@@ -1,11 +1,10 @@
 module.exports = function babelConfig(api) {
-  api.cache.using(() => {
-    const bundlerDev = api.caller((caller) => caller?.isDev)
-    return `${process.env.NODE_ENV ?? ''}:${process.env.EXPO_PUBLIC_DEVTOOLS ?? ''}:${String(bundlerDev)}`
-  })
+  api.cache.using(() => `${process.env.NODE_ENV ?? ''}:${process.env.EXPO_PUBLIC_DEVTOOLS ?? ''}`)
   const devtools =
     process.env.NODE_ENV !== 'production' && process.env.EXPO_PUBLIC_DEVTOOLS !== 'false'
-  // Metro sets `isDev` false for `expo export` even when the parent process left NODE_ENV unset.
+  // Read the caller after the cache is configured. Calling it inside cache.using
+  // makes Babel throw once Expo Router's entry is evaluated. Metro sets `isDev`
+  // false for `expo export` even when the parent process left NODE_ENV unset.
   const trackRenders = devtools && api.caller((caller) => caller?.isDev) !== false
   const plugins = []
   if (devtools) {
