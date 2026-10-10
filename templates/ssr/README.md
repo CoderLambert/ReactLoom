@@ -10,6 +10,7 @@ pnpm test
 pnpm test:e2e:setup   # first Playwright run; on Linux add: --with-deps
 pnpm test:e2e
 pnpm build
+pnpm analyze      # writes .next/diagnostics/analyze
 ```
 
 From the ReactLoom repo root:
@@ -26,7 +27,9 @@ After `create-reactloom --template ssr`, build `Dockerfile` from the generated p
 
 These work after `pnpm install`, including in a project created with `create-reactloom`. Nothing else is required for Biome, format on save, Lefthook, Vitest UI and coverage, TanStack Query devtools, React Scan, or click-to-source. Next.js shows compile errors in its own overlay. This template does not also run vite-plugin-checker.
 
-React Scan lives in `src/app/react-scan.tsx`. That client component imports `react-scan` before React, and `src/app/layout.tsx` mounts it. In `pnpm dev`, hover an element to see its component name, props, and render time. Re-renders are highlighted. Production builds alias `react-scan` to `src/lib/react-scan-stub.ts`, so the client bundle does not include the library.
+React Scan lives in `src/app/react-scan.tsx`. That client component imports `react-scan` before React, and `src/app/layout.tsx` mounts it. In `pnpm dev`, hover an element to see its component name, props, and render time. Re-renders are highlighted, and the outline lists the props that changed. Production builds alias `react-scan` to `src/lib/react-scan-stub.ts`, so the client bundle does not include the library.
+
+why-did-you-render is not loaded. Next.js 16 compiles JSX with SWC on Turbopack and has no app-wide `jsxImportSource`. `pnpm analyze` writes `.next/diagnostics/analyze`. `ANALYZE=true next build --webpack` still writes `.next/analyze` through `@next/bundle-analyzer`. For a console diff on one component, call `useWhyDidYouUpdate` from `@reactloom/devtools`. Do not import it from the app layout.
 
 Hold Option+Shift on macOS, or Alt+Shift on Windows and Linux, then click. The Next.js error overlay's Open in editor uses the same launcher. The editor is a running Neovim server, then Cursor, then VS Code.
 

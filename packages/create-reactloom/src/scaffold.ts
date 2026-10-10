@@ -87,6 +87,12 @@ async function copySharedPackages(
       path.join(directory, 'packages', 'api-client'),
     )
   }
+  if (manifest.packages.devtools) {
+    await copyFiltered(
+      path.join(repoRoot, 'packages', 'devtools'),
+      path.join(directory, 'packages', 'devtools'),
+    )
+  }
   if (manifest.packages.tsconfig.length === 0) return
 
   const sourceDir = path.join(repoRoot, 'packages', 'tsconfig')
@@ -221,6 +227,137 @@ async function assertReactScan(directory: string, manifest: TemplateManifest): P
   }
 }
 
+async function readTemplateText(
+  directory: string,
+  relative: string,
+  label: string,
+): Promise<string> {
+  try {
+    return await readFile(path.join(directory, relative), 'utf8')
+  } catch {
+    throw new Error(`Template is missing its ${label} file: ${relative}`)
+  }
+}
+
+function dependencyVersion(pkg: PackageJson, name: string): string | undefined {
+  return pkg.devDependencies?.[name] ?? pkg.dependencies?.[name]
+}
+
+async function assertWhyDidYouRender(directory: string, manifest: TemplateManifest): Promise<void> {
+  const wdyr = manifest.whyDidYouRender
+  if (!wdyr) {
+    throw new Error('template.json whyDidYouRender must name the package and its config file.')
+  }
+  const configText = await readTemplateText(directory, wdyr.config, 'why-did-you-render')
+  const pkg = JSON.parse(
+    await readFile(path.join(directory, 'package.json'), 'utf8'),
+  ) as PackageJson
+  const installed = dependencyVersion(pkg, wdyr.package)
+  if (wdyr.enabled) {
+    if (installed !== wdyr.version) {
+      throw new Error(
+        `template.json whyDidYouRender expects ${wdyr.package}@${wdyr.version}, found ${installed ?? 'nothing'}.`,
+      )
+    }
+    if (
+      !configText.includes('jsxImportSource') ||
+      !configText.includes(wdyr.package) ||
+      !configText.includes("NODE_ENV !== 'production'")
+    ) {
+      throw new Error(
+        'template.json whyDidYouRender.config must set jsxImportSource outside production.',
+      )
+    }
+    // Expo is the template that enables this. The entry has to load the tracker
+    // before React. babel.config.js cannot do that on its own.
+    const entry = await readTemplateText(directory, 'index.js', 'why-did-you-render entry')
+    if (!entry.includes('./src/lib/wdyr') || !entry.includes('expo-router/entry')) {
+      throw new Error('index.js must import src/lib/wdyr before expo-router/entry.')
+    }
+    const init = await readTemplateText(directory, 'src/lib/wdyr.js', 'why-did-you-render init')
+    if (
+      !init.includes('whyDidYouRender') ||
+      !init.includes('trackAllPureComponents') ||
+      !init.includes('__DEV__')
+    ) {
+      throw new Error('src/lib/wdyr.js must call whyDidYouRender in development.')
+    }
+    if (pkg.main !== 'index.js') {
+      throw new Error('package.json main must be index.js so why-did-you-render loads first.')
+    }
+    return
+  }
+  if (installed !== undefined) {
+    throw new Error(
+      `template.json whyDidYouRender is disabled, but ${wdyr.package} is still a dependency.`,
+    )
+  }
+  if (!wdyr.reason || !configText.includes(wdyr.reason)) {
+    throw new Error('template.json whyDidYouRender.config must include the reason the tool is off.')
+  }
+}
+
+async function assertBundleAnalyze(directory: string, manifest: TemplateManifest): Promise<void> {
+  const analyze = manifest.bundleAnalyze
+  if (!analyze) {
+    throw new Error(
+      'template.json bundleAnalyze must name the analyzer, its script, and its config.',
+    )
+  }
+  const configText = await readTemplateText(directory, analyze.config, 'bundle analyzer')
+  if (!configText.includes(analyze.marker)) {
+    throw new Error(`template.json bundleAnalyze.config must contain ${analyze.marker}.`)
+  }
+  const pkg = JSON.parse(
+    await readFile(path.join(directory, 'package.json'), 'utf8'),
+  ) as PackageJson
+  if (pkg.scripts?.analyze !== analyze.script) {
+    throw new Error(
+      `package.json analyze must be "${analyze.script}", found "${pkg.scripts?.analyze ?? ''}".`,
+    )
+  }
+  const installed = dependencyVersion(pkg, analyze.package)
+  if (installed !== analyze.version) {
+    throw new Error(
+      `template.json bundleAnalyze expects ${analyze.package}@${analyze.version}, found ${installed ?? 'nothing'}.`,
+    )
+  }
+}
+
+async function assertPropsDiff(directory: string, manifest: TemplateManifest): Promise<void> {
+  const diff = manifest.propsDiff
+  if (!diff) {
+    throw new Error('template.json propsDiff must name the primary tool and the hook package.')
+  }
+  if (!manifest.packages.devtools) {
+    throw new Error('template.json packages.devtools must be true when propsDiff is set.')
+  }
+  const hookText = await readTemplateText(
+    directory,
+    'packages/devtools/src/use-why-did-you-update.ts',
+    'props diff hook',
+  )
+  if (!hookText.includes('export function useWhyDidYouUpdate')) {
+    throw new Error('packages/devtools must export useWhyDidYouUpdate.')
+  }
+  const pkg = JSON.parse(
+    await readFile(path.join(directory, 'package.json'), 'utf8'),
+  ) as PackageJson
+  if (dependencyVersion(pkg, diff.hook) !== 'workspace:*') {
+    throw new Error(`template.json propsDiff.hook must depend on ${diff.hook}@workspace:*.`)
+  }
+  const configText = await readTemplateText(directory, diff.config, 'props diff')
+  if (diff.primary === 'react-scan') {
+    const imported =
+      configText.includes("from 'react-scan'") || configText.includes('from "react-scan"')
+    if (!imported) throw new Error('template.json propsDiff.config must import react-scan.')
+    return
+  }
+  if (!configText.includes('whyDidYouRender')) {
+    throw new Error('template.json propsDiff.config must call whyDidYouRender.')
+  }
+}
+
 async function rewriteChangesetIgnore(directory: string, projectName: string): Promise<void> {
   const configPath = path.join(directory, '.changeset', 'config.json')
   try {
@@ -291,6 +428,9 @@ export async function scaffold(options: ScaffoldOptions): Promise<void> {
   await writeProjectPackage(options.directory, options.name, manifest, repoRoot)
   await assertClickToSource(options.directory, manifest)
   await assertReactScan(options.directory, manifest)
+  await assertWhyDidYouRender(options.directory, manifest)
+  await assertBundleAnalyze(options.directory, manifest)
+  await assertPropsDiff(options.directory, manifest)
   await rewriteChangesetIgnore(options.directory, options.name)
   await installAiConfig({
     repoRoot,

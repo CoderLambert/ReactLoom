@@ -4,6 +4,7 @@
   "strip": ["template.json"],
   "packages": {
     "api-client": true,
+    "devtools": true,
     "tsconfig": ["base.json", "react.json", "vite.json", "node.json"]
   },
   "configs": [
@@ -29,6 +30,25 @@
     "package": "react-scan",
     "version": "0.5.7",
     "enabled": true,
+    "config": "src/main.tsx"
+  },
+  "whyDidYouRender": {
+    "package": "@welldone-software/why-did-you-render",
+    "version": "10.0.1",
+    "enabled": false,
+    "config": "AGENTS.md",
+    "reason": "why-did-you-render v10 needs its package as the automatic JSX importSource. Vite 8 injects that import before React, which runs ahead of React Scan, so this template does not load why-did-you-render. React Scan's outline shows the render cause and the props that changed."
+  },
+  "bundleAnalyze": {
+    "package": "rollup-plugin-visualizer",
+    "version": "7.1.1",
+    "config": "vite.config.ts",
+    "script": "ANALYZE=true vite build",
+    "marker": "rollup-plugin-visualizer"
+  },
+  "propsDiff": {
+    "primary": "react-scan",
+    "hook": "@reactloom/devtools",
     "config": "src/main.tsx"
   },
   "clickToSource": {

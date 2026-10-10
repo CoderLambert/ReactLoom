@@ -11,6 +11,7 @@
   ],
   "packages": {
     "api-client": true,
+    "devtools": true,
     "tsconfig": ["base.json", "react.json", "expo.json", "node.json"]
   },
   "configs": [
@@ -38,6 +39,24 @@
     "enabled": false,
     "config": "AGENTS.md",
     "reason": "react-scan 0.5.7 has no React Native export. The native preview at aidenybai/react-scan#23 is unmerged, so this template does not load React Scan."
+  },
+  "whyDidYouRender": {
+    "package": "@welldone-software/why-did-you-render",
+    "version": "10.0.1",
+    "enabled": true,
+    "config": "babel.config.js"
+  },
+  "bundleAnalyze": {
+    "package": "expo-atlas",
+    "version": "0.4.3",
+    "config": "package.json",
+    "script": "EXPO_ATLAS=true expo export --platform web --output-dir dist && expo-atlas .expo/atlas.jsonl",
+    "marker": "EXPO_ATLAS"
+  },
+  "propsDiff": {
+    "primary": "@welldone-software/why-did-you-render",
+    "hook": "@reactloom/devtools",
+    "config": "src/lib/wdyr.js"
   },
   "clickToSource": {
     "plugin": "react-native-dev-inspector",

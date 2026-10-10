@@ -334,6 +334,11 @@ describe('create-reactloom', () => {
       expect(manifest.reactScan?.package).toBe('react-scan')
       expect(manifest.reactScan?.version).toBe('0.5.7')
       expect(manifest.reactScan?.enabled).toBe(template !== 'mobile')
+      expect(manifest.packages.devtools).toBe(true)
+      expect(manifest.whyDidYouRender?.version).toBe('10.0.1')
+      expect(manifest.whyDidYouRender?.enabled).toBe(template === 'mobile')
+      expect(manifest.bundleAnalyze?.script).toBeTruthy()
+      expect(manifest.propsDiff?.hook).toBe('@reactloom/devtools')
       expect(manifest.configs).toEqual(
         expect.arrayContaining(['scripts/open-in-editor.mjs', 'scripts/code', 'scripts/code.cmd']),
       )
@@ -393,6 +398,35 @@ describe('create-reactloom', () => {
       expect(pkg.devDependencies?.lefthook).toBe('2.2.1')
       expect(pkg.dependencies?.['@nestjs/core']).toBeUndefined()
       expect(pkg.scripts?.lint).toBe('biome check .')
+      expect(pkg.scripts?.analyze).toBe(manifest.bundleAnalyze?.script)
+      expect(pkg.devDependencies?.['@reactloom/devtools']).toBe('workspace:*')
+      const analyzer = manifest.bundleAnalyze
+      if (!analyzer || !manifest.whyDidYouRender || !manifest.propsDiff) {
+        throw new Error('template manifest is missing a productivity tool')
+      }
+      const analyzerConfig = await readFile(path.join(directory, analyzer.config), 'utf8')
+      expect(analyzerConfig).toContain(analyzer.marker)
+      const analyzerVersion =
+        pkg.devDependencies?.[analyzer.package] ?? pkg.dependencies?.[analyzer.package]
+      expect(analyzerVersion).toBe(analyzer.version)
+      const hook = await readFile(
+        path.join(directory, 'packages/devtools/src/use-why-did-you-update.ts'),
+        'utf8',
+      )
+      expect(hook).toContain('export function useWhyDidYouUpdate')
+      const wdyrVersion =
+        pkg.devDependencies?.['@welldone-software/why-did-you-render'] ??
+        pkg.dependencies?.['@welldone-software/why-did-you-render']
+      if (manifest.whyDidYouRender.enabled) {
+        expect(wdyrVersion).toBe('10.0.1')
+      } else {
+        expect(wdyrVersion).toBeUndefined()
+        const reasonFile = await readFile(
+          path.join(directory, manifest.whyDidYouRender.config),
+          'utf8',
+        )
+        expect(reasonFile).toContain(manifest.whyDidYouRender.reason)
+      }
       const changeset = JSON.parse(
         await readFile(path.join(directory, '.changeset', 'config.json'), 'utf8'),
       ) as { ignore: string[] }
@@ -504,6 +538,7 @@ describe('create-reactloom', () => {
     expect(ssrExtensions).not.toContain('expo.vscode-expo-tools')
     const ssrPkg = JSON.parse(await readFile(path.join(ssr, 'package.json'), 'utf8')) as {
       devDependencies: Record<string, string>
+      scripts: Record<string, string>
     }
     expect(ssrPkg.devDependencies['@tanstack/react-query-devtools']).toBe('5.104.1')
     expect(ssrPkg.devDependencies['react-scan']).toBe('0.5.7')
@@ -538,6 +573,7 @@ describe('create-reactloom', () => {
     const mobileSettings = await readFile(path.join(mobile, '.vscode/settings.json'), 'utf8')
     expect(mobileSettings).not.toContain('tailwindCSS')
     const mobilePkg = JSON.parse(await readFile(path.join(mobile, 'package.json'), 'utf8')) as {
+      main: string
       dependencies?: Record<string, string>
       devDependencies: Record<string, string>
       scripts: Record<string, string>
@@ -559,6 +595,24 @@ describe('create-reactloom', () => {
     }
     const mobileBabel = await readFile(path.join(mobile, 'babel.config.js'), 'utf8')
     expect(mobileBabel).toContain('inspectorBabelPlugin')
+    expect(mobileBabel).toContain('jsxImportSource')
+    expect(mobileBabel).toContain('@welldone-software/why-did-you-render')
+    expect(mobileBabel).toContain("NODE_ENV !== 'production'")
+    const mobileEntry = await readFile(path.join(mobile, 'index.js'), 'utf8')
+    expect(mobileEntry.indexOf('./src/lib/wdyr')).toBeLessThan(
+      mobileEntry.indexOf('expo-router/entry'),
+    )
+    const mobileWdyr = await readFile(path.join(mobile, 'src/lib/wdyr.js'), 'utf8')
+    expect(mobileWdyr).toContain('trackAllPureComponents')
+    expect(mobileWdyr).toContain('__DEV__')
+    expect(mobilePkg.main).toBe('index.js')
+    expect(mobilePkg.devDependencies['@welldone-software/why-did-you-render']).toBe('10.0.1')
+    expect(mobilePkg.devDependencies['expo-atlas']).toBe('0.4.3')
+    expect(mobilePkg.scripts.analyze).toContain('EXPO_ATLAS=true')
+    expect(spaPkg.devDependencies['@welldone-software/why-did-you-render']).toBeUndefined()
+    expect(ssrPkg.devDependencies['@welldone-software/why-did-you-render']).toBeUndefined()
+    expect(spaPkg.scripts.analyze).toBe('ANALYZE=true vite build')
+    expect(ssrPkg.scripts.analyze).toBe('next analyze --output')
     const mobileEnv = await readFile(path.join(mobile, '.env.development'), 'utf8')
     expect(mobileEnv).toContain('EXPO_PUBLIC_DEVTOOLS=true')
     expect(mobileEnv).not.toMatch(/^LAUNCH_EDITOR=/m)

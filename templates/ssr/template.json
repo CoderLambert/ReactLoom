@@ -14,6 +14,7 @@
   ],
   "packages": {
     "api-client": true,
+    "devtools": true,
     "tsconfig": ["base.json", "react.json", "next.json", "node.json"]
   },
   "configs": [
@@ -39,6 +40,25 @@
     "package": "react-scan",
     "version": "0.5.7",
     "enabled": true,
+    "config": "src/app/react-scan.tsx"
+  },
+  "whyDidYouRender": {
+    "package": "@welldone-software/why-did-you-render",
+    "version": "10.0.1",
+    "enabled": false,
+    "config": "AGENTS.md",
+    "reason": "Next.js 16 compiles JSX with SWC on Turbopack and has no app-wide jsxImportSource. why-did-you-render v10 requires that Babel setting, so this template does not load it. React Scan's outline shows the render cause and the props that changed."
+  },
+  "bundleAnalyze": {
+    "package": "@next/bundle-analyzer",
+    "version": "16.4.0",
+    "config": "next.config.ts",
+    "script": "next analyze --output",
+    "marker": "@next/bundle-analyzer"
+  },
+  "propsDiff": {
+    "primary": "react-scan",
+    "hook": "@reactloom/devtools",
     "config": "src/app/react-scan.tsx"
   },
   "clickToSource": {

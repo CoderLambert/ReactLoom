@@ -14,6 +14,8 @@ export type TemplateManifest = {
   replacements?: Array<{ file: string; from: string; to: string }>
   packages: {
     'api-client': boolean
+    /** Shared dev-only helpers. Copied when true. */
+    devtools: boolean
     tsconfig: string[]
   }
   configs: string[]
@@ -36,6 +38,37 @@ export type TemplateManifest = {
     enabled: boolean
     config: string
     reason?: string
+  }
+  /**
+   * why-did-you-render. Expo sets `enabled` and points `config` at babel.config.js.
+   * SPA and SSR set `enabled` to false. `reason` is the sentence in `config`.
+   */
+  whyDidYouRender?: {
+    package: string
+    version: string
+    enabled: boolean
+    config: string
+    reason?: string
+  }
+  /**
+   * `pnpm analyze`. `script` is the package.json command. `config` is the file
+   * that wires the analyzer and must contain `marker`.
+   */
+  bundleAnalyze?: {
+    package: string
+    version: string
+    config: string
+    script: string
+    marker: string
+  }
+  /**
+   * Where a props diff comes from. `hook` is `@reactloom/devtools`.
+   * `primary` is the tool that shows the diff without an extra overlay.
+   */
+  propsDiff?: {
+    primary: string
+    hook: string
+    config: string
   }
   /**
    * Inspector package, the committed env file, and the editor launcher.
@@ -98,6 +131,10 @@ export function parseManifest(value: unknown): TemplateManifest {
   if (typeof packageRecord['api-client'] !== 'boolean' || !Array.isArray(packageRecord.tsconfig)) {
     throw new Error('template.json packages.api-client and packages.tsconfig are required.')
   }
+  const devtools = packageRecord.devtools === undefined ? false : packageRecord.devtools
+  if (typeof devtools !== 'boolean') {
+    throw new Error('template.json packages.devtools must be a boolean.')
+  }
   const tsconfig = stringList(packageRecord.tsconfig, 'packages.tsconfig')
   for (const preset of tsconfig) {
     if (!/^[a-z0-9.-]+\.json$/.test(preset) || preset === 'package.json') {
@@ -117,7 +154,7 @@ export function parseManifest(value: unknown): TemplateManifest {
     strip: optionalStringList(record.strip, 'strip'),
     rename: optionalRename(record.rename),
     replacements: optionalReplacements(record.replacements),
-    packages: { 'api-client': packageRecord['api-client'], tsconfig },
+    packages: { 'api-client': packageRecord['api-client'], devtools, tsconfig },
     configs: stringList(record.configs, 'configs'),
     ci: record.ci,
     docker: record.docker,
@@ -127,6 +164,9 @@ export function parseManifest(value: unknown): TemplateManifest {
     },
     docs: stringList(record.docs, 'docs'),
     reactScan: optionalReactScan(record.reactScan),
+    whyDidYouRender: optionalWhyDidYouRender(record.whyDidYouRender),
+    bundleAnalyze: optionalBundleAnalyze(record.bundleAnalyze),
+    propsDiff: optionalPropsDiff(record.propsDiff),
     clickToSource: optionalClickToSource(record.clickToSource),
   }
 }
@@ -173,6 +213,98 @@ function optionalReactScan(value: unknown): TemplateManifest['reactScan'] {
     config: templateFile(record.config, 'reactScan.config'),
     ...(reason === undefined ? {} : { reason }),
   }
+}
+
+function optionalWhyDidYouRender(value: unknown): TemplateManifest['whyDidYouRender'] {
+  if (value === undefined) return undefined
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    throw new Error('template.json whyDidYouRender must be an object.')
+  }
+  const record = value as Record<string, unknown>
+  if (record.package !== '@welldone-software/why-did-you-render') {
+    throw new Error(
+      'template.json whyDidYouRender.package must be @welldone-software/why-did-you-render.',
+    )
+  }
+  const version = exactVersion(record.version, 'whyDidYouRender.version')
+  if (typeof record.enabled !== 'boolean') {
+    throw new Error('template.json whyDidYouRender.enabled must be a boolean.')
+  }
+  let reason: string | undefined
+  if (record.enabled) {
+    if (record.reason !== undefined) {
+      throw new Error('template.json whyDidYouRender.reason is only used when the tool is off.')
+    }
+  } else if (typeof record.reason !== 'string' || record.reason.trim().length === 0) {
+    throw new Error('template.json whyDidYouRender.reason must explain why the tool is off.')
+  } else {
+    reason = record.reason
+  }
+  return {
+    package: '@welldone-software/why-did-you-render',
+    version,
+    enabled: record.enabled,
+    config: templateFile(record.config, 'whyDidYouRender.config'),
+    ...(reason === undefined ? {} : { reason }),
+  }
+}
+
+function optionalBundleAnalyze(value: unknown): TemplateManifest['bundleAnalyze'] {
+  if (value === undefined) return undefined
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    throw new Error('template.json bundleAnalyze must be an object.')
+  }
+  const record = value as Record<string, unknown>
+  if (
+    typeof record.package !== 'string' ||
+    !/^(?:@[a-z0-9-~][a-z0-9-._~]*\/)?[a-z0-9-~][a-z0-9-._~]*$/.test(record.package)
+  ) {
+    throw new Error('template.json bundleAnalyze.package must name the analyzer package.')
+  }
+  if (typeof record.script !== 'string' || record.script.trim().length === 0) {
+    throw new Error('template.json bundleAnalyze.script must be the analyze command.')
+  }
+  if (typeof record.marker !== 'string' || record.marker.trim().length === 0) {
+    throw new Error('template.json bundleAnalyze.marker must appear in the config file.')
+  }
+  return {
+    package: record.package,
+    version: exactVersion(record.version, 'bundleAnalyze.version'),
+    config: templateFile(record.config, 'bundleAnalyze.config'),
+    script: record.script,
+    marker: record.marker,
+  }
+}
+
+function optionalPropsDiff(value: unknown): TemplateManifest['propsDiff'] {
+  if (value === undefined) return undefined
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    throw new Error('template.json propsDiff must be an object.')
+  }
+  const record = value as Record<string, unknown>
+  if (record.hook !== '@reactloom/devtools') {
+    throw new Error('template.json propsDiff.hook must be @reactloom/devtools.')
+  }
+  if (
+    record.primary !== 'react-scan' &&
+    record.primary !== '@welldone-software/why-did-you-render'
+  ) {
+    throw new Error(
+      'template.json propsDiff.primary must be react-scan or @welldone-software/why-did-you-render.',
+    )
+  }
+  return {
+    primary: record.primary,
+    hook: '@reactloom/devtools',
+    config: templateFile(record.config, 'propsDiff.config'),
+  }
+}
+
+function exactVersion(value: unknown, label: string): string {
+  if (typeof value !== 'string' || !/^\d+\.\d+\.\d+$/.test(value)) {
+    throw new Error(`template.json ${label} must be an exact version.`)
+  }
+  return value
 }
 
 function optionalClickToSource(value: unknown): TemplateManifest['clickToSource'] {

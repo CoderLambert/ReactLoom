@@ -24,6 +24,7 @@ export const DOCKER_FILES = [
 
 export type PackageJson = {
   name?: string
+  main?: string
   scripts?: Record<string, string>
   dependencies?: Record<string, string>
   devDependencies?: Record<string, string>
@@ -90,6 +91,10 @@ export function pruneProjectPackage(
   const scripts = { ...(next.scripts ?? {}) }
 
   if (!manifest.packages['api-client']) delete dependencies['@reactloom/api-client']
+  if (!manifest.packages.devtools) {
+    delete dependencies['@reactloom/devtools']
+    delete devDependencies['@reactloom/devtools']
+  }
   if (manifest.packages.tsconfig.length === 0) delete devDependencies['@reactloom/tsconfig']
 
   for (const [config, packages] of Object.entries(TOOLING_DEV_DEPENDENCIES)) {

@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "description": "ReactLoom production Expo template.",
-  "main": "expo-router/entry",
+  "main": "index.js",
   "packageManager": "pnpm@10.33.3",
   "scripts": {
     "start": "expo start",
@@ -11,6 +11,7 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "build": "expo export --platform web --output-dir dist",
+    "analyze": "EXPO_ATLAS=true expo export --platform web --output-dir dist && expo-atlas .expo/atlas.jsonl",
     "lint": "biome check .",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
@@ -50,11 +51,14 @@
   },
   "devDependencies": {
     "@babel/core": "7.29.7",
+    "@reactloom/devtools": "workspace:*",
     "@reactloom/tsconfig": "workspace:*",
     "@types/react": "19.3.0",
     "@vitest/coverage-v8": "5.0.3",
     "@vitest/ui": "5.0.3",
+    "@welldone-software/why-did-you-render": "10.0.1",
     "babel-preset-expo": "~57.0.14",
+    "expo-atlas": "0.4.3",
     "react-native-dev-inspector": "1.1.0",
     "typescript": "7.0.2",
     "vitest": "5.0.3"

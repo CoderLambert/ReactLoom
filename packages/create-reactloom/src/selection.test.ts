@@ -80,6 +80,47 @@ describe('template selection', () => {
     ).toThrow(/reactScan.config/)
   })
 
+  it('rejects a why-did-you-render path that leaves the template', () => {
+    expect(() =>
+      parseManifest({
+        ...spaManifest(),
+        whyDidYouRender: {
+          package: '@welldone-software/why-did-you-render',
+          version: '10.0.1',
+          enabled: true,
+          config: '../babel.config.js',
+        },
+      }),
+    ).toThrow(/whyDidYouRender.config/)
+  })
+
+  it('rejects a disabled why-did-you-render entry that has no reason', () => {
+    expect(() =>
+      parseManifest({
+        ...spaManifest(),
+        whyDidYouRender: {
+          package: '@welldone-software/why-did-you-render',
+          version: '10.0.1',
+          enabled: false,
+          config: 'AGENTS.md',
+        },
+      }),
+    ).toThrow(/whyDidYouRender.reason/)
+  })
+
+  it('rejects a props diff whose primary tool is unknown', () => {
+    expect(() =>
+      parseManifest({
+        ...spaManifest(),
+        propsDiff: {
+          primary: 'why-did-you-update',
+          hook: '@reactloom/devtools',
+          config: 'src/main.tsx',
+        },
+      }),
+    ).toThrow(/propsDiff.primary/)
+  })
+
   it('rejects a disabled React Scan entry that has no reason', () => {
     expect(() =>
       parseManifest({
@@ -228,6 +269,30 @@ describe('template selection', () => {
         'studio',
       ).ignore,
     ).toEqual(['studio'])
+  })
+
+  it('drops the devtools package when the template does not list it', () => {
+    const pruned = pruneProjectPackage(
+      {
+        dependencies: { '@reactloom/devtools': 'workspace:*' },
+        devDependencies: { '@reactloom/devtools': 'workspace:*' },
+      },
+      spaManifest(),
+      versions,
+    )
+    expect(pruned.dependencies?.['@reactloom/devtools']).toBeUndefined()
+    expect(pruned.devDependencies?.['@reactloom/devtools']).toBeUndefined()
+  })
+
+  it('keeps the devtools package when the template lists it', () => {
+    const manifest = spaManifest()
+    manifest.packages.devtools = true
+    const pruned = pruneProjectPackage(
+      { devDependencies: { '@reactloom/devtools': 'workspace:*' } },
+      manifest,
+      versions,
+    )
+    expect(pruned.devDependencies?.['@reactloom/devtools']).toBe('workspace:*')
   })
 
   it('requires a version for every selected tool', () => {

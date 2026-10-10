@@ -6,6 +6,8 @@ import { codeInspectorPlugin } from 'code-inspector-plugin'
 import type { NextConfig } from 'next'
 import { headersFor } from './src/server/security-headers'
 
+// `pnpm analyze` is `next analyze --output` (Turbopack). This wrapper still
+// writes `.next/analyze` for `ANALYZE=true next build --webpack`.
 const withBundleAnalyzer = bundleAnalyzer({ enabled: process.env.ANALYZE === 'true' })
 
 type InspectorEditor = NonNullable<Parameters<typeof codeInspectorPlugin>[0]['editor']>

@@ -17,7 +17,7 @@
     "test:affected": "pnpm --filter \"...[HEAD]\" --if-present test",
     "test:e2e:setup": "playwright install chromium",
     "test:e2e": "playwright test",
-    "analyze": "ANALYZE=true next build"
+    "analyze": "next analyze --output"
   },
   "dependencies": {
     "@hookform/resolvers": "5.9.1",
@@ -41,6 +41,7 @@
     "@axe-core/playwright": "4.13.0",
     "@next/bundle-analyzer": "16.4.0",
     "@playwright/test": "1.64.0",
+    "@reactloom/devtools": "workspace:*",
     "@reactloom/tsconfig": "workspace:*",
     "@tailwindcss/postcss": "4.3.3",
     "@tanstack/react-query-devtools": "5.104.1",

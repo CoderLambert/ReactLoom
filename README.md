@@ -151,6 +151,9 @@ Listing `biome.json`, `lefthook.yml`, `commitlint.config.mjs`, or `.changeset/co
 - `docs` lists paths such as `docs/getting-started.md` and `docs/adr/0004-api-client.md`.
 - `clickToSource` names that template's inspector package, its exact version, the bundler config (`vite.config.ts`, `next.config.ts`, or `metro.config.js`), the committed launch-editor file (`.env.development`), and `scripts/open-in-editor.mjs`. List `scripts/open-in-editor.mjs`, `scripts/code`, and `scripts/code.cmd` in `configs` so generation copies them. The CLI checks those files were copied, that the env file does not pin an editor, and that `package.json` depends on that version. Do not put another template's inspector in that file.
 - `reactScan` names `react-scan`, its exact version, `enabled`, and the config file. SPA and SSR set `enabled` to true and import the package from that file. Mobile sets `enabled` to false, and `reason` is the sentence in `AGENTS.md` that explains why. The CLI checks the file and that `package.json` matches.
+- `whyDidYouRender` names `@welldone-software/why-did-you-render`, its exact version, `enabled`, and the config file. Expo sets `enabled` to true. SPA and SSR set it to false, and `reason` is the sentence in `AGENTS.md`. The CLI checks that sentence when the tool is off, and the dev-only Babel setup when it is on.
+- `bundleAnalyze` names the analyzer package, its exact version, the config file, the `analyze` script, and a marker that file must contain.
+- `propsDiff` names the primary tool (`react-scan` or `@welldone-software/why-did-you-render`) and `@reactloom/devtools`. `packages.devtools` copies that package. The hook is not imported from an app entry.
 
 ## Conventions
 
@@ -254,6 +257,54 @@ Mobile records this sentence as `reactScan.reason`, and the CLI requires `AGENTS
 > react-scan 0.5.7 has no React Native export. The native preview at aidenybai/react-scan#23 is unmerged, so this template does not load React Scan.
 
 The preview's author describes it as early and not at feature parity, and 0.5.7 does not publish a `react-scan/native` entry.
+
+### why-did-you-render
+
+why-did-you-render 10.0.1 logs an unnecessary re-render, and the reason, to the console. v10 supports React 19 only when the automatic JSX transform uses that package as `importSource`. It stays out of production. The package monkeypatches React and slows it down, and its own docs say not to ship it.
+
+| | SPA (Vite 8) | SSR (Next.js 16) | Mobile (Expo) |
+| --- | --- | --- | --- |
+| Loaded | no | no | yes, while `expo start` is running |
+| Config | `templates/spa/AGENTS.md` | `templates/ssr/AGENTS.md` | `babel.config.js`, `index.js`, `src/lib/wdyr.js` |
+
+Vite would inject `jsxImportSource` at the top of every module, ahead of the React Scan import. React Scan has to be the first import, so the tracker would run first and the outline would be unreliable. Next.js compiles App Router JSX with SWC on Turbopack and has no app-wide `jsxImportSource`. A Babel config would fight that bundler. Expo's `babel-preset-expo` accepts `jsxImportSource`, and a custom `index.js` can import the tracker before `expo-router/entry`.
+
+`template.json` `whyDidYouRender` records the package, the exact version, `enabled`, and the config file. When `enabled` is false, `reason` is the sentence in that file. `create-reactloom` checks the sentence is present and that `package.json` does not depend on the package. When it is on, the CLI checks the Babel gate, `index.js`, and `src/lib/wdyr.js`.
+
+The SPA sentence is:
+
+> why-did-you-render v10 needs its package as the automatic JSX importSource. Vite 8 injects that import before React, which runs ahead of React Scan, so this template does not load why-did-you-render. React Scan's outline shows the render cause and the props that changed.
+
+The SSR sentence is:
+
+> Next.js 16 compiles JSX with SWC on Turbopack and has no app-wide jsxImportSource. why-did-you-render v10 requires that Babel setting, so this template does not load it. React Scan's outline shows the render cause and the props that changed.
+
+On Expo, the preset option is set only when `NODE_ENV` is not `production`, `EXPO_PUBLIC_DEVTOOLS` is not `false`, and Metro is not already compiling a production bundle (`expo export` sets that). `src/lib/wdyr.js` calls `whyDidYouRender(React, { trackAllPureComponents: true })` inside `__DEV__`, so Metro strips the call from the export. A component that is not a pure component can opt in with `whyDidYouRender = true`.
+
+### Bundle analysis
+
+`pnpm analyze` is on every template. `pnpm build` does not run it. `template.json` `bundleAnalyze` records the package, the exact version, the config file, the script, and a marker the CLI looks for in that file.
+
+| | SPA | SSR | Mobile |
+| --- | --- | --- | --- |
+| Package | `rollup-plugin-visualizer` 7.1.1 | `@next/bundle-analyzer` 16.4.0, plus Next's built-in analyzer | `expo-atlas` 0.4.3 |
+| Script | `ANALYZE=true vite build` | `next analyze --output` | `EXPO_ATLAS=true expo export --platform web --output-dir dist && expo-atlas .expo/atlas.jsonl` |
+| Report | `dist/stats.html` | `.next/diagnostics/analyze` | `.expo/atlas.jsonl`, then the Atlas UI |
+| Config | `vite.config.ts` | `next.config.ts` | `package.json` |
+
+The Vite plugin is added only when `ANALYZE` is `true`. Next 16's default `next build` is Turbopack, and `@next/bundle-analyzer` skips Turbopack and points at `next analyze`. `next analyze --output` writes the report and exits. It does not start the interactive server. `ANALYZE=true next build --webpack` still uses `@next/bundle-analyzer` and writes `.next/analyze`. Expo Atlas is the documented Expo report. It has been stable since SDK 53. The Atlas file includes source, so it stays under `.expo`, which is gitignored. `pnpm analyze` on Expo opens the viewer after the export.
+
+### Props diffs
+
+No second overlay is installed. The props that changed are already on screen or in the console.
+
+| | What shows the diff |
+| --- | --- |
+| SPA and SSR | React Scan. Hover a component and the outline lists the props that changed, with the render time and the re-render highlight. |
+| Expo | why-did-you-render prints the previous props, the next props, and the reason for pure components, and for any component with `whyDidYouRender = true`. |
+| One component | `useWhyDidYouUpdate` from `@reactloom/devtools`. |
+
+The hook is opt-in. Call it inside the component you are debugging. Do not mount it on the app root, and do not import it from `src/main.tsx`, `src/app/layout.tsx`, or `index.js`. Production builds inline `NODE_ENV` and drop the log when a feature does import it. Because no entry imports it, the production bundles do not contain it. `template.json` `propsDiff` records the primary tool, the hook package, and the config file. `packages.devtools` copies `packages/devtools` into a generated project. The package is a `workspace:*` devDependency.
 
 ### In-browser TypeScript errors
 
