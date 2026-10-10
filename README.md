@@ -114,9 +114,39 @@ pnpm exec create-reactloom pocket --template mobile --yes
 
 `--template` is `spa`, `ssr`, or `mobile`. `--yes` skips prompts. `--install` runs `pnpm install` in the new directory. The project name is the last segment of the path, so `studio` and `../outside/studio` both name the package `studio`.
 
-The CLI copies the template, copies `@reactloom/api-client` and `@reactloom/tsconfig` into `packages/`, writes a `pnpm-workspace.yaml`, copies Biome and EditorConfig, renames the package, and deletes template-only files (`template.json`, and for SSR the monorepo Dockerfile). The SSR trace root in `next.config.ts` is rewritten so the generated app is self-contained.
+The CLI copies that template directory, then adds only the shared files listed in `templates/<id>/template.json`. It renames the package, deletes template-only files (`template.json`, and for SSR the monorepo Dockerfile), and writes a `pnpm-workspace.yaml` whose `packages` list is `packages/*`. `lefthook` is added to `onlyBuiltDependencies` only when `lefthook.yml` is in the manifest. The SSR trace root in `next.config.ts` is rewritten so the generated app is self-contained. The mobile Metro config's workspace root is rewritten to the generated project.
 
-It also copies the matching AI collaboration files: that template's `AGENTS.md`, `CLAUDE.md`, `.github/copilot-instructions.md`, `.cursor/mcp.json`, and the Cursor rules that apply to the template (general, that template, and testing). `@reactloom/template-<id>` becomes the project name, and `templates/<id>/` paths are rewritten so they match the generated root.
+`@reactloom/template-<id>` in the copied AI files becomes the project name, and `templates/<id>/` paths are rewritten so they match the generated root.
+
+## What each template receives
+
+`template.json` is the manifest. It is not copied into the new project.
+
+| | SPA | SSR | Mobile |
+| --- | --- | --- | --- |
+| `packages/api-client` | yes | yes | yes |
+| TypeScript presets | `base`, `react`, `vite`, `node` | `base`, `react`, `next`, `node` | `base`, `react`, `expo`, `node` |
+| Root configs | `.npmrc`, EditorConfig, Biome, Lefthook, Commitlint, Changesets, Renovate | same | same |
+| CI | `templates/spa/.github/workflows/ci.yml` | `templates/ssr/.github/workflows/ci.yml` | `templates/mobile/.github/workflows/ci.yml` |
+| Dockerfile | no | yes (`Dockerfile.standalone` renamed to `Dockerfile`) | no |
+| Cursor rules | general, spa, testing | general, ssr, testing | general, mobile, testing |
+| AI pointers | `CLAUDE.md`, `.github/copilot-instructions.md`, `.cursor/mcp.json` | same | same |
+| ADRs | 0003 sessions, 0004 API client, 0005 tooling, 0006 AI collaboration | same | same |
+
+Left out of every generated app: the monorepo workflow (`.github/workflows/ci.yml` at the repo root), `docs/adr/0001-monorepo-and-init.md`, `docs/adr/0002-frameworks.md`, and `packages/create-reactloom`. An SPA also excludes `next.json`, `expo.json`, `next.config.ts`, `app.json`, Nest config, and the SSR and mobile Cursor rules. SSR excludes the Vite and Expo presets. Mobile excludes the Vite and Next presets. The copied `@reactloom/tsconfig` `package.json` exports only the presets that were copied.
+
+Listing `biome.json`, `lefthook.yml`, `commitlint.config.mjs`, or `.changeset/config.json` adds that tool's devDependency from the root `package.json`. Omitting one removes the dependency and any script that runs it (`lint`, `changeset`, `version-packages`). Dependencies and scripts for a framework whose preset is not listed (`next`, `expo`, `vite`, Nest) are removed. The Changesets `ignore` list is rewritten to the new project name.
+
+### Add a file to a template
+
+- A file that belongs only to that app (a route, a component, the template's own CI workflow) goes in `templates/<id>/`. The CLI copies the template directory. Do not also list it under `configs`.
+- A shared package, TypeScript preset, repo-root config, AI file, or ADR is included by adding it to `templates/<id>/template.json`.
+- A tsconfig preset must include the presets it extends. `vite.json`, `next.json`, and `expo.json` extend `react.json`, which extends `base.json`. Copying `api-client` requires `node.json`, because the client extends `@reactloom/tsconfig/node.json`.
+- Set `docker` to `true` only when that template should keep a Dockerfile. SSR is the only template that does.
+- `ci` is the template-relative workflow path (`.github/workflows/ci.yml`). The monorepo workflow is never copied over it.
+- `ai.rules` lists Cursor rule filenames from `.cursor/rules/`. Add a rule there only for the templates it applies to.
+- `ai.pointers` lists repo-root files such as `CLAUDE.md`.
+- `docs` lists ADR paths such as `docs/adr/0004-api-client.md`.
 
 ## Conventions
 

@@ -54,6 +54,9 @@ Templates:
   ssr      Next.js SSR with session cookies and Docker
   mobile   Expo / React Native
 
+Each template's template.json lists the shared packages, configs, AI files,
+and docs that are copied. Files for other templates are left out.
+
 Options:
   -t, --template <id>   Template to copy
   -y, --yes             Skip prompts (requires name and template)

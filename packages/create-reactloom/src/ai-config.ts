@@ -8,14 +8,6 @@ const TEMPLATE_PACKAGE: Record<TemplateId, string> = {
   mobile: '@reactloom/template-mobile',
 }
 
-export const RULES_FOR_TEMPLATE: Record<TemplateId, readonly string[]> = {
-  spa: ['general.mdc', 'spa.mdc', 'testing.mdc'],
-  ssr: ['general.mdc', 'ssr.mdc', 'testing.mdc'],
-  mobile: ['general.mdc', 'mobile.mdc', 'testing.mdc'],
-}
-
-const POINTER_FILES = ['CLAUDE.md', '.github/copilot-instructions.md', '.cursor/mcp.json'] as const
-
 export function adaptAiText(contents: string, template: TemplateId, projectName: string): string {
   const directoryPrefix = `templates/${template}/`
   const rewritten = contents
@@ -57,6 +49,8 @@ export async function installAiConfig(options: {
   directory: string
   template: TemplateId
   projectName: string
+  rules: readonly string[]
+  pointers: readonly string[]
 }): Promise<void> {
   const agentsPath = path.join(options.directory, 'AGENTS.md')
   const agents = await readFile(agentsPath, 'utf8')
@@ -64,7 +58,7 @@ export async function installAiConfig(options: {
 
   const rulesDir = path.join(options.directory, '.cursor', 'rules')
   await mkdir(rulesDir, { recursive: true })
-  for (const rule of RULES_FOR_TEMPLATE[options.template]) {
+  for (const rule of options.rules) {
     const source = await readFile(path.join(options.repoRoot, '.cursor', 'rules', rule), 'utf8')
     await writeFile(
       path.join(rulesDir, rule),
@@ -72,7 +66,7 @@ export async function installAiConfig(options: {
     )
   }
 
-  for (const relative of POINTER_FILES) {
+  for (const relative of options.pointers) {
     const source = await readFile(path.join(options.repoRoot, relative), 'utf8')
     const destination = path.join(options.directory, relative)
     await mkdir(path.dirname(destination), { recursive: true })

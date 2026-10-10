@@ -1,5 +1,31 @@
 {
   "id": "spa",
   "description": "Vite SPA with TanStack Router, TanStack Query, and a session-guarded feature.",
-  "strip": ["template.json"]
+  "strip": ["template.json"],
+  "packages": {
+    "api-client": true,
+    "tsconfig": ["base.json", "react.json", "vite.json", "node.json"]
+  },
+  "configs": [
+    ".npmrc",
+    ".editorconfig",
+    "biome.json",
+    "lefthook.yml",
+    "commitlint.config.mjs",
+    ".changeset/config.json",
+    ".changeset/README.md",
+    "renovate.json"
+  ],
+  "ci": ".github/workflows/ci.yml",
+  "docker": false,
+  "ai": {
+    "pointers": ["CLAUDE.md", ".github/copilot-instructions.md", ".cursor/mcp.json"],
+    "rules": ["general.mdc", "spa.mdc", "testing.mdc"]
+  },
+  "docs": [
+    "docs/adr/0003-sessions.md",
+    "docs/adr/0004-api-client.md",
+    "docs/adr/0005-tooling.md",
+    "docs/adr/0006-ai-collaboration.md"
+  ]
 }

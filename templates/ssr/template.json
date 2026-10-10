@@ -9,7 +9,33 @@
     {
       "file": "next.config.ts",
       "from": "path.join(import.meta.dirname, '../..')",
-      "to": "import.meta.dirname"
+      "to": "path.join(import.meta.dirname)"
     }
+  ],
+  "packages": {
+    "api-client": true,
+    "tsconfig": ["base.json", "react.json", "next.json", "node.json"]
+  },
+  "configs": [
+    ".npmrc",
+    ".editorconfig",
+    "biome.json",
+    "lefthook.yml",
+    "commitlint.config.mjs",
+    ".changeset/config.json",
+    ".changeset/README.md",
+    "renovate.json"
+  ],
+  "ci": ".github/workflows/ci.yml",
+  "docker": true,
+  "ai": {
+    "pointers": ["CLAUDE.md", ".github/copilot-instructions.md", ".cursor/mcp.json"],
+    "rules": ["general.mdc", "ssr.mdc", "testing.mdc"]
+  },
+  "docs": [
+    "docs/adr/0003-sessions.md",
+    "docs/adr/0004-api-client.md",
+    "docs/adr/0005-tooling.md",
+    "docs/adr/0006-ai-collaboration.md"
   ]
 }

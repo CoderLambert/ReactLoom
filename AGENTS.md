@@ -4,7 +4,7 @@ This file is the source of truth for coding agents. Tool-specific files point he
 
 ## Architecture
 
-ReactLoom is a pnpm workspace. Templates are developed in-tree and copied by `create-reactloom` into standalone projects. Shared code lives in `packages/` and is copied with the template, so a generated app does not stay coupled to this git repo.
+ReactLoom is a pnpm workspace. Templates are developed in-tree and copied by `create-reactloom` into standalone projects. Shared code lives in `packages/`. The CLI copies only what that template's `template.json` lists, so a generated app does not stay coupled to this git repo and does not receive other templates' files.
 
 | Path | Role |
 | --- | --- |
@@ -54,6 +54,21 @@ From the repository root:
 | `pnpm create-reactloom` | Same CLI, rebuilding it first |
 
 `create-reactloom` is a root devDependency, so `pnpm exec create-reactloom` works from the repository root. The generated app is created in that current directory, or at the path you pass (`../outside/web`). It is not created inside `packages/create-reactloom`. `pnpm create` is pnpm's built-in initializer and does not run this CLI.
+
+Template choice is still the interactive prompt or `--template spa|ssr|mobile`. What gets copied is `templates/<id>/template.json`:
+
+| Field | Selects |
+| --- | --- |
+| `packages.api-client` | `packages/api-client` when `true` |
+| `packages.tsconfig` | Preset filenames. The copied package exports only these. SPA is `base.json`, `react.json`, `vite.json`, `node.json` (not `next.json` or `expo.json`). SSR swaps in `next.json`. Mobile swaps in `expo.json`. Every template that copies the API client lists `node.json`. |
+| `configs` | Repo-root files: `.npmrc`, `.editorconfig`, `biome.json`, `lefthook.yml`, `commitlint.config.mjs`, `.changeset/config.json`, `.changeset/README.md`, `renovate.json` |
+| `ci` | The template's own `.github/workflows/ci.yml`. The monorepo workflow is not copied. |
+| `docker` | `true` only for SSR, which keeps `Dockerfile` |
+| `ai.pointers` | `CLAUDE.md`, `.github/copilot-instructions.md`, `.cursor/mcp.json` |
+| `ai.rules` | That template's Cursor rules only (`general` plus `spa`, `ssr`, or `mobile`, plus `testing`) |
+| `docs` | ADRs 0003, 0004, 0005, and 0006. ADR 0001 and 0002 stay in this repo. |
+
+To add a shared file to a template, put its repo-root path (or preset filename) in that template's `template.json`. A file that lives only in the template directory is copied with the template; do not list it under `configs`. Include every tsconfig preset the new preset extends. Listing Biome, Lefthook, Commitlint, or Changesets also adds that tool's devDependency from the root `package.json`, and Lefthook is written to `onlyBuiltDependencies`. Leaving a tool out removes its devDependency and the `lint`, `changeset`, or `version-packages` script that would call it. Nest, Next, Expo, and Vite dependencies and scripts are removed when that framework's preset is not listed. Do not give an SPA a Nest config, `next.json`, or `expo.json`.
 
 Inside a template directory, `pnpm dev`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, and `pnpm build` run for that package. SPA and SSR also have `pnpm test:e2e:setup` and `pnpm test:e2e`.
 

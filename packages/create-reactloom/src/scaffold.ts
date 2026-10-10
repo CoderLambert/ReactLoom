@@ -3,7 +3,16 @@ import { cp, mkdir, readFile, rename, rm, stat, writeFile } from 'node:fs/promis
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { installAiConfig } from './ai-config.js'
-import { findRepoRoot, readManifest, type TemplateId } from './templates.js'
+import {
+  DOCKER_FILES,
+  type PackageJson,
+  pruneProjectPackage,
+  pruneTsconfigPackage,
+  rewriteChangesetConfig,
+  unselectedFrameworkFiles,
+  workspaceYaml,
+} from './selection.js'
+import { findRepoRoot, readManifest, type TemplateId, type TemplateManifest } from './templates.js'
 
 const SKIP_DIRS = new Set([
   'node_modules',
@@ -51,11 +60,94 @@ async function copyFiltered(source: string, destination: string): Promise<void> 
   })
 }
 
-async function rewritePackageName(directory: string, name: string): Promise<void> {
+async function copyRepoPath(repoRoot: string, relative: string, directory: string): Promise<void> {
+  const source = path.join(repoRoot, relative)
+  try {
+    await stat(source)
+  } catch {
+    throw new Error(`Manifest path does not exist: ${relative}`)
+  }
+  const destination = path.join(directory, relative)
+  await mkdir(path.dirname(destination), { recursive: true })
+  await copyFiltered(source, destination)
+}
+
+async function copySharedPackages(
+  repoRoot: string,
+  directory: string,
+  manifest: TemplateManifest,
+): Promise<void> {
+  await mkdir(path.join(directory, 'packages'), { recursive: true })
+  if (manifest.packages['api-client']) {
+    await copyFiltered(
+      path.join(repoRoot, 'packages', 'api-client'),
+      path.join(directory, 'packages', 'api-client'),
+    )
+  }
+  if (manifest.packages.tsconfig.length === 0) return
+
+  const sourceDir = path.join(repoRoot, 'packages', 'tsconfig')
+  const destDir = path.join(directory, 'packages', 'tsconfig')
+  await mkdir(destDir, { recursive: true })
+  await copyFiltered(path.join(sourceDir, 'package.json'), path.join(destDir, 'package.json'))
+  for (const preset of manifest.packages.tsconfig) {
+    const relative = path.posix.join('packages/tsconfig', preset)
+    try {
+      await stat(path.join(sourceDir, preset))
+    } catch {
+      throw new Error(`Manifest path does not exist: ${relative}`)
+    }
+    await copyFiltered(path.join(sourceDir, preset), path.join(destDir, preset))
+  }
+  const packagePath = path.join(destDir, 'package.json')
+  const pkg = JSON.parse(await readFile(packagePath, 'utf8')) as PackageJson
+  const pruned = pruneTsconfigPackage(pkg, manifest.packages.tsconfig)
+  await writeFile(packagePath, `${JSON.stringify(pruned, null, 2)}\n`)
+}
+
+async function copyManifestFiles(
+  repoRoot: string,
+  directory: string,
+  relativePaths: readonly string[],
+): Promise<void> {
+  for (const relative of relativePaths) {
+    if (relative === '.github/workflows/ci.yml') {
+      throw new Error(
+        'List the template CI workflow in template.json "ci". Do not copy the monorepo workflow.',
+      )
+    }
+    await copyRepoPath(repoRoot, relative, directory)
+  }
+}
+
+async function writeProjectPackage(
+  directory: string,
+  name: string,
+  manifest: TemplateManifest,
+  repoRoot: string,
+): Promise<void> {
   const packagePath = path.join(directory, 'package.json')
-  const pkg = JSON.parse(await readFile(packagePath, 'utf8')) as { name?: string }
-  pkg.name = name
-  await writeFile(packagePath, `${JSON.stringify(pkg, null, 2)}\n`)
+  const pkg = JSON.parse(await readFile(packagePath, 'utf8')) as PackageJson
+  const rootPkg = JSON.parse(
+    await readFile(path.join(repoRoot, 'package.json'), 'utf8'),
+  ) as PackageJson
+  const versions = { ...(rootPkg.dependencies ?? {}), ...(rootPkg.devDependencies ?? {}) }
+  const pruned = pruneProjectPackage({ ...pkg, name }, manifest, versions)
+  await writeFile(packagePath, `${JSON.stringify(pruned, null, 2)}\n`)
+}
+
+async function rewriteChangesetIgnore(directory: string, projectName: string): Promise<void> {
+  const configPath = path.join(directory, '.changeset', 'config.json')
+  try {
+    await stat(configPath)
+  } catch {
+    return
+  }
+  const config = JSON.parse(await readFile(configPath, 'utf8')) as { ignore?: string[] }
+  await writeFile(
+    configPath,
+    `${JSON.stringify(rewriteChangesetConfig(config, projectName), null, 2)}\n`,
+  )
 }
 
 export async function scaffold(options: ScaffoldOptions): Promise<void> {
@@ -67,27 +159,23 @@ export async function scaffold(options: ScaffoldOptions): Promise<void> {
   const repoRoot = await findRepoRoot(here)
   const templateDir = path.join(repoRoot, 'templates', options.template)
   const manifest = await readManifest(templateDir)
+  if (manifest.id !== options.template) {
+    throw new Error(`template.json id "${manifest.id}" does not match ${options.template}.`)
+  }
 
   await copyFiltered(templateDir, options.directory)
-  await mkdir(path.join(options.directory, 'packages'), { recursive: true })
-  await copyFiltered(
-    path.join(repoRoot, 'packages', 'api-client'),
-    path.join(options.directory, 'packages', 'api-client'),
-  )
-  await copyFiltered(
-    path.join(repoRoot, 'packages', 'tsconfig'),
-    path.join(options.directory, 'packages', 'tsconfig'),
-  )
-  await copyFiltered(path.join(repoRoot, 'biome.json'), path.join(options.directory, 'biome.json'))
-  await copyFiltered(
-    path.join(repoRoot, '.editorconfig'),
-    path.join(options.directory, '.editorconfig'),
-  )
+  await copySharedPackages(repoRoot, options.directory, manifest)
+  await copyManifestFiles(repoRoot, options.directory, manifest.configs)
+  await copyManifestFiles(repoRoot, options.directory, manifest.docs)
 
-  await writeFile(
-    path.join(options.directory, 'pnpm-workspace.yaml'),
-    'packages:\n  - "packages/*"\n',
-  )
+  const workflow = path.join(options.directory, manifest.ci)
+  try {
+    await stat(workflow)
+  } catch {
+    throw new Error(`Template is missing its CI workflow: ${manifest.ci}`)
+  }
+
+  await writeFile(path.join(options.directory, 'pnpm-workspace.yaml'), workspaceYaml(manifest))
 
   for (const [from, to] of Object.entries(manifest.rename ?? {})) {
     await rename(path.join(options.directory, from), path.join(options.directory, to))
@@ -106,12 +194,24 @@ export async function scaffold(options: ScaffoldOptions): Promise<void> {
     await rm(path.join(options.directory, relative), { force: true, recursive: true })
   }
 
-  await rewritePackageName(options.directory, options.name)
+  if (!manifest.docker) {
+    for (const relative of DOCKER_FILES) {
+      await rm(path.join(options.directory, relative), { force: true })
+    }
+  }
+  for (const relative of unselectedFrameworkFiles(manifest)) {
+    await rm(path.join(options.directory, relative), { force: true })
+  }
+
+  await writeProjectPackage(options.directory, options.name, manifest, repoRoot)
+  await rewriteChangesetIgnore(options.directory, options.name)
   await installAiConfig({
     repoRoot,
     directory: options.directory,
     template: options.template,
     projectName: options.name,
+    rules: manifest.ai.rules,
+    pointers: manifest.ai.pointers,
   })
 
   if (options.install) {
