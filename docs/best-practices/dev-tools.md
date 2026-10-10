@@ -464,7 +464,7 @@ Expo 没有 `test:e2e` 脚本。设备流程是手工或本机 Maestro：`.maest
 | baseURL | `http://127.0.0.1:4317` | `http://127.0.0.1:4318` | `appId: com.reactloom.app` |
 | webServer 环境 | `VITE_ENABLE_MSW=true`，`VITE_API_BASE_URL` 指向 4317，`VITE_DEVTOOLS=false`，`REACTLOOM_OPEN=false` | `NEXT_PUBLIC_DEVTOOLS=false`，`REACTLOOM_OPEN=false`。不设置 `NEXT_PUBLIC_ENABLE_MSW`，因此保持默认 false | 无 |
 | 项目 | 只有 Desktop Chrome | 同左 | 无 |
-| CI | 模板工作流和 monorepo 的 `verify (spa)` | `verify (ssr)`。模板工作流的缓存键带 `playwright-ssr-` 前缀 | `verify (mobile)` 只到 `pnpm build` |
+| CI | 模板工作流和 monorepo 的 `verify (spa)` | `verify (ssr)`。缓存键与 SPA 相同：`playwright-` 加系统、`@playwright/test` 版本和锁文件哈希 | `verify (mobile)` 只到构建，没有 Playwright |
 | 清单 | `template.json` 的 `e2e.tool` 为 `playwright` | 同左 | `maestro` |
 
 `REACTLOOM_OPEN=false` 避免测试时弹出浏览器窗口。SPA 的 `server.open` 和 SSR 的 `scripts/open-browser.mjs` 都会看这个变量。
