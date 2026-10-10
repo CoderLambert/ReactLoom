@@ -102,6 +102,8 @@
     "docs/best-practices/data-fetching.md",
     "docs/best-practices/styling.md",
     "docs/best-practices/performance.md",
-    "docs/best-practices/pitfalls.md"
+    "docs/best-practices/pitfalls.md",
+    "docs/best-practices/workflow-research.md",
+    "docs/best-practices/dev-tools.md"
   ]
 }

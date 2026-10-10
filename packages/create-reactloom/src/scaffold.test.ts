@@ -454,6 +454,8 @@ describe('create-reactloom', () => {
         'docs/best-practices/styling.md',
         'docs/best-practices/performance.md',
         'docs/best-practices/pitfalls.md',
+        'docs/best-practices/workflow-research.md',
+        'docs/best-practices/dev-tools.md',
       ]
       for (const practice of practiceFiles) {
         expect(manifest.docs).toContain(practice)
@@ -472,6 +474,15 @@ describe('create-reactloom', () => {
       )
       const readme = await readFile(path.join(directory, 'README.md'), 'utf8')
       expect(readme).toContain('docs/best-practices/README.md')
+      const research = await readFile(
+        path.join(directory, 'docs/best-practices/workflow-research.md'),
+        'utf8',
+      )
+      const tools = await readFile(path.join(directory, 'docs/best-practices/dev-tools.md'), 'utf8')
+      expect(research).toContain('https://github.com/CoderLambert/ReactLoom/issues/2')
+      expect(research).toContain('未实现')
+      expect(tools).toContain('code-inspector-plugin')
+      expect(tools).toContain('未实现')
       if (template === 'ssr') {
         expect(fetching).toContain('HydrationBoundary')
         expect(styling).toContain('@theme')

@@ -70,7 +70,7 @@ Template choice is still the interactive prompt or `--template spa|ssr|mobile`. 
 | `docker` | `true` only for SSR, which keeps `Dockerfile` |
 | `ai.pointers` | `CLAUDE.md`, `.github/copilot-instructions.md`, `.cursor/mcp.json` |
 | `ai.rules` | That template's Cursor rules only (`general` plus `spa`, `ssr`, or `mobile`, plus `testing`) |
-| `docs` | `docs/getting-started.md`, `docs/best-practices/` (one file per topic, filtered per template), plus ADRs 0003, 0004, 0005, and 0006. ADR 0001 and 0002 stay in this repo. |
+| `docs` | `docs/getting-started.md`, `docs/best-practices/` (one file per topic, filtered per template; `workflow-research.md` and `dev-tools.md` are copied in full), plus ADRs 0003, 0004, 0005, and 0006. ADR 0001 and 0002 stay in this repo. |
 | `clickToSource` | Inspector package, exact version, bundler config, `.env.development`, and `scripts/open-in-editor.mjs`. `configs` also copies `scripts/code` and `scripts/code.cmd`. SPA and SSR use `code-inspector-plugin` 2.0.9. Mobile uses `react-native-dev-inspector` 1.1.0. The env file leaves the editor unset. The launcher opens a listening Neovim, then Cursor or VS Code. |
 | `reactScan` | `react-scan` 0.5.7. SPA config is `src/main.tsx` (import before React). SSR config is `src/app/react-scan.tsx` (client component, import before React, top-most import in `layout.tsx`). Mobile sets `enabled` to false: 0.5.7 has no React Native export, and the native preview is unmerged. Production builds alias the web import to an empty module. |
 

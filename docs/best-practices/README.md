@@ -10,6 +10,10 @@ These notes match the code in this project. Each file is one topic. Start with t
 - [Styling](styling.md) covers<!-- reactloom:spa --> Tailwind v4 tokens, shadcn and `cva` variants, `cn()`, and dark mode.<!-- /reactloom:spa --><!-- reactloom:ssr --> Tailwind v4 tokens, `cva` variants, and `cn()`.<!-- /reactloom:ssr --><!-- reactloom:mobile --> React Native styles.<!-- /reactloom:mobile -->
 - [Performance](performance.md) covers code splitting, memoization, images, and bundle size.<!-- reactloom:spa --> It also covers React Scan.<!-- /reactloom:spa --><!-- reactloom:ssr --> It also covers React Scan.<!-- /reactloom:ssr --><!-- reactloom:mobile --> It also covers why-did-you-render.<!-- /reactloom:mobile -->
 - [Common pitfalls](pitfalls.md) lists mistakes this code is set up to avoid, and the fix for each.
+- [Workflow research（工作流调研）](workflow-research.md) compares community workflow choices with what this repo runs. The page is in Chinese. It mirrors GitHub issue [#2](https://github.com/CoderLambert/ReactLoom/issues/2).
+- [Dev tools（开发工具目录）](dev-tools.md) lists every productivity tool in this repo, with commands, config paths, and a per-template table. The page is in Chinese.
+
+`workflow-research.md` and `dev-tools.md` are copied in full into every generated project. They compare SPA, SSR, and Expo on purpose, so they do not use template-only sections.
 
 <!-- reactloom:spa -->
 Paths in the other files are relative to this project. The task feature in `templates/spa/src/features/tasks` is the sample to copy.
