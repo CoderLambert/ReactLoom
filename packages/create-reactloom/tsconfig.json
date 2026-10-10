@@ -1,0 +1,9 @@
+{
+  "extends": "@reactloom/tsconfig/node.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "noEmit": true,
+    "types": ["node"]
+  },
+  "include": ["src"]
+}

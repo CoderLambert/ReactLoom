@@ -1,0 +1,60 @@
+{
+  "appName": "ReactLoom",
+  "skip": "Skip to content",
+  "nav": {
+    "home": "Home",
+    "tasks": "Tasks",
+    "signIn": "Sign in",
+    "signOut": "Sign out"
+  },
+  "home": {
+    "eyebrow": "SPA template",
+    "title": "A workshop for production React.",
+    "body": "This Vite app is the ReactLoom SPA: typed routes, a session guard, and one feature that talks to the network through TanStack Query.",
+    "enter": "Enter the workshop",
+    "api": "Retries, timeouts, and normalized errors live in the shared API client.",
+    "query": "Tasks use a query key factory, an optimistic mutation, and visible loading and error states.",
+    "a11y": "Landmarks, labels, and axe checks ship with the template."
+  },
+  "login": {
+    "title": "Sign in",
+    "hint": "Fixture account: ada@reactloom.dev / loom-demo",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Sign in",
+    "submitting": "Signing in…"
+  },
+  "tasks": {
+    "title": "Warp board",
+    "body": "Jobs for this session. The list is cached, and creating a task updates it before the response returns.",
+    "empty": "Nothing on the board yet.",
+    "titleLabel": "Task title",
+    "placeholder": "Beat the weft",
+    "add": "Add task",
+    "adding": "Adding…",
+    "retry": "Try again",
+    "error": "The task list could not be loaded.",
+    "loading": "Loading tasks…",
+    "markDone": "Mark done",
+    "reopen": "Reopen",
+    "all": "All",
+    "open": "Open",
+    "done": "Done"
+  },
+  "theme": {
+    "toDark": "Use dark theme",
+    "toLight": "Use light theme"
+  },
+  "language": {
+    "label": "Language",
+    "en": "English",
+    "es": "Español"
+  },
+  "errors": {
+    "title": "This view hit a snag.",
+    "body": "The rest of the app is still available. Try the view again, or go back home.",
+    "retry": "Try again",
+    "home": "Go home",
+    "notFound": "That page is not on the loom."
+  }
+}

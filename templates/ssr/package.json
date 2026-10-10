@@ -1,0 +1,48 @@
+{
+  "name": "@reactloom/template-ssr",
+  "version": "0.1.0",
+  "private": true,
+  "description": "ReactLoom production SSR template.",
+  "packageManager": "pnpm@10.33.3",
+  "scripts": {
+    "dev": "next dev --hostname 0.0.0.0 --port 4318",
+    "build": "next build && node scripts/check-bundle-budget.mjs",
+    "start": "next start --hostname 0.0.0.0 --port 4318",
+    "lint": "biome check .",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "analyze": "ANALYZE=true next build"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "5.9.1",
+    "@reactloom/api-client": "workspace:*",
+    "@sentry/nextjs": "11.6.0",
+    "@t3-oss/env-nextjs": "0.13.11",
+    "@tanstack/react-query": "5.104.1",
+    "class-variance-authority": "0.7.1",
+    "clsx": "2.1.1",
+    "i18next": "26.4.3",
+    "jose": "6.2.12",
+    "next": "16.4.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "react-hook-form": "7.89.0",
+    "react-i18next": "17.0.16",
+    "tailwind-merge": "3.7.0",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
+    "@next/bundle-analyzer": "16.4.0",
+    "@playwright/test": "1.64.0",
+    "@reactloom/tsconfig": "workspace:*",
+    "@tailwindcss/postcss": "4.3.3",
+    "@types/node": "22.20.5",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "tailwindcss": "4.3.3",
+    "typescript": "7.0.2",
+    "vitest": "5.0.3"
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended", "helpers:pinGitHubActionDigests"],
+  "description": "Weekly grouped updates for the ReactLoom pnpm workspace.",
+  "dependencyDashboard": true,
+  "timezone": "Asia/Shanghai",
+  "schedule": ["before 6am on Monday"],
+  "labels": ["dependencies"],
+  "rangeStrategy": "bump",
+  "postUpdateOptions": ["pnpmDedupe"],
+  "lockFileMaintenance": {
+    "enabled": true,
+    "automerge": true,
+    "platformAutomerge": true,
+    "schedule": ["before 6am on Monday"]
+  },
+  "packageRules": [
+    {
+      "description": "Automerge minor, patch, pin, and digest updates after CI passes.",
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true,
+      "platformAutomerge": true
+    },
+    {
+      "description": "Automerge non-major devDependency updates after CI passes.",
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true,
+      "platformAutomerge": true
+    },
+    {
+      "description": "Major updates stay open for review.",
+      "matchUpdateTypes": ["major"],
+      "automerge": false,
+      "dependencyDashboardApproval": false,
+      "labels": ["dependencies", "major"]
+    },
+    {
+      "groupName": "ESLint",
+      "matchPackageNames": ["/^eslint/", "/^@eslint\\//", "/^@eslint-community\\//"]
+    },
+    {
+      "groupName": "typescript-eslint",
+      "matchPackageNames": ["/^@typescript-eslint\\//", "typescript-eslint"]
+    },
+    {
+      "groupName": "TypeScript",
+      "matchPackageNames": ["typescript", "/^@types\\/node$/"]
+    },
+    {
+      "groupName": "Vitest",
+      "matchPackageNames": ["vitest", "/^@vitest\\//"]
+    },
+    {
+      "groupName": "Playwright",
+      "matchPackageNames": ["playwright", "@playwright/test", "/^@axe-core\\//", "axe-core"]
+    },
+    {
+      "groupName": "Tailwind CSS",
+      "matchPackageNames": ["tailwindcss", "tailwind-merge", "/^@tailwindcss\\//"]
+    },
+    {
+      "groupName": "TanStack",
+      "matchPackageNames": ["/^@tanstack\\//"]
+    },
+    {
+      "groupName": "React",
+      "matchPackageNames": ["react", "react-dom", "@types/react", "@types/react-dom"]
+    },
+    {
+      "groupName": "Expo and React Native",
+      "matchPackageNames": [
+        "expo",
+        "/^expo-/",
+        "/^@expo\\//",
+        "react-native",
+        "react-native-web",
+        "/^react-native-/",
+        "/^@react-native\\//",
+        "/^@react-native-community\\//",
+        "babel-preset-expo",
+        "jest-expo",
+        "/^@babel\\//"
+      ]
+    },
+    {
+      "groupName": "Next.js",
+      "matchPackageNames": ["next", "/^@next\\//"]
+    }
+  ]
+}

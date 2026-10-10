@@ -1,0 +1,9 @@
+appId: com.reactloom.app
+---
+- launchApp
+- tapOn: Email
+- inputText: ada@reactloom.dev
+- tapOn: Password
+- inputText: loom-demo
+- tapOn: Sign in
+- assertVisible: Warp board

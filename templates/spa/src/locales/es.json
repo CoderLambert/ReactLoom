@@ -1,0 +1,60 @@
+{
+  "appName": "ReactLoom",
+  "skip": "Saltar al contenido",
+  "nav": {
+    "home": "Inicio",
+    "tasks": "Tareas",
+    "signIn": "Entrar",
+    "signOut": "Salir"
+  },
+  "home": {
+    "eyebrow": "Plantilla SPA",
+    "title": "Un taller para React de producción.",
+    "body": "Esta app de Vite es la SPA de ReactLoom: rutas tipadas, una sesión protegida y una función que habla con la red a través de TanStack Query.",
+    "enter": "Entrar al taller",
+    "api": "Reintentos, tiempos de espera y errores normalizados viven en el cliente de API compartido.",
+    "query": "Las tareas usan una fábrica de claves, una mutación optimista y estados visibles de carga y error.",
+    "a11y": "Referencias, etiquetas y comprobaciones de axe vienen con la plantilla."
+  },
+  "login": {
+    "title": "Entrar",
+    "hint": "Cuenta de prueba: ada@reactloom.dev / loom-demo",
+    "email": "Correo",
+    "password": "Contraseña",
+    "submit": "Entrar",
+    "submitting": "Entrando…"
+  },
+  "tasks": {
+    "title": "Tablero de urdimbre",
+    "body": "Trabajo de esta sesión. La lista queda en caché y crear una tarea la actualiza antes de que vuelva la respuesta.",
+    "empty": "Todavía no hay nada en el tablero.",
+    "titleLabel": "Título de la tarea",
+    "placeholder": "Apretar la trama",
+    "add": "Añadir tarea",
+    "adding": "Añadiendo…",
+    "retry": "Reintentar",
+    "error": "No se pudo cargar la lista de tareas.",
+    "loading": "Cargando tareas…",
+    "markDone": "Marcar hecha",
+    "reopen": "Reabrir",
+    "all": "Todas",
+    "open": "Abiertas",
+    "done": "Hechas"
+  },
+  "theme": {
+    "toDark": "Usar tema oscuro",
+    "toLight": "Usar tema claro"
+  },
+  "language": {
+    "label": "Idioma",
+    "en": "English",
+    "es": "Español"
+  },
+  "errors": {
+    "title": "Esta vista encontró un problema.",
+    "body": "El resto de la app sigue disponible. Prueba de nuevo o vuelve al inicio.",
+    "retry": "Reintentar",
+    "home": "Ir al inicio",
+    "notFound": "Esa página no está en el telar."
+  }
+}

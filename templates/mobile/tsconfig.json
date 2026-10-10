@@ -1,0 +1,10 @@
+{
+  "extends": "@reactloom/tsconfig/expo.json",
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "types": []
+  },
+  "include": ["app", "src", "expo-env.d.ts"]
+}

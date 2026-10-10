@@ -1,0 +1,29 @@
+{
+  "name": "create-reactloom",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Scaffold a ReactLoom SPA, SSR, or mobile project.",
+  "type": "module",
+  "bin": {
+    "create-reactloom": "./dist/cli.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "prepare": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "start": "node dist/cli.js"
+  },
+  "dependencies": {
+    "@clack/prompts": "1.8.1"
+  },
+  "devDependencies": {
+    "@reactloom/tsconfig": "workspace:*",
+    "@types/node": "22.20.5",
+    "typescript": "7.0.2",
+    "vitest": "5.0.3"
+  }
+}

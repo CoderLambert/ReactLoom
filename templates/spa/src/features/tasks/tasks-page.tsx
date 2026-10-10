@@ -1,0 +1,117 @@
+import { standardSchemaResolver } from '@hookform/resolvers/standard-schema'
+import { Link, useSearch } from '@tanstack/react-router'
+import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { useCreateTask, useSetTaskStatus, useTasks } from '@/features/tasks/hooks'
+import { type CreateTaskInput, createTaskSchema } from '@/features/tasks/schema'
+import { isApiError } from '@/lib/api'
+
+const filters = ['all', 'open', 'done'] as const
+
+export function TasksPage() {
+  const { t } = useTranslation()
+  const { status } = useSearch({ from: '/tasks' })
+  const tasks = useTasks()
+  const create = useCreateTask()
+  const update = useSetTaskStatus()
+  const form = useForm<CreateTaskInput>({
+    resolver: standardSchemaResolver(createTaskSchema),
+    defaultValues: { title: '' },
+  })
+
+  const visible = (tasks.data ?? []).filter((task) => status === 'all' || task.status === status)
+  const errorMessage = isApiError(tasks.error)
+    ? tasks.error.message
+    : tasks.isError
+      ? t('tasks.error')
+      : null
+
+  return (
+    <section className="space-y-8">
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div className="max-w-xl space-y-2">
+          <h1 className="text-5xl">{t('tasks.title')}</h1>
+          <p className="text-muted">{t('tasks.body')}</p>
+        </div>
+        <nav className="flex gap-2" aria-label={t('tasks.title')}>
+          {filters.map((filter) => (
+            <Link
+              key={filter}
+              to="/tasks"
+              search={{ status: filter }}
+              aria-current={status === filter ? 'page' : undefined}
+              className={
+                status === filter
+                  ? 'rounded-full bg-ink px-3 py-1 text-sm text-linen'
+                  : 'rounded-full px-3 py-1 text-sm ring-1 ring-line'
+              }
+            >
+              {t(`tasks.${filter}`)}
+            </Link>
+          ))}
+        </nav>
+      </div>
+
+      <form
+        className="flex flex-col gap-3 sm:flex-row sm:items-end"
+        onSubmit={form.handleSubmit(async (values) => {
+          await create.mutateAsync(values.title)
+          form.reset()
+        })}
+      >
+        <div className="grow space-y-2">
+          <Label htmlFor="title">{t('tasks.titleLabel')}</Label>
+          <Input id="title" placeholder={t('tasks.placeholder')} {...form.register('title')} />
+          {form.formState.errors.title ? (
+            <p className="text-sm text-copper" role="alert">
+              {form.formState.errors.title.message}
+            </p>
+          ) : null}
+        </div>
+        <Button type="submit" disabled={create.isPending}>
+          {create.isPending ? t('tasks.adding') : t('tasks.add')}
+        </Button>
+      </form>
+
+      {tasks.isPending ? <p>{t('tasks.loading')}</p> : null}
+      {errorMessage ? (
+        <div role="alert" className="space-y-3">
+          <p>{errorMessage}</p>
+          <Button variant="secondary" onClick={() => tasks.refetch()}>
+            {t('tasks.retry')}
+          </Button>
+        </div>
+      ) : null}
+      {!tasks.isPending && !tasks.isError && visible.length === 0 ? (
+        <p>{t('tasks.empty')}</p>
+      ) : null}
+
+      <ul className="divide-y divide-line overflow-hidden rounded-3xl bg-card ring-1 ring-line">
+        {visible.map((task) => (
+          <li key={task.id} className="flex items-center justify-between gap-4 px-4 py-3">
+            <div>
+              <p className={task.status === 'done' ? 'text-muted line-through' : 'font-medium'}>
+                {task.title}
+              </p>
+              <p className="text-xs text-muted">{task.status}</p>
+            </div>
+            <Button
+              variant="ghost"
+              onClick={() =>
+                update.mutate({
+                  id: task.id,
+                  status: task.status === 'done' ? 'open' : 'done',
+                })
+              }
+            >
+              {task.status === 'done' ? t('tasks.reopen') : t('tasks.markDone')}
+            </Button>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
