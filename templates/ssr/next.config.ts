@@ -73,6 +73,7 @@ function webpackWithAliases(entries: Record<string, string>) {
 }
 
 const nextConfig: NextConfig = {
+  // The Next.js dev overlay stays on. productionBrowserSourceMaps stays off.
   allowedDevOrigins: ['127.0.0.1'],
   output: 'standalone',
   outputFileTracingRoot: path.join(import.meta.dirname, '../..'),

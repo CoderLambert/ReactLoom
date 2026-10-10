@@ -2,6 +2,16 @@
 
 Expo SDK 57 and Expo Router. The session token uses `expo-secure-store` on device and `localStorage` on web export. Tasks in fixture mode stay on device; set `EXPO_PUBLIC_USE_FIXTURES=false` to call `@reactloom/api-client`.
 
+## Zero to running
+
+```sh
+pnpm install
+pnpm dev
+pnpm test
+```
+
+`pnpm dev` starts Expo and does not open a browser or a simulator. Press `w` for the web preview. From the ReactLoom repo, `pnpm exec create-reactloom pocket --template mobile --dev` installs and starts this server.
+
 ```sh
 pnpm start
 pnpm lint

@@ -9,6 +9,7 @@ import {
   isDirectInvocation,
   parseCliArgs,
   resolveProjectLocation,
+  resolveStartup,
   run,
 } from './cli.js'
 import { scaffold } from './scaffold.js'
@@ -34,6 +35,39 @@ describe('create-reactloom', () => {
       template: 'ssr',
       yes: true,
       install: true,
+      dev: false,
+    })
+    expect(parseCliArgs(['studio', '--template', 'spa', '--dev'])).toMatchObject({
+      yes: false,
+      install: true,
+      dev: true,
+    })
+  })
+
+  it('starts the dev server only when asked', () => {
+    expect(resolveStartup({ yes: true, install: false, dev: false })).toEqual({
+      install: false,
+      dev: false,
+    })
+    expect(resolveStartup({ yes: true, install: true, dev: false })).toEqual({
+      install: true,
+      dev: false,
+    })
+    expect(resolveStartup({ yes: true, install: true, dev: true })).toEqual({
+      install: true,
+      dev: true,
+    })
+    expect(resolveStartup({ yes: false, install: true, dev: false })).toEqual({
+      install: true,
+      dev: false,
+    })
+    expect(resolveStartup({ yes: false, install: false, dev: false }, 'dev')).toEqual({
+      install: true,
+      dev: true,
+    })
+    expect(resolveStartup({ yes: false, install: false, dev: false }, 'skip')).toEqual({
+      install: false,
+      dev: false,
     })
   })
 
@@ -557,6 +591,10 @@ describe('create-reactloom', () => {
     expect(spaVite).toContain('open-in-editor.mjs')
     expect(spaVite).toContain('activateLauncher')
     expect(spaVite).not.toContain('LAUNCH_EDITOR')
+    expect(spaVite).toContain('REACTLOOM_OPEN')
+    expect(spaVite).toContain('http://127.0.0.1:4317')
+    const spaPlaywright = await readFile(path.join(spa, 'playwright.config.ts'), 'utf8')
+    expect(spaPlaywright).toContain("REACTLOOM_OPEN: 'false'")
     expect(spaVite).not.toContain("bundler: 'turbopack'")
     const spaEnv = await readFile(path.join(spa, '.env.development'), 'utf8')
     expect(spaEnv).toContain('VITE_DEVTOOLS=true')
@@ -608,6 +646,11 @@ describe('create-reactloom', () => {
     const ssrEnv = await readFile(path.join(ssr, '.env.development'), 'utf8')
     expect(ssrEnv).toContain('NEXT_PUBLIC_DEVTOOLS=true')
     expect(ssrEnv).not.toMatch(/^REACT_EDITOR=/m)
+    expect(ssrPkg.scripts.dev).toContain('next dev')
+    const ssrOpener = await readFile(path.join(ssr, 'scripts/open-browser.mjs'), 'utf8')
+    expect(ssrOpener).toContain('REACTLOOM_OPEN')
+    const ssrPlaywright = await readFile(path.join(ssr, 'playwright.config.ts'), 'utf8')
+    expect(ssrPlaywright).toContain("REACTLOOM_OPEN: 'false'")
     expect(ssrPkg.devDependencies['@tanstack/react-router-devtools']).toBeUndefined()
     await expect(stat(path.join(ssr, 'src/app/react-scan.tsx'))).resolves.toBeTruthy()
 

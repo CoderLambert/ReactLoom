@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { spawn } from 'node:child_process'
 import { realpathSync } from 'node:fs'
 import { readFile } from 'node:fs/promises'
 import path from 'node:path'
@@ -13,8 +14,23 @@ type CliOptions = {
   template: string | undefined
   yes: boolean
   install: boolean
+  dev: boolean
   help: boolean
   version: boolean
+}
+
+export type StartupChoice = 'dev' | 'install' | 'skip'
+
+/** `--dev` installs and starts the server. `--yes` without `--dev` never starts it. */
+export function resolveStartup(
+  options: { yes: boolean; install: boolean; dev: boolean },
+  choice?: StartupChoice,
+): { install: boolean; dev: boolean } {
+  if (options.dev) return { install: true, dev: true }
+  if (options.yes || options.install) return { install: options.install, dev: false }
+  if (choice === 'dev') return { install: true, dev: true }
+  if (choice === 'install') return { install: true, dev: false }
+  return { install: false, dev: false }
 }
 
 export function parseCliArgs(argv: string[]): CliOptions {
@@ -24,6 +40,7 @@ export function parseCliArgs(argv: string[]): CliOptions {
       template: { type: 'string', short: 't' },
       yes: { type: 'boolean', short: 'y', default: false },
       install: { type: 'boolean', default: false },
+      dev: { type: 'boolean', default: false },
       help: { type: 'boolean', short: 'h', default: false },
       version: { type: 'boolean', short: 'v', default: false },
     },
@@ -31,11 +48,13 @@ export function parseCliArgs(argv: string[]): CliOptions {
     strict: true,
   })
 
+  const dev = values.dev ?? false
   return {
     name: positionals[0],
     template: values.template,
     yes: values.yes ?? false,
-    install: values.install ?? false,
+    install: (values.install ?? false) || dev,
+    dev,
     help: values.help ?? false,
     version: values.version ?? false,
   }
@@ -61,11 +80,17 @@ Options:
   -t, --template <id>   Template to copy
   -y, --yes             Skip prompts (requires name and template)
       --install         Install dependencies with pnpm
+      --dev             Install dependencies and start the dev server
   -h, --help            Show this help
   -v, --version         Print the CLI version
 
+--dev implies --install. --yes without --dev prints the next commands and
+does not start a server. SPA and SSR open a browser unless CI is set or
+REACTLOOM_OPEN=false. Expo does not open a browser.
+
 Examples:
   pnpm exec create-reactloom
+  pnpm exec create-reactloom studio --template spa --dev
   pnpm exec create-reactloom studio --template spa --yes
   pnpm exec create-reactloom ../outside/web --template ssr --yes --install
 `
@@ -116,7 +141,7 @@ export async function run(argv: string[]): Promise<void> {
 
   let name = options.name
   let template = options.template
-  let install = options.install
+  let startup = resolveStartup(options)
 
   if (!options.yes) {
     p.intro('ReactLoom')
@@ -150,16 +175,25 @@ export async function run(argv: string[]): Promise<void> {
       }
       template = selected
     }
-    if (!options.install) {
-      const shouldInstall = await p.confirm({
-        message: 'Install dependencies with pnpm?',
-        initialValue: true,
+    if (!options.dev && !options.install) {
+      const choice = await p.select({
+        message: 'Install dependencies and start the dev server?',
+        initialValue: 'dev' as const,
+        options: [
+          {
+            value: 'dev' as const,
+            label: 'Install and start',
+            hint: 'pnpm install, then pnpm dev',
+          },
+          { value: 'install' as const, label: 'Install only' },
+          { value: 'skip' as const, label: 'Skip' },
+        ],
       })
-      if (p.isCancel(shouldInstall)) {
+      if (p.isCancel(choice)) {
         p.cancel('Scaffold cancelled.')
         process.exit(0)
       }
-      install = shouldInstall
+      startup = resolveStartup(options, choice)
     }
   }
 
@@ -178,14 +212,35 @@ export async function run(argv: string[]): Promise<void> {
     name: location.name,
     template,
     directory: location.directory,
-    install,
+    install: startup.install,
   })
   spinner?.stop('Project created')
 
   const shown = path.relative(baseDir, location.directory) || '.'
+  if (startup.dev) {
+    const message = [
+      `Starting pnpm dev in ${shown}.`,
+      'SPA and SSR open a browser unless CI is set or REACTLOOM_OPEN=false.',
+      template === 'mobile'
+        ? 'Expo does not open a browser. Press w for the web preview.'
+        : undefined,
+    ]
+      .filter((line): line is string => Boolean(line))
+      .join('\n')
+    if (options.yes) {
+      console.log(`Created ${location.directory}`)
+      console.log(message)
+    } else {
+      p.note(message, 'Next')
+      p.outro('Dev server starting')
+    }
+    await startDevServer(location.directory)
+    return
+  }
+
   const nextSteps = [
     `cd ${shown}`,
-    install ? undefined : 'pnpm install',
+    startup.install ? undefined : 'pnpm install',
     template === 'mobile' ? 'pnpm start' : 'pnpm dev',
     template === 'mobile' ? undefined : 'pnpm test:e2e:setup',
   ].filter((step): step is string => Boolean(step))
@@ -198,6 +253,28 @@ export async function run(argv: string[]): Promise<void> {
 
   p.note(nextSteps.join('\n'), 'Next')
   p.outro('Done')
+}
+
+function startDevServer(cwd: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const child = spawn('pnpm', ['dev'], { cwd, stdio: 'inherit' })
+    const stop = (signal: NodeJS.Signals) => {
+      if (!child.killed) child.kill(signal)
+    }
+    process.on('SIGINT', stop)
+    process.on('SIGTERM', stop)
+    child.on('error', reject)
+    child.on('exit', (code, signal) => {
+      process.off('SIGINT', stop)
+      process.off('SIGTERM', stop)
+      if (signal) {
+        process.kill(process.pid, signal)
+        return
+      }
+      if (code === 0) resolve()
+      else reject(new Error(`pnpm dev exited with code ${code ?? 'unknown'}`))
+    })
+  })
 }
 
 if (isDirectInvocation(process.argv[1], fileURLToPath(import.meta.url))) {

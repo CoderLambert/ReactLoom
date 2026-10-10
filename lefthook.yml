@@ -1,4 +1,6 @@
-# parallel: false runs commands in file order. Biome rewrites staged files before the typecheck.
+# A non-zero exit blocks the commit. parallel: false runs commands in file order.
+# Biome rewrites staged files before the typecheck. The typecheck and tests
+# cover packages changed since HEAD, not the whole repo.
 pre-commit:
   parallel: false
   commands:

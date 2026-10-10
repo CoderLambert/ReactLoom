@@ -4,9 +4,12 @@ import { StatusBar } from 'expo-status-bar'
 import { useState } from 'react'
 import { I18nextProvider } from 'react-i18next'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
+import { DevErrorBoundary } from '@/components/errors/fallback'
 import { AuthProvider } from '@/features/auth/auth-context'
 import { DevInspector } from '@/lib/dev-inspector'
 import { i18n } from '@/lib/i18n'
+
+export { DevErrorBoundary as ErrorBoundary }
 
 export default function RootLayout() {
   const [client] = useState(() => new QueryClient())

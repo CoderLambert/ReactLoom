@@ -2,6 +2,16 @@
 
 Vite, React 19, TanStack Router, TanStack Query, Tailwind CSS v4, and a shadcn-style component set.
 
+## Zero to running
+
+```sh
+pnpm install
+pnpm dev
+pnpm test
+```
+
+`pnpm dev` opens http://127.0.0.1:4317. It stays closed when `CI` is set or `REACTLOOM_OPEN=false`. From the ReactLoom repo, `pnpm exec create-reactloom studio --template spa --dev` installs and starts this server.
+
 ```sh
 pnpm dev          # http://127.0.0.1:4317
 pnpm lint

@@ -76,6 +76,12 @@ export default defineConfig(({ command }) => {
     server: {
       host: '0.0.0.0',
       port: 4317,
+      // The error overlay stays on (Vite's default) and checker adds TypeScript.
+      // Open the app URL, not 0.0.0.0. CI, Playwright, and Storybook keep it closed.
+      open:
+        process.env.CI || process.env.REACTLOOM_OPEN === 'false' || process.env.STORYBOOK === 'true'
+          ? false
+          : 'http://127.0.0.1:4317',
       fs: {
         allow: [searchForWorkspaceRoot(root), root],
       },

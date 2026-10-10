@@ -2,6 +2,16 @@
 
 Next.js 16 App Router with an httpOnly session cookie, security headers, a standalone Docker image, and the shared API client.
 
+## Zero to running
+
+```sh
+pnpm install
+pnpm dev
+pnpm test
+```
+
+`pnpm dev` starts Next.js and opens http://127.0.0.1:4318. `scripts/open-browser.mjs` does the open step, because `next dev` has no open flag. It stays closed when `CI` is set or `REACTLOOM_OPEN=false`. From the ReactLoom repo, `pnpm exec create-reactloom web --template ssr --dev` installs and starts this server.
+
 ```sh
 pnpm dev          # http://127.0.0.1:4318
 pnpm lint

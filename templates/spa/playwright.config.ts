@@ -17,6 +17,7 @@ export default defineConfig({
       VITE_ENABLE_MSW: 'true',
       VITE_API_BASE_URL: 'http://127.0.0.1:4317',
       VITE_DEVTOOLS: 'false',
+      REACTLOOM_OPEN: 'false',
     },
   },
   projects: [

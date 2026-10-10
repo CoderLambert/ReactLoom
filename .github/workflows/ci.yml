@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  verify:
+  packages:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -21,21 +21,78 @@ jobs:
         with:
           node-version: 22
           cache: pnpm
+      - name: Install
+        run: pnpm install --frozen-lockfile
+      - name: Lint
+        run: pnpm lint
+      - name: Typecheck shared packages
+        run: pnpm --filter @reactloom/api-client --filter @reactloom/devtools --filter create-reactloom typecheck
+      - name: Test shared packages
+        run: pnpm --filter @reactloom/api-client --filter @reactloom/devtools test
+      - name: Test create-reactloom
+        run: pnpm --filter create-reactloom exec vitest run --exclude src/scaffold.integration.test.ts --exclude '**/node_modules/**' --exclude '**/dist/**'
+
+  verify:
+    name: verify (${{ matrix.name }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: spa
+            filter: "@reactloom/template-spa"
+            e2e: true
+          - name: ssr
+            filter: "@reactloom/template-ssr"
+            e2e: true
+          - name: mobile
+            filter: "@reactloom/template-mobile"
+            e2e: false
+    env:
+      EXPO_NO_TELEMETRY: "1"
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.3
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: pnpm
       - uses: actions/cache@v4
+        if: matrix.e2e
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
       - name: Install
         run: pnpm install --frozen-lockfile
       - name: Lint
-        run: pnpm lint
+        run: pnpm --filter "${{ matrix.filter }}" lint
       - name: Typecheck
-        run: pnpm typecheck
+        run: pnpm --filter "${{ matrix.filter }}" typecheck
       - name: Test
-        run: pnpm test
+        run: pnpm --filter "${{ matrix.filter }}" test
       - name: Build
-        run: pnpm build
+        run: pnpm --filter "${{ matrix.filter }}" build
       - name: Install Playwright
-        run: pnpm test:e2e:setup --with-deps
+        if: matrix.e2e
+        run: pnpm --filter "${{ matrix.filter }}" test:e2e:setup --with-deps
       - name: End-to-end
-        run: pnpm test:e2e
+        if: matrix.e2e
+        run: pnpm --filter "${{ matrix.filter }}" test:e2e
+
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.3
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: pnpm
+      - name: Install
+        run: pnpm install --frozen-lockfile
+      - name: Generate each template and build it
+        run: pnpm --filter create-reactloom exec vitest run src/scaffold.integration.test.ts

@@ -4,6 +4,25 @@ Production-grade React templates for a Vite SPA, a Next.js SSR app, and an Expo 
 
 The templates are meant to be started from and kept, not thrown away after the first screen. Each one includes a session pattern, a typed API client, error boundaries, env validation, tests, and CI. Shared TypeScript presets and the API client live in the pnpm workspace.
 
+## Zero to running
+
+In this repo:
+
+```sh
+pnpm install
+pnpm dev:spa
+pnpm dev:ssr
+pnpm dev:mobile
+```
+
+`pnpm dev:spa` opens http://127.0.0.1:4317. `pnpm dev:ssr` opens port 4318. Expo does not open a browser: press `w` for the web preview. The browser stays closed when `CI` is set or `REACTLOOM_OPEN=false`.
+
+A new project installs dependencies and starts the dev server in one step:
+
+```sh
+pnpm exec create-reactloom studio --template spa --dev
+```
+
 ## Stack
 
 Versions below are the ones installed in this repo.
@@ -108,12 +127,14 @@ pnpm exec create-reactloom
 Non-interactive:
 
 ```sh
-pnpm exec create-reactloom studio --template spa --yes
+pnpm exec create-reactloom studio --template spa --dev
 pnpm exec create-reactloom web --template ssr --yes --install
 pnpm exec create-reactloom pocket --template mobile --yes
 ```
 
-`--template` is `spa`, `ssr`, or `mobile`. `--yes` skips prompts. `--install` runs `pnpm install` in the new directory. The project name is the last segment of the path, so `studio` and `../outside/studio` both name the package `studio`.
+`--template` is `spa`, `ssr`, or `mobile`. `--yes` skips prompts and does not start a server. `--install` runs `pnpm install` and stops there. `--dev` installs and then runs `pnpm dev` in the new directory. Without those flags, the prompt offers install-and-start, install only, or skip. The project name is the last segment of the path, so `studio` and `../outside/studio` both name the package `studio`.
+
+SPA `vite.config.ts` sets `server.open` to http://127.0.0.1:4317. SSR `package.json` `dev` runs `scripts/open-browser.mjs`, which starts `next dev` and opens http://127.0.0.1:4318. Both stay closed when `CI` is set or `REACTLOOM_OPEN=false`. Playwright sets `REACTLOOM_OPEN=false`. Expo does not open a browser.
 
 The CLI copies that template directory, then adds only the shared files listed in `templates/<id>/template.json`. It renames the package, deletes template-only files (`template.json`, and for SSR the monorepo Dockerfile), and writes a `pnpm-workspace.yaml` whose `packages` list is `packages/*`. `lefthook` is added to `onlyBuiltDependencies` only when `lefthook.yml` is in the manifest. The SSR trace root in `next.config.ts` is rewritten so the generated app is self-contained. The mobile Metro config's workspace root is rewritten to the generated project.
 
@@ -209,6 +230,8 @@ The pre-commit hook runs in order (`parallel: false`):
 2. If a staged file is TypeScript, `pnpm typecheck:affected` and `pnpm test:affected` run.
 
 The commit-msg hook runs Commitlint. Commits use Conventional Commits.
+
+A non-zero exit from Biome, the affected typecheck, the affected tests, or Commitlint rejects the commit. The hook does not run the full monorepo suite. Biome sees only staged files. The typecheck and tests use `pnpm --filter "...[HEAD]"`.
 
 ### VS Code
 
@@ -360,9 +383,33 @@ Expo keeps the Maestro flow at `templates/mobile/.maestro/login.yaml` (`appId: c
 
 ### In-browser TypeScript errors
 
-The SPA dev server uses vite-plugin-checker 0.14 in `templates/spa/vite.config.ts`. It shells out to `tsc` and shows TypeScript errors in the Vite overlay. `enableBuild` is off, because `pnpm typecheck` already runs `tsc`. The checker does not run ESLint or Biome.
+The SPA dev server uses vite-plugin-checker 0.14 in `templates/spa/vite.config.ts`. It shells out to `tsc` and shows TypeScript errors in the Vite overlay. The overlay itself stays on, so compile and runtime errors keep source-mapped locations in the browser and in the terminal. `enableBuild` is off, because `pnpm typecheck` already runs `tsc`. The checker does not run ESLint or Biome. CSS uses `css.devSourcemap`, and production builds keep `build.sourcemap`.
 
-SSR does not use vite-plugin-checker. Next.js already shows compile errors in its overlay. Mobile uses the Expo dev server for bundler errors.
+SSR does not use vite-plugin-checker. Next.js already shows compile and runtime errors in its dev overlay, and in the terminal, with source maps. `productionBrowserSourceMaps` stays off. Mobile uses the Expo dev server. `expo-router/entry` calls `setupLogBox()` from `@expo/log-box`, so compile and uncaught runtime errors open in LogBox with symbolicated frames.
+
+### Error boundaries
+
+Caught render errors stay on the page instead of only in the overlay.
+
+| | Where | What you see in development |
+| --- | --- | --- |
+| SPA | `templates/spa/src/components/errors/fallback.tsx` | The message, then the stack. A project frame is a button with `data-insp-path` (`file:line:column:frame`). Click it, or hold Option+Shift (Alt+Shift) and click. |
+| SSR | `templates/ssr/src/app/error.tsx` | The same stack. Click calls `/__nextjs_launch-editor`. The Next.js overlay still covers compile errors. |
+| Expo | `templates/mobile/src/components/errors/fallback.tsx`, exported as `ErrorBoundary` from `app/_layout.tsx` | The message and a symbolicated stack. Tap a frame to POST Metro's `open-stack-frame`. LogBox still covers compile errors and uncaught exceptions. |
+
+Production builds omit the stack. Frames are parsed by `parseDevStack` in `@reactloom/devtools/stack`, so the app entries do not import `useWhyDidYouUpdate`.
+
+### Continuous integration
+
+`.github/workflows/ci.yml` is the monorepo workflow. It is not copied into a generated project. Each template keeps its own workflow (`templates/<id>/.github/workflows/ci.yml`), and those files do not set `concurrency`.
+
+| Job | What it runs |
+| --- | --- |
+| `packages` | `pnpm install --frozen-lockfile`, `pnpm lint` for the whole repo, typecheck and test for `@reactloom/api-client`, `@reactloom/devtools`, and `create-reactloom` (unit tests only) |
+| `verify` | One matrix cell each for SPA, SSR, and Expo: install, lint, typecheck, test, and build. Web cells also install Playwright and run `pnpm test:e2e`. Expo build is `expo export --platform web`. |
+| `smoke` | `create-reactloom` generates each template, then that project installs, typechecks, tests, and builds |
+
+`actions/setup-node` caches pnpm. Web `verify` cells cache `~/.cache/ms-playwright` on the lockfile. `create-reactloom` checks that a generated workflow does not contain `concurrency:` or `@reactloom/template-`.
 
 ### Click to source
 
@@ -459,7 +506,7 @@ The config extends `config:recommended`, which turns on the dependency dashboard
 1. Open [the Renovate GitHub App](https://github.com/apps/renovate) and choose **Install**.
 2. Pick the account or organization that owns this private repository, then grant access to this repository only.
 3. Renovate reads the committed `renovate.json`. It does not need an onboarding commit if this file is already on the default branch.
-4. Protect `main` and require the `CI / verify` check. Auto-merge waits for that check.
+4. Protect `main` and require the CI jobs: `verify (spa)`, `verify (ssr)`, `verify (mobile)`, `packages`, and `smoke`. Auto-merge waits for those checks.
 5. Use the Dependency Dashboard issue to see pending updates. Major updates stay open until someone merges them.
 
 App permissions and the schedule are documented by Renovate: [installing Renovate](https://docs.renovatebot.com/getting-started/installing-onboarding/) and [config:recommended](https://docs.renovatebot.com/presets-config/).

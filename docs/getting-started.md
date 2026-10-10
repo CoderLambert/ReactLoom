@@ -9,13 +9,18 @@ From a generated project, or from `templates/spa`, `templates/ssr`, or `template
 ```sh
 pnpm install
 pnpm dev
-pnpm lint
-pnpm typecheck
 pnpm test
-pnpm build
 ```
 
-`pnpm dev` is Vite on port 4317 (SPA), Next.js on port 4318 (SSR), or Expo (mobile). In the monorepo the same servers are `pnpm dev:spa`, `pnpm dev:ssr`, and `pnpm dev:mobile` from the repository root.
+`pnpm dev` is Vite on port 4317 (SPA), Next.js on port 4318 (SSR), or Expo (mobile). SPA and SSR open that URL in the browser. They stay closed when `CI` is set or `REACTLOOM_OPEN=false`. Expo does not open a browser: press `w` for the web preview. In the monorepo the same servers are `pnpm dev:spa`, `pnpm dev:ssr`, and `pnpm dev:mobile` from the repository root.
+
+From the ReactLoom repo, install and start in one step:
+
+```sh
+pnpm exec create-reactloom studio --template spa --dev
+```
+
+`--dev` implies install. `--yes` without `--dev` does not start a server. The interactive prompt offers install-and-start, install only, or skip.
 
 SPA and SSR also have Playwright. The first run needs browsers. On Linux, add `--with-deps`:
 
@@ -44,7 +49,7 @@ After `pnpm install`, these are already configured:
 | --- | --- |
 | Format and lint | Biome. `pnpm lint` is `biome check`. ESLint and Prettier are not installed. TypeScript 7 has no programmatic compiler API, so type-aware `typescript-eslint` is not used. `tsc` is the typecheck. |
 | Format on save | `.vscode` sets Biome as the default formatter and organizes imports on save. The ESLint and Prettier extensions are marked unwanted. |
-| Git hooks | Lefthook, not Husky or lint-staged. Pre-commit formats the staged files with Biome, then typechecks and tests packages changed since the last commit. Commit messages go through Commitlint. |
+| Git hooks | Lefthook, not Husky or lint-staged. Pre-commit formats the staged files with Biome, then typechecks and tests packages changed since the last commit. Commit messages go through Commitlint. A failing hook blocks the commit. |
 | Typecheck and test caching | TypeScript `incremental` reuses `.tsbuildinfo`. The pre-commit typecheck and test use `pnpm --filter "...[HEAD]"`, so unchanged packages are skipped. |
 | Vitest | `pnpm test:ui` opens the Vitest UI. `pnpm test:coverage` writes a v8 text and HTML report. Coverage is not a CI gate. |
 | Devtools | SPA: TanStack Query, TanStack Router, and React Scan (`src/main.tsx`), plus TypeScript errors in the Vite overlay (vite-plugin-checker, dev server only). SSR: TanStack Query, React Scan (`src/app/react-scan.tsx`, client only), and the Next.js error overlay. Hover an element in either web dev server to see the component name, props, and render time; re-renders are highlighted. Production builds alias `react-scan` to an empty module. Mobile does not load React Scan: 0.5.7 has no React Native export, and the native preview is unmerged. Mobile also does not load the TanStack panels. |
@@ -55,6 +60,7 @@ After `pnpm install`, these are already configured:
 | Browser mocks | SPA: `VITE_ENABLE_MSW=true` in dev reuses `src/mocks/handlers.ts`. SSR: `NEXT_PUBLIC_ENABLE_MSW` defaults to false so Playwright hits the route handlers; set it true in `.env.local` to start the same style of handlers. Expo: `EXPO_PUBLIC_USE_FIXTURES`. MSW 3.0.3 has no React Native entry. |
 | Accessibility | Playwright axe stays on SPA and SSR. The web dev server also logs `@axe-core/react` while devtools are on. Install the axe DevTools browser extension for a manual pass. Expo does not load that package. |
 | End-to-end | Playwright on SPA and SSR (`pnpm test:e2e`). Maestro on Expo (`.maestro/login.yaml`). CI does not launch an emulator. |
+| Errors | SPA: Vite overlay plus vite-plugin-checker, and a dev stack in `src/components/errors/fallback.tsx`. SSR: the Next.js overlay, and a dev stack in `src/app/error.tsx`. Expo: LogBox, and a dev stack from `app/_layout.tsx`. Project frames open in the editor. Production hides the stack. |
 | Click to source | SPA uses `code-inspector-plugin` on Vite. SSR uses the same plugin on Turbopack, plus Next.js open-in-editor. Expo uses `react-native-dev-inspector`. |
 
 Click to source, on the web: hold Option+Shift on macOS, or Alt+Shift on Windows and Linux, then click. On Expo, tap the lightning button, then tap the component. Saving the file hot-reloads through the dev server that is already running.
