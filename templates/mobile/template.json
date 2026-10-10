@@ -43,6 +43,7 @@
     "docs/adr/0003-sessions.md",
     "docs/adr/0004-api-client.md",
     "docs/adr/0005-tooling.md",
-    "docs/adr/0006-ai-collaboration.md"
+    "docs/adr/0006-ai-collaboration.md",
+    "docs/getting-started.md"
   ]
 }

@@ -69,7 +69,7 @@ Template choice is still the interactive prompt or `--template spa|ssr|mobile`. 
 | `docker` | `true` only for SSR, which keeps `Dockerfile` |
 | `ai.pointers` | `CLAUDE.md`, `.github/copilot-instructions.md`, `.cursor/mcp.json` |
 | `ai.rules` | That template's Cursor rules only (`general` plus `spa`, `ssr`, or `mobile`, plus `testing`) |
-| `docs` | ADRs 0003, 0004, 0005, and 0006. ADR 0001 and 0002 stay in this repo. |
+| `docs` | `docs/getting-started.md`, plus ADRs 0003, 0004, 0005, and 0006. ADR 0001 and 0002 stay in this repo. |
 | `clickToSource` | Inspector package, exact version, bundler config, `.env.development`, and `scripts/open-in-editor.mjs`. `configs` also copies `scripts/code` and `scripts/code.cmd`. SPA and SSR use `code-inspector-plugin` 2.0.9. Mobile uses `react-native-dev-inspector` 1.1.0. The env file leaves the editor unset. The launcher opens a listening Neovim, then Cursor or VS Code. |
 
 To add a shared file to a template, put its repo-root path (or preset filename) in that template's `template.json`. A file that lives only in the template directory is copied with the template; do not list it under `configs`. Include every tsconfig preset the new preset extends. Listing Biome, Lefthook, Commitlint, or Changesets also adds that tool's devDependency from the root `package.json`, and Lefthook is written to `onlyBuiltDependencies`. Leaving a tool out removes its devDependency and the `lint`, `changeset`, or `version-packages` script that would call it. Nest, Next, Expo, and Vite dependencies and scripts are removed when that framework's preset is not listed. Do not give an SPA a Nest config, `next.json`, or `expo.json`.

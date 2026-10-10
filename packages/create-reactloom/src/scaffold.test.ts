@@ -370,6 +370,7 @@ describe('create-reactloom', () => {
           await expect(stat(file)).rejects.toThrow()
         }
       }
+      await expect(stat(path.join(directory, 'docs/getting-started.md'))).resolves.toBeTruthy()
       for (const config of manifest.configs) {
         await expect(stat(path.join(directory, config))).resolves.toBeTruthy()
       }

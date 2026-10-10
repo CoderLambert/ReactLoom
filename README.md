@@ -48,6 +48,7 @@ React 18 was considered and not used. React 19 is the current mainstream release
 │   ├── spa/                 # Vite SPA
 │   ├── ssr/                 # Next.js SSR + Docker
 │   └── mobile/              # Expo
+├── docs/getting-started.md  # usage guide, also copied into generated projects
 ├── docs/adr/                # architecture decisions
 ├── renovate.json
 └── .github/workflows/ci.yml
@@ -126,12 +127,12 @@ The CLI copies that template directory, then adds only the shared files listed i
 | --- | --- | --- | --- |
 | `packages/api-client` | yes | yes | yes |
 | TypeScript presets | `base`, `react`, `vite`, `node` | `base`, `react`, `next`, `node` | `base`, `react`, `expo`, `node` |
-| Root configs | `.npmrc`, EditorConfig, Biome, Lefthook, Commitlint, Changesets, Renovate | same | same |
+| Root configs | `.npmrc`, EditorConfig, Biome, Lefthook, Commitlint, Changesets, Renovate, `scripts/open-in-editor.mjs`, `scripts/code`, `scripts/code.cmd` | same | same |
 | CI | `templates/spa/.github/workflows/ci.yml` | `templates/ssr/.github/workflows/ci.yml` | `templates/mobile/.github/workflows/ci.yml` |
 | Dockerfile | no | yes (`Dockerfile.standalone` renamed to `Dockerfile`) | no |
 | Cursor rules | general, spa, testing | general, ssr, testing | general, mobile, testing |
 | AI pointers | `CLAUDE.md`, `.github/copilot-instructions.md`, `.cursor/mcp.json` | same | same |
-| ADRs | 0003 sessions, 0004 API client, 0005 tooling, 0006 AI collaboration | same | same |
+| Docs | `docs/getting-started.md`, ADRs 0003–0006 | same | same |
 
 Left out of every generated app: the monorepo workflow (`.github/workflows/ci.yml` at the repo root), `docs/adr/0001-monorepo-and-init.md`, `docs/adr/0002-frameworks.md`, and `packages/create-reactloom`. An SPA also excludes `next.json`, `expo.json`, `next.config.ts`, `app.json`, Nest config, and the SSR and mobile Cursor rules. SSR excludes the Vite and Expo presets. Mobile excludes the Vite and Next presets. The copied `@reactloom/tsconfig` `package.json` exports only the presets that were copied.
 
@@ -146,7 +147,7 @@ Listing `biome.json`, `lefthook.yml`, `commitlint.config.mjs`, or `.changeset/co
 - `ci` is the template-relative workflow path (`.github/workflows/ci.yml`). The monorepo workflow is never copied over it.
 - `ai.rules` lists Cursor rule filenames from `.cursor/rules/`. Add a rule there only for the templates it applies to.
 - `ai.pointers` lists repo-root files such as `CLAUDE.md`.
-- `docs` lists ADR paths such as `docs/adr/0004-api-client.md`.
+- `docs` lists paths such as `docs/getting-started.md` and `docs/adr/0004-api-client.md`.
 - `clickToSource` names that template's inspector package, its exact version, the bundler config (`vite.config.ts`, `next.config.ts`, or `metro.config.js`), the committed launch-editor file (`.env.development`), and `scripts/open-in-editor.mjs`. List `scripts/open-in-editor.mjs`, `scripts/code`, and `scripts/code.cmd` in `configs` so generation copies them. The CLI checks those files were copied, that the env file does not pin an editor, and that `package.json` depends on that version. Do not put another template's inspector in that file.
 
 ## Conventions
@@ -173,56 +174,100 @@ pnpm test:e2e:setup --with-deps
 
 Generated SPA and SSR projects include the same `test:e2e:setup` script. pnpm 10 skips dependency build scripts unless they are trusted. `pnpm-workspace.yaml` lists `lefthook` in `onlyBuiltDependencies`, so `pnpm install` registers the git hooks. To trust another package, add its name there or run `pnpm approve-builds`.
 
-## Editor and local checks
+## Developer productivity
 
-Biome is the formatter and linter. Lefthook is the git hook runner. ESLint, Prettier, Husky, and lint-staged are not installed as project tools, and `.vscode/extensions.json` marks the ESLint and Prettier extensions as unwanted.
+Cloning this repo, or generating a project with `create-reactloom`, turns these on. There is no ESLint, Prettier, Husky, lint-staged, or Turbo setup step. The one exception is Neovim: the dev server cannot open a new nvim window, so Neovim users start a listener once. The walkthrough is [Getting started](docs/getting-started.md). `create-reactloom` copies that file into the generated project.
 
-The repo root `.vscode` is for working in this monorepo. It recommends Biome, Tailwind CSS IntelliSense, Vitest Explorer, Playwright, Expo Tools, and Error Lens. Format on save uses Biome. `typescript.tsdk` points at the workspace TypeScript 7 install. Tailwind IntelliSense reads `cn` and `cva` through `tailwindCSS.classFunctions` and `tailwindCSS.experimental.classRegex`.
+### Biome instead of ESLint and Prettier
 
-Each template has its own `.vscode`. `create-reactloom` copies that directory with the template and does not copy the monorepo `.vscode`:
+Biome 2.5.15 is the formatter and the linter. `pnpm lint` is `biome check .`.
+
+ESLint plus Prettier was the usual pair, and it is not used here. TypeScript 7 does not ship a programmatic compiler API, so type-aware `typescript-eslint` is not a practical default. `tsc` remains the typecheck. Biome covers format and lint in one tool without that API. `.vscode/extensions.json` marks the ESLint and Prettier extensions as unwanted, so the editor does not prompt you to install them.
+
+### Lefthook instead of Husky and lint-staged
+
+Lefthook is the git hook runner. Husky and lint-staged are not installed.
+
+`pnpm-workspace.yaml` lists `lefthook` in `onlyBuiltDependencies`. pnpm 10 skips other dependency build scripts, so `pnpm install` registers these hooks and does not need a separate Husky install. `lefthook.yml` is a shared config, and `create-reactloom` copies it.
+
+The pre-commit hook runs in order (`parallel: false`):
+
+1. Biome formats and lints the staged files (`{staged_files}`) and stages the fixes.
+2. If a staged file is TypeScript, `pnpm typecheck:affected` and `pnpm test:affected` run.
+
+The commit-msg hook runs Commitlint. Commits use Conventional Commits.
+
+### VS Code
+
+The repo root `.vscode` is for this monorepo. It recommends Biome, Tailwind CSS IntelliSense, Vitest Explorer, Playwright, Expo Tools, and Error Lens. Each template has a smaller `.vscode`. `create-reactloom` copies the template directory and does not copy the monorepo `.vscode`:
 
 | | SPA | SSR | Mobile |
 | --- | --- | --- | --- |
 | Extensions | Biome, Tailwind, Vitest, Playwright, Error Lens | same | Biome, Vitest, Expo Tools, Error Lens |
 | Tailwind class regex | yes | yes | no |
 
-Lefthook's pre-commit hook formats staged files with Biome, then runs `pnpm typecheck:affected` and `pnpm test:affected`. Those scripts are `pnpm --filter "...[HEAD]"`, so only packages changed since the last commit (and their dependents) typecheck and run unit tests. Shared `tsconfig` presets set `incremental` so a second `tsc` reuses `.tsbuildinfo`. Turbo is not added: this workspace is a handful of packages, and the filter already skips unchanged ones.
+Format on save is on. The default formatter is `biomejs.biome`. Save also runs `source.fixAll.biome` and `source.organizeImports.biome`. `typescript.tsdk` points at the workspace TypeScript 7 install. On the web templates, Tailwind IntelliSense reads `cn` and `cva` through `tailwindCSS.classFunctions` and `tailwindCSS.experimental.classRegex`.
 
-`pnpm test:coverage` writes a v8 text and HTML report (`coverage/`, gitignored). `pnpm test:ui` in a package opens the Vitest UI. Coverage is not a CI gate.
+### Pre-commit checks on staged files
 
-Dev-only overlays, loaded only while `pnpm dev` is running. The SPA production build aliases React Scan and the TanStack devtools to `templates/spa/src/lib/devtools-stub.ts`, so they are not part of the client bundle. Playwright sets `VITE_DEVTOOLS=false` and `NEXT_PUBLIC_DEVTOOLS=false` so those panels are not part of the axe scan:
+Biome's pre-commit command receives only `{staged_files}`. It does not reformat the rest of the tree.
+
+The typecheck and test that follow are not limited to the staged hunks. They are `pnpm --filter "...[HEAD]"`, so they run in packages changed since the last commit, and in dependents of those packages. Unchanged packages are skipped. A staged markdown file does not by itself start that step: the command's glob is `*.{ts,tsx}`.
+
+### Typecheck and test caching
+
+Shared `tsconfig` presets set `incremental`, so a later `tsc` reuses `.tsbuildinfo`. Those files are gitignored. The affected filter is the other cache: pre-commit does not typecheck or test a package that has not changed since `HEAD`. Turbo is not added. This workspace is a handful of packages, and the filter already skips the unchanged ones.
+
+### Vitest UI and coverage
+
+Inside a package, `pnpm test:ui` opens the Vitest UI and `pnpm test:coverage` writes a v8 text and HTML report under `coverage/` (gitignored). From the repo root, `pnpm test:coverage` runs that script in every package that defines it. A generated project has both scripts at its root. Coverage is not a CI gate.
+
+### React and TanStack devtools
+
+These load only while `pnpm dev` is running. The SPA production build aliases React Scan and the TanStack devtools to `templates/spa/src/lib/devtools-stub.ts`, so they stay out of the client bundle. Playwright sets `VITE_DEVTOOLS=false` and `NEXT_PUBLIC_DEVTOOLS=false`, and that process value wins over `.env.development`, so the axe scan does not see the panels.
 
 | Tool | Where | What it does |
 | --- | --- | --- |
-| TanStack Query devtools | SPA `src/app/providers.tsx`, SSR `src/app/providers.tsx` | Inspect queries. SPA already had this; SSR now does too. |
+| TanStack Query devtools | SPA `src/app/providers.tsx`, SSR `src/app/providers.tsx` | Inspect queries. |
 | TanStack Router devtools | SPA `src/main.tsx` | Inspect the route tree. Bottom-right, so it does not sit on the query panel. |
 | React Scan | SPA `src/main.tsx`, SSR `src/app/react-scan.tsx` | Outlines components that re-render. The import is dynamic and development-only. |
-| vite-plugin-checker | SPA `vite.config.ts` | TypeScript errors in the Vite error overlay. `enableBuild` is off because `pnpm typecheck` already runs `tsc`. It does not run ESLint or Biome. |
 
-Mobile does not get those web overlays. Expo's dev server and the editor extensions cover that template. Next.js already shows compile errors, so SSR does not also run vite-plugin-checker.
+Mobile does not get those web overlays.
+
+### In-browser TypeScript errors
+
+The SPA dev server uses vite-plugin-checker 0.14 in `templates/spa/vite.config.ts`. It shells out to `tsc` and shows TypeScript errors in the Vite overlay. `enableBuild` is off, because `pnpm typecheck` already runs `tsc`. The checker does not run ESLint or Biome.
+
+SSR does not use vite-plugin-checker. Next.js already shows compile errors in its overlay. Mobile uses the Expo dev server for bundler errors.
 
 ### Click to source
 
-Cloning this repo, or generating a project with `create-reactloom`, needs no extra config. `pnpm dev` loads the inspector. Click a component and the editor opens at that file and line. Saving the file hot-reloads through the dev server that is already running (Vite HMR, Next.js Fast Refresh, or Expo Fast Refresh).
+`pnpm dev` loads an inspector. Click a component and the editor opens at that file and line. Saving hot-reloads through the dev server that is already running (Vite HMR, Next.js Fast Refresh, or Expo Fast Refresh).
 
-Each template's `template.json` `clickToSource` names the inspector package, its exact version, the bundler config, `.env.development`, and `scripts/open-in-editor.mjs`. `configs` also copies `scripts/code` and `scripts/code.cmd`. `create-reactloom` checks those files landed and that the package is that version. A generated SPA does not get the Next.js or Expo setup.
-
-| | SPA | SSR | Mobile |
+| | SPA (Vite) | SSR (Next.js) | Mobile (Expo) |
 | --- | --- | --- | --- |
-| Tool | `code-inspector-plugin` 2.0.9 on Vite | same plugin on Turbopack, plus the Next.js dev overlay | `react-native-dev-inspector` 1.1.0 |
-| Config | `templates/spa/vite.config.ts`, `.env.development`, `scripts/open-in-editor.mjs` | `templates/ssr/next.config.ts`, `.env.development`, the same scripts | `templates/mobile/metro.config.js`, `babel.config.js`, `src/lib/dev-inspector.tsx`, `.env.development`, the same scripts |
+| Tool | `code-inspector-plugin` 2.0.9 | same plugin on Turbopack, plus the Next.js dev overlay | `react-native-dev-inspector` 1.1.0 |
+| Where | `templates/spa/vite.config.ts`, dev server only | `templates/ssr/next.config.ts` | `metro.config.js`, `babel.config.js`, `src/lib/dev-inspector.tsx` |
 | Gesture | Option+Shift (macOS) or Alt+Shift, then click | same gesture. Overlay stack frames use Open in editor | Tap the lightning button, then tap the component |
 
-`.env.development` is committed. It turns devtools on and does not set an editor. While the dev server starts, the bundler config calls `activateLauncher`. That stashes any `LAUNCH_EDITOR`, `CODE_EDITOR`, or `REACT_EDITOR` you already set into `REACTLOOM_EDITOR`, then points those three variables at `scripts/code` (Windows: `scripts/code.cmd`). The inspectors spawn that path. It is a shim named `code` so they pass `file:line`. It is not VS Code. Do not put `scripts/` on `PATH`. The shim runs `scripts/open-in-editor.mjs`.
+Each template's `template.json` `clickToSource` names the inspector package, its exact version, the bundler config, `.env.development`, and `scripts/open-in-editor.mjs`. `configs` also copies `scripts/code` and `scripts/code.cmd`. `create-reactloom` checks those files landed and that the package is that version. A generated SPA does not get the Next.js or Expo inspector.
 
-On each click the script looks for an editor in this order:
+`.env.development` is committed. It turns devtools on and does not set an editor. While the dev server starts, the bundler calls `activateLauncher`. That stashes any `LAUNCH_EDITOR`, `CODE_EDITOR`, or `REACT_EDITOR` already set into `REACTLOOM_EDITOR`, then points those three variables at `scripts/code` (Windows: `scripts/code.cmd`). The inspectors spawn that path. The shim is named `code` so they pass `file:line`. It is not VS Code. Do not put `scripts/` on `PATH`. The shim runs `scripts/open-in-editor.mjs`.
 
-1. An explicit command: `LAUNCH_EDITOR`, then `CODE_EDITOR`, then `REACT_EDITOR`, then `VISUAL`, then `EDITOR`. A value of `nvim`, `neovim`, or `vim` stays on the Neovim path below and does not fall through to Cursor.
-2. A running Neovim server. The address is `$NVIM`, then `$NVIM_LISTEN_ADDRESS`, then `.nvim.sock` in the current directory and each parent up to the git root (so a socket at the repo root still works when `pnpm --filter` runs inside a template). The command is `nvim --server <address> --remote +<line> <file>`.
+The Vite plugin is registered only for `vite dev`, and only when `VITE_DEVTOOLS` is not `false`. The launcher is not activated during `vite build`. The Next.js plugin returns `dev: false` when `NODE_ENV` is `production` or `NEXT_PUBLIC_DEVTOOLS` is `false`, and it does not activate the launcher in that case, so `next build` does not inject `data-insp-path`. SPA source maps stay on (`build.sourcemap` and `css.devSourcemap`). Next.js dev source maps stay on. `productionBrowserSourceMaps` stays off. The Expo babel plugin and the root `DevInspector` run only outside production, and only when `EXPO_PUBLIC_DEVTOOLS` is not `false`. `metro.config.js` passes the launcher as `withInspector`'s `editor`.
+
+Server Components are included: the Turbopack rule rewrites JSX in the App Router, and the Next.js overlay opens server stack frames from their source maps. This repo uses `src/app`, and Next.js 16.4 resolves that path.
+
+### Editor auto-detection
+
+On each click, `scripts/open-in-editor.mjs` looks for an editor in this order:
+
+1. An explicit command: `LAUNCH_EDITOR`, then `CODE_EDITOR`, then `REACT_EDITOR`, then `VISUAL`, then `EDITOR`. A value of `nvim`, `neovim`, or `vim` stays on the Neovim path and does not fall through to Cursor.
+2. A running Neovim server. The address is `$NVIM`, then `$NVIM_LISTEN_ADDRESS`, then `.nvim.sock` in the current directory and each parent up to the git root. A socket at the repo root still works when `pnpm --filter` runs inside a template. The command is `nvim --server <address> --remote +<line> <file>`.
 3. A running Cursor, then VS Code (`code`, then `code-insiders`, then `codium`).
 4. A new terminal Neovim, `nvim +<line> <file>`, when a terminal emulator is available. The dev server's own stdio is not a terminal, so this step opens Terminal.app, Windows Terminal, or a Linux emulator.
 
-`$NVIM` is set only inside Neovim's `:terminal`. A dev server you start from a normal shell does not see it. One-time setup, from the project directory:
+VS Code and Cursor need no setup when that editor is already running, or when `code` or `cursor` is on `PATH`. Neovim does. `$NVIM` is set only inside Neovim's `:terminal`, so a dev server started from a normal shell does not see it. One-time setup, from the project directory:
 
 ```sh
 nvim --listen .nvim.sock
@@ -239,12 +284,6 @@ end
 ```
 
 `.nvim.sock` is gitignored. GUI editors receive `file:line:column`. Neovim receives `+line`.
-
-Playwright still sets `VITE_DEVTOOLS=false` and `NEXT_PUBLIC_DEVTOOLS=false` in the web server env, and that process value wins over the file.
-
-The Vite plugin is registered only for `vite dev`, and only when `VITE_DEVTOOLS` is not `false`. The launcher is not activated during `vite build`. The Next.js plugin returns `dev: false` when `NODE_ENV` is `production` or `NEXT_PUBLIC_DEVTOOLS` is `false`, and it does not activate the launcher in that case, so `next build` does not inject `data-insp-path` or the inspector client. SPA source maps stay on (`build.sourcemap` and `css.devSourcemap`). Next.js dev source maps stay on. `productionBrowserSourceMaps` stays off. The Expo babel plugin and the root `DevInspector` run only outside production, and only when `EXPO_PUBLIC_DEVTOOLS` is not `false`. `metro.config.js` passes the launcher as `withInspector`'s `editor`.
-
-Server Components are included: the Turbopack rule rewrites JSX in the App Router, and the Next.js overlay opens server stack frames from their source maps. This repo uses `src/app`, and Next.js 16.4 resolves that path.
 
 Optional override, only if detection does not open an editor. Put one line in `.env.local` (gitignored) and restart `pnpm dev`. The same names work in every template. `LAUNCH_EDITOR` wins when more than one is set.
 
@@ -303,6 +342,7 @@ App permissions and the schedule are documented by Renovate: [installing Renovat
 
 ## Decisions worth reading
 
+- [Getting started](docs/getting-started.md)
 - [Monorepo and the init command](docs/adr/0001-monorepo-and-init.md)
 - [Frameworks per template](docs/adr/0002-frameworks.md)
 - [Sessions](docs/adr/0003-sessions.md)
