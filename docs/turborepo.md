@@ -180,7 +180,7 @@ CI 用的是本地目录加 GitHub `actions/cache`，不是 Vercel 远程缓存�
 工作流里的步骤（monorepo 的 `packages`、`verify`，以及三个模板各自的工作流）：
 
 ```yaml
-- uses: actions/cache@v4
+- uses: actions/cache@v6
   with:
     path: .turbo
     key: turbo-${{ runner.os }}-${{ github.sha }}
@@ -188,7 +188,7 @@ CI 用的是本地目录加 GitHub `actions/cache`，不是 Vercel 远程缓存�
       turbo-${{ runner.os }}-
 ```
 
-键带提交号，恢复时用同一系统上最近的一份。这和 pnpm 的安装缓存、Playwright 的浏览器缓存是三份不同的缓存。
+键带提交号，恢复时用同一系统上最近的一份。Action 主版本是 `actions/checkout@v7`、`pnpm/action-setup@v6`、`actions/setup-node@v7`、`actions/cache@v6`。pnpm 商店、Playwright 浏览器、`.turbo`、Expo 的 `.expo` 与 `.metro-cache` 是四份缓存，键和命中后的安装命令写在 [CI](ci.md)。
 
 如果以后要开远程缓存，在本机：
 
