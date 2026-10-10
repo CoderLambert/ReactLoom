@@ -1,0 +1,166 @@
+{
+  "$schema": "https://turborepo.dev/schema.json",
+  "cacheDir": ".turbo/cache",
+  "envMode": "strict",
+  "globalDependencies": ["pnpm-lock.yaml", "pnpm-workspace.yaml"],
+  "globalEnv": ["CI", "NODE_ENV"],
+  "globalPassThroughEnv": [
+    "EXPO_NO_TELEMETRY",
+    "FORCE_COLOR",
+    "REACTLOOM_OPEN",
+    "SESSION_SECRET",
+    "TURBO_API",
+    "TURBO_REMOTE_CACHE_SIGNATURE_KEY",
+    "TURBO_REMOTE_ONLY",
+    "TURBO_SCM_BASE",
+    "TURBO_SCM_HEAD",
+    "TURBO_TEAM",
+    "TURBO_TELEMETRY_DISABLED",
+    "TURBO_TOKEN"
+  ],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "description": "Compile a package. The package script stays Vite, Next.js, tsc, or Expo.",
+      "env": [
+        "ANALYZE",
+        "EXPO_PUBLIC_*",
+        "NEXT_PUBLIC_*",
+        "REACTLOOM_STRICT_SECRETS",
+        "STORYBOOK",
+        "VITE_*"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/packages/tsconfig/**",
+        "!.expo/**",
+        "!.next/cache/**",
+        "!coverage/**",
+        "!dist/**",
+        "!storybook-static/**",
+        "!**/*.tsbuildinfo"
+      ],
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
+    },
+    "dev": {
+      "cache": false,
+      "dependsOn": ["^build"],
+      "description": "Long-running dev server. Not cached.",
+      "interactive": true,
+      "persistent": true,
+      "passThroughEnv": ["EXPO_PUBLIC_*", "NEXT_PUBLIC_*", "STORYBOOK", "VITE_*"]
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "description": "Unit and integration tests. Coverage is the test:coverage task.",
+      "env": ["EXPO_PUBLIC_*", "NEXT_PUBLIC_*", "VITE_*"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/packages/tsconfig/**",
+        "!.expo/**",
+        "!.next/cache/**",
+        "!coverage/**",
+        "!dist/**",
+        "!storybook-static/**",
+        "!**/*.tsbuildinfo"
+      ]
+    },
+    "test:coverage": {
+      "dependsOn": ["^build"],
+      "description": "Vitest v8 coverage report.",
+      "env": ["EXPO_PUBLIC_*", "NEXT_PUBLIC_*", "VITE_*"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/packages/tsconfig/**",
+        "!.expo/**",
+        "!.next/cache/**",
+        "!coverage/**",
+        "!dist/**",
+        "!storybook-static/**",
+        "!**/*.tsbuildinfo"
+      ],
+      "outputs": ["coverage/**"]
+    },
+    "test:e2e": {
+      "cache": false,
+      "dependsOn": ["^build"],
+      "description": "Playwright. Always runs. Mobile has no script, so Turbo skips it.",
+      "env": ["NEXT_PUBLIC_DEVTOOLS", "NEXT_PUBLIC_ENABLE_MSW", "VITE_DEVTOOLS", "VITE_ENABLE_MSW"],
+      "passThroughEnv": ["PLAYWRIGHT_*"]
+    },
+    "lint": {
+      "description": "Biome in one workspace package.",
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/biome.json",
+        "!.expo/**",
+        "!.next/**",
+        "!coverage/**",
+        "!dist/**",
+        "!storybook-static/**"
+      ]
+    },
+    "//#lint:root": {
+      "description": "Biome for root files that are not a workspace package in this monorepo.",
+      "inputs": [
+        "biome.json",
+        "commitlint.config.mjs",
+        "lefthook.yml",
+        "package.json",
+        "packages/tsconfig/**",
+        "scripts/**"
+      ]
+    },
+    "typecheck": {
+      "dependsOn": ["^build"],
+      "description": "tsc --noEmit. Shared packages build first so dist types exist.",
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/packages/tsconfig/**",
+        "!.expo/**",
+        "!.next/cache/**",
+        "!coverage/**",
+        "!dist/**",
+        "!storybook-static/**",
+        "!**/*.tsbuildinfo"
+      ]
+    },
+    "analyze": {
+      "dependsOn": ["^build"],
+      "description": "Bundle report. The package script is the real analyzer, not turbo.",
+      "env": ["ANALYZE", "EXPO_ATLAS", "EXPO_PUBLIC_*", "NEXT_PUBLIC_*", "STORYBOOK", "VITE_*"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/packages/tsconfig/**",
+        "!.expo/**",
+        "!.next/cache/**",
+        "!coverage/**",
+        "!dist/**",
+        "!storybook-static/**"
+      ],
+      "outputs": [".expo/**", ".next/**", "!.next/cache/**", "dist/**"]
+    },
+    "storybook": {
+      "cache": false,
+      "dependsOn": ["^build"],
+      "description": "Storybook dev server. The static build is build-storybook.",
+      "interactive": true,
+      "persistent": true,
+      "passThroughEnv": ["NEXT_PUBLIC_*", "STORYBOOK", "VITE_*"]
+    },
+    "build-storybook": {
+      "dependsOn": ["^build"],
+      "description": "Static Storybook. This is the task that writes storybook-static.",
+      "env": ["NEXT_PUBLIC_*", "STORYBOOK", "VITE_*"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/packages/tsconfig/**",
+        "!.next/cache/**",
+        "!coverage/**",
+        "!dist/**",
+        "!storybook-static/**"
+      ],
+      "outputs": ["storybook-static/**"]
+    }
+  }
+}

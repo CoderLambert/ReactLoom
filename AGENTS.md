@@ -15,7 +15,7 @@ ReactLoom is a pnpm workspace. Templates are developed in-tree and copied by `cr
 | `templates/ssr` | Next.js App Router app, plus Docker |
 | `templates/mobile` | Expo app |
 | `docs/adr` | Architecture decisions |
-| `docs/best-practices` | Practices for components, state, data fetching, styling, performance, and pitfalls. `create-reactloom` copies this folder and strips sections marked for the other templates. |
+| `docs/best-practices` | Practices for components, state, data fetching, styling, performance, and pitfalls. `create-reactloom` copies this folder and strips sections marked for the other templates. `docs/turborepo.md` is the task-runner guide and is copied with every template. |
 
 TypeScript is `strict` (7.0.2). React is 19.3.0 on web. Expo SDK 57 pins React 19.2.3, so the mobile template stays on that peer. Biome formats and lints. `tsc` typechecks. Changesets version `@reactloom/api-client` and `create-reactloom`. Templates are not published.
 
@@ -45,12 +45,12 @@ From the repository root:
 | `pnpm dev:spa` | SPA on port 4317 |
 | `pnpm dev:ssr` | SSR on port 4318 |
 | `pnpm dev:mobile` | Expo dev server |
-| `pnpm lint` | Biome check |
-| `pnpm typecheck` | `tsc` in every package |
+| `pnpm lint` | Biome, through `turbo run lint` plus the root `lint:root` task |
+| `pnpm typecheck` | `tsc` in every package that defines the script |
 | `pnpm test` | Unit and integration tests |
 | `pnpm test:coverage` | Vitest v8 coverage for packages that define the script |
-| `pnpm typecheck:affected` | `tsc` in packages changed since `HEAD` |
-| `pnpm test:affected` | Unit tests in packages changed since `HEAD` |
+| `pnpm typecheck:affected` | `turbo run typecheck --affected` (changes since `main`) |
+| `pnpm test:affected` | Unit tests in packages changed since `main` |
 | `pnpm test:e2e:setup` | Install Playwright Chromium for SPA and SSR |
 | `pnpm test:e2e` | Playwright for SPA and SSR |
 | `pnpm build` | Library, both web apps, and Expo web export |
@@ -65,16 +65,16 @@ Template choice is still the interactive prompt or `--template spa|ssr|mobile`. 
 | --- | --- |
 | `packages.api-client` | `packages/api-client` when `true` |
 | `packages.tsconfig` | Preset filenames. The copied package exports only these. SPA is `base.json`, `react.json`, `vite.json`, `node.json` (not `next.json` or `expo.json`). SSR swaps in `next.json`. Mobile swaps in `expo.json`. Every template that copies the API client lists `node.json`. |
-| `configs` | Repo-root files: `.npmrc`, `.editorconfig`, `biome.json`, `lefthook.yml`, `commitlint.config.mjs`, `.changeset/config.json`, `.changeset/README.md`, `renovate.json` |
+| `configs` | Repo-root files: `.npmrc`, `.editorconfig`, `biome.json`, `lefthook.yml`, `commitlint.config.mjs`, `.changeset/config.json`, `.changeset/README.md`, `renovate.json`, `turbo.json` |
 | `ci` | The template's own `.github/workflows/ci.yml`. The monorepo workflow is not copied. |
 | `docker` | `true` only for SSR, which keeps `Dockerfile` |
 | `ai.pointers` | `CLAUDE.md`, `.github/copilot-instructions.md`, `.cursor/mcp.json` |
 | `ai.rules` | That template's Cursor rules only (`general` plus `spa`, `ssr`, or `mobile`, plus `testing`) |
-| `docs` | `docs/getting-started.md`, `docs/best-practices/` (one file per topic, filtered per template; `workflow-research.md` and `dev-tools.md` are copied in full), plus ADRs 0003, 0004, 0005, and 0006. ADR 0001 and 0002 stay in this repo. |
+| `docs` | `docs/getting-started.md`, `docs/turborepo.md`, `docs/best-practices/` (one file per topic, filtered per template; `workflow-research.md` and `dev-tools.md` are copied in full), plus ADRs 0003, 0004, 0005, and 0006. ADR 0001 and 0002 stay in this repo. |
 | `clickToSource` | Inspector package, exact version, bundler config, `.env.development`, and `scripts/open-in-editor.mjs`. `configs` also copies `scripts/code` and `scripts/code.cmd`. SPA and SSR use `code-inspector-plugin` 2.0.9. Mobile uses `react-native-dev-inspector` 1.1.0. The env file leaves the editor unset. The launcher opens a listening Neovim, then Cursor or VS Code. |
 | `reactScan` | `react-scan` 0.5.7. SPA config is `src/main.tsx` (import before React). SSR config is `src/app/react-scan.tsx` (client component, import before React, top-most import in `layout.tsx`). Mobile sets `enabled` to false: 0.5.7 has no React Native export, and the native preview is unmerged. Production builds alias the web import to an empty module. |
 
-To add a shared file to a template, put its repo-root path (or preset filename) in that template's `template.json`. A file that lives only in the template directory is copied with the template; do not list it under `configs`. Include every tsconfig preset the new preset extends. Listing Biome, Lefthook, Commitlint, or Changesets also adds that tool's devDependency from the root `package.json`, and Lefthook is written to `onlyBuiltDependencies`. Leaving a tool out removes its devDependency and the `lint`, `changeset`, or `version-packages` script that would call it. Nest, Next, Expo, and Vite dependencies and scripts are removed when that framework's preset is not listed. Do not give an SPA a Nest config, `next.json`, or `expo.json`.
+To add a shared file to a template, put its repo-root path (or preset filename) in that template's `template.json`. A file that lives only in the template directory is copied with the template; do not list it under `configs`. Include every tsconfig preset the new preset extends. Listing Biome, Lefthook, Commitlint, Changesets, or `turbo.json` also adds that tool's devDependency from the root `package.json`, and Lefthook is written to `onlyBuiltDependencies`. `turbo.json` also adds `"."` to the generated workspace so Turbo schedules the app. Leaving a tool out removes its devDependency and the `lint`, `changeset`, or `version-packages` script that would call it. Nest, Next, Expo, and Vite dependencies and scripts are removed when that framework's preset is not listed. Do not give an SPA a Nest config, `next.json`, or `expo.json`.
 
 Inside a template directory, `pnpm dev`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, and `pnpm build` run for that package. SPA and SSR also have `pnpm test:e2e:setup` and `pnpm test:e2e`.
 
@@ -86,7 +86,7 @@ Biome formats and lints. Lefthook runs those checks. Do not add ESLint, Prettier
 
 Root `.vscode/extensions.json` recommends Biome, Tailwind CSS IntelliSense, Vitest, Playwright, Expo Tools, and Error Lens for this monorepo. `.vscode/settings.json` formats on save with Biome, uses the workspace TypeScript SDK, and teaches Tailwind IntelliSense the `cn` and `cva` class regex. Each template ships a smaller `.vscode` that `create-reactloom` copies with the template. The monorepo `.vscode` is not listed in `template.json` `configs`, so a generated SPA does not get the Expo recommendation and a generated mobile app does not get Tailwind or Playwright.
 
-`lefthook.yml` is a shared config, so generated projects get the same hook. Pre-commit formats staged files with Biome, then `pnpm typecheck:affected` and `pnpm test:affected` (`pnpm --filter "...[HEAD]"`). A non-zero exit blocks the commit. The hook does not run the full suite. TypeScript presets set `incremental`. `pnpm test:coverage` is the v8 report. `pnpm --filter <package> test:ui` opens Vitest UI.
+`lefthook.yml` is a shared config, so generated projects get the same hook. Pre-commit formats staged files with Biome, then `pnpm exec turbo run typecheck test --affected`. `--affected` compares the branch with `main`. A non-zero exit blocks the commit. The hook does not run the full suite. TypeScript presets set `incremental`. `pnpm test:coverage` is the v8 report. `pnpm --filter <package> test:ui` opens Vitest UI. Task order and the `.turbo` cache are `turbo.json`. The guide is `docs/turborepo.md`.
 
 `--dev` installs and starts `pnpm dev`. `--yes` without `--dev` does not start a server. SPA `server.open` and SSR `scripts/open-browser.mjs` open the browser unless `CI` is set or `REACTLOOM_OPEN=false`. Expo does not. Dev error boundaries show a source-mapped stack (`@reactloom/devtools/stack`). The monorepo CI workflow is `.github/workflows/ci.yml`: a `verify` matrix per template, a `packages` job, and a `smoke` job that generates each template and builds it. Template workflows stay one job and do not set `concurrency`.
 
@@ -176,3 +176,14 @@ After a code change, run the narrowest check that proves it, then the workspace 
 - Do not store the mobile session in AsyncStorage. Use `templates/mobile/src/lib/token-store.ts`.
 - Do not bump mobile React ahead of the Expo SDK peer.
 - Do not finish a change without running the checks that cover it.
+
+<!-- BEGIN:turborepo-agent-rules -->
+
+# This is NOT the Turborepo you know
+
+Turborepo configuration, task behavior, and CLI commands can vary between installed versions and may differ from your training data. Resolve the `turbo` package from this file's directory or relevant workspace; in monorepos, it may not be visible from the repository root. For example, run `node -p "require.resolve('turbo/package.json')"` from a workspace that depends on `turbo`.
+
+Read `docs/README.md` inside that installed package first, then read the relevant pages from its `docs/` directory before changing Turborepo configuration or commands. Heed deprecation notices. These bundled docs match the installed package version and are available without network access.
+
+This block is written and re-added by `turbo` before repository-scoped commands when an AI agent is detected. In the Turborepo source repository, its template is defined in `crates/turborepo-cli/src/cli/agent_guidance.rs`. Removing the managed block while updates are enabled means a later qualifying invocation will add it again. Set `"agentGuidance": false` in the root `turbo.json` or `turbo.jsonc` to opt out; this does not remove an existing block. Keep the block committed with your work to avoid an uncommitted change on the next agent invocation.
+<!-- END:turborepo-agent-rules -->

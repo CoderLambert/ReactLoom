@@ -26,6 +26,7 @@
     ".changeset/config.json",
     ".changeset/README.md",
     "renovate.json",
+    "turbo.json",
     "scripts/open-in-editor.mjs",
     "scripts/code",
     "scripts/code.cmd"
@@ -109,6 +110,7 @@
     "docs/best-practices/performance.md",
     "docs/best-practices/pitfalls.md",
     "docs/best-practices/workflow-research.md",
-    "docs/best-practices/dev-tools.md"
+    "docs/best-practices/dev-tools.md",
+    "docs/turborepo.md"
   ]
 }

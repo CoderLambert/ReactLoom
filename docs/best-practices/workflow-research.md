@@ -2,6 +2,8 @@
 
 本文按场景比较社区里常见的工作流，并写明 ReactLoom 现在用哪一种。它对应 GitHub issue [#2](https://github.com/CoderLambert/ReactLoom/issues/2)。
 
+issue #2 里和任务缓存有关的那一项，现在的决定是采用 Turborepo 2.11.7。本地缓存目录是 `.turbo`，CI 用 `actions/cache` 恢复它。远程缓存仍然可选，仓库不要求 `TURBO_TOKEN`。Nx、Chromatic、Lighthouse CI、size-limit、Vercel、EAS 仍是未实现。操作说明在 [Turborepo](../turborepo.md)。
+
 三个模板都会收到本文。文中的路径是各模板自己的文件名（例如 SPA 的 `vite.config.ts`）。在 monorepo 里，这些文件在对应模板目录下；`create-reactloom` 生成的项目里，它们在项目根目录。
 
 ## 状态
@@ -13,10 +15,10 @@
 
 | 场景 | 社区里常见的选择 | ReactLoom |
 | --- | --- | --- |
-| 任务缓存 | Turborepo 或 Nx | 未实现。用 pnpm 的 `...[HEAD]` 过滤受影响的包 |
+| 任务缓存 | Turborepo 或 Nx | 已接入 Turborepo 2.11.7，本地目录 `.turbo`。Nx 未实现 |
 | CI 依赖缓存 | `actions/setup-node` 的 `cache: pnpm` | 已接入 |
 | CI 浏览器缓存 | `actions/cache` 缓存 Playwright | 已接入（SPA 与 SSR；Expo 没有 Playwright） |
-| 远程任务缓存 | Turborepo Remote Cache 或 Nx Cloud | 未实现 |
+| 远程任务缓存 | Turborepo Remote Cache 或 Nx Cloud | 可选，未要求。CI 不设置令牌。Nx Cloud 未实现 |
 | CI 路径过滤 | `on.push.paths` 或 paths-filter | 未实现。每次 push 和 pull request 都跑完整作业 |
 | CI 并发 | `concurrency` 取消过期运行 | 已接入，只在 monorepo 根工作流 |
 | 提交前检查 | Lefthook，或 Husky 加 lint-staged | 已接入 Lefthook。Husky 与 lint-staged 未实现 |
@@ -72,24 +74,26 @@
 
 ### 在 ReactLoom 中
 
-未实现。没有 `turbo.json`，也没有 `nx.json`。
+已接入 Turborepo，没有 `nx.json`。根上有 `turbo.json`，版本是 2.11.7。完整字段说明、命令和清缓存的步骤在 [Turborepo](../turborepo.md)。
 
-[ADR 0005](../adr/0005-tooling.md) 的决定是：工作区只有三个模板加两个共享包，`pnpm --filter "...[HEAD]"` 已经能把类型检查和测试限制在自上次提交以来有改动的包。根 `package.json` 里：
+[ADR 0005](../adr/0005-tooling.md) 原先用 `pnpm --filter "...[HEAD]"` 限制类型检查和测试。那条过滤还留在各模板自己的 `typecheck:affected` / `test:affected` 脚本里。monorepo 根脚本和 Lefthook 改走 Turbo：
 
 | 脚本 | 命令 |
 | --- | --- |
-| `typecheck:affected` | `pnpm --filter "...[HEAD]" --if-present typecheck` |
-| `test:affected` | `pnpm --filter "...[HEAD]" --if-present test` |
+| `typecheck`、`test`、`build` | `turbo run <任务>` |
+| `typecheck:affected` | `turbo run typecheck --affected` |
+| `test:affected` | `turbo run test --affected` |
+| 模板包里的 `typecheck:affected` | 仍是 `pnpm --filter "...[HEAD]" --if-present typecheck` |
 
-Lefthook 的 pre-commit 调用这两条，不调用 Turbo 或 Nx。共享 TypeScript preset 打开了 `incremental`，重复的 `tsc` 复用 `.tsbuildinfo`。这是编译器缓存，不是任务缓存。
+`--affected` 的基线是 `main`，比 `...[HEAD]` 宽：功能分支上会带上自 `main` 以来的包。Lefthook 用的是 `--affected`。共享 TypeScript preset 的 `incremental` 还在，`.tsbuildinfo` 是编译器缓存，和 `.turbo` 不是一回事。
 
-三个模板的差异：affected 看的是包，不看框架。改了 SPA 的页面，不会因此去跑 SSR 的 `next build`，除非那个包也在 `...[HEAD]` 的依赖闭包里。CI 不使用这套过滤，CI 每次都跑三个模板。见下一节。
+三个模板的差异：任务看的是包，不看框架。改了 SPA 的页面，不会因此去跑 SSR 的 `next build`，除非那个包也在本次哈希或 `--affected` 的范围内。CI 不用 `--affected` 把整个矩阵滤掉。`verify` 仍按模板各跑一遍，但命中 `.turbo` 时会跳过输入没变的命令。
 
-以后如果包的数量让 `pnpm -r build` 明显浪费，再加 Turborepo 比 Nx 更贴近现在的脚本。那一步还没做。
+Nx 仍未实现。远程缓存未要求，见下一节。
 
 ## 2. GitHub Actions 的缓存与跳过
 
-依赖缓存、浏览器缓存、远程任务缓存、路径过滤、并发取消，是五件不同的事。ReactLoom 只做了前两件里的依赖和浏览器，加上根工作流的并发取消。
+依赖缓存、浏览器缓存、任务缓存、远程任务缓存、路径过滤、并发取消，是不同的事。ReactLoom 做了 pnpm 安装缓存、Playwright 浏览器缓存、Turborepo 本地目录（经 `actions/cache`），以及根工作流的并发取消。远程令牌没有配。
 
 ### pnpm 安装缓存
 
@@ -128,7 +132,7 @@ ReactLoom：已接入，而且只在会跑 Playwright 的作业上。
 | SSR 模板的 `.github/workflows/ci.yml` | 同上 | `playwright-ssr-` 加上系统和锁文件哈希 | 总是跑 |
 | Expo 模板的 `.github/workflows/ci.yml` | 无 | 无 | 不跑。构建是 `expo export --platform web` |
 
-安装命令是 `pnpm test:e2e:setup --with-deps`（pnpm 10 不要在 `--with-deps` 前面再加一个 `--`）。Expo 的 verify 作业另外设置 `EXPO_NO_TELEMETRY: "1"`，这只在 monorepo 矩阵里。
+安装命令是 `pnpm test:e2e:setup --with-deps`（pnpm 10 不要在 `--with-deps` 前面再加一个 `--`）。Expo 的 verify 作业设置 `EXPO_NO_TELEMETRY: "1"`：monorepo 矩阵里有，生成后的 Expo 工作流里也有。
 
 ### 远程任务缓存
 
@@ -144,7 +148,7 @@ ReactLoom：已接入，而且只在会跑 Playwright 的作业上。
 
 参考：[Turborepo remote caching](https://turborepo.dev/docs/core-concepts/remote-caching)、[Nx remote cache](https://nx.dev/docs/features/ci-features/remote-cache)。
 
-ReactLoom：未实现。`actions/cache` 只用于 Playwright 浏览器。没有 Turbo 或 Nx 的远程缓存令牌，也没有把 `dist` 或 `.next` 放进 `actions/cache`。
+ReactLoom：远程缓存未要求。没有 `TURBO_TOKEN`、`TURBO_TEAM` 或 Nx Cloud。本地任务缓存已接入：`turbo.json` 的 `cacheDir` 是 `.turbo/cache`，工作流用 `actions/cache` 保存 `.turbo`，键是 `turbo-${{ runner.os }}-${{ github.sha }}`，恢复前缀是 `turbo-${{ runner.os }}-`。这和把 `dist` 或 `.next` 单独放进 `actions/cache` 不是一回事，恢复的是 Turbo 的任务缓存。令牌怎么配写在 [Turborepo](../turborepo.md)，不配也能跑。
 
 ### 路径过滤
 
@@ -182,7 +186,7 @@ concurrency:
   cancel-in-progress: true
 ```
 
-三个模板自己的 `.github/workflows/ci.yml` 不写 `concurrency`。生成器的测试会拒绝模板工作流里出现这个键，避免生成后的单包仓库和 monorepo 的取消策略缠在一起。模板工作流也不含 `@reactloom/template-` 这样的过滤器，因为生成后的 `package.json` 名字就是项目名，作业直接跑 `pnpm lint`。
+三个模板自己的 `.github/workflows/ci.yml` 不写 `concurrency`。生成器的测试会拒绝模板工作流里出现这个键，避免生成后的单包仓库和 monorepo 的取消策略缠在一起。模板工作流也不含 `@reactloom/template-` 这样的过滤器，因为生成后的 `package.json` 名字就是项目名。作业跑 `pnpm exec turbo run lint typecheck test build`（Web 再跑 `test:e2e`），并缓存 `.turbo`。
 
 ## 3. 提交前闸门
 
@@ -215,7 +219,7 @@ ReactLoom：已接入 Lefthook 2.2.1。Husky 与 lint-staged 未实现，不要�
 
 - `parallel: false`。Biome 先改文件，然后才类型检查。
 - pre-commit 的 `biome`：glob 是 `*.{js,jsx,ts,tsx,json,css,mjs,cjs}`，命令是 `pnpm exec biome check --write`，作用在 `{staged_files}`，`stage_fixed: true`。
-- pre-commit 的 `check-affected`：glob 是 `*.{ts,tsx}`，命令是 `pnpm typecheck:affected && pnpm test:affected`。这是自 `HEAD` 起有变化的包，不是全仓库，也不是「只跑暂存文件里的测试」。
+- pre-commit 的 `check-affected`：glob 是 `*.{ts,tsx}`，命令是 `pnpm exec turbo run typecheck test --affected`。范围是相对 `main` 有变化的包，含未提交的改动，不是全仓库，也不是「只跑暂存文件里的测试」。
 - 非零退出会挡住这次提交。注释写在 `lefthook.yml` 顶部。
 
 `pnpm-workspace.yaml` 的 `onlyBuiltDependencies` 只有 `lefthook`。生成项目会保留这份列表。
@@ -361,13 +365,13 @@ monorepo 根 `.github/workflows/ci.yml`：
 
 | 作业 | 做什么 |
 | --- | --- |
-| `packages` | 全仓库 `pnpm lint`；类型检查和测试 API client、devtools；create-reactloom 的单元测试，排除 `src/scaffold.integration.test.ts` |
-| `verify (spa)` / `verify (ssr)` / `verify (mobile)` | 该包的 lint、typecheck、test、build。Web 再加 Playwright |
+| `packages` | `pnpm lint`（Turbo 的包检查加根上的 `lint:root`）；`turbo run typecheck` / `turbo run test` 覆盖 API client 和 devtools；create-reactloom 的单元测试仍用带 `--exclude` 的 `vitest run`，排除 `src/scaffold.integration.test.ts` |
+| `verify (spa)` / `verify (ssr)` / `verify (mobile)` | `turbo run lint typecheck test build`，按该模板过滤。Web 再加 Playwright |
 | `smoke` | 生成三个模板并各自构建 |
 
 Renovate 的自动合并等的就是这些检查名：`verify (spa)`、`verify (ssr)`、`verify (mobile)`、`packages`、`smoke`。
 
-生成后的项目只有模板那一份工作流：安装、lint、typecheck、test、build，Web 再加 e2e。没有矩阵，没有 `concurrency`，没有 smoke。
+生成后的项目只有模板那一份工作流：安装，然后 `pnpm exec turbo run lint typecheck test build`，Web 再加 e2e。缓存 `.turbo`。没有矩阵，没有 `concurrency`，没有 smoke。
 
 ### 预览
 
@@ -475,10 +479,10 @@ ReactLoom：未实现。没有 `eas.json`，没有 `eas-cli`，工作流不调�
 
 | 阶段 | SPA | SSR | Expo |
 | --- | --- | --- | --- |
-| 本地任务缓存 | 不用 Turbo / Nx。affected 脚本在根上 | 同左 | 同左 |
+| 本地任务缓存 | Turborepo `.turbo` | 同左 | 同左 |
 | CI 安装缓存 | pnpm | pnpm | pnpm |
 | CI 浏览器缓存 | Playwright | Playwright | 无 |
-| 远程任务缓存 | 未实现 | 未实现 | 未实现 |
+| 远程任务缓存 | 可选，未要求 | 同左 | 同左 |
 | 路径过滤 | 未实现 | 未实现 | 未实现 |
 | 提交闸门 | Lefthook + commitlint | 同左 | 同左 |
 | Storybook | 已接入 | 已接入 | 未实现 |

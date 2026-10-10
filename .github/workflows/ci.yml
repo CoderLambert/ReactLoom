@@ -5,6 +5,9 @@ on:
     branches: [main]
   pull_request:
 
+env:
+  TURBO_TELEMETRY_DISABLED: "1"
+
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -21,14 +24,20 @@ jobs:
         with:
           node-version: 22
           cache: pnpm
+      - uses: actions/cache@v4
+        with:
+          path: .turbo
+          key: turbo-${{ runner.os }}-${{ github.sha }}
+          restore-keys: |
+            turbo-${{ runner.os }}-
       - name: Install
         run: pnpm install --frozen-lockfile
       - name: Lint
         run: pnpm lint
       - name: Typecheck shared packages
-        run: pnpm --filter @reactloom/api-client --filter @reactloom/devtools --filter create-reactloom typecheck
+        run: pnpm exec turbo run typecheck --filter=@reactloom/api-client --filter=@reactloom/devtools --filter=create-reactloom
       - name: Test shared packages
-        run: pnpm --filter @reactloom/api-client --filter @reactloom/devtools test
+        run: pnpm exec turbo run test --filter=@reactloom/api-client --filter=@reactloom/devtools
       - name: Test create-reactloom
         run: pnpm --filter create-reactloom exec vitest run --exclude src/scaffold.integration.test.ts --exclude '**/node_modules/**' --exclude '**/dist/**'
 
@@ -60,26 +69,26 @@ jobs:
           node-version: 22
           cache: pnpm
       - uses: actions/cache@v4
+        with:
+          path: .turbo
+          key: turbo-${{ runner.os }}-${{ github.sha }}
+          restore-keys: |
+            turbo-${{ runner.os }}-
+      - uses: actions/cache@v4
         if: matrix.e2e
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
       - name: Install
         run: pnpm install --frozen-lockfile
-      - name: Lint
-        run: pnpm --filter "${{ matrix.filter }}" lint
-      - name: Typecheck
-        run: pnpm --filter "${{ matrix.filter }}" typecheck
-      - name: Test
-        run: pnpm --filter "${{ matrix.filter }}" test
-      - name: Build
-        run: pnpm --filter "${{ matrix.filter }}" build
+      - name: Lint, typecheck, test, and build
+        run: pnpm exec turbo run lint typecheck test build --filter="${{ matrix.filter }}"
       - name: Install Playwright
         if: matrix.e2e
         run: pnpm --filter "${{ matrix.filter }}" test:e2e:setup --with-deps
       - name: End-to-end
         if: matrix.e2e
-        run: pnpm --filter "${{ matrix.filter }}" test:e2e
+        run: pnpm exec turbo run test:e2e --filter="${{ matrix.filter }}"
 
   smoke:
     runs-on: ubuntu-latest

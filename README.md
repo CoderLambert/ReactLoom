@@ -108,7 +108,7 @@ From the repo root:
 | `pnpm exec create-reactloom` | Scaffold an app in the current directory |
 | `pnpm create-reactloom` | Same CLI, rebuilding it first |
 
-Inside a template, `pnpm dev`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, and `pnpm build` work on that package alone. SPA and SSR also have `pnpm test:e2e:setup` and `pnpm test:e2e`.
+Inside a template, `pnpm dev`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, and `pnpm build` work on that package alone. SPA and SSR also have `pnpm test:e2e:setup` and `pnpm test:e2e`. From the repo root those commands go through Turborepo (`turbo run`). The task list is [Turborepo](docs/turborepo.md). `pnpm test:e2e:setup` installs browsers and is not a Turbo task.
 
 `create-reactloom` is a root devDependency, so `pnpm exec create-reactloom` resolves from the repository root. The app is written in the directory where you run the command. Pass a path when it should land somewhere else:
 
@@ -213,11 +213,11 @@ Generated SPA and SSR projects include the same `test:e2e:setup` script. pnpm 10
 
 ## Developer productivity
 
-Cloning this repo, or generating a project with `create-reactloom`, turns these on. There is no ESLint, Prettier, Husky, lint-staged, or Turbo setup step. The one exception is Neovim: the dev server cannot open a new nvim window, so Neovim users start a listener once. The walkthrough is [Getting started](docs/getting-started.md). `create-reactloom` copies that file into the generated project.
+Cloning this repo, or generating a project with `create-reactloom`, turns these on. There is no ESLint, Prettier, Husky, or lint-staged setup step. Turborepo 2.11.7 is already the task runner. The Chinese guide is [Turborepo](docs/turborepo.md). The one exception for editors is Neovim: the dev server cannot open a new nvim window, so Neovim users start a listener once. The walkthrough is [Getting started](docs/getting-started.md). `create-reactloom` copies that file into the generated project.
 
 ### Biome instead of ESLint and Prettier
 
-Biome 2.5.15 is the formatter and the linter. `pnpm lint` is `biome check .`.
+Biome 2.5.15 is the formatter and the linter. Root `pnpm lint` is `turbo run lint lint:root`. Each package's own `lint` script is `biome check .`.
 
 ESLint plus Prettier was the usual pair, and it is not used here. TypeScript 7 does not ship a programmatic compiler API, so type-aware `typescript-eslint` is not a practical default. `tsc` remains the typecheck. Biome covers format and lint in one tool without that API. `.vscode/extensions.json` marks the ESLint and Prettier extensions as unwanted, so the editor does not prompt you to install them.
 
@@ -230,11 +230,11 @@ Lefthook is the git hook runner. Husky and lint-staged are not installed.
 The pre-commit hook runs in order (`parallel: false`):
 
 1. Biome formats and lints the staged files (`{staged_files}`) and stages the fixes.
-2. If a staged file is TypeScript, `pnpm typecheck:affected` and `pnpm test:affected` run.
+2. If a staged file is TypeScript, `pnpm exec turbo run typecheck test --affected` runs. `--affected` selects packages changed since `main`.
 
 The commit-msg hook runs Commitlint. Commits use Conventional Commits.
 
-A non-zero exit from Biome, the affected typecheck, the affected tests, or Commitlint rejects the commit. The hook does not run the full monorepo suite. Biome sees only staged files. The typecheck and tests use `pnpm --filter "...[HEAD]"`.
+A non-zero exit from Biome, the affected typecheck, the affected tests, or Commitlint rejects the commit. The hook does not run the full monorepo suite. Biome sees only staged files. The typecheck and tests use `turbo run typecheck test --affected`.
 
 ### VS Code
 
@@ -251,15 +251,19 @@ Format on save is on. The default formatter is `biomejs.biome`. Save also runs `
 
 Biome's pre-commit command receives only `{staged_files}`. It does not reformat the rest of the tree.
 
-The typecheck and test that follow are not limited to the staged hunks. They are `pnpm --filter "...[HEAD]"`, so they run in packages changed since the last commit, and in dependents of those packages. Unchanged packages are skipped. A staged markdown file does not by itself start that step: the command's glob is `*.{ts,tsx}`.
+The typecheck and test that follow are not limited to the staged hunks. They are `turbo --affected`, so they run in packages changed since `main`, including uncommitted work. A staged markdown file does not by itself start that step: the command's glob is `*.{ts,tsx}`.
 
 ### Typecheck and test caching
 
-Shared `tsconfig` presets set `incremental`, so a later `tsc` reuses `.tsbuildinfo`. Those files are gitignored. The affected filter is the other cache: pre-commit does not typecheck or test a package that has not changed since `HEAD`. Turbo is not added. This workspace is a handful of packages, and the filter already skips the unchanged ones.
+Turborepo 2.11.7 is the task cache. Root `pnpm typecheck`, `pnpm test`, and `pnpm build` are `turbo run`. A repeat with the same inputs restores outputs from `.turbo/cache` and skips the command. `pnpm exec turbo run <task> --force` ignores that cache. `docs/turborepo.md` covers the tasks, the env keys, and how to delete `.turbo`.
+
+Shared `tsconfig` presets also set `incremental`, so a later `tsc` that does run can reuse `.tsbuildinfo`. Those files are gitignored. That compiler cache is separate from `.turbo`.
+
+Lefthook's `--affected` flag skips packages that have not changed since `main`. Inside a template, `typecheck:affected` is still `pnpm --filter "...[HEAD]"`.
 
 ### Vitest UI and coverage
 
-Inside a package, `pnpm test:ui` opens the Vitest UI and `pnpm test:coverage` writes a v8 text and HTML report under `coverage/` (gitignored). From the repo root, `pnpm test:coverage` runs that script in every package that defines it. A generated project has both scripts at its root. Coverage is not a CI gate.
+Inside a package, `pnpm test:ui` opens the Vitest UI and `pnpm test:coverage` writes a v8 text and HTML report under `coverage/` (gitignored). From the repo root, `pnpm test:coverage` runs that script through Turbo in every package that defines it. A generated project has both scripts at its root. Coverage is not a CI gate. The `test:coverage` task is what records `coverage/**`; `test` does not.
 
 ### React and TanStack devtools
 

@@ -2,7 +2,7 @@
 
 这里只记仓库里真正有的生产力工具：它做什么、怎么用、配置文件在哪、三个模板有什么不同。标成「未实现」的项没有配置，不要到仓库里去找。
 
-工作流层面的比较（Turborepo、Chromatic、Lighthouse CI、Vercel、EAS 等）在 [工作流调研](workflow-research.md)。那些工具多数未实现。
+Turborepo 已接入，任务和缓存的说明在 [Turborepo](../turborepo.md)。工作流层面其余的比较（Chromatic、Lighthouse CI、Vercel、EAS 等）在 [工作流调研](workflow-research.md)。那些工具多数未实现。
 
 三个模板都会收到本文。路径是各模板自己的文件名。monorepo 里它们在对应模板目录下；生成后的项目里它们在项目根目录。
 
@@ -25,6 +25,25 @@
 | vite-plugin-checker | 已接入 | 未实现。用 Next 的 overlay | 未实现 |
 | TanStack 开发工具 | Query 和 Router | 只有 Query | 未实现 |
 | Vitest UI 与覆盖率 | 已接入 | 已接入 | 已接入 |
+| Turborepo | 已接入 | 已接入 | 已接入 |
+
+## Turborepo
+
+### 作用
+
+Turborepo 2.11.7 编排工作区里的 `build`、`dev`、`test`、`lint`、`typecheck`、`analyze`、`storybook`。它缓存 `dist`、`.next`（不含 `.next/cache`）、`storybook-static` 和 `coverage`。它不代替 Vite、Next.js 或 Expo。
+
+### 用法
+
+仓库根的 `pnpm dev:spa`、`pnpm lint`、`pnpm typecheck`、`pnpm test`、`pnpm build` 都是 `turbo run`。某个模板目录里的 `pnpm dev` / `pnpm build` 仍是该包自己的命令。
+
+### 配置
+
+根 `turbo.json`。三个模板经 `template.json` 的 `configs` 复制这一份，并带上 `turbo` 开发依赖。生成后的 `pnpm-workspace.yaml` 含 `"."` 和 `packages/*`，所以应用和共享包都会被调度。字段、命令、清缓存和可选的远程缓存见 [Turborepo](../turborepo.md)。
+
+### 模板差异
+
+任务名相同。SPA 和 SSR 有 `storybook` 与 `test:e2e`。Expo 没有这两条脚本，Turbo 会跳过。`dev` 在 Expo 上是 `expo start`。
 
 ## Biome
 
@@ -36,7 +55,7 @@
 
 | 命令 | 在哪跑 | 做什么 |
 | --- | --- | --- |
-| `pnpm lint` | 仓库根 | `biome check .` |
+| `pnpm lint` | 仓库根 | `turbo run lint lint:root`。各包的 `lint` 是 `biome check .` |
 | `pnpm format` | 仓库根 | `biome check --write .` |
 | `pnpm lint` | 某个模板目录 | 只检查那个包 |
 
@@ -63,7 +82,7 @@
 
 Lefthook 2.2.1 跑 git 钩子。commitlint 21.2.3 检查提交说明是不是约定式提交。Husky 和 lint-staged 未实现。
 
-非零退出会挡住这次提交。钩子不快跑全仓库：格式化只看暂存文件，类型检查和测试只看自 `HEAD` 起有变化的包。
+非零退出会挡住这次提交。钩子不快跑全仓库：格式化只看暂存文件。类型检查和测试用 `turbo --affected`，范围是相对 `main` 有变化的包。
 
 ### 用法
 
@@ -71,7 +90,7 @@ Lefthook 2.2.1 跑 git 钩子。commitlint 21.2.3 检查提交说明是不是约
 
 不需要单独的命令。`git commit` 时：
 
-1. pre-commit：Biome，然后 `pnpm typecheck:affected && pnpm test:affected`。
+1. pre-commit：Biome，然后 `pnpm exec turbo run typecheck test --affected`。
 2. commit-msg：`pnpm exec commitlint --edit`。
 
 说明形如 `docs: add a tool catalog`。绕过钩子的 `--no-verify` 不是工作流的一部分。
@@ -83,9 +102,9 @@ Lefthook 2.2.1 跑 git 钩子。commitlint 21.2.3 检查提交说明是不是约
 | `lefthook.yml` | pre-commit 与 commit-msg。`parallel: false` |
 | `commitlint.config.mjs` | `extends: ['@commitlint/config-conventional']` |
 | `pnpm-workspace.yaml` | `onlyBuiltDependencies: [lefthook]` |
-| 根 `package.json` | `typecheck:affected`、`test:affected` 使用 `pnpm --filter "...[HEAD]"` |
+| 根 `package.json` | `typecheck:affected`、`test:affected` 是 `turbo run … --affected`。模板包里的同名脚本仍是 `pnpm --filter "...[HEAD]"` |
 
-pre-commit 的 Biome glob 是 `*.{js,jsx,ts,tsx,json,css,mjs,cjs}`，带 `stage_fixed: true`，格式化结果会回到暂存区。affected 那一步的 glob 是 `*.{ts,tsx}`。只改了 Markdown 时，不会因此跑类型检查。
+pre-commit 的 Biome glob 是 `*.{js,jsx,ts,tsx,json,css,mjs,cjs}`，带 `stage_fixed: true`，格式化结果会回到暂存区。affected 那一步的 glob 是 `*.{ts,tsx}`。只改了 Markdown 时，不会因此跑类型检查。`--affected` 比包脚本里的 `...[HEAD]` 宽，功能分支会带上自 `main` 以来的改动。
 
 ### 模板差异
 
@@ -507,7 +526,7 @@ pnpm test:ui
 pnpm test:coverage
 ```
 
-仓库根的 `pnpm test:coverage` 是 `pnpm -r --if-present test:coverage`。没有这个脚本的包会被跳过。
+仓库根的 `pnpm test:coverage` 是 `turbo run test:coverage`。没有这个脚本的包会被跳过。覆盖率目录是该任务的输出。
 
 ### 配置
 

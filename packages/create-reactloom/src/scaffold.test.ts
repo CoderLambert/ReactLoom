@@ -95,6 +95,7 @@ describe('create-reactloom', () => {
     await expect(stat(path.join(directory, 'biome.json'))).resolves.toBeTruthy()
     const workspace = await readFile(path.join(directory, 'pnpm-workspace.yaml'), 'utf8')
     expect(workspace).toContain('packages/*')
+    expect(workspace).toContain('"."')
     expect(workspace).not.toContain('templates/*')
     expect(workspace).toContain('lefthook')
     const envExample = await readFile(path.join(directory, '.env.example'), 'utf8')
@@ -596,8 +597,12 @@ describe('create-reactloom', () => {
 
       const workspace = await readFile(path.join(directory, 'pnpm-workspace.yaml'), 'utf8')
       expect(workspace).toContain('packages/*')
+      expect(workspace).toContain('"."')
       expect(workspace).not.toContain('templates/*')
       expect(workspace).toContain('onlyBuiltDependencies')
+      expect(pkg.devDependencies?.turbo).toBe('2.11.7')
+      await expect(stat(path.join(directory, 'turbo.json'))).resolves.toBeTruthy()
+      await expect(stat(path.join(directory, 'docs/turborepo.md'))).resolves.toBeTruthy()
     }
   })
 
@@ -696,7 +701,7 @@ describe('create-reactloom', () => {
     expect(spaVite).toContain("'react-scan': devtoolsStub")
     expect(spaMain).toContain('TanStackRouterDevtools')
     const lefthook = await readFile(path.join(spa, 'lefthook.yml'), 'utf8')
-    expect(lefthook).toContain('typecheck:affected')
+    expect(lefthook).toContain('turbo run typecheck test --affected')
     expect(lefthook).toContain('{staged_files}')
 
     const ssrExtensions = await readFile(path.join(ssr, '.vscode/extensions.json'), 'utf8')

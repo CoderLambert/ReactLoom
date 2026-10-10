@@ -15,6 +15,7 @@ const versions: Record<string, string> = {
   '@commitlint/cli': '21.2.3',
   '@commitlint/config-conventional': '21.2.3',
   '@changesets/cli': '3.0.3',
+  turbo: '2.11.7',
 }
 
 function spaManifest(): TemplateManifest {
@@ -295,6 +296,31 @@ describe('template selection', () => {
     )
     expect(pruned.scripts).toEqual({ dev: 'vite' })
     expect(pruned.devDependencies?.['@biomejs/biome']).toBeUndefined()
+  })
+
+  it('adds turbo when turbo.json is selected and includes the app package', () => {
+    const manifest = spaManifest()
+    manifest.configs = [...manifest.configs, 'turbo.json']
+    const pruned = pruneProjectPackage(
+      { scripts: { build: 'vite build', dev: 'vite' }, devDependencies: {} },
+      manifest,
+      versions,
+    )
+    expect(pruned.devDependencies?.turbo).toBe('2.11.7')
+    expect(pruned.scripts?.build).toBe('vite build')
+    const workspace = workspaceYaml(manifest)
+    expect(workspace).toContain('"."')
+    expect(workspace).toContain('packages/*')
+    expect(workspace).not.toContain('templates/*')
+
+    const without = spaManifest()
+    const prunedWithout = pruneProjectPackage(
+      { scripts: { build: 'vite build' }, devDependencies: { turbo: '2.11.7' } },
+      without,
+      versions,
+    )
+    expect(prunedWithout.devDependencies?.turbo).toBeUndefined()
+    expect(workspaceYaml(without)).not.toContain('"."')
   })
 
   it('writes lefthook into the workspace only when its config is selected', () => {

@@ -6,6 +6,7 @@ export const TOOLING_DEV_DEPENDENCIES: Record<string, readonly string[]> = {
   'lefthook.yml': ['lefthook'],
   'commitlint.config.mjs': ['@commitlint/cli', '@commitlint/config-conventional'],
   '.changeset/config.json': ['@changesets/cli'],
+  'turbo.json': ['turbo'],
 }
 
 /** Scripts removed when the config they run is not in the manifest. */
@@ -38,7 +39,9 @@ type TsconfigPackage = {
 }
 
 export function workspaceYaml(manifest: TemplateManifest): string {
-  const lines = ['packages:', '  - "packages/*"']
+  const packageGlobs = ['  - "packages/*"']
+  if (manifest.configs.includes('turbo.json')) packageGlobs.unshift('  - "."')
+  const lines = ['packages:', ...packageGlobs]
   if (manifest.configs.includes('lefthook.yml')) {
     lines.push('', 'onlyBuiltDependencies:', '  - lefthook')
   }
