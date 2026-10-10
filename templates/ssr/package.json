@@ -11,6 +11,7 @@
     "lint": "biome check .",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
+    "test:e2e:setup": "playwright install chromium",
     "test:e2e": "playwright test",
     "analyze": "ANALYZE=true next build"
   },

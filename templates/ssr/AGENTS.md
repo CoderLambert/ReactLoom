@@ -40,6 +40,7 @@ From this directory:
 | `pnpm lint` | Biome |
 | `pnpm typecheck` | `tsc` |
 | `pnpm test` | Vitest |
+| `pnpm test:e2e:setup` | Install Playwright Chromium |
 | `pnpm test:e2e` | Playwright |
 | `pnpm build` | `next build` and the gzip budget check |
 
@@ -49,7 +50,7 @@ Route handlers and server modules may use the client or the local task module. C
 
 ## Testing
 
-Vitest covers session cookies and security headers beside `templates/ssr/src/server`. Playwright signs in as `ada@reactloom.dev` / `loom-demo`, waits for the heading, then runs axe.
+Vitest covers session cookies and security headers beside `templates/ssr/src/server`. Playwright signs in as `ada@reactloom.dev` / `loom-demo`, waits for the heading, then runs axe. Run `pnpm test:e2e:setup` before the first end-to-end run. On Linux, `pnpm test:e2e:setup --with-deps` installs system libraries.
 
 ## Do
 

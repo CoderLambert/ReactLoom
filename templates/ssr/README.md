@@ -7,6 +7,7 @@ pnpm dev          # http://127.0.0.1:4318
 pnpm lint
 pnpm typecheck
 pnpm test
+pnpm test:e2e:setup   # first Playwright run; on Linux add: --with-deps
 pnpm test:e2e
 pnpm build
 ```

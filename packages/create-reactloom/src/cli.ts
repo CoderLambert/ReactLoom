@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { realpathSync } from 'node:fs'
 import { readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -41,9 +42,12 @@ export function parseCliArgs(argv: string[]): CliOptions {
 }
 
 function helpText(): string {
-  return `create-reactloom <project-name> [options]
+  return `create-reactloom <project> [options]
 
 Scaffold a production ReactLoom app.
+
+<project> is a directory name or a path. The app is created there, relative to
+the directory where you ran the command (or INIT_CWD when pnpm sets it).
 
 Templates:
   spa      Vite SPA (TanStack Router + Query)
@@ -58,10 +62,36 @@ Options:
   -v, --version         Print the CLI version
 
 Examples:
-  pnpm create-reactloom studio --template spa --yes
-  pnpm create-reactloom web --template ssr --yes --install
   pnpm exec create-reactloom
+  pnpm exec create-reactloom studio --template spa --yes
+  pnpm exec create-reactloom ../outside/web --template ssr --yes --install
 `
+}
+
+export function invocationDirectory(
+  env: { INIT_CWD?: string } = process.env,
+  cwd = process.cwd(),
+): string {
+  const init = env.INIT_CWD
+  if (typeof init === 'string' && path.isAbsolute(init)) return init
+  return cwd
+}
+
+export function isDirectInvocation(entry: string | undefined, modulePath: string): boolean {
+  if (!entry) return false
+  try {
+    return realpathSync(modulePath) === realpathSync(entry)
+  } catch {
+    return path.resolve(modulePath) === path.resolve(entry)
+  }
+}
+
+export function resolveProjectLocation(
+  nameOrPath: string,
+  baseDir: string,
+): { name: string; directory: string } {
+  const directory = path.resolve(baseDir, nameOrPath)
+  return { directory, name: path.basename(directory) }
 }
 
 async function readOwnVersion(): Promise<string> {
@@ -137,20 +167,28 @@ export async function run(argv: string[]): Promise<void> {
     throw new Error(`Unknown template "${template}". Choose one of: ${templateIds.join(', ')}.`)
   }
 
-  const directory = path.resolve(process.cwd(), name)
+  const baseDir = invocationDirectory()
+  const location = resolveProjectLocation(name, baseDir)
   const spinner = options.yes ? undefined : p.spinner()
   spinner?.start(`Copying the ${template} template`)
-  await scaffold({ name, template, directory, install })
+  await scaffold({
+    name: location.name,
+    template,
+    directory: location.directory,
+    install,
+  })
   spinner?.stop('Project created')
 
+  const shown = path.relative(baseDir, location.directory) || '.'
   const nextSteps = [
-    `cd ${name}`,
+    `cd ${shown}`,
     install ? undefined : 'pnpm install',
     template === 'mobile' ? 'pnpm start' : 'pnpm dev',
+    template === 'mobile' ? undefined : 'pnpm test:e2e:setup',
   ].filter((step): step is string => Boolean(step))
 
   if (options.yes) {
-    console.log(`Created ${directory}`)
+    console.log(`Created ${location.directory}`)
     console.log(nextSteps.join('\n'))
     return
   }
@@ -159,10 +197,7 @@ export async function run(argv: string[]): Promise<void> {
   p.outro('Done')
 }
 
-const invokedDirectly =
-  process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])
-
-if (invokedDirectly) {
+if (isDirectInvocation(process.argv[1], fileURLToPath(import.meta.url))) {
   run(process.argv.slice(2)).catch((error: unknown) => {
     const message = error instanceof Error ? error.message : 'Scaffold failed.'
     console.error(message)

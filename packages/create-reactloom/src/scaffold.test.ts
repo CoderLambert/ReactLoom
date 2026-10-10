@@ -1,12 +1,20 @@
-import { mkdtemp, readFile, rm, stat } from 'node:fs/promises'
+import { mkdtemp, readFile, rm, stat, symlink } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { afterEach, describe, expect, it } from 'vitest'
 import { adaptAiText } from './ai-config.js'
-import { parseCliArgs } from './cli.js'
+import {
+  invocationDirectory,
+  isDirectInvocation,
+  parseCliArgs,
+  resolveProjectLocation,
+  run,
+} from './cli.js'
 import { scaffold } from './scaffold.js'
 
 const created: string[] = []
+const cliPackageDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 
 afterEach(async () => {
   await Promise.all(created.splice(0).map((dir) => rm(dir, { recursive: true, force: true })))
@@ -36,9 +44,11 @@ describe('create-reactloom', () => {
     const pkg = JSON.parse(await readFile(path.join(directory, 'package.json'), 'utf8')) as {
       name: string
       dependencies: Record<string, string>
+      scripts: Record<string, string>
     }
     expect(pkg.name).toBe('studio')
     expect(pkg.dependencies['@reactloom/api-client']).toBe('workspace:*')
+    expect(pkg.scripts['test:e2e:setup']).toBe('playwright install chromium')
     await expect(stat(path.join(directory, 'template.json'))).rejects.toThrow()
     await expect(stat(path.join(directory, 'src', 'main.tsx'))).resolves.toBeTruthy()
     await expect(
@@ -66,6 +76,95 @@ describe('create-reactloom', () => {
     const config = await readFile(path.join(directory, 'next.config.ts'), 'utf8')
     expect(config).toContain('import.meta.dirname')
     expect(config).not.toContain('../..')
+    const pkg = JSON.parse(await readFile(path.join(directory, 'package.json'), 'utf8')) as {
+      scripts: Record<string, string>
+    }
+    expect(pkg.scripts['test:e2e:setup']).toBe('playwright install chromium')
+  })
+
+  it('treats a symlinked entry as a direct invocation', async () => {
+    const parent = await tempParent()
+    const source = path.join(cliPackageDir, 'src/cli.ts')
+    const link = path.join(parent, 'cli.ts')
+    await symlink(source, link)
+    expect(isDirectInvocation(link, source)).toBe(true)
+    expect(isDirectInvocation(undefined, source)).toBe(false)
+  })
+
+  it('resolves a project name against the invocation directory', () => {
+    expect(resolveProjectLocation('studio', '/work')).toEqual({
+      name: 'studio',
+      directory: '/work/studio',
+    })
+    expect(resolveProjectLocation('../outside/web', '/work')).toEqual({
+      name: 'web',
+      directory: '/outside/web',
+    })
+    expect(resolveProjectLocation('../../outside/web', '/work/packages/create-reactloom')).toEqual({
+      name: 'web',
+      directory: '/work/outside/web',
+    })
+    expect(resolveProjectLocation('/tmp/pocket', '/work')).toEqual({
+      name: 'pocket',
+      directory: '/tmp/pocket',
+    })
+    expect(invocationDirectory({ INIT_CWD: '/work' }, '/work/packages/create-reactloom')).toBe(
+      '/work',
+    )
+    expect(invocationDirectory({}, '/work')).toBe('/work')
+  })
+
+  it('creates the project in the current directory', async () => {
+    const parent = await tempParent()
+    const previousCwd = process.cwd()
+    const previousInit = process.env.INIT_CWD
+    delete process.env.INIT_CWD
+    process.chdir(parent)
+    try {
+      await run(['studio', '--template', 'spa', '--yes'])
+      const pkg = JSON.parse(
+        await readFile(path.join(parent, 'studio', 'package.json'), 'utf8'),
+      ) as { name: string }
+      expect(pkg.name).toBe('studio')
+    } finally {
+      process.chdir(previousCwd)
+      if (previousInit === undefined) delete process.env.INIT_CWD
+      else process.env.INIT_CWD = previousInit
+    }
+  })
+
+  it('uses INIT_CWD when the process directory is the CLI package', async () => {
+    const parent = await tempParent()
+    const previousCwd = process.cwd()
+    const previousInit = process.env.INIT_CWD
+    process.env.INIT_CWD = parent
+    process.chdir(cliPackageDir)
+    try {
+      await run(['studio', '--template', 'spa', '--yes'])
+      await expect(stat(path.join(parent, 'studio', 'package.json'))).resolves.toBeTruthy()
+      await expect(stat(path.join(cliPackageDir, 'studio'))).rejects.toThrow()
+    } finally {
+      process.chdir(previousCwd)
+      if (previousInit === undefined) delete process.env.INIT_CWD
+      else process.env.INIT_CWD = previousInit
+    }
+  })
+
+  it('creates the project at a path passed on the command line', async () => {
+    const parent = await tempParent()
+    const target = path.join(parent, 'nested', 'studio')
+    const previousInit = process.env.INIT_CWD
+    delete process.env.INIT_CWD
+    try {
+      await run([target, '--template', 'mobile', '--yes'])
+      const pkg = JSON.parse(await readFile(path.join(target, 'package.json'), 'utf8')) as {
+        name: string
+      }
+      expect(pkg.name).toBe('studio')
+    } finally {
+      if (previousInit === undefined) delete process.env.INIT_CWD
+      else process.env.INIT_CWD = previousInit
+    }
   })
 
   it('rejects unsafe project names', async () => {

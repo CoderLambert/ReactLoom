@@ -79,11 +79,22 @@ From the repo root:
 | `pnpm lint` | Biome |
 | `pnpm typecheck` | `tsc` in every package |
 | `pnpm test` | Unit and integration tests |
+| `pnpm test:e2e:setup` | Install Playwright Chromium for SPA and SSR |
 | `pnpm test:e2e` | Playwright for SPA and SSR |
 | `pnpm build` | Library, both web apps, and Expo web export |
-| `pnpm create` | Runs `create-reactloom` |
+| `pnpm exec create-reactloom` | Scaffold an app in the current directory |
+| `pnpm create-reactloom` | Same CLI, rebuilding it first |
 
-Inside a template, `pnpm dev`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, and `pnpm build` work on that package alone.
+Inside a template, `pnpm dev`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, and `pnpm build` work on that package alone. SPA and SSR also have `pnpm test:e2e:setup` and `pnpm test:e2e`.
+
+`create-reactloom` is a root devDependency, so `pnpm exec create-reactloom` resolves from the repository root. The app is written in the directory where you run the command. Pass a path when it should land somewhere else:
+
+```sh
+pnpm exec create-reactloom studio --template spa --yes
+pnpm exec create-reactloom ../outside/web --template ssr --yes
+```
+
+`pnpm create` is pnpm's built-in initializer and does not run this CLI.
 
 ## Create a project
 
@@ -101,7 +112,7 @@ pnpm exec create-reactloom web --template ssr --yes --install
 pnpm exec create-reactloom pocket --template mobile --yes
 ```
 
-`--template` is `spa`, `ssr`, or `mobile`. `--yes` skips prompts. `--install` runs `pnpm install` in the new directory.
+`--template` is `spa`, `ssr`, or `mobile`. `--yes` skips prompts. `--install` runs `pnpm install` in the new directory. The project name is the last segment of the path, so `studio` and `../outside/studio` both name the package `studio`.
 
 The CLI copies the template, copies `@reactloom/api-client` and `@reactloom/tsconfig` into `packages/`, writes a `pnpm-workspace.yaml`, copies Biome and EditorConfig, renames the package, and deletes template-only files (`template.json`, and for SSR the monorepo Dockerfile). The SSR trace root in `next.config.ts` is rewritten so the generated app is self-contained.
 
@@ -116,6 +127,20 @@ It also copies the matching AI collaboration files: that template's `AGENTS.md`,
 - Web UI imports `cn` from `@/lib/utils`. Add shadcn components with the aliases in `templates/spa/components.json`.
 - Commits follow Conventional Commits. Lefthook runs Biome and Commitlint.
 - Changesets cover the shared library and the CLI. Templates are not published.
+
+Before the first Playwright run, install browsers:
+
+```sh
+pnpm test:e2e:setup
+```
+
+On Linux, install the system libraries as well:
+
+```sh
+pnpm test:e2e:setup --with-deps
+```
+
+Generated SPA and SSR projects include the same `test:e2e:setup` script. pnpm 10 skips dependency build scripts unless they are trusted. `pnpm-workspace.yaml` lists `lefthook` in `onlyBuiltDependencies`, so `pnpm install` registers the git hooks. To trust another package, add its name there or run `pnpm approve-builds`.
 
 ## AI collaboration
 

@@ -60,6 +60,7 @@ async function rewritePackageName(directory: string, name: string): Promise<void
 
 export async function scaffold(options: ScaffoldOptions): Promise<void> {
   assertProjectName(options.name)
+  await mkdir(path.dirname(options.directory), { recursive: true })
   await assertDestination(options.directory)
 
   const here = path.dirname(fileURLToPath(import.meta.url))

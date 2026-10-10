@@ -47,11 +47,17 @@ From the repository root:
 | `pnpm lint` | Biome check |
 | `pnpm typecheck` | `tsc` in every package |
 | `pnpm test` | Unit and integration tests |
+| `pnpm test:e2e:setup` | Install Playwright Chromium for SPA and SSR |
 | `pnpm test:e2e` | Playwright for SPA and SSR |
 | `pnpm build` | Library, both web apps, and Expo web export |
-| `pnpm create` | Build and run `create-reactloom` |
+| `pnpm exec create-reactloom` | Scaffold an app in the current directory |
+| `pnpm create-reactloom` | Same CLI, rebuilding it first |
 
-Inside a template directory, `pnpm dev`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, and `pnpm build` run for that package. SPA and SSR also have `pnpm test:e2e`.
+`create-reactloom` is a root devDependency, so `pnpm exec create-reactloom` works from the repository root. The generated app is created in that current directory, or at the path you pass (`../outside/web`). It is not created inside `packages/create-reactloom`. `pnpm create` is pnpm's built-in initializer and does not run this CLI.
+
+Inside a template directory, `pnpm dev`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, and `pnpm build` run for that package. SPA and SSR also have `pnpm test:e2e:setup` and `pnpm test:e2e`.
+
+Before the first Playwright run, install browsers with `pnpm test:e2e:setup`. On Linux, use `pnpm test:e2e:setup --with-deps` so system libraries are installed too. pnpm 10 skips dependency build scripts unless they are listed. `pnpm-workspace.yaml` sets `onlyBuiltDependencies` to `lefthook`, so install registers the git hooks. Trust another package by adding it there or by running `pnpm approve-builds`.
 
 Node is 22.14 or newer (`.nvmrc` is `22`). The package manager is pnpm 10.33.3. Use pnpm, including `pnpm exec`, for every install and script.
 
@@ -99,7 +105,7 @@ The client joins the base URL, sends JSON, attaches a bearer token when `getAcce
 
 - Unit and integration tests use Vitest. SPA component tests go through `templates/spa/src/test/render.tsx`.
 - SPA HTTP tests use MSW. `templates/spa/src/test/setup.ts` fails the test when a request has no handler.
-- Playwright covers SPA and SSR. The axe scan runs after the heading is visible. `color-contrast` is disabled in the current specs.
+- Playwright covers SPA and SSR. Run `pnpm test:e2e:setup` before the first end-to-end run, and add `--with-deps` on Linux. The axe scan runs after the heading is visible. `color-contrast` is disabled in the current specs.
 - Mobile CI runs Vitest and `expo export --platform web`. The Maestro flow at `templates/mobile/.maestro/login.yaml` is local device coverage.
 - Add a changeset when you change `@reactloom/api-client` or `create-reactloom` behavior.
 

@@ -20,6 +20,9 @@ importers:
       '@commitlint/config-conventional':
         specifier: 21.2.3
         version: 21.2.3
+      create-reactloom:
+        specifier: workspace:*
+        version: link:packages/create-reactloom
       lefthook:
         specifier: 2.2.1
         version: 2.2.1

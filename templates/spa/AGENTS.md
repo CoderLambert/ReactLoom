@@ -31,6 +31,7 @@ From this directory:
 | `pnpm lint` | Biome |
 | `pnpm typecheck` | `tsc` |
 | `pnpm test` | Vitest |
+| `pnpm test:e2e:setup` | Install Playwright Chromium |
 | `pnpm test:e2e` | Playwright |
 | `pnpm build` | Production build and the gzip budget check |
 
@@ -40,7 +41,7 @@ Feature API modules call `api.request` with a Zod schema and the query `signal`.
 
 ## Testing
 
-Vitest plus Testing Library. MSW must handle every request the screen makes. Playwright signs in as `ada@reactloom.dev` / `loom-demo`, waits for the heading, then runs axe.
+Vitest plus Testing Library. MSW must handle every request the screen makes. Playwright signs in as `ada@reactloom.dev` / `loom-demo`, waits for the heading, then runs axe. Run `pnpm test:e2e:setup` before the first end-to-end run. On Linux, `pnpm test:e2e:setup --with-deps` installs system libraries.
 
 ## Do
 

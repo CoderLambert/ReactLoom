@@ -7,6 +7,7 @@ alwaysApply: false
 # Testing
 
 - Run unit tests with Vitest (`pnpm test` in the package, or `pnpm test` at the workspace root).
+- Before the first Playwright run, install Chromium with `pnpm test:e2e:setup`. On Linux, `pnpm test:e2e:setup --with-deps`.
 - Query the DOM with Testing Library roles and labels. SPA screen tests go through the shared `renderApp` helper.
 - Mock HTTP with MSW. Unhandled requests fail the test. Reset handlers and fixtures after each test.
 - Playwright specs sign in as the fixture user, wait until the expected heading is visible, then run `@axe-core/playwright`. Keep `color-contrast` disabled only when the spec already disables it.
