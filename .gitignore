@@ -13,6 +13,7 @@ test-results
 .env.*.local
 !.env.example
 .DS_Store
+.nvim.sock
 *.log
 .changeset/*.md
 !.changeset/README.md

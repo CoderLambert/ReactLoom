@@ -26,16 +26,18 @@ export type TemplateManifest = {
   }
   docs: string[]
   /**
-   * Inspector package and the committed launch-editor file for this template.
+   * Inspector package, the committed env file, and the editor launcher.
    * `config` is the bundler file. `launchEditor` is the env file that leaves
-   * the editor unset so detection stays automatic. The CLI checks both were copied
-   * and that package.json pins `plugin` at `version`.
+   * the editor unset. `launcher` is `scripts/open-in-editor.mjs`. The CLI checks
+   * those files, plus `scripts/code` and `scripts/code.cmd`, were copied and
+   * that package.json pins `plugin` at `version`.
    */
   clickToSource?: {
     plugin: string
     version: string
     config: string
     launchEditor: string
+    launcher: string
   }
 }
 
@@ -146,6 +148,7 @@ function optionalClickToSource(value: unknown): TemplateManifest['clickToSource'
     version: record.version,
     config: templateFile(record.config, 'clickToSource.config'),
     launchEditor: templateFile(record.launchEditor, 'clickToSource.launchEditor'),
+    launcher: templateFile(record.launcher, 'clickToSource.launcher'),
   }
 }
 

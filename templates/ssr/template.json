@@ -24,7 +24,10 @@
     "commitlint.config.mjs",
     ".changeset/config.json",
     ".changeset/README.md",
-    "renovate.json"
+    "renovate.json",
+    "scripts/open-in-editor.mjs",
+    "scripts/code",
+    "scripts/code.cmd"
   ],
   "ci": ".github/workflows/ci.yml",
   "docker": true,
@@ -36,7 +39,8 @@
     "plugin": "code-inspector-plugin",
     "version": "2.0.9",
     "config": "next.config.ts",
-    "launchEditor": ".env.development"
+    "launchEditor": ".env.development",
+    "launcher": "scripts/open-in-editor.mjs"
   },
   "docs": [
     "docs/adr/0003-sessions.md",

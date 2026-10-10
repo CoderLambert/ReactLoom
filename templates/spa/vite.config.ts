@@ -1,3 +1,6 @@
+import fs from 'node:fs'
+import { createRequire } from 'node:module'
+import path from 'node:path'
 import { fileURLToPath, URL } from 'node:url'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
@@ -6,27 +9,32 @@ import { visualizer } from 'rollup-plugin-visualizer'
 import { defineConfig, searchForWorkspaceRoot } from 'vite'
 import checker from 'vite-plugin-checker'
 
-// Unset means auto-detect. `.env.development` does not set an editor.
-function inspectorEditor():
-  | NonNullable<Parameters<typeof codeInspectorPlugin>[0]['editor']>
-  | undefined {
-  const value = process.env.CODE_EDITOR || process.env.LAUNCH_EDITOR || process.env.REACT_EDITOR
-  if (!value) return undefined
-  return value as NonNullable<Parameters<typeof codeInspectorPlugin>[0]['editor']>
+type InspectorEditor = NonNullable<Parameters<typeof codeInspectorPlugin>[0]['editor']>
+
+// Points the inspector at scripts/code. The shim runs open-in-editor.mjs.
+function activateEditor(configDir: string): InspectorEditor {
+  const beside = path.join(configDir, 'scripts', 'open-in-editor.mjs')
+  const modulePath = fs.existsSync(beside)
+    ? beside
+    : path.join(configDir, '..', '..', 'scripts', 'open-in-editor.mjs')
+  const loaded = createRequire(modulePath)(modulePath) as {
+    activateLauncher: (dir: string) => string
+  }
+  return loaded.activateLauncher(configDir) as InspectorEditor
 }
 
 const root = fileURLToPath(new URL('.', import.meta.url))
 const devtoolsStub = fileURLToPath(new URL('./src/lib/devtools-stub.ts', import.meta.url))
 
 export default defineConfig(({ command }) => {
-  const editor = inspectorEditor()
+  const clickToSource = command === 'serve' && process.env.VITE_DEVTOOLS !== 'false'
   return {
     plugins: [
       // Before the React plugin so JSX keeps data-insp-path. Dev server only; production builds omit it.
-      command === 'serve' && process.env.VITE_DEVTOOLS !== 'false'
+      clickToSource
         ? codeInspectorPlugin({
             bundler: 'vite',
-            ...(editor ? { editor } : {}),
+            editor: activateEditor(root),
           })
         : undefined,
       react(),

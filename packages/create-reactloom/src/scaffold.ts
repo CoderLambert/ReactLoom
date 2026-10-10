@@ -146,7 +146,15 @@ async function assertClickToSource(directory: string, manifest: TemplateManifest
       'template.json clickToSource must name the inspector plugin and the launch-editor file.',
     )
   }
-  for (const relative of [click.config, click.launchEditor]) {
+  const launcherDir = path.posix.dirname(click.launcher)
+  const relatives = [
+    click.config,
+    click.launchEditor,
+    click.launcher,
+    path.posix.join(launcherDir, 'code'),
+    path.posix.join(launcherDir, 'code.cmd'),
+  ]
+  for (const relative of relatives) {
     try {
       await stat(path.join(directory, relative))
     } catch {
@@ -159,7 +167,7 @@ async function assertClickToSource(directory: string, manifest: TemplateManifest
     if (trimmed.length === 0 || trimmed.startsWith('#')) continue
     if (/^(CODE_EDITOR|LAUNCH_EDITOR|REACT_EDITOR)=/.test(trimmed)) {
       throw new Error(
-        `${click.launchEditor} must leave the editor unset so launch-editor can detect it.`,
+        `${click.launchEditor} must leave the editor unset so scripts/open-in-editor.mjs can detect it.`,
       )
     }
   }

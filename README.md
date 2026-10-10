@@ -147,7 +147,7 @@ Listing `biome.json`, `lefthook.yml`, `commitlint.config.mjs`, or `.changeset/co
 - `ai.rules` lists Cursor rule filenames from `.cursor/rules/`. Add a rule there only for the templates it applies to.
 - `ai.pointers` lists repo-root files such as `CLAUDE.md`.
 - `docs` lists ADR paths such as `docs/adr/0004-api-client.md`.
-- `clickToSource` names that template's inspector package, its exact version, the bundler config (`vite.config.ts`, `next.config.ts`, or `metro.config.js`), and the committed launch-editor file (`.env.development`). The CLI checks both files were copied, that the env file does not pin an editor, and that `package.json` depends on that version. Do not put another template's inspector in that file.
+- `clickToSource` names that template's inspector package, its exact version, the bundler config (`vite.config.ts`, `next.config.ts`, or `metro.config.js`), the committed launch-editor file (`.env.development`), and `scripts/open-in-editor.mjs`. List `scripts/open-in-editor.mjs`, `scripts/code`, and `scripts/code.cmd` in `configs` so generation copies them. The CLI checks those files were copied, that the env file does not pin an editor, and that `package.json` depends on that version. Do not put another template's inspector in that file.
 
 ## Conventions
 
@@ -205,33 +205,68 @@ Mobile does not get those web overlays. Expo's dev server and the editor extensi
 
 Cloning this repo, or generating a project with `create-reactloom`, needs no extra config. `pnpm dev` loads the inspector. Click a component and the editor opens at that file and line. Saving the file hot-reloads through the dev server that is already running (Vite HMR, Next.js Fast Refresh, or Expo Fast Refresh).
 
-Each template's `template.json` `clickToSource` names the inspector package, its exact version, the bundler config, and `.env.development`. `create-reactloom` copies those files and checks the package landed at that version. A generated SPA does not get the Next.js or Expo setup.
+Each template's `template.json` `clickToSource` names the inspector package, its exact version, the bundler config, `.env.development`, and `scripts/open-in-editor.mjs`. `configs` also copies `scripts/code` and `scripts/code.cmd`. `create-reactloom` checks those files landed and that the package is that version. A generated SPA does not get the Next.js or Expo setup.
 
 | | SPA | SSR | Mobile |
 | --- | --- | --- | --- |
 | Tool | `code-inspector-plugin` 2.0.9 on Vite | same plugin on Turbopack, plus the Next.js dev overlay | `react-native-dev-inspector` 1.1.0 |
-| Config | `templates/spa/vite.config.ts`, `.env.development` | `templates/ssr/next.config.ts`, `.env.development` | `templates/mobile/metro.config.js`, `babel.config.js`, `src/lib/dev-inspector.tsx`, `.env.development` |
+| Config | `templates/spa/vite.config.ts`, `.env.development`, `scripts/open-in-editor.mjs` | `templates/ssr/next.config.ts`, `.env.development`, the same scripts | `templates/mobile/metro.config.js`, `babel.config.js`, `src/lib/dev-inspector.tsx`, `.env.development`, the same scripts |
 | Gesture | Option+Shift (macOS) or Alt+Shift, then click | same gesture. Overlay stack frames use Open in editor | Tap the lightning button, then tap the component |
 
-`.env.development` is committed. It turns devtools on and does not set an editor. launch-editor (and Next.js, for the overlay) detect a running VS Code or Cursor. Playwright still sets `VITE_DEVTOOLS=false` and `NEXT_PUBLIC_DEVTOOLS=false` in the web server env, and that process value wins over the file.
+`.env.development` is committed. It turns devtools on and does not set an editor. While the dev server starts, the bundler config calls `activateLauncher`. That stashes any `LAUNCH_EDITOR`, `CODE_EDITOR`, or `REACT_EDITOR` you already set into `REACTLOOM_EDITOR`, then points those three variables at `scripts/code` (Windows: `scripts/code.cmd`). The inspectors spawn that path. It is a shim named `code` so they pass `file:line`. It is not VS Code. Do not put `scripts/` on `PATH`. The shim runs `scripts/open-in-editor.mjs`.
 
-The Vite plugin is registered only for `vite dev`, and only when `VITE_DEVTOOLS` is not `false`. The Next.js plugin returns no Turbopack rules when `NODE_ENV` is `production` or `NEXT_PUBLIC_DEVTOOLS` is `false`, so `next build` does not inject `data-insp-path` or the inspector client. SPA source maps stay on (`build.sourcemap` and `css.devSourcemap`). Next.js dev source maps stay on. `productionBrowserSourceMaps` stays off. The Expo babel plugin and the root `DevInspector` run only outside production, and only when `EXPO_PUBLIC_DEVTOOLS` is not `false`. `metro.config.js` calls `withInspector` with no `editor` option.
+On each click the script looks for an editor in this order:
+
+1. An explicit command: `LAUNCH_EDITOR`, then `CODE_EDITOR`, then `REACT_EDITOR`, then `VISUAL`, then `EDITOR`. A value of `nvim`, `neovim`, or `vim` stays on the Neovim path below and does not fall through to Cursor.
+2. A running Neovim server. The address is `$NVIM`, then `$NVIM_LISTEN_ADDRESS`, then `.nvim.sock` in the current directory and each parent up to the git root (so a socket at the repo root still works when `pnpm --filter` runs inside a template). The command is `nvim --server <address> --remote +<line> <file>`.
+3. A running Cursor, then VS Code (`code`, then `code-insiders`, then `codium`).
+4. A new terminal Neovim, `nvim +<line> <file>`, when a terminal emulator is available. The dev server's own stdio is not a terminal, so this step opens Terminal.app, Windows Terminal, or a Linux emulator.
+
+`$NVIM` is set only inside Neovim's `:terminal`. A dev server you start from a normal shell does not see it. One-time setup, from the project directory:
+
+```sh
+nvim --listen .nvim.sock
+```
+
+Or in `init.lua`. A socket is not a regular file, so this uses `fs_stat` rather than `filereadable`:
+
+```lua
+local sock = vim.fn.getcwd() .. "/.nvim.sock"
+local uv = vim.uv or vim.loop
+if uv.fs_stat(sock) == nil then
+  pcall(vim.fn.serverstart, sock)
+end
+```
+
+`.nvim.sock` is gitignored. GUI editors receive `file:line:column`. Neovim receives `+line`.
+
+Playwright still sets `VITE_DEVTOOLS=false` and `NEXT_PUBLIC_DEVTOOLS=false` in the web server env, and that process value wins over the file.
+
+The Vite plugin is registered only for `vite dev`, and only when `VITE_DEVTOOLS` is not `false`. The launcher is not activated during `vite build`. The Next.js plugin returns `dev: false` when `NODE_ENV` is `production` or `NEXT_PUBLIC_DEVTOOLS` is `false`, and it does not activate the launcher in that case, so `next build` does not inject `data-insp-path` or the inspector client. SPA source maps stay on (`build.sourcemap` and `css.devSourcemap`). Next.js dev source maps stay on. `productionBrowserSourceMaps` stays off. The Expo babel plugin and the root `DevInspector` run only outside production, and only when `EXPO_PUBLIC_DEVTOOLS` is not `false`. `metro.config.js` passes the launcher as `withInspector`'s `editor`.
 
 Server Components are included: the Turbopack rule rewrites JSX in the App Router, and the Next.js overlay opens server stack frames from their source maps. This repo uses `src/app`, and Next.js 16.4 resolves that path.
 
-Optional override, only if detection does not open an editor. Put one line in `.env.local` (gitignored) and restart `pnpm dev`:
+Optional override, only if detection does not open an editor. Put one line in `.env.local` (gitignored) and restart `pnpm dev`. The same names work in every template. `LAUNCH_EDITOR` wins when more than one is set.
 
-| Variable | Who reads it |
+| Variable | Examples |
 | --- | --- |
-| `CODE_EDITOR` | code-inspector on the SPA and SSR. Example: `cursor`, `code`, `webstorm`, or an executable path. |
-| `LAUNCH_EDITOR` | Passed to code-inspector when `CODE_EDITOR` is unset. The Expo inspector reads this first. |
-| `REACT_EDITOR` | Next.js `/__nextjs_launch-editor`, then a running editor, then `VISUAL`, then `EDITOR`. code-inspector also accepts it when the other two are unset. |
+| `LAUNCH_EDITOR` | `cursor`, `code`, `nvim`, `webstorm`, or an executable path. Read first. |
+| `CODE_EDITOR` | Same values. Used when `LAUNCH_EDITOR` is unset. |
+| `REACT_EDITOR` | Same values. Used when the two above are unset. Next.js also reads this for `/__nextjs_launch-editor`. |
+| `VISUAL`, then `EDITOR` | Used when the three names above are unset. `EDITOR=nvim` opens Neovim. |
 
 These steps cannot be made automatic from the repo:
 
 | Limit | Why | One-line fix |
 | --- | --- | --- |
-| No editor process, and `code` or `cursor` is not on `PATH` | Detection looks at running editors. A clone cannot install VS Code or Cursor, or put their shell commands on `PATH`. | Uncomment `CODE_EDITOR=cursor` in the SPA `.env.local`, `REACT_EDITOR=cursor` in the SSR `.env.local`, or `LAUNCH_EDITOR=cursor` in the mobile `.env.local`, then restart `pnpm dev`. |
+| No Neovim socket, and `$NVIM` is unset in the dev server | Neovim runs in a terminal. The dev server cannot attach a new nvim window to its own stdio. `$NVIM` exists only inside a Neovim terminal. | `nvim --listen .nvim.sock` in the project, or add the `init.lua` snippet above. |
+| `nvim` is not on `PATH` | `--remote` and a new window both run the `nvim` binary. A socket file alone is not enough. | Install Neovim so `command -v nvim` works, or set `LAUNCH_EDITOR=cursor`. |
+| No terminal emulator | A brand-new nvim window needs Terminal.app, Windows Terminal (`wt`), `$TERMINAL`, or `kitty`, `alacritty`, `wezterm`, `gnome-terminal`, `konsole`, `xfce4-terminal`, or `xterm`. | `nvim --listen .nvim.sock`, or `export TERMINAL=kitty`, or `LAUNCH_EDITOR=cursor`. |
+| Stale `.nvim.sock` | The path is a socket, but nothing is listening. `--remote` fails and the click stops there. | `rm -f .nvim.sock`, then start nvim again. |
+| `scripts/` is on `PATH` | `scripts/code` is the shim, not VS Code. A `code` command would open the shim. | Keep `scripts/` off `PATH`. Set `LAUNCH_EDITOR` to the real `cursor` or `code` binary. |
+| Windows `scripts/code.cmd` fails with `EINVAL` | Node will not spawn a `.cmd` file unless `shell` is set. | `LAUNCH_EDITOR=cursor` in `.env.local`, then restart `pnpm dev`. |
+| Cursor is chosen while VS Code is also running | After Neovim, a running Cursor is preferred over VS Code. | `LAUNCH_EDITOR=code` in `.env.local`. |
+| No editor process, and `code` or `cursor` is not on `PATH` | A clone cannot install VS Code or Cursor. | `LAUNCH_EDITOR=cursor` in `.env.local` (or `CODE_EDITOR` / `REACT_EDITOR`), then restart `pnpm dev`. |
 | React DevTools browser extension | A repository cannot install a browser extension. Click-to-source does not use it. The dev server injects the inspector. | Install the React DevTools extension only if you want its Components panel. |
 | Expo phone or simulator | Generation does not boot a simulator or a device. Open-in-editor runs on the computer that runs Metro. | `pnpm --filter @reactloom/template-mobile exec expo start --web` |
 

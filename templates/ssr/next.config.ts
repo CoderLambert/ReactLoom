@@ -1,3 +1,5 @@
+import fs from 'node:fs'
+import { createRequire } from 'node:module'
 import path from 'node:path'
 import bundleAnalyzer from '@next/bundle-analyzer'
 import { codeInspectorPlugin } from 'code-inspector-plugin'
@@ -6,19 +8,23 @@ import { headersFor } from './src/server/security-headers'
 
 const withBundleAnalyzer = bundleAnalyzer({ enabled: process.env.ANALYZE === 'true' })
 
-// Unset means auto-detect. `.env.development` does not set an editor.
-// Next.js open-in-editor reads REACT_EDITOR, then a running editor, then VISUAL, then EDITOR.
-function inspectorEditor():
-  | NonNullable<Parameters<typeof codeInspectorPlugin>[0]['editor']>
-  | undefined {
-  const value = process.env.CODE_EDITOR || process.env.LAUNCH_EDITOR || process.env.REACT_EDITOR
-  if (!value) return undefined
-  return value as NonNullable<Parameters<typeof codeInspectorPlugin>[0]['editor']>
+type InspectorEditor = NonNullable<Parameters<typeof codeInspectorPlugin>[0]['editor']>
+
+// Points the inspector at scripts/code. The shim runs open-in-editor.mjs.
+// Turbopack loader options must be plain data, so this returns a string.
+function activateEditor(configDir: string): InspectorEditor {
+  const beside = path.join(configDir, 'scripts', 'open-in-editor.mjs')
+  const modulePath = fs.existsSync(beside)
+    ? beside
+    : path.join(configDir, '..', '..', 'scripts', 'open-in-editor.mjs')
+  const loaded = createRequire(modulePath)(modulePath) as {
+    activateLauncher: (dir: string) => string
+  }
+  return loaded.activateLauncher(configDir) as InspectorEditor
 }
 
-const editor = inspectorEditor()
-// Turbopack loader options must be plain data. A boolean `dev: false` turns the
-// plugin off for production builds and Playwright. Functions and regexes are not serializable.
+// A boolean `dev: false` turns the plugin off for production builds and Playwright.
+// Functions and regexes are not serializable.
 const clickToSource =
   process.env.NODE_ENV !== 'production' && process.env.NEXT_PUBLIC_DEVTOOLS !== 'false'
 
@@ -32,8 +38,7 @@ const nextConfig: NextConfig = {
   turbopack: {
     rules: codeInspectorPlugin({
       bundler: 'turbopack',
-      ...(clickToSource ? {} : { dev: false }),
-      ...(editor ? { editor } : {}),
+      ...(clickToSource ? { editor: activateEditor(import.meta.dirname) } : { dev: false }),
     }),
   },
   async headers() {

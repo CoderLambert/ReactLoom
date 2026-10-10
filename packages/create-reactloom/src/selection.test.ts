@@ -66,6 +66,21 @@ describe('template selection', () => {
     ).toThrow(/clickToSource.launchEditor/)
   })
 
+  it('rejects a launcher path that leaves the template', () => {
+    expect(() =>
+      parseManifest({
+        ...spaManifest(),
+        clickToSource: {
+          plugin: 'code-inspector-plugin',
+          version: '2.0.9',
+          config: 'vite.config.ts',
+          launchEditor: '.env.development',
+          launcher: '../scripts/open-in-editor.mjs',
+        },
+      }),
+    ).toThrow(/clickToSource.launcher/)
+  })
+
   it('rejects a tsconfig preset that is not a filename', () => {
     expect(() =>
       parseManifest({
