@@ -57,7 +57,7 @@ upload：`CI=true` 时 `target` 是 `temporary-public-storage`（日志里有一
 pnpm lighthouse
 ```
 
-开发服务器上的分数不能和 CI 比。`LIGHTHOUSE_LOCAL=true pnpm dev` 仍会审计那台 dev 服务器，并在终端写明这一点。要对齐 CI，用 `pnpm preview` 或 `pnpm lighthouse`，它们打的是生产预览。
+开发服务器上的分数不能和 CI 比。`LIGHTHOUSE_LOCAL=true pnpm dev` 仍会审计那台 dev 服务器，并在终端写明这一点。要对齐 CI，用 `pnpm preview` 或 `pnpm lighthouse`。SPA 的 `preview` 是 `vite preview`。SSR 的 `preview` 是 `next start`，端口 4318。两者都打生产构建。`pnpm lighthouse` 会先自己构建。
 
 CI 还有 `workflow_dispatch` 输入 `lighthouse`，默认 true。推送和 pull request 不读 `LIGHTHOUSE_LOCAL`。手动运行时，输入为 false，或仓库变量是 `false`，作业都不跑。
 
