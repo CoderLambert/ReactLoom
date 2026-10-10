@@ -336,7 +336,7 @@ The SPA already starts MSW in the browser when `VITE_ENABLE_MSW=true` and Vite i
 
 SSR adds `NEXT_PUBLIC_ENABLE_MSW`, default `false`, on the client schema in `templates/ssr/src/server/env.ts` and in `.env.example`. `.env.development` does not turn it on. `src/app/dev-client.tsx` starts `src/mocks/browser.ts` only when `NODE_ENV` is not production, devtools are on, and the flag is `true`. The handlers match the cookie API (`{ user }` from `POST /api/session`, tasks with `ownerId`) and keep the signed-in flag in memory. Playwright leaves the flag off and hits the real route handlers.
 
-`vite build` and `next build` alias `msw`, `msw/browser`, `msw/http`, and `msw/node` to `src/lib/workflow-stub.ts`. The dev server does not. `build-storybook` sets `STORYBOOK=true` and skips that alias.
+`vite build` and `next build` alias `msw/browser`, `msw/http`, `msw/node`, and `@axe-core/react` to `src/lib/workflow-stub.ts`. A bare `msw` alias is not used, because it is a prefix and would resolve `msw/browser` to a path under the stub file. The dev server does not apply these aliases. `build-storybook` sets `STORYBOOK=true` and skips them.
 
 Expo does not load MSW. 3.0.3 has a browser worker and a Node server, and no React Native entry. Local data stays behind `EXPO_PUBLIC_USE_FIXTURES` (default `true` in `templates/mobile/src/lib/env.ts`, read by `src/features/auth/service.ts`).
 

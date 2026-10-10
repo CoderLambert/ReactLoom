@@ -46,7 +46,6 @@ function bundledAliases(): Record<string, string> | undefined {
   const alias: Record<string, string> = {}
   if (reactScanStub) alias['react-scan'] = reactScanStub
   if (workflowStub) {
-    alias.msw = workflowStub
     alias['msw/browser'] = workflowStub
     alias['msw/http'] = workflowStub
     alias['msw/node'] = workflowStub

@@ -61,9 +61,10 @@ export default defineConfig(({ command }) => {
           : {}),
         // App production builds drop the worker and the React axe logger.
         // `build-storybook` sets STORYBOOK so the stories can still import them.
+        // Exact subpaths. A bare `msw` key is a prefix and turns `msw/browser`
+        // into `workflow-stub.ts/browser` when the dev import is still in the graph.
         ...(command === 'build' && process.env.STORYBOOK !== 'true'
           ? {
-              msw: workflowStub,
               'msw/browser': workflowStub,
               'msw/http': workflowStub,
               'msw/node': workflowStub,
