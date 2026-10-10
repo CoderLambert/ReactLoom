@@ -1,0 +1,10 @@
+{
+  "extends": "@reactloom/tsconfig/react.json",
+  "compilerOptions": {
+    "types": ["vite/client"],
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["src", "e2e", "playwright.config.ts", "vitest.config.ts"]
+}

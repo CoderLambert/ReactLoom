@@ -1,0 +1,15 @@
+{
+  "id": "ssr",
+  "description": "Next.js App Router template with cookie sessions, security headers, and Docker.",
+  "strip": ["template.json", "Dockerfile.monorepo"],
+  "rename": {
+    "Dockerfile.standalone": "Dockerfile"
+  },
+  "replacements": [
+    {
+      "file": "next.config.ts",
+      "from": "path.join(import.meta.dirname, '../..')",
+      "to": "import.meta.dirname"
+    }
+  ]
+}

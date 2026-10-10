@@ -1,0 +1,5 @@
+{
+  "id": "spa",
+  "description": "Vite SPA with TanStack Router, TanStack Query, and a session-guarded feature.",
+  "strip": ["template.json"]
+}

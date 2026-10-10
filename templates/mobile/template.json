@@ -1,0 +1,5 @@
+{
+  "id": "mobile",
+  "description": "Expo Router template with a secure-store session and the shared API client.",
+  "strip": ["template.json"]
+}

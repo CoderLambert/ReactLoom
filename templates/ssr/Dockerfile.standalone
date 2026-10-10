@@ -1,0 +1,28 @@
+# Used after `create-reactloom --template ssr`. Build context is the generated project.
+FROM node:22-alpine AS base
+RUN corepack enable && corepack prepare pnpm@10.33.3 --activate
+WORKDIR /app
+
+FROM base AS deps
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml* ./
+COPY packages ./packages
+RUN pnpm install --frozen-lockfile || pnpm install
+
+FROM base AS build
+COPY --from=deps /app /app
+COPY . .
+ENV REACTLOOM_STRICT_SECRETS=false
+RUN pnpm --filter @reactloom/api-client build && pnpm build
+
+FROM node:22-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+ENV PORT=3000
+ENV HOSTNAME=0.0.0.0
+RUN addgroup -S nodejs && adduser -S nextjs -G nodejs
+COPY --from=build /app/.next/standalone ./
+COPY --from=build /app/.next/static ./.next/static
+COPY --from=build /app/public ./public
+USER nextjs
+EXPOSE 3000
+CMD ["node", "server.js"]
