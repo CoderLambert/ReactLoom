@@ -12,6 +12,8 @@ pnpm test
 
 `pnpm dev` starts Expo and does not open a browser or a simulator. Press `w` for the web preview. From the ReactLoom repo, `pnpm exec create-reactloom pocket --template mobile --dev` installs and starts this server.
 
+Best practices for this app are in [docs/best-practices/README.md](docs/best-practices/README.md): component organization, state, data fetching, React Native styling, performance, and pitfalls.
+
 ```sh
 pnpm start
 pnpm lint

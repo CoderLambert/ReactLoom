@@ -17,6 +17,8 @@ pnpm dev:mobile
 
 `pnpm dev:spa` opens http://127.0.0.1:4317. `pnpm dev:ssr` opens port 4318. Expo does not open a browser: press `w` for the web preview. The browser stays closed when `CI` is set or `REACTLOOM_OPEN=false`.
 
+How to extend a template is in [Best practices](docs/best-practices/README.md): component organization, state, data fetching, styling, performance, and pitfalls. `create-reactloom` copies that folder and keeps the sections that match the template.
+
 A new project installs dependencies and starts the dev server in one step:
 
 ```sh
@@ -68,6 +70,7 @@ React 18 was considered and not used. React 19 is the current mainstream release
 │   ├── ssr/                 # Next.js SSR + Docker
 │   └── mobile/              # Expo
 ├── docs/getting-started.md  # usage guide, also copied into generated projects
+├── docs/best-practices/     # practices copied per template (SSR-only sections stay on SSR)
 ├── docs/adr/                # architecture decisions
 ├── renovate.json
 └── .github/workflows/ci.yml
@@ -153,7 +156,7 @@ The CLI copies that template directory, then adds only the shared files listed i
 | Dockerfile | no | yes (`Dockerfile.standalone` renamed to `Dockerfile`) | no |
 | Cursor rules | general, spa, testing | general, ssr, testing | general, mobile, testing |
 | AI pointers | `CLAUDE.md`, `.github/copilot-instructions.md`, `.cursor/mcp.json` | same | same |
-| Docs | `docs/getting-started.md`, ADRs 0003–0006 | same | same |
+| Docs | `docs/getting-started.md`, `docs/best-practices/` (SPA sections), ADRs 0003–0006 | same folder, SSR sections (hydration stays here) | same folder, mobile sections (no Tailwind, no SSR hydration) |
 | `reactScan` | `react-scan` 0.5.7 in `src/main.tsx` | `react-scan` 0.5.7 in `src/app/react-scan.tsx` | off; 0.5.7 has no stable React Native entry |
 | `storybook` | 10.6.1, `@storybook/react-vite` | 10.6.1, `@storybook/nextjs` | off; on-device Storybook does not match Expo SDK 57 |
 | `browserMocks` | `VITE_ENABLE_MSW` | `NEXT_PUBLIC_ENABLE_MSW` (off by default) | `EXPO_PUBLIC_USE_FIXTURES` |
@@ -173,7 +176,7 @@ Listing `biome.json`, `lefthook.yml`, `commitlint.config.mjs`, or `.changeset/co
 - `ci` is the template-relative workflow path (`.github/workflows/ci.yml`). The monorepo workflow is never copied over it.
 - `ai.rules` lists Cursor rule filenames from `.cursor/rules/`. Add a rule there only for the templates it applies to.
 - `ai.pointers` lists repo-root files such as `CLAUDE.md`.
-- `docs` lists paths such as `docs/getting-started.md` and `docs/adr/0004-api-client.md`.
+- `docs` lists paths such as `docs/getting-started.md`, `docs/adr/0004-api-client.md`, and `docs/best-practices/README.md`. Files under `docs/best-practices/` are filtered while they are copied. A section wrapped in `<!-- reactloom:ssr -->` … `<!-- /reactloom:ssr -->` is kept for SSR and removed for SPA and mobile. `spa` and `mobile` markers work the same way. `templates/<id>/` in the kept text is rewritten to the generated project root.
 - `clickToSource` names that template's inspector package, its exact version, the bundler config (`vite.config.ts`, `next.config.ts`, or `metro.config.js`), the committed launch-editor file (`.env.development`), and `scripts/open-in-editor.mjs`. List `scripts/open-in-editor.mjs`, `scripts/code`, and `scripts/code.cmd` in `configs` so generation copies them. The CLI checks those files were copied, that the env file does not pin an editor, and that `package.json` depends on that version. Do not put another template's inspector in that file.
 - `reactScan` names `react-scan`, its exact version, `enabled`, and the config file. SPA and SSR set `enabled` to true and import the package from that file. Mobile sets `enabled` to false, and `reason` is the sentence in `AGENTS.md` that explains why. The CLI checks the file and that `package.json` matches.
 - `whyDidYouRender` names `@welldone-software/why-did-you-render`, its exact version, `enabled`, and the config file. Expo sets `enabled` to true. SPA and SSR set it to false, and `reason` is the sentence in `AGENTS.md`. The CLI checks that sentence when the tool is off, and the dev-only Babel setup when it is on.
@@ -186,7 +189,7 @@ Listing `biome.json`, `lefthook.yml`, `commitlint.config.mjs`, or `.changeset/co
 
 ## Conventions
 
-- Server state belongs in TanStack Query. Do not copy it into Zustand.
+- Server state belongs in TanStack Query. Do not copy it into Zustand. The worked examples are in [Best practices](docs/best-practices/README.md).
 - Call the network through `@reactloom/api-client`. It retries idempotent requests, aborts on timeout, and throws `ApiError`.
 - Validate env with the t3 env schema. Commit `.env.example` and `.env.development` (devtools on, editor unset). Secrets and a machine-specific editor override go in `.env.local`.
 - Feature code lives under `src/features/<name>` with a schema, an API function, query keys, and hooks.
@@ -513,6 +516,7 @@ App permissions and the schedule are documented by Renovate: [installing Renovat
 
 ## Decisions worth reading
 
+- [Best practices](docs/best-practices/README.md)
 - [Getting started](docs/getting-started.md)
 - [Monorepo and the init command](docs/adr/0001-monorepo-and-init.md)
 - [Frameworks per template](docs/adr/0002-frameworks.md)

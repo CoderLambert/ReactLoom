@@ -2,6 +2,8 @@
 
 This guide is for the ReactLoom monorepo and for a project created with `create-reactloom`. The developer setup below is already in the project. You do not install ESLint, Prettier, Husky, lint-staged, or Turbo, and you do not turn click-to-source on.
 
+How this codebase wants features built is in [Best practices](docs/best-practices/README.md). A generated project includes the sections for its template.
+
 ## Run the app
 
 From a generated project, or from `templates/spa`, `templates/ssr`, or `templates/mobile`:

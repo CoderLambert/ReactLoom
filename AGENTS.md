@@ -15,6 +15,7 @@ ReactLoom is a pnpm workspace. Templates are developed in-tree and copied by `cr
 | `templates/ssr` | Next.js App Router app, plus Docker |
 | `templates/mobile` | Expo app |
 | `docs/adr` | Architecture decisions |
+| `docs/best-practices` | Practices for components, state, data fetching, styling, performance, and pitfalls. `create-reactloom` copies this folder and strips sections marked for the other templates. |
 
 TypeScript is `strict` (7.0.2). React is 19.3.0 on web. Expo SDK 57 pins React 19.2.3, so the mobile template stays on that peer. Biome formats and lints. `tsc` typechecks. Changesets version `@reactloom/api-client` and `create-reactloom`. Templates are not published.
 
@@ -69,7 +70,7 @@ Template choice is still the interactive prompt or `--template spa|ssr|mobile`. 
 | `docker` | `true` only for SSR, which keeps `Dockerfile` |
 | `ai.pointers` | `CLAUDE.md`, `.github/copilot-instructions.md`, `.cursor/mcp.json` |
 | `ai.rules` | That template's Cursor rules only (`general` plus `spa`, `ssr`, or `mobile`, plus `testing`) |
-| `docs` | `docs/getting-started.md`, plus ADRs 0003, 0004, 0005, and 0006. ADR 0001 and 0002 stay in this repo. |
+| `docs` | `docs/getting-started.md`, `docs/best-practices/` (one file per topic, filtered per template), plus ADRs 0003, 0004, 0005, and 0006. ADR 0001 and 0002 stay in this repo. |
 | `clickToSource` | Inspector package, exact version, bundler config, `.env.development`, and `scripts/open-in-editor.mjs`. `configs` also copies `scripts/code` and `scripts/code.cmd`. SPA and SSR use `code-inspector-plugin` 2.0.9. Mobile uses `react-native-dev-inspector` 1.1.0. The env file leaves the editor unset. The launcher opens a listening Neovim, then Cursor or VS Code. |
 | `reactScan` | `react-scan` 0.5.7. SPA config is `src/main.tsx` (import before React). SSR config is `src/app/react-scan.tsx` (client component, import before React, top-most import in `layout.tsx`). Mobile sets `enabled` to false: 0.5.7 has no React Native export, and the native preview is unmerged. Production builds alias the web import to an empty module. |
 

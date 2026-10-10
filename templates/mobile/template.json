@@ -95,6 +95,13 @@
     "docs/adr/0004-api-client.md",
     "docs/adr/0005-tooling.md",
     "docs/adr/0006-ai-collaboration.md",
-    "docs/getting-started.md"
+    "docs/getting-started.md",
+    "docs/best-practices/README.md",
+    "docs/best-practices/components.md",
+    "docs/best-practices/state.md",
+    "docs/best-practices/data-fetching.md",
+    "docs/best-practices/styling.md",
+    "docs/best-practices/performance.md",
+    "docs/best-practices/pitfalls.md"
   ]
 }

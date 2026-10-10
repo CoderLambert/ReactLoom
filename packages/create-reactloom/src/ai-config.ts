@@ -8,6 +8,32 @@ const TEMPLATE_PACKAGE: Record<TemplateId, string> = {
   mobile: '@reactloom/template-mobile',
 }
 
+const BEST_PRACTICE_TEMPLATES = ['spa', 'ssr', 'mobile'] as const
+
+export function adaptBestPractices(
+  contents: string,
+  template: TemplateId,
+  projectName: string,
+): string {
+  let text = contents
+  for (const id of BEST_PRACTICE_TEMPLATES) {
+    const pattern = new RegExp(`<!-- reactloom:${id} -->[\\s\\S]*?<!-- /reactloom:${id} -->`, 'g')
+    text =
+      id === template
+        ? text.replace(pattern, (block) =>
+            block
+              .replaceAll(`<!-- reactloom:${id} -->`, '')
+              .replaceAll(`<!-- /reactloom:${id} -->`, ''),
+          )
+        : text.replace(pattern, '')
+  }
+  const collapsed = text
+    .replace(/[ \t]+\n/g, '\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim()
+  return `${adaptAiText(collapsed, template, projectName)}\n`
+}
+
 export function adaptAiText(contents: string, template: TemplateId, projectName: string): string {
   const directoryPrefix = `templates/${template}/`
   const rewritten = contents

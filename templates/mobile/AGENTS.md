@@ -2,7 +2,7 @@
 
 Agents that walk the directory tree also read any `AGENTS.md` closer to the repository root.
 
-This directory is the Expo app, package `@reactloom/template-mobile`. Generated projects keep this file as their root instructions.
+This directory is the Expo app, package `@reactloom/template-mobile`. Generated projects keep this file as their root instructions. Practices for this app are in `docs/best-practices/README.md` at the project root.
 
 ## Stack
 

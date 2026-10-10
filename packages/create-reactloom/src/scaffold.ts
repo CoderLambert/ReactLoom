@@ -2,7 +2,7 @@ import { spawn } from 'node:child_process'
 import { cp, mkdir, readFile, rename, rm, stat, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { installAiConfig } from './ai-config.js'
+import { adaptBestPractices, installAiConfig } from './ai-config.js'
 import {
   DOCKER_FILES,
   type PackageJson,
@@ -119,12 +119,26 @@ async function copyManifestFiles(
   repoRoot: string,
   directory: string,
   relativePaths: readonly string[],
+  adapt?: { template: TemplateId; projectName: string },
 ): Promise<void> {
   for (const relative of relativePaths) {
     if (relative === '.github/workflows/ci.yml') {
       throw new Error(
         'List the template CI workflow in template.json "ci". Do not copy the monorepo workflow.',
       )
+    }
+    if (adapt && relative.startsWith('docs/best-practices/')) {
+      const source = path.join(repoRoot, relative)
+      let contents: string
+      try {
+        contents = await readFile(source, 'utf8')
+      } catch {
+        throw new Error(`Manifest path does not exist: ${relative}`)
+      }
+      const destination = path.join(directory, relative)
+      await mkdir(path.dirname(destination), { recursive: true })
+      await writeFile(destination, adaptBestPractices(contents, adapt.template, adapt.projectName))
+      continue
     }
     await copyRepoPath(repoRoot, relative, directory)
   }
@@ -568,7 +582,10 @@ export async function scaffold(options: ScaffoldOptions): Promise<void> {
   await copyFiltered(templateDir, options.directory)
   await copySharedPackages(repoRoot, options.directory, manifest)
   await copyManifestFiles(repoRoot, options.directory, manifest.configs)
-  await copyManifestFiles(repoRoot, options.directory, manifest.docs)
+  await copyManifestFiles(repoRoot, options.directory, manifest.docs, {
+    template: options.template,
+    projectName: options.name,
+  })
 
   const workflow = path.join(options.directory, manifest.ci)
   try {

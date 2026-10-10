@@ -12,6 +12,8 @@ pnpm test
 
 `pnpm dev` starts Next.js and opens http://127.0.0.1:4318. `scripts/open-browser.mjs` does the open step, because `next dev` has no open flag. It stays closed when `CI` is set or `REACTLOOM_OPEN=false`. From the ReactLoom repo, `pnpm exec create-reactloom web --template ssr --dev` installs and starts this server.
 
+Best practices for this app are in [docs/best-practices/README.md](docs/best-practices/README.md): component organization, state, data fetching (including SSR hydration), styling, performance, and pitfalls.
+
 ```sh
 pnpm dev          # http://127.0.0.1:4318
 pnpm lint

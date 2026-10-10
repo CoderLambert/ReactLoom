@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { afterEach, describe, expect, it } from 'vitest'
-import { adaptAiText } from './ai-config.js'
+import { adaptAiText, adaptBestPractices } from './ai-config.js'
 import {
   invocationDirectory,
   isDirectInvocation,
@@ -228,6 +228,33 @@ describe('create-reactloom', () => {
     expect(adapted).toContain('globs: **/*.ts,packages/**/*.ts')
   })
 
+  it('keeps one template inside best-practice docs', () => {
+    const source = [
+      'Shared.',
+      '<!-- reactloom:spa -->',
+      'SPA file `templates/spa/src/features/tasks/hooks.ts`.',
+      '<!-- /reactloom:spa -->',
+      '<!-- reactloom:ssr -->',
+      'This template does not pass a dehydrated TanStack Query cache into HydrationBoundary.',
+      '<!-- /reactloom:ssr -->',
+      '<!-- reactloom:mobile -->',
+      'Use StyleSheet.',
+      '<!-- /reactloom:mobile -->',
+    ].join('\n')
+
+    const spa = adaptBestPractices(source, 'spa', 'studio')
+    expect(spa).toContain('src/features/tasks/hooks.ts')
+    expect(spa).not.toContain('templates/')
+    expect(spa).not.toContain('HydrationBoundary')
+    expect(spa).not.toContain('StyleSheet')
+    expect(spa).not.toContain('<!-- reactloom:')
+
+    const ssr = adaptBestPractices(source, 'ssr', 'web')
+    expect(ssr).toContain('HydrationBoundary')
+    expect(ssr).not.toContain('hooks.ts')
+    expect(ssr).not.toContain('StyleSheet')
+  })
+
   it('keeps commas inside glob braces while dropping other templates', () => {
     const adapted = adaptAiText(
       'globs: "templates/spa/**/*.{test,spec}.ts,templates/ssr/**/*.ts,packages/**/*.test.ts"',
@@ -419,6 +446,52 @@ describe('create-reactloom', () => {
         }
       }
       await expect(stat(path.join(directory, 'docs/getting-started.md'))).resolves.toBeTruthy()
+      const practiceFiles = [
+        'docs/best-practices/README.md',
+        'docs/best-practices/components.md',
+        'docs/best-practices/state.md',
+        'docs/best-practices/data-fetching.md',
+        'docs/best-practices/styling.md',
+        'docs/best-practices/performance.md',
+        'docs/best-practices/pitfalls.md',
+      ]
+      for (const practice of practiceFiles) {
+        expect(manifest.docs).toContain(practice)
+        const text = await readFile(path.join(directory, practice), 'utf8')
+        expect(text).not.toContain('<!-- reactloom:')
+        expect(text).not.toContain('templates/')
+      }
+      const fetching = await readFile(
+        path.join(directory, 'docs/best-practices/data-fetching.md'),
+        'utf8',
+      )
+      const styling = await readFile(path.join(directory, 'docs/best-practices/styling.md'), 'utf8')
+      const performance = await readFile(
+        path.join(directory, 'docs/best-practices/performance.md'),
+        'utf8',
+      )
+      const readme = await readFile(path.join(directory, 'README.md'), 'utf8')
+      expect(readme).toContain('docs/best-practices/README.md')
+      if (template === 'ssr') {
+        expect(fetching).toContain('HydrationBoundary')
+        expect(styling).toContain('@theme')
+        expect(styling).not.toContain('StyleSheet')
+        expect(performance).toContain('react-scan')
+        expect(performance).not.toContain('Expo Atlas')
+      } else if (template === 'mobile') {
+        expect(fetching).not.toContain('HydrationBoundary')
+        expect(styling).toContain('StyleSheet')
+        expect(styling).not.toContain('@theme')
+        expect(performance).toContain('why-did-you-render')
+        expect(performance).toContain('Expo Atlas')
+        expect(performance).not.toContain('src/main.tsx')
+      } else {
+        expect(fetching).not.toContain('HydrationBoundary')
+        expect(styling).toContain('@theme')
+        expect(styling).not.toContain('StyleSheet')
+        expect(performance).toContain('react-scan')
+        expect(performance).not.toContain('Expo Atlas')
+      }
       for (const config of manifest.configs) {
         await expect(stat(path.join(directory, config))).resolves.toBeTruthy()
       }

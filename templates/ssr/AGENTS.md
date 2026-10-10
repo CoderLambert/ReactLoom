@@ -12,7 +12,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 Agents that walk the directory tree also read any `AGENTS.md` closer to the repository root.
 
-This directory is the Next.js 16 App Router app, package `@reactloom/template-ssr`. Generated projects keep this file as their root instructions. Keep the `nextjs-agent-rules` block above intact.
+This directory is the Next.js 16 App Router app, package `@reactloom/template-ssr`. Generated projects keep this file as their root instructions. Keep the `nextjs-agent-rules` block above intact. Practices for this app are in `docs/best-practices/README.md` at the project root.
 
 ## Stack
 

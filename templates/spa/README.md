@@ -12,6 +12,8 @@ pnpm test
 
 `pnpm dev` opens http://127.0.0.1:4317. It stays closed when `CI` is set or `REACTLOOM_OPEN=false`. From the ReactLoom repo, `pnpm exec create-reactloom studio --template spa --dev` installs and starts this server.
 
+Best practices for this app are in [docs/best-practices/README.md](docs/best-practices/README.md): component organization, state, data fetching, styling, performance, and pitfalls.
+
 ```sh
 pnpm dev          # http://127.0.0.1:4317
 pnpm lint
