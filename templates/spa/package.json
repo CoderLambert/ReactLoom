@@ -6,9 +6,9 @@
   "type": "module",
   "packageManager": "pnpm@10.33.3",
   "scripts": {
-    "dev": "node scripts/with-lighthouse.mjs dev -- vite --host 0.0.0.0 --port 4317",
+    "dev": "if [ -f scripts/with-lighthouse.mjs ]; then node scripts/with-lighthouse.mjs dev -- vite --host 0.0.0.0 --port 4317; else node ../../scripts/with-lighthouse.mjs dev -- vite --host 0.0.0.0 --port 4317; fi",
     "build": "vite build && node scripts/check-bundle-budget.mjs",
-    "preview": "node scripts/with-lighthouse.mjs preview -- vite preview --host 0.0.0.0 --port 4317",
+    "preview": "if [ -f scripts/with-lighthouse.mjs ]; then node scripts/with-lighthouse.mjs preview -- vite preview --host 0.0.0.0 --port 4317; else node ../../scripts/with-lighthouse.mjs preview -- vite preview --host 0.0.0.0 --port 4317; fi",
     "prepare": "if [ -f scripts/setup-git.mjs ]; then node scripts/setup-git.mjs; else node ../../scripts/setup-git.mjs; fi",
     "lint": "biome check .",
     "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.node.json --noEmit",
