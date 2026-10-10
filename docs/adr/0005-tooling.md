@@ -4,6 +4,6 @@ Biome replaces ESLint and Prettier for this new repo. Lefthook replaces Husky an
 
 Tailwind CSS v4 uses `@tailwindcss/vite` in the SPA and `@tailwindcss/postcss` in Next.js. The mobile template uses React Native styles so Metro does not depend on NativeWind.
 
-Web tests are Vitest plus Testing Library, MSW for the SPA integration test, and Playwright with axe. Bundle scripts fail the build when gzipped JavaScript exceeds the budget in each template.
+Web tests are Vitest plus Testing Library, MSW for the SPA integration test, and Playwright with axe. Storybook 10.6.1 runs on the SPA with `@storybook/react-vite` and on SSR with `@storybook/nextjs`, both with the a11y addon and the shared MSW handlers. `@axe-core/react` logs in those dev servers only. Expo does not load on-device Storybook, MSW, or `@axe-core/react`; it keeps `EXPO_PUBLIC_USE_FIXTURES` and the Maestro flow. Bundle scripts fail the build when gzipped JavaScript exceeds the budget in each template.
 
 Changesets versions the library and the CLI. Renovate groups dependency updates; see the README. This repository does not publish packages.

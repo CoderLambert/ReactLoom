@@ -21,6 +21,8 @@ why-did-you-render logs unnecessary re-renders to the console while `pnpm dev` i
 
 react-scan 0.5.7 has no React Native export. The native preview at aidenybai/react-scan#23 is unmerged, so this template does not load React Scan. Hover outlines (component name, props, render time) are available in the SPA and SSR templates. For a console diff on one component here, call `useWhyDidYouUpdate` from `@reactloom/devtools`. Do not import it from `index.js`.
 
+On-device Storybook is not loaded. `@storybook/react-native` 10.6.0 is developed with Expo 57, but it requires `react-native-safe-area-context` 5.8.0 and `@gorhom/bottom-sheet`. Expo SDK 57 bundles safe-area-context ~5.7.0 and does not include bottom-sheet. Local data stays behind `EXPO_PUBLIC_USE_FIXTURES`. MSW 3.0.3 has no React Native entry. `@axe-core/react` needs a DOM, so it is not loaded. Use the axe DevTools browser extension on the web preview. `.maestro/login.yaml` is the device flow. CI does not launch an emulator, and Maestro is not an npm dependency.
+
 Tap the lightning button, then tap a component. The editor is a running Neovim server, then Cursor, then VS Code. A simulator is not started for you. `pnpm dev`, then `w`, opens the web preview.
 
 Neovim needs one step. The dev server cannot open a new nvim window:

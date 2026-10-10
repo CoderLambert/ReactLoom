@@ -61,6 +61,33 @@
     "hook": "@reactloom/devtools",
     "config": "src/app/react-scan.tsx"
   },
+  "storybook": {
+    "enabled": true,
+    "package": "storybook",
+    "version": "10.6.1",
+    "framework": "@storybook/nextjs",
+    "config": ".storybook/main.ts",
+    "stories": ["src/components/ui/button.stories.tsx", "src/app/login/page.stories.tsx"]
+  },
+  "browserMocks": {
+    "mode": "msw",
+    "flag": "NEXT_PUBLIC_ENABLE_MSW",
+    "config": "src/app/dev-client.tsx",
+    "package": "msw",
+    "version": "3.0.3"
+  },
+  "devA11y": {
+    "enabled": true,
+    "package": "@axe-core/react",
+    "version": "4.13.0",
+    "config": "src/app/dev-client.tsx"
+  },
+  "e2e": {
+    "tool": "playwright",
+    "config": "playwright.config.ts",
+    "package": "@playwright/test",
+    "version": "1.64.0"
+  },
   "clickToSource": {
     "plugin": "code-inspector-plugin",
     "version": "2.0.9",

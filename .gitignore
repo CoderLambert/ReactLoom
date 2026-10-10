@@ -6,6 +6,7 @@ coverage
 playwright-report
 test-results
 .turbo
+storybook-static
 *.tsbuildinfo
 .eslintcache
 .env

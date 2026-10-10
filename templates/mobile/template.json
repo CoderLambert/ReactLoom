@@ -58,6 +58,31 @@
     "hook": "@reactloom/devtools",
     "config": "src/lib/wdyr.js"
   },
+  "storybook": {
+    "enabled": false,
+    "package": "storybook",
+    "version": "10.6.1",
+    "framework": "@storybook/react-vite",
+    "config": "AGENTS.md",
+    "reason": "@storybook/react-native 10.6.0 is developed with Expo 57, but it requires react-native-safe-area-context 5.8.0 and @gorhom/bottom-sheet. Expo SDK 57 bundles safe-area-context ~5.7.0 and does not include bottom-sheet, so this template does not load on-device Storybook."
+  },
+  "browserMocks": {
+    "mode": "fixtures",
+    "flag": "EXPO_PUBLIC_USE_FIXTURES",
+    "config": "AGENTS.md",
+    "reason": "msw 3.0.3 ships a browser worker and a Node server, and no React Native entry. This template keeps local data behind EXPO_PUBLIC_USE_FIXTURES instead of loading MSW."
+  },
+  "devA11y": {
+    "enabled": false,
+    "package": "@axe-core/react",
+    "version": "4.13.0",
+    "config": "AGENTS.md",
+    "reason": "@axe-core/react needs a DOM. This template renders React Native views, so it does not load that package. Use the axe DevTools browser extension on the web preview, and Maestro for the device flow."
+  },
+  "e2e": {
+    "tool": "maestro",
+    "config": ".maestro/login.yaml"
+  },
   "clickToSource": {
     "plugin": "react-native-dev-inspector",
     "version": "1.1.0",

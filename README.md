@@ -134,6 +134,10 @@ The CLI copies that template directory, then adds only the shared files listed i
 | AI pointers | `CLAUDE.md`, `.github/copilot-instructions.md`, `.cursor/mcp.json` | same | same |
 | Docs | `docs/getting-started.md`, ADRs 0003–0006 | same | same |
 | `reactScan` | `react-scan` 0.5.7 in `src/main.tsx` | `react-scan` 0.5.7 in `src/app/react-scan.tsx` | off; 0.5.7 has no stable React Native entry |
+| `storybook` | 10.6.1, `@storybook/react-vite` | 10.6.1, `@storybook/nextjs` | off; on-device Storybook does not match Expo SDK 57 |
+| `browserMocks` | `VITE_ENABLE_MSW` | `NEXT_PUBLIC_ENABLE_MSW` (off by default) | `EXPO_PUBLIC_USE_FIXTURES` |
+| `devA11y` | `@axe-core/react` in `src/main.tsx` | `@axe-core/react` in `src/app/dev-client.tsx` | off; the package needs a DOM |
+| `e2e` | Playwright | Playwright | Maestro (`.maestro/login.yaml`) |
 
 Left out of every generated app: the monorepo workflow (`.github/workflows/ci.yml` at the repo root), `docs/adr/0001-monorepo-and-init.md`, `docs/adr/0002-frameworks.md`, and `packages/create-reactloom`. An SPA also excludes `next.json`, `expo.json`, `next.config.ts`, `app.json`, Nest config, and the SSR and mobile Cursor rules. SSR excludes the Vite and Expo presets. Mobile excludes the Vite and Next presets. The copied `@reactloom/tsconfig` `package.json` exports only the presets that were copied.
 
@@ -154,6 +158,10 @@ Listing `biome.json`, `lefthook.yml`, `commitlint.config.mjs`, or `.changeset/co
 - `whyDidYouRender` names `@welldone-software/why-did-you-render`, its exact version, `enabled`, and the config file. Expo sets `enabled` to true. SPA and SSR set it to false, and `reason` is the sentence in `AGENTS.md`. The CLI checks that sentence when the tool is off, and the dev-only Babel setup when it is on.
 - `bundleAnalyze` names the analyzer package, its exact version, the config file, the `analyze` script, and a marker that file must contain.
 - `propsDiff` names the primary tool (`react-scan` or `@welldone-software/why-did-you-render`) and `@reactloom/devtools`. `packages.devtools` copies that package. The hook is not imported from an app entry.
+- `storybook` names `storybook`, its exact version, the framework (`@storybook/react-vite` or `@storybook/nextjs`), and the config file. SPA and SSR set `enabled` to true and list `stories`. Mobile sets `enabled` to false, and `reason` is the sentence in `AGENTS.md`. The CLI checks the framework, the a11y addon, `msw-storybook-addon`, the scripts, and the preview file when it is on.
+- `browserMocks` is `msw` or `fixtures`. `msw` names the flag, the config file, and `msw` at an exact version. That file must gate the worker on development, and `src/mocks/handlers.ts` must call `http`. `fixtures` names the flag and the reason. The CLI checks that MSW is absent in that mode.
+- `devA11y` names `@axe-core/react`, its exact version, and the config file. When `enabled` is true, that file loads the package behind a dev check. When it is false, `reason` is the sentence in the config file and the package is not installed.
+- `e2e` is `playwright` or `maestro`. Playwright names `@playwright/test` and its exact version. The CLI checks the config, `pnpm test:e2e`, and `@axe-core/playwright` in `e2e/workshop.spec.ts`. Maestro names the flow file. The CLI checks `appId` and `launchApp`, and that Playwright is not installed.
 
 ## Conventions
 
@@ -305,6 +313,50 @@ No second overlay is installed. The props that changed are already on screen or 
 | One component | `useWhyDidYouUpdate` from `@reactloom/devtools`. |
 
 The hook is opt-in. Call it inside the component you are debugging. Do not mount it on the app root, and do not import it from `src/main.tsx`, `src/app/layout.tsx`, or `index.js`. Production builds inline `NODE_ENV` and drop the log when a feature does import it. Because no entry imports it, the production bundles do not contain it. `template.json` `propsDiff` records the primary tool, the hook package, and the config file. `packages.devtools` copies `packages/devtools` into a generated project. The package is a `workspace:*` devDependency.
+
+### Storybook
+
+Storybook 10.6.1 is on the SPA and SSR templates. `pnpm storybook` starts it (`--no-open`, port 6006 on the SPA and 6007 on SSR). `pnpm build-storybook` writes `storybook-static`, which is gitignored. Both scripts set `STORYBOOK=true` so the production aliases that drop MSW and `@axe-core/react` stay off while the stories compile. App builds leave that variable unset.
+
+| | SPA | SSR | Mobile |
+| --- | --- | --- | --- |
+| Framework | `@storybook/react-vite` | `@storybook/nextjs` | not loaded |
+| Config | `templates/spa/.storybook/main.ts` | `templates/ssr/.storybook/main.ts` | `templates/mobile/AGENTS.md` |
+| Stories | Button, Input, Label, Card, and the login route | the same primitives, plus `src/app/login/page.tsx` | none |
+
+`.storybook/preview.ts` imports the template's `src/mocks/handlers.ts` and starts them with `msw-storybook-addon`. `@storybook/addon-a11y` is on. `parameters.a11y.test` is `todo`, so the panel shows violations and `build-storybook` does not fail the workshop on them. `template.json` `storybook` records the package, the version, the framework, the config, and the story files. `create-reactloom` checks those files and the scripts.
+
+Expo does not load `@storybook/react-native`. The package is developed with Expo 57, and its peers do not match this SDK:
+
+> @storybook/react-native 10.6.0 is developed with Expo 57, but it requires react-native-safe-area-context 5.8.0 and @gorhom/bottom-sheet. Expo SDK 57 bundles safe-area-context ~5.7.0 and does not include bottom-sheet, so this template does not load on-device Storybook.
+
+### Browser mocks
+
+The SPA already starts MSW in the browser when `VITE_ENABLE_MSW=true` and Vite is in dev. That name stays (it is the flag this template already shipped). It defaults to `true` in `templates/spa/src/lib/env.ts` and `.env.example`. `src/main.tsx` loads `src/mocks/browser.ts`, which uses the same `src/mocks/handlers.ts` as Vitest. Vitest sets the flag to false and uses the Node server. Playwright sets it to true. `public/mockServiceWorker.js` is the worker file.
+
+SSR adds `NEXT_PUBLIC_ENABLE_MSW`, default `false`, on the client schema in `templates/ssr/src/server/env.ts` and in `.env.example`. `.env.development` does not turn it on. `src/app/dev-client.tsx` starts `src/mocks/browser.ts` only when `NODE_ENV` is not production, devtools are on, and the flag is `true`. The handlers match the cookie API (`{ user }` from `POST /api/session`, tasks with `ownerId`) and keep the signed-in flag in memory. Playwright leaves the flag off and hits the real route handlers.
+
+`vite build` and `next build` alias `msw`, `msw/browser`, `msw/http`, and `msw/node` to `src/lib/workflow-stub.ts`. The dev server does not. `build-storybook` sets `STORYBOOK=true` and skips that alias.
+
+Expo does not load MSW. 3.0.3 has a browser worker and a Node server, and no React Native entry. Local data stays behind `EXPO_PUBLIC_USE_FIXTURES` (default `true` in `templates/mobile/src/lib/env.ts`, read by `src/features/auth/service.ts`).
+
+> msw 3.0.3 ships a browser worker and a Node server, and no React Native entry. This template keeps local data behind EXPO_PUBLIC_USE_FIXTURES instead of loading MSW.
+
+### Accessibility in development
+
+Playwright still runs `@axe-core/playwright` in `e2e/workshop.spec.ts` after the heading is visible. `color-contrast` stays disabled in those specs.
+
+`@axe-core/react` 4.13.0 logs violations in the web dev server. The SPA dynamic-imports it from `src/main.tsx` when `import.meta.env.DEV` and `VITE_DEVTOOLS` are on. SSR does the same from `src/app/dev-client.tsx` when `NODE_ENV` is not production and `NEXT_PUBLIC_DEVTOOLS` is not `false`. Playwright sets those devtools flags to `false`, so the end-to-end run does not also start the React logger. Production builds alias `@axe-core/react` to `src/lib/workflow-stub.ts`.
+
+Storybook's a11y addon is the workshop view of the same rules. For a pass over a running page, install the [axe DevTools browser extension](https://www.deque.com/axe/devtools/). A repository cannot install a browser extension.
+
+Expo does not load `@axe-core/react`. It needs a DOM, and this template renders React Native views. Use the axe DevTools extension on the web preview, and Maestro for the device flow.
+
+### End-to-end
+
+SPA and SSR keep Playwright: `@playwright/test` 1.64.0, `playwright.config.ts`, `pnpm test:e2e`, and `pnpm test:e2e:setup`. The web server in those configs sets devtools off so axe stays on the page under test.
+
+Expo keeps the Maestro flow at `templates/mobile/.maestro/login.yaml` (`appId: com.reactloom.app`, then `launchApp`). Maestro is not an npm dependency. CI does not launch an emulator, so the flow stays a local device check. `template.json` `e2e` records `maestro` and that file. A generated mobile app does not get Playwright.
 
 ### In-browser TypeScript errors
 

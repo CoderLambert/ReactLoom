@@ -71,6 +71,51 @@ export type TemplateManifest = {
     config: string
   }
   /**
+   * Storybook. Web templates set `enabled` and name the framework package.
+   * Mobile sets `enabled` to false. `reason` is the sentence in `config`.
+   */
+  storybook?: {
+    enabled: boolean
+    package: string
+    version: string
+    framework: string
+    config: string
+    stories?: string[]
+    reason?: string
+  }
+  /**
+   * Browser or device mocks. `msw` reuses `src/mocks/handlers.ts`.
+   * `fixtures` is the Expo in-process stand-in. `flag` is the env variable.
+   */
+  browserMocks?: {
+    mode: 'msw' | 'fixtures'
+    flag: string
+    config: string
+    package?: string
+    version?: string
+    reason?: string
+  }
+  /**
+   * Dev-time accessibility feedback. Web templates load `@axe-core/react`.
+   * Mobile sets `enabled` to false and explains the missing DOM.
+   */
+  devA11y?: {
+    enabled: boolean
+    package: string
+    version: string
+    config: string
+    reason?: string
+  }
+  /**
+   * End-to-end runner. Web templates use Playwright. Mobile uses the Maestro flow.
+   */
+  e2e?: {
+    tool: 'playwright' | 'maestro'
+    config: string
+    package?: string
+    version?: string
+  }
+  /**
    * Inspector package, the committed env file, and the editor launcher.
    * `config` is the bundler file. `launchEditor` is the env file that leaves
    * the editor unset. `launcher` is `scripts/open-in-editor.mjs`. The CLI checks
@@ -167,6 +212,10 @@ export function parseManifest(value: unknown): TemplateManifest {
     whyDidYouRender: optionalWhyDidYouRender(record.whyDidYouRender),
     bundleAnalyze: optionalBundleAnalyze(record.bundleAnalyze),
     propsDiff: optionalPropsDiff(record.propsDiff),
+    storybook: optionalStorybook(record.storybook),
+    browserMocks: optionalBrowserMocks(record.browserMocks),
+    devA11y: optionalDevA11y(record.devA11y),
+    e2e: optionalE2e(record.e2e),
     clickToSource: optionalClickToSource(record.clickToSource),
   }
 }
@@ -298,6 +347,144 @@ function optionalPropsDiff(value: unknown): TemplateManifest['propsDiff'] {
     hook: '@reactloom/devtools',
     config: templateFile(record.config, 'propsDiff.config'),
   }
+}
+
+function optionalStorybook(value: unknown): TemplateManifest['storybook'] {
+  if (value === undefined) return undefined
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    throw new Error('template.json storybook must be an object.')
+  }
+  const record = value as Record<string, unknown>
+  if (record.package !== 'storybook') {
+    throw new Error('template.json storybook.package must be storybook.')
+  }
+  if (record.framework !== '@storybook/react-vite' && record.framework !== '@storybook/nextjs') {
+    throw new Error(
+      'template.json storybook.framework must be @storybook/react-vite or @storybook/nextjs.',
+    )
+  }
+  if (typeof record.enabled !== 'boolean') {
+    throw new Error('template.json storybook.enabled must be a boolean.')
+  }
+  let reason: string | undefined
+  let stories: string[] | undefined
+  if (record.enabled) {
+    if (record.reason !== undefined) {
+      throw new Error('template.json storybook.reason is only used when Storybook is off.')
+    }
+    if (!Array.isArray(record.stories) || record.stories.length === 0) {
+      throw new Error('template.json storybook.stories must list the story files.')
+    }
+    stories = record.stories.map((entry) => templateFile(entry, 'storybook.stories'))
+  } else if (typeof record.reason !== 'string' || record.reason.trim().length === 0) {
+    throw new Error('template.json storybook.reason must explain why Storybook is off.')
+  } else {
+    reason = record.reason
+    if (record.stories !== undefined) {
+      throw new Error('template.json storybook.stories is only used when Storybook is on.')
+    }
+  }
+  return {
+    enabled: record.enabled,
+    package: 'storybook',
+    version: exactVersion(record.version, 'storybook.version'),
+    framework: record.framework,
+    config: templateFile(record.config, 'storybook.config'),
+    ...(stories === undefined ? {} : { stories }),
+    ...(reason === undefined ? {} : { reason }),
+  }
+}
+
+function optionalBrowserMocks(value: unknown): TemplateManifest['browserMocks'] {
+  if (value === undefined) return undefined
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    throw new Error('template.json browserMocks must be an object.')
+  }
+  const record = value as Record<string, unknown>
+  if (record.mode !== 'msw' && record.mode !== 'fixtures') {
+    throw new Error('template.json browserMocks.mode must be msw or fixtures.')
+  }
+  if (typeof record.flag !== 'string' || !/^[A-Z][A-Z0-9_]+$/.test(record.flag)) {
+    throw new Error('template.json browserMocks.flag must be an env variable name.')
+  }
+  if (record.mode === 'msw') {
+    if (record.package !== 'msw') {
+      throw new Error('template.json browserMocks.package must be msw.')
+    }
+    if (record.reason !== undefined) {
+      throw new Error('template.json browserMocks.reason is only used for fixture mode.')
+    }
+    return {
+      mode: 'msw',
+      flag: record.flag,
+      config: templateFile(record.config, 'browserMocks.config'),
+      package: 'msw',
+      version: exactVersion(record.version, 'browserMocks.version'),
+    }
+  }
+  if (typeof record.reason !== 'string' || record.reason.trim().length === 0) {
+    throw new Error('template.json browserMocks.reason must explain why MSW is off.')
+  }
+  return {
+    mode: 'fixtures',
+    flag: record.flag,
+    config: templateFile(record.config, 'browserMocks.config'),
+    reason: record.reason,
+  }
+}
+
+function optionalDevA11y(value: unknown): TemplateManifest['devA11y'] {
+  if (value === undefined) return undefined
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    throw new Error('template.json devA11y must be an object.')
+  }
+  const record = value as Record<string, unknown>
+  if (record.package !== '@axe-core/react') {
+    throw new Error('template.json devA11y.package must be @axe-core/react.')
+  }
+  if (typeof record.enabled !== 'boolean') {
+    throw new Error('template.json devA11y.enabled must be a boolean.')
+  }
+  let reason: string | undefined
+  if (record.enabled) {
+    if (record.reason !== undefined) {
+      throw new Error('template.json devA11y.reason is only used when the tool is off.')
+    }
+  } else if (typeof record.reason !== 'string' || record.reason.trim().length === 0) {
+    throw new Error('template.json devA11y.reason must explain why the tool is off.')
+  } else {
+    reason = record.reason
+  }
+  return {
+    enabled: record.enabled,
+    package: '@axe-core/react',
+    version: exactVersion(record.version, 'devA11y.version'),
+    config: templateFile(record.config, 'devA11y.config'),
+    ...(reason === undefined ? {} : { reason }),
+  }
+}
+
+function optionalE2e(value: unknown): TemplateManifest['e2e'] {
+  if (value === undefined) return undefined
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    throw new Error('template.json e2e must be an object.')
+  }
+  const record = value as Record<string, unknown>
+  if (record.tool !== 'playwright' && record.tool !== 'maestro') {
+    throw new Error('template.json e2e.tool must be playwright or maestro.')
+  }
+  if (record.tool === 'playwright') {
+    if (record.package !== '@playwright/test') {
+      throw new Error('template.json e2e.package must be @playwright/test.')
+    }
+    return {
+      tool: 'playwright',
+      config: templateFile(record.config, 'e2e.config'),
+      package: '@playwright/test',
+      version: exactVersion(record.version, 'e2e.version'),
+    }
+  }
+  return { tool: 'maestro', config: templateFile(record.config, 'e2e.config') }
 }
 
 function exactVersion(value: unknown, label: string): string {

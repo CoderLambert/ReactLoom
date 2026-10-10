@@ -339,6 +339,12 @@ describe('create-reactloom', () => {
       expect(manifest.whyDidYouRender?.enabled).toBe(template === 'mobile')
       expect(manifest.bundleAnalyze?.script).toBeTruthy()
       expect(manifest.propsDiff?.hook).toBe('@reactloom/devtools')
+      expect(manifest.storybook?.package).toBe('storybook')
+      expect(manifest.storybook?.enabled).toBe(template !== 'mobile')
+      expect(manifest.browserMocks?.flag).toBeTruthy()
+      expect(manifest.devA11y?.package).toBe('@axe-core/react')
+      expect(manifest.devA11y?.enabled).toBe(template !== 'mobile')
+      expect(manifest.e2e?.tool).toBe(template === 'mobile' ? 'maestro' : 'playwright')
       expect(manifest.configs).toEqual(
         expect.arrayContaining(['scripts/open-in-editor.mjs', 'scripts/code', 'scripts/code.cmd']),
       )
@@ -426,6 +432,44 @@ describe('create-reactloom', () => {
           'utf8',
         )
         expect(reasonFile).toContain(manifest.whyDidYouRender.reason)
+      }
+      const storybook = manifest.storybook
+      const mocks = manifest.browserMocks
+      const a11y = manifest.devA11y
+      const e2e = manifest.e2e
+      if (!storybook || !mocks || !a11y || !e2e) {
+        throw new Error('template manifest is missing a workflow tool')
+      }
+      if (storybook.enabled) {
+        expect(pkg.devDependencies?.storybook).toBe(storybook.version)
+        expect(pkg.devDependencies?.[storybook.framework]).toBe(storybook.version)
+        expect(pkg.scripts?.storybook).toContain('storybook dev')
+        expect(pkg.scripts?.['build-storybook']).toContain('STORYBOOK=true')
+        expect(pkg.scripts?.['build-storybook']).toContain('storybook build')
+      } else {
+        expect(pkg.devDependencies?.storybook).toBeUndefined()
+        expect(pkg.scripts?.storybook).toBeUndefined()
+      }
+      if (mocks.mode === 'msw') {
+        expect(pkg.devDependencies?.msw).toBe(mocks.version)
+      } else {
+        expect(pkg.devDependencies?.msw).toBeUndefined()
+        expect(pkg.dependencies?.msw).toBeUndefined()
+      }
+      if (a11y.enabled) {
+        expect(pkg.devDependencies?.['@axe-core/react']).toBe(a11y.version)
+      } else {
+        expect(pkg.devDependencies?.['@axe-core/react']).toBeUndefined()
+      }
+      if (e2e.tool === 'playwright') {
+        expect(pkg.devDependencies?.['@playwright/test']).toBe(e2e.version)
+        expect(pkg.scripts?.['test:e2e']).toBe('playwright test')
+      } else {
+        expect(pkg.devDependencies?.['@playwright/test']).toBeUndefined()
+        expect(pkg.scripts?.['test:e2e']).toBeUndefined()
+        const flow = await readFile(path.join(directory, e2e.config), 'utf8')
+        expect(flow).toContain('appId:')
+        expect(flow).toContain('launchApp')
       }
       const changeset = JSON.parse(
         await readFile(path.join(directory, '.changeset', 'config.json'), 'utf8'),
@@ -549,7 +593,8 @@ describe('create-reactloom', () => {
     expect(ssrNext).toContain('open-in-editor.mjs')
     expect(ssrNext).toContain('activateLauncher')
     expect(ssrNext).toContain('path.join(import.meta.dirname)')
-    expect(ssrNext).toContain("resolveAlias: { 'react-scan': reactScanStub }")
+    expect(ssrNext).toContain("alias['react-scan'] = reactScanStub")
+    expect(ssrNext).toContain('resolveAlias: aliases')
     expect(ssrNext).not.toContain('../..')
     const ssrScan = await readFile(path.join(ssr, 'src/app/react-scan.tsx'), 'utf8')
     expect(ssrScan).toContain("import { scan } from 'react-scan'")

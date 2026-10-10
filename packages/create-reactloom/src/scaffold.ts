@@ -23,6 +23,7 @@ const SKIP_DIRS = new Set([
   'playwright-report',
   'test-results',
   '.turbo',
+  'storybook-static',
 ])
 
 export type ScaffoldOptions = {
@@ -358,6 +359,185 @@ async function assertPropsDiff(directory: string, manifest: TemplateManifest): P
   }
 }
 
+function devGate(text: string): boolean {
+  return text.includes('import.meta.env.DEV') || text.includes('NODE_ENV')
+}
+
+async function assertStorybook(directory: string, manifest: TemplateManifest): Promise<void> {
+  const storybook = manifest.storybook
+  if (!storybook) {
+    throw new Error('template.json storybook must name the package, version, and config.')
+  }
+  const configText = await readTemplateText(directory, storybook.config, 'storybook')
+  const pkg = JSON.parse(
+    await readFile(path.join(directory, 'package.json'), 'utf8'),
+  ) as PackageJson
+  if (storybook.enabled) {
+    if (dependencyVersion(pkg, storybook.package) !== storybook.version) {
+      throw new Error(
+        `template.json storybook expects ${storybook.package}@${storybook.version}, found ${dependencyVersion(pkg, storybook.package) ?? 'nothing'}.`,
+      )
+    }
+    if (dependencyVersion(pkg, storybook.framework) !== storybook.version) {
+      throw new Error(
+        `template.json storybook expects ${storybook.framework}@${storybook.version}, found ${dependencyVersion(pkg, storybook.framework) ?? 'nothing'}.`,
+      )
+    }
+    if (!dependencyVersion(pkg, '@storybook/addon-a11y')) {
+      throw new Error('template.json storybook is on, but @storybook/addon-a11y is not installed.')
+    }
+    if (!dependencyVersion(pkg, 'msw-storybook-addon')) {
+      throw new Error('template.json storybook is on, but msw-storybook-addon is not installed.')
+    }
+    if (
+      !configText.includes(storybook.framework) ||
+      !configText.includes('@storybook/addon-a11y') ||
+      !configText.includes('msw-storybook-addon')
+    ) {
+      throw new Error(
+        'template.json storybook.config must load the framework, the a11y addon, and msw-storybook-addon.',
+      )
+    }
+    if (!pkg.scripts?.storybook?.includes('storybook dev')) {
+      throw new Error('package.json storybook must run storybook dev.')
+    }
+    const built = pkg.scripts?.['build-storybook'] ?? ''
+    if (!built.includes('STORYBOOK=true') || !built.includes('storybook build')) {
+      throw new Error(
+        'package.json build-storybook must set STORYBOOK=true and run storybook build.',
+      )
+    }
+    for (const relative of storybook.stories ?? []) {
+      await readTemplateText(directory, relative, 'story')
+    }
+    const preview = storybook.config.replace(/main\.ts$/, 'preview.ts')
+    const previewText = await readTemplateText(directory, preview, 'storybook preview')
+    if (!previewText.includes('msw')) {
+      throw new Error('Storybook preview must start MSW with the template handlers.')
+    }
+    return
+  }
+  for (const name of [
+    'storybook',
+    storybook.framework,
+    '@storybook/addon-a11y',
+    'msw-storybook-addon',
+  ]) {
+    if (dependencyVersion(pkg, name) !== undefined) {
+      throw new Error(`template.json storybook is disabled, but ${name} is still a dependency.`)
+    }
+  }
+  if (pkg.scripts?.storybook !== undefined || pkg.scripts?.['build-storybook'] !== undefined) {
+    throw new Error('template.json storybook is disabled, but a storybook script is still present.')
+  }
+  if (!storybook.reason || !configText.includes(storybook.reason)) {
+    throw new Error('template.json storybook.config must include the reason Storybook is off.')
+  }
+}
+
+async function assertBrowserMocks(directory: string, manifest: TemplateManifest): Promise<void> {
+  const mocks = manifest.browserMocks
+  if (!mocks) {
+    throw new Error('template.json browserMocks must name the mode, the flag, and the config.')
+  }
+  const configText = await readTemplateText(directory, mocks.config, 'browser mocks')
+  const pkg = JSON.parse(
+    await readFile(path.join(directory, 'package.json'), 'utf8'),
+  ) as PackageJson
+  if (mocks.mode === 'msw') {
+    const installed = dependencyVersion(pkg, 'msw')
+    if (installed !== mocks.version) {
+      throw new Error(
+        `template.json browserMocks expects msw@${mocks.version ?? ''}, found ${installed ?? 'nothing'}.`,
+      )
+    }
+    if (!configText.includes(mocks.flag) || !devGate(configText)) {
+      throw new Error(
+        'template.json browserMocks.config must read the flag and start the worker only in development.',
+      )
+    }
+    const handlers = await readTemplateText(directory, 'src/mocks/handlers.ts', 'msw handlers')
+    if (!handlers.includes('http.')) {
+      throw new Error('src/mocks/handlers.ts must define the shared MSW handlers.')
+    }
+    return
+  }
+  if (dependencyVersion(pkg, 'msw') !== undefined) {
+    throw new Error('template.json browserMocks is fixtures, but msw is still a dependency.')
+  }
+  if (!mocks.reason || !configText.includes(mocks.flag) || !configText.includes(mocks.reason)) {
+    throw new Error(
+      'template.json browserMocks.config must include the flag and the reason MSW is off.',
+    )
+  }
+}
+
+async function assertDevA11y(directory: string, manifest: TemplateManifest): Promise<void> {
+  const a11y = manifest.devA11y
+  if (!a11y) {
+    throw new Error('template.json devA11y must name @axe-core/react and its config file.')
+  }
+  const configText = await readTemplateText(directory, a11y.config, 'dev accessibility')
+  const pkg = JSON.parse(
+    await readFile(path.join(directory, 'package.json'), 'utf8'),
+  ) as PackageJson
+  const installed = dependencyVersion(pkg, a11y.package)
+  if (a11y.enabled) {
+    if (installed !== a11y.version) {
+      throw new Error(
+        `template.json devA11y expects ${a11y.package}@${a11y.version}, found ${installed ?? 'nothing'}.`,
+      )
+    }
+    if (!configText.includes(a11y.package) || !devGate(configText)) {
+      throw new Error('template.json devA11y.config must load @axe-core/react only in development.')
+    }
+    return
+  }
+  if (installed !== undefined) {
+    throw new Error(`template.json devA11y is disabled, but ${a11y.package} is still a dependency.`)
+  }
+  if (!a11y.reason || !configText.includes(a11y.reason)) {
+    throw new Error('template.json devA11y.config must include the reason the tool is off.')
+  }
+}
+
+async function assertE2e(directory: string, manifest: TemplateManifest): Promise<void> {
+  const e2e = manifest.e2e
+  if (!e2e) {
+    throw new Error('template.json e2e must name the runner and its config file.')
+  }
+  const pkg = JSON.parse(
+    await readFile(path.join(directory, 'package.json'), 'utf8'),
+  ) as PackageJson
+  if (e2e.tool === 'playwright') {
+    const installed = dependencyVersion(pkg, '@playwright/test')
+    if (installed !== e2e.version) {
+      throw new Error(
+        `template.json e2e expects @playwright/test@${e2e.version ?? ''}, found ${installed ?? 'nothing'}.`,
+      )
+    }
+    await readTemplateText(directory, e2e.config, 'playwright')
+    if (pkg.scripts?.['test:e2e'] !== 'playwright test') {
+      throw new Error('package.json test:e2e must be playwright test.')
+    }
+    const spec = await readTemplateText(directory, 'e2e/workshop.spec.ts', 'playwright axe spec')
+    if (!spec.includes('@axe-core/playwright')) {
+      throw new Error('e2e/workshop.spec.ts must run @axe-core/playwright.')
+    }
+    return
+  }
+  const flow = await readTemplateText(directory, e2e.config, 'maestro')
+  if (!flow.includes('appId:') || !flow.includes('launchApp')) {
+    throw new Error('template.json e2e.config must be a Maestro flow with appId and launchApp.')
+  }
+  if (dependencyVersion(pkg, '@playwright/test') !== undefined) {
+    throw new Error('template.json e2e is maestro, but @playwright/test is still a dependency.')
+  }
+  if (pkg.scripts?.['test:e2e'] !== undefined) {
+    throw new Error('template.json e2e is maestro, but test:e2e is still a script.')
+  }
+}
+
 async function rewriteChangesetIgnore(directory: string, projectName: string): Promise<void> {
   const configPath = path.join(directory, '.changeset', 'config.json')
   try {
@@ -431,6 +611,10 @@ export async function scaffold(options: ScaffoldOptions): Promise<void> {
   await assertWhyDidYouRender(options.directory, manifest)
   await assertBundleAnalyze(options.directory, manifest)
   await assertPropsDiff(options.directory, manifest)
+  await assertStorybook(options.directory, manifest)
+  await assertBrowserMocks(options.directory, manifest)
+  await assertDevA11y(options.directory, manifest)
+  await assertE2e(options.directory, manifest)
   await rewriteChangesetIgnore(options.directory, options.name)
   await installAiConfig({
     repoRoot,

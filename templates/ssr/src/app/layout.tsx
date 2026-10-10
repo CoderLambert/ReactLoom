@@ -1,5 +1,6 @@
 // biome-ignore-all assist/source/organizeImports: React Scan must be the top-most import
 import { ReactScan } from '@/app/react-scan'
+import { DevClient } from '@/app/dev-client'
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 import { Providers } from '@/app/providers'
@@ -15,6 +16,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <ReactScan />
+      <DevClient />
       <body>
         <a
           href="#content"

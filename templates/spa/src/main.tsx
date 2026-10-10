@@ -14,6 +14,11 @@ const showDevtools = import.meta.env.DEV && env.VITE_DEVTOOLS === 'true'
 
 if (showDevtools) {
   scan({ enabled: true })
+  void import('@axe-core/react').then(async (axe) => {
+    const React = await import('react')
+    const ReactDOM = await import('react-dom')
+    await axe.default(React, ReactDOM, 1000)
+  })
 }
 
 const TanStackRouterDevtools = showDevtools

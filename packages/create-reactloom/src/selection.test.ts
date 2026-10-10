@@ -108,6 +108,62 @@ describe('template selection', () => {
     ).toThrow(/whyDidYouRender.reason/)
   })
 
+  it('rejects a storybook framework that is not Vite or Next', () => {
+    expect(() =>
+      parseManifest({
+        ...spaManifest(),
+        storybook: {
+          enabled: true,
+          package: 'storybook',
+          version: '10.6.1',
+          framework: '@storybook/react',
+          config: '.storybook/main.ts',
+          stories: ['src/components/ui/button.stories.tsx'],
+        },
+      }),
+    ).toThrow(/storybook.framework/)
+  })
+
+  it('rejects a disabled storybook entry that has no reason', () => {
+    expect(() =>
+      parseManifest({
+        ...spaManifest(),
+        storybook: {
+          enabled: false,
+          package: 'storybook',
+          version: '10.6.1',
+          framework: '@storybook/react-vite',
+          config: 'AGENTS.md',
+        },
+      }),
+    ).toThrow(/storybook.reason/)
+  })
+
+  it('rejects a browser mock mode that is not msw or fixtures', () => {
+    expect(() =>
+      parseManifest({
+        ...spaManifest(),
+        browserMocks: {
+          mode: 'fetch',
+          flag: 'VITE_ENABLE_MSW',
+          config: 'src/main.tsx',
+        },
+      }),
+    ).toThrow(/browserMocks.mode/)
+  })
+
+  it('rejects an end-to-end tool that is not playwright or maestro', () => {
+    expect(() =>
+      parseManifest({
+        ...spaManifest(),
+        e2e: {
+          tool: 'cypress',
+          config: 'playwright.config.ts',
+        },
+      }),
+    ).toThrow(/e2e.tool/)
+  })
+
   it('rejects a props diff whose primary tool is unknown', () => {
     expect(() =>
       parseManifest({

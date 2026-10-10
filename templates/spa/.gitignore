@@ -8,3 +8,4 @@ test-results
 .env.local
 !.env.example
 stats.html
+storybook-static

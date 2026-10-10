@@ -17,7 +17,9 @@
     "test:affected": "pnpm --filter \"...[HEAD]\" --if-present test",
     "test:e2e:setup": "playwright install chromium",
     "test:e2e": "playwright test",
-    "analyze": "next analyze --output"
+    "analyze": "next analyze --output",
+    "storybook": "STORYBOOK=true storybook dev -p 6007 --no-open",
+    "build-storybook": "STORYBOOK=true storybook build"
   },
   "dependencies": {
     "@hookform/resolvers": "5.9.1",
@@ -39,10 +41,13 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",
+    "@axe-core/react": "4.13.0",
     "@next/bundle-analyzer": "16.4.0",
     "@playwright/test": "1.64.0",
     "@reactloom/devtools": "workspace:*",
     "@reactloom/tsconfig": "workspace:*",
+    "@storybook/addon-a11y": "10.6.1",
+    "@storybook/nextjs": "10.6.1",
     "@tailwindcss/postcss": "4.3.3",
     "@tanstack/react-query-devtools": "5.104.1",
     "@types/node": "22.20.5",
@@ -51,9 +56,17 @@
     "@vitest/coverage-v8": "5.0.3",
     "@vitest/ui": "5.0.3",
     "code-inspector-plugin": "2.0.9",
+    "msw": "3.0.3",
+    "msw-storybook-addon": "3.0.3",
     "react-scan": "0.5.7",
+    "storybook": "10.6.1",
     "tailwindcss": "4.3.3",
     "typescript": "7.0.2",
     "vitest": "5.0.3"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
   }
 }

@@ -11,12 +11,14 @@ export const env = createEnv({
   client: {
     NEXT_PUBLIC_APP_NAME: z.string().min(1).default('ReactLoom'),
     NEXT_PUBLIC_SENTRY_DSN: z.url().optional(),
+    NEXT_PUBLIC_ENABLE_MSW: z.enum(['true', 'false']).default('false'),
   },
   runtimeEnv: {
     SESSION_SECRET: process.env.SESSION_SECRET,
     REACTLOOM_STRICT_SECRETS: process.env.REACTLOOM_STRICT_SECRETS,
     NEXT_PUBLIC_APP_NAME: process.env.NEXT_PUBLIC_APP_NAME,
     NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
+    NEXT_PUBLIC_ENABLE_MSW: process.env.NEXT_PUBLIC_ENABLE_MSW,
   },
   emptyStringAsUndefined: true,
 })

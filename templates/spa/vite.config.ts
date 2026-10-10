@@ -25,6 +25,7 @@ function activateEditor(configDir: string): InspectorEditor {
 
 const root = fileURLToPath(new URL('.', import.meta.url))
 const devtoolsStub = fileURLToPath(new URL('./src/lib/devtools-stub.ts', import.meta.url))
+const workflowStub = fileURLToPath(new URL('./src/lib/workflow-stub.ts', import.meta.url))
 
 export default defineConfig(({ command }) => {
   const clickToSource = command === 'serve' && process.env.VITE_DEVTOOLS !== 'false'
@@ -56,6 +57,17 @@ export default defineConfig(({ command }) => {
           ? {
               '@tanstack/react-router-devtools': devtoolsStub,
               '@tanstack/react-query-devtools': devtoolsStub,
+            }
+          : {}),
+        // App production builds drop the worker and the React axe logger.
+        // `build-storybook` sets STORYBOOK so the stories can still import them.
+        ...(command === 'build' && process.env.STORYBOOK !== 'true'
+          ? {
+              msw: workflowStub,
+              'msw/browser': workflowStub,
+              'msw/http': workflowStub,
+              'msw/node': workflowStub,
+              '@axe-core/react': workflowStub,
             }
           : {}),
       },
