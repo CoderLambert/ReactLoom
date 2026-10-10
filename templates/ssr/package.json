@@ -49,6 +49,7 @@
     "@types/react-dom": "19.3.0",
     "@vitest/coverage-v8": "5.0.3",
     "@vitest/ui": "5.0.3",
+    "code-inspector-plugin": "2.0.9",
     "react-scan": "0.5.7",
     "tailwindcss": "4.3.3",
     "typescript": "7.0.2",

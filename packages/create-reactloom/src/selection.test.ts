@@ -38,6 +38,15 @@ describe('template selection', () => {
     expect(() => parseManifest({ id: 'spa', description: 'SPA' })).toThrow(/packages/)
   })
 
+  it('rejects a click-to-source path that leaves the template', () => {
+    expect(() =>
+      parseManifest({
+        ...spaManifest(),
+        clickToSource: { tool: 'code-inspector-plugin', config: '../vite.config.ts' },
+      }),
+    ).toThrow(/clickToSource.config/)
+  })
+
   it('rejects a tsconfig preset that is not a filename', () => {
     expect(() =>
       parseManifest({

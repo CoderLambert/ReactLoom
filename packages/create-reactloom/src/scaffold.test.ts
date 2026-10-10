@@ -465,6 +465,11 @@ describe('create-reactloom', () => {
       scripts: Record<string, string>
     }
     expect(spaPkg.devDependencies['vite-plugin-checker']).toBe('0.14.5')
+    expect(spaPkg.devDependencies['code-inspector-plugin']).toBe('2.0.9')
+    const spaVite = await readFile(path.join(spa, 'vite.config.ts'), 'utf8')
+    expect(spaVite).toContain("bundler: 'vite'")
+    expect(spaVite).toContain('LAUNCH_EDITOR')
+    expect(spaVite).not.toContain("bundler: 'turbopack'")
     expect(spaPkg.devDependencies['@tanstack/react-router-devtools']).toBe('1.167.2')
     expect(spaPkg.devDependencies['react-scan']).toBe('0.5.7')
     expect(spaPkg.devDependencies['@vitest/coverage-v8']).toBe('5.0.3')
@@ -486,6 +491,10 @@ describe('create-reactloom', () => {
     expect(ssrPkg.devDependencies['@tanstack/react-query-devtools']).toBe('5.104.1')
     expect(ssrPkg.devDependencies['react-scan']).toBe('0.5.7')
     expect(ssrPkg.devDependencies['vite-plugin-checker']).toBeUndefined()
+    expect(ssrPkg.devDependencies['code-inspector-plugin']).toBe('2.0.9')
+    const ssrNext = await readFile(path.join(ssr, 'next.config.ts'), 'utf8')
+    expect(ssrNext).toContain("bundler: 'turbopack'")
+    expect(ssrNext).toContain('REACT_EDITOR')
     expect(ssrPkg.devDependencies['@tanstack/react-router-devtools']).toBeUndefined()
     await expect(stat(path.join(ssr, 'src/app/react-scan.tsx'))).resolves.toBeTruthy()
 
@@ -502,6 +511,9 @@ describe('create-reactloom', () => {
     expect(mobilePkg.devDependencies['@vitest/ui']).toBe('5.0.3')
     expect(mobilePkg.devDependencies['react-scan']).toBeUndefined()
     expect(mobilePkg.devDependencies['vite-plugin-checker']).toBeUndefined()
+    expect(mobilePkg.devDependencies['code-inspector-plugin']).toBeUndefined()
+    const mobileAgents = await readFile(path.join(mobile, 'AGENTS.md'), 'utf8')
+    expect(mobileAgents).toContain('element inspector')
     expect(mobilePkg.scripts['test:e2e']).toBeUndefined()
   })
 

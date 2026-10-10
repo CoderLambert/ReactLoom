@@ -29,6 +29,10 @@
     "pointers": ["CLAUDE.md", ".github/copilot-instructions.md", ".cursor/mcp.json"],
     "rules": ["general.mdc", "mobile.mdc", "testing.mdc"]
   },
+  "clickToSource": {
+    "tool": "expo-devtools",
+    "config": "AGENTS.md"
+  },
   "docs": [
     "docs/adr/0003-sessions.md",
     "docs/adr/0004-api-client.md",

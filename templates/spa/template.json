@@ -22,6 +22,10 @@
     "pointers": ["CLAUDE.md", ".github/copilot-instructions.md", ".cursor/mcp.json"],
     "rules": ["general.mdc", "spa.mdc", "testing.mdc"]
   },
+  "clickToSource": {
+    "tool": "code-inspector-plugin",
+    "config": "vite.config.ts"
+  },
   "docs": [
     "docs/adr/0003-sessions.md",
     "docs/adr/0004-api-client.md",

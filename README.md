@@ -147,6 +147,7 @@ Listing `biome.json`, `lefthook.yml`, `commitlint.config.mjs`, or `.changeset/co
 - `ai.rules` lists Cursor rule filenames from `.cursor/rules/`. Add a rule there only for the templates it applies to.
 - `ai.pointers` lists repo-root files such as `CLAUDE.md`.
 - `docs` lists ADR paths such as `docs/adr/0004-api-client.md`.
+- `clickToSource` names that template's inspector and the template file that configures it (`vite.config.ts`, `next.config.ts`, or the mobile `AGENTS.md`). The CLI checks the file was copied. Do not put another template's inspector in that file.
 
 ## Conventions
 
@@ -199,6 +200,30 @@ Dev-only overlays, loaded only while `pnpm dev` is running. The SPA production b
 | vite-plugin-checker | SPA `vite.config.ts` | TypeScript errors in the Vite error overlay. `enableBuild` is off because `pnpm typecheck` already runs `tsc`. It does not run ESLint or Biome. |
 
 Mobile does not get those web overlays. Expo's dev server and the editor extensions cover that template. Next.js already shows compile errors, so SSR does not also run vite-plugin-checker.
+
+### Click to source
+
+Each template's `template.json` `clickToSource` names the inspector and the file that configures it. `create-reactloom` copies that file with the template and checks it arrived. A generated SPA does not get the Next.js setup, and a generated mobile app does not get `code-inspector-plugin`.
+
+| | SPA | SSR | Mobile |
+| --- | --- | --- | --- |
+| Tool | `code-inspector-plugin` on Vite | `code-inspector-plugin` on Turbopack, plus the Next.js dev overlay | Expo element inspector and React Native DevTools |
+| Config | `templates/spa/vite.config.ts` | `templates/ssr/next.config.ts` | `templates/mobile/AGENTS.md` |
+| Shortcut | Option+Shift (macOS) or Alt+Shift, then click | same shortcut for the DOM inspector. Overlay stack frames and the route DevTools use Open in editor | Dev menu → Toggle element inspector. In the Expo terminal, press `j`, then Components and Sources |
+
+The Vite plugin is registered only for `vite dev`, and only when `VITE_DEVTOOLS` is not `false`. The Next.js plugin returns no Turbopack rules when `NODE_ENV` is `production` or `NEXT_PUBLIC_DEVTOOLS` is `false`, so `next build` does not inject `data-insp-path` or the inspector client. SPA source maps stay on (`build.sourcemap` and `css.devSourcemap`). Next.js dev source maps stay on. `productionBrowserSourceMaps` stays off.
+
+Set the editor in `.env.local`, not in a committed env file:
+
+| Variable | Who reads it |
+| --- | --- |
+| `CODE_EDITOR` | code-inspector. Example: `cursor`, `code`, `webstorm`, or an executable path. |
+| `LAUNCH_EDITOR` | Vite's launch-editor convention. The SPA and SSR configs pass it to code-inspector when `CODE_EDITOR` is unset. |
+| `REACT_EDITOR` | Next.js `/__nextjs_launch-editor` (error overlay and route DevTools), then `VISUAL`, then `EDITOR`. The click inspector also accepts it when the other two are unset. |
+
+Server Components are included: the Turbopack rule rewrites JSX in the App Router, and the Next.js overlay opens server stack frames from their source maps. This repo uses `src/app`, and Next.js 16.4 resolves that path.
+
+Expo does not get a click-to-IDE plugin. Metro does not ship open-in-editor, and a third-party inspector would wrap the root layout and the web export. The element inspector and React Native DevTools already locate the component and show its source inside DevTools.
 
 ## AI collaboration
 

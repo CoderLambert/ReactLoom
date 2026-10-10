@@ -70,6 +70,7 @@ Template choice is still the interactive prompt or `--template spa|ssr|mobile`. 
 | `ai.pointers` | `CLAUDE.md`, `.github/copilot-instructions.md`, `.cursor/mcp.json` |
 | `ai.rules` | That template's Cursor rules only (`general` plus `spa`, `ssr`, or `mobile`, plus `testing`) |
 | `docs` | ADRs 0003, 0004, 0005, and 0006. ADR 0001 and 0002 stay in this repo. |
+| `clickToSource` | The inspector for that template and the template file that configures it. SPA is `code-inspector-plugin` in `vite.config.ts`. SSR is the same plugin in `next.config.ts`. Mobile is `expo-devtools` in its `AGENTS.md`. |
 
 To add a shared file to a template, put its repo-root path (or preset filename) in that template's `template.json`. A file that lives only in the template directory is copied with the template; do not list it under `configs`. Include every tsconfig preset the new preset extends. Listing Biome, Lefthook, Commitlint, or Changesets also adds that tool's devDependency from the root `package.json`, and Lefthook is written to `onlyBuiltDependencies`. Leaving a tool out removes its devDependency and the `lint`, `changeset`, or `version-packages` script that would call it. Nest, Next, Expo, and Vite dependencies and scripts are removed when that framework's preset is not listed. Do not give an SPA a Nest config, `next.json`, or `expo.json`.
 
@@ -86,6 +87,8 @@ Root `.vscode/extensions.json` recommends Biome, Tailwind CSS IntelliSense, Vite
 `lefthook.yml` is a shared config, so generated projects get the same hook. Pre-commit formats staged files with Biome, then `pnpm typecheck:affected` and `pnpm test:affected` (`pnpm --filter "...[HEAD]"`). TypeScript presets set `incremental`. `pnpm test:coverage` is the v8 report. `pnpm --filter <package> test:ui` opens Vitest UI.
 
 SPA dev loads Query devtools, Router devtools, React Scan, and vite-plugin-checker (TypeScript overlay only, not during `vite build`). The production Vite build aliases those three packages to `templates/spa/src/lib/devtools-stub.ts`. SSR dev loads Query devtools and React Scan. Mobile does not load those web overlays. See `docs/adr/0005-tooling.md`.
+
+Click-to-source is per template, recorded as `clickToSource` in `template.json`. SPA uses `code-inspector-plugin` in `vite.config.ts` (dev server only, source maps on). SSR uses the same plugin on Turbopack in `next.config.ts` plus Next.js open-in-editor (`REACT_EDITOR`). Hold Option+Shift on macOS, or Alt+Shift on Windows and Linux, then click. `CODE_EDITOR`, then `LAUNCH_EDITOR`, then `REACT_EDITOR` chooses the editor for that click. Production builds do not include the inspector. Mobile uses the Expo element inspector and React Native DevTools (`j` in the Expo terminal). Do not add a Metro click-to-IDE plugin.
 
 Node is 22.14 or newer (`.nvmrc` is `22`). The package manager is pnpm 10.33.3. Use pnpm, including `pnpm exec`, for every install and script.
 

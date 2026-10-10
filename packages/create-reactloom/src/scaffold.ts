@@ -167,6 +167,15 @@ export async function scaffold(options: ScaffoldOptions): Promise<void> {
   }
 
   await copyFiltered(templateDir, options.directory)
+  if (manifest.clickToSource) {
+    try {
+      await stat(path.join(options.directory, manifest.clickToSource.config))
+    } catch {
+      throw new Error(
+        `Template is missing its click-to-source config: ${manifest.clickToSource.config}`,
+      )
+    }
+  }
   await copySharedPackages(repoRoot, options.directory, manifest)
   await copyManifestFiles(repoRoot, options.directory, manifest.configs)
   await copyManifestFiles(repoRoot, options.directory, manifest.docs)

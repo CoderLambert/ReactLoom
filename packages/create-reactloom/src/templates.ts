@@ -25,6 +25,14 @@ export type TemplateManifest = {
     rules: string[]
   }
   docs: string[]
+  /**
+   * Names the click-to-source setup that ships inside this template.
+   * `config` is a template-relative file. The CLI checks that file was copied.
+   */
+  clickToSource?: {
+    tool: string
+    config: string
+  }
 }
 
 export function isTemplateId(value: string): value is TemplateId {
@@ -100,6 +108,7 @@ export function parseManifest(value: unknown): TemplateManifest {
       rules: stringList(aiRecord.rules, 'ai.rules'),
     },
     docs: stringList(record.docs, 'docs'),
+    clickToSource: optionalClickToSource(record.clickToSource),
   }
 }
 
@@ -111,6 +120,26 @@ function stringList(value: unknown, label: string): string[] {
     throw new Error(`template.json ${label} must be an array of paths.`)
   }
   return value
+}
+
+function optionalClickToSource(value: unknown): TemplateManifest['clickToSource'] {
+  if (value === undefined) return undefined
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    throw new Error('template.json clickToSource must be an object.')
+  }
+  const record = value as Record<string, unknown>
+  if (typeof record.tool !== 'string' || record.tool.length === 0) {
+    throw new Error('template.json clickToSource.tool must name the inspector.')
+  }
+  if (
+    typeof record.config !== 'string' ||
+    record.config.length === 0 ||
+    record.config.includes('..') ||
+    path.isAbsolute(record.config)
+  ) {
+    throw new Error('template.json clickToSource.config must be a file inside the template.')
+  }
+  return { tool: record.tool, config: record.config }
 }
 
 function optionalStringList(value: unknown, label: string): string[] | undefined {

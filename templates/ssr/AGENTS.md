@@ -52,7 +52,7 @@ Route handlers and server modules may use the client or the local task module. C
 
 ## Testing
 
-Dev server loads TanStack Query devtools and React Scan. Next.js shows its own error overlay, so there is no Vite checker. Vitest covers session cookies and security headers beside `templates/ssr/src/server`. Playwright signs in as `ada@reactloom.dev` / `loom-demo`, waits for the heading, then runs axe. Run `pnpm test:e2e:setup` before the first end-to-end run. On Linux, `pnpm test:e2e:setup --with-deps` installs system libraries.
+Dev server loads TanStack Query devtools and React Scan. Next.js shows its own error overlay, so there is no Vite checker. Click-to-source is `code-inspector-plugin` on the Turbopack rules in `next.config.ts`, including Server Components. It adds no rules when `NODE_ENV` is `production` or `NEXT_PUBLIC_DEVTOOLS` is `false`. Hold Option+Shift on macOS, or Alt+Shift on Windows and Linux, then click an element. The Next.js error overlay and route DevTools open a file through `/__nextjs_launch-editor`; set `REACT_EDITOR` (then `VISUAL`, then `EDITOR`). Click-to-source also reads `CODE_EDITOR` and `LAUNCH_EDITOR` first. Production browser source maps stay off. Vitest covers session cookies and security headers beside `templates/ssr/src/server`. Playwright signs in as `ada@reactloom.dev` / `loom-demo`, waits for the heading, then runs axe. Run `pnpm test:e2e:setup` before the first end-to-end run. On Linux, `pnpm test:e2e:setup --with-deps` installs system libraries.
 
 ## Do
 
