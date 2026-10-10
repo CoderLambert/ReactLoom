@@ -32,6 +32,13 @@
     "pointers": ["CLAUDE.md", ".github/copilot-instructions.md", ".cursor/mcp.json"],
     "rules": ["general.mdc", "mobile.mdc", "testing.mdc"]
   },
+  "reactScan": {
+    "package": "react-scan",
+    "version": "0.5.7",
+    "enabled": false,
+    "config": "AGENTS.md",
+    "reason": "react-scan 0.5.7 has no React Native export. The native preview at aidenybai/react-scan#23 is unmerged, so this template does not load React Scan."
+  },
   "clickToSource": {
     "plugin": "react-native-dev-inspector",
     "version": "1.1.0",

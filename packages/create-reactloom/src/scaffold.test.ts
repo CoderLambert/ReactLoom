@@ -331,6 +331,9 @@ describe('create-reactloom', () => {
       expect(manifest.docs).not.toContain('docs/adr/0001-monorepo-and-init.md')
       expect(manifest.docs).not.toContain('docs/adr/0002-frameworks.md')
       expect(manifest.clickToSource?.launcher).toBe('scripts/open-in-editor.mjs')
+      expect(manifest.reactScan?.package).toBe('react-scan')
+      expect(manifest.reactScan?.version).toBe('0.5.7')
+      expect(manifest.reactScan?.enabled).toBe(template !== 'mobile')
       expect(manifest.configs).toEqual(
         expect.arrayContaining(['scripts/open-in-editor.mjs', 'scripts/code', 'scripts/code.cmd']),
       )
@@ -487,7 +490,10 @@ describe('create-reactloom', () => {
     expect(spaPkg.scripts['test:coverage']).toBe('vitest run --coverage')
     expect(spaPkg.scripts['typecheck:affected']).toContain('...[HEAD]')
     const spaMain = await readFile(path.join(spa, 'src/main.tsx'), 'utf8')
-    expect(spaMain).toContain('react-scan')
+    expect(spaMain).toContain("import { scan } from 'react-scan'")
+    expect(spaMain).toContain('scan({ enabled: true })')
+    expect(spaMain).not.toContain("import('react-scan')")
+    expect(spaVite).toContain("'react-scan': devtoolsStub")
     expect(spaMain).toContain('TanStackRouterDevtools')
     const lefthook = await readFile(path.join(spa, 'lefthook.yml'), 'utf8')
     expect(lefthook).toContain('typecheck:affected')
@@ -508,7 +514,17 @@ describe('create-reactloom', () => {
     expect(ssrNext).toContain('open-in-editor.mjs')
     expect(ssrNext).toContain('activateLauncher')
     expect(ssrNext).toContain('path.join(import.meta.dirname)')
+    expect(ssrNext).toContain("resolveAlias: { 'react-scan': reactScanStub }")
     expect(ssrNext).not.toContain('../..')
+    const ssrScan = await readFile(path.join(ssr, 'src/app/react-scan.tsx'), 'utf8')
+    expect(ssrScan).toContain("import { scan } from 'react-scan'")
+    expect(ssrScan).toContain('scan({')
+    expect(ssrScan).toContain('enabled: true')
+    expect(ssrScan).not.toContain("import('react-scan')")
+    const ssrLayout = await readFile(path.join(ssr, 'src/app/layout.tsx'), 'utf8')
+    expect(ssrLayout.indexOf("from '@/app/react-scan'")).toBeLessThan(
+      ssrLayout.indexOf("from '@/app/providers'"),
+    )
     const ssrEnv = await readFile(path.join(ssr, '.env.development'), 'utf8')
     expect(ssrEnv).toContain('NEXT_PUBLIC_DEVTOOLS=true')
     expect(ssrEnv).not.toMatch(/^REACT_EDITOR=/m)
@@ -522,11 +538,13 @@ describe('create-reactloom', () => {
     const mobileSettings = await readFile(path.join(mobile, '.vscode/settings.json'), 'utf8')
     expect(mobileSettings).not.toContain('tailwindCSS')
     const mobilePkg = JSON.parse(await readFile(path.join(mobile, 'package.json'), 'utf8')) as {
+      dependencies?: Record<string, string>
       devDependencies: Record<string, string>
       scripts: Record<string, string>
     }
     expect(mobilePkg.devDependencies['@vitest/ui']).toBe('5.0.3')
     expect(mobilePkg.devDependencies['react-scan']).toBeUndefined()
+    expect(mobilePkg.dependencies?.['react-scan']).toBeUndefined()
     expect(mobilePkg.devDependencies['vite-plugin-checker']).toBeUndefined()
     expect(mobilePkg.devDependencies['code-inspector-plugin']).toBeUndefined()
     expect(mobilePkg.devDependencies['react-native-dev-inspector']).toBe('1.1.0')
@@ -546,6 +564,9 @@ describe('create-reactloom', () => {
     expect(mobileEnv).not.toMatch(/^LAUNCH_EDITOR=/m)
     const mobileAgents = await readFile(path.join(mobile, 'AGENTS.md'), 'utf8')
     expect(mobileAgents).toContain('react-native-dev-inspector')
+    expect(mobileAgents).toContain(
+      'react-scan 0.5.7 has no React Native export. The native preview at aidenybai/react-scan#23 is unmerged, so this template does not load React Scan.',
+    )
     expect(mobilePkg.scripts['test:e2e']).toBeUndefined()
   })
 

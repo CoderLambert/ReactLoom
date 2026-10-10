@@ -25,6 +25,12 @@
     "pointers": ["CLAUDE.md", ".github/copilot-instructions.md", ".cursor/mcp.json"],
     "rules": ["general.mdc", "spa.mdc", "testing.mdc"]
   },
+  "reactScan": {
+    "package": "react-scan",
+    "version": "0.5.7",
+    "enabled": true,
+    "config": "src/main.tsx"
+  },
   "clickToSource": {
     "plugin": "code-inspector-plugin",
     "version": "2.0.9",

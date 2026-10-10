@@ -21,6 +21,8 @@ Sign in with `ada@reactloom.dev` / `loom-demo`. MSW serves `/api/session` and `/
 
 These work after `pnpm install`, including in a project created with `create-reactloom`. Nothing else is required for Biome, format on save, Lefthook, Vitest UI and coverage, the TanStack and React Scan panels, TypeScript errors in the Vite overlay, or click-to-source.
 
+React Scan is the first import in `src/main.tsx`. In `pnpm dev`, hover an element to see its component name, props, and render time. Re-renders are highlighted. `vite build` aliases `react-scan` to `src/lib/devtools-stub.ts`, so the production bundle does not include it.
+
 Hold Option+Shift on macOS, or Alt+Shift on Windows and Linux, then click. The editor is a running Neovim server, then Cursor, then VS Code.
 
 Neovim needs one step. The dev server cannot open a new nvim window:

@@ -47,10 +47,13 @@ export default defineConfig(({ command }) => {
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),
-        // Production builds swap dev-only panels for an empty module so they stay out of the gzip budget.
+        // The dev server loads the real package. Production builds, and Playwright
+        // (VITE_DEVTOOLS=false), resolve it to an empty module so the library stays out of the bundle.
+        ...(command === 'build' || process.env.VITE_DEVTOOLS === 'false'
+          ? { 'react-scan': devtoolsStub }
+          : {}),
         ...(command === 'build'
           ? {
-              'react-scan': devtoolsStub,
               '@tanstack/react-router-devtools': devtoolsStub,
               '@tanstack/react-query-devtools': devtoolsStub,
             }

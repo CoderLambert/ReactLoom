@@ -133,6 +133,7 @@ The CLI copies that template directory, then adds only the shared files listed i
 | Cursor rules | general, spa, testing | general, ssr, testing | general, mobile, testing |
 | AI pointers | `CLAUDE.md`, `.github/copilot-instructions.md`, `.cursor/mcp.json` | same | same |
 | Docs | `docs/getting-started.md`, ADRs 0003–0006 | same | same |
+| `reactScan` | `react-scan` 0.5.7 in `src/main.tsx` | `react-scan` 0.5.7 in `src/app/react-scan.tsx` | off; 0.5.7 has no stable React Native entry |
 
 Left out of every generated app: the monorepo workflow (`.github/workflows/ci.yml` at the repo root), `docs/adr/0001-monorepo-and-init.md`, `docs/adr/0002-frameworks.md`, and `packages/create-reactloom`. An SPA also excludes `next.json`, `expo.json`, `next.config.ts`, `app.json`, Nest config, and the SSR and mobile Cursor rules. SSR excludes the Vite and Expo presets. Mobile excludes the Vite and Next presets. The copied `@reactloom/tsconfig` `package.json` exports only the presets that were copied.
 
@@ -149,6 +150,7 @@ Listing `biome.json`, `lefthook.yml`, `commitlint.config.mjs`, or `.changeset/co
 - `ai.pointers` lists repo-root files such as `CLAUDE.md`.
 - `docs` lists paths such as `docs/getting-started.md` and `docs/adr/0004-api-client.md`.
 - `clickToSource` names that template's inspector package, its exact version, the bundler config (`vite.config.ts`, `next.config.ts`, or `metro.config.js`), the committed launch-editor file (`.env.development`), and `scripts/open-in-editor.mjs`. List `scripts/open-in-editor.mjs`, `scripts/code`, and `scripts/code.cmd` in `configs` so generation copies them. The CLI checks those files were copied, that the env file does not pin an editor, and that `package.json` depends on that version. Do not put another template's inspector in that file.
+- `reactScan` names `react-scan`, its exact version, `enabled`, and the config file. SPA and SSR set `enabled` to true and import the package from that file. Mobile sets `enabled` to false, and `reason` is the sentence in `AGENTS.md` that explains why. The CLI checks the file and that `package.json` matches.
 
 ## Conventions
 
@@ -224,15 +226,34 @@ Inside a package, `pnpm test:ui` opens the Vitest UI and `pnpm test:coverage` wr
 
 ### React and TanStack devtools
 
-These load only while `pnpm dev` is running. The SPA production build aliases React Scan and the TanStack devtools to `templates/spa/src/lib/devtools-stub.ts`, so they stay out of the client bundle. Playwright sets `VITE_DEVTOOLS=false` and `NEXT_PUBLIC_DEVTOOLS=false`, and that process value wins over `.env.development`, so the axe scan does not see the panels.
+These load only while `pnpm dev` is running. Playwright sets `VITE_DEVTOOLS=false` and `NEXT_PUBLIC_DEVTOOLS=false`, and that process value wins over `.env.development`, so the axe scan does not see the panels. The SPA production build aliases the TanStack devtools to `templates/spa/src/lib/devtools-stub.ts`.
 
 | Tool | Where | What it does |
 | --- | --- | --- |
 | TanStack Query devtools | SPA `src/app/providers.tsx`, SSR `src/app/providers.tsx` | Inspect queries. |
 | TanStack Router devtools | SPA `src/main.tsx` | Inspect the route tree. Bottom-right, so it does not sit on the query panel. |
-| React Scan | SPA `src/main.tsx`, SSR `src/app/react-scan.tsx` | Outlines components that re-render. The import is dynamic and development-only. |
 
 Mobile does not get those web overlays.
+
+### React Scan
+
+React Scan 0.5.7 is on in the SPA and SSR dev servers. Hover an element and the outline shows that React component's name, its props, and its render time. Re-renders are highlighted. Those are the package defaults: `scan({ enabled: true })` with the toolbar on. No extra options are set.
+
+Each template's `template.json` `reactScan` records the package, the exact version, and the config file. `create-reactloom` checks that file and the `package.json` pin, so a generated project includes the same setup. The integration is the one in React Scan's install docs for that bundler. It is the module import, not the CDN script. The CDN script would load in every environment, including production. `react-scan/all-environments` is the import that runs in production, and these templates do not use it.
+
+| | SPA (Vite) | SSR (Next.js App Router) | Mobile (Expo) |
+| --- | --- | --- | --- |
+| Config | `templates/spa/src/main.tsx` | `templates/ssr/src/app/react-scan.tsx`, mounted from `src/app/layout.tsx` | `templates/mobile/AGENTS.md` (`reactScan.enabled` is false) |
+| How it loads | `import { scan } from 'react-scan'` is the first import, before React and React DOM. `scan({ enabled: true })` runs when `import.meta.env.DEV` and `VITE_DEVTOOLS` is `true`. | A client component. `import { scan } from 'react-scan'` comes before `react`, and `useEffect` calls `scan({ enabled: true })`. That component is the top-most import in `layout.tsx` and renders as the first child of `<html>`, so it is client-side only. | Not loaded. |
+| Production | `vite build` aliases `react-scan` to `src/lib/devtools-stub.ts`. The same alias applies when `VITE_DEVTOOLS` is `false`. | `next build`, and dev with `NEXT_PUBLIC_DEVTOOLS=false`, alias `react-scan` to `src/lib/react-scan-stub.ts` (`turbopack.resolveAlias`, and the webpack alias for `next build --webpack`). | `react-scan` is not a dependency, so `expo export` cannot include it. |
+
+The Vite plugin section of the React Scan docs is still a TODO, so the SPA uses the documented module import. The published Vite plugin also peers an older Vite than this repo.
+
+Mobile records this sentence as `reactScan.reason`, and the CLI requires `AGENTS.md` to include it and `package.json` not to depend on `react-scan`:
+
+> react-scan 0.5.7 has no React Native export. The native preview at aidenybai/react-scan#23 is unmerged, so this template does not load React Scan.
+
+The preview's author describes it as early and not at feature parity, and 0.5.7 does not publish a `react-scan/native` entry.
 
 ### In-browser TypeScript errors
 

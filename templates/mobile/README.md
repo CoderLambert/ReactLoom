@@ -14,7 +14,9 @@ pnpm build        # expo export --platform web
 
 ## Developer productivity
 
-These work after `pnpm install`, including in a project created with `create-reactloom`. Nothing else is required for Biome, format on save, Lefthook, Vitest UI and coverage, or click-to-source. This template does not load the web devtools (TanStack panels, React Scan, or vite-plugin-checker). Expo shows bundler errors in the dev server.
+These work after `pnpm install`, including in a project created with `create-reactloom`. Nothing else is required for Biome, format on save, Lefthook, Vitest UI and coverage, or click-to-source. This template does not load the web devtools (TanStack panels or vite-plugin-checker). Expo shows bundler errors in the dev server.
+
+react-scan 0.5.7 has no React Native export. The native preview at aidenybai/react-scan#23 is unmerged, so this template does not load React Scan. Hover outlines (component name, props, render time) are available in the SPA and SSR templates.
 
 Tap the lightning button, then tap a component. The editor is a running Neovim server, then Cursor, then VS Code. A simulator is not started for you. `pnpm dev`, then `w`, opens the web preview.
 

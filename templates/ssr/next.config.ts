@@ -28,6 +28,13 @@ function activateEditor(configDir: string): InspectorEditor {
 const clickToSource =
   process.env.NODE_ENV !== 'production' && process.env.NEXT_PUBLIC_DEVTOOLS !== 'false'
 
+// The client component imports react-scan. Production builds, and Playwright
+// (NEXT_PUBLIC_DEVTOOLS=false), resolve that import to an empty module.
+const reactScanStub =
+  process.env.NODE_ENV === 'production' || process.env.NEXT_PUBLIC_DEVTOOLS === 'false'
+    ? './src/lib/react-scan-stub.ts'
+    : undefined
+
 const nextConfig: NextConfig = {
   allowedDevOrigins: ['127.0.0.1'],
   output: 'standalone',
@@ -40,7 +47,26 @@ const nextConfig: NextConfig = {
       bundler: 'turbopack',
       ...(clickToSource ? { editor: activateEditor(import.meta.dirname) } : { dev: false }),
     }),
+    ...(reactScanStub ? { resolveAlias: { 'react-scan': reactScanStub } } : {}),
   },
+  webpack: reactScanStub
+    ? (config: { resolve?: { alias?: unknown } }) => {
+        const resolve = config.resolve ?? {}
+        const current = resolve.alias
+        const alias =
+          current && typeof current === 'object' && !Array.isArray(current)
+            ? { ...(current as Record<string, unknown>) }
+            : {}
+        config.resolve = {
+          ...resolve,
+          alias: {
+            ...alias,
+            'react-scan': path.join(import.meta.dirname, 'src/lib/react-scan-stub.ts'),
+          },
+        }
+        return config
+      }
+    : undefined,
   async headers() {
     return [{ source: '/:path*', headers: [...headersFor(process.env.NODE_ENV)] }]
   },

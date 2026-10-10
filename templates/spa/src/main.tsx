@@ -1,3 +1,5 @@
+// biome-ignore-all assist/source/organizeImports: react-scan must be imported before React and React DOM
+import { scan } from 'react-scan'
 import { RouterProvider } from '@tanstack/react-router'
 import { lazy, StrictMode, Suspense } from 'react'
 import { createRoot } from 'react-dom/client'
@@ -10,6 +12,10 @@ import '@/styles/globals.css'
 
 const showDevtools = import.meta.env.DEV && env.VITE_DEVTOOLS === 'true'
 
+if (showDevtools) {
+  scan({ enabled: true })
+}
+
 const TanStackRouterDevtools = showDevtools
   ? lazy(() =>
       import('@tanstack/react-router-devtools').then((mod) => ({
@@ -19,10 +25,6 @@ const TanStackRouterDevtools = showDevtools
   : null
 
 async function boot() {
-  if (showDevtools) {
-    const { scan } = await import('react-scan')
-    scan({ enabled: true })
-  }
   await initMonitoring(env.VITE_SENTRY_DSN)
   if (env.VITE_ENABLE_MSW === 'true' && import.meta.env.DEV) {
     const { worker } = await import('@/mocks/browser')

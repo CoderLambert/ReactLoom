@@ -26,6 +26,8 @@ After `create-reactloom --template ssr`, build `Dockerfile` from the generated p
 
 These work after `pnpm install`, including in a project created with `create-reactloom`. Nothing else is required for Biome, format on save, Lefthook, Vitest UI and coverage, TanStack Query devtools, React Scan, or click-to-source. Next.js shows compile errors in its own overlay. This template does not also run vite-plugin-checker.
 
+React Scan lives in `src/app/react-scan.tsx`. That client component imports `react-scan` before React, and `src/app/layout.tsx` mounts it. In `pnpm dev`, hover an element to see its component name, props, and render time. Re-renders are highlighted. Production builds alias `react-scan` to `src/lib/react-scan-stub.ts`, so the client bundle does not include the library.
+
 Hold Option+Shift on macOS, or Alt+Shift on Windows and Linux, then click. The Next.js error overlay's Open in editor uses the same launcher. The editor is a running Neovim server, then Cursor, then VS Code.
 
 Neovim needs one step. The dev server cannot open a new nvim window:

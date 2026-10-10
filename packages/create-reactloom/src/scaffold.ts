@@ -182,6 +182,45 @@ async function assertClickToSource(directory: string, manifest: TemplateManifest
   }
 }
 
+async function assertReactScan(directory: string, manifest: TemplateManifest): Promise<void> {
+  const scan = manifest.reactScan
+  if (!scan) {
+    throw new Error('template.json reactScan must name the react-scan package and its config file.')
+  }
+  const configPath = path.join(directory, scan.config)
+  let configText: string
+  try {
+    configText = await readFile(configPath, 'utf8')
+  } catch {
+    throw new Error(`Template is missing its React Scan file: ${scan.config}`)
+  }
+  const pkg = JSON.parse(
+    await readFile(path.join(directory, 'package.json'), 'utf8'),
+  ) as PackageJson
+  const installed = pkg.devDependencies?.[scan.package] ?? pkg.dependencies?.[scan.package]
+  if (scan.enabled) {
+    if (installed !== scan.version) {
+      throw new Error(
+        `template.json reactScan expects ${scan.package}@${scan.version}, found ${installed ?? 'nothing'}.`,
+      )
+    }
+    const imported =
+      configText.includes(`from '${scan.package}'`) || configText.includes(`from "${scan.package}"`)
+    if (!imported) {
+      throw new Error(`template.json reactScan.config must import ${scan.package}.`)
+    }
+    return
+  }
+  if (installed !== undefined) {
+    throw new Error(
+      `template.json reactScan is disabled, but ${scan.package} is still a dependency.`,
+    )
+  }
+  if (!scan.reason || !configText.includes(scan.reason)) {
+    throw new Error('template.json reactScan.config must include the reason React Scan is off.')
+  }
+}
+
 async function rewriteChangesetIgnore(directory: string, projectName: string): Promise<void> {
   const configPath = path.join(directory, '.changeset', 'config.json')
   try {
@@ -251,6 +290,7 @@ export async function scaffold(options: ScaffoldOptions): Promise<void> {
 
   await writeProjectPackage(options.directory, options.name, manifest, repoRoot)
   await assertClickToSource(options.directory, manifest)
+  await assertReactScan(options.directory, manifest)
   await rewriteChangesetIgnore(options.directory, options.name)
   await installAiConfig({
     repoRoot,

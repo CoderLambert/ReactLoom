@@ -66,6 +66,34 @@ describe('template selection', () => {
     ).toThrow(/clickToSource.launchEditor/)
   })
 
+  it('rejects a React Scan path that leaves the template', () => {
+    expect(() =>
+      parseManifest({
+        ...spaManifest(),
+        reactScan: {
+          package: 'react-scan',
+          version: '0.5.7',
+          enabled: true,
+          config: '../src/main.tsx',
+        },
+      }),
+    ).toThrow(/reactScan.config/)
+  })
+
+  it('rejects a disabled React Scan entry that has no reason', () => {
+    expect(() =>
+      parseManifest({
+        ...spaManifest(),
+        reactScan: {
+          package: 'react-scan',
+          version: '0.5.7',
+          enabled: false,
+          config: 'AGENTS.md',
+        },
+      }),
+    ).toThrow(/reactScan.reason/)
+  })
+
   it('rejects a launcher path that leaves the template', () => {
     expect(() =>
       parseManifest({

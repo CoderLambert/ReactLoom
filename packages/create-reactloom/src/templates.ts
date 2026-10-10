@@ -26,6 +26,18 @@ export type TemplateManifest = {
   }
   docs: string[]
   /**
+   * React Scan package and the file that wires it. SPA and SSR set `enabled`.
+   * Mobile sets `enabled` to false and `reason` explains the missing native entry.
+   * The CLI checks that file, and that package.json matches.
+   */
+  reactScan?: {
+    package: string
+    version: string
+    enabled: boolean
+    config: string
+    reason?: string
+  }
+  /**
    * Inspector package, the committed env file, and the editor launcher.
    * `config` is the bundler file. `launchEditor` is the env file that leaves
    * the editor unset. `launcher` is `scripts/open-in-editor.mjs`. The CLI checks
@@ -114,6 +126,7 @@ export function parseManifest(value: unknown): TemplateManifest {
       rules: stringList(aiRecord.rules, 'ai.rules'),
     },
     docs: stringList(record.docs, 'docs'),
+    reactScan: optionalReactScan(record.reactScan),
     clickToSource: optionalClickToSource(record.clickToSource),
   }
 }
@@ -126,6 +139,40 @@ function stringList(value: unknown, label: string): string[] {
     throw new Error(`template.json ${label} must be an array of paths.`)
   }
   return value
+}
+
+function optionalReactScan(value: unknown): TemplateManifest['reactScan'] {
+  if (value === undefined) return undefined
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    throw new Error('template.json reactScan must be an object.')
+  }
+  const record = value as Record<string, unknown>
+  if (record.package !== 'react-scan') {
+    throw new Error('template.json reactScan.package must be react-scan.')
+  }
+  if (typeof record.version !== 'string' || !/^\d+\.\d+\.\d+$/.test(record.version)) {
+    throw new Error('template.json reactScan.version must be an exact version.')
+  }
+  if (typeof record.enabled !== 'boolean') {
+    throw new Error('template.json reactScan.enabled must be a boolean.')
+  }
+  let reason: string | undefined
+  if (record.enabled) {
+    if (record.reason !== undefined) {
+      throw new Error('template.json reactScan.reason is only used when React Scan is off.')
+    }
+  } else if (typeof record.reason !== 'string' || record.reason.trim().length === 0) {
+    throw new Error('template.json reactScan.reason must explain why React Scan is off.')
+  } else {
+    reason = record.reason
+  }
+  return {
+    package: 'react-scan',
+    version: record.version,
+    enabled: record.enabled,
+    config: templateFile(record.config, 'reactScan.config'),
+    ...(reason === undefined ? {} : { reason }),
+  }
 }
 
 function optionalClickToSource(value: unknown): TemplateManifest['clickToSource'] {

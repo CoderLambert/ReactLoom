@@ -1,7 +1,8 @@
+// biome-ignore-all assist/source/organizeImports: React Scan must be the top-most import
+import { ReactScan } from '@/app/react-scan'
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 import { Providers } from '@/app/providers'
-import { ReactScan } from '@/app/react-scan'
 import { env } from '@/server/env'
 import '@/styles/globals.css'
 
@@ -13,8 +14,8 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
+      <ReactScan />
       <body>
-        <ReactScan />
         <a
           href="#content"
           className="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:rounded-full focus:bg-ink focus:px-4 focus:py-2 focus:text-linen"
