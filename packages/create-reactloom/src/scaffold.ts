@@ -139,6 +139,41 @@ async function writeProjectPackage(
   await writeFile(packagePath, `${JSON.stringify(pruned, null, 2)}\n`)
 }
 
+async function assertClickToSource(directory: string, manifest: TemplateManifest): Promise<void> {
+  const click = manifest.clickToSource
+  if (!click) {
+    throw new Error(
+      'template.json clickToSource must name the inspector plugin and the launch-editor file.',
+    )
+  }
+  for (const relative of [click.config, click.launchEditor]) {
+    try {
+      await stat(path.join(directory, relative))
+    } catch {
+      throw new Error(`Template is missing its click-to-source file: ${relative}`)
+    }
+  }
+  const envText = await readFile(path.join(directory, click.launchEditor), 'utf8')
+  for (const line of envText.split('\n')) {
+    const trimmed = line.trim()
+    if (trimmed.length === 0 || trimmed.startsWith('#')) continue
+    if (/^(CODE_EDITOR|LAUNCH_EDITOR|REACT_EDITOR)=/.test(trimmed)) {
+      throw new Error(
+        `${click.launchEditor} must leave the editor unset so launch-editor can detect it.`,
+      )
+    }
+  }
+  const pkg = JSON.parse(
+    await readFile(path.join(directory, 'package.json'), 'utf8'),
+  ) as PackageJson
+  const installed = pkg.devDependencies?.[click.plugin] ?? pkg.dependencies?.[click.plugin]
+  if (installed !== click.version) {
+    throw new Error(
+      `template.json clickToSource expects ${click.plugin}@${click.version}, found ${installed ?? 'nothing'}.`,
+    )
+  }
+}
+
 async function rewriteChangesetIgnore(directory: string, projectName: string): Promise<void> {
   const configPath = path.join(directory, '.changeset', 'config.json')
   try {
@@ -167,15 +202,6 @@ export async function scaffold(options: ScaffoldOptions): Promise<void> {
   }
 
   await copyFiltered(templateDir, options.directory)
-  if (manifest.clickToSource) {
-    try {
-      await stat(path.join(options.directory, manifest.clickToSource.config))
-    } catch {
-      throw new Error(
-        `Template is missing its click-to-source config: ${manifest.clickToSource.config}`,
-      )
-    }
-  }
   await copySharedPackages(repoRoot, options.directory, manifest)
   await copyManifestFiles(repoRoot, options.directory, manifest.configs)
   await copyManifestFiles(repoRoot, options.directory, manifest.docs)
@@ -216,6 +242,7 @@ export async function scaffold(options: ScaffoldOptions): Promise<void> {
   }
 
   await writeProjectPackage(options.directory, options.name, manifest, repoRoot)
+  await assertClickToSource(options.directory, manifest)
   await rewriteChangesetIgnore(options.directory, options.name)
   await installAiConfig({
     repoRoot,

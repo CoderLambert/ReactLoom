@@ -40,7 +40,7 @@ From this directory:
 
 ## Testing
 
-Editor recommendations are Biome, Vitest, Expo Tools, and Error Lens. Web-only devtools (Tailwind, Playwright, React Scan, TanStack devtools, code-inspector) are not part of this template. Locate a component with the Expo dev menu element inspector, or press `j` in the Expo terminal and use React Native DevTools: the Components tab selects the element, and the Sources tab opens that file inside DevTools. Expo SDK 57 does not launch the host editor from a tap, and this template does not add a Metro inspector plugin. Vitest covers the auth reducer and the task repository. `templates/mobile/.maestro/login.yaml` is the device flow and is not part of CI.
+Editor recommendations are Biome, Vitest, Expo Tools, and Error Lens. Web-only devtools (Tailwind, Playwright, React Scan, TanStack devtools, code-inspector) are not part of this template. Click-to-source is `react-native-dev-inspector`: `withInspector` in `metro.config.js` with no editor option, the babel plugin outside production, and `DevInspector` in `src/lib/dev-inspector.tsx`. `.env.development` sets `EXPO_PUBLIC_DEVTOOLS=true` and leaves the editor unset, so a running VS Code or Cursor is detected. Tap the lightning button, then tap a component. Saving the file uses Fast Refresh. If detection fails, set `LAUNCH_EDITOR=cursor` in `.env.local`. A simulator is not started for you; `pnpm dev` then `w` opens the web preview. Vitest covers the auth reducer and the task repository. `templates/mobile/.maestro/login.yaml` is the device flow and is not part of CI.
 
 ## Do
 

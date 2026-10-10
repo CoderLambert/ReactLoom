@@ -30,8 +30,10 @@
     "rules": ["general.mdc", "mobile.mdc", "testing.mdc"]
   },
   "clickToSource": {
-    "tool": "expo-devtools",
-    "config": "AGENTS.md"
+    "plugin": "react-native-dev-inspector",
+    "version": "1.1.0",
+    "config": "metro.config.js",
+    "launchEditor": ".env.development"
   },
   "docs": [
     "docs/adr/0003-sessions.md",

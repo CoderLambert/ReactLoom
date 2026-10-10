@@ -26,12 +26,16 @@ export type TemplateManifest = {
   }
   docs: string[]
   /**
-   * Names the click-to-source setup that ships inside this template.
-   * `config` is a template-relative file. The CLI checks that file was copied.
+   * Inspector package and the committed launch-editor file for this template.
+   * `config` is the bundler file. `launchEditor` is the env file that leaves
+   * the editor unset so detection stays automatic. The CLI checks both were copied
+   * and that package.json pins `plugin` at `version`.
    */
   clickToSource?: {
-    tool: string
+    plugin: string
+    version: string
     config: string
+    launchEditor: string
   }
 }
 
@@ -128,18 +132,33 @@ function optionalClickToSource(value: unknown): TemplateManifest['clickToSource'
     throw new Error('template.json clickToSource must be an object.')
   }
   const record = value as Record<string, unknown>
-  if (typeof record.tool !== 'string' || record.tool.length === 0) {
-    throw new Error('template.json clickToSource.tool must name the inspector.')
-  }
   if (
-    typeof record.config !== 'string' ||
-    record.config.length === 0 ||
-    record.config.includes('..') ||
-    path.isAbsolute(record.config)
+    typeof record.plugin !== 'string' ||
+    !/^(?:@[a-z0-9-~][a-z0-9-._~]*\/)?[a-z0-9-~][a-z0-9-._~]*$/.test(record.plugin)
   ) {
-    throw new Error('template.json clickToSource.config must be a file inside the template.')
+    throw new Error('template.json clickToSource.plugin must name the inspector package.')
   }
-  return { tool: record.tool, config: record.config }
+  if (typeof record.version !== 'string' || !/^\d+\.\d+\.\d+$/.test(record.version)) {
+    throw new Error('template.json clickToSource.version must be an exact version.')
+  }
+  return {
+    plugin: record.plugin,
+    version: record.version,
+    config: templateFile(record.config, 'clickToSource.config'),
+    launchEditor: templateFile(record.launchEditor, 'clickToSource.launchEditor'),
+  }
+}
+
+function templateFile(value: unknown, label: string): string {
+  if (
+    typeof value !== 'string' ||
+    value.length === 0 ||
+    value.includes('..') ||
+    path.isAbsolute(value)
+  ) {
+    throw new Error(`template.json ${label} must be a file inside the template.`)
+  }
+  return value
 }
 
 function optionalStringList(value: unknown, label: string): string[] | undefined {

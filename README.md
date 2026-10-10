@@ -147,13 +147,13 @@ Listing `biome.json`, `lefthook.yml`, `commitlint.config.mjs`, or `.changeset/co
 - `ai.rules` lists Cursor rule filenames from `.cursor/rules/`. Add a rule there only for the templates it applies to.
 - `ai.pointers` lists repo-root files such as `CLAUDE.md`.
 - `docs` lists ADR paths such as `docs/adr/0004-api-client.md`.
-- `clickToSource` names that template's inspector and the template file that configures it (`vite.config.ts`, `next.config.ts`, or the mobile `AGENTS.md`). The CLI checks the file was copied. Do not put another template's inspector in that file.
+- `clickToSource` names that template's inspector package, its exact version, the bundler config (`vite.config.ts`, `next.config.ts`, or `metro.config.js`), and the committed launch-editor file (`.env.development`). The CLI checks both files were copied, that the env file does not pin an editor, and that `package.json` depends on that version. Do not put another template's inspector in that file.
 
 ## Conventions
 
 - Server state belongs in TanStack Query. Do not copy it into Zustand.
 - Call the network through `@reactloom/api-client`. It retries idempotent requests, aborts on timeout, and throws `ApiError`.
-- Validate env with the t3 env schema. Commit `.env.example` only.
+- Validate env with the t3 env schema. Commit `.env.example` and `.env.development` (devtools on, editor unset). Secrets and a machine-specific editor override go in `.env.local`.
 - Feature code lives under `src/features/<name>` with a schema, an API function, query keys, and hooks.
 - Web UI imports `cn` from `@/lib/utils`. Add shadcn components with the aliases in `templates/spa/components.json`.
 - Commits follow Conventional Commits. Lefthook runs Biome and Commitlint.
@@ -203,27 +203,37 @@ Mobile does not get those web overlays. Expo's dev server and the editor extensi
 
 ### Click to source
 
-Each template's `template.json` `clickToSource` names the inspector and the file that configures it. `create-reactloom` copies that file with the template and checks it arrived. A generated SPA does not get the Next.js setup, and a generated mobile app does not get `code-inspector-plugin`.
+Cloning this repo, or generating a project with `create-reactloom`, needs no extra config. `pnpm dev` loads the inspector. Click a component and the editor opens at that file and line. Saving the file hot-reloads through the dev server that is already running (Vite HMR, Next.js Fast Refresh, or Expo Fast Refresh).
+
+Each template's `template.json` `clickToSource` names the inspector package, its exact version, the bundler config, and `.env.development`. `create-reactloom` copies those files and checks the package landed at that version. A generated SPA does not get the Next.js or Expo setup.
 
 | | SPA | SSR | Mobile |
 | --- | --- | --- | --- |
-| Tool | `code-inspector-plugin` on Vite | `code-inspector-plugin` on Turbopack, plus the Next.js dev overlay | Expo element inspector and React Native DevTools |
-| Config | `templates/spa/vite.config.ts` | `templates/ssr/next.config.ts` | `templates/mobile/AGENTS.md` |
-| Shortcut | Option+Shift (macOS) or Alt+Shift, then click | same shortcut for the DOM inspector. Overlay stack frames and the route DevTools use Open in editor | Dev menu → Toggle element inspector. In the Expo terminal, press `j`, then Components and Sources |
+| Tool | `code-inspector-plugin` 2.0.9 on Vite | same plugin on Turbopack, plus the Next.js dev overlay | `react-native-dev-inspector` 1.1.0 |
+| Config | `templates/spa/vite.config.ts`, `.env.development` | `templates/ssr/next.config.ts`, `.env.development` | `templates/mobile/metro.config.js`, `babel.config.js`, `src/lib/dev-inspector.tsx`, `.env.development` |
+| Gesture | Option+Shift (macOS) or Alt+Shift, then click | same gesture. Overlay stack frames use Open in editor | Tap the lightning button, then tap the component |
 
-The Vite plugin is registered only for `vite dev`, and only when `VITE_DEVTOOLS` is not `false`. The Next.js plugin returns no Turbopack rules when `NODE_ENV` is `production` or `NEXT_PUBLIC_DEVTOOLS` is `false`, so `next build` does not inject `data-insp-path` or the inspector client. SPA source maps stay on (`build.sourcemap` and `css.devSourcemap`). Next.js dev source maps stay on. `productionBrowserSourceMaps` stays off.
+`.env.development` is committed. It turns devtools on and does not set an editor. launch-editor (and Next.js, for the overlay) detect a running VS Code or Cursor. Playwright still sets `VITE_DEVTOOLS=false` and `NEXT_PUBLIC_DEVTOOLS=false` in the web server env, and that process value wins over the file.
 
-Set the editor in `.env.local`, not in a committed env file:
-
-| Variable | Who reads it |
-| --- | --- |
-| `CODE_EDITOR` | code-inspector. Example: `cursor`, `code`, `webstorm`, or an executable path. |
-| `LAUNCH_EDITOR` | Vite's launch-editor convention. The SPA and SSR configs pass it to code-inspector when `CODE_EDITOR` is unset. |
-| `REACT_EDITOR` | Next.js `/__nextjs_launch-editor` (error overlay and route DevTools), then `VISUAL`, then `EDITOR`. The click inspector also accepts it when the other two are unset. |
+The Vite plugin is registered only for `vite dev`, and only when `VITE_DEVTOOLS` is not `false`. The Next.js plugin returns no Turbopack rules when `NODE_ENV` is `production` or `NEXT_PUBLIC_DEVTOOLS` is `false`, so `next build` does not inject `data-insp-path` or the inspector client. SPA source maps stay on (`build.sourcemap` and `css.devSourcemap`). Next.js dev source maps stay on. `productionBrowserSourceMaps` stays off. The Expo babel plugin and the root `DevInspector` run only outside production, and only when `EXPO_PUBLIC_DEVTOOLS` is not `false`. `metro.config.js` calls `withInspector` with no `editor` option.
 
 Server Components are included: the Turbopack rule rewrites JSX in the App Router, and the Next.js overlay opens server stack frames from their source maps. This repo uses `src/app`, and Next.js 16.4 resolves that path.
 
-Expo does not get a click-to-IDE plugin. Metro does not ship open-in-editor, and a third-party inspector would wrap the root layout and the web export. The element inspector and React Native DevTools already locate the component and show its source inside DevTools.
+Optional override, only if detection does not open an editor. Put one line in `.env.local` (gitignored) and restart `pnpm dev`:
+
+| Variable | Who reads it |
+| --- | --- |
+| `CODE_EDITOR` | code-inspector on the SPA and SSR. Example: `cursor`, `code`, `webstorm`, or an executable path. |
+| `LAUNCH_EDITOR` | Passed to code-inspector when `CODE_EDITOR` is unset. The Expo inspector reads this first. |
+| `REACT_EDITOR` | Next.js `/__nextjs_launch-editor`, then a running editor, then `VISUAL`, then `EDITOR`. code-inspector also accepts it when the other two are unset. |
+
+These steps cannot be made automatic from the repo:
+
+| Limit | Why | One-line fix |
+| --- | --- | --- |
+| No editor process, and `code` or `cursor` is not on `PATH` | Detection looks at running editors. A clone cannot install VS Code or Cursor, or put their shell commands on `PATH`. | Uncomment `CODE_EDITOR=cursor` in the SPA `.env.local`, `REACT_EDITOR=cursor` in the SSR `.env.local`, or `LAUNCH_EDITOR=cursor` in the mobile `.env.local`, then restart `pnpm dev`. |
+| React DevTools browser extension | A repository cannot install a browser extension. Click-to-source does not use it. The dev server injects the inspector. | Install the React DevTools extension only if you want its Components panel. |
+| Expo phone or simulator | Generation does not boot a simulator or a device. Open-in-editor runs on the computer that runs Metro. | `pnpm --filter @reactloom/template-mobile exec expo start --web` |
 
 ## AI collaboration
 

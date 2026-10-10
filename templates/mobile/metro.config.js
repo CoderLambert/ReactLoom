@@ -1,5 +1,6 @@
 const path = require('node:path')
 const { getDefaultConfig } = require('expo/metro-config')
+const { withInspector } = require('react-native-dev-inspector/metro')
 
 const projectRoot = __dirname
 const workspaceRoot = path.resolve(projectRoot, '../..')
@@ -12,4 +13,5 @@ config.resolver.nodeModulesPaths = [
 ]
 config.resolver.unstable_enableSymlinks = true
 
-module.exports = config
+// No editor option: launch-editor detects a running VS Code or Cursor.
+module.exports = withInspector(config)

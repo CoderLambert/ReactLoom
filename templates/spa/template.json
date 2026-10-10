@@ -23,8 +23,10 @@
     "rules": ["general.mdc", "spa.mdc", "testing.mdc"]
   },
   "clickToSource": {
-    "tool": "code-inspector-plugin",
-    "config": "vite.config.ts"
+    "plugin": "code-inspector-plugin",
+    "version": "2.0.9",
+    "config": "vite.config.ts",
+    "launchEditor": ".env.development"
   },
   "docs": [
     "docs/adr/0003-sessions.md",

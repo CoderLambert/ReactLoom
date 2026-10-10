@@ -6,6 +6,7 @@ import { visualizer } from 'rollup-plugin-visualizer'
 import { defineConfig, searchForWorkspaceRoot } from 'vite'
 import checker from 'vite-plugin-checker'
 
+// Unset means auto-detect. `.env.development` does not set an editor.
 function inspectorEditor():
   | NonNullable<Parameters<typeof codeInspectorPlugin>[0]['editor']>
   | undefined {

@@ -6,6 +6,8 @@ import { headersFor } from './src/server/security-headers'
 
 const withBundleAnalyzer = bundleAnalyzer({ enabled: process.env.ANALYZE === 'true' })
 
+// Unset means auto-detect. `.env.development` does not set an editor.
+// Next.js open-in-editor reads REACT_EDITOR, then a running editor, then VISUAL, then EDITOR.
 function inspectorEditor():
   | NonNullable<Parameters<typeof codeInspectorPlugin>[0]['editor']>
   | undefined {

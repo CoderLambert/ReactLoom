@@ -180,6 +180,9 @@ importers:
       babel-preset-expo:
         specifier: ~57.0.14
         version: 57.0.14(@babel/core@7.29.7)(@babel/runtime@7.29.10)(expo@57.0.27)(react-refresh@0.14.2)
+      react-native-dev-inspector:
+        specifier: 1.1.0
+        version: 1.1.0(@babel/core@7.29.7)(metro-config@0.84.6)(metro@0.84.6)(react-native@0.86.3(@babel/core@7.29.7)(@react-native/metro-config@0.86.3(@babel/core@7.29.7))(@types/react@19.3.0)(react@19.2.3))(react@19.2.3)
       typescript:
         specifier: 7.0.2
         version: 7.0.2
@@ -2676,6 +2679,19 @@ packages:
     peerDependenciesMeta:
       '@types/react':
         optional: true
+
+  '@rn-dev-inspector/core@1.1.0':
+    resolution: {integrity: sha512-mX1vOFCTd2tBT8Q4Hsatp/du/8UGfDa3IDnhFCWAU1FCp3KVCfKEsWf5GLHLbdMFKoiQiP9g9Ub0DqczD5NjPg==}
+    peerDependencies:
+      react: '>=17.0.0'
+      react-native: '>=0.68.0'
+
+  '@rn-dev-inspector/metro-plugin@1.1.0':
+    resolution: {integrity: sha512-vNYIpjOo4GoVXx5BZXWrrG83M/UWwsaOl3BP8JVtPyEBZwE5b1PCca2M1x6CJ/2wegbAQxY9ydFdHYp0sGkJmA==}
+    peerDependencies:
+      '@babel/core': '>=7.0.0'
+      metro: '>=0.72.0'
+      metro-config: '>=0.72.0'
 
   '@rolldown/binding-android-arm-eabi@1.2.13':
     resolution: {integrity: sha512-Vu/NICrgdRvUOeaJZIyB2FP63s6fO/4ud5l8dXmxDx9yDyn+mN0y+gsvsVviSli+T361Aqo0h46EuMoobrwawA==}
@@ -5889,6 +5905,12 @@ packages:
 
   react-is@19.3.0:
     resolution: {integrity: sha512-UpMYezM4v5/18F28aC66AEsjXIgE02kyEMH6yLdgLXu/UTfa1Ntwck/nNLrbqJsEXW7gPb0coNO9FQse9WTovA==}
+
+  react-native-dev-inspector@1.1.0:
+    resolution: {integrity: sha512-d9rClJUahKBPoeZTIgCvcRY5bEdscmMJpYZAgHqeryIBqaSY5QrKpYk8GVYVTm4NGtl1jw6rq72SQZ18VDOlAw==}
+    peerDependencies:
+      react: '>=17.0.0'
+      react-native: '>=0.68.0'
 
   react-native-drawer-layout@4.2.11:
     resolution: {integrity: sha512-Aua+LAZJ6L3v7ESHsNtxN2sO+hFQKsSz3EDKOLIpWni6PdQEJGFT0Mc2UnEsvFdfV743aHfODTAaHxsJ2D0uFw==}
@@ -9272,6 +9294,18 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.3.0
 
+  '@rn-dev-inspector/core@1.1.0(react-native@0.86.3(@babel/core@7.29.7)(@react-native/metro-config@0.86.3(@babel/core@7.29.7))(@types/react@19.3.0)(react@19.2.3))(react@19.2.3)':
+    dependencies:
+      react: 19.2.3
+      react-native: 0.86.3(@babel/core@7.29.7)(@react-native/metro-config@0.86.3(@babel/core@7.29.7))(@types/react@19.3.0)(react@19.2.3)
+
+  '@rn-dev-inspector/metro-plugin@1.1.0(@babel/core@7.29.7)(metro-config@0.84.6)(metro@0.84.6)':
+    dependencies:
+      '@babel/core': 7.29.7
+      launch-editor: 2.14.2
+      metro: 0.84.6
+      metro-config: 0.84.6
+
   '@rolldown/binding-android-arm-eabi@1.2.13':
     optional: true
 
@@ -12577,6 +12611,17 @@ snapshots:
   react-is@18.3.1: {}
 
   react-is@19.3.0: {}
+
+  react-native-dev-inspector@1.1.0(@babel/core@7.29.7)(metro-config@0.84.6)(metro@0.84.6)(react-native@0.86.3(@babel/core@7.29.7)(@react-native/metro-config@0.86.3(@babel/core@7.29.7))(@types/react@19.3.0)(react@19.2.3))(react@19.2.3):
+    dependencies:
+      '@rn-dev-inspector/core': 1.1.0(react-native@0.86.3(@babel/core@7.29.7)(@react-native/metro-config@0.86.3(@babel/core@7.29.7))(@types/react@19.3.0)(react@19.2.3))(react@19.2.3)
+      '@rn-dev-inspector/metro-plugin': 1.1.0(@babel/core@7.29.7)(metro-config@0.84.6)(metro@0.84.6)
+      react: 19.2.3
+      react-native: 0.86.3(@babel/core@7.29.7)(@react-native/metro-config@0.86.3(@babel/core@7.29.7))(@types/react@19.3.0)(react@19.2.3)
+    transitivePeerDependencies:
+      - '@babel/core'
+      - metro
+      - metro-config
 
   react-native-drawer-layout@4.2.11(react-native-gesture-handler@2.32.0(react-native@0.86.3(@babel/core@7.29.7)(@react-native/metro-config@0.86.3(@babel/core@7.29.7))(@types/react@19.3.0)(react@19.2.3))(react@19.2.3))(react-native-reanimated@4.5.1(react-native-worklets@0.10.1(@babel/core@7.29.7)(@react-native/metro-config@0.86.3(@babel/core@7.29.7))(react-native@0.86.3(@babel/core@7.29.7)(@react-native/metro-config@0.86.3(@babel/core@7.29.7))(@types/react@19.3.0)(react@19.2.3))(react@19.2.3))(react-native@0.86.3(@babel/core@7.29.7)(@react-native/metro-config@0.86.3(@babel/core@7.29.7))(@types/react@19.3.0)(react@19.2.3))(react@19.2.3))(react-native@0.86.3(@babel/core@7.29.7)(@react-native/metro-config@0.86.3(@babel/core@7.29.7))(@types/react@19.3.0)(react@19.2.3))(react@19.2.3):
     dependencies:

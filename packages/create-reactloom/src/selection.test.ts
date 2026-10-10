@@ -42,9 +42,28 @@ describe('template selection', () => {
     expect(() =>
       parseManifest({
         ...spaManifest(),
-        clickToSource: { tool: 'code-inspector-plugin', config: '../vite.config.ts' },
+        clickToSource: {
+          plugin: 'code-inspector-plugin',
+          version: '2.0.9',
+          config: '../vite.config.ts',
+          launchEditor: '.env.development',
+        },
       }),
     ).toThrow(/clickToSource.config/)
+  })
+
+  it('rejects a launch-editor path that leaves the template', () => {
+    expect(() =>
+      parseManifest({
+        ...spaManifest(),
+        clickToSource: {
+          plugin: 'code-inspector-plugin',
+          version: '2.0.9',
+          config: 'vite.config.ts',
+          launchEditor: '../.env.development',
+        },
+      }),
+    ).toThrow(/clickToSource.launchEditor/)
   })
 
   it('rejects a tsconfig preset that is not a filename', () => {
