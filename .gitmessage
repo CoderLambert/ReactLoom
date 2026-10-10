@@ -1,0 +1,22 @@
+# type(scope): subject
+#
+# type: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert
+# scope: spa, ssr, mobile, api-client, cli, docs, ci
+# A feature suffix is allowed: spa-auth, api-client/retry
+# Subject names that feature. Imperative, lowercase, no period, at least 12 characters.
+# Do not use: update files, fix stuff, wip, changes
+# One logical change per commit.
+
+type(scope): subject
+
+# What changed. feat and fix need this body (at least 40 characters).
+What changed:
+
+# Why this change exists.
+Why:
+
+# Modules, templates, and users affected.
+Impact scope:
+
+# Delete this line when nothing breaks. Keep the BREAKING CHANGE: trailer when it does.
+# BREAKING CHANGE: what broke, and what callers must do

@@ -257,6 +257,8 @@ The typecheck and test that follow are not limited to the staged hunks. They are
 
 Turborepo 2.11.7 is the task cache. Root `pnpm typecheck`, `pnpm test`, and `pnpm build` are `turbo run`. A repeat with the same inputs restores outputs from `.turbo/cache` and skips the command. `pnpm exec turbo run <task> --force` ignores that cache. `docs/turborepo.md` covers the tasks, the env keys, and how to delete `.turbo`.
 
+CI caches the pnpm store, Playwright browsers, `.turbo`, and the Expo/Metro directories. The key design and the Action majors (`checkout@v7`, `pnpm/action-setup@v6`, `setup-node@v7`, `cache@v6`) are in [CI](docs/ci.md). Commit messages use `.gitmessage`; [Git workflow](docs/git-workflow.md) covers Lefthook. Storybook's MCP addon is [Storybook and AI](docs/storybook-ai.md). Lighthouse on the SPA and SSR is [Lighthouse](docs/best-practices/lighthouse.md). `create-reactloom --deploy self-hosted` writes the SSH deploy workflow described in [Self-hosted deploy](docs/deploy-self-hosted.md). The default is `--deploy none`.
+
 Shared `tsconfig` presets also set `incremental`, so a later `tsc` that does run can reuse `.tsbuildinfo`. Those files are gitignored. That compiler cache is separate from `.turbo`.
 
 Lefthook's `--affected` flag skips packages that have not changed since `main`. Inside a template, `typecheck:affected` is still `pnpm --filter "...[HEAD]"`.
@@ -521,6 +523,10 @@ App permissions and the schedule are documented by Renovate: [installing Renovat
 ## Decisions worth reading
 
 - [Best practices](docs/best-practices/README.md)
+- [CI](docs/ci.md)
+- [Git workflow](docs/git-workflow.md)
+- [Storybook and AI](docs/storybook-ai.md)
+- [Self-hosted deploy](docs/deploy-self-hosted.md)
 - [Getting started](docs/getting-started.md)
 - [Monorepo and the init command](docs/adr/0001-monorepo-and-init.md)
 - [Frameworks per template](docs/adr/0002-frameworks.md)

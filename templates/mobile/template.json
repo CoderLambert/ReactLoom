@@ -24,6 +24,9 @@
     ".changeset/README.md",
     "renovate.json",
     "turbo.json",
+    ".gitmessage",
+    "scripts/setup-git.mjs",
+    "scripts/check-ai-rules-sync.mjs",
     "scripts/open-in-editor.mjs",
     "scripts/code",
     "scripts/code.cmd"
@@ -31,8 +34,8 @@
   "ci": ".github/workflows/ci.yml",
   "docker": false,
   "ai": {
-    "pointers": ["CLAUDE.md", ".github/copilot-instructions.md", ".cursor/mcp.json"],
-    "rules": ["general.mdc", "mobile.mdc", "testing.mdc"]
+    "pointers": ["CLAUDE.md", ".github/copilot-instructions.md", ".cursor/mcp.json", ".mcp.json"],
+    "rules": ["general.mdc", "mobile.mdc", "testing.mdc", "commits.mdc"]
   },
   "reactScan": {
     "package": "react-scan",
@@ -106,6 +109,12 @@
     "docs/best-practices/pitfalls.md",
     "docs/best-practices/workflow-research.md",
     "docs/best-practices/dev-tools.md",
-    "docs/turborepo.md"
+    "docs/turborepo.md",
+    "docs/ci.md",
+    "docs/git-workflow.md",
+    "docs/storybook-ai.md",
+    "docs/deploy-self-hosted.md",
+    "docs/agents/storybook.md",
+    "docs/best-practices/lighthouse.md"
   ]
 }

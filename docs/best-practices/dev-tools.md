@@ -2,7 +2,7 @@
 
 这里只记仓库里真正有的生产力工具：它做什么、怎么用、配置文件在哪、三个模板有什么不同。标成「未实现」的项没有配置，不要到仓库里去找。
 
-Turborepo 已接入，任务和缓存的说明在 [Turborepo](../turborepo.md)。工作流层面其余的比较（Chromatic、Lighthouse CI、Vercel、EAS 等）在 [工作流调研](workflow-research.md)。那些工具多数未实现。
+Turborepo 已接入，任务和缓存的说明在 [Turborepo](../turborepo.md)。CI 缓存和作业在 [CI](../ci.md)。提交说明和 Lefthook 在 [Git 工作流](../git-workflow.md)。Storybook MCP 在 [Storybook 与 AI](../storybook-ai.md)。Lighthouse 在 [Lighthouse](lighthouse.md)。工作流层面其余的比较（Chromatic、size-limit、Vercel、EAS 等）在 [工作流调研](workflow-research.md)。那些工具多数未实现。
 
 三个模板都会收到本文。路径是各模板自己的文件名。monorepo 里它们在对应模板目录下；生成后的项目里它们在项目根目录。
 
@@ -18,7 +18,8 @@ Turborepo 已接入，任务和缓存的说明在 [Turborepo](../turborepo.md)�
 | why-did-you-render | 未实现，用 React Scan | 未实现，用 React Scan | 已接入，仅开发 |
 | 打包分析 | `rollup-plugin-visualizer` | `next analyze`，另留 webpack 分析器 | Expo Atlas |
 | 属性差异 | React Scan，外加可选 hook | 同左 | why-did-you-render，外加可选 hook |
-| Storybook | 已接入，端口 6006 | 已接入，端口 6007 | 未实现 |
+| Storybook | 已接入，端口 6006，含 MCP | 已接入，端口 6007，含 MCP | 未实现 |
+| Lighthouse CI | 已接入，默认只在 CI | 已接入，默认只在 CI | 未实现 |
 | MSW 开发态模拟 | `VITE_ENABLE_MSW`，默认开 | `NEXT_PUBLIC_ENABLE_MSW`，默认关 | 未实现。用 `EXPO_PUBLIC_USE_FIXTURES` |
 | axe | 开发态 `@axe-core/react`，e2e 用 Playwright | 同左 | 未实现。Web 预览用浏览器扩展 |
 | 端到端 | Playwright | Playwright | Maestro，不在 CI 里跑 |
@@ -91,9 +92,10 @@ Lefthook 2.2.1 跑 git 钩子。commitlint 21.2.3 检查提交说明是不是约
 不需要单独的命令。`git commit` 时：
 
 1. pre-commit：Biome，然后 `pnpm exec turbo run typecheck test --affected`。
-2. commit-msg：`pnpm exec commitlint --edit`。
+2. commit-msg：`pnpm exec commitlint --edit`。scope 必填，`feat` 和 `fix` 要有正文。
+3. pre-push：`node scripts/check-ai-rules-sync.mjs`。
 
-说明形如 `docs: add a tool catalog`。绕过钩子的 `--no-verify` 不是工作流的一部分。
+说明形如 `docs(docs): add a tool catalog`。模板、AI 提示和跳过钩子的办法在 [Git 工作流](../git-workflow.md)。
 
 ### 配置
 
@@ -535,6 +537,47 @@ pnpm test:coverage
 ### 模板差异
 
 三个模板都有 `test`、`test:ui`、`test:coverage`。SPA 的 Vitest 会把 `VITE_ENABLE_MSW` 设为 `false`，因为节点测试用的是 `src/mocks/server.ts`，不是浏览器 worker。Expo 的测试是仓库和 reducer，没有浏览器。
+
+## Lighthouse
+
+### 作用
+
+SPA 和 SSR 用 `@lhci/cli` 0.15.1 审计生产预览。Expo 未实现：没有对应的页面作业。
+
+### 用法
+
+```sh
+pnpm lighthouse
+LIGHTHOUSE_LOCAL=true pnpm preview
+```
+
+`LIGHTHOUSE_LOCAL` 默认关。`LIGHTHOUSE_CI` 默认开，是仓库变量，不是本地环境变量。细节、限速和怎么读报告在 [Lighthouse](lighthouse.md)。
+
+### 配置
+
+`lighthouserc.cjs`。报告在 `.lighthouseci/`。CI 复用 Playwright 的 Chromium。
+
+### 模板差异
+
+SPA 预览端口 4317，SSR 是 4318。Expo 的工作流里没有 `lhci`。
+
+## Storybook MCP
+
+### 作用
+
+SPA 和 SSR 的 Storybook 开发服务器提供 `/mcp`。代理用它查组件、写 story。Expo 未实现，原因和「不装 React Native Storybook」相同。
+
+### 用法
+
+先 `pnpm storybook`。SPA 是 `http://localhost:6006/mcp`，SSR 是 `http://localhost:6007/mcp`。工具、配置文件和版本检查在 [Storybook 与 AI](../storybook-ai.md)。
+
+### 配置
+
+`.storybook/main.ts` 的 `@storybook/addon-mcp`。Cursor、Copilot、Claude Code 的 MCP 文件指向这个地址，没有密钥。
+
+### 模板差异
+
+SPA 另有 `@storybook/addon-vitest`，`pnpm test` 仍只跑 `unit`。SSR 的框架是 Webpack，不装 Vitest 插件，所以不要依赖 `test-run`。
 
 ## 生成项目会拿到什么
 

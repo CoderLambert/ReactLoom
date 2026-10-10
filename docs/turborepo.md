@@ -207,7 +207,7 @@ pnpm exec turbo link
 
 这三个名字已经在 `globalPassThroughEnv`，传给任务时不会进入哈希。仓库和 GitHub Actions 都没有配置它们。Nx Cloud 同样未实现。
 
-monorepo 的 `packages` 作业不会用 `turbo run test --filter=create-reactloom`。那条会跑 `scaffold.integration.test.ts`。CLI 测试在该作业里仍是一条带 `--exclude` 的 `vitest run`，完整生成放在 `smoke` 作业。
+monorepo 的 `packages` 作业不会用 `turbo run test --filter=create-reactloom`。那条会跑 `scaffold.integration.test.ts`。CLI 测试在该作业里仍是一条带 `--exclude` 的 `vitest run`，完整生成放在 `smoke` 作业。CI 里 `.turbo`、pnpm 商店、Playwright 和 Expo 的键写在 [CI](ci.md)。`dev` 的 `passThroughEnv` 包含 `LIGHTHOUSE_LOCAL`，所以本地开关不会被 strict 模式丢掉，也不会写进 `build` 的哈希。
 
 ## 和 Vite、Next、Expo 的关系
 
@@ -217,6 +217,7 @@ monorepo 的 `packages` 作业不会用 `turbo run test --filter=create-reactloo
 | Next.js 16 | SSR 的 `dev` / `build` / `analyze` | 缓存 `.next/**`，但不把 `.next/cache/**` 放进缓存。开发服务器仍是 `next dev`，打包器仍可以是 Turbopack |
 | Expo SDK 57 | `dev`（`expo start`）和 `build`（`expo export`） | 缓存 web 导出的 `dist/**`。`analyze` 另外留下 `.expo/**`（Atlas） |
 | Storybook | `storybook` 与 `build-storybook` | 只有静态构建写入 `storybook-static/**` |
+| Lighthouse | SPA / SSR 的 `lighthouse` | `cache: false`。脚本自己 `pnpm build` 再 `lhci autorun` |
 | `tsc`、Vitest、Biome | 共享包和模板上的同名脚本 | 按包缓存成功结果。Biome 不会被换成别的 linter |
 
 改端口、别名、预算脚本、环境变量前缀时，改的是 Vite / Next / Expo 的配置和包脚本。只有「缓存该不该失效、谁该先编译」才改 `turbo.json`。

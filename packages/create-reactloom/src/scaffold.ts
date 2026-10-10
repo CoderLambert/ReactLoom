@@ -3,6 +3,7 @@ import { cp, mkdir, readFile, rename, rm, stat, writeFile } from 'node:fs/promis
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { adaptBestPractices, installAiConfig } from './ai-config.js'
+import { type DeployTarget, writeDeployFiles } from './deploy.js'
 import {
   DOCKER_FILES,
   type PackageJson,
@@ -31,6 +32,7 @@ export type ScaffoldOptions = {
   template: TemplateId
   directory: string
   install?: boolean
+  deploy?: DeployTarget
 }
 
 const NAME_PATTERN = /^[a-z][a-z0-9-]*$/
@@ -632,6 +634,9 @@ export async function scaffold(options: ScaffoldOptions): Promise<void> {
   await assertBrowserMocks(options.directory, manifest)
   await assertDevA11y(options.directory, manifest)
   await assertE2e(options.directory, manifest)
+  if (options.deploy === 'self-hosted') {
+    await writeDeployFiles(options.directory, options.template)
+  }
   await rewriteChangesetIgnore(options.directory, options.name)
   await installAiConfig({
     repoRoot,

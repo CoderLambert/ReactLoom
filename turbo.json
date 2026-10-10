@@ -48,7 +48,14 @@
       "description": "Long-running dev server. Not cached.",
       "interactive": true,
       "persistent": true,
-      "passThroughEnv": ["EXPO_PUBLIC_*", "NEXT_PUBLIC_*", "STORYBOOK", "VITE_*"]
+      "passThroughEnv": [
+        "EXPO_PUBLIC_*",
+        "LIGHTHOUSE_LOCAL",
+        "LIGHTHOUSE_URL",
+        "NEXT_PUBLIC_*",
+        "STORYBOOK",
+        "VITE_*"
+      ]
     },
     "test": {
       "dependsOn": ["^build"],
@@ -147,6 +154,11 @@
       "interactive": true,
       "persistent": true,
       "passThroughEnv": ["NEXT_PUBLIC_*", "STORYBOOK", "VITE_*"]
+    },
+    "lighthouse": {
+      "cache": false,
+      "description": "Lighthouse CI against the production preview. The package script builds, then lhci autorun.",
+      "passThroughEnv": ["CHROME_PATH", "LIGHTHOUSE_ATTACH", "LIGHTHOUSE_URL"]
     },
     "build-storybook": {
       "dependsOn": ["^build"],

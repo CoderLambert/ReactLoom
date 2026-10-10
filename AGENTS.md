@@ -15,7 +15,7 @@ ReactLoom is a pnpm workspace. Templates are developed in-tree and copied by `cr
 | `templates/ssr` | Next.js App Router app, plus Docker |
 | `templates/mobile` | Expo app |
 | `docs/adr` | Architecture decisions |
-| `docs/best-practices` | Practices for components, state, data fetching, styling, performance, and pitfalls. `create-reactloom` copies this folder and strips sections marked for the other templates. `docs/turborepo.md` is the task-runner guide and is copied with every template. |
+| `docs/best-practices` | Practices for components, state, data fetching, styling, performance, and pitfalls. `create-reactloom` copies this folder and strips sections marked for the other templates. `docs/turborepo.md`, `docs/ci.md`, `docs/git-workflow.md`, `docs/storybook-ai.md`, and `docs/deploy-self-hosted.md` are copied with every template. |
 
 TypeScript is `strict` (7.0.2). React is 19.3.0 on web. Expo SDK 57 pins React 19.2.3, so the mobile template stays on that peer. Biome formats and lints. `tsc` typechecks. Changesets version `@reactloom/api-client` and `create-reactloom`. Templates are not published.
 
@@ -54,6 +54,7 @@ From the repository root:
 | `pnpm test:e2e:setup` | Install Playwright Chromium for SPA and SSR |
 | `pnpm test:e2e` | Playwright for SPA and SSR |
 | `pnpm build` | Library, both web apps, and Expo web export |
+| `pnpm lighthouse` | SPA and SSR production-preview audit |
 | `pnpm exec create-reactloom` | Scaffold an app in the current directory |
 | `pnpm create-reactloom` | Same CLI, rebuilding it first |
 
@@ -65,12 +66,12 @@ Template choice is still the interactive prompt or `--template spa|ssr|mobile`. 
 | --- | --- |
 | `packages.api-client` | `packages/api-client` when `true` |
 | `packages.tsconfig` | Preset filenames. The copied package exports only these. SPA is `base.json`, `react.json`, `vite.json`, `node.json` (not `next.json` or `expo.json`). SSR swaps in `next.json`. Mobile swaps in `expo.json`. Every template that copies the API client lists `node.json`. |
-| `configs` | Repo-root files: `.npmrc`, `.editorconfig`, `biome.json`, `lefthook.yml`, `commitlint.config.mjs`, `.changeset/config.json`, `.changeset/README.md`, `renovate.json`, `turbo.json` |
+| `configs` | Repo-root files: `.npmrc`, `.editorconfig`, `biome.json`, `lefthook.yml`, `commitlint.config.mjs`, `.gitmessage`, `.changeset/config.json`, `.changeset/README.md`, `renovate.json`, `turbo.json`, plus the shared scripts those tools call |
 | `ci` | The template's own `.github/workflows/ci.yml`. The monorepo workflow is not copied. |
 | `docker` | `true` only for SSR, which keeps `Dockerfile` |
-| `ai.pointers` | `CLAUDE.md`, `.github/copilot-instructions.md`, `.cursor/mcp.json` |
-| `ai.rules` | That template's Cursor rules only (`general` plus `spa`, `ssr`, or `mobile`, plus `testing`) |
-| `docs` | `docs/getting-started.md`, `docs/turborepo.md`, `docs/best-practices/` (one file per topic, filtered per template; `workflow-research.md` and `dev-tools.md` are copied in full), plus ADRs 0003, 0004, 0005, and 0006. ADR 0001 and 0002 stay in this repo. |
+| `ai.pointers` | `CLAUDE.md`, `.github/copilot-instructions.md`, `.cursor/mcp.json`, `.mcp.json` |
+| `ai.rules` | That template's Cursor rules only (`general` plus `spa`, `ssr`, or `mobile`, plus `testing`, `commits`, and `storybook` on the web templates) |
+| `docs` | `docs/getting-started.md`, `docs/turborepo.md`, `docs/ci.md`, `docs/git-workflow.md`, `docs/storybook-ai.md`, `docs/deploy-self-hosted.md`, `docs/agents/storybook.md`, `docs/best-practices/` (one file per topic, including `lighthouse.md`, filtered per template; `workflow-research.md` and `dev-tools.md` are copied in full), plus ADRs 0003, 0004, 0005, and 0006. ADR 0001 and 0002 stay in this repo. |
 | `clickToSource` | Inspector package, exact version, bundler config, `.env.development`, and `scripts/open-in-editor.mjs`. `configs` also copies `scripts/code` and `scripts/code.cmd`. SPA and SSR use `code-inspector-plugin` 2.0.9. Mobile uses `react-native-dev-inspector` 1.1.0. The env file leaves the editor unset. The launcher opens a listening Neovim, then Cursor or VS Code. |
 | `reactScan` | `react-scan` 0.5.7. SPA config is `src/main.tsx` (import before React). SSR config is `src/app/react-scan.tsx` (client component, import before React, top-most import in `layout.tsx`). Mobile sets `enabled` to false: 0.5.7 has no React Native export, and the native preview is unmerged. Production builds alias the web import to an empty module. |
 
@@ -86,15 +87,15 @@ Biome formats and lints. Lefthook runs those checks. Do not add ESLint, Prettier
 
 Root `.vscode/extensions.json` recommends Biome, Tailwind CSS IntelliSense, Vitest, Playwright, Expo Tools, and Error Lens for this monorepo. `.vscode/settings.json` formats on save with Biome, uses the workspace TypeScript SDK, and teaches Tailwind IntelliSense the `cn` and `cva` class regex. Each template ships a smaller `.vscode` that `create-reactloom` copies with the template. The monorepo `.vscode` is not listed in `template.json` `configs`, so a generated SPA does not get the Expo recommendation and a generated mobile app does not get Tailwind or Playwright.
 
-`lefthook.yml` is a shared config, so generated projects get the same hook. Pre-commit formats staged files with Biome, then `pnpm exec turbo run typecheck test --affected`. `--affected` compares the branch with `main`. A non-zero exit blocks the commit. The hook does not run the full suite. TypeScript presets set `incremental`. `pnpm test:coverage` is the v8 report. `pnpm --filter <package> test:ui` opens Vitest UI. Task order and the `.turbo` cache are `turbo.json`. The guide is `docs/turborepo.md`.
+`lefthook.yml` is a shared config, so generated projects get the same hook. Pre-commit formats staged files with Biome, then `pnpm exec turbo run typecheck test --affected`. `--affected` compares the branch with `main`. Commit-msg runs commitlint. Pre-push runs `node scripts/check-ai-rules-sync.mjs`. A non-zero exit blocks the command. The hook does not run the full suite. TypeScript presets set `incremental`. `pnpm test:coverage` is the v8 report. `pnpm --filter <package> test:ui` opens Vitest UI. Task order and the `.turbo` cache are `turbo.json`. The guides are `docs/turborepo.md`, `docs/ci.md`, and `docs/git-workflow.md`.
 
-`--dev` installs and starts `pnpm dev`. `--yes` without `--dev` does not start a server. SPA `server.open` and SSR `scripts/open-browser.mjs` open the browser unless `CI` is set or `REACTLOOM_OPEN=false`. Expo does not. Dev error boundaries show a source-mapped stack (`@reactloom/devtools/stack`). The monorepo CI workflow is `.github/workflows/ci.yml`: a `verify` matrix per template, a `packages` job, and a `smoke` job that generates each template and builds it. Template workflows stay one job and do not set `concurrency`.
+`--dev` installs and starts `pnpm dev`. `--yes` without `--dev` does not start a server. `--deploy` is `none` (default) or `self-hosted`. `vercel` and `docker` are reserved and are not generated. SPA `server.open` and SSR `scripts/open-browser.mjs` open the browser unless `CI` is set or `REACTLOOM_OPEN=false`. Expo does not. Dev error boundaries show a source-mapped stack (`@reactloom/devtools/stack`). The monorepo CI workflow is `.github/workflows/ci.yml`: a `verify` matrix per template, a `packages` job, a `lighthouse` job for SPA and SSR, and a `smoke` job that generates each template and builds it. Template workflows do not set `concurrency`. Cache keys are in `docs/ci.md`.
 
 SPA dev loads Query devtools, Router devtools, React Scan, and vite-plugin-checker (TypeScript overlay only, not during `vite build`). React Scan is a static import at the top of `templates/spa/src/main.tsx`, before React. The production Vite build aliases React Scan and the TanStack devtools to `templates/spa/src/lib/devtools-stub.ts`. SSR dev loads Query devtools and React Scan. The SSR client component is `templates/ssr/src/app/react-scan.tsx`, and production (and `NEXT_PUBLIC_DEVTOOLS=false`) aliases `react-scan` to `templates/ssr/src/lib/react-scan-stub.ts`. Mobile does not load those web overlays. react-scan 0.5.7 has no React Native export, and the native preview is unmerged.
 
 why-did-you-render 10.0.1 is Expo-only, and only while `expo start` is running. v10 needs its package as the JSX `importSource`. Vite 8 would inject that import ahead of React Scan, and Next.js 16 Turbopack has no app-wide `jsxImportSource`, so those templates leave the package off and use React Scan's outline for the render cause and the props that changed. Expo sets `jsxImportSource` in `templates/mobile/babel.config.js` outside production, and `templates/mobile/index.js` imports `src/lib/wdyr.js` before `expo-router/entry`. `pnpm analyze` is rollup-plugin-visualizer (`dist/stats.html`) on the SPA, `next analyze --output` (`.next/diagnostics/analyze`) on SSR, and Expo Atlas (`.expo/atlas.jsonl`) on mobile. `@next/bundle-analyzer` stays in `next.config.ts` for `ANALYZE=true next build --webpack`. `useWhyDidYouUpdate` in `packages/devtools` is an opt-in console diff. No app entry imports it. See `docs/adr/0005-tooling.md`.
 
-Storybook 10.6.1 is `pnpm storybook` and `pnpm build-storybook` on SPA (`@storybook/react-vite`, port 6006) and SSR (`@storybook/nextjs`, port 6007). Stories cover the primitives and the login screen. `msw-storybook-addon` reuses `src/mocks/handlers.ts`. `@storybook/addon-a11y` is on. Expo does not load `@storybook/react-native` 10.6.0: it requires `react-native-safe-area-context` 5.8.0 and `@gorhom/bottom-sheet`, and Expo SDK 57 bundles safe-area-context ~5.7.0. SPA browser mocks stay on `VITE_ENABLE_MSW`. SSR adds `NEXT_PUBLIC_ENABLE_MSW`, default false, so Playwright still hits the route handlers. Expo keeps `EXPO_PUBLIC_USE_FIXTURES` because MSW 3.0.3 has no React Native entry. `@axe-core/react` logs in the web dev servers while devtools are on, and production builds alias it and `msw` to `src/lib/workflow-stub.ts` unless `STORYBOOK=true`. Install the axe DevTools browser extension for a manual pass. Playwright stays on SPA and SSR. Maestro at `templates/mobile/.maestro/login.yaml` is the Expo device flow and is not run in CI.
+Storybook 10.6.1 is `pnpm storybook` and `pnpm build-storybook` on SPA (`@storybook/react-vite`, port 6006) and SSR (`@storybook/nextjs`, port 6007). `@storybook/addon-mcp` serves `/mcp` with the dev, docs, and test toolsets. SPA also loads `@storybook/addon-vitest`. Stories cover the primitives and the login screen. `msw-storybook-addon` reuses `src/mocks/handlers.ts`. `@storybook/addon-a11y` is on. Expo does not load `@storybook/react-native` 10.6.0: it requires `react-native-safe-area-context` 5.8.0 and `@gorhom/bottom-sheet`, and Expo SDK 57 bundles safe-area-context ~5.7.0. SPA browser mocks stay on `VITE_ENABLE_MSW`. SSR adds `NEXT_PUBLIC_ENABLE_MSW`, default false, so Playwright still hits the route handlers. Expo keeps `EXPO_PUBLIC_USE_FIXTURES` because MSW 3.0.3 has no React Native entry. `@axe-core/react` logs in the web dev servers while devtools are on, and production builds alias it and `msw` to `src/lib/workflow-stub.ts` unless `STORYBOOK=true`. Install the axe DevTools browser extension for a manual pass. Playwright stays on SPA and SSR. Maestro at `templates/mobile/.maestro/login.yaml` is the Expo device flow and is not run in CI.
 
 Click-to-source works after clone or `create-reactloom` with no extra config. `template.json` `clickToSource` records the plugin, version, bundler file, `.env.development`, and `scripts/open-in-editor.mjs`. That env file turns devtools on and does not set an editor. The bundler points the inspectors at `scripts/code`, which runs the launcher. Detection order is an explicit `LAUNCH_EDITOR`, `CODE_EDITOR`, `REACT_EDITOR`, `VISUAL`, or `EDITOR`, then a Neovim server (`$NVIM` or `.nvim.sock` from `nvim --listen .nvim.sock`), then a running Cursor or VS Code, then a new terminal nvim when a terminal emulator exists. SPA uses `code-inspector-plugin` in `vite.config.ts` (dev server only, source maps on). SSR uses the same plugin on Turbopack in `next.config.ts`, plus Next.js open-in-editor. Hold Option+Shift on macOS, or Alt+Shift on Windows and Linux, then click. Mobile uses `react-native-dev-inspector`: `withInspector` in `metro.config.js` receives the launcher as `editor`, the babel plugin runs outside production, and `DevInspector` lives in `src/lib/dev-inspector.tsx`. Tap the lightning button, then tap the component. Saving hot-reloads through the dev server. Production builds do not include the inspector. If nothing opens, start nvim with `--listen .nvim.sock` or set `LAUNCH_EDITOR=cursor` in `.env.local`. Do not put `scripts/` on `PATH`. The React DevTools extension is not required. Expo does not start a simulator; `expo start --web` is the local check.
 
@@ -139,6 +140,40 @@ return api.request('/api/tasks', taskListSchema, { signal })
 - Query defaults skip retry on 401, 403, 404, validation, and abort. See `templates/spa/src/lib/query-client.ts`.
 
 The client joins the base URL, sends JSON, attaches a bearer token when `getAccessToken` returns one, and aborts on caller cancel or timeout. See `docs/adr/0004-api-client.md`.
+
+## Commits
+
+One logical change per commit. Header: `type(scope): subject`.
+
+- Scope is `spa`, `ssr`, `mobile`, `api-client`, `cli`, `docs`, or `ci`. A feature suffix is part of the scope: `feat(spa-auth): ...`, `fix(api-client/retry): ...`. The scope or the subject names the feature being changed.
+- Subject is imperative, lowercase, at least 12 characters, and not vague. Do not use `update files`, `fix stuff`, `wip`, or `changes`.
+- `feat` and `fix` need a body that says what changed, why, and the impact scope (modules, templates, users).
+- Breaking changes use a `BREAKING CHANGE:` trailer.
+- `.gitmessage` is the editor template. `pnpm install` sets `git config --local commit.template .gitmessage`. The same rules are in `.cursor/rules/commits.mdc`, `.github/copilot-instructions.md`, and `github.copilot.chat.commitMessageGeneration.instructions`.
+
+Good:
+
+```
+feat(spa-auth): restore the session before the router guard
+
+What changed: beforeLoad reads the Zustand snapshot synchronously.
+Why: a hydration effect redirected users who were already logged in.
+Impact scope: SPA login and authenticated routes.
+```
+
+Bad: `feat: update files`, `fix stuff`, `wip`.
+
+## Storybook
+
+When changing UI on the SPA or SSR, start Storybook and use its MCP server before adding a component. SPA is http://localhost:6006/mcp. SSR is http://localhost:6007/mcp. Toolsets `dev`, `docs`, and `test` are on.
+
+- Call `docs-list` and `docs-show` before using a prop. Do not invent props that are not in the manifest.
+- Call `stories-find-by-component` and `get-storybook-story-instructions`, then write a CSF story. Interactions use a play function.
+- On the SPA, `test-run` uses `@storybook/addon-vitest`. `pnpm test` still runs only the `unit` project.
+- SSR uses `@storybook/nextjs` (Webpack). `@storybook/addon-vitest` is not installed there, so do not rely on `test-run`.
+- Expo does not load Storybook or this MCP addon. The safe-area and bottom-sheet mismatch is in `templates/mobile/AGENTS.md`.
+
+The instructions were written for Storybook 10.6.1 and `@storybook/addon-mcp` 10.6.1. Those versions are the frontmatter of `.cursor/rules/storybook.mdc` and `docs/agents/storybook.md`. `scripts/check-ai-rules-sync.mjs` fails on a Storybook major mismatch or an addon-mcp minor mismatch.
 
 ## Testing
 

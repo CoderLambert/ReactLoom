@@ -1,0 +1,34 @@
+---
+description: Conventional commits that name the feature and explain why
+alwaysApply: true
+---
+
+# Commits
+
+Write one logical change per commit. The header is `type(scope): subject`.
+
+- Scope is `spa`, `ssr`, `mobile`, `api-client`, `cli`, `docs`, or `ci`. Add a feature suffix when it names the work: `feat(spa-auth): ...`, `fix(api-client/retry): ...`.
+- The subject names that feature. Imperative, lowercase, no period, at least 12 characters.
+- Forbidden subjects: `update files`, `fix stuff`, `wip`, `changes`, and the other vague words in `commitlint.config.mjs`.
+- `feat` and `fix` need a body. Say what changed, why, and the impact scope (modules, templates, users).
+- Put a break in a `BREAKING CHANGE:` trailer.
+
+Good:
+
+```
+feat(spa-auth): restore the session before the router guard
+
+What changed: the Zustand snapshot is read synchronously in beforeLoad.
+Why: a hydration effect let the guard redirect a logged-in user.
+Impact scope: SPA login and authenticated routes.
+```
+
+Bad:
+
+```
+feat: update files
+fix stuff
+wip
+```
+
+`.gitmessage` is the editor template. `pnpm install` sets `git config --local commit.template .gitmessage`.

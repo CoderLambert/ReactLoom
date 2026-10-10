@@ -2,7 +2,7 @@
 
 本文按场景比较社区里常见的工作流，并写明 ReactLoom 现在用哪一种。它对应 GitHub issue [#2](https://github.com/CoderLambert/ReactLoom/issues/2)。
 
-issue #2 里和任务缓存有关的那一项，现在的决定是采用 Turborepo 2.11.7。本地缓存目录是 `.turbo`，CI 用 `actions/cache` 恢复它。远程缓存仍然可选，仓库不要求 `TURBO_TOKEN`。Nx、Chromatic、Lighthouse CI、size-limit、Vercel、EAS 仍是未实现。操作说明在 [Turborepo](../turborepo.md)。
+issue #2 里和任务缓存有关的那一项，现在的决定是采用 Turborepo 2.11.7。本地缓存目录是 `.turbo`，CI 用 `actions/cache` 恢复它。远程缓存仍然可选，仓库不要求 `TURBO_TOKEN`。Lighthouse CI 已在 SPA 和 SSR 接入（`@lhci/cli` 0.15.1）；Expo 没有这项作业。Nx、Chromatic、size-limit、Vercel、EAS 仍是未实现。操作说明在 [Turborepo](../turborepo.md) 和 [CI](../ci.md)。
 
 三个模板都会收到本文。文中的路径是各模板自己的文件名（例如 SPA 的 `vite.config.ts`）。在 monorepo 里，这些文件在对应模板目录下；`create-reactloom` 生成的项目里，它们在项目根目录。
 
@@ -25,7 +25,7 @@ issue #2 里和任务缓存有关的那一项，现在的决定是采用 Turbore
 | 提交说明 | commitlint | 已接入 |
 | 组件驱动开发 | Storybook | 已接入 SPA 与 SSR。Expo 未接入 |
 | 视觉回归 | Chromatic | 未实现 |
-| 性能闸门 | Lighthouse CI、size-limit、自写体积预算 | 自写 gzip 预算已接入 SPA 与 SSR。Lighthouse CI 与 size-limit 未实现 |
+| 性能闸门 | Lighthouse CI、size-limit、自写体积预算 | gzip 预算和 Lighthouse CI 已接入 SPA 与 SSR。size-limit 未实现。Expo 不用 Lighthouse |
 | 版本说明 | Changesets | 已接入，只覆盖 API client 和 CLI |
 | 依赖更新 | Renovate 或 Dependabot | Renovate 配置已接入。GitHub App 要人去安装 |
 | Web 托管 | Vercel | 未实现 |
@@ -107,9 +107,13 @@ Nx 仍未实现。远程缓存未要求，见下一节。
 
 ReactLoom：已接入。monorepo 根工作流 `.github/workflows/ci.yml` 和三个模板各自的 `.github/workflows/ci.yml` 都是：
 
-- `pnpm/action-setup@v4`，版本 `10.33.3`
-- `actions/setup-node@v5`，`node-version: 22`，`cache: pnpm`
+- `actions/checkout@v7`
+- `pnpm/action-setup@v6`，版本 `10.33.3`
+- `actions/setup-node@v7`，`node-version: 22`，`cache: pnpm`
+- `actions/cache@v6` 负责 `.turbo`、Playwright 和 Expo
 - `pnpm install --frozen-lockfile`
+
+Renovate 的 `helpers:pinGitHubActionDigests` 会把这些主版本钉成提交哈希。键的设计和清缓存的办法在 [CI](../ci.md)。
 
 生成后的项目只保留自己那一份工作流，不复制 monorepo 的矩阵。
 
@@ -117,9 +121,9 @@ ReactLoom：已接入。monorepo 根工作流 `.github/workflows/ci.yml` 和三�
 
 何时使用：SPA 或 SSR 的端到端测试要装 Chromium，而浏览器二进制比测试代码大得多。
 
-优点：锁文件不变时，不必每次下载浏览器。`test:e2e:setup` 仍然要跑，命中缓存时它很快。
+优点：锁文件和 `@playwright/test` 版本都不变时，不必下载浏览器。命中后只跑 `playwright install-deps chromium`。未命中才跑 `playwright install --with-deps chromium`。
 
-缺点：只缓存 `~/.cache/ms-playwright`。系统库（Linux 的 `--with-deps`）不在这个目录里，仍然每次安装。键如果不含锁文件，浏览器版本会和 `@playwright/test` 错位。
+缺点：只缓存 `~/.cache/ms-playwright`。系统库不在这个目录里，命中时仍要装一次。键里同时有系统、Playwright 版本和 `**/pnpm-lock.yaml` 的哈希。
 
 参考：[Playwright CI caching](https://playwright.dev/docs/ci-intro#caching-browsers)。
 
@@ -127,12 +131,12 @@ ReactLoom：已接入，而且只在会跑 Playwright 的作业上。
 
 | 工作流 | 缓存路径 | 键 | 谁跑 e2e |
 | --- | --- | --- | --- |
-| monorepo `.github/workflows/ci.yml` 的 `verify` | `~/.cache/ms-playwright` | `playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}` | `matrix.e2e` 为真时，也就是 SPA 和 SSR |
+| monorepo `.github/workflows/ci.yml` 的 `verify` | `~/.cache/ms-playwright` | `playwright-` 加系统、`@playwright/test` 版本、`hashFiles('**/pnpm-lock.yaml')` | `matrix.e2e` 为真时，也就是 SPA 和 SSR |
 | SPA 模板的 `.github/workflows/ci.yml` | 同上 | 同上 | 总是跑 |
-| SSR 模板的 `.github/workflows/ci.yml` | 同上 | `playwright-ssr-` 加上系统和锁文件哈希 | 总是跑 |
-| Expo 模板的 `.github/workflows/ci.yml` | 无 | 无 | 不跑。构建是 `expo export --platform web` |
+| SSR 模板的 `.github/workflows/ci.yml` | 同上 | 同上，不再使用 `playwright-ssr-` 前缀 | 总是跑 |
+| Expo 模板的 `.github/workflows/ci.yml` | `.expo` 和 `.metro-cache` | `expo-` 加系统和锁文件哈希 | 不跑 Playwright。构建是 `expo export --platform web` |
 
-安装命令是 `pnpm test:e2e:setup --with-deps`（pnpm 10 不要在 `--with-deps` 前面再加一个 `--`）。Expo 的 verify 作业设置 `EXPO_NO_TELEMETRY: "1"`：monorepo 矩阵里有，生成后的 Expo 工作流里也有。
+本地安装浏览器仍是 `pnpm test:e2e:setup`。CI 在未命中时用 `playwright install --with-deps chromium`（pnpm 10 不要在参数前再加一个 `--`）。Expo 的 verify 作业设置 `EXPO_NO_TELEMETRY: "1"`：monorepo 矩阵里有，生成后的 Expo 工作流里也有。Metro 把文件缓存写到 `.metro-cache`，这一步放在 `pnpm install` 之后。
 
 ### 远程任务缓存
 
@@ -334,7 +338,7 @@ ReactLoom：未实现。没有 `size-limit` 配置，也没有它的 GitHub Acti
 
 参考：[Lighthouse CI](https://github.com/GoogleChrome/lighthouse-ci)。
 
-ReactLoom：未实现。Playwright 跑的是 axe，不是 Lighthouse。没有 `lighthouserc` 文件，工作流里也没有 `lhci`。
+ReactLoom：SPA 和 SSR 已接入。`lighthouserc.cjs` 用 `@lhci/cli` 0.15.1，`pnpm lighthouse` 先构建再 `lhci autorun`。CI 作业默认开，仓库变量 `LIGHTHOUSE_CI=false` 或手动输入 `lighthouse: false` 会关掉。本地 `LIGHTHOUSE_LOCAL` 默认关。Expo 没有这个作业。Playwright 的 axe 扫描还在，它不代替 Lighthouse。字段和限速说明在 [Lighthouse](lighthouse.md)。
 
 ## 6. 从开发到部署
 
@@ -365,13 +369,14 @@ monorepo 根 `.github/workflows/ci.yml`：
 
 | 作业 | 做什么 |
 | --- | --- |
-| `packages` | `pnpm lint`（Turbo 的包检查加根上的 `lint:root`）；`turbo run typecheck` / `turbo run test` 覆盖 API client 和 devtools；create-reactloom 的单元测试仍用带 `--exclude` 的 `vitest run`，排除 `src/scaffold.integration.test.ts` |
-| `verify (spa)` / `verify (ssr)` / `verify (mobile)` | `turbo run lint typecheck test build`，按该模板过滤。Web 再加 Playwright |
+| `packages` | `pnpm lint`（Turbo 的包检查加根上的 `lint:root`）；`turbo run typecheck` / `turbo run test` 覆盖 API client 和 devtools；create-reactloom 的单元测试仍用带 `--exclude` 的 `vitest run`，排除 `src/scaffold.integration.test.ts`。另外跑 `scripts/check-ai-rules-sync.mjs` |
+| `verify (spa)` / `verify (ssr)` / `verify (mobile)` | `turbo run lint typecheck test build`，按该模板过滤。Web 再加 Playwright。Expo 另恢复 `.expo` 和 `.metro-cache` |
+| `lighthouse (spa)` / `lighthouse (ssr)` | `turbo run lighthouse`。默认开，见 [Lighthouse](lighthouse.md) |
 | `smoke` | 生成三个模板并各自构建 |
 
 Renovate 的自动合并等的就是这些检查名：`verify (spa)`、`verify (ssr)`、`verify (mobile)`、`packages`、`smoke`。
 
-生成后的项目只有模板那一份工作流：安装，然后 `pnpm exec turbo run lint typecheck test build`，Web 再加 e2e。缓存 `.turbo`。没有矩阵，没有 `concurrency`，没有 smoke。
+生成后的项目只有模板那一份工作流：安装，然后 `pnpm exec turbo run lint typecheck test build`，Web 再加 e2e 和 Lighthouse。缓存 `.turbo`。Expo 另缓存 `.expo` 和 `.metro-cache`，没有 Lighthouse。没有矩阵，没有 `concurrency`，没有 smoke。自建部署是另一份 `deploy.yml`，只有 `--deploy self-hosted` 才生成。Vercel 仍未实现。
 
 ### 预览
 
@@ -488,7 +493,8 @@ ReactLoom：未实现。没有 `eas.json`，没有 `eas-cli`，工作流不调�
 | Storybook | 已接入 | 已接入 | 未实现 |
 | Chromatic | 未实现 | 未实现 | 未实现 |
 | 体积闸门 | 550 / 280 KiB gzip | 900 KiB 客户端 gzip | 未实现，用 Atlas 看 |
-| Lighthouse CI、size-limit | 未实现 | 未实现 | 未实现 |
+| Lighthouse CI | 已接入 | 已接入 | 不适用 |
+| size-limit | 未实现 | 未实现 | 未实现 |
 | 预览 | `pnpm preview` | `pnpm start` 或 Docker | Web 导出，无托管 |
 | 版本 | 模板被 Changesets 忽略 | 同左 | 同左 |
 | 依赖更新 | 复制 `renovate.json` | 同左 | 同左 |

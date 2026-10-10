@@ -13,6 +13,8 @@ These notes match the code in this project. Each file is one topic. Start with t
 - [Workflow research（工作流调研）](workflow-research.md) compares community workflow choices with what this repo runs. The page is in Chinese. It mirrors GitHub issue [#2](https://github.com/CoderLambert/ReactLoom/issues/2).
 - [Dev tools（开发工具目录）](dev-tools.md) lists every productivity tool in this repo, with commands, config paths, and a per-template table. The page is in Chinese.
 - [Turborepo](../turborepo.md) is the Chinese guide to the task runner and its cache. Every template copies it. It is not one of the topic files above.
+- [Lighthouse](lighthouse.md) is the Chinese note for the SPA and SSR audit. Expo has no Lighthouse job.
+- [CI](../ci.md), [Git workflow](../git-workflow.md), [Storybook and AI](../storybook-ai.md), and [self-hosted deploy](../deploy-self-hosted.md) sit next to this folder. Every template copies them.
 
 `workflow-research.md` and `dev-tools.md` are copied in full into every generated project. They compare SPA, SSR, and Expo on purpose, so they do not use template-only sections.
 

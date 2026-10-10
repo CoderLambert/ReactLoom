@@ -6,12 +6,14 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { parseArgs } from 'node:util'
 import * as p from '@clack/prompts'
+import { parseDeployTarget } from './deploy.js'
 import { scaffold } from './scaffold.js'
 import { isTemplateId, templateIds } from './templates.js'
 
 type CliOptions = {
   name: string | undefined
   template: string | undefined
+  deploy: string | undefined
   yes: boolean
   install: boolean
   dev: boolean
@@ -38,6 +40,7 @@ export function parseCliArgs(argv: string[]): CliOptions {
     args: argv,
     options: {
       template: { type: 'string', short: 't' },
+      deploy: { type: 'string' },
       yes: { type: 'boolean', short: 'y', default: false },
       install: { type: 'boolean', default: false },
       dev: { type: 'boolean', default: false },
@@ -52,6 +55,7 @@ export function parseCliArgs(argv: string[]): CliOptions {
   return {
     name: positionals[0],
     template: values.template,
+    deploy: values.deploy,
     yes: values.yes ?? false,
     install: (values.install ?? false) || dev,
     dev,
@@ -78,6 +82,7 @@ and docs that are copied. Files for other templates are left out.
 
 Options:
   -t, --template <id>   Template to copy
+      --deploy <target> none (default) or self-hosted. vercel and docker are reserved.
   -y, --yes             Skip prompts (requires name and template)
       --install         Install dependencies with pnpm
       --dev             Install dependencies and start the dev server
@@ -141,6 +146,7 @@ export async function run(argv: string[]): Promise<void> {
 
   let name = options.name
   let template = options.template
+  let deploy = parseDeployTarget(options.deploy)
   let startup = resolveStartup(options)
 
   if (!options.yes) {
@@ -174,6 +180,25 @@ export async function run(argv: string[]): Promise<void> {
         process.exit(0)
       }
       template = selected
+    }
+    if (!options.deploy) {
+      const selectedDeploy = await p.select({
+        message: 'Deployment target',
+        initialValue: 'none' as const,
+        options: [
+          { value: 'none' as const, label: 'None', hint: 'No deploy workflow' },
+          {
+            value: 'self-hosted' as const,
+            label: 'Self-hosted',
+            hint: 'GitHub Actions, SSH, and rsync',
+          },
+        ],
+      })
+      if (p.isCancel(selectedDeploy)) {
+        p.cancel('Scaffold cancelled.')
+        process.exit(0)
+      }
+      deploy = selectedDeploy
     }
     if (!options.dev && !options.install) {
       const choice = await p.select({
@@ -213,6 +238,7 @@ export async function run(argv: string[]): Promise<void> {
     template,
     directory: location.directory,
     install: startup.install,
+    deploy,
   })
   spinner?.stop('Project created')
 

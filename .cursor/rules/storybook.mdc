@@ -1,0 +1,21 @@
+---
+description: Use the Storybook MCP while changing UI
+globs: "**/*.stories.tsx"
+alwaysApply: false
+storybook: 10.6.1
+addon-mcp: 10.6.1
+---
+
+# Storybook
+
+Storybook MCP is a preview. SPA serves it at http://localhost:6006/mcp (`@storybook/react-vite`). SSR serves it at http://localhost:6007/mcp (`@storybook/nextjs`). Start `pnpm storybook` before calling the tools. Expo has no Storybook, so it has no MCP server.
+
+Before adding UI, find an existing component:
+
+1. `docs-list` and `docs-show` for props. Do not invent props that the manifest does not list.
+2. `stories-find-by-component` and `get-storybook-story-instructions` before writing a CSF story.
+3. Stories use play functions for the interaction. `@storybook/addon-a11y` is already on.
+4. SPA can `test-run` because `@storybook/addon-vitest` is installed. SSR's framework is webpack `@storybook/nextjs`, and the Vitest addon needs a Vite builder, so do not expect `test-run` there.
+5. When a component's props change, update its stories in the same change.
+
+`scripts/check-ai-rules-sync.mjs` compares this file's `storybook` major and `addon-mcp` minor with the installed versions.

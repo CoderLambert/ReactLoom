@@ -41,7 +41,11 @@ describe('create-reactloom', () => {
       yes: false,
       install: true,
       dev: true,
+      deploy: undefined,
     })
+    expect(parseCliArgs(['studio', '--template', 'spa', '--deploy', 'self-hosted']).deploy).toBe(
+      'self-hosted',
+    )
   })
 
   it('starts the dev server only when asked', () => {
@@ -367,17 +371,17 @@ describe('create-reactloom', () => {
     const locked: Record<TemplateId, { presets: string[]; rules: string[]; docker: boolean }> = {
       spa: {
         presets: ['base.json', 'react.json', 'vite.json', 'node.json'],
-        rules: ['general.mdc', 'spa.mdc', 'testing.mdc'],
+        rules: ['general.mdc', 'spa.mdc', 'testing.mdc', 'commits.mdc', 'storybook.mdc'],
         docker: false,
       },
       ssr: {
         presets: ['base.json', 'react.json', 'next.json', 'node.json'],
-        rules: ['general.mdc', 'ssr.mdc', 'testing.mdc'],
+        rules: ['general.mdc', 'ssr.mdc', 'testing.mdc', 'commits.mdc', 'storybook.mdc'],
         docker: true,
       },
       mobile: {
         presets: ['base.json', 'react.json', 'expo.json', 'node.json'],
-        rules: ['general.mdc', 'mobile.mdc', 'testing.mdc'],
+        rules: ['general.mdc', 'mobile.mdc', 'testing.mdc', 'commits.mdc'],
         docker: false,
       },
     }
@@ -457,6 +461,7 @@ describe('create-reactloom', () => {
         'docs/best-practices/pitfalls.md',
         'docs/best-practices/workflow-research.md',
         'docs/best-practices/dev-tools.md',
+        'docs/best-practices/lighthouse.md',
       ]
       for (const practice of practiceFiles) {
         expect(manifest.docs).toContain(practice)
@@ -692,7 +697,9 @@ describe('create-reactloom', () => {
     expect(spaPkg.devDependencies['@tanstack/react-router-devtools']).toBe('1.167.2')
     expect(spaPkg.devDependencies['react-scan']).toBe('0.5.7')
     expect(spaPkg.devDependencies['@vitest/coverage-v8']).toBe('5.0.3')
-    expect(spaPkg.scripts['test:coverage']).toBe('vitest run --coverage')
+    expect(spaPkg.scripts['test:coverage']).toBe('vitest run --coverage --project unit')
+    expect(spaPkg.scripts.prepare).toContain('scripts/setup-git.mjs')
+    expect(spaPkg.scripts.lighthouse).toContain('lhci autorun')
     expect(spaPkg.scripts['typecheck:affected']).toContain('...[HEAD]')
     const spaMain = await readFile(path.join(spa, 'src/main.tsx'), 'utf8')
     expect(spaMain).toContain("import { scan } from 'react-scan'")
@@ -703,6 +710,17 @@ describe('create-reactloom', () => {
     const lefthook = await readFile(path.join(spa, 'lefthook.yml'), 'utf8')
     expect(lefthook).toContain('turbo run typecheck test --affected')
     expect(lefthook).toContain('{staged_files}')
+    expect(lefthook).toContain('check-ai-rules-sync.mjs')
+    const mcp = JSON.parse(await readFile(path.join(spa, '.cursor/mcp.json'), 'utf8')) as {
+      mcpServers: Record<string, { url?: string }>
+    }
+    expect(mcp.mcpServers['storybook-spa']?.url).toBe('http://localhost:6006/mcp')
+    expect(mcp.mcpServers['storybook-ssr']).toBeUndefined()
+    const claude = JSON.parse(await readFile(path.join(spa, '.mcp.json'), 'utf8')) as {
+      mcpServers: Record<string, unknown>
+    }
+    expect(claude.mcpServers['storybook-spa']).toBeTruthy()
+    expect(claude.mcpServers['storybook-ssr']).toBeUndefined()
 
     const ssrExtensions = await readFile(path.join(ssr, '.vscode/extensions.json'), 'utf8')
     expect(ssrExtensions).toContain('ms-playwright.playwright')
@@ -821,5 +839,13 @@ describe('create-reactloom', () => {
     expect(pkg.scripts['test:e2e:setup']).toBeUndefined()
     const workflow = await readFile(path.join(directory, '.github/workflows/ci.yml'), 'utf8')
     expect(workflow).not.toContain('test:e2e')
+    expect(workflow).toContain('.metro-cache')
+    const mobileMcp = JSON.parse(
+      await readFile(path.join(directory, '.cursor/mcp.json'), 'utf8'),
+    ) as {
+      mcpServers: Record<string, unknown>
+    }
+    expect(mobileMcp.mcpServers['storybook-spa']).toBeUndefined()
+    expect(mobileMcp.mcpServers['storybook-ssr']).toBeUndefined()
   })
 })

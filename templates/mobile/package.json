@@ -8,6 +8,7 @@
   "scripts": {
     "start": "expo start",
     "dev": "expo start",
+    "prepare": "if [ -f scripts/setup-git.mjs ]; then node scripts/setup-git.mjs; else node ../../scripts/setup-git.mjs; fi",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "build": "expo export --platform web --output-dir dist",
@@ -59,6 +60,7 @@
     "@welldone-software/why-did-you-render": "10.0.1",
     "babel-preset-expo": "~57.0.14",
     "expo-atlas": "0.4.3",
+    "metro-cache": "0.84.6",
     "react-native-dev-inspector": "1.1.0",
     "typescript": "7.0.2",
     "vitest": "5.0.3"

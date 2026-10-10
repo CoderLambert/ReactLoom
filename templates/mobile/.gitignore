@@ -1,6 +1,9 @@
 node_modules
 .turbo
 .expo
+.metro-cache
+.env.deploy
+!.env.deploy.example
 dist
 coverage
 *.tsbuildinfo

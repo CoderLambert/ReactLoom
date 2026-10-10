@@ -34,6 +34,25 @@ export function adaptBestPractices(
   return `${adaptAiText(collapsed, template, projectName)}\n`
 }
 
+export function adaptMcpJson(contents: string, template: TemplateId): string {
+  const parsed = JSON.parse(contents) as {
+    mcpServers?: Record<string, unknown>
+    servers?: Record<string, unknown>
+  }
+  const drop = (name: string) => {
+    if (!name.startsWith('storybook-')) return false
+    if (template === 'mobile') return true
+    return name !== `storybook-${template}`
+  }
+  for (const group of [parsed.mcpServers, parsed.servers]) {
+    if (!group) continue
+    for (const name of Object.keys(group)) {
+      if (drop(name)) delete group[name]
+    }
+  }
+  return `${JSON.stringify(parsed, null, 2)}\n`
+}
+
 export function adaptAiText(contents: string, template: TemplateId, projectName: string): string {
   const directoryPrefix = `templates/${template}/`
   const rewritten = contents
@@ -96,6 +115,9 @@ export async function installAiConfig(options: {
     const source = await readFile(path.join(options.repoRoot, relative), 'utf8')
     const destination = path.join(options.directory, relative)
     await mkdir(path.dirname(destination), { recursive: true })
-    await writeFile(destination, adaptAiText(source, options.template, options.projectName))
+    const adapted = relative.endsWith('mcp.json')
+      ? adaptMcpJson(source, options.template)
+      : adaptAiText(source, options.template, options.projectName)
+    await writeFile(destination, adapted)
   }
 }

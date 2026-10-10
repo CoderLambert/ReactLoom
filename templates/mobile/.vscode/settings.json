@@ -6,5 +6,10 @@
     "source.organizeImports.biome": "explicit"
   },
   "typescript.tsdk": "node_modules/typescript/lib",
-  "typescript.enablePromptUseWorkspaceTsdk": true
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "github.copilot.chat.commitMessageGeneration.instructions": [
+    {
+      "text": "Follow Conventional Commits: type(scope): subject. Scope is spa, ssr, mobile, api-client, cli, docs, or ci, optionally with a feature suffix such as spa-auth or api-client/retry. The subject names the feature, is imperative, lowercase, and at least 12 characters. Never use update files, fix stuff, wip, or changes. The body of feat and fix must say what changed, why, and the impact scope. Flag breaks with BREAKING CHANGE:. One logical change per commit."
+    }
+  ]
 }

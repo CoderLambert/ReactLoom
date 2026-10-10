@@ -7,6 +7,12 @@
     "context7": {
       "command": "npx",
       "args": ["-y", "@upstash/context7-mcp"]
+    },
+    "storybook-spa": {
+      "url": "http://localhost:6006/mcp"
+    },
+    "storybook-ssr": {
+      "url": "http://localhost:6007/mcp"
     }
   }
 }

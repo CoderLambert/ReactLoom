@@ -5,7 +5,8 @@
   "description": "ReactLoom production SSR template.",
   "packageManager": "pnpm@10.33.3",
   "scripts": {
-    "dev": "node scripts/open-browser.mjs -- next dev --hostname 0.0.0.0 --port 4318",
+    "dev": "node scripts/with-lighthouse.mjs dev -- node scripts/open-browser.mjs -- next dev --hostname 0.0.0.0 --port 4318",
+    "prepare": "if [ -f scripts/setup-git.mjs ]; then node scripts/setup-git.mjs; else node ../../scripts/setup-git.mjs; fi",
     "build": "next build && node scripts/check-bundle-budget.mjs",
     "start": "next start --hostname 0.0.0.0 --port 4318",
     "lint": "biome check .",
@@ -19,7 +20,8 @@
     "test:e2e": "playwright test",
     "analyze": "next analyze --output",
     "storybook": "STORYBOOK=true storybook dev -p 6007 --no-open",
-    "build-storybook": "STORYBOOK=true storybook build"
+    "build-storybook": "STORYBOOK=true storybook build",
+    "lighthouse": "pnpm build && lhci autorun"
   },
   "dependencies": {
     "@hookform/resolvers": "5.9.1",
@@ -46,7 +48,9 @@
     "@playwright/test": "1.64.0",
     "@reactloom/devtools": "workspace:*",
     "@reactloom/tsconfig": "workspace:*",
+    "@lhci/cli": "0.15.1",
     "@storybook/addon-a11y": "10.6.1",
+    "@storybook/addon-mcp": "10.6.1",
     "@storybook/nextjs": "10.6.1",
     "@tailwindcss/postcss": "4.3.3",
     "@tanstack/react-query-devtools": "5.104.1",

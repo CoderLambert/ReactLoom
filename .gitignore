@@ -6,6 +6,10 @@ coverage
 playwright-report
 test-results
 .turbo
+.metro-cache
+.lighthouseci
+.env.deploy
+!.env.deploy.example
 storybook-static
 *.tsbuildinfo
 .eslintcache
