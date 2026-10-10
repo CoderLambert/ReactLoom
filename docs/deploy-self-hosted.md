@@ -17,17 +17,17 @@
 
 | | 构建产物 | 切换方式 |
 | --- | --- | --- |
-| SPA | `dist/` | rsync 到 `releases/<时间戳>`，原子替换 `current` 符号链接，然后 `nginx -t && systemctl reload nginx` |
-| SSR | `.next/standalone`，外加 `.next/static` 和 `public` | 同样的符号链接，然后 `pm2 reload`，再请求 `http://127.0.0.1:3000/` |
-| Expo | `expo export` 的 Web `dist/` | 和 SPA 一样的静态目录。原生包走 EAS，这个工作流不调用 `eas build` |
+| SPA | `dist/` | rsync 到 `releases/<时间戳>`，原子替换 `current` 符号链接，然后 `nginx -t`。能用 systemd 就 `systemctl reload nginx`，否则 `nginx -s reload` |
+| SSR | `.next/standalone`，外加 `.next/static` 和 `public` | 同样的符号链接。进程已在跑就 `pm2 reload ecosystem.config.cjs`，第一次则 `pm2 start`。然后请求 `http://127.0.0.1:3000/` |
+| Expo | `expo export --platform web`（`-p web`）写出的 `dist/` | 和 SPA 一样的静态目录。原生包走 EAS，这个工作流不调用 `eas build` |
 
-保留最近 `DEPLOY_KEEP` 个发布目录，默认 5。正在被 `current` 指着的目录不会删。
+健康检查或 nginx 重载成功之后，才删掉多出来的旧目录。保留最近 `DEPLOY_KEEP` 个，默认 5。正在被 `current` 指着的目录不会删。
 
 ## 服务器要先有什么
 
 - 一个只能登录、不能用密码写仓库的部署用户，以及 `authorized_keys` 里的公钥。
 - 目录可写：`DEPLOY_PATH/releases` 和 `DEPLOY_PATH/current`。
-- SPA 和 Expo Web：已安装 nginx。部署用户要能执行 `nginx -t` 和 `systemctl reload nginx`。不能执行就用 sudoers 只放开这两条，样例配置放在 `deploy/nginx.conf.sample`，`root` 指到 `current`。
+- SPA 和 Expo Web：已安装 nginx。部署用户要能执行 `nginx -t`，以及 `systemctl reload nginx` 或 `nginx -s reload`。不能执行就用 sudoers 只放开需要的那条。样例配置放在 `deploy/nginx.conf.sample`，`root` 指到 `current`。
 - SSR：Node 和 pm2。standalone 监听 `127.0.0.1:3000`。nginx 样例把 80 反代到这个端口。先在服务器上装好站点配置，工作流只 reload 进程，不覆盖 nginx 配置。
 - 主机公钥。不要在 SSH 里关 `StrictHostKeyChecking`。
 
@@ -54,11 +54,13 @@ CI 不读 `DEPLOY_SSH_KEY_PATH`。本地脚本不读私钥内容，只读文件�
 ```text
 $DEPLOY_PATH/
   releases/
-    20261010T120000Z/
-  current -> releases/20261010T120000Z
+    20261010212600/
+  current -> releases/20261010212600
 ```
 
-`current.next` 是替换过程中的临时链接，`mv -Tf` 把它换成 `current`。回滚就是把 `current` 指回上一个 `releases/` 目录，然后对 SPA / Expo 再 reload nginx，对 SSR 再 `pm2 reload`。
+时间戳是 UTC 的 `YYYYMMDDHHMMSS`。`current.next` 是替换过程中的临时链接，`mv -Tf` 把它换成 `current`。
+
+回滚是把 `current` 指回一个还在的 `releases/` 目录。SPA 和 Expo 再执行 `nginx -t`，然后 `systemctl reload nginx` 或 `nginx -s reload`。SSR 再执行 `pm2 reload <那个目录>/ecosystem.config.cjs`。健康检查失败时旧目录还在，因为清理发生在切换成功之后。
 
 ## 本地手动部署
 

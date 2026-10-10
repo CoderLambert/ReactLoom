@@ -27,12 +27,17 @@ describe('deploy target', () => {
     const ssr = renderDeployScript('ssr')
     const mobile = renderDeployScript('mobile')
     expect(spa).toContain('dist/')
+    expect(spa).toContain('"' + '${release}/"')
+    expect(spa).not.toContain('${' + 'remote}')
     expect(spa).toContain('nginx -t')
     expect(spa).not.toContain('StrictHostKeyChecking=no')
     expect(ssr).toContain('.next/standalone/')
     expect(ssr).toContain('pm2 reload')
+    expect(ssr).toContain('pm2 start')
     expect(ssr).toContain('http://127.0.0.1:3000/')
+    expect(spa).toContain('nginx -s reload')
     expect(mobile).toContain('dist/')
+    expect(mobile).toContain('nginx -t')
     expect(renderDeployWorkflow('mobile')).toContain('EAS')
     expect(renderDeployWorkflow('spa')).toContain('secrets.DEPLOY_SSH_KEY')
     expect(renderDeployWorkflow('ssr')).toContain('secrets.DEPLOY_KNOWN_HOSTS')
@@ -61,5 +66,54 @@ describe('deploy target', () => {
     await expect(readFile(path.join(hosted, 'ecosystem.config.cjs'), 'utf8')).resolves.toContain(
       'server.js',
     )
+  })
+
+  it('writes the self-hosted files for each template and skips them for none', async () => {
+    const parent = await mkdtemp(path.join(tmpdir(), 'reactloom-deploy-matrix-'))
+    directories.push(parent)
+    for (const template of ['spa', 'ssr', 'mobile'] as const) {
+      const skipped = path.join(parent, `${template}-none`)
+      await scaffold({ name: `${template}-none`, template, directory: skipped, deploy: 'none' })
+      await expect(
+        readFile(path.join(skipped, '.github/workflows/deploy.yml'), 'utf8'),
+      ).rejects.toThrow()
+
+      const directory = path.join(parent, template)
+      await scaffold({ name: template, template, directory, deploy: 'self-hosted' })
+      const workflow = await readFile(path.join(directory, '.github/workflows/deploy.yml'), 'utf8')
+      const script = await readFile(path.join(directory, 'scripts/deploy.sh'), 'utf8')
+      const nginx = await readFile(path.join(directory, 'deploy/nginx.conf.sample'), 'utf8')
+      const ignore = await readFile(path.join(directory, '.gitignore'), 'utf8')
+      expect(workflow).toContain('branches: [main]')
+      expect(workflow).toContain('workflow_dispatch:')
+      expect(workflow).toContain('secrets.DEPLOY_SSH_KEY')
+      expect(workflow).toContain('secrets.DEPLOY_KNOWN_HOSTS')
+      expect(workflow).not.toContain('StrictHostKeyChecking=no')
+      expect(script).toContain('StrictHostKeyChecking=yes')
+      expect(script).toContain('mv -Tf')
+      expect(ignore).toContain('.env.deploy')
+      expect(ignore).toContain('!.env.deploy.example')
+      await expect(
+        readFile(path.join(directory, 'scripts/ci-prepare-ssh.sh'), 'utf8'),
+      ).resolves.toContain('DEPLOY_SSH_KEY')
+      if (template === 'ssr') {
+        expect(script).toContain('.next/standalone/')
+        expect(script).toContain('.next/static/')
+        expect(nginx).toContain('proxy_pass http://127.0.0.1:3000')
+        await expect(
+          readFile(path.join(directory, 'ecosystem.config.cjs'), 'utf8'),
+        ).resolves.toContain('server.js')
+      } else {
+        expect(script).toContain('dist/')
+        expect(nginx).toContain('try_files')
+        await expect(
+          readFile(path.join(directory, 'ecosystem.config.cjs'), 'utf8'),
+        ).rejects.toThrow()
+      }
+      if (template === 'mobile') {
+        expect(workflow).toContain('expo export --platform web')
+        expect(workflow).toContain('EAS')
+      }
+    }
   })
 })

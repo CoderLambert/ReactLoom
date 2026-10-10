@@ -22,7 +22,7 @@ export function parseDeployTarget(value: string | undefined): DeployTarget {
 export function renderDeployWorkflow(template: TemplateId): string {
   const buildNote =
     template === 'mobile'
-      ? '# Expo exports the web bundle. Native binaries stay on EAS, which this workflow does not call.\n'
+      ? '# Build runs expo export --platform web (-p web) into dist/. Native binaries stay on EAS, which this workflow does not call.\n'
       : template === 'ssr'
         ? '# Next.js standalone output is rsynced, then pm2 reloads server.js.\n'
         : '# The Vite dist/ directory is published as a static release.\n'
@@ -55,8 +55,10 @@ jobs:
           cache: pnpm
       - name: Install
         run: pnpm install --frozen-lockfile
+      # Package build: Vite dist/, Next.js standalone, or the Expo web export.
       - name: Build
         run: pnpm exec turbo run build
+      # CI has the key text, not a laptop path. The next step reads the path this script writes.
       - name: Install the deploy key
         env:
           DEPLOY_SSH_KEY: \${{ secrets.DEPLOY_SSH_KEY }}
@@ -103,30 +105,40 @@ fi
 export function renderDeployScript(template: TemplateId): string {
   const sync =
     template === 'ssr'
-      ? `rsync_release "\${ROOT}/.next/standalone/" "\${remote}/"
-rsync_release "\${ROOT}/.next/static/" "\${remote}/.next/static/"
-rsync_release "\${ROOT}/public/" "\${remote}/public/"
-rsync_release "\${ROOT}/ecosystem.config.cjs" "\${remote}/ecosystem.config.cjs"
-rsync_release "\${ROOT}/deploy/nginx.conf.sample" "\${remote}/nginx.conf.sample"
+      ? `rsync_release "\${ROOT}/.next/standalone/" "\${release}/"
+rsync_release "\${ROOT}/.next/static/" "\${release}/.next/static/"
+rsync_release "\${ROOT}/public/" "\${release}/public/"
+rsync_release "\${ROOT}/ecosystem.config.cjs" "\${release}/ecosystem.config.cjs"
+rsync_release "\${ROOT}/deploy/nginx.conf.sample" "\${release}/nginx.conf.sample"
 `
-      : `rsync_release "\${ROOT}/dist/" "\${remote}/"
-rsync_release "\${ROOT}/deploy/nginx.conf.sample" "\${remote}/nginx.conf.sample"
+      : `rsync_release "\${ROOT}/dist/" "\${release}/"
+rsync_release "\${ROOT}/deploy/nginx.conf.sample" "\${release}/nginx.conf.sample"
 `
 
   const activate =
     template === 'ssr'
-      ? `pm2 reload "\${release}/ecosystem.config.cjs" --update-env
+      ? `# First deploy starts the process. Later deploys reload it in place.
+if pm2 describe reactloom >/dev/null 2>&1; then
+  pm2 reload "\${release}/ecosystem.config.cjs" --update-env
+else
+  pm2 start "\${release}/ecosystem.config.cjs"
+fi
 for _ in 1 2 3 4 5 6 7 8 9 10; do
   if curl -fsS "http://127.0.0.1:3000/" >/dev/null; then
-    exit 0
+    break
   fi
   sleep 1
 done
-echo "SSR health check failed on http://127.0.0.1:3000/" >&2
-exit 1
+if ! curl -fsS "http://127.0.0.1:3000/" >/dev/null; then
+  echo "SSR health check failed on http://127.0.0.1:3000/" >&2
+  exit 1
+fi
 `
       : `nginx -t
-systemctl reload nginx
+# systemctl needs a unit. nginx -s reload works when the deploy user can signal the master process.
+if ! systemctl reload nginx; then
+  nginx -s reload
+fi
 `
 
   return `#!/usr/bin/env bash
@@ -165,6 +177,8 @@ rsync_release() {
 }
 
 ${sync}
+# Switch current only after the new directory is fully synced.
+# mv -Tf replaces the symlink in one rename. Prune runs after the server is serving this release.
 "\${SSH[@]}" "\${DEST}" "bash -s" -- "\${release}" "\${DEPLOY_PATH}" "\${DEPLOY_KEEP}" <<'REMOTE'
 set -euo pipefail
 release="$1"
@@ -172,6 +186,7 @@ base="$2"
 keep="$3"
 ln -sfn "\${release}" "\${base}/current.next"
 mv -Tf "\${base}/current.next" "\${base}/current"
+${activate}
 current="$(readlink -f "\${base}/current")"
 mapfile -t old < <(ls -1dt "\${base}/releases"/*)
 if [ "\${#old[@]}" -gt "\${keep}" ]; then
@@ -181,7 +196,6 @@ if [ "\${#old[@]}" -gt "\${keep}" ]; then
     fi
   done
 fi
-${activate}
 REMOTE
 `
 }
