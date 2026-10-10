@@ -3,6 +3,7 @@ import { expect, test } from '@playwright/test'
 
 test('signs in with a cookie session and adds a task', async ({ page }) => {
   await page.goto('/')
+  await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
   const accessibility = await new AxeBuilder({ page }).disableRules(['color-contrast']).analyze()
   expect(accessibility.violations).toEqual([])
 
