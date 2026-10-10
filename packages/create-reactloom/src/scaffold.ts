@@ -56,7 +56,10 @@ async function assertDestination(directory: string): Promise<void> {
 async function copyFiltered(source: string, destination: string): Promise<void> {
   await cp(source, destination, {
     recursive: true,
-    filter: (entry) => !SKIP_DIRS.has(path.basename(entry)),
+    filter: (entry) => {
+      const base = path.basename(entry)
+      return !SKIP_DIRS.has(base) && !base.endsWith('.tsbuildinfo')
+    },
   })
 }
 

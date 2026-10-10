@@ -1,9 +1,14 @@
+# parallel: false runs commands in file order. Biome rewrites staged files before the typecheck.
 pre-commit:
+  parallel: false
   commands:
     biome:
       glob: "*.{js,jsx,ts,tsx,json,css,mjs,cjs}"
       run: pnpm exec biome check --write --no-errors-on-unmatched --files-ignore-unknown=true {staged_files}
       stage_fixed: true
+    check-affected:
+      glob: "*.{ts,tsx}"
+      run: pnpm typecheck:affected && pnpm test:affected
 
 commit-msg:
   commands:

@@ -30,6 +30,8 @@ From this directory:
 | `pnpm lint` | Biome |
 | `pnpm typecheck` | `tsc` |
 | `pnpm test` | Vitest |
+| `pnpm test:coverage` | Vitest with the v8 coverage report |
+| `pnpm test:ui` | Vitest browser UI |
 | `pnpm build` | `expo export --platform web` |
 
 ## API client
@@ -38,7 +40,7 @@ From this directory:
 
 ## Testing
 
-Vitest covers the auth reducer and the task repository. `templates/mobile/.maestro/login.yaml` is the device flow and is not part of CI.
+Editor recommendations are Biome, Vitest, Expo Tools, and Error Lens. Web-only devtools (Tailwind, Playwright, React Scan, TanStack devtools) are not part of this template. Vitest covers the auth reducer and the task repository. `templates/mobile/.maestro/login.yaml` is the device flow and is not part of CI.
 
 ## Do
 

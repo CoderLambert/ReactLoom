@@ -441,6 +441,70 @@ describe('create-reactloom', () => {
     await expect(stat(path.join(directory, 'nest-cli.json'))).rejects.toThrow()
   })
 
+  it('copies each template editor setup and keeps other frameworks out', async () => {
+    const parent = await tempParent()
+    const spa = path.join(parent, 'studio')
+    const ssr = path.join(parent, 'web')
+    const mobile = path.join(parent, 'pocket')
+    await scaffold({ name: 'studio', template: 'spa', directory: spa })
+    await scaffold({ name: 'web', template: 'ssr', directory: ssr })
+    await scaffold({ name: 'pocket', template: 'mobile', directory: mobile })
+
+    const spaExtensions = await readFile(path.join(spa, '.vscode/extensions.json'), 'utf8')
+    expect(spaExtensions).toContain('biomejs.biome')
+    expect(spaExtensions).toContain('bradlc.vscode-tailwindcss')
+    expect(spaExtensions).toContain('ms-playwright.playwright')
+    expect(spaExtensions).not.toContain('expo.vscode-expo-tools')
+    const spaSettings = await readFile(path.join(spa, '.vscode/settings.json'), 'utf8')
+    expect(spaSettings).toContain('biomejs.biome')
+    expect(spaSettings).toContain('tailwindCSS.experimental.classRegex')
+    expect(spaSettings).toContain('node_modules/typescript/lib')
+    const spaPkg = JSON.parse(await readFile(path.join(spa, 'package.json'), 'utf8')) as {
+      dependencies: Record<string, string>
+      devDependencies: Record<string, string>
+      scripts: Record<string, string>
+    }
+    expect(spaPkg.devDependencies['vite-plugin-checker']).toBe('0.14.5')
+    expect(spaPkg.devDependencies['@tanstack/react-router-devtools']).toBe('1.167.2')
+    expect(spaPkg.devDependencies['react-scan']).toBe('0.5.7')
+    expect(spaPkg.devDependencies['@vitest/coverage-v8']).toBe('5.0.3')
+    expect(spaPkg.scripts['test:coverage']).toBe('vitest run --coverage')
+    expect(spaPkg.scripts['typecheck:affected']).toContain('...[HEAD]')
+    const spaMain = await readFile(path.join(spa, 'src/main.tsx'), 'utf8')
+    expect(spaMain).toContain('react-scan')
+    expect(spaMain).toContain('TanStackRouterDevtools')
+    const lefthook = await readFile(path.join(spa, 'lefthook.yml'), 'utf8')
+    expect(lefthook).toContain('typecheck:affected')
+    expect(lefthook).toContain('{staged_files}')
+
+    const ssrExtensions = await readFile(path.join(ssr, '.vscode/extensions.json'), 'utf8')
+    expect(ssrExtensions).toContain('ms-playwright.playwright')
+    expect(ssrExtensions).not.toContain('expo.vscode-expo-tools')
+    const ssrPkg = JSON.parse(await readFile(path.join(ssr, 'package.json'), 'utf8')) as {
+      devDependencies: Record<string, string>
+    }
+    expect(ssrPkg.devDependencies['@tanstack/react-query-devtools']).toBe('5.104.1')
+    expect(ssrPkg.devDependencies['react-scan']).toBe('0.5.7')
+    expect(ssrPkg.devDependencies['vite-plugin-checker']).toBeUndefined()
+    expect(ssrPkg.devDependencies['@tanstack/react-router-devtools']).toBeUndefined()
+    await expect(stat(path.join(ssr, 'src/app/react-scan.tsx'))).resolves.toBeTruthy()
+
+    const mobileExtensions = await readFile(path.join(mobile, '.vscode/extensions.json'), 'utf8')
+    expect(mobileExtensions).toContain('expo.vscode-expo-tools')
+    expect(mobileExtensions).not.toContain('playwright')
+    expect(mobileExtensions).not.toContain('tailwindcss')
+    const mobileSettings = await readFile(path.join(mobile, '.vscode/settings.json'), 'utf8')
+    expect(mobileSettings).not.toContain('tailwindCSS')
+    const mobilePkg = JSON.parse(await readFile(path.join(mobile, 'package.json'), 'utf8')) as {
+      devDependencies: Record<string, string>
+      scripts: Record<string, string>
+    }
+    expect(mobilePkg.devDependencies['@vitest/ui']).toBe('5.0.3')
+    expect(mobilePkg.devDependencies['react-scan']).toBeUndefined()
+    expect(mobilePkg.devDependencies['vite-plugin-checker']).toBeUndefined()
+    expect(mobilePkg.scripts['test:e2e']).toBeUndefined()
+  })
+
   it('points the generated mobile workspace at the project and skips Next', async () => {
     const parent = await tempParent()
     const directory = path.join(parent, 'pocket')

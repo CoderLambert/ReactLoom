@@ -47,6 +47,9 @@ From the repository root:
 | `pnpm lint` | Biome check |
 | `pnpm typecheck` | `tsc` in every package |
 | `pnpm test` | Unit and integration tests |
+| `pnpm test:coverage` | Vitest v8 coverage for packages that define the script |
+| `pnpm typecheck:affected` | `tsc` in packages changed since `HEAD` |
+| `pnpm test:affected` | Unit tests in packages changed since `HEAD` |
 | `pnpm test:e2e:setup` | Install Playwright Chromium for SPA and SSR |
 | `pnpm test:e2e` | Playwright for SPA and SSR |
 | `pnpm build` | Library, both web apps, and Expo web export |
@@ -73,6 +76,16 @@ To add a shared file to a template, put its repo-root path (or preset filename) 
 Inside a template directory, `pnpm dev`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, and `pnpm build` run for that package. SPA and SSR also have `pnpm test:e2e:setup` and `pnpm test:e2e`.
 
 Before the first Playwright run, install browsers with `pnpm test:e2e:setup`. On Linux, use `pnpm test:e2e:setup --with-deps` so system libraries are installed too. pnpm 10 skips dependency build scripts unless they are listed. `pnpm-workspace.yaml` sets `onlyBuiltDependencies` to `lefthook`, so install registers the git hooks. Trust another package by adding it there or by running `pnpm approve-builds`.
+
+## Editor and checks
+
+Biome formats and lints. Lefthook runs those checks. Do not add ESLint, Prettier, Husky, or lint-staged.
+
+Root `.vscode/extensions.json` recommends Biome, Tailwind CSS IntelliSense, Vitest, Playwright, Expo Tools, and Error Lens for this monorepo. `.vscode/settings.json` formats on save with Biome, uses the workspace TypeScript SDK, and teaches Tailwind IntelliSense the `cn` and `cva` class regex. Each template ships a smaller `.vscode` that `create-reactloom` copies with the template. The monorepo `.vscode` is not listed in `template.json` `configs`, so a generated SPA does not get the Expo recommendation and a generated mobile app does not get Tailwind or Playwright.
+
+`lefthook.yml` is a shared config, so generated projects get the same hook. Pre-commit formats staged files with Biome, then `pnpm typecheck:affected` and `pnpm test:affected` (`pnpm --filter "...[HEAD]"`). TypeScript presets set `incremental`. `pnpm test:coverage` is the v8 report. `pnpm --filter <package> test:ui` opens Vitest UI.
+
+SPA dev loads Query devtools, Router devtools, React Scan, and vite-plugin-checker (TypeScript overlay only, not during `vite build`). The production Vite build aliases those three packages to `templates/spa/src/lib/devtools-stub.ts`. SSR dev loads Query devtools and React Scan. Mobile does not load those web overlays. See `docs/adr/0005-tooling.md`.
 
 Node is 22.14 or newer (`.nvmrc` is `22`). The package manager is pnpm 10.33.3. Use pnpm, including `pnpm exec`, for every install and script.
 

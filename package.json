@@ -16,6 +16,9 @@
     "format": "biome check --write .",
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r test",
+    "test:coverage": "pnpm -r --if-present test:coverage",
+    "typecheck:affected": "pnpm --filter \"...[HEAD]\" --if-present typecheck",
+    "test:affected": "pnpm --filter \"...[HEAD]\" --if-present test",
     "test:e2e:setup": "pnpm --filter @reactloom/template-spa --filter @reactloom/template-ssr test:e2e:setup",
     "test:e2e": "pnpm --filter @reactloom/template-spa --filter @reactloom/template-ssr test:e2e",
     "build": "pnpm -r build",
@@ -29,6 +32,7 @@
     "@commitlint/cli": "21.2.3",
     "@commitlint/config-conventional": "21.2.3",
     "create-reactloom": "workspace:*",
-    "lefthook": "2.2.1"
+    "lefthook": "2.2.1",
+    "typescript": "7.0.2"
   }
 }

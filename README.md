@@ -172,6 +172,34 @@ pnpm test:e2e:setup --with-deps
 
 Generated SPA and SSR projects include the same `test:e2e:setup` script. pnpm 10 skips dependency build scripts unless they are trusted. `pnpm-workspace.yaml` lists `lefthook` in `onlyBuiltDependencies`, so `pnpm install` registers the git hooks. To trust another package, add its name there or run `pnpm approve-builds`.
 
+## Editor and local checks
+
+Biome is the formatter and linter. Lefthook is the git hook runner. ESLint, Prettier, Husky, and lint-staged are not installed as project tools, and `.vscode/extensions.json` marks the ESLint and Prettier extensions as unwanted.
+
+The repo root `.vscode` is for working in this monorepo. It recommends Biome, Tailwind CSS IntelliSense, Vitest Explorer, Playwright, Expo Tools, and Error Lens. Format on save uses Biome. `typescript.tsdk` points at the workspace TypeScript 7 install. Tailwind IntelliSense reads `cn` and `cva` through `tailwindCSS.classFunctions` and `tailwindCSS.experimental.classRegex`.
+
+Each template has its own `.vscode`. `create-reactloom` copies that directory with the template and does not copy the monorepo `.vscode`:
+
+| | SPA | SSR | Mobile |
+| --- | --- | --- | --- |
+| Extensions | Biome, Tailwind, Vitest, Playwright, Error Lens | same | Biome, Vitest, Expo Tools, Error Lens |
+| Tailwind class regex | yes | yes | no |
+
+Lefthook's pre-commit hook formats staged files with Biome, then runs `pnpm typecheck:affected` and `pnpm test:affected`. Those scripts are `pnpm --filter "...[HEAD]"`, so only packages changed since the last commit (and their dependents) typecheck and run unit tests. Shared `tsconfig` presets set `incremental` so a second `tsc` reuses `.tsbuildinfo`. Turbo is not added: this workspace is a handful of packages, and the filter already skips unchanged ones.
+
+`pnpm test:coverage` writes a v8 text and HTML report (`coverage/`, gitignored). `pnpm test:ui` in a package opens the Vitest UI. Coverage is not a CI gate.
+
+Dev-only overlays, loaded only while `pnpm dev` is running. The SPA production build aliases React Scan and the TanStack devtools to `templates/spa/src/lib/devtools-stub.ts`, so they are not part of the client bundle. Playwright sets `VITE_DEVTOOLS=false` and `NEXT_PUBLIC_DEVTOOLS=false` so those panels are not part of the axe scan:
+
+| Tool | Where | What it does |
+| --- | --- | --- |
+| TanStack Query devtools | SPA `src/app/providers.tsx`, SSR `src/app/providers.tsx` | Inspect queries. SPA already had this; SSR now does too. |
+| TanStack Router devtools | SPA `src/main.tsx` | Inspect the route tree. Bottom-right, so it does not sit on the query panel. |
+| React Scan | SPA `src/main.tsx`, SSR `src/app/react-scan.tsx` | Outlines components that re-render. The import is dynamic and development-only. |
+| vite-plugin-checker | SPA `vite.config.ts` | TypeScript errors in the Vite error overlay. `enableBuild` is off because `pnpm typecheck` already runs `tsc`. It does not run ESLint or Biome. |
+
+Mobile does not get those web overlays. Expo's dev server and the editor extensions cover that template. Next.js already shows compile errors, so SSR does not also run vite-plugin-checker.
+
 ## AI collaboration
 
 `AGENTS.md` at the repository root is the source of truth for coding agents: architecture, how the three templates differ, commands, directories, the API client, tests, and the do/don't rules. Each template has a nearer `AGENTS.md`. The SSR file keeps the Next.js agent block that `next dev` writes, and adds the ReactLoom session and security rules under it.

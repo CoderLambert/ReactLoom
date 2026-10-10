@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 import { Providers } from '@/app/providers'
+import { ReactScan } from '@/app/react-scan'
 import { env } from '@/server/env'
 import '@/styles/globals.css'
 
@@ -13,6 +14,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body>
+        <ReactScan />
         <a
           href="#content"
           className="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:rounded-full focus:bg-ink focus:px-4 focus:py-2 focus:text-linen"
