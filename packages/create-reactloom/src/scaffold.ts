@@ -2,6 +2,7 @@ import { spawn } from 'node:child_process'
 import { cp, mkdir, readFile, rename, rm, stat, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { installAiConfig } from './ai-config.js'
 import { findRepoRoot, readManifest, type TemplateId } from './templates.js'
 
 const SKIP_DIRS = new Set([
@@ -105,6 +106,12 @@ export async function scaffold(options: ScaffoldOptions): Promise<void> {
   }
 
   await rewritePackageName(options.directory, options.name)
+  await installAiConfig({
+    repoRoot,
+    directory: options.directory,
+    template: options.template,
+    projectName: options.name,
+  })
 
   if (options.install) {
     await runInstall(options.directory)

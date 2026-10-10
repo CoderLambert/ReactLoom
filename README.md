@@ -105,6 +105,8 @@ pnpm exec create-reactloom pocket --template mobile --yes
 
 The CLI copies the template, copies `@reactloom/api-client` and `@reactloom/tsconfig` into `packages/`, writes a `pnpm-workspace.yaml`, copies Biome and EditorConfig, renames the package, and deletes template-only files (`template.json`, and for SSR the monorepo Dockerfile). The SSR trace root in `next.config.ts` is rewritten so the generated app is self-contained.
 
+It also copies the matching AI collaboration files: that template's `AGENTS.md`, `CLAUDE.md`, `.github/copilot-instructions.md`, `.cursor/mcp.json`, and the Cursor rules that apply to the template (general, that template, and testing). `@reactloom/template-<id>` becomes the project name, and `templates/<id>/` paths are rewritten so they match the generated root.
+
 ## Conventions
 
 - Server state belongs in TanStack Query. Do not copy it into Zustand.
@@ -114,6 +116,12 @@ The CLI copies the template, copies `@reactloom/api-client` and `@reactloom/tsco
 - Web UI imports `cn` from `@/lib/utils`. Add shadcn components with the aliases in `templates/spa/components.json`.
 - Commits follow Conventional Commits. Lefthook runs Biome and Commitlint.
 - Changesets cover the shared library and the CLI. Templates are not published.
+
+## AI collaboration
+
+`AGENTS.md` at the repository root is the source of truth for coding agents: architecture, how the three templates differ, commands, directories, the API client, tests, and the do/don't rules. Each template has a nearer `AGENTS.md`. The SSR file keeps the Next.js agent block that `next dev` writes, and adds the ReactLoom session and security rules under it.
+
+`CLAUDE.md` imports `@AGENTS.md`. `.github/copilot-instructions.md` points at the same file. Cursor rules in `.cursor/rules/*.mdc` are glob-scoped: general TypeScript and Biome, SPA, SSR, mobile, and testing. `.cursor/mcp.json` is an example that starts the shadcn MCP server and the Context7 docs server. It has no API keys or tokens. See [ADR 0006](docs/adr/0006-ai-collaboration.md).
 
 The fixture account on every template is `ada@reactloom.dev` / `loom-demo`. It is local demo data, not a credential.
 
@@ -147,6 +155,7 @@ App permissions and the schedule are documented by Renovate: [installing Renovat
 - [Sessions](docs/adr/0003-sessions.md)
 - [API client](docs/adr/0004-api-client.md)
 - [Tooling](docs/adr/0005-tooling.md)
+- [AI collaboration](docs/adr/0006-ai-collaboration.md)
 
 ## Practices this follows
 
@@ -159,3 +168,4 @@ App permissions and the schedule are documented by Renovate: [installing Renovat
 - [Tailwind CSS with Vite](https://tailwindcss.com/docs/installation/using-vite) and [shadcn/ui for Vite](https://ui.shadcn.com/docs/installation/vite).
 - [TypeScript 7](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/) and [React versions](https://react.dev/versions).
 - [Renovate configuration](https://docs.renovatebot.com/configuration-options/).
+- [AGENTS.md](https://agents.md/), [Cursor rules](https://cursor.com/docs/rules), [Claude Code memory](https://code.claude.com/docs/en/memory), and [Copilot custom instructions](https://docs.github.com/en/copilot/concepts/prompting/response-customization) for the AI collaboration files.

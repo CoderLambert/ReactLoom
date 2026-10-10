@@ -1,0 +1,81 @@
+import { mkdir, readFile, writeFile } from 'node:fs/promises'
+import path from 'node:path'
+import type { TemplateId } from './templates.js'
+
+const TEMPLATE_PACKAGE: Record<TemplateId, string> = {
+  spa: '@reactloom/template-spa',
+  ssr: '@reactloom/template-ssr',
+  mobile: '@reactloom/template-mobile',
+}
+
+export const RULES_FOR_TEMPLATE: Record<TemplateId, readonly string[]> = {
+  spa: ['general.mdc', 'spa.mdc', 'testing.mdc'],
+  ssr: ['general.mdc', 'ssr.mdc', 'testing.mdc'],
+  mobile: ['general.mdc', 'mobile.mdc', 'testing.mdc'],
+}
+
+const POINTER_FILES = ['CLAUDE.md', '.github/copilot-instructions.md', '.cursor/mcp.json'] as const
+
+export function adaptAiText(contents: string, template: TemplateId, projectName: string): string {
+  const directoryPrefix = `templates/${template}/`
+  const rewritten = contents
+    .replaceAll(directoryPrefix, '')
+    .replaceAll(`templates/${template}`, '.')
+    .replaceAll(TEMPLATE_PACKAGE[template], projectName)
+
+  return rewritten.replace(/^globs:\s*"?(.*?)"?\s*$/m, (_line, raw: string) => {
+    const kept = splitGlobs(raw).filter((glob) => !glob.includes('templates/'))
+    if (kept.length === 0) {
+      throw new Error(`Adaptation removed every glob for the ${template} template.`)
+    }
+    return `globs: ${kept.join(',')}`
+  })
+}
+
+function splitGlobs(value: string): string[] {
+  const globs: string[] = []
+  let current = ''
+  let depth = 0
+  for (const char of value) {
+    if (char === '{') depth += 1
+    if (char === '}' && depth > 0) depth -= 1
+    if (char === ',' && depth === 0) {
+      const glob = current.trim()
+      if (glob) globs.push(glob)
+      current = ''
+      continue
+    }
+    current += char
+  }
+  const glob = current.trim()
+  if (glob) globs.push(glob)
+  return globs
+}
+
+export async function installAiConfig(options: {
+  repoRoot: string
+  directory: string
+  template: TemplateId
+  projectName: string
+}): Promise<void> {
+  const agentsPath = path.join(options.directory, 'AGENTS.md')
+  const agents = await readFile(agentsPath, 'utf8')
+  await writeFile(agentsPath, adaptAiText(agents, options.template, options.projectName))
+
+  const rulesDir = path.join(options.directory, '.cursor', 'rules')
+  await mkdir(rulesDir, { recursive: true })
+  for (const rule of RULES_FOR_TEMPLATE[options.template]) {
+    const source = await readFile(path.join(options.repoRoot, '.cursor', 'rules', rule), 'utf8')
+    await writeFile(
+      path.join(rulesDir, rule),
+      adaptAiText(source, options.template, options.projectName),
+    )
+  }
+
+  for (const relative of POINTER_FILES) {
+    const source = await readFile(path.join(options.repoRoot, relative), 'utf8')
+    const destination = path.join(options.directory, relative)
+    await mkdir(path.dirname(destination), { recursive: true })
+    await writeFile(destination, adaptAiText(source, options.template, options.projectName))
+  }
+}
