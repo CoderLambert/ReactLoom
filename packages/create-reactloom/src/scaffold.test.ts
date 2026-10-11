@@ -606,7 +606,10 @@ describe('create-reactloom', () => {
       expect(workspace).not.toContain('templates/*')
       expect(workspace).toContain('onlyBuiltDependencies')
       expect(pkg.devDependencies?.turbo).toBe('2.11.7')
-      await expect(stat(path.join(directory, 'turbo.json'))).resolves.toBeTruthy()
+      const turbo = JSON.parse(await readFile(path.join(directory, 'turbo.json'), 'utf8')) as {
+        ui?: string
+      }
+      expect(turbo.ui).toBe('tui')
       await expect(stat(path.join(directory, 'docs/turborepo.md'))).resolves.toBeTruthy()
     }
   })
@@ -695,6 +698,7 @@ describe('create-reactloom', () => {
     expect(spaEnv).toContain('# CODE_EDITOR=cursor')
     expect(spaEnv).not.toMatch(/^CODE_EDITOR=/m)
     expect(spaPkg.devDependencies['@tanstack/react-router-devtools']).toBe('1.167.2')
+    expect(spaPkg.devDependencies['@tanstack/react-devtools']).toBe('0.10.13')
     expect(spaPkg.devDependencies['react-scan']).toBe('0.5.7')
     expect(spaPkg.devDependencies['@vitest/coverage-v8']).toBe('5.0.3')
     expect(spaPkg.scripts['test:coverage']).toBe('vitest run --coverage --project unit')
@@ -704,9 +708,14 @@ describe('create-reactloom', () => {
     const spaMain = await readFile(path.join(spa, 'src/main.tsx'), 'utf8')
     expect(spaMain).toContain("import { scan } from 'react-scan'")
     expect(spaMain).toContain('scan({ enabled: true })')
+    expect(spaMain).toContain("env.VITE_REACT_SCAN === 'true'")
     expect(spaMain).not.toContain("import('react-scan')")
     expect(spaVite).toContain("'react-scan': devtoolsStub")
-    expect(spaMain).toContain('TanStackRouterDevtools')
+    expect(spaMain).toContain('TanStackDevtools')
+    expect(spaMain).toContain('ReactQueryDevtoolsPanel')
+    expect(spaMain).toContain('TanStackRouterDevtoolsPanel')
+    const spaEnvExample = await readFile(path.join(spa, '.env.example'), 'utf8')
+    expect(spaEnvExample).toContain('VITE_REACT_SCAN=false')
     const lefthook = await readFile(path.join(spa, 'lefthook.yml'), 'utf8')
     expect(lefthook).toContain('turbo run typecheck test --affected')
     expect(lefthook).toContain('{staged_files}')
@@ -730,6 +739,7 @@ describe('create-reactloom', () => {
       scripts: Record<string, string>
     }
     expect(ssrPkg.devDependencies['@tanstack/react-query-devtools']).toBe('5.104.1')
+    expect(ssrPkg.devDependencies['@tanstack/react-devtools']).toBe('0.10.13')
     expect(ssrPkg.devDependencies['react-scan']).toBe('0.5.7')
     expect(ssrPkg.devDependencies['vite-plugin-checker']).toBeUndefined()
     expect(ssrPkg.devDependencies['code-inspector-plugin']).toBe('2.0.9')
@@ -739,12 +749,14 @@ describe('create-reactloom', () => {
     expect(ssrNext).toContain('activateLauncher')
     expect(ssrNext).toContain('path.join(import.meta.dirname)')
     expect(ssrNext).toContain("alias['react-scan'] = reactScanStub")
+    expect(ssrNext).toContain("alias['@tanstack/react-devtools']")
     expect(ssrNext).toContain('resolveAlias: aliases')
     expect(ssrNext).not.toContain('../..')
     const ssrScan = await readFile(path.join(ssr, 'src/app/react-scan.tsx'), 'utf8')
     expect(ssrScan).toContain("import { scan } from 'react-scan'")
     expect(ssrScan).toContain('scan({')
     expect(ssrScan).toContain('enabled: true')
+    expect(ssrScan).toContain("process.env.NEXT_PUBLIC_REACT_SCAN !== 'true'")
     expect(ssrScan).not.toContain("import('react-scan')")
     const ssrLayout = await readFile(path.join(ssr, 'src/app/layout.tsx'), 'utf8')
     expect(ssrLayout.indexOf("from '@/app/react-scan'")).toBeLessThan(
@@ -759,6 +771,8 @@ describe('create-reactloom', () => {
     const ssrPlaywright = await readFile(path.join(ssr, 'playwright.config.ts'), 'utf8')
     expect(ssrPlaywright).toContain("REACTLOOM_OPEN: 'false'")
     expect(ssrPkg.devDependencies['@tanstack/react-router-devtools']).toBeUndefined()
+    const ssrEnvExample = await readFile(path.join(ssr, '.env.example'), 'utf8')
+    expect(ssrEnvExample).toContain('NEXT_PUBLIC_REACT_SCAN=false')
     await expect(stat(path.join(ssr, 'src/app/react-scan.tsx'))).resolves.toBeTruthy()
 
     const mobileExtensions = await readFile(path.join(mobile, '.vscode/extensions.json'), 'utf8')

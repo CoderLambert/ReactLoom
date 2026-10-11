@@ -33,9 +33,9 @@ Sign in with `ada@reactloom.dev` / `loom-demo`. MSW serves `/api/session` and `/
 
 ## Developer productivity
 
-These work after `pnpm install`, including in a project created with `create-reactloom`. Nothing else is required for Biome, format on save, Lefthook, Vitest UI and coverage, the TanStack and React Scan panels, TypeScript errors in the Vite overlay, or click-to-source.
+安装依赖后，TanStack Query 与 Router 会作为插件出现在同一个 `@tanstack/react-devtools` 面板中，只保留一个悬浮入口。该面板由 `VITE_DEVTOOLS` 控制并懒加载；生产构建把三个 TanStack devtools 包指向 `src/lib/devtools-stub.ts`。
 
-React Scan is the first import in `src/main.tsx`. In `pnpm dev`, hover an element to see its component name, props, and render time. Re-renders are highlighted. The outline also lists the props that changed. `vite build` aliases `react-scan` to `src/lib/devtools-stub.ts`, so the production bundle does not include it.
+React Scan 默认关闭，并与统一面板使用独立开关。需要时在 `.env.local` 设置 `VITE_REACT_SCAN=true` 并重启 `pnpm dev`；悬停元素后可查看组件名、props、渲染耗时和重复渲染。`src/main.tsx` 仍把 `react-scan` 放在 React 之前，`vite build` 则将其替换为空桩，生产包不会包含实现代码。
 
 why-did-you-render is not loaded. Vite 8 would inject its JSX import ahead of React Scan. `pnpm analyze` writes `dist/stats.html`. For a console diff on one component, call `useWhyDidYouUpdate` from `@reactloom/devtools`. Do not import it from `src/main.tsx`.
 

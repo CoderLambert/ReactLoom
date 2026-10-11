@@ -12,6 +12,7 @@ export const env = createEnv({
     NEXT_PUBLIC_APP_NAME: z.string().min(1).default('ReactLoom'),
     NEXT_PUBLIC_SENTRY_DSN: z.url().optional(),
     NEXT_PUBLIC_ENABLE_MSW: z.enum(['true', 'false']).default('false'),
+    NEXT_PUBLIC_REACT_SCAN: z.enum(['true', 'false']).default('false'),
   },
   runtimeEnv: {
     SESSION_SECRET: process.env.SESSION_SECRET,
@@ -19,6 +20,7 @@ export const env = createEnv({
     NEXT_PUBLIC_APP_NAME: process.env.NEXT_PUBLIC_APP_NAME,
     NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
     NEXT_PUBLIC_ENABLE_MSW: process.env.NEXT_PUBLIC_ENABLE_MSW,
+    NEXT_PUBLIC_REACT_SCAN: process.env.NEXT_PUBLIC_REACT_SCAN,
   },
   emptyStringAsUndefined: true,
 })

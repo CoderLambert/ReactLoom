@@ -48,13 +48,12 @@ export default defineConfig(({ command }) => {
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),
-        // The dev server loads the real package. Production builds, and Playwright
-        // (VITE_DEVTOOLS=false), resolve it to an empty module so the library stays out of the bundle.
-        ...(command === 'build' || process.env.VITE_DEVTOOLS === 'false'
-          ? { 'react-scan': devtoolsStub }
-          : {}),
+        // The production build resolves React Scan to an empty module. Development keeps
+        // the import order stable, but VITE_REACT_SCAN must be true before scan() runs.
+        ...(command === 'build' ? { 'react-scan': devtoolsStub } : {}),
         ...(command === 'build'
           ? {
+              '@tanstack/react-devtools': devtoolsStub,
               '@tanstack/react-router-devtools': devtoolsStub,
               '@tanstack/react-query-devtools': devtoolsStub,
             }

@@ -6,6 +6,9 @@ import { useEffect } from 'react'
 
 export function ReactScan() {
   useEffect(() => {
+    if (process.env.NODE_ENV !== 'development' || process.env.NEXT_PUBLIC_REACT_SCAN !== 'true') {
+      return
+    }
     scan({
       enabled: true,
     })

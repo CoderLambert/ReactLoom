@@ -9,7 +9,7 @@ Memoize a component after a render tool shows the same props producing extra ren
 <!-- reactloom:spa -->
 Routes are split in `templates/spa/src/app/router.tsx`. `HomePage`, `LoginPage`, and `TasksPage` are `lazy()` imports, wrapped by `lazyPage` in `<Suspense>`. `defaultPreload: 'intent'` fetches the next route's module on hover. That preload is JavaScript, not query data.
 
-Devtools are split the same way. `templates/spa/src/main.tsx` lazy-loads the router devtools only when `import.meta.env.DEV` and `VITE_DEVTOOLS` are on. `templates/spa/src/app/providers.tsx` lazy-loads React Query devtools under the same check. Production builds alias `react-scan` to `templates/spa/src/lib/devtools-stub.ts`.
+开发工具也按需拆分。`templates/spa/src/main.tsx` 仅在开发模式且 `VITE_DEVTOOLS=true` 时懒加载统一 TanStack 容器、Query 插件和 Router 插件。React Scan 使用独立的 `VITE_REACT_SCAN` 开关，默认关闭。生产构建把所有相关包指向 `templates/spa/src/lib/devtools-stub.ts`。
 
 Do not statically import a page into `router.tsx`. That pulls every screen into the entry.
 <!-- /reactloom:spa -->
@@ -17,7 +17,7 @@ Do not statically import a page into `router.tsx`. That pulls every screen into 
 <!-- reactloom:ssr -->
 The App Router splits by file. `templates/ssr/src/app/page.tsx` (home), `login/page.tsx`, and `tasks/page.tsx` are separate modules. The root layout stays a Server Component so the client bundle is the providers plus the client pages, not the whole tree.
 
-`templates/ssr/src/app/providers.tsx` lazy-loads React Query devtools only when `NODE_ENV` is `development` and `NEXT_PUBLIC_DEVTOOLS` is not `'false'`. React Scan is imported from `templates/ssr/src/app/react-scan.tsx` and aliased to an empty module in production.
+`templates/ssr/src/app/providers.tsx` 仅在开发模式且 `NEXT_PUBLIC_DEVTOOLS` 不是 false 时懒加载统一 TanStack 容器与 Query 插件。React Scan 使用独立的 `NEXT_PUBLIC_REACT_SCAN` 开关，默认关闭；生产构建把两类调试包都替换为空桩。
 
 Keep a new server-only helper under `templates/ssr/src/server`. Importing it from a client page pulls it into the browser bundle or fails the build.
 <!-- /reactloom:ssr -->

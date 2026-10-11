@@ -1,5 +1,6 @@
 {
   "$schema": "https://turborepo.dev/schema.json",
+  "ui": "tui",
   "cacheDir": ".turbo/cache",
   "envMode": "strict",
   "globalDependencies": ["pnpm-lock.yaml", "pnpm-workspace.yaml"],

@@ -12,8 +12,11 @@ import '@/styles/globals.css'
 
 const showDevtools = import.meta.env.DEV && env.VITE_DEVTOOLS === 'true'
 
-if (showDevtools) {
+if (import.meta.env.DEV && env.VITE_REACT_SCAN === 'true') {
   scan({ enabled: true })
+}
+
+if (showDevtools) {
   void import('@axe-core/react').then(async (axe) => {
     const React = await import('react')
     const ReactDOM = await import('react-dom')
@@ -21,10 +24,26 @@ if (showDevtools) {
   })
 }
 
-const TanStackRouterDevtools = showDevtools
+const TanStackDevtools = showDevtools
+  ? lazy(() =>
+      import('@tanstack/react-devtools').then((mod) => ({
+        default: mod.TanStackDevtools,
+      })),
+    )
+  : null
+
+const ReactQueryDevtoolsPanel = showDevtools
+  ? lazy(() =>
+      import('@tanstack/react-query-devtools').then((mod) => ({
+        default: mod.ReactQueryDevtoolsPanel,
+      })),
+    )
+  : null
+
+const TanStackRouterDevtoolsPanel = showDevtools
   ? lazy(() =>
       import('@tanstack/react-router-devtools').then((mod) => ({
-        default: mod.TanStackRouterDevtools,
+        default: mod.TanStackRouterDevtoolsPanel,
       })),
     )
   : null
@@ -43,9 +62,20 @@ async function boot() {
     <StrictMode>
       <Providers>
         <RouterProvider router={router} />
-        {TanStackRouterDevtools ? (
+        {TanStackDevtools && ReactQueryDevtoolsPanel && TanStackRouterDevtoolsPanel ? (
           <Suspense fallback={null}>
-            <TanStackRouterDevtools router={router} position="bottom-right" initialIsOpen={false} />
+            <TanStackDevtools
+              plugins={[
+                {
+                  name: 'TanStack Query',
+                  render: <ReactQueryDevtoolsPanel />,
+                },
+                {
+                  name: 'TanStack Router',
+                  render: <TanStackRouterDevtoolsPanel router={router} />,
+                },
+              ]}
+            />
           </Suspense>
         ) : null}
       </Providers>

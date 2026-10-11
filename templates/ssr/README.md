@@ -39,9 +39,9 @@ After `create-reactloom --template ssr`, build `Dockerfile` from the generated p
 
 ## Developer productivity
 
-These work after `pnpm install`, including in a project created with `create-reactloom`. Nothing else is required for Biome, format on save, Lefthook, Vitest UI and coverage, TanStack Query devtools, React Scan, or click-to-source. Next.js shows compile errors in its own overlay. This template does not also run vite-plugin-checker.
+安装依赖后，TanStack Query 作为插件运行在统一的 `@tanstack/react-devtools` 面板里，只显示一个悬浮入口。该面板由 `NEXT_PUBLIC_DEVTOOLS` 控制并懒加载；生产构建把 TanStack devtools 包替换为空桩。Next.js 继续使用自己的编译错误 overlay。
 
-React Scan lives in `src/app/react-scan.tsx`. That client component imports `react-scan` before React, and `src/app/layout.tsx` mounts it. In `pnpm dev`, hover an element to see its component name, props, and render time. Re-renders are highlighted, and the outline lists the props that changed. Production builds alias `react-scan` to `src/lib/react-scan-stub.ts`, so the client bundle does not include the library.
+React Scan 默认关闭，并使用独立开关。需要时在 `.env.local` 设置 `NEXT_PUBLIC_REACT_SCAN=true` 并重启 `pnpm dev`。`src/app/react-scan.tsx` 仍在 React 之前导入它，`layout.tsx` 继续挂载客户端组件；生产构建以及未显式开启时都通过 `src/lib/react-scan-stub.ts` 使用空实现。
 
 why-did-you-render is not loaded. Next.js 16 compiles JSX with SWC on Turbopack and has no app-wide `jsxImportSource`. `pnpm analyze` writes `.next/diagnostics/analyze`. `ANALYZE=true next build --webpack` still writes `.next/analyze` through `@next/bundle-analyzer`. For a console diff on one component, call `useWhyDidYouUpdate` from `@reactloom/devtools`. Do not import it from the app layout.
 

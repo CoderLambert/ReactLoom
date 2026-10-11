@@ -1,20 +1,10 @@
 import { QueryClientProvider } from '@tanstack/react-query'
-import { lazy, type ReactNode, Suspense } from 'react'
+import type { ReactNode } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { I18nextProvider } from 'react-i18next'
 import { Fallback } from '@/components/errors/fallback'
-import { env } from '@/lib/env'
 import { i18n } from '@/lib/i18n'
 import { queryClient } from '@/lib/query-client'
-
-const ReactQueryDevtools =
-  import.meta.env.DEV && env.VITE_DEVTOOLS === 'true'
-    ? lazy(() =>
-        import('@tanstack/react-query-devtools').then((mod) => ({
-          default: mod.ReactQueryDevtools,
-        })),
-      )
-    : null
 
 export function Providers({ children }: { children: ReactNode }) {
   return (
@@ -27,11 +17,6 @@ export function Providers({ children }: { children: ReactNode }) {
         >
           {children}
         </ErrorBoundary>
-        {ReactQueryDevtools ? (
-          <Suspense fallback={null}>
-            <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />
-          </Suspense>
-        ) : null}
       </QueryClientProvider>
     </I18nextProvider>
   )

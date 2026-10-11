@@ -178,7 +178,7 @@ Listing `biome.json`, `lefthook.yml`, `commitlint.config.mjs`, or `.changeset/co
 - `ai.pointers` lists repo-root files such as `CLAUDE.md`.
 - `docs` lists paths such as `docs/getting-started.md`, `docs/adr/0004-api-client.md`, and `docs/best-practices/README.md`. Files under `docs/best-practices/` are filtered while they are copied. A section wrapped in `<!-- reactloom:ssr -->` … `<!-- /reactloom:ssr -->` is kept for SSR and removed for SPA and mobile. `spa` and `mobile` markers work the same way. `templates/<id>/` in the kept text is rewritten to the generated project root.
 - `clickToSource` names that template's inspector package, its exact version, the bundler config (`vite.config.ts`, `next.config.ts`, or `metro.config.js`), the committed launch-editor file (`.env.development`), and `scripts/open-in-editor.mjs`. List `scripts/open-in-editor.mjs`, `scripts/code`, and `scripts/code.cmd` in `configs` so generation copies them. The CLI checks those files were copied, that the env file does not pin an editor, and that `package.json` depends on that version. Do not put another template's inspector in that file.
-- `reactScan` names `react-scan`, its exact version, `enabled`, and the config file. SPA and SSR set `enabled` to true and import the package from that file. Mobile sets `enabled` to false, and `reason` is the sentence in `AGENTS.md` that explains why. The CLI checks the file and that `package.json` matches.
+- `reactScan` 记录 `react-scan`、固定版本、`enabled` 和配置文件。SPA 与 SSR 的 `enabled` 为 true，但运行时必须通过各自的 `*_REACT_SCAN` 变量显式开启。Mobile 的 `enabled` 为 false，`reason` 对应 `AGENTS.md` 中的禁用原因。CLI 会校验配置文件与 `package.json` 中的版本。
 - `whyDidYouRender` names `@welldone-software/why-did-you-render`, its exact version, `enabled`, and the config file. Expo sets `enabled` to true. SPA and SSR set it to false, and `reason` is the sentence in `AGENTS.md`. The CLI checks that sentence when the tool is off, and the dev-only Babel setup when it is on.
 - `bundleAnalyze` names the analyzer package, its exact version, the config file, the `analyze` script, and a marker that file must contain.
 - `propsDiff` names the primary tool (`react-scan` or `@welldone-software/why-did-you-render`) and `@reactloom/devtools`. `packages.devtools` copies that package. The hook is not imported from an app entry.
@@ -269,26 +269,25 @@ Inside a package, `pnpm test:ui` opens the Vitest UI and `pnpm test:coverage` wr
 
 ### React and TanStack devtools
 
-These load only while `pnpm dev` is running. Playwright sets `VITE_DEVTOOLS=false` and `NEXT_PUBLIC_DEVTOOLS=false`, and that process value wins over `.env.development`, so the axe scan does not see the panels. The SPA production build aliases the TanStack devtools to `templates/spa/src/lib/devtools-stub.ts`.
+TanStack 开发工具只在 `pnpm dev` 期间懒加载。SPA 用 `@tanstack/react-devtools` 提供一个统一入口，并把 Query 与 Router 面板注册为插件；SSR 使用同一个容器，只注册 Query。Playwright 会设置 `VITE_DEVTOOLS=false` 或 `NEXT_PUBLIC_DEVTOOLS=false`，因此面板与开发态 axe 日志不会干扰端到端检查。生产构建把相关包指向空桩，客户端产物不包含调试实现。
 
 | Tool | Where | What it does |
 | --- | --- | --- |
-| TanStack Query devtools | SPA `src/app/providers.tsx`, SSR `src/app/providers.tsx` | Inspect queries. |
-| TanStack Router devtools | SPA `src/main.tsx` | Inspect the route tree. Bottom-right, so it does not sit on the query panel. |
+| TanStack unified devtools | SPA `src/main.tsx`, SSR `src/app/providers.tsx` | 一个悬浮入口；SPA 内含 Query 与 Router，SSR 内含 Query。 |
 
 Mobile does not get those web overlays.
 
 ### React Scan
 
-React Scan 0.5.7 is on in the SPA and SSR dev servers. Hover an element and the outline shows that React component's name, its props, and its render time. Re-renders are highlighted. Those are the package defaults: `scan({ enabled: true })` with the toolbar on. No extra options are set.
+React Scan 0.5.7 已安装在 SPA 和 SSR，但默认关闭，避免它的悬浮工具栏与 TanStack 入口重叠。需要时在 `.env.local` 中设置 `VITE_REACT_SCAN=true`（SPA）或 `NEXT_PUBLIC_REACT_SCAN=true`（SSR）并重启开发服务器。开启后，悬停轮廓会显示组件名、props、渲染耗时与重复渲染提示。
 
 Each template's `template.json` `reactScan` records the package, the exact version, and the config file. `create-reactloom` checks that file and the `package.json` pin, so a generated project includes the same setup. The integration is the one in React Scan's install docs for that bundler. It is the module import, not the CDN script. The CDN script would load in every environment, including production. `react-scan/all-environments` is the import that runs in production, and these templates do not use it.
 
 | | SPA (Vite) | SSR (Next.js App Router) | Mobile (Expo) |
 | --- | --- | --- | --- |
 | Config | `templates/spa/src/main.tsx` | `templates/ssr/src/app/react-scan.tsx`, mounted from `src/app/layout.tsx` | `templates/mobile/AGENTS.md` (`reactScan.enabled` is false) |
-| How it loads | `import { scan } from 'react-scan'` is the first import, before React and React DOM. `scan({ enabled: true })` runs when `import.meta.env.DEV` and `VITE_DEVTOOLS` is `true`. | A client component. `import { scan } from 'react-scan'` comes before `react`, and `useEffect` calls `scan({ enabled: true })`. That component is the top-most import in `layout.tsx` and renders as the first child of `<html>`, so it is client-side only. | Not loaded. |
-| Production | `vite build` aliases `react-scan` to `src/lib/devtools-stub.ts`. The same alias applies when `VITE_DEVTOOLS` is `false`. | `next build`, and dev with `NEXT_PUBLIC_DEVTOOLS=false`, alias `react-scan` to `src/lib/react-scan-stub.ts` (`turbopack.resolveAlias`, and the webpack alias for `next build --webpack`). | `react-scan` is not a dependency, so `expo export` cannot include it. |
+| How it loads | `import { scan } from 'react-scan'` 保持为 React 与 React DOM 之前的首个 import；仅当 `import.meta.env.DEV` 且 `VITE_REACT_SCAN=true` 时调用。 | 客户端组件保留 import 顺序；仅当开发模式且 `NEXT_PUBLIC_REACT_SCAN=true` 时调用。`layout.tsx` 仍把它作为最上面的 import。 | Not loaded. |
+| Production | `vite build` 把 `react-scan` 和三个 TanStack devtools 包指向 `src/lib/devtools-stub.ts`。 | `next build` 把 React Scan 和 TanStack devtools 指向 `src/lib/react-scan-stub.ts`；React Scan 未显式开启时，开发构建也使用空桩。 | `react-scan` is not a dependency, so `expo export` cannot include it. |
 
 The Vite plugin section of the React Scan docs is still a TODO, so the SPA uses the documented module import. The published Vite plugin also peers an older Vite than this repo.
 

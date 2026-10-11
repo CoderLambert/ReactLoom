@@ -13,6 +13,8 @@ Turborepo 不代替 Vite、Next.js 或 Expo。它只决定「哪个包的哪条�
 
 配置只有仓库根的 `turbo.json`。包自己不写第二份。版本钉在根 `package.json` 的 `devDependencies`：`turbo` `2.11.7`。
 
+`turbo.json` 顶层设置 `"ui": "tui"`。根目录的三个 `dev:*` 快捷脚本也固定传给 Turbo 同一设置，避免终端包装器把仓库默认值降级为 stream；用户执行时不需要再加参数。CI 不执行 `dev` 任务，lint、typecheck、test 和 build 仍按 CI 的非交互模式输出。
+
 ## 为什么是它，而不是 Nx，也不是只留 pnpm
 
 以前的决定写在 [ADR 0005](adr/0005-tooling.md)：工作区不大，`pnpm --filter "...[HEAD]"` 已经能少跑一些包。那条过滤现在还留在各模板自己的 `typecheck:affected` 脚本里。根脚本和 Lefthook 改用 Turbo，是因为过滤和缓存不是同一件事。

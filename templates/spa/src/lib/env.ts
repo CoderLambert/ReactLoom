@@ -9,6 +9,7 @@ export const env = createEnv({
     VITE_SENTRY_DSN: z.url().optional(),
     VITE_APP_NAME: z.string().min(1).default('ReactLoom'),
     VITE_DEVTOOLS: z.enum(['true', 'false']).default('true'),
+    VITE_REACT_SCAN: z.enum(['true', 'false']).default('false'),
   },
   runtimeEnv: import.meta.env,
   emptyStringAsUndefined: true,

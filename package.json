@@ -9,9 +9,9 @@
     "pnpm": ">=10"
   },
   "scripts": {
-    "dev:spa": "turbo run dev --filter=@reactloom/template-spa",
-    "dev:ssr": "turbo run dev --filter=@reactloom/template-ssr",
-    "dev:mobile": "turbo run dev --filter=@reactloom/template-mobile",
+    "dev:spa": "turbo run dev --ui=tui --filter=@reactloom/template-spa",
+    "dev:ssr": "turbo run dev --ui=tui --filter=@reactloom/template-ssr",
+    "dev:mobile": "turbo run dev --ui=tui --filter=@reactloom/template-mobile",
     "lint": "turbo run lint lint:root",
     "lint:root": "biome check scripts package.json biome.json lefthook.yml commitlint.config.mjs packages/tsconfig",
     "format": "biome check --write .",

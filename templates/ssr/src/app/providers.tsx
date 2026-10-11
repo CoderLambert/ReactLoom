@@ -8,10 +8,18 @@ import { i18n } from '@/lib/i18n'
 const showDevtools =
   process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_DEVTOOLS !== 'false'
 
-const ReactQueryDevtools = showDevtools
+const TanStackDevtools = showDevtools
+  ? lazy(() =>
+      import('@tanstack/react-devtools').then((mod) => ({
+        default: mod.TanStackDevtools,
+      })),
+    )
+  : null
+
+const ReactQueryDevtoolsPanel = showDevtools
   ? lazy(() =>
       import('@tanstack/react-query-devtools').then((mod) => ({
-        default: mod.ReactQueryDevtools,
+        default: mod.ReactQueryDevtoolsPanel,
       })),
     )
   : null
@@ -27,9 +35,16 @@ export function Providers({ children }: { children: ReactNode }) {
     <I18nextProvider i18n={i18n}>
       <QueryClientProvider client={client}>
         {children}
-        {ReactQueryDevtools ? (
+        {TanStackDevtools && ReactQueryDevtoolsPanel ? (
           <Suspense fallback={null}>
-            <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />
+            <TanStackDevtools
+              plugins={[
+                {
+                  name: 'TanStack Query',
+                  render: <ReactQueryDevtoolsPanel />,
+                },
+              ]}
+            />
           </Suspense>
         ) : null}
       </QueryClientProvider>

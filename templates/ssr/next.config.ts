@@ -30,21 +30,30 @@ function activateEditor(configDir: string): InspectorEditor {
 const clickToSource =
   process.env.NODE_ENV !== 'production' && process.env.NEXT_PUBLIC_DEVTOOLS !== 'false'
 
-// The client component imports react-scan. Production builds, and Playwright
-// (NEXT_PUBLIC_DEVTOOLS=false), resolve that import to an empty module.
-const productionAlias =
+// TanStack panels follow the shared devtools switch. React Scan has a separate,
+// opt-in switch so its floating toolbar stays hidden by default.
+const productionBuild = process.env.NODE_ENV === 'production'
+const tanStackDevtoolsStub =
   process.env.NODE_ENV === 'production' || process.env.NEXT_PUBLIC_DEVTOOLS === 'false'
-
-const reactScanStub = productionAlias ? './src/lib/react-scan-stub.ts' : undefined
+const reactScanStub =
+  productionBuild || process.env.NEXT_PUBLIC_REACT_SCAN !== 'true'
+    ? './src/lib/react-scan-stub.ts'
+    : undefined
 
 // App builds drop the worker and the React axe logger. Storybook sets STORYBOOK
 // so `storybook build` can still import the real packages.
 const workflowStub =
-  process.env.STORYBOOK === 'true' || !productionAlias ? undefined : './src/lib/workflow-stub.ts'
+  process.env.STORYBOOK === 'true' || !tanStackDevtoolsStub
+    ? undefined
+    : './src/lib/workflow-stub.ts'
 
 function bundledAliases(): Record<string, string> | undefined {
   const alias: Record<string, string> = {}
   if (reactScanStub) alias['react-scan'] = reactScanStub
+  if (tanStackDevtoolsStub) {
+    alias['@tanstack/react-devtools'] = './src/lib/react-scan-stub.ts'
+    alias['@tanstack/react-query-devtools'] = './src/lib/react-scan-stub.ts'
+  }
   if (workflowStub) {
     alias['msw/browser'] = workflowStub
     alias['msw/http'] = workflowStub

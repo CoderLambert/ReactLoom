@@ -117,9 +117,9 @@ Login uses `Controller` and `loginSchema`. The task screen repeats `next.length 
 ## Importing a dev tool into the production graph
 
 <!-- reactloom:spa -->
-`vite build` aliases `react-scan`, `msw/browser`, `msw/http`, `msw/node`, and `@axe-core/react` to stubs. A bare `msw` alias is wrong: it prefix-matches `msw/browser` and points that import at a stub path with `/browser` glued on.
+`vite build` 会把 React Scan、三个 TanStack devtools 包、`msw/browser`、`msw/http`、`msw/node` 和 `@axe-core/react` 指向空桩。不要给 `msw` 写裸 alias；它会前缀匹配 `msw/browser`，并把 `/browser` 错接到桩路径后面。
 
-**Fix.** Import React Scan only from `templates/spa/src/main.tsx`, behind the devtools check that is already there. Import MSW from `templates/spa/src/mocks`. Do not add a `msw` alias without the subpath.
+**Fix.** React Scan 只从 `templates/spa/src/main.tsx` 导入，并由 `VITE_REACT_SCAN` 独立控制。统一 TanStack 面板仍由 `VITE_DEVTOOLS` 控制。MSW 从 `templates/spa/src/mocks` 导入，alias 必须写具体子路径。
 <!-- /reactloom:spa -->
 
 <!-- reactloom:ssr -->

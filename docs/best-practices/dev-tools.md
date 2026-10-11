@@ -232,7 +232,7 @@ SSR 的服务器组件在开发时也会带上 `data-insp-path`。错误边界�
 
 ### 用法
 
-`pnpm dev` 之后直接悬停。不需要再打开开关，只要对应的 `*_DEVTOOLS` 不是 `false`。
+React Scan 默认关闭。需要时在 `.env.local` 中设置 `VITE_REACT_SCAN=true`（SPA）或 `NEXT_PUBLIC_REACT_SCAN=true`（SSR），重启 `pnpm dev` 后再悬停元素。
 
 生产构建把 `react-scan` 指到一个空模块，包里不应出现这个库（实现上会看到 `bippy` 这个内部名）。Playwright 把开发工具环境变量设为 `false`，所以端到端页面上没有这层面板。
 
@@ -240,8 +240,8 @@ SSR 的服务器组件在开发时也会带上 `data-insp-path`。错误边界�
 
 | | SPA | SSR |
 | --- | --- | --- |
-| 入口 | `src/main.tsx`。`react-scan` 的 import 必须在 React 和 React DOM 之前。`scan({ enabled: true })` 在 `import.meta.env.DEV` 且 `VITE_DEVTOOLS === 'true'` 时调用 | `src/app/react-scan.tsx` 是客户端组件，import 在 `react` 之前，`useEffect` 里 `scan({ enabled: true })`。`src/app/layout.tsx` 把它作为最上面的 import 并渲染 `<ReactScan />` |
-| 生产桩 | `src/lib/devtools-stub.ts` 导出空的 `scan`。`vite.config.ts` 在生产和 `VITE_DEVTOOLS=false` 时把 `react-scan` 指到它 | `src/lib/react-scan-stub.ts`。`next.config.ts` 用 Turbopack 的 `resolveAlias`，以及 `next build --webpack` 用的 webpack alias |
+| 入口 | `src/main.tsx`。`react-scan` 的 import 必须在 React 和 React DOM 之前。仅在 `import.meta.env.DEV` 且 `VITE_REACT_SCAN=true` 时调用 `scan` | `src/app/react-scan.tsx` 是客户端组件，import 在 `react` 之前。仅在开发模式且 `NEXT_PUBLIC_REACT_SCAN=true` 时调用 `scan`；`layout.tsx` 仍将它作为最上面的 import |
+| 生产桩 | `src/lib/devtools-stub.ts` 导出空的 `scan`；`vite build` 始终把 `react-scan` 指向它 | `src/lib/react-scan-stub.ts`；生产构建以及未显式开启 React Scan 的开发构建都通过 Turbopack/webpack alias 使用空桩 |
 | 清单 | `template.json` 的 `reactScan.enabled` 为 true | 同左 |
 
 ### 模板差异
@@ -493,11 +493,11 @@ SPA 的 `pnpm dev`。类型错误出现在页面遮罩和终端。`enableBuild` 
 
 ### 作用
 
-在页面上查看 Query 缓存，SPA 还可以查看 Router 的匹配。只在开发、并且开发工具开关打开时加载，用 `lazy` 拆出去。
+在页面上查看 Query 缓存，SPA 还可以查看 Router 的匹配。两者作为插件放进 `@tanstack/react-devtools` 的统一面板，只保留一个悬浮入口。只在开发工具开关打开时用 `lazy` 加载。
 
 ### 用法
 
-`pnpm dev`。面板默认收起。SPA 上 Query 的按钮在左下（`buttonPosition="bottom-left"`），Router 的开发工具在 `src/main.tsx` 里按同一条件加载。SSR 只有 Query，按钮同样在左下。
+`pnpm dev`。面板默认收起。SPA 的一个入口中有 Query 与 Router 两个插件；SSR 的一个入口中只有 Query。
 
 Playwright 把开发工具关掉，面板不会挡 axe。
 
@@ -505,9 +505,9 @@ Playwright 把开发工具关掉，面板不会挡 axe。
 
 | | SPA | SSR |
 | --- | --- | --- |
-| Query | `src/app/providers.tsx`，条件是 `import.meta.env.DEV && VITE_DEVTOOLS === 'true'` | `src/app/providers.tsx`，条件是 `NODE_ENV === 'development'` 且 `NEXT_PUBLIC_DEVTOOLS !== 'false'` |
-| Router | `src/main.tsx` | 无。SSR 不用 TanStack Router |
-| 生产 | `vite.config.ts` 把 `@tanstack/react-query-devtools` 和 `@tanstack/react-router-devtools` 指到 `src/lib/devtools-stub.ts` | Query 开发工具只在开发条件里 dynamic import，生产构建不应把它打进客户端 |
+| 统一容器 | `src/main.tsx`，条件是 `import.meta.env.DEV && VITE_DEVTOOLS === 'true'` | `src/app/providers.tsx`，条件是 `NODE_ENV === 'development'` 且 `NEXT_PUBLIC_DEVTOOLS !== 'false'` |
+| 插件 | Query 与 Router | Query；SSR 不用 TanStack Router |
+| 生产 | `vite.config.ts` 把三个 TanStack devtools 包指向 `src/lib/devtools-stub.ts` | `next.config.ts` 把统一容器和 Query 插件指向 `src/lib/react-scan-stub.ts` |
 
 ### 模板差异
 

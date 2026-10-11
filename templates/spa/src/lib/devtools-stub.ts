@@ -1,9 +1,13 @@
 export function scan() {}
 
-export function TanStackRouterDevtools() {
+export function TanStackDevtools() {
   return null
 }
 
-export function ReactQueryDevtools() {
+export function ReactQueryDevtoolsPanel() {
+  return null
+}
+
+export function TanStackRouterDevtoolsPanel() {
   return null
 }
