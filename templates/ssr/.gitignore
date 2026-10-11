@@ -1,4 +1,8 @@
 node_modules
+.turbo
+.lighthouseci
+.env.deploy
+!.env.deploy.example
 .next
 dist
 coverage
@@ -8,3 +12,4 @@ test-results
 .env
 .env.local
 !.env.example
+storybook-static

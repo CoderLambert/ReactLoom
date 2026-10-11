@@ -1,0 +1,16 @@
+---
+description: Vitest, MSW, and Playwright conventions
+globs: "templates/spa/**/*.test.ts,templates/spa/**/*.test.tsx,templates/spa/**/*.spec.ts,templates/spa/**/*.spec.tsx,templates/spa/e2e/**/*.ts,templates/spa/src/mocks/**/*.ts,templates/spa/vitest.config.ts,templates/spa/playwright.config.ts,templates/ssr/**/*.test.ts,templates/ssr/**/*.test.tsx,templates/ssr/**/*.spec.ts,templates/ssr/**/*.spec.tsx,templates/ssr/e2e/**/*.ts,templates/ssr/vitest.config.ts,templates/ssr/playwright.config.ts,templates/mobile/**/*.test.ts,templates/mobile/**/*.test.tsx,templates/mobile/**/*.spec.ts,templates/mobile/**/*.spec.tsx,templates/mobile/vitest.config.ts,templates/mobile/.maestro/**/*.yaml,packages/**/*.test.ts"
+alwaysApply: false
+---
+
+# Testing
+
+- Run unit tests with Vitest (`pnpm test` in the package, or `pnpm test` at the workspace root).
+- Before the first Playwright run, install Chromium with `pnpm test:e2e:setup`. On Linux, `pnpm test:e2e:setup --with-deps`.
+- Query the DOM with Testing Library roles and labels. SPA screen tests go through the shared `renderApp` helper.
+- Mock HTTP with MSW. Unhandled requests fail the test. Reset handlers and fixtures after each test.
+- Playwright specs sign in as the fixture user, wait until the expected heading is visible, then run `@axe-core/playwright`. Keep `color-contrast` disabled only when the spec already disables it.
+- Assert `ApiError` codes in client tests. Cover retry and timeout behavior in `packages/api-client`, and cookie or header behavior next to the SSR server modules.
+- Mobile device flow stays in the Maestro YAML. CI runs Vitest and the Expo web export for that template.
+- When behavior changes, update the test in the same change and run it.

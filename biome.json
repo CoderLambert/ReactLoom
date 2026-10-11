@@ -18,6 +18,7 @@
       "!**/test-results",
       "!**/pnpm-lock.yaml",
       "!**/mockServiceWorker.js",
+      "!**/storybook-static",
       "!**/next-env.d.ts"
     ]
   },

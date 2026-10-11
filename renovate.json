@@ -52,6 +52,13 @@
       "matchPackageNames": ["vitest", "/^@vitest\\//"]
     },
     {
+      "groupName": "Storybook",
+      "matchPackageNames": ["storybook", "/^@storybook\\//", "msw-storybook-addon"],
+      "prBodyNotes": [
+        "Storybook or @storybook/addon-mcp changed. Bump the storybook and addon-mcp frontmatter in .cursor/rules/storybook.mdc and docs/agents/storybook.md. scripts/check-ai-rules-sync.mjs fails on a Storybook major mismatch or an addon-mcp minor mismatch until those versions match."
+      ]
+    },
+    {
       "groupName": "Playwright",
       "matchPackageNames": ["playwright", "@playwright/test", "/^@axe-core\\//", "axe-core"]
     },

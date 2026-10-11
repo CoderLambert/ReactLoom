@@ -8,6 +8,7 @@ export default defineConfig({
     command: 'pnpm dev',
     url: 'http://127.0.0.1:4318',
     reuseExistingServer: !process.env.CI,
+    env: { NEXT_PUBLIC_DEVTOOLS: 'false', REACTLOOM_OPEN: 'false' },
   },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
 })

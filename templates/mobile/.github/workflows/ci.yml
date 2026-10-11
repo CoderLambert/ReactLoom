@@ -1,24 +1,45 @@
 name: CI
 
+# Action majors: actions/checkout@v7, pnpm/action-setup@v6, actions/setup-node@v7, actions/cache@v6.
+# Renovate helpers:pinGitHubActionDigests rewrites these tags to commit SHAs.
+# Expo has no Playwright browsers and no Lighthouse job. Metro writes .metro-cache.
+
 on:
   push:
     branches: [main]
   pull_request:
 
+env:
+  TURBO_TELEMETRY_DISABLED: "1"
+  EXPO_NO_TELEMETRY: "1"
+
 jobs:
   verify:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: pnpm/action-setup@v4
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
         with:
           version: 10.33.3
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: pnpm
+      - uses: actions/cache@v6
+        with:
+          path: .turbo
+          key: turbo-${{ runner.os }}-${{ github.sha }}
+          restore-keys: |
+            turbo-${{ runner.os }}-
       - run: pnpm install --frozen-lockfile
-      - run: pnpm lint
-      - run: pnpm typecheck
-      - run: pnpm test
-      - run: pnpm build
+      - name: Restore Expo and Metro caches
+        uses: actions/cache@v6
+        with:
+          path: |
+            .expo
+            .metro-cache
+          key: expo-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            expo-${{ runner.os }}-
+      - run: node scripts/check-ai-rules-sync.mjs
+      - run: pnpm exec turbo run lint typecheck test build

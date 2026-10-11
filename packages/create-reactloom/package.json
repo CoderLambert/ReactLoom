@@ -13,8 +13,11 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "prepare": "tsc -p tsconfig.build.json",
+    "lint": "biome check .",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:ui": "vitest --ui",
     "start": "node dist/cli.js"
   },
   "dependencies": {
@@ -23,6 +26,8 @@
   "devDependencies": {
     "@reactloom/tsconfig": "workspace:*",
     "@types/node": "22.20.5",
+    "@vitest/coverage-v8": "5.0.3",
+    "@vitest/ui": "5.0.3",
     "typescript": "7.0.2",
     "vitest": "5.0.3"
   }

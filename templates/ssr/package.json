@@ -5,14 +5,24 @@
   "description": "ReactLoom production SSR template.",
   "packageManager": "pnpm@10.33.3",
   "scripts": {
-    "dev": "next dev --hostname 0.0.0.0 --port 4318",
+    "dev": "if [ -f scripts/with-lighthouse.mjs ]; then node scripts/with-lighthouse.mjs dev -- node scripts/open-browser.mjs -- next dev --hostname 0.0.0.0 --port 4318; else node ../../scripts/with-lighthouse.mjs dev -- node scripts/open-browser.mjs -- next dev --hostname 0.0.0.0 --port 4318; fi",
+    "prepare": "if [ -f scripts/setup-git.mjs ]; then node scripts/setup-git.mjs; else node ../../scripts/setup-git.mjs; fi",
     "build": "next build && node scripts/check-bundle-budget.mjs",
     "start": "next start --hostname 0.0.0.0 --port 4318",
+    "preview": "if [ -f scripts/with-lighthouse.mjs ]; then node scripts/with-lighthouse.mjs preview -- next start --hostname 0.0.0.0 --port 4318; else node ../../scripts/with-lighthouse.mjs preview -- next start --hostname 0.0.0.0 --port 4318; fi",
     "lint": "biome check .",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:ui": "vitest --ui",
+    "typecheck:affected": "pnpm --filter \"...[HEAD]\" --if-present typecheck",
+    "test:affected": "pnpm --filter \"...[HEAD]\" --if-present test",
+    "test:e2e:setup": "playwright install chromium",
     "test:e2e": "playwright test",
-    "analyze": "ANALYZE=true next build"
+    "analyze": "next analyze --output",
+    "storybook": "STORYBOOK=true storybook dev -p 6007 --no-open",
+    "build-storybook": "STORYBOOK=true storybook build",
+    "lighthouse": "pnpm build && lhci autorun"
   },
   "dependencies": {
     "@hookform/resolvers": "5.9.1",
@@ -34,15 +44,34 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",
+    "@axe-core/react": "4.13.0",
     "@next/bundle-analyzer": "16.4.0",
     "@playwright/test": "1.64.0",
+    "@reactloom/devtools": "workspace:*",
     "@reactloom/tsconfig": "workspace:*",
+    "@lhci/cli": "0.15.1",
+    "@storybook/addon-a11y": "10.6.1",
+    "@storybook/addon-mcp": "10.6.1",
+    "@storybook/nextjs": "10.6.1",
     "@tailwindcss/postcss": "4.3.3",
+    "@tanstack/react-query-devtools": "5.104.1",
     "@types/node": "22.20.5",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
+    "@vitest/coverage-v8": "5.0.3",
+    "@vitest/ui": "5.0.3",
+    "code-inspector-plugin": "2.0.9",
+    "msw": "3.0.3",
+    "msw-storybook-addon": "3.0.3",
+    "react-scan": "0.5.7",
+    "storybook": "10.6.1",
     "tailwindcss": "4.3.3",
     "typescript": "7.0.2",
     "vitest": "5.0.3"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
   }
 }

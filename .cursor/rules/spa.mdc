@@ -1,0 +1,15 @@
+---
+description: Vite SPA with TanStack Router, TanStack Query, and feature folders
+globs: "templates/spa/**/*.ts,templates/spa/**/*.tsx,templates/spa/**/*.css"
+alwaysApply: false
+---
+
+# SPA
+
+- Add screens to the code-based route tree in `templates/spa/src/app/router.tsx`. Lazy-load the page component. Guard authenticated routes in `beforeLoad` by reading `useAuthStore.getState().session` synchronously.
+- Put a feature in `templates/spa/src/features/<name>/` with `schema.ts`, `api.ts`, `keys.ts`, and `hooks.ts`. Keep the page component beside them.
+- API functions call `api.request` from `templates/spa/src/lib/api.ts`, pass the query `signal`, and set `retry: false` on mutations.
+- Query keys live in a factory such as `taskKeys`. Mutations cancel in-flight queries, apply an optimistic cache update when the UI needs it, roll back on error, and invalidate on settle.
+- TanStack Query owns server state. Zustand is for theme and the `sessionStorage` session snapshot.
+- Add shadcn components with the aliases in `templates/spa/components.json`. Compose classes with `cn` from `@/lib/utils`.
+- MSW handlers live in `templates/spa/src/mocks`. Browser and node setups share those handlers.

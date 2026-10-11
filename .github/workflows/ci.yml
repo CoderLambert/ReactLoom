@@ -1,41 +1,194 @@
 name: CI
 
+# Action majors: actions/checkout@v7, pnpm/action-setup@v6, actions/setup-node@v7, actions/cache@v6.
+# Renovate helpers:pinGitHubActionDigests rewrites these tags to commit SHAs.
+
 on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
+    inputs:
+      lighthouse:
+        description: Run Lighthouse CI
+        type: boolean
+        default: true
+
+env:
+  TURBO_TELEMETRY_DISABLED: "1"
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  verify:
+  packages:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: pnpm/action-setup@v4
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
         with:
           version: 10.33.3
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: pnpm
-      - uses: actions/cache@v4
+      - uses: actions/cache@v6
         with:
-          path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+          path: .turbo
+          key: turbo-${{ runner.os }}-${{ github.sha }}
+          restore-keys: |
+            turbo-${{ runner.os }}-
       - name: Install
         run: pnpm install --frozen-lockfile
+      - name: Check Storybook AI rule versions
+        run: node scripts/check-ai-rules-sync.mjs
       - name: Lint
         run: pnpm lint
-      - name: Typecheck
-        run: pnpm typecheck
-      - name: Test
-        run: pnpm test
-      - name: Build
-        run: pnpm build
-      - name: Install Playwright
-        run: pnpm exec playwright install --with-deps chromium
+      - name: Typecheck shared packages
+        run: pnpm exec turbo run typecheck --filter=@reactloom/api-client --filter=@reactloom/devtools --filter=create-reactloom
+      - name: Test shared packages
+        run: pnpm exec turbo run test --filter=@reactloom/api-client --filter=@reactloom/devtools
+      - name: Test create-reactloom
+        run: pnpm --filter create-reactloom exec vitest run --exclude src/scaffold.integration.test.ts --exclude '**/node_modules/**' --exclude '**/dist/**'
+
+  verify:
+    name: verify (${{ matrix.name }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: spa
+            filter: "@reactloom/template-spa"
+            e2e: true
+          - name: ssr
+            filter: "@reactloom/template-ssr"
+            e2e: true
+          - name: mobile
+            filter: "@reactloom/template-mobile"
+            e2e: false
+    env:
+      EXPO_NO_TELEMETRY: "1"
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 10.33.3
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+      - uses: actions/cache@v6
+        with:
+          path: .turbo
+          key: turbo-${{ runner.os }}-${{ github.sha }}
+          restore-keys: |
+            turbo-${{ runner.os }}-
+      - name: Resolve Playwright version
+        if: matrix.e2e
+        id: playwright-version
+        run: |
+          version=$(node --input-type=commonjs -p "require('./templates/${{ matrix.name }}/package.json').devDependencies['@playwright/test']")
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+      - uses: actions/cache@v6
+        if: matrix.e2e
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.playwright-version.outputs.version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            playwright-${{ runner.os }}-${{ steps.playwright-version.outputs.version }}-
+            playwright-${{ runner.os }}-
+      - name: Install
+        run: pnpm install --frozen-lockfile
+      - name: Restore Expo and Metro caches
+        if: matrix.name == 'mobile'
+        uses: actions/cache@v6
+        with:
+          path: |
+            templates/mobile/.expo
+            templates/mobile/.metro-cache
+          key: expo-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            expo-${{ runner.os }}-
+      - name: Lint, typecheck, test, and build
+        run: pnpm exec turbo run lint typecheck test build --filter="${{ matrix.filter }}"
+      - name: Install Playwright browsers
+        if: matrix.e2e && steps.playwright-cache.outputs.cache-hit != 'true'
+        run: pnpm --filter "${{ matrix.filter }}" exec playwright install --with-deps chromium
+      - name: Install Playwright system libraries
+        if: matrix.e2e && steps.playwright-cache.outputs.cache-hit == 'true'
+        run: pnpm --filter "${{ matrix.filter }}" exec playwright install-deps chromium
       - name: End-to-end
-        run: pnpm test:e2e
+        if: matrix.e2e
+        run: pnpm exec turbo run test:e2e --filter="${{ matrix.filter }}"
+
+  lighthouse:
+    name: lighthouse (${{ matrix.name }})
+    if: ${{ (github.event_name != 'workflow_dispatch' && vars.LIGHTHOUSE_CI != 'false') || (github.event_name == 'workflow_dispatch' && inputs.lighthouse == true && vars.LIGHTHOUSE_CI != 'false') }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: spa
+            filter: "@reactloom/template-spa"
+          - name: ssr
+            filter: "@reactloom/template-ssr"
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 10.33.3
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+      - uses: actions/cache@v6
+        with:
+          path: .turbo
+          key: turbo-${{ runner.os }}-${{ github.sha }}
+          restore-keys: |
+            turbo-${{ runner.os }}-
+      - name: Resolve Playwright version
+        id: playwright-version
+        run: |
+          version=$(node --input-type=commonjs -p "require('./templates/${{ matrix.name }}/package.json').devDependencies['@playwright/test']")
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+      - uses: actions/cache@v6
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.playwright-version.outputs.version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            playwright-${{ runner.os }}-${{ steps.playwright-version.outputs.version }}-
+            playwright-${{ runner.os }}-
+      - name: Install
+        run: pnpm install --frozen-lockfile
+      - name: Install Playwright browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: pnpm --filter "${{ matrix.filter }}" exec playwright install --with-deps chromium
+      - name: Install Playwright system libraries
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: pnpm --filter "${{ matrix.filter }}" exec playwright install-deps chromium
+      - name: Point Lighthouse at Playwright Chromium
+        run: echo "CHROME_PATH=$(node scripts/print-playwright-chrome.mjs)" >> "$GITHUB_ENV"
+      - name: Lighthouse
+        run: pnpm exec turbo run lighthouse --filter="${{ matrix.filter }}"
+
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 10.33.3
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+      - name: Install
+        run: pnpm install --frozen-lockfile
+      - name: Generate each template and build it
+        run: pnpm --filter create-reactloom exec vitest run src/scaffold.integration.test.ts

@@ -1,0 +1,14 @@
+---
+description: Expo Router screens and secure-store sessions
+globs: "templates/mobile/**/*.ts,templates/mobile/**/*.tsx"
+alwaysApply: false
+---
+
+# Mobile
+
+- Screens are Expo Router files in `templates/mobile/app`. Feature logic stays in `templates/mobile/src/features`.
+- Read and write the session only through `templates/mobile/src/lib/token-store.ts`. Native uses `expo-secure-store`. Web export uses `localStorage`. Leave AsyncStorage out of the session path.
+- `EXPO_PUBLIC_USE_FIXTURES` defaults to fixture login so the app runs without a backend. When it is `false`, `signIn` sends the same payload through `@reactloom/api-client`.
+- Client env vars use the `EXPO_PUBLIC_` prefix and the schema in `templates/mobile/src/lib/env.ts`.
+- Stay on the React version Expo SDK 57 pins (19.2.3). Style with React Native `StyleSheet` so Metro does not need NativeWind.
+- Unit tests are Vitest. The Maestro flow `templates/mobile/.maestro/login.yaml` is device coverage and is not part of CI. `pnpm build` is `expo export --platform web`.

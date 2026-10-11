@@ -1,0 +1,5 @@
+#!/bin/sh
+# Named "code" so Next.js, launch-ide, and launch-editor pass file:line.
+# This is not VS Code. Do not put this directory on PATH.
+dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+exec node "$dir/open-in-editor.mjs" "$@"

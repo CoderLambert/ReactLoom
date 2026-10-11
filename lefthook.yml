@@ -1,11 +1,23 @@
+# A non-zero exit blocks the commit. parallel: false runs commands in file order.
+# Biome rewrites staged files first. turbo --affected then typechecks and tests
+# packages changed since the default branch, including uncommitted work.
 pre-commit:
+  parallel: false
   commands:
     biome:
       glob: "*.{js,jsx,ts,tsx,json,css,mjs,cjs}"
       run: pnpm exec biome check --write --no-errors-on-unmatched --files-ignore-unknown=true {staged_files}
       stage_fixed: true
+    check-affected:
+      glob: "*.{ts,tsx}"
+      run: pnpm exec turbo run typecheck test --affected --output-logs=errors-only
 
 commit-msg:
   commands:
     commitlint:
       run: pnpm exec commitlint --edit {1}
+
+pre-push:
+  commands:
+    ai-rules-sync:
+      run: node scripts/check-ai-rules-sync.mjs

@@ -1,4 +1,8 @@
 node_modules
+.turbo
+.lighthouseci
+.env.deploy
+!.env.deploy.example
 dist
 coverage
 playwright-report
@@ -8,3 +12,4 @@ test-results
 .env.local
 !.env.example
 stats.html
+storybook-static

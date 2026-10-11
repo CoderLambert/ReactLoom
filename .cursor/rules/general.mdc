@@ -1,0 +1,15 @@
+---
+description: TypeScript, naming, and Biome conventions
+globs: "templates/spa/**/*.ts,templates/spa/**/*.tsx,templates/ssr/**/*.ts,templates/ssr/**/*.tsx,templates/mobile/**/*.ts,templates/mobile/**/*.tsx,packages/**/*.ts"
+alwaysApply: false
+---
+
+# TypeScript, naming, and Biome
+
+- Keep TypeScript `strict`. Biome rejects `any` and requires `import type` for type-only imports.
+- Names: kebab-case files, PascalCase components, `use` hooks, `z.infer` for schema types.
+- Prefer named exports. Next.js route files (`page.tsx`, `layout.tsx`, `route.ts`, `error.tsx`) use the default export that framework requires.
+- Format with Biome (single quotes, semicolons as needed, trailing commas, two-space indent, line width 100). Run `pnpm exec biome check --write` on files you edit.
+- Validate env with the t3 schema already in the package. Add new variables to `.env.example` and leave `.env` untracked.
+- HTTP goes through `@reactloom/api-client` in `packages/api-client`. Feature code calls the app's API module.
+- After a change, run `pnpm lint`, `pnpm typecheck`, and `pnpm test` for the packages you touched.

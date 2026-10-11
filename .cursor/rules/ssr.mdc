@@ -1,0 +1,15 @@
+---
+description: Next.js server and client boundaries, security headers, and cookie sessions
+globs: "templates/ssr/**/*.ts,templates/ssr/**/*.tsx,templates/ssr/**/*.css"
+alwaysApply: false
+---
+
+# SSR
+
+- This is Next.js 16. Read `templates/ssr/node_modules/next/dist/docs/` before using a Next API. Keep the `nextjs-agent-rules` block in `templates/ssr/AGENTS.md`.
+- Server Components are the default. Add `'use client'` only for state, effects, event handlers, or browser APIs. `templates/ssr/src/app/providers.tsx` and the login and tasks pages are client components. The root layout stays a server component.
+- Server-only code stays in `templates/ssr/src/server`. Client components talk to route handlers under `templates/ssr/src/app/api` through `getApi()` in `templates/ssr/src/lib/api.ts` with `credentials: 'include'`.
+- The session is a `jose` HS256 JWT in the `rl_session` httpOnly cookie (`templates/ssr/src/server/session-token.ts`). `templates/ssr/src/proxy.ts` redirects anonymous users away from `/tasks`. Leave the cookie `httpOnly`, `sameSite: 'lax'`, and `secure` in production.
+- Register security headers from `headersFor` in `templates/ssr/next.config.ts`. Production keeps the Content-Security-Policy entry. `poweredByHeader` stays off.
+- `SESSION_SECRET` is read only by the server env schema. `REACTLOOM_STRICT_SECRETS=true` must keep refusing the development fallback.
+- In this monorepo, `outputFileTracingRoot` points at the workspace root. `create-reactloom` rewrites that to the generated app root. Leave the generated value inside the app.

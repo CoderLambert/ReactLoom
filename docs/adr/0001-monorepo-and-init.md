@@ -4,4 +4,4 @@ ReactLoom is a pnpm workspace. Templates are developed in-tree and copied by `cr
 
 The CLI follows create-vite and create-t3-app: `@clack/prompts` when a human is present, and `--template`, `--yes`, and `--install` when they are not. It deletes `template.json` and other template-only files, then writes a fresh `pnpm-workspace.yaml` so the generated app still depends on `@reactloom/api-client` through `workspace:*`.
 
-Shared packages are copied into the generated project. The result does not stay coupled to this git repo.
+Shared files are selected by that template's `template.json`. An SPA receives the API client and the `base`, `react`, `vite`, and `node` TypeScript presets, not the Next.js or Expo presets, and not a Dockerfile. The copied `@reactloom/tsconfig` package exports only those presets. The result does not stay coupled to this git repo.

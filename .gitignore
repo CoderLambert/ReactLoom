@@ -6,6 +6,11 @@ coverage
 playwright-report
 test-results
 .turbo
+.metro-cache
+.lighthouseci
+.env.deploy
+!.env.deploy.example
+storybook-static
 *.tsbuildinfo
 .eslintcache
 .env
@@ -13,6 +18,7 @@ test-results
 .env.*.local
 !.env.example
 .DS_Store
+.nvim.sock
 *.log
 .changeset/*.md
 !.changeset/README.md
