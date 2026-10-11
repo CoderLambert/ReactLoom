@@ -1,3 +1,4 @@
+import { passthrough } from 'msw'
 import { HttpResponse, http } from 'msw/http'
 import type { Task, TaskStatus } from '@/features/tasks/schema'
 import { demoSession, demoToken, demoUser, seedTasks } from '@/mocks/fixtures'
@@ -15,6 +16,7 @@ function isAuthorized(request: Request) {
 }
 
 export const handlers = [
+  http.all('*/__reactloom/lighthouse', () => passthrough()),
   http.post('*/api/session', async ({ request }) => {
     const body = (await request.json()) as { email?: string; password?: string }
     if (body.email !== demoUser.email || body.password !== demoUser.password) {

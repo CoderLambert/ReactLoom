@@ -24,6 +24,13 @@ const ReactQueryDevtoolsPanel = showDevtools
     )
   : null
 
+const ReactScanPlugin = showDevtools
+  ? lazy(() => import('@/app/devtools-plugins').then((mod) => ({ default: mod.ReactScanPlugin })))
+  : null
+const LighthousePlugin = showDevtools
+  ? lazy(() => import('@/app/devtools-plugins').then((mod) => ({ default: mod.LighthousePlugin })))
+  : null
+
 export function Providers({ children }: { children: ReactNode }) {
   const [client] = useState(
     () =>
@@ -35,7 +42,7 @@ export function Providers({ children }: { children: ReactNode }) {
     <I18nextProvider i18n={i18n}>
       <QueryClientProvider client={client}>
         {children}
-        {TanStackDevtools && ReactQueryDevtoolsPanel ? (
+        {TanStackDevtools && ReactQueryDevtoolsPanel && ReactScanPlugin && LighthousePlugin ? (
           <Suspense fallback={null}>
             <TanStackDevtools
               plugins={[
@@ -43,6 +50,8 @@ export function Providers({ children }: { children: ReactNode }) {
                   name: 'TanStack Query',
                   render: <ReactQueryDevtoolsPanel />,
                 },
+                { id: 'reactloom-react-scan', name: 'React Scan', render: <ReactScanPlugin /> },
+                { id: 'reactloom-lighthouse', name: 'Lighthouse', render: <LighthousePlugin /> },
               ]}
             />
           </Suspense>

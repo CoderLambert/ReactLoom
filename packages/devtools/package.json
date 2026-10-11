@@ -13,6 +13,18 @@
     "./stack": {
       "types": "./dist/stack.d.ts",
       "import": "./dist/stack.js"
+    },
+    "./panels": {
+      "types": "./dist/panels.d.ts",
+      "import": "./dist/panels.js"
+    },
+    "./scan-controller": {
+      "types": "./dist/scan-controller.d.ts",
+      "import": "./dist/scan-controller.js"
+    },
+    "./lighthouse-server": {
+      "types": "./dist/lighthouse-server.d.ts",
+      "import": "./dist/lighthouse-server.js"
     }
   },
   "files": [

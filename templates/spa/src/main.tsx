@@ -6,6 +6,7 @@ import { createRoot } from 'react-dom/client'
 import { Providers } from '@/app/providers'
 import { router } from '@/app/router'
 import { env } from '@/lib/env'
+import { reactScanController } from '@/lib/react-scan-controller'
 import { i18n } from '@/lib/i18n'
 import { initMonitoring } from '@/lib/monitoring'
 import '@/styles/globals.css'
@@ -13,7 +14,8 @@ import '@/styles/globals.css'
 const showDevtools = import.meta.env.DEV && env.VITE_DEVTOOLS === 'true'
 
 if (import.meta.env.DEV && env.VITE_REACT_SCAN === 'true') {
-  scan({ enabled: true })
+  scan({ enabled: true, showToolbar: false })
+  reactScanController.configure(true, false)
 }
 
 if (showDevtools) {
@@ -30,6 +32,13 @@ const TanStackDevtools = showDevtools
         default: mod.TanStackDevtools,
       })),
     )
+  : null
+
+const ReactScanPlugin = showDevtools
+  ? lazy(() => import('@/app/devtools-plugins').then((mod) => ({ default: mod.ReactScanPlugin })))
+  : null
+const LighthousePlugin = showDevtools
+  ? lazy(() => import('@/app/devtools-plugins').then((mod) => ({ default: mod.LighthousePlugin })))
   : null
 
 const ReactQueryDevtoolsPanel = showDevtools
@@ -52,7 +61,11 @@ async function boot() {
   await initMonitoring(env.VITE_SENTRY_DSN)
   if (env.VITE_ENABLE_MSW === 'true' && import.meta.env.DEV) {
     const { worker } = await import('@/mocks/browser')
-    await worker.start({ serviceWorker: { url: '/mockServiceWorker.js' } })
+    await worker.start({
+      serviceWorker: { url: '/mockServiceWorker.js' },
+      // Let page navigation and third-party devtool checks reach their server.
+      onUnhandledFrame: 'bypass',
+    })
   }
 
   const root = document.getElementById('root')
@@ -62,7 +75,11 @@ async function boot() {
     <StrictMode>
       <Providers>
         <RouterProvider router={router} />
-        {TanStackDevtools && ReactQueryDevtoolsPanel && TanStackRouterDevtoolsPanel ? (
+        {TanStackDevtools &&
+        ReactQueryDevtoolsPanel &&
+        TanStackRouterDevtoolsPanel &&
+        ReactScanPlugin &&
+        LighthousePlugin ? (
           <Suspense fallback={null}>
             <TanStackDevtools
               plugins={[
@@ -74,6 +91,8 @@ async function boot() {
                   name: 'TanStack Router',
                   render: <TanStackRouterDevtoolsPanel router={router} />,
                 },
+                { id: 'reactloom-react-scan', name: 'React Scan', render: <ReactScanPlugin /> },
+                { id: 'reactloom-lighthouse', name: 'Lighthouse', render: <LighthousePlugin /> },
               ]}
             />
           </Suspense>

@@ -9,7 +9,7 @@ Memoize a component after a render tool shows the same props producing extra ren
 <!-- reactloom:spa -->
 Routes are split in `templates/spa/src/app/router.tsx`. `HomePage`, `LoginPage`, and `TasksPage` are `lazy()` imports, wrapped by `lazyPage` in `<Suspense>`. `defaultPreload: 'intent'` fetches the next route's module on hover. That preload is JavaScript, not query data.
 
-开发工具也按需拆分。`templates/spa/src/main.tsx` 仅在开发模式且 `VITE_DEVTOOLS=true` 时懒加载统一 TanStack 容器、Query 插件和 Router 插件。React Scan 使用独立的 `VITE_REACT_SCAN` 开关，默认关闭。生产构建把所有相关包指向 `templates/spa/src/lib/devtools-stub.ts`。
+开发工具也按需拆分。`templates/spa/src/main.tsx` 仅在开发模式且 `VITE_DEVTOOLS=true` 时懒加载统一容器、Query、Router、React Scan 和 Lighthouse 页签。React Scan 默认关闭，可从面板开启，`VITE_REACT_SCAN` 只控制启动时自动扫描。生产构建把相关包和面板适配器指向 `templates/spa/src/lib/devtools-stub.ts`。
 
 Do not statically import a page into `router.tsx`. That pulls every screen into the entry.
 <!-- /reactloom:spa -->
@@ -17,7 +17,7 @@ Do not statically import a page into `router.tsx`. That pulls every screen into 
 <!-- reactloom:ssr -->
 The App Router splits by file. `templates/ssr/src/app/page.tsx` (home), `login/page.tsx`, and `tasks/page.tsx` are separate modules. The root layout stays a Server Component so the client bundle is the providers plus the client pages, not the whole tree.
 
-`templates/ssr/src/app/providers.tsx` 仅在开发模式且 `NEXT_PUBLIC_DEVTOOLS` 不是 false 时懒加载统一 TanStack 容器与 Query 插件。React Scan 使用独立的 `NEXT_PUBLIC_REACT_SCAN` 开关，默认关闭；生产构建把两类调试包都替换为空桩。
+`templates/ssr/src/app/providers.tsx` 仅在开发模式且 `NEXT_PUBLIC_DEVTOOLS` 不是 false 时懒加载统一容器、Query、React Scan 和 Lighthouse 页签。React Scan 默认关闭，可从面板开启，`NEXT_PUBLIC_REACT_SCAN` 只控制启动时自动扫描；生产构建把调试包和面板适配器替换为空桩。
 
 Keep a new server-only helper under `templates/ssr/src/server`. Importing it from a client page pulls it into the browser bundle or fails the build.
 <!-- /reactloom:ssr -->
@@ -74,13 +74,13 @@ The web export must not contain Storybook, MSW, or `@axe-core/react`. Those pack
 `useWhyDidYouUpdate` from `@reactloom/devtools` logs a console diff for one component. Call it from that component while you are looking. Do not import it from the app entry, and do not leave it on a hot list.
 
 <!-- reactloom:spa -->
-React Scan is the overlay. `templates/spa/src/main.tsx` imports `react-scan` before React and calls `scan({ enabled: true })` when devtools are on. Hover an element for the component name, props, and render time. The outline lists the props that changed.
+React Scan highlights renders when enabled from the unified panel or by `VITE_REACT_SCAN=true`. `templates/spa/src/main.tsx` imports `react-scan` before React. Its detailed toolbar is hidden until requested in the panel; enable that toolbar to inspect component names, props, and render reasons.
 
 why-did-you-render is not loaded. Vite 8 would inject its JSX import ahead of React Scan. Use the outline, or `useWhyDidYouUpdate` on the one component you care about.
 <!-- /reactloom:spa -->
 
 <!-- reactloom:ssr -->
-React Scan is the overlay. `templates/ssr/src/app/layout.tsx` renders `ReactScan` from `templates/ssr/src/app/react-scan.tsx`, and that module is the top-most import so the scanner installs before React. It runs in development on the client. Server Components are not drawn in the overlay. Hover a client element for the component name, props, and render time.
+`templates/ssr/src/app/layout.tsx` renders `ReactScan` from `templates/ssr/src/app/react-scan.tsx`, and that module is the top-most import so the scanner installs before React. It runs on client components in development when enabled from the panel or by `NEXT_PUBLIC_REACT_SCAN=true`. Enable the detailed toolbar in the panel to inspect component names, props, and render reasons. Server Components are not drawn in the overlay.
 
 why-did-you-render is not loaded. Next.js 16 compiles JSX with SWC and has no app-wide `jsxImportSource`. Use React Scan's outline, or `useWhyDidYouUpdate` on one client component.
 <!-- /reactloom:ssr -->
