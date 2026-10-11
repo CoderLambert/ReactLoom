@@ -33,9 +33,9 @@ Sign in with `ada@reactloom.dev` / `loom-demo`. MSW serves `/api/session` and `/
 
 ## Developer productivity
 
-安装依赖后，TanStack Query 与 Router 会作为插件出现在同一个 `@tanstack/react-devtools` 面板中，只保留一个悬浮入口。该面板由 `VITE_DEVTOOLS` 控制并懒加载；生产构建把三个 TanStack devtools 包指向 `src/lib/devtools-stub.ts`。
+安装依赖后，统一 `@tanstack/react-devtools` 面板的 Plugins 中有 Query、Router、React Scan 和 Lighthouse，只保留一个悬浮入口。该面板由 `VITE_DEVTOOLS` 控制并懒加载；生产构建把 TanStack devtools 和面板适配器指向 `src/lib/devtools-stub.ts`。Lighthouse 页签可读取最近的本地报告、运行开发首页审计；正式评分仍使用 `pnpm lighthouse`。
 
-React Scan 默认关闭，并与统一面板使用独立开关。需要时在 `.env.local` 设置 `VITE_REACT_SCAN=true` 并重启 `pnpm dev`；悬停元素后可查看组件名、props、渲染耗时和重复渲染。`src/main.tsx` 仍把 `react-scan` 放在 React 之前，`vite build` 则将其替换为空桩，生产包不会包含实现代码。
+React Scan 默认关闭，可直接在统一面板开启或暂停。详细检查工具栏默认收起，需要查看组件名、props、渲染原因时勾选显示。`VITE_REACT_SCAN=true` 仅控制开发启动时自动扫描；`src/main.tsx` 仍把 `react-scan` 放在 React 之前，生产构建将其替换为空桩。
 
 why-did-you-render is not loaded. Vite 8 would inject its JSX import ahead of React Scan. `pnpm analyze` writes `dist/stats.html`. For a console diff on one component, call `useWhyDidYouUpdate` from `@reactloom/devtools`. Do not import it from `src/main.tsx`.
 

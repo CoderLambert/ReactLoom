@@ -31,12 +31,12 @@ const clickToSource =
   process.env.NODE_ENV !== 'production' && process.env.NEXT_PUBLIC_DEVTOOLS !== 'false'
 
 // TanStack panels follow the shared devtools switch. React Scan has a separate,
-// opt-in switch so its floating toolbar stays hidden by default.
+// opt-in startup switch; the shared panel can also activate scanning on demand.
 const productionBuild = process.env.NODE_ENV === 'production'
 const tanStackDevtoolsStub =
   process.env.NODE_ENV === 'production' || process.env.NEXT_PUBLIC_DEVTOOLS === 'false'
 const reactScanStub =
-  productionBuild || process.env.NEXT_PUBLIC_REACT_SCAN !== 'true'
+  productionBuild || (tanStackDevtoolsStub && process.env.NEXT_PUBLIC_REACT_SCAN !== 'true')
     ? './src/lib/react-scan-stub.ts'
     : undefined
 
@@ -51,6 +51,7 @@ function bundledAliases(): Record<string, string> | undefined {
   const alias: Record<string, string> = {}
   if (reactScanStub) alias['react-scan'] = reactScanStub
   if (tanStackDevtoolsStub) {
+    alias['@/app/devtools-plugins'] = './src/lib/react-scan-stub.ts'
     alias['@tanstack/react-devtools'] = './src/lib/react-scan-stub.ts'
     alias['@tanstack/react-query-devtools'] = './src/lib/react-scan-stub.ts'
   }
@@ -88,7 +89,7 @@ const nextConfig: NextConfig = {
   outputFileTracingRoot: path.join(import.meta.dirname, '../..'),
   poweredByHeader: false,
   reactStrictMode: true,
-  transpilePackages: ['@reactloom/api-client'],
+  transpilePackages: ['@reactloom/api-client', '@reactloom/devtools'],
   turbopack: {
     rules: codeInspectorPlugin({
       bundler: 'turbopack',

@@ -215,7 +215,9 @@ SSR 的服务器组件在开发时也会带上 `data-insp-path`。错误边界�
 
 ### 用法
 
-React Scan 默认关闭。需要时在 `.env.local` 中设置 `VITE_REACT_SCAN=true`（SPA）或 `NEXT_PUBLIC_REACT_SCAN=true`（SSR），重启 `pnpm dev` 后再悬停元素。
+React Scan 默认关闭。打开 TanStack Devtools → Plugins → React Scan，点击「开启扫描」或「暂停扫描」，不用重启开发服务器。详细检查工具栏默认收起；需要查看组件名、props 和渲染原因时勾选「显示 React Scan 详细检查工具栏」。面板切换或关闭不会自动停止扫描，要停止时使用「暂停扫描」。
+
+需要开发服务器启动后就自动扫描时，仍可在 `.env.local` 中设置 `VITE_REACT_SCAN=true`（SPA）或 `NEXT_PUBLIC_REACT_SCAN=true`（SSR）。这两个变量只控制初始状态，详细工具栏仍默认收起。设置总开发工具开关为 false 时，统一面板不加载，React Scan 的独立启动开关仍可使用。
 
 生产构建把 `react-scan` 指到一个空模块，包里不应出现这个库（实现上会看到 `bippy` 这个内部名）。Playwright 把开发工具环境变量设为 `false`，所以端到端页面上没有这层面板。
 
@@ -223,8 +225,8 @@ React Scan 默认关闭。需要时在 `.env.local` 中设置 `VITE_REACT_SCAN=t
 
 | | SPA | SSR |
 | --- | --- | --- |
-| 入口 | `src/main.tsx`。`react-scan` 的 import 必须在 React 和 React DOM 之前。仅在 `import.meta.env.DEV` 且 `VITE_REACT_SCAN=true` 时调用 `scan` | `src/app/react-scan.tsx` 是客户端组件，import 在 `react` 之前。仅在开发模式且 `NEXT_PUBLIC_REACT_SCAN=true` 时调用 `scan`；`layout.tsx` 仍将它作为最上面的 import |
-| 生产桩 | `src/lib/devtools-stub.ts` 导出空的 `scan`；`vite build` 始终把 `react-scan` 指向它 | `src/lib/react-scan-stub.ts`；生产构建以及未显式开启 React Scan 的开发构建都通过 Turbopack/webpack alias 使用空桩 |
+| 入口 | `src/main.tsx`。`react-scan` 的 import 必须在 React 和 React DOM 之前。`src/lib/react-scan-controller.ts` 为统一面板提供运行时控制 | `src/app/react-scan.tsx` 是客户端组件，import 在 `react` 之前，`layout.tsx` 仍将它作为最上面的 import。导出的 controller 为统一面板提供运行时控制 |
+| 生产桩 | `src/lib/devtools-stub.ts` 导出空的 `scan` 和 `setOptions`；`vite build` 始终把 `react-scan` 和面板适配器指向它 | `src/lib/react-scan-stub.ts`；生产构建把 React Scan、TanStack 包及面板适配器指向空桩；开发工具关闭且扫描启动开关关闭时也使用 React Scan 空桩 |
 | 清单 | `template.json` 的 `reactScan.enabled` 为 true | 同左 |
 
 ### 模板差异
@@ -498,11 +500,11 @@ SPA 的 `pnpm dev`。类型错误出现在页面遮罩和终端。`enableBuild` 
 
 ### 作用
 
-在页面上查看 Query 缓存，SPA 还可以查看 Router 的匹配。两者作为插件放进 `@tanstack/react-devtools` 的统一面板，只保留一个悬浮入口。只在开发工具开关打开时用 `lazy` 加载。
+在页面上查看 Query 缓存，SPA 还可以查看 Router 的匹配。统一面板还提供 React Scan 控制和 Lighthouse 本地报告页签。所有页签通过 `@tanstack/react-devtools` 的同一个悬浮入口访问，只在开发工具开关打开时用 `lazy` 加载。
 
 ### 用法
 
-`pnpm dev`。面板默认收起。SPA 的一个入口中有 Query 与 Router 两个插件；SSR 的一个入口中只有 Query。
+`pnpm dev`。面板默认收起。SPA 的 Plugins 中有 Query、Router、React Scan 和 Lighthouse；SSR 有 Query、React Scan 和 Lighthouse。点击页签可打开内容，TanStack 支持把多个插件并排放置。
 
 Playwright 把开发工具关掉，面板不会挡 axe。
 
@@ -511,7 +513,7 @@ Playwright 把开发工具关掉，面板不会挡 axe。
 | | SPA | SSR |
 | --- | --- | --- |
 | 统一容器 | `src/main.tsx`，条件是 `import.meta.env.DEV && VITE_DEVTOOLS === 'true'` | `src/app/providers.tsx`，条件是 `NODE_ENV === 'development'` 且 `NEXT_PUBLIC_DEVTOOLS !== 'false'` |
-| 插件 | Query 与 Router | Query；SSR 不用 TanStack Router |
+| 插件 | Query、Router、React Scan、Lighthouse | Query、React Scan、Lighthouse；SSR 不用 TanStack Router |
 | 生产 | `vite.config.ts` 把三个 TanStack devtools 包指向 `src/lib/devtools-stub.ts` | `next.config.ts` 把统一容器和 Query 插件指向 `src/lib/react-scan-stub.ts` |
 
 ### 模板差异
@@ -548,6 +550,10 @@ pnpm test:coverage
 ### 作用
 
 SPA 和 SSR 用 `@lhci/cli` 0.15.1 审计生产预览。Expo 未实现：没有对应的页面作业。
+
+开发时打开 TanStack Devtools → Plugins → Lighthouse，可读取本模板 `.lighthouseci/lhr-*.json` 中最近一次有效报告，查看四项评分、关键指标和未通过的审计项。「刷新报告」用于读取命令行新生成的报告；「运行开发页审计」在本地运行 `lhci collect`，审计开发服务器首页，并自动轮询结果。它不会构建应用，开发评分仅用于排查，正式评分使用下方的生产预览命令。
+
+本地桥接只在开发工具开启时提供：SPA 是 Vite 的 `/__reactloom/lighthouse` middleware，SSR 是 `/api/devtools/lighthouse` route handler。接口检查 Host 和 Origin，审计目标固定为本地模板首页，不接受用户提交的命令、文件名或 URL。生产环境和 Playwright 开发工具关闭时不提供审计启动入口。失败时面板显示错误，可修正 Chromium 配置后重试。
 
 ### 用法
 

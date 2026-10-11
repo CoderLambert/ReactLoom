@@ -119,7 +119,7 @@ Login uses `Controller` and `loginSchema`. The task screen repeats `next.length 
 <!-- reactloom:spa -->
 `vite build` 会把 React Scan、三个 TanStack devtools 包、`msw/browser`、`msw/http`、`msw/node` 和 `@axe-core/react` 指向空桩。不要给 `msw` 写裸 alias；它会前缀匹配 `msw/browser`，并把 `/browser` 错接到桩路径后面。
 
-**Fix.** React Scan 只从 `templates/spa/src/main.tsx` 导入，并由 `VITE_REACT_SCAN` 独立控制。统一 TanStack 面板仍由 `VITE_DEVTOOLS` 控制。MSW 从 `templates/spa/src/mocks` 导入，alias 必须写具体子路径。
+**Fix.** React Scan 必须先于 React 从 `templates/spa/src/main.tsx` 导入；统一面板通过 `src/lib/react-scan-controller.ts` 控制扫描，`VITE_REACT_SCAN` 控制初始状态。面板由 `VITE_DEVTOOLS` 控制。MSW 从 `templates/spa/src/mocks` 导入，alias 必须写具体子路径。
 <!-- /reactloom:spa -->
 
 <!-- reactloom:ssr -->

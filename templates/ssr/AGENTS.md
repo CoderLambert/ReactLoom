@@ -54,7 +54,7 @@ Route handlers and server modules may use the client or the local task module. C
 
 ## Testing
 
-开发服务器用 `@tanstack/react-devtools` 的一个悬浮入口承载 Query 插件，并保留懒加载。React Scan 客户端组件仍在 `react` 之前导入包，且是 `layout.tsx` 最上面的 import，但默认不调用；仅当 `NEXT_PUBLIC_REACT_SCAN=true` 时开启。`NEXT_PUBLIC_DEVTOOLS` 继续控制统一 TanStack 面板、axe 日志和点击跳源码。生产构建把 TanStack devtools 与 React Scan 指向 `src/lib/react-scan-stub.ts`；React Scan 未显式开启时，开发构建也使用空桩。Next.js 16 继续使用 SWC 和自己的错误 overlay，不加 Vite checker。why-did-you-render 不加载；需要单组件属性差异时使用 `@reactloom/devtools` 的 `useWhyDidYouUpdate`，不要从 `src/app/layout.tsx` 导入。`pnpm analyze` 写入 `.next/diagnostics/analyze`。Storybook、MSW、Playwright、Lighthouse、安全头与点击跳源码的既有约束不变。
+开发服务器用 `@tanstack/react-devtools` 的一个悬浮入口承载 Query、React Scan 和 Lighthouse，并保留懒加载。React Scan 客户端组件仍在 `react` 之前导入包，且是 `layout.tsx` 最上面的 import，默认关闭，可从统一面板开启或暂停，详细工具栏按需显示；`NEXT_PUBLIC_REACT_SCAN=true` 控制启动时自动扫描。`NEXT_PUBLIC_DEVTOOLS` 控制统一面板、axe 日志和点击跳源码。生产构建把 TanStack 包、React Scan 和面板适配器指向 `src/lib/react-scan-stub.ts`；开发工具关闭且扫描启动开关关闭时也使用 React Scan 空桩。Lighthouse route handler 只在开发工具开启时运行固定本地首页的审计，并读取 `.lighthouseci` 报告，生产返回 404。正式评分仍用 `pnpm lighthouse`。Next.js 16 继续使用 SWC 和自己的错误 overlay，不加 Vite checker。why-did-you-render 不加载；需要单组件属性差异时使用 `@reactloom/devtools` 的 `useWhyDidYouUpdate`，不要从 `src/app/layout.tsx` 导入。`pnpm analyze` 写入 `.next/diagnostics/analyze`。Storybook、MSW、Playwright、安全头与点击跳源码的既有约束不变。
 
 生成器用下面这句精确文本校验 why-did-you-render 的禁用原因：Next.js 16 compiles JSX with SWC on Turbopack and has no app-wide jsxImportSource. why-did-you-render v10 requires that Babel setting, so this template does not load it. React Scan's outline shows the render cause and the props that changed.
 
