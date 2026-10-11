@@ -1,23 +1,22 @@
 'use client'
 
-import { useEffect } from 'react'
+import dynamic from 'next/dynamic'
+import { Suspense } from 'react'
+
+const BrowserDevTools = dynamic(
+  () => import('@/app/dev-browser-tools').then(({ BrowserDevTools }) => BrowserDevTools),
+  { ssr: false },
+)
 
 // Browser mocks and the React axe logger. Both stay out of production builds.
 export function DevClient() {
-  useEffect(() => {
-    if (process.env.NODE_ENV === 'production' || process.env.NEXT_PUBLIC_DEVTOOLS === 'false') {
-      return
-    }
-    if (process.env.NEXT_PUBLIC_ENABLE_MSW === 'true') {
-      void import('@/mocks/browser').then(({ worker }) => {
-        return worker.start({ onUnhandledFrame: 'bypass' })
-      })
-    }
-    void import('@axe-core/react').then(async (axe) => {
-      const React = await import('react')
-      const ReactDOM = await import('react-dom')
-      await axe.default(React, ReactDOM, 1000)
-    })
-  }, [])
-  return null
+  if (process.env.NODE_ENV === 'production' || process.env.NEXT_PUBLIC_DEVTOOLS === 'false') {
+    return null
+  }
+
+  return (
+    <Suspense fallback={null}>
+      <BrowserDevTools />
+    </Suspense>
+  )
 }
