@@ -375,7 +375,7 @@ Expo：没有 MSW。`EXPO_PUBLIC_USE_FIXTURES` 默认 `true`，登录和任务�
 | --- | --- | --- | --- |
 | 状态 | 已接入 | 已接入，默认关 | 未实现 MSW。夹具已接入 |
 | 开关 | `VITE_ENABLE_MSW`，schema 默认 `true`（`src/lib/env.ts`） | `NEXT_PUBLIC_ENABLE_MSW`，默认 `false`（`src/server/env.ts`） | `EXPO_PUBLIC_USE_FIXTURES`，默认 `true`（`src/lib/env.ts`） |
-| 启动 | `src/main.tsx` 在 DEV 且开关为真时 `worker.start`，worker 文件是 `/mockServiceWorker.js` | `src/app/dev-client.tsx` 只在开关为 `'true'` 时启动 | `src/features/auth/service.ts` 在夹具模式下不发请求 |
+| 启动 | `src/main.tsx` 在 DEV 且开关为真时 `worker.start`，worker 文件是 `/mockServiceWorker.js` | `src/app/dev-browser-tools.tsx` 只在开关为 `'true'` 时启动；`src/app/dev-client.tsx` 用 `ssr: false` 加载它 | `src/features/auth/service.ts` 在夹具模式下不发请求 |
 | handlers | `src/mocks/handlers.ts` | 同左 | 无 |
 | 测试 | Vitest 用 `src/mocks/server.ts`。`vitest.config.ts` 把 `VITE_ENABLE_MSW` 设为 `false`，测试服务器自己听 | 路由测试直接打 handler，不靠浏览器 worker | 仓库测试，不靠 MSW |
 | 生产别名 | `vite.config.ts` 把 `msw/browser`、`msw/http`、`msw/node` 指到 `src/lib/workflow-stub.ts` | `next.config.ts` 同样三个子路径 | 依赖里没有 `msw` |
@@ -399,12 +399,34 @@ SPA 和 SSR：`pnpm dev` 且开发工具开着时，控制台会出现 `@axe-cor
 
 Expo：未实现 `@axe-core/react`，它需要 DOM。Web 预览用 axe DevTools 扩展。设备流程用 Maestro，见下一节。
 
+### 开发浮层为什么会触发 axe
+
+向 DOM 注入内容本身不是错误。问题是 TanStack Devtools 通过 portal 把一套完整界面挂到同一个 `document.body`，axe 会把应用和开发浮层当成同一份页面结构。浮层的语义元素可能与应用冲突：
+
+- 应用和浮层各有一个 `<header>`，触发 `landmark-no-duplicate-banner`。
+- 浮层的文字和控件位于应用的 landmark 之外，触发 `region`。
+- 应用从 `h1` 开始，浮层内部直接使用 `h3`、`h4`，触发 `heading-order`。
+
+这些不是应用 DOM 的缺陷。SSR 的 `src/app/dev-browser-tools.tsx` 因此只在开发态 `@axe-core/react` 中关闭这三条已确认的浮层误报。其它 axe 规则继续运行；生产构建不加载浮层，Playwright 又会关闭开发工具并检查真实页面，所以这三条规则没有从最终闸门中消失。
+
+不要把 `include` 或 `exclude` 子树当成这类问题的通用修复。landmark 和标题层级规则会参考文档级关系，只排除浮层子树不一定能消除应用节点上的关联违规。也不要为了让控制台安静而移除应用自己的 `<header>`、`<main>` 或标题语义。
+
+出现新的 axe 控制台错误时：
+
+1. 先记录规则 ID 和每个违规节点的 `target`，不要只看控制台摘要。
+2. 在 Elements 中确认目标是否都位于 `[data-testid="tanstack_devtools"]` 下。随机生成的类名不能作为长期判断依据。
+3. 如果目标包含应用节点，修应用结构，并为对应页面补 Playwright axe 覆盖。
+4. 只有当目标全部来自开发浮层、且无浮层的 Playwright 扫描仍会执行该规则时，才在开发态 logger 中精确关闭单条规则。
+5. 修改后刷新首页、登录页、受保护路由和登录后的页面，等待 1000 ms debounce，再检查新的 `error` 和 `warning`。
+
+不要关闭整个 axe，也不要把开发浮层打开的页面当成最终可访问性结果。以后加入 React Scan、调试面板或其它 portal 工具时，先检查它是否注入 `header`、`main`、`nav`、`h1`–`h6`，以及可见内容是否落在 landmark 外；最终扫描始终在开发浮层关闭的环境运行。
+
 ### 配置
 
 | | SPA | SSR | Expo |
 | --- | --- | --- | --- |
 | 开发态包 | `@axe-core/react` 4.13.0 | 同左 | 未实现 |
-| 启动位置 | `src/main.tsx`，动态 import，间隔 1000 ms | `src/app/dev-client.tsx` | 无 |
+| 启动位置 | `src/main.tsx`，动态 import，间隔 1000 ms | `src/app/dev-browser-tools.tsx`，由 `dev-client.tsx` 以 `ssr: false` 加载 | 无 |
 | 端到端 | `e2e/workshop.spec.ts` | 同左 | 无 |
 | 单元测试里的 axe-core | `src/features/auth/login-page.test.tsx` 直接用 `axe-core` | 无这份页面测试 | 无 |
 | Storybook | `.storybook/preview.ts` 的 a11y 插件，`test: 'todo'` | 同左 | 无 |

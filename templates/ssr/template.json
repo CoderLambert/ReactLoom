@@ -78,7 +78,7 @@
   "browserMocks": {
     "mode": "msw",
     "flag": "NEXT_PUBLIC_ENABLE_MSW",
-    "config": "src/app/dev-client.tsx",
+    "config": "src/app/dev-browser-tools.tsx",
     "package": "msw",
     "version": "3.0.3"
   },
@@ -86,7 +86,7 @@
     "enabled": true,
     "package": "@axe-core/react",
     "version": "4.13.0",
-    "config": "src/app/dev-client.tsx"
+    "config": "src/app/dev-browser-tools.tsx"
   },
   "e2e": {
     "tool": "playwright",
