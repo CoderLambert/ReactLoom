@@ -17,7 +17,7 @@ config.resolver.unstable_enableSymlinks = true
 config.cacheStores = [new FileStore({ root: path.join(projectRoot, '.metro-cache') })]
 
 // scripts/code is named like VS Code so the inspector passes file:line.
-// open-in-editor.mjs then opens Neovim, Cursor, or VS Code.
+// open-in-editor.mjs then opens VS Code by default.
 const beside = path.join(projectRoot, 'scripts', 'open-in-editor.mjs')
 const modulePath = fs.existsSync(beside)
   ? beside

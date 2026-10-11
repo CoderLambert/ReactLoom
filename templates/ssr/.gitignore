@@ -13,3 +13,4 @@ test-results
 .env.local
 !.env.example
 storybook-static
+.nvim.sock

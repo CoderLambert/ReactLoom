@@ -166,41 +166,24 @@ monorepo 根 `.vscode/extensions.json` 推荐：
 
 检测编辑器的程序是 `scripts/open-in-editor.mjs`。检查器实际启动的是 `scripts/code`（Windows 是 `scripts/code.cmd`）。这个名字叫 `code`，这样检查器会把 `file:line` 传进来。它不是 VS Code。不要把 `scripts/` 加进 `PATH`，否则系统会找到这个垫片而不是编辑器。
 
-`.env.development` 把开发工具打开，并且故意不设置编辑器，好让下面的检测顺序生效。机器自己的选择写在 `.env.local` 的 `LAUNCH_EDITOR`。
+`.env.development` 把开发工具打开，并且故意不设置编辑器。默认使用 VS Code；如果要换编辑器，在 `.env.local` 设置 `LAUNCH_EDITOR`。
 
 ### 用法
 
 | 模板 | 手势 |
 | --- | --- |
-| SPA、SSR | macOS 按住 Option+Shift，Windows 和 Linux 按住 Alt+Shift，再点击元素 |
+| SPA、SSR | macOS 按住 Control+Shift+Option，Windows 和 Linux 按住 Ctrl+Shift+Alt，再点击元素。两个 `codeInspectorPlugin` 配置都显式使用 `ctrlKey + shiftKey + altKey` |
 | Expo | 点闪电按钮，再点组件。先 `pnpm dev`，需要 Web 预览时在终端按 `w`。生成项目不会替你启动模拟器 |
-
-Neovim 要先有一个正在听的服务器。开发服务器不能自己弹出一个新的 nvim 窗口。一次性步骤，在项目目录：
-
-```sh
-nvim --listen .nvim.sock
-```
-
-或者在 `init.lua` 里，只在套接字还不存在时启动：
-
-```lua
-local sock = vim.fn.getcwd() .. "/.nvim.sock"
-local uv = vim.uv or vim.loop
-if uv.fs_stat(sock) == nil then
-  pcall(vim.fn.serverstart, sock)
-end
-```
-
-`$NVIM` 只在 Neovim 的内置终端里才有。`.nvim.sock` 已被 gitignore。套接字文件还在、但是没有进程在听时，删掉再开：`rm -f .nvim.sock`。
 
 检测顺序写在 `scripts/open-in-editor.mjs` 的 `planLaunch`：
 
-1. 显式命令，按这个顺序看环境变量：`REACTLOOM_EDITOR`、`LAUNCH_EDITOR`、`CODE_EDITOR`、`REACT_EDITOR`、`VISUAL`、`EDITOR`。值如果就是启动器自己，会跳过，避免递归。值如果是 `nvim`，走 Neovim 的路径（已有服务器，否则再尝试新终端）。
-2. 正在听的 Neovim：`$NVIM`，然后 `$NVIM_LISTEN_ADDRESS`，然后从当前目录向上到 git 根查找 `.nvim.sock`。命令是 `nvim --server <address> --remote +<line> <file>`。
-3. 正在运行的图形编辑器，按这个顺序找进程：Cursor、VS Code、Code Insiders、VSCodium。参数是 `-r -g file:line:column`。
-4. 新的终端 nvim：macOS 用 Terminal.app（`osascript`），Windows 用 `wt`，Linux 用 `$TERMINAL` 或 kitty、alacritty、wezterm、gnome-terminal、konsole、xfce4-terminal、xterm。开发服务器没有 TTY，所以不会把 nvim 绑到自己的标准输入上。
+1. 显式命令：`LAUNCH_EDITOR`、`CODE_EDITOR`、`REACT_EDITOR`，并读取模板目录的 `.env.local`。命令按 shell 引号规则拆成程序和参数。
+2. 默认 VS Code：Linux 通过系统已注册的 `vscode://file` 桌面协议打开精确行列，让桌面正常激活 VS Code，不再强制操作合成器焦点；其他平台回退到 `code -r -g 文件:行:列`。
+3. 只有找不到 `code` 时，才使用原有的 Neovim、`VISUAL` / `EDITOR`、Cursor、tmux 或终端兼容逻辑。
 
-都失败时，终端里会打印 `failureReason()` 的那几行，其中包括 `nvim --listen .nvim.sock`。
+都失败时，开发服务器会打印中文原因和配置建议。
+
+设置 `REACTLOOM_EDITOR_DEBUG=1` 会输出命令拆分、socket 探测、跨项目拒绝和兜底过程。`pnpm doctor:editor [文件:行]` 运行同一套选择逻辑，但不会真正打开文件。
 
 ### 配置
 
@@ -210,7 +193,7 @@ end
 | `scripts/code`、`scripts/code.cmd` | 检查器调用的垫片 |
 | `.env.development` | 开发工具开，编辑器不设 |
 
-这三个文件通过 `template.json` 的 `configs` 进生成项目。`clickToSource.launcher` 是 `scripts/open-in-editor.mjs`。
+这三个文件通过 `template.json` 的 `configs` 进生成项目。`clickToSource.launcher` 是 `scripts/open-in-editor.mjs`；三个模板的 `package.json` 都保留 `doctor:editor`，所以生成项目也能直接诊断。
 
 ### 模板差异
 

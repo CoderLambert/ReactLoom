@@ -21,6 +21,7 @@ function runCommand(command: string, args: string[], cwd: string): Promise<void>
         ...process.env,
         CI: '1',
         EXPO_NO_TELEMETRY: '1',
+        npm_config_store_dir: path.join(tmpdir(), 'reactloom-pnpm-store'),
       },
     })
     child.on('error', reject)

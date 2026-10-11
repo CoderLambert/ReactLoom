@@ -47,22 +47,6 @@ why-did-you-render is not loaded. Next.js 16 compiles JSX with SWC on Turbopack 
 
 `pnpm storybook` uses `@storybook/nextjs` on port 6007. Stories cover Button, Input, Label, Card, and the login page, with MSW and the a11y addon. `NEXT_PUBLIC_ENABLE_MSW` defaults to false so Playwright hits the route handlers. Set it to true in `.env.local` to start those handlers in `pnpm dev`. `@axe-core/react` logs while devtools are on. Install the axe DevTools browser extension for a manual pass. Playwright stays `pnpm test:e2e`.
 
-Hold Option+Shift on macOS, or Alt+Shift on Windows and Linux, then click. The Next.js error overlay's Open in editor uses the same launcher. The editor is a running Neovim server, then Cursor, then VS Code.
-
-Neovim needs one step. The dev server cannot open a new nvim window:
-
-```sh
-nvim --listen .nvim.sock
-```
-
-Or in `init.lua`:
-
-```lua
-local sock = vim.fn.getcwd() .. "/.nvim.sock"
-local uv = vim.uv or vim.loop
-if uv.fs_stat(sock) == nil then
-  pcall(vim.fn.serverstart, sock)
-end
-```
+Hold Control+Shift+Option on macOS, or Ctrl+Shift+Alt on Windows and Linux, then click. The Next.js error overlay uses the same launcher, which opens the matching file and position in VS Code by default. Set `LAUNCH_EDITOR` in `.env.local` only when you want another editor. Run `pnpm doctor:editor [file:line]` to diagnose without opening.
 
 `docs/getting-started.md` at the repository root has the rest, including the cases that still need a manual fix.

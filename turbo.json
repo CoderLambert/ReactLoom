@@ -50,12 +50,19 @@
       "interactive": true,
       "persistent": true,
       "passThroughEnv": [
+        "DBUS_SESSION_BUS_ADDRESS",
+        "DISPLAY",
         "EXPO_PUBLIC_*",
         "LIGHTHOUSE_LOCAL",
         "LIGHTHOUSE_URL",
         "NEXT_PUBLIC_*",
         "STORYBOOK",
-        "VITE_*"
+        "VITE_*",
+        "WAYLAND_DISPLAY",
+        "XDG_CURRENT_DESKTOP",
+        "XDG_RUNTIME_DIR",
+        "XDG_SESSION_DESKTOP",
+        "XDG_SESSION_TYPE"
       ]
     },
     "test": {

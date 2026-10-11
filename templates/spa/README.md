@@ -41,22 +41,6 @@ why-did-you-render is not loaded. Vite 8 would inject its JSX import ahead of Re
 
 `pnpm storybook` uses `@storybook/react-vite` on port 6006. Stories cover Button, Input, Label, Card, and the login route. The preview starts the same MSW handlers. `@axe-core/react` logs in the dev server while devtools are on, and the Storybook a11y addon covers the workshop. Install the axe DevTools browser extension for a manual pass. `pnpm build` aliases `msw` and `@axe-core/react` to `src/lib/workflow-stub.ts`. `pnpm build-storybook` sets `STORYBOOK=true` so that alias stays off.
 
-Hold Option+Shift on macOS, or Alt+Shift on Windows and Linux, then click. The editor is a running Neovim server, then Cursor, then VS Code.
-
-Neovim needs one step. The dev server cannot open a new nvim window:
-
-```sh
-nvim --listen .nvim.sock
-```
-
-Or in `init.lua`:
-
-```lua
-local sock = vim.fn.getcwd() .. "/.nvim.sock"
-local uv = vim.uv or vim.loop
-if uv.fs_stat(sock) == nil then
-  pcall(vim.fn.serverstart, sock)
-end
-```
+Hold Control+Shift+Option on macOS, or Ctrl+Shift+Alt on Windows and Linux, then click. The launcher opens the matching file and position in VS Code by default. Set `LAUNCH_EDITOR` in `.env.local` only when you want another editor. Run `pnpm doctor:editor [file:line]` to diagnose without opening.
 
 `docs/getting-started.md` at the repository root has the rest, including the cases that still need a manual fix.

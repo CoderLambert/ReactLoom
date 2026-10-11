@@ -180,7 +180,7 @@ Lighthouse 12.6.1 的性能类别权重：
 
 1. 打开 `.lighthouseci` 里的 HTML，或 CI 日志里 `temporary-public-storage` 的临时链接。
 2. Opportunities 列出估计能省下的时间，例如未使用的 JavaScript、阻塞渲染的资源、过大的图片。Diagnostics 给出元素或 URL。
-3. 组件对不上文件时，用生产预览打开同一地址，再用 click-to-source。SPA 和 SSR 是按住 Option+Shift（macOS）或 Alt+Shift 再点击。SSR 的 Next 开发浮层也可以用 Open in editor。打开文件的程序是 `scripts/open-in-editor.mjs`。
+3. 组件对不上文件时，用生产预览打开同一地址，再用 click-to-source。SPA 和 SSR 是按住 Control+Shift+Option（macOS）或 Ctrl+Shift+Alt（Windows/Linux）再点击。SSR 的 Next 开发浮层也可以用 Open in editor。打开文件的程序是 `scripts/open-in-editor.mjs`。
 4. 脚本把包撑大时跑 `pnpm analyze`。SPA 写出 `dist/stats.html`。SSR 写出 `.next/diagnostics/analyze`。这和 `scripts/check-bundle-budget.mjs` 的 gzip 闸门是两条线。
 5. Expo 的闪电按钮是另一套检查器。这个模板没有 Lighthouse 报告。
 

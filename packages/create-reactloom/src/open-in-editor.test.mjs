@@ -1,15 +1,16 @@
+import { spawnSync } from 'node:child_process'
 import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import {
   activateLauncher,
   claimEditorEnv,
-  failureReason,
   parseLocation,
   planLaunch,
   runCli,
+  splitCommand,
 } from '../../../scripts/open-in-editor.mjs'
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..')
@@ -26,41 +27,41 @@ function ctx(overrides = {}) {
     processes: [],
     launcherPath,
     which: () => null,
+    exists: () => false,
     isSocket: () => false,
+    scanSockets: () => [],
+    removeSocket: vi.fn(),
+    readFile: () => {
+      throw new Error('missing')
+    },
+    hasTty: false,
     ...overrides,
   }
 }
 
-function nvimWhich(extra = {}) {
-  return (command) => {
-    if (command === 'nvim') return '/usr/bin/nvim'
-    return extra[command] ?? null
-  }
+function whichMap(entries) {
+  return (command) => entries[command] ?? null
+}
+
+function nvimContext(overrides = {}) {
+  return ctx({ which: whichMap({ nvim: '/usr/bin/nvim' }), ...overrides })
 }
 
 afterEach(() => {
   process.exitCode = undefined
+  vi.restoreAllMocks()
 })
 
 describe('parseLocation', () => {
-  it('reads file:line:column after inspector flags', () => {
+  it('reads inspector forms and Windows paths', () => {
     expect(parseLocation(['-r', '-g', `${file}:14:9`])).toEqual(location)
-    expect(parseLocation(['/workspace', '-g', `${file}:14:9`])).toEqual(location)
-  })
-
-  it('reads a Windows path from the rightmost colon pair', () => {
-    expect(parseLocation(['-g', 'C:\\foo\\bar.tsx:14:9'])).toEqual({
+    expect(parseLocation(['+call cursor(14, 9)', file])).toEqual(location)
+    expect(parseLocation(['--doctor', `${file}:14`])).toEqual({ file, line: 14, column: 1 })
+    expect(parseLocation(['C:\\foo\\bar.tsx:14:9'])).toEqual({
       file: 'C:\\foo\\bar.tsx',
       line: 14,
       column: 9,
     })
-  })
-
-  it('reads +line, a cursor call, positionals, and flags', () => {
-    expect(parseLocation(['+14', file])).toEqual({ file, line: 14, column: 1 })
-    expect(parseLocation(['+call cursor(14, 9)', file])).toEqual(location)
-    expect(parseLocation([file, '14', '9'])).toEqual(location)
-    expect(parseLocation(['--line', '14', '--column', '9', file])).toEqual(location)
   })
 
   it('returns null when no file is present', () => {
@@ -68,348 +69,370 @@ describe('parseLocation', () => {
   })
 })
 
+describe('splitCommand', () => {
+  it('splits editor arguments with shell-style quoting', () => {
+    expect(splitCommand('omarchy-launch-editor --inline "two words" \'three words\'')).toEqual([
+      'omarchy-launch-editor',
+      '--inline',
+      'two words',
+      'three words',
+    ])
+  })
+
+  it('rejects an unclosed quote', () => {
+    expect(() => splitCommand('cursor "broken')).toThrow(/未闭合/)
+  })
+})
+
 describe('planLaunch', () => {
-  it('opens a project socket in the running Neovim server', () => {
-    const plan = planLaunch(
-      location,
-      ctx({
-        which: nvimWhich(),
-        isSocket: (address) => address === '/tmp/proj/.nvim.sock',
-      }),
-    )
-    expect(plan).toEqual({
-      ok: true,
-      command: '/usr/bin/nvim',
-      args: ['--server', '/tmp/proj/.nvim.sock', '--remote', '+14', file],
-      wait: true,
-    })
-  })
-
-  it('prefers a host:port NVIM address over .nvim.sock', () => {
-    const plan = planLaunch(
-      location,
-      ctx({
-        env: { NVIM: '127.0.0.1:7777' },
-        which: nvimWhich(),
-        isSocket: (address) => address.endsWith('.nvim.sock'),
-      }),
-    )
-    expect(plan.args).toContain('127.0.0.1:7777')
-    expect(plan.args).not.toContain('/tmp/proj/.nvim.sock')
-  })
-
-  it('accepts a named pipe and NVIM_LISTEN_ADDRESS', () => {
-    const pipe = planLaunch(
-      location,
-      ctx({
-        env: { NVIM: '\\\\.\\pipe\\nvim' },
-        which: nvimWhich(),
-      }),
-    )
-    expect(pipe.args[1]).toBe('\\\\.\\pipe\\nvim')
-
-    const listen = planLaunch(
-      location,
-      ctx({
-        env: { NVIM_LISTEN_ADDRESS: '127.0.0.1:9999' },
-        which: nvimWhich(),
-      }),
-    )
-    expect(listen.args).toContain('127.0.0.1:9999')
-  })
-
-  it('ignores a NVIM value that is not a listen address and uses .nvim.sock', () => {
-    const plan = planLaunch(
-      location,
-      ctx({
-        env: { NVIM: '/tmp/not-a-socket' },
-        which: nvimWhich(),
-        isSocket: (address) => address === '/tmp/proj/.nvim.sock',
-      }),
-    )
-    expect(plan.args).toContain('/tmp/proj/.nvim.sock')
-  })
-
-  it('walks parents up to the git root and stops there', () => {
-    const plan = planLaunch(
-      location,
-      ctx({
-        cwd: '/repo/packages/app',
-        gitRoot: '/repo',
-        which: nvimWhich(),
-        isSocket: (address) => address === '/repo/.nvim.sock',
-      }),
-    )
-    expect(plan.args).toContain('/repo/.nvim.sock')
-
-    const above = planLaunch(
-      location,
-      ctx({
-        cwd: '/repo/packages/app',
-        gitRoot: '/repo',
-        which: nvimWhich(),
-        isSocket: (address) => address === '/.nvim.sock',
-      }),
-    )
-    expect(above.ok).toBe(false)
-  })
-
-  it('lets an explicit Cursor command beat a live Neovim socket', () => {
-    const plan = planLaunch(
-      location,
-      ctx({
-        env: { LAUNCH_EDITOR: 'cursor' },
-        which: nvimWhich(),
-        isSocket: () => true,
-      }),
-    )
-    expect(plan).toEqual({
-      ok: true,
-      command: 'cursor',
-      args: ['-g', `${file}:14:9`],
-      wait: false,
-    })
-  })
-
-  it('lets LAUNCH_EDITOR beat EDITOR', () => {
-    const plan = planLaunch(
-      location,
-      ctx({
-        env: { LAUNCH_EDITOR: 'cursor', EDITOR: 'nvim' },
-        which: nvimWhich(),
-        isSocket: () => true,
-      }),
-    )
-    expect(plan.command).toBe('cursor')
-  })
-
-  it('keeps an explicit nvim command off the GUI path', () => {
+  it('uses desktop activation for VS Code before Neovim and ambient editor settings', () => {
     const plan = planLaunch(
       location,
       ctx({
         env: { EDITOR: 'nvim' },
-        processes: [{ comm: 'cursor', exe: '/usr/bin/cursor' }],
-        which: nvimWhich({ kitty: '/usr/bin/kitty' }),
+        which: whichMap({
+          code: '/usr/bin/code',
+          'xdg-open': '/usr/bin/xdg-open',
+          nvim: '/usr/bin/nvim',
+        }),
       }),
     )
-    expect(plan).toEqual({
+    expect(plan).toMatchObject({
       ok: true,
-      command: '/usr/bin/kitty',
-      args: ['/usr/bin/nvim', '+14', file],
-      wait: false,
+      command: '/usr/bin/xdg-open',
+      args: ['vscode://file/tmp/proj/src/app.tsx:14:9'],
+      method: '默认 VS Code（桌面激活）',
     })
   })
 
-  it('uses an absolute nvim binary when nvim is not on PATH', () => {
-    const plan = planLaunch(
-      location,
-      ctx({
-        env: { EDITOR: '/opt/bin/nvim' },
-        which: (command) => (command === 'kitty' ? '/usr/bin/kitty' : null),
-      }),
-    )
-    expect(plan.args[0]).toBe('/opt/bin/nvim')
-  })
-
-  it('ignores a launcher path stored as the editor and uses the socket', () => {
-    const plan = planLaunch(
-      location,
-      ctx({
-        env: { LAUNCH_EDITOR: launcherPath },
-        which: nvimWhich(),
-        isSocket: (address) => address === '/tmp/proj/.nvim.sock',
-      }),
-    )
-    expect(plan.command).toBe('/usr/bin/nvim')
-    expect(plan.wait).toBe(true)
-  })
-
-  it('skips code when which(code) is the launcher itself', () => {
-    const plan = planLaunch(
-      location,
-      ctx({
-        env: { LAUNCH_EDITOR: 'code' },
-        which: (command) => {
-          if (command === 'code') return launcherPath
-          if (command === 'nvim') return '/usr/bin/nvim'
-          return null
-        },
-        isSocket: (address) => address === '/tmp/proj/.nvim.sock',
-      }),
-    )
-    expect(plan.command).toBe('/usr/bin/nvim')
-  })
-
-  it('spawns a real code binary when LAUNCH_EDITOR=code', () => {
-    const plan = planLaunch(
-      location,
-      ctx({
-        env: { LAUNCH_EDITOR: 'code' },
-        which: (command) => (command === 'code' ? '/usr/bin/code' : null),
-      }),
-    )
-    expect(plan).toEqual({
+  it('falls back to the VS Code CLI when desktop activation is unavailable', () => {
+    const plan = planLaunch(location, ctx({ which: whichMap({ code: '/usr/bin/code' }) }))
+    expect(plan).toMatchObject({
       ok: true,
-      command: 'code',
-      args: ['-g', `${file}:14:9`],
-      wait: false,
-    })
-  })
-
-  it('prefers a running Cursor over a running VS Code', () => {
-    const plan = planLaunch(
-      location,
-      ctx({
-        processes: [
-          { comm: 'code', exe: '/usr/bin/code' },
-          { comm: 'cursor', exe: '/usr/bin/cursor' },
-        ],
-      }),
-    )
-    expect(plan).toEqual({
-      ok: true,
-      command: '/usr/bin/cursor',
+      command: '/usr/bin/code',
       args: ['-r', '-g', `${file}:14:9`],
-      wait: false,
+      method: '默认 VS Code',
     })
   })
 
-  it('does not treat the launcher process as VS Code', () => {
+  it('preserves parameters in EDITOR when a TTY is available', () => {
     const plan = planLaunch(
       location,
       ctx({
-        processes: [{ comm: 'code', exe: launcherPath }],
+        env: { EDITOR: 'omarchy-launch-editor --inline "work pane"' },
+        hasTty: true,
+        which: whichMap({ 'omarchy-launch-editor': '/usr/bin/omarchy-launch-editor' }),
       }),
     )
-    expect(plan.ok).toBe(false)
+    expect(plan).toMatchObject({
+      ok: true,
+      command: '/usr/bin/omarchy-launch-editor',
+      args: ['--inline', 'work pane', `${file}:14:9`],
+      wait: true,
+      method: 'EDITOR',
+    })
   })
 
-  it('opens a new terminal nvim when that is feasible', () => {
-    const kitty = planLaunch(
+  it('reads a quoted explicit editor from the template .env.local', () => {
+    const plan = planLaunch(
       location,
       ctx({
-        which: nvimWhich({ kitty: '/usr/bin/kitty' }),
-      }),
-    )
-    expect(kitty).toEqual({
-      ok: true,
-      command: '/usr/bin/kitty',
-      args: ['/usr/bin/nvim', '+14', file],
-      wait: false,
-    })
-
-    const gnome = planLaunch(
-      location,
-      ctx({
-        which: nvimWhich({ 'gnome-terminal': '/usr/bin/gnome-terminal' }),
-      }),
-    )
-    expect(gnome.args).toEqual(['--', '/usr/bin/nvim', '+14', file])
-
-    const mac = planLaunch(
-      location,
-      ctx({
-        platform: 'darwin',
-        which: nvimWhich({ osascript: '/usr/bin/osascript' }),
-      }),
-    )
-    expect(mac.command).toBe('/usr/bin/osascript')
-    expect(mac.args[1]).toContain("/usr/bin/nvim +14 '/tmp/proj/src/app.tsx'")
-
-    const windows = planLaunch(
-      location,
-      ctx({
-        platform: 'win32',
-        which: (command) => {
-          if (command === 'nvim') return 'C:\\nvim\\nvim.exe'
-          if (command === 'wt') return 'C:\\Windows\\wt.exe'
-          return null
+        configDir: '/tmp/proj',
+        readFile: (name) => {
+          expect(name).toBe('/tmp/proj/.env.local')
+          return 'LAUNCH_EDITOR="cursor --reuse-window"\n'
         },
+        which: whichMap({ cursor: '/usr/bin/cursor' }),
       }),
     )
-    expect(windows).toEqual({
-      ok: true,
-      command: 'C:\\Windows\\wt.exe',
-      args: ['nvim', '+14', file],
-      wait: false,
+    expect(plan).toMatchObject({
+      command: '/usr/bin/cursor',
+      args: ['--reuse-window', '-g', `${file}:14:9`],
+      method: '显式编辑器 LAUNCH_EDITOR',
     })
   })
 
-  it('explains the one-time Neovim setup when nothing can open the file', () => {
+  it('routes explicit LAUNCH_EDITOR=nvim through the project server', () => {
+    const plan = planLaunch(
+      location,
+      nvimContext({
+        env: { LAUNCH_EDITOR: 'nvim --clean' },
+        isSocket: (address) => address === '/tmp/proj/.nvim.sock',
+        probeNvim: () => ({ ok: true, cwd: '/tmp/proj' }),
+      }),
+    )
+    expect(plan).toMatchObject({
+      ok: true,
+      command: '/usr/bin/nvim',
+      method: 'Neovim server /tmp/proj/.nvim.sock',
+    })
+    expect(plan.args.slice(0, 4)).toEqual([
+      '--clean',
+      '--server',
+      '/tmp/proj/.nvim.sock',
+      '--remote-send',
+    ])
+  })
+
+  it('walks from the clicked file to the git root for .nvim.sock', () => {
+    const nestedFile = '/tmp/proj/packages/app/src/view.tsx'
+    const plan = planLaunch(
+      { file: nestedFile, line: 3, column: 4 },
+      nvimContext({
+        isSocket: (address) => address === '/tmp/proj/packages/app/.nvim.sock',
+        probeNvim: () => ({ ok: true, cwd: '/tmp/proj/packages/app' }),
+      }),
+    )
+    expect(plan.args).toContain('/tmp/proj/packages/app/.nvim.sock')
+    expect(plan.args.at(-1)).toContain(
+      ':drop /tmp/proj/packages/app/src/view.tsx | call cursor(3, 4)<CR>',
+    )
+  })
+
+  it('uses a matching XDG runtime socket and mocks remote-expr spawn', () => {
+    const spawnMock = vi.fn((command, args, options) => {
+      expect(command).toBe('/usr/bin/nvim')
+      expect(args).toEqual(['--server', '/run/user/1000/nvim.123.0', '--remote-expr', 'getcwd()'])
+      expect(options.timeout).toBe(1000)
+      return { status: 0, stdout: '/tmp/proj\n', stderr: '' }
+    })
+    const plan = planLaunch(
+      location,
+      nvimContext({
+        isSocket: (address) => address === '/run/user/1000/nvim.123.0',
+        scanSockets: () => ['/run/user/1000/nvim.123.0'],
+        spawnSync: spawnMock,
+      }),
+    )
+    expect(plan.args).toContain('/run/user/1000/nvim.123.0')
+    expect(spawnMock).toHaveBeenCalledOnce()
+  })
+
+  it('chooses the deepest cwd among this project and rejects other projects', () => {
+    const sockets = ['/run/nvim.1.0', '/run/nvim.2.0', '/run/nvim.3.0']
+    const cwdBySocket = {
+      '/run/nvim.1.0': '/tmp/proj',
+      '/run/nvim.2.0': '/tmp/proj/packages/app',
+      '/run/nvim.3.0': '/tmp/another-project',
+    }
+    const plan = planLaunch(
+      location,
+      nvimContext({
+        isSocket: (address) => sockets.includes(address),
+        scanSockets: () => sockets,
+        probeNvim: (address) => ({ ok: true, cwd: cwdBySocket[address] }),
+      }),
+    )
+    expect(plan.args).toContain('/run/nvim.2.0')
+    expect(plan.debug.join('\n')).toContain('其他项目')
+  })
+
+  it('requires inherited NVIM to be live and inside this project', () => {
+    const plan = planLaunch(
+      location,
+      nvimContext({
+        env: { NVIM: '/run/foreign.sock' },
+        isSocket: (address) => address === '/run/foreign.sock' || address === '/run/local.sock',
+        scanSockets: () => ['/run/local.sock'],
+        probeNvim: (address) => ({
+          ok: true,
+          cwd: address === '/run/foreign.sock' ? '/tmp/other' : '/tmp/proj',
+        }),
+      }),
+    )
+    expect(plan.args).toContain('/run/local.sock')
+    expect(plan.args).not.toContain('/run/foreign.sock')
+  })
+
+  it('skips stale sockets, removes only a confirmed project .nvim.sock, and logs both', () => {
+    const removeSocket = vi.fn()
+    const plan = planLaunch(
+      location,
+      nvimContext({
+        isSocket: (address) =>
+          address === '/tmp/proj/.nvim.sock' ||
+          address === '/run/stale.sock' ||
+          address === '/run/live.sock',
+        scanSockets: () => ['/run/stale.sock', '/run/live.sock'],
+        probeNvim: (address) =>
+          address === '/run/live.sock'
+            ? { ok: true, cwd: '/tmp/proj' }
+            : { ok: false, reason: '连接被拒绝' },
+        removeSocket,
+      }),
+    )
+    expect(plan.args).toContain('/run/live.sock')
+    expect(removeSocket).toHaveBeenCalledWith('/tmp/proj/.nvim.sock')
+    expect(removeSocket).not.toHaveBeenCalledWith('/run/stale.sock')
+    expect(plan.debug.join('\n')).toContain('失效运行时 socket')
+  })
+
+  it('escapes spaces and Ex-special characters in the remote-send path', () => {
+    const special = '/tmp/proj/a b/x|y#z.tsx'
+    const plan = planLaunch(
+      { file: special, line: 2, column: 7 },
+      nvimContext({
+        isSocket: (address) => address === '/tmp/proj/.nvim.sock',
+        probeNvim: () => ({ ok: true, cwd: '/tmp/proj' }),
+      }),
+    )
+    expect(plan.args.at(-1)).toBe(
+      '<C-\\><C-N>:drop /tmp/proj/a\\ b/x\\|y\\#z.tsx | call cursor(2, 7)<CR>',
+    )
+  })
+
+  it('skips a terminal EDITOR without a TTY and uses a running Cursor', () => {
+    const plan = planLaunch(
+      location,
+      ctx({
+        env: { EDITOR: 'omarchy-launch-editor --inline' },
+        which: whichMap({ 'omarchy-launch-editor': '/usr/bin/omarchy-launch-editor' }),
+        processes: [{ comm: 'cursor', exe: '/usr/bin/cursor' }],
+      }),
+    )
+    expect(plan.method).toBe('正在运行的 Cursor / VS Code')
+    expect(plan.attempts.join('\n')).toContain('没有 TTY')
+  })
+
+  it('uses tmux before a terminal emulator', () => {
+    const plan = planLaunch(
+      location,
+      nvimContext({
+        env: { TMUX: '/tmp/tmux-1000/default,123,0' },
+        which: whichMap({ nvim: '/usr/bin/nvim', tmux: '/usr/bin/tmux', kitty: '/usr/bin/kitty' }),
+      }),
+    )
+    expect(plan).toMatchObject({
+      command: '/usr/bin/tmux',
+      args: ['new-window', '-c', '/tmp/proj', '/usr/bin/nvim', '+14', file],
+      method: 'tmux 新窗口',
+    })
+  })
+
+  it('reports every failed strategy with actionable Chinese guidance', () => {
     const plan = planLaunch(location, ctx())
     expect(plan.ok).toBe(false)
-    expect(plan.reason).toBe(failureReason())
-    expect(plan.reason).toContain('nvim --listen .nvim.sock')
-    expect(plan.reason).toContain('LAUNCH_EDITOR=cursor')
+    expect(plan.reason).toContain('显式编辑器')
+    expect(plan.reason).toContain('Neovim server')
+    expect(plan.reason).toContain('VISUAL / EDITOR')
+    expect(plan.reason).toContain('Cursor / VS Code')
+    expect(plan.reason).toContain('tmux')
+    expect(plan.reason).toContain('LAUNCH_EDITOR')
+    expect(plan.reason).toContain('init.lua')
   })
 })
 
-describe('claimEditorEnv', () => {
-  it('stashes the explicit editor and points the inspector variables at the shim', () => {
-    const env = { LAUNCH_EDITOR: 'cursor', EDITOR: 'nvim' }
-    claimEditorEnv(launcherPath, env)
-    expect(env).toEqual({
-      LAUNCH_EDITOR: launcherPath,
-      CODE_EDITOR: launcherPath,
-      REACT_EDITOR: launcherPath,
-      REACTLOOM_EDITOR: 'cursor',
-      EDITOR: 'nvim',
-    })
-  })
-
-  it('does not stash the shim path as the user editor', () => {
-    const env = { LAUNCH_EDITOR: launcherPath, EDITOR: 'nvim' }
-    claimEditorEnv(launcherPath, env)
-    expect(env.REACTLOOM_EDITOR).toBeUndefined()
-    expect(env.EDITOR).toBe('nvim')
-    expect(env.LAUNCH_EDITOR).toBe(launcherPath)
-  })
-})
-
-describe('activateLauncher', () => {
+describe('launcher activation', () => {
   const temps = []
 
   afterEach(() => {
     for (const dir of temps.splice(0)) fs.rmSync(dir, { recursive: true, force: true })
   })
 
-  it('uses the repo scripts when the template directory has none', () => {
-    const env = {}
-    const command = activateLauncher(path.join(repoRoot, 'templates', 'spa'), env)
-    const name = process.platform === 'win32' ? 'code.cmd' : 'code'
-    expect(command).toBe(path.join(repoRoot, 'scripts', name))
-    expect(env.LAUNCH_EDITOR).toBe(command)
-    expect(env.CODE_EDITOR).toBe(command)
-    expect(env.REACT_EDITOR).toBe(command)
+  it('stashes an explicit command with arguments and points inspectors at the shim', () => {
+    const env = { LAUNCH_EDITOR: 'cursor --reuse-window', EDITOR: 'nvim' }
+    claimEditorEnv(launcherPath, env)
+    expect(env).toEqual({
+      LAUNCH_EDITOR: launcherPath,
+      CODE_EDITOR: launcherPath,
+      REACT_EDITOR: launcherPath,
+      REACTLOOM_EDITOR: 'cursor --reuse-window',
+      EDITOR: 'nvim',
+    })
   })
 
-  it('uses scripts beside a generated project', () => {
+  it('loads .env.local beside a generated project before claiming variables', () => {
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'reactloom-editor-'))
     temps.push(dir)
     fs.mkdirSync(path.join(dir, 'scripts'))
     fs.writeFileSync(path.join(dir, 'scripts', 'open-in-editor.mjs'), '\n')
     fs.writeFileSync(path.join(dir, 'scripts', 'code'), '\n')
     fs.writeFileSync(path.join(dir, 'scripts', 'code.cmd'), '\n')
-    const env = { LAUNCH_EDITOR: 'cursor' }
+    fs.writeFileSync(path.join(dir, '.env.local'), 'LAUNCH_EDITOR="cursor --reuse-window"\n')
+    const env = {}
     const command = activateLauncher(dir, env)
-    const name = process.platform === 'win32' ? 'code.cmd' : 'code'
-    expect(command).toBe(path.join(dir, 'scripts', name))
-    expect(env.REACTLOOM_EDITOR).toBe('cursor')
+    expect(command).toBe(
+      path.join(dir, 'scripts', process.platform === 'win32' ? 'code.cmd' : 'code'),
+    )
+    expect(env.REACTLOOM_EDITOR).toBe('cursor --reuse-window')
+    expect(env.REACTLOOM_CONFIG_DIR).toBe(dir)
   })
 
-  it('throws when the shim is missing', () => {
-    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'reactloom-editor-'))
-    temps.push(dir)
-    expect(() => activateLauncher(dir, {})).toThrow(/open-in-editor.mjs/)
+  it('uses the monorepo scripts when the template directory has none', () => {
+    const env = {}
+    const command = activateLauncher(path.join(repoRoot, 'templates', 'spa'), env)
+    expect(command).toBe(
+      path.join(repoRoot, 'scripts', process.platform === 'win32' ? 'code.cmd' : 'code'),
+    )
   })
 })
 
 describe('runCli', () => {
-  it('does not spawn an editor when arguments or an editor are missing', () => {
-    runCli([])
-    expect(process.exitCode).toBe(1)
-    process.exitCode = undefined
-    runCli([`${file}:14:9`], ctx())
-    expect(process.exitCode).toBe(1)
+  it('does not recursively launch its own inspector shim from the real entry point', () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'reactloom-editor-path-'))
+    const fakeCode = path.join(dir, process.platform === 'win32' ? 'code.cmd' : 'code')
+    fs.writeFileSync(fakeCode, '')
+    fs.chmodSync(fakeCode, 0o755)
+    const realLauncher = path.join(
+      repoRoot,
+      'scripts',
+      process.platform === 'win32' ? 'code.cmd' : 'code',
+    )
+    const result = spawnSync(
+      process.execPath,
+      [path.join(repoRoot, 'scripts', 'open-in-editor.mjs'), '--doctor', `${file}:14:9`],
+      {
+        encoding: 'utf8',
+        env: {
+          PATH: `${dir}${path.delimiter}${process.env.PATH ?? ''}`,
+          LAUNCH_EDITOR: realLauncher,
+          CODE_EDITOR: realLauncher,
+          REACT_EDITOR: realLauncher,
+        },
+        timeout: 2_000,
+      },
+    )
+    fs.rmSync(dir, { recursive: true, force: true })
+
+    expect(result.error).toBeUndefined()
+    expect(result.status).toBe(0)
+    expect(result.stdout).toContain('选择：默认 VS Code')
+    expect(result.stdout).not.toContain('选择：显式编辑器')
+  })
+
+  it('diagnoses without spawning an editor', () => {
+    const log = vi.fn()
+    const spawnMock = vi.fn()
+    const plan = runCli(
+      ['--doctor', `${file}:14`],
+      ctx({
+        env: { LAUNCH_EDITOR: 'cursor' },
+        which: whichMap({ cursor: '/usr/bin/cursor' }),
+        log,
+        spawn: spawnMock,
+      }),
+    )
+    expect(plan.ok).toBe(true)
+    expect(spawnMock).not.toHaveBeenCalled()
+    expect(log.mock.calls.flat().join('\n')).toContain('不会打开文件')
+    expect(log.mock.calls.flat().join('\n')).toContain('显式编辑器 LAUNCH_EDITOR')
+  })
+
+  it('uses an injected spawn for a non-waiting editor plan', () => {
+    const child = { on: vi.fn(), unref: vi.fn() }
+    const spawnMock = vi.fn(() => child)
+    runCli(
+      [`${file}:14:9`],
+      ctx({
+        env: { LAUNCH_EDITOR: 'cursor' },
+        which: whichMap({ cursor: '/usr/bin/cursor' }),
+        spawn: spawnMock,
+      }),
+    )
+    expect(spawnMock).toHaveBeenCalledWith('/usr/bin/cursor', ['-g', `${file}:14:9`], {
+      detached: true,
+      stdio: 'ignore',
+    })
+    expect(child.unref).toHaveBeenCalled()
   })
 })

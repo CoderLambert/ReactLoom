@@ -36,8 +36,8 @@ function DevFrames({ stack }: { stack: string }) {
   return (
     <div className="space-y-2">
       <p className="text-sm text-muted">
-        Click a project frame to open it. Option+Shift (Alt+Shift) uses the same inspector as the
-        rest of the page. Compile errors stay in the Vite overlay.
+        Click a project frame to open it. Control+Shift+Option (Ctrl+Shift+Alt) uses the same
+        inspector as the rest of the page. Compile errors stay in the Vite overlay.
       </p>
       <pre className="overflow-auto rounded-2xl bg-ink/5 p-4 text-xs leading-5">
         {frames.map((frame, index) => {

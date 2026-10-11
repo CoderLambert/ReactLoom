@@ -108,6 +108,8 @@ pnpm 10 允许把根目录算进工作区，于是 `pnpm exec turbo run build` �
 
 `SESSION_SECRET` 不进哈希，是因为它不应被写进客户端产物。会改变构建结果的公开变量用另一组：`VITE_*`、`NEXT_PUBLIC_*`、`EXPO_PUBLIC_*`，写在具体任务的 `env` 上。`REACTLOOM_STRICT_SECRETS` 会决定 SSR 构建拒不拒绝开发密钥，所以它在 `build` 的 `env` 里，参与哈希。
 
+`dev` 任务另外透传 `DBUS_SESSION_BUS_ADDRESS`、`DISPLAY`、`WAYLAND_DISPLAY` 和相关 `XDG_*` 桌面会话变量。Linux 的 click-to-source 需要这些变量调用系统注册的 `vscode://file` 协议，让桌面正常激活 VS Code；不再通过 Hyprland 强制聚焦窗口。这些变量在 CI 中不存在，因此不会改变非交互任务。
+
 ### 任务
 
 `^build` 表示「依赖包的 `build` 先成功」。API client 的 `exports` 指向 `dist`，所以应用的 `dev`、`test`、`typecheck`、`build` 都依赖它。没有该脚本的包会被跳过，例如 `@reactloom/tsconfig` 没有 `build`。

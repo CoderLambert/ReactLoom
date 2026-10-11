@@ -58,6 +58,10 @@ Route handlers and server modules may use the client or the local task module. C
 
 生成器用下面这句精确文本校验 why-did-you-render 的禁用原因：Next.js 16 compiles JSX with SWC on Turbopack and has no app-wide jsxImportSource. why-did-you-render v10 requires that Babel setting, so this template does not load it. React Scan's outline shows the render cause and the props that changed.
 
+## Click-to-source
+
+按住 Ctrl+Shift+Alt（Linux/Windows）或 Control+Shift+Option（macOS）再单击元素；`next.config.ts` 显式配置了这三个 modifier。launcher 会先读 `.env.local` 的 `LAUNCH_EDITOR` / `CODE_EDITOR` / `REACT_EDITOR`（支持带引号的参数）；未配置时默认打开 VS Code 的精确源码位置。Linux 走 `vscode://file` 桌面协议，不强制操作合成器焦点。`REACTLOOM_EDITOR_DEBUG=1` 打印解析过程；`pnpm doctor:editor [文件:行]` 只诊断不打开。
+
 ## Do
 
 - Read the Next.js docs under `node_modules/next/dist/docs/` before adding a framework API.

@@ -65,20 +65,19 @@ After `pnpm install`, these are already configured:
 | Errors | SPA: Vite overlay plus vite-plugin-checker, and a dev stack in `src/components/errors/fallback.tsx`. SSR: the Next.js overlay, and a dev stack in `src/app/error.tsx`. Expo: LogBox, and a dev stack from `app/_layout.tsx`. Project frames open in the editor. Production hides the stack. |
 | Click to source | SPA uses `code-inspector-plugin` on Vite. SSR uses the same plugin on Turbopack, plus Next.js open-in-editor. Expo uses `react-native-dev-inspector`. |
 
-Click to source, on the web: hold Option+Shift on macOS, or Alt+Shift on Windows and Linux, then click. On Expo, tap the lightning button, then tap the component. Saving the file hot-reloads through the dev server that is already running.
+Click to source, on the web: hold Control+Shift+Option on macOS, or Ctrl+Shift+Alt on Windows and Linux, then click. On Expo, tap the lightning button, then tap the component. Saving the file hot-reloads through the dev server that is already running.
 
-The editor is detected. No editor variable is set in `.env.development`.
+No editor variable is set in `.env.development`. VS Code is the default.
 
-1. An explicit `LAUNCH_EDITOR`, `CODE_EDITOR`, `REACT_EDITOR`, `VISUAL`, or `EDITOR`, if you set one in `.env.local`.
-2. A running Neovim server (`$NVIM`, `$NVIM_LISTEN_ADDRESS`, or `.nvim.sock`).
-3. A running Cursor, then VS Code.
-4. A new terminal Neovim, when a terminal emulator is available.
+1. An explicit `LAUNCH_EDITOR`, `CODE_EDITOR`, or `REACT_EDITOR`, including quoted arguments from `.env.local`.
+2. VS Code at the exact source position. Linux uses the registered `vscode://file` desktop handler and does not force compositor focus; other platforms fall back to `code -r -g file:line:column`.
+3. Legacy editor detection only when `code` is unavailable.
 
-VS Code and Cursor need nothing else when that editor is already running, or when `code` or `cursor` is on `PATH`.
+VS Code needs nothing else when `code` is on `PATH`. Set `LAUNCH_EDITOR=cursor` in `.env.local` if you prefer Cursor.
 
 ## Neovim
 
-Neovim is the one step that is not automatic. The dev server has no terminal, so it cannot open a new nvim window on its own stdio. `$NVIM` is set only inside a Neovim `:terminal`, which a dev server started from a normal shell does not have.
+The launcher scans live Neovim sockets automatically, but a project socket is the most deterministic setup. `$NVIM` is usually inherited only inside a Neovim `:terminal`; its server cwd is checked so an inherited socket cannot jump into another project.
 
 From the project directory:
 
@@ -89,16 +88,12 @@ nvim --listen .nvim.sock
 Or in `init.lua`. A socket is not a regular file, so this uses `fs_stat`:
 
 ```lua
-local sock = vim.fn.getcwd() .. "/.nvim.sock"
-local uv = vim.uv or vim.loop
-if uv.fs_stat(sock) == nil then
-  pcall(vim.fn.serverstart, sock)
-end
+local root = vim.fs.root(0, ".git") or vim.fn.getcwd()
+local sock = root .. "/.nvim.sock"
+if not vim.uv.fs_stat(sock) then pcall(vim.fn.serverstart, sock) end
 ```
 
-`.nvim.sock` is gitignored. The click then runs `nvim --server <address> --remote +<line> <file>` in that instance. A socket at the git root is found even when the dev server's working directory is a package inside the repo.
-
-If the socket is left behind after nvim exits, `rm -f .nvim.sock` and start nvim again.
+`.nvim.sock` is gitignored. Multiple projects stay isolated by git root. If several Neovim instances belong to one project, the deepest server cwd wins. A confirmed-dead project `.nvim.sock` is skipped and may be removed; runtime-directory sockets are never deleted.
 
 The inspectors spawn `scripts/code` (on Windows, `scripts/code.cmd`). That file is named `code` so they pass a line number. It is not VS Code. Do not put `scripts/` on `PATH`.
 
@@ -106,10 +101,11 @@ The inspectors spawn `scripts/code` (on Windows, `scripts/code.cmd`). That file 
 
 | What you see | Fix |
 | --- | --- |
-| Neovim is installed, and the click does nothing | `nvim --listen .nvim.sock` in the project, or the `init.lua` snippet above. |
-| `nvim` is not on `PATH` | Install Neovim, or set `LAUNCH_EDITOR=cursor` in `.env.local` and restart `pnpm dev`. |
-| You want VS Code while Cursor is also running | `LAUNCH_EDITOR=code` in `.env.local`. Cursor is preferred when both are running. |
+| `code` is not on `PATH` | Install the VS Code shell command, or set `LAUNCH_EDITOR` in `.env.local` to an available editor and restart `pnpm dev`. |
+| You want Cursor instead of VS Code | Set `LAUNCH_EDITOR=cursor` in `.env.local` and restart `pnpm dev`. |
 | Windows reports `EINVAL` from `scripts/code.cmd` | `LAUNCH_EDITOR=cursor` in `.env.local`. |
+
+Set `REACTLOOM_EDITOR_DEBUG=1` for the full selection trace. `pnpm doctor:editor [file:line]` prints the selected command without opening it.
 | Expo on a phone or simulator | Open-in-editor runs on the computer that runs Metro. `pnpm dev`, then press `w` for the web preview. Generation does not boot a simulator. |
 
 The React DevTools browser extension is not required. Click-to-source does not use it.

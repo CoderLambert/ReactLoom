@@ -36,6 +36,7 @@ export default defineConfig(({ command }) => {
         ? codeInspectorPlugin({
             bundler: 'vite',
             editor: activateEditor(root),
+            hotKeys: ['ctrlKey', 'shiftKey', 'altKey'],
           })
         : undefined,
       react(),

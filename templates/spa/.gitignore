@@ -13,3 +13,4 @@ test-results
 !.env.example
 stats.html
 storybook-static
+.nvim.sock
