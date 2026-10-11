@@ -8,6 +8,7 @@ import {
   claimEditorEnv,
   failureReason,
   parseLocation,
+  planEditorFocus,
   planLaunch,
   runCli,
 } from '../../../scripts/open-in-editor.mjs'
@@ -69,6 +70,23 @@ describe('parseLocation', () => {
 })
 
 describe('planLaunch', () => {
+  it('uses VS Code by default before Neovim and EDITOR', () => {
+    const plan = planLaunch(
+      location,
+      ctx({
+        env: { EDITOR: 'nvim' },
+        which: nvimWhich({ code: '/usr/bin/code' }),
+        isSocket: () => true,
+      }),
+    )
+    expect(plan).toEqual({
+      ok: true,
+      command: '/usr/bin/code',
+      args: ['-r', '-g', `${file}:14:9`],
+      wait: false,
+    })
+  })
+
   it('opens a project socket in the running Neovim server', () => {
     const plan = planLaunch(
       location,
@@ -80,7 +98,12 @@ describe('planLaunch', () => {
     expect(plan).toEqual({
       ok: true,
       command: '/usr/bin/nvim',
-      args: ['--server', '/tmp/proj/.nvim.sock', '--remote', '+14', file],
+      args: [
+        '--server',
+        '/tmp/proj/.nvim.sock',
+        '--remote-expr',
+        `execute('edit ' . fnameescape('${file}')) . cursor(14, 9)`,
+      ],
       wait: true,
     })
   })
@@ -341,6 +364,32 @@ describe('planLaunch', () => {
     expect(plan.reason).toBe(failureReason())
     expect(plan.reason).toContain('nvim --listen .nvim.sock')
     expect(plan.reason).toContain('LAUNCH_EDITOR=cursor')
+  })
+})
+
+describe('planEditorFocus', () => {
+  it('focuses VS Code on Hyprland', () => {
+    expect(
+      planEditorFocus(
+        { command: '/usr/bin/code' },
+        {
+          env: { HYPRLAND_INSTANCE_SIGNATURE: 'instance' },
+          which: (command) => (command === 'hyprctl' ? '/usr/bin/hyprctl' : null),
+        },
+      ),
+    ).toEqual({
+      command: '/usr/bin/hyprctl',
+      args: [
+        '--instance',
+        'instance',
+        'dispatch',
+        'hl.dsp.focus({ window = "class:com.microsoft.VSCode" })',
+      ],
+    })
+  })
+
+  it('does nothing outside Hyprland', () => {
+    expect(planEditorFocus({ command: '/usr/bin/code' }, { env: {}, which: () => null })).toBeNull()
   })
 })
 

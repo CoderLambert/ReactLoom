@@ -1,8 +1,6 @@
 #!/usr/bin/env node
-// Opens file:line from a dev-server inspector.
-// Order: REACTLOOM_EDITOR (the user's LAUNCH_EDITOR / CODE_EDITOR / REACT_EDITOR),
-// then VISUAL / EDITOR, then a running Neovim server, then a running Cursor or
-// VS Code, then a new terminal nvim. Inspectors spawn scripts/code so they keep
+// Opens file:line from a dev-server inspector. An explicit editor override wins;
+// otherwise VS Code is the default. Inspectors spawn scripts/code so they keep
 // the line number. That shim is not VS Code.
 
 import { execFileSync, spawn, spawnSync } from 'node:child_process'
@@ -127,12 +125,18 @@ export function planLaunch(location, context = {}) {
   const line = positive(location.line)
   const column = positive(location.column)
 
-  const explicit = explicitEditor(env, launcherPath, which)
+  const explicit = explicitEditor(env, launcherPath, which, [
+    'REACTLOOM_EDITOR',
+    'LAUNCH_EDITOR',
+    'CODE_EDITOR',
+    'REACT_EDITOR',
+  ])
   if (explicit) {
     if (isNvimCommand(explicit)) {
       const nvim = planNvim({
         file,
         line,
+        column,
         cwd,
         gitRoot,
         env,
@@ -148,9 +152,42 @@ export function planLaunch(location, context = {}) {
     return planExplicit(explicit, file, line, column)
   }
 
+  const vscode = which('code')
+  if (vscode && !samePath(vscode, launcherPath)) {
+    return {
+      ok: true,
+      command: vscode,
+      args: ['-r', '-g', `${file}:${line}:${column}`],
+      wait: false,
+    }
+  }
+
+  const ambient = explicitEditor(env, launcherPath, which, ['VISUAL', 'EDITOR'])
+  if (ambient) {
+    if (isNvimCommand(ambient)) {
+      const nvim = planNvim({
+        file,
+        line,
+        column,
+        cwd,
+        gitRoot,
+        env,
+        isSocket,
+        which,
+        platform,
+        terminal: true,
+        nvimBin: path.isAbsolute(ambient) ? ambient : undefined,
+      })
+      if (nvim) return nvim
+      return { ok: false, reason: failureReason() }
+    }
+    return planExplicit(ambient, file, line, column)
+  }
+
   const server = planNvim({
     file,
     line,
+    column,
     cwd,
     gitRoot,
     env,
@@ -167,6 +204,7 @@ export function planLaunch(location, context = {}) {
   const terminal = planNvim({
     file,
     line,
+    column,
     cwd,
     gitRoot,
     env,
@@ -181,7 +219,37 @@ export function planLaunch(location, context = {}) {
   return { ok: false, reason: failureReason() }
 }
 
-export function runCli(argv, context) {
+export function planEditorFocus(plan, context = {}) {
+  const env = context.env ?? process.env
+  const which = context.which ?? whichCommand
+  if (editorBasename(plan.command) !== 'code') return null
+  const hyprctl = which('hyprctl')
+  if (!hyprctl) return null
+  let instance = env.HYPRLAND_INSTANCE_SIGNATURE
+  if (!instance) {
+    try {
+      const output = (context.execFileSync ?? execFileSync)(hyprctl, ['instances', '-j'], {
+        encoding: 'utf8',
+      })
+      const instances = JSON.parse(output)
+      instance = instances.sort((left, right) => right.time - left.time)[0]?.instance
+    } catch {
+      return null
+    }
+  }
+  if (!instance) return null
+  return {
+    command: hyprctl,
+    args: [
+      '--instance',
+      instance,
+      'dispatch',
+      'hl.dsp.focus({ window = "class:com.microsoft.VSCode" })',
+    ],
+  }
+}
+
+export function runCli(argv, context = {}) {
   const location = parseLocation(argv)
   if (!location) {
     console.error('Usage: open-in-editor.mjs <file:line:column>')
@@ -195,14 +263,29 @@ export function runCli(argv, context) {
     return
   }
   if (plan.wait) {
-    const result = spawnSync(plan.command, plan.args, { stdio: 'inherit' })
+    const result = (context.spawnSync ?? spawnSync)(plan.command, plan.args, { stdio: 'inherit' })
     process.exitCode = result.status ?? 1
     return
   }
-  const child = spawn(plan.command, plan.args, { detached: true, stdio: 'ignore' })
+  const spawnImpl = context.spawn ?? spawn
+  const child = spawnImpl(plan.command, plan.args, { detached: true, stdio: 'ignore' })
   child.on('error', (error) => {
     console.error(error.message)
   })
+  const focus = planEditorFocus(plan, context)
+  if (focus) {
+    child.on('spawn', () => {
+      const schedule = context.setTimeout ?? setTimeout
+      schedule(() => {
+        const focusChild = spawnImpl(focus.command, focus.args, {
+          detached: true,
+          stdio: 'ignore',
+        })
+        focusChild.on('error', () => {})
+        focusChild.unref()
+      }, context.focusDelay ?? 350)
+    })
+  }
   child.unref()
 }
 
@@ -223,15 +306,12 @@ function launcherRoot(configDir) {
   return path.resolve(configDir, '..', '..')
 }
 
-function explicitEditor(env, launcherPath, which) {
-  const keys = [
-    'REACTLOOM_EDITOR',
-    'LAUNCH_EDITOR',
-    'CODE_EDITOR',
-    'REACT_EDITOR',
-    'VISUAL',
-    'EDITOR',
-  ]
+function explicitEditor(
+  env,
+  launcherPath,
+  which,
+  keys = ['REACTLOOM_EDITOR', 'LAUNCH_EDITOR', 'CODE_EDITOR', 'REACT_EDITOR'],
+) {
   for (const key of keys) {
     const value = env[key]
     if (!value || samePath(value, launcherPath)) continue
@@ -265,6 +345,7 @@ function planExplicit(command, file, line, column) {
 function planNvim({
   file,
   line,
+  column,
   cwd,
   gitRoot,
   env,
@@ -283,7 +364,12 @@ function planNvim({
       return {
         ok: true,
         command: nvim,
-        args: ['--server', address, '--remote', `+${line}`, file],
+        args: [
+          '--server',
+          address,
+          '--remote-expr',
+          `execute('edit ' . fnameescape(${vimStringLiteral(file)})) . cursor(${line}, ${column})`,
+        ],
         wait: true,
       }
     }
@@ -408,6 +494,10 @@ function shQuote(value) {
 
 function appleQuote(value) {
   return `"${value.replaceAll('\\', '\\\\').replaceAll('"', '\\"')}"`
+}
+
+function vimStringLiteral(value) {
+  return `'${value.replaceAll("'", "''")}'`
 }
 
 function whichCommand(command) {
