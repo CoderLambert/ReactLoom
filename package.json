@@ -24,6 +24,7 @@
     "test:e2e": "turbo run test:e2e --filter=@reactloom/template-spa --filter=@reactloom/template-ssr",
     "build": "turbo run build",
     "analyze": "turbo run analyze",
+    "doctor:editor": "node scripts/open-in-editor.mjs --doctor",
     "lighthouse": "turbo run lighthouse --filter=@reactloom/template-spa --filter=@reactloom/template-ssr",
     "prepare": "node scripts/setup-git.mjs",
     "create-reactloom": "pnpm --filter create-reactloom build && node ./packages/create-reactloom/dist/cli.js",

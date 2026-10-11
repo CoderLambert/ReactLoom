@@ -13,6 +13,7 @@
     "ios": "expo start --ios",
     "build": "expo export --platform web --output-dir dist",
     "analyze": "EXPO_ATLAS=true expo export --platform web --output-dir dist && expo-atlas .expo/atlas.jsonl",
+    "doctor:editor": "if [ -f scripts/open-in-editor.mjs ]; then launcher=scripts/open-in-editor.mjs; else launcher=../../scripts/open-in-editor.mjs; fi; node \"$launcher\" --doctor",
     "lint": "biome check .",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",

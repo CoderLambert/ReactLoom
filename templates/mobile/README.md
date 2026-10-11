@@ -35,22 +35,6 @@ react-scan 0.5.7 has no React Native export. The native preview at aidenybai/rea
 
 On-device Storybook is not loaded. `@storybook/react-native` 10.6.0 is developed with Expo 57, but it requires `react-native-safe-area-context` 5.8.0 and `@gorhom/bottom-sheet`. Expo SDK 57 bundles safe-area-context ~5.7.0 and does not include bottom-sheet. Local data stays behind `EXPO_PUBLIC_USE_FIXTURES`. MSW 3.0.3 has no React Native entry. `@axe-core/react` needs a DOM, so it is not loaded. Use the axe DevTools browser extension on the web preview. `.maestro/login.yaml` is the device flow. CI does not launch an emulator, and Maestro is not an npm dependency.
 
-Tap the lightning button, then tap a component. The editor is a running Neovim server, then Cursor, then VS Code. A simulator is not started for you. `pnpm dev`, then `w`, opens the web preview.
-
-Neovim needs one step. The dev server cannot open a new nvim window:
-
-```sh
-nvim --listen .nvim.sock
-```
-
-Or in `init.lua`:
-
-```lua
-local sock = vim.fn.getcwd() .. "/.nvim.sock"
-local uv = vim.uv or vim.loop
-if uv.fs_stat(sock) == nil then
-  pcall(vim.fn.serverstart, sock)
-end
-```
+Tap the lightning button, then tap a component. The launcher opens the matching file and position in VS Code by default. Set `LAUNCH_EDITOR` in `.env.local` only when you want another editor. Run `pnpm doctor:editor [file:line]` to diagnose without opening. A simulator is not started for you. `pnpm dev`, then `w`, opens the web preview.
 
 `docs/getting-started.md` at the repository root has the rest, including the cases that still need a manual fix.

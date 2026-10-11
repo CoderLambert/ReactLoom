@@ -92,6 +92,7 @@ const nextConfig: NextConfig = {
   turbopack: {
     rules: codeInspectorPlugin({
       bundler: 'turbopack',
+      hotKeys: ['ctrlKey', 'shiftKey', 'altKey'],
       ...(clickToSource ? { editor: activateEditor(import.meta.dirname) } : { dev: false }),
     }),
     ...(aliases ? { resolveAlias: aliases } : {}),
