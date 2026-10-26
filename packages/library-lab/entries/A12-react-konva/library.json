@@ -1,1 +1,101 @@
-{"schemaVersion":1,"entryId":"A12","slug":"react-konva","name":"react-konva","group":"A","summary":"React 声明式二维画布","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "A12",
+  "slug": "react-konva",
+  "name": "react-konva",
+  "group": "A",
+  "summary": "React 19.3 声明式二维画布与编辑状态",
+  "tags": [
+    "React",
+    "Canvas",
+    "Konva",
+    "drag",
+    "accessibility"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "react-konva",
+      "version": "19.3.2"
+    },
+    {
+      "name": "konva",
+      "version": "10.9.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "React-Konva 官方说明",
+      "url": "https://konvajs.org/docs/react/index.html"
+    },
+    {
+      "title": "React 19.3 兼容说明",
+      "url": "https://github.com/konvajs/react-konva/blob/master/docs/react-compatibility.md"
+    },
+    {
+      "title": "npm React-Konva",
+      "url": "https://www.npmjs.com/package/react-konva"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "A11",
+      "relation": "complements",
+      "reason": "React之外直接操作场景图优先Konva；不要同时让两个Owner操控同一个Stage。"
+    },
+    {
+      "entryId": "A10",
+      "relation": "alternative",
+      "reason": "复杂协作白板通常优先用tldraw而不是手工打造全部选区/历史/协作。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "React Stage/Layer/Rect",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": []
+    },
+    {
+      "demoId": "business",
+      "title": "可编辑流水线节点",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": []
+    },
+    {
+      "demoId": "advanced",
+      "title": "动态增删、键盘回退和尺寸响应",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "cleanup",
+        "interaction"
+      ]
+    }
+  ],
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "基于原研究和2026-10-27官方文档重新实现；原研究测试未继承。"
+  },
+  "license": {
+    "spdx": "MIT",
+    "assets": "全部用本地原创演示数据；无商用图片或收费资源。"
+  }
+}

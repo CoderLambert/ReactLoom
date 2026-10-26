@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "已编写真实SDK调用，但本批未执行npm/浏览器运行"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "尚未完成依赖完整的TS/Vite构建"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "未进行Chromium、无障碍与资源清理实测"
+  }
+}

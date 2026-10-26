@@ -1,1 +1,107 @@
-{"schemaVersion":1,"entryId":"B06","slug":"ant-design","name":"Ant Design","group":"B","summary":"企业级 React 组件与表单","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "B06",
+  "slug": "ant-design",
+  "name": "Ant Design",
+  "group": "B",
+  "summary": "企业组件、受控表单、表格与反馈",
+  "tags": [
+    "form",
+    "table",
+    "feedback",
+    "validation",
+    "React19",
+    "IME"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "antd",
+      "version": "6.6.7"
+    }
+  ],
+  "references": [
+    {
+      "title": "Ant Design 组件与主题",
+      "url": "https://ant.design/components/overview/"
+    },
+    {
+      "title": "Form 组件",
+      "url": "https://ant.design/components/form/"
+    },
+    {
+      "title": "Table 组件",
+      "url": "https://ant.design/components/table/"
+    },
+    {
+      "title": "npm 6.6.7",
+      "url": "https://www.npmjs.com/package/antd"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "B07",
+      "relation": "alternative",
+      "reason": "MUI遵循Material Design，选择应基于设计系统与现有产品规范。"
+    },
+    {
+      "entryId": "B08",
+      "relation": "alternative",
+      "reason": "Mantine含多个业务hooks；优先评估组件覆盖和样式成本。"
+    },
+    {
+      "entryId": "C01",
+      "relation": "complements",
+      "reason": "复杂表单已有React Hook Form时须明确单一表单状态所有者，不应重复双重注册。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "主题Button/Input/Alert",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": []
+    },
+    {
+      "demoId": "business",
+      "title": "RSS管理Form + Table",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": []
+    },
+    {
+      "demoId": "advanced",
+      "title": "后端冲突模拟、错误回填、撤销与键盘",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "cleanup",
+        "interaction"
+      ]
+    }
+  ],
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "基于原研究和2026-10-27官方文档重新实现；原研究测试未继承。"
+  },
+  "license": {
+    "spdx": "MIT",
+    "assets": "全部用本地原创演示数据；无商用图片或收费资源。"
+  }
+}
