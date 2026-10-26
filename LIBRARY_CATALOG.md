@@ -105,21 +105,21 @@
 |E17|hls.js|HLS 播放引擎与缓冲|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E17-hlsjs/)|
 |E18|wavesurfer.js|音频波形、区域与时间线|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E18-wavesurferjs8/)|
 |E19|ffmpeg.wasm|浏览器 WebAssembly 媒体转换|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E19-ffmpeg-wasm/)|
-|F01|Uppy|上传队列、协议和文件管理|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F01-uppy/)|
+|F01|Uppy|文件选择、限制、排队与本地预览：真实 Uppy Core，不使用假上传进度|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F01-uppy/)|
 |F02|react-dropzone|文件选择与拖放输入|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F02-react-dropzone/)|
-|F03|Papa Parse|CSV 解析、导出与流处理|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F03-papaparse/)|
+|F03|Papa Parse|真实 CSV 解析/导出：引号换行、表头与URL验证、本地文件及公式注入防护|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F03-papaparse/)|
 |F04|ExcelJS|Excel 工作簿生成与编辑|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F04-exceljs/)|
 |F05|SheetJS|电子表格导入导出|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F05-sheetjs/)|
-|F06|PDF.js|PDF 文档解析与展示|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F06-pdfjs/)|
+|F06|PDF.js|真正的 pdfjs-dist Worker、PDF 解析、Canvas 分页渲染和取消清理|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F06-pdfjs/)|
 |F07|react-pdf|React PDF 文档展示|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F07-react-pdf/)|
 |F08|@react-pdf/renderer|React 声明式 PDF 生成|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F08-react-pdf-renderer/)|
 |F09|pdf-lib|PDF 页面修改与合并|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F09-pdf-lib/)|
 |F10|Orval|OpenAPI 客户端生成|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F10-orval/)|
 |F11|MSW|网络层请求 Mock 与场景|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F11-msw/)|
-|F12|Vitest|单元及组件测试|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F12-vitest/)|
-|F13|Playwright|浏览器端到端自动化|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F13-playwright/)|
+|F12|Vitest|真实 Vitest 测试配方：数据校验、可注入HTTP状态与取消竞态|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F12-vitest/)|
+|F13|Playwright|真实 Chromium E2E：语义定位、HTTP 场景矩阵与取消竞态（独立 CLI）|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F13-playwright/)|
 |F14|Storybook|组件文档与交互场景|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F14-storybook/)|
 |F15|Knip|未使用代码和依赖检测|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F15-knip/)|
 |F16|dependency-cruiser|模块依赖与架构规则|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F16-dependency-cruiser/)|
-|F17|axe-core|自动化无障碍规则检测|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F17-axe-core/)|
+|F17|axe-core|真实 axe.run 局部审计，定位缺少alt/label/button-name并展示修复前后|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F17-axe-core/)|
 |F18|rollup-plugin-visualizer|构建模块组成和体积分析|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F18-rollup-plugin-visualizer/)|

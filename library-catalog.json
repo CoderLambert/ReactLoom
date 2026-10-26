@@ -811,9 +811,9 @@
     "entryId": "F01",
     "name": "Uppy",
     "group": "F",
-    "summary": "上传队列、协议和文件管理",
+    "summary": "文件选择、限制、排队与本地预览：真实 Uppy Core，不使用假上传进度",
     "path": "packages/library-lab/entries/F01-uppy",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "F02",
@@ -821,15 +821,15 @@
     "group": "F",
     "summary": "文件选择与拖放输入",
     "path": "packages/library-lab/entries/F02-react-dropzone",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "F03",
     "name": "Papa Parse",
     "group": "F",
-    "summary": "CSV 解析、导出与流处理",
+    "summary": "真实 CSV 解析/导出：引号换行、表头与URL验证、本地文件及公式注入防护",
     "path": "packages/library-lab/entries/F03-papaparse",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "F04",
@@ -851,9 +851,9 @@
     "entryId": "F06",
     "name": "PDF.js",
     "group": "F",
-    "summary": "PDF 文档解析与展示",
+    "summary": "真正的 pdfjs-dist Worker、PDF 解析、Canvas 分页渲染和取消清理",
     "path": "packages/library-lab/entries/F06-pdfjs",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "F07",
@@ -893,23 +893,23 @@
     "group": "F",
     "summary": "网络层请求 Mock 与场景",
     "path": "packages/library-lab/entries/F11-msw",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "F12",
     "name": "Vitest",
     "group": "F",
-    "summary": "单元及组件测试",
+    "summary": "真实 Vitest 测试配方：数据校验、可注入HTTP状态与取消竞态",
     "path": "packages/library-lab/entries/F12-vitest",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "F13",
     "name": "Playwright",
     "group": "F",
-    "summary": "浏览器端到端自动化",
+    "summary": "真实 Chromium E2E：语义定位、HTTP 场景矩阵与取消竞态（独立 CLI）",
     "path": "packages/library-lab/entries/F13-playwright",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "F14",
@@ -939,9 +939,9 @@
     "entryId": "F17",
     "name": "axe-core",
     "group": "F",
-    "summary": "自动化无障碍规则检测",
+    "summary": "真实 axe.run 局部审计，定位缺少alt/label/button-name并展示修复前后",
     "path": "packages/library-lab/entries/F17-axe-core",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "F18",
