@@ -20,3 +20,17 @@ pnpm --filter @reactloom/library-lab test:e2e
 
 当前实现：119条目录与分类搜索（含移动端）、四Tab深链接、安全Markdown原文/目录与按需 Shiki 高亮、源码SHA-256清单、显式启动/停止、CLI可复现命令提示、sourceFingerprint 证据失效判定、局部错误边界。已接入13个库的真实SDK调用源码（含非Web MSW Node 入口），真实构建/SDK/浏览器状态仍未完成。
 待完善：剩余106条完整垂直示例与指南、Worker/SW独立 runner、真实依赖锁文件、CI与浏览器/性能证据。文档图片仅允许本地审核过的 raster 资产。
+
+## 面向 Agent 的离线检索
+
+无需安装前端依赖或启动浏览器，即可从库元数据定位精准条目：
+
+```sh
+node packages/library-lab/scripts/find-library.mjs --query "并发" --json
+node packages/library-lab/scripts/find-library.mjs --id D03 --agent
+node packages/library-lab/scripts/find-library.mjs --group E --limit 10
+```
+
+输出定位到 `library.json`、`agent.md`、`guide.md`、`examples/` 和 `verification.json`。条目已收录或源码已存在都不代表真实 SDK 测试通过。离线平台测试命令 `pnpm --filter @reactloom/library-lab test` **不加载 SDK**；SDK 专项测试必须单独执行 `test:sdk`，二者不可混淆。
+
+源码面板使用 `source-index.json` 提供摘要与路径，用户选择后只下载该文件；浏览器支持 Web Crypto 时会核对 SHA-256。无需为查看某个 Demo 把该库所有源码一次下载。
