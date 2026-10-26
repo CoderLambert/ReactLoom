@@ -1,1 +1,104 @@
-{"schemaVersion":1,"entryId":"E13","slug":"photoswipe","name":"PhotoSwipe","group":"E","summary":"图片灯箱与触控缩放","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "E13",
+  "slug": "photoswipe",
+  "name": "PhotoSwipe",
+  "group": "E",
+  "summary": "响应式图库灯箱：PhotoSwipe Lightbox、触控缩放、键盘关闭与实例销毁",
+  "tags": [
+    "图库",
+    "Lightbox",
+    "图片预览",
+    "触控缩放",
+    "生命周期"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "photoswipe",
+      "version": "5.4.4"
+    }
+  ],
+  "references": [
+    {
+      "title": "PhotoSwipe Getting Started",
+      "url": "https://photoswipe.com/getting-started/"
+    },
+    {
+      "title": "PhotoSwipe 官方源码",
+      "url": "https://github.com/dimsemenov/PhotoSwipe"
+    },
+    {
+      "title": "Lightbox 配置选项",
+      "url": "https://photoswipe.com/options/"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "E14",
+      "relation": "complements",
+      "reason": "裁剪选择交由react-easy-crop，PhotoSwipe主要处理图集预览和缩放。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "level": "basic",
+      "title": "单张图片的按需灯箱",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "lazy-media",
+        "keyboard",
+        "gallery-lifecycle"
+      ],
+      "description": "真实PhotoSwipeLightbox + PhotoSwipe按首次点击加载，使用原创本地SVG。"
+    },
+    {
+      "demoId": "business",
+      "level": "business",
+      "title": "多张文章配图的画廊",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "lazy-media",
+        "keyboard",
+        "gallery-lifecycle"
+      ],
+      "description": "多项带显式width/height元数据的响应式画廊，Esc与焦点回归需浏览器验收。"
+    },
+    {
+      "demoId": "advanced",
+      "level": "advanced",
+      "title": "动态增加图片与卸载边界",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "lazy-media",
+        "keyboard",
+        "gallery-lifecycle"
+      ],
+      "description": "React状态变更后动态追加图片，检查事件委托并销毁lightbox实例。"
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "assets": "原创本地SVG/Canvas演示数据，未上传外部图片，未包含付费或第三方媒体资源。"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "2026-10-27独立重建示例；参考官方API。未执行真实SDK/浏览器验收，不继承历史PASS。"
+  }
+}

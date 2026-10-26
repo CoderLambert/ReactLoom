@@ -1,1 +1,119 @@
-{"schemaVersion":1,"entryId":"F16","slug":"dependency-cruiser","name":"dependency-cruiser","group":"F","summary":"模块依赖与架构规则","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "F16",
+  "slug": "dependency-cruiser",
+  "name": "dependency-cruiser",
+  "group": "F",
+  "summary": "源码级依赖图与架构边界约束：真实CLI检测跨层引用和循环依赖",
+  "tags": [
+    "依赖关系",
+    "架构规则",
+    "环依赖",
+    "CLI",
+    "AST",
+    "CI"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "dependency-cruiser",
+      "version": "18.5.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "官方仓库、CLI和规则概述",
+      "url": "https://github.com/sverweij/dependency-cruiser"
+    },
+    {
+      "title": "规则配置参考",
+      "url": "https://github.com/sverweij/dependency-cruiser/blob/main/doc/rules-reference.md"
+    },
+    {
+      "title": "npm 发行信息",
+      "url": "https://www.npmjs.com/package/dependency-cruiser"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "F15",
+      "relation": "complements",
+      "reason": "Knip寻找未使用依赖和入口，dependency-cruiser审计已经存在的模块依赖边及架构规则。"
+    },
+    {
+      "entryId": "F18",
+      "relation": "complements",
+      "reason": "构建产物体积与模块源码级依赖关系互补，不应据bundle体积直接判断循环依赖。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "level": "basic",
+      "title": "正常三层模块依赖",
+      "executionKind": "node-ci",
+      "entryPoint": "examples/workspace/basic/src/main.ts",
+      "sourceFiles": [
+        "examples/run.mjs",
+        "examples/workspace/config.cjs",
+        "examples/workspace/basic/src/main.ts",
+        "examples/workspace/basic/src/domain/get-article.ts",
+        "examples/workspace/basic/src/ui/render-title.ts"
+      ],
+      "capabilities": [
+        "node-process",
+        "real-cli",
+        "fixture"
+      ],
+      "description": "真实depcruise对独立basic源码执行配置规则，预期零违反。"
+    },
+    {
+      "demoId": "business",
+      "level": "business",
+      "title": "领域模块反向依赖UI",
+      "executionKind": "node-ci",
+      "entryPoint": "examples/workspace/business/src/domain/summary.ts",
+      "sourceFiles": [
+        "examples/run.mjs",
+        "examples/workspace/config.cjs",
+        "examples/workspace/business/src/main.ts",
+        "examples/workspace/business/src/domain/summary.ts",
+        "examples/workspace/business/src/ui/badge.ts"
+      ],
+      "capabilities": [
+        "node-process",
+        "real-cli",
+        "fixture"
+      ],
+      "description": "故意构造domain→ui违规边，CLI应返回非零和对应规则名称。"
+    },
+    {
+      "demoId": "advanced",
+      "level": "advanced",
+      "title": "跨模块循环引用",
+      "executionKind": "node-ci",
+      "entryPoint": "examples/workspace/advanced/src/first.ts",
+      "sourceFiles": [
+        "examples/run.mjs",
+        "examples/workspace/config.cjs",
+        "examples/workspace/advanced/src/first.ts",
+        "examples/workspace/advanced/src/second.ts",
+        "examples/verify.mjs"
+      ],
+      "capabilities": [
+        "node-process",
+        "real-cli",
+        "fixture"
+      ],
+      "description": "真实CLI检测a→b→a循环；verify.mjs按预期验证退出码和违反规则。"
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "assets": "全部为原创隔离fixture，不扫描正式ReactLoom生产源码或私有依赖。"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "2026-10-27根据官方规则/CLI独立编写fixture；真实depcruise尚未执行。"
+  }
+}

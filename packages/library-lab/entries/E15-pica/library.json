@@ -1,1 +1,108 @@
-{"schemaVersion":1,"entryId":"E15","slug":"pica","name":"pica","group":"E","summary":"浏览器高质量图片缩放","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "E15",
+  "slug": "pica",
+  "name": "pica",
+  "group": "E",
+  "summary": "浏览器本地高质量像素缩放与PNG导出：真实pica.resize/ toBlob",
+  "tags": [
+    "图片压缩",
+    "Canvas",
+    "resize",
+    "Worker",
+    "Blob",
+    "资源管理"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "pica",
+      "version": "10.0.3"
+    }
+  ],
+  "references": [
+    {
+      "title": "pica 官方README与v10迁移",
+      "url": "https://github.com/nodeca/pica"
+    },
+    {
+      "title": "pica 版本记录",
+      "url": "https://www.npmjs.com/package/pica"
+    },
+    {
+      "title": "image-blob-reduce 补充方案",
+      "url": "https://github.com/nodeca/image-blob-reduce"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "E14",
+      "relation": "complements",
+      "reason": "react-easy-crop决定裁剪区域，pica对裁剪后的像素数据进行缩放。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "level": "basic",
+      "title": "原创Canvas缩放至480px",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "canvas",
+        "worker-optional",
+        "blob",
+        "explicit-start"
+      ],
+      "description": "真实pica()、resize、toBlob，输入使用确定性Canvas。"
+    },
+    {
+      "demoId": "business",
+      "level": "business",
+      "title": "本地照片尺寸缩减",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "canvas",
+        "worker-optional",
+        "blob",
+        "explicit-start"
+      ],
+      "description": "支持本地PNG/JPEG/WebP，进行解码像素限制并仅在浏览器内处理。"
+    },
+    {
+      "demoId": "advanced",
+      "level": "advanced",
+      "title": "与Canvas原生缩放对比及取消",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "canvas",
+        "worker-optional",
+        "blob",
+        "explicit-start"
+      ],
+      "description": "原生Canvas与pica结果并排但不虚构画质评分，Abort使用cancelToken和generation。"
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "assets": "原创本地SVG/Canvas演示数据，未上传外部图片，未包含付费或第三方媒体资源。"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "2026-10-27独立重建示例；参考官方API。未执行真实SDK/浏览器验收，不继承历史PASS。"
+  }
+}

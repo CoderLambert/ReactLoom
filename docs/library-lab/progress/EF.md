@@ -192,3 +192,66 @@ E03/F01/F06/F17需与公共DemoHost真实浏览器验证，尤其StrictMode重�
 ### 剩余计划（EF 21/37已接入，待完成16项）
 
 优先 F16 dependency-cruiser、F18 rollup-plugin-visualizer、E13 PhotoSwipe、E14 react-easy-crop、E15 pica；随后F04 ExcelJS、F09 pdf-lib、F08 @react-pdf/renderer、E17 hls.js、E18 wavesurfer.js，最后评估E19 ffmpeg.wasm大资源隔离和E11/F05原件缺失重建。持续维护版本/许可/验收证据。用户不需要对每个小阶段重复批准。
+
+## 第五轮：媒体本地处理与工程CLI实战（2026-10-27，北京时间）
+
+- **新分支**：`feat/library-lab-ef-media-tools-20261027`，基于当轮最新集成 `feat/library-lab@53e6c93003b08f6aac14da9c375e210e6b12540a`。旧 `feat/library-lab-ef-wave5` 已存在但落后集成分支，因此不force更新、不覆盖既有提交，而新建独立分支。
+- **前轮PR状态**：#11、#15、#17、#20 已确认合入 `feat/library-lab`；主PR #8仍为Draft。
+- **本轮新增5库，15个basic/business/advanced真实SDK/CLI场景源码**；累计EF为 **26/37 库具有源码与指南，余11库**。不等于SDK/浏览器PASS。
+- **仅EF授权文件**：`entries/E13`、`entries/E14`、`entries/E15`、`entries/F16`、`entries/F18` 和本进度文件；未修改根package、锁文件、公共src/CI、旧模板、main。
+
+|条目|新增真实源码及交付|关键边界|
+|---|---|---|
+| E13 PhotoSwipe 5.4.4 | React中真正构造PhotoSwipeLightbox，原版灯箱延迟import、原创本地SVG画廊、动态追加缩略图、destroy；完整guide/agent | width/height元数据、键盘/触控/焦点、StrictMode重复挂载、CSS范围和无远程图像 |
+| E14 react-easy-crop 6.2.4 | 真Cropper drag/zoom与onCropComplete、Canvas drawImage/toBlob产生本地PNG；高级选择本地文件、文件大小/解码像素验证、URL回收 | 裁剪坐标不等于导出文件；未实现rotation不能虚称旋转裁剪；切换/卸载通过generation防旧回写 |
+| E15 pica 10.0.3 | 真pica()工厂、resize/toBlob、原创Canvas图像、本地格式/像素限制、与原生Canvas对照及cancelToken | v10 API迁移、Worker/WASM仅按条件使用，无法假定Worker自动释放；体积不等于画质 |
+| F16 dependency-cruiser 18.5.0 | 完整隔离三层TS导入fixture、forbidden域层规则与circular规则、真实CLI node启动器和verify脚本 | basic预期CLI0，business/advanced故意违规非0；不扫描或删除生产仓库 |
+| F18 rollup-plugin-visualizer 7.1.1 | 独立Vite8 fixture、treemap HTML / Markdown / raw-data JSON三模式、真实dynamic import代码、verify构建脚本 | 不写假构建尺寸；报告可能泄露私有源码路径，禁止公开自动上传；不修改主Vite构建 |
+
+### 本轮验证范围和真实状态
+
+- 通过GitHub Tree实际核对5/5 `library.json` 解析、5×3唯一场景声明、每个entryPoint和sourceFiles文件Blob存在、guide/agent/AGENTS/verification齐全，结构一致性 **PASS**。此验证不依赖目标SDK，也不等于TS类型或浏览器通过。
+- E14源代码审查补丁：本地图片首先createImageBitmap做尺寸限制，在媒体替换时用requestId过滤过期解码；切换zoom时取消旧导出busy状态；本地文件仅PNG/JPEG/WebP≤4MiB且像素≤1600万。仍需真实浏览器内存/移动端验收。
+- E15源代码审查补丁：真实resize完成后撤销本轮cancel回调，后续toBlob只做generation隔离，防止取消已结算token导致无关拒绝。
+- **真实SDK与Node-CLI：NOT_RUN；TS/Vite完整构建：BLOCKED；Chromium：NOT_RUN**，因为公共依赖仍未装入完整可用锁文件，先前npm DNS与GitHub Runner阻塞未有成功恢复证据。本轮没有重复失败安装、也没有把结构检查虚称SDK测试。
+- F16与F18含真正的 `examples/verify.mjs`，运行前不能把声明中的“期望退出0/非0”当成已出现的输出。EF不具有安装依赖或修改CI的写入所有权，相关请求交PLATFORM。
+
+### 第五轮 dependencyRequests（PLATFORM 唯一owner）
+
+|准确包名|官方/npm版本基线|用途、许可、兼容性|
+|---|---|---|
+| `photoswipe` | `5.4.4` | E13，MIT，`photoswipe/lightbox`、`photoswipe/style.css`、`import('photoswipe')`；须确认构建chunk、键盘与destroy。|
+| `react-easy-crop` | `6.2.4` | E14，MIT，React19 peer和Cropper类型需真实锁文件解析；支持受控crop/zoom/onCropComplete。|
+| `pica` | `10.0.3` | E15，MIT，v10工厂默认导出与cancelToken，Worker/CSP及Canvas能力浏览器检查。|
+| `dependency-cruiser`（dev）| `18.5.0` | F16，MIT，Node CLI `depcruise`；检查Node22兼容与config解析；不引入web运行包。|
+| `rollup-plugin-visualizer`（dev）| `7.1.1` | F18，MIT，与ReactLoom SPA模板当前使用的版本一致；独立Vite8 build fixture。|
+
+PLATFORM统一变更 `packages/library-lab/package.json` 和真实生成的 `pnpm-lock.yaml`，确认同版peer后执行以下针对性命令（命令仅供真实运行，不可先记PASS）：
+
+```sh
+pnpm --filter @reactloom/library-lab typecheck
+pnpm --filter @reactloom/library-lab build
+node packages/library-lab/entries/F16-dependency-cruiser/examples/verify.mjs
+node packages/library-lab/entries/F18-rollup-plugin-visualizer/examples/verify.mjs
+pnpm --filter @reactloom/library-lab test:e2e
+```
+
+E13/E14/E15应在Chromium使用真正SDK手动/自动完成灯箱Esc与卸载、Canvas Blob解码/像素、pica cancelToken/旧批次不回写以及网络面板零外部图片上传，再更新对应verification.json。
+
+### 下一轮（EF剩11库）
+
+E11 Streamdown（历史仅摘要，必须标recreated）、E12 assistant-ui、E16 Video.js、E17 hls.js、E18 wavesurfer.js、E19 ffmpeg.wasm；F04 ExcelJS、F05 SheetJS（历史仅摘要，必须标recreated）、F08 @react-pdf/renderer、F09 pdf-lib、F10 Orval。优先F09/pdf-lib、F04/ExcelJS、F10/Orval等无需巨大浏览器资源的条目，再处理媒体/AI编辑和WASM隔离；依赖和许可证以官方一手资料重新核验，禁止生成占位Demo冒充真实SDK。
+
+runCount=5/24。本次每项均完成多文件源码+文档的垂直交付；完成整批后由PLATFORM审查PR并集成，EF下一轮基于最新集成head建立新分支继续，不覆盖已合并的旧工作。
+
+### 第五轮持久交付索引
+
+- 代码提交：`0b77251f0e0f0f359d8ac090348430649c1e7897`。
+- 独立Draft PR：[#25](https://github.com/CoderLambert/ReactLoom/pull/25)，base=`feat/library-lab`，不得合并main。
+- GitHub Compare：基线 `53e6c93003b08f6aac14da9c375e210e6b12540a` →提交，ahead=1，50个新增/修改文件，全部属于EF entries或本progress，无越界修改。
+- 平台接入待处理：统一依赖安装/真实锁文件、Node真实CLI验证、Vite typecheck/build、Chromium交互/资源回收。EF继续下一批，不重复本批已提交源码。
+
+
+### Vite 8 Oxc兼容修复（同批）
+
+官方Vite 8文档确认：`build.minify: 'esbuild'`已弃用且esbuild不再是默认依赖。F18真实构建fixture改为`minify: 'oxc'`，避免PLATFORM为该孤立测试额外安装esbuild；补丁提交`73905ca52eb1b64fc1c40c7c906cd3657b9cf0e8`。此修订仅为源代码与官方API兼容性修复，**并不代表真实Vite构建已经通过**。

@@ -1,1 +1,120 @@
-{"schemaVersion":1,"entryId":"F18","slug":"rollup-plugin-visualizer","name":"rollup-plugin-visualizer","group":"F","summary":"构建模块组成和体积分析","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "F18",
+  "slug": "rollup-plugin-visualizer",
+  "name": "rollup-plugin-visualizer",
+  "group": "F",
+  "summary": "真实Vite8构建报告：Treemap、Markdown体积清单与Raw-data JSON",
+  "tags": [
+    "bundle分析",
+    "Vite",
+    "Rollup",
+    "按需分包",
+    "raw-data",
+    "CLI"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "rollup-plugin-visualizer",
+      "version": "7.1.1"
+    },
+    {
+      "name": "vite",
+      "version": "8.3.4"
+    }
+  ],
+  "references": [
+    {
+      "title": "rollup-plugin-visualizer 官方API",
+      "url": "https://github.com/btd/rollup-plugin-visualizer"
+    },
+    {
+      "title": "npm版本、报表模板与配置",
+      "url": "https://www.npmjs.com/package/rollup-plugin-visualizer"
+    },
+    {
+      "title": "Vite构建配置",
+      "url": "https://vite.dev/config/build-options"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "F16",
+      "relation": "complements",
+      "reason": "dependency-cruiser检查源码模块架构，visualizer分析打包后实际模块大小和chunk组成。"
+    },
+    {
+      "entryId": "F15",
+      "relation": "complements",
+      "reason": "Knip帮助发现未使用导入及依赖，实际删除前结合Bundle产物分析。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "level": "basic",
+      "title": "Treemap真实HTML产物",
+      "executionKind": "node-ci",
+      "entryPoint": "examples/vite.config.ts",
+      "sourceFiles": [
+        "examples/vite.config.ts",
+        "examples/fixture/index.html",
+        "examples/fixture/main.ts",
+        "examples/fixture/helper.ts"
+      ],
+      "capabilities": [
+        "node-process",
+        "real-vite-build",
+        "report"
+      ],
+      "description": "pnpm exec vite build --mode basic 生成统计HTML；不是站内模拟体积图。"
+    },
+    {
+      "demoId": "business",
+      "level": "business",
+      "title": "Markdown构建尺寸摘要",
+      "executionKind": "node-ci",
+      "entryPoint": "examples/vite.config.ts",
+      "sourceFiles": [
+        "examples/vite.config.ts",
+        "examples/fixture/main.ts",
+        "examples/fixture/heavy.ts",
+        "examples/fixture/helper.ts"
+      ],
+      "capabilities": [
+        "node-process",
+        "real-vite-build",
+        "report"
+      ],
+      "description": "使用markdown模板生成构建报告；字节数来自本次真实Vite构建。"
+    },
+    {
+      "demoId": "advanced",
+      "level": "advanced",
+      "title": "Raw-data JSON与懒加载chunk",
+      "executionKind": "node-ci",
+      "entryPoint": "examples/vite.config.ts",
+      "sourceFiles": [
+        "examples/vite.config.ts",
+        "examples/fixture/main.ts",
+        "examples/fixture/heavy.ts",
+        "examples/verify.mjs"
+      ],
+      "capabilities": [
+        "node-process",
+        "real-vite-build",
+        "report"
+      ],
+      "description": "使用raw-data生成机器可读取报告，验证动态import在构建中产生chunk。"
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "assets": "原创独立Vite fixture和生成报告；构建元数据可能含绝对路径，勿直接公开私有报告。"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "以ReactLoom现有rollup-plugin-visualizer@7.1.1为基准新编写隔离fixture；真实Vite构建未运行。"
+  }
+}
