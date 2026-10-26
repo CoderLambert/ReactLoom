@@ -255,3 +255,59 @@ runCount=5/24。本次每项均完成多文件源码+文档的垂直交付；完
 ### Vite 8 Oxc兼容修复（同批）
 
 官方Vite 8文档确认：`build.minify: 'esbuild'`已弃用且esbuild不再是默认依赖。F18真实构建fixture改为`minify: 'oxc'`，避免PLATFORM为该孤立测试额外安装esbuild；补丁提交`73905ca52eb1b64fc1c40c7c906cd3657b9cf0e8`。此修订仅为源代码与官方API兼容性修复，**并不代表真实Vite构建已经通过**。
+
+## 第六轮：Office/PDF生成、Orval客户端及音频波形（2026-10-27，北京时间，wave6）
+
+- **独立分支** `feat/library-lab-ef-wave6`，基于本轮实际集成分支 `feat/library-lab@a9441528ea68d2daa56f2c0bbbc0e4fbe7cf5ae1` 建立。EF第五轮 Draft PR #25 在本轮启动时仍开放，绝不重写/force其head；此分支仅包含另外5个待做条目和本progress。
+- 本轮新增 **5个不同的EF库、15个basic/business/advanced示例声明**。合并前统计必须分开：已合入集成21条，PR #25独立待合5条，本PR独立待合5条；全部按次序合入后的代码接入目标 **31/37，剩余6条**。均不能作为真实SDK/浏览器验收PASS。
+- 文件所有权：只写 `entries/F04`、`F08`、`F09`、`F10`、`entries/E18` 和本文。没有修改root、package.json、锁文件、公共代码、CI或生产部署。
+
+| 条目 | 三层实战源码 | 应用、边界与复现 |
+|---|---|---|
+| F04 ExcelJS | 真实`ExcelJS.Workbook`表头格式、RSS阅读统计/冻结表头/公式缓存、恶意公式开头/错误数值/真实workbook往返 | `examples/core.mjs`和`basic.mjs/business.mjs/advanced.mjs/verify.mjs`，只用内存XLSX；公式并不由ExcelJS求值 |
+| F09 pdf-lib | 真实PDFDocument.create/drawText、copyPages两份原创PDF、读取本地PDF并标注/损坏回退 | React内按需运行，`examples/document.ts`可脱离UI迁移，generation+objectURL释放，≤2MiB，标准字体暂不支持中文 |
+| F10 Orval | 真实本地OpenAPI 3.0.3契约→Fetch单文件、TanStack Query hooks、按tags拆分客户端 | 使用`orval.config.ts`和`run.mjs`执行固定`--project`，不调用真实服务器；产物仅在`examples/generated/`，Node >=22.18不可忽略 |
+| F08 @react-pdf/renderer | 真Document/Page/Text和Flexbox、React `pdf(...).toBlob()`生成单页/日报/100行自动分页 | 初始不构建；用户点击才生成，PDF URL撤销，100行/最大140行约束，无第三方字体和远程资源 |
+| E18 wavesurfer.js | 真实WaveSurfer.create/load/playPause/setTime/setPlaybackRate/zoom，输入是原创8kHz/1.6秒PCM WAV | StrictMode event取消/销毁后重新create、BlobURL撤销、捕获AbortError、播放按钮用户手势；v8生命周期与v7有差异 |
+
+每个条目均创建了`library.json`、中文`guide.md`、`agent.md`、简短`AGENTS.md`、`verification.json`和真实源码引用；源码面板将通过公共生成器从同一`sourceFiles`中按需提取，不另造演示副本。Node-CI类不在网页伪造命令执行。
+
+### 本轮验证范围与限制
+
+- GitHub树对象已存储新增源码、示例和文档，但Git对象创建不证明TS编译或SDK运行；平台源文件完整性可通过`catalog:check`在完整安装环境验证。
+- SDK/CLI/F04 workbook实际往返/F10 Orval代码生成：**NOT_RUN**；React/TS/Vite完整构建：**BLOCKED**（公共依赖/根锁文件尚需PLATFORM实际解析）；Chromium/Worker/音频播放：**NOT_RUN**。不继承旧研究验收，也不模拟SDK后记录PASS。
+- `F10/examples/spec-check.mjs`只断言本地OpenAPI JSON结构；即使跑通也只是fixture检查，不能记为Orval CLI已运行。F04 `advanced.mjs` 通过真实ExcelJS读取B5证明恶意公式前缀已经转成单元格文本，不硬编码虚假通过结果。
+- 本轮不重复上轮已知DNS失败安装、未能分配runner的GitHub Actions；依赖和真正SDK复验由PLATFORM统一执行。
+
+### 第六轮 dependencyRequests（由PLATFORM独占依赖与锁文件）
+
+| 包/基线 | 条目 | 接线注意 |
+|---|---|---|
+| `exceljs@4.4.0` | F04 | MIT、Node/浏览器包差异，内存writeBuffer/load，验证公式结果类型/宏限制 |
+| `pdf-lib@1.17.1` | F09 | MIT、真实PDF合并/修改，浏览器内Blob下载和对象URL释放 |
+| `orval@8.44.0`（dev） | F10 | MIT，真实Node CLI要求 **Node >=22.18**；本地OpenAPI input、output schemas、React Query/Fetch配置需实际解析；不打进生产SPA bundle |
+| `@react-pdf/renderer@4.9.0` | F08 | MIT、React19 peer、包Worker和PDF字体行为必须由构建及浏览器确认，不能与F07`react-pdf`混淆 |
+| `wavesurfer.js@8.0.3` | E18 | BSD-3-Clause，v8 API、音频解码/权限、浏览器销毁和BlobURL作用域 |
+
+建议PLATFORM安装上述依赖（确认实际npm registry/peer/许可证后由唯一owner提交完整锁文件）并定向运行以下命令，不可提前宣称PASS：
+
+```sh
+node packages/library-lab/entries/F04-exceljs/examples/verify.mjs
+node packages/library-lab/entries/F04-exceljs/examples/basic.mjs
+node packages/library-lab/entries/F04-exceljs/examples/business.mjs
+node packages/library-lab/entries/F04-exceljs/examples/advanced.mjs
+node packages/library-lab/entries/F10-orval/examples/spec-check.mjs
+node packages/library-lab/entries/F10-orval/examples/basic.mjs
+node packages/library-lab/entries/F10-orval/examples/business.mjs
+node packages/library-lab/entries/F10-orval/examples/advanced.mjs
+pnpm --filter @reactloom/library-lab catalog:check
+pnpm --filter @reactloom/library-lab typecheck
+pnpm --filter @reactloom/library-lab build
+pnpm --filter @reactloom/library-lab test:e2e
+```
+
+### 后续队列
+
+EF待完整接入6项：**E11 Streamdown（原件SUMMARY_ONLY，重建标recreated）、E12 assistant-ui、E16 Video.js、E17 hls.js、E19 ffmpeg.wasm、F05 SheetJS（原件SUMMARY_ONLY）**。优先E17/E16本地媒体和E12/E11安全流式UI；超大WASM需独立加载与安全隔离。分组PR必须全部对`feat/library-lab`，不得合入main；公共平台集成时先审查已有#25，再依次集成本轮独立PR并在真实依赖条件具备时验证。
+
+runCount=6/24。本轮不把5库源代码和30+例子等同完整生产交付；记录真正可复现的源码、命令、依赖与未验证事实。

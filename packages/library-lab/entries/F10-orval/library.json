@@ -1,1 +1,131 @@
-{"schemaVersion":1,"entryId":"F10","slug":"orval","name":"Orval","group":"F","summary":"OpenAPI 客户端生成","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "F10",
+  "slug": "orval",
+  "name": "Orval",
+  "group": "F",
+  "summary": "本地OpenAPI契约生成真实Fetch与TanStack Query代码，按生成目标隔离并检查产物",
+  "tags": [
+    "OpenAPI",
+    "代码生成",
+    "Fetch",
+    "React Query",
+    "Node CLI",
+    "类型安全",
+    "API契约"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "orval",
+      "version": "8.44.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "Orval 官方配置示例",
+      "url": "https://orval.dev/docs/guides/basics/"
+    },
+    {
+      "title": "Orval CLI Quick Start",
+      "url": "https://orval.dev/docs/quick-start/"
+    },
+    {
+      "title": "Orval Fetch 输出",
+      "url": "https://orval.dev/docs/guides/fetch/"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "F11",
+      "relation": "complements",
+      "reason": "Orval生成客户端与类型；MSW拦截真实请求用于前端可控测试，不能混淆生成与网络模拟。"
+    },
+    {
+      "entryId": "D07",
+      "relation": "complements",
+      "reason": "生成React Query hooks需要TanStack Query Provider及缓存生命周期配置。"
+    },
+    {
+      "entryId": "C02",
+      "relation": "complements",
+      "reason": "编译期类型不替代运行时服务端响应校验；需要边界校验时可结合Zod。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "level": "basic",
+      "executionKind": "node-ci",
+      "title": "生成原生Fetch客户端",
+      "entryPoint": "examples/basic.mjs",
+      "sourceFiles": [
+        "examples/orval.config.ts",
+        "examples/openapi/news.json",
+        "examples/run.mjs",
+        "examples/basic.mjs",
+        "examples/verify.mjs",
+        "examples/spec-check.mjs"
+      ],
+      "capabilities": [
+        "node-process",
+        "real-cli",
+        "local-contract",
+        "generated-types"
+      ],
+      "description": "以真实Orval CLI读本地OpenAPI，生成客户端；不使用远程服务或伪造代码生成输出。"
+    },
+    {
+      "demoId": "business",
+      "level": "business",
+      "executionKind": "node-ci",
+      "title": "生成React Query Hooks",
+      "entryPoint": "examples/business.mjs",
+      "sourceFiles": [
+        "examples/orval.config.ts",
+        "examples/openapi/news.json",
+        "examples/run.mjs",
+        "examples/business.mjs",
+        "examples/verify.mjs",
+        "examples/spec-check.mjs"
+      ],
+      "capabilities": [
+        "node-process",
+        "real-cli",
+        "local-contract",
+        "generated-types"
+      ],
+      "description": "以真实Orval CLI读本地OpenAPI，生成客户端；不使用远程服务或伪造代码生成输出。"
+    },
+    {
+      "demoId": "advanced",
+      "level": "advanced",
+      "executionKind": "node-ci",
+      "title": "按标签拆分API模块",
+      "entryPoint": "examples/advanced.mjs",
+      "sourceFiles": [
+        "examples/orval.config.ts",
+        "examples/openapi/news.json",
+        "examples/run.mjs",
+        "examples/advanced.mjs",
+        "examples/verify.mjs",
+        "examples/spec-check.mjs"
+      ],
+      "capabilities": [
+        "node-process",
+        "real-cli",
+        "local-contract",
+        "generated-types"
+      ],
+      "description": "以真实Orval CLI读本地OpenAPI，生成客户端；不使用远程服务或伪造代码生成输出。"
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "assets": "原创OpenAPI契约及所有fixture；生成产物在本地，不提交不可信服务器代码"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "按Orval 8.44官方资料重写；历史Demo输出不作为当前CLI证据。"
+  }
+}

@@ -1,1 +1,121 @@
-{"schemaVersion":1,"entryId":"E18","slug":"wavesurferjs8","name":"wavesurfer.js","group":"E","summary":"音频波形、区域与时间线","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "E18",
+  "slug": "wavesurferjs8",
+  "name": "wavesurfer.js",
+  "group": "E",
+  "summary": "真实波形播放器与音频片段交互：本地合成WAV、播放位置、倍速缩放与销毁",
+  "tags": [
+    "音频",
+    "波形",
+    "WebAudio",
+    "生命周期",
+    "Blob URL",
+    "播放器"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "wavesurfer.js",
+      "version": "8.0.3"
+    }
+  ],
+  "references": [
+    {
+      "title": "wavesurfer.js官方示例与API",
+      "url": "https://github.com/katspaugh/wavesurfer.js"
+    },
+    {
+      "title": "wavesurfer.js v8变更日志",
+      "url": "https://github.com/katspaugh/wavesurfer.js/releases"
+    },
+    {
+      "title": "npm wavesurfer.js",
+      "url": "https://www.npmjs.com/package/wavesurfer.js"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "E16",
+      "relation": "complements",
+      "reason": "Video.js更适合视频播放器与字幕；wavesurfer.js聚焦音频波形和交互定位。"
+    },
+    {
+      "entryId": "E17",
+      "relation": "alternative",
+      "reason": "hls.js为HLS媒体流引擎，不直接提供可编辑波形。"
+    },
+    {
+      "entryId": "E19",
+      "relation": "complements",
+      "reason": "ffmpeg.wasm可进行媒体格式转换；wavesurfer.js不是视频转码器或波形离线构建器。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "level": "basic",
+      "executionKind": "react",
+      "title": "原创音频波形与播放",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/wav.ts",
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "audio",
+        "blob-url",
+        "no-remote-media",
+        "waveform"
+      ],
+      "description": "用户启动后真实WaveSurfer.create/load()解码一个本地生成的PCM WAV，不访问外部音频。"
+    },
+    {
+      "demoId": "business",
+      "level": "business",
+      "executionKind": "react",
+      "title": "进度定位与片段预览",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/wav.ts",
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "audio",
+        "blob-url",
+        "no-remote-media",
+        "waveform"
+      ],
+      "description": "用户启动后真实WaveSurfer.create/load()解码一个本地生成的PCM WAV，不访问外部音频。"
+    },
+    {
+      "demoId": "advanced",
+      "level": "advanced",
+      "executionKind": "react",
+      "title": "缩放、倍速、取消加载与彻底卸载",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/wav.ts",
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "audio",
+        "blob-url",
+        "no-remote-media",
+        "waveform"
+      ],
+      "description": "用户启动后真实WaveSurfer.create/load()解码一个本地生成的PCM WAV，不访问外部音频。"
+    }
+  ],
+  "license": {
+    "spdx": "BSD-3-Clause",
+    "assets": "音频样本是运行时原创PCM合成，不包含第三方音乐或录音"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "按wavesurfer.js 8.0.3文档重写，v7迁移破坏性行为另有说明；浏览器SDK未运行。"
+  }
+}
