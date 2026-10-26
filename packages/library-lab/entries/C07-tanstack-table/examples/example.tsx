@@ -1,4 +1,4 @@
-import {useEffect, useMemo, useRef, useState} from 'react';
+import {useEffect, useMemo, useRef, useState, type FormEvent} from 'react';
 import {
   createColumnHelper, createPaginatedRowModel, createSortedRowModel,
   rowPaginationFeature, rowSelectionFeature, rowSortingFeature,
@@ -100,7 +100,7 @@ export default function TableExample({level}:Props){
     enableMultiSort:false,
   });
   const visible=table.getRowModel().rows;
-  function search(event:React.FormEvent<HTMLFormElement>){
+  function search(event:FormEvent<HTMLFormElement>){
     event.preventDefault();setQuery(draft.trim());setPagination(p=>({...p,pageIndex:0}));
   }
   return <section aria-label="TanStack Table v9 实际表格">
