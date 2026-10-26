@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "真实axe-core分析代码已提交，但未在浏览器运行"
+  },
+  "build": {
+    "status": "BLOCKED",
+    "note": "等待PLATFORM声明axe-core 4.14.0依赖并真实构建"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "修复前后违反数量/人工复核项需要Chromium验收"
+  }
+}

@@ -1,7 +1,7 @@
 # EF 通道持续开发进度
 
 - 通道：EF，Issue #7；分支 `feat/library-lab-ef`；PR base 为 `feat/library-lab`。
-- runCount：2 / 24。
+- runCount：3 / 24。
 - 基线：`38ed2d247bd82e4f1422b0e8904973e16bca2972`。
 - 本轮日期：2026-10-27（北京时间）。
 - 状态：**累计11个条目交付真实 SDK 示例/Node CLI 测试源码、Guide/Agent 文档；实际构建、SDK和浏览器验证仍未完成。**
@@ -106,3 +106,50 @@ PLATFORM 接入后应追加F03 Node SDK定向测试：`node --test entries/F03-p
 - E09：新输入触发高亮时先清空旧 token，防止错误把过期视觉内容当新数据。
 - F12：使用稳定的 Vitest `toHaveBeenCalledTimes` + `toHaveBeenCalledWith` 断言，避免较新matcher版本差异。
 - 另新增 E04/E07/E08/E09 各2条真实SDK Node `tests/node-scenarios.test.mjs` 断言源码。只是测试文件已创建；未安装/运行，**不能标 PASS**。PLATFORM 可定向 `node --test packages/library-lab/entries/{E04-codemirror6,E07-remark,E08-rehype,E09-shiki}/tests/node-scenarios.test.mjs`（请注意shell brace-expansion需显式匹配路径）。
+
+## 第三轮实际交付（2026-10-27，wave3）
+
+**分支**：`feat/library-lab-ef-wave3`，从当时最新集成 `feat/library-lab@2b244ef44cbf8e216a0f39e77b763acae8f50c04` 建立，避免旧 wave2 分支覆盖平台并发改动。此前 PR #11 与 PR #15 均已核实合入集成分支。
+
+本轮新接入 **5 库，15 个basic/business/advanced场景源码**；累计 EF **16/37 条有真实第三方SDK或CLI配方及完整指南/Agent文档，剩余21条**。该计数仅代表源码/知识接入，不表示实际浏览器验收已经PASS。
+
+|条目|场景与原始源码|安全及真实能力边界|
+|---|---|---|
+| E03 Lexical | 真 lexical/@lexical/react Composer + EditorState输入 / sessionStorage JSON草稿 / 选区格式命令与撤销 | 限制草稿100KB，parser失败不覆盖；真实浏览器IME/JSON兼容性未验证；v0.52 Extension Composer需后续选型 |
+| F13 Playwright | 真 @playwright/test CLI：可访问名称定位与状态 / 200、422、503浏览器route场景 / AbortController旧新请求竞态 | 测试源为Node-CI运行型，不在站内运行任意shell，不冒充真实后端请求 |
+| F01 Uppy | 真 @uppy/core：File选择拖入与限制 / 本地预览删除 / 超大文件拒绝与销毁 | **只有本地Core队列**，无上传插件，不画虚假进度，不请求Transloadit/S3 |
+| F06 PDF.js | 真 pdfjs-dist + `?url`同版Worker：原创有效PDF Canvas / 分页提取 / HiDPI缩放与坏字节错误恢复 | 按需启动，局部文件≤3MB，取消renderTask和loadingTask，未加载外部PDF |
+| F17 axe-core | 真 axe.run 当前子树：缺图片alt / 表单label / 空名按钮3规则修复对照 | **仅选取3条规则**，不能从零违规推断所有WCAG通过；故意失败DOM仅作教学 |
+
+**新增源文件组织**：每条均含 `library.json`、`guide.md`、`agent.md`、`AGENTS.md`、`verification.json`，3个场景定义和真实复用源文件。React场景的 `examples/demo.tsx` 只导出 `example.tsx`；F13采用独立Playwright config与3个`*.spec.ts`，不用主应用假造终端。已有来源审计未改变E11/F05未恢复的事实。
+
+### 静态与独立检查（非SDK验收）
+
+- GitHub Git Tree 中检查5份库manifest可解析、每份3个唯一basic/business/advanced demo、实际入口列在sourceFiles且所有源码路径已提交、agent/guide/AGENTS/verification均存在：**5/5 PASS**。这不是TS类型检查，不是DOM/SDK已运行。
+- F06原创PDF fixture算法另用 Python/PyMuPDF 复刻相同xref/stream构造逻辑，验证2页文本可被独立PDF解析器读取：**结构算法预检 PASS**。未在本轮使用真正的 pdfjs-dist Worker，因此F06 SDK仍 NOT_RUN。
+- 对照2026-10-27官方文档核查：Lexical 0.52.0、pdfjs-dist 6.4.299、axe-core 4.14.0、Uppy Core API及许可，以及Playwright已存在的1.64.0依赖。包具体peer/lockfile尚需平台安装时再确认。
+- 不可执行的项目门禁：`pnpm --filter @reactloom/library-lab typecheck`、`build`、真SDK导入/CLI和Chromium E2E均未完成（PLATFORM统一依赖/Runner仍待就绪）；所有库验证状态仍为NOT_RUN/BLOCKED，不能冒用研究包历史PASS。
+- 最近集成GitHub workflow 40395555157仍见2个Job runner_id=0/steps=[]，在正式执行前失败；不重复猜测原因或循环重跑。
+
+### 新增 dependencyRequests（只由PLATFORM统一安装）
+
+|依赖|请求准确版本|许可及用途|适配注意|
+|---|---|---|---|
+| `lexical`、`@lexical/react` | `0.52.0` 均保持同版 | MIT；E03 文档编辑器 | React19、v0.52 Composer/Extension区别；运行时确认peer |
+| `@uppy/core` | `6.1.0` | MIT；F01纯本地状态/限制/事件 | 不需要XHR/Tus或@uppy/react；不能误加收费服务 |
+| `pdfjs-dist` | `6.4.299` | Apache-2.0；F06解析/Worker | Vite同版`pdf.worker.min.mjs?url`、CSP与单例Worker核对 |
+| `axe-core` | `4.14.0` | MPL-2.0；F17规则审计 | 区分浏览器实际DOM与jsdom模拟 |
+| `@playwright/test` | **已声明1.64.0，无需重复添加** | Apache-2.0；F13 Node-CI | 独立config位于`entries/F13-playwright/examples/playwright.config.ts`，需真Chromium |
+
+请PLATFORM把准确版本及peer验证后写入本包package.json + **真实解析的**根pnpm-lock.yaml，优先运行定向命令和构建，不能手工编造lock integrity。F13可运行：
+```bash
+pnpm --filter @reactloom/library-lab exec playwright install chromium
+pnpm --filter @reactloom/library-lab exec playwright test --config entries/F13-playwright/examples/playwright.config.ts
+```
+E03/F01/F06/F17需与公共DemoHost真实浏览器验证，尤其StrictMode重挂、Worker版本/CSP和清理、axe仅局部扫描。
+
+### 下一批（EF剩21库）
+
+优先 E01 Tiptap / E02 BlockNote / F07 react-pdf / F15 Knip / F14 Storybook，然后 F16 dependency-cruiser / F18 rollup-plugin-visualizer / E13 PhotoSwipe 等。大型WASM/视频/远程素材仅按显式加载与合法授权实施。E11 Streamdown/F05 SheetJS归档原件缺失，不得伪称已恢复。
+
+当前runCount=3/24。worker只改自己entries/E、entries/F和本progress；没有修改公共依赖、CI、主分支或其他组。

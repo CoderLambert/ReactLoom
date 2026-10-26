@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "尚未执行真实 pdfjs-dist 构建与Worker解析"
+  },
+  "build": {
+    "status": "BLOCKED",
+    "note": "PLATFORM需统一安装并固定 pdfjs-dist@6.4.299 和Vite Worker"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "尚未在Chromium实际渲染、切页、DPR与坏文档测试"
+  }
+}

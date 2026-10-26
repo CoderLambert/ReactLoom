@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "测试源码已编写，但未运行真实 @playwright/test runner"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "Node CLI示例，需验证独立config的类型和Playwright解析"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "尚未运行真实 Chromium，无法证明UI/竞态通过"
+  }
+}

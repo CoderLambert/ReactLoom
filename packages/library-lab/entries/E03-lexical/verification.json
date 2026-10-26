@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "未执行真实 lexical SDK 测试，待安装依赖与平台校验"
+  },
+  "build": {
+    "status": "BLOCKED",
+    "note": "PLATFORM 尚未安装 Lexical 并锁定依赖"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "IME/选区/重挂/序列化尚待 Chromium 真测"
+  }
+}
