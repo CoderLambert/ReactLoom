@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "需要实际安装并运行所声明的 SDK；不能用领域 fixture 冒充"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "当前提交未执行真实 TypeScript/Vite 构建"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "真实 ResizeObserver、scrollTop、测量和浏览器E2E仍待运行"
+  }
+}

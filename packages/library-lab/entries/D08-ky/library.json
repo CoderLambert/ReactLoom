@@ -1,1 +1,98 @@
-{"schemaVersion":1,"entryId":"D08","slug":"ky","name":"ky","group":"D","summary":"基于 Fetch 的 HTTP 客户端","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "D08",
+  "slug": "ky",
+  "name": "Ky",
+  "group": "D",
+  "summary": "基于 Fetch 的 HTTP 客户端：重试、超时、响应校验与取消",
+  "tags": [
+    "Fetch",
+    "HTTP",
+    "重试",
+    "AbortSignal",
+    "RSS"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "ky",
+      "version": "2.2.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "官方 v2.2.0 文档",
+      "url": "https://github.com/sindresorhus/ky/blob/v2.2.0/readme.md"
+    },
+    {
+      "title": "v2.2.0 发行信息",
+      "url": "https://github.com/sindresorhus/ky/releases/tag/v2.2.0"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "D09",
+      "relation": "alternative",
+      "reason": "已有 Axios 拦截器链、上传进度等基础设施时未必需要迁移。"
+    },
+    {
+      "entryId": "D07",
+      "relation": "complements",
+      "reason": "Ky 仅是 HTTP transport，远端状态/缓存拥有者应为 TanStack Query。"
+    },
+    {
+      "entryId": "D04",
+      "relation": "complements",
+      "reason": "按服务速率配额限制并发或请求启动频率，可在 Ky 外层加 p-queue。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "本地传输 Fixture 的 GET、JSON 校验",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [],
+      "description": "本地传输 Fixture 的 GET、JSON 校验"
+    },
+    {
+      "demoId": "business",
+      "title": "RSS 搜索取消与新旧请求所有权",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [],
+      "description": "RSS 搜索取消与新旧请求所有权"
+    },
+    {
+      "demoId": "advanced",
+      "title": "503 有限重试、409 禁止写入重试、响应体尺寸限制",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [],
+      "description": "503 有限重试、409 禁止写入重试、响应体尺寸限制"
+    }
+  ],
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "参考历史研究并重新核验官方版本编写示例；历史测试没有迁移为本条 PASS。"
+  },
+  "license": {
+    "spdx": "MIT",
+    "note": "仅演示本地确定性 fixture，不请求外部 API"
+  }
+}
