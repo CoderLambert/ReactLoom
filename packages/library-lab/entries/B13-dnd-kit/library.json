@@ -1,1 +1,120 @@
-{"schemaVersion":1,"entryId":"B13","slug":"dnd-kit","name":"dnd-kit","group":"B","summary":"排序、传感器和自定义拖拽","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "B13",
+  "slug": "dnd-kit",
+  "name": "dnd-kit",
+  "group": "B",
+  "summary": "真实鼠标/触控/键盘排序与稳定身份、受限拖拽的工程示例",
+  "tags": [
+    "拖拽排序",
+    "可访问性",
+    "keyboard",
+    "touch",
+    "sensor"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "@dnd-kit/core",
+      "version": "6.3.1"
+    },
+    {
+      "name": "@dnd-kit/sortable",
+      "version": "10.0.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "dnd-kit 经典Sortable文档",
+      "url": "https://dndkit.com/legacy/presets/sortable/overview/"
+    },
+    {
+      "title": "新版 API迁移文档",
+      "url": "https://dndkit.com/react/guides/sensors/"
+    },
+    {
+      "title": "legacy core npm",
+      "url": "https://www.npmjs.com/package/@dnd-kit/core"
+    },
+    {
+      "title": "sortable npm",
+      "url": "https://www.npmjs.com/package/@dnd-kit/sortable"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "B14",
+      "relation": "alternative",
+      "reason": "Pragmatic drag and drop底层事件模型适合复杂drop target；此处提供成熟Sortable预设。"
+    },
+    {
+      "entryId": "B22",
+      "relation": "migration-to",
+      "reason": "react-beautiful-dnd历史项目迁移时需要重审键盘、触摸和数据所有权。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "最小排序",
+      "description": "鼠标/触摸传感器和键盘传感器，唯一ID排序",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "drag-drop",
+        "keyboard",
+        "touch",
+        "aria-live"
+      ]
+    },
+    {
+      "demoId": "business",
+      "title": "新闻订阅源优先级",
+      "description": "更长条目、拖拽手柄、上下移动按钮与状态播报",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "drag-drop",
+        "keyboard",
+        "touch",
+        "aria-live"
+      ]
+    },
+    {
+      "demoId": "advanced",
+      "title": "固定条目与撤销",
+      "description": "被锁定的条目不可拖动或按钮重排，支持撤销和恢复",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "drag-drop",
+        "keyboard",
+        "touch",
+        "aria-live"
+      ]
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "note": "使用legacy稳定API；新版@dnd-kit/react为另一套接口，不能混写。"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "本轮按官方接口独立编写新代码、文档与Agent指南；原研究的PASS未继承。"
+  }
+}

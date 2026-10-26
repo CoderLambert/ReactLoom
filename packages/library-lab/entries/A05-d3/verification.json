@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "SDK尚未安装并执行；源码导入不等于SDK PASS"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "等待PLATFORM安装并生成受控锁文件后执行类型检查与构建"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "Chromium交互和卸载资源尚未验证"
+  }
+}

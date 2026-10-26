@@ -1,1 +1,107 @@
-{"schemaVersion":1,"entryId":"B02","slug":"gsap","name":"GSAP","group":"B","summary":"时间线与复杂编排动画","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "B02",
+  "slug": "gsap",
+  "name": "GSAP",
+  "group": "B",
+  "summary": "有时间线、重播、反转与减少动画偏好控制的交互动画",
+  "tags": [
+    "timeline",
+    "动画编排",
+    "reduced-motion",
+    "react",
+    "cleanup"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "gsap",
+      "version": "3.15.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "GSAP React集成",
+      "url": "https://gsap.com/resources/React/"
+    },
+    {
+      "title": "gsap.context生命周期",
+      "url": "https://gsap.com/docs/v3/GSAP/gsap.context()/"
+    },
+    {
+      "title": "npm GSAP授权和版本",
+      "url": "https://www.npmjs.com/package/gsap"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "B01",
+      "relation": "alternative",
+      "reason": "Motion更适于布局变化和声明式组件状态；GSAP擅长高控制度的时间线和序列。"
+    },
+    {
+      "entryId": "B03",
+      "relation": "alternative",
+      "reason": "react-spring适合物理弹性模型；GSAP适用于精细编排的timeline。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "基础缓动",
+      "description": "真实 gsap.fromTo 动画两个信息卡片",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "animation",
+        "reduced-motion"
+      ]
+    },
+    {
+      "demoId": "business",
+      "title": "可重播新闻入场",
+      "description": "GSAP timeline 按顺序播放卡片和提示",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "animation",
+        "reduced-motion"
+      ]
+    },
+    {
+      "demoId": "advanced",
+      "title": "播放控制与降级",
+      "description": "暂停/恢复/反转/重播，respect prefers-reduced-motion并revert",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "animation",
+        "reduced-motion"
+      ]
+    }
+  ],
+  "license": {
+    "name": "GSAP Standard No Charge",
+    "url": "https://gsap.com/standard-license",
+    "note": "不是 MIT。使用前须核对软件再分发/嵌入及商业场景的标准授权边界；不包含收费资产。"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "基于公开官方API重新编写；未继承历史Demo和测试通过状态。"
+  }
+}
