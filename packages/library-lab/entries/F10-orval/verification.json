@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "仅准备真实Orval配置和安全本地OpenAPI，尚未运行CLI"
+  },
+  "build": {
+    "status": "BLOCKED",
+    "note": "PLATFORM尚未提供完整Node22.18+/pnpm依赖锁"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "Node-CI配方不伪造浏览器终端"
+  }
+}
