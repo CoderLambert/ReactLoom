@@ -12,6 +12,40 @@ async function safeRead(root,relative){
  return readFile(full,'utf8');
 }
 async function optionalText(root,name){try{return await safeRead(root,name);}catch(error){if(error.code==='ENOENT')return null;throw error;}}
+const VERIFIED_STATUSES=new Set(['PASS','FAIL','NOT_RUN','BLOCKED']);
+function verifiedState(raw,fingerprint){
+ const output={};
+ for(const [name,value] of Object.entries(raw)){
+  if(!value||typeof value!=='object'||!VERIFIED_STATUSES.has(value.status))
+   throw new Error(`invalid verification status: ${name}`);
+  if(value.status==='PASS' && (!value.sourceFingerprint||value.sourceFingerprint!==fingerprint||!value.evidence||!value.command)) {
+   output[name]={...value,status:'NOT_RUN',note:`STALE: Previous PASS has no matching current-source fingerprint and command/evidence.`};
+  }else output[name]=value;
+ }
+ for(const name of ['sdk','build','browser'])if(!output[name])output[name]={status:'NOT_RUN',note:'No verification evidence has been recorded'};
+ return output;
+}
+async function collectAssets(root,relative='assets'){
+ const results=[];
+ let items;
+ try{items=await readdir(path.join(root,relative),{withFileTypes:true});}
+ catch(error){if(error.code==='ENOENT')return results;throw error;}
+ for(const item of items.sort((a,b)=>a.name.localeCompare(b.name))){
+  const name=`${relative}/${item.name}`;
+  if(!safeRelativePath(name)||item.isSymbolicLink())throw new Error(`unsafe asset: ${name}`);
+  if(item.isDirectory()){results.push(...await collectAssets(root,name));continue;}
+  if(!item.isFile())throw new Error(`unsupported asset: ${name}`);
+  if(!/\.(png|jpe?g|webp|gif)$/iu.test(name))continue;
+  const resolved=await realpath(path.join(root,name)),rootPath=await realpath(root);
+  if(!resolved.startsWith(rootPath+path.sep))throw new Error(`asset escapes entry: ${name}`);
+  const stat=await lstat(path.join(root,name));
+  if(stat.size>5_000_000)throw new Error(`asset exceeds 5 MB: ${name}`);
+  results.push({name,contents:await readFile(resolved)});
+ }
+ return results;
+}
+
+
 export async function generate(root=packageRoot,{check=false,expectedCount=119}={}){
  const entriesRoot=path.join(root,'entries');const dirs=(await readdir(entriesRoot,{withFileTypes:true})).filter(d=>d.isDirectory()).sort((a,b)=>a.name.localeCompare(b.name));
  const entries=[],payloads=[],ids=new Set(),slugs=new Set(),imports=[];
@@ -21,19 +55,22 @@ export async function generate(root=packageRoot,{check=false,expectedCount=119}=
   if(dir.name!==`${entry.entryId}-${entry.slug}`)throw new Error(`directory/id mismatch: ${dir.name}`);
   if(ids.has(entry.entryId)||slugs.has(entry.slug))throw new Error(`duplicate id/slug: ${dir.name}`);ids.add(entry.entryId);slugs.add(entry.slug);
   const guide=await optionalText(folder,'guide.md'),agent=await optionalText(folder,'agent.md');
-  const verificationText=await optionalText(folder,'verification.json');const verification=verificationText?JSON.parse(verificationText):{sdk:{status:'NOT_RUN',note:'尚未在本应用执行目标库测试'},build:{status:'NOT_RUN'},browser:{status:'NOT_RUN'}};
+  const verificationText=await optionalText(folder,'verification.json');const rawVerification=verificationText?JSON.parse(verificationText):{sdk:{status:'NOT_RUN',note:'尚未在本应用执行目标库测试'},build:{status:'NOT_RUN'},browser:{status:'NOT_RUN'}};
   const sources=[];const names=new Set(entry.demos.flatMap(d=>d.sourceFiles));
   for(const name of [...names].sort()){const content=await safeRead(folder,name);sources.push({path:name,sha256:createHash('sha256').update(content).digest('hex'),content});}
   for(const demo of entry.demos){if(demo.entryPoint){await safeRead(folder,demo.entryPoint);if(!names.has(demo.entryPoint))throw new Error(`entryPoint missing from sourceFiles: ${entry.entryId}/${demo.demoId}`);
    if(demo.executionKind==='react')imports.push(`  ${JSON.stringify(`${entry.entryId}/${demo.demoId}`)}: () => import(${JSON.stringify(`../../entries/${dir.name}/${demo.entryPoint}`)}),`);}}
-  entries.push({...entry,directory:dir.name,guideAvailable:guide!==null,agentAvailable:agent!==null,verification});payloads.push({id:entry.entryId,guide,agent,sources});
+  const assets=await collectAssets(folder);
+  const sourceFingerprint=createHash('sha256').update(JSON.stringify({packages:entry.packages,sources:sources.map(({path,sha256})=>({path,sha256}))})).digest('hex');
+  const verification=verifiedState(rawVerification,sourceFingerprint);
+  entries.push({...entry,directory:dir.name,guideAvailable:guide!==null,agentAvailable:agent!==null,sourceFingerprint,verification});payloads.push({id:entry.entryId,guide,agent,sources,assets});
  }
  if(entries.length!==expectedCount)throw new Error(`expected ${expectedCount} entries; found ${entries.length}`);
  for(const entry of entries)for(const related of entry.related)if(!ids.has(related.entryId))throw new Error(`unknown related ${entry.entryId} -> ${related.entryId}`);
  if(expectedCount===119){const expected={A:17,B:22,C:22,D:21,E:19,F:18};for(const [group,count]of Object.entries(expected))if(entries.filter(e=>e.group===group).length!==count)throw new Error(`invalid group count ${group}`);}
  if(check)return{entries:entries.length,loaders:imports.length};
  const out=path.join(root,'public');await mkdir(out,{recursive:true});await rm(path.join(out,'raw'),{recursive:true,force:true});
- for(const p of payloads){const dest=path.join(out,'raw',p.id);await mkdir(dest,{recursive:true});if(p.guide!==null)await writeFile(path.join(dest,'guide.md'),p.guide);if(p.agent!==null)await writeFile(path.join(dest,'agent.md'),p.agent);await writeFile(path.join(dest,'sources.json'),JSON.stringify(p.sources));}
+ for(const p of payloads){const dest=path.join(out,'raw',p.id);await mkdir(dest,{recursive:true});if(p.guide!==null)await writeFile(path.join(dest,'guide.md'),p.guide);if(p.agent!==null)await writeFile(path.join(dest,'agent.md'),p.agent);await writeFile(path.join(dest,'sources.json'),JSON.stringify(p.sources));for(const asset of p.assets){const target=path.join(dest,asset.name);await mkdir(path.dirname(target),{recursive:true});await writeFile(target,asset.contents);}}
  await writeFile(path.join(out,'catalog.json'),JSON.stringify(entries));
  await mkdir(path.join(root,'src/generated'),{recursive:true});await writeFile(path.join(root,'src/generated/loaders.ts'),`// Generated from validated entry manifests. Do not edit.\nimport type {ComponentType} from 'react';\nimport type {DemoProps} from '../lib/types';\nexport const demoLoaders: Record<string, () => Promise<{default: ComponentType<DemoProps>}>> = {\n${imports.join('\n')}\n};\n`);
  const markdown=`# ReactLoom Library Lab\n\n119 条工程知识条目；收录不代表运行验证通过。先读 agent.md，再读真实源码及验证状态。\n\n|编号|工具库|用途|组别|目录|\n|---|---|---|---|---|\n`+entries.map(e=>`|${e.entryId}|${e.name}|${e.summary.replaceAll('|','/')}|${GROUPS[e.group]}|[条目](packages/library-lab/entries/${e.directory}/)|`).join('\n')+'\n';
