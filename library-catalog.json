@@ -123,9 +123,9 @@
     "entryId": "A16",
     "name": "MapLibre GL JS",
     "group": "A",
-    "summary": "矢量地图样式、数据源和图层",
+    "summary": "无需瓦片服务的 WebGL GeoJSON 点层、过滤及生命周期实践",
     "path": "packages/library-lab/entries/A16-maplibre-gl-js",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "A17",
@@ -187,17 +187,17 @@
     "entryId": "B07",
     "name": "MUI",
     "group": "B",
-    "summary": "Material Design React 组件",
+    "summary": "Material UI 主题、表格、可访问弹窗与业务错误回填",
     "path": "packages/library-lab/entries/B07-mui",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "B08",
     "name": "Mantine",
     "group": "B",
-    "summary": "React 组件与应用交互工具",
+    "summary": "主题控件、业务表格、模态编辑及 NumberInput 中间值校验",
     "path": "packages/library-lab/entries/B08-mantine",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "B09",
@@ -211,25 +211,25 @@
     "entryId": "B10",
     "name": "Base UI",
     "group": "B",
-    "summary": "无样式可访问组件原语",
+    "summary": "无样式 Checkbox 的语义、混合态、授权禁用与真实 FormData",
     "path": "packages/library-lab/entries/B10-base-ui",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "B11",
     "name": "Radix Primitives",
     "group": "B",
-    "summary": "复杂组件交互与焦点原语",
+    "summary": "DropdownMenu 原语的键盘、焦点、复选、单选与嵌套菜单实战",
     "path": "packages/library-lab/entries/B11-radix-primitives",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "B12",
     "name": "React Aria",
     "group": "B",
-    "summary": "可访问交互与国际化组件",
+    "summary": "React Aria Components ComboBox 的键盘、IME、ARIA 与异步建议实战",
     "path": "packages/library-lab/entries/B12-react-aria",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "B13",
@@ -443,17 +443,17 @@
     "entryId": "C17",
     "name": "i18next",
     "group": "C",
-    "summary": "语言资源、复数和命名空间",
+    "summary": "独立语言实例、命名空间、复数、插值和 fallback 的核心 i18n 工作坊",
     "path": "packages/library-lab/entries/C17-i18next",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "C18",
     "name": "react-i18next",
     "group": "C",
-    "summary": "React 国际化与 Suspense",
+    "summary": "React useTranslation、Trans 富文本与多工作区 I18nextProvider 隔离",
     "path": "packages/library-lab/entries/C18-react-i18next",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "C19",
@@ -531,9 +531,9 @@
     "entryId": "D06",
     "name": "Immer",
     "group": "D",
-    "summary": "不可变状态更新",
+    "summary": "不可变嵌套更新、结构共享、Patch / inversePatches 乐观回滚",
     "path": "packages/library-lab/entries/D06-immer",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "D07",
@@ -571,9 +571,9 @@
     "entryId": "D11",
     "name": "Jotai",
     "group": "D",
-    "summary": "原子状态与派生数据",
+    "summary": "原子和派生状态、写入 atom、Provider Store 多租户隔离",
     "path": "packages/library-lab/entries/D11-jotai",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "D12",
@@ -643,9 +643,9 @@
     "entryId": "D20",
     "name": "MiniSearch",
     "group": "D",
-    "summary": "浏览器本地全文索引",
+    "summary": "本地全文倒排索引、前缀与拼写容错、查询建议和索引重建",
     "path": "packages/library-lab/entries/D20-minisearch",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "D21",

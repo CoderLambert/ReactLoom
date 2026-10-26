@@ -19,7 +19,7 @@
 |A13|Three.js|三维场景、材质、模型和渲染|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A13-threejs/)|
 |A14|React Three Fiber|React 声明式三维渲染|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A14-react-three-fiber/)|
 |A15|Leaflet|无需远程底图的地点数据浏览、图层与地图交互|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A15-leaflet/)|
-|A16|MapLibre GL JS|矢量地图样式、数据源和图层|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A16-maplibre-gl-js/)|
+|A16|MapLibre GL JS|无需瓦片服务的 WebGL GeoJSON 点层、过滤及生命周期实践|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A16-maplibre-gl-js/)|
 |A17|deck.gl|GPU 大规模地理数据图层|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A17-deckgl/)|
 |B01|Motion for React|React 入场/离场、列表布局过渡与减少动画偏好|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B01-motion-for-react/)|
 |B02|GSAP|有时间线、重播、反转与减少动画偏好控制的交互动画|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B02-gsap/)|
@@ -27,12 +27,12 @@
 |B04|dotLottie 播放器|本地矢量动画、播放控制与减少动态效果|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B04-dotlottie/)|
 |B05|Rive React Runtime|Rive 状态机动画与 React 集成|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B05-rive-react/)|
 |B06|Ant Design|企业组件、受控表单、表格与反馈|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B06-ant-design/)|
-|B07|MUI|Material Design React 组件|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B07-mui/)|
-|B08|Mantine|React 组件与应用交互工具|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B08-mantine/)|
+|B07|MUI|Material UI 主题、表格、可访问弹窗与业务错误回填|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B07-mui/)|
+|B08|Mantine|主题控件、业务表格、模态编辑及 NumberInput 中间值校验|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B08-mantine/)|
 |B09|shadcn/ui|自有源码设计系统和组件组合|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B09-shadcn-ui/)|
-|B10|Base UI|无样式可访问组件原语|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B10-base-ui/)|
-|B11|Radix Primitives|复杂组件交互与焦点原语|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B11-radix-primitives/)|
-|B12|React Aria|可访问交互与国际化组件|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B12-react-aria/)|
+|B10|Base UI|无样式 Checkbox 的语义、混合态、授权禁用与真实 FormData|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B10-base-ui/)|
+|B11|Radix Primitives|DropdownMenu 原语的键盘、焦点、复选、单选与嵌套菜单实战|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B11-radix-primitives/)|
+|B12|React Aria|React Aria Components ComboBox 的键盘、IME、ARIA 与异步建议实战|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B12-react-aria/)|
 |B13|dnd-kit|真实鼠标/触控/键盘排序与稳定身份、受限拖拽的工程示例|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B13-dnd-kit/)|
 |B14|Pragmatic drag and drop|底层拖放事件与跨容器交互|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B14-pragmatic-drag-and-drop/)|
 |B15|react-grid-layout|可拖拽、缩放与响应式仪表盘布局（2.3.0 控制式接口）|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B15-react-grid-layout/)|
@@ -59,8 +59,8 @@
 |C14|date-fns|函数式日期、日历天与 DST 时区运算|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C14-date-fns/)|
 |C15|Day.js|不可变日期、严格校验与时区插件的 RSS 排程实践|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C15-dayjs/)|
 |C16|Luxon|DateTime、Interval 与明确 IANA 时区的日历窗口|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C16-luxon/)|
-|C17|i18next|语言资源、复数和命名空间|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C17-i18next/)|
-|C18|react-i18next|React 国际化与 Suspense|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C18-react-i18next/)|
+|C17|i18next|独立语言实例、命名空间、复数、插值和 fallback 的核心 i18n 工作坊|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C17-i18next/)|
+|C18|react-i18next|React useTranslation、Trans 富文本与多工作区 I18nextProvider 隔离|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C18-react-i18next/)|
 |C19|nuqs|URL 查询状态双向同步|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C19-nuqs/)|
 |C20|clsx|条件 className 合成|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C20-clsx/)|
 |C21|tailwind-merge|Tailwind v4 工具类冲突合并与可覆盖组件实践|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C21-tailwind-merge/)|
@@ -70,12 +70,12 @@
 |D03|p-limit|Promise 并发上限控制|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D03-p-limit/)|
 |D04|p-queue|并发、滑动窗口限流与任务优先级调度|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D04-p-queue/)|
 |D05|decimal.js|从字符串到精确金额：decimal.js 的税率、舍入和对账边界|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D05-decimal-js/)|
-|D06|Immer|不可变状态更新|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D06-immer/)|
+|D06|Immer|不可变嵌套更新、结构共享、Patch / inversePatches 乐观回滚|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D06-immer/)|
 |D07|TanStack Query|远程状态的查询键、缓存、取消与乐观更新生命周期|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D07-tanstack-query/)|
 |D08|Ky|基于 Fetch 的 HTTP 客户端：重试、超时、响应校验与取消|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D08-ky/)|
 |D09|Axios|HTTP 实例拦截器、取消、幂等请求重试与 409 失败分支|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D09-axios/)|
 |D10|Zustand|React19 vanilla store、租户状态与受控 persist 迁移|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D10-zustand/)|
-|D11|Jotai|原子状态与派生数据|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D11-jotai/)|
+|D11|Jotai|原子和派生状态、写入 atom、Provider Store 多租户隔离|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D11-jotai/)|
 |D12|Redux Toolkit|可追踪状态与业务流程|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D12-redux-toolkit/)|
 |D13|RTK Query|Redux 数据请求与缓存订阅|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D13-rtk-query/)|
 |D14|XState|状态机与 Actor 生命周期|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D14-xstate/)|
@@ -84,7 +84,7 @@
 |D17|Yjs|CRDT 实时协作与离线合并|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D17-yjs/)|
 |D18|Comlink|Worker RPC 和数据传输|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D18-comlink/)|
 |D19|Fuse.js|浏览器端加权模糊搜索、分组过滤、IME 与动态索引重建|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D19-fusejs/)|
-|D20|MiniSearch|浏览器本地全文索引|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D20-minisearch/)|
+|D20|MiniSearch|本地全文倒排索引、前缀与拼写容错、查询建议和索引重建|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D20-minisearch/)|
 |D21|Pagefind|构建时静态站点全文搜索|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D21-pagefind/)|
 |E01|Tiptap|ProseMirror 驱动的 Headless 富文本编辑器：工具栏、JSON 草稿与安全导入|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E01-tiptap/)|
 |E02|BlockNote|开箱即用的块级文档编辑器：块结构、JSON 草稿与变更生命周期|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E02-blocknote/)|
