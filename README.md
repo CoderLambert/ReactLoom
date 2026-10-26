@@ -8,6 +8,14 @@ The templates are meant to be started from and kept, not thrown away after the f
 
 新建独立的 [Library Lab](packages/library-lab/README.md) 应用，在 `packages/library-lab` 展示 A–F 六组 119 个前端工具库的**目录**、真实 Demo、中文指南、Agent 指南和替代关系。`pnpm dev:library` 在本地启动端口 4319；从仓库根的 [完整索引](LIBRARY_CATALOG.md) 按用途定位条目。目录收录数与经过构建/SDK/浏览器验证的 Demo 数严格区分；详细状态见 [Library Lab 调度与进度](docs/library-lab/COORDINATION.md)。此私有实验应用**不会复制**进任何 SPA/SSR/Mobile 模板。
 
+## Library Lab — 119 前端库实战与 Agent 知识
+
+`packages/library-lab` 是独立且不随 `create-reactloom` 分发的 React/Vite 实验室。按 A–F 六组浏览库的实际应用、Markdown 深入指南、Agent 实施手册和相关选型；源码直接来自对应示例文件。目录的 119 条是研究目标，**不代表 119 个 SDK 已经过运行验收**。
+
+- [完整用途索引](LIBRARY_CATALOG.md) · [开发进度](docs/library-lab/progress/PLATFORM.md) · [运行说明](packages/library-lab/README.md)
+- 启动应用：`pnpm dev:library`（需要先安装工作区依赖，本机端口 4319）。
+- Agent 离线检索：`node packages/library-lab/scripts/find-library.mjs --query '并发' --json`，再读候选 `agent.md` 与证据。
+
 ## Zero to running
 
 In this repo:

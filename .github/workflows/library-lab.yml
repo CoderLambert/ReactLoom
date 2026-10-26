@@ -2,10 +2,10 @@ name: Library Lab
 on:
   pull_request:
     branches: ['feat/library-lab']
-    paths: ['packages/library-lab/**', 'docs/library-lab/**', '.github/workflows/library-lab.yml', 'pnpm-lock.yaml']
+    paths: ['packages/library-lab/**', 'docs/library-lab/**', '.github/workflows/library-lab.yml', 'pnpm-lock.yaml', 'package.json', 'pnpm-workspace.yaml', 'AGENTS.md', 'LIBRARY_CATALOG.md']
   push:
     branches: ['feat/library-lab']
-    paths: ['packages/library-lab/**', 'docs/library-lab/**', '.github/workflows/library-lab.yml', 'pnpm-lock.yaml']
+    paths: ['packages/library-lab/**', 'docs/library-lab/**', '.github/workflows/library-lab.yml', 'pnpm-lock.yaml', 'package.json', 'pnpm-workspace.yaml', 'AGENTS.md', 'LIBRARY_CATALOG.md']
 permissions:
   contents: read
 concurrency:

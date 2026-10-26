@@ -10,6 +10,7 @@
   },
   "scripts": {
     "dev:spa": "turbo run dev --ui=tui --filter=@reactloom/template-spa",
+    "dev:library": "pnpm --filter @reactloom/library-lab dev",
     "dev:ssr": "turbo run dev --ui=tui --filter=@reactloom/template-ssr",
     "dev:mobile": "turbo run dev --ui=tui --filter=@reactloom/template-mobile",
     "lint": "turbo run lint lint:root",
