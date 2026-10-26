@@ -1,1 +1,93 @@
-{"schemaVersion":1,"entryId":"C16","slug":"luxon","name":"Luxon","group":"C","summary":"时区、日期区间和持续时间","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "C16",
+  "slug": "luxon",
+  "name": "Luxon",
+  "group": "C",
+  "summary": "DateTime、Interval 与明确 IANA 时区的日历窗口",
+  "tags": [
+    "时间区间",
+    "DST",
+    "IANA",
+    "DateTime",
+    "RSS"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "luxon",
+      "version": "3.7.2"
+    }
+  ],
+  "references": [
+    {
+      "title": "官方 API v3.7.2",
+      "url": "https://moment.github.io/luxon/api-docs/index.html"
+    },
+    {
+      "title": "Luxon 源码",
+      "url": "https://github.com/moment/luxon"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "C14",
+      "relation": "alternative",
+      "reason": "轻量函数式计算时用 date-fns。"
+    },
+    {
+      "entryId": "C15",
+      "relation": "alternative",
+      "reason": "已有 Day.js 插件生态的项目不必盲目替换。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "严格解析与本地化显示",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [],
+      "description": "严格解析与本地化显示"
+    },
+    {
+      "demoId": "business",
+      "title": "DateTime + Interval 日历排程",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [],
+      "description": "DateTime + Interval 日历排程"
+    },
+    {
+      "demoId": "advanced",
+      "title": "春秋 DST 与 getPossibleOffsets",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [],
+      "description": "春秋 DST 与 getPossibleOffsets"
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "note": "示例源码与测试数据为本项目新写，不包含第三方图片或时区数据包。"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "根据官方文档重新编写三层示例；旧资料未被当作SDK或浏览器验证结果。"
+  }
+}
