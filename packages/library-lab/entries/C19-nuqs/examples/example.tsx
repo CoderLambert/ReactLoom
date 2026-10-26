@@ -1,4 +1,4 @@
-import {useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {NuqsAdapter} from 'nuqs/adapters/tanstack-router';
 import {parseAsInteger, parseAsString, useQueryState} from 'nuqs';
 
@@ -18,9 +18,12 @@ function QueryWorkshop({level}:Props){
  const [group,setGroup]=useQueryState('ll_c19_group',parseAsString.withDefault('all'));
  const [draft,setDraft]=useState(query);
  const composing=useRef(false);
+ // Browser back/forward changes nuqs state; keep the editable draft synchronized.
+ useEffect(()=>{if(!composing.current)setDraft(query);},[query]);
  const normalizedGroup=group==='tech'||group==='business'?group:'all';
  const matches=feeds.filter(item=>(normalizedGroup==='all'||item.group===normalizedGroup)&&item.name.toLowerCase().includes(query.toLowerCase()));
- const safePage=Math.max(1,Math.min(5,Number.isFinite(page)?page:1));
+ const pageCount=Math.max(1,Math.ceil(matches.length/2));
+ const safePage=Math.max(1,Math.min(pageCount,Number.isFinite(page)?page:1));
  const pageItems=matches.slice((safePage-1)*2,safePage*2);
  const commit=(value:string)=>{void setQuery(value||null);void setPage(null);};
  return <section aria-label="nuqs 实际URL状态示例">

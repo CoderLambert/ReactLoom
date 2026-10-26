@@ -14,7 +14,14 @@ export default function ComlinkWorkshop({level}:Props){
  async function execute(){
   dispose();const current=++epoch.current;
   setWorking(true);setResult('启动单独的模块 Worker…');
-  const worker=new Worker(new URL('./worker.ts',import.meta.url),{type:'module'});
+  let worker: Worker;
+  try {
+   worker=new Worker(new URL('./worker.ts',import.meta.url),{type:'module'});
+  }catch(error){
+   // Worker construction can fail under strict CSP or unsupported module workers.
+   if(current===epoch.current){setResult('无法启动模块 Worker：'+String(error));setWorking(false);}
+   return;
+  }
   const remote=Comlink.wrap<WorkerAPI>(worker);
   const controller=new AbortController();
   session.current={worker,remote,controller};

@@ -182,3 +182,9 @@ PLATFORM 在 packages/library-lab/package.json 及真实 pnpm-lock.yaml 中统�
 - 优先继续 C04 JSON Forms、C05 Ajv、C08 AG Grid（社区许可限定）、C12 FullCalendar、C13 Frappe Gantt、D02 lodash-es；之后处理 D12 Redux Toolkit、D13 RTK Query、D14 XState、D16 Workbox、D17 Yjs、D21 Pagefind 和 C22 Moment 迁移。
 - PLATFORM 应先对本批新增8个包解析真实版本/peer，执行对应6份 sdk tests、typecheck/build 和有代表性的 Browser 场景，再按 sourceFingerprint 与日志更新 PASS；不会把新增 tests 文件冒称为已运行。
 - 此轮结束后 CD worker PR 必须 base=feat/library-lab；仅 PLATFORM 可以审核合并，后续再从最新集成分支续作。
+
+### 第六批补强（提交到 PR #28）
+
+- 交互修订：C19 nuqs 在浏览器后退/前进后同步输入框草稿，页码按真实筛选结果页数夹取，防止分享非法/过期页码导致有结果却显示空页。
+- D18 Comlink 对 `new Worker` 的 CSP/模块兼容失败显式反馈而非 unhandled rejection；Worker 代理进度回调等待 RPC acknowledgment，保证最终结果不超前于进度事件。
+- 仍未实际安装依赖或运行浏览器；这些是源码级风险修正，验证状态保留 NOT_RUN。PR 需 PLATFORM 集成/依赖和浏览器复核。

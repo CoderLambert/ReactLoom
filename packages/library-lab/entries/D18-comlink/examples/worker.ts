@@ -9,7 +9,8 @@ const api={
  async progress(total:number,report:(done:number)=>void){
   for(let index=1;index<=total;index++){
    await new Promise(resolve=>setTimeout(resolve,45));
-   report(index);
+   // Proxy callbacks are asynchronous RPC calls; wait for acknowledgment to preserve order.
+   await report(index);
   }
   return total;
  },
