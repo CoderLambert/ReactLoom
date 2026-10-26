@@ -1,1 +1,102 @@
-{"schemaVersion":1,"entryId":"D11","slug":"jotai","name":"Jotai","group":"D","summary":"原子状态与派生数据","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "D11",
+  "slug": "jotai",
+  "name": "Jotai",
+  "group": "D",
+  "summary": "原子和派生状态、写入 atom、Provider Store 多租户隔离",
+  "tags": [
+    "原子状态",
+    "React",
+    "Provider",
+    "多租户",
+    "Jotai v3"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "jotai",
+      "version": "3.0.1"
+    }
+  ],
+  "references": [
+    {
+      "title": "Jotai v3 文档",
+      "url": "https://jotai.org/docs"
+    },
+    {
+      "title": "atom API",
+      "url": "https://jotai.org/docs/core/atom"
+    },
+    {
+      "title": "官方 v3.0.1 发布说明",
+      "url": "https://github.com/pmndrs/jotai/releases/tag/v3.0.1"
+    },
+    {
+      "title": "v3 迁移指南",
+      "url": "https://jotai.org/docs/guides/migrating-to-v3"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "D10",
+      "relation": "alternative",
+      "reason": "Zustand 偏向 store-centric 集中管理；Jotai 更适合细粒度原子依赖图与派生值。"
+    },
+    {
+      "entryId": "D07",
+      "relation": "complements",
+      "reason": "服务端请求缓存应由 TanStack Query 等持有，Jotai 管组件级可变偏好和展示状态。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "基础 atom 与派生 atom",
+      "description": "同一 store 中 count 与 double 响应式更新",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": []
+    },
+    {
+      "demoId": "business",
+      "title": "RSS 未读统计与写入 atom",
+      "description": "按稳定行 ID 切换已读，unread derived 自动更新",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": []
+    },
+    {
+      "demoId": "advanced",
+      "title": "两个独立 Provider Store",
+      "description": "同一 atom 配置跨两个团队互不干扰",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": []
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "note": "原生 SDK 依赖遵守上游 MIT；本条目不分发第三方媒体，许可仍需目标产品核对"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "mode": "recreated",
+    "note": "根据官方 API 独立编写；不沿用旧研究源文件或历史测试 PASS"
+  }
+}
