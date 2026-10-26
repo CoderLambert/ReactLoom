@@ -11,11 +11,12 @@
     "catalog:check": "node scripts/generate.mjs --check && node scripts/validate-dependencies.mjs",
     "lint": "biome check src scripts tests e2e package.json tsconfig.json vite.config.ts playwright.config.ts",
     "typecheck": "node scripts/generate.mjs && tsc --noEmit",
-    "test": "node --test tests/catalog.test.mjs tests/document-utils.test.mjs tests/generate.test.mjs tests/find-library.test.mjs tests/validate-dependencies.test.mjs",
+    "test": "node --test tests/catalog.test.mjs tests/document-utils.test.mjs tests/generate.test.mjs tests/find-library.test.mjs tests/validate-dependencies.test.mjs tests/reproduction.test.mjs tests/sdk-runner.test.mjs",
     "test:e2e": "playwright test",
     "test:e2e:setup": "playwright install chromium",
-    "test:sdk": "node --test tests/sdk.test.mjs entries/F11-msw/tests/node-scenarios.test.mjs",
-    "library:find": "node scripts/find-library.mjs"
+    "test:sdk": "node scripts/sdk-runner.mjs",
+    "library:find": "node scripts/find-library.mjs",
+    "test:vitest": "vitest run entries/F12-vitest/examples/*.test.ts"
   },
   "dependencies": {
     "@floating-ui/react": "0.27.20",

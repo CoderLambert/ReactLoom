@@ -1,6 +1,7 @@
 name: Library Lab
 on:
   pull_request:
+    branches: ['feat/library-lab']
     paths: ['packages/library-lab/**', 'docs/library-lab/**', '.github/workflows/library-lab.yml', 'pnpm-lock.yaml']
   push:
     branches: ['feat/library-lab']
@@ -41,6 +42,7 @@ jobs:
         run: |
           pnpm --filter @reactloom/library-lab typecheck
           pnpm --filter @reactloom/library-lab test:sdk
+          pnpm --filter @reactloom/library-lab test:vitest
           pnpm --filter @reactloom/library-lab build
       - name: Install Chromium
         run: pnpm --filter @reactloom/library-lab exec playwright install --with-deps chromium

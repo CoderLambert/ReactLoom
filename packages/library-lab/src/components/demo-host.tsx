@@ -2,6 +2,7 @@ import {lazy,Suspense,useMemo,useState,useEffect} from 'react';
 import {ErrorBoundary} from 'react-error-boundary';
 import type {Entry,Demo,SourceMetadata} from '../lib/types';
 import {demoLoaders} from '../generated/loaders';
+import {reproductionCommand} from '../lib/reproduction.mjs';
 function SourceViewer({entryId,demo}:{entryId:string;demo:Demo}){
  const [files,setFiles]=useState<SourceMetadata[]>([]);
  const [selected,setSelected]=useState('');
@@ -59,10 +60,9 @@ function SourceViewer({entryId,demo}:{entryId:string;demo:Demo}){
 }
 function Reproduction({entry,demo}:{entry:Entry;demo:Demo}){
  const [feedback,setFeedback]=useState('');
- const isNode=demo.executionKind==='node-ci' && !!demo.entryPoint?.endsWith('.mjs');
- const command=isNode?`node entries/${entry.directory}/${demo.entryPoint} ${demo.level}`:'';
- return <section className="cli-repro"><h3>{isNode?'Node.js 真实复现命令':'隔离运行模式'}</h3>
-  {isNode?<><p>在 <code>packages/library-lab</code> 目录执行下方命令，真实 SDK 由当前 package 依赖解析。浏览器不会代你执行任意 shell。</p><pre><code>{command}</code></pre><button type="button" onClick={()=>void navigator.clipboard.writeText(command).then(()=>setFeedback('命令已复制')).catch(()=>setFeedback('复制失败，请手动选择'))}>复制运行命令</button><p role="status">{feedback}</p></>:
+ const command=reproductionCommand(entry,demo);
+ return <section className="cli-repro"><h3>{command?'真实可复现的本地命令':'隔离运行模式'}</h3>
+  {command?<><p>在 <code>packages/library-lab</code> 目录安装依赖后执行下方命令。Node.js 与 Vitest 分别使用真实运行器；网页只展示命令，不执行任意 shell。</p><pre><code>{command}</code></pre><button type="button" onClick={()=>void navigator.clipboard.writeText(command).then(()=>setFeedback('命令已复制')).catch(()=>setFeedback('复制失败，请手动选择'))}>复制运行命令</button><p role="status">{feedback}</p></>:
   <p>当前示例需要专用 Worker 或隔离 origin。未建立经过检查的宿主时仅显示源码和环境要求，不在主应用中隐式注册 Service Worker。</p>}
   <p className="notice">执行和验证状态以本条目的 verification.json 和有命令/日志的证据为准。请勿将网页展示等同于执行成功。</p>
  </section>;
