@@ -16,11 +16,11 @@
 |A10|tldraw|可扩展画布编辑器和白板|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A10-tldraw/)|
 |A11|Konva|Canvas 2D 场景图、图元拖拽、选择与变换|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A11-konva/)|
 |A12|react-konva|React 19.3 声明式二维画布与编辑状态|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A12-react-konva/)|
-|A13|Three.js|三维场景、材质、模型和渲染|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A13-threejs/)|
-|A14|React Three Fiber|React 声明式三维渲染|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A14-react-three-fiber/)|
+|A13|Three.js|WebGL 3D场景、动画循环、尺寸管理与显存回收的原生引擎实验|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A13-threejs/)|
+|A14|React Three Fiber|React19声明式三维场景、useFrame与可见性节能的实践|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A14-react-three-fiber/)|
 |A15|Leaflet|无需远程底图的地点数据浏览、图层与地图交互|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A15-leaflet/)|
 |A16|MapLibre GL JS|无需瓦片服务的 WebGL GeoJSON 点层、过滤及生命周期实践|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A16-maplibre-gl-js/)|
-|A17|deck.gl|GPU 大规模地理数据图层|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A17-deckgl/)|
+|A17|deck.gl|无底图的GPU地理点图层，交互拾取、数据增量更新与Deck.finalize|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A17-deckgl/)|
 |B01|Motion for React|React 入场/离场、列表布局过渡与减少动画偏好|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B01-motion-for-react/)|
 |B02|GSAP|有时间线、重播、反转与减少动画偏好控制的交互动画|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B02-gsap/)|
 |B03|react-spring|基于 spring 物理的 React 动画与列表进出场；局部减少动画兼容|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B03-react-spring/)|
@@ -29,20 +29,20 @@
 |B06|Ant Design|企业组件、受控表单、表格与反馈|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B06-ant-design/)|
 |B07|MUI|Material UI 主题、表格、可访问弹窗与业务错误回填|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B07-mui/)|
 |B08|Mantine|主题控件、业务表格、模态编辑及 NumberInput 中间值校验|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B08-mantine/)|
-|B09|shadcn/ui|自有源码设计系统和组件组合|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B09-shadcn-ui/)|
+|B09|shadcn/ui|从注册表复制源码的设计系统，CVA变体与Radix Slot组合、组件源码所有权和可访问性|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B09-shadcn-ui/)|
 |B10|Base UI|无样式 Checkbox 的语义、混合态、授权禁用与真实 FormData|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B10-base-ui/)|
 |B11|Radix Primitives|DropdownMenu 原语的键盘、焦点、复选、单选与嵌套菜单实战|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B11-radix-primitives/)|
 |B12|React Aria|React Aria Components ComboBox 的键盘、IME、ARIA 与异步建议实战|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B12-react-aria/)|
 |B13|dnd-kit|真实鼠标/触控/键盘排序与稳定身份、受限拖拽的工程示例|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B13-dnd-kit/)|
-|B14|Pragmatic drag and drop|底层拖放事件与跨容器交互|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B14-pragmatic-drag-and-drop/)|
+|B14|Pragmatic drag and drop|原生DOM拖放适配器、drop targets、监视器与严格事件作用域|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B14-pragmatic-drag-and-drop/)|
 |B15|react-grid-layout|可拖拽、缩放与响应式仪表盘布局（2.3.0 控制式接口）|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B15-react-grid-layout/)|
 |B16|react-resizable-panels|可调整尺寸的面板布局|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B16-react-resizable-panels/)|
 |B17|Floating UI|浮层定位、碰撞和焦点管理|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B17-floating-ui/)|
 |B18|cmdk|可访问命令菜单、搜索分组与中文输入法快捷键|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B18-cmdk/)|
 |B19|Embla Carousel|可访问的触控轮播、滑动吸附和动态卡片|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B19-embla-carousel/)|
 |B20|Sonner|即时通知和操作反馈|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B20-sonner/)|
-|B21|react-motion（历史迁移）|历史弹簧动画识别与现代迁移|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B21-react-motion-migration/)|
-|B22|react-beautiful-dnd（历史迁移）|历史拖拽库识别与迁移|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B22-react-beautiful-dnd-migration/)|
+|B21|react-motion（历史迁移）|从停滞的react-motion Motion/spring模式迁移至现代motion/react的状态驱动动画|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B21-react-motion-migration/)|
+|B22|react-beautiful-dnd（历史迁移）|把废弃react-beautiful-dnd的Droppable/Draggable列表低风险迁移为React19兼容替代库|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B22-react-beautiful-dnd-migration/)|
 |C01|React Hook Form|真实 RSS 订阅表单：动态字段、服务端错误映射与请求取消|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C01-react-hook-form/)|
 |C02|Zod|不可信 RSS / OPML JSON 校验、规范化与跨字段错误|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C02-zod/)|
 |C03|Valibot|模块化类型安全数据校验|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C03-valibot/)|
@@ -98,28 +98,28 @@
 |E10|DOMPurify|HTML 净化和输出安全|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E10-dompurify/)|
 |E11|Streamdown|增量流式 Markdown 展示|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E11-streamdown/)|
 |E12|assistant-ui|聊天界面和运行时交互|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E12-assistant-ui/)|
-|E13|PhotoSwipe|图片灯箱与触控缩放|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E13-photoswipe/)|
-|E14|react-easy-crop|图片裁剪交互与坐标|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E14-react-easy-crop/)|
-|E15|pica|浏览器高质量图片缩放|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E15-pica/)|
+|E13|PhotoSwipe|响应式图库灯箱：PhotoSwipe Lightbox、触控缩放、键盘关闭与实例销毁|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E13-photoswipe/)|
+|E14|react-easy-crop|可拖拽缩放裁剪框、真实像素区域、PNG本地输出与文件资源清理|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E14-react-easy-crop/)|
+|E15|pica|浏览器本地高质量像素缩放与PNG导出：真实pica.resize/ toBlob|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E15-pica/)|
 |E16|Video.js|视频播放器与控制界面|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E16-videojs-v10/)|
 |E17|hls.js|HLS 播放引擎与缓冲|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E17-hlsjs/)|
-|E18|wavesurfer.js|音频波形、区域与时间线|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E18-wavesurferjs8/)|
+|E18|wavesurfer.js|真实波形播放器与音频片段交互：本地合成WAV、播放位置、倍速缩放与销毁|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E18-wavesurferjs8/)|
 |E19|ffmpeg.wasm|浏览器 WebAssembly 媒体转换|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E19-ffmpeg-wasm/)|
 |F01|Uppy|文件选择、限制、排队与本地预览：真实 Uppy Core，不使用假上传进度|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F01-uppy/)|
 |F02|react-dropzone|文件选择与拖放输入|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F02-react-dropzone/)|
 |F03|Papa Parse|真实 CSV 解析/导出：引号换行、表头与URL验证、本地文件及公式注入防护|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F03-papaparse/)|
-|F04|ExcelJS|Excel 工作簿生成与编辑|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F04-exceljs/)|
+|F04|ExcelJS|Excel工作簿真实生成与读取：冻结表头、统计公式、RSS数据和不可信单元格处理|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F04-exceljs/)|
 |F05|SheetJS|电子表格导入导出|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F05-sheetjs/)|
 |F06|PDF.js|真正的 pdfjs-dist Worker、PDF 解析、Canvas 分页渲染和取消清理|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F06-pdfjs/)|
 |F07|react-pdf|React 组件化 PDF 阅读：本地文档、分页、TextLayer 与同版本 Worker|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F07-react-pdf/)|
-|F08|@react-pdf/renderer|React 声明式 PDF 生成|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F08-react-pdf-renderer/)|
-|F09|pdf-lib|PDF 页面修改与合并|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F09-pdf-lib/)|
-|F10|Orval|OpenAPI 客户端生成|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F10-orval/)|
+|F08|@react-pdf/renderer|React组件声明式生成原生PDF：报告布局、分页文本、受控下载与链接生命周期|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F08-react-pdf-renderer/)|
+|F09|pdf-lib|浏览器真正创建、合并及标注 PDF，处理本地字节边界并释放对象 URL|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F09-pdf-lib/)|
+|F10|Orval|本地OpenAPI契约生成真实Fetch与TanStack Query代码，按生成目标隔离并检查产物|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F10-orval/)|
 |F11|MSW|网络层请求 Mock 与场景|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F11-msw/)|
 |F12|Vitest|真实 Vitest 测试配方：数据校验、可注入HTTP状态与取消竞态|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F12-vitest/)|
 |F13|Playwright|真实 Chromium E2E：语义定位、HTTP 场景矩阵与取消竞态（独立 CLI）|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F13-playwright/)|
 |F14|Storybook|组件隔离开发、CSF Stories、Play交互断言与可访问性反馈|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F14-storybook/)|
 |F15|Knip|检查 Monorepo 无用文件、导出及依赖：最小项目、业务入口与生产模式的真实 CLI 练习|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F15-knip/)|
-|F16|dependency-cruiser|模块依赖与架构规则|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F16-dependency-cruiser/)|
+|F16|dependency-cruiser|源码级依赖图与架构边界约束：真实CLI检测跨层引用和循环依赖|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F16-dependency-cruiser/)|
 |F17|axe-core|真实 axe.run 局部审计，定位缺少alt/label/button-name并展示修复前后|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F17-axe-core/)|
-|F18|rollup-plugin-visualizer|构建模块组成和体积分析|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F18-rollup-plugin-visualizer/)|
+|F18|rollup-plugin-visualizer|真实Vite8构建报告：Treemap、Markdown体积清单与Raw-data JSON|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F18-rollup-plugin-visualizer/)|

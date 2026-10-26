@@ -99,17 +99,17 @@
     "entryId": "A13",
     "name": "Three.js",
     "group": "A",
-    "summary": "三维场景、材质、模型和渲染",
+    "summary": "WebGL 3D场景、动画循环、尺寸管理与显存回收的原生引擎实验",
     "path": "packages/library-lab/entries/A13-threejs",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "A14",
     "name": "React Three Fiber",
     "group": "A",
-    "summary": "React 声明式三维渲染",
+    "summary": "React19声明式三维场景、useFrame与可见性节能的实践",
     "path": "packages/library-lab/entries/A14-react-three-fiber",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "A15",
@@ -131,9 +131,9 @@
     "entryId": "A17",
     "name": "deck.gl",
     "group": "A",
-    "summary": "GPU 大规模地理数据图层",
+    "summary": "无底图的GPU地理点图层，交互拾取、数据增量更新与Deck.finalize",
     "path": "packages/library-lab/entries/A17-deckgl",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "B01",
@@ -203,9 +203,9 @@
     "entryId": "B09",
     "name": "shadcn/ui",
     "group": "B",
-    "summary": "自有源码设计系统和组件组合",
+    "summary": "从注册表复制源码的设计系统，CVA变体与Radix Slot组合、组件源码所有权和可访问性",
     "path": "packages/library-lab/entries/B09-shadcn-ui",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "B10",
@@ -243,9 +243,9 @@
     "entryId": "B14",
     "name": "Pragmatic drag and drop",
     "group": "B",
-    "summary": "底层拖放事件与跨容器交互",
+    "summary": "原生DOM拖放适配器、drop targets、监视器与严格事件作用域",
     "path": "packages/library-lab/entries/B14-pragmatic-drag-and-drop",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "B15",
@@ -299,17 +299,17 @@
     "entryId": "B21",
     "name": "react-motion（历史迁移）",
     "group": "B",
-    "summary": "历史弹簧动画识别与现代迁移",
+    "summary": "从停滞的react-motion Motion/spring模式迁移至现代motion/react的状态驱动动画",
     "path": "packages/library-lab/entries/B21-react-motion-migration",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "B22",
     "name": "react-beautiful-dnd（历史迁移）",
     "group": "B",
-    "summary": "历史拖拽库识别与迁移",
+    "summary": "把废弃react-beautiful-dnd的Droppable/Draggable列表低风险迁移为React19兼容替代库",
     "path": "packages/library-lab/entries/B22-react-beautiful-dnd-migration",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "C01",
@@ -755,25 +755,25 @@
     "entryId": "E13",
     "name": "PhotoSwipe",
     "group": "E",
-    "summary": "图片灯箱与触控缩放",
+    "summary": "响应式图库灯箱：PhotoSwipe Lightbox、触控缩放、键盘关闭与实例销毁",
     "path": "packages/library-lab/entries/E13-photoswipe",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "E14",
     "name": "react-easy-crop",
     "group": "E",
-    "summary": "图片裁剪交互与坐标",
+    "summary": "可拖拽缩放裁剪框、真实像素区域、PNG本地输出与文件资源清理",
     "path": "packages/library-lab/entries/E14-react-easy-crop",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "E15",
     "name": "pica",
     "group": "E",
-    "summary": "浏览器高质量图片缩放",
+    "summary": "浏览器本地高质量像素缩放与PNG导出：真实pica.resize/ toBlob",
     "path": "packages/library-lab/entries/E15-pica",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "E16",
@@ -795,9 +795,9 @@
     "entryId": "E18",
     "name": "wavesurfer.js",
     "group": "E",
-    "summary": "音频波形、区域与时间线",
+    "summary": "真实波形播放器与音频片段交互：本地合成WAV、播放位置、倍速缩放与销毁",
     "path": "packages/library-lab/entries/E18-wavesurferjs8",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "E19",
@@ -835,9 +835,9 @@
     "entryId": "F04",
     "name": "ExcelJS",
     "group": "F",
-    "summary": "Excel 工作簿生成与编辑",
+    "summary": "Excel工作簿真实生成与读取：冻结表头、统计公式、RSS数据和不可信单元格处理",
     "path": "packages/library-lab/entries/F04-exceljs",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "F05",
@@ -867,25 +867,25 @@
     "entryId": "F08",
     "name": "@react-pdf/renderer",
     "group": "F",
-    "summary": "React 声明式 PDF 生成",
+    "summary": "React组件声明式生成原生PDF：报告布局、分页文本、受控下载与链接生命周期",
     "path": "packages/library-lab/entries/F08-react-pdf-renderer",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "F09",
     "name": "pdf-lib",
     "group": "F",
-    "summary": "PDF 页面修改与合并",
+    "summary": "浏览器真正创建、合并及标注 PDF，处理本地字节边界并释放对象 URL",
     "path": "packages/library-lab/entries/F09-pdf-lib",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "F10",
     "name": "Orval",
     "group": "F",
-    "summary": "OpenAPI 客户端生成",
+    "summary": "本地OpenAPI契约生成真实Fetch与TanStack Query代码，按生成目标隔离并检查产物",
     "path": "packages/library-lab/entries/F10-orval",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "F11",
@@ -931,9 +931,9 @@
     "entryId": "F16",
     "name": "dependency-cruiser",
     "group": "F",
-    "summary": "模块依赖与架构规则",
+    "summary": "源码级依赖图与架构边界约束：真实CLI检测跨层引用和循环依赖",
     "path": "packages/library-lab/entries/F16-dependency-cruiser",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "F17",
@@ -947,8 +947,8 @@
     "entryId": "F18",
     "name": "rollup-plugin-visualizer",
     "group": "F",
-    "summary": "构建模块组成和体积分析",
+    "summary": "真实Vite8构建报告：Treemap、Markdown体积清单与Raw-data JSON",
     "path": "packages/library-lab/entries/F18-rollup-plugin-visualizer",
-    "contentState": "missing"
+    "contentState": "recreated"
   }
 ]
