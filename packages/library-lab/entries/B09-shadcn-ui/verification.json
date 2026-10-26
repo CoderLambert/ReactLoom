@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "本地源码使用真实Radix Slot/CVA/clsx/tailwind-merge，但尚未执行第三方依赖运行检查"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "缺依赖安装和TypeScript生产构建"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "未进行键盘、焦点与移动端E2E"
+  }
+}

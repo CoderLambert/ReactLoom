@@ -1,1 +1,113 @@
-{"schemaVersion":1,"entryId":"A17","slug":"deckgl","name":"deck.gl","group":"A","summary":"GPU 大规模地理数据图层","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "A17",
+  "slug": "deckgl",
+  "name": "deck.gl",
+  "group": "A",
+  "summary": "无底图的GPU地理点图层，交互拾取、数据增量更新与Deck.finalize",
+  "tags": [
+    "deck.gl",
+    "WebGL2",
+    "geospatial",
+    "ScatterplotLayer",
+    "GPU"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "@deck.gl/core",
+      "version": "9.4.0"
+    },
+    {
+      "name": "@deck.gl/layers",
+      "version": "9.4.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "deck.gl standalone入门",
+      "url": "https://deck.gl/docs/get-started/using-standalone"
+    },
+    {
+      "title": "Deck parent与finalize API",
+      "url": "https://deck.gl/docs/api-reference/core/deck"
+    },
+    {
+      "title": "ScatterplotLayer属性",
+      "url": "https://deck.gl/docs/api-reference/layers/scatterplot-layer"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "A16",
+      "relation": "complements",
+      "reason": "MapLibre可提供底图和矢量地图交互，deck.gl更适合大量GPU数据层；组合时先审查同步与底图来源许可。"
+    },
+    {
+      "entryId": "A13",
+      "relation": "alternative",
+      "reason": "Three.js能渲染通用3D对象，而deck.gl为地理可视化提供分层和地理投影。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "离线点层与拾取",
+      "description": "理解 deck.gl 的最小真实用法",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "WebGL",
+        "GPU",
+        "cleanup"
+      ]
+    },
+    {
+      "demoId": "business",
+      "title": "订阅站点健康监测",
+      "description": "面向真实项目的订阅站点健康监测",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "WebGL",
+        "GPU",
+        "cleanup"
+      ]
+    },
+    {
+      "demoId": "advanced",
+      "title": "千点数据、过滤与资源释放",
+      "description": "验证deck.gl的资源和交互边界",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "WebGL",
+        "GPU",
+        "cleanup"
+      ]
+    }
+  ],
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "依据官方资料重新编写，历史报告的测试结果不继承；使用真实运行源码。"
+  },
+  "license": {
+    "spdx": "MIT",
+    "assets": "本地原创数据与界面，无第三方地图瓦片、图片或收费资源。"
+  }
+}
