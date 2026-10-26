@@ -1,8 +1,7 @@
 import {lazy,Suspense,useMemo,useState,useEffect} from 'react';
 import {ErrorBoundary} from 'react-error-boundary';
-import type {Entry,Demo} from '../lib/types';
+import type {Entry,Demo,SourceMetadata} from '../lib/types';
 import {demoLoaders} from '../generated/loaders';
-type SourceMetadata={path:string;sha256:string;bytes:number};
 function SourceViewer({entryId,demo}:{entryId:string;demo:Demo}){
  const [files,setFiles]=useState<SourceMetadata[]>([]);
  const [selected,setSelected]=useState('');

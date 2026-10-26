@@ -15,3 +15,9 @@ test('links reject executable and remote asset protocols',()=>{for(const p of ['
 test('only four tabs are accepted',()=>{assert.equal(normalizeTab('agent'),'agent');assert.equal(normalizeTab('../../x'),'demo');});
 test('references must be safe https URLs',()=>assert.ok(validateEntry({...sample,references:[{title:'x',url:'javascript:1'}]}).length));
 test('source files cannot escape an entry',()=>assert.ok(validateEntry({...sample,demos:[{demoId:'basic',title:'基础',level:'basic',executionKind:'react',entryPoint:'../escape.tsx',sourceFiles:['../x']}]}).length));
+
+test('filter includes reproducible Node CLI examples without pretending they run in the browser',()=>{
+ const node={...sample,demos:[{demoId:'basic',title:'Node CLI',level:'basic',executionKind:'node-ci',entryPoint:'examples/run.mjs',sourceFiles:['examples/run.mjs']}]};
+ assert.equal(filterEntries([node], '', 'all', true).length,1);
+ assert.equal(filterEntries([sample], '', 'all', true).length,0);
+});

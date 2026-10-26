@@ -17,7 +17,7 @@ export function filterEntries(entries, query = '', group = 'all', runnable = fal
   const terms = query.trim().toLocaleLowerCase().split(/\s+/u).filter(Boolean);
   return entries.filter(entry => {
     if (group !== 'all' && entry.group !== group) return false;
-    if (runnable && !entry.demos?.some(d => d.entryPoint && d.executionKind === 'react')) return false;
+    if (runnable && !entry.demos?.some(d => Boolean(d.entryPoint))) return false;
     const haystack = [entry.entryId,entry.name,entry.slug,entry.summary,...(entry.tags ?? []),...(entry.packages ?? []).map(p => p.name)].join(' ').toLocaleLowerCase();
     return terms.every(term => haystack.includes(term));
   });
