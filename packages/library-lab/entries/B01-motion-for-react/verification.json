@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "motion 14.6.0 未在本环境安装并运行"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "PLATFORM 需统一添加依赖锁文件后执行"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "入场/离场/重排/减少动画/键盘焦点仍需实际浏览器"
+  }
+}
