@@ -1,1 +1,113 @@
-{"schemaVersion":1,"entryId":"D18","slug":"comlink","name":"Comlink","group":"D","summary":"Worker RPC 和数据传输","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "D18",
+  "slug": "comlink",
+  "name": "Comlink",
+  "group": "D",
+  "summary": "Web Worker RPC、Transferable 数据传递、回调代理与资源释放",
+  "tags": [
+    "Worker",
+    "RPC",
+    "异步",
+    "性能",
+    "Transferable",
+    "生命周期"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "comlink",
+      "version": "4.4.2"
+    }
+  ],
+  "references": [
+    {
+      "title": "官方 README / API",
+      "url": "https://github.com/GoogleChromeLabs/comlink"
+    },
+    {
+      "title": "Worker 和结构化克隆",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm"
+    },
+    {
+      "title": "模块 Worker",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Worker/Worker"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "D03",
+      "relation": "complements",
+      "reason": "p-limit 控制并发排队；Comlink 提供真正的 Worker 消息/RPC，两者解决不同问题。"
+    },
+    {
+      "entryId": "E19",
+      "relation": "complements",
+      "reason": "ffmpeg.wasm 等重 CPU/WASM 工作可用 Worker 承载；仍需要内存/取消和跨源隔离规划。"
+    },
+    {
+      "entryId": "D17",
+      "relation": "complements",
+      "reason": "Yjs CRDT 数据可能在 Worker 中进行计算/持久化，通过 Comlink 组织跨线程接口。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "模块 Worker 跨线程 RPC",
+      "description": "分析数组频数，结果通过 Comlink Remote 返回",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/worker.ts"
+      ],
+      "capabilities": [
+        "worker"
+      ]
+    },
+    {
+      "demoId": "business",
+      "title": "4000 条数据分析任务",
+      "description": "把计算移动到 Worker，不阻塞主线程UI",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/worker.ts"
+      ],
+      "capabilities": [
+        "worker"
+      ]
+    },
+    {
+      "demoId": "advanced",
+      "title": "Transferable、进度回调及终止",
+      "description": "发送 Uint8Array 所有权、Comlink.proxy回调、释放proxy",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/worker.ts"
+      ],
+      "capabilities": [
+        "worker"
+      ]
+    }
+  ],
+  "license": {
+    "spdx": "Apache-2.0",
+    "note": "代码仅依赖官方 Comlink，未下载第三方 Worker 远程脚本"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "mode": "recreated",
+    "note": "按 Comlink 4.4.2 官方 expose/wrap/transfer/releaseProxy 重写；仍待运行"
+  }
+}

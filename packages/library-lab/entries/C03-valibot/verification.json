@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "未在本批执行真实 valibot@1.4.2 Node 测试"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "PLATFORM 统一安装并测试"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "待生产预览 Playwright"
+  }
+}

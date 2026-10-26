@@ -143,3 +143,48 @@ PLATFORM 在 packages/library-lab/package.json 及真实 pnpm-lock.yaml 中统�
 - CD 真实 SDK import 示例源码累计从19/43增至 **24/43**，剩余19条无完整示例；本批新增真实 SDK 通过数为0。
 - 下轮优先 C11 react-arborist（树形虚拟列表/拖拽）、C19 nuqs（URL 历史和 IME）、D15 Dexie（事务/迁移）、D18 Comlink（Worker 生命周期）、C06 IMask（中文输入/光标）、C03 Valibot（schema 和错误）；遇 Worker 环境阻塞继续独立条目。
 - 本 PR 只能以 feat/library-lab 为 base，主 Draft PR #8 保持不动，PLATFORM 单一 owner 审核合入。
+
+## 第六批 / 2026-10-27 — 六个独立 SDK 实战条目（C03/C06/C11/C19/D15/D18）
+
+- runCount：**6/24**。基于集成 `feat/library-lab@a9441528ea68d2daa56f2c0bbbc0e4fbe7cf5ae1` 新建 `feat/library-lab-cd-wave6`，不复用已合并 wave5 的旧分支；目标是集成分支，绝不写 main。
+- 本批 **6 个条目、18 个 basic/business/advanced Demo 入口**：每条均具备 library.json、guide.md、agent.md、AGENTS.md、examples/example.tsx、examples/demo.tsx、tests/sdk.test.mjs、verification.json。D18 另外有真正模块 Worker `examples/worker.ts`。共49个新/改文件（加本进度文件共50个）。
+- **C03 Valibot 1.4.2**：安全解析 unknown JSON、HTTPS RSS 数组导入合同、partialCheck + forward 的跨字段日期错误。测试实际 SDK safeParse、字段剔除和 issue。
+- **C06 IMask/react-imask 7.6.1**：onAccept/unmask、编号和金额掩码、日期格式与真正日历日期的区分、中文自由输入不强加数字掩码；Node test 真正导入 imask。
+- **C11 react-arborist 3.16.0**：受控 RSS 分组树、ID 稳定、官方 adjustMoveIndex 处理 pre-removal drop slot、1800 节点的虚拟化与中文输入法过滤。Node test 只验证官方 helper，不冒充浏览器拖拽。
+- **C19 nuqs 2.10.1**：TanStack Router 适配器、独立 ll_c19_ 参数命名空间、URL 搜索分页、push/replace 历史、IME 和非法整数降级。TanStack 集成仍需真实浏览器验证。
+- **D15 Dexie 4.4.7**：真实 IndexedDB 索引、单事务重复主键回滚、v1→v2复合索引；演示仅在随机独占数据库写 fixture，退出删除自身库。Node SDK 测试用 fake-indexeddb 模拟 IDB 底层，不能冒充 Chromium。
+- **D18 Comlink 4.4.2**：真实模块 Worker+Comlink.wrap/expose、4千项分组计算、Uint8Array transfer、Comlink.proxy 回调、releaseProxy/terminate/epoch 取消。Node test 用真实 MessageChannel+官方 Node adapter；Browser Worker/CSP 仍待验收。
+
+### 实际文件范围、代码与测试事实
+
+- GitHub Git Tree SHA：`5e5a6da00b1b443821644422e922e9a23ef7ba21`（添加进度前）；前五个条目的目录树递归检查已确认为 guide/agent/AGENTS/verification/json/源文件/sdk test 均存在。D18 的所有文件由单独 create_tree 创建，后续用 git diff 核对完整变更范围。
+- 本轮没有运行实际 npm SDK、TypeScript 类型检查、Vite 生产构建或 Chromium。四类检查均为 **NOT_RUN**。已有 Runner 无法分配与本地 npm DNS 失败均不应靠一遍遍重试来替代开发；新文件的结构完整性不等于 SDK PASS。
+- GitHub 分支只新增授权的 `entries/C*`、`entries/D*` 和本进度；不改公共 package/lockfile/CI/索引/旧模板。
+
+### dependencyRequests（只由 PLATFORM 统一写 package/lock）
+
+| 包名 | 固定目标版本 | 用途、已核查资料 | 集成注意 |
+|---|---|---|---|
+| valibot | 1.4.2 | C03, https://valibot.dev/guides/parse-data/ | MIT，Node/Vite 实际 import 后验证 |
+| react-imask | 7.6.1 | C06, https://imask.js.org/api/modules/react_imask.html | MIT，与 imask 版本一致，React19 onAccept 必须跑浏览器 |
+| imask | 7.6.1 | C06, https://imask.js.org/guide.html | MIT，Node SDK 测试使用底层 createMask |
+| react-arborist | 3.16.0 | C11, https://github.com/jameskerr/react-arborist/releases/tag/v3.16.0 | MIT，核查 react-dnd 等 peer/transitives |
+| nuqs | 2.10.1 | C19, https://nuqs.dev/docs/adapters | MIT，TanStack Adapter 实验性，与 validateSearch 需实测 |
+| dexie | 4.4.7 | D15, https://dexie.org/docs/Version/Version | Apache-2.0，浏览器持久化检查 |
+| fake-indexeddb (devDependency) | 6.2.6 | D15 Node SDK 测试, https://www.npmjs.com/package/fake-indexeddb | Apache-2.0，不应进入生产浏览器包 |
+| comlink | 4.4.2 | D18, https://github.com/GoogleChromeLabs/comlink | Apache-2.0，Node adapter 和 Vite Worker 产物需实测 |
+
+固定版本基于 2026-10-27 可访问的官方文档、npm 发布和公开安全版本列表；依赖尚未由 PLATFORM 的 pnpm 真实解析，不手写 lock integrity，旧模板版本不变。
+
+### 当前范围与继续队列
+
+- CD从 **24/43 → 30/43 条拥有真实 SDK import 示例源码**，剩余13项。该数字是写入源码的条目数，不是已通过实测数量。
+- 优先继续 C04 JSON Forms、C05 Ajv、C08 AG Grid（社区许可限定）、C12 FullCalendar、C13 Frappe Gantt、D02 lodash-es；之后处理 D12 Redux Toolkit、D13 RTK Query、D14 XState、D16 Workbox、D17 Yjs、D21 Pagefind 和 C22 Moment 迁移。
+- PLATFORM 应先对本批新增8个包解析真实版本/peer，执行对应6份 sdk tests、typecheck/build 和有代表性的 Browser 场景，再按 sourceFingerprint 与日志更新 PASS；不会把新增 tests 文件冒称为已运行。
+- 此轮结束后 CD worker PR 必须 base=feat/library-lab；仅 PLATFORM 可以审核合并，后续再从最新集成分支续作。
+
+### 第六批补强（提交到 PR #28）
+
+- 交互修订：C19 nuqs 在浏览器后退/前进后同步输入框草稿，页码按真实筛选结果页数夹取，防止分享非法/过期页码导致有结果却显示空页。
+- D18 Comlink 对 `new Worker` 的 CSP/模块兼容失败显式反馈而非 unhandled rejection；Worker 代理进度回调等待 RPC acknowledgment，保证最终结果不超前于进度事件。
+- 仍未实际安装依赖或运行浏览器；这些是源码级风险修正，验证状态保留 NOT_RUN。PR 需 PLATFORM 集成/依赖和浏览器复核。

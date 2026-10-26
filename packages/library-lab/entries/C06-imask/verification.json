@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "需要安装 imask@7.6.1 并执行 Node tests"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "PLATFORM 统一解析 react-imask@7.6.1 和 TypeScript"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "需 Chromium onAccept、IME、光标、重置验证"
+  }
+}

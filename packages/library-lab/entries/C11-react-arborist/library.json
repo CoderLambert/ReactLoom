@@ -1,1 +1,110 @@
-{"schemaVersion":1,"entryId":"C11","slug":"react-arborist","name":"react-arborist","group":"C","summary":"虚拟化树形数据与拖拽","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "C11",
+  "slug": "react-arborist",
+  "name": "react-arborist",
+  "group": "C",
+  "summary": "虚拟化树形 RSS 目录、稳定节点 ID、跨分组拖拽和中文搜索",
+  "tags": [
+    "树组件",
+    "虚拟化",
+    "拖拽",
+    "分组",
+    "键盘",
+    "IME"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "react-arborist",
+      "version": "3.16.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "react-arborist 官方文档",
+      "url": "https://github.com/jameskerr/react-arborist"
+    },
+    {
+      "title": "v3.16.0 发布说明",
+      "url": "https://github.com/jameskerr/react-arborist/releases/tag/v3.16.0"
+    },
+    {
+      "title": "npm 与许可证",
+      "url": "https://www.npmjs.com/package/react-arborist"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "C10",
+      "relation": "alternative",
+      "reason": "TanStack Virtual 提供底层虚拟布局但不包含完整树的排序、焦点、拖放语义。"
+    },
+    {
+      "entryId": "B13",
+      "relation": "alternative",
+      "reason": "dnd-kit 专注自定义拖放；已有复杂树交互可优先考虑完整 Arborist。"
+    },
+    {
+      "entryId": "C09",
+      "relation": "alternative",
+      "reason": "React Virtuoso 偏向列表和动态内容，树关系与拖拽通常需额外实现。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "键盘选中与展开折叠",
+      "description": "真实树节点和 ARIA 交互",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "drag-and-drop"
+      ]
+    },
+    {
+      "demoId": "business",
+      "title": "RSS 分组移动与重命名",
+      "description": "受控 data 与 onMove/pre-removal index 修正",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "drag-and-drop"
+      ]
+    },
+    {
+      "demoId": "advanced",
+      "title": "1800节点虚拟化与 IME 搜索",
+      "description": "大规模节点、保留稳定 id 和自定义 searchMatch",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "drag-and-drop"
+      ]
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "note": "上游 react-dnd 等间接依赖须由 PLATFORM 安装核验"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "mode": "recreated",
+    "note": "基于官方 3.16.0 API 独立实现，未将旧研究当实测"
+  }
+}

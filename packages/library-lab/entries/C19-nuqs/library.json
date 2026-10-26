@@ -1,1 +1,110 @@
-{"schemaVersion":1,"entryId":"C19","slug":"nuqs","name":"nuqs","group":"C","summary":"URL 查询状态双向同步","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "C19",
+  "slug": "nuqs",
+  "name": "nuqs",
+  "group": "C",
+  "summary": "URL 搜索参数的类型安全状态、路由适配、push/replace 和 IME 约束",
+  "tags": [
+    "URL状态",
+    "TanStack Router",
+    "参数解析",
+    "历史记录",
+    "IME",
+    "搜索"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "nuqs",
+      "version": "2.10.1"
+    }
+  ],
+  "references": [
+    {
+      "title": "官方 TanStack Router Adapter 文档",
+      "url": "https://nuqs.dev/docs/adapters"
+    },
+    {
+      "title": "nuqs useQueryState",
+      "url": "https://nuqs.dev/docs/basic-usage"
+    },
+    {
+      "title": "项目源码与许可",
+      "url": "https://github.com/47ng/nuqs"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "D07",
+      "relation": "complements",
+      "reason": "URL 持久筛选参数交给 nuqs，真实远端数据、查询 key 和缓存交给 TanStack Query。"
+    },
+    {
+      "entryId": "D19",
+      "relation": "complements",
+      "reason": "Fuse.js 可以使用 URL 共享的筛选词，但索引与权限是另一层职责。"
+    },
+    {
+      "entryId": "C01",
+      "relation": "complements",
+      "reason": "表单草稿应和已提交的 URL 筛选状态分离，尤其中文 IME。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "查询词作为URL状态",
+      "description": "字符串 parser 与查询词分享",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "history"
+      ]
+    },
+    {
+      "demoId": "business",
+      "title": "RSS 搜索筛选与分页",
+      "description": "分组、查询、分页联合回写URL",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "history"
+      ]
+    },
+    {
+      "demoId": "advanced",
+      "title": "浏览器返回与非法参数",
+      "description": "push/replace历史策略和越界归一",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "history"
+      ]
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "note": "不含第三方数据，全部来源由链接访问"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "mode": "recreated",
+    "note": "参考 nuqs v2.10.1 官方 API 与 TanStack Router adapter，尚未实测"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "等待 comlink 4.4.2 Node MessagePort 实测"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "待 Vite module worker 产物和 tsc"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "待 Chromium RPC/transfer/terminate/CSP"
+  }
+}
