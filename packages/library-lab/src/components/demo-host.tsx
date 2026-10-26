@@ -4,6 +4,8 @@ import type {Entry,Demo,SourceMetadata} from '../lib/types';
 import {demoLoaders} from '../generated/loaders';
 import {reproductionCommand} from '../lib/reproduction.mjs';
 import {demoRunPolicy,CAPABILITY_DESCRIPTIONS} from '../lib/demo-policy.mjs';
+import {sourceLanguage} from '../lib/source-language.mjs';
+import HighlightCode from './highlight-code';
 function SourceViewer({entryId,demo}:{entryId:string;demo:Demo}){
  const [files,setFiles]=useState<SourceMetadata[]>([]);
  const [selected,setSelected]=useState('');
@@ -55,7 +57,7 @@ function SourceViewer({entryId,demo}:{entryId:string;demo:Demo}){
   {files.length>0&&<div className="demo-controls"><label>文件 <select aria-label="查看源码文件" value={selected} onChange={e=>setSelected(e.target.value)}>{files.map(file=><option key={file.path} value={file.path}>{file.path}</option>)}</select></label><button type="button" disabled={loading||!!error||!current} onClick={()=>void copy()}>复制源码</button><span role="status">{copyState}</span></div>}
   {loading&&<p role="status">正在按需读取当前文件…</p>}
   {error&&<p role="alert">{error}</p>}
-  {current&&!loading&&!error&&<><pre><code>{content}</code></pre><small className="hash">SHA-256 {current.sha256} · {verified?'已校验':'未校验'} · {current.bytes} 字节</small></>}
+  {current&&!loading&&!error&&<><HighlightCode code={content} language={sourceLanguage(current.path)} showCopy={false}/><small className="hash">SHA-256 {current.sha256} · {verified?'已校验':'未校验'} · {current.bytes} 字节</small></>}
   {!current&&!error&&<p className="notice">当前示例未列出可查看的源码文件。</p>}
  </section>;
 }

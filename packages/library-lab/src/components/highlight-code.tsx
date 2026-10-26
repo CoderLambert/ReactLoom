@@ -11,7 +11,7 @@ const SUPPORTED = new Set([
   'html', 'css', 'yaml', 'markdown', 'python', 'go', 'rust',
 ]);
 
-export default function HighlightCode({code, language}: {code: string; language: string}) {
+export default function HighlightCode({code, language, showCopy=true}: {code: string; language: string; showCopy?: boolean}) {
   const [tokens, setTokens] = useState<Token[][] | null>(null);
   const [loading, setLoading] = useState(false);
   const [notice, setNotice] = useState('');
@@ -49,7 +49,7 @@ export default function HighlightCode({code, language}: {code: string; language:
       {supported && !tokens && <button type="button" disabled={loading} onClick={() => void highlight()}>
         {loading ? '高亮加载中…' : '启用高亮'}
       </button>}
-      <button type="button" onClick={() => void copy()}>复制代码</button>
+      {showCopy && <button type="button" onClick={() => void copy()}>复制代码</button>}
     </div>
     <pre><code>{tokens ? tokens.map((line, index) =>
       <span key={index} className="code-line">{line.map((token,i) =>
