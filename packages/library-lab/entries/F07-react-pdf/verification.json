@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "真实目标 SDK 运行待执行；React-PDF v11 与本地 pdfjs-dist Worker 版本尚需 PLATFORM 真正解析锁文件后核对。"
+  },
+  "build": {
+    "status": "BLOCKED",
+    "note": "PLATFORM 尚未统一安装新依赖并真实更新 pnpm-lock.yaml，未执行 Vite/TypeScript 构建。"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "尚未在目标浏览器进行交互、资源卸载和无障碍核验。"
+  }
+}
