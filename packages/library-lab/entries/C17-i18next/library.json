@@ -1,1 +1,93 @@
-{"schemaVersion":1,"entryId":"C17","slug":"i18next","name":"i18next","group":"C","summary":"语言资源、复数和命名空间","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "C17",
+  "slug": "i18next",
+  "name": "i18next",
+  "group": "C",
+  "summary": "独立语言实例、命名空间、复数、插值和 fallback 的核心 i18n 工作坊",
+  "tags": [
+    "i18n",
+    "语言资源",
+    "复数规则",
+    "命名空间",
+    "SSR"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "i18next",
+      "version": "26.4.3"
+    }
+  ],
+  "references": [
+    {
+      "title": "i18next 官方 API",
+      "url": "https://www.i18next.com/overview/api"
+    },
+    {
+      "title": "配置选项与初始化",
+      "url": "https://www.i18next.com/overview/configuration-options"
+    },
+    {
+      "title": "官方项目",
+      "url": "https://github.com/i18next/i18next"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "C18",
+      "relation": "complements",
+      "reason": "React 组件订阅语言变化应使用 react-i18next 的 Provider/hook；核心 i18next 可用于服务端与框架无关工具。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "切换语言、插值与数量复数",
+      "description": "独立实例与欢迎语，真实使用 i18next.t/changeLanguage",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": []
+    },
+    {
+      "demoId": "business",
+      "title": "RSS 多命名空间资源",
+      "description": "common/news 分离，单复数以及共享文本",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": []
+    },
+    {
+      "demoId": "advanced",
+      "title": "缺失键、回退与生命周期",
+      "description": "未配置中文资源时回退英文；卸载销毁独立实例",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": []
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "note": "原生 SDK 依赖遵守上游 MIT；本条目不分发第三方媒体，许可仍需目标产品核对"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "mode": "recreated",
+    "note": "根据官方 API 独立编写；不沿用旧研究源文件或历史测试 PASS"
+  }
+}

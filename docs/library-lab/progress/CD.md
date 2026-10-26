@@ -109,3 +109,37 @@ PLATFORM 在 packages/library-lab/package.json 及真实 pnpm-lock.yaml 中统�
 - CD累计 **19/43 条已编写真实目标 SDK 导入示例**（此前14 + 本批5）。实际 SDK 运行通过数量本批新增仍为0，待 PLATFOM 安装并验证后再更新 sourceFingerprint 证据。
 - 后续建议先 C11 react-arborist / D11 Jotai，再 C17 i18next / C18 react-i18next / D15 Dexie / D18 Comlink / D20 MiniSearch；继续处理生命周期和边界，避免仅生成目录卡片。
 - 本批每条新增定向 tests/sdk.test.mjs；由 PLATFORM 合并进入统一 sdk-runner 机制并复核 SDK / TS / browser，当前不强行编辑公共工具脚本。
+
+## 第五批 / 2026-10-27 — 五个多工作区/本地状态 SDK 实战（C17、C18、D06、D11、D20）
+
+- runCount：**5 / 24**；基于 `feat/library-lab@fc3e3d3e18d3599333d001cae5c45b44704e5211` 新建 `feat/library-lab-cd-wave5`。之前 PR #10/#14/#18/#21 已合入集成分支，未复用已合并/落后的 worker 分支；本轮未修改 main、公共平台或锁文件。
+- **C17 i18next 26.4.3**：createInstance + initAsync:false、英中切换、插值、英文单复数、common/news namespace、缺失键 fallback，实例销毁与语言切换 generation。明确不是机器翻译和 React 订阅实现。
+- **C18 react-i18next 17.0.16 + i18next 26.4.3**：I18nextProvider/useTranslation/Trans 实际调用、两组独立实例隔离、多个命名空间、受控 strong 富文本映射；有独立 SSR SDK 测试文件，不拿 SSR 冒充浏览器 hydration。
+- **D06 Immer 11.2.9**：produce 深层更新和结构共享、RSS read 状态、enablePatches/produceWithPatches/applyPatches；进阶示例禁止新写入与旧逆向 Patch 交错，生产要求版本/任务身份。
+- **D11 Jotai 3.0.1**：原子、派生 atom、写入 atom、createStore/Provider；两个团队共用 atom 配置却互不影响。v3 为 ESM-only，v3.0.1 修复 v3.0.0 useAtomValue 回归。
+- **D20 MiniSearch 7.2.0**：真实倒排索引、boost/prefix/fuzzy、autoSuggest、按类 filter 先于前20条限制、输入法 composing、源文档变更后 rebuild。不是授权 ACL；评分方向与 Fuse.js 不同。
+
+### 本批交付与静态校验
+
+- 新增 **5条 × 3级 = 15个真实 SDK import 示例场景**，每库都有 library.json、guide.md、agent.md、AGENTS.md、examples/example.tsx、examples/demo.tsx、tests/sdk.test.mjs、verification.json，共40个库级文件。源码展示与运行代码同源。
+- GitHub staged tree：初版 `cb6fa0a663c9450599d15d37c1ad4efd7ca37773`，修复两个测试断言后为 `0543d8cc4424b60a7b0f2dd5262712b16f248cff`。已用 GitHub Git Tree 核对五条每个文件存在、JSON manifest 均可解析、5×3个源码入口和文件声明完整。使用 V8 Function 检查 **5份剥离 ESM import 后的 Node 测试语法，5/5 PASS**；不等于真正执行 SDK、tsc 或 Vite。
+- 本轮**没有完成 npm 实际安装、SDK Node 执行、TypeScript 类型检查、生产构建或 Playwright**；五条 verification.json 的 sdk/build/browser 均为 **NOT_RUN**。执行容器先前多次 DNS/CI Runner 阻塞，本轮避免重复失败。没有用旧研究或模拟服务冒充 SDK PASS。
+- C17/C18 采用当前 SPA 模板依赖版本；Jotai v3.0.1、Immer v11.2.9 和 MiniSearch v7.2.0 参考官方 tag/npm 核对。仍需 PLATFORM 解析实际依赖/peer/React19 和 Node 环境。
+
+### dependencyRequests — 仅 PLATFORM 管理
+
+|包|目标版本|来源|用途|
+|---|---|---|---|
+|i18next|26.4.3|https://www.i18next.com/overview/api|C17/C18 共用 SPA 锁定版本|
+|react-i18next|17.0.16|https://react.i18next.com/latest/usetranslation-hook|C18 React hook/Provider/Trans|
+|immer|11.2.9|https://github.com/immerjs/immer/releases/tag/v11.2.9|D06 patch/rollback|
+|jotai|3.0.1|https://github.com/pmndrs/jotai/releases/tag/v3.0.1|D11 ESM-only/React18+/Node22.12+|
+|minisearch|7.2.0|https://www.npmjs.com/package/minisearch|D20 搜索索引|
+
+依赖只能由 PLATFORM 统一写 packages/library-lab/package.json 与根 pnpm-lock.yaml，不能手造 lock integrity。待依赖接入，先执行本批五份真实 SDK 定向测试，再 typecheck/build/代表性浏览器 E2E，随后按 sourceFingerprint 与执行日志记录 PASS。
+
+### 汇总与下一队列
+
+- CD 真实 SDK import 示例源码累计从19/43增至 **24/43**，剩余19条无完整示例；本批新增真实 SDK 通过数为0。
+- 下轮优先 C11 react-arborist（树形虚拟列表/拖拽）、C19 nuqs（URL 历史和 IME）、D15 Dexie（事务/迁移）、D18 Comlink（Worker 生命周期）、C06 IMask（中文输入/光标）、C03 Valibot（schema 和错误）；遇 Worker 环境阻塞继续独立条目。
+- 本 PR 只能以 feat/library-lab 为 base，主 Draft PR #8 保持不动，PLATFORM 单一 owner 审核合入。

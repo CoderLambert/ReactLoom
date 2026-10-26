@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "本轮未在可安装依赖环境执行真实 SDK Node 测试；不可继承研究包历史结果"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "依赖及锁文件由 PLATFORM 统一解析后运行 tsc/Vite"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "浏览器真实交互和生命周期尚待 Playwright"
+  }
+}

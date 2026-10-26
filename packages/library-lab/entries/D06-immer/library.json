@@ -1,1 +1,98 @@
-{"schemaVersion":1,"entryId":"D06","slug":"immer","name":"Immer","group":"D","summary":"不可变状态更新","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "D06",
+  "slug": "immer",
+  "name": "Immer",
+  "group": "D",
+  "summary": "不可变嵌套更新、结构共享、Patch / inversePatches 乐观回滚",
+  "tags": [
+    "状态更新",
+    "结构共享",
+    "produce",
+    "Patch",
+    "乐观更新"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "immer",
+      "version": "11.2.9"
+    }
+  ],
+  "references": [
+    {
+      "title": "Immer 官方文档",
+      "url": "https://immerjs.github.io/immer/"
+    },
+    {
+      "title": "Patches API",
+      "url": "https://immerjs.github.io/immer/patches/"
+    },
+    {
+      "title": "官方 v11.2.9 发行",
+      "url": "https://github.com/immerjs/immer/releases/tag/v11.2.9"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "D12",
+      "relation": "complements",
+      "reason": "Redux Toolkit 使用 Immer 处理 reducer 的草稿变更，但应用仍需把异步副作用与缓存更新所有权区分开。"
+    },
+    {
+      "entryId": "D07",
+      "relation": "complements",
+      "reason": "在 TanStack Query 的乐观更新中可使用 produce 生成不可变缓存状态；回滚必须检查竞态。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "produce 深层更新与结构共享",
+      "description": "子对象仅按需复制，不原地修改基础数据",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": []
+    },
+    {
+      "demoId": "business",
+      "title": "RSS 分组和阅读状态批量编辑",
+      "description": "真实 produce 更新 nested array 与 revision",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": []
+    },
+    {
+      "demoId": "advanced",
+      "title": "乐观 Patch 与可控回滚",
+      "description": "produceWithPatches/applyPatches 配合禁止冲突写入",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": []
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "note": "原生 SDK 依赖遵守上游 MIT；本条目不分发第三方媒体，许可仍需目标产品核对"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "mode": "recreated",
+    "note": "根据官方 API 独立编写；不沿用旧研究源文件或历史测试 PASS"
+  }
+}

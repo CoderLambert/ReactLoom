@@ -1,1 +1,99 @@
-{"schemaVersion":1,"entryId":"D20","slug":"minisearch","name":"MiniSearch","group":"D","summary":"浏览器本地全文索引","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "D20",
+  "slug": "minisearch",
+  "name": "MiniSearch",
+  "group": "D",
+  "summary": "本地全文倒排索引、前缀与拼写容错、查询建议和索引重建",
+  "tags": [
+    "全文搜索",
+    "倒排索引",
+    "前缀",
+    "模糊匹配",
+    "IME",
+    "RSS"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "minisearch",
+      "version": "7.2.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "官方 API 与 README",
+      "url": "https://github.com/lucaong/minisearch"
+    },
+    {
+      "title": "npm 稳定版本",
+      "url": "https://www.npmjs.com/package/minisearch"
+    },
+    {
+      "title": "API 文档",
+      "url": "https://lucaong.github.io/minisearch/"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "D19",
+      "relation": "alternative",
+      "reason": "Fuse.js 更适合小集合字段加权模糊查询；MiniSearch 对多文档正文采用倒排索引。"
+    },
+    {
+      "entryId": "D21",
+      "relation": "alternative",
+      "reason": "静态站点可构建期生成 Pagefind 全文索引，减少客户端下载和实时建立索引的成本。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "倒排索引、字段权重与 score",
+      "description": "添加本地文档后按正文和标题评分检索",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": []
+    },
+    {
+      "demoId": "business",
+      "title": "RSS 分类过滤与输入法",
+      "description": "查询后引擎内部过滤，再控制显示数量",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": []
+    },
+    {
+      "demoId": "advanced",
+      "title": "前缀、错拼联想与重新索引",
+      "description": "autoSuggest 与文档更新后建新索引",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": []
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "note": "原生 SDK 依赖遵守上游 MIT；本条目不分发第三方媒体，许可仍需目标产品核对"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "mode": "recreated",
+    "note": "根据官方 API 独立编写；不沿用旧研究源文件或历史测试 PASS"
+  }
+}
