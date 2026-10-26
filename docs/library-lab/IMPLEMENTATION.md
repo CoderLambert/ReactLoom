@@ -49,3 +49,8 @@ A/B #16八条与C/D #18四条完整工作坊已实际合入集成分支，新增
 ## 第5轮持续集成进展（2026-10-27）
 
 已审核并集成EF #25、AB #26、EF #27共17条真实库研究源代码，#27 EF进度冲突通过保留两批记录的双亲合并修复。总计119个目录中91个具有guide.md/agent.md/实际示例源码，273项分层场景配置，28项未实现；实际官方SDK/browser PASS仍无本轮新证据。公共package登记实际条目版本；固定F04/F10/F16/F18 Node CLI verifier，修正示例复现命令并防止任意demo.level注入，离线定向Node纯逻辑14 PASS。根pnpm-lock/真实生产build/SDK/浏览器BLOCKED或NOT_RUN，F06/F07 PDF.js版本冲突仍在#22。详情见 progress/PLATFORM.md。
+
+
+## 第5轮最终合入状态（增量CD #28与内容门禁）
+
+#28额外合入Valibot、IMask、react-arborist、nuqs、Dexie、Comlink六条（squash `c58f18ea8656aebebc09c204b89739065c643150`）。合计本轮四个worker PR (#25、#26、#27、#28)新接入23条，最新为119目录/97条源码+文档/291个三层场景/22条待实现。PLATFORM统一更新依赖和索引，并为完整条目引入guide/agent/目录规则/证据/三个真实示例的结构门禁。离线定向Node检查18 PASS、0 FAIL；目标SDK、完整TS/Vite生产构建、Chromium及锁文件仍因环境不可用NOT_RUN/BLOCKED，不继承旧研究报告的PASS。

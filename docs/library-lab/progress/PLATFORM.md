@@ -141,3 +141,12 @@ runCount：**5/24**。本次只向`feat/library-lab`集成，`main`和既有PR #
 在本轮进行期间，CD分支新增 PR #28（C03 Valibot、C06 IMask、C11 react-arborist、C19 nuqs、D15 Dexie、D18 Comlink，共6条/18个分层入口）。PLATFORM审查所有50个变更路径均属于C/D条目和自己的进度文件，结合官方资料核查 react-arborist adjustMoveIndex 已在v3.15正式导出、nuqs TanStack Router adapter 的实验性支持；squash合入`c58f18ea8656aebebc09c204b89739065c643150`至集成分支，无main改动。
 
 统一新增valibot/imask/react-imask/react-arborist/nuqs/dexie/comlink及fake-indexeddb（仅dev）真实版本声明，再同步两个根目录索引。远端GitHub提交结构总计 **119目录、97份指南和Agent手册、291个分层配置、剩22条待完整接入**，不代表运行验收已过。C19路由兼容、D15 IndexedDB事务/迁移和D18实际Worker需要真实浏览器跟踪；新增6条SDK测试仅存源码，未执行。PDF.js #22、pnpm-lock/Actions #12仍为阻塞。本轮runCount保持5/24，下一轮从实际分支head恢复。
+
+
+### 本轮平台完整性门禁（第5轮收尾）
+
+提交 `f6a397dc80ad122f82133a411c7e5cf2942ebeb1`：在完整119目录生成时新增 `entryCompletenessIssues` 检查。标成`reviewed/imported/recreated`的库必须同时具有`guide.md`、`agent.md`、`AGENTS.md`、`verification.json`，且basic/business/advanced各自准确一个，示例入口必须包含在实际`sourceFiles`中；标记missing的库不得暴露可运行Demo。单条生成器fixture仍可独立测试而无需铺119个目录，旧目录的PASS过期机制保留。
+
+**本地局部平台快照**执行`node --check scripts/entry-gate.mjs`、`node --check scripts/cli-runner.mjs`和`node --test tests/entry-gate.test.mjs tests/cli-runner.test.mjs tests/reproduction.test.mjs`，共 **18 PASS / 0 FAIL**，仅覆盖离线纯Node规则与命令防护。远端新生成器未在完整当前依赖集运行，不把本记录当作 `pnpm install/typecheck/build/SDK/E2E` 通过。
+
+最新静态GitHub完整树（truncated=false）：119份library.json、97份guide.md、97份agent.md、97份AGENTS.md、97份verification.json，剩下22个缺条目明确在Git树中。开发分支持续保存；runCount仍是本次**5/24**，下轮继续集成剩余22条、阻塞修复与全量真实构建证据。

@@ -13,3 +13,5 @@ Only PLATFORM edits common source, scripts, package/lockfile, CI and generated c
 ## Verification evidence binding
 
 The generator hashes the exact displayed `sourceFiles` content and declared package versions into `sourceFingerprint` for each entry. A `verification.json` PASS is accepted only when it includes the current fingerprint, the actual command and a durable evidence reference; otherwise generated catalogue status becomes NOT_RUN with a STALE explanation. SDK, build and browser remain separate status dimensions. To obtain a fingerprint, run `catalog:generate` and look up `public/catalog.json`; update evidence only after the corresponding command really ran. Do not copy PASS from an unrelated branch/SDK version. Local documentation raster images (png/jpg/webp/gif, <=5 MiB, no symlinks) can be included under `entries/<ID>/assets` and are copied to `/raw/<ID>/assets`. SVG/HTML are deliberately not copied into document pages.
+
+完整目录生成时，标记为已接入的条目必须有 guide.md、agent.md、目录级 AGENTS.md、verification.json 和 basic/business/advanced 三个源码入口；保持入口来源同一份真实文件。缺失条目只能显示待接入，不能生成假 Demo 或假 SDK PASS。校验逻辑位于 scripts/entry-gate.mjs，由 scripts/generate.mjs 统一接线。
