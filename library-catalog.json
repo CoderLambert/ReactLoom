@@ -323,9 +323,9 @@
     "entryId": "C02",
     "name": "Zod",
     "group": "C",
-    "summary": "TypeScript 运行时数据校验",
+    "summary": "不可信 RSS / OPML JSON 校验、规范化与跨字段错误",
     "path": "packages/library-lab/entries/C02-zod",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "C03",
@@ -363,9 +363,9 @@
     "entryId": "C07",
     "name": "TanStack Table",
     "group": "C",
-    "summary": "Headless 表格、排序和分页",
+    "summary": "Headless 表格的稳定业务 ID、排序和分页数据所有权",
     "path": "packages/library-lab/entries/C07-tanstack-table",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "C08",
@@ -379,17 +379,17 @@
     "entryId": "C09",
     "name": "React Virtuoso",
     "group": "C",
-    "summary": "动态高度列表虚拟化",
+    "summary": "自动测量变高列表、RSS分段加载与历史消息锚定",
     "path": "packages/library-lab/entries/C09-react-virtuoso",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "C10",
     "name": "TanStack Virtual",
     "group": "C",
-    "summary": "底层虚拟化布局控制",
+    "summary": "Headless 列表虚拟化、变高测量与稳定业务键",
     "path": "packages/library-lab/entries/C10-tanstack-virtual",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "C11",
@@ -419,9 +419,9 @@
     "entryId": "C14",
     "name": "date-fns",
     "group": "C",
-    "summary": "函数式日期计算与格式化",
+    "summary": "函数式日期、日历天与 DST 时区运算",
     "path": "packages/library-lab/entries/C14-date-fns",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "C15",
@@ -469,15 +469,15 @@
     "group": "C",
     "summary": "条件 className 合成",
     "path": "packages/library-lab/entries/C20-clsx",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "C21",
     "name": "tailwind-merge",
     "group": "C",
-    "summary": "Tailwind 样式冲突合并",
+    "summary": "Tailwind v4 工具类冲突合并与可覆盖组件实践",
     "path": "packages/library-lab/entries/C21-tailwind-merge",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "C22",

@@ -44,26 +44,26 @@
 |B21|react-motion（历史迁移）|历史弹簧动画识别与现代迁移|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B21-react-motion-migration/)|
 |B22|react-beautiful-dnd（历史迁移）|历史拖拽库识别与迁移|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B22-react-beautiful-dnd-migration/)|
 |C01|React Hook Form|真实 RSS 订阅表单：动态字段、服务端错误映射与请求取消|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C01-react-hook-form/)|
-|C02|Zod|TypeScript 运行时数据校验|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C02-zod/)|
+|C02|Zod|不可信 RSS / OPML JSON 校验、规范化与跨字段错误|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C02-zod/)|
 |C03|Valibot|模块化类型安全数据校验|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C03-valibot/)|
 |C04|JSON Forms|JSON Schema 驱动动态表单|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C04-jsonforms/)|
 |C05|Ajv|JSON Schema 验证与编译|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C05-ajv/)|
 |C06|IMask|输入掩码、格式化和光标维护|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C06-imask/)|
-|C07|TanStack Table|Headless 表格、排序和分页|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C07-tanstack-table/)|
+|C07|TanStack Table|Headless 表格的稳定业务 ID、排序和分页数据所有权|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C07-tanstack-table/)|
 |C08|AG Grid|复杂数据网格与编辑|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C08-ag-grid/)|
-|C09|React Virtuoso|动态高度列表虚拟化|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C09-react-virtuoso/)|
-|C10|TanStack Virtual|底层虚拟化布局控制|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C10-tanstack-virtual/)|
+|C09|React Virtuoso|自动测量变高列表、RSS分段加载与历史消息锚定|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C09-react-virtuoso/)|
+|C10|TanStack Virtual|Headless 列表虚拟化、变高测量与稳定业务键|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C10-tanstack-virtual/)|
 |C11|react-arborist|虚拟化树形数据与拖拽|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C11-react-arborist/)|
 |C12|FullCalendar|事件日历、时区和排程|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C12-fullcalendar/)|
 |C13|Frappe Gantt|任务依赖与甘特图|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C13-frappe-gantt/)|
-|C14|date-fns|函数式日期计算与格式化|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C14-date-fns/)|
+|C14|date-fns|函数式日期、日历天与 DST 时区运算|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C14-date-fns/)|
 |C15|Day.js|轻量日期对象和时区插件|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C15-dayjs/)|
 |C16|Luxon|时区、日期区间和持续时间|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C16-luxon/)|
 |C17|i18next|语言资源、复数和命名空间|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C17-i18next/)|
 |C18|react-i18next|React 国际化与 Suspense|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C18-react-i18next/)|
 |C19|nuqs|URL 查询状态双向同步|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C19-nuqs/)|
 |C20|clsx|条件 className 合成|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C20-clsx/)|
-|C21|tailwind-merge|Tailwind 样式冲突合并|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C21-tailwind-merge/)|
+|C21|tailwind-merge|Tailwind v4 工具类冲突合并与可覆盖组件实践|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C21-tailwind-merge/)|
 |C22|Moment（历史迁移）|历史日期库识别与现代迁移|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C22-moment-migration/)|
 |D01|es-toolkit|现代类型安全工具函数|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D01-es-toolkit/)|
 |D02|Lodash/lodash-es|通用工具函数与模块化分发|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D02-lodash/)|
