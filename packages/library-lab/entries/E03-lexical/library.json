@@ -1,1 +1,129 @@
-{"schemaVersion":1,"entryId":"E03","slug":"lexical","name":"Lexical","group":"E","summary":"可扩展编辑器状态模型","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "E03",
+  "slug": "lexical",
+  "name": "Lexical",
+  "group": "E",
+  "summary": "结构化富文本编辑：真实 EditorState、React Composer、草稿 JSON 和格式命令",
+  "tags": [
+    "编辑器",
+    "Lexical",
+    "EditorState",
+    "内容模型",
+    "输入法",
+    "持久化",
+    "React"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "lexical",
+      "version": "0.52.0"
+    },
+    {
+      "name": "@lexical/react",
+      "version": "0.52.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "Lexical React 官方指南",
+      "url": "https://lexical.dev/docs/getting-started/react"
+    },
+    {
+      "title": "Lexical State 与序列化",
+      "url": "https://lexical.dev/docs/concepts/serialization"
+    },
+    {
+      "title": "Lexical GitHub",
+      "url": "https://github.com/facebook/lexical"
+    },
+    {
+      "title": "v0.52.0",
+      "url": "https://github.com/facebook/lexical/releases/tag/v0.52.0"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "E01",
+      "relation": "alternative",
+      "reason": "Tiptap基于ProseMirror，适合复用其编辑器生态。"
+    },
+    {
+      "entryId": "E02",
+      "relation": "alternative",
+      "reason": "BlockNote提供更完整的块级笔记UI。"
+    },
+    {
+      "entryId": "E04",
+      "relation": "alternative",
+      "reason": "CodeMirror处理代码/结构文本，不承担富文档编辑任务。"
+    },
+    {
+      "entryId": "E10",
+      "relation": "complements",
+      "reason": "导出用户输入的HTML时必须单独实施净化。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "文本与 EditorState",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "rich-text",
+        "dom-editor",
+        "session-storage"
+      ],
+      "description": "真实输入和文档状态读写。"
+    },
+    {
+      "demoId": "business",
+      "title": "结构化 JSON 草稿",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "rich-text",
+        "dom-editor",
+        "session-storage"
+      ],
+      "description": "会话级 JSON 保存/恢复与错误回退。"
+    },
+    {
+      "demoId": "advanced",
+      "title": "格式命令与 IME 边界",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "rich-text",
+        "dom-editor",
+        "session-storage"
+      ],
+      "description": "文字选区/粗体与中文输入法和撤销边界。"
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "assets": "原创文本及本地示例；未包含第三方编辑器皮肤或图片"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "根据 0.52.0 官方API独立重写。历史资料仅参考，未继承旧PASS。"
+  }
+}

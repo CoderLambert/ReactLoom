@@ -1,1 +1,120 @@
-{"schemaVersion":1,"entryId":"F17","slug":"axe-core","name":"axe-core","group":"F","summary":"自动化无障碍规则检测","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "F17",
+  "slug": "axe-core",
+  "name": "axe-core",
+  "group": "F",
+  "summary": "真实 axe.run 局部审计，定位缺少alt/label/button-name并展示修复前后",
+  "tags": [
+    "axe",
+    "可访问性",
+    "WCAG",
+    "审计",
+    "语义标签",
+    "自动化测试",
+    "ARIA"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "axe-core",
+      "version": "4.14.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "axe-core 官方仓库",
+      "url": "https://github.com/dequelabs/axe-core"
+    },
+    {
+      "title": "axe.run API / context",
+      "url": "https://github.com/dequelabs/axe-core/blob/develop/doc/API.md"
+    },
+    {
+      "title": "局部DOM上下文",
+      "url": "https://github.com/dequelabs/axe-core/blob/develop/doc/context.md"
+    },
+    {
+      "title": "npm 版本与许可",
+      "url": "https://www.npmjs.com/package/axe-core"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "F13",
+      "relation": "complements",
+      "reason": "Playwright驱动真实浏览器用户行为，可在各状态/路由中运行axe扫描。"
+    },
+    {
+      "entryId": "F12",
+      "relation": "complements",
+      "reason": "Vitest可校验可测试逻辑，但不能用jsdom模拟全部axe DOM布局与浏览器行为。"
+    },
+    {
+      "entryId": "B12",
+      "relation": "complements",
+      "reason": "React Aria帮助组件提供可访问交互，但仍需集成测试证明业务流程。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "level": "basic",
+      "title": "图片alt规则",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "browser-dom",
+        "a11y-audit",
+        "manual-trigger"
+      ],
+      "description": "对故意缺alt的本地图片运行真实axe-core。"
+    },
+    {
+      "demoId": "business",
+      "level": "business",
+      "title": "表单label关联",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "browser-dom",
+        "a11y-audit",
+        "manual-trigger"
+      ],
+      "description": "测试输入框缺少关联label，修复后复审。"
+    },
+    {
+      "demoId": "advanced",
+      "level": "advanced",
+      "title": "组合缺陷与修复对照",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "browser-dom",
+        "a11y-audit",
+        "manual-trigger"
+      ],
+      "description": "同时展示图片、表单和按钮名称三种规则。"
+    }
+  ],
+  "license": {
+    "spdx": "MPL-2.0",
+    "assets": "原始DOM示例及透明GIF数据，不使用第三方媒体"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "基于axe.run官方API重新实现，DOM规则和准确性需要真实浏览器执行方可认可。"
+  }
+}

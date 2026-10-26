@@ -1,0 +1,40 @@
+# PDF.js：真实 PDF 页面读取、Canvas 和 Worker 生命周期
+
+## 选型
+
+Mozilla PDF.js / `pdfjs-dist` 负责解析和展示已有PDF，常用于报表、合同、论文预览及文章内嵌文档。它**不是**用React生成PDF的 `@react-pdf/renderer`，也不等于能安全修改签名/权限的PDF编辑器。若仅需要React组件封装，优先对比F07 react-pdf；需要修改PDF可比较F09 pdf-lib。
+
+```bash
+pnpm add pdfjs-dist@6.4.299
+```
+
+示例使用 `pdfjs-dist/build/pdf.worker.min.mjs?url` 引入与主线程SDK**相同发布版本**的Worker，`GlobalWorkerOptions.workerSrc` 由Vite构建成局部静态文件，避免硬编码外部CDN或把Worker加载视为天然跨源安全。
+
+## 三层实战
+
+**basic**：`examples/fixture.ts` 生成原创、两页、含正确xref偏移和Length的PDF字节；`getDocument({data:bytes})` 真实解析（绝不是绘制一张相似图片）。`getPage(1)` 和 `page.render(...)` 在 Canvas 上真正显示文档页。
+
+**business**：页码增减触发取消旧 render task，再使用 `getTextContent()` 展示PDF实际文本层。文本提取不等于结构化表格识别或OCR；字体映射缺失可能让内容为空或错乱，应对用户说明限制。
+
+**advanced**：缩放与 `window.devicePixelRatio` 上限2控制HiDPI。用户自行选择≤3MiB PDF，只在本地读取，切换内容时重置页码。按按钮使用损坏字节单独触发解析错误，捕获并保持原文档；资源释放避免中途旧渲染将画布重写。
+
+## 关键生命周期
+
+- `getDocument` 返回loadingTask，含Worker/数据流；页面卸载或文件改变时 `loadingTask.destroy()` 释放。
+- `page.render()` 返回renderTask；参数变更/卸载调用 `renderTask.cancel()`，不能复用正在绘制的同一个Canvas。
+- Canvas像素为 CSS尺寸×DPR，需要内存预算：600×800×2×2≈7.7MiB/单页（RGBA）。不要一次渲染100页全部高分辨率位图。
+- 尽量用受控 `Uint8Array`、对象URL并在不需要时revoke；本示例不使用外部PDF URL，降低SSRF与版权风险。
+- 浏览器 Worker/CSP可能需要 `worker-src 'self'`；跨源隔离、字体/CMAP/standard fonts和大文件行为请基于真实部署确定，不得写成普适已验证。
+
+## 特有反例
+
+1. Worker主线程用v6、PDF Worker从旧CDN取v5 → 版本不匹配造成神秘错误；必须同版锁定。
+2. 在每次输入/页码改变时不断`getDocument`却不`destroy` → Worker和PDF缓存泄漏。
+3. 取消切页只`setState`不`renderTask.cancel` → 旧页重叠绘制、Canvas状态冲突。
+4. 文本提取等同于OCR → 扫描件无文字层，必须另用OCR并标其许可/成本。
+5. 直接接受任意公网PDF链接/无大小限制 → SSRF、内存峰值及跨域失败。真实服务需可信代理/配额/权限。
+6. 在Canvas设CSS高宽却忘设置实际像素 → 高DPI模糊/缩放性能问题。
+
+## 验收
+
+需要实际安装SDK、Worker、Chromium后：第一页和第二页内容不同，getTextContent包含预期关键词，缩放/切换迅速时无“same canvas”并发错误，坏文档提示不清空有效文档，卸载停止Worker相关资源。当前只有源码提交，不能称SDK或浏览器PASS。官方 [PDF.js仓库](https://github.com/mozilla/pdf.js) · [API](https://mozilla.github.io/pdf.js/api/) · [npm](https://www.npmjs.com/package/pdfjs-dist)。
