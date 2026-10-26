@@ -1,1 +1,108 @@
-{"schemaVersion":1,"entryId":"C03","slug":"valibot","name":"Valibot","group":"C","summary":"模块化类型安全数据校验","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "C03",
+  "slug": "valibot",
+  "name": "Valibot",
+  "group": "C",
+  "summary": "模块化 Schema 验证、RSS 数据收窄与跨字段错误定位",
+  "tags": [
+    "schema",
+    "运行时校验",
+    "RSS",
+    "unknown",
+    "数据安全",
+    "Valibot"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "valibot",
+      "version": "1.4.2"
+    }
+  ],
+  "references": [
+    {
+      "title": "Valibot 官方文档",
+      "url": "https://valibot.dev/guides/introduction/"
+    },
+    {
+      "title": "safeParse 说明",
+      "url": "https://valibot.dev/guides/parse-data/"
+    },
+    {
+      "title": "partialCheck API",
+      "url": "https://valibot.dev/api/partialCheck/"
+    },
+    {
+      "title": "源代码与许可",
+      "url": "https://github.com/fabian-hiller/valibot"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "C02",
+      "relation": "alternative",
+      "reason": "Zod 4 生态成熟，若项目已有 Zod schema 不应只为体积盲目重写。"
+    },
+    {
+      "entryId": "C01",
+      "relation": "complements",
+      "reason": "RHF 管输入与订阅，Valibot 管边界验证和类型收窄。"
+    },
+    {
+      "entryId": "C05",
+      "relation": "alternative",
+      "reason": "外部 JSON Schema 为唯一合同的项目可使用 Ajv。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "安全 RSS 来源校验",
+      "description": "真实 safeParse、字段去空格、额外字段收窄",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": []
+    },
+    {
+      "demoId": "business",
+      "title": "多 RSS 源导入合同",
+      "description": "数组、集合边界及 HTTPS 约束",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": []
+    },
+    {
+      "demoId": "advanced",
+      "title": "区间字段级错误",
+      "description": "partialCheck + forward 的日期业务条件",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": []
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "note": "原始示例与研究笔记，未捆绑第三方商业资源"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "mode": "recreated",
+    "note": "基于 2026-10-27 官方 API 独立编写；不继承历史测试 PASS"
+  }
+}

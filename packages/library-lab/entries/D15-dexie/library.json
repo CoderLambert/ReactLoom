@@ -1,1 +1,114 @@
-{"schemaVersion":1,"entryId":"D15","slug":"dexie","name":"Dexie","group":"D","summary":"IndexedDB 查询、事务和迁移","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "D15",
+  "slug": "dexie",
+  "name": "Dexie",
+  "group": "D",
+  "summary": "IndexedDB 事务、复合索引和版本升级，不污染其他站点存储",
+  "tags": [
+    "IndexedDB",
+    "事务",
+    "离线",
+    "Schema升级",
+    "复合索引",
+    "数据所有权"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "dexie",
+      "version": "4.4.7"
+    }
+  ],
+  "references": [
+    {
+      "title": "Dexie 官方文档",
+      "url": "https://dexie.org/docs/"
+    },
+    {
+      "title": "Schema 升级说明",
+      "url": "https://dexie.org/docs/Version/Version"
+    },
+    {
+      "title": "事务与异步使用",
+      "url": "https://dexie.org/docs/Tutorial/Best-Practices"
+    },
+    {
+      "title": "Dexie GitHub",
+      "url": "https://github.com/dexie/Dexie.js"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "D16",
+      "relation": "complements",
+      "reason": "Workbox 管网络缓存与离线响应；Dexie 管结构化查询和本地事务。"
+    },
+    {
+      "entryId": "D17",
+      "relation": "complements",
+      "reason": "Yjs 管协作合并，Dexie 持久化局部快照时必须定义拥有者/冲突协议。"
+    },
+    {
+      "entryId": "D07",
+      "relation": "complements",
+      "reason": "TanStack Query 远程数据缓存不能直接等同 IndexedDB 持久业务记录。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "本地 RSS 过滤与排序",
+      "description": "Dexie table 和 indexed where 查询",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "indexeddb"
+      ]
+    },
+    {
+      "demoId": "business",
+      "title": "约束失败时原子回滚",
+      "description": "真实 readwrite 事务与重复主键",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "indexeddb"
+      ]
+    },
+    {
+      "demoId": "advanced",
+      "title": "离线 Schema 版本升级",
+      "description": "version(1)→version(2) 和复合索引",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "indexeddb"
+      ]
+    }
+  ],
+  "license": {
+    "spdx": "Apache-2.0",
+    "note": "Dexie.js core 免费；Dexie Cloud 服务功能不属于本例"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "mode": "recreated",
+    "note": "参照 Dexie 4.4.7 schema/transaction 官方文档独立实现，未实测"
+  }
+}
