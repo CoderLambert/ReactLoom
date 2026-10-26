@@ -196,3 +196,14 @@ PLATFORM需通过真实`pnpm`解析及锁文件提交依赖，核对本库和现
 
 A/B累计 **22/39** 个库已编写源码、guide和agent手册，**17项待开发**；Demo选择累计66。此处22≠实际SDK验收22。下一优先：A15 Leaflet（地图tile与资源许可）、A16 MapLibre GL（需隔离环境）、B07 MUI、B08 Mantine、B11 Radix Primitives；对A09 Excalidraw/A10 tldraw及B21/B22历史迁移须先核对资产/授权与框架兼容。公共依赖/CI变更一律由PLATFORM执行。
 
+
+
+### 第4轮同批继续：A15 Leaflet 离线地图（累计6库）
+
+在本轮前5库的基础上继续新增 **A15 Leaflet 1.9.4**：真实Leaflet Map/LayerGroup/circleMarker、原创经纬网格、不加载任何远程瓦片、RSS地点筛选、站点标记及DOM弹窗、键盘可访问定位、响应式invalidateSize、动态节点与map.remove卸载。新增7个条目文件：library.json、真实React/Leaflet代码example.tsx+demo.tsx、guide.md、agent.md、AGENTS.md、verification.json；注册basic/business/advanced 3个可选场景。
+
+**额外依赖请求**：生产 `leaflet@1.9.4`（BSD-2-Clause，https://www.npmjs.com/package/leaflet）；TypeScript开发 `@types/leaflet@1.9.22`（MIT，https://www.npmjs.com/package/@types/leaflet），务必由PLATFORM统一维护package/lock。Leaflet 1.9 API：https://leafletjs.com/reference.html 。没有实际连外部地图服务，不能以此代表在线瓦片权限或底图许可通过。
+
+**计数修正**：本次完整轮次总共 **6库/18个分层Demo选择**；AB累计 **23/39** 项有源码/指南/Agent笔记，尚余 **16项**；总注册69个，均不等于SDK/浏览器验收。旧本轮前述“5库/22/39”的小计已被本节更正。Leaflet与前5库一样，真实SDK/build/browser本轮全部NOT_RUN，仅有GitHub静态源文件校验。
+
+下一轮优先 A16 MapLibre（先审查无外部瓦片/worker配置与WebGL能力）、B07 MUI、B08 Mantine、B11 Radix、B12 React Aria，及A09/A10复杂白板的授权/依赖能力评估；不做虚拟截图代替SDK。

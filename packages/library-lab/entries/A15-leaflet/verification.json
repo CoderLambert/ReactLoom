@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "真实leaflet调用源码已写，本轮未执行npm或目标SDK"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "尚未进行真实类型检查/Vite生产构建"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "地图/图层/ResizeObserver/CSP与键盘操作尚未在Chromium运行"
+  }
+}
