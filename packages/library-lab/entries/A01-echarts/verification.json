@@ -1,0 +1,18 @@
+{
+  "content": {
+    "status": "PASS",
+    "note": "官方文档核对并原创写入指南和真实 API 示例；未执行目标库"
+  },
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "缺少 echarts 实际安装及运行环境"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "仅新增源码；TypeScript/Vite尚未验证"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "无 Chromium 实测结果"
+  }
+}

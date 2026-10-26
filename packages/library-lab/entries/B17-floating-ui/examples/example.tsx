@@ -1,0 +1,102 @@
+import {useId, useState} from 'react';
+import {
+  autoUpdate, flip, offset, shift,
+  FloatingFocusManager, FloatingPortal, useClick, useDismiss, useFloating,
+  useInteractions, useRole,
+} from '@floating-ui/react';
+
+type Level = 'basic' | 'business' | 'advanced';
+
+export default function FloatingExample({level}: {level: Level}) {
+  const [open, setOpen] = useState(false);
+  const [selected, setSelected] = useState('未选择');
+  const [query, setQuery] = useState('');
+  const [composing, setComposing] = useState(false);
+  const id = useId();
+  const {refs, floatingStyles, context, placement} = useFloating({
+    open,
+    onOpenChange: setOpen,
+    placement: level === 'advanced' ? 'top-start' : 'bottom-start',
+    middleware: [offset(10), flip({padding: 12}), shift({padding: 12})],
+    // Both reference and floating elements are conditionally mounted while open.
+    whileElementsMounted: autoUpdate,
+  });
+  const click = useClick(context);
+  const dismiss = useDismiss(context, {escapeKey: true, outsidePress: true});
+  const role = useRole(context, {role: 'dialog'});
+  const {getReferenceProps, getFloatingProps} = useInteractions([click, dismiss, role]);
+  const choose = (value: string) => {
+    setSelected(value);
+    setOpen(false);
+  };
+
+  return <section aria-label="Floating UI 真实交互示例">
+    <h2>{level === 'basic' ? '可定位的浮层' : level === 'business' ? '新闻操作 Popover' : '视口边缘、键盘和输入法'}</h2>
+    <p>点击按钮打开真实 Floating UI 浮层；Escape 或点击外部关闭，关闭后焦点应返回触发按钮。</p>
+    <div style={{height: level === 'advanced' ? 190 : 125, maxWidth: 530,
+      overflow: level === 'advanced' ? 'auto' : 'visible', border: '1px dashed #aab5aa',
+      padding: 18, borderRadius: 10}}>
+      {level === 'advanced' && <p style={{margin: 0}}>此容器独立滚动。向下滚动后再打开面板，观察定位更新。</p>}
+      <div style={{paddingTop: level === 'advanced' ? 85 : 8}}>
+        <button
+          ref={refs.setReference}
+          type="button"
+          {...getReferenceProps()}
+          aria-haspopup="dialog"
+          aria-controls={open ? id : undefined}
+          aria-expanded={open}
+        >
+          {level === 'basic' ? '打开详情' : level === 'business' ? '新闻操作 ▾' : '编辑过滤条件 ▾'}
+        </button>
+      </div>
+    </div>
+    <p role="status">当前选择：{selected}；定位策略：{placement}</p>
+    {open && <FloatingPortal>
+      <FloatingFocusManager context={context} modal={false} returnFocus>
+        <div
+          id={id}
+          ref={refs.setFloating}
+          style={{...floatingStyles, zIndex: 9999, width: level === 'advanced' ? 300 : 260,
+            padding: 16, background: '#fffefa', color: '#243a30',
+            border: '1px solid #adc7b4', borderRadius: 10,
+            boxShadow: '0 12px 28px #1d392b33'}}
+          {...getFloatingProps()}
+          aria-label={level === 'advanced' ? '过滤条件' : '文章浮层'}
+        >
+          {level === 'basic' ? <>
+            <strong>按锚点定位的真实 Popover</strong>
+            <p>通过 offset、flip、shift 处理偏移和视口碰撞。</p>
+            <button type="button" onClick={() => choose('已查看')}>确认并关闭</button>
+          </> : level === 'business' ? <>
+            <strong>文章操作</strong>
+            <div style={{display: 'grid', gap: 8, marginTop: 12}}>
+              <button type="button" onClick={() => choose('加入稍后阅读')}>加入稍后阅读</button>
+              <button type="button" onClick={() => choose('标记已读')}>标记已读</button>
+              <button type="button" onClick={() => choose('已复制引用')}>复制引用（演示状态）</button>
+            </div>
+          </> : <>
+            <strong>搜索范围</strong>
+            <label htmlFor={id + '-query'} style={{display: 'block', marginTop: 8}}>筛选关键词</label>
+            <input
+              id={id + '-query'}
+              value={query}
+              onChange={event => setQuery(event.target.value)}
+              onCompositionStart={() => setComposing(true)}
+              onCompositionEnd={() => setComposing(false)}
+              onKeyDown={event => {
+                if (event.key === 'Enter' && !composing && !event.nativeEvent.isComposing) {
+                  event.preventDefault();
+                  choose(query.trim() ? `搜索：${query.trim()}` : '清空过滤');
+                }
+              }}
+              placeholder="支持中文输入法"
+              style={{display: 'block', width: '100%', border: '1px solid #cbd6cd', padding: 6}}
+            />
+            <p style={{fontSize: 12}}>中文候选字输入期间按 Enter 不提交。也可点击确认。</p>
+            <button type="button" onClick={() => choose(query.trim() ? `搜索：${query.trim()}` : '清空过滤')}>应用过滤</button>
+          </>}
+        </div>
+      </FloatingFocusManager>
+    </FloatingPortal>}
+  </section>;
+}

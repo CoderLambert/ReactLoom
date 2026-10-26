@@ -1,1 +1,114 @@
-{"schemaVersion":1,"entryId":"B17","slug":"floating-ui","name":"Floating UI","group":"B","summary":"浮层定位、碰撞和焦点管理","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "B17",
+  "slug": "floating-ui",
+  "name": "Floating UI",
+  "group": "B",
+  "summary": "浮层定位、碰撞和焦点管理",
+  "tags": [
+    "Popover",
+    "Portal",
+    "定位",
+    "键盘",
+    "ARIA",
+    "IME"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "@floating-ui/react",
+      "version": "0.27.20"
+    }
+  ],
+  "references": [
+    {
+      "title": "Floating UI React 文档",
+      "url": "https://floating-ui.com/docs/react"
+    },
+    {
+      "title": "Floating Focus Manager",
+      "url": "https://floating-ui.com/docs/FloatingFocusManager"
+    },
+    {
+      "title": "官方仓库",
+      "url": "https://github.com/floating-ui/floating-ui"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "B11",
+      "relation": "alternative",
+      "reason": "Radix 提供更完整的可访问 Popover 原语；需要构造定制定位和交互机制时选择 Floating UI。"
+    },
+    {
+      "entryId": "B10",
+      "relation": "alternative",
+      "reason": "Base UI 提供无样式完整组件而不是只提供定位/交互 hooks。"
+    },
+    {
+      "entryId": "B18",
+      "relation": "complements",
+      "reason": "命令搜索面板可搭配 cmdk 设计列表与键盘导航；要明确唯一焦点管理所有者。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "基础锚点与视口翻转",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "portal",
+        "focus",
+        "keyboard"
+      ],
+      "description": "点击锚点，观察浮层位置、焦点和点击外部关闭"
+    },
+    {
+      "demoId": "business",
+      "title": "带动作的业务 Popover",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "portal",
+        "focus",
+        "keyboard"
+      ],
+      "description": "选择新闻阅读操作，关闭后交还触发器焦点"
+    },
+    {
+      "demoId": "advanced",
+      "title": "滚动定位、Escape 与中文 IME",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "portal",
+        "focus",
+        "keyboard"
+      ],
+      "description": "在滚动容器与边界使用浮层，输入中文后安全提交"
+    }
+  ],
+  "license": {
+    "spdx": "MIT"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "独立实现，历史研究不计为本实现已测试。"
+  }
+}
