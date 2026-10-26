@@ -16,7 +16,8 @@
     "test:e2e:setup": "playwright install chromium",
     "test:sdk": "node scripts/sdk-runner.mjs",
     "library:find": "node scripts/find-library.mjs",
-    "test:vitest": "vitest run entries/F12-vitest/examples/*.test.ts"
+    "test:vitest": "vitest run entries/F12-vitest/examples/*.test.ts",
+    "catalog:index": "node scripts/root-catalog.mjs"
   },
   "dependencies": {
     "@antv/g6": "5.1.1",

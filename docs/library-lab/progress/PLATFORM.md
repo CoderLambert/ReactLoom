@@ -54,3 +54,22 @@ packages/library-lab公共框架/协议/源码，root LIBRARY_CATALOG.md；生�
 4. 继续审核和合入分组 PR，优先消除尚未接入的 104 条；公共变更针对性执行测试，保持 Draft #8。
 
 runCount：1 / 24。所有后续自动开发从实际最新 GitHub commit/PR 恢复；记录不代表后续轮次一定执行成功。
+
+
+## 平台持续开发第2轮（2026-10-27，Asia/Shanghai）
+
+**本轮实际合入分组功能，而非仅巡检：**
+
+- A/B PR #16（8个库）已由 PLATFORM 审核变更范围后 squash 合入 `feat/library-lab`，merge SHA `675704d7757ab4b3d929debccf8d9c96ec22eef5`；包括 D3、React Flow、AntV G6、Mermaid、GSAP、react-spring、dnd-kit、react-grid-layout。
+- C/D PR #18（4个库）已由 PLATFORM 审核后 squash 合入，merge SHA `40fb6e9de5146c43e6431624e40222c2fdc139b8`；包括 React Virtuoso、TanStack Virtual、p-queue 和 Ky。
+- 公共依赖声明统一补入9个新包及 `@types/d3`（提交 `479872535c8b2e714212a3bd0448a959e44c2c46`）；与新增条目声明的版本精确对齐。**并非已安装验证**，不能手写 `pnpm-lock.yaml`。
+- 修正 Markdown 中的相对示例和测试源码链接，使其指向真实生成的 `raw/<ID>/sources/<path>`，阻止未发布的HTML/SVG/配置链接；修正根 `package.json` 重复的 `dev:library` 脚本键，清理过时静态Demo数量描述（`f34ac29e61e30ddbdb20a153ad7ddf16093eedb0`）。
+- 新增 `scripts/root-catalog.mjs`，公共生成器和审计工具共用根目录机器/Markdown索引序列化逻辑；新增离线一致性测试（`97b2e443678110b23b3e19943b1b07c824b0d140`）。已根据当前条目的真实library.json逐组回写两份根索引，最终索引提交 `60307cf2666f1b80f495e9153229bdad9c7ae3de`；校验工具可用于平台集成Push及面向main的PR，不要求分组Worker修改公共索引。
+
+**实际工作树复核：**从 GitHub `feat/library-lab@60307cf` 读取非截断 Git tree：119条library.json，47条已提交guide.md、agent.md、verification.json及各3个demo定义；根机器目录显示47个`contentState=recreated`、72个`missing`，与实际47份guide一致。六组分布：A7/B10/C8/D6/E8/F8。**47个源码/文档接入条目、141个分层配置，不等于47个SDK执行验收PASS；还有72项未接入。** 根Markdown与机器JSON均从实际条目同步，改造过程中没有发布到main。
+
+**本轮离线证据：**在本地旧版119条目录快照上运行 `node --test tests/document-utils.test.mjs tests/generate.test.mjs tests/root-catalog.test.mjs`，**14 PASS / 0 FAIL**；对旧快照调用 `node scripts/generate.mjs` 后 `node scripts/root-catalog.mjs` 得到 `Agent index matches 119 entry manifests`。该测试验证新增的通用逻辑，**不验证本次远端47个示例的第三方SDK或TS类型**。GitHub MCP复核了远端完整树、两份索引对应条目47/47及六组分布；npm安装、真实SDK、tsc、Vite build、Chromium依旧 `BLOCKED/NOT_RUN`。
+
+**CI边界调整：** `Library Lab` 工作流已允许对main的最终Draft PR #8启动，并在集成Push或主PR时核对根目录索引；worker PR base=feat/library-lab时跳过根索引检查，因为公共根索引只允许PLATFORM改。原仓库CI保留不变。Github Runner分配前失败的既有事实仍在Issue #12，未复跑相同阻塞；没有将无法运行的workflow标为通过。
+
+**下批：**恢复真实pnpm仓库可用网络/Runner后生成锁文件并执行47条模块类型/官方SDK/生产预览的定向验证；同时继续安全集成新的分组PR，检查复杂库peer依赖及Worker/SW隔离。runCount：**2 /24**。集成仍为Draft PR #8，main未修改。

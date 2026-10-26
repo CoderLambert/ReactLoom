@@ -1,8 +1,8 @@
 name: Library Lab
 on:
   pull_request:
-    branches: ['feat/library-lab']
-    paths: ['packages/library-lab/**', 'docs/library-lab/**', '.github/workflows/library-lab.yml', 'pnpm-lock.yaml', 'package.json', 'pnpm-workspace.yaml', 'AGENTS.md', 'LIBRARY_CATALOG.md']
+    branches: ['main', 'feat/library-lab']
+    paths: ['packages/library-lab/**', 'docs/library-lab/**', '.github/workflows/library-lab.yml', 'pnpm-lock.yaml', 'package.json', 'pnpm-workspace.yaml', 'AGENTS.md', 'LIBRARY_CATALOG.md', 'library-catalog.json']
   push:
     branches: ['feat/library-lab']
     paths: ['packages/library-lab/**', 'docs/library-lab/**', '.github/workflows/library-lab.yml', 'pnpm-lock.yaml', 'package.json', 'pnpm-workspace.yaml', 'AGENTS.md', 'LIBRARY_CATALOG.md']
@@ -26,6 +26,10 @@ jobs:
           node scripts/validate-dependencies.mjs
           npm test
           node scripts/generate.mjs
+      - name: Check tracked Agent root indexes
+        if: ${{ github.event_name == 'push' || github.event.pull_request.base.ref == 'main' }}
+        working-directory: packages/library-lab
+        run: node scripts/root-catalog.mjs
   runtime-bootstrap:
     runs-on: ubuntu-latest
     steps:

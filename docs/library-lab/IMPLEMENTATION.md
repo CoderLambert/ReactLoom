@@ -34,3 +34,8 @@ pnpm --filter @reactloom/library-lab dev
 ## 第1轮公共平台增强（2026-10-27）
 
 新增离线 `library:find` 命令给 Agent 精准查找库说明、示例及验证路径；源码面板改为每文件按需请求+摘要校验，不再一次下载整库源代码；`catalog:check` 增加实际依赖声明静态一致性。离线 Node `test` 与要求真实 SDK 的 `test:sdk` 严格分离。以上仅代表代码与离线逻辑层交付，不表示生产依赖与浏览器已经验收。详见 `progress/PLATFORM.md`。
+
+
+## 第2轮集成进展（2026-10-27）
+
+A/B #16八条与C/D #18四条完整工作坊已实际合入集成分支，新增SDK包统一声明。当前 GitHub 文件树与根索引一致：119已收录，47个条目有三层源码和独立guide/agent，共141项演示选择；72项仍缺完整示例。只属于代码及文档接入，真实SDK运行、tsc、构建、Chromium仍缺独立执行证据。增加根目录索引一致性工具及CI条件检查、修正Markdown本地源码引用，详见progress/PLATFORM.md。所有内容仍留在Draft PR #8。
