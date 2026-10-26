@@ -12,7 +12,7 @@ const samples: Record<Level, string> = {
   advanced: '# 不可信文章\n\n[安全来源](https://example.org)\n\n[危险操作](javascript:alert(1))\n\n<script>alert("not executed by remark")</script>\n\n![远程图片](https://tracking.invalid/1.gif)',
 }
 function safeURL(url: string) {
-  if (url.startsWith('#') || url.startsWith('/')) return true
+  if (url.startsWith('#') || (url.startsWith('/') && !url.startsWith('//'))) return true
   try {return new URL(url).protocol === 'https:'} catch {return false}
 }
 function audit(tree: unknown): Audit {

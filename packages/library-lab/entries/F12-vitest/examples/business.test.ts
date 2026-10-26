@@ -12,7 +12,8 @@ describe('scenario matrix: real Vitest, injected fake business HTTP',()=>{
     }))
     const signal=new AbortController().signal
     expect(await verifyCode(request,signal)).toEqual(expected)
-    expect(request).toHaveBeenCalledExactlyOnceWith(signal)
+    expect(request).toHaveBeenCalledTimes(1)
+    expect(request).toHaveBeenCalledWith(signal)
   })
   it('rejects malformed 200 response rather than silently passing',async ()=>{
     await expect(verifyCode(async()=>new Response('{"unknown":42}',{status:200}),new AbortController().signal))

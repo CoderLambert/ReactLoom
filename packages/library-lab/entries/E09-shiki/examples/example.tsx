@@ -19,6 +19,7 @@ export default function ShikiExample({level}: Props) {
   useEffect(() => {
     let live = true
     setState('正在解析 token…')
+    setRows([])
     const timer = setTimeout(() => {
       // This module is only downloaded when the user explicitly starts the demo.
       codeToTokens(code, {lang, theme: 'github-light'})

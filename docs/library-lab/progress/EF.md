@@ -98,3 +98,11 @@ PLATFORM 接入后应追加F03 Node SDK定向测试：`node --test entries/F03-p
 ### 下一批队列
 
 优先E03 Lexical、F13 Playwright（真实CLI）、F01 Uppy、F06 PDF.js；随后E01 Tiptap、E02 BlockNote、F07 react-pdf、F14 Storybook。依赖/授权复杂的库先完成指南、版本审查和独立隔离设计，再由平台统一接线。范围剩26个条目待完整处理；E11/F05原件仍缺失，应标recreated而不伪称恢复。
+
+### 第二轮代码复核补丁（同批提交）
+
+- F03：文件异步读取捕获稳定 input 引用，避免 await 后访问 React event.currentTarget；对 Papa Parse 多余/缺失列及 __parsed_extra 拒绝导入；高级案例使用有效 `=2+3` 输入实际演示 escapeFormulae，并保留列数错误行。
+- E07：禁止将以 `//` 开头的协议相对 URL 误判为站内路径。
+- E09：新输入触发高亮时先清空旧 token，防止错误把过期视觉内容当新数据。
+- F12：使用稳定的 Vitest `toHaveBeenCalledTimes` + `toHaveBeenCalledWith` 断言，避免较新matcher版本差异。
+- 另新增 E04/E07/E08/E09 各2条真实SDK Node `tests/node-scenarios.test.mjs` 断言源码。只是测试文件已创建；未安装/运行，**不能标 PASS**。PLATFORM 可定向 `node --test packages/library-lab/entries/{E04-codemirror6,E07-remark,E08-rehype,E09-shiki}/tests/node-scenarios.test.mjs`（请注意shell brace-expansion需显式匹配路径）。

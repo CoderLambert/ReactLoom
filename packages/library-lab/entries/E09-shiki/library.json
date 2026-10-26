@@ -97,7 +97,8 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "tests/node-scenarios.test.mjs"
       ],
       "capabilities": [
         "async-highlight",

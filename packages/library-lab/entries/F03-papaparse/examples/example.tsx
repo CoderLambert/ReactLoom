@@ -8,7 +8,7 @@ type Report = {accepted: Feed[]; rejected: string[]; parserErrors: string[]; esc
 const fixtures: Record<Level, string> = {
   basic: 'title,url,note\n"React, Loom",https://example.org/feeds,"带引号 ""文本"" 和\n下一行"',
   business: 'title,url,note\n技术新闻,https://example.org/rss,官方来源\n复制,https://example.org/rss,重复源\n不可信,ftp://example.org/x,非HTTPS',
-  advanced: 'title,url,note\n"=HYPERLINK(\"https://bad.invalid\")",https://example.org/rss,外部表格公式\n正常,https://example.org/other,合法\n"坏行",https://example.org/rss,too,many,cells',
+  advanced: 'title,url,note\n=2+3,https://example.org/rss,危险公式\n正常,https://example.org/other,合法\n"坏行",https://example.org/rss,too,many,cells',
 }
 function reportCSV(source: string): Report {
   const result = Papa.parse<Feed>(source.replace(/^\uFEFF/, ''), {
@@ -17,7 +17,12 @@ function reportCSV(source: string): Report {
   const accepted: Feed[] = []
   const rejected: string[] = []
   const seen = new Set<string>()
+  const invalidRowIndices = new Set(result.errors.filter(e => e.code === 'TooManyFields' || e.code === 'TooFewFields').map(e => e.row))
   result.data.forEach((raw, index) => {
+    if (invalidRowIndices.has(index) || '__parsed_extra' in raw) {
+      rejected.push('第 ' + (index + 2) + ' 行：列数与表头不一致')
+      return
+    }
     const line = index + 2
     const title = typeof raw.title === 'string' ? raw.title.trim() : ''
     const url = typeof raw.url === 'string' ? raw.url.trim() : ''
@@ -51,7 +56,8 @@ export default function PapaParseExample({level}: Props) {
   useEffect(() => () => {generation.current++}, [])
 
   async function chooseFile(event: ChangeEvent<HTMLInputElement>) {
-    const file = event.currentTarget.files?.[0]
+    const input = event.currentTarget
+    const file = input.files?.[0]
     if (!file) return
     const revision = ++generation.current
     setReport(null)
@@ -62,7 +68,7 @@ export default function PapaParseExample({level}: Props) {
       setText(next);setError('')
     } catch (e) {
       if (generation.current === revision) setError('文件读取失败：' + String(e))
-    } finally {event.currentTarget.value = ''}
+    } finally {input.value = ''}
   }
   function parse() {
     try {setReport(reportCSV(text));setError('')} catch (e) {setError(String(e));setReport(null)}
