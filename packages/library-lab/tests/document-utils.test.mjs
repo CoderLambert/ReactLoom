@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {extractDocumentHeadings,resolveDocumentUrl} from '../src/lib/document-utils.mjs';
+import {extractDocumentHeadings,resolveDocumentUrl,slugHeading} from '../src/lib/document-utils.mjs';
 
 test('only safe HTTPS, fragments and same-entry relative files are accepted', () => {
   assert.equal(resolveDocumentUrl('https://example.com/doc', 'A01'), 'https://example.com/doc');
@@ -15,6 +15,14 @@ test('only safe HTTPS, fragments and same-entry relative files are accepted', ()
 test('headings ignore fenced blocks and correctly preserve source line anchor', () => {
   const doc = '# Title\n```md\n## Fake\n```\n## Part\n~~~sh\n# shell comment\n~~~\n### 中文指南 ###\n> ## quoted\n';
   assert.deepEqual(extractDocumentHeadings(doc).map(({id,title}) => [id,title]), [
-    ['section-1','Title'],['section-5','Part'],['section-9','中文指南'],
+    ['title','Title'],['part','Part'],['中文指南','中文指南'],
   ]);
+});
+
+test('Chinese anchors, inline code and duplicate headings exclude fenced content',()=>{
+ assert.equal(slugHeading('使用 `AbortSignal` 配置'),'使用-abortsignal-配置');
+ const doc='## 安装与配置\n## 安装与配置\n\n```md\n## 假标题\n```\n> ## 引用标题\n### 使用 `AbortSignal` 配置';
+ const headings=extractDocumentHeadings(doc);
+ assert.deepEqual(headings.map(h=>h.id),['安装与配置','安装与配置-1','使用-abortsignal-配置']);
+ assert.equal(headings[2].line,8);
 });

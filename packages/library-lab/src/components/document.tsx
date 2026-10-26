@@ -30,6 +30,8 @@ export default function Document({entryId,kind,available}:Props){
   const [text,setText]=useState('');const [error,setError]=useState('');const [loading,setLoading]=useState(true);const [retry,setRetry]=useState(0);
   const url=`${import.meta.env.BASE_URL}raw/${entryId}/${kind}.md`;
   const toc=useMemo(()=>extractDocumentHeadings(text),[text]);
+  const anchors=useMemo(()=>new Map(toc.map(h=>[h.line,h.id])),[toc]);
+  const headingId=(line?:number)=>anchors.get(line??-1)??`section-${line??0}`;
   useEffect(()=>{
     const controller=new AbortController();
     setText('');setError('');setLoading(true);
@@ -57,9 +59,9 @@ export default function Document({entryId,kind,available}:Props){
           img:({src,alt})=>src?.startsWith(assetPrefix)&&/\.(?:png|jpe?g|webp|gif)$/iu.test(src.split('#')[0])?
             <img src={src} alt={alt??''} loading="lazy" decoding="async" referrerPolicy="no-referrer"/>:
             <span className="notice">[外部或未审核的图片未自动加载：{alt||'图片'}]</span>,
-          h1:({node,children})=><h1 id={`section-${node?.position?.start.line}`}>{children}</h1>,
-          h2:({node,children})=><h2 id={`section-${node?.position?.start.line}`}>{children}</h2>,
-          h3:({node,children})=><h3 id={`section-${node?.position?.start.line}`}>{children}</h3>,
+          h1:({node,children})=><h1 id={headingId(node?.position?.start.line)}>{children}</h1>,
+          h2:({node,children})=><h2 id={headingId(node?.position?.start.line)}>{children}</h2>,
+          h3:({node,children})=><h3 id={headingId(node?.position?.start.line)}>{children}</h3>,
         }}>{text}</Markdown>
     </article>{toc.length>2&&<nav className="document-toc" aria-label="当前文档目录"><strong>本页目录</strong>
       <ol>{toc.filter(h=>h.depth>1).map(item=><li key={item.id} data-depth={item.depth}>

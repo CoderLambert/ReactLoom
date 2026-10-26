@@ -18,3 +18,16 @@ test('source browser downloads only one file at a time and verifies its digest',
  await expect(page.locator('.source-viewer .hash')).toContainText('已校验');
  expect(sourceRequests).toHaveLength(2);
 });
+
+test('documentation headings expose stable shareable fragments',async({page})=>{
+ await page.goto('/libraries/clsx?tab=docs');
+ const toc=page.getByRole('navigation',{name:'当前文档目录'});
+ await toc.getByRole('link',{name:'用在哪里'}).click();
+ await expect(page).toHaveURL(/#用在哪里$/u);
+ await expect(page.locator('h2#用在哪里')).toBeVisible();
+});
+test('Node-CI Vitest recipe shows reproducible command instead of fake shell',async({page})=>{
+ await page.goto('/libraries/vitest?tab=demo&example=basic');
+ await expect(page.getByText('pnpm exec vitest run entries/F12-vitest/examples/basic.test.ts')).toBeVisible();
+ await expect(page.getByRole('button',{name:'运行当前示例'})).toHaveCount(0);
+});

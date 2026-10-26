@@ -23,10 +23,19 @@ export function resolveDocumentUrl(value, entryId, basePath = '/') {
   return `${prefix}raw/${entryId}/${encodedPath}${fragment}`;
 }
 
+export function slugHeading(text) {
+  return String(text ?? '').normalize('NFKC').toLocaleLowerCase()
+    .replace(/\[([^\]]+)\]\([^)]*\)/gu, '$1')
+    .replace(/[`*_~]/gu,'')
+    .replace(/<[^>]*>/gu,'')
+    .replace(/[^\p{L}\p{N}_\s-]/gu,'')
+    .trim().replace(/\s+/gu,'-').replace(/-+/gu,'-');
+}
 /** A minimal ToC scanner: fenced source code and blockquotes never create links. */
 export function extractDocumentHeadings(markdown) {
   if (typeof markdown !== 'string') return [];
   const headings = [];
+  const seen = new Map();
   let fence = null;
   markdown.split(/\r?\n/u).forEach((line, index) => {
     const open = line.match(/^ {0,3}(`{3,}|~{3,})/u);
@@ -36,11 +45,16 @@ export function extractDocumentHeadings(markdown) {
       else if (marker === fence.marker && open[1].length >= fence.length) fence = null;
       return;
     }
-    if (fence) return;
+    if (fence || /^\s*>/u.test(line)) return;
     const match = line.match(/^ {0,3}(#{1,3})(?:\s+|$)(.*)$/u);
     if (!match) return;
     const text = match[2].replace(/\s+#+\s*$/u,'').trim();
-    if (text) headings.push({depth:match[1].length,title:text,line:index+1,id:`section-${index+1}`});
+    if (text) {
+      const stem=slugHeading(text)||`section-${index+1}`;
+      const count=seen.get(stem)??0;
+      seen.set(stem,count+1);
+      headings.push({depth:match[1].length,title:text,line:index+1,id:count?`${stem}-${count}`:stem});
+    }
   });
   return headings;
 }
