@@ -9,6 +9,8 @@ export function reproductionCommand(entry,demo){
  const relative=`entries/${entry.directory}/${demo.entryPoint}`;
  if(/\.test\.[cm]?js$/u.test(demo.entryPoint))return `node --test ${relative}`;
  if(/\.(?:test|spec)\.tsx?$/u.test(demo.entryPoint)&&entry.packages?.some(p=>p.name==='vitest'))return `pnpm exec vitest run ${relative}`;
+ if(/\.spec\.tsx?$/u.test(demo.entryPoint)&&entry.packages?.some(p=>p.name==='@playwright/test')&&demo.sourceFiles.includes('examples/playwright.config.ts'))
+  return `pnpm exec playwright test --config=entries/${entry.directory}/examples/playwright.config.ts ${relative}`;
  if(/\.[cm]?js$/u.test(demo.entryPoint)&&LEVELS.has(demo.level))return `node ${relative} ${demo.level}`;
  return null;
 }

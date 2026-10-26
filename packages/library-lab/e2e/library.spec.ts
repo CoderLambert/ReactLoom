@@ -40,3 +40,9 @@ test('verification detail distinguishes SDK, build and browser outcomes',async({
  await expect(page.getByText('目录收录、示例存在、Node 平台测试与真实第三方 SDK 验证必须分开判断。',{exact:false})).toBeVisible();
  await expect(page.getByText('当前源码与依赖指纹：',{exact:false})).toBeVisible();
 });
+
+test('Playwright workshop displays the real standalone CLI command and never runs a browser via UI',async({page})=>{
+ await page.goto('/libraries/playwright?tab=demo&example=basic');
+ await expect(page.getByText('pnpm exec playwright test --config=entries/F13-playwright/examples/playwright.config.ts entries/F13-playwright/examples/basic.spec.ts')).toBeVisible();
+ await expect(page.getByRole('button',{name:'运行当前示例'})).toHaveCount(0);
+});

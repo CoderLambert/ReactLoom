@@ -16,3 +16,10 @@ test('rejects unsafe paths and unsupported modes',()=>{
  assert.equal(reproductionCommand({directory:'F12-vitest;echo BAD',packages:entry.packages},base),null);
  assert.equal(reproductionCommand({directory:'F12-vitest',packages:[]},base),null);
 });
+
+test('Playwright workshops use their checked-in standalone config, not the app test runner',()=>{
+ const e={directory:'F13-playwright',packages:[{name:'@playwright/test',version:'1.64.0'}]};
+ const demo={executionKind:'node-ci',level:'business',entryPoint:'examples/business.spec.ts',sourceFiles:['examples/business.spec.ts','examples/playwright.config.ts']};
+ assert.equal(reproductionCommand(e,demo),'pnpm exec playwright test --config=entries/F13-playwright/examples/playwright.config.ts entries/F13-playwright/examples/business.spec.ts');
+ assert.equal(reproductionCommand(e,{...demo,sourceFiles:['examples/business.spec.ts']}),null,'missing config cannot silently fall back to app tests');
+});
