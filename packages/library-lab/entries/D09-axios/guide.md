@@ -16,7 +16,7 @@ const response=await client.get('/sources',{signal:controller.signal})
 
 ## Demo 的真实边界
 
-三个场景共用 examples/example.tsx：真正 import 并执行 Axios.create、interceptors.request.use、interceptors.response.use、.get、.post、axios.isAxiosError 和 AbortSignal。适配器是每次页面挂载创建的严格 https://lab.invalid 内存 fixture，不会联网；它模拟 HTTP 409/503，因此不能把这项单测叫做真实服务器兼容性验收。
+三个场景共用 examples/example.tsx：真正 import 并执行 Axios.create、interceptors.request.use、interceptors.response.use、.get、.post、axios.isAxiosError 和 AbortSignal。适配器使用真实 axios.getUri(config) 合并 baseURL 与 params，再执行 https://lab.invalid 来源限制，因此按租户/查询筛选生效；该内存 fixture 不会联网；它模拟 HTTP 409/503，因此不能把这项单测叫做真实服务器兼容性验收。
 
 **基础**：实例独立、请求头仅属于当前实例、请求/响应拦截链。
 

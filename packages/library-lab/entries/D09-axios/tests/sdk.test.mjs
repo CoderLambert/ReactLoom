@@ -27,3 +27,15 @@ test('actual Axios respects a pre-aborted signal',async()=>{
  const client=axios.create({adapter:async config=>({status:200,statusText:'OK',data:1,config,headers:new AxiosHeaders()})});
  await assert.rejects(client.get('https://lab.invalid/blocked',{signal:controller.signal}),error=>axios.isCancel(error));
 });
+
+test('Axios getUri constructs actual baseURL and query params for adapter routing',async()=>{
+ const client=axios.create({baseURL:'https://lab.invalid',adapter:async config=>{
+  const url=new URL(axios.getUri(config));
+  assert.equal(url.origin,'https://lab.invalid');
+  assert.equal(url.pathname,'/feeds');
+  assert.equal(url.searchParams.get('tenant'),'b');
+  assert.equal(url.searchParams.get('q'),'React');
+  return {data:[],status:200,statusText:'OK',headers:new AxiosHeaders(),config};
+ }});
+ await client.get('/feeds',{params:{tenant:'b',q:'React'}});
+});

@@ -20,7 +20,7 @@ async function pause(ms:number,signal?:AbortSignal) {
 export function makeFixtureClient(onTrace:(text:string)=>void) {
  const attempts=new Map<string,number>();
  const adapter:AxiosAdapter=async (config:InternalAxiosRequestConfig)=>{
-   const url=new URL(config.url??'',config.baseURL??'https://lab.invalid');
+   const url=new URL(axios.getUri(config)); // Axios serializes baseURL AND params before fixture routing
    if(url.origin!=='https://lab.invalid')throw new Error('fixture 只支持 https://lab.invalid，拒绝外部请求');
    await pause(url.pathname==='/slow'?340:60,config.signal as AbortSignal|undefined);
    const key=url.pathname;const current=(attempts.get(key)??0)+1;attempts.set(key,current);
@@ -65,6 +65,10 @@ export default function AxiosWorkshop({level}:{level:Level}){
  const timer=useRef<number|null>(null);
  const [client]=useState(()=>makeFixtureClient(message=>setLogs(history=>[...history.slice(-9),message])));
  useEffect(()=>()=>{generation.current++;active.current?.abort();if(timer.current!==null)window.clearTimeout(timer.current);client.dispose();},[client]);
+ function cancelCurrent(){
+  if(timer.current!==null){window.clearTimeout(timer.current);timer.current=null;}
+  active.current?.abort();generation.current++;setResult('请求已取消');
+ }
  function controller(){active.current?.abort();active.current=new AbortController();generation.current++;return {signal:active.current.signal,token:generation.current};}
  async function search(value:string,selected:'a'|'b',slow=false){
   const {signal,token}=controller();setResult('请求进行中…');
@@ -97,7 +101,7 @@ export default function AxiosWorkshop({level}:{level:Level}){
       onCompositionStart={()=>{composing.current=true;}} onCompositionEnd={()=>{composing.current=false;}}/></label>}
    <button type="button" onClick={()=>{if(!composing.current)void search(draft.trim(),tenant);}}>GET 列表</button>
    {level==='business'&&<button type="button" onClick={()=>{void search('',tenant,true);timer.current=window.setTimeout(()=>{timer.current=null;void search('React',tenant);},40);}}>先慢后快竞态</button>}
-   <button type="button" onClick={()=>active.current?.abort()}>取消请求</button>
+   <button type="button" onClick={cancelCurrent}>取消请求</button>
   </div>}
   {level==='advanced'&&<div className="demo-controls">
    <button type="button" onClick={()=>void testFailure('retry')}>GET 503 限定重试</button>
