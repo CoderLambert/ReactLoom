@@ -1,1 +1,93 @@
-{"schemaVersion":1,"entryId":"D05","slug":"decimal-js","name":"decimal.js","group":"D","summary":"任意精度十进制计算","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "D05",
+  "slug": "decimal-js",
+  "name": "decimal.js",
+  "group": "D",
+  "summary": "从字符串到精确金额：decimal.js 的税率、舍入和对账边界",
+  "tags": [
+    "Decimal",
+    "金额",
+    "精度",
+    "财务",
+    "计算"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "decimal.js",
+      "version": "10.6.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "官方 README 与许可证",
+      "url": "https://github.com/MikeMcl/decimal.js/"
+    },
+    {
+      "title": "包版本元数据",
+      "url": "https://github.com/MikeMcl/decimal.js/blob/master/package.json"
+    },
+    {
+      "title": "API 参考",
+      "url": "https://mikemcl.github.io/decimal.js/"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "C02",
+      "relation": "complements",
+      "reason": "Zod 在金额转 Decimal 前做输入和 DTO 边界验证。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "二进制浮点对照",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [],
+      "description": "真实 Decimal 加法对照 JS Number。"
+    },
+    {
+      "demoId": "business",
+      "title": "订阅采购金额计算",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [],
+      "description": "明确的价税计算与输入范围验证。"
+    },
+    {
+      "demoId": "advanced",
+      "title": "舍入规则与模块隔离",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [],
+      "description": "ROUND_HALF_UP 与 HALF_EVEN 在半分边界的差异。"
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "note": "本目录示例原创，不复用第三方测试或收费资产"
+  },
+  "provenance": {
+    "origin": "RFL-20261023/D/decimal.js",
+    "mode": "recreated",
+    "note": "基于官方 10.6.0 文档重新实现，不继承旧运行结论"
+  }
+}

@@ -6,9 +6,9 @@
 
 必须保留：在 limiter 回调内启动工作；一批或一个共享服务只拥有预期的 limiter；真实工作监听 signal；卸载/新批次后旧回调不得回写；结果部分失败使用 allSettled 或明确事务策略。
 
-禁止：先启动所有 fetch 再包装；把 activeCount 保存后当队列事实；把 clearQueue 当作 abort；假设 async CPU 工作已离开主线程；一次创建无限排队任务。
+禁止：先启动所有 fetch 再包装；把 activeCount 保存后当队列事实；把 clearQueue 当作正在运行任务的 abort；假设 async CPU 工作已离开主线程；一次创建无限排队任务。
 
-运行：`pnpm --filter @reactloom/library-lab test:sdk`、`typecheck`、`build`。SDK 测试断言实际最大并发、返回顺序与拒绝；浏览器再测开始/取消/卸载。可 mock 业务延迟，不能 mock p-limit 后算 SDK PASS。
+运行：`pnpm --filter @reactloom/library-lab test:sdk`、`typecheck`、`build`。SDK 测试断言实际最大并发、返回顺序与拒绝；浏览器再测开始/取消/卸载，尤其确认 rejectOnClear=true 下 queued Promise 能结算且没有旧结果回写。可 mock 业务延迟，不能 mock p-limit 后算 SDK PASS。
 
 当前依赖安装 DNS BLOCKED，SDK 与浏览器 NOT_RUN。相关库 D04 p-queue 用于更复杂队列需求，D18 Comlink 用于 Worker 通信但并不替代调度。
 
