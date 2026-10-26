@@ -12,8 +12,14 @@ test('actual Fuse.js indexes and returns identified ranked documents',()=>{
 test('actual SDK honors result limit and has no implicit group permission filter',()=>{
  const fuse=new Fuse(rows,{keys:['title'],threshold:0.8});
  assert.ok(fuse.search('r',{limit:1}).length<=1);
- const groupOnly=fuse.search('a').filter(hit=>hit.item.group==='技术');
- assert.ok(groupOnly.every(hit=>hit.item.group==='技术'));
+ const allHits=fuse.search('a');
+ assert.ok(allHits.some(hit=>hit.item.group==='商业'));
+ const scopedDocs=rows.filter(row=>row.group==='技术');
+ const scopedFuse=new Fuse(scopedDocs,{keys:['title'],threshold:0.8});
+ const scopedHits=scopedFuse.search('a');
+ assert.ok(scopedHits.length>0);
+ assert.ok(scopedHits.every(hit=>hit.item.group==='技术'));
+ assert.ok(scopedHits.length<allHits.length);
 });
 test('setCollection explicitly replaces index rather than mutating caller array',()=>{
  const fuse=new Fuse(rows,{keys:['title']});

@@ -8,7 +8,7 @@ examples/example.tsx 的 createArticleIndex() 和业务筛选组合可以复制�
 
 ## 不可删的边界
 1. 索引由当前 data 快照构建；数据更改后重新构建或 setCollection。
-2. 搜索时显式指定 limit；查询权限和 tenant 必须先裁剪，Fuse 不提供 ACL。
+2. 搜索时显式指定 limit；查询权限和 tenant 必须在构建索引及 search limit 前先裁剪，Fuse 不提供 ACL；先搜索取前N条后过滤可能遗漏合法结果。
 3. 中文 IME composition 阶段不能提交旧查询。
 4. search.match 只能生成文本节点/可控高亮，禁止注入不可信 HTML。
 5. 维护稳定文档 id，区别 score 与业务相关性或权限。

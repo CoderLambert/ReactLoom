@@ -24,13 +24,15 @@ export default function FuseWorkshop({level}:{level:Level}){
  const [group,setGroup]=useState<Group|'全部'>('全部');
  const [threshold,setThreshold]=useState(0.35);
  const composing=useRef(false);
- const engine=useMemo(()=>createArticleIndex(docs,threshold),[docs,threshold]);
+ // Scope the searchable collection before indexing and before the result limit.
+ // Production ACL and tenant constraints must be applied at this boundary.
+ const scopedDocs=useMemo(()=>group==='全部'?docs:docs.filter(item=>item.group===group),[docs,group]);
+ const engine=useMemo(()=>createArticleIndex(scopedDocs,threshold),[scopedDocs,threshold]);
  const results=useMemo(()=>{
-   const hits=query.trim()?engine.search(query.trim(),{limit:20}).map(hit=>({
+   return query.trim()?engine.search(query.trim(),{limit:20}).map(hit=>({
      item:hit.item,score:hit.score??null,matches:hit.matches?.map(part=>part.key)??[],
-   })):docs.map(item=>({item,score:null,matches:[] as (string|undefined)[]}));
-   return hits.filter(hit=>group==='全部'||hit.item.group===group);
- },[engine,docs,query,group]);
+   })):scopedDocs.map(item=>({item,score:null,matches:[] as (string|undefined)[]}));
+ },[engine,scopedDocs,query]);
  function addRecord(){
    if(docs.some(item=>item.id==='new'))return;
    setDocs(old=>[...old,{id:'new',title:'React Query 新订阅',summary:'新导入 RSS 频道，真实触发索引重建',group:'技术',tags:['React','RSS']}]);
@@ -50,7 +52,7 @@ export default function FuseWorkshop({level}:{level:Level}){
     {[0,0.15,0.35,0.55].map(value=><option value={value} key={value}>{value.toFixed(2)}</option>)}</select></label>
    <button type="button" onClick={addRecord}>增量导入新 RSS（重建索引）</button>
   </div>}
-  <p role="status">匹配 {results.length}/{docs.length} 条；空查询展示当前分组所有文档。</p>
+  <p role="status">匹配 {results.length}/{scopedDocs.length} 条；空查询展示当前分组所有文档。</p>
   {results.length?<ol data-testid="fuse-results">{results.map(({item,score,matches})=>
    <li key={item.id}><strong>{item.title}</strong> · {item.group}
     <p>{item.summary}</p>
