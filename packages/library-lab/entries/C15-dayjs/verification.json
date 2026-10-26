@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "真实 SDK 定向测试待依赖安装与执行，测试文件存在不等于通过"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "本条目新增后应用构建尚未执行"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "真实浏览器交互和时区环境矩阵尚未执行"
+  }
+}

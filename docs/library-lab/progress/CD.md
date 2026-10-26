@@ -3,7 +3,7 @@
 ## 恢复与分支
 
 - Issue #6、主 Epic #4，目标集成分支 feat/library-lab。前一批 PR #10 **已合入**，本批从最新集成提交 df4674d501bac029f8529ff940ba9b8c8707347c 新建 feat/library-lab-cd-wave2，避免在旧已合并分支继续开发。
-- runCount：3 / 24；仅写 entries/C*、entries/D* 及此进度文件。公共 package/lockfile/CI/生成器由 PLATFORM 独占。
+- runCount：4 / 24；仅写 entries/C*、entries/D* 及此进度文件。公共 package/lockfile/CI/生成器由 PLATFORM 独占。
 - 本轮 Git commit / PR 见本通道新 PR；用户的主 PR #8 仍为 Draft，不写 main。
 
 ## 本轮新增 4 个完整垂直条目
@@ -73,3 +73,39 @@ PLATFORM 在 packages/library-lab/package.json 及真实 pnpm-lock.yaml 中统�
 ### 后续可执行队列
 
 优先 D09 Axios（拦截器、取消、409与限流重试边界）、C15 Day.js 与 C16 Luxon（同组时区/语义差异）、D10 Zustand（selector、持久化隔离）、C11 react-arborist（虚拟树与拖拽）、D19 Fuse.js（本地检索）。优先不依赖新的共享 runner 的条目；每轮接入有实际源码与文档的批次，而不是只添加目录卡片。
+
+## 第四批 / 2026-10-27 — 五个真实 SDK 教学条目（C15、C16、D09、D10、D19）
+
+- runCount：**4 / 24**；基线 `feat/library-lab@688a660272775b3399a18ae34630401a19ac556c`，本批工作分支 `feat/library-lab-cd-wave4`，新独立 PR 的目标分支固定 `feat/library-lab`。本批所有修改仅在 entries/C*、entries/D* 与本进度文件；不触碰根包、锁文件、公共 src/CI/main/旧模板。
+- 5个条目从 missing 改为 recreated，每条有准确 library.json、guide.md、agent.md、AGENTS.md、verification.json、examples/example.tsx、examples/demo.tsx、tests/sdk.test.mjs，共 **15 个 basic/business/advanced Demo 场景**，可见代码全部与 entryPoint 同源。
+- **C15 Day.js v1.11.23**：严格 YYYY-MM-DD，utc/timezone/customParseFormat 插件，RSS 时区民用日，纽约春/秋23/25小时与回拨两种显式 UTC instant。
+- **C16 Luxon v3.7.2**：DateTime/Interval、zone/locale、+1 calendar day、getPossibleOffsets 检测重叠本地时间；开发类型需求 @types/luxon。
+- **D09 Axios v1.20.0**：真实 Axios.create/拦截器及 eject、AbortSignal/generation、防旧请求覆盖；仅本地严格域名自定义 adapter 模拟后端 503 GET 有限重试与 POST 409 不重试。adapter 模拟的是服务端协议，不是 mock Axios SDK。固定安全版本，避免已知 2026-03 恶意发行的 1.14.1 / 0.30.4。
+- **D10 Zustand v5.0.16**：真实 createStore、useStore、persist、createJSONStorage、partialize、version/migrate；团队 A/B UI 状态隔离；示例使用独占 Map storage，绝不向用户浏览器真实 localStorage 存 token。
+- **D19 Fuse.js v7.5.0 (Apache-2.0)**：字段加权模糊搜索、score、group筛选、IME防误提交、threshold 调整、动态数据后重建实际 Fuse 索引；明确搜索不是 ACL 和语义嵌入。
+
+### 第四批可核查检查
+
+- Git tree 静态检查：五条 library.json JSON 均成功解析；五条各8个文件齐备，15个 Demo metadata 都具备真实 entryPoint/sourceFiles，所有相对路径在 Git tree 中存在；五条 examples/example.tsx 均静态导入其声明的目标 SDK。
+- 五份独立 node:test 的纯 JavaScript **语法解析 PASS（去掉 ESM import 后只做 JS Parser 语法检查）**，不是 Node 真正执行。
+- 本轮未安装 npm package、未运行真实 SDK / tsc / Vite build / Playwright；五个条目 verification.json 的 sdk/build/browser 保持 NOT_RUN。平台现有环境与 CI Runner 运行限制仍待集成负责人复核，绝不把静态通过称为 SDK 通过。
+- 特别注意：C15/C16 的日期与 DST 结论尚需 Node 真正按目标版本核对；D09 自定义 adapter 不证明实际 HTTP 请求对 409/503 的默认行为；Zustand 教学内存存储不证明浏览器跨刷新持久化。
+
+### dependencyRequests — 仅 PLATFORM 管理 package.json 与 pnpm-lock.yaml
+
+| 包名 | 目标版本 | 类型/许可 | 核验依据 |
+|---|---|---|---|
+| dayjs | 1.11.23 | dependency，MIT | https://github.com/iamkun/dayjs/releases/tag/v1.11.23 |
+| luxon | 3.7.2 | dependency，MIT | https://www.npmjs.com/package/luxon |
+| @types/luxon | 3.7.6 | devDependency，MIT | https://www.npmjs.com/package/%40types/luxon |
+| axios | 1.20.0 | dependency，MIT | https://github.com/axios/axios/releases/tag/v1.20.0 |
+| zustand | 5.0.16 | dependency，MIT；现有SPA曾用5.0.15，不要跨模板改依赖 | https://security.snyk.io/package/npm/zustand |
+| fuse.js | 7.5.0 | dependency，Apache-2.0 | https://www.npmjs.com/package/fuse.js |
+
+依赖安全：Axios 禁止自动浮动至历史恶意版本。上述目标版本已在公共来源检索，尚未由本执行环境真实 npm 解析/验证 peers，PLATFORM 负责安装、冻结锁文件及实际运行。不得手工伪造 lock integrity。
+
+### 进度与下一批
+
+- CD累计 **19/43 条已编写真实目标 SDK 导入示例**（此前14 + 本批5）。实际 SDK 运行通过数量本批新增仍为0，待 PLATFOM 安装并验证后再更新 sourceFingerprint 证据。
+- 后续建议先 C11 react-arborist / D11 Jotai，再 C17 i18next / C18 react-i18next / D15 Dexie / D18 Comlink / D20 MiniSearch；继续处理生命周期和边界，避免仅生成目录卡片。
+- 本批每条新增定向 tests/sdk.test.mjs；由 PLATFORM 合并进入统一 sdk-runner 机制并复核 SDK / TS / browser，当前不强行编辑公共工具脚本。
