@@ -1,4 +1,4 @@
-import {readdir,stat,readFile} from 'node:fs/promises';
+import {readdir,stat} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 import path from 'node:path';
 const root=fileURLToPath(new URL('./generated/',import.meta.url));
@@ -10,7 +10,6 @@ export async function verifyProject(project){
   let files=[];
   if(project==='advanced'){
     files=(await readdir(root)).filter(name=>name.startsWith('advanced')).map(name=>path.join(root,name));
-    files=files.filter(async()=>true);
   }else{files=[target]}
   let found=0;
   for(const f of files){

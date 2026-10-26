@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "真实目标SDK运行仍待安装后的独立测试"
+  },
+  "build": {
+    "status": "BLOCKED",
+    "note": "应用锁文件/完整依赖未通过CI验收"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "尚未执行Chromium/资源生命周期回归"
+  }
+}

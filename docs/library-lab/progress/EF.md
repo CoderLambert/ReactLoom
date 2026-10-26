@@ -192,3 +192,122 @@ E03/F01/F06/F17需与公共DemoHost真实浏览器验证，尤其StrictMode重�
 ### 剩余计划（EF 21/37已接入，待完成16项）
 
 优先 F16 dependency-cruiser、F18 rollup-plugin-visualizer、E13 PhotoSwipe、E14 react-easy-crop、E15 pica；随后F04 ExcelJS、F09 pdf-lib、F08 @react-pdf/renderer、E17 hls.js、E18 wavesurfer.js，最后评估E19 ffmpeg.wasm大资源隔离和E11/F05原件缺失重建。持续维护版本/许可/验收证据。用户不需要对每个小阶段重复批准。
+
+## 第五轮：媒体本地处理与工程CLI实战（2026-10-27，北京时间）
+
+- **新分支**：`feat/library-lab-ef-media-tools-20261027`，基于当轮最新集成 `feat/library-lab@53e6c93003b08f6aac14da9c375e210e6b12540a`。旧 `feat/library-lab-ef-wave5` 已存在但落后集成分支，因此不force更新、不覆盖既有提交，而新建独立分支。
+- **前轮PR状态**：#11、#15、#17、#20 已确认合入 `feat/library-lab`；主PR #8仍为Draft。
+- **本轮新增5库，15个basic/business/advanced真实SDK/CLI场景源码**；累计EF为 **26/37 库具有源码与指南，余11库**。不等于SDK/浏览器PASS。
+- **仅EF授权文件**：`entries/E13`、`entries/E14`、`entries/E15`、`entries/F16`、`entries/F18` 和本进度文件；未修改根package、锁文件、公共src/CI、旧模板、main。
+
+|条目|新增真实源码及交付|关键边界|
+|---|---|---|
+| E13 PhotoSwipe 5.4.4 | React中真正构造PhotoSwipeLightbox，原版灯箱延迟import、原创本地SVG画廊、动态追加缩略图、destroy；完整guide/agent | width/height元数据、键盘/触控/焦点、StrictMode重复挂载、CSS范围和无远程图像 |
+| E14 react-easy-crop 6.2.4 | 真Cropper drag/zoom与onCropComplete、Canvas drawImage/toBlob产生本地PNG；高级选择本地文件、文件大小/解码像素验证、URL回收 | 裁剪坐标不等于导出文件；未实现rotation不能虚称旋转裁剪；切换/卸载通过generation防旧回写 |
+| E15 pica 10.0.3 | 真pica()工厂、resize/toBlob、原创Canvas图像、本地格式/像素限制、与原生Canvas对照及cancelToken | v10 API迁移、Worker/WASM仅按条件使用，无法假定Worker自动释放；体积不等于画质 |
+| F16 dependency-cruiser 18.5.0 | 完整隔离三层TS导入fixture、forbidden域层规则与circular规则、真实CLI node启动器和verify脚本 | basic预期CLI0，business/advanced故意违规非0；不扫描或删除生产仓库 |
+| F18 rollup-plugin-visualizer 7.1.1 | 独立Vite8 fixture、treemap HTML / Markdown / raw-data JSON三模式、真实dynamic import代码、verify构建脚本 | 不写假构建尺寸；报告可能泄露私有源码路径，禁止公开自动上传；不修改主Vite构建 |
+
+### 本轮验证范围和真实状态
+
+- 通过GitHub Tree实际核对5/5 `library.json` 解析、5×3唯一场景声明、每个entryPoint和sourceFiles文件Blob存在、guide/agent/AGENTS/verification齐全，结构一致性 **PASS**。此验证不依赖目标SDK，也不等于TS类型或浏览器通过。
+- E14源代码审查补丁：本地图片首先createImageBitmap做尺寸限制，在媒体替换时用requestId过滤过期解码；切换zoom时取消旧导出busy状态；本地文件仅PNG/JPEG/WebP≤4MiB且像素≤1600万。仍需真实浏览器内存/移动端验收。
+- E15源代码审查补丁：真实resize完成后撤销本轮cancel回调，后续toBlob只做generation隔离，防止取消已结算token导致无关拒绝。
+- **真实SDK与Node-CLI：NOT_RUN；TS/Vite完整构建：BLOCKED；Chromium：NOT_RUN**，因为公共依赖仍未装入完整可用锁文件，先前npm DNS与GitHub Runner阻塞未有成功恢复证据。本轮没有重复失败安装、也没有把结构检查虚称SDK测试。
+- F16与F18含真正的 `examples/verify.mjs`，运行前不能把声明中的“期望退出0/非0”当成已出现的输出。EF不具有安装依赖或修改CI的写入所有权，相关请求交PLATFORM。
+
+### 第五轮 dependencyRequests（PLATFORM 唯一owner）
+
+|准确包名|官方/npm版本基线|用途、许可、兼容性|
+|---|---|---|
+| `photoswipe` | `5.4.4` | E13，MIT，`photoswipe/lightbox`、`photoswipe/style.css`、`import('photoswipe')`；须确认构建chunk、键盘与destroy。|
+| `react-easy-crop` | `6.2.4` | E14，MIT，React19 peer和Cropper类型需真实锁文件解析；支持受控crop/zoom/onCropComplete。|
+| `pica` | `10.0.3` | E15，MIT，v10工厂默认导出与cancelToken，Worker/CSP及Canvas能力浏览器检查。|
+| `dependency-cruiser`（dev）| `18.5.0` | F16，MIT，Node CLI `depcruise`；检查Node22兼容与config解析；不引入web运行包。|
+| `rollup-plugin-visualizer`（dev）| `7.1.1` | F18，MIT，与ReactLoom SPA模板当前使用的版本一致；独立Vite8 build fixture。|
+
+PLATFORM统一变更 `packages/library-lab/package.json` 和真实生成的 `pnpm-lock.yaml`，确认同版peer后执行以下针对性命令（命令仅供真实运行，不可先记PASS）：
+
+```sh
+pnpm --filter @reactloom/library-lab typecheck
+pnpm --filter @reactloom/library-lab build
+node packages/library-lab/entries/F16-dependency-cruiser/examples/verify.mjs
+node packages/library-lab/entries/F18-rollup-plugin-visualizer/examples/verify.mjs
+pnpm --filter @reactloom/library-lab test:e2e
+```
+
+E13/E14/E15应在Chromium使用真正SDK手动/自动完成灯箱Esc与卸载、Canvas Blob解码/像素、pica cancelToken/旧批次不回写以及网络面板零外部图片上传，再更新对应verification.json。
+
+### 下一轮（EF剩11库）
+
+E11 Streamdown（历史仅摘要，必须标recreated）、E12 assistant-ui、E16 Video.js、E17 hls.js、E18 wavesurfer.js、E19 ffmpeg.wasm；F04 ExcelJS、F05 SheetJS（历史仅摘要，必须标recreated）、F08 @react-pdf/renderer、F09 pdf-lib、F10 Orval。优先F09/pdf-lib、F04/ExcelJS、F10/Orval等无需巨大浏览器资源的条目，再处理媒体/AI编辑和WASM隔离；依赖和许可证以官方一手资料重新核验，禁止生成占位Demo冒充真实SDK。
+
+runCount=5/24。本次每项均完成多文件源码+文档的垂直交付；完成整批后由PLATFORM审查PR并集成，EF下一轮基于最新集成head建立新分支继续，不覆盖已合并的旧工作。
+
+### 第五轮持久交付索引
+
+- 代码提交：`0b77251f0e0f0f359d8ac090348430649c1e7897`。
+- 独立Draft PR：[#25](https://github.com/CoderLambert/ReactLoom/pull/25)，base=`feat/library-lab`，不得合并main。
+- GitHub Compare：基线 `53e6c93003b08f6aac14da9c375e210e6b12540a` →提交，ahead=1，50个新增/修改文件，全部属于EF entries或本progress，无越界修改。
+- 平台接入待处理：统一依赖安装/真实锁文件、Node真实CLI验证、Vite typecheck/build、Chromium交互/资源回收。EF继续下一批，不重复本批已提交源码。
+
+
+### Vite 8 Oxc兼容修复（同批）
+
+官方Vite 8文档确认：`build.minify: 'esbuild'`已弃用且esbuild不再是默认依赖。F18真实构建fixture改为`minify: 'oxc'`，避免PLATFORM为该孤立测试额外安装esbuild；补丁提交`73905ca52eb1b64fc1c40c7c906cd3657b9cf0e8`。此修订仅为源代码与官方API兼容性修复，**并不代表真实Vite构建已经通过**。
+
+## 第六轮：Office/PDF生成、Orval客户端及音频波形（2026-10-27，北京时间，wave6）
+
+- **独立分支** `feat/library-lab-ef-wave6`，基于本轮实际集成分支 `feat/library-lab@a9441528ea68d2daa56f2c0bbbc0e4fbe7cf5ae1` 建立。EF第五轮 Draft PR #25 在本轮启动时仍开放，绝不重写/force其head；此分支仅包含另外5个待做条目和本progress。
+- 本轮新增 **5个不同的EF库、15个basic/business/advanced示例声明**。合并前统计必须分开：已合入集成21条，PR #25独立待合5条，本PR独立待合5条；全部按次序合入后的代码接入目标 **31/37，剩余6条**。均不能作为真实SDK/浏览器验收PASS。
+- 文件所有权：只写 `entries/F04`、`F08`、`F09`、`F10`、`entries/E18` 和本文。没有修改root、package.json、锁文件、公共代码、CI或生产部署。
+
+| 条目 | 三层实战源码 | 应用、边界与复现 |
+|---|---|---|
+| F04 ExcelJS | 真实`ExcelJS.Workbook`表头格式、RSS阅读统计/冻结表头/公式缓存、恶意公式开头/错误数值/真实workbook往返 | `examples/core.mjs`和`basic.mjs/business.mjs/advanced.mjs/verify.mjs`，只用内存XLSX；公式并不由ExcelJS求值 |
+| F09 pdf-lib | 真实PDFDocument.create/drawText、copyPages两份原创PDF、读取本地PDF并标注/损坏回退 | React内按需运行，`examples/document.ts`可脱离UI迁移，generation+objectURL释放，≤2MiB，标准字体暂不支持中文 |
+| F10 Orval | 真实本地OpenAPI 3.0.3契约→Fetch单文件、TanStack Query hooks、按tags拆分客户端 | 使用`orval.config.ts`和`run.mjs`执行固定`--project`，不调用真实服务器；产物仅在`examples/generated/`，Node >=22.18不可忽略 |
+| F08 @react-pdf/renderer | 真Document/Page/Text和Flexbox、React `pdf(...).toBlob()`生成单页/日报/100行自动分页 | 初始不构建；用户点击才生成，PDF URL撤销，100行/最大140行约束，无第三方字体和远程资源 |
+| E18 wavesurfer.js | 真实WaveSurfer.create/load/playPause/setTime/setPlaybackRate/zoom，输入是原创8kHz/1.6秒PCM WAV | StrictMode event取消/销毁后重新create、BlobURL撤销、捕获AbortError、播放按钮用户手势；v8生命周期与v7有差异 |
+
+每个条目均创建了`library.json`、中文`guide.md`、`agent.md`、简短`AGENTS.md`、`verification.json`和真实源码引用；源码面板将通过公共生成器从同一`sourceFiles`中按需提取，不另造演示副本。Node-CI类不在网页伪造命令执行。
+
+### 本轮验证范围与限制
+
+- GitHub树对象已存储新增源码、示例和文档，但Git对象创建不证明TS编译或SDK运行；平台源文件完整性可通过`catalog:check`在完整安装环境验证。
+- SDK/CLI/F04 workbook实际往返/F10 Orval代码生成：**NOT_RUN**；React/TS/Vite完整构建：**BLOCKED**（公共依赖/根锁文件尚需PLATFORM实际解析）；Chromium/Worker/音频播放：**NOT_RUN**。不继承旧研究验收，也不模拟SDK后记录PASS。
+- `F10/examples/spec-check.mjs`只断言本地OpenAPI JSON结构；即使跑通也只是fixture检查，不能记为Orval CLI已运行。F04 `advanced.mjs` 通过真实ExcelJS读取B5证明恶意公式前缀已经转成单元格文本，不硬编码虚假通过结果。
+- 本轮不重复上轮已知DNS失败安装、未能分配runner的GitHub Actions；依赖和真正SDK复验由PLATFORM统一执行。
+
+### 第六轮 dependencyRequests（由PLATFORM独占依赖与锁文件）
+
+| 包/基线 | 条目 | 接线注意 |
+|---|---|---|
+| `exceljs@4.4.0` | F04 | MIT、Node/浏览器包差异，内存writeBuffer/load，验证公式结果类型/宏限制 |
+| `pdf-lib@1.17.1` | F09 | MIT、真实PDF合并/修改，浏览器内Blob下载和对象URL释放 |
+| `orval@8.44.0`（dev） | F10 | MIT，真实Node CLI要求 **Node >=22.18**；本地OpenAPI input、output schemas、React Query/Fetch配置需实际解析；不打进生产SPA bundle |
+| `@react-pdf/renderer@4.9.0` | F08 | MIT、React19 peer、包Worker和PDF字体行为必须由构建及浏览器确认，不能与F07`react-pdf`混淆 |
+| `wavesurfer.js@8.0.3` | E18 | BSD-3-Clause，v8 API、音频解码/权限、浏览器销毁和BlobURL作用域 |
+
+建议PLATFORM安装上述依赖（确认实际npm registry/peer/许可证后由唯一owner提交完整锁文件）并定向运行以下命令，不可提前宣称PASS：
+
+```sh
+node packages/library-lab/entries/F04-exceljs/examples/verify.mjs
+node packages/library-lab/entries/F04-exceljs/examples/basic.mjs
+node packages/library-lab/entries/F04-exceljs/examples/business.mjs
+node packages/library-lab/entries/F04-exceljs/examples/advanced.mjs
+node packages/library-lab/entries/F10-orval/examples/spec-check.mjs
+node packages/library-lab/entries/F10-orval/examples/basic.mjs
+node packages/library-lab/entries/F10-orval/examples/business.mjs
+node packages/library-lab/entries/F10-orval/examples/advanced.mjs
+pnpm --filter @reactloom/library-lab catalog:check
+pnpm --filter @reactloom/library-lab typecheck
+pnpm --filter @reactloom/library-lab build
+pnpm --filter @reactloom/library-lab test:e2e
+```
+
+### 后续队列
+
+EF待完整接入6项：**E11 Streamdown（原件SUMMARY_ONLY，重建标recreated）、E12 assistant-ui、E16 Video.js、E17 hls.js、E19 ffmpeg.wasm、F05 SheetJS（原件SUMMARY_ONLY）**。优先E17/E16本地媒体和E12/E11安全流式UI；超大WASM需独立加载与安全隔离。分组PR必须全部对`feat/library-lab`，不得合入main；公共平台集成时先审查已有#25，再依次集成本轮独立PR并在真实依赖条件具备时验证。
+
+runCount=6/24。本轮不把5库源代码和30+例子等同完整生产交付；记录真正可复现的源码、命令、依赖与未验证事实。

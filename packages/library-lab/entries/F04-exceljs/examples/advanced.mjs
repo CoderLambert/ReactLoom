@@ -1,9 +1,14 @@
 import {generateWorkbook,inspectWorkbook,FIXTURE} from './core.mjs';
 import assert from 'node:assert/strict';
+import ExcelJS from 'exceljs';
 const rows=[...FIXTURE,{id:'r04',source:'=HYPERLINK("https://example.invalid","click")',reads:0,stars:0}];
 const {bytes}=await generateWorkbook('advanced',rows);
 const actual=await inspectWorkbook(bytes);
 assert.equal(typeof actual.firstSource,'string');
+const restored=new ExcelJS.Workbook();
+await restored.xlsx.load(bytes);
+const raw=restored.getWorksheet('Sources')?.getCell('B5').value;
+assert.equal(raw,"'=HYPERLINK(\"https://example.invalid\",\"click\")");
 const invalid=[{id:'bad',source:'Invalid',reads:NaN,stars:1}];
 await assert.rejects(generateWorkbook('advanced',invalid),/invalid reads/);
-console.log(JSON.stringify({scenario:'advanced',bytes:bytes.byteLength,totalCell:actual.summary,formulaInputWasEscaped:true},null,2));
+console.log(JSON.stringify({scenario:'advanced',bytes:bytes.byteLength,totalCell:actual.summary,escapedCellValue:raw},null,2));
