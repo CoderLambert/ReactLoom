@@ -31,3 +31,12 @@ test('Node-CI Vitest recipe shows reproducible command instead of fake shell',as
  await expect(page.getByText('pnpm exec vitest run entries/F12-vitest/examples/basic.test.ts')).toBeVisible();
  await expect(page.getByRole('button',{name:'运行当前示例'})).toHaveCount(0);
 });
+
+
+test('verification detail distinguishes SDK, build and browser outcomes',async({page})=>{
+ await page.goto('/libraries/clsx?tab=docs');
+ await expect(page.getByLabel('分项验证状态')).toBeVisible();
+ await page.getByText('查看实际验证命令、证据与阻塞原因').click();
+ await expect(page.getByText('目录收录、示例存在、Node 平台测试与真实第三方 SDK 验证必须分开判断。',{exact:false})).toBeVisible();
+ await expect(page.getByText('当前源码与依赖指纹：',{exact:false})).toBeVisible();
+});
