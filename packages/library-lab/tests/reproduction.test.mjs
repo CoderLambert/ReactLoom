@@ -60,3 +60,9 @@ test('visualizer executes standalone Vite config only when its declared package 
  assert.equal(reproductionCommand({...entry,packages:[{name:'vite'}]},demo),null);
  assert.equal(reproductionCommand({...entry,directory:'../../evil'},demo),null);
 });
+
+test('copyable commands reject non-enumerated scenario levels and shell-like strings',()=>{
+ const entry={directory:'F18-rollup-plugin-visualizer',packages:[{name:'rollup-plugin-visualizer'},{name:'vite'}]};
+ const demo={executionKind:'node-ci',entryPoint:'examples/vite.config.ts',sourceFiles:['examples/vite.config.ts']};
+ for(const level of ['advanced;echo BAD','basic && echo BAD','custom',null]) assert.equal(reproductionCommand(entry,{...demo,level}),null);
+});

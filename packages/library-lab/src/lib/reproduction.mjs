@@ -6,7 +6,7 @@ const hasPackage=(entry,name)=>entry.packages?.some(pkg=>pkg.name===name)??false
 export function reproductionCommand(entry,demo){
  if(!entry||!demo||demo.executionKind!=='node-ci'||typeof entry.directory!=='string'||!DIRECTORY.test(entry.directory)||
   !safeRelativePath(demo.entryPoint)||!/^[a-zA-Z0-9_./-]+$/u.test(demo.entryPoint)||
-  !Array.isArray(demo.sourceFiles)||!demo.sourceFiles.includes(demo.entryPoint))return null;
+  !Array.isArray(demo.sourceFiles)||!demo.sourceFiles.includes(demo.entryPoint)||!LEVELS.has(demo.level))return null;
  const relative=`entries/${entry.directory}/${demo.entryPoint}`;
  if(/\.test\.[cm]?js$/u.test(demo.entryPoint))return `node --test ${relative}`;
  if(/\.(?:test|spec)\.tsx?$/u.test(demo.entryPoint)&&hasPackage(entry,'vitest'))return `pnpm exec vitest run ${relative}`;
