@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "真实 MUI Core API 使用源码已提交，未执行目标SDK。"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "等待 PLATFORM 安装 MUI/Emotion 后运行 tsc 和构建。"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "Dialog键盘、Portal、IME与状态恢复尚未运行Chromium。"
+  }
+}

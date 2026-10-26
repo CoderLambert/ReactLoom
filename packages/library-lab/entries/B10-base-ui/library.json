@@ -1,1 +1,115 @@
-{"schemaVersion":1,"entryId":"B10","slug":"base-ui","name":"Base UI","group":"B","summary":"无样式可访问组件原语","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "B10",
+  "slug": "base-ui",
+  "name": "Base UI",
+  "group": "B",
+  "summary": "无样式 Checkbox 的语义、混合态、授权禁用与真实 FormData",
+  "tags": [
+    "headless UI",
+    "checkbox",
+    "indeterminate",
+    "forms",
+    "a11y",
+    "permissions"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "@base-ui/react",
+      "version": "1.9.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "Base UI 官方 Checkbox",
+      "url": "https://base-ui.com/react/components/checkbox"
+    },
+    {
+      "title": "Base UI Menu",
+      "url": "https://base-ui.com/react/components/menu"
+    },
+    {
+      "title": "npm",
+      "url": "https://www.npmjs.com/package/@base-ui/react"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "B11",
+      "relation": "alternative",
+      "reason": "Radix Primitives是另一套Headless体系，团队需按可访问性与API统一选型。"
+    },
+    {
+      "entryId": "B09",
+      "relation": "complements",
+      "reason": "shadcn/ui交付可维护样式源码，具体底层原语版本与实现需核对。"
+    },
+    {
+      "entryId": "C01",
+      "relation": "complements",
+      "reason": "React Hook Form可管理复杂表单业务状态，而Base UI仅负责交互原语。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "Checkbox Root 与 label",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/checkbox.css",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "a11y",
+        "keyboard",
+        "native-form"
+      ]
+    },
+    {
+      "demoId": "business",
+      "title": "多项权限与全选",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/checkbox.css",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "a11y",
+        "keyboard",
+        "native-form"
+      ]
+    },
+    {
+      "demoId": "advanced",
+      "title": "混合态、禁用与 FormData",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/checkbox.css",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "a11y",
+        "keyboard",
+        "native-form"
+      ]
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "assets": "原创权限fixture与局部CSS，无商业资源。"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "以官方 Base UI 1.9 Checkbox API 重新实现，未继承历史运行结论。"
+  }
+}
