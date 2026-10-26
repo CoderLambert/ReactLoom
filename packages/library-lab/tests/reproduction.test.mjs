@@ -43,3 +43,20 @@ test('Knip recipes are restricted to the local sample fixture without destructiv
  }
  assert.equal(reproductionCommand(e,{...base,entryPoint:'examples/workspace/knip.evil.json',sourceFiles:['examples/workspace/knip.evil.json','examples/workspace/package.json']}),null);
 });
+
+test('dependency-cruiser uses the checked-in Node harness rather than trying to run a TypeScript fixture',()=>{
+ const entry={directory:'F16-dependency-cruiser',packages:[{name:'dependency-cruiser'}]};
+ const fixtures={basic:'examples/workspace/basic/src/main.ts',business:'examples/workspace/business/src/domain/summary.ts',advanced:'examples/workspace/advanced/src/first.ts'};
+ for(const [level,entryPoint] of Object.entries(fixtures)){
+  const demo={executionKind:'node-ci',level,entryPoint,sourceFiles:[entryPoint,'examples/run.mjs','examples/workspace/config.cjs']};
+  assert.equal(reproductionCommand(entry,demo),`node entries/F16-dependency-cruiser/examples/run.mjs ${level}`);
+  assert.equal(reproductionCommand(entry,{...demo,sourceFiles:[entryPoint]}),null);
+ }
+});
+test('visualizer executes standalone Vite config only when its declared package and sources exist',()=>{
+ const entry={directory:'F18-rollup-plugin-visualizer',packages:[{name:'rollup-plugin-visualizer'},{name:'vite'}]};
+ const demo={executionKind:'node-ci',level:'advanced',entryPoint:'examples/vite.config.ts',sourceFiles:['examples/vite.config.ts','examples/fixture/main.ts']};
+ assert.equal(reproductionCommand(entry,demo),'pnpm exec vite build --config entries/F18-rollup-plugin-visualizer/examples/vite.config.ts --mode advanced');
+ assert.equal(reproductionCommand({...entry,packages:[{name:'vite'}]},demo),null);
+ assert.equal(reproductionCommand({...entry,directory:'../../evil'},demo),null);
+});

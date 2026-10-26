@@ -16,6 +16,15 @@ export function reproductionCommand(entry,demo){
   hasPackage(entry,'storybook')&&hasPackage(entry,'@storybook/react-vite')&&
   demo.sourceFiles.includes('examples/.storybook/main.ts'))
   return `pnpm exec storybook dev --no-open -p 6029 --config-dir entries/${entry.directory}/examples/.storybook`;
+ // Config and fixture paths are not executable source. Only allow audited, fixed runners.
+ if(entry.directory==='F16-dependency-cruiser' && hasPackage(entry,'dependency-cruiser') &&
+  demo.entryPoint===`examples/workspace/${demo.level}/src/${demo.level==='business'?'domain/summary':demo.level==='advanced'?'first':'main'}.ts` &&
+  demo.sourceFiles.includes('examples/run.mjs') && demo.sourceFiles.includes('examples/workspace/config.cjs'))
+  return `node entries/F16-dependency-cruiser/examples/run.mjs ${demo.level}`;
+ if(entry.directory==='F18-rollup-plugin-visualizer' && hasPackage(entry,'rollup-plugin-visualizer') &&
+  hasPackage(entry,'vite') && demo.entryPoint==='examples/vite.config.ts' &&
+  demo.sourceFiles.includes('examples/vite.config.ts'))
+  return `pnpm exec vite build --config entries/F18-rollup-plugin-visualizer/examples/vite.config.ts --mode ${demo.level}`;
  const knip=demo.entryPoint.match(/^examples\/workspace\/knip\.(basic|business|advanced)\.json$/u);
  if(knip&&hasPackage(entry,'knip')&&demo.sourceFiles.includes('examples/workspace/package.json'))
   return `pnpm exec knip --directory entries/${entry.directory}/examples/workspace --config knip.${knip[1]}.json${knip[1]==='advanced'?' --production':''}`;

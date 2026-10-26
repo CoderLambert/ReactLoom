@@ -11,13 +11,14 @@
     "catalog:check": "node scripts/generate.mjs --check && node scripts/validate-dependencies.mjs",
     "lint": "biome check src scripts tests e2e package.json tsconfig.json vite.config.ts playwright.config.ts",
     "typecheck": "node scripts/generate.mjs && tsc --noEmit",
-    "test": "node --test tests/catalog.test.mjs tests/document-utils.test.mjs tests/generate.test.mjs tests/find-library.test.mjs tests/validate-dependencies.test.mjs tests/reproduction.test.mjs tests/sdk-runner.test.mjs tests/demo-policy.test.mjs tests/source-language.test.mjs tests/worker-protocol.test.mjs tests/root-catalog.test.mjs",
+    "test": "node --test tests/catalog.test.mjs tests/document-utils.test.mjs tests/generate.test.mjs tests/find-library.test.mjs tests/validate-dependencies.test.mjs tests/reproduction.test.mjs tests/sdk-runner.test.mjs tests/demo-policy.test.mjs tests/source-language.test.mjs tests/worker-protocol.test.mjs tests/root-catalog.test.mjs tests/cli-runner.test.mjs",
     "test:e2e": "playwright test",
     "test:e2e:setup": "playwright install chromium",
     "test:sdk": "node scripts/sdk-runner.mjs",
     "library:find": "node scripts/find-library.mjs",
     "test:vitest": "vitest run entries/F12-vitest/examples/*.test.ts",
-    "catalog:index": "node scripts/root-catalog.mjs"
+    "catalog:index": "node scripts/root-catalog.mjs",
+    "test:cli": "node scripts/cli-runner.mjs"
   },
   "dependencies": {
     "@antv/g6": "5.1.1",
@@ -148,5 +149,9 @@
     "typescript": "7.0.2",
     "vite": "8.3.4",
     "vitest": "5.0.5"
+  },
+  "engines": {
+    "node": ">=22.18.0",
+    "pnpm": ">=10"
   }
 }

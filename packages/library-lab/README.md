@@ -60,3 +60,15 @@ node scripts/sdk-runner.mjs                        # 所有 Node SDK 测试，�
 ```
 
 `--entry` / `--entries` 与 `--group` 不能混用；定向命令不会悄悄加入全局 `tests/sdk.test.mjs`。没有 Node 测试的 WebGL、编辑器或纯浏览器条目应通过单独的浏览器场景验证，**不能因 Node suite 为零就声称 PASS**。
+
+## CLI workshops / 独立 Node 工具复现
+
+F04 ExcelJS、F10 Orval、F16 dependency-cruiser、F18 rollup-plugin-visualizer 不伪装成浏览器执行。页面根据已审查的配置提供可复制命令；真实 CLI 验证统一由固定清单运行（需要 Node >=22.18、真实安装的依赖及本机权限）：
+
+```sh
+node packages/library-lab/scripts/cli-runner.mjs --list
+node packages/library-lab/scripts/cli-runner.mjs --entry=F04
+node packages/library-lab/scripts/cli-runner.mjs --entries=F10,F16,F18
+```
+
+CLI runner 仅执行仓库内硬编码的验证脚本，不接收外部 shell/path。未执行的 CLI 结果仍为 NOT_RUN，离线校验只能证明选择器输入和调用边界正确。Orval 8+ 需 Node.js >=22.18。
