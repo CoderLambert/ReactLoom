@@ -44,3 +44,8 @@ A/B #16八条与C/D #18四条完整工作坊已实际合入集成分支，新增
 ## 第4轮集成开发（2026-10-27）
 
 已分别 squash 合并 AB PR #23（6库）与CD PR #24（5库）到集成分支；119目录中已有74库的完整指南与示例源码，45库仍缺。平台增加SDK Node测试按ID/按组选择器，并提供缺测失败语义；公共 package声明已补齐本批14个版本条目，根Agent索引保持119条同步。尚未生成实际pnpm锁文件，不以静态版本匹配、离线单测或GitHub无runner的失败job声称生产验收。进度与实测边界见progress/PLATFORM.md。
+
+
+## 第5轮持续集成进展（2026-10-27）
+
+已审核并集成EF #25、AB #26、EF #27共17条真实库研究源代码，#27 EF进度冲突通过保留两批记录的双亲合并修复。总计119个目录中91个具有guide.md/agent.md/实际示例源码，273项分层场景配置，28项未实现；实际官方SDK/browser PASS仍无本轮新证据。公共package登记实际条目版本；固定F04/F10/F16/F18 Node CLI verifier，修正示例复现命令并防止任意demo.level注入，离线定向Node纯逻辑14 PASS。根pnpm-lock/真实生产build/SDK/浏览器BLOCKED或NOT_RUN，F06/F07 PDF.js版本冲突仍在#22。详情见 progress/PLATFORM.md。

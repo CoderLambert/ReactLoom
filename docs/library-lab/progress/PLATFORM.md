@@ -115,3 +115,22 @@ runCount：1 / 24。所有后续自动开发从实际最新 GitHub commit/PR 恢
 3. 继续推进独立frame/SW运行器安全边界、Markdown/示例完整源码展示、移动端键盘和视图卸载专项验证，先用离线确定性测试保护公共协议。
 
 runCount：**4/24**。main与旧模板保持未修改，Draft PR #8维持待最终验收状态；本轮非完整生产验收。
+
+
+## 平台持续开发第5轮（2026-10-27，北京时间）
+
+**已实际集成17个新库、3个分组PR；不是仅更新进度：**
+
+- EF wave5 PR #25：审核后squash合入 `d3e26d54b12bf972840ed3151d3bd067a0d0d452`，5个库：E13 PhotoSwipe、E14 react-easy-crop、E15 pica、F16 dependency-cruiser、F18 rollup-plugin-visualizer。
+- AB wave6 PR #26：审核后squash合入 `d2445e91844e0b5ffccc75f4004b4c3a05de63fe`，7个库：A13 Three.js、A14 React Three Fiber、A17 deck.gl、B09 shadcn/ui、B14 Pragmatic drag and drop、B21 react-motion现代迁移、B22 react-beautiful-dnd现代迁移。
+- EF wave6 PR #27：与#25的EF进度追加发生合并冲突，未强推覆盖。审核49个PR变更后，仅将48个EF条目文件叠加在当前集成树，EF进度保留原258行并安全追加wave6 56行；使用two-parent Git commit `21ba998181fc680b38831842821f790e39580b1e` 合并到feat/library-lab。GitHub确认PR #27为merged。该批5库：E18 wavesurfer.js、F04 ExcelJS、F08 @react-pdf/renderer、F09 pdf-lib、F10 Orval。
+- 公共依赖与根索引：`419011568efbe6d41ec64cb91b78ef9fc72625ff` 添加新条目实际声明的生产/开发包及`@types/three`，保持Node/CLI构建工具为dev-only；同步119条`library-catalog.json`和`LIBRARY_CATALOG.md`。这只是严格静态版本合同，不是npm安装成功。
+- 公共 CLI 真实复现：`8162548a2f49467760e932d8698b20e97cf7dd2d` 引入固定4条Node/CLI verifier(F04/F10/F16/F18)，浏览器仅复制真实命令不执行shell；F16和F18的“展示命令”指向真正的Node runner和独立Vite fixture。发现GitHub提交过程的反斜杠转义问题，立即用`e1e1e4bf70460ef5e394e74f1ddd81e021eef3c7`修正表达式；`4c5be0ecc9d570b5c5f30d6e714c795c8a697b19`阻止不可信demo.level注入可复制CLI命令。
+
+**可核对的全量文件结构（GitHub完整递归树，非截断）：**119份library.json，91份guide.md和agent.md，剩余28条未接入完整文档/示例；三层basic/business/advanced配置共273个。库目录A17/B22/C22/D21/E19/F18未变。91条是已提交源码及笔记，不是91个真实运行通过。
+
+**本轮实际测试：**在本地部分旧版平台快照执行`node --check scripts/cli-runner.mjs`与`node --check tests/cli-runner.test.mjs`成功；`node --test tests/cli-runner.test.mjs tests/reproduction.test.mjs`在新注入防护前13 PASS、补丁后**14 PASS/0 FAIL**。只证明新CLI/命令安全通用逻辑，不代表完整远端91个SDK或TypeScript/Vite经过运行。远端新依赖下载、实际pnpm-lock、tsc、Vite build、Chromium E2E仍**BLOCKED/NOT_RUN**；GitHub Actions最新run显示失败，原已证实Runner分配前失败，Issue #12保持开放。F06/F07 PDF.js Worker版本不一致#22继续阻断依赖合同，不通过弱化门禁掩盖问题。
+
+**下一轮优先队列：**一是EF修复F06/F07版本冲突后合入；二是核查AB/CD/EF剩余28条的PR并同步公共版本/索引；三是完善Worker/SW/frame隔离与证据展示；四是可用Node>=22.18/pnpm10/Runner出现时立即解析可信锁文件、执行受影响SDK/CLI/真实构建/浏览器测试，逐项写入可追溯证据，不继承历史PASS。
+
+runCount：**5/24**。本次只向`feat/library-lab`集成，`main`和既有PR #3未改，最终PR #8仍Draft。不会因某次失败而假装已跑过完整生产验收。
