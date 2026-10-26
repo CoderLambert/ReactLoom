@@ -22,6 +22,7 @@ jobs:
         working-directory: packages/library-lab
         run: |
           node scripts/generate.mjs --check
+          node scripts/validate-dependencies.mjs
           npm test
           node scripts/generate.mjs
   runtime-bootstrap:
