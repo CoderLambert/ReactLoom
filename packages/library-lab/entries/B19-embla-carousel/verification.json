@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "尚未安装真实 embla-carousel-react@8.6.0 运行"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "PLATFORM 统一处理新依赖与锁文件后验证"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "触摸、键盘、动态增删和卸载需要 Chromium/移动端实测"
+  }
+}

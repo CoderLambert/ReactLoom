@@ -1,1 +1,106 @@
-{"schemaVersion":1,"entryId":"A03","slug":"chartjs","name":"Chart.js","group":"A","summary":"Canvas 图表和轻量统计展示","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "A03",
+  "slug": "chartjs",
+  "name": "Chart.js",
+  "group": "A",
+  "summary": "模块化 Canvas 图表与 React 生命周期边界",
+  "contentState": "recreated",
+  "tags": [
+    "Canvas",
+    "ResizeObserver",
+    "destroy",
+    "tree-shaking",
+    "React"
+  ],
+  "packages": [
+    {
+      "name": "chart.js",
+      "version": "4.6.1"
+    }
+  ],
+  "references": [
+    {
+      "title": "Chart.js 官方模块化注册",
+      "url": "https://www.chartjs.org/docs/latest/getting-started/integration.html"
+    },
+    {
+      "title": "Chart.js 响应式布局",
+      "url": "https://www.chartjs.org/docs/latest/configuration/responsive.html"
+    },
+    {
+      "title": "Chart.js npm",
+      "url": "https://www.npmjs.com/package/chart.js"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "A01",
+      "relation": "alternative",
+      "reason": "ECharts 的组件与交互系统更丰富；Chart.js 适合常见图表且可按控制器注册。"
+    },
+    {
+      "entryId": "A02",
+      "relation": "alternative",
+      "reason": "Recharts 由 React 管理 SVG；Chart.js 手动持有 Canvas 实例，必须在 effect cleanup 中 destroy。"
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "assets": "仅原创本地数据"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "本轮独立基于 Chart.js 4 官方文档重写，不继承历史 PASS"
+  },
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "按需注册柱状图",
+      "description": "仅注册 bar 所需控制器与图形组件，真实 Canvas 绘制",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "canvas",
+        "resize-observer"
+      ]
+    },
+    {
+      "demoId": "business",
+      "title": "NewsHub 订阅指标更新",
+      "description": "可刷新本地统计数据，复用 Chart 实例 update 而不是重复 new",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "canvas",
+        "resize-observer"
+      ]
+    },
+    {
+      "demoId": "advanced",
+      "title": "图形切换、销毁与无效数据边界",
+      "description": "Bar/Line 切换时销毁旧实例，防 NaN 与固定 Canvas 尺寸",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "canvas",
+        "resize-observer"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "Chart.js@4.6.1 尚未在本环境运行"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "依赖、完整类型和 Vite 构建由 PLATFORM 统一集成"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "Canvas 生命周期、Resize、StrictMode及等价表格待 Chromium"
+  }
+}

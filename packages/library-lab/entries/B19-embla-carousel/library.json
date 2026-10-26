@@ -1,1 +1,110 @@
-{"schemaVersion":1,"entryId":"B19","slug":"embla-carousel","name":"Embla Carousel","group":"B","summary":"响应式轮播与滑动吸附","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "B19",
+  "slug": "embla-carousel",
+  "name": "Embla Carousel",
+  "group": "B",
+  "summary": "可访问的触控轮播、滑动吸附和动态卡片",
+  "contentState": "recreated",
+  "tags": [
+    "轮播",
+    "touch",
+    "滑动吸附",
+    "键盘",
+    "动态列表",
+    "cleanup"
+  ],
+  "packages": [
+    {
+      "name": "embla-carousel-react",
+      "version": "8.6.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "Embla React v8 稳定文档",
+      "url": "https://www.embla-carousel.com/docs/v8/get-started/react"
+    },
+    {
+      "title": "Embla API 与事件",
+      "url": "https://www.embla-carousel.com/api/"
+    },
+    {
+      "title": "npm 官方包",
+      "url": "https://www.npmjs.com/package/embla-carousel-react"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "B01",
+      "relation": "complements",
+      "reason": "Motion 可动画轮播内部内容；避免 Embla 和 Motion 同时操控 slide transform。"
+    },
+    {
+      "entryId": "B13",
+      "relation": "alternative",
+      "reason": "拖拽排序应选 dnd-kit 而不是水平轮播引擎。"
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "assets": "仅原创本地文字卡片"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "依据 Embla v8 正式文档独立重写；不继承历史测试结论。"
+  },
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "触控轮播与上一页/下一页",
+      "description": "真实 useEmblaCarousel v8，横向触摸与按钮导航，监听器自动释放",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "touch",
+        "pointer",
+        "resize-observer"
+      ]
+    },
+    {
+      "demoId": "business",
+      "title": "新闻推荐专题轮播",
+      "description": "列表卡片和动态页码、双向按钮禁用状态",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "touch",
+        "pointer",
+        "resize-observer"
+      ]
+    },
+    {
+      "demoId": "advanced",
+      "title": "循环模式及动态增删",
+      "description": "loop、reInit、动态增加和删除卡片、恢复初始顺序",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "touch",
+        "pointer",
+        "resize-observer"
+      ]
+    }
+  ]
+}
