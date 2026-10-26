@@ -1,0 +1,18 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "平台已有依赖声明，实际SDK执行尚待安装"
+  },
+  "build": {
+    "status": "BLOCKED",
+    "note": "平台lockfile/依赖安装待完成"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "GFM、URL/XSS、键盘输入待E2E"
+  },
+  "security": {
+    "status": "NOT_RUN",
+    "note": "需真实DOM与外链请求检查"
+  }
+}

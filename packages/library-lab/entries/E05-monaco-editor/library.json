@@ -1,1 +1,110 @@
-{"schemaVersion":1,"entryId":"E05","slug":"monaco-editor","name":"Monaco Editor","group":"E","summary":"IDE 级代码编辑与 Worker","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "E05",
+  "slug": "monaco-editor",
+  "name": "Monaco Editor",
+  "group": "E",
+  "summary": "IDE 级代码编辑与 Worker",
+  "tags": [
+    "code-editor",
+    "Web Worker",
+    "TypeScript",
+    "JSON",
+    "CSP",
+    "dispose"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "monaco-editor",
+      "version": "0.57.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "Monaco Editor 官方集成文档（含 Vite）",
+      "url": "https://github.com/microsoft/monaco-editor/blob/main/docs/integrate-esm.md"
+    },
+    {
+      "title": "Monaco 发行版 0.57.0",
+      "url": "https://www.npmjs.com/package/monaco-editor"
+    },
+    {
+      "title": "Monaco API 文档",
+      "url": "https://microsoft.github.io/monaco-editor/typedoc/"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "E04",
+      "relation": "alternative",
+      "reason": "CodeMirror 6 更适合需要精细控制扩展与较轻负担的编辑场景；Monaco 更侧重 IDE 风格体验。"
+    },
+    {
+      "entryId": "E09",
+      "relation": "complements",
+      "reason": "Shiki 可用于静态代码展示；并不自动替代 Monaco 的编辑器和语言服务。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "编辑器基础生命周期",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/demo.tsx",
+        "examples/example.tsx",
+        "examples/workers.ts"
+      ],
+      "capabilities": [
+        "web-worker",
+        "resize-observer"
+      ],
+      "description": "TS 编辑器创建/更改/布局/销毁；实际编辑由 Monaco 完成。"
+    },
+    {
+      "demoId": "business",
+      "title": "业务草稿编辑与保存",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/demo.tsx",
+        "examples/example.tsx",
+        "examples/workers.ts"
+      ],
+      "capabilities": [
+        "web-worker",
+        "resize-observer"
+      ],
+      "description": "修改 TypeScript 内容并显式保存草稿快照；无服务端持久化。"
+    },
+    {
+      "demoId": "advanced",
+      "title": "JSON 语法诊断",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/demo.tsx",
+        "examples/example.tsx",
+        "examples/workers.ts"
+      ],
+      "capabilities": [
+        "web-worker",
+        "resize-observer"
+      ],
+      "description": "实际使用 Monaco JSON 语言服务 Worker；观察错误标记与资源释放。"
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "assets": "原创练习文本；未复制 VS Code 扩展或语言服务器"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "本条目以官方 Vite ESM 接口新写；尚未恢复或声明原始 ZIP 的测试结果。"
+  }
+}

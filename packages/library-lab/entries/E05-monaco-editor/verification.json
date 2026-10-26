@@ -1,0 +1,22 @@
+{
+  "source": {
+    "status": "NOT_RUN",
+    "note": "待官方SDK及源文件依赖解析"
+  },
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "Monaco真实导入和诊断尚未执行"
+  },
+  "build": {
+    "status": "BLOCKED",
+    "note": "集成平台需安装 monaco-editor 并重建锁文件"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "Worker/CSP/resize/model dispose 需实浏览器E2E"
+  },
+  "isolation": {
+    "status": "BLOCKED",
+    "note": "Monaco Worker完整释放与独立隔离由 PLATFORM 评估"
+  }
+}
