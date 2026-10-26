@@ -1,4 +1,5 @@
 import {lazy,Suspense,useMemo,useState,useEffect} from 'react';
+const WorkerHost = lazy(() => import('./worker-host'));
 import {ErrorBoundary} from 'react-error-boundary';
 import type {Entry,Demo,SourceMetadata} from '../lib/types';
 import {demoLoaders} from '../generated/loaders';
@@ -6,6 +7,7 @@ import {reproductionCommand} from '../lib/reproduction.mjs';
 import {demoRunPolicy,CAPABILITY_DESCRIPTIONS} from '../lib/demo-policy.mjs';
 import {sourceLanguage} from '../lib/source-language.mjs';
 import HighlightCode from './highlight-code';
+import {workerFactories} from '../generated/worker-loaders';
 function SourceViewer({entryId,demo}:{entryId:string;demo:Demo}){
  const [files,setFiles]=useState<SourceMetadata[]>([]);
  const [selected,setSelected]=useState('');
@@ -75,10 +77,12 @@ export default function DemoHost({entry,demoId,onSelect}:{entry:Entry;demoId?:st
  const [started,setStarted]=useState(false);const [reset,setReset]=useState(0);
  const key=`${entry.entryId}/${demo?.demoId??''}`;
  const loader=demoLoaders[key];
+ const workerFactory=workerFactories[key];
  const policy=demoRunPolicy(demo);
  const Component=useMemo(()=>policy.mode==='react'&&loader?lazy(loader):null,[loader,policy.mode]);
+ const canStart=Boolean((policy.mode==='react'&&Component)||(policy.mode==='worker'&&workerFactory));
  useEffect(()=>{setStarted(false);setReset(0);},[key]);
  if(!demo)return <div className="empty"><h2>真实示例正在接入</h2><p>可以先阅读文档与 Agent 指南。当前条目未标记为已完成，也不会用模拟画面代替目标库。</p></div>;
  return <><div className="demo-toolbar"><label>学习场景 <select value={demo.demoId} onChange={e=>onSelect(e.target.value)}>{entry.demos.map(d=><option key={d.demoId} value={d.demoId}>{({basic:'入门',business:'业务',advanced:'边界'})[d.level]} · {d.title}</option>)}</select></label><span className="badge">{demo.executionKind}</span></div><p>{demo.description}</p>
- {Boolean(demo.capabilities?.length)&&<div className="tags" aria-label="运行环境能力">{demo.capabilities?.map(cap=><span className="badge" key={cap}>{CAPABILITY_DESCRIPTIONS[cap]??cap}</span>)}</div>}<div className="install"><span>安装依赖</span><code>pnpm add {entry.packages.map(p=>`${p.name}${p.version?`@${p.version}`:''}`).join(' ')}</code></div><div className="notice">示例源码已接入不等于真实运行验证通过。请核对页面上方的构建、SDK 与浏览器状态。</div><div className="demo-stage">{Component&&policy.mode==='react'?started?<ErrorBoundary key={`${key}:${reset}`} fallbackRender={({error,resetErrorBoundary})=><div role="alert"><h3>这个示例加载失败</h3><p>{String(error)}</p><button type="button" onClick={resetErrorBoundary}>重试</button></div>}><Suspense fallback={<p role="status">正在加载当前示例…</p>}><Component level={demo.level}/></Suspense></ErrorBoundary>:<div className="start-demo"><span className="play-symbol" aria-hidden="true">▷</span><h3>按需启动，不占用其他页面资源</h3><button className="primary" type="button" onClick={()=>setStarted(true)}>运行当前示例</button></div>:policy.mode==='reproduction'?<Reproduction entry={entry} demo={demo}/>:<section role="note" className="notice">{policy.mode==='react'?'当前示例尚未生成可加载的代码入口。':policy.reason}</section>}</div>{started&&<div className="demo-actions"><button type="button" onClick={()=>setReset(n=>n+1)}>重置此示例</button><button type="button" onClick={()=>setStarted(false)}>停止并卸载</button></div>}<SourceViewer entryId={entry.entryId} demo={demo}/></>;
+ {Boolean(demo.capabilities?.length)&&<div className="tags" aria-label="运行环境能力">{demo.capabilities?.map(cap=><span className="badge" key={cap}>{CAPABILITY_DESCRIPTIONS[cap]??cap}</span>)}</div>}<div className="install"><span>安装依赖</span><code>pnpm add {entry.packages.map(p=>`${p.name}${p.version?`@${p.version}`:''}`).join(' ')}</code></div><div className="notice">示例源码已接入不等于真实运行验证通过。请核对页面上方的构建、SDK 与浏览器状态。</div><div className="demo-stage">{canStart?started?<ErrorBoundary key={`${key}:${reset}`} fallbackRender={({error,resetErrorBoundary})=><div role="alert"><h3>这个示例加载失败</h3><p>{String(error)}</p><button type="button" onClick={resetErrorBoundary}>重试</button></div>}><Suspense fallback={<p role="status">正在加载当前示例…</p>}>{Component?<Component level={demo.level}/>:workerFactory?<WorkerHost createWorker={workerFactory} level={demo.level}/>:null}</Suspense></ErrorBoundary>:<div className="start-demo"><span className="play-symbol" aria-hidden="true">▷</span><h3>按需启动，不占用其他页面资源</h3><button className="primary" type="button" onClick={()=>setStarted(true)}>运行当前示例</button></div>:policy.mode==='reproduction'?<Reproduction entry={entry} demo={demo}/>:<section role="note" className="notice">{policy.mode==='react'?'当前示例尚未生成可加载的代码入口。':policy.reason}</section>}</div>{started&&<div className="demo-actions"><button type="button" onClick={()=>setReset(n=>n+1)}>重置此示例</button><button type="button" onClick={()=>setStarted(false)}>停止并卸载</button></div>}<SourceViewer entryId={entry.entryId} demo={demo}/></>;
 }

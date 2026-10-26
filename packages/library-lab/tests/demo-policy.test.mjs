@@ -23,3 +23,9 @@ test('unknown or traversal entries cannot be imported',()=>{
  assert.equal(demoRunPolicy(null).mode,'unavailable');
 });
 test('capability labels for privileged features are explicit',()=>assert.ok(CAPABILITY_DESCRIPTIONS['service-worker'].includes('独立')));
+
+test('reviewed module workers can run while service workers remain isolated',()=>{
+ assert.equal(demoRunPolicy({...base,executionKind:'worker',entryPoint:'examples/compute.worker.ts',capabilities:['web-worker']}).mode,'worker');
+ assert.equal(demoRunPolicy({...base,executionKind:'worker',entryPoint:'../secrets.ts'}).mode,'unavailable');
+ assert.equal(demoRunPolicy({...base,executionKind:'worker',capabilities:['service-worker']}).mode,'isolated');
+});

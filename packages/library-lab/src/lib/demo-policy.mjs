@@ -33,9 +33,11 @@ export function demoRunPolicy(demo) {
     mode:'reproduction',
     reason:'命令行示例只能在受控 Node.js 环境中复现，网页不会启动本地命令。',
   };
-  if (demo.executionKind === 'worker' || demo.executionKind === 'browser-frame') return {
-    mode:'isolated',
-    reason:'此示例需要独立 Worker 或沙箱页面运行器；在运行器通过隔离检查前只展示源码。',
+  if (demo.executionKind === 'worker') return safeRelativePath(demo.entryPoint) ? {
+    mode:'worker',reason:'已注册的受审查 Worker 示例可以显式启动并在离开时终止；不是不可信脚本沙箱。',
+  } : {mode:'unavailable',reason:'Worker 入口无效'};
+  if (demo.executionKind === 'browser-frame') return {
+    mode:'isolated',reason:'需要专用隔离 origin；当前不会在主站 iframe 执行此示例。',
   };
   if (demo.executionKind !== 'react' || !safeRelativePath(demo.entryPoint)) return {
     mode:'unavailable',

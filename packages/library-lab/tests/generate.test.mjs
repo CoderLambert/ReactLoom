@@ -51,3 +51,16 @@ test('source listing stays metadata-only and each source is independently retrie
  assert.equal(index[0].sha256,createHash('sha256').update(raw).digest('hex'));
  await assert.rejects(readFile(path.join(root,'public/raw/D03/sources.json')), /ENOENT/);
 });
+
+test('worker entries produce deferred Vite module-worker factories and no React import',async t=>{
+ const {root,dir}=await setup(t);
+ await writeFile(path.join(dir,'examples/calculate.worker.ts'),"self.onmessage = () => self.postMessage({type: 'result'});");
+ await writeFile(path.join(dir,'library.json'),JSON.stringify({...fixture,demos:[{demoId:'advanced',title:'Worker',level:'advanced',executionKind:'worker',entryPoint:'examples/calculate.worker.ts',sourceFiles:['examples/calculate.worker.ts'],capabilities:['web-worker']}]}));
+ const generated=await generate(root,{expectedCount:1});
+ assert.equal(generated.loaders,0);
+ const worker=await readFile(path.join(root,'src/generated/worker-loaders.ts'),'utf8');
+ assert.match(worker,/new Worker\(new URL\(/u);
+ assert.match(worker,/calculate\.worker\.ts/u);
+ const react=await readFile(path.join(root,'src/generated/loaders.ts'),'utf8');
+ assert.doesNotMatch(react,/calculate\.worker\.ts/u);
+});

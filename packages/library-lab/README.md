@@ -39,3 +39,9 @@ node packages/library-lab/scripts/find-library.mjs --group E --limit 10
 ## 静态依赖契约审核
 
 `pnpm --filter @reactloom/library-lab catalog:check` 校验目录完整性及已接入 Demo 所声明的 npm 包名称、精确版本是否与此应用的 `package.json` 一致；该审核不执行安装，也不代表 TypeScript、构建、SDK 或浏览器已经通过。新增库由 AB/CD/EF 提交元数据，PLATFORM 统一确认依赖后再执行此门禁。
+
+## Worker 演示协议
+
+经过审查的 `executionKind: worker` 条目可以提供独立 ESM Worker 模块入口，生成器产生延迟创建的 `workerFactories`；**页面只有用户点击运行时才创建 Worker**。宿主向 Worker 发送 `{type:'start',level,runId}`，Worker 使用同一 `runId` 返回 `{type:'progress'|'result'|'error',message:string,runId}`；无效或过期消息被丢弃、文本截断，退出或45秒超时后终止 Worker。Worker 非不可信代码安全边界，不支持任意脚本执行。
+
+`service-worker`、`persistent-network-interception`、`cross-origin-isolation` 等能力仍拒绝在主站运行，需独立 origin 审计。CLI/Node 示例仍仅提供可复制命令。该能力的生成器协议经过离线测试，但直到有真实条目、依赖安装和浏览器验收前，不能宣称 Worker SDK 运行 PASS。
