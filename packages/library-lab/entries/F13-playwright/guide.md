@@ -21,7 +21,7 @@ pnpm --filter @reactloom/library-lab exec playwright test --config entries/F13-p
 
 **business（请求场景）**：用 `page.route` 拦截目标固定 `https://api.lab.invalid`，提供 200、422 和 503 的 HTTP 响应。业务页面真实执行 `fetch`，测试捕获次数并断言用户看见的状态。请勿把 `page.route` 的 Mock 当成真实生产服务调用，也不要把网络Mock误认成MSW Worker。
 
-**advanced（异步回写）**：旧请求延迟，新请求更快；组件用 `AbortController` 和 generation 防护。验证最终UI只显示新结果；唯一用于等过时请求到达的有限等待应替换成更稳定的事件barrier作为后续改进。此示例虽已写源码，未安装浏览器前不能声称完成了竞态验证。
+**advanced（异步回写）**：旧请求延迟，新请求更快；组件用 `AbortController` 和 generation 防护。验证最终UI只显示新结果；示例以两个Promise barrier严格保证旧请求先被拦截、新请求完成后才释放旧响应；不用固定sleep。此示例虽已写源码，未安装浏览器前不能声称完成了竞态验证。
 
 ## 生产级要求
 

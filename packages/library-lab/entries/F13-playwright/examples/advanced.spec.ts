@@ -1,18 +1,31 @@
 import {test, expect} from '@playwright/test'
 import {racePage} from './fixtures'
 
-test('advanced: stale aborted request never overwrites the newest result', async ({page}) => {
-  let abortedOrLateOld = false
+test('advanced: abort and stale response cannot overwrite the newest result', async ({page}) => {
+  // Deterministic barriers: the old request MUST be intercepted before new begins.
+  let oldSeen!: () => void
+  let releaseOld!: () => void
+  let oldFinished!: () => void
+  const interceptedOld = new Promise<void>(resolve => {oldSeen = resolve})
+  const oldBarrier = new Promise<void>(resolve => {releaseOld = resolve})
+  const finishedOld = new Promise<void>(resolve => {oldFinished = resolve})
+  let oldHandlerRan = false
   await page.route('https://api.lab.invalid/items**', async route => {
     const q = new URL(route.request().url()).searchParams.get('q')
     if (q === 'old') {
-      await new Promise(resolve => setTimeout(resolve, 280))
+      oldHandlerRan = true
+      oldSeen()
       try {
+        await oldBarrier
+        // If AbortController already cancelled fetch, fulfill can reject; that's
+        // expected. The important contract is the visible newest result.
         await route.fulfill({status: 200, contentType: 'application/json',
           headers: {'access-control-allow-origin': '*'},
           body: JSON.stringify({label: '旧结果'})})
       } catch {
-        abortedOrLateOld = true // Expected when browser aborts a pending fetch.
+        // The browser cancelled the old network request.
+      } finally {
+        oldFinished()
       }
     } else {
       await route.fulfill({status: 200, contentType: 'application/json',
@@ -22,10 +35,11 @@ test('advanced: stale aborted request never overwrites the newest result', async
   })
   await page.setContent(racePage)
   await page.getByRole('button', {name: '旧版本'}).click()
+  await interceptedOld
   await page.getByRole('button', {name: '新版本'}).click()
   await expect(page.getByRole('status')).toHaveText('新结果')
-  // The old response may be cancelled or arrive later. In neither case may it replace new.
-  await page.waitForTimeout(350)
+  releaseOld()
+  await finishedOld
   await expect(page.getByRole('status')).toHaveText('新结果')
-  expect(typeof abortedOrLateOld).toBe('boolean')
+  expect(oldHandlerRan).toBe(true)
 })
