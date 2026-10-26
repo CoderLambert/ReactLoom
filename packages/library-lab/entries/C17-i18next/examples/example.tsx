@@ -16,10 +16,10 @@ export const resources = {
   },
 };
 
-export function createLocalI18next() {
+export async function createLocalI18next() {
   const instance = createInstance();
   // Each demo owns an instance; never mutate the app-wide singleton.
-  void instance.init({
+  await instance.init({
     lng: 'zh', fallbackLng: 'en', supportedLngs: ['zh', 'en'],
     defaultNS: 'common', ns: ['common', 'news'], resources,
     initAsync: false, interpolation: {escapeValue: true},
@@ -37,14 +37,13 @@ export default function I18nextWorkshop({level}: {level: Level}) {
 
   useEffect(() => {
     let alive = true;
-    const local = createInstance();
-    void local.init({
-      lng: 'zh', fallbackLng: 'en', supportedLngs: ['zh', 'en'],
-      ns: ['common', 'news'], defaultNS: 'common', resources,
-      initAsync: false, interpolation: {escapeValue: true},
-    }).then(() => {if (alive) setInstance(local);})
-      .catch(error => {if (alive) setNotice(String(error));});
-    return () => {alive = false; request.current++; local.destroy();};
+    let owned: i18n | null = null;
+    void createLocalI18next().then(local => {
+      if (!alive) {local.destroy(); return;}
+      owned = local;
+      setInstance(local);
+    }).catch(error => {if (alive) setNotice(String(error));});
+    return () => {alive = false; request.current++; owned?.destroy();};
   }, []);
 
   async function switchLanguage(next: Language) {
