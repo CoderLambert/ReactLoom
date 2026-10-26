@@ -39,7 +39,7 @@ export default function D3Workshop({level}:Props){
     svg.append('text').attr('x',m.left).attr('y',15).attr('fill','currentColor')
       .attr('font-size','11').text('阅读数 / 收藏数');
     if(level==='basic'){
-      svg.append('g').selectAll('rect').data(data,d=>d.day).join('rect')
+      svg.append('g').selectAll('rect').data(data).join('rect')
         .attr('x',d=>scaleX(d.day)??0).attr('width',scaleX.bandwidth())
         .attr('y',d=>scaleY(d.views)).attr('height',d=>scaleY(0)-scaleY(d.views))
         .attr('rx',3).attr('fill','#357761')
@@ -52,7 +52,7 @@ export default function D3Workshop({level}:Props){
         .attr('stroke','#357761').attr('stroke-width',3);
       svg.append('path').datum(data).attr('d',savesLine).attr('fill','none')
         .attr('stroke','#ce8557').attr('stroke-width',2);
-      svg.selectAll('circle').data(data,d=>d.day).join('circle')
+      svg.selectAll('circle').data(data).join('circle')
         .attr('cx',center).attr('cy',d=>scaleY(d.views)).attr('r',5)
         .attr('fill','#357761').style('cursor','pointer')
         .on('pointerenter',(_,d)=>setSelected(d.day));

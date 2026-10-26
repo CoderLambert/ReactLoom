@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState,type CSSProperties} from 'react';
 import {DndContext,KeyboardSensor,PointerSensor,closestCenter,useSensor,useSensors,type DragEndEvent} from '@dnd-kit/core';
 import {SortableContext,arrayMove,sortableKeyboardCoordinates,useSortable,verticalListSortingStrategy} from '@dnd-kit/sortable';
 type Props={level:'basic'|'business'|'advanced'};
@@ -10,7 +10,7 @@ const INITIAL:Item[]=[
 ];
 function SortableRow({item,index,total,move,lockable}:{item:Item;index:number;total:number;move:(id:string,direction:number)=>void;lockable:boolean}){
   const {attributes,listeners,setNodeRef,setActivatorNodeRef,transform,transition,isDragging}=useSortable({id:item.id,disabled:item.locked});
-  const style:React.CSSProperties={
+  const style:CSSProperties={
     transform:transform?'translate3d('+transform.x+'px,'+transform.y+'px,0) scale('+transform.scaleX+','+transform.scaleY+')':undefined,
     transition,opacity:isDragging?0.45:1,display:'flex',alignItems:'center',gap:10,padding:12,
     border:'1px solid #b5ccbd',borderRadius:8,background:'white',marginBottom:8,
