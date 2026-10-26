@@ -1,1 +1,98 @@
-{"schemaVersion":1,"entryId":"D04","slug":"p-queue","name":"p-queue","group":"D","summary":"任务队列、并发与速率控制","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "D04",
+  "slug": "p-queue",
+  "name": "p-queue",
+  "group": "D",
+  "summary": "并发、滑动窗口限流与任务优先级调度",
+  "tags": [
+    "队列",
+    "限流",
+    "取消",
+    "RSS"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "p-queue",
+      "version": "10.0.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "官方 v10.0.0 文档与源码",
+      "url": "https://github.com/sindresorhus/p-queue/tree/v10.0.0"
+    },
+    {
+      "title": "官方 Releases",
+      "url": "https://github.com/sindresorhus/p-queue/releases"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "D03",
+      "relation": "alternative",
+      "reason": "仅需限制同时执行的任务数时优先轻量 p-limit；p-queue 支持速率窗口与暂停优先级。"
+    },
+    {
+      "entryId": "D08",
+      "relation": "complements",
+      "reason": "p-queue 控制发起频率；Ky 负责单次 HTTP 重试、超时和响应错误。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "真正的并发池和批量任务状态",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "timer"
+      ],
+      "description": "真正的并发池和批量任务状态"
+    },
+    {
+      "demoId": "business",
+      "title": "RSS 并发和每窗口请求额度",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "timer"
+      ],
+      "description": "RSS 并发和每窗口请求额度"
+    },
+    {
+      "demoId": "advanced",
+      "title": "失败隔离、队列取消与排队任务拒绝",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "timer"
+      ],
+      "description": "失败隔离、队列取消与排队任务拒绝"
+    }
+  ],
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "参考历史研究并重新核验官方版本编写示例；历史测试没有迁移为本条 PASS。"
+  },
+  "license": {
+    "spdx": "MIT",
+    "note": "仅演示本地确定性 fixture，不请求外部 API"
+  }
+}

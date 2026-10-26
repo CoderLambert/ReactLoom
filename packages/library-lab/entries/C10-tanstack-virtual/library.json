@@ -1,1 +1,96 @@
-{"schemaVersion":1,"entryId":"C10","slug":"tanstack-virtual","name":"TanStack Virtual","group":"C","summary":"底层虚拟化布局控制","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "C10",
+  "slug": "tanstack-virtual",
+  "name": "TanStack Virtual",
+  "group": "C",
+  "summary": "Headless 列表虚拟化、变高测量与稳定业务键",
+  "tags": [
+    "虚拟化",
+    "Headless",
+    "可变高度",
+    "React 19"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "@tanstack/react-virtual",
+      "version": "3.14.21"
+    }
+  ],
+  "references": [
+    {
+      "title": "TanStack React Virtual 官方API",
+      "url": "https://tanstack.com/virtual/latest/docs/framework/react/react-virtual"
+    },
+    {
+      "title": "Virtualizer API",
+      "url": "https://tanstack.com/virtual/latest/docs/api/virtualizer"
+    },
+    {
+      "title": "TanStack Virtual Releases",
+      "url": "https://github.com/TanStack/virtual/releases"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "C09",
+      "relation": "alternative",
+      "reason": "常规变高列表优先评估自动测量和较完整的业务 API 的 React Virtuoso。"
+    },
+    {
+      "entryId": "C07",
+      "relation": "complements",
+      "reason": "业务表格由 Table 管行模型，Virtual 专注可见行，搭配使用但不替代分页。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "八千条文章的基础虚拟窗口",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [],
+      "description": "八千条文章的基础虚拟窗口"
+    },
+    {
+      "demoId": "business",
+      "title": "按需筛选、稳定业务键与滚动定位",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [],
+      "description": "按需筛选、稳定业务键与滚动定位"
+    },
+    {
+      "demoId": "advanced",
+      "title": "展开行重新测量、滚动区间和深度跳转",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [],
+      "description": "展开行重新测量、滚动区间和深度跳转"
+    }
+  ],
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "按官方稳定版本与旧研究重新实现；历史测试不算本次运行验收。"
+  },
+  "license": {
+    "spdx": "MIT",
+    "note": "自有确定性模拟文章数据；无收费资源及外部网络请求"
+  }
+}
