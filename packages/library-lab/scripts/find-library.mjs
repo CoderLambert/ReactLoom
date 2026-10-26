@@ -10,7 +10,7 @@ const DEFAULT_ROOT=fileURLToPath(new URL('../entries/',import.meta.url));
 const USAGE=`ReactLoom Library Lab — agent-friendly local catalogue
 Usage:
   node scripts/find-library.mjs --query '并发' [--group D] [--limit 8] [--json]
-  node scripts/find-library.mjs --id D03 [--agent]
+  node scripts/find-library.mjs --id D03 [--agent] [--related]
   node scripts/find-library.mjs --group A [--json]
 
 The catalogue is research metadata, not proof that an SDK has passed runtime tests.
@@ -55,13 +55,23 @@ export async function loadEntries(entriesRoot=DEFAULT_ROOT){
  return found;
 }
 
+/** Explain alternative/complement/migration links directly to another coding agent. */
+export function relatedEntries(entry,entries){
+ const byId=new Map(entries.map(item=>[item.entryId,item]));
+ return (entry.related??[]).flatMap(relation=>{
+  const target=byId.get(relation.entryId);
+  return target?[{id:target.entryId,name:target.name,summary:target.summary,relation:relation.relation,reason:relation.reason,paths:agentPaths(target)}]:[];
+ });
+}
+
 export function parseArgs(argv){
- const opts={query:'',group:undefined,entryId:undefined,limit:8,json:false,agent:false,help:false};
+ const opts={query:'',group:undefined,entryId:undefined,limit:8,json:false,agent:false,related:false,help:false};
  const named=new Set(['--query','--group','--id','--limit']);
  for(let i=0;i<argv.length;i++){
   const flag=argv[i];
   if(flag==='--json'){opts.json=true;continue;}
   if(flag==='--agent'){opts.agent=true;continue;}
+  if(flag==='--related'){opts.related=true;continue;}
   if(flag==='--help'||flag==='-h'){opts.help=true;continue;}
   if(!named.has(flag) || i===argv.length-1 || argv[i+1].startsWith('--'))throw new Error(`Invalid argument: ${flag}`);
   const value=argv[++i];
@@ -74,6 +84,7 @@ export function parseArgs(argv){
  if(opts.entryId && !/^[A-F]\d{2}$/u.test(opts.entryId))throw new Error('Entry ID must look like A01');
  if(!Number.isInteger(opts.limit)||opts.limit<1||opts.limit>30)throw new Error('Limit must be 1–30');
  if(opts.agent && !opts.entryId)throw new Error('--agent requires --id');
+ if(opts.related && !opts.entryId)throw new Error('--related requires --id');
  return opts;
 }
 
@@ -88,11 +99,16 @@ export async function runCli(argv,{entriesRoot=DEFAULT_ROOT,write=console.log}={
  if(!opts.query && !opts.group && !opts.entryId){write(USAGE);return 0;}
  const entries=await loadEntries(entriesRoot);
  const selected=searchEntries(entries,opts);
- const output=selected.map(entry=>({id:entry.entryId,name:entry.name,summary:entry.summary,group:entry.group,contentState:entry.contentState,packages:entry.packages,paths:agentPaths(entry)}));
+ const output=selected.map(entry=>({id:entry.entryId,name:entry.name,summary:entry.summary,group:entry.group,contentState:entry.contentState,packages:entry.packages,paths:agentPaths(entry),...(opts.related?{related:relatedEntries(entry,entries)}:{})}));
  if(opts.json){write(JSON.stringify({count:selected.length,results:output},null,2));return selected.length?0:2;}
  if(!selected.length){write('未找到对应条目。请调整关键词、分组或编号。');return 2;}
  for(const item of output){
   write(`${item.id}  ${item.name} · ${GROUPS[item.group]}\n  ${item.summary}\n  Agent: ${item.paths.agent}\n  Demo: ${item.paths.examples}\n  Evidence: ${item.paths.verification}\n  内容状态: ${item.contentState}（不代表 SDK 已验收）`);
+ }
+ if(opts.related){
+  for(const item of output){
+   write(item.related?.length ? '关联库：\n' + item.related.map(r=>'  '+r.relation+' → '+r.id+' '+r.name+': '+r.reason+'\n  Agent: '+r.paths.agent).join('\n') : '暂无已确认的关联库。');
+  }
  }
  if(opts.agent){
   const target=path.join(entriesRoot,selected[0].directory,'agent.md');

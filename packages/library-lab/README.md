@@ -28,6 +28,7 @@ pnpm --filter @reactloom/library-lab test:e2e
 ```sh
 node packages/library-lab/scripts/find-library.mjs --query "并发" --json
 node packages/library-lab/scripts/find-library.mjs --id D03 --agent
+node packages/library-lab/scripts/find-library.mjs --id D03 --related --json
 node packages/library-lab/scripts/find-library.mjs --group E --limit 10
 ```
 
