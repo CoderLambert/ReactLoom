@@ -11,3 +11,29 @@ test('generates exact source hashes, lazy loaders and raw markdown',async t=>{co
 test('rejects missing SDK demo source rather than silently downgrade',async t=>{const{root,dir}=await setup(t);await rm(path.join(dir,'examples/demo.tsx'));await assert.rejects(generate(root,{expectedCount:1}),/ENOENT/);});
 test('rejects unknown relationship target',async t=>{const{root,dir}=await setup(t);await writeFile(path.join(dir,'library.json'),JSON.stringify({...fixture,related:[{entryId:'A01',relation:'complements',reason:'组合'}]}));await assert.rejects(generate(root,{expectedCount:1}),/unknown related/);});
 test('catalogue generation is repeatable',async t=>{const{root}=await setup(t);await generate(root,{expectedCount:1});const a=await readFile(path.join(root,'public/catalog.json'),'utf8');await generate(root,{expectedCount:1});assert.equal(await readFile(path.join(root,'public/catalog.json'),'utf8'),a);});
+
+
+test('source verification passes are invalidated after unverified source change',async t=>{
+  const {root,dir}=await setup(t);
+  await writeFile(path.join(dir,'verification.json'),JSON.stringify({sdk:{status:'PASS',command:'node test',evidence:'artifact-1',sourceFingerprint:'old-hash'}}));
+  await generate(root,{expectedCount:1});
+  const entry=JSON.parse(await readFile(path.join(root,'public/catalog.json'),'utf8'))[0];
+  assert.equal(entry.verification.sdk.status,'NOT_RUN');
+  assert.match(entry.verification.sdk.note,/STALE/);
+  assert.equal(entry.sourceFingerprint.length,64);
+  await writeFile(path.join(dir,'verification.json'),JSON.stringify({sdk:{status:'PASS',command:'node test',evidence:'artifact-1',sourceFingerprint:entry.sourceFingerprint}}));
+  await generate(root,{expectedCount:1});
+  const accepted=JSON.parse(await readFile(path.join(root,'public/catalog.json'),'utf8'))[0];
+  assert.equal(accepted.verification.sdk.status,'PASS');
+});
+
+test('only small local raster assets are copied into the generated raw folder',async t=>{
+  const {root,dir}=await setup(t);
+  await mkdir(path.join(dir,'assets'),{recursive:true});
+  const png=Buffer.from([137,80,78,71,13,10,26,10]);
+  await writeFile(path.join(dir,'assets/chart.png'),png);
+  await writeFile(path.join(dir,'assets/script.svg'),'<svg onload="alert(1)"/>');
+  await generate(root,{expectedCount:1});
+  assert.deepEqual(await readFile(path.join(root,'public/raw/D03/assets/chart.png')),png);
+  await assert.rejects(readFile(path.join(root,'public/raw/D03/assets/script.svg')), /ENOENT/);
+});

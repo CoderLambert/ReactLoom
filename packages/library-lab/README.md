@@ -18,5 +18,5 @@ pnpm --filter @reactloom/library-lab test:e2e
 
 源码、guide.md、agent.md 与相关关系按 `entries/<ID>-<slug>` 组织。运行 `catalog:generate` 生成原文、源码哈希、动态loader和根索引。主站不自动运行下载大型SDK，不把未接入条目伪装成真实效果。
 
-当前实现：目录搜索、分类、四Tab深链接、Markdown安全渲染、原文复制、源码manifest、显式启动/停止、局部错误边界，clsx与p-limit三层示例源码。
-待完善：全量指南与示例、Markdown目录/高亮/相对资源、Worker/SW独立runner、完整CI与锁文件、真实浏览器与性能证据。
+当前实现：119条目录与分类搜索（含移动端）、四Tab深链接、安全Markdown原文/目录与按需 Shiki 高亮、源码SHA-256清单、显式启动/停止、CLI可复现命令提示、sourceFingerprint 证据失效判定、局部错误边界。已接入13个库的真实SDK调用源码（含非Web MSW Node 入口），真实构建/SDK/浏览器状态仍未完成。
+待完善：剩余106条完整垂直示例与指南、Worker/SW独立 runner、真实依赖锁文件、CI与浏览器/性能证据。文档图片仅允许本地审核过的 raster 资产。
