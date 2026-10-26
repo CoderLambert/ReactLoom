@@ -29,3 +29,8 @@
 
 pnpm --filter @reactloom/library-lab dev
 端口4319。首次需要真实pnpm安装及锁文件更新。产物不默认公开；原研究全文仍待按条目审查导入。
+
+
+## 第1轮公共平台增强（2026-10-27）
+
+新增离线 `library:find` 命令给 Agent 精准查找库说明、示例及验证路径；源码面板改为每文件按需请求+摘要校验，不再一次下载整库源代码；`catalog:check` 增加实际依赖声明静态一致性。离线 Node `test` 与要求真实 SDK 的 `test:sdk` 严格分离。以上仅代表代码与离线逻辑层交付，不表示生产依赖与浏览器已经验收。详见 `progress/PLATFORM.md`。
