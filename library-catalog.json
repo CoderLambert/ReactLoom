@@ -675,17 +675,17 @@
     "entryId": "E03",
     "name": "Lexical",
     "group": "E",
-    "summary": "可扩展编辑器状态模型",
+    "summary": "结构化富文本编辑：真实 EditorState、React Composer、草稿 JSON 和格式命令",
     "path": "packages/library-lab/entries/E03-lexical",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "E04",
     "name": "CodeMirror 6",
     "group": "E",
-    "summary": "模块化代码编辑器",
+    "summary": "模块化源代码编辑器：真实 EditorState / EditorView、草稿恢复、可更新配置与卸载",
     "path": "packages/library-lab/entries/E04-codemirror6",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "E05",
@@ -693,7 +693,7 @@
     "group": "E",
     "summary": "IDE 级代码编辑与 Worker",
     "path": "packages/library-lab/entries/E05-monaco-editor",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "E06",
@@ -701,31 +701,31 @@
     "group": "E",
     "summary": "安全的 React Markdown 展示",
     "path": "packages/library-lab/entries/E06-react-markdown",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "E07",
     "name": "remark",
     "group": "E",
-    "summary": "Markdown AST 处理流水线",
+    "summary": "Markdown 结构化处理：真实 mdast 解析、GFM 规范化和危险链接审计",
     "path": "packages/library-lab/entries/E07-remark",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "E08",
     "name": "rehype",
     "group": "E",
-    "summary": "HTML AST 处理与转换",
+    "summary": "HTML AST 转换与安全输出：rehype-sanitize 净化及沙箱预览",
     "path": "packages/library-lab/entries/E08-rehype",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "E09",
     "name": "Shiki",
     "group": "E",
-    "summary": "代码语法高亮",
+    "summary": "只读代码语法着色：按需 token 化，使用 React 文本节点安全渲染",
     "path": "packages/library-lab/entries/E09-shiki",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "E10",
@@ -733,7 +733,7 @@
     "group": "E",
     "summary": "HTML 净化和输出安全",
     "path": "packages/library-lab/entries/E10-dompurify",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "E11",

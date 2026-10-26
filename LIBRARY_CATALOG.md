@@ -88,13 +88,13 @@
 |D21|Pagefind|构建时静态站点全文搜索|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D21-pagefind/)|
 |E01|Tiptap|富文本编辑器和扩展|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E01-tiptap/)|
 |E02|BlockNote|块级文档编辑体验|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E02-blocknote/)|
-|E03|Lexical|可扩展编辑器状态模型|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E03-lexical/)|
-|E04|CodeMirror 6|模块化代码编辑器|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E04-codemirror6/)|
+|E03|Lexical|结构化富文本编辑：真实 EditorState、React Composer、草稿 JSON 和格式命令|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E03-lexical/)|
+|E04|CodeMirror 6|模块化源代码编辑器：真实 EditorState / EditorView、草稿恢复、可更新配置与卸载|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E04-codemirror6/)|
 |E05|Monaco Editor|IDE 级代码编辑与 Worker|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E05-monaco-editor/)|
 |E06|react-markdown|安全的 React Markdown 展示|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E06-react-markdown/)|
-|E07|remark|Markdown AST 处理流水线|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E07-remark/)|
-|E08|rehype|HTML AST 处理与转换|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E08-rehype/)|
-|E09|Shiki|代码语法高亮|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E09-shiki/)|
+|E07|remark|Markdown 结构化处理：真实 mdast 解析、GFM 规范化和危险链接审计|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E07-remark/)|
+|E08|rehype|HTML AST 转换与安全输出：rehype-sanitize 净化及沙箱预览|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E08-rehype/)|
+|E09|Shiki|只读代码语法着色：按需 token 化，使用 React 文本节点安全渲染|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E09-shiki/)|
 |E10|DOMPurify|HTML 净化和输出安全|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E10-dompurify/)|
 |E11|Streamdown|增量流式 Markdown 展示|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E11-streamdown/)|
 |E12|assistant-ui|聊天界面和运行时交互|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E12-assistant-ui/)|
