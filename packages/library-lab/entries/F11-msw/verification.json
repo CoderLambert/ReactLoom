@@ -1,0 +1,22 @@
+{
+  "source": {
+    "status": "NOT_RUN",
+    "note": "仅审查官方API文档，未实际解析SDK"
+  },
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "node-runner.mjs 已编写，但缺实际 msw 安装/运行"
+  },
+  "build": {
+    "status": "BLOCKED",
+    "note": "需要 PLATFORM 添加 msw@3.0.3 至 package/lock"
+  },
+  "browser": {
+    "status": "BLOCKED",
+    "note": "需要独立 /lab-runners/msw/ iframe + worker script + 作用域实测"
+  },
+  "security": {
+    "status": "NOT_RUN",
+    "note": "scope/unregister/onUnhandledFrame 需E2E验证"
+  }
+}

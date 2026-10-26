@@ -1,0 +1,18 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "useDropzone真实SDK未安装执行"
+  },
+  "build": {
+    "status": "BLOCKED",
+    "note": "react-dropzone@20.1.4待PLATFORM加入锁文件"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "文件对话框/drag-drop/快速切换/键盘待真实E2E"
+  },
+  "security": {
+    "status": "NOT_RUN",
+    "note": "文件内容仅本地读取行为需通过网络观测核验"
+  }
+}

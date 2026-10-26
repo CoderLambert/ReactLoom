@@ -1,0 +1,18 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "需安装 dompurify@3.4.17 并真实调用"
+  },
+  "build": {
+    "status": "BLOCKED",
+    "note": "依赖版本/锁文件由 PLATFORM 集成"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "危险 DOM 属性和请求网络需 Playwright 验证"
+  },
+  "security": {
+    "status": "NOT_RUN",
+    "note": "XSS 用例尚未真实执行"
+  }
+}

@@ -1,1 +1,124 @@
-{"schemaVersion":1,"entryId":"E06","slug":"react-markdown","name":"react-markdown","group":"E","summary":"安全的 React Markdown 展示","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "E06",
+  "slug": "react-markdown",
+  "name": "react-markdown",
+  "group": "E",
+  "summary": "安全的 React Markdown 展示",
+  "tags": [
+    "Markdown",
+    "GFM",
+    "XSS",
+    "rehype",
+    "remark"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "react-markdown",
+      "version": "10.1.0"
+    },
+    {
+      "name": "remark-gfm",
+      "version": "4.0.1"
+    },
+    {
+      "name": "rehype-sanitize",
+      "version": "6.0.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "react-markdown 官方仓库",
+      "url": "https://github.com/remarkjs/react-markdown"
+    },
+    {
+      "title": "remark-gfm 官方仓库",
+      "url": "https://github.com/remarkjs/remark-gfm"
+    },
+    {
+      "title": "rehype-sanitize 官方仓库",
+      "url": "https://github.com/rehypejs/rehype-sanitize"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "E07",
+      "relation": "complements",
+      "reason": "remark 插件操作 Markdown AST，适合在渲染前规范化文档结构。"
+    },
+    {
+      "entryId": "E08",
+      "relation": "complements",
+      "reason": "rehype 处理 HAST；只有审查过的插件才能进入不可信内容流水线。"
+    },
+    {
+      "entryId": "E09",
+      "relation": "complements",
+      "reason": "Shiki 适合将代码块转换为更易读的静态高亮 HTML。"
+    },
+    {
+      "entryId": "E10",
+      "relation": "alternative",
+      "reason": "需要受信任策略下处理 HTML 字符串时可评估 DOMPurify；Markdown 默认不执行 HTML。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "Markdown 最小渲染",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "markdown",
+        "safe-render"
+      ],
+      "description": "文本、标题、链接和代码片段的 React 元素展示。"
+    },
+    {
+      "demoId": "business",
+      "title": "技术报告 GFM 表格",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "markdown",
+        "safe-render"
+      ],
+      "description": "真实 GFM 表格、任务清单和文档结构，编辑原文即时更新。"
+    },
+    {
+      "demoId": "advanced",
+      "title": "不可信输入安全测试",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "markdown",
+        "safe-render"
+      ],
+      "description": "通过恶意 URL 与内联 HTML 检查禁用脚本、清理路径和自定义元素。"
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "assets": "原创 Markdown 场景文本"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "依据官方API新写示例；不继承历史测试结果。"
+  }
+}
