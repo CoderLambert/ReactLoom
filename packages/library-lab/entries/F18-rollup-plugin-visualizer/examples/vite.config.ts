@@ -28,7 +28,7 @@ export default defineConfig(({ mode }) => {
       outDir: path.join(examples, 'reports', 'dist-' + mode),
       emptyOutDir: true,
       sourcemap: false,
-      minify: 'esbuild',
+      minify: 'oxc',
     },
   };
 });
