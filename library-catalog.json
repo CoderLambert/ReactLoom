@@ -1,0 +1,954 @@
+[
+  {
+    "entryId": "A01",
+    "name": "Apache ECharts",
+    "group": "A",
+    "summary": "业务仪表盘和多类型交互图表",
+    "path": "packages/library-lab/entries/A01-echarts",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "A02",
+    "name": "Recharts",
+    "group": "A",
+    "summary": "React 声明式 SVG 图表与可访问数据表",
+    "path": "packages/library-lab/entries/A02-recharts",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "A03",
+    "name": "Chart.js",
+    "group": "A",
+    "summary": "模块化 Canvas 图表与 React 生命周期边界",
+    "path": "packages/library-lab/entries/A03-chartjs",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "A04",
+    "name": "uPlot",
+    "group": "A",
+    "summary": "高频时间序列和紧凑趋势图",
+    "path": "packages/library-lab/entries/A04-uplot",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "A05",
+    "name": "D3",
+    "group": "A",
+    "summary": "数据映射、比例尺和自定义可视化",
+    "path": "packages/library-lab/entries/A05-d3",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "A06",
+    "name": "React Flow",
+    "group": "A",
+    "summary": "节点连线与可编辑流程编排",
+    "path": "packages/library-lab/entries/A06-react-flow",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "A07",
+    "name": "AntV G6",
+    "group": "A",
+    "summary": "关系图布局和图分析",
+    "path": "packages/library-lab/entries/A07-antv-g6",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "A08",
+    "name": "Mermaid",
+    "group": "A",
+    "summary": "以文本维护流程图与架构图",
+    "path": "packages/library-lab/entries/A08-mermaid",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "A09",
+    "name": "Excalidraw",
+    "group": "A",
+    "summary": "手绘风格协作草图与白板",
+    "path": "packages/library-lab/entries/A09-excalidraw",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "A10",
+    "name": "tldraw",
+    "group": "A",
+    "summary": "可扩展画布编辑器和白板",
+    "path": "packages/library-lab/entries/A10-tldraw",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "A11",
+    "name": "Konva",
+    "group": "A",
+    "summary": "二维 Canvas 场景图和图形操作",
+    "path": "packages/library-lab/entries/A11-konva",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "A12",
+    "name": "react-konva",
+    "group": "A",
+    "summary": "React 声明式二维画布",
+    "path": "packages/library-lab/entries/A12-react-konva",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "A13",
+    "name": "Three.js",
+    "group": "A",
+    "summary": "三维场景、材质、模型和渲染",
+    "path": "packages/library-lab/entries/A13-threejs",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "A14",
+    "name": "React Three Fiber",
+    "group": "A",
+    "summary": "React 声明式三维渲染",
+    "path": "packages/library-lab/entries/A14-react-three-fiber",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "A15",
+    "name": "Leaflet",
+    "group": "A",
+    "summary": "轻量二维地图与标记",
+    "path": "packages/library-lab/entries/A15-leaflet",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "A16",
+    "name": "MapLibre GL JS",
+    "group": "A",
+    "summary": "矢量地图样式、数据源和图层",
+    "path": "packages/library-lab/entries/A16-maplibre-gl-js",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "A17",
+    "name": "deck.gl",
+    "group": "A",
+    "summary": "GPU 大规模地理数据图层",
+    "path": "packages/library-lab/entries/A17-deckgl",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "B01",
+    "name": "Motion for React",
+    "group": "B",
+    "summary": "React 入场/离场、列表布局过渡与减少动画偏好",
+    "path": "packages/library-lab/entries/B01-motion-for-react",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "B02",
+    "name": "GSAP",
+    "group": "B",
+    "summary": "时间线与复杂编排动画",
+    "path": "packages/library-lab/entries/B02-gsap",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "B03",
+    "name": "react-spring",
+    "group": "B",
+    "summary": "弹簧动画与自然交互",
+    "path": "packages/library-lab/entries/B03-react-spring",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "B04",
+    "name": "dotLottie 播放器",
+    "group": "B",
+    "summary": "dotLottie 动画资源播放",
+    "path": "packages/library-lab/entries/B04-dotlottie",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "B05",
+    "name": "Rive React Runtime",
+    "group": "B",
+    "summary": "Rive 状态机动画与 React 集成",
+    "path": "packages/library-lab/entries/B05-rive-react",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "B06",
+    "name": "Ant Design",
+    "group": "B",
+    "summary": "企业级 React 组件与表单",
+    "path": "packages/library-lab/entries/B06-ant-design",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "B07",
+    "name": "MUI",
+    "group": "B",
+    "summary": "Material Design React 组件",
+    "path": "packages/library-lab/entries/B07-mui",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "B08",
+    "name": "Mantine",
+    "group": "B",
+    "summary": "React 组件与应用交互工具",
+    "path": "packages/library-lab/entries/B08-mantine",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "B09",
+    "name": "shadcn/ui",
+    "group": "B",
+    "summary": "自有源码设计系统和组件组合",
+    "path": "packages/library-lab/entries/B09-shadcn-ui",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "B10",
+    "name": "Base UI",
+    "group": "B",
+    "summary": "无样式可访问组件原语",
+    "path": "packages/library-lab/entries/B10-base-ui",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "B11",
+    "name": "Radix Primitives",
+    "group": "B",
+    "summary": "复杂组件交互与焦点原语",
+    "path": "packages/library-lab/entries/B11-radix-primitives",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "B12",
+    "name": "React Aria",
+    "group": "B",
+    "summary": "可访问交互与国际化组件",
+    "path": "packages/library-lab/entries/B12-react-aria",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "B13",
+    "name": "dnd-kit",
+    "group": "B",
+    "summary": "排序、传感器和自定义拖拽",
+    "path": "packages/library-lab/entries/B13-dnd-kit",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "B14",
+    "name": "Pragmatic drag and drop",
+    "group": "B",
+    "summary": "底层拖放事件与跨容器交互",
+    "path": "packages/library-lab/entries/B14-pragmatic-drag-and-drop",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "B15",
+    "name": "react-grid-layout",
+    "group": "B",
+    "summary": "可拖动缩放的响应式仪表盘",
+    "path": "packages/library-lab/entries/B15-react-grid-layout",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "B16",
+    "name": "react-resizable-panels",
+    "group": "B",
+    "summary": "可调整尺寸的面板布局",
+    "path": "packages/library-lab/entries/B16-react-resizable-panels",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "B17",
+    "name": "Floating UI",
+    "group": "B",
+    "summary": "浮层定位、碰撞和焦点管理",
+    "path": "packages/library-lab/entries/B17-floating-ui",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "B18",
+    "name": "cmdk",
+    "group": "B",
+    "summary": "可访问命令菜单、搜索分组与中文输入法快捷键",
+    "path": "packages/library-lab/entries/B18-cmdk",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "B19",
+    "name": "Embla Carousel",
+    "group": "B",
+    "summary": "可访问的触控轮播、滑动吸附和动态卡片",
+    "path": "packages/library-lab/entries/B19-embla-carousel",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "B20",
+    "name": "Sonner",
+    "group": "B",
+    "summary": "即时通知和操作反馈",
+    "path": "packages/library-lab/entries/B20-sonner",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "B21",
+    "name": "react-motion（历史迁移）",
+    "group": "B",
+    "summary": "历史弹簧动画识别与现代迁移",
+    "path": "packages/library-lab/entries/B21-react-motion-migration",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "B22",
+    "name": "react-beautiful-dnd（历史迁移）",
+    "group": "B",
+    "summary": "历史拖拽库识别与迁移",
+    "path": "packages/library-lab/entries/B22-react-beautiful-dnd-migration",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "C01",
+    "name": "React Hook Form",
+    "group": "C",
+    "summary": "真实 RSS 订阅表单：动态字段、服务端错误映射与请求取消",
+    "path": "packages/library-lab/entries/C01-react-hook-form",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "C02",
+    "name": "Zod",
+    "group": "C",
+    "summary": "TypeScript 运行时数据校验",
+    "path": "packages/library-lab/entries/C02-zod",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "C03",
+    "name": "Valibot",
+    "group": "C",
+    "summary": "模块化类型安全数据校验",
+    "path": "packages/library-lab/entries/C03-valibot",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "C04",
+    "name": "JSON Forms",
+    "group": "C",
+    "summary": "JSON Schema 驱动动态表单",
+    "path": "packages/library-lab/entries/C04-jsonforms",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "C05",
+    "name": "Ajv",
+    "group": "C",
+    "summary": "JSON Schema 验证与编译",
+    "path": "packages/library-lab/entries/C05-ajv",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "C06",
+    "name": "IMask",
+    "group": "C",
+    "summary": "输入掩码、格式化和光标维护",
+    "path": "packages/library-lab/entries/C06-imask",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "C07",
+    "name": "TanStack Table",
+    "group": "C",
+    "summary": "Headless 表格、排序和分页",
+    "path": "packages/library-lab/entries/C07-tanstack-table",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "C08",
+    "name": "AG Grid",
+    "group": "C",
+    "summary": "复杂数据网格与编辑",
+    "path": "packages/library-lab/entries/C08-ag-grid",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "C09",
+    "name": "React Virtuoso",
+    "group": "C",
+    "summary": "动态高度列表虚拟化",
+    "path": "packages/library-lab/entries/C09-react-virtuoso",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "C10",
+    "name": "TanStack Virtual",
+    "group": "C",
+    "summary": "底层虚拟化布局控制",
+    "path": "packages/library-lab/entries/C10-tanstack-virtual",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "C11",
+    "name": "react-arborist",
+    "group": "C",
+    "summary": "虚拟化树形数据与拖拽",
+    "path": "packages/library-lab/entries/C11-react-arborist",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "C12",
+    "name": "FullCalendar",
+    "group": "C",
+    "summary": "事件日历、时区和排程",
+    "path": "packages/library-lab/entries/C12-fullcalendar",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "C13",
+    "name": "Frappe Gantt",
+    "group": "C",
+    "summary": "任务依赖与甘特图",
+    "path": "packages/library-lab/entries/C13-frappe-gantt",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "C14",
+    "name": "date-fns",
+    "group": "C",
+    "summary": "函数式日期计算与格式化",
+    "path": "packages/library-lab/entries/C14-date-fns",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "C15",
+    "name": "Day.js",
+    "group": "C",
+    "summary": "轻量日期对象和时区插件",
+    "path": "packages/library-lab/entries/C15-dayjs",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "C16",
+    "name": "Luxon",
+    "group": "C",
+    "summary": "时区、日期区间和持续时间",
+    "path": "packages/library-lab/entries/C16-luxon",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "C17",
+    "name": "i18next",
+    "group": "C",
+    "summary": "语言资源、复数和命名空间",
+    "path": "packages/library-lab/entries/C17-i18next",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "C18",
+    "name": "react-i18next",
+    "group": "C",
+    "summary": "React 国际化与 Suspense",
+    "path": "packages/library-lab/entries/C18-react-i18next",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "C19",
+    "name": "nuqs",
+    "group": "C",
+    "summary": "URL 查询状态双向同步",
+    "path": "packages/library-lab/entries/C19-nuqs",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "C20",
+    "name": "clsx",
+    "group": "C",
+    "summary": "条件 className 合成",
+    "path": "packages/library-lab/entries/C20-clsx",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "C21",
+    "name": "tailwind-merge",
+    "group": "C",
+    "summary": "Tailwind 样式冲突合并",
+    "path": "packages/library-lab/entries/C21-tailwind-merge",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "C22",
+    "name": "Moment（历史迁移）",
+    "group": "C",
+    "summary": "历史日期库识别与现代迁移",
+    "path": "packages/library-lab/entries/C22-moment-migration",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "D01",
+    "name": "es-toolkit",
+    "group": "D",
+    "summary": "现代类型安全工具函数",
+    "path": "packages/library-lab/entries/D01-es-toolkit",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "D02",
+    "name": "Lodash/lodash-es",
+    "group": "D",
+    "summary": "通用工具函数与模块化分发",
+    "path": "packages/library-lab/entries/D02-lodash",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "D03",
+    "name": "p-limit",
+    "group": "D",
+    "summary": "Promise 并发上限控制",
+    "path": "packages/library-lab/entries/D03-p-limit",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "D04",
+    "name": "p-queue",
+    "group": "D",
+    "summary": "任务队列、并发与速率控制",
+    "path": "packages/library-lab/entries/D04-p-queue",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "D05",
+    "name": "decimal.js",
+    "group": "D",
+    "summary": "任意精度十进制计算",
+    "path": "packages/library-lab/entries/D05-decimal-js",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "D06",
+    "name": "Immer",
+    "group": "D",
+    "summary": "不可变状态更新",
+    "path": "packages/library-lab/entries/D06-immer",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "D07",
+    "name": "TanStack Query",
+    "group": "D",
+    "summary": "远端状态缓存与异步请求",
+    "path": "packages/library-lab/entries/D07-tanstack-query",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "D08",
+    "name": "ky",
+    "group": "D",
+    "summary": "基于 Fetch 的 HTTP 客户端",
+    "path": "packages/library-lab/entries/D08-ky",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "D09",
+    "name": "Axios",
+    "group": "D",
+    "summary": "HTTP 客户端、拦截和取消",
+    "path": "packages/library-lab/entries/D09-axios",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "D10",
+    "name": "Zustand",
+    "group": "D",
+    "summary": "轻量共享客户端状态",
+    "path": "packages/library-lab/entries/D10-zustand",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "D11",
+    "name": "Jotai",
+    "group": "D",
+    "summary": "原子状态与派生数据",
+    "path": "packages/library-lab/entries/D11-jotai",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "D12",
+    "name": "Redux Toolkit",
+    "group": "D",
+    "summary": "可追踪状态与业务流程",
+    "path": "packages/library-lab/entries/D12-redux-toolkit",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "D13",
+    "name": "RTK Query",
+    "group": "D",
+    "summary": "Redux 数据请求与缓存订阅",
+    "path": "packages/library-lab/entries/D13-rtk-query",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "D14",
+    "name": "XState",
+    "group": "D",
+    "summary": "状态机与 Actor 生命周期",
+    "path": "packages/library-lab/entries/D14-xstate",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "D15",
+    "name": "Dexie",
+    "group": "D",
+    "summary": "IndexedDB 查询、事务和迁移",
+    "path": "packages/library-lab/entries/D15-dexie",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "D16",
+    "name": "Workbox",
+    "group": "D",
+    "summary": "Service Worker 缓存与离线更新",
+    "path": "packages/library-lab/entries/D16-workbox",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "D17",
+    "name": "Yjs",
+    "group": "D",
+    "summary": "CRDT 实时协作与离线合并",
+    "path": "packages/library-lab/entries/D17-yjs",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "D18",
+    "name": "Comlink",
+    "group": "D",
+    "summary": "Worker RPC 和数据传输",
+    "path": "packages/library-lab/entries/D18-comlink",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "D19",
+    "name": "Fuse.js",
+    "group": "D",
+    "summary": "客户端模糊匹配与排序",
+    "path": "packages/library-lab/entries/D19-fusejs",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "D20",
+    "name": "MiniSearch",
+    "group": "D",
+    "summary": "浏览器本地全文索引",
+    "path": "packages/library-lab/entries/D20-minisearch",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "D21",
+    "name": "Pagefind",
+    "group": "D",
+    "summary": "构建时静态站点全文搜索",
+    "path": "packages/library-lab/entries/D21-pagefind",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "E01",
+    "name": "Tiptap",
+    "group": "E",
+    "summary": "富文本编辑器和扩展",
+    "path": "packages/library-lab/entries/E01-tiptap",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "E02",
+    "name": "BlockNote",
+    "group": "E",
+    "summary": "块级文档编辑体验",
+    "path": "packages/library-lab/entries/E02-blocknote",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "E03",
+    "name": "Lexical",
+    "group": "E",
+    "summary": "可扩展编辑器状态模型",
+    "path": "packages/library-lab/entries/E03-lexical",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "E04",
+    "name": "CodeMirror 6",
+    "group": "E",
+    "summary": "模块化代码编辑器",
+    "path": "packages/library-lab/entries/E04-codemirror6",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "E05",
+    "name": "Monaco Editor",
+    "group": "E",
+    "summary": "IDE 级代码编辑与 Worker",
+    "path": "packages/library-lab/entries/E05-monaco-editor",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "E06",
+    "name": "react-markdown",
+    "group": "E",
+    "summary": "安全的 React Markdown 展示",
+    "path": "packages/library-lab/entries/E06-react-markdown",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "E07",
+    "name": "remark",
+    "group": "E",
+    "summary": "Markdown AST 处理流水线",
+    "path": "packages/library-lab/entries/E07-remark",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "E08",
+    "name": "rehype",
+    "group": "E",
+    "summary": "HTML AST 处理与转换",
+    "path": "packages/library-lab/entries/E08-rehype",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "E09",
+    "name": "Shiki",
+    "group": "E",
+    "summary": "代码语法高亮",
+    "path": "packages/library-lab/entries/E09-shiki",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "E10",
+    "name": "DOMPurify",
+    "group": "E",
+    "summary": "HTML 净化和输出安全",
+    "path": "packages/library-lab/entries/E10-dompurify",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "E11",
+    "name": "Streamdown",
+    "group": "E",
+    "summary": "增量流式 Markdown 展示",
+    "path": "packages/library-lab/entries/E11-streamdown",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "E12",
+    "name": "assistant-ui",
+    "group": "E",
+    "summary": "聊天界面和运行时交互",
+    "path": "packages/library-lab/entries/E12-assistant-ui",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "E13",
+    "name": "PhotoSwipe",
+    "group": "E",
+    "summary": "图片灯箱与触控缩放",
+    "path": "packages/library-lab/entries/E13-photoswipe",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "E14",
+    "name": "react-easy-crop",
+    "group": "E",
+    "summary": "图片裁剪交互与坐标",
+    "path": "packages/library-lab/entries/E14-react-easy-crop",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "E15",
+    "name": "pica",
+    "group": "E",
+    "summary": "浏览器高质量图片缩放",
+    "path": "packages/library-lab/entries/E15-pica",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "E16",
+    "name": "Video.js",
+    "group": "E",
+    "summary": "视频播放器与控制界面",
+    "path": "packages/library-lab/entries/E16-videojs-v10",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "E17",
+    "name": "hls.js",
+    "group": "E",
+    "summary": "HLS 播放引擎与缓冲",
+    "path": "packages/library-lab/entries/E17-hlsjs",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "E18",
+    "name": "wavesurfer.js",
+    "group": "E",
+    "summary": "音频波形、区域与时间线",
+    "path": "packages/library-lab/entries/E18-wavesurferjs8",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "E19",
+    "name": "ffmpeg.wasm",
+    "group": "E",
+    "summary": "浏览器 WebAssembly 媒体转换",
+    "path": "packages/library-lab/entries/E19-ffmpeg-wasm",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "F01",
+    "name": "Uppy",
+    "group": "F",
+    "summary": "上传队列、协议和文件管理",
+    "path": "packages/library-lab/entries/F01-uppy",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "F02",
+    "name": "react-dropzone",
+    "group": "F",
+    "summary": "文件选择与拖放输入",
+    "path": "packages/library-lab/entries/F02-react-dropzone",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "F03",
+    "name": "Papa Parse",
+    "group": "F",
+    "summary": "CSV 解析、导出与流处理",
+    "path": "packages/library-lab/entries/F03-papaparse",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "F04",
+    "name": "ExcelJS",
+    "group": "F",
+    "summary": "Excel 工作簿生成与编辑",
+    "path": "packages/library-lab/entries/F04-exceljs",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "F05",
+    "name": "SheetJS",
+    "group": "F",
+    "summary": "电子表格导入导出",
+    "path": "packages/library-lab/entries/F05-sheetjs",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "F06",
+    "name": "PDF.js",
+    "group": "F",
+    "summary": "PDF 文档解析与展示",
+    "path": "packages/library-lab/entries/F06-pdfjs",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "F07",
+    "name": "react-pdf",
+    "group": "F",
+    "summary": "React PDF 文档展示",
+    "path": "packages/library-lab/entries/F07-react-pdf",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "F08",
+    "name": "@react-pdf/renderer",
+    "group": "F",
+    "summary": "React 声明式 PDF 生成",
+    "path": "packages/library-lab/entries/F08-react-pdf-renderer",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "F09",
+    "name": "pdf-lib",
+    "group": "F",
+    "summary": "PDF 页面修改与合并",
+    "path": "packages/library-lab/entries/F09-pdf-lib",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "F10",
+    "name": "Orval",
+    "group": "F",
+    "summary": "OpenAPI 客户端生成",
+    "path": "packages/library-lab/entries/F10-orval",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "F11",
+    "name": "MSW",
+    "group": "F",
+    "summary": "网络层请求 Mock 与场景",
+    "path": "packages/library-lab/entries/F11-msw",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "F12",
+    "name": "Vitest",
+    "group": "F",
+    "summary": "单元及组件测试",
+    "path": "packages/library-lab/entries/F12-vitest",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "F13",
+    "name": "Playwright",
+    "group": "F",
+    "summary": "浏览器端到端自动化",
+    "path": "packages/library-lab/entries/F13-playwright",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "F14",
+    "name": "Storybook",
+    "group": "F",
+    "summary": "组件文档与交互场景",
+    "path": "packages/library-lab/entries/F14-storybook",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "F15",
+    "name": "Knip",
+    "group": "F",
+    "summary": "未使用代码和依赖检测",
+    "path": "packages/library-lab/entries/F15-knip",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "F16",
+    "name": "dependency-cruiser",
+    "group": "F",
+    "summary": "模块依赖与架构规则",
+    "path": "packages/library-lab/entries/F16-dependency-cruiser",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "F17",
+    "name": "axe-core",
+    "group": "F",
+    "summary": "自动化无障碍规则检测",
+    "path": "packages/library-lab/entries/F17-axe-core",
+    "contentState": "missing"
+  },
+  {
+    "entryId": "F18",
+    "name": "rollup-plugin-visualizer",
+    "group": "F",
+    "summary": "构建模块组成和体积分析",
+    "path": "packages/library-lab/entries/F18-rollup-plugin-visualizer",
+    "contentState": "missing"
+  }
+]

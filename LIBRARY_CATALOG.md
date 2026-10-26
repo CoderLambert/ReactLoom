@@ -5,8 +5,8 @@
 |编号|工具库|用途|组别|目录|
 |---|---|---|---|---|
 |A01|Apache ECharts|业务仪表盘和多类型交互图表|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A01-echarts/)|
-|A02|Recharts|React 声明式业务图表|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A02-recharts/)|
-|A03|Chart.js|Canvas 图表和轻量统计展示|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A03-chartjs/)|
+|A02|Recharts|React 声明式 SVG 图表与可访问数据表|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A02-recharts/)|
+|A03|Chart.js|模块化 Canvas 图表与 React 生命周期边界|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A03-chartjs/)|
 |A04|uPlot|高频时间序列和紧凑趋势图|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A04-uplot/)|
 |A05|D3|数据映射、比例尺和自定义可视化|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A05-d3/)|
 |A06|React Flow|节点连线与可编辑流程编排|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A06-react-flow/)|
@@ -21,7 +21,7 @@
 |A15|Leaflet|轻量二维地图与标记|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A15-leaflet/)|
 |A16|MapLibre GL JS|矢量地图样式、数据源和图层|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A16-maplibre-gl-js/)|
 |A17|deck.gl|GPU 大规模地理数据图层|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A17-deckgl/)|
-|B01|Motion for React|React 动画、布局过渡和手势|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B01-motion-for-react/)|
+|B01|Motion for React|React 入场/离场、列表布局过渡与减少动画偏好|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B01-motion-for-react/)|
 |B02|GSAP|时间线与复杂编排动画|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B02-gsap/)|
 |B03|react-spring|弹簧动画与自然交互|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B03-react-spring/)|
 |B04|dotLottie 播放器|dotLottie 动画资源播放|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B04-dotlottie/)|
@@ -38,12 +38,12 @@
 |B15|react-grid-layout|可拖动缩放的响应式仪表盘|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B15-react-grid-layout/)|
 |B16|react-resizable-panels|可调整尺寸的面板布局|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B16-react-resizable-panels/)|
 |B17|Floating UI|浮层定位、碰撞和焦点管理|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B17-floating-ui/)|
-|B18|cmdk|命令菜单、键盘操作和搜索|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B18-cmdk/)|
-|B19|Embla Carousel|响应式轮播与滑动吸附|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B19-embla-carousel/)|
+|B18|cmdk|可访问命令菜单、搜索分组与中文输入法快捷键|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B18-cmdk/)|
+|B19|Embla Carousel|可访问的触控轮播、滑动吸附和动态卡片|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B19-embla-carousel/)|
 |B20|Sonner|即时通知和操作反馈|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B20-sonner/)|
 |B21|react-motion（历史迁移）|历史弹簧动画识别与现代迁移|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B21-react-motion-migration/)|
 |B22|react-beautiful-dnd（历史迁移）|历史拖拽库识别与迁移|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B22-react-beautiful-dnd-migration/)|
-|C01|React Hook Form|高效 React 表单与动态字段|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C01-react-hook-form/)|
+|C01|React Hook Form|真实 RSS 订阅表单：动态字段、服务端错误映射与请求取消|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C01-react-hook-form/)|
 |C02|Zod|TypeScript 运行时数据校验|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C02-zod/)|
 |C03|Valibot|模块化类型安全数据校验|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C03-valibot/)|
 |C04|JSON Forms|JSON Schema 驱动动态表单|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C04-jsonforms/)|
