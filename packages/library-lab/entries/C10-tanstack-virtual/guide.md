@@ -44,7 +44,7 @@ React 19 中可使用 useFlushSync:false 防止同步刷新警告，但这影响
 1. **只裁剪 data 而缺高度占位**：滚动条尺寸错误；使用 getTotalSize + 绝对定位。
 2. **漏写 data-index**：measureElement 不能可靠定位行索引；保持 DOM data-index。
 3. **index 当稳定 key**：分页和排序后错误地复用行；getItemKey 使用业务 ID。
-4. **假设虚拟化自动加载后台数据**：需要独立 pagination/cache 层，C07/C07的 Table 也不代替网络。
+4. **假设虚拟化自动加载后台数据**：需要独立 pagination/cache 层，C07 的 Table 也不代替网络。
 5. **展开后不重新测量**：动态高度误差持续累积；绑定 ref 测量并避免冲突的 CSS。
 6. **未考虑无障碍**：窗口之外的行不在 DOM，长列表应有查询/分页/跳转的可访问替代路径。
 

@@ -129,7 +129,7 @@ export default function KyWorkshop({level}: {level: Level}) {
           {maxResponseSize: 100, retry: {limit: 0}, signal: controller.signal}).text();
         result = '响应尺寸限制未触发（需要核对目标版本）';
       } else {
-        const response = await client.delete('https://lab.invalid/removed', {retry: {limit: 0}});
+        const response = await client.delete('https://lab.invalid/removed', {retry: {limit: 0}, signal: controller.signal});
         result = 'DELETE ' + response.status + '：204 不应调用 json()';
       }
       if (ticket === generation.current) setAdvancedResult(result);

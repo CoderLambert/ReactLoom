@@ -1,4 +1,4 @@
-import {useEffect, useMemo, useRef, useState} from 'react';
+import {useEffect, useMemo, useRef, useState, type ReactNode} from 'react';
 import {Virtuoso, type VirtuosoHandle} from 'react-virtuoso';
 
 type Level = 'basic' | 'business' | 'advanced';
@@ -12,7 +12,7 @@ function sampleArticle(index: number): Article {
   };
 }
 
-const card = (article: Article, suffix?: React.ReactNode) => (
+const card = (article: Article, suffix?: ReactNode) => (
   <article style={{padding: '12px 16px', borderBottom: '1px solid #dce4db', background: '#fff'}}>
     <h3 style={{margin: 0, fontSize: 15}}>{article.title}</h3>
     <p style={{margin: '6px 0 0', fontSize: 13}}>{article.summary}</p>
@@ -140,15 +140,17 @@ function Advanced() {
       computeItemKey={(_index, item) => item.id}
       atBottomStateChange={setAtBottom}
       followOutput={bottom => bottom ? 'auto' : false}
-      itemContent={(_index, item) => card(item, <button type="button"
-        aria-expanded={expanded.has(item.id)}
-        onClick={() => setExpanded(current => {
-          const next = new Set(current);
-          if (next.has(item.id)) next.delete(item.id); else next.add(item.id);
-          return next;
-        })}>{expanded.has(item.id) ? '折叠说明' : '展开说明'}</button>)}
+      itemContent={(_index, item) => card(item, <div>
+        {expanded.has(item.id) && <p style={{whiteSpace: 'pre-wrap', fontSize: 13}}>{('展开的历史消息详细说明。\n').repeat(8)}</p>}
+        <button type="button" aria-expanded={expanded.has(item.id)}
+          onClick={() => setExpanded(current => {
+            const next = new Set(current);
+            if (next.has(item.id)) next.delete(item.id); else next.add(item.id);
+            return next;
+          })}>{expanded.has(item.id) ? '折叠说明' : '展开说明'}</button>
+      </div>)}
     />
-    <p>注意：展开按钮仅切换控件文案；下面将在完整业务版中加入扩展正文，用于检验动态高度重新测量。</p>
+    <p>展开实际插入长文本，验证可变高度重测；前插时不得改变已有消息的业务键。</p>
   </section>;
 }
 
