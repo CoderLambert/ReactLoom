@@ -27,9 +27,9 @@
     "entryId": "A04",
     "name": "uPlot",
     "group": "A",
-    "summary": "高频时间序列和紧凑趋势图",
+    "summary": "有界内存的时间序列趋势图与实时遥测",
     "path": "packages/library-lab/entries/A04-uplot",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "A05",
@@ -83,17 +83,17 @@
     "entryId": "A11",
     "name": "Konva",
     "group": "A",
-    "summary": "二维 Canvas 场景图和图形操作",
+    "summary": "Canvas 2D 场景图、图元拖拽、选择与变换",
     "path": "packages/library-lab/entries/A11-konva",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "A12",
     "name": "react-konva",
     "group": "A",
-    "summary": "React 声明式二维画布",
+    "summary": "React 19.3 声明式二维画布与编辑状态",
     "path": "packages/library-lab/entries/A12-react-konva",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "A13",
@@ -115,9 +115,9 @@
     "entryId": "A15",
     "name": "Leaflet",
     "group": "A",
-    "summary": "轻量二维地图与标记",
+    "summary": "无需远程底图的地点数据浏览、图层与地图交互",
     "path": "packages/library-lab/entries/A15-leaflet",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "A16",
@@ -163,9 +163,9 @@
     "entryId": "B04",
     "name": "dotLottie 播放器",
     "group": "B",
-    "summary": "dotLottie 动画资源播放",
+    "summary": "本地矢量动画、播放控制与减少动态效果",
     "path": "packages/library-lab/entries/B04-dotlottie",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "B05",
@@ -179,9 +179,9 @@
     "entryId": "B06",
     "name": "Ant Design",
     "group": "B",
-    "summary": "企业级 React 组件与表单",
+    "summary": "企业组件、受控表单、表格与反馈",
     "path": "packages/library-lab/entries/B06-ant-design",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "B07",
@@ -427,17 +427,17 @@
     "entryId": "C15",
     "name": "Day.js",
     "group": "C",
-    "summary": "轻量日期对象和时区插件",
+    "summary": "不可变日期、严格校验与时区插件的 RSS 排程实践",
     "path": "packages/library-lab/entries/C15-dayjs",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "C16",
     "name": "Luxon",
     "group": "C",
-    "summary": "时区、日期区间和持续时间",
+    "summary": "DateTime、Interval 与明确 IANA 时区的日历窗口",
     "path": "packages/library-lab/entries/C16-luxon",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "C17",
@@ -555,17 +555,17 @@
     "entryId": "D09",
     "name": "Axios",
     "group": "D",
-    "summary": "HTTP 客户端、拦截和取消",
+    "summary": "HTTP 实例拦截器、取消、幂等请求重试与 409 失败分支",
     "path": "packages/library-lab/entries/D09-axios",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "D10",
     "name": "Zustand",
     "group": "D",
-    "summary": "轻量共享客户端状态",
+    "summary": "React19 vanilla store、租户状态与受控 persist 迁移",
     "path": "packages/library-lab/entries/D10-zustand",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "D11",
@@ -635,9 +635,9 @@
     "entryId": "D19",
     "name": "Fuse.js",
     "group": "D",
-    "summary": "客户端模糊匹配与排序",
+    "summary": "浏览器端加权模糊搜索、分组过滤、IME 与动态索引重建",
     "path": "packages/library-lab/entries/D19-fusejs",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "D20",
@@ -659,17 +659,17 @@
     "entryId": "E01",
     "name": "Tiptap",
     "group": "E",
-    "summary": "富文本编辑器和扩展",
+    "summary": "ProseMirror 驱动的 Headless 富文本编辑器：工具栏、JSON 草稿与安全导入",
     "path": "packages/library-lab/entries/E01-tiptap",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "E02",
     "name": "BlockNote",
     "group": "E",
-    "summary": "块级文档编辑体验",
+    "summary": "开箱即用的块级文档编辑器：块结构、JSON 草稿与变更生命周期",
     "path": "packages/library-lab/entries/E02-blocknote",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "E03",
@@ -859,9 +859,9 @@
     "entryId": "F07",
     "name": "react-pdf",
     "group": "F",
-    "summary": "React PDF 文档展示",
+    "summary": "React 组件化 PDF 阅读：本地文档、分页、TextLayer 与同版本 Worker",
     "path": "packages/library-lab/entries/F07-react-pdf",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "F08",
@@ -915,17 +915,17 @@
     "entryId": "F14",
     "name": "Storybook",
     "group": "F",
-    "summary": "组件文档与交互场景",
+    "summary": "组件隔离开发、CSF Stories、Play交互断言与可访问性反馈",
     "path": "packages/library-lab/entries/F14-storybook",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "F15",
     "name": "Knip",
     "group": "F",
-    "summary": "未使用代码和依赖检测",
+    "summary": "检查 Monorepo 无用文件、导出及依赖：最小项目、业务入口与生产模式的真实 CLI 练习",
     "path": "packages/library-lab/entries/F15-knip",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "F16",
