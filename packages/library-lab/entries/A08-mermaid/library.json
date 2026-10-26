@@ -1,1 +1,109 @@
-{"schemaVersion":1,"entryId":"A08","slug":"mermaid","name":"Mermaid","group":"A","summary":"以文本维护流程图与架构图","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "A08",
+  "slug": "mermaid",
+  "name": "Mermaid",
+  "group": "A",
+  "summary": "将受控 Mermaid DSL 编译成流程图、时序图和状态图",
+  "tags": [
+    "Mermaid",
+    "diagram",
+    "flowchart",
+    "sequence",
+    "安全边界"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "mermaid",
+      "version": "12.2.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "官方 Mermaid API",
+      "url": "https://mermaid.ai/open-source/config/setup/mermaid/interfaces/Mermaid.html"
+    },
+    {
+      "title": "Mermaid 安全公告",
+      "url": "https://github.com/mermaid-js/mermaid/security/advisories/GHSA-c4c3-pg64-4m4v"
+    },
+    {
+      "title": "官方仓库",
+      "url": "https://github.com/mermaid-js/mermaid"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "A01",
+      "relation": "alternative",
+      "reason": "ECharts适合数据系列图表；Mermaid适合版本控制的流程和结构图。"
+    },
+    {
+      "entryId": "E06",
+      "relation": "complements",
+      "reason": "Markdown文档可嵌 Mermaid 图，但渲染器应隔离并按需加载。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "数据处理流程",
+      "description": "预设的 flowchart DSL 经 Mermaid.parse/render 得到图形。",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "svg",
+        "iframe-sandbox",
+        "diagram"
+      ]
+    },
+    {
+      "demoId": "business",
+      "title": "系统时序",
+      "description": "切换到前端→API→Worker 的预定义 sequenceDiagram。",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "svg",
+        "iframe-sandbox",
+        "diagram"
+      ]
+    },
+    {
+      "demoId": "advanced",
+      "title": "状态与错误回退",
+      "description": "stateDiagram-v2 与刻意的非法 DSL 切换，展示解析失败及恢复。",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "svg",
+        "iframe-sandbox",
+        "diagram"
+      ]
+    }
+  ],
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "新实现：官方文档和当前库 API 独立核对；没有继承历史测试 PASS。"
+  },
+  "license": {
+    "spdx": "MIT",
+    "assets": "本地生成的确定性数据；不打包第三方商业媒体。"
+  }
+}

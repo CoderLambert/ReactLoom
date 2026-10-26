@@ -1,1 +1,116 @@
-{"schemaVersion":1,"entryId":"B15","slug":"react-grid-layout","name":"react-grid-layout","group":"B","summary":"可拖动缩放的响应式仪表盘","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "B15",
+  "slug": "react-grid-layout",
+  "name": "react-grid-layout",
+  "group": "B",
+  "summary": "可拖拽、缩放与响应式仪表盘布局（2.3.0 控制式接口）",
+  "tags": [
+    "dashboard",
+    "drag",
+    "resize",
+    "GridLayout",
+    "layout schema"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "react-grid-layout",
+      "version": "2.3.0"
+    },
+    {
+      "name": "react-resizable",
+      "version": "4.0.2"
+    }
+  ],
+  "references": [
+    {
+      "title": "react-grid-layout v2 官方",
+      "url": "https://github.com/react-grid-layout/react-grid-layout"
+    },
+    {
+      "title": "npm react-grid-layout",
+      "url": "https://www.npmjs.com/package/react-grid-layout"
+    },
+    {
+      "title": "react-resizable 官方",
+      "url": "https://github.com/react-grid-layout/react-resizable"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "B16",
+      "relation": "complements",
+      "reason": "Resizable Panels管理分栏宽高；Grid Layout 管理二维模块网格。"
+    },
+    {
+      "entryId": "B13",
+      "relation": "alternative",
+      "reason": "dnd-kit更适合任意列表/组件拖拽；Grid Layout针对固定列网格位置与尺寸。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "只读统计面板",
+      "description": "三个稳定业务ID的 12 列网格，关闭拖拽缩放，测量父容器宽度。",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "drag-and-drop",
+        "resize-observer",
+        "layout",
+        "keyboard"
+      ]
+    },
+    {
+      "demoId": "business",
+      "title": "可编辑新闻看板",
+      "description": "开启句柄拖拽、可缩放卡片和布局变更的结构化状态。",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "drag-and-drop",
+        "resize-observer",
+        "layout",
+        "keyboard"
+      ]
+    },
+    {
+      "demoId": "advanced",
+      "title": "锁定与键盘替代",
+      "description": "锁定固定面板、响应窄屏、重置/导出布局，并提供键盘排序按钮。",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "drag-and-drop",
+        "resize-observer",
+        "layout",
+        "keyboard"
+      ]
+    }
+  ],
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "基于当期官方API重新编写真实SDK示例；未继承历史测试结论。"
+  },
+  "license": {
+    "spdx": "MIT",
+    "assets": "本地确定性数据与原创示例；不打包外部素材。"
+  }
+}

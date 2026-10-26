@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "真实目标SDK尚未执行，当前仅有实际SDK导入源码"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "等待平台统一lockfile及完整typecheck/build"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "拖拽/画布真实浏览器交互尚未验证"
+  }
+}

@@ -1,0 +1,9 @@
+# A06 React Flow — Agent 实战约束
+
+**用途**：在 React 应用中编辑交互式节点管线，非后台工作流执行器。版本 @xyflow/react 12.12.0 / MIT；无需旧 reactflow v11。
+**迁移源码**：examples/example.tsx；examples/demo.tsx 仅负责Lab导出。移动时一起包含 @xyflow/react/dist/style.css，父级显式高度，稳定节点/边ID。
+**数据所有权**：ReactFlow 的节点和连接数组由受控 useNodesState/useEdgesState 管理，onNodesChange/onEdgesChange不能省略；onConnect 使用 addEdge，仅创建合法 Connection。节点文案不可信，不应执行脚本或URL。
+**校验边界**：防自环只是示例；产品必须增加节点类型、句柄约束、有向无环性、版本冲突以及后端权限。自动执行、网络调用必须另设计安全边界。
+**反例**：父容器高度0、直接改数组且不触发更新、索引ID、ReactFlow+旧reactflow混装、未加载CSS、把图形连接误当业务权限验证。
+**检查**：真实包构建、React19类型、拖拽/连接/重置、新节点ID稳定、键盘辅助控件、卸载资源及文字替代数据表。没有执行前所有验证维度保持NOT_RUN。
+**参考**：https://reactflow.dev/learn ; https://reactflow.dev/api-reference/utils/add-edge。相关 A07 G6 和 A08 Mermaid。
