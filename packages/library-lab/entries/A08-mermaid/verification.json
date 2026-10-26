@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "已编写真实 SDK import；尚未安装和运行依赖。"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "等待 PLATFORM 统一安装依赖并实际 typecheck/build。"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "尚未执行 Chromium 及资源卸载、可访问性测试。"
+  }
+}

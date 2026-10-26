@@ -115,3 +115,33 @@
 
 优先 A07 AntV G6、A08 Mermaid、B03 react-spring、B15 grid layout；并在依赖/Runner可用后回归已接入4库及前9库的真实SDK、TS、浏览器交互。执行失败只记录实际日志，能独立推进时继续下一条目。worker PR base 始终为 feat/library-lab，合并只由 PLATFORM 执行。
 
+
+
+---
+
+## 第3轮追加：G6 / Mermaid / react-spring / react-grid-layout（同 PR #16）
+
+保持 **runCount=3 / 24**（这是本轮的连续追加，而非新一轮）。在此前 A05 D3、A06 React Flow、B02 GSAP、B13 dnd-kit 的基础上，继续写入以下四个完整可迁移源码条目，并复用已经打开的 Draft PR #16，没有另建重叠PR。
+
+|条目|官方SDK版本|三层示例|特殊验证关注点|
+|---|---|---|---|
+|A07 AntV G6|@antv/g6@5.1.1|三节点关系图、动态审校节点、容器缩放与实例重建|Graph.render异步、ResizeObserver、StrictMode destroy、Canvas无障碍替代|
+|A08 Mermaid|mermaid@12.2.0|flowchart、sequenceDiagram、stateDiagram与非法DSL恢复|受控配置、唯一render ID、parse错误恢复、无脚本沙箱iframe|
+|B03 react-spring|@react-spring/web@10.1.2|单卡片spring、列表useTransition、reduce-motion与键盘焦点|局部媒体查询监听、stable keys、immediate、focus恢复|
+|B15 react-grid-layout|react-grid-layout@2.3.0 + react-resizable@4.0.2|静态网格、拖拽/缩放看板、锁定与窄屏/键盘替代|v2 width测量、controlled layout、稳定 i、cleanup/断点持久化|
+
+每个库包含更新后的 library.json、3个 Demo 注册选择、同一真实SDK实现 example.tsx + 适配出口 demo.tsx、独立中文 guide.md、agent.md、目录 AGENTS.md 与 verification.json。未强行拆成12个复制组件。
+
+**静态证据**：Git Tree `e3a285903b3d8fe925be51e513b8395b6fd6f6de` 经 GitHub tree API 读取，非截断（总967条树路径）；本批 A07/A08/B03/B15 **28/28 指定文件存在**，4/4 manifest Blob 能 JSON 解析，12/12 Demo 元数据指向真实存在的 example/demo.tsx，0结构缺失。该检查仅证明文件完整和目录协议，不证明 TS 类型、目标库 import、运行效果。实际 `npm install`、`pnpm typecheck`、`pnpm build`、SDK Runtime 和 Chromium 浏览器本轮 **均 NOT_RUN**，verification.json 全部保持 NOT_RUN，不可把静态检查改写为PASS。
+
+**新 dependencyRequests → PLATFORM 单一负责人安装并生成真实锁文件**：
+- `@antv/g6@5.1.1`，MIT，官方 React 5.x 生命周期：https://g6.antv.antgroup.com/en/manual/getting-started/integration/react
+- `mermaid@12.2.0`，MIT，API：https://mermaid.ai/open-source/config/setup/mermaid/interfaces/Mermaid.html 。注意2026-08-04公告 GHSA-c4c3-pg64-4m4v（旧版配置原型污染）；本示例配置只用硬编码对象，生产需保证信任边界。
+- `@react-spring/web@10.1.2`，MIT，hooks：https://www.react-spring.dev/docs/components/use-transition
+- `react-grid-layout@2.3.0` + `react-resizable@4.0.2`，MIT，v2 的 useContainerWidth/gridConfig 与两个 CSS 样式入口：https://github.com/react-grid-layout/react-grid-layout 。
+
+安装前由 PLATFORM 核验 React19/TS7/Vite8 peers，尤其 react-grid-layout 2.3.0 与 react-resizable 4.x；如实际依赖冲突，需要在官方支持版本范围内联动调整该条目库代码、元数据和测试，禁止只降级 package.json 而留下旧API。
+
+**累计进度**：先前 wave1 4 + wave2 5 + 本轮 wave3 原4 + 追加4 = **17/39 个 A/B 库已编写真实 SDK import、完整指南与 Agent手册，共51个分层选择**；仍有 **22项未实现**。数量不表示已构建或已通过真实SDK验收。
+
+**下一队列**：A04 uPlot（时间序列大数据/销毁）、A09 Excalidraw（React19/大型包/授权）、A11 Konva（stage销毁与坐标）、B04 dotLottie（资源许可与播放清理）、B06 Ant Design（受控表单/样式隔离）；在平台依赖/Runner可用后复验 wave1-wave3 的真实类型检查、SDK 和关键浏览器行为。所有补充仅在本库 A/B 与 progress/AB.md，公共依赖/CI由PLATFORM处理。

@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "真实SDK源码已提交，环境尚无依赖安装记录。"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "平台统一解析依赖后再执行 TS/Vite 构建。"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "未执行 Chromium 交互、键盘、清理与 reduced-motion 回归。"
+  }
+}
