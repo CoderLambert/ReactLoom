@@ -28,7 +28,7 @@ const results = await Promise.allSettled(items.map(item => limit(() => processIt
 
 `limit(fn)` 接收尚未执行的函数。库在空位可用时调用函数，以返回 Promise 的结算作为释放槽位依据。`activeCount` 与 `pendingCount` 是观测值，不是可以保存下来替代内部队列的状态。
 
-本 Demo 每批创建一个 limiter，一个 AbortController 和一个 generation。AbortSignal 控制实际工作，generation 避免上一批结果写入下一批。组件卸载递增 generation 并 abort，不删除全站数据。
+本 Demo 每批创建一个 limiter，一个 AbortController 和一个 generation。AbortSignal 控制实际工作，generation 避免上一批结果写入下一批。组件卸载递增 generation、abort 正在运行的任务，并清空未执行队列；所有 Promise 都会结算，不删除全站数据。
 
 ## 至少三组必须理解的反例
 
@@ -42,7 +42,7 @@ const results = await Promise.allSettled(items.map(item => limit(() => processIt
 
 ### 3. 把清空队列等同取消
 
-错误：认为 clearQueue 会中断已运行 fetch 或所有版本都会拒绝排队 Promise。正确：取消实际工作用 AbortSignal；审查所用版本的 clearQueue/rejectOnClear 语义。此示例不调用 clearQueue，而让排队函数取得执行机会后检查已中止标志，从而正常结算全部 Promise。
+错误：认为 clearQueue 会中断已运行 fetch 或所有版本都会拒绝排队 Promise。正确：取消实际工作用 AbortSignal；审查所用版本的 clearQueue/rejectOnClear 语义。本示例明确使用 p-limit@7.3.3 的 `rejectOnClear: true`：取消时先通过 AbortSignal 中断运行中任务，再调用 `limit.clearQueue()`，使等待队列里的 Promise 以 AbortError 拒绝并由 `Promise.allSettled` 统一结算。
 
 ### 4. 在 render 每次创建 limiter
 

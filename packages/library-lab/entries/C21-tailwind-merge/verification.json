@@ -1,0 +1,18 @@
+{
+  "content": {
+    "status": "NOT_RUN",
+    "note": "新文档待校对"
+  },
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "尚未以实际 tailwind-merge@3.7.0 执行"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "需平台安装/锁文件后真实构建"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "组件状态交互和 computed style 待验收"
+  }
+}

@@ -1,1 +1,104 @@
-{"schemaVersion":1,"entryId":"C02","slug":"zod","name":"Zod","group":"C","summary":"TypeScript 运行时数据校验","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "C02",
+  "slug": "zod",
+  "name": "Zod",
+  "group": "C",
+  "summary": "不可信 RSS / OPML JSON 校验、规范化与跨字段错误",
+  "tags": [
+    "Schema",
+    "校验",
+    "Zod 4",
+    "RSS",
+    "OPML",
+    "数据安全"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "zod",
+      "version": "4.6.5"
+    }
+  ],
+  "references": [
+    {
+      "title": "官方文档",
+      "url": "https://zod.dev/"
+    },
+    {
+      "title": "源码与许可",
+      "url": "https://github.com/colinhacks/zod"
+    },
+    {
+      "title": "v4 迁移说明",
+      "url": "https://zod.dev/v4/changelog"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "C01",
+      "relation": "complements",
+      "reason": "React Hook Form 负责字段订阅与状态，Zod 定义数据约束。"
+    },
+    {
+      "entryId": "C03",
+      "relation": "alternative",
+      "reason": "在高度重视打包大小的项目可比较 Valibot。"
+    },
+    {
+      "entryId": "C05",
+      "relation": "alternative",
+      "reason": "现存 JSON Schema 是事实来源时优先审查 Ajv。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "安全 RSS 数据解析",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [],
+      "description": "真实 safeParse，将 unknown 安全映射到 DTO。"
+    },
+    {
+      "demoId": "business",
+      "title": "RSS/OPML 判别联合",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [],
+      "description": "分支结构有明确字段约束，而非对象断言。"
+    },
+    {
+      "demoId": "advanced",
+      "title": "TTL 转换与来源去重",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [],
+      "description": "transform 与 superRefine 的输入输出及路径。"
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "note": "仅引用官方链接，教学代码原创"
+  },
+  "provenance": {
+    "origin": "RFL-20261023/C/zod",
+    "mode": "recreated",
+    "note": "复用研究主题，代码独立重写，未继承历史测试通过结论"
+  }
+}

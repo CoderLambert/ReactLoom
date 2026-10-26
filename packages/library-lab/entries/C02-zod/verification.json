@@ -1,0 +1,18 @@
+{
+  "content": {
+    "status": "NOT_RUN",
+    "note": "新实现需独立审阅"
+  },
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "目标 zod 4.6.5 尚未在本轮环境安装并运行"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "等待平台锁文件后执行真实 TS+Vite"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "等待浏览器 E2E 和错误路径验证"
+  }
+}

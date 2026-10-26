@@ -1,1 +1,98 @@
-{"schemaVersion":1,"entryId":"C21","slug":"tailwind-merge","name":"tailwind-merge","group":"C","summary":"Tailwind 样式冲突合并","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "C21",
+  "slug": "tailwind-merge",
+  "name": "tailwind-merge",
+  "group": "C",
+  "summary": "Tailwind v4 工具类冲突合并与可覆盖组件实践",
+  "tags": [
+    "Tailwind",
+    "样式",
+    "组件API",
+    "响应式",
+    "className"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "tailwind-merge",
+      "version": "3.7.0"
+    },
+    {
+      "name": "clsx",
+      "version": "2.1.1"
+    }
+  ],
+  "references": [
+    {
+      "title": "官方 README",
+      "url": "https://github.com/dcastil/tailwind-merge"
+    },
+    {
+      "title": "官方 API 文档",
+      "url": "https://github.com/dcastil/tailwind-merge/blob/main/docs/api-reference.md"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "C20",
+      "relation": "complements",
+      "reason": "clsx 用于条件拼接，tailwind-merge 用于 Tailwind 规则下的冲突消解。"
+    },
+    {
+      "entryId": "B09",
+      "relation": "complements",
+      "reason": "可用于源码可控的组件设计系统，需声明允许覆盖的 className 语义。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "合并输入类名",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [],
+      "description": "对比真实 twJoin 和 twMerge 的结果。"
+    },
+    {
+      "demoId": "business",
+      "title": "可覆盖的内容卡片",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [],
+      "description": "真实 clsx + twMerge 组合处理组件默认值与覆盖。"
+    },
+    {
+      "demoId": "advanced",
+      "title": "非对称冲突与 modifier",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [],
+      "description": "方向性冲突、响应式/悬停变体的真实执行。"
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "note": "不重新分发第三方源码"
+  },
+  "provenance": {
+    "origin": "RFL-20261023/C/tailwind-merge",
+    "mode": "recreated",
+    "note": "本次以新 SDK 版本重写演示；不迁移旧通过状态"
+  }
+}
