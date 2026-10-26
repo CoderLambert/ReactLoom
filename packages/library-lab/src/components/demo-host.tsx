@@ -1,11 +1,62 @@
 import {lazy,Suspense,useMemo,useState,useEffect} from 'react';
 import {ErrorBoundary} from 'react-error-boundary';
-import type {Entry,Demo,SourceFile} from '../lib/types';
+import type {Entry,Demo} from '../lib/types';
 import {demoLoaders} from '../generated/loaders';
+type SourceMetadata={path:string;sha256:string;bytes:number};
 function SourceViewer({entryId,demo}:{entryId:string;demo:Demo}){
- const [files,setFiles]=useState<SourceFile[]>([]);const [error,setError]=useState('');const [selected,setSelected]=useState('');
- useEffect(()=>{const controller=new AbortController();setFiles([]);setSelected('');setError('');fetch(`${import.meta.env.BASE_URL}raw/${entryId}/sources.json`,{signal:controller.signal}).then(r=>{if(!r.ok)throw new Error('无法读取源码清单');return r.json();}).then((all:SourceFile[])=>{const relevant=all.filter(f=>demo.sourceFiles.includes(f.path));setFiles(relevant);setSelected(relevant[0]?.path??'');}).catch(e=>{if(!controller.signal.aborted)setError(String(e));});return()=>controller.abort();},[entryId,demo]);
- const file=files.find(f=>f.path===selected);return <section className="source-viewer"><h3>运行源码</h3><p>以下内容从实际示例文件生成，并附 SHA-256；不是另写的展示代码。</p>{error?<p role="alert">{error}</p>:<><label>文件 <select value={selected} onChange={e=>setSelected(e.target.value)}>{files.map(f=><option key={f.path}>{f.path}</option>)}</select></label>{file&&<><pre><code>{file.content}</code></pre><small className="hash">SHA-256 {file.sha256}</small></>}</>}</section>;
+ const [files,setFiles]=useState<SourceMetadata[]>([]);
+ const [selected,setSelected]=useState('');
+ const [content,setContent]=useState('');
+ const [error,setError]=useState('');
+ const [loading,setLoading]=useState(false);
+ const [verified,setVerified]=useState(false);
+ const [copyState,setCopyState]=useState('');
+ useEffect(()=>{
+  const controller=new AbortController();setFiles([]);setSelected('');setError('');
+  fetch(import.meta.env.BASE_URL+'raw/'+entryId+'/source-index.json',{signal:controller.signal})
+   .then(response=>{if(!response.ok)throw new Error('无法读取源码索引');return response.json();})
+   .then((items:SourceMetadata[])=>{
+    if(controller.signal.aborted)return;
+    if(!Array.isArray(items))throw new Error('源码索引格式错误');
+    const relevant=items.filter(file=>demo.sourceFiles.includes(file.path));
+    setFiles(relevant);setSelected(relevant[0]?.path??'');
+   })
+   .catch(cause=>{if(!controller.signal.aborted)setError(String(cause));});
+  return()=>controller.abort();
+ },[entryId,demo]);
+ const current=files.find(file=>file.path===selected);
+ useEffect(()=>{
+  if(!current){setContent('');setVerified(false);return;}
+  const controller=new AbortController();setLoading(true);setError('');setContent('');setVerified(false);setCopyState('');
+  const encoded=current.path.split('/').map(encodeURIComponent).join('/');
+  fetch(import.meta.env.BASE_URL+'raw/'+entryId+'/sources/'+encoded,{signal:controller.signal})
+   .then(async response=>{
+    if(!response.ok||response.headers.get('content-type')?.includes('text/html'))throw new Error('源码读取失败');
+    const source=await response.text();
+    if(globalThis.crypto?.subtle){
+     const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(source));
+     const hash=Array.from(new Uint8Array(digest),byte=>byte.toString(16).padStart(2,'0')).join('');
+     if(hash!==current.sha256)throw new Error('源码与生成索引的 SHA-256 不一致，请重新构建');
+     if(!controller.signal.aborted)setVerified(true);
+    }
+    if(!controller.signal.aborted)setContent(source);
+   })
+   .catch(cause=>{if(!controller.signal.aborted)setError(String(cause));})
+   .finally(()=>{if(!controller.signal.aborted)setLoading(false);});
+  return()=>controller.abort();
+ },[entryId,current?.path,current?.sha256]);
+ const copy=async()=>{
+  try{await navigator.clipboard.writeText(content);setCopyState('源码已复制');}
+  catch{setCopyState('复制失败，请手动选择源码');}
+ };
+ return <section className="source-viewer"><h3>真实源码</h3>
+  <p>每个源码文件独立按需下载，文件内容来自运行示例；浏览器支持时校验 SHA-256。</p>
+  {files.length>0&&<div className="demo-controls"><label>文件 <select aria-label="查看源码文件" value={selected} onChange={e=>setSelected(e.target.value)}>{files.map(file=><option key={file.path} value={file.path}>{file.path}</option>)}</select></label><button type="button" disabled={loading||!!error||!current} onClick={()=>void copy()}>复制源码</button><span role="status">{copyState}</span></div>}
+  {loading&&<p role="status">正在按需读取当前文件…</p>}
+  {error&&<p role="alert">{error}</p>}
+  {current&&!loading&&!error&&<><pre><code>{content}</code></pre><small className="hash">SHA-256 {current.sha256} · {verified?'已校验':'未校验'} · {current.bytes} 字节</small></>}
+  {!current&&!error&&<p className="notice">当前示例未列出可查看的源码文件。</p>}
+ </section>;
 }
 function Reproduction({entry,demo}:{entry:Entry;demo:Demo}){
  const [feedback,setFeedback]=useState('');
