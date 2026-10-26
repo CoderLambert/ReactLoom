@@ -1,0 +1,5 @@
+{
+  "sdk": {"status":"NOT_RUN","note":"使用真实包 import，当前依赖下载 DNS 受阻，未运行 SDK"},
+  "build": {"status":"BLOCKED","note":"registry.npmjs.org DNS 无法解析"},
+  "browser": {"status":"NOT_RUN"}
+}

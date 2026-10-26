@@ -1,0 +1,9 @@
+node_modules/
+dist/
+public/raw/
+public/catalog.json
+public/llms.txt
+src/generated/
+playwright-report/
+test-results/
+*.tsbuildinfo

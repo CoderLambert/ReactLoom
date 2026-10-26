@@ -1,0 +1,56 @@
+name: Library Lab
+on:
+  pull_request:
+    paths: ['packages/library-lab/**', 'docs/library-lab/**', '.github/workflows/library-lab.yml', 'pnpm-lock.yaml']
+  push:
+    branches: ['feat/library-lab']
+    paths: ['packages/library-lab/**', 'docs/library-lab/**', '.github/workflows/library-lab.yml', 'pnpm-lock.yaml']
+permissions:
+  contents: read
+concurrency:
+  group: library-lab-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  catalogue:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate entries and test generator
+        working-directory: packages/library-lab
+        run: |
+          node scripts/generate.mjs --check
+          npm test
+          node scripts/generate.mjs
+  runtime-bootstrap:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.3
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Bootstrap actual resolution (temporary; coordinator must commit lockfile)
+        run: pnpm install --no-frozen-lockfile --ignore-scripts
+      - name: Typecheck, actual SDK tests and build
+        run: |
+          pnpm --filter @reactloom/library-lab typecheck
+          pnpm --filter @reactloom/library-lab test:sdk
+          pnpm --filter @reactloom/library-lab build
+      - name: Install Chromium
+        run: pnpm --filter @reactloom/library-lab exec playwright install --with-deps chromium
+      - name: Production preview smoke
+        run: pnpm --filter @reactloom/library-lab test:e2e
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: library-lab-bootstrap-${{ github.sha }}
+          path: |
+            pnpm-lock.yaml
+            packages/library-lab/dist
+            packages/library-lab/playwright-report
+          retention-days: 7
