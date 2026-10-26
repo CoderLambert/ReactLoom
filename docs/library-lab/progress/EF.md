@@ -171,7 +171,8 @@ E03/F01/F06/F17需与公共DemoHost真实浏览器验证，尤其StrictMode重�
 - **提交1**：`c05b6cd9c9dd45dc41b1b454958c090a2fcc6412`（E01/E02/F07，22个源码/资料文件）。
 - **提交2**：本轮后续提交（F14/F15及持久进度、依赖请求）。
 - **结构校验**：通过GitHub Git Tree/Blob实际读取5个 `library.json`，5份均为合法JSON，5×3 Demo声明具有唯一basic/business/advanced，entryPoint属于sourceFiles且仓库Blob存在，guide/agent/verification存在：**5/5结构PASS**。此检查不调用任何目标SDK，不能等同业务功能PASS。
-- **F07 fixture 算法预检**：直接读取本批提交的 fixture.ts，仅剥离 TypeScript 类型注解后在 JS 沙箱执行，获得 925 字节/2页/7对象，全部对象 offset、xref、stream Length 均匹配：结构预检 PASS，**未运行 react-pdf/pdfjs SDK**。\n- **实际运行**：本环境 registry.npmjs.org 仍返回 EAI_AGAIN；此前已有相同阻塞，本轮仅一次验证后不再循环安装。没有pnpm可执行/依赖的完整构建环境，E01/E02/F07 SDK NOT_RUN，F14/F15真正CLI NOT_RUN，TypeScript/Vite BLOCKED，Chromium/Storybook未运行。不会继承历史研究或其他条目PASS。
+- **F07 fixture 算法预检**：直接读取本批提交的 fixture.ts，仅剥离 TypeScript 类型注解后在 JS 沙箱执行，获得 925 字节/2页/7对象，全部对象 offset、xref、stream Length 均匹配：结构预检 PASS，**未运行 react-pdf/pdfjs SDK**。
+- **实际运行**：本环境 registry.npmjs.org 仍返回 EAI_AGAIN；此前已有相同阻塞，本轮仅一次验证后不再循环安装。没有pnpm可执行/依赖的完整构建环境，E01/E02/F07 SDK NOT_RUN，F14/F15真正CLI NOT_RUN，TypeScript/Vite BLOCKED，Chromium/Storybook未运行。不会继承历史研究或其他条目PASS。
 - **来源**：以2026-10-27核对的 Tiptap/BlockNote/react-pdf/Storybook/Knip 官方使用/发行页为基准重新实现，版本仍待PLATFORM实际pnpm解析及peer证实。所有示例输入是原创/本地，未引入第三方付费素材或服务。
 
 ### 第四轮新增 dependencyRequests（只由PLATFORM修改package与lockfile）
