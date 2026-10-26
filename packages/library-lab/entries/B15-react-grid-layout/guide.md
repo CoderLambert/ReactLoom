@@ -17,7 +17,7 @@ const {width,containerRef,mounted}=useContainerWidth();
 **2.x 和 1.x API 并不通用**：v2 引入 TS 类型、width 明确传入、配置对象、受控 layout；旧 `data-grid`/`WidthProvider` 迁移应使用 legacy 子路径，不能混在本例 v2 组件里。
 
 ## 三层演示
-基础展示静态 NewsHub 三模块看板，强制 `dragConfig.enabled=false`；业务层允许通过 `.lab-grid-handle` 拖动或缩放，并将更新后的布局作为 React state；进阶锁定头部面板，宽度不足自动切换 6 列，提供重置、可序列化 JSON 和键盘左右移动替代。
+基础展示静态 NewsHub 三模块看板，强制 `dragConfig.enabled=false`；业务层允许通过 `.lab-grid-handle` 拖动或缩放，并将更新后的布局作为 React state；进阶锁定头部面板，宽度不足自动切换 6 列，提供重置、可序列化 JSON 和键盘位置及宽度调整替代。
 
 ## 数据契约
 `Layout` 每项使用稳定 `i`，必须与子节点 React key 一致。`x/y/w/h` 是网格单位，不是像素。`minW/maxW` 也为列单位；初始布局应适配当前 cols。来自服务端的用户布局必须验证字段、总列数、唯一 ID、权限和布局版本后再渲染，不能将用户 JSON 直接控制 CSS 选择器或 DOM 内容。

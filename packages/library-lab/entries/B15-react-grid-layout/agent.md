@@ -12,7 +12,7 @@
 - v2 `gridConfig`/`dragConfig`/`resizeConfig`，明确 `layout` 与 `onLayoutChange` 的所有权，克隆回调数据。
 - 样式导入 react-grid-layout + react-resizable；只拖句柄，不让卡片按钮被视为拖动。
 - 屏幕尺寸变化时避免不可逆压缩用户已保存布局；正式系统使用多断点布局。
-- 对不能依赖指针的用户提供 keyboard 操作，并对 static 项禁用全部移动控件。
+- 对不能依赖指针的用户提供键盘移动和宽度调整操作，并对 static 项禁用全部移动控件。
 
 ## 禁忌
 不要混用 `react-grid-layout/legacy` 的 `WidthProvider` 与本例 v2；不要把旧 localStorage 当可信 schema；不要在每次渲染重置 layout；不要引入未验证的碰撞策略或在回调中直接修改 readonly 输入。
