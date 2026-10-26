@@ -1,51 +1,47 @@
-# Library Lab CD 进度（C+D，43 项）
+# ReactLoom Library Lab — CD 进度（43 项）
 
-## 恢复状态
+## 恢复与分支
 
-- 通道：CD / Issue #6 / 分支 `feat/library-lab-cd`，只拥有 `entries/C*`、`entries/D*` 与本文件。
-- 最新实际源码提交：`0850fea24bde059834a3a52fec4accde8c32523d`。
-- 初始集成基线：`38ed2d247bd82e4f1422b0e8904973e16bca2972`；当前平台集成分支另有目录索引提交，不要覆盖其公共文件。
-- runCount：1 / 24。没有更改根锁文件、运行器、平台源码或其他分组。
+- Issue #6、主 Epic #4，目标集成分支 feat/library-lab。前一批 PR #10 **已合入**，本批从最新集成提交 df4674d501bac029f8529ff940ba9b8c8707347c 新建 feat/library-lab-cd-wave2，避免在旧已合并分支继续开发。
+- runCount：2 / 24；仅写 entries/C*、entries/D* 及此进度文件。公共 package/lockfile/CI/生成器由 PLATFORM 独占。
+- 本轮 Git commit / PR 见本通道新 PR；用户的主 PR #8 仍为 Draft，不写 main。
 
-## 已落地的条目（此轮不是 43/43 完工）
+## 本轮新增 4 个完整垂直条目
 
-|条目|交付|内容状态|SDK/编译/浏览器|
+|条目|三层真实 SDK 源码场景|指南与验证|
+|---|---|---|
+|C14 date-fns 4.4.0 + @date-fns/tz 1.5.0|严格 YYYY-MM-DD、IANA RSS 排程、DST 23/25h及回拨本地事件歧义|library.json / guide.md / agent.md / AGENTS.md / verification.json，NOT_RUN|
+|D01 es-toolkit 1.52.0|分组去重、RSS 最新优先与分页、恶意URL/不可信数据隔离|同上，NOT_RUN|
+|C07 TanStack Table 9.2.4|v9 useTable/tableFeatures、稳定业务 rowId、排序分页、手动模拟服务端/取消竞态|同上，NOT_RUN|
+|D07 TanStack Query 5.104.1|QueryClient 分离、租户完整缓存键、AbortSignal/乐观mutation失败回滚|同上，NOT_RUN|
+
+每条均有 examples/example.tsx 真正 import 目标 SDK，examples/demo.tsx 重导出；basic/business/advanced 三个 manifest 指向同一份按 level 呈现的源码，源码面板自动读取实际文件。所有 HTTP/服务端情形明确为内存 fixture，不宣称实网通过。
+
+当前 CD 43 条：已经接入实际示例的 C01/C02/C07/C14/C20/C21/D01/D03/D05/D07 = **10/43**；这与“真实 SDK 已验收”是不同计数。其余33条仍待实现，不能以119个目录数代替完成数。
+
+## 新增定向 SDK 测试文件
+
+- entries/C14-date-fns/tests/sdk.test.mjs：date-fns + TZDate 真实计算春/秋 DST 的23/25小时。
+- entries/D01-es-toolkit/tests/sdk.test.mjs：真实 es-toolkit 对 orderBy/uniqBy/groupBy/chunk 进行断言。
+- entries/D07-tanstack-query/tests/sdk.test.mjs：真实 QueryClient 多租户 cache key 与 cancelQueries/AbortSignal。
+
+本执行环境没有真实 npm 安装。本次检索官方文档确认日期 v4+tz、v9 Table API、Query v5 cancellation 和 es-toolkit/array。容器 DNS 不能解析 github.com / registry.npmjs.org，SDK/TS/Vite/Playwright **NOT_RUN**；未伪称测试通过。以上 test 文件是新增可复现测试，不是已经运行通过的测试结果。后续由 PLATFORM 汇总到合适的 test:sdk 脚本，执行后将日志与 sourceFingerprint 绑定到 verification.json。
+
+## dependencyRequests：请 PLATFORM 统一处理，CD 禁止编辑锁文件
+
+|依赖|固定版本|理由|官方依据|
 |---|---|---|---|
-|C01 React Hook Form|三层真实 RHF 订阅表单、useFieldArray 稳定 key、HTTPS 校验、错误回填、AbortController、中文指南及 Agent 手册|recreated / 需独立审阅|NOT_RUN|
-|C02 Zod|三层真实 Zod 校验、strictObject、RSS/OPML 判别联合、跨字段 superRefine、输入输出类型与反例|recreated / 需独立审阅|NOT_RUN|
-|C21 tailwind-merge|三层 twMerge/twJoin + clsx、组件变体与方向性冲突、中文说明/Agent 指南|recreated / 需独立审阅|NOT_RUN|
-|D05 decimal.js|三层高精度对照、采购金额计算、税与 HALF_UP/HALF_EVEN、模块级 Decimal.clone、指南/Agent|recreated / 需独立审阅|NOT_RUN|
-|D03 p-limit|在现有3层真实SDK示例上修复取消：AbortSignal + rejectOnClear + clearQueue，保证排队 Promise 可结算；同步 guide/agent|已存在并加固|新版本 NOT_RUN|
-|C20 clsx|保留平台已有的3层实际示例和说明；本轮未重复改写|已有示例|沿用之前 NOT_RUN|
+|date-fns|4.4.0|C14 日期计算和 DST|https://github.com/date-fns/date-fns/releases/tag/v4.4.0|
+|@date-fns/tz|1.5.0|C14 TZDate/tz |https://github.com/date-fns/tz|
+|es-toolkit|1.52.0|D01 array groupBy/orderBy/uniqBy/chunk|https://es-toolkit.dev/|
+|@tanstack/react-table|9.2.4|C07 v9 API/rowFeature，不与 v8 混用|https://tanstack.com/table/latest|
+|@tanstack/react-query|5.104.1|D07 QueryClient/useQuery/mutation，与现有 SPA 对齐|https://tanstack.com/query/latest/docs/framework/react/overview|
 
-注：这里只把 `contentState=recreated` 表示“源码与说明在新项目中重新编写”，**并非 SDK 验证通过**。其余37条 C/D 仍以原有目录/待接入为主。
+PLATFORM 需使用真实注册表校验、解析 peers 并更新 pnpm-lock.yaml；本次没有自造 integrity。确认实际构建之前，各版本只表示“目标版本”，不是“已安装验收版本”。
 
-## 本次验证事实
+## 后续推进队列
 
-- 已使用 GitHub connector 实际检查本次 staged tree 的 C01、C02、C21、D03、D05 五个条目：**5/5 拥有 guide.md、agent.md、AGENTS.md、verification.json；15/15 demo sourceFiles 和入口在 Git tree 内存在**。检查对象为新写入的真实Git对象，而非计划。
-- 搜索并核对官方接口：RHF v7 的 useFieldArray/错误重置、Zod 4 safeParse/schema、tailwind-merge 3.7.0 的 API 及 Tailwind v4 支持、p-limit 7.3.3 rejectOnClear、decimal.js 10.6.0 Decimal.clone 与 rounding。
-- 本轮容器 `curl https://github.com/CoderLambert/ReactLoom.git` 报 `Could not resolve host: github.com`；npm 依赖未安装。**TS类型检查、实际 SDK Node 单测、Vite build、Playwright 都没有执行**，验证标记保持 NOT_RUN，绝不把源文件存在/静态目录检查当成这些测试通过。
-- 平台历史 17 项 Node 逻辑测试属于初始公共提交的证据，**不是本次新增四库的测试结果**。
-
-## dependencyRequests（PLATFORM 单一 owner 安装）
-
-|npm package|版本|用途|来源|优先级|
-|---|---|---|---|---|
-|react-hook-form|7.89.0|C01 三层 React Hook Form 运行时|当前 `templates/spa/package.json` 已使用；https://react-hook-form.com/|P0|
-|zod|4.6.5|C02 真实运行时 Schema|当前 SPA 模板已使用；https://github.com/colinhacks/zod/releases/tag/v4.6.5|P0|
-|tailwind-merge|3.7.0|C21 冲突合并；兼容现有 Tailwind v4.3|当前 SPA 模板已使用；https://github.com/dcastil/tailwind-merge|P1|
-|decimal.js|10.6.0|D05 精确十进制计算|官方 package.json 与 npm 版本；https://github.com/MikeMcl/decimal.js|P1|
-
-现有 Lab manifest 已含 `clsx@2.1.1`、`p-limit@7.3.3`，勿重复新增。
-PLATFORM 需核对真实注册表/peer 兼容并统一更改 `packages/library-lab/package.json` 与 `pnpm-lock.yaml`；CD 不做锁文件操作，不手造 lock integrity。
-
-## 后续队列（下一轮直接写代码）
-
-1. 一旦 PLATFORM 同步依赖：对 C01/C02/C21/D05 跑真实 TypeScript/build、SDK 定向测试；据错误修正当前条目源码/guide/agent，再记录有命令/日志的证据。D03 复核 cancel clearQueue 的 E2E。
-2. 继续 C14 date-fns（日期/DST 输入与 SSR）和 D01 es-toolkit（纯工具集合场景），选择成熟版本并先做完整三个层次；这两项只编辑各自目录。
-3. C07 TanStack Table / D07 TanStack Query：稳定行 ID 与分页/排序、缓存键、取消及 stale-response race；这两项需要平台依赖和运行时集成，先写可独立源码/文档。
-4. 每轮至少推进一个完整高价值实现，不重复打印泛泛研究。特殊依赖由 PLATFORM 接收，不覆盖其他队列。
-
-## 交付与边界
-
-CD 当前 PR 目标应为 `feat/library-lab`，不能 main；只由 PLATFORM 审查并合入。遇环境阻塞继续独立任务；所有代码的 SDK/build/browser 状态在实际执行前不得标 PASS，绝不调用收费 API 或公开私有仓库。
+1. 合并后先补 C07/D07 的真正 TS/SDK/浏览器验证，并复核 v9 React Table JSX Type、Tenant 切换和 Query mutation 清理。
+2. 然后继续 C09 React Virtuoso 或 C10 TanStack Virtual、D04 p-queue、D08 ky/D09 Axios；着重虚拟化稳定高度/行ID、超时取消/竞态、HTTP Retry-After。
+3. 若 SDK 下载仍不可行，继续条目源码与文档，不要每轮重复跑同一个 DNS 失败；将真实未执行留 NOT_RUN。
+4. 仅 PLATFORM 审核并合并本批 PR 至 feat/library-lab；本通道禁止合 main、公开部署或影响模板。

@@ -1,1 +1,102 @@
-{"schemaVersion":1,"entryId":"C07","slug":"tanstack-table","name":"TanStack Table","group":"C","summary":"Headless 表格、排序和分页","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "C07",
+  "slug": "tanstack-table",
+  "name": "TanStack Table",
+  "group": "C",
+  "summary": "Headless 表格的稳定业务 ID、排序和分页数据所有权",
+  "tags": [
+    "TanStack Table",
+    "表格",
+    "排序",
+    "分页",
+    "行选择"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "@tanstack/react-table",
+      "version": "9.2.4"
+    }
+  ],
+  "references": [
+    {
+      "title": "TanStack Table v9 官方文档",
+      "url": "https://tanstack.com/table/latest"
+    },
+    {
+      "title": "官方源码",
+      "url": "https://github.com/TanStack/table"
+    },
+    {
+      "title": "v8 对比说明",
+      "url": "https://tanstack.com/table/v8/docs/guide/sorting"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "C08",
+      "relation": "alternative",
+      "reason": "超复杂完整企业数据网格可比较 AG Grid 的免费/商业能力边界。"
+    },
+    {
+      "entryId": "C10",
+      "relation": "complements",
+      "reason": "大列表按需搭配 TanStack Virtual；虚拟化不代替服务端分页。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "本地列排序与稳定行ID",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "timer"
+      ],
+      "description": "本地列排序与稳定行ID"
+    },
+    {
+      "demoId": "business",
+      "title": "RSS前端过滤与分页",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "timer"
+      ],
+      "description": "RSS前端过滤与分页"
+    },
+    {
+      "demoId": "advanced",
+      "title": "服务端分页/排序、取消与跨页选中",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "timer"
+      ],
+      "description": "服务端分页/排序、取消与跨页选中"
+    }
+  ],
+  "license": {
+    "spdx": "MIT"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "针对恢复的 9.2.4 原研究按最新平台约定独立精简和改写；原旧测试不继承"
+  }
+}

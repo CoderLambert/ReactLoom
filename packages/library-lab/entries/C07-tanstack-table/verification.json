@@ -1,0 +1,12 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "源码针对 v9.2.4，官方 SDK 运行测试未执行"
+  },
+  "build": {
+    "status": "NOT_RUN"
+  },
+  "browser": {
+    "status": "NOT_RUN"
+  }
+}

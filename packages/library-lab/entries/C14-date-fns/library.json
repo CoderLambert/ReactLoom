@@ -1,1 +1,100 @@
-{"schemaVersion":1,"entryId":"C14","slug":"date-fns","name":"date-fns","group":"C","summary":"函数式日期计算与格式化","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "C14",
+  "slug": "date-fns",
+  "name": "date-fns",
+  "group": "C",
+  "summary": "函数式日期、日历天与 DST 时区运算",
+  "tags": [
+    "日期",
+    "DST",
+    "IANA时区",
+    "排程"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "date-fns",
+      "version": "4.4.0"
+    },
+    {
+      "name": "@date-fns/tz",
+      "version": "1.5.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "date-fns 官方源码",
+      "url": "https://github.com/date-fns/date-fns"
+    },
+    {
+      "title": "时区扩展官方源码",
+      "url": "https://github.com/date-fns/tz"
+    },
+    {
+      "title": "v4 时区发布说明",
+      "url": "https://blog.date-fns.org/v40-with-time-zone-support/"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "C15",
+      "relation": "alternative",
+      "reason": "Day.js 提供链式 API，但需分别验证时区插件解析语义。"
+    },
+    {
+      "entryId": "C16",
+      "relation": "alternative",
+      "reason": "Luxon 对持续使用 DateTime/Interval 对象模型的系统更直接。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "严格校验日历日期",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [],
+      "description": "严格校验日历日期"
+    },
+    {
+      "demoId": "business",
+      "title": "RSS排程（IANA时区）",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [],
+      "description": "RSS排程（IANA时区）"
+    },
+    {
+      "demoId": "advanced",
+      "title": "DST 23/25 小时与回拨时间歧义",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [],
+      "description": "DST 23/25 小时与回拨时间歧义"
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "note": "仅自有示例文字和代码；不附第三方媒体"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "基于官方API与研究包重新编写；历史测试状态不继承"
+  }
+}
