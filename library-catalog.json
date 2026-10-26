@@ -331,9 +331,9 @@
     "entryId": "C03",
     "name": "Valibot",
     "group": "C",
-    "summary": "模块化类型安全数据校验",
+    "summary": "模块化 Schema 验证、RSS 数据收窄与跨字段错误定位",
     "path": "packages/library-lab/entries/C03-valibot",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "C04",
@@ -355,9 +355,9 @@
     "entryId": "C06",
     "name": "IMask",
     "group": "C",
-    "summary": "输入掩码、格式化和光标维护",
+    "summary": "数字编号、金额和日期输入掩码；保留光标与中文 IME 边界",
     "path": "packages/library-lab/entries/C06-imask",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "C07",
@@ -395,9 +395,9 @@
     "entryId": "C11",
     "name": "react-arborist",
     "group": "C",
-    "summary": "虚拟化树形数据与拖拽",
+    "summary": "虚拟化树形 RSS 目录、稳定节点 ID、跨分组拖拽和中文搜索",
     "path": "packages/library-lab/entries/C11-react-arborist",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "C12",
@@ -459,9 +459,9 @@
     "entryId": "C19",
     "name": "nuqs",
     "group": "C",
-    "summary": "URL 查询状态双向同步",
+    "summary": "URL 搜索参数的类型安全状态、路由适配、push/replace 和 IME 约束",
     "path": "packages/library-lab/entries/C19-nuqs",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "C20",
@@ -603,9 +603,9 @@
     "entryId": "D15",
     "name": "Dexie",
     "group": "D",
-    "summary": "IndexedDB 查询、事务和迁移",
+    "summary": "IndexedDB 事务、复合索引和版本升级，不污染其他站点存储",
     "path": "packages/library-lab/entries/D15-dexie",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "D16",
@@ -627,9 +627,9 @@
     "entryId": "D18",
     "name": "Comlink",
     "group": "D",
-    "summary": "Worker RPC 和数据传输",
+    "summary": "Web Worker RPC、Transferable 数据传递、回调代理与资源释放",
     "path": "packages/library-lab/entries/D18-comlink",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "D19",

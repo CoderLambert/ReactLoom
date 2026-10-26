@@ -45,15 +45,15 @@
 |B22|react-beautiful-dnd（历史迁移）|把废弃react-beautiful-dnd的Droppable/Draggable列表低风险迁移为React19兼容替代库|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B22-react-beautiful-dnd-migration/)|
 |C01|React Hook Form|真实 RSS 订阅表单：动态字段、服务端错误映射与请求取消|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C01-react-hook-form/)|
 |C02|Zod|不可信 RSS / OPML JSON 校验、规范化与跨字段错误|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C02-zod/)|
-|C03|Valibot|模块化类型安全数据校验|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C03-valibot/)|
+|C03|Valibot|模块化 Schema 验证、RSS 数据收窄与跨字段错误定位|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C03-valibot/)|
 |C04|JSON Forms|JSON Schema 驱动动态表单|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C04-jsonforms/)|
 |C05|Ajv|JSON Schema 验证与编译|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C05-ajv/)|
-|C06|IMask|输入掩码、格式化和光标维护|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C06-imask/)|
+|C06|IMask|数字编号、金额和日期输入掩码；保留光标与中文 IME 边界|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C06-imask/)|
 |C07|TanStack Table|Headless 表格的稳定业务 ID、排序和分页数据所有权|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C07-tanstack-table/)|
 |C08|AG Grid|复杂数据网格与编辑|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C08-ag-grid/)|
 |C09|React Virtuoso|自动测量变高列表、RSS分段加载与历史消息锚定|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C09-react-virtuoso/)|
 |C10|TanStack Virtual|Headless 列表虚拟化、变高测量与稳定业务键|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C10-tanstack-virtual/)|
-|C11|react-arborist|虚拟化树形数据与拖拽|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C11-react-arborist/)|
+|C11|react-arborist|虚拟化树形 RSS 目录、稳定节点 ID、跨分组拖拽和中文搜索|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C11-react-arborist/)|
 |C12|FullCalendar|事件日历、时区和排程|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C12-fullcalendar/)|
 |C13|Frappe Gantt|任务依赖与甘特图|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C13-frappe-gantt/)|
 |C14|date-fns|函数式日期、日历天与 DST 时区运算|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C14-date-fns/)|
@@ -61,7 +61,7 @@
 |C16|Luxon|DateTime、Interval 与明确 IANA 时区的日历窗口|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C16-luxon/)|
 |C17|i18next|独立语言实例、命名空间、复数、插值和 fallback 的核心 i18n 工作坊|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C17-i18next/)|
 |C18|react-i18next|React useTranslation、Trans 富文本与多工作区 I18nextProvider 隔离|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C18-react-i18next/)|
-|C19|nuqs|URL 查询状态双向同步|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C19-nuqs/)|
+|C19|nuqs|URL 搜索参数的类型安全状态、路由适配、push/replace 和 IME 约束|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C19-nuqs/)|
 |C20|clsx|条件 className 合成|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C20-clsx/)|
 |C21|tailwind-merge|Tailwind v4 工具类冲突合并与可覆盖组件实践|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C21-tailwind-merge/)|
 |C22|Moment（历史迁移）|历史日期库识别与现代迁移|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C22-moment-migration/)|
@@ -79,10 +79,10 @@
 |D12|Redux Toolkit|可追踪状态与业务流程|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D12-redux-toolkit/)|
 |D13|RTK Query|Redux 数据请求与缓存订阅|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D13-rtk-query/)|
 |D14|XState|状态机与 Actor 生命周期|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D14-xstate/)|
-|D15|Dexie|IndexedDB 查询、事务和迁移|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D15-dexie/)|
+|D15|Dexie|IndexedDB 事务、复合索引和版本升级，不污染其他站点存储|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D15-dexie/)|
 |D16|Workbox|Service Worker 缓存与离线更新|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D16-workbox/)|
 |D17|Yjs|CRDT 实时协作与离线合并|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D17-yjs/)|
-|D18|Comlink|Worker RPC 和数据传输|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D18-comlink/)|
+|D18|Comlink|Web Worker RPC、Transferable 数据传递、回调代理与资源释放|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D18-comlink/)|
 |D19|Fuse.js|浏览器端加权模糊搜索、分组过滤、IME 与动态索引重建|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D19-fusejs/)|
 |D20|MiniSearch|本地全文倒排索引、前缀与拼写容错、查询建议和索引重建|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D20-minisearch/)|
 |D21|Pagefind|构建时静态站点全文搜索|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D21-pagefind/)|

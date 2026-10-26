@@ -134,3 +134,10 @@ runCount：**4/24**。main与旧模板保持未修改，Draft PR #8维持待最�
 **下一轮优先队列：**一是EF修复F06/F07版本冲突后合入；二是核查AB/CD/EF剩余28条的PR并同步公共版本/索引；三是完善Worker/SW/frame隔离与证据展示；四是可用Node>=22.18/pnpm10/Runner出现时立即解析可信锁文件、执行受影响SDK/CLI/真实构建/浏览器测试，逐项写入可追溯证据，不继承历史PASS。
 
 runCount：**5/24**。本次只向`feat/library-lab`集成，`main`和既有PR #3未改，最终PR #8仍Draft。不会因某次失败而假装已跑过完整生产验收。
+
+
+### 第5轮并行任务同步追加：CD PR #28
+
+在本轮进行期间，CD分支新增 PR #28（C03 Valibot、C06 IMask、C11 react-arborist、C19 nuqs、D15 Dexie、D18 Comlink，共6条/18个分层入口）。PLATFORM审查所有50个变更路径均属于C/D条目和自己的进度文件，结合官方资料核查 react-arborist adjustMoveIndex 已在v3.15正式导出、nuqs TanStack Router adapter 的实验性支持；squash合入`c58f18ea8656aebebc09c204b89739065c643150`至集成分支，无main改动。
+
+统一新增valibot/imask/react-imask/react-arborist/nuqs/dexie/comlink及fake-indexeddb（仅dev）真实版本声明，再同步两个根目录索引。远端GitHub提交结构总计 **119目录、97份指南和Agent手册、291个分层配置、剩22条待完整接入**，不代表运行验收已过。C19路由兼容、D15 IndexedDB事务/迁移和D18实际Worker需要真实浏览器跟踪；新增6条SDK测试仅存源码，未执行。PDF.js #22、pnpm-lock/Actions #12仍为阻塞。本轮runCount保持5/24，下一轮从实际分支head恢复。
