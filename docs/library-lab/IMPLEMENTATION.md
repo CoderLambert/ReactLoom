@@ -39,3 +39,8 @@ pnpm --filter @reactloom/library-lab dev
 ## 第2轮集成进展（2026-10-27）
 
 A/B #16八条与C/D #18四条完整工作坊已实际合入集成分支，新增SDK包统一声明。当前 GitHub 文件树与根索引一致：119已收录，47个条目有三层源码和独立guide/agent，共141项演示选择；72项仍缺完整示例。只属于代码及文档接入，真实SDK运行、tsc、构建、Chromium仍缺独立执行证据。增加根目录索引一致性工具及CI条件检查、修正Markdown本地源码引用，详见progress/PLATFORM.md。所有内容仍留在Draft PR #8。
+
+
+## 第4轮集成开发（2026-10-27）
+
+已分别 squash 合并 AB PR #23（6库）与CD PR #24（5库）到集成分支；119目录中已有74库的完整指南与示例源码，45库仍缺。平台增加SDK Node测试按ID/按组选择器，并提供缺测失败语义；公共 package声明已补齐本批14个版本条目，根Agent索引保持119条同步。尚未生成实际pnpm锁文件，不以静态版本匹配、离线单测或GitHub无runner的失败job声称生产验收。进度与实测边界见progress/PLATFORM.md。

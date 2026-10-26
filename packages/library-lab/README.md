@@ -45,3 +45,18 @@ node packages/library-lab/scripts/find-library.mjs --group E --limit 10
 经过审查的 `executionKind: worker` 条目可以提供独立 ESM Worker 模块入口，生成器产生延迟创建的 `workerFactories`；**页面只有用户点击运行时才创建 Worker**。宿主向 Worker 发送 `{type:'start',level,runId}`，Worker 使用同一 `runId` 返回 `{type:'progress'|'result'|'error',message:string,runId}`；无效或过期消息被丢弃、文本截断，退出或45秒超时后终止 Worker。Worker 非不可信代码安全边界，不支持任意脚本执行。
 
 `service-worker`、`persistent-network-interception`、`cross-origin-isolation` 等能力仍拒绝在主站运行，需独立 origin 审计。CLI/Node 示例仍仅提供可复制命令。该能力的生成器协议经过离线测试，但直到有真实条目、依赖安装和浏览器验收前，不能宣称 Worker SDK 运行 PASS。
+
+## 定向 SDK 测试（避免每次运行全部库）
+
+`node --test` 只执行实际存在的第三方库 Node 测试。新增的目标条目不存在测试文件时，运行器明确失败，不能把空集合记录为通过。
+
+```sh
+cd packages/library-lab
+node scripts/sdk-runner.mjs --list                  # 查看全部实际 Node SDK 测试文件；不执行
+node scripts/sdk-runner.mjs --entry=D03             # 指定一个库
+node scripts/sdk-runner.mjs --entries=C17,C18,D06   # 仅执行指定库
+node scripts/sdk-runner.mjs --group=F               # 仅执行 F 组实际 Node 测试
+node scripts/sdk-runner.mjs                        # 所有 Node SDK 测试，包含全局测试
+```
+
+`--entry` / `--entries` 与 `--group` 不能混用；定向命令不会悄悄加入全局 `tests/sdk.test.mjs`。没有 Node 测试的 WebGL、编辑器或纯浏览器条目应通过单独的浏览器场景验证，**不能因 Node suite 为零就声称 PASS**。

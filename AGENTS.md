@@ -14,7 +14,6 @@ ReactLoom is a pnpm workspace. Templates are developed in-tree and copied by `cr
 | `packages/api-client` | Framework-free HTTP client (`@reactloom/api-client`) |
 | `packages/create-reactloom` | Init CLI |
 | `packages/tsconfig` | Shared TypeScript presets |
-| `packages/library-lab` | Independent private knowledge/playground SPA. Indexed in `LIBRARY_CATALOG.md`; not copied into generated templates. |
 | `packages/library-lab` | Private Library Lab SPA and 119 tool-library entry guides; never copied by create-reactloom |
 | `templates/spa` | Vite SPA |
 | `templates/ssr` | Next.js App Router app, plus Docker |

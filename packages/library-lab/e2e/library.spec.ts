@@ -46,3 +46,41 @@ test('Playwright workshop displays the real standalone CLI command and never run
  await expect(page.getByText('pnpm exec playwright test --config=entries/F13-playwright/examples/playwright.config.ts entries/F13-playwright/examples/basic.spec.ts')).toBeVisible();
  await expect(page.getByRole('button',{name:'运行当前示例'})).toHaveCount(0);
 });
+
+
+test('mobile category picker remains keyboard-usable when the desktop sidebar is hidden',async({page})=>{
+ await page.setViewportSize({width:390,height:844});
+ await page.goto('/');
+ const group=page.getByRole('combobox',{name:'选择领域分类'});
+ await expect(group).toBeVisible();
+ await group.selectOption('E');
+ await expect(page.locator('.library-card')).toHaveCount(19);
+ await page.getByRole('textbox',{name:'搜索工具库'}).fill('Monaco');
+ await expect(page.locator('.library-card')).toHaveCount(1);
+ await expect(page.getByRole('link',{name:/E05/})).toBeVisible();
+});
+
+test('manual tab activation preserves keyboard focus without loading other tabs',async({page})=>{
+ await page.goto('/libraries/clsx?tab=docs');
+ const docs=page.getByRole('tab',{name:'详细文档'});
+ const agent=page.getByRole('tab',{name:'Agent 指南'});
+ await docs.focus();
+ await page.keyboard.press('ArrowRight');
+ await expect(agent).toBeFocused();
+ await expect(agent).toHaveAttribute('aria-selected','false');
+ await page.keyboard.press('Enter');
+ await expect(agent).toHaveAttribute('aria-selected','true');
+ await expect(page).toHaveURL(/tab=agent/u);
+ await expect(page.getByRole('button',{name:'运行当前示例'})).toHaveCount(0);
+});
+
+test('reading Monaco docs does not fetch its interactive editor runtime',async({page})=>{
+ const heavyRequests:string[]=[];
+ page.on('request',request=>{
+  if(/\/(?:assets|node_modules)\/[^?]*(?:monaco-editor|echarts)/iu.test(request.url()))heavyRequests.push(request.url());
+ });
+ await page.goto('/libraries/monaco-editor?tab=docs');
+ await expect(page.getByRole('tab',{name:'详细文档'})).toHaveAttribute('aria-selected','true');
+ await expect(page.getByRole('link',{name:'读取 Markdown 原文'})).toBeVisible();
+ expect(heavyRequests).toEqual([]);
+});

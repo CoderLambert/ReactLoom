@@ -88,3 +88,30 @@ runCount：1 / 24。所有后续自动开发从实际最新 GitHub commit/PR 恢
 **未解决的真实环境条件**：Node包实际安装、pnpm-lock冻结、TypeScript完整检查、Vite production build、目标SDK/Chromium真实执行仍BLOCKED/NOT_RUN；此前GitHub Actions runner_id=0,steps=[]，详见#12。不要用Mock、静态审计或原研究包历史结论冒充运行验收。
 
 **下批**：先合并新增依赖的静态合法性与F06/F07版本冲突修复，再继续 worker 波次、审查React19/peer/CSS Worker、补真正锁文件及打包级隔离检查。有可用运行环境后先定向检查63条实际源码、六风险切片与关键浏览器操作，再恢复完整frozen CI。runCount：**3 / 24**。
+
+
+## 平台持续开发第4轮（2026-10-27，北京时间）
+
+### 完成的实际 GitHub 集成与代码
+
+- AB wave5 PR #23（6条：A16 MapLibre、B07 MUI、B08 Mantine、B10 Base UI、B11 Radix、B12 React Aria）审查只改 A/B 条目与进度，6份 library.json、18个分层入口，已 squash 到 feat/library-lab：`dba70e9137239f80518020da857ac5cafdb3a89d`。
+- CD wave5 PR #24（5条：C17 i18next、C18 react-i18next、D06 Immer、D11 Jotai、D20 MiniSearch）审查只改 C/D 条目与进度，5份 library.json、15个分层入口，已 squash 到 feat/library-lab：`289282a4ada7a5ce34dc381cf9d034adabafed90`。
+- 公共依赖通过 `534e7e7c1feefc55420ccdaf21ca064efadff0b0` 提交：新增/调整14个 package 条目，与这11份元数据记录的版本完全一致；同时重建追踪的根目录 `library-catalog.json` 与 `LIBRARY_CATALOG.md`（119条）。这只是**静态依赖合同匹配**，不是 npm 已解析的证明。
+- 公共 SDK runner `53e6c93003b08f6aac14da9c375e210e6b12540a` 增加 `--entry`/`--entries`/`--group`/`--list`，缺失指定的实际 SDK Node 测试时直接报错，避免空测试误报 PASS。默认仍运行全量真实 Node SDK 测试。新增测试保护选择、跨组排除与注入参数校验。
+- 增加移动端分类、Radix Tabs 手动键盘激活、文档不预加载 Monaco 的 Playwright 回归场景，并补 README 运行入口。新增浏览器测试**仅提交源码，未执行**。
+
+### 真实进度与验证边界
+
+- 完整身份目录仍 **119/119**；有独立 `guide.md`、`agent.md` 与示例实现的条目 **74/119**；演示选择元数据为 **222**（主要是每条basic/business/advanced复用实现），剩余 **45条** 仍无完整垂直实现。
+- 通过非截断 Git Tree 逐路径统计：119个 entry，74个含真实源码/双指南，**23个条目**有实际提交的 `tests/*.test.mjs` SDK Node suite。其余库可能需要浏览器验证，但不能当作已经验证；23 是“测试文件存在”而不是 SDK 已经 PASS。
+- 在离线本地平台工作副本（部分模块版本可能早于当前远端集成）运行SDK选择器及公共纯 Node 测试：`node --test ...` **57 PASS、0 FAIL**；SDK runner 新增测试 **6 PASS**；静态 TSX 语法解析 0 诊断。由于本地副本不是最新74库完整版本，此结果仅证明公共逻辑/新选择器，不是远端74条目构建或浏览器运行证据。
+- npm依赖真实安装、可信 `pnpm-lock.yaml`、完整 TypeScript、Vite build、SDK runtime、Chromium E2E依旧 **BLOCKED/NOT_RUN**。最近GitHub Actions run 40408615999 两个 job 均 `steps=[]` / 无Runner执行证据；旧共享阻塞维持Issue #12。不修改计费配置、不自造锁文件、不通过Mock冒充SDK。
+- F06/F07 PDF.js runtime/Worker 版本不一致仍是Issue #22硬阻塞，继续由 EF 修复并交由PLATFORM统一依赖；不得把 catalog:check 当成功，直到不一致真实消除。
+
+### 下一批
+
+1. 优先审核下批 worker PR：已接入条目全量静态依赖审计，统一包版本；若 PDF.js #22有 EF 修复则立即集成并核对Worker版本。
+2. 寻找真实可用的Node22+/pnpm10执行环境，**生成真正锁文件而非手造 integrity**，冻结CI安装后执行SDK入口与真实TypeScript构建；如 Runner仍无法分配，继续不受阻的公共安全与可用性开发。
+3. 继续推进独立frame/SW运行器安全边界、Markdown/示例完整源码展示、移动端键盘和视图卸载专项验证，先用离线确定性测试保护公共协议。
+
+runCount：**4/24**。main与旧模板保持未修改，Draft PR #8维持待最终验收状态；本轮非完整生产验收。
