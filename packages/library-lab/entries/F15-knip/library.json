@@ -1,1 +1,136 @@
-{"schemaVersion":1,"entryId":"F15","slug":"knip","name":"Knip","group":"F","summary":"未使用代码和依赖检测","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "F15",
+  "slug": "knip",
+  "name": "Knip",
+  "group": "F",
+  "summary": "检查 Monorepo 无用文件、导出及依赖：最小项目、业务入口与生产模式的真实 CLI 练习",
+  "tags": [
+    "Knip",
+    "CLI",
+    "Monorepo",
+    "未使用文件",
+    "unused",
+    "production"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "knip",
+      "version": "6.41.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "Knip 入口与项目配置",
+      "url": "https://knip.dev/guides/configuring-project-files"
+    },
+    {
+      "title": "Knip CLI 参数",
+      "url": "https://knip.dev/reference/cli"
+    },
+    {
+      "title": "Knip 完整配置",
+      "url": "https://knip.dev/reference/configuration"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "F16",
+      "relation": "complements",
+      "reason": "dependency-cruiser 针对依赖方向/分层约束；Knip针对死代码、孤立文件与无用依赖。"
+    },
+    {
+      "entryId": "F18",
+      "relation": "complements",
+      "reason": "rollup-plugin-visualizer分析实际生产bundle组成，Knip静态扫描未使用代码，证据维度不同。"
+    },
+    {
+      "entryId": "F12",
+      "relation": "complements",
+      "reason": "删除被报告无用文件前通过Vitest/相关E2E复核外部依赖与反射引用。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "level": "basic",
+      "title": "最小依赖与未使用文件",
+      "executionKind": "node-ci",
+      "entryPoint": "examples/workspace/knip.basic.json",
+      "sourceFiles": [
+        "examples/workspace/package.json",
+        "examples/workspace/knip.basic.json",
+        "examples/workspace/knip.business.json",
+        "examples/workspace/knip.advanced.json",
+        "examples/workspace/src/index.ts",
+        "examples/workspace/src/tasks.ts",
+        "examples/workspace/src/unused.ts",
+        "examples/workspace/scripts/generate.ts",
+        "examples/workspace/tests/tasks.test.ts"
+      ],
+      "capabilities": [
+        "node-process",
+        "real-cli",
+        "isolated-fixture"
+      ],
+      "description": "用真Knip CLI扫描原创fixture，输出unused文件/依赖，不删除源码。"
+    },
+    {
+      "demoId": "business",
+      "level": "business",
+      "title": "业务入口与白名单理由",
+      "executionKind": "node-ci",
+      "entryPoint": "examples/workspace/knip.business.json",
+      "sourceFiles": [
+        "examples/workspace/package.json",
+        "examples/workspace/knip.basic.json",
+        "examples/workspace/knip.business.json",
+        "examples/workspace/knip.advanced.json",
+        "examples/workspace/src/index.ts",
+        "examples/workspace/src/tasks.ts",
+        "examples/workspace/src/unused.ts",
+        "examples/workspace/scripts/generate.ts",
+        "examples/workspace/tests/tasks.test.ts"
+      ],
+      "capabilities": [
+        "node-process",
+        "real-cli",
+        "isolated-fixture"
+      ],
+      "description": "扩展脚本入口并限定特殊例外，观察报告如何变化。"
+    },
+    {
+      "demoId": "advanced",
+      "level": "advanced",
+      "title": "生产模式与公开导出",
+      "executionKind": "node-ci",
+      "entryPoint": "examples/workspace/knip.advanced.json",
+      "sourceFiles": [
+        "examples/workspace/package.json",
+        "examples/workspace/knip.basic.json",
+        "examples/workspace/knip.business.json",
+        "examples/workspace/knip.advanced.json",
+        "examples/workspace/src/index.ts",
+        "examples/workspace/src/tasks.ts",
+        "examples/workspace/src/unused.ts",
+        "examples/workspace/scripts/generate.ts",
+        "examples/workspace/tests/tasks.test.ts"
+      ],
+      "capabilities": [
+        "node-process",
+        "real-cli",
+        "isolated-fixture"
+      ],
+      "description": "标注production entry/project，开启entry exports检查，不与测试依赖混淆。"
+    }
+  ],
+  "license": {
+    "spdx": "ISC",
+    "assets": "原创 fixture 和例子；无需付费服务、密钥或第三方素材。"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "2026-10-27复核当前官方文档后新增独立示例。实际CLI、SDK、浏览器和依赖构建仍待执行。"
+  }
+}

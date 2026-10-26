@@ -1,7 +1,7 @@
 # EF 通道持续开发进度
 
 - 通道：EF，Issue #7；分支 `feat/library-lab-ef`；PR base 为 `feat/library-lab`。
-- runCount：3 / 24。
+- runCount：4 / 24。
 - 基线：`38ed2d247bd82e4f1422b0e8904973e16bca2972`。
 - 本轮日期：2026-10-27（北京时间）。
 - 状态：**累计11个条目交付真实 SDK 示例/Node CLI 测试源码、Guide/Agent 文档；实际构建、SDK和浏览器验证仍未完成。**
@@ -153,3 +153,41 @@ E03/F01/F06/F17需与公共DemoHost真实浏览器验证，尤其StrictMode重�
 优先 E01 Tiptap / E02 BlockNote / F07 react-pdf / F15 Knip / F14 Storybook，然后 F16 dependency-cruiser / F18 rollup-plugin-visualizer / E13 PhotoSwipe 等。大型WASM/视频/远程素材仅按显式加载与合法授权实施。E11 Streamdown/F05 SheetJS归档原件缺失，不得伪称已恢复。
 
 当前runCount=3/24。worker只改自己entries/E、entries/F和本progress；没有修改公共依赖、CI、主分支或其他组。
+
+## 第四轮实质代码交付（2026-10-27，北京时间，wave4）
+
+**恢复与安全分支**：已读最新集成 `feat/library-lab@688a660272775b3399a18ae34630401a19ac556c`、根及应用AGENTS、协议、PR #11/#15/#17（已合入集成）和原进度；从当前集成分支创建 `feat/library-lab-ef-wave4`，没有复用已合并旧分支的祖先覆盖公共平台。此轮仅EF entries 与本进度文件，主PR #8保留Draft，PR base严格 `feat/library-lab`。
+
+本轮**新增5条完整工程条目、15个basic/business/advanced场景**，包含直接来自真实库的源码或实际CLI配方，以及完整guide/agent/AGENTS与分项验证文件：
+
+|库|执行类型与三层真实源码|可复用的工程重点|
+|---|---|---|
+|E01 Tiptap|React EditorContent：StarterKit工具栏/JSON会话草稿/结构限额和恢复|ProseMirror命令、编辑器生命周期、IME、外部富文本输出安全，Tiptap3.32.0|
+|E02 BlockNote|React：useCreateBlockNote/Mantine块编辑/JSON保存恢复/真实insertBlocks|订阅清理、块schema、MPL许可与商业XL隔离、样式副作用，0.56.0|
+|F07 react-pdf|React：原创两页PDF/分页与TextLayer/本地坏文件和恢复|react-pdf11 + pdfjs同版Worker，最多3MiB，文件竞态，离线运行|
+|F14 Storybook|Node-CI：真实CSF3 Basic/Business/Advanced stories + play断言 + 独立Storybook配置|storybook10.6.1（已有SPA模板版本）；不是主站假终端，实际Storybook CLI验收待PLATFORM|
+|F15 Knip|Node-CI：三套真实knip config +完整隔离fixture，unused文件/依赖、入口范围/production|knip6.41.0，报告不等同可自动删除，退出码可因故意未使用代码非零|
+
+- **提交1**：`c05b6cd9c9dd45dc41b1b454958c090a2fcc6412`（E01/E02/F07，22个源码/资料文件）。
+- **提交2**：本轮后续提交（F14/F15及持久进度、依赖请求）。
+- **结构校验**：通过GitHub Git Tree/Blob实际读取5个 `library.json`，5份均为合法JSON，5×3 Demo声明具有唯一basic/business/advanced，entryPoint属于sourceFiles且仓库Blob存在，guide/agent/verification存在：**5/5结构PASS**。此检查不调用任何目标SDK，不能等同业务功能PASS。
+- **实际运行**：本环境 registry.npmjs.org 仍返回 EAI_AGAIN；此前已有相同阻塞，本轮仅一次验证后不再循环安装。没有pnpm可执行/依赖的完整构建环境，E01/E02/F07 SDK NOT_RUN，F14/F15真正CLI NOT_RUN，TypeScript/Vite BLOCKED，Chromium/Storybook未运行。不会继承历史研究或其他条目PASS。
+- **来源**：以2026-10-27核对的 Tiptap/BlockNote/react-pdf/Storybook/Knip 官方使用/发行页为基准重新实现，版本仍待PLATFORM实际pnpm解析及peer证实。所有示例输入是原创/本地，未引入第三方付费素材或服务。
+
+### 第四轮新增 dependencyRequests（只由PLATFORM修改package与lockfile）
+
+|包与版本|条目|正式接入注意|
+|---|---|---|
+|`@tiptap/react@3.32.0` + `@tiptap/pm@3.32.0` + `@tiptap/starter-kit@3.32.0`|E01|三包同版本，React19，Tiptap v3的StarterKit/useEditor API，MIT|
+|`@blocknote/core@0.56.0` + `@blocknote/react@0.56.0` + `@blocknote/mantine@0.56.0`|E02|三个包同版；MPL-2.0；Mantine peers准确版本由平台解析，禁止XL未经许可|
+|`@mantine/core` + `@mantine/hooks` + `@mantine/utils`|E02|直接官方安装要求；**精确版本未知，必须由PLATFORM依据@blocknote/mantine 0.56实际peer解析后填写**，不能伪造|
+|`react-pdf@11.0.0`|F07|React19+ / Node22.13+ / MIT，生产Worker同模块配置|
+|`pdfjs-dist` 与react-pdf 11解析到的兼容版本|F07|用于本地 `?url` Worker；避免与F06版本冲突，核对pnpm hoist及PDF.js主线程/worker严格同版；暂不编造版本|
+|`storybook@10.6.1` + `@storybook/react-vite@10.6.1` + `@storybook/addon-a11y@10.6.1`（dev）|F14|和ReactLoom现有SPA模板对齐；Storybook应由独立CLI运行，不能打入SPA主包|
+|`knip@6.41.0`（dev）|F15|ISC；Node CLI只读fixture，不调用 --fix，也不扫描或删除用户生产仓库|
+
+公共环境请求：PLATFORM安装后运行针对E01/E02/F07的定向typecheck/build+Chromium，分别检查编辑器卸载/IME、Mantine CSS隔离、PDF Worker路径/CSP/分页。F14通过 `pnpm exec storybook dev -p 6029 --no-open --config-dir entries/F14-storybook/examples/.storybook` 与build进行真实play/组件测试；F15通过 `pnpm exec knip --directory entries/F15-knip/examples/workspace --config knip.basic.json` 及business/advanced（高级加 `--production`）检查报告类别。**node-ci 配方不允许在网页伪造执行结果。**
+
+### 剩余计划（EF 21/37已接入，待完成16项）
+
+优先 F16 dependency-cruiser、F18 rollup-plugin-visualizer、E13 PhotoSwipe、E14 react-easy-crop、E15 pica；随后F04 ExcelJS、F09 pdf-lib、F08 @react-pdf/renderer、E17 hls.js、E18 wavesurfer.js，最后评估E19 ffmpeg.wasm大资源隔离和E11/F05原件缺失重建。持续维护版本/许可/验收证据。用户不需要对每个小阶段重复批准。
