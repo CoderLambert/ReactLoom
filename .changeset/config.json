@@ -11,6 +11,7 @@
     "reactloom",
     "@reactloom/template-spa",
     "@reactloom/template-ssr",
-    "@reactloom/template-mobile"
+    "@reactloom/template-mobile",
+    "@reactloom/library-lab"
   ]
 }

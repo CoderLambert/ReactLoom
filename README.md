@@ -4,6 +4,10 @@ Production-grade React templates for a Vite SPA, a Next.js SSR app, and an Expo 
 
 The templates are meant to be started from and kept, not thrown away after the first screen. Each one includes a session pattern, a typed API client, error boundaries, env validation, tests, and CI. Shared TypeScript presets and the API client live in the pnpm workspace.
 
+## Library Lab — 实战工具库与 Agent 知识库
+
+新建独立的 [Library Lab](packages/library-lab/README.md) 应用，在 `packages/library-lab` 展示 A–F 六组 119 个前端工具库的**目录**、真实 Demo、中文指南、Agent 指南和替代关系。`pnpm dev:library` 在本地启动端口 4319；从仓库根的 [完整索引](LIBRARY_CATALOG.md) 按用途定位条目。目录收录数与经过构建/SDK/浏览器验证的 Demo 数严格区分；详细状态见 [Library Lab 调度与进度](docs/library-lab/COORDINATION.md)。此私有实验应用**不会复制**进任何 SPA/SSR/Mobile 模板。
+
 ## Zero to running
 
 In this repo:
