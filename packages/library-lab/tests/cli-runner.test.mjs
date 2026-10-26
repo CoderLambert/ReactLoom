@@ -13,7 +13,7 @@ test('list mode reports recipes without starting SDK processes',()=>assert.equal
 test('known verifier paths run as Node with shell disabled; a failing real SDK stops the suite',()=>{
  const commands=[];const spawn=(binary,args,opts)=>{commands.push({binary,args,opts});return {status:0,error:null}};
  assert.equal(executeRecipes(selectedRecipes(parseCliSelection(['--entry=F10'])),{cwd:'/fixtures',spawn,stdout:()=>{}}),3);
- for(const {args,opts} of commands){assert.match(args[0],/^entries\\/F10-orval\\/examples\\//);assert.equal(opts.shell,false);assert.equal(opts.cwd,'/fixtures');}
+ for(const {args,opts} of commands){assert.match(args[0],/^entries\/F10-orval\/examples\//);assert.equal(opts.shell,false);assert.equal(opts.cwd,'/fixtures');}
  const failing=(binary,args)=>({status:args[0].includes('business')?1:0,error:null});
  assert.throws(()=>executeRecipes(selectedRecipes(parseCliSelection(['--entry=F10'])),{cwd:'/fixtures',spawn:failing,stdout:()=>{}}),/real verifier failed/);
 });

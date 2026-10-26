@@ -9,7 +9,7 @@ export const CLI_RECIPES=Object.freeze({
  F16:{label:'dependency-cruiser architecture rules',scripts:['entries/F16-dependency-cruiser/examples/verify.mjs']},
  F18:{label:'rollup-plugin-visualizer real Vite reports',scripts:['entries/F18-rollup-plugin-visualizer/examples/verify.mjs']},
 });
-const PATTERN=/^[A-F]\\d{2}$/u;
+const PATTERN=/^[A-F]\d{2}$/u;
 export function parseCliSelection(args=[]){
  let list=false;const ids=new Set();
  for(const arg of args){
@@ -34,7 +34,7 @@ export function executeRecipes(recipes,{cwd=root,spawn=spawnSync,stdout=console.
  for(const {id,label,scripts} of recipes){
   stdout(`Running actual ${id}: ${label}`);
   for(const script of scripts){
-   if(!/^entries\\/[A-F]\\d{2}-[a-z0-9-]+\\/examples\\/[a-z0-9-]+\\.mjs$/u.test(script)||!script.startsWith(`entries/${id}-`))
+   if(!/^entries\/[A-F]\d{2}-[a-z0-9-]+\/examples\/[a-z0-9-]+\.mjs$/u.test(script)||!script.startsWith(`entries/${id}-`))
     throw new Error(`Unsafe CLI verifier path for ${id}`);
    const result=spawn(process.execPath,[script],{cwd,stdio:'inherit',shell:false,timeout:180_000});
    if(result.error)throw result.error;
@@ -48,7 +48,7 @@ export function executeRecipes(recipes,{cwd=root,spawn=spawnSync,stdout=console.
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
  try{
   const parsed=parseCliSelection(process.argv.slice(2));const recipes=selectedRecipes(parsed);
-  if(parsed.list)console.log(recipes.map(({id,label,scripts})=>`${id} ${label}\\n  ${scripts.join('\\n  ')}`).join('\\n'));
+  if(parsed.list)console.log(recipes.map(({id,label,scripts})=>`${id} ${label}\n  ${scripts.join('\n  ')}`).join('\n'));
   else executeRecipes(recipes);
  }catch(error){console.error(String(error));process.exitCode=1;}
 }
