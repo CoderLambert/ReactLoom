@@ -1,1 +1,92 @@
-{"schemaVersion":1,"entryId":"D01","slug":"es-toolkit","name":"es-toolkit","group":"D","summary":"现代类型安全工具函数","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "D01",
+  "slug": "es-toolkit",
+  "name": "es-toolkit",
+  "group": "D",
+  "summary": "轻量类型安全工具函数：RSS 排序、去重、分组和分页",
+  "tags": [
+    "es-toolkit",
+    "工具函数",
+    "RSS",
+    "去重",
+    "分组"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "es-toolkit",
+      "version": "1.52.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "es-toolkit 官方文档",
+      "url": "https://es-toolkit.dev/"
+    },
+    {
+      "title": "es-toolkit GitHub",
+      "url": "https://github.com/toss/es-toolkit"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "D02",
+      "relation": "alternative",
+      "reason": "对已有 Lodash 项目需逐 API 对比迭代器与空值语义，不能机械替换。"
+    },
+    {
+      "entryId": "D03",
+      "relation": "complements",
+      "reason": "chunk 只切分数组，异步请求仍需由 p-limit 控制并发启动数。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "分组与稳定去重",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [],
+      "description": "分组与稳定去重"
+    },
+    {
+      "demoId": "business",
+      "title": "RSS 聚合、排序、分页",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [],
+      "description": "RSS 聚合、排序、分页"
+    },
+    {
+      "demoId": "advanced",
+      "title": "坏输入隔离与URL规范化",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [],
+      "description": "坏输入隔离与URL规范化"
+    }
+  ],
+  "license": {
+    "spdx": "MIT"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "依据已审阅的原研究与官方 API 独立改写；未继承旧测试结论"
+  }
+}

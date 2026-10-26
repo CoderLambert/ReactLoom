@@ -1,0 +1,12 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "未执行本提交真实 es-toolkit SDK 测试"
+  },
+  "build": {
+    "status": "NOT_RUN"
+  },
+  "browser": {
+    "status": "NOT_RUN"
+  }
+}

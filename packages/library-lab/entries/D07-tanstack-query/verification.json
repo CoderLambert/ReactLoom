@@ -1,0 +1,12 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "真实 Query v5 依赖未在本条目运行 SDK 测试"
+  },
+  "build": {
+    "status": "NOT_RUN"
+  },
+  "browser": {
+    "status": "NOT_RUN"
+  }
+}
