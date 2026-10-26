@@ -1,0 +1,16 @@
+.rl-radix-lab {font-size: 14px; color: #25382d}
+.rl-radix-workspace {padding: 20px; border: 1px solid #cbd8ce; border-radius: 10px; background: #f7faf5; max-width: 420px}
+.rl-radix-trigger {color: #fff; background: #246348; border: 1px solid #246348; border-radius: 7px; padding: 9px 14px; cursor: pointer}
+.rl-radix-trigger:hover {background: #174f38}
+.rl-radix-trigger:focus-visible {outline: 3px solid #a1cba9; outline-offset: 3px}
+.rl-radix-menu {min-width: 240px; padding: 8px; z-index: 11000; border: 1px solid #a6bdab; box-shadow: 0 16px 38px #172f2433; border-radius: 10px; background: #fffef9; color: #263d30}
+.rl-radix-label {font-size: 11px; color: #667a69; padding: 8px 26px}
+.rl-radix-item {position: relative; font-size: 13px; display: flex; align-items: center; justify-content: space-between; border-radius: 6px; padding: 9px 12px 9px 27px; cursor: default; user-select: none; outline: none}
+.rl-radix-item[data-highlighted] {background: #dcebdd; color: #164b32}
+.rl-radix-item[data-disabled] {opacity: .4; cursor: not-allowed; pointer-events: none}
+.rl-radix-indicator {position: absolute; left: 9px; font-size: 11px; color: #237554}
+.rl-radix-shortcut {margin-left: 18px; color: #748a79; font-size: 11px}
+.rl-radix-separator {height: 1px; background: #e4ebe1; margin: 7px 6px}
+.rl-radix-danger {color: #a43f32}
+.rl-radix-switch {display: inline-flex; gap: 8px; margin-bottom: 14px}
+@media (prefers-reduced-motion: reduce) {.rl-radix-menu {animation: none!important; transition: none!important}}

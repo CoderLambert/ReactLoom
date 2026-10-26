@@ -1,1 +1,123 @@
-{"schemaVersion":1,"entryId":"B07","slug":"mui","name":"MUI","group":"B","summary":"Material Design React 组件","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "B07",
+  "slug": "mui",
+  "name": "MUI",
+  "group": "B",
+  "summary": "Material UI 主题、表格、可访问弹窗与业务错误回填",
+  "tags": [
+    "Material Design",
+    "design system",
+    "table",
+    "dialog",
+    "a11y",
+    "React"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "@mui/material",
+      "version": "9.5.0"
+    },
+    {
+      "name": "@emotion/react",
+      "version": "11.14.0"
+    },
+    {
+      "name": "@emotion/styled",
+      "version": "11.14.1"
+    }
+  ],
+  "references": [
+    {
+      "title": "MUI 官方安装",
+      "url": "https://mui.com/material-ui/getting-started/installation/"
+    },
+    {
+      "title": "Snackbar 文档",
+      "url": "https://mui.com/material-ui/react-snackbar/"
+    },
+    {
+      "title": "npm",
+      "url": "https://www.npmjs.com/package/@mui/material"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "B06",
+      "relation": "alternative",
+      "reason": "企业交互场景可与 Ant Design 比较，避免同一产品多套组件体系。"
+    },
+    {
+      "entryId": "B08",
+      "relation": "alternative",
+      "reason": "Mantine 提供不同组件/API/主题体系，选一套主UI设计系统。"
+    },
+    {
+      "entryId": "B11",
+      "relation": "alternative",
+      "reason": "仅需要无样式基础交互时评估 Radix Primitives，避免整包引入。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "主题与输入组件",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "portal",
+        "keyboard",
+        "focus",
+        "a11y"
+      ]
+    },
+    {
+      "demoId": "business",
+      "title": "RSS Table 与状态过滤",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "portal",
+        "keyboard",
+        "focus",
+        "a11y"
+      ]
+    },
+    {
+      "demoId": "advanced",
+      "title": "Dialog 校验、模拟409与撤销",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "portal",
+        "keyboard",
+        "focus",
+        "a11y"
+      ]
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "assets": "开源 Material UI Core 和 Emotion；不包含 MUI X Pro/商业组件。"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "基于官方MUI使用方式重新实现；旧研究不作为运行验收。"
+  }
+}

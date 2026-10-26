@@ -1,6 +1,6 @@
 # AB 开发进度 — A/B 前端库垂直实现
 
-**调度轮次：1 / 最多24；状态：FIRST_VERTICAL_BATCH_COMMITTED（实际 SDK 与浏览器未验证）。**
+**最新调度轮次：5 / 最多24；状态：WAVE5_SOURCE_STAGED（实际 SDK 与浏览器仍待验证）。**
 
 - 分支：`feat/library-lab-ab`，base 提交 `38ed2d247bd82e4f1422b0e8904973e16bca2972`。
 - 集成目标：`feat/library-lab`，集成读取的头提交 `5955b9a03f95545f2107583a109e22cc6e44078c`。
@@ -207,3 +207,47 @@ A/B累计 **22/39** 个库已编写源码、guide和agent手册，**17项待开�
 **计数修正**：本次完整轮次总共 **6库/18个分层Demo选择**；AB累计 **23/39** 项有源码/指南/Agent笔记，尚余 **16项**；总注册69个，均不等于SDK/浏览器验收。旧本轮前述“5库/22/39”的小计已被本节更正。Leaflet与前5库一样，真实SDK/build/browser本轮全部NOT_RUN，仅有GitHub静态源文件校验。
 
 下一轮优先 A16 MapLibre（先审查无外部瓦片/worker配置与WebGL能力）、B07 MUI、B08 Mantine、B11 Radix、B12 React Aria，及A09/A10复杂白板的授权/依赖能力评估；不做虚拟截图代替SDK。
+
+
+---
+
+## 第5轮（wave5）：MapLibre / MUI / Mantine / Base UI / Radix / React Aria
+
+**runCount=5 / 24**。本批从当时最新集成 HEAD `c93304753ba6cafe7788ad53ea4f133edbdd63e7` 新建 `feat/library-lab-ab-wave5`，不用已合并的旧 `feat/library-lab-ab`。先在集成根 catalog 核对：**23/39 A/B 条目已有源码**，本批另外新增 6 条，待集成后应达 **29/39，仍有10条待补**。以实际 manifest 为准，不能把 SDK 状态或 PR 未合并说成已发布。
+
+### 本批实际完成（六库、18个场景选择）
+
+|条目|真实目标SDK（依赖由 PLATFORM 核实安装）|可运行源码中的三个场景|边界重点|
+|---|---|---|---|
+|A16 MapLibre GL JS|maplibre-gl@6.15.0|WebGL空白样式/GeoJSON CircleLayer/动态来源和过滤|v6 ESM namespace-only import、WebGL2创建失败回退、load后source/layer、ResizeObserver/map.remove、无外网瓦片|
+|B07 MUI|@mui/material@9.5.0 + Emotion 11.14|ThemeProvider/TextField/Chip；RSS Table+Switch；Dialog校验/模拟409/撤销|真实MUI组件与本地业务fixture明确分开、Modal焦点、Emotion样式与Portal|
+|B08 Mantine|@mantine/core@9.7.3 + @mantine/hooks@9.7.3|主题表单；Table/Switch/防抖检索；Modal/NumberInput union校验|styles.layer.css，NumberInput string中间态不能直接写数字；useDebouncedValue确实从hooks导入|
+|B10 Base UI|@base-ui/react@1.9.0|受控Checkbox；权限树与全选；indeterminate/disabled/真实FormData|保留原语键盘/隐藏input、业务权限与UI禁用区分、局部CSS|
+|B11 Radix Primitives|@radix-ui/react-dropdown-menu@2.1.25|基础DropdownMenu；复选置顶+RadioGroup；Submenu/权限禁用|Radix管理焦点/ARIA、Portal、Escape及Tab卸载，无自造全局事件|
+|B12 React Aria|react-aria-components@1.21.0|键盘ComboBox；RSS频道筛选；本地异步候选+FormData|受控inputValue和selectedKey分离、IME、旧请求generation+abort、禁用项和读屏|
+
+每项均有 `library.json`、源文件 `examples/example.tsx`、Lab适配 `examples/demo.tsx`、中文深入 `guide.md`、`agent.md`、目录 `AGENTS.md`、`verification.json`；B10/B11/B12 还包含相应局部 CSS。所有条目 `contentState=recreated`，不是“历史原件被再次恢复”或目标SDK验收通过。每库三个basic/business/advanced**路由选择**，真实SDK代码被复用，不是18个独立bundle。
+
+### 本批实际检查（仅静态检查）
+
+- GitHub staged tree `2a273cbfccb259e30d2a05107bf30d43cf06781f` 已非截断读取（1240路径），逐库读取6份 JSON 清单、6份 `verification.json` 和真实 `examples/example.tsx` Blob：**6/6** 目录与JSON合法、**18/18** demo声明指向存在的源文件、要求的guide/agent/AGENTS和示例源码齐全、**0缺失**。
+- 修复A16 v6无默认export / WebGL2构造异常后，重新暂存；B08 增加真实 useDebouncedValue 依赖调用。最终提交需检查最新tree及PR改动范围；静态路径检查不能证明TypeScript或API运行。
+- **未执行** npm/pnpm安装、官方SDK runtime、完整tsc、Vite生产构建、Playwright Chromium。此轮没有新增运行时 PASS；6项 `sdk/build/browser: NOT_RUN`，仍需集成通道生成真实锁文件并验证。
+- 本轮没有碰触公共代码、package/lockfile、CI、旧模板、main、既有PR #3 或公开部署。
+
+### dependencyRequests（严格交给 PLATFORM 单一owner）
+
+以下版本/API依据官方资料拟用，**不是安装成功证明**；集成前需核实npm发行、React19 peer、TS7/Vite8/CSS和许可，记录真实pnpm版本锁及sdk/build证据：
+
+- `maplibre-gl@6.15.0`，BSD-3-Clause；v6 ESM没有default export、WebGL2需求、独立worker/CSP需浏览器核验。https://maplibre.org/maplibre-gl-js/docs/ ；https://www.npmjs.com/package/maplibre-gl
+- `@mui/material@9.5.0` + `@emotion/react@11.14.0` + `@emotion/styled@11.14.1`，MIT；注意Emotion、CSS和Portal。https://mui.com/material-ui/getting-started/installation/
+- `@mantine/core@9.7.3` + `@mantine/hooks@9.7.3`，MIT；样式仅引入`styles.layer.css`。https://mantine.dev/getting-started/ ; https://mantine.dev/styles/mantine-styles/
+- `@base-ui/react@1.9.0`，MIT；只使用checkbox原语和原生表单。https://base-ui.com/react/components/checkbox
+- `@radix-ui/react-dropdown-menu@2.1.25`，MIT；Popover/DropdownMenu的焦点事件由Radix维护。https://www.radix-ui.com/primitives/docs/components/dropdown-menu
+- `react-aria-components@1.21.0`，Apache-2.0；新版本ComboBox/Popover/集合API需实际构建校验。https://react-aria.adobe.com/ComboBox
+
+依赖列表写入此文件，不修改公共package/lock，不使用Mock代替所展示的目标SDK。MapLibre空白style不等于可用地理底图；未来公共瓦片服务要核对许可/署名及用户隐私。
+
+### 下一轮待开发（A/B完整清单余项优先）
+
+A09 Excalidraw、A10 tldraw、A13 Three.js、A14 React Three Fiber、A17 deck.gl；B05 Rive React Runtime、B09 shadcn/ui、B14 Pragmatic drag and drop、B21 react-motion历史迁移、B22 react-beautiful-dnd历史迁移。先处理依赖/许可/源码所有权，选择真实SDK或真实迁移示例；不能为了赶完成进度生成假Canvas或伪终端。PLATFORM有可执行环境后还需回归既有29条SDK/TS/浏览器。

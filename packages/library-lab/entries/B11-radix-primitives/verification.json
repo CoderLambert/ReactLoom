@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "真实Radix DropdownMenu API源码已提交但未执行。"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "等待PLATFORM确认React19 peer、依赖与TS/Vite构建。"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "键盘、子菜单、焦点返回和Portal卸载未进行浏览器实测。"
+  }
+}

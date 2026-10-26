@@ -1,1 +1,110 @@
-{"schemaVersion":1,"entryId":"A16","slug":"maplibre-gl-js","name":"MapLibre GL JS","group":"A","summary":"矢量地图样式、数据源和图层","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "A16",
+  "slug": "maplibre-gl-js",
+  "name": "MapLibre GL JS",
+  "group": "A",
+  "summary": "无需瓦片服务的 WebGL GeoJSON 点层、过滤及生命周期实践",
+  "tags": [
+    "WebGL",
+    "GeoJSON",
+    "vector",
+    "offline style",
+    "resize",
+    "cleanup"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "maplibre-gl",
+      "version": "6.15.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "MapLibre GL JS API",
+      "url": "https://maplibre.org/maplibre-gl-js/docs/"
+    },
+    {
+      "title": "GeoJSON layer 官方示例",
+      "url": "https://maplibre.org/maplibre-gl-js/docs/examples/geojson-line/"
+    },
+    {
+      "title": "npm",
+      "url": "https://www.npmjs.com/package/maplibre-gl"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "A15",
+      "relation": "alternative",
+      "reason": "少量标点、DOM/SVG覆盖物和轻量交互通常优先选择 Leaflet，不强制GPU。"
+    },
+    {
+      "entryId": "A17",
+      "relation": "complements",
+      "reason": "极大数据量 GPU 叠加可以在矢量地图基础上选择 deck.gl。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "空白样式与真实 WebGL 点层",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "webgl",
+        "resize-observer",
+        "geojson",
+        "cleanup"
+      ]
+    },
+    {
+      "demoId": "business",
+      "title": "数据驱动状态与过滤",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "webgl",
+        "resize-observer",
+        "geojson",
+        "cleanup"
+      ]
+    },
+    {
+      "demoId": "advanced",
+      "title": "动态站点与资源清理",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "webgl",
+        "resize-observer",
+        "geojson",
+        "cleanup"
+      ]
+    }
+  ],
+  "license": {
+    "spdx": "BSD-3-Clause",
+    "assets": "自有模拟点位与空白内联 style；无外部地图瓦片、收费数据或第三方媒体。"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "基于 MapLibre 官方文档重新编写，不继承历史研究 PASS。"
+  }
+}

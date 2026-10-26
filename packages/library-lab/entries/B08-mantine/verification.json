@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "真实 Mantine 核心API调用源码已提交但未安装运行。"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "等待 PLATFORM 核验9.7.3 peer并运行类型/生产构建。"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "NumberInput输入边界、Modal焦点与样式隔离未实测。"
+  }
+}
