@@ -4,6 +4,7 @@ import {fileURLToPath} from 'node:url';
 import {createHash} from 'node:crypto';
 import {validateEntry,safeRelativePath} from '../src/lib/catalog.mjs';
 import {rootCatalogData,rootCatalogMarkdown} from './root-catalog.mjs';
+import {entryCompletenessIssues} from './entry-gate.mjs';
 const packageRoot=fileURLToPath(new URL('..',import.meta.url));
 async function safeRead(root,relative){
  if(!safeRelativePath(relative))throw new Error(`unsafe source ${relative}`);
@@ -56,7 +57,13 @@ export async function generate(root=packageRoot,{check=false,expectedCount=119}=
   if(dir.name!==`${entry.entryId}-${entry.slug}`)throw new Error(`directory/id mismatch: ${dir.name}`);
   if(ids.has(entry.entryId)||slugs.has(entry.slug))throw new Error(`duplicate id/slug: ${dir.name}`);ids.add(entry.entryId);slugs.add(entry.slug);
   const guide=await optionalText(folder,'guide.md'),agent=await optionalText(folder,'agent.md');
-  const verificationText=await optionalText(folder,'verification.json');const rawVerification=verificationText?JSON.parse(verificationText):{sdk:{status:'NOT_RUN',note:'尚未在本应用执行目标库测试'},build:{status:'NOT_RUN'},browser:{status:'NOT_RUN'}};
+  const agentRules=await optionalText(folder,'AGENTS.md');
+  const verificationText=await optionalText(folder,'verification.json');
+  if(expectedCount===119){
+   const problems=entryCompletenessIssues(entry,{guide:guide!==null,agent:agent!==null,agents:agentRules!==null,verification:verificationText!==null});
+   if(problems.length)throw new Error(`${dir.name}: incomplete library content: ${problems.join('; ')}`);
+  }
+  const rawVerification=verificationText?JSON.parse(verificationText):{sdk:{status:'NOT_RUN',note:'尚未在本应用执行目标库测试'},build:{status:'NOT_RUN'},browser:{status:'NOT_RUN'}};
   const sources=[];const names=new Set(entry.demos.flatMap(d=>d.sourceFiles));
   for(const name of [...names].sort()){const content=await safeRead(folder,name);sources.push({path:name,sha256:createHash('sha256').update(content).digest('hex'),content});}
   for(const demo of entry.demos){if(demo.entryPoint){await safeRead(folder,demo.entryPoint);if(!names.has(demo.entryPoint))throw new Error(`entryPoint missing from sourceFiles: ${entry.entryId}/${demo.demoId}`);
