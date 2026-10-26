@@ -11,7 +11,7 @@
     "catalog:check": "node scripts/generate.mjs --check && node scripts/validate-dependencies.mjs",
     "lint": "biome check src scripts tests e2e package.json tsconfig.json vite.config.ts playwright.config.ts",
     "typecheck": "node scripts/generate.mjs && tsc --noEmit",
-    "test": "node --test tests/catalog.test.mjs tests/document-utils.test.mjs tests/generate.test.mjs tests/find-library.test.mjs tests/validate-dependencies.test.mjs tests/reproduction.test.mjs tests/sdk-runner.test.mjs",
+    "test": "node --test tests/catalog.test.mjs tests/document-utils.test.mjs tests/generate.test.mjs tests/find-library.test.mjs tests/validate-dependencies.test.mjs tests/reproduction.test.mjs tests/sdk-runner.test.mjs tests/demo-policy.test.mjs",
     "test:e2e": "playwright test",
     "test:e2e:setup": "playwright install chromium",
     "test:sdk": "node scripts/sdk-runner.mjs",

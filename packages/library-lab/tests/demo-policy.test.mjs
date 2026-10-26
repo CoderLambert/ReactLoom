@@ -1,0 +1,25 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {demoRunPolicy,CAPABILITY_DESCRIPTIONS} from '../src/lib/demo-policy.mjs';
+const base={executionKind:'react',entryPoint:'examples/demo.tsx',capabilities:[]};
+test('safe React demos still launch only through the explicit host',()=>{
+ assert.equal(demoRunPolicy(base).mode,'react');
+ assert.equal(demoRunPolicy({...base,capabilities:['web-worker','resize-observer']}).mode,'react');
+});
+test('Service Workers and privileged scripts cannot run in the host origin',()=>{
+ for(const cap of ['service-worker','persistent-network-interception','global-service-worker','untrusted-script','cross-origin-isolation']){
+   const result=demoRunPolicy({...base,capabilities:[cap]});
+   assert.equal(result.mode,'isolated',cap);
+   assert.match(result.reason,/独立|禁止|需要/u);
+ }
+});
+test('Node, Worker and frame demos never turn into a fake React runtime',()=>{
+ for(const kind of ['node-ci','worker','browser-frame'])assert.notEqual(demoRunPolicy({...base,executionKind:kind}).mode,'react',kind);
+ assert.equal(demoRunPolicy({...base,executionKind:'node-ci'}).mode,'reproduction');
+});
+test('unknown or traversal entries cannot be imported',()=>{
+ assert.equal(demoRunPolicy({...base,entryPoint:'../private.tsx'}).mode,'unavailable');
+ assert.equal(demoRunPolicy({...base,entryPoint:undefined}).mode,'unavailable');
+ assert.equal(demoRunPolicy(null).mode,'unavailable');
+});
+test('capability labels for privileged features are explicit',()=>assert.ok(CAPABILITY_DESCRIPTIONS['service-worker'].includes('独立')));
