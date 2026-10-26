@@ -491,9 +491,9 @@
     "entryId": "D01",
     "name": "es-toolkit",
     "group": "D",
-    "summary": "现代类型安全工具函数",
+    "summary": "轻量类型安全工具函数：RSS 排序、去重、分组和分页",
     "path": "packages/library-lab/entries/D01-es-toolkit",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "D02",
@@ -509,23 +509,23 @@
     "group": "D",
     "summary": "Promise 并发上限控制",
     "path": "packages/library-lab/entries/D03-p-limit",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "D04",
     "name": "p-queue",
     "group": "D",
-    "summary": "任务队列、并发与速率控制",
+    "summary": "并发、滑动窗口限流与任务优先级调度",
     "path": "packages/library-lab/entries/D04-p-queue",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "D05",
     "name": "decimal.js",
     "group": "D",
-    "summary": "任意精度十进制计算",
+    "summary": "从字符串到精确金额：decimal.js 的税率、舍入和对账边界",
     "path": "packages/library-lab/entries/D05-decimal-js",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "D06",
@@ -539,17 +539,17 @@
     "entryId": "D07",
     "name": "TanStack Query",
     "group": "D",
-    "summary": "远端状态缓存与异步请求",
+    "summary": "远程状态的查询键、缓存、取消与乐观更新生命周期",
     "path": "packages/library-lab/entries/D07-tanstack-query",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "D08",
-    "name": "ky",
+    "name": "Ky",
     "group": "D",
-    "summary": "基于 Fetch 的 HTTP 客户端",
+    "summary": "基于 Fetch 的 HTTP 客户端：重试、超时、响应校验与取消",
     "path": "packages/library-lab/entries/D08-ky",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "D09",

@@ -65,14 +65,14 @@
 |C20|clsx|条件 className 合成|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C20-clsx/)|
 |C21|tailwind-merge|Tailwind v4 工具类冲突合并与可覆盖组件实践|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C21-tailwind-merge/)|
 |C22|Moment（历史迁移）|历史日期库识别与现代迁移|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C22-moment-migration/)|
-|D01|es-toolkit|现代类型安全工具函数|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D01-es-toolkit/)|
+|D01|es-toolkit|轻量类型安全工具函数：RSS 排序、去重、分组和分页|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D01-es-toolkit/)|
 |D02|Lodash/lodash-es|通用工具函数与模块化分发|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D02-lodash/)|
 |D03|p-limit|Promise 并发上限控制|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D03-p-limit/)|
-|D04|p-queue|任务队列、并发与速率控制|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D04-p-queue/)|
-|D05|decimal.js|任意精度十进制计算|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D05-decimal-js/)|
+|D04|p-queue|并发、滑动窗口限流与任务优先级调度|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D04-p-queue/)|
+|D05|decimal.js|从字符串到精确金额：decimal.js 的税率、舍入和对账边界|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D05-decimal-js/)|
 |D06|Immer|不可变状态更新|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D06-immer/)|
-|D07|TanStack Query|远端状态缓存与异步请求|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D07-tanstack-query/)|
-|D08|ky|基于 Fetch 的 HTTP 客户端|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D08-ky/)|
+|D07|TanStack Query|远程状态的查询键、缓存、取消与乐观更新生命周期|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D07-tanstack-query/)|
+|D08|Ky|基于 Fetch 的 HTTP 客户端：重试、超时、响应校验与取消|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D08-ky/)|
 |D09|Axios|HTTP 客户端、拦截和取消|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D09-axios/)|
 |D10|Zustand|轻量共享客户端状态|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D10-zustand/)|
 |D11|Jotai|原子状态与派生数据|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D11-jotai/)|
