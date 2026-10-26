@@ -18,7 +18,15 @@ export function resolveDocumentUrl(value, entryId, basePath = '/') {
   if (parts.some(part => !part || part === '..' || part === '.')) return '';
   const prefix = basePath.startsWith('/') && !basePath.includes('..') ?
     `${basePath.replace(/\/$/u, '')}/` : '/';
-  const encodedPath = parts.map(encodeURIComponent).join('/');
+  // The generator publishes only reviewed local markdown, raster assets, and
+  // declared example/test sources. Avoid links that silently serve SPA HTML.
+  const normalized = parts.join('/');
+  let published;
+  if (normalized === 'guide.md' || normalized === 'agent.md') published = normalized;
+  else if (/^assets\/(?:[\p{L}\p{N}_-]+\/)*[\p{L}\p{N}_-]+\.(?:png|jpe?g|webp|gif)$/iu.test(normalized)) published = normalized;
+  else if (/^(?:examples|tests)\/(?:[\p{L}\p{N}_.-]+\/)*[\p{L}\p{N}_.-]+\.(?:[cm]?[jt]sx?|json|css|md|txt|ya?ml)$/iu.test(normalized)) published = 'sources/' + normalized;
+  else return '';
+  const encodedPath = published.split('/').map(encodeURIComponent).join('/');
   const fragment = hash && /^[\p{L}\p{N}_-]+$/u.test(hash) ? `#${encodeURIComponent(hash)}` : '';
   return `${prefix}raw/${entryId}/${encodedPath}${fragment}`;
 }

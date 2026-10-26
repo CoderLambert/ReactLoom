@@ -10,7 +10,7 @@
   },
   "scripts": {
     "dev:spa": "turbo run dev --ui=tui --filter=@reactloom/template-spa",
-    "dev:library": "pnpm --filter @reactloom/library-lab dev",
+    "dev:library": "turbo run dev --ui=tui --filter=@reactloom/library-lab",
     "dev:ssr": "turbo run dev --ui=tui --filter=@reactloom/template-ssr",
     "dev:mobile": "turbo run dev --ui=tui --filter=@reactloom/template-mobile",
     "lint": "turbo run lint lint:root",
@@ -31,7 +31,6 @@
     "create-reactloom": "pnpm --filter create-reactloom build && node ./packages/create-reactloom/dist/cli.js",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "dev:library": "turbo run dev --ui=tui --filter=@reactloom/library-lab",
     "build:library": "turbo run build --filter=@reactloom/library-lab",
     "test:library": "pnpm --filter @reactloom/library-lab test",
     "library:find": "node packages/library-lab/scripts/find-library.mjs"
