@@ -35,33 +35,33 @@
     "entryId": "A05",
     "name": "D3",
     "group": "A",
-    "summary": "数据映射、比例尺和自定义可视化",
+    "summary": "可定制SVG可视化：比例尺、坐标轴、数据联结与动态重绘",
     "path": "packages/library-lab/entries/A05-d3",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "A06",
     "name": "React Flow",
     "group": "A",
-    "summary": "节点连线与可编辑流程编排",
+    "summary": "React 节点工作流编辑器：受控节点和边、连接校验与画布交互",
     "path": "packages/library-lab/entries/A06-react-flow",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "A07",
     "name": "AntV G6",
     "group": "A",
-    "summary": "关系图布局和图分析",
+    "summary": "关系网络的节点、边、拓扑与交互画布（基于 G6 5.1.1）",
     "path": "packages/library-lab/entries/A07-antv-g6",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "A08",
     "name": "Mermaid",
     "group": "A",
-    "summary": "以文本维护流程图与架构图",
+    "summary": "将受控 Mermaid DSL 编译成流程图、时序图和状态图",
     "path": "packages/library-lab/entries/A08-mermaid",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "A09",

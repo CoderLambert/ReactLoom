@@ -8,10 +8,10 @@
 |A02|Recharts|React 声明式 SVG 图表与可访问数据表|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A02-recharts/)|
 |A03|Chart.js|模块化 Canvas 图表与 React 生命周期边界|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A03-chartjs/)|
 |A04|uPlot|高频时间序列和紧凑趋势图|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A04-uplot/)|
-|A05|D3|数据映射、比例尺和自定义可视化|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A05-d3/)|
-|A06|React Flow|节点连线与可编辑流程编排|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A06-react-flow/)|
-|A07|AntV G6|关系图布局和图分析|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A07-antv-g6/)|
-|A08|Mermaid|以文本维护流程图与架构图|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A08-mermaid/)|
+|A05|D3|可定制SVG可视化：比例尺、坐标轴、数据联结与动态重绘|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A05-d3/)|
+|A06|React Flow|React 节点工作流编辑器：受控节点和边、连接校验与画布交互|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A06-react-flow/)|
+|A07|AntV G6|关系网络的节点、边、拓扑与交互画布（基于 G6 5.1.1）|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A07-antv-g6/)|
+|A08|Mermaid|将受控 Mermaid DSL 编译成流程图、时序图和状态图|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A08-mermaid/)|
 |A09|Excalidraw|手绘风格协作草图与白板|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A09-excalidraw/)|
 |A10|tldraw|可扩展画布编辑器和白板|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A10-tldraw/)|
 |A11|Konva|二维 Canvas 场景图和图形操作|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A11-konva/)|
