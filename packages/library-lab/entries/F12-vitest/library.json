@@ -1,1 +1,118 @@
-{"schemaVersion":1,"entryId":"F12","slug":"vitest","name":"Vitest","group":"F","summary":"单元及组件测试","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "F12",
+  "slug": "vitest",
+  "name": "Vitest",
+  "group": "F",
+  "summary": "真实 Vitest 测试配方：数据校验、可注入HTTP状态与取消竞态",
+  "tags": [
+    "Vitest",
+    "Node",
+    "测试",
+    "Scenario Matrix",
+    "Fake Timers",
+    "AbortSignal",
+    "CLI"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "vitest",
+      "version": "5.0.5"
+    }
+  ],
+  "references": [
+    {
+      "title": "Vitest 官方写测试指南",
+      "url": "https://vitest.dev/guide/learn/writing-tests"
+    },
+    {
+      "title": "Vitest 配置参考",
+      "url": "https://vitest.dev/config/"
+    },
+    {
+      "title": "Vitest CLI 文档",
+      "url": "https://vitest.dev/guide/cli"
+    },
+    {
+      "title": "Vitest 发布记录",
+      "url": "https://github.com/vitest-dev/vitest/releases/tag/v5.0.5"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "F11",
+      "relation": "complements",
+      "reason": "MSW 可提供真实拦截层，Vitest 驱动可控的业务请求场景断言。"
+    },
+    {
+      "entryId": "F13",
+      "relation": "complements",
+      "reason": "Vitest 侧重纯函数/逻辑与可控环境，Playwright 验证浏览器真实交互。"
+    },
+    {
+      "entryId": "F17",
+      "relation": "complements",
+      "reason": "axe-core 专注可访问性规则，Vitest 的普通Node测试不能证明浏览器无障碍通过。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "规范化与非法输入",
+      "level": "basic",
+      "executionKind": "node-ci",
+      "entryPoint": "examples/basic.test.ts",
+      "sourceFiles": [
+        "examples/domain.ts",
+        "examples/basic.test.ts"
+      ],
+      "capabilities": [
+        "node-process",
+        "vitest-runner"
+      ],
+      "description": "运行真实 Vitest，断言 feed URL 解析、输入拒绝与异常。"
+    },
+    {
+      "demoId": "business",
+      "title": "HTTP Scenario Matrix",
+      "level": "business",
+      "executionKind": "node-ci",
+      "entryPoint": "examples/business.test.ts",
+      "sourceFiles": [
+        "examples/domain.ts",
+        "examples/business.test.ts"
+      ],
+      "capabilities": [
+        "node-process",
+        "dependency-injection"
+      ],
+      "description": "用注入式业务 HTTP 响应模拟 200/422/503；Vitest本身是真实测试引擎。"
+    },
+    {
+      "demoId": "advanced",
+      "title": "取消与过期结果",
+      "level": "advanced",
+      "executionKind": "node-ci",
+      "entryPoint": "examples/advanced.test.ts",
+      "sourceFiles": [
+        "examples/domain.ts",
+        "examples/advanced.test.ts"
+      ],
+      "capabilities": [
+        "node-process",
+        "fake-timers",
+        "abort-signal"
+      ],
+      "description": "使用 vi.useFakeTimers + AbortSignal 验证新请求不能被旧结果覆盖。"
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "assets": "全部测试用例为原创本地夹具，不请求真实服务"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "Vitest 5 官方 API 新写 CLI 研究配方；真实 Vitest runner 与报告尚需执行。"
+  }
+}

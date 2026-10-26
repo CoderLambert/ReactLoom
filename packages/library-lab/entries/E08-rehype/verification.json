@@ -1,0 +1,18 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "目标SDK真实import已编写，但尚无新版本安装/执行证据。"
+  },
+  "build": {
+    "status": "BLOCKED",
+    "note": "等待PLATFORM统一增加准确依赖、解析pnpm-lock并实际构建。"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "生产预览/实际DOM/网络行为未运行。"
+  },
+  "security": {
+    "status": "NOT_RUN",
+    "note": "不可信内容策略需真实浏览器与攻击测试确认。"
+  }
+}

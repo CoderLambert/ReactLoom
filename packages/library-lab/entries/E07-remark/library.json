@@ -1,1 +1,116 @@
-{"schemaVersion":1,"entryId":"E07","slug":"remark","name":"remark","group":"E","summary":"Markdown AST 处理流水线","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "E07",
+  "slug": "remark",
+  "name": "remark",
+  "group": "E",
+  "summary": "Markdown 结构化处理：真实 mdast 解析、GFM 规范化和危险链接审计",
+  "tags": [
+    "Markdown",
+    "AST",
+    "mdast",
+    "GFM",
+    "内容处理",
+    "静态分析"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "remark",
+      "version": "15.0.1"
+    },
+    {
+      "name": "remark-gfm",
+      "version": "4.0.1"
+    }
+  ],
+  "references": [
+    {
+      "title": "remark 官方仓库",
+      "url": "https://github.com/remarkjs/remark"
+    },
+    {
+      "title": "remark 官方 API",
+      "url": "https://github.com/remarkjs/remark/tree/main/packages/remark"
+    },
+    {
+      "title": "remark-gfm 官方仓库",
+      "url": "https://github.com/remarkjs/remark-gfm"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "E06",
+      "relation": "complements",
+      "reason": "remark 负责 Markdown AST/变换，React 端安全渲染用 react-markdown。"
+    },
+    {
+      "entryId": "E08",
+      "relation": "complements",
+      "reason": "需要 HTML AST 与净化时通过 unified 管线接入 rehype；remark 不承担浏览器 HTML 安全。"
+    },
+    {
+      "entryId": "E11",
+      "relation": "alternative",
+      "reason": "持续流式生成的不完整 Markdown 与一次性 AST 解析是不同问题，应评估适配流式输出的工具。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "level": "basic",
+      "title": "结构解析与标题提取",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "text-transform",
+        "safe-preview"
+      ],
+      "description": "结构解析与标题提取"
+    },
+    {
+      "demoId": "business",
+      "level": "business",
+      "title": "GFM 工程报告规范化",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "text-transform",
+        "safe-preview"
+      ],
+      "description": "GFM 工程报告规范化"
+    },
+    {
+      "demoId": "advanced",
+      "level": "advanced",
+      "title": "不可信链接及 HTML 审计",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "text-transform",
+        "safe-preview"
+      ],
+      "description": "不可信链接及 HTML 审计"
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "assets": "示例仅使用原创 Markdown 文本"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "根据官方 remark API 重新编写；旧研究用于边界参考，运行结论重新验证。"
+  }
+}

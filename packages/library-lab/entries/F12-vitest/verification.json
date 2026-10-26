@@ -1,0 +1,18 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "3个Vitest测试文件已写入，但没有运行真实Vitest runner。"
+  },
+  "build": {
+    "status": "BLOCKED",
+    "note": "需要PLATFORM统一添加vitest并生成真实lockfile和类型检查。"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "本条是node-ci，不要求伪造浏览器运行；若演示Web UI，仍需独立browser runner。"
+  },
+  "security": {
+    "status": "NOT_RUN",
+    "note": "业务输入策略测试尚未由真实runner执行。"
+  }
+}

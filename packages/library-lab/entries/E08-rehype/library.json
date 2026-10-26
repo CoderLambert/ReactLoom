@@ -1,1 +1,116 @@
-{"schemaVersion":1,"entryId":"E08","slug":"rehype","name":"rehype","group":"E","summary":"HTML AST 处理与转换","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "E08",
+  "slug": "rehype",
+  "name": "rehype",
+  "group": "E",
+  "summary": "HTML AST 转换与安全输出：rehype-sanitize 净化及沙箱预览",
+  "tags": [
+    "HTML",
+    "HAST",
+    "Sanitize",
+    "XSS",
+    "内容处理",
+    "隔离预览"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "rehype",
+      "version": "13.0.2"
+    },
+    {
+      "name": "rehype-sanitize",
+      "version": "6.0.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "rehype 官方仓库",
+      "url": "https://github.com/rehypejs/rehype"
+    },
+    {
+      "title": "rehype-sanitize 官方文档",
+      "url": "https://github.com/rehypejs/rehype-sanitize"
+    },
+    {
+      "title": "MDN iframe sandbox",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/iframe"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "E07",
+      "relation": "complements",
+      "reason": "remark 负责 Markdown AST，rehype 负责 HTML AST 和序列化。"
+    },
+    {
+      "entryId": "E10",
+      "relation": "alternative",
+      "reason": "DOMPurify 适合直接净化 HTML 字符串，rehype-sanitize 在 HAST 流程中执行 schema 允许列表。"
+    },
+    {
+      "entryId": "E06",
+      "relation": "complements",
+      "reason": "react-markdown 的 rehype 插件链可以接入可信的 sanitize 转换。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "level": "basic",
+      "title": "HTML 解析与允许列表",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "text-transform",
+        "safe-preview"
+      ],
+      "description": "HTML 解析与允许列表"
+    },
+    {
+      "demoId": "business",
+      "level": "business",
+      "title": "RSS 富文本公告净化",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "text-transform",
+        "safe-preview"
+      ],
+      "description": "RSS 富文本公告净化"
+    },
+    {
+      "demoId": "advanced",
+      "level": "advanced",
+      "title": "XSS 输入与无脚本 iframe 预览",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "text-transform",
+        "safe-preview"
+      ],
+      "description": "XSS 输入与无脚本 iframe 预览"
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "assets": "原创富文本样例，不加载外部 HTML/图片"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "根据官方 rehype 13 和 rehype-sanitize 6 编写独立安全样例。"
+  }
+}

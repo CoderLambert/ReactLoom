@@ -1,13 +1,13 @@
 # EF 通道持续开发进度
 
 - 通道：EF，Issue #7；分支 `feat/library-lab-ef`；PR base 为 `feat/library-lab`。
-- runCount：1 / 24。
+- runCount：2 / 24。
 - 基线：`38ed2d247bd82e4f1422b0e8904973e16bca2972`。
 - 本轮日期：2026-10-27（北京时间）。
-- 状态：**5 个条目已落地完整研究指南、Agent 手册、三层真实 SDK 源码或 Node 入口，实际构建与 SDK 验证未完成**。
+- 状态：**累计11个条目交付真实 SDK 示例/Node CLI 测试源码、Guide/Agent 文档；实际构建、SDK和浏览器验证仍未完成。**
 - 写入所有权：仅 `entries/E*`、`entries/F*` 和本进度文件，公共依赖/CI/runner 未触碰。
 
-## 本轮完成的垂直代码（不等于 SDK 验收通过）
+## 首轮交付（5库，详见PR #11；不等于SDK验收）
 
 | 条目 | basic/business/advanced | 真实依赖与源码 | 验证与限制 |
 | --- | --- | --- | --- |
@@ -47,7 +47,7 @@
 3. E05：构建 worker chunk、JSON/TypeScript language diagnostics，审查 CSP 的 `worker-src`；在切换、卸载和重挂后检查 model URI 与 Worker 占用，内部 Worker 缓存仍可能持续存在。
 4. E06/E10：XSS 和不安全 URL 网络检查；F02：拖拽/本地文件键盘交互。当前 Lab 公共 `DemoHost` 对 Node 类型只显示源码，这应明确展示复现命令，不要伪装在线 shell。
 
-## 下一批执行队列
+## 第一轮原定后续（本轮部分已经完成）
 
 - E04 CodeMirror 6：模块化编辑器及 destroy，补与 Monaco 的选型比较。
 - E09 Shiki：仅用户打开高亮或源码 Tab 时加载，AST 原始文本保持一致。
@@ -56,3 +56,45 @@
 - 后续按重用价值处理 E07 remark/E08 rehype/F13 Playwright 等，并继续推进其余 E/F 条目。
 
 不要因为某一项 npm 安装失败就在下一轮重复浪费资源；先在其他条目连续交付有依据源码与知识，再等待 PLATFORM 统一解决环境。
+
+
+## 第二轮实际交付（2026-10-27，wave2）
+
+新分支 `feat/library-lab-ef-wave2` 基于最新已集成 `feat/library-lab@df4674d501bac029f8529ff940ba9b8c8707347c`，避免已经合并的PR #11旧基线覆盖新平台代码。该轮**六条完整垂直源码、每库三层共18个场景**，累计本通道11库33场景源码（不等于所有场景可浏览器执行）。
+
+| 条目 | 类型与三层源码 | 核心复用/边界 |
+| --- | --- | --- |
+| E04 CodeMirror 6 | React：EditorState/EditorView、会话草稿、Compartment动态只读 | effect挂载/卸载destroy、IME风险、局部sessionStorage，不模拟EditorView |
+| E07 remark | React：mdast标题提取、GFM表格处理、危险URL/raw HTML审计 | 真remark+GFM processor，输出仍是Markdown文本，不称sanitize |
+| E08 rehype | React：HAST/HTML parse、公告净化、恶意HTML隔离预览 | 真rehype+rehype-sanitize，iframe sandbox空许可+CSP独立约束 |
+| E09 Shiki | React：真实tokens/语言切换、不可信代码安全展示 | 复用已声明shiki@4.5.0，React文本token，不用innerHTML，按需启动 |
+| F03 Papa Parse | React：引号跨行解析、RSS CSV导入、错误行/公式注入 | 真Papa.parse/unparse，另有3个Node真实SDK断言文件，未执行 |
+| F12 Vitest | Node-CI：纯函数、200/422/503场景矩阵、fake timers取消竞态 | 真Vitest测试文件 basic/business/advanced；不提供伪造网页命令执行 |
+
+每条新增/更新 library.json、guide.md、agent.md、AGENTS.md、examples/、verification.json（均未写入无证据PASS）。F03另含 `tests/node-scenarios.test.mjs`，F12含三份 `*.test.ts` 实际Vitest入口。源码由平台生成器以相同文件展示并计算指纹，不维护第二份展示代码。
+
+### 第二轮新增 dependencyRequests（PLATFORM 独占package/lockfile）
+
+这些版本来自2026-10-23官方发行基线，已查阅2026-10-27可访问的官方API文档；**最终须由PLATFORM在CI解析包版本、peer、license及锁文件后确定**：
+
+| 包 | 请求版本 | 目标条目 | 备注 |
+| --- | --- | --- | --- |
+| `codemirror` | 6.0.2 | E04 | 组合汇总包，提供basicSetup/EditorView；MIT |
+| `@codemirror/state` | 6.7.6 | E04 | EditorState、Compartment；MIT |
+| `@codemirror/lang-javascript` | 6.2.5 | E04 | javascript({typescript:true})；MIT |
+| `remark` | 15.0.1 | E07 | Markdown parse/stringify；MIT；remark-gfm 4.0.1已有 |
+| `rehype` | 13.0.2 | E08 | HTML parse/stringify；MIT；rehype-sanitize 6.0.0已有 |
+| `papaparse` | 5.7.0 | F03 | CSV parse/unparse；MIT |
+| `@types/papaparse` | 5.5.2 (dev) | F03 | DefinitelyTyped；实际TS解析确认 |
+| `vitest` | 5.0.5 (dev) | F12 | 应与Vite8/Node22/现有Vitest版本协调；MIT |
+| `shiki` | 4.5.0 | E09 | **已在当前PLATFORM包声明，无需重复添加** |
+
+PLATFORM 接入后应追加F03 Node SDK定向测试：`node --test entries/F03-papaparse/tests/node-scenarios.test.mjs`；F12独立测试：`pnpm --filter @reactloom/library-lab exec vitest run entries/F12-vitest/examples/*.test.ts`，不能将单测源文件存在当作测试PASS。
+
+### 本轮真实验证
+
+仅 GitHub Git Object/API 提交成功；**没有在本执行环境实际运行以上6项的目标SDK、TypeScript构建或Chromium**。运行前SDK=NOT_RUN，build=BLOCKED（公共缺依赖），browser=NOT_RUN；不得继承旧研究包的领域单测PASS。E09虽然已在package声明，但尚无本轮SDK执行证据。后续优先检查版本安装和官方SDK运行，不反复尝试已知失败的DNS操作。
+
+### 下一批队列
+
+优先E03 Lexical、F13 Playwright（真实CLI）、F01 Uppy、F06 PDF.js；随后E01 Tiptap、E02 BlockNote、F07 react-pdf、F14 Storybook。依赖/授权复杂的库先完成指南、版本审查和独立隔离设计，再由平台统一接线。范围剩26个条目待完整处理；E11/F05原件仍缺失，应标recreated而不伪称恢复。

@@ -1,1 +1,114 @@
-{"schemaVersion":1,"entryId":"F03","slug":"papaparse","name":"Papa Parse","group":"F","summary":"CSV 解析、导出与流处理","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "F03",
+  "slug": "papaparse",
+  "name": "Papa Parse",
+  "group": "F",
+  "summary": "真实 CSV 解析/导出：引号换行、表头与URL验证、本地文件及公式注入防护",
+  "tags": [
+    "CSV",
+    "数据导入",
+    "本地文件",
+    "EscapeFormulae",
+    "编码",
+    "类型安全",
+    "批量"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "papaparse",
+      "version": "5.7.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "Papa Parse 官方文档",
+      "url": "https://www.papaparse.com/docs"
+    },
+    {
+      "title": "Papa Parse GitHub",
+      "url": "https://github.com/mholt/PapaParse"
+    },
+    {
+      "title": "Papa Parse Releases",
+      "url": "https://github.com/mholt/PapaParse/releases"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "F04",
+      "relation": "alternative",
+      "reason": "需要 XLSX、单元格样式、工作簿及合并单元格时优先 ExcelJS。"
+    },
+    {
+      "entryId": "F05",
+      "relation": "alternative",
+      "reason": "SheetJS 面向电子表格格式；Papa Parse 专注 CSV 字符串及流解析。"
+    },
+    {
+      "entryId": "F02",
+      "relation": "complements",
+      "reason": "文件选择可以由 react-dropzone 提供，Papa Parse 负责解析和导出，上传需另外设计。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "引号、逗号与跨行文本",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "csv-parse"
+      ],
+      "description": "真正调用 Papa.parse 并展示字段与错误。"
+    },
+    {
+      "demoId": "business",
+      "title": "订阅源 CSV 导入校验",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "local-file",
+        "url-validation",
+        "csv-parse"
+      ],
+      "description": "从本地输入或受限文件选择读取 CSV，校验协议与重复项。"
+    },
+    {
+      "demoId": "advanced",
+      "title": "错误行与公式注入防护",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "tests/node-scenarios.test.mjs"
+      ],
+      "capabilities": [
+        "escape-formulae",
+        "parser-errors"
+      ],
+      "description": "用真实 Papa.unparse({escapeFormulae:true}) 输出安全 CSV，并对不可信表格行报错。"
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "assets": "示例数据全部本地生成，不包含真实用户 CSV"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "按官方 Papa Parse 5 API 重写并记录原研究已恢复，不继承历史领域单测作为SDK验收。"
+  }
+}
