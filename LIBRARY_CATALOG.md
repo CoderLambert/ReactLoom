@@ -22,8 +22,8 @@
 |A16|MapLibre GL JS|矢量地图样式、数据源和图层|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A16-maplibre-gl-js/)|
 |A17|deck.gl|GPU 大规模地理数据图层|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A17-deckgl/)|
 |B01|Motion for React|React 入场/离场、列表布局过渡与减少动画偏好|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B01-motion-for-react/)|
-|B02|GSAP|时间线与复杂编排动画|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B02-gsap/)|
-|B03|react-spring|弹簧动画与自然交互|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B03-react-spring/)|
+|B02|GSAP|有时间线、重播、反转与减少动画偏好控制的交互动画|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B02-gsap/)|
+|B03|react-spring|基于 spring 物理的 React 动画与列表进出场；局部减少动画兼容|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B03-react-spring/)|
 |B04|dotLottie 播放器|dotLottie 动画资源播放|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B04-dotlottie/)|
 |B05|Rive React Runtime|Rive 状态机动画与 React 集成|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B05-rive-react/)|
 |B06|Ant Design|企业级 React 组件与表单|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B06-ant-design/)|
@@ -33,9 +33,9 @@
 |B10|Base UI|无样式可访问组件原语|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B10-base-ui/)|
 |B11|Radix Primitives|复杂组件交互与焦点原语|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B11-radix-primitives/)|
 |B12|React Aria|可访问交互与国际化组件|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B12-react-aria/)|
-|B13|dnd-kit|排序、传感器和自定义拖拽|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B13-dnd-kit/)|
+|B13|dnd-kit|真实鼠标/触控/键盘排序与稳定身份、受限拖拽的工程示例|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B13-dnd-kit/)|
 |B14|Pragmatic drag and drop|底层拖放事件与跨容器交互|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B14-pragmatic-drag-and-drop/)|
-|B15|react-grid-layout|可拖动缩放的响应式仪表盘|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B15-react-grid-layout/)|
+|B15|react-grid-layout|可拖拽、缩放与响应式仪表盘布局（2.3.0 控制式接口）|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B15-react-grid-layout/)|
 |B16|react-resizable-panels|可调整尺寸的面板布局|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B16-react-resizable-panels/)|
 |B17|Floating UI|浮层定位、碰撞和焦点管理|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B17-floating-ui/)|
 |B18|cmdk|可访问命令菜单、搜索分组与中文输入法快捷键|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B18-cmdk/)|

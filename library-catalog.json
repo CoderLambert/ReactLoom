@@ -147,17 +147,17 @@
     "entryId": "B02",
     "name": "GSAP",
     "group": "B",
-    "summary": "时间线与复杂编排动画",
+    "summary": "有时间线、重播、反转与减少动画偏好控制的交互动画",
     "path": "packages/library-lab/entries/B02-gsap",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "B03",
     "name": "react-spring",
     "group": "B",
-    "summary": "弹簧动画与自然交互",
+    "summary": "基于 spring 物理的 React 动画与列表进出场；局部减少动画兼容",
     "path": "packages/library-lab/entries/B03-react-spring",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "B04",
@@ -235,9 +235,9 @@
     "entryId": "B13",
     "name": "dnd-kit",
     "group": "B",
-    "summary": "排序、传感器和自定义拖拽",
+    "summary": "真实鼠标/触控/键盘排序与稳定身份、受限拖拽的工程示例",
     "path": "packages/library-lab/entries/B13-dnd-kit",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "B14",
@@ -251,9 +251,9 @@
     "entryId": "B15",
     "name": "react-grid-layout",
     "group": "B",
-    "summary": "可拖动缩放的响应式仪表盘",
+    "summary": "可拖拽、缩放与响应式仪表盘布局（2.3.0 控制式接口）",
     "path": "packages/library-lab/entries/B15-react-grid-layout",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "B16",
