@@ -23,3 +23,23 @@ test('Playwright workshops use their checked-in standalone config, not the app t
  assert.equal(reproductionCommand(e,demo),'pnpm exec playwright test --config=entries/F13-playwright/examples/playwright.config.ts entries/F13-playwright/examples/business.spec.ts');
  assert.equal(reproductionCommand(e,{...demo,sourceFiles:['examples/business.spec.ts']}),null,'missing config cannot silently fall back to app tests');
 });
+
+test('Storybook recipe uses an actual checked-in config and refuses missing prerequisites',()=>{
+ const e={directory:'F14-storybook',packages:[{name:'storybook'},{name:'@storybook/react-vite'}]};
+ const demo={...base,entryPoint:'examples/stories/StatusCard.stories.tsx',sourceFiles:['examples/stories/StatusCard.stories.tsx','examples/.storybook/main.ts']};
+ assert.equal(reproductionCommand(e,demo),'pnpm exec storybook dev --no-open -p 6029 --config-dir entries/F14-storybook/examples/.storybook');
+ assert.equal(reproductionCommand(e,{...demo,sourceFiles:[demo.entryPoint]}),null);
+ assert.equal(reproductionCommand({...e,packages:[{name:'storybook'}]},demo),null);
+});
+test('Knip recipes are restricted to the local sample fixture without destructive flags',()=>{
+ const e={directory:'F15-knip',packages:[{name:'knip'}]};
+ for(const level of ['basic','business','advanced']){
+  const file=`examples/workspace/knip.${level}.json`;
+  const demo={...base,entryPoint:file,level,sourceFiles:[file,'examples/workspace/package.json']};
+  const cmd=reproductionCommand(e,demo);
+  assert.equal(cmd,`pnpm exec knip --directory entries/F15-knip/examples/workspace --config knip.${level}.json${level==='advanced'?' --production':''}`);
+  assert.equal(reproductionCommand(e,{...demo,sourceFiles:[file]}),null);
+  assert.equal(cmd.includes('--fix'),false);
+ }
+ assert.equal(reproductionCommand(e,{...base,entryPoint:'examples/workspace/knip.evil.json',sourceFiles:['examples/workspace/knip.evil.json','examples/workspace/package.json']}),null);
+});

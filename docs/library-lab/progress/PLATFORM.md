@@ -73,3 +73,18 @@ runCount：1 / 24。所有后续自动开发从实际最新 GitHub commit/PR 恢
 **CI边界调整：** `Library Lab` 工作流已允许对main的最终Draft PR #8启动，并在集成Push或主PR时核对根目录索引；worker PR base=feat/library-lab时跳过根索引检查，因为公共根索引只允许PLATFORM改。原仓库CI保留不变。Github Runner分配前失败的既有事实仍在Issue #12，未复跑相同阻塞；没有将无法运行的workflow标为通过。
 
 **下批：**恢复真实pnpm仓库可用网络/Runner后生成锁文件并执行47条模块类型/官方SDK/生产预览的定向验证；同时继续安全集成新的分组PR，检查复杂库peer依赖及Worker/SW隔离。runCount：**2 /24**。集成仍为Draft PR #8，main未修改。
+
+
+## 平台持续开发第3轮（2026-10-27，Asia/Shanghai）
+
+**已直接集成三个完整分组批次**：AB PR #19（6条，squash SHA `53450048b895961925312732d87e84cf49d9a7f0`）、EF PR #20（5条，`774600c6f6b6550b59704166f6b617dfd795da6e`）、CD PR #21（5条，`c93304753ba6cafe7788ad53ea4f133edbdd63e7`）。事先复核所有 changed paths 属各自 entries 和 progress，并检查元数据/代表性目标 SDK 源码；合入的是可审查源码，不是实测通过。用户主 PR #8 保持 Draft，main 与既有 PR #3 均未修改。
+
+公共提交 `cf54e0b324d8c68b45b1b999c1085e5a05c74b52`：登记新 16 个条目所需的 22 个生产包和 6 个开发包；根 `LIBRARY_CATALOG.md` 与 `library-catalog.json` 按实际源码收录情况同步到 **119目录 / 63份独立工作坊源码、指南、agent.md / 189项 basic/business/advanced 场景声明 / 56待完成**。六组 A11/B12/C10/D9/E10/F11；189项是场景配置总数，不是SDK 189 PASS。
+
+**当前公共平台代码继续推进**：Node/CLI 展示规则新增真实 Storybook Story + 配置，以及 Knip 独立fixture basic/business/advanced可复制命令；仍然不在浏览器执行shell、不允许任意命令参数或文件路径。代码高亮器增加实际 source+language 身份绑定，切换源码时立即隐藏旧Shiki tokens并废弃未完成任务，避免出现"展示代码属于前一文件"。在本地隔离快照对命令规则运行 `node --test tests/reproduction.test.mjs`：**6 PASS / 0 FAIL**；高亮组件全局 TypeScript `transpileModule` 语法诊断0。以上均非真实 React build/SDK 测试。
+
+**关键已确认集成冲突**：F07 react-pdf 11 的内部 pdfjs-dist 为6.3.289，F06条目声明6.4.299；当前Lab运行清单采用6.3.289保护F07同模块worker版本，并将F06协议不一致单独跟踪 Issue #22。F06需EF将代码/元数据/文档/测试一起改至兼容版本，或独立隔离Vite构建；在消除不一致前 `catalog:check` 的 dependency audit预期FAIL，不能削弱门禁、伪造 PASS。
+
+**未解决的真实环境条件**：Node包实际安装、pnpm-lock冻结、TypeScript完整检查、Vite production build、目标SDK/Chromium真实执行仍BLOCKED/NOT_RUN；此前GitHub Actions runner_id=0,steps=[]，详见#12。不要用Mock、静态审计或原研究包历史结论冒充运行验收。
+
+**下批**：先合并新增依赖的静态合法性与F06/F07版本冲突修复，再继续 worker 波次、审查React19/peer/CSS Worker、补真正锁文件及打包级隔离检查。有可用运行环境后先定向检查63条实际源码、六风险切片与关键浏览器操作，再恢复完整frozen CI。runCount：**3 / 24**。
