@@ -1,0 +1,18 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "Node SDK测试源已提交，尚无真实papaparse安装或执行日志。"
+  },
+  "build": {
+    "status": "BLOCKED",
+    "note": "需PLATFORM加 papaparse/@types/papaparse 并解析lockfile。"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "本地文件、CSV导出和错误可见性尚待真实浏览器验收。"
+  },
+  "security": {
+    "status": "NOT_RUN",
+    "note": "escapeFormulae注入拦截、恶意协议和大文件策略尚未真实执行测试。"
+  }
+}
