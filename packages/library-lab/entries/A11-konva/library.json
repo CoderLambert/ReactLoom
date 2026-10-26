@@ -1,1 +1,97 @@
-{"schemaVersion":1,"entryId":"A11","slug":"konva","name":"Konva","group":"A","summary":"二维 Canvas 场景图和图形操作","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "A11",
+  "slug": "konva",
+  "name": "Konva",
+  "group": "A",
+  "summary": "Canvas 2D 场景图、图元拖拽、选择与变换",
+  "tags": [
+    "Canvas",
+    "scene graph",
+    "drag",
+    "resize",
+    "export"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "konva",
+      "version": "10.9.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "Konva 官方文档",
+      "url": "https://konvajs.org/docs/index.html"
+    },
+    {
+      "title": "拖拽教程",
+      "url": "https://konvajs.org/docs/drag_and_drop/Drag_and_Drop.html"
+    },
+    {
+      "title": "项目",
+      "url": "https://github.com/konvajs/konva"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "A12",
+      "relation": "complements",
+      "reason": "已使用React且希望声明式图元时，考虑react-konva；Stage不能双重托管。"
+    },
+    {
+      "entryId": "A09",
+      "relation": "alternative",
+      "reason": "完整绘画白板产品可评估Excalidraw而不是从图元系统自建。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "Canvas节点与选择",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": []
+    },
+    {
+      "demoId": "business",
+      "title": "新闻卡片拖拽编排",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": []
+    },
+    {
+      "demoId": "advanced",
+      "title": "Transformer、缩放、键盘替代与销毁",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "ResizeObserver",
+        "cleanup"
+      ]
+    }
+  ],
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "参考历史研究，重新编写和整理本应用示例；旧验证不继承。"
+  },
+  "license": {
+    "spdx": "MIT",
+    "assets": "本地演示数据为原创；无第三方媒体。"
+  }
+}

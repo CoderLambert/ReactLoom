@@ -145,3 +145,65 @@
 **累计进度**：先前 wave1 4 + wave2 5 + 本轮 wave3 原4 + 追加4 = **17/39 个 A/B 库已编写真实 SDK import、完整指南与 Agent手册，共51个分层选择**；仍有 **22项未实现**。数量不表示已构建或已通过真实SDK验收。
 
 **下一队列**：A04 uPlot（时间序列大数据/销毁）、A09 Excalidraw（React19/大型包/授权）、A11 Konva（stage销毁与坐标）、B04 dotLottie（资源许可与播放清理）、B06 Ant Design（受控表单/样式隔离）；在平台依赖/Runner可用后复验 wave1-wave3 的真实类型检查、SDK 和关键浏览器行为。所有补充仅在本库 A/B 与 progress/AB.md，公共依赖/CI由PLATFORM处理。
+
+
+---
+
+## 第4轮（wave4）：uPlot / Konva / react-konva / dotLottie / Ant Design
+
+**runCount=4 / 24。** 历史 PR #9/#13/#16 已由 PLATFORM 合入 `feat/library-lab`。本批在集成基线 `688a660272775b3399a18ae34630401a19ac556c` 的独立分支 `feat/library-lab-ab-wave4` 开发；旧 `feat/library-lab-ab` 已非当前代码起点，严禁将其强推覆盖集成成果。基线目录仍是17/39个 A/B 条目实战源码。
+
+### 本批实际新增代码
+
+| 条目 | 目标实际 SDK 版本 | Demo 分层 | 主要工程特性 |
+|---|---|---|---|
+| A04 uPlot | `uplot@1.6.32` | 时间序列 / 双轴遥测 / 滚动窗口 | AlignedData、null缺值、Canvas setData、ResizeObserver+rAF、destroy、DOM表格 |
+| A11 Konva | `konva@10.9.0` | 场景节点 / 拖拽卡片 / Transformer | Stage/Layer/Group/Rect/Text、按ID增量同步、transform scale归一化、滚轮坐标系、DOM键盘替代与清理 |
+| A12 react-konva | `react-konva@19.3.2` + `konva@10.9.0` | 声明式Stage / 拖拽流程 / 动态节点 | React19.3适配、Group图元与文本一起拖拽、stable ID、ResizeObserver、HTML等价表格 |
+| B04 dotLottie | `@lottiefiles/dotlottie-react@0.20.0` | 本地动画 / 业务成功反馈 / 动效控制 | 本地自有JSON资源、真正DotLottieReact data、ref实例播放控制、load/errors、visibility、prefers-reduced-motion、事件清理 |
+| B06 Ant Design | `antd@6.6.7` | Input主题 / RSS Form+Table / 409错误回填 | ConfigProvider/App.useApp/Form/Table/Modal、稳定rowKey、字段错误回填、中文IME友好搜索、模拟业务与真实SDK区分 |
+
+每库新增/更新 `library.json`、`examples/example.tsx`、`examples/demo.tsx`、`guide.md`、`agent.md`、`AGENTS.md`、`verification.json`；B04包含本地 `examples/pulse.json`。页面源码即实际entryPoint引用的同一实现，无第二份展示用伪代码。每库basic/business/advanced 3种选择，**本批5库、15注册示例选择**（并非15个独立运行时）。
+
+### 实际静态校验（不等于目标 SDK 实测）
+
+本轮已通过 GitHub API 针对**未提交前的真实tree**进行结构校验：5份library.json可解析、5/5各自guide/agent/AGENTS/verification齐备、15/15 Demo注册和sourceFiles指向现存blob，5项真实包import对应元数据声明；全部sdk/build/browser仍为 `NOT_RUN`。此前容器无法解析npm域名，未声称TypeScript或浏览器通过。
+
+源码内额外审阅并修复：react-konva拖拽Group保证图形/文本同动；dotLottie使用稳定refCallback避免持续解绑重绑；两个Canvas示例新增节点ID递增避免删除后重复；Konva卸载不对已卸载组件setState。
+
+### dependencyRequests — 仅 PLATFORM 维护 app package + 根锁文件
+
+| 包 | 要求核对版本 | 证据与特定事项 | 许可 |
+|---|---|---|---|
+| `uplot` | `1.6.32` | https://www.npmjs.com/package/uplot；真实引入 `uplot/dist/uPlot.min.css`；时间轴秒/ResizeObserver | MIT |
+| `konva` | `10.9.0` | https://www.npmjs.com/package/konva；Stage命令API、Transformer、2D渲染 | MIT |
+| `react-konva` | `19.3.2` | https://www.npmjs.com/package/react-konva；**必须与React/ReactDOM ^19.3匹配**且peer配合konva10，旧React不能通用 | MIT |
+| `@lottiefiles/dotlottie-react` | `0.20.0` | https://docs.lottiefiles.com/en/runtimes/distributions/react/v0.x/api-reference；真实WASM/Worker+本地JSON，检查CSP | MIT |
+| `antd` | `6.6.7` | https://www.npmjs.com/package/antd；官方Form/Table/App使用；注意Portal样式和React19 | MIT |
+
+PLATFORM需通过真实`pnpm`解析及锁文件提交依赖，核对本库和现有库的peer后运行定向typecheck/build；不能手动写lock integrity，更不能只修改package版本而留下旧API。SDK尚未执行时本通道不填PASS。
+
+### 本批应补实测（待平台环境）
+
+- uPlot：真实setData不重建Canvas、秒时间轴、窗口容量100、重复mount/resize/dispose无泄漏。
+- Konva：Group增量同步、drag/transform、连续删除新增ID唯一、卸载Node/Canvas和Observer清零、键盘按钮与图形状态一致。
+- react-konva：React19.3依赖兼容、拖拽时文字跟随Group、键盘操作替代、重复Stage挂载。
+- dotLottie：本地JSON可实际解析、WASM/worker加载、系统减少动画关闭、页面隐藏暂停、实例ref不重复回调。
+- AntD：Form成功/409失败、setFields错误可见、IME搜索、Table键盘焦点、Modal关闭及卸载Portal。
+- 在没有真实npm和浏览器执行前全部保持NOT_RUN。没有让Mock取代任何目标SDK。
+
+### 当前队列和计数
+
+A/B累计 **22/39** 个库已编写源码、guide和agent手册，**17项待开发**；Demo选择累计66。此处22≠实际SDK验收22。下一优先：A15 Leaflet（地图tile与资源许可）、A16 MapLibre GL（需隔离环境）、B07 MUI、B08 Mantine、B11 Radix Primitives；对A09 Excalidraw/A10 tldraw及B21/B22历史迁移须先核对资产/授权与框架兼容。公共依赖/CI变更一律由PLATFORM执行。
+
+
+
+### 第4轮同批继续：A15 Leaflet 离线地图（累计6库）
+
+在本轮前5库的基础上继续新增 **A15 Leaflet 1.9.4**：真实Leaflet Map/LayerGroup/circleMarker、原创经纬网格、不加载任何远程瓦片、RSS地点筛选、站点标记及DOM弹窗、键盘可访问定位、响应式invalidateSize、动态节点与map.remove卸载。新增7个条目文件：library.json、真实React/Leaflet代码example.tsx+demo.tsx、guide.md、agent.md、AGENTS.md、verification.json；注册basic/business/advanced 3个可选场景。
+
+**额外依赖请求**：生产 `leaflet@1.9.4`（BSD-2-Clause，https://www.npmjs.com/package/leaflet）；TypeScript开发 `@types/leaflet@1.9.22`（MIT，https://www.npmjs.com/package/@types/leaflet），务必由PLATFORM统一维护package/lock。Leaflet 1.9 API：https://leafletjs.com/reference.html 。没有实际连外部地图服务，不能以此代表在线瓦片权限或底图许可通过。
+
+**计数修正**：本次完整轮次总共 **6库/18个分层Demo选择**；AB累计 **23/39** 项有源码/指南/Agent笔记，尚余 **16项**；总注册69个，均不等于SDK/浏览器验收。旧本轮前述“5库/22/39”的小计已被本节更正。Leaflet与前5库一样，真实SDK/build/browser本轮全部NOT_RUN，仅有GitHub静态源文件校验。
+
+下一轮优先 A16 MapLibre（先审查无外部瓦片/worker配置与WebGL能力）、B07 MUI、B08 Mantine、B11 Radix、B12 React Aria，及A09/A10复杂白板的授权/依赖能力评估；不做虚拟截图代替SDK。

@@ -1,1 +1,100 @@
-{"schemaVersion":1,"entryId":"B04","slug":"dotlottie","name":"dotLottie 播放器","group":"B","summary":"dotLottie 动画资源播放","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "B04",
+  "slug": "dotlottie",
+  "name": "dotLottie 播放器",
+  "group": "B",
+  "summary": "本地矢量动画、播放控制与减少动态效果",
+  "tags": [
+    "lottie",
+    "animation",
+    "canvas",
+    "a11y",
+    "reduced-motion"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "@lottiefiles/dotlottie-react",
+      "version": "0.20.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "dotLottie React v0.x 文档",
+      "url": "https://docs.lottiefiles.com/en/runtimes/distributions/react/v0.x"
+    },
+    {
+      "title": "官方实例接口",
+      "url": "https://docs.lottiefiles.com/en/runtimes/distributions/react/v0.x/api-reference"
+    },
+    {
+      "title": "npm版本与许可",
+      "url": "https://www.npmjs.com/package/@lottiefiles/dotlottie-react"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "B05",
+      "relation": "alternative",
+      "reason": "需要设计器状态机驱动强交互时考虑Rive；Lottie更适合被动播放与简单控制。"
+    },
+    {
+      "entryId": "B01",
+      "relation": "alternative",
+      "reason": "UI布局或状态切换动画用Motion而非引入外部Lottie资源。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "播放/暂停本地矢量动画",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/pulse.json"
+      ],
+      "capabilities": []
+    },
+    {
+      "demoId": "business",
+      "title": "业务提交结果动效",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/pulse.json"
+      ],
+      "capabilities": []
+    },
+    {
+      "demoId": "advanced",
+      "title": "动画速度、暂停策略及减少动态",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/pulse.json"
+      ],
+      "capabilities": [
+        "cleanup",
+        "interaction"
+      ]
+    }
+  ],
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "基于原研究和2026-10-27官方文档重新实现；原研究测试未继承。"
+  },
+  "license": {
+    "spdx": "MIT",
+    "assets": "全部用本地原创演示数据；无商用图片或收费资源。"
+  }
+}

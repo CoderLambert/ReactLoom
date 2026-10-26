@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "本轮未安装及执行目标SDK，真实包import代码已编写"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "尚未运行依赖完整的类型检查与Vite构建"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "尚未运行Chromium交互与资源卸载测试"
+  }
+}

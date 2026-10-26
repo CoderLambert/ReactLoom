@@ -1,1 +1,97 @@
-{"schemaVersion":1,"entryId":"A04","slug":"uplot","name":"uPlot","group":"A","summary":"高频时间序列和紧凑趋势图","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "A04",
+  "slug": "uplot",
+  "name": "uPlot",
+  "group": "A",
+  "summary": "有界内存的时间序列趋势图与实时遥测",
+  "tags": [
+    "timeseries",
+    "Canvas",
+    "streaming",
+    "性能",
+    "resize"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "uplot",
+      "version": "1.6.32"
+    }
+  ],
+  "references": [
+    {
+      "title": "uPlot 官方项目",
+      "url": "https://github.com/leeoniya/uPlot"
+    },
+    {
+      "title": "API / 设计说明",
+      "url": "https://github.com/leeoniya/uPlot/blob/master/docs/README.md"
+    },
+    {
+      "title": "npm 1.6.32",
+      "url": "https://www.npmjs.com/package/uplot"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "A01",
+      "relation": "alternative",
+      "reason": "大量遥测折线和轻量Canvas首选uPlot；复杂类型/交互优先ECharts。"
+    },
+    {
+      "entryId": "A03",
+      "relation": "alternative",
+      "reason": "Chart.js生态插件更丰富，但大规模时间序列要分别验证吞吐。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "最小时间序列",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": []
+    },
+    {
+      "demoId": "business",
+      "title": "双指标请求监测",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": []
+    },
+    {
+      "demoId": "advanced",
+      "title": "滚动窗口、缺失点、重置与清理",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "ResizeObserver",
+        "cleanup"
+      ]
+    }
+  ],
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "参考历史研究，重新编写和整理本应用示例；旧验证不继承。"
+  },
+  "license": {
+    "spdx": "MIT",
+    "assets": "本地演示数据为原创；无第三方媒体。"
+  }
+}
