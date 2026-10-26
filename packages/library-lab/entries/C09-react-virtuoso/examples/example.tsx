@@ -46,6 +46,7 @@ function Business() {
   const [loading, setLoading] = useState(false);
   const [notice, setNotice] = useState('本地确定性 fixture，不发送 HTTP');
   const pending = useRef(false);
+  const composing = useRef(false);
   const generation = useRef(0);
   const timer = useRef<number | null>(null);
   const filtered = useMemo(() => all.filter(item => (item.title + item.summary).toLowerCase().includes(query.toLowerCase())), [all, query]);
@@ -58,6 +59,7 @@ function Business() {
   }, []);
 
   const applySearch = () => {
+    if (composing.current) return;
     generation.current += 1;
     if (timer.current !== null) window.clearTimeout(timer.current);
     timer.current = null;
@@ -86,8 +88,8 @@ function Business() {
     <h2>RSS 阅读流：筛选、分页门禁与滚动窗口</h2>
     <form onSubmit={event => {event.preventDefault(); applySearch();}} className="demo-controls">
       <label>文章关键词 <input aria-label="文章关键词" value={draft} onChange={e => setDraft(e.target.value)}
-        onCompositionStart={() => setNotice('输入法合成中；不会自动提交搜索')}
-        onCompositionEnd={() => setNotice('输入完成后按搜索提交')} /></label>
+        onCompositionStart={() => {composing.current = true; setNotice('输入法合成中；不会提交搜索');}}
+        onCompositionEnd={() => {composing.current = false; setNotice('输入完成后按搜索提交');}} /></label>
       <button type="submit">搜索</button>
     </form>
     <p role="status">{notice} · {visible.length}/{filtered.length} 篇 {loading ? '加载下一段…' : ''}</p>

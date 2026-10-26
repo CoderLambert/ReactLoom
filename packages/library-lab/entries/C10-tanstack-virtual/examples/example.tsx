@@ -75,15 +75,18 @@ function SearchableFeed({advanced}: {advanced: boolean}) {
   const [draft, setDraft] = useState('');
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState('all');
+  const composing = useRef(false);
   const all = useMemo(() => Array.from({length: 3400}, (_, i) => makeArticle(i)), []);
   const items = useMemo(() => all.filter(item =>
     (category === 'all' || item.title.startsWith(category)) &&
     (item.title + item.summary).toLowerCase().includes(query.toLowerCase())), [all, category, query]);
-  const search = () => setQuery(draft.trim());
+  const search = () => {if (!composing.current) setQuery(draft.trim());};
   return <section aria-label="TanStack Virtual 业务过滤">
     <h2>{advanced ? '动态高度：测量失效与深度跳转' : 'RSS 虚拟结果：查询与业务主键'}</h2>
     <form className="demo-controls" onSubmit={e => {e.preventDefault(); search();}}>
       <label>关键词 <input value={draft} onChange={e => setDraft(e.target.value)}
+        onCompositionStart={() => {composing.current = true;}}
+        onCompositionEnd={() => {composing.current = false;}}
         aria-label="搜索文章" /></label>
       <label>分类 <select value={category} onChange={e => setCategory(e.target.value)}>
         <option value="all">全部</option><option value="工程实践">工程实践</option>

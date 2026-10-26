@@ -15,9 +15,12 @@ function validateSources(value: unknown): Source[] {
     if (!item || typeof item !== 'object') throw new Error('来源字段缺失');
     const source = item as Record<string, unknown>;
     if (typeof source.id !== 'string' || typeof source.title !== 'string' ||
-      typeof source.url !== 'string' || !source.url.startsWith('https://'))
+      typeof source.url !== 'string')
       throw new Error('来源数据不合法');
-    return {id: source.id, title: source.title, url: source.url};
+    let parsed: URL;
+    try {parsed = new URL(source.url);} catch {throw new Error('来源URL无效');}
+    if (parsed.protocol !== 'https:' || !parsed.hostname) throw new Error('只能使用HTTPS来源');
+    return {id: source.id, title: source.title, url: parsed.href};
   });
 }
 
@@ -77,6 +80,7 @@ export default function KyWorkshop({level}: {level: Level}) {
     retry: {limit: 1, methods: ['get'], statusCodes: [503], backoffLimit: 400},
   }), [fixture]);
   const [draft, setDraft] = useState('');
+  const composing = useRef(false);
   const [data, setData] = useState<Source[]>([]);
   const [state, setState] = useState('本地网络 fixture 待执行；不会发出真实 HTTP');
   const [advancedResult, setAdvancedResult] = useState('');
@@ -145,8 +149,10 @@ export default function KyWorkshop({level}: {level: Level}) {
     <p>调用真实 ky@2.2 的请求、重试与超时实现；fetch 传入严格限定的本地虚构 Response 适配器，绝不连接外网。</p>
     {level !== 'advanced' ? <>
       {level === 'business' && <form className="demo-controls" onSubmit={event => {
-        event.preventDefault(); void search(draft.trim());}}>
-        <label>来源关键词 <input aria-label="来源关键词" value={draft} onChange={event => setDraft(event.target.value)} /></label>
+        event.preventDefault(); if (!composing.current) void search(draft.trim());}}>
+        <label>来源关键词 <input aria-label="来源关键词" value={draft} onChange={event => setDraft(event.target.value)}
+          onCompositionStart={() => {composing.current = true;}}
+          onCompositionEnd={() => {composing.current = false;}} /></label>
         <button type="submit">搜索来源</button>
       </form>}
       <div className="demo-controls">
