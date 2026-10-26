@@ -1,1 +1,111 @@
-{"schemaVersion":1,"entryId":"A01","slug":"echarts","name":"Apache ECharts","group":"A","summary":"业务仪表盘和多类型交互图表","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "A01",
+  "slug": "echarts",
+  "name": "Apache ECharts",
+  "group": "A",
+  "summary": "业务仪表盘和多类型交互图表",
+  "tags": [
+    "Canvas",
+    "报表",
+    "ResizeObserver",
+    "时间序列",
+    "销毁"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "echarts",
+      "version": "6.1.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "ECharts 官方按需引入",
+      "url": "https://echarts.apache.org/handbook/en/basics/import/"
+    },
+    {
+      "title": "ECharts 官方实例与组件 API",
+      "url": "https://echarts.apache.org/en/api.html"
+    },
+    {
+      "title": "官方 GitHub 仓库",
+      "url": "https://github.com/apache/echarts"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "A02",
+      "relation": "alternative",
+      "reason": "Recharts 更偏 React 声明式图表，适合简单业务组件；复杂混合图与图形交互优先比较 ECharts。"
+    },
+    {
+      "entryId": "A03",
+      "relation": "alternative",
+      "reason": "Chart.js 适合较小图表需求，需比较定制化和运行体积。"
+    },
+    {
+      "entryId": "A05",
+      "relation": "complements",
+      "reason": "自定义比例尺与复杂数据变换可借鉴 D3，但不要同时让两个库控制同一 SVG/Canvas 生命周期。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "按需注册柱状图",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "canvas",
+        "resize-observer"
+      ],
+      "description": "使用真实 ECharts core 绘制七天阅读量并查看 tooltip"
+    },
+    {
+      "demoId": "business",
+      "title": "双系列业务指标对比",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "canvas",
+        "resize-observer"
+      ],
+      "description": "通过一个实例组合柱形与折线，点击数据点反馈"
+    },
+    {
+      "demoId": "advanced",
+      "title": "增量更新、缩放及销毁",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "canvas",
+        "resize-observer"
+      ],
+      "description": "监听容器宽度、逐次更新数据，离开 Tab 销毁实例与监听"
+    }
+  ],
+  "license": {
+    "spdx": "Apache-2.0",
+    "note": "示例数据自造；不打包地图版权资源"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "此示例重新编写，未复用原研究包测试结论。"
+  }
+}

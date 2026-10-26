@@ -1,0 +1,18 @@
+{
+  "content": {
+    "status": "PASS",
+    "note": "根据v4官方API重写可运行源码和指南"
+  },
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "待统一安装 react-resizable-panels@4.14.1"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "无本提交TS/build证据"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "真实拖动、键盘、窄屏未执行"
+  }
+}

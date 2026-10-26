@@ -1,1 +1,104 @@
-{"schemaVersion":1,"entryId":"B20","slug":"sonner","name":"Sonner","group":"B","summary":"即时通知和操作反馈","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "B20",
+  "slug": "sonner",
+  "name": "Sonner",
+  "group": "B",
+  "summary": "即时通知和操作反馈",
+  "tags": [
+    "Toast",
+    "React",
+    "撤销",
+    "反馈",
+    "异步状态"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "sonner",
+      "version": "2.0.8"
+    }
+  ],
+  "references": [
+    {
+      "title": "Sonner 官方交互文档",
+      "url": "https://sonner.emilkowal.ski/"
+    },
+    {
+      "title": "Sonner 官方仓库",
+      "url": "https://github.com/emilkowalski/sonner"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "B11",
+      "relation": "alternative",
+      "reason": "复杂的阻断性流程需要 Dialog/AlertDialog 类组件，而非短 Toast；可组合 Radix 对话框。"
+    },
+    {
+      "entryId": "B17",
+      "relation": "complements",
+      "reason": "Toast 不承担浮层定位业务，复杂 Popover 仍交给 Floating UI 或成熟组件管理。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "基础成功通知",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "portal",
+        "timer",
+        "aria-live"
+      ],
+      "description": "显示一条独立Toast并阅读业务状态"
+    },
+    {
+      "demoId": "business",
+      "title": "带撤销的业务操作",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "portal",
+        "timer",
+        "aria-live"
+      ],
+      "description": "保存新闻后通过通知操作撤销本地状态"
+    },
+    {
+      "demoId": "advanced",
+      "title": "异步加载、失败和资源清理",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "portal",
+        "timer",
+        "aria-live"
+      ],
+      "description": "使用同一toast id由加载态进入成功或失败，可停止并清理"
+    }
+  ],
+  "license": {
+    "spdx": "MIT"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "独立编写，不继承研究包测试。"
+  }
+}

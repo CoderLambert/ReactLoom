@@ -1,0 +1,66 @@
+# A01 Apache ECharts — 真实业务图表与生命周期
+
+## 适用范围
+
+用于 Dashboard、报表、时间序列、多种图形组合、交互下钻。它不是 React 组件库，实例由业务组件明确创建和释放。对于非常简单的 React 图表，也可以比较 A02 Recharts 和 A03 Chart.js。
+
+## 安装与按需引入
+
+```bash
+pnpm add echarts@6.1.0
+```
+
+```tsx
+import {init, use} from 'echarts/core';
+import {BarChart, LineChart} from 'echarts/charts';
+import {GridComponent, TooltipComponent, LegendComponent} from 'echarts/components';
+import {CanvasRenderer} from 'echarts/renderers';
+use([BarChart, LineChart, GridComponent, TooltipComponent, LegendComponent, CanvasRenderer]);
+```
+
+**完整可迁移实现**：[examples/example.tsx](examples/example.tsx)。Lab 的适配入口 `examples/demo.tsx` 仅重导出实际实现，源码查看器读取文件字节，而不是另一份手抄版本。
+
+## 三层实验
+
+### 1. 入门：真实条形图
+
+绘制七天的固定阅读次数；类别轴、Tooltip 和完整文本数据表同时存在。不要把 Canvas 当成读屏可理解的唯一表示。
+
+### 2. 业务：柱状与折线叠加
+
+同一坐标系展示本周与上周数据。多系列共享分类轴与 Tooltip。根据报表任务决定是否要分别设置不同纵轴，避免量纲不一致造成误导。
+
+### 3. 进阶：增量更新、动态宽度、资源释放
+
+点“启动增量更新”后按顺序调整样本，确认图表响应；缩小图表容器时由 ResizeObserver 调用 `chart.resize()`。离开当前 Demo 或切 Tab 必须断开 Observer、移除 click 监听、停止 timer，并调用 `dispose()`；StrictMode 下重复挂载同样要干净。
+
+## 数据流和示例所有权
+
+React state（样本）→ `setOption`（更新实例）→ ECharts 渲染到容器。ECharts 实例和 ResizeObserver 仅在组件挂载时创建并由同一个 Effect cleanup 释放；更新数据不能重复 `init()`。复杂图形数据进入适度 memoization，不应把任意 100 万条数据直接作为每秒 React state。
+
+## 专属反例
+
+1. **每次 render 调用 init**：泄漏实例并覆盖 Canvas。应将创建/销毁限定在挂载与清理 Effect 内。
+2. **只监听 window.resize**：侧边栏拖动不会触发窗口尺寸变化。应对真正容器使用 ResizeObserver，并在卸载时 disconnect。
+3. **将非可信 HTML 注入 tooltip formatter**：不可信字符串可能进入 HTML。这里使用内置 Tooltip 与固定字段；若使用 HTML formatter，必须明确转义与 URL 规则。
+4. **仅靠颜色表达两个系列**：需要 legend、文本名称和数据表，考虑色盲与读屏。
+5. **用旧 option 与新数据 merge 后残留老系列**：图表结构改变时使用明确的 notMerge/replaceMerge 策略，并测试实际行为；不总是无条件全量重建实例。
+
+## 生产选型
+
+按需注册用到的 Chart/Component/Renderer；主页面只在 Demo Tab 被打开且用户点击运行后动态导入本模块。大数据使用图表采样/渐进绘制等官方机制前先基于真实数据基准衡量。切换主题、renderer 或实例大小要重新审查 resize 和 dispose。对 WebGL 或地图额外核对版权和资源清理。
+
+## 验证矩阵（未通过之前不要宣称完成）
+
+- 构建：检验真实 echarts 6.1.0 类型与 tree-shaking。
+- SDK：检查实际 init/getInstanceByDom、setOption、dispose 生命周期。
+- 浏览器：图表像素可见、Tooltip、容器缩放、更新暂停、重复挂载不遗留监听。
+- 可访问性：表格数值与图形数据一致，状态变化可读。
+
+当前只提交了真实 SDK 调用源码；依赖安装、构建和浏览器验证仍为 `NOT_RUN`，不会借用历史资料的 PASS。
+
+## 参考
+
+- [官方 NPM 按需导入](https://echarts.apache.org/handbook/en/basics/import/)
+- [ECharts API](https://echarts.apache.org/en/api.html)
+- [Apache-2.0 许可证所在仓库](https://github.com/apache/echarts)
