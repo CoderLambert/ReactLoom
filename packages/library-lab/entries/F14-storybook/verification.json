@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "需要真实Storybook CLI构建及play交互，尚未运行"
+  },
+  "build": {
+    "status": "BLOCKED",
+    "note": "共享依赖/锁文件尚待PLATFORM统一安装和真实构建"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "尚未执行真实Storybook/Chromium或独立浏览器验证；Node CLI条目如不适用则不强制制造浏览器PASS"
+  }
+}

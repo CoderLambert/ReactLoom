@@ -1,1 +1,126 @@
-{"schemaVersion":1,"entryId":"E01","slug":"tiptap","name":"Tiptap","group":"E","summary":"富文本编辑器和扩展","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "E01",
+  "slug": "tiptap",
+  "name": "Tiptap",
+  "group": "E",
+  "summary": "ProseMirror 驱动的 Headless 富文本编辑器：工具栏、JSON 草稿与安全导入",
+  "tags": [
+    "富文本",
+    "React",
+    "ProseMirror",
+    "JSON",
+    "IME",
+    "EditorContent"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "@tiptap/react",
+      "version": "3.32.0"
+    },
+    {
+      "name": "@tiptap/pm",
+      "version": "3.32.0"
+    },
+    {
+      "name": "@tiptap/starter-kit",
+      "version": "3.32.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "Tiptap React 官方安装",
+      "url": "https://tiptap.dev/docs/editor/getting-started/install/react"
+    },
+    {
+      "title": "Tiptap Editor API",
+      "url": "https://tiptap.dev/docs/editor/api/editor"
+    },
+    {
+      "title": "Tiptap Commands",
+      "url": "https://tiptap.dev/docs/editor/api/commands"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "E03",
+      "relation": "alternative",
+      "reason": "Lexical 对编辑命令和状态模型的控制不同，适合细粒度 React 编辑器架构。"
+    },
+    {
+      "entryId": "E02",
+      "relation": "alternative",
+      "reason": "BlockNote 提供更完整的块级文档 UI；Tiptap 更便于从原语自行设计体验。"
+    },
+    {
+      "entryId": "E10",
+      "relation": "complements",
+      "reason": "富HTML跨越不可信输入/输出边界时需单独设计净化策略，不能因ProseMirror schema存在就忽略安全审查。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "level": "basic",
+      "title": "原生编辑与格式工具栏",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "contenteditable",
+        "session-storage",
+        "editor-disposal",
+        "ime"
+      ],
+      "description": "实际 useEditor + StarterKit；加粗、斜体和段落编辑。"
+    },
+    {
+      "demoId": "business",
+      "level": "business",
+      "title": "会话草稿的 JSON 持久化",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "contenteditable",
+        "session-storage",
+        "editor-disposal",
+        "ime"
+      ],
+      "description": "真实 editor.getJSON 与 setContent，局部 sessionStorage 与恢复错误处理。"
+    },
+    {
+      "demoId": "advanced",
+      "level": "advanced",
+      "title": "编辑器导出、限额与恢复边界",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "contenteditable",
+        "session-storage",
+        "editor-disposal",
+        "ime"
+      ],
+      "description": "验证内容大小与损坏草稿回退；不把 HTML 输入当作可信数据。"
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "assets": "示例输入由 ReactLoom 原创生成，不含第三方照片、字体包副本或付费功能。"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "按2026-10-27官方文档重新编写；旧归档的测试结果不作为本次真实SDK验证证据。"
+  }
+}
