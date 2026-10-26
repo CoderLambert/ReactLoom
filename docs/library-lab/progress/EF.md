@@ -218,7 +218,7 @@ E03/F01/F06/F17需与公共DemoHost真实浏览器验证，尤其StrictMode重�
 
 ### 第五轮 dependencyRequests（PLATFORM 唯一owner）
 
-|准确包名|官方/nmp版本基线|用途、许可、兼容性|
+|准确包名|官方/npm版本基线|用途、许可、兼容性|
 |---|---|---|
 | `photoswipe` | `5.4.4` | E13，MIT，`photoswipe/lightbox`、`photoswipe/style.css`、`import('photoswipe')`；须确认构建chunk、键盘与destroy。|
 | `react-easy-crop` | `6.2.4` | E14，MIT，React19 peer和Cropper类型需真实锁文件解析；支持受控crop/zoom/onCropComplete。|
@@ -251,3 +251,7 @@ runCount=5/24。本次每项均完成多文件源码+文档的垂直交付；完
 - GitHub Compare：基线 `53e6c93003b08f6aac14da9c375e210e6b12540a` →提交，ahead=1，50个新增/修改文件，全部属于EF entries或本progress，无越界修改。
 - 平台接入待处理：统一依赖安装/真实锁文件、Node真实CLI验证、Vite typecheck/build、Chromium交互/资源回收。EF继续下一批，不重复本批已提交源码。
 
+
+### Vite 8 Oxc兼容修复（同批）
+
+官方Vite 8文档确认：`build.minify: 'esbuild'`已弃用且esbuild不再是默认依赖。F18真实构建fixture改为`minify: 'oxc'`，避免PLATFORM为该孤立测试额外安装esbuild；补丁提交`73905ca52eb1b64fc1c40c7c906cd3657b9cf0e8`。此修订仅为源代码与官方API兼容性修复，**并不代表真实Vite构建已经通过**。
