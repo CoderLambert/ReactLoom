@@ -53,7 +53,7 @@ node packages/library-lab/scripts/find-library.mjs --group E --limit 10
 ```sh
 cd packages/library-lab
 node scripts/sdk-runner.mjs --list                  # 查看全部实际 Node SDK 测试文件；不执行
-node scripts/sdk-runner.mjs --entry=D03             # 指定一个库
+node scripts/sdk-runner.mjs --entry=C17             # 指定一个库
 node scripts/sdk-runner.mjs --entries=C17,C18,D06   # 仅执行指定库
 node scripts/sdk-runner.mjs --group=F               # 仅执行 F 组实际 Node 测试
 node scripts/sdk-runner.mjs                        # 所有 Node SDK 测试，包含全局测试
