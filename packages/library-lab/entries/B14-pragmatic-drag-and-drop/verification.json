@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "真实目标SDK源码已编写，未执行runtime验收"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "缺本通道完整pnpm依赖解析与tsc/build报告"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "未运行浏览器交互与资源清理E2E"
+  }
+}

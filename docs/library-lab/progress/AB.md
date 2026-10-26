@@ -251,3 +251,50 @@ A/B累计 **22/39** 个库已编写源码、guide和agent手册，**17项待开�
 ### 下一轮待开发（A/B完整清单余项优先）
 
 A09 Excalidraw、A10 tldraw、A13 Three.js、A14 React Three Fiber、A17 deck.gl；B05 Rive React Runtime、B09 shadcn/ui、B14 Pragmatic drag and drop、B21 react-motion历史迁移、B22 react-beautiful-dnd历史迁移。先处理依赖/许可/源码所有权，选择真实SDK或真实迁移示例；不能为了赶完成进度生成假Canvas或伪终端。PLATFORM有可执行环境后还需回归既有29条SDK/TS/浏览器。
+
+
+---
+
+## 第6轮（wave6）：Three.js / React Three Fiber / deck.gl / shadcn源码 / Pragmatic DnD / 历史迁移
+
+**runCount=6 / 24**。从执行时最新集成HEAD `a9441528ea68d2daa56f2c0bbbc0e4fbe7cf5ae1` 新建分支 `feat/library-lab-ab-wave6`；本轮只修改 A/B 条目及该进度文件，不再向已合并的首轮分支提交。GitHub实际文件树确认先前29/39条有源码；本批新增 **7个独立条目 / 21个basic/business/advanced演示选择**，在PLATFORM审核合并后 **36/39**，剩余 A09/A10/B05 三条专项事项。
+
+### 本批真实源码与主要能力
+
+|条目|实际SDK包与版本（待PLATFORM真实安装/核验）|演示实现及专项边界|
+|---|---|---|
+|A13 Three.js|three@0.186.0；dev @types/three@0.186.0|Scene/Camera/Geometry/Material/WebGLRenderer，旋转与颜色，ResizeObserver，setAnimationLoop(null)、geometry/material/renderer dispose与可访问回退|
+|A14 React Three Fiber|@react-three/fiber@9.8.2 + three@0.186.0|真实Canvas/useFrame、React19.3适配、业务状态切换、reduced-motion动态监听、frameloop demand、重新挂载|
+|A17 deck.gl|@deck.gl/core@9.4.0 + @deck.gl/layers@9.4.0|Standalone Deck/ScatterplotLayer、原创GeoJSON式点集、无任何外部底图、过滤和1200点样例、GPU回退、resize/setProps/finalize|
+|B09 shadcn/ui源码工作流|class-variance-authority@0.7.1 + @radix-ui/react-slot@1.5.0 + clsx@2.1.1 + tailwind-merge@3.7.0|本地原创Button组件源码、variant/size/Slot asChild，RSS批量操作、真实disabled及卸载计时器清理；明确不是“shadcn运行时包”，也不是官方CLI生成逐字快照|
+|B14 Pragmatic drag and drop|@atlaskit/pragmatic-drag-and-drop@1.8.1|原生draggable/dropTargetForElements/monitorForElements，useId作用域，监听cleanup，频道排序、锁定、键盘按钮回退、撤销|
+|B21 react-motion历史迁移|motion@14.6.0（已在公共package声明）|真实Motion/AnimatePresence/useReducedMotion，Spring与TransitionMotion迁移，稳定key，列表退出与撤销；不安装旧react-motion|
+|B22 react-beautiful-dnd历史迁移|@hello-pangea/dnd@18.0.1|真实DragDropContext/Droppable/Draggable/placeholder，兼容React19的现代fork，锁定、撤销、上/下移动回退；不安装旧react-beautiful-dnd|
+
+每库均新增或更新 `library.json`、实际 `examples/example.tsx`、适配 `examples/demo.tsx`、`guide.md`、`agent.md`、目录 `AGENTS.md` 和 `verification.json`；B09独立保存 `examples/ui/button.tsx`，该组件即运行及源码查看的同一文件。所有条目`contentState=recreated`，并记载历史附件曾恢复，但不会继承旧验证。
+
+### 实际检查和验证事实
+
+- GitHub完整staged tree `3c6165ea08e0d9490590190c29d55e0a05cb0cfa` 为非截断，可核对七个条目的文件。用connector逐库读取manifest blob并JSON解析：**7/7身份与目录一致、21/21三层演示注册entryPoint及sourceFiles存在，7/7包含完整guide、agent、AGENTS与verification文档**，另有B09额外button源码；这是静态结构检查，**没有运行TypeScript或第三方SDK**。
+- 本轮未执行pnpm安装、真实SDK运行、完整TypeScript typecheck、Vite production build或Chromium E2E。全部新增库的`sdk/build/browser=NOT_RUN`；不能将官方文档检索、tree检查或React代码文本视为执行通过。
+- WebGL/Worker/浏览器安全边界：A13/A14/A17都有可访问HTML反馈和资源清理；真实GPU释放、StrictMode、浏览器上下文上限需要PLATFORM有构建环境后在浏览器验证。deck.gl样本1200点不是性能成绩，不涉及地图瓦片许可。
+
+### dependencyRequests → PLATFORM唯一Owner
+
+仅平台集成负责编写`packages/library-lab/package.json`、pnpm-lock、CI；本轮**没有**修改这些文件。请核对SDK发行、React19/TypeScript7/Vite8 peer、许可证、构建及包体积，再通过真实pnpm解析生成锁文件（禁止手写integrity）：
+
+- `three@0.186.0` + TypeScript dev `@types/three@0.186.0`（MIT）；官方 https://threejs.org/manual/pages/creating-a-scene.html ，https://www.npmjs.com/package/@types/three
+- `@react-three/fiber@9.8.2`（MIT）与上述three版本和React19.3匹配； https://github.com/pmndrs/react-three-fiber/releases/tag/v9.8.2
+- `@deck.gl/core@9.4.0` + `@deck.gl/layers@9.4.0`（MIT；严格同版本）；https://deck.gl/docs/get-started/using-standalone
+- `class-variance-authority@0.7.1`（Apache-2.0）+ `@radix-ui/react-slot@1.5.0`（MIT）；既有clsx/tailwind-merge可复用。B09是源代码组件工作流而非新增shadcn runtime；https://ui.shadcn.com/docs/components/button
+- `@atlaskit/pragmatic-drag-and-drop@1.8.1`（Apache-2.0；需核对peer/exports）；https://atlassian.design/components/pragmatic-drag-and-drop/core-package/adapters/element/
+- `@hello-pangea/dnd@18.0.1`（Apache-2.0，React19）；https://github.com/hello-pangea/dnd
+- `motion@14.6.0` 已被PLATFORM声明，无新增依赖；只作为旧react-motion的现代迁移目标。
+
+### 剩余AB开发队列（3条）与许可风险
+
+1. **A09 Excalidraw**：真实`@excalidraw/excalidraw`体积大，加载器、fonts/asset URL、CSP及离线/许可需先明确；不能自动请求外部字体资源或虚构画板，方案为独立按需runner并带本地字体资源。
+2. **A10 tldraw**：官方生产构建有License Key约束，不能无有效许可发布公网Demo；要求PLATFORM评估dev-only或合法密钥/明确受限构建。不得提交密钥或绕过许可，不能以本地开发可用宣称生产可用。
+3. **B05 Rive React Runtime**：需要可合法再分发的`.riv`运行资产，或用户显式导入本地`.riv`，不能为了凑数用假Canvas，按Worker/OffscreenCanvas/visibility处理。
+
+如有可独立完成的源码与指南，下一轮继续推进这3条，遇商业许可约束继续其他可行工作并保持BLOCKED标识。仅PLATFORM可审核合入`feat/library-lab`。当前累计36/39是**代码/文档接入数**，SDK实测未由本轮新增。
