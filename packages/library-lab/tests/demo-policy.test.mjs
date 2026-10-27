@@ -29,3 +29,22 @@ test('reviewed module workers can run while service workers remain isolated',()=
  assert.equal(demoRunPolicy({...base,executionKind:'worker',entryPoint:'../secrets.ts'}).mode,'unavailable');
  assert.equal(demoRunPolicy({...base,executionKind:'worker',capabilities:['service-worker']}).mode,'isolated');
 });
+
+test('network interception never runs on the shared SPA origin', () => {
+ for (const kind of ['react','worker','browser-frame']) {
+  const result=demoRunPolicy({...base,executionKind:kind,capabilities:['network-interception']});
+  assert.equal(result.mode,'isolated',kind);
+  assert.match(result.reason,/网络拦截/u);
+ }
+ assert.equal(demoRunPolicy({...base,capabilities:['persistent-network-interception']}).mode,'isolated');
+});
+test('Node process capability is CLI-only, not React or Worker execution', () => {
+ for (const kind of ['react','worker']) {
+  assert.equal(demoRunPolicy({...base,executionKind:kind,capabilities:['node-process']}).mode,'isolated',kind);
+ }
+ for (const cap of ['node-process','network-interception']) {
+  assert.equal(demoRunPolicy({...base,executionKind:'node-ci',capabilities:[cap]}).mode,'reproduction',cap);
+ }
+ // A forbidden global SW capability is never downgraded to a safe CLI preview.
+ assert.equal(demoRunPolicy({...base,executionKind:'node-ci',capabilities:['global-service-worker']}).mode,'isolated');
+});
