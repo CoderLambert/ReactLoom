@@ -17,3 +17,7 @@ R3F采用稳定v9.8.2（React19.3兼容），不要无审查升级到v10 alpha�
 **必须验证**：真实目标SDK import、React19类型检查、生产构建、浏览器设备适配、快速反复挂载/切Tab无事件/GPU资源泄漏；特殊设备能力缺失时使用数据表退化展示。PASS需当前源码指纹、命令及日志证据，否则为NOT_RUN。
 
 **官方参考**：[R3F Canvas官方API](https://r3f.docs.pmnd.rs/api/canvas) · [R3F useFrame官方API](https://r3f.docs.pmnd.rs/api/hooks) · [React19兼容发布说明](https://github.com/pmndrs/react-three-fiber/releases/tag/v9.8.2)。
+
+## 第13轮资源/无障碍契约
+
+`frame-policy.ts` 必须与 `useDocumentVisibility` 一同移植；不能只在 `useFrame` 内 return 但让 Canvas 永远 `always`。暂停、减少动态、后台、速度零都需要 `demand`；恢复时依赖 React/R3F 自身调度。任何层级均保留 HTML 可操作按钮。policy 测试不是GPU或SDK验收。

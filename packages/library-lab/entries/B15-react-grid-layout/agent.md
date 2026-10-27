@@ -19,3 +19,7 @@
 
 ## 实测清单
 真实 SDK import、typecheck/build、拖动和调整尺寸、状态和 JSON 一致、窄屏6列、锁定、键盘可用、卸载无 ResizeObserver 泄露。尚未实际运行：sdk/build/browser 保持 NOT_RUN。官方 https://github.com/react-grid-layout/react-grid-layout
+
+## 第13轮断点策略与边界
+
+宽/窄布局使用不同的受控保存槽，不可在 `onLayoutChange` 把6列压缩结果写回12列用户配置；锁定标志仅属于当前交互状态，不能泄漏到持久化 schema。窄屏键盘上下相邻移动，宽屏左右移动；检查边界和 static 后禁用非法操作。保留 `layout-policy.ts` 与 `tests/layout-policy.test.mts`，实际RGL v2 compactor/drag/resize仍需Chromium证据。

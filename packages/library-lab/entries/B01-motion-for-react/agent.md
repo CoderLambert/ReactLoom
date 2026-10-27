@@ -22,3 +22,7 @@
 实际 motion/react import、类型和 Vite 构建；Chrome 中 enter/exit、快速重复点击、稳定键重排、StrictMode、读屏语义、系统 reduced-motion、卸载无资源残留。当前全 NOT_RUN，切勿以静态代码声称通过。
 
 官方 https://motion.dev/docs/react-installation
+
+## 第13轮业务状态与焦点安全
+
+保留 `card-policy.ts` 的最大容量与稳定ID；不能在React updater中使用自增ref造成StrictMode身份不稳定。焦点只在被删除DOM自身占焦点时，于commit后的layout effect移动，不用 `queueMicrotask` 盲目抢焦点。需在真实浏览器验证 pointer/keyboard、连续删除、恢复和exit动画；policy套件不代表Motion SDK PASS。
