@@ -14,3 +14,7 @@ Node 真实 createApi+configureStore dispatch 与 cache 查询状态；browser S
 
 ## 参考
 https://redux.js.org/toolkit/rtk-query/overview
+
+## 请求所有权加固（第十二批）
+
+复制列表时优先使用 `currentData`，不能在新 tenant/search 请求尚未返回时显示旧 `data`。租户或已提交搜索条件变化时重建子面板的订阅上下文；保存 RTK Query mutation 返回的可 abort 请求句柄，卸载时 `abort()` 并使用请求 epoch 阻止旧提示回写。客户端取消不能撤销已在服务器提交的动作，后端必须使用版本/幂等合同。409 时不要无条件 invalidatesTags；按业务确认后触发失效。中文 IME composition 内不得提交半成品查询。SDK 两租户失效测试仅是 Node 层，浏览器需要覆盖 A→B→A、409、连续搜索及卸载后旧请求。

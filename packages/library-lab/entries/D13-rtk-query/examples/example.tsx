@@ -1,4 +1,4 @@
-import {useEffect,useState} from 'react';
+import {useEffect,useRef,useState} from 'react';
 import {Provider} from 'react-redux';
 import {configureStore} from '@reduxjs/toolkit';
 import {createApi,type BaseQueryFn} from '@reduxjs/toolkit/query/react';
@@ -46,7 +46,7 @@ export function createDemoRuntime(){
    }),
    toggle:builder.mutation<Feed,{tenant:string;id:string}>({
     query:({tenant,id})=>({kind:'toggle',tenant,id}),
-    invalidatesTags:(_result,_error,args)=>[{type:'Feeds',id:args.tenant}]
+    invalidatesTags:(result,_error,args)=>result?[{type:'Feeds',id:args.tenant}]:[]
    })
   })
  });
@@ -55,12 +55,28 @@ export function createDemoRuntime(){
 }
 type Runtime=ReturnType<typeof createDemoRuntime>;
 function FeedsPanel({runtime,tenant,search,level}:{runtime:Runtime;tenant:string;search:string;level:Level}){
- const {data=[],isLoading,isFetching,isError,error,refetch}=runtime.api.useListQuery({tenant,search});
+ // currentData never displays successful rows from a previous query argument.
+ const {currentData,isLoading,isFetching,isError,error,refetch}=runtime.api.useListQuery({tenant,search});
+ const data=currentData??[];
  const [toggle,mutation]=runtime.api.useToggleMutation();
  const [notice,setNotice]=useState('当前数据来自隔离内存 fixture');
+ const inFlight=useRef<{abort():void}|null>(null);
+ const requestEpoch=useRef(0);
+ useEffect(()=>()=>{requestEpoch.current++;inFlight.current?.abort();inFlight.current=null;},[]);
  async function change(row:Feed){
-  try{await toggle({tenant,id:row.id}).unwrap();setNotice('已修改，RTK Query 对此租户缓存标签发起失效刷新');}
-  catch(e){setNotice('操作被拒绝：'+JSON.stringify(e));}
+  // A stale mutation may settle after tenant/search changes or unmount.
+  const ticket=++requestEpoch.current;
+  inFlight.current?.abort();
+  const request=toggle({tenant,id:row.id});
+  inFlight.current=request;
+  try{
+   await request.unwrap();
+   if(ticket===requestEpoch.current)setNotice('已修改，RTK Query 对此租户缓存标签发起失效刷新');
+  }catch(e){
+   if(ticket===requestEpoch.current)setNotice('操作被拒绝：'+JSON.stringify(e));
+  }finally{
+   if(ticket===requestEpoch.current)inFlight.current=null;
+  }
  }
  return <div>
   <p>{isLoading?'加载中':isFetching?'后台刷新中':isError?'查询失败':'查询完成'} · 租户 {tenant}</p>
@@ -77,16 +93,28 @@ export default function RtkQueryExample({level}:{level:Level}){
  const [runtime]=useState(createDemoRuntime);
  const [tenant,setTenant]=useState('team-a');
  const [search,setSearch]=useState('');
+ const [draftSearch,setDraftSearch]=useState('');
+ const composing=useRef(false);
  useEffect(()=>()=>{runtime.store.dispatch(runtime.api.util.resetApiState());},[runtime]);
  return <section aria-label="RTK Query 实际运行示例">
   <h2>{level==='basic'?'缓存查询与失效':level==='business'?'多租户 RSS 订阅':'取消、409 和缓存隔离'}</h2>
   <div className="demo-controls">{level!=='basic'&&<label>租户 <select value={tenant} onChange={e=>setTenant(e.target.value)}>
     <option value="team-a">team-a</option><option value="team-b">team-b</option>
    </select></label>}
-   <label>标题搜索 <input value={search} onChange={e=>setSearch(e.target.value)}/></label>
+   <form onSubmit={event=>{event.preventDefault();if(!composing.current)setSearch(draftSearch.trim());}}>
+    <label>标题搜索 <input value={draftSearch} onChange={e=>setDraftSearch(e.target.value)}
+      onCompositionStart={()=>{composing.current=true;}}
+      onCompositionEnd={()=>{composing.current=false;}}
+      onKeyDown={event=>{
+       if(event.key==='Enter'&&(composing.current||event.nativeEvent.isComposing||event.keyCode===229))event.preventDefault();
+      }}/></label>
+    <button type="submit">应用搜索</button>
+   </form>
    {level==='advanced'&&<button type="button" onClick={()=>runtime.setDelay(700)}>模拟慢传输</button>}
   </div>
-  <Provider store={runtime.store}><FeedsPanel runtime={runtime} tenant={tenant} search={search} level={level}/></Provider>
+  <Provider store={runtime.store}>
+   <FeedsPanel key={JSON.stringify([tenant,search])} runtime={runtime} tenant={tenant} search={search} level={level}/>
+  </Provider>
   <p>查询 key 同时包含 tenant 与 search，服务端仍需验证租户权限；本地 fixture 与授权服务不是一回事。</p>
  </section>;
 }

@@ -335,3 +335,19 @@ C13 Frappe Gantt 1.2.2 上游 `src/index.js` 的 `bind_bar_events` 会向 `docum
 - **无法执行**：仅一次网络可达性检查 `curl -IL --max-time 6 https://registry.npmjs.org/axios` -> `Could not resolve host: registry.npmjs.org`；本环境没有项目依赖。真实 C07 Table v9、D10 Zustand middleware、D08 Ky、D09 Axios `sdk` 测试以及应用完整 `typecheck`、`build`、Chromium **NOT_RUN**；不把已有 package 声明或静态文件作为 SDK PASS。现有 verification.json 的 sdk/build/browser 状态保留 NOT_RUN。
 - **dependencyRequests：本轮无新增**。仍依赖 PLATFORM 既有 `@tanstack/react-table@9.2.4`（MIT）、`zustand@5.0.16`（MIT）、`ky@2.2.0`（MIT）、`axios@1.20.0`（MIT）四个目标版本的正式 pnpm 安装/Peer/许可复核及锁文件；CD 不修改 package 或 lock。
 - 源码/指南/Agent/三层入口继续为 **43/43**，不能据此宣称SDK验收完成。下一队列：PLATFORM 集成后先运行该四库真实 SDK、typecheck、生产构建及 C07 越界/IME、D10 hydrate、两次 503→200 浏览器路径；如持续无法安装，再挑无需公共文件的 C/D 严重生命周期缺陷和纯策略可执行测试补齐；最终按 sourceFingerprint/命令/日志绑定证据，不用历史 PASS。
+
+
+---
+
+## 第十二轮（2026-10-27）— RTK Query 缓存身份、Dexie 迁移和 Comlink 故障生命周期
+
+- **runCount：12/24**。前一 PR #45 已由 PLATFORM 合入集成分支；本轮从最新已读取的 `feat/library-lab@e9cc2100e1fc4dfeb6a929534c60aab87c700326` 创建 `feat/library-lab-cd-wave12`，Draft PR [#48](https://github.com/CoderLambert/ReactLoom/pull/48)，base=`feat/library-lab`，未合并 main 或覆盖旧 `feat/library-lab-cd`。
+- **D13 RTK Query**：以真实 SDK `useListQuery().currentData` 防止当前查询中显示旧租户成功数据；按 `[tenant,search]` 重建组件订阅，卸载时取消真实 mutation 请求句柄并用 epoch 阻止旧成功/409消息回写。增加搜索草稿/提交与 IME Enter 保护；mutation 仅成功时 invalidatesTags，409不无谓刷新。新增真实 SDK 两租户失效验证源码（未执行）。
+- **D15 Dexie**：使用实际演示代码导入的 `examples/rollback-policy.mjs` 比较事务回滚前后完整业务字段，不再只看行数。切换 Demo 等级后关闭旧 Dexie 连接、废弃旧异步响应，删除失败显式提示；新增带类型声明的同源辅助模块及纯 Node 回归。真实 v1 fixture 明确包含无 `read` 字段的 `rss-legacy`，v2 `.upgrade(...modify)` 补字段并显示 `migratedLegacyRead`；对应 SDK 测试加入字段迁移断言而非仅核对版本/索引。
+- **D18 Comlink**：Worker 原生 `error`/`messageerror` 加入 RPC/取消竞速；`releaseProxy` 失败也在 finally 执行 `terminate()`，并显式拆除错误监听器。新增实际 Comlink+Node MessageChannel/transfer/proxy 回调测试源码（未执行）。
+- **本轮源码提交**：`37f343946252ce61797a042c552e2f76fa8dcd1f`（Dexie rollback）、`cc59ca7aa38bbc5f58c6e966f094ab62b8aed4e9`（RTK Query）、`c0708409b87dfec04e4775a0747f4592646cf7cb`（Comlink）、`6e051199d428ae5a4633d69eba4bbc7f504c6f82`（Dexie legacy migration）。本次 progress 提交接续在后，实际 PR head 以 GitHub 为准。
+- **真正执行的命令/结果**：Node v22.16.0，本地仅重建 D15 两份纯策略源码并对照 GitHub Git blob SHA **`8c706239750b3b30e80239b0eba40c63a0d4efd2`**、**`e878e7b0a2353d7382c61a22bb983d1359d3cae6`** 完全一致；`node --check` 两份模块通过；`node --test packages/library-lab/entries/D15-dexie/tests/rollback-policy.test.mjs`：**4 PASS / 0 FAIL**。此 PASS 只证明无 SDK 的回滚字段比较逻辑，**不证明真实 Dexie 事务或迁移成功**。
+- **未执行 / 不能继承历史 PASS**：D13/D15/D18 `tests/sdk.test.mjs`（需要已安装目标 SDK）、完整 TypeScript 类型检查、Vite 生产构建、Chromium IME/跨租户切换/IndexedDB versionchange/Worker 退出：均 **NOT_RUN**。既有 npm DNS 和 GitHub runner 无步骤故障未在本轮重复请求；仍需要 PLATFORM 的真实 lockfile 与可用执行环境，不能将源码存在或 Mock fixture 算验收。原 verification.json 的 SDK/build/browser 状态保持 NOT_RUN，最终结果必须按 sourceFingerprint+命令+持久化日志绑定。
+- **改动范围**：合计 16 个条目文件（D13/D15/D18）+ 本进度文件；公共 `src/scripts/tests`、根/本包依赖及锁文件、CI/目录索引、main、PR #3、旧模板、公开部署均未修改。已接入的 **CD 源码/双指南/三层 Demo 保持 43/43**，本轮新增实际 SDK PASS 为 0，不等于 43 个 SDK 运行验收完成。
+- **dependencyRequests**：**本轮无新增包**；继续请 PLATFORM 核实并安装现有 `@reduxjs/toolkit@2.13.0`（MIT）、`react-redux@9.3.0`（MIT）、`dexie@4.4.7`（Apache-2.0）、`fake-indexeddb@6.2.6`（dev，MIT）、`comlink@4.4.2`（Apache-2.0），检查真实 API/peer/锁文件，不由 CD 手改 package/lock。
+- **下一队列**：PLATFORM 集成 PR #48 后优先执行 D13/D15/D18 真实 SDK 定向测试、typecheck/build、浏览器 A→B→A、IME、删除重试、Worker crash/取消。CD 有执行环境后针对真实失败精修；仍被阻塞时可独立复核 D17 Yjs 断线收敛/快照、D16 Workbox 离线缓存所有权，保留尚未完成的浏览器/隔离运行门槛。不会重复重新创建 43 项。

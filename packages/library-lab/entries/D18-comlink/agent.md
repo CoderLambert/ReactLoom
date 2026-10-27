@@ -13,3 +13,7 @@ Worker + Remote 应有明确 owner；离开页面调用 releaseProxy/terminate�
 
 ## 组合
 D03 p-limit 负责限制派发并发，D18 Comlink 负责线程消息层，E19 ffmpeg.wasm 可能需要多 Worker/WASM 独立内存预算。参考 https://github.com/GoogleChromeLabs/comlink 。
+
+## 故障与清理修复（第十二批）
+
+Worker 不一定会回复 RPC：为每次会话监听 `error` / `messageerror`，与目标 Promise、AbortSignal 三方竞速；正确清除监听器。Remote `releaseProxy` 失败时仍要 `terminate()`，不能使释放异常阻止物理线程终止。不要仅在业务 `catch` 写一个文字失败后留下 Worker。SDK 的 Node MessagePort callback + transfer 测试与浏览器 Module Worker/CSP 是两条独立证据，均须执行后才能标记通过。

@@ -15,3 +15,9 @@
 Node `node --test packages/library-lab/entries/D15-dexie/tests/sdk.test.mjs` 用真 Dexie + fake-indexeddb，检查唯一键/rollback/index 升级；浏览器需验证真实 IDB、页面刷新、配额/隐私模式与数据库清理。没跑过就 NOT_RUN，不能继承其他 project 的 PASS。
 
 官方 https://dexie.org/docs/Version/Version 。
+
+## 回滚与异步清理加固（第十二批）
+
+复用 `examples/rollback-policy.mjs` 的整行比对：只比记录数无法证明事务已回滚。切换层级关闭旧连接并通过 epoch 阻止旧结果写入当前页面；每个临时库由创建它的异步任务负责 `close`/`Dexie.delete`。浏览器拒绝删除时必须提示而非谎称清空，不可把此示例“运行后删库”复制到真实用户数据。新增纯策略测试 `tests/rollback-policy.test.mjs` 与真实 Dexie 事务断言；前者 PASS 不意味着后者或 Chromium PASS。
+
+迁移 fixture 至少包含 v1 允许但 v2 需要修正的旧行（缺失 `read`），同时断言 v2 查询保留 ID 并写入 `read:false`。仅 `verno===2` 或复合索引可查询不能证明真正发生字段迁移。
