@@ -1,6 +1,7 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 import {createInstance, type i18n} from 'i18next';
 import {I18nextProvider, Trans, useTranslation} from 'react-i18next';
+import {createLatestLanguageSwitcher} from './language-switch.mjs';
 
 type Language = 'zh' | 'en';
 type Level = 'basic' | 'business' | 'advanced';
@@ -23,9 +24,15 @@ function LocalizedPanel({level, scope}: {level: Level; scope: string}) {
   const [count, setCount] = useState(2);
   const [name, setName] = useState('Lambert');
   const [error, setError] = useState('');
-  async function changeLanguage(next: Language) {
-    try {await i18n.changeLanguage(next); setError('');}
-    catch (cause) {setError(String(cause));}
+  // A provider owns one serialized queue, never overlapping changeLanguage promises.
+  const switcher = useMemo(() => createLatestLanguageSwitcher(
+    next => i18n.changeLanguage(next),
+    {onCommit: () => setError(''), onError: cause => setError('切换失败：' + String(cause))},
+  ), [i18n]);
+  useEffect(() => () => switcher.dispose(), [switcher]);
+  function changeLanguage(next: Language) {
+    setError('');
+    switcher.request(next);
   }
   return <article className="demo-card" aria-label={scope + '翻译面板'}>
     <h3>{scope} · {t('common:title')}</h3>
