@@ -67,7 +67,9 @@
         "examples/validation.mjs",
         "examples/validation.test.mjs",
         "examples/archive-policy.mjs",
-        "examples/archive-policy.test.mjs"
+        "examples/archive-policy.test.mjs",
+        "examples/zip-entry-policy.mjs",
+        "examples/zip-entry-policy.test.mjs"
       ],
       "capabilities": [
         "node-process",
@@ -92,7 +94,9 @@
         "examples/validation.mjs",
         "examples/validation.test.mjs",
         "examples/archive-policy.mjs",
-        "examples/archive-policy.test.mjs"
+        "examples/archive-policy.test.mjs",
+        "examples/zip-entry-policy.mjs",
+        "examples/zip-entry-policy.test.mjs"
       ],
       "capabilities": [
         "node-process",
@@ -117,7 +121,9 @@
         "examples/validation.mjs",
         "examples/validation.test.mjs",
         "examples/archive-policy.mjs",
-        "examples/archive-policy.test.mjs"
+        "examples/archive-policy.test.mjs",
+        "examples/zip-entry-policy.mjs",
+        "examples/zip-entry-policy.test.mjs"
       ],
       "capabilities": [
         "node-process",

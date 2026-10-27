@@ -17,3 +17,6 @@
 ## 任务所有权与Blob URL（第12轮）
 
 复用`example.tsx`必须同时带上`operation-gate.mjs`及声明：同步begin挡连点、invalidate挡级别/文件切换后的旧回写、finally只有当前token可复位busy。不要在`setDownload(next)`之前撤销仍在DOM上的旧href；Effect cleanup释放已提交的旧下载链接，unmount清理所有曾创建URL。实际解析大对象不可中止，应另加内存/进程隔离。
+
+
+EF wave23迁移：`document.ts` 必须连同 `document-policy.mjs`、`document-policy.d.mts` 复制，加载后使用 `getPageCount/getPages/getSize` 约束页面和MediaBox，保存后且Blob URL分配前约束输出≤4MiB。PDFDocument.load本身仍需要受限进程/Worker；纯Node假对象的结构测试不代表真实SDK验收。

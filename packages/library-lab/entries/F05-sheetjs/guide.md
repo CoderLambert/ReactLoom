@@ -47,3 +47,10 @@ examples/archive-policy.mjs 在真正的 XLSX.read() 前执行ZIP目录级预算
 **重要限制**：ZIP中央目录的长度和比例都可被恶意文件伪造，不能代替解压过程的CPU/内存硬限制、ZIP处理器安全审核或独立进程隔离。真实服务仍须在可终止的Worker或进程中解析不可信工作簿，提供独立内存/CPU与超时上限。node --test examples/archive-policy.test.mjs 仅验证典型恶意目录被拦截，不能算SheetJS SDK安全测试。
 
 examples/verify.mjs 的PASS日志移至全部负例断言后，避免早报通过。
+
+
+## 第23轮：中央目录与本地ZIP头一致性
+
+`preflightXlsx` 现在调用 `zip-entry-policy.mjs`：校验本地头与中央目录 flags、方法、CRC32、压缩/原始尺寸、文件名及边界完全一致；只允许UTF-8标志位或零，拒绝data descriptor（bit 3）及其它ZIP变体。重叠检查包含本地文件头，不只压缩字节。该策略是当前三列表格的保守导入子集，可能拒绝其他合法ZIP，**不是通用ZIP解析/杀毒工具**。
+
+使用 `node --test packages/library-lab/entries/F05-sheetjs/examples/archive-policy.test.mjs packages/library-lab/entries/F05-sheetjs/examples/zip-entry-policy.test.mjs` 重现结构测试。压缩体积可以伪报，真实 `XLSX.read` 必须置于可中止/可限制CPU与内存的进程。官方CE包依赖仍需PLATFORM用官方tarball复核并运行。

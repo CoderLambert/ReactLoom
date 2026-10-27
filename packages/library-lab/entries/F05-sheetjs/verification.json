@@ -1,7 +1,7 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "已编写真正第三方 SDK 调用；npm依赖未在本轮安装/运行，不得视为通过"
+    "note": "已编写真正第三方 SDK 调用；npm依赖未在本轮安装/运行，不得视为通过；wave23仅离线纯Node策略回归，不导入目标SDK，实际SDK/CLI仍NOT_RUN"
   },
   "build": {
     "status": "BLOCKED",

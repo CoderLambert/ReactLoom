@@ -40,3 +40,8 @@ ExcelJS 4.4.0/MIT：<https://github.com/exceljs/exceljs>。真实源码位于 `e
 共享 `examples/row-policy.mjs` 将校验放在 `new ExcelJS.Workbook()` **之前**：拒绝不存在/非字符串/空白或包含控制字符的来源，拒绝空ID及忽略大小写与两侧空格后重复ID；`reads/stars` 每项和总和都必须是非负安全整数，避免Excel公式缓存落入超过JavaScript安全整数范围的数。`safeSpreadsheetText` 仅接受字符串，trim后再对 `= + - @` 做字面量前缀保护。调用方不可绕过checkRows直接写不可信业务行。
 
 离线运行 `node --test packages/library-lab/entries/F04-exceljs/examples/row-policy.test.mjs` 仅验证纯数据契约；真实ExcelJS读写还要执行 `examples/verify.mjs` 并真实安装依赖。不要从前者推断 XLSX 序列化已验收。
+
+
+## 第23轮：Excel 与 JavaScript 整数精度不一致
+
+`row-policy.mjs` 现在在Workbook创建之前限制 reads/stars 各自的**总和≤999,999,999,999,999**。因为Excel仅保证15位有效数字，JS的Number.isSafeInteger并不保证XLSX打开和SUM重算不丢精度。超限直接拒绝，不能在缓存结果上标称准确。独立Node策略5项通过，不等于真实ExcelJS读写或Excel公式重算通过。依据：https://support.microsoft.com/en-us/excel/change-formula-recalculation-iteration-or-precision-in-excel

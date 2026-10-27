@@ -59,7 +59,10 @@
         "examples/example.tsx",
         "examples/demo.tsx",
         "examples/operation-gate.mjs",
-        "examples/operation-gate.d.mts"
+        "examples/operation-gate.d.mts",
+        "examples/document-policy.mjs",
+        "examples/document-policy.d.mts",
+        "examples/document-policy.test.mjs"
       ],
       "capabilities": [
         "local-pdf",
@@ -79,7 +82,10 @@
         "examples/example.tsx",
         "examples/demo.tsx",
         "examples/operation-gate.mjs",
-        "examples/operation-gate.d.mts"
+        "examples/operation-gate.d.mts",
+        "examples/document-policy.mjs",
+        "examples/document-policy.d.mts",
+        "examples/document-policy.test.mjs"
       ],
       "capabilities": [
         "local-pdf",
@@ -100,7 +106,10 @@
         "examples/demo.tsx",
         "examples/operation-gate.mjs",
         "examples/operation-gate.d.mts",
-        "examples/operation-gate.test.mjs"
+        "examples/operation-gate.test.mjs",
+        "examples/document-policy.mjs",
+        "examples/document-policy.d.mts",
+        "examples/document-policy.test.mjs"
       ],
       "capabilities": [
         "local-pdf",
