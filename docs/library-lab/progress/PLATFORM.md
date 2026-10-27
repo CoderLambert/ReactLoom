@@ -381,3 +381,5 @@ runCount: **14/24**。本轮依赖/测试阶段最新提交 81ec09ac04a05b6bb826
 **下批**：优先可用 Node≥22.18/pnpm10/registry 或实际执行的 Actions Runner，运行 `pnpm verify:library --execute --resolve-lock` 真实解析锁文件，再恢复 `--frozen-lockfile`，随后按失败依据修复 TypeScript/Vite并对 D03/F15/F16/F18、E05 Monaco Worker、F06/F07 PDF.js、F11 MSW和D16 Workbox隔离做真实 SDK/浏览器验收；先解决完整运行环境，不重复调用已知无 steps 的CI。保持 Draft 主 PR #8，main/PR #3/模板未改，不公开部署或调用付费API。
 
 **runCount: 15/24**。
+
+**同轮最新 CI 复核（不增加 runCount）**：集成分支提交 `65d4ab98734f78973f739e7402a8f58b25c5ff59` 对应最新 [Library Lab #40492117107](https://github.com/CoderLambert/ReactLoom/actions/runs/40492117107) 两个 job 和 [主 CI #40492117198](https://github.com/CoderLambert/ReactLoom/actions/runs/40492117198) 七个 job 均 conclusion=failure。分别读取 Lab 的 runtime-bootstrap job `122148359095` 和 catalogue job `122148359471`，`fetch_workflow_job_steps` 返回空数组 `[]`，因此仍**没有任何真实构建/SDK/类型/浏览器执行步骤记录**，本轮隔离 Node TAP 是唯一新平台运行证据；不能将本次 CI 失败归因于代码错误。主 PR #8 状态已回读为 open/draft、base=main，未合并。\n
