@@ -72,3 +72,14 @@ node packages/library-lab/scripts/cli-runner.mjs --entries=F10,F16,F18
 ```
 
 CLI runner 仅执行仓库内硬编码的验证脚本，不接收外部 shell/path。未执行的 CLI 结果仍为 NOT_RUN，离线校验只能证明选择器输入和调用边界正确。Orval 8+ 需 Node.js >=22.18。
+
+
+## 离线准备度报告（源码级，不执行 SDK）
+
+```sh
+pnpm library:status
+node packages/library-lab/scripts/readiness.mjs --group=A
+node packages/library-lab/scripts/readiness.mjs --json > /tmp/library-lab-readiness.json
+```
+
+该命令只读取本地 `library.json`、指南、Agent 规则、真实示例文件与 `verification.json`，逐源文件计算 SHA-256 和统一 `sourceFingerprint`；返回源代码接入数、三层配置声明数、运行类型数及 SDK/构建/浏览器证据状态。**只有当前源码指纹与 command/evidence 一致的 PASS 才保留**。缺文件或路径越界明确失败；本报告不安装 npm 包，不验证软件许可，也不替代真实运行日志。正式 SDK/生产构建/浏览器仍需要可执行环境。

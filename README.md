@@ -11,6 +11,7 @@ The templates are meant to be started from and kept, not thrown away after the f
 - [完整用途索引](LIBRARY_CATALOG.md) · [开发进度](docs/library-lab/progress/PLATFORM.md) · [运行说明](packages/library-lab/README.md)
 - 启动应用：`pnpm dev:library`（需要先安装工作区依赖，本机端口 4319）。
 - Agent 离线检索：`node packages/library-lab/scripts/find-library.mjs --query '并发' --json`，再读候选 `agent.md` 与证据。
+- 离线证据与接入进度：`pnpm library:status`（支持在 `packages/library-lab/scripts/readiness.mjs` 上加 `--group=A`、`--json`）。`sourceComplete` 不等于 SDK、TypeScript 或浏览器通过。
 
 ## Zero to running
 

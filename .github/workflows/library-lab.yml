@@ -26,6 +26,17 @@ jobs:
           node scripts/validate-dependencies.mjs
           npm test
           node scripts/generate.mjs
+      - name: Source-aware offline readiness inventory
+        if: always()
+        working-directory: packages/library-lab
+        run: node scripts/readiness.mjs --json > readiness-report.json
+      - name: Upload catalogue evidence (not SDK proof)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: library-lab-catalogue-${{ github.sha }}
+          path: packages/library-lab/readiness-report.json
+          retention-days: 7
       - name: Check tracked Agent root indexes
         if: ${{ github.event_name == 'push' || github.event.pull_request.base.ref == 'main' }}
         working-directory: packages/library-lab

@@ -54,3 +54,8 @@ A/B #16八条与C/D #18四条完整工作坊已实际合入集成分支，新增
 ## 第5轮最终合入状态（增量CD #28与内容门禁）
 
 #28额外合入Valibot、IMask、react-arborist、nuqs、Dexie、Comlink六条（squash `c58f18ea8656aebebc09c204b89739065c643150`）。合计本轮四个worker PR (#25、#26、#27、#28)新接入23条，最新为119目录/97条源码+文档/291个三层场景/22条待实现。PLATFORM统一更新依赖和索引，并为完整条目引入guide/agent/目录规则/证据/三个真实示例的结构门禁。离线定向Node检查18 PASS、0 FAIL；目标SDK、完整TS/Vite生产构建、Chromium及锁文件仍因环境不可用NOT_RUN/BLOCKED，不继承旧研究报告的PASS。
+
+
+## 第6轮公共集成与准确验证（2026-10-27）
+
+AB Draft #29 通过双亲合并集成A09 Excalidraw/A10 tldraw/B05 Rive；软件依赖和两份根索引已同步。119身份目录中100条已具四件套与三层实际源码（300种选择），19条待接入。离线 `library:status` 逐文件指纹验证及证据失效降级共享目录生成器的同一合同，真实SDK/tsc/build/E2E/锁文件仍未取得有效运行证据。详见 `progress/PLATFORM.md`。

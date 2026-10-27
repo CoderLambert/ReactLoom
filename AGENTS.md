@@ -233,3 +233,6 @@ This block is written and re-added by `turbo` before repository-scoped commands 
 
 
 Agent 检索可直接运行 `node packages/library-lab/scripts/find-library.mjs --query '<任务关键词>'`，按需加 `--id A01 --agent` 定位特定库的工程指南。此 CLI 只解析本地条目 JSON，不运行 Demo 或其依赖；条目状态不是通过验收的证据。
+
+
+Agent 可用 `node packages/library-lab/scripts/readiness.mjs --group=D --json` 在未安装前端依赖时检查当前真实源码/依赖指纹与分项验收，禁止将 declared scenarios 与 PASS 数混淆。独立 `scripts/verification-contract.mjs` 与目录生成器共享指纹计算；过期的 PASS 会降为 NOT_RUN。

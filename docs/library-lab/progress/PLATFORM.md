@@ -150,3 +150,14 @@ runCount：**5/24**。本次只向`feat/library-lab`集成，`main`和既有PR #
 **本地局部平台快照**执行`node --check scripts/entry-gate.mjs`、`node --check scripts/cli-runner.mjs`和`node --test tests/entry-gate.test.mjs tests/cli-runner.test.mjs tests/reproduction.test.mjs`，共 **18 PASS / 0 FAIL**，仅覆盖离线纯Node规则与命令防护。远端新生成器未在完整当前依赖集运行，不把本记录当作 `pnpm install/typecheck/build/SDK/E2E` 通过。
 
 最新静态GitHub完整树（truncated=false）：119份library.json、97份guide.md、97份agent.md、97份AGENTS.md、97份verification.json，剩下22个缺条目明确在Git树中。开发分支持续保存；runCount仍是本次**5/24**，下轮继续集成剩余22条、阻塞修复与全量真实构建证据。
+
+
+## 平台持续开发第6轮（2026-10-27，北京时间）
+
+- **真实集成**：审核AB Draft PR #29 共26个文件（仅 A09/A10/B05 条目及AB进度），因为GitHub拒绝直接merge Draft PR，改用精确双亲非强推合并 `10e7311b3a2247a9af948b8d7c2e0b444c367d0a`；GitHub已确认PR #29 merged。接入 Excalidraw、tldraw、Rive 三条源码/指南/agent/验证记录。tldraw自定义许可保留生产锁，不提供或绕过license；Rive使用引用的远程素材，不复制资产。
+- **公共依赖与索引**：`01cdbdd7cf8abb1bf1435e4dc1ad776a4908681b` 统一登记 `@excalidraw/excalidraw@0.18.1`、`tldraw@5.5.2`、`@rive-app/react-webgl2@4.37.0`，根目录119条索引同步，准确文件树为 **119 manifest / 100 guide / 100 agent.md / 100 AGENTS.md / 100 verification.json / 300场景声明 / 19待接入**。版本通过npm/官方网页核对，但不是实际pnpm安装或React19 peer验收。
+- **新公共能力**：`59bb1e668ceee7f15e418c77ba248cf2b6feed25` 新增离线 `library:status` 源码准备度CLI与共享 verification-contract。读取实际源码字节并计算 SHA-256，生成SDK/build/browser分项状态和无SDK依赖的JSON报告；未附当前指纹/命令/证据的旧PASS自动降为NOT_RUN。现有 catalogue generator改用同一份指纹算法，避免前端展示与Agent状态统计漂移。附7项定向Node单测。
+- **本轮实际执行**：在本地部分旧版119目录副本，执行 `node --test tests/readiness.test.mjs tests/generate.test.mjs tests/catalog.test.mjs` 为 **29 PASS / 0 FAIL / 0 SKIP**，`node scripts/generate.mjs --check` 回报119身份目录；只验证新增公共纯Node协议，不代表远端100条SDK、TypeScript或浏览器已运行。Github完整树 `truncated=false` 再次核对100份四件套。npm/corepack仍无法访问registry，Actions最近运行40428722496等显示失败，未得到可靠Runner构建日志；因而真实锁文件/tsc/build/SDK/Chromium仍BLOCKED或NOT_RUN，Issue #12仍开放；F06/F07 PDF.js冲突Issue #22尚未得到可执行验证。
+- **后续**：公共离线readiness加入专属CI并产出独立artifact，跟踪剩余19条worker内容和合法依赖、PDF.js配对；有可执行pnpm10环境时优先生成真实锁文件并恢复frozen CI，执行受影响SDK与浏览器验收。未修改main、旧模板或PR #3；主PR #8保持Draft。
+
+runCount：**6 / 24**。
