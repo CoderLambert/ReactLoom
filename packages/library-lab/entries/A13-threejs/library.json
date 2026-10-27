@@ -92,7 +92,8 @@
       "sourceFiles": [
         "examples/example.tsx",
         "examples/demo.tsx",
-        "examples/animation-policy.ts"
+        "examples/animation-policy.ts",
+        "tests/animation-policy.test.mts"
       ],
       "capabilities": [
         "WebGL",

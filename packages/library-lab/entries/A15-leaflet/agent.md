@@ -18,3 +18,7 @@
 
 
 **连续点击与唯一身份（wave8）**：必须一并迁移 `examples/station-factory.ts`；事件处理时把 `const station=makeLocalLocation(++nextId.current)` 固定下来，再传进 `setItems`。严禁在 updater 内读取可变 `nextId.current`。一次批次上限40，保留稳定ID作为 React key、选择状态和地图 marker 关联。纯规则的Node PASS不是 Leaflet SDK/浏览器 PASS。
+
+## wave16 可见选择与边界
+
+必须同时迁移 `examples/location-policy.ts`：`selectedVisibleId` 计算过滤后的目标；标记高亮、状态文本和删除操作须指向同一ID；`shiftLocation` 保证有效经纬度和不可变数据。缺失来源不得生成无效Marker。纯Node检查不证明真实Leaflet地图更新与无泄漏。

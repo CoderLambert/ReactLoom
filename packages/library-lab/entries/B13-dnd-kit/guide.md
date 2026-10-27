@@ -36,3 +36,7 @@ DndContext 处理 sensors/collision；SortableContext 提供 id 顺序；useSort
 原实现仅拒绝锁定的拖拽起点、终点，允许一个可移动条目从固定项前面移到后面；数组重排会把中间固定项的索引悄悄改变。现使用 `examples/pinned-order.ts` 检查从起点到终点的**完整闭区间**，任一条目为 locked/fixed 就拒绝移动，三个SDK实现都使用同一约束。上下按钮在不可合法移动方向直接禁用，避免看起来可点但实际只报错。
 本地定向测试在条目目录执行：`node --experimental-strip-types --test tests/pinned-order.test.mjs`；测试从实际TS源文件导入规则，覆盖锁定项、双向跨越、合法同侧重排及越界。**该纯业务规则测试不意味着 SDK、React、Chromium 或触控运行已经验收。**
 若产品允许移动其他项跨过固定槽位，先重新定义排序与不变式，并增加对应测试，而不是直接套用 arrayMove/splice。
+
+## AB wave16：快速多事件重排的一致性
+
+拖拽事件、上下键和重置统一在当前 `itemsRef` 快照上提交；`pinned-order.ts` 的 `reorderVisible` 按真实ID验证目标、去重、锁定闭区间、可见前缀，并保留basic模式未显示的尾部频道。避免连续事件依据旧React闭包数组产生丢序/错误撤销快照。`tests/reorder-policy.test.mts` 额外覆盖隐藏尾部、固定槽位、旧目标和重复ID；键盘传感器/触摸与DOM焦点仍待真实浏览器。

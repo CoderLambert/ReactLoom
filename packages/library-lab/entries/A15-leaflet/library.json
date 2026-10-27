@@ -55,7 +55,8 @@
       "sourceFiles": [
         "examples/example.tsx",
         "examples/demo.tsx",
-        "examples/station-factory.ts"
+        "examples/station-factory.ts",
+        "examples/location-policy.ts"
       ],
       "capabilities": [
         "ResizeObserver",
@@ -72,7 +73,8 @@
       "sourceFiles": [
         "examples/example.tsx",
         "examples/demo.tsx",
-        "examples/station-factory.ts"
+        "examples/station-factory.ts",
+        "examples/location-policy.ts"
       ],
       "capabilities": [
         "ResizeObserver",
@@ -89,7 +91,9 @@
       "sourceFiles": [
         "examples/example.tsx",
         "examples/demo.tsx",
-        "examples/station-factory.ts"
+        "examples/station-factory.ts",
+        "examples/location-policy.ts",
+        "tests/location-policy.test.mts"
       ],
       "capabilities": [
         "ResizeObserver",

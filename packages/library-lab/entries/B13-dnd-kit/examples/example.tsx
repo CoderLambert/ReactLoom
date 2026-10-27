@@ -1,7 +1,7 @@
-import {useState,type CSSProperties} from 'react';
+import {useRef,useState,type CSSProperties} from 'react';
 import {DndContext,KeyboardSensor,PointerSensor,closestCenter,useSensor,useSensors,type DragEndEvent} from '@dnd-kit/core';
-import {SortableContext,arrayMove,sortableKeyboardCoordinates,useSortable,verticalListSortingStrategy} from '@dnd-kit/sortable';
-import {canReorderAroundPinned} from './pinned-order';
+import {SortableContext,sortableKeyboardCoordinates,useSortable,verticalListSortingStrategy} from '@dnd-kit/sortable';
+import {canReorderAroundPinned,reorderVisible} from './pinned-order';
 type Props={level:'basic'|'business'|'advanced'};
 type Item={id:string;title:string;locked?:boolean};
 const INITIAL:Item[]=[
@@ -32,6 +32,7 @@ function SortableRow({item,index,move,lockable,canMoveUp,canMoveDown}:{item:Item
 }
 export default function DndKitWorkshop({level}:Props){
   const [items,setItems]=useState<Item[]>(INITIAL);
+  const itemsRef=useRef<Item[]>(INITIAL);
   const [previous,setPrevious]=useState<Item[]|null>(null);
   const [message,setMessage]=useState('使用拖动手柄或上下按钮调整顺序');
   const visible=level==='basic'?items.slice(0,3):items;
@@ -39,22 +40,29 @@ export default function DndKitWorkshop({level}:Props){
     useSensor(PointerSensor,{activationConstraint:{distance:6}}),
     useSensor(KeyboardSensor,{coordinateGetter:sortableKeyboardCoordinates})
   );
-  function commit(next:Item[],note:string){setPrevious(items);setItems(next);setMessage(note);}
+  function commit(next:Item[],note:string){
+    setPrevious(itemsRef.current);
+    itemsRef.current=next;
+    setItems(next);
+    setMessage(note);
+  }
   function reorder(activeId:string,overId:string){
-    const start=visible.findIndex(item=>item.id===activeId);
-    const end=visible.findIndex(item=>item.id===overId);
-    if(start<0||end<0||start===end)return;
-    if(!canReorderAroundPinned(visible,start,end)){setMessage('固定频道不可移动，也不能被其他条目跨越；顺序未改变');return;}
-    const moved=arrayMove(visible,start,end);
-    commit(level==='basic'?[...moved,...items.slice(3)]:moved,'已调整 '+visible[start].title+' 的优先级');
+    const current=itemsRef.current;
+    const moved=reorderVisible(current,activeId,overId,level==='basic'?3:current.length);
+    if(!moved){
+      if(activeId!==overId)setMessage('固定频道、过期目标或重复ID：不能变更顺序');
+      return;
+    }
+    commit(moved,'已调整 '+(current.find(item=>item.id===activeId)?.title??activeId)+' 的优先级');
   }
   function handleEnd(event:DragEndEvent){
     if(event.over)reorder(String(event.active.id),String(event.over.id));
   }
   function move(id:string,direction:number){
-    const idx=visible.findIndex(item=>item.id===id),next=idx+direction;
-    if(idx<0||next<0||next>=visible.length)return;
-    reorder(id,visible[next].id);
+    const active=level==='basic'?itemsRef.current.slice(0,3):itemsRef.current;
+    const idx=active.findIndex(item=>item.id===id),next=idx+direction;
+    if(idx<0||next<0||next>=active.length)return;
+    reorder(id,active[next].id);
   }
   return <section aria-label="dnd-kit 排序实战">
     <h2>{level==='basic'?'拖动三个频道':level==='business'?'RSS 频道优先级':'锁定、撤销与输入多样性'}</h2>
@@ -69,8 +77,8 @@ export default function DndKitWorkshop({level}:Props){
       </SortableContext>
     </DndContext>
     {level==='advanced'&&<div className="demo-controls">
-      <button type="button" disabled={!previous} onClick={()=>{if(previous){setItems(previous);setPrevious(null);setMessage('已撤销上一次排序');}}}>撤销</button>
-      <button type="button" onClick={()=>{setPrevious(items);setItems(INITIAL);setMessage('已恢复初始频道顺序');}}>恢复默认</button>
+      <button type="button" disabled={!previous} onClick={()=>{if(previous){itemsRef.current=previous;setItems(previous);setPrevious(null);setMessage('已撤销上一次排序');}}}>撤销</button>
+      <button type="button" onClick={()=>commit(INITIAL,'已恢复初始频道顺序')}>恢复默认</button>
     </div>}
     <p role="status" aria-live="polite">{message}</p>
     <output className="demo-output">{visible.map(item=>item.id).join(' → ')}</output>

@@ -29,3 +29,7 @@ React维护来源列表；Leaflet负责Map、LayerGroup、circleMarker。Map只�
 ## 连续添加数据的并发安全（AB wave8 加固）
 
 新增模拟点位会先在事件处理函数中固定递增的 `sequence`，由 `examples/station-factory.ts` 纯函数产生 ID、标签和坐标，再调用 React `setItems`。不能在异步状态更新函数中读取随后会变化的 `ref.current`，否则连续点击可能出现 ID 与坐标/标签错配。演示限制最多追加40个点位，避免无界扩张。`tests/station-factory.test.mts` 用 Node 类型擦除执行纯规则回归；它不证明 Leaflet SDK、容器测量及浏览器点位已经通过。
+
+## AB wave16：筛选选择一致性和合法坐标
+
+`examples/location-policy.ts` 统一选中**当前可见**的点位：切换“仅已启用”时隐藏的暂停点不再在地图及读屏状态中被误报为选中；删除选中点后按当前过滤条件选择下一可见位置。高级模式连续坐标更新统一限制到纬度±85、经度±180，避免超出可渲染范围；源被删除后禁用修改按钮。`tests/location-policy.test.mts` 只校验纯数据规则，Leaflet真实marker/ResizeObserver/键盘定位仍待浏览器。
