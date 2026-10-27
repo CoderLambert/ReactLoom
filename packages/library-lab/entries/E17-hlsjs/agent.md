@@ -7,3 +7,7 @@
 常见错误：把 `video.pause()` 当资源释放、对错误无限重试、假设Safari一定走hls.js、将Manifest读取算实际媒体可播放。
 验收：需要媒体服务器和实际浏览器。检查清单与分段请求、质量切换、失败恢复、停止后网络无持续下载、Worker/CSP。不能用TypeScript解析或Mock播放器标SDK PASS。
 相关E16 Video.js v10，E19 ffmpeg.wasm，E18 wavesurfer.js。官方：https://github.com/video-dev/hls.js
+
+## Wave16 迁移必留
+
+保留 keyed HlsSession 或等效严格销毁，fatal 时使generation失效；只允许manifest真实levels的质量index。原生Safari分支不要误认为Hls.js初始化成功。

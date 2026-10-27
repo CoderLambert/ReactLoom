@@ -1,14 +1,14 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "真实目标SDK运行仍待安装后的独立测试"
+    "note": "真实目标SDK运行仍待安装后的独立测试；wave16修改源码，目标SDK/完整构建/浏览器未执行，状态保持。"
   },
   "build": {
     "status": "BLOCKED",
-    "note": "应用锁文件/完整依赖未通过CI验收"
+    "note": "应用锁文件/完整依赖未通过CI验收；wave16修改源码，目标SDK/完整构建/浏览器未执行，状态保持。"
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "尚未执行Chromium/资源生命周期回归"
+    "note": "尚未执行Chromium/资源生命周期回归；wave16修改源码，目标SDK/完整构建/浏览器未执行，状态保持。"
   }
 }

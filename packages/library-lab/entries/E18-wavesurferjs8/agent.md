@@ -17,3 +17,7 @@
 - Node目录单测不能代表SDK或浏览器验收；当前状态NOT_RUN/BLOCKED。
 
 官方：<https://github.com/katspaugh/wavesurfer.js>
+
+## Wave16 迁移必留
+
+保留 keyed session 或等效状态重置，异步播放Promise reject前检查实例所有权；离开页面必须destroy/revoke并在真实浏览器检查不残留声音。

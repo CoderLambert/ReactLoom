@@ -17,3 +17,7 @@
 浏览器点击后有实际application/pdf Blob，PDF.js解析页数和文本、100行跨页、卸载内存释放、失败恢复、键盘交互；还需检查字体编码与商业分发权。模拟Blob不等于真实SDK测试。当前该库sdk/build/browser均NOT_RUN/BLOCKED。
 
 官方：<https://react-pdf.org/docs/v4>
+
+## Wave16 迁移必留
+
+`report.tsx` 复用 `report-policy.mjs` 和 `.d.mts`，禁止将原始数据多余字段注入PDF；保留同步running ref、keyed session和Blob URL清理。真实PDF序列化、PDF.js解析、字体/分页需SDK/browser验收。

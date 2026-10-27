@@ -29,3 +29,7 @@ F09 pdf-lib可在生成后合并PDF；F07 react-pdf可作为预览器。练习�
 
 ## 来源及验证
 <https://react-pdf.org/docs/v4>、<https://react-pdf.org/docs/v4/advanced/on-the-fly-rendering>；4.9.0/MIT。TypeScript/Vite/Chromium SDK测试尚未完成，NOT_RUN不是PASS。
+
+## Wave16 报表输入与并发
+
+唯一数据校验源 `examples/report-policy.mjs` 拒绝null/数组、非ASCII名字、错误ID、大小写重复ID、非安全整数/超140行；只把白名单字段放进PDF。`PdfRendererSession key={level}` 隔离下载链接，同步running ref阻止同轮重复pdf().toBlob。纯Node测试5项通过，不代表react-pdf/字体/分页真实验证。
