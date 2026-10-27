@@ -1,0 +1,41 @@
+{
+  "date": "2026-10-27",
+  "branch": "feat/library-lab",
+  "headBeforeProgress": "1faca0c9b6b80d9887693ac9191990248a85d73d",
+  "mergedPRs": [
+    35,
+    36,
+    37,
+    38,
+    39
+  ],
+  "dataOrigin": "GitHub commit tree and manifest reads",
+  "validationScope": "static tree and version metadata only",
+  "counts": {
+    "entries": 119,
+    "groups": {
+      "A": 17,
+      "B": 22,
+      "C": 22,
+      "D": 21,
+      "E": 19,
+      "F": 18
+    },
+    "requiredContentSets": 119,
+    "scenarioDeclarations": 357,
+    "newRuntimeSdkPass": 0
+  },
+  "githubRun": {
+    "id": 40435506801,
+    "runnerAllocated": false,
+    "stepsRun": 0
+  },
+  "gates": {
+    "npmInstall": "BLOCKED",
+    "pnpmFrozenLock": "BLOCKED",
+    "tsc": "NOT_RUN",
+    "viteProductionBuild": "NOT_RUN",
+    "sdk": "NOT_RUN",
+    "chromium": "NOT_RUN"
+  }
+}

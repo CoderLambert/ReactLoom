@@ -1,6 +1,6 @@
 # ReactLoom Library Lab
 
-独立前端工具库实战与 Agent 知识应用。119条目录已收录，当前仅首批示例逐步接入；目录数量不代表全部示例完成。
+独立前端工具库实战与 Agent 知识应用。119条库的源码示例、中文指南与 Agent 文档已接入，357项三层场景是**声明数量，不是 SDK / 浏览器测试通过数量**。依赖安装、TypeScript 全仓检查与 Vite/Chromium 仍待可用 Runner 验证。
 
 ```sh
 pnpm install

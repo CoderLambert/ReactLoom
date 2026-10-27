@@ -190,3 +190,23 @@ GitHub最新run 40432842277（主CI 7 job）与40432842202（Lab 2 job）全部 
 **后续优先级**：审查CD余下8库PR、公共依赖后统一生成根索引；实际Node>=22.18/pnpm10可用时先生成真实锁文件并恢复frozen安装，再完成PDF Worker双库与AB异步生命周期浏览器回归、中文IME E2E；未取得执行环境仍继续公共安全与Agent可用性改进。保持 Draft PR #8，不改main/旧模板/PR #3。
 
 runCount：**8 / 24**。
+
+## 平台持续开发第9轮（2026-10-27，北京时间；GitHub 集成）
+
+**实际集成及代码变更：**
+
+- CD #35：常规 squash `43f06fee237f8666697279ea1a6b457b23ba1ab8`，6 个内容条目 C04、C08、C12、C13、C22、D13；50 个文件仅属 CD 条目和进度。
+- AB #36：常规 squash `eae0b8eec2a0a3d3281170c6dcda3159f8d6945d`，B13/B14/B22 固定槽位跨越与键盘逻辑修复，纯 helper 回归由 worker 记录，不等于浏览器拖放验证。
+- EF #38：常规 squash `f019c76c3b5923112bc1171d6d780b7b151da8f5`，F11 MSW 浏览器路由隔离、E19 FFmpeg 操作代次/输入预检、F05 SheetJS ZIP 预算预检；这些预检不能代替沙箱。
+- AB #37：因与 #36 同写 progress/AB.md，平台以双亲 Git merge `aa67e9e19d3287644263926e97daeaaab98c96d8` 合入 30 个 A/B 所属文件，并保留双方进度：A13动画、A15/A16地图、B17中文IME、B20 toast 异步竞态修复。
+- CD #39：因与 #35 同写 progress/CD.md，平台双亲 merge `fdb34344f848b994958ef00b386dfd0ef0e6991a` 保留两批进度，新增 D16 Workbox、D21 Pagefind 隔离 Node 构建工作坊。
+- PLATFORM `731eda9e3b77ec2850db5cd30d4fe90f151db9ba`：单点增补 9 个真实浏览器库依赖和 Workbox/Pagefind 两项 dev 依赖，CLI 白名单扩展 D16/D21 各 3 种层级，增加不可注入路径/禁用 shell 的 Node 单测（新增测试**已提交，未在当前完整远端树执行**）。
+- PLATFORM `1faca0c9b6b80d9887693ac9191990248a85d73d`：重建根目录双索引，与8个新条目 contentState 和用途一致，未将已编写内容等同于SDK验收。
+
+**只读 Git Tree 独立核验：**集成分支完整递归树 `truncated=false`，119 个唯一 ID 目录，A17/B22/C22/D21/E19/F18；每个目录具有 `library.json/guide.md/agent.md/AGENTS.md/verification.json` 和示例源文件。与此对应 **119/119 内容源码与文档已接入、357项三层场景声明、0项本轮新增真实SDK PASS**。文件存在性检查不是 TypeScript、运行时 API、浏览器或教学质量验收。
+
+**本轮执行证据边界：**GitHub PR #35/#36/#37/#38/#39 变更范围已逐文件审查；部分 worker 先前报告纯 Node 回归和静态语法，但本平台未复跑完整代码。版本交叉核对包括 FullCalendar v7 的 `@fullcalendar/react/daygrid` 新路径与 `temporal-polyfill` peer，AG Grid Community 36.2.0、JSON Forms 3.8.0、Frappe Gantt 1.2.2、react-redux 9.3.0、Workbox 7.4.1、Pagefind 1.5.2（来源见PR提交及 npm/官方文档）。**未执行真实包安装、tsc、Vite build、SDK导入或Chromium。** 最近 GitHub Lab workflow `40435506801` 两个作业 `runner_id=0,steps=[]`，在Runner分配前失败；并非运行过构建后失败。受限网络无完整registry依赖；根 `pnpm-lock.yaml` 尚未真实解析，不能造 integrity。维持 #12 阻塞。
+
+**下轮：**一旦 Node>=22.18/pnpm10 与网络或Runner恢复，真实生成lock并保留 `--frozen-lockfile`，对全部导入条目先做分组型检查与构建；重点测试 C13 Frappe 文档级监听器风险、F06/F07 PDF Worker、F11 MSW origin、D16 SW 构建及 D21 Pagefind 原生索引，处理真实失败。仅因缺安装而重复跑相同失败不计进度；可以继续补隔离runner、文档质量和Agent迁移测试。
+
+runCount：**9 / 24**。PR #8 继续 Draft；main/旧模板/PR #3 未修改，未公开部署。
