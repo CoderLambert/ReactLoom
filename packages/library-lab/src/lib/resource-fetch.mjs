@@ -5,7 +5,7 @@
  */
 export async function requestGeneratedResource(url, parse, {signal, timeoutMs = 20_000, fetchImpl = fetch} = {}) {
   if (typeof url !== 'string' || !url.startsWith('/') || url.startsWith('//') ||
-      /[\\\u0000-\u001f]/u.test(url) || /(?:^|\/)\.\.?\//u.test(url) ||
+      /[\\\u0000-\u001f]/u.test(url) || /(?:^|\/)\.\.?(?:\/|$)/u.test(url) ||
       typeof parse !== 'function' || typeof fetchImpl !== 'function') {
     throw new TypeError('Generated resource request must use a same-origin pathname and parser');
   }
@@ -18,6 +18,7 @@ export async function requestGeneratedResource(url, parse, {signal, timeoutMs = 
   else signal?.addEventListener('abort', abortFromCaller, {once:true});
   const timeout = setTimeout(() => controller.abort(new Error('生成资源读取超时，请重试')), timeoutMs);
   try {
+    if (controller.signal.aborted) throw controller.signal.reason;
     // no-store avoids retrying a stale SPA/CDN cache entry after a digest mismatch.
     const response = await fetchImpl(url, {signal:controller.signal, cache:'no-store'});
     if (controller.signal.aborted) throw controller.signal.reason;
