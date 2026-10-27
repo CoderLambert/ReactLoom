@@ -7,3 +7,7 @@
 **重点反例**：在 handleDragOver 中直接提交排序导致抖动；将 array index 用作 id；全行注册监听导致输入框失焦；把 CSS disabled 当权限；卸载后沿用 stale drag context；缺键盘/屏幕阅读器反馈。
 **目标验收**：实际 SDK import、typecheck/build、Chromium Space/Arrow/Escape、touch模拟、拖动后业务顺序、锁定、撤销，焦点保留。未执行则维持 NOT_RUN，不把 UI 代码存在当成 SDK PASS。
 **参考**：https://dndkit.com/legacy/presets/sortable/overview/；其他方案 B14 Pragmatic drag and drop，迁移 B22 旧 Beautiful DnD。
+
+## 固定槽位回归合同
+固定项不仅自己不能拖，也不能被其他项目跨越后挤走。必须在业务 reorder/onDragEnd/onDrop 的最终提交处检查 `canReorderAroundPinned(items, from, to)`；不可只禁用 handle 或仅检查 source/target。拖拽与键盘上下按钮调用同一业务约束，按钮用它计算 disabled。
+提取 `examples/pinned-order.ts` 与单测 `tests/pinned-order.test.mjs`。检查双向跨越、索引边界、非固定段内操作与撤销；真实 SDK/browser 仍须单独验收。旧验证证据应随源码指纹变化降级为 NOT_RUN。

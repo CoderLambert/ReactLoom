@@ -1,5 +1,6 @@
 import {useState} from 'react';
 import {DragDropContext,Draggable,Droppable,type DropResult} from '@hello-pangea/dnd';
+import {canReorderAroundPinned} from './pinned-order';
 
 type Level='basic'|'business'|'advanced';
 type Item={id:string;label:string;fixed?:boolean};
@@ -16,7 +17,7 @@ export default function BeautifulDndMigration({level}:{level:Level}){
   function apply(next:Item[],notice:string){setPrevious(items);setItems(next);setMessage(notice);}
   function move(sourceIndex:number,destIndex:number){
     if(sourceIndex<0||destIndex<0||sourceIndex>=visible.length||destIndex>=visible.length||sourceIndex===destIndex)return;
-    if(visible[sourceIndex].fixed||visible[destIndex].fixed){setMessage('固定频道不可交换');return;}
+    if(!canReorderAroundPinned(visible,sourceIndex,destIndex)){setMessage('固定频道不可移动，也不能被跨越；顺序未改变');return;}
     const list=visible.slice();const [item]=list.splice(sourceIndex,1);list.splice(destIndex,0,item);
     apply(level==='basic'?[...list,...items.slice(3)]:list,'已调整频道 '+item.label+' 的顺序');
   }
@@ -41,9 +42,9 @@ export default function BeautifulDndMigration({level}:{level:Level}){
                 aria-label={'拖动 '+item.label} style={{cursor:item.fixed?'not-allowed':'grab',touchAction:'none'}}>⠿</button>
               <span style={{flex:1}}>{item.label}</span>
               {item.fixed&&<small>固定</small>}
-              <button type="button" aria-label={'上移 '+item.label} disabled={item.fixed||index===0}
+              <button type="button" aria-label={'上移 '+item.label} disabled={index===0||!canReorderAroundPinned(visible,index,index-1)}
                 onClick={()=>move(index,index-1)}>↑</button>
-              <button type="button" aria-label={'下移 '+item.label} disabled={item.fixed||index===visible.length-1}
+              <button type="button" aria-label={'下移 '+item.label} disabled={index===visible.length-1||!canReorderAroundPinned(visible,index,index+1)}
                 onClick={()=>move(index,index+1)}>↓</button>
             </li>}
           </Draggable>)}

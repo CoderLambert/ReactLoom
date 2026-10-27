@@ -57,7 +57,8 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/pinned-order.ts"
       ],
       "capabilities": [
         "native-drag-drop",
@@ -74,7 +75,8 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/pinned-order.ts"
       ],
       "capabilities": [
         "native-drag-drop",
@@ -91,7 +93,9 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/pinned-order.ts",
+        "tests/pinned-order.test.mjs"
       ],
       "capabilities": [
         "native-drag-drop",

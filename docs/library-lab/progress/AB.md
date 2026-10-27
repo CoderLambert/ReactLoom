@@ -364,3 +364,17 @@ A09 Excalidraw、A10 tldraw、A13 Three.js、A14 React Three Fiber、A17 deck.gl
 ### 后续 AB 定向工作
 
 优先获取 PLATFORM 类型/构建错误的文件级清单，按 AB 目录修复；有浏览器时重点验收 A09 异步导入-重置竞态、A10 原生/程序化形状上限、A17 WebGL context 反复进出、B04 切场景计时器、B05 远端.riv失败和卸载。源代码已经39/39，仅代码覆盖不能触发“生产验收已完成”的结论。若环境持续不可运行，记录真实阻塞，不重复要求用户逐项验收。
+
+---
+
+## 第8轮：B13/B14/B22 固定槽位跨越 bug 修复
+
+**恢复事实**：AB 39/39条目源码+guide+agent已并入集成分支。PR #33在本轮准备时已被PLATFORM合并为 `f052e8b478d604ccefb6cf8f3569b80055c68f2a`，因此新建工作分支 `feat/library-lab-ab-pinned-order`，不重写历史 `feat/library-lab-ab` 或重开已合并 PR。
+
+**实际实现**：B13 dnd-kit、B14 Pragmatic drag and drop、B22 Pangea DnD原先只检查起点/终点是否锁定，移动区间中间有固定频道时arrayMove/splice仍会移动固定频道。三个库现在均把包含起点/终点及中间项的闭区间作为不可跨越边界，拖放结束在数据提交处拒绝；相邻键盘按钮提前禁用不合法方向。示例依然真实调用对应SDK，未替换为Mock。
+
+各库新增 `examples/pinned-order.ts` 和 `tests/pinned-order.test.mjs`，更新3层sourceFiles、guide、agent。本轮只改B13/B14/B22和本进度文件，未动公共依赖/锁文件/CI，dependencyRequests新增0。
+
+**验证事实**：Node v22.16.0使用 `node --experimental-strip-types --test` 对相同固定槽位规则的三份本地TS源与测试共执行 **24 PASS、0 FAIL、0 SKIP**（locked/fixed、双向跨越、合法同侧移动、非法索引）。这只证明该领域规则的本地单测，不代表实际SDK/类型/构建/浏览器已通过。本轮没有获取官方SDK/Chromium执行证据，保留 NOT_RUN/BLOCKED。GitHub文件和差异范围还需在提交后核对。
+
+runCount=8/24，待PLATFORM审核合入到feat/library-lab；主要剩余真实依赖/锁文件、tsc/Vite build、浏览器实测及复杂库资源许可检查。

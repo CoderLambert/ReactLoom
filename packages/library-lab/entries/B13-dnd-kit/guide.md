@@ -31,3 +31,8 @@ DndContext 处理 sensors/collision；SortableContext 提供 id 顺序；useSort
 
 ## 练习与验收
 加入后台持久化失败回滚和权限检查；测试鼠标距离阈值、触控、键盘手柄、锁定条目、稳定焦点、Esc取消和撤销。当前仅有真实目标库 import 源码，SDK/build/browser NOT_RUN。禁止据此声称 React19 全兼容或完整可访问性通过。
+
+## 固定频道不可被跨越：业务规则而非拖拽SDK特性
+原实现仅拒绝锁定的拖拽起点、终点，允许一个可移动条目从固定项前面移到后面；数组重排会把中间固定项的索引悄悄改变。现使用 `examples/pinned-order.ts` 检查从起点到终点的**完整闭区间**，任一条目为 locked/fixed 就拒绝移动，三个SDK实现都使用同一约束。上下按钮在不可合法移动方向直接禁用，避免看起来可点但实际只报错。
+本地定向测试在条目目录执行：`node --experimental-strip-types --test tests/pinned-order.test.mjs`；测试从实际TS源文件导入规则，覆盖锁定项、双向跨越、合法同侧重排及越界。**该纯业务规则测试不意味着 SDK、React、Chromium 或触控运行已经验收。**
+若产品允许移动其他项跨过固定槽位，先重新定义排序与不变式，并增加对应测试，而不是直接套用 arrayMove/splice。
