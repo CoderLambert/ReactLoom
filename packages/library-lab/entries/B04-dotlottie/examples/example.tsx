@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type ComponentProps } from 'react';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import pulse from './pulse.json';
+import {mayPlay,playbackLabel} from './playback-policy';
 
 type Level = 'basic' | 'business' | 'advanced';
 type Player = Parameters<NonNullable<ComponentProps<typeof DotLottieReact>['dotLottieRefCallback']>>[0];
@@ -39,7 +40,7 @@ export default function DotLottieExample({ level }: { level: Level }) {
   useEffect(() => {
     if (!player) { setLoaded(false); return; }
     const onLoad = () => { setLoaded(true); setError(''); };
-    const onError = () => { setLoaded(false); setError('动画解析失败，业务状态仍可查看'); };
+    const onError = () => { setLoaded(false); setPlaying(false); setError('动画解析失败，业务状态仍可查看'); };
     player.addEventListener('load', onLoad);
     player.addEventListener('loadError', onError);
     player.addEventListener('renderError', onError);
@@ -54,7 +55,7 @@ export default function DotLottieExample({ level }: { level: Level }) {
   useEffect(() => {
     if (!player || !loaded) return;
     player.setSpeed(speed);
-    if (playing && visible && (!reduced || override)) player.play();
+    if (playing && mayPlay({loaded,visible,reduced,override})) player.play();
     else { player.pause(); if (reduced && !override) player.setFrame(0); }
   }, [player, loaded, speed, playing, visible, reduced, override]);
   useEffect(() => () => { if (pending.current !== null) window.clearTimeout(pending.current); }, []);
@@ -77,7 +78,7 @@ export default function DotLottieExample({ level }: { level: Level }) {
     </figure>
     {error && <p role="alert">{error}</p>}
     <div className="demo-controls">
-      <button type="button" disabled={!loaded} onClick={()=>setPlaying(v=>!v)}>{playing?'暂停':'播放'}</button>
+      <button type="button" disabled={!loaded || (!playing && !mayPlay({loaded,visible,reduced,override}))} onClick={()=>setPlaying(v=>!v)}>{playing?'暂停':'播放'}</button>
       <button type="button" disabled={!loaded} onClick={()=>{setPlaying(false);player?.stop();}}>停止并回到首帧</button>
       {level !== 'basic' && <button type="button" onClick={finishLocalAction}>模拟本地订阅确认</button>}
       {level==='advanced' && <>
@@ -88,7 +89,7 @@ export default function DotLottieExample({ level }: { level: Level }) {
       </>}
     </div>
     <p role="status">业务：{outcome==='idle'?'尚未提交':outcome==='pending'?'本地处理中':'操作成功'}；
-      播放：{playing?'已请求播放':'暂停'}；页面：{visible?'可见':'隐藏'}；减少动态：{reduced?'开启':'关闭'}。</p>
+      播放：{playbackLabel({loaded,visible,reduced,override},playing)}；页面：{visible?'可见':'隐藏'}；减少动态：{reduced?'开启':'关闭'}。</p>
     {reduced&&!override&&<p>尊重系统减少动态偏好：显示静态首帧。只有高级层显式开启才允许覆盖。</p>}
     {level==='advanced'&&<p>页面隐藏、关闭Tab或播放器卸载都会停止播放，并解除事件监听/超时任务。无CSS动画或网络请求作为后备。</p>}
   </section>;

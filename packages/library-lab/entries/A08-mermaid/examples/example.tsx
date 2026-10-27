@@ -1,5 +1,6 @@
 import {useEffect,useMemo,useState} from 'react';
 import mermaid from 'mermaid';
+import {queueMermaidRender} from './render-queue';
 
 type Level='basic'|'business'|'advanced';
 let nextRenderId=0;
@@ -48,18 +49,20 @@ export default function MermaidExample({level}:{level:Level}){
     let active=true;
     setSvg('');
     setError('');
-    prepareMermaid();
-    void (async()=>{
-      try{
+    // Mermaid mutates module-wide render state. Serialize even across concurrent
+    // DemoHost instances; a stale queued job never invokes parse/render.
+    void queueMermaidRender(
+      () => active,
+      async () => {
+        prepareMermaid();
         const parsed=await mermaid.parse(diagram,{suppressErrors:true});
         if(!parsed)throw new Error('DSL 语法校验未通过');
-        // Unique IDs prevent collisions across quick switching and StrictMode.
         const result=await mermaid.render('rl-mermaid-'+(++nextRenderId),diagram);
-        if(active)setSvg(result.svg);
-      }catch(reason){
-        if(active)setError('图形无法渲染：'+String(reason));
-      }
-    })();
+        return result.svg;
+      },
+      result => setSvg(result),
+      reason => setError('图形无法渲染：'+String(reason)),
+    );
     return()=>{active=false;};
   },[diagram]);
 
