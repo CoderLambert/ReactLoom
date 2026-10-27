@@ -821,3 +821,7 @@ Draft **[#71](https://github.com/CoderLambert/ReactLoom/pull/71)**，head `feat/
 - 本段进度另提交；PR head与最新进度提交以GitHub记录为准，拒绝用自身commit SHA作循环声明。worker PR base只允许`feat/library-lab`。
 - `dependencyRequests`：**本批新增0项**，现有Sonner/Motion/@hello-pangea/dnd已经由PLATFORM声明准确版本；仅PLATFORM处理公共package、pnpm-lock、CI。
 - 下一队列：取得PLATFORM真实SDK/完整TSX、浏览器焦点（包括Motion退出动画）及拖动碰撞证据；优先复查B01/B19或A15仍可独立复现的业务缺陷。39/39仍只表示源码与文档覆盖，不宣称SDK验收完成；持续跟踪至最多24轮。
+
+### wave20 GitHub Actions实际回读（PR #74）
+
+截至本轮读取，提交`901879ee952c17a64db3a38d2b3b225d8129f2a0`对应`Library Lab` run [40519701965](https://github.com/CoderLambert/ReactLoom/actions/runs/40519701965)：**failure**，runtime-bootstrap与catalogue共2个Job均`steps=[]`；`CI` run [40519702223](https://github.com/CoderLambert/ReactLoom/actions/runs/40519702223)：**failure**，smoke、packages、verify spa/ssr/mobile、lighthouse spa/ssr共7个Job均`steps=[]`。共9/9 Job没有可验证安装/构建/执行步骤，不能据此判定AB代码编译失败，也不能标记SDK/浏览器PASS。该runner异常交PLATFORM唯一Owner处理，本通道不盲目重跑。新增SDK/构建证据仍为零；本轮最后追加DnD level切换前的layout-effect代次失效，浏览器运行仍待验证。

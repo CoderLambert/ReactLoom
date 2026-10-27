@@ -1,4 +1,4 @@
-import {useReducer, useRef} from 'react';
+import {useLayoutEffect, useReducer, useRef} from 'react';
 import {DragDropContext, Draggable, Droppable, type DropResult} from '@hello-pangea/dnd';
 import {canReorderAroundPinned, initialOrderState, isFreshDrop, reduceOrder, type DragSnapshot} from './pinned-order';
 
@@ -7,6 +7,11 @@ type Level = 'basic' | 'business' | 'advanced';
 export default function BeautifulDndMigration({level}: {level: Level}) {
   const [state, dispatch] = useReducer(reduceOrder, initialOrderState());
   const activeDrag = useRef<DragSnapshot | null>(null);
+  // SDK context remounts when level changes; invalidate a pending drag before paint.
+  useLayoutEffect(() => {
+    activeDrag.current = null;
+    return () => { activeDrag.current = null; };
+  }, [level]);
   const visible = level === 'basic' ? state.items.slice(0, 3) : state.items;
 
   function move(sourceIndex: number, destIndex: number) {
