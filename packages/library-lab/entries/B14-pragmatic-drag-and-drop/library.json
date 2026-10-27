@@ -97,7 +97,8 @@
         "examples/example.tsx",
         "examples/demo.tsx",
         "examples/pinned-order.ts",
-        "tests/pinned-order.test.mjs"
+        "tests/pinned-order.test.mjs",
+        "tests/drag-session.test.mts"
       ],
       "capabilities": [
         "native-drag-drop",

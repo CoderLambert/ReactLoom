@@ -23,3 +23,7 @@
 ## wave16 原生拖拽冲突防护
 
 只为 `draggable` 指定真实已挂载的 `dragHandle: handleRef.current`（官方Element Adapter参数），确保点击非手柄的按钮或选中文本不触发原生拖动。手柄 `touchAction:none` 仅局部设置，键盘保留上下按钮，保证用户不用拖拽也能排序。卸载要释放draggable/dropTarget/monitor。真实浏览器触屏/ARIA/焦点未验收，不应宣称完整可访问性。
+
+## wave18原生拖拽所有权
+
+原生拖动开始在monitor.onDragStart记录activeId、revision、level；onDrop无论目标是否有效都必须消费会话，在匹配时才调用reorder。commit/undo/重置推进revision，模式变化及卸载清空令牌；保留`draggable({element,dragHandle})`与combine清理。纯规则测试不是原生拖拽/SDK成功证据。

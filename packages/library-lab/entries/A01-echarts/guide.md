@@ -70,3 +70,7 @@ React state（样本）→ `setOption`（更新实例）→ ECharts 渲染到容
 高级层 `examples/stream-policy.ts` 区分用户点击“开始”的**意图状态**与实际计时器运行状态：页面隐藏、系统偏好减少动态时自动停止增量计时；页面重新可见或偏好解除时在仍有用户意图的前提下恢复。明确勾选允许动态才覆盖减少动态；隐藏标签页永远不继续更新。计数由稳定单一 interval 和 tick ref 推进，避免每1.2秒重复拆建计时器；卸载清理监听及interval。图表 `animationDuration` 也会响应系统偏好。
 
 双系列业务模式的等价表格增加“上周”行，防止仅用Canvas展示对照数据。纯规则测试：`node --experimental-strip-types --test entries/A01-echarts/tests/stream-policy.test.mts`。还需实际 ECharts 初始化、render、ResizeObserver、背景标签和读屏验收，不能视为SDK PASS。
+
+## AB wave18：容器响应式与观察器安全释放
+
+去除图表外层强制250px最小宽度，使狭窄Demo/移动窗口不横向撑破布局。`ResizeObserver`只调度一个`requestAnimationFrame`，容器实际宽高非零才调用真实`chart.resize()`；Effect清理时取消待执行帧、disconnect并dispose实例，避免已销毁ECharts对象在旧帧里被调用。图表点选显示系列名、日期和值而非仅日期；复位同时清空旧选择。减少动态偏好下也取消演示用CSS宽度过渡。需在Chromium真实观察快速拉伸、关闭Tab/StrictMode、双系列点选；尚无SDK/浏览器PASS。

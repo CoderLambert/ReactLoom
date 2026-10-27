@@ -28,3 +28,7 @@ A02 Recharts：简单 React 业务图；A03 Chart.js：简单 Canvas 图；A05 D
 ## 背景标签页与动画策略
 
 迁移 `examples/stream-policy.ts`，将“用户请求播放”与 `shouldAdvanceReadingStream` 的实际播放分开。监听 document.visibilitychange 和 matchMedia('prefers-reduced-motion: reduce')，在 cleanup 对称注销。稳定 interval 不随 tick 频率重复安装，刷新由 `advanceReadingCounts` 执行。双系列图必须提供两系列完整文字数据，不能只呈现颜色差异。纯逻辑断言不是 ECharts 真实SDK/浏览器验证。
+
+## wave18资源不变式
+
+A01图表实例由挂载Effect唯一拥有；ResizeObserver只触发合并的rAF，不直接向已dispose实例调用resize。卸载先disconnect再cancelAnimationFrame并dispose。容器必须允许窄于250px、尺寸为0时不传给resize；缩放与reduced-motion须浏览器实测。点选反馈包括实际seriesName、name及简单value；不要将未知值塞进HTML formatter。源码/纯规则核查不构成官方ECharts运行PASS。

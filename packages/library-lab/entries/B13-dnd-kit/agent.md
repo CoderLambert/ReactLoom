@@ -15,3 +15,7 @@
 ## wave16 快照语义
 
 保留 `itemsRef` 作为拖拽回调的当前数据来源，`reorderVisible` 对当前快照一次生成完整新数组，切换basic模式仍保留未显示的频道尾部。成功变更时从变更前的 `itemsRef.current` 保存一层撤销快照；撤销要同步恢复ref和React state。不要在React updater里做副作用或混用旧闭包数据。纯策略PASS不替代SDK交互验收。
+
+## wave18拖拽代次不变式
+
+DndContext的onDragStart捕获activeId+revision+level，onDragEnd先清空会话再检查isCurrentDragSession；对键盘按钮/撤销/重置的每一次合法写入推进revision，level改变清除会话，onDragCancel清除。必须保留核心Sortable/useSortable和稳定id；真实浏览器复测拖动中操作按钮、Esc取消和焦点。Node会话测试仅说明业务不变式。

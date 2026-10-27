@@ -14,3 +14,9 @@ export function canReorderAroundPinned<T extends {locked?: boolean; fixed?: bool
   }
   return true;
 }
+
+/** A drag is valid only for the data revision and demo mode in which it started. */
+export type DragSession={activeId:string;revision:number;level:'basic'|'business'|'advanced'};
+export function isCurrentDragSession(session:DragSession|null,activeId:string,revision:number,level:DragSession['level']):boolean {
+  return session!==null && session.activeId===activeId && session.revision===revision && session.level===level;
+}

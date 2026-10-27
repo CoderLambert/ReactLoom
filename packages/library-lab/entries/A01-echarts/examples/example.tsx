@@ -49,13 +49,26 @@ export default function EchartsExample({level}: {level: Level}) {
     if (!element) return;
     const chart = init(element, undefined, {renderer: 'canvas'});
     instance.current = chart;
-    const onClick = (event: {name?: string}) => setSelected(event.name ?? '');
+    const onClick = (event: {name?: string;seriesName?: string;value?: unknown}) => {
+      const value = typeof event.value === 'number' || typeof event.value === 'string' ? '：' + String(event.value) : '';
+      setSelected((event.seriesName ?? '数据') + ' / ' + (event.name ?? '未知分类') + value);
+    };
     chart.on('click', onClick);
-    const resize = () => chart.resize();
-    const observer = new ResizeObserver(resize);
+    // Coalesce ResizeObserver bursts; no resize is allowed after teardown.
+    let resizeFrame = 0;
+    const scheduleResize = () => {
+      if (resizeFrame) return;
+      resizeFrame = window.requestAnimationFrame(() => {
+        resizeFrame = 0;
+        if (element.isConnected && element.clientWidth > 0 && element.clientHeight > 0) chart.resize();
+      });
+    };
+    const observer = new ResizeObserver(scheduleResize);
     observer.observe(element);
+    scheduleResize();
     return () => {
       observer.disconnect();
+      if (resizeFrame) window.cancelAnimationFrame(resizeFrame);
       chart.off('click', onClick);
       chart.dispose();
       if (instance.current === chart) instance.current = null;
@@ -99,12 +112,12 @@ export default function EchartsExample({level}: {level: Level}) {
     {level === 'advanced' && <div style={{display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 14}}>
       <button type="button" onClick={() => setLive(value => !value)}>{live ? '暂停增量更新' : '启动增量更新'}</button>
       <button type="button" onClick={() => setCompact(value => !value)}>{compact ? '恢复宽图' : '缩小容器，观察 resize'}</button>
-      <button type="button" onClick={() => {tickIndex.current=0;setValues(baseline);setUpdates(0);}}>复位业务数据</button>
+      <button type="button" onClick={() => {tickIndex.current=0;setValues(baseline);setUpdates(0);setSelected('');}}>复位业务数据</button>
       {reducedMotion && <label><input type="checkbox" checked={allowMotion}
         onChange={event => setAllowMotion(event.target.checked)}/>允许动态演示（覆盖减少动态偏好）</label>}
       <span aria-live="polite">增量更新次数：{updates}；{playbackActive?'运行中':live?'已暂停（页面隐藏或减少动态）':'已停止'}</span>
     </div>}
-    <div style={{width: compact ? '65%' : '100%', minWidth: 250, maxWidth: 880, transition: 'width .2s'}}>
+    <div style={{width: compact ? '65%' : '100%', minWidth: 0, maxWidth: 880, transition: reducedMotion && !allowMotion ? 'none' : 'width .2s'}}>
       <div ref={node} style={{height: 300, width: '100%'}} role="img" aria-label="七天阅读趋势交互图表，下方提供可访问的数据表"/>
     </div>
     <p role="status">最近点击：{selected || '尚未选择数据点'}</p>

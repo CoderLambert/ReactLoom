@@ -104,7 +104,8 @@
         "examples/demo.tsx",
         "examples/pinned-order.ts",
         "tests/pinned-order.test.mjs",
-        "tests/reorder-policy.test.mts"
+        "tests/reorder-policy.test.mts",
+        "tests/drag-session.test.mts"
       ],
       "capabilities": [
         "drag-drop",
