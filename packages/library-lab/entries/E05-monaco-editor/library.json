@@ -58,7 +58,9 @@
         "examples/example.tsx",
         "examples/workers.ts",
         "examples/worker-lease.mjs",
-        "examples/worker-lease.d.mts"
+        "examples/worker-lease.d.mts",
+        "examples/resource-cleanup.mjs",
+        "examples/resource-cleanup.d.mts"
       ],
       "capabilities": [
         "web-worker",
@@ -77,7 +79,9 @@
         "examples/example.tsx",
         "examples/workers.ts",
         "examples/worker-lease.mjs",
-        "examples/worker-lease.d.mts"
+        "examples/worker-lease.d.mts",
+        "examples/resource-cleanup.mjs",
+        "examples/resource-cleanup.d.mts"
       ],
       "capabilities": [
         "web-worker",
@@ -97,7 +101,10 @@
         "examples/workers.ts",
         "examples/worker-lease.mjs",
         "examples/worker-lease.d.mts",
-        "examples/worker-lease.test.mjs"
+        "examples/worker-lease.test.mjs",
+        "examples/resource-cleanup.mjs",
+        "examples/resource-cleanup.d.mts",
+        "examples/resource-cleanup.test.mjs"
       ],
       "capabilities": [
         "web-worker",
