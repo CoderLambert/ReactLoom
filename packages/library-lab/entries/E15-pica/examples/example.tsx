@@ -1,9 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import pica from 'pica';
+import { checkSourceFile, checkSourcePixels, targetDimensions } from './resize-policy.mjs';
 
 type Props = { level: 'basic' | 'business' | 'advanced' };
-const MAX_BYTES = 4 * 1024 * 1024;
-const MAX_PIXELS = 16_000_000;
 
 function paint(canvas: HTMLCanvasElement) {
   canvas.width = 1280;
@@ -29,10 +28,10 @@ function paint(canvas: HTMLCanvasElement) {
 }
 
 async function loadIntoCanvas(file: File): Promise<HTMLCanvasElement> {
-  if (!['image/png','image/jpeg','image/webp'].includes(file.type) || file.size > MAX_BYTES) throw new Error('只接受4MiB以内的PNG/JPEG/WebP');
+  checkSourceFile(file);
   const bitmap = await createImageBitmap(file);
   try {
-    if (bitmap.width * bitmap.height > MAX_PIXELS || bitmap.width === 0 || bitmap.height === 0) throw new Error('解码图像像素过大');
+    checkSourcePixels(bitmap.width, bitmap.height);
     const canvas = document.createElement('canvas');
     canvas.width = bitmap.width;
     canvas.height = bitmap.height;
@@ -45,7 +44,12 @@ async function loadIntoCanvas(file: File): Promise<HTMLCanvasElement> {
   }
 }
 
+// Keyed session isolates all local file/result state on demo-level changes.
 export default function PicaExample({ level }: Props) {
+  return <PicaSession key={level} level={level} />;
+}
+
+function PicaSession({ level }: Props) {
   const resizer = useMemo(() => pica(), []);
   const sampleCanvas = useRef<HTMLCanvasElement>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -58,6 +62,8 @@ export default function PicaExample({ level }: Props) {
   const [running, setRunning] = useState(false);
   const cancelRef = useRef<(() => void) | null>(null);
   const generation = useRef(0);
+  const operationRef = useRef(false);
+  const mountedRef = useRef(false);
 
   useEffect(() => { if (sampleCanvas.current) paint(sampleCanvas.current); }, []);
   useEffect(() => {
@@ -72,13 +78,30 @@ export default function PicaExample({ level }: Props) {
     setNativeUrl(url);
     return () => URL.revokeObjectURL(url);
   }, [nativeBlob]);
-  useEffect(() => () => {
-    generation.current += 1;
-    cancelRef.current?.();
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      generation.current += 1;
+      cancelRef.current?.();
+      cancelRef.current = null;
+    };
   }, []);
 
-  async function execute() {
+  function invalidate(reason: string) {
+    generation.current += 1;
     cancelRef.current?.();
+    cancelRef.current = null;
+    setResultBlob(null);
+    setNativeBlob(null);
+    // The cancelled Promise may still be decoding or encoding; do not overlap heavy work.
+    setStatus(operationRef.current ? reason + '；等待旧任务结束' : reason);
+    if (!operationRef.current) setRunning(false);
+  }
+
+  async function execute() {
+    if (operationRef.current) return; // synchronous single-flight, not only React disabled state
+    operationRef.current = true;
     const id = ++generation.current;
     setRunning(true);
     setStatus('解码或绘制中…');
@@ -90,9 +113,7 @@ export default function PicaExample({ level }: Props) {
       else if (sampleCanvas.current) source = sampleCanvas.current;
       else throw new Error('示例画布不存在');
       if (id !== generation.current) return;
-      const scale = Math.min(1, edge / Math.max(source.width, source.height));
-      const width = Math.max(1, Math.round(source.width * scale));
-      const height = Math.max(1, Math.round(source.height * scale));
+      const { width, height } = targetDimensions(source.width, source.height, edge);
       const target = document.createElement('canvas');
       target.width = width;
       target.height = height;
@@ -120,19 +141,16 @@ export default function PicaExample({ level }: Props) {
     } catch (error) {
       if (id === generation.current) setStatus('失败或取消：' + String(error));
     } finally {
-      if (id === generation.current) {
+      operationRef.current = false;
+      if (mountedRef.current) {
+        if (id === generation.current) cancelRef.current = null;
         setRunning(false);
-        cancelRef.current = null;
       }
     }
   }
 
   function cancel() {
-    generation.current += 1;
-    cancelRef.current?.();
-    cancelRef.current = null;
-    setRunning(false);
-    setStatus('已取消；旧Promise结果将被忽略');
+    invalidate('取消请求已发送，旧结果不会回写');
   }
 
   return (
@@ -140,10 +158,17 @@ export default function PicaExample({ level }: Props) {
       <h2>{level === 'basic' ? 'Canvas高质量缩放' : level === 'business' ? '本地图片预处理' : 'Pica与浏览器原生缩放'}</h2>
       <p>真实pica v10工厂实例和 resize/toBlob，首次打开Demo才加载SDK。输入不上传；不同引擎的质量不以文件字节直接评判。</p>
       <canvas ref={sampleCanvas} aria-label="原创图像源数据" style={{ maxWidth: '100%', width: 360, borderRadius: 9 }} />
-      {level !== 'basic' && <label>选择本地图片 <input type="file" accept="image/png,image/jpeg,image/webp" onChange={e => { setFile(e.target.files?.[0] ?? null); e.target.value=''; }} /></label>}
+      {level !== 'basic' && <label>选择本地图片 <input type="file" accept="image/png,image/jpeg,image/webp" onChange={e => {
+        const selected = e.target.files?.[0];
+        e.target.value = '';
+        if (!selected) return;
+        invalidate('已选择新来源，旧图片处理结果已失效');
+        try { checkSourceFile(selected); setFile(selected); }
+        catch (error) { setFile(null); setStatus('文件不符合限制：' + String(error)); }
+      }} /></label>}
       <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 12, marginTop: 20 }}>
         <label htmlFor="pica-edge">目标最长边</label>
-        <select id="pica-edge" disabled={running} value={edge} onChange={e => setEdge(Number(e.target.value))}>
+        <select id="pica-edge" disabled={running} value={edge} onChange={e => { invalidate('尺寸已改变，等待重新缩放'); setEdge(Number(e.target.value)); }}>
           {[240,480,800].map(value => <option key={value} value={value}>{value}px</option>)}
         </select>
         <button type="button" disabled={running} onClick={() => void execute()}>调用pica缩放</button>
@@ -152,7 +177,7 @@ export default function PicaExample({ level }: Props) {
       <p role="status">{status}</p>
       {resultUrl && <figure><img src={resultUrl} alt="真实pica生成的缩小图像" style={{ maxWidth: '100%' }} /><figcaption>pica PNG: {resultBlob?.size ?? 0}字节</figcaption></figure>}
       {level === 'advanced' && nativeUrl && <figure><img src={nativeUrl} alt="原生Canvas缩放对照图" style={{ maxWidth: '100%' }} /><figcaption>原生Canvas PNG: {nativeBlob?.size ?? 0}字节；文件体积不是视觉质量指标</figcaption></figure>}
-      <p>注意：cancelToken和generation负责中断与防旧结果回写；pica内部Worker资源是否已终止需在真实浏览器验证，不能凭组件卸载假定。</p>
+      <p>任务单飞：取消或换图后必须等待旧Promise结算再启动下一次；cancelToken和generation阻止旧结果回写。内部Worker按pica的idle策略释放，仍需真实浏览器/CSP验证。</p>
     </section>
   );
 }
