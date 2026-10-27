@@ -63,6 +63,8 @@
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
+        "examples/sanitize-policy.mjs",
+        "examples/sanitize-policy.d.mts",
         "examples/example.tsx",
         "examples/demo.tsx"
       ],
@@ -79,6 +81,8 @@
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
+        "examples/sanitize-policy.mjs",
+        "examples/sanitize-policy.d.mts",
         "examples/example.tsx",
         "examples/demo.tsx"
       ],
@@ -95,6 +99,8 @@
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
+        "examples/sanitize-policy.mjs",
+        "examples/sanitize-policy.d.mts",
         "examples/example.tsx",
         "examples/demo.tsx",
         "tests/node-scenarios.test.mjs"
