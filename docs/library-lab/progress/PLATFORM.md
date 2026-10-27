@@ -226,3 +226,14 @@ runCount：**9 / 24**。PR #8 继续 Draft；main/旧模板/PR #3 未修改，�
 
 **下一批**：有可用 Node >=22.18 / pnpm10 registry 或 CI runner 时先真实解析 lock 并恢复 frozen，之后以实际构建错误为依据修复未验证的 API/peer 版本；聚焦六大高风险条目、C13 全局监听、F06/F07 PDF Worker、F11 MSW origin 与 D16 Workbox。页面新型拆包路径增加生产预览验证，不以离线测试替代网络和构建。主 PR #8 保持 Draft，main/旧模板/PR #3 未改。
 
+
+
+## 公共平台持续开发第10轮（2026-10-27，北京时间）
+
+**实际集成：**将 A/B PR #44 squash 合入（`c44a18ebdff45ff579c52630dccc265f6caef14c`），C/D PR #45 squash 合入（`811eb894747f37764a34edc5ed2a0588985c42ae`），E/F PR #46 squash 合入（`448420fd788d309a0b389f6d80346153ee6478aa`）。分别审查过变更文件范围（AB 24、CD 22、EF 23），均只修改受授权条目和各自进度文件；非公共依赖/锁文件。首批改善 uPlot X轴自动范围/减少动态、G6 viewport/observer、AntD 撤销原子性、Embla稳定ID；CD分页和IME、可复现503 fixture、Zustand严格旧数据迁移；EF Monaco Worker租约、pdf-lib异步操作门禁、MSW精确 scope 与实际 fetch 拦截守卫。MSW需要独立iframe runner，故本轮仍**不称浏览器验收**。
+
+**公共平台实质修复：**提交 `8ab32f97eff0b27c4fbdac9bc7630c01b3600f5c` 将 `test:sdk` 候选套件限定为显式 `sdk.test.mjs` / `node-scenarios.test.mjs`，不再把 `page-policy.test.mjs` 等纯逻辑回归当作真实 SDK 执行。新增 `scripts/policy-runner.mjs` / `tests/policy-runner.test.mjs`、`test:policy` 命令、缺少目标测试时明确失败，保留按 entry/group 选择。仅套件名称本身也不能证明内部导入，真实 PASS 需实际 SDK 和日志。
+
+**准确实测范围：**本地 Node 22.16.0 独立材料重新执行了 A/B 四份纯策略测试 `--experimental-strip-types --test`：**16 PASS、0 FAIL**；本地隔离平台策略/SDK 发现器类比代码：**5 PASS、0 FAIL**。这些证据只覆盖纯函数与测试选择器模拟，不代表完整远端HEAD的 `npm test` 或任何目标SDK；已对 GitHub 提交代码的正则和语法作静态复核。实际依赖安装、生成合法 pnpm-lock、TypeScript、Vite、全部真实SDK和 Chromium：**BLOCKED/NOT_RUN**。GitHub Actions依旧在Runner前失败，继续单点追踪#12，勿无限重试同一已知失败。
+
+**目录不变：**119条身份/源码/guide/agent/验证记录与357场景配置声明；零个SDK可因本轮纯Node PASS自动改成PASS。可执行的异步网络/Worker/Canvas/浏览器证据仍待环境恢复。主PR #8继续Draft；未改main、PR #3或原模板。**runCount 10/24**。下一轮优先获取真正pnpm解析/锁文件与运行证据，并补独立MSW iframe及PDF/Monaco/图表浏览器对照；在执行环境仍受限时继续非依赖型平台改进。

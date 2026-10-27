@@ -18,7 +18,7 @@ const fixtureFiles=[
  'entries/B17-floating-ui/tests/render.test.mjs',
  'entries/D03-p-limit/tests/sdk.test.mjs',
 ];
-test('default preserves global and all entry suites',()=>{
+test('default retains only explicitly named SDK suites',()=>{
  assert.deepEqual(selectSdkTests(fixtureFiles),[fixtureFiles[0],fixtureFiles[1],fixtureFiles[2],fixtureFiles[4]]);
 });
 test('precisely scopes to one or multiple entries, never running the global suite',()=>{

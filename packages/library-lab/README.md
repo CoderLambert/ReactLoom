@@ -50,7 +50,7 @@ node packages/library-lab/scripts/find-library.mjs --group E --limit 10
 
 ## 定向 SDK 测试（避免每次运行全部库）
 
-`node --test` 只执行实际存在的第三方库 Node 测试。新增的目标条目不存在测试文件时，运行器明确失败，不能把空集合记录为通过。
+`test:sdk` 只收集显式命名的 `sdk.test.mjs` / `node-scenarios.test.mjs`；**纯业务政策 `.test.mjs` 不再计入 SDK 套件**。新增的目标条目不存在真正 SDK 套件时，定向选择明确失败，不能把零个目标 SDK 测试记录为通过。套件命名只是候选范围，运行成功仍需核对真实 SDK 导入和日志。
 
 ```sh
 cd packages/library-lab
@@ -62,6 +62,20 @@ node scripts/sdk-runner.mjs                        # 所有 Node SDK 测试，�
 ```
 
 `--entry` / `--entries` 与 `--group` 不能混用；定向命令不会悄悄加入全局 `tests/sdk.test.mjs`。没有 Node 测试的 WebGL、编辑器或纯浏览器条目应通过单独的浏览器场景验证，**不能因 Node suite 为零就声称 PASS**。
+
+## 纯策略回归（与 SDK 验收隔离）
+
+独立执行纯粹的输入校验、并发/撤销状态、资源释放判定、Worker 注册作用域、页面与图表策略；支持 `.test.mjs` 与使用 Node 类型剥离的 `.test.mts`，**无论结果如何均不得填写目标 SDK PASS**。部分测试可能依赖特定条目文件或已安装包，执行失败不得降级为假通过。
+
+```sh
+cd packages/library-lab
+node scripts/policy-runner.mjs --list
+node scripts/policy-runner.mjs --entry=C07
+node scripts/policy-runner.mjs --group=B
+pnpm test:policy
+```
+
+测试目录约定：`entries/<ID>-<slug>/(examples|tests)/*.test.(mjs|mts)`。仅 `sdk.test.mjs`、`node-scenarios.test.mjs` 属于正式 SDK 套件；其他名称仅作为政策级回归候选。测试分类与运行命令要分别记录，避免将非 SDK 回归数量累加到 SDK 已通过数。
 
 ## CLI workshops / 独立 Node 工具复现
 

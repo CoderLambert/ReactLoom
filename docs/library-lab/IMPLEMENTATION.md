@@ -71,3 +71,10 @@ AB Draft #29 通过双亲合并集成A09 Excalidraw/A10 tldraw/B05 Rive；软件
 ## 全量源码收录后的公共平台增量（2026-10-27）
 
 AB #41、CD #42、EF #43 三条高价值质量 PR 已审核合入集成分支，持续修复 ECharts 动态资源、React Flow DAG、cmdk 输入法，RHF/TanStack Query 异步所有权，以及 PapaParse/ExcelJS 导入安全。公共平台由一次请求所有119份重型 `catalog.json` 改为初始轻量 `catalog-index.json` 加库级按需 `raw/<ID>/detail.json`，绑定原源码指纹并取消旧请求；保留完整目录供离线 Agent。依赖安装/生产构建/SDK/Chromium 尚无真实执行证据，LL08、LL10 仍保持未验收。进度和精确SHA见 `progress/PLATFORM.md`。
+
+
+## 公共平台第10轮 — SDK 与策略测试分流（2026-10-27）
+
+三个不同所有权的 worker PR #44（A/B）/#45（C/D）/#46（E/F）经逐文件范围审核后 squash 合入 `feat/library-lab`，分别对应 uPlot/G6/AntD/Embla、TanStack Table/Ky/Axios/Zustand、Monaco/pdf-lib/MSW 的 UI 与资源生命周期加固。它们不扩充119个身份条目或357个场景声明，也不等于官方 SDK 运行通过。
+
+发现 SDK 测试运行器原先会把 `page-policy.test.mjs` 等纯函数测试计作 SDK 套件，可能导致没有加载目标库也得到 SDK 选择器 PASS。因此改为仅选择 `sdk.test.mjs` 和 `node-scenarios.test.mjs`，另提供可按条目/分组执行的 `test:policy`，明确禁止跨分类推断；通过名称筛选仍不代替实际执行和导入审查。完整应用类型/构建/浏览器与锁文件因可执行环境缺失仍不能标记已验证。
