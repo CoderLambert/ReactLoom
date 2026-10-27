@@ -22,3 +22,7 @@
 ## 动效策略与迁移（wave8）
 
 迁移 `examples/example.tsx` 时必须连同 `examples/animation-policy.ts` 一起读取；默认尊重系统减少动态。`shouldAnimate` 只在可见、用户请求播放、且系统未禁止动态或用户明确允许覆盖时返回 true；`visibilitychange` 和 `MediaQueryList change` 监听必须卸载，`setAnimationLoop(null)` 必须在 renderer.dispose 之前执行。静态帧保留内容可访问性。不要把 Node 纯规则测试称为 WebGL 或官方 SDK 验收。
+
+## wave16 必须保留
+
+将 `shouldRunFrameLoop(state,speed)` 与 `speed` 更新时的 `syncAnimation()` 一并迁移：速度为0必须关闭持续GPU循环。色彩变更不能触发多余Geometry重建；形状变化才重新分配并释放旧实例。恢复播放重置计时基线。纯策略测试只是CPU规则证据，需真实Three SDK、GPU占用/StrictMode重复挂载与浏览器验证。

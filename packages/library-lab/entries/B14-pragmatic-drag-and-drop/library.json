@@ -63,7 +63,8 @@
       "capabilities": [
         "native-drag-drop",
         "keyboard-fallback",
-        "cleanup"
+        "cleanup",
+        "isolated-drag-handle"
       ]
     },
     {
@@ -81,7 +82,8 @@
       "capabilities": [
         "native-drag-drop",
         "keyboard-fallback",
-        "cleanup"
+        "cleanup",
+        "isolated-drag-handle"
       ]
     },
     {
@@ -100,7 +102,8 @@
       "capabilities": [
         "native-drag-drop",
         "keyboard-fallback",
-        "cleanup"
+        "cleanup",
+        "isolated-drag-handle"
       ]
     }
   ],

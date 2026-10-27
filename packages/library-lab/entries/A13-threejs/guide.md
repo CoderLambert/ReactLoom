@@ -39,3 +39,7 @@ React只保存业务旋转速度和材质选择，逐帧角度写入Three Mesh�
 ## 动态效果与页面可见性（AB wave8 加固）
 
 三维场景不应在 `document.hidden` 或用户选择 `prefers-reduced-motion: reduce` 时持续 GPU 动画。实际 Demo 将四个输入 `playing / visible / reducedMotion / overrideMotion` 交给 `examples/animation-policy.ts` 的纯函数裁决：页面不可见与显式暂停总是优先于减少动态覆盖；减少动态默认停止动画循环，仍渲染静态帧以保留内容。`matchMedia` 的 change 监听和 visibilitychange 在卸载时释放。高级 Demo 提供明确的减少动态覆盖选项，但默认不覆盖。使用 `node --experimental-strip-types --test entries/A13-threejs/tests/animation-policy.test.mts` 验证这部分纯规则；它不证明 Three.js WebGL、GPU 资源释放或浏览器功能已经通过。
+
+## AB wave16：零速GPU空转与几何生命周期
+
+`examples/animation-policy.ts` 的 `shouldRunFrameLoop` 在速度为0、页面后台、手动暂停或未覆盖的减少动态偏好下停止 `setAnimationLoop`，只保留静态帧。恢复时重置上一帧时间，避免跨暂停状态积累跳帧。材质色切换只调用 `material.color.set`，不再每次新建并dispose Geometry；实际球/盒形状变化才替换并释放旧geometry。使用 `node --experimental-strip-types --test tests/animation-policy.test.mts` 检查纯策略；WebGL实际帧循环与GPU回收仍待浏览器验收。

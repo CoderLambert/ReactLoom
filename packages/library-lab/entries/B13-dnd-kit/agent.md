@@ -11,3 +11,7 @@
 ## 固定槽位回归合同
 固定项不仅自己不能拖，也不能被其他项目跨越后挤走。必须在业务 reorder/onDragEnd/onDrop 的最终提交处检查 `canReorderAroundPinned(items, from, to)`；不可只禁用 handle 或仅检查 source/target。拖拽与键盘上下按钮调用同一业务约束，按钮用它计算 disabled。
 提取 `examples/pinned-order.ts` 与单测 `tests/pinned-order.test.mjs`。检查双向跨越、索引边界、非固定段内操作与撤销；真实 SDK/browser 仍须单独验收。旧验证证据应随源码指纹变化降级为 NOT_RUN。
+
+## wave16 快照语义
+
+保留 `itemsRef` 作为拖拽回调的当前数据来源，`reorderVisible` 对当前快照一次生成完整新数组，切换basic模式仍保留未显示的频道尾部。成功变更时从变更前的 `itemsRef.current` 保存一层撤销快照；撤销要同步恢复ref和React state。不要在React updater里做副作用或混用旧闭包数据。纯策略PASS不替代SDK交互验收。

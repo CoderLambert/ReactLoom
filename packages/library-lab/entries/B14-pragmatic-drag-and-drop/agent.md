@@ -19,3 +19,7 @@
 ## 固定槽位回归合同
 固定项不仅自己不能拖，也不能被其他项目跨越后挤走。必须在业务 reorder/onDragEnd/onDrop 的最终提交处检查 `canReorderAroundPinned(items, from, to)`；不可只禁用 handle 或仅检查 source/target。拖拽与键盘上下按钮调用同一业务约束，按钮用它计算 disabled。
 提取 `examples/pinned-order.ts` 与单测 `tests/pinned-order.test.mjs`。检查双向跨越、索引边界、非固定段内操作与撤销；真实 SDK/browser 仍须单独验收。旧验证证据应随源码指纹变化降级为 NOT_RUN。
+
+## wave16 原生拖拽冲突防护
+
+只为 `draggable` 指定真实已挂载的 `dragHandle: handleRef.current`（官方Element Adapter参数），确保点击非手柄的按钮或选中文本不触发原生拖动。手柄 `touchAction:none` 仅局部设置，键盘保留上下按钮，保证用户不用拖拽也能排序。卸载要释放draggable/dropTarget/monitor。真实浏览器触屏/ARIA/焦点未验收，不应宣称完整可访问性。

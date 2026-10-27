@@ -38,3 +38,7 @@ Draggable与dropTarget必须在元素mount后注册，并在unmount时调用comb
 原实现仅拒绝锁定的拖拽起点、终点，允许一个可移动条目从固定项前面移到后面；数组重排会把中间固定项的索引悄悄改变。现使用 `examples/pinned-order.ts` 检查从起点到终点的**完整闭区间**，任一条目为 locked/fixed 就拒绝移动，三个SDK实现都使用同一约束。上下按钮在不可合法移动方向直接禁用，避免看起来可点但实际只报错。
 本地定向测试在条目目录执行：`node --experimental-strip-types --test tests/pinned-order.test.mjs`；测试从实际TS源文件导入规则，覆盖锁定项、双向跨越、合法同侧重排及越界。**该纯业务规则测试不意味着 SDK、React、Chromium 或触控运行已经验收。**
 若产品允许移动其他项跨过固定槽位，先重新定义排序与不变式，并增加对应测试，而不是直接套用 arrayMove/splice。
+
+## AB wave16：独立指针拖动手柄
+
+官方Element Adapter的 `draggable({element,dragHandle})` 可以限定只有子元素启动拖拽，避免整行原生Drag劫持行内上/下移动按钮、文字选择与辅助操作。本例注册 `handleRef`，将 `touchAction:none` 只应用到32px手柄；其他区域保留正常滚动/点击。Pragmatic没有内置键盘Sortable，键盘仍通过上下按钮和同一业务重排规则实现。官方API：https://atlassian.design/components/pragmatic-drag-and-drop/core-package/adapters/element 。需在Chromium真实检查拖动起始区/点击按钮/触屏滚动与cleanup；本轮只有代码与官方API核实，SDK/browser NOT_RUN。

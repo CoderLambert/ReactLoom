@@ -12,12 +12,13 @@ const INITIAL:Item[]=[
 ];
 function ItemRow({item,scope,move,index,canMoveUp,canMoveDown}:{item:Item;scope:string;move:(id:string,offset:number)=>void;index:number;canMoveUp:boolean;canMoveDown:boolean}){
   const ref=useRef<HTMLLIElement>(null);
+  const handleRef=useRef<HTMLSpanElement>(null);
   const [dragging,setDragging]=useState(false);
   useEffect(()=>{
-    const element=ref.current;if(!element||item.locked)return;
+    const element=ref.current,dragHandle=handleRef.current;if(!element||!dragHandle||item.locked)return;
     return combine(
       draggable({
-        element,
+        element,dragHandle,
         getInitialData:()=>({scope,type:'reactloom-entry',id:item.id}),
         onDragStart:()=>setDragging(true),
         onDrop:()=>setDragging(false),
@@ -30,7 +31,9 @@ function ItemRow({item,scope,move,index,canMoveUp,canMoveDown}:{item:Item;scope:
     );
   },[item.id,item.locked,scope]);
   return <li ref={ref} data-state={dragging?'dragging':'idle'} style={{padding:12,marginBottom:8,border:'1px solid #bac9bc',borderRadius:8,background:dragging?'#e2efe8':'white',display:'flex',alignItems:'center',gap:9}}>
-    <span aria-hidden="true">⠿</span><span style={{flex:1}}>{index+1}. {item.title}</span>
+    <span ref={handleRef} aria-hidden="true" title="仅指针拖动，键盘请使用上下按钮"
+      style={{cursor:item.locked?'not-allowed':'grab',touchAction:'none',minWidth:32,minHeight:32,display:'inline-flex',alignItems:'center',justifyContent:'center'}}>⠿</span>
+    <span style={{flex:1}}>{index+1}. {item.title}</span>
     {item.locked&&<span>🔒固定</span>}
     <button type="button" aria-label={'上移 '+item.title} disabled={!canMoveUp} onClick={()=>move(item.id,-1)}>↑</button>
     <button type="button" aria-label={'下移 '+item.title} disabled={!canMoveDown} onClick={()=>move(item.id,1)}>↓</button>

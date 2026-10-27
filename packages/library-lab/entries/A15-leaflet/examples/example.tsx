@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import * as L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import {makeLocalLocation, MAX_EXTRA_LOCATIONS} from './station-factory';
+import {selectedVisibleId,shiftLocation} from './location-policy';
 
 type Level = 'basic' | 'business' | 'advanced';
 type Location = { id: string; label: string; city: string; center: [number, number]; status: 'online' | 'paused' };
@@ -19,6 +20,7 @@ export default function LeafletExample({ level }: { level: Level }) {
   const [items, setItems] = useState<Location[]>(INITIAL);
   const [onlyOnline, setOnlyOnline] = useState(false);
   const [selected, setSelected] = useState('sea');
+  const selectedVisible = selectedVisibleId(items, onlyOnline, selected);
   useEffect(() => { setItems(INITIAL); setSelected('sea'); setOnlyOnline(false); }, [level]);
   useEffect(() => {
     const element = host.current; if (!element) return;
@@ -58,8 +60,8 @@ export default function LeafletExample({ level }: { level: Level }) {
     }
     for (const item of visible) {
       const dot = L.circleMarker(item.center, {
-        radius: item.id === selected ? 12 : 8,
-        weight: item.id === selected ? 3 : 1,
+        radius: item.id === selectedVisible ? 12 : 8,
+        weight: item.id === selectedVisible ? 3 : 1,
         color: '#285e46', fillColor: item.status === 'online' ? '#5db47b' : '#b8a38a', fillOpacity: .9,
       }).addTo(group);
       dot.on('click', () => setSelected(item.id));
@@ -72,7 +74,7 @@ export default function LeafletExample({ level }: { level: Level }) {
       popup.append(heading, status);
       dot.bindPopup(popup);
     }
-  }, [ready, items, onlyOnline, selected]);
+  }, [ready, items, onlyOnline, selectedVisible]);
   const visible = items.filter(item => !onlyOnline || item.status === 'online');
   const focusLocation = (item: Location) => {
     setSelected(item.id);
@@ -86,8 +88,8 @@ export default function LeafletExample({ level }: { level: Level }) {
     <div className="demo-controls">
       {level !== 'basic' && <label><input type="checkbox" checked={onlyOnline} onChange={e => setOnlyOnline(e.target.checked)}/>仅显示已启用来源</label>}
       {level === 'advanced' && <>
-        <button type="button" onClick={() => setItems(old => old.map(item => item.id === 'sea' ?
-          { ...item, center: [item.center[0] + .25, item.center[1] + .25] } : item))}>模拟更新Seattle坐标</button>
+        <button type="button" onClick={() => setItems(old => shiftLocation(old, 'sea', .25))}
+          disabled={!items.some(item => item.id === 'sea')}>模拟更新Seattle坐标</button>
         <button type="button" onClick={() => {
           if (nextId.current >= MAX_EXTRA_LOCATIONS) return;
           const station = makeLocalLocation(++nextId.current);
@@ -95,13 +97,14 @@ export default function LeafletExample({ level }: { level: Level }) {
           setSelected(station.id);
         }} disabled={nextId.current >= MAX_EXTRA_LOCATIONS}>新增模拟来源（最多40条）</button>
         <button type="button" onClick={() => {
-          setItems(old => old.filter(item => item.id !== selected));
-          setSelected(items.find(item => item.id !== selected)?.id ?? '');
-        }} disabled={!items.some(item => item.id === selected)}>删除选中</button>
+          const remaining=items.filter(item => item.id !== selectedVisible);
+          setItems(remaining);
+          setSelected(selectedVisibleId(remaining,onlyOnline,''));
+        }} disabled={!selectedVisible}>删除选中</button>
       </>}
       <button type="button" onClick={() => mapRef.current?.setView([39.5, -98], 4)}>重置视角</button>
     </div>
-    <p role="status">共有 {items.length} 个来源，当前显示 {visible.length} 个；选中 {items.find(x => x.id === selected)?.label ?? '无'}。</p>
+    <p role="status">共有 {items.length} 个来源，当前显示 {visible.length} 个；选中 {items.find(x => x.id === selectedVisible)?.label ?? '无'}。</p>
     <table><caption>点位与状态数据表（地图的等价文本操作）</caption><thead><tr><th scope="col">位置</th><th scope="col">状态</th><th scope="col">坐标</th><th scope="col">操作</th></tr></thead>
       <tbody>{visible.map(item => <tr key={item.id}><td>{item.city} · {item.label}</td><td>{item.status === 'online' ? '启用' : '暂停'}</td><td>{item.center.map(n => n.toFixed(2)).join(', ')}</td>
         <td><button type="button" onClick={() => focusLocation(item)}>地图定位</button></td></tr>)}</tbody></table>

@@ -14,3 +14,18 @@ export function canReorderAroundPinned<T extends {locked?: boolean; fixed?: bool
   }
   return true;
 }
+
+export type SortableRecord={id:string;locked?:boolean;fixed?:boolean};
+/** Reorder a visible prefix, preserving hidden items and pinned positions atomically. */
+export function reorderVisible<T extends SortableRecord>(items:readonly T[],sourceId:string,targetId:string,visibleCount=items.length):T[]|null {
+  if(!Number.isInteger(visibleCount)||visibleCount<1||visibleCount>items.length)return null;
+  const visible=items.slice(0,visibleCount);
+  if(new Set(visible.map(item=>item.id)).size!==visible.length)return null;
+  const source=visible.findIndex(item=>item.id===sourceId);
+  const target=visible.findIndex(item=>item.id===targetId);
+  if(!canReorderAroundPinned(visible,source,target))return null;
+  const result=visible.slice();
+  const [moving]=result.splice(source,1);
+  result.splice(target,0,moving);
+  return [...result,...items.slice(visibleCount)];
+}

@@ -1,6 +1,6 @@
 import {useEffect,useRef,useState} from 'react';
 import * as THREE from 'three';
-import {shouldAnimate} from './animation-policy';
+import {shouldRunFrameLoop} from './animation-policy';
 
 type Level='basic'|'business'|'advanced';
 type Runtime={renderer:THREE.WebGLRenderer;scene:THREE.Scene;camera:THREE.PerspectiveCamera;mesh:THREE.Mesh<THREE.BufferGeometry,THREE.MeshStandardMaterial>;draw:(time:number)=>void;frame:()=>void;geometry:THREE.BufferGeometry;syncAnimation:()=>void};
@@ -11,18 +11,19 @@ export default function ThreeExample({level}:{level:Level}){
   const host=useRef<HTMLDivElement>(null);
   const runtime=useRef<Runtime|null>(null);
   const [shape,setShape]=useState<'box'|'sphere'>('box');
+  const geometryShape=useRef<'box'|'sphere'>('box');
   const [speed,setSpeed]=useState(0.7);
   const [playing,setPlaying]=useState(true);
-  const [reducedMotion,setReducedMotion]=useState(()=>window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  const [reducedMotion,setReducedMotion]=useState(()=>typeof window!=='undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   const [overrideMotion,setOverrideMotion]=useState(false);
-  const [visible,setVisible]=useState(()=>!document.hidden);
+  const [visible,setVisible]=useState(()=>typeof document==='undefined'||!document.hidden);
   const [error,setError]=useState('');
   const [color,setColor]=useState('#227b68');
   const playingRef=useRef(playing);
   const reducedRef=useRef(reducedMotion);
   const overrideRef=useRef(overrideMotion);
   const currentSpeed=useRef(speed);
-  useEffect(()=>{currentSpeed.current=speed;},[speed]);
+  useEffect(()=>{currentSpeed.current=speed;runtime.current?.syncAnimation();},[speed]);
   useEffect(()=>{
     const media=window.matchMedia('(prefers-reduced-motion: reduce)');
     const onChange=()=>setReducedMotion(media.matches);
@@ -51,6 +52,7 @@ export default function ThreeExample({level}:{level:Level}){
     const light=new THREE.DirectionalLight(0xffffff,2.5);
     light.position.set(3,4,5);scene.add(light);
     let last=0;
+    let loopActive=false;
     const frame=()=>renderer.render(scene,camera);
     const draw=(time:number)=>{
       const delta=last?Math.min((time-last)/1000,0.1):0;
@@ -60,6 +62,7 @@ export default function ThreeExample({level}:{level:Level}){
     };
     const data:Runtime={renderer,scene,camera,mesh,draw,frame,geometry,syncAnimation:()=>{}};
     runtime.current=data;
+    geometryShape.current='box';
     const resize=()=>{
       if(runtime.current!==data)return;
       const width=Math.max(1,container.clientWidth);
@@ -71,12 +74,16 @@ export default function ThreeExample({level}:{level:Level}){
     observer.observe(container);resize();
     const syncAnimation=()=>{
       if(runtime.current!==data)return;
-      const active=shouldAnimate({
+      const active=shouldRunFrameLoop({
         playing:playingRef.current,visible:!document.hidden,
         reducedMotion:reducedRef.current,overrideMotion:overrideRef.current,
-      });
-      renderer.setAnimationLoop(active?draw:null);
-      if(!active)frame();
+      },currentSpeed.current);
+      if(active!==loopActive){
+        if(active)last=0;
+        renderer.setAnimationLoop(active?draw:null);
+        loopActive=active;
+        if(!active)frame();
+      }
       setVisible(!document.hidden);
     };
     data.syncAnimation=syncAnimation;
@@ -100,13 +107,20 @@ export default function ThreeExample({level}:{level:Level}){
   },[playing,reducedMotion,overrideMotion]);
   useEffect(()=>{
     const r=runtime.current;if(!r)return;
-    if(r.mesh.geometry!==r.geometry)r.geometry=r.mesh.geometry;
-    const next=buildGeometry(level==='advanced'?shape:'box');
-    const previous=r.mesh.geometry;r.mesh.geometry=next;r.geometry=next;
+    const nextShape=level==='advanced'?shape:'box';
+    if(nextShape===geometryShape.current)return;
+    const previous=r.mesh.geometry;
+    const next=buildGeometry(nextShape);
+    r.mesh.geometry=next;r.geometry=next;
+    geometryShape.current=nextShape;
     previous.dispose();
+    if(!shouldRunFrameLoop({playing,visible:!document.hidden,reducedMotion,overrideMotion},speed))r.frame();
+  },[shape,level]);
+  useEffect(()=>{
+    const r=runtime.current;if(!r)return;
     r.mesh.material.color.set(color);
-    if(!shouldAnimate({playing,visible:!document.hidden,reducedMotion,overrideMotion}))r.frame();
-  },[shape,color,level]);
+    if(!shouldRunFrameLoop({playing,visible:!document.hidden,reducedMotion,overrideMotion},speed))r.frame();
+  },[color]);
   return <section aria-label="Three.js 真实三维场景">
     <h2>{level==='basic'?'真实3D网格':level==='business'?'新闻产品状态模型':'GPU资源、暂停与网格替换'}</h2>
     <p>真实 Three.js WebGLRenderer + Scene + Mesh；没有远程模型或材质请求。</p>
@@ -122,7 +136,7 @@ export default function ThreeExample({level}:{level:Level}){
     <div ref={host} role="img" aria-label="可旋转的三维几何体；下方提供当前参数"
       style={{height:280,background:'#eaf0e9',borderRadius:10,overflow:'hidden'}}/>
     {error&&<p role="alert">WebGL不可用：{error}。可从下方读取参数。</p>}
-    <p role="status">网格：{level==='advanced'?shape:'box'}；颜色：{color}；角速度：{speed}；动画：{shouldAnimate({playing,visible,reducedMotion,overrideMotion})?'运行':'暂停'}；减少动态：{reducedMotion?'开启':'关闭'}。</p>
+    <p role="status">网格：{level==='advanced'?shape:'box'}；颜色：{color}；角速度：{speed}；动画：{shouldRunFrameLoop({playing,visible,reducedMotion,overrideMotion},speed)?'运行':'暂停'}；减少动态：{reducedMotion?'开启':'关闭'}。</p>
     <p>窗口和容器变化自动resize；后台和系统减少动态时停止动画循环，保留静态帧；仅高级操作可显式覆盖减少动态。退出Tab后停止动画、断开监听并dispose几何体、材质和渲染器。</p>
   </section>;
 }
