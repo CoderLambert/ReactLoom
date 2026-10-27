@@ -11,3 +11,6 @@
 
 
 **取消语义警告**：不能用 `ComposerPrimitive.Cancel` 替代 `aui.thread.cancelRun()`。参考 `examples/example.tsx` 中 `StopResponse` 的 `useAui/useAuiState`，按 `thread.isRunning && thread.capabilities.cancel` 控制。Adapter 遇到 abortSignal 必须终止后续 yield；真实 DOM 需在点击停止后验证流不再追加。官方：https://www.assistant-ui.com/docs/guides/state-outside-the-thread 。
+
+
+**离线fixture新入口**：配对复制 `examples/reply-policy.mjs`、`.d.mts` 和 `example.tsx`。用户输入必须来自 `run({messages})`，只消费最近user文本、限160字、排除tool/assistant内容；每段yield完整累计字符串。目标项目替换成真实模型网关时另做认证、服务端上下文预算、流中错误/取消，并禁止将本地回复当成可信模型事实或真实RSS。

@@ -12,3 +12,6 @@
 ## 新增明确的不变量
 
 FFmpeg构造和on('log')/load放在同一个异常边界内，确保finally释放同步操作门禁。组件原地切换level必须终止旧Worker和失效session；不要只更新UI下拉选项而保留旧转换的Promise所有权。库核心/编码器的重分发许可仍须独立审查，真实浏览器构建及FFmpeg SDK保持NOT_RUN。
+
+
+**输出文件契约补充**：迁移时一并复制 `examples/wav-output-policy.mjs` 及 `.d.mts`。必须在创建可播放 Blob URL 之前验证 PCM16/16kHz/单声道、RIFF/chunk 长度和实际 data 时长。不得只以 `exec()===0` 或 `RIFF/WAVE` 魔数断言正确转换。此检查只保证格式约束，不是解码器沙箱或 codec 授权证明。

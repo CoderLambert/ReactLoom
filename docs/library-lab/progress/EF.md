@@ -592,3 +592,55 @@ runCount=18/24.
 
 - Draft [PR #73](https://github.com/CoderLambert/ReactLoom/pull/73)，base `feat/library-lab`、head `feat/library-lab-ef-wave21-msw-pdf-ownership`，初始本轮PR head `1aa2696b68337fe5f5bdcf51ce5f06503bd71509`。GitHub compare从基线a7514e4至该head：**4提交 / 27变更文件 / 0越权路径**。
 - 原始Node TAP 9 PASS / 0 FAIL，本轮六个policy/test Git SHA逐个同源确认。源码文件树由PR保留，非完整仓库SDK/test:policy运行。F11浏览器和F06/F07 PDF Worker端仍需平台Chromium+依赖运行。
+
+
+## 第22轮：E19 FFmpeg PCM校验、E16 视频文件边界、E12 聊天Adapter输入语义（2026-10-27）
+
+- **真实基线/权限**：从 `feat/library-lab@f96f43fad9ba6e227b71a85596c9b91eb1ff1dfb` 派生 `feat/library-lab-ef-wave22-media-chat-policies`，保留EF原历史；当前 [Draft PR #76](https://github.com/CoderLambert/ReactLoom/pull/76) base固定 `feat/library-lab`，仅更改 `E19-ffmpeg-wasm` / `E16-videojs-v10` / `E12-assistant-ui` 条目及本文，公共依赖/锁文件/CI/生成索引/main不修改。
+- **E19真实源码**：输出检查从仅 `RIFF/WAVE` 魔数升级为 `wav-output-policy.mjs` 解析 RIFF总长、`fmt ` PCM16 16kHz单声道/字节率、`data` 帧数、chunk边界/填充和最大2秒音频，允许合法附属chunk。校验在 `new Blob`/URL之前实际调用；不把FFmpeg退出码0误作WAV完整性证明。CLI目标是实际 `ffmpeg.load/writeFile/exec/readFile`；未重构为Mock。
+- **E16真实源码**：用户本地MP4/WebM先检查12B–8MiB的File metadata，随后仅读取32B文件头检查ISO BMFF `ftyp` 或WebM EBML；不读取整8MiB做预览或外传。File `slice().arrayBuffer()` 过期回写由 `generation` 拦截，同步busy/finally只释放本次操作；切换basic/business/advanced时 keyed-remount，使旧播放器、MediaRecorder和BlobURL完成卸载/销毁。
+- **E12真实源码**：本地 `ChatModelAdapter.run({messages,abortSignal})` 从最近 `user` 消息的文本parts提取最多160 Unicode字符，忽略tool/assistant字段、控制字符；basic/business/advanced分别产生明确不涉及云模型或真实RSS的确定性内容。流式使用累计完整文本而不是delta，继续使用 `AbortSignal` 和 `thread.cancelRun()`；不接入付费API。
+- 三库各自新增对应 `.mjs`、`.d.mts`、`.test.mjs` 真实源码文件，更新三层 `library.json.sourceFiles`、完整 `guide.md`、`agent.md`、`AGENTS.md` 及保守的 `verification.json`。无单独CLI伪终端、无新WASM分发文件。
+
+### 精确实际运行与证据
+
+本容器 Node **v22.16.0** 在 `/mnt/data/ef22` 使用与提交Blob完全一致的6份策略/测试文件运行：
+
+```bash
+node --test /mnt/data/ef22/E19/examples/wav-output-policy.test.mjs /mnt/data/ef22/E16/examples/video-file-policy.test.mjs /mnt/data/ef22/E12/examples/reply-policy.test.mjs
+```
+
+**初始新增策略12 PASS / 0 FAIL，扩大E19既有输入校验回归后最终15 PASS / 0 FAIL**（E19 WAV输出5+输入3，E16视频3，E12消息4）；逐文件 `node --check` 成功。扩展验证8份本地 `git hash-object` 与提交到GitHub的同源Blob SHA-1相同：
+
+| 文件 | Git Blob SHA-1 |
+| --- | --- |
+| E19 `wav-output-policy.mjs` | `12a22ba670a0d646725629ce8e54b111bf85f918` |
+| E19 `wav-output-policy.test.mjs` | `920c5a2b8c51650c54e38cc8cec986b6fbb4a728` |
+| E19 `input-policy.mjs` | `20ffef047654676829b91be0d0b56c1737cb74a0` |
+| E19 `input-policy.test.mjs` | `d605db5d49205d174f00ba807e7a9dccc129e9cf` |
+| E16 `video-file-policy.mjs` | `71ef23f1505983a196ecb7e9d106a68a1c1e5445` |
+| E16 `video-file-policy.test.mjs` | `490811275e2a0c4996fae829f378dc14b024bc6e` |
+| E12 `reply-policy.mjs` | `f497e71bf7530313e9bcf7c1900a723cbd623944` |
+| E12 `reply-policy.test.mjs` | `70df05071682ca87718440096546d40e4d6bb809` |
+
+**测试只验证纯 Node WAV/文件头/回复策略，没有导入这三个库的SDK**，没有运行真实WASM、Video.js播放、assistant-ui DOM或其cancellation。没有把测试命名为SDK PASS或把Node fixture算成生产CLI产物。
+
+### BLOCKED / NOT_RUN、dependencyRequests、下一队列
+
+- 三条目标第三方 **SDK与完整TSX类型检查/生产Vite build：NOT_RUN/BLOCKED**；浏览器 FFmpeg/WASM下载/CSP/Worker清理、Video.js v10/MediaRecorder/Blob播放与切换、assistant-ui输入/取消/滚动/IME：**NOT_RUN**。E05 Monaco真实Worker和F11 MSW scope/双tab/CSP仍待PLATFORM独立受限runner。PLATFORM真实pnpm lockfile、Node≥22.18/可安装目标包依然是统一阻塞；不得把12项纯策略PASS升级为SDK/browser PASS。
+- `dependencyRequests` **无新增包**：复核既有 `@ffmpeg/ffmpeg@0.12.15` + `@ffmpeg/core@0.12.10`（源码wrapper MIT；WASM core需核对独立编解码器LGPL/GPL/专利与再分发授权，显式本地核心资产和worker-src），`@videojs/react@10.2.0`（Apache-2.0；React19/播放器导入与CSS peer），`@assistant-ui/react@0.15.21`（MIT；`useLocalRuntime` + `ChatModelAdapter`/Primitives peers）。由PLATFORM完成真实registry、peer、锁文件、worker/iframe宿主、浏览器和生产打包，EF不修改公共文件。
+- 参考官方资料：FFmpeg API https://ffmpegwasm.netlify.app/docs/api/ffmpeg/classes/ffmpeg/ （`exec(args,timeout)`）；v10 React https://videojs.org/docs/guides/installation/react ；assistant-ui LocalRuntime https://www.assistant-ui.com/docs/runtimes/custom/local-runtime （yield必须完整累计文本）。版本只是仓库既有声明，非本轮联网安装验证。
+- **下一队列**：PLATFORM得到真实TypeScript/Vite/SDK反馈后及时修复类型/API；优先E05 Monaco Worker、F11 scoped SW/CSP真实Chromium；然后E19实际同源core WASM许可证/转换、E16浏览器视频、E12可中止流式消息。可独立复核F05 SheetJS重建内容的CLI输入证据与文档；不无效重复下载失败。
+- EF总覆盖仍是 **37/37目录有源码/guide/agent/三层声明**，而**37个SDK并未生产验收**。第22轮并未结束全部职责；剩余上限到24轮须如实列缺口。
+
+**runCount=22/24**。本批代码提交：E19 `7218bb887eed47ca6acf2f506bb57012d67e458d`，E16 `fa61f81a831e00c33756481e2d97b3dd6db7e30e` / keyed session `f1cbe174d0cdaac4e9ca03c8b416cbf626a93304`，E12 `72d4b5fc095d16204d98704420999f2280a262bb`；进度索引提交以PR #76最新 head 为准。
+
+### 第22轮扩大回归及真实修复
+
+扩大为整个三库现有Node策略范围后，**真实发现一个预存E19缺陷**：`input-policy.mjs` 的MP3魔数谓词缺失右括号，Node ESM报 `SyntaxError: Unexpected token ';'`；旧 `input-policy.test.mjs` 用只有RIFF/WAVE字节的假WAV且断言44B输出可接受，与新增严格PCM合同冲突。EF已在本条目修复谓词语法、替换为46B合法PCM16 WAV夹具并更新预算负例；修复前扩大测试出现12 pass/1 fail，修复后 **15 pass/0 fail**。完整实际执行：
+
+```bash
+node --test /mnt/data/ef22/{E12,E16,E19}/examples/*.test.mjs
+```
+
+真实运行的E19 input-policy模块与测试Git Blob SHA分别为 `20ffef047654676829b91be0d0b56c1737cb74a0` 和 `d605db5d49205d174f00ba807e7a9dccc129e9cf`，已本地`git hash-object`核对。保留先失败后修复的记录，不把纯Node合成WAV检查升级为FFmpeg SDK、媒体解码、Chromium或生产build PASS。此变更是EF第22轮同一Draft PR #76内的额外真实代码提交。

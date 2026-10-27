@@ -2,9 +2,12 @@ import {useEffect,useRef,useState} from 'react';
 import {VideoPlayer,VideoSkin,Video} from '@videojs/react/video';
 import '@videojs/react/video/skin.css';
 import {createLocalClip} from './clip';
+import {validateVideoMetadata,validateVideoHeader} from './video-file-policy.mjs';
 type Level='basic'|'business'|'advanced';
-const MAX_FILE=8*1024*1024;
 export default function VideoJsExample({level}:{level:Level}){
+ return <VideoJsSession key={level} level={level}/>;
+}
+function VideoJsSession({level}:{level:Level}){
  const [url,setUrl]=useState('');const [status,setStatus]=useState('未创建视频；不会自动访问外部资源');
  const [busy,setBusy]=useState(false);const generation=useRef(0);const current=useRef<string|null>(null);
  const recording=useRef<AbortController|null>(null);
@@ -23,9 +26,16 @@ export default function VideoJsExample({level}:{level:Level}){
   finally{if(recording.current===controller)recording.current=null;if(id===generation.current)setBusy(false)}
  }
  async function open(file:File|null){if(!file)return;
-  recording.current?.abort();const id=++generation.current;setBusy(false);
-  if(!['video/webm','video/mp4'].includes(file.type)||file.size>MAX_FILE){setStatus('仅接受不超过8MiB的WebM/MP4');return}
-  update(file,id);
+  recording.current?.abort();const id=++generation.current;setBusy(true);
+  try{
+   validateVideoMetadata(file);
+   // Inspect at most 32 bytes; full file remains in browser-owned File/Blob.
+   const header=new Uint8Array(await file.slice(0,32).arrayBuffer());
+   if(id!==generation.current)return;
+   validateVideoHeader(file.type,header);
+   update(file,id);
+  }catch(error){if(id===generation.current)setStatus('文件校验失败：'+String(error))}
+  finally{if(id===generation.current)setBusy(false)}
  }
  function remove(){generation.current++;recording.current?.abort();recording.current=null;if(current.current){retiredUrls.current.push(current.current);current.current=null}setUrl('');setBusy(false);setStatus('素材已移除')}
  return <section aria-label="Video.js v10真实播放器">

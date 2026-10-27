@@ -42,3 +42,7 @@ https://videojs.org/docs/guides/installation/react 和 https://videojs.org/chang
 ## 视频源切换的异步渲染边界（补充）
 
 切换 Blob URL 时，不能在调用 `setUrl(next)` **之前**立即撤销旧 URL：React 可能尚未提交旧 Player 的卸载，旧浏览器媒体实例仍在使用该地址。当前 Demo 将旧 URL 加入待释放队列，等 `url` 更新后的 Effect（React commit 后）撤销；卸载时对当前与待释放 URL 全量清理。此修复是源码生命周期审查，尚未执行真实媒体浏览器测试。
+
+## 第22批：File MIME/魔数预检与异步所有权
+
+浏览器的 `accept` 只是选择器提示，`File.type` 也可由客户端伪造。本示例现在先以 `video-file-policy.mjs` 对12字节–8MiB大小和明确MIME做同步校验，再只读取文件头最多32字节检查 MP4 `ftyp` 与WebM EBML 签名，然后才创建播放 Blob URL。用户快速切换、录制/文件选择交叉时通过 `generation` 排除旧文件头读取回写；`finally` 只解除自己的 busy。校验不是完整容器解码、无恶意媒体安全保证。单独运行 `node --test entries/E16-videojs-v10/examples/video-file-policy.test.mjs` 仅代表静态策略，不证明真正Video.js/MediaRecorder正常工作。

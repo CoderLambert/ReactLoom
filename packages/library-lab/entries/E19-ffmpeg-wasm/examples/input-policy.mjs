@@ -1,3 +1,4 @@
+import {inspectPcmWav} from './wav-output-policy.mjs';
 /** Fast local preflight. Signatures cannot make an untrusted decoder memory-safe. */
 export const MAX_INPUT_BYTES = 4 * 1024 * 1024;
 export const MAX_OUTPUT_BYTES = 2 * 1024 * 1024;
@@ -14,7 +15,7 @@ const isWebm = (bytes) =>
 const isMp4 = (bytes) => bytes.length >= 12 && ascii(bytes, 4, 4) === 'ftyp';
 const isMp3 = (bytes) =>
   bytes.length >= 3 && (ascii(bytes, 0, 3) === 'ID3' ||
-    (bytes[0] === 0xff && (bytes[1] & 0xe0) === 0xe0);
+    (bytes[0] === 0xff && (bytes[1] & 0xe0) === 0xe0));
 
 export function isAllowedMediaFile(file) {
   return Boolean(MIME_EXTENSION[file?.type] &&
@@ -32,9 +33,6 @@ export function validateInputMedia(file, bytes) {
   return extension;
 }
 export function validateOutputWav(bytes) {
-  if (!(bytes instanceof Uint8Array) || bytes.byteLength < 44 ||
-      bytes.byteLength > MAX_OUTPUT_BYTES || !isWav(bytes)) {
-    throw new Error('转换结果不是有效大小的WAV文件');
-  }
+  inspectPcmWav(bytes, MAX_OUTPUT_BYTES, 2);
   return bytes.byteLength;
 }
