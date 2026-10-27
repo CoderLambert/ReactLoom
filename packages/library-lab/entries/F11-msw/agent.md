@@ -44,3 +44,6 @@ GET 响应200及 JSON；验证码成功200、错误422且应用显示字段反�
 ## Wave21 迁移与验证
 
 迁移 `examples/session-gate.mjs` 并在首次异步预检前同步获取租约。失败释放，stop成功才释放；不能待首次await完成才占用实例。共享scope的worker.stop()只停止当前client，**不得在普通卸载中注销registration**；PLATFORM使用单独origin或独占浏览器上下文验证全局清理。纯Node测试不能提升SDK/浏览器状态。
+## 第24轮迁移：Worker script fail-closed
+
+除 `browser-worker.mjs`、`registration-policy.mjs` 与 `session-gate.mjs`，必须同步 `worker-script-preflight.mjs`。先检查脚本URL严格处于隔离scope，再以带上界的同源真实fetch读取、判200/MIME/非HTML、无redirect，随后才调用真实 `setupWorker().start()`；失败只能返回错误，不能回退全局 `/mockServiceWorker.js`。注意只有PLATFORM能提供并验收生产静态Worker及CSP，Node预检策略PASS不能代替MSW和Chromium验收。
