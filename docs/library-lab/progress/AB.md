@@ -1,9 +1,9 @@
 # AB 开发进度 — A/B 前端库垂直实现
 
-**最新调度轮次：17 / 最多24；状态：WAVE17_AB_39_SOURCE_HARDENING（39/39仅源码和文档覆盖；SDK、完整构建与浏览器尚未验收）。**
+**最新调度轮次：18 / 最多24；状态：WAVE18_AB_39_SOURCE_HARDENING（39/39仅源码和文档覆盖；SDK、完整构建与浏览器尚未验收）。**
 
-- 当前本批分支：`feat/library-lab-ab-wave17`，精确集成base `caef398bfa3568b1e9bf690366b39ae5448769de`；最初公共提交为 `38ed2d247bd82e4f1422b0e8904973e16bca2972`，不用于本轮强制回退。
-- 集成目标：`feat/library-lab`；本轮开始读取的最新头提交 `caef398bfa3568b1e9bf690366b39ae5448769de`（旧历史基线仅保留于下方各轮记录）。
+- 当前本批分支：`feat/library-lab-ab-wave18`，精确集成base `e62650ad6d025963da9ede967125502502fd031f`；初始公共提交 `38ed2d247bd82e4f1422b0e8904973e16bca2972` 仅作历史，不使用force覆盖。
+- 集成目标：`feat/library-lab`；本轮开始读取的最新头提交 `e62650ad6d025963da9ede967125502502fd031f`，前轮PR #65已被PLATFORM合并。
 - 当前分支仅修改 A*、B* 条目及本进度文件；不更改公共源码、依赖、锁文件、CI、主 PR #8。
 
 ## 第1轮实质交付
@@ -713,3 +713,34 @@ PLATFORM审核本PR的base/head、授权路径并合入私有 \`feat/library-lab
 - 本批代码及进度提交后相对精确集成起点 \`caef398bfa3568b1e9bf690366b39ae5448769de\` 的 GitHub Compare 为 **22/22 文件全部在AB授权范围，ahead=4、behind=0**。6/6 Node独立helper/test Git Blob字节与实际执行一致；四库12/12个Demo源码引用有效。
 - 真实GitHub Actions：提交 \`f2b7ced9b565c3889ba1793101cbbf549a41e0e6\` 触发 CI run **40494818121** 与 Library Lab run **40494817999**，二者状态均为 \`failure\`；对应 \`runtime-bootstrap\` job **122157477021**、\`catalogue\` job **122157477399** 均为 \`steps=[]\`；两份Job日志均返回 **404 BlobNotFound**。因此没有任何可用构建步骤证据，不能归因源码TS错误或虚报SDK/build/browser通过；公共runner/锁文件修复仍由PLATFORM负责。
 - 本批 **runCount=17/24**、依赖新增0。下一轮优先根据真实SDK/完整TypeScript报错修复四库或其他AB目录可复现缺陷，避免在没有runner情况下反复重试相同失败。
+
+---
+
+## 第18轮（wave18）：ECharts缩放与销毁、Floating UI剪贴板时序、两类拖拽异步冲突
+
+**runCount=18/24**。从已核对的最新集成HEAD `e62650ad6d025963da9ede967125502502fd031f` 新建 `feat/library-lab-ab-wave18`，不重复初始化，也未修改旧 `feat/library-lab-ab` 或任何已合并worker分支。读取了协调/实施合同、包AGENTS、真实 `packages/library-lab/src/lib/types.ts` 和 `catalog.mjs`（根 `src/lib/...` 不存在，实际文件位于包下）、AB进度和开放PR；此前AB #65已合入，仅#8与无关#3仍开放，没有重复的AB PR。
+
+### 实际源码修复（4库、继续复用12个三层Demo运行入口）
+
+|库|实际变更|应做的浏览器回归|
+|---|---|---|
+|A01 ECharts|外层移除250px最小宽度；ResizeObserver经单个rAF合并并仅在非零容器尺寸resize；卸载断Observer、取消rAF后dispose；点选真实seriesName/name/value，重置清空旧选项；减少动态偏好不播放容器宽度CSS动画|窄于250px、连续拖宽、立刻卸载、StrictMode、柱线选择及 reduced-motion|
+|B17 Floating UI|原close依赖React Effect撤销clipboard Promise，有事件到Effect之间的竞态；现在 `useFloating.onOpenChange` 同步撤销请求，Escape/外部点击/业务选择立即使旧回调失效；卸载清理保留|受控延迟的Clipboard resolve/reject，关闭后重开不出现旧成功状态，Portal+Tab/Escape焦点归还|
+|B13 dnd-kit|保留真实Legacy DndContext/Sortable/KeyboardSensor；drag start记录activeId+数据revision+level，drag end只有会话未被键盘重排、重置、撤销或切模式改变才可提交；cancel和模式切换清空会话|拖动期间点击上/下移或恢复、再结束旧拖动；键盘Space/Escape及触控|
+|B14 Pragmatic DnD|真实Atlassian monitor.onDragStart/onDrop使用相同代次不变式；Native Drop必须匹配当前数据revision/level/ID，消费会话后才能更新；undo/reset/卸载清理，同时保留独立dragHandle与键盘按钮|原生拖动期间撤销、重置、模式切换、drop到无效目标以及跨实例作用域|
+
+本批代码与指南/Agent共**18个文件**，源码提交 `c93d27dd00381aa1ce026a74365c57ca890bb48a`：4个实际TSX示例、2个纯规则helper、2个独立新单测、2份manifest追加高级源码路径、4份guide、4份agent。未新造SDK替代品、页面占位或第二份展示源码，A/B的39/39源码覆盖口径不变。所有修改均在 `packages/library-lab/entries/A*`/`B*` 授权范围，随后仅本进度文件另提交。
+
+### 实际执行与可复核校验
+
+- 本地 Node **v22.16.0**：`node --experimental-strip-types --test /mnt/data/ab-wave18/B13/tests/*.test.* /mnt/data/ab-wave18/B14/tests/*.test.*` → **28 PASS、0 FAIL、0 SKIP**。覆盖原固定槽位/隐藏尾部重排20项及本批drag-session8项。仅执行不依赖SDK的策略测试，**不是第三方DndContext、原生Drag或浏览器回归结果**。
+- TypeScript **5.8.3**：`tsc --noEmit --strict --skipLibCheck --target ES2022 --module ESNext --moduleResolution Bundler /mnt/data/ab-wave18/{B13,B14}/examples/pinned-order.ts` → **PASS**，仅两份纯规则模块，未执行React/TSX与完整应用检查。
+- 本地Git `git hash-object` 与GitHub提交blob完整SHA **4/4一致**：B13 helper `4725aa1cdebf0a0a7ce308249adc67486642905b`，B14 helper `e2aa0326016fbc01dd1fcf01787d3185b2f839c6`，两份新单测同为 `c5a82c2a168976e0fa5cb8c02a9c6fa985cd871d`。3份旧基线测试的Blob也精确匹配GitHub，未用替身函数测试SDK。
+- GitHub完整tree **2009条路径，truncated=false**，四份manifest的**12/12 demo入口、共53/53入口/sourceFiles引用均存在**。相对精确base的Compare **18/18文件全部在AB目录、ahead=1、behind=0**；加上本进度将为19文件，提交后再核对。
+- ECharts/Floating UI/dnd-kit/Pragmatic**官方SDK运行、React完整TSX类型检查、pnpm真实依赖和锁文件、Vite生产构建、Chromium/Canvas/Clipboard/drag/focus验收：NOT_RUN/BLOCKED**。没有可用已安装依赖；既有Actions runner失败无执行steps和日志，本批不循环重试相同故障。四项 `verification.json` 的sdk/build/browser继续NOT_RUN，绝无新增真实SDK PASS。
+
+### 依赖、集成及下一队列
+
+**dependencyRequests新增0**；既有SDK声明 `echarts@6.1.0`、`@floating-ui/react@0.27.20`、`@dnd-kit/core@6.3.1`、`@dnd-kit/sortable@10.0.0`、`@atlaskit/pragmatic-drag-and-drop@1.8.1`，由PLATFORM负责实际安装、锁文件和peer核对。
+
+**Draft PR [#68](https://github.com/CoderLambert/ReactLoom/pull/68)**：base严格 `feat/library-lab`，head `feat/library-lab-ab-wave18`；只允许PLATFORM审查合并到私有集成分支，不更改main、PR #3/#8、模板或公开部署。下一批优先依据PLATFORM的真实构建/SDK/浏览器日志排查四库，再按独立缺陷处理 A16 MapLibre 多实例/WebGL重载、A06 React Flow连线冲突、B18 cmdk 输入法与快捷键；仍禁止把新增规则测试冒充SDK PASS。到runCount24仍存在验收缺口则准确记录并结束本通道。
