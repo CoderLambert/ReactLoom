@@ -16,8 +16,15 @@ export function resolveDocumentUrl(value, entryId, basePath = '/') {
       relative.startsWith('/') || relative.startsWith('//')) return '';
   const parts = relative.replace(/^\.\//u, '').split('/');
   if (parts.some(part => !part || part === '..' || part === '.')) return '';
-  const prefix = basePath.startsWith('/') && !basePath.includes('..') ?
-    `${basePath.replace(/\/$/u, '')}/` : '/';
+  // Vite BASE_URL must be a same-origin pathname, never a scheme-relative URL.
+  const segments = typeof basePath === 'string' ? basePath.split('/') : [];
+  const safeBase = typeof basePath === 'string' && basePath.startsWith('/') &&
+    !basePath.startsWith('//') && !basePath.includes('//') &&
+    segments.every((part, index) => index === 0 ||
+      (part === '' && index === segments.length - 1) ||
+      (part !== '.' && part !== '..' && /^[\p{L}\p{N}_.~-]+$/u.test(part)))
+    ? basePath : '/';
+  const prefix = safeBase.replace(/\/$/u, '') + '/';
   // The generator publishes only reviewed local markdown, raster assets, and
   // declared example/test sources. Avoid links that silently serve SPA HTML.
   const normalized = parts.join('/');
@@ -39,30 +46,52 @@ export function slugHeading(text) {
     .replace(/[^\p{L}\p{N}_\s-]/gu,'')
     .trim().replace(/\s+/gu,'-').replace(/-+/gu,'-');
 }
-/** A minimal ToC scanner: fenced source code and blockquotes never create links. */
+/** Keep Markdown ToC anchors aligned with actual ATX/setext headings.
+ * A fence closes only on a blank-suffix delimiter, not on code following ticks.
+ * The source line is the first line of a setext heading (as in remark). */
 export function extractDocumentHeadings(markdown) {
   if (typeof markdown !== 'string') return [];
   const headings = [];
   const seen = new Map();
   let fence = null;
+  let previous = null;
+  const pushHeading = (title, depth, line) => {
+    const stem = slugHeading(title) || 'section-' + line;
+    const count = seen.get(stem) ?? 0;
+    seen.set(stem, count + 1);
+    headings.push({depth, title, line, id:count ? stem + '-' + count : stem});
+  };
   markdown.split(/\r?\n/u).forEach((line, index) => {
-    const open = line.match(/^ {0,3}(`{3,}|~{3,})/u);
-    if (open) {
-      const marker = open[1][0];
-      if (!fence) fence = {marker, length:open[1].length};
-      else if (marker === fence.marker && open[1].length >= fence.length) fence = null;
+    const fenceLine = line.match(/^ {0,3}(\x60{3,}|~{3,})(.*)$/u);
+    if (fence) {
+      if (fenceLine && fenceLine[1][0] === fence.marker &&
+          fenceLine[1].length >= fence.length && !fenceLine[2].trim()) fence = null;
+      previous = null;
       return;
     }
-    if (fence || /^\s*>/u.test(line)) return;
-    const match = line.match(/^ {0,3}(#{1,3})(?:\s+|$)(.*)$/u);
-    if (!match) return;
-    const text = match[2].replace(/\s+#+\s*$/u,'').trim();
-    if (text) {
-      const stem=slugHeading(text)||`section-${index+1}`;
-      const count=seen.get(stem)??0;
-      seen.set(stem,count+1);
-      headings.push({depth:match[1].length,title:text,line:index+1,id:count?`${stem}-${count}`:stem});
+    if (fenceLine) {
+      if (fenceLine[1][0] === '~' || !fenceLine[2].includes('\x60'))
+        fence = {marker:fenceLine[1][0],length:fenceLine[1].length};
+      previous = null;
+      return;
     }
+    if (/^(?: {4}|\t| {0,3}>)/u.test(line)) {previous = null; return;}
+    const atx = line.match(/^ {0,3}(#{1,3})(?:\s+|$)(.*)$/u);
+    if (atx) {
+      const title = atx[2].replace(/\s+#+\s*$/u,'').trim();
+      if (title) pushHeading(title, atx[1].length, index + 1);
+      previous = null;
+      return;
+    }
+    const setext = line.match(/^ {0,3}(=+|-+)\s*$/u);
+    if (setext && previous && previous.line === index) {
+      pushHeading(previous.title, setext[1][0] === '=' ? 1 : 2, previous.line);
+      previous = null;
+      return;
+    }
+    // A list, quote, code block or thematic break is not a setext heading.
+    previous = /^\s*$/u.test(line) || /^ {0,3}(?:[-*+]\s+|\d+[.)]\s+|(?:[-*_]\s*){3,}$)/u.test(line)
+      ? null : {title:line.trim(),line:index + 1};
   });
   return headings;
 }
