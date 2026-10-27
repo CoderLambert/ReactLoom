@@ -326,3 +326,6 @@ runCount：**9 / 24**。PR #8 继续 Draft；main/旧模板/PR #3 未修改，�
 **CI**：2026-10-27最新 [Library Lab 40475998122](https://github.com/CoderLambert/ReactLoom/actions/runs/40475998122) 2jobs和 [主CI 40475998093](https://github.com/CoderLambert/ReactLoom/actions/runs/40475998093) 7jobs均failure且steps=null，没有可信测试步骤，不能据此给代码构建判FAIL。当前工作环境缺pnpm10、完整可联网仓库工作树且Node版本低于CLI执行最低22.18；根pnpm-lock.yaml仍未真实解析Library Lab importer。没有手造锁文件或伪造证据。本轮新增SDK PASS=0。
 
 **覆盖维度**：119身份目录、119有源码/guide/agent/verification文件，357个**配置**场景；可浏览器运行的Demo数量与SDK真实PASS不能从此推断。原包117资料，E11/F05为重建，新增资料审核数无有效证据。下一批：先修复合入EF #57；争取真实pnpm锁/冻结安装，继而TS7、Vite、SDK及Worker/MSW/Monaco/PDF.js关键浏览器验证；继续独立平台工作，不重复无步骤CI。主 #8仍 Draft；main、PR #3、SPA/SSR/Mobile模板未动。**runCount 13/24**。
+
+
+**同批补证（精确提交字节）**：原始Node TAP已提交 docs/library-lab/evidence/platform-wave13-node.tap，Git Blob 3cf55953073c6409dc1f9ce1e980426ff17843d8，实际容器日志SHA-256 b3ce3d5dc2a79b03701519fb774d32e3e99df24872810dd2d29cb139f17d2849，6 PASS/0 FAIL/0 SKIP。独立执行 tsc --noEmit --pretty false --lib es2022,dom --module nodenext --moduleResolution nodenext /mnt/data/library-lab-wave13/src/lib/source-integrity.d.mts：TS5.8.3声明语法PASS（不是全包类型检查）。本子批仍属于第13轮。
