@@ -36,3 +36,9 @@ pnpm --filter @reactloom/library-lab add @blocknote/core@0.56.0 @blocknote/react
 验证初始块/格式操作、保存恢复、坏数据拒绝、前后两个文档隔离、热重载和重挂、IME和移动端菜单。仅在目标浏览器有证据后写浏览器 PASS。服务端需要校验权限和可用资源，不能继承前端 JSON 判断。
 
 文档：[入门](https://www.blocknotejs.org/docs/getting-started)、[事件清理](https://www.blocknotejs.org/docs/reference/editor/events)、[React 集成](https://www.blocknotejs.org/docs/react/overview)。本条是重新实现，SDK/build/browser 仍未验收。
+
+## 恢复的保守边界（EF 第十五批）
+
+BlockNote `editor.document` 自带实例块 ID、资源与深层内联结构。新增 `parseBlockSnapshot` 在 SDK 调用前检查 60,000 UTF-16 字符、最多 100 个文本块（含嵌套）、深度上限、常见自由文本块类型和 HTTPS 外链，无条件拒绝图片/视频/文件块及非 HTTPS 带凭据 URL，并移除存储的块 ID 以让新编辑器生成实例 ID。它**不是**完整 BlockNote Schema 或 HTML 净化器，不能复制到需要支持媒体/表格的产品后直接把数据当有效。
+
+恢复 `sessionStorage.getItem` 已纳入 try/catch，处理禁用存储策略；level 改变会销毁旧编辑器子组件并创建新的上下文。失败的 replaceBlocks 行为需在真实 SDK 中验证是否为原子事务，不应假设 catch 一定能回滚部分更新。Node 策略测试只检验边界，不证明 Mantine/BlockNote 真实运行。

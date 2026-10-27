@@ -1,7 +1,7 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "真实目标 SDK 运行待执行；待真实加载 Tiptap v3 EditorContent 和 ProseMirror 扩展。"
+    "note": "真实目标 SDK 运行待执行；待真实加载 Tiptap v3 EditorContent 和 ProseMirror 扩展。 本批有纯策略快照负例源码，不意味着已加载真实目标 SDK。"
   },
   "build": {
     "status": "BLOCKED",

@@ -3,12 +3,16 @@ import {useCreateBlockNote} from '@blocknote/react'
 import {BlockNoteView} from '@blocknote/mantine'
 import '@blocknote/mantine/style.css'
 import '@blocknote/core/fonts/inter.css'
+import {MAX_SNAPSHOT, parseBlockSnapshot} from './snapshot-policy.mjs'
 
 type Level = 'basic' | 'business' | 'advanced'
 const KEY = 'reactloom.lab.E02.blocknote.blocks.v1'
-const MAX_SNAPSHOT = 60_000
 
 export default function BlockNoteExample({level}: {level: Level}) {
+  return <BlockNoteSession key={level} level={level} />
+}
+
+function BlockNoteSession({level}: {level: Level}) {
   const editor = useCreateBlockNote({initialContent:[
     {type:'heading',props:{level:2},content:'阅读笔记'},
     {type:'paragraph',content:'在这里编辑本地块文档，并使用列表和斜杠菜单。'},
@@ -28,18 +32,14 @@ export default function BlockNoteExample({level}: {level: Level}) {
     catch(error){setNotice(`存储失败：${String(error)}`)}
   }
   function restore(){
-    const raw = sessionStorage.getItem(KEY)
-    if(!raw){setNotice('没有本地草稿');return}
-    if(raw.length > MAX_SNAPSHOT){setNotice('已有草稿超过限额，已拒绝');return}
     try{
-      const blocks: unknown = JSON.parse(raw)
-      if(!Array.isArray(blocks)||blocks.length===0||blocks.length>100||
-        blocks.some(item=>!item||typeof item!=='object'||typeof item.type!=='string')) {
-        throw new Error('块结构或数量不合法')
-      }
-      // 传给库自己的 schema 验证；失败不会在这里覆盖正确的已存文档。
+      // Storage access itself can throw in privacy-restricted browsing contexts.
+      const raw = sessionStorage.getItem(KEY)
+      if(!raw){setNotice('没有本地草稿');return}
+      const blocks = parseBlockSnapshot(raw)
+      // The conservative structural guard runs before the real SDK consumes the partial blocks.
       editor.replaceBlocks(editor.document,blocks as Parameters<typeof editor.replaceBlocks>[1])
-      setNotice('恢复完成；只替换本例文档块。')
+      setNotice('已恢复有限文本块；持久化块 ID 不复用。')
     }catch(error){setNotice(`无法恢复该版本草稿：${String(error)}`)}
   }
   function insertReview(){

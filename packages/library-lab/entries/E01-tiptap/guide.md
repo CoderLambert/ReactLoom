@@ -40,3 +40,9 @@ pnpm --filter @reactloom/library-lab dev
 ## 当前验证与官方资料
 
 来源：[React 官方安装](https://tiptap.dev/docs/editor/getting-started/install/react)、[Editor API](https://tiptap.dev/docs/editor/api/editor)。原材料属于研究参考；本条示例为重新实现。依赖尚未统一安装；SDK NOT_RUN、完整构建 BLOCKED、浏览器 NOT_RUN，不能推断实际渲染已通过。
+
+## 本地 JSON 恢复防护补充（EF 第十五批）
+
+浏览器 sessionStorage 可以被开发者工具或同源脚本修改，不可信任顶层 type=doc 就直接替换 ProseMirror 文档。源码将 `parseTiptapSnapshot` 与 React 恢复按钮共用，检查 20,000 UTF-16 字符、最多 500 节点、12 层深度、StarterKit 节点/marks 类型及无凭据 HTTPS 链接；再使用 Tiptap 3 官方 `setContent(json, {errorOnInvalidContent:true})` 明确拒绝无效 Schema，而非静默丢弃未知节点。该边界只面向此演示的 StarterKit；生产新增图片/表格/自定义 marks 时，必须同步改版本化文档 Schema 和校验，不得直接开放白名单。
+
+三层示例在 level 切换时用 React key 独立重新挂载编辑器，避免一个实例跨场景遗留草稿、撤销历史和统计。纯 Node 检查位于 `tests/policy.test.mjs`；它未加载 Tiptap，不能替代真实 Tiptap/IME/浏览器测试。

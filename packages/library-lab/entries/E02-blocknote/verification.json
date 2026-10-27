@@ -1,7 +1,7 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "真实目标 SDK 运行待执行；依赖需 PLATFORM 锁定 Mantine peer；CSS/渲染宿主隔离尚无浏览器证据。"
+    "note": "真实目标 SDK 运行待执行；依赖需 PLATFORM 锁定 Mantine peer；CSS/渲染宿主隔离尚无浏览器证据。 本批有纯策略快照负例源码，不意味着已加载真实目标 SDK。"
   },
   "build": {
     "status": "BLOCKED",
