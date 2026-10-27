@@ -39,3 +39,7 @@ return <Canvas><ambientLight/><mesh><boxGeometry/><meshStandardMaterial/></mesh>
 `examples/frame-policy.ts` 集中判断手动暂停、动态系统偏好、`document.visibilityState` 和零角速度：任何条件禁止动画时切换 Canvas `frameloop='demand'`，但保留 React 状态变化触发的静态帧。visibilitychange 在组件卸载时取消；后台恢复只在其它策略也允许时恢复，`boundedFrameDelta` 避免标签页节流后的大时间差瞬移。basic 也提供真实 HTML 按钮，不能要求键盘用户在 WebGL Mesh 上操作。
 
 `node --experimental-strip-types --test entries/A14-react-three-fiber/tests/frame-policy.test.mts` 仅验证计算策略；实际 WebGL2、Context loss、StrictMode 多次 Canvas 重建及 GPU 内存释放必须在真实 SDK/Chromium 环境测量。
+
+## 第22轮：滚动离屏帧预算
+
+`useCanvasVisibility` 以容器为观察目标，用 `IntersectionObserver` 维护是否进入视口；document 前后台和视口可见性同时为真才允许连续帧。滚离视口时 `frameloop='demand'`，保留 Canvas/业务状态供返回时恢复，卸载断开 observer；不支持 IntersectionObserver 时回退为仅依赖 document.visibilityState。新策略不证明GPU显存已经释放，卸载/进出视口需真实Chromium和WebGL profiling。静态三维状态与HTML键盘按钮持续可用。

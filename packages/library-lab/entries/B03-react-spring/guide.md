@@ -45,3 +45,7 @@ MIT 许可。
 初始`prefers-reduced-motion`读取matchMedia，避免先动画再停；列表限制12条并去重业务id，禁止无限量离场节点。删除按钮只有在自身确实持有document.activeElement时才恢复焦点到新增按钮，不得在其他元素持有焦点时抢走焦点。通过`article-policy.ts`独立检验身份、上限和焦点意图，真实spring/离场/焦点仍需浏览器回归。
 
 **满额焦点回退**：12条满额时“添加”按钮disabled，不可向该节点调用focus；删除当前聚焦行时将焦点转到始终可用的“恢复默认数据”按钮。此处仅完成源码与规则测试，浏览器焦点需要验证。
+
+## 第22轮：离场焦点与React提交边界
+
+删除按钮后，将删除后剩余条数传给 `focusDestinationAfterRemoval`，记录焦点意图，然后让React提交列表更新；`useLayoutEffect([articles])` 在Add由满额disabled变成可用后才focus，避免同步聚焦禁用按钮或让退出动画节点继续占焦点。Add仍禁用时回退可用Reset；重置清理旧焦点意图，无关按钮删除不抢焦点。Node策略测试不等于Chromium焦点/动画真实验证。

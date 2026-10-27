@@ -1,5 +1,5 @@
 import {animated,useSpring,useTransition} from '@react-spring/web';
-import {useEffect,useRef,useState} from 'react';
+import {useEffect,useLayoutEffect,useRef,useState} from 'react';
 import {appendUniqueArticle,MAX_SPRING_ARTICLES,focusDestinationAfterRemoval} from './article-policy';
 
 type Level='basic'|'business'|'advanced';
@@ -27,6 +27,16 @@ export default function SpringExample({level}:{level:Level}){
   const nextId=useRef(3);
   const addRef=useRef<HTMLButtonElement|null>(null);
   const resetRef=useRef<HTMLButtonElement|null>(null);
+  const focusAfterRemoval=useRef<'none'|'add'|'reset'>('none');
+  // Wait for the React commit that re-enables Add at the capacity boundary.
+  useLayoutEffect(()=>{
+    const destination=focusAfterRemoval.current;
+    if(destination==='none')return;
+    focusAfterRemoval.current='none';
+    const requested=destination==='add'?addRef.current:resetRef.current;
+    const target=requested&&!requested.disabled?requested:resetRef.current;
+    if(target?.isConnected&&!target.disabled)target.focus();
+  },[articles]);
   const style=useSpring({
     opacity:expanded?1:0.45,
     transform:expanded?'translateY(0px)':'translateY(18px)',
@@ -47,10 +57,9 @@ export default function SpringExample({level}:{level:Level}){
     setArticles(old=>appendUniqueArticle(old,{id:'rss-'+id,title:'新增订阅内容 #'+id}));
   }
   function removeArticle(id:string,button:HTMLButtonElement){
-    const destination=focusDestinationAfterRemoval(document.activeElement===button,articles.length);
+    if(!articles.some(item=>item.id===id))return;
+    focusAfterRemoval.current=focusDestinationAfterRemoval(document.activeElement===button,articles.length-1);
     setArticles(old=>old.filter(item=>item.id!==id));
-    if(destination==='add')addRef.current?.focus();
-    else if(destination==='reset')resetRef.current?.focus();
   }
   return <section aria-label="React Spring 实际动画实验">
     <h2>{level==='basic'?'弹簧卡片':level==='business'?'阅读列表进出场':'动画偏好与快速操作'}</h2>
@@ -61,7 +70,7 @@ export default function SpringExample({level}:{level:Level}){
     </animated.div>
     {level!=='basic'&&<>
       <h3>动画列表 · stable keys</h3>
-      <div className="demo-controls"><button ref={addRef} type="button" disabled={articles.length>=MAX_SPRING_ARTICLES} onClick={addArticle}>添加一条新闻（上限 {MAX_SPRING_ARTICLES}）</button><button ref={resetRef} type="button" onClick={()=>setArticles(seed)}>恢复默认数据</button></div>
+      <div className="demo-controls"><button ref={addRef} type="button" disabled={articles.length>=MAX_SPRING_ARTICLES} onClick={addArticle}>添加一条新闻（上限 {MAX_SPRING_ARTICLES}）</button><button ref={resetRef} type="button" onClick={()=>{focusAfterRemoval.current='none';setArticles(seed);}}>恢复默认数据</button></div>
       <div style={{display:'grid',gap:9}}>
         {transitions((animatedStyle,item)=><animated.article key={item.id} style={{...animatedStyle,background:'#fff',border:'1px solid #dbe4d9',borderRadius:8,padding:12,display:'flex',gap:12,justifyContent:'space-between',alignItems:'center'}}>
           <span>{item.title}</span><button type="button" onClick={event=>removeArticle(item.id,event.currentTarget)} aria-label={'移除 '+item.title}>移除</button>

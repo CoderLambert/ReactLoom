@@ -21,3 +21,5 @@ R3F采用稳定v9.8.2（React19.3兼容），不要无审查升级到v10 alpha�
 ## 第13轮资源/无障碍契约
 
 `frame-policy.ts` 必须与 `useDocumentVisibility` 一同移植；不能只在 `useFrame` 内 return 但让 Canvas 永远 `always`。暂停、减少动态、后台、速度零都需要 `demand`；恢复时依赖 React/R3F 自身调度。任何层级均保留 HTML 可操作按钮。policy 测试不是GPU或SDK验收。
+
+**第22轮离屏补充**：移植时保留 `useCanvasVisibility`、`IntersectionObserver.disconnect` 和文档可见性门禁；只检查 document.hidden 仍会在长页面离屏位置消耗GPU帧。离屏通过demand暂停动画，不等于释放WebGL上下文，GPU与React生命周期真实验证保持NOT_RUN。

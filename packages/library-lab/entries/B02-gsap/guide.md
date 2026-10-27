@@ -30,3 +30,7 @@ GSAP 会修改元素 inline style；在 useEffect 中使用 gsap.context(callbac
 
 ## 后台播放、手动暂停与初帧减动补丁（2026-10-27）
 `timeline-policy.ts`统一判断：页面隐藏、用户暂停或系统开启reduced-motion，任一成立都不得播放。可恢复的`tl.pause()/resume()`使返回前台后继续原位置；手动暂停状态在visibility切换后保持。首屏读取reduced-motion，进度夹紧0–100。visibilitychange和matchMedia均卸载监听；GSAP/StrictMode需实际浏览器验收。
+
+## 第22轮：限幅React进度更新
+
+原onUpdate每动画帧都setProgress，复杂页面会重复调度整个React实验区。现在由GSAP继续逐帧修改DOM，只在展示进度较上次变化至少5个百分点、或到达0%/100%端点时更新React进度条；重播、切层级及减少动态时重置进度。正放和倒放均生效。Node规则测试仅证明进度发射策略，实际GSAP/StrictMode/浏览器性能仍未验收。

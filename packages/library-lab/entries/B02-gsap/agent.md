@@ -11,3 +11,5 @@
 **组合**：B01 Motion替代，B03 spring替代，B19 Embla协作时隔离 transform 所有权。
 
 **2026播放补充**：`timeline-policy.ts`区分用户手动暂停与后台自动暂停；visibility恢复仅在未手动暂停时续播。初次渲染读取reduced-motion并清理监听。勿在hidden页面强制play。
+
+**第22轮进度限频**：逐帧style由GSAP负责，`shouldPublishProgress`限幅React状态（相差≥5%或0/100终点）；重建timeline时重置`displayedProgress`，避免沿用旧阶段进度。策略单测PASS不代表SDK和浏览器验收。

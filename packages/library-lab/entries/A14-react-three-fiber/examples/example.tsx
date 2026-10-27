@@ -21,6 +21,22 @@ function useDocumentVisibility(){
   },[]);
   return visible;
 }
+/** Stop continuous GPU frames after scroll-out, keeping the Canvas for return. */
+function useCanvasVisibility(){
+  const containerRef=useRef<HTMLDivElement>(null);
+  const [inViewport,setInViewport]=useState(true);
+  useEffect(()=>{
+    const node=containerRef.current;
+    if(!node||typeof IntersectionObserver==='undefined')return;
+    const observer=new IntersectionObserver(entries=>{
+      const entry=entries[0];
+      if(entry)setInViewport(entry.isIntersecting);
+    },{threshold:0.01});
+    observer.observe(node);
+    return()=>observer.disconnect();
+  },[]);
+  return {containerRef,inViewport};
+}
 function ObjectMesh({shape,color,speed,paused,onSelect}:{shape:Shape;color:string;speed:number;paused:boolean;onSelect:()=>void}){
   const mesh=useRef<Mesh>(null);
   const [hover,setHover]=useState(false);
@@ -39,12 +55,13 @@ function ObjectMesh({shape,color,speed,paused,onSelect}:{shape:Shape;color:strin
 export default function FiberExample({level}:{level:Level}){
   const reduced=useReducedMotion();
   const visible=useDocumentVisibility();
+  const {containerRef,inViewport}=useCanvasVisibility();
   const [paused,setPaused]=useState(false);
   const [speed,setSpeed]=useState(0.9);
   const [shape,setShape]=useState<Shape>('box');
   const [active,setActive]=useState(false);
   const [sceneKey,setSceneKey]=useState(0);
-  const running=shouldRunFrames({paused,reducedMotion:reduced,visible,speed});
+  const running=shouldRunFrames({paused,reducedMotion:reduced,visible:visible&&inViewport,speed});
   const effectivePaused=!running;
   return <section aria-label="React Three Fiber 实战">
     <h2>{level==='basic'?'JSX驱动三维场景':level==='business'?'新闻业务3D状态切换':'帧预算、减少动画和恢复'}</h2>
@@ -58,7 +75,7 @@ export default function FiberExample({level}:{level:Level}){
         <button type="button" onClick={()=>{setSceneKey(k=>k+1);setActive(false);setPaused(false);}}>重新挂载场景</button>
       </>}
     </div>
-    <div style={{height:300,background:'#eaf0e9',borderRadius:9}}>
+    <div ref={containerRef} style={{height:300,minWidth:0,background:'#eaf0e9',borderRadius:9}}>
       <Canvas key={sceneKey} frameloop={running?'always':'demand'} dpr={[1,1.5]}
         gl={{antialias:true,powerPreference:'low-power'}}
         camera={{position:[0,0,5],fov:50}}
@@ -70,7 +87,7 @@ export default function FiberExample({level}:{level:Level}){
           color={active?'#c47b37':'#267c6b'} onSelect={()=>setActive(v=>!v)}/>
       </Canvas>
     </div>
-    <p role="status">模型：{level==='advanced'?shape:'box'}；处理状态：{active?'已处理':'未处理'}；动画：{effectivePaused?'暂停（含系统减少动画）':'运行'}。</p>
-    <p>所有层级均提供HTML键盘按钮。离开前台、停止转动或开启系统减动时切为按需渲染；React负责状态，useFrame仅修改Mesh transform。</p>
+    <p role="status">模型：{level==='advanced'?shape:'box'}；处理状态：{active?'已处理':'未处理'}；动画：{effectivePaused?'暂停（含系统减少动画或离屏）':'运行'}；画布在视口内：{inViewport?'是':'否'}。</p>
+    <p>所有层级均提供HTML键盘按钮。离开前台、滚出视口、停止转动或开启系统减动时切为按需渲染；React负责状态，useFrame仅修改Mesh transform。</p>
   </section>;
 }
