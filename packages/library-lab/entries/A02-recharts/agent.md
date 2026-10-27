@@ -25,3 +25,8 @@ Recharts 3.10.1、react-is 19.3.0，需与宿主 React 版本对应。本轮属 
 ## 最小测试
 
 真实 SDK import、TS typecheck、Vite build、非零宽高/resize、dataKey/axis、3–14 范围、卸载重挂载、表格辅助技术。官方：https://github.com/recharts/recharts
+
+
+## Agent 迁移边界：本轮运行前加固：受控范围与刷新预算
+
+新增 `examples/chart-policy.ts` 作为实际运行/源码面板共享的纯规则：3–14 天稳定窗口，14 日标签互不重复，刷新计数限制 1000 次以避免无限增大示例数据；表格与图表消费同一 `sampleRows`。数字输入允许暂时清空后继续输入，在 blur 时恢复合法范围。ResponsiveContainer 启用 60ms resize debounce，父容器仍提供明确高度。对应 `tests/chart-policy.test.mts` 仅验证数据边界，真实 ResizeObserver 与 SVG 仍需 Chromium。

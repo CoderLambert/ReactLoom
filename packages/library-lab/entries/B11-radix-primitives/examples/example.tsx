@@ -87,16 +87,16 @@ export default function RadixPrimitivesExample({level}: {level: Level}) {
                 </DropdownMenu.SubTrigger>
                 <DropdownMenu.Portal>
                   <DropdownMenu.SubContent className="rl-radix-menu" sideOffset={6}>
-                    <DropdownMenu.Item className="rl-radix-item" onSelect={() => {setScope('unread');report('列表仅显示有未读的频道');}}>
+                    <DropdownMenu.Item className="rl-radix-item" onSelect={() => {setScope('unread');setSelectedFeedId(visibleFeeds(feeds, 'unread', sort, pinnedIds)[0]?.id ?? '');report('列表仅显示有未读的频道');}}>
                       只看未读
                     </DropdownMenu.Item>
-                    <DropdownMenu.Item className="rl-radix-item" onSelect={() => {setScope('saved');report('列表仅显示有收藏的频道');}}>
+                    <DropdownMenu.Item className="rl-radix-item" onSelect={() => {setScope('saved');setSelectedFeedId(visibleFeeds(feeds, 'saved', sort, pinnedIds)[0]?.id ?? '');report('列表仅显示有收藏的频道');}}>
                       最近收藏
                     </DropdownMenu.Item>
                   </DropdownMenu.SubContent>
                 </DropdownMenu.Portal>
               </DropdownMenu.Sub>
-              <DropdownMenu.Item className="rl-radix-item" onSelect={() => {setScope('all');report('已恢复全部频道');}}>
+              <DropdownMenu.Item className="rl-radix-item" onSelect={() => {setScope('all');setSelectedFeedId(visibleFeeds(feeds, 'all', sort, pinnedIds)[0]?.id ?? '');report('已恢复全部频道');}}>
                 显示全部频道
               </DropdownMenu.Item>
               <DropdownMenu.Item disabled={locked || !selectedFeed} className="rl-radix-item rl-radix-danger"

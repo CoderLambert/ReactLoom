@@ -8,6 +8,7 @@ type Level = 'basic' | 'business' | 'advanced';
 import {sampleRows, normalizeWindow, nextRevision, MAX_REVISION} from './chart-policy';
 export default function RechartsExample({level}: {level: Level}) {
   const [count, setCount] = useState(7);
+  const [windowDraft, setWindowDraft] = useState('7');
   const [revision, setRevision] = useState(0);
   const [showRate, setShowRate] = useState(true);
   const isBasic = level === 'basic';
@@ -22,8 +23,11 @@ export default function RechartsExample({level}: {level: Level}) {
       <button type="button" onClick={() => setRevision(nextRevision)} disabled={revision >= MAX_REVISION}>增加阅读数据</button>
       {level === 'advanced' && <>
         <label>窗口天数 <input aria-label="窗口天数" type="number" min={3} max={14} step={1}
-          value={count} onChange={event => {const n = Number(event.currentTarget.value);
-            if (Number.isInteger(n)) setCount(normalizeWindow(n));}}
+          value={windowDraft} onChange={event => {
+            const text = event.currentTarget.value;
+            setWindowDraft(text);
+            if (/^\d+$/.test(text)) setCount(normalizeWindow(Number(text)));
+          }} onBlur={() => setWindowDraft(String(count))}
           style={{width: 70, marginLeft: 8}}/></label>
         <label><input type="checkbox" checked={showRate} onChange={event => setShowRate(event.target.checked)}/> 显示收藏率</label>
       </>}

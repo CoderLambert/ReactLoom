@@ -56,3 +56,8 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 - [npm 版本](https://www.npmjs.com/package/@radix-ui/react-dropdown-menu)
 
 MIT；所有示例业务内容为原创。
+
+
+## 本轮修复：菜单动作驱动真实本地列表
+
+旧菜单的筛选、排序、删除大多只替换状态提示，不改变可见数据。现由 `examples/feed-policy.ts` 持有确定性可迁移规则：置顶优先、时间/热度排序、仅未读/有收藏筛选、锁定删除防越权。三层示例仍使用真实 Radix Root、Portal、CheckboxItem、RadioItem、Submenu；列表按钮可键盘选择，选择不同筛选时同步选中第一条可见订阅，删除会更新实际本地集合而不访问后端。 `tests/feed-policy.test.mts` 只证明纯数据规则，Portal/Escape/焦点返回需要浏览器验证。
