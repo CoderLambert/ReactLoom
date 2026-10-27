@@ -1,7 +1,7 @@
 # EF 通道持续开发进度
 
 - 通道：EF，Issue #7；当前 wave4 分支 `feat/library-lab-ef-wave4`，Draft PR #20；PR base 为 `feat/library-lab`。
-- runCount：4 / 24。
+- runCount：18 / 24。
 - 基线：`38ed2d247bd82e4f1422b0e8904973e16bca2972`。
 - 本轮日期：2026-10-27（北京时间）。
 - 状态：**累计21/37个库已经接入真实第三方SDK示例或CLI源码、Guide与Agent手册；其余16项待接入。SDK、构建、浏览器验证单独计数，目前不得宣称PASS。**
@@ -505,3 +505,22 @@ runCount=16/24。
 - **下一队列**：根据PLATFORM对本批SDK/浏览器的实际反馈修复；独立审查 F15 Knip、F16 Bundle Analyzer、F18 dependency-cruiser 的真实CLI重现/错误码/结果保真；继续 E05/F11真实Worker与SW验证。EF **37/37目录具源码、三层例子、指南**，**不等于37个库已通过运行验收**。
 
 runCount=17/24。
+
+## 第十八轮：工程CLI真实报告契约与陈旧产物防护（2026-10-27）
+
+- 分支 `feat/library-lab-ef-wave18-cli-verification`，从最新 `feat/library-lab` 衍生；本批只改 `F15-knip`、`F16-dependency-cruiser`、`F18-rollup-plugin-visualizer` 三个条目和本文。上一轮 PR #61 已合入。绝不更改 main/PR #3/PLATFORM/根依赖/锁文件/CI或部署。
+- **F15 Knip**：增加 `examples/verify.mjs`，以真实 `pnpm exec knip --reporter json` 执行三个fixture配置，严格区分 0无问题/1有lint问题/2工具错误；结构校验 `issues[].files[].name`，对basic孤立文件与business显式抑制进行断言，不把任意字符串出现当作证据。
+- **F16 dependency-cruiser**：真实 verify 分开执行 JSON 与 err 双报告器；前者要求 `modules[]`、`summary.violations[].rule.name/severity` 与错误数吻合，后者要求正例0/反例非0；不再将 JSON 错误/CLI崩溃误认为架构规则成功命中。
+- **F18 rollup-plugin-visualizer**：每个真实构建前仅清理本条目的固定旧reports路径，阻止旧HTML/Markdown/raw JSON掩盖构建失败；检查报告结构、raw-data格式版本和实际输出不少于两份JS分包。
+- 每库新增同源纯逻辑校验文件和负例测试；已同步 3层 `library.json` 的 sourceFiles 与各自guide、agent、AGENTS、verification说明。无第三方付费API、私有产物公开或自动删除实际生产源码。
+
+### 本轮真实运行证据及边界
+
+- Node v22.16.0 在隔离目录按原仓库相对导入路径运行三份纯Node原生测试：`node --test /mnt/data/reactloom-ef-wave18-test/{F15/report-policy.test.mjs,F16/result-policy.test.mjs,F18/report-policy.test.mjs}`；**10 PASS / 0 FAIL**（F15 4 / F16 3 / F18 3）。此处命令是测试隔离副本的真实执行，不是整个仓库CLI运行。
+- 6份实际执行MJS通过 `git hash-object` 与GitHub远端提交Blob完整SHA-1一致：F15策略 `3dfec728e28dbb8aa5acf155fd6eeed3274c1792` /测试 `19cfca91dbdac269959d5b4b470486c91cb3564a`；F16策略 `f38d2153dd04325044715025f20495da3d8a820d` /测试 `a1b0d2a99163df56c1d3d42f85b479ff1793e4a7`；F18策略 `50b12a5fe537a81cdef23753544072e81d0122d4` /测试 `fa24ed3ec4cb4b3338e8d67bcb76df80c5e754ca`。
+- 这十个**仅是解析/策略测试**，样例报告是人工构造的负例，**没有加载knip、dependency-cruiser、rollup-plugin-visualizer、Vite或Chromium**；三个条目 `verification.json` 保持 SDK/CLI NOT_RUN、build BLOCKED、browser NOT_RUN，不能写PASS。实际CLI产物、生产类型/构建和分包验证仍须PLATFORM真环境执行。
+- `dependencyRequests`：无新增包；现有 `knip@6.41.0`（ISC）、`dependency-cruiser@18.5.0`（MIT）、`rollup-plugin-visualizer@7.1.1`（MIT）和 `vite@8.3.4` 的真实版本/peer/Node/锁文件需PLATFORM核验。纯源码修改不代表最终npm lock已解析。
+- **下批队列**：PLATFORM恢复可执行环境后运行三个真实 `examples/verify.mjs`，特别复核Knip suppression和dependency-cruiser err reporter的版本行为；其次 F10 Orval生成文件合同、F06/F07 PDF.js Worker、E05 Monaco Worker、F11 MSW Scope/CSP和E19 FFmpeg WASM运行。若依赖环境持续无可用Runner，不重复无意义下载，继续条目局部负例审计。
+- EF 维持 37/37 条目源码/指南覆盖；生产SDK/浏览器/构建验收远未完全完成。只有实际验收闭环才达到完工。
+
+runCount=18/24.
