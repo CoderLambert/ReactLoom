@@ -26,3 +26,7 @@
 ### 第10轮异步渲染与身份
 
 `setSlides` 后不能立即依据旧DOM调用 `scrollTo`；通过一次性resetEpoch在布局提交后 `reInit + scrollTo`。动态列表变化用ID签名而非仅数组长度；新ID采用单调分配，snap index使用真实 `scrollSnapList().length` clamp。卸载释放真实 Embla instance 和事件订阅。检查同长度替换、删除末尾选中项、重置、之后再次追加卡片以及窄屏loop，不得将Node纯逻辑测试误认为触控SDK通过。
+
+## wave21 迁移断言
+
+保留carouselArrow键盘边界策略、聚焦region和每张slide的group/幻灯片信息。只在viewport自身收到左右箭头时调`emblaApi.scrollPrev(reducedMotion)`或`scrollNext(reducedMotion)`；禁止捕获嵌套控件的事件。真实snap数量和卡片数量分别显示。系统减少动画监听要在卸载时解除，SDK/浏览器仍NOT_RUN。

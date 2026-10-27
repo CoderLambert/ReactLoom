@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import * as L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import {makeLocalLocation, MAX_EXTRA_LOCATIONS} from './station-factory';
+import {makeLocalLocation, canAddLocalLocation} from './station-factory';
 import {selectedVisibleId,shiftLocation} from './location-policy';
 
 type Level = 'basic' | 'business' | 'advanced';
@@ -21,6 +21,7 @@ export default function LeafletExample({ level }: { level: Level }) {
   const [onlyOnline, setOnlyOnline] = useState(false);
   const [selected, setSelected] = useState('sea');
   const selectedVisible = selectedVisibleId(items, onlyOnline, selected);
+  useEffect(() => { if (selected !== selectedVisible) setSelected(selectedVisible); }, [selected, selectedVisible]);
   useEffect(() => { setItems(INITIAL); setSelected('sea'); setOnlyOnline(false); }, [level]);
   useEffect(() => {
     const element = host.current; if (!element) return;
@@ -49,7 +50,7 @@ export default function LeafletExample({ level }: { level: Level }) {
       if (mapRef.current === map) mapRef.current = null;
       if (groupRef.current === group) groupRef.current = null;
     };
-  }, [level]);
+  }, []);
   useEffect(() => {
     const group = groupRef.current;
     if (!ready || !group) return;
@@ -91,11 +92,11 @@ export default function LeafletExample({ level }: { level: Level }) {
         <button type="button" onClick={() => setItems(old => shiftLocation(old, 'sea', .25))}
           disabled={!items.some(item => item.id === 'sea')}>模拟更新Seattle坐标</button>
         <button type="button" onClick={() => {
-          if (nextId.current >= MAX_EXTRA_LOCATIONS) return;
+          if (!canAddLocalLocation(items)) return;
           const station = makeLocalLocation(++nextId.current);
-          setItems(old => [...old, station]);
+          setItems(old => canAddLocalLocation(old) ? [...old, station] : old);
           setSelected(station.id);
-        }} disabled={nextId.current >= MAX_EXTRA_LOCATIONS}>新增模拟来源（最多40条）</button>
+        }} disabled={!canAddLocalLocation(items)}>新增模拟来源（同时最多40条）</button>
         <button type="button" onClick={() => {
           const remaining=items.filter(item => item.id !== selectedVisible);
           setItems(remaining);

@@ -22,3 +22,7 @@
 ## wave16 可见选择与边界
 
 必须同时迁移 `examples/location-policy.ts`：`selectedVisibleId` 计算过滤后的目标；标记高亮、状态文本和删除操作须指向同一ID；`shiftLocation` 保证有效经纬度和不可变数据。缺失来源不得生成无效Marker。纯Node检查不证明真实Leaflet地图更新与无泄漏。
+
+## wave21 接入规则
+
+Map的创建/移除只和挂载/卸载绑定，不允许level变化时重建而保留旧ready。保留筛选后的真实selected回写。带上`canAddLocalLocation`的UI和setItems双层容量检查；即使删除后重新追加，makeLocalLocation保持唯一ID、合法坐标和有限40个同时模拟来源。回归连续切层级、删除后追加、StrictMode以及无瓦片出站请求；SDK/浏览器依旧NOT_RUN。

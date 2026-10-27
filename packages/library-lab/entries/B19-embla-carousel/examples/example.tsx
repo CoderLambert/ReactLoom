@@ -1,6 +1,6 @@
 import {useEffect, useMemo, useRef, useState} from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
-import {allocateSlideId, boundedSnap} from './slide-policy';
+import {allocateSlideId, boundedSnap, carouselArrow} from './slide-policy';
 
 type Level = 'basic' | 'business' | 'advanced';
 type Slide = {id: number; title: string; description: string; category: string};
@@ -20,6 +20,18 @@ export default function EmblaExample({level}: {level: Level}) {
   const slideSignature = slides.map(item => item.id).join(',');
   const [canPrevious, setCanPrevious] = useState(false);
   const [canNext, setCanNext] = useState(true);
+  const [snapCount, setSnapCount] = useState(0);
+  const [reducedMotion, setReducedMotion] = useState(() =>
+    typeof window !== 'undefined' && typeof window.matchMedia === 'function' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  useEffect(() => {
+    if (typeof window.matchMedia !== 'function') return;
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const syncMotion = () => setReducedMotion(media.matches);
+    syncMotion();
+    media.addEventListener('change', syncMotion);
+    return () => media.removeEventListener('change', syncMotion);
+  }, []);
   const options = useMemo(() => ({
     align: 'start' as const,
     containScroll: 'trimSnaps' as const,
@@ -33,6 +45,7 @@ export default function EmblaExample({level}: {level: Level}) {
       setSelected(boundedSnap(emblaApi.selectedScrollSnap(),emblaApi.scrollSnapList().length));
       setCanPrevious(emblaApi.canScrollPrev());
       setCanNext(emblaApi.canScrollNext());
+      setSnapCount(emblaApi.scrollSnapList().length);
     };
     sync();
     emblaApi.on('select', sync);
@@ -54,6 +67,7 @@ export default function EmblaExample({level}: {level: Level}) {
     setSelected(boundedSnap(emblaApi.selectedScrollSnap(),emblaApi.scrollSnapList().length));
     setCanPrevious(emblaApi.canScrollPrev());
     setCanNext(emblaApi.canScrollNext());
+    setSnapCount(emblaApi.scrollSnapList().length);
   }, [emblaApi, slideSignature, resetEpoch]);
 
   function append() {
@@ -72,9 +86,17 @@ export default function EmblaExample({level}: {level: Level}) {
     <h2>{level === 'basic' ? '手动滑动新闻专题' :
       level === 'business' ? '内容推荐卡片' : '动态增删与循环吸附'}</h2>
     <p>触摸滑动与按钮导航均由真实 Embla v8 实例处理，内容只是离线 fixture。</p>
-    <div ref={emblaRef} style={{overflow: 'hidden', borderRadius: 10, border: '1px solid #dbe3d8'}}>
+    <div ref={emblaRef} role="region" aria-roledescription="轮播" aria-label="新闻专题卡片" tabIndex={0}
+      onKeyDown={event => {
+        const direction = carouselArrow(event.key, event.target === event.currentTarget, canPrevious, canNext);
+        if (!direction || !emblaApi) return;
+        event.preventDefault();
+        if (direction === 'prev') emblaApi.scrollPrev(reducedMotion);
+        else emblaApi.scrollNext(reducedMotion);
+      }} style={{overflow: 'hidden', borderRadius: 10, border: '1px solid #dbe3d8'}}>
       <div style={{display: 'flex', touchAction: 'pan-y pinch-zoom'}}>
-        {slides.map(item => <article key={item.id} aria-label={item.title}
+        {slides.map((item, index) => <article key={item.id} role="group" aria-roledescription="幻灯片"
+          aria-label={`第 ${index + 1} 张，共 ${slides.length} 张：${item.title}`}
           style={{flex: '0 0 82%', minWidth: 0, minHeight: 178, marginRight: '3%',
             padding: '18px 20px', background: '#f0f7f1', borderRight: '1px solid #d6e4d7'}}>
           <small style={{color: '#456b55'}}>{item.category} · {item.id}</small>
@@ -84,13 +106,15 @@ export default function EmblaExample({level}: {level: Level}) {
       </div>
     </div>
     <div style={{display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center', marginTop: 15}}>
-      <button type="button" disabled={!emblaApi || !canPrevious} onClick={() => emblaApi?.scrollPrev()}>
+      <button type="button" disabled={!emblaApi || !canPrevious} onClick={() => emblaApi?.scrollPrev(reducedMotion)}>
         ← 上一张
       </button>
-      <button type="button" disabled={!emblaApi || !canNext} onClick={() => emblaApi?.scrollNext()}>
+      <button type="button" disabled={!emblaApi || !canNext} onClick={() => emblaApi?.scrollNext(reducedMotion)}>
         下一张 →
       </button>
-      <output aria-live="polite">当前第 {Math.min(selected + 1, slides.length)} 张 · 共 {slides.length} 张</output>
+      <output aria-live="polite">{emblaApi && snapCount > 0 ?
+        `当前第 ${Math.min(selected + 1, snapCount)} 个吸附位置，共 ${snapCount} 个；卡片 ${slides.length} 张` :
+        "轮播初始化中"}</output>
     </div>
     {level === 'advanced' && <div style={{display: 'flex', gap: 12, flexWrap: 'wrap', marginTop: 12}}>
       <button type="button" disabled={slides.length >= 24} onClick={append}>添加卡片</button>
@@ -102,7 +126,7 @@ export default function EmblaExample({level}: {level: Level}) {
       }}>恢复默认卡片</button>
     </div>}
     <p style={{fontSize: 12, color: '#597062', marginTop: 14}}>
-      拖动区保留页面的纵向触摸滚动；导航按钮放置在拖动区之外。卸载时 React hook 销毁引擎，effect 对称注销事件。
+      拖动区可Tab聚焦并用左右箭头切换，保留页面纵向触摸滚动；减少动画时即时跳转。导航按钮在拖动区之外。卸载时 React hook 销毁引擎，effect 对称注销事件。
     </p>
   </section>;
 }

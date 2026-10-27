@@ -20,9 +20,12 @@ test('produces seven consistent integer values for Canvas and table', () => {
   assert.equal(chartCounts(2).length, 7);
   assert.ok(chartCounts(1e30).every(n => Number.isSafeInteger(n)));
 });
-test('auto sampling respects mode and visibility', () => {
+test('auto sampling respects mode, visibility and capacity', () => {
   assert.equal(shouldAutoSample(true, 'advanced', true), true);
   assert.equal(shouldAutoSample(true, 'advanced', false), false);
   assert.equal(shouldAutoSample(true, 'business', true), false);
   assert.equal(shouldAutoSample(false, 'advanced', true), false);
+  assert.equal(shouldAutoSample(true, 'advanced', true, MAX_REVISION - 1), true);
+  assert.equal(shouldAutoSample(true, 'advanced', true, MAX_REVISION), false);
+  assert.equal(shouldAutoSample(true, 'advanced', true, MAX_REVISION + 1), false);
 });

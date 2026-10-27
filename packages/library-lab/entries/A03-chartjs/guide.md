@@ -61,3 +61,9 @@ Chart.js + TanStack Query：查询与缓存由 Query 管理，Chart 更新只消
 `examples/chart-stream-policy.ts` 维护严格限制在 0–10000 的 revision 与七日等价数据；构造 Chart 时直接消费当前 revision，避免图形类型切换瞬间回到第一版 fixture。advanced 的 400ms 自动采样只在页面可见且停留 advanced 时工作，销毁 interval 和 visibilitychange 监听；表格与 Canvas 始终来自同一个 chartCounts 输出。按钮/计时器更新都复用已存在的 Chart.update('none')，类型变化才 destroy/create，Chart.js 的响应式行为仍由 SDK 自身负责。
 
 离线政策检查：`node --experimental-strip-types --test entries/A03-chartjs/tests/chart-stream-policy.test.mts`；仅证明有界数据和采样策略，不能代替真实 Canvas / Chart.js 生命周期、ResizeObserver、构建或 Chromium 验收。
+
+## wave21：Canvas选点与可访问的同步状态
+
+真实Chart.js 的`options.onClick`使用series point索引更新React选中日期；HTML数据表提供每个数字的原生button，用Tab/Enter/Space选择后由官方`chart.setActiveElements`高亮相同数据点、`chart.update('none')`刷新，并由role=status读出当日数值。渲染与源码依旧共用examples/example.tsx；不可仅以Canvas鼠标点击作为业务信息入口。
+
+`shouldAutoSample`现在接收revision，达到`MAX_REVISION=10000`立即不再创建interval，按钮在上界禁用，切层级/后台仍停止采样。策略Node测试证明上界，Chart.js真实高亮、Canvas重复挂载与React焦点仍须PLATFORM定向SDK/Chromium验证。

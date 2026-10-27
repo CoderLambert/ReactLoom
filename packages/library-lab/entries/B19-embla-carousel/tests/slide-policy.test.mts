@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {boundedSnap,allocateSlideId} from '../examples/slide-policy.ts';
+import {boundedSnap,allocateSlideId,carouselArrow} from '../examples/slide-policy.ts';
 test('clamp outdated snap after removal or viewport resize',()=>{
  assert.equal(boundedSnap(6,3),2);
  assert.equal(boundedSnap(-1,3),0);
@@ -19,4 +19,13 @@ test('IDs increase across delete, append, restore without collisions',()=>{
 test('invalid unsafe IDs are rejected rather than silently duplicated',()=>{
  assert.throws(()=>allocateSlideId(Number.MAX_SAFE_INTEGER,[]),RangeError);
  assert.throws(()=>allocateSlideId(-5,[]),RangeError);
+});
+
+test('keyboard arrows never hijack nested controls or disabled boundaries',()=>{
+ assert.equal(carouselArrow('ArrowRight',true,true,true),'next');
+ assert.equal(carouselArrow('ArrowLeft',true,true,true),'prev');
+ assert.equal(carouselArrow('ArrowRight',false,true,true),null);
+ assert.equal(carouselArrow('ArrowLeft',true,false,true),null);
+ assert.equal(carouselArrow('ArrowRight',true,true,false),null);
+ assert.equal(carouselArrow('Space',true,true,true),null);
 });

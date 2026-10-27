@@ -24,3 +24,7 @@ library.json → examples/example.tsx → guide.md → verification.json。运�
 ## 第13轮执行注意
 
 保留 `chart-stream-policy.ts` 与图表/HTML表共用的同一数据源；background/非advanced不继续高频采样，取消 interval/visibilitychange；切换类型初始 Chart 数据不得短暂回滚，最终必须 `chart.destroy()`。定向 policy 测试在 `tests/chart-stream-policy.test.mts`，SDK/浏览器仍需独立证据。
+
+## wave21 接入约束
+
+保留`chart-stream-policy.ts`的采样上界，调用`shouldAutoSample(auto, level, visible, revision)`，依赖包含revision，达到10000不再启动interval。Chart.js`onClick`和HTML数据表button使用同一个selectedDay，调用真实`chart.setActiveElements`来反映键盘选择；Canvas下必须保留可访问的数字表格/状态提示。不要把Node业务策略通过记为官方SDK、TSX、Canvas或浏览器PASS。
