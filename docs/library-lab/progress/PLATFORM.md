@@ -254,3 +254,31 @@ runCount：**9 / 24**。PR #8 继续 Draft；main/旧模板/PR #3 未修改，�
 **本轮真实测试：**在 Node 22.16.0 隔离原型运行 `node --test /mnt/data/local-verification/tests/local-verify.test.mjs`，**5 PASS/0 FAIL/0 SKIP**，测试范围仅 CLI 参数解析及步骤选择；安全URL回归源码已提交，未在完整远端 HEAD 运行；当前 Node 低于验证脚本 `--execute` 的最低22.18；项目真实pnpm10和依赖仍无法从 registry 安装。未执行真实锁解析、frozen安装、TypeScript、Vite、第三方SDK或 Chromium，全部依旧 BLOCKED/NOT_RUN，既有 Issue #12 继续单点跟踪。CI run `40452198662` catalogue/runtime-bootstrap 两作业均失败且没有steps日志，无法认定任何测试曾执行。条目自身 verification.json 未擅自标 PASS。
 
 **后续优先：**有授权的 Node≥22.18/pnpm10 且registry可达的工作树时，执行 `pnpm verify:library --execute --resolve-lock`，审查与提交真实锁并修改 CI 为 `--frozen-lockfile`；之后针对 PDF.js Worker配对、MSW隔离origin、Monaco、FFmpeg、C13 Frappe Gantt监听生命周期、Chromium无障碍逐项形成准确证据。无法安装时继续独立公共协议与定向测试，不循环尝试相同DNS/Runner失败。**runCount仍记录10/24，本子批属于同轮续作**。主 #8 Draft、main/PR #3/三个模板均未触及。
+
+
+## PLATFORM 第11轮：三组质量 PR 集成 + 源码同源/生产烟测修复（2026-10-27）
+
+**实际集成操作**：先在 GitHub 读取 COORDINATION/IMPLEMENTATION/根与本包 AGENTS、本进度、Issue #4/#5/#6/#7、开放 PR 和 CI；复查 PR 当前 head、base 和逐文件变更范围，确认新增均只落在各 worker 的 entries 与专属进度文件，没有公共 package/lock/CI 变更。三个 PR 原为 Draft，仅 worker PR 转 Ready；保持最终 #8 Draft。GitHub 使用 `expected_head_sha` + squash merge，未 force/未合 main：
+
+- [AB #50](https://github.com/CoderLambert/ReactLoom/pull/50) `8c0f97e2c44e10c356355bffa60fed0bfc3d4637` → 集成提交 `28356257852edaec18ae1a0034d3332b45f2b267`；25项改动仅 A12/B02/B03/B09 和 AB.md：react-konva 宿主窄屏/拖拽世界坐标、GSAP 后台暂停与减少动态、react-spring 焦点/有界列表、shadcn 状态代次与定时器。
+- [CD #51](https://github.com/CoderLambert/ReactLoom/pull/51) `c442ded0306d7a874920680d8b76b3499f2374bc` → `013c70a3966c32e26646aecf0f4f02794a278845`；22项改动仅 D16/D17/D21 和 CD.md：Workbox 公共匿名 GET 精确路径、Yjs 文档/租户 envelope 与乱序重放、Pagefind 明确公开分级与 HTML 转义。
+- [EF #52](https://github.com/CoderLambert/ReactLoom/pull/52) `f0a21656aa6a5d4cdb77d37e6d44f8cbd9ca96a7` → `a63ecb0708211d1779d8e233030c5ecd041c9885`；仅 E07/E08/E09/F12 和 EF.md：remark AST 有界审计、rehype 严格白名单、Shiki 场景重置与 Vitest 异步取消所有权。所有变更属于示例源码和对应文档、entry-local测试；没有新全局依赖需求。
+
+**PLATFORM 直接写代码并推送**：
+
+- `15ef29936345b866e036c3ac9c0d33dc50d24cdb`：修复 E2E 仍拦截已废弃 `catalog.json` 的假阳性；现在拦截真实首页 `catalog-index.json`，断言错误可恢复、仅两次索引请求、没有旧目录下载，并增加单库 `detail.json` 损坏后的隔离和重试回归。
+- `41484f31699daf1b0febde8a7ee67c23f1d5f76b`：修复 SourceViewer 在选择另一个文件后、Effect 更新状态前可能短暂展示并复制上一个文件却标注为新文件 SHA 的竞态。显示和复制都绑定 `entryId/path/sha256`，复制只允许当前文件 **实际 SHA 校验成功**；浏览器缺 WebCrypto 则仅能手动查看而不冒称已核验。
+- `91870744d18c3ec8d2597e29bfb89b67aad43e11`：新增生产预览源码请求拦截测试，控制第二文件请求，确保切换期间旧源码/校验标记不可见，篡改内容会被拒绝且复制按钮仍禁用。
+- `3d1fa6d60e1ca169e53520783c590672be85e4e2`：修复 `React.lazy` 失败重试仍复用已拒绝 Promise 的问题；显式重试会重新建立 lazy 组件和 ErrorBoundary，而非只复位错误外壳。
+- `f2c8cae0bbb0d9951a0768aac0a3b9538d2ec2fe`：新增 clsx 真组件在重置、停止卸载、重新启动时丢弃旧状态的浏览器回归案例。
+
+**实际执行及证据状态**：
+
+- PASS：三个 PR 的 GitHub squash merge 成功；PR #50/#51/#52 关闭且 merged，#8 仍 open/draft。GitHub 当前分支的修改文件和源代码已回读。worker 在各自独立材料环境报告 AB 16、CD 9、EF 9 项纯策略 Node PASS；这些不是 PLATFORM 在本轮完整 HEAD 复跑的测试，**不增加任何 SDK PASS**。
+- NOT_RUN：本轮新增 Playwright case 尚未执行；本轮平台未执行完整源码 `pnpm typecheck`、`pnpm build`、真实 SDK、MSW/iframe、Chromium 或 Preview。不能把已提交的回归源码当作通过。
+- BLOCKED：本执行容器只有 Node `v22.16.0` 和 TypeScript `5.8.3`，无 pnpm、无本次私有仓库完整可执行工作树，不能执行要求 Node >=22.18 / pnpm10 的真实冻结安装/解析。根 `pnpm-lock.yaml` 未获得合法解析，未手工伪造。
+- CI：最新 `f2c8cae0` 对应 [Library Lab 40462784376](https://github.com/CoderLambert/ReactLoom/actions/runs/40462784376) 两个 job 与 [CI 40462784369](https://github.com/CoderLambert/ReactLoom/actions/runs/40462784369) 七个 job 均 `conclusion=failure` 且 `steps=[]`，没有可信构建日志；不能断言具体失败原因或已测试过上述代码。
+
+**当前维度**：119/119 目录，119/119 条目源码/指南/Agent/状态文件（文件覆盖，非质量验收），357种场景**配置声明**；原始研究资料117份+E11/F05按重建标记，资料审核数没有本轮新增证明；真实 SDK PASS 本轮新增 **0**。11个本轮加固条目不是新条目，故总目录和Demo场景声明数量不增加。
+
+**下一批**：优先取得真实 Node>=22.18/pnpm10/registry 或可执行Runner，执行 `pnpm verify:library --execute --resolve-lock` 获得可信根锁、随后恢复 CI frozen 安装并跑定向构建/SDK/浏览器；处理真实失败后再建立 PDF.js、MSW iframe、Workbox SW、Monaco Worker 的隔离运行证据。若运行环境继续受限，优先对公共安全与生命周期产生可合并的增量，而不重复同一安装失败。**runCount 11/24**。main、PR #3、SPA/SSR/Mobile模板及生产公开部署均未改动。
