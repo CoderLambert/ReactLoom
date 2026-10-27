@@ -436,3 +436,32 @@ GitHub compare: 5次提交，30个变更文件全部位于 `packages/library-lab
 
 **dependencyRequests 新增=0**，继续由PLATFORM维护package/lock/CI、获取真实Runner环境；本通道未触及其他分组。SDK/浏览器恢复后优先针对A06拖拽连接/删除节点；B18 fcitx5/Rime尾随Enter与聚焦关闭；A01标签页隐藏/减少动态/双系列表格进行定向E2E及真实资源回收检查。其余A/B复杂WebGL/白板建议基于真实执行报错而不是无证据大改。
 
+
+---
+
+## 第10轮（wave10）：uPlot / G6 / Ant Design / Embla 的状态与生命周期加固
+
+**runCount=10/24**。本轮以集成分支 `feat/library-lab@363009eb24230fee8c4e5103bcef950ed129a649` 为固定起点，已核对根AGENTS、应用协议、39条A/B已落地、当时开放PR仅主Draft #8和无关#3，因此新建独立 `feat/library-lab-ab-wave10`，未重写旧分支。工作已实际提交：第一批 `75e9a415f546e5c67392f7d6b49c15ee1836a3b5`，第二批 `cb422a7ea81e39071d8e6f6a6a214d7cf7de6404`，交付 [Draft PR #44](https://github.com/CoderLambert/ReactLoom/pull/44)，base只能为 `feat/library-lab`。PLATFORM尚未合并，主PR #8仍Draft。
+
+|条目|实际修正|可独立测试的纯规则|
+|---|---|---|
+|A04 uPlot|流式数据 `setData(data,false)` 改为自动重算轴范围，防止窗口移动后新数据位于旧X轴外；后台与减少动态偏好暂停650ms计时，显式覆盖不绕过隐藏；事件与interval释放|stream-policy.ts：请求/可见性/系统偏好/覆盖组合|
+|A07 AntV G6|360px硬下限导致窄屏图Canvas溢出，改为真实宿主宽；ResizeObserver 更新合并到可取消requestAnimationFrame；异步render仍保留disposed及destroy防线，文本拓扑等价物继续可见|graph-sizing.ts：非法/零宽跳过、窄宽遵从宿主、4096px安全上界|
+|B06 Ant Design|原 `setHistory(rows)` 与 `setRows` 双状态会保存旧闭包快照，改为单一React函数式 `FeedHistory`，追加/切换/一步撤销原子生效；重复ID/URL无副作用|feed-history.ts：重复与连续操作、单层撤销、no-op|
+|B19 Embla Carousel|重置时 `setSlides` 后立即对旧DOM `scrollTo(0)`，改为DOM提交后 `reInit` 再执行仅一次跳转；按稳定ID签名重算、单调分配ID（示例上限24）、过期snap索引归界、初始化前按钮禁用|slide-policy.ts：ID分配、snap边界与异常输入|
+
+本批四库原有 `library.json` 的basic/business/advanced均加入新helper至sourceFiles；指南/Agent说明更新，原 `examples/example.tsx` 仍直接调用真实目标SDK，未替换为Mock。新增**四个独立纯函数helper + 四个针对性 Node test**。没有修改公共package/lock/CI、主分支或其他通道，**dependencyRequests新增0**。
+
+### 实际验证（限定声明）
+
+在 Node **22.16.0**，对与PR八个新测试/源码Git Blob SHA逐项一致的字节文件执行：
+`node --experimental-strip-types --test /mnt/data/ab-wave10/{A04,A07,B06,B19}/tests/*.test.mts` → **16 PASS / 0 FAIL / 0 SKIP**。
+在 TypeScript **5.8.3** 执行 `tsc --noEmit --strict --skipLibCheck --target ES2022 --module ESNext --moduleResolution Bundler /mnt/data/ab-wave10/{A04,A07,B06,B19}/examples/*.ts` → **PASS（仅四个纯helper）**。
+GitHub `compare_commits` 证实前两提交变更24文件，**24/24只在AB entries/A*、entries/B***；八份helper/test blob SHA与 `git hash-object` 完全一致。以上只验证确定性领域规则与范围，**不代表官方SDK实际import、React19完整tsc7、Vite生产构建、Chromium桌面/移动端/触控/GPU已通过**。SDK/build/browser状态保留原 `NOT_RUN/BLOCKED`，没有填写虚构PASS。还需PLATFORM拥有真实npm安装、锁文件、Runner后补集成实测。
+
+### 后续队列与当前限制
+
+1. **PLATFORM**审核合入#44，并根据实际运行日志针对A04移动窗口坐标、A07 graph.render与resize/unmount、B06连续编辑/撤销、B19删除/重置/循环触控验证；公共CI与pnpm-lock由PLATFORM处理。
+2. **AB**在本分支或平台新报告上继续针对确定的源码缺陷做定向修复，不再重复建设39项已存在目录；必要时审阅大型Canvas/白板许可及异步生命周期，而非改写已通过文档。
+3. 当前 **39/39为源码+手册覆盖**，真实SDK/React构建/浏览器全部未取得可核对的PASS证据，LL08/LL10不应宣布验收完成。无实际日志时不反复重试同一下载/无Runner错误。
+
