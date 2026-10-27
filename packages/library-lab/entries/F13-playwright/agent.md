@@ -13,3 +13,7 @@
 
 ## 命令与证据
 `pnpm --filter @reactloom/library-lab exec playwright install chromium`; `pnpm --filter @reactloom/library-lab exec playwright test --config entries/F13-playwright/examples/playwright.config.ts`。如真实执行，保存报告和提交SHA、sourceFingerprint；现在未验证故不标PASS。
+
+## 失败路径与双击防护迁移（wave17）
+
+将 HTTP 非2xx、网络层失败和响应JSON/Schema错误分开；成功态必须要求 `result.ok === true` 而非仅以HTTP 200判断。提交锁在发起请求前同步设置，并在 `finally` 解锁，不丢失失败后的用户操作机会。Playwright 场景采用可确定释放的 Promise barrier，且 `finally` 释放挂起路由，不能在断言异常后留下未完成异步工作。以上是待运行源码，不可填真实浏览器PASS。

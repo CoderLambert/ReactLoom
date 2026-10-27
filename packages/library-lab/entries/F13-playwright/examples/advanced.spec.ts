@@ -34,12 +34,17 @@ test('advanced: abort and stale response cannot overwrite the newest result', as
     }
   })
   await page.setContent(racePage)
-  await page.getByRole('button', {name: '旧版本'}).click()
-  await interceptedOld
-  await page.getByRole('button', {name: '新版本'}).click()
-  await expect(page.getByRole('status')).toHaveText('新结果')
-  releaseOld()
-  await finishedOld
-  await expect(page.getByRole('status')).toHaveText('新结果')
-  expect(oldHandlerRan).toBe(true)
+  try {
+    await page.getByRole('button', {name: '旧版本'}).click()
+    await interceptedOld
+    await page.getByRole('button', {name: '新版本'}).click()
+    await expect(page.getByRole('status')).toHaveText('新结果')
+    releaseOld()
+    await finishedOld
+    await expect(page.getByRole('status')).toHaveText('新结果')
+    expect(oldHandlerRan).toBe(true)
+  } finally {
+    // Also release a held route when an assertion fails before the normal release.
+    releaseOld()
+  }
 })

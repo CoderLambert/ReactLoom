@@ -19,16 +19,36 @@ export const subscriptionPage = `
     <output id="status" aria-live="polite">待提交</output>
   </main>
   <script>
-    document.querySelector('#subscribe').addEventListener('click', async () => {
+    const button = document.querySelector('#subscribe')
+    button.addEventListener('click', async () => {
+      // Synchronous single-flight: prevent duplicate submissions during fetch.
+      if (button.disabled) return
+      button.disabled = true
       const status = document.querySelector('#status')
       status.textContent = '发送中'
       try {
         const email = document.querySelector('#email').value
         const response = await fetch('https://api.lab.invalid/subscribe?email=' + encodeURIComponent(email))
-        const result = await response.json()
-        status.textContent = response.ok ? '订阅成功' : result.message
+        let result
+        try {
+          result = await response.json()
+        } catch {
+          status.textContent = '响应格式异常'
+          return
+        }
+        if (!result || typeof result !== 'object' || Array.isArray(result)) {
+          status.textContent = '响应格式异常'
+        } else if (response.ok) {
+          status.textContent = result.ok === true ? '订阅成功' : '响应格式异常'
+        } else {
+          status.textContent = typeof result.message === 'string' &&
+            result.message.length > 0 && result.message.length <= 160
+            ? result.message : '响应格式异常'
+        }
       } catch {
         status.textContent = '网络不可用'
+      } finally {
+        button.disabled = false
       }
     })
   </script>`

@@ -11,3 +11,7 @@
 基础：`image-alt` 检测错误图片；修复版通过目标规则。业务：没有label时触发 `label`；关联label后消失。进阶：无名按钮触发 `button-name`，修复后组合规则无violations。还要检查 `incomplete`，不能把这三个rule无问题推成所有WCAG合规；真实浏览器执行之前为NOT_RUN。
 
 禁止生产站点插入不可信脚本/外部扫描服务；无需付费API。官方：https://github.com/dequelabs/axe-core
+
+## 跨实例队列迁移限制
+
+同时显示多个待扫描组件时应复用 `audit-queue.mjs` 的单模块排队器；在组件卸载、替换场景后失效化旧请求，并保持 `container.isConnected` 检查。运行中不要调用 `axe.reset()` 中断其他组件的全局规则。此队列只协调同一份 Lab 模块发起的 `axe.run`，不能保证外部代码不会并发扫描。Node 纯队列测试的通过不得标为 axe-core SDK 已验证。
