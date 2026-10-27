@@ -1,1 +1,108 @@
-{"schemaVersion":1,"entryId":"D17","slug":"yjs","name":"Yjs","group":"D","summary":"CRDT 实时协作与离线合并","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "D17",
+  "slug": "yjs",
+  "name": "Yjs",
+  "group": "D",
+  "summary": "Y.Doc 双副本离线编辑、状态向量和 CRDT 增量合并",
+  "tags": [
+    "CRDT",
+    "Yjs",
+    "离线协作",
+    "update",
+    "state-vector",
+    "冲突合并"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "yjs",
+      "version": "13.6.33"
+    }
+  ],
+  "references": [
+    {
+      "title": "官方 Y.Doc API",
+      "url": "https://docs.yjs.dev/api/y.doc"
+    },
+    {
+      "title": "Document updates",
+      "url": "https://docs.yjs.dev/api/document-updates"
+    },
+    {
+      "title": "Yjs 源码",
+      "url": "https://github.com/yjs/yjs"
+    },
+    {
+      "title": "npm 13.6.33",
+      "url": "https://www.npmjs.com/package/yjs"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "D15",
+      "relation": "complements",
+      "reason": "Dexie 可以持久化本地数据，Yjs负责协作增量；不得直接把普通JSON覆盖当CRDT合并。"
+    },
+    {
+      "entryId": "D18",
+      "relation": "complements",
+      "reason": "Comlink可向Worker转移计算，不能替代 Yjs 传输及权限。"
+    },
+    {
+      "entryId": "E01",
+      "relation": "complements",
+      "reason": "Tiptap 文档协作可使用 Yjs 生态适配，但需验证版本和数据所有权。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "level": "basic",
+      "title": "共享 Map 与本地事务",
+      "description": "实际Y.Doc/Y.Map写入，查看共享数据",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": []
+    },
+    {
+      "demoId": "business",
+      "level": "business",
+      "title": "双端离线增量同步",
+      "description": "Y.encodeStateVector与applyUpdate交换增量",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": []
+    },
+    {
+      "demoId": "advanced",
+      "level": "advanced",
+      "title": "冲突收敛与业务含义",
+      "description": "同名字段并发编辑后双副本收敛，不预设谁赢",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": []
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "note": "不包含线上协作文档或私有信息"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "mode": "recreated",
+    "note": "2026-10-27依据Yjs 13.6.33官方文档重新实现，未继承历史SDK通过记录。"
+  }
+}

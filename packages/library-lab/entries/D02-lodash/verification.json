@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "需实际安装 lodash-es@4.18.1 运行 SDK tests"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "待 PLATFORM 的真实 typecheck/build"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "待中文IME/卸载浏览器验证"
+  }
+}

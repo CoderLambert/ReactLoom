@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "待 yjs@13.6.33 真实SDK Node test"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "待真实 TypeScript/Vite 构建"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "双副本 UI/StrictMode 卸载待实测"
+  }
+}

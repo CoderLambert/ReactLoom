@@ -188,3 +188,41 @@ PLATFORM 在 packages/library-lab/package.json 及真实 pnpm-lock.yaml 中统�
 - 交互修订：C19 nuqs 在浏览器后退/前进后同步输入框草稿，页码按真实筛选结果页数夹取，防止分享非法/过期页码导致有结果却显示空页。
 - D18 Comlink 对 `new Worker` 的 CSP/模块兼容失败显式反馈而非 unhandled rejection；Worker 代理进度回调等待 RPC acknowledgment，保证最终结果不超前于进度事件。
 - 仍未实际安装依赖或运行浏览器；这些是源码级风险修正，验证状态保留 NOT_RUN。PR 需 PLATFORM 集成/依赖和浏览器复核。
+
+
+## 第七批 / 2026-10-27 — Schema、ESM 工具、Redux Actor 与离线 CRDT（C05/D02/D12/D14/D17）
+
+- runCount：**7/24**。从已验证集成基线 `feat/library-lab@9340aa9d42cd0318a31eda8e5a1ee840dd2d5108` 延续事先创建但无差异的 `feat/library-lab-cd-wave7`。原 `feat/library-lab-cd` 已落后，**未覆盖或重写旧分支**。本批仅改 `entries/C*`、`entries/D*` 与本进度文件。
+- 新增 **5 个独立条目 / 15 个 basic-business-advanced 分层场景**。每库 8 个事实文件：library.json、guide.md、agent.md、AGENTS.md、verification.json、examples/example.tsx、examples/demo.tsx、tests/sdk.test.mjs；展示代码直接引用运行示例，真实 SDK 在示例和 Node 测试中导入。
+- **C05 Ajv 8.20.0**：静态可信 JSON Schema + strict / allErrors / 不隐式转换，RSS 导入合同与 if/then 条件必填；明确 core 不自带 formats，校验不等同 SSRF 安全。
+- **D02 lodash-es 4.18.1**：uniqBy 首次保留语义、groupBy/orderBy 稳定排序、chunk 分批、debounce.flush/cancel 和中文输入法 composition 期间不错误提交。
+- **D12 Redux Toolkit 2.13.0**：真实 configureStore/createSlice、两个独立租户 store、状态订阅、请求身份守卫及异步回包次序；切换租户/卸载时取消演示计时器和活跃请求标记。
+- **D14 XState 5.33.3**：真实 setup/createActor/assign、draft-reviewing-rejected-published 审批转换、两次重试预算 guard、Strict Mode actor 创建/订阅/停止所有权。
+- **D17 Yjs 13.6.33**：真实 Y.Doc / Y.Map、离线两个副本、encodeStateVector / encodeStateAsUpdate / applyUpdate 增量同步和同键冲突收敛。无真实网络、鉴权、永久存储/awareness，不能宣称完整协作后端。
+
+### 本批真实检查
+
+- Git staged tree 逐项核对：5 个目录均存在 library.json/guide/agent/AGENTS/verification/examples/{example,demo}/tests/sdk.test.mjs；**40 个库级文件**。
+- 5 份 `library.json` 实际 JSON.parse 成功，合计 **15 个声明 Demo**，每个 `entryPoint` 在 sourceFiles 中且目标路径存在。
+- 5 份 `tests/sdk.test.mjs` 使用 V8 的 Function parser 去除顶层 import 后**仅语法解析 5/5 PASS**。这不是导入/执行真实 SDK，也没有解析 TSX 的类型。
+- 当前执行容器目标 SDK 未安装，历史 npm DNS、GitHub Runner 分配限制仍需 PLATFORM 排查。为避免重复已知失败，本批没有重复 npm 安装尝试。**SDK Node = NOT_RUN，TypeScript = NOT_RUN，Vite production = NOT_RUN，Chromium = NOT_RUN**。上述四项严格不标 PASS，旧研究结果不继承。
+- 文档/示例只用了原创 fixture 和官方公开 API，未提交外部实际数据，未启动对外请求或付费服务。
+
+### dependencyRequests（PLATFORM 单一 Owner）
+
+| npm 包 | 固定目标版本 | 范围和许可证 | 已核对官方信息 |
+|---|---|---|---|
+| ajv | 8.20.0 | dependency / MIT；C05 JSON Schema compile | https://www.npmjs.com/package/ajv |
+| lodash-es | 4.18.1 | dependency / MIT；D02 ES Modules named imports | https://www.npmjs.com/package/lodash-es |
+| @types/lodash-es | 4.17.12 | devDependency / MIT；D02 TypeScript declarations（依赖 @types/lodash） | https://www.npmjs.com/package/@types/lodash-es |
+| @reduxjs/toolkit | 2.13.0 | dependency / MIT；D12 configureStore/createSlice | https://www.npmjs.com/package/@reduxjs/toolkit |
+| xstate | 5.33.3 | dependency / MIT；D14 Actor v5 | https://www.npmjs.com/package/xstate |
+| yjs | 13.6.33 | dependency / MIT；D17 Y.Doc / binary update | https://www.npmjs.com/package/yjs |
+
+这些版本是本轮研究的**目标版本**，并非当前包已安装。仅 PLATFORM 可以更新 `packages/library-lab/package.json`、`pnpm-lock.yaml` 和 CI；不手造 integrity；应核对 Peer/TypeScript7/React19 后跑真实 SDK+tsc/build/Browser，再将 sourceFingerprint 和持久日志绑定 verification PASS。
+
+### 当前进度与下轮任务
+
+- 本轮从 **30/43 提升至 35/43 有真实 SDK import 源码和文档**，剩余 **8 条**：C04 JSON Forms、C08 AG Grid、C12 FullCalendar、C13 Frappe Gantt、C22 Moment 历史迁移、D13 RTK Query、D16 Workbox、D21 Pagefind。35 只是源码接入数，不是 SDK 正式验收数。
+- 下一批优先 C04 + C08；结合 v7 FullCalendar 的 React 单包结构实施 C12，防止误用 v6 拆分插件安装；随后 C13/D13 和需要 SW/CLI 隔离的 D16/D21，历史 C22 使用迁移示例而非安装旧 Moment SDK。
+- 本批 worker PR 仅以 `feat/library-lab` 为 base，交由 PLATFORM 统一依赖/审查/合并。没有变更 main、旧模板、PR #3 或其他通道。
