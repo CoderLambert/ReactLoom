@@ -1,6 +1,6 @@
 # EF 通道持续开发进度
 
-- 通道：EF，Issue #7；当前 wave21 分支 `feat/library-lab-ef-wave21-msw-pdf-ownership`，待建 Draft PR；PR base 固定 `feat/library-lab`。
+- 通道：EF，Issue #7；当前 wave21 分支 `feat/library-lab-ef-wave21-msw-pdf-ownership`，Draft PR #73；PR base 固定 `feat/library-lab`。
 - runCount：21 / 24。
 - 基线：`38ed2d247bd82e4f1422b0e8904973e16bca2972`。
 - 本轮日期：2026-10-27（北京时间）。
@@ -587,3 +587,8 @@ runCount=18/24.
 - **dependencyRequests**：不新增包。已有 `msw@3.0.3`、`pdfjs-dist@6.3.289`、`react-pdf@11.0.0` 的确切lock、peer、SW脚本、PDF Worker资产/CSP及浏览器环境依赖PLATFORM真实解析；不是本轮安装证据。PLATFORM需真实测试F11双start/跨标签共享scope、停止和刷新、F06超大MediaBox/高DPR拒绝渲染、F07反复reset/切换及detached-buffer检查。
 - **仍然BLOCKED/NOT_RUN**：真实第三方SDK、全仓库TypeScript/Vite构建、pnpm真实锁文件、Chromium SW注册/CSP与PDF Worker均没有本轮可信运行结果，不将Node策略9 PASS冒充生产验收。EF仍 **37/37源码+指南覆盖**，不是全部37库已运行成功。
 - **下一队列**：待PLATFORM真实构建/SDK反馈优先修复F11/ F06-F07真实接口差异、E19 FFmpeg WASM资源许可/核心加载，剩余运行轮次控制在24次之内。**runCount=21/24**；达到上限须列实际剩余缺口，不虚称完成。
+
+### Wave21 持久交付索引与精确范围
+
+- Draft [PR #73](https://github.com/CoderLambert/ReactLoom/pull/73)，base `feat/library-lab`、head `feat/library-lab-ef-wave21-msw-pdf-ownership`，初始本轮PR head `1aa2696b68337fe5f5bdcf51ce5f06503bd71509`。GitHub compare从基线a7514e4至该head：**4提交 / 27变更文件 / 0越权路径**。
+- 原始Node TAP 9 PASS / 0 FAIL，本轮六个policy/test Git SHA逐个同源确认。源码文件树由PR保留，非完整仓库SDK/test:policy运行。F11浏览器和F06/F07 PDF Worker端仍需平台Chromium+依赖运行。
