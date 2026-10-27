@@ -38,3 +38,9 @@ pnpm add -D fake-indexeddb@6.2.6
 Node SDK 真实 Dexie + fake-indexeddb 合约测试代码已编写，尚未安装或执行；Chromium 实际 IndexedDB/重启迁移 NOT_RUN。参见 verification.json。Dexie Core Apache-2.0；不启用 Cloud。
 
 官方：https://dexie.org/docs/ / https://dexie.org/docs/Version/Version / https://github.com/dexie/Dexie.js
+
+## 第十二批：验证整行事务回滚与场景切换
+
+事务失败后的“数据未变化”应比较**稳定业务 ID、分组、时间戳、阅读状态**，而不是只比较行数；行数相同但 `read` 已变同样是数据损坏。`examples/rollback-policy.mjs` 是真实运行代码使用的纯比较逻辑，`tests/rollback-policy.test.mjs` 定向覆盖顺序变化、字段变更和等长替换。SDK 回归测试再用实际 Dexie 事务验证约束失败时整行记录恢复。
+
+切换 `basic/business/advanced` 期间关闭前一临时连接、废弃异步 epoch；前一会话的 `finally` 仍负责删除它创建的数据库。删除失败不再静默报告“已清理”，保留名字供卸载时尽力重试。**Chromium 中的 IndexedDB versionchange、配额和删除阻塞仍未验证**，不得把纯比较测试视为数据库验收。

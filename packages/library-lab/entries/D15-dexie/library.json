@@ -65,7 +65,9 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/rollback-policy.mjs",
+        "examples/rollback-policy.d.mts"
       ],
       "capabilities": [
         "indexeddb"
@@ -80,7 +82,9 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/rollback-policy.mjs",
+        "examples/rollback-policy.d.mts"
       ],
       "capabilities": [
         "indexeddb"
@@ -95,7 +99,9 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/rollback-policy.mjs",
+        "examples/rollback-policy.d.mts"
       ],
       "capabilities": [
         "indexeddb"
