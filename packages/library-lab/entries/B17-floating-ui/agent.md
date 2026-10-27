@@ -35,3 +35,7 @@
 ## wave18异步所有权
 
 `useFloating({onOpenChange})`关闭时必须同步增加clipboardRequest，不能等`useEffect([open])`后才标记过期。choose/复制成功走同一关闭函数，Portal外部点击、Escape、卸载必须使旧Promise无权提交状态；错误保留在当前浮层可读的role=alert中。必须用真实Clipboard权限环境验证，不能Mock Floating UI SDK后标PASS。
+
+## wave23 业务操作不能只改提示文本
+
+`business-policy.ts` 与 `example.tsx` 是同一迁移单元：稍后阅读/已读必须更新本地文章状态、支持撤回；过滤必须影响具体列表，并区分尚在输入的 query 与已提交 appliedQuery。保留现有浮层定位、非模态焦点、中文IME提交守卫、剪贴板异步取消规则。纯逻辑单测不能覆盖 Floating UI Portal/ARIA/焦点行为；获得真实依赖后在浏览器验收。

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {shouldAdvanceReadingStream,advanceReadingCounts} from '../examples/stream-policy.ts';
+import {shouldAdvanceReadingStream,advanceReadingCounts,MAX_READING_UPDATES} from '../examples/stream-policy.ts';
 const active = {level:'advanced',requested:true,visible:true,reducedMotion:false,allowMotion:false} as const;
 test('active advanced visible stream may tick',()=>assert.equal(shouldAdvanceReadingStream(active),true));
 test('basic and business never start the stream',()=>{
@@ -26,4 +26,13 @@ test('empty and invalid ticks do not modify data',()=>{
   assert.deepEqual(advanceReadingCounts([2],-1),[2]);
   assert.deepEqual(advanceReadingCounts([2],Infinity),[2]);
   assert.deepEqual(advanceReadingCounts([2],0.2),[2]);
+});
+
+test('stream cap prevents further ticking until reset',()=>{
+  assert.equal(MAX_READING_UPDATES,120);
+  assert.equal(shouldAdvanceReadingStream({...active,exhausted:true}),false);
+  assert.equal(shouldAdvanceReadingStream({...active,exhausted:false}),true);
+});
+test('offscreen chart is paused through visibility gate',()=>{
+  assert.equal(shouldAdvanceReadingStream({...active,visible:false,exhausted:false}),false);
 });

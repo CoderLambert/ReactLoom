@@ -61,7 +61,8 @@
       "sourceFiles": [
         "examples/example.tsx",
         "examples/demo.tsx",
-        "examples/ime-guard.ts"
+        "examples/ime-guard.ts",
+        "examples/business-policy.ts"
       ],
       "capabilities": [
         "portal",
@@ -79,7 +80,8 @@
       "sourceFiles": [
         "examples/example.tsx",
         "examples/demo.tsx",
-        "examples/ime-guard.ts"
+        "examples/ime-guard.ts",
+        "examples/business-policy.ts"
       ],
       "capabilities": [
         "portal",
@@ -97,7 +99,8 @@
       "sourceFiles": [
         "examples/example.tsx",
         "examples/demo.tsx",
-        "examples/ime-guard.ts"
+        "examples/ime-guard.ts",
+        "examples/business-policy.ts"
       ],
       "capabilities": [
         "portal",

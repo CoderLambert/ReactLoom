@@ -74,3 +74,9 @@ React state（样本）→ `setOption`（更新实例）→ ECharts 渲染到容
 ## AB wave18：容器响应式与观察器安全释放
 
 去除图表外层强制250px最小宽度，使狭窄Demo/移动窗口不横向撑破布局。`ResizeObserver`只调度一个`requestAnimationFrame`，容器实际宽高非零才调用真实`chart.resize()`；Effect清理时取消待执行帧、disconnect并dispose实例，避免已销毁ECharts对象在旧帧里被调用。图表点选显示系列名、日期和值而非仅日期；复位同时清空旧选择。减少动态偏好下也取消演示用CSS宽度过渡。需在Chromium真实观察快速拉伸、关闭Tab/StrictMode、双系列点选；尚无SDK/浏览器PASS。
+
+## AB wave23：离屏暂停、演示样本上界与键盘选点
+
+高级模式除 `visibilitychange` 外还用 `IntersectionObserver` 观察真实图表容器；滚动离屏暂停增量计时，返回视口按原用户意图恢复。最多处理 `MAX_READING_UPDATES=120` 次，达到上限不再挂计时器，必须显式复位才能重播；复位同步清理计数 ref，避免重复播放。观察器与 interval 都由 effect 对称释放。
+
+Canvas 点击与表格内可聚焦数值按钮共享选择状态；表格按钮调用真实 `dispatchAction({type:'showTip', seriesIndex, dataIndex})`，可用 Enter/Space 浏览每个系列和分类。当前仅有策略回归源码，**尚未**在真实 ECharts/浏览器/读屏验证焦点、tooltip、销毁或耗能效果。
