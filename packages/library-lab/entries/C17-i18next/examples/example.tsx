@@ -1,5 +1,6 @@
 import {useEffect, useRef, useState} from 'react';
 import {createInstance, type i18n} from 'i18next';
+import {createLatestLanguageSwitcher} from './language-switch.mjs';
 
 type Level = 'basic' | 'business' | 'advanced';
 type Language = 'zh' | 'en';
@@ -33,7 +34,7 @@ export default function I18nextWorkshop({level}: {level: Level}) {
   const [name, setName] = useState('开发者');
   const [count, setCount] = useState(2);
   const [notice, setNotice] = useState('');
-  const request = useRef(0);
+  const switcher = useRef<ReturnType<typeof createLatestLanguageSwitcher> | null>(null);
 
   useEffect(() => {
     let alive = true;
@@ -41,20 +42,24 @@ export default function I18nextWorkshop({level}: {level: Level}) {
     void createLocalI18next().then(local => {
       if (!alive) {local.destroy(); return;}
       owned = local;
+      switcher.current = createLatestLanguageSwitcher(
+        next => local.changeLanguage(next),
+        {onCommit: next => {setLanguage(next); setNotice('');},
+          onError: error => setNotice('切换失败：' + String(error))},
+      );
       setInstance(local);
     }).catch(error => {if (alive) setNotice(String(error));});
-    return () => {alive = false; request.current++; owned?.destroy();};
+    return () => {
+      alive = false;
+      switcher.current?.dispose();
+      switcher.current = null;
+      owned?.destroy();
+    };
   }, []);
 
-  async function switchLanguage(next: Language) {
-    if (!instance) return;
-    const id = ++request.current;
-    try {
-      await instance.changeLanguage(next);
-      if (request.current === id) setLanguage(next);
-    } catch (error) {
-      if (request.current === id) setNotice('切换失败：' + String(error));
-    }
+  function switchLanguage(next: Language) {
+    setNotice('');
+    switcher.current?.request(next);
   }
 
   if (!instance) return <p role="status">{notice || '正在初始化独立语言实例…'}</p>;
