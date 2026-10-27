@@ -38,3 +38,9 @@ Worker 并非独立的安全沙箱：同源网络和应用数据权限需要按�
 `tests/sdk.test.mjs` 包含真实 Comlink/MessageChannel；未运行前只能 NOT_RUN。生产 Worker chunk/CSP、资源卸载和 TypeScript 类型由 PLATFORM 实际验证。
 
 参考：https://github.com/GoogleChromeLabs/comlink 。Apache-2.0。
+
+## 第十二批：Worker 崩溃通道与释放失败兜底
+
+仅使用 AbortSignal 竞速无法处理**Worker 脚本崩溃但 RPC Promise 永远 pending**的情况。现在监听原生 Worker 的 `error` / `messageerror` 并让其参与 `Promise.race`；无论任务成功、报错或用户取消，都移除事件监听、释放 Comlink Remote 并终止 Worker。如果 `releaseProxy` 同步抛错或异步拒绝，`finally` 仍会执行 `terminate()`，不因 SDK 通道损坏而泄漏线程。更换任务的 epoch 继续阻止旧 Worker 错误覆盖当前 UI。
+
+新增 Node 真实 SDK 测试使用 `MessageChannel`、`Comlink.transfer` 和 `Comlink.proxy`，对真实 transfer 后原缓冲区 detached、Worker RPC 式回调实际到达进行断言；该 Node 传输测试尚未运行，**不能替代 Chromium 的 CSP、真实模块 Worker 脚本错误或资源回收测试**。

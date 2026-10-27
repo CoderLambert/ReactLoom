@@ -9,7 +9,12 @@ export default function ComlinkWorkshop({level}:Props){
  const session=useRef<Session|null>(null);
  const epoch=useRef(0);
  const dispose=()=>{const active=session.current;session.current=null;if(!active)return;
-  active.controller.abort();void active.remote[Comlink.releaseProxy]();active.worker.terminate();};
+  active.controller.abort();
+  // A failed proxy release must never prevent physical Worker termination.
+  try{void Promise.resolve(active.remote[Comlink.releaseProxy]()).catch(()=>{});}
+  catch{/* Proxy may have already been released after a Worker crash. */}
+  finally{active.worker.terminate();}
+ };
  useEffect(()=>()=>{epoch.current++;dispose();},[]);
  async function execute(){
   dispose();const current=++epoch.current;
@@ -25,6 +30,12 @@ export default function ComlinkWorkshop({level}:Props){
   const remote=Comlink.wrap<WorkerAPI>(worker);
   const controller=new AbortController();
   session.current={worker,remote,controller};
+  let rejectWorkerError:(reason:Error)=>void=()=>{};
+  const crashed=new Promise<never>((_,reject)=>{rejectWorkerError=reject;});
+  const onError=(event:ErrorEvent)=>rejectWorkerError(new Error('Worker 脚本异常：'+(event.message||'未提供详细信息')));
+  const onMessageError=()=>rejectWorkerError(new Error('Worker 消息无法反序列化'));
+  worker.addEventListener('error',onError,{once:true});
+  worker.addEventListener('messageerror',onMessageError,{once:true});
   try{
    let task:Promise<unknown>;
    if(level==='basic'){
@@ -45,10 +56,14 @@ export default function ComlinkWorkshop({level}:Props){
    }
    const cancelled=new Promise<never>((_,reject)=>controller.signal.addEventListener('abort',
     ()=>reject(new DOMException('任务已取消','AbortError')),{once:true}));
-   const answer=await Promise.race([task,cancelled]);
+   const answer=await Promise.race([task,cancelled,crashed]);
    if(current===epoch.current)setResult(JSON.stringify(answer,null,2));
   }catch(error){if(current===epoch.current)setResult('Worker失败：'+String(error));}
-  finally{if(current===epoch.current){dispose();setWorking(false);}}
+  finally{
+   worker.removeEventListener('error',onError);
+   worker.removeEventListener('messageerror',onMessageError);
+   if(current===epoch.current){dispose();setWorking(false);}
+  }
  }
  function cancel(){epoch.current++;dispose();setWorking(false);setResult('Worker 已终止，旧异步结果不会回写');}
  return <section aria-label="Comlink真实Worker示例">

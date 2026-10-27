@@ -21,3 +21,29 @@ test('transfer helper registers real transferable for RPC',()=>{
  assert.equal(Comlink.transfer(array,[array.buffer]),array);
  assert.equal(typeof Comlink.releaseProxy,'symbol');
 });
+
+test('real Comlink transfers ownership and invokes proxied progress callback',async()=>{
+ const {port1,port2}=new MessageChannel();
+ Comlink.expose({
+  async aggregate(values,report){
+   const total=values.reduce((sum,value)=>sum+value,0);
+   await report(total);
+   return total;
+  }
+ },nodeEndpoint(port1));
+ const remote=Comlink.wrap(nodeEndpoint(port2));
+ const bytes=new Uint8Array([2,3,5]);
+ const progress=[];
+ try{
+  const answer=await remote.aggregate(
+   Comlink.transfer(bytes,[bytes.buffer]),
+   Comlink.proxy(value=>{progress.push(value);})
+  );
+  assert.equal(answer,10);
+  assert.equal(bytes.byteLength,0,'transfer must detach the original ArrayBuffer');
+  assert.deepEqual(progress,[10]);
+ }finally{
+  await remote[Comlink.releaseProxy]();
+  port1.close();port2.close();
+ }
+});
