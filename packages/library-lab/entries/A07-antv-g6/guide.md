@@ -44,3 +44,8 @@ graph.destroy();
 - [GitHub 仓库](https://github.com/antvis/G6)
 
 许可证：MIT。
+
+
+## 窄屏与高频 ResizeObserver（第10轮）
+
+此前宽度 `Math.max(360, hostWidth)` 会在 320px 等窄屏超出真实容器。现在测量 `examples/graph-sizing.ts` 的 host CSS 宽度，隐藏容器和非法尺寸忽略，对异常超大尺寸提供 4096px 安全上界。ResizeObserver 不再同步调用 G6 `setSize`，而是下一动画帧合并变化；卸载取消排队帧并断开观察。异步 render 返回后仍需检查 disposed，防止销毁后的图重新订阅。HTML 节点和边列表是可访问等价文本；实际 G6 Canvas/resize 仍需浏览器验证。

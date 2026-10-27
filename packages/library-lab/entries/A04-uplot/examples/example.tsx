@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import uPlot from 'uplot';
 import 'uplot/dist/uPlot.min.css';
+import {shouldRunStream} from './stream-policy';
 
 type Level = 'basic' | 'business' | 'advanced';
 const START = Math.floor(Date.UTC(2026, 9, 26, 0, 0, 0) / 1000);
@@ -47,19 +48,37 @@ function TelemetryChart({ data, level }: { data: uPlot.AlignedData; level: Level
       if (plot.current === instance) plot.current = null;
     };
   }, [level]); // series/axes change -> rebuild; data-only changes -> setData
-  useEffect(() => { plot.current?.setData(data, false); }, [data]);
+  // Streaming moves the x-axis window; reset auto scales or fresh points disappear off-screen.
+  useEffect(() => { plot.current?.setData(data); }, [data]);
   return <div ref={host} role="img" aria-label="uPlot 时间序列走势（下方表格提供等价数据）" style={{ width: '100%', minWidth: 280 }} />;
 }
 export default function UplotExample({ level }: { level: Level }) {
   const [samples, setSamples] = useState(28);
   const [shift, setShift] = useState(0);
   const [stream, setStream] = useState(false);
+  const [overrideReducedMotion, setOverrideReducedMotion] = useState(false);
+  const [visible, setVisible] = useState(() => typeof document === 'undefined' || document.visibilityState === 'visible');
+  const [reducedMotion, setReducedMotion] = useState(() => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  useEffect(() => {
+    if (level !== 'advanced') return;
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const syncVisibility = () => setVisible(document.visibilityState === 'visible');
+    const syncReducedMotion = () => setReducedMotion(media.matches);
+    syncVisibility(); syncReducedMotion();
+    document.addEventListener('visibilitychange', syncVisibility);
+    media.addEventListener('change', syncReducedMotion);
+    return () => {
+      document.removeEventListener('visibilitychange', syncVisibility);
+      media.removeEventListener('change', syncReducedMotion);
+    };
+  }, [level]);
+  const canStream = shouldRunStream({advanced:level === 'advanced',requested:stream,visible,reducedMotion,overrideReducedMotion});
   useEffect(() => { setSamples(28); setShift(0); setStream(false); }, [level]);
   useEffect(() => {
-    if (level !== 'advanced' || !stream) return;
+    if (!canStream) return;
     const timer = window.setInterval(() => setShift(x => x + 1), 650);
     return () => window.clearInterval(timer);
-  }, [level, stream]);
+  }, [canStream]);
   const data = useMemo(() => createSeries(samples, shift, level), [samples, shift, level]);
   const end = data[0].length;
   return <section aria-label="uPlot 实时数据示例">
@@ -72,8 +91,10 @@ export default function UplotExample({ level }: { level: Level }) {
       {level === 'advanced' && <>
         <button type="button" onClick={() => setStream(v => !v)}>{stream ? '暂停模拟采样' : '开始模拟采样'}</button>
         <button type="button" onClick={() => { setStream(false); setShift(0); }}>清空增量并重置</button>
+        <label><input type="checkbox" checked={overrideReducedMotion} onChange={e => setOverrideReducedMotion(e.target.checked)}/>明确允许在减少动态偏好下采样</label>
       </>}
     </div>
+    {level === 'advanced' && stream && !canStream && <p role="status">采样已暂停：{!visible ? '页面位于后台' : '遵循系统减少动态偏好'}。返回可见页面或明确覆盖偏好后会恢复。</p>}
     <TelemetryChart data={data} level={level} />
     <p role="status">当前数据点 {end}；窗口上限 {WINDOW}；最后时间戳 {new Date(data[0][end - 1] * 1000).toLocaleString('zh-CN')}</p>
     <div style={{ overflowX: 'auto' }}><table style={{ width: '100%', textAlign: 'left' }}><caption>最近五个采样（Canvas 的文字替代）</caption>

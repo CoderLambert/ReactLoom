@@ -18,3 +18,8 @@
 
 ## 官方来源
 https://g6.antv.antgroup.com/en/manual/getting-started/integration/react
+
+
+### 第10轮资源与响应式约束
+
+迁移时用实际宿主宽度设定 Graph 初始及更新尺寸，不将 360px 硬编码为移动端最低宽度。`examples/graph-sizing.ts` 仅为确定性尺寸规范化；必须保留 ResizeObserver → requestAnimationFrame 合并更新，以及卸载 cancelAnimationFrame/observer.disconnect/graph.destroy。G6 render 为异步过程，竞态仍需真实 Chromium 挂载/切换/卸载验证，不可将尺寸单测冒充 SDK 成功。

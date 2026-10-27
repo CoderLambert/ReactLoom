@@ -31,3 +31,8 @@ ECharts（A01）图表形态丰富；Chart.js（A03）生态插件更多；uPlot
 目前示例源码存在，但目标SDK/tsc/Vite/Chromium还未执行，状态见 `verification.json`。验证应检查数组列长度、setData后的可视变化、重复mount/unmount后Canvas数回到0、ResizeObserver断开、流式定时器停止、键盘读取表格。
 
 官方： https://github.com/leeoniya/uPlot · https://github.com/leeoniya/uPlot/blob/master/docs/README.md （MIT）。
+
+
+## 动态采样与横轴可见性（第10轮加固）
+
+uPlot 的 `setData(data, false)` 跳过自动范围重置：当横向时间窗口移动后，新数据点可能位于旧的 X 轴范围之外。这里改用 `setData(data)`，为移动窗口重新计算坐标轴，同时继续复用 Canvas 实例。采样计时器受页面可见性与 `prefers-reduced-motion` 管控；用户可明确覆盖减少动态偏好，但隐藏页面永远暂停。应用恢复前台后仅在用户仍请求采样时继续；暂停不清除历史样本。`examples/stream-policy.ts` 为纯业务判定，测试仅证明策略，真实 Canvas 绘制仍待浏览器核验。
