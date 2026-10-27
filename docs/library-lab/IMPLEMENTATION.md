@@ -97,3 +97,10 @@ AB #68、CD #69、EF #70 已由PLATFORM核对变更文件范围和固定head后s
 ## 第20轮：源码索引与详情版本同源约束（2026-10-27）
 
 公共生成器为实际源码文件列表、SHA-256及字节数的规范化JSON生成 `sourceIndexSha256`，详情在已与轻量目录sourceFingerprint匹配后提供该摘要。源码面板先验证上限/路径和完整索引摘要，再按文件SHA与大小下载；有效格式的旧索引或整体替换索引不能再静默通过。详情缺摘要或浏览器不支持WebCrypto时fail closed。已提交生成器、协议、Node回归源码与生产preview负例。精确远端源码及测试两Blob的离线Node定向运行7 PASS，但仅覆盖 `source-integrity` 逻辑；生成器完整/浏览器/第三方SDK仍NOT_RUN，根依赖锁与完整tsc/build仍BLOCKED。进度与证据见 `progress/PLATFORM.md` 第20轮；不将静态119条/357场景声明计为验收成功。主PR #8保持Draft。
+
+
+## 第22轮：MSW受限Worker资源准备与生成资源URL边界（2026-10-28）
+
+本轮审核并集成AB [#80](https://github.com/CoderLambert/ReactLoom/pull/80)、CD [#81](https://github.com/CoderLambert/ReactLoom/pull/81)、EF [#82](https://github.com/CoderLambert/ReactLoom/pull/82)，保留仅 A/B、C/D、E/F 条目及各自进度的所有权。公共平台直接为F11预检新增**官方 MSW Worker 静态资源的待执行构建路径**：`dev`/`build` 在Vite前用`msw init ./public/lab-runners/msw --no-save`生成，`scripts/verify-msw-worker.mjs`检查常规文件、路径、UTF-8、JavaScript事件处理器及≤512KiB字节预算，并输出只表示静态产物检验的SHA-256。根`mockServiceWorker.js`不产生；默认加载主SPA也不得注册。**此路径尚未实际从 npm 安装及构建环境执行，且尚无独立 iframe/CSP/注册/双标签实测；它并不意味着MSW已经工作。**
+
+所有五类公开生成资源继续使用唯一`requestGeneratedResource`，新增规范路径拒绝规则：包括编码`..`、双重编码、编码分隔符、query/fragment、空路径段和控制字符；保留按响应流上限、超时、取消和当前源码摘要验证。安全逻辑定向离线Node 6 PASS/0 FAIL，全部官方 SDK/应用 TypeScript/Vite及Chromium仍BLOCKED或NOT_RUN；细节和Git Blob同源TAP见`progress/PLATFORM.md`第22轮。根`pnpm-lock.yaml`只接受真实pnpm解析结果，不生成虚构integrity。主PR #8继续Draft待用户验收。
