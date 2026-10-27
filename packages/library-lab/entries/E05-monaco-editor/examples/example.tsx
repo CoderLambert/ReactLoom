@@ -1,6 +1,8 @@
 import {useEffect, useRef, useState} from 'react'
 import * as monaco from 'monaco-editor'
 import {installMonacoWorkers} from './workers'
+import {createOwnedResourceCleanup} from './resource-cleanup.mjs'
+import type {OwnedResourceSlots} from './resource-cleanup.mjs'
 
 type Level = 'basic' | 'business' | 'advanced'
 type Props = {level: Level}
@@ -31,15 +33,19 @@ export default function MonacoExample({level}: Props) {
     }
     const json = level === 'advanced'
     const language = json ? 'json' : 'typescript'
-    let model: monaco.editor.ITextModel | undefined
-    let instance: monaco.editor.IStandaloneCodeEditor | undefined
+    // A failed dispose must not prevent later disposals or leak the Worker mapping.
+    const owned: OwnedResourceSlots = {releaseWorkers}
+    const cleanup = createOwnedResourceCleanup(owned, failures => {
+      console.warn('Monaco资源清理出现异常（后续资源已继续释放）', failures)
+    })
     try {
-      model = monaco.editor.createModel(
+      const model = monaco.editor.createModel(
         snippets[level],
         language,
-        monaco.Uri.parse(`inmemory://reactloom-library/e05/${crypto.randomUUID()}.${json ? 'json' : 'ts'}`),
+        monaco.Uri.parse('inmemory://reactloom-library/e05/' + crypto.randomUUID() + (json ? '.json' : '.ts')),
       )
-      instance = monaco.editor.create(container, {
+      owned.model = model
+      const editor = monaco.editor.create(container, {
         model,
         theme: 'vs-light',
         ariaLabel: 'Monaco 代码编辑区域',
@@ -48,51 +54,35 @@ export default function MonacoExample({level}: Props) {
         automaticLayout: false,
         wordWrap: 'on',
       })
-    } catch (error) {
-      instance?.dispose()
-      model?.dispose()
-      releaseWorkers()
-      setMessage('编辑器创建失败：' + String(error))
-      return
-    }
-    if (!model || !instance) {releaseWorkers();return}
-    active.current = instance
-    setCode(model.getValue())
-    setProblemCount(0)
-    setSaved('')
-    setMessage('编辑器已创建；Worker 是否启动需要浏览器实际验证')
-    // Listener/observer/layout setup can throw after the editor was created.
-    // Install cleanup before subscribing so a failed mount cannot retain a model or lease.
-    const editor = instance
-    const textModel = model
-    let contentListener: {dispose(): void} | undefined
-    let markerListener: {dispose(): void} | undefined
-    let observer: ResizeObserver | undefined
-    const cleanup = () => {
-      observer?.disconnect()
-      markerListener?.dispose()
-      contentListener?.dispose()
-      active.current = null
-      editor.dispose()
-      textModel.dispose()
-      releaseWorkers()
-    }
-    try {
-      contentListener = editor.onDidChangeModelContent(() => setCode(editor.getValue()))
-      markerListener = monaco.editor.onDidChangeMarkers((resources) => {
-        if (resources.some(uri => uri.toString() === textModel.uri.toString())) {
-          setProblemCount(monaco.editor.getModelMarkers({resource: textModel.uri}).length)
+      owned.editor = editor
+      active.current = editor
+      setCode(model.getValue())
+      setProblemCount(0)
+      setSaved('')
+      setMessage('编辑器已创建；Worker 是否启动需要浏览器实际验证')
+      owned.contentListener = editor.onDidChangeModelContent(() => setCode(editor.getValue()))
+      owned.markerListener = monaco.editor.onDidChangeMarkers((resources) => {
+        if (resources.some(uri => uri.toString() === model.uri.toString())) {
+          setProblemCount(monaco.editor.getModelMarkers({resource: model.uri}).length)
         }
       })
-      observer = new ResizeObserver(() => editor.layout())
+      const observer = new ResizeObserver(() => {
+        if (active.current === editor) editor.layout()
+      })
+      owned.observer = observer
       observer.observe(container)
       editor.layout()
     } catch (error) {
       cleanup()
-      setMessage('编辑器监听或布局初始化失败：' + String(error))
+      active.current = null
+      setMessage('编辑器创建、监听或布局初始化失败：' + String(error))
       return
     }
-    return cleanup
+    return () => {
+      cleanup()
+      active.current = null
+    }
+
   }, [level])
 
   return <section aria-label="Monaco Editor 真实运行示例">
