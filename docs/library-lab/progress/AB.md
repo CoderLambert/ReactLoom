@@ -1,6 +1,6 @@
 # AB 开发进度 — A/B 前端库垂直实现
 
-**最新调度轮次：7 / 最多24；状态：WAVE7_AB_39_SOURCE_STAGED（A/B全部39条已提交源码与文档，PR #29 待集成；SDK/构建/浏览器仍未验证）。**
+**最新调度轮次：12 / 最多24；状态：WAVE12_AB_39_SOURCE_HARDENING（39/39仅源码和文档覆盖；SDK、完整构建与浏览器尚未验收）。**
 
 - 分支：`feat/library-lab-ab`，base 提交 `38ed2d247bd82e4f1422b0e8904973e16bca2972`。
 - 集成目标：`feat/library-lab`，集成读取的头提交 `5955b9a03f95545f2107583a109e22cc6e44078c`。
@@ -498,3 +498,33 @@ GitHub `compare_commits` 证实前两提交变更24文件，**24/24只在AB entr
 ### GitHub CI观察补记（与源码运行验收分开）
 
 Draft PR #47（https://github.com/CoderLambert/ReactLoom/pull/47）实际触发工作流：Library Lab run 40454825977、CI run 40454825702，均报告 conclusion=failure；Library Lab 的 runtime-bootstrap job 122025599429 与 catalogue job 122025599671 均报 failure，但Connector获取两者日志均得到GitHub BlobNotFound 404，job steps为空。**因此无可用runner执行日志，不能归因为本PR源码问题，也不能将其计为真实SDK/构建验证**。PLATFORM应核对 Actions runner/日志可用性后再诊断，禁止以纯逻辑12 PASS覆盖此项失败。
+
+---
+
+## 第12轮（wave12）：react-konva / GSAP / react-spring / shadcn/ui 运行前质量加固
+
+**runCount=12/24。** 在执行前已读取最新集成分支 `feat/library-lab@0b98b4ef4accd16ab3d7278d8181568c77dc6476` 的 COORDINATION/IMPLEMENTATION/AGENTS/types/catalog、本进度与开放PR。实际开放PR仅集成主Draft #8和无关PR #3；此前AB #47已集成、未重复提交旧内容。旧 `feat/library-lab-ab` 指向历史状态，因此从上述精确集成SHA新建 `feat/library-lab-ab-wave12`，所有更新均以非force且检查原head的方式推送。
+
+### 已提交真实SDK示例修复（四个库，12种分层选择继续共用实际源码）
+
+| 条目 | 修正 | 可测试规则 |
+|---|---|---|
+| A12 react-konva | 去除容器minWidth:320/Stage至少320px造成的窄屏溢出；按真实clientWidth测量；dragMove/dragEnd和DOM按钮在Konva局部世界坐标限制边界；新增节点上限24/坐标布局 | `examples/stage-policy.ts` |
+| B02 GSAP | 初次render读取减少动态偏好；visibilitychange后台自动暂停、恢复前台仅续播未被用户手动暂停的timeline；进度范围钳制 | `examples/timeline-policy.ts` |
+| B03 react-spring | 初次render读取减少动态偏好；列表限定12条、业务ID去重；仅删除按钮实际占焦点时恢复到新增入口，避免抢走其他焦点 | `examples/article-policy.ts` |
+| B09 shadcn/ui | 归档提取尚未归档的ID固定快照，busy期间禁用复选框；reset、切换level与卸载取消定时器并使旧epoch失效，禁止迟到回写 | `examples/archive-policy.ts` |
+
+提交 `46df29becc8f70c7f0c70f55b05bcf2e40d3a3bd`、`9fd9de2bf4767e3031e222c341be3c3fc72248e3`。两批各12个文件，合计24个条目内部变更（4×示例tsx、纯helper、单测、library.json三层sourceFiles、guide.md、agent.md），并另改本进度文档。**仅AB授权范围**，不修改根package、pnpm-lock、CI、公共索引或其他通道；新增dependencyRequests=0。
+
+### 执行证据（仅准确范围）
+
+- Node `22.16.0`：`node --experimental-strip-types --test /mnt/data/ab-wave12/{A12,B02,B03,B09}/tests/*.test.mts`：**16 PASS、0 FAIL、0 SKIP**。
+- TypeScript `5.8.3`：`tsc --noEmit --strict --skipLibCheck --target ES2022 --module ESNext --moduleResolution Bundler /mnt/data/ab-wave12/{A12,B02,B03,B09}/examples/*.ts`：**PASS，仅4份无第三方依赖的纯规则helper**。
+- GitHub逐文件回读八份helper/测试blob，**8/8 SHA与上面Node/tsc执行的本地git hash-object相同**：A12 b3eab066/2080ce50、B02 912f742c/252cbedc、B03 d4cd0aa4/13a49ec8、B09 1fcfd5af/8df1bebb。Git tree分两批继承精确父树，未覆盖旧分支。
+- **真实目标SDK导入、React完整类型检查、Vite生产build、Chromium浏览器/Canvas/键盘焦点/动画生命周期依然NOT_RUN/BLOCKED**（无可用的真实依赖/lockfile/runner证据），`verification.json`没有提升到PASS。不将政策单测计入SDK测试选择器。
+
+### PLATFORM与后续队列
+
+PLATFORM应审核此批PR并仅合入 `feat/library-lab`；真实运行环境准备好后验证 A12 缩放拖拽局部坐标、B02 后台/返回前台/用户暂停及StrictMode、B03 减动与删除焦点、B09 隔离异步回写和Slot/Button交互。当前四库纯逻辑规则可复现，不足以宣布应用可运行。
+
+AB下一队列：检查 A03 Chart.js canvas实例重建与高频数据、A14 React Three Fiber的WebGL生命周期、B01 Motion的切场景动画与焦点；优先处理确证缺陷或来自PLATFORM的真实TS/SDK构建日志。不反复执行无Runner的同一CI错误，不将39/39内容覆盖误写成 SDK验收完成。没有新增依赖请求、公开部署或合并main。
