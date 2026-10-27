@@ -279,3 +279,11 @@ PLATFORM 在 packages/library-lab/package.json 及真实 pnpm-lock.yaml 中统�
 #### 风险交接
 
 C13 Frappe Gantt 1.2.2 上游 `src/index.js` 的 `bind_bar_events` 会向 `document` 绑定 mouseup，且未暴露 destroy/unsubscribe。仅替换容器子节点不能释放该 document listener，连续切换示例会累积监听。**请 PLATFORM 在生产可交互前提供独立 iframe document runner 并用 Chromium 验证停止/清理**，或者限制直接加载；不要将这条标 browser PASS。本批 C13 动态代码仍为待浏览器验证的教学草稿。
+
+### 第八批最终补充：源码边界检查与日期输入修复
+
+- 安排了本轮 **6 个条目/18 个 Demo 声明**（C04、C08、C12、C13、C22、D13）；在最新 worker Git tree 逐条确认每个目录至少含 library.json、guide.md、agent.md、AGENTS.md、verification.json、examples/example.tsx、examples/demo.tsx、tests/sdk.test.mjs。6个 manifest 均为 basic/business/advanced 各一条，entryPoint/sourceFiles均在 Git tree 中存在。
+- 对6份实际 SDK Node 测试源码移除顶层 ESM import 后进行 V8 JavaScript parser 检查：**静态语法 6/6 通过**，不是运行 SDK；本轮未在已安装目标包的环境里执行 Node test/tsc/Vite build/Chromium，全部 **NOT_RUN**。
+- C12 FullCalendar 和 C13 Frappe Gantt 的 YYYY-MM-DD 用户输入增加 UTC round-trip 校验，防止 Date.parse 自动进位接受 2026-02-30 一类无效日期。这是新增代码保护，真实浏览器验收仍 NOT_RUN。
+- Worker Draft PR #35：https://github.com/CoderLambert/ReactLoom/pull/35 ，base=feat/library-lab，保持待 PLATFORM 审核集成。公共依赖/锁文件不由 CD 修改。
+- 累计 **41/43 源码+双指南条目**。下批剩余 D16 Workbox（安全限定 Service Worker scope/runner）与 D21 Pagefind（独立 CLI 构建产物）；不要将需要特殊 runner 的场景做成网页伪终端。
