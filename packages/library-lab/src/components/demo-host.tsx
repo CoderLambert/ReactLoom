@@ -8,6 +8,7 @@ import {demoRunPolicy,CAPABILITY_DESCRIPTIONS} from '../lib/demo-policy.mjs';
 import {sourceLanguage} from '../lib/source-language.mjs';
 import {validateSourceIndex,verifySourceIndexDigest,readBoundedSourceResponse} from '../lib/source-integrity.mjs';
 import {readLimitedJsonResponse,JSON_RESPONSE_LIMITS} from '../lib/bounded-json.mjs';
+import {requestGeneratedResource} from '../lib/resource-fetch.mjs';
 import {packageInstallCommand} from '../lib/package-source.mjs';
 import HighlightCode from './highlight-code';
 import {workerFactories} from '../generated/worker-loaders';
@@ -22,8 +23,8 @@ function SourceViewer({entryId,demo,indexDigest}:{entryId:string;demo:Demo;index
  const [copyState,setCopyState]=useState('');
  useEffect(()=>{
   const controller=new AbortController();setFiles([]);setSelected('');setError('');
-  fetch(import.meta.env.BASE_URL+'raw/'+entryId+'/source-index.json',{signal:controller.signal})
-   .then(response=>readLimitedJsonResponse(response,JSON_RESPONSE_LIMITS.sourceIndex))
+  requestGeneratedResource(import.meta.env.BASE_URL+'raw/'+entryId+'/source-index.json',
+    response=>readLimitedJsonResponse(response,JSON_RESPONSE_LIMITS.sourceIndex),{signal:controller.signal})
    .then(async(items:unknown)=>{
     if(controller.signal.aborted)return;
     const relevant=validateSourceIndex(items,demo.sourceFiles);
@@ -42,8 +43,8 @@ function SourceViewer({entryId,demo,indexDigest}:{entryId:string;demo:Demo;index
   if(!current){setContent('');setLoadedKey('');setVerified(false);return;}
   const controller=new AbortController();setLoading(true);setError('');setContent('');setLoadedKey('');setVerified(false);setCopyState('');
   const encoded=current.path.split('/').map(encodeURIComponent).join('/');
-  fetch(import.meta.env.BASE_URL+'raw/'+entryId+'/sources/'+encoded,{signal:controller.signal})
-   .then(async response=>{
+  requestGeneratedResource(import.meta.env.BASE_URL+'raw/'+entryId+'/sources/'+encoded,
+   async response=>{
     const source=await readBoundedSourceResponse(response,current.bytes);
     if(globalThis.crypto?.subtle){
      const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(source));
@@ -52,7 +53,7 @@ function SourceViewer({entryId,demo,indexDigest}:{entryId:string;demo:Demo;index
      if(!controller.signal.aborted)setVerified(true);
     }
     if(!controller.signal.aborted){setContent(source);setLoadedKey(`${entryId}/${current.path}/${current.sha256}`);}
-   })
+   },{signal:controller.signal})
    .catch(cause=>{if(!controller.signal.aborted)setError(String(cause));})
    .finally(()=>{if(!controller.signal.aborted)setLoading(false);});
   return()=>controller.abort();
