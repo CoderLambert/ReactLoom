@@ -103,7 +103,7 @@
         "canvas",
         "local-download"
       ],
-      "description": "有界批量创建、只读实例状态、锁定操作、离开卸载"
+      "description": "程序化新增80总量上限（原生手绘不受限）、只读实例状态、离开卸载"
     }
   ],
   "license": {

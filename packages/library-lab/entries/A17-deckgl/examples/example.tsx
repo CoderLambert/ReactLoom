@@ -41,7 +41,11 @@ export default function DeckGlExample({level}:{level:Level}){
   useEffect(()=>{
     const node=container.current;if(!node)return;
     const probe=document.createElement('canvas');
-    if(!probe.getContext('webgl2')){setError('WebGL2不可用，改用下面的可访问数据表');return;}
+    const probeGl=probe.getContext('webgl2');
+    if(!probeGl){setError('WebGL2不可用，改用下面的可访问数据表');return;}
+    // Feature probing creates a real GPU context. Release it before opening Deck's context.
+    probeGl.getExtension('WEBGL_lose_context')?.loseContext();
+    let disposed=false;
     let deck:Deck;
     try{
       deck=new Deck({
@@ -50,7 +54,7 @@ export default function DeckGlExample({level}:{level:Level}){
         controller:true,layers:layers(SITES,1.5),
         getTooltip:info=>info.object&&typeof info.object.name==='string'?info.object.name:null,
         onClick:info=>{const item=info.object as Location|undefined;if(item)setPicked(item.name);},
-        onError:cause=>setError(String(cause)),
+        onError:cause=>{if(!disposed)setError(String(cause));},
       });
     }catch(cause){setError(cause instanceof Error?cause.message:'deck.gl 无法启动');return;}
     deckRef.current=deck;setReady(true);
@@ -61,6 +65,7 @@ export default function DeckGlExample({level}:{level:Level}){
     });
     observer.observe(node);
     return()=>{
+      disposed=true;
       observer.disconnect();cancelAnimationFrame(frame);
       deck.finalize();if(deckRef.current===deck)deckRef.current=null;
     };

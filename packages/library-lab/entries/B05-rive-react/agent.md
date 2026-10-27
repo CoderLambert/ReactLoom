@@ -18,7 +18,7 @@ SDK：`@rive-app/react-webgl2@4.37.0`。
 
 - 按路由/显式操作懒加载整个 Rive SDK；Rive WebGL2 + WASM 不放在应用入口。
 - 使用单数 `stateMachine` 与经资产核对的名字。不存在的 View Model 字段不能硬凑接口。
-- RiveComponent 在明确尺寸容器中渲染，先检查加载错误和 CSP/CDN。
+- RiveComponent 在明确尺寸容器中渲染，先检查加载错误和 CSP/CDN。useRive 的异步加载回调须受播放器挂载生命周期约束；调用 play/pause 需要处理运行时异常。请求播放不等于CDN载入成功。
 - Rive 只负责视觉；真实业务状态与失败、取消逻辑由 React/Domain 层表达。
 - AbortController + generation 防止取消、重复请求与卸载后旧结果覆盖新页面。
 - 监听页面可见性、用户 reduced-motion 与视口；暂停不可见实例，需要时卸载 SDK 子组件。

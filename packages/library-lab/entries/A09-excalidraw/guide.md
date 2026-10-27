@@ -30,7 +30,7 @@ import '@excalidraw/excalidraw/index.css';
 
 **业务**：通过 `convertToExcalidrawElements` 将 RSS 获取、清洗分类、人工审核转换为官方完整元素，再调用 `api.updateScene` 更新。初始值仅在挂载阶段解析一次；修改已挂载画布应走 API，而不是反复更改 `initialData`。
 
-**进阶**：`api.getSceneElements / getAppState / getFiles` 提供真实场景，`exportToBlob` 导出 PNG。文件导入调用 `loadFromBlob`，但先校验大小（1.5 MB）、总元素（200）和 URL 协议；不接受内嵌二进制附件。`viewModeEnabled` 改为只读展示。导出 Object URL 在下载后/卸载时回收，场景初始化不会写入网站其它空间。
+**进阶**：`api.getSceneElements / getAppState / getFiles` 提供真实场景，`exportToBlob` 导出 PNG。文件导入调用 `loadFromBlob`，但先校验大小（1.5 MB）、总元素（200）和 URL 协议；不接受内嵌二进制附件。导入/导出是异步 SDK 操作，必须通过操作代号防止旧文件在用户重置、替换场景或退出 Tab 后回写；“忽略结果”只防止旧结果使用，不代表能够中止 SDK 内部解析。`viewModeEnabled` 改为只读展示。导出 Object URL 在下载后/卸载时回收，场景初始化不会写入网站其它空间。
 
 这里的“安全校验”只是 Demo 的一组防护，不代表已经为所有不可信 Excalidraw 文档提供充分的隔离与审计；真实业务还需授权、schema/资产策略和持久化校验。
 

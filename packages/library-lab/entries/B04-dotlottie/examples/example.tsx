@@ -25,7 +25,12 @@ export default function DotLottieExample({ level }: { level: Level }) {
   const [error, setError] = useState('');
   const [outcome, setOutcome] = useState<'idle'|'pending'|'success'>('idle');
   const pending = useRef<number | null>(null);
-  useEffect(() => { setPlaying(false); setOverride(false); setSpeed(1); setOutcome('idle'); }, [level]);
+  useEffect(() => {
+    // The business completion timer belongs to the current scene; do not let a previous
+    // scene's pending callback turn the next scene into a false success.
+    if (pending.current !== null) { window.clearTimeout(pending.current); pending.current = null; }
+    setPlaying(false); setOverride(false); setSpeed(1); setOutcome('idle');
+  }, [level]);
   useEffect(() => {
     const onVisibility = () => setVisible(!document.hidden);
     document.addEventListener('visibilitychange', onVisibility);

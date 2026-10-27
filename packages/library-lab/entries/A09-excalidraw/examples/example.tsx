@@ -33,7 +33,7 @@ function initialWorkflow() {
   ]);
 }
 
-function saveBlob(blob: Blob, name: string, urls: Set<string>) {
+function saveBlob(blob: Blob, name: string, urls: Set<string>, timers: Set<number>) {
   const url = URL.createObjectURL(blob);
   urls.add(url);
   const link = document.createElement('a');
@@ -43,27 +43,39 @@ function saveBlob(blob: Blob, name: string, urls: Set<string>) {
   link.click();
   link.remove();
   // A delay allows the download to start; remaining URLs are revoked on unmount.
-  window.setTimeout(() => {
+  const timer = window.setTimeout(() => {
     URL.revokeObjectURL(url);
     urls.delete(url);
+    timers.delete(timer);
   }, 2000);
+  timers.add(timer);
 }
 
 export default function ExcalidrawWorkshop({ level }: { level: Level }) {
   const apiRef = useRef<EditorApi | null>(null);
   const urlsRef = useRef(new Set<string>());
+  const downloadTimers = useRef(new Set<number>());
   const reportTimer = useRef<number | undefined>(undefined);
+  const operationId = useRef(0);
+  const mounted = useRef(false);
   const [count, setCount] = useState(0);
   const [readOnly, setReadOnly] = useState(false);
   const [working, setWorking] = useState(false);
   const [message, setMessage] = useState('所有画板数据仅在本页面内存中，未同步到服务器。');
   const seed = useMemo(() => level === 'basic' ? undefined : ({ elements: initialWorkflow(), appState: { viewBackgroundColor: '#fffdf7' } }), [level]);
 
-  useEffect(() => () => {
-    apiRef.current = null;
-    if (reportTimer.current !== undefined) window.clearTimeout(reportTimer.current);
-    for (const url of urlsRef.current) URL.revokeObjectURL(url);
-    urlsRef.current.clear();
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+      ++operationId.current; // invalidate in-flight loadFromBlob/exportToBlob
+      apiRef.current = null;
+      if (reportTimer.current !== undefined) window.clearTimeout(reportTimer.current);
+      for (const timer of downloadTimers.current) window.clearTimeout(timer);
+      downloadTimers.current.clear();
+      for (const url of urlsRef.current) URL.revokeObjectURL(url);
+      urlsRef.current.clear();
+    };
   }, []);
 
   const onChange = useCallback((elements: readonly { isDeleted?: boolean }[]) => {
@@ -73,6 +85,8 @@ export default function ExcalidrawWorkshop({ level }: { level: Level }) {
   }, []);
 
   function clearCurrentScene() {
+    ++operationId.current;
+    setWorking(false);
     apiRef.current?.resetScene();
     setMessage('仅重置当前画布。不会清除浏览器、其他库或用户数据。');
   }
@@ -82,6 +96,7 @@ export default function ExcalidrawWorkshop({ level }: { level: Level }) {
     if (!api) return;
     const elements = api.getSceneElements();
     if (!elements.length) { setMessage('画布为空，请先绘制至少一个元素。'); return; }
+    const token = ++operationId.current;
     setWorking(true);
     try {
       const blob = await exportToBlob({
@@ -91,19 +106,25 @@ export default function ExcalidrawWorkshop({ level }: { level: Level }) {
         mimeType: 'image/png',
         maxWidthOrHeight: 2048,
       });
+      if (token !== operationId.current || !mounted.current || apiRef.current !== api) return;
       if (!blob) throw new Error('未生成 PNG');
-      saveBlob(blob, 'reactloom-workflow.png', urlsRef.current);
+      saveBlob(blob, 'reactloom-workflow.png', urlsRef.current, downloadTimers.current);
       setMessage('已生成本地 PNG (' + blob.size + ' 字节)，未上传任何服务器。');
-    } catch (error) { setMessage('PNG 导出失败：' + String(error)); }
-    finally { setWorking(false); }
+    } catch (error) {
+      if (token === operationId.current && mounted.current) setMessage('PNG 导出失败：' + String(error));
+    } finally {
+      if (token === operationId.current && mounted.current) setWorking(false);
+    }
   }
 
   async function importScene(event: ChangeEvent<HTMLInputElement>) {
     const file = event.currentTarget.files?.[0];
     event.currentTarget.value = '';
     if (!file) return;
-    if (!apiRef.current) { setMessage('编辑器未就绪'); return; }
+    const api = apiRef.current;
+    if (!api) { setMessage('编辑器未就绪'); return; }
     if (file.size > MAX_IMPORT_BYTES) { setMessage('导入文件最大允许 1.5 MB'); return; }
+    const token = ++operationId.current;
     setWorking(true);
     try {
       const restored = await loadFromBlob(file, null, null);
@@ -111,10 +132,15 @@ export default function ExcalidrawWorkshop({ level }: { level: Level }) {
       if (elements.length > MAX_ELEMENTS) throw new Error('元素超过 200 个，本实验不允许大批量导入');
       if (elements.some(element => !isAllowedLink(element.link))) throw new Error('存在不安全的元素链接');
       if (restored.files && Object.keys(restored.files).length) throw new Error('当前教学导入不接受含二进制附件的画板');
-      apiRef.current.updateScene({ elements, appState: { viewBackgroundColor: '#fffdf7' } });
+      // Loading is asynchronous: a reset, scene replacement, or unmount invalidates this result.
+      if (token !== operationId.current || !mounted.current || apiRef.current !== api) return;
+      api.updateScene({ elements, appState: { viewBackgroundColor: '#fffdf7' } });
       setMessage('已通过 Excalidraw SDK 导入 ' + elements.length + ' 个元素；仅影响当前页面。');
-    } catch (error) { setMessage('导入已拒绝：' + String(error)); }
-    finally { setWorking(false); }
+    } catch (error) {
+      if (token === operationId.current && mounted.current) setMessage('导入已拒绝：' + String(error));
+    } finally {
+      if (token === operationId.current && mounted.current) setWorking(false);
+    }
   }
 
   return (
@@ -124,12 +150,19 @@ export default function ExcalidrawWorkshop({ level }: { level: Level }) {
       <div className="ab-actions" role="group" aria-label="白板操作">
         <button type="button" onClick={clearCurrentScene}>重置当前画布</button>
         {level !== 'basic' && <button type="button" onClick={() => {
+          ++operationId.current;
+          setWorking(false);
           apiRef.current?.updateScene({ elements: initialWorkflow() });
           setMessage('已重新加载本地 RSS 工作流骨架。');
         }}>恢复流程草图</button>}
         {level === 'advanced' && <>
           <label><input type="checkbox" checked={readOnly} onChange={event => setReadOnly(event.target.checked)} />只读演示</label>
           <button type="button" disabled={working} onClick={() => void exportPng()}>下载 PNG</button>
+          {working && <button type="button" onClick={() => {
+            ++operationId.current;
+            setWorking(false);
+            setMessage('已取消使用当前操作结果。SDK底层解析/导出可能仍在进行，但不得回写画板或触发下载。');
+          }}>忽略当前导入或导出</button>}
           <label>导入 .excalidraw 文件
             <input type="file" accept=".excalidraw,.json,application/json" disabled={working} onChange={event => void importScene(event)} />
           </label>

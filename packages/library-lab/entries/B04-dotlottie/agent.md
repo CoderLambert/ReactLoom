@@ -6,7 +6,7 @@
 
 **迁移**：读`examples/example.tsx`和`examples/pulse.json`。保留实例ref callback、已加载标志与load/error监听清理；仅从获授权本地文件或受控来源读取JSON/.lottie。App状态和动画状态分别维护，不复制Demo的本地模拟业务提交到生产服务端。
 
-**必须保留**：初始autoplay=false；prefers-reduced-motion默认停首帧；visibilitychange页面隐藏暂停；卸载移除监听与本地timer；图形下方有文本替代，canvas不是业务反馈唯一媒介。
+**必须保留**：初始autoplay=false；prefers-reduced-motion默认停首帧；visibilitychange页面隐藏暂停；切换场景时先清除旧业务timer，卸载移除监听与本地timer；图形下方有文本替代，canvas不是业务反馈唯一媒介。
 
 **禁止**：在UI render里反复addEventListener；依赖播放结束作为保存成功；默认访问第三方素材URL；把一套播放器的setFrame兼容性直接套到其它大版本；通过复制动效掩盖API错误。
 

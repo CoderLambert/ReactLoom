@@ -42,18 +42,30 @@ function wait(ms: number, signal: AbortSignal): Promise<void> {
 
 /** Owns exactly one Rive canvas; unmounting this child releases the SDK instance. */
 function RivePlayer({ playing, onError }: { playing: boolean; onError: (message: string) => void }) {
+  const alive = useRef(true);
+  useEffect(() => {
+    alive.current = true;
+    return () => { alive.current = false; };
+  }, []);
   const { rive, RiveComponent } = useRive({
     src: RIVE_SAMPLE_URL,
     stateMachine: RIVE_SAMPLE_STATE_MACHINE,
     autoplay: false,
-    onLoadError: error => onError('Rive 资源/渲染失败：' + String(error)),
+    onLoadError: error => {
+      // The remote .riv can fail after the player left the viewport.
+      if (alive.current) onError('Rive 资源/渲染失败：' + String(error));
+    },
   }, { useOffscreenRenderer: true });
 
   useEffect(() => {
     if (!rive) return;
-    if (playing) rive.play();
-    else rive.pause();
-  }, [rive, playing]);
+    try {
+      if (playing) rive.play();
+      else rive.pause();
+    } catch (error) {
+      if (alive.current) onError('Rive 播放控制失败：' + String(error));
+    }
+  }, [rive, playing, onError]);
 
   return <div className="ab-rive-canvas" aria-hidden="true"><RiveComponent /></div>;
 }
@@ -65,6 +77,7 @@ export default function RiveWorkshop({ level }: { level: Level }) {
   const [manuallyPaused, setManuallyPaused] = useState(false);
   const [phase, setPhase] = useState<Review>('idle');
   const [message, setMessage] = useState('动画资源采用官方公开文档的 CDN 地址，当前运行需要网络。');
+  const handlePlayerError = useCallback((detail: string) => setMessage(detail), []);
   const [simulateError, setSimulateError] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const pendingRef = useRef<AbortController | null>(null);
@@ -137,13 +150,13 @@ export default function RiveWorkshop({ level }: { level: Level }) {
     <p role="status" aria-live="polite">{level === 'business' ? ('业务状态：' + phase + ' · ') : ''}{message}</p>
     <div ref={wrapperRef} className="ab-rive-viewport">
       {shouldMount
-        ? <RivePlayer playing={playing} onError={setMessage} />
+        ? <RivePlayer playing={playing} onError={handlePlayerError} />
         : <div className="ab-rive-placeholder">动画在视口外：Rive 组件已卸载；返回视口后再加载。</div>}
     </div>
     <dl className="ab-rive-facts">
       <div><dt>文档页面</dt><dd>{pageVisible ? '前台' : '后台'}</dd></div>
       <div><dt>系统减少动态效果</dt><dd>{reduced ? '开启（停播）' : '关闭'}</dd></div>
-      <div><dt>播放器状态</dt><dd>{!shouldMount ? '未挂载' : playing ? '播放' : '暂停'}</dd></div>
+      <div><dt>播放器请求状态</dt><dd>{!shouldMount ? '未挂载' : playing ? '请求播放（需资源成功加载）' : '请求暂停'}</dd></div>
     </dl>
     <p>动画只是视觉装饰，审核成功/失败必须由 HTML 文本、按钮状态和真实业务契约表达。WebGL2 与 CDN 失败时仍保留文本结果。</p>
   </section>;
