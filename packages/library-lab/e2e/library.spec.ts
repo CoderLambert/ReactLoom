@@ -141,3 +141,32 @@ test('landing page requests compact index, full detail only after opening one en
  await expect(page.getByRole('tab',{name:'实战 Demo'})).toBeVisible();
  expect(requests.filter(path=>path.startsWith('/raw/')&&path.endsWith('/detail.json'))).toEqual(['/raw/C20/detail.json']);
 });
+
+
+test('production source viewer refuses a malformed source index before any source request',async({page})=>{
+ let sourceDownloads=0;
+ page.on('request',request=>{if(request.url().includes('/raw/C20/sources/'))sourceDownloads+=1;});
+ await page.route('**/raw/C20/source-index.json',async route=>{
+  const response=await route.fetch();
+  const index=await response.json() as Array<{path:string;sha256:string;bytes:number}>;
+  index[0]={...index[0],sha256:'tampered'};
+  await route.fulfill({response,contentType:'application/json',body:JSON.stringify(index)});
+ });
+ await page.goto('/libraries/clsx?tab=demo&example=basic');
+ await expect(page.locator('.source-viewer [role="alert"]')).toContainText('源码索引含无效');
+ await expect(page.getByRole('button',{name:'复制源码'})).toHaveCount(0);
+ expect(sourceDownloads).toBe(0);
+});
+
+test('production source viewer rejects a byte-count mismatch without exposing copy',async({page})=>{
+ await page.route('**/raw/C20/source-index.json',async route=>{
+  const response=await route.fetch();
+  const index=await response.json() as Array<{path:string;sha256:string;bytes:number}>;
+  index[0]={...index[0],bytes:1};
+  await route.fulfill({response,contentType:'application/json',body:JSON.stringify(index)});
+ });
+ await page.goto('/libraries/clsx?tab=demo&example=basic');
+ await expect(page.locator('.source-viewer [role="alert"]')).toContainText('源码实际大小超出索引声明');
+ await expect(page.getByRole('button',{name:'复制源码'})).toBeDisabled();
+ await expect(page.locator('.source-viewer .hash')).toHaveCount(0);
+});
