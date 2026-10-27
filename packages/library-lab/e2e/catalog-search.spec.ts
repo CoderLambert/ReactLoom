@@ -21,3 +21,14 @@ test('search commits preserve existing category and do not create an entry per k
   expect(new URL(page.url()).searchParams.get('group')).toBe('E');
   await expect(page.locator('.library-card')).toHaveCount(1);
 });
+
+test('invalid catalogue payload shows a recoverable error rather than rendering corrupt entries',async({page})=>{
+  let corrupt=true;
+  await page.route('**/catalog.json',route=>corrupt?
+    route.fulfill({status:200,contentType:'application/json',body:'{"invalid":true}'}):route.continue());
+  await page.goto('/');
+  await expect(page.getByRole('alert')).toContainText('受限的条目数组');
+  corrupt=false;
+  await page.getByRole('button',{name:'重试'}).click();
+  await expect(page.locator('.library-card')).toHaveCount(119);
+});

@@ -19,9 +19,16 @@ export function validateCatalogPayload(value) {
       throw new Error(entry.entryId + ' 的源码摘要缺失或无效');
     if (!entry.verification || typeof entry.verification !== 'object' || Array.isArray(entry.verification))
       throw new Error(entry.entryId + ' 缺少独立验证状态');
-    for (const kind of KINDS)
-      if (!STATES.has(entry.verification[kind]?.status))
+    for (const kind of KINDS) {
+      const record = entry.verification[kind];
+      if (!STATES.has(record?.status))
         throw new Error(entry.entryId + ' 的 ' + kind + ' 验证状态无效');
+      if (record.status === 'PASS' && (
+        record.sourceFingerprint !== entry.sourceFingerprint ||
+        typeof record.command !== 'string' || !record.command.trim() ||
+        typeof record.evidence !== 'string' || !record.evidence.trim()
+      )) throw new Error(entry.entryId + ' 的 ' + kind + ' PASS 缺少匹配的指纹、执行命令或证据');
+    }
   }
   return value;
 }

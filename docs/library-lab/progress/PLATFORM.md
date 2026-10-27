@@ -172,3 +172,21 @@ runCount：**6 / 24**。
 - **阻塞仍在**：本环境无法解析 npm 下载源、GitHub Actions 最近 run 40429548255 等执行在 runner 分配之前失败；真实 pnpm 锁文件、完整 TypeScript、Vite build、官方 SDK、Playwright 仍 **BLOCKED/NOT_RUN**，Issue #12 继续记录。不能手造锁文件或把静态校验当作生产通过。未修改 main、旧模板或 PR #3；主 PR #8 仍保持 Draft。
 
 **下一批**：继续接入 CD 余下 8 条 worker PR，并同步公共包版本和根索引；优先由 EF 修复 PDF.js #22 且同时升级源码/文档/测试；完善 frame/SW 隔离；有真实 pnpm10+Node22.18 环境时生成冻结锁文件并实际执行构建、六风险切片与浏览器验证，逐条写证据。下一次从最新 GitHub HEAD 恢复并核对独立分组状态。**runCount: 7 / 24**。
+
+## 平台持续开发第8轮（2026-10-27，北京时间）
+
+**本轮实际合入两个独立质量修复 PR（不是单纯巡检）：**
+
+- EF #34：检查15个变更文件只涉及 F06/F07 与 EF 自身进度，标记可审核后通过 GitHub 常规 merge 进入 feat/library-lab，merge `8c54208d61c01309af20d4edfbce01e3b026f2e1`。F06/F07 与 Library Lab 根依赖在源码声明上已统一 `pdfjs-dist@6.3.289`（匹配 react-pdf 11.0.0），F06 用 `createRenderGate()` 串行化共享 Canvas 上的 PDF.js RenderTask，防止取消后未结算的前次渲染撞上新渲染。三项纯 Node render-gate 单测通过。**Issue #22 只关闭了静态版本差异，不关闭真实 Worker/Chromium 验收。**
+- AB #33：检查15个变更文件限于 AB 条目与进度，通过常规 merge `f052e8b478d604ccefb6cf8f3569b80055c68f2a`。针对 A09 Excalidraw、A10 tldraw、A17 deck.gl、B04 dotLottie、B05 Rive 完成异步结果失效、真实配额语义、GPU上下文释放、timer和播放错误/卸载清理。未声称SDK运行PASS。
+- PLATFORM `a28ce7dff06f9ffef277da209ffe6c47b1710bbc`：新增 `catalog-search.tsx`，在中文IME候选词组合期间仅维护本地草稿，结束后180ms合并提交URL，保留原分类/筛选条件和浏览器深链接；新增 catalog-payload 合同，在客户端检验条目Schema、重复ID/slug、源码指纹、SDK/build/browser状态，损坏数据时 fail closed 并提供重试。
+- 本批后续改进：进一步拒绝无匹配源指纹、实际命令、证据的伪PASS，并在取消后的异步JSON读取中检查 AbortSignal。新增离线测试7项和生产预览E2E草案（中文IME、分类URL保持、损坏目录恢复）。
+
+**文件树确认**：通过 GitHub 不截断递归树检查，119个 `library.json`，111组 `guide.md/agent.md/verification.json`，按三层为333项场景**声明**，8条仍需内容完成：C04、C08、C12、C13、C22、D13、D16、D21。111是源代码和文档接入，不是111个SDK PASS。
+
+**实际可重复证据与边界**：本地 Node 22.16.0 隔离文件执行 `node --test /mnt/data/platform-turn8/tests/catalog-payload.test.mjs /mnt/data/ef-wave9-test/render-gate.test.mjs` 得到 **10 PASS、0 FAIL、0 SKIP**（7个payload/查询纯逻辑 + 3个Canvas队列纯逻辑）；TAP摘要写入 `docs/library-lab/evidence/platform-turn8-offline.tap`。TypeScript `transpileModule` 对新搜索组件和E2E草案为0语法诊断，不等于完整 `tsc`。合并远端全部代码的 `pnpm install/typecheck/build/test:sdk/Chromium` 均仍 **BLOCKED或NOT_RUN**；E2E文件只提交未运行。
+GitHub最新run 40432842277（主CI 7 job）与40432842202（Lab 2 job）全部 `runner_id=0, steps=[]`，属于分配Runner前失败，未产生测试日志；不能推断为代码执行失败，也不能声称根锁文件冻结。共享阻塞 #12 不重复触发同样的失败workflow。
+
+**后续优先级**：审查CD余下8库PR、公共依赖后统一生成根索引；实际Node>=22.18/pnpm10可用时先生成真实锁文件并恢复frozen安装，再完成PDF Worker双库与AB异步生命周期浏览器回归、中文IME E2E；未取得执行环境仍继续公共安全与Agent可用性改进。保持 Draft PR #8，不改main/旧模板/PR #3。
+
+runCount：**8 / 24**。

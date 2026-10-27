@@ -6,6 +6,12 @@ const fixture={schemaVersion:1,entryId:'D03',slug:'p-limit',name:'p-limit',group
 test('generated catalog shape is accepted without claiming runtime PASS',()=>assert.deepEqual(validateCatalogPayload([fixture]),[fixture]));
 test('duplicate identities or slugs never reach Router',()=>{assert.throws(()=>validateCatalogPayload([fixture,{...fixture,slug:'other'}]),/重复/);assert.throws(()=>validateCatalogPayload([fixture,{...fixture,entryId:'D04'}]),/重复/);});
 test('schema, malicious references, and missing arrays fail closed',()=>{assert.throws(()=>validateCatalogPayload([{...fixture,references:[{title:'x',url:'javascript:alert(1)'}]}]),/无效/);assert.throws(()=>validateCatalogPayload([{...fixture,tags:null}]),/无效/);});
-test('missing source fingerprint and verification status fail closed',()=>{assert.throws(()=>validateCatalogPayload([{...fixture,sourceFingerprint:''}]),/源码摘要/);assert.throws(()=>validateCatalogPayload([{...fixture,verification:{sdk:{status:'PASS'}}}]),/build/);});
+test('missing source fingerprint and verification status fail closed',()=>{assert.throws(()=>validateCatalogPayload([{...fixture,sourceFingerprint:''}]),/源码摘要/);assert.throws(()=>validateCatalogPayload([{...fixture,verification:{sdk:{status:'NOT_RUN'}}}]),/build/);});
 test('catalog length cannot be zero or unbounded',()=>{assert.throws(()=>validateCatalogPayload([]),/受限/);assert.throws(()=>validateCatalogPayload(Array(301).fill(fixture)),/受限/);});
 test('search query is bounded, without replacing Chinese IME characters',()=>{assert.equal(normalizeCatalogQuery('前端 工程'), '前端 工程');assert.equal(normalizeCatalogQuery('x'.repeat(400)).length, SEARCH_QUERY_LIMIT);assert.equal(normalizeCatalogQuery(undefined),'');});
+test('unsubstantiated PASS cannot be rendered as verified',()=>{
+  const verification={...fixture.verification,sdk:{status:'PASS',sourceFingerprint:fixture.sourceFingerprint,command:'',evidence:'unverified'}};
+  assert.throws(()=>validateCatalogPayload([{...fixture,verification}]),/PASS/);
+  verification.sdk={status:'PASS',sourceFingerprint:fixture.sourceFingerprint,command:'node --test',evidence:'docs/evidence/real-run.log'};
+  assert.equal(validateCatalogPayload([{...fixture,verification}]).length,1);
+});

@@ -1,0 +1,33 @@
+TAP version 13
+# Subtest: only one render touches the shared canvas at a time
+ok 1 - only one render touches the shared canvas at a time
+# Subtest: a cancelled render rejecting does not poison subsequent operations
+ok 2 - a cancelled render rejecting does not poison subsequent operations
+# Subtest: stale queued render can skip work without blocking latest
+ok 3 - stale queued render can skip work without blocking latest
+# Subtest: generated catalog shape is accepted without claiming runtime PASS
+ok 4 - generated catalog shape is accepted without claiming runtime PASS
+# Subtest: duplicate identities or slugs never reach Router
+ok 5 - duplicate identities or slugs never reach Router
+# Subtest: schema, malicious references, and missing arrays fail closed
+ok 6 - schema, malicious references, and missing arrays fail closed
+# Subtest: missing source fingerprint and verification status fail closed
+ok 7 - missing source fingerprint and verification status fail closed
+# Subtest: catalog length cannot be zero or unbounded
+ok 8 - catalog length cannot be zero or unbounded
+# Subtest: search query is bounded, without replacing Chinese IME characters
+ok 9 - search query is bounded, without replacing Chinese IME characters
+# Subtest: unsubstantiated PASS cannot be rendered as verified
+ok 10 - unsubstantiated PASS cannot be rendered as verified
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 69.329282
+# command: node --test /mnt/data/platform-turn8/tests/catalog-payload.test.mjs /mnt/data/ef-wave9-test/render-gate.test.mjs
+# node: v22.16.0
+# note: archived result summary omits per-case timing; test was executed in isolated local directories, NOT full repository SDK/TS/build/browser.
