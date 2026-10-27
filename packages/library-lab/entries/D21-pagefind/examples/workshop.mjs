@@ -1,20 +1,21 @@
 import * as pagefind from 'pagefind';
+import {assertPublicDocument, escapeHtmlText} from './publication-policy.mjs';
 import {mkdtemp, mkdir, writeFile, rm, stat} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import path from 'node:path';
 
 const LEVELS = new Set(['basic', 'business', 'advanced']);
 const pages = [
-  {url: '/articles/react-suspense/', title: 'React Suspense', content: 'Rendering async interfaces with a clear loading boundary'},
-  {url: '/articles/cache-design/', title: 'Cache ownership', content: 'Cache invalidation and data versioning for RSS readers'},
-  {url: '/articles/agent-notes/', title: 'Agent engineering notes', content: 'A static knowledge base with reusable examples'},
+  {visibility: 'public', url: '/articles/react-suspense/', title: 'React Suspense', content: 'Rendering async interfaces with a clear loading boundary'},
+  {visibility: 'public', url: '/articles/cache-design/', title: 'Cache ownership', content: 'Cache invalidation and data versioning for RSS readers'},
+  {visibility: 'public', url: '/articles/agent-notes/', title: 'Agent engineering notes', content: 'A static knowledge base with reusable examples'},
 ];
 
 function documentHTML(title, content) {
   // Deliberately static trusted fixture. Do not put unescaped user HTML here.
   return '<!doctype html><html lang="en"><head><meta charset="utf-8"><title>' +
-    title + '</title></head><body><main data-pagefind-body><h1>' + title +
-    '</h1><p>' + content + '</p></main></body></html>';
+    escapeHtmlText(title) + '</title></head><body><main data-pagefind-body><h1>' + escapeHtmlText(title) +
+    '</h1><p>' + escapeHtmlText(content) + '</p></main></body></html>';
 }
 function ensureNoErrors(result, action) {
   if (!result || (result.errors !== undefined && !Array.isArray(result.errors))) throw new Error('Unexpected Pagefind response from ' + action);
@@ -36,15 +37,18 @@ export async function runWorkshop(level, {keepOutput = false} = {}) {
     index = created.index;
     if (!index) throw new Error('Pagefind binary did not return an index');
     for (const doc of pages.slice(0, level === 'basic' ? 2 : 3)) {
+      const publicDoc = assertPublicDocument(doc);
       ensureNoErrors(await index.addHTMLFile({
-        url: doc.url,
-        content: documentHTML(doc.title, doc.content),
+        url: publicDoc.url,
+        content: documentHTML(publicDoc.title, publicDoc.content),
       }), 'addHTMLFile');
     }
     if (level !== 'basic') {
+      const note = assertPublicDocument({visibility: 'public', url: '/files/rss-playbook.txt',
+        title: 'RSS field notes', content: 'Offline RSS sync, query ownership, retries and idempotency'});
       ensureNoErrors(await index.addCustomRecord({
-        url: '/files/rss-playbook.txt',
-        content: 'Offline RSS sync, query ownership, retries and idempotency',
+        url: note.url,
+        content: note.content,
         language: 'en',
         meta: {title: 'RSS field notes', category: 'guide'},
         filters: {category: ['guide'], tags: ['rss', 'offline']},

@@ -67,3 +67,9 @@ Node SDK：读取真实 Workbox 构建结果，校验 manifest、隐藏资源排
 - https://developer.chrome.com/docs/workbox/modules/workbox-build
 - https://github.com/GoogleChrome/workbox
 - https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerContainer/register
+
+## 第十三轮加固：避免缓存带凭据的公开 URL 响应
+
+URL 是公开路径，不保证 **响应** 是公开数据。原先的正则只检测 URL，默认的 same-origin Request 即使携带 Cookie，也可能匹配并进入 CacheStorage。现在 `examples/cache-policy.mjs` 提供无外部闭包的 Workbox `RouteMatchCallback`（会被 generateSW 序列化至 SW），必须同时匹配精确 HTTPS origin/path、`GET`、`request.credentials === 'omit'`，并拒绝 Authorization/Cookie/Proxy-Authorization 请求头。默认 `same-origin` 和 `include` 一律绕过这个 runtime cache；客户端显式匿名 fetch 才满足规则，不能强改其他用户请求的凭据模式。
+
+此规则只是一层构建策略保护，不会检查服务端业务是否误返回私有内容，也不替代发布前的数据分级、Cache-Control 策略或隔离 origin 验收。单独运行纯规则回归：`node --test entries/D16-workbox/tests/cache-policy.test.mjs`；仍须真实 Workbox SDK 构建验证生成器是否正确序列化回调，以及隔离浏览器的 credentials/cached-response 测试。

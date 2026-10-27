@@ -37,3 +37,7 @@ pnpm --filter @reactloom/library-lab exec node --test entries/D21-pagefind/tests
 需要 devDependency pagefind@1.5.2（按平台版本策略统一加入）、真实 package/lock 安装、CLI recipe 白名单 D21、专用静态预览 E2E。不要擅自改公共文件。
 
 来源：https://pagefind.app/docs/node-api/
+
+## 新增发布前策略门禁
+
+读取 `examples/publication-policy.mjs`：`assertPublicDocument` 是显式公开状态与站内 URL 的 fail-closed 断言，`escapeHtmlText` 让 CMS/RSS 文本只能以文本形式进入 HTML 结构；三层真实 Pagefind 入口实际调用两个函数。切勿把请求侧的 `visibility` 当 ACL 授权，必须由可信上游决定。迁移时先运行独立 `tests/publication-policy.test.mjs`，再在装有 Pagefind 原生包的环境执行 SDK 测试并检查 bundle，没有浏览器实测则维持 NOT_RUN。

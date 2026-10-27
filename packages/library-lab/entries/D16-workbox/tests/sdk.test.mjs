@@ -19,9 +19,12 @@ test('real workbox-build: public GET runtime strategy is narrow and bounded', as
   assert.equal(rule.handler, 'NetworkFirst');
   assert.deepEqual(rule.options.cacheableResponse.statuses, [200]);
   assert.equal(rule.options.expiration.maxEntries, 12);
-  assert.equal(rule.urlPattern.test('https://lab.example.test/__library_lab_workbox__/api/public/rss?id=1'), true);
-  assert.equal(rule.urlPattern.test('https://other.test/__library_lab_workbox__/api/public/rss'), false);
-  assert.equal(rule.urlPattern.test('https://lab.example.test/__library_lab_workbox__/api/private/profile'), false);
+  const match = (url, init = {}) => rule.urlPattern({url: new URL(url), request: new Request(url, init)});
+  assert.equal(match('https://lab.example.test/__library_lab_workbox__/api/public/rss?id=1', {credentials:'omit'}), true);
+  assert.equal(match('https://lab.example.test/__library_lab_workbox__/api/public/rss?id=1'), false);
+  assert.equal(match('https://lab.example.test/__library_lab_workbox__/api/public/rss?id=1', {credentials:'omit', headers:{Authorization:'Bearer secret'}}), false);
+  assert.equal(match('https://other.test/__library_lab_workbox__/api/public/rss', {credentials:'omit'}), false);
+  assert.equal(match('https://lab.example.test/__library_lab_workbox__/api/private/profile', {credentials:'omit'}), false);
   const summary = await runWorkshop('business');
   assert.equal(summary.runtimeStrategy, 'NetworkFirst-public-GET-only');
 });

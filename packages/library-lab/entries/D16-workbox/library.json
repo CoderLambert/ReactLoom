@@ -61,6 +61,7 @@
       "entryPoint": "examples/basic.mjs",
       "sourceFiles": [
         "examples/workshop.mjs",
+        "examples/cache-policy.mjs",
         "examples/basic.mjs",
         "tests/sdk.test.mjs"
       ],
@@ -80,6 +81,7 @@
       "entryPoint": "examples/business.mjs",
       "sourceFiles": [
         "examples/workshop.mjs",
+        "examples/cache-policy.mjs",
         "examples/business.mjs",
         "tests/sdk.test.mjs"
       ],
@@ -99,6 +101,7 @@
       "entryPoint": "examples/advanced.mjs",
       "sourceFiles": [
         "examples/workshop.mjs",
+        "examples/cache-policy.mjs",
         "examples/advanced.mjs",
         "tests/sdk.test.mjs"
       ],
