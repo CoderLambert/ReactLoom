@@ -10,7 +10,7 @@ const cases = [
 ] as const
 
 for (const scenario of cases) {
-  test(`business: actual browser fetch mocked at HTTP boundary ${scenario.status}`, async ({page}) => {
+  test(`business: HTTP ${scenario.status} -> ${scenario.expected}`, async ({page}) => {
     let intercepted = 0
     await page.route('https://api.lab.invalid/subscribe**', async route => {
       intercepted++
