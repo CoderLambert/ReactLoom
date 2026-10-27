@@ -1,12 +1,14 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "真实 Query v5 依赖未在本条目运行 SDK 测试"
+    "note": "QueryClient/cache patch 实际目标 SDK 测试已提交但依赖未安装，尚未运行"
   },
   "build": {
-    "status": "NOT_RUN"
+    "status": "NOT_RUN",
+    "note": "完整 TypeScript 与 Vite build 未运行"
   },
   "browser": {
-    "status": "NOT_RUN"
+    "status": "NOT_RUN",
+    "note": "409、A→B→A、连点、后台刷新与多行编辑 Chromium 未运行"
   }
 }
