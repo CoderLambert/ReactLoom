@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "BLOCKED",
+    "note": "缺少由PLATFORM核验并部署的@ffmpeg/core ESM WASM资产"
+  },
+  "build": {
+    "status": "BLOCKED",
+    "note": "依赖包和锁文件由PLATFORM独占"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "需要真实Chromium+同源Worker/WASM/CSP证据"
+  }
+}

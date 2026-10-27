@@ -1,1 +1,120 @@
-{"schemaVersion":1,"entryId":"E17","slug":"hlsjs","name":"hls.js","group":"E","summary":"HLS 播放引擎与缓冲","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "E17",
+  "slug": "hlsjs",
+  "name": "hls.js",
+  "group": "E",
+  "summary": "真实 HLS.js MSE引擎、清单与码率、致命错误与网络资源销毁",
+  "tags": [
+    "HLS",
+    "MSE",
+    "Streaming",
+    "Quality",
+    "CORS"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "hls.js",
+      "version": "1.7.3"
+    }
+  ],
+  "references": [
+    {
+      "title": "HLS.js官方源码与用法",
+      "url": "https://github.com/video-dev/hls.js"
+    },
+    {
+      "title": "v1.7.3发行",
+      "url": "https://github.com/video-dev/hls.js/releases/tag/v1.7.3"
+    },
+    {
+      "title": "官方演示与兼容性",
+      "url": "https://hlsjs.video-dev.org/demo/"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "E16",
+      "relation": "complements",
+      "reason": "Video.js v10提供完整播放器UI，可搭配HLS源组件。"
+    },
+    {
+      "entryId": "E18",
+      "relation": "alternative",
+      "reason": "wavesurfer.js侧重音频波形，不承担HLS分段协议。"
+    },
+    {
+      "entryId": "E19",
+      "relation": "complements",
+      "reason": "ffmpeg.wasm可转换媒体文件，不能替代线上HLS播放引擎。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "level": "basic",
+      "executionKind": "react",
+      "title": "MSE功能检测与真实公开测试清单",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "opt-in-remote-test",
+        "HLS",
+        "MSE",
+        "native-fallback",
+        "no-paid-API"
+      ],
+      "description": "MSE功能检测与真实公开测试清单。真实 SDK 接入，媒体能力需浏览器环境验证；不预报运行成功。"
+    },
+    {
+      "demoId": "business",
+      "level": "business",
+      "executionKind": "react",
+      "title": "自动/固定画质切换与层级读取",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "opt-in-remote-test",
+        "HLS",
+        "MSE",
+        "native-fallback",
+        "no-paid-API"
+      ],
+      "description": "自动/固定画质切换与层级读取。真实 SDK 接入，媒体能力需浏览器环境验证；不预报运行成功。"
+    },
+    {
+      "demoId": "advanced",
+      "level": "advanced",
+      "executionKind": "react",
+      "title": "fatal错误、重连与彻底卸载",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "opt-in-remote-test",
+        "HLS",
+        "MSE",
+        "native-fallback",
+        "no-paid-API"
+      ],
+      "description": "fatal错误、重连与彻底卸载。真实 SDK 接入，媒体能力需浏览器环境验证；不预报运行成功。"
+    }
+  ],
+  "license": {
+    "spdx": "Apache-2.0",
+    "assets": "生成的纯本地Canvas素材；外部公共HLS测试流必须用户显式选择，不下载付费资源"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "2026-10-27按HLS.js v1.7.3官方README/Release重写；媒体请求须用户显式触发。"
+  }
+}

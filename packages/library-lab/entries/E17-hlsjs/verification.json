@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "未实际安装执行对应第三方SDK"
+  },
+  "build": {
+    "status": "BLOCKED",
+    "note": "公共锁文件及真实bundle尚待PLATFORM在可用网络环境核验"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "需要实际浏览器测试媒体API、事件与卸载"
+  }
+}

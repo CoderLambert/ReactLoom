@@ -311,3 +311,23 @@ pnpm --filter @reactloom/library-lab test:e2e
 EF待完整接入6项：**E11 Streamdown（原件SUMMARY_ONLY，重建标recreated）、E12 assistant-ui、E16 Video.js、E17 hls.js、E19 ffmpeg.wasm、F05 SheetJS（原件SUMMARY_ONLY）**。优先E17/E16本地媒体和E12/E11安全流式UI；超大WASM需独立加载与安全隔离。分组PR必须全部对`feat/library-lab`，不得合入main；公共平台集成时先审查已有#25，再依次集成本轮独立PR并在真实依赖条件具备时验证。
 
 runCount=6/24。本轮不把5库源代码和30+例子等同完整生产交付；记录真正可复现的源码、命令、依赖与未验证事实。
+
+
+## 第七轮：EF 最后6条内容与源码接入（2026-10-27，北京时间）
+- **分支** `feat/library-lab-ef-wave7` 从集成 `feat/library-lab@9340aa9d42cd0318a31eda8e5a1ee840dd2d5108` 建立；已有 EF PR #11/#15/#17/#20/#25/#27 经核对均已合入集成。主 PR #8 仍是 Draft。
+- **本轮六条**：E11 Streamdown、E12 assistant-ui、E16 Video.js v10、E17 hls.js、E19 ffmpeg.wasm、F05 SheetJS CE。新增 **18 条基本/业务/进阶 Demo 声明**，全部真实 SDK 代码或明确的 Node CLI 配方；均附 `library.json`、`guide.md`、`agent.md`、`AGENTS.md`、`verification.json`。全程只写 E/F 条目及本进度。
+- 集成前准确统计：**31/37 个 EF 库已在集成分支接入源码与指南**，本 PR 新增其余6库；PLATFORM 对本 PR 审查并合入后才是 **37/37 EF 内容与示例代码覆盖**，不等于真实运行验收。
+- E11/F05 的历史独立原件均为 SUMMARY_ONLY，**本轮独立重建，明确标记 recreated**，不得引用历史测试 PASS。
+- E11 演示增量累计 Markdown/未闭合语法/恶意链接；E12 用真实 LocalRuntime 和本地确定性Adapter（**没有AI模型、无付费调用**），完成流式与取消；E16 使用Video.js v10 `@videojs/react` 和用户手势录制的原创WebM，加入Abort清理；E17 使用Hls.js事件/质量/销毁，**外部公开示例 HLS 仅用户点击才请求**；E19 真实FFmpeg wrapper，核心WASM必须由PLATFORM同源提供，显式加载/转换/terminate；F05 Node CLI真实SheetJS XLSX往返、业务报表及公式注入预防。
+- 核验范围：GitHub Git Tree对象已实际保存上述内容；6/6 manifest可解析、18/18声明均指向已写入的真实源码路径，6份指南、Agent手册、目录规范与验证文件齐全。这是结构/静态审计，不是SDK PASS。
+- **运行诚实状态**：目标 SDK/Node CLI **NOT_RUN**；TypeScript/Vite完整构建 **BLOCKED**（公共依赖/真实锁文件没有本轮安装证据）；浏览器播放/安全/Worker **NOT_RUN**；E19 WASM核心资产部署 **BLOCKED**。GitHub Actions此前无Runner事实不能替代当前运行结果。不冒充由真实SDK执行过。
+- **本次源码审查修正**：E11 代码围栏不额外反斜线转义；E16 MediaRecorder显式Abort并清理track/timer；E19处理 `file.arrayBuffer()` 拒绝和取消竞态，转换期间log与有效Engine绑定，而非初次load id。
+- **dependencyRequests — PLATFORM单一 owner**：
+  - `streamdown@2.6.0` — Apache-2.0，核对React19 peer、Tailwind v4扫描配置、不可信Markdown安全策略。
+  - `@assistant-ui/react@0.15.21` — MIT，确认0.15.x当前`useLocalRuntime`、Thread/Message/Composer primitives、React19类型与AbortSignal，离线fixture不需付费模型。
+  - `@videojs/react@10.2.0` — Video.js v10 React包，Apache-2.0；**不是npm `video.js` v8**，CSS分块与播放器卸载需生产浏览器验证。
+  - `hls.js@1.7.3` — Apache-2.0，`enableWorker:false`的MSE加载、CORS与原生HLS回退验证；外部测试流不作为生产资源。
+  - `@ffmpeg/ffmpeg@0.12.15` + `@ffmpeg/core@0.12.10` — wrapper MIT；核心 FFmpeg LGPL/GPL/codec 许可需逐项审查；PLATFORM必须安装并在同源 `/ffmpeg-core/` 提供匹配esm JS/WASM以及检查Vite Worker、CSP、MIME；此版本并非两个包都0.12.15。
+  - SheetJS CE `xlsx@0.20.3` — 只能按官方独立发行渠道核验 `https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz`，**不能误用过时 npm registry `xlsx`**；锁文件需由平台实际解析/固定完整性，Apache-2.0。
+- PLATFORM测试要求（**仅实际执行后填PASS**）：`node packages/library-lab/entries/F05-sheetjs/examples/verify.mjs`；`pnpm --filter @reactloom/library-lab catalog:check`、`typecheck`、`build`、`test:e2e`；播放/E19真实WASM和CSP/资源卸载的专项Chromium。
+- 后续需要PLATFORM合并此PR并安装上述依赖；EF 可以继续修复已接入条目的源码/文档问题，但不能越权把未跑的浏览器/官方SDK记为已验收。**runCount=7/24**。
