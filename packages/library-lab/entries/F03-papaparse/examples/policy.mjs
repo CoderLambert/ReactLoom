@@ -13,7 +13,7 @@ function readText(value, field, maxLength, {allowNewline = false} = {}) {
   if (typeof value !== 'string') throw new Error(field + ' 必须是文本');
   const valueText = value.trim();
   if (valueText.length > maxLength) throw new Error(field + ' 超过 ' + maxLength + ' 字符');
-  const invalidControls = allowNewline ? /[\u0000-\u0009\u000B-\u001F\u007F]/u : /[\u0000-\u001F\u007F]/u;
+  const invalidControls = allowNewline ? /[\u0000-\u0009\u000B-\u000C\u000E-\u001F\u007F]/u : /[\u0000-\u001F\u007F]/u;
   if (invalidControls.test(valueText)) throw new Error(field + ' 含控制字符');
   return valueText;
 }

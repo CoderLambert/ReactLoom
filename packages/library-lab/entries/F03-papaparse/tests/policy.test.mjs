@@ -11,8 +11,8 @@ test('requires exact three-column header and rejects automatic duplicate rename'
 });
 test('normalizes valid HTTPS, strips fragment and deduplicates equivalent links', () => {
   const seen = new Set();
-  assert.deepEqual(normalizeFeed({title:' RSS ',url:'https://EXAMPLE.org/rss#article',note:'ok\nnext'},seen),
-    {title:'RSS',url:'https://example.org/rss',note:'ok\nnext'});
+  assert.deepEqual(normalizeFeed({title:' RSS ',url:'https://EXAMPLE.org/rss#article',note:'ok\r\nnext'},seen),
+    {title:'RSS',url:'https://example.org/rss',note:'ok\r\nnext'});
   assert.throws(() => normalizeFeed({title:'again',url:'https://example.org/rss',note:''},seen), /重复/);
 });
 test('rejects credentials, unsafe schemes, control characters and stray fields', () => {

@@ -9,7 +9,7 @@ test('rejects duplicate identities including whitespace/case',()=>{
  assert.throws(()=>checkRows([row,{...row,id:' R01 '}]),/duplicate/);
 });
 test('rejects missing fields, invalid text and unsafe aggregates',()=>{
- for(const bad of [null,{...row,source:undefined},{...row,source:''},{...row,source:7},{...row,source:'hello\u0000world'},{...row,id:''},{...row,reads:-1}]){
+ for(const bad of [null,{...row,source:undefined},{...row,source:''},{...row,source:7},{...row,source:'hello\u0000world'},{...row,id:''},{...row,id:'bad\u0000id'},{...row,reads:-1}]){
   assert.throws(()=>checkRows([bad]));
  }
  assert.throws(()=>checkRows([{...row,reads:Number.MAX_SAFE_INTEGER},{...row,id:'r02',reads:1}]),/aggregate/);

@@ -22,6 +22,7 @@ export function checkRows(rows) {
     const normalizedId = row.id.trim().toLocaleLowerCase('en-US');
     if (ids.has(normalizedId)) throw new Error('duplicate row id');
     ids.add(normalizedId);
+    safeSpreadsheetText(row.id);
     safeSpreadsheetText(row.source);
     for (const field of ['reads','stars']) {
       if (!Number.isSafeInteger(row[field]) || row[field] < 0) {
