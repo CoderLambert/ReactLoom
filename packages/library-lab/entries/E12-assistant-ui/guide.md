@@ -30,3 +30,8 @@ E11 Streamdown 可以作为逐条消息的 Markdown 渲染器；D07 TanStack Que
 
 ## 验证状态
 源码是真正的 `@assistant-ui/react` API 调用，但此批不具备依赖安装/构建/浏览器成功证据。验证前不可标 PASS。参考 https://www.assistant-ui.com/docs/runtimes/custom/local-runtime ，MIT。
+
+
+## 取消运行与取消编辑不是同一件事（2026-10-27复核）
+
+真正中止流式助手回复须调用 `useAui().thread.cancelRun()`，可用 `useAuiState(s => s.thread.isRunning && s.thread.capabilities.cancel)` 控制按钮禁用状态。`ComposerPrimitive.Cancel` 负责取消**编辑/消息撰写**，不能拿来实现“停止模型回复”。进阶示例现通过 `StopResponse` 调用 thread action，Adapter 必须响应 abortSignal。参见官方 [State Outside the Thread](https://www.assistant-ui.com/docs/guides/state-outside-the-thread) 和 [Composer](https://www.assistant-ui.com/docs/primitives/composer)。该源码修正尚需真实 SDK/浏览器运行检查。

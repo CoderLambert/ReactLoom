@@ -9,13 +9,16 @@ export default function HlsExample({level}:{level:Level}){
  const [selected,setSelected]=useState(-1);
  function stop(){
   generation.current++;hlsRef.current?.destroy();hlsRef.current=null;
-  const video=videoRef.current;if(video){video.pause();video.removeAttribute('src');video.load();}
+  const video=videoRef.current;if(video){video.onerror=null;video.pause();video.removeAttribute('src');video.load();}
   setQualities([]);setSelected(-1);setStatus('已停止并清理媒体实例');
  }
  useEffect(()=>()=>{generation.current++;hlsRef.current?.destroy();const v=videoRef.current;if(v){v.pause();v.removeAttribute('src');v.load()}},[]);
  function load(){
   const video=videoRef.current;if(!video)return;stop();const run=++generation.current;
   setStatus('用户已选择访问公开测试流，等待清单…');
+  video.onerror=()=>{if(run!==generation.current)return;
+   setStatus(`浏览器媒体解码/资源错误：${video.error?.message||'请检查网络、CORS与媒体编码'}`);
+  };
   if(Hls.isSupported()){
    const hls=new Hls({enableWorker:false,maxBufferLength:12});hlsRef.current=hls;
    hls.on(Hls.Events.MEDIA_ATTACHED,()=>{if(run===generation.current)hls.loadSource(TEST_HLS)});
@@ -27,7 +30,11 @@ export default function HlsExample({level}:{level:Level}){
    hls.on(Hls.Events.ERROR,(_,err)=>{
     if(run!==generation.current)return;
     setStatus(`HLS错误：${err.type}/${err.details}${err.fatal?' (fatal)':''}`);
-    if(err.fatal){hls.destroy();if(hlsRef.current===hls)hlsRef.current=null;}
+    if(err.fatal){
+     hls.destroy();if(hlsRef.current===hls)hlsRef.current=null;
+     video.onerror=null;video.pause();video.removeAttribute('src');video.load();
+     setQualities([]);setSelected(-1);
+    }
    });
    hls.attachMedia(video);
   }else if(video.canPlayType('application/vnd.apple.mpegurl')){
