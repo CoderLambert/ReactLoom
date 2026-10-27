@@ -587,3 +587,26 @@ runCount: **14/24**。本轮依赖/测试阶段最新提交 81ec09ac04a05b6bb826
 **身份目录119、提交的源码/guide/agent/verification结构119、三层场景配置声明357；本批真正浏览器已运行Demo=0，新增第三方SDK PASS=0；117份研究原件本轮未逐项重审，E11/F05原件缺失保持。**
 
 **下一批**：先恢复可信 `pnpm install --no-frozen-lockfile` 的真实解析和根锁文件，审查版本/peer/许可及 frozen install，再运行 TypeScript + Vite + D07 QueryClient/E05 Monaco/F11 MSW 的真实SDK；补真正隔离iframe/CSP与范围受限的MSW控制验收，并核对生产静态Worker的MIME、是否由官方CLI输出；随后验证React-Spring键盘焦点、R3F离屏、GSAP进度和生产懒加载/卸载。外部依赖阻塞时继续独立源码工作，但不会无意义重复没有执行步骤的CI。主 PR #8 保持 Open/Draft，绝不合 main。
+
+
+## PLATFORM 第23轮：运行许可与 CI 增量（2026-10-28）
+
+**runCount: 23/24。** 以私有 GitHub `feat/library-lab@87ea2afe5957ba370f114f0acecb8cde1cd0c5eb` 为真实起点，读取最新 COORDINATION、IMPLEMENTATION、根/包 AGENTS、本进度、#4/#5/#6/#7、开放 PR、完整 CI 与关键宿主/SDK runner 源码。确认根 CI 和 Lab CI 的最近 jobs 仍为 failure/无 steps；对应 `runtime-bootstrap` 作业下载日志返回 BlobNotFound 404，不冒充编译失败或 PASS。#12 保留环境障碍。
+
+### Worker 审核及真实合并
+- **AB PR #83**：head `7f361e979a8dfa2623064db6edbb36808e692583`、base `feat/library-lab`，compare ahead 6/behind 0，**12/12 路径**严格在 A01/B17/AB 进度所有权。审核 ECharts 离屏暂停/120 次上界/表格键盘 `dispatchAction` 与 Floating UI 业务状态/过滤/IME 源码。只转换该 Worker PR 为 Ready 并带 `expected_head_sha` 常规 squash，集成提交 `868c66328f4c49708dd63bb6f8c1ab5d63a6361c`。Worker 报告策略 13 PASS，但本 PLATFORM 未重跑、不计 SDK。
+- **CD PR #84**：head `76206dd4bfb2c8ad3182e1d0b973d10e7468142d`、base 同集成分支，compare ahead 3/behind 0，**10/10 路径**只在 C07/CD 进度。审阅 TanStack Table 查询 identity、epoch/AbortSignal 租约及 SSR SDK 测试源码；固定 head 常规 squash 提交 `84b4d6e235125bf0b2c37ec6e650282dbbb2ce09`。Worker 报告策略 10 PASS，本平台未重复实测、真实 `@tanstack/react-table` v9 SDK 用例仍 NOT_RUN。
+- 两批都未改公共依赖、根锁、其他 Worker、main/PR #3；主 Draft PR #8 无状态变更。各 PR 的源代码变更使相关旧验收如有出现需重新绑定指纹。
+
+### 公共源码与测试交付
+- 修复 **Demo 跨场景隐式启动**：`src/components/demo-host.tsx` 原先仅在切换后 `useEffect` 把 `started=true` 清零，下一场景可能在提交时提前懒加载/挂载。改成由 `startedKey===entryId/demoId` 才获运行许可；停止、切换重置均撤销许可。提交 `403ddce74f25fba2fd1eb0a539328f75021d5903`。生产 E2E 用例已加入场景切换后必须重新显式启动，提交 `01d0bf4016732683e5a2aa55e0c09131535f6e50`，**Chromium NOT_RUN**。
+- 新 `scripts/ci-plan.mjs` 与 `tests/ci-plan.test.mjs`：用 Git `diff -z` 严格选取变更条目；仅文档/进度 => `docs-only` 跳过昂贵 `runtime-bootstrap`；条目 manifest/examples/tests/assets => `affected` 指定真实 SDK ID；公共 src/scripts/tests/e2e、package/lock/workflow => `full`。失效 SHA、比较错误、无比较基线**安全回退 full**。CI 新 `plan` 作业决定 runtime 条件及 SDK 目标；catalogue、已有根 CI 全部保留，真实安装继续 **临时 no-frozen** 且上传候选 lock/产物，不会据此宣称 frozen。源码提交 `8961854dccdcbc4681234c9a82bbb003b60febec`、`052effc7d796bb87645f5744172dabc85764ea0f`、工作流 `7fd45426cf81d839475652d9d741d34617c433d6`、本包默认 Node 测试接线 `2b1a19b77ea61daa78100ce3d29e31994a0d5577`。
+- 专门针对六个首批风险库核对 `tests/sdk.test.mjs`：**C01 RHF、D03 p-limit 有测试源码；A01 ECharts、B17 Floating UI、E05 Monaco、F11 MSW 缺目标 SDK 测试文件**。四项不能以离线策略回归替代。已登记独立 P0 [Issue #85](https://github.com/CoderLambert/ReactLoom/issues/85) 指明 SDK/构建/浏览器收口标准。禁止降低现有缺测失败门禁。
+
+### 实际命令与结果
+- 可用容器 Node **v22.16.0**（低于本包要求的 >=22.18）、Git 2.47.3；对远端新文件精确 Blob 执行 `node --check scripts/ci-plan.mjs` / `node --check tests/ci-plan.test.mjs`：**PASS**；`node --test tests/ci-plan.test.mjs`：**5 PASS / 0 FAIL / 0 SKIP**。覆盖文档跳过、条目级选择、公共全跑、坏 base fail-closed、合成 Git 仓库真实差分。Git Blob 实现 `095a752474271d4fe11f5383e89b58e988cb2f2e`、测试 `e77421fff8476790a2ac3efd8ff83b0e5a643790` 与本地 `git hash-object` 逐字节匹配；原始 TAP [platform-wave23-ci-plan.tap](../evidence/platform-wave23-ci-plan.tap)，stdout SHA-256 `7f76b9cadcd21b56538acd23851bb94efdeef17f04c5e284e3135c3d4c0b1099`。仅证明纯 Node CI 策略；GitHub Workflow 调度未执行，不表示 CI、SDK 或生产构建 PASS。
+- **BLOCKED**：根 `pnpm-lock.yaml` 缺通过真实 registry 解析的 Library Lab importer，当前 Node/pnpm/registry/Actions Runner 条件不足；不可手填 integrity。
+- **NOT_RUN**：整库 `pnpm test`、完整 React TypeScript、Vite build、真实 SDK、Chromium、MSW SW scope、Monaco/PDF/图表真实生命周期。此次新增 E2E 源码未执行。
+
+### 分离覆盖、风险优先级与末轮方向
+A–F 身份目录 **119**，源文件/guide/agent/verification 结构覆盖 **119**，三层场景声明 **357**；资料原件逐篇审查数**本轮未复算**（117旧稿不可默认为SDK通过，E11/F05仍按原件缺失/重建处理）。本轮真正浏览器运行验收 Demo **0**；新增真实第三方 SDK PASS **0**。持续 22+ 波次只有离线局部证明而无可信可运行版本是不合格交付，不能继续以微小加固替代闭环。最后一轮应首先解决真实 lock、frozen install、完整 type/build、前六风险库至少一条实际 SDK/Chromium 链路；权限/Runner不可用则以 #12/#85 和准确 NOT_RUN/BLOCKED 保留问题、严守24轮上限，完成清单与剩余缺口单列。
