@@ -25,6 +25,7 @@ jobs:
           node scripts/generate.mjs --check
           node scripts/validate-dependencies.mjs
           npm test
+          node scripts/policy-runner.mjs # entry policy regression, never SDK proof
           node scripts/generate.mjs
       - name: Source-aware offline readiness inventory
         if: always()
