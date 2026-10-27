@@ -106,7 +106,7 @@ export default function ThreeExample({level}:{level:Level}){
     previous.dispose();
     r.mesh.material.color.set(color);
     if(!shouldAnimate({playing,visible:!document.hidden,reducedMotion,overrideMotion}))r.frame();
-  },[shape,color,level,playing,reducedMotion,overrideMotion]);
+  },[shape,color,level]);
   return <section aria-label="Three.js 真实三维场景">
     <h2>{level==='basic'?'真实3D网格':level==='business'?'新闻产品状态模型':'GPU资源、暂停与网格替换'}</h2>
     <p>真实 Three.js WebGLRenderer + Scene + Mesh；没有远程模型或材质请求。</p>
