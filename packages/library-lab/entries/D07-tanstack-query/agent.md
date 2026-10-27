@@ -20,3 +20,7 @@
 使用目标 SDK 模拟业务服务但不 mock SDK。检查取消信号、旧响应无串线、缓存键隔离、乐观 409 回滚、成功失效重拉及卸载资源。项目 SDK/类型/构建/浏览器此提交未真实通过，不能继承历史研究测试结果。
 
 官方：https://tanstack.com/query/latest/docs/framework/react/overview
+
+## 旧工作区 mutation 防串线
+
+缓存键隔离仍不足以隔离 UI 通知；执行异步 `onMutate` 时先记录租户 generation/epoch，返回 mutation context，成功与失败回调仅在 context epoch 与当前工作区 epoch 相等时显示 toast/状态。即使已切换 A → B → A，也不能显示先前 A 的过期完成通知。**原始租户的回滚和失效查询仍必须执行**，不能因为 UI 已切换而遗漏数据一致性处理。实际乐观写回、服务器端提交不是可自动取消的业务事务。重点补浏览器 E2E：旧租户成功和409都不得串线。

@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {QueryClient, QueryClientProvider, useIsFetching, useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 
 export type Feed = {id:string; title:string; enabled:boolean; rev:number};
@@ -54,6 +54,10 @@ const keys={
 function QueryWorkspace({level, backend}:{level:Props['level'];backend:Backend}){
   const client=useQueryClient();
   const [tenant,setTenant]=useState<Tenant>('team-a');
+  // Mutation completion belongs to the identity epoch in which it started.
+  // A -> B -> A must not resurrect a message from the first A session.
+  const tenantEpoch=useRef(0);
+  useEffect(()=>()=>{tenantEpoch.current++;},[]);
   const [draft,setDraft]=useState('');
   const [search,setSearch]=useState('');
   const [page,setPage]=useState(0);
@@ -73,18 +77,23 @@ function QueryWorkspace({level, backend}:{level:Props['level'];backend:Backend})
     scope:{id:'library-lab-toggle-'+tenant},
     mutationFn:(vars:{id:string;enabled:boolean;fail:boolean})=>backend.toggle(tenant,vars.id,vars.enabled,vars.fail),
     onMutate:async(vars)=>{
+      const epoch=tenantEpoch.current;
       await client.cancelQueries({queryKey:keys.feeds(tenant)});
       const snapshots=client.getQueriesData<ListPage>({queryKey:keys.feeds(tenant)});
       client.setQueriesData<ListPage>({queryKey:keys.feeds(tenant)},old=>old?{
         ...old,items:old.items.map(row=>row.id===vars.id?{...row,enabled:vars.enabled}:row),
       }:old);
-      return {snapshots};
+      return {snapshots,epoch};
     },
     onError:(error,_vars,context)=>{
       for(const [key,value] of context?.snapshots??[])client.setQueryData(key,value);
-      setMessage('更新失败，已回滚：'+error.message);
+      if(context?.epoch===tenantEpoch.current)
+        setMessage('更新失败，已回滚：'+error.message);
     },
-    onSuccess:(saved)=>setMessage('更新完成：'+saved.id+' rev '+saved.rev),
+    onSuccess:(saved,_vars,context)=>{
+      if(context?.epoch===tenantEpoch.current)
+        setMessage('更新完成：'+saved.id+' rev '+saved.rev);
+    },
     onSettled:async()=>{await Promise.all([
       client.invalidateQueries({queryKey:keys.feeds(tenant)}),
       client.invalidateQueries({queryKey:keys.stats(tenant)}),
@@ -93,6 +102,8 @@ function QueryWorkspace({level, backend}:{level:Props['level'];backend:Backend})
   const data=list.data;
   const rows=data?.items??[];
   function switchTenant(value:Tenant){
+    if(value===tenant)return;
+    tenantEpoch.current++;
     setTenant(value);setDraft('');setSearch('');setPage(0);setMessage('');
   }
   return <section aria-label="TanStack Query 实际SDK">

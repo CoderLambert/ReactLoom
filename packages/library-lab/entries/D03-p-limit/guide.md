@@ -74,3 +74,7 @@ p-limit + HTTP 客户端：先统一重试/超时预算，再决定重试是在�
 - [发行记录](https://github.com/sindresorhus/p-limit/releases)
 
 MIT；本地任务输入为原创 fixture。
+
+## 新增独立 SDK 回归（真实包，不以 Mock 替代）
+
+`tests/sdk.test.mjs` 使用目标 `p-limit@7.3.3` 验证上限、`rejectOnClear` 下排队任务是否全部以 AbortError 结算，以及 AbortSignal 如何处理已启动任务。测试**定义并不等于运行**；安装后执行 `node --test packages/library-lab/entries/D03-p-limit/tests/sdk.test.mjs`。如果 pending Promise 无法结算，测试将超时失败而不会误报成功。
