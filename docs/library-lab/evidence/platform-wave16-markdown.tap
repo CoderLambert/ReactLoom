@@ -1,0 +1,52 @@
+TAP version 13
+# Subtest: only safe HTTPS, fragments and same-entry relative files are accepted
+ok 1 - only safe HTTPS, fragments and same-entry relative files are accepted
+  ---
+  duration_ms: 5.093419
+  type: 'test'
+  ...
+# Subtest: headings ignore fenced blocks and correctly preserve source line anchor
+ok 2 - headings ignore fenced blocks and correctly preserve source line anchor
+  ---
+  duration_ms: 3.023891
+  type: 'test'
+  ...
+# Subtest: Chinese anchors, inline code and duplicate headings exclude fenced content
+ok 3 - Chinese anchors, inline code and duplicate headings exclude fenced content
+  ---
+  duration_ms: 0.389148
+  type: 'test'
+  ...
+# Subtest: local example and test links map to real generated source files, not missing SPA fallbacks
+ok 4 - local example and test links map to real generated source files, not missing SPA fallbacks
+  ---
+  duration_ms: 2.532638
+  type: 'test'
+  ...
+# Subtest: Markdown byte ceiling preserves split multibyte UTF-8 without trusting response length
+ok 5 - Markdown byte ceiling preserves split multibyte UTF-8 without trusting response length
+  ---
+  duration_ms: 27.279291
+  type: 'test'
+  ...
+# Subtest: Markdown byte ceiling rejects oversized decoded body and cancels the reader
+ok 6 - Markdown byte ceiling rejects oversized decoded body and cancels the reader
+  ---
+  duration_ms: 0.679437
+  type: 'test'
+  ...
+# Subtest: Markdown rejects fallback HTML, non-2xx, invalid UTF-8 and absent response bodies
+ok 7 - Markdown rejects fallback HTML, non-2xx, invalid UTF-8 and absent response bodies
+  ---
+  duration_ms: 3.754685
+  type: 'test'
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 109.890631
