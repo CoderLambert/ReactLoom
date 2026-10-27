@@ -527,3 +527,10 @@ runCount: **14/24**。本轮依赖/测试阶段最新提交 81ec09ac04a05b6bb826
 身份目录仍为**119**，源码/中文guide/Agent/verification结构为**119**，三层Demo声明为**357**；本轮已实际运行浏览器Demo **0**，新增官方SDK PASS **0**；117旧资料实际逐项审核数未重数，E11/F05原件继续按缺失/重建管理。新索引证据属于平台安全逻辑，不修改任何`verification.json`。
 
 下批：可安装环境优先真实解析root pnpm lock、冻结CI、完整TS/Vite及本批generator+详情+浏览器用例；随后优先MSW SW scope、Monaco/PDF.js Worker、生产卸载和资源预算。无可用runner时继续独立公共代码，保持唯一集成分支与主 PR #8 Draft。
+
+### PLATFORM 第20轮同批 Worker 合入（runCount仍为20/24）
+
+- 共享源码索引安全提交与证据收口后发现新开放的AB [PR #77](https://github.com/CoderLambert/ReactLoom/pull/77)，实际head `3d27ba9718ef37eee6c48b245978d270e331eb7d`，base精确为 `feat/library-lab`，状态初始Draft。通过GitHub Compare确认ahead=5/behind=0，全部**16/16变更路径**只在 `entries/A*`、`entries/B*` 与 `progress/AB.md`。审查三份实际SDK组件、变化的纯TS helper、PR diff及dependencyRequests=0之后，仅将该**worker PR**转换为Ready，并带 `expected_head_sha` 按GitHub常规squash合入唯一私有集成分支：merge `132da5d9a50a149022b908215044828624c2ed5c`。主PR #8始终Draft、不合main。
+- 接入既有 **A03 Chart.js、A15 Leaflet、B19 Embla** 三库质量改进（身份/场景数量不变）：真实Chart.js画布点选与键盘等价表格并同步选中态、到10000上界停止400ms自动采样；Leaflet实例随挂载创建并在卸载清理而非随level反复重建、过滤可见选中、删除后可重复追加本地来源；Embla真实snap数量与卡片数量区分、键盘左右与减少动画偏好、ARIA幻灯片标注。没有新增依赖/锁文件修改。
+- AB报告Node22.16隔离纯政策13 PASS/0 FAIL、3个纯TS helper检查PASS，6份测试/源码Git Blob同源；**本PLATFORM未重跑**，不继承为实际第三方SDK运行验收。A03/A15/B19真实Chart.js Canvas/Leaflet Map/Embla、完整TypeScript/Vite/Chromium仍 **NOT_RUN/BLOCKED**。上文平台自身精确Blob安全回归7 PASS/0 FAIL另计；本批新增真实SDK PASS仍0。
+- 当前唯一集成分支最新以本段进度提交后的GitHub实际head为准，runCount仍 **20/24**；继续优先锁文件真实依赖解析、构建、SDK/浏览器门禁并保留CI无Runner阻塞#12。
