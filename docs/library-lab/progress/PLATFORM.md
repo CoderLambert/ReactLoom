@@ -305,4 +305,6 @@ runCount：**9 / 24**。PR #8 继续 Draft；main/旧模板/PR #3 未修改，�
 
 **下一批**：首先恢复符合 Node>=22.18 / pnpm10 / registry 的执行工作树或能实际分配 runner 的 CI；执行 `pnpm verify:library --execute --resolve-lock` 并审查真实 lock，再冻结安装、定向 SDK/TS/Vite/Chromium 测试，逐项修复实际失败。尤其对 Monaco Worker、MSW iframe/Service Worker 独立 origin、PDF.js Worker 版本配对、Workbox scope 和本批编辑器存储恢复/Canvas 焦点做目标 SDK/浏览器验收。在环境受阻期间可继续公共宿主的无副作用静态保护，避免重复刷 DNS 或冒称 SDK 验证。
 
+**可持久复核的原始 Node TAP**：`docs/library-lab/evidence/platform-wave12-node.tap`（实际命令见上，SHA-256 `fa7a284ebc3e96bc825adc09bcd22633960007c9e10d00bf28c8c7fb42684e7c`，Git Blob `6fd7d506aad4c8671c916b17a6b697da0a95db08`）直接保存在本私有分支，供下次对照真实代码与命令；它**仅证明12项无第三方依赖政策/协议测试**。额外核查集成后 CI [Library Lab 40469860871](https://github.com/CoderLambert/ReactLoom/actions/runs/40469860871) 2 jobs、[主 CI 40469860873](https://github.com/CoderLambert/ReactLoom/actions/runs/40469860873) 7 jobs 全为 failure 且 `steps=null`，不能归类为构建测试 FAIL 的代码诊断；仍待 #12 处理。
+
 **runCount 12/24**。#8 仍为 Draft、main / PR #3 / 模板与公开部署未动；三个本批 worker PR 均已合入，仅使用项目授权的集成分支。
