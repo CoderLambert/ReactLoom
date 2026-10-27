@@ -1,0 +1,6 @@
+.ab-tldraw { min-width: 0; }
+.ab-tldraw .ab-tldraw-controls { display: flex; flex-wrap: wrap; gap: .6rem; margin: 1rem 0; }
+.ab-tldraw .ab-tldraw-canvas { position: relative; height: min(64vh, 560px); min-height: 400px; border: 1px solid #bdcec0; border-radius: 12px; overflow: hidden; isolation: isolate; }
+.ab-tldraw .ab-tldraw-note { margin-top: 1rem; font-size: .85rem; color: #64716a; }
+.ab-tldraw-locked { border: 1px solid #d9c796; padding: 22px; border-radius: 12px; background: #fffae9; }
+@media (max-width: 720px) { .ab-tldraw .ab-tldraw-canvas { height: 460px; } }

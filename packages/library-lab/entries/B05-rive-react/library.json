@@ -1,1 +1,124 @@
-{"schemaVersion":1,"entryId":"B05","slug":"rive-react","name":"Rive React Runtime","group":"B","summary":"Rive 状态机动画与 React 集成","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "B05",
+  "slug": "rive-react",
+  "name": "Rive React Runtime",
+  "group": "B",
+  "summary": "Rive WebGL2 动画播放、可访问状态反馈和运行时生命周期",
+  "tags": [
+    "Rive",
+    "交互动画",
+    "WASM",
+    "WebGL2",
+    "请求取消"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "@rive-app/react-webgl2",
+      "version": "4.37.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "Rive 官方 React 使用指南",
+      "url": "https://rive.app/docs/runtimes/react/react"
+    },
+    {
+      "title": "状态机输入与运行时接口",
+      "url": "https://rive.app/docs/runtimes/react/state-machines"
+    },
+    {
+      "title": "2026年8月单数stateMachine API变更",
+      "url": "https://community.rive.app/c/announcements/rive-runtime-updates-august-31-2026"
+    },
+    {
+      "title": "官方 CDN 演示资源来源",
+      "url": "https://rive.app/docs/runtimes/react/react"
+    },
+    {
+      "title": "官方 MIT React Runtime 仓库",
+      "url": "https://github.com/rive-app/rive-react"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "B04",
+      "relation": "alternative",
+      "reason": "dotLottie更适合设计资产简单循环播放，Rive支持艺术板、状态机、输入与数据绑定，但需要.riv资产及WASM加载。"
+    },
+    {
+      "entryId": "B01",
+      "relation": "alternative",
+      "reason": "Motion for React适合DOM布局/过渡，Rive适合设计工具制作的矢量动画。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "官方 .riv 演示播放控制",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/styles.css",
+        "examples/asset.ts"
+      ],
+      "capabilities": [
+        "wasm",
+        "webgl2",
+        "remote-official-asset"
+      ],
+      "description": "真实Rive useRive加载官方 CDN 示例，停止与继续播放"
+    },
+    {
+      "demoId": "business",
+      "title": "新闻审核状态与请求取消",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/styles.css",
+        "examples/asset.ts"
+      ],
+      "capabilities": [
+        "wasm",
+        "webgl2",
+        "remote-official-asset"
+      ],
+      "description": "业务状态由 React 管理，Rive 只做视觉反馈；演示后端任务为本地可取消计时器"
+    },
+    {
+      "demoId": "advanced",
+      "title": "可见性、减少动画和WebGL资源生命周期",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/styles.css",
+        "examples/asset.ts"
+      ],
+      "capabilities": [
+        "wasm",
+        "webgl2",
+        "remote-official-asset"
+      ],
+      "description": "页面隐藏、视口退出、系统 reduced-motion、卸载时暂停/清理，须Chrome实测"
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "notes": "Rive React runtime 为 MIT；.riv 内容、官方演示动画、字体、设计服务/商用资产为独立授权，示例仅引用官方远程URL，不再分发其二进制。"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "archive": "ReactLoom_119_Full_Research_2026-10-24.zip",
+    "note": "参照旧4.37.0 workshop与最新官方API重新适配，未继承23个domain测试为SDK PASS。"
+  }
+}

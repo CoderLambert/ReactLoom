@@ -1,0 +1,18 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "真实@rive-app/react-webgl2 useRive调用已写；包/WASM未在本轮安装或执行。"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "PLATFORM需确认4.37.0/React19 peer及真实pnpm-lock并运行Vite。"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "需验证官方CDN可访问、play/pause、IntersectionObserver、StrictMode卸载和WebGL上下文。"
+  },
+  "assets": {
+    "status": "BLOCKED",
+    "note": "官方演示 .riv 不打包，需要浏览器可连接 https://cdn.rive.app/animations/vehicles.riv；自有资产授权尚未提供。"
+  }
+}

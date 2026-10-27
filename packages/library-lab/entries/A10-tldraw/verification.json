@@ -1,0 +1,18 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "真实 tldraw Editor/Shape API 已编写，未在本分支安装运行。"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "PLATFORM需要统一安装tldraw@5.5.2并真实解析锁文件。"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "本地license允许条件、画布/焦点/只读/销毁待浏览器实测。"
+  },
+  "license": {
+    "status": "NOT_RUN",
+    "note": "官方明确生产许可条件，本Demo无许可证；未授权远程宿主会显示合规提示。"
+  }
+}
