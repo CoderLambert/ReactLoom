@@ -1,0 +1,46 @@
+TAP version 13
+# Subtest: source index selects declared paths in order without trusting unrelated source entries
+ok 1 - source index selects declared paths in order without trusting unrelated source entries
+  ---
+  duration_ms: 15.852608
+  type: 'test'
+  ...
+# Subtest: source index rejects absent, duplicated, tampered, oversized or traversal metadata
+ok 2 - source index rejects absent, duplicated, tampered, oversized or traversal metadata
+  ---
+  duration_ms: 5.224225
+  type: 'test'
+  ...
+# Subtest: source stream preserves multibyte text across chunk boundaries
+ok 3 - source stream preserves multibyte text across chunk boundaries
+  ---
+  duration_ms: 193.481746
+  type: 'test'
+  ...
+# Subtest: source stream rejects forged smaller or larger declared byte lengths
+ok 4 - source stream rejects forged smaller or larger declared byte lengths
+  ---
+  duration_ms: 9.689868
+  type: 'test'
+  ...
+# Subtest: source stream rejects fallback HTML, non-200 replies and invalid UTF-8
+ok 5 - source stream rejects fallback HTML, non-200 replies and invalid UTF-8
+  ---
+  duration_ms: 8.000485
+  type: 'test'
+  ...
+# Subtest: source stream accepts empty files and rejects impossible byte expectations
+ok 6 - source stream accepts empty files and rejects impossible byte expectations
+  ---
+  duration_ms: 5.443308
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 839.247517
