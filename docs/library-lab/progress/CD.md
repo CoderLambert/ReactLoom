@@ -470,3 +470,20 @@ C13 Frappe Gantt 1.2.2 上游 `src/index.js` 的 `bind_bar_events` 会向 `docum
 - **dependencyRequests：无新增**。沿用 PLATFORM 已记录的 `@jsonforms/core@3.8.0`、`@jsonforms/react@3.8.0`、`@jsonforms/vanilla-renderers@3.8.0`、`ajv@8.20.0`、`nuqs@2.10.1`、`xstate@5.33.3`（条目元数据许可 MIT；需 PLATFORM 在安装环境按实际 package/peer/API/许可复核）。
 - **累计覆盖仍 43/43 源码条目 / 129 层级入口**，本轮新增真实目标 SDK PASS **0**；源码覆盖不等于 SDK/build/browser 可运行。
 - **下一队列**：PLATFORM 审核集成 PR #69 并在有依赖环境运行 `node --test packages/library-lab/entries/{C04-jsonforms,C19-nuqs,D14-xstate}/tests/sdk.test.mjs`（shell 需实际展开3个文件）、`pnpm --filter @reactloom/library-lab typecheck`、`build` 和浏览器 IME/422/URL Back/Actor 非法事件验收；CD 如果可用执行环境恢复，优先根据真实 SDK/tsc 错误精修 C04 的 schema 类型/回调、C19 的 TanStack Router adapter 和 D14 事件类型，其他情况下继续 C/D 高价值缺陷加固，绝不虚报 PASS。
+
+
+---
+
+## 第二十轮（2026-10-27）— 虚拟列表重复查询身份与 Fuse 隐藏筛选隔离
+
+- **runCount=20/24**。GitHub 先读取最新集成 `feat/library-lab@a7514e4b6354ade43a36dc39512c7ccafc688dbe` 的 COORDINATION/IMPLEMENTATION、根/本包 AGENTS、types/catalog、CD 进度与 PR #69/#8，确认 #69 已由 PLATFORM 合入。创建 `feat/library-lab-cd-wave20`，工作提交 **`64712674ac697a40cebacfeb560b2a44ee80acce`**；新的 Draft [PR #72](https://github.com/CoderLambert/ReactLoom/pull/72) base=`feat/library-lab`，不对 main 或 PR #3 操作。
+- **C09 React Virtuoso 4.18.19**：过去 `key={query}` 不能在相同关键词重新提交时将已经滚至底端的 viewport 与从头30条的新数据分离。实际 JSX 现在由每次合法提交递增的 `viewRevision` 控制 key。新增真正被 UI 调用的 `examples/view-policy.mjs`：NFC/控制字符/80码点搜索规范化、`nextWindowLimit` 对最后一页裁剪与非整数拒绝；和 `.d.mts` 声明、`tests/view-policy.test.mjs` 共用同源实现。已有 endReached 同步门禁、generation 取消与真实 Virtuoso 组件继续保留。
+- **C10 TanStack Virtual 3.14.21**：旧 `getItemKey` 使用 `missing-index` 兜底，遇不合法/过期索引会安静地丢失业务身份；现在调用 `stableRowId` 显式拒绝不存在或无 ID 的行，用 `useCallback` 绑定当前数据。原 `key={category+'|'+query}` 在重复同条件查询时无法重置旧测量；现在 `viewIdentity(group,query,revision)` 采用 JSON 数组编码，每次提交递增 revision，避免分隔符歧义和旧 scroll/measure 复用。新增同源 helper、声明、Node 回归。
+- **D19 Fuse.js 7.5.0**：此前从业务分组或高级阈值切回基础模式后，控件隐藏但过滤和阈值仍影响搜索。现在 `resolveScope` 根据当前 level 派生生效条件：basic=全部+0.35、business=当前组+0.35、advanced=当前组+合法阈值，并在构建真实 Fuse 索引之前执行 `visibleDocuments`；输入正规化并限制 Unicode 长度。该 group 仅为**客户端 UI 筛选**，不构成真实 ACL/租户授权。
+- 三项均直接修改真实 `examples/example.tsx`，保留三个 basic/business/advanced SDK 入口，`library.json` 的 **9/9 sourceFiles** 增加相应 `.mjs` 与 `.d.mts`；更新 guide/agent/AGENTS，新增与官方 SDK 实际 import 相关的回归**源码**。合计首提交 **27/27 修改文件均位于受授权 C09/C10/D19 条目**，本文件为附加第28个受授权路径。
+- **真实执行证据**：Node **v22.16.0**，在 `/mnt/data/cd-wave20` 运行 `node --check` 对三个策略模块及三份 Node 测试语法通过；`node --test /mnt/data/cd-wave20/packages/library-lab/entries/*/tests/*.test.mjs` 为 **12 PASS / 0 FAIL**（C09 4、C10 4、D19 4）。六份源码/测试在本地运行后 `git hash-object` SHA 与 GitHub 分支对应 git blob **完全一致**：C09 源 `669f9760` / 测 `8d680968`；C10 源 `203c61b1` / 测 `eb69d513`；D19 源 `0bc81f6b` / 测 `f24b8bd7`。原始本地 TAP 路径 `/mnt/data/cd-wave20/wave20-node.tap`（容器暂存，非仓库内持久证据，不得暗称已上传 CI）。
+- **独立声明验证**：TypeScript **5.8.3** 执行 `tsc --noEmit --strict --target ES2022 --module nodenext --moduleResolution nodenext <三份 .d.mts>`，**PASS**；三份文件 Git blob 一致：C09 `a223576c`、C10 `5be89fab`、D19 `245daa0b`。这仅是声明类型检查，未包含 React 组件和第三方 SDK 类型环境。
+- **真实目标库/全项目验收没有执行**：`C09/C10/D19/tests/sdk.test.mjs`、完整 `pnpm --filter @reactloom/library-lab typecheck`、Vite `build`、Chromium 的重复查询重置/滚动测量/IME/分组切换均 **NOT_RUN**，因为本容器没有项目已安装的三方依赖与已解析根 lockfile。没有安装重试/造假的官方SDK PASS。 `verification.json.sdk/build/browser` 仍保留 NOT_RUN，正式完成需绑定新 `sourceFingerprint` 和持久化命令日志。
+- **dependencyRequests：无新增**。PLATFORM 既有声明 `react-virtuoso@4.18.19`（MIT）、`@tanstack/react-virtual@3.14.21`（MIT）、`fuse.js@7.5.0`（Apache-2.0），实际安装与包许可/peer 检查仍由 PLATFORM 完成。不编辑公共 src/scripts/tests、依赖/锁文件、CI、生成索引、其他通道、main、旧模板、收费服务或公开部署。
+- **覆盖仍为43/43条 CD 源码、双指南、三层场景129个声明选择**；本轮官方 SDK/browser/build **新增 PASS 为0**。下轮先由 PLATFORM 检查并合入 Draft #72；取得真实依赖环境后执行三份 `sdk.test.mjs`、完整 typecheck/build、Chromium 测重复搜索后滚动归零、筛选语义与 IME。若依赖仍不具备，优先修 D11 Jotai Provider 生命周期、D19 Fuse 索引文档替换以及 C09/C10 行身份/焦点等有实际风险的范围，避免无价值重复实现。
+
