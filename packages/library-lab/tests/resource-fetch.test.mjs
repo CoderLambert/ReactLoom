@@ -71,3 +71,28 @@ test('already aborted caller signal prevents acceptance of an immediate response
   await assert.rejects(requestGeneratedResource('/raw/C20/guide.md',r=>r.text(),{signal:signal.signal,fetchImpl:async()=>{called++;return okResponse();}}),/Old tab/);
   assert.equal(called,0);
 });
+
+
+test('rejects encoded traversal, nested decoding, query and slash ambiguities before network access',async()=>{
+ let requests=0;
+ const fetchImpl=async()=>{requests++;return okResponse();};
+ for(const url of [
+  '/raw/%2e%2e/secrets', '/raw/%2E./secrets', '/raw/%252e%252e/secrets',
+  '/raw/C20%2fdetail.json','/raw/C20%5Cdetail.json','/raw//detail.json',
+  '/raw/C20/detail.json?source=/admin','/raw/C20/detail.json#fragment',
+  '/raw/C20/%ff','/raw/C20/%00','/raw/C20/%25%32%65',
+ ]) {
+  await assert.rejects(requestGeneratedResource(url,response=>response.text(),{fetchImpl}),TypeError,url);
+ }
+ assert.equal(requests,0);
+});
+
+test('preserves safe UTF-8 and space encodings for generated source paths',async()=>{
+ const calls=[];
+ const url='/raw/E05/sources/%E4%B8%AD%E6%96%87%20example.tsx';
+ const result=await requestGeneratedResource(url,response=>response.text(),{
+  fetchImpl:async actual=>{calls.push(actual);return okResponse();},
+ });
+ assert.equal(result,'ok');
+ assert.deepEqual(calls,[url]);
+});
