@@ -67,7 +67,10 @@
         "examples/workspace/src/tasks.ts",
         "examples/workspace/src/unused.ts",
         "examples/workspace/scripts/generate.ts",
-        "examples/workspace/tests/tasks.test.ts"
+        "examples/workspace/tests/tasks.test.ts",
+        "examples/report-policy.mjs",
+        "examples/report-policy.test.mjs",
+        "examples/verify.mjs"
       ],
       "capabilities": [
         "node-process",
@@ -91,7 +94,10 @@
         "examples/workspace/src/tasks.ts",
         "examples/workspace/src/unused.ts",
         "examples/workspace/scripts/generate.ts",
-        "examples/workspace/tests/tasks.test.ts"
+        "examples/workspace/tests/tasks.test.ts",
+        "examples/report-policy.mjs",
+        "examples/report-policy.test.mjs",
+        "examples/verify.mjs"
       ],
       "capabilities": [
         "node-process",
@@ -115,7 +121,10 @@
         "examples/workspace/src/tasks.ts",
         "examples/workspace/src/unused.ts",
         "examples/workspace/scripts/generate.ts",
-        "examples/workspace/tests/tasks.test.ts"
+        "examples/workspace/tests/tasks.test.ts",
+        "examples/report-policy.mjs",
+        "examples/report-policy.test.mjs",
+        "examples/verify.mjs"
       ],
       "capabilities": [
         "node-process",
