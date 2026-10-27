@@ -69,3 +69,10 @@ C02 Zod 管运行时约束，RHF 管字段/错误与提交；若采用 `@hookfor
 - [useFieldArray](https://react-hook-form.com/docs/usefieldarray)
 - [setError](https://react-hook-form.com/docs/useform/seterror)
 - [reset](https://react-hook-form.com/docs/useform/reset)
+
+## 本轮加固：RSS URL 身份与草稿竞态
+
+- 使用 `examples/feed-url-policy.mjs` 计算**请求地址身份**：HTTPS、无 URL 内嵌凭据、规范化大小写不敏感的主机名和默认 443 端口、去掉 fragment；**不得对 path/query 整串 `toLowerCase()`**，因为服务端可能区分 `/Feed` 与 `/feed`。客户端策略不是服务端 SSRF 保护，真正抓取仍需校验 DNS/内网地址/重定向。
+- 重复源现在反馈到具体 `sources.N.url` 字段，并保留整体提示。非法 URL 由字段校验拒绝，不参与重复分组计算。
+- `useWatch` 覆盖输入变化、增删来源与重置；草稿变化会中断本地未结算提交、使旧结果失去回写资格。已保存预览是不可变快照；修改后不再展示与当前草稿不匹配的旧预览。
+- 无第三方依赖的定向检查：`node --test packages/library-lab/entries/C01-react-hook-form/tests/url-policy.test.mjs`。当前 Node 本地纯逻辑测试不代表 RHF React 交互或真实网络已验收。还需 Chromium 验证编辑过程中取消、字段错误清理和动态行。

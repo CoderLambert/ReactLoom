@@ -36,3 +36,7 @@
 https://react-hook-form.com/docs/usefieldarray
 https://react-hook-form.com/docs/useform/seterror
 https://react-hook-form.com/docs/useform/reset
+
+## RSS 身份和旧请求加固（本轮）
+
+迁移时同时复制 `examples/feed-url-policy.mjs` 及类型声明 `.d.mts`。比较 URL 时只规范化 URL 标准认可的部分，不降低 path/query 的字母大小写；去掉 #fragment，拒绝 URL 内嵌用户名和密码。不要把这个纯函数当作服务端 SSRF 防护。使用 `useWatch` 感知用户在异步提交期间改字段或增删行；修改将旧 AbortController 中止并递增 generation。已保存预览仅在快照与当前草稿一致时展示。验证：`node --test packages/library-lab/entries/C01-react-hook-form/tests/url-policy.test.mjs`（只测纯逻辑）；RHF 提交/取消仍需真实浏览器。

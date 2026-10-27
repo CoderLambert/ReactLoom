@@ -13,3 +13,7 @@
 当前依赖安装 DNS BLOCKED，SDK 与浏览器 NOT_RUN。相关库 D04 p-queue 用于更复杂队列需求，D18 Comlink 用于 Worker 通信但并不替代调度。
 
 官方：https://github.com/sindresorhus/p-limit
+
+## 定向实际 SDK 检查
+
+`node --test packages/library-lab/entries/D03-p-limit/tests/sdk.test.mjs`：真实 `p-limit` 上限、clearQueue 的 queued AbortError 结算，以及 running 使用单独 AbortSignal 的边界。浏览器仍须验证任务取消后旧结果不回写；不能凭 Node 测试通过宣称 React 生命周期验收。

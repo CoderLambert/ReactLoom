@@ -1,5 +1,6 @@
 import {useEffect, useRef, useState} from 'react';
-import {useFieldArray, useForm} from 'react-hook-form';
+import {useFieldArray, useForm, useWatch} from 'react-hook-form';
+import {canonicalFeedUrl, findDuplicateFeedIndex} from './feed-url-policy.mjs';
 
 export type Source = {name: string; url: string};
 export type SubscriptionDraft = {group: string; sources: Source[]};
@@ -11,12 +12,9 @@ const defaultDraft: SubscriptionDraft = {
 };
 
 function validateHttps(value: string): true | string {
-  try {
-    const url = new URL(value);
-    return url.protocol === 'https:' ? true : '只允许 HTTPS 源地址';
-  } catch {
-    return '请输入有效的完整 URL';
-  }
+  return canonicalFeedUrl(value) === null
+    ? '请输入不包含用户名或密码的 HTTPS 完整地址'
+    : true;
 }
 
 function delayWithSignal(ms: number, signal: AbortSignal) {
@@ -50,6 +48,25 @@ export default function SubscriptionForm({level}: Props) {
   const [feedback, setFeedback] = useState('尚未提交');
   const controller = useRef<AbortController | null>(null);
   const generation = useRef(0);
+  const draft = useWatch({control});
+  const draftFingerprint = JSON.stringify(draft);
+  const previousDraft = useRef(draftFingerprint);
+
+  // A changed form invalidates any pending response, not just explicit Reset.
+  // useWatch observes dynamic append/remove as well as text edits.
+  useEffect(() => {
+    if (previousDraft.current === draftFingerprint) return;
+    previousDraft.current = draftFingerprint;
+    clearErrors('root.server');
+    if (controller.current) {
+      generation.current++;
+      controller.current.abort();
+      controller.current = null;
+      setFeedback('草稿发生变化：旧提交已取消，请重新提交');
+    }
+  }, [clearErrors, draftFingerprint]);
+
+  const savedIsCurrent = saved !== null && JSON.stringify(saved) === draftFingerprint;
 
   useEffect(() => () => {
     generation.current++;
@@ -74,10 +91,13 @@ export default function SubscriptionForm({level}: Props) {
       // 本地业务 fixture：模拟耗时与 409 映射，不访问外部 HTTP。
       if (level === 'advanced') await delayWithSignal(450, active.signal);
       if (active.signal.aborted || token !== generation.current) return;
-      const urls = value.sources.map(source => source.url.trim().toLowerCase());
-      if (new Set(urls).size !== urls.length) {
+      // Host and default port are canonicalized; path/query remain case sensitive.
+      const duplicateIndex = findDuplicateFeedIndex(value.sources);
+      if (duplicateIndex !== -1) {
+        setError(('sources.' + duplicateIndex + '.url') as `sources.${number}.url`,
+          {type: 'duplicate', message: '与本分组已有 RSS URL 重复'}, {shouldFocus: true});
         setError('root.server', {type: 'duplicate', message: '同一分组不能重复订阅相同 URL'});
-        setFeedback('客户端检测到重复 URL');
+        setFeedback('客户端检测到规范化 URL 重复');
         return;
       }
       if (level === 'advanced') {
@@ -91,7 +111,7 @@ export default function SubscriptionForm({level}: Props) {
           return;
         }
       }
-      setSaved(value);
+      setSaved({group: value.group, sources: value.sources.map(source => ({...source}))});
       setFeedback('校验通过，已生成本地预览；没有真正写入服务端');
     } catch (error) {
       if (token === generation.current && !active.signal.aborted) {
@@ -150,6 +170,6 @@ export default function SubscriptionForm({level}: Props) {
     <p role="status">{feedback} · {isDirty ? '存在未保存修改' : '输入处于默认状态'}</p>
     {errors.root?.server && <p role="alert">{errors.root.server.message}</p>}
     {advanced && <p>将任意 URL 改为 <code>https://example.com/duplicate</code>，可模拟服务端 409；取消后不应回写旧结果。</p>}
-    {saved && <><h3>通过校验的本地数据</h3><output className="demo-output">{JSON.stringify(saved, null, 2)}</output></>}
+    {savedIsCurrent && <><h3>通过校验的本地数据</h3><output className="demo-output">{JSON.stringify(saved, null, 2)}</output></>}
   </section>;
 }

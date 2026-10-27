@@ -308,3 +308,15 @@ C13 Frappe Gantt 1.2.2 上游 `src/index.js` 的 `bind_bar_events` 会向 `docum
 
 - 另请 PLATFORM 将 D16 的三个 CLI 入口、D21 的三个 CLI 入口按静态白名单加入其现有 `scripts/cli-runner.mjs`（CD 不可修改该文件），并更新 `packages/library-lab/package.json` 与真实 pnpm-lock；运行定向真实 Node SDK tests，必要时再做独立 browser preview。不得手造 lock integrity，也不得用 Mock SDK 代替原生构建。
 - 当前累计**从第八批含 Draft #35 的 41/43 到 43/43 条拥有完整源码、指南、Agent 说明、三层场景**；这是跨待合入 PR 的 authored 数量，不代表集成分支已经接入43条，也不代表有任何新 SDK 实际 PASS。CD 代码覆盖任务达到全量；后续继续审查 SDK/build 证据、修复上游 API 不兼容、验收专用 Worker/索引 runner，而不是反复重新生成目录占位页。
+
+---
+
+## 第十轮（2026-10-27）— 43/43 源码完成后的边界修复
+
+- runCount：**10/24**；基于最新集成 `0733f237ddfbc4ab3204c531255f386c46abec27` 新建 `feat/library-lab-cd-hardening-20261027`。截至本轮检查，原CD PR #35/#39 均已由 PLATFORM 合入，集成分支已有43/43套源码与双指南；这是源码覆盖，不是 SDK/浏览器验收通过。旧 `feat/library-lab-cd` 仍是初始分支，禁止覆盖集成进度。
+- **C01 React Hook Form**：修复整串 RSS URL 转小写导致大小写敏感路径/query 假重复；增加独立 `feed-url-policy.mjs` 及类型声明，规范 HTTPS 主机/默认端口、移除fragment并拒绝URL内嵌凭据。重复反馈到字段路径；`useWatch` 监视编辑和字段数组变化，取消旧提交、禁止陈旧保存快照显示。测试 `tests/url-policy.test.mjs` 无第三方依赖，**Node v22.16 本地执行5 PASS/0 FAIL**。这不等于 React Hook Form 实际浏览器通过。
+- **D07 TanStack Query**：防止切换租户时旧 `useMutation` 的成功/409文本写入新工作区：在 `onMutate` 的异步取消操作前捕获 tenantEpoch，回调只有相同 epoch 才更新当前视图；旧租户的 query rollback/invalidate 仍执行。A→B→A 也不会恢复旧反馈。尚需真实浏览器快速切换验证。
+- **D03 p-limit**：添加真实 `p-limit@7.3.3` SDK test 对有界并发、`rejectOnClear` queued AbortError 结算、running 独立 AbortSignal 取消的断言；与既有平台全局测试互补，不重复修改演示状态机。**SDK未安装，本次仅静态语法检查，NOT_RUN**。
+- 这批没有新增第三方依赖请求。PLATFORM 仍负责正式 npm/pnpm 解析、完整 tsc/build/Chromium 和最终 sourceFingerprint 绑定；纯 Node URL 检查不是 SDK PASS。所有源码、manifest、文档和测试修改仅在 `entries/C*`、`entries/D*`，另追加本进度。
+- 检查建议：`node --test packages/library-lab/entries/C01-react-hook-form/tests/url-policy.test.mjs`（本轮已跑）；`node --test packages/library-lab/entries/D03-p-limit/tests/sdk.test.mjs`（待安装真实SDK）；`pnpm --filter @reactloom/library-lab catalog:check` / `typecheck` / `build` / Chromium tenant-switch/RHF E2E（待可用环境）。
+- 下一队列：真实 SDK/TS 编译错误优先修复 C01/D03/D07；复审跨租户缓存/旧反馈和全组 URL/IME 边界，定位问题才做精准改动，不重复创建43条目录。达到充分可运行证据后交由 PLATFORM 统一验收。

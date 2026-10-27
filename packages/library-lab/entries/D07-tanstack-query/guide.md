@@ -31,3 +31,9 @@
 不同 tenant 绝不共享列表内容；快速搜索/翻页，旧慢请求不能回写当前 key；点击取消，实际等待被 AbortSignal 中止；更新失败的乐观状态被回滚；成功更新后统计和列表重新一致。当前新源码 SDK/build/browser 仍为 NOT_RUN，见 verification.json。
 
 官方：https://tanstack.com/query/latest/docs/framework/react/guides/query-cancellation · https://tanstack.com/query/latest/docs/framework/react/guides/important-defaults
+
+## 本轮修复：切换租户时的 mutation 反馈隔离
+
+即使 QueryKey 按 tenant 隔离，**mutation 的 success/error 回调也可能晚于工作区切换**。旧版本会把 A 的成功/409 文案显示在 B。当前示例在 `onMutate` **await 之前**记录 `tenantEpoch`，返回到 context；`onSuccess/onError` 仍回滚/失效对应租户的快照，但只在 epoch 未变化时修改当前页面提示。切换 A → B → A 也不恢复最早 A 的反馈；unmount 会让旧 epoch 失效。
+
+浏览器定向场景：在团队 A 启动需240ms的开关修改，立即切到 B；A 的完成/409 不得出现在 B 页面。再切回 A，不能展示先前过期消息，但 A 自身缓存仍可按服务器结果独立失效重拉。本地 fixture 是业务模拟，不能代表实际服务器写入可被取消。SDK/Chromium 尚未运行，本处只描述代码设计和必须验证的行为。
