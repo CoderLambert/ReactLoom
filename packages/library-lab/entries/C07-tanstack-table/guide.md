@@ -47,7 +47,7 @@ IME 组合中的 Enter 只确认候选，不应触发搜索；组合结束后才
 
 ## 请求身份隔离与迟到结果（第24轮补强）
 
-进阶场景将 **pageIndex、pageSize、sorting、query、503 模式、服务端数据上限** 编入 `tableQueryIdentity`；在 React render 时只展示与当前身份相同的已完成响应。发起新请求前同步 `invalidate`，旧 AbortSignal 立即中止；effect 自身用单调 epoch 验证 `owns()`，即使 A→B→A 恢复相同查询键，原 A 的迟到 Promise 仍不能写回。旧 effect 的 cleanup 不得取消新请求。服务端缩减导致末页越界时先纠正页号，然后重新请求新页，绝不把旧页数据冒充新页。
+进阶场景将 **pageIndex、pageSize、sorting、query、503 模式、服务端数据上限** 编入 `tableQueryIdentity`；在 React render 时只展示与当前身份相同的已完成响应。发起新请求前同步 `invalidate`，旧 AbortSignal 立即中止；effect 自身用单调 epoch 验证 `owns()`，即使 A→B→A 恢复相同查询键，原 A 的迟到 Promise 仍不能写回。已完成页面另绑定 lease generation；新操作同步 invalidate 后即便查询键恢复相同，渲染也不能短暂复活旧页面。旧 effect 的 cleanup 不得取消新请求。服务端缩减导致末页越界时先纠正页号，然后重新请求新页，绝不把旧页数据冒充新页。
 
 查询提交/排序/翻页/页大小/模拟异常均先取消旧所有权；`useEffect` 在 StrictMode 重挂载时也会撤销过期 lease。中文 IME 的候选确认 Enter 与组合结束后短窗口内的 Enter 不触发检索，而鼠标点击查询按钮仍可提交。只有同一请求身份的错误能在当前页呈现。
 

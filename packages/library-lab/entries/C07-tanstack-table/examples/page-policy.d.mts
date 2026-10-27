@@ -8,6 +8,7 @@ export declare function tableQueryIdentity(value: {
   limit: number;
 }): string;
 export interface PageRequestLease {
+  readonly generation: number;
   readonly signal: AbortSignal;
   owns(): boolean;
   close(): void;
@@ -15,5 +16,6 @@ export interface PageRequestLease {
 }
 export declare function createPageRequestGate(): {
   invalidate(): void;
+  revision(): number;
   begin(): PageRequestLease;
 };

@@ -31,5 +31,5 @@
 ## 最终请求所有权补充（第24轮）
 
 - 将 `tableQueryIdentity` 覆盖全部后端分页输入；当前渲染不能读另一个 identity 的旧 rows/total/error。业务换租户时还必须包含租户授权身份并清理外部缓存；本示例仅单租户 fixture。
-- `createPageRequestGate` 的 epoch 与 AbortSignal 双重保护不可删：切换排序/页号/筛选/模拟故障先同步 invalidate；真正完成结果必须 `lease.owns()`。A→B→A 的等价 key 仍需拒绝第一次 A 的响应。
+- `createPageRequestGate` 的 epoch 与 AbortSignal 双重保护不可删：切换排序/页号/筛选/模拟故障先同步 invalidate；真正完成结果必须 `lease.owns()`。**渲染已完成数据也要检查 `lease.generation === gate.revision()`**，避免 A→B→A 等价 key 短暂复活第一次 A 的页面。
 - 先做源码与策略核验，再在真实 `@tanstack/react-table@9.2.4` 环境执行 `tests/sdk.test.mjs`，最后完整 TS/Vite/Chromium 验证。策略 PASS 不等于 SDK PASS；不能因为离线 SDK 不可用而删除测试或模拟目标包。

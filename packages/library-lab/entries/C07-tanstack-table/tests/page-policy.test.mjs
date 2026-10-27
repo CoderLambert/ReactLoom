@@ -55,3 +55,13 @@ test('A→B→A rejects late original A even when the request identity repeats',
   assert.equal(B.owns(),false);assert.equal(secondA.owns(),true);
   gate.invalidate();assert.equal(secondA.owns(),false);assert.equal(secondA.signal.aborted,true);
 });
+test('settled page stays visible only until the next invalidation revision',()=>{
+  const gate=createPageRequestGate();const settled=gate.begin();
+  const displayedGeneration=settled.generation;
+  settled.close();
+  assert.equal(gate.revision(),displayedGeneration);
+  gate.invalidate();
+  assert.notEqual(gate.revision(),displayedGeneration,'invalidate hides old rows synchronously');
+  const repeated=gate.begin();
+  assert.notEqual(repeated.generation,displayedGeneration,'same query key cannot resurrect prior response');
+});

@@ -10,7 +10,7 @@ import {clampPageIndex,createPageRequestGate,tableQueryIdentity} from './page-po
 export type Feed = {id:string; title:string; category:'技术'|'资讯'|'商业'; subscribers:number; status:'active'|'paused'};
 type Props = {level:'basic'|'business'|'advanced'};
 type Response = {rows:Feed[]; total:number};
-type OwnedResponse = Response & {identity:string};
+type OwnedResponse = Response & {identity:string;generation:number};
 export const feedSeed: Feed[] = Array.from({length:18},(_,i)=>({
   id:'feed-'+String(100+i),
   title:['Frontend Engineering','Platform Weekly','AI Systems','News Digest','Open Source'][i%5]+' #'+(i+1),
@@ -71,7 +71,7 @@ export default function TableExample({level}:Props){
   const [sorting,setSorting]=useState<SortingState>([]);
   const [pagination,setPagination]=useState<PaginationState>({pageIndex:0,pageSize:level==='basic'?18:5});
   const [rowSelection,setRowSelection]=useState<RowSelectionState>({});
-  const [remote,setRemote]=useState<OwnedResponse>({rows:[],total:0,identity:''});
+  const [remote,setRemote]=useState<OwnedResponse>({rows:[],total:0,identity:'',generation:-1});
   const [pendingIdentity,setPendingIdentity]=useState('');
   const [error,setError]=useState({identity:'',message:''});
   const [fail,setFail]=useState(false);
@@ -82,7 +82,8 @@ export default function TableExample({level}:Props){
   const identity=advanced?tableQueryIdentity({
     pageIndex:pagination.pageIndex,pageSize:pagination.pageSize,sorting,query,fail,limit:serverLimit,
   }):'';
-  const currentRemote:Response=advanced&&remote.identity===identity?remote:{rows:[],total:0};
+  const currentRemote:Response=advanced&&remote.identity===identity&&
+    remote.generation===requestGate.current.revision()?remote:{rows:[],total:0};
   const pending=advanced&&pendingIdentity===identity;
   const currentError=error.identity===identity?error.message:'';
   useEffect(()=>{
@@ -98,7 +99,7 @@ export default function TableExample({level}:Props){
     const lease=gate.begin();
     setPendingIdentity(identity);
     setError({identity,message:''});
-    setRemote({identity,rows:[],total:0});
+    setRemote({identity,generation:lease.generation,rows:[],total:0});
     void fetchLocalPage({
       pageIndex:pagination.pageIndex,pageSize:pagination.pageSize,sort:sorting,query,fail,limit:serverLimit,
     },lease.signal)
@@ -110,7 +111,7 @@ export default function TableExample({level}:Props){
           setPagination(p=>({...p,pageIndex:corrected}));
           return; // Re-fetch corrected page; never commit results for the old page.
         }
-        setRemote({...result,identity});
+        setRemote({...result,identity,generation:lease.generation});
       })
       .catch(e=>{if(lease.owns())setError({identity,message:String(e)});})
       .finally(()=>{

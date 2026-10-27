@@ -30,12 +30,14 @@ export function createPageRequestGate() {
   };
   return {
     invalidate,
+    revision: () => epoch,
     begin() {
       invalidate();
       const current = new AbortController();
       controller = current;
       const mine = epoch;
       return {
+        generation: mine,
         signal: current.signal,
         owns: () => mine === epoch && controller === current && !current.signal.aborted,
         close() { if (mine === epoch && controller === current) controller = null; },
