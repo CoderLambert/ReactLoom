@@ -898,3 +898,31 @@ PLATFORM审核 #80 base/head、14文件的目录授权并合入私有 `feat/libr
 
 波次进度提交 `683d782b6cbc94cb27fa52b180fb33b058ad6f01` 对应Github Actions：CI [40539324288](https://github.com/CoderLambert/ReactLoom/actions/runs/40539324288) 为 `failure`（7个job）；Library Lab [40539324093](https://github.com/CoderLambert/ReactLoom/actions/runs/40539324093) 为 `failure`（2个job）。独立查询 runtime-bootstrap `122313081309`、catalogue `122313081971`、verify spa `122313082438` 三个job的步骤API，全部 `steps=[]`；无安装、SDK、完整TS或浏览器可审计执行证据。不能以该failure确定本次AB源码编译失败，更不能声称它通过。相同runner故障交PLATFORM，未无意义重跑。PR #80保持Draft、base `feat/library-lab`。
 
+
+
+
+---
+
+## 第23轮（wave23）：ECharts离屏/预算控制与Floating UI真实业务状态
+
+**runCount=23/24**。起始从 GitHub Connector 读取最新私有集成分支 `feat/library-lab@87ea2afe5957ba370f114f0acecb8cde1cd0c5eb` 的协调、实施、包/根 AGENTS、类型/目录合同和本文件；PR #80 已合并，无开放AB PR。从精确base创建 `feat/library-lab-ab-wave23`，仅用预期HEAD非force快进提交。Draft worker [#83](https://github.com/CoderLambert/ReactLoom/pull/83) 的 **base=feat/library-lab**，不碰main、PR #3、模板、部署、公共文件。
+
+### 本轮代码交付（2个高风险库，6个共享真实运行Demo）
+
+- **A01 ECharts**：在已有 document.visibilitychange / reduced-motion 控制之外，加 `IntersectionObserver` 对真实图表DOM的离屏暂停，卸载disconnect；新增 `MAX_READING_UPDATES=120`，到上界关闭定时器、禁用新启动并要求复位，计数ref与React state同步重置。两系列数据表变成可聚焦按钮，Enter/Space选择真实值，并调用 SDK `dispatchAction({type:'showTip',seriesIndex,dataIndex})`，不自行模拟ECharts。新增2个策略断言、更新源码/指南/agent。
+- **B17 Floating UI**：业务“稍后阅读/已读”真正修改并可反向撤销本地文章状态，不只是提示语；高级搜索把已提交关键词应用到真实本地文章集合，与尚在编辑的query区分，执行NFKC+大小写规范化及多关键字匹配。中文IME安全判断、FloatingPortal、FloatingFocusManager、autoUpdate、剪贴板授权及迟到Promise撤销均沿用真实实现。新 `examples/business-policy.ts` 和5项业务回归，并同步3个Demo的library.json sourceFiles、guide、agent，展示与运行同源。此处article是教学 fixture，不宣称后端持久化。
+
+本轮仅更改**A01/B17目录中的11文件**，含2个新文件；原verification.json的SDK/build/browser继续NOT_RUN，未做虚假升级；新增dependencyRequests **0**，真实SDK导入语句保留。GitHub compare 在progress提交前确认 **ahead=3、behind=0、11/11目录授权路径**，本次progress追加后预期只有本文件多出一项变更；未force、未操作集成分支。
+
+### 实际验证与同源字节
+
+- 在隔离目录 `/mnt/data/ab-wave23`，**Node 22.16.0**：
+  `node --experimental-strip-types --test A01-echarts/tests/stream-policy.test.mts B17-floating-ui/tests/business-policy.test.mts` → **13 PASS / 0 FAIL / 0 SKIP**，仅是纯策略/业务函数，不是目标SDK/Canvas/Portal运行。
+- **TypeScript 5.8.3**：
+  `tsc --noEmit --strict --skipLibCheck --target ES2022 --module ESNext --moduleResolution Bundler A01-echarts/examples/stream-policy.ts B17-floating-ui/examples/business-policy.ts` → **PASS**，仅两份不依赖React/SDK的TS模块。
+- 本地 `git hash-object` 对实际执行字节与远端4个Git Blob逐一一致：A01 helper `dfa0ad0ef873ed428de3fe340dbd8248e6702e1f`、A01 test `5a14ab242104d3abd8798074ccf9caa5ea9eb0b0`、B17 helper `446167ef8856b43abd07080be920b0f2dbf3a27f`、B17 test `b12dbdebe194d473c830c74d7b02348f485d127e`。此证据仅支持这4文件纯逻辑测试。
+- **完整React/TSX类型检查、真实echarts与@floating-ui/react安装及SDK运行、pnpm-lock真实解析、Vite build、Chromium触控/键盘/中文IME/Canvas刷新/Portal焦点/StrictMode**仍**NOT_RUN/BLOCKED**。不得据策略PASS声明真实运行通过。既有GitHub Actions jobs steps为空且日志不可得，等待PLATFORM修复共享执行环境，不盲目循环同一DNS失败。
+
+### 下一队列 / 交接
+
+PLATFORM审核并合入 [#83](https://github.com/CoderLambert/ReactLoom/pull/83)，取得可用Runner后优先真实验证ECharts数据表触发 `showTip`、离屏/120次上界/StrictMode dispose，以及Floating UI非模态焦点返回、IME组合输入、业务状态撤销和搜索结果。若发现可复现源代码缺陷，下一最后一轮wave24在A/B所有权内修复。**39/39 A/B条目已有源码/文档不等于任何SDK、构建和浏览器已验收**。授权剩余1轮；到上限时如实列出缺口并停止本通道，不伪造全部PASS。
