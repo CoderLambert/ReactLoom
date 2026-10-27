@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import * as L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import {makeLocalLocation, MAX_EXTRA_LOCATIONS} from './station-factory';
 
 type Level = 'basic' | 'business' | 'advanced';
 type Location = { id: string; label: string; city: string; center: [number, number]; status: 'online' | 'paused' };
@@ -88,10 +89,11 @@ export default function LeafletExample({ level }: { level: Level }) {
         <button type="button" onClick={() => setItems(old => old.map(item => item.id === 'sea' ?
           { ...item, center: [item.center[0] + .25, item.center[1] + .25] } : item))}>模拟更新Seattle坐标</button>
         <button type="button" onClick={() => {
-          const id = `site-${++nextId.current}`;
-          setItems(old => [...old, { id, label: `备用源 ${old.length + 1}`, city: 'Chicago', center: [41.8781 + nextId.current * .1, -87.6298], status: 'online' }]);
-          setSelected(id);
-        }}>新增模拟来源</button>
+          if (nextId.current >= MAX_EXTRA_LOCATIONS) return;
+          const station = makeLocalLocation(++nextId.current);
+          setItems(old => [...old, station]);
+          setSelected(station.id);
+        }} disabled={nextId.current >= MAX_EXTRA_LOCATIONS}>新增模拟来源（最多40条）</button>
         <button type="button" onClick={() => {
           setItems(old => old.filter(item => item.id !== selected));
           setSelected(items.find(item => item.id !== selected)?.id ?? '');

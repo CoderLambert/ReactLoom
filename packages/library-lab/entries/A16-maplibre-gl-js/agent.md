@@ -28,3 +28,6 @@
 A15 Leaflet：少量点位或 SVG 覆盖物。A17 deck.gl：极高密度 GPU 可视化。地图服务权利审查与 UI 展示分离，不能替换目标库为假的 Canvas 后记验收 PASS。
 
 官方文档 https://maplibre.org/maplibre-gl-js/docs/ ；许可 BSD-3-Clause。
+
+
+**动态 GeoJSON 的身份约束（wave8）**：一起复制 `examples/station-factory.ts`；在事件回调中固定 `station=makeLocalStation(++nextId.current)`，禁止在异步 `setStations` updater 里读取递增 ref。重置时重置计数，保留 `id` 在 GeoJSON properties、React key 和状态中的一致性。演示最多追加40个点位，不是引擎性能上限；Browser/WebGL2验证仍需真实运行。

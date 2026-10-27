@@ -15,3 +15,6 @@
 **必要测试**：catalog:check、typecheck、build、真实SDK地图创建/图层筛选/键盘定位、重复挂载和卸载无残余实例、浏览器Network无瓦片请求。当前sdk/build/browser均NOT_RUN。
 
 **官方**：https://leafletjs.com/reference.html。
+
+
+**连续点击与唯一身份（wave8）**：必须一并迁移 `examples/station-factory.ts`；事件处理时把 `const station=makeLocalLocation(++nextId.current)` 固定下来，再传进 `setItems`。严禁在 updater 内读取可变 `nextId.current`。一次批次上限40，保留稳定ID作为 React key、选择状态和地图 marker 关联。纯规则的Node PASS不是 Leaflet SDK/浏览器 PASS。

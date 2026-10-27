@@ -24,3 +24,8 @@ React维护来源列表；Leaflet负责Map、LayerGroup、circleMarker。Map只�
 本轮仅实现源文件和指南；SDK、TS、Vite、Chromium NOT_RUN。后续检查真实地图创建/销毁、一个容器反复挂载、源切换图层数量、DOM键盘定位、无外网瓦片请求、弹窗不注入HTML、不同屏幕invalidateSize。别将地理坐标示意冒充完整地图库验收。
 
 官方：https://leafletjs.com/reference.html · https://leafletjs.com/examples/quick-start/ 。叶库BSD-2-Clause、@types/leaflet MIT。
+
+
+## 连续添加数据的并发安全（AB wave8 加固）
+
+新增模拟点位会先在事件处理函数中固定递增的 `sequence`，由 `examples/station-factory.ts` 纯函数产生 ID、标签和坐标，再调用 React `setItems`。不能在异步状态更新函数中读取随后会变化的 `ref.current`，否则连续点击可能出现 ID 与坐标/标签错配。演示限制最多追加40个点位，避免无界扩张。`tests/station-factory.test.mts` 用 Node 类型擦除执行纯规则回归；它不证明 Leaflet SDK、容器测量及浏览器点位已经通过。
