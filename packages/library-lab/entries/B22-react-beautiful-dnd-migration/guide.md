@@ -38,3 +38,7 @@ basic旧版DragDropContext→Pangea的最小替换，稳定draggableId；busines
 原实现仅拒绝锁定的拖拽起点、终点，允许一个可移动条目从固定项前面移到后面；数组重排会把中间固定项的索引悄悄改变。现使用 `examples/pinned-order.ts` 检查从起点到终点的**完整闭区间**，任一条目为 locked/fixed 就拒绝移动，三个SDK实现都使用同一约束。上下按钮在不可合法移动方向直接禁用，避免看起来可点但实际只报错。
 本地定向测试在条目目录执行：`node --experimental-strip-types --test tests/pinned-order.test.mjs`；测试从实际TS源文件导入规则，覆盖锁定项、双向跨越、合法同侧重排及越界。**该纯业务规则测试不意味着 SDK、React、Chromium 或触控运行已经验收。**
 若产品允许移动其他项跨过固定槽位，先重新定义排序与不变式，并增加对应测试，而不是直接套用 arrayMove/splice。
+
+## 拖动与其他操作冲突（AB wave20）
+
+键盘上移/下移、撤销、恢复原序在同一次Reducer事务中修改列表并提升revision。DragStart捕获可见ID序列、revision与level；onDragEnd提交前必须核对快照/拖动ID。中途发生键盘更改、撤销、重置或切换三层模式，旧Drop直接丢弃，不能覆盖较新业务操作。`examples/pinned-order.ts`兼具不可跨越固定项和原子顺序历史状态；`tests/order-history.test.mts`仅证明规则，不代表真实拖动/触摸和React19已验收。
