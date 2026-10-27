@@ -33,5 +33,5 @@ test('real MiniSearch autoSuggest is scoped before indexing, not just search fil
   assert.equal(tech.search('Secret',{fuzzy:false}).length,0);
   assert.equal(tech.autoSuggest('Secret',{fuzzy:false}).length,0);
   assert.ok(all.search('Secret',{fuzzy:false}).some(hit=>hit.id==='a'));
-  assert.ok(all.autoSuggest('Secret',{fuzzy:false}).some(hit=>hit.suggestion.includes('Secret')));
+  assert.ok(all.autoSuggest('Secret',{fuzzy:false}).some(hit=>hit.suggestion.toLowerCase().includes('secret')));
 });
