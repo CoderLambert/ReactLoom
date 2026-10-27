@@ -57,3 +57,7 @@ import {Virtuoso} from 'react-virtuoso';
 - https://virtuoso.dev/react-virtuoso/
 - https://virtuoso.dev/react-virtuoso/api-reference/virtuoso/
 - https://github.com/petyosi/react-virtuoso/releases/tag/react-virtuoso%404.18.19
+
+## 补充：同条件重新搜索也必须恢复窗口身份
+
+业务层即使重复提交相同关键词，也会从头加载 30 条，因此 `Virtuoso key={query}` 不足以重置仍停留在底部的滚动位置。当前实际示例使用独立 `viewRevision` 作为 viewport key，`nextViewRevision` 每次合法提交递增；筛选词由 `normalizeFeedQuery` 做 NFC/控制字符和 80 码点上界，`nextWindowLimit` 对最后一页设定明确上界。相同 helper 在 `examples/view-policy.mjs`，由组件直接 import，`tests/view-policy.test.mjs` 执行纯 Node 回归。它们并不证明 Virtuoso 的浏览器滚动已经通过，真实窗口重置、IME、末页 endReached 和滚动锚点仍需 Chromium 验证。

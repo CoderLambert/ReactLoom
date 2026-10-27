@@ -1,5 +1,6 @@
-import {useMemo, useRef, useState} from 'react';
+import {useCallback, useMemo, useRef, useState} from 'react';
 import {useVirtualizer} from '@tanstack/react-virtual';
+import {normalizeFilterQuery, stableRowId, viewIdentity} from './filter-policy.mjs';
 
 type Level = 'basic' | 'business' | 'advanced';
 type Article = {id: string; title: string; summary: string};
@@ -14,10 +15,11 @@ function VirtualList({items, advanced = false}: {items: Article[]; advanced?: bo
   const viewport = useRef<HTMLDivElement>(null);
   const [expanded, setExpanded] = useState<Set<string>>(() => new Set());
   const [visible, setVisible] = useState('');
+  const getItemKey = useCallback((index: number) => stableRowId(items, index), [items]);
   const virtualizer = useVirtualizer({
     count: items.length,
     getScrollElement: () => viewport.current,
-    getItemKey: (index: number) => items[index]?.id ?? 'missing-' + index,
+    getItemKey,
     estimateSize: () => 94,
     overscan: 5,
     useFlushSync: false,
@@ -75,16 +77,22 @@ function SearchableFeed({advanced}: {advanced: boolean}) {
   const [draft, setDraft] = useState('');
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState('all');
+  const [viewRevision, setViewRevision] = useState(0);
   const composing = useRef(false);
   const all = useMemo(() => Array.from({length: 3400}, (_, i) => makeArticle(i)), []);
   const items = useMemo(() => all.filter(item =>
     (category === 'all' || item.title.startsWith(category)) &&
     (item.title + item.summary).toLowerCase().includes(query.toLowerCase())), [all, category, query]);
-  const search = () => {if (!composing.current) setQuery(draft.trim());};
+  const search = () => {
+    if (composing.current) return;
+    setQuery(normalizeFilterQuery(draft));
+    // A repeat submission must reset an old scrolled measurement set too.
+    setViewRevision(revision => revision + 1);
+  };
   return <section aria-label="TanStack Virtual 业务过滤">
     <h2>{advanced ? '动态高度：测量失效与深度跳转' : 'RSS 虚拟结果：查询与业务主键'}</h2>
     <form className="demo-controls" onSubmit={e => {e.preventDefault(); search();}}>
-      <label>关键词 <input value={draft} onChange={e => setDraft(e.target.value)}
+      <label>关键词 <input maxLength={120} value={draft} onChange={e => setDraft(e.target.value)}
         onCompositionStart={() => {composing.current = true;}}
         onCompositionEnd={() => {composing.current = false;}}
         aria-label="搜索文章" /></label>
@@ -95,7 +103,7 @@ function SearchableFeed({advanced}: {advanced: boolean}) {
       <button type="submit">筛选</button>
     </form>
     <p>更新查询后重建该视图的测量索引，避免不同结果集复用旧索引。</p>
-    <VirtualList key={category + '|' + query} items={items} advanced={advanced} />
+    <VirtualList key={viewIdentity(category, query, viewRevision)} items={items} advanced={advanced} />
   </section>;
 }
 

@@ -1,5 +1,6 @@
 import {useMemo,useRef,useState} from 'react';
 import Fuse from 'fuse.js';
+import {normalizeQuery, resolveScope, visibleDocuments} from './search-scope.mjs';
 type Level='basic'|'business'|'advanced';
 type Group='技术'|'商业'|'开源';
 type Article={id:string;title:string;summary:string;group:Group;tags:string[]};
@@ -24,10 +25,11 @@ export default function FuseWorkshop({level}:{level:Level}){
  const [group,setGroup]=useState<Group|'全部'>('全部');
  const [threshold,setThreshold]=useState(0.35);
  const composing=useRef(false);
+ const {group:effectiveGroup, threshold:effectiveThreshold}=resolveScope({level,group,threshold});
  // Scope the searchable collection before indexing and before the result limit.
  // Production ACL and tenant constraints must be applied at this boundary.
- const scopedDocs=useMemo(()=>group==='全部'?docs:docs.filter(item=>item.group===group),[docs,group]);
- const engine=useMemo(()=>createArticleIndex(scopedDocs,threshold),[scopedDocs,threshold]);
+ const scopedDocs=useMemo(()=>visibleDocuments(docs,effectiveGroup),[docs,effectiveGroup]);
+ const engine=useMemo(()=>createArticleIndex(scopedDocs,effectiveThreshold),[scopedDocs,effectiveThreshold]);
  const results=useMemo(()=>{
    return query.trim()?engine.search(query.trim(),{limit:20}).map(hit=>({
      item:hit.item,score:hit.score??null,matches:hit.matches?.map(part=>part.key)??[],
@@ -40,8 +42,8 @@ export default function FuseWorkshop({level}:{level:Level}){
  return <section aria-label="Fuse.js 浏览器模糊搜索">
   <h2>{level==='basic'?'带分数的模糊查询':level==='business'?'RSS 频道分类、排序与输入法':'阈值比较和动态索引变更'}</h2>
   <p>真正调用 Fuse.js 7.5.0 Fuse.search，不请求网络；搜索结果仅以文本显示，不渲染第三方 HTML。</p>
-  <form className="demo-controls" onSubmit={e=>{e.preventDefault();if(!composing.current)setQuery(draft.trim());}}>
-   <label>检索关键词 <input aria-label="检索关键词" value={draft} onChange={e=>setDraft(e.target.value)}
+  <form className="demo-controls" onSubmit={e=>{e.preventDefault();if(!composing.current)setQuery(normalizeQuery(draft));}}>
+   <label>检索关键词 <input aria-label="检索关键词" maxLength={120} value={draft} onChange={e=>setDraft(e.target.value)}
       onCompositionStart={()=>{composing.current=true;}} onCompositionEnd={()=>{composing.current=false;}}/></label>
    <button type="submit">开始检索</button>
    {level!=='basic'&&<label>频道分组 <select aria-label="频道分组" value={group} onChange={e=>setGroup(e.target.value as typeof group)}>
@@ -52,7 +54,7 @@ export default function FuseWorkshop({level}:{level:Level}){
     {[0,0.15,0.35,0.55].map(value=><option value={value} key={value}>{value.toFixed(2)}</option>)}</select></label>
    <button type="button" onClick={addRecord}>增量导入新 RSS（重建索引）</button>
   </div>}
-  <p role="status">匹配 {results.length}/{scopedDocs.length} 条；空查询展示当前分组所有文档。</p>
+  <p role="status">匹配 {results.length}/{scopedDocs.length} 条 · 有效分组 {effectiveGroup} · 阈值 {effectiveThreshold.toFixed(2)}；空查询展示当前分组所有文档。</p>
   {results.length?<ol data-testid="fuse-results">{results.map(({item,score,matches})=>
    <li key={item.id}><strong>{item.title}</strong> · {item.group}
     <p>{item.summary}</p>

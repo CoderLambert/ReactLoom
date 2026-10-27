@@ -53,7 +53,9 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/view-policy.mjs",
+        "examples/view-policy.d.mts"
       ],
       "capabilities": [],
       "description": "一万条虚构文章的可变高度虚拟窗口"
@@ -66,7 +68,9 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/view-policy.mjs",
+        "examples/view-policy.d.mts"
       ],
       "capabilities": [],
       "description": "RSS 搜索、分段加载与中文输入法"
@@ -79,7 +83,9 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/view-policy.mjs",
+        "examples/view-policy.d.mts"
       ],
       "capabilities": [],
       "description": "历史消息前插、展开和底部跟随"

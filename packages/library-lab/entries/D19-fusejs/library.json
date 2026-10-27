@@ -55,7 +55,9 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/search-scope.mjs",
+        "examples/search-scope.d.mts"
       ],
       "capabilities": [],
       "description": "Fuse.search 加权评分"
@@ -68,7 +70,9 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/search-scope.mjs",
+        "examples/search-scope.d.mts"
       ],
       "capabilities": [],
       "description": "RSS 分组过滤与输入法处理"
@@ -81,7 +85,9 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/search-scope.mjs",
+        "examples/search-scope.d.mts"
       ],
       "capabilities": [],
       "description": "容错阈值和新增条目索引刷新"
