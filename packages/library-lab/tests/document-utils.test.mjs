@@ -66,3 +66,25 @@ test('Markdown rejects fallback HTML, non-2xx, invalid UTF-8 and absent response
   await assert.rejects(readLimitedMarkdownResponse(new Response(Uint8Array.of(0xc3,0x28))),TypeError);
   await assert.rejects(readLimitedMarkdownResponse(new Response(null)),/字节流/);
 });
+
+
+test('Setext headings use source start lines and duplicate slugs match rendered anchors', () => {
+  const doc=['Introduction','============','## 中英对照','中英对照','---','中文标题','----'].join('\n');
+  assert.deepEqual(extractDocumentHeadings(doc).map(h=>[h.id,h.depth,h.line]),[
+    ['introduction',1,1],['中英对照',2,3],['中英对照-1',2,4],['中文标题',2,6],
+  ]);
+});
+
+test('Fence-looking code text cannot expose hidden headings; indented/quoted code stays out of TOC', () => {
+  const ticks='\x60'.repeat(3);
+  const doc=[ticks+'md',ticks+' not a closing fence','## hidden',ticks,
+    '    ## indent','\t## tab','> ## quote','- item','---','## visible'].join('\n');
+  assert.deepEqual(extractDocumentHeadings(doc).map(h=>h.id),['visible']);
+});
+
+test('Document-relative links reject scheme-relative or malformed Vite base paths', () => {
+  for (const base of ['//attacker.example/', '/nested//route/', '/a/../b/', '/a?x=1/', '/a#frag', '/a\\backslash/']) {
+    assert.equal(resolveDocumentUrl('guide.md','A01',base), '/raw/A01/guide.md',base);
+  }
+  assert.equal(resolveDocumentUrl('guide.md','A01','/docs.v2/library/'), '/docs.v2/library/raw/A01/guide.md');
+});
