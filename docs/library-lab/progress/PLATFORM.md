@@ -308,3 +308,21 @@ runCount：**9 / 24**。PR #8 继续 Draft；main/旧模板/PR #3 未修改，�
 **可持久复核的原始 Node TAP**：`docs/library-lab/evidence/platform-wave12-node.tap`（实际命令见上，SHA-256 `fa7a284ebc3e96bc825adc09bcd22633960007c9e10d00bf28c8c7fb42684e7c`，Git Blob `6fd7d506aad4c8671c916b17a6b697da0a95db08`）直接保存在本私有分支，供下次对照真实代码与命令；它**仅证明12项无第三方依赖政策/协议测试**。额外核查集成后 CI [Library Lab 40469860871](https://github.com/CoderLambert/ReactLoom/actions/runs/40469860871) 2 jobs、[主 CI 40469860873](https://github.com/CoderLambert/ReactLoom/actions/runs/40469860873) 7 jobs 全为 failure 且 `steps=null`，不能归类为构建测试 FAIL 的代码诊断；仍待 #12 处理。
 
 **runCount 12/24**。#8 仍为 Draft、main / PR #3 / 模板与公开部署未动；三个本批 worker PR 均已合入，仅使用项目授权的集成分支。
+
+
+## PLATFORM 第13轮：AB/CD 合入 + 生产源码索引/字节上界（2026-10-27）
+
+**实际集成**：基于 feat/library-lab@9a5778a9 阅读 COORDINATION、IMPLEMENTATION、根/本包AGENTS、progress、Issue #4/#5/#6/#7、开放PR及CI。逐路径审核 ownership/head/base 与 patch 后，squash 合入 [AB #56](https://github.com/CoderLambert/ReactLoom/pull/56)，head f5e45366、23个A/B授权路径、集成提交 10669259；[CD #58](https://github.com/CoderLambert/ReactLoom/pull/58)，head 3b55ca41、39个C/D授权路径、集成提交 4c994169。修复覆盖 Mermaid异步串行与取消、deck.gl GPU尺寸、dotLottie减少动态、移动面板、日期时区DST输入消歧、decimal.js发票精度。AB/CD 自报纯策略测试不计入SDK。
+
+**集成阻塞**：[EF #57](https://github.com/CoderLambert/ReactLoom/pull/57) 审查发现 F01与F08新增 tests/policy.test.mjs 引用了错误的 ../preview-policy.mjs、../report-policy.mjs，真实文件在 ../examples/，从仓库原路径运行将找不到模块。已留下明确PR review，**不合入**直至EF修正并在原始测试目录复跑。
+
+**PLATFORM 直接开发**：
+- 提交 cd65cbd5/e9e4733e/4d37c1c2：source-integrity.mjs + .d.mts + 6项Node回归，对元信息唯一路径、sourceFiles完整性、SHA256格式、2MB大小、UTF-8跨chunk、伪造内容长度/HTML/404/无效编码进行检验。
+- 提交 b7c1c86e：SourceViewer使用完整索引校验与有界stream读取，不再不受控response.text()；只在实际字节和SHA256均匹配时允许核验/复制。
+- 提交 add2c36a：两个生产预览Playwright case涵盖畸形索引及字节长度造假；**源码已提交但测试NOT_RUN**。
+
+**实测边界**：Node v22.16.0隔离目录执行 node --test /mnt/data/library-lab-wave13/tests/source-integrity.test.mjs，**6 PASS / 0 FAIL / 0 SKIP**。精确参与测试的新源码/声明/测试 Git Blob SHA：5b76d9f55fddc44fd8f34eecb0419804ea07e520、e779cf0d5d996f6395c1c67ab3649187fd90b20b、8b412703df73ab151c765f2c8c40f23b9c4b0d1e，已核与远端一致；其依赖的safeRelativePath在本地为从远端catalog.mjs复制的函数，**不等于完整仓库测试**。实际Playwright、TypeScript、生产构建、第三方SDK均 NOT_RUN/BLOCKED。
+
+**CI**：2026-10-27最新 [Library Lab 40475998122](https://github.com/CoderLambert/ReactLoom/actions/runs/40475998122) 2jobs和 [主CI 40475998093](https://github.com/CoderLambert/ReactLoom/actions/runs/40475998093) 7jobs均failure且steps=null，没有可信测试步骤，不能据此给代码构建判FAIL。当前工作环境缺pnpm10、完整可联网仓库工作树且Node版本低于CLI执行最低22.18；根pnpm-lock.yaml仍未真实解析Library Lab importer。没有手造锁文件或伪造证据。本轮新增SDK PASS=0。
+
+**覆盖维度**：119身份目录、119有源码/guide/agent/verification文件，357个**配置**场景；可浏览器运行的Demo数量与SDK真实PASS不能从此推断。原包117资料，E11/F05为重建，新增资料审核数无有效证据。下一批：先修复合入EF #57；争取真实pnpm锁/冻结安装，继而TS7、Vite、SDK及Worker/MSW/Monaco/PDF.js关键浏览器验证；继续独立平台工作，不重复无步骤CI。主 #8仍 Draft；main、PR #3、SPA/SSR/Mobile模板未动。**runCount 13/24**。
