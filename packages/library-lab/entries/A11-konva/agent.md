@@ -15,3 +15,7 @@
 **命令**：`pnpm --filter @reactloom/library-lab catalog:check`，`typecheck`，`build`，专项浏览器交互及卸载测试。当前为NOT_RUN。
 
 **来源**：https://konvajs.org/docs/index.html 。
+
+## 第11轮迁移补充
+
+`examples/stage-policy.ts` 定义可测的 Stage 测量和节点上限，必须与 `examples/example.tsx` 一起复制。不要把宿主窄屏强制扩成320px，也不要在 React 函数式 updater 内递增 ID ref（StrictMode重放会制造不可预测ID）；生成 ID 放到点击事件，再使用纯 updater。Canvas实际拖拽/Transform后记得在真浏览器检查资源释放。

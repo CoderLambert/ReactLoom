@@ -33,3 +33,7 @@ React 管控外层 DOM 与数据状态；D3 只操作 svgRef 对应的 SVG 子�
 ## 一手资料
 - https://d3js.org/api
 - https://www.npmjs.com/package/d3
+
+## 第11轮：筛选、提示及窄屏绘图一致性
+
+新增 `examples/chart-policy.ts`，`visibleSeries` 作为阈值+日期窗口的共同数据源；`visibleSelection` 只在实际绘制数据集合中寻找选中图元，避免选择已过滤日期后仍展示误导的旧提示。观察 ResizeObserver 得到的 0/NaN/Infinity 尺寸时忽略，不再退回猜测的620px；大尺寸限制为4096以免意外巨大SVG。窄屏仅稀疏显示部分X轴刻度，但数据/等价表格完整保留；筛选0行给出明确状态。`tests/chart-policy.test.mts` 仅验证筛选与宽度规则，D3真实SVG/ResizeObserver仍需浏览器回归。

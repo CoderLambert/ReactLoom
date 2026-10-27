@@ -8,3 +8,7 @@
 **常见误用**：useEffect 之外命令式改 DOM；数组 index 当稳定数据ID；依赖尺寸未变化仍重绘；漏清理 transition；把高频 pointermove 更新每个 React 子组件。
 **验收**：在真实依赖安装后 pnpm --filter @reactloom/library-lab typecheck、build；浏览器检查三层场景、键盘/屏幕阅读器替代表格、resize 与卸载后 observer 数。缺测试时必须保持 NOT_RUN，不将纯静态校验当 SDK PASS。
 **相关库**：A01 ECharts / A02 Recharts 替代；数据来源可由 D07 TanStack Query 驱动，但数据拉取与缓存不交给 D3。
+
+## 第11轮迁移补充
+
+复制 `examples/chart-policy.ts`；确保绘制集合、选中说明、空集状态使用相同 `visibleSeries` 结果。ResizeObserver的隐藏/零宽不应回填虚假的620px，窄屏只省略重复刻度、不丢原始表格数据。实际 D3 SVG 测试待SDK安装和浏览器运行。

@@ -31,3 +31,7 @@ Konva适合框架无关图形底层控制与频繁命令更新；react-konva适�
 SDK、TypeScript、生产构建、浏览器均未运行，不能标PASS。后续需验证重复mount/unmount不残留Canvas，键盘按钮更新真实节点，dragend坐标、transformend尺寸稳定，移动端touch拖拽，极端缩放约束，截图与无障碍替代。
 
 官方：https://konvajs.org/docs/index.html · https://github.com/konvajs/konva （MIT）。
+
+## 第11轮：真实窄屏尺寸和有界节点创建
+
+之前 Stage 创建和 ResizeObserver 都用 `Math.max(320, el.clientWidth)`，即使父容器不足320px也撑出横向Canvas；现在 `examples/stage-policy.ts` 读取真实宿主宽度、忽略隐藏/非法测量、将异常巨幅宽度钳制到4096。Stage容器允许缩窄；画布内容可能因业务世界坐标超出视口，需要用户主动缩放/移动，**并不等于自动重排所有卡片**。新增示例节点总量上限24与重复ID保护，ID在事件处理器中生成，不再在 React 状态 updater 内执行 `++ref`（StrictMode可重算updater）；业务列表与键盘按钮保留。测试只覆盖尺寸/容量规则，Konva拖拽、Transformer、触控仍需真SDK浏览器验收。

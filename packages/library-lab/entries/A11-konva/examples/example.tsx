@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import Konva from 'konva';
+import {appendCard, canAddCard, MAX_SAMPLE_CARDS, stageWidth} from './stage-policy';
 
 type Level = 'basic' | 'business' | 'advanced';
 type Card = { id: string; title: string; x: number; y: number; width: number; height: number; color: string };
@@ -25,7 +26,7 @@ export default function KonvaExample({ level }: { level: Level }) {
   useEffect(() => {
     const el = host.current;
     if (!el) return;
-    const scene = new Konva.Stage({ container: el, width: Math.max(320, el.clientWidth), height: 280 });
+    const scene = new Konva.Stage({ container: el, width: stageWidth(el.clientWidth) ?? 1, height: 280 });
     const canvasLayer = new Konva.Layer();
     const handles = new Konva.Transformer({
       rotateEnabled: false, flipEnabled: false, keepRatio: false,
@@ -50,7 +51,10 @@ export default function KonvaExample({ level }: { level: Level }) {
     let raf = 0;
     const observer = new ResizeObserver(() => {
       cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => { if (stage.current === scene) scene.width(Math.max(320, el.clientWidth)); });
+      raf = requestAnimationFrame(() => {
+        const width = stageWidth(el.clientWidth);
+        if (stage.current === scene && width !== null && scene.width() !== width) scene.width(width);
+      });
     });
     observer.observe(el);
     return () => {
@@ -94,7 +98,7 @@ export default function KonvaExample({ level }: { level: Level }) {
   return <section aria-label="Konva 原生 Canvas 场景">
     <h2>{level === 'basic' ? '场景图节点与选择' : level === 'business' ? '审核流可拖拽卡片' : '变换、缩放、操作替代'}</h2>
     <p>真实 Konva Stage/Layer/Group/Rect/Text，舞台挂载一次并增量同步；鼠标拖拽后才写入业务坐标。</p>
-    <div ref={host} style={{ width: '100%', minWidth: 320, minHeight: 280, border: '1px solid #ccd9ca', borderRadius: 8, background: '#fafcf7' }}
+    <div ref={host} style={{ width: '100%', minWidth: 0, minHeight: 280, border: '1px solid #ccd9ca', borderRadius: 8, background: '#fafcf7' }}
       role="img" aria-label="新闻工作流的可拖拽 Canvas；下方提供键盘操作与等价卡片列表" />
     <div className="demo-controls">
       <label>当前选中<select value={selected ?? ''} onChange={e => setSelected(e.target.value || null)}>
@@ -103,12 +107,19 @@ export default function KonvaExample({ level }: { level: Level }) {
       {chosen && <><button type="button" onClick={() => apply(chosen.id, { x: chosen.x + 10 })}>向右 10px</button>
         <button type="button" onClick={() => apply(chosen.id, { y: chosen.y + 10 })}>向下 10px</button></>}
       {level === 'advanced' && <>
-        <button type="button" onClick={() => setCards(old => [...old, { id: `node-${++nextCardId.current}`, title: `步骤 ${old.length + 1}`, x: 40 + old.length * 35, y: 75 + old.length * 15, width: 135, height: 60, color: '#f2e5d1' }])}>新增卡片</button>
+        <button type="button" disabled={!canAddCard(cards.length)} onClick={() => {
+          const id = 'node-' + ++nextCardId.current;
+          setCards(old => appendCard(old, {
+            id, title: '步骤 ' + (old.length + 1),
+            x: 40 + old.length * 35, y: 75 + old.length * 15,
+            width: 135, height: 60, color: '#f2e5d1',
+          }));
+        }}>新增卡片</button>
         <button type="button" onClick={() => { if (selected) { setCards(old => old.filter(c => c.id !== selected)); setSelected(null); } }} disabled={!chosen}>删除选中</button>
         <button type="button" onClick={() => { stage.current?.scale({ x: 1, y: 1 }); stage.current?.position({ x: 0, y: 0 }); setZoom(1); }}>还原缩放</button>
       </>}
     </div>
-    <p role="status">节点 {cards.length}，当前缩放 {zoom.toFixed(2)}，选中 {chosen?.title ?? '无'}。缩放需要将指针坐标映射到世界坐标。</p>
+    <p role="status">节点 {cards.length} / {MAX_SAMPLE_CARDS}（示例上限），当前缩放 {zoom.toFixed(2)}，选中 {chosen?.title ?? '无'}。缩放需要将指针坐标映射到世界坐标。</p>
     <ul>{cards.map(c => <li key={c.id}>{c.title} · x={c.x}, y={c.y}, {c.width}×{c.height} <button type="button" onClick={() => setSelected(c.id)}>选择</button></li>)}</ul>
     {level === 'advanced' && <p>Transformer resize 后要将 group.scale 合并进 width/height，再将scale重置；舞台销毁必须销毁全部图元和监听。</p>}
   </section>;

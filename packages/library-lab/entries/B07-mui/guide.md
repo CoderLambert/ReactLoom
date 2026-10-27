@@ -49,3 +49,9 @@ React19 peer、Emotion CSS 注入顺序、Tailwind 全局层叠需要真实构�
 - [MUI npm](https://www.npmjs.com/package/@mui/material)
 
 MUI Material 核心 MIT；Emotion MIT。此示例不使用 Pro/商业控件。
+
+## 第11轮：函数式历史状态与稳定ID
+
+原来 `setBefore(rows)` 加 `setRows(old => ...)` 产生两个彼此独立的 React 更新源：连续 Switch 点击可能把过期 `rows` 捕获为撤销快照，使用 `old.length + 1` 作为新增 ID 又会在撤销后复用。现在 `examples/feed-history.ts` 把业务数组、单步撤销快照和单调 ID 分配合并为一个 `FeedHistory`，所有修改使用 `setFeedHistory(previous => ...)`；重复地址/无效 ID/无变化操作不覆盖撤销点。Dialog 与 Snackbar 继续调用真实 MUI 组件，业务失败仍仅为本地模拟。
+
+回归：先连续开关两条，撤销只能回退最近一次；新增→撤销→新增不会复用 ID；重复地址不产生记录。`tests/feed-history.test.mts` 是纯业务规则，不代表 MUI Portal/焦点/IME 已通过浏览器验收。
