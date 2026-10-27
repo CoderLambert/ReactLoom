@@ -63,7 +63,7 @@ function createFixtureTransport() {
       return new Response(null, {status: 204});
     return Response.json({message: 'not found'}, {status: 404});
   };
-  return {fetch: mockFetch, attempts};
+  return {fetch: mockFetch, attempts, resetTransient: () => attempts.delete('GET:/transient')};
 }
 
 function describeError(error: unknown): string {
@@ -121,6 +121,8 @@ export default function KyWorkshop({level}: {level: Level}) {
     try {
       let result: string;
       if (kind === 'retry') {
+        // Each click must demonstrate a NEW first-attempt 503, not reuse last click's success.
+        fixture.resetTransient();
         const payload = await client.get('https://lab.invalid/transient',
           {signal: controller.signal}).json<{ok: boolean; attempts: number}>();
         result = '503 后最终成功，实际请求次数：' + payload.attempts;

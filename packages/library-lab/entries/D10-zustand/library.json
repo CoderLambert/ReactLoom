@@ -59,6 +59,8 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/migration-policy.mjs",
+        "examples/migration-policy.d.mts",
         "examples/demo.tsx"
       ],
       "capabilities": [],
@@ -72,6 +74,8 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/migration-policy.mjs",
+        "examples/migration-policy.d.mts",
         "examples/demo.tsx"
       ],
       "capabilities": [],
@@ -85,6 +89,8 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/migration-policy.mjs",
+        "examples/migration-policy.d.mts",
         "examples/demo.tsx"
       ],
       "capabilities": [],

@@ -23,3 +23,7 @@
 定向测试稳定 rowId/跨页选择、分页排序/搜索、503 恢复、取消竞态、键盘导航。当前仅编写真实 v9 SDK 入口，不代表包已安装、通过 typecheck/build/browser。任何 PASS 需与 sourceFingerprint+命令+日志绑定。
 
 文档：https://tanstack.com/table/latest · https://github.com/TanStack/table
+
+## 加固约束（不可在迁移中删除）
+
+后端分页总数减少时按业务 rowCount 校正 pageIndex；超限后重新请求，而不是仅把页码文本改成1。新查询加载时清除旧页的可见记录，避免旧数据闪现。切换 Demo 模式需重新建立 pageSize 所有权，输入法组合确认的 Enter 不提交搜索。纯策略测试和真实 v9/Chromium 验收分开记录。

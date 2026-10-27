@@ -20,3 +20,7 @@ examples/example.tsx：createChannelStore(storage) 是 vanilla + persist 模式�
 node --test entries/D10-zustand/tests/sdk.test.mjs，必须真加载 zustand/vanilla 与 middleware；再应用 typecheck/build、租户切换和迁移浏览器检查。未跑 NOT_RUN。依赖声明向 PLATFORM 申请 zustand@5.0.16。
 
 官方：https://zustand.docs.pmnd.rs/
+
+## 强制的旧数据检查
+
+保留 `migration-policy.mjs` 和 `persist.migrate` 的直接连接：只接收合法旧字段，字符串 `"false"` 不是 boolean，不复制未知 token/tenant。未知 schema 版本应回退到安全 UI 默认状态。迁移函数纯测试不等于 SDK persist/hydration 或真实浏览器通过。

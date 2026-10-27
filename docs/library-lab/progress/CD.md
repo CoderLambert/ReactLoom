@@ -320,3 +320,18 @@ C13 Frappe Gantt 1.2.2 上游 `src/index.js` 的 `bind_bar_events` 会向 `docum
 - 这批没有新增第三方依赖请求。PLATFORM 仍负责正式 npm/pnpm 解析、完整 tsc/build/Chromium 和最终 sourceFingerprint 绑定；纯 Node URL 检查不是 SDK PASS。所有源码、manifest、文档和测试修改仅在 `entries/C*`、`entries/D*`，另追加本进度。
 - 检查建议：`node --test packages/library-lab/entries/C01-react-hook-form/tests/url-policy.test.mjs`（本轮已跑）；`node --test packages/library-lab/entries/D03-p-limit/tests/sdk.test.mjs`（待安装真实SDK）；`pnpm --filter @reactloom/library-lab catalog:check` / `typecheck` / `build` / Chromium tenant-switch/RHF E2E（待可用环境）。
 - 下一队列：真实 SDK/TS 编译错误优先修复 C01/D03/D07；复审跨租户缓存/旧反馈和全组 URL/IME 边界，定位问题才做精准改动，不重复创建43条目录。达到充分可运行证据后交由 PLATFORM 统一验收。
+
+
+---
+
+## 第十一轮（2026-10-27）— 分页、旧状态迁移与反复重试真实修复
+
+- **runCount：11/24**。从最新集成 `feat/library-lab@363009eb24230fee8c4e5103bcef950ed129a649` 创建 `feat/library-lab-cd-wave11`，未覆盖早期已合并的 `feat/library-lab-cd`；本批 [Draft PR #45](https://github.com/CoderLambert/ReactLoom/pull/45)，base=`feat/library-lab`，由 PLATFORM 单独审核合并。
+- **C07 TanStack Table v9**：修复后端缩减结果时仍停留在已越界分页的问题，使用真正被演示源码导入的 `examples/page-policy.mjs` + `.d.mts`，检测 total 变小后校正 pageIndex 并发新请求；新请求清除旧行，禁用加载中翻页；加「模拟后台缩减到2条」按钮；切换 Demo 层级恢复当前 pageSize；中文 IME Enter 不误提交。三层 Demo sourceFiles 与示例代码保持同源。
+- **D10 Zustand v5**：v1→v2 persist.migrate 现在调用 `examples/migration-policy.mjs`，仅接受旧 schema 的布尔字段和合法枚举，字符串 `"false"`、未知版本、错误形状不会被类型断言带入持久状态；drop token/tenant。补 `.d.mts`、纯策略 Node tests 以及需要真实 Zustand 的 SDK middleware 回归测试定义；同步三层源码清单。
+- **D08 Ky / D09 Axios**：连续点击 GET 503 教程按钮时，各自重新启动一次本地 fixture 的初次 503，因此第二次及更多次点击仍会通过真实 SDK 的重试路径，而不是直接 200。此重置仅存在于业务内存 fixture，不控制实际网络端点；补充指南/Agent 使用约束。
+- 开发代码实际提交：C07 `1a03c4ab15d7d05610852d8167af427b496d81e9`；D10 `3ad1205af8a5c90fa3c54b18251e7b7c896ecf04`；Ky/Axios `3e4a52ae2a88a3f75ec2107446cf2aa6ced8a261`。本次变更在进度提交前 GitHub compare 为 **21/21 路径全部属于 CD 条目所有权**；未修改任何公共平台/lock/CI/main/PR#3。
+- **实际执行**：Node `v22.16.0`，对从 GitHub branch 按 blob SHA 逐字核对后重建于 `/mnt/data/cd_wave11_exact` 的两个纯策略测试运行 `node --test <C07/tests/page-policy.test.mjs> <D10/tests/migration-policy.test.mjs>`，**9 PASS / 0 FAIL**；对四份 Node 文件运行 `node --check` 无错误。使用 `git hash-object` 核对 4 份本地源文件的 blob SHA 分别为 `92b7bff0` / `0c46d5f9` / `9c67bf32` / `61ea5d1a`，均与 GitHub 同一文件 SHA 相符。本结果只证明这四份**无 SDK 的真实源文件**，不是 React UI 或 SDK 完整验收。
+- **无法执行**：仅一次网络可达性检查 `curl -IL --max-time 6 https://registry.npmjs.org/axios` -> `Could not resolve host: registry.npmjs.org`；本环境没有项目依赖。真实 C07 Table v9、D10 Zustand middleware、D08 Ky、D09 Axios `sdk` 测试以及应用完整 `typecheck`、`build`、Chromium **NOT_RUN**；不把已有 package 声明或静态文件作为 SDK PASS。现有 verification.json 的 sdk/build/browser 状态保留 NOT_RUN。
+- **dependencyRequests：本轮无新增**。仍依赖 PLATFORM 既有 `@tanstack/react-table@9.2.4`（MIT）、`zustand@5.0.16`（MIT）、`ky@2.2.0`（MIT）、`axios@1.20.0`（MIT）四个目标版本的正式 pnpm 安装/Peer/许可复核及锁文件；CD 不修改 package 或 lock。
+- 源码/指南/Agent/三层入口继续为 **43/43**，不能据此宣称SDK验收完成。下一队列：PLATFORM 集成后先运行该四库真实 SDK、typecheck、生产构建及 C07 越界/IME、D10 hydrate、两次 503→200 浏览器路径；如持续无法安装，再挑无需公共文件的 C/D 严重生命周期缺陷和纯策略可执行测试补齐；最终按 sourceFingerprint/命令/日志绑定证据，不用历史 PASS。

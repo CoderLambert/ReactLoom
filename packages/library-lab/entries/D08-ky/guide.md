@@ -57,3 +57,7 @@ TanStack Query 负责远程数据缓存、失效、取消与写入回滚；Ky �
 真实 SDK 的 Node 定向测试为 tests/sdk.test.mjs，包含 fixture fetch；无真实外网。浏览器需测搜索竞态、取消按钮、重试结果及响应上限。代码已提交不代表 SDK 实测通过；verification.json 仍 NOT_RUN。
 
 官方：https://github.com/sindresorhus/ky/blob/v2.2.0/readme.md
+
+## 重复执行时的重试示范
+
+本地传输 fixture 的 `GET:/transient` 失败计数必须按**每次按钮事件**重置；否则第一次点击展示 503→200，第二次直接 200，教学结果无法重现。现在点击“GET 503 → 有限重试”总会重新触发一次首请求 503。生产系统绝不能通过重置客户端账本伪造真实服务器故障，该 reset 只存在于显式内存 fixture 中。SDK 实际重试仍需独立测试。
