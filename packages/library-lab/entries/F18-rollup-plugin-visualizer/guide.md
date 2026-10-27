@@ -63,3 +63,7 @@ F16 dependency-cruiser定位源码层级和循环；F15 Knip识别无效入口�
 输入已经有真实Vite配置/源码与verify.mjs，但本环境尚不能安装依赖或执行Vite8插件，**SDK/CLI NOT_RUN，build BLOCKED，浏览器NOT_RUN**。生成HTML/Markdown/JSON必须来自真实命令，不允许把本指南示意数值写成PASS。
 
 官方：https://github.com/btd/rollup-plugin-visualizer
+
+## 构建报告新鲜度门禁（2026-10-27）
+
+实际执行 `node entries/F18-rollup-plugin-visualizer/examples/verify.mjs`：按固定level清理本条目旧的 `examples/reports/<level>.<ext>` 和 `dist-<level>`，再进行真实Vite build，检查HTML结构、Markdown表格、[官方raw-data版本字段](https://github.com/btd/rollup-plugin-visualizer/blob/master/README.md) 与至少两份真正构建的JS chunk。旧报告不能掩盖失败命令。`node --test entries/F18-rollup-plugin-visualizer/examples/report-policy.test.mjs` 仅为合成样例的策略负例；不是Vite/plugin真实验收。

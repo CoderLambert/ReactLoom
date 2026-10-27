@@ -75,3 +75,7 @@ F15 Knip侧重无效入口和unused文件；F18 visualizer侧重打包后chunk�
 所有源码和规则已写入GitHub，但没有实际调用18.5.0 CLI、未解析依赖锁文件，SDK/CLI NOT_RUN、build BLOCKED。任何预期非零都不能冒充“已检测到违规”。
 
 官方：https://github.com/sverweij/dependency-cruiser
+
+## CLI报告器分离验收（2026-10-27）
+
+`node entries/F16-dependency-cruiser/examples/verify.mjs` 对每个场景执行两次真实depcruise：`--output-type json` 验证 `modules`、`summary.violations[].rule.name/severity` 与 `summary.error`；`--output-type err` 检查无违规exit 0和故意违规exit非0。此法不再仅靠JSON原文搜索规则关键字，也不把程序异常退出当成架构违规。参考 [官方 CLI](https://github.com/sverweij/dependency-cruiser/blob/main/doc/cli.md)。`node --test entries/F16-dependency-cruiser/examples/result-policy.test.mjs` 只是合成报表的纯逻辑负例测试，不算SDK/CLI PASS。

@@ -1,29 +1,28 @@
-import { spawnSync } from 'node:child_process';
-import { fileURLToPath } from 'node:url';
-import { stat, readFile, readdir } from 'node:fs/promises';
+import {spawnSync} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
+import {stat,readFile,readdir,rm} from 'node:fs/promises';
 import path from 'node:path';
-import assert from 'node:assert/strict';
+import {checkVisualizerReport} from './report-policy.mjs';
 
-const dir = fileURLToPath(new URL('.', import.meta.url));
-const lab = path.resolve(dir, '../../../');
-const config = path.join(dir, 'vite.config.ts');
-const binary = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm';
-const suffix = { basic: '.html', business: '.md', advanced: '.json' };
-for (const level of Object.keys(suffix)) {
-  const result = spawnSync(binary, ['exec','vite','build','--config',config,'--mode',level],
-    { cwd: lab, encoding: 'utf8', maxBuffer: 8 * 1024 * 1024 });
-  if (result.error) throw result.error;
-  assert.equal(result.status, 0, level + ' real Vite build failed: ' + (result.stderr || result.stdout));
-  const report = path.join(dir, 'reports', level + suffix[level]);
-  const info = await stat(report);
-  assert.ok(info.size > 100, 'Expected an actual nonempty report: ' + level);
-  const text = await readFile(report, 'utf8');
-  if (level === 'basic') assert.match(text, /<html/i);
-  if (level === 'advanced') {
-    const raw = JSON.parse(text);
-    assert.ok(raw !== null && typeof raw === 'object', 'Expected real raw-data JSON');
-    const output = await readdir(path.join(dir, 'reports', 'dist-' + level, 'assets'));
-    assert.ok(output.filter(name => name.endsWith('.js')).length >= 2, 'Dynamic import should produce a separate JS chunk');
-  }
-  process.stdout.write(level + ': build exit 0; report ' + info.size + ' bytes\n');
+const dir=fileURLToPath(new URL('.',import.meta.url));
+const lab=path.resolve(dir,'../../../');
+const config=path.join(dir,'vite.config.ts');
+const binary=process.platform==='win32'?'pnpm.cmd':'pnpm';
+const suffix={basic:'.html',business:'.md',advanced:'.json'};
+for(const level of Object.keys(suffix)){
+  const report=path.join(dir,'reports',level+suffix[level]);
+  const dist=path.join(dir,'reports','dist-'+level);
+  // These are fixed own-fixture paths, never the application build directory.
+  await rm(report,{force:true});
+  await rm(dist,{force:true,recursive:true});
+  const run=spawnSync(binary,['exec','vite','build','--config',config,'--mode',level],
+    {cwd:lab,encoding:'utf8',maxBuffer:8_000_000,timeout:120_000,windowsHide:true});
+  if(run.error||run.signal||run.status!==0)
+    throw Error(level+' actual Vite build failed: '+String(run.error??run.signal??(run.stderr||run.stdout)).slice(0,3000));
+  const info=await stat(report);
+  const body=await readFile(report,'utf8');
+  const chunks=level==='advanced'?await readdir(path.join(dist,'assets')):[];
+  checkVisualizerReport(level,body,chunks);
+  process.stdout.write(level+': fresh real Vite report '+info.size+
+    ' bytes'+(level==='advanced'?', JS chunks='+chunks.filter(p=>p.endsWith('.js')).length:'')+'\n');
 }

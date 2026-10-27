@@ -43,3 +43,7 @@ pnpm exec knip --directory entries/F15-knip/examples/workspace --config knip.adv
 
 实际 CLI 执行3套配置，比较输出差异；在本仓库配置上另测试 workspace plugins/TS paths，别对原 fixtures 的预计结果凭空标 PASS。目前Knip SDK NOT_RUN、完整构建 BLOCKED、浏览器不适用（NOT_RUN）。
 参考 [项目配置](https://knip.dev/guides/configuring-project-files)、[CLI](https://knip.dev/reference/cli)、[完整参考](https://knip.dev/reference/configuration)。
+
+## 真实CLI报告校验增强（2026-10-27）
+
+执行 `node entries/F15-knip/examples/verify.mjs`，真实运行三组 `knip --reporter json`。按 [官方 Knip JSON reporter](https://knip.dev/features/reporters) 读取 `issues[].files[].name` 而不是搜索日志字符串；退出码0代表无问题、1代表发现问题、2代表工具/配置错误，2不可冒充成功。basic应检出孤立文件，business的显式忽略应使该项消失，advanced独立生产扫描。`node --test entries/F15-knip/examples/report-policy.test.mjs` 仅测试解析策略（合成JSON），不是Knip SDK/CLI验收。

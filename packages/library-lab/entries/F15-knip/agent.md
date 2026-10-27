@@ -13,3 +13,5 @@
 **验收**：三个隔离配置按实际knip版本执行，保存命令/退出码/stdout/commit/依赖锁；证明一个未使用文件被报告、加入有理由的ignore后分类变化，生产模式排除测试上下文。未跑之前sdk=NOT_RUN。
 
 参考：https://knip.dev/reference/configuration 与 https://knip.dev/reference/cli
+
+**机器验收门禁**：依次读取 `examples/report-policy.mjs`、真实 `examples/verify.mjs` 和CLI标准输出。不可把退出码2当成预期lint的1；只运行 `report-policy.test.mjs` 不得写SDK PASS。

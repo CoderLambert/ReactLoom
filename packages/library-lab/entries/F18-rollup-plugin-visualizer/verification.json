@@ -1,7 +1,7 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "真实CLI配方与fixture已提交，但尚未安装或运行对应工具"
+    "note": "真实CLI配方与fixture已提交，但尚未安装或运行对应工具；报告新鲜度/结构检查与纯策略单测源码已加，真实Vite插件执行仍NOT_RUN"
   },
   "build": {
     "status": "BLOCKED",
