@@ -287,3 +287,24 @@ C13 Frappe Gantt 1.2.2 上游 `src/index.js` 的 `bind_bar_events` 会向 `docum
 - C12 FullCalendar 和 C13 Frappe Gantt 的 YYYY-MM-DD 用户输入增加 UTC round-trip 校验，防止 Date.parse 自动进位接受 2026-02-30 一类无效日期。这是新增代码保护，真实浏览器验收仍 NOT_RUN。
 - Worker Draft PR #35：https://github.com/CoderLambert/ReactLoom/pull/35 ，base=feat/library-lab，保持待 PLATFORM 审核集成。公共依赖/锁文件不由 CD 修改。
 - 累计 **41/43 源码+双指南条目**。下批剩余 D16 Workbox（安全限定 Service Worker scope/runner）与 D21 Pagefind（独立 CLI 构建产物）；不要将需要特殊 runner 的场景做成网页伪终端。
+
+---
+
+## 第九批 / 2026-10-27 — D16 Workbox 与 D21 Pagefind：隔离构建型 Node SDK 工作坊
+
+- runCount：**9/24**。从集成 `feat/library-lab@101315e3bdf299047f9c2a39aa670ed59570ec4a` 创建独立 `feat/library-lab-cd-wave9`；上一批 #35 仍为 Draft，二者修改的库目录互不重叠，PLATFORM 合入时必须合并两批 progress 的历史追加内容，不得以本进度文件覆盖 #35 后续新记录。
+- **D16 Workbox 7.4.1（MIT）**：真实 `workbox-build.getManifest/generateSW` 本地构建；基础预缓存、限定公开 RSS GET 的 NetworkFirst 缓存、离线 fallback 三层入口。每次在 `os.tmpdir()` 的随机专属目录生成实际 sw.js，显式排除 private 资源，skipWaiting/clientsClaim 为 false，**绝不注册到主站或浏览器 root scope**。生成成功只证明 Node 构建，不代表浏览器 SW install/activate/fetch/offline 可用。
+- **D21 Pagefind 1.5.2（MIT）**：真实 `pagefind.createIndex/addHTMLFile/addCustomRecord/addDirectory/getFiles/writeFiles/deleteIndex`；两篇静态 HTML、带元信息与分类的 RSS 笔记、静态目录扫描三层入口。生成 bundle 于随机临时目录，Node CLI 结束释放 native indexer；没有伪造浏览器搜索，也不把静态索引当成 ACL。
+- 两条均为 `executionKind=node-ci`，不强迫 React 页面执行 Node 程序；每条都有 library.json、guide.md、agent.md、AGENTS.md、verification.json、examples/workshop.mjs、basic/business/advanced.mjs、tests/sdk.test.mjs，合计 **20 个条目文件，6 个分层场景**。实际运行源码和展示源码是同一文件，配套中文说明与 Agent 迁移规范；本批原创示例基于官方文档重新实现，标 `recreated`，不声称恢复历史运行证据。
+- 使用 GitHub Git Tree 递归核对：2/2 manifest JSON 可解析、2×3入口声明及所有 sourceFiles 存在、10份 .mjs 在 V8 异步函数解析器中**静态语法 10/10 无错误**。这是静态结构和语法检查，不是 Node 官方 SDK 真正运行。`sdk/build/browser` 在 verification.json 均为 **NOT_RUN**；npm依赖、pnpm-lock、真实生成的 sw.js/index bundle、完整TypeScript、Vite/Chromium 尚未在可用环境执行，不能标 PASS。
+- 第九批独立 worker PR 必须 base=`feat/library-lab`，PLATFORM 负责审核合并。此 CD 通道仅修改 `entries/D16-workbox/**`、`entries/D21-pagefind/**` 与 `progress/CD.md`，未触碰公共 package/lock/CI/生成索引、main、PR#3 或其他组。
+
+### dependencyRequests — 由 PLATFORM 单一 Owner 实际安装和验收
+
+|包|目标版本|使用/许可与来源|集成前必须验证|
+|---|---|---|---|
+| `workbox-build` | `7.4.1`，devDependency，MIT | https://developer.chrome.com/docs/workbox/modules/workbox-build | Node>=20；真实 generateSW/getManifest；独立 Service Worker scope 浏览器隔离，主站不得被控制 |
+| `pagefind` | `1.5.2`，devDependency，MIT | https://pagefind.app/docs/node-api/ | native binary 实际安装/执行，完整 bundle 输出、浏览器 search/result.data、中文索引及部署子路径 |
+
+- 另请 PLATFORM 将 D16 的三个 CLI 入口、D21 的三个 CLI 入口按静态白名单加入其现有 `scripts/cli-runner.mjs`（CD 不可修改该文件），并更新 `packages/library-lab/package.json` 与真实 pnpm-lock；运行定向真实 Node SDK tests，必要时再做独立 browser preview。不得手造 lock integrity，也不得用 Mock SDK 代替原生构建。
+- 当前累计**从第八批含 Draft #35 的 41/43 到 43/43 条拥有完整源码、指南、Agent 说明、三层场景**；这是跨待合入 PR 的 authored 数量，不代表集成分支已经接入43条，也不代表有任何新 SDK 实际 PASS。CD 代码覆盖任务达到全量；后续继续审查 SDK/build 证据、修复上游 API 不兼容、验收专用 Worker/索引 runner，而不是反复重新生成目录占位页。
