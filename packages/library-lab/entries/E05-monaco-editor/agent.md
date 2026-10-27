@@ -32,3 +32,8 @@ https://github.com/microsoft/monaco-editor/blob/main/docs/integrate-esm.md
 ## MonacoEnvironment迁移约束（第12轮）
 
 需要连同`workers.ts`复制`worker-lease.mjs`及TypeScript声明。调用`installMonacoWorkers()`保存release，必须先释放Monaco editor/model再release。共享页面已有MonacoEnvironment的场景应交由宿主统一配置，**不要**替换或删除其它编辑器的全局映射。引用计数**不保证**实际Worker线程销毁，必须实测生产`worker-src`及diagnostics。
+
+
+## 第20轮异常初始化注意
+
+迁移 E05 时除了 editor/model 的创建异常，还必须兜底 `onDidChangeModelContent`、全局 markers 订阅、`ResizeObserver` 创建/observe 和首次 `layout()` 的同步抛错。示例已将初始化的所有阶段纳入统一 cleanup，失败也必须释放只由当前 Lab 编辑器持有的环境租约；不要仅依赖正常 effect 卸载。PLATFORM 需在真实 Chromium 注入 ResizeObserver/Worker 初始化失败，核查回退提示与模型、监听器、租约无净增长。

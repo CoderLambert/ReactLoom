@@ -1,7 +1,7 @@
 # EF 通道持续开发进度
 
-- 通道：EF，Issue #7；当前 wave18 分支 `feat/library-lab-ef-wave18-cli-verification`，Draft PR #64；PR base 为 `feat/library-lab`。
-- runCount：18 / 24。
+- 通道：EF，Issue #7；当前 wave20 分支 `feat/library-lab-ef-wave20-orval-scope-contracts`，Draft PR #70；PR base 为 `feat/library-lab`。
+- runCount：20 / 24。
 - 基线：`38ed2d247bd82e4f1422b0e8904973e16bca2972`。
 - 本轮日期：2026-10-27（北京时间）。
 - 状态：**37/37个条目已有三层真实示例源码及指南，但目标SDK、完整构建和浏览器验收不因源码覆盖而自动PASS。**
@@ -556,3 +556,20 @@ runCount=18/24.
 代码提交链：E13 `df6d205bd60b07ed31ced7216a23acf0cde835ee`；E14 `e462e0c1493bc8d93d014fe3bb6bb8b0a71eca6f`；E15 `7b8ed7cf10d2c114a9da72abd58f5013cfe227ff`。GitHub Compare审核仅可写路径；未涉及main、root、公共依赖、CI、目录索引、部署或PR #3。Draft PR [#67](https://github.com/CoderLambert/ReactLoom/pull/67)；[Issue #7](https://github.com/CoderLambert/ReactLoom/issues/7)。GitHub Compare当前为4提交、26文件、0越权文件（进度索引提交后以最终PR为准）。三库basic/business/advanced的sourceFiles/entryPoint已逐项从GitHub读取验证，无缺失，属于结构核对不是SDK PASS。
 
 **runCount=19/24**。
+
+
+## 第20轮：F10 Orval 生成证据严格化与 E05 Monaco 初始化异常回收（2026-10-27）
+
+- **基线和所有权**：从 GitHub 最新 `feat/library-lab@e62650ad6d025963da9ede967125502502fd031f` 新建 `feat/library-lab-ef-wave20-orval-scope-contracts`，仅更改 F10 / E05 的 entry 文件和本进度；主Epic #4、EF Issue #7，PR base 固定为 `feat/library-lab`；不改 main / PR #3 / PLATFORM 所有文件，不公开部署。
+- **F10 Orval（复杂真实CLI垂直切片）**：旧 `verifyProject()` 只看生成目录是否出现长度超过20字节的文件，可错将上轮残留、失败输出、错误 API 当成功。新增独立 `examples/output-policy.mjs` / `output-policy.test.mjs`：Node ≥22.18 门槛、固定项目 allowlist、按项目清理**只属于该项目**的输出（拒绝 symlink，保留同目录其它项目和手写源码），检查产物目录/\*.ts(x)、不超过128文件/6MiB、真正导出 `listSources` / `createSource` / `getSource`，business 的三项 Query hooks、advanced tags-split 输出子目录，并对源文件内容+相对路径计算 SHA-256。真实 `run.mjs` 在Node版本通过后调用本包固定 `pnpm exec orval`，连续生成两次并比较完整 SHA-256，CLI失败、无输出、输出异常、非确定性均抛错，不打印成功。三个 `node-ci` 场景保持复现真实 CLI，不伪造在线网页终端。
+- **E05 Monaco（风险配套）**：`examples/example.tsx` 此前只对编辑器/model构造阶段异常执行清理，已创建实例之后订阅 `onDidChangeModelContent` / `onDidChangeMarkers`、初始化 `ResizeObserver` 或首次 `layout()` 同步失败时可能泄漏。现在提前设置统一 `cleanup`，监听、观察和布局均在 try/catch 内，失败也释放观察器、订阅、editor、model、Worker配置租约；没有私自终止 Monaco 内部缓存 Worker。三层源码仍同源，更新指南、Agent和verification的真实限制。
+- **已真正执行**：Node v22.16.0，按GitHub同字节恢复F10原生纯Node policy源与测试；`node --check`两份文件、`node --test .../output-policy.test.mjs` **6 PASS、0 FAIL**。测试含Node门槛、旧/空输出、Query Hooks、tags-split、固定范围清理以及恶意symlink。真实执行文件 Git Blob SHA-1：policy `99c91dc47d6910ef7b6be1bd5b15d77e85c47226`，test `e83d28d6bb33e9d834497a6818bda428145fe34c`；SHA与远端源码一致。**这六个纯策略测试没有加载 Orval、Monaco 目标SDK，不等于SDK/浏览器通过**。
+- **未执行/阻塞**：容器Node 22.16.0 **低于Orval 8的≥22.18硬门槛**，且无私有仓库完整 pnpm 真实依赖和Chromium环境。本轮真正 `orval` basic/business/advanced CLI、生成物TypeScript消费检查、E05实际Monaco/Worker/异常挂载、完整TypeScript/Vite build与浏览器CSP/Worker均 **NOT_RUN/BLOCKED**；所有SDK/build/browser `verification.json` 保留非PASS。禁止把这些Node纯函数fixture伪装成CLI产物。
+- **dependencyRequests / PLATFORM**：本批**不新增第三方包**。PLATFORM负责核实并安装既有 `orval@8.44.0`（MIT；Node ≥22.18，CLI仅在本地OpenAPI fixture）和 `monaco-editor@0.57.0`（MIT；Vite ESM `?worker`、JSON/TS Worker与`worker-src`）；统一补实际pnpm锁与完整运行环境。Orval official https://orval.dev/docs/installation/ 、https://orval.dev/docs/reference/cli/ 、https://orval.dev/docs/reference/configuration/output/；Monaco official https://github.com/microsoft/monaco-editor/blob/main/docs/integrate-esm.md 。准确peer由PLATFORM安装时复核，不虚构锁文件。
+- **必须真的运行后才能升级状态的命令**：Node ≥22.18及依赖恢复后分别执行 `node packages/library-lab/entries/F10-orval/examples/{basic,business,advanced}.mjs`（合法 shell展开要在受支持shell逐项执行）、`pnpm --filter @reactloom/library-lab catalog:check`、`typecheck`、`build`，验证产物Hooks/标签分包/稳定指纹及消费类型；Chromium独立跑E05 Monaco Worker正常与注入ResizeObserver失败、F11 MSW scoped SW注册/控制/CSP/卸载；之后F06/F07 PDF Worker及E19 FFmpeg WASM。无真SDK证据前不会填写PASS。
+- **下一队列**：依据平台真实安装反馈先处理F10 Node门槛/Orval生成API与 E05布局/Worker兼容；继续F11真实SW隔离/多标签所有权、F06/F07 PDF Worker配对、E19 WASM资产许可及生命周期。EF仍 **37/37源码与指南覆盖，不是37个SDK运行通过**。本轮 `runCount=20/24`，达到上限如仍有阻塞须如实列出，不假装验收完工。
+
+### 第20轮持久交付索引
+
+- [Draft PR #70](https://github.com/CoderLambert/ReactLoom/pull/70)，head `feat/library-lab-ef-wave20-orval-scope-contracts`、base固定 `feat/library-lab`；首批完整源码提交 `256a274525bed7aa7a649fe2cfcdc2503be4775e`。
+- GitHub compare基线至首提交：1个提交、14个变更文件、**0个EF写入越权**；所有文件仅在E05/F10条目及EF progress。Node F10 policy真实6 PASS/0 FAIL，其余Orval/Monaco/TS/Vite/Chromium仍NOT_RUN或BLOCKED。PR为Draft，PLATFORM单一owner审核集成。

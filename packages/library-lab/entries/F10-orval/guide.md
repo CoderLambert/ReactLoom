@@ -35,3 +35,21 @@ D07 TanStack Query、F11 MSW、C02 Zod。Orval生成接口函数与类型，Mock
 
 ## 资料与状态
 <https://orval.dev/docs/quick-start/> · <https://orval.dev/docs/guides/basics/>。MIT / 8.44.0。尚未运行SDK CLI/构建，原因见 verification.json。
+
+
+## 第20轮：不可用旧产物冒充 CLI 成功
+
+原版 `verifyProject()` 只检查生成目录有大于20字节的文件：上一次生成残留、错误的模块、空壳函数都可能被误认成成功。本版 `examples/run.mjs` 在 **Node ≥22.18** 下用固定的本包 `pnpm exec orval --config ... --project ...` 调用真实 CLI：先删除**本项目固定归属**的生成目标，不执行会影响其他项目的 `orval --clean`；每一轮生成后用 `output-policy.mjs` 核实三项契约 operationId 的导出、business 的实际 Query hooks、advanced 的 tag-split 文件层级和文件大小/数量，全部文件加入 SHA-256 指纹。两次生成必须得到完全一致的源文件哈希，否则返回错误而非成功提示。故障不得伪造 generated 文件作为测试结果。
+
+从仓库根目录复现（PLATFORM先安装真依赖及生成锁文件）：
+
+```bash
+node packages/library-lab/entries/F10-orval/examples/basic.mjs
+node packages/library-lab/entries/F10-orval/examples/business.mjs
+node packages/library-lab/entries/F10-orval/examples/advanced.mjs
+node --test packages/library-lab/entries/F10-orval/examples/output-policy.test.mjs
+```
+
+前3个命令必须在 Node ≥22.18 且可解析 `orval@8.44.0` 的环境执行；最后一个**仅检验离线验收策略**，不能升级 Orval SDK/生成产物状态。生成器只接受仓库固定本地 OpenAPI 契约，输出仅位于 `examples/generated/`，其它项目文件绝不由它清理。生成客户端仍应在真实消费者项目用 tsc、TanStack Query Provider、Mock Server 和真实HTTP契约验证。
+
+文档依据：<https://orval.dev/docs/reference/cli/>、<https://orval.dev/docs/reference/configuration/output/>、<https://orval.dev/docs/installation/>。Orval MIT，生成代码的下游框架许可证及类型兼容由实际宿主核验。
