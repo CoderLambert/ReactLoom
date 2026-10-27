@@ -1,1 +1,116 @@
-{"schemaVersion":1,"entryId":"C22","slug":"moment-migration","name":"Moment（历史迁移）","group":"C","summary":"历史日期库识别与现代迁移","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "C22",
+  "slug": "moment-migration",
+  "name": "Moment（历史迁移）",
+  "group": "C",
+  "summary": "将历史 Moment 日期代码迁移到 date-fns、Day.js 与明确的时区模型",
+  "tags": [
+    "历史迁移",
+    "Moment",
+    "日期",
+    "时区",
+    "DST",
+    "替代库"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "date-fns",
+      "version": "4.4.0"
+    },
+    {
+      "name": "@date-fns/tz",
+      "version": "1.5.0"
+    },
+    {
+      "name": "dayjs",
+      "version": "1.11.23"
+    }
+  ],
+  "references": [
+    {
+      "title": "Moment 项目维护状态与迁移建议",
+      "url": "https://momentjs.com/docs/#/-project-status/"
+    },
+    {
+      "title": "date-fns 官方文档",
+      "url": "https://date-fns.org/docs/Getting-Started"
+    },
+    {
+      "title": "Day.js 官方文档",
+      "url": "https://day.js.org/docs/en/parse/parse"
+    },
+    {
+      "title": "date-fns TZDate 时区处理",
+      "url": "https://github.com/date-fns/tz"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "C14",
+      "relation": "migration-to",
+      "reason": "需要函数式日期计算和 TZDate 时区表达时选 date-fns；应独立核对 DST 行为。"
+    },
+    {
+      "entryId": "C15",
+      "relation": "migration-to",
+      "reason": "对已有 Moment 链式调用，Day.js 提供相近但默认不可变的 API；解析严格性与插件须重新校验。"
+    },
+    {
+      "entryId": "C16",
+      "relation": "migration-to",
+      "reason": "面向 IANA 时区、民用时间和区间计算，可评估 Luxon 的显式模型。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "从 Moment 格式化迁移",
+      "description": "严格解析与等效格式化，识别无效日期",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": []
+    },
+    {
+      "demoId": "business",
+      "title": "RSS 排程的明确时区",
+      "description": "日期显示与实际 UTC instant 分离",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": []
+    },
+    {
+      "demoId": "advanced",
+      "title": "DST 与可变对象语义",
+      "description": "23小时自然日及秋季重复时刻",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": []
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "note": "date-fns/Day.js/TZ 工具均按其许可证使用；本项目原创实验代码。Moment 本身不作为 Lab 运行依赖。"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "mode": "recreated",
+    "note": "旧 Moment 研究 ZIP 用于识别迁移场景；本实现只运行替代库，不恢复也不执行旧 Moment。"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "未安装/执行本条目所依赖的 date-fns、@date-fns/tz 和 Day.js。此迁移示例不运行 Moment。"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "PLATFORM 尚未完成当前候选版本的完整 TypeScript/Vite 构建"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "真实时区、日期输入和销毁行为尚待 Chromium 验证"
+  }
+}

@@ -59,13 +59,25 @@ export default function JsonFormsExample({level}:{level:Level}) {
   const [saving,setSaving]=useState(false);
   const request=useRef<AbortController|null>(null);
   const generation=useRef(0);
+  const dataRef=useRef<Subscription>({...initial});
   const [basic,setBasic]=useState({name:'Library Lab',enabled:true});
   useEffect(()=>()=>{generation.current++;request.current?.abort();},[]);
   const onDataChange=useCallback(({data:nextData,errors:validation}: {data:Subscription;errors:ErrorObject[]})=>{
     if(!nextData)return;
-    setData(old=>JSON.stringify(old)===JSON.stringify(nextData)?old:nextData);
+    // A server-side error is cleared only when the user really edits the data.
+    // Validation-only callbacks can occur when additionalErrors changes.
+    const changed=JSON.stringify(dataRef.current)!==JSON.stringify(nextData);
+    if(changed){
+      dataRef.current=nextData;
+      generation.current++;
+      request.current?.abort();
+      request.current=null;
+      setSaving(false);
+      setServerErrors([]);
+      setStatus('草稿已变化；旧保存请求已取消，请重新提交');
+      setData(nextData);
+    }
     setErrors(validation?.length??0);
-    setServerErrors([]);
   },[]);
   async function submit() {
     generation.current++;const id=generation.current;
@@ -104,7 +116,7 @@ export default function JsonFormsExample({level}:{level:Level}) {
     <div className="demo-controls">
       <button type="button" disabled={saving||errors>0} onClick={()=>void submit()}>保存内存草稿</button>
       <button type="button" disabled={!saving} onClick={()=>{generation.current++;request.current?.abort();request.current=null;setSaving(false);setStatus('已取消，旧结果不会回写');}}>取消进行中的操作</button>
-      <button type="button" onClick={()=>{generation.current++;request.current?.abort();setSaving(false);setData({...initial});setErrors(0);setServerErrors([]);setStatus('已重置当前示例');}}>重置</button>
+      <button type="button" onClick={()=>{generation.current++;request.current?.abort();setSaving(false);dataRef.current={...initial};setData({...initial});setErrors(0);setServerErrors([]);setStatus('已重置当前示例');}}>重置</button>
     </div>
     <p role="status">{status}</p><details><summary>查看最终 payload</summary><pre>{JSON.stringify(toSubscriptionPayload(data),null,2)}</pre></details>
     {level==='advanced'&&<p>将名称改为 duplicate 触发模拟 409；保存期间取消或重置，验证旧请求没有资格更新界面。生产环境必须由服务器重新校验和鉴权。</p>}
