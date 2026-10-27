@@ -644,3 +644,32 @@ A08/A17/B04 的每层 `library.json` 已加入新helper至 `sourceFiles`，运�
 - Draft PR **[#59](https://github.com/CoderLambert/ReactLoom/pull/59)**，head `feat/library-lab-ab-wave15`，base **`feat/library-lab`**，校验代码+进度提交 `bc64243f77325a4b72d7f12909546157632922ed`（本段是随后文档补记）。集成基线至提交时仍为 `b3fa3b0370f50c39078562987400d753390671ee`，比较结果 **26/26 变更均在授权目录，ahead=3、behind=0**，无重叠开放AB PR。
 - GitHub Actions 真实返回 **CI run 40480193825 failure**，**Library Lab run 40480193878 failure**。其中 Library Lab `catalogue` job 122108275644、`runtime-bootstrap` job 122108275836，以及 CI `verify(ssr)` job 122108275592 均返回 `steps=[]`，**没有真实构建或 SDK 执行步骤证据**；不能将其记为本轮源码构建失败的根因，也不能标记 SDK/browser PASS。此前相同环境故障已知，未循环重试。
 - 无可读实际 TSX/SDK/Chromium 验收证据时保持 `verification.json` 中相应状态 `NOT_RUN`；PLATFORM负责获取 runner、依赖/锁文件与浏览器测试证据，AB仅在可复现的 A/B 目录缺陷上修复。进度至此 `runCount=15/24`，本批交付四项实质修改，不将源码文档覆盖误作通过验收。
+
+---
+
+## 第16轮（wave16）：Three.js、Leaflet、dnd-kit、Pragmatic 拖拽生命周期与状态边界
+
+**runCount=16/24；A/B 39/39 已有源码与文档，但官方SDK/浏览器仍未完成验收。** 按协调合同先从 GitHub 读取最新集成 `feat/library-lab@b1b9d2a6aba6fb8578d40937c931b07d45f7e0cd` 的 COORDINATION、IMPLEMENTATION、根/包 AGENTS、types、catalog、本进度与开放 PR。确认 AB #59 已由 PLATFORM 合入、无开放 AB PR；新建 `feat/library-lab-ab-wave16` 从精确集成 HEAD 起步，不覆盖旧分支、不 force。Draft PR **[#63](https://github.com/CoderLambert/ReactLoom/pull/63)** 的 base 仅为 `feat/library-lab`，主 Draft #8、main 与 PR #3 不变。
+
+### 本轮提交的实际垂直切片（4库、既有12个Demo选择）
+
+| 库 | 实际源代码修复 | 新增或更新的校验 |
+|---|---|---|
+| A13 Three.js | `shouldRunFrameLoop` 将速度=0、后台不可见、系统减动/显式暂停纳入 GPU loop 门禁；调速同步更新动画策略，恢复重置帧时间；材质颜色只更新 material，不再每次重建并dispose geometry；切形状仍释放旧 GPU 资源 | `animation-policy.ts` 与测试扩至13例 |
+| A15 Leaflet | 过滤后的当前可见ID同时控制地图高亮/状态/删除，删除后选中下一可见项；移动经纬度限制到±85/±180，缺失Seattle禁用更新；仍使用真实 L.Map、LayerGroup/Marker 与 ResizeObserver | 新 `location-policy.ts`、3例测试 |
+| B13 dnd-kit | onDragEnd/上下按钮/重置读取同一 `itemsRef` 最新快照；数据层统一拒绝固定槽位跨越、无效ID和重复ID；basic只重排可见前缀，尾部保留；撤销同步恢复ref+React state | 扩展 `pinned-order.ts`，新增4例 `reorder-policy.test.mts` |
+| B14 Pragmatic drag and drop | 使用官方 Element Adapter 的 `draggable({element,dragHandle})`；将 touchAction:none 和指针拖动限定到32px手柄，其他行区域的按钮点击、文本与滚动不会被整行原生draggable主动占用；保留键盘上下按钮与effect cleanup | 按官方API审查，浏览器交互仍须验收 |
+
+真实运行组件、helper、测试、4个 `library.json`、4份guide.md和4份agent.md 已更新，`verification.json` 保持 sdk/build/browser NOT_RUN。全部条目继续使用同一 `examples/example.tsx` 作为展示与运行源码，没有生成伪页面、Mock目标SDK或修改公共文件。新增依赖 **0**；版本仍为 `three@0.186.0`、`leaflet@1.9.4`、`@dnd-kit/core@6.3.1`/`@dnd-kit/sortable@10.0.0`、`@atlaskit/pragmatic-drag-and-drop@1.8.1`（PLATFORM独占依赖与锁文件）。
+
+### 实际运行和精确证据
+
+- Node **v22.16.0**：`node --experimental-strip-types --test /mnt/data/ab-wave16/{A13,A15,B13}/tests/*.test.mts` → **20 PASS，0 FAIL，0 SKIP**。仅纯业务/动画策略；B14本轮没有虚构自动浏览器测试。
+- TypeScript **5.8.3**：`tsc --noEmit --strict --skipLibCheck --target ES2022 --module ESNext --moduleResolution Bundler /mnt/data/ab-wave16/{A13,A15,B13}/examples/*.ts` → **PASS，仅A13/A15/B13三个无第三方依赖的纯helper**。第一次本地测试因缺B13本地被导入文件而FAIL，补齐与仓库SHA一致的 `pinned-order.ts` 后20/20通过；第一次TS命令因 `.ts` 导入扩展未启用而失败，后将重排规则合并进现有 `pinned-order.ts`，最终严格类型检查无需额外flags通过；未隐藏失败或把它算SDK通过。
+- 六份实际测试/纯策略源码 Git Blob SHA 与本地 `git hash-object` **6/6匹配**：A13 `e3be47dd / 8ff02b5a`，A15 `38701797 / 5ec1ca3d`，B13 `0a104fd3 / e4c6cd14`。
+- **代码提交 `438c31e72d01267d4f7b15cf9a240f74965f0cd2`**。GitHub比较本轮基线：**22/22变更文件均属 A*/B*，ahead=1、behind=0**。非截断完整Git树 **1959条路径**；4个manifest的 **12/12 个entryPoint** 和全部 `sourceFiles` 都有真实Blob。
+- **真实第三方SDK import/TSX完整TypeScript、pnpm安装/锁文件、Vite生产build、Chromium/GPU/键盘/触屏/ARIA：NOT_RUN/BLOCKED**。当前容器没有本私有项目依赖；GitHub查询这次代码提交没有可确认的workflow run或commit status，不推断PASS；既有runner无步骤日志的问题不循环重试。验收必须后续由PLATFORM取得真实命令、当前sourceFingerprint和持久日志再标PASS。
+
+### 交接、依赖和后续
+
+**dependencyRequests新增0。** 仍只有 PLATFORM 能合入本Draft PR到私有集成分支，不能合main或公开部署。下一次先检查PR #63集成与真实runner/typecheck反馈，A/B下一独立缺陷队列：A09 Excalidraw/A10 tldraw 的卸载/白板状态，B05 Rive的WASM上下文，B17 Floating UI的Portal/focus/IME；只修复可复现问题，不重复生成39个条目。重点浏览器验收本轮的零速GPU帧停止、Leaflet过滤删除同步、dnd-kit连续拖放撤销、Pragmatic只有手柄可拖且上下按钮不被劫持。
