@@ -64,3 +64,17 @@ test('worker entries produce deferred Vite module-worker factories and no React 
  const react=await readFile(path.join(root,'src/generated/loaders.ts'),'utf8');
  assert.doesNotMatch(react,/calculate\.worker\.ts/u);
 });
+
+test('landing catalogue is lightweight; full detail is fetched only by ID and bound to the same fingerprint',async t=>{
+ const {root}=await setup(t);
+ await generate(root,{expectedCount:1});
+ const overview=JSON.parse(await readFile(path.join(root,'public/catalog-index.json'),'utf8'));
+ const detail=JSON.parse(await readFile(path.join(root,'public/raw/D03/detail.json'),'utf8'));
+ assert.equal(overview.length,1);
+ assert.equal(overview[0].entryId,'D03');
+ assert.equal(overview[0].hasDemo,true);
+ for(const field of ['demos','packages','verification','references']) assert.equal(Object.hasOwn(overview[0],field),false);
+ assert.equal(detail.sourceFingerprint,overview[0].sourceFingerprint);
+ assert.equal(detail.demos[0].entryPoint,'examples/demo.tsx');
+ assert.equal(detail.guideAvailable,true);
+});

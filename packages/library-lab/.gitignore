@@ -9,3 +9,4 @@ test-results/
 *.tsbuildinfo
 public/ffmpeg-core/
 public/.ffmpeg-core-staging-*/
+public/catalog-index.json

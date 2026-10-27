@@ -4,6 +4,7 @@ import {fileURLToPath} from 'node:url';
 import {createHash} from 'node:crypto';
 import {validateEntry,safeRelativePath} from '../src/lib/catalog.mjs';
 import {rootCatalogData,rootCatalogMarkdown} from './root-catalog.mjs';
+import {toCatalogIndex,validateCatalogIndex} from '../src/lib/catalog-index.mjs';
 import {entryCompletenessIssues} from './entry-gate.mjs';
 import {verifiedState,sourceFingerprint as fingerprintOf} from './verification-contract.mjs';
 const packageRoot=fileURLToPath(new URL('..',import.meta.url));
@@ -65,13 +66,16 @@ export async function generate(root=packageRoot,{check=false,expectedCount=119}=
  if(entries.length!==expectedCount)throw new Error(`expected ${expectedCount} entries; found ${entries.length}`);
  for(const entry of entries)for(const related of entry.related)if(!ids.has(related.entryId))throw new Error(`unknown related ${entry.entryId} -> ${related.entryId}`);
  if(expectedCount===119){const expected={A:17,B:22,C:22,D:21,E:19,F:18};for(const [group,count]of Object.entries(expected))if(entries.filter(e=>e.group===group).length!==count)throw new Error(`invalid group count ${group}`);}
+ const lightweightIndex=validateCatalogIndex(toCatalogIndex(entries));
  if(check)return{entries:entries.length,loaders:imports.length,workers:workerImports.length};
  const out=path.join(root,'public');await mkdir(out,{recursive:true});await rm(path.join(out,'raw'),{recursive:true,force:true});
- for(const p of payloads){const dest=path.join(out,'raw',p.id);await mkdir(dest,{recursive:true});if(p.guide!==null)await writeFile(path.join(dest,'guide.md'),p.guide);if(p.agent!==null)await writeFile(path.join(dest,'agent.md'),p.agent);
+ const entryById=new Map(entries.map(item=>[item.entryId,item]));
+ for(const p of payloads){const dest=path.join(out,'raw',p.id);await mkdir(dest,{recursive:true});await writeFile(path.join(dest,'detail.json'),JSON.stringify(entryById.get(p.id)));if(p.guide!==null)await writeFile(path.join(dest,'guide.md'),p.guide);if(p.agent!==null)await writeFile(path.join(dest,'agent.md'),p.agent);
   await writeFile(path.join(dest,'source-index.json'),JSON.stringify(p.sources.map(({path:sourcePath,sha256,content})=>({path:sourcePath,sha256,bytes:Buffer.byteLength(content)}))));
   for(const source of p.sources){const destination=path.join(dest,'sources',source.path);await mkdir(path.dirname(destination),{recursive:true});await writeFile(destination,source.content);}
   for(const asset of p.assets){const target=path.join(dest,asset.name);await mkdir(path.dirname(target),{recursive:true});await writeFile(target,asset.contents);}}
  await writeFile(path.join(out,'catalog.json'),JSON.stringify(entries));
+ await writeFile(path.join(out,'catalog-index.json'),JSON.stringify(lightweightIndex));
  await mkdir(path.join(root,'src/generated'),{recursive:true});await writeFile(path.join(root,'src/generated/loaders.ts'),`// Generated from validated entry manifests. Do not edit.\nimport type {ComponentType} from 'react';\nimport type {DemoProps} from '../lib/types';\nexport const demoLoaders: Record<string, () => Promise<{default: ComponentType<DemoProps>}>> = {\n${imports.join('\n')}\n};\n`);
  await writeFile(path.join(root,'src/generated/worker-loaders.ts'),`// Generated worker factories. No workers start at module import.\nexport const workerFactories: Record<string, () => Worker> = {\n${workerImports.join('\n')}\n};\n`);
  const markdown=rootCatalogMarkdown(entries);
