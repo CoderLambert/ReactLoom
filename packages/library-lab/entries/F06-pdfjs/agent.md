@@ -17,3 +17,7 @@
 ## 跨库接入和并发绘制
 
 Lab 与 F07 react-pdf 11 使用同一 `pdfjs-dist@6.3.289` 及本地 Worker；实际锁文件/hoist 由 PLATFORM 检查。若升级 react-pdf，先核对其 PDF.js 精确依赖并同步 F06/F07，不能只改一个 Worker URL。单个 Canvas 的渲染需复用 `examples/render-gate.mjs`，在 cleanup 调用 `task.cancel()`，并等待旧 promise 结算后再 `render`；过期页不得设置新状态。测试 `render-gate.test.mjs` 和 `worker-version.test.mjs` 为纯 Node 逻辑/静态合同，不代表浏览器 PDF SDK 已验证。
+
+## Wave21 Canvas预算迁移
+
+除 `render-gate.mjs` 外同时迁移 `render-budget.mjs` / `.d.mts`。从 `page.getViewport` 得到宽高后，必须先 `boundedCanvasSize(viewport,devicePixelRatio)` 再给canvas设置像素，否则文件体积限制挡不住巨大页。测试 `node --test entries/F06-pdfjs/examples/render-budget.test.mjs` 是纯策略，目标SDK和浏览器仍需PLATFORM实际运行。

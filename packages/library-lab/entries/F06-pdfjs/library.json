@@ -68,7 +68,9 @@
         "examples/example.tsx",
         "examples/render-gate.mjs",
         "examples/render-gate.d.mts",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/render-budget.mjs",
+        "examples/render-budget.d.mts"
       ],
       "capabilities": [
         "pdf-worker",
@@ -89,7 +91,9 @@
         "examples/example.tsx",
         "examples/render-gate.mjs",
         "examples/render-gate.d.mts",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/render-budget.mjs",
+        "examples/render-budget.d.mts"
       ],
       "capabilities": [
         "pdf-worker",
@@ -112,7 +116,10 @@
         "examples/render-gate.d.mts",
         "examples/demo.tsx",
         "examples/render-gate.test.mjs",
-        "examples/worker-version.test.mjs"
+        "examples/worker-version.test.mjs",
+        "examples/render-budget.mjs",
+        "examples/render-budget.d.mts",
+        "examples/render-budget.test.mjs"
       ],
       "capabilities": [
         "pdf-worker",
