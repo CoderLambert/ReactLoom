@@ -610,12 +610,14 @@ runCount=18/24.
 node --test /mnt/data/ef22/E19/examples/wav-output-policy.test.mjs /mnt/data/ef22/E16/examples/video-file-policy.test.mjs /mnt/data/ef22/E12/examples/reply-policy.test.mjs
 ```
 
-**12 PASS / 0 FAIL**（E19 WAV5，E16视频3，E12消息4）；逐文件 `node --check` 成功。6个本地 `git hash-object` 与提交到GitHub的同源Blob SHA-1相同：
+**初始新增策略12 PASS / 0 FAIL，扩大E19既有输入校验回归后最终15 PASS / 0 FAIL**（E19 WAV输出5+输入3，E16视频3，E12消息4）；逐文件 `node --check` 成功。扩展验证8份本地 `git hash-object` 与提交到GitHub的同源Blob SHA-1相同：
 
 | 文件 | Git Blob SHA-1 |
 | --- | --- |
 | E19 `wav-output-policy.mjs` | `12a22ba670a0d646725629ce8e54b111bf85f918` |
 | E19 `wav-output-policy.test.mjs` | `920c5a2b8c51650c54e38cc8cec986b6fbb4a728` |
+| E19 `input-policy.mjs` | `20ffef047654676829b91be0d0b56c1737cb74a0` |
+| E19 `input-policy.test.mjs` | `d605db5d49205d174f00ba807e7a9dccc129e9cf` |
 | E16 `video-file-policy.mjs` | `71ef23f1505983a196ecb7e9d106a68a1c1e5445` |
 | E16 `video-file-policy.test.mjs` | `490811275e2a0c4996fae829f378dc14b024bc6e` |
 | E12 `reply-policy.mjs` | `f497e71bf7530313e9bcf7c1900a723cbd623944` |
@@ -632,3 +634,13 @@ node --test /mnt/data/ef22/E19/examples/wav-output-policy.test.mjs /mnt/data/ef2
 - EF总覆盖仍是 **37/37目录有源码/guide/agent/三层声明**，而**37个SDK并未生产验收**。第22轮并未结束全部职责；剩余上限到24轮须如实列缺口。
 
 **runCount=22/24**。本批代码提交：E19 `7218bb887eed47ca6acf2f506bb57012d67e458d`，E16 `fa61f81a831e00c33756481e2d97b3dd6db7e30e` / keyed session `f1cbe174d0cdaac4e9ca03c8b416cbf626a93304`，E12 `72d4b5fc095d16204d98704420999f2280a262bb`；进度索引提交以PR #76最新 head 为准。
+
+### 第22轮扩大回归及真实修复
+
+扩大为整个三库现有Node策略范围后，**真实发现一个预存E19缺陷**：`input-policy.mjs` 的MP3魔数谓词缺失右括号，Node ESM报 `SyntaxError: Unexpected token ';'`；旧 `input-policy.test.mjs` 用只有RIFF/WAVE字节的假WAV且断言44B输出可接受，与新增严格PCM合同冲突。EF已在本条目修复谓词语法、替换为46B合法PCM16 WAV夹具并更新预算负例；修复前扩大测试出现12 pass/1 fail，修复后 **15 pass/0 fail**。完整实际执行：
+
+```bash
+node --test /mnt/data/ef22/{E12,E16,E19}/examples/*.test.mjs
+```
+
+真实运行的E19 input-policy模块与测试Git Blob SHA分别为 `20ffef047654676829b91be0d0b56c1737cb74a0` 和 `d605db5d49205d174f00ba807e7a9dccc129e9cf`，已本地`git hash-object`核对。保留先失败后修复的记录，不把纯Node合成WAV检查升级为FFmpeg SDK、媒体解码、Chromium或生产build PASS。此变更是EF第22轮同一Draft PR #76内的额外真实代码提交。
