@@ -59,6 +59,8 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/clip.ts",
+        "examples/video-file-policy.mjs",
+        "examples/video-file-policy.d.mts",
         "examples/example.tsx",
         "examples/demo.tsx"
       ],
@@ -79,6 +81,8 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/clip.ts",
+        "examples/video-file-policy.mjs",
+        "examples/video-file-policy.d.mts",
         "examples/example.tsx",
         "examples/demo.tsx"
       ],
@@ -99,8 +103,11 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/clip.ts",
+        "examples/video-file-policy.mjs",
+        "examples/video-file-policy.d.mts",
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/video-file-policy.test.mjs"
       ],
       "capabilities": [
         "user-gesture",
