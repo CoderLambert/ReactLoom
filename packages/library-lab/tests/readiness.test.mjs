@@ -15,3 +15,36 @@ test('3 levels are declarations, not SDK execution',async t=>{const{root}=await 
 test('source edits invalidate recorded PASS',async t=>{const{root,folder}=await fixture(t);let r=await readinessReport(root);await writeFile(path.join(folder,'verification.json'),JSON.stringify({sdk:{status:'PASS',sourceFingerprint:r.entries[0].fingerprint,command:'node --test',evidence:'log.json'}}));r=await readinessReport(root);assert.equal(r.verification.sdk.PASS,1);await writeFile(path.join(folder,'examples/demo.mjs'),'export default 3');r=await readinessReport(root);assert.equal(r.verification.sdk.PASS,0);assert.equal(r.verification.sdk.NOT_RUN,1);});
 test('missing required documentation causes incomplete status',async t=>{const{root,folder}=await fixture(t);await rm(path.join(folder,'agent.md'));const r=await readinessReport(root);assert.equal(r.counts.sourceComplete,0);assert.equal(r.counts.sourceIncomplete,1);assert.match(r.entries[0].issues.join(' '),/agent/);});
 test('unsafe argument selectors rejected',()=>{assert.deepEqual(parseReadinessArgs(['--group=D','--json']),{group:'D',json:true});assert.throws(()=>parseReadinessArgs(['--group=../../etc']),/Usage/);assert.throws(()=>parseReadinessArgs(['--entry=../private']),/Usage/);});
+
+test('stale recorded FAIL is not a failure of changed source', async t => {
+ const {root,folder}=await fixture(t);
+ let report=await readinessReport(root);
+ const oldFingerprint=report.entries[0].fingerprint;
+ await writeFile(path.join(folder,'verification.json'),JSON.stringify({
+  sdk:{status:'FAIL',sourceFingerprint:oldFingerprint,command:'node --test',evidence:'tests/failure.tap'}
+ }));
+ report=await readinessReport(root);
+ assert.equal(report.verification.sdk.FAIL,1);
+ await writeFile(path.join(folder,'examples/demo.mjs'),'export default 9');
+ report=await readinessReport(root);
+ assert.equal(report.verification.sdk.FAIL,0);
+ assert.equal(report.verification.sdk.NOT_RUN,1);
+ assert.match(report.entries[0].verification.sdk.note,/STALE.*FAIL/);
+});
+
+test('PASS and FAIL both reject malformed or missing execution evidence', () => {
+ for(const status of ['PASS','FAIL']){
+  for(const record of [
+   {sourceFingerprint:'current',command:'node --test',evidence:{url:'mock.json'}},
+   {sourceFingerprint:'current',command:'   ',evidence:'run.tap'},
+   {sourceFingerprint:'current',command:'node --test',evidence:''},
+   {sourceFingerprint:'old',command:'node --test',evidence:'run.tap'},
+  ]){
+   const state=verifiedState({sdk:{status,...record}},'current');
+   assert.equal(state.sdk.status,'NOT_RUN');
+   assert.match(state.sdk.note,/STALE/);
+  }
+  assert.equal(verifiedState({sdk:{status,sourceFingerprint:'current',command:'node --test',evidence:'run.tap'}},'current').sdk.status,status);
+ }
+ assert.equal(verifiedState({sdk:{status:'BLOCKED',note:'Registry unavailable'}},'current').sdk.status,'BLOCKED');
+});
