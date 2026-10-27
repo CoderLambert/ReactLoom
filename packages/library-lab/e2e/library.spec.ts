@@ -19,6 +19,35 @@ test('source browser downloads only one file at a time and verifies its digest',
  expect(sourceRequests).toHaveLength(2);
 });
 
+test('source viewer never exposes stale or digest-mismatched bytes as verified copy',async({page})=>{
+ let requests=0;
+ let release!:()=>void;
+ const gate=new Promise<void>(resolve=>{release=resolve;});
+ await page.route('**/raw/C20/sources/**',async route=>{
+  requests+=1;
+  if(requests===2){
+   await gate;
+   await route.fulfill({status:200,contentType:'text/plain',body:'tampered source from a stale deployment'});
+  }else await route.continue();
+ });
+ await page.goto('/libraries/clsx?tab=demo&example=basic');
+ const chooser=page.getByRole('combobox',{name:'查看源码文件'});
+ const copy=page.getByRole('button',{name:'复制源码'});
+ await expect(page.locator('.source-viewer .hash')).toContainText('已校验');
+ await expect(copy).toBeEnabled();
+ const files=await chooser.locator('option').evaluateAll(items=>items.map(item=>(item as HTMLOptionElement).value));
+ expect(files.length).toBeGreaterThan(1);
+ try{
+  await chooser.selectOption(files[1]);
+  await expect.poll(()=>requests).toBe(2);
+  await expect(copy).toBeDisabled();
+  await expect(page.locator('.source-viewer .hash')).toHaveCount(0);
+ }finally{release();}
+ await expect(page.locator('.source-viewer [role="alert"]')).toContainText('SHA-256 不一致');
+ await expect(copy).toBeDisabled();
+ await expect(page.locator('.source-viewer .hash')).toHaveCount(0);
+});
+
 test('documentation headings expose stable shareable fragments',async({page})=>{
  await page.goto('/libraries/clsx?tab=docs');
  const toc=page.getByRole('navigation',{name:'当前文档目录'});
