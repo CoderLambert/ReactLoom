@@ -44,3 +44,9 @@ Document 子树挂载负责 PDF.js 加载和渲染资源，切换文档时使用
 需要真实 Chromium：离线两页PDF渲染、text层与分页、文件选择大小限制、坏字节错误、修复/重进、Worker URL实际被请求、DevTools资源卸载和 CSP。当前SDK NOT_RUN、构建 BLOCKED、浏览器 NOT_RUN；此前 F06 的结构算法预检不作为本条目 SDK 运行证明。
 
 官方：[React-PDF README](https://github.com/wojtekmaj/react-pdf)，[npm 11.0.0](https://www.npmjs.com/package/react-pdf)，[PDF.js](https://mozilla.github.io/pdf.js/api/)。
+
+## Wave21：Worker Transfer与重置时的数据所有权
+
+PDF.js可能将解析输入的Uint8Array buffer transfer到Worker；直接`<Document file={bytes}>`交出React状态/原创fixture可能使其成为detached buffer，恢复示例时再利用就失败。示例现在经 `examples/worker-payload.mjs` 对非空且<=3MiB字节创建 `slice()` 的独立副本，传给 `<Document file={{data}}>`。通过 `useMemo([bytes,documentGeneration])` 保持file对象在正常重渲染期间稳定，每次重置/切换才重新申请Worker专属数据。
+
+`node --test entries/F07-react-pdf/examples/worker-payload.test.mjs` 使用原生Node structuredClone的transfer真实复现「Worker副本被detach，原字节不受影响」，但没有运行react-pdf或PDF.js。真实浏览器仍必须验证重复重置、页码导航、F06/F07交替Worker加载和CSP。

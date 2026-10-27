@@ -65,7 +65,9 @@
       "sourceFiles": [
         "examples/fixture.ts",
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/worker-payload.mjs",
+        "examples/worker-payload.d.mts"
       ],
       "capabilities": [
         "pdf-worker",
@@ -84,7 +86,9 @@
       "sourceFiles": [
         "examples/fixture.ts",
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/worker-payload.mjs",
+        "examples/worker-payload.d.mts"
       ],
       "capabilities": [
         "pdf-worker",
@@ -103,7 +107,10 @@
       "sourceFiles": [
         "examples/fixture.ts",
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/worker-payload.mjs",
+        "examples/worker-payload.d.mts",
+        "examples/worker-payload.test.mjs"
       ],
       "capabilities": [
         "pdf-worker",
