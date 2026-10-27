@@ -17,3 +17,8 @@
 **必须验证**：真实目标SDK import、React19类型检查、生产构建、浏览器设备适配、快速反复挂载/切Tab无事件/GPU资源泄漏；特殊设备能力缺失时使用数据表退化展示。PASS需当前源码指纹、命令及日志证据，否则为NOT_RUN。
 
 **官方参考**：[Three.js 官方入门](https://threejs.org/manual/pages/creating-a-scene.html) · [WebGLRenderer API](https://threejs.org/docs/pages/WebGLRenderer.html) · [Three.js releases](https://github.com/mrdoob/three.js/releases)。
+
+
+## 动效策略与迁移（wave8）
+
+迁移 `examples/example.tsx` 时必须连同 `examples/animation-policy.ts` 一起读取；默认尊重系统减少动态。`shouldAnimate` 只在可见、用户请求播放、且系统未禁止动态或用户明确允许覆盖时返回 true；`visibilitychange` 和 `MediaQueryList change` 监听必须卸载，`setAnimationLoop(null)` 必须在 renderer.dispose 之前执行。静态帧保留内容可访问性。不要把 Node 纯规则测试称为 WebGL 或官方 SDK 验收。
