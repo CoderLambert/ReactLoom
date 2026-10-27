@@ -282,3 +282,26 @@ runCount：**9 / 24**。PR #8 继续 Draft；main/旧模板/PR #3 未修改，�
 **当前维度**：119/119 目录，119/119 条目源码/指南/Agent/状态文件（文件覆盖，非质量验收），357种场景**配置声明**；原始研究资料117份+E11/F05按重建标记，资料审核数没有本轮新增证明；真实 SDK PASS 本轮新增 **0**。11个本轮加固条目不是新条目，故总目录和Demo场景声明数量不增加。
 
 **下一批**：优先取得真实 Node>=22.18/pnpm10/registry 或可执行Runner，执行 `pnpm verify:library --execute --resolve-lock` 获得可信根锁、随后恢复 CI frozen 安装并跑定向构建/SDK/浏览器；处理真实失败后再建立 PDF.js、MSW iframe、Workbox SW、Monaco Worker 的隔离运行证据。若运行环境继续受限，优先对公共安全与生命周期产生可合并的增量，而不重复同一安装失败。**runCount 11/24**。main、PR #3、SPA/SSR/Mobile模板及生产公开部署均未改动。
+
+
+## PLATFORM 第12轮：三组质量改进集成、共享宿主 capability 与 Worker 终态修复（2026-10-27）
+
+**代码与合并证据**：按 COORDINATION/IMPLEMENTATION/根和包级 AGENTS、#4/#5/#6/#7、开放 PR 与 CI 恢复实际 GitHub HEAD，逐文件检查每个 worker PR 的 base/head 和所有路径所有权；三组均未写公共 src/scripts/package/锁/CI/生成索引，未提出新增 package 版本。仅将 worker PR 自 Draft 转为 Ready，保持对 main 的主 #8 为 Draft，并以 `expected_head_sha` 做 GitHub squash merge：
+
+- [AB #53](https://github.com/CoderLambert/ReactLoom/pull/53) 头 `089d00c3bdf5214c5cc3a9b7434150d7db2bdb88`，25个授权路径，集成 `e7ef67f2b18d46fc182463eb89dde9d21f01199a`：A03 Chart.js 可见性采样与数据同源、A14 R3F 按需帧、B01 Motion 有界卡片/键盘焦点、B15 宽/窄布局独立维护。
+- [CD #54](https://github.com/CoderLambert/ReactLoom/pull/54) 头 `0aa418fe90b3c89295984086aef52de87f4791bc`，19个授权路径，集成 `0efa843e84416f904bfecb47e95b39566f92f2a6`：C08 AG Grid 行 revision CAS、防过时快照覆盖；D04 p-queue 对运行和等待任务使用共享 AbortSignal，避免 `clear()` 遗留永不结算的 add Promise；C06 IMask 日历闰年边界。
+- [EF #55](https://github.com/CoderLambert/ReactLoom/pull/55) 头 `9f4b4c8b31a0a661c1fa96475afe753c5642856f`，37个授权路径，集成 `144f3d330b704f91754b5f7a284f4a615e6f0f20`：Tiptap/BlockNote/Lexical/CodeMirror 6 的快照大小、结构、存储恢复及不同场景编辑器生命周期。第三方 Schema 和 UI 仍须实测。
+
+**PLATFORM 实际代码提交**（全部写于 feat/library-lab 公共 owner 范围）：`f0b8c6da`、`45004740` 禁止在主 SPA React/Worker 组件直接使用 `network-interception` 或 `node-process`，仅对固定 Node-CI 显示可复制的 CLI 命令，保持 SW/不可信执行在隔离环境；`7a2b16b2` 修复 Worker 终态后仍处理消息、遗漏 `messageerror` 和资源处理器清理；`7fcf7781`、`1dc6a477` 规范日志控制符、Bidi 伪装和 4KiB 输出边界；`23320d93`、`64c41faa`、`dd0c79b9`、`2a1261da` 实现并接线最多40条日志但**始终保留末尾 result/error** 的同源策略与声明、回归测试。相关源码与 GitHub Blob SHA 已回读。
+
+**实际执行结果（不要跨越证据范围）**：
+
+- **PASS**：隔离环境复制 GitHub 当前字节的 `src/lib/worker-protocol.mjs`、`tests/worker-protocol.test.mjs`、`src/components/worker-host.tsx`，`git hash-object` 分别为 `fb9695f7833b3cf01e4a2cb293d91ac36471220e`、`660d37db07dc7bd4a39921eab688dc7954160686`、`992d6f4344928a299ed35ee395ebb82efa485f51`，与远端当前 blob 完全一致。执行 `node --test /mnt/data/library-verify/tests/worker-protocol.test.mjs`：**4 PASS / 0 FAIL / 0 SKIP**，涵盖 Worker 协议、旧消息拒绝、控制符/Bidi 和40项上限终态；全局 TS 5.8.3 `transpileModule` 对对应 WorkerHost TSX：**0 语法诊断**（不是完整 TypeScript typecheck）。另在 V8 对读取的 GitHub `catalog.mjs` / `demo-policy.mjs` 原始纯函数作10项直接执行断言：**10 PASS / 0 FAIL**，涵盖共享 origin 隔离、Node-CI、非法入口；它不是完整 `node --test` 也不是 SDK。
+- **NOT_RUN**：本轮完整 HEAD 的 `pnpm test`、真实第三方 SDK、React/Worker 浏览器挂卸载、TypeScript 7 typecheck、Vite production build、Chromium E2E/Preview。本轮加入的政策 Node 测试文件并未在完整 pnpm 工作树执行；worker 自报纯策略测试不等于平台复跑或 SDK PASS。
+- **BLOCKED**：本地 Node v22.16.0 低于执行器 Node>=22.18，缺 pnpm10 与真实可联网的完整工作树。GitHub 仓库 `pnpm-lock.yaml` 虽存在，**实际读取确认缺 `packages/library-lab:` importer**，不能称为已完成本包锁定，也不手造 integrity。PR #53/#54/#55 对应 Library Lab Actions `40466964978`/`40467062343`/`40468062129` 的 jobs 均 failure、`steps=null`（无作业步骤可核），真实原因仍在 #12 跟踪，未证明代码构建失败或成功。
+
+**覆盖维度**：119/119 条目目录；119/119有示例源码、guide/agent/verification 文件，357个三层 **Demo 配置声明**；实际浏览器成功 Demo 与官方 SDK 实测 PASS 不能由上述数字推得，**本轮新 SDK PASS=0**；资料原包117份，E11/F05为重建材料，本轮没有增加可核对的来源审核数。未重新生成/伪造 pnpm 锁或 runtime 证据，也未更新 verification.json 为 PASS。
+
+**下一批**：首先恢复符合 Node>=22.18 / pnpm10 / registry 的执行工作树或能实际分配 runner 的 CI；执行 `pnpm verify:library --execute --resolve-lock` 并审查真实 lock，再冻结安装、定向 SDK/TS/Vite/Chromium 测试，逐项修复实际失败。尤其对 Monaco Worker、MSW iframe/Service Worker 独立 origin、PDF.js Worker 版本配对、Workbox scope 和本批编辑器存储恢复/Canvas 焦点做目标 SDK/浏览器验收。在环境受阻期间可继续公共宿主的无副作用静态保护，避免重复刷 DNS 或冒称 SDK 验证。
+
+**runCount 12/24**。#8 仍为 Draft、main / PR #3 / 模板与公开部署未动；三个本批 worker PR 均已合入，仅使用项目授权的集成分支。
