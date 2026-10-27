@@ -55,3 +55,11 @@ Floating UI 为锚点弹层定位，cmdk 负责命令语义/选择；两者不�
 `examples/keyboard-policy.ts` 将 Ctrl/Cmd+K 和 Enter 规则作为可独立测试的纯函数。只有面板关闭时，普通输入框的快捷键不被示例抢走；面板打开后焦点处于其输入框时，再次 Ctrl/Cmd+K 可以关闭。Shift/Alt/IME Processing/229 不触发全局快捷键。
 
 中文/日文候选的 `compositionend` 可能先于尾随 `keydown Enter`，所以仅检查 `isComposing` 仍可能误选命令。本例保留“等待提交 Enter keyup”的标记；在捕获阶段阻止尾随回车冒泡给 cmdk，keyup/后续新按键/失焦会清除标记。鼠标操作与正常第二次 Enter 仍应可用，后续必须用真实 fcitx5/Rime/Chromium 验证事件顺序。定向规则测试：`node --experimental-strip-types --test entries/B18-cmdk/tests/keyboard-policy.test.mts`。
+
+
+## AB wave19：命令要有真实本地数据副作用
+
+旧示例只更新“演示已完成”的提示，未实际修改任何业务状态。现在 `examples/command-state.ts` 维护原创本地 NewsHub 文章 fixture，cmdk 的 Command.Item onSelect 驱动可观察的行为：稍后阅读切换收藏，已读标记幂等，生成引用填充字符串，模拟刷新增加本地计数。DOM 可访问区域显示同一业务状态，没有隐藏的第二套假演示。删除所有订阅仍 disabled 且 select 函数拒绝执行。
+
+切换层级重置本地数据和查询，不写用户账户、不操作远端订阅、不宣称已经写入系统剪贴板。输入法和 Ctrl/Cmd+K 继续由 keyboard-policy 和真实 cmdk 管理。新增 Node 测试只验证纯业务状态；SDK 的 Dialog/Portal、IME、焦点、键盘需 Chromium 运行。
+

@@ -1,9 +1,9 @@
 # AB 开发进度 — A/B 前端库垂直实现
 
-**最新调度轮次：18 / 最多24；状态：WAVE18_AB_39_SOURCE_HARDENING（39/39仅源码和文档覆盖；SDK、完整构建与浏览器尚未验收）。**
+**最新调度轮次：19 / 最多24；状态：WAVE19_AB_39_SOURCE_HARDENING（39/39仅源码和文档覆盖；SDK、完整构建与浏览器尚未验收）。**
 
-- 当前本批分支：`feat/library-lab-ab-wave18`，精确集成base `e62650ad6d025963da9ede967125502502fd031f`；初始公共提交 `38ed2d247bd82e4f1422b0e8904973e16bca2972` 仅作历史，不使用force覆盖。
-- 集成目标：`feat/library-lab`；本轮开始读取的最新头提交 `e62650ad6d025963da9ede967125502502fd031f`，前轮PR #65已被PLATFORM合并。
+- 当前本批分支：`feat/library-lab-ab-wave19`，精确集成base `a7514e4b6354ade43a36dc39512c7ccafc688dbe`；初始公共提交 `38ed2d247bd82e4f1422b0e8904973e16bca2972` 仅作历史，不使用force覆盖。
+- 集成目标：`feat/library-lab`；本轮开始读取的最新头提交 `a7514e4b6354ade43a36dc39512c7ccafc688dbe`，前轮 PR #68 已被 PLATFORM 合并。
 - 当前分支仅修改 A*、B* 条目及本进度文件；不更改公共源码、依赖、锁文件、CI、主 PR #8。
 
 ## 第1轮实质交付
@@ -748,3 +748,43 @@ PLATFORM审核本PR的base/head、授权路径并合入私有 \`feat/library-lab
 ### wave18 GitHub CI 对应提交回读（2026-10-27）
 
 PR #68的进度提交 `b5a21a00650eb37bc86dd181e449b3bf00328b94` 触发GitHub Actions：**CI run `40502535598` = failure**（packages、verify ssr/spa/mobile、lighthouse ssr/spa、smoke共7个job全部 `steps=[]`）；**Library Lab run `40502535604` = failure**（runtime-bootstrap `122183530797`、catalogue `122183531102`，二者均 `steps=[]`）。这些job没有任何可审查的测试/安装步骤，不等于已执行生产TS/Vite、SDK或浏览器，也没有足够证据将错误归因于此次AB源码。相同runner不提供步骤的故障交PLATFORM集中调查，本通道不重复重跑。当前相对集成基线Compare **19/19文件全部在AB授权范围、ahead=2/behind=0**。新版Docs提交只补录证据，不改变源码和verification状态。
+
+
+---
+
+## 第19轮（wave19）：MapLibre GL / React Flow / cmdk 真实状态与生命周期修复
+
+**runCount=19/24**；本次从读取时集成精确 HEAD `a7514e4b6354ade43a36dc39512c7ccafc688dbe` 建立新分支 `feat/library-lab-ab-wave19`，没有在已合并的旧 worker 分支上重复初始化或force覆盖。先阅读 COORDINATION、IMPLEMENTATION、根/包AGENTS、包内真实 `src/lib/types.ts`/`catalog.mjs`、AB历史和开放PR；当时没有开放 AB PR。主PR #8与无关PR #3保持不变。
+
+### 本轮已实际提交（3库、9个三层Demo配置）
+
+| 条目 | 可交互源代码变化 | 独立新规则与回归用例 |
+|---|---|---|
+| **A16 MapLibre GL JS** | GeoJSON过滤后当前选中项自动调整到首个可见站点，空列表取消选择；关闭MapLibre内置trackResize，改为单ResizeObserver+rAF及非零尺寸/实例有效性判断；监听WebGL context丢失/恢复并显示DOM表格回退；load图层初始化出错提示，卸载同步移除事件与释放map | `examples/selection-policy.ts`、`tests/selection-policy.test.mts`，4例 |
+| **A06 React Flow** | Demo level从basic换到business/advanced时恢复完整节点和边；重置创建独立节点/位置/data副本而不复用可变初始对象；advanced增加原生Select键盘连线、表格删除按钮，真实调用现有onConnect/DAG校验和onNodesChange清边，不是只改状态提示 | `examples/workflow-preset.ts`、`tests/workflow-preset.test.mts`，3例 |
+| **B18 cmdk** | 原先命令只写“演示完成”文本，本次Command.Item选中后实际修改本地NewsHub fixture：稍后阅读切换、标记已读、生成本地引用和模拟刷新计数；危险删除继续被禁用；切层级重置演示数据，原Keyboard/IME守卫仍保留 | `examples/command-state.ts`、`tests/command-state.test.mts`，4例 |
+
+三库的真实 `examples/example.tsx` 和 `library.json` 已同步，新辅助源码明确加入basic/business/advanced的sourceFiles；guide与agent手册记录迁移、安全边界及使用时的实际交互。没有编写第二份展示用假代码，没有Mock官方 SDK；原39/39源码和文档覆盖状态不等于39/39可运行验收。
+
+### 提交、精确范围与真实执行结果
+
+- MapLibre代码提交 `34069ad21606e4f1c093fe9c4578fedcf9fcae8b`，React Flow提交 `2c4a802f17b4eed8d7be0fec3f44b436be1ca737`，cmdk提交 `51e0cbc61a1d7420bf266065a3a95abdb72eaa7c`，每一步均基于上一步精确head使用非force GitHub ref 快进。
+- Node **22.16.0** 实际执行 `node --experimental-strip-types --test /mnt/data/ab-wave19/{A06,A16,B18}/tests/*.test.mts` → **11 PASS、0 FAIL、0 SKIP**。A06 3、A16 4、B18 4，仅为纯领域策略，不是假装 SDK 通过。
+- TypeScript **5.8.3** 实际执行 `tsc --noEmit --strict --skipLibCheck --target ES2022 --module ESNext --moduleResolution Bundler /mnt/data/ab-wave19/{A06,A16,B18}/examples/*.ts` → **PASS**，仅新加的三份无目标SDK依赖的独立TS规则源码。
+- 六份本地执行的helper/test经 `git hash-object` 与已提交GitHub的完整Blob SHA **6/6逐文件一致**：A06 `9c810db9/9f22ec7e`、A16 `2b39770d/d52705e6`、B18 `dab4b9aa/25ad05fa`。这保证本地运行对象字节与提交一致，但不保证React真实运行。
+- GitHub Compare从精确本轮集成base至代码HEAD：**18/18变更文件均属于AB的entries/A*或B***，ahead=3、behind=0；完整递归Git Tree有**2027项，truncated=false**，三库 **9/9 demo entryPoint、45/45 sourceFiles与入口引用均存在**。后续增加本AB.md进度文件，同样属于允许范围。
+- 三库 `verification.json` 已实际回读，sdk/build/browser全部仍为**NOT_RUN**；真实MapLibre/WebGL2、React Flow拖拽+键盘焦点、cmdk Portal/IME、完整React TSX类型、pnpm真实依赖、锁文件、Vite和Chromium **均未执行成功验证（NOT_RUN/BLOCKED）**。新代码的官方SDK import保留，不以Node规则PASS替代SDK证据。本代码HEAD尚未发现GitHub Actions执行记录；此前runner无steps/日志的阻塞不无限重试。
+- **dependencyRequests本轮新增0**。现有 `maplibre-gl@6.15.0`、`@xyflow/react@12.12.0`、`cmdk@1.1.1` 依赖声明由PLATFORM唯一负责人真实安装、peer/许可复核并更新锁文件。未改package.json、pnpm-lock、CI、其他进度/条目、main或公开部署。
+
+### PR与下一批验收队列
+
+Draft **[#71](https://github.com/CoderLambert/ReactLoom/pull/71)**，head `feat/library-lab-ab-wave19`，base严格为 `feat/library-lab`，仅PLATFORM可以审核合并到私有集成分支。下一轮先读PR集成结果与runner证据；优先真实Chromium验收MapLibre重复挂载/失去WebGL上下文/离线过滤，React Flow切层级和键盘建边/删点，cmdk真实onSelect/IME/焦点，发现具体错误再修复；如果依赖或runner仍阻塞，继续选择独立可确认的A/B条目缺陷（例如B15网格布局、A14 R3F、A03 Chart.js），而非生成重复占位页面。到24轮仍未拿到SDK/浏览器/构建证据则如实报告、停止本通道，不宣称质量门禁已完成。
+
+
+
+### wave19 GitHub CI与PR最终回读（2026-10-27）
+
+- Draft PR **[#71](https://github.com/CoderLambert/ReactLoom/pull/71)** 保持open/draft，base仅 `feat/library-lab`。进度提交 `6ef3d292e6ea96201a0b7acc940c3a5a70300393` 所在worker分支按GitHub Compare相对精确集成起点 **ahead=4、behind=0、19/19文件均在AB授权范围**（三库各6文件 + 本进度1文件）。
+- GitHub Actions真实查询：Library Lab `40510987688` = **failure**；CI `40510987650` = **failure**。Library Lab 的 `runtime-bootstrap` job `122212525050`、`catalogue` job `122212525684`、CI 的 `verify (spa)` job `122212525493` 均经独立 steps API 核实 **steps=[]**；CI所有7个Job均失败。这些记录没有可读执行步骤，不能证明实际运行过 pnpm、React TSX构建、Vite或SDK，不能认定源码有编译缺陷，更不能将状态写成PASS。Runner/锁文件属PLATFORM处理，AB不循环重跑同一不具备日志的失败。
+- 本轮实际通过的只有**11项 Node 纯策略测试与三份TypeScript纯规则检查**；MapLibre GPU/React Flow焦点连接/cmdk IME等关键浏览器验证仍明确NOT_RUN/BLOCKED。PLATFORM合入前应对本PR继续执行真实 SDK、pnpm、Chromium 定向回归。
+

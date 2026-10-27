@@ -3,6 +3,7 @@ import * as maplibregl from 'maplibre-gl';
 import type {GeoJSONSource, Map as MapInstance, MapLayerMouseEvent} from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import {makeLocalStation, MAX_EXTRA_STATIONS} from './station-factory';
+import {resolveVisibleStation, canResizeMap} from './selection-policy';
 
 // A tile-free laboratory: MapLibre renders genuine vector layers, without map credentials.
 type Level = 'basic' | 'business' | 'advanced';
@@ -36,16 +37,22 @@ export default function MapLibreExample({level}: {level: Level}) {
     () => level === 'basic' ? stations.slice(0, 2) : stations.filter(s => !onlyHealthy || s.healthy),
     [stations, onlyHealthy, level],
   );
+  const visibleSelected = resolveVisibleStation(visible, selected);
+  useEffect(() => {
+    if (selected !== visibleSelected) setSelected(visibleSelected);
+  }, [selected, visibleSelected]);
 
   useEffect(() => {
     const node = host.current;
     if (!node) return;
     // Style is local and intentionally has no tile/sprite/glyph requests.
+    setReady(false);
+    setError('');
     let map: MapInstance;
     try {
       map = new maplibregl.Map({
         container: node, style: EMPTY_STYLE, center: [116.1, 39.1], zoom: 6,
-        attributionControl: false, cooperativeGestures: true,
+        attributionControl: false, cooperativeGestures: true, trackResize: false,
       });
     } catch (error) {
       setError(error instanceof Error ? error.message : '此设备的 WebGL2 初始化失败，请改用下方数据表');
@@ -54,40 +61,64 @@ export default function MapLibreExample({level}: {level: Level}) {
     mapRef.current = map;
     let raf = 0;
     let attached = false;
+    let disposed = false;
     const onSelect = (event: MapLayerMouseEvent) => {
       const feature = event.features?.[0];
       const id = feature?.properties?.id;
-      if (typeof id === 'string') setSelected(id);
+      if (!disposed && typeof id === 'string') setSelected(id);
     };
     const onError = (event: {error?: Error}) => {
-      setError(event.error?.message ?? 'MapLibre 渲染错误');
+      if (!disposed) setError(event.error?.message ?? 'MapLibre 渲染错误');
+    };
+    const onContextLost = () => {
+      if (!disposed) {setReady(false); setError('WebGL 上下文丢失，仍可通过下方数据表操作');}
+    };
+    const onContextRestored = () => {
+      if (!disposed && mapRef.current === map) {
+        setError('');
+        setReady(map.isStyleLoaded());
+      }
     };
     const onLoad = () => {
-      map.addSource('stations', {type: 'geojson', data: asGeoJson(BASE)});
-      map.addLayer({id: 'stations', type: 'circle', source: 'stations',
-        paint: {'circle-radius': 11, 'circle-color': [
-          'case', ['boolean', ['get', 'healthy'], false], '#237a56', '#c78939',
-        ], 'circle-stroke-color': '#fff', 'circle-stroke-width': 2},
-      });
-      map.on('click', 'stations', onSelect);
-      attached = true;
-      setReady(true);
+      if (disposed || mapRef.current !== map) return;
+      try {
+        map.addSource('stations', {type: 'geojson', data: asGeoJson(BASE)});
+        map.addLayer({id: 'stations', type: 'circle', source: 'stations',
+          paint: {'circle-radius': 11, 'circle-color': [
+            'case', ['boolean', ['get', 'healthy'], false], '#237a56', '#c78939',
+          ], 'circle-stroke-color': '#fff', 'circle-stroke-width': 2},
+        });
+        map.on('click', 'stations', onSelect);
+        attached = true;
+        setReady(true);
+      } catch (cause) {
+        setReady(false);
+        setError(cause instanceof Error ? cause.message : '地图图层初始化失败，请使用数据表');
+      }
     };
     map.on('load', onLoad);
     map.on('error', onError);
+    map.on('webglcontextlost', onContextLost);
+    map.on('webglcontextrestored', onContextRestored);
     const observer = new ResizeObserver(() => {
+      if (disposed) return;
       cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => {if (mapRef.current === map) map.resize();});
+      raf = requestAnimationFrame(() => {
+        if (canResizeMap(node.clientWidth, node.clientHeight, !disposed && mapRef.current === map)) map.resize();
+      });
     });
     observer.observe(node);
     return () => {
+      disposed = true;
       observer.disconnect();
       cancelAnimationFrame(raf);
       map.off('load', onLoad);
       map.off('error', onError);
+      map.off('webglcontextlost', onContextLost);
+      map.off('webglcontextrestored', onContextRestored);
       if (attached) map.off('click', 'stations', onSelect);
-      map.remove();
       if (mapRef.current === map) mapRef.current = null;
+      map.remove();
     };
   }, []);
 
@@ -123,7 +154,7 @@ export default function MapLibreExample({level}: {level: Level}) {
       style={{height: 300, width: '100%', background: '#e8ede6', borderRadius: 8}}/>
     {error && <p role="alert">{error}</p>}
     <p role="status">图层：{ready ? '已加载' : '等待地图初始化或 WebGL'}；
-      可见站点：{visible.length}；当前选择：{stations.find(s => s.id === selected)?.label ?? '无'}。</p>
+      可见站点：{visible.length}；当前选择：{visible.find(s => s.id === visibleSelected)?.label ?? '无'}。</p>
     <div style={{overflowX: 'auto'}}><table>
       <caption>离线地理点位数据（提供键盘和读屏替代操作）</caption>
       <thead><tr><th scope="col">来源</th><th scope="col">经度</th><th scope="col">纬度</th><th scope="col">健康状态</th><th scope="col">操作</th></tr></thead>
