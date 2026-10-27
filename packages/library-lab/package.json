@@ -7,7 +7,7 @@
     "dev": "node scripts/generate.mjs && node scripts/prepare-ffmpeg-core.mjs && pnpm run prepare:msw && vite --host 127.0.0.1 --port 4319",
     "build": "node scripts/generate.mjs && node scripts/prepare-ffmpeg-core.mjs && pnpm run prepare:msw && vite build",
     "preview": "vite preview --host 127.0.0.1 --port 4319",
-    "prepare:msw": "msw init ./public/lab-runners/msw --no-save && node scripts/verify-msw-worker.mjs",
+    "prepare:msw": "node -e \"require('node:fs').mkdirSync('public/lab-runners/msw',{recursive:true})\" && msw init ./public/lab-runners/msw --no-save && node scripts/verify-msw-worker.mjs",
     "catalog:generate": "node scripts/generate.mjs",
     "catalog:check": "node scripts/generate.mjs --check && node scripts/validate-dependencies.mjs",
     "lint": "biome check src scripts tests e2e package.json tsconfig.json vite.config.ts playwright.config.ts",
