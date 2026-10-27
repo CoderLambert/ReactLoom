@@ -78,3 +78,8 @@ AB #41、CD #42、EF #43 三条高价值质量 PR 已审核合入集成分支，
 三个不同所有权的 worker PR #44（A/B）/#45（C/D）/#46（E/F）经逐文件范围审核后 squash 合入 `feat/library-lab`，分别对应 uPlot/G6/AntD/Embla、TanStack Table/Ky/Axios/Zustand、Monaco/pdf-lib/MSW 的 UI 与资源生命周期加固。它们不扩充119个身份条目或357个场景声明，也不等于官方 SDK 运行通过。
 
 发现 SDK 测试运行器原先会把 `page-policy.test.mjs` 等纯函数测试计作 SDK 套件，可能导致没有加载目标库也得到 SDK 选择器 PASS。因此改为仅选择 `sdk.test.mjs` 和 `node-scenarios.test.mjs`，另提供可按条目/分组执行的 `test:policy`，明确禁止跨分类推断；通过名称筛选仍不代替实际执行和导入审查。完整应用类型/构建/浏览器与锁文件因可执行环境缺失仍不能标记已验证。
+
+
+## 公共平台第13轮 — AB/CD 集成及源码响应上界（2026-10-27）
+
+AB #56 与CD #58 经base/head/diff及文件所有权审核后合入集成分支；EF #57 的两处Node测试相对导入路径错误已提交review，修正前不合并。SourceViewer新增严格source-index验证及不超过索引声明字节数（生成器文件上限2MB）的流式源码读取，保留原SHA-256核验，阻止伪造大小、缺失文件和旧源误复制。配套6项Node离线测试已在精确新模块字节下运行通过，原始TAP保存在 docs/library-lab/evidence/platform-wave13-node.tap；2项新Chromium preview案例仅提交未运行。此轮仍无第三方SDK、真实pnpm锁、完整TypeScript、Vite、浏览器PASS；不能从119份目录和357场景配置推断SDK通过。详情见 progress/PLATFORM.md。
