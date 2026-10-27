@@ -32,3 +32,7 @@ A02 Recharts：简单 React 业务图；A03 Chart.js：简单 Canvas 图；A05 D
 ## wave18资源不变式
 
 A01图表实例由挂载Effect唯一拥有；ResizeObserver只触发合并的rAF，不直接向已dispose实例调用resize。卸载先disconnect再cancelAnimationFrame并dispose。容器必须允许窄于250px、尺寸为0时不传给resize；缩放与reduced-motion须浏览器实测。点选反馈包括实际seriesName、name及简单value；不要将未知值塞进HTML formatter。源码/纯规则核查不构成官方ECharts运行PASS。
+
+## wave23 离屏暂停与键盘等价选点
+
+高级连续更新必须把 `document.visibilityState`、目标容器 `IntersectionObserver`、减少动态偏好、120次刷新上限合并控制；达到上限后不创建新定时器。复位必须重置 ref 和 state。为Canvas图表提供可聚焦的等价表格按钮，并通过真实 ECharts `dispatchAction` 对应 series/dataIndex，而非伪造显示或直接操作内部 ZRender。保留监听清理；在真实浏览器验证快捷键、焦点、动态数据和卸载，不将纯策略测试当SDK PASS。
