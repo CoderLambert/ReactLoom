@@ -3,6 +3,7 @@ import {readFile} from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {loadEntries} from './find-library.mjs';
+import {allowedPackageResolution} from '../src/lib/package-source.mjs';
 
 const root=fileURLToPath(new URL('../',import.meta.url));
 const npmName=/^(?:@[a-z0-9._-]+\/)?[a-z0-9][a-z0-9._-]*$/u;
@@ -19,7 +20,7 @@ export function checkDependencyContract(entries,manifest){
    if(names.has(pkg.name))errors.push(`${entry.entryId}: duplicate package ${pkg.name}`);
    names.add(pkg.name);
    if(!Object.hasOwn(versions,pkg.name))errors.push(`${entry.entryId}: missing ${pkg.name} in Library Lab dependencies`);
-   else if(pkg.version && versions[pkg.name]!==pkg.version)
+   else if(!allowedPackageResolution(pkg,versions[pkg.name]))
     errors.push(`${entry.entryId}: ${pkg.name} metadata ${pkg.version}, manifest ${versions[pkg.name]}`);
   }
  }
