@@ -1,4 +1,5 @@
 import {useRef, useState} from 'react';
+import {takeUndo} from './patch-ownership.mjs';
 import {produce, produceWithPatches, applyPatches, enablePatches, type Patch} from 'immer';
 
 enablePatches(); // One-time opt-in required for patch-based examples.
@@ -62,10 +63,11 @@ export default function ImmerWorkshop({level}: {level: Level}) {
   }
 
   function rollback() {
-    if (!undo.current) return;
+    // React may defer the state updater. Read the inverse BEFORE clearing the ref.
+    const inverse = takeUndo(undo);
+    if (inverse === null) return;
     // No concurrent writes are allowed between patch creation and rollback in this demo.
-    setFeed(current => applyPatches(current, undo.current ?? []));
-    undo.current = null;
+    setFeed(current => applyPatches(current, inverse));
     setPatches([]);
     setNotice('逆向 Patch 已恢复执行前状态');
   }

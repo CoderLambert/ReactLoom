@@ -1,4 +1,6 @@
 import {useMemo,useRef,useState} from 'react';
+import {isCivilDate,getUtcInstant,allocateEventId} from './calendar-policy.mjs';
+export {getUtcInstant} from './calendar-policy.mjs';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/react/daygrid';
 import timeGridPlugin from '@fullcalendar/react/timegrid';
@@ -21,23 +23,31 @@ const FOLD:Event[]=[
  {id:'fold-early',title:'DST 01:30（UTC−04）',start:'2026-11-01T01:30:00-04:00'},
  {id:'fold-late',title:'DST 01:30（UTC−05）',start:'2026-11-01T01:30:00-05:00'}
 ];
-export function getUtcInstant(value:string){const date=new Date(value);return Number.isNaN(date.getTime())?null:date.toISOString();}
 export default function CalendarExample({level}:{level:Level}){
  const [events,setEvents]=useState<Event[]>(()=>level==='advanced'?[...INITIAL,...FOLD]:[...INITIAL]);
  const [title,setTitle]=useState('RSS 频道审核');
  const [date,setDate]=useState('2026-11-03');
  const [status,setStatus]=useState('演示仅更新组件内存，不连接真实日历服务');
  const calendarRef=useRef<FullCalendar|null>(null);
+ const localSequence=useRef(1);
  const memoEvents=useMemo(()=>events,[events]);
  function add(){
-  const validDate=/^\d{4}-\d{2}-\d{2}$/.test(date)&&Number.isFinite(new Date(date+'T00:00:00Z').getTime())&&
-    new Date(date+'T00:00:00Z').toISOString().slice(0,10)===date;
+  const validDate=isCivilDate(date);
   if(!title.trim()||!validDate){setStatus('标题及日历日期必须有效（不允许自动进位）');return;}
-  const next={id:'item-'+String(Date.now()),title:title.trim(),start:date,allDay:true};
+  const allocated=allocateEventId(localSequence.current,events.map(event=>event.id));
+  localSequence.current=allocated.nextSequence;
+  const next={id:allocated.id,title:title.trim(),start:date,allDay:true};
   setEvents(old=>[...old,next]);setTitle('');setStatus('本地事件已添加，未写入服务端');
  }
  function move(info:{event:{id:string;startStr:string;endStr:string;allDay:boolean};revert:()=>void}){
   if(level==='advanced'&&info.event.id==='fold-early'){info.revert();setStatus('模拟 409：修订冲突，已调用 revert() 恢复原日期');return;}
+  if(!events.some(event=>event.id===info.event.id)) {
+   info.revert();setStatus('事件不再属于当前数据集；已撤销过期编辑');return;
+  }
+  if(info.event.allDay ? !isCivilDate(info.event.startStr) || (!!info.event.endStr && !isCivilDate(info.event.endStr)) :
+     !getUtcInstant(info.event.startStr) || (!!info.event.endStr && !getUtcInstant(info.event.endStr))) {
+   info.revert();setStatus('拖拽返回无效日期或无明确偏移的时间值，已撤销，避免 DST 时刻被误写');return;
+  }
   setEvents(current=>current.map(item=>item.id===info.event.id?{...item,start:info.event.startStr,end:info.event.endStr||undefined,allDay:info.event.allDay}:item));
   setStatus('拖拽后的日期已同步到 React 数据源。生产服务端须校验 revision。');
  }

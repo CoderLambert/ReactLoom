@@ -63,3 +63,6 @@ produce(base,draft=>...) 记录草稿写入并对发生变化的路径进行拷�
 ## 授权
 
 该条目源码与文字为独立编写的教学材料；目标库使用上游 MIT 许可，未捆绑第三方图片、字体或付费资源。
+
+## 本批真实修复：延迟更新中的 inverse 所有权
+旧实现调用 `setFeed(current => applyPatches(current, undo.current ?? []))` 后立刻把 `undo.current` 清零。React 在批量处理时可能晚于清零执行 updater，最终应用空 Patch，UI 看似点击撤销但实际不变。现在先用 `takeUndo(undo)` **同步认领 inverse**，把不可变的局部 `inverse` 传入 updater，重复撤销不会消费另一个操作。领域纯测试见 `tests/patch-ownership.test.mjs`；`tests/sdk.test.mjs` 另用真实 Immer 生成 inverse 作为回归测试源码，但未在安装 SDK 的环境执行。生产异步服务还须用 revision/请求身份阻止过期 inverse 覆盖新缓存。

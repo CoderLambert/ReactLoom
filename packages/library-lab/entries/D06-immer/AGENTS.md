@@ -4,3 +4,4 @@
 
 本库特殊边界：不得泄漏 draft 到异步操作；不得把 Patch 当经过授权的外部命令；不得回滚过期 inverse 到已经变化的最新缓存；不得直接修改 React state 或使用数组索引当稳定业务 ID。
 
+保留 `takeUndo(undo)` 先同步取走 inverse，再将局部常量捕获进 React updater。不要恢复 `applyPatches(current, undo.current ?? [])` 这种延迟读 ref 的错误。

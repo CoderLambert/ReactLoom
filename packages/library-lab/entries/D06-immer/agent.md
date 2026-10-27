@@ -41,3 +41,6 @@ Immer 官方文档：https://immerjs.github.io/immer/
 Patches API：https://immerjs.github.io/immer/patches/
 
 官方 v11.2.9 发行：https://github.com/immerjs/immer/releases/tag/v11.2.9
+
+## React updater 竞态修复
+对延迟执行的 `setFeed(current => ...)`，不能在 updater 内重新读取稍后会被清空的 `undo.current`。先同步 `const inverse = takeUndo(undo)`，再闭包捕获 `inverse`。迁移时带上 `examples/patch-ownership.mjs`、类型声明和两级测试；纯 Node 策略通过仍不等于真实 Immer/React 浏览器通过。

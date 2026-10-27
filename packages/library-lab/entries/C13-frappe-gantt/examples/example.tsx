@@ -1,30 +1,14 @@
 import {useEffect,useMemo,useRef,useState} from 'react';
 import './gantt.css';
+import {validatePlan} from './plan-policy.mjs';
+export {validatePlan,validCivilDate} from './plan-policy.mjs';
 type Level='basic'|'business'|'advanced';
 type Task={id:string;name:string;start:string;end:string;progress:number;dependencies:string};
-export function validCivilDate(value:string):boolean {
- if(!/^\d{4}-\d{2}-\d{2}$/.test(value))return false;
- const date=new Date(value+'T00:00:00Z');
- return Number.isFinite(date.getTime())&&date.toISOString().slice(0,10)===value;
-}
 const BASE:Task[]=[
  {id:'research',name:'需求评审',start:'2026-10-27',end:'2026-10-29',progress:100,dependencies:''},
  {id:'frontend',name:'前端开发',start:'2026-10-30',end:'2026-11-04',progress:45,dependencies:'research'},
  {id:'qa',name:'联调回归',start:'2026-11-05',end:'2026-11-08',progress:10,dependencies:'frontend'}
 ];
-export function validatePlan(tasks:Task[]):string|null {
- const ids=new Set(tasks.map(t=>t.id));
- if(ids.size!==tasks.length)return '任务 ID 不允许重复';
- for(const task of tasks){
-  if(!validCivilDate(task.start)||!validCivilDate(task.end)||task.start>task.end)
-   return task.id+' 的日期区间无效';
-  if(task.progress<0||task.progress>100)return task.id+' 的进度必须在 0-100';
-  for(const id of task.dependencies.split(',').map(s=>s.trim()).filter(Boolean)){
-   if(!ids.has(id)||id===task.id)return task.id+' 存在非法任务依赖';
-  }
- }
- return null;
-}
 function GanttCanvas({tasks,view}:{tasks:Task[];view:'Day'|'Week'|'Month'}) {
  const host=useRef<HTMLDivElement|null>(null);
  const [error,setError]=useState('');
@@ -56,11 +40,16 @@ export default function FrappeGanttExample({level}:{level:Level}){
   if(level==='advanced'&&task.id==='qa'){setStatus('模拟 HTTP 409：联调任务版本冲突，未修改客户端权威数据');return;}
   setTasks(candidate);setStatus('已更新当前内存计划：'+task.id);
  }
+ function previewCycle(){
+  const candidate=tasks.map(task=>task.id==='research'?{...task,dependencies:'qa'}:task);
+  const error=validatePlan(candidate);
+  setStatus(error?'演示依赖环被拒绝：'+error:'当前计划未形成闭环');
+ }
  return <section aria-label="Frappe Gantt 真实示例">
   <h2>{level==='basic'?'三项任务与依赖':level==='business'?'项目任务进度':'无效区间与 409 冲突'}</h2>
   <div className="demo-controls"><label>时间尺度 <select value={view} onChange={e=>setView(e.target.value as typeof view)}>
    <option>Day</option><option>Week</option><option>Month</option>
-  </select></label>{level!=='basic'&&<label>过滤表格任务 <input value={filter} onChange={e=>setFilter(e.target.value)}/></label>}</div>
+  </select></label>{level!=='basic'&&<label>过滤表格任务 <input value={filter} onChange={e=>setFilter(e.target.value)}/></label>}{level==='advanced'&&<button type="button" onClick={previewCycle}>模拟依赖闭环（不保存）</button>}</div>
   <p role="status">{status}</p>
   <GanttCanvas tasks={tasks} view={view}/>
   <h3>等效键盘可编辑任务列表</h3>
@@ -77,6 +66,6 @@ export default function FrappeGanttExample({level}:{level:Level}){
    </td></tr>)}
   </tbody></table></div>
   <p>甘特图只负责可视化，日期更改由语义表格完成。筛选只作用于表格，不能将缺少依赖的子集交给甘特引擎。</p>
-  {level==='advanced'&&<p>将结束日改为早于开始日触发拒绝；保存“联调回归”模拟 409。更复杂的依赖闭环、跨时区与服务端 revision 需要独立契约测试。</p>}
+  {level==='advanced'&&<p>将结束日改为早于开始日触发拒绝；保存“联调回归”模拟 409。本地依赖闭环/非有限进度已校验；跨时区与服务端 revision 仍需要独立契约测试。</p>}
  </section>;
 }
