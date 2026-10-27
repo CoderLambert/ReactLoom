@@ -73,7 +73,9 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/draft-policy.mjs",
+        "examples/draft-policy.d.mts"
       ],
       "capabilities": [
         "dom-editor",
@@ -90,7 +92,9 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/draft-policy.mjs",
+        "examples/draft-policy.d.mts"
       ],
       "capabilities": [
         "dom-editor",
@@ -108,7 +112,10 @@
       "sourceFiles": [
         "examples/example.tsx",
         "examples/demo.tsx",
-        "tests/node-scenarios.test.mjs"
+        "tests/node-scenarios.test.mjs",
+        "examples/draft-policy.mjs",
+        "examples/draft-policy.d.mts",
+        "tests/policy.test.mjs"
       ],
       "capabilities": [
         "dom-editor",

@@ -11,3 +11,7 @@
 **验收断言**：真 CodeMirror 依赖可 import/构建，输入影响 state.doc，Compartment 切换不重建 view，切 Tab 卸载后不会留下旧 DOM，sessionStorage 拒绝时编辑仍可用，IME/移动端需另测。禁用 SDK Mock 冒充成功。
 
 **备选**：E05 Monaco（IDE）、E09 Shiki（只读）、E06 react-markdown（预览）。官方 https://codemirror.net/docs/guide/ 。本次新实现未运行 SDK/浏览器。
+
+## EF 迁移增补
+
+所有 sessionStorage 读取（首次初始化和“恢复”按钮）与保存都必须调用 `examples/draft-policy.mjs` 的 50,000 字符/NUL 校验，拒绝大草稿时保留当前 EditorView 内容。原文可能包含非可信代码；本示例只编辑文本不运行代码。先运行 `node --test packages/library-lab/entries/E04-codemirror6/tests/policy.test.mjs`，然后验收真实 CodeMirror 事务/只读、IME和卸载。

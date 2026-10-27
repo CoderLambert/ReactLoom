@@ -1,7 +1,7 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "已提交真实 SDK imports，但依赖/锁文件与运行环境由 PLATFORM 集成后验证。"
+    "note": "已提交真实 SDK imports，但依赖/锁文件与运行环境由 PLATFORM 集成后验证。 新增纯策略负例不构成真实 SDK 加载证据。"
   },
   "build": {
     "status": "BLOCKED",

@@ -74,7 +74,9 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/snapshot-policy.mjs",
+        "examples/snapshot-policy.d.mts"
       ],
       "capabilities": [
         "rich-text",
@@ -91,7 +93,9 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/snapshot-policy.mjs",
+        "examples/snapshot-policy.d.mts"
       ],
       "capabilities": [
         "rich-text",
@@ -108,7 +112,10 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/snapshot-policy.mjs",
+        "examples/snapshot-policy.d.mts",
+        "tests/policy.test.mjs"
       ],
       "capabilities": [
         "rich-text",

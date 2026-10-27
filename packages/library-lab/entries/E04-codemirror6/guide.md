@@ -60,3 +60,9 @@ view.destroy()
 安装依赖后执行 `pnpm --filter @reactloom/library-lab typecheck && pnpm --filter @reactloom/library-lab build`；浏览器检查输入、切换只读不丢内容、保存恢复、React StrictMode 双挂载无重复编辑器、离开 Tab 实例销毁、中文 IME。**当前未执行 SDK 构建或真实浏览器验收，不记 PASS。**
 
 官方来源：[Guide](https://codemirror.net/docs/guide/) · [API](https://codemirror.net/docs/ref/) · [Changelog](https://codemirror.net/docs/changelog/)；核心 MIT，语言包与扩展分别审查许可。
+
+## EF 第十五批：会话草稿恢复限额
+
+原示例仅在首次挂载读取业务草稿时限制小于 50K 字符，手动“恢复草稿”按钮没有同样约束；同源污染过大的 sessionStorage 值可能被无限制插入 EditorView。现在 `assertDraftText` 由首次挂载、保存和手动恢复三条路径共用，允许最多 50,000 UTF-16 代码单元的原文，拒绝 NUL 和超长值；不合法内容只给状态提示，不覆盖用户当前代码。这个限制是 UI 资源保护，不是 TypeScript 静态分析或安全执行沙箱。
+
+纯 Node 负例 `tests/policy.test.mjs` 不 import CodeMirror，不能代替真实 EditorView、IME、卸载或 Vite 构建。

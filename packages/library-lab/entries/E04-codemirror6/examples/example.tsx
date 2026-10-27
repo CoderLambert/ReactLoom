@@ -2,6 +2,7 @@ import {useEffect, useRef, useState} from 'react'
 import {basicSetup, EditorView} from 'codemirror'
 import {Compartment, EditorState} from '@codemirror/state'
 import {javascript} from '@codemirror/lang-javascript'
+import {assertDraftText} from './draft-policy.mjs'
 
 type Level = 'basic' | 'business' | 'advanced'
 type Props = {level: Level}
@@ -24,12 +25,14 @@ export default function CodeMirrorExample({level}: Props) {
   useEffect(() => {
     if (!mount.current) return
     let initial = defaults[level]
+    let ignoredDraft = false
     if (level === 'business') {
       try {
         const saved = sessionStorage.getItem(SESSION_KEY)
-        if (saved !== null && saved.length < 50_000) initial = saved
+        if (saved !== null) initial = assertDraftText(saved)
       } catch {
-        // Storage can be disabled by the browser; editing still works.
+        // A malformed, oversized or inaccessible stored draft cannot poison EditorView.
+        ignoredDraft = true
       }
     }
     const view = new EditorView({
@@ -55,7 +58,7 @@ export default function CodeMirrorExample({level}: Props) {
     viewRef.current = view
     setLength(view.state.doc.length)
     setReadOnly(false)
-    setNotice('已创建独立 EditorView；可输入或粘贴文本')
+    setNotice(ignoredDraft ? '草稿不可用或超过限额；已加载默认文档' : '已创建独立 EditorView；可输入或粘贴文本')
     return () => {
       if (viewRef.current === view) viewRef.current = null
       view.destroy()
@@ -81,10 +84,10 @@ export default function CodeMirrorExample({level}: Props) {
     const value = viewRef.current?.state.doc.toString()
     if (value === undefined) return
     try {
-      sessionStorage.setItem(SESSION_KEY, value)
-      setNotice('已保存到本标签页 sessionStorage（无远程上传）')
-    } catch {
-      setNotice('浏览器禁止会话存储，编辑功能仍可用')
+      sessionStorage.setItem(SESSION_KEY, assertDraftText(value))
+      setNotice('已保存有界草稿到当前标签页 sessionStorage（无远程上传）')
+    } catch (error) {
+      setNotice(`草稿未保存：${String(error)}`)
     }
   }
 
@@ -94,10 +97,11 @@ export default function CodeMirrorExample({level}: Props) {
     try {
       const value = sessionStorage.getItem(SESSION_KEY)
       if (value === null) return setNotice('没有已保存的草稿')
-      view.dispatch({changes: {from: 0, to: view.state.doc.length, insert: value}})
-      setNotice('已从当前标签页恢复草稿')
-    } catch {
-      setNotice('读取会话存储失败')
+      const valid = assertDraftText(value)
+      view.dispatch({changes: {from: 0, to: view.state.doc.length, insert: valid}})
+      setNotice('已从当前标签页恢复有界草稿')
+    } catch (error) {
+      setNotice(`草稿恢复失败，当前文本保持不变：${String(error)}`)
     }
   }
 
