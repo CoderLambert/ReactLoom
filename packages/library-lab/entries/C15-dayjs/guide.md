@@ -55,3 +55,8 @@ dayjs.extend(customParseFormat)
 实际 node:test 中直接 import dayjs 及官方插件，检查严格解析、23/25小时与回拨偏移；未安装前状态 NOT_RUN。不要将研发演示数据当真实 RSS 服务。浏览器需补设备时区矩阵（系统设 UTC/纽约/上海）、IME/键盘检查。
 
 官方：https://day.js.org/docs/en/plugin/timezone · https://day.js.org/docs/en/parse/string-format · https://github.com/iamkun/dayjs/releases/tag/v1.11.23
+
+
+## 进阶补充：校验偏移是否属于该 IANA 时区
+
+真实示例另提供 `resolveExplicitZonedInstant`（`examples/offset-instant.mjs`）：输入必须提供 `YYYY-MM-DDTHH:mm:ss±HH:mm`，先由 Day.js 得到确定瞬间，再使用官方 timezone 插件转换至 IANA zone，回查本地年月日、时分及该区合法偏移。这样 `2026-11-01T01:30:00-04:00` 与 `-05:00` 都可作为纽约合法事件，`2026-03-08T02:30:00-05:00`（跳过的墙上时间）与错误 `-06:00` 被拒。它是刻意保守的秒级教学输入格式，既不能替代后端认证，也不代表 Day.js 原生会自动执行该校验。对应实际 SDK 回归源码已补充但尚未运行。

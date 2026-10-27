@@ -20,3 +20,8 @@ examples/example.tsx 中 strictDate、civilWindow 和 twoFallbackInstants 是可
 node --test entries/C15-dayjs/tests/sdk.test.mjs，以及 Lab typecheck/build/重点浏览器。必须看到当前SDK导入和断言真的通过才填写PASS，并绑定 sourceFingerprint + 命令+日志。
 
 官方：https://day.js.org/docs/en/plugin/timezone
+
+
+## 事件输入与 DST 缺失时刻
+
+如果上游提供偏移且同时声明 IANA zone，迁移 `examples/offset-instant.mjs` 校验两者一致，勿直接信任时间文本的偏移。回拨日两种真实 offset 必须都能表示；春季跳过的 02:30 必须被拒。新 helper 由实际 Day.js 插件调用实现；`sdk.test.mjs` 需要真正安装依赖后执行，不能把源码存在当作 PASS。
