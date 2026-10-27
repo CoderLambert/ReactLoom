@@ -1,14 +1,14 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "未实际安装执行对应第三方SDK"
+    "note": "未实际安装执行对应第三方SDK；wave16修改源码，目标SDK/完整构建/浏览器未执行，状态保持。"
   },
   "build": {
     "status": "BLOCKED",
-    "note": "公共锁文件及真实bundle尚待PLATFORM在可用网络环境核验"
+    "note": "公共锁文件及真实bundle尚待PLATFORM在可用网络环境核验；wave16修改源码，目标SDK/完整构建/浏览器未执行，状态保持。"
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "需要实际浏览器测试媒体API、事件与卸载"
+    "note": "需要实际浏览器测试媒体API、事件与卸载；wave16修改源码，目标SDK/完整构建/浏览器未执行，状态保持。"
   }
 }
