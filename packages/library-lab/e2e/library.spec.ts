@@ -186,3 +186,34 @@ test('Markdown Setext TOC anchors match rendered headings, with fenced decoys ex
  await expect(page).toHaveURL(/#setup-1$/u);
  await expect(page.locator('h2#setup-1')).toBeVisible();
 });
+
+
+test('catalog index has a bounded JSON transport before any card can render',async({page})=>{
+ await page.route('**/catalog-index.json',route=>route.fulfill({
+  status:200,contentType:'application/json',body:' '.repeat(512_001),
+ }));
+ await page.goto('/');
+ await expect(page.getByRole('alert')).toContainText('JSON 响应超过字节安全上限');
+ await expect(page.locator('.library-card')).toHaveCount(0);
+});
+
+test('detail JSON transport rejects an HTML SPA fallback and offers retry',async({page})=>{
+ await page.route('**/raw/C20/detail.json',route=>route.fulfill({
+  status:200,contentType:'text/html',body:'<html><body>SPA fallback</body></html>',
+ }));
+ await page.goto('/libraries/clsx?tab=docs');
+ await expect(page.getByRole('alert')).toContainText('JSON 资源类型不正确');
+ await expect(page.getByRole('button',{name:'重试读取'})).toBeVisible();
+});
+
+test('source index JSON transport rejects wrong MIME before downloading source',async({page})=>{
+ let downloads=0;
+ page.on('request',request=>{if(request.url().includes('/raw/C20/sources/'))downloads++;});
+ await page.route('**/raw/C20/source-index.json',route=>route.fulfill({
+  status:200,contentType:'text/html',body:'<html><body>not a source index</body></html>',
+ }));
+ await page.goto('/libraries/clsx?tab=demo&example=basic');
+ await expect(page.locator('.source-viewer [role="alert"]')).toContainText('JSON 资源类型不正确');
+ await expect(page.getByRole('button',{name:'复制源码'})).toHaveCount(0);
+ expect(downloads).toBe(0);
+});
