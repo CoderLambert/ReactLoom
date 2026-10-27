@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {mkdtemp,mkdir,writeFile,rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import path from 'node:path';
-import {discoverPolicyTests,selectPolicyTests} from '../scripts/policy-runner.mjs';
+import {discoverPolicyTests,selectPolicyTests,planChangedPolicyTests} from '../scripts/policy-runner.mjs';
 import {discoverSdkTests,selectSdkTests} from '../scripts/sdk-runner.mjs';
 
 async function fixture(t){
@@ -43,4 +43,42 @@ test('SDK selection cannot silently count a pure policy-only entry as SDK PASS',
 test('malformed entry names and injected selectors are rejected',()=>{
  assert.throws(()=>selectPolicyTests(['entries/../../secret/tests/run.test.mjs']),/No matching policy/);
  assert.throws(()=>selectPolicyTests(['entries/F11-msw/tests/routes.test.mjs'],{entries:['Z99']}),/Invalid/);
+});
+
+test('entry-level CI policy plan selects changed source IDs but not other libraries',()=>{
+ const files=['entries/A04-uplot/tests/stream-policy.test.mts',
+  'entries/C07-table/tests/page-policy.test.mjs',
+  'entries/F11-msw/tests/routes.test.mjs',
+  'entries/F11-msw/tests/sdk.test.mjs'];
+ const plan=planChangedPolicyTests([
+  'packages/library-lab/entries/F11-msw/examples/example.tsx',
+  'packages/library-lab/entries/A04-uplot/library.json',
+  'docs/library-lab/progress/AB.md',
+ ],files);
+ assert.deepEqual(plan,{mode:'affected',entries:['A04','F11'],files:files.slice(0,1).concat(files.slice(2,3))});
+});
+test('guide-only and entries lacking policy suites are SKIP, never an SDK PASS',()=>{
+ const suites=['entries/C07-table/tests/page-policy.test.mjs'];
+ const documentation=planChangedPolicyTests([
+  'packages/library-lab/entries/C07-table/guide.md',
+  'docs/library-lab/COORDINATION.md'
+ ],suites);
+ assert.deepEqual(documentation,{mode:'skip',entries:[],files:[]});
+ const uncovered=planChangedPolicyTests([
+  'packages/library-lab/entries/E05-monaco-editor/examples/example.tsx'
+ ],suites);
+ assert.deepEqual(uncovered,{mode:'skip',entries:['E05'],files:[]});
+});
+test('shared runtime and dependency changes require all pure policies, excluding SDK suites',()=>{
+ const suites=['entries/A04-uplot/tests/stream-policy.test.mts',
+  'entries/C07-table/tests/page-policy.test.mjs',
+  'entries/F11-msw/tests/node-scenarios.test.mjs'];
+ for(const path of ['packages/library-lab/src/components/demo-host.tsx',
+  'packages/library-lab/scripts/policy-runner.mjs',
+  'packages/library-lab/tests/catalog.test.mjs',
+  'pnpm-lock.yaml','.github/workflows/library-lab.yml']){
+  const plan=planChangedPolicyTests([path],suites);
+  assert.equal(plan.mode,'all',path);
+  assert.deepEqual(plan.files,suites.slice(0,2));
+ }
 });
