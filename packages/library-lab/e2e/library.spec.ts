@@ -84,3 +84,16 @@ test('reading Monaco docs does not fetch its interactive editor runtime',async({
  await expect(page.getByRole('link',{name:'读取 Markdown 原文'})).toBeVisible();
  expect(heavyRequests).toEqual([]);
 });
+
+test('landing page requests compact index, full detail only after opening one entry',async({page})=>{
+ const requests:string[]=[];
+ page.on('request',request=>{requests.push(new URL(request.url()).pathname);});
+ await page.goto('/');
+ await expect(page.locator('.library-card')).toHaveCount(119);
+ expect(requests).toContain('/catalog-index.json');
+ expect(requests).not.toContain('/catalog.json');
+ expect(requests.filter(path=>path.startsWith('/raw/')&&path.endsWith('/detail.json'))).toHaveLength(0);
+ await page.getByRole('link',{name:/C20/}).click();
+ await expect(page.getByRole('tab',{name:'实战 Demo'})).toBeVisible();
+ expect(requests.filter(path=>path.startsWith('/raw/')&&path.endsWith('/detail.json'))).toEqual(['/raw/C20/detail.json']);
+});
