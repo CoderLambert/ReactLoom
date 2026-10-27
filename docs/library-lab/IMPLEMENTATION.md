@@ -11,7 +11,7 @@
 - [x] LL01 身份目录恢复：119条；原件缺失E11/F05明确保留。
 - [x] LL02 元数据/源码路径校验、重复ID/关联与生成器初版。
 - [x] LL03 独立SPA源码、路由、布局、CI bootstrap；实际依赖安装/构建仍待验证。
-- [x] LL04 四Tab、安全Markdown初版、源码与raw文档；目录/高亮/相对链接待完善。
+- [x] LL04 四Tab、安全Markdown、目录（ATX/Setext）、按需高亮、受限同源相对链接、源码与raw文档已接线；真实Chromium/生产预览仍待验收。
 - [x] LL05 React DemoHost初版；Worker/SW/frame/node证据runner待实现。
 - [ ] LL06 六风险切片：ECharts/Floating UI/RHF/p-limit/Monaco/MSW。
 - [ ] LL07 存储、WASM、历史依赖等特殊环境。
@@ -83,3 +83,8 @@ AB #41、CD #42、EF #43 三条高价值质量 PR 已审核合入集成分支，
 ## 公共平台第13轮 — AB/CD 集成及源码响应上界（2026-10-27）
 
 AB #56 与CD #58 经base/head/diff及文件所有权审核后合入集成分支；EF #57 的两处Node测试相对导入路径错误已提交review，修正前不合并。SourceViewer新增严格source-index验证及不超过索引声明字节数（生成器文件上限2MB）的流式源码读取，保留原SHA-256核验，阻止伪造大小、缺失文件和旧源误复制。配套6项Node离线测试已在精确新模块字节下运行通过，原始TAP保存在 docs/library-lab/evidence/platform-wave13-node.tap；2项新Chromium preview案例仅提交未运行。此轮仍无第三方SDK、真实pnpm锁、完整TypeScript、Vite、浏览器PASS；不能从119份目录和357场景配置推断SDK通过。详情见 progress/PLATFORM.md。
+
+
+## 第17轮：文档导航与链接同源边界（2026-10-27）
+
+AB #68、CD #69、EF #70 已由PLATFORM核对变更文件范围和固定head后squash合入私有集成分支；覆盖ECharts、Floating UI、两类拖拽、JSON Forms/nuqs/XState、Monaco及Orval安全交互，不新增库身份或SDK PASS。公共 src/lib/document-utils.mjs 支持Setext目录/正确首行ID，拒绝带尾随代码的假fence及站外伪BASE_URL；精确GitHub Blob同源的Node定向测试10 PASS/0 FAIL，证据见 progress/PLATFORM.md 和 evidence/platform-wave17-markdown.tap。另新增生产preview中的Setext目录/重复anchor/伪标题 Playwright烟测，仅提交未在Chromium运行。根lock真实解析、完整tsc/Vite、SDK/浏览器仍未通过；PR #8保持Draft。
