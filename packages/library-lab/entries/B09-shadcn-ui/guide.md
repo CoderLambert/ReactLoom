@@ -39,3 +39,7 @@ import {Button} from './ui/button';
 - [2026 Radix包迁移说明](https://ui.shadcn.com/docs/changelog/2026-02-radix-ui)
 
 当前源码已编写但SDK/tsc/生产构建/浏览器均NOT_RUN。
+
+
+## 归档事务快照与异步取消补丁（2026-10-27）
+归档时提取仍待归档ID快照，期间禁用checkbox与提交，不依赖250ms后可变`selected`。重置、切换demo级别和卸载均递增operationEpoch并取消本地定时器；过期回调不得写回新场景。已归档ID不重复计算成功量；模拟延迟不是实际HTTP请求或持久化。`archive-policy.ts`提供规则测试，真实Slot/CVA和浏览器交互仍待验收。

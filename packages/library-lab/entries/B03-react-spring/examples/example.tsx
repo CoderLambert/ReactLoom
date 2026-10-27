@@ -1,5 +1,6 @@
 import {animated,useSpring,useTransition} from '@react-spring/web';
 import {useEffect,useRef,useState} from 'react';
+import {appendUniqueArticle,MAX_SPRING_ARTICLES,shouldRestoreAfterRemoval} from './article-policy';
 
 type Level='basic'|'business'|'advanced';
 type Article={id:string;title:string};
@@ -8,7 +9,7 @@ const seed:Article[]=[
   {id:'rss-2',title:'TypeScript 状态建模'}
 ];
 function useLocalReducedMotion(){
-  const [reduced,setReduced]=useState(false);
+  const [reduced,setReduced]=useState(()=>typeof window!=='undefined'&&window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   useEffect(()=>{
     const media=window.matchMedia('(prefers-reduced-motion: reduce)');
     const onChange=()=>setReduced(media.matches);
@@ -40,13 +41,14 @@ export default function SpringExample({level}:{level:Level}){
     config:{tension:240,friction:28}
   });
   function addArticle(){
+    if(articles.length>=MAX_SPRING_ARTICLES)return;
     const id=nextId.current++;
-    setArticles(old=>[...old,{id:'rss-'+id,title:'新增订阅内容 #'+id}]);
+    setArticles(old=>appendUniqueArticle(old,{id:'rss-'+id,title:'新增订阅内容 #'+id}));
   }
-  function removeArticle(id:string){
+  function removeArticle(id:string,button:HTMLButtonElement){
+    const ownedFocus=shouldRestoreAfterRemoval(document.activeElement===button);
     setArticles(old=>old.filter(item=>item.id!==id));
-    // The disappearing button cannot keep keyboard focus.
-    addRef.current?.focus();
+    if(ownedFocus)addRef.current?.focus();
   }
   return <section aria-label="React Spring 实际动画实验">
     <h2>{level==='basic'?'弹簧卡片':level==='business'?'阅读列表进出场':'动画偏好与快速操作'}</h2>
@@ -57,14 +59,14 @@ export default function SpringExample({level}:{level:Level}){
     </animated.div>
     {level!=='basic'&&<>
       <h3>动画列表 · stable keys</h3>
-      <div className="demo-controls"><button ref={addRef} type="button" onClick={addArticle}>添加一条新闻</button><button type="button" onClick={()=>setArticles(seed)}>恢复默认数据</button></div>
+      <div className="demo-controls"><button ref={addRef} type="button" disabled={articles.length>=MAX_SPRING_ARTICLES} onClick={addArticle}>添加一条新闻（上限 {MAX_SPRING_ARTICLES}）</button><button type="button" onClick={()=>setArticles(seed)}>恢复默认数据</button></div>
       <div style={{display:'grid',gap:9}}>
         {transitions((animatedStyle,item)=><animated.article key={item.id} style={{...animatedStyle,background:'#fff',border:'1px solid #dbe4d9',borderRadius:8,padding:12,display:'flex',gap:12,justifyContent:'space-between',alignItems:'center'}}>
-          <span>{item.title}</span><button type="button" onClick={()=>removeArticle(item.id)} aria-label={'移除 '+item.title}>移除</button>
+          <span>{item.title}</span><button type="button" onClick={event=>removeArticle(item.id,event.currentTarget)} aria-label={'移除 '+item.title}>移除</button>
         </animated.article>)}
       </div>
       <p role="status">逻辑上还存在 {articles.length} 条；离场动画元素随后卸载。</p>
     </>}
-    {level==='advanced'&&<p>键盘焦点在删除时回到“添加”按钮；列表 key 使用业务ID，动画配置只作用本演示，不写全局 Globals。</p>}
+    {level==='advanced'&&<p>仅在被删除的按钮实际持有焦点时转移至“添加”按钮；列表 key 使用业务ID，动画配置只作用本演示，不写全局 Globals。</p>}
   </section>;
 }

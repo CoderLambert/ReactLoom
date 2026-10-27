@@ -39,3 +39,7 @@ React hook 创建的 spring controller 由组件生命周期管理；无论切�
 - [useReducedMotion 机制](https://www.react-spring.dev/docs/utilities/use-reduced-motion)
 
 MIT 许可。
+
+
+## 键盘焦点与列表资源补丁（2026-10-27）
+初始`prefers-reduced-motion`读取matchMedia，避免先动画再停；列表限制12条并去重业务id，禁止无限量离场节点。删除按钮只有在自身确实持有document.activeElement时才恢复焦点到新增按钮，不得在其他元素持有焦点时抢走焦点。通过`article-policy.ts`独立检验身份、上限和焦点意图，真实spring/离场/焦点仍需浏览器回归。

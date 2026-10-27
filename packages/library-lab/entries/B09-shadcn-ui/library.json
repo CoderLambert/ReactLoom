@@ -79,7 +79,8 @@
       "sourceFiles": [
         "examples/example.tsx",
         "examples/demo.tsx",
-        "examples/ui/button.tsx"
+        "examples/ui/button.tsx",
+        "examples/archive-policy.ts"
       ],
       "capabilities": [
         "source-owned",
@@ -98,7 +99,8 @@
       "sourceFiles": [
         "examples/example.tsx",
         "examples/demo.tsx",
-        "examples/ui/button.tsx"
+        "examples/ui/button.tsx",
+        "examples/archive-policy.ts"
       ],
       "capabilities": [
         "source-owned",
@@ -117,7 +119,8 @@
       "sourceFiles": [
         "examples/example.tsx",
         "examples/demo.tsx",
-        "examples/ui/button.tsx"
+        "examples/ui/button.tsx",
+        "examples/archive-policy.ts"
       ],
       "capabilities": [
         "source-owned",

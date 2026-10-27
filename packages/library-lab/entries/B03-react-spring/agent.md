@@ -15,3 +15,5 @@
 
 ## 最小验收
 真实依赖构建、basic 切换、business 新增/删除离场、advanced 快速切换和 reduce-motion、键盘焦点、卸载后不保留监听。未实际执行时保持 NOT_RUN。官方：https://www.react-spring.dev/docs/components/use-transition
+
+**2026列表补充**：`article-policy.ts`将业务ID去重并限制12条；删除时仅被删按钮真正持有焦点才转到新增按钮。初次绘制前读取系统减动偏好，勿设置全局Globals。
