@@ -12,3 +12,10 @@ test('detects absent, duplicate, invalid and version-drifted package references'
  assert.match(results.errors.join('\n'),/metadata 7.0.0/);
  assert.match(results.errors.join('\n'),/missing unknown/);
 });
+
+test('SheetJS CE 0.20.3 must resolve to official tarball, not stale registry xlsx',()=>{
+ const sheetjs={entryId:'F05',packages:[{name:'xlsx',version:'0.20.3'}],demos:[{demoId:'basic'}]};
+ const official={devDependencies:{xlsx:'https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz'}};
+ assert.deepEqual(checkDependencyContract([sheetjs],official).errors,[]);
+ assert.match(checkDependencyContract([sheetjs],{dependencies:{xlsx:'0.20.3'}}).errors.join(','),/metadata 0.20.3/u);
+});

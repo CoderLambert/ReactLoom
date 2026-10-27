@@ -161,3 +161,14 @@ runCount：**5/24**。本次只向`feat/library-lab`集成，`main`和既有PR #
 - **后续**：公共离线readiness加入专属CI并产出独立artifact，跟踪剩余19条worker内容和合法依赖、PDF.js配对；有可执行pnpm10环境时优先生成真实锁文件并恢复frozen CI，执行受影响SDK与浏览器验收。未修改main、旧模板或PR #3；主PR #8保持Draft。
 
 runCount：**6 / 24**。
+
+## 平台持续开发第7轮（2026-10-27，北京时间）
+
+- **EF 分组集成**：审查 #32 共 15 个变更路径，均在 E12/E16/E17/F05 条目和 EF 进度范围内；因为 PR 为 Draft，REST merge 405，采用精确原始 blob 安全双亲非强推合并 `55ee60f3967ba652d3d3f3399ed9111ee55394b6`。GitHub 随后确认 #32 为 merged。内容：assistant-ui 正确取消线程运行、Video.js Blob URL commit 后回收、原生与 MSE HLS 错误清理、SheetJS 三列表头/范围/公式/输入校验。Worker 报告独立 Node 输入规则测试 7 PASS，但**并非真实 SheetJS SDK 测试**。
+- **新增公共代码**：`e7515a6` 补 C05/D02/D12/D14/D17 + E11/E12/E16/E17/E19/F05 共 11 个新增条目的运行时依赖（10 个）和开发依赖（3 个）。官方 SheetJS CE 0.20.3 指向 **https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz**，拒绝旧 npm registry `xlsx` 版本误映射；`package-source.mjs` 只生成严格受审查的可复制安装命令，`validate-dependencies.mjs` 使用同一个解析合同，DemoHost 展示准确来源。补包来源的纯 Node 定向测试与 TypeScript 声明文件。
+- **FFmpeg 核心交付边界**：`18f57b6` 新增 `scripts/prepare-ffmpeg-core.mjs`。默认 `BLOCKED`，不下载、不再分发 GPL 单线程 core。完成许可、编解码器、NOTICE 人工审查后才允许设置 `LIBRARY_LAB_FFMPEG_CORE_LICENSE_REVIEWED=true`，校验实际安装的 0.12.10 版本/许可证后拷贝本站同源 JS/WASM，生成 SHA-256 证据清单；只移除自己标识的旧产物，手工文件禁止覆盖。E19 真正 Worker/WASM 运行、跨浏览器和许可均尚需独立验收。
+- **根目录 Agent 索引纠偏**：`5673cb2` 同步此前两批实际合入的 CD 5 库和 EF 6 库到 `library-catalog.json` 和 `LIBRARY_CATALOG.md`。按最新实际条目元数据：**119 身份目录，111 内容及示例条目，333 个 basic/business/advanced 场景声明，8 条待接入**：C04、C08、C12、C13、C22、D13、D16、D21。场景数不是执行次数。
+- **真实验证**：在本轮独立 Node 22.16.0 本地测试副本运行 `node --test tests/package-source.test.mjs tests/validate-dependencies.test.mjs tests/prepare-ffmpeg-core.test.mjs`，**12 PASS、0 FAIL、0 SKIP**。范围仅为供应链字符串合同、目录依赖声明检查和 FFmpeg 核心 staging 的 mock 文件边界；不是在完整最新仓库验证依赖安装，也不是 FFmpeg SDK 或 SheetJS SDK。新增全局 TypeScript 声明尚未执行全仓 `tsc`，不称 PASS。11 条定向 package 声明逐条核对和官方 tarball 特例匹配；F06/F07 pdfjs-dist 6.4.299/6.3.289 仍冲突 #22。
+- **阻塞仍在**：本环境无法解析 npm 下载源、GitHub Actions 最近 run 40429548255 等执行在 runner 分配之前失败；真实 pnpm 锁文件、完整 TypeScript、Vite build、官方 SDK、Playwright 仍 **BLOCKED/NOT_RUN**，Issue #12 继续记录。不能手造锁文件或把静态校验当作生产通过。未修改 main、旧模板或 PR #3；主 PR #8 仍保持 Draft。
+
+**下一批**：继续接入 CD 余下 8 条 worker PR，并同步公共包版本和根索引；优先由 EF 修复 PDF.js #22 且同时升级源码/文档/测试；完善 frame/SW 隔离；有真实 pnpm10+Node22.18 环境时生成冻结锁文件并实际执行构建、六风险切片与浏览器验证，逐条写证据。下一次从最新 GitHub HEAD 恢复并核对独立分组状态。**runCount: 7 / 24**。
