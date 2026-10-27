@@ -32,3 +32,10 @@ F04 ExcelJS 更侧重 XLSX 样式/对象模型；F03 Papa Parse 更适合纯 CSV
 
 ## 执行证据
 本轮提交源码但当前没有真正解析 SheetJS 官方包并运行 `verify.mjs`。SDK/CLI NOT_RUN，完整构建 BLOCKED。只有实际执行后才能更新证据。Apache-2.0 CE。官方 https://docs.sheetjs.com/docs/getting-started/installation/frameworks/ 。
+
+
+## 受信任表头与工作簿公式边界（2026-10-27增强）
+
+演示用的导入器只接受 `channel / views / kind` 三列，顺序必须一致；工作表必须从 A1 开始，200 行上限，在解析时启用 `sheetRows` 并结合 `!fullref` 核对原始范围。不能只对 `sheet_to_json` 输出取几个字段——缺表头可能被 `String(undefined)` 伪装成合法业务数据，额外列会悄悄丢失。导入时开启 `cellFormula` 仅用于**检测并拒绝公式单元格**，不是执行公式。避免不可信工作簿的公式/宏、隐藏列带来的内容绕行。本约束适用于本次三列原型，不是通用 Excel 导入器。
+
+新增框架无关的 `examples/validation.mjs` 和 `examples/validation.test.mjs`。已在 Node v22.16.0 上实际运行后者 **7 PASS / 0 FAIL**，验证行模式、危险前缀、大小限制和重复频道；`examples/verify.mjs` 的真实 XLSX 公式/列结构检查仍需官方 `xlsx` 依赖安装后执行，不能把前述纯逻辑测试记为 SheetJS SDK PASS。输入2MiB限制只约束压缩前上传文件体积，不能作为对 ZIP bomb 的绝对防护：服务端处理仍需运行资源、超时和内存隔离。

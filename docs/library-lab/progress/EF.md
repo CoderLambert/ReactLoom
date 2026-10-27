@@ -331,3 +331,15 @@ runCount=6/24。本轮不把5库源代码和30+例子等同完整生产交付；
   - SheetJS CE `xlsx@0.20.3` — 只能按官方独立发行渠道核验 `https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz`，**不能误用过时 npm registry `xlsx`**；锁文件需由平台实际解析/固定完整性，Apache-2.0。
 - PLATFORM测试要求（**仅实际执行后填PASS**）：`node packages/library-lab/entries/F05-sheetjs/examples/verify.mjs`；`pnpm --filter @reactloom/library-lab catalog:check`、`typecheck`、`build`、`test:e2e`；播放/E19真实WASM和CSP/资源卸载的专项Chromium。
 - 后续需要PLATFORM合并此PR并安装上述依赖；EF 可以继续修复已接入条目的源码/文档问题，但不能越权把未跑的浏览器/官方SDK记为已验收。**runCount=7/24**。
+
+## 第八轮：EF 37条已覆盖后的跨库风险修正（2026-10-27）
+
+- 本轮从最新集成 `feat/library-lab@dfbaf71f111bd9f938ff5c25c34577ddb792b34d` 新建 `feat/library-lab-ef-wave8-hardening`；EF 第七轮六库 PR #30 已在本轮恢复时实际完成合入（merge commit `4ef64d7560ab2ff9adcfa40e91c406a85d9eec2d`），**没有重复创建六个库**，改为对四个高风险条目做真实源码纠错。仅写入授权的 E12/E16/E17/F05 条目和本文件，不触碰公共源码/锁文件/CI/main。
+- **E12 assistant-ui**：核对官方 Composer API 后发现 `ComposerPrimitive.Cancel` 取消的是撰写/编辑，不是正在生成的 thread run；改为 `useAui().thread.cancelRun()`，通过 `useAuiState(s=>s.thread.isRunning && s.thread.capabilities.cancel)` 管理停止按钮。保留离线 ChatModelAdapter 对 AbortSignal 的处理，未连接收费模型。
+- **E16 Video.js**：上批 `setUrl(next)` 前立即 `URL.revokeObjectURL(old)` 可能令尚未被 React 提交卸载的旧播放器瞬间失效。将旧 URL 放入退休队列，在 URL 更新提交后的 Effect 中撤销，卸载时同时释放现用和排队 URL；新增指南解释该竞态。
+- **E17 hls.js**：增加原生 HLS 分支对 `HTMLMediaElement.error` 的捕获（不假设原生播放产生 Hls.js ERROR）；fatal 后销毁 MSE 引擎并清理视频源、清单和码率。重新载入时解绑旧 onerror，generation 排除旧事件。外部 HLS 仍仅由点击触发。
+- **F05 SheetJS**：将三列业务验证拆入框架无关 `examples/validation.mjs`，显式拒绝缺列/多列、非文本、非法整数、控制字符、重复频道；保护 =,+,-,@ 前缀且归一化幂等。解析工作簿采用有限 `sheetRows`、原始表范围/严格表头检查、检测并拒绝公式单元格；真实包 verify 脚本新增畸形表、额外列和公式负例。保留 `xlsx@0.20.3` 仅使用官方 SheetJS CE 发行包的要求，不修改 lock。
+- **实际运行的测试**：Node v22.16.0 下 `node --test examples/validation.test.mjs` 共 **7 PASS / 0 FAIL**，仅覆盖不依赖 xlsx 的业务/安全边界。这一结果**不表示 SheetJS SDK PASS**。
+- **未运行/阻塞**：需要真实依赖安装的 `examples/verify.mjs`、E12/E16/E17 React/真实 SDK、完整 TypeScript/Vite build、Chromium/WebKit/HLS、FFmpeg WASM 仍 `NOT_RUN/BLOCKED`，不继承先前静态审查或历史研究 PASS。此轮未重试已知无 Runner / npm DNS 问题。
+- **PLATFORM 后续**：合入本修复 PR 后统一核实 package/peer、生成真实 pnpm 锁文件并运行真实构建；专测 E12 点击停止能实际触发 abort、E16 连续源切换不闪断/泄漏 Blob、E17 原生 HLS 错误与 fatal 后重载、F05 完整 `node packages/library-lab/entries/F05-sheetjs/examples/verify.mjs` 和恶意 XLSX/资源限额。压缩包2MiB限制不能代替 ZIP bomb 的进程/内存隔离。
+- EF 内容接入仍为 **37/37**（仅库条目有代码/指南/Agent手册），目标 SDK 和浏览器验收**没有新增通过**。继续检查剩余条目而不是冒充已全部测试；`runCount=8/24`。

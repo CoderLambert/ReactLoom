@@ -1,7 +1,7 @@
 import {useMemo} from 'react';
 import {
  AssistantRuntimeProvider,ComposerPrimitive,MessagePrimitive,
- ThreadPrimitive,useLocalRuntime,type ChatModelAdapter,
+ ThreadPrimitive,useLocalRuntime,useAui,useAuiState,type ChatModelAdapter,
 } from '@assistant-ui/react';
 
 type Level='basic'|'business'|'advanced';
@@ -11,6 +11,11 @@ function sleep(ms:number,signal:AbortSignal){return new Promise<void>((resolve,r
  const abort=()=>{clearTimeout(timer);signal.removeEventListener('abort',abort);reject(new DOMException('cancelled','AbortError'))};
  signal.addEventListener('abort',abort,{once:true});
 });}
+function StopResponse(){
+ const aui=useAui();
+ const canStop=useAuiState(s=>s.thread.isRunning && s.thread.capabilities.cancel);
+ return <button type="button" disabled={!canStop} onClick={()=>aui.thread.cancelRun()}>停止响应</button>;
+}
 function LocalPlayground({level}:{level:Level}){
  const adapter=useMemo<ChatModelAdapter>(()=>({
   async *run({messages,abortSignal}){
@@ -37,7 +42,7 @@ function LocalPlayground({level}:{level:Level}){
    <ComposerPrimitive.Root style={{display:'flex',gap:9,marginTop:12}}>
     <ComposerPrimitive.Input aria-label="向本地适配器提问" placeholder="输入内容后发送，数据不会离开浏览器…" style={{flex:1,minHeight:70}}/>
     <div style={{display:'flex',flexDirection:'column',gap:5}}><ComposerPrimitive.Send>发送</ComposerPrimitive.Send>
-     {level==='advanced'&&<ComposerPrimitive.Cancel>停止响应</ComposerPrimitive.Cancel>}
+     {level==='advanced'&&<StopResponse/>}
     </div>
    </ComposerPrimitive.Root>
   </ThreadPrimitive.Root>

@@ -37,3 +37,8 @@ E17 hls.js 解决 HLS 分段；E18 wavesurfer.js 提供音频波形；E19 ffmpeg
 
 ## 官方与授权
 https://videojs.org/docs/guides/installation/react 和 https://videojs.org/changelog/10.0.0 。Apache-2.0，播放器是真实包；SDK/浏览器测试尚未执行成功。
+
+
+## 视频源切换的异步渲染边界（补充）
+
+切换 Blob URL 时，不能在调用 `setUrl(next)` **之前**立即撤销旧 URL：React 可能尚未提交旧 Player 的卸载，旧浏览器媒体实例仍在使用该地址。当前 Demo 将旧 URL 加入待释放队列，等 `url` 更新后的 Effect（React commit 后）撤销；卸载时对当前与待释放 URL 全量清理。此修复是源码生命周期审查，尚未执行真实媒体浏览器测试。

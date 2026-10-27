@@ -63,7 +63,9 @@
         "examples/basic.mjs",
         "examples/business.mjs",
         "examples/advanced.mjs",
-        "examples/verify.mjs"
+        "examples/verify.mjs",
+        "examples/validation.mjs",
+        "examples/validation.test.mjs"
       ],
       "capabilities": [
         "node-process",
@@ -84,7 +86,9 @@
         "examples/basic.mjs",
         "examples/business.mjs",
         "examples/advanced.mjs",
-        "examples/verify.mjs"
+        "examples/verify.mjs",
+        "examples/validation.mjs",
+        "examples/validation.test.mjs"
       ],
       "capabilities": [
         "node-process",
@@ -105,7 +109,9 @@
         "examples/basic.mjs",
         "examples/business.mjs",
         "examples/advanced.mjs",
-        "examples/verify.mjs"
+        "examples/verify.mjs",
+        "examples/validation.mjs",
+        "examples/validation.test.mjs"
       ],
       "capabilities": [
         "node-process",

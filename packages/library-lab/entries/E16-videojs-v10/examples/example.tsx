@@ -8,10 +8,13 @@ export default function VideoJsExample({level}:{level:Level}){
  const [url,setUrl]=useState('');const [status,setStatus]=useState('未创建视频；不会自动访问外部资源');
  const [busy,setBusy]=useState(false);const generation=useRef(0);const current=useRef<string|null>(null);
  const recording=useRef<AbortController|null>(null);
+ const retiredUrls=useRef<string[]>([]);
  const update=(blob:Blob,id:number)=>{if(id!==generation.current)return;
-  const next=URL.createObjectURL(blob);if(current.current)URL.revokeObjectURL(current.current);
+  const next=URL.createObjectURL(blob);if(current.current)retiredUrls.current.push(current.current);
   current.current=next;setUrl(next);setStatus(`已加载本地素材：${(blob.size/1024).toFixed(1)} KiB`);};
- useEffect(()=>()=>{generation.current++;recording.current?.abort();if(current.current)URL.revokeObjectURL(current.current)},[]);
+ // Revoke previous Blob URLs only after React has committed the new player/source.
+ useEffect(()=>{const old=retiredUrls.current.splice(0);for(const value of old)URL.revokeObjectURL(value)},[url]);
+ useEffect(()=>()=>{generation.current++;recording.current?.abort();if(current.current)URL.revokeObjectURL(current.current);for(const old of retiredUrls.current)URL.revokeObjectURL(old);retiredUrls.current=[]},[]);
  async function build(variant:'light'|'dark'){
   recording.current?.abort();const controller=new AbortController();recording.current=controller;
   const id=++generation.current;setBusy(true);setStatus('正在录制原创 Canvas 片段…');
@@ -24,7 +27,7 @@ export default function VideoJsExample({level}:{level:Level}){
   if(!['video/webm','video/mp4'].includes(file.type)||file.size>MAX_FILE){setStatus('仅接受不超过8MiB的WebM/MP4');return}
   update(file,id);
  }
- function remove(){generation.current++;recording.current?.abort();recording.current=null;if(current.current){URL.revokeObjectURL(current.current);current.current=null}setUrl('');setBusy(false);setStatus('素材已移除')}
+ function remove(){generation.current++;recording.current?.abort();recording.current=null;if(current.current){retiredUrls.current.push(current.current);current.current=null}setUrl('');setBusy(false);setStatus('素材已移除')}
  return <section aria-label="Video.js v10真实播放器">
   <h2>{level==='basic'?'本地生成视频与播放器':level==='business'?'切换两段本地新闻片头':'本地视频导入、停止与销毁'}</h2>
   <p>使用稳定版 @videojs/react/video 的 VideoPlayer/VideoSkin/Video，而不是旧版 video.js@8。生成小型 WebM 只走 Canvas/MediaRecorder，不上传文件。</p>

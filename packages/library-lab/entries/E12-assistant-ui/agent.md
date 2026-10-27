@@ -8,3 +8,6 @@
 **最小验收**：不挂载Provider时故意失败用例；用户发送、流式渲染、取消、卸载、重进、IME 和键盘无障碍。SDK/typecheck/build/browser 全部需要独立实际证据。
 **关联**：E11 Streamdown流式文本、D07 Query请求缓存、F11 MSW网络场景矩阵。
 **出处**：https://www.assistant-ui.com/docs/runtimes/custom/local-runtime
+
+
+**取消语义警告**：不能用 `ComposerPrimitive.Cancel` 替代 `aui.thread.cancelRun()`。参考 `examples/example.tsx` 中 `StopResponse` 的 `useAui/useAuiState`，按 `thread.isRunning && thread.capabilities.cancel` 控制。Adapter 遇到 abortSignal 必须终止后续 yield；真实 DOM 需在点击停止后验证流不再追加。官方：https://www.assistant-ui.com/docs/guides/state-outside-the-thread 。
