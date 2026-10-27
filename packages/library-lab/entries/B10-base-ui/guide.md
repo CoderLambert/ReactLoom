@@ -54,3 +54,8 @@ import {Checkbox} from '@base-ui/react/checkbox';
 - [npm @base-ui/react](https://www.npmjs.com/package/@base-ui/react)
 
 MIT，无付费资源与远程接口。
+
+
+## 本轮修复：锁定权限下的父级混合态
+
+原实现总以三个权限计算父级 `checked/indeterminate`，锁定管理权限后只剩两个可选项，即使两项全选也永远显示混合态，父级再次点击无法取消。本轮通过 `examples/permission-policy.ts` 以**当前可选权限集合**计算父级状态和 `n/n 可选`，在状态更新层拒绝锁定 `manage`，而不仅依赖控件 disabled。进入非 advanced 模式不继承隐藏锁定开关。使用真实 Base UI Checkbox，`tests/permission-policy.test.mts` 为纯规则检查；Space/label/FormData 仍需真实 SDK 浏览器验证。

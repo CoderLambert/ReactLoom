@@ -61,6 +61,7 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/channel-policy.ts",
         "examples/combobox.css",
         "examples/demo.tsx"
       ],
@@ -80,6 +81,7 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/channel-policy.ts",
         "examples/combobox.css",
         "examples/demo.tsx"
       ],
@@ -99,6 +101,7 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/channel-policy.ts",
         "examples/combobox.css",
         "examples/demo.tsx"
       ],

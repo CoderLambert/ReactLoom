@@ -22,3 +22,8 @@
 实际SDK键盘 Enter/Space/Arrow/Escape/typeahead；勾选项不关闭菜单，Radio互斥，禁用删除无法执行，焦点返回 Trigger；Tab卸载 Portal 清理、触屏/小窗口定位。用真实原语测试，不 mock @radix-ui SDK 后标 PASS。验证当前为 NOT_RUN，依赖安装和真实浏览器须由 PLATFORM 补验。
 
 许可 MIT，官方 https://www.radix-ui.com/primitives/docs/components/dropdown-menu
+
+
+## Agent 迁移边界：本轮修复：菜单动作驱动真实本地列表
+
+旧菜单的筛选、排序、删除大多只替换状态提示，不改变可见数据。现由 `examples/feed-policy.ts` 持有确定性可迁移规则：置顶优先、时间/热度排序、仅未读/有收藏筛选、锁定删除防越权。三层示例仍使用真实 Radix Root、Portal、CheckboxItem、RadioItem、Submenu；列表按钮可键盘选择，选择不同筛选时同步选中第一条可见订阅，删除会更新实际本地集合而不访问后端。 `tests/feed-policy.test.mts` 只证明纯数据规则，Portal/Escape/焦点返回需要浏览器验证。

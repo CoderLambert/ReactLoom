@@ -22,3 +22,8 @@
 实际导入和构建、Chromium 中文合成输入、Up/Down/Enter/Escape、禁用项、FormData ID、异步竞态与卸载、键盘焦点和读屏。若 SDK 未安装或Runner不可用，填 NOT_RUN/BLOCKED，不可把静态语法/fixture结果写成 PASS。
 
 官方 https://react-aria.adobe.com/ComboBox ，源码 https://github.com/adobe/react-spectrum
+
+
+## Agent 迁移边界：本轮修复：输入与已确认 ID 的双状态契约
+
+旧受控 ComboBox 在筛选后可能提交旧 `selectedKey`；按分类“技术”检索与组件只按名称的二次默认筛选也可能不一致。现在 `examples/channel-policy.ts` 显式按名称/分类过滤，ComboBox 的默认过滤返回 true 避免双重筛除；异步结果仅在查询与当前文本一致、加载结束后可见。 `onSelectionChange` 同步 ID 与显示名称，用户编辑文本会使不再匹配的 ID 失效，提交时再次确认 enabled 项 ID、文本与真实 FormData 一致；组合输入期拒绝提交。240ms 延迟仅为**本地模拟查询**，非服务端 API。`tests/channel-policy.test.mts` 是纯规则测试；IME/键盘/Portal/表单提交仍需真实 React Aria 浏览器验证。

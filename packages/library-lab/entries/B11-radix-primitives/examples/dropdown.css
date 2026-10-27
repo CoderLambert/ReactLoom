@@ -14,3 +14,9 @@
 .rl-radix-danger {color: #a43f32}
 .rl-radix-switch {display: inline-flex; gap: 8px; margin-bottom: 14px}
 @media (prefers-reduced-motion: reduce) {.rl-radix-menu {animation: none!important; transition: none!important}}
+
+.rl-radix-feeds {display:grid;gap:6px;margin:10px 0 14px;max-height:230px;overflow-y:auto}
+.rl-radix-feeds button {text-align:left;border:1px solid #cbd8ce;border-radius:6px;padding:8px;background:#fff;color:#294936;cursor:pointer}
+.rl-radix-feeds button[aria-pressed="true"] {border-color:#246348;background:#e3f0e5;font-weight:600}
+.rl-radix-feeds button:focus-visible {outline:3px solid #a1cba9;outline-offset:2px}
+@media(max-width:400px){.rl-radix-workspace{padding:10px}.rl-radix-menu{min-width:180px}}
