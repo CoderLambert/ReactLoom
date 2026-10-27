@@ -373,3 +373,9 @@ runCount=6/24。本轮不把5库源代码和30+例子等同完整生产交付；
 - **本轮实际 Node 测试**：Node v22.16.0，隔离运行 `F03/tests/policy.test.mjs` 与 `F04/examples/row-policy.test.mjs` **7 PASS、0 FAIL**。两套纯策略均不导入第三方SDK，绝不计为 `papaparse` / `exceljs` SDK PASS。
 - **尚待PLATFORM执行**：安装当前声明依赖后 `node --test packages/library-lab/entries/F03-papaparse/tests/node-scenarios.test.mjs`、`node packages/library-lab/entries/F04-exceljs/examples/verify.mjs`，随后 `catalog:check`、TypeScript/Vite build、Chromium 文件选择/卸载竞态。GitHub CI在先前无Runner；未重试已知DNS/无Runner故障。SDK/浏览器仍NOT_RUN，build仍BLOCKED。
 - 新源代码被公共生成器读取前应检查 `sourceFiles` 的完整性与真实依赖解析，不能从静态路径检查升级PASS。37/37 EF 条目继续保持已有内容覆盖；本轮是纠错/强化而非新增库。`runCount=11/24`。下一步优先依据PLATFORM的真实构建反馈修复TypeScript/SDK兼容性，若环境依然不可用则检查其它高风险导入/资源生命周期条目。
+
+### 第十一轮交付索引
+
+- Draft PR [#43](https://github.com/CoderLambert/ReactLoom/pull/43)，目标 `feat/library-lab`；关键源码提交 `772139aae64dfdfde41bb86c187f9436ad75fd8f`。该提交修复了F03导入抽取时遗漏的演示fixtures；PR审查应采用最新head。
+- `git compare` 对比集成 `0733f237ddfbc4ab3204c531255f386c46abec27`：18个变更文件均在EF授权范围。实际纯策略Node用例7 PASS；第三方SDK真实运行仍 NOT_RUN。
+- Issue [#7](https://github.com/CoderLambert/ReactLoom/issues/7) 已留有本轮代码、验证和下步执行要求。PLATFORM集成后，若本分支需要下一轮代码修复，应从更新的集成head另建wave分支，不重写已合入PR。
