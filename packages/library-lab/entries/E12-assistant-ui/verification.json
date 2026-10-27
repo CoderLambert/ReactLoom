@@ -1,7 +1,7 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "已编写真正第三方 SDK 调用；npm依赖未在本轮安装/运行，不得视为通过"
+    "note": "Node离线fixture策略不导入assistant-ui SDK；真实@assistant-ui/react LocalRuntime尚未运行"
   },
   "build": {
     "status": "BLOCKED",
@@ -9,6 +9,6 @@
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "尚未获得真实浏览器/媒体/Worker执行证据"
+    "note": "真实Thread/Composer输入、Unicode流式渲染、停止run、卸载后AbortSignal仍待Chromium验收"
   }
 }

@@ -59,6 +59,8 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/reply-policy.mjs",
+        "examples/reply-policy.d.mts",
         "examples/demo.tsx"
       ],
       "capabilities": [
@@ -76,6 +78,8 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/reply-policy.mjs",
+        "examples/reply-policy.d.mts",
         "examples/demo.tsx"
       ],
       "capabilities": [
@@ -93,7 +97,10 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/reply-policy.mjs",
+        "examples/reply-policy.d.mts",
+        "examples/demo.tsx",
+        "examples/reply-policy.test.mjs"
       ],
       "capabilities": [
         "offline-adapter",

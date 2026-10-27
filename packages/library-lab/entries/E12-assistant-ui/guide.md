@@ -35,3 +35,7 @@ E11 Streamdown 可以作为逐条消息的 Markdown 渲染器；D07 TanStack Que
 ## 取消运行与取消编辑不是同一件事（2026-10-27复核）
 
 真正中止流式助手回复须调用 `useAui().thread.cancelRun()`，可用 `useAuiState(s => s.thread.isRunning && s.thread.capabilities.cancel)` 控制按钮禁用状态。`ComposerPrimitive.Cancel` 负责取消**编辑/消息撰写**，不能拿来实现“停止模型回复”。进阶示例现通过 `StopResponse` 调用 thread action，Adapter 必须响应 abortSignal。参见官方 [State Outside the Thread](https://www.assistant-ui.com/docs/guides/state-outside-the-thread) 和 [Composer](https://www.assistant-ui.com/docs/primitives/composer)。该源码修正尚需真实 SDK/浏览器运行检查。
+
+## 第22批：消息输入真正驱动确定性回复
+
+此前三层示例只返回固定话术，`ChatModelAdapter.run({messages})` 并未读取用户内容。本批新增 `examples/reply-policy.mjs`：仅读取**最新一条user消息**的text片段，忽略assistant/tool内容与非文本part，去除控制字符并限160个Unicode字符。响应明确标记本地fixture，business 不假装真实抓取RSS。流式 `async *run` 通过 `cumulativeChunks` 逐次yield完整累积文本（不是delta），继续检查 `abortSignal`。Node策略测试 `node --test entries/E12-assistant-ui/examples/reply-policy.test.mjs` 不加载assistant-ui，SDK/真实DOM取消仍未验证。

@@ -3,6 +3,7 @@ import {
  AssistantRuntimeProvider,ComposerPrimitive,MessagePrimitive,
  ThreadPrimitive,useLocalRuntime,useAui,useAuiState,type ChatModelAdapter,
 } from '@assistant-ui/react';
+import {makeLocalReply,cumulativeChunks} from './reply-policy.mjs';
 
 type Level='basic'|'business'|'advanced';
 function sleep(ms:number,signal:AbortSignal){return new Promise<void>((resolve,reject)=>{
@@ -19,10 +20,8 @@ function StopResponse(){
 function LocalPlayground({level}:{level:Level}){
  const adapter=useMemo<ChatModelAdapter>(()=>({
   async *run({messages,abortSignal}){
-   const output=level==='basic'?'这是本地适配器的确定性回复，不访问任何模型。':
-    level==='business'?'新闻研究任务：先去重 RSS，再记录来源和抓取时间；不把 Mock 数据当真实新闻。':
-    '边界实验：运行中可点击停止，取消信号由 runtime 传给适配器；不要在组件卸载后继续向旧线程推送。';
-   const segments=level==='basic'?[output]:[output.slice(0,20),output.slice(0,50),output];
+   const output=makeLocalReply(messages,level);
+   const segments=level==='basic'?[output]:cumulativeChunks(output,level==='advanced'?18:24);
    for(const part of segments){
     if(abortSignal.aborted) return;
     try{await sleep(level==='advanced'?450:220,abortSignal)}catch{ return; }
