@@ -21,3 +21,6 @@
 ## 固定槽位回归合同
 固定项不仅自己不能拖，也不能被其他项目跨越后挤走。必须在业务 reorder/onDragEnd/onDrop 的最终提交处检查 `canReorderAroundPinned(items, from, to)`；不可只禁用 handle 或仅检查 source/target。拖拽与键盘上下按钮调用同一业务约束，按钮用它计算 disabled。
 提取 `examples/pinned-order.ts` 与单测 `tests/pinned-order.test.mjs`。检查双向跨越、索引边界、非固定段内操作与撤销；真实 SDK/browser 仍须单独验收。旧验证证据应随源码指纹变化降级为 NOT_RUN。
+
+
+**wave20追加**：迁移时必须一并复制`examples/pinned-order.ts`中的`reduceOrder`和`isFreshDrop`。所有键盘/拖动入口应以同一Reducer更新状态，拖动开始记录revision、level和业务id顺序，结束时拒绝失效Drop；撤销/重置立刻废止当前拖动。规则测试见`tests/order-history.test.mts`，真实SDK/浏览器仍NOT_RUN。
