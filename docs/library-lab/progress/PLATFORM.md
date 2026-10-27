@@ -210,3 +210,19 @@ runCount：**8 / 24**。
 **下轮：**一旦 Node>=22.18/pnpm10 与网络或Runner恢复，真实生成lock并保留 `--frozen-lockfile`，对全部导入条目先做分组型检查与构建；重点测试 C13 Frappe 文档级监听器风险、F06/F07 PDF Worker、F11 MSW origin、D16 SW 构建及 D21 Pagefind 原生索引，处理真实失败。仅因缺安装而重复跑相同失败不计进度；可以继续补隔离runner、文档质量和Agent迁移测试。
 
 runCount：**9 / 24**。PR #8 继续 Draft；main/旧模板/PR #3 未修改，未公开部署。
+
+## 集成增量：AB/CD/EF 条目加固与两级目录加载（2026-10-27）
+
+- AB PR [#41](https://github.com/CoderLambert/ReactLoom/pull/41) 经逐文件范围审查后 squash 合入 `98e0f9d9b20a372bfd52616c0573cb4218b0da03`：A01 ECharts 后台暂停与减动策略、A06 React Flow 有向无环连接守卫与删除关联边、B18 cmdk 中文 IME 尾随 Enter 防误触。worker 声明的 19 项 Node 纯函数测试不能算 ECharts/React Flow/cmdk 真实浏览器通过。
+- CD PR [#42](https://github.com/CoderLambert/ReactLoom/pull/42) squash 合入 `74100474aae54166dae9e8ce0620c20b7d2e2cae`：C01 RSS URL 规范化/草稿变化取消旧提交，D03 p-limit 真实 SDK 定向测试源，D07 TanStack Query 租户切换异步结果所有权；未运行完整官方 SDK 验证。
+- EF PR [#43](https://github.com/CoderLambert/ReactLoom/pull/43) squash 合入 `1fe213f97464a9eff2c4036f093d7a736e23b651`：F03 CSV 严格表头/非法列/公式防护与真实 Papa Parse 解析路径、F04 ExcelJS 行规则和安全合计；新增 Node 契约单测，不代表 ExcelJS 生产 I/O 已验收。
+- 平台提交 `1231d040048e00417490588b9da4f6dcc24c1b5e`：生成轻量首页 `catalog-index.json`、按库 `raw/<ID>/detail.json`，保留原 `catalog.json` 兼容离线流程；提供纯逻辑校验、源码指纹和路由一致性校验。
+- 平台提交 `1c5b0b359110c32fa5d6603a32a4925f21d26f2a`：首页只请求精简索引，进入详情才读取该库完整元数据；导航 abort 陈旧 fetch，详情失败支持重试，Playwright 增加首页不拉取119份详情的回归用例（**尚未运行浏览器**）。
+- 后续平台纠偏：详情 Effect 依赖改为完整稳定的 `summary,key,entryId,attempt`；README 更新真实结构、未完成项和查看约束。
+
+**本轮实测边界**：在隔离的**旧版119条目录小型副本** `/mnt/data/library-lab-integration-8/testapp` 执行 `node --test tests/catalog-index.test.mjs tests/generate.test.mjs tests/catalog.test.mjs` → **26 PASS、0 FAIL、0 SKIP**；该副本不是 GitHub 最新完整代码，也不包含其所有SDK示例，因此仅证明本次目录协议、生成器、输入检查的离线纯逻辑。旧副本 `node scripts/generate.mjs --check` → 119 entries、6 loaders；这里的6 loaders**不代表集成分支真实Demo数量**。当前完整 GitHub tree（truncated=false）列出 119 library.json、119份四件套目录文件，集成分支延续 **357个场景声明**；0个SDK/浏览器PASS由本次任务新增。
+
+**CI 证据**：当前 head `1c5b0b359110c32fa5d6603a32a4925f21d26f2a` 的 [主 CI 40446175862](https://github.com/CoderLambert/ReactLoom/actions/runs/40446175862) 七个 job 和 [Library Lab CI 40446175858](https://github.com/CoderLambert/ReactLoom/actions/runs/40446175858) 两个 job 均 `runner_id=0,steps=[]`，未启动任何测试命令。原因尚未证实，不归咎于代码或账单。宿主无法解析 npm registry，根 `pnpm-lock.yaml` 不生成伪造 integrity。真实依赖安装、TS7 typecheck、Vite 构建、SDK/Worker/PDF/MSW 和 Chromium E2E 继续 **BLOCKED／NOT_RUN**。
+
+**下一批**：有可用 Node >=22.18 / pnpm10 registry 或 CI runner 时先真实解析 lock 并恢复 frozen，之后以实际构建错误为依据修复未验证的 API/peer 版本；聚焦六大高风险条目、C13 全局监听、F06/F07 PDF Worker、F11 MSW origin 与 D16 Workbox。页面新型拆包路径增加生产预览验证，不以离线测试替代网络和构建。主 PR #8 保持 Draft，main/旧模板/PR #3 未改。
+

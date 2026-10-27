@@ -30,7 +30,7 @@ export function useCatalogDetail(summary?:CatalogEntry) {
         if(!controller.signal.aborted)setState({key,error:String(cause)});
       });
     return()=>controller.abort();
-  },[entryId,slug,fingerprint,summary?.group,attempt]);
+  },[summary,key,entryId,attempt]);
   const current=state.key===key?state:undefined;
   return {
     entry:current?.entry,

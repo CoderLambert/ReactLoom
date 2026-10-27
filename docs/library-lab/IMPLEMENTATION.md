@@ -67,3 +67,7 @@ AB Draft #29 通过双亲合并集成A09 Excalidraw/A10 tldraw/B05 Rive；软件
 ## 第9轮 — 源码与文档目录覆盖完整（2026-10-27）
 
 五项 worker PR #35/#36/#37/#38/#39 合入独立集成分支，其中 C/D 最后8条内容与三层示例已补齐。**119/119条具备源文件和指南、357个场景声明，但零个条目因本轮而新增实际SDK PASS**。根目录目录文件同步、固定 Node CLI 运行器追加 D16/D21，公共依赖元数据集中更新。质量门禁 LL08 只能在真实SDK/浏览器/构建获得证据后最终关闭，LL10仍未完成。CI实际runner_id=0，无构建日志；根锁文件未解析，不得将静态覆盖率冒充应用可运行。
+
+## 全量源码收录后的公共平台增量（2026-10-27）
+
+AB #41、CD #42、EF #43 三条高价值质量 PR 已审核合入集成分支，持续修复 ECharts 动态资源、React Flow DAG、cmdk 输入法，RHF/TanStack Query 异步所有权，以及 PapaParse/ExcelJS 导入安全。公共平台由一次请求所有119份重型 `catalog.json` 改为初始轻量 `catalog-index.json` 加库级按需 `raw/<ID>/detail.json`，绑定原源码指纹并取消旧请求；保留完整目录供离线 Agent。依赖安装/生产构建/SDK/Chromium 尚无真实执行证据，LL08、LL10 仍保持未验收。进度和精确SHA见 `progress/PLATFORM.md`。

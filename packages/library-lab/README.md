@@ -19,7 +19,7 @@ pnpm --filter @reactloom/library-lab test:e2e
 源码、guide.md、agent.md 与相关关系按 `entries/<ID>-<slug>` 组织。运行 `catalog:generate` 生成原文、源码哈希、动态loader和根索引。主站不自动运行下载大型SDK，不把未接入条目伪装成真实效果。
 
 当前实现：119条目录与分类搜索（含移动端）、四Tab深链接、安全Markdown原文/目录与按需 Shiki 高亮、源码SHA-256清单、显式启动/停止、CLI可复现命令提示、sourceFingerprint 证据失效判定、局部错误边界。已有部分条目接入真实SDK调用源码（含非Web MSW Node入口），准确数量以源目录及生成索引为准；构建/SDK/浏览器运行状态必须以实际验证证据为准。
-待完善：尚未接入条目的完整垂直示例与指南、Worker/SW独立 runner、真实依赖锁文件、CI与浏览器/性能证据。文档图片仅允许本地审核过的 raster 资产。
+待完善：真实依赖安装和冻结锁文件、目标 SDK 与浏览器执行证据、特殊 Worker/SW 独立 runner、许可证复核、CI 与性能验收。119 条源文件及指南的存在不等于运行通过。文档图片仅允许本地审核过的 raster 资产。
 
 ## 面向 Agent 的离线检索
 
@@ -33,6 +33,8 @@ node packages/library-lab/scripts/find-library.mjs --group E --limit 10
 ```
 
 输出定位到 `library.json`、`agent.md`、`guide.md`、`examples/` 和 `verification.json`。条目已收录或源码已存在都不代表真实 SDK 测试通过。离线平台测试命令 `pnpm --filter @reactloom/library-lab test` **不加载 SDK**；SDK 专项测试必须单独执行 `test:sdk`，二者不可混淆。
+
+首页只读取生成的 `public/catalog-index.json`（119条轻量目录，包含用途与检索标签，**不携带所有第三方 SDK、运行配置和完整验证证据**）。进入某一个库时，才读取 `public/raw/<ID>/detail.json`；详情根据索引中的条目编号、slug、分组和 `sourceFingerprint` 再次验证，避免旧版 CDN 缓存与新版入口混合。跨库导航会取消未完成的请求，并提供失败重试。为不破坏离线工具，生成器仍保留完整版 `catalog.json`。页面四个 Tab 的文档与真实 Demo 维持独立懒加载。
 
 源码面板使用 `source-index.json` 提供摘要与路径，用户选择后只下载该文件；浏览器支持 Web Crypto 时会核对 SHA-256。无需为查看某个 Demo 把该库所有源码一次下载。
 
