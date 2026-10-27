@@ -1,10 +1,11 @@
 import {useEffect,useRef,useState} from 'react';
 import gsap from 'gsap';
-import {progressPercent, shouldPlayTimeline} from './timeline-policy';
+import {progressPercent, shouldPlayTimeline, shouldPublishProgress} from './timeline-policy';
 type Props={level:'basic'|'business'|'advanced'};
 export default function GsapTimelineWorkshop({level}:Props){
   const scope=useRef<HTMLDivElement>(null);
   const timeline=useRef<gsap.core.Timeline|null>(null);
+  const displayedProgress=useRef(-1);
   const [generation,setGeneration]=useState(0);
   const [progress,setProgress]=useState(0);
   const [paused,setPaused]=useState(false);
@@ -27,8 +28,17 @@ export default function GsapTimelineWorkshop({level}:Props){
     const host=scope.current;if(!host)return;
     const context=gsap.context(()=>{
       gsap.set('.gsap-lab-item',{clearProps:'all'});
-      if(reduce){setProgress(100);return;}
-      const tl=gsap.timeline({paused:document.hidden,onUpdate:()=>setProgress(progressPercent(tl.progress()))});
+      const startProgress=reduce?100:0;
+      displayedProgress.current=startProgress;
+      setProgress(startProgress);
+      if(reduce)return;
+      const tl=gsap.timeline({paused:document.hidden,onUpdate:()=>{
+        const next=progressPercent(tl.progress());
+        if(shouldPublishProgress(displayedProgress.current,next)){
+          displayedProgress.current=next;
+          setProgress(next);
+        }
+      }});
       tl.fromTo('.gsap-lab-item',
         {autoAlpha:0,y:level==='basic'?12:32},
         {autoAlpha:1,y:0,duration:.48,ease:'power2.out',stagger:level==='basic'?0:.12})

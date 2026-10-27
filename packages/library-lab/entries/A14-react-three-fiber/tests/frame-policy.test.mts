@@ -18,3 +18,9 @@ test('refuses invalid speed and clamps long frame gaps', () => {
   assert.equal(boundedFrameDelta(0.02), 0.02);
   assert.equal(boundedFrameDelta(Infinity), 0);
 });
+test('intersection and document visibility jointly stop the frame loop', () => {
+  const visibleDocumentAndCanvas = true;
+  const offscreenCanvas = false;
+  assert.equal(shouldRunFrames({...defaults, visible: visibleDocumentAndCanvas && offscreenCanvas}), false);
+  assert.equal(shouldRunFrames({...defaults, visible: visibleDocumentAndCanvas && true}), true);
+});

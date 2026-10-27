@@ -17,3 +17,9 @@ test('removing a button that did not own focus must not steal focus', () => {
   assert.equal(focusDestinationAfterRemoval(true,3),'add');
   assert.equal(focusDestinationAfterRemoval(true,MAX_SPRING_ARTICLES),'reset');
 });
+test('deleting from a full list enables Add after commit instead of focusing disabled Add', () => {
+  assert.equal(focusDestinationAfterRemoval(true,MAX_SPRING_ARTICLES - 1),'add');
+});
+test('unfocused removals never move focus, even near capacity', () => {
+  assert.equal(focusDestinationAfterRemoval(false,MAX_SPRING_ARTICLES - 1),'none');
+});
