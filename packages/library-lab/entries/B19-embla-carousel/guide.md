@@ -54,3 +54,9 @@ B01 Motion 可动画单张卡片内部的文字或按钮，但不能与 Embla �
 ## 动态DOM提交后重算与恢复（第10轮）
 
 此前 `setSlides(originals); emblaApi.scrollTo(0)` 在同一事件执行：`scrollTo`可能读取旧DOM的snap，之后的 `reInit` 又使位置错乱。现在把重置请求记为 `resetEpoch`，在React DOM提交后的effect里 `reInit`，再 `scrollTo(0, true)`；每次重置只应用一次，不会在之后追加卡片时再次跳回首张。`slideSignature`基于稳定ID而不是仅看数组长度，重排/替换同长度内容也会重算。`allocateSlideId` 单调分配新ID（最多24张教学卡片），避免删除恢复后重复ID；`boundedSnap`将删除卡片后的过期索引限制为实际snap范围。导航在 API 初始化前禁用。Node策略测试不证明触控/scrollTo行为，必须在真实 Embla v8 和Chromium验证。
+
+## wave21：真实吸附点、键盘语义与减少动画
+
+`containScroll:trimSnaps` 的吸附点个数可能小于卡片数，不能把选中 snap index 直接读作“第N张”。本版由实际 `emblaApi.scrollSnapList().length` 记录吸附位置总数，在 `select/reInit` 同步。卡片使用group/幻灯片语义，区域自身可Tab聚焦并用左右箭头调用官方v8滚动API；事件仅在Viewport本身是target时消费，不劫持内部控件。
+
+动态侦测 `prefers-reduced-motion`，开启时对 `scrollPrev/scrollNext` 传 `jump=true`，跳过惯性滚动。需真实Chromium检验loop/resize/移动设备触摸/读屏/卸载的准确行为；纯规则测试不能证明Embla SDK运行。
