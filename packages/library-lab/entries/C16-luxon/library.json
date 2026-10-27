@@ -50,7 +50,11 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/wall-time.mjs",
+        "examples/wall-time.d.mts",
+        "examples/wall-time-policy.mjs",
+        "examples/wall-time-policy.d.mts"
       ],
       "capabilities": [],
       "description": "严格解析与本地化显示"
@@ -63,7 +67,11 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/wall-time.mjs",
+        "examples/wall-time.d.mts",
+        "examples/wall-time-policy.mjs",
+        "examples/wall-time-policy.d.mts"
       ],
       "capabilities": [],
       "description": "DateTime + Interval 日历排程"
@@ -76,7 +84,11 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/wall-time.mjs",
+        "examples/wall-time.d.mts",
+        "examples/wall-time-policy.mjs",
+        "examples/wall-time-policy.d.mts"
       ],
       "capabilities": [],
       "description": "春秋 DST 与 getPossibleOffsets"

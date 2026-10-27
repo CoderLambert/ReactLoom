@@ -50,3 +50,8 @@ DateTime.fromISO(value,{zone}) 用显式 zone 解析当地日期；toUTC() 保�
 node:test 直接使用 luxon SDK，检查无效日期、Interval DST 23/25小时与 getPossibleOffsets()。SDK/build/browser没有运行则必须保留 NOT_RUN。实际命令见 tests/sdk.test.mjs，严格不得用 mock 库记 PASS。
 
 官方：https://moment.github.io/luxon/api-docs/index.html
+
+
+## 进阶补充：不存在与重复的本地时刻
+
+`examples/wall-time.mjs` 是实际演示调用的独立 Luxon 适配器。先由纯 `wall-time-policy.mjs` 校验严格的 `YYYY-MM-DDTHH:mm`，再由真实 `DateTime.fromISO(...,{zone})` 解释为本地时间；解析后回查墙上时间，阻止 Luxon 对春季 DST 缺失的 `2026-03-08T02:30` 自动前移成 03:30。秋季的 `2026-11-01T01:30` 必须借助 `getPossibleOffsets()` 和用户明确选择 `-04:00` 或 `-05:00`，才可形成 UTC instant。这个教学合约刻意拒绝歧义，不默默采用运行机猜测。纯策略 Node 检查不验证 Luxon SDK；SDK 需要独立安装运行。

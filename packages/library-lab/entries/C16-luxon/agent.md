@@ -16,3 +16,8 @@ examples/example.tsx 的 parseCalendarDay、dailyWindow、ambiguousFallback。ex
 先 node --test entries/C16-luxon/tests/sdk.test.mjs，复核春秋 DST 与回拨；再类型检查、构建、浏览器。没有实际安装/运行时为 NOT_RUN。对应 C14/C15 的 API 不是 Luxon API，不得照搬。
 
 官方：https://moment.github.io/luxon/api-docs/index.html
+
+
+## 强制消歧代码路径
+
+不能只调用 `DateTime.fromISO(wall,{zone})` 后检查 `isValid`：Luxon 对春季 DST 缺失时间可能平移，对秋季重复时刻可能选一个偏移。复制 `examples/wall-time.mjs` 和 `wall-time-policy.mjs`，必须保留墙上时间回查、`getPossibleOffsets` 和可显式选择的偏移；对未知偏移报错，不能自动选择第一项。纯 Node 和真实 Luxon SDK 测试分项记录。

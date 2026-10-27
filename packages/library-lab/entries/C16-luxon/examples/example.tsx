@@ -1,5 +1,6 @@
 import {useState} from 'react';
 import {DateTime, Interval} from 'luxon';
+import {resolveWallTime} from './wall-time.mjs';
 
 type Level = 'basic'|'business'|'advanced';
 type Zone = 'America/New_York'|'Asia/Shanghai'|'UTC';
@@ -28,6 +29,8 @@ export function ambiguousFallback() {
 export default function LuxonWorkshop({level}:{level:Level}) {
  const [civil,setCivil]=useState('2026-03-07');
  const [zone,setZone]=useState<Zone>('America/New_York');
+ const [wall,setWall]=useState('2026-11-01T01:30');
+ const [selectedOffset,setSelectedOffset]=useState('');
  const [result,setResult]=useState('');
  const [error,setError]=useState('');
  function run() {
@@ -38,7 +41,8 @@ export default function LuxonWorkshop({level}:{level:Level}) {
      ? {schedule:dailyWindow(civil,zone),note:'日历天+1，跨DST不等于固定加86400000ms'}
      : {spring:dailyWindow('2026-03-07','America/New_York'),
         fall:dailyWindow('2026-10-31','America/New_York'),
-        ambiguous:ambiguousFallback()};
+        ambiguous:ambiguousFallback(),
+        resolved:resolveWallTime(wall,'America/New_York',selectedOffset||undefined)};
    setResult(JSON.stringify(output,null,2));setError('');
   } catch(e){setError(e instanceof Error?e.message:String(e));setResult('');}
  }
@@ -49,6 +53,23 @@ export default function LuxonWorkshop({level}:{level:Level}) {
     {level!=='advanced'&&<label>时区 <select aria-label="时区" value={zone} onChange={e=>setZone(e.target.value as Zone)}>
       {zones.map(z=><option key={z}>{z}</option>)}</select></label>}
    </div>
+   {level==='advanced'&&<div className="demo-controls">
+     <label>纽约本地时间
+       <input aria-label="纽约本地时间" value={wall}
+         onChange={e=>{setWall(e.target.value);setResult('');setError('');}}/>
+     </label>
+     <label>显式 UTC 偏移
+       <select aria-label="显式 UTC 偏移" value={selectedOffset}
+         onChange={e=>{setSelectedOffset(e.target.value);setResult('');setError('');}}>
+         <option value="">未选择（回拨必须拒绝）</option>
+         <option value="-04:00">-04:00（先发生）</option>
+         <option value="-05:00">-05:00（后发生）</option>
+       </select>
+     </label>
+     <button type="button" onClick={()=>{setWall('2026-03-08T02:30');setSelectedOffset('');setResult('');}}>
+       模拟春季不存在的本地 02:30
+     </button>
+   </div>}
    <button type="button" onClick={run}>使用 Luxon 运行</button>
    {error&&<p role="alert">{error}</p>}
    {result&&<pre data-testid="luxon-result">{result}</pre>}
