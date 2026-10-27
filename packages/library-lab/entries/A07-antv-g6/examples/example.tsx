@@ -1,5 +1,6 @@
 import {Graph} from '@antv/g6';
 import {useEffect,useRef,useState} from 'react';
+import {measuredGraphWidth} from './graph-sizing';
 
 type Level='basic'|'business'|'advanced';
 type Step={id:string;label:string};
@@ -35,19 +36,28 @@ export default function G6Example({level}:{level:Level}){
     if(!host)return;
     let disposed=false;
     setStatus('正在建立真实 G6 Graph');
+    const initialWidth=measuredGraphWidth(host.getBoundingClientRect().width) ?? 330;
     const graph=new Graph({
       container:host,
-      width:Math.max(360,Math.floor(host.getBoundingClientRect().width)),
+      width:initialWidth,
       height:330,
       data:dataset(level,extended),
       node:{type:'circle',style:{size:42,fill:'#d9e7df',stroke:'#326b57',lineWidth:2}},
       edge:{type:'line',style:{stroke:'#6c9380',lineWidth:2,endArrow:true}},
       behaviors:['drag-canvas','zoom-canvas']
     });
+    let resizeFrame=0;
+    let appliedWidth=initialWidth;
     const observer=new ResizeObserver(entries=>{
       if(disposed)return;
-      const width=entries[0]?.contentRect.width??0;
-      if(width>0)graph.setSize(Math.max(360,Math.floor(width)),330);
+      const width=measuredGraphWidth(entries[0]?.contentRect.width??0);
+      if(width===null||width===appliedWidth)return;
+      cancelAnimationFrame(resizeFrame);
+      resizeFrame=requestAnimationFrame(()=>{
+        if(disposed||width===appliedWidth)return;
+        graph.setSize(width,330);
+        appliedWidth=width;
+      });
     });
     // StrictMode also runs setup/cleanup twice; each effect owns exactly one graph.
     void graph.render().then(()=>{
@@ -60,6 +70,7 @@ export default function G6Example({level}:{level:Level}){
     return()=>{
       disposed=true;
       observer.disconnect();
+      cancelAnimationFrame(resizeFrame);
       graph.destroy();
     };
   },[level,extended,revision]);
@@ -72,7 +83,7 @@ export default function G6Example({level}:{level:Level}){
       {level==='advanced'&&<button type="button" onClick={()=>setRevision(value=>value+1)}>重新创建图实例</button>}
     </div>
     <p role="status">{status}</p>
-    <div ref={hostRef} style={{height:330,width:'100%',background:'#f7faf6',border:'1px solid #d8e4d9',borderRadius:10}} aria-label="拖动及缩放的关系图画布"/>
+    <div ref={hostRef} role="img" style={{height:330,width:'100%',background:'#f7faf6',border:'1px solid #d8e4d9',borderRadius:10}} aria-label="拖动及缩放的关系图画布"/>
     <h3>图数据的无障碍文本等价物</h3>
     <ol>{data.nodes.map(node=><li key={node.id}>{node.data.label}（{node.id}）</li>)}</ol>
     <p>有向边：{data.edges.map(edge=>edge.source+' → '+edge.target).join('、')}</p>

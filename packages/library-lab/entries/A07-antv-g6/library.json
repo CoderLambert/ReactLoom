@@ -55,6 +55,7 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/graph-sizing.ts",
         "examples/demo.tsx"
       ],
       "capabilities": [
@@ -73,6 +74,7 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/graph-sizing.ts",
         "examples/demo.tsx"
       ],
       "capabilities": [
@@ -91,6 +93,7 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/graph-sizing.ts",
         "examples/demo.tsx"
       ],
       "capabilities": [

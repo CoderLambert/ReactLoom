@@ -49,3 +49,8 @@ B01 Motion 可动画单张卡片内部的文字或按钮，但不能与 Embla �
 
 一手资料：https://www.embla-carousel.com/docs/v8/get-started/react
 许可证 MIT；不包含第三方图片。
+
+
+## 动态DOM提交后重算与恢复（第10轮）
+
+此前 `setSlides(originals); emblaApi.scrollTo(0)` 在同一事件执行：`scrollTo`可能读取旧DOM的snap，之后的 `reInit` 又使位置错乱。现在把重置请求记为 `resetEpoch`，在React DOM提交后的effect里 `reInit`，再 `scrollTo(0, true)`；每次重置只应用一次，不会在之后追加卡片时再次跳回首张。`slideSignature`基于稳定ID而不是仅看数组长度，重排/替换同长度内容也会重算。`allocateSlideId` 单调分配新ID（最多24张教学卡片），避免删除恢复后重复ID；`boundedSnap`将删除卡片后的过期索引限制为实际snap范围。导航在 API 初始化前禁用。Node策略测试不证明触控/scrollTo行为，必须在真实 Embla v8 和Chromium验证。

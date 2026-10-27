@@ -1,5 +1,6 @@
-import {useEffect, useMemo, useState} from 'react';
+import {useEffect, useMemo, useRef, useState} from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
+import {allocateSlideId, boundedSnap} from './slide-policy';
 
 type Level = 'basic' | 'business' | 'advanced';
 type Slide = {id: number; title: string; description: string; category: string};
@@ -13,6 +14,10 @@ const originals: Slide[] = [
 export default function EmblaExample({level}: {level: Level}) {
   const [slides, setSlides] = useState<Slide[]>(originals);
   const [selected, setSelected] = useState(0);
+  const [resetEpoch, setResetEpoch] = useState(0);
+  const appliedReset = useRef(0);
+  const lastAllocated = useRef(4);
+  const slideSignature = slides.map(item => item.id).join(',');
   const [canPrevious, setCanPrevious] = useState(false);
   const [canNext, setCanNext] = useState(true);
   const options = useMemo(() => ({
@@ -25,7 +30,7 @@ export default function EmblaExample({level}: {level: Level}) {
   useEffect(() => {
     if (!emblaApi) return;
     const sync = () => {
-      setSelected(emblaApi.selectedScrollSnap());
+      setSelected(boundedSnap(emblaApi.selectedScrollSnap(),emblaApi.scrollSnapList().length));
       setCanPrevious(emblaApi.canScrollPrev());
       setCanNext(emblaApi.canScrollNext());
     };
@@ -39,12 +44,24 @@ export default function EmblaExample({level}: {level: Level}) {
   }, [emblaApi]);
 
   useEffect(() => {
-    emblaApi?.reInit();
-  }, [emblaApi, slides.length]);
+    if (!emblaApi) return;
+    // Wait until React has committed the new slides before recalculating snaps.
+    emblaApi.reInit();
+    if (appliedReset.current !== resetEpoch) {
+      appliedReset.current = resetEpoch;
+      emblaApi.scrollTo(0, true);
+    }
+    setSelected(boundedSnap(emblaApi.selectedScrollSnap(),emblaApi.scrollSnapList().length));
+    setCanPrevious(emblaApi.canScrollPrev());
+    setCanNext(emblaApi.canScrollNext());
+  }, [emblaApi, slideSignature, resetEpoch]);
 
   function append() {
-    setSlides(items => [...items, {
-      id: Math.max(0, ...items.map(item => item.id)) + 1,
+    if (slides.length >= 24) return;
+    const id=allocateSlideId(lastAllocated.current,slides.map(item=>item.id));
+    lastAllocated.current=id;
+    setSlides(items => items.length >= 24 ? items : [...items, {
+      id,
       title: '新的学习专题',
       description: '列表状态更新后需让引擎重新计算滚动吸附点。',
       category: '动态内容',
@@ -67,21 +84,21 @@ export default function EmblaExample({level}: {level: Level}) {
       </div>
     </div>
     <div style={{display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center', marginTop: 15}}>
-      <button type="button" disabled={!canPrevious} onClick={() => emblaApi?.scrollPrev()}>
+      <button type="button" disabled={!emblaApi || !canPrevious} onClick={() => emblaApi?.scrollPrev()}>
         ← 上一张
       </button>
-      <button type="button" disabled={!canNext} onClick={() => emblaApi?.scrollNext()}>
+      <button type="button" disabled={!emblaApi || !canNext} onClick={() => emblaApi?.scrollNext()}>
         下一张 →
       </button>
       <output aria-live="polite">当前第 {Math.min(selected + 1, slides.length)} 张 · 共 {slides.length} 张</output>
     </div>
     {level === 'advanced' && <div style={{display: 'flex', gap: 12, flexWrap: 'wrap', marginTop: 12}}>
-      <button type="button" onClick={append}>添加卡片</button>
+      <button type="button" disabled={slides.length >= 24} onClick={append}>添加卡片</button>
       <button type="button" disabled={slides.length === 1}
         onClick={() => setSlides(items => items.length > 1 ? items.slice(0, -1) : items)}>移除最后一张</button>
       <button type="button" onClick={() => {
         setSlides(originals);
-        emblaApi?.scrollTo(0);
+        setResetEpoch(epoch => epoch + 1);
       }}>恢复默认卡片</button>
     </div>}
     <p style={{fontSize: 12, color: '#597062', marginTop: 14}}>

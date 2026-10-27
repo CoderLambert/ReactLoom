@@ -17,3 +17,7 @@
 **可执行命令**：`pnpm --filter @reactloom/library-lab catalog:check`、`typecheck`、`build`，并在真实浏览器运行对应Demo。缺SDK依赖不可标PASS。
 
 **官方来源**：https://github.com/leeoniya/uPlot 。
+
+### 第10轮回归门槛
+
+滚动时间轴 `setData(data)` 应重算自动尺度，不要把固定静态图例上的 `resetScales=false` 直接搬到移动窗口。`examples/stream-policy.ts` 是暂停规则事实源：后台永远不采样、减少动态默认暂停、显式恢复不绕过页面隐藏；监听 visibilitychange 与媒体查询必须在卸载时对称释放。Node 单测不是 uPlot Canvas 验收。
