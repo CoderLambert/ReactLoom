@@ -1,6 +1,7 @@
 import {useEffect, useRef, useState} from 'react';
 import {NuqsAdapter} from 'nuqs/adapters/tanstack-router';
 import {parseAsInteger, parseAsString, useQueryState} from 'nuqs';
+import {deriveSearchView, sanitizeQuery} from './url-policy.mjs';
 
 type Props={level:'basic'|'business'|'advanced'};
 type Feed={id:string;name:string;group:'tech'|'business'};
@@ -20,12 +21,8 @@ function QueryWorkshop({level}:Props){
  const composing=useRef(false);
  // Browser back/forward changes nuqs state; keep the editable draft synchronized.
  useEffect(()=>{if(!composing.current)setDraft(query);},[query]);
- const normalizedGroup=group==='tech'||group==='business'?group:'all';
- const matches=feeds.filter(item=>(normalizedGroup==='all'||item.group===normalizedGroup)&&item.name.toLowerCase().includes(query.toLowerCase()));
- const pageCount=Math.max(1,Math.ceil(matches.length/2));
- const safePage=Math.max(1,Math.min(pageCount,Number.isFinite(page)?page:1));
- const pageItems=matches.slice((safePage-1)*2,safePage*2);
- const commit=(value:string)=>{void setQuery(value||null);void setPage(null);};
+ const {safeQuery,safeGroup,matches,pageCount,safePage,pageItems}=deriveSearchView({level,query,group,page},feeds);
+ const commit=(value:string)=>{const clean=sanitizeQuery(value);void setQuery(clean||null);void setPage(null);};
  return <section aria-label="nuqs 实际URL状态示例">
   <h2>{level==='basic'?'字符串查询与 URL':level==='business'?'RSS筛选与分页':'push/replace 与错误参数'}</h2>
   <p>使用真实 nuqs parser、hook 和 TanStack Router 适配器；参数使用 ll_c19_ 前缀，不覆盖当前页面的 tab/example。</p>
@@ -34,18 +31,18 @@ function QueryWorkshop({level}:Props){
    onCompositionEnd={event=>{composing.current=false;commit(event.currentTarget.value);}}
    onChange={event=>{setDraft(event.target.value);if(!composing.current)commit(event.target.value);}}/>
   </label>
-  {level!=='basic'&&<label>分组 <select aria-label="分组筛选" value={normalizedGroup}
+  {level!=='basic'&&<label>分组 <select aria-label="分组筛选" value={safeGroup}
    onChange={event=>{void setGroup(event.target.value==='all'?null:event.target.value);void setPage(null);}}>
    <option value="all">全部</option><option value="tech">技术</option><option value="business">商业</option>
   </select></label>}
   <button type="button" onClick={()=>{setDraft('');void setQuery(null);void setPage(null);void setGroup(null);}}>清除实验参数</button></div>
-  <p>已解析：query={query||'（空）'}, page={safePage}, group={normalizedGroup}</p>
+  <p>已解析：query={safeQuery||'（空）'}, page={safePage}, group={safeGroup}</p>
   <ul aria-label="筛选结果">{(level==='basic'?matches:pageItems).map(item=><li key={item.id}>{item.name} · {item.group}</li>)}</ul>
   {!matches.length&&<p role="status">没有匹配的订阅</p>}
   {level!=='basic'&&<div className="demo-controls">
    <button type="button" disabled={safePage<=1} onClick={()=>void setPage(safePage-1)}>上一页</button>
    <span>第 {safePage} 页</span>
-   <button type="button" disabled={safePage*2>=matches.length} onClick={()=>void setPage(safePage+1)}>下一页</button>
+   <button type="button" disabled={safePage>=pageCount} onClick={()=>void setPage(safePage+1)}>下一页</button>
   </div>}
   {level==='advanced'&&<><p>本模式翻页使用 push，使浏览器返回可以恢复此前页码；搜索仍 replace，避免每个按键新增历史条目。</p><p>试着在地址栏将 ll_c19_page 改为非法文本：parser 会使用默认值，业务仍需限制页码范围。</p></>}
  </section>;

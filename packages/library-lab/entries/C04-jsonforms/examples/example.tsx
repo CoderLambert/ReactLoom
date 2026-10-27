@@ -2,23 +2,11 @@ import {useCallback, useEffect, useRef, useState} from 'react';
 import {JsonForms} from '@jsonforms/react';
 import {vanillaRenderers, vanillaCells} from '@jsonforms/vanilla-renderers';
 import type {ErrorObject} from 'ajv';
+import {subscriptionSchema, toSubscriptionPayload, validateSubmission, toServerError, type Subscription} from './submission-policy.mjs';
 
 // 入门 / RSS 订阅设置 / 409、取消与防旧响应覆盖，共用同一真实 SDK。
 type Level = 'basic' | 'business' | 'advanced';
-type Subscription = {name: string; feedType: 'rss' | 'manual'; url: string; enabled: boolean};
 const initial: Subscription = {name:'Frontend Weekly',feedType:'rss',url:'https://example.org/feed.xml',enabled:true};
-export const subscriptionSchema = {
-  type:'object', additionalProperties:false,
-  required:['name','feedType'],
-  properties:{
-    name:{type:'string',minLength:2,maxLength:60,title:'订阅名称'},
-    feedType:{type:'string',enum:['rss','manual'],title:'订阅类型'},
-    url:{type:'string',minLength:8,maxLength:200,title:'RSS 地址'},
-    enabled:{type:'boolean',title:'启用订阅'}
-  },
-  if:{properties:{feedType:{const:'rss'}},required:['feedType']},
-  then:{required:['url']}
-};
 const uiSchema = {
   type:'VerticalLayout',
   elements:[
@@ -37,12 +25,6 @@ const basicUi = {type:'VerticalLayout',elements:[
   {type:'Control',scope:'#/properties/enabled'}
 ]};
 
-export function toSubscriptionPayload(data: Subscription) {
-  // UI 隐藏不等于数据删除。手动渠道绝不能将旧 url 继续送到服务器。
-  return data.feedType==='rss'
-    ? {name:data.name.trim(),feedType:'rss',url:data.url.trim(),enabled:data.enabled}
-    : {name:data.name.trim(),feedType:'manual',enabled:data.enabled};
-}
 function abortableDelay(ms:number,signal:AbortSignal) {
   return new Promise<void>((resolve,reject)=>{
     if(signal.aborted){reject(new DOMException('Aborted','AbortError'));return;}
@@ -60,6 +42,7 @@ export default function JsonFormsExample({level}:{level:Level}) {
   const request=useRef<AbortController|null>(null);
   const generation=useRef(0);
   const dataRef=useRef<Subscription>({...initial});
+  const composing=useRef(false);
   const [basic,setBasic]=useState({name:'Library Lab',enabled:true});
   useEffect(()=>()=>{generation.current++;request.current?.abort();},[]);
   const onDataChange=useCallback(({data:nextData,errors:validation}: {data:Subscription;errors:ErrorObject[]})=>{
@@ -80,19 +63,21 @@ export default function JsonFormsExample({level}:{level:Level}) {
     setErrors(validation?.length??0);
   },[]);
   async function submit() {
+    if(composing.current){setStatus('请先完成中文输入法选词，再提交');return;}
     generation.current++;const id=generation.current;
     request.current?.abort();const controller=new AbortController();request.current=controller;
     setSaving(true);setServerErrors([]);setStatus('正在保存到内存模拟服务…');
     try{
       await abortableDelay(level==='advanced'?500:160,controller.signal);
       if(id!==generation.current)return;
-      const payload=toSubscriptionPayload(data);
-      if(payload.name.toLowerCase()==='duplicate'){
-        const serverError:ErrorObject={instancePath:'/name',schemaPath:'#/server/uniqueName',keyword:'errorMessage',params:{},message:'该订阅名已存在（模拟 HTTP 409）'};
-        setServerErrors([serverError]);setStatus('HTTP 409：服务端字段错误已回填');return;
+      const payload=toSubscriptionPayload(dataRef.current);
+      const invalid=validateSubmission(payload);
+      if(invalid){
+        setServerErrors([toServerError(invalid.field,invalid.message)]);
+        setStatus('HTTP 422：模拟服务端字段错误已回填');return;
       }
-      if(payload.feedType==='rss'&&!/^https:\/\//i.test(payload.url)){
-        setStatus('HTTP 422：演示服务端策略仅接受 HTTPS RSS');return;
+      if(payload.name.toLowerCase()==='duplicate'){
+        setServerErrors([toServerError('name','该订阅名已存在（模拟 HTTP 409）')]);setStatus('HTTP 409：服务端字段错误已回填');return;
       }
       setStatus('保存成功：仅内存模拟响应，未发起真实网络请求。');
     }catch(error){
@@ -106,7 +91,7 @@ export default function JsonFormsExample({level}:{level:Level}) {
     <p role="status">客户端 Schema 错误数：{errors}</p>
     <pre>{JSON.stringify(basic,null,2)}</pre>
   </section>;
-  return <section aria-label="JSON Forms 订阅配置">
+  return <section aria-label="JSON Forms 订阅配置" onCompositionStart={()=>{composing.current=true;}} onCompositionEnd={()=>{composing.current=false;}}>
     <h2>{level==='business'?'RSS 订阅配置':'服务器错误、竞态和取消'}</h2>
     <p>切换 manual 后地址输入会隐藏；提交时由明确的 payload 策略删除 url，隐藏 UI 本身不会清空数据。</p>
     <JsonForms schema={subscriptionSchema} uischema={uiSchema} data={data}
@@ -116,7 +101,7 @@ export default function JsonFormsExample({level}:{level:Level}) {
     <div className="demo-controls">
       <button type="button" disabled={saving||errors>0} onClick={()=>void submit()}>保存内存草稿</button>
       <button type="button" disabled={!saving} onClick={()=>{generation.current++;request.current?.abort();request.current=null;setSaving(false);setStatus('已取消，旧结果不会回写');}}>取消进行中的操作</button>
-      <button type="button" onClick={()=>{generation.current++;request.current?.abort();setSaving(false);dataRef.current={...initial};setData({...initial});setErrors(0);setServerErrors([]);setStatus('已重置当前示例');}}>重置</button>
+      <button type="button" onClick={()=>{generation.current++;request.current?.abort();request.current=null;setSaving(false);dataRef.current={...initial};setData({...initial});setErrors(0);setServerErrors([]);setStatus('已重置当前示例');}}>重置</button>
     </div>
     <p role="status">{status}</p><details><summary>查看最终 payload</summary><pre>{JSON.stringify(toSubscriptionPayload(data),null,2)}</pre></details>
     {level==='advanced'&&<p>将名称改为 duplicate 触发模拟 409；保存期间取消或重置，验证旧请求没有资格更新界面。生产环境必须由服务器重新校验和鉴权。</p>}

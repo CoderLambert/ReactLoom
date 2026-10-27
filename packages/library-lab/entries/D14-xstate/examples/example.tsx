@@ -1,5 +1,6 @@
 import {useEffect, useRef, useState} from 'react';
 import {setup, createActor, assign, type ActorRefFrom} from 'xstate';
+import {isValidRejection, normalizeRejectionReason, MAX_REJECTION_REASON_LENGTH} from './review-policy.mjs';
 
 type Level = 'basic'|'business'|'advanced';
 type Props = {level: Level};
@@ -10,9 +11,12 @@ type ReviewContext = {retries:number; reason:string};
 
 export const reviewMachine = setup({
   types: {context: {} as ReviewContext, events: {} as ReviewEvent},
-  guards: {hasRetryBudget: ({context}) => context.retries < 2},
+  guards: {
+    hasRetryBudget: ({context}) => context.retries < 2,
+    hasRejectionReason: ({event}) => isValidRejection(event),
+  },
   actions: {
-    saveReason: assign({reason: ({event}) => event.type === 'REJECT' ? event.reason : ''}),
+    saveReason: assign({reason: ({event}) => event.type === 'REJECT' ? normalizeRejectionReason(event.reason) : ''}),
     incrementRetries: assign({retries: ({context}) => context.retries + 1, reason: ''}),
     clearReview: assign({retries: 0, reason: ''}),
   },
@@ -24,7 +28,7 @@ export const reviewMachine = setup({
     draft: {on: {SUBMIT: 'reviewing'}},
     reviewing: {on: {
       APPROVE: 'published',
-      REJECT: {target: 'rejected', actions: 'saveReason'},
+      REJECT: {target: 'rejected', guard: 'hasRejectionReason', actions: 'saveReason'},
     }},
     rejected: {on: {
       RETRY: {target: 'reviewing', guard: 'hasRetryBudget', actions: 'incrementRetries'},
@@ -59,8 +63,8 @@ export default function XStateExample({level}: Props) {
       <button type="button" disabled={view.state!=='draft'} onClick={()=>dispatch({type:'SUBMIT'})}>提交审核</button>
       <button type="button" disabled={view.state!=='reviewing'} onClick={()=>dispatch({type:'APPROVE'})}>批准发布</button>
       {level!=='basic'&&<>
-        <label>拒绝原因<input value={reason} onChange={e=>setReason(e.target.value)} /></label>
-        <button type="button" disabled={view.state!=='reviewing'||!reason.trim()}
+        <label>拒绝原因<input value={reason} maxLength={MAX_REJECTION_REASON_LENGTH} onChange={e=>setReason(e.target.value)} /></label>
+        <button type="button" disabled={view.state!=='reviewing'||!isValidRejection({type:'REJECT',reason})}
           onClick={()=>dispatch({type:'REJECT',reason:reason.trim()})}>驳回</button>
         <button type="button" disabled={view.state!=='rejected'||view.retries>=2}
           onClick={()=>dispatch({type:'RETRY'})}>重试审核</button>

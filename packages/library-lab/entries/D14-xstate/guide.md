@@ -39,3 +39,6 @@ import {setup, createActor, assign} from 'xstate';
 - https://www.npmjs.com/package/xstate
 
 MIT。
+
+## 守卫必须约束程序事件
+React 按钮的 disabled 无法阻止其他调用者执行 actor.send。现在 XState `reviewing.REJECT` 事件使用来自 `examples/review-policy.mjs` 的 guard：空白、缺失、非字符串及超过 200 Unicode 码点的拒绝原因都不改变状态；保存前 trim 原因。新增纯 Node 策略测试及真实 XState 的 guard 回归源码。纯 Node PASS 不等于 Actor SDK PASS，须安装 `xstate@5.33.3` 运行测试并进行浏览器多轮重试/重置验证。

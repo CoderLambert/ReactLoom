@@ -61,7 +61,9 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/submission-policy.mjs",
+        "examples/submission-policy.d.mts"
       ],
       "description": "真实 SDK 入门交互"
     },
@@ -73,7 +75,9 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/submission-policy.mjs",
+        "examples/submission-policy.d.mts"
       ],
       "description": "订阅中心业务场景"
     },
@@ -85,7 +89,9 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/submission-policy.mjs",
+        "examples/submission-policy.d.mts"
       ],
       "description": "竞态、错误与边界条件"
     }

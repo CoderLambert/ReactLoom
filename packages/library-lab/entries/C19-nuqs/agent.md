@@ -17,3 +17,5 @@ Node 真正 import `nuqs/server` 完成 parser 断言；Chromium 确保深链接
 
 ## 关联
 TanStack Router 原生 typed search 是替代；D07 TanStack Query 管服务器缓存；C01 RHF 管输入草稿。官方 https://nuqs.dev/docs/adapters 。
+
+一并迁移 `examples/url-policy.mjs` 与声明，避免隐藏 URL group 造成基础模式暗中过滤。当前越界页码仅钳制 UI，不强行规范化地址栏；生产 Router 的 search 所有权需要一致，不能在 render 内写历史栈。

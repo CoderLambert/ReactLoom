@@ -14,3 +14,12 @@ test('real Ajv validates conditional rss URL and required name',()=>{
  assert.equal(validate({name:'demo',kind:'manual'}),true);
  assert.equal(validate({name:'demo',kind:'rss',url:'https://example.org/rss'}),true);
 });
+
+import {subscriptionSchema,toSubscriptionPayload} from '../examples/submission-policy.mjs';
+test('real Ajv validates the same conditional JSON Forms UI schema',()=>{
+ const validate=new Ajv({allErrors:true}).compile(subscriptionSchema);
+ assert.equal(validate({name:'Manual',feedType:'manual',url:'',enabled:true}),true);
+ assert.equal(validate({name:'RSS',feedType:'rss',url:'http://invalid.test/rss',enabled:true}),false);
+ assert.equal(validate({name:'RSS',feedType:'rss',url:'https://example.org/rss',enabled:true}),true);
+ assert.equal('url' in toSubscriptionPayload({name:'Manual',feedType:'manual',url:'https://example.org/rss',enabled:true}),false);
+});

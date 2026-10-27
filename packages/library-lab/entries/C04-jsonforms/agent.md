@@ -18,3 +18,6 @@
 
 ## 来源与状态
 官方 https://jsonforms.io/docs/integrations/react/；当前仅提交真实包 import 的源码和定向测试，不代表 SDK/构建/Chromium PASS。优先查 verification.json 与运行时指纹。
+
+## 新增迁移要点
+必须一起复制 `examples/submission-policy.mjs`、`.d.mts` 与 React 示例。切换为 manual 后的旧 URL 不能作为客户端错误，也不能继续出现在 payload。对 /name 的409、/url 的422错误按 `additionalErrors` 回填。中文输入法选词期间不发起提交，编辑后旧请求无权回写。服务端不可信 URL 还需内网 SSRF 检查。

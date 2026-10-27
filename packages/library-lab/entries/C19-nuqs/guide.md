@@ -35,3 +35,6 @@ pnpm add nuqs@2.10.1
 `tests/sdk.test.mjs` 直接 import `nuqs/server` 验证 parser/serializer；此轮未执行，且 Node 单测不足以证明 TanStack Router 集成。浏览器 E2E、React19 类型和 URL 历史由 PLATFORM 统一跑。MIT 许可。
 
 官方 https://nuqs.dev/docs/adapters 与 https://github.com/47ng/nuqs 。
+
+## 隐藏的旧参数与深链接
+`examples/url-policy.mjs` 负责显示层的唯一筛选派生规则：basic 模式必须忽略 business/advanced 遗留的隐藏分组；非法、负数、非安全整数和越界页码只在显示时裁剪，不将旧参数意外 push 入历史栈。关键词移除控制字符并限制 80 个 Unicode 码点。它既不是 nuqs 适配器验证，也不是服务端 ACL。真正浏览器返回、IME、Tab URL 保留另做 E2E。
