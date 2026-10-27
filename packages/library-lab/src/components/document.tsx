@@ -4,6 +4,7 @@ import remarkGfm from 'remark-gfm';
 import rehypeSanitize from 'rehype-sanitize';
 import HighlightCode from './highlight-code';
 import {extractDocumentHeadings,resolveDocumentUrl,readLimitedMarkdownResponse} from '../lib/document-utils.mjs';
+import {requestGeneratedResource} from '../lib/resource-fetch.mjs';
 
 type Props={entryId:string; kind:'guide'|'agent'; available:boolean};
 
@@ -36,7 +37,7 @@ export default function Document({entryId,kind,available}:Props){
     const controller=new AbortController();
     setText('');setError('');setLoading(true);
     if(!available){setLoading(false);return()=>controller.abort();}
-    fetch(url,{signal:controller.signal}).then(readLimitedMarkdownResponse).then(body=>{if(!controller.signal.aborted){setText(body);setLoading(false);}})
+    requestGeneratedResource(url,readLimitedMarkdownResponse,{signal:controller.signal}).then(body=>{if(!controller.signal.aborted){setText(body);setLoading(false);}})
       .catch(caught=>{if(!controller.signal.aborted){setError(String(caught));setLoading(false);}});
     return()=>controller.abort();
   },[url,available,retry]);
