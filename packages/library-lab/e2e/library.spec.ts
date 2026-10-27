@@ -170,3 +170,19 @@ test('production source viewer rejects a byte-count mismatch without exposing co
  await expect(page.getByRole('button',{name:'复制源码'})).toBeDisabled();
  await expect(page.locator('.source-viewer .hash')).toHaveCount(0);
 });
+
+
+test('Markdown Setext TOC anchors match rendered headings, with fenced decoys excluded',async({page})=>{
+ const ticks=String.fromCharCode(96).repeat(3);
+ const body=['Overview','========','Setup','------',ticks+'md',
+  '## Hidden heading',ticks+' not a closing fence','## Hidden too',ticks,
+  '## Setup'].join('\n');
+ await page.route('**/raw/C20/guide.md',route=>route.fulfill({status:200,contentType:'text/markdown',body}));
+ await page.goto('/libraries/clsx?tab=docs');
+ const toc=page.getByRole('navigation',{name:'当前文档目录'});
+ await expect(toc.getByRole('link',{name:'Setup',exact:true})).toHaveCount(2);
+ await expect(toc.getByRole('link',{name:/Hidden/u})).toHaveCount(0);
+ await toc.getByRole('link',{name:'Setup',exact:true}).nth(1).click();
+ await expect(page).toHaveURL(/#setup-1$/u);
+ await expect(page.locator('h2#setup-1')).toBeVisible();
+});
