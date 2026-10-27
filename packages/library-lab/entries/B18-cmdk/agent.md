@@ -28,3 +28,9 @@ document 永久绑定 Ctrl+K、不同命令使用相同 value、模糊搜索结�
 ## 必须迁移的键盘守卫
 
 `examples/example.tsx` 依赖 `examples/keyboard-policy.ts`；快捷键只在本 Demo 生命周期中注册。关闭面板时不拦截其他编辑器 Ctrl/Cmd+K；打开后允许同快捷键关闭。IME candidate 的 compositionend → keydown Enter → keyup Enter 期间，必须抑制“确认候选”被 cmdk 误识别为提交命令。Node纯函数测试不能替代真实操作系统中文输入法E2E。
+
+
+## wave19 真实动作逻辑
+
+迁移时一起复制 `examples/command-state.ts`。业务语义现在在本地 reducer 中实际落地，不是只改 lastAction 提示。将其换成生产授权服务时需要重新实现服务端鉴权与异步错误；当前“模拟刷新”不访问网络、“生成本地引用”不调用剪贴板。禁用动作不得通过命令执行通道绕过。
+
