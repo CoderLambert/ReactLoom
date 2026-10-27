@@ -29,3 +29,7 @@ E16 Video.js播放视频，E17 hls.js处理HLS分段，E19 ffmpeg.wasm转换媒�
 
 ## 官方与验证
 <https://github.com/katspaugh/wavesurfer.js/releases>、<https://www.npmjs.com/package/wavesurfer.js>，BSD-3-Clause，8.0.3。真实SDK/浏览器测试尚未运行，不能把代码编写当验收。
+
+## Wave16 会话边界
+
+三层示例按level重新挂载 `WaveformSession`：切换时销毁旧波形、撤销 Blob URL、重置倍速/时间/播放状态并重新加载原创WAV。`playPause`异步错误只可更新仍为当前的WaveSurfer实例。真实音频播放与StrictMode资源验收尚未运行。

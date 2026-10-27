@@ -38,3 +38,7 @@ https://github.com/video-dev/hls.js 、https://github.com/video-dev/hls.js/relea
 ## 故障和原生播放分支（补充）
 
 原生 HLS（典型 Safari）不生成 Hls.js ERROR 事件；必须监听 HTMLMediaElement 的 `error` 并展示网络/解码错误。MSE 模式发生 fatal 时销毁 Hls 实例、卸载 source、清空清单画质，并保留可见错误；`stop()` 移除旧媒体错误回调，旧会话由 generation 排除。本次仅完成源码审查，尚未在 Chromium/WebKit 拉流实测。
+
+## Wave16 HLS 场景隔离
+
+`HlsSession key={level}` 在三层场景切换时卸载旧 video/MSE，`destroy()` 后清空 `onerror`；fatal 错误立即使 generation 失效。固定码率仅从已解析 `MANIFEST_PARSED` 中选择，或 `-1` 自动。Chromium/WebKit的实际分段网络、Worker/CSP与媒体卸载尚未运行。

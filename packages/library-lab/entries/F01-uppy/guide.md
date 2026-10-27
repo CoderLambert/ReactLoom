@@ -38,3 +38,7 @@ pnpm add @uppy/core@6.1.0
 后续平台安装实际版本，执行真实 DOM/File/Drop 测试；Uppy实例销毁、类型与大小限制、拒绝后仍能添加合法文件、删除后的过时回写必须验证。库本身未被加载运行前状态为NOT_RUN；网络上传能力为 **N/A（未设计）**，不能冒充SDK失败或成功。
 
 官方 [Core](https://uppy.io/docs/uppy/) · [React](https://uppy.io/docs/react/) · [上传协议](https://uppy.io/docs/guides/choosing-uploader/)。开源 Core MIT，远程云服务或协议服务器可能独立收费。
+
+## Wave16 文件预览安全边界
+
+真实Uppy队列不变，`examples/preview-policy.mjs` 按Blob.size预拒绝超12,000字节、fatal UTF-8解析、拒绝二进制控制字符，只显示4000字符。`UppySession key={level}` 避免跨场景旧文件队列/预览泄漏。纯Node策略测试4项通过，不是Uppy SDK/真实上传验收。
