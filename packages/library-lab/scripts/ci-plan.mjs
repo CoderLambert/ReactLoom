@@ -7,7 +7,8 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 
 const repositoryRoot = path.resolve(fileURLToPath(new URL('.', import.meta.url)), '../../..');
-const ENTRY_SOURCE = /^packages\/library-lab\/entries\/([A-F]\d{2})-[a-z0-9-]+\/(?:library\.json$|examples\/|tests\/|assets\/)/u;
+const ENTRY_PATH = /^packages\/library-lab\/entries\/([A-F]\d{2})-[a-z0-9-]+\/(.+)$/u;
+const ENTRY_DOC_ONLY = /^(?:guide\.md|agent\.md|AGENTS\.md|verification\.json)$/u;
 const SHARED_RUNTIME = /^(?:package\.json$|pnpm-lock\.yaml$|pnpm-workspace\.yaml$|\.github\/workflows\/(?:library-lab|ci)\.yml$|packages\/library-lab\/(?:package\.json$|src\/|scripts\/|tests\/|e2e\/|public\/|tsconfig\.|vite\.config\.|playwright\.config\.))/u;
 
 export function planRuntimeChecks(changedPaths, {forceFull = false} = {}) {
@@ -18,8 +19,9 @@ export function planRuntimeChecks(changedPaths, {forceFull = false} = {}) {
   let full = forceFull;
   for (const file of changedPaths) {
     if (SHARED_RUNTIME.test(file)) full = true;
-    const match = ENTRY_SOURCE.exec(file);
-    if (match) entries.add(match[1]);
+    const match = ENTRY_PATH.exec(file);
+    // Unknown entry-local paths may be executable code. Only known documents are safe to skip.
+    if (match && !ENTRY_DOC_ONLY.test(match[2])) entries.add(match[1]);
   }
   const affected = [...entries].sort();
   return {
