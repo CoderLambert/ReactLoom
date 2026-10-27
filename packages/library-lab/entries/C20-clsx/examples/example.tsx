@@ -1,12 +1,13 @@
 import {useState} from 'react';
 import clsx from 'clsx';
 import {clsx as lite} from 'clsx/lite';
+import {cardClassInputs} from './class-policy.mjs';
 
 type Props={level:'basic'|'business'|'advanced'};
 export default function ClassNamesExample({level}:Props){
  const [selected,setSelected]=useState(false);const [disabled,setDisabled]=useState(false);
  const [tone,setTone]=useState<'neutral'|'success'|'warning'>('neutral');
- const result=clsx('demo-card',{'is-selected':selected,'is-disabled':disabled},tone!=='neutral'&&`tone-${tone}`);
+ const result=clsx(...cardClassInputs({selected,disabled,tone}));
  const edge=clsx('px-2',false,null,undefined,0,1,['px-4',{active:true,inactive:false}]);
  return <section aria-label="clsx 实际运行示例">
   <h2>{level==='basic'?'条件类名':level==='business'?'新闻卡片状态':'易错输入与 Tailwind 冲突'}</h2>

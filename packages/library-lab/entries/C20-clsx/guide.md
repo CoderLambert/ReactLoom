@@ -67,3 +67,7 @@ CSS Modules：把 `styles.card`、`styles.selected` 等实际导出值交给 cls
 - [v2.1.1 源码](https://github.com/lukeed/clsx/tree/v2.1.1)
 
 MIT 许可；本示例不包含第三方媒体资产。
+
+## 第22轮：有限样式语义与 SDK 用例
+
+示例改为先由 `examples/class-policy.mjs` 映射有限业务状态，再交给**真实 clsx** 合成类名。布尔状态仅接受 `true`，tone 只允许 success/warning，未知服务端文案不会被拼接成 `hidden/fixed` 等任意样式。CSS 并不由策略提供，按钮的原生 `disabled` 和 `aria-pressed` 仍是操作语义来源。新增 `tests/class-policy.test.mjs` 已有纯 Node 检查；`tests/sdk.test.mjs` 直接 import `clsx`/`clsx/lite` 检查合并、falsy 与 Tailwind 类保留，**需要实际安装运行**，不从策略测试推断 SDK PASS。

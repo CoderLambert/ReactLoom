@@ -17,3 +17,7 @@
 
 ## 来源
 https://github.com/lukeed/clsx
+
+## 第22轮有限类名白名单
+
+复制示例时连同 `examples/class-policy.mjs` 和声明使用，避免把服务端任意 tone/状态直接拼成类名；采用确定的有限状态映射后再调用 clsx。永远同步 button 的 disabled 和 aria-pressed 等原生语义。新增真实 `clsx`/lite SDK 测试源码但尚未运行，不能用纯策略测试替代。

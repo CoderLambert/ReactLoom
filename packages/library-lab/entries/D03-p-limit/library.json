@@ -40,7 +40,10 @@
       "sourceFiles": [
         "examples/example.tsx",
         "examples/demo.tsx",
-        "tests/sdk.test.mjs"
+        "tests/sdk.test.mjs",
+        "examples/job-policy.mjs",
+        "examples/job-policy.d.mts",
+        "tests/job-policy.test.mjs"
       ],
       "capabilities": [
         "timer"
@@ -55,7 +58,10 @@
       "sourceFiles": [
         "examples/example.tsx",
         "examples/demo.tsx",
-        "tests/sdk.test.mjs"
+        "tests/sdk.test.mjs",
+        "examples/job-policy.mjs",
+        "examples/job-policy.d.mts",
+        "tests/job-policy.test.mjs"
       ],
       "capabilities": [
         "timer"
@@ -70,7 +76,10 @@
       "sourceFiles": [
         "examples/example.tsx",
         "examples/demo.tsx",
-        "tests/sdk.test.mjs"
+        "tests/sdk.test.mjs",
+        "examples/job-policy.mjs",
+        "examples/job-policy.d.mts",
+        "tests/job-policy.test.mjs"
       ],
       "capabilities": [
         "timer"
