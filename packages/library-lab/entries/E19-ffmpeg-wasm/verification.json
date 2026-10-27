@@ -1,7 +1,7 @@
 {
   "sdk": {
     "status": "BLOCKED",
-    "note": "缺少由PLATFORM核验并部署的@ffmpeg/core ESM WASM资产"
+    "note": "PLATFORM尚未部署真实@ffmpeg/core/WASM；新增RIFF/PCM策略不能作为FFmpeg SDK PASS"
   },
   "build": {
     "status": "BLOCKED",
@@ -9,6 +9,6 @@
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "需要真实Chromium+同源Worker/WASM/CSP证据"
+    "note": "真实FFmpeg转码PCM、WASM资产许可/来源/CSP/Worker卸载仍须Chromium验证"
   }
 }

@@ -41,3 +41,7 @@ https://ffmpegwasm.netlify.app/docs/getting-started/usage/ 与 https://github.co
 ## Worker 初始化和切场景所有权（本轮）
 
 `new FFmpeg()` 及其事件绑定现在均受显式 `try/catch/finally` 管理；即使构造函数抛错，`operation.current` 也会被释放且状态展示失败，不会永久锁住“显式加载”按钮。组件的 `level` 若原地变更，终止原 Worker、使旧 session 失效并重置文件/日志；下一场景要求用户重新点击加载核心（**绝不后台自动下载WASM**）。核心文件、codec许可证、CSP、Worker销毁和取消后的历史事件仍需要目标浏览器与真实WASM跑通才能确认。
+
+## 严格验证 FFmpeg 输出（第22批）
+
+转换成功退出码不保证返回的是有效的16kHz单声道PCM。原校验只检查 RIFF/WAVE 魔数，可能误将损坏的 chunk、错误声道、采样率、编码格式或异常时长判定为成功。现在 `input-policy.mjs` 委托 `wav-output-policy.mjs` 按 RIFF 总长度、chunk 偏移/填充、fmt PCM16/16kHz/mono、byte rate、data 偶数字节和两秒预算校验；额外 LIST/JUNK chunk 不会被误拒。测试可以单独执行 `node --test entries/E19-ffmpeg-wasm/examples/wav-output-policy.test.mjs`（在包目录下）；纯策略PASS不能替代真实FFmpeg WASM及浏览器Worker验收。

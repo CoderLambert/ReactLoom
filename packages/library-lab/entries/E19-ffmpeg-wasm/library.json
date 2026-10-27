@@ -65,6 +65,8 @@
       "sourceFiles": [
         "examples/wav.ts",
         "examples/input-policy.d.mts",
+        "examples/wav-output-policy.mjs",
+        "examples/wav-output-policy.d.mts",
         "examples/input-policy.mjs",
         "examples/example.tsx",
         "examples/demo.tsx"
@@ -88,6 +90,8 @@
       "sourceFiles": [
         "examples/wav.ts",
         "examples/input-policy.d.mts",
+        "examples/wav-output-policy.mjs",
+        "examples/wav-output-policy.d.mts",
         "examples/input-policy.mjs",
         "examples/example.tsx",
         "examples/demo.tsx"
@@ -111,10 +115,13 @@
       "sourceFiles": [
         "examples/wav.ts",
         "examples/input-policy.d.mts",
+        "examples/wav-output-policy.mjs",
+        "examples/wav-output-policy.d.mts",
         "examples/input-policy.mjs",
         "examples/example.tsx",
         "examples/demo.tsx",
-        "examples/input-policy.test.mjs"
+        "examples/input-policy.test.mjs",
+        "examples/wav-output-policy.test.mjs"
       ],
       "capabilities": [
         "wasm-large",
