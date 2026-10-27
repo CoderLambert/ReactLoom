@@ -604,8 +604,8 @@ A08/A17/B04 的每层 `library.json` 已加入新helper至 `sourceFiles`，运�
 
 ### 第14轮 PR / CI 最终回读
 
-- Draft PR [#56](https://github.com/CoderLambert/ReactLoom/pull/56) 已建立，base=\`feat/library-lab\`，head=\`feat/library-lab-ab-wave14\`，未合并 main。
+- Draft PR [#56](https://github.com/CoderLambert/ReactLoom/pull/56) 已建立，base=`feat/library-lab`，head=`feat/library-lab-ab-wave14`，未合并 main。
 - GitHub 比较本轮基线后确认 **23/23 文件属于 A*/B* 或 progress/AB.md**，无跨组写入。完整集成树未截断，A08/A17/B04/B16 每条3个 demo 都指向已存在源码路径（12/12 无缺失），A08/A17/B04 共9/9清单包含新helper。
-- GitHub Actions 本次两组 workflow runs \`40472384355\`、\`40472384309\` 均为 **failure**；对应 job 的 \`steps=[]\`，尝试读取 runtime-bootstrap 日志返回 404 \`BlobNotFound\`。不具备执行步骤和构建日志，无法归因于 SDK/源码编译失败，更不能标记构建 PASS。PLATFORM 的 runner/lockfile/真实SDK验收仍为待办。
+- GitHub Actions 本次两组 workflow runs `40472384355`、`40472384309` 均为 **failure**；对应 job 的 `steps=[]`，尝试读取 runtime-bootstrap 日志返回 404 `BlobNotFound`。不具备执行步骤和构建日志，无法归因于 SDK/源码编译失败，更不能标记构建 PASS。PLATFORM 的 runner/lockfile/真实SDK验收仍为待办。
 - 本轮只在可执行的纯策略 helper/test 上得到 11 PASS 与局部严格 TS PASS；浏览器/真实SDK/完整生产构建仍未通过验收。用户侧只在完整批次记录进展，通知集中在 Issue #5。
 
