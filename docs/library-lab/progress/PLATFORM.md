@@ -408,3 +408,12 @@ runCount: **14/24**。本轮依赖/测试阶段最新提交 81ec09ac04a05b6bb826
 **下一批**：取得真实 Node>=22.18 + pnpm10 + registry/Runner 后，先用 `pnpm verify:library --execute --resolve-lock` 生成审查真实锁文件，恢复 `--frozen-lockfile`，运行 `tests/readiness.test.mjs`、完整 typecheck/Vite/受影响 SDK 和 production Chromium。重点验证 A09/A10/B05/B17、C02/C03/C05、E13/E14/E15 的异步清理，以及 E05 Monaco、F11 MSW、PDF Worker、D16 Workbox 的真实隔离。无此环境时继续推进可独立验证的公共功能而不刷无步骤 CI。
 
 **runCount: 16/24**。此轮只有3个worker PR合并与实际公共代码改动；最终 [Draft #8](https://github.com/CoderLambert/ReactLoom/pull/8) 仍待用户真实生产验收。
+
+
+### 第16轮后续开发：Markdown 2MB 有界流式读取（同轮，不增加 runCount）
+
+- `c00e5bbaae8037119db59bc88eda8cdf7f4447ce`：公共 `src/lib/document-utils.mjs` 新增 `readLimitedMarkdownResponse`，拒绝非成功 HTTP、HTML fallback、缺失body与无效UTF-8；通过 `ReadableStream` 按**实际接收字节**实施 2,000,000 字节上限，异常取消 reader，按 chunk 解码多字节 UTF-8，而非信任 `Content-Length`。图文文档与运行示例继续只在自身 origin 读取。
+- `7bc3a754bf8ac4bdd12adb4b56585411ba79d503`：文档 Tab 的 `src/components/document.tsx` 由不受界的 `response.text()` 改为公用有界解析；保留 AbortController、目录/链接安全过滤及原文复制，未改变用户数据或其他模板。
+- `fa23769793ce6e98df1881aa9d715c4a6f065ece`：公共 `tests/document-utils.test.mjs` 增加分片中文/emoji、伪 Content-Length、超过上限时 Reader 取消、HTML/HTTP/坏UTF-8/null body 断言，并保留原4条URL与目录安全回归。
+- **本轮精准实测：**Node `v22.16.0` 隔离目录，逐字节恢复 GitHub 新版 `document-utils.mjs`、`document-utils.test.mjs`；`git hash-object` 分别等于远端 blob `adfd6dcc0fd8dd9ed268f4e3e5e16f6948dbb15f` 与 `5a8e5dad89fe14d98406f0caeef8b835f1811100`。执行 `node --check src/lib/document-utils.mjs`、`node --check tests/document-utils.test.mjs` 通过；`node --test tests/document-utils.test.mjs`：**7 PASS / 0 FAIL / 0 SKIP**。原始 TAP SHA256 `b6dd7919dbb73f41cf5beed39a6d521711b8f970fcb537044c8e0c063acfed00`、Git blob `9af500d5c94a9f6276fc412ad6d9abb9fa661d71`，证据在 [platform-wave16-markdown.tap](../evidence/platform-wave16-markdown.tap)，已确认证据 Git Blob 与执行日志文件匹配。
+- 这是**离线 Node 单元测试**，不是全量 React/TS 类型、Vite 构建、Chromium 或官方 SDK PASS；React 文档 Tab 的浏览器集成未执行。此前五项证据合同孤立测试另计 5 PASS，不与目标 SDK 或worker自报测试混合。本轮源代码、文档、验证记录均保持尚未运行状态；锁文件真实解析仍BLOCKED。
