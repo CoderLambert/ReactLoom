@@ -673,3 +673,7 @@ A08/A17/B04 的每层 `library.json` 已加入新helper至 `sourceFiles`，运�
 ### 交接、依赖和后续
 
 **dependencyRequests新增0。** 仍只有 PLATFORM 能合入本Draft PR到私有集成分支，不能合main或公开部署。下一次先检查PR #63集成与真实runner/typecheck反馈，A/B下一独立缺陷队列：A09 Excalidraw/A10 tldraw 的卸载/白板状态，B05 Rive的WASM上下文，B17 Floating UI的Portal/focus/IME；只修复可复现问题，不重复生成39个条目。重点浏览器验收本轮的零速GPU帧停止、Leaflet过滤删除同步、dnd-kit连续拖放撤销、Pragmatic只有手柄可拖且上下按钮不被劫持。
+
+### wave16 GitHub CI 回读补记（2026-10-27）
+
+进度提交 `0c62488aae0c7ae477c762bb963a16b8797f9ea8` 对应两个 workflow：CI `40487604294`、Library Lab `40487604298`。后者 `catalogue` job `122133223477` 与 `runtime-bootstrap` job `122133223651`，前者 `verify (ssr)` job `122133223864` 均为 **failure 且 steps=[]**；catalogue 日志读取返回 GitHub BlobNotFound (404)。不能证明任何目标SDK、生产构建或浏览器实际运行，也无法定位源码编译失败。未循环重试同一runner缺步骤问题；由 PLATFORM 修复CI/runner/lockfile、取得含执行步骤与日志的证据后才重新验收。
