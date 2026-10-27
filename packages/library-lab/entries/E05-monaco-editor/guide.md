@@ -62,3 +62,8 @@ Monaco 区分 `model`、`editor`、`worker` 和语言服务：model 是带 URI �
 ## 第20轮异常挂载回收
 
 旧代码在 `onDidChangeModelContent`、`onDidChangeMarkers`、`ResizeObserver` 构造/observe 或首次 `layout()` 抛错时无法返回 React effect 清理函数：已经创建的 editor、model 和全局 worker 配置租约会残留。现在提前构造统一 `cleanup()`，订阅/观察/布局放进同一个 try/catch，初始化失败与常规卸载走相同释放路径。`ResizeObserver` 仍是必需的现代浏览器能力；缺少时显示明确错误，绝不把失败当作 Monaco 已正常工作。实际异常注入、CSP/JSON Worker与重挂循环必须由 PLATFORM 在 Chromium 中验证，源码安全补丁不是浏览器 PASS。
+## 第24轮：异常 teardown 的剩余资源回收
+
+`examples/resource-cleanup.mjs` 是与真实 React 编辑器入口共享的单一资源回收实现。卸载依次断开 ResizeObserver、markers 订阅、内容订阅、editor、model，最后释放 Worker 配置引用租约。即使某个 disposer 抛错，也会继续尝试剩余步骤；同一 cleanup 再次调用不会重复销毁。最先完成的 model/editor 会立即纳入资源记录，后续构造/observe/layout 异常同样走该路径，回收异常仅做本地诊断提示，不显示为 SDK 成功。
+
+可离线执行 `node --test entries/E05-monaco-editor/examples/resource-cleanup.test.mjs`，验证错误注入后资源的释放顺序和幂等性。此测试不载入 Monaco，**不能证明浏览器 Worker 终止、CSP 正确或真实编辑器实例没有内存泄漏**。生产还需专门验证 JSON/TS Worker 的实际 network MIME、控制台回退、StrictMode 卸载重挂、页面切换以及异常 ResizeObserver；Worker 真正线程生命周期由 Monaco 内部管理，不能手动 terminate 共享线程。

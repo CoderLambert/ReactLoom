@@ -1,7 +1,7 @@
 {
   "source": {
     "status": "NOT_RUN",
-    "note": "第20轮增加监听/ResizeObserver/首次layout同步抛错清理路径；TypeScript/Monaco/Chromium未执行，保持NOT_RUN"
+    "note": "第24轮新增与真实示例同源的幂等分阶段清理器；隔离Node纯策略测试3 PASS。未运行Monaco SDK/完整React，不能计作source/sdk/build/browser的实际运行PASS。"
   },
   "sdk": {
     "status": "NOT_RUN",
@@ -17,6 +17,6 @@
   },
   "isolation": {
     "status": "BLOCKED",
-    "note": "Monaco Worker完整释放与独立隔离由 PLATFORM 评估"
+    "note": "第24轮即使disposer抛错也继续释放编辑器/model/Worker映射租约；真正Monaco Worker线程释放、生产CSP及Chromium重挂仍需PLATFORM实测，当前BLOCKED。"
   }
 }

@@ -102,7 +102,9 @@
         "examples/registration-policy.mjs",
         "examples/registration-policy.test.mjs",
         "examples/session-gate.mjs",
-        "examples/session-gate.test.mjs"
+        "examples/session-gate.test.mjs",
+        "examples/worker-script-preflight.mjs",
+        "examples/worker-script-preflight.test.mjs"
       ],
       "capabilities": [
         "node-process",

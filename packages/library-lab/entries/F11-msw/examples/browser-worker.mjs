@@ -5,6 +5,7 @@ import {createHandlers} from './handlers.mjs'
 import {scenarioEndpoints, BROWSER_RUNNER_SCOPE} from './routes.mjs'
 import {findExactScopeRegistration, assertWorkerRegistration} from './registration-policy.mjs'
 import {createExclusiveSessionGate} from './session-gate.mjs'
+import {preflightScopedWorkerScript} from './worker-script-preflight.mjs'
 
 const sessionGate = createExclusiveSessionGate()
 
@@ -32,6 +33,8 @@ export async function startIsolatedWorker() {
     const existing = findExactScopeRegistration(
       await navigator.serviceWorker.getRegistrations(), scopeURL.href)
     if (existing) assertWorkerRegistration(existing, scopeURL.href, scriptURL.href)
+    // Reject SPA fallbacks, redirected or oversized scripts before asking MSW to register.
+    await preflightScopedWorkerScript(scopeURL.href, scriptURL.href)
     endpoints = browserScenarioEndpoints()
     worker = setupWorker(...createHandlers(endpoints))
   } catch (error) {

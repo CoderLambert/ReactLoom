@@ -37,3 +37,6 @@ https://github.com/microsoft/monaco-editor/blob/main/docs/integrate-esm.md
 ## 第20轮异常初始化注意
 
 迁移 E05 时除了 editor/model 的创建异常，还必须兜底 `onDidChangeModelContent`、全局 markers 订阅、`ResizeObserver` 创建/observe 和首次 `layout()` 的同步抛错。示例已将初始化的所有阶段纳入统一 cleanup，失败也必须释放只由当前 Lab 编辑器持有的环境租约；不要仅依赖正常 effect 卸载。PLATFORM 需在真实 Chromium 注入 ResizeObserver/Worker 初始化失败，核查回退提示与模型、监听器、租约无净增长。
+## 第24轮迁移：失败清理不得被单个 disposer 中断
+
+迁移时把 `examples/resource-cleanup.mjs`、同名 `.d.mts` 与 `worker-lease.mjs` 一起复制，编辑器入口需共享 `createOwnedResourceCleanup(owned)`。model 创建成功即赋值 `owned.model`、editor 成功即赋值 `owned.editor`，后续所有监听器和观察器同理；任一阶段抛错或组件卸载均调用同一个幂等闭包。不可仅用串行 `dispose()` 而不防其中任意一个抛错。独立 Node 测试仅检验策略，不等于真实 Monaco SDK/Worker/CSP 已验收。

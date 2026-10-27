@@ -680,3 +680,31 @@ node --test /mnt/data/ef23/F04/examples/row-policy.test.mjs \
 - Draft [PR #79](https://github.com/CoderLambert/ReactLoom/pull/79)，base `feat/library-lab`，head `feat/library-lab-ef-wave23-spreadsheet-pdf-bounds`，初始源码提交 `6d8b6a7ec4152a71d4f5a78d8266eacd201e3b4a`，清单/指南/进度提交 `fa5f6619d6850a709cc021dcc12a6754d5ae141e`。
 - GitHub Compare 基线 `132da5d9...` 至 `fa5f6619...`：2 commits、22个变更文件，全部为EF条目或此进度文件，0越权路径；最终进度索引提交不扩大授权写入范围。
 - 实际执行离线Node纯策略20 PASS、0 FAIL；F05历史材料仍为recreated，三库真实SDK/TypeScript/Vite/Chromium继续NOT_RUN/BLOCKED。PLATFORM应审核并合并到集成分支；**本通道没有合并main或公开部署**。
+
+
+## 第24轮（上限轮）：E05 Monaco异常清理 + F11 MSW scoped Worker脚本预检（2026-10-28）
+
+- **确切基线与权限**：先读取最新GitHub集成 \`feat/library-lab@b30fc3f4550006f2ae91104094102ef0e287e620\` 的 COORDINATION、IMPLEMENTATION、本包AGENTS、types/catalog、EF progress与PR #8/#79，确认#79已由PLATFORM合入，避免覆盖第一轮遗留的 \`feat/library-lab-ef\` 旧分支。新建 \`feat/library-lab-ef-wave24-worker-preflight-teardown\`，独立 [Draft PR #82](https://github.com/CoderLambert/ReactLoom/pull/82) base严格 \`feat/library-lab\`。全批只写E05、F11条目与本进度文件；root/package/lock/CI/生成索引、main、PR #3、公开部署未触碰。
+- **E05真实运行代码修复**：\`examples/example.tsx\` 改用新 \`resource-cleanup.mjs\` / \`.d.mts\` 的同源幂等回收器。model、editor、content/marker监听、ResizeObserver创建成功后立即登记所有权，初始化抛错与正常effect卸载统一回收。每项清理无论前项是否抛错均执行，最后归还全局MonacoEnvironment配置租约；重复cleanup不二次释放。ResizeObserver的迟到回调不再对非当前editor调用layout。内部语言Worker仍由Monaco管理，**不声称主动终止缓存Worker**。
+- **F11真实运行代码修复**：\`examples/browser-worker.mjs\` 在真实 \`setupWorker().start()\` 前先 \`await preflightScopedWorkerScript(scope,script)\`。新 \`worker-script-preflight.mjs\` 必须从严格同源 \`/lab-runners/msw/mockServiceWorker.js\` 流式fetch到JS脚本，阻断root scope、跨源/带query URL、重定向、非200、HTML SPA fallback、非JavaScript MIME、空脚本及超过512KiB真实字节的返回；指定 \`redirect:'error'\`、\`cache:'no-store'\`。失败由原同步session gate释放启动租约，绝不尝试回退根作用域。测试\`Response\`是纯策略夹具，并不假扮真实MSW SDK。
+- 两库分别更新library.json的三层sourceFiles、guide、agent、AGENTS及verification；新增5个可迁移源码/测试文件。SDK与CLI、browser、build原保守状态不升级PASS，E11/F05历史原件状态仍为recreated。
+
+### 实际执行（与GitHub Blob逐字节同源）
+
+- Node \`v22.16.0\`，隔离目录 \`/mnt/data/lab-final\` 中执行 \`node --test /mnt/data/lab-final/E05/examples/resource-cleanup.test.mjs /mnt/data/lab-final/F11/examples/worker-script-preflight.test.mjs\`：**8 PASS / 0 FAIL / 0 SKIP**，E05 3、F11 5。
+- 两份策略与两份test及E05声明共5个 \`git hash-object\` 与 GitHub Blob SHA **5/5一致**：E05 \`resource-cleanup.mjs\` \`3616637a2450bc16b9eb7ac0dcdb5b5327e4db46\`、test \`090597a146ec9b89ce26b809359a55b2fb965a25\`、声明 \`0ffb37a4b7a72db438b321256aed73d7fd1c6e4b\`；F11 \`worker-script-preflight.mjs\` \`7d0cf3be034c5a53699666c4d130ce5dbf7d559d\`、test \`17da42da06b3729fcd9e6a30bed24d87d760a276\`。
+- \`node --check\`新JS源码与测试 **PASS**；独立 \`tsc --noEmit --strict --skipLibCheck --target ES2022 --module NodeNext --moduleResolution NodeNext --lib ES2022,DOM .../resource-cleanup.d.mts\` **PASS**，只检验新增声明；\`typescript.transpileModule\`对本地新增TSX入口副本报告**0语法诊断**，非完整TypeScript类型检查且改动入口未做远端字节同源编译。未安装/导入任何官方Monaco或MSW包，8个PASS只属于纯策略。
+- GitHub Compare提交前范围17条变更路径/17 commits，**0越权**；最终progress文件加入后预计18文件/18 commits，以最终GitHub Compare及PR head为准。不同于实际生产测试，该Compare只能证明提交和路径，不是SDK运行。
+
+### dependencyRequests（PLATFORM单一owner，仍未解决）
+
+- **没有新增第三方包/版本**。现有 \`monaco-editor@0.57.0\` MIT、\`msw@3.0.3\` MIT，须PLATFORM对实际registry/pnpm锁、React/Vite兼容及生产bundle确认，不能把官方网页说明当作安装证据。
+- **F11专属Runner**：在真实受限origin/iframe内部由PLATFORM提供官方同版生成的 \`/lab-runners/msw/mockServiceWorker.js\`，JS MIME且≤512KiB。CSP至少允许Worker脚本的 \`worker-src 'self'\` 和本次预检fetch所需的 \`connect-src 'self'\`，iframe/frame-ancestors按运行环境制定。测试真实Chromium初次注册/控制器、相同scope双标签、stop仅停止当前client、反复重挂、失败脚本/404/HTML fallback后不保留活动租约；只有PLATFORM可以进行全局清理。确认MSW v3官方start的\`onUnhandledFrame\`、\`serviceWorker.url/options.scope\`合同。
+- **E05 Monaco**：真实Vite \`?worker\` chunks、JSON/TS诊断、\`worker-src\` CSP及卸载后model列表和内部Worker占用需要生产Chromium验收；即使清理函数无抛错也不证明底层Worker真正终止。
+- **全局执行阻塞**：本轮容器Node 22.16.0低于本包要求≥22.18，\`pnpm\`缺失、registry.npmjs.org DNS解析失败；PLATFORM当前根lock无完整真实解析的Library Lab importer，GitHub Actions此前runner_id=0/steps=[]。未反复下载、未手填lock完整性、未伪造生产构建或官方SDK测试。真实 \`pnpm --filter @reactloom/library-lab catalog:check / typecheck / build / test:sdk / test:e2e\` 及Chromium MSW/Monaco Worker/CSP **NOT_RUN/BLOCKED**。
+
+### 上限收口与准确剩余缺口
+
+**runCount=24/24**。EF 37/37只代表源码、中文指南、Agent说明和357场景中的本组条目声明覆盖，不代表37项实际 SDK PASS或生产可交付。已完成本轮可独立推进的高风险源码加固并已提交 Draft PR #82；本通道达到用户明确24轮上限，**停止继续独立轮询开发**，不擅自宣称全部验收通过。
+
+**交接PLATFORM的下一队列**：优先审查/合入#82（固定base、head和授权目录）；恢复可执行Node≥22.18/pnpm10/registry及根真实lock，完成E05/F11生产SDK/Worker/SW+CSP及全应用typecheck/build/E2E；随后F05官方SheetJS CE真实CLI、E19同源WASM核心许可与编码转换、F10 Orval真实产物、F06/F07 PDF Worker及其它37库的SDK生产验收。只有真实运行日志+当期源码指纹才可提升verification状态；用户并未授权合main/公开部署。
