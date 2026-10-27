@@ -1,1 +1,114 @@
-{"schemaVersion":1,"entryId":"D12","slug":"redux-toolkit","name":"Redux Toolkit","group":"D","summary":"可追踪状态与业务流程","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "D12",
+  "slug": "redux-toolkit",
+  "name": "Redux Toolkit",
+  "group": "D",
+  "summary": "createSlice/configureStore、团队状态隔离和响应竞态防护",
+  "tags": [
+    "Redux",
+    "状态管理",
+    "createSlice",
+    "租户隔离",
+    "异步请求",
+    "可追踪"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "@reduxjs/toolkit",
+      "version": "2.13.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "Redux Toolkit 官方入门",
+      "url": "https://redux-toolkit.js.org/introduction/getting-started"
+    },
+    {
+      "title": "createSlice API",
+      "url": "https://redux-toolkit.js.org/api/createSlice"
+    },
+    {
+      "title": "configureStore API",
+      "url": "https://redux-toolkit.js.org/api/configureStore"
+    },
+    {
+      "title": "npm 包许可",
+      "url": "https://www.npmjs.com/package/@reduxjs/toolkit"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "D10",
+      "relation": "alternative",
+      "reason": "Zustand 更轻量，Redux Toolkit 更适合可审计的复杂事件状态。 "
+    },
+    {
+      "entryId": "D11",
+      "relation": "alternative",
+      "reason": "Jotai 适合局部原子派生状态，不需要所有事件集中在 reducer。 "
+    },
+    {
+      "entryId": "D13",
+      "relation": "complements",
+      "reason": "RTK Query 是 Redux Toolkit 自带远程查询缓存模块，可复用同一个 store。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "level": "basic",
+      "title": "Slice 基础",
+      "description": "真实createSlice/configureStore与订阅",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "timer"
+      ]
+    },
+    {
+      "demoId": "business",
+      "level": "business",
+      "title": "双租户 RSS 频道状态",
+      "description": "两份独立store、稳定ID与已读状态",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "timer"
+      ]
+    },
+    {
+      "demoId": "advanced",
+      "level": "advanced",
+      "title": "过期请求回包守卫",
+      "description": "请求ID guard阻止旧响应覆盖新的结果",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "timer"
+      ]
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "note": "课程中的数据全部为虚构 fixture，不包含真实租户数据"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "mode": "recreated",
+    "note": "2026-10-27按照Redux Toolkit官方2.13.0 API实现，未在当前环境运行SDK。"
+  }
+}

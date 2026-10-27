@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "待官方RTK 2.13.0安装并执行SDK Node测试"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "TypeScript和Vite生产构建待平台环境"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "双工作区store订阅和timer卸载待Chromium验证"
+  }
+}

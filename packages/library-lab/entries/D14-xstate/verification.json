@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "待真实安装 XState v5.33.3 执行 Actor/guard Node tests"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "TypeScript 7 + Vite 8尚未完成真实检查"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "待审稿交互与StrictMode卸载浏览器测试"
+  }
+}
