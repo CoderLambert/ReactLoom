@@ -1,7 +1,7 @@
 {
   "source": {
     "status": "NOT_RUN",
-    "note": "第12轮仅执行纯JS生命周期和注册策略的定向Node测试；没有实际导入目标SDK，不计SDK或浏览器PASS"
+    "note": "第24轮新增真实browser-worker启动前的受限同源Worker脚本响应预检；隔离Node纯策略测试5 PASS。没导入msw官方SDK，不计SDK/浏览器通过。"
   },
   "sdk": {
     "status": "NOT_RUN",
@@ -13,10 +13,10 @@
   },
   "browser": {
     "status": "BLOCKED",
-    "note": "代码具scope/controller/真实fetch检查与自有注册回收；独立iframe/script/CSP和Chromium实测仍需PLATFORM Wave21同步租约、客户端专属停止和跨标签避免unregister已编码；真实SW/CSP/Chromium双标签验收仍BLOCKED。"
+    "note": "需PLATFORM提供MSW v3官方scoped脚本、独立iframe和CSP worker-src/connect-src，运行真实Chromium registration/controller/fetch/stop；第24轮Node预检不等于浏览器SW实测，仍BLOCKED。"
   },
   "security": {
     "status": "NOT_RUN",
-    "note": "scope/unregister/onUnhandledFrame 需E2E验证"
+    "note": "校验脚本路径、重定向、响应MIME、实际响应大小和SPA fallback的纯策略5 PASS；跨标签scope、脚本授权、CSP、MSW真实SW启动仍NOT_RUN。"
   }
 }
