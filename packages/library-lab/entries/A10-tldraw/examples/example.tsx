@@ -10,7 +10,7 @@ import 'tldraw/tldraw.css';
 import './styles.css';
 
 type Level = 'basic' | 'business' | 'advanced';
-const MAX_SHAPES = 80;
+const MAX_PROGRAMMATIC_SHAPES = 80;
 const FLOW = [
   { label: 'RSS 获取', x: 60, color: 'blue' },
   { label: '正文清洗', x: 300, color: 'green' },
@@ -33,7 +33,7 @@ function downloadJson(doc: unknown, name: string) {
 function createFlow(editor: Editor) {
   editor.run(() => {
     const current = editor.getCurrentPageShapes().length;
-    if (current + FLOW.length > MAX_SHAPES) return;
+    if (current + FLOW.length > MAX_PROGRAMMATIC_SHAPES) return;
     const top = 50 + Math.ceil(current / 4) * 160;
     for (const node of FLOW) {
       editor.createShape({
@@ -65,9 +65,15 @@ export default function TldrawWorkshop({ level }: { level: Level }) {
   const onMount = useCallback((instance: Editor) => {
     setEditor(instance);
     if (level !== 'basic') createFlow(instance);
-    setCount(instance.getCurrentPageShapes().length);
+    // Store changes also include shape moves: do not rerender the host on each pointer move.
+    let previousCount = instance.getCurrentPageShapes().length;
+    setCount(previousCount);
     const unsubscribe = instance.store.listen(() => {
-      setCount(instance.getCurrentPageShapes().length);
+      const nextCount = instance.getCurrentPageShapes().length;
+      if (nextCount !== previousCount) {
+        previousCount = nextCount;
+        setCount(nextCount);
+      }
     }, { scope: 'document' });
     // Editor handles its own document and graphics teardown.
     return () => unsubscribe();
@@ -87,8 +93,8 @@ export default function TldrawWorkshop({ level }: { level: Level }) {
 
   function addProcess() {
     if (!editor || editor.getIsReadonly()) return;
-    if (editor.getCurrentPageShapes().length + FLOW.length > MAX_SHAPES) {
-      setStatus('达到本示例上限 80 个形状，请先清理当前实例。');
+    if (editor.getCurrentPageShapes().length + FLOW.length > MAX_PROGRAMMATIC_SHAPES) {
+      setStatus('本示例的自动新增上限为80个形状；原生绘图工具不受此按钮限制。');
       return;
     }
     createFlow(editor);
@@ -99,7 +105,7 @@ export default function TldrawWorkshop({ level }: { level: Level }) {
   function addBoundedBatch() {
     if (!editor || editor.getIsReadonly()) return;
     const current = editor.getCurrentPageShapes().length;
-    const capacity = Math.max(0, MAX_SHAPES - current);
+    const capacity = Math.max(0, MAX_PROGRAMMATIC_SHAPES - current);
     const amount = Math.min(36, capacity);
     editor.run(() => {
       for (let n = 0; n < amount; n++) {
@@ -113,7 +119,7 @@ export default function TldrawWorkshop({ level }: { level: Level }) {
       }
     });
     editor.zoomToFit();
-    setStatus('批量创建 ' + amount + ' 个形状（上限80）；未做性能基准测试。');
+    setStatus('批量新增 ' + amount + ' 个形状（程序化按钮受80总量限制）；未做性能基准测试。');
   }
 
   function clearLocal() {
@@ -155,7 +161,7 @@ export default function TldrawWorkshop({ level }: { level: Level }) {
       <button type="button" disabled={!editor} onClick={exportDocument}>下载文档 JSON</button>
       <button type="button" disabled={!editor} onClick={() => editor?.zoomToFit()}>缩放适合画布</button>
     </div>
-    <p role="status" aria-live="polite">形状数量 {count} / {MAX_SHAPES} · {status}</p>
+    <p role="status" aria-live="polite">当前形状 {count} · 示例程序化新增限制为画布总量 {MAX_PROGRAMMATIC_SHAPES}（原生绘制不限） · {status}</p>
     <div className="ab-tldraw-canvas" aria-label="tldraw 真实可编辑画布">
       <Tldraw autoFocus={false} licenseKey={licenseKey} onMount={onMount} />
     </div>

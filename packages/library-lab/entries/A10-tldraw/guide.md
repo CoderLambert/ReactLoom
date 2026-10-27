@@ -29,7 +29,7 @@ import 'tldraw/tldraw.css';
 
 **业务**：调用真实 `Editor.createShape` 创建包含 `toRichText` 文本的四个节点：RSS 获取、清洗、分类、审核。无需自研 drag/zoom 事件。通过 `Editor.zoomToFit` 查看全部节点。
 
-**进阶**：调用 `Editor.run` 作为单批次创建事务，限制总形状为 80；用 `Editor.updateInstanceState({isReadonly:true})` 切换只读，测试工具栏/变更 API 是否不可操作。按需导出 `getSnapshot(editor.store).document` 的真实文档 JSON，而不是仅截图。只读为客户端会话状态，不等于后端权限。
+**进阶**：调用 `Editor.run` 作为单批次创建事务，仅对示例提供的程序化创建按钮限制当前画布总形状数为 80（原生画笔绘制不受此代码限制）；用 `Editor.updateInstanceState({isReadonly:true})` 切换只读，测试工具栏/变更 API 是否不可操作。按需导出 `getSnapshot(editor.store).document` 的真实文档 JSON，而不是仅截图。只读为客户端会话状态，不等于后端权限。
 
 Demo 的代码来自 `examples/example.tsx`。`examples/demo.tsx` 是Lab入口复用，`examples/styles.css` 只承担容器尺寸/本地样式。三层选择共用 SDK 实现，不表示三个独立构建。
 
@@ -45,7 +45,7 @@ tldraw Editor 有文档模型（shapes/pages/assets）与实例态（焦点/相�
 2. 将 tldraw 视为普通自由许可证组件：正式部署不提供授权会违反SDK生产条件。
 3. 把 readonly 当服务端权限：攻击者仍可直接调业务 API；后端必须核验读写权限。
 4. 保存整个 store 当成业务文档：相机、选择和临时状态无须覆盖业务持久化；至少区分 `snapshot.document` 与会话数据。
-5. 无限调用 `createShapes`：没有业务上限时重型内容消耗内存；本实验设80形状硬限并使用单批事务。
+5. 无限调用 `createShapes`：没有业务上限时重型内容消耗内存；本实验仅对程序化新增设80形状上限并使用单批事务。原生工具仍能继续绘制，生产文档上限须由产品层单独设计和验证，不能将示例按钮上限称为全局配额。
 6. 未释放 `Editor.store.listen`：每次重新挂载倍增订阅。本实现通过 `onMount` 返回函数注销。
 
 ## 性能 / 安全 / 可访问性

@@ -334,3 +334,33 @@ A09 Excalidraw、A10 tldraw、A13 Three.js、A14 React Three Fiber、A17 deck.gl
 本PR经PLATFORM审核合入之后，**A/B 39/39库拥有独立源码、中文guide、agent.md、目录规则与3层真实示例定义，仍为0项本批运行时PASS**。AB不应在源码接入完成时宣称生产验收；随后优先与PLATFORM合作核实依赖、针对真实tsc/SDK/browser失败修复A09/A10/B05及既有复杂WebGL/绘图条目。独立生产授权、外网.riv与字体审查不可被Mock替代。
 
 当前结果只保留在开发分支，最终对main的Draft PR #8未合并、未公开部署。
+
+
+---
+
+## 第7轮后续：A/B 完整条目质量加固（5 个库）
+
+**执行基线**：\`feat/library-lab@dfbaf71f111bd9f938ff5c25c34577ddb792b34d\`。核对 PR #29 已于 2026-10-27T00:39:31Z 合并到集成分支，当前已无开放 AB PR。旧 \`feat/library-lab-ab\` 指向历史提交，**本批新建 \`feat/library-lab-ab-hardening\`，避免覆盖 39 项已合入成果**。AB 范围为 A17+B22 共39项，源码和文档现均已收录；实际 SDK/TS/浏览器完整通过仍无证据。
+
+### 本批实际代码修正（全部限 AB 自有路径）
+
+| 条目 | 修改目的 | 变更 |
+|---|---|---|
+| **A09 Excalidraw** | 异步场景覆盖与资源回收 | 用 \`operationId\` 使导入/导出结果在重置、重新载入流程、忽略结果和卸载后失效；加入 mounted/API 身份检查；延迟撤销 URL 的计时器纳入统一清理。明确“忽略结果不取消SDK内部异步运算”。 |
+| **A10 tldraw** | 修正虚假配额语义/高频渲染 | 明确80形状上限只限制示例按钮自动创建，**不限制原生手绘工具**；Store 订阅只在形状数量变化时触发 React 状态更新，避免每次拖拽都无条件 setState；同步 guide/agent/manifest。 |
+| **A17 deck.gl** | GPU 上下文泄漏及异步错误回写 | \`getContext('webgl2')\` 是真实 GPU 上下文分配；探测后使用 \`WEBGL_lose_context\` 释放探测上下文；\`Deck.finalize()\` 后阻止延迟错误更新状态；同步 agent。 |
+| **B04 dotLottie** | 跨场景旧任务污染 | 切换 basic/business/advanced 场景时取消上一场景本地业务定时器，避免旧“订阅成功”回写新场景；同步 agent。 |
+| **B05 Rive** | 卸载后迟到的 CDN/播放回调及误导状态 | 子播放器卸载后忽略迟到的加载错误，play/pause 用 try/catch；UI 明确区分“请求播放”和 SDK/远程资源实际成功播放，回调稳定性与迁移注意事项同步 guide/agent。 |
+
+合计涉及5个库、11个源码/文档/元数据文件，另更新本进度文件。不新增包、不修改根 lock、CI、公共宿主或其他组。
+
+### 验证证据与剩余问题
+
+- 本批更改从 GitHub connector 读取**实际集成分支文件**并使用精确匹配补丁，路径均为 AB 授权目录；Git Tree 已创建，后续提交与 PR 中记录准确 SHA。
+- tldraw 官方 API 已核对 \`Tldraw.onMount\` 可返回 cleanup、\`Editor.updateInstanceState({isReadonly})\` 与实例态语义；Excalidraw 官方确认 \`loadFromBlob(file,null,null)\` 返回 RestoredDataState；Rive 官方记录 Web React 单数 stateMachine 等版本迁移。
+- 这只是源码及静态检查，**本轮没有实际完成 pnpm 安装、TS 全量检查、真实SDK运行、Vite生产构建或Chromium验证**。既有 verification.json 的SDK/build/browser保持NOT_RUN或原有BLOCKED，没有虚构 PASS。源码改动会由 PLATFORM 生成器更新指纹使旧证据失效。
+- **dependencyRequests 新增为0**。需要 PLATFORM 继续解决真实 pnpm-lock、CI runner、A09/A10/B05正式浏览器与资源许可实测。对 AB 不可单独修复的公共依赖/CI 阻塞，移交平台，而非在本通道越权变更。
+
+### 后续 AB 定向工作
+
+优先获取 PLATFORM 类型/构建错误的文件级清单，按 AB 目录修复；有浏览器时重点验收 A09 异步导入-重置竞态、A10 原生/程序化形状上限、A17 WebGL context 反复进出、B04 切场景计时器、B05 远端.riv失败和卸载。源代码已经39/39，仅代码覆盖不能触发“生产验收已完成”的结论。若环境持续不可运行，记录真实阻塞，不重复要求用户逐项验收。

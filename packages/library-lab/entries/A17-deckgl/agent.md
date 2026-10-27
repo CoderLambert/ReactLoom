@@ -14,6 +14,8 @@
 
 **迁移时保留的工程合同**：明确资源所有者、异常/空环境回退、卸载清理、异步任务失效与无障碍替代。仅复制目标项目需要的最小实现，不能照搬 Lab 的假业务字段和本地 fixture。
 
+**资源探测注意**：`getContext('webgl2')` 会实际分配一个 GPU 上下文，探测成功后通过 `WEBGL_lose_context` 释放独立探测画布，避免与 Deck 本体叠加占用；异步渲染错误在 finalize 后不得再更新组件状态。
+
 **必须验证**：真实目标SDK import、React19类型检查、生产构建、浏览器设备适配、快速反复挂载/切Tab无事件/GPU资源泄漏；特殊设备能力缺失时使用数据表退化展示。PASS需当前源码指纹、命令及日志证据，否则为NOT_RUN。
 
 **官方参考**：[deck.gl standalone入门](https://deck.gl/docs/get-started/using-standalone) · [Deck parent与finalize API](https://deck.gl/docs/api-reference/core/deck) · [ScatterplotLayer属性](https://deck.gl/docs/api-reference/layers/scatterplot-layer)。
