@@ -1,6 +1,6 @@
 import {useEffect,useMemo,useRef,useState} from 'react';
 import './gantt.css';
-import {validatePlan,validCivilDate} from './plan-policy.mjs';
+import {validatePlan} from './plan-policy.mjs';
 export {validatePlan,validCivilDate} from './plan-policy.mjs';
 type Level='basic'|'business'|'advanced';
 type Task={id:string;name:string;start:string;end:string;progress:number;dependencies:string};
