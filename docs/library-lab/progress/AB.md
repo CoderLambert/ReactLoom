@@ -538,3 +538,40 @@ AB下一队列：检查 A03 Chart.js canvas实例重建与高频数据、A14 Rea
 - **Draft PR #50**：https://github.com/CoderLambert/ReactLoom/pull/50 ，目标严格 `feat/library-lab`。A/B目录24份变更文件+本进度1份，GitHub compare **25/25 AB范围内**、0跨组/公共文件；新修复提交 `5d98255d673920a848408dc7c42bb4a05756b2b4`，上一批实现 `46df29becc8f70c7f0c70f55b05bcf2e40d3a3bd`、`9fd9de2bf4767e3031e222c341be3c3fc72248e3`。
 - GitHub Actions于PR head实际返回 `CI #40460744796` 与 `Library Lab #40460744838` 均为 **failure**；后者catalogue/runtime-bootstrap、前者所有job均 `steps=[]`，没有可信的SDK安装/TS/Vite/browser执行日志。**不能将本轮CI失败归因到条目代码，也不能冒充构建运行通过**。此类runner分配前失败不循环重试，交PLATFORM排障。
 - B03满额焦点helper/test经GitHub回读 SHA与本地严格测试文件一致：`7ab0c8e30a7865d8cb6f142155565a9909293bf4` / `a05497128eca5062aeb3b2c7280bcbbfcba23124`。
+
+
+---
+
+## 第13轮（wave13）：Chart.js / React Three Fiber / Motion / react-grid-layout 真正源码加固
+
+**runCount=13/24；源码与指南覆盖39/39（不等于实际SDK验收）。** 本轮只读恢复 `feat/library-lab@66479e8a2d3e27d65c3c581093822cb4baf6c00d` 的 COORDINATION/IMPLEMENTATION、根/包 AGENTS、types/catalog、已有AB进度以及开放PR：先前AB #50已由PLATFORM合并；当时开放PR仅主Draft #8及无关 #3，没有开放AB PR。没有回写旧 `feat/library-lab-ab`；从精确集成head创建 `feat/library-lab-ab-wave13`，无force推送。
+
+### 已提交代码（4库 / 12个原有basic-business-advanced选项）
+
+| 条目 | 实际缺陷与修复 | 可迁移源码/测试 |
+|---|---|---|
+| A03 Chart.js | 旧代码在创建 Chart 时从 `makeCounts(0)` 重新起步；高频更新不具生命周期策略。现在构造时消费当前revision、有界0–10000值；advanced提供每400ms实际更新、只在前台有效且切换层级停采样；共用Canvas/数据表的七日数据，Chart实例只在类型切换时destroy/recreate | `examples/chart-stream-policy.ts` / `tests/chart-stream-policy.test.mts` |
+| A14 React Three Fiber | 旧代码仅处理手动暂停与reduce-motion，标签页隐藏时仍保持always帧循环；速度为0也空转；basic层缺同等键盘按钮。新增document visibility监听+卸载清理，统一frame-policy控制demand/always与有效delta，basic提供真实HTML操作入口 | `examples/frame-policy.ts` / `tests/frame-policy.test.mts` |
+| B01 Motion for React | `queueMicrotask` 在React DOM提交前可能强行抢焦点；无限新增列表；状态逻辑与动画耦合。新增12项容量/稳定ID/删除重排规则，只有被删除按钮实际占焦点时在 `useLayoutEffect` 提交后恢复；控制列表时继续实际使用AnimatePresence和motion组件 | `examples/card-policy.ts` / `tests/card-policy.test.mts` |
+| B15 react-grid-layout | 旧实现将手机6列投影写回同一个桌面12列状态，切回宽屏不可逆丢坐标，260px minWidth产生窄屏溢出；键盘在6列满宽时左右移无效。现保存wide/narrow独立布局，按断点重新挂载真实GridLayout，锁定卡片的几何不会被回调覆盖；12列左右/6列上下键盘移动、宽度边界及禁用态由纯规则控制，去掉minWidth硬下限 | `examples/layout-policy.ts` / `tests/layout-policy.test.mts` |
+
+四项仍直接import真实目标SDK，均更新运行的example.tsx、3层library.json sourceFiles、guide.md、agent.md；AGENTS/verification.json原值保留。总共24个变更文件：4份实际组件+4份纯helper+4份定向test+4份library.json+4份guide+4份agent，**全部属于AB条目目录**。code commit `e5d272ee55ae1a243aa26aefa8f1d2a237685679`；GitHub compare相对上述集成head确认 `24/24` AB授权路径，`0` 个公共/跨组文件。本进度文件由独立后续提交追加，避免无法在同一个提交中自引用准确SHA。
+
+### 本轮真实执行（证据严格限定范围）
+
+```bash
+node --experimental-strip-types --test /mnt/data/ab-wave13/{A03,A14,B01,B15}/tests/*.test.mts
+# Node 22.16.0: 16 PASS / 0 FAIL / 0 SKIP
+tsc --noEmit --strict --skipLibCheck --target ES2022 --module ESNext --moduleResolution Bundler /mnt/data/ab-wave13/{A03,A14,B01,B15}/examples/*.ts
+# TypeScript 5.8.3: PASS，仅4个不依赖SDK/React的纯规则helper
+```
+
+八份helper/测试文件均通过GitHub create_blob返回的Git SHA与本轮实际执行同一字节本地`git hash-object`对照 **8/8匹配**。GitHub提交后回读4份library.json，所有 `12/12` 层级选择的entryPoint与新sourceFiles清单一致。**这只证明规则和静态契约**，不等于4项真实SDK、React TypeScript 7、Vite生产构建或Chromium交互成功。
+
+**真实第三方SDK运行、完整React类型检查、生产Vite构建、浏览器/输入法/Canvas/WebGL/drag E2E：NOT_RUN/BLOCKED。** 当前工具容器没有这个私有monorepo实际pnpm依赖与匹配锁文件；既有GitHub CI runner/log不可用。没有运行安装或反复重试已知DNS问题，没把policy测试混入SDK PASS。四项verification.json SDK/build/browser保持既有NOT_RUN，等PLATFORM给出真实运行指纹/命令/可读日志后再升级。
+
+### 依赖及下一队列
+
+dependencyRequests新增 **0**。上述四库既有声明依赖分别是 `chart.js@4.6.1`、`@react-three/fiber@9.8.2`+`three@0.186.0`、`motion@14.6.0`、`react-grid-layout@2.3.0`+`react-resizable@4.0.2`，均已由公共package登记；PLATFORM负责真实pnpm lock、运行器、依赖peer和CI。
+
+下一批优先按真实SDK/tsc/浏览器错误定位AB目录后修复；独立代码队列为A08 Mermaid的频繁重绘/worker资源、A17 deck.gl生命周期、B04 dotLottie异步资源与B16 react-resizable-panels的键盘约束。PLATFORM只负责审核合入本PR至 `feat/library-lab`，不擅自合main、改PR #3、模板、CI、公共索引或公开部署。需要重点浏览器回归本批：Chart初始化/后台恢复、R3F隐藏/重挂载GPU、Motion聚焦删除、Grid宽窄切换后的双布局与指针拖拽。
