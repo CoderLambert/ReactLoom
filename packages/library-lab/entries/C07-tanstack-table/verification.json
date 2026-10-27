@@ -1,12 +1,14 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "源码针对 v9.2.4，官方 SDK 运行测试未执行"
+    "note": "已提交真实 @tanstack/react-table v9 + React SSR 回归 tests/sdk.test.mjs；本轮项目依赖未安装且单次 npm DNS 失败，未运行目标 SDK。纯 page-policy 测试不能计为 SDK PASS。"
   },
   "build": {
-    "status": "NOT_RUN"
+    "status": "NOT_RUN",
+    "note": "未执行完整 React TypeScript 与 Vite build；当前环境缺少项目依赖及 pnpm。"
   },
   "browser": {
-    "status": "NOT_RUN"
+    "status": "NOT_RUN",
+    "note": "未在 Chromium 验证 A→B→A、切换页、503、IME 和跨页选择；不能由 SSR/策略推断 UI PASS。"
   }
 }
