@@ -1,1 +1,131 @@
-{"schemaVersion":1,"entryId":"E19","slug":"ffmpeg-wasm","name":"ffmpeg.wasm","group":"E","summary":"浏览器 WebAssembly 媒体转换","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "E19",
+  "slug": "ffmpeg-wasm",
+  "name": "ffmpeg.wasm",
+  "group": "E",
+  "summary": "FFmpeg.wasm 真实 Worker 转换、WASM显式加载、取消与内存边界",
+  "tags": [
+    "FFmpeg",
+    "WASM",
+    "Worker",
+    "Audio",
+    "Memory",
+    "CSP"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "@ffmpeg/ffmpeg",
+      "version": "0.12.15"
+    },
+    {
+      "name": "@ffmpeg/core",
+      "version": "0.12.10"
+    }
+  ],
+  "references": [
+    {
+      "title": "官方Usage/React用法",
+      "url": "https://ffmpegwasm.netlify.app/docs/getting-started/usage/"
+    },
+    {
+      "title": "官方项目与许可",
+      "url": "https://github.com/ffmpegwasm/ffmpeg.wasm"
+    },
+    {
+      "title": "npm JS wrapper",
+      "url": "https://www.npmjs.com/package/%40ffmpeg/ffmpeg"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "E16",
+      "relation": "complements",
+      "reason": "Video.js负责播放已处理媒体，ffmpeg.wasm负责格式转换。"
+    },
+    {
+      "entryId": "E18",
+      "relation": "complements",
+      "reason": "wavesurfer.js展示转换后WAV波形。"
+    },
+    {
+      "entryId": "F02",
+      "relation": "complements",
+      "reason": "react-dropzone负责安全文件选择，不参与转换。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "level": "basic",
+      "executionKind": "react",
+      "title": "原创WAV转换",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/wav.ts",
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "wasm-large",
+        "worker",
+        "explicit-user-load",
+        "offline-core",
+        "no-cdn",
+        "audio"
+      ],
+      "description": "原创WAV转换；必须先由PLATFORM部署同源WASM核心资产"
+    },
+    {
+      "demoId": "business",
+      "level": "business",
+      "executionKind": "react",
+      "title": "本地媒体转16kHz单声道",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/wav.ts",
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "wasm-large",
+        "worker",
+        "explicit-user-load",
+        "offline-core",
+        "no-cdn",
+        "audio"
+      ],
+      "description": "本地媒体转16kHz单声道；必须先由PLATFORM部署同源WASM核心资产"
+    },
+    {
+      "demoId": "advanced",
+      "level": "advanced",
+      "executionKind": "react",
+      "title": "取消重建Worker/超时",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/wav.ts",
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "wasm-large",
+        "worker",
+        "explicit-user-load",
+        "offline-core",
+        "no-cdn",
+        "audio"
+      ],
+      "description": "取消重建Worker/超时；必须先由PLATFORM部署同源WASM核心资产"
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "assets": "JS wrapper MIT；core本身可能包含第三方 LGPL/GPL/编解码器授权义务，生产分发需复核"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "基于官方ffmpeg.wasm 0.12用法重写；核心二进制未随EF提交，依赖+静态资产需PLATFORM接线，WASM NOT_RUN"
+  }
+}
