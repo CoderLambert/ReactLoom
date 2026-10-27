@@ -515,3 +515,14 @@ C13 Frappe Gantt 1.2.2 上游 `src/index.js` 的 `bind_bar_events` 会向 `docum
 - **dependencyRequests：本轮无新增**。继续使用 PLATFORM 已登记的 `react-hook-form@7.89.0`（MIT）、`p-limit@7.3.3`（MIT）、`clsx@2.1.1`（MIT）及项目已有 React/ReactDOM。后续真实安装还需根据安装树与官方 tag 核对 peer/API/许可，CD 未并发更改锁文件。
 - **下一队列（尚余2轮上限）**：PLATFORM 先审查并合入 #78，仅到 `feat/library-lab`；具备 npm/pnpm 和有效 runner 后分别运行三库真实 SDK、全项目 tsc/build 与 Chromium，重点验证 C01 中文候选确认/409 对应行与 A→B→A 草稿、D03 切换 level/取消后旧任务绝不回写、C20 实际样式输出与无障碍属性。若执行环境仍缺，优先检查 D07 TanStack Query 乐观回滚并发和 C07 Table 稳定行 ID 的可复现风险，避免机械重复文档。达到24轮只记录真实剩余缺口，不将43/43静态覆盖谎称整体验收。
 
+
+---
+
+## 第23轮（2026-10-28）— D07 Query 行级回滚、版本 CAS 与同租户失效调度
+
+- **runCount：23/24**。本轮从 GitHub 集成基线 `feat/library-lab@b30fc3f4550006f2ae91104094102ef0e287e620` 创建 `feat/library-lab-cd-wave23`。先确认 CD 上批 #78 已合并；本批 PR base 必须为 `feat/library-lab`，不合 main。只改 D07 目录和本文件，保留主 #8 与旧模板。
+- **实际代码**：D07 `examples/example.tsx` 调用新的 `optimistic-policy.mjs`：基于业务 ID、服务端 `rev`、乐观令牌三重前提应用、提交与409回滚，消除恢复整页旧快照时覆盖其他已成功行的缺陷。内存 fixture 用 `expectedRev` 模拟真实 compare-and-swap，旧 rev 拒绝；mutation variables 携带 tenant，切换 A→B→A 后旧请求仍归属原团队，旧提示受 epoch 抑制。Query 的 mutationKey 按租户记录，只有最后 mutation `onSettled` 执行缓存失效，避免旧 refetch 覆盖新乐观状态；同步 ref 防止同一按钮重复提交。取消不同搜索/分页之间不安全的 placeholder 行复用。三层源文件与显示复用同一源码，更新 library.json/guide/agent/AGENTS/verification。
+- **实际运行**：Node **v22.16.0**；新建纯策略模块与测试 `node --check` PASS；`node --test packages/library-lab/entries/D07-tanstack-query/tests/optimistic-policy.test.mjs`：**6 PASS、0 FAIL、0 SKIP**，覆盖不可变、行级恢复、不同 token 拒绝旧回调、服务端 revision、缺页不创建。单文件 `tsc --noEmit --strict --target ES2022 --module nodenext --moduleResolution nodenext` 对 `optimistic-policy.d.mts` 独立声明检查 PASS。与这些执行文件一致的 GitHub blob SHA：策略 `f1d5773862a896bb7ae7afd4e01f202435b9ca32`、声明 `c14a36847f2f996efe684247b706a7d19edffb54`、测试 `38561cfdb5e5038e88ba9ee3c72fed352ef6cf35`，**3/3 与本地 git hash-object 匹配**。
+- **NOT_RUN/BLOCKED**：增加了真正导入 `QueryClient` 的 `tests/sdk.test.mjs` 回归，但没有安装 @tanstack/react-query 到当前运行环境，故 SDK 测试 **NOT_RUN**；全项目 React TSX tsc、Vite build、Chromium 多操作/跨工作区/503与409交互也 **NOT_RUN**。当前容器无项目 node_modules/pnpm；单次 `getent ahostsv4 registry.npmjs.org` DNS 没解析，未重复网络安装。策略测试不能冒充目标 SDK PASS。
+- **dependencyRequests：本批无新增包**。仍使用 PLATFORM manifest 所拥有的 `@tanstack/react-query@5.104.1`（MIT；QueryClient/useMutation/mutationKey/isMutating 官方 API），React19/安装/锁由 PLATFORM 单一 owner 管理；参考官方文档 https://tanstack.com/query/v5/docs/framework/react/guides/optimistic-updates 。
+- **CD 总量**：43/43 源码+指南+Agent、129层级场景声明保持；**本轮新增目标 SDK / 完整构建 / 浏览器 PASS 均为0**，非完整验收。后续：PLATFORM 审查并合入本批至集成分支，执行真实 SDK+typecheck/build+Chromium。重点 409 导致回滚、同租户两个行更新、跨租户 A→B→A、后台刷新与 optimistic draft 竞态、旧 revision，再据实际错误修复。达到第24轮上限时如实列剩余阻塞，并停用 CD 轮次，不可宣称43/43运行完成。
