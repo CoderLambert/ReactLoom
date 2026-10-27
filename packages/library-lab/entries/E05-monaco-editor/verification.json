@@ -1,7 +1,7 @@
 {
   "source": {
     "status": "NOT_RUN",
-    "note": "第12轮仅执行纯JS生命周期和注册策略的定向Node测试；没有实际导入目标SDK，不计SDK或浏览器PASS"
+    "note": "第20轮增加监听/ResizeObserver/首次layout同步抛错清理路径；TypeScript/Monaco/Chromium未执行，保持NOT_RUN"
   },
   "sdk": {
     "status": "NOT_RUN",

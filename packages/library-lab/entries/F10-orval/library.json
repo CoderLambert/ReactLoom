@@ -4,7 +4,7 @@
   "slug": "orval",
   "name": "Orval",
   "group": "F",
-  "summary": "本地OpenAPI契约生成真实Fetch与TanStack Query代码，按生成目标隔离并检查产物",
+  "summary": "离线 OpenAPI 真实 Orval CLI 双次生成、React Query Hooks、标签分包与产物指纹验收",
   "tags": [
     "OpenAPI",
     "代码生成",
@@ -65,7 +65,9 @@
         "examples/run.mjs",
         "examples/basic.mjs",
         "examples/verify.mjs",
-        "examples/spec-check.mjs"
+        "examples/spec-check.mjs",
+        "examples/output-policy.mjs",
+        "examples/output-policy.test.mjs"
       ],
       "capabilities": [
         "node-process",
@@ -87,7 +89,9 @@
         "examples/run.mjs",
         "examples/business.mjs",
         "examples/verify.mjs",
-        "examples/spec-check.mjs"
+        "examples/spec-check.mjs",
+        "examples/output-policy.mjs",
+        "examples/output-policy.test.mjs"
       ],
       "capabilities": [
         "node-process",
@@ -109,7 +113,9 @@
         "examples/run.mjs",
         "examples/advanced.mjs",
         "examples/verify.mjs",
-        "examples/spec-check.mjs"
+        "examples/spec-check.mjs",
+        "examples/output-policy.mjs",
+        "examples/output-policy.test.mjs"
       ],
       "capabilities": [
         "node-process",

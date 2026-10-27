@@ -61,24 +61,38 @@ export default function MonacoExample({level}: Props) {
     setProblemCount(0)
     setSaved('')
     setMessage('编辑器已创建；Worker 是否启动需要浏览器实际验证')
-    const contentListener = instance.onDidChangeModelContent(() => setCode(instance.getValue()))
-    const markerListener = monaco.editor.onDidChangeMarkers((resources) => {
-      if (resources.some(uri => uri.toString() === model.uri.toString())) {
-        setProblemCount(monaco.editor.getModelMarkers({resource: model.uri}).length)
-      }
-    })
-    const observer = new ResizeObserver(() => instance.layout())
-    observer.observe(container)
-    instance.layout()
-    return () => {
-      observer.disconnect()
-      markerListener.dispose()
-      contentListener.dispose()
+    // Listener/observer/layout setup can throw after the editor was created.
+    // Install cleanup before subscribing so a failed mount cannot retain a model or lease.
+    const editor = instance
+    const textModel = model
+    let contentListener: {dispose(): void} | undefined
+    let markerListener: {dispose(): void} | undefined
+    let observer: ResizeObserver | undefined
+    const cleanup = () => {
+      observer?.disconnect()
+      markerListener?.dispose()
+      contentListener?.dispose()
       active.current = null
-      instance.dispose()
-      model.dispose()
+      editor.dispose()
+      textModel.dispose()
       releaseWorkers()
     }
+    try {
+      contentListener = editor.onDidChangeModelContent(() => setCode(editor.getValue()))
+      markerListener = monaco.editor.onDidChangeMarkers((resources) => {
+        if (resources.some(uri => uri.toString() === textModel.uri.toString())) {
+          setProblemCount(monaco.editor.getModelMarkers({resource: textModel.uri}).length)
+        }
+      })
+      observer = new ResizeObserver(() => editor.layout())
+      observer.observe(container)
+      editor.layout()
+    } catch (error) {
+      cleanup()
+      setMessage('编辑器监听或布局初始化失败：' + String(error))
+      return
+    }
+    return cleanup
   }, [level])
 
   return <section aria-label="Monaco Editor 真实运行示例">

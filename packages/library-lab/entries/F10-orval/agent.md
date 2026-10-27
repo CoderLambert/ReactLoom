@@ -17,3 +17,8 @@
 `node examples/spec-check.mjs`只验证fixture，不是目标SDK测试。必须真正运行`pnpm exec orval --config ... --project basic/business/advanced`，检查生成产物、React Query hooks、错误响应类型、重复生成 diff稳定性和tsc。CI runner无法执行则状态NOT_RUN/BLOCKED，不能把spec-check PASS当Orval PASS。
 
 官方：<https://orval.dev/docs/>
+
+
+## CLI 产物验收与故障恢复（第20轮）
+
+迁移时连同 `examples/output-policy.mjs`、`verify.mjs`、`run.mjs` 与 `orval.config.ts` 一起复制并将固定路径更新为目标包，不能只复制示例日志。分别检查 basic Fetch 的三项 operationId、business React Query Hooks、advanced tags-split 子目录。执行前应清理**仅此项目拥有**的固定输出，拒绝符号链接和越界路径；同配置连续两次生成内容必须确定性一致。不要调用带外部 URL 的任意生成任务或宽泛 `--clean`；不要认为单次CLI零退出码、旧生成物存在或 Node policy PASS 就等于 TypeScript build PASS。运行 Orval 8 至少需要 Node 22.18，React Query 的 Provider 与类型检查必须单独验证。真正运行失败则将SDK/CLI状态保持NOT_RUN/FAIL并附日志，未运行时保持NOT_RUN。
