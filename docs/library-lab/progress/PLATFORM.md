@@ -329,3 +329,23 @@ runCount：**9 / 24**。PR #8 继续 Draft；main/旧模板/PR #3 未修改，�
 
 
 **同批补证（精确提交字节）**：原始Node TAP已提交 docs/library-lab/evidence/platform-wave13-node.tap，Git Blob 3cf55953073c6409dc1f9ce1e980426ff17843d8，实际容器日志SHA-256 b3ce3d5dc2a79b03701519fb774d32e3e99df24872810dd2d29cb139f17d2849，6 PASS/0 FAIL/0 SKIP。独立执行 tsc --noEmit --pretty false --lib es2022,dom --module nodenext --moduleResolution nodenext /mnt/data/library-lab-wave13/src/lib/source-integrity.d.mts：TS5.8.3声明语法PASS（不是全包类型检查）。本子批仍属于第13轮。
+
+## PLATFORM 第14轮：四组PR集成及依赖合同修复（2026-10-27）
+
+**实际集成（仅 feat/library-lab，不碰main）**：先读取最新COORDINATION/IMPLEMENTATION、根/包AGENTS、Issue #4/#5/#6/#7、进度、开放PR、diff和CI。严格检查worker所有权、base和expected head，合入：
+- EF [#57](https://github.com/CoderLambert/ReactLoom/pull/57) 30路径（E17 HLS、E18 WaveSurfer、F01 Uppy、F08 React PDF），修复两处Node测试导入后，squash commit a329a46af03f24e25922a15b53df80728c8b606f。
+- AB [#59](https://github.com/CoderLambert/ReactLoom/pull/59) 26路径（A02 Recharts、B10 Base UI、B11 Radix、B12 React Aria），squash commit e73374d56a45f1810cddff9b31f8c5b3c72304d8。
+- CD [#60](https://github.com/CoderLambert/ReactLoom/pull/60) 28路径（C17/C18 i18next、D20 MiniSearch），squash commit 122f6dbc5f09864c1abc34ffc91d2674bc7ccc85。
+- EF [#61](https://github.com/CoderLambert/ReactLoom/pull/61) 25路径（F13 Playwright、F14 Storybook、F17 axe-core）。GitHub常规squash返回405：与#57只冲突progress/EF.md。确认其他24个EF文件无交叉修改后，取其准确Git blob，保留#57进度再追加#61第17轮进度，创建双亲提交 b11fd218aa34ef5942660d246133b1a69bcb19e6（第二亲为#61 head 20654c8ecf0062e128b252affda7d1e23cdb6be3），以非force fast-forward更新集成分支。GitHub已确认#61 merged/closed。无覆盖、未改其它worker文件。
+
+**PLATFORM源码提交**：逐一读取119个library.json，将每条packages/版本与公共package.json核对，仅缺4项：E03 lexical@0.52.0、@lexical/react@0.52.0，F01 @uppy/core@6.1.0，F17 axe-core@4.14.0。已据npm发布信息与官方使用文档核对版本及许可（Lexical MIT、Uppy MIT、axe MPL-2.0），静态核验React19与Lexical React18+边界；真实peer安装仍待pnpm解析。统一加入package依赖，并将已存在的6项source-integrity Node回归接入默认test：commit 2286f37fc5c94ba21bc9e4fa99b8d1161bd40917。补真实E03/F01/F17 manifest/包声明定向回归：commit 81ec09ac04a05b6bb8264292e07f9359c2a58365。参考 https://uppy.io/docs/uppy/、https://www.npmjs.com/package/@uppy/core、https://www.npmjs.com/package/@lexical/react、https://www.npmjs.com/package/axe-core。这不是包实际安装或SDK实测。
+
+**实际执行/证据界限**：
+- PASS：GitHub四个worker PR成功合入或双亲保真合入；PR #8仍open/Draft；119条manifest静态差异完成、上述4项依赖声明已在远端补齐。纯静态比对不能算Node PASS。
+- NOT_RUN：本轮完整集成分支Node tests、新增声明回归、实际SDK import、TypeScript typecheck、Vite build、Chromium、Storybook play/axe DOM、HLS/PDF/Worker/SW。Worker独立声称EF #57 9个和#61 4个Node纯策略通过，非本平台在该HEAD运行，绝非SDK通过。verification.json不升PASS。
+- BLOCKED：执行机 node --version = v22.16.0，未安装pnpm；registry.npmjs.org DNS不可达，也没有可运行完整私有repo工作树。不能执行pnpm10合法解析/冻结安装，未生成根pnpm-lock importer，未伪造。GitHub当前HEAD 81ec09ac04a05b6bb8264292e07f9359c2a58365 的 [Library Lab #40484809233](https://github.com/CoderLambert/ReactLoom/actions/runs/40484809233) 2 job及 [主CI #40484809244](https://github.com/CoderLambert/ReactLoom/actions/runs/40484809244) 7 job均failure且steps=null，表明没有可信步骤日志，不能据此推断构建代码FAIL。
+- 维度：119/119身份目录、119份源码/guide/agent/verification文件、357个三层Demo配置声明；本轮新增实际SDK PASS=0，真实可运行Demo与原始117资料审核数不从静态覆盖推导，E11/F05仍为重建。
+
+**下一批**：有Node>=22.18/pnpm10/registry/Runner时先 pnpm verify:library --execute --resolve-lock，审查真实lock恢复frozen，再逐项执行catalog、Node政策回归、E03/F01/F17 SDK、tsc/Vite、Chromium及F06/F07 PDF Worker、E05 Monaco、F11 MSW、D16 Workbox SW隔离；无安装环境不重复伪运行，继续公共协议可独立代码修复。主PR#8继续Draft，不改main、PR#3、模板、生产或公网部署。
+
+runCount: **14/24**。本轮依赖/测试阶段最新提交 81ec09ac04a05b6bb8264292e07f9359c2a58365；progress自身提交见本次GitHub历史。
