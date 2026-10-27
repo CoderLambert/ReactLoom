@@ -1,5 +1,5 @@
 import {useEffect, useMemo, useRef, useState} from 'react';
-import {chartCounts, nextRevision, shouldAutoSample} from './chart-stream-policy';
+import {chartCounts, nextRevision, shouldAutoSample, MAX_REVISION} from './chart-stream-policy';
 import {
   Chart, BarController, BarElement, LineController, LineElement, PointElement,
   CategoryScale, LinearScale, Legend, Tooltip,
@@ -18,6 +18,7 @@ export default function ChartJsExample({level}: {level: Level}) {
   const [kind, setKind] = useState<ChartKind>('bar');
   const [revision, setRevision] = useState(0);
   const [autoSample, setAutoSample] = useState(false);
+  const [selectedDay, setSelectedDay] = useState<number | null>(null);
   const [tabVisible, setTabVisible] = useState(() =>
     typeof document === 'undefined' || document.visibilityState === 'visible');
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -33,10 +34,10 @@ export default function ChartJsExample({level}: {level: Level}) {
   }, []);
 
   useEffect(() => {
-    if (!shouldAutoSample(autoSample, level, tabVisible)) return;
+    if (!shouldAutoSample(autoSample, level, tabVisible, revision)) return;
     const timer = window.setInterval(() => setRevision(nextRevision), 400);
     return () => window.clearInterval(timer);
-  }, [autoSample, level, tabVisible]);
+  }, [autoSample, level, tabVisible, revision]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -61,6 +62,10 @@ export default function ChartJsExample({level}: {level: Level}) {
         maintainAspectRatio: false,
         animation: false,
         plugins: {legend: {display: true}},
+        onClick: (_event, elements) => {
+          const index = elements[0]?.index;
+          if (typeof index === 'number' && index >= 0 && index < labels.length) setSelectedDay(index);
+        },
         scales: {y: {beginAtZero: true}},
       },
     });
@@ -78,12 +83,19 @@ export default function ChartJsExample({level}: {level: Level}) {
     chart.update('none');
   }, [counts, effectiveKind]);
 
+  useEffect(() => {
+    const chart = chartRef.current;
+    if (!chart) return;
+    chart.setActiveElements(selectedDay === null ? [] : [{datasetIndex: 0, index: selectedDay}]);
+    chart.update('none');
+  }, [selectedDay, effectiveKind]);
+
   return <section aria-label="Chart.js 真实 Canvas 示例">
     <h2>{level === 'basic' ? 'Canvas 阅读量柱状图' :
       level === 'business' ? '可更新的业务统计' : '柱线切换与实例销毁'}</h2>
     <p>调用 chart.js 真实 Chart 构造函数；数据为固定公式生成的本地 fixture。</p>
     <div style={{display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center', marginBottom: 14}}>
-      <button type="button" onClick={() => setRevision(nextRevision)}>模拟新增阅读</button>
+      <button type="button" disabled={revision >= MAX_REVISION} onClick={() => setRevision(nextRevision)}>模拟新增阅读</button>
       {level === 'advanced' && <label><input type="checkbox" checked={autoSample}
         onChange={event => setAutoSample(event.currentTarget.checked)}/>
         自动采样（400ms，后台暂停）
@@ -95,6 +107,8 @@ export default function ChartJsExample({level}: {level: Level}) {
         </select>
       </label>}
       <output aria-live="polite">七日总阅读：{counts.reduce((a, b) => a + b, 0)}</output>
+      <output role="status">{selectedDay === null ? "可点选图形或使用下方表格按钮" :
+        `${labels[selectedDay]}：${counts[selectedDay]} 次阅读`}</output>
     </div>
     <div style={{height: 310, position: 'relative', border: '1px solid #d7e3d6',
       background: '#fbfefb', borderRadius: 10, padding: 12}}>
@@ -103,10 +117,12 @@ export default function ChartJsExample({level}: {level: Level}) {
     <table style={{width: '100%', textAlign: 'left', fontSize: 13, marginTop: 15}}>
       <caption style={{textAlign: 'left'}}>Canvas 图表等价数据表</caption>
       <thead><tr><th scope="col">日期</th>{labels.map(day => <th scope="col" key={day}>{day}</th>)}</tr></thead>
-      <tbody><tr><th scope="row">阅读数</th>{counts.map((count, i) => <td key={labels[i]}>{count}</td>)}</tr></tbody>
+      <tbody><tr><th scope="row">阅读数</th>{counts.map((count, i) => <td key={labels[i]}><button type="button"
+        aria-label={`选中${labels[i]}的阅读量 ${count}`} aria-pressed={selectedDay === i}
+        onClick={() => setSelectedDay(i)}>{count}</button></td>)}</tr></tbody>
     </table>
     <p style={{fontSize: 12, color: '#607060', marginTop: 15}}>
-      数据变化复用 chart.update('none')；仅切换类型时 destroy/recreate。自动采样切走场景或隐藏标签页即暂停，实例随组件卸载销毁。
+      图形点击与表格按钮使用同一React选中态。达到采样上界、隐藏标签页或离开高级模式即停止interval；实例卸载destroy。
     </p>
   </section>;
 }

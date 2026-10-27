@@ -14,7 +14,7 @@ export function chartCounts(revision: number): number[] {
   return Array.from({length: 7}, (_, index) => 110 + index * 17 + current * (index + 3));
 }
 
-/** Auto sampling never advances a hidden or non-advanced demo. */
-export function shouldAutoSample(auto: boolean, level: string, visible: boolean): boolean {
-  return auto && level === 'advanced' && visible;
+/** Auto sampling never advances a hidden, non-advanced or saturated demo. */
+export function shouldAutoSample(auto: boolean, level: string, visible: boolean, revision = 0): boolean {
+  return auto && level === 'advanced' && visible && normalizeRevision(revision) < MAX_REVISION;
 }
