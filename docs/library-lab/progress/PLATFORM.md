@@ -478,3 +478,30 @@ runCount: **14/24**。本轮依赖/测试阶段最新提交 81ec09ac04a05b6bb826
 ### 第18轮同批依赖元数据复核（保持runCount=18）
 
 按EF #73的现有版本声明直接读取官方维护仓库的实际 tag manifest（不照抄旧研究稿）：[msw v3.0.3](https://github.com/mswjs/msw/blob/v3.0.3/package.json) = MIT、Node >=22.12、可选 peer TypeScript >=5.9.x / Vite >=6 / graphql >=16；当前Lab声明TypeScript 7.0.2、Vite 8.3.4、Node >=22.18 在声明范围内。[react-pdf v11.0.0](https://github.com/wojtekmaj/react-pdf/blob/v11.0.0/packages/react-pdf/package.json) = MIT、React/ReactDOM ^19.0.0、可选@types/react ^19.0.0、固定依赖 **pdfjs-dist 6.3.289**；当前Lab React 19.3.0 / @types/react 19.3.0 / pdfjs-dist 6.3.289与之相符。[Mozilla pdf.js v6.3.289](https://github.com/mozilla/pdf.js/blob/v6.3.289/package.json) 上游声明Apache-2.0、Node >=22.13 或 >=24。**这仅证实真实上游tag中的版本、peer与许可元数据，不等于 npm registry成功拉取、解决传递依赖、pnpm lock或SDK运行；没有据此修改版本或验收状态。**
+
+
+## PLATFORM 第19轮：三个Worker交互质量PR + Worker运行观察报告（2026-10-27）
+
+**runCount: 19/24。** 从实际GitHub私有分支恢复并复读 COORDINATION、IMPLEMENTATION、根和本包AGENTS、Issue #4/#5/#6/#7、平台进度、开放PR与CI；起点为 feat/library-lab @ f96f43fad9ba6e227b71a85596c9b91eb1ff1dfb。未沿用旧容器工作树。
+
+### 真实集成（共69个所有权范围内变更文件）
+
+- AB [PR #74](https://github.com/CoderLambert/ReactLoom/pull/74)：固定head 428e8b81a57b6fccea6956426470db0d2eb80155；21/21路径仅B20/B21/B22及AB进度，squash eac59cbc77c74564ff4bda3b58e75eea6e41231a。Sonner仅最近保存可撤销、Motion reducer事务/焦点、Pangea拒绝过期拖拽索引。
+- CD [PR #75](https://github.com/CoderLambert/ReactLoom/pull/75)：固定head c97f93c983a08f1e91950ad4b303bed0013c532a；19/19路径仅D11/D19与CD进度，squash 7e18962f510c786a417c91a9ae4b84f1582d7464。Jotai租户Store及Fuse增删改后真实重建索引。
+- EF [PR #76](https://github.com/CoderLambert/ReactLoom/pull/76)：固定head dba7192c2f149012190595e4482fea4985a87432；29/29路径仅E12/E16/E19与EF进度，squash 02554d6f7e2632756cf0b2f255da25093a04ba3d。assistant-ui文本输入预算、Video.js文件魔数预检、ffmpeg.wasm输出RIFF/PCM约束。
+- GitHub REST拒绝直接合并Draft Worker PR (405)，故仅将这三个worker PR标记ready后以 expected_head_sha squash；主 PR #8仍Draft。三组PR无公共新依赖请求，本轮未修改版本/根锁。
+
+### 公共Worker报告切片（真实源码）
+
+- 新 src/lib/worker-observation.mjs 与 .d.mts：浏览器仅在用户显式启动的Worker宿主产生本地观察记录，绑定本次runId、条目ID、demo层级及目录sourceFingerprint；最多40条清理控制字符的消息。超时/宿主异常/Worker自报结果分开；终态之后拒绝迟到事件。结构强制 assurance=unverified-browser-observation，禁止Worker声称result自动等价SDK PASS。
+- src/components/worker-host.tsx 和 demo-host.tsx 接入报告；完成时可显式复制JSON（不自动上传或改verification.json），停止/切页销毁Worker和事件监听。浏览器/剪贴板与真正第三方Worker SDK尚未运行，属于待验收UI。
+- tests/worker-observation.test.mjs 进入本包默认离线Node测试命令；新增定向测试4项验证身份绑定、40日志上限/终态保留、超时/主机错误与迟到消息隔离。
+
+### 本轮实际命令及证据范围
+
+- 宿主 Node v22.16.0，隔离目录 /mnt/data/library-lab-isolated：node --test tests/worker-observation.test.mjs → **4 PASS / 0 FAIL / 0 SKIP**；node --check src/lib/worker-observation.mjs → PASS。精确新模块blob 74c19c9a002836ceda152e0fc1b16c40350bbe4d、测试blob 99e18270b333b9e7a6bed4141f9e88d52f546c16，与运行时 git hash-object一致，非完整仓库回归。
+- tsc 5.8.3：tsc --noEmit --strict --skipLibCheck --target ES2022 --module ESNext --moduleResolution Bundler --lib ES2022,DOM src/lib/worker-observation.d.mts → PASS，仅声明文件；全局TypeScript transpileModule对新 worker-host.tsx 静态语法解析0错误（非类型检查）。独立TAP保存 evidence/platform-wave19-worker.tap。
+- Node未达到package要求>=22.18，容器无pnpm10，registry.npmjs.org DNS无法解析；实际依赖安装及根pnpm-lock importer生成 **BLOCKED**。完整tsc/Vite、第三方SDK、Chromium生产preview、Worker宿主与复制UI验证 **NOT_RUN**；不将上述纯函数测试计为SDK PASS。当前Actions [Library Lab 40515750776](https://github.com/CoderLambert/ReactLoom/actions/runs/40515750776) 2个job、[主CI 40515750586](https://github.com/CoderLambert/ReactLoom/actions/runs/40515750586) 7个job全failure但steps=0，没有可审的构建日志。
+- 目录覆盖沿用已核实的119/119源码+双指南+verification，357 basic/business/advanced **配置声明**（不是运行成功数）；本轮新增实际SDK PASS=0，浏览器Demo实测PASS=0，117原资料逐项审核量本轮未重新统计，E11/F05原件仍缺并以recreated处理。
+
+**下批**：真实安装环境恢复后首先生成审查根pnpm-lock并启用frozen CI，执行完整tsc与Vite构建，Chromium重点检查本轮Worker报告的生命周期、复制JSON、迟到事件和卸载，再验证Monaco/F11 MSW/PDF.js/FFmpeg worker。无可用Runner时优先推进独立源码安全与增量回归，不用静态产物冒充生产验收。主 PR #8保持open/Draft，不动main、PR #3、旧模板、公开部署及付费API。
