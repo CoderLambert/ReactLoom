@@ -31,3 +31,8 @@ basic将Motion children(render function)的数值插值改为声明式 motion.di
 - [react-motion历史库](https://github.com/chenglou/react-motion)
 
 许可：MIT（请依目标版本复核）；本示例代码和输入数据原创。不调用付费API。
+
+
+## 连续修改与焦点所有权（AB wave20）
+
+迁移后的业务任务列表使用`examples/task-history.ts`纯Reducer：添加、删除和单步撤销作为原子状态转换，ID仅递增且最多24项；连续点击不会从过期闭包回滚到旧列表。删除时如果焦点位于被删除按钮，React提交后恢复到邻近任务，最后一条则转移到添加按钮。减少动画时禁用布局插值，仍保留真实Motion/AnimatePresence退出语义。Node规则测试与真实动画/屏幕阅读器验收分开记录。

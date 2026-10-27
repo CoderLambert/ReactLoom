@@ -12,3 +12,6 @@
 
 
 **异步 Toast 的最后任务所有权（wave8）**：迁移 `examples/example.tsx` 必须一并阅读 `examples/latest-run.ts`。`LatestRunGuard.start()` 返回当前运行 token，后续写状态需验证 `isCurrent(token)`；重试先停止旧 timer 与旧 loading toast，取消/组件卸载 `invalidate()` 并清理本例的 toast id。代次校验不取消真实 HTTP；线上要结合 AbortSignal、请求幂等键与服务端任务生命周期，不能只用 `toast.dismiss()` 假装取消业务。
+
+
+**重复保存保护（wave20）**：旧Toast的撤销动作只能作用于创建它的最近一次保存；执行新保存先失效旧token和关闭旧保存Toast，执行撤销后也消费token。切换Demo level与卸载需同时废止保存和异步任务所有权。运行源码与 `tests/undo-ownership.test.mts` 提供规则证据，不把Node测试写为SDK PASS。

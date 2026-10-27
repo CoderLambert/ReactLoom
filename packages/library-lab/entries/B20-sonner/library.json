@@ -87,7 +87,8 @@
       "sourceFiles": [
         "examples/example.tsx",
         "examples/demo.tsx",
-        "examples/latest-run.ts"
+        "examples/latest-run.ts",
+        "tests/undo-ownership.test.mts"
       ],
       "capabilities": [
         "portal",

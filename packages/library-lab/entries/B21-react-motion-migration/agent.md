@@ -15,3 +15,6 @@
 **迁移流程**：先读条目用途和版本→判断业务状态与React/UI元素所有权→提取最小代码→接入目标项目的依赖/许可证/样式→测试触摸、键盘、IME、快速重挂载和异常回滚→记录源码指纹。不要把演示输入或未经验证的安装版本视为生产承诺。
 
 官方：[Motion React文档](https://motion.dev/docs/react-animation) / [AnimatePresence](https://motion.dev/docs/react-animate-presence) / [reduced motion](https://motion.dev/docs/react-use-reduced-motion) / [react-motion历史库](https://github.com/chenglou/react-motion)。
+
+
+**状态事务和焦点（wave20）**：复制`examples/example.tsx`时也要复制`examples/task-history.ts`，由Reducer序列化删除/添加/撤销；禁止在`setUndo(items);setItems(...)`中抓取过期render闭包。删除持有焦点的按钮需在提交后显式转移焦点；reduced-motion应同时控制layout动画。核对`tests/task-history.test.mts`，SDK/TSX/Chromium继续NOT_RUN。

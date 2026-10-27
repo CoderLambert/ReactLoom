@@ -58,7 +58,8 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/task-history.ts"
       ],
       "capabilities": [
         "animation",
@@ -75,7 +76,8 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/task-history.ts"
       ],
       "capabilities": [
         "animation",
@@ -92,7 +94,9 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/task-history.ts",
+        "tests/task-history.test.mts"
       ],
       "capabilities": [
         "animation",

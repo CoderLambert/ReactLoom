@@ -13,14 +13,18 @@ export default function SonnerExample({level}: {level: Level}) {
   const timers = useRef<Set<number>>(new Set());
   const latestRun = useRef(new LatestRunGuard());
   const runningToast = useRef<string | number | null>(null);
+  const saveOwner = useRef(new LatestRunGuard());
+  const savedToast = useRef<string | number | null>(null);
 
   useEffect(() => () => {
     latestRun.current.invalidate();
+    saveOwner.current.invalidate();
+    savedToast.current = null;
     clearPending();
     // Only dismiss toasts owned by this demo; never call toast.dismiss() without an id.
     for (const id of owned.current) toast.dismiss(id);
     owned.current.clear();
-  }, []);
+  }, [level]);
 
   function clearPending() {
     for (const timer of timers.current) window.clearTimeout(timer);
@@ -43,13 +47,27 @@ export default function SonnerExample({level}: {level: Level}) {
     setResult('已触发基本通知');
   }
   function saveNews() {
+    // Only the latest save owns the undo action. An old toast may outlive a new save.
+    const token = saveOwner.current.start();
+    if (savedToast.current !== null) {
+      toast.dismiss(savedToast.current);
+      owned.current.delete(savedToast.current);
+    }
     setSaved(true);
     setResult('新闻已加入稍后阅读');
-    remember(toast.success('已加入稍后阅读', {
+    const id = toast.success('已加入稍后阅读', {
       toasterId,
-      description: '撤销入口在通知中，注意可访问名称。',
-      action: {label: '撤销', onClick: () => {setSaved(false); setResult('已撤销');}},
-    }));
+      description: '仅最新一次保存可以撤销，业务状态持续可见。',
+      action: {label: '撤销', onClick: () => {
+        if (!saveOwner.current.isCurrent(token)) return;
+        saveOwner.current.invalidate();
+        savedToast.current = null;
+        setSaved(false);
+        setResult('已撤销最近一次保存');
+      }},
+    });
+    savedToast.current = id;
+    remember(id);
   }
   function simulateTask() {
     // A second click supersedes the first, including any pending toast and callback.
@@ -76,6 +94,8 @@ export default function SonnerExample({level}: {level: Level}) {
   }
   function cancelOwn() {
     latestRun.current.invalidate();
+    saveOwner.current.invalidate();
+    savedToast.current = null;
     clearPending();
     for (const id of owned.current) toast.dismiss(id);
     owned.current.clear();
