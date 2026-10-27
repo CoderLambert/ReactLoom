@@ -29,3 +29,9 @@ export function reorderVisible<T extends SortableRecord>(items:readonly T[],sour
   result.splice(target,0,moving);
   return [...result,...items.slice(visibleCount)];
 }
+
+/** A drag is valid only for the data revision and demo mode in which it started. */
+export type DragSession={activeId:string;revision:number;level:'basic'|'business'|'advanced'};
+export function isCurrentDragSession(session:DragSession|null,activeId:string,revision:number,level:DragSession['level']):boolean {
+  return session!==null && session.activeId===activeId && session.revision===revision && session.level===level;
+}

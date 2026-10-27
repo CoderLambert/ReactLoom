@@ -1,7 +1,7 @@
 import {useEffect,useId,useRef,useState} from 'react';
 import {draggable,dropTargetForElements,monitorForElements} from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import {combine} from '@atlaskit/pragmatic-drag-and-drop/combine';
-import {canReorderAroundPinned} from './pinned-order';
+import {canReorderAroundPinned,isCurrentDragSession,type DragSession} from './pinned-order';
 
 type Level='basic'|'business'|'advanced';
 type Item={id:string;title:string;locked?:boolean};
@@ -46,9 +46,14 @@ export default function PragmaticExample({level}:{level:Level}){
   const undoRef=useRef<Item[]|null>(null);
   const [undoable,setUndoable]=useState(false);
   const [status,setStatus]=useState('拖动项目到另一个未锁定项目，或用上下按钮。');
+  const dataRevision=useRef(0);
+  const dragSession=useRef<DragSession|null>(null);
+  const currentLevel=useRef(level);currentLevel.current=level;
+  useEffect(()=>{dragSession.current=null;},[level]);
   const shown=level==='basic'?items.slice(0,3):items;
   const shownRef=useRef(shown);shownRef.current=shown;
   function commit(next:Item[],message:string){
+    ++dataRevision.current;
     undoRef.current=itemsRef.current;setUndoable(true);
     itemsRef.current=next;setItems(next);setStatus(message);
   }
@@ -66,14 +71,22 @@ export default function PragmaticExample({level}:{level:Level}){
   useEffect(()=>{
     const detach=monitorForElements({
       canMonitor:({source})=>source.data.scope===scope&&source.data.type==='reactloom-entry',
+      onDragStart:({source})=>{
+        const id=source.data.id;
+        dragSession.current=typeof id==='string'
+          ? {activeId:id,revision:dataRevision.current,level:currentLevel.current} : null;
+      },
       onDrop:({source,location})=>{
+        const snapshot=dragSession.current;
+        dragSession.current=null;
         const target=location.current.dropTargets[0];
         if(target?.data.scope!==scope||target.data.type!=='reactloom-target')return;
         const from=source.data.id,to=target.data.id;
-        if(typeof from==='string'&&typeof to==='string')reorderRef.current(from,to);
+        if(typeof from==='string'&&typeof to==='string'&&isCurrentDragSession(snapshot,from,dataRevision.current,currentLevel.current))
+          reorderRef.current(from,to);
       },
     });
-    return detach;
+    return ()=>{dragSession.current=null;detach();};
   },[scope]);
   function move(id:string,offset:number){
     const source=shown.findIndex(x=>x.id===id),target=source+offset;
@@ -82,7 +95,7 @@ export default function PragmaticExample({level}:{level:Level}){
   }
   function undo(){
     if(!undoRef.current)return;
-    const old=undoRef.current;itemsRef.current=old;setItems(old);
+    const old=undoRef.current;++dataRevision.current;dragSession.current=null;itemsRef.current=old;setItems(old);
     undoRef.current=null;setUndoable(false);setStatus('已撤销上次排序');
   }
   return <section aria-label="Pragmatic drag and drop 实践">

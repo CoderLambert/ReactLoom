@@ -1,7 +1,7 @@
-import {useRef,useState,type CSSProperties} from 'react';
-import {DndContext,KeyboardSensor,PointerSensor,closestCenter,useSensor,useSensors,type DragEndEvent} from '@dnd-kit/core';
+import {useEffect,useRef,useState,type CSSProperties} from 'react';
+import {DndContext,KeyboardSensor,PointerSensor,closestCenter,useSensor,useSensors,type DragStartEvent,type DragEndEvent} from '@dnd-kit/core';
 import {SortableContext,sortableKeyboardCoordinates,useSortable,verticalListSortingStrategy} from '@dnd-kit/sortable';
-import {canReorderAroundPinned,reorderVisible} from './pinned-order';
+import {canReorderAroundPinned,reorderVisible,isCurrentDragSession,type DragSession} from './pinned-order';
 type Props={level:'basic'|'business'|'advanced'};
 type Item={id:string;title:string;locked?:boolean};
 const INITIAL:Item[]=[
@@ -35,12 +35,16 @@ export default function DndKitWorkshop({level}:Props){
   const itemsRef=useRef<Item[]>(INITIAL);
   const [previous,setPrevious]=useState<Item[]|null>(null);
   const [message,setMessage]=useState('使用拖动手柄或上下按钮调整顺序');
+  const dataRevision=useRef(0);
+  const dragSession=useRef<DragSession|null>(null);
+  useEffect(()=>{dragSession.current=null;},[level]);
   const visible=level==='basic'?items.slice(0,3):items;
   const sensors=useSensors(
     useSensor(PointerSensor,{activationConstraint:{distance:6}}),
     useSensor(KeyboardSensor,{coordinateGetter:sortableKeyboardCoordinates})
   );
   function commit(next:Item[],note:string){
+    ++dataRevision.current; // keyboard/reset action revokes any in-progress drop
     setPrevious(itemsRef.current);
     itemsRef.current=next;
     setItems(next);
@@ -55,8 +59,14 @@ export default function DndKitWorkshop({level}:Props){
     }
     commit(moved,'已调整 '+(current.find(item=>item.id===activeId)?.title??activeId)+' 的优先级');
   }
+  function handleStart(event:DragStartEvent){
+    dragSession.current={activeId:String(event.active.id),revision:dataRevision.current,level};
+  }
   function handleEnd(event:DragEndEvent){
-    if(event.over)reorder(String(event.active.id),String(event.over.id));
+    const session=dragSession.current;
+    dragSession.current=null;
+    if(event.over&&isCurrentDragSession(session,String(event.active.id),dataRevision.current,level))
+      reorder(String(event.active.id),String(event.over.id));
   }
   function move(id:string,direction:number){
     const active=level==='basic'?itemsRef.current.slice(0,3):itemsRef.current;
@@ -67,7 +77,7 @@ export default function DndKitWorkshop({level}:Props){
   return <section aria-label="dnd-kit 排序实战">
     <h2>{level==='basic'?'拖动三个频道':level==='business'?'RSS 频道优先级':'锁定、撤销与输入多样性'}</h2>
     <p>真实 @dnd-kit/core 和 sortable 的 DndContext/useSortable，稳定字符串ID，不直接操作DOM改变数组。</p>
-    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleEnd}>
+    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={handleStart} onDragEnd={handleEnd} onDragCancel={()=>{dragSession.current=null;}}>
       <SortableContext items={visible.map(item=>item.id)} strategy={verticalListSortingStrategy}>
         <ol style={{listStyle:'none',padding:0}}>{visible.map((item,index)=>
           <SortableRow key={item.id} item={item} index={index} move={move} lockable={level==='advanced'}
@@ -77,7 +87,7 @@ export default function DndKitWorkshop({level}:Props){
       </SortableContext>
     </DndContext>
     {level==='advanced'&&<div className="demo-controls">
-      <button type="button" disabled={!previous} onClick={()=>{if(previous){itemsRef.current=previous;setItems(previous);setPrevious(null);setMessage('已撤销上一次排序');}}}>撤销</button>
+      <button type="button" disabled={!previous} onClick={()=>{if(previous){++dataRevision.current;dragSession.current=null;itemsRef.current=previous;setItems(previous);setPrevious(null);setMessage('已撤销上一次排序');}}}>撤销</button>
       <button type="button" onClick={()=>commit(INITIAL,'已恢复初始频道顺序')}>恢复默认</button>
     </div>}
     <p role="status" aria-live="polite">{message}</p>

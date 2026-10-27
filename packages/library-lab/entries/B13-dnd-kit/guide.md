@@ -40,3 +40,7 @@ DndContext 处理 sensors/collision；SortableContext 提供 id 顺序；useSort
 ## AB wave16：快速多事件重排的一致性
 
 拖拽事件、上下键和重置统一在当前 `itemsRef` 快照上提交；`pinned-order.ts` 的 `reorderVisible` 按真实ID验证目标、去重、锁定闭区间、可见前缀，并保留basic模式未显示的尾部频道。避免连续事件依据旧React闭包数组产生丢序/错误撤销快照。`tests/reorder-policy.test.mts` 额外覆盖隐藏尾部、固定槽位、旧目标和重复ID；键盘传感器/触摸与DOM焦点仍待真实浏览器。
+
+## AB wave18：拖动开始到提交之间的版本冲突
+
+拖动手柄激活时用真实`onDragStart`捕获activeId、当前模式及`dataRevision`；`onDragEnd`只有三者仍匹配才执行`reorderVisible`。在拖动期间使用上/下键、重置、撤销或切换basic/business/advanced，会使旧拖动结果失效。`onDragCancel`清理会话，不让过时的Drop覆盖新顺序。新增`tests/drag-session.test.mts`四项纯规则测试；该测试不代替dnd-kit真实传感器、Esc、触控及焦点行为验收。

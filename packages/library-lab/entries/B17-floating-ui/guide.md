@@ -73,3 +73,7 @@ React 状态更新可能批量化；`compositionend` 若紧邻同一次 Enter �
 业务浮层“复制示例引用”调用浏览器原生`navigator.clipboard.writeText`，**只有Promise成功**才关闭弹层并显示“已复制”；权限拒绝或非安全上下文在当前浮层保留`role=alert`错误，不能用按钮点击冒充复制成功。该文本明确为本地教学引用。必须在HTTPS或localhost下用真实Chromium验证，Floating UI的Portal/焦点/IME回归也不能从源码推断成功。
 
 剪贴板写入完成也检查异步请求代次；用户同时选择其他动作、关闭浮层或卸载后，迟到的复制 Promise 不再覆盖结果或关闭下次打开的浮层。
+
+## AB wave18：外部关闭必须同步取消未完成剪贴板回写
+
+旧实现依赖`useEffect([open])`取消剪贴板Promise；点外部或Escape关闭浮层到Effect运行之间存在微任务窗口，成功回调可能误标“已复制”甚至关闭下一次打开的Popover。现在Floating UI的`onOpenChange`立即撤销请求序号并重置输入法状态；业务按钮也走同一关闭函数，组件卸载另外撤销。复制失败仍保留Popover及可访问错误，Clipboard API只能在安全上下文和用户授权下真实验证。需在浏览器通过受控延迟Promise复现“复制中关闭→迟到resolve/reject→再次打开”及Escape焦点归还，不能把代码变更视为浏览器PASS。

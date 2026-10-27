@@ -42,3 +42,7 @@ Draggable与dropTarget必须在元素mount后注册，并在unmount时调用comb
 ## AB wave16：独立指针拖动手柄
 
 官方Element Adapter的 `draggable({element,dragHandle})` 可以限定只有子元素启动拖拽，避免整行原生Drag劫持行内上/下移动按钮、文字选择与辅助操作。本例注册 `handleRef`，将 `touchAction:none` 只应用到32px手柄；其他区域保留正常滚动/点击。Pragmatic没有内置键盘Sortable，键盘仍通过上下按钮和同一业务重排规则实现。官方API：https://atlassian.design/components/pragmatic-drag-and-drop/core-package/adapters/element 。需在Chromium真实检查拖动起始区/点击按钮/触屏滚动与cleanup；本轮只有代码与官方API核实，SDK/browser NOT_RUN。
+
+## AB wave18：原生拖放监听的代次安全
+
+列表级`monitorForElements`在真实`onDragStart`记住源ID、数据revision和模式；`onDrop`先消费/清空令牌，再验证当前数据、来源和模式，才允许调用业务reorder。拖动开始后若通过键盘按钮、撤销/重置或切换basic/business/advanced改写顺序，旧Native Drag Drop不能覆盖新状态。卸载monitor也清空令牌；指针仍只能从`dragHandle`启动，键盘用户使用上/下按钮。`tests/drag-session.test.mts`验证纯会话判定，浏览器级原生拖拽/触屏/跨实例隔离仍NOT_RUN。

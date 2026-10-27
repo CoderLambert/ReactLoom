@@ -31,3 +31,7 @@
 示例使用 `navigator.clipboard.writeText`，写入成功后才调用 `choose`；失败保留Popover并给屏幕阅读器`role=alert`。不可退回到“点击即显示已复制”的假业务效果。需测试HTTPS安全上下文、拒绝权限、键盘焦点与关闭恢复。
 
 同时保留 `clipboardRequest` 代次防护，覆盖选择其他动作、Escape/外部关闭、卸载后迟到的剪贴板Promise。不能在这些状态下异步改写当前选择。
+
+## wave18异步所有权
+
+`useFloating({onOpenChange})`关闭时必须同步增加clipboardRequest，不能等`useEffect([open])`后才标记过期。choose/复制成功走同一关闭函数，Portal外部点击、Escape、卸载必须使旧Promise无权提交状态；错误保留在当前浮层可读的role=alert中。必须用真实Clipboard权限环境验证，不能Mock Floating UI SDK后标PASS。

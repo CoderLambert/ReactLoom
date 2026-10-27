@@ -18,11 +18,20 @@ export default function FloatingExample({level}: {level: Level}) {
   const composing = useRef(false);
   const suppressNextEnter = useRef(false);
   const id = useId();
-  useEffect(() => { if (!open) ++clipboardRequest.current; }, [open]);
+  // Floating UI dismisses synchronously; revoke in-flight clipboard writes before React effects run.
+  const setPopoverOpen = (nextOpen: boolean) => {
+    if (!nextOpen) {
+      ++clipboardRequest.current;
+      setClipboardError('');
+      composing.current = false;
+      suppressNextEnter.current = false;
+    }
+    setOpen(nextOpen);
+  };
   useEffect(() => () => { ++clipboardRequest.current; }, []);
   const {refs, floatingStyles, context, placement} = useFloating({
     open,
-    onOpenChange: setOpen,
+    onOpenChange: setPopoverOpen,
     placement: level === 'advanced' ? 'top-start' : 'bottom-start',
     middleware: [offset(10), flip({padding: 12}), shift({padding: 12})],
     // Both reference and floating elements are conditionally mounted while open.
@@ -33,10 +42,8 @@ export default function FloatingExample({level}: {level: Level}) {
   const role = useRole(context, {role: 'dialog'});
   const {getReferenceProps, getFloatingProps} = useInteractions([click, dismiss, role]);
   const choose = (value: string) => {
-    ++clipboardRequest.current; // a different action invalidates a pending clipboard result
     setSelected(value);
-    setClipboardError('');
-    setOpen(false);
+    setPopoverOpen(false); // invalidates a pending copy synchronously
   };
   async function copyCitation() {
     const request = ++clipboardRequest.current;
