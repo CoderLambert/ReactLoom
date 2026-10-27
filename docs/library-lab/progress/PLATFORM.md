@@ -473,3 +473,8 @@ runCount: **14/24**。本轮依赖/测试阶段最新提交 81ec09ac04a05b6bb826
 - 本轮进度/证据均保存在私有仓库，主PR #8保持 Draft；main、既有PR #3、模板、公开部署和付费API均未触碰。
 
 **下批**：优先取得Node>=22.18、pnpm10与可用registry/Runner，使用真实解析补根lock且恢复frozen，再执行完整类型/Vite和有实际SDK导入的定向套件，Chromium重点运行新增JSON安全回归与 A06/A16/B18、C09/C10/D19、F06/F07/F11、Monaco及PDF/MSW资源卸载；环境继续阻塞时推进其他可独立验证的公共代码，不把无Runner的CI失败当作构建结果。
+
+
+### 第18轮同批依赖元数据复核（保持runCount=18）
+
+按EF #73的现有版本声明直接读取官方维护仓库的实际 tag manifest（不照抄旧研究稿）：[msw v3.0.3](https://github.com/mswjs/msw/blob/v3.0.3/package.json) = MIT、Node >=22.12、可选 peer TypeScript >=5.9.x / Vite >=6 / graphql >=16；当前Lab声明TypeScript 7.0.2、Vite 8.3.4、Node >=22.18 在声明范围内。[react-pdf v11.0.0](https://github.com/wojtekmaj/react-pdf/blob/v11.0.0/packages/react-pdf/package.json) = MIT、React/ReactDOM ^19.0.0、可选@types/react ^19.0.0、固定依赖 **pdfjs-dist 6.3.289**；当前Lab React 19.3.0 / @types/react 19.3.0 / pdfjs-dist 6.3.289与之相符。[Mozilla pdf.js v6.3.289](https://github.com/mozilla/pdf.js/blob/v6.3.289/package.json) 上游声明Apache-2.0、Node >=22.13 或 >=24。**这仅证实真实上游tag中的版本、peer与许可元数据，不等于 npm registry成功拉取、解决传递依赖、pnpm lock或SDK运行；没有据此修改版本或验收状态。**
