@@ -231,3 +231,40 @@ PLATFORM 在 packages/library-lab/package.json 及真实 pnpm-lock.yaml 中统�
 - 真实功能提交：`26e005da1b129c57e0876e2c4e3cbaa954553eab`。
 - Draft PR：[#31](https://github.com/CoderLambert/ReactLoom/pull/31)，base=`feat/library-lab`，等待 PLATFORM 审核与依赖接入。
 - GitHub compare：41/41 文件只在 CD 允许路径；五库各八个条目文件，另一个 progress 文件；当前结果属于**源码层**而非 SDK PASS。
+
+
+## 第八批 / 2026-10-27 — C04/C08/C12/C13/D13 五个 SDK 垂直场景
+
+- runCount：8/24。从最新集成 feat/library-lab@55ee60f3967ba652d3d3f3399ed9111ee55394b6 新建 feat/library-lab-cd-wave8，已确认上一批 #31 合并。只修改 entries/C*、entries/D* 和本进度文件。
+- C04 JSON Forms 3.8.0：JSON Schema/UISchema/vanilla renderer，RSS 地址条件、白名单 payload、409 字段回填和取消；409/服务端只是本地 fixture。
+- C08 AG Grid Community 36.2.0：AgGridProvider + AllCommunityModule、稳定 rowId、readOnlyEdit、不变更新、分页及快慢加载竞态；未用商业 Enterprise。
+- C12 FullCalendar React v7.1.3：v7 子路径插件、skeleton/theme/palette CSS、日历创建、拖动回滚与纽约 DST 两个 UTC instant；没有使用 Premium。
+- C13 Frappe Gantt v1.2.2：动态真正加载 SVG 甘特、复制输入防止 SDK 改动 React state、只读图和可键盘编辑表格、无效区间/409 回滚，独立 CSS 避免未暴露包子路径。真实浏览器资源释放待检查。
+- D13 RTK Query 2.13.0：真实 createApi / configureStore / hooks / API middleware、租户维度完整缓存键、tag invalidation、私有 store、内存 fixture 和模拟 409。
+- 五项都包含 library.json、3个 level 指向同一真实示例、examples/demo.tsx 和 example.tsx、中文 guide.md、agent.md、AGENTS.md、verification.json、node:test/sdk.test.mjs；C13 另有 examples/gantt.css。合计41个新增条目文件及本进度修改。
+- 原研究包有原件，但本轮页面与 Agent 笔记基于核对过的官方 API 重新编写，标 recreated，不继承旧研究 PASS。
+- 当前未取得本批真实 npm 包安装、SDK 运行、TypeScript 检查、Vite build、Chromium 测试证据；五条 verification.json 的 sdk/build/browser 均为 NOT_RUN。静态存在 != 真实验收通过。
+
+### dependencyRequests — 仅 PLATFORM 安装并管理 lockfile
+
+| 包 | 固定目标版本 | 用途 | 来源 |
+|---|---|---|---|
+| @jsonforms/core | 3.8.0 | 核心 schema | https://github.com/eclipsesource/jsonforms |
+| @jsonforms/react | 3.8.0 | React renderer | https://jsonforms.io/docs/integrations/react/ |
+| @jsonforms/vanilla-renderers | 3.8.0 | Vanilla 控件 | https://github.com/eclipsesource/jsonforms |
+| ajv | 8.20.0 | 类型、Schema 错误 | https://ajv.js.org |
+| ag-grid-community | 36.2.0 | Community 模块 | https://www.ag-grid.com/react-data-grid/installation/ |
+| ag-grid-react | 36.2.0 | React Grid/Provider | https://www.ag-grid.com/react-data-grid/installation/ |
+| @fullcalendar/react | 7.1.3 | v7 标准日历与插件 | https://fullcalendar.io/docs/react |
+| temporal-polyfill | 1.0.4 | v7 peer，须再核查 | https://fullcalendar.io/docs/upgrading-from-v6 |
+| frappe-gantt | 1.2.2 | SVG 甘特 | https://github.com/frappe/gantt |
+| @reduxjs/toolkit | 2.13.0 | RTK Query | https://redux.js.org/toolkit/rtk-query/overview |
+| react-redux | 9.3.0 | React Provider | https://react-redux.js.org |
+
+上述版本是已查文档与归档的目标，不是已安装测试成功的声明；PLATFORM 统一核对 peers/许可/版本、写 package/真实 pnpm-lock，禁止手造 integrity。重点检查 JSONForms onChange 初始化、AG Grid readOnlyEdit、FullCalendar v7 CSS 与 peer、Gantt 包 CSS exports、RTK Query BaseQueryFn typing。
+
+### 累计与下一队列
+
+- 第七批 35/43，新增5项后达到40/43已有真实 SDK import 示例代码；不能等同40个 SDK PASS。
+- 剩余 C22 Moment（历史迁移，不强装旧 Moment）、D16 Workbox（Service Worker 隔离 scope）、D21 Pagefind（真实 Node CLI 静态索引）。待公共 Runner/isolated runner 支持后实现，不能伪造浏览器 shell。
+- 当前 PR base 必须是 feat/library-lab，PLATFORM 审核合并；不触碰 main、公共依赖/锁文件、旧模板和 PR #3。

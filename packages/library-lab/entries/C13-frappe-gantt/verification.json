@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "真实 SDK import/行为测试已写，待安装依赖并执行"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "待平台执行 TypeScript 和生产构建"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "待真实 Chromium 交互、卸载和可访问性测试"
+  }
+}

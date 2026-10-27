@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "待 PLATFORM 安装固定版本并执行本条目真实 SDK Node 测试"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "待 TS/Vite 构建检查"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "待 Chromium 真实交互及无障碍检查"
+  }
+}
