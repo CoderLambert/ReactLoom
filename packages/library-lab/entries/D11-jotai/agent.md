@@ -43,3 +43,9 @@ atom API：https://jotai.org/docs/core/atom
 官方 v3.0.1 发布说明：https://github.com/pmndrs/jotai/releases/tag/v3.0.1
 
 v3 迁移指南：https://jotai.org/docs/guides/migrating-to-v3
+
+## 账号退出与可迁移会话模式
+
+将 TenantWorkspace 放在能感知真实账号/租户身份变化的 key 边界里：身份变化必须实际卸载旧 Provider、创建新 Store。不要只改 label，也不要把隐藏团队的 Store 永久放在上层 useMemo。旧订阅由 React 卸载，Jotai 不替业务服务取消请求；应用还必须同步取消异步任务并按 tenant 清除远端缓存。
+
+复制 examples/story-policy.mjs 与 story-policy.d.mts，真实 toggleReadAtom 必须使用 toggleStoryRead，不得退回数组下标操作。对重复 ID 和无效 read 数据明确拒绝。独立 story-policy.test.mjs 只验证业务策略，SDK 测试须实际 import jotai；浏览器需检查 A 退出后状态回初值而 B 不变，以及进阶模式离开再进入 B 状态清空。

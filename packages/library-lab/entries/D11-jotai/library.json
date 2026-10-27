@@ -59,7 +59,9 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/story-policy.mjs",
+        "examples/story-policy.d.mts"
       ],
       "capabilities": []
     },
@@ -72,20 +74,24 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/story-policy.mjs",
+        "examples/story-policy.d.mts"
       ],
       "capabilities": []
     },
     {
       "demoId": "advanced",
-      "title": "两个独立 Provider Store",
-      "description": "同一 atom 配置跨两个团队互不干扰",
+      "title": "独立 Store 与退出登录重建",
+      "description": "两个团队独立 Provider；替换 A 会话后 A 状态清空，B 不受影响",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/story-policy.mjs",
+        "examples/story-policy.d.mts"
       ],
       "capabilities": []
     }

@@ -57,7 +57,9 @@
         "examples/example.tsx",
         "examples/demo.tsx",
         "examples/search-scope.mjs",
-        "examples/search-scope.d.mts"
+        "examples/search-scope.d.mts",
+        "examples/index-lifecycle.mjs",
+        "examples/index-lifecycle.d.mts"
       ],
       "capabilities": [],
       "description": "Fuse.search 加权评分"
@@ -72,14 +74,16 @@
         "examples/example.tsx",
         "examples/demo.tsx",
         "examples/search-scope.mjs",
-        "examples/search-scope.d.mts"
+        "examples/search-scope.d.mts",
+        "examples/index-lifecycle.mjs",
+        "examples/index-lifecycle.d.mts"
       ],
       "capabilities": [],
       "description": "RSS 分组过滤与输入法处理"
     },
     {
       "demoId": "advanced",
-      "title": "容错阈值和新增条目索引刷新",
+      "title": "索引新增、同 ID 替换、删除",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
@@ -87,10 +91,12 @@
         "examples/example.tsx",
         "examples/demo.tsx",
         "examples/search-scope.mjs",
-        "examples/search-scope.d.mts"
+        "examples/search-scope.d.mts",
+        "examples/index-lifecycle.mjs",
+        "examples/index-lifecycle.d.mts"
       ],
       "capabilities": [],
-      "description": "容错阈值和新增条目索引刷新"
+      "description": "真实 Fuse 索引按不可变文档快照重建，不残留旧内容"
     }
   ],
   "license": {

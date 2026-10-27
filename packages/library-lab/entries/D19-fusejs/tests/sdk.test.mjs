@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import Fuse from 'fuse.js';
 import {resolveScope,visibleDocuments} from '../examples/search-scope.mjs';
+import {upsertDocument,removeDocument} from '../examples/index-lifecycle.mjs';
 const rows=[{id:'1',title:'React performance',group:'技术'},{id:'2',title:'Market briefing',group:'商业'},
 {id:'3',title:'GraphQL tutorial',group:'技术'}];
 test('actual Fuse.js indexes and returns identified ranked documents',()=>{
@@ -36,4 +37,23 @@ test('real Fuse index reflects active mode instead of stale hidden options',()=>
  const narrowed=resolveScope({level:'business',group:'商业',threshold:0.55});
  const scopedFuse=new Fuse(visibleDocuments(rows,narrowed.group),{keys:['title'],threshold:narrowed.threshold});
  assert.equal(scopedFuse.search('React').some(hit=>hit.item.id==='1'),false);
+});
+test('actual Fuse snapshot rebuild removes replaced and deleted indexed text',()=>{
+ const index=docs=>new Fuse(docs,{keys:['title'],threshold:0.15});
+ const imported={id:'new',title:'React Query imported',group:'技术'};
+ const added=upsertDocument(rows,imported);
+ assert.equal(index(added).search('React Query imported')[0]?.item.id,'new');
+ const replaced=upsertDocument(added,{id:'new',title:'TypeScript imported',group:'技术'});
+ assert.equal(index(replaced).search('React Query imported').some(hit=>hit.item.id==='new'),false);
+ assert.equal(index(replaced).search('TypeScript imported')[0]?.item.id,'new');
+ const deleted=removeDocument(replaced,'new');
+ assert.equal(index(deleted).search('TypeScript imported').some(hit=>hit.item.id==='new'),false);
+ assert.equal(rows.length,3);
+});
+test('real Fuse rebuild excludes a document moved out of selected category',()=>{
+ const before=upsertDocument(rows,{id:'new',title:'Zebra special',group:'技术'});
+ const after=upsertDocument(before,{id:'new',title:'Zebra special',group:'商业'});
+ const make=docs=>new Fuse(visibleDocuments(docs,'技术'),{keys:['title'],threshold:0});
+ assert.equal(make(before).search('Zebra special')[0]?.item.id,'new');
+ assert.equal(make(after).search('Zebra special').some(hit=>hit.item.id==='new'),false);
 });

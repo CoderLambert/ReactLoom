@@ -1,6 +1,7 @@
 import {useMemo,useRef,useState} from 'react';
 import Fuse from 'fuse.js';
 import {normalizeQuery, resolveScope, visibleDocuments} from './search-scope.mjs';
+import {upsertDocument, removeDocument} from './index-lifecycle.mjs';
 type Level='basic'|'business'|'advanced';
 type Group='技术'|'商业'|'开源';
 type Article={id:string;title:string;summary:string;group:Group;tags:string[]};
@@ -36,8 +37,15 @@ export default function FuseWorkshop({level}:{level:Level}){
    })):scopedDocs.map(item=>({item,score:null,matches:[] as (string|undefined)[]}));
  },[engine,scopedDocs,query]);
  function addRecord(){
-   if(docs.some(item=>item.id==='new'))return;
-   setDocs(old=>[...old,{id:'new',title:'React Query 新订阅',summary:'新导入 RSS 频道，真实触发索引重建',group:'技术',tags:['React','RSS']}]);
+   setDocs(old=>upsertDocument(old,{id:'imported-rss',title:'React Query 新订阅',
+     summary:'新导入 RSS 频道，触发真实 Fuse 索引重建',group:'技术',tags:['React','RSS']}));
+ }
+ function replaceRecord(){
+   setDocs(old=>upsertDocument(old,{id:'imported-rss',title:'TypeScript 专题替换',
+     summary:'同一业务 ID 更新标题，旧 React 匹配必须失效',group:'技术',tags:['TypeScript','RSS']}));
+ }
+ function deleteRecord(){
+   setDocs(old=>removeDocument(old,'imported-rss'));
  }
  return <section aria-label="Fuse.js 浏览器模糊搜索">
   <h2>{level==='basic'?'带分数的模糊查询':level==='business'?'RSS 频道分类、排序与输入法':'阈值比较和动态索引变更'}</h2>
@@ -52,7 +60,9 @@ export default function FuseWorkshop({level}:{level:Level}){
   {level==='advanced'&&<div className="demo-controls">
    <label>threshold <select aria-label="容错阈值" value={threshold} onChange={e=>setThreshold(Number(e.target.value))}>
     {[0,0.15,0.35,0.55].map(value=><option value={value} key={value}>{value.toFixed(2)}</option>)}</select></label>
-   <button type="button" onClick={addRecord}>增量导入新 RSS（重建索引）</button>
+   <button type="button" onClick={addRecord}>新增或恢复 RSS（React）</button>
+   <button type="button" onClick={replaceRecord} disabled={!docs.some(item=>item.id==='imported-rss')}>同 ID 替换为 TypeScript</button>
+   <button type="button" onClick={deleteRecord}>删除导入的 RSS</button>
   </div>}
   <p role="status">匹配 {results.length}/{scopedDocs.length} 条 · 有效分组 {effectiveGroup} · 阈值 {effectiveThreshold.toFixed(2)}；空查询展示当前分组所有文档。</p>
   {results.length?<ol data-testid="fuse-results">{results.map(({item,score,matches})=>

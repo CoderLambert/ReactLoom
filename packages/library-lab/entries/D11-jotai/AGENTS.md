@@ -4,3 +4,5 @@
 
 本库特殊边界：不要每 render 构造 atom 导致订阅震荡；不要从默认 Store 读取租户敏感状态；不要依赖被 v3 删除的旧辅助 API；不把客户端 atom 当远端数据真相或授权源。
 
+
+追加边界：每个租户 session 使用 keyed TenantWorkspace 与独立 Provider；旧会话卸载后不得跨身份复用 Store。真实写 atom 引入 story-policy.mjs/.d.mts 并在三个 sourceFiles 中列出；重复业务 ID 必须 fail closed。测试状态按实际执行分级。

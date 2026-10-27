@@ -64,3 +64,13 @@ node:test 使用真实 createStore/atom，验证派生更新、Store 隔离和�
 ## 授权
 
 该条目源码与文字为独立编写的教学材料；目标库使用上游 MIT 许可，未捆绑第三方图片、字体或付费资源。
+
+## 会话切换与 Store 生命周期（增量实战）
+
+进阶示例新增「退出并新建团队 A 会话」操作。每个 TenantWorkspace 自己用 createStore 创建 Store，外层对该子组件使用随会话编号变化的 React key；退出时旧 Provider 子树卸载，重新挂载时得到新的 Store 与计数、RSS 已读初值。团队 B 组件不受 A 退出影响；离开进阶示例时 B 被卸载，返回后是新 Store。不能只改变页面上的租户名称却复用原 Store，这会让上一账号的 UI 草稿继续存在。
+
+story-policy.mjs 的 toggleStoryRead 在真正的写 atom 中调用，通过不可变数组快照与稳定业务 ID 更新记录。重复或空 ID、非布尔 read 明确抛错，找不到目标 ID 返回原数组，以免无效事件触发不必要的订阅刷新。源文件与 .d.mts 类型声明作为三个场景共同的真实展示源码。
+
+注意：本示例只证明本地 Jotai Store 的所有权生命周期，不负责注销网络请求、清理 TanStack Query 缓存、后端鉴权或服务端租户隔离；正式登录切换必须由应用整体编排这些资源。React StrictMode 与快速切换 UI 仍需浏览器真实验收。
+
+定向纯策略回归：node --test packages/library-lab/entries/D11-jotai/tests/story-policy.test.mjs；SDK 源码：tests/sdk.test.mjs 真正 import jotai，需要已安装的固定依赖。纯策略 PASS 不等于 SDK / tsc / build / Chromium PASS.
