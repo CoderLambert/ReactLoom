@@ -17,8 +17,15 @@ export function verifiedState(raw = {}, fingerprint) {
  for(const [name,value] of Object.entries(raw)){
   if(!value || typeof value!=='object' || Array.isArray(value) || !ALLOWED.has(value.status))
    throw new Error('invalid verification status: '+name);
-  if(value.status==='PASS' && (value.sourceFingerprint!==fingerprint || !value.evidence || !value.command))
-   output[name]={...value,status:'NOT_RUN',note:'STALE: Previous PASS has no matching current-source fingerprint and command/evidence.'};
+  // A failure observed on an older implementation is not a failure of the
+  // current code. PASS and FAIL both require matching source and real evidence.
+  // BLOCKED describes unavailable infrastructure, not an executed result.
+  const executed=value.status==='PASS'||value.status==='FAIL';
+  const current=value.sourceFingerprint===fingerprint &&
+    typeof value.command==='string' && Boolean(value.command.trim()) &&
+    typeof value.evidence==='string' && Boolean(value.evidence.trim());
+  if(executed && !current)
+   output[name]={...value,status:'NOT_RUN',note:'STALE: Previous '+value.status+' has no matching current-source fingerprint and nonempty command/evidence.'};
   else output[name]=value;
  }
  for(const name of VERIFICATION_KINDS)
