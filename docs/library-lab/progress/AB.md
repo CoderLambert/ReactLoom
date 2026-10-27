@@ -638,3 +638,9 @@ A08/A17/B04 的每层 `library.json` 已加入新helper至 `sourceFiles`，运�
 ### 集成/后续队列
 
 仅PLATFORM审核并合入本波 worker PR 到 `feat/library-lab`；不得并入main。优先取得真实依赖/runner证据后定向检查 A02 窄屏/resize与高级数字中间态，B10 Space/label与锁定权限 FormData，B11 Portal方向键/焦点返回/子菜单/删除状态，B12 中文拼音合成+Enter、取消旧查询/选中提交。若无runner的新证据，下一独立源码加固队列为 **A13 Three.js、A15 Leaflet、B13 dnd-kit、B14 Pragmatic drag and drop**，只修确证缺陷，不反复重写39项。
+
+### 第15轮 PR 与 GitHub CI 完整回读
+
+- Draft PR **[#59](https://github.com/CoderLambert/ReactLoom/pull/59)**，head `feat/library-lab-ab-wave15`，base **`feat/library-lab`**，校验代码+进度提交 `bc64243f77325a4b72d7f12909546157632922ed`（本段是随后文档补记）。集成基线至提交时仍为 `b3fa3b0370f50c39078562987400d753390671ee`，比较结果 **26/26 变更均在授权目录，ahead=3、behind=0**，无重叠开放AB PR。
+- GitHub Actions 真实返回 **CI run 40480193825 failure**，**Library Lab run 40480193878 failure**。其中 Library Lab `catalogue` job 122108275644、`runtime-bootstrap` job 122108275836，以及 CI `verify(ssr)` job 122108275592 均返回 `steps=[]`，**没有真实构建或 SDK 执行步骤证据**；不能将其记为本轮源码构建失败的根因，也不能标记 SDK/browser PASS。此前相同环境故障已知，未循环重试。
+- 无可读实际 TSX/SDK/Chromium 验收证据时保持 `verification.json` 中相应状态 `NOT_RUN`；PLATFORM负责获取 runner、依赖/锁文件与浏览器测试证据，AB仅在可复现的 A/B 目录缺陷上修复。进度至此 `runCount=15/24`，本批交付四项实质修改，不将源码文档覆盖误作通过验收。
