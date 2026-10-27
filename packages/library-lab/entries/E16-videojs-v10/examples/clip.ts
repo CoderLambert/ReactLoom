@@ -5,7 +5,10 @@ export async function createLocalClip(variant: 'light'|'dark'='light',signal?:Ab
  if(!canvas.captureStream)throw new Error('此浏览器不支持Canvas视频捕获');
  const candidates=['video/webm;codecs=vp8','video/webm'];const mimeType=candidates.find(x=>MediaRecorder.isTypeSupported(x));
  if(!mimeType)throw new Error('浏览器不能录制WebM；请改用本地文件输入');
- const stream=canvas.captureStream(12);const recorder=new MediaRecorder(stream,{mimeType});
+ const stream=canvas.captureStream(12);
+ let recorder:MediaRecorder;
+ try{recorder=new MediaRecorder(stream,{mimeType});}
+ catch(error){stream.getTracks().forEach(track=>track.stop());throw error;}
  const chunks:BlobPart[]=[];let frame=0,finished=false;let timeout:number|undefined;
  const draw=()=>{context.fillStyle=variant==='light'?'#e7f0e8':'#273b36';context.fillRect(0,0,320,180);
  context.fillStyle=variant==='light'?'#205843':'#e9f5e6';
