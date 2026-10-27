@@ -48,3 +48,11 @@ const {width,containerRef,mounted}=useContainerWidth();
 - [react-resizable 样式和 API](https://github.com/react-grid-layout/react-resizable)
 
 MIT 许可。
+
+## 第13轮加固：隔离宽窄布局与键盘边界
+
+旧实现把12列布局直接 clamp 到6列，再经 `onLayoutChange` 写回同一个 `layout` state，导致从手机切回桌面时原有宽屏位置丢失。现以 `{wide,narrow}` 双份受控数据分别保存，首次窄屏用 `initialNarrowCells` 垂直排成全宽卡片；GridLayout 以 breakpoint key 重建以避免旧测量影响当前模式。回调只提交当前断点的变更、剥离运行时 `static` 标志，并保护显式锁定卡片的几何属性。重置明确同时重置两个模式。
+
+`layout-policy.ts` 的 `keyboardMove/keyboardResize` 在宽屏按列移动，在窄屏交换相邻纵向顺序；检查边界、最大最小宽度与固定项。不能依赖单一 `x` 的窄屏左右按钮。宽度容器不再强制最小260px，窄设备需在真实浏览器测量 overflow。后台或未挂载时不自行增加 ResizeObserver。
+
+定向政策测试：`node --experimental-strip-types --test entries/B15-react-grid-layout/tests/layout-policy.test.mts`，只证明纯几何策略；真实 SDK v2 pointer drag/resize、compactor、React渲染与Chromium仍需单独验收。

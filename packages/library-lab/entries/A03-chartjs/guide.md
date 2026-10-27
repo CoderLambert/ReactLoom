@@ -55,3 +55,9 @@ Chart.js + TanStack Query：查询与缓存由 Query 管理，Chart 更新只消
 - https://www.chartjs.org/docs/latest/configuration/responsive.html
 
 许可证 MIT。
+
+## 第13轮加固：有界高频采样和数据一致性
+
+`examples/chart-stream-policy.ts` 维护严格限制在 0–10000 的 revision 与七日等价数据；构造 Chart 时直接消费当前 revision，避免图形类型切换瞬间回到第一版 fixture。advanced 的 400ms 自动采样只在页面可见且停留 advanced 时工作，销毁 interval 和 visibilitychange 监听；表格与 Canvas 始终来自同一个 chartCounts 输出。按钮/计时器更新都复用已存在的 Chart.update('none')，类型变化才 destroy/create，Chart.js 的响应式行为仍由 SDK 自身负责。
+
+离线政策检查：`node --experimental-strip-types --test entries/A03-chartjs/tests/chart-stream-policy.test.mts`；仅证明有界数据和采样策略，不能代替真实 Canvas / Chart.js 生命周期、ResizeObserver、构建或 Chromium 验收。

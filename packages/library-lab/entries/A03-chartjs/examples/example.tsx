@@ -1,4 +1,5 @@
 import {useEffect, useMemo, useRef, useState} from 'react';
+import {chartCounts, nextRevision, shouldAutoSample} from './chart-stream-policy';
 import {
   Chart, BarController, BarElement, LineController, LineElement, PointElement,
   CategoryScale, LinearScale, Legend, Tooltip,
@@ -12,20 +13,30 @@ Chart.register(
 type Level = 'basic' | 'business' | 'advanced';
 type ChartKind = 'bar' | 'line';
 const labels = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
-function safeCount(value: number): number {
-  return Number.isFinite(value) ? Math.max(0, Math.round(value)) : 0;
-}
-function makeCounts(revision: number): number[] {
-  return labels.map((_, index) => safeCount(110 + index * 17 + revision * (index + 3)));
-}
 
 export default function ChartJsExample({level}: {level: Level}) {
   const [kind, setKind] = useState<ChartKind>('bar');
   const [revision, setRevision] = useState(0);
+  const [autoSample, setAutoSample] = useState(false);
+  const [tabVisible, setTabVisible] = useState(() =>
+    typeof document === 'undefined' || document.visibilityState === 'visible');
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const chartRef = useRef<Chart<ChartKind, number[], string> | null>(null);
-  const counts = useMemo(() => makeCounts(revision), [revision]);
+  const counts = useMemo(() => chartCounts(revision), [revision]);
   const effectiveKind: ChartKind = level === 'advanced' ? kind : 'bar';
+
+  useEffect(() => {
+    const updateVisibility = () => setTabVisible(document.visibilityState === 'visible');
+    updateVisibility();
+    document.addEventListener('visibilitychange', updateVisibility);
+    return () => document.removeEventListener('visibilitychange', updateVisibility);
+  }, []);
+
+  useEffect(() => {
+    if (!shouldAutoSample(autoSample, level, tabVisible)) return;
+    const timer = window.setInterval(() => setRevision(nextRevision), 400);
+    return () => window.clearInterval(timer);
+  }, [autoSample, level, tabVisible]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -39,7 +50,7 @@ export default function ChartJsExample({level}: {level: Level}) {
         labels: [...labels],
         datasets: [{
           label: '阅读量',
-          data: makeCounts(0),
+          data: chartCounts(revision),
           backgroundColor: 'rgba(49,113,82,0.7)',
           borderColor: '#317152',
           borderWidth: 2,
@@ -72,7 +83,11 @@ export default function ChartJsExample({level}: {level: Level}) {
       level === 'business' ? '可更新的业务统计' : '柱线切换与实例销毁'}</h2>
     <p>调用 chart.js 真实 Chart 构造函数；数据为固定公式生成的本地 fixture。</p>
     <div style={{display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center', marginBottom: 14}}>
-      <button type="button" onClick={() => setRevision(n => n + 1)}>模拟新增阅读</button>
+      <button type="button" onClick={() => setRevision(nextRevision)}>模拟新增阅读</button>
+      {level === 'advanced' && <label><input type="checkbox" checked={autoSample}
+        onChange={event => setAutoSample(event.currentTarget.checked)}/>
+        自动采样（400ms，后台暂停）
+      </label>}
       {level === 'advanced' && <label>图形类型
         <select aria-label="选择图形类型" value={kind}
           onChange={event => setKind(event.currentTarget.value as ChartKind)} style={{marginLeft: 8}}>
@@ -91,7 +106,7 @@ export default function ChartJsExample({level}: {level: Level}) {
       <tbody><tr><th scope="row">阅读数</th>{counts.map((count, i) => <td key={labels[i]}>{count}</td>)}</tr></tbody>
     </table>
     <p style={{fontSize: 12, color: '#607060', marginTop: 15}}>
-      同一 Canvas 不得被两个未销毁的 Chart 实例占有；切换类型触发 effect 清理并重建。
+      数据变化复用 chart.update('none')；仅切换类型时 destroy/recreate。自动采样切走场景或隐藏标签页即暂停，实例随组件卸载销毁。
     </p>
   </section>;
 }

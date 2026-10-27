@@ -20,3 +20,7 @@ library.json → examples/example.tsx → guide.md → verification.json。运�
 真实 SDK import、typecheck/build、两类 controller 注册成功；按钮更新不重复创建 Chart；类型切换与 StrictMode 双挂载不抛 Canvas already in use；离开页面销毁；响应式尺寸和等价数据表；无异常输出。未运行填 NOT_RUN。
 
 官方：https://www.chartjs.org/docs/latest/getting-started/integration.html
+
+## 第13轮执行注意
+
+保留 `chart-stream-policy.ts` 与图表/HTML表共用的同一数据源；background/非advanced不继续高频采样，取消 interval/visibilitychange；切换类型初始 Chart 数据不得短暂回滚，最终必须 `chart.destroy()`。定向 policy 测试在 `tests/chart-stream-policy.test.mts`，SDK/浏览器仍需独立证据。

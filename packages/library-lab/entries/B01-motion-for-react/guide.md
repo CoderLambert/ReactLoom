@@ -50,3 +50,9 @@ B19 Embla：Motion 动画卡片内部内容，Embla 单独拥有容器的位移�
 - https://motion.dev/docs/react-installation
 - https://motion.dev/docs/react-animate-presence
 许可证 MIT。
+
+## 第13轮加固：并发列表状态与焦点所有权
+
+`card-policy.ts` 确保12项上限、稳定唯一ID、确定性删除和重排。candidate ID 只在点击事件产生，不在React可能重试的 updater中自增。原来的 `queueMicrotask(focus)` 在Concurrent React尚未完成DOM提交时可能抢焦点；现在仅当即将归档的按钮确实为 `document.activeElement` 时设置标记，`useLayoutEffect([cards])` 在列表提交后恢复焦点，鼠标在其它控件操作不会抢焦点。恢复列表时清除待转移标记。
+
+`node --experimental-strip-types --test entries/B01-motion-for-react/tests/card-policy.test.mts` 验证容量与身份规则，不证明真实 AnimatePresence 退出、焦点行为或减少动画浏览器验收。

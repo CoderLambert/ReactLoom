@@ -1,4 +1,5 @@
-import {useRef, useState} from 'react';
+import {useLayoutEffect, useRef, useState} from 'react';
+import {appendUniqueCard, archiveCard, MAX_MOTION_CARDS, moveFirstToEnd} from './card-policy';
 import {AnimatePresence, MotionConfig, motion, useReducedMotion} from 'motion/react';
 
 type Level = 'basic' | 'business' | 'advanced';
@@ -15,15 +16,24 @@ export default function MotionExample({level}: {level: Level}) {
   const [cards, setCards] = useState<Card[]>(startingCards);
   const nextId = useRef(4);
   const addButton = useRef<HTMLButtonElement>(null);
+  const focusAfterRemoval = useRef(false);
+  useLayoutEffect(() => {
+    if (!focusAfterRemoval.current) return;
+    focusAfterRemoval.current = false;
+    addButton.current?.focus();
+  }, [cards]);
 
   function addCard() {
-    setCards(current => [...current, {id: nextId.current++,
-      title: '新建阅读任务', description: '新的列表项通过 AnimatePresence 进入'}]);
+    if (cards.length >= MAX_MOTION_CARDS) return;
+    const candidate = {id: nextId.current++,
+      title: '新建阅读任务', description: '新的列表项通过 AnimatePresence 进入'};
+    setCards(current => appendUniqueCard(current, candidate));
   }
-  function removeCard(id: number) {
-    setCards(current => current.filter(card => card.id !== id));
-    // Moving focus away from the removed button prevents a lost keyboard position.
-    queueMicrotask(() => addButton.current?.focus());
+  function removeCard(id: number, button: HTMLButtonElement) {
+    if (!cards.some(card => card.id === id)) return;
+    // Only reclaim focus when the removed button actually owns it.
+    if (document.activeElement === button) focusAfterRemoval.current = true;
+    setCards(current => archiveCard(current, id));
   }
   const enter = reduced ? false : {opacity: 0, y: 14};
   const leave = reduced ? {opacity: 0} : {opacity: 0, y: -10};
@@ -51,13 +61,14 @@ export default function MotionExample({level}: {level: Level}) {
         </div>
       </> : <>
         <div style={{display: 'flex', gap: 10, flexWrap: 'wrap'}}>
-          <button type="button" ref={addButton} onClick={addCard}>添加任务</button>
+          <button type="button" ref={addButton} onClick={addCard}
+            disabled={cards.length >= MAX_MOTION_CARDS}>添加任务（最多{MAX_MOTION_CARDS}项）</button>
           {level === 'advanced' && <>
             <button type="button" disabled={cards.length < 2}
-              onClick={() => setCards(current => current.length < 2 ? current : [...current.slice(1), current[0]])}>
+              onClick={() => setCards(moveFirstToEnd)}>
               把第一项移到最后
             </button>
-            <button type="button" onClick={() => setCards(startingCards)}>恢复初始列表</button>
+            <button type="button" onClick={() => {focusAfterRemoval.current = false; setCards(startingCards);}}>恢复初始列表</button>
           </>}
         </div>
         <p role="status" aria-live="polite" style={{marginTop: 12}}>当前任务：{cards.length} 项</p>
@@ -69,13 +80,13 @@ export default function MotionExample({level}: {level: Level}) {
               style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                 gap: 15, background: '#edf5eb', borderRadius: 10, padding: 16}}>
               <div><strong>{card.title}</strong><p style={{fontSize: 13, margin: '5px 0 0'}}>{card.description}</p></div>
-              <button type="button" aria-label={'归档 ' + card.title} onClick={() => removeCard(card.id)}>归档</button>
+              <button type="button" aria-label={'归档 ' + card.title} onClick={event => removeCard(card.id, event.currentTarget)}>归档</button>
             </motion.li>)}
           </AnimatePresence>
         </motion.ul>
       </>}
       <p style={{fontSize: 12, color: '#5f7163', marginTop: 14}}>
-        不把动画当作业务状态源。减少动画偏好时禁用布局位移；归档后焦点返回“添加任务”。
+        不把动画当作业务状态源。减少动画偏好时禁用布局位移；仅当被归档按钮原本占焦点，React提交后才把焦点转向“添加任务”。
       </p>
     </section>
   </MotionConfig>;
