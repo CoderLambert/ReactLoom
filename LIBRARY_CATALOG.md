@@ -47,7 +47,7 @@
 |C02|Zod|不可信 RSS / OPML JSON 校验、规范化与跨字段错误|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C02-zod/)|
 |C03|Valibot|模块化 Schema 验证、RSS 数据收窄与跨字段错误定位|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C03-valibot/)|
 |C04|JSON Forms|JSON Schema 驱动动态表单|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C04-jsonforms/)|
-|C05|Ajv|JSON Schema 验证与编译|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C05-ajv/)|
+|C05|Ajv|JSON Schema 编译验证、严格输入边界与条件规则|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C05-ajv/)|
 |C06|IMask|数字编号、金额和日期输入掩码；保留光标与中文 IME 边界|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C06-imask/)|
 |C07|TanStack Table|Headless 表格的稳定业务 ID、排序和分页数据所有权|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C07-tanstack-table/)|
 |C08|AG Grid|复杂数据网格与编辑|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C08-ag-grid/)|
@@ -66,7 +66,7 @@
 |C21|tailwind-merge|Tailwind v4 工具类冲突合并与可覆盖组件实践|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C21-tailwind-merge/)|
 |C22|Moment（历史迁移）|历史日期库识别与现代迁移|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C22-moment-migration/)|
 |D01|es-toolkit|轻量类型安全工具函数：RSS 排序、去重、分组和分页|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D01-es-toolkit/)|
-|D02|Lodash/lodash-es|通用工具函数与模块化分发|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D02-lodash/)|
+|D02|Lodash/lodash-es|现代集合去重、分组排序和可清理的输入防抖|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D02-lodash/)|
 |D03|p-limit|Promise 并发上限控制|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D03-p-limit/)|
 |D04|p-queue|并发、滑动窗口限流与任务优先级调度|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D04-p-queue/)|
 |D05|decimal.js|从字符串到精确金额：decimal.js 的税率、舍入和对账边界|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D05-decimal-js/)|
@@ -76,12 +76,12 @@
 |D09|Axios|HTTP 实例拦截器、取消、幂等请求重试与 409 失败分支|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D09-axios/)|
 |D10|Zustand|React19 vanilla store、租户状态与受控 persist 迁移|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D10-zustand/)|
 |D11|Jotai|原子和派生状态、写入 atom、Provider Store 多租户隔离|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D11-jotai/)|
-|D12|Redux Toolkit|可追踪状态与业务流程|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D12-redux-toolkit/)|
+|D12|Redux Toolkit|createSlice/configureStore、团队状态隔离和响应竞态防护|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D12-redux-toolkit/)|
 |D13|RTK Query|Redux 数据请求与缓存订阅|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D13-rtk-query/)|
-|D14|XState|状态机与 Actor 生命周期|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D14-xstate/)|
+|D14|XState|Actor 有限状态机：审稿流程、守卫和重试预算|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D14-xstate/)|
 |D15|Dexie|IndexedDB 事务、复合索引和版本升级，不污染其他站点存储|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D15-dexie/)|
 |D16|Workbox|Service Worker 缓存与离线更新|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D16-workbox/)|
-|D17|Yjs|CRDT 实时协作与离线合并|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D17-yjs/)|
+|D17|Yjs|Y.Doc 双副本离线编辑、状态向量和 CRDT 增量合并|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D17-yjs/)|
 |D18|Comlink|Web Worker RPC、Transferable 数据传递、回调代理与资源释放|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D18-comlink/)|
 |D19|Fuse.js|浏览器端加权模糊搜索、分组过滤、IME 与动态索引重建|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D19-fusejs/)|
 |D20|MiniSearch|本地全文倒排索引、前缀与拼写容错、查询建议和索引重建|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D20-minisearch/)|
@@ -96,20 +96,20 @@
 |E08|rehype|HTML AST 转换与安全输出：rehype-sanitize 净化及沙箱预览|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E08-rehype/)|
 |E09|Shiki|只读代码语法着色：按需 token 化，使用 React 文本节点安全渲染|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E09-shiki/)|
 |E10|DOMPurify|HTML 净化和输出安全|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E10-dompurify/)|
-|E11|Streamdown|增量流式 Markdown 展示|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E11-streamdown/)|
-|E12|assistant-ui|聊天界面和运行时交互|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E12-assistant-ui/)|
+|E11|Streamdown|面向流式 Markdown 的真实增量显示、未闭合语法与安全输出|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E11-streamdown/)|
+|E12|assistant-ui|真实 LocalRuntime 聊天原语、离线 Adapter、流式输出与取消|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E12-assistant-ui/)|
 |E13|PhotoSwipe|响应式图库灯箱：PhotoSwipe Lightbox、触控缩放、键盘关闭与实例销毁|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E13-photoswipe/)|
 |E14|react-easy-crop|可拖拽缩放裁剪框、真实像素区域、PNG本地输出与文件资源清理|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E14-react-easy-crop/)|
 |E15|pica|浏览器本地高质量像素缩放与PNG导出：真实pica.resize/ toBlob|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E15-pica/)|
-|E16|Video.js|视频播放器与控制界面|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E16-videojs-v10/)|
-|E17|hls.js|HLS 播放引擎与缓冲|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E17-hlsjs/)|
+|E16|Video.js|Video.js v10 React 真正播放器：原创WebM、本地切换、生命周期与跨版本迁移|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E16-videojs-v10/)|
+|E17|hls.js|真实 HLS.js MSE引擎、清单与码率、致命错误与网络资源销毁|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E17-hlsjs/)|
 |E18|wavesurfer.js|真实波形播放器与音频片段交互：本地合成WAV、播放位置、倍速缩放与销毁|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E18-wavesurferjs8/)|
-|E19|ffmpeg.wasm|浏览器 WebAssembly 媒体转换|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E19-ffmpeg-wasm/)|
+|E19|ffmpeg.wasm|FFmpeg.wasm 真实 Worker 转换、WASM显式加载、取消与内存边界|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E19-ffmpeg-wasm/)|
 |F01|Uppy|文件选择、限制、排队与本地预览：真实 Uppy Core，不使用假上传进度|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F01-uppy/)|
 |F02|react-dropzone|文件选择与拖放输入|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F02-react-dropzone/)|
 |F03|Papa Parse|真实 CSV 解析/导出：引号换行、表头与URL验证、本地文件及公式注入防护|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F03-papaparse/)|
 |F04|ExcelJS|Excel工作簿真实生成与读取：冻结表头、统计公式、RSS数据和不可信单元格处理|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F04-exceljs/)|
-|F05|SheetJS|电子表格导入导出|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F05-sheetjs/)|
+|F05|SheetJS|SheetJS CE 0.20.3 的真实工作簿往返与危险表格输入边界|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F05-sheetjs/)|
 |F06|PDF.js|真正的 pdfjs-dist Worker、PDF 解析、Canvas 分页渲染和取消清理|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F06-pdfjs/)|
 |F07|react-pdf|React 组件化 PDF 阅读：本地文档、分页、TextLayer 与同版本 Worker|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F07-react-pdf/)|
 |F08|@react-pdf/renderer|React组件声明式生成原生PDF：报告布局、分页文本、受控下载与链接生命周期|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F08-react-pdf-renderer/)|

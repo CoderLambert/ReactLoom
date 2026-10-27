@@ -347,9 +347,9 @@
     "entryId": "C05",
     "name": "Ajv",
     "group": "C",
-    "summary": "JSON Schema 验证与编译",
+    "summary": "JSON Schema 编译验证、严格输入边界与条件规则",
     "path": "packages/library-lab/entries/C05-ajv",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "C06",
@@ -499,9 +499,9 @@
     "entryId": "D02",
     "name": "Lodash/lodash-es",
     "group": "D",
-    "summary": "通用工具函数与模块化分发",
+    "summary": "现代集合去重、分组排序和可清理的输入防抖",
     "path": "packages/library-lab/entries/D02-lodash",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "D03",
@@ -579,9 +579,9 @@
     "entryId": "D12",
     "name": "Redux Toolkit",
     "group": "D",
-    "summary": "可追踪状态与业务流程",
+    "summary": "createSlice/configureStore、团队状态隔离和响应竞态防护",
     "path": "packages/library-lab/entries/D12-redux-toolkit",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "D13",
@@ -595,9 +595,9 @@
     "entryId": "D14",
     "name": "XState",
     "group": "D",
-    "summary": "状态机与 Actor 生命周期",
+    "summary": "Actor 有限状态机：审稿流程、守卫和重试预算",
     "path": "packages/library-lab/entries/D14-xstate",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "D15",
@@ -619,9 +619,9 @@
     "entryId": "D17",
     "name": "Yjs",
     "group": "D",
-    "summary": "CRDT 实时协作与离线合并",
+    "summary": "Y.Doc 双副本离线编辑、状态向量和 CRDT 增量合并",
     "path": "packages/library-lab/entries/D17-yjs",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "D18",
@@ -739,17 +739,17 @@
     "entryId": "E11",
     "name": "Streamdown",
     "group": "E",
-    "summary": "增量流式 Markdown 展示",
+    "summary": "面向流式 Markdown 的真实增量显示、未闭合语法与安全输出",
     "path": "packages/library-lab/entries/E11-streamdown",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "E12",
     "name": "assistant-ui",
     "group": "E",
-    "summary": "聊天界面和运行时交互",
+    "summary": "真实 LocalRuntime 聊天原语、离线 Adapter、流式输出与取消",
     "path": "packages/library-lab/entries/E12-assistant-ui",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "E13",
@@ -779,17 +779,17 @@
     "entryId": "E16",
     "name": "Video.js",
     "group": "E",
-    "summary": "视频播放器与控制界面",
+    "summary": "Video.js v10 React 真正播放器：原创WebM、本地切换、生命周期与跨版本迁移",
     "path": "packages/library-lab/entries/E16-videojs-v10",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "E17",
     "name": "hls.js",
     "group": "E",
-    "summary": "HLS 播放引擎与缓冲",
+    "summary": "真实 HLS.js MSE引擎、清单与码率、致命错误与网络资源销毁",
     "path": "packages/library-lab/entries/E17-hlsjs",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "E18",
@@ -803,9 +803,9 @@
     "entryId": "E19",
     "name": "ffmpeg.wasm",
     "group": "E",
-    "summary": "浏览器 WebAssembly 媒体转换",
+    "summary": "FFmpeg.wasm 真实 Worker 转换、WASM显式加载、取消与内存边界",
     "path": "packages/library-lab/entries/E19-ffmpeg-wasm",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "F01",
@@ -843,9 +843,9 @@
     "entryId": "F05",
     "name": "SheetJS",
     "group": "F",
-    "summary": "电子表格导入导出",
+    "summary": "SheetJS CE 0.20.3 的真实工作簿往返与危险表格输入边界",
     "path": "packages/library-lab/entries/F05-sheetjs",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "F06",
