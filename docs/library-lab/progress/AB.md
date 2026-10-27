@@ -407,3 +407,32 @@ GitHub compare: 5次提交，30个变更文件全部位于 `packages/library-lab
 **dependencyRequests**：本批只复用已声明的 `three/leaflet/maplibre-gl/@floating-ui/react/sonner`，不新增包版本请求。根package、pnpm-lock、公共CI由PLATFORM负责；本轮未修改这些文件。GitHub npm下载/runner环境问题不能通过纯逻辑测试替代。
 
 **后续可执行工作**：PLATFORM优先独立审核合入 #36 和 #37，需保留双方对本进度文件的追加记录；有真实安装环境后针对 A13 frame/visibility/GPU释放、A15/A16 连续新增定位及地图卸载、B17 fcitx/Rime 回车、B20 通知重复运行与卸载进行浏览器集成回归。无浏览器环境则继续其他已确认的A/B源码缺陷，不循环重试相同DNS阻塞。主PR #8仍为Draft，禁止合并main/公开部署。
+
+
+---
+
+## 第9轮：React Flow DAG、cmdk 中文 IME、ECharts 后台暂停与减动策略
+
+**runCount=9/24；执行基线** feat/library-lab@0733f237ddfbc4ab3204c531255f386c46abec27。确认 AB #36/#37 已由 PLATFORM 合并、没有其他开放AB PR；没有回写过期的 feat/library-lab-ab。新独立工作分支 feat/library-lab-ab-wave9，本轮仅修改 A01/A06/B18 条目及本文件，主Draft #8仍待集成。
+
+### 本轮真实改动
+
+|条目|实际代码改动|源文件与文档一致性|
+|---|---|---|
+|A06 React Flow|修复 example.tsx 缺少 useState import 的明显编译缺陷；业务图连接判定增加端点存在性、同向重复、自环和完整多跳环路校验；isValidConnection 提前阻止非法交互，onConnect 写入时再检查；onNodesChange 删除节点时清理所有关联边|新增 examples/graph-rules.ts 与 tests/graph-rules.test.mts；3层 sourceFiles 清单、guide、agent 同步|
+|B18 cmdk|修复 compositionend 后尾随 Enter 可能错误执行命令；用 keyup 清除一次提交保护；Ctrl/Cmd+K 在关闭状态不抢外部输入框，已打开状态可在命令输入框内再次关闭；IME/229 和 Shift/Alt 排除|新增 examples/keyboard-policy.ts 与 tests/keyboard-policy.test.mts；3层 sourceFiles 清单、guide、agent 同步|
+|A01 ECharts|实时刷新计时器不再随着 updates 每tick重建；隐藏页面或开启系统减少动态时停止计时，支持显式覆盖减少动态、恢复可见后有条件续播；动画更新尊重系统偏好；双系列业务图增加“上周”数据表行|新增 examples/stream-policy.ts 与 tests/stream-policy.test.mts；3层 sourceFiles 清单、guide、agent 同步|
+
+保持真实第三方SDK import与原组件，未用Canvas假图/SDK mock替换。每库仍共用实际example.tsx作为basic/business/advanced的实现，合计9项演示选择，并不虚称新增9个独立bundle。
+
+### 精确可复现的实际检查
+
+离线使用本轮准备的**同字节**纯领域逻辑源与单测：
+
+- Node 22.16.0: \`node --experimental-strip-types --test A01/tests/*.test.mts A06/tests/*.test.mts B18/tests/*.test.mts\` → **19 PASS / 0 FAIL / 0 SKIP**。
+- TypeScript 5.8.3: \`tsc --noEmit --strict --skipLibCheck --target ES2022 --module ESNext --moduleResolution Bundler A01/examples/stream-policy.ts A06/examples/graph-rules.ts B18/examples/keyboard-policy.ts\` → **PASS（仅3个纯helper）**。
+- GitHub 生成tree的六个新增源码及测试Blob SHA与本轮离线逐文件\`git hash-object\`完全一致（A01 c526ec4/7d601e7、A06 f6bb064/74a059d、B18 2659725/042df5c），保证本地运行对象与提交对象一致。
+- 完整集成分支目录树未截断、三组真实helper及测试文件均存在。以上不替代真实第三方SDK导入运行、React19完整TS7构建、Vite生产build、Chromium中文输入法/Canvas及后台可见性测试。**sdk/build/browser仍保持NOT_RUN/BLOCKED，verification.json未写虚假PASS**。
+
+**dependencyRequests 新增=0**，继续由PLATFORM维护package/lock/CI、获取真实Runner环境；本通道未触及其他分组。SDK/浏览器恢复后优先针对A06拖拽连接/删除节点；B18 fcitx5/Rime尾随Enter与聚焦关闭；A01标签页隐藏/减少动态/双系列表格进行定向E2E及真实资源回收检查。其余A/B复杂WebGL/白板建议基于真实执行报错而不是无证据大改。
+

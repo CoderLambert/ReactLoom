@@ -64,3 +64,9 @@ React state（样本）→ `setOption`（更新实例）→ ECharts 渲染到容
 - [官方 NPM 按需导入](https://echarts.apache.org/handbook/en/basics/import/)
 - [ECharts API](https://echarts.apache.org/en/api.html)
 - [Apache-2.0 许可证所在仓库](https://github.com/apache/echarts)
+
+## AB wave9：后台节能、减少动画与等价数据
+
+高级层 `examples/stream-policy.ts` 区分用户点击“开始”的**意图状态**与实际计时器运行状态：页面隐藏、系统偏好减少动态时自动停止增量计时；页面重新可见或偏好解除时在仍有用户意图的前提下恢复。明确勾选允许动态才覆盖减少动态；隐藏标签页永远不继续更新。计数由稳定单一 interval 和 tick ref 推进，避免每1.2秒重复拆建计时器；卸载清理监听及interval。图表 `animationDuration` 也会响应系统偏好。
+
+双系列业务模式的等价表格增加“上周”行，防止仅用Canvas展示对照数据。纯规则测试：`node --experimental-strip-types --test entries/A01-echarts/tests/stream-policy.test.mts`。还需实际 ECharts 初始化、render、ResizeObserver、背景标签和读屏验收，不能视为SDK PASS。

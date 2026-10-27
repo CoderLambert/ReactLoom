@@ -64,6 +64,7 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/keyboard-policy.ts",
         "examples/demo.tsx"
       ],
       "capabilities": [
@@ -81,6 +82,7 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/keyboard-policy.ts",
         "examples/demo.tsx"
       ],
       "capabilities": [
@@ -92,12 +94,13 @@
     {
       "demoId": "advanced",
       "title": "局部 Ctrl/Cmd+K 对话框",
-      "description": "浏览器快捷键只在 Demo 挂载时注册，支持 Escape、IME 与焦点恢复",
+      "description": "Ctrl/Cmd+K 关闭面板时不抢其他输入，面板开启时可切换关闭；IME 尾随 Enter 保护",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/keyboard-policy.ts",
         "examples/demo.tsx"
       ],
       "capabilities": [

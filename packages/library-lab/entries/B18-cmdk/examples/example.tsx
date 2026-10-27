@@ -1,5 +1,6 @@
 import {useEffect, useRef, useState} from 'react';
 import {Command} from 'cmdk';
+import {shouldSuppressCommandEnter, shouldTogglePalette} from './keyboard-policy';
 
 type Level = 'basic' | 'business' | 'advanced';
 type Action = {id: string; label: string; description: string; keywords: string[]; group: '阅读' | '管理'; enabled: boolean};
@@ -21,22 +22,23 @@ export default function CmdkExample({level}: {level: Level}) {
   const [query, setQuery] = useState('');
   const [lastAction, setLastAction] = useState('尚未执行命令');
   const composing = useRef(false);
+  const pendingImeEnter = useRef(false);
   const trigger = useRef<HTMLButtonElement>(null);
   const advanced = level === 'advanced';
 
   useEffect(() => {
     if (!advanced) return;
     const handleKey = (event: KeyboardEvent) => {
-      if (event.key.toLowerCase() !== 'k' || !(event.ctrlKey || event.metaKey)) return;
       const element = event.target;
-      if (element instanceof HTMLElement && (element.isContentEditable ||
-        ['INPUT', 'TEXTAREA', 'SELECT'].includes(element.tagName))) return;
+      const editable = element instanceof HTMLElement && (element.isContentEditable ||
+        ['INPUT', 'TEXTAREA', 'SELECT'].includes(element.tagName));
+      if (!shouldTogglePalette(event,editable,open)) return;
       event.preventDefault();
       setOpen(value => !value);
     };
     document.addEventListener('keydown', handleKey);
     return () => document.removeEventListener('keydown', handleKey);
-  }, [advanced]);
+  }, [advanced,open]);
 
   function select(action: Action) {
     if (composing.current || !action.enabled) return;
@@ -53,14 +55,19 @@ export default function CmdkExample({level}: {level: Level}) {
       aria-label="输入命令关键词"
       value={query}
       onValueChange={setQuery}
-      onCompositionStart={() => {composing.current = true;}}
-      onCompositionEnd={() => {composing.current = false;}}
+      onCompositionStart={() => {composing.current = true; pendingImeEnter.current = true;}}
+      onCompositionEnd={() => {composing.current = false; pendingImeEnter.current = true;}}
       onKeyDownCapture={event => {
-        if (event.key === 'Enter' && (composing.current || event.nativeEvent.isComposing)) {
+        if (event.key !== 'Enter' && !composing.current) pendingImeEnter.current = false;
+        if (shouldSuppressCommandEnter(event.nativeEvent,composing.current,pendingImeEnter.current)) {
           event.preventDefault();
           event.stopPropagation();
         }
       }}
+      onKeyUpCapture={event => {
+        if (event.key === 'Enter') pendingImeEnter.current = false;
+      }}
+      onBlur={() => {composing.current = false; pendingImeEnter.current = false;}}
       placeholder="搜索命令、中文拼写或快捷词"
     />
     <Command.List>
@@ -92,6 +99,6 @@ export default function CmdkExample({level}: {level: Level}) {
       {commandContent}
     </Command>}
     <p role="status" aria-live="polite" style={{marginTop: 15}}>当前动作：{lastAction}</p>
-    <p style={{fontSize: 12}}>危险命令被禁用；Ctrl/Cmd+K 不覆盖其他输入框，切换 Tab 时自动移除键盘监听。</p>
+    <p style={{fontSize: 12}}>危险命令被禁用；面板关闭时 Ctrl/Cmd+K 不抢占其他输入框，面板打开后同键可关闭；输入法确认后的 Enter keyup 才解除误提交保护，卸载移除监听。</p>
   </section>;
 }

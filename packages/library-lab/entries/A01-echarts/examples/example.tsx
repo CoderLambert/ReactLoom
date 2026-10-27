@@ -3,6 +3,7 @@ import {init, use, type EChartsType} from 'echarts/core';
 import {BarChart, LineChart} from 'echarts/charts';
 import {GridComponent, TooltipComponent, LegendComponent, TitleComponent} from 'echarts/components';
 import {CanvasRenderer} from 'echarts/renderers';
+import {advanceReadingCounts, shouldAdvanceReadingStream} from './stream-policy';
 
 // Register only the features used by this module. This is deliberately outside render.
 use([BarChart, LineChart, GridComponent, TooltipComponent, LegendComponent, TitleComponent, CanvasRenderer]);
@@ -20,6 +21,27 @@ export default function EchartsExample({level}: {level: Level}) {
   const [compact, setCompact] = useState(false);
   const [live, setLive] = useState(false);
   const [updates, setUpdates] = useState(0);
+  const tickIndex = useRef(0);
+  const [visible, setVisible] = useState(true);
+  const [reducedMotion, setReducedMotion] = useState(false);
+  const [allowMotion, setAllowMotion] = useState(false);
+  const playbackActive = shouldAdvanceReadingStream({
+    level, requested: live, visible, reducedMotion, allowMotion,
+  });
+
+  useEffect(() => {
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const syncMotion = () => setReducedMotion(media.matches);
+    const syncVisibility = () => setVisible(!document.hidden);
+    syncMotion();
+    syncVisibility();
+    media.addEventListener('change',syncMotion);
+    document.addEventListener('visibilitychange',syncVisibility);
+    return () => {
+      media.removeEventListener('change',syncMotion);
+      document.removeEventListener('visibilitychange',syncVisibility);
+    };
+  }, []);
 
   // StrictMode will mount/clean up/mount again; never share a chart instance across elements.
   useEffect(() => {
@@ -44,7 +66,8 @@ export default function EchartsExample({level}: {level: Level}) {
     const chart = instance.current;
     if (!chart) return;
     chart.setOption({
-      animationDuration: 280,
+      animationDuration: reducedMotion && !allowMotion ? 0 : 280,
+      animationDurationUpdate: reducedMotion && !allowMotion ? 0 : 280,
       title: {text: level === 'basic' ? '近七日文章阅读' : 'NewsHub 阅读趋势', left: 10, textStyle: {fontSize: 15}},
       tooltip: {trigger: 'axis', confine: true},
       legend: {show: level === 'business', bottom: 0},
@@ -58,17 +81,17 @@ export default function EchartsExample({level}: {level: Level}) {
           ]
         : [{name: '阅读量', type: level === 'advanced' ? 'line' : 'bar', smooth: level === 'advanced', data: values, itemStyle: {color: '#36715a'}, areaStyle: level === 'advanced' ? {opacity: 0.12} : undefined}],
     }, {notMerge: true, lazyUpdate: true});
-  }, [level, values]);
+  }, [level, values, reducedMotion, allowMotion]);
 
   useEffect(() => {
-    if (level !== 'advanced' || !live) return;
+    if (!playbackActive) return;
     const interval = window.setInterval(() => {
-      setValues(previousValues => previousValues.map((value, index) =>
-        index === updates % previousValues.length ? value + 3 : value));
+      const tick = tickIndex.current++;
+      setValues(previousValues => advanceReadingCounts(previousValues,tick));
       setUpdates(previousUpdates => previousUpdates + 1);
     }, 1200);
     return () => window.clearInterval(interval);
-  }, [level, live, updates]);
+  }, [playbackActive]);
 
   return <section aria-label="Apache ECharts 真实图表">
     <h2>{level === 'basic' ? '柱状图与分类轴' : level === 'business' ? '业务对比：柱状 + 折线' : '实时更新与容器缩放'}</h2>
@@ -76,8 +99,10 @@ export default function EchartsExample({level}: {level: Level}) {
     {level === 'advanced' && <div style={{display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 14}}>
       <button type="button" onClick={() => setLive(value => !value)}>{live ? '暂停增量更新' : '启动增量更新'}</button>
       <button type="button" onClick={() => setCompact(value => !value)}>{compact ? '恢复宽图' : '缩小容器，观察 resize'}</button>
-      <button type="button" onClick={() => {setValues(baseline); setUpdates(0);}}>复位业务数据</button>
-      <span aria-live="polite">增量更新次数：{updates}</span>
+      <button type="button" onClick={() => {tickIndex.current=0;setValues(baseline);setUpdates(0);}}>复位业务数据</button>
+      {reducedMotion && <label><input type="checkbox" checked={allowMotion}
+        onChange={event => setAllowMotion(event.target.checked)}/>允许动态演示（覆盖减少动态偏好）</label>}
+      <span aria-live="polite">增量更新次数：{updates}；{playbackActive?'运行中':live?'已暂停（页面隐藏或减少动态）':'已停止'}</span>
     </div>}
     <div style={{width: compact ? '65%' : '100%', minWidth: 250, maxWidth: 880, transition: 'width .2s'}}>
       <div ref={node} style={{height: 300, width: '100%'}} role="img" aria-label="七天阅读趋势交互图表，下方提供可访问的数据表"/>
@@ -85,8 +110,11 @@ export default function EchartsExample({level}: {level: Level}) {
     <p role="status">最近点击：{selected || '尚未选择数据点'}</p>
     <div style={{overflowX: 'auto'}}>
       <table style={{borderCollapse: 'collapse', width: '100%'}} aria-label="图表对应的文本数据">
-        <thead><tr>{labels.map(day => <th key={day} style={{padding: 6, textAlign: 'left'}}>{day}</th>)}</tr></thead>
-        <tbody><tr>{values.map((value, index) => <td key={labels[index]} style={{padding: 6}}>{value}</td>)}</tr></tbody>
+        <caption>阅读趋势对应数据（逐系列）</caption>
+        <thead><tr><th scope="col">系列</th>{labels.map(day => <th scope="col" key={day} style={{padding: 6, textAlign: 'left'}}>{day}</th>)}</tr></thead>
+        <tbody><tr><th scope="row">{level==='business'?'本周':'阅读量'}</th>{values.map((value, index) => <td key={labels[index]} style={{padding: 6}}>{value}</td>)}</tr>
+          {level==='business' && <tr><th scope="row">上周</th>{previous.map((value,index) => <td key={labels[index]} style={{padding:6}}>{value}</td>)}</tr>}
+        </tbody>
       </table>
     </div>
   </section>;

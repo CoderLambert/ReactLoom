@@ -26,3 +26,9 @@ useNodesState/useEdgesState 管理受控数组并提供 onNodesChange/onEdgesCha
 
 ## 练习及验收
 添加循环检查、节点类型约束、撤销/恢复和版本化保存。测试改变节点位置后状态持久、删除节点后关联边规则、页面卸载无全局事件泄露。当前仅编写真实SDK导入源码；没有SDK运行、TS构建、Chromium验收，不能标PASS。
+
+## AB wave9：连接数据不变式已接线
+
+本示例实际通过 `examples/graph-rules.ts` 检查断开的端点、已移除的节点、同向重复、直接自环和**多跳有向环路**。校验既作为 React Flow 的 `isValidConnection` UI 提示，也用于 `onConnect` 写入前的判定；删除节点时按 NodeChange 的 remove ID 清除关联边，不能留下悬空的执行管线。采用可迭代 DFS，避免深链递归溢出。其他业务规则（句柄类型、权限、服务端并发版本）仍必须单独实现。
+
+定向逻辑测试：`node --experimental-strip-types --test entries/A06-react-flow/tests/graph-rules.test.mts`。这是纯图规则测试，不等于实际 React Flow SDK、浏览器或生产构建通过。
