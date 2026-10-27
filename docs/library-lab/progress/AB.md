@@ -1,6 +1,6 @@
 # AB 开发进度 — A/B 前端库垂直实现
 
-**最新调度轮次：5 / 最多24；状态：WAVE5_SOURCE_STAGED（实际 SDK 与浏览器仍待验证）。**
+**最新调度轮次：7 / 最多24；状态：WAVE7_AB_39_SOURCE_STAGED（A/B全部39条已提交源码与文档，PR #29 待集成；SDK/构建/浏览器仍未验证）。**
 
 - 分支：`feat/library-lab-ab`，base 提交 `38ed2d247bd82e4f1422b0e8904973e16bca2972`。
 - 集成目标：`feat/library-lab`，集成读取的头提交 `5955b9a03f95545f2107583a109e22cc6e44078c`。
