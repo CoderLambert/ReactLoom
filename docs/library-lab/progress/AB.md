@@ -744,3 +744,7 @@ PLATFORM审核本PR的base/head、授权路径并合入私有 \`feat/library-lab
 **dependencyRequests新增0**；既有SDK声明 `echarts@6.1.0`、`@floating-ui/react@0.27.20`、`@dnd-kit/core@6.3.1`、`@dnd-kit/sortable@10.0.0`、`@atlaskit/pragmatic-drag-and-drop@1.8.1`，由PLATFORM负责实际安装、锁文件和peer核对。
 
 **Draft PR [#68](https://github.com/CoderLambert/ReactLoom/pull/68)**：base严格 `feat/library-lab`，head `feat/library-lab-ab-wave18`；只允许PLATFORM审查合并到私有集成分支，不更改main、PR #3/#8、模板或公开部署。下一批优先依据PLATFORM的真实构建/SDK/浏览器日志排查四库，再按独立缺陷处理 A16 MapLibre 多实例/WebGL重载、A06 React Flow连线冲突、B18 cmdk 输入法与快捷键；仍禁止把新增规则测试冒充SDK PASS。到runCount24仍存在验收缺口则准确记录并结束本通道。
+
+### wave18 GitHub CI 对应提交回读（2026-10-27）
+
+PR #68的进度提交 `b5a21a00650eb37bc86dd181e449b3bf00328b94` 触发GitHub Actions：**CI run `40502535598` = failure**（packages、verify ssr/spa/mobile、lighthouse ssr/spa、smoke共7个job全部 `steps=[]`）；**Library Lab run `40502535604` = failure**（runtime-bootstrap `122183530797`、catalogue `122183531102`，二者均 `steps=[]`）。这些job没有任何可审查的测试/安装步骤，不等于已执行生产TS/Vite、SDK或浏览器，也没有足够证据将错误归因于此次AB源码。相同runner不提供步骤的故障交PLATFORM集中调查，本通道不重复重跑。当前相对集成基线Compare **19/19文件全部在AB授权范围、ahead=2/behind=0**。新版Docs提交只补录证据，不改变源码和verification状态。
