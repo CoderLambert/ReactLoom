@@ -13,3 +13,7 @@
 **测试指令**：`catalog:check/typecheck/build`后才是真实Chromium Playwright。验证加载、暂停、卸载、错误后退化、移动端DPR、系统减少动态；导入SDK可真实检查但历史摘要PASS不能继承。
 
 **来源**：https://docs.lottiefiles.com/en/runtimes/distributions/react/v0.x/api-reference。
+
+## wave14 迁移补充
+
+同时迁移 `examples/playback-policy.ts`，以 `mayPlay` 作为真实 `player.play()` 和用户新播放请求的共同守卫，以 `playbackLabel` 显示资源加载/后台/系统偏好的客观状态。error 事件要停止意图播放；手动 override 不能突破 document.hidden。单测仅验证策略，不证明 WASM/SDK 成功。
