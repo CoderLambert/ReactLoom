@@ -65,3 +65,7 @@ React 管理演示级只读/导入状态；画板自身的场景、撤销栈、�
 - [编辑器 API](https://docs.excalidraw.com/docs/@excalidraw/excalidraw/api/props/excalidraw-api)
 - [简化元素创建](https://docs.excalidraw.com/docs/@excalidraw/excalidraw/api/excalidraw-element-skeleton)
 - [工具库源代码与 MIT 授权](https://github.com/excalidraw/excalidraw)
+
+### wave17：不可信本地文件边界
+
+`examples/scene-policy.ts` 是实际示例引用的导入策略。文件须有 `.excalidraw`/`.json` 后缀、非空且不超过1.5MB；SDK恢复后继续检查元素不超过200、拒绝嵌入附件及不安全链接。仅允许**无用户名/密码的HTTPS**元素链接，阻止脚本协议、明文HTTP和混淆用户信息URL；Native `onLinkOpen` 也采用同一策略。此限制是教学安全边界，不构成完整文档隔离；须实测SDK解码、URL跳转及特殊文件。

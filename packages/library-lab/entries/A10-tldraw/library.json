@@ -63,7 +63,8 @@
       "sourceFiles": [
         "examples/example.tsx",
         "examples/demo.tsx",
-        "examples/styles.css"
+        "examples/styles.css",
+        "examples/snapshot-policy.ts"
       ],
       "capabilities": [
         "canvas",
@@ -80,7 +81,8 @@
       "sourceFiles": [
         "examples/example.tsx",
         "examples/demo.tsx",
-        "examples/styles.css"
+        "examples/styles.css",
+        "examples/snapshot-policy.ts"
       ],
       "capabilities": [
         "canvas",
@@ -97,7 +99,8 @@
       "sourceFiles": [
         "examples/example.tsx",
         "examples/demo.tsx",
-        "examples/styles.css"
+        "examples/styles.css",
+        "examples/snapshot-policy.ts"
       ],
       "capabilities": [
         "canvas",

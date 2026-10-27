@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRive } from '@rive-app/react-webgl2';
 import { RIVE_SAMPLE_URL, RIVE_SAMPLE_STATE_MACHINE } from './asset';
 import './styles.css';
+import { riveRuntimePolicy } from './runtime-policy';
 
 type Level = 'basic' | 'business' | 'advanced';
 type Review = 'idle' | 'pending' | 'success' | 'error';
@@ -95,10 +96,15 @@ export default function RiveWorkshop({ level }: { level: Level }) {
     return () => observer.disconnect();
   }, [level]);
 
-  useEffect(() => () => {
-    ++generation.current;
-    pendingRef.current?.abort();
-  }, []);
+  // Closing one scenario cancels its outstanding local review before another can display it.
+  useEffect(() => {
+    setPhase('idle');
+    return () => {
+      ++generation.current;
+      pendingRef.current?.abort();
+      pendingRef.current = null;
+    };
+  }, [level]);
 
   const cancelReview = useCallback(() => {
     ++generation.current;
@@ -130,9 +136,11 @@ export default function RiveWorkshop({ level }: { level: Level }) {
     }
   }, [simulateError]);
 
-  const playing = pageVisible && !reduced && !manuallyPaused &&
-    (level === 'business' ? phase === 'pending' : true);
-  const shouldMount = level !== 'advanced' || inView;
+  const runtime = riveRuntimePolicy({
+    level, pageVisible, inView, reducedMotion: reduced, manuallyPaused, phase,
+  });
+  const playing = runtime.play;
+  const shouldMount = runtime.mount;
 
   return <section className="ab-rive" aria-label="Rive 动画与状态机制实验">
     <h2>{level === 'basic' ? '入门：Rive 播放器' : level === 'business' ? '业务：审核状态驱动动画' : '进阶：视口与资源生命周期'}</h2>
@@ -151,7 +159,7 @@ export default function RiveWorkshop({ level }: { level: Level }) {
     <div ref={wrapperRef} className="ab-rive-viewport">
       {shouldMount
         ? <RivePlayer playing={playing} onError={handlePlayerError} />
-        : <div className="ab-rive-placeholder">动画在视口外：Rive 组件已卸载；返回视口后再加载。</div>}
+        : <div className="ab-rive-placeholder">{pageVisible ? '动画在视口外：Rive 组件已卸载；返回视口后再加载。' : '页面在后台：Rive 组件已卸载，SDK负责释放渲染资源。'}</div>}
     </div>
     <dl className="ab-rive-facts">
       <div><dt>文档页面</dt><dd>{pageVisible ? '前台' : '后台'}</dd></div>

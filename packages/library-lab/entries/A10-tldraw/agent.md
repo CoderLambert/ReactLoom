@@ -35,3 +35,7 @@
 本机挂载成功、真实形状增删、画布缩放、只读拒绝修改、JSON文档结构含 shapes、再次挂载订阅无泄漏、键盘 Tab/Escape 不影响主应用、未授权非本机宿主显示合规提示。版本、执行命令、日志和源码指纹写 verification，缺测维持 NOT_RUN。
 
 官方：https://tldraw.dev/sdk-features/license-key
+
+### wave17 快照约束
+
+同时迁移 `examples/snapshot-policy.ts`，保留UTF-8 3MB限制、URL/timeout实例级Set与卸载清理。不要把下载成功当服务器持久化或SDK完整验收；涉及blob/浏览器下载仍需真实Chromium验证。

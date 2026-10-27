@@ -67,3 +67,7 @@ const {getReferenceProps, getFloatingProps} =
 ## IME 合成完成后的 Enter 竞态（AB wave8 加固）
 
 React 状态更新可能批量化；`compositionend` 若紧邻同一次 Enter 的 `keydown`，只检查 `isComposing` 或旧 state 仍可能误提交。此示例用同步 ref 追踪 composition、合成完成后的下一次 Enter、原生 `isComposing` 与兼容性 keyCode 229；仅由真正的普通 Enter 触发 `choose`。合成期不 `preventDefault`，避免阻断输入法候选确认；在 Enter keyup 或失焦后清除防误提交标志。判断纯函数见 `examples/ime-guard.ts`，Node 定向测试不替代 Chromium/Windows/Linux 中文输入法真实验证。
+
+### wave17：真正写入剪贴板
+
+业务浮层“复制示例引用”调用浏览器原生`navigator.clipboard.writeText`，**只有Promise成功**才关闭弹层并显示“已复制”；权限拒绝或非安全上下文在当前浮层保留`role=alert`错误，不能用按钮点击冒充复制成功。该文本明确为本地教学引用。必须在HTTPS或localhost下用真实Chromium验证，Floating UI的Portal/焦点/IME回归也不能从源码推断成功。

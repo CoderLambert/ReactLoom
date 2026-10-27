@@ -7,22 +7,10 @@ import {
 } from '@excalidraw/excalidraw';
 import '@excalidraw/excalidraw/index.css';
 import './styles.css';
+import { isSafeSceneLink, sceneImportError } from './scene-policy';
 
 type Level = 'basic' | 'business' | 'advanced';
 type EditorApi = Parameters<NonNullable<ComponentProps<typeof Excalidraw>['excalidrawAPI']>>[0];
-const MAX_IMPORT_BYTES = 1_500_000;
-const MAX_ELEMENTS = 200;
-
-function isAllowedLink(url: string | null | undefined) {
-  if (!url) return true;
-  try {
-    const parsed = new URL(url);
-    return parsed.protocol === 'https:' || parsed.protocol === 'http:';
-  } catch {
-    return false;
-  }
-}
-
 function initialWorkflow() {
   return convertToExcalidrawElements([
     { type: 'rectangle', x: 40, y: 65, width: 165, height: 100, backgroundColor: '#e7f5ef', label: { text: 'RSS 获取' } },
@@ -123,15 +111,19 @@ export default function ExcalidrawWorkshop({ level }: { level: Level }) {
     if (!file) return;
     const api = apiRef.current;
     if (!api) { setMessage('编辑器未就绪'); return; }
-    if (file.size > MAX_IMPORT_BYTES) { setMessage('导入文件最大允许 1.5 MB'); return; }
+    const fileError = sceneImportError({ name: file.name, bytes: file.size });
+    if (fileError) { setMessage(fileError); return; }
     const token = ++operationId.current;
     setWorking(true);
     try {
       const restored = await loadFromBlob(file, null, null);
       const elements = restored.elements ?? [];
-      if (elements.length > MAX_ELEMENTS) throw new Error('元素超过 200 个，本实验不允许大批量导入');
-      if (elements.some(element => !isAllowedLink(element.link))) throw new Error('存在不安全的元素链接');
-      if (restored.files && Object.keys(restored.files).length) throw new Error('当前教学导入不接受含二进制附件的画板');
+      const sceneError = sceneImportError({
+        name: file.name, bytes: file.size, elementCount: elements.length,
+        links: elements.map(element => element.link),
+        attachedFiles: Object.keys(restored.files ?? {}).length,
+      });
+      if (sceneError) throw new Error(sceneError);
       // Loading is asynchronous: a reset, scene replacement, or unmount invalidates this result.
       if (token !== operationId.current || !mounted.current || apiRef.current !== api) return;
       api.updateScene({ elements, appState: { viewBackgroundColor: '#fffdf7' } });
@@ -179,9 +171,9 @@ export default function ExcalidrawWorkshop({ level }: { level: Level }) {
           excalidrawAPI={api => { apiRef.current = api; }}
           onChange={onChange}
           onLinkOpen={(element, event) => {
-            if (!isAllowedLink(element.link)) {
+            if (!isSafeSceneLink(element.link)) {
               event.preventDefault();
-              setMessage('阻止了非 HTTP(S) 链接。');
+              setMessage('阻止了非 HTTPS 或带凭据的链接。');
             }
           }}
         />
