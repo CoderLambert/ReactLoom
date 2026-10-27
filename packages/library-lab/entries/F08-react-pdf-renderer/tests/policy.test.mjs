@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { validatedRows } from '../report-policy.mjs';
+import { validatedRows } from '../examples/report-policy.mjs';
 
 const row = { id: 'react', name: 'React Notes', articles: 18 };
 test('accepts bounded fixture and strips untrusted extra fields', () => {
