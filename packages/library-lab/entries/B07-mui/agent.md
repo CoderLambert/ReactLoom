@@ -23,3 +23,7 @@ Theme 生效且未作用于其他 UI；搜索过滤及 Switch 在单一状态模
 ## 授权与文档
 
 官方 https://mui.com/material-ui/ ，安装 https://mui.com/material-ui/getting-started/installation/ 。核心 MIT，不暗示 Pro Data Grid 可免费使用。当前真实SDK与浏览器验证 NOT_RUN。
+
+## 第11轮迁移补充
+
+需要一起复制 `examples/feed-history.ts`：`example.tsx` 已调用 `toggleFeed/addFeed/undoFeed` 处理原子更新。不要复活 `setBefore(rows)` 快照双状态；新的 local-ID 通过单调计数防撤销后碰撞。可独立运行 `node --experimental-strip-types --test tests/feed-history.test.mts` 检查纯规则，真实 MUI Portal/焦点/键盘和 React 构建仍需专测。

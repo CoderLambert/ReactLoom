@@ -5,33 +5,27 @@ import {
   Switch, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
   TextField, ThemeProvider, Typography,
 } from '@mui/material';
+import {addFeed, initialFeedHistory, toggleFeed, undoFeed} from './feed-history';
 
 type Level = 'basic' | 'business' | 'advanced';
-type Subscription = {id: string; title: string; endpoint: string; enabled: boolean};
-const BASE: Subscription[] = [
-  {id: 's-1', title: '工程实践', endpoint: 'https://example.org/engineering.xml', enabled: true},
-  {id: 's-2', title: '设计系统', endpoint: 'https://example.org/design.xml', enabled: true},
-  {id: 's-3', title: '资讯观察', endpoint: 'https://example.org/news.xml', enabled: false},
-];
 const theme = createTheme({palette: {primary: {main: '#2b674e'}, secondary: {main: '#987a45'}}, shape: {borderRadius: 10}});
 
 export default function MaterialUIExample({level}: {level: Level}) {
   const [workspace, setWorkspace] = useState('ReactLoom');
   const [query, setQuery] = useState('');
-  const [rows, setRows] = useState<Subscription[]>(BASE);
+  const [feedHistory, setFeedHistory] = useState(initialFeedHistory);
+  const {rows, before} = feedHistory;
   const [editing, setEditing] = useState(false);
   const [title, setTitle] = useState('');
   const [url, setUrl] = useState('');
   const [error, setError] = useState('');
   const [injectConflict, setInjectConflict] = useState(false);
-  const [before, setBefore] = useState<Subscription[] | null>(null);
   const [notice, setNotice] = useState('');
   const filtered = useMemo(() => rows.filter(row =>
     (row.title + ' ' + row.endpoint).toLocaleLowerCase().includes(query.toLocaleLowerCase())), [rows, query]);
 
   function toggle(id: string, enabled: boolean) {
-    setBefore(rows);
-    setRows(old => old.map(row => row.id === id ? {...row, enabled} : row));
+    setFeedHistory(previous => toggleFeed(previous, id, enabled));
     setNotice('本地启用状态已更新');
   }
   function save() {
@@ -54,8 +48,7 @@ export default function MaterialUIExample({level}: {level: Level}) {
       setError('模拟 HTTP 409：地址已存在，请更换（不会真实请求服务端）');
       return;
     }
-    setBefore(rows);
-    setRows(old => [...old, {id: 'local-' + (old.length + 1), title: label, endpoint: normalized, enabled: true}]);
+    setFeedHistory(previous => addFeed(previous, label, normalized));
     setEditing(false);
     setTitle('');
     setUrl('');
@@ -86,7 +79,7 @@ export default function MaterialUIExample({level}: {level: Level}) {
         <TextField label="搜索订阅" size="small" value={query}
           onChange={event => setQuery(event.target.value)} sx={{flex: '1 1 200px'}}/>
         {level === 'advanced' && <Button variant="contained" onClick={() => {setEditing(true); setError('');}}>新增订阅</Button>}
-        <Button disabled={!before} onClick={() => {if(before){setRows(before);setBefore(null);setNotice('已撤销上一次修改');}}}>撤销</Button>
+        <Button disabled={!before} onClick={() => {if(before){setFeedHistory(undoFeed);setNotice('已撤销上一次修改');}}}>撤销</Button>
       </Stack>
       <TableContainer component={Paper} variant="outlined">
         <Table size="small" aria-label="RSS 订阅状态表">

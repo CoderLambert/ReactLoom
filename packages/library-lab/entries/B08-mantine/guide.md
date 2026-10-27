@@ -51,3 +51,9 @@ Mantine NumberInput 的 `onChange` 不是无条件 number：清空得到 `''`、
 - [Provider](https://mantine.dev/theming/mantine-provider/)
 
 Mantine core / hooks MIT；本地 RSS 数据原创。
+
+## 第11轮：单一FeedHistory避免连续编辑丢撤销点
+
+原来 `setHistory(rows)` 与独立 `setRows(previous=>...)` 的组合会在高频 Switch/NumberInput 编辑时记录旧闭包。现在 `examples/feed-history.ts` 管理 `{rows,before}` 原子更新，`updateQuota` 在业务提交层仍严格验证 NumberInput 的 `number|string` 及范围，并拒绝无变化、未知 ID；Modal 仅持有选中的**稳定 ID**，标题总是从当前数据读取，避免将过期对象当作业务事实。`undoFeed` 仅回滚最新一次有效变更，不把早先更改一并丢掉。
+
+可测试输入 `''`/`'-'`/0/101/NaN/大整数、连续两次修改与单步撤销。`tests/feed-history.test.mts` 只覆盖领域逻辑，Mantine Portal、CSS layer 和浏览器输入法仍未实测。

@@ -5,30 +5,25 @@ import {
 } from '@mantine/core';
 import {useDebouncedValue} from '@mantine/hooks';
 import '@mantine/core/styles.layer.css';
+import {initialFeedHistory, toggleFeed, undoFeed, updateQuota, validQuota} from './feed-history';
 
 type Level = 'basic' | 'business' | 'advanced';
-type Feed = {id: string; title: string; quota: number; enabled: boolean};
-const INITIAL: Feed[] = [
-  {id: 'frontend', title: '前端实践', quota: 15, enabled: true},
-  {id: 'ai', title: 'AI 与工程', quota: 25, enabled: true},
-  {id: 'security', title: '安全公告', quota: 5, enabled: false},
-];
 const theme = createTheme({primaryColor: 'teal', fontFamily: 'system-ui, sans-serif'});
 
 function FeedManager({level}: {level: Level}) {
   const [workspace, setWorkspace] = useState('ReactLoom');
-  const [rows, setRows] = useState<Feed[]>(INITIAL);
+  const [feedHistory, setFeedHistory] = useState(initialFeedHistory);
+  const {rows, before} = feedHistory;
   const [filter, setFilter] = useState('');
   const [debouncedFilter] = useDebouncedValue(filter, 150);
-  const [selected, setSelected] = useState<Feed | null>(null);
+  const [selected, setSelected] = useState<string | null>(null);
   const [quotaDraft, setQuotaDraft] = useState<number | string>(15);
-  const [history, setHistory] = useState<Feed[] | null>(null);
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
   const visible = useMemo(() => rows.filter(row => row.title.toLocaleLowerCase().includes(debouncedFilter.toLocaleLowerCase())), [rows, debouncedFilter]);
 
   function edit(row: Feed) {
-    setSelected(row);
+    setSelected(row.id);
     setQuotaDraft(row.quota);
     setError('');
     setNotice('');
@@ -36,18 +31,16 @@ function FeedManager({level}: {level: Level}) {
   function saveQuota() {
     if (!selected) return;
     // Mantine NumberInput deliberately returns strings for intermediate values.
-    if (typeof quotaDraft !== 'number' || !Number.isSafeInteger(quotaDraft) || quotaDraft < 1 || quotaDraft > 100) {
+    if (!validQuota(quotaDraft)) {
       setError('请求限额必须是 1–100 的整数；空值、短横线不能被当作零');
       return;
     }
-    setHistory(rows);
-    setRows(previous => previous.map(row => row.id === selected.id ? {...row, quota: quotaDraft} : row));
+    setFeedHistory(previous => updateQuota(previous, selected, quotaDraft));
     setSelected(null);
     setNotice('本地配额已更新（没有调用服务器）');
   }
   function toggle(id: string, enabled: boolean) {
-    setHistory(rows);
-    setRows(previous => previous.map(row => row.id === id ? {...row, enabled} : row));
+    setFeedHistory(previous => toggleFeed(previous, id, enabled));
   }
 
   return <Stack gap="md">
@@ -67,8 +60,8 @@ function FeedManager({level}: {level: Level}) {
       <Group justify="space-between" align="end" gap="sm" wrap="wrap">
         <TextInput label="筛选订阅" placeholder="技术、AI…" value={filter}
           onChange={event => setFilter(event.currentTarget.value)}/>
-        <Button variant="outline" disabled={!history} onClick={() => {
-          if (history) {setRows(history);setHistory(null);setNotice('已撤销最近一次变更');}
+        <Button variant="outline" disabled={!before} onClick={() => {
+          if (before) {setFeedHistory(undoFeed);setNotice('已撤销最近一次变更');}
         }}>撤销上一次</Button>
       </Group>
       <div style={{overflowX: 'auto'}}>
@@ -90,7 +83,7 @@ function FeedManager({level}: {level: Level}) {
       {notice && <Alert color="teal" role="status">{notice}</Alert>}
     </>}
     <Modal opened={Boolean(selected)} onClose={() => {setSelected(null);setError('');}}
-      title={'编辑配额：' + (selected?.title ?? '')} centered>
+      title={'编辑配额：' + (rows.find(row => row.id === selected)?.title ?? '')} centered>
       <Stack gap="md">
         <NumberInput label="每小时请求上限" description="仅接受1–100整数"
           min={1} max={100} clampBehavior="none" decimalScale={0}

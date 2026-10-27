@@ -23,3 +23,7 @@
 ## 证据边界
 
 本轮未执行真实 SDK / tsc / Vite / Chromium；不可标 PASS。可 Mock 业务后端，但不能 Mock Mantine 后声称库验证成功。MIT，官方 https://mantine.dev/ 。
+
+## 第11轮迁移补充
+
+将 `examples/feed-history.ts` 与 `example.tsx` 一起迁走；选中项只保留业务 ID，使用函数式 `setFeedHistory` 更新并维护同状态的单步撤销快照。不能将领域规则 Node PASS 推断为 Mantine NumberInput/Modal 的真实SDK行为；运行浏览器时检查焦点返回、IME和 Portal 卸载。

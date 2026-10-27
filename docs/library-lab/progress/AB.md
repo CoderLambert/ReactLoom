@@ -465,3 +465,36 @@ GitHub `compare_commits` 证实前两提交变更24文件，**24/24只在AB entr
 2. **AB**在本分支或平台新报告上继续针对确定的源码缺陷做定向修复，不再重复建设39项已存在目录；必要时审阅大型Canvas/白板许可及异步生命周期，而非改写已通过文档。
 3. 当前 **39/39为源码+手册覆盖**，真实SDK/React构建/浏览器全部未取得可核对的PASS证据，LL08/LL10不应宣布验收完成。无实际日志时不反复重试同一下载/无Runner错误。
 
+---
+
+## 第11轮（wave11）：MUI / Mantine 状态原子性、D3 绘制选择、Konva 窄屏与容量
+
+**runCount=11/24；集成基线及提交父节点 feat/library-lab@e9cc2100e1fc4dfeb6a929534c60aab87c700326。** 核对当时开放PR仅主Draft #8和无关 #3，AB #44已合并，独立开发分支 feat/library-lab-ab-wave11。**本轮代码提交 b826708838d73b212db0580a6e8dc992468f781a**；仅改A05/A11/B07/B08共24个条目内文件。本进度单独提交，不覆盖先前历史。
+
+| 条目 | 直接源码改动 | 纯规则测试 |
+| --- | --- | --- |
+| B07 MUI | 将旧闭包setBefore(rows)和独立setRows替换为函数式FeedHistory；无变化不覆盖撤销点；新增ID单调增长防撤销后碰撞 | feed-history.test.mts，4例 |
+| B08 Mantine | rows和before同一原子更新；连续Switch/Quota只撤销最新一步；NumberInput字符串/非法值不提交，Modal选中项只存业务ID | feed-history.test.mts，3例 |
+| A05 D3 | 轴和可见选择使用同一筛选数据集；空集明确告知；非法ResizeObserver尺寸不再回填虚构620px，窄屏减少刻度但保留数据表 | chart-policy.test.mts，3例 |
+| A11 Konva | Stage宽度不再强制至少320px；新增卡片限制24个、拒绝重复ID；ID生成移出React状态updater避免StrictMode二次调用副作用 | stage-policy.test.mts，2例 |
+
+所有条目仍使用真实SDK源码，新增helper列入三层sourceFiles，guide/agent同步，verification.json不虚报PASS。39/39仅表示原有源码与文档覆盖。
+
+### 实际命令与证据
+
+- Node 22.16.0：node --experimental-strip-types --test /mnt/data/ab-wave11/{A05,A11,B07,B08}/tests/*.test.mts → **12 PASS / 0 FAIL / 0 SKIP**。首次红测发现Array.slice(-0)回退全部数据，修复后重测全绿。
+- TypeScript 5.8.3：tsc --noEmit --strict --skipLibCheck --target ES2022 --module ESNext --moduleResolution Bundler /mnt/data/ab-wave11/{A05,A11,B07,B08}/examples/*.ts → **PASS，仅4个纯逻辑helper**。
+- GitHub新建8个源码/测试Git blob；与本地git hash-object逐一相同：A05 2422420d/a412ba75，A11 b68e2a65/0d7a6842，B07 d1125384/d2e9b045，B08 2a29a36b/6843fb16。其余React TSX及SDK需真实环境验证。
+- **真实第三方SDK、React19完整类型检查、Vite生产build、Chromium焦点/IME/Canvas/触控：NOT_RUN/BLOCKED**。纯规则测试不等于官方SDK验收；不继承历史PASS。
+
+### dependencyRequests / 后续队列
+
+- 本轮新增dependencyRequests为0，复用已记录的d3、konva、MUI和Mantine。公共依赖、锁文件、CI、索引和真实runner归PLATFORM。
+- PLATFORM审核合入并在具备真实运行环境后验收B07/B08连续编辑和撤销、Dialog/Modal焦点与数字中间态、A05窄屏和筛选、A11 Canvas拖拽/Transformer/卸载。
+- AB后续优先按真实TS/SDK错误修复；无runner时可独立检查A03 Chart.js、A12 react-konva、B03 react-spring。禁止重复造条目和循环DNS重试。
+- 主PR #8仍Draft；未改main、PR #3、模板、公共脚本、package/lock、CI、其他组或公开部署。
+
+
+### GitHub CI观察补记（与源码运行验收分开）
+
+Draft PR #47（https://github.com/CoderLambert/ReactLoom/pull/47）实际触发工作流：Library Lab run 40454825977、CI run 40454825702，均报告 conclusion=failure；Library Lab 的 runtime-bootstrap job 122025599429 与 catalogue job 122025599671 均报 failure，但Connector获取两者日志均得到GitHub BlobNotFound 404，job steps为空。**因此无可用runner执行日志，不能归因为本PR源码问题，也不能将其计为真实SDK/构建验证**。PLATFORM应核对 Actions runner/日志可用性后再诊断，禁止以纯逻辑12 PASS覆盖此项失败。
