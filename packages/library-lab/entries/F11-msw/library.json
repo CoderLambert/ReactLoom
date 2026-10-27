@@ -60,7 +60,8 @@
       "sourceFiles": [
         "examples/node-runner.mjs",
         "examples/routes.mjs",
-        "examples/handlers.mjs"
+        "examples/handlers.mjs",
+        "examples/session-gate.mjs"
       ],
       "capabilities": [
         "node-process",
@@ -77,7 +78,8 @@
       "sourceFiles": [
         "examples/node-runner.mjs",
         "examples/routes.mjs",
-        "examples/handlers.mjs"
+        "examples/handlers.mjs",
+        "examples/session-gate.mjs"
       ],
       "capabilities": [
         "node-process",
@@ -98,7 +100,9 @@
         "examples/browser-worker.mjs",
         "tests/routes.test.mjs",
         "examples/registration-policy.mjs",
-        "examples/registration-policy.test.mjs"
+        "examples/registration-policy.test.mjs",
+        "examples/session-gate.mjs",
+        "examples/session-gate.test.mjs"
       ],
       "capabilities": [
         "node-process",
