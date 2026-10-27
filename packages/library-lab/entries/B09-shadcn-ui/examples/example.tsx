@@ -1,5 +1,6 @@
 import {useEffect,useRef,useState} from 'react';
 import {Button} from './ui/button';
+import {archiveByIds,isCurrentArchiveRun,pendingArchiveIds} from './archive-policy';
 
 type Level = 'basic'|'business'|'advanced';
 type Article={id:string;title:string;archived:boolean};
@@ -15,15 +16,28 @@ export default function ShadcnSourceExample({level}:{level:Level}){
   const [message,setMessage]=useState('这组组件源码随项目维护，不调用虚构的 shadcn 运行时。');
   const [variant,setVariant]=useState<'default'|'secondary'|'outline'|'destructive'>('default');
   const timer=useRef<ReturnType<typeof setTimeout>|null>(null);
-  useEffect(()=>()=>{if(timer.current!==null)clearTimeout(timer.current);},[]);
-  function toggle(id:string){setSelected(old=>old.includes(id)?old.filter(x=>x!==id):[...old,id]);}
-  function archive(){
-    if(!selected.length)return;
-    setBusy(true);
+  const operationEpoch=useRef(0);
+  function cancelPending(){
+    operationEpoch.current++;
     if(timer.current!==null)clearTimeout(timer.current);
+    timer.current=null;
+  }
+  useEffect(()=>{
+    setBusy(false);
+    return()=>{operationEpoch.current++;if(timer.current!==null)clearTimeout(timer.current);timer.current=null;};
+  },[level]);
+  function toggle(id:string){if(!busy)setSelected(old=>old.includes(id)?old.filter(x=>x!==id):[...old,id]);}
+  function archive(){
+    if(busy)return;
+    const snapshot=pendingArchiveIds(articles,selected);
+    if(!snapshot.length){setMessage('所选条目均已归档，无需重复执行');return;}
+    cancelPending();
+    const epoch=operationEpoch.current;
+    setBusy(true);
     timer.current=setTimeout(()=>{
-      setArticles(old=>old.map(a=>selected.includes(a.id)?{...a,archived:true}:a));
-      setMessage('批量归档了 '+selected.length+' 条数据（仅当前浏览器内存）');
+      if(!isCurrentArchiveRun(epoch,operationEpoch.current))return;
+      setArticles(old=>archiveByIds(old,snapshot));
+      setMessage('批量归档了 '+snapshot.length+' 条数据（仅当前浏览器内存）');
       setSelected([]);setBusy(false);timer.current=null;
     },250);
   }
@@ -43,7 +57,7 @@ export default function ShadcnSourceExample({level}:{level:Level}){
       <ul style={{listStyle:'none',padding:0}}>{articles.map(article=><li key={article.id}
         style={{display:'flex',alignItems:'center',gap:12,marginBottom:12}}>
         <label style={{display:'flex',alignItems:'center',gap:8,flex:1}}>
-          <input type="checkbox" checked={selected.includes(article.id)} onChange={()=>toggle(article.id)}/>
+          <input type="checkbox" disabled={busy} checked={selected.includes(article.id)} onChange={()=>toggle(article.id)}/>
           {article.title}
         </label>
         <span>{article.archived?'已归档':'待阅读'}</span>
@@ -55,7 +69,7 @@ export default function ShadcnSourceExample({level}:{level:Level}){
     {level==='advanced'&&<div className="demo-controls" style={{marginTop:14}}>
       <Button asChild variant="outline"><a href="https://ui.shadcn.com/docs/components/button" target="_blank" rel="noopener noreferrer">官方Button文档 ↗</a></Button>
       <Button variant="destructive" type="button" onClick={()=>{
-        if(timer.current!==null){clearTimeout(timer.current);timer.current=null;}setBusy(false);setArticles(INITIAL);setSelected([]);setMessage('恢复本地示例数据');
+        cancelPending();setBusy(false);setArticles(INITIAL);setSelected([]);setMessage('恢复本地示例数据');
       }}>重置本地数据</Button>
     </div>}
     <p role="status">{message}</p>

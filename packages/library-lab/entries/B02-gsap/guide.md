@@ -26,3 +26,7 @@ GSAP 会修改元素 inline style；在 useEffect 中使用 gsap.context(callbac
 ## 验证与练习
 调度真实依赖后检查 pause/play/reverse、replay 和 reduced-motion；StrictMode 切换Tab检查 context.revert 后 inline transform 不残留。无浏览器执行时 status 必须 NOT_RUN，代码能通过静态解析不意味着设备交互已验收。
 参考：https://gsap.com/resources/React/ ; https://gsap.com/docs/v3/GSAP/gsap.context()/ 。
+
+
+## 后台播放、手动暂停与初帧减动补丁（2026-10-27）
+`timeline-policy.ts`统一判断：页面隐藏、用户暂停或系统开启reduced-motion，任一成立都不得播放。可恢复的`tl.pause()/resume()`使返回前台后继续原位置；手动暂停状态在visibility切换后保持。首屏读取reduced-motion，进度夹紧0–100。visibilitychange和matchMedia均卸载监听；GSAP/StrictMode需实际浏览器验收。

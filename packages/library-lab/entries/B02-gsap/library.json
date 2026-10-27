@@ -55,7 +55,8 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/timeline-policy.ts"
       ],
       "capabilities": [
         "animation",
@@ -71,7 +72,8 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/timeline-policy.ts"
       ],
       "capabilities": [
         "animation",
@@ -87,7 +89,8 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/timeline-policy.ts"
       ],
       "capabilities": [
         "animation",

@@ -13,3 +13,4 @@
 **测试**：查看`verification.json`的真实SDK/build/browser证据，运行`catalog:check`、`typecheck`、`build`、Chromium实际交互；确保dragend/按钮变动同一模型，ResizeObserver释放、无残留Stage。
 
 **来源**：https://konvajs.org/docs/react/index.html。当前验证 NOT_RUN。
+**2026窄屏补充**：迁移`stage-policy.ts`，ResizeObserver遵从宿主实际宽度；Group拖拽在局部世界坐标clamp，不持久化屏幕坐标。节点限24个，键盘替代操作一致。窄屏Canvas和StrictMode仍待真实验收。

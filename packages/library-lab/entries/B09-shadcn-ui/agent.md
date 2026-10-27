@@ -11,3 +11,5 @@
 **测试**：真实CVA variant classes、Slot继承单子节点、键盘Tab/Space、禁用阻止、焦点环、tailwind-merge冲突、不同主题中的可读性；依赖未安装/未跑浏览器就保持NOT_RUN。
 
 官方：https://ui.shadcn.com/docs/installation/vite ; https://ui.shadcn.com/docs/components/radix/button
+
+**2026异步补充**：归档只快照未归档ID，busy期间禁用多选；每次取消、切级别或卸载使operationEpoch失效并清理timer。不能把本地延迟当成HTTP完成。

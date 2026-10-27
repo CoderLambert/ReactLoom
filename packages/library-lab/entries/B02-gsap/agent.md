@@ -9,3 +9,5 @@
 **反例**：全局 gsap.to('.card')；render中创建 timeline；用一次 gsap.killTweensOf('*') 清整个页面；关闭 Tab 后仍设置 React state；在减少动画时隐藏真实内容。
 **检查**：确认真实包 import、严格TS和生产构建、浏览器 replay/pause/reverse、StrictMode 双挂载、切 Tab 无遗留动画、键盘可读。当前三个验证维度均 NOT_RUN，不能将旧附件报告充当新SDK通过。
 **组合**：B01 Motion替代，B03 spring替代，B19 Embla协作时隔离 transform 所有权。
+
+**2026播放补充**：`timeline-policy.ts`区分用户手动暂停与后台自动暂停；visibility恢复仅在未手动暂停时续播。初次渲染读取reduced-motion并清理监听。勿在hidden页面强制play。
