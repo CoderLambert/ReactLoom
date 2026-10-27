@@ -24,13 +24,25 @@ export default function FFmpegExample({level}: {level: Level}) {
     }
     setResult('');
   }
-  useEffect(() => () => {
-    session.current++;
-    operation.current = null;
-    engine.current?.terminate();
-    engine.current = null;
-    if (out.current) URL.revokeObjectURL(out.current);
-  }, []);
+  useEffect(() => {
+    // A consuming app can change level without unmounting this heavy worker.
+    setLoaded(false);
+    setBusy(false);
+    setInput(null);
+    setResult('');
+    setLog('');
+    setStatus('场景已切换：仅在显式点击后加载本站FFmpeg核心');
+    return () => {
+      session.current++;
+      operation.current = null;
+      try { engine.current?.terminate(); } catch { /* teardown is best-effort */ }
+      engine.current = null;
+      if (out.current) {
+        URL.revokeObjectURL(out.current);
+        out.current = null;
+      }
+    };
+  }, [level]);
 
   async function load() {
     if (operation.current !== null || engine.current || loaded) return;
@@ -38,13 +50,16 @@ export default function FFmpegExample({level}: {level: Level}) {
     operation.current = id;
     setBusy(true);
     setStatus('正在从本站加载隔离的FFmpeg核心资源…');
-    const ffmpeg = new FFmpeg();
-    engine.current = ffmpeg;
-    ffmpeg.on('log', ({message}) => {
-      if (engine.current === ffmpeg) setLog(message.slice(0, 500));
-    });
-    const base = new URL(import.meta.env.BASE_URL + 'ffmpeg-core/', window.location.origin);
+    let candidate: FFmpeg | null = null;
     try {
+      // A constructor error must also unlock operation.current in finally.
+      const ffmpeg = new FFmpeg();
+      candidate = ffmpeg;
+      engine.current = ffmpeg;
+      ffmpeg.on('log', ({message}) => {
+        if (engine.current === ffmpeg) setLog(message.slice(0, 500));
+      });
+      const base = new URL(import.meta.env.BASE_URL + 'ffmpeg-core/', window.location.origin);
       await ffmpeg.load({
         coreURL: new URL('ffmpeg-core.js', base).href,
         wasmURL: new URL('ffmpeg-core.wasm', base).href,
@@ -56,11 +71,11 @@ export default function FFmpegExample({level}: {level: Level}) {
       setLoaded(true);
       setStatus('FFmpeg引擎加载完成，点击执行本地转换');
     } catch (error) {
-      ffmpeg.terminate();
-      if (engine.current === ffmpeg) engine.current = null;
+      try { candidate?.terminate(); } catch { /* preserve initial failure */ }
+      if (engine.current === candidate) engine.current = null;
       if (id === session.current) {
         setLoaded(false);
-        setStatus('核心加载失败：' + String(error) + '。请PLATFORM核对同源资源和CSP');
+        setStatus('核心初始化或加载失败：' + String(error) + '。请PLATFORM核对同源资源和CSP');
       }
     } finally {
       if (operation.current === id) {

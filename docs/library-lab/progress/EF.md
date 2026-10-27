@@ -396,3 +396,28 @@ runCount=6/24。本轮不把5库源代码和30+例子等同完整生产交付；
 
 - Draft PR [#46](https://github.com/CoderLambert/ReactLoom/pull/46)，base=`feat/library-lab`、head=`feat/library-lab-ef-wave12-worker-lifecycle`。最新代码/文档提交 `ef66a81d100a9978c245858c45558fd0e463151b`，之前两个提交 `32335aeacec70aa23a3aa3430d22b050af7488d6`、`9cfedb8c8629e979dd871f61e992a5ef8fa2634a`，均只针对EF条目。
 - 对比当轮集成基线：3 commits、25个变更文件，全部满足EF授权目录规则；11项Node纯策略PASS，不等同SDK/浏览器PASS。下一轮应在#46被PLATFORM集成后，从最新集成分支继续创建新wave，不重写合入后的旧分支。
+
+## 第十三轮：富文本边界、文件预览与FFmpeg场景隔离（2026-10-27）
+
+- 当前集成基线 `feat/library-lab@e9cc2100e1fc4dfeb6a929534c60aab87c700326`，独立 EF 工作分支 `feat/library-lab-ef-wave13-render-file-boundaries`，上一轮 #46 已合入。只写 E06/E10/F02/E19 与本进度；不编辑PLATFORM包、锁文件、CI、索引或main。
+- **E06 react-markdown**：共享 `render-policy.mjs` URL和a/img组件策略，拒绝危险协议、控制字符、HTTPS凭据和图片追踪请求。新增 `tests/sdk.test.mjs`：真实 `react-markdown` + `remark-gfm` + `rehype-sanitize` + React SSR负例，必须待完整依赖安装后**实际执行**才能记 SDK PASS。复用组件切换level会重设旧草稿。
+- **E10 DOMPurify**：改为显式允许标签与href/title属性，HTTPS-only URI，消除宽泛HTML profile；`html-policy.test.mjs`只验证纯策略常量，不执行DOMPurify。真正XSS、DOM/CSP/网络验收仍 NOT_RUN。
+- **F02 react-dropzone**：Blob.slice(0,8192).text() 避免预览1600字符却解码整个256KiB准入文件；场景切换也废弃旧Promise。新增 `preview.test.mjs` 的原生Node Blob预算测试，不等于 useDropzone SDK或浏览器测试。
+- **E19 ffmpeg.wasm**：FFmpeg构造异常也经过catch/finally释放operation；切level终止引擎、撤销URL和session失效；不在后台加载核心资产。真实WASM core、Worker/CSP和编码器许可证仍待PLATFORM。
+- 三层源文件清单已扩展E06/E10/F02新辅助/测试文件；保留 verification.json 原来的 SDK/browser NOT_RUN、build BLOCKED，不将提交或策略测试当运行通过。需公共平台实际执行 `catalog:check`、`typecheck`、`build` 和Chromium目标回归。
+- dependencyRequests：**无新增包**。现有 `react-markdown@10.1.0` + `remark-gfm@4.0.1` + `rehype-sanitize@6.0.0`，`dompurify@3.4.17` (MPL-2.0 OR Apache-2.0)，`react-dropzone@20.1.4` (MIT)，`@ffmpeg/ffmpeg@0.12.15` + `@ffmpeg/core@0.12.10` (wrapper MIT、核心编解码许可另核)；PLATFORM独占根依赖和锁文件且需确认API/peer/许可。
+- 本轮执行命令和结果须以真实Node工具输出及远端CI为准；`node --test packages/library-lab/entries/{E10-dompurify,F02-react-dropzone}/examples/*.test.mjs` 属于纯策略、`node --test packages/library-lab/entries/E06-react-markdown/tests/sdk.test.mjs` 属于实际SDK。两者不能混算。
+- 下一队列：真实SDK/TS/Vite安装反馈；Chromium E06出站图像与恶意HTML、E10 DOM净化、F02选择器与竞态、E19构造故障/WASM取消和切换；后续按平台反馈修复。EF仍 **37/37内容覆盖**，绝非37/37已验收。
+
+runCount=13/24。
+
+### 第十三轮真实定向验证补记
+
+- 使用 Node v22.16.0 在独立工作目录实际执行两组源码同字节的原生测试：`node --test E10/html-policy.test.mjs F02/preview.test.mjs`，共 **6 PASS / 0 FAIL**，耗时约 106 ms（TAP，E10 3 + F02 3）。通过 `git hash-object` 对比 GitHub 当前 wave13 blob SHA：E10 policy `7a724d46`、test `41935d26`，F02 preview `4fbaae47`、test `c100e284`，确认本次本地执行文件与实际提交字节一致。两套都**没有import目标DOMPurify/react-dropzone**，故不计 SDK PASS。
+- GitHub compare 基线 `e9cc2100` 至开发head `e0a6c41c`：4个提交、28个变更文件，全部位于 EF 条目或本进度文件。E06/E10/F02 的3×3层 sourceFiles 已逐项读取 GitHub 树并确认 9/9 路径组无缺失，属于静态完整性检查。
+- 由于工作容器无项目 React、DOMPurify、react-dropzone、FFmpeg 真实 node_modules，本轮 **E06实际SDK SSR、E10 DOMPurify、F02 useDropzone、E19 WASM、整包 TypeScript/Vite构建与Chromium E2E均没有执行**；verified字段仍按各库原有NOT_RUN/BLOCKED保留，未伪造日志或通过状态。
+
+### 第十三轮集成索引
+
+- [EF Draft PR #49](https://github.com/CoderLambert/ReactLoom/pull/49)，head `feat/library-lab-ef-wave13-render-file-boundaries`，base 固定 `feat/library-lab`，本轮预PR代码head `0a19aa65a17a7d0c02695a10bcffd13b53ac8722`；仅提交至EF允许路径，无部署或main更改。
+- 后续由PLATFORM检查真实SDK版本/peer/lock、类型/构建以及浏览器隔离，再决定合入。Issue #7记录本轮证据；本轮 **runCount=13/24**。

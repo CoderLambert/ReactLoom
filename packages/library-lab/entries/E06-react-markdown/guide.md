@@ -51,3 +51,9 @@ pnpm add react-markdown@10.1.0 remark-gfm@4.0.1 rehype-sanitize@6.0.0
 - https://github.com/remarkjs/react-markdown
 - https://github.com/remarkjs/remark-gfm
 - https://github.com/rehypejs/rehype-sanitize
+
+## 同源链接策略与可复现 SDK 回归（本轮）
+
+组件与 `tests/sdk.test.mjs` 共享 `examples/render-policy.mjs` 的 URL 和 a/img renderer，不再各自维护两套安全决策。允许无凭据HTTPS或有限页内锚点，拒绝控制字符及其他协议；远程图片转成普通文本，不加载跟踪像素。不透明 AST 属性不透传给真正 DOM。切换三层场景时清空旧编辑草稿。
+
+真实 SDK 测试：`node --test packages/library-lab/entries/E06-react-markdown/tests/sdk.test.mjs`。它确实 import React、react-dom/server、react-markdown、remark-gfm、rehype-sanitize，并检查基本格式、GFM 表格与 XSS 相关输出；只有目标依赖安装后运行方可记SDK证据。SSR HTML 断言不代替 Chromium 的外部网络、点击与 CSP 测试。本轮并未运行此 SDK 命令。

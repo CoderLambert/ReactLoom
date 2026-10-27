@@ -12,7 +12,7 @@ React 默认会转义普通文本，不需要在每个 `<p>{text}</p>` 都进行
 pnpm add dompurify@3.4.17
 ```
 
-实际示例在 `examples/example.tsx`。先用 `DOMPurify.sanitize(dirty, {USE_PROFILES:{html:true},FORBID_TAGS:[...]})` 得到干净字符串，再交给 React 的 `dangerouslySetInnerHTML`。这里只使用 HTML profile，禁止 iframe、form、style、img 等不需要的元素，并移除 style 属性。该策略是**教学中的严格子集**，不等于适合所有 CMS 的通用策略。
+实际示例在 `examples/example.tsx`。先用 `DOMPurify.sanitize(dirty, htmlPolicy)` 得到干净字符串，再交给 React 的 `dangerouslySetInnerHTML`。采用 ALLOWED_TAGS 和 ALLOWED_ATTR 最小允许列表，只保留受限排版元素与 a[href,title]，仅允许无凭据 HTTPS 链接。不要混用 USE_PROFILES 与 ALLOWED_TAGS，前者会覆盖后者。点击外站链接另由产品制定跳转策略。该策略是**教学中的严格子集**，不等于适合所有 CMS 的通用策略。
 
 ## 三层可交互实验
 
@@ -53,3 +53,7 @@ DOMPurify 在浏览器里直接使用 DOM；Node/SSR 运行时需要可靠、受
 - https://www.npmjs.com/package/dompurify
 
 当前安装和浏览器验证仍为 NOT_RUN/BLOCKED，不继承历史安全结论。
+
+## 固定策略与真实安全证据的区别
+
+策略位于 `examples/html-policy.mjs`。示例切换场景时重置原输入，防止旧攻击样例混进新业务场景。使用 `node --test packages/library-lab/entries/E10-dompurify/examples/html-policy.test.mjs` 只能检查**纯策略**标签/属性名单与 URL 正则（不加载 DOMPurify），不能证明净化 SDK、安全 DOM、网络和 CSP。真正验收须安装官方 dompurify@3.4.17，并在 Chromium 测 script/svg/onclick/远程图片、http:、javascript:、data:、带凭据 URL 等最终 DOM。只有真实证据才能调整 verification 状态。

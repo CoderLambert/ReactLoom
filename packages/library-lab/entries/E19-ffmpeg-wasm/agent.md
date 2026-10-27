@@ -8,3 +8,7 @@
 **关联**：E16 Video.js、E18 wavesurfer.js、F02 react-dropzone。官方 https://ffmpegwasm.netlify.app/docs/getting-started/usage/ 。
 
 **最新资源/输入契约**：迁移时一并读取 `examples/input-policy.mjs` 及 `input-policy.d.mts`。在 `arrayBuffer()` 前拒绝过大的File，读取后校验MIME与文件魔数及字节数，输出限定2MiB并核查WAV头。它只阻断明显不匹配的数据，不证明媒体解码器安全。`examples/example.tsx` 通过同步 operation token 防止连续点击并发写同一虚拟文件名，通过 session + FFmpeg实例身份排除取消后回写。不能删去这些检查或把纯Node 3个测试当真实WASM PASS。
+
+## 新增明确的不变量
+
+FFmpeg构造和on('log')/load放在同一个异常边界内，确保finally释放同步操作门禁。组件原地切换level必须终止旧Worker和失效session；不要只更新UI下拉选项而保留旧转换的Promise所有权。库核心/编码器的重分发许可仍须独立审查，真实浏览器构建及FFmpeg SDK保持NOT_RUN。

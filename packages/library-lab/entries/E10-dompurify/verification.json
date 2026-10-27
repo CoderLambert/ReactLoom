@@ -13,6 +13,6 @@
   },
   "security": {
     "status": "NOT_RUN",
-    "note": "XSS 用例尚未真实执行"
+    "note": "Added policy-only Node assertions; actual DOMPurify SDK/browser XSS remains NOT_RUN"
   }
 }

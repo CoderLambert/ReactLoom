@@ -1,7 +1,7 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "useDropzone真实SDK未安装执行"
+    "note": "Native Blob preview helper regression added; true useDropzone SDK remains NOT_RUN"
   },
   "build": {
     "status": "BLOCKED",
@@ -9,7 +9,7 @@
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "文件对话框/drag-drop/快速切换/键盘待真实E2E"
+    "note": "NOT_RUN: picker/drag-drop/keyboard/quick A-B swap/level navigation"
   },
   "security": {
     "status": "NOT_RUN",
