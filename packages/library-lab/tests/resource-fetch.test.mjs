@@ -16,7 +16,7 @@ test('successful generated resource request bypasses stale HTTP caches and parse
 });
 
 test('rejects external, protocol-relative, relative and traversing paths', async () => {
-  for(const value of ['https://example.com/x','//example.com/x','raw/index.json','/raw/../private','/raw/./x','/raw/\\secret']) {
+  for(const value of ['https://example.com/x','//example.com/x','raw/index.json','/raw/../private','/raw/./x','/raw/..','/raw/.','/raw/\\secret']) {
     await assert.rejects(requestGeneratedResource(value, async()=>{}), TypeError);
   }
   await assert.rejects(requestGeneratedResource('/raw/x',null),TypeError);
@@ -67,5 +67,7 @@ test('parser failures propagate and a subsequent retry is independent', async()=
 
 test('already aborted caller signal prevents acceptance of an immediate response',async()=>{
   const signal=new AbortController();signal.abort(new DOMException('Old tab','AbortError'));
-  await assert.rejects(requestGeneratedResource('/raw/C20/guide.md',r=>r.text(),{signal:signal.signal,fetchImpl:async()=>okResponse()}),/Old tab/);
+  let called=0;
+  await assert.rejects(requestGeneratedResource('/raw/C20/guide.md',r=>r.text(),{signal:signal.signal,fetchImpl:async()=>{called++;return okResponse();}}),/Old tab/);
+  assert.equal(called,0);
 });
