@@ -103,3 +103,19 @@ node packages/library-lab/scripts/readiness.mjs --json > /tmp/library-lab-readin
 ## FFmpeg Core 授权与构建（E19）
 
 包声明包含 `@ffmpeg/ffmpeg@0.12.15`（JS wrapper）及 `@ffmpeg/core@0.12.10`（大体积单线程二进制，GPL-2.0-or-later）。**默认不复制核心 WASM，也不把 E19 标成已运行。** 仅在完成目标分发形式的许可证、编解码器和 NOTICE 审核后，设置 `LIBRARY_LAB_FFMPEG_CORE_LICENSE_REVIEWED=true` 再运行 `pnpm --filter @reactloom/library-lab build`。构建脚本会校验准确版本/许可，生成带 SHA-256 的同源 `public/ffmpeg-core/`，卸载旧生成资产时不碰用户手工文件。核心资源不提交 Git、不自动从 CDN 拉取。开关并不代表法律授权；实际交付仍需手动核验许可证与浏览器 WASM/Worker/CSP。未设置开关时用户访问 E19 看到真实阻塞，而不是假演示。官方来源：https://www.npmjs.com/package/@ffmpeg/core
+
+## 本机真实验收与锁文件恢复（显式执行）
+
+`pnpm verify:library` 默认只打印步骤，不访问 registry、不改锁文件、不启动浏览器；专门避免在受限环境反复无效安装。需要 **Node ≥22.18 和 pnpm 10.x**：
+
+```sh
+pnpm verify:library                                      # 只查看固定执行计划
+pnpm verify:library --execute                            # 冻结安装 → 目录/Node逻辑 → tsc → Vite
+pnpm verify:library --execute --sdk-entry=D03             # 上述门槛通过后运行指定真实SDK
+pnpm verify:library --execute --browser --setup-browser   # 上述门槛通过后安装并运行Chromium
+pnpm verify:library --execute --resolve-lock              # 仅干净的feat/library-lab分支，真实pnpm解析锁
+```
+
+必须先确认当前分支与 `pnpm-lock.yaml` 工作区改动；`--resolve-lock` 会用真实 pnpm 执行 `install --lockfile-only --no-frozen-lockfile`，然后立即运行 `install --frozen-lockfile`，从不手写 integrity。分组开发分支不得使用此开关修改公共锁文件。结果按命令写入本地、被 Git 忽略的 `packages/library-lab/.local-evidence/<timestamp>-<sha>/`，含分步 stdout/stderr、状态、当前 Git SHA、工具版本与锁摘要；不会自动上传到 GitHub。正式发布前仍需审查真实日志并将合法根锁文件提交到集成分支，把 CI bootstrap 切回冻结安装。
+
+每个测试阶段只在前面阶段真实通过后执行。日志中 `PASS` 是**具体命令级结果**，不是给 119 个库自动赋予 SDK/浏览器 PASS；现有 GitHub Actions Runner 分配前失败时仍标 BLOCKED／NOT_RUN。新增选项、解析规则的 Node 单测不替代软件依赖的构建。

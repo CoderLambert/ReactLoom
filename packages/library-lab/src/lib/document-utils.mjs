@@ -7,7 +7,7 @@ export function resolveDocumentUrl(value, entryId, basePath = '/') {
   if (value.startsWith('#') && /^#[\p{L}\p{N}_-]+$/u.test(value)) return value;
   try {
     const url = new URL(value);
-    if (url.protocol === 'https:') return url.href;
+    if (url.protocol === 'https:' && url.hostname && !url.username && !url.password) return url.href;
   } catch { /* relative URLs handled below */ }
   if (!/^[A-F]\d{2}$/u.test(entryId)) return '';
   const [relative, hash] = value.split('#');

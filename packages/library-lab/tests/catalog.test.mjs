@@ -12,6 +12,12 @@ test('group filter excludes other categories',()=>assert.equal(filterEntries([sa
 test('tag search is case insensitive',()=>assert.equal(filterEntries([sample],'CONCURRENCY','all').length,1));
 test('paths reject traversal and backslashes',()=>{for(const p of ['../x','a/../../x','/etc/passwd','a\\x','a//x','a/./x']) assert.equal(safeRelativePath(p),false,p);assert.equal(safeRelativePath('examples/basic/demo.tsx'),true);});
 test('links reject executable and remote asset protocols',()=>{for(const p of ['javascript:alert(1)','data:text/html,hi','//evil.test','file:///x']) assert.equal(safeLink(p),'');assert.equal(safeLink('https://example.org/docs'),'https://example.org/docs');});
+test('external source links reject credential-bearing authorities and invalid fragments',()=>{
+ for(const invalid of ['https://user:password@example.org/', 'https://safe.example@evil.example/path', 'https://user@example.org/', 'https://example.org/\\u007f', '#bad fragment', '#use?query']) assert.equal(safeLink(invalid),'', invalid);
+ assert.equal(safeLink('#安装与配置'),'#安装与配置');
+ assert.equal(safeLink('https://example.org/guide'),'https://example.org/guide');
+ assert.ok(validateEntry({...sample,references:[{title:'credentialed',url:'https://name:secret@example.org'}]}).length);
+});
 test('only four tabs are accepted',()=>{assert.equal(normalizeTab('agent'),'agent');assert.equal(normalizeTab('../../x'),'demo');});
 test('references must be safe https URLs',()=>assert.ok(validateEntry({...sample,references:[{title:'x',url:'javascript:1'}]}).length));
 test('source files cannot escape an entry',()=>assert.ok(validateEntry({...sample,demos:[{demoId:'basic',title:'基础',level:'basic',executionKind:'react',entryPoint:'../escape.tsx',sourceFiles:['../x']}]}).length));

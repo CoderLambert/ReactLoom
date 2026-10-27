@@ -9,9 +9,12 @@ export function safeRelativePath(value) {
     !/[\\\u0000-\u001f:?#]/u.test(value) && value.split('/').every(p => p && p !== '.' && p !== '..');
 }
 export function safeLink(value) {
-  if (typeof value !== 'string' || /[\u0000-\u0020\\]/u.test(value)) return '';
-  if (value.startsWith('#')) return value;
-  try { const url = new URL(value); return url.protocol === 'https:' ? url.href : ''; } catch { return ''; }
+  if (typeof value !== 'string' || /[\u0000-\u0020\u007f\\]/u.test(value)) return '';
+  if (value.startsWith('#')) return /^#[\p{L}\p{N}_.:-]+$/u.test(value) ? value : '';
+  try {
+    const url = new URL(value);
+    return url.protocol === 'https:' && Boolean(url.hostname) && !url.username && !url.password ? url.href : '';
+  } catch { return ''; }
 }
 export function filterEntries(entries, query = '', group = 'all', runnable = false) {
   const terms = query.trim().toLocaleLowerCase().split(/\s+/u).filter(Boolean);

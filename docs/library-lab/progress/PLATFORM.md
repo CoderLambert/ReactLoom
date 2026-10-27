@@ -239,3 +239,18 @@ runCount：**9 / 24**。PR #8 继续 Draft；main/旧模板/PR #3 未修改，�
 **目录不变：**119条身份/源码/guide/agent/验证记录与357场景配置声明；零个SDK可因本轮纯Node PASS自动改成PASS。可执行的异步网络/Worker/Canvas/浏览器证据仍待环境恢复。主PR #8继续Draft；未改main、PR #3或原模板。**runCount 10/24**。下一轮优先获取真正pnpm解析/锁文件与运行证据，并补独立MSW iframe及PDF/Monaco/图表浏览器对照；在执行环境仍受限时继续非依赖型平台改进。
 
 **本轮同一批后续CI接线：** `dd6ef7e734c2ee31e4df038387ecd230675e9e3a` 在无安装的 `catalogue` job 加入 `node scripts/policy-runner.mjs`，将纯逻辑回归与需要真实包安装的 `runtime-bootstrap/test:sdk` 严格隔离。GitHub Runner 尚未执行这个新步骤，状态 NOT_RUN，不能将接线视为 CI PASS。
+
+
+## 平台第10轮同批集成与可执行验收通道（2026-10-27）
+
+**本轮实质提交/合并：**分别读取并审查 AB #47、CD #48、EF #49 的所有修改文件与关键风险 diff，确认各自仅写入授权条目及自己的进度。三个 Draft PR 在保留主 #8 Draft 的前提下转为 Ready，使用 GitHub 官方 squash merge 与 expected-head SHA 门禁：
+- [#47](https://github.com/CoderLambert/ReactLoom/pull/47) → `5c88c50f2bcf6afaa33db0fc0c75201eba577b03`：MUI/Mantine 编辑状态与撤销原子化，D3 筛选共源/尺寸钳制，Konva Stage 窄屏和节点容量限制。
+- [#48](https://github.com/CoderLambert/ReactLoom/pull/48) → `9f3b363fc90b62921ac698e36fdbacae1facb802`：RTK Query 租户缓存呈现与Mutation取消，Dexie完整字段回滚比对，Comlink Worker终止/错误处理。
+- [#49](https://github.com/CoderLambert/ReactLoom/pull/49) → `00ddd37d583a6fb2114e196c5eb9c927a1239dd9`：react-markdown 外链与资源限制、DOMPurify固定标签/属性表、FFmpeg 初始化/切场景清理、react-dropzone 8KiB 有界预览。未引入新依赖声明，119条目录和357个三层**配置声明**不变。
+
+**公共平台直接开发：**提交 `73b5b60e702bb89b87c9d681c09315f2bca42d84`，新增 `scripts/local-verify.mjs`、五项参数/门禁测试及根 `verify:library`、包 `verify:local` 命令。默认只打印计划，只有显式 `--execute` 才执行；仅集成分支且锁文件干净时可 `--resolve-lock` 使用真实pnpm生成锁文件，再强制冻结安装；后续顺序为目录、纯逻辑、typecheck、build，可显式追加单库SDK/Chromium。所有shell关闭、可执行命令固定，不接受用户命令路径；保留每步骤日志和 SHA/工具版本/锁摘要于未跟踪的本地证据目录，遇首个失败立即停止，杜绝一串假PASS。
+同一批后续安全修复对 `safeLink` 与本地文档 HTTPS 链接禁止 userinfo 和无效片段，增加对应回归，避免研究引用携带凭据的误导性站点。
+
+**本轮真实测试：**在 Node 22.16.0 隔离原型运行 `node --test /mnt/data/local-verification/tests/local-verify.test.mjs`，**5 PASS/0 FAIL/0 SKIP**，测试范围仅 CLI 参数解析及步骤选择；安全URL回归源码已提交，未在完整远端 HEAD 运行；当前 Node 低于验证脚本 `--execute` 的最低22.18；项目真实pnpm10和依赖仍无法从 registry 安装。未执行真实锁解析、frozen安装、TypeScript、Vite、第三方SDK或 Chromium，全部依旧 BLOCKED/NOT_RUN，既有 Issue #12 继续单点跟踪。CI run `40452198662` catalogue/runtime-bootstrap 两作业均失败且没有steps日志，无法认定任何测试曾执行。条目自身 verification.json 未擅自标 PASS。
+
+**后续优先：**有授权的 Node≥22.18/pnpm10 且registry可达的工作树时，执行 `pnpm verify:library --execute --resolve-lock`，审查与提交真实锁并修改 CI 为 `--frozen-lockfile`；之后针对 PDF.js Worker配对、MSW隔离origin、Monaco、FFmpeg、C13 Frappe Gantt监听生命周期、Chromium无障碍逐项形成准确证据。无法安装时继续独立公共协议与定向测试，不循环尝试相同DNS/Runner失败。**runCount仍记录10/24，本子批属于同轮续作**。主 #8 Draft、main/PR #3/三个模板均未触及。
