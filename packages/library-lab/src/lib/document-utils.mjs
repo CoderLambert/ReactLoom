@@ -66,3 +66,34 @@ export function extractDocumentHeadings(markdown) {
   });
   return headings;
 }
+
+
+/** Read generated Markdown with a decoded-byte ceiling, not an unbounded
+ * Response.text(). Content-Length may describe compressed bytes or be forged. */
+export const MAX_MARKDOWN_BYTES = 2_000_000;
+export async function readLimitedMarkdownResponse(response) {
+  if (!response?.ok || response.headers?.get('content-type')?.toLowerCase().includes('text/html'))
+    throw new Error('Markdown 原文未生成，或服务器返回了 SPA 页面');
+  if (!response.body) throw new Error('Markdown 响应没有可读取的字节流');
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder('utf-8', {fatal:true});
+  const chunks = [];
+  let bytes = 0;
+  try {
+    for (;;) {
+      const {value, done} = await reader.read();
+      if (done) break;
+      if (!(value instanceof Uint8Array)) throw new Error('Markdown 响应不是字节流');
+      bytes += value.byteLength;
+      if (bytes > MAX_MARKDOWN_BYTES) throw new Error('Markdown 响应超过 2 MB 安全上限');
+      chunks.push(decoder.decode(value, {stream:true}));
+    }
+    chunks.push(decoder.decode());
+    return chunks.join('');
+  } catch(error) {
+    try { await reader.cancel(); } catch { /* aborted / already closed */ }
+    throw error;
+  } finally {
+    reader.releaseLock();
+  }
+}
