@@ -71,3 +71,5 @@ React 状态更新可能批量化；`compositionend` 若紧邻同一次 Enter �
 ### wave17：真正写入剪贴板
 
 业务浮层“复制示例引用”调用浏览器原生`navigator.clipboard.writeText`，**只有Promise成功**才关闭弹层并显示“已复制”；权限拒绝或非安全上下文在当前浮层保留`role=alert`错误，不能用按钮点击冒充复制成功。该文本明确为本地教学引用。必须在HTTPS或localhost下用真实Chromium验证，Floating UI的Portal/焦点/IME回归也不能从源码推断成功。
+
+剪贴板写入完成也检查异步请求代次；用户同时选择其他动作、关闭浮层或卸载后，迟到的复制 Promise 不再覆盖结果或关闭下次打开的浮层。
