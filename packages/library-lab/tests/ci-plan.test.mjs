@@ -24,6 +24,10 @@ test('source changes select only the corresponding real SDK suites', () => {
     `${entry('D03')}/tests/sdk.test.mjs`, `${entry('B17')}/agent.md`,
   ]), {mode: 'affected', run_runtime: 'true', sdk_entries: 'A01,D03', affected: ['A01','D03']});
 });
+test('entry-local unknown paths are treated as runtime until proven documentation', () => {
+  const plan = planRuntimeChecks([`${entry('E05')}/lib/worker-bridge.ts`, `${entry('A01')}/verification.json`]);
+  assert.deepEqual(plan, {mode: 'affected', run_runtime: 'true', sdk_entries: 'E05', affected: ['E05']});
+});
 test('public code, package, lock and workflow changes require full verification', () => {
   for (const file of ['packages/library-lab/src/components/demo-host.tsx',
     'packages/library-lab/scripts/sdk-runner.mjs', 'packages/library-lab/e2e/library.spec.ts',
