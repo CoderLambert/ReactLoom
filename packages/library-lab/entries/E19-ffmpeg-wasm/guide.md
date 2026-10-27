@@ -37,3 +37,7 @@ https://ffmpegwasm.netlify.app/docs/getting-started/usage/ 与 https://github.co
 `examples/input-policy.mjs` 在把上传内容交给FFmpeg之前先检查File元数据（4MiB以内）、实际读取的字节数量与RIFF/WAVE、ID3/MP3帧、EBML WebM或`ftyp` MP4头部；转换完成后限制WAV结果2MiB并确认RIFF/WAVE头。这是**保守快速预检**，不表示完整文件格式验证，也不能代替WASM进程的CPU/内存隔离。
 
 运行按钮增加同步 operation 所有权：快速双击不再对同一FFmpeg虚拟FS文件名执行两个命令。`session`结合引擎实例身份拒绝取消、重新加载或卸载后迟到的结果；旧引擎的 finally 清理只能处理旧实例，不能清除新任务的busy标记。`node --test examples/input-policy.test.mjs`仅是3个纯逻辑场景，不是FFmpeg本体通过。真实Worker/WASM、超时、CSP和浏览器内存边界仍须PLATFORM运行验证。
+
+## Worker 初始化和切场景所有权（本轮）
+
+`new FFmpeg()` 及其事件绑定现在均受显式 `try/catch/finally` 管理；即使构造函数抛错，`operation.current` 也会被释放且状态展示失败，不会永久锁住“显式加载”按钮。组件的 `level` 若原地变更，终止原 Worker、使旧 session 失效并重置文件/日志；下一场景要求用户重新点击加载核心（**绝不后台自动下载WASM**）。核心文件、codec许可证、CSP、Worker销毁和取消后的历史事件仍需要目标浏览器与真实WASM跑通才能确认。
