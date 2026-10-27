@@ -417,3 +417,28 @@ runCount: **14/24**。本轮依赖/测试阶段最新提交 81ec09ac04a05b6bb826
 - `fa23769793ce6e98df1881aa9d715c4a6f065ece`：公共 `tests/document-utils.test.mjs` 增加分片中文/emoji、伪 Content-Length、超过上限时 Reader 取消、HTML/HTTP/坏UTF-8/null body 断言，并保留原4条URL与目录安全回归。
 - **本轮精准实测：**Node `v22.16.0` 隔离目录，逐字节恢复 GitHub 新版 `document-utils.mjs`、`document-utils.test.mjs`；`git hash-object` 分别等于远端 blob `adfd6dcc0fd8dd9ed268f4e3e5e16f6948dbb15f` 与 `5a8e5dad89fe14d98406f0caeef8b835f1811100`。执行 `node --check src/lib/document-utils.mjs`、`node --check tests/document-utils.test.mjs` 通过；`node --test tests/document-utils.test.mjs`：**7 PASS / 0 FAIL / 0 SKIP**。原始 TAP SHA256 `b6dd7919dbb73f41cf5beed39a6d521711b8f970fcb537044c8e0c063acfed00`、Git blob `9af500d5c94a9f6276fc412ad6d9abb9fa661d71`，证据在 [platform-wave16-markdown.tap](../evidence/platform-wave16-markdown.tap)，已确认证据 Git Blob 与执行日志文件匹配。
 - 这是**离线 Node 单元测试**，不是全量 React/TS 类型、Vite 构建、Chromium 或官方 SDK PASS；React 文档 Tab 的浏览器集成未执行。此前五项证据合同孤立测试另计 5 PASS，不与目标 SDK 或worker自报测试混合。本轮源代码、文档、验证记录均保持尚未运行状态；锁文件真实解析仍BLOCKED。
+
+
+## PLATFORM 第17轮：三组质量PR集成与Markdown目录安全改造（2026-10-27）
+
+**恢复与所有权：**直接从GitHub集成分支 e62650ad6d025963da9ede967125502502fd031f 读取 COORDINATION/IMPLEMENTATION、根及包AGENTS、PLATFORM、Issue #4/#5/#6/#7、开放PR与最新CI；未假定容器保留前轮代码。对3个Worker PR读取实际head、base、完整文件名及核心patch，逐文件确认仅在各自分组 entries 和progress目录，不含公共依赖、根锁、CI、模板。以expected_head_sha、squash顺序合入唯一私有集成分支，没有force或main合并：
+
+- [AB #68](https://github.com/CoderLambert/ReactLoom/pull/68)：head 031bec686552b75f3744b2bc8f4a42893c845608，19个合法路径 → e1af5cee86e2f0e2899b6acff3495384dbba810f。ECharts尺寸合并/销毁，Floating UI剪贴板过期回调，B13/B14拖拽版本冲突。
+- [CD #69](https://github.com/CoderLambert/ReactLoom/pull/69)：head c3f9df84e0ab58f72bdabafee39eb9db0265cc7f，28个合法路径 → 49efc2a97c45fdd77ac16dc70974a5ac187934cc。C04 JSON Forms条件schema、IME/422错误，C19 nuqs网址规范化，D14 XState机器内部REJECT验证。
+- [EF #70](https://github.com/CoderLambert/ReactLoom/pull/70)：head f7a869ccaeb5df75f2dd1aab8e83b1ab6a7a7e5d，14个合法路径 → e1e2b91fea886c47fb7e56302cf21d6ac2d35f38。E05 Monaco初始化异常释放资源；F10 Orval固定项目真实CLI生成入口及有限输出/双次指纹策略。此批均是已有条目加固，Worker纯逻辑测试不能传递为平台SDK PASS，新增公共依赖请求0。
+
+**PLATFORM公共源码真实提交：**
+
+- 9a236171759ef7154f363020c29fa89bfca303e5：src/lib/document-utils.mjs 支持Setext一级/二级标题和正确源行锚点，避免带尾随代码的fence伪关闭；代码缩进/引用/列表不计入目录。文档相对链接BASE_URL仅接受站内规范路径，拒绝scheme-relative //host、..、重复斜线、query/hash污染。
+- 58c4b86324618cc4adf7902f4cbe3e0d37531fd5：tests/document-utils.test.mjs添加三个独立回归，覆盖Setext重复标题、伪代码围栏、恶意base。
+- eb0f266d8a00dbe99a5ae98db825fe0345ad461e：上传实际测试记录 [platform-wave17-markdown.tap](../evidence/platform-wave17-markdown.tap)。
+
+**精确Node验证：**宿主Node v22.16.0（低于产品要求22.18），pnpm不存在，git ls-remote因github.com DNS失败。将新模块和测试逐字节恢复到隔离 /mnt/data/lab-exact：git hash-object源文件 a2975788dd16b16fef4208862564653d07b803d8、测试文件 4d3c82a5218cce54e285657a31e9559b6516e843，均与GitHub Blob完全相同；node --check src/lib/document-utils.mjs 及 tests/document-utils.test.mjs PASS；执行 cd /mnt/data/lab-exact && node --test tests/document-utils.test.mjs 得 **10 PASS / 0 FAIL / 0 SKIP**，原始TAP已提交。另运行独立原型4 PASS但不与精确Blob结果相加。以上严格属于平台纯Node安全/目录逻辑，不是完整仓库依赖构建或SDK。
+
+**CI与不可伪造的边界：**最新 [Library Lab 40506714819](https://github.com/CoderLambert/ReactLoom/actions/runs/40506714819) 2 job和 [主CI 40506714724](https://github.com/CoderLambert/ReactLoom/actions/runs/40506714724) 7 job全部failure，但runner_id=null且steps=[]，没有运行过的构建/SDK/类型步骤证据，原因保留#12。根pnpm-lock仍缺经npm registry真实解析的Lab importer（BLOCKED；不手造integrity）。完整pnpm test/catalog:check/typecheck/build、Worker/SW/iframe、MSW/PDF/Monaco/Orval真实SDK、Chromium生产preview与互动（NOT_RUN）。本轮worker新SDK测试源亦未执行。
+
+**分开统计：**沿用此前核对的119个身份条目、119份源码/中文guide/agent/verification和357个basic/business/advanced配置声明；本批影响A01/B13/B14/B17、C04/C19/D14、E05/F10等9个现有条目，新增身份0。**本轮SDK真实运行PASS=0；浏览器Demo实际成功验证=0；117旧资料逐项审核数未复核，E11/F05原件缺失继续保留recreated口径。**这些静态数字不能当运行验收成果。
+
+**下批：**在真实Node>=22.18、pnpm10和可用registry/Runner上生成审查root lock并恢复frozen；按需执行类型、Vite、目标SDK、生产Chromium，重点验证A01/B13/B14/B17、C04/D14、E05 Worker/F10 Orval以及F11 MSW、PDF Worker、D16 SW origin。运行环境仍阻断时继续无下载依赖的公共代码实做，不刷重复无步骤CI。
+
+**runCount: 17/24。** PR #8维持open/Draft待用户验收，main、PR #3、原模板及公开部署均未触碰。
