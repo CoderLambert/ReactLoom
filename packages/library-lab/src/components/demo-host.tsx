@@ -7,6 +7,7 @@ import {reproductionCommand} from '../lib/reproduction.mjs';
 import {demoRunPolicy,CAPABILITY_DESCRIPTIONS} from '../lib/demo-policy.mjs';
 import {sourceLanguage} from '../lib/source-language.mjs';
 import {validateSourceIndex,readBoundedSourceResponse} from '../lib/source-integrity.mjs';
+import {readLimitedJsonResponse,JSON_RESPONSE_LIMITS} from '../lib/bounded-json.mjs';
 import {packageInstallCommand} from '../lib/package-source.mjs';
 import HighlightCode from './highlight-code';
 import {workerFactories} from '../generated/worker-loaders';
@@ -22,7 +23,7 @@ function SourceViewer({entryId,demo}:{entryId:string;demo:Demo}){
  useEffect(()=>{
   const controller=new AbortController();setFiles([]);setSelected('');setError('');
   fetch(import.meta.env.BASE_URL+'raw/'+entryId+'/source-index.json',{signal:controller.signal})
-   .then(response=>{if(!response.ok)throw new Error('无法读取源码索引');return response.json();})
+   .then(response=>readLimitedJsonResponse(response,JSON_RESPONSE_LIMITS.sourceIndex))
    .then((items:unknown)=>{
     if(controller.signal.aborted)return;
     const relevant=validateSourceIndex(items,demo.sourceFiles);
