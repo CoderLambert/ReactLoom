@@ -20,3 +20,5 @@ examples/vite.config.ts 作为隔离配置示例，examples/fixture/{main.ts,hel
 不能把所有lazy chunk求和等于首屏大小，不能把Raw JSON字段未经版本锁定放进长久稳定API，不能在没有合适测试时直接硬编码manualChunks，不能提交生成reports巨型文件，不能使用假体积图或手写报告冒充SDK输出。
 
 与F16源码依赖规则、F15未用依赖识别互补。验证状态见verification.json；目前真实构建仍BLOCKED。官方：https://github.com/btd/rollup-plugin-visualizer
+
+**可迁移的报告验收**：运行 `examples/verify.mjs` 前只清理工具自己的受控reports，必须重新构建再校验生成文件、版本与chunk，不得借用旧产物。纯Node `report-policy.test.mjs` 只验证解析断言，不能升级build或SDK状态。
