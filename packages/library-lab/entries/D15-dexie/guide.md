@@ -44,3 +44,5 @@ Node SDK 真实 Dexie + fake-indexeddb 合约测试代码已编写，尚未安�
 事务失败后的“数据未变化”应比较**稳定业务 ID、分组、时间戳、阅读状态**，而不是只比较行数；行数相同但 `read` 已变同样是数据损坏。`examples/rollback-policy.mjs` 是真实运行代码使用的纯比较逻辑，`tests/rollback-policy.test.mjs` 定向覆盖顺序变化、字段变更和等长替换。SDK 回归测试再用实际 Dexie 事务验证约束失败时整行记录恢复。
 
 切换 `basic/business/advanced` 期间关闭前一临时连接、废弃异步 epoch；前一会话的 `finally` 仍负责删除它创建的数据库。删除失败不再静默报告“已清理”，保留名字供卸载时尽力重试。**Chromium 中的 IndexedDB versionchange、配额和删除阻塞仍未验证**，不得把纯比较测试视为数据库验收。
+
+迁移夹具补正：高级场景现明确在 **v1** 插入缺失 `read` 字段的 `rss-legacy`，v2 的真实 `.upgrade(...modify)` 填入 `read:false`，结果显示 `migratedLegacyRead`；真实 Dexie SDK 测试也验证该字段确实写回，而不是只测试索引创建。该 SDK 测试尚未执行，不能宣称升级验收 PASS。

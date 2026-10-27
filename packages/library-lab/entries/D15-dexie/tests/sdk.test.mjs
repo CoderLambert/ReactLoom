@@ -27,10 +27,13 @@ test('real Dexie upgrade retains rows and installs compound index', async () => 
  legacy.close();
  const modern=new Dexie(name);
  modern.version(1).stores({feeds:'&id,group,updatedAt'});
- modern.version(2).stores({feeds:'&id,group,updatedAt,[group+updatedAt]'});
+ modern.version(2).stores({feeds:'&id,group,updatedAt,[group+updatedAt]'}).upgrade(tx=>
+  tx.table('feeds').toCollection().modify(row=>{if(row.read===undefined)row.read=false;})
+ );
  try {
   const items=await modern.table('feeds').where('[group+updatedAt]').between(['技术',0],['技术',999]).toArray();
   assert.equal(modern.verno,2);
   assert.deepEqual(items.map(x=>x.id),['a']);
+  assert.equal(items[0].read,false,'legacy field must be migrated during version upgrade');
  } finally {modern.close();await Dexie.delete(name);}
 });

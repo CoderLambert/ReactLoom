@@ -71,13 +71,15 @@ export default function DexieWorkshop({level}:Props){
       const after=await table.toArray();
       if(token===epoch.current)setOutput(JSON.stringify({before:before.length,after:after.length,rollback,unchanged:sameFeedSnapshot(before,after),feeds:after},null,2));
     } else {
+      // A real v1 record without `read` proves that the v2 upgrade fills missing fields.
+      await db.table('feeds').put({id:'rss-legacy',group:'技术',updatedAt:250});
       db.close();
       db=configure(name,true);
       opened.current=db;
       await db.open();
       const upgraded=db.table<Feed,string>('feeds');
       const items=await upgraded.where('[group+updatedAt]').between(['技术',0],['技术',Number.MAX_SAFE_INTEGER]).toArray();
-      if(token===epoch.current)setOutput(JSON.stringify({dbVersion:db.verno,index:'[group+updatedAt]',items},null,2));
+      if(token===epoch.current)setOutput(JSON.stringify({dbVersion:db.verno,index:'[group+updatedAt]',migratedLegacyRead:items.some(row=>row.id==='rss-legacy'&&row.read===false),items},null,2));
     }
     if(token===epoch.current)setStatus('查询已完成；示例库将被删除，不会保存任何真实用户数据');
   }catch(error){
