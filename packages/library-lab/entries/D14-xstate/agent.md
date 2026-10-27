@@ -12,3 +12,5 @@
 `node --test entries/D14-xstate/tests/sdk.test.mjs` 验证实际 SDK；TS/build/Browser 分别记录证据。至少断言无效事件不转换、retries 上限、RESET、卸载无订阅。当前这些环节尚未执行，不能标 PASS。
 
 替代 D10 Zustand（简单状态）；组合 C01 RHF 和 D07 Query。官方 https://stately.ai/docs/ 。
+
+复制状态机时必须同时复制 `review-policy.mjs` / `.d.mts`，因为程序发出的 REJECT 事件绕过按钮 disabled。后端仍需审稿授权，200 字符上限是本示例的领域规则而非 SDK 限制。

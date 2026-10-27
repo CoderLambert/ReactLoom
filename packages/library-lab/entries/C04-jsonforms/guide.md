@@ -30,3 +30,6 @@ JSON Schema 的 required/minLength/if/then 管校验，UI Schema 的 VerticalLay
 ## 推荐资料
 https://jsonforms.io/docs/integrations/react/
 https://github.com/eclipsesource/jsonforms
+
+## 加固：动态 Schema、422 和中文输入法
+RSS 的 required/minLength/HTTPS 限制仅在 feedType=rss 时启用；manual 的隐藏 URL 不再阻止客户端校验，也永远不会传到服务器。真正的 JSON Schema、payload 白名单和额外错误映射统一定义于 `examples/submission-policy.mjs`，UI/源码面板/测试同源。模拟服务除 duplicate→409 外，将不合法 URL、凭据与片段映射为 `/url` 的 422 `additionalErrors`。输入法 composition 未完成时阻止提交，保存仍受 AbortController+generation 限制。服务端仍需做 SSRF 与授权防护；Node 策略测试不能替代 JsonForms/Ajv SDK 与 Chromium 验证。
