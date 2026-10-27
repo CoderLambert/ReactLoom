@@ -485,3 +485,9 @@ runCount=16/24。
 - [EF Draft PR #57](https://github.com/CoderLambert/ReactLoom/pull/57)，head `feat/library-lab-ef-wave16-media-queue-pdf`，base严格 `feat/library-lab`。提交序列：`5a58eef9e72ff4126033b6f8c81129268cc5e361` 源码、`b3460a85f7c46d4a02882b32e906e02a5a7656e7` 指南/进度、`089c2b48c47e69840303c55766c3b9d56ac8cb0b` AGENTS与诚实verification。
 - GitHub compare与当前tree实际核对：3 commits、30 changed files，全部 `entries/E*`/`entries/F*` 或本进度文档，**0越权**。F01与F08六份basic/business/advanced场景sourceFiles清单 **6/6含entryPoint且均存在**；四份独立Node原件blob SHA与执行字节完全匹配。
 - 当前PR保持Draft；真正SDK、TypeScript/Vite全包、真实媒体、Chromium/PDF Worker验收仍 `NOT_RUN/BLOCKED`，等待PLATFORM真实依赖/runner反馈，不合main，不部署。
+
+### 第十六轮合入阻塞复核（2026-10-27）
+
+- PLATFORM 在 PR #57 评论指出两处确定性 `ERR_MODULE_NOT_FOUND`：F01与F08纯Node测试原先从 `tests/` 错误导入 `../preview-policy.mjs` / `../report-policy.mjs`。已经改为正确的 `../examples/preview-policy.mjs` / `../examples/report-policy.mjs`，修复提交 `e1edda15b4d6cd2895d4646e4b6a276d5b280eb3`、`13279c9088e6ca3cad337867b8ebd931adcff4c4`；没有修改测试断言或生产策略。
+- 实际运行环境 Node v22.16.0，使用与远端**完全相同字节**的策略与修复后测试文件，按仓库原相对目录结构还原至隔离目录后执行：`node --test packages/library-lab/entries/F01-uppy/tests/policy.test.mjs packages/library-lab/entries/F08-react-pdf-renderer/tests/policy.test.mjs`，**9 PASS / 0 FAIL**。本环境GitHub私有仓库无法直接git clone，明确不是完整仓库pnpm/SDK运行。
+- `git hash-object` 精确匹配远端策略blob：F01 `56b698c79f939ec5b69eff2f62f495c0c4a7e04e`、F08 `cd01539f39694f72055b34539d29c01fe0602f7d`；修复后测试blob：F01 `4a04dbcacb2bbc76de8095cecf7cf06da20a960f`、F08 `baf13d83c1223836777ab395c3830513801e70f7`。原先旧测试SHA不再适用。这是Node policy测试，而非Uppy/react-pdf SDK、TypeScript/Vite或Chromium PASS。
