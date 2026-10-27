@@ -1,0 +1,46 @@
+TAP version 13
+# Subtest: refuses encoded traversal, nested decoding, query and slash before network
+ok 1 - refuses encoded traversal, nested decoding, query and slash before network
+  ---
+  duration_ms: 5.671537
+  type: 'test'
+  ...
+# Subtest: passes encoded UTF-8/space through unchanged
+ok 2 - passes encoded UTF-8/space through unchanged
+  ---
+  duration_ms: 83.820942
+  type: 'test'
+  ...
+# Subtest: cancellation still interrupts pending request and cleans up
+ok 3 - cancellation still interrupts pending request and cleans up
+  ---
+  duration_ms: 2.787847
+  type: 'test'
+  ...
+# Subtest: checks staged scoped JS bytes and marks the result asset-only
+ok 4 - checks staged scoped JS bytes and marks the result asset-only
+  ---
+  duration_ms: 3.025079
+  type: 'test'
+  ...
+# Subtest: rejects HTML fallback, malformed UTF-8, non-worker JS and oversize responses
+ok 5 - rejects HTML fallback, malformed UTF-8, non-worker JS and oversize responses
+  ---
+  duration_ms: 1.068049
+  type: 'test'
+  ...
+# Subtest: reads only a regular scoped worker and rejects symlink staging
+ok 6 - reads only a regular scoped worker and rejects symlink staging
+  ---
+  duration_ms: 56.716608
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 514.218225
