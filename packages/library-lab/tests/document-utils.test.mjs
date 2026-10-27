@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {extractDocumentHeadings,resolveDocumentUrl,slugHeading} from '../src/lib/document-utils.mjs';
+import {extractDocumentHeadings,resolveDocumentUrl,slugHeading,MAX_MARKDOWN_BYTES,readLimitedMarkdownResponse} from '../src/lib/document-utils.mjs';
 
 test('only safe HTTPS, fragments and same-entry relative files are accepted', () => {
   assert.equal(resolveDocumentUrl('https://example.com/doc', 'A01'), 'https://example.com/doc');
@@ -36,4 +36,33 @@ test('local example and test links map to real generated source files, not missi
   for (const value of ['package.json','AGENTS.md','config.env','README.md','notes.html','assets/tracker.svg','assets/javascript.js','examples/secret.sh','examples/../../secret.ts','examples/%2e%2e/secret.ts']) {
     assert.equal(resolveDocumentUrl(value, 'A01'), '', 'Unexpected local public path: ' + value);
   }
+});
+
+
+test('Markdown byte ceiling preserves split multibyte UTF-8 without trusting response length', async () => {
+  const expected='# 文档\\nemoji 😀';
+  const bytes=new TextEncoder().encode(expected);
+  const response=new Response(new ReadableStream({start(controller) {
+    for(const byte of bytes) controller.enqueue(Uint8Array.of(byte));
+    controller.close();
+  }}), {headers:{'content-type':'text/markdown','content-length':'1'}});
+  assert.equal(await readLimitedMarkdownResponse(response),expected);
+});
+
+test('Markdown byte ceiling rejects oversized decoded body and cancels the reader', async () => {
+  let cancelled=false;
+  const source=new ReadableStream({
+    start(controller) { controller.enqueue(new Uint8Array(MAX_MARKDOWN_BYTES+1)); },
+    cancel() { cancelled=true; },
+  });
+  const response=new Response(source,{headers:{'content-type':'text/markdown','content-length':'10'}});
+  await assert.rejects(readLimitedMarkdownResponse(response),/2 MB/);
+  assert.equal(cancelled,true);
+});
+
+test('Markdown rejects fallback HTML, non-2xx, invalid UTF-8 and absent response bodies', async () => {
+  await assert.rejects(readLimitedMarkdownResponse(new Response('<html/>',{headers:{'content-type':'text/html; charset=utf-8'}})),/SPA/);
+  await assert.rejects(readLimitedMarkdownResponse(new Response('not found',{status:404})),/原文未生成/);
+  await assert.rejects(readLimitedMarkdownResponse(new Response(Uint8Array.of(0xc3,0x28))),TypeError);
+  await assert.rejects(readLimitedMarkdownResponse(new Response(null)),/字节流/);
 });
