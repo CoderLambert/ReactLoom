@@ -2,6 +2,7 @@ import {useEffect, useRef, useState} from 'react'
 import {getDocument, GlobalWorkerOptions} from 'pdfjs-dist'
 import workerSrc from 'pdfjs-dist/build/pdf.worker.min.mjs?url'
 import {createWorkshopPdf} from './fixture'
+import {createRenderGate} from './render-gate.mjs'
 
 type Level = 'basic' | 'business' | 'advanced'
 type Props = {level: Level}
@@ -14,6 +15,9 @@ GlobalWorkerOptions.workerSrc = workerSrc
 export default function PdfViewerExample({level}: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const fileGeneration = useRef(0)
+  // The same HTMLCanvasElement may not be used by concurrent PDF.js RenderTasks.
+  // A cancelled task must settle before the next one begins drawing.
+  const withCanvas = useRef(createRenderGate())
   const [bytes, setBytes] = useState(() => createWorkshopPdf())
   const [pdf, setPdf] = useState<PDFDoc | null>(null)
   const [pageNum, setPageNum] = useState(1)
@@ -47,20 +51,26 @@ export default function PdfViewerExample({level}: Props) {
     const render = async () => {
       const page = await pdf.getPage(pageNum)
       if (!active) return
-      const canvas = canvasRef.current
-      const context = canvas?.getContext('2d')
-      if (!canvas || !context) throw new Error('当前浏览器不支持 Canvas 2D')
-      const viewport = page.getViewport({scale: 1.15 * scale})
-      const ratio = Math.min(window.devicePixelRatio || 1, 2)
-      canvas.width = Math.ceil(viewport.width * ratio)
-      canvas.height = Math.ceil(viewport.height * ratio)
-      canvas.style.width = `${Math.ceil(viewport.width)}px`
-      canvas.style.height = `${Math.ceil(viewport.height)}px`
-      task = page.render({
-        canvas, canvasContext: context, viewport,
-        transform: ratio !== 1 ? [ratio,0,0,ratio,0,0] : undefined,
+      // Serialize the actual canvas painting, not document loading or text extraction.
+      // renderTask.cancel() rejects its promise asynchronously; starting a new
+      // render immediately can throw "Cannot use the same canvas".
+      await withCanvas.current(async () => {
+        if (!active) return
+        const canvas = canvasRef.current
+        const context = canvas?.getContext('2d')
+        if (!canvas || !context) throw new Error('当前浏览器不支持 Canvas 2D')
+        const viewport = page.getViewport({scale: 1.15 * scale})
+        const ratio = Math.min(window.devicePixelRatio || 1, 2)
+        canvas.width = Math.ceil(viewport.width * ratio)
+        canvas.height = Math.ceil(viewport.height * ratio)
+        canvas.style.width = `${Math.ceil(viewport.width)}px`
+        canvas.style.height = `${Math.ceil(viewport.height)}px`
+        task = page.render({
+          canvas, canvasContext: context, viewport,
+          transform: ratio !== 1 ? [ratio,0,0,ratio,0,0] : undefined,
+        })
+        await task.promise
       })
-      await task.promise
       if (!active) return
       const text = await page.getTextContent()
       if (!active) return

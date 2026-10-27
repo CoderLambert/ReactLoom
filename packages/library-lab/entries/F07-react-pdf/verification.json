@@ -1,7 +1,7 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "真实目标 SDK 运行待执行；React-PDF v11 与本地 pdfjs-dist Worker 版本尚需 PLATFORM 真正解析锁文件后核对。"
+    "note": "SDK未运行；F07和F06元数据/根清单已共同声明pdfjs-dist@6.3.289，真实锁文件解析与Worker验证仍待PLATFORM"
   },
   "build": {
     "status": "BLOCKED",
