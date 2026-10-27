@@ -53,3 +53,11 @@ const safeCsv = Papa.unparse(parsed.data,{escapeFormulae:true})
 PLATFORM 安装依赖后：`node --test packages/library-lab/entries/F03-papaparse/tests/node-scenarios.test.mjs`；`pnpm --filter @reactloom/library-lab typecheck && pnpm --filter @reactloom/library-lab build`；E2E 检查本地文件、分隔文本、恶意公式、字段错误和重复选择。缺少实际执行日志时 sdk/browser 保持 NOT_RUN。
 
 官方：[Docs](https://www.papaparse.com/docs) · [Releases](https://github.com/mholt/PapaParse/releases) · [GitHub](https://github.com/mholt/PapaParse)。
+
+## 增量安全修正：严校验与文件读取所有权（EF wave11）
+
+UI 与 Node 目标SDK测试现在共享 `examples/report.mjs` 的真正 Papa Parse 解析路径；`examples/policy.mjs` 是无第三方依赖的纯业务契约，`tests/policy.test.mjs` 可离线执行。表头必须严格 `title,url,note` 且列数/顺序唯一，防止 `meta.renamedHeaders` 使重复列被默默改名。只有列数失配且有明确行位置时按行拒绝；非列数型、行定位不可信的解析错误整批拒绝，避免半个损坏 CSV 被误导入。
+
+业务名称限制160字符、备注2000字符、URL2048字符；禁止控制字符、凭据 URL 和非 HTTPS，保留引号内真实换行备注；仅导出通过检验的记录且开启 `escapeFormulae`。这只是**离线清洗**，不能替代抓取端针对DNS重绑定、内网IP和重定向的SSRF防护。
+
+切换文件、手动输入、解析或重置都会递增 generation，旧 `File.text()` 无权覆盖新文本。选中File后同步清空input，使超大文件被拒绝后仍能选同一文件。离线纯逻辑测试通过不意味着 Papa SDK/浏览器已运行。

@@ -61,6 +61,10 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/report.mjs",
+        "examples/report.d.mts",
+        "examples/policy.mjs",
+        "examples/policy.d.mts",
         "examples/demo.tsx"
       ],
       "capabilities": [
@@ -76,6 +80,10 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/report.mjs",
+        "examples/report.d.mts",
+        "examples/policy.mjs",
+        "examples/policy.d.mts",
         "examples/demo.tsx"
       ],
       "capabilities": [
@@ -93,8 +101,13 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/report.mjs",
+        "examples/report.d.mts",
+        "examples/policy.mjs",
+        "examples/policy.d.mts",
         "examples/demo.tsx",
-        "tests/node-scenarios.test.mjs"
+        "tests/node-scenarios.test.mjs",
+        "tests/policy.test.mjs"
       ],
       "capabilities": [
         "escape-formulae",

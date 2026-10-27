@@ -1,4 +1,6 @@
 import ExcelJS from 'exceljs';
+import {checkRows,safeSpreadsheetText} from './row-policy.mjs';
+export {safeSpreadsheetText} from './row-policy.mjs';
 
 export const FIXTURE = Object.freeze([
   {id:'r01',source:'React Updates',reads:52,stars:5},
@@ -6,26 +8,9 @@ export const FIXTURE = Object.freeze([
   {id:'r03',source:'Security Weekly',reads:25,stars:4},
 ]);
 
-export function safeSpreadsheetText(value) {
-  const text = String(value).trim();
-  if (text.length > 160) throw new Error('cell text exceeds 160 characters');
-  return /^[=+\-@\t\r]/u.test(text) ? "'" + text : text;
-}
-
-function checkRows(rows) {
-  if (!Array.isArray(rows) || rows.length === 0 || rows.length > 500) throw new Error('expected 1–500 rows');
-  const ids = new Set();
-  for (const row of rows) {
-    if (typeof row.id !== 'string' || ids.has(row.id)) throw new Error('duplicate/missing row id');
-    ids.add(row.id);
-    if (!Number.isSafeInteger(row.reads) || row.reads < 0) throw new Error('invalid reads');
-    if (!Number.isSafeInteger(row.stars) || row.stars < 0) throw new Error('invalid stars');
-  }
-}
-
 export async function generateWorkbook(level = 'basic', rows = FIXTURE) {
   if (!['basic','business','advanced'].includes(level)) throw new Error('unknown scenario');
-  checkRows(rows);
+  const totals = checkRows(rows);
   const book = new ExcelJS.Workbook();
   book.creator = 'ReactLoom Library Lab';
   book.created = new Date('2026-10-27T00:00:00Z');
@@ -41,7 +26,6 @@ export async function generateWorkbook(level = 'basic', rows = FIXTURE) {
   for (const row of rows) {
     sheet.addRow({id:safeSpreadsheetText(row.id),name:safeSpreadsheetText(row.source),reads:row.reads,stars:row.stars});
   }
-  const totals = rows.reduce((a,r)=>({reads:a.reads+r.reads,stars:a.stars+r.stars}),{reads:0,stars:0});
   if (level !== 'basic') {
     const n = rows.length+2;
     sheet.getCell('B'+n).value='TOTAL';
