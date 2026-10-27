@@ -63,3 +63,7 @@ tldraw Editor 有文档模型（shapes/pages/assets）与实例态（焦点/相�
 - [只读](https://tldraw.dev/sdk-features/readonly)
 - [许可证和不同主机的限制](https://tldraw.dev/sdk-features/license-key)
 - [npm 5.5.2](https://www.npmjs.com/package/tldraw)
+
+### wave17：快照下载资源所有权
+
+`examples/snapshot-policy.ts` 将真实 `getSnapshot(editor.store).document` 的 JSON 序列化限制为3MB（按UTF-8字节，而非UTF-16字符数）；超限和循环结构向用户报告错误而不是创建大Object URL。已创建的URL会在1.5秒后撤销；如果先切换Tab/卸载，组件同步清除自身下载计时器并撤销剩余URL。限制仅针对**当前教学导出**，不声称限制原生tldraw绘制或文档持久化容量。

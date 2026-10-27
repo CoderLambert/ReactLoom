@@ -1,4 +1,4 @@
-import {useId, useRef, useState} from 'react';
+import {useEffect, useId, useRef, useState} from 'react';
 import {shouldApplyFilterOnKeyDown} from './ime-guard';
 import {
   autoUpdate, flip, offset, shift,
@@ -12,10 +12,14 @@ export default function FloatingExample({level}: {level: Level}) {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState('未选择');
   const [query, setQuery] = useState('');
+  const [clipboardError, setClipboardError] = useState('');
+  const clipboardRequest = useRef(0);
   // Refs update synchronously even when React batches composition and key events.
   const composing = useRef(false);
   const suppressNextEnter = useRef(false);
   const id = useId();
+  useEffect(() => { if (!open) ++clipboardRequest.current; }, [open]);
+  useEffect(() => () => { ++clipboardRequest.current; }, []);
   const {refs, floatingStyles, context, placement} = useFloating({
     open,
     onOpenChange: setOpen,
@@ -29,9 +33,24 @@ export default function FloatingExample({level}: {level: Level}) {
   const role = useRole(context, {role: 'dialog'});
   const {getReferenceProps, getFloatingProps} = useInteractions([click, dismiss, role]);
   const choose = (value: string) => {
+    ++clipboardRequest.current; // a different action invalidates a pending clipboard result
     setSelected(value);
+    setClipboardError('');
     setOpen(false);
   };
+  async function copyCitation() {
+    const request = ++clipboardRequest.current;
+    setClipboardError('');
+    try {
+      if (!navigator.clipboard?.writeText) throw new Error('当前环境不提供剪贴板写入能力');
+      await navigator.clipboard.writeText('ReactLoom Library Lab / Floating UI 示例新闻引用（本地教学数据）');
+      if (request === clipboardRequest.current) choose('已复制示例引用');
+    } catch {
+      // Keep the popover open so denied permissions cannot be mistaken for success.
+      if (request === clipboardRequest.current)
+        setClipboardError('复制未成功：请检查 HTTPS 安全上下文和剪贴板权限。');
+    }
+  }
 
   return <section aria-label="Floating UI 真实交互示例">
     <h2>{level === 'basic' ? '可定位的浮层' : level === 'business' ? '新闻操作 Popover' : '视口边缘、键盘和输入法'}</h2>
@@ -75,7 +94,8 @@ export default function FloatingExample({level}: {level: Level}) {
             <div style={{display: 'grid', gap: 8, marginTop: 12}}>
               <button type="button" onClick={() => choose('加入稍后阅读')}>加入稍后阅读</button>
               <button type="button" onClick={() => choose('标记已读')}>标记已读</button>
-              <button type="button" onClick={() => choose('已复制引用')}>复制引用（演示状态）</button>
+              <button type="button" onClick={() => void copyCitation()}>复制示例引用到剪贴板</button>
+              {clipboardError && <p role="alert">{clipboardError}</p>}
             </div>
           </> : <>
             <strong>搜索范围</strong>

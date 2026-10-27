@@ -33,3 +33,7 @@ SDK：`@rive-app/react-webgl2@4.37.0`。
 真正 npm 安装/TS/Build、CDN资产加载、UI播放/暂停、隐藏页面暂停、系统 reduced-motion、卸载 GPU、请求取消/重试/503、StrictMode双挂载和移动端 WebGL。结果连源码指纹存档，不能复制历史原研究的23个Node纯逻辑 PASS。
 
 官方：https://rive.app/docs/runtimes/react/react
+
+### wave17 运行时约束
+
+复制 `examples/runtime-policy.ts`；隐藏页面/高级场景离开视口时卸载RivePlayer而不是只暂停动画。业务异步模拟在level切换与unmount时Abort并增加generation；保持SDK内部实例由官方hook拥有。Node测试只能证明布尔门禁，不证明GPU释放。

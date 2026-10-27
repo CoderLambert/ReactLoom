@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { serializeSnapshot } from './snapshot-policy';
 import {
   Tldraw,
   createShapeId,
@@ -18,16 +19,22 @@ const FLOW = [
   { label: '人工审核', x: 780, color: 'violet' },
 ] as const;
 
-function downloadJson(doc: unknown, name: string) {
-  const blob = new Blob([JSON.stringify(doc, null, 2)], { type: 'application/json' });
+function downloadJson(doc: unknown, name: string, urls: Set<string>, timers: Set<number>) {
+  const blob = new Blob([serializeSnapshot(doc)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
+  urls.add(url);
   const anchor = document.createElement('a');
   anchor.href = url;
   anchor.download = name;
   document.body.append(anchor);
   anchor.click();
   anchor.remove();
-  window.setTimeout(() => URL.revokeObjectURL(url), 1500);
+  const timer = window.setTimeout(() => {
+    URL.revokeObjectURL(url);
+    urls.delete(url);
+    timers.delete(timer);
+  }, 1500);
+  timers.add(timer);
 }
 
 function createFlow(editor: Editor) {
@@ -58,6 +65,14 @@ export default function TldrawWorkshop({ level }: { level: Level }) {
   const [count, setCount] = useState(0);
   const [readonly, setReadonly] = useState(false);
   const [status, setStatus] = useState('仅当前实例内存数据；不连接服务器和共享缓存。');
+  const downloadUrls = useRef(new Set<string>());
+  const downloadTimers = useRef(new Set<number>());
+  useEffect(() => () => {
+    for (const timer of downloadTimers.current) window.clearTimeout(timer);
+    downloadTimers.current.clear();
+    for (const url of downloadUrls.current) URL.revokeObjectURL(url);
+    downloadUrls.current.clear();
+  }, []);
   const licenseKey = import.meta.env.VITE_TLDRAW_LICENSE_KEY as string | undefined;
   const isLocalHost = typeof window !== 'undefined' && ['localhost','127.0.0.1','::1'].includes(window.location.hostname);
   const canMount = Boolean(licenseKey) || isLocalHost;
@@ -130,14 +145,18 @@ export default function TldrawWorkshop({ level }: { level: Level }) {
 
   function exportDocument() {
     if (!editor) return;
-    const snapshot = getSnapshot(editor.store);
-    downloadJson({
-      kind: 'tldraw-demo-document',
-      version: 1,
-      source: 'ReactLoom Library Lab A10',
-      document: snapshot.document,
-    }, 'rss-board.tldraw.json');
-    setStatus('已下载真实 tldraw store 文档快照；不包括相机/选择等会话状态。');
+    try {
+      const snapshot = getSnapshot(editor.store);
+      downloadJson({
+        kind: 'tldraw-demo-document',
+        version: 1,
+        source: 'ReactLoom Library Lab A10',
+        document: snapshot.document,
+      }, 'rss-board.tldraw.json', downloadUrls.current, downloadTimers.current);
+      setStatus('已下载真实 tldraw store 文档快照；不包括相机/选择等会话状态。');
+    } catch (error) {
+      setStatus('下载失败：' + String(error));
+    }
   }
 
   if (!canMount) {

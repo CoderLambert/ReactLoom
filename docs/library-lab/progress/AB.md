@@ -1,9 +1,9 @@
 # AB 开发进度 — A/B 前端库垂直实现
 
-**最新调度轮次：15 / 最多24；状态：WAVE15_AB_39_SOURCE_HARDENING（39/39仅源码和文档覆盖；SDK、完整构建与浏览器尚未验收）。**
+**最新调度轮次：17 / 最多24；状态：WAVE17_AB_39_SOURCE_HARDENING（39/39仅源码和文档覆盖；SDK、完整构建与浏览器尚未验收）。**
 
-- 分支：`feat/library-lab-ab`，base 提交 `38ed2d247bd82e4f1422b0e8904973e16bca2972`。
-- 集成目标：`feat/library-lab`，集成读取的头提交 `5955b9a03f95545f2107583a109e22cc6e44078c`。
+- 当前本批分支：`feat/library-lab-ab-wave17`，精确集成base `caef398bfa3568b1e9bf690366b39ae5448769de`；最初公共提交为 `38ed2d247bd82e4f1422b0e8904973e16bca2972`，不用于本轮强制回退。
+- 集成目标：`feat/library-lab`；本轮开始读取的最新头提交 `caef398bfa3568b1e9bf690366b39ae5448769de`（旧历史基线仅保留于下方各轮记录）。
 - 当前分支仅修改 A*、B* 条目及本进度文件；不更改公共源码、依赖、锁文件、CI、主 PR #8。
 
 ## 第1轮实质交付
@@ -677,3 +677,39 @@ A08/A17/B04 的每层 `library.json` 已加入新helper至 `sourceFiles`，运�
 ### wave16 GitHub CI 回读补记（2026-10-27）
 
 进度提交 `0c62488aae0c7ae477c762bb963a16b8797f9ea8` 对应两个 workflow：CI `40487604294`、Library Lab `40487604298`。后者 `catalogue` job `122133223477` 与 `runtime-bootstrap` job `122133223651`，前者 `verify (ssr)` job `122133223864` 均为 **failure 且 steps=[]**；catalogue 日志读取返回 GitHub BlobNotFound (404)。不能证明任何目标SDK、生产构建或浏览器实际运行，也无法定位源码编译失败。未循环重试同一runner缺步骤问题；由 PLATFORM 修复CI/runner/lockfile、取得含执行步骤与日志的证据后才重新验收。
+
+---
+
+## 第17轮（wave17）：Excalidraw / tldraw / Rive / Floating UI 安全、GPU 与真实操作闭环
+
+**runCount=17/24**。本轮读取最新集成分支合同、实施/根与包AGENTS、types/catalog、本进度和开放PR。起始集成精确HEAD = \`caef398bfa3568b1e9bf690366b39ae5448769de\`（branch \`feat/library-lab\`）。AB旧PR #63 已于2026-10-27 10:41:33 UTC 合并；创建全新 \`feat/library-lab-ab-wave17\`，不重写旧分支。开放PR仅主Draft #8及无关#3，未存在开放AB PR。代码提交依次为 \`6ece7735a9d4996d8c1a20637fc215899c3e6bda\`、\`9771847d248a6bae1b36a2aaad27e62cb63b5602\`，第二次提交校验前一head且使用非force快进。
+
+### 已提交的四库实质修复
+
+|库|实际UI/SDK实现中的变化|独立规则与证据|
+|---|---|---|
+|A09 Excalidraw|导入前验证非空、.excalidraw/.json及1.5MB上限；真实 \`loadFromBlob\` 完成后检查元素<=200、禁止附带二进制、拒绝非HTTPS/嵌凭据链接；真实SDK的 \`onLinkOpen\` 调用同一个安全判断。原异步operationId及导出清理保留。|新增 \`examples/scene-policy.ts\`、\`tests/scene-policy.test.mts\`|
+|A10 tldraw|真实 \`getSnapshot(editor.store)\` 下载加入JSON UTF-8字节3MB上限；对序列化失败显式反馈；Object URL与撤销timer由实例拥有，卸载时全部清除，不再留独立于Tab的悬空延迟清理。|新增 \`examples/snapshot-policy.ts\`、\`tests/snapshot-policy.test.mts\`|
+|B05 Rive React|真实 \`useRive\` 播放器在页面后台或高级场景脱离视口时卸载，而不是只把playing设false；减动/手动暂停时可见实例保留但停播。切换level即取消未完成的业务模拟请求，防止旧计时器覆盖新场景。|新增 \`examples/runtime-policy.ts\`、\`tests/runtime-policy.test.mts\`|
+|B17 Floating UI|原“复制引用”只修改React文本状态，现在真实调用 \`navigator.clipboard.writeText\`；只有浏览器Promise成功才显示复制成功并关闭Popover；权限拒绝保留浮层及aria-live错误。增加异步代次保护，关闭/改选/卸载后旧Promise不能覆盖新界面。继续保留真实Floating UI Portal/FocusManager/IME。|实际TSX及guide/agent修复；浏览器权限和焦点测试待运行|
+
+A09/A10/B05 的三层 \`library.json\` 均引用新增规则源码；四库共12个 basic/business/advanced 场景继续从真实 \`examples/example.tsx\` 渲染；guide和agent同步更新，没有生成占位演示。**本轮共21个条目范围文件**（四份运行组件、三份helper及三份测试、三份manifest、四份guide与四份agent），再追加本 progress；不编辑其他所有权目录。没有新增 SDK 依赖，**dependencyRequests新增=0**。
+
+### 实际验证及边界
+
+- 容器 Node **22.16.0**：\`node --experimental-strip-types --test /mnt/data/ab-wave17/{A09,A10,B05}/tests/*.test.mts\` → **12 PASS、0 FAIL、0 SKIP**。验证仅覆盖导入规则、JSON下载上界、Rive布尔决策；B17剪贴板与React/SDK需浏览器实测。
+- TypeScript **5.8.3**：\`tsc --noEmit --strict --skipLibCheck --target ES2022 --module ESNext --moduleResolution Bundler /mnt/data/ab-wave17/{A09,A10,B05}/examples/*.ts\` → **PASS，仅3份无SDK依赖的纯规则模块**。
+- 上述六份rule/test本地 \`git hash-object\` 与 GitHub同分支blob精确 **6/6匹配**。GitHub递归树1985项、\`truncated=false\`；四库12个Demo的所有 entryPoint/sourceFiles均存在，三库9个Demo均包含新增helper。相对起始集成head的 compare 在代码第二次提交时 **21/21 文件均属于AB entries/A*/B*，ahead=2、behind=0**。
+- **实际Excalidraw/tldraw/Rive/Floating UI SDK执行、React TSX完整类型检查、pnpm生产依赖、Vite构建、Chromium Clipboard/焦点/IME/白板/GPU释放均 NOT_RUN/BLOCKED**。本通道没有完整依赖与有效Runner执行日志；不能把规则测试、源码清单或SDK代码导入文本写为SDK PASS。四库 \`verification.json\` 保持既有状态，未虚构sourceFingerprint、官方资源许可或CI绿灯。
+- A09 HTTPS仅为本教学示例对外链的最小约束，不等于恶意文档完全安全；A10的3MB是教学下载限制，不是SDK画布上限；Rive后台卸载后WebGL是否释放须用实际Chromium profile确认；Clipboard安全上下文与权限须浏览器确认。
+
+### 后续队列与平台交接
+
+PLATFORM审核本PR的base/head、授权路径并合入私有 \`feat/library-lab\` 后，需要优先恢复真实pnpm锁文件/Runner日志，并按本批4库定向验收：Excalidraw导入/重置竞态与URL点击；tldraw大文档快照、下载URL清理和许可；Rive后台/跨level/WASM与WebGL资源；Floating UI剪贴板拒绝、Escape/Tab焦点恢复及中文IME。再对39条A/B按明确TSX构建报错补修，而非重新生成页面。主Draft #8保持未合并main；不修改PR #3/模板/公开部署。
+
+### wave17 PR/CI 最终回读（2026-10-27）
+
+- 已创建 **[Draft PR #65](https://github.com/CoderLambert/ReactLoom/pull/65)**，head \`feat/library-lab-ab-wave17\`，base **\`feat/library-lab\`**，主PR #8继续Draft且未合并main。
+- 本批代码及进度提交后相对精确集成起点 \`caef398bfa3568b1e9bf690366b39ae5448769de\` 的 GitHub Compare 为 **22/22 文件全部在AB授权范围，ahead=4、behind=0**。6/6 Node独立helper/test Git Blob字节与实际执行一致；四库12/12个Demo源码引用有效。
+- 真实GitHub Actions：提交 \`f2b7ced9b565c3889ba1793101cbbf549a41e0e6\` 触发 CI run **40494818121** 与 Library Lab run **40494817999**，二者状态均为 \`failure\`；对应 \`runtime-bootstrap\` job **122157477021**、\`catalogue\` job **122157477399** 均为 \`steps=[]\`；两份Job日志均返回 **404 BlobNotFound**。因此没有任何可用构建步骤证据，不能归因源码TS错误或虚报SDK/build/browser通过；公共runner/锁文件修复仍由PLATFORM负责。
+- 本批 **runCount=17/24**、依赖新增0。下一轮优先根据真实SDK/完整TypeScript报错修复四库或其他AB目录可复现缺陷，避免在没有runner情况下反复重试相同失败。

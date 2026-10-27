@@ -25,3 +25,9 @@
 
 
 **IME 实际迁移（wave8）**：一起复制 `examples/ime-guard.ts`。`composing` 与 `suppressNextEnter` 采用同步 ref；中文候选字确认所用 Enter 不触发搜索业务动作，且不要在组合输入期间 `preventDefault`。React 可能批量更新 composition 状态，不能单靠 `useState` 布尔值。必须在真实 Chromium+fcitx5/Rime 或目标中文 IME 下确认候选词、回车、Tab/Escape 和失焦；Node纯判断测试不是UI验收。
+
+### wave17 真实剪贴板写入
+
+示例使用 `navigator.clipboard.writeText`，写入成功后才调用 `choose`；失败保留Popover并给屏幕阅读器`role=alert`。不可退回到“点击即显示已复制”的假业务效果。需测试HTTPS安全上下文、拒绝权限、键盘焦点与关闭恢复。
+
+同时保留 `clipboardRequest` 代次防护，覆盖选择其他动作、Escape/外部关闭、卸载后迟到的剪贴板Promise。不能在这些状态下异步改写当前选择。

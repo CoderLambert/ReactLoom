@@ -69,3 +69,7 @@ Rive runtime 是 MIT，但动画资源、美术模板、导出服务或其他产
 - [2026-08-31 Runtime更新](https://community.rive.app/c/announcements/rive-runtime-updates-august-31-2026)
 - [React Runtime MIT仓库](https://github.com/rive-app/rive-react)
 - [状态机概念](https://rive.app/docs/runtimes/react/state-machines)
+
+### wave17：后台GPU与场景取消
+
+`examples/runtime-policy.ts` 统一挂载和播放判定：后台页面**卸载**Rive播放器（不是仅设 `play=false`），高级场景脱离视口也卸载；可见但减少动画或手动暂停时保留静态实例并停止播放。场景切换会取消正在执行的本地业务计时器，代次拦截旧任务回写。播放器卸载时由官方`useRive`运行时释放WebGL2资源，是否真正释放GPU/WASM需Chromium和目标SDK实测。

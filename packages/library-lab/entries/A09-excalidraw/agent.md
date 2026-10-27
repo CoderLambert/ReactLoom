@@ -32,3 +32,7 @@
 画布高度非零、真实绘图和编辑、API 更新、限制导入/阻止危险链接、PNG 下载、只读不允许修改、Escape/Tab 焦点不污染外部页面、切换 Tab 无旧回调/Blob URL 残留。按库版本跑真正类型检查与 Chromium，记录源码指纹和日志。
 
 **官方**：https://docs.excalidraw.com/docs/@excalidraw/excalidraw/installation
+
+### wave17 导入规则
+
+迁移必须同时复制 `examples/scene-policy.ts`。所有不可信文件在 SDK 解码前检查后缀/字节，在恢复后检查元素/附件/HTTPS链接；用户点击链接同样走 `isSafeSceneLink`。不要把Node纯策略测试认作Excalidraw官方SDK/浏览器安全审计。

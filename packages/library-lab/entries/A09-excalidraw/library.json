@@ -59,7 +59,8 @@
       "sourceFiles": [
         "examples/example.tsx",
         "examples/demo.tsx",
-        "examples/styles.css"
+        "examples/styles.css",
+        "examples/scene-policy.ts"
       ],
       "capabilities": [
         "canvas",
@@ -76,7 +77,8 @@
       "sourceFiles": [
         "examples/example.tsx",
         "examples/demo.tsx",
-        "examples/styles.css"
+        "examples/styles.css",
+        "examples/scene-policy.ts"
       ],
       "capabilities": [
         "canvas",
@@ -93,7 +95,8 @@
       "sourceFiles": [
         "examples/example.tsx",
         "examples/demo.tsx",
-        "examples/styles.css"
+        "examples/styles.css",
+        "examples/scene-policy.ts"
       ],
       "capabilities": [
         "canvas",
