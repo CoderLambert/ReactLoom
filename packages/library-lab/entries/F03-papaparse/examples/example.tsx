@@ -4,6 +4,12 @@ import type {Report} from './report.mjs'
 
 type Level = 'basic' | 'business' | 'advanced'
 type Props = {level: Level}
+const fixtures: Record<Level, string> = {
+  basic: 'title,url,note\n"React, Loom",https://example.org/feeds,"带引号 ""文本"" 和\n下一行"',
+  business: 'title,url,note\n技术新闻,https://example.org/rss,官方来源\n复制,https://example.org/rss,重复源\n不可信,ftp://example.org/x,非HTTPS',
+  advanced: 'title,url,note\n=2+3,https://example.org/rss,危险公式\n正常,https://example.org/other,合法\n"坏行",https://example.org/rss,too,many,cells',
+}
+
 export default function PapaParseExample({level}: Props) {
   const [text, setText] = useState(fixtures[level])
   const [report, setReport] = useState<Report | null>(null)
