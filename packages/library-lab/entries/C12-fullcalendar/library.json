@@ -1,1 +1,94 @@
-{"schemaVersion":1,"entryId":"C12","slug":"fullcalendar","name":"FullCalendar","group":"C","summary":"事件日历、时区和排程","tags":[],"contentState":"missing","packages":[],"references":[],"related":[],"demos":[]}
+{
+  "schemaVersion": 1,
+  "entryId": "C12",
+  "slug": "fullcalendar",
+  "name": "FullCalendar",
+  "group": "C",
+  "summary": "基于 React 的事件排程、日历视图与时区边界",
+  "tags": [
+    "日历",
+    "事件排程",
+    "DST",
+    "v7"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "@fullcalendar/react",
+      "version": "7.1.3"
+    },
+    {
+      "name": "temporal-polyfill",
+      "version": "1.0.4"
+    }
+  ],
+  "references": [
+    {
+      "title": "v7 React 官方文档",
+      "url": "https://fullcalendar.io/docs/react"
+    },
+    {
+      "title": "v7 迁移指南",
+      "url": "https://fullcalendar.io/docs/upgrading-from-v6-js"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "C14",
+      "relation": "complements",
+      "reason": "date-fns 用于输入日期及服务端排程业务规则，不替代交互日历。"
+    },
+    {
+      "entryId": "C16",
+      "relation": "complements",
+      "reason": "Luxon 适合 DST/时区业务约束的独立验证。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "最小入门",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "description": "实际 SDK 基础交互"
+    },
+    {
+      "demoId": "business",
+      "title": "实际业务",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "description": "业务数据与生命周期"
+    },
+    {
+      "demoId": "advanced",
+      "title": "异常与边界",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "description": "失败、时间/并发边界"
+    }
+  ],
+  "provenance": {
+    "collection": "RFL-20261023",
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "基于官方材料重新编写，仅参考旧研究，不继承既有示例的运行验收结论"
+  },
+  "license": {
+    "spdx": "MIT",
+    "assets": "自制示例数据，无付费扩展"
+  }
+}
