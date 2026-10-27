@@ -52,3 +52,8 @@ const {tokens} = await codeToTokens('const x = 1', {
 `pnpm --filter @reactloom/library-lab typecheck`、`build` 与真实 Chrome smoke，检查英文/中文/恶意 HTML 原样文本、切换语言后无过期结果、首页无 Shiki 大 chunk 请求；运行前状态不记 PASS。
 
 参考：[官方 API](https://shiki.style/guide/install)、[性能](https://shiki.style/guide/best-performance)、[Bundle](https://shiki.style/guide/bundles)。
+
+
+## 重用组件时的场景所有权
+
+Host 未必通过 key 强制 remount；若 React 在同一 ShikiExample 实例中将 level 从 business 改为 advanced，旧代码、语言及 token 需要重置，不能继续把上个业务场景的高亮展示成当前场景。示例现有 effect 清理会废弃旧的异步 Shiki 结果，并在 level 变化时重新选择样本与语言。真实 Shiki SDK 用例扩充 Unicode 多行 token 文本保真断言。输入高亮是文本处理，不能据此宣称编译成功或 HTML 消毒通过。
