@@ -10,7 +10,7 @@ export function sourceFingerprint(packages, sources) {
  return createHash('sha256').update(JSON.stringify({packages,sources:files})).digest('hex');
 }
 
-/** A prior PASS without matching code/versions/command/evidence becomes NOT_RUN. */
+/** Historical PASS or FAIL without current source/command/evidence becomes NOT_RUN. */
 export function verifiedState(raw = {}, fingerprint) {
  if(!raw || typeof raw!=='object' || Array.isArray(raw))throw new Error('Invalid verification data');
  const output={};
