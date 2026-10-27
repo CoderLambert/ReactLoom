@@ -5,6 +5,9 @@ import {createLocalClip} from './clip';
 import {validateVideoMetadata,validateVideoHeader} from './video-file-policy.mjs';
 type Level='basic'|'business'|'advanced';
 export default function VideoJsExample({level}:{level:Level}){
+ return <VideoJsSession key={level} level={level}/>;
+}
+function VideoJsSession({level}:{level:Level}){
  const [url,setUrl]=useState('');const [status,setStatus]=useState('未创建视频；不会自动访问外部资源');
  const [busy,setBusy]=useState(false);const generation=useRef(0);const current=useRef<string|null>(null);
  const recording=useRef<AbortController|null>(null);
