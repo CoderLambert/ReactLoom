@@ -9,6 +9,9 @@ const ISOLATED = new Set([
   'persistent-network-interception',
   'global-service-worker',
 ]);
+// These features may be documented or reproduced by a Node CLI, but cannot
+// silently execute inside a React component or dedicated Worker on the SPA origin.
+const HOST_PRIVILEGES = new Set(['network-interception', 'node-process']);
 export const CAPABILITY_DESCRIPTIONS = Object.freeze({
   'service-worker': 'Service Worker（需要独立域名与作用域）',
   'cross-origin-isolation': '跨源隔离（需要专用响应头和独立预览）',
@@ -24,7 +27,8 @@ export const CAPABILITY_DESCRIPTIONS = Object.freeze({
 export function demoRunPolicy(demo) {
   if (!demo || typeof demo !== 'object') return {mode:'unavailable',reason:'示例未定义'};
   const caps = Array.isArray(demo.capabilities) ? demo.capabilities : [];
-  const blocked = caps.filter(cap => ISOLATED.has(cap));
+  const blocked = caps.filter(cap => ISOLATED.has(cap) ||
+    (demo.executionKind !== 'node-ci' && HOST_PRIVILEGES.has(cap)));
   if (blocked.length) return {
     mode:'isolated',
     reason:`包含需要独立运行环境的能力：${blocked.map(cap=>CAPABILITY_DESCRIPTIONS[cap]).join('、')}。当前主站不会执行此示例。`,
