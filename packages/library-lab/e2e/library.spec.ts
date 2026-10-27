@@ -262,3 +262,21 @@ test('generated catalogue, docs and source requests use a cancellable network-fi
   expect(hit?.signal,fragment).toBe(true);
  }
 });
+
+
+test('production preview stages the official MSW asset under the isolated scope only', async({page})=>{
+ const scoped=await page.request.get('/lab-runners/msw/mockServiceWorker.js',{maxRedirects:0});
+ expect(scoped.status()).toBe(200);
+ expect(scoped.headers()['content-type']??'').toMatch(/javascript/iu);
+ const bytes=await scoped.body();
+ expect(bytes.byteLength).toBeGreaterThan(0);
+ expect(bytes.byteLength).toBeLessThanOrEqual(512*1024);
+ expect(new TextDecoder('utf-8',{fatal:true}).decode(bytes)).toMatch(/\baddEventListener\s*\(/u);
+ const root=await page.request.get('/mockServiceWorker.js',{maxRedirects:0});
+ expect(root.ok() && /javascript/iu.test(root.headers()['content-type']??'')).toBe(false);
+ await page.goto('/');
+ const registrations=await page.evaluate(async()=>('serviceWorker' in navigator)
+   ? (await navigator.serviceWorker.getRegistrations()).map(registration=>registration.scope)
+   : []);
+ expect(registrations.some(scope=>scope.endsWith('/lab-runners/msw/'))).toBe(false);
+});
