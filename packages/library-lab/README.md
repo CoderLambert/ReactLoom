@@ -77,14 +77,17 @@ pnpm test:policy
 
 测试目录约定：`entries/<ID>-<slug>/(examples|tests)/*.test.(mjs|mts)`。仅 `sdk.test.mjs`、`node-scenarios.test.mjs` 属于正式 SDK 套件；其他名称仅作为政策级回归候选。测试分类与运行命令要分别记录，避免将非 SDK 回归数量累加到 SDK 已通过数。
 
+Library Lab CI 在完整平台 Node 测试后，通过 `node scripts/policy-runner.mjs --changed-base=<40位Git SHA>` 比较真实 Git 差异：仅源文件、`library.json` 或测试变动的条目运行其纯策略用例；公共 `src/scripts/tests`、本包配置、依赖/锁文件与 Lab CI 变化会全量运行纯策略；指南、Agent 与进度文本不会无意义地触发所有条目。Git 差异无法读取时安全回退运行全部策略，不把 `SKIP` 当 SDK PASS。此增量机制不替代独立 TypeScript、SDK、构建与 E2E 检查。
+
 ## CLI workshops / 独立 Node 工具复现
 
-F04 ExcelJS、F10 Orval、F16 dependency-cruiser、F18 rollup-plugin-visualizer 不伪装成浏览器执行。页面根据已审查的配置提供可复制命令；真实 CLI 验证统一由固定清单运行（需要 Node >=22.18、真实安装的依赖及本机权限）：
+D16 Workbox、D21 Pagefind、F04 ExcelJS、F10 Orval、F15 Knip、F16 dependency-cruiser、F18 rollup-plugin-visualizer 均通过固定 CLI 白名单在本机验证，不伪装成浏览器执行。其中 D16 只生成隔离工作坊资产，不在主站注册 Service Worker；所有 CLI 运行需要对应的真实依赖和本机权限（项目要求 Node >=22.18）。
 
 ```sh
 node packages/library-lab/scripts/cli-runner.mjs --list
-node packages/library-lab/scripts/cli-runner.mjs --entry=F04
-node packages/library-lab/scripts/cli-runner.mjs --entries=F10,F16,F18
+node packages/library-lab/scripts/cli-runner.mjs --entry=F15  # 三组真实 Knip JSON 报告
+node packages/library-lab/scripts/cli-runner.mjs --entries=D16,D21 # 独立 Workbox/Pagefind 构建
+node packages/library-lab/scripts/cli-runner.mjs --entries=F04,F10,F16,F18
 ```
 
 CLI runner 仅执行仓库内硬编码的验证脚本，不接收外部 shell/path。未执行的 CLI 结果仍为 NOT_RUN，离线校验只能证明选择器输入和调用边界正确。Orval 8+ 需 Node.js >=22.18。
