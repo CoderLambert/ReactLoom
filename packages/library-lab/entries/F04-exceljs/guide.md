@@ -34,3 +34,9 @@ F03 Papa Parse 解析外部 CSV，F04 生成规范 XLSX，F02 react-dropzone 负
 
 ## 来源与验证
 ExcelJS 4.4.0/MIT：<https://github.com/exceljs/exceljs>。真实源码位于 `examples/core.mjs`，复现入口是 `examples/basic.mjs` 等。本次未运行目标SDK、构建或浏览器，不得引用历史研究PASS。
+
+## 增量数据约束（EF wave11）
+
+共享 `examples/row-policy.mjs` 将校验放在 `new ExcelJS.Workbook()` **之前**：拒绝不存在/非字符串/空白或包含控制字符的来源，拒绝空ID及忽略大小写与两侧空格后重复ID；`reads/stars` 每项和总和都必须是非负安全整数，避免Excel公式缓存落入超过JavaScript安全整数范围的数。`safeSpreadsheetText` 仅接受字符串，trim后再对 `= + - @` 做字面量前缀保护。调用方不可绕过checkRows直接写不可信业务行。
+
+离线运行 `node --test packages/library-lab/entries/F04-exceljs/examples/row-policy.test.mjs` 仅验证纯数据契约；真实ExcelJS读写还要执行 `examples/verify.mjs` 并真实安装依赖。不要从前者推断 XLSX 序列化已验收。

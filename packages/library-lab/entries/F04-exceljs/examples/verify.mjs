@@ -13,4 +13,7 @@ for (const level of ['basic','business','advanced']) {
 assert.equal(safeSpreadsheetText('=2+3'),"'=2+3");
 assert.equal(safeSpreadsheetText('@SUM(A1:A9)'),"'@SUM(A1:A9)");
 await assert.rejects(generateWorkbook('advanced',[{id:'x',source:'x',reads:Infinity,stars:1}]),/invalid reads/);
+await assert.rejects(generateWorkbook('advanced',[{id:'x',source:undefined,reads:1,stars:1}]),/spreadsheet text/);
+await assert.rejects(generateWorkbook('advanced',[{id:'R01',source:'A',reads:1,stars:1},{id:' r01 ',source:'B',reads:1,stars:1}]),/duplicate row id/);
+await assert.rejects(generateWorkbook('advanced',[{id:'a',source:'A',reads:Number.MAX_SAFE_INTEGER,stars:1},{id:'b',source:'B',reads:1,stars:1}]),/unsafe aggregate/);
 console.log('ExcelJS actual SDK roundtrip assertions completed');

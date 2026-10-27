@@ -51,6 +51,8 @@
       "entryPoint": "examples/basic.mjs",
       "sourceFiles": [
         "examples/core.mjs",
+        "examples/row-policy.test.mjs",
+        "examples/row-policy.mjs",
         "examples/basic.mjs",
         "examples/business.mjs",
         "examples/advanced.mjs",
@@ -71,6 +73,8 @@
       "entryPoint": "examples/business.mjs",
       "sourceFiles": [
         "examples/core.mjs",
+        "examples/row-policy.test.mjs",
+        "examples/row-policy.mjs",
         "examples/basic.mjs",
         "examples/business.mjs",
         "examples/advanced.mjs",
@@ -91,6 +95,8 @@
       "entryPoint": "examples/advanced.mjs",
       "sourceFiles": [
         "examples/core.mjs",
+        "examples/row-policy.test.mjs",
+        "examples/row-policy.mjs",
         "examples/basic.mjs",
         "examples/business.mjs",
         "examples/advanced.mjs",

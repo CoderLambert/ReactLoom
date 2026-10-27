@@ -16,3 +16,7 @@
 `node entries/F04-exceljs/examples/verify.mjs`：真实调用ExcelJS，检查构造/往返、冻结表头、公式及缓存值、恶意前缀处理、非法数值拒绝。需要本地和CI安装依赖后运行；目前NOT_RUN，构建BLOCKED。
 
 官方：<https://github.com/exceljs/exceljs>
+
+## EF wave11 迁移约束
+
+保留 `row-policy.mjs` 的严格文本/字段/总量检查，调用 `generateWorkbook` 前不能靠 `String(undefined)` 自动转成业务名称；ID 去重要求 trim+casefold，合计不能超过MAX_SAFE_INTEGER。应用展示与CLI共用该检查，不许为让示例通过而删除校验。`row-policy.test.mjs` 的无依赖测试PASS不等于ExcelJS SDK PASS。

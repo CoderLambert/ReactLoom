@@ -9,3 +9,7 @@
 **负例**：split(',') 手拆、忽略引号换行、以 dynamicTyping 转全量 ID、把 Markdown/XSS sanitizer 当 CSV 公式过滤、不校验 URL 就后端抓取。
 **验证**：真实包 Node 集成文件 `tests/node-scenarios.test.mjs` 含引号换行/错误字段/escapeFormulae；还需TS构建和真实 File API E2E。当前新代码未运行 SDK、build、browser。
 关联 F02/F04/F05；官方 https://www.papaparse.com/docs。
+
+## EF wave11 必保留合同
+
+迁移时把 `report.mjs` 与 `policy.mjs` 视为同一条导入路径，不可在UI和Node测试分别抄两份。精确校验表头、重命名重复列、结构错误；对无法可靠定位的解析错误**整批拒绝**。`File.text()` 的旧Promise在用户编辑/重置/解析时也必须失效（不仅卸载时）。限制文本大小/长度，导出继续调用真正的 `Papa.unparse({escapeFormulae:true})`；URL只是离线格式筛选，任何后端访问仍需SSRF保护。纯策略Node测试与真实Papa Node测试分开报告。

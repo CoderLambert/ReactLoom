@@ -363,3 +363,19 @@ runCount=6/24。本轮不把5库源代码和30+例子等同完整生产交付；
 - Node v22.16.0已在本轮运行独立纯Node检查：F11 routes 3项、E19 input-policy 3项、F05 archive-policy 4项，共10 PASS/0 FAIL。没有导入真实第三方SDK，不得升级SDK或浏览器验证状态。
 - MSW真实worker/fetch、FFmpeg核心加载与取消、SheetJS XLSX回读、TS/Vite构建、浏览器E2E仍 NOT_RUN/BLOCKED。无新增第三方依赖；PLATFORM统一核对已请求版本及锁文件。需要真实SDK环境确认SheetJS正常生产包能通过保守ZIP预检。
 - 当前EF 37/37条已有源码与指南，本轮属于风险修正、不新增库。runCount=10/24。后续优先等待PLATFORM真实依赖编译反馈并继续剩余跨库安全修复，不能虚报验证通过。
+
+
+## 第十一轮：F03 CSV 导入与 F04 Excel 报表双端安全合同（2026-10-27）
+
+- 基线：集成 `feat/library-lab@0733f237ddfbc4ab3204c531255f386c46abec27`，前轮 #38 已集成且当时无开放 EF PR；独立工作分支 `feat/library-lab-ef-wave11-csv-xlsx`。仅修改 F03/F04 条目及本进度，不涉及公共 src、依赖、lockfile、CI、根索引或 main。
+- F03 Papa Parse：真实 `Papa.parse`/`unparse` 被收敛到独立 `examples/report.mjs`，React UI与Node SDK集成测试共用同一解析路径；纯 `policy.mjs` 严格校验唯一/准确三列表头、业务字段类型长度/控制字符、无凭据HTTPS和规范化去重。可定位的字段数错误逐行拒绝，不可恢复解析错误整批拒绝。用户手工编辑、重置和点击解析使尚未完成的 File.text 失效，超大文件被拒绝后仍可重新选择同一文件。
+- F04 ExcelJS：纯 `examples/row-policy.mjs` 校验空ID/空源/非字符串/控制字符、大小写及空格归一化重复ID、1–500行、计数及**聚合合计**必须是安全整数。`generateWorkbook` 在分配Workbook前调用，并保持真实ExcelJS IO；verify SDK脚本新增三个错误负例。三层示例的 sourceFiles 与文档、Agent指南已同步；无新SDK依赖需求。
+- **本轮实际 Node 测试**：Node v22.16.0，隔离运行 `F03/tests/policy.test.mjs` 与 `F04/examples/row-policy.test.mjs` **7 PASS、0 FAIL**。两套纯策略均不导入第三方SDK，绝不计为 `papaparse` / `exceljs` SDK PASS。
+- **尚待PLATFORM执行**：安装当前声明依赖后 `node --test packages/library-lab/entries/F03-papaparse/tests/node-scenarios.test.mjs`、`node packages/library-lab/entries/F04-exceljs/examples/verify.mjs`，随后 `catalog:check`、TypeScript/Vite build、Chromium 文件选择/卸载竞态。GitHub CI在先前无Runner；未重试已知DNS/无Runner故障。SDK/浏览器仍NOT_RUN，build仍BLOCKED。
+- 新源代码被公共生成器读取前应检查 `sourceFiles` 的完整性与真实依赖解析，不能从静态路径检查升级PASS。37/37 EF 条目继续保持已有内容覆盖；本轮是纠错/强化而非新增库。`runCount=11/24`。下一步优先依据PLATFORM的真实构建反馈修复TypeScript/SDK兼容性，若环境依然不可用则检查其它高风险导入/资源生命周期条目。
+
+### 第十一轮交付索引
+
+- Draft PR [#43](https://github.com/CoderLambert/ReactLoom/pull/43)，目标 `feat/library-lab`；关键源码提交 `772139aae64dfdfde41bb86c187f9436ad75fd8f`。该提交修复了F03导入抽取时遗漏的演示fixtures；PR审查应采用最新head。
+- `git compare` 对比集成 `0733f237ddfbc4ab3204c531255f386c46abec27`：18个变更文件均在EF授权范围。实际纯策略Node用例7 PASS；第三方SDK真实运行仍 NOT_RUN。
+- Issue [#7](https://github.com/CoderLambert/ReactLoom/issues/7) 已留有本轮代码、验证和下步执行要求。PLATFORM集成后，若本分支需要下一轮代码修复，应从更新的集成head另建wave分支，不重写已合入PR。
