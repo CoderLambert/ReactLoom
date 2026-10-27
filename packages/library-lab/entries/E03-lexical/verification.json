@@ -1,7 +1,7 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "未执行真实 lexical SDK 测试，待安装依赖与平台校验"
+    "note": "未执行真实 lexical SDK 测试，待安装依赖与平台校验 新增纯策略负例不构成真实 SDK 加载证据。"
   },
   "build": {
     "status": "BLOCKED",

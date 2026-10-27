@@ -436,3 +436,31 @@ runCount=13/24。
 - **下一队列**：依据 PLATFORM 真实安装/构建和浏览器反馈修复具体 SDK 类型与资源问题；保留 E05 Worker/F11 Service Worker 独立 runner、F06/F07 PDF Worker 配对、E19 WASM 真实加载的明确环境阻塞。EF **37/37 内容覆盖**不等于 37/37 可运行验收。只有完整范围和门禁真正结束才停通道。
 
 runCount=14/24。
+
+
+## 第十五轮：富文本与代码编辑器的持久化边界（2026-10-27）
+
+- **实际代码与PR**：从当轮最新集成 `feat/library-lab@66479e8a2d3e27d65c3c581093822cb4baf6c00d` 创建 `feat/library-lab-ef-wave15-editor-persistence`，提交 `eab922e84d4f85bf34bdb144eb347434b76a2c17`（E01/E02）、`b3f58ba3b2dd07ba501073139ebe4011d135360c`（E03/E04）；Draft [PR #55](https://github.com/CoderLambert/ReactLoom/pull/55)，base固定 `feat/library-lab`，绝不合main/修改PLATFORM/公开部署。
+- **E01 Tiptap**：修复sessionStorage恢复只验证顶层type就执行setContent的问题；新纯策略限制20K UTF-16字符/500节点/12层、StarterKit节点与marks、属性与HTTPS凭据边界，然后真实Tiptap命令使用官方v3 `setContent(json,{errorOnInvalidContent:true})` 要求抛错而不是静默忽略非法节点；level切换通过带key子组件重新初始化编辑器/撤销历史。
+- **E02 BlockNote**：sessionStorage读取也纳入try/catch；文本块、内联字段、外链、嵌套、总100块和60K字符串配额检查；保存的运行时块ID不重新注入；拒绝未授权媒体/附件，按level重新挂载实例。此纯校验不等于SDK schema/事务回滚，若replaceBlocks抛错不保证修改已自动撤销。
+- **E03 Lexical**：有限原生节点快照校验；阻止空根、未知node、过深结构和恶意style。实际恢复使用 `parseEditorState` 后再检查 `isEmpty()` 才 `setEditorState`（官方文档明确空state会异常/不同恢复行为）；keyed Composer隔离三个场景的内容、历史和选区。
+- **E04 CodeMirror6**：初始业务草稿、保存、手动恢复三条路径统一执行50K UTF-16字符/NUL限制；非法存储值不覆盖当前EditorView，保留已有Compartment、view.destroy和IME提醒。此限额不是代码执行沙箱。
+- 四库各新增唯一纯MJS策略源、`.d.mts`声明、Node负例测试；所有三层demo源码清单同步，guide/agent/AGENTS/verification与源码一致。4库×3层=**12 sourceFiles manifest**，对GitHub提交树逐文件检验**0缺失**。此前内容覆盖EF **37/37**保持，**不等于实际运行验收**。
+
+### 本批真实验证及保真边界
+
+- 在Node **v22.16.0** 逐项从仓库同字节源码执行：`node --test /mnt/data/reactloom-ef-wave15/{E01-tiptap,E02-blocknote,E03-lexical,E04-codemirror6}/tests/policy.test.mjs`，共**14 PASS / 0 FAIL**（E01 4、E02 4、E03 3、E04 3）。8份MJS通过 `node --check`；均通过本地 `git hash-object` 对照GitHub已提交blob的**完整 SHA-1**，不是改写的简化测试：
+  - E01策略 `349dd404908b3e7b4c59a04c75daa57682a91a93`；测试 `a216e2719018c6dc3d5af4b9039e0d3467ea8ed1`。
+  - E02策略 `2eefb693a1543eac701958d9052a35d43a82d189`；测试 `88e044e6e1ac195ee6c6d7cb71b29107417ea952`。
+  - E03策略 `63d6a80e0d257d9549307e4f1e2a67c14d55324d`；测试 `12dc794f1e9294ca38e022a875fe67c402da90f2`。
+  - E04策略 `60793434c4eef2027db6aa3e51ade8a72d62c544`；测试 `b9cd16168dc55b3927abbd2d9d143475fa98deb0`。
+- **这些仅是离线业务策略测试**：未import真实Tiptap/BlockNote/Lexical/CodeMirror、未挂载EditorContent/BlockNoteView/EditorView/Composer，不能为sdk/build/browser填写PASS。仓库内verification.json继续 `SDK NOT_RUN`、`build BLOCKED`、`browser NOT_RUN`；实际SDK、TypeScript、Vite/Chromium、Mantine CSS、中文IME/多实例及Tiptap/BlockNote Schema兼容仍必须真实运行。
+- 仅做Github静态结构检查与版本/API官方文档抽样复核；未安装/锁定pnpm依赖、无真正浏览器证据，也没有伪造SDK运行日志。GitHub compare基线到本轮第二提交 **2 commits / 36 files**，全部在EF授权 E*/F*；第三提交只新增本progress文件。
+
+### dependencyRequests / 下一批队列
+
+- **无新增依赖请求**；沿用当前元数据 E01 `@tiptap/react,@tiptap/pm,@tiptap/starter-kit@3.32.0`（MIT）、E02 `@blocknote/{core,react,mantine}@0.56.0`（MPL-2.0；Mantine peers和非自由XL扩展仍由PLATFORM准确复核）、E03 `lexical,@lexical/react@0.52.0`（MIT）、E04 `codemirror@6.0.2,@codemirror/state@6.7.6,@codemirror/lang-javascript@6.2.5`（MIT）。不是声称这些依赖在本轮安装成功或全部peer已通过。
+- PLATFORM独占真实pnpm lock、`catalog:check`、`typecheck`、`build`、跨库runner/Chromium。待可运行时先定向测试E01/E02恢复合法与非法文档/焦点/IME/重挂、E03空state/输入法、E04超长sessionStorage且内容不丢；并继续E05 Worker、F11 MSW ServiceWorker作用域/CSP、F06/F07 PDF.js配对、E19 FFmpeg WASM许可与真实启动。收集实际版本/日志后解决错误，不循环重试既知 npm/DNS 阻塞。
+- EF仍37/37个内容目录，**业务策略14 PASS不代表37个SDK通过**。下轮基于最新已合入集成分支继续修复高价值风险，待PLATFORM合入本PR前不对同一目录重叠push。若真实验收全通过才停止通道；否则继续直到24轮上限，明确列出缺口。
+
+runCount=15/24。

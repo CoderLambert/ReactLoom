@@ -13,3 +13,7 @@
 **验收**：选区加粗/撤销、内容保存重进恢复、非法 JSON 与超长输入、两标签页独立、卸载无更新回写；在真实浏览器执行并记录 commit SHA / pkg lock / 截图。命令：`pnpm --filter @reactloom/library-lab typecheck`、`build`、针对 E01 的浏览器检查。NOT_RUN 不能写 PASS。
 
 **资料**：https://tiptap.dev/docs/editor/getting-started/install/react 与 https://tiptap.dev/docs/editor/api/editor。
+
+## EF 迁移补充
+
+复用 `examples/snapshot-policy.mjs` 时保留 20KB / 500节点 / 深度12 / StarterKit 白名单限制及 `errorOnInvalidContent:true`，并针对业务新增 Node/Mark 类型升级校验。独立场景通过子组件 key 重挂，不能把切换 Tab 等同 CSS 隐藏。先跑 `node --test packages/library-lab/entries/E01-tiptap/tests/policy.test.mjs`，再用真正 SDK + Chromium 验证，不能把此纯策略测试记为 SDK PASS。

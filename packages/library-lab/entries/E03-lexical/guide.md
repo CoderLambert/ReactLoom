@@ -48,3 +48,9 @@ pnpm add lexical@0.52.0 @lexical/react@0.52.0
 先从 E04 CodeMirror 了解“编辑代码”与“编辑内容”的差别，再与 E01 Tiptap / E02 BlockNote 比较。目标 SDK 构建/浏览器尚待执行，`verification.json` 不得根据旧研究的单测结果写 PASS。
 
 官方：[React 组件](https://lexical.dev/docs/react/plugins) · [序列化](https://lexical.dev/docs/concepts/serialization) · [GitHub](https://github.com/facebook/lexical) · [v0.52.0 Release](https://github.com/facebook/lexical/releases/tag/v0.52.0)。核心 MIT；原创本地示例。
+
+## EF 第十五批：安全恢复与场景独立性
+
+`parseEditorState` 可以成功解析根为空的快照，而官方 `setEditorState` 对空根会拒绝或执行不同的恢复策略。迁移时先运行本条 `assertLexicalSnapshot`，只接受 root → paragraph → text/linebreak/tab 的基础节点、至少一个段落、最多400节点、8层深度及100KB快照；再验证 `restored.isEmpty()` 为 false，最后真正调用 SDK 的 `setEditorState`。该保守验证仅覆盖本实验没有注册自定义节点的 Composer；若接入表格/列表/图像，需要明确更新节点 Schema 和迁移脚本。
+
+React `LexicalComposer` 绑定 `key={level}`，场景切换后不再意外复用旧草稿、HistoryPlugin 历史与选区。无需也不允许把 JSON 直接作为 `innerHTML`。新建 `tests/policy.test.mjs` 为不依赖 Lexical 的负例；必须另跑真实 SDK、TypeScript 和 Chromium。

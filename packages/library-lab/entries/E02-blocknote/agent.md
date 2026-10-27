@@ -13,3 +13,7 @@
 **验证**：真实SDK挂载/输入/插块，数据量限制、损坏JSON、恢复失败不覆盖、卸载监听解除、跨文档切换；TypeScript/Bundler/Mantine peer 和 CSS检查。未运行SDK、浏览器继续保持 NOT_RUN。
 
 **官方依据**：https://www.blocknotejs.org/docs/getting-started 和 https://www.blocknotejs.org/docs/reference/editor/events
+
+## EF 迁移补充
+
+保留 `examples/snapshot-policy.mjs` 对快照深度/数量/外链的约束，并明确当前只支持文本块，媒体/表格及其他 block schema 必须专门扩展。恢复时包括 `sessionStorage.getItem` 的异常路径；不可把 `replaceBlocks` 抛错当作事务回滚保证。切换场景 key 必须让旧 BlockNote 实例完整释放。先跑 `node --test packages/library-lab/entries/E02-blocknote/tests/policy.test.mjs`；再在目标 SDK/浏览器实测。

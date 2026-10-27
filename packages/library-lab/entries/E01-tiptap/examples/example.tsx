@@ -1,13 +1,17 @@
 import {useEffect, useState} from 'react'
 import {EditorContent, useEditor} from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
+import {MAX_SNAPSHOT as MAX_CHARS, parseTiptapSnapshot} from './snapshot-policy.mjs'
 
 type Level = 'basic' | 'business' | 'advanced'
 const KEY = 'reactloom.lab.E01.tiptap.draft.v1'
-const MAX_CHARS = 20_000
 const START = '<h2>工程笔记</h2><p>编辑 <strong>Tiptap</strong> 示例，观察结构化文档。</p>'
 
 export default function TiptapExample({level}: {level: Level}) {
+  return <TiptapSession key={level} level={level} />
+}
+
+function TiptapSession({level}: {level: Level}) {
   const [notice, setNotice] = useState('仅在当前浏览器本地处理内容。')
   const [chars, setChars] = useState(0)
   const [jsonPreview, setJsonPreview] = useState('')
@@ -47,12 +51,9 @@ export default function TiptapExample({level}: {level: Level}) {
       const raw = sessionStorage.getItem(KEY)
       if (!raw) {setNotice('没有保存过草稿。'); return}
       if (raw.length > MAX_CHARS) throw new Error('草稿超过最大可恢复长度')
-      const parsed: unknown = JSON.parse(raw)
-      if (!parsed || typeof parsed !== 'object' || (parsed as {type?: string}).type !== 'doc') {
-        throw new Error('不是合法的 Tiptap 文档顶层结构')
-      }
-      editor.commands.setContent(parsed as Parameters<typeof editor.commands.setContent>[0])
-      setNotice('已恢复文档；没有将JSON当HTML插入页面。')
+      const parsed = parseTiptapSnapshot(raw)
+      editor.commands.setContent(parsed as Parameters<typeof editor.commands.setContent>[0], {errorOnInvalidContent: true})
+      setNotice('已通过节点、深度、属性与 SDK Schema 验证后恢复 JSON 文档。')
     } catch (error) {setNotice(`草稿恢复失败，当前文档未被主动清空：${String(error)}`)}
   }
 

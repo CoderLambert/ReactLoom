@@ -7,11 +7,11 @@ import {HistoryPlugin} from '@lexical/react/LexicalHistoryPlugin'
 import {OnChangePlugin} from '@lexical/react/LexicalOnChangePlugin'
 import {LexicalErrorBoundary} from '@lexical/react/LexicalErrorBoundary'
 import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext'
+import {assertLexicalSnapshot, MAX_SNAPSHOT} from './snapshot-policy.mjs'
 
 type Level = 'basic' | 'business' | 'advanced'
 type Props = {level: Level}
 const KEY = 'reactloom:library-lab:E03:article:v1'
-const MAX_SNAPSHOT = 100_000
 
 /** The JSON is Lexical's authoritative document, not innerHTML. */
 function Actions({level}: Props) {
@@ -38,7 +38,9 @@ function Actions({level}: Props) {
       const json = sessionStorage.getItem(KEY)
       if (!json) return setNotice('没有已保存的草稿')
       if (json.length > MAX_SNAPSHOT) return setNotice('草稿超出大小限制，拒绝恢复')
-      editor.setEditorState(editor.parseEditorState(json))
+      const restored = editor.parseEditorState(assertLexicalSnapshot(json))
+      if (restored.isEmpty()) throw new Error('空文档不可应用')
+      editor.setEditorState(restored)
       setNotice('已恢复 Lexical JSON 文档（未注入 HTML）')
     } catch {
       setNotice('草稿已损坏或与当前节点协议不兼容，未覆盖编辑内容')
@@ -86,7 +88,7 @@ export default function LexicalExample({level}: Props) {
   return <section aria-label="Lexical 真实编辑器">
     <h2>{level === 'basic' ? '编辑器状态与文本' : level === 'business' ? '新闻文章本地 JSON 草稿' : '格式命令与状态恢复边界'}</h2>
     <p>使用真实 lexical / @lexical/react。请在编辑框内输入文字，内容不会发送到服务器。</p>
-    <LexicalComposer initialConfig={config}>
+    <LexicalComposer key={level} initialConfig={config}>
       <div style={{position: 'relative', marginBlock: '16px'}}>
         <RichTextPlugin
           contentEditable={<ContentEditable aria-label="Lexical 文档编辑区" style={{border: '1px solid #bbcabc', borderRadius: 8, padding: 14, minHeight: 140}} />}

@@ -19,3 +19,7 @@
 - `PASS` 需要当前源码 fingerprint、真实命令和耐久日志，否则状态维持 NOT_RUN/BLOCKED。
 
 **边界**：v0.52 新 Extension Composer 值得后续升级评估；当前官方兼容的传统 Composer 示例不等于推荐继续为新项目无条件使用旧 API。链接：https://lexical.dev/docs/getting-started/react
+
+## EF 迁移增补
+
+持久化 Lexical JSON 前后保持非空根检查；`parseEditorState` 之后必须检查 `isEmpty()` 再应用，不要根据 parse 成功假定状态可提交。场景级 key 阻断历史/草稿串用。节点 Schema 升级时同步 `examples/snapshot-policy.mjs` 与负例；当前政策仅覆盖原生 paragraph/text。先运行 `node --test packages/library-lab/entries/E03-lexical/tests/policy.test.mjs`，再进行真正 Lexical SDK/Chromium 验证。
