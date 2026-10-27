@@ -32,3 +32,7 @@ GET 响应200及 JSON；验证码成功200、错误422且应用显示字段反�
 4. 执行分场景 UI/E2E，最后加入真实后端契约检查。
 
 当前SDK/构建/浏览器状态 NOT_RUN/BLOCKED。官方：https://mswjs.io/docs/quick-start
+
+## 浏览器/Node URL 事实源
+
+读取 `examples/routes.mjs` 并使用 `scenarioEndpoints(base)`：Node 为保留的 `https://library-lab.invalid/`，iframe 使用当前 origin 的 `/lab-runners/msw/`。`createHandlers(urls)` 统一业务响应；不得在浏览器通过跨域 `.invalid` 地址假设拦截已经生效。`browser-worker.mjs` 的 registration scope/script 精确检查仅是 readiness gate，实际 `fetch` 和 Worker 接管仍需 Chromium 测试。禁止在顶层 SPA 注册这个 Worker。

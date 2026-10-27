@@ -59,6 +59,7 @@
       "entryPoint": "examples/node-runner.mjs",
       "sourceFiles": [
         "examples/node-runner.mjs",
+        "examples/routes.mjs",
         "examples/handlers.mjs"
       ],
       "capabilities": [
@@ -75,6 +76,7 @@
       "entryPoint": "examples/node-runner.mjs",
       "sourceFiles": [
         "examples/node-runner.mjs",
+        "examples/routes.mjs",
         "examples/handlers.mjs"
       ],
       "capabilities": [
@@ -91,8 +93,10 @@
       "entryPoint": "examples/node-runner.mjs",
       "sourceFiles": [
         "examples/node-runner.mjs",
+        "examples/routes.mjs",
         "examples/handlers.mjs",
-        "examples/browser-worker.mjs"
+        "examples/browser-worker.mjs",
+        "tests/routes.test.mjs"
       ],
       "capabilities": [
         "node-process",

@@ -1,5 +1,6 @@
 import * as XLSX from 'xlsx';
 import {MAX_ROWS, HEADERS, normalize} from './validation.mjs';
+import {preflightXlsx} from './archive-policy.mjs';
 export {normalize} from './validation.mjs';
 export const fixture=[
  {channel:'Frontend',views:128,kind:'订阅'}, {channel:'AI',views:63,kind:'推荐'},
@@ -16,6 +17,8 @@ export function importWorkbook(bytes){
  if(!(bytes instanceof Uint8Array) || bytes.byteLength<1 || bytes.byteLength>2_000_000) {
    throw new Error('仅接受不超过2MiB的工作簿字节');
  }
+ // Check declared ZIP expansion before XML parsing. Not a substitute for a bounded parser.
+ preflightXlsx(bytes);
  // sheetRows bounds materialization; !fullref preserves a bigger source range for rejection.
  const book=XLSX.read(bytes,{cellFormula:true,cellHTML:false,cellText:false,sheetRows:MAX_ROWS+2});
  if(book.SheetNames.length!==1)throw new Error('仅接受单个工作表');

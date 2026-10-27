@@ -64,6 +64,8 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/wav.ts",
+        "examples/input-policy.d.mts",
+        "examples/input-policy.mjs",
         "examples/example.tsx",
         "examples/demo.tsx"
       ],
@@ -85,6 +87,8 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/wav.ts",
+        "examples/input-policy.d.mts",
+        "examples/input-policy.mjs",
         "examples/example.tsx",
         "examples/demo.tsx"
       ],
@@ -106,8 +110,11 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/wav.ts",
+        "examples/input-policy.d.mts",
+        "examples/input-policy.mjs",
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/input-policy.test.mjs"
       ],
       "capabilities": [
         "wasm-large",

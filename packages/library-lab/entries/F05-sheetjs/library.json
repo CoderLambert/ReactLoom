@@ -65,7 +65,9 @@
         "examples/advanced.mjs",
         "examples/verify.mjs",
         "examples/validation.mjs",
-        "examples/validation.test.mjs"
+        "examples/validation.test.mjs",
+        "examples/archive-policy.mjs",
+        "examples/archive-policy.test.mjs"
       ],
       "capabilities": [
         "node-process",
@@ -88,7 +90,9 @@
         "examples/advanced.mjs",
         "examples/verify.mjs",
         "examples/validation.mjs",
-        "examples/validation.test.mjs"
+        "examples/validation.test.mjs",
+        "examples/archive-policy.mjs",
+        "examples/archive-policy.test.mjs"
       ],
       "capabilities": [
         "node-process",
@@ -111,7 +115,9 @@
         "examples/advanced.mjs",
         "examples/verify.mjs",
         "examples/validation.mjs",
-        "examples/validation.test.mjs"
+        "examples/validation.test.mjs",
+        "examples/archive-policy.mjs",
+        "examples/archive-policy.test.mjs"
       ],
       "capabilities": [
         "node-process",
