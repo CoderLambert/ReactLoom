@@ -3,7 +3,7 @@
 ## 恢复与分支
 
 - Issue #6、主 Epic #4，目标集成分支 feat/library-lab。前一批 PR #10 **已合入**，本批从最新集成提交 df4674d501bac029f8529ff940ba9b8c8707347c 新建 feat/library-lab-cd-wave2，避免在旧已合并分支继续开发。
-- runCount：4 / 24；仅写 entries/C*、entries/D* 及此进度文件。公共 package/lockfile/CI/生成器由 PLATFORM 独占。
+- runCount：13 / 24（下方旧批次各自数字为历史记录）；仅写 entries/C*、entries/D* 及此进度文件。公共 package/lockfile/CI/生成器由 PLATFORM 独占。
 - 本轮 Git commit / PR 见本通道新 PR；用户的主 PR #8 仍为 Draft，不写 main。
 
 ## 本轮新增 4 个完整垂直条目
@@ -351,3 +351,18 @@ C13 Frappe Gantt 1.2.2 上游 `src/index.js` 的 `bind_bar_events` 会向 `docum
 - **改动范围**：合计 16 个条目文件（D13/D15/D18）+ 本进度文件；公共 `src/scripts/tests`、根/本包依赖及锁文件、CI/目录索引、main、PR #3、旧模板、公开部署均未修改。已接入的 **CD 源码/双指南/三层 Demo 保持 43/43**，本轮新增实际 SDK PASS 为 0，不等于 43 个 SDK 运行验收完成。
 - **dependencyRequests**：**本轮无新增包**；继续请 PLATFORM 核实并安装现有 `@reduxjs/toolkit@2.13.0`（MIT）、`react-redux@9.3.0`（MIT）、`dexie@4.4.7`（Apache-2.0）、`fake-indexeddb@6.2.6`（dev，MIT）、`comlink@4.4.2`（Apache-2.0），检查真实 API/peer/锁文件，不由 CD 手改 package/lock。
 - **下一队列**：PLATFORM 集成 PR #48 后优先执行 D13/D15/D18 真实 SDK 定向测试、typecheck/build、浏览器 A→B→A、IME、删除重试、Worker crash/取消。CD 有执行环境后针对真实失败精修；仍被阻塞时可独立复核 D17 Yjs 断线收敛/快照、D16 Workbox 离线缓存所有权，保留尚未完成的浏览器/隔离运行门槛。不会重复重新创建 43 项。
+
+
+---
+
+## 第十三轮（2026-10-27）— 离线缓存、静态索引、CRDT 数据边界加固
+
+- **runCount：13/24**；从最新集成 `feat/library-lab@0b98b4ef4accd16ab3d7278d8181568c77dc6476` 新建 `feat/library-lab-cd-wave13`。上批 #48 已合并；本批复用独立分支并创建 [Draft PR #51](https://github.com/CoderLambert/ReactLoom/pull/51)，base 仍为 `feat/library-lab`，绝不合 main。
+- **D16 Workbox**：原 runtimeCaching 只检查 URL，因此 Cookie 认证的同源默认请求可能命中所谓“公开缓存”。改用可被 Workbox `generateSW` 序列化的自包含 `RouteMatchCallback`：强制 `GET`、精确 `https://lab.example.test/__library_lab_workbox__/api/public/rss`、`request.credentials === 'omit'`，拒绝 Authorization/Cookie/Proxy-Authorization 头；默认 same-origin/include 凭据请求不缓存。配置真正引用 `examples/cache-policy.mjs`，新增 SDK 断言和 Node 纯策略测试。此检查不保证服务器输出确实公开，必须继续独立 origin 的实际 SW 浏览器验收。
+- **D21 Pagefind**：新增 `examples/publication-policy.mjs`，真实 Node workshop 的 HTML 页面和自定义 RSS 记录在交给 Pagefind 前必须显式标记 `visibility: 'public'`、使用允许的站内路径、具有标题和正文；`documentHTML` 的文本转义防止把未来 CMS/RSS 内容拼成可执行 HTML。新增公开白名单/路径拒绝/HTML 转义测试。仅有内容标志不等于可信 ACL，构建前仍要从可信发布状态审核。
+- **D17 Yjs**：实际 `Y.Doc` 同步函数使用 tenant/document/format/64 KiB 上限的二进制 envelope，先取双向 state vector 增量、后逆序应用，进阶按钮重复投递同一 update 以展示 V1 的幂等收敛；组件捕获异常显示拒绝原因。另加 `.d.mts` 类型、纯 policy 测试及对真实 `Y.applyUpdate` 乱序/重放/跨文档拒绝的 SDK 测试源码。envelope 是本地教学约束，**不能替代服务器验证租户/文档权限**。
+- **实际提交**：`a4cdd70cda3918a7d6651f9df2ca9e2026379165`（D16/D21）、`d41f0225861492f6df467bb5a4ab9bd906c985bc`（D17）。GitHub compare `0b98b4e...feat/library-lab-cd-wave13` 确认进度提交之前 **21/21 修改路径全属于 CD 条目授权目录**；D16/D17/D21 各三个 demo 的 sourceFiles 与入口 **9/9 在 Git tree 中存在**。新增测试是原有 SDK 套件外独立策略，不用纯逻辑冒充 SDK PASS。
+- **真实执行**：Node `v22.16.0`；从工作容器复制纯逻辑文件及对应测试到同样目录结构，六份文件分别用 Git blob `git hash-object` 对照 GitHub 最新内容完全一致（D16 源 `15ea37e1`/测 `ddef3499`；D21 源 `760aca1e`/测 `c541e5a8`；D17 源 `4918c94b`/测 `e4dcdf44`）。实际运行：`node --test packages/library-lab/entries/{D16-workbox/tests/cache-policy.test.mjs,D21-pagefind/tests/publication-policy.test.mjs,D17-yjs/tests/update-transport.test.mjs}`，**9 PASS / 0 FAIL**。仅验证无 SDK 的安全决策逻辑，并非目标 SDK、浏览器或者完整 app 的执行证据。
+- **未运行/阻塞**：本地缺 `workbox-build`、`pagefind`、`yjs` 等安装，单次 `getent hosts registry.npmjs.org` 检查显示 DNS 不可用；不重复网络安装尝试。D16 SW 真实生成与 Fetch/cache、D21 native indexer 和浏览器搜索、D17 `Y.applyUpdate` 真正运行、完整 TypeScript/Vite build、Chromium **NOT_RUN**；所有条目 `verification.json` 的 SDK/build/browser 状态保留 NOT_RUN，不伪造 fingerprint/PASS。平台 lockfile 和运行环境仍为外部集成条件。
+- **dependencyRequests：本轮无新增**。已有 `workbox-build@7.4.1`（MIT）、`pagefind@1.5.2`（MIT）、`yjs@13.6.33`（MIT）目标版本在 PLATFORM 清单中；需其安装真实 npm 包、锁文件并核对 API/许可。没有编辑依赖、锁文件、公共 src/scripts/CI、生成索引或旧模板。
+- **累计**：CD 源码/指南/Agent/三个层级仍覆盖 **43/43**，本轮新增 SDK PASS 为 **0**。PLATFORM 审核 PR #51 并集成后再执行真实 SDK 与 Browser 门禁。下批优先修真实 SDK 运行错误与 Workbox/静态索引隔离；环境继续阻塞时，CD 独立审计 C15/C16 日期时区边界或 D17 断线后同步收敛（不重复构建已经完成的条目）。
