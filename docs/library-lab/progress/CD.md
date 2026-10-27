@@ -380,3 +380,10 @@ C13 Frappe Gantt 1.2.2 上游 `src/index.js` 的 `bind_bar_events` 会向 `docum
 - **NOT_RUN/BLOCKED**：三库实际官方 SDK Node 测试、TypeScript full typecheck、Vite build、Chromium 编辑、光标/IME、队列取消实测仍未运行；当前环境缺依赖和 pnpm，历史 registry DNS/Runner 不可用。未复用历史假 PASS； verification.json 原 sdk/build/browser 均保持 NOT_RUN。按 PLATFORM 要求最终以 sourceFingerprint + 命令 + 持久日志绑定验收。
 - **dependencyRequests：本轮无新增包**。沿用 AG Grid Community `ag-grid-community@36.2.0`/`ag-grid-react@36.2.0`（MIT）、`p-queue@10.0.0`（MIT）、`imask@7.6.1`/`react-imask@7.6.1`（MIT）；需要 PLATFORM 统一确认实际安装版本/API、React 19 peers 与根锁文件。
 - **CD 43/43** 条目继续具备源码+指南+Agent+三层示例；这只是源文件覆盖，不能当 43 个 SDK/build/browser PASS。下一队列：PLATFORM 集成并在可用 Runner 上运行 C08/D04/C06 SDK+typecheck/build/浏览器；聚焦 C08 编辑并发 409 和快慢刷新、D04 cancel while paused、C06 闰年/DST/IME，不重造现有条目。如 SDK 出现确定兼容错误再精修。
+
+### 第十四轮 GitHub 交付定位与本次检查的精确范围
+
+- Draft PR [#54](https://github.com/CoderLambert/ReactLoom/pull/54)，base=`feat/library-lab`，首个完整变更提交 `b5afcdc0f6b591a4db58ed1752da36fcea83e29e`，等待 PLATFORM 审核集成；仅由 PLATFORM 合并，不合 main。
+- GitHub compare 基于 `66479e8a2d3e27d65c3c581093822cb4baf6c00d`：**19/19 变更路径均在 CD 所有权**。C08/C06 各有 3 层复用同一组件的 sourceFiles，并包含新加入的真实 helper 与类型声明；D04 仍使用已有三层真实 PQueue 组件。
+- 将提交后的源文件重建于隔离目录，`git hash-object` 分别与远端 Git blob SHA 一致：C08 `edit-policy.mjs=58b333e75692df5deda2d327088ae3307e6a65c6`、`edit-policy.test.mjs=8cea41aae44f3524f46f698d31966b557d5a2632`；C06 `calendar-policy.mjs=0e545a10368c7ec19392a263790d7215cf0dad53`、`calendar-policy.test.mjs=38591a7dd4d954dd0e6575474b5ed10f23f0faeb`。
+- `node --check` 对上述 **4 个精确文件**无语法错误；`node --test` 对两个策略测试文件 **7 PASS / 0 FAIL**。这些不导入官方 SDK；D04 增加的 p-queue SDK 测试，以及 TS/构建/浏览器仍为 `NOT_RUN`。未更改 verification.json 的结果为假 PASS。
