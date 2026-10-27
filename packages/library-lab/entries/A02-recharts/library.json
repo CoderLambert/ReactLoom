@@ -67,6 +67,7 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/chart-policy.ts",
         "examples/demo.tsx"
       ],
       "capabilities": [
@@ -83,6 +84,7 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/chart-policy.ts",
         "examples/demo.tsx"
       ],
       "capabilities": [
@@ -99,6 +101,7 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/chart-policy.ts",
         "examples/demo.tsx"
       ],
       "capabilities": [

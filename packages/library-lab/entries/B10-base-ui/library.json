@@ -60,6 +60,7 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/permission-policy.ts",
         "examples/checkbox.css",
         "examples/demo.tsx"
       ],
@@ -77,6 +78,7 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/permission-policy.ts",
         "examples/checkbox.css",
         "examples/demo.tsx"
       ],
@@ -94,6 +96,7 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/permission-policy.ts",
         "examples/checkbox.css",
         "examples/demo.tsx"
       ],

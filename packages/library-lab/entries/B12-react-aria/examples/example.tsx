@@ -4,9 +4,9 @@ import {
   Popover, Text,
 } from 'react-aria-components';
 import './combobox.css';
+import {confirmedChannel, filterChannels, queryRows, type Channel} from './channel-policy';
 
 type Level = 'basic' | 'business' | 'advanced';
-type Channel = {id: string; name: string; category: string; disabled?: boolean};
 const CHANNELS: Channel[] = [
   {id: 'react', name: 'React 组件工程', category: '技术'},
   {id: 'backend', name: '后端架构实践', category: '技术'},
@@ -22,18 +22,21 @@ export default function ReactAriaExample({level}: {level: Level}) {
   const [inputValue, setInputValue] = useState('');
   const [resolved, setResolved] = useState<Channel[]>(CHANNELS);
   const [busy, setBusy] = useState(false);
+  const [resolvedQuery, setResolvedQuery] = useState('');
+  const composing = useRef(false);
   const [message, setMessage] = useState('尚未选择频道');
   const generation = useRef(0);
   const stableItems = useMemo(
     () => level === 'basic' ? CHANNELS.slice(0, 4) : CHANNELS,
     [level],
   );
-  const items = level === 'advanced' ? resolved : stableItems;
+  const items = level === 'advanced' ? queryRows(resolved, inputValue, resolvedQuery, busy) : filterChannels(stableItems, inputValue);
 
   // This delayed search is explicitly a LOCAL fixture, not an API integration.
   useEffect(() => {
     if (level !== 'advanced') {
       setResolved(CHANNELS);
+      setResolvedQuery('');
       setBusy(false);
       return;
     }
@@ -42,9 +45,8 @@ export default function ReactAriaExample({level}: {level: Level}) {
     setBusy(true);
     const timer = setTimeout(() => {
       if (controller.signal.aborted || generation.current !== id) return;
-      const query = inputValue.trim().toLocaleLowerCase('zh-CN');
-      setResolved(CHANNELS.filter(item =>
-        (item.name + ' ' + item.category).toLocaleLowerCase('zh-CN').includes(query)));
+      setResolved(filterChannels(CHANNELS, inputValue));
+      setResolvedQuery(inputValue);
       setBusy(false);
     }, 240);
     return () => {
@@ -62,8 +64,12 @@ export default function ReactAriaExample({level}: {level: Level}) {
 
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (composing.current) return;
+    const selected = confirmedChannel(CHANNELS, selectedKey, inputValue);
     const value = new FormData(event.currentTarget).get('channel');
-    setMessage(value ? '真实表单选中频道 ID：' + String(value) : '请先选择一个频道');
+    setMessage(selected && value === selected.id
+      ? '真实表单选中频道 ID：' + selected.id
+      : '请先从候选项确认一个有效频道');
   }
 
   return <section aria-label="React Aria Components 可访问组合框实战" className="rl-aria-lab">
@@ -76,17 +82,24 @@ export default function ReactAriaExample({level}: {level: Level}) {
         selectedKey={selectedKey}
         onSelectionChange={key => {
           const value = key === null ? null : String(key);
-          setSelectedKey(value);
-          setMessage(value ? '已选择：' + (CHANNELS.find(x => x.id === value)?.name ?? value) : '选择已清空');
+          const selected = CHANNELS.find(item => item.id === value && !item.disabled);
+          setSelectedKey(selected?.id ?? null);
+          setInputValue(selected?.name ?? '');
+          setMessage(selected ? '已选择：' + selected.name : '选择已清空');
         }}
         inputValue={inputValue}
-        onInputChange={setInputValue}
-        defaultFilter={(textValue, query) => textValue.toLocaleLowerCase('zh-CN').includes(query.toLocaleLowerCase('zh-CN'))}
+        onInputChange={value => {
+          setInputValue(value);
+          setSelectedKey(old => confirmedChannel(CHANNELS, old, value)?.id ?? null);
+        }}
+        defaultFilter={() => true}
         menuTrigger={level === 'advanced' ? 'focus' : 'input'}
       >
         <Label>选择 RSS 频道</Label>
         <div className="rl-aria-group">
-          <Input placeholder="输入 React、开源、资讯…" aria-describedby="react-aria-lab-hint"/>
+          <Input placeholder="输入 React、开源、资讯…" aria-describedby="react-aria-lab-hint"
+            onCompositionStart={() => {composing.current = true;}}
+            onCompositionEnd={() => {composing.current = false;}}/>
           <Button aria-label="显示可选频道">▾</Button>
         </div>
         <Text slot="description" id="react-aria-lab-hint">
@@ -103,7 +116,7 @@ export default function ReactAriaExample({level}: {level: Level}) {
           </ListBox>
         </Popover>
       </ComboBox>
-      {level === 'advanced' && <p role="status" className="rl-aria-status">{busy ? '正在查询本地数据…' : '查询完成'} · {resolved.length} 条候选</p>}
+      {level === 'advanced' && <p role="status" className="rl-aria-status">{busy || resolvedQuery !== inputValue ? '正在查询本地数据…' : '查询完成'} · {items.length} 条候选</p>}
       <div className="rl-aria-actions">
         <button type="submit" className="rl-aria-submit">提交真实表单</button>
         <button type="button" onClick={() => {setSelectedKey(null);setInputValue('');setMessage('已清空');}}>清空选择</button>

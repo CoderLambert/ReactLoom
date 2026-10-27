@@ -61,6 +61,7 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/feed-policy.ts",
         "examples/dropdown.css",
         "examples/demo.tsx"
       ],
@@ -79,6 +80,7 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/feed-policy.ts",
         "examples/dropdown.css",
         "examples/demo.tsx"
       ],
@@ -97,6 +99,7 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/feed-policy.ts",
         "examples/dropdown.css",
         "examples/demo.tsx"
       ],

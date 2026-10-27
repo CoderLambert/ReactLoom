@@ -1,9 +1,9 @@
-import {useMemo, useState, type FormEvent} from 'react';
+import {useState, type FormEvent} from 'react';
+import {changeAllPermissions, changePermission as updatePermission, normalizePermissions, permissionSummary, type Permission} from './permission-policy';
 import {Checkbox} from '@base-ui/react/checkbox';
 import './checkbox.css';
 
 type Level = 'basic' | 'business' | 'advanced';
-type Permission = 'read' | 'comment' | 'manage';
 const OPTIONS: {id: Permission; label: string; description: string}[] = [
   {id: 'read', label: '阅读文章', description: '允许查看已订阅内容'},
   {id: 'comment', label: '参与评论', description: '允许在工作区发表评论'},
@@ -14,16 +14,14 @@ export default function BaseUiExample({level}: {level: Level}) {
   const [enabled, setEnabled] = useState<Permission[]>(['read']);
   const [lockManage, setLockManage] = useState(false);
   const [submit, setSubmit] = useState('尚未提交表单');
-  const partial = enabled.length > 0 && enabled.length < OPTIONS.length;
-  const all = enabled.length === OPTIONS.length;
-  const total = useMemo(() => enabled.length, [enabled]);
-
+  const manageLocked = level === 'advanced' && lockManage;
+  const selection = permissionSummary(enabled, manageLocked);
   function changePermission(id: Permission, checked: boolean) {
-    setEnabled(previous => checked ? [...previous.filter(x => x !== id), id] : previous.filter(x => x !== id));
+    setEnabled(previous => updatePermission(previous, id, checked, manageLocked));
     setSubmit('权限已修改，尚未提交');
   }
   function changeAll(checked: boolean) {
-    setEnabled(checked ? OPTIONS.filter(p => !(lockManage && p.id === 'manage')).map(p => p.id) : []);
+    setEnabled(changeAllPermissions(checked, manageLocked));
     setSubmit('批量选择已更新');
   }
   function submitForm(event: FormEvent<HTMLFormElement>) {
@@ -45,25 +43,25 @@ export default function BaseUiExample({level}: {level: Level}) {
       {level === 'advanced' && <label className="rl-base-row">
         <input type="checkbox" checked={lockManage} onChange={e => {
           setLockManage(e.target.checked);
-          if (e.target.checked) setEnabled(old => old.filter(value => value !== 'manage'));
+          if (e.target.checked) setEnabled(old => normalizePermissions(old, true));
         }}/>
         锁定“管理订阅”权限（模拟服务端权限限制）
       </label>}
       <label className="rl-base-row rl-base-parent">
-        <Checkbox.Root checked={all} indeterminate={partial} className="rl-base-checkbox"
+        <Checkbox.Root checked={selection.checked} indeterminate={selection.indeterminate} className="rl-base-checkbox"
           onCheckedChange={changeAll}>
           <Checkbox.Indicator className="rl-base-indicator">
-            {partial ? '−' : '✓'}
+            {selection.indeterminate ? '−' : '✓'}
           </Checkbox.Indicator>
         </Checkbox.Root>
         <span>全选 / 取消全选</span>
-        <strong>{total} / {OPTIONS.length}</strong>
+        <strong>{selection.selectedCount} / {selection.eligibleCount} 可选</strong>
       </label>
       <div className="rl-base-list">{OPTIONS.map(option =>
         <label className="rl-base-row" key={option.id}>
           <Checkbox.Root className="rl-base-checkbox" name="permissions" value={option.id}
             checked={enabled.includes(option.id)}
-            disabled={lockManage && option.id === 'manage'}
+            disabled={manageLocked && option.id === 'manage'}
             onCheckedChange={checked => changePermission(option.id, checked)}>
             <Checkbox.Indicator className="rl-base-indicator">✓</Checkbox.Indicator>
           </Checkbox.Root>
