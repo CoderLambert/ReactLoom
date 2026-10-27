@@ -1,7 +1,7 @@
 # EF 通道持续开发进度
 
-- 通道：EF，Issue #7；当前 wave21 分支 `feat/library-lab-ef-wave21-msw-pdf-ownership`，Draft PR #73；PR base 固定 `feat/library-lab`。
-- runCount：21 / 24。
+- 通道：EF，Issue #7；当前 wave23 分支 `feat/library-lab-ef-wave23-spreadsheet-pdf-bounds`，Draft PR #79；PR base 固定 `feat/library-lab`。
+- runCount：23 / 24。
 - 基线：`38ed2d247bd82e4f1422b0e8904973e16bca2972`。
 - 本轮日期：2026-10-27（北京时间）。
 - 状态：**37/37个条目已有三层真实示例源码及指南，但目标SDK、完整构建和浏览器验收不因源码覆盖而自动PASS。**
@@ -644,3 +644,39 @@ node --test /mnt/data/ef22/{E12,E16,E19}/examples/*.test.mjs
 ```
 
 真实运行的E19 input-policy模块与测试Git Blob SHA分别为 `20ffef047654676829b91be0d0b56c1737cb74a0` 和 `d605db5d49205d174f00ba807e7a9dccc129e9cf`，已本地`git hash-object`核对。保留先失败后修复的记录，不把纯Node合成WAV检查升级为FFmpeg SDK、媒体解码、Chromium或生产build PASS。此变更是EF第22轮同一Draft PR #76内的额外真实代码提交。
+
+## 第23轮：Excel精度、SheetJS双头ZIP、pdf-lib页面/输出预算（2026-10-27）
+
+- **基线**：从最新集成 `feat/library-lab@132da5d9a50a149022b908215044828624c2ed5c` 创建独立 `feat/library-lab-ef-wave23-spreadsheet-pdf-bounds`，而非更新早已合入、仍指向首轮的 `feat/library-lab-ef` 旧分支。只修改E/F条目与本进度，PLATFORM仍独占根源码、依赖、锁文件、CI、runner和索引；PR base保持集成分支。
+- **F04 ExcelJS**：修复原先只用JS安全整数核验SUM缓存的精度漏洞。对reads/stars各列总数增加 `MAX_EXCEL_INTEGER=999_999_999_999_999`（Excel最多15有效数字），额外拒绝单行及累计超限，不变更真实 `ExcelJS.Workbook`、公式和CLI路径；原 `verify.mjs` 依然必须真实安装SDK才能执行。
+- **F05 SheetJS CE（recreated）**：新增 `zip-entry-policy.mjs`，实际在 `preflightXlsx` 调用，检查本地/中央头 flags/CRC/压缩尺寸/原始尺寸/方法/文件名一致性、保守拒绝 data descriptor；ZIP重叠检测包含local header。新增独立单测和真实入口级恶意头回归，不替代 `XLSX.read` 的可中止隔离/内存限制，也不声称合法通用ZIP兼容。
+- **F09 pdf-lib**：新增 `document-policy.mjs`、`.d.mts`、纯策略测试，并在 `document.ts` 的真实 `PDFDocument.load` 后调用页面数/尺寸规则（1–20页；36–2000pt），三种 `save()` 输出在生成Blob URL前拒绝超过4MiB；输入仍不超过2MiB。**PDF解析前内存/CPU仍无硬预算**，不能把这个后验策略误称为恶意PDF沙箱。
+- 上述更新已在相应 `library.json.sourceFiles`、中文guide/agent与verification非PASS说明中同步；未改条目身份、场景数量或新增SDK版本。SheetJS历史原件缺失状态仍是 `recreated`。
+
+### 实际独立测试与证据
+
+本容器 Node v22.16.0，执行以下**纯Node策略**源文件（没有导入ExcelJS/SheetJS/pdf-lib目标SDK）：
+
+```bash
+node --test /mnt/data/ef23/F04/examples/row-policy.test.mjs \
+  /mnt/data/ef23/F05/examples/archive-policy.test.mjs \
+  /mnt/data/ef23/F05/examples/zip-entry-policy.test.mjs \
+  /mnt/data/ef23/F09/examples/document-policy.test.mjs
+```
+
+**20 PASS / 0 FAIL**：F04 5，F05 archive入口6 + 独立local-header helper5，F09后验页面和字节4。运行了新源逻辑与原相对依赖结构；其中F05两份helper/test和F09两份helper/test的本地Git Blob SHA分别为 `99c61253df318b22d14c0ba8f297e3cfb0ab88c2` / `93f84293fbbdc1aef3238bb49ea5fee266a9654c` / `962f287453853a1ddeaae4dd835f04c3beeeef6f` / `7c182a102197375d8bb33a358a726c02db79e017`，与GitHub创建的Blob完全一致。F05 archive源及测试也与恢复执行本地文件 SHA 相同（`f1b4f58f1a0d01bf8a25cf7538bb3c85ea0c9afc`、`093cc9c4d84af2e6a50493ba73820f865fea2743`）；F04核心策略采用对GitHub源的定点替换，后续最终检验以远端文件为准。
+
+**真实目标SDK/CLI、TypeScript/Vite构建、Chromium/Worker/CSP：NOT_RUN/BLOCKED**。上述Node结构校验、policy输入假对象及GitHub提交不构成ExcelJS/SheetJS/pdf-lib SDK PASS。 `verification.json` 保持SDK NOT_RUN、build BLOCKED、browser NOT_RUN。
+
+### dependencyRequests及剩余收口
+
+- 本轮**没有新增包/许可素材**。既有 `exceljs@4.4.0` (MIT)、`xlsx@0.20.3` (SheetJS CE官方固定tarball，Apache-2.0，禁止误用陈旧npm包)、`pdf-lib@1.17.1` (MIT) 仍需PLATFORM确认真实lock/peer/API；无真实SDK或CI构建结论。
+- 官方核实：微软Excel15位精度 https://support.microsoft.com/en-us/excel/change-formula-recalculation-iteration-or-precision-in-excel ；SheetJS官方CE发行 https://cdn.sheetjs.com/ 、https://docs.sheetjs.com/docs/getting-started/installation/frameworks/ ；pdf-lib API https://pdf-lib.js.org/docs/api/classes/pdfdocument 、https://pdf-lib.js.org/docs/api/classes/pdfpage 。
+- **下一队列（第24轮上限）**：检查PLATFORM最新合并与生产构建证据，优先修复有实测反馈的E05 Monaco Worker、F11 MSW scope/CSP、F05真实CE CLI以及F09 SDK类型；真实SDK/Chromium执行条件仍无则只能诚实列剩余缺口，不得升级PASS。已覆盖的37/37仍仅是源码/文档/三层声明，不是生产已通过。
+- 首批源码提交 `6d8b6a7ec4152a71d4f5a78d8266eacd201e3b4a`，后续进度/manifest提交及PR以实际GitHub head为准。**runCount=23/24**。
+
+### 第23轮远端审计索引
+
+- Draft [PR #79](https://github.com/CoderLambert/ReactLoom/pull/79)，base `feat/library-lab`，head `feat/library-lab-ef-wave23-spreadsheet-pdf-bounds`，初始源码提交 `6d8b6a7ec4152a71d4f5a78d8266eacd201e3b4a`，清单/指南/进度提交 `fa5f6619d6850a709cc021dcc12a6754d5ae141e`。
+- GitHub Compare 基线 `132da5d9...` 至 `fa5f6619...`：2 commits、22个变更文件，全部为EF条目或此进度文件，0越权路径；最终进度索引提交不扩大授权写入范围。
+- 实际执行离线Node纯策略20 PASS、0 FAIL；F05历史材料仍为recreated，三库真实SDK/TypeScript/Vite/Chromium继续NOT_RUN/BLOCKED。PLATFORM应审核并合并到集成分支；**本通道没有合并main或公开部署**。

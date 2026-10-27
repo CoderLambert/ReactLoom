@@ -1,4 +1,6 @@
 /** Pure input policy for the ExcelJS sample. Actual workbook IO stays in core.mjs. */
+/** Excel has only 15 significant decimal digits, even though JS safe integers can be larger. */
+export const MAX_EXCEL_INTEGER = 999_999_999_999_999;
 export function safeSpreadsheetText(value) {
   if (typeof value !== 'string') throw new Error('spreadsheet text must be a string');
   const valueText = value.trim();
@@ -29,7 +31,7 @@ export function checkRows(rows) {
         throw new Error('invalid ' + field);
       }
       totals[field] += row[field];
-      if (!Number.isSafeInteger(totals[field])) {
+      if (!Number.isSafeInteger(totals[field]) || totals[field] > MAX_EXCEL_INTEGER) {
         throw new Error('unsafe aggregate ' + field);
       }
     }

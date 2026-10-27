@@ -32,3 +32,10 @@ F07 react-pdf进行所生成PDF的可选择文本预览；F08适合用React布�
 ## PDF并发与下载URL事务（第12轮）
 
 `operation-gate.mjs`提供同步single-flight：React`busy`在同一事件批次不会同步生效，不能用它阻止连续点击产生并行pdf-lib解析。任务完成`finish(token)`，切换level或卸载调用invalidate，使旧Promise及旧finally不修改新界面。下载URL由Set跟踪，新旧下载链接在React提交后使用Effect cleanup释放，卸载时回收尚未commit的URL。2MiB限制是输入快速预筛，**pdf-lib解析非可取消进程、不是不可信PDF解压沙箱**。离线测试仅覆盖gate而非SDK。
+
+
+## 第23轮：真实PDF页面预算与下载边界
+
+`document.ts` 已调用 `document-policy.mjs`：从 `PDFDocument.load` 获得页面后检查页数1–20页，每页 `getSize()` 宽高均为36–2000pt，之后才绘制标注。三个场景的 `save()` 输出都受4MiB预算约束，只有成功时才创建下载Blob URL；输入依然最多2MiB。官方API：https://pdf-lib.js.org/docs/api/classes/pdfdocument 与 https://pdf-lib.js.org/docs/api/classes/pdfpage 。
+
+**不能误用为安全沙箱**：页面预算在解析后运行，无法限制pdf-lib加载恶意压缩对象时的峰值内存和CPU。Node结构策略测试仅验证预算规则，不证明pdf-lib导入/合并/浏览器下载成功。

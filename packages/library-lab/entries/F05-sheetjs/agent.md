@@ -13,3 +13,6 @@
 **输入与公式验证**：先读 `examples/validation.mjs`（严格三列对象、整数范围、文本/重复检查）；读 `examples/core.mjs` 的 `XLSX.read(sheetRows)`、表头、范围与公式单元格拒绝。不可用 `sheet_to_json` 后直接忽略额外列或对缺失属性 `String(undefined)`。通过 `node --test examples/validation.test.mjs` 只能验证纯业务边界；必须另外执行真实 SheetJS `examples/verify.mjs` 并测试恶意 XLSX，再判断目标SDK是否通过。压缩ZIP尺寸限制不等于解压内存限制。
 
 **解压预检**：读取 examples/archive-policy.mjs，在 XLSX.read(bytes) 前调用 preflightXlsx(bytes)，同时读 archive-policy.test.mjs；对ZIP64、多磁盘、宏和高压缩比作保守拒绝。只能减少明显恶意ZIP的输入面，不能证明ZIP库/解压器内存安全，真实生产必须在可杀死的隔离Worker/进程里解析。纯Node测试不等于SheetJS SDK PASS。
+
+
+EF wave23迁移：`archive-policy.mjs` 与新增的 `zip-entry-policy.mjs` 必须一并复制，严格核对本地/中央ZIP头（大小、CRC、flags、方法、路径），且本实验明确拒绝ZIP data descriptor。preflight不能拦截实际inflate超过伪造声明的数据，也不是沙箱。SDK与真实CLI仍NOT_RUN。

@@ -65,3 +65,15 @@ test('rejects declared inflation bombs before invoking XLSX.read', () => {
   ]);
   assert.throws(() => preflightXlsx(bytes), /解压预算/);
 });
+test('rejects mismatched local flags and declared sizes before XLSX.read', () => {
+  for (const [position, size, writeMethod] of [[6, 1, 'writeUInt16LE'], [18, 999, 'writeUInt32LE'], [22, 999, 'writeUInt32LE']]) {
+    const altered = normal();
+    altered[writeMethod](size, position);
+    assert.throws(() => preflightXlsx(altered), /ZIP/);
+  }
+});
+test('rejects local data descriptors even if central and local bits agree', () => {
+  assert.throws(() => preflightXlsx(archive([
+    {name:'[Content_Types].xml'}, {name:'xl/workbook.xml',flags:0x8},
+  ])), /数据描述符/);
+});

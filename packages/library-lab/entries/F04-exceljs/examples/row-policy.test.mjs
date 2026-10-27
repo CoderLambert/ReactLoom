@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {checkRows,safeSpreadsheetText} from './row-policy.mjs';
+import {checkRows,safeSpreadsheetText,MAX_EXCEL_INTEGER} from './row-policy.mjs';
 const row={id:'r01',source:'React Updates',reads:52,stars:5};
 test('validates bounded rows and calculates safe totals',()=>{
  assert.deepEqual(checkRows([row,{...row,id:'r02',reads:8,stars:1}]),{reads:60,stars:6});
@@ -19,4 +19,9 @@ test('protects formula-leading text even with whitespace before it',()=>{
  assert.equal(safeSpreadsheetText(' =HYPERLINK("https://example.org") '),"'=HYPERLINK(\"https://example.org\")");
  assert.equal(safeSpreadsheetText(' @SUM(A1:A9)'),"'@SUM(A1:A9)");
  assert.throws(()=>safeSpreadsheetText(' '),/invalid/);
+});
+test('rejects values or SUM caches exceeding Excel 15-digit precision',()=>{
+ assert.deepEqual(checkRows([{...row,reads:MAX_EXCEL_INTEGER,stars:0}]),{reads:MAX_EXCEL_INTEGER,stars:0});
+ assert.throws(()=>checkRows([{...row,reads:MAX_EXCEL_INTEGER+1}]),/unsafe aggregate reads/);
+ assert.throws(()=>checkRows([{...row,reads:MAX_EXCEL_INTEGER},{...row,id:'r02',reads:1}]),/unsafe aggregate reads/);
 });

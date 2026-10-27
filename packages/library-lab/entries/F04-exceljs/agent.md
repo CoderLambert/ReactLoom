@@ -20,3 +20,6 @@
 ## EF wave11 迁移约束
 
 保留 `row-policy.mjs` 的严格文本/字段/总量检查，调用 `generateWorkbook` 前不能靠 `String(undefined)` 自动转成业务名称；ID 去重要求 trim+casefold，合计不能超过MAX_SAFE_INTEGER。应用展示与CLI共用该检查，不许为让示例通过而删除校验。`row-policy.test.mjs` 的无依赖测试PASS不等于ExcelJS SDK PASS。
+
+
+EF wave23迁移注意：必须复制 `row-policy.mjs` 中的 `MAX_EXCEL_INTEGER`；勿把JS `Number.MAX_SAFE_INTEGER` 当作Excel无损上限。超出15位的大整数应转文本并单独设计合计策略；离线policy通过不代表ExcelJS/Excel公式真实验收。
