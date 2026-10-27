@@ -1,7 +1,8 @@
 import {useEffect, useRef, useState} from 'react';
 import {QueryClient, QueryClientProvider, useIsFetching, useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
+import {optimisticRow, rollbackRow, commitRow} from './optimistic-policy.mjs';
 
-export type Feed = {id:string; title:string; enabled:boolean; rev:number};
+export type Feed = {id:string; title:string; enabled:boolean; rev:number; optimisticToken?:number};
 type Tenant = 'team-a' | 'team-b';
 type Props = {level: 'basic' | 'business' | 'advanced'};
 type ListPage = {items:Feed[]; total:number; page:number};
@@ -32,11 +33,12 @@ export function createFixtureBackend(){
       await pause(140,signal);
       return {total:db[tenant].length,enabled:db[tenant].filter(feed=>feed.enabled).length};
     },
-    async toggle(tenant:Tenant,id:string,enabled:boolean,fail:boolean):Promise<Feed>{
+    async toggle(tenant:Tenant,id:string,enabled:boolean,expectedRev:number,fail:boolean):Promise<Feed>{
       await pause(240);
       if(fail)throw new Error('业务 fixture：模拟 409 版本冲突');
       const index=db[tenant].findIndex(row=>row.id===id);
       if(index<0)throw new Error('来源不存在');
+      if(db[tenant][index].rev!==expectedRev)throw new Error('业务 fixture：409 版本已变化，请刷新');
       const updated={...db[tenant][index],enabled,rev:db[tenant][index].rev+1};
       db[tenant][index]=updated;return {...updated};
     },
@@ -49,6 +51,7 @@ const keys={
   feeds:(tenant:Tenant)=>['library-lab','query-demo',tenant,'feeds'] as const,
   list:(tenant:Tenant,search:string,page:number)=>['library-lab','query-demo',tenant,'feeds',search,page] as const,
   stats:(tenant:Tenant)=>['library-lab','query-demo',tenant,'stats'] as const,
+  mutations:(tenant:Tenant)=>['library-lab','query-demo',tenant,'mutations'] as const,
 };
 
 function QueryWorkspace({level, backend}:{level:Props['level'];backend:Backend}){
@@ -57,6 +60,8 @@ function QueryWorkspace({level, backend}:{level:Props['level'];backend:Backend})
   // Mutation completion belongs to the identity epoch in which it started.
   // A -> B -> A must not resurrect a message from the first A session.
   const tenantEpoch=useRef(0);
+  const mutationSequence=useRef(0);
+  const inFlightRows=useRef(new Set<string>());
   useEffect(()=>()=>{tenantEpoch.current++;},[]);
   const [draft,setDraft]=useState('');
   const [search,setSearch]=useState('');
@@ -70,34 +75,46 @@ function QueryWorkspace({level, backend}:{level:Props['level'];backend:Backend})
     queryKey:keys.list(tenant,search,page),
     queryFn:({signal})=>backend.list(tenant,search,page,signal,delay),
     staleTime:3_000,
-    // Prevent previous tenant records from flashing after switching identity.
-    placeholderData:(old,previous)=>previous?.queryKey?.[2]===tenant?old:undefined,
+    // A previous search/page is not a valid placeholder for the new key.
   });
   const update=useMutation({
+    mutationKey:keys.mutations(tenant),
     scope:{id:'library-lab-toggle-'+tenant},
-    mutationFn:(vars:{id:string;enabled:boolean;fail:boolean})=>backend.toggle(tenant,vars.id,vars.enabled,vars.fail),
+    mutationFn:(vars:{tenant:Tenant;id:string;enabled:boolean;expectedRev:number;fail:boolean})=>
+      backend.toggle(vars.tenant,vars.id,vars.enabled,vars.expectedRev,vars.fail),
     onMutate:async(vars)=>{
       const epoch=tenantEpoch.current;
-      await client.cancelQueries({queryKey:keys.feeds(tenant)});
-      const snapshots=client.getQueriesData<ListPage>({queryKey:keys.feeds(tenant)});
-      client.setQueriesData<ListPage>({queryKey:keys.feeds(tenant)},old=>old?{
-        ...old,items:old.items.map(row=>row.id===vars.id?{...row,enabled:vars.enabled}:row),
-      }:old);
-      return {snapshots,epoch};
+      const token=++mutationSequence.current;
+      await client.cancelQueries({queryKey:keys.feeds(vars.tenant)});
+      // Save only the original affected row, never restore an entire old page.
+      const snapshots=client.getQueriesData<ListPage>({queryKey:keys.feeds(vars.tenant)})
+        .map(([key,page])=>({key,previous:page?.items.find(row=>row.id===vars.id)}));
+      client.setQueriesData<ListPage>({queryKey:keys.feeds(vars.tenant)},old=>
+        optimisticRow(old,{id:vars.id,enabled:vars.enabled,expectedRev:vars.expectedRev,token}));
+      return {snapshots,epoch,token};
     },
-    onError:(error,_vars,context)=>{
-      for(const [key,value] of context?.snapshots??[])client.setQueryData(key,value);
-      if(context?.epoch===tenantEpoch.current)
-        setMessage('更新失败，已回滚：'+error.message);
+    onError:(error,vars,context)=>{
+      if(context)for(const {key,previous} of context.snapshots)
+        client.setQueryData<ListPage>(key,old=>
+          rollbackRow(old,{id:vars.id,token:context.token,previous}));
+      if(context?.epoch===tenantEpoch.current&&vars.tenant===tenant)
+        setMessage('更新失败，已按行回滚：'+error.message);
     },
-    onSuccess:(saved,_vars,context)=>{
-      if(context?.epoch===tenantEpoch.current)
+    onSuccess:(saved,vars,context)=>{
+      if(context)client.setQueriesData<ListPage>({queryKey:keys.feeds(vars.tenant)},old=>
+        commitRow(old,{id:vars.id,token:context.token,saved}));
+      if(context?.epoch===tenantEpoch.current&&vars.tenant===tenant)
         setMessage('更新完成：'+saved.id+' rev '+saved.rev);
     },
-    onSettled:async()=>{await Promise.all([
-      client.invalidateQueries({queryKey:keys.feeds(tenant)}),
-      client.invalidateQueries({queryKey:keys.stats(tenant)}),
-    ]);},
+    onSettled:async(_saved,_error,vars)=>{
+      inFlightRows.current.delete(vars.tenant+':'+vars.id);
+      // Old invalidation must not refetch over a newer pending draft.
+      if(client.isMutating({mutationKey:keys.mutations(vars.tenant)})!==1)return;
+      await Promise.all([
+        client.invalidateQueries({queryKey:keys.feeds(vars.tenant)}),
+        client.invalidateQueries({queryKey:keys.stats(vars.tenant)}),
+      ]);
+    },
   });
   const data=list.data;
   const rows=data?.items??[];
@@ -127,8 +144,13 @@ function QueryWorkspace({level, backend}:{level:Props['level'];backend:Backend})
     </div>}
     {list.isPending?<p>读取列表中…</p>:list.isError?<p role="alert">查询失败：{list.error.message}</p>:<div>
       <ul>{rows.map(row=><li key={row.id} style={{padding:'7px 0'}}>
-        {row.title} · {row.enabled?'已启用':'已暂停'} · rev {row.rev}
-        {level==='advanced'&&<button type="button" disabled={update.isPending} onClick={()=>update.mutate({id:row.id,enabled:!row.enabled,fail:failNext})}>
+        {row.title} · {row.enabled?'已启用':'已暂停'} · rev {row.rev}{row.optimisticToken!==undefined?' · 等待服务端确认':''}
+        {level==='advanced'&&<button type="button" disabled={update.isPending} onClick={()=>{
+          const key=tenant+':'+row.id;
+          if(inFlightRows.current.has(key))return;
+          inFlightRows.current.add(key);
+          update.mutate({tenant,id:row.id,enabled:!row.enabled,expectedRev:row.rev,fail:failNext});
+        }}>
           {row.enabled?'暂停':'启用'}
         </button>}
       </li>)}</ul>
