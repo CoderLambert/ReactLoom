@@ -1,6 +1,7 @@
 import {useEffect,useState} from 'react';
 import type {CatalogEntry,Entry} from './types';
 import {validateCatalogDetail} from './catalog-index.mjs';
+import {readLimitedJsonResponse,JSON_RESPONSE_LIMITS} from './bounded-json.mjs';
 
 type DetailState = {key:string; entry?:Entry; error?:string};
 
@@ -17,11 +18,7 @@ export function useCatalogDetail(summary?:CatalogEntry) {
     const controller=new AbortController();
     setState({key});
     fetch(import.meta.env.BASE_URL+'raw/'+entryId+'/detail.json',{signal:controller.signal})
-      .then(async response=>{
-        if(!response.ok||response.headers.get('content-type')?.includes('text/html'))
-          throw new Error('该库的详情文件缺失，或服务器错误返回了 SPA 页面');
-        return response.json();
-      })
+      .then(response=>readLimitedJsonResponse(response,JSON_RESPONSE_LIMITS.catalogDetail))
       .then((payload:unknown)=>{
         const entry=validateCatalogDetail(payload,summary);
         if(!controller.signal.aborted)setState({key,entry});
