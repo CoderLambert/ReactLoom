@@ -1,0 +1,11 @@
+.ab-rive { min-width: 0; }
+.ab-rive .ab-rive-actions { display: flex; flex-wrap: wrap; gap: .65rem; align-items: center; margin: 1rem 0; }
+.ab-rive .ab-rive-actions label { display: flex; align-items: center; gap: .4rem; font-size: .9rem; }
+.ab-rive .ab-rive-viewport { height: min(48vh, 390px); min-height: 270px; border-radius: 12px; border: 1px solid #ccdad0; background: #f5faf3; overflow: hidden; }
+.ab-rive .ab-rive-canvas { width: 100%; height: 100%; }
+.ab-rive .ab-rive-placeholder { height: 100%; display: grid; place-items: center; color: #4a6559; padding: 22px; text-align: center; }
+.ab-rive .ab-rive-facts { display: flex; gap: 1rem; flex-wrap: wrap; margin: 1rem 0; }
+.ab-rive .ab-rive-facts div { border: 1px solid #d4e0d7; padding: .5rem .9rem; border-radius: 7px; }
+.ab-rive .ab-rive-facts dt { font-size: .75rem; color: #66756e; }
+.ab-rive .ab-rive-facts dd { margin: 0; font-size: .9rem; font-weight: 600; }
+@media(prefers-reduced-motion:reduce) { .ab-rive { scroll-behavior: auto; } }

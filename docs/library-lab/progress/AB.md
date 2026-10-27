@@ -298,3 +298,39 @@ A09 Excalidraw、A10 tldraw、A13 Three.js、A14 React Three Fiber、A17 deck.gl
 3. **B05 Rive React Runtime**：需要可合法再分发的`.riv`运行资产，或用户显式导入本地`.riv`，不能为了凑数用假Canvas，按Worker/OffscreenCanvas/visibility处理。
 
 如有可独立完成的源码与指南，下一轮继续推进这3条，遇商业许可约束继续其他可行工作并保持BLOCKED标识。仅PLATFORM可审核合入`feat/library-lab`。当前累计36/39是**代码/文档接入数**，SDK实测未由本轮新增。
+
+
+---
+## 第7轮（wave7）：A09 Excalidraw / A10 tldraw / B05 Rive
+
+**runCount=7/24，状态：WAVE7_SOURCE_STAGED，待PLATFORM合入和运行时验证。**
+
+本轮读取最新 `feat/library-lab@9340aa9d42cd0318a31eda8e5a1ee840dd2d5108`、公共COORDINATION/AGENTS/types/schema、已合入的AB PR #9/#13/#16/#23/#26及当时开放PR，确认AB前36/39已落地，尚缺A09/A10/B05；不复用已合并分支。从该精确SHA建立新的wave7独立分支，只变更AB条目与本进度文件。
+
+### 新增实际源码（3条，共9项分层场景配置）
+
+|ID|真实SDK import及能力|三层重点|资源/授权策略|
+|---|---|---|---|
+|A09|@excalidraw/excalidraw@0.18.1；Excalidraw、convertToExcalidrawElements、exportToBlob、loadFromBlob|真正嵌入可编辑画布；RSS工作流；限制文件大小/数量/链接的导入、PNG导出、只读和资源清理|原创流程形状；不嵌入未经核验字体素材；资产字体/CDN可能需要自托管|
+|A10|tldraw@5.5.2；Tldraw、Editor、createShapeId、toRichText、getSnapshot|原生无限画布；RSS流程geo形状；上限80形状、readonly、文档快照|**tldraw为自定义许可，生产需合法licenseKey**；仅在本机开发环境或显式合法key时挂载，不伪造许可证，不绕过水印；不使用persistenceKey|
+|B05|@rive-app/react-webgl2@4.37.0；useRive/stateMachine/RiveComponent|真实Rive播放；审核异步状态/可取消；后台与reduce-motion停播、视口退出释放组件|官方文档远程车辆.riv仅引用，不拷贝/再分发资产；WebGL2/WASM及CDN失败保留语义HTML|
+
+每条：library.json/guide.md/agent.md/AGENTS.md/verification.json；`examples/example.tsx` 是唯一运行实现、`demo.tsx` 直接导出该实现，真实完整源码包含导入及实际API；额外本地样式 A09/A10/B05，B05含 asset.ts。三个库各注册basic/business/advanced，共9个选项但不是9个独立SDK bundle。原归档作为研究输入，均标`contentState=recreated`，不继承旧PASS。
+
+### 证据分级（严格）
+
+- 通过 GitHub create_tree 暂存并核对：3份JSON可解析且id/目录固定，9项demo所声明的sourceFiles均在本批确实提交的源码文件里；guide/agent/AGENTS/verification每项齐备。**这是本批静态结构检查**。
+- **未运行** npm/pnpm install、真实SDK runtime、完整 tsc、Vite production build、Chromium E2E；相应verification.json中的SDK/build/browser全部NOT_RUN；Excalidraw资产/Rive素材需环境与授权实测，标明BLOCKED。不能把GitHub树检查、官方资料或历史研究的纯逻辑测试当成实际SDK PASS。
+- 仍由PLATFORM单一owner处理 `packages/library-lab/package.json`、pnpm-lock、CI与公共runner，不因一项许可证问题阻断其他独立条目的源码审查。
+
+### dependencyRequests（PLATFORM唯一Owner，版本待实际pnpm解析）
+
+- `@excalidraw/excalidraw@0.18.1` — MIT SDK，CSS `@excalidraw/excalidraw/index.css`、`excalidrawAPI`、`exportToBlob`/ `loadFromBlob`/ `convertToExcalidrawElements`；官方 https://docs.excalidraw.com/docs/@excalidraw/excalidraw/installation 。需要验证React19、字体资源与CSP。
+- `tldraw@5.5.2` — **自定义许可证，生产使用需合法 key**；官方 https://tldraw.dev/sdk-features/license-key ；确认实际依赖与React19 peer，保留合法水印。无可用授权时只进行本机开发和阅读原文，不部署私有站点。
+- `@rive-app/react-webgl2@4.37.0` — React runtime MIT，WASM/WebGL2；官方 https://rive.app/docs/runtimes/react/react 。`.riv`样例https://cdn.rive.app/animations/vehicles.riv 是远程引用，不包含在仓库，需审查外部资源CSP与授权/离线策略。
+
+### 后续协调
+
+本PR经PLATFORM审核合入之后，**A/B 39/39库拥有独立源码、中文guide、agent.md、目录规则与3层真实示例定义，仍为0项本批运行时PASS**。AB不应在源码接入完成时宣称生产验收；随后优先与PLATFORM合作核实依赖、针对真实tsc/SDK/browser失败修复A09/A10/B05及既有复杂WebGL/绘图条目。独立生产授权、外网.riv与字体审查不可被Mock替代。
+
+当前结果只保留在开发分支，最终对main的Draft PR #8未合并、未公开部署。
