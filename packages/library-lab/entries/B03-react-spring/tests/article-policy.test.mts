@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {MAX_SPRING_ARTICLES,appendUniqueArticle,shouldRestoreAfterRemoval} from '../examples/article-policy.ts';
+import {MAX_SPRING_ARTICLES,appendUniqueArticle,focusDestinationAfterRemoval} from '../examples/article-policy.ts';
 
 test('append preserves unique business identities', () => {
   assert.deepEqual(appendUniqueArticle([{id:'a'}],{id:'b'}),[{id:'a'},{id:'b'}]);
@@ -13,6 +13,7 @@ test('bounded list rejects 13th article without mutating current items', () => {
   assert.equal(original.length,MAX_SPRING_ARTICLES);
 });
 test('removing a button that did not own focus must not steal focus', () => {
-  assert.equal(shouldRestoreAfterRemoval(false),false);
-  assert.equal(shouldRestoreAfterRemoval(true),true);
+  assert.equal(focusDestinationAfterRemoval(false,3),'none');
+  assert.equal(focusDestinationAfterRemoval(true,3),'add');
+  assert.equal(focusDestinationAfterRemoval(true,MAX_SPRING_ARTICLES),'reset');
 });

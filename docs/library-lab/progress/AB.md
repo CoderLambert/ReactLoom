@@ -528,3 +528,7 @@ Draft PR #47（https://github.com/CoderLambert/ReactLoom/pull/47）实际触发�
 PLATFORM应审核此批PR并仅合入 `feat/library-lab`；真实运行环境准备好后验证 A12 缩放拖拽局部坐标、B02 后台/返回前台/用户暂停及StrictMode、B03 减动与删除焦点、B09 隔离异步回写和Slot/Button交互。当前四库纯逻辑规则可复现，不足以宣布应用可运行。
 
 AB下一队列：检查 A03 Chart.js canvas实例重建与高频数据、A14 React Three Fiber的WebGL生命周期、B01 Motion的切场景动画与焦点；优先处理确证缺陷或来自PLATFORM的真实TS/SDK构建日志。不反复执行无Runner的同一CI错误，不将39/39内容覆盖误写成 SDK验收完成。没有新增依赖请求、公开部署或合并main。
+
+### 第12轮补充：满额列表焦点缺陷闭环
+
+静态审查发现：B03列表到达12条后新增按钮被禁用，若仍将移除按钮的焦点转到它会失败。追加`focusDestinationAfterRemoval`三态策略和可用的resetRef；满额删除有焦点行时转至恢复按钮，其余不抢焦点。更新helper、测试、guide、agent及实际组件；Node全批**16 PASS/0 FAIL**、独立TS helper检查PASS（并非SDK/浏览器）。helper/test本地Git blob `7ab0c8e3`/`a0549712`，回读后核对。

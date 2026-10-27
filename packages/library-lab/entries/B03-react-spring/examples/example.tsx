@@ -1,6 +1,6 @@
 import {animated,useSpring,useTransition} from '@react-spring/web';
 import {useEffect,useRef,useState} from 'react';
-import {appendUniqueArticle,MAX_SPRING_ARTICLES,shouldRestoreAfterRemoval} from './article-policy';
+import {appendUniqueArticle,MAX_SPRING_ARTICLES,focusDestinationAfterRemoval} from './article-policy';
 
 type Level='basic'|'business'|'advanced';
 type Article={id:string;title:string};
@@ -26,6 +26,7 @@ export default function SpringExample({level}:{level:Level}){
   const [articles,setArticles]=useState<Article[]>(seed);
   const nextId=useRef(3);
   const addRef=useRef<HTMLButtonElement|null>(null);
+  const resetRef=useRef<HTMLButtonElement|null>(null);
   const style=useSpring({
     opacity:expanded?1:0.45,
     transform:expanded?'translateY(0px)':'translateY(18px)',
@@ -46,9 +47,10 @@ export default function SpringExample({level}:{level:Level}){
     setArticles(old=>appendUniqueArticle(old,{id:'rss-'+id,title:'新增订阅内容 #'+id}));
   }
   function removeArticle(id:string,button:HTMLButtonElement){
-    const ownedFocus=shouldRestoreAfterRemoval(document.activeElement===button);
+    const destination=focusDestinationAfterRemoval(document.activeElement===button,articles.length);
     setArticles(old=>old.filter(item=>item.id!==id));
-    if(ownedFocus)addRef.current?.focus();
+    if(destination==='add')addRef.current?.focus();
+    else if(destination==='reset')resetRef.current?.focus();
   }
   return <section aria-label="React Spring 实际动画实验">
     <h2>{level==='basic'?'弹簧卡片':level==='business'?'阅读列表进出场':'动画偏好与快速操作'}</h2>
@@ -59,7 +61,7 @@ export default function SpringExample({level}:{level:Level}){
     </animated.div>
     {level!=='basic'&&<>
       <h3>动画列表 · stable keys</h3>
-      <div className="demo-controls"><button ref={addRef} type="button" disabled={articles.length>=MAX_SPRING_ARTICLES} onClick={addArticle}>添加一条新闻（上限 {MAX_SPRING_ARTICLES}）</button><button type="button" onClick={()=>setArticles(seed)}>恢复默认数据</button></div>
+      <div className="demo-controls"><button ref={addRef} type="button" disabled={articles.length>=MAX_SPRING_ARTICLES} onClick={addArticle}>添加一条新闻（上限 {MAX_SPRING_ARTICLES}）</button><button ref={resetRef} type="button" onClick={()=>setArticles(seed)}>恢复默认数据</button></div>
       <div style={{display:'grid',gap:9}}>
         {transitions((animatedStyle,item)=><animated.article key={item.id} style={{...animatedStyle,background:'#fff',border:'1px solid #dbe4d9',borderRadius:8,padding:12,display:'flex',gap:12,justifyContent:'space-between',alignItems:'center'}}>
           <span>{item.title}</span><button type="button" onClick={event=>removeArticle(item.id,event.currentTarget)} aria-label={'移除 '+item.title}>移除</button>

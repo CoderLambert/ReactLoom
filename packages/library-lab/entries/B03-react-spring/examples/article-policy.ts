@@ -5,6 +5,8 @@ export function appendUniqueArticle<T extends Identified>(items: readonly T[], c
   return [...items, candidate];
 }
 /** Move focus only when the removed control itself actually owns keyboard focus. */
-export function shouldRestoreAfterRemoval(removedButtonFocused: boolean): boolean {
-  return removedButtonFocused;
+export function focusDestinationAfterRemoval(removedButtonFocused: boolean, itemCount: number): 'none' | 'add' | 'reset' {
+  if (!removedButtonFocused) return 'none';
+  // The Add control is disabled while the list is at capacity, so use a stable fallback.
+  return itemCount >= MAX_SPRING_ARTICLES ? 'reset' : 'add';
 }
