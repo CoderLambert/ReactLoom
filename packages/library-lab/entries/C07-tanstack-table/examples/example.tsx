@@ -5,6 +5,7 @@ import {
   sortFn_text, tableFeatures, useTable,
   type PaginationState, type RowSelectionState, type SortingState,
 } from '@tanstack/react-table';
+import {clampPageIndex} from './page-policy.mjs';
 
 export type Feed = {id:string; title:string; category:'技术'|'资讯'|'商业'; subscribers:number; status:'active'|'paused'};
 type Props = {level:'basic'|'business'|'advanced'};
@@ -36,7 +37,7 @@ const columns=helper.columns([
   helper.accessor('status',{header:'订阅状态',sortFn:'text'}),
 ]);
 
-function fetchLocalPage(params:{pageIndex:number;pageSize:number;sort:SortingState;query:string;fail:boolean},signal:AbortSignal):Promise<Response>{
+function fetchLocalPage(params:{pageIndex:number;pageSize:number;sort:SortingState;query:string;fail:boolean;limit:number},signal:AbortSignal):Promise<Response>{
   return new Promise((resolve,reject)=>{
     if(signal.aborted){reject(new DOMException('已取消','AbortError'));return;}
     let done=false;
@@ -44,7 +45,7 @@ function fetchLocalPage(params:{pageIndex:number;pageSize:number;sort:SortingSta
     const timer=setTimeout(()=>{
       if(done)return;done=true;signal.removeEventListener('abort',cancel);
       if(params.fail){reject(new Error('本地模拟服务端 503'));return;}
-      const filtered=feedSeed.filter(x=>(x.title+x.category).toLowerCase().includes(params.query.toLowerCase()));
+      const filtered=feedSeed.slice(0,params.limit).filter(x=>(x.title+x.category).toLowerCase().includes(params.query.toLowerCase()));
       const sort=params.sort[0];const sorted=[...filtered];
       if(sort&&['title','category','subscribers','status'].includes(sort.id)){
         sorted.sort((a,b)=>{
@@ -64,6 +65,7 @@ export default function TableExample({level}:Props){
   const advanced=level==='advanced';
   const [query,setQuery]=useState('');
   const [draft,setDraft]=useState('');
+  const composing=useRef(false);
   const [sorting,setSorting]=useState<SortingState>([]);
   const [pagination,setPagination]=useState<PaginationState>({pageIndex:0,pageSize:level==='basic'?18:5});
   const [rowSelection,setRowSelection]=useState<RowSelectionState>({});
@@ -72,18 +74,35 @@ export default function TableExample({level}:Props){
   const [error,setError]=useState('');
   const [fail,setFail]=useState(false);
   const [retry,setRetry]=useState(0);
+  const [serverLimit,setServerLimit]=useState(feedSeed.length);
   const latest=useRef(0);
+  useEffect(()=>{
+    setPagination(p=>{
+      const size=level==='basic'?18:5;
+      return p.pageIndex===0&&p.pageSize===size?p:{pageIndex:0,pageSize:size};
+    });
+  },[level]);
   const clientRows=useMemo(()=>feedSeed.filter(x=>(x.title+x.category).toLowerCase().includes(query.toLowerCase())),[query]);
   useEffect(()=>{
     if(!advanced)return;
     const controller=new AbortController();const sequence=++latest.current;
     setPending(true);setError('');
-    void fetchLocalPage({pageIndex:pagination.pageIndex,pageSize:pagination.pageSize,sort:sorting,query,fail},controller.signal)
-      .then(result=>{if(!controller.signal.aborted&&sequence===latest.current)setRemote(result);})
+    // New server query must not display the previous server page.
+    setRemote({rows:[],total:0});
+    void fetchLocalPage({pageIndex:pagination.pageIndex,pageSize:pagination.pageSize,sort:sorting,query,fail,limit:serverLimit},controller.signal)
+      .then(result=>{
+        if(controller.signal.aborted||sequence!==latest.current)return;
+        const corrected=clampPageIndex(pagination.pageIndex,pagination.pageSize,result.total);
+        if(corrected!==pagination.pageIndex){
+          setPagination(p=>({...p,pageIndex:corrected}));
+          return; // A new effect fetches the now-valid page; never display a stale page.
+        }
+        setRemote(result);
+      })
       .catch(e=>{if(!controller.signal.aborted&&sequence===latest.current)setError(String(e));})
       .finally(()=>{if(!controller.signal.aborted&&sequence===latest.current)setPending(false);});
     return()=>controller.abort();
-  },[advanced,pagination.pageIndex,pagination.pageSize,sorting,query,fail,retry]);
+  },[advanced,pagination.pageIndex,pagination.pageSize,sorting,query,fail,retry,serverLimit]);
   const onSort=(next:SortingState|((previous:SortingState)=>SortingState))=>{
     setSorting(current=>(typeof next==='function'?next(current):next).slice(0,1));
     setPagination(p=>({...p,pageIndex:0}));
@@ -101,16 +120,24 @@ export default function TableExample({level}:Props){
   });
   const visible=table.getRowModel().rows;
   function search(event:FormEvent<HTMLFormElement>){
-    event.preventDefault();setQuery(draft.trim());setPagination(p=>({...p,pageIndex:0}));
+    event.preventDefault();
+    if(composing.current)return;
+    setQuery(draft.trim());setPagination(p=>({...p,pageIndex:0}));
   }
   return <section aria-label="TanStack Table v9 实际表格">
     <h2>{level==='basic'?'Headless 表格与稳定 rowId':level==='business'?'本地筛选、排序和分页':'手动分页、失败和请求竞态'}</h2>
     <p>运行官方 v9 表格引擎。数据为本地 RSS fixture；高级模式用可取消延迟模拟服务端，不伪称真实 HTTP。</p>
-    {level!=='basic'&&<form onSubmit={search} className="demo-controls"><label>检索 RSS 来源
-      <input aria-label="检索RSS来源" value={draft} onChange={e=>setDraft(e.target.value)} onCompositionEnd={e=>setDraft(e.currentTarget.value)}/>
+    {level!=='basic'&&<form onSubmit={search} onKeyDown={event=>{
+      if(event.key==='Enter'&&(event.nativeEvent.isComposing||event.nativeEvent.keyCode===229))
+        event.preventDefault();
+    }} className="demo-controls"><label>检索 RSS 来源
+      <input aria-label="检索RSS来源" value={draft} onChange={e=>setDraft(e.target.value)}
+        onCompositionStart={()=>{composing.current=true;}}
+        onCompositionEnd={e=>{composing.current=false;setDraft(e.currentTarget.value);}}/>
     </label><button type="submit">查询</button></form>}
     {advanced&&<div className="demo-controls">
-      <button type="button" onClick={()=>{setFail(false);setRetry(v=>v+1);}}>恢复并刷新</button>
+      <button type="button" onClick={()=>{setFail(false);setServerLimit(feedSeed.length);setRetry(v=>v+1);}}>恢复并刷新</button>
+      <button type="button" onClick={()=>setServerLimit(2)}>模拟后台缩减到2条</button>
       <button type="button" onClick={()=>setFail(true)}>模拟服务端 503</button>
     </div>}
     <p role="status">{pending?'正在读取本地服务端分页…':error||('当前显示 '+visible.length+' 行')}</p>
@@ -130,9 +157,9 @@ export default function TableExample({level}:Props){
         {visible.length===0&&<tr><td colSpan={5}>没有匹配的来源</td></tr>}</tbody>
     </table></div>
     {level!=='basic'&&<div className="demo-controls">
-      <button type="button" disabled={!table.getCanPreviousPage()} onClick={()=>table.previousPage()}>上一页</button>
+      <button type="button" disabled={pending||!table.getCanPreviousPage()} onClick={()=>table.previousPage()}>上一页</button>
       <span>第{pagination.pageIndex+1} / {Math.max(1,table.getPageCount())}页</span>
-      <button type="button" disabled={!table.getCanNextPage()} onClick={()=>table.nextPage()}>下一页</button>
+      <button type="button" disabled={pending||!table.getCanNextPage()} onClick={()=>table.nextPage()}>下一页</button>
       <label>每页
         <select aria-label="每页行数" value={pagination.pageSize} onChange={e=>table.setPageSize(Number(e.target.value))}>
           {[3,5,10].map(n=><option key={n} value={n}>{n}</option>)}

@@ -38,3 +38,9 @@
 排序/分页后已选业务 ID 不变；改变查询时重置页号；高级模式只向 UI 提供当前页数据；故意 503 显示失败并可恢复；快速两次查询旧响应无回写；卸载时计时器与 abort listener 清理。此源码尚未真实执行 SDK/TS build/Playwright，verification.json 维持 NOT_RUN。
 
 官方：https://tanstack.com/table/latest · https://github.com/TanStack/table
+
+## 后端总数变化及中文输入法（第十一轮加固）
+
+高级场景翻到末页后点「模拟后台缩减到2条」，异步 fixture 返回更新后的 total。通过 `clampPageIndex(pageIndex,pageSize,total)` 校正越界页并重新请求该页，避免将老行误作新查询或长期停留在空的末页。恢复按钮重置服务端 fixture。切换 Demo 层级也重置 pageSize/pageIndex，避免基础模式每页18行泄漏到业务模式。
+
+IME 组合中的 Enter 只确认候选，不应触发搜索；组合结束后才能正常提交。模拟服务端分页与真实 v9 SDK 类型/浏览器渲染是两种不同证据。`node --test packages/library-lab/entries/C07-tanstack-table/tests/page-policy.test.mjs` 仅覆盖不依赖 SDK 的分页政策；SDK/tsc/Chromium 仍待真实运行。
