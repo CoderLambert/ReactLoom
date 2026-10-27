@@ -1,10 +1,11 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
+import {canonicalHttpsFeedUrl, isSafeOpmlFilename} from './boundary-policy.mjs';
 import * as z from 'zod';
 
 type Props = {level: 'basic' | 'business' | 'advanced'};
 
 const HttpsUrl = z.string().trim().url().refine(
-  value => value.startsWith('https://'), '只允许 HTTPS 链接',
+  value => canonicalHttpsFeedUrl(value) !== null, '仅允许无凭据的 HTTPS 完整地址',
 );
 export const FeedSchema = z.strictObject({
   title: z.string().trim().min(2, '标题至少两个字符'),
@@ -14,12 +15,12 @@ export const ImportEventSchema = z.discriminatedUnion('kind', [
   z.strictObject({kind: z.literal('rss'), url: HttpsUrl}),
   z.strictObject({
     kind: z.literal('opml'),
-    filename: z.string().endsWith('.opml', {message: '需要 .opml 文件'}),
+    filename: z.string().trim().refine(isSafeOpmlFilename, '必须为不含目录的 .opml 文件名'),
     groups: z.array(z.string().min(1)).min(1),
   }),
 ]);
 // 先拒绝空字符串，避免 JS Number('') = 0 被误认为合法 TTL。
-const TTL = z.string().trim().min(1, '请填写 TTL').pipe(
+const TTL = z.string().trim().min(1, '请填写 TTL').regex(/^[1-9]\d?$/u, 'TTL 必须是十进制正整数').pipe(
   z.coerce.number().int().min(1).max(60),
 );
 export const BatchPolicySchema = z.strictObject({
@@ -28,7 +29,8 @@ export const BatchPolicySchema = z.strictObject({
 }).superRefine((policy, context) => {
   const seen = new Set<string>();
   policy.sources.forEach((source, index) => {
-    const key = source.url.toLowerCase();
+    const key = canonicalHttpsFeedUrl(source.url);
+    if (key === null) return; // Let the URL field validator report malformed values.
     if (seen.has(key)) {
       context.addIssue({
         code: 'custom',
@@ -69,6 +71,12 @@ export default function ZodBoundaryExample({level}: Props) {
   const [errors, setErrors] = useState<string[]>([]);
   const [output, setOutput] = useState('');
   const [status, setStatus] = useState('等待解析输入');
+  useEffect(() => {
+    setRaw(JSON.stringify(validExamples[level], null, 2));
+    setErrors([]);
+    setOutput('');
+    setStatus('已切换场景，等待验证');
+  }, [level]);
 
   function validate() {
     let input: unknown;
@@ -104,7 +112,10 @@ export default function ZodBoundaryExample({level}: Props) {
     <label htmlFor="zod-json-input">未可信 JSON 输入</label>
     <textarea id="zod-json-input" aria-label="未可信 JSON 输入"
       style={{display:'block',width:'100%',minHeight:220,fontFamily:'monospace',marginTop:8}}
-      spellCheck={false} value={raw} onChange={event => setRaw(event.target.value)}/>
+      spellCheck={false} value={raw} onChange={event => {
+        setRaw(event.target.value); setErrors([]); setOutput('');
+        setStatus('内容已修改，需要重新校验');
+      }}/>
     <div className="demo-controls">
       <button type="button" onClick={validate}>运行 safeParse</button>
       <button type="button" onClick={() => {

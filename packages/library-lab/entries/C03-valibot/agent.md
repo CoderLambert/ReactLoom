@@ -21,3 +21,7 @@
 
 ## 验证入口与可信度
 `node --test packages/library-lab/entries/C03-valibot/tests/sdk.test.mjs` 要求真实 SDK。生产 `typecheck`、`build` 和浏览器回归由 PLATFORM 统一执行。记录成功证据和 sourceFingerprint 之前不能标 PASS。目前均为 NOT_RUN。参考官方 https://valibot.dev/ 。
+
+## 迁移注意
+
+连同实际 schema 复制同目录的 `boundary-policy.mjs` 与 `.d.mts`，否则丢失无凭据 HTTPS 与真实民用日约束。不要使用 Date.UTC 自动进位证明字符串日期存在。编辑后清除旧结果；官方 SDK、TypeScript、浏览器仍独立验收。

@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as v from 'valibot';
+import {canonicalHttpsFeedUrl, isRealCivilDate} from '../examples/boundary-policy.mjs';
 
 test('real Valibot validates and strips extra keys', () => {
   const schema = v.object({name: v.pipe(v.string(), v.trim(), v.minLength(2))});
@@ -20,4 +21,15 @@ test('real Valibot partialCheck forwards cross-field issue', () => {
   const result = v.safeParse(schema, {start: '2026-11-04', end: '2026-11-01'});
   assert.equal(result.success, false);
   if (!result.success) assert.match(result.issues[0].message, /end<start/);
+});
+
+test('real Valibot checks HTTPS credentials and strict civil dates', () => {
+  const url = v.pipe(v.string(), v.url(), v.check(x => canonicalHttpsFeedUrl(x) !== null));
+  assert.equal(v.safeParse(url, 'https://user:pass@example.com/rss').success, false);
+  assert.equal(v.safeParse(url, 'https://example.com/Feed?q=A').success, true);
+  const schema = v.object({date: v.pipe(v.string(), v.isoDate(), v.check(isRealCivilDate))});
+  const invalid = v.safeParse(schema, {date: '2026-02-29'});
+  assert.equal(invalid.success, false);
+  if (!invalid.success) assert.equal(invalid.issues[0].path?.[0]?.key, 'date');
+  assert.equal(v.safeParse(schema, {date: '2000-02-29'}).success, true);
 });

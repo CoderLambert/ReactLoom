@@ -1,4 +1,5 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
+import {canonicalHttpsFeedUrl, isRealCivilDate} from './boundary-policy.mjs';
 import * as v from 'valibot';
 
 type Props = {level: 'basic' | 'business' | 'advanced'};
@@ -6,7 +7,7 @@ type Props = {level: 'basic' | 'business' | 'advanced'};
 // Schema declarations are ordinary application code; the input must remain unknown.
 const FeedSchema = v.object({
   name: v.pipe(v.string(), v.trim(), v.minLength(2, '名称至少2个字符')),
-  url: v.pipe(v.string(), v.url('无效的URL'), v.check(url => url.startsWith('https://'), '仅允许HTTPS')),
+  url: v.pipe(v.string(), v.url('无效的URL'), v.check(url => canonicalHttpsFeedUrl(url) !== null, '仅允许无凭据的 HTTPS 完整地址')),
   category: v.picklist(['tech', 'business']),
 });
 const BatchSchema = v.object({
@@ -15,7 +16,7 @@ const BatchSchema = v.object({
 });
 const WindowSchema = v.pipe(
   v.object({
-    start: v.pipe(v.string(), v.isoDate('日期须为YYYY-MM-DD')),
+    start: v.pipe(v.string(), v.isoDate('日期须为YYYY-MM-DD'), v.check(isRealCivilDate, '不存在的公历日期')),
     end: v.pipe(v.string(), v.isoDate('日期须为YYYY-MM-DD')),
   }),
   v.forward(
@@ -35,13 +36,20 @@ export default function ValibotExample({level}: Props) {
   const [payload, setPayload] = useState(samples[level]);
   const [result, setResult] = useState('点击验证以执行真实 Valibot safeParse');
   const schema = level === 'basic' ? FeedSchema : level === 'business' ? BatchSchema : WindowSchema;
+  useEffect(() => {
+    setPayload(samples[level]);
+    setResult('场景已切换，需要重新验证');
+  }, [level]);
   const validate = () => {
     try {
       const parsed: unknown = JSON.parse(payload);
       const outcome = v.safeParse(schema, parsed, {abortEarly: false});
       setResult(outcome.success
         ? 'PASS: ' + JSON.stringify(outcome.output, null, 2)
-        : 'FAIL: ' + outcome.issues.map(issue => issue.message).join('\n'));
+        : 'FAIL: ' + outcome.issues.map(issue => {
+          const field = (issue.path ?? []).map(part => String(part.key)).join('.');
+          return (field || '(根对象)') + '：' + issue.message;
+        }).join('\n'));
     } catch (error) {
       setResult('FAIL: 输入不是有效 JSON：' + String(error));
     }
@@ -50,7 +58,9 @@ export default function ValibotExample({level}: Props) {
     <h2>{level === 'basic' ? 'Schema校验与未知输入' : level === 'business' ? 'RSS批量导入合同' : '跨字段日期约束与错误位置'}</h2>
     <p>{level === 'advanced' ? '默认样例故意使结束早于开始。日期格式和前后顺序是两项不同约束。' : '所有输入先作为unknown解析；不会用TypeScript类型断言代替运行时校验。'}</p>
     <label htmlFor="c03-json">输入 JSON</label>
-    <textarea id="c03-json" style={{display:'block',width:'100%',minHeight:185,fontFamily:'monospace'}} value={payload} onChange={e => setPayload(e.target.value)} />
+    <textarea id="c03-json" style={{display:'block',width:'100%',minHeight:185,fontFamily:'monospace'}} value={payload} onChange={e => {
+      setPayload(e.target.value); setResult('输入已改变，需要重新验证');
+    }} />
     <div className="demo-controls">
       <button type="button" onClick={validate}>运行 safeParse</button>
       <button type="button" onClick={() => {setPayload(samples[level]);setResult('已恢复原始样例');}}>恢复示例</button>
