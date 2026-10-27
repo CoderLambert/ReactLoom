@@ -55,6 +55,7 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/graph-rules.ts",
         "examples/demo.tsx"
       ],
       "capabilities": [
@@ -73,6 +74,7 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/graph-rules.ts",
         "examples/demo.tsx"
       ],
       "capabilities": [
@@ -85,12 +87,13 @@
     {
       "demoId": "advanced",
       "title": "新增节点与连接保护",
-      "description": "新增节点、阻止自连接、重置工作流与本地数量观测",
+      "description": "连接拒绝缺失/重复/自环/成环，节点删除清理关联边并可重置",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/graph-rules.ts",
         "examples/demo.tsx"
       ],
       "capabilities": [

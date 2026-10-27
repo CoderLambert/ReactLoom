@@ -24,3 +24,7 @@
 ## 相关
 
 A02 Recharts：简单 React 业务图；A03 Chart.js：简单 Canvas 图；A05 D3：底层数据映射。官方 https://echarts.apache.org/handbook/en/basics/import/ 。
+
+## 背景标签页与动画策略
+
+迁移 `examples/stream-policy.ts`，将“用户请求播放”与 `shouldAdvanceReadingStream` 的实际播放分开。监听 document.visibilitychange 和 matchMedia('prefers-reduced-motion: reduce')，在 cleanup 对称注销。稳定 interval 不随 tick 频率重复安装，刷新由 `advanceReadingCounts` 执行。双系列图必须提供两系列完整文字数据，不能只呈现颜色差异。纯逻辑断言不是 ECharts 真实SDK/浏览器验证。

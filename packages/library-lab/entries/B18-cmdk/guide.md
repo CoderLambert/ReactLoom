@@ -49,3 +49,9 @@ Floating UI 为锚点弹层定位，cmdk 负责命令语义/选择；两者不�
 练习 1：将工作台命令连接到受控路由动作，关闭后焦点回触发器；练习 2：模拟拼音候选完成按 Enter，确保只触发一次。还需测试 disabled、Escape、Ctrl+K 事件作用域、StrictMode 反复挂载、移动端屏幕键盘。
 
 本轮源码已写，SDK/生产构建/真实 Chromium NOT_RUN，禁止将结构检查说成库测试通过。官网 https://github.com/pacocoursey/cmdk ，许可证 MIT。
+
+## AB wave9：输入法尾随回车与快捷键所有权
+
+`examples/keyboard-policy.ts` 将 Ctrl/Cmd+K 和 Enter 规则作为可独立测试的纯函数。只有面板关闭时，普通输入框的快捷键不被示例抢走；面板打开后焦点处于其输入框时，再次 Ctrl/Cmd+K 可以关闭。Shift/Alt/IME Processing/229 不触发全局快捷键。
+
+中文/日文候选的 `compositionend` 可能先于尾随 `keydown Enter`，所以仅检查 `isComposing` 仍可能误选命令。本例保留“等待提交 Enter keyup”的标记；在捕获阶段阻止尾随回车冒泡给 cmdk，keyup/后续新按键/失焦会清除标记。鼠标操作与正常第二次 Enter 仍应可用，后续必须用真实 fcitx5/Rime/Chromium 验证事件顺序。定向规则测试：`node --experimental-strip-types --test entries/B18-cmdk/tests/keyboard-policy.test.mts`。

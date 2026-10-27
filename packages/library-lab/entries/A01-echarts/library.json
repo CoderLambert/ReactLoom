@@ -59,6 +59,7 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/stream-policy.ts",
         "examples/demo.tsx"
       ],
       "capabilities": [
@@ -75,6 +76,7 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/stream-policy.ts",
         "examples/demo.tsx"
       ],
       "capabilities": [
@@ -91,13 +93,14 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/stream-policy.ts",
         "examples/demo.tsx"
       ],
       "capabilities": [
         "canvas",
         "resize-observer"
       ],
-      "description": "监听容器宽度、逐次更新数据，离开 Tab 销毁实例与监听"
+      "description": "稳定计时器、页面隐藏与减少动态自动暂停、容器缩放及实例清理"
     }
   ],
   "license": {

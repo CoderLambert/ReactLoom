@@ -24,3 +24,7 @@ document 永久绑定 Ctrl+K、不同命令使用相同 value、模糊搜索结�
 实际 SDK import + TS build + Chromium 键盘/IME（中文组词）、Tab 焦点、Escape、disabled 与卸载监听计数。React StrictMode 重挂载后 Ctrl+K 只触发一次。当前 SDK/build/browser NOT_RUN，不得冒充通过。
 
 官方参考 https://github.com/pacocoursey/cmdk
+
+## 必须迁移的键盘守卫
+
+`examples/example.tsx` 依赖 `examples/keyboard-policy.ts`；快捷键只在本 Demo 生命周期中注册。关闭面板时不拦截其他编辑器 Ctrl/Cmd+K；打开后允许同快捷键关闭。IME candidate 的 compositionend → keydown Enter → keyup Enter 期间，必须抑制“确认候选”被 cmdk 误识别为提交命令。Node纯函数测试不能替代真实操作系统中文输入法E2E。
