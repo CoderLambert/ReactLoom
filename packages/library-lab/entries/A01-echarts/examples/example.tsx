@@ -129,7 +129,7 @@ export default function EchartsExample({level}: {level: Level}) {
     <h2>{level === 'basic' ? '柱状图与分类轴' : level === 'business' ? '业务对比：柱状 + 折线' : '实时更新与容器缩放'}</h2>
     <p>真实 echarts/core 模块按需注册，点击数据点后下方会显示选择结果。</p>
     {level === 'advanced' && <div style={{display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 14}}>
-      <button type="button" disabled={updates >= MAX_READING_UPDATES && !live} onClick={() => setLive(value => !value)}>{live ? '暂停增量更新' : '启动增量更新'}</button>
+      <button type="button" disabled={updates >= MAX_READING_UPDATES} onClick={() => setLive(value => !value)}>{updates >= MAX_READING_UPDATES ? '达到上限，请复位' : live ? '暂停增量更新' : '启动增量更新'}</button>
       <button type="button" onClick={() => setCompact(value => !value)}>{compact ? '恢复宽图' : '缩小容器，观察 resize'}</button>
       <button type="button" onClick={() => {tickIndex.current=0;updateCount.current=0;setLive(false);setValues(baseline);setUpdates(0);setSelected('');}}>复位业务数据</button>
       {reducedMotion && <label><input type="checkbox" checked={allowMotion}
