@@ -29,3 +29,15 @@ test('real middleware invokes versioned migrate',async()=>{
    migrate:(old,v)=>({value:v===1?old.oldValue:0})}));
  await store.persist.rehydrate();assert.equal(store.getState().value,42);
 });
+
+test('real Zustand persist v1 migration rejects malformed legacy booleans',async()=>{
+ const {migrateChannelPreferences}=await import('../examples/migration-policy.mjs');
+ const map=new Map([['untrusted-legacy',JSON.stringify({state:{enabled:'false',view:'grid',token:'do-not-persist'},version:1})]]);
+ const storage={getItem:k=>map.get(k)??null,setItem:(k,v)=>{map.set(k,v)},removeItem:k=>map.delete(k)};
+ const store=createStore()(persist(()=>({view:'list',enabledByTenant:{'team-a':true,'team-b':false}}),
+   {name:'untrusted-legacy',version:2,storage:createJSONStorage(()=>storage),skipHydration:true,
+    migrate:migrateChannelPreferences}));
+ await store.persist.rehydrate();
+ assert.deepEqual(store.getState(),{view:'grid',enabledByTenant:{'team-a':true,'team-b':false}});
+ assert.equal(map.get('untrusted-legacy').includes('do-not-persist'),false);
+});

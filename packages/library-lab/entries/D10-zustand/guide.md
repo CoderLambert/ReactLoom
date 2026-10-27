@@ -48,3 +48,9 @@ import {persist,createJSONStorage} from 'zustand/middleware'
 SDK 测试使用真实 zustand/vanilla 与 persist、独立多 store、版本迁移/部分状态序列化；尚未执行则 NOT_RUN。界面按钮明确状态和团队标签，不用颜色代替状态语义。实验存储退出后清理 Map，不触及真实浏览器存储。
 
 官方：https://zustand.docs.pmnd.rs/ · https://zustand.site/en/docs/persist/ · https://github.com/pmndrs/zustand/releases
+
+## v1 存储是未知数据，不是 TypeScript StoreState（第十一轮加固）
+
+示例真实 `persist.migrate` 调用 `examples/migration-policy.mjs`，只接受 v1 的布尔 `enabled` 与 `grid/list` 枚举。恶意/损坏的 `{"enabled":"false"}` **不能**当作 Boolean(false)，旧 token、tenant 等字段不进入新 state。未知版本、null、数组均回退到安全默认 UI 偏好，不能使用 `value as Persisted` 掩盖类型边界。v2 同版本持久化数据的运行时校验尚需另建 schema 防线。
+
+`node --test packages/library-lab/entries/D10-zustand/tests/migration-policy.test.mjs` 是纯 JS 回归；`node --test packages/library-lab/entries/D10-zustand/tests/sdk.test.mjs` 必须加载真实 zustand SDK 才能证明 middleware 集成。浏览器 hydration/refresh 未完成验收。

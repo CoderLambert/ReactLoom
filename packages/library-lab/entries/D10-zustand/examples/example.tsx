@@ -2,6 +2,7 @@ import {useEffect,useState} from 'react';
 import {useStore} from 'zustand';
 import {createStore} from 'zustand/vanilla';
 import {persist,createJSONStorage,type StateStorage} from 'zustand/middleware';
+import {migrateChannelPreferences} from './migration-policy.mjs';
 
 type Level='basic'|'business'|'advanced';
 type Tenant='team-a'|'team-b';
@@ -34,13 +35,7 @@ export function createChannelStore(storage:StateStorage) {
   {
    name:KEY,version:2,storage:createJSONStorage<Persisted>(()=>storage),skipHydration:true,
    partialize:state=>({view:state.view,enabledByTenant:state.enabledByTenant}),
-   migrate:(value,version)=>{
-    if(version===1){
-      const old=value as {enabled?:boolean;view?:View};
-      return {view:old.view==='grid'?'grid':'list',enabledByTenant:{'team-a':old.enabled??true,'team-b':false}};
-    }
-    return value as Persisted;
-   },
+   migrate:(value,version)=>migrateChannelPreferences(value,version),
   }
  ));
 }
