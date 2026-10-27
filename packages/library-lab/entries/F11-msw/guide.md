@@ -85,3 +85,8 @@ PLATFORM必须接入真实iframe/同源mockServiceWorker.js，使用Chromium检�
 **普通卸载不能调用 `ServiceWorkerRegistration.unregister()`。** MSW v3 的 stop 仅关闭当前客户端请求 Mock；注册本身跨客户端共享。即使是本iframe第一次创建 registration，别的标签也可能随后使用；卸载时注销会误伤该标签。只有PLATFORM在完全隔离的origin/浏览器上下文终止后，才能执行全局清除与残留验证。https://mswjs.io/api/setup-worker/stop ，https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerRegistration/unregister 。
 
 命令：`node --test entries/F11-msw/examples/session-gate.test.mjs`（从packages/library-lab运行）。它只测试纯Node同步租约，不表示真实MSW、SW、CSP或跨标签已通过；Chromium必须另测双次start、停止/重启及不同标签不相互影响。
+## 第24轮：在真实注册前检查 Worker 脚本响应
+
+`examples/browser-worker.mjs` 现在在 `setupWorker().start()` **之前**调用同源 `worker-script-preflight.mjs`：只接受 `/lab-runners/msw/mockServiceWorker.js`，禁止跨源、重定向、非200和不可信SPA HTML fallback；验证JavaScript MIME及实际流式响应≤512KiB（不仅相信 Content-Length）。使用 `redirect:'error'`、`cache:'no-store'`，脚本与scope绑定；发现缺失资源时释放启动租约，不创建新的MSW实例或注册。Vite开发服务可以返回SPA页面而不是此独立资产，预检要明确失败，不可悄悄回退为root Worker。
+
+可执行 `node --test entries/F11-msw/examples/worker-script-preflight.test.mjs` 检查本地策略和流式限制；**这不是MSW SDK运行、CSP或浏览器注册成功**。PLATFORM仍需部署官方由匹配MSW版本生成的worker文件、检查实际MIME与CSP（至少 `worker-src 'self'`）、iframe scope和双标签停止隔离，并在真正Chromium中完成registration/controller/GET文章拦截、失败卸载与全局注册清单检查。禁止为绕过检查而注册root Worker。
