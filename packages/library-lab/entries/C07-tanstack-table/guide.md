@@ -44,3 +44,11 @@
 高级场景翻到末页后点「模拟后台缩减到2条」，异步 fixture 返回更新后的 total。通过 `clampPageIndex(pageIndex,pageSize,total)` 校正越界页并重新请求该页，避免将老行误作新查询或长期停留在空的末页。恢复按钮重置服务端 fixture。切换 Demo 层级也重置 pageSize/pageIndex，避免基础模式每页18行泄漏到业务模式。
 
 IME 组合中的 Enter 只确认候选，不应触发搜索；组合结束后才能正常提交。模拟服务端分页与真实 v9 SDK 类型/浏览器渲染是两种不同证据。`node --test packages/library-lab/entries/C07-tanstack-table/tests/page-policy.test.mjs` 仅覆盖不依赖 SDK 的分页政策；SDK/tsc/Chromium 仍待真实运行。
+
+## 请求身份隔离与迟到结果（第24轮补强）
+
+进阶场景将 **pageIndex、pageSize、sorting、query、503 模式、服务端数据上限** 编入 `tableQueryIdentity`；在 React render 时只展示与当前身份相同的已完成响应。发起新请求前同步 `invalidate`，旧 AbortSignal 立即中止；effect 自身用单调 epoch 验证 `owns()`，即使 A→B→A 恢复相同查询键，原 A 的迟到 Promise 仍不能写回。旧 effect 的 cleanup 不得取消新请求。服务端缩减导致末页越界时先纠正页号，然后重新请求新页，绝不把旧页数据冒充新页。
+
+查询提交/排序/翻页/页大小/模拟异常均先取消旧所有权；`useEffect` 在 StrictMode 重挂载时也会撤销过期 lease。中文 IME 的候选确认 Enter 与组合结束后短窗口内的 Enter 不触发检索，而鼠标点击查询按钮仍可提交。只有同一请求身份的错误能在当前页呈现。
+
+`node --test packages/library-lab/entries/C07-tanstack-table/tests/page-policy.test.mjs` 是框架无关策略测试；`node --test packages/library-lab/entries/C07-tanstack-table/tests/sdk.test.mjs` 才真正导入 v9 React Table/React SSR SDK，需安装包后执行。提交测试源码不等于 SDK PASS，完整 typecheck/Vite/Chromium 仍单独验收。官方 v9 API 参见 https://tanstack.com/table/latest/docs/framework/react/guide/migrating 和 https://tanstack.com/table/latest/docs/framework/react/guide/pagination 。

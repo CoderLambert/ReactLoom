@@ -5,11 +5,12 @@ import {
   sortFn_text, tableFeatures, useTable,
   type PaginationState, type RowSelectionState, type SortingState,
 } from '@tanstack/react-table';
-import {clampPageIndex} from './page-policy.mjs';
+import {clampPageIndex,createPageRequestGate,tableQueryIdentity} from './page-policy.mjs';
 
 export type Feed = {id:string; title:string; category:'技术'|'资讯'|'商业'; subscribers:number; status:'active'|'paused'};
 type Props = {level:'basic'|'business'|'advanced'};
 type Response = {rows:Feed[]; total:number};
+type OwnedResponse = Response & {identity:string};
 export const feedSeed: Feed[] = Array.from({length:18},(_,i)=>({
   id:'feed-'+String(100+i),
   title:['Frontend Engineering','Platform Weekly','AI Systems','News Digest','Open Source'][i%5]+' #'+(i+1),
@@ -66,16 +67,24 @@ export default function TableExample({level}:Props){
   const [query,setQuery]=useState('');
   const [draft,setDraft]=useState('');
   const composing=useRef(false);
+  const composingEndBefore=useRef(0);
   const [sorting,setSorting]=useState<SortingState>([]);
   const [pagination,setPagination]=useState<PaginationState>({pageIndex:0,pageSize:level==='basic'?18:5});
   const [rowSelection,setRowSelection]=useState<RowSelectionState>({});
-  const [remote,setRemote]=useState<Response>({rows:[],total:0});
-  const [pending,setPending]=useState(false);
-  const [error,setError]=useState('');
+  const [remote,setRemote]=useState<OwnedResponse>({rows:[],total:0,identity:''});
+  const [pendingIdentity,setPendingIdentity]=useState('');
+  const [error,setError]=useState({identity:'',message:''});
   const [fail,setFail]=useState(false);
   const [retry,setRetry]=useState(0);
   const [serverLimit,setServerLimit]=useState(feedSeed.length);
-  const latest=useRef(0);
+  const requestGate=useRef<ReturnType<typeof createPageRequestGate>|null>(null);
+  if(!requestGate.current)requestGate.current=createPageRequestGate();
+  const identity=advanced?tableQueryIdentity({
+    pageIndex:pagination.pageIndex,pageSize:pagination.pageSize,sorting,query,fail,limit:serverLimit,
+  }):'';
+  const currentRemote:Response=advanced&&remote.identity===identity?remote:{rows:[],total:0};
+  const pending=advanced&&pendingIdentity===identity;
+  const currentError=error.identity===identity?error.message:'';
   useEffect(()=>{
     setPagination(p=>{
       const size=level==='basic'?18:5;
@@ -84,37 +93,53 @@ export default function TableExample({level}:Props){
   },[level]);
   const clientRows=useMemo(()=>feedSeed.filter(x=>(x.title+x.category).toLowerCase().includes(query.toLowerCase())),[query]);
   useEffect(()=>{
-    if(!advanced)return;
-    const controller=new AbortController();const sequence=++latest.current;
-    setPending(true);setError('');
-    // New server query must not display the previous server page.
-    setRemote({rows:[],total:0});
-    void fetchLocalPage({pageIndex:pagination.pageIndex,pageSize:pagination.pageSize,sort:sorting,query,fail,limit:serverLimit},controller.signal)
+    if(!advanced){requestGate.current?.invalidate();return;}
+    const gate=requestGate.current!;
+    const lease=gate.begin();
+    setPendingIdentity(identity);
+    setError({identity,message:''});
+    setRemote({identity,rows:[],total:0});
+    void fetchLocalPage({
+      pageIndex:pagination.pageIndex,pageSize:pagination.pageSize,sort:sorting,query,fail,limit:serverLimit,
+    },lease.signal)
       .then(result=>{
-        if(controller.signal.aborted||sequence!==latest.current)return;
+        if(!lease.owns())return;
         const corrected=clampPageIndex(pagination.pageIndex,pagination.pageSize,result.total);
         if(corrected!==pagination.pageIndex){
+          gate.invalidate();
           setPagination(p=>({...p,pageIndex:corrected}));
-          return; // A new effect fetches the now-valid page; never display a stale page.
+          return; // Re-fetch corrected page; never commit results for the old page.
         }
-        setRemote(result);
+        setRemote({...result,identity});
       })
-      .catch(e=>{if(!controller.signal.aborted&&sequence===latest.current)setError(String(e));})
-      .finally(()=>{if(!controller.signal.aborted&&sequence===latest.current)setPending(false);});
-    return()=>controller.abort();
-  },[advanced,pagination.pageIndex,pagination.pageSize,sorting,query,fail,retry,serverLimit]);
+      .catch(e=>{if(lease.owns())setError({identity,message:String(e)});})
+      .finally(()=>{
+        if(lease.owns())setPendingIdentity('');
+        lease.close();
+      });
+    return()=>lease.cancel();
+  },[advanced,identity,pagination.pageIndex,pagination.pageSize,sorting,query,fail,retry,serverLimit]);
+  const invalidateAndRefresh=()=>{
+    requestGate.current?.invalidate();
+    setRetry(value=>value+1); // Force a fresh effect even if an updater returns the same state.
+  };
   const onSort=(next:SortingState|((previous:SortingState)=>SortingState))=>{
+    invalidateAndRefresh();
     setSorting(current=>(typeof next==='function'?next(current):next).slice(0,1));
     setPagination(p=>({...p,pageIndex:0}));
   };
-  const rows=advanced?remote.rows:clientRows;
+  const onPaginationChange=(next:PaginationState|((current:PaginationState)=>PaginationState))=>{
+    invalidateAndRefresh();
+    setPagination(next);
+  };
+  const rows=advanced?currentRemote.rows:clientRows;
   const table=useTable({
     features,columns,data:rows,getRowId:row=>row.id,
     manualSorting:advanced,manualPagination:advanced,
-    rowCount:advanced?remote.total:undefined,
+    rowCount:advanced?currentRemote.total:undefined,
     state:{sorting,pagination,rowSelection},
     onSortingChange:onSort,
-    onPaginationChange:setPagination,
+    onPaginationChange,
     onRowSelectionChange:setRowSelection,
     enableMultiSort:false,
   });
@@ -122,25 +147,30 @@ export default function TableExample({level}:Props){
   function search(event:FormEvent<HTMLFormElement>){
     event.preventDefault();
     if(composing.current)return;
+    invalidateAndRefresh();
     setQuery(draft.trim());setPagination(p=>({...p,pageIndex:0}));
   }
   return <section aria-label="TanStack Table v9 实际表格">
     <h2>{level==='basic'?'Headless 表格与稳定 rowId':level==='business'?'本地筛选、排序和分页':'手动分页、失败和请求竞态'}</h2>
     <p>运行官方 v9 表格引擎。数据为本地 RSS fixture；高级模式用可取消延迟模拟服务端，不伪称真实 HTTP。</p>
     {level!=='basic'&&<form onSubmit={search} onKeyDown={event=>{
-      if(event.key==='Enter'&&(event.nativeEvent.isComposing||event.nativeEvent.keyCode===229))
+      if(event.key==='Enter'&&(event.nativeEvent.isComposing||event.nativeEvent.keyCode===229||
+          composing.current||Date.now()<composingEndBefore.current))
         event.preventDefault();
     }} className="demo-controls"><label>检索 RSS 来源
       <input aria-label="检索RSS来源" value={draft} onChange={e=>setDraft(e.target.value)}
-        onCompositionStart={()=>{composing.current=true;}}
-        onCompositionEnd={e=>{composing.current=false;setDraft(e.currentTarget.value);}}/>
+        onCompositionStart={()=>{composing.current=true;composingEndBefore.current=0;}}
+        onCompositionEnd={e=>{
+          composing.current=false;composingEndBefore.current=Date.now()+80;
+          setDraft(e.currentTarget.value);
+        }}/>
     </label><button type="submit">查询</button></form>}
     {advanced&&<div className="demo-controls">
-      <button type="button" onClick={()=>{setFail(false);setServerLimit(feedSeed.length);setRetry(v=>v+1);}}>恢复并刷新</button>
-      <button type="button" onClick={()=>setServerLimit(2)}>模拟后台缩减到2条</button>
-      <button type="button" onClick={()=>setFail(true)}>模拟服务端 503</button>
+      <button type="button" onClick={()=>{invalidateAndRefresh();setFail(false);setServerLimit(feedSeed.length);}}>恢复并刷新</button>
+      <button type="button" onClick={()=>{invalidateAndRefresh();setServerLimit(2);}}>模拟后台缩减到2条</button>
+      <button type="button" onClick={()=>{invalidateAndRefresh();setFail(true);}}>模拟服务端 503</button>
     </div>}
-    <p role="status">{pending?'正在读取本地服务端分页…':error||('当前显示 '+visible.length+' 行')}</p>
+    <p role="status">{pending?'正在读取本地服务端分页…':currentError||('当前显示 '+visible.length+' 行')}</p>
     <div style={{overflowX:'auto'}}><table style={{width:'100%',borderCollapse:'collapse'}}>
       <caption>RSS 订阅来源，选中状态按持久业务 ID 保存</caption>
       <thead>{table.getHeaderGroups().map(group=><tr key={group.id}>{group.headers.map(header=>{
