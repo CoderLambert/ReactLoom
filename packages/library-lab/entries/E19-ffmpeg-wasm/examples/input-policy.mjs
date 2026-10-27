@@ -15,7 +15,7 @@ const isWebm = (bytes) =>
 const isMp4 = (bytes) => bytes.length >= 12 && ascii(bytes, 4, 4) === 'ftyp';
 const isMp3 = (bytes) =>
   bytes.length >= 3 && (ascii(bytes, 0, 3) === 'ID3' ||
-    (bytes[0] === 0xff && (bytes[1] & 0xe0) === 0xe0);
+    (bytes[0] === 0xff && (bytes[1] & 0xe0) === 0xe0));
 
 export function isAllowedMediaFile(file) {
   return Boolean(MIME_EXTENSION[file?.type] &&
