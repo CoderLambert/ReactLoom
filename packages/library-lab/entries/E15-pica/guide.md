@@ -63,3 +63,9 @@ E14裁剪几何区、pica缩放裁剪后的Canvas；E13预览原图或缩小图�
 真实SDK源已写，缺根锁文件/依赖解析，本环境未运行真实pica.resize、Chromium或bundle。SDK NOT_RUN / build BLOCKED / browser NOT_RUN。安装后核查输出PNG字节、尺寸、取消中断、反复开始/卸载、浏览器内存与Worker清理，不以Mock计算成功。
 
 官方：https://github.com/nodeca/pica
+
+## EF wave19：文件替换、取消与任务单飞
+
+此前只在运行开始时读取 `file`，用户在运行途中选新文件不会废弃旧异步结果；且不同 `level` 复用组件时可能显示上一层结果。本轮新增真实数据流中的 `examples/resize-policy.mjs`：非空文件与合法MIME/4MiB约束、1600万安全像素上界、仅允许240/480/800目标最长边；真实 `pica.resize/toBlob` API未被Mock。选文件或改最长边立刻失效旧generation、取消`cancelToken`并清除旧Blob；`operationRef` 同步单飞防止解码/缩放重叠，取消时界面显示等待旧任务结算才解锁运行按钮。`key={level}`让每个场景独立重挂，旧任务卸载后不可回写。
+
+注意pica官方文档中 `cancelToken` 通过Promise rejection结束resize任务，但不能取消已进行的ImageBitmap解码、PNG编码，也无法证明Worker已经terminate；Worker可能按配置 idle 时间复用。禁止把仅设置`running=false`冒充真实取消。本地复现：`node --test packages/library-lab/entries/E15-pica/examples/resize-policy.test.mjs`（只覆盖纯尺寸/输入策略）。PLATFORM仍须在Chromium运行真实pica、反复更换文件/取消/重挂，测量Blob URL、Worker/内存回收与CSP，并运行typecheck/build。

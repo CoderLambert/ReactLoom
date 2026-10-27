@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ChangeEvent } from 'react';
 import Cropper from 'react-easy-crop';
+import { checkImageFile, checkImageDimensions, checkCropArea } from './crop-policy.mjs';
 
 type Props = { level: 'basic' | 'business' | 'advanced' };
 type Area = { x: number; y: number; width: number; height: number };
@@ -12,23 +13,21 @@ function sampleImage(): string {
   return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
 }
 const sample = sampleImage();
-const MAX_BYTES = 4 * 1024 * 1024;
-const MAX_PIXELS = 16_000_000;
 
 async function cropToPng(source: string, area: Area): Promise<Blob> {
   const image = new Image();
   image.src = source;
   await image.decode();
-  if (image.naturalWidth * image.naturalHeight > MAX_PIXELS) throw new Error('解码像素过大');
-  const { x, y, width, height } = area;
-  if (![x, y, width, height].every(Number.isFinite) || width < 1 || height < 1) throw new Error('无效裁剪区域');
+  checkImageDimensions(image.naturalWidth, image.naturalHeight);
+  // croppedAreaPixels is rounded by react-easy-crop; validate before allocating a Canvas.
+  const { x, y, width, height } = checkCropArea(area, image.naturalWidth, image.naturalHeight);
   const canvas = document.createElement('canvas');
-  canvas.width = Math.round(width);
-  canvas.height = Math.round(height);
+  canvas.width = width;
+  canvas.height = height;
   const context = canvas.getContext('2d');
   if (!context) throw new Error('无法创建Canvas上下文');
   context.drawImage(image, x, y, width, height, 0, 0, canvas.width, canvas.height);
-  return new Promise<Blob>((resolve, reject) => canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('无法编码PNG')), 'image/png'));
+  return new Promise<Blob>((resolve, reject) => canvas.toBlob(blob => blob && blob.size > 0 ? resolve(blob) : reject(new Error('无法编码PNG')), 'image/png'));
 }
 
 export default function EasyCropExample({ level }: Props) {
@@ -41,7 +40,9 @@ export default function EasyCropExample({ level }: Props) {
   const [resultUrl, setResultUrl] = useState('');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+  const [checkingFile, setCheckingFile] = useState(false);
   const generation = useRef(0);
+  const activeExport = useRef(0);
   const source = localUrl || sample;
   const aspect = level === 'basic' ? 1 : level === 'business' ? 16 / 9 : 4 / 3;
 
@@ -61,33 +62,47 @@ export default function EasyCropExample({ level }: Props) {
 
   useEffect(() => {
     generation.current += 1;
+    activeExport.current = 0;
     setArea(null);
     setResultBlob(null);
     setBusy(false);
     setError('');
   }, [source, aspect, zoom]);
 
-  useEffect(() => () => { generation.current += 1; }, []);
+  useEffect(() => () => { generation.current += 1; activeExport.current = 0; }, []);
+
+  function invalidateOutput() {
+    generation.current += 1;
+    activeExport.current = 0;
+    setArea(null);
+    setResultBlob(null);
+    setBusy(false);
+  }
+
+  function changeCrop(next: { x: number; y: number }) {
+    invalidateOutput();
+    setCrop(next);
+  }
+
+  function changeZoom(next: number) {
+    if (next === zoom) return;
+    invalidateOutput();
+    setZoom(next);
+  }
 
   async function chooseFile(event: ChangeEvent<HTMLInputElement>) {
     const file = event.currentTarget.files?.[0];
     event.currentTarget.value = '';
     if (!file) return;
-    const requestId = ++generation.current;
-    setResultBlob(null);
-    setArea(null);
-    setBusy(false);
-    if (!['image/png', 'image/jpeg', 'image/webp'].includes(file.type) || file.size > MAX_BYTES) {
-      setError('仅支持不超过4MiB的 PNG / JPEG / WebP 文件');
-      return;
-    }
+    invalidateOutput();
+    const requestId = generation.current;
+    setCheckingFile(true);
     try {
-      // Reject overly large decoded dimensions before letting Cropper mount the image.
+      checkImageFile(file);
+      // File size alone cannot bound the number of decoded pixels.
       const bitmap = await createImageBitmap(file);
       try {
-        if (bitmap.width * bitmap.height > MAX_PIXELS || bitmap.width < 1 || bitmap.height < 1) {
-          throw new Error('解码图片像素超过1600万，已拒绝处理');
-        }
+        checkImageDimensions(bitmap.width, bitmap.height);
       } finally {
         bitmap.close();
       }
@@ -97,22 +112,30 @@ export default function EasyCropExample({ level }: Props) {
       setCrop({ x: 0, y: 0 });
       setLocalFile(file);
     } catch (cause) {
-      if (requestId === generation.current) setError('图片解码或尺寸检查失败：' + String(cause));
+      if (requestId === generation.current) setError('图片检查失败：' + String(cause));
+    } finally {
+      if (requestId === generation.current) setCheckingFile(false);
     }
   }
 
   async function exportCrop() {
+    if (activeExport.current || checkingFile) return; // synchronous gate for double-clicks
     if (!area) { setError('请等待媒体加载和裁剪区域计算完成'); return; }
     const id = ++generation.current;
+    activeExport.current = id;
     setError('');
     setBusy(true);
     try {
       const blob = await cropToPng(source, area);
-      if (id === generation.current) setResultBlob(blob);
+      if (id === generation.current && activeExport.current === id) setResultBlob(blob);
     } catch (cause) {
-      if (id === generation.current) setError(String(cause));
+      if (id === generation.current && activeExport.current === id) setError(String(cause));
     } finally {
-      if (id === generation.current) setBusy(false);
+      // A cancelled older export must never release a newer export's gate.
+      if (activeExport.current === id) {
+        activeExport.current = 0;
+        setBusy(false);
+      }
     }
   }
 
@@ -123,15 +146,15 @@ export default function EasyCropExample({ level }: Props) {
       {level === 'advanced' && <label>选择本地图片 <input aria-label="选择本地图片" type="file" accept="image/png,image/jpeg,image/webp" onChange={event => { void chooseFile(event); }} /></label>}
       <div style={{ position: 'relative', height: 330, marginTop: 16, background: '#192e2b', overflow: 'hidden', borderRadius: 10 }}>
         <Cropper image={source} crop={crop} zoom={zoom} minZoom={1} maxZoom={3}
-          aspect={aspect} onCropChange={setCrop} onZoomChange={setZoom}
-          onCropComplete={(_, pixels) => setArea(pixels)} />
+          aspect={aspect} onCropChange={changeCrop} onZoomChange={changeZoom}
+          onCropComplete={(_, pixels) => { if (!checkingFile) setArea(pixels); }} />
       </div>
       <div style={{ marginTop: 18, display: 'flex', alignItems: 'center', gap: 12 }}>
         <label htmlFor="crop-zoom">缩放 {zoom.toFixed(1)}</label>
         <input id="crop-zoom" type="range" min="1" max="3" step=".1" value={zoom}
-          onChange={event => setZoom(Number(event.target.value))} />
-        <button type="button" disabled={busy || !area} onClick={() => void exportCrop()}>
-          {busy ? '处理中…' : '裁剪并导出PNG'}
+          onChange={event => changeZoom(Number(event.target.value))} />
+        <button type="button" disabled={busy || checkingFile || !area} onClick={() => void exportCrop()}>
+          {busy ? '处理中…' : checkingFile ? '检查图片…' : '裁剪并导出PNG'}
         </button>
       </div>
       {area && <p>真实裁剪像素：{JSON.stringify(area)}</p>}

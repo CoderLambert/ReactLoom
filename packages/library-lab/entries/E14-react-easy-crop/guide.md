@@ -57,3 +57,9 @@ File / 本地SVG → 可解码图像 → Cropper内部手势/缩放 → onCropCo
 PLATFORM安装后执行真实typecheck/build和Chromium：拖动更新坐标、改变比例、实际PNG Blob非空且可解码、重复换图/卸载后ObjectURL撤销、本地文件大小和解码像素限制、没有上传网络请求。状态目前 SDK NOT_RUN / build BLOCKED / browser NOT_RUN。
 
 官方：https://github.com/ValentinH/react-easy-crop
+
+## EF wave19：有效矩形、异步所有权与输出预算
+
+`examples/crop-policy.mjs` 是**真实导出路径所使用**的约束：非空文件≤4MiB、解码源图≤1600万像素、`croppedAreaPixels` 必须为安全整数且完全落在解码源图内部、输出≤400万像素。限制必须在 `canvas.width/height` 分配之前执行；大图允许进入交互但若裁剪输出过大，会提示继续放大再重试。Canvas `toBlob` 必须生成非空PNG。**禁止**只约束源文件大小而忽略画布尺寸。
+
+拖动/改变缩放/切换文件即失效正在导出的 Promise；`activeExport` 用同步任务ID挡双击，旧finally不能解除新任务的门禁。新文件解码时禁用导出；`createImageBitmap` 在成功和异常中释放 bitmap。详见实际源码。运行 `node --test packages/library-lab/entries/E14-react-easy-crop/examples/crop-policy.test.mjs` 只验证独立纯策略，不能计SDK/浏览器 PASS。PLATFORM须执行真实Cropper手势、PNG解码/实际尺寸、重复快速选择、取消回写、Blob URL回收与CSP。源SVG由本地可信代码构造；用户上传SVG未开放。不执行收费服务。

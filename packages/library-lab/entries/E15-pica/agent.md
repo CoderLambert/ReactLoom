@@ -13,3 +13,7 @@
 ## 执行检查
 
 PLATFORM安装后执行 typecheck/build、Chromium中真实resize/toBlob、Blob PNG头/解码宽高、取消处理后无旧回写、重挂卸载ObjectURL回收、CSP Worker行为。没有真实执行证据记 NOT_RUN/BLOCKED。相关E14 crop、E13 PhotoSwipe。官方：https://github.com/nodeca/pica
+
+## wave19 迁移提醒
+
+业务传入新File或变更尺寸必须同步废弃旧generation、清空旧图，并触发pica的`cancelToken`；不要只在`execute()`开头取消。`operationRef` 必须保持到旧Promise真正结算，避免64MiB级画布并行分配；React状态`running`不提供同步互斥。层级切换使用 keyed session，避免旧结果泄漏。实际SDK/Worker/浏览器验收独立记录，不从Node策略测试推断通过。

@@ -77,3 +77,9 @@ useEffect(() => {
 - https://photoswipe.com/getting-started/
 - https://photoswipe.com/options/
 - https://github.com/dimsemenov/PhotoSwipe
+
+## 动态图集生命周期加固（EF wave19）
+
+新增 `examples/gallery-policy.mjs` 作为场景选择和原始尺寸/重复ID的**同源业务约束**；Node测试 `examples/gallery-policy.test.mjs` 只覆盖纯数据契约，绝不表示PhotoSwipe已在Chromium运行。示例在 `level` 或动态图片集合变化时销毁旧 `PhotoSwipeLightbox` 并重新初始化该gallery作用域；移除第四张前显式 `pswp.close()`，避免持有已经退出React列表的slide。官方说明 `destroy()` 可关闭已打开灯箱并取消绑定；不能推断所有内核懒加载已在浏览器验证。SVG data URL是**本地代码生成的可信固定素材**，此policy不做不可信SVG净化，生产接入应使用已审查的媒体资产和正确的CSP `img-src`。
+
+重现实测：`node --test packages/library-lab/entries/E13-photoswipe/examples/gallery-policy.test.mjs`。PLATFORM后续在真实Chromium按 Esc/焦点恢复/动态移除正在查看的第四张/StrictMode卸载重挂/CSP检查；仅文档和数据测试通过不更改 `verification.json` 中SDK/browser状态。

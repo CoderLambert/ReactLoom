@@ -15,3 +15,7 @@
 固定1:1与16:9模式的预览；拖动、滚轮、触摸；导出PNG解码尺寸；切图时旧导出作废；不能导入超过限制的文件；ObjectURL不泄露；组件卸载取消旧回写；旋转未实现要显式标注。见verification.json，未实测不可填PASS。
 
 推荐与E15 pica组合进行裁后缩放，与E13 PhotoSwipe组合进行裁前预览。官方：https://github.com/ValentinH/react-easy-crop
+
+## wave19 可迁移安全边界
+
+直接复用 `checkCropArea` 在Canvas分配前确认像素矩形完全处于源图内，且控制最大输出像素；`onCropChange`/`onZoomChange` 必须失效正在导出的旧任务。`activeExport` 为同步双击门禁，不用 React `busy` 状态冒充同步互斥。对源文件解码和真实图片输出需继续跑浏览器负例；纯Node几何检查不能证明react-easy-crop运行成功。

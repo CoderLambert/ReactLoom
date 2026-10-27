@@ -49,6 +49,9 @@
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
+        "examples/resize-policy.mjs",
+        "examples/resize-policy.d.mts",
+        "examples/resize-policy.test.mjs",
         "examples/example.tsx",
         "examples/demo.tsx"
       ],
@@ -67,6 +70,9 @@
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
+        "examples/resize-policy.mjs",
+        "examples/resize-policy.d.mts",
+        "examples/resize-policy.test.mjs",
         "examples/example.tsx",
         "examples/demo.tsx"
       ],
@@ -85,6 +91,9 @@
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
+        "examples/resize-policy.mjs",
+        "examples/resize-policy.d.mts",
+        "examples/resize-policy.test.mjs",
         "examples/example.tsx",
         "examples/demo.tsx"
       ],
