@@ -33,3 +33,9 @@ React维护来源列表；Leaflet负责Map、LayerGroup、circleMarker。Map只�
 ## AB wave16：筛选选择一致性和合法坐标
 
 `examples/location-policy.ts` 统一选中**当前可见**的点位：切换“仅已启用”时隐藏的暂停点不再在地图及读屏状态中被误报为选中；删除选中点后按当前过滤条件选择下一可见位置。高级模式连续坐标更新统一限制到纬度±85、经度±180，避免超出可渲染范围；源被删除后禁用修改按钮。`tests/location-policy.test.mts` 只校验纯数据规则，Leaflet真实marker/ResizeObserver/键盘定位仍待浏览器。
+
+## wave21：真实地图挂载周期、筛选提交与动态容量
+
+先前 Map effect 依赖 `level`，切换 basic/business/advanced 时重新创建 `L.map(host)`，但 `ready` 保持 true，标记 effect 不一定重新执行，可能出现只有网格没有点位的新Map。本版将地图对象绑定组件挂载（空依赖），切层级只重置React数据，由唯一LayerGroup处理重绘。筛选隐藏旧选中项时同步真实选择状态，避免关闭筛选后跳回隐藏来源。
+
+40是**同时存在**的模拟点位上限，而非40次历史点击限制。删除后可继续添加，ID按正安全整数单调分配，坐标固定在40个合法离线教学位置循环。事件与函数式setter均检查当前容量，避免快点击越界。本批Node策略测试不证明地图SDK或Chromium中的ResizeObserver、StrictMode、定位和资源清理通过。
