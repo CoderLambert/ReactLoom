@@ -1,0 +1,138 @@
+# ReactLoom Library Lab PLATFORM wave15 — isolated exact-blob Node evidence
+# Runtime: Node v22.16.0; repo HEAD requires Node >=22.18, so this is NOT full build/SDK/browser validation.
+# Exact GitHub blob SHA (git hash-object of executed files):
+# scripts/cli-runner.mjs ddf011a0c8154a0d800ea001f487809bb25f0b95
+# tests/cli-runner.test.mjs 456597ebf384ed4ade09191f4e1c10b29d31fcb1
+# scripts/sdk-runner.mjs 068c1f32c89ef436bce57543dc895668789083db
+# scripts/policy-runner.mjs 8024ebb324e7449f825176018b50054bc0003a2e
+# tests/policy-runner.test.mjs 244f47bfdf6ae6697328d04d5eaf8f94d112b4f5
+# Commands executed from /mnt/data/reactloom-exact/packages/library-lab
+# node --test tests/cli-runner.test.mjs
+# SHA256 of original TAP: 80444552d858e0be514321fc9039501aad8927ac45cc98b85654e3ad8bf9d01b
+TAP version 13
+# Subtest: fixed registry contains seven checked-in CLI verifier recipes
+ok 1 - fixed registry contains seven checked-in CLI verifier recipes
+  ---
+  duration_ms: 3.846444
+  type: 'test'
+  ...
+# Subtest: unknown targets and injection payloads fail instead of silently passing
+ok 2 - unknown targets and injection payloads fail instead of silently passing
+  ---
+  duration_ms: 0.903458
+  type: 'test'
+  ...
+# Subtest: list mode reports recipes without starting SDK processes
+ok 3 - list mode reports recipes without starting SDK processes
+  ---
+  duration_ms: 0.201786
+  type: 'test'
+  ...
+# Subtest: known verifier paths run as Node with shell disabled; a failing real SDK stops the suite
+ok 4 - known verifier paths run as Node with shell disabled; a failing real SDK stops the suite
+  ---
+  duration_ms: 0.724497
+  type: 'test'
+  ...
+# Subtest: tampered registry paths cannot execute arbitrary scripts
+ok 5 - tampered registry paths cannot execute arbitrary scripts
+  ---
+  duration_ms: 0.325723
+  type: 'test'
+  ...
+# Subtest: D16 and D21 use fixed local real SDK runners rather than a web shell
+ok 6 - D16 and D21 use fixed local real SDK runners rather than a web shell
+  ---
+  duration_ms: 0.603685
+  type: 'test'
+  ...
+# Subtest: F15 Knip verifier is fixed to the checked-in Node harness and never executes user input
+ok 7 - F15 Knip verifier is fixed to the checked-in Node harness and never executes user input
+  ---
+  duration_ms: 0.821814
+  type: 'test'
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 153.398221
+
+# node --test tests/policy-runner.test.mjs
+# SHA256 of original TAP: 10d1992cf9e6ec5c48df55b0bf8ea6f4a6cbdd4c69f7d9a9a2a341f8e4c9328a
+TAP version 13
+# Subtest: policy discovery includes TS type-stripping suites and excludes real SDK suites
+ok 1 - policy discovery includes TS type-stripping suites and excludes real SDK suites
+  ---
+  duration_ms: 26.222218
+  type: 'test'
+  ...
+# Subtest: SDK selection cannot silently count a pure policy-only entry as SDK PASS
+ok 2 - SDK selection cannot silently count a pure policy-only entry as SDK PASS
+  ---
+  duration_ms: 13.419504
+  type: 'test'
+  ...
+# Subtest: malformed entry names and injected selectors are rejected
+ok 3 - malformed entry names and injected selectors are rejected
+  ---
+  duration_ms: 0.332402
+  type: 'test'
+  ...
+# Subtest: entry-level CI policy plan selects changed source IDs but not other libraries
+ok 4 - entry-level CI policy plan selects changed source IDs but not other libraries
+  ---
+  duration_ms: 0.527838
+  type: 'test'
+  ...
+# Subtest: guide-only and entries lacking policy suites are SKIP, never an SDK PASS
+ok 5 - guide-only and entries lacking policy suites are SKIP, never an SDK PASS
+  ---
+  duration_ms: 0.235586
+  type: 'test'
+  ...
+# Subtest: shared runtime and dependency changes require all pure policies, excluding SDK suites
+ok 6 - shared runtime and dependency changes require all pure policies, excluding SDK suites
+  ---
+  duration_ms: 0.309989
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 114.800093
+
+# Synthetic fixture integration — not an actual ReactLoom workspace policy run
+# Created a temporary Git repository with A04 and C07 independent test suites.
+# Committed only an A04 source file, then:
+# node scripts/policy-runner.mjs --changed-base=08db4c638b87a430b3b1e50bb42d68240de4516d
+# SHA256 of original output: 78a6c49b54d71a3c4251f57d548058b09b343725914bd394013de1368263a73e
+Changed-entry policy plan: affected; affected IDs: A04
+Pure entry policy suites selected: 1 (not SDK evidence)
+TAP version 13
+# Subtest: A04 synthetic CI policy fixture
+ok 1 - A04 synthetic CI policy fixture
+  ---
+  duration_ms: 0.854311
+  type: 'test'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 81.567926
+# All preceding Node results: 7+6 exact blob unit tests PASS; 1 synthetic fixture integration PASS.
+# Actual third-party SDK, whole repository TypeScript, Vite production build, Chromium/Worker/SW are NOT_RUN/BLOCKED.
