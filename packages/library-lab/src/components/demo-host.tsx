@@ -6,6 +6,7 @@ import {demoLoaders} from '../generated/loaders';
 import {reproductionCommand} from '../lib/reproduction.mjs';
 import {demoRunPolicy,CAPABILITY_DESCRIPTIONS} from '../lib/demo-policy.mjs';
 import {sourceLanguage} from '../lib/source-language.mjs';
+import {validateSourceIndex,readBoundedSourceResponse} from '../lib/source-integrity.mjs';
 import {packageInstallCommand} from '../lib/package-source.mjs';
 import HighlightCode from './highlight-code';
 import {workerFactories} from '../generated/worker-loaders';
@@ -22,10 +23,9 @@ function SourceViewer({entryId,demo}:{entryId:string;demo:Demo}){
   const controller=new AbortController();setFiles([]);setSelected('');setError('');
   fetch(import.meta.env.BASE_URL+'raw/'+entryId+'/source-index.json',{signal:controller.signal})
    .then(response=>{if(!response.ok)throw new Error('无法读取源码索引');return response.json();})
-   .then((items:SourceMetadata[])=>{
+   .then((items:unknown)=>{
     if(controller.signal.aborted)return;
-    if(!Array.isArray(items))throw new Error('源码索引格式错误');
-    const relevant=items.filter(file=>demo.sourceFiles.includes(file.path));
+    const relevant=validateSourceIndex(items,demo.sourceFiles);
     setFiles(relevant);setSelected(relevant[0]?.path??'');
    })
    .catch(cause=>{if(!controller.signal.aborted)setError(String(cause));});
@@ -41,8 +41,7 @@ function SourceViewer({entryId,demo}:{entryId:string;demo:Demo}){
   const encoded=current.path.split('/').map(encodeURIComponent).join('/');
   fetch(import.meta.env.BASE_URL+'raw/'+entryId+'/sources/'+encoded,{signal:controller.signal})
    .then(async response=>{
-    if(!response.ok||response.headers.get('content-type')?.includes('text/html'))throw new Error('源码读取失败');
-    const source=await response.text();
+    const source=await readBoundedSourceResponse(response,current.bytes);
     if(globalThis.crypto?.subtle){
      const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(source));
      const hash=Array.from(new Uint8Array(digest),byte=>byte.toString(16).padStart(2,'0')).join('');
