@@ -51,3 +51,9 @@ Monaco 区分 `model`、`editor`、`worker` 和语言服务：model 是带 URI �
 ## 验证状态
 
 源码使用真实 Monaco ESM API 和 Vite Worker 构造器，但当前本地环境无 npm 依赖，`sdk`、`build` 和 `browser` 均不能标 PASS。具体细项参见 `verification.json`；离线编译不代表 Worker 已工作。
+
+## 多编辑器 Worker 环境租约（第12轮）
+
+`examples/worker-lease.mjs` 引用计数管理 **MonacoEnvironment配置**：多编辑器共享getWorker映射，最后一个卸载时仅删除本示例自己的映射；若外部host已经提供配置或中途替换，拒绝静默覆盖。创建model/editor失败时释放租约，正常cleanup按观察器、订阅、editor、model、lease顺序完成。
+
+这里**不**直接terminate由Monaco内部持有/缓存的语言Worker，`model.dispose`亦非Worker终止保证。正式CSP/Worker验证需真实Monaco加载JSON诊断、切换level与卸载重挂，检查Worker chunk网络、主线程回退与`worker-src`；离线 `node --test entries/E05-monaco-editor/examples/worker-lease.test.mjs`只校验宿主所有权。

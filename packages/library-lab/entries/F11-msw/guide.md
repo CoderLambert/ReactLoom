@@ -71,3 +71,9 @@ F12 Vitest 适合断言 Node handler 场景；F13 Playwright 用来验证浏览�
 旧版本固定使用 `https://library-lab.invalid/api/...`，这只适用于 Node 拦截；隔离浏览器 iframe 直接 fetch 到该域名会涉及跨域/CORS/未匹配预检，不能据此验证本地 Worker。现在 `examples/routes.mjs` 的 `scenarioEndpoints(base)` 由同一规则生成两种地址：Node 仍用 `.invalid`，浏览器从 `location.origin + /lab-runners/msw/` 生成同源 scoped API。`handlers.mjs` 的 `createHandlers(urls)` 复用同一真实 MSW handler，避免两套业务假数据漂移。
 
 `examples/browser-worker.mjs` 拒绝顶层页面和非 scoped 入口，启动后对 registration 的 scope 及 scriptURL 做精确断言。`worker.stop()` 是停止监听，不是注销注册；真正的隔离 iframe、worker 脚本、注册卸载策略和 Chromium 截获验证仍由 PLATFORM 承担。纯 `node --test tests/routes.test.mjs` 只检查 URL 合同，**不构成 MSW SDK/Service Worker PASS**。
+
+## 浏览器真实截获证明与回收（第12轮）
+
+`registration-policy.mjs`验证严格scope和精确scriptURL，不能把根scope的Service Worker当成本runner注册。browser-worker启动前拒绝外来注册；成功后除了检查注册，还要验证当前frame controller实际为预期脚本，并真实`fetch` scoped article断言响应，否则失败及清理。stop会await MSW v3异步stop；只有当前会话新建的注册才尝试unregister，不私自注销已有注册。此防护**仍假设runner独占该scope**；同源多tab并发启动时需要PLATFORM独立origin或跨标签协调，否则不可声称完全隔离。
+
+PLATFORM必须接入真实iframe/同源mockServiceWorker.js，使用Chromium检查`worker-src`、`script-src`、MIME、frame-ancestors、控制权、反复启动/停止和页面关闭后注册残留。纯`node --test entries/F11-msw/examples/registration-policy.test.mjs`仅检查Scope策略，不等于msw SDK/浏览器PASS。

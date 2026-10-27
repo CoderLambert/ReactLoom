@@ -36,3 +36,7 @@ GET 响应200及 JSON；验证码成功200、错误422且应用显示字段反�
 ## 浏览器/Node URL 事实源
 
 读取 `examples/routes.mjs` 并使用 `scenarioEndpoints(base)`：Node 为保留的 `https://library-lab.invalid/`，iframe 使用当前 origin 的 `/lab-runners/msw/`。`createHandlers(urls)` 统一业务响应；不得在浏览器通过跨域 `.invalid` 地址假设拦截已经生效。`browser-worker.mjs` 的 registration scope/script 精确检查仅是 readiness gate，实际 `fetch` 和 Worker 接管仍需 Chromium 测试。禁止在顶层 SPA 注册这个 Worker。
+
+## Service Worker运行模式的硬约束（第12轮）
+
+仅在PLATFORM受控iframe显式启动`startIsolatedWorker()`，保存返回的async stop并在finally/unmount await调用。迁移`registration-policy.mjs`一起验证外部script不被覆盖、script/scope/controller和真实fetch都正常。已存在的同scope注册不自动注销；多tab共享scope必须用独立origin/跨tab租约处理。没有提供worker脚本及真实浏览器环境时严禁称为运行验收。

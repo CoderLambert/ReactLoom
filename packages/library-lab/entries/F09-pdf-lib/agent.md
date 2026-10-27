@@ -13,3 +13,7 @@
 实际导入pdf-lib，创建→load页数与标题校验；合并页序；原始输入不可变；坏PDF/加密/超限显示失败；切换路由不泄漏下载URL。未进行真实SDK/Chromium验证时不得将结构检查记PASS。
 
 官方：<https://github.com/Hopding/pdf-lib>
+
+## 任务所有权与Blob URL（第12轮）
+
+复用`example.tsx`必须同时带上`operation-gate.mjs`及声明：同步begin挡连点、invalidate挡级别/文件切换后的旧回写、finally只有当前token可复位busy。不要在`setDownload(next)`之前撤销仍在DOM上的旧href；Effect cleanup释放已提交的旧下载链接，unmount清理所有曾创建URL。实际解析大对象不可中止，应另加内存/进程隔离。

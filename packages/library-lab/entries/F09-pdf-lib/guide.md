@@ -28,3 +28,7 @@ F07 react-pdf进行所生成PDF的可选择文本预览；F08适合用React布�
 
 ## 官方依据与状态
 <https://github.com/Hopding/pdf-lib> / <https://pdf-lib.js.org/>。MIT，基线1.17.1。实际SDK、生产构建和浏览器仍NOT_RUN/BLOCKED，源码存在不等于验收通过。
+
+## PDF并发与下载URL事务（第12轮）
+
+`operation-gate.mjs`提供同步single-flight：React`busy`在同一事件批次不会同步生效，不能用它阻止连续点击产生并行pdf-lib解析。任务完成`finish(token)`，切换level或卸载调用invalidate，使旧Promise及旧finally不修改新界面。下载URL由Set跟踪，新旧下载链接在React提交后使用Effect cleanup释放，卸载时回收尚未commit的URL。2MiB限制是输入快速预筛，**pdf-lib解析非可取消进程、不是不可信PDF解压沙箱**。离线测试仅覆盖gate而非SDK。

@@ -1,7 +1,7 @@
 {
   "source": {
     "status": "NOT_RUN",
-    "note": "仅审查官方API文档，未实际解析SDK"
+    "note": "第12轮仅执行纯JS生命周期和注册策略的定向Node测试；没有实际导入目标SDK，不计SDK或浏览器PASS"
   },
   "sdk": {
     "status": "NOT_RUN",
@@ -13,7 +13,7 @@
   },
   "browser": {
     "status": "BLOCKED",
-    "note": "需要独立 /lab-runners/msw/ iframe + worker script + 作用域实测"
+    "note": "代码具scope/controller/真实fetch检查与自有注册回收；独立iframe/script/CSP和Chromium实测仍需PLATFORM"
   },
   "security": {
     "status": "NOT_RUN",
