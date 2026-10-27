@@ -2,6 +2,7 @@
 import {useState} from 'react';
 import {addDays, differenceInCalendarDays, differenceInHours, format, isValid, parseISO} from 'date-fns';
 import {TZDate, tz} from '@date-fns/tz';
+import {assertExplicitInstant} from './instant-policy.mjs';
 
 type Zone = 'America/New_York' | 'Asia/Shanghai' | 'UTC';
 type Level = 'basic' | 'business' | 'advanced';
@@ -19,10 +20,7 @@ export function parseCivilDate(raw: string, zone: Zone): TZDate {
 }
 
 export function parseInstant(value: string): Date {
-  if (!/(?:[zZ]|[+-]\d{2}:\d{2})$/.test(value)) {
-    throw new Error('绝对事件必须明确 Z 或 ±HH:mm，拒绝回拨日无偏移的 01:30');
-  }
-  const date = parseISO(value);
+  const date = parseISO(assertExplicitInstant(value));
   if (!isValid(date)) throw new Error('事件时间不是合法 ISO 8601');
   return date;
 }

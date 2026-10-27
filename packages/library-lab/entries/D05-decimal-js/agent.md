@@ -25,3 +25,8 @@
 ## 官方
 
 https://github.com/MikeMcl/decimal.js/
+
+
+## 防止算法与展示双份维护
+
+移植 `examples/invoice.mjs` 和 `examples/amount-policy.mjs`；UI 不再独占 `calculateInvoice` 算法。金额入参与结果都保留十进制字符串，严禁先转换为 JS Number；明确发票税额舍入点与按行/按单价舍入的差异。字段变更必须使旧结果失效，不能让旧计算结果被当成新参数的账单。SDK 回归直接导入 invoice.mjs，纯策略通过不意味着 decimal.js 已运行。

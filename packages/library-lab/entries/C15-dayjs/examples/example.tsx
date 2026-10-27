@@ -4,6 +4,7 @@ import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import 'dayjs/locale/zh-cn';
+import {resolveExplicitZonedInstant} from './offset-instant.mjs';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -38,6 +39,7 @@ export function twoFallbackInstants() {
 export default function DayjsWorkshop({level}:{level:Level}) {
   const [civil,setCivil] = useState('2026-03-07');
   const [zone,setZone] = useState<Zone>('America/New_York');
+  const [eventInput,setEventInput] = useState('2026-11-01T01:30:00-04:00');
   const [result,setResult] = useState('');
   const [error,setError] = useState('');
   function run() {
@@ -51,6 +53,7 @@ export default function DayjsWorkshop({level}:{level:Level}) {
              spring:civilWindow('2026-03-07','America/New_York'),
              fall:civilWindow('2026-10-31','America/New_York'),
              fallback:twoFallbackInstants(),
+             selectedEvent:resolveExplicitZonedInstant(eventInput,'America/New_York'),
            };
       setResult(JSON.stringify(output,null,2));setError('');
     } catch(e) {setError(e instanceof Error?e.message:String(e));setResult('');}
@@ -62,6 +65,18 @@ export default function DayjsWorkshop({level}:{level:Level}) {
       <label>日历日期 <input aria-label="日历日期" value={civil} onChange={e=>setCivil(e.target.value)}/></label>
       {level==='business'&&<label>IANA 时区 <select aria-label="IANA 时区" value={zone}
         onChange={e=>setZone(e.target.value as Zone)}>{zones.map(z=><option key={z}>{z}</option>)}</select></label>}
+    </div>}
+    {level==='advanced'&&<div className="demo-controls">
+      <label>纽约带偏移的绝对事件
+        <input aria-label="纽约带偏移的绝对事件" value={eventInput}
+          onChange={e=>{setEventInput(e.target.value);setResult('');setError('');}}/>
+      </label>
+      <button type="button" onClick={()=>{setEventInput('2026-11-01T01:30:00-05:00');setResult('');}}>
+        选择回拨后的 -05:00
+      </button>
+      <button type="button" onClick={()=>{setEventInput('2026-03-08T02:30:00-05:00');setResult('');}}>
+        尝试春季不存在的 02:30
+      </button>
     </div>}
     <button type="button" onClick={run}>使用 Day.js 运行计算</button>
     {error&&<p role="alert">{error}</p>}

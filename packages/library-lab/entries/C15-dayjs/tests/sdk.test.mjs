@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc.js';
 import timezone from 'dayjs/plugin/timezone.js';
 import customParseFormat from 'dayjs/plugin/customParseFormat.js';
+import {resolveExplicitZonedInstant} from '../examples/offset-instant.mjs';
 dayjs.extend(utc);dayjs.extend(timezone);dayjs.extend(customParseFormat);
 const fmt='YYYY-MM-DD HH:mm';
 function noon(day,zone){return dayjs.tz(day+' 12:00',fmt,zone);}
@@ -20,4 +21,17 @@ test('distinct UTC instants survive same wall clock with different offsets',()=>
  const second=dayjs.utc('2026-11-01T06:30:00Z').tz('America/New_York');
  assert.equal(first.format('HH:mm'),second.format('HH:mm'));
  assert.notEqual(first.format('Z'),second.format('Z'));
+});
+
+test('actual Day.js accepts both disambiguated fall-back instants',()=>{
+ const first=resolveExplicitZonedInstant('2026-11-01T01:30:00-04:00','America/New_York');
+ const second=resolveExplicitZonedInstant('2026-11-01T01:30:00-05:00','America/New_York');
+ assert.equal(first.instant,'2026-11-01T05:30:00.000Z');
+ assert.equal(second.instant,'2026-11-01T06:30:00.000Z');
+});
+test('actual Day.js rejects mismatched offsets and spring-forward wall gaps',()=>{
+ for(const input of ['2026-03-08T02:30:00-05:00','2026-11-01T01:30:00-06:00',
+   '2026-11-01T01:30:00','2026-02-30T10:00:00-05:00']) {
+   assert.throws(()=>resolveExplicitZonedInstant(input,'America/New_York'));
+ }
 });

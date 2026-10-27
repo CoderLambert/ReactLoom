@@ -20,3 +20,8 @@
 NY 2026-03-07→03-08 23h；10-31→11-01 25h；`2026-02-30`、无偏移回拨 01:30 拒绝。版本/API/构建/浏览器必须在目标项目再验证。本分支未实际运行这些 SDK 用例，不能写 PASS。
 
 来源：https://github.com/date-fns/date-fns · https://github.com/date-fns/tz
+
+
+## 迁移前的额外输入契约
+
+复制 `assertExplicitInstant` 和 `parseInstant` 时必须保留两段校验：正则与日历日期范围确保事件带明确偏移，真实 `parseISO` 将其转换为 instant。尤其 `-00:00` 不是已知 UTC 偏移；不要把 SDK 宽松解析当业务 schema。校验自身的纯 Node 测试与真正 date-fns SDK 测试分别报告。

@@ -46,3 +46,7 @@ C12 FullCalendar 负责 UI，但 all-day 与 timed event 需要不同建模。C1
 - https://github.com/date-fns/date-fns
 - https://github.com/date-fns/tz
 - https://blog.date-fns.org/v40-with-time-zone-support/
+
+## 新增：绝对事件输入的格式边界
+
+示例现在通过同源 `examples/instant-policy.mjs` 先验证事件 ISO 日期时间，再交给真实 `date-fns/parseISO`：必须提供秒和明确的 `Z` 或 `±HH:mm`，最多三位毫秒；拒绝日期溢出、闰年错误、24:00、闰秒 60、超出 ±14:00 的偏移和表示“偏移未知”的 `-00:00`。独立纯策略测试可直接运行，但不证明 date-fns SDK 已运行。此格式是本 Lab 的保守 API 契约，不声称覆盖 ISO 8601 全语法。

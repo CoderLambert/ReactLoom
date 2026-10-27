@@ -387,3 +387,21 @@ C13 Frappe Gantt 1.2.2 上游 `src/index.js` 的 `bind_bar_events` 会向 `docum
 - GitHub compare 基于 `66479e8a2d3e27d65c3c581093822cb4baf6c00d`：**19/19 变更路径均在 CD 所有权**。C08/C06 各有 3 层复用同一组件的 sourceFiles，并包含新加入的真实 helper 与类型声明；D04 仍使用已有三层真实 PQueue 组件。
 - 将提交后的源文件重建于隔离目录，`git hash-object` 分别与远端 Git blob SHA 一致：C08 `edit-policy.mjs=58b333e75692df5deda2d327088ae3307e6a65c6`、`edit-policy.test.mjs=8cea41aae44f3524f46f698d31966b557d5a2632`；C06 `calendar-policy.mjs=0e545a10368c7ec19392a263790d7215cf0dad53`、`calendar-policy.test.mjs=38591a7dd4d954dd0e6575474b5ed10f23f0faeb`。
 - `node --check` 对上述 **4 个精确文件**无语法错误；`node --test` 对两个策略测试文件 **7 PASS / 0 FAIL**。这些不导入官方 SDK；D04 增加的 p-queue SDK 测试，以及 TS/构建/浏览器仍为 `NOT_RUN`。未更改 verification.json 的结果为假 PASS。
+
+
+---
+
+## 第十五轮（2026-10-27）— DST 时间歧义与十进制账单正确性
+
+- **runCount：15/24**；从最新集成 `feat/library-lab@9a5778a97970119a4d811e139d81038f66042ec2` 独立创建 `feat/library-lab-cd-wave15`。上一 CD #54 已由 PLATFORM 合并，本轮保持 [Draft PR #58](https://github.com/CoderLambert/ReactLoom/pull/58) 的 base=`feat/library-lab`，不合并 main。
+- **C14 date-fns**：新增由实际 React 示例导入的 `examples/instant-policy.mjs` 和类型声明，带明确 UTC 偏移的秒级事件先校验，再通过真实 `date-fns/parseISO` 转换。拒绝非法日历日（含11/12月）、2月30、世纪年闰日、缺少时分秒、无偏移、`-00:00`（偏移未知）、超过 ±14:00 的偏移、24:00 与秒=60；新增纯 Node 策略及真实 SDK 测试源码。
+- **C15 Day.js**：`examples/offset-instant.mjs` 真正调用 Day.js + timezone，核对事件自带 UTC 偏移与具名 IANA 时区转换后的实际本地日期、时分及偏移是否一致；两个 2026-11-01 01:30 回拨时刻均可独立表达，2026-03-08 不存在的 02:30 和错误偏移明确拒绝。高级 Demo 增加两个可点击实战场景；SDK 回归源码尚未执行。
+- **C16 Luxon**：新增独立 `wall-time-policy.mjs` 严格年月日/时分校验及真实 SDK `wall-time.mjs`。从本地墙上时间解析后回查，拒绝 DST 春季缺失时间；使用 `DateTime#getPossibleOffsets` 并强制选择回拨重叠时刻的 `-04:00` 或 `-05:00`，不默默依赖默认猜测；完整高级交互、声明和双层测试源码同步。
+- **D05 decimal.js**：提取单一真实计算实现 `examples/invoice.mjs`，UI 与真正 SDK 测试复用它，金额输入由 `amount-policy.mjs` 约束为十进制字符串。展示 0.335×3 在“先舍入行小计”=1.01 与“先舍入单价”=1.02 的对照；用户修改金额、数量、税率时立即废弃旧账单和旧错误。明确不能把示例舍入阶段当成所有税务规则。
+- **实际 GitHub 提交**：C14 `ae44658011ea8bf0499283b225b3208c059b2435`、C15 `d4629ca548028163d1b3841cc1b93e9d6bb6ae70`、C16 `3fd60a34dbe16c1ec5d906e2d630a8f33a277985`、D05 `12d59fab86ba4aac7af230ae145ba778c1c2d332`、C16 交互初始值修复 `11f5f5b2a9be2e234bc194f2c7fe176f815b6ebe`、C14 完整12月校验修复 `50c6109222c5acf305d6c5b2e56501d86f083db3`。本进度提交在这些源码提交之后，PR HEAD 以 GitHub 实际结果为准。
+- **实际执行的定向验证**：Node v22.16.0，隔离工作目录中按 GitHub Git blob SHA 重建并逐字核对 C14、C16、D05 各1个纯策略模块及其独立测试，共 **6/6 SHA 一致**；对这6个文件 `node --check` **PASS**；`node --test C14/tests/instant-policy.test.mjs C16/tests/wall-time-policy.test.mjs D05/tests/amount-policy.test.mjs` 为 **8 PASS、0 FAIL**。该结果只证明无 SDK 的真实策略实现，目标 SDK 未 mock、也**没有**实际运行；不得据此填目标库 SDK PASS。
+- **结构与写入范围**：GitHub compare 在进度更新前核实 **39/39 修改路径都属于 CD 授权 C*/D* 目录**；四条目各 basic/business/advanced 共12个真实演示声明，`sourceFiles` 全部在 Github 示例文件夹存在，且实际代码导入对应 helper。进度更新后应为 40 个授权路径（额外本文件），由 PR 对比确认。未改根/包级依赖与锁文件、PLATFORM 公共文件/CI、生成目录、其他组、main、PR #3、旧模板，也未公开部署。
+- **NOT_RUN / BLOCKED**：本轮 C14/C15/C16/D05 四库 `tests/sdk.test.mjs`、全量 TypeScript typecheck、Vite production build、Chromium DST/账单 UI **均 NOT_RUN**。本地缺项目 SDK/pnpm 锁文件及可用安装路径，`getent ahostsv4 registry.npmjs.org` 单次 DNS 检查失败（exit=2）；没有再次重复网络请求。四条目 `verification.json` 仍维持原来的 SDK/build/browser NOT_RUN，不继承历史验证。
+- **dependencyRequests：无新增**。当前平台 package 已声明 `date-fns@4.4.0`、`@date-fns/tz@1.5.0`、`dayjs@1.11.23`、`luxon@3.7.2`、`decimal.js@10.6.0`（对应上游代码与许可仍需 PLATFORM 在正式安装时核对，预期均 MIT），任何锁文件更新只能由 PLATFORM 执行。
+- **范围进度：CD 43/43 条源码、中文指南、Agent 与三层真实调用均有覆盖；本轮新增目标 SDK/构建/浏览器 PASS 为 0**，不得视作整体运行验收完成。
+- **下一队列**：PLATFORM 首先合入/审核 #58 并提供已安装真实包的 SDK 定向执行环境；逐个运行四库 `node --test .../tests/sdk.test.mjs`、`pnpm --filter @reactloom/library-lab typecheck`、`build`、Chromium 时区选择/DST gap/overlap 与账单 stale output。真实失败出现时 CD 按当前 SHA 精修并绑定源指纹/真实命令/持久化日志；不可用时只独立推进确有复现价值的 C/D 高风险边界，不重复创建43条。

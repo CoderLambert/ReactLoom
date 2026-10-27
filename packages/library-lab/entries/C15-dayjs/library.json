@@ -54,7 +54,9 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/offset-instant.mjs",
+        "examples/offset-instant.d.mts"
       ],
       "capabilities": [],
       "description": "严格日历日期和中文本地化"
@@ -67,7 +69,9 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/offset-instant.mjs",
+        "examples/offset-instant.d.mts"
       ],
       "capabilities": [],
       "description": "RSS IANA 时区每日窗口"
@@ -80,7 +84,9 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/offset-instant.mjs",
+        "examples/offset-instant.d.mts"
       ],
       "capabilities": [],
       "description": "DST 23/25h、回拨同名时刻"

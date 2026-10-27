@@ -72,3 +72,10 @@ C02 Zod 可作为格式、精度和业务范围边界；后端也须验证相同
 - [GitHub 仓库](https://github.com/MikeMcl/decimal.js/)
 - [package.json (v10.6.0)](https://github.com/MikeMcl/decimal.js/blob/master/package.json)
 - [API 参考](https://mikemcl.github.io/decimal.js/)
+
+
+## 同源可执行账单计算与结果所有权
+
+核心金额函数已抽到实际 UI 导入的 `examples/invoice.mjs`（仍直接加载 decimal.js），字符串输入校验使用 `examples/amount-policy.mjs`。独立真实 SDK 回归 `tests/sdk.test.mjs` 复用相同金额函数，不再复制一套可能分叉的计算逻辑。
+
+专门演示 `0.335 × 3`：**先乘行金额后四舍五入得 1.01**，**先舍入单价再乘数量得 1.02**。这不是哪一种永远正确，而是计价合同要求的两个不同舍入点。三项输入一经更改即清除旧发票结果和旧错误，避免旧输出伪装成新输入的账单；正式后端仍需核对价格、权限、币种与税法。纯格式策略测试与真实 decimal.js SDK 测试严格分开。

@@ -1,39 +1,8 @@
 import {useState} from 'react';
 import Decimal from 'decimal.js';
+import {calculateInvoice, roundingContrast, type InvoiceInput, type InvoiceResult} from './invoice.mjs';
 
 type Props = {level: 'basic' | 'business' | 'advanced'};
-type InvoiceInput = {unitPrice: string; quantity: string; taxPercent: string};
-type InvoiceResult = {subtotal: string; tax: string; total: string};
-
-// 不修改 Decimal.set 的全局默认配置，以免污染其他业务模块。
-const Money = Decimal.clone({precision: 28, rounding: Decimal.ROUND_HALF_UP});
-const Bankers = Decimal.clone({precision: 28, rounding: Decimal.ROUND_HALF_EVEN});
-
-function amount(label: string, input: string): Decimal {
-  const value = input.trim();
-  if (!/^(?:0|[1-9]\d{0,9})(?:\.\d{1,4})?$/.test(value)) {
-    throw new Error(label + ' 必须是非负十进制字符串，最多四位小数');
-  }
-  return new Money(value);
-}
-
-export function calculateInvoice(input: InvoiceInput): InvoiceResult {
-  const unit = amount('单价', input.unitPrice);
-  if (!/^[1-9]\d{0,3}$/.test(input.quantity)) {
-    throw new Error('数量必须是 1–9999 的整数');
-  }
-  const qty = new Money(input.quantity);
-  const taxRate = amount('税率', input.taxPercent);
-  if (taxRate.greaterThan(100)) throw new Error('税率不超过 100%');
-
-  // 本演示采用“行小计四舍五入到分，再计算税”的业务规则。
-  // 生产应按实际合同和税务法规确定算法及舍入点。
-  const subtotal = unit.times(qty).toDecimalPlaces(2);
-  const tax = subtotal.times(taxRate).dividedBy(100).toDecimalPlaces(2);
-  const total = subtotal.plus(tax);
-  return {subtotal: subtotal.toFixed(2), tax: tax.toFixed(2), total: total.toFixed(2)};
-}
-
 export default function DecimalExample({level}: Props) {
   const [input, setInput] = useState<InvoiceInput>({
     unitPrice: '19.99',
@@ -42,8 +11,16 @@ export default function DecimalExample({level}: Props) {
   });
   const [result, setResult] = useState<InvoiceResult | null>(null);
   const [error, setError] = useState('');
-  const precise = new Money('0.1').plus('0.2').toString();
+  const precise = new Decimal('0.1').plus('0.2').toString();
+  const contrast = roundingContrast();
   const native = String(0.1 + 0.2);
+
+  function updateInput(key: keyof InvoiceInput, value: string) {
+    setInput(old => ({...old, [key]: value}));
+    // An invoice computed for previous fields must not remain visible after editing.
+    setResult(null);
+    setError('');
+  }
 
   function calculate() {
     try {
@@ -68,11 +45,11 @@ export default function DecimalExample({level}: Props) {
     {level !== 'basic' && <>
       <div className="demo-controls">
         <label>单价 <input value={input.unitPrice} aria-label="单价"
-          onChange={event => setInput(old => ({...old, unitPrice: event.target.value}))}/></label>
+          onChange={event => updateInput('unitPrice', event.target.value)}/></label>
         <label>数量 <input value={input.quantity} aria-label="数量"
-          onChange={event => setInput(old => ({...old, quantity: event.target.value}))}/></label>
+          onChange={event => updateInput('quantity', event.target.value)}/></label>
         <label>税率 (%) <input value={input.taxPercent} aria-label="税率"
-          onChange={event => setInput(old => ({...old, taxPercent: event.target.value}))}/></label>
+          onChange={event => updateInput('taxPercent', event.target.value)}/></label>
         <button type="button" onClick={calculate}>按业务规则计算</button>
       </div>
       {error && <p role="alert">{error}</p>}
@@ -86,10 +63,13 @@ export default function DecimalExample({level}: Props) {
       <h3>边界：恰好半分</h3>
       <div className="demo-output">
         ROUND_HALF_UP('1.005').toFixed(2) →{' '}
-        <output data-testid="half-up">{new Money('1.005').toFixed(2)}</output><br/>
+        <output data-testid="half-up">{contrast.halfUp}</output><br/>
         ROUND_HALF_EVEN('1.005').toFixed(2) →{' '}
-        <output data-testid="half-even">{new Bankers('1.005').toFixed(2)}</output>
+        <output data-testid="half-even">{contrast.halfEven}</output>
       </div>
+      <p>单价 0.335 × 3：按整行金额舍入 = <output data-testid="extended-line">{contrast.extendedLine}</output>；
+        先舍入单价再乘数量 = <output data-testid="rounded-unit">{contrast.roundedEachUnit}</output>。
+        两种结果不同，必须以合同指定的舍入点为准。</p>
       <p>这里使用 Decimal.clone 获得隔离构造器，不在共享模块修改 Decimal 全局配置。
         业务入参先进行精度与范围检查，不接受科学计数法或 Infinity 进入价格字段。</p>
     </section>}
