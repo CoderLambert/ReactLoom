@@ -30,7 +30,7 @@ export default function LuxonWorkshop({level}:{level:Level}) {
  const [civil,setCivil]=useState('2026-03-07');
  const [zone,setZone]=useState<Zone>('America/New_York');
  const [wall,setWall]=useState('2026-11-01T01:30');
- const [selectedOffset,setSelectedOffset]=useState('');
+ const [selectedOffset,setSelectedOffset]=useState('-04:00');
  const [result,setResult]=useState('');
  const [error,setError]=useState('');
  function run() {
