@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import MiniSearch from 'minisearch';
+import {scopeSearchDocuments} from '../examples/scope-policy.mjs';
 const docs=[{id:'1',title:'React Suspense',group:'tech',body:'Async state'},
   {id:'2',title:'Product positioning',group:'market',body:'Market research'},
   {id:'3',title:'React Query',group:'tech',body:'Cache invalidation'}];
@@ -21,3 +22,16 @@ test('actual MiniSearch filters before top results and rebuilds changed content'
   assert.ok(index.autoSuggest('React',{prefix:true}).length>0);
 });
 
+
+test('real MiniSearch autoSuggest is scoped before indexing, not just search filter', () => {
+  const privateAndPublic = [
+    {id:'a',title:'Secret launch roadmap',group:'产品',body:'Embargoed initiative'},
+    {id:'b',title:'React rendering basics',group:'技术',body:'Hooks and components'},
+  ];
+  const tech = make(scopeSearchDocuments(privateAndPublic,'技术'));
+  const all = make(scopeSearchDocuments(privateAndPublic,'全部'));
+  assert.equal(tech.search('Secret',{fuzzy:false}).length,0);
+  assert.equal(tech.autoSuggest('Secret',{fuzzy:false}).length,0);
+  assert.ok(all.search('Secret',{fuzzy:false}).some(hit=>hit.id==='a'));
+  assert.ok(all.autoSuggest('Secret',{fuzzy:false}).some(hit=>hit.suggestion.includes('Secret')));
+});
