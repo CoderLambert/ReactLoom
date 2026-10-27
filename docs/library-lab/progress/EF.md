@@ -391,3 +391,8 @@ runCount=6/24。本轮不把5库源代码和30+例子等同完整生产交付；
 - **真实未跑**：Monaco Worker/JSON诊断、MSW真实SW intercept/CSP、pdf-lib实际SDK与浏览器下载交互、全量TypeScript/Vite生产构建，仍**NOT_RUN/BLOCKED**（公共pnpm锁文件/可运行Runner暂无本轮证据）。新文件目录结构检查不等于运行。
 - **dependencyRequests**：无新增依赖；沿用`monaco-editor@0.57.0`(MIT)、`msw@3.0.3`(MIT，Node>=22/TS>=5.9)、`pdf-lib@1.17.1`(MIT)，由PLATFORM唯一维护package/lock与实际安装。请平台定向运行`catalog:check` / `typecheck` / `build`，再在Chromium验证三库的Worker/下载生命周期；若脚本/Worker失败，保持verification BLOCKED。
 - **下一队列**：真实SDK/Runner具备时首先消除其TS/构建故障；随后检查E05多实例/StrictMode、F11预存SW/多tab重入、F09连续文件/Tab切换和Blob泄漏。EF内容覆盖**37/37**，不是生产验收完成；**runCount=12/24**。若所有可独立推进工作确实完成再按规定停用，不以37个目录存在冒充最终PASS。
+
+### 第十二轮交付索引
+
+- Draft PR [#46](https://github.com/CoderLambert/ReactLoom/pull/46)，base=`feat/library-lab`、head=`feat/library-lab-ef-wave12-worker-lifecycle`。最新代码/文档提交 `ef66a81d100a9978c245858c45558fd0e463151b`，之前两个提交 `32335aeacec70aa23a3aa3430d22b050af7488d6`、`9cfedb8c8629e979dd871f61e992a5ef8fa2634a`，均只针对EF条目。
+- 对比当轮集成基线：3 commits、25个变更文件，全部满足EF授权目录规则；11项Node纯策略PASS，不等同SDK/浏览器PASS。下一轮应在#46被PLATFORM集成后，从最新集成分支继续创建新wave，不重写合入后的旧分支。
