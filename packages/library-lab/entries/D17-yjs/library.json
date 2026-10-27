@@ -65,6 +65,8 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/update-transport.mjs",
+        "examples/update-transport.d.mts",
         "examples/demo.tsx"
       ],
       "capabilities": []
@@ -78,6 +80,8 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/update-transport.mjs",
+        "examples/update-transport.d.mts",
         "examples/demo.tsx"
       ],
       "capabilities": []
@@ -91,6 +95,8 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/update-transport.mjs",
+        "examples/update-transport.d.mts",
         "examples/demo.tsx"
       ],
       "capabilities": []
