@@ -28,3 +28,6 @@ A11 Konva适合命令式绘制/框架无关宿主；A12适合React状态驱动�
 目前真实SDK代码已写，typecheck/build/browser **NOT_RUN**。后续必须跑React19.3 peer与Canvas渲染，重复挂载卸载，点击/拖拽/键盘同一模型、尺寸缩放与DOM替代，不能用截图或Mock SDK代替运行。
 
 来源：https://konvajs.org/docs/react/index.html · https://github.com/konvajs/react-konva/blob/master/docs/react-compatibility.md （MIT）。
+
+## 窄屏与拖拽边界补丁（2026-10-27）
+宿主宽度来自实际 clientWidth，不再强制最小320px；`stage-policy.ts`将尺寸/逻辑世界坐标分离（620×260），dragMove与dragEnd在Konva Group的局部坐标上夹紧，DOM键盘移动使用相同规则。动态节点最多24个，新增ID由事件处理器递增，不在React updater产生副作用。以上仅是纯规则测试，缩放后的pointer坐标、真实Canvas焦点和StrictMode仍待SDK/Chromium实测。

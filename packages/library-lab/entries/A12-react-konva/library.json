@@ -58,7 +58,8 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/stage-policy.ts"
       ],
       "capabilities": []
     },
@@ -70,7 +71,8 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/stage-policy.ts"
       ],
       "capabilities": []
     },
@@ -82,7 +84,8 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/stage-policy.ts"
       ],
       "capabilities": [
         "cleanup",
