@@ -2,7 +2,8 @@ import {useEffect,useRef,useState} from 'react';
 import WaveSurfer from 'wavesurfer.js';
 import {makeLabWave} from './wav';
 type Level='basic'|'business'|'advanced';
-export default function WaveformExample({level}:{level:Level}){
+export default function WaveformExample({level}:{level:Level}){return <WaveformSession key={level} level={level}/>;}
+function WaveformSession({level}:{level:Level}){
  const mount=useRef<HTMLDivElement>(null);
  const wave=useRef<WaveSurfer|null>(null);
  const [ready,setReady]=useState(false);
@@ -42,7 +43,8 @@ export default function WaveformExample({level}:{level:Level}){
   <p>生成1.6秒8kHz本地PCM波形。仅在启动Demo后初始化实例，页面卸载立即destroy并revoke URL。</p>
   <div ref={mount} aria-label="音频波形图" style={{minHeight:105}}/>
   <p role="status">{status}</p><p>播放位置：{seconds.toFixed(2)}s / 1.60s</p>
-  <div className="demo-controls"><button type="button" disabled={!ready} onClick={()=>{void wave.current?.playPause().catch(e=>setStatus('播放失败：'+String(e)))}}>{playing?'暂停':'播放'}</button>
+  <div className="demo-controls"><button type="button" disabled={!ready} onClick={()=>{const instance=wave.current;if(!instance)return;
+    void instance.playPause().catch(error=>{if(wave.current===instance)setStatus('播放失败：'+String(error))});}}>{playing?'暂停':'播放'}</button>
    {level!=='basic'&&<button type="button" disabled={!ready} onClick={()=>seek(.8)}>跳到0.8秒</button>}
    {level==='advanced'&&<><label>倍速<select value={rate} disabled={!ready} onChange={e=>changeRate(Number(e.target.value))}><option value={1}>1×</option><option value={1.5}>1.5×</option></select></label><button type="button" disabled={!ready} onClick={()=>wave.current?.zoom(120)}>放大波形</button><button type="button" disabled={!ready} onClick={()=>wave.current?.zoom(0)}>复原</button></>}
   </div>

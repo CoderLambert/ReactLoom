@@ -65,7 +65,10 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/preview-policy.mjs",
+        "examples/preview-policy.d.mts",
+        "tests/policy.test.mjs"
       ],
       "capabilities": [
         "local-file-picker",
@@ -83,7 +86,10 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/preview-policy.mjs",
+        "examples/preview-policy.d.mts",
+        "tests/policy.test.mjs"
       ],
       "capabilities": [
         "local-file-picker",
@@ -101,7 +107,10 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/preview-policy.mjs",
+        "examples/preview-policy.d.mts",
+        "tests/policy.test.mjs"
       ],
       "capabilities": [
         "local-file-picker",

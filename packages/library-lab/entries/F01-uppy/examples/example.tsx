@@ -1,11 +1,13 @@
 import {useEffect, useRef, useState} from 'react'
 import Uppy from '@uppy/core'
+import {readTextPreview} from './preview-policy.mjs'
 
 type Level = 'basic' | 'business' | 'advanced'
 type Props = {level: Level}
 type LocalFile = {id: string; name: string; size: number; type: string}
 
-export default function UppyQueueExample({level}: Props) {
+export default function UppyQueueExample({level}: Props) {return <UppySession key={level} level={level}/>}
+function UppySession({level}: Props) {
   const uppyRef = useRef<Uppy | null>(null)
   const generation = useRef(0)
   const [files, setFiles] = useState<LocalFile[]>([])
@@ -71,19 +73,15 @@ export default function UppyQueueExample({level}: Props) {
   async function inspect(id: string) {
     const file = uppyRef.current?.getFile(id)
     if (!file || !(file.data instanceof Blob)) return
-    if (file.size && file.size > 12_000) {
-      setNotice('文件较大，本演示只预览不超过 12KB 的文本')
-      return
-    }
     const token = ++generation.current
     setPreview('')
     try {
-      const text = await file.data.text()
+      const text = await readTextPreview(file.data)
       if (token !== generation.current) return
-      setPreview(text.slice(0, 4_000))
+      setPreview(text)
       setNotice('仅在本地读取文本，未提交远端')
-    } catch {
-      if (token === generation.current) setNotice('本地文件读取失败')
+    } catch (error) {
+      if (token === generation.current) setNotice('本地文件预览失败：' + (error instanceof Error ? error.message : String(error)))
     }
   }
 

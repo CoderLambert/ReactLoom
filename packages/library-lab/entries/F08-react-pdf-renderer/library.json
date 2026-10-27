@@ -56,7 +56,10 @@
       "sourceFiles": [
         "examples/report.tsx",
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/report-policy.mjs",
+        "examples/report-policy.d.mts",
+        "tests/policy.test.mjs"
       ],
       "capabilities": [
         "pdf-renderer",
@@ -74,7 +77,10 @@
       "sourceFiles": [
         "examples/report.tsx",
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/report-policy.mjs",
+        "examples/report-policy.d.mts",
+        "tests/policy.test.mjs"
       ],
       "capabilities": [
         "pdf-renderer",
@@ -92,7 +98,10 @@
       "sourceFiles": [
         "examples/report.tsx",
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/report-policy.mjs",
+        "examples/report-policy.d.mts",
+        "tests/policy.test.mjs"
       ],
       "capabilities": [
         "pdf-renderer",
