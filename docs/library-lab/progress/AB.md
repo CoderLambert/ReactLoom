@@ -864,3 +864,32 @@ Draft **[#71](https://github.com/CoderLambert/ReactLoom/pull/71)**，head `feat/
 
 - 首次进度提交 `38a0c37e85ef169e12baa7ea7cb8a0780c5922ba` 引发 **Library Lab run [40530001456](https://github.com/CoderLambert/ReactLoom/actions/runs/40530001456) = failure** 与 **CI run [40530001245](https://github.com/CoderLambert/ReactLoom/actions/runs/40530001245) = failure**。分别2个与7个Job，共 **9/9个Job经过独立steps API核对全部`steps=[]`**。抽查runtime-bootstrap Job `122279881283`日志返回 **HTTP 404 BlobNotFound**。无法证明任何实际安装、SDK渲染、类型/构建或Chromium步骤执行，不能推断为AB源码编译失败。公共runner与依赖验收交PLATFORM处理，不重复盲跑。
 - 后续仅将A15测试标题从旧“invalid or excess”修正为准确的“invalid fixture sequences”；断言逻辑不变。修正后的本地文件`git hash-object`是 `17a6f8576f197eae54238d2dac270d327b20246a`，Node 22.16.0 同一3库策略套件已重新执行，仍 **13 PASS、0 FAIL、0 SKIP**。所有六份规则/测试的新GitHub blob与本地文件保持一致，其余源码无变更。本文并未把任何 SDK/build/browser 标为PASS。
+
+
+---
+
+## 第22轮（wave22）：React Three Fiber 离屏GPU帧、GSAP进度渲染、react-spring焦点提交
+
+**runCount=22/24**；起始时经 GitHub 读取最新 `feat/library-lab@b30fc3f4550006f2ae91104094102ef0e287e620` 的 COORDINATION、IMPLEMENTATION、根/包AGENTS、包内实际 `src/lib/types.ts`/`catalog.mjs`、AB完整进度和开放PR。#77已合入PLATFORM，开放PR仅主Draft #8与无关#3，故从精确集成HEAD新建独立 `feat/library-lab-ab-wave22`，不覆盖已合并旧分支，也未force。范围39条A17/B22依然39/39具有原先源码、guide、agent和三层Demo；绝不据此推导SDK运行成功。
+
+### 本轮可执行源代码修复
+
+| 条目 | 已改真实运行源码与维护材料 | 仍需正式交互验证 |
+| --- | --- | --- |
+| A14 React Three Fiber | `examples/example.tsx` 新增本地 `IntersectionObserver` 观察实际Canvas容器，离开视口时和document隐藏/系统减动一起控制现有 `shouldRunFrames`，切 `frameloop='demand'` 停止连续GPU帧；卸载断开observer、不支持IO时保留document可见性fallback。原Canvas/useFrame真实SDK及HTML等价按钮继续存在，增加策略回归。 | 长页面滚出/滚回、React19 R3F恢复动画、StrictMode、显存与WebGL context真实回收 |
+| B02 GSAP | 实际 `gsap.context` timeline依然管理逐帧DOM动画，但 `onUpdate` 经 `shouldPublishProgress` 在进度相对上一次展示变化至少5个百分点或达到0/100终点时才setReact状态；replay/level/reduced-motion重建时重置进度ref。补两项正反向和非法值单测。 | Chromium下暂停/反向/重播/后台恢复与进度条、真实React渲染性能 |
+| B03 react-spring | 归档聚焦按钮原先在React提交前立即调用`focus()`，12项上限时Add仍disabled；现在先存焦点意图并按**删除后剩余项数**选择，`useLayoutEffect([articles])` 在状态提交后聚焦可用Add，异常禁用则转到Reset；手动Reset清掉旧意图。仍保留真实 `useSpring/useTransition`、业务稳定ID及减少动画。 | Chromium下满额键盘删除、spring退出期间焦点归属、连续重置、Tab操作 |
+
+源码与官方目标SDK import未被替换成Mock。三库已同步 `guide.md` 和 `agent.md`；`library.json` 原有的三个level仍引用这些实际执行文件与策略源，源码展示从同一文件生成；`verification.json` 的SDK、build、browser均维持准确的 `NOT_RUN`，没有继承历史PASS。新增SDK依赖与 `dependencyRequests` **0项**。未改公共package、lock、src、scripts、CI、全局索引、模板、main、PR#3或公开部署。
+
+### 真实执行检查与边界
+
+- **Node 22.16.0**：`node --experimental-strip-types --test /mnt/data/ab-wave22/{A14,B02,B03}/tests/*.test.mts` → **14 PASS，0 FAIL，0 SKIP**，仅覆盖A14帧策略、B02进度阈值和可见性策略、B03文章去重/容量/焦点决策，不能替代实际SDK渲染。
+- **TypeScript 5.8.3**：在 `/mnt/data/ab-wave22` 执行 `tsc --noEmit --strict --skipLibCheck --target ES2022 --module ESNext --moduleResolution Bundler B02/examples/timeline-policy.ts B03/examples/article-policy.ts A14/examples/frame-policy.ts` → **PASS（仅三个没有外部依赖的纯TS模块）**。
+- 精确可复核同源测试字节：A14测试Git Blob `f15a2585b744b4fd85d476e9912417e8d6c36844`；B02 helper/test `a37aea257a36d7146e389451211c402f9a2e761c` / `f050057b206ac4f17843d0007c690c28e43caa64`；B03 helper/test `55e8db68b8812ef73d93787a588404f63d88fb32` / `f9ee26a3601e54c8f142130f9f5dc61395ca9014`，本地 `git hash-object` 对这5文件与GitHub精准 **5/5相同**。A14纯frame-policy源沿用已有GitHub Blob `a915e291fa95a5b16d48924992563976d79d09a3`，与本地测试输入一致。
+- GitHub源代码提交 `96b675b5982d4bb2bcb580615849799314fcf506`，相比精确集成基线 **ahead=1、behind=0、14/14源码/指南/测试文件全部在授权A/B目录**。已建立 **[Draft PR #80](https://github.com/CoderLambert/ReactLoom/pull/80)**，base严格为 `feat/library-lab`。
+- 真实 `@react-three/fiber`、`gsap`、`@react-spring/web` SDK运行、完整React TSX typecheck、pnpm install/锁文件、Vite production build及Chromium GPU/焦点/动画性能 **NOT_RUN/BLOCKED**。无可核对的这些命令的成功日志，不能将策略PASS当作三库SDK通过；PLATFORM是公共安装和CI唯一Owner。此前Actions job `steps=[]`、日志404的已知问题不在AB反复无意义重试。
+
+### 后续队列与交接
+
+PLATFORM审核 #80 base/head、14文件的目录授权并合入私有 `feat/library-lab`；获得真实CI/本地SDK执行环境后定向运行A14画布视口进出、B02时间线逆放/恢复、B03满额删除与键盘焦点。若真实类型/SDK/浏览器报错定位到A/B，本通道剩余最多2轮直接修复；否则优先针对39条的明确可复现缺陷而非重复输出研究或占位页。**到第24轮仍缺真实运行验收则准确列出缺口并结束AB，不宣称全部通过。**
