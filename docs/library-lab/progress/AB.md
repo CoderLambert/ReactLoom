@@ -1,9 +1,9 @@
 # AB 开发进度 — A/B 前端库垂直实现
 
-**最新调度轮次：19 / 最多24；状态：WAVE19_AB_39_SOURCE_HARDENING（39/39仅源码和文档覆盖；SDK、完整构建与浏览器尚未验收）。**
+**最新调度轮次：20 / 最多24；状态：WAVE20_AB_39_SOURCE_HARDENING（39/39仅源码和文档覆盖；SDK、完整构建与浏览器尚未验收）。**
 
-- 当前本批分支：`feat/library-lab-ab-wave19`，精确集成base `a7514e4b6354ade43a36dc39512c7ccafc688dbe`；初始公共提交 `38ed2d247bd82e4f1422b0e8904973e16bca2972` 仅作历史，不使用force覆盖。
-- 集成目标：`feat/library-lab`；本轮开始读取的最新头提交 `a7514e4b6354ade43a36dc39512c7ccafc688dbe`，前轮 PR #68 已被 PLATFORM 合并。
+- 当前本批分支：`feat/library-lab-ab-wave20`，精确集成base `f96f43fad9ba6e227b71a85596c9b91eb1ff1dfb`；初始公共提交 `38ed2d247bd82e4f1422b0e8904973e16bca2972` 仅作历史，不使用force覆盖。
+- 集成目标：`feat/library-lab`；本轮开始读取的最新头提交 `f96f43fad9ba6e227b71a85596c9b91eb1ff1dfb`，前轮 PR #71 已被 PLATFORM 合并。
 - 当前分支仅修改 A*、B* 条目及本进度文件；不更改公共源码、依赖、锁文件、CI、主 PR #8。
 
 ## 第1轮实质交付
@@ -788,3 +788,36 @@ Draft **[#71](https://github.com/CoderLambert/ReactLoom/pull/71)**，head `feat/
 - GitHub Actions真实查询：Library Lab `40510987688` = **failure**；CI `40510987650` = **failure**。Library Lab 的 `runtime-bootstrap` job `122212525050`、`catalogue` job `122212525684`、CI 的 `verify (spa)` job `122212525493` 均经独立 steps API 核实 **steps=[]**；CI所有7个Job均失败。这些记录没有可读执行步骤，不能证明实际运行过 pnpm、React TSX构建、Vite或SDK，不能认定源码有编译缺陷，更不能将状态写成PASS。Runner/锁文件属PLATFORM处理，AB不循环重跑同一不具备日志的失败。
 - 本轮实际通过的只有**11项 Node 纯策略测试与三份TypeScript纯规则检查**；MapLibre GPU/React Flow焦点连接/cmdk IME等关键浏览器验证仍明确NOT_RUN/BLOCKED。PLATFORM合入前应对本PR继续执行真实 SDK、pnpm、Chromium 定向回归。
 
+
+---
+
+## 第20轮（wave20）：Sonner / react-motion迁移 / react-beautiful-dnd迁移的真实业务交互加固
+
+**runCount=20/24**，集成基线精确 SHA `f96f43fad9ba6e227b71a85596c9b91eb1ff1dfb`；先读取COORDINATION/IMPLEMENTATION、根和包AGENTS、types/catalog、AB进度、现有PR，确认前轮PR #71已合入且无AB开放PR，新建`feat/library-lab-ab-wave20`而不force覆盖旧分支。
+
+### 本轮实际交付
+
+|条目|运行中实际变化|规则测试|
+|---|---|---|
+|B20 Sonner|保存Toast的撤销动作绑定最近一次保存token；新保存关闭旧Toast，旧异步动作无法撤销新业务状态；level切换失效任务与撤销token、定向清理本例Toast，不影响别的页面|新增`tests/undo-ownership.test.mts`3例，复用`LatestRunGuard`|
+|B21 react-motion历史迁移|运行目标仍是真实`motion/react`；使用单一`reduceTasks`事务处理连续添加、删除、撤销、选中；单调ID与24项容量；删除聚焦按钮后转移到邻近项/添加按钮，减少动画控制layout|新增`examples/task-history.ts`和4项测试|
+|B22 react-beautiful-dnd历史迁移|实际运行`@hello-pangea/dnd`；将键盘排序/撤销/重置统一到`reduceOrder`；drag开始记录level、revision和ID快照，结束时拒绝旧Drop覆盖新状态；固定槽不可跨越|扩展`examples/pinned-order.ts`和新增5项测试，原固定槽8例保留|
+
+三库均更新`library.json`真实源码清单、`guide.md`、`agent.md`、`AGENTS.md`；三个独立真实SDK入口仍由各自`examples/demo.tsx`转发`example.tsx`，不生成伪页面；SDK/build/browser `verification.json`不伪造PASS。
+
+### 实际测试、精确内容核验
+
+- Node 22.16.0：
+  `node --experimental-strip-types --test /mnt/data/ab-wave20/B20/tests/{undo-ownership.test.mts,latest-run.test.mts} /mnt/data/ab-wave20/B21/tests/task-history.test.mts /mnt/data/ab-wave20/B22/tests/{order-history.test.mts,pinned-order.test.mjs}`
+  **23 PASS / 0 FAIL**（3个库的纯业务规则，包含11个原有/延续规则用例，不是第三方SDK渲染）。
+- TypeScript 5.8.3：`tsc --noEmit --strict --skipLibCheck --target ES2022 --module ESNext --moduleResolution Bundler` 对本次三个纯规则模块 `B20/examples/latest-run.ts`、`B21/examples/task-history.ts`、`B22/examples/pinned-order.ts` 为**PASS**，不等于完整React TSX类型检查。
+- Node实际测试的六份目标源码/测试文件与GitHub Git Blob SHA逐一比对完全一致 **6/6**；目标SHA见对应文件GitHub API。GitHub Compare在创建进度提交前：**20/20项变更全部在AB允许路径、ahead=2/behind=0**。
+- 完整`pnpm install`、SDK真实导入执行、完整React类型检查、Vite生产构建、Chromium焦点/拖动/Portal仍为 **NOT_RUN/BLOCKED**；本轮容器`git ls-remote https://github.com/CoderLambert/ReactLoom.git HEAD`返回`Could not resolve host: github.com`，没有反复重试DNS；不把规则单测算进SDK PASS。GitHub Actions状态以提交后实际查询为准，不继承前轮缺步骤的FAIL为本轮测试结果。
+
+### 提交、依赖及后续
+
+- 源码提交1：`43a2aa8dea3326e80fdaa02b497b3af12e29e08a`（B20/B21）
+- 源码提交2：`1498a097043baf36baae64305ddf8c399b2c84bd`（B22）
+- 本段进度另提交；PR head与最新进度提交以GitHub记录为准，拒绝用自身commit SHA作循环声明。worker PR base只允许`feat/library-lab`。
+- `dependencyRequests`：**本批新增0项**，现有Sonner/Motion/@hello-pangea/dnd已经由PLATFORM声明准确版本；仅PLATFORM处理公共package、pnpm-lock、CI。
+- 下一队列：取得PLATFORM真实SDK/完整TSX、浏览器焦点（包括Motion退出动画）及拖动碰撞证据；优先复查B01/B19或A15仍可独立复现的业务缺陷。39/39仍只表示源码与文档覆盖，不宣称SDK验收完成；持续跟踪至最多24轮。
