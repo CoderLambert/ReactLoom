@@ -52,3 +52,9 @@ Group 负责拖动事件与尺寸分配，业务可订阅 `onLayoutChanged` 在�
 - [v4 官方接口与示例](https://github.com/bvaughn/react-resizable-panels)
 - [CHANGELOG v3→v4 迁移](https://github.com/bvaughn/react-resizable-panels/blob/main/CHANGELOG.md)
 - MIT，未包含第三方媒体素材。
+
+## 第14轮：窄容器和多实例冲突
+
+修复包内 Demo 固定 `minWidth:270` 导致小于 270px 的实际容器横向溢出。用 `minWidth:0` 保持布局随容器缩放（实际不可读宽度由 Group/Panel 自身 minSize 约束，生产应考虑小屏改纵向或折叠）。Group、Panel、Separator 的 DOM ID 使用 React `useId()` 生成实例前缀，避免多个 DemoHost 同时挂载时发生重复 ID / ARIA 指向冲突。仅 Separator 的触控手柄禁用默认手势，使面板滚动区域保持正常滚动。
+
+仍须实际安装 react-resizable-panels v4，用 Chromium 验证 240px 宽容器、两个同时挂载的实例、键盘方向键、触摸分割条及重置焦点；本轮没有把源代码修改标为浏览器 PASS。

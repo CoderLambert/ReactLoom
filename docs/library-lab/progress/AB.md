@@ -1,6 +1,6 @@
 # AB 开发进度 — A/B 前端库垂直实现
 
-**最新调度轮次：12 / 最多24；状态：WAVE12_AB_39_SOURCE_HARDENING（39/39仅源码和文档覆盖；SDK、完整构建与浏览器尚未验收）。**
+**最新调度轮次：14 / 最多24；状态：WAVE14_AB_39_SOURCE_HARDENING（39/39仅源码和文档覆盖；SDK、完整构建与浏览器尚未验收）。**
 
 - 分支：`feat/library-lab-ab`，base 提交 `38ed2d247bd82e4f1422b0e8904973e16bca2972`。
 - 集成目标：`feat/library-lab`，集成读取的头提交 `5955b9a03f95545f2107583a109e22cc6e44078c`。
@@ -575,3 +575,37 @@ tsc --noEmit --strict --skipLibCheck --target ES2022 --module ESNext --moduleRes
 dependencyRequests新增 **0**。上述四库既有声明依赖分别是 `chart.js@4.6.1`、`@react-three/fiber@9.8.2`+`three@0.186.0`、`motion@14.6.0`、`react-grid-layout@2.3.0`+`react-resizable@4.0.2`，均已由公共package登记；PLATFORM负责真实pnpm lock、运行器、依赖peer和CI。
 
 下一批优先按真实SDK/tsc/浏览器错误定位AB目录后修复；独立代码队列为A08 Mermaid的频繁重绘/worker资源、A17 deck.gl生命周期、B04 dotLottie异步资源与B16 react-resizable-panels的键盘约束。PLATFORM只负责审核合入本PR至 `feat/library-lab`，不擅自合main、改PR #3、模板、CI、公共索引或公开部署。需要重点浏览器回归本批：Chart初始化/后台恢复、R3F隐藏/重挂载GPU、Motion聚焦删除、Grid宽窄切换后的双布局与指针拖拽。
+
+
+---
+
+## 第14轮（wave14）：Mermaid队列、deck.gl尺寸与选择、dotLottie播放策略、可缩放面板多实例
+
+**runCount=14/24；执行基线**：`feat/library-lab@9a5778a97970119a4d811e139d81038f66042ec2`，已确认AB wave13 PR #53合并，开放PR只有主Draft #8、无AB通道待提交PR。新分支 `feat/library-lab-ab-wave14` 从此集成head创建，不覆盖旧 `feat/library-lab-ab`。本轮源码提交 `bdd17a7fdf7565abb19f439f6d638eed013ccfb1`；当前进度/文档提交由本PR的最新head承担。目标base严格 `feat/library-lab`，集成者须检查当前HEAD/文件范围后再合并。
+
+|条目|真实源码改动|验证范围|
+|---|---|---|
+|A08 Mermaid|全局异步parse/render串行排队；切换/卸载跳过过时排队任务并拦截迟到结果；不变更可信DSL或sandbox|render-queue.ts + tests，4例定向|
+|A17 deck.gl|隐藏/0尺寸不更新GPU，有限幅且去重的容器resize；稳定ID拾取，过滤后不显示过时结果；保留Deck.finalize|deck-size.ts + tests，4例定向|
+|B04 dotLottie|统一真实播放门禁（加载、页面可见、减少动态/显式覆盖），错误后清除播放请求，状态展示实际播放条件|playback-policy.ts + tests，3例定向|
+|B16 react-resizable-panels|移除270px硬最小宽度；所有Group/Panel/Separator ID实例隔离；只有分割条拦截触摸滚动手势；保持v4 SDK|静态修改和文档，交互仍待实际浏览器|
+
+A08/A17/B04 的每层 `library.json` 已加入新helper至 `sourceFiles`，运行源和展示源引用同一份代码（3×3=9个分层声明），B16 原有3层入口不变。四条均补充guide/agent；B16历史缺指纹的content PASS改为NOT_RUN，其他 `verification.json` 的SDK/build/browser均保持NOT_RUN。没有新增SDK依赖、Mock目标SDK、支付/公开部署或主分支变更。
+
+### 实际命令与证据（仅独立策略）
+
+本轮 Node `v22.16.0` 执行：
+`node --experimental-strip-types --test /mnt/data/ab-wave14/{A08,A17,B04}/tests/*.test.mts` → **11 PASS / 0 FAIL / 0 SKIP**。
+`tsc --noEmit --strict --skipLibCheck --target ES2022 --module ESNext --moduleResolution Bundler /mnt/data/ab-wave14/{A08,A17,B04}/examples/*.ts` → **PASS**（TypeScript 5.8.3，仅三份纯helper）。
+
+6份helper/test分别经本地 `git hash-object` 和GitHub写入后的Blob SHA核对：A08 `6a6de34e/597af3bf`、A17 `9b59f660/1bd83350`、B04 `cc204164/e8eb64ff`，**6/6匹配**。该证据只证明测试对象精确对应已提交文件和纯规则行为；并不说明目标SDK真实import、完整React+TS7、Vite构建或Chromium/GPU/WASM/ARIA/触摸交互成功。这些仍 **NOT_RUN/BLOCKED**，禁止冒充SDK PASS。
+
+**dependencyRequests**：本轮新增0。现有SDK版本和锁文件归PLATFORM统一维护；尚缺真实依赖安装、GitHub可用runner及运行日志，此前相同DNS/runner故障不循环重试。下个AB开发队列优先A02 Recharts、B10 Base UI、B11 Radix Primitives、B12 React Aria 的真实资源与焦点缺陷；PLATFORM合入后需对本轮4库做真实SDK/浏览器定向回归（多Mermaid异步、deck过滤/resize、Lottie后台与减动、多Group键盘触摸）。
+
+### 第14轮 PR / CI 最终回读
+
+- Draft PR [#56](https://github.com/CoderLambert/ReactLoom/pull/56) 已建立，base=`feat/library-lab`，head=`feat/library-lab-ab-wave14`，未合并 main。
+- GitHub 比较本轮基线后确认 **23/23 文件属于 A*/B* 或 progress/AB.md**，无跨组写入。完整集成树未截断，A08/A17/B04/B16 每条3个 demo 都指向已存在源码路径（12/12 无缺失），A08/A17/B04 共9/9清单包含新helper。
+- GitHub Actions 本次两组 workflow runs `40472384355`、`40472384309` 均为 **failure**；对应 job 的 `steps=[]`，尝试读取 runtime-bootstrap 日志返回 404 `BlobNotFound`。不具备执行步骤和构建日志，无法归因于 SDK/源码编译失败，更不能标记构建 PASS。PLATFORM 的 runner/lockfile/真实SDK验收仍为待办。
+- 本轮只在可执行的纯策略 helper/test 上得到 11 PASS 与局部严格 TS PASS；浏览器/真实SDK/完整生产构建仍未通过验收。用户侧只在完整批次记录进展，通知集中在 Issue #5。
+

@@ -19,3 +19,7 @@
 实际SDK import+typecheck+build、浏览器拖动和键盘、纵向切换、最小约束、重置与卸载。业务布局数据可以自造，但不能mock Panel库后标 SDK PASS。现 verification.json 尚无真实 SDK/浏览器通过证据。
 
 官方 https://github.com/bvaughn/react-resizable-panels 。
+
+## wave14 响应式约束
+
+把示例复制到多面板业务前保留 `useId` 实例命名空间，防止跨实例重复 Group/Panel/Separator ID；容器不得设置固定大于实际手机可视区域的 `minWidth`。只对分割条设置 `touchAction:'none'`，不要禁用整个编辑器面板的触摸滚动。需要真实触摸和键盘回归；现 SDK/build/browser NOT_RUN。

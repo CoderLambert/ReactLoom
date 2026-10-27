@@ -19,3 +19,7 @@
 **必须验证**：真实目标SDK import、React19类型检查、生产构建、浏览器设备适配、快速反复挂载/切Tab无事件/GPU资源泄漏；特殊设备能力缺失时使用数据表退化展示。PASS需当前源码指纹、命令及日志证据，否则为NOT_RUN。
 
 **官方参考**：[deck.gl standalone入门](https://deck.gl/docs/get-started/using-standalone) · [Deck parent与finalize API](https://deck.gl/docs/api-reference/core/deck) · [ScatterplotLayer属性](https://deck.gl/docs/api-reference/layers/scatterplot-layer)。
+
+## wave14 边界策略
+
+`examples/deck-size.ts` 是新迁移依赖：ResizeObserver 只将有效、改变后的可见容器尺寸送入 `Deck.setProps`；过滤/交互用 `Location.id`，不要以名称做不稳定身份键。仍须实际 GPU/Chromium 验证隐显切换、resize 去重、picked 过滤、finalize 后 RAF 不更新和硬件资源回收。尺寸规则单测不是官方 SDK PASS。

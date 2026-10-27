@@ -54,6 +54,7 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/playback-policy.ts",
         "examples/demo.tsx",
         "examples/pulse.json"
       ],
@@ -67,6 +68,7 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/playback-policy.ts",
         "examples/demo.tsx",
         "examples/pulse.json"
       ],
@@ -80,6 +82,7 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/playback-policy.ts",
         "examples/demo.tsx",
         "examples/pulse.json"
       ],

@@ -26,3 +26,9 @@ Lottie/dotLottie用于视觉反馈和轻量品牌动效，不是业务流程状�
 SDK/typecheck/build/browser仍未执行，本轮只落地源码；验证需检查loadError恢复、隐藏暂停、reduced-motion覆盖、Tab切换事件移除、离线素材可解析与最终业务状态不依赖动画。没有真实运行不得PASS。
 
 官方：https://docs.lottiefiles.com/en/runtimes/distributions/react/v0.x · https://docs.lottiefiles.com/en/runtimes/distributions/react/v0.x/api-reference 。MIT。
+
+## 第14轮：请求播放与真实可播放状态
+
+新增 `examples/playback-policy.ts`：只有 `loaded && visible && (!reduced || override)` 才允许实际播放。未加载、后台隐藏或减少动态但没有明确 opt-in 时，播放按钮禁用（已有播放请求仍允许手动暂停），状态文字描述实际阻止原因，而不再用“已请求播放”暗示 Canvas 正在运动。动画加载/渲染失败清除旧的播放请求；本地业务状态独立于动画结果。高级 override 仅覆盖系统减少动态，**不覆盖后台暂停**。
+
+`node --experimental-strip-types --test entries/B04-dotlottie/tests/playback-policy.test.mts` 只验证布尔策略和反馈文案；实际 dotLottie WASM/worker/canvas loadError 与页面 visibility 恢复、实例销毁仍需 SDK 和真实浏览器测试。

@@ -35,3 +35,9 @@ Deck接受parent为当前示例DOM节点，ResizeObserver按容器大小setProps
 - [ScatterplotLayer属性](https://deck.gl/docs/api-reference/layers/scatterplot-layer)
 
 本地数据与示例代码为原创。使用前核对依赖版本与当前许可证；不请求第三方付费 API。
+
+## 第14轮：容器尺寸与 GPU 资源边界
+
+新增 `examples/deck-size.ts`。ResizeObserver 的 0 宽/0 高、NaN/Infinity 测量不应更新 WebGL canvas；小数 CSS 像素取整、超过 4096 CSS px 时限幅，仅当实测尺寸变化才调用 `deck.setProps`。首帧未测得尺寸暂用 1×1，后续容器有正尺寸后自动恢复；释放仍严格通过 `deck.finalize()`。高分辨率产品还应核对 DPR 和真实设备支持的最大纹理/viewport，不把 4096 当通用硬件阈值。
+
+图层选择使用稳定站点 ID，状态展示从当前筛选集求名称，因此过滤后不会显示已不可见站点的过期名称。GPU 初始化/运行错误在状态文本中优先展示，数据表继续可用于读屏与键盘。纯尺寸规则测试不代表 1200 点真实显卡帧率、WebGL2 或 context-loss 验收。

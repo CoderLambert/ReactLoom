@@ -15,3 +15,7 @@
 
 ## 测试断言
 有效 flowchart / sequence / state 均显示；无效 DSL 显示失败，修复后恢复；切页后旧 promise 不回写；iframe 不可运行脚本；本 SDK 构建实际 PASS 前所有文档保持 NOT_RUN。官网 https://mermaid.ai/open-source/config/setup/mermaid/interfaces/Mermaid.html
+
+## 并发与取消（wave14）
+
+迁移多个 Mermaid 图时，必须同时复制 `examples/render-queue.ts`：相同模块中所有组件共用一个串行队列；effect 清理仅使任务失效，并不真正取消正在执行的 Promise。不能把纯队列测试当作 SDK PASS，仍需实际启动 Mermaid，验证快速切换、StrictMode、渲染异常后恢复和 sandbox CSP。

@@ -43,3 +43,9 @@ Mermaid 初始化是模块全局设置，因此在受控模块中只初始化一
 - [官方仓库](https://github.com/mermaid-js/mermaid)
 
 MIT 许可；不包含远程图片和第三方素材。
+
+## 第14轮：并发渲染和快速切换修正
+
+新增 `examples/render-queue.ts`：同一个模块中的多个 DemoHost 实例统一串行执行 `parse + render`，排队后发现所属 React effect 已失效则跳过整个任务，实际执行完成后再次检查 effect 生命周期才更新 SVG 或错误。图形 ID 仍按全局计数唯一生成，安全策略与无脚本 iframe 保持不变。串行队列**不是 Worker，也不具备中断正在运行的 Mermaid 解析器**：对于极大图，仍需 PLATFORM 隔离线程与配额。
+
+回归：`node --experimental-strip-types --test entries/A08-mermaid/tests/render-queue.test.mts` 覆盖全局顺序、排队取消、进行中失效、错误后队列继续；这是**纯队列策略测试**，不代表 Mermaid 官方 SDK 的渲染或 iframe 浏览器验收。
