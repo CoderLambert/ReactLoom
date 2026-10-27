@@ -479,3 +479,9 @@ runCount=15/24。
 - EF **37/37已有源码和指南**，不代表已完成真实运行验收，PR保持Draft，base固定feat/library-lab；不合main或公开部署。
 
 runCount=16/24。
+
+### 第十六轮GitHub提交与客观结构验收
+
+- [EF Draft PR #57](https://github.com/CoderLambert/ReactLoom/pull/57)，head `feat/library-lab-ef-wave16-media-queue-pdf`，base严格 `feat/library-lab`。提交序列：`5a58eef9e72ff4126033b6f8c81129268cc5e361` 源码、`b3460a85f7c46d4a02882b32e906e02a5a7656e7` 指南/进度、`089c2b48c47e69840303c55766c3b9d56ac8cb0b` AGENTS与诚实verification。
+- GitHub compare与当前tree实际核对：3 commits、30 changed files，全部 `entries/E*`/`entries/F*` 或本进度文档，**0越权**。F01与F08六份basic/business/advanced场景sourceFiles清单 **6/6含entryPoint且均存在**；四份独立Node原件blob SHA与执行字节完全匹配。
+- 当前PR保持Draft；真正SDK、TypeScript/Vite全包、真实媒体、Chromium/PDF Worker验收仍 `NOT_RUN/BLOCKED`，等待PLATFORM真实依赖/runner反馈，不合main，不部署。
