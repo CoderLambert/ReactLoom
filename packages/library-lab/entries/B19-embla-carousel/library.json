@@ -64,6 +64,7 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/slide-policy.ts",
         "examples/demo.tsx"
       ],
       "capabilities": [
@@ -81,6 +82,7 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/slide-policy.ts",
         "examples/demo.tsx"
       ],
       "capabilities": [
@@ -98,6 +100,7 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/slide-policy.ts",
         "examples/demo.tsx"
       ],
       "capabilities": [

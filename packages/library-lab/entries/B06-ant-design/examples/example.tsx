@@ -1,6 +1,7 @@
 import { useMemo, useRef, useState } from 'react';
 import { App as AntApp, Alert, Button, Card, ConfigProvider, Form, Input, Modal, Select, Space, Switch, Table, Tag, Typography } from 'antd';
 import type { TableColumnsType } from 'antd';
+import {appendFeed, toggleFeed, undoFeed, type FeedHistory} from './feed-history';
 
 type Level='basic'|'business'|'advanced';
 type Feed={id:string;title:string;url:string;category:'tech'|'news';enabled:boolean};
@@ -13,12 +14,13 @@ function Workspace({level}:{level:Level}) {
   const [form]=Form.useForm<Values>();
   const {message}=AntApp.useApp();
   const sequence=useRef(START.length);
-  const [rows,setRows]=useState<Feed[]>(START);
+  const [feedState,setFeedState]=useState<FeedHistory<Feed>>({rows:START,previous:null});
+  const rows=feedState.rows;
+  const history=feedState.previous;
   const [query,setQuery]=useState('');
   const [draft,setDraft]=useState('');
   const [failOnce,setFailOnce]=useState(false);
   const [editing,setEditing]=useState<Feed|null>(null);
-  const [history,setHistory]=useState<Feed[]|null>(null);
   const [project,setProject]=useState('ReactLoom');
   const [confirmed,setConfirmed]=useState(false);
   const filtered=useMemo(()=>rows.filter(r=>[r.title,r.url,r.category].join(' ').toLowerCase().includes(query.toLowerCase())),[rows,query]);
@@ -34,16 +36,17 @@ function Workspace({level}:{level:Level}) {
       form.setFields([{name:'url',errors:['该 RSS 地址已经存在']}]);
       return;
     }
-    setHistory(rows);
     sequence.current+=1;
-    setRows(old=>[{id:`feed-${sequence.current}`,title:values.title.trim(),url:normalized,category:values.category,enabled:true},...old]);
+    const feed:Feed={id:`feed-${sequence.current}`,title:values.title.trim(),url:normalized,category:values.category,enabled:true};
+    // Atomic functional state owns both the new rows and the previous snapshot.
+    setFeedState(state=>appendFeed(state,feed));
     form.resetFields();
     message.success('本地新增成功；未发出外部请求');
   }
   const columns:TableColumnsType<Feed>=[
     {title:'订阅标题',dataIndex:'title',key:'title',sorter:(a,b)=>a.title.localeCompare(b.title,'zh-CN')},
     {title:'分类',dataIndex:'category',key:'category',render:(value:Feed['category'])=><Tag>{value==='tech'?'技术':'资讯'}</Tag>},
-    {title:'启用',key:'enabled',render:(_unknown,record)=><Switch checked={record.enabled} aria-label={`${record.title} 启用`} onChange={enabled=>{setHistory(rows);setRows(old=>old.map(r=>r.id===record.id?{...r,enabled}:r));}}/>},
+    {title:'启用',key:'enabled',render:(_unknown,record)=><Switch checked={record.enabled} aria-label={`${record.title} 启用`} onChange={enabled=>setFeedState(state=>toggleFeed(state,record.id,enabled))}/>},
     {title:'操作',key:'actions',render:(_unknown,record)=><Button size="small" onClick={()=>setEditing(record)} aria-label={`查看 ${record.title}`}>详情</Button>},
   ];
   if(level==='basic')return <Card title="基本组件与主题" variant="outlined">
@@ -70,7 +73,7 @@ function Workspace({level}:{level:Level}) {
         <Space wrap>
           <Button htmlType="submit" type="primary">新增本地订阅</Button>
           {level==='advanced'&&<Button onClick={()=>setFailOnce(true)}>下一次提交注入 409</Button>}
-          <Button disabled={!history} onClick={()=>{if(history){setRows(history);setHistory(null);message.info('撤销上一项列表修改');}}}>撤销修改</Button>
+          <Button disabled={!history} onClick={()=>{if(history){setFeedState(state=>undoFeed(state));message.info('撤销上一项列表修改');}}}>撤销修改</Button>
         </Space>
       </Form>
       <Input.Search aria-label="查找RSS" value={draft} onChange={e=>setDraft(e.target.value)}

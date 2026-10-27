@@ -29,3 +29,9 @@ Ant Design UI自带模块体积较大，不应在Library Lab首页静态import�
 当前只写源码；SDK/typecheck/build/Chromium NOT_RUN。后续验证字段校验、模拟409回填、撤销、分页排序、Modal键盘焦点、IME搜索、主题Portal、卸载后无残留Overlay，并在真实服务中补取消和竞态测试。
 
 官方：https://ant.design/components/form/ · https://ant.design/components/table/ · https://ant.design/components/app 。
+
+## 原子撤销快照（第10轮）
+
+此前新增、Switch切换和撤销各自调用 `setRows` 与 `setHistory(rows)`，其中 `rows` 是事件闭包中的旧快照。快速连续操作或React批处理时，历史记录可能对应错误的状态。现用 `examples/feed-history.ts` 的纯状态转移，将当前rows和单层previous纳入**一次函数式 setFeedState**。重复订阅ID/URL不生成新的撤销快照，缺失的项目操作也不污染历史。Undo只撤销最近一次有效修改，不是完整多级历史或服务端事务；真实保存需等后端确认后纳入重试和回滚策略。
+
+Node纯逻辑测试覆盖快速连续切换、重复新增、无效操作和单次撤销。该检查不代替 Ant Design Form/Table/Portal 在浏览器的交互测试。

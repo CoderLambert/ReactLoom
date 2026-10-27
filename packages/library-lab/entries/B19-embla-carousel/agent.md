@@ -21,3 +21,8 @@
 真实 v8 API 安装与编译；滚动选中索引、增删后 snap 边界、loop 重置、触摸与页面纵向滚动、键盘导航、卸载释放 observer 与监听。当前SDK/build/browser NOT_RUN；不能仅凭源码生成标记 PASS。
 
 官方：https://www.embla-carousel.com/docs/v8/get-started/react
+
+
+### 第10轮异步渲染与身份
+
+`setSlides` 后不能立即依据旧DOM调用 `scrollTo`；通过一次性resetEpoch在布局提交后 `reInit + scrollTo`。动态列表变化用ID签名而非仅数组长度；新ID采用单调分配，snap index使用真实 `scrollSnapList().length` clamp。卸载释放真实 Embla instance 和事件订阅。检查同长度替换、删除末尾选中项、重置、之后再次追加卡片以及窄屏loop，不得将Node纯逻辑测试误认为触控SDK通过。
