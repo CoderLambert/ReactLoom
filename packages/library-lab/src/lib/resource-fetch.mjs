@@ -3,11 +3,33 @@
  * This prevents a valid 200 response that never finishes streaming from leaving
  * the Library Lab spinner and active network connection alive indefinitely.
  */
+/** Reject path reinterpretation by browsers, CDNs or reverse proxies before fetch. */
+export function assertGeneratedResourcePath(url) {
+  if (typeof url !== 'string' || url.length > 2048 || !url.startsWith('/') ||
+      url.startsWith('//') || /[?#\\\u0000-\u001f\u007f]/u.test(url)) {
+    throw new TypeError('Generated resource must use a canonical same-origin pathname');
+  }
+  const segments = url.slice(1).split('/');
+  if (segments.length > 32 || segments.some(segment => !segment)) {
+    throw new TypeError('Generated resource path contains empty or excessive segments');
+  }
+  for (const segment of segments) {
+    let decoded;
+    try { decoded = decodeURIComponent(segment); }
+    catch { throw new TypeError('Generated resource path contains malformed percent encoding'); }
+    // Deny nested escapes as well: a second proxy decode must not produce "../" or "/".
+    if (decoded === '.' || decoded === '..' ||
+        /[/\\\u0000-\u001f\u007f]/u.test(decoded) || /%[0-9a-f]{2}/iu.test(decoded)) {
+      throw new TypeError('Generated resource path contains unsafe encoded segments');
+    }
+  }
+  return url;
+}
+
 export async function requestGeneratedResource(url, parse, {signal, timeoutMs = 20_000, fetchImpl = fetch} = {}) {
-  if (typeof url !== 'string' || !url.startsWith('/') || url.startsWith('//') ||
-      /[\\\u0000-\u001f]/u.test(url) || /(?:^|\/)\.\.?(?:\/|$)/u.test(url) ||
-      typeof parse !== 'function' || typeof fetchImpl !== 'function') {
-    throw new TypeError('Generated resource request must use a same-origin pathname and parser');
+  assertGeneratedResourcePath(url);
+  if (typeof parse !== 'function' || typeof fetchImpl !== 'function') {
+    throw new TypeError('Generated resource requires a parser and fetch implementation');
   }
   if (!Number.isSafeInteger(timeoutMs) || timeoutMs < 1 || timeoutMs > 120_000) {
     throw new RangeError('Generated resource timeout is invalid');
