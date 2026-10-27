@@ -1,5 +1,6 @@
 import {useEffect, useId, useRef, useState} from 'react'
 import axe from 'axe-core'
+import {enqueueAxeAudit} from './audit-queue.mjs'
 
 type Level = 'basic' | 'business' | 'advanced'
 type Props = {level: Level}
@@ -7,29 +8,41 @@ type Finding = {id: string; impact: string | null | undefined; description: stri
 const TRANSPARENT_GIF = 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='
 
 export default function AxeAuditExample({level}: Props) {
+  // Remount the audit session whenever the demo level changes.
+  return <AxeAuditSession key={level} level={level} />
+}
+
+function AxeAuditSession({level}: Props) {
   const ref = useRef<HTMLDivElement>(null)
   const inputId = useId()
   const generation = useRef(0)
+  const running = useRef(false)
   const [repaired, setRepaired] = useState(false)
   const [busy, setBusy] = useState(false)
   const [findings, setFindings] = useState<Finding[] | null>(null)
   const [uncertain, setUncertain] = useState(0)
   const [notice, setNotice] = useState('按需执行真实 axe.run()；不会扫描其他页面')
 
-  useEffect(() => () => {generation.current++}, [])
+  useEffect(() => () => {generation.current++; running.current = false}, [])
 
   async function audit() {
     const container = ref.current
-    if (!container || busy) return
+    if (!container || running.current) return
+    running.current = true
     const token = ++generation.current
     setBusy(true)
     setFindings(null)
     setNotice('正在分析当前示例DOM…')
     try {
-      const report = await axe.run(container, {
-        runOnly: {type: 'rule', values: ['image-alt', 'label', 'button-name']},
-      })
-      if (token !== generation.current) return
+      // axe-core rejects overlapping runs, including across different demo instances.
+      const queued = await enqueueAxeAudit(
+        () => axe.run(container, {
+          runOnly: {type: 'rule', values: ['image-alt', 'label', 'button-name']},
+        }),
+        () => token === generation.current && ref.current === container && container.isConnected,
+      )
+      if (token !== generation.current || queued.skipped) return
+      const report = queued.result
       setFindings(report.violations.map(item => ({
         id: item.id, impact: item.impact, description: item.description,
         targets: item.nodes.map(node => node.target.join(' > ')),
@@ -39,12 +52,15 @@ export default function AxeAuditExample({level}: Props) {
     } catch (error) {
       if (token === generation.current) setNotice(`当前环境无法完成审计：${String(error)}`)
     } finally {
-      if (token === generation.current) setBusy(false)
+      if (token === generation.current) {
+        running.current = false
+        setBusy(false)
+      }
     }
   }
 
   function toggleRepair() {
-    if (busy) return
+    if (running.current) return
     generation.current++
     setRepaired(v => !v)
     setFindings(null)
@@ -53,7 +69,7 @@ export default function AxeAuditExample({level}: Props) {
 
   return <section aria-label="axe-core 真实可访问性规则演示">
     <h2>{level === 'basic' ? '图片缺少替代文本' : level === 'business' ? '表单标签的真实可访问名称' : '多种缺陷与局部审计边界'}</h2>
-    <p>将同一段DOM从故意缺陷切换到修复版，使用真正的 axe-core 分析当前容器。**只运行3条规则**，不冒充全面WCAG验收。</p>
+    <p>将同一段DOM从故意缺陷切换到修复版，使用真正的 axe-core 分析当前容器。仅运行 3 条规则，不冒充全面WCAG验收。</p>
     <div ref={ref} style={{border:'1px solid #d3dfd2',padding:20,borderRadius:9,marginBlock:18}}>
       <h3>被审计的局部组件</h3>
       {level !== 'business' && <img src={TRANSPARENT_GIF} width="140" height="65"

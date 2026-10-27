@@ -1,7 +1,7 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "真实axe-core分析代码已提交，但未在浏览器运行"
+    "note": "已新增跨实例排队纯Node策略测试；真实 axe.run SDK/规则仍未在浏览器运行"
   },
   "build": {
     "status": "BLOCKED",
@@ -9,6 +9,6 @@
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "修复前后违反数量/人工复核项需要Chromium验收"
+    "note": "需Chromium验证并排实例、快速切换及axe并发/失效DOM；未执行"
   }
 }

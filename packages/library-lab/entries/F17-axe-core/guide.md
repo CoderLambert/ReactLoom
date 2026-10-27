@@ -42,3 +42,11 @@ Demo 用 `examples/example.tsx` 真实调用 `axe.run(container,{runOnly:{type:'
 ## 验证与来源
 
 需实际浏览器运行三层：缺陷版出现对应rule，修复版目标规则消失，其他区域不被误扫，点击快速切换不触发重叠运行。当前SDK/浏览器未执行，verification未标PASS。官方 [axe-core](https://github.com/dequelabs/axe-core) · [API](https://github.com/dequelabs/axe-core/blob/develop/doc/API.md)。许可证MPL-2.0，作为浏览器依赖使用时须遵守许可及第三方依赖条款。
+
+## 并发审计与场景生命周期（EF wave17）
+
+axe-core 同一实例不允许并发 `axe.run`，两张并排 Demo 或切换 level 时很容易触发 `Axe is already running`。本条目新增同源 `examples/audit-queue.mjs` 将本演示内的扫描排队；`isCurrent` 在队列轮到任务之前检查当前 DOM 是否仍挂载与本次 token 是否有效，旧请求直接跳过而不会启动新的 axe 扫描。Promise 拒绝不会阻断后续任务。
+
+React 外层使用 `key={level}` 让不同难度各有独立会话，卸载时废弃 token；调用中按 `running` 同步门禁阻止双击。**正在执行的 axe.run 无法被这段队列取消**，其他独立导入 axe-core 的应用也不在此序列化边界内；不要在不同应用之间推断全局互斥。
+
+纯逻辑可运行：`node --test packages/library-lab/entries/F17-axe-core/examples/audit-queue.test.mjs`。它仅测排队、跳过与故障恢复，不导入 axe-core，**不是目标 SDK 或浏览器 PASS**。真正需要用 Chromium 验证两实例同时点击、level 快速切换、规则变化、CSP 和真实 `axe.run` 结果。
