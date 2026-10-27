@@ -36,7 +36,7 @@ export function makeFixtureClient(onTrace:(text:string)=>void) {
  const client=axios.create({baseURL:'https://lab.invalid',adapter,timeout:2000});
  const req=client.interceptors.request.use(config=>{config.headers.set('X-Lab-Request','isolated');return config;});
  const res=client.interceptors.response.use(response=>response,error=>Promise.reject(error));
- return {client,dispose:()=>{client.interceptors.request.eject(req);client.interceptors.response.eject(res);}};
+ return {client,resetTransient:()=>attempts.delete('/transient'),dispose:()=>{client.interceptors.request.eject(req);client.interceptors.response.eject(res);}};
 }
 export async function boundedGetRetry(client:AxiosInstance,signal:AbortSignal) {
  for(let attempt=0;attempt<2;attempt++){
@@ -83,6 +83,8 @@ export default function AxiosWorkshop({level}:{level:Level}){
  async function testFailure(kind:'retry'|'conflict'){
   const {signal,token}=controller();setResult('验证真实 Axios 适配与拦截器…');
   try{
+   // A second button press is a second incident, so the fixture must start with 503 again.
+   if(kind==='retry')client.resetTransient();
    const response=kind==='retry'?await boundedGetRetry(client.client,signal)
       :await client.client.post('/conflict',{feed:'a1',revision:0},{signal});
    if(token===generation.current)setResult('status '+response.status+': '+JSON.stringify(response.data));

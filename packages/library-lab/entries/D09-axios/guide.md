@@ -43,3 +43,7 @@ Axios + TanStack Query：HTTP transport 不应拥有第二份可变 server-state
 业务内容与错误必须以文本公布，不把 token 写到 URL 或 console；不将用户输入直接拼接不可信 URL。实例级 adapter 便于安全注入真实 API 和测试替身，但当前 fixture 并非外网。Node SDK 测试文件 tests/sdk.test.mjs 使用真实 Axios 包直接断言拦截器链、AxiosError 和取消；TypeScript、Vite、Chromium 未执行前为 NOT_RUN。
 
 官方：https://axios-http.com/docs/interceptors · https://axios-http.com/docs/cancellation · https://github.com/axios/axios/releases/tag/v1.20.0
+
+## 点击级重试确定性
+
+Fixture 的 `/transient` 计数仅在每次“GET 503 限定重试”之前重置，确保**连续两次点击**各自经历 503→200；否则第一次成功后所有后续点击都会假性立即成功。重置仅作用于本地业务模拟器，不影响 `AxiosInstance`、实际拦截器注册或 `AbortSignal`。真实 HTTP 的失败重试与总时间预算需在集成后验收。

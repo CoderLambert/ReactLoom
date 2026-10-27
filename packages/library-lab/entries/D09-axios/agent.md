@@ -21,3 +21,7 @@ examples/example.tsx：makeFixtureClient() 展示隔离实例、拦截器注册�
 node --test entries/D09-axios/tests/sdk.test.mjs，再 typecheck/build/浏览器。运行真实axios导入但模拟后端：可以记录“SDK行为已测”，不能记录“真实网络/生产服务器通过”。检查本条 verification.json 和 sourceFingerprint。
 
 官方：https://github.com/axios/axios/releases/tag/v1.20.0
+
+## 必检可重复操作
+
+`makeFixtureClient.resetTransient()` 仅在新一轮 GET retry fixture 前调用。连续点击两次都应各自先遭遇模拟 503，再经真实 Axios GET 重新请求成功。该 fixture 不模拟真实网络/服务器请求幂等性，不能替代集成测试。

@@ -21,3 +21,7 @@ Ky 是基于 Fetch 的 HTTP transport，不是缓存、队列、Schema 或重试
 (GET) 503 最多一次重试、总尝试=2；(POST) 409 不重试；(GET) 显式 AbortSignal 取消；(GET) 大 body 触发尺寸上限；(DELETE) 204 不解析 JSON；旧慢请求不得覆盖新请求。真实业务端点可 mock，但目标 Ky SDK 必须是真正安装调用。SDK/build/browser证据仍NOT_RUN，不能继承旧报告的 Node 模型 PASS。
 
 官方：https://github.com/sindresorhus/ky/blob/v2.2.0/readme.md
+
+## 重复演示的一致性
+
+`createFixtureTransport.resetTransient` 只重置演示中 `GET:/transient` 的本地计数；连续点两次 503 按钮都应经历第一次失败和有限重试。真实服务端的请求状态不应被客户端“重置”，并且不能把 fixture 结果当作后端可用性测试。
