@@ -383,3 +383,28 @@ runCount: **14/24**。本轮依赖/测试阶段最新提交 81ec09ac04a05b6bb826
 **runCount: 15/24**。
 
 **同轮最新 CI 复核（不增加 runCount）**：集成分支提交 `65d4ab98734f78973f739e7402a8f58b25c5ff59` 对应最新 [Library Lab #40492117107](https://github.com/CoderLambert/ReactLoom/actions/runs/40492117107) 两个 job 和 [主 CI #40492117198](https://github.com/CoderLambert/ReactLoom/actions/runs/40492117198) 七个 job 均 conclusion=failure。分别读取 Lab 的 runtime-bootstrap job `122148359095` 和 catalogue job `122148359471`，`fetch_workflow_job_steps` 返回空数组 `[]`，因此仍**没有任何真实构建/SDK/类型/浏览器执行步骤记录**，本轮隔离 Node TAP 是唯一新平台运行证据；不能将本次 CI 失败归因于代码错误。主 PR #8 状态已回读为 open/draft、base=main，未合并。\n
+
+## PLATFORM 第16轮：三组图片/Schema/白板质量 PR 集成；历史 FAIL 证据失效修复（2026-10-27）
+
+**恢复事实源与边界：**在集成 HEAD `caef398bfa3568b1e9bf690366b39ae5448769de` 回读 COORDINATION、IMPLEMENTATION、根/包 AGENTS、本进度、Issue #4/#5/#6/#7、开放 PR 与 GitHub Actions。PR #8 保持 open/Draft，base=main；不合 main、不触碰 PR #3、模板、收费 API 或公开部署。
+
+**实际合入三个非重叠 Worker PR（合入前逐条核对 base、固定 head 和变更路径）：**
+
+- [AB #65](https://github.com/CoderLambert/ReactLoom/pull/65) head `faed8c3ad1a3876104b23495198d3e0c4f6bddd7`，22 个合法 A/B + AB 进度路径，squash merge `de335dcf7b6b48dc5f81d974484e14e0c075b4b5`。A09 Excalidraw JSON/HTTPS/附件边界，A10 tldraw 快照与 Blob URL 清理，B05 Rive 停止不可见 GPU，B17 Floating UI 剪贴板 Promise/焦点及 IME。
+- [CD #66](https://github.com/CoderLambert/ReactLoom/pull/66) head `473c811b35e3c1214dfe175da817e804440a4301`，28 个 C/D + CD 进度合法路径，squash merge `d5304fbb4f70b748f0615a0a9d2173844b095855`。C02 Zod/C03 Valibot/C05 Ajv 规范化 HTTPS feed、OPML/日期/去重语义与输入变更后的状态失效。
+- [EF #67](https://github.com/CoderLambert/ReactLoom/pull/67) head `48f18fd42df61c3d2233fdc7e03cff31d85f3029`，26 个 E/F + EF 进度合法路径，squash merge `385c3399b25fd8905e9d00e30dc49f32b321410c`。E13 PhotoSwipe 当前图库作用域及销毁、E14 react-easy-crop 像素/内存边界与竞态隔离、E15 pica 取消令牌与单飞保护。三批均为已有库质量修复，未增加目录/配置场景；分组自报 Node 纯政策验证不能升格 SDK PASS。
+
+**PLATFORM 直接开发与持久证据：**
+
+- `45e236e4` + `b1e4f868`：`scripts/verification-contract.mjs` 过去仅在 PASS 失配时降级，旧源码上的失败仍可显示为当前 FAIL。现在对实际执行态 **PASS 与 FAIL** 都要求当前 `sourceFingerprint`、非空字符串 command/evidence，失配降为 `NOT_RUN` 并标 `STALE`；不把基础设施 `BLOCKED` 错判成已执行。
+- `7d779186`：`tests/readiness.test.mjs` 增加旧失败过期、伪 evidence 对象/空字符串拒绝、正确 FAIL 保留的回归断言。这份整合级测试**已提交但完整工作树未执行**。
+- 在 Node v22.16.0 **隔离目录**将新合同模块按 GitHub Blob 精确内容恢复，`git hash-object scripts/verification-contract.mjs` = `3d78edfbe27ebe2bfe5e9404e47961952393eb1d`，与远端 blob 一致；`node --check scripts/verification-contract.mjs` **PASS**；`node --test tests/verification-contract.test.mjs`（独立五项边界 fixture）**5 PASS / 0 FAIL / 0 SKIP**。这是合同源码的孤立逻辑验证，不是已提交 `tests/readiness.test.mjs` 全套运行，不含第三方 SDK 或浏览器。
+- 原始测试输出已提交 `docs/library-lab/evidence/platform-wave16-node.tap`（本地 TAP SHA-256 `5fd5d0910f6879cbf5cc455bb47b37b906ac61aae4a61956e5ac00576ab78e0a`）；证据文件提交 `de2e22dd12cc72b66689ce31f7956d15b57597d8`。这是**纯 Node 逻辑证据**，不计入运行 SDK 成功数。
+
+**CI/安装核实：**集成初始 HEAD 的 [Library Lab #40492321294](https://github.com/CoderLambert/ReactLoom/actions/runs/40492321294) 两 job 与 [主 CI #40492321575](https://github.com/CoderLambert/ReactLoom/actions/runs/40492321575) 七 job 全 `failure`，返回 `steps=null`，不具备实际 typecheck/build/SDK/E2E 日志；在新提交产生可信 runner/步骤之前不可归因为代码编译错误。本环境 Node v22.16.0 低于声明的 >=22.18，pnpm 未安装且 Github/npm DNS 不可用，故根 `pnpm-lock.yaml` **仍缺真实 Lab importer 解析**，不得手造、不得改为假 frozen 成功。三个 worker PR 无新增公共依赖请求；已存在包的 peer/许可和锁仍待实际 registry 验证。
+
+**严格计数**：沿用上轮实际目录核查，119 个身份库和 119 个源码/guide/agent/verification 文件包；357 为三层 **配置声明**，非浏览器运行成功数；新增真实 SDK PASS **0**，本轮实际成功浏览器 Demo **未测**，原始研究包117份、E11/F05仅重建，未新增可核对资料审核数。所有受影响的第三方 SDK 实测/tsc/Vite/Chromium **NOT_RUN**；真实锁解析 **BLOCKED**；没有根据纯政策验证修改 verification.json 为 PASS。
+
+**下一批**：取得真实 Node>=22.18 + pnpm10 + registry/Runner 后，先用 `pnpm verify:library --execute --resolve-lock` 生成审查真实锁文件，恢复 `--frozen-lockfile`，运行 `tests/readiness.test.mjs`、完整 typecheck/Vite/受影响 SDK 和 production Chromium。重点验证 A09/A10/B05/B17、C02/C03/C05、E13/E14/E15 的异步清理，以及 E05 Monaco、F11 MSW、PDF Worker、D16 Workbox 的真实隔离。无此环境时继续推进可独立验证的公共功能而不刷无步骤 CI。
+
+**runCount: 16/24**。此轮只有3个worker PR合并与实际公共代码改动；最终 [Draft #8](https://github.com/CoderLambert/ReactLoom/pull/8) 仍待用户真实生产验收。
