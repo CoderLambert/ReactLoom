@@ -1,4 +1,5 @@
-import {useMemo} from 'react';
+import {useMemo, useState} from 'react';
+import {toggleStoryRead} from './story-policy.mjs';
 import {atom, createStore, Provider, useAtom, useAtomValue, useSetAtom} from 'jotai';
 
 type Level = 'basic' | 'business' | 'advanced';
@@ -6,14 +7,13 @@ type Story = {id: string; title: string; read: boolean};
 
 export const counterAtom = atom(0);
 export const doubleAtom = atom(get => get(counterAtom) * 2);
-export const storiesAtom = atom<Story[]>([
+export const storiesAtom = atom<readonly Story[]>([
   {id: 'rss-1', title: '前端性能监控', read: false},
   {id: 'rss-2', title: '测试场景矩阵', read: false},
 ]);
 export const unreadAtom = atom(get => get(storiesAtom).filter(story => !story.read).length);
 export const toggleReadAtom = atom(null, (get, set, id: string) => {
-  set(storiesAtom, get(storiesAtom).map(story =>
-    story.id === id ? {...story, read: !story.read} : story));
+  set(storiesAtom, toggleStoryRead(get(storiesAtom), id));
 });
 
 function WorkspaceAtoms({level, label}: {level: Level; label: string}) {
@@ -42,19 +42,26 @@ function WorkspaceAtoms({level, label}: {level: Level; label: string}) {
   </article>;
 }
 
+function TenantWorkspace({level, label}: {level: Level; label: string}) {
+  // Each keyed mount owns one Store; unmount releases its local state subscriptions.
+  const store = useMemo(() => createStore(), []);
+  return <Provider store={store}><WorkspaceAtoms level={level} label={label} /></Provider>;
+}
+
 export default function JotaiWorkshop({level}: {level: Level}) {
-  const leftStore = useMemo(() => createStore(), []);
-  const rightStore = useMemo(() => createStore(), []);
+  const [teamASession, setTeamASession] = useState(0);
   return <section aria-label="Jotai 原子 Store 隔离演示">
     <h2>{level === 'basic' ? '基础 atom 与派生值' :
       level === 'business' ? 'RSS 已读原子与写入 atom' : '多租户独立 Provider/Store'}</h2>
-    <p>同一个 atom 配置在不同 Store 中有独立的值；Demo 不使用默认全局 Store。</p>
-    <Provider store={leftStore}><WorkspaceAtoms level={level} label="团队 A" /></Provider>
+    <p>同一组 atom 配置在不同 Store 中有独立的值。更换团队 A 的会话会卸载旧 Provider，防止旧会话状态残留。</p>
+    {level === 'advanced' && <button type="button" onClick={() => setTeamASession(current => current + 1)}>
+      退出并新建团队 A 会话
+    </button>}
+    <TenantWorkspace key={'team-A-session-' + teamASession} level={level} label="团队 A" />
     {level === 'advanced' && <>
-      <p>下面是同一组件和同一组 atom 配置，但通过另一 Store 实现真正隔离。</p>
-      <Provider store={rightStore}><WorkspaceAtoms level={level} label="团队 B" /></Provider>
+      <p>团队 B 的 Store 由独立组件持有：更换 A 的会话不会重置 B；退出高级模式会卸载 B。</p>
+      <TenantWorkspace key="team-B-session" level={level} label="团队 B" />
     </>}
-    <p>Jotai 保存原子化 UI 状态，远端数据缓存仍应交给 TanStack Query 等专门层。</p>
+    <p>UI atom 不承担服务端缓存或授权；实际租户切换必须同步清除/隔离远端缓存与请求。</p>
   </section>;
 }
-

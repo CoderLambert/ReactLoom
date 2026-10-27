@@ -59,3 +59,11 @@ tests/sdk.test.mjs 直接真实 import Fuse 并验证搜索、limit、setCollect
 ## 补充：隐藏设置不得继续影响基础模式
 
 原版在高级模式设置容错阈值、业务模式选择分组后，回到基础模式虽然隐藏了两项控件，却继续使用上一次的 `group` 和 `threshold`。这会令基础搜索不可预期地缺少文章、得分不同。现在组件每次由 `resolveScope({level, group, threshold})` 派生生效设置：basic 永远全部分组 + 0.35；business 保留可见分组但固定 0.35；advanced 才使用合法高级阈值。 `visibleDocuments` 在建 Fuse 索引之前筛选，`normalizeQuery` 有 NFC、控制字符清理、80 码点长度限制。helper 源码与声明同时在三层 sourceFiles 展示。该分组是 UI 条件，不是租户授权；生产权限仍须在服务端或数据交付阶段完成。
+
+## 数据更新必须更换索引快照：新增 / 替换 / 删除
+
+进阶场景现在有三个真实交互：新增带固定业务 ID 的 RSS、将同 ID 记录替换成 TypeScript 标题、删除该 ID。组件真正从 index-lifecycle.mjs 引入 upsertDocument 与 removeDocument，使用 React setDocs(old => ...) 的函数式更新，确保连续操作顺序确定。旧快照不可原地修改；useMemo 看到新 docs 后先做分组裁剪，再重新 new Fuse，旧标题不能残留在搜索结果。
+
+upsertDocument 保持既有 ID 的列表位置，插入时追加；removeDocument 删除特定 ID，不存在时返回原数组。源数据含重复/空 ID 则拒绝更新，防止 index 与 React key 产生二义性。三个层级共用 example.tsx、index-lifecycle.mjs/.d.mts 和既有 search-scope.mjs/.d.mts；不要维护第二份展示代码。索引是本地 UI 能力，不是可代替后端 tenant ACL 的边界。
+
+运行 node --test packages/library-lab/entries/D19-fusejs/tests/index-lifecycle.test.mjs 只证明不可变快照规则；tests/sdk.test.mjs 另外包含真实 Fuse 构建后新增、替换、删除及分组迁移断言。浏览器应验证先新增再替换时旧 React 命中消失、TypeScript 新命中出现，删除后不再命中，并测试中文 IME 与隐藏筛选模式。未执行 SDK/浏览器时仍保持 NOT_RUN。

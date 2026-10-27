@@ -22,3 +22,9 @@ examples/example.tsx 的 createArticleIndex() 和业务筛选组合可以复制�
 ## 级别切换与隐藏状态回归
 
 迁移时必须一起复制 `examples/search-scope.mjs` 与 `search-scope.d.mts`，真实组件只从 `resolveScope` 取得生效分组/阈值，再调用 `visibleDocuments` 建立新的 Fuse 索引。basic 不可悄悄应用已隐藏的 business 分组，business 不可继承已隐藏的高级阈值。用 `tests/search-scope.test.mjs` 跑策略测试、`tests/sdk.test.mjs` 跑真实 Fuse 导入测试；前者不能算后者 PASS。
+
+## 动态更新的源码交接
+
+必须同时复制 examples/index-lifecycle.mjs 和 .d.mts：数据变更走 upsertDocument/removeDocument 的函数式 setDocs，不能原地 push/splice 或只刷新列表不重建 Fuse 实例。数据库回传重复 ID 应拒绝并上报，不能以数组索引作记录身份。重建索引必须基于真实新数据快照及当前生效分组/阈值，不能在旧索引先截断 limit 后才过滤。
+
+进阶验收顺序：新增固定 ID 的 React 条目 → 同 ID 替换为 TypeScript → 删除 → 再次新增；旧词结果应随每次重建失效，源数组快照保持不变。纯策略 tests/index-lifecycle.test.mjs 与实际 Fuse tests/sdk.test.mjs 是两类不同证据，前者 PASS 不可填写 SDK PASS。
