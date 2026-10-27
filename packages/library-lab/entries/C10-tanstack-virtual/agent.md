@@ -22,3 +22,7 @@
 不同高度、滚动至首/末、动态展开、搜索后旧索引清理、行 ID 保留、IME、React19滚动警告、宽窄屏以及浏览器真实 ResizeObserver。不能用纯 Node 数据切片断言声称虚拟化成功。当前SDK/build/browser标 NOT_RUN。
 
 官方：https://tanstack.com/virtual/latest/docs/framework/react/react-virtual
+
+## 当前关键补丁
+
+复制 `examples/filter-policy.mjs` 与声明：`getItemKey` 通过 `stableRowId(items,index)` 获取当前行 ID（缺失立即暴露），`viewIdentity(group,query,revision)` 将相同条件的二次搜索区别为新虚拟视图。过滤后保持 React 的 keyed remount 清空旧尺寸缓存。检查 `tests/filter-policy.test.mjs`，但不要把其纯 Node PASS 解释成 ResizeObserver 或 React 实际渲染验收。

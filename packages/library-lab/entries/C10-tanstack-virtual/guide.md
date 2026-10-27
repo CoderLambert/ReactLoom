@@ -53,3 +53,7 @@ React 19 中可使用 useFlushSync:false 防止同步刷新警告，但这影响
 和 C07 TanStack Table 组合时 Table 管行排序过滤，Virtual 管可见视图；和 D07 TanStack Query 组合时 Query 拥有分页缓存与请求取消。性能验证以真实设备和 Chromium 收集可见 DOM 数、滚动/交互响应为主，禁止填报虚构 FPS。当前SDK/TS/构建/浏览器均未执行，详见 verification.json。
 
 官方：https://tanstack.com/virtual/latest/docs/framework/react/react-virtual 和 https://tanstack.com/virtual/latest/docs/api/virtualizer
+
+## 补充：查询身份与行键不应复用
+
+原先只用 `category + '|' + query` 作为组件 key，同条件重新提交不会清掉前一批测量缓存，且字符串拼接存在分隔符歧义。现在实际组件调用 `examples/filter-policy.mjs` 的 `viewIdentity`（数组 JSON 编码加递增 revision）区分每次有效提交，用 `stableRowId` 强制按当前列表获得有效业务 ID，不在错误索引时悄悄降级为 `missing-0`。 `getItemKey` 由 useCallback 绑定数据快照，减少不必要的虚拟化 option 重建。纯 Node 回归覆盖排序后 ID、非法索引、长 Unicode 查询、重复搜索的视图身份；真正动态测量、焦点和 Chromium 滚动仍然 NOT_RUN。

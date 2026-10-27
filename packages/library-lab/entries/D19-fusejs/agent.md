@@ -18,3 +18,7 @@ examples/example.tsx 的 createArticleIndex() 和业务筛选组合可以复制�
 真实 fuse.js 包 node:test 断言排序、limit、setCollection；浏览器测中文输入与动态更新。未执行时 verification SDK/browser 保持 NOT_RUN。对比 D20 MiniSearch/D21 Pagefind 时不能只比虚构性能数字。
 
 官方：https://www.fusejs.io/api/options.html
+
+## 级别切换与隐藏状态回归
+
+迁移时必须一起复制 `examples/search-scope.mjs` 与 `search-scope.d.mts`，真实组件只从 `resolveScope` 取得生效分组/阈值，再调用 `visibleDocuments` 建立新的 Fuse 索引。basic 不可悄悄应用已隐藏的 business 分组，business 不可继承已隐藏的高级阈值。用 `tests/search-scope.test.mjs` 跑策略测试、`tests/sdk.test.mjs` 跑真实 Fuse 导入测试；前者不能算后者 PASS。

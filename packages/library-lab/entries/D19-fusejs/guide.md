@@ -55,3 +55,7 @@ D20 MiniSearch 擅长在字段上建立倒排索引和全文检索；D21 Pagefin
 tests/sdk.test.mjs 直接真实 import Fuse 并验证搜索、limit、setCollection。浏览器需验证 IME、组别过滤和数据更新。没有实际跑依赖/浏览器则状态 NOT_RUN；Mock SDK 或编造命中率不得记 PASS。
 
 官方：https://www.fusejs.io/ · https://www.fusejs.io/api/options.html · https://github.com/krisk/Fuse/releases
+
+## 补充：隐藏设置不得继续影响基础模式
+
+原版在高级模式设置容错阈值、业务模式选择分组后，回到基础模式虽然隐藏了两项控件，却继续使用上一次的 `group` 和 `threshold`。这会令基础搜索不可预期地缺少文章、得分不同。现在组件每次由 `resolveScope({level, group, threshold})` 派生生效设置：basic 永远全部分组 + 0.35；business 保留可见分组但固定 0.35；advanced 才使用合法高级阈值。 `visibleDocuments` 在建 Fuse 索引之前筛选，`normalizeQuery` 有 NFC、控制字符清理、80 码点长度限制。helper 源码与声明同时在三层 sourceFiles 展示。该分组是 UI 条件，不是租户授权；生产权限仍须在服务端或数据交付阶段完成。

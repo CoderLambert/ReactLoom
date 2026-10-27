@@ -1,5 +1,6 @@
 import {useEffect, useMemo, useRef, useState, type ReactNode} from 'react';
 import {Virtuoso, type VirtuosoHandle} from 'react-virtuoso';
+import {normalizeFeedQuery, nextWindowLimit, nextViewRevision} from './view-policy.mjs';
 
 type Level = 'basic' | 'business' | 'advanced';
 type Article = {id: string; title: string; summary: string};
@@ -43,6 +44,7 @@ function Business() {
   const [draft, setDraft] = useState('');
   const [query, setQuery] = useState('');
   const [limit, setLimit] = useState(30);
+  const [viewRevision, setViewRevision] = useState(0);
   const [loading, setLoading] = useState(false);
   const [notice, setNotice] = useState('本地确定性 fixture，不发送 HTTP');
   const pending = useRef(false);
@@ -65,8 +67,10 @@ function Business() {
     timer.current = null;
     pending.current = false;
     setLoading(false);
-    setQuery(draft.trim());
+    setQuery(normalizeFeedQuery(draft));
     setLimit(30);
+    // Even the same query must discard an old end-of-list scroll position.
+    setViewRevision(nextViewRevision);
     setNotice('筛选变更：取消上轮本地延迟任务并重置滚动锚点');
   };
 
@@ -77,7 +81,7 @@ function Business() {
     const token = ++generation.current;
     timer.current = window.setTimeout(() => {
       if (token !== generation.current) return;
-      setLimit(count => Math.min(count + 30, filtered.length));
+      setLimit(count => nextWindowLimit(count, filtered.length));
       pending.current = false;
       setLoading(false);
       timer.current = null;
@@ -87,13 +91,13 @@ function Business() {
   return <section aria-label="Virtuoso RSS 列表">
     <h2>RSS 阅读流：筛选、分页门禁与滚动窗口</h2>
     <form onSubmit={event => {event.preventDefault(); applySearch();}} className="demo-controls">
-      <label>文章关键词 <input aria-label="文章关键词" value={draft} onChange={e => setDraft(e.target.value)}
+      <label>文章关键词 <input aria-label="文章关键词" maxLength={120} value={draft} onChange={e => setDraft(e.target.value)}
         onCompositionStart={() => {composing.current = true; setNotice('输入法合成中；不会提交搜索');}}
         onCompositionEnd={() => {composing.current = false; setNotice('输入完成后按搜索提交');}} /></label>
       <button type="submit">搜索</button>
     </form>
     <p role="status">{notice} · {visible.length}/{filtered.length} 篇 {loading ? '加载下一段…' : ''}</p>
-    <Virtuoso key={query} style={{height: 390, border: '1px solid #c9d7ca'}}
+    <Virtuoso key={viewRevision} style={{height: 390, border: '1px solid #c9d7ca'}}
       data={visible} computeItemKey={(_index, item) => item.id}
       endReached={loadMore}
       itemContent={(_index, item) => card(item)}
