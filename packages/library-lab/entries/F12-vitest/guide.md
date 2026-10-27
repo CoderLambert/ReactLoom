@@ -52,3 +52,10 @@ pnpm exec vitest run entries/F12-vitest/examples/advanced.test.ts
 3 个 test 文件实际通过后记录具体命令与输出，并补 `pnpm --filter @reactloom/library-lab typecheck`。E2E/真实网页在本节点并非适用的 SDK 主门槛；无需为每个命令行工具强制添加伪 React Demo。
 
 官方 [写测试](https://vitest.dev/guide/learn/writing-tests) · [CLI](https://vitest.dev/guide/cli) · [配置](https://vitest.dev/config/)。
+
+
+## 额外边界：响应体异步解析期间取消
+
+原实现仅在 HTTP Promise resolve 后检查 AbortSignal；若响应已经到达、JSON 正在解码，AbortSignal 随后触发，则旧数据仍可能被返回。现在在请求之前、响应之后、200/422 响应体解析之后分别检查取消，并保留 createLatestRequest 的 generation 防线。新增真实 Vitest 测试以确定性的 Promise gate 模拟取消发生在 JSON 解码中，以及已取消请求不得调用 HTTP、活动失败必须显式抛出。测试注入的是业务 HTTP 响应，不是替身 Vitest SDK。
+
+待平台安装后运行 pnpm --filter @reactloom/library-lab test:vitest 与 typecheck，记录真实命令/退出码/commit；目前没有执行目标 Vitest 5 runner，不能写 PASS。

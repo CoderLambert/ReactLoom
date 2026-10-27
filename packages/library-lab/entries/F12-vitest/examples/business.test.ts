@@ -20,3 +20,50 @@ describe('scenario matrix: real Vitest, injected fake business HTTP',()=>{
       .rejects.toThrow('Invalid JSON shape')
   })
 })
+
+describe('abort boundaries during request and JSON parsing',()=>{
+  it('never calls the HTTP layer for an already aborted signal',async()=>{
+    const controller=new AbortController()
+    controller.abort()
+    const request=vi.fn(async()=>new Response('{"message":"wrong"}',{status:200}))
+    await expect(verifyCode(request,controller.signal)).rejects.toMatchObject({name:'AbortError'})
+    expect(request).not.toHaveBeenCalled()
+  })
+  it('does not accept a late successful JSON parse after cancellation',async()=>{
+    const controller=new AbortController()
+    let entered!: () => void
+    let deliver!: (data: unknown) => void
+    const parsing=new Promise<void>(resolve=>{entered=resolve})
+    const request=vi.fn(async()=>{
+      return {
+        status:200,
+        ok:true,
+        json:()=>{
+          entered()
+          return new Promise<unknown>(resolve=>{deliver=resolve})
+        },
+      } as Response
+    })
+    const pending=verifyCode(request,controller.signal)
+    await parsing
+    controller.abort()
+    deliver({message:'late-success'})
+    await expect(pending).rejects.toMatchObject({name:'AbortError'})
+    expect(request).toHaveBeenCalledTimes(1)
+  })
+  it('checks cancellation after parsing an invalid 422 response',async()=>{
+    const controller=new AbortController()
+    let release!: (data: unknown) => void
+    let parsing!: () => void
+    const entered=new Promise<void>(resolve=>{parsing=resolve})
+    const request=async()=>({
+      status:422,ok:false,
+      json:()=>{parsing();return new Promise<unknown>(resolve=>{release=resolve})},
+    } as Response)
+    const pending=verifyCode(request,controller.signal)
+    await entered
+    controller.abort()
+    release({code:'OTP_EXPIRED'})
+    await expect(pending).rejects.toMatchObject({name:'AbortError'})
+  })
+})
