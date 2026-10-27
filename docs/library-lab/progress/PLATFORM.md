@@ -449,3 +449,27 @@ runCount: **14/24**。本轮依赖/测试阶段最新提交 81ec09ac04a05b6bb826
 - 公共提交 6a0685722da75405b9e560b1d322238c43db8c89：e2e/library.spec.ts 新增真实浏览器计划中的 Setext 标题、重复slug、围栏假标题目录点击测试，固定拦截仅 C20 guide.md 的审查用Markdown fixture；**仅提交 NOT_RUN**，不冒充Chromium。TypeScript 5.8.3 对独立新TS测试片段做 transpileModule 静态诊断=0，非完整构建。
 - 公共提交 eefc0a3eaba75fa8be98b8d8cdbf3071632e5a4f：IMPLEMENTATION.md LL04 更新为已接线安全目录/按需高亮/本地链接，同时注明浏览器未验收；同步第17轮结果。未编辑任何worker所有权文件。
 - runCount仍 **17/24**，后续代码与本进度提交以 PR #8 实际HEAD为准。分组PR #68/#69/#70 已合并，PR #8 仍 Draft；完整SDK/锁/tsc/Vite/Chromium状态保持 NOT_RUN/BLOCKED。
+
+
+## PLATFORM 第18轮：三组Worker集成 + 目录JSON边界完整切片（2026-10-27）
+
+**runCount: 18/24。** 恢复时读取了当前集成分支的 COORDINATION.md、IMPLEMENTATION.md、根与本包 AGENTS、PLATFORM、Issue #4/#5/#6/#7、开放PR和GitHub CI；实际初始集成 HEAD 为 `a7514e4b6354ade43a36dc39512c7ccafc688dbe`，未依赖容器中不存在的旧源码。
+
+### 三分组已集成且仅触碰各自条目
+- **AB [#71](https://github.com/CoderLambert/ReactLoom/pull/71)**：核对当前 head `2401f6a0274ec36e215873fda12950451f3d2b8f`，19个变更文件均属于 A*/B* 与 AB.md；仅对既有 A06 React Flow、A16 MapLibre、B18 cmdk 的实例切换、资源及键盘/命令状态加固。Worker报告11项 Node纯策略PASS、3个辅助TS规则静态检查；PLATFORM未重跑，SDK/Chromium仍NOT_RUN。单向squash集成 `c3d3739b9c0a6cc83595d61ec15424bb20b18a21`。
+- **CD [#72](https://github.com/CoderLambert/ReactLoom/pull/72)**：head `462f534aa4fae8d174e55c5084d415867d245742`，28/28路径只在 C*/D* 与 CD.md；C09 Virtuoso分页复位、C10 Virtual行身份、D19 Fuse查询作用域。Worker报告12项 Node纯策略PASS，3份独立声明检查，目标SDK未运行；squash `f8033d525b10fa545262ed35a360e7a64924d425`。
+- **EF [#73](https://github.com/CoderLambert/ReactLoom/pull/73)**：head `b14f579428cacad644d183829abc464c98242116`，27/27路径只在 F* 与 EF.md；F11 MSW独占启动租约和不跨tab注销全局SW，F06 PDF.js画布分辨率预算，F07 React-PDF Worker独立复制数据。Worker报告9项Node纯策略PASS，SDK/Chromium未运行；squash `79f29d8d98df61ee71ad7e6cc1d97117a5aa8c5c`。
+- 3个Draft worker PR因GitHub REST不允许直接merge草稿，经核对base/head/变更所有权后先标记ready再以 `expected_head_sha` 合入。**只对worker进行状态转换，主 #8 始终open/Draft**，未force、未合main或修改PR #3。三组本轮没有新增公共依赖请求；旧版本/peer/许可证与实际lock依旧需要registry核验。
+
+### 公共代码与测试切片
+- 新增 `src/lib/bounded-json.mjs` 与 `bounded-json.d.mts`：三种生成JSON独立字节预算（目录512KB、条目详情512KB、源码索引128KB），按流实际UTF-8字节约束，拒绝HTML fallback、非JSON MIME、非2xx、无字节流、损坏UTF-8和不完整JSON；不信任Content-Length；超限时取消reader。不会替代已有目录shape、指纹与SHA校验。
+- `src/lib/catalog-context.tsx`、`src/lib/catalog-detail.tsx`、`src/components/demo-host.tsx` 三处实际fetch不再调用无界 `response.json()`；新 `tests/bounded-json.test.mjs` 接入本包默认Node测试脚本。生产preview `e2e/library.spec.ts` 增加超额首页目录、错误详情MIME、错误源码索引MIME的3个负向回归，**仅提交未运行**。
+- **本轮执行的精确Node证据**：容器 Node `v22.16.0`（低于项目要求>=22.18），新模块和测试在隔离目录逐字节恢复；`git hash-object` 分别 `91c34fe94c49ad73deb0c06c52f07fcda94b0924` 和 `b9295c8c24f1c67aa794167cd0b78b813c0305e7`，与当前GitHub Blob SHA匹配。执行 `node --check src/lib/bounded-json.mjs`、`node --check tests/bounded-json.test.mjs` 均PASS；`node --test tests/bounded-json.test.mjs` 得 **6 PASS / 0 FAIL / 0 SKIP**，原始TAP提交 [platform-wave18-json.tap](../evidence/platform-wave18-json.tap)，文件Git Blob `8d59a64241839ed3cd68ac09dd30924e56395a89`，原始日志SHA256 `7aee912fbb6bf21bfc363d697d21635778a24d6020b651edddf7deaf3c7363a0`。
+- 独立TypeScript `5.8.3` 使用 `tsc --noEmit --strict --skipLibCheck --target ES2022 --module ESNext --moduleResolution Bundler --lib ES2022,DOM src/lib/bounded-json.d.mts`：**PASS，仅新声明文件**，Git Blob `c7e4424a341029547fe68bce82177bfe52096c3d` 与远端一致。**完整React TSX/typecheck/Vite均未运行**，不能由此推断通过。
+
+### 当前门槛、CI事实与分离计数
+- 新代码GitHub Actions：[Library Lab run 40514981811](https://github.com/CoderLambert/ReactLoom/actions/runs/40514981811) 两个job均 `runner_id=null, steps=[]`；[主CI run 40514981794](https://github.com/CoderLambert/ReactLoom/actions/runs/40514981794) 七个job同样无Runner/无step，均标记failure但没有实际安装、类型或构建测试日志。根 `pnpm-lock.yaml` 仍缺针对本包的真实解析；本容器只有Node22.16、TypeScript5.8、无pnpm，github/npm DNS不可用。真实锁解析 **BLOCKED**；完整tsc/Vite、受影响真实SDK、Chromium生产预览、Worker/SW/iframe **NOT_RUN**；不得标记PASS。
+- 历史核对口径：**119个身份条目、119份源码/guide/agent/verification结构，357个basic/business/advanced配置声明**，本轮变更9个既有条目但新增身份0。**本轮真实SDK PASS新增0；本轮真实浏览器Demo成功验收0（未运行）；117旧资料审核数未重新复核，E11/F05原件依旧缺失并按recreated处理。** 未修改validation.json以伪造成功。
+- 本轮进度/证据均保存在私有仓库，主PR #8保持 Draft；main、既有PR #3、模板、公开部署和付费API均未触碰。
+
+**下批**：优先取得Node>=22.18、pnpm10与可用registry/Runner，使用真实解析补根lock且恢复frozen，再执行完整类型/Vite和有实际SDK导入的定向套件，Chromium重点运行新增JSON安全回归与 A06/A16/B18、C09/C10/D19、F06/F07/F11、Monaco及PDF/MSW资源卸载；环境继续阻塞时推进其他可独立验证的公共代码，不把无Runner的CI失败当作构建结果。
