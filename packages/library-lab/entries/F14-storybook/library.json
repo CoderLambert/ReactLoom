@@ -115,7 +115,7 @@
         "real-cli",
         "isolated-fixture"
       ],
-      "description": "禁用态可见性和可操作性断言，addon-a11y辅助检查。"
+      "description": "实际Storybook同时覆盖禁用态与首次异步回调失败后重试；需要执行Story play方可验证。"
     }
   ],
   "license": {

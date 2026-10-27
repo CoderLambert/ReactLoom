@@ -47,3 +47,11 @@ pnpm exec storybook build --config-dir entries/F14-storybook/examples/.storybook
 ## 后续验收
 
 运行 Storybook CLI 的三条 Story play 与构建，核对 story ID、交互断言和 addon 报告；另用真实浏览器验证 tabindex/移动视图。当前命令未经本环境执行，SDK NOT_RUN、构建 BLOCKED、浏览器 NOT_RUN。官方 [Play](https://storybook.js.org/docs/writing-stories/play-function)、[React Vite](https://storybook.js.org/docs/get-started/frameworks/react-vite)。
+
+## 异步保存失败与 Storybook 自动验收（EF wave17）
+
+示例组件将归档拆为 `idle / saving / done / error` 四态：`onArchive` 可返回 Promise，点击后同步防双击、等待成功才显示“已归档”、拒绝时展示可重试错误。通过 `generation` 隔离卸载及 Story args 切换后过期的 Promise，避免旧操作覆盖新故事；这不是后端事务回滚。新增 `Recovery` Story 用 `fn().mockRejectedValueOnce` 模拟首次失败，真实 `play` 再次触发后验证成功与回调次数。故事 fixture 使用本地 Mock 函数，不涉及真实网络/收费API。
+
+`.storybook/preview.ts` 的 `a11y.test` 从 `todo` 收紧为 `error`。**注意：`storybook dev` 只启动可交互故事，`storybook build` 只验证构建；它们不会自动证明所有 `play` 或 a11y 测试已在 CI 执行。** CI 必须由 PLATFORM 另外正确配置 `@storybook/addon-vitest` 或 Storybook test-runner、真实浏览器、相应依赖和可访问性测试执行入口，并保存故事执行报告。当前仍是 SDK、Story play、浏览器 NOT_RUN，不能以静态 Story 源码声称已通过。
+
+参考 [Storybook 官方交互测试](https://storybook.js.org/docs/writing-tests/interaction-testing) 与 [a11y.test 行为](https://storybook.js.org/docs/writing-tests/accessibility-testing)。生产实现中还应对可中止的请求实际传播 AbortSignal；这里只实现防过期结果和重试示范。
