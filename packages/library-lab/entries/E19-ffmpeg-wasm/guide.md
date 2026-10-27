@@ -31,3 +31,9 @@ E16 Video.js v10 播放转换后的本地视频；E18 wavesurfer.js播放与显�
 
 ## 官方
 https://ffmpegwasm.netlify.app/docs/getting-started/usage/ 与 https://github.com/ffmpegwasm/ffmpeg.wasm ，wrapper MIT；核心第三方许可证需要逐组件审查。
+
+## 异步任务与输入媒体边界增强
+
+`examples/input-policy.mjs` 在把上传内容交给FFmpeg之前先检查File元数据（4MiB以内）、实际读取的字节数量与RIFF/WAVE、ID3/MP3帧、EBML WebM或`ftyp` MP4头部；转换完成后限制WAV结果2MiB并确认RIFF/WAVE头。这是**保守快速预检**，不表示完整文件格式验证，也不能代替WASM进程的CPU/内存隔离。
+
+运行按钮增加同步 operation 所有权：快速双击不再对同一FFmpeg虚拟FS文件名执行两个命令。`session`结合引擎实例身份拒绝取消、重新加载或卸载后迟到的结果；旧引擎的 finally 清理只能处理旧实例，不能清除新任务的busy标记。`node --test examples/input-policy.test.mjs`仅是3个纯逻辑场景，不是FFmpeg本体通过。真实Worker/WASM、超时、CSP和浏览器内存边界仍须PLATFORM运行验证。

@@ -353,3 +353,13 @@ runCount=6/24。本轮不把5库源代码和30+例子等同完整生产交付；
 - **已执行纯Node逻辑测试**：Node v22.16.0 `node --test render-gate.test.mjs` **3 PASS/0 FAIL**，覆盖同Canvas排他、取消拒绝后继续、过期排队操作跳过。新增`worker-version.test.mjs`为根依赖/F06/F07/Worker URL的静态合同，须在完整源码检出环境执行；不声称该测试或 SDK已通过。测试参考：PDF.js官方RenderTask文档与react-pdf的Worker配置指南。
 - **真实运行状态**：PDF.js SDK、React-PDF SDK、TypeScript/Vite生产构建、Chromium/Worker/CSP皆 **NOT_RUN或BLOCKED**，公共锁文件仍由PLATFORM统一解析；不得从本轮纯逻辑测试生成SDK PASS。建议平台在真实环境执行 `node --test packages/library-lab/entries/F06-pdfjs/examples/{render-gate,worker-version}.test.mjs`、`pnpm --filter @reactloom/library-lab catalog:check`、`typecheck`、`build`，并在Chromium快速切页/缩放/反复F06-F07切换。
 - 本轮范围只有 F06/F07 entries 与EF进度，无公共代码、包依赖、lock/CI/main或部署修改。runCount=9/24。完成集成后的剩余EF工作应围绕SDK真实证据/特殊资源协同PLATFORM完成，不应再发明新的占位条目。官方 https://mozilla.github.io/pdf.js/api/draft/module-pdfjsLib-RenderTask.html 和 https://github.com/wojtekmaj/react-pdf 。
+
+## 第十轮：F11 / E19 / F05 真实运行前安全合同修复（2026-10-27）
+
+- 从最新集成 feat/library-lab@101315e3bdf299047f9c2a39aa670ed59570ec4a 建立独立分支；上轮PR #34已合入。仅涉及 E19/F05/F11 条目与本进度，不修改公共依赖、lockfile、CI或main。
+- F11 MSW：保留Node .invalid端点，新增 scenarioEndpoints + createHandlers，让浏览器iframe的场景HTTP改为同源 /lab-runners/msw/api/ 路径；限定iframe与scope，并在启动后比对registration scope/scriptURL。真实browser runner仍由PLATFORM接线。
+- E19 ffmpeg.wasm：在读取File字节前预检4MiB限制、后对照MIME与WAV/MP3/WebM/MP4文件头、转换后WAV输出限制2MiB；同步operation所有权阻止连续点击并发写同名虚拟FS文件，session+引擎身份拒绝取消后的回写。
+- F05 SheetJS：XLSX.read前先校验ZIP中央目录的条目/总声明解压/压缩比/重复名/本地头/危险路径/宏；ZIP目录可伪造，不能代替隔离Worker、内存CPU超时硬限制。verify.mjs的PASS日志移到所有实际SDK负例完成后。
+- Node v22.16.0已在本轮运行独立纯Node检查：F11 routes 3项、E19 input-policy 3项、F05 archive-policy 4项，共10 PASS/0 FAIL。没有导入真实第三方SDK，不得升级SDK或浏览器验证状态。
+- MSW真实worker/fetch、FFmpeg核心加载与取消、SheetJS XLSX回读、TS/Vite构建、浏览器E2E仍 NOT_RUN/BLOCKED。无新增第三方依赖；PLATFORM统一核对已请求版本及锁文件。需要真实SDK环境确认SheetJS正常生产包能通过保守ZIP预检。
+- 当前EF 37/37条已有源码与指南，本轮属于风险修正、不新增库。runCount=10/24。后续优先等待PLATFORM真实依赖编译反馈并继续剩余跨库安全修复，不能虚报验证通过。

@@ -65,3 +65,9 @@ F12 Vitest 适合断言 Node handler 场景；F13 Playwright 用来验证浏览�
 ## 当前结果
 
 当前仅完成真实 API 的源码与复现脚本，依赖、Node SDK 与 browser scope 尚未运行；`verification.json` 保持 NOT_RUN/BLOCKED。平台任务拥有依赖安装与 iframe/Service Worker runner 的建设权。
+
+## 独立浏览器场景 URL 修正（本批）
+
+旧版本固定使用 `https://library-lab.invalid/api/...`，这只适用于 Node 拦截；隔离浏览器 iframe 直接 fetch 到该域名会涉及跨域/CORS/未匹配预检，不能据此验证本地 Worker。现在 `examples/routes.mjs` 的 `scenarioEndpoints(base)` 由同一规则生成两种地址：Node 仍用 `.invalid`，浏览器从 `location.origin + /lab-runners/msw/` 生成同源 scoped API。`handlers.mjs` 的 `createHandlers(urls)` 复用同一真实 MSW handler，避免两套业务假数据漂移。
+
+`examples/browser-worker.mjs` 拒绝顶层页面和非 scoped 入口，启动后对 registration 的 scope 及 scriptURL 做精确断言。`worker.stop()` 是停止监听，不是注销注册；真正的隔离 iframe、worker 脚本、注册卸载策略和 Chromium 截获验证仍由 PLATFORM 承担。纯 `node --test tests/routes.test.mjs` 只检查 URL 合同，**不构成 MSW SDK/Service Worker PASS**。

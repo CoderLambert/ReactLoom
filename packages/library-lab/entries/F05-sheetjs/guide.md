@@ -39,3 +39,11 @@ F04 ExcelJS 更侧重 XLSX 样式/对象模型；F03 Papa Parse 更适合纯 CSV
 演示用的导入器只接受 `channel / views / kind` 三列，顺序必须一致；工作表必须从 A1 开始，200 行上限，在解析时启用 `sheetRows` 并结合 `!fullref` 核对原始范围。不能只对 `sheet_to_json` 输出取几个字段——缺表头可能被 `String(undefined)` 伪装成合法业务数据，额外列会悄悄丢失。导入时开启 `cellFormula` 仅用于**检测并拒绝公式单元格**，不是执行公式。避免不可信工作簿的公式/宏、隐藏列带来的内容绕行。本约束适用于本次三列原型，不是通用 Excel 导入器。
 
 新增框架无关的 `examples/validation.mjs` 和 `examples/validation.test.mjs`。已在 Node v22.16.0 上实际运行后者 **7 PASS / 0 FAIL**，验证行模式、危险前缀、大小限制和重复频道；`examples/verify.mjs` 的真实 XLSX 公式/列结构检查仍需官方 `xlsx` 依赖安装后执行，不能把前述纯逻辑测试记为 SheetJS SDK PASS。输入2MiB限制只约束压缩前上传文件体积，不能作为对 ZIP bomb 的绝对防护：服务端处理仍需运行资源、超时和内存隔离。
+
+## ZIP 中央目录轻量预检（本批）
+
+examples/archive-policy.mjs 在真正的 XLSX.read() 前执行ZIP目录级预算：2MiB上传、80个文件、单项声明最大4MiB、整体声明解压最大8MiB、单项声明压缩比上限200；拒绝多磁盘/ZIP64、加密、重复名、路径穿越、声明超额、本地头异常、重叠数据和宏/嵌入条目。必须有 [Content_Types].xml 与 xl/workbook.xml。严格限制专为本演示三列表格，不是通用SheetJS功能规范。
+
+**重要限制**：ZIP中央目录的长度和比例都可被恶意文件伪造，不能代替解压过程的CPU/内存硬限制、ZIP处理器安全审核或独立进程隔离。真实服务仍须在可终止的Worker或进程中解析不可信工作簿，提供独立内存/CPU与超时上限。node --test examples/archive-policy.test.mjs 仅验证典型恶意目录被拦截，不能算SheetJS SDK安全测试。
+
+examples/verify.mjs 的PASS日志移至全部负例断言后，避免早报通过。
