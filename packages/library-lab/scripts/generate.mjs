@@ -5,6 +5,7 @@ import {createHash} from 'node:crypto';
 import {validateEntry,safeRelativePath} from '../src/lib/catalog.mjs';
 import {rootCatalogData,rootCatalogMarkdown} from './root-catalog.mjs';
 import {entryCompletenessIssues} from './entry-gate.mjs';
+import {verifiedState,sourceFingerprint as fingerprintOf} from './verification-contract.mjs';
 const packageRoot=fileURLToPath(new URL('..',import.meta.url));
 async function safeRead(root,relative){
  if(!safeRelativePath(relative))throw new Error(`unsafe source ${relative}`);
@@ -14,19 +15,6 @@ async function safeRead(root,relative){
  return readFile(full,'utf8');
 }
 async function optionalText(root,name){try{return await safeRead(root,name);}catch(error){if(error.code==='ENOENT')return null;throw error;}}
-const VERIFIED_STATUSES=new Set(['PASS','FAIL','NOT_RUN','BLOCKED']);
-function verifiedState(raw,fingerprint){
- const output={};
- for(const [name,value] of Object.entries(raw)){
-  if(!value||typeof value!=='object'||!VERIFIED_STATUSES.has(value.status))
-   throw new Error(`invalid verification status: ${name}`);
-  if(value.status==='PASS' && (!value.sourceFingerprint||value.sourceFingerprint!==fingerprint||!value.evidence||!value.command)) {
-   output[name]={...value,status:'NOT_RUN',note:`STALE: Previous PASS has no matching current-source fingerprint and command/evidence.`};
-  }else output[name]=value;
- }
- for(const name of ['sdk','build','browser'])if(!output[name])output[name]={status:'NOT_RUN',note:'No verification evidence has been recorded'};
- return output;
-}
 async function collectAssets(root,relative='assets'){
  const results=[];
  let items;
@@ -70,7 +58,7 @@ export async function generate(root=packageRoot,{check=false,expectedCount=119}=
    if(demo.executionKind==='react')imports.push(`  ${JSON.stringify(`${entry.entryId}/${demo.demoId}`)}: () => import(${JSON.stringify(`../../entries/${dir.name}/${demo.entryPoint}`)}),`);
    if(demo.executionKind==='worker')workerImports.push(`  ${JSON.stringify(`${entry.entryId}/${demo.demoId}`)}: () => new Worker(new URL(${JSON.stringify(`../../entries/${dir.name}/${demo.entryPoint}`)}, import.meta.url), {type:'module'}),`);}}
   const assets=await collectAssets(folder);
-  const sourceFingerprint=createHash('sha256').update(JSON.stringify({packages:entry.packages,sources:sources.map(({path,sha256})=>({path,sha256}))})).digest('hex');
+  const sourceFingerprint=fingerprintOf(entry.packages,sources);
   const verification=verifiedState(rawVerification,sourceFingerprint);
   entries.push({...entry,directory:dir.name,guideAvailable:guide!==null,agentAvailable:agent!==null,sourceFingerprint,verification});payloads.push({id:entry.entryId,guide,agent,sources,assets});
  }
