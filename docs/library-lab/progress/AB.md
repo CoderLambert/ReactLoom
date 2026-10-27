@@ -493,3 +493,8 @@ GitHub `compare_commits` 证实前两提交变更24文件，**24/24只在AB entr
 - PLATFORM审核合入并在具备真实运行环境后验收B07/B08连续编辑和撤销、Dialog/Modal焦点与数字中间态、A05窄屏和筛选、A11 Canvas拖拽/Transformer/卸载。
 - AB后续优先按真实TS/SDK错误修复；无runner时可独立检查A03 Chart.js、A12 react-konva、B03 react-spring。禁止重复造条目和循环DNS重试。
 - 主PR #8仍Draft；未改main、PR #3、模板、公共脚本、package/lock、CI、其他组或公开部署。
+
+
+### GitHub CI观察补记（与源码运行验收分开）
+
+Draft PR #47（https://github.com/CoderLambert/ReactLoom/pull/47）实际触发工作流：Library Lab run 40454825977、CI run 40454825702，均报告 conclusion=failure；Library Lab 的 runtime-bootstrap job 122025599429 与 catalogue job 122025599671 均报 failure，但Connector获取两者日志均得到GitHub BlobNotFound 404，job steps为空。**因此无可用runner执行日志，不能归因为本PR源码问题，也不能将其计为真实SDK/构建验证**。PLATFORM应核对 Actions runner/日志可用性后再诊断，禁止以纯逻辑12 PASS覆盖此项失败。
