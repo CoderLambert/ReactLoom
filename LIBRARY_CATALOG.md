@@ -12,8 +12,8 @@
 |A06|React Flow|React 节点工作流编辑器：受控节点和边、连接校验与画布交互|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A06-react-flow/)|
 |A07|AntV G6|关系网络的节点、边、拓扑与交互画布（基于 G6 5.1.1）|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A07-antv-g6/)|
 |A08|Mermaid|将受控 Mermaid DSL 编译成流程图、时序图和状态图|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A08-mermaid/)|
-|A09|Excalidraw|手绘风格协作草图与白板|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A09-excalidraw/)|
-|A10|tldraw|可扩展画布编辑器和白板|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A10-tldraw/)|
+|A09|Excalidraw|手绘白板嵌入、业务流程草图、导入导出和协作边界|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A09-excalidraw/)|
+|A10|tldraw|可编程无限画布与业务白板，明确生产许可证限制|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A10-tldraw/)|
 |A11|Konva|Canvas 2D 场景图、图元拖拽、选择与变换|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A11-konva/)|
 |A12|react-konva|React 19.3 声明式二维画布与编辑状态|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A12-react-konva/)|
 |A13|Three.js|WebGL 3D场景、动画循环、尺寸管理与显存回收的原生引擎实验|图表 · 画布 · 地图|[条目](packages/library-lab/entries/A13-threejs/)|
@@ -25,7 +25,7 @@
 |B02|GSAP|有时间线、重播、反转与减少动画偏好控制的交互动画|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B02-gsap/)|
 |B03|react-spring|基于 spring 物理的 React 动画与列表进出场；局部减少动画兼容|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B03-react-spring/)|
 |B04|dotLottie 播放器|本地矢量动画、播放控制与减少动态效果|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B04-dotlottie/)|
-|B05|Rive React Runtime|Rive 状态机动画与 React 集成|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B05-rive-react/)|
+|B05|Rive React Runtime|Rive WebGL2 动画播放、可访问状态反馈和运行时生命周期|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B05-rive-react/)|
 |B06|Ant Design|企业组件、受控表单、表格与反馈|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B06-ant-design/)|
 |B07|MUI|Material UI 主题、表格、可访问弹窗与业务错误回填|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B07-mui/)|
 |B08|Mantine|主题控件、业务表格、模态编辑及 NumberInput 中间值校验|组件 · 动画 · 交互|[条目](packages/library-lab/entries/B08-mantine/)|

@@ -67,17 +67,17 @@
     "entryId": "A09",
     "name": "Excalidraw",
     "group": "A",
-    "summary": "手绘风格协作草图与白板",
+    "summary": "手绘白板嵌入、业务流程草图、导入导出和协作边界",
     "path": "packages/library-lab/entries/A09-excalidraw",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "A10",
     "name": "tldraw",
     "group": "A",
-    "summary": "可扩展画布编辑器和白板",
+    "summary": "可编程无限画布与业务白板，明确生产许可证限制",
     "path": "packages/library-lab/entries/A10-tldraw",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "A11",
@@ -171,9 +171,9 @@
     "entryId": "B05",
     "name": "Rive React Runtime",
     "group": "B",
-    "summary": "Rive 状态机动画与 React 集成",
+    "summary": "Rive WebGL2 动画播放、可访问状态反馈和运行时生命周期",
     "path": "packages/library-lab/entries/B05-rive-react",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "B06",
