@@ -232,3 +232,33 @@ test('production source index refuses valid-looking stale metadata before a sour
  expect(downloads).toBe(0);
  await expect(page.getByRole('button',{name:'复制源码'})).toHaveCount(0);
 });
+
+test('generated catalogue, docs and source requests use a cancellable network-first fetch',async({page})=>{
+ await page.addInitScript(()=>{
+  const original=window.fetch.bind(window);
+  const requests:Array<{url:string;cache?:RequestCache;signal:boolean}>=[];
+  (window as Window & {__labAssetFetches?:typeof requests}).__labAssetFetches=requests;
+  window.fetch=(input:RequestInfo | URL,init?:RequestInit)=>{
+   const url=typeof input==='string'?input:input instanceof URL?input.toString():input.url;
+   if(url.includes('catalog-index.json')||url.includes('/raw/C20/')){
+    requests.push({url,cache:init?.cache,signal:!!init?.signal});
+   }
+   return original(input,init);
+  };
+ });
+ await page.goto('/libraries/clsx?tab=docs');
+ await expect(page.getByRole('link',{name:'读取 Markdown 原文'})).toBeVisible();
+ await page.getByRole('tab',{name:'实战 Demo'}).click();
+ await expect(page.locator('.source-viewer .hash')).toContainText('已校验');
+ const requests=await page.evaluate(()=>(window as Window & {
+  __labAssetFetches?:Array<{url:string;cache?:RequestCache;signal:boolean}>
+ }).__labAssetFetches??[]);
+ const required=['catalog-index.json','/raw/C20/detail.json','/raw/C20/guide.md',
+  '/raw/C20/source-index.json','/raw/C20/sources/'];
+ for(const fragment of required){
+  const hit=requests.find(entry=>entry.url.includes(fragment));
+  expect(hit,fragment).toBeDefined();
+  expect(hit?.cache,fragment).toBe('no-store');
+  expect(hit?.signal,fragment).toBe(true);
+ }
+});
