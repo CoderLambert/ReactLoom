@@ -410,3 +410,9 @@ runCount=6/24。本轮不把5库源代码和30+例子等同完整生产交付；
 - 下一队列：真实SDK/TS/Vite安装反馈；Chromium E06出站图像与恶意HTML、E10 DOM净化、F02选择器与竞态、E19构造故障/WASM取消和切换；后续按平台反馈修复。EF仍 **37/37内容覆盖**，绝非37/37已验收。
 
 runCount=13/24。
+
+### 第十三轮真实定向验证补记
+
+- 使用 Node v22.16.0 在独立工作目录实际执行两组源码同字节的原生测试：`node --test E10/html-policy.test.mjs F02/preview.test.mjs`，共 **6 PASS / 0 FAIL**，耗时约 106 ms（TAP，E10 3 + F02 3）。通过 `git hash-object` 对比 GitHub 当前 wave13 blob SHA：E10 policy `7a724d46`、test `41935d26`，F02 preview `4fbaae47`、test `c100e284`，确认本次本地执行文件与实际提交字节一致。两套都**没有import目标DOMPurify/react-dropzone**，故不计 SDK PASS。
+- GitHub compare 基线 `e9cc2100` 至开发head `e0a6c41c`：4个提交、28个变更文件，全部位于 EF 条目或本进度文件。E06/E10/F02 的3×3层 sourceFiles 已逐项读取 GitHub 树并确认 9/9 路径组无缺失，属于静态完整性检查。
+- 由于工作容器无项目 React、DOMPurify、react-dropzone、FFmpeg 真实 node_modules，本轮 **E06实际SDK SSR、E10 DOMPurify、F02 useDropzone、E19 WASM、整包 TypeScript/Vite构建与Chromium E2E均没有执行**；verified字段仍按各库原有NOT_RUN/BLOCKED保留，未伪造日志或通过状态。
