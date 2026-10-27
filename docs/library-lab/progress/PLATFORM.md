@@ -534,3 +534,27 @@ runCount: **14/24**。本轮依赖/测试阶段最新提交 81ec09ac04a05b6bb826
 - 接入既有 **A03 Chart.js、A15 Leaflet、B19 Embla** 三库质量改进（身份/场景数量不变）：真实Chart.js画布点选与键盘等价表格并同步选中态、到10000上界停止400ms自动采样；Leaflet实例随挂载创建并在卸载清理而非随level反复重建、过滤可见选中、删除后可重复追加本地来源；Embla真实snap数量与卡片数量区分、键盘左右与减少动画偏好、ARIA幻灯片标注。没有新增依赖/锁文件修改。
 - AB报告Node22.16隔离纯政策13 PASS/0 FAIL、3个纯TS helper检查PASS，6份测试/源码Git Blob同源；**本PLATFORM未重跑**，不继承为实际第三方SDK运行验收。A03/A15/B19真实Chart.js Canvas/Leaflet Map/Embla、完整TypeScript/Vite/Chromium仍 **NOT_RUN/BLOCKED**。上文平台自身精确Blob安全回归7 PASS/0 FAIL另计；本批新增真实SDK PASS仍0。
 - 当前唯一集成分支最新以本段进度提交后的GitHub实际head为准，runCount仍 **20/24**；继续优先锁文件真实依赖解析、构建、SDK/浏览器门禁并保留CI无Runner阻塞#12。
+
+## PLATFORM 第21轮：受限网络资源事务 + CD/EF Worker 集成（2026-10-27）
+
+**runCount: 21/24。** 从 GitHub 私有集成树恢复，读取最新根与本包 AGENTS、COORDINATION、IMPLEMENTATION、本进度、Issue #4/#5/#6/#7、开放 PR 与 CI；起点为 `feat/library-lab@7481603f18ddff3a4aabab63d543c28eb5ac2778`，未假定旧容器代码持久。平台直接开发公共源码并顺序合入2个独立通道的授权 PR。没有触碰 main、PR #3、模板、公开部署或付费 API。
+
+### 审核集成的 Worker 成果
+
+- **CD [#78](https://github.com/CoderLambert/ReactLoom/pull/78)**：PR base=`feat/library-lab`，固定 head `762c777f299ca851c1b8e1467e391254dd5e9215`；**30/30变更路径**严格限于 `entries/C*`、`entries/D*` 及 `progress/CD.md`。审阅 React Hook Form 异步提交/IME 捕获、p-limit 终态及切换层级的任务清理、clsx 有限类名策略；worker 报告精确策略 **8 PASS**、独立声明检查通过，PLATFORM未重复运行。这些不是SDK实测。只转换这一份worker Draft并按 expected head squash至集成分支：**`2abb3afd0991bdfc7a1a9d0c42b32853c5f10cdd`**。
+- **EF [#79](https://github.com/CoderLambert/ReactLoom/pull/79)**：固定 head `b1ff7681453b625b76034d80880a3904036c59b2`，base=`feat/library-lab`，**22/22变更路径**只在 `entries/E*`、`entries/F*` 与 `progress/EF.md`；审核 ExcelJS 15位有效整数预算、SheetJS local/central ZIP 元数据/重叠校验、pdf-lib 页面数量/布局及保存尺寸。短暂 GitHub mergeable=false 后重新读取为 true，未force；按 expected head squash **`1194d25c04ac281aca25677b09bb1c1c8733b9a6`**。Worker的20项Node纯策略PASS为其独立证据，PLATFORM没有复算或升级SDK。F05旧研究原件缺失仍为 recreated。
+- 两组**无新增公共依赖请求**；原有react-hook-form/p-limit/clsx/exceljs/xlsx/pdf-lib的registry真实解析、peer及最终许可审查仍待可信安装环境。没有修改 worker 自有文件和 verification.json 中SDK状态。
+
+### 公共平台可运行的代码切片
+
+- 新增 `src/lib/resource-fetch.mjs` / `.d.mts`：所有**实际五类生成资源入口**（首页轻目录、单库详情、文档、源码索引、源码字节）均改用根路径限定的 `requestGeneratedResource`，统一 `cache:'no-store'`、20秒同时覆盖响应头**及完整流式解析**的截止时间，合并调用者 AbortSignal 与内部超时，finally 移除监听器和超时。拒绝外站/协议相对/相对路径/点段/反斜线，已取消的请求不再启动网络，超时后可由现有重试界面恢复。原有 JSON/Markdown/源码字节限制、目录指纹与SHA-256校验**继续保持**，没有使用不受限的 response.text/json。
+- 实际改动公共 `catalog-context.tsx`、`catalog-detail.tsx`、`document.tsx`、`demo-host.tsx` 四个宿主入口，本包 `package.json` 默认Node测试纳入新套件。新 `e2e/library.spec.ts` 生产预览回归要求同一个页面的五类请求具有 `no-store` 和 AbortSignal，浏览器用例**已提交但NOT_RUN**。没有引入新的第三方依赖或变更生成的119份来源。
+
+### 真实执行及证据
+
+- 在可用容器 **Node v22.16.0**（低于项目要求 Node>=22.18）、TypeScript 5.8.3 下运行**与 GitHub Blob 完全相同**的 `node --check src/lib/resource-fetch.mjs`、`node --check tests/resource-fetch.test.mjs` => PASS；`node --test tests/resource-fetch.test.mjs` => **7 PASS / 0 FAIL / 0 SKIP**；`tsc --noEmit --strict --skipLibCheck --target ES2022 --module NodeNext --moduleResolution NodeNext --lib ES2022,DOM src/lib/resource-fetch.d.mts` => PASS（**仅该声明文件**）。Git blobs：实现 `df78ee0f41ab89f3e488a757a4fd3a274b621a70`、声明 `6ca47a56abc7b3981e7ec9b09fb0c299dc41307c`、测试 `2d93b114404d1e286eecbfab03e2dcd14e71ebfd`，与执行环境 `git hash-object` 逐一相符。原始TAP和完整命令见 [platform-wave21-resource-fetch.tap](../evidence/platform-wave21-resource-fetch.tap)（原始stdout SHA256 `61f10421de676c21c83570829e40dacf05c476472183729ddf396268a9f5bed8`）。隔离单测只证明请求编排、边界、超时和取消逻辑，不是整站类型、浏览器或 SDK。
+- **BLOCKED**：根 `pnpm-lock.yaml` 缺真实解析的 `packages/library-lab` importer；Node>=22.18/pnpm10/registry和GitHub Runner执行步骤不可用。最新 [Lab CI #40535987441](https://github.com/CoderLambert/ReactLoom/actions/runs/40535987441) 的2个job与 [主CI #40535987567](https://github.com/CoderLambert/ReactLoom/actions/runs/40535987567) 的7个job均结论failure，独立读取catalogue/bootstrap/packages job的 `steps=[]`；**没有**构建失败或成功的实际步骤证据，原因继续由Issue #12跟踪，不重跑同一空日志。
+- **NOT_RUN**：本轮改动后的整个 `pnpm test` / `catalog:check`、真实React TypeScript、Vite产物、CD #78与EF #79真实第三方SDK、Chromium请求/懒加载/资源卸载、Monaco Worker、MSW SW scope、PDF/Excel真实解析。没有将新增的浏览器代码或Worker声称的PASS升级verification。
+- **分开统计**：119个目录身份、119份已提交的source/guide/agent/verification结构、357个三层Demo**声明**，本轮修改6个既有worker库（C01、C20、D03、F04、F05、F09），新增目录0；浏览器真正运行成功Demo=**0（未执行）**，本轮新增实际SDK PASS=**0**；117份旧研究资料逐项审核数量**未重新统计**，E11/F05原件缺失事实不变。
+
+**下一批**：在合格Node/pnpm registry及能执行的Runner生成/审查根lockfile importer并切回冻结安装；用真实依赖跑受影响TypeScript/Vite、C01/D03/C20/F04/F05/F09 SDK，再运行新生产preview网络超时/切换/来源校验、MSW SW/Monaco/PDF Worker卸载。若外部Runner仍无步骤，继续无下载依赖的公共源码修复，不把静态目录数量误算为运行验收。主 [Draft #8](https://github.com/CoderLambert/ReactLoom/pull/8) 持续Open/Draft待用户验收。
