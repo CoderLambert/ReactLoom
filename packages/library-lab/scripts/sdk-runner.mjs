@@ -6,6 +6,12 @@ import {spawnSync} from 'node:child_process';
 const root = fileURLToPath(new URL('..', import.meta.url));
 const entryPattern = /^[A-F]\d{2}$/u;
 const groupPattern = /^[A-F]$/u;
+const sdkSuitePath = /^entries\/([A-F]\d{2})-[a-z0-9-]+\/tests\/(?:sdk|node-scenarios)\.test\.mjs$/u;
+
+/** Only explicitly named real-SDK suites count toward SDK test selection. */
+export function isSdkSuiteName(name) {
+  return name === 'sdk.test.mjs' || name === 'node-scenarios.test.mjs';
+}
 
 /** Find real, checked-in Node SDK suites in deterministic order. */
 export async function discoverSdkTests(projectRoot = root) {
@@ -17,7 +23,7 @@ export async function discoverSdkTests(projectRoot = root) {
     let tests;
     try { tests = await readdir(directory, {withFileTypes: true}); }
     catch (error) { if (error.code === 'ENOENT') continue; throw error; }
-    for (const testFile of tests.filter(item => item.isFile() && item.name.endsWith('.test.mjs'))
+    for (const testFile of tests.filter(item => item.isFile() && isSdkSuiteName(item.name))
       .sort((a, b) => a.name.localeCompare(b.name))) {
       files.push('entries/' + dir.name + '/tests/' + testFile.name);
     }
@@ -31,9 +37,11 @@ export function selectSdkTests(files, {entries = null, group = null} = {}) {
   if (entries !== null && (!Array.isArray(entries) || !entries.length ||
       entries.some(id => !entryPattern.test(id)))) throw new Error('Invalid --entries (expected A01,B17)');
   if (group !== null && !groupPattern.test(group)) throw new Error('Invalid --group (expected A-F)');
-  if (entries === null && group === null) return files;
-  const matches = files.filter(file => {
-    const match = /^entries\/([A-F]\d{2})-[^/]+\/tests\/[^/]+\.test\.mjs$/u.exec(file);
+  // Even externally supplied file lists must not promote pure policy fixtures to SDK status.
+  const approved = files.filter(file => file === 'tests/sdk.test.mjs' || sdkSuitePath.test(file));
+  if (entries === null && group === null) return approved;
+  const matches = approved.filter(file => {
+    const match = sdkSuitePath.exec(file);
     return !!match && (entries !== null ? entries.includes(match[1]) : match[1][0] === group);
   });
   if (entries !== null) {
