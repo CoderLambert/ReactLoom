@@ -1,7 +1,7 @@
 # EF 通道持续开发进度
 
-- 通道：EF，Issue #7；当前 wave20 分支 `feat/library-lab-ef-wave20-orval-scope-contracts`，Draft PR #70；PR base 为 `feat/library-lab`。
-- runCount：20 / 24。
+- 通道：EF，Issue #7；当前 wave21 分支 `feat/library-lab-ef-wave21-msw-pdf-ownership`，待建 Draft PR；PR base 固定 `feat/library-lab`。
+- runCount：21 / 24。
 - 基线：`38ed2d247bd82e4f1422b0e8904973e16bca2972`。
 - 本轮日期：2026-10-27（北京时间）。
 - 状态：**37/37个条目已有三层真实示例源码及指南，但目标SDK、完整构建和浏览器验收不因源码覆盖而自动PASS。**
@@ -573,3 +573,17 @@ runCount=18/24.
 
 - [Draft PR #70](https://github.com/CoderLambert/ReactLoom/pull/70)，head `feat/library-lab-ef-wave20-orval-scope-contracts`、base固定 `feat/library-lab`；首批完整源码提交 `256a274525bed7aa7a649fe2cfcdc2503be4775e`。
 - GitHub compare基线至首提交：1个提交、14个变更文件、**0个EF写入越权**；所有文件仅在E05/F10条目及EF progress。Node F10 policy真实6 PASS/0 FAIL，其余Orval/Monaco/TS/Vite/Chromium仍NOT_RUN或BLOCKED。PR为Draft，PLATFORM单一owner审核集成。
+
+## 第21轮：F11 MSW并发租约/共享SW回收；F06/F07 PDF Worker资源预算与所有权（2026-10-27）
+
+- 从GitHub最新已集成 `feat/library-lab@a7514e4b6354ade43a36dc39512c7ccafc688dbe` 开始，新工作分支 `feat/library-lab-ef-wave21-msw-pdf-ownership`。此前EF PR #70确认已被PLATFORM合并。本批只修改 `entries/F11-msw`、`F06-pdfjs`、`F07-react-pdf` 和本进度，PLATFORM继续独有公共源码/依赖/lock/CI及Worker runner。
+- **F11 MSW**：旧 `activeSession` 在 `await getRegistrations` 后才设为true，连续启动会跨await重复注册；现在 `session-gate.mjs` 在首次await前取得同步租约。正常stop并发调用归并同一Promise；失败stop保持租约以避免未知仍活动的拦截器与新实例并存。普通iframe teardown不再全局unregister（可能破坏随后加入相同scope的另一tab），仅await官方MSW v3的本client `worker.stop()`。只有PLATFORM可在独立origin/浏览器上下文结束后全局清理。官方MSW v3 stop: https://mswjs.io/api/setup-worker/stop ；MDN unregister: https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerRegistration/unregister 。
+- **F06 PDF.js**：真实 `page.render()` 前执行 `render-budget.mjs`：viewport正有限，CSS边长与Canvas背板边长均<=4096px，Canvas总像素<=8,000,000，DPR最高2；阻止几MiB文件伪造巨型PDF MediaBox造成内存压力，沿用既有 `render-gate` 排他串行。
+- **F07 react-pdf**：Document的 `file` 从React可复用原始Uint8Array改为 `useMemo` 创建的独立 `{data: bytes.slice()}`，避免PDF.js Worker transfer令源state、内建fixture detached，reset可以再次生成可读字节。file对象在普通重渲染下保持身份，内容变更/generation才复制；拒绝空或超3MiB输入。
+- **实际运行范围**：Node v22.16.0，在本容器隔离原始相对文件结构执行：
+  `node --test /mnt/data/reactloom-ef-wave21/{F11,F06,F07}/examples/*.test.mjs`
+  **9 PASS / 0 FAIL**（F11 session-gate 3、F06 render-budget 4、F07 worker-payload 2）。F07真Node `structuredClone(...,{transfer})` 演示副本被detach后原数组仍完整；**不是react-pdf/PDF.js目标SDK测试**。六个执行源文件与GitHub Blob SHA完全相同：F11 `2575a24257e28e7471fbab9570435654c7ae04ef` / `e963e3dc28f9f7526a6b47db7b1db99f8fe11c77`；F06 `bf2cc668f1b93d8a91001b19a3f63b4e46bae4e8` / `8c4cc65b953106b37f1a93472f4e69f2c83655b3`；F07 `0cc18819e4be9548f3af44c58d26c82442d68b16` / `893219d684eb33df3496022b023c1abb3ad05d45`。本批未运行真正MSW、pdfjs-dist、react-pdf或Chromium，严禁升级verification至SDK/Browser PASS。
+- **提交**：F11 `ab86da65ea480819d0a4d67fc4716e6764431486`；F06 `e791340500146a805d299c6a3e103f2ad29a550e`；F07 `c3d98b2f86f7c518b57496cdf1369a2678ffef03`；本文件独立进度提交随GitHub PR查看。源/指南/Agent/目录AGENTS/manifest/verification保持同源更新。
+- **dependencyRequests**：不新增包。已有 `msw@3.0.3`、`pdfjs-dist@6.3.289`、`react-pdf@11.0.0` 的确切lock、peer、SW脚本、PDF Worker资产/CSP及浏览器环境依赖PLATFORM真实解析；不是本轮安装证据。PLATFORM需真实测试F11双start/跨标签共享scope、停止和刷新、F06超大MediaBox/高DPR拒绝渲染、F07反复reset/切换及detached-buffer检查。
+- **仍然BLOCKED/NOT_RUN**：真实第三方SDK、全仓库TypeScript/Vite构建、pnpm真实锁文件、Chromium SW注册/CSP与PDF Worker均没有本轮可信运行结果，不将Node策略9 PASS冒充生产验收。EF仍 **37/37源码+指南覆盖**，不是全部37库已运行成功。
+- **下一队列**：待PLATFORM真实构建/SDK反馈优先修复F11/ F06-F07真实接口差异、E19 FFmpeg WASM资源许可/核心加载，剩余运行轮次控制在24次之内。**runCount=21/24**；达到上限须列实际剩余缺口，不虚称完成。
