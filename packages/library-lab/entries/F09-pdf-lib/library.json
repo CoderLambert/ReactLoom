@@ -57,7 +57,9 @@
       "sourceFiles": [
         "examples/document.ts",
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/operation-gate.mjs",
+        "examples/operation-gate.d.mts"
       ],
       "capabilities": [
         "local-pdf",
@@ -75,7 +77,9 @@
       "sourceFiles": [
         "examples/document.ts",
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/operation-gate.mjs",
+        "examples/operation-gate.d.mts"
       ],
       "capabilities": [
         "local-pdf",
@@ -93,7 +97,10 @@
       "sourceFiles": [
         "examples/document.ts",
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/operation-gate.mjs",
+        "examples/operation-gate.d.mts",
+        "examples/operation-gate.test.mjs"
       ],
       "capabilities": [
         "local-pdf",

@@ -1,19 +1,14 @@
-// Vite-specific adapter. MonacoEnvironment must exist before editor.create().
+// Vite-specific adapter; model disposal does not terminate Monaco's internal cached workers.
 import BaseWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
 import JsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker'
 import CssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker'
 import HtmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker'
 import TsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
+import {acquireWorkerEnvironment} from './worker-lease.mjs'
 
-type MonacoWorkerHost = typeof globalThis & {
-  MonacoEnvironment?: {getWorker(workerId: string, label: string): Worker}
-}
-
-export function installMonacoWorkers(): void {
-  const host = globalThis as MonacoWorkerHost
-  if (host.MonacoEnvironment) return
-  host.MonacoEnvironment = {
-    getWorker(_workerId, label) {
+export function installMonacoWorkers(): () => void {
+  return acquireWorkerEnvironment(globalThis, () => ({
+    getWorker(_workerId: string, label: string): Worker {
       switch (label) {
         case 'json': return new JsonWorker({name: 'monaco-json'})
         case 'css':
@@ -27,5 +22,5 @@ export function installMonacoWorkers(): void {
         default: return new BaseWorker({name: 'monaco-editor'})
       }
     },
-  }
+  }))
 }

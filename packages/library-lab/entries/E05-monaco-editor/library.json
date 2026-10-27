@@ -56,7 +56,9 @@
       "sourceFiles": [
         "examples/demo.tsx",
         "examples/example.tsx",
-        "examples/workers.ts"
+        "examples/workers.ts",
+        "examples/worker-lease.mjs",
+        "examples/worker-lease.d.mts"
       ],
       "capabilities": [
         "web-worker",
@@ -73,7 +75,9 @@
       "sourceFiles": [
         "examples/demo.tsx",
         "examples/example.tsx",
-        "examples/workers.ts"
+        "examples/workers.ts",
+        "examples/worker-lease.mjs",
+        "examples/worker-lease.d.mts"
       ],
       "capabilities": [
         "web-worker",
@@ -90,7 +94,10 @@
       "sourceFiles": [
         "examples/demo.tsx",
         "examples/example.tsx",
-        "examples/workers.ts"
+        "examples/workers.ts",
+        "examples/worker-lease.mjs",
+        "examples/worker-lease.d.mts",
+        "examples/worker-lease.test.mjs"
       ],
       "capabilities": [
         "web-worker",
