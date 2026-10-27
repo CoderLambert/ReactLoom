@@ -19,3 +19,7 @@
 5. 记录对应版本/commit/命令和真实结果，未执行写NOT_RUN。
 
 **不能删掉的部分**：gallery Ref作用域、pswpModule动态import、尺寸元数据、effect清理、原生链接语义。验证状态见 verification.json。官方： https://photoswipe.com/getting-started/ 。
+
+## wave19 迁移风险
+
+动态图库删除/切换level时，先关闭当前slide，再销毁或重新初始化当前gallery范围的Lightbox；不要仅更新React数组而让旧Popup索引继续引用已卸载元素。`gallery-policy.mjs` 只约束示例ID/尺寸/层级，不验证用户上传SVG的安全性。真实PhotoSwipe SDK与Chromium必须另外验证。

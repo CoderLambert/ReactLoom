@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import PhotoSwipeLightbox from 'photoswipe/lightbox';
 import 'photoswipe/style.css';
+import { visibleArtwork } from './gallery-policy.mjs';
 
 type Level = 'basic' | 'business' | 'advanced';
 type Props = { level: Level };
@@ -25,11 +26,12 @@ function localArtwork(index: number): string {
 }
 
 const artwork = palettes.map((_, index) => ({
-  id: index + 1, src: localArtwork(index), alt: '原创抽象景观 ' + (index + 1),
+  id: index + 1, src: localArtwork(index), alt: '原创抽象景观 ' + (index + 1), width: W, height: H,
 }));
 
 export default function PhotoSwipeExample({ level }: Props) {
   const galleryRef = useRef<HTMLDivElement>(null);
+  const lightboxRef = useRef<PhotoSwipeLightbox | null>(null);
   const [includeExtra, setIncludeExtra] = useState(false);
   const [showCaption, setShowCaption] = useState(true);
 
@@ -45,13 +47,15 @@ export default function PhotoSwipeExample({ level }: Props) {
       showHideAnimationType: 'fade',
     });
     lightbox.init();
+    lightboxRef.current = lightbox;
     return () => {
+      if (lightboxRef.current === lightbox) lightboxRef.current = null;
+      // The official destroy() closes an open dialog and unbinds its listeners.
       lightbox.destroy();
     };
-  }, []);
+  }, [level, includeExtra]);
 
-  const visible = level === 'basic' ? artwork.slice(0, 1)
-    : artwork.slice(0, level === 'advanced' && includeExtra ? 4 : 3);
+  const visible = visibleArtwork(artwork, level, includeExtra);
 
   return (
     <section aria-label="PhotoSwipe 真正图库示例">
@@ -64,18 +68,18 @@ export default function PhotoSwipeExample({ level }: Props) {
         </label>
       )}
       {level === 'advanced' && (
-        <button type="button" onClick={() => setIncludeExtra(value => !value)}>
+        <button type="button" onClick={() => { lightboxRef.current?.pswp?.close(); setIncludeExtra(value => !value); }}>
           {includeExtra ? '移除第四张' : '添加第四张'}
         </button>
       )}
       <div ref={galleryRef} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 16, marginTop: 20 }}>
         {visible.map(item => (
           <figure key={item.id} style={{ margin: 0 }}>
-            <a href={item.src} data-pswp-width={W} data-pswp-height={H} aria-label={'打开大图：' + item.alt}>
+            <a href={item.src} data-pswp-width={item.width} data-pswp-height={item.height} aria-label={'打开大图：' + item.alt}>
               <img src={item.src} alt={item.alt} loading="lazy" width={300} height={200}
                 style={{ width: '100%', height: 'auto', aspectRatio: '3 / 2', objectFit: 'cover', borderRadius: 10 }} />
             </a>
-            {showCaption && <figcaption style={{ fontSize: 12 }}>图 {item.id} · 原创本地图像 · {W}×{H}</figcaption>}
+            {showCaption && <figcaption style={{ fontSize: 12 }}>图 {item.id} · 原创本地图像 · {item.width}×{item.height}</figcaption>}
           </figure>
         ))}
       </div>
