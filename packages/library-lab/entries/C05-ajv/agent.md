@@ -15,3 +15,7 @@
 合法 payload、缺字段、额外字段、类型混淆、条件必填、schema 编译失败都要验证；SDK Node 与 Browser CSP 分别记证据。运行 `node --test entries/C05-ajv/tests/sdk.test.mjs`、`pnpm --filter @reactloom/library-lab typecheck` 和生产预览 E2E。当前状态 NOT_RUN，不得继承历史报告 PASS。
 
 官方： https://ajv.js.org/ 。替代方案：C02 Zod / C03 Valibot；互补 C04 JSON Forms。
+
+## RSS 专项规则不能依赖 uniqueItems
+
+静态 schema 可保证字段形状和集合大小，但不同 id/title 的重复 URL 不受 `uniqueItems` 约束；拷贝示例时还须携带 `examples/rss-policy.mjs` 和声明，结构验证成功后再次校验无凭据 HTTPS 与规范化业务身份。输入变化清理过期结果，明确区分 Ajv PASS 与纯策略 PASS。服务端仍需单独负责 SSRF/权限。
