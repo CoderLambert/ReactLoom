@@ -44,3 +44,11 @@ pnpm --filter @reactloom/library-lab exec playwright test --config entries/F13-p
 ## 验证
 
 SDK / 浏览器的验证属于 Playwright 的同一真实执行路径：必须保存具体命令、exit code、Node/Chromium、版本、源指纹和实际报告；当前尚未执行，`verification.json` 全部保持 NOT_RUN/BLOCKED。官方：[断言](https://playwright.dev/docs/test-assertions) · [Mock](https://playwright.dev/docs/mock) · [配置](https://playwright.dev/docs/test-configuration)。
+
+## 业务场景异常与清理增强（EF wave17）
+
+除 200/422/503 三类 HTTP 响应外，新增 **200 响应体违反契约、422 缺少错误字段、JSON 解析失败和真正网络失败** 四类边界。HTTP 状态码并不保证返回体结构正确；页面将无效响应显示为“响应格式异常”，transport failure 显示为“网络不可用”，而不是不加检查地把任意 200 视为成功。提交时同步禁用按钮，`finally` 无论 JSON 失败或网络异常都恢复交互；真实 Chromium 测试使用 route barrier 验证发送中按钮状态。
+
+进阶的旧网络请求在 `try/finally` 中释放拦截屏障，即使中途断言失败也不让测试持有未解决的旧请求。**此处的 `route.fulfill` 和 `route.abort` 仍然只证明浏览器网络契约，不代表后端服务已实际处理请求。**
+
+当前只是提交了 Playwright 源码；真实 Chromium 安装和执行仍由 PLATFORM 负责。命令：`pnpm --filter @reactloom/library-lab exec playwright test --config entries/F13-playwright/examples/playwright.config.ts`，运行后需保存实际 report/trace 与 commit、源码指纹，才可升级browser/sdk状态。
