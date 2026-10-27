@@ -558,3 +558,32 @@ runCount: **14/24**。本轮依赖/测试阶段最新提交 81ec09ac04a05b6bb826
 - **分开统计**：119个目录身份、119份已提交的source/guide/agent/verification结构、357个三层Demo**声明**，本轮修改6个既有worker库（C01、C20、D03、F04、F05、F09），新增目录0；浏览器真正运行成功Demo=**0（未执行）**，本轮新增实际SDK PASS=**0**；117份旧研究资料逐项审核数量**未重新统计**，E11/F05原件缺失事实不变。
 
 **下一批**：在合格Node/pnpm registry及能执行的Runner生成/审查根lockfile importer并切回冻结安装；用真实依赖跑受影响TypeScript/Vite、C01/D03/C20/F04/F05/F09 SDK，再运行新生产preview网络超时/切换/来源校验、MSW SW/Monaco/PDF Worker卸载。若外部Runner仍无步骤，继续无下载依赖的公共源码修复，不把静态目录数量误算为运行验收。主 [Draft #8](https://github.com/CoderLambert/ReactLoom/pull/8) 持续Open/Draft待用户验收。
+
+## PLATFORM 第22轮：AB/CD/EF 三通道集成 + MSW 受限静态资源供应 + URL 规范化（2026-10-28，北京时间）
+
+**runCount: 22/24。** 从私有 GitHub `feat/library-lab@b30fc3f4550006f2ae91104094102ef0e287e620` 实际恢复，读取根/本包 AGENTS、COORDINATION、IMPLEMENTATION、本进度、Issues #4/#5/#6/#7、开放PR和CI。保持单一私有集成分支；不改 main、PR #3、既有模板、生产部署或付费API。本批 worker 全部通过 exact head、base、完整路径列表与代表性源码 patch 审核，均无新公共依赖请求。
+
+### Worker PR 审核与实际合并
+
+- [AB #80](https://github.com/CoderLambert/ReactLoom/pull/80)：head `8df6335dc9d3ed29465e3f718c11154f4beb69a7`，15/15 路径仅 A14/B02/B03 与 AB 进度，compare ahead3/behind0；以 expected head 常规 squash **`a269359a31196745b2b8a463070aefd03134ff45`**。React Three Fiber 离屏停止连续帧、GSAP 展示进度降低 React 更新频率、react-spring 满额删除在 React commit 后恢复键盘焦点。AB 独立纯规则测试报告 14 PASS；本平台未复测真实 R3F/GSAP/spring 或 Chromium。
+- [CD #81](https://github.com/CoderLambert/ReactLoom/pull/81)：head `2c31d59556344775f219342bb9a9089d0a5c3be8`，11/11 路径仅 D07 TanStack Query 与 CD 进度，GitHub mergeable=true；以 expected head squash **`460a26a9af680362a3bd832392877a7380ea5db3`**。行级 optimistic token/revision CAS、租户隔离、409 仅回滚本人操作、延迟失效保护；`sdk.test.mjs` 加入真实 QueryClient 导入测试**源码**但未在平台运行，不认定 SDK PASS。CD 纯策略测试报告6 PASS（非平台重复运行）。
+- [EF #82](https://github.com/CoderLambert/ReactLoom/pull/82)：head `f84c3aa25db9137f3085a6aca0bd0b327367db5f`，18/18 路径仅 E05 Monaco/F11 MSW 与 EF 进度，mergeable=true；以 expected head squash **`11d7e78d723e168280e0778f977096f3b2dcb8af`**。Monaco异常 disposer 后继续释放 model/editor/Worker 租约；MSW 首次注册前按同源 scope/准确URL/JS MIME/不重定向/512KiB 有界流预检，拒绝 SPA fallback。EF 独立 8 项纯测试报告未作为 SDK/浏览器验收。
+
+### PLATFORM 直接开发的公共代码切片
+
+1. **为官方 MSW 生成物建立明确的构建供应路径（依赖环境未执行）**：`package.json` 的 `dev`/`build` 在 Vite 前执行 `prepare:msw`，预创建 `public/lab-runners/msw`，调用包内现有 `msw init ./public/lab-runners/msw --no-save`（不能写根 worker），再执行新 `scripts/verify-msw-worker.mjs`。校验正规非 symlink 文件、512KiB上限、有效UTF-8、非HTML和脚本事件监听，并输出 SHA-256 及 **assurance=generated-asset-only**。生成的 `public/lab-runners/msw/mockServiceWorker.js` 被 gitignore；没有手工造官方 worker 或把浏览器脚本输出冒充安装证据。新增 `tests/verify-msw-worker.test.mjs` 纳入默认 Node 测试与 Playwright **生产预览源码**：仅隔离路径返回 JS、根路径不暴露 SW、主 SPA 不主动注册。
+2. **修复所有生成资源统一 fetch 的 URL 混淆漏洞**：`src/lib/resource-fetch.mjs` 新增 `assertGeneratedResourcePath()`，拒绝编码点段、二次编码、编码斜线/反斜线、路径空段、控制字符、query/fragment、无效percent编码及过长路径；保留已实现的请求取消、完整正文截止时间及 no-store。更新 `tests/resource-fetch.test.mjs` 覆盖恶意与合法 UTF-8 URL，不新增包。
+3. 公共 E2E 只添加验收断言而**未执行**。本批不改变任何库数量、声明场景或 verification 的 SDK PASS；没有把尚无独立 iframe/有效 CSP 的 MSW 注入主站。
+
+### 执行证据 / 未验收边界
+
+- 容器 Node `v22.16.0`（低于项目要求的 >=22.18），无可信 pnpm10/registry；只有独立提取的 Node 实现可运行。`node --check` 对两份新增/改动 .mjs 为 **PASS**；`node --test /mnt/data/lab-wave22/tests/resource-fetch-security.test.mjs /mnt/data/lab-wave22/tests/verify-msw-worker.test.mjs` 为 **6 PASS / 0 FAIL / 0 SKIP**，其中3项资源URL安全为隔离定向测试，3项MSW产物卫士来自仓库新增同源测试。参与运行的实现 `resource-fetch.mjs` Git blob `672474a273de69a776881858ef53c361d30417fd`、`verify-msw-worker.mjs` blob `7b77b98a320e84e01b6b0fadf238edea4c3ecf08`、`verify-msw-worker.test.mjs` blob `7eb0c6038b3abf4a9ae8555ee842c11eeee8b3a8` 与 GitHub 精确匹配。原始TAP：[`platform-wave22-msw-resource-node.tap`](../evidence/platform-wave22-msw-resource-node.tap)（SHA256 `2c8bf0e9d946cf5d629fdff32064d37b6ef1fb786e0490f6adc6df04b2e8bd4a`）。不是全套仓库 Node test、pnpm install、真实 MSW、浏览器或 SDK。
+- 本批抽查 [Lab CI #40544535879](https://github.com/CoderLambert/ReactLoom/actions/runs/40544535879)（2 jobs）和 [主CI #40544535896](https://github.com/CoderLambert/ReactLoom/actions/runs/40544535896)（7 jobs）均显示failure；独立步骤 API 对 Lab catalogue 和 runtime-bootstrap 返回 **steps=[]**，没有实际运行步骤可审。后续对最新动作仍须按 run/head 核实，不将空作业失败当成构建失败。
+- **BLOCKED**：根 `pnpm-lock.yaml` 尚无真实解析 `packages/library-lab` importer；真正 Node>=22.18/pnpm10 和 npm registry 或可执行 GitHub runner缺失，不能人工补虚假 integrity，不恢复 frozen CI。
+- **NOT_RUN**：全量本包测试、真正 `msw init`、现有 Node 单测完整回归、TypeScript、Vite dev/build、所有变更条目的真实第三方SDK、Chromium E2E、Monaco JSON Worker、MSW真实 iframe/registration/controller/拦截/双标签隔离、GPU/焦点/缓存真实交互。若源码继续变化，旧同源证据相应失效。
+
+### 分项口径 / 下一批
+
+**身份目录119、提交的源码/guide/agent/verification结构119、三层场景配置声明357；本批真正浏览器已运行Demo=0，新增第三方SDK PASS=0；117份研究原件本轮未逐项重审，E11/F05原件缺失保持。**
+
+**下一批**：先恢复可信 `pnpm install --no-frozen-lockfile` 的真实解析和根锁文件，审查版本/peer/许可及 frozen install，再运行 TypeScript + Vite + D07 QueryClient/E05 Monaco/F11 MSW 的真实SDK；补真正隔离iframe/CSP与范围受限的MSW控制验收，并核对生产静态Worker的MIME、是否由官方CLI输出；随后验证React-Spring键盘焦点、R3F离屏、GSAP进度和生产懒加载/卸载。外部依赖阻塞时继续独立源码工作，但不会无意义重复没有执行步骤的CI。主 PR #8 保持 Open/Draft，绝不合 main。
