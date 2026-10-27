@@ -76,3 +76,10 @@ C02 Zod 管运行时约束，RHF 管字段/错误与提交；若采用 `@hookfor
 - 重复源现在反馈到具体 `sources.N.url` 字段，并保留整体提示。非法 URL 由字段校验拒绝，不参与重复分组计算。
 - `useWatch` 覆盖输入变化、增删来源与重置；草稿变化会中断本地未结算提交、使旧结果失去回写资格。已保存预览是不可变快照；修改后不再展示与当前草稿不匹配的旧预览。
 - 无第三方依赖的定向检查：`node --test packages/library-lab/entries/C01-react-hook-form/tests/url-policy.test.mjs`。当前 Node 本地纯逻辑测试不代表 RHF React 交互或真实网络已验收。还需 Chromium 验证编辑过程中取消、字段错误清理和动态行。
+
+## 第22轮：真实输入身份与 IME 提交边界
+
+- 新增且**实际在 JSX 调用**的 `examples/form-policy.mjs`。提交开始即取得字段值指纹；异步 409 或成功回写前，必须同时满足 **generation 未变、AbortSignal 未中止、RHF getValues() 与提交快照一致**，不能仅凭 `isSubmitting` 或定时器结算推断草稿未变。
+- `onChangeCapture` 在浏览器输入事件发生时先同步终止旧提交；`useWatch` 继续覆盖 `append/remove/reset` 一类程序化字段变化。动态增删之前同样主动失效当前提交，避免旧字段索引的 409 回写到删除后的另一行。
+- 中文输入法保护覆盖 `isComposing`、组合态、`keyCode=229` 和结束后的 80ms Enter 边界。该短保护只针对键盘 Enter，点击按钮仍走正常 RHF 提交。不要在每个中文候选键上对字段值执行 trim/reset。
+- 无依赖策略回归：`node --test packages/library-lab/entries/C01-react-hook-form/tests/form-policy.test.mjs`；真实 RHF `useForm/useFieldArray` 的 Node SDK 验证源码位于 `tests/sdk.test.mjs`。策略回归只证明纯逻辑，正式还需在已安装 RHF/ReactDOM 的环境执行 SDK、tsc、Vite 和 Chromium 输入法/409/删除竞态验收。

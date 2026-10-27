@@ -78,3 +78,11 @@ MIT；本地任务输入为原创 fixture。
 ## 新增独立 SDK 回归（真实包，不以 Mock 替代）
 
 `tests/sdk.test.mjs` 使用目标 `p-limit@7.3.3` 验证上限、`rejectOnClear` 下排队任务是否全部以 AbortError 结算，以及 AbortSignal 如何处理已启动任务。测试**定义并不等于运行**；安装后执行 `node --test packages/library-lab/entries/D03-p-limit/tests/sdk.test.mjs`。如果 pending Promise 无法结算，测试将超时失败而不会误报成功。
+
+## 第22轮：任务终态不可回退与演示层级所有权
+
+`examples/job-policy.mjs` 现由真实 p-limit 演示 UI 引用：只允许 queued → running/cancelled，running → done/error/cancelled；done/error/cancelled 为终态，旧 Promise 迟到后不得把 cancelled 标为 done。批次取消一次性把尚未结束的卡片转为 cancelled，但**不将本策略的纯 Node 检查误记为 p-limit SDK 测试**。
+
+切换 basic/business/advanced 时，旧 batch 的 generation 失效，AbortController 中断运行中的本地延迟，`clearQueue()` 结算未开始的 promise，重置仅该 Demo 的状态。取消按钮仍等待旧批次 allSettled 收尾后才允许新批次，避免误把仍在结算的任务算作消失。
+
+新增 `node --test packages/library-lab/entries/D03-p-limit/tests/job-policy.test.mjs`（纯策略）。官方 SDK `tests/sdk.test.mjs` 保留真实 p-limit import；需已安装依赖后另行执行。多批次共享全局限额需进一步上移 limiter 所有权，不能因每批自身上限正确就宣称跨批次不会超额。

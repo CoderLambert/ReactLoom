@@ -5,7 +5,7 @@
   },
   "sdk": {
     "status": "NOT_RUN",
-    "note": "尚未在本轮环境安装并运行 react-hook-form 7.89.0"
+    "note": "尚未在本轮环境安装并运行 react-hook-form 7.89.0；第22轮新增/更新真实 SDK 测试源码，但仍未执行目标库 SDK"
   },
   "build": {
     "status": "NOT_RUN",
@@ -13,6 +13,6 @@
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "需实测 useFieldArray、IME、409 和取消"
+    "note": "需实测 useFieldArray、IME、409 和取消；第22轮交互改动未在 Chromium 验收"
   }
 }

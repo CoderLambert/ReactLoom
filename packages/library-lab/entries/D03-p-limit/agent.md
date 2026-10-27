@@ -17,3 +17,7 @@
 ## 定向实际 SDK 检查
 
 `node --test packages/library-lab/entries/D03-p-limit/tests/sdk.test.mjs`：真实 `p-limit` 上限、clearQueue 的 queued AbortError 结算，以及 running 使用单独 AbortSignal 的边界。浏览器仍须验证任务取消后旧结果不回写；不能凭 Node 测试通过宣称 React 生命周期验收。
+
+## 第22轮终态/层级切换迁移
+
+同时迁移实际 import 的 `examples/job-policy.mjs` 和 `.d.mts`。使用 `transitionJob` 防迟到回调让 cancelled/done/error 回到 running；使用 `cancelUnsettledJobs` 保留已完成条目。level/组件会话变化必须 abort + `clearQueue` + generation，旧 Promise 不可回写新视图。该 UI 策略只是状态呈现，不会自动中止真实 Fetch；实际业务必须传递 AbortSignal。单测纯策略与真实 SDK 分别报告。

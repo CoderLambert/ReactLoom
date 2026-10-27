@@ -57,7 +57,11 @@
         "examples/demo.tsx",
         "examples/feed-url-policy.mjs",
         "examples/feed-url-policy.d.mts",
-        "tests/url-policy.test.mjs"
+        "tests/url-policy.test.mjs",
+        "examples/form-policy.mjs",
+        "examples/form-policy.d.mts",
+        "tests/form-policy.test.mjs",
+        "tests/sdk.test.mjs"
       ],
       "capabilities": [],
       "description": "真实 RHF register/handleSubmit，不访问外部服务。"
@@ -73,7 +77,11 @@
         "examples/demo.tsx",
         "examples/feed-url-policy.mjs",
         "examples/feed-url-policy.d.mts",
-        "tests/url-policy.test.mjs"
+        "tests/url-policy.test.mjs",
+        "examples/form-policy.mjs",
+        "examples/form-policy.d.mts",
+        "tests/form-policy.test.mjs",
+        "tests/sdk.test.mjs"
       ],
       "capabilities": [],
       "description": "useFieldArray 使用字段 id 保持稳定行身份。"
@@ -89,7 +97,11 @@
         "examples/demo.tsx",
         "examples/feed-url-policy.mjs",
         "examples/feed-url-policy.d.mts",
-        "tests/url-policy.test.mjs"
+        "tests/url-policy.test.mjs",
+        "examples/form-policy.mjs",
+        "examples/form-policy.d.mts",
+        "tests/form-policy.test.mjs",
+        "tests/sdk.test.mjs"
       ],
       "capabilities": [
         "timer",

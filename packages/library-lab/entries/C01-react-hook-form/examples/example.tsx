@@ -1,4 +1,5 @@
-import {useEffect, useRef, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
+import {canApplySubmitResult, fingerprintDraft, shouldBlockCompositionEnter} from './form-policy.mjs';
 import {useFieldArray, useForm, useWatch} from 'react-hook-form';
 import {canonicalFeedUrl, findDuplicateFeedIndex} from './feed-url-policy.mjs';
 
@@ -38,7 +39,7 @@ function delayWithSignal(ms: number, signal: AbortSignal) {
 }
 
 export default function SubscriptionForm({level}: Props) {
-  const {control, register, handleSubmit, setError, clearErrors, reset,
+  const {control, register, handleSubmit, setError, clearErrors, reset, getValues,
     formState: {errors, isSubmitting, isDirty}} = useForm<SubscriptionDraft>({
       defaultValues: defaultDraft,
       mode: 'onBlur',
@@ -49,8 +50,18 @@ export default function SubscriptionForm({level}: Props) {
   const controller = useRef<AbortController | null>(null);
   const generation = useRef(0);
   const draft = useWatch({control});
-  const draftFingerprint = JSON.stringify(draft);
+  const draftFingerprint = fingerprintDraft(draft);
   const previousDraft = useRef(draftFingerprint);
+  const composing = useRef(false);
+  const compositionEndedAt = useRef(Number.NEGATIVE_INFINITY);
+  const invalidateSubmission = useCallback(() => {
+    const active = controller.current;
+    if (!active) return;
+    generation.current++;
+    active.abort();
+    controller.current = null;
+    setFeedback('草稿发生变化：旧提交已取消，请重新提交');
+  }, []);
 
   // A changed form invalidates any pending response, not just explicit Reset.
   // useWatch observes dynamic append/remove as well as text edits.
@@ -58,15 +69,10 @@ export default function SubscriptionForm({level}: Props) {
     if (previousDraft.current === draftFingerprint) return;
     previousDraft.current = draftFingerprint;
     clearErrors('root.server');
-    if (controller.current) {
-      generation.current++;
-      controller.current.abort();
-      controller.current = null;
-      setFeedback('草稿发生变化：旧提交已取消，请重新提交');
-    }
-  }, [clearErrors, draftFingerprint]);
+    invalidateSubmission();
+  }, [clearErrors, draftFingerprint, invalidateSubmission]);
 
-  const savedIsCurrent = saved !== null && JSON.stringify(saved) === draftFingerprint;
+  const savedIsCurrent = saved !== null && fingerprintDraft(saved) === draftFingerprint;
 
   useEffect(() => () => {
     generation.current++;
@@ -81,6 +87,7 @@ export default function SubscriptionForm({level}: Props) {
   };
 
   async function submit(value: SubscriptionDraft) {
+    const expectedFingerprint = fingerprintDraft(value);
     const token = ++generation.current;
     controller.current?.abort();
     const active = new AbortController();
@@ -90,7 +97,13 @@ export default function SubscriptionForm({level}: Props) {
     try {
       // 本地业务 fixture：模拟耗时与 409 映射，不访问外部 HTTP。
       if (level === 'advanced') await delayWithSignal(450, active.signal);
-      if (active.signal.aborted || token !== generation.current) return;
+      if (!canApplySubmitResult({
+        expectedFingerprint,
+        currentFingerprint: fingerprintDraft(getValues()),
+        expectedEpoch: token,
+        currentEpoch: generation.current,
+        aborted: active.signal.aborted,
+      })) return;
       // Host and default port are canonicalized; path/query remain case sensitive.
       const duplicateIndex = findDuplicateFeedIndex(value.sources);
       if (duplicateIndex !== -1) {
@@ -127,10 +140,25 @@ export default function SubscriptionForm({level}: Props) {
   return <section aria-label="React Hook Form 实际 SDK 示例">
     <h2>{level === 'basic' ? 'RSS 订阅表单' : advanced ? '字段级错误、取消与竞态' : '动态 RSS 来源列表'}</h2>
     <p>RHF 管理真实输入与字段数组；提交端是明确标注的本地业务 fixture，不需要 API 密钥。</p>
-    <form onSubmit={handleSubmit(submit)} onKeyDown={event => {
-      // 中文 IME 候选确认键不应意外提交表单。
-      if (event.key === 'Enter' && event.nativeEvent.isComposing) event.preventDefault();
-    }}>
+    <form onChangeCapture={invalidateSubmission}
+      onCompositionStartCapture={() => {composing.current = true;}}
+      onCompositionEndCapture={() => {
+        composing.current = false;
+        compositionEndedAt.current = performance.now();
+      }}
+      onKeyDownCapture={event => {
+        if (shouldBlockCompositionEnter({
+          key: event.key,
+          composing: composing.current,
+          isComposing: event.nativeEvent.isComposing,
+          keyCode: event.nativeEvent.keyCode,
+          sinceCompositionEndMs: performance.now() - compositionEndedAt.current,
+        })) event.preventDefault();
+      }}
+      onSubmit={event => {
+        if (composing.current) {event.preventDefault(); return;}
+        void handleSubmit(submit)(event);
+      }}>
       <div className="demo-controls">
         <label>分组名称 <input aria-label="分组名称" aria-invalid={!!errors.group}
           aria-describedby={errors.group ? 'rhf-group-error' : undefined}
@@ -152,13 +180,15 @@ export default function SubscriptionForm({level}: Props) {
               {required: '请输入 URL', validate: validateHttps})} />
           </label>
           {level !== 'basic' && <button type="button" disabled={fields.length <= 1}
-            onClick={() => remove(index)}>移除该源</button>}
+            onClick={() => {invalidateSubmission(); remove(index);}}>移除该源</button>}
         </div>
         {errors.sources?.[index]?.name && <p role="alert">{errors.sources[index]?.name?.message}</p>}
         {errors.sources?.[index]?.url && <p role="alert">{errors.sources[index]?.url?.message}</p>}
       </fieldset>)}
-      {level !== 'basic' && <button type="button" onClick={() =>
-        append({name: '新来源', url: 'https://example.com/feed'})}>新增 RSS 来源</button>}
+      {level !== 'basic' && <button type="button" onClick={() => {
+        invalidateSubmission();
+        append({name: '新来源', url: 'https://example.com/feed'});
+      }}>新增 RSS 来源</button>}
       <div className="demo-controls">
         <button type="submit" disabled={isSubmitting}>验证并预览</button>
         {advanced && <button type="button" onClick={stop}>取消本地提交</button>}

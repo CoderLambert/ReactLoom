@@ -1,5 +1,6 @@
 import {useEffect, useRef, useState} from 'react';
 import pLimit from 'p-limit';
+import {cancelUnsettledJobs, transitionJob} from './job-policy.mjs';
 
 type Props = {level: 'basic' | 'business' | 'advanced'};
 type JobState = 'queued' | 'running' | 'done' | 'error' | 'cancelled';
@@ -39,14 +40,27 @@ export default function ConcurrencyExample({level}: Props) {
     current.current = null;
   }, []);
 
+  // Switching demo levels is a new ownership epoch, not a continuation of old jobs.
+  const previousLevel = useRef(level);
+  useEffect(() => {
+    if (previousLevel.current === level) return;
+    previousLevel.current = level;
+    generation.current++;
+    current.current?.controller.abort();
+    current.current?.clearQueue();
+    current.current = null;
+    setJobs([]);
+    setRunning(false);
+    setCounts({active: 0, pending: 0});
+    setStatus('已切换演示层级，旧批次终止');
+  }, [level]);
+
   function cancel() {
     if (!current.current) return;
     // 先中止正在运行的任务，再让队列上未开始的 Promise 以 AbortError 结算。
     current.current.controller.abort();
     current.current.clearQueue();
-    setJobs(old => old.map(job =>
-      job.state === 'running' || job.state === 'queued'
-        ? {...job, state: 'cancelled'} : job));
+    setJobs(cancelUnsettledJobs);
     setStatus('正在取消批次…');
   }
 
@@ -66,7 +80,7 @@ export default function ConcurrencyExample({level}: Props) {
 
     function update(id: number, state: JobState) {
       if (token !== generation.current) return;
-      setJobs(old => old.map(job => job.id === id ? {...job, state} : job));
+      setJobs(old => transitionJob(old, id, state));
       setCounts({active: limit.activeCount, pending: limit.pendingCount});
     }
 
@@ -93,8 +107,7 @@ export default function ConcurrencyExample({level}: Props) {
     if (token !== generation.current) return;
     // 被 clearQueue 拒绝的任务尚未运行，需在 UI 中补齐 cancelled 标记。
     if (controller.signal.aborted) {
-      setJobs(old => old.map(job => job.state === 'queued' || job.state === 'running'
-        ? {...job, state: 'cancelled'} : job));
+      setJobs(cancelUnsettledJobs);
     }
     setCounts({active: limit.activeCount, pending: limit.pendingCount});
     setRunning(false);
