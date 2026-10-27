@@ -12,6 +12,24 @@ concurrency:
   group: library-lab-${{ github.ref }}
   cancel-in-progress: true
 jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      run_runtime: ${{ steps.scope.outputs.run_runtime }}
+      sdk_entries: ${{ steps.scope.outputs.sdk_entries }}
+      plan_mode: ${{ steps.scope.outputs.plan_mode }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Select affected runtime checks (fail closed)
+        id: scope
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before || '' }}
+        run: node packages/library-lab/scripts/ci-plan.mjs "--base=$BASE_SHA" >> "$GITHUB_OUTPUT"
   catalogue:
     runs-on: ubuntu-latest
     env:
@@ -47,6 +65,8 @@ jobs:
         working-directory: packages/library-lab
         run: node scripts/root-catalog.mjs
   runtime-bootstrap:
+    needs: plan
+    if: needs.plan.outputs.run_runtime == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -58,12 +78,20 @@ jobs:
           node-version: '22'
       - name: Bootstrap actual resolution (temporary; coordinator must commit lockfile)
         run: pnpm install --no-frozen-lockfile --ignore-scripts
-      - name: Typecheck, actual SDK tests and build
+      - name: Typecheck, targeted tests and build
         run: |
           pnpm --filter @reactloom/library-lab typecheck
-          pnpm --filter @reactloom/library-lab test:sdk
           pnpm --filter @reactloom/library-lab test:vitest
           pnpm --filter @reactloom/library-lab build
+      - name: Verify real SDKs (targeted or full)
+        env:
+          SDK_ENTRIES: ${{ needs.plan.outputs.sdk_entries }}
+        run: |
+          if [ -n "$SDK_ENTRIES" ]; then
+            pnpm --filter @reactloom/library-lab exec node scripts/sdk-runner.mjs "--entries=$SDK_ENTRIES"
+          else
+            pnpm --filter @reactloom/library-lab test:sdk
+          fi
       - name: Install Chromium
         run: pnpm --filter @reactloom/library-lab exec playwright install --with-deps chromium
       - name: Production preview smoke
