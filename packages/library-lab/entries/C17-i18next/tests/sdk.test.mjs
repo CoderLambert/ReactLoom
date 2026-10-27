@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createInstance} from 'i18next';
+import {createLatestLanguageSwitcher} from '../examples/language-switch.mjs';
 
 const resources = {
   zh: {common: {greeting: '你好 {{name}}'}, feed: {article_other: '{{count}}条'}},
@@ -31,3 +32,21 @@ test('actual i18next provides configured fallback and isolated instances', async
   zh.destroy(); en.destroy();
 });
 
+
+test('actual i18next honors latest intent when queued switches serialize', async () => {
+  const client = await instance('zh');
+  const committed = [];
+  let latestCommitted;
+  const finished = new Promise(resolve => { latestCommitted = resolve; });
+  const switcher = createLatestLanguageSwitcher(
+    language => client.changeLanguage(language),
+    {onCommit: language => {committed.push(language); latestCommitted();}},
+  );
+  switcher.request('en');
+  switcher.request('zh');
+  await finished;
+  assert.equal(client.language, 'zh');
+  assert.deepEqual(committed, ['zh']);
+  switcher.dispose();
+  client.destroy();
+});

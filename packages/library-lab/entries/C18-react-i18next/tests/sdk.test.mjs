@@ -4,6 +4,7 @@ import React from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
 import {createInstance} from 'i18next';
 import {I18nextProvider, useTranslation, Trans} from 'react-i18next';
+import {createLatestLanguageSwitcher} from '../examples/language-switch.mjs';
 
 const resources = {
   zh: {common: {greeting: '你好', legal: '阅读<strong>说明</strong>'}},
@@ -39,3 +40,20 @@ test('actual Trans uses a React element instead of raw HTML insertion', async ()
   i18n.destroy();
 });
 
+
+test('real provider shows latest serialized language rather than stale intent', async () => {
+  const i18n = await local('zh');
+  const render = () => renderToStaticMarkup(React.createElement(I18nextProvider,
+    {i18n}, React.createElement(Greeting)));
+  let settled;
+  const finished = new Promise(resolve => {settled = resolve;});
+  const queue = createLatestLanguageSwitcher(language => i18n.changeLanguage(language),
+    {onCommit: settled});
+  queue.request('en');
+  queue.request('zh');
+  await finished;
+  assert.match(render(), /你好/);
+  assert.equal(i18n.language, 'zh');
+  queue.dispose();
+  i18n.destroy();
+});

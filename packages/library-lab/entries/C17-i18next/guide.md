@@ -63,3 +63,9 @@ createInstance 为每个工作区或请求创建独立实例；init 加载资源
 ## 授权
 
 该条目源码与文字为独立编写的教学材料；目标库使用上游 MIT 许可，未捆绑第三方图片、字体或付费资源。
+
+## 第16轮：语言切换并发所有权
+
+真实 `changeLanguage` 返回 Promise；只用请求编号阻止旧 `setState` 不足以阻止旧 Promise **修改 i18next 实例本身**。本版 `examples/language-switch.mjs` 将每个独立实例的切换操作串行化，队列只保留最后一次意图；仅最终操作完成时提交当前语言或错误，卸载后 `dispose()` 抛弃未执行请求。不能取消底层语言包 I/O，销毁实例前必须释放队列。可复制 `examples/language-switch.d.mts` 为 TS 类型契约。
+
+无第三方依赖的策略测试：`node --test entries/C17-i18next/tests/language-switch.test.mjs`，覆盖快速切换、旧失败、卸载和之后重试；**真正 SDK 验证**必须另外执行 `node --test entries/C17-i18next/tests/sdk.test.mjs`（其中真实 import i18next，需安装依赖）。浏览器还需覆盖实际语言切换、复数文案、错误和 React Strict Mode 卸载，当前均未执行。

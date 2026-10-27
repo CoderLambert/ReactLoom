@@ -405,3 +405,18 @@ C13 Frappe Gantt 1.2.2 上游 `src/index.js` 的 `bind_bar_events` 会向 `docum
 - **dependencyRequests：无新增**。当前平台 package 已声明 `date-fns@4.4.0`、`@date-fns/tz@1.5.0`、`dayjs@1.11.23`、`luxon@3.7.2`、`decimal.js@10.6.0`（对应上游代码与许可仍需 PLATFORM 在正式安装时核对，预期均 MIT），任何锁文件更新只能由 PLATFORM 执行。
 - **范围进度：CD 43/43 条源码、中文指南、Agent 与三层真实调用均有覆盖；本轮新增目标 SDK/构建/浏览器 PASS 为 0**，不得视作整体运行验收完成。
 - **下一队列**：PLATFORM 首先合入/审核 #58 并提供已安装真实包的 SDK 定向执行环境；逐个运行四库 `node --test .../tests/sdk.test.mjs`、`pnpm --filter @reactloom/library-lab typecheck`、`build`、Chromium 时区选择/DST gap/overlap 与账单 stale output。真实失败出现时 CD 按当前 SHA 精修并绑定源指纹/真实命令/持久化日志；不可用时只独立推进确有复现价值的 C/D 高风险边界，不重复创建43条。
+
+
+---
+
+## 第十六轮（2026-10-27）— 语言切换异步所有权与 MiniSearch 建索引前隔离
+
+- **runCount：16/24**；本轮从 GitHub 最新集成 `feat/library-lab@b3fa3b0370f50c39078562987400d753390671ee` 建立独立工作分支 `feat/library-lab-cd-wave16`，Draft [PR #60](https://github.com/CoderLambert/ReactLoom/pull/60)，base=`feat/library-lab`，未覆盖旧已合并分支。
+- **C17 i18next**（代码提交 `21f9dafdd4459cd3e92daf5addebf2e00c562682`）：此前通过请求编号拦截旧 React setState，但并发 `changeLanguage` 仍可能改变底层实例的当前语言。新增实际示例导入的 `language-switch.mjs` / `.d.mts`，串行化切换并只保留最新等待意图，旧错误不回写，销毁前 dispose。三个 Demo 的源码列表同步，新增真实 i18next SDK 回归测试定义。
+- **C18 react-i18next**（提交 `df7bee6b3e2da8d661b5636c82f9ac700440d92c`）：每个 provider 内 LocalizedPanel 的 `useMemo` 队列绑定自己的 i18n 实例，卸载 dispose 且与另一个 provider 不共享，保留实际 `useTranslation` / `Trans` 订阅。补同源策略及真实 Provider SSR/SDK 测试定义。
+- **D20 MiniSearch**（提交 `410834d28f0c0f02560d7c2fdebe854a6904bee5`）：修复仅 search 分组过滤、而 autoSuggest 对完整 index 联想可能泄漏其他分类词条的问题。现在预裁剪 scopedDocs，再构建 SDK 索引，ID map、空查询、search 和 autoSuggest 一致；新增真实 SDK 测试定义与纯策略测试。**生产 ACL 必须在索引原始资料进入浏览器前由服务端执行**，UI category 不等同授权。
+- 三条均保留 library.json、guide.md、agent.md、AGENTS.md、verification.json、basic/business/advanced 三层实际 SDK 示例及源码展示；变更范围只有 entries/C17、entries/C18、entries/D20、本进度，没有新增条目、没有修改公共平台或生成索引。
+- **实际执行**：Node v22.16.0，在独立容器工作区对与 GitHub Git blob SHA 一致的六份纯策略源文件/测试（C17 两份 `625f614d`/`dcff2065`、C18 相同两份、D20 `01db6c5a`/`4a74d498`）运行 `node --test C17/tests/language-switch.test.mjs C18/tests/language-switch.test.mjs D20/tests/scope-policy.test.mjs`：**10 PASS、0 FAIL**。对应 Node `--check` 通过。三个 `.d.mts` 与 Git blobs 一致，独立 `tsc 5.8.3 --noEmit --module nodenext --moduleResolution nodenext` 声明检查通过；不代表完整项目 TypeScript typecheck。
+- **未执行**：C17/C18/D20 真实目标库 `tests/sdk.test.mjs`、全量 TypeScript、Vite 构建和 Chromium/IME/SSR hydration 验收均 **NOT_RUN**；本机 `git ls-remote` 单次网络探测报 `Could not resolve host: github.com`，没有重复联网/安装尝试。未用 Mock SDK 充当真实验收，相关 `verification.json` 的 sdk/build/browser 继续为 NOT_RUN。
+- **dependencyRequests：本轮无新增**；复用已声明的 `i18next@26.4.3`（MIT）、`react-i18next@17.0.16`（MIT）、`minisearch@7.2.0`（MIT），由 PLATFORM 在实际安装中复核固定版本、license、peer 与 pnpm-lock，本通道不触碰 package/lock。
+- **总量：CD 43/43 条源码与指南/Agent/三层演示配置覆盖，0 新增目标 SDK PASS**。下一队列：PLATFORM 审核 #60 后安装固定包并执行上述三条真实 SDK 定向 Node suites，随后 library-lab `typecheck`、`build`、Chromium 连续语言切换/Provider 隔离、分类切换与联想、IME；将真实日志与 sourceFingerprint 绑定。若执行环境仍缺失，CD 只针对可复现的高价值独立 C/D 缺陷继续修复，不重建43条。

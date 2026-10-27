@@ -4,3 +4,4 @@
 
 本库特殊边界：禁止将 Trans 当任意 HTML 注入器；禁止一边使用 Provider 一边修改未受控的 default singleton；禁止声称有 Suspense 的默认解决方案能处理全部异步加载；不得将服务器端渲染测试冒充浏览器 hydration。
 
+- 第16轮实例级队列策略文件与声明已接入三层源码视图。每个 I18nextProvider 独立配置 changeLanguage，unmount dispose；不可用仅屏蔽 setState 的 epoch 代替底层语言串行化。SSR SDK 测试不能替代 hydration/IME/浏览器交互。

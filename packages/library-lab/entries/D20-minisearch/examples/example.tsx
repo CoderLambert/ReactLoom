@@ -1,5 +1,6 @@
 import {useMemo, useRef, useState} from 'react';
 import MiniSearch from 'minisearch';
+import {scopeSearchDocuments} from './scope-policy.mjs';
 
 type Level = 'basic' | 'business' | 'advanced';
 type Group = '技术' | '产品' | '开源';
@@ -29,21 +30,23 @@ export default function MiniSearchWorkshop({level}: {level: Level}) {
   const [group, setGroup] = useState<Group | '全部'>('全部');
   const [tolerant, setTolerant] = useState(true);
   const composing = useRef(false);
-  const index = useMemo(() => buildMiniIndex(documents), [documents]);
-  const byId = useMemo(() => new Map(documents.map(doc => [doc.id, doc])), [documents]);
+  // Scope the index itself, not only rendered hits: autoSuggest can reveal terms.
+  // This is a UI category demonstration, not a substitute for upstream authorization.
+  const scopedDocs = useMemo(() => scopeSearchDocuments(documents, group), [documents, group]);
+  const index = useMemo(() => buildMiniIndex(scopedDocs), [scopedDocs]);
+  const byId = useMemo(() => new Map(scopedDocs.map(doc => [doc.id, doc])), [scopedDocs]);
 
   const matches = useMemo(() => {
-    if (!query.trim()) return documents.filter(doc => group === '全部' || doc.group === group)
-      .map(doc => ({doc, score: null as number | null}));
+    if (!query.trim()) return scopedDocs.map(doc => ({doc, score: null as number | null}));
     // Filter before result limiting; a category filter after slice could hide hits.
     return index.search(query.trim(), {
       fuzzy: tolerant ? 0.2 : false, prefix: true,
-      filter: result => group === '全部' || byId.get(String(result.id))?.group === group,
+      filter: result => byId.has(String(result.id)),
     }).slice(0, 20).map(result => ({
       doc: byId.get(String(result.id)),
       score: result.score as number | null,
     })).filter((hit): hit is {doc: Doc; score: number | null} => Boolean(hit.doc));
-  }, [index, byId, documents, query, group, tolerant]);
+  }, [index, byId, scopedDocs, query, tolerant]);
 
   const suggestions = useMemo(() => level === 'advanced' && query.trim()
     ? index.autoSuggest(query.trim(), {fuzzy: tolerant ? 0.2 : false, prefix: true}).slice(0, 3)
@@ -83,7 +86,7 @@ export default function MiniSearchWorkshop({level}: {level: Level}) {
         <p>{doc.summary}</p>
         {score !== null && <small>相关性分数 {score.toFixed(3)}（越高越匹配）</small>}
       </li>)}</ol>
-    <p>这里索引的是可信 fixture；多租户/ACL 必须在索引构建或后端授权边界另行实现。</p>
+    <p>分类先裁剪索引，再运行搜索及联想；此处仍是可信 fixture，真实 ACL 必须由后端先授权。</p>
   </section>;
 }
 

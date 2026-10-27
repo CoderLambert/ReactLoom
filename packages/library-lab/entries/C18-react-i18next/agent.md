@@ -41,3 +41,7 @@ I18nextProvider 官方文档：https://react.i18next.com/latest/i18nextprovider
 Trans 受控富文本说明：https://react.i18next.com/latest/trans-component
 
 官方源代码：https://github.com/i18next/react-i18next
+
+## 最新语言意图和组件生命周期（第16轮）
+
+同时迁移 `examples/example.tsx`、`examples/language-switch.mjs` 与声明文件；将队列与 provider 的实例 identity 绑定，unmount 先 dispose 后释放实例。不要只加请求序号：这无法阻止旧 `changeLanguage` Promise 本身更改词库当前语言。保留真实 react-i18next hook 与 Trans，不得声称纯策略 PASS 等于组件已完成浏览器验收。

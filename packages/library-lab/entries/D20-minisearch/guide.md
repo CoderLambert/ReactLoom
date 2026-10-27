@@ -59,3 +59,11 @@ pnpm add minisearch@7.2.0
 ## 授权
 
 该条目源码与文字为独立编写的教学材料；目标库使用上游 MIT 许可，未捆绑第三方图片、字体或付费资源。
+
+## 第16轮：搜索建议与索引的分类所有权
+
+过去的演示仅对 `search({filter})` 做分类限制，`autoSuggest` 却基于**完整**索引，切换“技术”分组时仍可能从其他分组词条联想出文字。现在 `scopeSearchDocuments` 在 `buildMiniIndex` 之前裁剪可见分组，同一份 `scopedDocs` 同时驱动 ID 映射、空词结果、`search` 和 `autoSuggest`；切换分类后通过 React `useMemo` 重建真正索引。不是把未授权数据塞入浏览器、只靠展示时过滤的安全措施。
+
+官方 `autoSuggest` 同样支持 search 的 filter 选项，但索引构建前隔离更便于讲清缓存所有权和误泄漏风险。真实生产必须由服务端先鉴权后给浏览器最小许可文档，浏览器分类只是用户视图；索引里一旦出现敏感正文，UI 过滤不能收回泄露。索引大时要使用分组/租户 key 限定缓存与 Worker 生命周期。
+
+离线策略：`node --test entries/D20-minisearch/tests/scope-policy.test.mjs`；真实 MiniSearch SDK 的 search / autoSuggest 边界回归：`node --test entries/D20-minisearch/tests/sdk.test.mjs`。后一项需要安装目标 SDK，本轮未实际执行。

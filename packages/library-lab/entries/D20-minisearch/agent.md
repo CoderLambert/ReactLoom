@@ -41,3 +41,7 @@ alternative D21：静态站点可构建期生成 Pagefind 全文索引，减少�
 npm 稳定版本：https://www.npmjs.com/package/minisearch
 
 API 文档：https://lucaong.github.io/minisearch/
+
+## 分组索引与联想泄露防线（第16轮）
+
+迁移时同时带上 `examples/scope-policy.mjs` 与其类型声明；对最终已授权文档先做 group/tenant 切分，再以 `scopedDocs` 建立 index、ID 映射、搜索和 autoSuggest。旧实现只给 search 添加 filter，仍可能让 autoSuggest 看到跨组词。把 UI 分组当服务器 ACL 属于反例：私有原始文档不能因“前端过滤”进入浏览器。必须测试普通 query、空 query、联想、切换和新增/更新文档；真实 SDK / 浏览器证据缺失不可填 PASS。

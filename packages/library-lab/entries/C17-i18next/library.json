@@ -50,6 +50,8 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/language-switch.mjs",
+        "examples/language-switch.d.mts",
         "examples/demo.tsx"
       ],
       "capabilities": []
@@ -63,6 +65,8 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/language-switch.mjs",
+        "examples/language-switch.d.mts",
         "examples/demo.tsx"
       ],
       "capabilities": []
@@ -76,6 +80,8 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/language-switch.mjs",
+        "examples/language-switch.d.mts",
         "examples/demo.tsx"
       ],
       "capabilities": []
