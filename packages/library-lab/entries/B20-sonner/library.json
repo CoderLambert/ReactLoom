@@ -50,7 +50,8 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/latest-run.ts"
       ],
       "capabilities": [
         "portal",
@@ -67,7 +68,8 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/latest-run.ts"
       ],
       "capabilities": [
         "portal",
@@ -84,7 +86,8 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/latest-run.ts"
       ],
       "capabilities": [
         "portal",

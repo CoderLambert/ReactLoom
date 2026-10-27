@@ -52,3 +52,8 @@ toast.success('保存成功', {description: '你的内容已保存'});
 
 - [Sonner 官方](https://sonner.emilkowal.ski/)
 - [GitHub / MIT](https://github.com/emilkowalski/sonner)
+
+
+## 任务重入与迟到通知（AB wave8 加固）
+
+`toast.loading` 使用单次运行对应的 id 更新后续结果，但连续快速点击可能让旧计时器晚于新任务写入“成功”。演示新增 `LatestRunGuard` 作为纯同步代次标记；再次点击先失效旧代次、终止旧本地计时器并仅关闭旧 loading toast，再启动新任务。成功/失败由点击时快照确定。取消和卸载同时使代次失效、清理计时器、关闭自己拥有的 toast，绝不调用无参 `toast.dismiss()`。代次 guard 只阻止旧结果回写，不能替代真实网络 AbortSignal 或服务器事务取消。Node 定向测试仅验证 guard，真实 Sonner/React 焦点和通知行为仍待 SDK/Chromium。

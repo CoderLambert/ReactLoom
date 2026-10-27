@@ -9,3 +9,6 @@
 验收：实际Sonner SDK与React/TS构建；在浏览器中测试toast/撤销、同id更新、Tab切换后清理、Escape/键盘及无障碍公告。不能以mock SDK代替实际渲染。当前 verification.json 未提供任何SDK/浏览器PASS。
 
 官方：https://sonner.emilkowal.ski/ 。
+
+
+**异步 Toast 的最后任务所有权（wave8）**：迁移 `examples/example.tsx` 必须一并阅读 `examples/latest-run.ts`。`LatestRunGuard.start()` 返回当前运行 token，后续写状态需验证 `isCurrent(token)`；重试先停止旧 timer 与旧 loading toast，取消/组件卸载 `invalidate()` 并清理本例的 toast id。代次校验不取消真实 HTTP；线上要结合 AbortSignal、请求幂等键与服务端任务生命周期，不能只用 `toast.dismiss()` 假装取消业务。
