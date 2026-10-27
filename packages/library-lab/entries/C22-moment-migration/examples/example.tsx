@@ -2,7 +2,7 @@ import {useMemo,useState} from 'react';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import {addDays,format,isValid,parseISO} from 'date-fns';
-import {TZDate} from '@date-fns/tz';
+import {TZDate,tz} from '@date-fns/tz';
 
 dayjs.extend(customParseFormat);
 
@@ -45,7 +45,7 @@ export default function MomentMigrationExample({level}:{level:Level}){
  // The date-fns TZDate holds an explicit IANA zone, regardless of the browser's OS zone.
  const dst=useMemo(()=>{
   const noon=new TZDate(2026,2,7,12,0,0,'America/New_York');
-  const next=addDays(noon,1);
+  const next=addDays(noon,1,{in:tz('America/New_York')});
   const fallA=new Date('2026-11-01T01:30:00-04:00');
   const fallB=new Date('2026-11-01T01:30:00-05:00');
   return {

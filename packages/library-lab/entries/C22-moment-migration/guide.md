@@ -6,18 +6,18 @@ Moment 仍存在于不少旧工程，但对新 React 应用不应无条件重新
 
 ## 安装与实际导入
 
-\`\`\`bash
+```bash
 pnpm add date-fns@4.4.0 @date-fns/tz@1.5.0 dayjs@1.11.23
-\`\`\`
+```
 
-\`\`\`ts
+```ts
 import {addDays,parseISO,format} from 'date-fns'
 import {TZDate} from '@date-fns/tz'
 import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 dayjs.extend(customParseFormat)
 const valid = dayjs('2026-02-30','YYYY-MM-DD',true).isValid() // false
-\`\`\`
+```
 
 完整真实实现是 [examples/example.tsx](./examples/example.tsx)，Lab Demo 直接引用该文件，不维护另一份复制源码。本文代码为解释示例，具体运行结果需以 SDK 测试确认。
 
@@ -25,11 +25,11 @@ const valid = dayjs('2026-02-30','YYYY-MM-DD',true).isValid() // false
 
 ### 1. 基础：严格日期
 
-输入 \`YYYY-MM-DD\`，同时展示 date-fns 的民用日格式和 Day.js strict parsing。无效日必须产生清晰错误；禁止依赖运行时的日期字符串自动修正。
+输入 `YYYY-MM-DD`，同时展示 date-fns 的民用日格式和 Day.js strict parsing。无效日必须产生清晰错误；禁止依赖运行时的日期字符串自动修正。
 
 ### 2. 业务：跨时区 RSS 发布时间
 
-一条新闻的 UTC instant 应在指定 IANA 时区格式化；这是展示层行为，不应直接改变数据库中的原始瞬间。使用 \`Intl.DateTimeFormat({timeZone})\`，绝不手工加固定的 +8 小时。仅有 \`2026-11-01\` 的日历字段，不等价于 \`2026-11-01T00:00:00Z\`。
+一条新闻的 UTC instant 应在指定 IANA 时区格式化；这是展示层行为，不应直接改变数据库中的原始瞬间。使用 `Intl.DateTimeFormat({timeZone})`，绝不手工加固定的 +8 小时。仅有 `2026-11-01` 的日历字段，不等价于 `2026-11-01T00:00:00Z`。
 
 ### 3. 进阶：DST 与可变性
 
@@ -39,11 +39,11 @@ const valid = dayjs('2026-02-30','YYYY-MM-DD',true).isValid() // false
 
 |旧 Moment 思路|现代实现方向|必须检查|
 |---|---|---|
-|\`moment(value).format('YYYY-MM-DD')\`|Day.js \`format('YYYY-MM-DD')\` 或 date-fns \`format(date,'yyyy-MM-dd')\`|token 差异、输入是否有效|
-|\`moment(value).add(1,'day')\`|Day.js \`add(1,'day')\` / date-fns \`addDays\`|旧对象被修改，新实现通常返回新对象|
-|\`moment.utc(value)\`|保留 ISO instant，按需时区显示|数据存储是否为 instant|
-|\`moment.tz(...)\`|TZDate、Luxon、带 IANA 的接口|跳时/回拨/时区数据库|
-|\`moment(...).isValid()\`|按指定格式严格解析|日期无效不能被自动归一化|
+|`moment(value).format('YYYY-MM-DD')`|Day.js `format('YYYY-MM-DD')` 或 date-fns `format(date,'yyyy-MM-dd')`|token 差异、输入是否有效|
+|`moment(value).add(1,'day')`|Day.js `add(1,'day')` / date-fns `addDays`|旧对象被修改，新实现通常返回新对象|
+|`moment.utc(value)`|保留 ISO instant，按需时区显示|数据存储是否为 instant|
+|`moment.tz(...)`|TZDate、Luxon、带 IANA 的接口|跳时/回拨/时区数据库|
+|`moment(...).isValid()`|按指定格式严格解析|日期无效不能被自动归一化|
 
 ## 特别需要避免的反模式
 

@@ -268,3 +268,14 @@ PLATFORM 在 packages/library-lab/package.json 及真实 pnpm-lock.yaml 中统�
 - 第七批 35/43，新增5项后达到40/43已有真实 SDK import 示例代码；不能等同40个 SDK PASS。
 - 剩余 C22 Moment（历史迁移，不强装旧 Moment）、D16 Workbox（Service Worker 隔离 scope）、D21 Pagefind（真实 Node CLI 静态索引）。待公共 Runner/isolated runner 支持后实现，不能伪造浏览器 shell。
 - 当前 PR base 必须是 feat/library-lab，PLATFORM 审核合并；不触碰 main、公共依赖/锁文件、旧模板和 PR #3。
+
+### 第八批追加修复：Moment 迁移与本地表单竞态
+
+- 增加 C22 Moment 历史迁移条目：**不安装或调用旧 Moment**，用真实 date-fns/Day.js/TZDate 演示严格日期、RSS 时区显示、23 小时 DST 民用日与重复 01:30 instant；guide.md / agent.md / AGENTS.md / 3级入口 / Node SDK 测试 / verification.json 均有独立文件。当前 CD 源码接入由40/43提升为 **41/43**，剩余 D16 Workbox 与 D21 Pagefind。
+- C04 JSON Forms 修复：仅数据实际变化时清除服务器 additionalErrors；用户编辑时递增 generation 并 abort 旧保存，防止请求中旧结果覆盖新草稿。更换 additionalErrors 不再被校验回调瞬间清空；真实浏览器行为仍未运行。
+- C22 迁移指南消除转义反引号，正常渲染 Markdown 代码块；时区计算显式传入 date-fns v4 `{in:tz('America/New_York')}`，避免默认环境时区参与民用日运算。
+- 本批未修改公共 src、package、lockfile、CI 或其他组；测试证据仍为 SDK/build/browser NOT_RUN。C22 所需 date-fns@4.4.0 / @date-fns/tz@1.5.0 / dayjs@1.11.23 均已在集成 manifest 中，**无新增依赖**。
+
+#### 风险交接
+
+C13 Frappe Gantt 1.2.2 上游 `src/index.js` 的 `bind_bar_events` 会向 `document` 绑定 mouseup，且未暴露 destroy/unsubscribe。仅替换容器子节点不能释放该 document listener，连续切换示例会累积监听。**请 PLATFORM 在生产可交互前提供独立 iframe document runner 并用 Chromium 验证停止/清理**，或者限制直接加载；不要将这条标 browser PASS。本批 C13 动态代码仍为待浏览器验证的教学草稿。
