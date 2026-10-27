@@ -1,6 +1,6 @@
 import {useEffect,useState} from 'react';
 import type {Level} from '../lib/types';
-import {parseWorkerReply,workerStartMessage} from '../lib/worker-protocol.mjs';
+import {appendWorkerLog,parseWorkerReply,workerStartMessage} from '../lib/worker-protocol.mjs';
 
 type Props={createWorker:()=>Worker;level:Level};
 type State='starting'|'running'|'completed'|'failed';
@@ -28,7 +28,7 @@ export default function WorkerHost({createWorker,level}:Props){
    if(!live||finished)return;
    finished=true;
    setStatus('failed');
-   setLines(old=>[...old.slice(-39),message]);
+   setLines(old=>appendWorkerLog(old,{type:'error',message}));
    close();
   };
   try{
@@ -37,7 +37,7 @@ export default function WorkerHost({createWorker,level}:Props){
     if(!live||finished)return;
     const reply=parseWorkerReply(event.data,runId);
     if(!reply)return;
-    setLines(old=>old.length>=40?old:[...old,reply.message]);
+    setLines(old=>appendWorkerLog(old,reply));
     if(reply.type==='result'||reply.type==='error'){
      finished=true;
      setStatus(reply.type==='result'?'completed':'failed');close();
