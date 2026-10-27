@@ -1,0 +1,364 @@
+TAP version 13
+# Subtest: documentation and evidence edits do not trigger SDK/browser installs
+ok 1 - documentation and evidence edits do not trigger SDK/browser installs
+  ---
+  duration_ms: 7.428276
+  type: 'test'
+  ...
+# Subtest: entry source edits select precise IDs, including deleted paths
+ok 2 - entry source edits select precise IDs, including deleted paths
+  ---
+  duration_ms: 0.427794
+  type: 'test'
+  ...
+# Subtest: host, dependencies and workflow edits select full gates
+ok 3 - host, dependencies and workflow edits select full gates
+  ---
+  duration_ms: 0.330097
+  type: 'test'
+  ...
+# Subtest: missing or invalid Git base falls back to full, not an empty selection
+ok 4 - missing or invalid Git base falls back to full, not an empty selection
+  ---
+  duration_ms: 40.270686
+  type: 'test'
+  ...
+# Subtest: docs-only plan executes no SDK or browser commands
+ok 5 - docs-only plan executes no SDK or browser commands
+  ---
+  duration_ms: 1.439558
+  type: 'test'
+  ...
+# Subtest: runtime changes select exact SDK IDs and exact browser tags
+ok 6 - runtime changes select exact SDK IDs and exact browser tags
+  ---
+  duration_ms: 0.387483
+  type: 'test'
+  ...
+# Subtest: Vitest has its own real runner, not a nonexistent Node SDK suite
+ok 7 - Vitest has its own real runner, not a nonexistent Node SDK suite
+  ---
+  duration_ms: 0.220462
+  type: 'test'
+  ...
+# Subtest: full selection retains both SDK runners; empty and malformed runtime plans fail
+ok 8 - full selection retains both SDK runners; empty and malformed runtime plans fail
+  ---
+  duration_ms: 0.353473
+  type: 'test'
+  ...
+# Subtest: receipt CLI plans by default, rejects shell and arbitrary target arguments
+ok 9 - receipt CLI plans by default, rejects shell and arbitrary target arguments
+  ---
+  duration_ms: 0.707616
+  type: 'test'
+  ...
+# Subtest: only safe HTTPS, fragments and same-entry relative files are accepted
+ok 10 - only safe HTTPS, fragments and same-entry relative files are accepted
+  ---
+  duration_ms: 5.723469
+  type: 'test'
+  ...
+# Subtest: headings ignore fenced blocks and correctly preserve source line anchor
+ok 11 - headings ignore fenced blocks and correctly preserve source line anchor
+  ---
+  duration_ms: 3.350516
+  type: 'test'
+  ...
+# Subtest: Chinese anchors, inline code and duplicate headings exclude fenced content
+ok 12 - Chinese anchors, inline code and duplicate headings exclude fenced content
+  ---
+  duration_ms: 0.40469
+  type: 'test'
+  ...
+# Subtest: local example and test links map to real generated source files, not missing SPA fallbacks
+ok 13 - local example and test links map to real generated source files, not missing SPA fallbacks
+  ---
+  duration_ms: 4.16373
+  type: 'test'
+  ...
+# Subtest: Markdown byte ceiling preserves split multibyte UTF-8 without trusting response length
+ok 14 - Markdown byte ceiling preserves split multibyte UTF-8 without trusting response length
+  ---
+  duration_ms: 25.501103
+  type: 'test'
+  ...
+# Subtest: Markdown byte ceiling rejects oversized decoded body and cancels the reader
+ok 15 - Markdown byte ceiling rejects oversized decoded body and cancels the reader
+  ---
+  duration_ms: 0.991363
+  type: 'test'
+  ...
+# Subtest: Markdown rejects fallback HTML, non-2xx, invalid UTF-8 and absent response bodies
+ok 16 - Markdown rejects fallback HTML, non-2xx, invalid UTF-8 and absent response bodies
+  ---
+  duration_ms: 1.914152
+  type: 'test'
+  ...
+# Subtest: Setext headings use source start lines and duplicate slugs match rendered anchors
+ok 17 - Setext headings use source start lines and duplicate slugs match rendered anchors
+  ---
+  duration_ms: 0.636509
+  type: 'test'
+  ...
+# Subtest: Fence-looking code text cannot expose hidden headings; indented/quoted code stays out of TOC
+ok 18 - Fence-looking code text cannot expose hidden headings; indented/quoted code stays out of TOC
+  ---
+  duration_ms: 0.55798
+  type: 'test'
+  ...
+# Subtest: Document-relative links reject scheme-relative or malformed Vite base paths
+ok 19 - Document-relative links reject scheme-relative or malformed Vite base paths
+  ---
+  duration_ms: 0.618622
+  type: 'test'
+  ...
+# Subtest: cross-origin runner validates source, origin and session before start/result
+ok 20 - cross-origin runner validates source, origin and session before start/result
+  ---
+  duration_ms: 5.338119
+  type: 'test'
+  ...
+# Subtest: stop before ready never starts the SDK and joins repeated cleanup
+ok 21 - stop before ready never starts the SDK and joins repeated cleanup
+  ---
+  duration_ms: 0.427263
+  type: 'test'
+  ...
+# Subtest: teardown deadline reports unconfirmed cleanup and removes the orphan frame
+ok 22 - teardown deadline reports unconfirmed cleanup and removes the orphan frame
+  ---
+  duration_ms: 11.592728
+  type: 'test'
+  ...
+# Subtest: unknown levels, main origins and oversized payloads fail closed
+ok 23 - unknown levels, main origins and oversized payloads fail closed
+  ---
+  duration_ms: 1.138154
+  type: 'test'
+  ...
+# Subtest: generates exact source hashes, lazy loaders and raw markdown
+ok 24 - generates exact source hashes, lazy loaders and raw markdown
+  ---
+  duration_ms: 26.445245
+  type: 'test'
+  ...
+# Subtest: rejects missing SDK demo source rather than silently downgrade
+ok 25 - rejects missing SDK demo source rather than silently downgrade
+  ---
+  duration_ms: 10.905443
+  type: 'test'
+  ...
+# Subtest: rejects unknown relationship target
+ok 26 - rejects unknown relationship target
+  ---
+  duration_ms: 14.447142
+  type: 'test'
+  ...
+# Subtest: catalogue generation is repeatable
+ok 27 - catalogue generation is repeatable
+  ---
+  duration_ms: 43.229867
+  type: 'test'
+  ...
+# Subtest: source verification cannot be promoted by matching metadata without an actual receipt
+ok 28 - source verification cannot be promoted by matching metadata without an actual receipt
+  ---
+  duration_ms: 36.139554
+  type: 'test'
+  ...
+# Subtest: only small local raster assets are copied into the generated raw folder
+ok 29 - only small local raster assets are copied into the generated raw folder
+  ---
+  duration_ms: 26.989711
+  type: 'test'
+  ...
+# Subtest: source listing stays metadata-only and each source is independently retrievable
+ok 30 - source listing stays metadata-only and each source is independently retrievable
+  ---
+  duration_ms: 16.499913
+  type: 'test'
+  ...
+# Subtest: worker entries produce deferred Vite module-worker factories and no React import
+ok 31 - worker entries produce deferred Vite module-worker factories and no React import
+  ---
+  duration_ms: 19.815421
+  type: 'test'
+  ...
+# Subtest: landing catalogue is lightweight; full detail is fetched only by ID and bound to the same fingerprint
+ok 32 - landing catalogue is lightweight; full detail is fetched only by ID and bound to the same fingerprint
+  ---
+  duration_ms: 26.755013
+  type: 'test'
+  ...
+# Subtest: source index bytes are pinned by the generated detail digest
+ok 33 - source index bytes are pinned by the generated detail digest
+  ---
+  duration_ms: 27.221975
+  type: 'test'
+  ...
+# Subtest: real HTTP serves the fixed asset only under a unique, narrow session scope
+ok 34 - real HTTP serves the fixed asset only under a unique, narrow session scope
+  ---
+  duration_ms: 40.855626
+  type: 'test'
+  ...
+# Subtest: two-argument fingerprint retains the original manifest formula
+ok 35 - two-argument fingerprint retains the original manifest formula
+  ---
+  duration_ms: 1.556755
+  type: 'test'
+  ...
+# Subtest: stale PASS never counted
+ok 36 - stale PASS never counted
+  ---
+  duration_ms: 0.328574
+  type: 'test'
+  ...
+# Subtest: matching fingerprint with an unverified evidence string cannot preserve PASS
+ok 37 - matching fingerprint with an unverified evidence string cannot preserve PASS
+  ---
+  duration_ms: 1.016651
+  type: 'test'
+  ...
+# Subtest: 3 levels are declarations, not SDK execution
+ok 38 - 3 levels are declarations, not SDK execution
+  ---
+  duration_ms: 38.77607
+  type: 'test'
+  ...
+# Subtest: source edits invalidate a verified receipt
+ok 39 - source edits invalidate a verified receipt
+  ---
+  duration_ms: 45.309964
+  type: 'test'
+  ...
+# Subtest: missing required documentation causes incomplete status
+ok 40 - missing required documentation causes incomplete status
+  ---
+  duration_ms: 8.989623
+  type: 'test'
+  ...
+# Subtest: unsafe argument selectors rejected
+ok 41 - unsafe argument selectors rejected
+  ---
+  duration_ms: 1.217514
+  type: 'test'
+  ...
+# Subtest: stale recorded FAIL is not a failure of changed source
+ok 42 - stale recorded FAIL is not a failure of changed source
+  ---
+  duration_ms: 29.407942
+  type: 'test'
+  ...
+# Subtest: PASS and FAIL both reject malformed, missing or unverified execution evidence
+ok 43 - PASS and FAIL both reject malformed, missing or unverified execution evidence
+  ---
+  duration_ms: 0.442877
+  type: 'test'
+  ...
+# Subtest: a generated working copy cannot hide stale committed indexes
+ok 44 - a generated working copy cannot hide stale committed indexes
+  ---
+  duration_ms: 47.592623
+  type: 'test'
+  ...
+# Subtest: a clean committed index passes the immutable gate
+ok 45 - a clean committed index passes the immutable gate
+  ---
+  duration_ms: 36.774731
+  type: 'test'
+  ...
+# Subtest: dirty index edits are not accepted by the committed gate
+ok 46 - dirty index edits are not accepted by the committed gate
+  ---
+  duration_ms: 43.451225
+  type: 'test'
+  ...
+# Subtest: Markdown source links use the inert transport, including HTML
+ok 47 - Markdown source links use the inert transport, including HTML
+  ---
+  duration_ms: 6.878819
+  type: 'test'
+  ...
+# Subtest: source viewer uses the same transport mapping as the generator
+ok 48 - source viewer uses the same transport mapping as the generator
+  ---
+  duration_ms: 9.055156
+  type: 'test'
+  ...
+# Subtest: generator publishes original HTML bytes as inert .txt and never as executable HTML
+ok 49 - generator publishes original HTML bytes as inert .txt and never as executable HTML
+  ---
+  duration_ms: 57.652542
+  type: 'test'
+  ...
+# Subtest: source index retains original filenames and hashes while the transport path is inert
+ok 50 - source index retains original filenames and hashes while the transport path is inert
+  ---
+  duration_ms: 26.942444
+  type: 'test'
+  ...
+# Subtest: an HTML fallback at an inert source URL is still rejected
+ok 51 - an HTML fallback at an inert source URL is still rejected
+  ---
+  duration_ms: 1.499908
+  type: 'test'
+  ...
+# Subtest: matching strings alone never establish executed PASS or FAIL
+ok 52 - matching strings alone never establish executed PASS or FAIL
+  ---
+  duration_ms: 0.897031
+  type: 'test'
+  ...
+# Subtest: a real bounded receipt and log have a positive acceptance path
+ok 53 - a real bounded receipt and log have a positive acceptance path
+  ---
+  duration_ms: 26.694256
+  type: 'test'
+  ...
+# Subtest: missing, changed or unrelated receipts cannot become PASS
+ok 54 - missing, changed or unrelated receipts cannot become PASS
+  ---
+  duration_ms: 11.029058
+  type: 'test'
+  ...
+# Subtest: wrong exit status and symlinked evidence are rejected
+ok 55 - wrong exit status and symlinked evidence are rejected
+  ---
+  duration_ms: 7.058189
+  type: 'test'
+  ...
+# Subtest: verification fingerprint changes for lock, host, config and undisplayed test changes, not docs
+ok 56 - verification fingerprint changes for lock, host, config and undisplayed test changes, not docs
+  ---
+  duration_ms: 65.12545
+  type: 'test'
+  ...
+# Subtest: checks staged scoped JS bytes and marks the result asset-only
+ok 57 - checks staged scoped JS bytes and marks the result asset-only
+  ---
+  duration_ms: 1.293168
+  type: 'test'
+  ...
+# Subtest: rejects HTML fallback, malformed UTF-8, non-worker JS and oversize responses
+ok 58 - rejects HTML fallback, malformed UTF-8, non-worker JS and oversize responses
+  ---
+  duration_ms: 0.389646
+  type: 'test'
+  ...
+# Subtest: reads only a regular scoped worker and rejects symlink staging
+ok 59 - reads only a regular scoped worker and rejects symlink staging
+  ---
+  duration_ms: 12.803001
+  type: 'test'
+  ...
+1..59
+# tests 59
+# suites 0
+# pass 59
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 632.440915

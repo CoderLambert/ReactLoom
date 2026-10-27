@@ -29,9 +29,9 @@ test('Chinese anchors, inline code and duplicate headings exclude fenced content
 
 
 test('local example and test links map to real generated source files, not missing SPA fallbacks', () => {
-  assert.equal(resolveDocumentUrl('examples/example.tsx', 'D03'), '/raw/D03/sources/examples/example.tsx');
-  assert.equal(resolveDocumentUrl('./examples/demo.tsx#Usage', 'A01', '/lab/'), '/lab/raw/A01/sources/examples/demo.tsx#Usage');
-  assert.equal(resolveDocumentUrl('tests/sdk.test.mjs', 'F11'), '/raw/F11/sources/tests/sdk.test.mjs');
+  assert.equal(resolveDocumentUrl('examples/example.tsx', 'D03'), '/raw/D03/sources/examples/example.tsx.txt');
+  assert.equal(resolveDocumentUrl('./examples/demo.tsx#Usage', 'A01', '/lab/'), '/lab/raw/A01/sources/examples/demo.tsx.txt#Usage');
+  assert.equal(resolveDocumentUrl('tests/sdk.test.mjs', 'F11'), '/raw/F11/sources/tests/sdk.test.mjs.txt');
   assert.equal(resolveDocumentUrl('agent.md', 'B02'), '/raw/B02/agent.md');
   for (const value of ['package.json','AGENTS.md','config.env','README.md','notes.html','assets/tracker.svg','assets/javascript.js','examples/secret.sh','examples/../../secret.ts','examples/%2e%2e/secret.ts']) {
     assert.equal(resolveDocumentUrl(value, 'A01'), '', 'Unexpected local public path: ' + value);

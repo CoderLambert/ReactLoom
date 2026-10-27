@@ -1,12 +1,13 @@
 import {lazy,Suspense,useMemo,useState,useEffect} from 'react';
 const WorkerHost = lazy(() => import('./worker-host'));
+const IsolatedMswPanel = lazy(() => import('./isolated-msw-panel'));
 import {ErrorBoundary} from 'react-error-boundary';
 import type {Entry,Demo,SourceMetadata} from '../lib/types';
 import {demoLoaders} from '../generated/loaders';
 import {reproductionCommand} from '../lib/reproduction.mjs';
 import {demoRunPolicy,CAPABILITY_DESCRIPTIONS} from '../lib/demo-policy.mjs';
 import {sourceLanguage} from '../lib/source-language.mjs';
-import {validateSourceIndex,verifySourceIndexDigest,readBoundedSourceResponse} from '../lib/source-integrity.mjs';
+import {validateSourceIndex,verifySourceIndexDigest,readBoundedSourceResponse,sourceTextPath} from '../lib/source-integrity.mjs';
 import {readLimitedJsonResponse,JSON_RESPONSE_LIMITS} from '../lib/bounded-json.mjs';
 import {requestGeneratedResource} from '../lib/resource-fetch.mjs';
 import {packageInstallCommand} from '../lib/package-source.mjs';
@@ -42,7 +43,7 @@ function SourceViewer({entryId,demo,indexDigest}:{entryId:string;demo:Demo;index
  useEffect(()=>{
   if(!current){setContent('');setLoadedKey('');setVerified(false);return;}
   const controller=new AbortController();setLoading(true);setError('');setContent('');setLoadedKey('');setVerified(false);setCopyState('');
-  const encoded=current.path.split('/').map(encodeURIComponent).join('/');
+  const encoded=sourceTextPath(current.path).split('/').map(encodeURIComponent).join('/');
   requestGeneratedResource(import.meta.env.BASE_URL+'raw/'+entryId+'/sources/'+encoded,
    async response=>{
     const source=await readBoundedSourceResponse(response,current.bytes);
@@ -85,8 +86,7 @@ export default function DemoHost({entry,demoId,onSelect}:{entry:Entry;demoId?:st
  const demo=entry.demos.find(d=>d.demoId===demoId)??entry.demos[0];
  const [startedKey,setStartedKey]=useState<string|null>(null);const [reset,setReset]=useState(0);
  const key=`${entry.entryId}/${demo?.demoId??''}`;
- // Authorization is bound to the selected demo identity, never a reusable boolean.
- // On switching scenarios, the next lazy module cannot mount before effects reset state.
+ // A scenario change must not inherit authorization from a previously started demo.
  const started=startedKey===key;
  const loader=demoLoaders[key];
  const workerFactory=workerFactories[key];
@@ -96,5 +96,5 @@ export default function DemoHost({entry,demoId,onSelect}:{entry:Entry;demoId?:st
  useEffect(()=>{setStartedKey(null);setReset(0);},[key]);
  if(!demo)return <div className="empty"><h2>真实示例正在接入</h2><p>可以先阅读文档与 Agent 指南。当前条目未标记为已完成，也不会用模拟画面代替目标库。</p></div>;
  return <><div className="demo-toolbar"><label>学习场景 <select value={demo.demoId} onChange={e=>onSelect(e.target.value)}>{entry.demos.map(d=><option key={d.demoId} value={d.demoId}>{({basic:'入门',business:'业务',advanced:'边界'})[d.level]} · {d.title}</option>)}</select></label><span className="badge">{demo.executionKind}</span></div><p>{demo.description}</p>
- {Boolean(demo.capabilities?.length)&&<div className="tags" aria-label="运行环境能力">{demo.capabilities?.map(cap=><span className="badge" key={cap}>{CAPABILITY_DESCRIPTIONS[cap]??cap}</span>)}</div>}<div className="install"><span>安装依赖</span><code>{packageInstallCommand(entry.packages)}</code></div><div className="notice">示例源码已接入不等于真实运行验证通过。请核对页面上方的构建、SDK 与浏览器状态。</div><div className="demo-stage">{canStart?started?<ErrorBoundary key={`${key}:${reset}`} fallbackRender={({error,resetErrorBoundary})=><div role="alert"><h3>这个示例加载失败</h3><p>{String(error)}</p><button type="button" onClick={()=>{setReset(n=>n+1);resetErrorBoundary();}}>重新加载示例</button></div>}><Suspense fallback={<p role="status">正在加载当前示例…</p>}>{Component?<Component level={demo.level}/>:workerFactory?<WorkerHost createWorker={workerFactory} level={demo.level} entryId={entry.entryId} demoId={demo.demoId} sourceFingerprint={entry.sourceFingerprint}/>:null}</Suspense></ErrorBoundary>:<div className="start-demo"><span className="play-symbol" aria-hidden="true">▷</span><h3>按需启动，不占用其他页面资源</h3><button className="primary" type="button" onClick={()=>setStartedKey(key)}>运行当前示例</button></div>:policy.mode==='reproduction'?<Reproduction entry={entry} demo={demo}/>:<section role="note" className="notice">{policy.mode==='react'?'当前示例尚未生成可加载的代码入口。':policy.reason}</section>}</div>{started&&<div className="demo-actions"><button type="button" onClick={()=>setReset(n=>n+1)}>重置此示例</button><button type="button" onClick={()=>setStartedKey(null)}>停止并卸载</button></div>}<SourceViewer entryId={entry.entryId} demo={demo} indexDigest={entry.sourceIndexSha256}/></>;
+ {Boolean(demo.capabilities?.length)&&<div className="tags" aria-label="运行环境能力">{demo.capabilities?.map(cap=><span className="badge" key={cap}>{CAPABILITY_DESCRIPTIONS[cap]??cap}</span>)}</div>}<div className="install"><span>安装依赖</span><code>{packageInstallCommand(entry.packages)}</code></div><div className="notice">示例源码已接入不等于真实运行验证通过。请核对页面上方的构建、SDK 与浏览器状态。</div><div className="demo-stage">{canStart?started?<ErrorBoundary key={`${key}:${reset}`} fallbackRender={({error,resetErrorBoundary})=><div role="alert"><h3>这个示例加载失败</h3><p>{String(error)}</p><button type="button" onClick={()=>{setReset(n=>n+1);resetErrorBoundary();}}>重新加载示例</button></div>}><Suspense fallback={<p role="status">正在加载当前示例…</p>}>{Component?<Component level={demo.level}/>:workerFactory?<WorkerHost createWorker={workerFactory} level={demo.level} entryId={entry.entryId} demoId={demo.demoId} sourceFingerprint={entry.sourceFingerprint}/>:null}</Suspense></ErrorBoundary>:<div className="start-demo"><span className="play-symbol" aria-hidden="true">▷</span><h3>按需启动，不占用其他页面资源</h3><button className="primary" type="button" onClick={()=>setStartedKey(key)}>运行当前示例</button></div>:policy.mode==='reproduction'?<Reproduction entry={entry} demo={demo}/>:<section role="note" className="notice">{policy.mode==='react'?'当前示例尚未生成可加载的代码入口。':policy.reason}</section>}</div>{started&&<div className="demo-actions"><button type="button" onClick={()=>setReset(n=>n+1)}>重置此示例</button><button type="button" onClick={()=>setStartedKey(null)}>停止并卸载</button></div>}{entry.entryId==='F11'&&<Suspense fallback={<p role="status">正在加载浏览器运行面板…</p>}><IsolatedMswPanel key={key} level={demo.level}/></Suspense>}<SourceViewer entryId={entry.entryId} demo={demo} indexDigest={entry.sourceIndexSha256}/></>;
 }

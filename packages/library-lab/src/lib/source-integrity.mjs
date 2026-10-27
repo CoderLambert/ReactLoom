@@ -5,6 +5,12 @@ import {safeRelativePath} from './catalog.mjs';
 export const MAX_SOURCE_BYTES = 2_000_000;
 const SHA256 = /^[a-f0-9]{64}$/u;
 
+/** Preserve the displayed filename, but serve all source as inert text. */
+export function sourceTextPath(relative) {
+  if (!safeRelativePath(relative)) throw new Error('Unsafe source transport path');
+  return `${relative}.txt`;
+}
+
 /** Fail closed on stale/incomplete source indexes rather than displaying a
  * different version or silently omitting declared source files. */
 export function validateSourceIndex(value, requestedPaths) {

@@ -1,0 +1,3 @@
+Chromium loopback probe: /usr/bin/chromium via Python Playwright, headless.
+Observed: Page.goto: net::ERR_BLOCKED_BY_ADMINISTRATOR at http://127.0.0.1:<ephemeral-port>/
+No attempt was made to bypass this policy. Production UI, MSW SDK, and browser cleanup are NOT_RUN/BLOCKED.

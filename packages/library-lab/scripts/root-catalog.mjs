@@ -1,5 +1,6 @@
 /** Dependency-free consistency contract for the tracked Agent catalogue. */
 import {readFile} from 'node:fs/promises';
+import {execFileSync} from 'node:child_process';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {GROUPS} from '../src/lib/catalog.mjs';
@@ -32,16 +33,29 @@ export function diffRootCatalog(entries,actualJson,actualMarkdown){
   if(actualMarkdown!==rootCatalogMarkdown(entries))differences.push('LIBRARY_CATALOG.md differs from the canonical entry manifests');
   return differences;
 }
-export async function runRootCatalogAudit(repoRoot=fileURLToPath(new URL('../../..',import.meta.url))){
+export async function runRootCatalogAudit(repoRoot=fileURLToPath(new URL('../../..',import.meta.url)),{committed=false}={}){
   const [entries,json,markdown]=await Promise.all([
     loadEntries(path.join(repoRoot,'packages/library-lab/entries')),
     readFile(path.join(repoRoot,'library-catalog.json'),'utf8'),
     readFile(path.join(repoRoot,'LIBRARY_CATALOG.md'),'utf8'),
   ]);
-  return {entries:entries.length,differences:diffRootCatalog(entries,JSON.parse(json),markdown)};
+  const differences=diffRootCatalog(entries,JSON.parse(json),markdown);
+  if(committed){
+    // The generator can rewrite the working tree. Compare the submitted bytes
+    // from HEAD as well, so a self-repaired index cannot turn a bad commit green.
+    const git=args=>execFileSync('git',args,{cwd:repoRoot,encoding:'utf8',stdio:['ignore','pipe','pipe']});
+    const committedJson=git(['show','HEAD:library-catalog.json']);
+    const committedMarkdown=git(['show','HEAD:LIBRARY_CATALOG.md']);
+    differences.push(...diffRootCatalog(entries,JSON.parse(committedJson),committedMarkdown).map(message=>'HEAD: '+message));
+    if(git(['diff','HEAD','--','LIBRARY_CATALOG.md','library-catalog.json']).trim())
+      differences.push('Tracked Agent indexes differ from HEAD; regenerate and commit them explicitly.');
+  }
+  return {entries:entries.length,differences};
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
-  const result=await runRootCatalogAudit();
+  const args=process.argv.slice(2);
+  if(args.some(arg=>arg!=='--committed'))throw new Error('Usage: node scripts/root-catalog.mjs [--committed]');
+  const result=await runRootCatalogAudit(undefined,{committed:args.includes('--committed')});
   if(result.differences.length){
     for(const message of result.differences)console.error(message);
     console.error('Refresh tracked indexes with: pnpm --filter @reactloom/library-lab catalog:generate');

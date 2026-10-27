@@ -1,0 +1,15 @@
+$ node --version
+v22.16.0
+$ tsc --version
+Version 5.8.3
+$ tsc --noEmit --strict --module nodenext --moduleResolution nodenext --target ES2022 packages/library-lab/tests/source-declarations.mts
+DECLARATION_EXIT=0
+$ node --check <all restored/changed .mjs files, no SDK execution>
+SYNTAX_EXIT=0
+Workflow YAML structural parse: PASS (not a GitHub Actions execution)
+$ TypeScript 5.8.3 transpileModule (syntax-only)
+e2e/library.spec.ts: 0 syntax diagnostics (not full typecheck)
+e2e/repair.spec.ts: 0 syntax diagnostics (not full typecheck)
+src/components/demo-host.tsx: 0 syntax diagnostics (not full typecheck)
+src/components/isolated-msw-panel.tsx: 0 syntax diagnostics (not full typecheck)
+playwright.config.ts: 0 syntax diagnostics (not full typecheck)

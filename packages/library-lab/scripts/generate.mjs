@@ -3,10 +3,12 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {createHash} from 'node:crypto';
 import {validateEntry,safeRelativePath} from '../src/lib/catalog.mjs';
+import {sourceTextPath} from '../src/lib/source-integrity.mjs';
 import {rootCatalogData,rootCatalogMarkdown} from './root-catalog.mjs';
 import {toCatalogIndex,validateCatalogIndex} from '../src/lib/catalog-index.mjs';
 import {entryCompletenessIssues} from './entry-gate.mjs';
-import {verifiedState,sourceFingerprint as fingerprintOf} from './verification-contract.mjs';
+import {verifiedStateFromFiles,sourceFingerprint as fingerprintOf} from './verification-contract.mjs';
+import {sharedInputsFingerprint,entryInputsFingerprint} from './verification-inputs.mjs';
 const packageRoot=fileURLToPath(new URL('..',import.meta.url));
 async function safeRead(root,relative){
  if(!safeRelativePath(relative))throw new Error(`unsafe source ${relative}`);
@@ -38,6 +40,7 @@ async function collectAssets(root,relative='assets'){
 
 
 export async function generate(root=packageRoot,{check=false,expectedCount=119}={}){
+ const sharedInputs=await sharedInputsFingerprint(root);
  const entriesRoot=path.join(root,'entries');const dirs=(await readdir(entriesRoot,{withFileTypes:true})).filter(d=>d.isDirectory()).sort((a,b)=>a.name.localeCompare(b.name));
  const entries=[],payloads=[],ids=new Set(),slugs=new Set(),imports=[],workerImports=[];
  for(const dir of dirs){
@@ -61,8 +64,8 @@ export async function generate(root=packageRoot,{check=false,expectedCount=119}=
   const sourceIndex=sources.map(({path:sourcePath,sha256,content})=>({path:sourcePath,sha256,bytes:Buffer.byteLength(content)}));
   const sourceIndexSha256=createHash('sha256').update(JSON.stringify(sourceIndex)).digest('hex');
   const assets=await collectAssets(folder);
-  const sourceFingerprint=fingerprintOf(entry.packages,sources);
-  const verification=verifiedState(rawVerification,sourceFingerprint);
+  const sourceFingerprint=fingerprintOf(entry.packages,sources,await entryInputsFingerprint(folder,sharedInputs));
+  const verification=await verifiedStateFromFiles(rawVerification,sourceFingerprint,{repoRoot:path.resolve(root,'../..'),entryId:entry.entryId});
   entries.push({...entry,directory:dir.name,guideAvailable:guide!==null,agentAvailable:agent!==null,sourceFingerprint,sourceIndexSha256,verification});payloads.push({id:entry.entryId,guide,agent,sources,sourceIndex,assets});
  }
  if(entries.length!==expectedCount)throw new Error(`expected ${expectedCount} entries; found ${entries.length}`);
@@ -74,7 +77,7 @@ export async function generate(root=packageRoot,{check=false,expectedCount=119}=
  const entryById=new Map(entries.map(item=>[item.entryId,item]));
  for(const p of payloads){const dest=path.join(out,'raw',p.id);await mkdir(dest,{recursive:true});await writeFile(path.join(dest,'detail.json'),JSON.stringify(entryById.get(p.id)));if(p.guide!==null)await writeFile(path.join(dest,'guide.md'),p.guide);if(p.agent!==null)await writeFile(path.join(dest,'agent.md'),p.agent);
   await writeFile(path.join(dest,'source-index.json'),JSON.stringify(p.sourceIndex));
-  for(const source of p.sources){const destination=path.join(dest,'sources',source.path);await mkdir(path.dirname(destination),{recursive:true});await writeFile(destination,source.content);}
+  for(const source of p.sources){const destination=path.join(dest,'sources',sourceTextPath(source.path));await mkdir(path.dirname(destination),{recursive:true});await writeFile(destination,source.content);}
   for(const asset of p.assets){const target=path.join(dest,asset.name);await mkdir(path.dirname(target),{recursive:true});await writeFile(target,asset.contents);}}
  await writeFile(path.join(out,'catalog.json'),JSON.stringify(entries));
  await writeFile(path.join(out,'catalog-index.json'),JSON.stringify(lightweightIndex));

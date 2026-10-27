@@ -5,9 +5,10 @@ import {fileURLToPath} from 'node:url';
 import {createHash} from 'node:crypto';
 import {loadEntries} from './find-library.mjs';
 import {entryCompletenessIssues} from './entry-gate.mjs';
-import {sourceFingerprint,verifiedState,VERIFICATION_KINDS} from './verification-contract.mjs';
+import {sourceFingerprint,verifiedStateFromFiles,VERIFICATION_KINDS} from './verification-contract.mjs';
 import {safeRelativePath,GROUPS} from '../src/lib/catalog.mjs';
 
+import {sharedInputsFingerprint,entryInputsFingerprint} from './verification-inputs.mjs';
 const ROOT=fileURLToPath(new URL('../entries/',import.meta.url));
 async function readSafe(folder,relative){
  if(!safeRelativePath(relative))throw new Error('Unsafe path: '+relative);
@@ -24,6 +25,8 @@ async function existsSafe(folder,relative){
 }
 export async function readinessReport(entriesRoot=ROOT,{group}={}){
  if(group && !(group in GROUPS))throw new Error('Group must be A–F');
+ const packageRoot=path.dirname(path.resolve(entriesRoot));
+ const sharedInputs=await sharedInputsFingerprint(packageRoot);
  const manifests=(await loadEntries(entriesRoot)).filter(e=>!group||e.group===group);
  const verification=Object.fromEntries(VERIFICATION_KINDS.map(k=>[k,{PASS:0,FAIL:0,BLOCKED:0,NOT_RUN:0}]));
  const counts={total:manifests.length,sourceComplete:0,sourceIncomplete:0,missing:0,scenarioDeclarations:0,react:0,worker:0,nodeCi:0,browserFrame:0};
@@ -53,8 +56,8 @@ export async function readinessReport(entriesRoot=ROOT,{group}={}){
   if(kinds.has('worker'))counts.worker++;
   if(kinds.has('node-ci'))counts.nodeCi++;
   if(kinds.has('browser-frame'))counts.browserFrame++;
-  const fingerprint=sourceFingerprint(entry.packages,summaries);
-  const state=verifiedState(JSON.parse(await readSafe(folder,'verification.json')),fingerprint);
+  const fingerprint=sourceFingerprint(entry.packages,summaries,await entryInputsFingerprint(folder,sharedInputs));
+  const state=await verifiedStateFromFiles(JSON.parse(await readSafe(folder,'verification.json')),fingerprint,{repoRoot:path.resolve(packageRoot,'../..'),entryId:entry.entryId});
   for(const key of VERIFICATION_KINDS)verification[key][state[key].status]++;
   entries.push({id:entry.entryId,name:entry.name,state:'source-complete',fingerprint,verification:state});
  }

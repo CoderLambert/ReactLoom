@@ -1,3 +1,5 @@
+import {sourceTextPath} from './source-integrity.mjs';
+
 /**
  * One small URL policy for untrusted research notes. Runtime assets are copied to
  * /raw/<ID>/assets by the catalogue generator, never served from repository paths.
@@ -31,7 +33,7 @@ export function resolveDocumentUrl(value, entryId, basePath = '/') {
   let published;
   if (normalized === 'guide.md' || normalized === 'agent.md') published = normalized;
   else if (/^assets\/(?:[\p{L}\p{N}_-]+\/)*[\p{L}\p{N}_-]+\.(?:png|jpe?g|webp|gif)$/iu.test(normalized)) published = normalized;
-  else if (/^(?:examples|tests)\/(?:[\p{L}\p{N}_.-]+\/)*[\p{L}\p{N}_.-]+\.(?:[cm]?[jt]sx?|json|css|md|txt|ya?ml)$/iu.test(normalized)) published = 'sources/' + normalized;
+  else if (/^(?:examples|tests)\/(?:[\p{L}\p{N}_.-]+\/)*[\p{L}\p{N}_.-]+\.(?:[cm]?[jt]sx?|json|css|md|txt|ya?ml|html?|svg)$/iu.test(normalized)) published = 'sources/' + sourceTextPath(normalized);
   else return '';
   const encodedPath = published.split('/').map(encodeURIComponent).join('/');
   const fragment = hash && /^[\p{L}\p{N}_-]+$/u.test(hash) ? `#${encodeURIComponent(hash)}` : '';

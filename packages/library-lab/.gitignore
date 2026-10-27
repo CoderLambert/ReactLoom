@@ -12,3 +12,6 @@ public/.ffmpeg-core-staging-*/
 public/catalog-index.json
 .local-evidence/
 public/lab-runners/msw/mockServiceWorker.js
+dist-runners/
+runners/msw/public/mockServiceWorker.js
+ci-scope.json

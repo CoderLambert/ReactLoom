@@ -1,0 +1,46 @@
+TAP version 13
+# Subtest: documentation and evidence edits do not trigger SDK/browser installs
+ok 1 - documentation and evidence edits do not trigger SDK/browser installs
+  ---
+  duration_ms: 6.856856
+  type: 'test'
+  ...
+# Subtest: entry source edits select precise IDs, including deleted paths
+ok 2 - entry source edits select precise IDs, including deleted paths
+  ---
+  duration_ms: 0.746435
+  type: 'test'
+  ...
+# Subtest: host, dependencies and workflow edits select full gates
+ok 3 - host, dependencies and workflow edits select full gates
+  ---
+  duration_ms: 0.242005
+  type: 'test'
+  ...
+# Subtest: missing or invalid Git base falls back to full, not an empty selection
+ok 4 - missing or invalid Git base falls back to full, not an empty selection
+  ---
+  duration_ms: 37.516594
+  type: 'test'
+  ...
+# Subtest: Markdown source links use the inert transport, including HTML
+ok 5 - Markdown source links use the inert transport, including HTML
+  ---
+  duration_ms: 5.757179
+  type: 'test'
+  ...
+# Subtest: source viewer uses the same transport mapping as the generator
+ok 6 - source viewer uses the same transport mapping as the generator
+  ---
+  duration_ms: 4.73703
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 103.101223
