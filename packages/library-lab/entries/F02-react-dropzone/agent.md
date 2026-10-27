@@ -23,3 +23,7 @@
 ## 关联与来源
 
 F01 Uppy（上传）；F03 Papa Parse（CSV 解析）；官方：https://react-dropzone.js.org/。当前SDK/浏览器 NOT_RUN/BLOCKED，未实际证明通过。
+
+## 本批迁移约束
+
+务必连同 `examples/preview.mjs` 迁移；不要回退为全文件 `.text()` 后 slice。8KiB 原始预算/1600字符预览和 react-dropzone 256KiB 接受上限独立。场景切换要使旧 File Promise 失效。Node Blob 测试不能证明浏览器 SDK 行为。

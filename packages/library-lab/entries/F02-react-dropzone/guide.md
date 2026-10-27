@@ -17,8 +17,8 @@ pnpm add react-dropzone@20.1.4
 ## 三个可见场景
 
 1. **basic**：支持选择 TXT/CSV，列出文件名、大小和 MIME；筛选错误立即反馈。
-2. **business**：对合法文件调用 `File.text()`，最多预览前 1600 字符，不上传或存储文件。
-3. **advanced**：最多选择2个文件，单文件限 1 KiB。用户换文件/清空/卸载时增加 generation，旧的异步读取结果不再覆盖新预览。
+2. **business**：对合法文件只调用 `File.slice(0, 8192).text()`，最多预览 1600 字符，不上传或存储文件。
+3. **advanced**：最多选择2个文件，单文件限 1 KiB。用户换文件/清空/切换学习场景/卸载时增加 generation，旧的异步读取结果不再覆盖新预览。
 
 ## 为什么需要 generation？
 
@@ -53,3 +53,7 @@ pnpm add react-dropzone@20.1.4
 
 - https://react-dropzone.js.org/
 - https://github.com/react-dropzone/react-dropzone
+
+## 独立可复用读取边界（本轮）
+
+同源 `examples/preview.mjs` 最多读取 8KiB 而不是解码整个合规的 256KiB 文件，再截取 1600 个字符。SDK 负责文件选择，Blob.slice 负责内存预算，generation 负责旧 Promise 归属。复现纯 Node Blob 用例：`node --test packages/library-lab/entries/F02-react-dropzone/examples/preview.test.mjs`；这不是 `react-dropzone` SDK 测试。Chromium 仍要实测文件对话框、拖放、键盘、A→B 快速换文件和场景切换。

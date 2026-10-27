@@ -1,5 +1,6 @@
 import {useCallback, useEffect, useRef, useState} from 'react'
 import {useDropzone, type FileRejection} from 'react-dropzone'
+import {readLocalTextPreview} from './preview.mjs'
 
 type Level = 'basic' | 'business' | 'advanced'
 type Props = {level: Level}
@@ -11,6 +12,13 @@ export default function FileInputExample({level}: Props) {
   const [message, setMessage] = useState('尚未选择文件')
   const generation = useRef(0)
   useEffect(() => () => {generation.current++}, [])
+  useEffect(() => {
+    // Invalidate the previous scenario's pending Blob.text() on level navigation.
+    generation.current++
+    setItems([])
+    setPreview('')
+    setMessage('场景已重置；请选择本地文件')
+  }, [level])
 
   const onDrop = useCallback(
     (files: File[], rejections: FileRejection[]) => {
@@ -24,8 +32,8 @@ export default function FileInputExample({level}: Props) {
         setMessage(`已接受 ${files.length} 个文件；本示例不进行网络上传`)
       }
       if (level !== 'basic' && files[0]) {
-        void files[0].text().then(content => {
-          if (turn === generation.current) setPreview(content.slice(0, 1600))
+        void readLocalTextPreview(files[0]).then(content => {
+          if (turn === generation.current) setPreview(content)
         }).catch(error => {
           if (turn === generation.current) setMessage(`文件读取失败：${String(error)}`)
         })
