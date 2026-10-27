@@ -37,3 +37,17 @@
 即使 QueryKey 按 tenant 隔离，**mutation 的 success/error 回调也可能晚于工作区切换**。旧版本会把 A 的成功/409 文案显示在 B。当前示例在 `onMutate` **await 之前**记录 `tenantEpoch`，返回到 context；`onSuccess/onError` 仍回滚/失效对应租户的快照，但只在 epoch 未变化时修改当前页面提示。切换 A → B → A 也不恢复最早 A 的反馈；unmount 会让旧 epoch 失效。
 
 浏览器定向场景：在团队 A 启动需240ms的开关修改，立即切到 B；A 的完成/409 不得出现在 B 页面。再切回 A，不能展示先前过期消息，但 A 自身缓存仍可按服务器结果独立失效重拉。本地 fixture 是业务模拟，不能代表实际服务器写入可被取消。SDK/Chromium 尚未运行，本处只描述代码设计和必须验证的行为。
+
+## 第23轮：并发写入的缓存所有权与服务器版本校验
+
+原来 409 时整页 snapshot 回滚，会连带撤销同页另一条已经成功的 RSS 变更。此次实际 `examples/example.tsx` 导入 `optimistic-policy.mjs` 的行级策略，三层演示及源码面板读取相同源文件：
+
+- `optimisticRow` 只修改业务 ID 匹配、revision 与服务端预期一致且当前无其他 token 的缓存行；不更改同页其他行。
+- `rollbackRow` / `commitRow` 只更新仍由该次 mutation token 持有的行；成功使用服务端真实 `rev`，失败按旧行恢复，而不是恢复全部旧页。
+- 内存业务 fixture `toggle` 实行 `expectedRev` compare-and-swap，触发明确 409；前端 token 只是客户端并发控制，**不替代后端鉴权、ETag 或条件更新**。
+- `mutationKey` 加租户，`onSettled` 只由该租户最后一个 mutation 触发刷新，避免旧 refetch 提前覆盖新的 optimistic draft。提交参数显式带 tenant，切换 A→B→A 后仍更新原始 tenant 缓存但不误显示旧提示。
+- 按 tenant/业务 ID 同步拦截 UI 连点。查询分页/搜索变化不再使用不属于新 queryKey 的 placeholder 数据，避免把前页错标成当前页。
+
+测试应覆盖两行独立写入、并发成功/失败、后台刷新与乐观更新交错、服务端旧 revision 409、跨工作区切换、重复按钮点击。已执行的是 Node 纯策略 6 PASS 和独立类型声明静态检查；实际 TanStack Query SDK 集成测试源码已加入但 **NOT_RUN**。完整 TSX 类型、Vite、Chromium 仍 NOT_RUN，不能把策略 PASS 当第三方 SDK PASS。
+
+参考： https://tanstack.com/query/v5/docs/framework/react/guides/optimistic-updates
