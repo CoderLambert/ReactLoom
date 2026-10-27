@@ -1,6 +1,7 @@
 import {useState,type CSSProperties} from 'react';
 import {DndContext,KeyboardSensor,PointerSensor,closestCenter,useSensor,useSensors,type DragEndEvent} from '@dnd-kit/core';
 import {SortableContext,arrayMove,sortableKeyboardCoordinates,useSortable,verticalListSortingStrategy} from '@dnd-kit/sortable';
+import {canReorderAroundPinned} from './pinned-order';
 type Props={level:'basic'|'business'|'advanced'};
 type Item={id:string;title:string;locked?:boolean};
 const INITIAL:Item[]=[
@@ -8,7 +9,7 @@ const INITIAL:Item[]=[
   {id:'oss',title:'开源趋势'},{id:'news',title:'国际资讯',locked:true},
   {id:'read',title:'深度阅读'},{id:'later',title:'稍后阅读'},
 ];
-function SortableRow({item,index,total,move,lockable}:{item:Item;index:number;total:number;move:(id:string,direction:number)=>void;lockable:boolean}){
+function SortableRow({item,index,move,lockable,canMoveUp,canMoveDown}:{item:Item;index:number;move:(id:string,direction:number)=>void;lockable:boolean;canMoveUp:boolean;canMoveDown:boolean}){
   const {attributes,listeners,setNodeRef,setActivatorNodeRef,transform,transition,isDragging}=useSortable({id:item.id,disabled:item.locked});
   const style:CSSProperties={
     transform:transform?'translate3d('+transform.x+'px,'+transform.y+'px,0) scale('+transform.scaleX+','+transform.scaleY+')':undefined,
@@ -22,9 +23,9 @@ function SortableRow({item,index,total,move,lockable}:{item:Item;index:number;to
       style={{cursor:item.locked?'not-allowed':'grab',touchAction:'none'}}>⠿</button>
     <span style={{flex:1}}>{item.title}</span>
     {item.locked&&<span aria-label="锁定">🔒</span>}
-    <button type="button" aria-label={'上移 '+item.title} disabled={item.locked||index===0}
+    <button type="button" aria-label={'上移 '+item.title} disabled={!canMoveUp}
       onClick={()=>move(item.id,-1)}>↑</button>
-    <button type="button" aria-label={'下移 '+item.title} disabled={item.locked||index===total-1}
+    <button type="button" aria-label={'下移 '+item.title} disabled={!canMoveDown}
       onClick={()=>move(item.id,1)}>↓</button>
     {lockable&&<small>{item.locked?'不可拖动':'可移动'}</small>}
   </li>;
@@ -43,7 +44,7 @@ export default function DndKitWorkshop({level}:Props){
     const start=visible.findIndex(item=>item.id===activeId);
     const end=visible.findIndex(item=>item.id===overId);
     if(start<0||end<0||start===end)return;
-    if(visible[start].locked||visible[end].locked){setMessage('锁定条目不能移动，也不能与其他条目交换');return;}
+    if(!canReorderAroundPinned(visible,start,end)){setMessage('固定频道不可移动，也不能被其他条目跨越；顺序未改变');return;}
     const moved=arrayMove(visible,start,end);
     commit(level==='basic'?[...moved,...items.slice(3)]:moved,'已调整 '+visible[start].title+' 的优先级');
   }
@@ -61,7 +62,9 @@ export default function DndKitWorkshop({level}:Props){
     <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleEnd}>
       <SortableContext items={visible.map(item=>item.id)} strategy={verticalListSortingStrategy}>
         <ol style={{listStyle:'none',padding:0}}>{visible.map((item,index)=>
-          <SortableRow key={item.id} item={item} index={index} total={visible.length} move={move} lockable={level==='advanced'}/>
+          <SortableRow key={item.id} item={item} index={index} move={move} lockable={level==='advanced'}
+            canMoveUp={index>0&&canReorderAroundPinned(visible,index,index-1)}
+            canMoveDown={index<visible.length-1&&canReorderAroundPinned(visible,index,index+1)}/>
         )}</ol>
       </SortableContext>
     </DndContext>
