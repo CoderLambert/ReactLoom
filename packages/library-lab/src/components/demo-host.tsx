@@ -13,6 +13,7 @@ function SourceViewer({entryId,demo}:{entryId:string;demo:Demo}){
  const [files,setFiles]=useState<SourceMetadata[]>([]);
  const [selected,setSelected]=useState('');
  const [content,setContent]=useState('');
+ const [loadedKey,setLoadedKey]=useState('');
  const [error,setError]=useState('');
  const [loading,setLoading]=useState(false);
  const [verified,setVerified]=useState(false);
@@ -31,9 +32,12 @@ function SourceViewer({entryId,demo}:{entryId:string;demo:Demo}){
   return()=>controller.abort();
  },[entryId,demo]);
  const current=files.find(file=>file.path===selected);
+ const currentKey=current?`${entryId}/${current.path}/${current.sha256}`:'';
+ // Never show or copy a previous file while a newly selected file is loading.
+ const ready=Boolean(current&&loadedKey===currentKey&&!loading&&!error);
  useEffect(()=>{
-  if(!current){setContent('');setVerified(false);return;}
-  const controller=new AbortController();setLoading(true);setError('');setContent('');setVerified(false);setCopyState('');
+  if(!current){setContent('');setLoadedKey('');setVerified(false);return;}
+  const controller=new AbortController();setLoading(true);setError('');setContent('');setLoadedKey('');setVerified(false);setCopyState('');
   const encoded=current.path.split('/').map(encodeURIComponent).join('/');
   fetch(import.meta.env.BASE_URL+'raw/'+entryId+'/sources/'+encoded,{signal:controller.signal})
    .then(async response=>{
@@ -45,22 +49,23 @@ function SourceViewer({entryId,demo}:{entryId:string;demo:Demo}){
      if(hash!==current.sha256)throw new Error('源码与生成索引的 SHA-256 不一致，请重新构建');
      if(!controller.signal.aborted)setVerified(true);
     }
-    if(!controller.signal.aborted)setContent(source);
+    if(!controller.signal.aborted){setContent(source);setLoadedKey(`${entryId}/${current.path}/${current.sha256}`);}
    })
    .catch(cause=>{if(!controller.signal.aborted)setError(String(cause));})
    .finally(()=>{if(!controller.signal.aborted)setLoading(false);});
   return()=>controller.abort();
  },[entryId,current?.path,current?.sha256]);
  const copy=async()=>{
+  if(!ready||!verified)return;
   try{await navigator.clipboard.writeText(content);setCopyState('源码已复制');}
   catch{setCopyState('复制失败，请手动选择源码');}
  };
  return <section className="source-viewer"><h3>真实源码</h3>
   <p>每个源码文件独立按需下载，文件内容来自运行示例；浏览器支持时校验 SHA-256。</p>
-  {files.length>0&&<div className="demo-controls"><label>文件 <select aria-label="查看源码文件" value={selected} onChange={e=>setSelected(e.target.value)}>{files.map(file=><option key={file.path} value={file.path}>{file.path}</option>)}</select></label><button type="button" disabled={loading||!!error||!current} onClick={()=>void copy()}>复制源码</button><span role="status">{copyState}</span></div>}
+  {files.length>0&&<div className="demo-controls"><label>文件 <select aria-label="查看源码文件" value={selected} onChange={e=>setSelected(e.target.value)}>{files.map(file=><option key={file.path} value={file.path}>{file.path}</option>)}</select></label><button type="button" disabled={!ready||!verified} onClick={()=>void copy()}>复制源码</button><span role="status">{copyState}</span></div>}
   {loading&&<p role="status">正在按需读取当前文件…</p>}
   {error&&<p role="alert">{error}</p>}
-  {current&&!loading&&!error&&<><HighlightCode code={content} language={sourceLanguage(current.path)} showCopy={false}/><small className="hash">SHA-256 {current.sha256} · {verified?'已校验':'未校验'} · {current.bytes} 字节</small></>}
+  {current&&ready&&<><HighlightCode code={content} language={sourceLanguage(current.path)} showCopy={false}/><small className="hash">SHA-256 {current.sha256} · {verified?'已校验':'未校验'} · {current.bytes} 字节</small></>}
   {!current&&!error&&<p className="notice">当前示例未列出可查看的源码文件。</p>}
  </section>;
 }
