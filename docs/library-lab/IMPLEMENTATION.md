@@ -88,3 +88,8 @@ AB #56 与CD #58 经base/head/diff及文件所有权审核后合入集成分支�
 ## 第17轮：文档导航与链接同源边界（2026-10-27）
 
 AB #68、CD #69、EF #70 已由PLATFORM核对变更文件范围和固定head后squash合入私有集成分支；覆盖ECharts、Floating UI、两类拖拽、JSON Forms/nuqs/XState、Monaco及Orval安全交互，不新增库身份或SDK PASS。公共 src/lib/document-utils.mjs 支持Setext目录/正确首行ID，拒绝带尾随代码的假fence及站外伪BASE_URL；精确GitHub Blob同源的Node定向测试10 PASS/0 FAIL，证据见 progress/PLATFORM.md 和 evidence/platform-wave17-markdown.tap。另新增生产preview中的Setext目录/重复anchor/伪标题 Playwright烟测，仅提交未在Chromium运行。根lock真实解析、完整tsc/Vite、SDK/浏览器仍未通过；PR #8保持Draft。
+
+
+## 第18轮：三组质量集成与公开JSON传输防护（2026-10-27）
+
+已审核并 squash 合入三组限定目录的 worker PR：AB #71（React Flow/MapLibre/cmdk）、CD #72（Virtuoso/TanStack Virtual/Fuse.js）、EF #73（MSW/PDF.js/react-pdf）。本批仅加固已接入的9项，不增加119身份库或357项三层场景配置。公共平台 `src/lib/bounded-json.mjs` 已把首页 `catalog-index.json`、单条 `detail.json`、源码 `source-index.json` 的 fetch 改为按解压后流字节上限读取，校验MIME并拒绝SPA fallback；有独立Node测试与3项生产preview回归源码，仍保持已有schema与SHA审查。**精确源码同源的Node定向测试6 PASS/0 FAIL、独立类型声明静态检查PASS**；新Playwright、完整React TSX/Vite、真实SDK/Chromium均未运行，不能据此关闭LL06/LL08/LL10。基于官方tag核对MSW 3.0.3、react-pdf 11.0.0及pdfjs-dist 6.3.289的版本/peer/许可；实际pnpm锁解析继续BLOCKED。详见 `progress/PLATFORM.md` 第18轮。PR #8保持Draft。
