@@ -40,3 +40,7 @@ GET 响应200及 JSON；验证码成功200、错误422且应用显示字段反�
 ## Service Worker运行模式的硬约束（第12轮）
 
 仅在PLATFORM受控iframe显式启动`startIsolatedWorker()`，保存返回的async stop并在finally/unmount await调用。迁移`registration-policy.mjs`一起验证外部script不被覆盖、script/scope/controller和真实fetch都正常。已存在的同scope注册不自动注销；多tab共享scope必须用独立origin/跨tab租约处理。没有提供worker脚本及真实浏览器环境时严禁称为运行验收。
+
+## Wave21 迁移与验证
+
+迁移 `examples/session-gate.mjs` 并在首次异步预检前同步获取租约。失败释放，stop成功才释放；不能待首次await完成才占用实例。共享scope的worker.stop()只停止当前client，**不得在普通卸载中注销registration**；PLATFORM使用单独origin或独占浏览器上下文验证全局清理。纯Node测试不能提升SDK/浏览器状态。

@@ -3,6 +3,7 @@ import {Document, Page, pdfjs} from 'react-pdf'
 import workerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url'
 import 'react-pdf/dist/Page/TextLayer.css'
 import {createSamplePdf} from './fixture'
+import {createPdfWorkerPayload} from './worker-payload.mjs'
 
 type Level = 'basic' | 'business' | 'advanced'
 // Worker binding must be in the SAME module as the <Document>/<Page> render path.
@@ -18,12 +19,15 @@ export default function ReactPdfExample({level}: {level: Level}) {
   const [zoom,setZoom] = useState(1)
   const [documentGeneration,setGeneration] = useState(0)
   const [notice,setNotice] = useState('原始PDF由本地源码生成，不请求CDN/上传服务。')
+  // PDF.js may transfer the input buffer to its Worker. Do not transfer
+  // React state or the built-in fixture; the Document owns a fresh copy.
+  const documentFile=useMemo(()=>createPdfWorkerPayload(bytes),[bytes,documentGeneration])
   const readTurn=useRef(0)
   useEffect(()=>()=>{readTurn.current++},[])
 
   async function onFile(file?: File){
     if(!file)return
-    if(file.size>MAX_BYTES){setNotice('文件超过3MiB，拒绝读取');return}
+    if(file.size===0||file.size>MAX_BYTES){setNotice('文件超过3MiB，拒绝读取');return}
     if(!file.name.toLowerCase().endsWith('.pdf')){setNotice('这里只处理 .pdf 文件名，内容仍需由PDF解析器校验');return}
     const turn=++readTurn.current
     setNotice('正在读取本地文件…')
@@ -54,7 +58,7 @@ export default function ReactPdfExample({level}: {level: Level}) {
       <button type="button" onClick={reset}>恢复样例</button>
     </div>}
     <div style={{overflow:'auto',maxWidth:'100%',background:'#fff',padding:12,border:'1px solid #d5dfd5',borderRadius:9}}>
-      <Document key={documentGeneration} file={bytes} loading={<p role="status">正在解析PDF…</p>}
+      <Document key={documentGeneration} file={documentFile} loading={<p role="status">正在解析PDF…</p>}
         onLoadSuccess={result=>{setPageCount(result.numPages);setNotice(`解析成功，共${result.numPages}页`)}}
         onLoadError={error=>{setPageCount(0);setNotice(`PDF解析失败：${error.message}`)}}
         error={<p role="alert">PDF 无法解析。可恢复原创文档继续演示。</p>}>

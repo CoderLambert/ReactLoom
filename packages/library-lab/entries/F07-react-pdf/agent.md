@@ -14,3 +14,7 @@
 
 
 静态合同回归：`node --test entries/F06-pdfjs/examples/worker-version.test.mjs`；浏览器还要验证 F06 与 F07 交替挂载时没有版本错误、重复Worker或已销毁状态回写。禁止将该静态测试记为SDK PASS。
+
+## Wave21 Worker迁移注意
+
+不要直接把React可复用PDF数据或内建fixture作为`Document.file`传给PDF.js Worker。迁移 `worker-payload.mjs/.d.mts`，经 `createPdfWorkerPayload(bytes)` 建独立Uint8Array，`useMemo`保持file对象身份，文档generation变化才重建。没有真实SDK/浏览器运行证据，Node transfer策略PASS不能升级verification。

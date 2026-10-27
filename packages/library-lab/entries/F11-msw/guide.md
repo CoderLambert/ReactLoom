@@ -77,3 +77,11 @@ F12 Vitest 适合断言 Node handler 场景；F13 Playwright 用来验证浏览�
 `registration-policy.mjs`验证严格scope和精确scriptURL，不能把根scope的Service Worker当成本runner注册。browser-worker启动前拒绝外来注册；成功后除了检查注册，还要验证当前frame controller实际为预期脚本，并真实`fetch` scoped article断言响应，否则失败及清理。stop会await MSW v3异步stop；只有当前会话新建的注册才尝试unregister，不私自注销已有注册。此防护**仍假设runner独占该scope**；同源多tab并发启动时需要PLATFORM独立origin或跨标签协调，否则不可声称完全隔离。
 
 PLATFORM必须接入真实iframe/同源mockServiceWorker.js，使用Chromium检查`worker-src`、`script-src`、MIME、frame-ancestors、控制权、反复启动/停止和页面关闭后注册残留。纯`node --test entries/F11-msw/examples/registration-policy.test.mjs`仅检查Scope策略，不等于msw SDK/浏览器PASS。
+
+## Wave21：跨异步启动的本地排他与跨标签安全停止
+
+`startIsolatedWorker()` 在第一个 await 之前用 `session-gate.mjs` 取得同步租约，避免同一 iframe 的两个快速调用同时注册。预检/setupWorker 同步失败即释放；正常启动返回 `await stop()`，并发 stop 复用同一 Promise。若 stop 拒绝则保持租约，禁止可能仍有拦截的页面启动第二个实例。
+
+**普通卸载不能调用 `ServiceWorkerRegistration.unregister()`。** MSW v3 的 stop 仅关闭当前客户端请求 Mock；注册本身跨客户端共享。即使是本iframe第一次创建 registration，别的标签也可能随后使用；卸载时注销会误伤该标签。只有PLATFORM在完全隔离的origin/浏览器上下文终止后，才能执行全局清除与残留验证。https://mswjs.io/api/setup-worker/stop ，https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerRegistration/unregister 。
+
+命令：`node --test entries/F11-msw/examples/session-gate.test.mjs`（从packages/library-lab运行）。它只测试纯Node同步租约，不表示真实MSW、SW、CSP或跨标签已通过；Chromium必须另测双次start、停止/重启及不同标签不相互影响。

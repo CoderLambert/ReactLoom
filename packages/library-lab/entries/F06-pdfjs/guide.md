@@ -46,3 +46,9 @@ Lab 主依赖统一采用 `react-pdf@11.0.0` 对应的 `pdfjs-dist@6.3.289`。F0
 ## 为什么需要串行渲染
 
 PDF.js `RenderTask.cancel()` 并非同步释放正在绘制的 Canvas。连续切页/缩放时必须等待旧 `RenderTask.promise` 结算，再让新任务使用同一 Canvas。示例 `examples/render-gate.mjs` 负责串行化，React effect cleanup 负责取消旧任务，effect 的 `active` 标记阻止排队的过期绘制与状态回写。`node --test entries/F06-pdfjs/examples/render-gate.test.mjs` 覆盖排他队列、取消后继续以及过期任务跳过。此 Node 测试不使用 PDF.js，最终仍必须在真实 Chromium 快速切页/缩放并检查画布重复使用异常。
+
+## Wave21：PDF巨大页面的Canvas内存硬上限
+
+3MiB输入限制不等于安全的Canvas大小，恶意PDF可以声明极大页面。真正的 `page.render()` 之前使用 `examples/render-budget.mjs` 验证 `getViewport()` 返回有限正尺寸：CSS边长不大于4096px、Canvas backing-store边长不大于4096px且总像素不大于800万；DPR最大2。检查在任何 `canvas.width/height` 赋值前执行，异常页报告失败但保留串行渲染gate。生产可按设备分级设置内存预算。
+
+纯策略复现：`node --test entries/F06-pdfjs/examples/render-budget.test.mjs`，检查舍入、无穷/NaN、恶意尺寸与高DPR。该命令不会导入pdfjs-dist，不构成PDF Worker/SDK PASS；真实Chromium应加载巨型MediaBox PDF验证拒绝分配和正常页面恢复。

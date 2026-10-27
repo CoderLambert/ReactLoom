@@ -13,7 +13,7 @@
   },
   "browser": {
     "status": "BLOCKED",
-    "note": "代码具scope/controller/真实fetch检查与自有注册回收；独立iframe/script/CSP和Chromium实测仍需PLATFORM"
+    "note": "代码具scope/controller/真实fetch检查与自有注册回收；独立iframe/script/CSP和Chromium实测仍需PLATFORM Wave21同步租约、客户端专属停止和跨标签避免unregister已编码；真实SW/CSP/Chromium双标签验收仍BLOCKED。"
   },
   "security": {
     "status": "NOT_RUN",

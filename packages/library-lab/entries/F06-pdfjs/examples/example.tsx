@@ -3,6 +3,7 @@ import {getDocument, GlobalWorkerOptions} from 'pdfjs-dist'
 import workerSrc from 'pdfjs-dist/build/pdf.worker.min.mjs?url'
 import {createWorkshopPdf} from './fixture'
 import {createRenderGate} from './render-gate.mjs'
+import {boundedCanvasSize} from './render-budget.mjs'
 
 type Level = 'basic' | 'business' | 'advanced'
 type Props = {level: Level}
@@ -60,14 +61,15 @@ export default function PdfViewerExample({level}: Props) {
         const context = canvas?.getContext('2d')
         if (!canvas || !context) throw new Error('当前浏览器不支持 Canvas 2D')
         const viewport = page.getViewport({scale: 1.15 * scale})
-        const ratio = Math.min(window.devicePixelRatio || 1, 2)
-        canvas.width = Math.ceil(viewport.width * ratio)
-        canvas.height = Math.ceil(viewport.height * ratio)
-        canvas.style.width = `${Math.ceil(viewport.width)}px`
-        canvas.style.height = `${Math.ceil(viewport.height)}px`
+        // A 3MiB PDF can claim a huge page. Check before allocating canvas pixels.
+        const geometry = boundedCanvasSize(viewport, window.devicePixelRatio || 1)
+        canvas.width = geometry.pixelWidth
+        canvas.height = geometry.pixelHeight
+        canvas.style.width = `${geometry.cssWidth}px`
+        canvas.style.height = `${geometry.cssHeight}px`
         task = page.render({
           canvas, canvasContext: context, viewport,
-          transform: ratio !== 1 ? [ratio,0,0,ratio,0,0] : undefined,
+          transform: geometry.ratio !== 1 ? [geometry.ratio,0,0,geometry.ratio,0,0] : undefined,
         })
         await task.promise
       })
