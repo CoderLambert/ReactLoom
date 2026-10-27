@@ -851,7 +851,7 @@ Draft **[#71](https://github.com/CoderLambert/ReactLoom/pull/71)**，head `feat/
 - **TypeScript 5.8.3** 执行：
   `tsc --noEmit --strict --skipLibCheck --target ES2022 --module ESNext --moduleResolution Bundler A03/examples/chart-stream-policy.ts A15/examples/station-factory.ts B19/examples/slide-policy.ts`
   （工作目录 `/mnt/data/ab-wave21`）→ **PASS，仅三份纯TS helper**，不是React完整TSX类型检查。
-- 已将本地执行的 **6/6 源码与测试文件**经 `git hash-object` 与GitHub提交Git Blob逐一校验**精确匹配**。其中A03 helper/test `7df2904561134cde42d5d9a17e954d59abb9e991`/`8abbaa7d97666a438dc1251d435a6f7c0e39694a`；A15 `6b9f2336f3af0b8b9dd9455bf307fa4f86ed38c2`/`6b2a21922fefdcdf86aed88dfc142c1f69b50f19`；B19 `8058add2051615cb1e1ac38da6f870eef51f0c08`/`07b0e729c3ba7fdd09e0a78af5328c3c16bde14a`。
+- 已将本地执行的 **6/6 源码与测试文件**经 `git hash-object` 与GitHub提交Git Blob逐一校验**精确匹配**。其中A03 helper/test `7df2904561134cde42d5d9a17e954d59abb9e991`/`8abbaa7d97666a438dc1251d435a6f7c0e39694a`；A15 `6b9f2336f3af0b8b9dd9455bf307fa4f86ed38c2`/`17a6f8576f197eae54238d2dac270d327b20246a`；B19 `8058add2051615cb1e1ac38da6f870eef51f0c08`/`07b0e729c3ba7fdd09e0a78af5328c3c16bde14a`。
 - GitHub compare **本轮代码HEAD `fca7c797df675f51a4eddf71c0a8bb7d1928132e` 对精确集成起点：ahead=3、behind=0、15/15变更文件均位于本通道A/B授权范围**。本progress加入后再比对，预期只有额外的progress/AB.md。三库9个Demo的entryPoint/sourceFiles原声明均未变，且在此前完整集成树内存在。
 - **实际第三方SDK import/runtime、React TSX严格检查、pnpm完整依赖/锁文件、Vite生产构建、Chromium Chart/Leaflet/Embla键盘焦点/Resize/StrictMode、移动触控**本通道仍是 **NOT_RUN/BLOCKED**，不得从13个纯逻辑Node PASS推断出SDK/browser PASS；既有workflow大量job steps为空的问题由PLATFORM调查。本批verification.json继续保持sdk/build/browser为NOT_RUN。
 - 当前GitHub提交：A15 `b85f5f2522c85df693a4248699e3b2986fea25ed` → B19 `17a04b611d41f993ca62b28976431a717e1fe274` → A03 `fca7c797df675f51a4eddf71c0a8bb7d1928132e`，均以精确父提交创建tree/commit，再使用 **expected_sha+non-force** 更新分支。未修改main、公共依赖/CI、旧模板、PR #3或公开部署。
@@ -859,3 +859,8 @@ Draft **[#71](https://github.com/CoderLambert/ReactLoom/pull/71)**，head `feat/
 ### 下一队列
 
 由PLATFORM审核并集成本通道Draft PR（base只能 `feat/library-lab`）后，按真实SDK可执行环境重点验证A15跨level仅1个Map/标记不丢、A03可访问图形选点/Chart实例销毁、B19导航键盘/ARIA/loop与减少动画。若依赖仍阻塞，继续排查B01 Motion焦点及A14 React Three Fiber场景GPU生命周期等可独立确认的缺陷。**39/39是条目源码+文档覆盖，不是官方SDK运行通过。**剩余授权轮次3轮，到24仍缺真实验收须如实上报并结束AB通道。
+
+### wave21 GitHub Actions最终证据（2026-10-27）
+
+- 首次进度提交 `38a0c37e85ef169e12baa7ea7cb8a0780c5922ba` 引发 **Library Lab run [40530001456](https://github.com/CoderLambert/ReactLoom/actions/runs/40530001456) = failure** 与 **CI run [40530001245](https://github.com/CoderLambert/ReactLoom/actions/runs/40530001245) = failure**。分别2个与7个Job，共 **9/9个Job经过独立steps API核对全部`steps=[]`**。抽查runtime-bootstrap Job `122279881283`日志返回 **HTTP 404 BlobNotFound**。无法证明任何实际安装、SDK渲染、类型/构建或Chromium步骤执行，不能推断为AB源码编译失败。公共runner与依赖验收交PLATFORM处理，不重复盲跑。
+- 后续仅将A15测试标题从旧“invalid or excess”修正为准确的“invalid fixture sequences”；断言逻辑不变。修正后的本地文件`git hash-object`是 `17a6f8576f197eae54238d2dac270d327b20246a`，Node 22.16.0 同一3库策略套件已重新执行，仍 **13 PASS、0 FAIL、0 SKIP**。所有六份规则/测试的新GitHub blob与本地文件保持一致，其余源码无变更。本文并未把任何 SDK/build/browser 标为PASS。

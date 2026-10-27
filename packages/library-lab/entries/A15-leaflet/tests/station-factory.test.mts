@@ -9,7 +9,7 @@ test('sequential clicks capture unique Leaflet marker identity',()=>{
  assert.ok(stations.every(s=>s.center[0]<=90&&s.center[0]>=-90));
  assert.equal(canAddLocalLocation(stations),false);
 });
-test('invalid or excess Leaflet fixture ids are rejected',()=>{
+test('invalid Leaflet fixture sequences are rejected',()=>{
  for(const value of [0,-1,1.1,Infinity,NaN,Number.MAX_SAFE_INTEGER+1])assert.throws(()=>makeLocalLocation(value),RangeError);
 });
 
