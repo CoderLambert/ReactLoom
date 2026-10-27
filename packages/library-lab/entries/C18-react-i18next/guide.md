@@ -64,3 +64,9 @@ Node SSR 可通过真实 react-dom/server + I18nextProvider + hook 验证文本�
 ## 授权
 
 该条目源码与文字为独立编写的教学材料；目标库使用上游 MIT 许可，未捆绑第三方图片、字体或付费资源。
+
+## 第16轮：Provider 范围内的语言切换排序
+
+`LocalizedPanel` 使用 `useMemo` 为 Provider 的 `i18n` 实例创建独立 latest-intent 队列，`useEffect` 清理时 `dispose()`，父 `ScopedTranslation` 仍负责 `destroy()`。旧语言切换的异步完成不得覆盖用户最后一次选择；两个 Provider 之间不共享队列或默认 singleton。真正的 DOM 更新仍由 react-i18next 的 `languageChanged` 订阅触发。
+
+无第三方策略层：`node --test entries/C18-react-i18next/tests/language-switch.test.mjs`；真实 SSR Provider / Trans / 切换行为：`node --test entries/C18-react-i18next/tests/sdk.test.mjs`，后者需目标 SDK 安装。生产仍需浏览器检查快速 A→B→A、键盘焦点、SSR hydration 和 Provider 卸载，不能以纯 Node 队列测试替代。

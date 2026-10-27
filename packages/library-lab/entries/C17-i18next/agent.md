@@ -39,3 +39,7 @@ i18next 官方 API：https://www.i18next.com/overview/api
 配置选项与初始化：https://www.i18next.com/overview/configuration-options
 
 官方项目：https://github.com/i18next/i18next
+
+## 最新意图切换合同（第16轮）
+
+迁移时将 `examples/language-switch.mjs` 与 `examples/language-switch.d.mts` 一并复制；单实例一条队列，新的语言意图覆盖尚未开始的旧意图，但**绝不并发调用同一实例的 changeLanguage**。UI 的最终显示由 onCommit 驱动，旧失败不得覆盖新意图；卸载先 dispose，再 destroy。不要把无SDK队列测试当成真实 i18next / SSR / 浏览器 PASS。

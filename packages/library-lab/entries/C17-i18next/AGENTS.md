@@ -4,3 +4,4 @@
 
 本库特殊边界：禁止将翻译结果用 dangerouslySetInnerHTML 输出；禁止把同步 t() 输出缓存为永不刷新的模块级常量；禁止通过全局 changeLanguage 操作租户间共享模块；资源缺失或 sdk 未运行不可标 PASS。
 
+- 第16轮新增 `examples/language-switch.mjs` 与声明文件；三个 Demo 必须在 `library.json.sourceFiles` 包含这两份真正导入的源码。单实例不能并发调用 changeLanguage，必须确保销毁前调用 dispose；无SDK策略测试与真实 i18next SDK 测试严格区分。
