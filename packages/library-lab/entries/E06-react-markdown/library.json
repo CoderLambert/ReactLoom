@@ -72,6 +72,9 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/render-policy.mjs",
+        "examples/render-policy.d.mts",
+        "tests/sdk.test.mjs",
         "examples/demo.tsx"
       ],
       "capabilities": [
@@ -88,6 +91,9 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/render-policy.mjs",
+        "examples/render-policy.d.mts",
+        "tests/sdk.test.mjs",
         "examples/demo.tsx"
       ],
       "capabilities": [
@@ -104,6 +110,9 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/render-policy.mjs",
+        "examples/render-policy.d.mts",
+        "tests/sdk.test.mjs",
         "examples/demo.tsx"
       ],
       "capabilities": [

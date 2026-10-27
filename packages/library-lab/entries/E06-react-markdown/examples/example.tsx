@@ -1,7 +1,8 @@
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeSanitize from 'rehype-sanitize'
+import {safeMarkdownURL, markdownComponents} from './render-policy.mjs'
 
 type Level = 'basic' | 'business' | 'advanced'
 type Props = {level: Level}
@@ -11,18 +12,10 @@ const samples: Record<Level, string> = {
   advanced: '# 不可信内容\n\n[伪造链接](javascript:alert(1))\n\n<img src=x onerror=alert(1)>\n\n<script>alert(1)</script>\n\n![远程图片](https://example.com/track.png)',
 }
 
-function safeURL(value: string): string {
-  if (value.startsWith('#')) return value
-  try {
-    const url = new URL(value)
-    return url.protocol === 'https:' ? url.href : ''
-  } catch {
-    return ''
-  }
-}
-
 export default function MarkdownExample({level}: Props) {
   const [source, setSource] = useState(samples[level])
+  // Also work correctly when a consuming project reuses this component without remounting.
+  useEffect(() => {setSource(samples[level])}, [level])
   return <section aria-label="react-markdown 真实渲染实验">
     <h2>可编辑 Markdown</h2>
     <p>从左侧原文实时渲染；原文不会被当作可执行 JSX 或脚本。</p>
@@ -39,13 +32,8 @@ export default function MarkdownExample({level}: Props) {
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeSanitize]}
         skipHtml
-        urlTransform={safeURL}
-        components={{
-          a: ({href, children}) => href
-            ? <a href={href} target={href.startsWith('#') ? undefined : '_blank'} rel="noopener noreferrer">{children}</a>
-            : <span title="已移除不安全链接">{children}</span>,
-          img: ({alt}) => <span>[图片外链被禁用：{alt ?? '无描述'}]</span>,
-        }}
+        urlTransform={safeMarkdownURL}
+        components={markdownComponents}
       >{source}</Markdown>
     </section>
     {level === 'advanced' && <p role="status">尝试插入 script、事件属性、javascript: URL 或远程跟踪图，确认没有任何代码执行。</p>}

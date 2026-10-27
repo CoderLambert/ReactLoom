@@ -6,7 +6,7 @@ React 需要显示 Markdown：优先 react-markdown；需要编辑复杂块文�
 
 ## 可复用文件
 
-`examples/example.tsx` 中的 `Markdown`、`remarkGfm`、`rehypeSanitize`、`skipHtml`、`safeURL` 是核心，`examples/demo.tsx` 是 Lab 的懒加载适配。包：react-markdown@10.1.0、remark-gfm@4.0.1、rehype-sanitize@6.0.0。锁文件与真实依赖安装由目标工程确认。
+`examples/example.tsx` 中的 `Markdown`、`remarkGfm`、`rehypeSanitize`、`skipHtml`、`render-policy.mjs` 中的 `safeMarkdownURL` 和 `markdownComponents` 是核心，`examples/demo.tsx` 是 Lab 的懒加载适配。包：react-markdown@10.1.0、remark-gfm@4.0.1、rehype-sanitize@6.0.0。锁文件与真实依赖安装由目标工程确认。
 
 ## 不可删除的保护
 
@@ -23,3 +23,7 @@ basic：粗体与安全链接可访问。business：GFM table 和任务清单正
 ## 相关
 
 E07 remark / E08 rehype / E09 Shiki / E10 DOMPurify；当前SDK/浏览器状态未实测。官方：https://github.com/remarkjs/react-markdown
+
+## 新增同源安全规则
+
+复制 `examples/example.tsx` 时必须连同 `examples/render-policy.mjs`，否则会漏掉外链与跟踪图片策略。不随意增加相对 URL、图片或 MDX；变更后先运行真实 SDK SSR 套件，再在浏览器观察真实网络、CSP 与场景切换。尚无实际执行证据时保持SDK/Browser NOT_RUN。
