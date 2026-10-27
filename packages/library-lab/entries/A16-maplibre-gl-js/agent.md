@@ -31,3 +31,9 @@ A15 Leaflet：少量点位或 SVG 覆盖物。A17 deck.gl：极高密度 GPU 可
 
 
 **动态 GeoJSON 的身份约束（wave8）**：一起复制 `examples/station-factory.ts`；在事件回调中固定 `station=makeLocalStation(++nextId.current)`，禁止在异步 `setStations` updater 里读取递增 ref。重置时重置计数，保留 `id` 在 GeoJSON properties、React key 和状态中的一致性。演示最多追加40个点位，不是引擎性能上限；Browser/WebGL2验证仍需真实运行。
+
+
+## wave19 迁移安全要求
+
+一并复制 `examples/selection-policy.ts`，过滤隐藏选中项时重定向首个可见ID，空列表时清空选择。WebGL实例的 load/error/contextlost/contextrestored/click 回调应判定 disposed 和当前 mapRef，关闭 MapLibre 默认 trackResize，通过一个 ResizeObserver 合并有效尺寸变化。卸载顺序为断回调、取消rAF、`map.remove()`。真实GPU重建行为未验证。
+

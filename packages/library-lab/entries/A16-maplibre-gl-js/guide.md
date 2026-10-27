@@ -66,3 +66,13 @@ MapLibre 的 GeoJSON 点是 **[longitude, latitude]**，与 Leaflet 的 **[latit
 ## 高频动态增量与唯一 ID（AB wave8 加固）
 
 演示创建新站点时，事件处理函数必须先通过 `makeLocalStation(++nextId.current)` 固定 ID、标签和地理坐标，再将不可变数据交给 React updater。如果 updater 内读取可变 ref，快速点击可能导致旧条目拿到新坐标。这里限制最多增加40个本地站点，重置恢复初始数量时也重置序列。此限制是演示规模约束，不等于 MapLibre SDK 的容量上限。Node 规则检查只能证实 fixture 身份与坐标，不证明真实 WebGL2/GeoJSON 渲染。
+
+
+## AB wave19：选择一致性与 WebGL 生命周期
+
+过滤在线来源后，若当前选中站点已隐藏，状态栏/键盘表格/地图必须一致地切换至首个可见站点；空结果清空选择。规则位于 `examples/selection-policy.ts`。
+
+MapLibre 默认的 resize 路径与手写 ResizeObserver 会重复触发。本例使用 `trackResize:false`，统一通过单一 observer+rAF 调用 `map.resize()`，仅宽高为正且实例存活才调度。异步 load、error 和 WebGL context lost/restored 事件都必须检查地图实例，卸载时移除所有回调、断开 observer、撤销 rAF 并销毁 Map。初始化图层失败也保留可键盘操作的数据表。官方 Map/GeoJSONSource API：https://maplibre.org/maplibre-gl-js/docs/API/classes/Map/ 和 https://maplibre.org/maplibre-gl-js/docs/API/classes/GeoJSONSource/ 。
+
+纯规则测试不等于 MapLibre WebGL/Chromium 通过；必须后续真实验证 context 恢复与 StrictMode。
+
