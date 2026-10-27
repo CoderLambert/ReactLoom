@@ -57,7 +57,9 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/instant-policy.mjs",
+        "examples/instant-policy.d.mts"
       ],
       "capabilities": [],
       "description": "严格校验日历日期"
@@ -70,7 +72,9 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/instant-policy.mjs",
+        "examples/instant-policy.d.mts"
       ],
       "capabilities": [],
       "description": "RSS排程（IANA时区）"
@@ -83,7 +87,9 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/instant-policy.mjs",
+        "examples/instant-policy.d.mts"
       ],
       "capabilities": [],
       "description": "DST 23/25 小时与回拨时间歧义"
