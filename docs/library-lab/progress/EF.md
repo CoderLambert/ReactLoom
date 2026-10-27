@@ -343,3 +343,13 @@ runCount=6/24。本轮不把5库源代码和30+例子等同完整生产交付；
 - **未运行/阻塞**：需要真实依赖安装的 `examples/verify.mjs`、E12/E16/E17 React/真实 SDK、完整 TypeScript/Vite build、Chromium/WebKit/HLS、FFmpeg WASM 仍 `NOT_RUN/BLOCKED`，不继承先前静态审查或历史研究 PASS。此轮未重试已知无 Runner / npm DNS 问题。
 - **PLATFORM 后续**：合入本修复 PR 后统一核实 package/peer、生成真实 pnpm 锁文件并运行真实构建；专测 E12 点击停止能实际触发 abort、E16 连续源切换不闪断/泄漏 Blob、E17 原生 HLS 错误与 fatal 后重载、F05 完整 `node packages/library-lab/entries/F05-sheetjs/examples/verify.mjs` 和恶意 XLSX/资源限额。压缩包2MiB限制不能代替 ZIP bomb 的进程/内存隔离。
 - EF 内容接入仍为 **37/37**（仅库条目有代码/指南/Agent手册），目标 SDK 和浏览器验收**没有新增通过**。继续检查剩余条目而不是冒充已全部测试；`runCount=8/24`。
+
+
+## 第九轮：F06/F07 PDF.js版本合同与Canvas串行渲染（2026-10-27）
+
+- 恢复最新集成 `feat/library-lab@e7515a6e023b7e6528a8603aae46d6666ae3132f`，第八轮修复 PR #32 已于北京时间09:09合入集成分支。EF **37/37内容和三级示例源代码已接入**，本轮集中修复#22中的阻塞，不重复做目录。
+- **F06+F07跨条目依赖一致性**：F06旧元数据 `pdfjs-dist@6.4.299` 与集成依赖 `6.3.289` 冲突；F07声明旧版本未知。根据react-pdf v11.0.0的上游精确依赖，两条目均固定为 `pdfjs-dist@6.3.289`，同步guide/agent/verification。只改EF目录，PLATFORM拥有根package和锁文件；**尚未证明真实pnpm安装成功**。Issue #22 保持开放直到 SDK/Worker 真实验证。
+- **F06快速切页与缩放竞态**：PDF.js `RenderTask.cancel()` 异步结算，旧画布绘制未完全结束时立即对同Canvas调用 `page.render()` 会抛异常。新增可迁移 `examples/render-gate.mjs` 与类型声明，用串行Promise gate只保护canvas绘制；React effect cleanup仍取消旧RenderTask，active token跳过过期任务，文本抽取在锁外。源码、guide、agent同步说明。
+- **已执行纯Node逻辑测试**：Node v22.16.0 `node --test render-gate.test.mjs` **3 PASS/0 FAIL**，覆盖同Canvas排他、取消拒绝后继续、过期排队操作跳过。新增`worker-version.test.mjs`为根依赖/F06/F07/Worker URL的静态合同，须在完整源码检出环境执行；不声称该测试或 SDK已通过。测试参考：PDF.js官方RenderTask文档与react-pdf的Worker配置指南。
+- **真实运行状态**：PDF.js SDK、React-PDF SDK、TypeScript/Vite生产构建、Chromium/Worker/CSP皆 **NOT_RUN或BLOCKED**，公共锁文件仍由PLATFORM统一解析；不得从本轮纯逻辑测试生成SDK PASS。建议平台在真实环境执行 `node --test packages/library-lab/entries/F06-pdfjs/examples/{render-gate,worker-version}.test.mjs`、`pnpm --filter @reactloom/library-lab catalog:check`、`typecheck`、`build`，并在Chromium快速切页/缩放/反复F06-F07切换。
+- 本轮范围只有 F06/F07 entries 与EF进度，无公共代码、包依赖、lock/CI/main或部署修改。runCount=9/24。完成集成后的剩余EF工作应围绕SDK真实证据/特殊资源协同PLATFORM完成，不应再发明新的占位条目。官方 https://mozilla.github.io/pdf.js/api/draft/module-pdfjsLib-RenderTask.html 和 https://github.com/wojtekmaj/react-pdf 。

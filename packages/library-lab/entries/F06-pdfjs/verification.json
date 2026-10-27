@@ -1,14 +1,14 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "尚未执行真实 pdfjs-dist 构建与Worker解析"
+    "note": "F06 SDK与Worker 6.3.289已在源文件/manifest对齐F07；实际 pdfjs-dist import与解析尚未运行，不能标PASS"
   },
   "build": {
     "status": "BLOCKED",
-    "note": "PLATFORM需统一安装并固定 pdfjs-dist@6.4.299 和Vite Worker"
+    "note": "静态根清单版本为6.3.289，pnpm实际依赖解析/TypeScript/Vite构建由PLATFORM运行；当前未验收"
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "尚未在Chromium实际渲染、切页、DPR与坏文档测试"
+    "note": "待Chromium快速切页/缩放验证RenderTask取消后Canvas串行、Worker加载与两页内容"
   }
 }

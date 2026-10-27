@@ -18,7 +18,7 @@
   "packages": [
     {
       "name": "pdfjs-dist",
-      "version": "6.4.299"
+      "version": "6.3.289"
     }
   ],
   "references": [
@@ -66,6 +66,8 @@
       "sourceFiles": [
         "examples/fixture.ts",
         "examples/example.tsx",
+        "examples/render-gate.mjs",
+        "examples/render-gate.d.mts",
         "examples/demo.tsx"
       ],
       "capabilities": [
@@ -85,6 +87,8 @@
       "sourceFiles": [
         "examples/fixture.ts",
         "examples/example.tsx",
+        "examples/render-gate.mjs",
+        "examples/render-gate.d.mts",
         "examples/demo.tsx"
       ],
       "capabilities": [
@@ -104,7 +108,11 @@
       "sourceFiles": [
         "examples/fixture.ts",
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/render-gate.mjs",
+        "examples/render-gate.d.mts",
+        "examples/demo.tsx",
+        "examples/render-gate.test.mjs",
+        "examples/worker-version.test.mjs"
       ],
       "capabilities": [
         "pdf-worker",
@@ -121,6 +129,6 @@
   },
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
-    "note": "使用官方pdfjs-dist构建与同版ViteWorker重新实现，未继承历史报告PASS。"
+    "note": "使用官方pdfjs-dist构建与同版ViteWorker重新实现，未继承历史报告PASS。 EF wave9 pin 6.3.289 for React-PDF v11 compatibility; verified locally at metadata level, real SDK/Worker pending."
   }
 }

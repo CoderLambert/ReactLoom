@@ -12,6 +12,8 @@ pnpm --filter @reactloom/library-lab add react-pdf@11.0.0
 pnpm --filter @reactloom/library-lab dev
 ```
 
+当前 Lab 与 F06 统一声明 `pdfjs-dist@6.3.289`，这是 `react-pdf@11.0.0` 对应的 PDF.js 版本基线。不能只把 F06 升级到更新的 PDF.js 而仍让 F07 使用旧运行时；静态版本检查由 `entries/F06-pdfjs/examples/worker-version.test.mjs` 执行，实际锁文件与 Worker 仍待真实安装和浏览器验证。
+
 v11 需要 React19+、Node22.13+，适合当前 Lab 的 Node22/React19 主版本。官方特别指出 **Worker src 必须在使用 Document/Page 的同一模块设置**；示例 `examples/example.tsx` 用 Vite `pdfjs-dist/build/pdf.worker.min.mjs?url` 本地资源。pnpm 非扁平 node_modules 需要额外依赖解析/hoist，PLATFORM 要检查 Worker/SDK 是否同版，严禁默认借用 CDN 造成私有文档外传或不确定依赖。
 
 ## 三层示例与真实运行路径
