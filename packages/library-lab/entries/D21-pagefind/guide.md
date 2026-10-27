@@ -67,3 +67,9 @@ SDK：真实 native indexer 返回文件、写盘的目录存在、HTML/CustomRe
 - https://pagefind.app/docs/api/
 - https://pagefind.app/docs/running-pagefind/
 - https://github.com/Pagefind/pagefind
+
+## 第十三轮加固：公开索引的生成前拒绝与文本转义
+
+原示例信任内置 fixture，若开发者日后将输入换成 CMS/RSS 字符串后直接拼接 HTML，就可能把不可信 markup 插进待索引文档。现在 `examples/publication-policy.mjs` 提供 `assertPublicDocument` 和 `escapeHtmlText`：每条记录必须显式 `visibility: 'public'`、只允许 `/articles/` 或 `/files/` 已审查的站内路径、拥有非空标题正文；任何未标公开/非法路径在提交给 Pagefind 之前立即报错。HTML 通过字符实体转义，不把传入内容当 HTML 运行。
+
+此策略不是审查器，**无法发现公开标识被错误赋给私密内容**。真实构建流水线必须先用可信 ACL/发布状态筛选，不能把用户输入 `visibility=public` 当授权。参见 `node --test entries/D21-pagefind/tests/publication-policy.test.mjs` 的纯策略回归；页面标题转义和 indexer 构建仍需真实 Pagefind SDK 测试，最终访问控制不能依靠搜索结果过滤。

@@ -42,3 +42,7 @@ PLATFORM 独占 package/lock/CI 和正式 Service Worker runner；需加入 devD
 ## 官方资料
 
 https://developer.chrome.com/docs/workbox/modules/workbox-build
+
+## 新增不可删除的匿名缓存边界
+
+三层源码通过 `examples/cache-policy.mjs` 的 `matchPublicRssRequest` 精确匹配公开 RSS。必须保留 `credentials: 'omit'`、HTTPS origin/path 白名单、GET 与敏感请求头拒绝；正则仅靠 URL 匹配不足以避免认证数据缓存。Workbox 的 `urlPattern` 序列化函数不得捕获模块级变量或 React 对象。按 `tests/cache-policy.test.mjs` 运行纯策略断言后，还需要目标 Workbox 7.4.1 真正生成 sw.js 的 SDK 测试，浏览器验证缓存/隔离；不能将纯策略测试算 SDK PASS。

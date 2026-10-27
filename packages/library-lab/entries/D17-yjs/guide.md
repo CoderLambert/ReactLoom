@@ -44,3 +44,9 @@ Node SDK 测试真实运行 Y.Doc、Y.Map、状态向量、二进制 update、�
 - https://www.npmjs.com/package/yjs
 
 MIT；本例输入全为本地原创 fixture。
+
+## 第十三轮：乱序投递、重复回放和跨文档隔离
+
+真实 SDK 的 `syncReplicas` 现在先从同步前的状态向量分别计算 A→B/B→A delta，再**逆序投递**，进阶按钮还会**再次投递同一份 update**。根据 Yjs V1 update 的结合律、交换律与幂等性，两个文档接收全部 update 后应收敛，但本示例未实现网络重传队列，也未覆盖 provider 协商。新 `examples/update-transport.mjs` 给本地二进制传输增加 `tenantId/documentId/format` 一致性与 64 KiB 上限，拒绝混租户、混文档和超大演示包；`Uint8Array` 仍交真实 `Y.applyUpdate` 处理。
+
+**特别注意**：该本地 envelope 可以被不可信客户端伪造，不能充当身份认证或 ACL。上线时必须由服务器根据已认证连接绑定 tenant+document，并控制权限、更新速率、大小与持久化策略；敏感审批状态需业务层服务端裁决。纯无 SDK 回归命令：`node --test entries/D17-yjs/tests/update-transport.test.mjs`；真实 Yjs 乱序/重复集成断言在 `tests/sdk.test.mjs`，尚需实际安装执行。官方协议：https://docs.yjs.dev/api/document-updates 。

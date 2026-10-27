@@ -1,4 +1,5 @@
 import workboxBuild from 'workbox-build';
+import {matchPublicRssRequest} from './cache-policy.mjs';
 import {mkdtemp, mkdir, writeFile, readFile, rm, stat} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import path from 'node:path';
@@ -26,7 +27,7 @@ export function workboxOptions(site, level) {
   if (level !== 'basic') {
     options.runtimeCaching = [{
       // Only a public GET resource under the dedicated origin and scope.
-      urlPattern: /^https:\/\/lab\.example\.test\/__library_lab_workbox__\/api\/public\/rss(?:[/?#]|$)/,
+      urlPattern: matchPublicRssRequest,
       handler: 'NetworkFirst',
       method: 'GET',
       options: {
