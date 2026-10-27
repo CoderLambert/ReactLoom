@@ -532,3 +532,9 @@ AB下一队列：检查 A03 Chart.js canvas实例重建与高频数据、A14 Rea
 ### 第12轮补充：满额列表焦点缺陷闭环
 
 静态审查发现：B03列表到达12条后新增按钮被禁用，若仍将移除按钮的焦点转到它会失败。追加`focusDestinationAfterRemoval`三态策略和可用的resetRef；满额删除有焦点行时转至恢复按钮，其余不抢焦点。更新helper、测试、guide、agent及实际组件；Node全批**16 PASS/0 FAIL**、独立TS helper检查PASS（并非SDK/浏览器）。helper/test本地Git blob `7ab0c8e3`/`a0549712`，回读后核对。
+
+### 实际PR与CI观察（第12轮收口）
+
+- **Draft PR #50**：https://github.com/CoderLambert/ReactLoom/pull/50 ，目标严格 `feat/library-lab`。A/B目录24份变更文件+本进度1份，GitHub compare **25/25 AB范围内**、0跨组/公共文件；新修复提交 `5d98255d673920a848408dc7c42bb4a05756b2b4`，上一批实现 `46df29becc8f70c7f0c70f55b05bcf2e40d3a3bd`、`9fd9de2bf4767e3031e222c341be3c3fc72248e3`。
+- GitHub Actions于PR head实际返回 `CI #40460744796` 与 `Library Lab #40460744838` 均为 **failure**；后者catalogue/runtime-bootstrap、前者所有job均 `steps=[]`，没有可信的SDK安装/TS/Vite/browser执行日志。**不能将本轮CI失败归因到条目代码，也不能冒充构建运行通过**。此类runner分配前失败不循环重试，交PLATFORM排障。
+- B03满额焦点helper/test经GitHub回读 SHA与本地严格测试文件一致：`7ab0c8e30a7865d8cb6f142155565a9909293bf4` / `a05497128eca5062aeb3b2c7280bcbbfcba23124`。
