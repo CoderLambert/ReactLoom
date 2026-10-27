@@ -1,6 +1,6 @@
 # EF 通道持续开发进度
 
-- 通道：EF，Issue #7；当前 wave20 分支 `feat/library-lab-ef-wave20-orval-scope-contracts`；PR base 为 `feat/library-lab`（提交本轮Draft PR）。
+- 通道：EF，Issue #7；当前 wave20 分支 `feat/library-lab-ef-wave20-orval-scope-contracts`，Draft PR #70；PR base 为 `feat/library-lab`。
 - runCount：20 / 24。
 - 基线：`38ed2d247bd82e4f1422b0e8904973e16bca2972`。
 - 本轮日期：2026-10-27（北京时间）。
@@ -568,3 +568,8 @@ runCount=18/24.
 - **dependencyRequests / PLATFORM**：本批**不新增第三方包**。PLATFORM负责核实并安装既有 `orval@8.44.0`（MIT；Node ≥22.18，CLI仅在本地OpenAPI fixture）和 `monaco-editor@0.57.0`（MIT；Vite ESM `?worker`、JSON/TS Worker与`worker-src`）；统一补实际pnpm锁与完整运行环境。Orval official https://orval.dev/docs/installation/ 、https://orval.dev/docs/reference/cli/ 、https://orval.dev/docs/reference/configuration/output/；Monaco official https://github.com/microsoft/monaco-editor/blob/main/docs/integrate-esm.md 。准确peer由PLATFORM安装时复核，不虚构锁文件。
 - **必须真的运行后才能升级状态的命令**：Node ≥22.18及依赖恢复后分别执行 `node packages/library-lab/entries/F10-orval/examples/{basic,business,advanced}.mjs`（合法 shell展开要在受支持shell逐项执行）、`pnpm --filter @reactloom/library-lab catalog:check`、`typecheck`、`build`，验证产物Hooks/标签分包/稳定指纹及消费类型；Chromium独立跑E05 Monaco Worker正常与注入ResizeObserver失败、F11 MSW scoped SW注册/控制/CSP/卸载；之后F06/F07 PDF Worker及E19 FFmpeg WASM。无真SDK证据前不会填写PASS。
 - **下一队列**：依据平台真实安装反馈先处理F10 Node门槛/Orval生成API与 E05布局/Worker兼容；继续F11真实SW隔离/多标签所有权、F06/F07 PDF Worker配对、E19 WASM资产许可及生命周期。EF仍 **37/37源码与指南覆盖，不是37个SDK运行通过**。本轮 `runCount=20/24`，达到上限如仍有阻塞须如实列出，不假装验收完工。
+
+### 第20轮持久交付索引
+
+- [Draft PR #70](https://github.com/CoderLambert/ReactLoom/pull/70)，head `feat/library-lab-ef-wave20-orval-scope-contracts`、base固定 `feat/library-lab`；首批完整源码提交 `256a274525bed7aa7a649fe2cfcdc2503be4775e`。
+- GitHub compare基线至首提交：1个提交、14个变更文件、**0个EF写入越权**；所有文件仅在E05/F10条目及EF progress。Node F10 policy真实6 PASS/0 FAIL，其余Orval/Monaco/TS/Vite/Chromium仍NOT_RUN或BLOCKED。PR为Draft，PLATFORM单一owner审核集成。
