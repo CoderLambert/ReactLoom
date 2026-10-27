@@ -1,0 +1,65 @@
+Node: v22.16.0 (below Library Lab required >=22.18.0)
+Scope: isolated exact-source src/lib/resource-fetch.mjs + test; not full pnpm/SDK/browser
+Commands:
+node --check src/lib/resource-fetch.mjs               PASS
+node --check tests/resource-fetch.test.mjs             PASS
+tsc --noEmit --strict --skipLibCheck --target ES2022 --module NodeNext --moduleResolution NodeNext --lib ES2022,DOM src/lib/resource-fetch.d.mts  PASS (global TypeScript 5.8.3; isolated declaration only)
+node --test tests/resource-fetch.test.mjs              7 PASS / 0 FAIL / 0 SKIP
+Git Blob exact-source verification:
+src/lib/resource-fetch.mjs        df78ee0f41ab89f3e488a757a4fd3a274b621a70
+src/lib/resource-fetch.d.mts      6ca47a56abc7b3981e7ec9b09fb0c299dc41307c
+tests/resource-fetch.test.mjs     2d93b114404d1e286eecbfab03e2dcd14e71ebfd
+Raw TAP SHA256: 61f10421de676c21c83570829e40dacf05c476472183729ddf396268a9f5bed8
+
+TAP version 13
+# Subtest: successful generated resource request bypasses stale HTTP caches and parses body
+ok 1 - successful generated resource request bypasses stale HTTP caches and parses body
+  ---
+  duration_ms: 19.717691
+  type: 'test'
+  ...
+# Subtest: rejects external, protocol-relative, relative and traversing paths
+ok 2 - rejects external, protocol-relative, relative and traversing paths
+  ---
+  duration_ms: 0.770182
+  type: 'test'
+  ...
+# Subtest: caller abort cancels an in-flight request instead of accepting late data
+ok 3 - caller abort cancels an in-flight request instead of accepting late data
+  ---
+  duration_ms: 0.346633
+  type: 'test'
+  ...
+# Subtest: deadline bounds header wait and reports a retriable timeout
+ok 4 - deadline bounds header wait and reports a retriable timeout
+  ---
+  duration_ms: 15.536203
+  type: 'test'
+  ...
+# Subtest: deadline continues during a response whose body never finishes
+ok 5 - deadline continues during a response whose body never finishes
+  ---
+  duration_ms: 15.980885
+  type: 'test'
+  ...
+# Subtest: parser failures propagate and a subsequent retry is independent
+ok 6 - parser failures propagate and a subsequent retry is independent
+  ---
+  duration_ms: 0.841669
+  type: 'test'
+  ...
+# Subtest: already aborted caller signal prevents acceptance of an immediate response
+ok 7 - already aborted caller signal prevents acceptance of an immediate response
+  ---
+  duration_ms: 0.266041
+  type: 'test'
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 113.920236
