@@ -65,6 +65,8 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/calendar-policy.mjs",
+        "examples/calendar-policy.d.mts",
         "examples/demo.tsx"
       ],
       "capabilities": []
@@ -78,6 +80,8 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/calendar-policy.mjs",
+        "examples/calendar-policy.d.mts",
         "examples/demo.tsx"
       ],
       "capabilities": []
@@ -91,6 +95,8 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/calendar-policy.mjs",
+        "examples/calendar-policy.d.mts",
         "examples/demo.tsx"
       ],
       "capabilities": []

@@ -14,3 +14,7 @@
 
 ## 来源与状态
 https://www.ag-grid.com/react-data-grid/installation/；查看 library.json 实际依赖与 verification.json。当前静态源码已编写，需 PLATFORM 真正安装/构建/浏览器验证。
+
+## 新增禁止项：陈旧编辑覆盖
+
+必须从真实 `examples/example.tsx` 同时移植 `edit-policy.mjs` 的 revision compare-and-swap / 快照合并，不可只复制 `getRowId`。事件中的 `event.data.revision` 是显示版本，旧版本提交必须拒绝；重新加载只能覆盖比本地编辑更新的数据，不可复活已删行。服务端必须执行原子版本比较并返回 409，本地示例不是实际服务端保证。Node 定向策略：`node --test packages/library-lab/entries/C08-ag-grid/tests/edit-policy.test.mjs`；真实 SDK/browser 另验。

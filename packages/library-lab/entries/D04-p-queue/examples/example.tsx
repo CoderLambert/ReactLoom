@@ -29,23 +29,33 @@ export default function QueueWorkshop({level}: {level: Level}) {
   const current = useRef<Active | null>(null);
   const generation = useRef(0);
 
-  useEffect(() => () => {
-    generation.current++;
-    current.current?.controller.abort();
-    current.current?.queue.clear();
-    current.current?.queue.pause();
-    current.current = null;
-  }, []);
+  useEffect(() => {
+    setBusy(false);
+    setPaused(false);
+    if (generation.current > 0) {
+      setJobs([]);
+      setCounts({running: 0, queued: 0, peak: 0});
+      setSummary('场景已切换，上一批已取消');
+    }
+    return () => {
+      generation.current++;
+      current.current?.queue.pause();
+      current.current?.controller.abort(new DOMException('场景离开', 'AbortError'));
+      current.current = null;
+    };
+  }, [level]);
 
   function cancel() {
     const active = current.current;
     if (!active) return;
+    // Abort the shared signal, do NOT clear(): p-queue clear leaves queued add promises unresolved.
+    active.queue.pause();
     active.controller.abort(new DOMException('用户取消', 'AbortError'));
-    active.queue.clear();
     setSummary('正在取消运行与等待中的任务…');
   }
 
   async function execute() {
+    if (current.current) return; // defend against rapid double click before React disables the button
     const controller = new AbortController();
     const queue = new PQueue(level === 'basic' ? {concurrency}
       : {concurrency, interval: 600, intervalCap: 3, strict: true});
@@ -126,6 +136,6 @@ export default function QueueWorkshop({level}: {level: Level}) {
         RSS-{job.id}<strong>{job.status}</strong>
       </div>)}</div>
     {level !== 'basic' && <p>暂停不会中止运行中任务；priority 只改变等待队列顺序。真实外部 HTTP 尝试、重试预算和超时还需在任务函数内设计。</p>}
-    {level === 'advanced' && <p>第4个任务固定失败，其他项继续结算。abort 会通知运行中任务，clear() 处理等待队列；不能把清队列当作已终止网络 I/O。</p>}
+    {level === 'advanced' && <p>第4个任务固定失败，其他项继续结算。abort 同时拒绝等待中的 add() Promise 并通知运行中的任务；不能调用 clear() 后仍期待 allSettled 结束。</p>}
   </section>;
 }

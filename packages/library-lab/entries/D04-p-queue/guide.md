@@ -27,7 +27,7 @@ const results = await Promise.allSettled(jobs);
 
 **业务**：12个虚构 RSS 来源，队列并发 1-3、600ms 内启动最多3个任务，strict 滑动窗口控制更严格的起始次数。第8项排队时可设较高 priority，它影响还没开始的任务，不会抢占正在执行的项。暂停仅停止新任务，并不终止运行中任务。
 
-**边界**：第4项固定失败；其余任务照常结算。AbortController 同时传播给 queue.add(signal) 和真实任务 sleep；queue.clear() 移除等待队列，结果通过 Promise.allSettled 观察。进程退出或卸载时取消当前批次，不调用全局存储清理。
+**边界**：第4项固定失败；其余任务照常结算。AbortController 同时传播给 queue.add(signal) 和真实任务 sleep；取消先 pause 再 abort，等待任务的 add Promise 会 reject，结果通过 Promise.allSettled 观察。不可用 queue.clear() 代替 abort。进程退出或卸载时取消当前批次，不调用全局存储清理。
 
 ## 机制和易错边界
 
@@ -40,7 +40,7 @@ concurrency 约束同时执行数；intervalCap+interval 约束窗口中的启�
 1. 提前调用 fetch 再 enqueue：限流无效；传函数而不是已启动 Promise。
 2. 对每个 queue.add 立即 await：无意串行化；构建任务数组再并发等待。
 3. 把 intervalCap 当并发上限：请求很快完成时仍可能在单位时间启动过多；正确配置两个参数。
-4. 把 clear() 当作 abort：只移除等待队列；运行中必须显式取消真实 I/O。
+4. 在还有待执行 add() Promise 时调用 clear()：p-queue v10 官方明确警告这些 Promise 将**永不结算**，`Promise.allSettled` 可无限等待。传共享 AbortSignal 并先 pause 后 abort；运行中 I/O 也必须监听 signal。
 5. 未消费 add() 拒绝：导致非预期 unhandled rejection；使用 allSettled 或逐项 catch。
 6. 大数据一次入队数百万项：执行虽然受限，但排队对象本身消耗内存；优先有界生产、背压与按段生成。
 
@@ -53,3 +53,7 @@ NewsHub RSS 抓取：一层外部 quota 队列控制起始频率，一层 HTTP �
 已提交真实 SDK import 示例与 tests/sdk.test.mjs 目标测试，但此轮 npm/TS/Vite/浏览器实际未执行。只有运行后才能把 verification.json 更新 PASS 并附来源指纹与日志。许可 MIT，示例无真实服务、凭据或第三方媒体。
 
 官方：https://github.com/sindresorhus/p-queue/tree/v10.0.0
+
+### 场景切换与重复点击
+
+同一个 Demo 切换 basic/business/advanced 会终止上一批并重置状态，避免旧队列持续运行而新层级仍显示 busy；`current` 同步防重复点击导致队列所有权覆盖。`tests/sdk.test.mjs` 增加在暂停且一个任务运行时取消全部 Promise 的目标 SDK 断言，未运行之前不得标 SDK PASS。
