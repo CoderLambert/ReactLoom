@@ -31,3 +31,9 @@ tags 不应无限展开成每条都触发全站重拉；对大规模列表可提
 ## 官方资料
 https://redux.js.org/toolkit/rtk-query/overview
 https://redux.js.org/toolkit/rtk-query/usage/cache-behavior
+
+## 第十二批：查询身份、IME 与突变反馈隔离
+
+RTK Query 的 `data` 可以保留**上一次参数**成功时的数据；要求当前参数严格不显示旧工作区记录时，使用 `currentData`。本示例的 `FeedsPanel` 另以 `[tenant,search]` 为 React key，每次切换都卸载旧订阅/组件状态，避免 A→B→A 重现旧提示。正在执行的 mutation 会在卸载时调用真正 RTK Query 请求句柄的 `abort()`，请求 epoch 过滤旧成功/409结果；这只取消本地等待，**不能保证服务端已提交的变更回滚**。
+
+搜索框区分输入草稿与提交的 `search`，IME composition 期间 Enter 不发送半成品查询。失效标签仅对**成功** mutation 生效，409 不应无意义刷新相同租户的查询；真实SDK测试新增两个租户的缓存失效断言。若服务端允许部分提交，请引入版本号/幂等键和强制重新校验，不能把本地 abort 当成事务隔离。此行为仍待真实浏览器切换/IME 以及已安装SDK运行测试。
