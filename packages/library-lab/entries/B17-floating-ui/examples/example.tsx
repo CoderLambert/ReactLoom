@@ -1,5 +1,6 @@
 import {useEffect, useId, useRef, useState} from 'react';
 import {shouldApplyFilterOnKeyDown} from './ime-guard';
+import {ARTICLE_TITLES, filterArticleTitles, toggleArticleAction, type ArticleActionState} from './business-policy';
 import {
   autoUpdate, flip, offset, shift,
   FloatingFocusManager, FloatingPortal, useClick, useDismiss, useFloating,
@@ -13,6 +14,9 @@ export default function FloatingExample({level}: {level: Level}) {
   const [selected, setSelected] = useState('未选择');
   const [query, setQuery] = useState('');
   const [clipboardError, setClipboardError] = useState('');
+  const [article, setArticle] = useState<ArticleActionState>({saved: false, read: false});
+  const [appliedQuery, setAppliedQuery] = useState('');
+  const filteredArticles = filterArticleTitles(ARTICLE_TITLES, appliedQuery);
   const clipboardRequest = useRef(0);
   // Refs update synchronously even when React batches composition and key events.
   const composing = useRef(false);
@@ -44,6 +48,15 @@ export default function FloatingExample({level}: {level: Level}) {
   const choose = (value: string) => {
     setSelected(value);
     setPopoverOpen(false); // invalidates a pending copy synchronously
+  };
+  const actOnArticle = (kind: 'saved' | 'read') => {
+    setArticle(previous => toggleArticleAction(previous, kind));
+    choose(kind === 'saved' ? '稍后阅读状态已变更' : '已读状态已变更');
+  };
+  const applyFilter = () => {
+    const nextQuery = query.trim();
+    setAppliedQuery(nextQuery);
+    choose(nextQuery ? '已应用过滤：' + nextQuery : '已清空过滤');
   };
   async function copyCitation() {
     const request = ++clipboardRequest.current;
@@ -80,6 +93,8 @@ export default function FloatingExample({level}: {level: Level}) {
       </div>
     </div>
     <p role="status">当前选择：{selected}；定位策略：{placement}</p>
+    {level === 'business' && <p aria-live="polite">本地文章状态：{article.saved ? '已稍后阅读' : '未收藏'} · {article.read ? '已读' : '未读'}</p>}
+    {level === 'advanced' && <div aria-live="polite"><p>本地筛选结果（{filteredArticles.length} 项）</p><ul>{filteredArticles.map(title => <li key={title}>{title}</li>)}</ul></div>}
     {open && <FloatingPortal>
       <FloatingFocusManager context={context} modal={false} returnFocus>
         <div
@@ -99,8 +114,8 @@ export default function FloatingExample({level}: {level: Level}) {
           </> : level === 'business' ? <>
             <strong>文章操作</strong>
             <div style={{display: 'grid', gap: 8, marginTop: 12}}>
-              <button type="button" onClick={() => choose('加入稍后阅读')}>加入稍后阅读</button>
-              <button type="button" onClick={() => choose('标记已读')}>标记已读</button>
+              <button type="button" onClick={() => actOnArticle('saved')}>{article.saved ? '移出稍后阅读' : '加入稍后阅读'}</button>
+              <button type="button" onClick={() => actOnArticle('read')}>{article.read ? '标记未读' : '标记已读'}</button>
               <button type="button" onClick={() => void copyCitation()}>复制示例引用到剪贴板</button>
               {clipboardError && <p role="alert">{clipboardError}</p>}
             </div>
@@ -121,7 +136,7 @@ export default function FloatingExample({level}: {level: Level}) {
                   suppressNextEnter: suppressNextEnter.current,
                 })) {
                   event.preventDefault();
-                  choose(query.trim() ? `搜索：${query.trim()}` : '清空过滤');
+                  applyFilter();
                 }
               }}
               onKeyUp={event => {
@@ -134,7 +149,7 @@ export default function FloatingExample({level}: {level: Level}) {
               style={{display: 'block', width: '100%', border: '1px solid #cbd6cd', padding: 6}}
             />
             <p style={{fontSize: 12}}>中文输入法合成期间及刚完成合成的同一次 Enter 不提交；随后可正常 Enter 或点击确认。</p>
-            <button type="button" onClick={() => choose(query.trim() ? `搜索：${query.trim()}` : '清空过滤')}>应用过滤</button>
+            <button type="button" onClick={applyFilter}>应用过滤</button>
           </>}
         </div>
       </FloatingFocusManager>
