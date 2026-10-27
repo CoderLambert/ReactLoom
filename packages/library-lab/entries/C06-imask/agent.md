@@ -19,3 +19,7 @@
 Node: `node --test packages/library-lab/entries/C06-imask/tests/sdk.test.mjs` 真正调用 imask；浏览器需要测试真实 react-imask 回调、编辑中删改、焦点、IME、重置。未执行保持 NOT_RUN，不能拿静态源文件做验证证据。
 
 官方 https://imask.js.org/api/modules/react_imask.html 。
+
+## 特殊日期规则不可简化
+
+复用 `examples/calendar-policy.mjs`，保留 0001–0099 年处理、闰年、`0000` 禁止和年月日精确往返；避免 `Date.UTC(0..99)` 世纪重映射。DST 不能用 calendar-only 校验判断具体本地时间是否存在。Node 领域测试只证明策略，不等于 `react-imask` 组件和浏览器已验收。

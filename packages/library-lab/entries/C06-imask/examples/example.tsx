@@ -1,15 +1,8 @@
 import {useState} from 'react';
 import {IMaskInput} from 'react-imask';
+import {validCalendarDay} from './calendar-policy.mjs';
 type Props = {level: 'basic' | 'business' | 'advanced'};
 
-function validCalendarDay(text: string): boolean {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(text)) return false;
-  const year = Number(text.slice(0,4));
-  const month = Number(text.slice(5,7));
-  const day = Number(text.slice(8,10));
-  const instant = new Date(Date.UTC(year, month - 1, day));
-  return instant.getUTCFullYear() === year && instant.getUTCMonth() === month - 1 && instant.getUTCDate() === day;
-}
 export default function MaskedInputs({level}: Props) {
   const [raw,setRaw] = useState('');
   const [accepts,setAccepts] = useState(0);

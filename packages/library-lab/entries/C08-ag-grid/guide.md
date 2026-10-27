@@ -31,3 +31,9 @@ ColDef<Source>[] 强类型声明列，getRowId 返回稳定 feed ID，client-sid
 ## 官方来源
 https://www.ag-grid.com/react-data-grid/installation/
 https://www.ag-grid.com/react-data-grid/community-vs-enterprise/
+
+## 本轮重要更正：可编辑行的版本所有权
+
+`onCellEditRequest` 携带 Grid 显示时的 `event.data.revision`，交由示例真实调用的 `examples/edit-policy.mjs` 做 compare-and-swap。若同一行已经有更新版本，旧编辑返回 `conflict`，不再让过期编辑覆盖较新的状态。业务接口应映射 `If-Match`/版本字段，并向用户呈现 409；此处仅为本地 fixture，不证明服务器并发一致性。
+
+慢加载回包通过 `reconcileFeedSnapshot` 逐行按稳定 ID 比较版本：只保留较新的本地可编辑 `status`，其他服务器字段由新快照持有；服务器删除的行不会复活。生产端需有权威 revision、冲突处理和取消策略，不能拿纯前端计数器当分布式版本号。`tests/edit-policy.test.mjs` 使用 Node 验证领域规则；AG Grid 真实编辑/排序/分页仍需要 SDK、类型与浏览器测试。

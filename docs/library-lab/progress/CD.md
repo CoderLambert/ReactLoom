@@ -366,3 +366,24 @@ C13 Frappe Gantt 1.2.2 上游 `src/index.js` 的 `bind_bar_events` 会向 `docum
 - **未运行/阻塞**：本地缺 `workbox-build`、`pagefind`、`yjs` 等安装，单次 `getent hosts registry.npmjs.org` 检查显示 DNS 不可用；不重复网络安装尝试。D16 SW 真实生成与 Fetch/cache、D21 native indexer 和浏览器搜索、D17 `Y.applyUpdate` 真正运行、完整 TypeScript/Vite build、Chromium **NOT_RUN**；所有条目 `verification.json` 的 SDK/build/browser 状态保留 NOT_RUN，不伪造 fingerprint/PASS。平台 lockfile 和运行环境仍为外部集成条件。
 - **dependencyRequests：本轮无新增**。已有 `workbox-build@7.4.1`（MIT）、`pagefind@1.5.2`（MIT）、`yjs@13.6.33`（MIT）目标版本在 PLATFORM 清单中；需其安装真实 npm 包、锁文件并核对 API/许可。没有编辑依赖、锁文件、公共 src/scripts/CI、生成索引或旧模板。
 - **累计**：CD 源码/指南/Agent/三个层级仍覆盖 **43/43**，本轮新增 SDK PASS 为 **0**。PLATFORM 审核 PR #51 并集成后再执行真实 SDK 与 Browser 门禁。下批优先修真实 SDK 运行错误与 Workbox/静态索引隔离；环境继续阻塞时，CD 独立审计 C15/C16 日期时区边界或 D17 断线后同步收敛（不重复构建已经完成的条目）。
+
+
+---
+
+## 第十四轮（2026-10-27）— 网格并发编辑、p-queue 队列结算与早期年份日历
+
+- **runCount：14/24**。从已合入 #51 后的最新集成 `feat/library-lab@66479e8a2d3e27d65c3c581093822cb4baf6c00d` 派生 `feat/library-lab-cd-wave14`，只写 C08、D04、C06 三个条目与本进度，不改 public/platform/lock/CI、main、PR #3 或旧模板。PR base 必须为 `feat/library-lab`，交 PLATFORM 审查。
+- **C08 AG Grid Community**：新增真实 React 示例导入的 `examples/edit-policy.mjs`（带 .d.mts）；`onCellEditRequest` 现在携带 stable feed ID + expected revision 做 compare-and-swap，模拟 409/过期编辑明确拒绝；刷新快照按 ID 保留比服务快照新的本地状态、且不复活删除行。新增真实 UI 按钮模拟旧 revision。更新三个 demo 的 sourceFiles、指南、Agent 和 Node 回归。
+- **D04 p-queue**：修复官方明确警告的 `clear()` 导致等待中 add Promise 永不结算的风险：统一先 `pause()` 后共享 `AbortController.abort()`，已提交的 add 仍由 `Promise.allSettled` 消费；level 切换取消旧队列并恢复 UI；同步 ref 防止连点启动重建队列。真实 SDK 测试增加暂停时取消运行中+等待中任务的断言，**未安装未执行**。
+- **C06 IMask**：分离复用实际源码的 `calendar-policy.mjs`（.d.mts），通过 `setUTCFullYear` 避免 `Date.UTC(0..99)` 隐式映射到1900年代；验证闰年、世纪年、0000拒绝和 DST 日历/instant 分离。更新三个 Demo sourceFiles、指南与 Agent。
+- **真实执行**：Node v22.16.0，对 C08 和 C06 同源纯 JS 策略在隔离容器运行 `node --test`：**7 PASS / 0 FAIL**，两份 .mjs `node --check` PASS。策略未 Mock SDK，但也不导入 AG Grid、IMask、p-queue，**不得**计为 SDK PASS；新的 D04 SDK 测试定义尚未执行。
+- **NOT_RUN/BLOCKED**：三库实际官方 SDK Node 测试、TypeScript full typecheck、Vite build、Chromium 编辑、光标/IME、队列取消实测仍未运行；当前环境缺依赖和 pnpm，历史 registry DNS/Runner 不可用。未复用历史假 PASS； verification.json 原 sdk/build/browser 均保持 NOT_RUN。按 PLATFORM 要求最终以 sourceFingerprint + 命令 + 持久日志绑定验收。
+- **dependencyRequests：本轮无新增包**。沿用 AG Grid Community `ag-grid-community@36.2.0`/`ag-grid-react@36.2.0`（MIT）、`p-queue@10.0.0`（MIT）、`imask@7.6.1`/`react-imask@7.6.1`（MIT）；需要 PLATFORM 统一确认实际安装版本/API、React 19 peers 与根锁文件。
+- **CD 43/43** 条目继续具备源码+指南+Agent+三层示例；这只是源文件覆盖，不能当 43 个 SDK/build/browser PASS。下一队列：PLATFORM 集成并在可用 Runner 上运行 C08/D04/C06 SDK+typecheck/build/浏览器；聚焦 C08 编辑并发 409 和快慢刷新、D04 cancel while paused、C06 闰年/DST/IME，不重造现有条目。如 SDK 出现确定兼容错误再精修。
+
+### 第十四轮 GitHub 交付定位与本次检查的精确范围
+
+- Draft PR [#54](https://github.com/CoderLambert/ReactLoom/pull/54)，base=`feat/library-lab`，首个完整变更提交 `b5afcdc0f6b591a4db58ed1752da36fcea83e29e`，等待 PLATFORM 审核集成；仅由 PLATFORM 合并，不合 main。
+- GitHub compare 基于 `66479e8a2d3e27d65c3c581093822cb4baf6c00d`：**19/19 变更路径均在 CD 所有权**。C08/C06 各有 3 层复用同一组件的 sourceFiles，并包含新加入的真实 helper 与类型声明；D04 仍使用已有三层真实 PQueue 组件。
+- 将提交后的源文件重建于隔离目录，`git hash-object` 分别与远端 Git blob SHA 一致：C08 `edit-policy.mjs=58b333e75692df5deda2d327088ae3307e6a65c6`、`edit-policy.test.mjs=8cea41aae44f3524f46f698d31966b557d5a2632`；C06 `calendar-policy.mjs=0e545a10368c7ec19392a263790d7215cf0dad53`、`calendar-policy.test.mjs=38591a7dd4d954dd0e6575474b5ed10f23f0faeb`。
+- `node --check` 对上述 **4 个精确文件**无语法错误；`node --test` 对两个策略测试文件 **7 PASS / 0 FAIL**。这些不导入官方 SDK；D04 增加的 p-queue SDK 测试，以及 TS/构建/浏览器仍为 `NOT_RUN`。未更改 verification.json 的结果为假 PASS。

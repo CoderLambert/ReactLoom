@@ -23,8 +23,30 @@ test('queued add promises settle when cancelled before starting', async()=>{
   const controller=new AbortController();
   const promises=[queue.add(async()=>1,{signal:controller.signal}),queue.add(async()=>2,{signal:controller.signal})];
   controller.abort(new DOMException('stop','AbortError'));
-  queue.clear();
   const result=await Promise.allSettled(promises);
   assert.deepEqual(result.map(r=>r.status),['rejected','rejected']);
   assert.equal(queue.size,0);
 });
+
+test('abort while paused cancels both running and queued jobs without clear()', async()=>{
+  const queue=new PQueue({concurrency:1});
+  const controller=new AbortController();
+  let started=0;
+  const jobs=Array.from({length:4},()=>queue.add(async ({signal})=>{
+    started++;
+    await new Promise((resolve,reject)=>{
+      if(signal.aborted){reject(signal.reason);return;}
+      const timer=setTimeout(resolve,500);
+      signal.addEventListener('abort',()=>{clearTimeout(timer);reject(signal.reason);},{once:true});
+    });
+  },{signal:controller.signal}));
+  await new Promise(resolve=>setTimeout(resolve,10));
+  queue.pause();
+  controller.abort(new DOMException('cancelled','AbortError'));
+  const settled=await Promise.allSettled(jobs);
+  assert.equal(started,1);
+  assert.deepEqual(settled.map(result=>result.status),Array(4).fill('rejected'));
+  assert.equal(queue.size,0);
+  await queue.onIdle();
+});
+

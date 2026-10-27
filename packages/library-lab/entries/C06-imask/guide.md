@@ -38,3 +38,7 @@ C01 React Hook Form：用 Controller 接受 onAccept，而非 register 直接监
 - https://imask.js.org/guide.html
 - https://github.com/uNmAnNeR/imaskjs
 许可 MIT。
+
+## 日历边界专项：年份 0001–0099、世纪闰年与 DST
+
+示例将真实运行的日期规则独立为 `examples/calendar-policy.mjs`，通过 `setUTCFullYear` 按日历年月日比较。不能直接使用 `Date.UTC(year, ...)`：JS 会将 0–99 年重新映射为 1900–1999，导致 `0096-02-29` 等有效日期被误判。业务明确禁止 `0000` 年；`1900-02-29` 不存在，`2000-02-29` 存在。这里验证 calendar date，而不是用户所在时区的 instant：纽约 DST 切换日期依然是合法日历日期，不能据此计算 UTC 偏移。Node 纯规则验证：`node --test packages/library-lab/entries/C06-imask/tests/calendar-policy.test.mjs`；`imask`/`react-imask` SDK、光标与 IME 仍需实测。
