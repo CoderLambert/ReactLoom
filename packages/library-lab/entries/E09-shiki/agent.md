@@ -11,3 +11,6 @@
 **可验证断言**：真实 `shiki@4.5.0` import 成功；HTML 字符串的 script/onerror 仅作为文字显示；切换语言后无旧 token 覆盖；未启动 Demo 时无语法引擎资源下载。当前 SDK/build/browser 未在 EF 本轮执行。
 
 资料：https://shiki.style/guide/install ，https://shiki.style/guide/best-performance 。许可 MIT，主题/grammar 需单独检查。
+
+
+迁移边界：组件会被宿主重用，不要只在 useState 初始化时读取 level。依赖 level 重置 code/lang/rows/status，并结合 code/lang effect 的取消标识排除过期 Promise；真实 Web bundle 的资源下载、worker/grammar 延迟和多行 Unicode 保真需 Chromium/SDK 执行后才验收。禁止将静态语法高亮当 XSS sanitizer。

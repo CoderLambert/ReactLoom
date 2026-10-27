@@ -5,15 +5,20 @@ export function normalizeFeedURL(input: string): string {
   url.hash = ''
   return url.href
 }
+function requireActive(signal: AbortSignal): void {
+  if (signal.aborted) throw new DOMException('cancelled', 'AbortError')
+}
 export type RequestOutcome = {kind: 'ok'; message: string} | {kind: 'invalid'; code: string} | {kind: 'retry'; after: number}
 export async function verifyCode(
   request: (signal: AbortSignal) => Promise<Response>,
   signal: AbortSignal,
 ): Promise<RequestOutcome> {
+  requireActive(signal)
   const response = await request(signal)
-  if (signal.aborted) throw new DOMException('cancelled','AbortError')
+  requireActive(signal)
   if (response.status === 422) {
     const data: unknown = await response.json()
+    requireActive(signal)
     if (typeof data === 'object' && data && 'code' in data && typeof data.code === 'string') {
       return {kind: 'invalid', code: data.code}
     }
@@ -22,6 +27,7 @@ export async function verifyCode(
   if (response.status === 503) return {kind:'retry',after:3}
   if (!response.ok) throw new Error('Unexpected status: '+response.status)
   const data: unknown = await response.json()
+  requireActive(signal)
   if (!data || typeof data !== 'object' || !('message' in data) || typeof data.message !== 'string') throw new Error('Invalid JSON shape')
   return {kind:'ok',message:data.message}
 }

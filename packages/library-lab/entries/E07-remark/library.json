@@ -63,6 +63,8 @@
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
+        "examples/audit-policy.mjs",
+        "examples/audit-policy.d.mts",
         "examples/example.tsx",
         "examples/demo.tsx"
       ],
@@ -79,6 +81,8 @@
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
+        "examples/audit-policy.mjs",
+        "examples/audit-policy.d.mts",
         "examples/example.tsx",
         "examples/demo.tsx"
       ],
@@ -95,9 +99,12 @@
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
+        "examples/audit-policy.mjs",
+        "examples/audit-policy.d.mts",
         "examples/example.tsx",
         "examples/demo.tsx",
-        "tests/node-scenarios.test.mjs"
+        "tests/node-scenarios.test.mjs",
+        "examples/audit-policy.test.mjs"
       ],
       "capabilities": [
         "text-transform",

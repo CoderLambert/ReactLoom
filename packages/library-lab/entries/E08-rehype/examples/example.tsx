@@ -1,4 +1,5 @@
-import {useState} from 'react'
+import {useEffect,useState} from 'react'
+import {strictHtmlSchema} from './sanitize-policy.mjs'
 import {rehype} from 'rehype'
 import rehypeSanitize from 'rehype-sanitize'
 
@@ -13,11 +14,12 @@ const blockedCsp = "default-src 'none'; script-src 'none'; connect-src 'none'; i
 function sanitizeHtml(input: string) {
   if (new TextEncoder().encode(input).byteLength > 25_000) throw new Error('HTML 输入超出 25KiB 限额')
   // Unlike remark, this pipeline parses HTML to HAST and sanitizes BEFORE stringifying.
-  return String(rehype().use(rehypeSanitize).processSync(input))
+  return String(rehype().use(rehypeSanitize, strictHtmlSchema).processSync(input))
 }
 
 export default function RehypeExample({level}: Props) {
   const [source, setSource] = useState(samples[level])
+  useEffect(() => {setSource(samples[level]);setOutput(null);setError('')}, [level])
   const [output, setOutput] = useState<string | null>(null)
   const [error, setError] = useState('')
   function run() {
@@ -26,7 +28,7 @@ export default function RehypeExample({level}: Props) {
   }
   return <section aria-label="rehype 实际 HTML 净化">
     <h2>{level === 'basic' ? 'HTML AST 解析' : level === 'business' ? '业务富文本净化' : '攻击输入的安全处理'}</h2>
-    <p>真实 rehype → rehype-sanitize → stringify。净化的 HTML 在无脚本、不同源的沙箱 iframe 中预览。</p>
+    <p>真实 rehype → 严格允许列表 → stringify（移除所有可导航链接与远程媒体）。净化的 HTML 在无脚本、不同源的沙箱 iframe 中预览。</p>
     <label>输入 HTML<textarea aria-label="rehype HTML 输入" value={source} rows={6}
       maxLength={25_000} onChange={e=>setSource(e.target.value)}
       style={{display:'block',width:'100%',padding:12}}/></label>

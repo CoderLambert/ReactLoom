@@ -1,50 +1,25 @@
-import {useState} from 'react'
+import {useEffect,useState} from 'react'
 import {remark} from 'remark'
 import remarkGfm from 'remark-gfm'
+import {auditMarkdownTree} from './audit-policy.mjs'
 
 type Level = 'basic' | 'business' | 'advanced'
 type Props = {level: Level}
-type Audit = {headings: string[]; links: {url: string; safe: boolean}[]; nodes: number}
-type TreeNode = {type: string; value?: string; url?: string; children?: unknown[]}
 const samples: Record<Level, string> = {
   basic: '# ReactLoom Note\n\nA **typed** Markdown document.\n\n## Getting started\n\n- one\n- two',
   business: '# RSS 订阅验收\n\n| 场景 | 状态 |\n| --- | --- |\n| 导入完成 | PASS |\n| 取消请求 | NOT_RUN |\n\n- [x] 记录失败\n- [ ] 检查原始来源',
   advanced: '# 不可信文章\n\n[安全来源](https://example.org)\n\n[危险操作](javascript:alert(1))\n\n<script>alert("not executed by remark")</script>\n\n![远程图片](https://tracking.invalid/1.gif)',
 }
-function safeURL(url: string) {
-  if (url.startsWith('#') || (url.startsWith('/') && !url.startsWith('//'))) return true
-  try {return new URL(url).protocol === 'https:'} catch {return false}
-}
-function audit(tree: unknown): Audit {
-  const result: Audit = {headings: [], links: [], nodes: 0}
-  function walk(value: unknown) {
-    if (!value || typeof value !== 'object') return
-    const node = value as TreeNode
-    result.nodes += 1
-    if (node.type === 'heading') {
-      const title = (node.children ?? []).filter(c => typeof c === 'object' && c !== null)
-        .map(c => {
-          const child = c as TreeNode
-          return typeof child.value === 'string' ? child.value : ''
-        }).join('')
-      result.headings.push(title)
-    }
-    if ((node.type === 'link' || node.type === 'image') && typeof node.url === 'string')
-      result.links.push({url: node.url, safe: safeURL(node.url)})
-    for (const child of node.children ?? []) walk(child)
-  }
-  walk(tree)
-  return result
-}
 function transform(source: string) {
+  if (new TextEncoder().encode(source).byteLength > 24_000) throw new Error('Markdown 输入超过24KiB');
   const processor = remark().use(remarkGfm)
   const ast = processor.parse(source)
-  // serialize rather than render HTML: raw nodes remain inert text.
-  const normalized = String(processor.processSync(source))
-  return {normalized, audit: audit(ast)}
+  // One parsed AST for audit and serialization: no second parse pass.
+  return {normalized: String(processor.stringify(ast)), audit: auditMarkdownTree(ast)}
 }
 export default function RemarkExample({level}: Props) {
   const [source, setSource] = useState(samples[level])
+  useEffect(() => {setSource(samples[level]);setResult(null);setError('')}, [level])
   const [result, setResult] = useState<ReturnType<typeof transform> | null>(null)
   const [error, setError] = useState('')
   function execute() {

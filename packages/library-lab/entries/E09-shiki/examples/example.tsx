@@ -16,6 +16,11 @@ export default function ShikiExample({level}: Props) {
   const [lang, setLang] = useState<Lang>(level === 'advanced' ? 'html' : 'typescript')
   const [rows, setRows] = useState<Token[][]>([])
   const [state, setState] = useState('等待代码输入')
+  // A level change may reuse this component instance: discard previous code/tokens.
+  useEffect(() => {
+    setCode(examples[level]); setLang(level === 'advanced' ? 'html' : 'typescript')
+    setRows([]); setState('等待代码输入')
+  }, [level])
   useEffect(() => {
     let live = true
     setState('正在解析 token…')

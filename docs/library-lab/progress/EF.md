@@ -421,3 +421,18 @@ runCount=13/24。
 
 - [EF Draft PR #49](https://github.com/CoderLambert/ReactLoom/pull/49)，head `feat/library-lab-ef-wave13-render-file-boundaries`，base 固定 `feat/library-lab`，本轮预PR代码head `0a19aa65a17a7d0c02695a10bcffd13b53ac8722`；仅提交至EF允许路径，无部署或main更改。
 - 后续由PLATFORM检查真实SDK版本/peer/lock、类型/构建以及浏览器隔离，再决定合入。Issue #7记录本轮证据；本轮 **runCount=13/24**。
+
+
+## 第十四轮：Markdown/HTML AST 安全迁移与取消竞态真实源码修复（2026-10-27）
+
+- 基于实际集成 `feat/library-lab@0b98b4ef4accd16ab3d7278d8181568c77dc6476`，上轮 EF PR #49 已合入；独立分支 `feat/library-lab-ef-wave14-ast-sanitization-tests`，PR 固定 base=`feat/library-lab`。仅改 E07/E08/E09/F12 目录和本进度；公共依赖/lock/CI/全局源码/main 均未修改。
+- **E07 remark**：从 React 示例抽取唯一的 `examples/audit-policy.mjs`（含 TS 声明），真正 remark AST 与纯策略测试共用。修正嵌套 strong/link 的标题文本提取，加入 HTTPS 凭据/危险协议/控制字符与路径审计、24KiB UTF-8 输入/4096节点限制，`processor.stringify(ast)` 复用已经解析的 AST；复用 React 实例切换 level 时清理旧输入、错误与结果。新增真实 remark SDK 负例，尚未执行。
+- **E08 rehype**：官方 default sanitizer 允许 `img src`，而仅靠 iframe CSP 限制远端资源会给复制示例到业务项目留下跟踪风险。引入单源 `strictHtmlSchema` 且现有真实 SDK 测试共用：纯文本/有限文章标签，禁止 `href`、`src`、form、image、iframe、script/style、SVG。父页需要链接时独立授权；sandbox 和 CSP 只是防御纵深。切换 level 清除旧预览。
+- **E09 Shiki**：同一 React 实例从 basic/business/advanced 切换，明确重置 code/lang/rows/status；保留异步过期结果拒绝逻辑。增加真实 Shiki Unicode 多行 token 保真 SDK 案例（未执行）。
+- **F12 Vitest**：`verifyCode` 增加调用 HTTP 前、收到 Response 后、200/422 JSON 解析结束后的 AbortSignal 再检查；活动失败显式抛出，generation 拦截过期请求。真实 Vitest 测试源码补充取消在解析中、已经取消不请求、活动错误不吞掉等边界；尚未运行 Vitest CLI。
+- **真实独立 Node 检查**：Node v22.16.0，`node --test /tmp/reactloom-wave14/audit-policy.test.mjs` **3 PASS/0 FAIL**；`node --test /tmp/reactloom-wave14/domain-policy.test.mjs` **6 PASS/0 FAIL**。两者均是对应 GitHub blob 原字节（E07 policy `53c04604`、test `9f3655f0`、F12 domain `eacc64e5` 的 `git hash-object` 全 SHA 核对）；后者仅以本机 TypeScript 全局编译器 transpile domain.ts 并使用额外原生 Node 断言，**不是运行 Vitest SDK**。合计 **9个纯逻辑 PASS**，不提升任何 verification.json 的 SDK/browser/build 状态。
+- **仍 NOT_RUN/BLOCKED**：真正 remark/rehype/Shiki/Vitest SDK tests、完整 TypeScript 类型检查、Vite 构建、Chromium XSS/网络/资源清理测试。PLATFORM 包已声明 `remark@15.0.1`、`remark-gfm@4.0.1`、`rehype@13.0.2`、`rehype-sanitize@6.0.0`、`shiki@4.5.0`、`vitest@5.0.5`，**无新增 dependencyRequests**；根 pnpm 锁文件和真实 runner 仍由 PLATFORM 独占验证。
+- **定向验收命令（依赖具备时执行，未执行不能宣称PASS）**：`node --test packages/library-lab/entries/E07-remark/tests/node-scenarios.test.mjs packages/library-lab/entries/E08-rehype/tests/node-scenarios.test.mjs packages/library-lab/entries/E09-shiki/tests/node-scenarios.test.mjs`；`pnpm --filter @reactloom/library-lab test:vitest`、`catalog:check`、`typecheck`、`build`、关键 Chromium E2E。应重点核查非法 URL、iframe 无网络、Shiki 场景快速切换和 HTTP body parse 取消。
+- **下一队列**：依据 PLATFORM 真实安装/构建和浏览器反馈修复具体 SDK 类型与资源问题；保留 E05 Worker/F11 Service Worker 独立 runner、F06/F07 PDF Worker 配对、E19 WASM 真实加载的明确环境阻塞。EF **37/37 内容覆盖**不等于 37/37 可运行验收。只有完整范围和门禁真正结束才停通道。
+
+runCount=14/24。

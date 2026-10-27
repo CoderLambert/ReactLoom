@@ -52,3 +52,10 @@ const markdown = String(processor.processSync('**bold**'))
 安装真实 SDK 后，`remark().use(remarkGfm).parse()` 对表格/标题生成预期结构，序列化不执行脚本，恶意协议被审计标出；浏览器直接检查文本与网络。源码当前已写，但 SDK、build 和 Browser 仍 NOT_RUN/BLOCKED。
 
 官方：[remark](https://github.com/remarkjs/remark)、[GFM](https://github.com/remarkjs/remark-gfm)。MIT。
+
+
+## 工程增强：同源 AST 审计
+
+新的 examples/audit-policy.mjs 同时服务真实 remark 处理管线和纯 Node 规则测试。嵌套标题会遍历 strong/link/emphasis 后完整提取文本；拒绝 HTTPS 凭据、控制字符、危险协议与协议相对路径。输入 24KiB UTF-8、AST 4096 节点是教学预算；同一 AST 用于 stringify，避免双重 parse。URL 审计仅用于风险报告，并不授予浏览器点击或远程图片权限。
+
+分别运行 node --test packages/library-lab/entries/E07-remark/examples/audit-policy.test.mjs（纯规则）与 node --test packages/library-lab/entries/E07-remark/tests/node-scenarios.test.mjs（真实SDK）；不得将前者计为后者通过。

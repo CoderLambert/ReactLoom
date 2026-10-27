@@ -25,3 +25,17 @@ describe('latest request wins with explicit signal, not arbitrary sleeps',()=>{
     expect(await pending).toBeNull()
   })
 })
+
+describe('active failure and cancellation ownership',()=>{
+  it('propagates an active error but ignores the same error after cancellation',async()=>{
+    let rejectLoad!: (reason: Error)=>void
+    const manager=createLatestRequest<string>(()=>new Promise((_,reject)=>{rejectLoad=reject}))
+    const active=manager.run()
+    rejectLoad(new Error('real failure'))
+    await expect(active).rejects.toThrow('real failure')
+    const stale=manager.run()
+    manager.cancel()
+    rejectLoad(new Error('late failure'))
+    await expect(stale).resolves.toBeNull()
+  })
+})

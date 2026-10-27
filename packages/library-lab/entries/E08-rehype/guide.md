@@ -40,3 +40,10 @@ Markdown 导入：E07 remark → 转换器 → rehype/rehype-sanitize → 输出
 ## 验证清单
 
 实际安装后执行类型/构建和 Chromium E2E：危险属性消失，iframe 没有执行脚本，没有外部网络请求，链接协议符合策略，切换 Tab 没有异常副作用。SDK/browser 未运行不得标 PASS。来源 [rehype](https://github.com/rehypejs/rehype)、[rehype-sanitize](https://github.com/rehypejs/rehype-sanitize)。MIT。
+
+
+## 安全收紧：生产预览不允许导航或远程资源
+
+上游默认 Schema 会保留 img 的 src（移除 onerror 不等于防止远程追踪）。本例新增 examples/sanitize-policy.mjs，复用到真正 rehype 的 Node SDK 测试。仅允许文章、文本格式和无 href 的 a 标签；移除 img、iframe、form、脚本、style、SVG 等。可信宿主如需外链，须独立按域名与重定向策略渲染；不能从原始 HTML 直接放行。空 sandbox 与 CSP 仍作为第二道防线。
+
+真实执行：node --test packages/library-lab/entries/E08-rehype/tests/node-scenarios.test.mjs；需随后通过 Chromium 核对出站请求与 iframe 作用域。当前未执行 SDK/Chromium，状态不得升级 PASS。

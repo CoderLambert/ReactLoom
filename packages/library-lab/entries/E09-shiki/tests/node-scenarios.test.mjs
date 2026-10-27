@@ -11,3 +11,9 @@ test('real Shiki returns text tokens rather than executable DOM',async()=>{
   const {tokens}=await codeToTokens(src,{lang:'html',theme:'github-light'})
   assert.equal(tokens.flat().map(token=>token.content).join(''),src)
 })
+
+test('real Shiki preserves multiline source and non-ASCII text across tokens',async()=>{
+  const src='const 标题 = "新闻";\nconsole.log(标题);'
+  const {tokens}=await codeToTokens(src,{lang:'typescript',theme:'github-light'})
+  assert.equal(tokens.map(row=>row.map(token=>token.content).join('')).join('\n'),src)
+})

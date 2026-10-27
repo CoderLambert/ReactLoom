@@ -8,3 +8,6 @@
 反例：parse/stringify 后直接 innerHTML；sanitize 后继续追加不可信 HTML；用 regex 删除 script 代替 AST sanitizer；仅依赖 iframe 的同源权限。
 验收：真实 rehype 13.0.2 import，通过安全属性用例和真实浏览器网络/CSP检查；SDK Mock 不计入 PASS。
 关联 E07 remark、E10 DOMPurify、E06 react-markdown。MIT。 https://github.com/rehypejs/rehype
+
+
+迁移补充：真正调用 .use(rehypeSanitize, strictHtmlSchema)，保持 examples/sanitize-policy.mjs 与真实测试单源；该预览策略禁止 href/src 和远程媒体，不能直接回退到默认 Schema。场景切换必须清空上一场景解析结果；URL 点击策略应交由可信宿主生成，CSP 只能是第二道防护。真实SDK/browser仍待运行。
