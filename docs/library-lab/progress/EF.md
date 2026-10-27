@@ -464,3 +464,44 @@ runCount=14/24。
 - EF仍37/37个内容目录，**业务策略14 PASS不代表37个SDK通过**。下轮基于最新已合入集成分支继续修复高价值风险，待PLATFORM合入本PR前不对同一目录重叠push。若真实验收全通过才停止通道；否则继续直到24轮上限，明确列出缺口。
 
 runCount=15/24。
+
+## 第十六轮：媒体隔离、Uppy文本预览与PDF导出边界（2026-10-27）
+
+- 源码基线 `feat/library-lab@9a5778a97970119a4d811e139d81038f66042ec2`，上轮 EF #55 已合入；工作分支 `feat/library-lab-ef-wave16-media-queue-pdf`，代码提交 `5a58eef9e72ff4126033b6f8c81129268cc5e361`。只改E17/E18/F01/F08与progress，未动共享源码、依赖、lockfile、CI或main。
+- **E17 hls.js**：level键隔离HLS会话，fatal后旧generation失效，旧video.onerror销毁清空；仅允许实际manifest的画质index或-1。
+- **E18 wavesurfer.js**：level切换重建波形和原创本地WAV URL，切换时销毁旧播放器、重置播放状态；异步playPause失败不能回写已卸载实例。
+- **F01 Uppy**：真实Uppy队列仍在；预览改为同源 `preview-policy.mjs`，依据真实Blob.size拒绝>12KB、fatal UTF-8解码及控制字符检查，只展示4000字符；keyed实例隔离旧File引用。附.d.mts与Node测试。
+- **F08 react-pdf/renderer**：唯一 `report-policy.mjs` 校验报告数据，阻止无效ID、大小写重复、非ASCII、数字越界、额外字段泄漏；同步running ref防止重复序列化，keyed实例让旧下载链接卸载。
+- **实际执行**：Node环境执行 `node --test /mnt/data/reactloom-ef-wave16/F01/tests/policy.test.mjs /mnt/data/reactloom-ef-wave16/F08/tests/policy.test.mjs`，**9 PASS、0 FAIL**；4份MJS均经过`node --check`。执行文件与已提交GitHub原字节blob SHA-1一致：F01 policy `56b698c79f939ec5b69eff2f62f495c0c4a7e04e` / test `4ec5391bab3bb0718c52d26c81216e5225e80120`；F08 policy `cd01539f39694f72055b34539d29c01fe0602f7d` / test `33afa1b2630c35b229c1bc16b14f7ac24146afa3`。**仅纯业务策略，不导入真实Uppy或react-pdf SDK，E17/E18亦无SDK证据。**
+- **未运行/阻塞**：实际hls.js/wavesurfer.js/Uppy/react-pdf运行、TypeScript/Vite完整构建、Chromium/Worker/CSP、真实媒体网络、PDF Blob/PDF.js互操作，全部`NOT_RUN/BLOCKED`，不许将策略测试当SDK PASS。PLATFORM保有真实依赖/lockfile/runner控制权。
+- **dependencyRequests**：无新增。现有声明hls.js@1.7.3 Apache-2.0、wavesurfer.js@8.0.3 BSD-3-Clause、@uppy/core@6.1.0 MIT、@react-pdf/renderer@4.9.0 MIT，PLATFORM需真实核实版本/peer/许可、安装与锁文件；复核Uppy addFiles/getFiles/destroy与react-pdf pdf().toBlob官方文档但不等于安装验收。
+- **下一队列**：F13 Playwright CLI、F14 Storybook、F17 axe-core；待PLATFORM反馈定向SDK/types/build/Chromium与E05 Worker/F11 SW/E19 WASM、F06/F07 PDF.js。
+- EF **37/37已有源码和指南**，不代表已完成真实运行验收，PR保持Draft，base固定feat/library-lab；不合main或公开部署。
+
+runCount=16/24。
+
+### 第十六轮GitHub提交与客观结构验收
+
+- [EF Draft PR #57](https://github.com/CoderLambert/ReactLoom/pull/57)，head `feat/library-lab-ef-wave16-media-queue-pdf`，base严格 `feat/library-lab`。提交序列：`5a58eef9e72ff4126033b6f8c81129268cc5e361` 源码、`b3460a85f7c46d4a02882b32e906e02a5a7656e7` 指南/进度、`089c2b48c47e69840303c55766c3b9d56ac8cb0b` AGENTS与诚实verification。
+- GitHub compare与当前tree实际核对：3 commits、30 changed files，全部 `entries/E*`/`entries/F*` 或本进度文档，**0越权**。F01与F08六份basic/business/advanced场景sourceFiles清单 **6/6含entryPoint且均存在**；四份独立Node原件blob SHA与执行字节完全匹配。
+- 当前PR保持Draft；真正SDK、TypeScript/Vite全包、真实媒体、Chromium/PDF Worker验收仍 `NOT_RUN/BLOCKED`，等待PLATFORM真实依赖/runner反馈，不合main，不部署。
+
+### 第十六轮合入阻塞复核（2026-10-27）
+
+- PLATFORM 在 PR #57 评论指出两处确定性 `ERR_MODULE_NOT_FOUND`：F01与F08纯Node测试原先从 `tests/` 错误导入 `../preview-policy.mjs` / `../report-policy.mjs`。已经改为正确的 `../examples/preview-policy.mjs` / `../examples/report-policy.mjs`，修复提交 `e1edda15b4d6cd2895d4646e4b6a276d5b280eb3`、`13279c9088e6ca3cad337867b8ebd931adcff4c4`；没有修改测试断言或生产策略。
+- 实际运行环境 Node v22.16.0，使用与远端**完全相同字节**的策略与修复后测试文件，按仓库原相对目录结构还原至隔离目录后执行：`node --test packages/library-lab/entries/F01-uppy/tests/policy.test.mjs packages/library-lab/entries/F08-react-pdf-renderer/tests/policy.test.mjs`，**9 PASS / 0 FAIL**。本环境GitHub私有仓库无法直接git clone，明确不是完整仓库pnpm/SDK运行。
+- `git hash-object` 精确匹配远端策略blob：F01 `56b698c79f939ec5b69eff2f62f495c0c4a7e04e`、F08 `cd01539f39694f72055b34539d29c01fe0602f7d`；修复后测试blob：F01 `4a04dbcacb2bbc76de8095cecf7cf06da20a960f`、F08 `baf13d83c1223836777ab395c3830513801e70f7`。原先旧测试SHA不再适用。这是Node policy测试，而非Uppy/react-pdf SDK、TypeScript/Vite或Chromium PASS。
+
+## 第十七轮：Playwright/Storybook/axe-core 质量切片（2026-10-27）
+
+- **分支/范围**：从最新实际集成 `feat/library-lab@b3fa3b0370f50c39078562987400d753390671ee` 新建 `feat/library-lab-ef-wave17-qa-tooling`。wave16 Draft PR #57 尚待PLATFORM合并；本PR的progress从 #57 修复后的同一份历史追加，防止轮次/测试路径修复记录丢失。仅修改 `entries/F13-playwright`、`F14-storybook`、`F17-axe-core` 及本文件；没有修改任何公共源码、依赖、锁文件、CI、全局索引、main或既有模板。
+- **F13 Playwright**：`fixtures.ts` 的真实浏览器 fetch 现在区分 200/422/503、200假成功/422缺少错误结构、JSON非法响应和网络断连；同步禁用按钮并在finally恢复，避免请求pending时重复提交。真实`business.spec.ts`新增网络/坏JSON/未完成请求的交互与HTTP模拟负例，旧新请求的`advanced.spec.ts`无论断言是否成功均释放待决路由；修正多组场景重复test title问题。这里仅对HTTP网络边界Mock，不是后端真实服务证明。`@playwright/test@1.64.0` 的真Chromium **NOT_RUN**。
+- **F14 Storybook**：`StatusCard` 的归档动作由同步乐观更新改为可等待 `onArchive` Promise 的idle/saving/done/error；失败可重试，跨Story args变更、卸载后旧Promise无法回写，disabled门禁防双击。三个原有故事增加有效DOM与mock隔离断言，新增第四个 `Recovery` 故事验证首次拒绝、第二次成功；`preview.ts`将 `a11y.test` 从todo收紧为error。注意**启动Storybook与构建均不执行play**；只有PLATFORM配置并真实运行Vitest addon或Storybook test-runner且取得Chromium证据后可升PASS。本轮Storybook CLI/TS/Vite/browser **NOT_RUN/BLOCKED**。
+- **F17 axe-core**：发现原React组件仅在卸载时使`generation`失效，level切换复用实例可能显示旧审计，并且同页多实例调用`axe.run`会相互冲突。外层根据`level` keyed remount，新`audit-queue.mjs`对本模块发起的运行排他串行，旧排队请求在开始前校验`token`与`container.isConnected`跳过，抛错后队列可恢复。正在执行的axe.run无法被此策略取消；与其他不共享队列的axe客户端也不具全局互斥保证。添加`.d.mts`精确声明、`audit-queue.test.mjs` Node用例；更新3层sourceFiles与指南、Agent、verification。DOM规则/Chromium真实axe.run仍**NOT_RUN**。
+- **Node真实验证**：Node v22.16.0，在镜像原仓库相对目录的隔离文件树中执行 `node --test packages/library-lab/entries/F17-axe-core/examples/audit-queue.test.mjs`，**4 PASS / 0 FAIL**，覆盖多实例排他、未启动旧请求跳过、Promise拒绝和同步抛错后的队列恢复。执行的 queue/blob SHA `a19cc58261ed2e5821bf353ff0517375f37fa6bb`、test/blob SHA `71f86201d4fef4cd6c0b83b2f204b6a3b5c01c9f`、类型声明 `5d50de2124de9c9d8e016f544fd1cb24ce52aa91` 与远端完全相同。**只是Node队列策略，不导入axe SDK**。同轮修正PR #57两条测试路径，在原相对目录按Git Blob同字节还原执行另外**9 PASS/0 FAIL**（F01/F08纯policy）；不能计为本轮三个库SDK PASS。
+- **版本及依赖请求**：本轮不修改库版本。现有元数据：`@playwright/test@1.64.0`（Apache-2.0）、`storybook/@storybook/react-vite/@storybook/addon-a11y@10.6.1`（MIT）、`axe-core@4.14.0`（MPL-2.0），由PLATFORM确认实际registry、peer和许可证，安装并用真实锁文件解析。**dependencyRequests: PLATFORM需为F14新增独立Story play/a11y CI执行器（官方`@storybook/addon-vitest`或test-runner；精确版本先由平台依据现有Storybook 10/React19/Vitest peers核验，不伪填未确认版本），不得把storybook build标成play PASS**。F13需真实Chromium安装；F17需DOM/CSP沙箱与axe运行。版本列表是仓库既有声明，不等于此容器完成安装。
+- **阻塞**：私有GitHub仅能经GitHub连接访问，容器无项目node_modules/真实Chromium可执行与完整repo checkout，本轮不重复下载失败的依赖；TypeScript full typecheck、Vite、Chromium、Storybook CLI、axe-core真实浏览器行为、E05 Monaco Worker、F11 MSW SW/CSP、F06/F07 PDF Worker配对、E19 FFmpeg WASM仍 **NOT_RUN或BLOCKED**。不能从元数据或4+9离线Node policy通过升级SDK/browser。
+- **提交链**：F17 `ea491a45817e138b3bcde2cce5758acbf3d78e32`；F13 `841e0426547d197fb7b863df9173fc882a170da5`，测试名修复 `42ad637008c0f4d5c92db676fc4a3d0bd806d782`；F14 `67420c3120f0ba4ae481dd1ae38a0867e912315c`。本次PR base固定 `feat/library-lab`、保持Draft。先在PLATFORM真实依赖/runner条件下逐项执行，不能由 EF 越权改公共构建。
+- **下一队列**：根据PLATFORM对本批SDK/浏览器的实际反馈修复；独立审查 F15 Knip、F16 Bundle Analyzer、F18 dependency-cruiser 的真实CLI重现/错误码/结果保真；继续 E05/F11真实Worker与SW验证。EF **37/37目录具源码、三层例子、指南**，**不等于37个库已通过运行验收**。
+
+runCount=17/24。
