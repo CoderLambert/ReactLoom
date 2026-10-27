@@ -23,3 +23,7 @@ React 普通文本用 JSX 转义，不需要 DOMPurify。必须渲染受限 HTML
 ## 来源
 
 https://github.com/cure53/DOMPurify
+
+## 最小迁移不可漏的策略文件
+
+`examples/example.tsx` 调用真实DOMPurify并导入 `examples/html-policy.mjs`。只复制sanitize却回到宽泛默认HTML profile不符合本条安全边界。HTTPS-only URL 正则仍只是在净化时限定出站属性，不能替代DOM/XSS/网络验收；纯Node策略用例绝不能标SDK PASS。放宽标签或允许远程媒体前重新评审威胁模型。

@@ -50,6 +50,9 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/html-policy.mjs",
+        "examples/html-policy.d.mts",
+        "examples/html-policy.test.mjs",
         "examples/demo.tsx"
       ],
       "capabilities": [
@@ -65,6 +68,9 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/html-policy.mjs",
+        "examples/html-policy.d.mts",
+        "examples/html-policy.test.mjs",
         "examples/demo.tsx"
       ],
       "capabilities": [
@@ -80,6 +86,9 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/html-policy.mjs",
+        "examples/html-policy.d.mts",
+        "examples/html-policy.test.mjs",
         "examples/demo.tsx"
       ],
       "capabilities": [

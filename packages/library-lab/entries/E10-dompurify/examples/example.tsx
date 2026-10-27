@@ -1,5 +1,6 @@
-import {useMemo, useState} from 'react'
+import {useEffect, useMemo, useState} from 'react'
 import DOMPurify from 'dompurify'
+import {htmlPolicy} from './html-policy.mjs'
 
 type Level = 'basic' | 'business' | 'advanced'
 type Props = {level: Level}
@@ -10,14 +11,9 @@ const samples: Record<Level, string> = {
   advanced: '<h3 onclick="alert(1)">危险输入</h3><script>alert(1)</script><img src=x onerror=alert(1)><a href="javascript:alert(1)">注入链接</a><svg onload="alert(1)"></svg><p style="position:fixed">正常文案</p>',
 }
 
-const htmlPolicy = {
-  USE_PROFILES: {html: true},
-  FORBID_TAGS: ['iframe', 'form', 'style', 'img'],
-  FORBID_ATTR: ['style'],
-}
-
 export default function DOMPurifyExample({level}: Props) {
   const [dirty, setDirty] = useState(samples[level])
+  useEffect(() => {setDirty(samples[level])}, [level])
   const clean = useMemo(() => DOMPurify.sanitize(dirty, htmlPolicy), [dirty])
   return <section aria-label="DOMPurify 安全净化实验">
     <h2>{level === 'basic' ? '保留合法标记' : level === 'business' ? '公告与链接净化' : '恶意 HTML 输入防护'}</h2>
