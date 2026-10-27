@@ -22,13 +22,35 @@ test('search commits preserve existing category and do not create an entry per k
   await expect(page.locator('.library-card')).toHaveCount(1);
 });
 
-test('invalid catalogue payload shows a recoverable error rather than rendering corrupt entries',async({page})=>{
+test('invalid compact index is rejected and can be retried without requesting the legacy catalogue',async({page})=>{
   let corrupt=true;
-  await page.route('**/catalog.json',route=>corrupt?
+  const requested:string[]=[];
+  page.on('request',request=>requested.push(new URL(request.url()).pathname));
+  await page.route('**/catalog-index.json',route=>corrupt?
     route.fulfill({status:200,contentType:'application/json',body:'{"invalid":true}'}):route.continue());
   await page.goto('/');
-  await expect(page.getByRole('alert')).toContainText('受限的条目数组');
+  await expect(page.getByRole('alert')).toContainText('目录索引必须为非空、限定长度的数组');
+  expect(requested).toContain('/catalog-index.json');
+  expect(requested).not.toContain('/catalog.json');
   corrupt=false;
-  await page.getByRole('button',{name:'重试'}).click();
+  await page.getByRole('button',{name:'重试',exact:true}).click();
   await expect(page.locator('.library-card')).toHaveCount(119);
+  expect(requested.filter(path=>path==='/catalog-index.json')).toHaveLength(2);
+});
+
+test('a corrupt per-library detail stays isolated and a retry restores the selected library',async({page})=>{
+  let corrupt=true;
+  const details:string[]=[];
+  page.on('request',request=>{
+    const pathname=new URL(request.url()).pathname;
+    if(pathname.endsWith('/detail.json'))details.push(pathname);
+  });
+  await page.route('**/raw/C20/detail.json',route=>corrupt?
+    route.fulfill({status:200,contentType:'application/json',body:'{}'}):route.continue());
+  await page.goto('/libraries/clsx?tab=docs');
+  await expect(page.getByRole('alert')).toContainText('无法加载库详情');
+  corrupt=false;
+  await page.getByRole('button',{name:'重试读取'}).click();
+  await expect(page.getByRole('tab',{name:'详细文档'})).toHaveAttribute('aria-selected','true');
+  expect(details).toEqual(['/raw/C20/detail.json','/raw/C20/detail.json']);
 });
