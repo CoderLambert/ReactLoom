@@ -8,7 +8,7 @@ export function assertExplicitInstant(value) {
   if (!match) throw new Error('事件必须包含 YYYY-MM-DDTHH:mm:ss、Z 或 ±HH:mm');
   const [, yr, mo, da, hr, mi, se, , suffix] = match;
   const [year, month, day, hour, minute, second] = [yr, mo, da, hr, mi, se].map(Number);
-  const days = [31, leap(year) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31];
+  const days = [31, leap(year) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
   if (year < 1 || month < 1 || month > 12 || day < 1 || day > days[month - 1] ||
       hour > 23 || minute > 59 || second > 59) throw new Error('非法事件日期或时间');
   if (suffix === '-00:00') throw new Error('-00:00 表示偏移未知，不可当作明确事件时间');
