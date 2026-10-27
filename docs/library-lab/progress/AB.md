@@ -1,9 +1,9 @@
 # AB 开发进度 — A/B 前端库垂直实现
 
-**最新调度轮次：15 / 最多24；状态：WAVE15_AB_39_SOURCE_HARDENING（39/39仅源码和文档覆盖；SDK、完整构建与浏览器尚未验收）。**
+**最新调度轮次：17 / 最多24；状态：WAVE17_AB_39_SOURCE_HARDENING（39/39仅源码和文档覆盖；SDK、完整构建与浏览器尚未验收）。**
 
-- 分支：`feat/library-lab-ab`，base 提交 `38ed2d247bd82e4f1422b0e8904973e16bca2972`。
-- 集成目标：`feat/library-lab`，集成读取的头提交 `5955b9a03f95545f2107583a109e22cc6e44078c`。
+- 当前本批分支：`feat/library-lab-ab-wave17`，精确集成base `caef398bfa3568b1e9bf690366b39ae5448769de`；最初公共提交为 `38ed2d247bd82e4f1422b0e8904973e16bca2972`，不用于本轮强制回退。
+- 集成目标：`feat/library-lab`；本轮开始读取的最新头提交 `caef398bfa3568b1e9bf690366b39ae5448769de`（旧历史基线仅保留于下方各轮记录）。
 - 当前分支仅修改 A*、B* 条目及本进度文件；不更改公共源码、依赖、锁文件、CI、主 PR #8。
 
 ## 第1轮实质交付
