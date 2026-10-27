@@ -530,3 +530,29 @@ runCount=18/24.
 - [Draft PR #64](https://github.com/CoderLambert/ReactLoom/pull/64)，固定 base=`feat/library-lab`；开发提交：F15 `f851855062e6c5d4a21e457fed091497da74f457`，F16 `3024ed0c60338bb82f964debc6d1bf3ad53533dc`，F18 `0747622d80f6956b4cceb117da5f498a4d19ebc4`，进度提交 `0441d24c00e3587e922136df013eed0fcfc5e444`。
 - GitHub compare：**4 commits / 25 files / 0 EF越界**；实测Node纯策略 **10 PASS / 0 FAIL**，六文件 Git Blob 完整 SHA 与测试执行原件一致。真实目标CLI/SDK、完整TS/Vite、Chromium及pnpm锁均**NOT_RUN/BLOCKED**。
 - Issue #7 已发布本轮结果；PR留Draft待PLATFORM审查集成，不修改main或公共平台。
+
+## 第十九轮：E13 / E14 / E15 图片预览、裁剪及缩放生命周期（2026-10-27）
+
+- 工作分支：`feat/library-lab-ef-wave19-image-lifecycle`，实际基线集成 `feat/library-lab@caef398bfa3568b1e9bf690366b39ae5448769de`，目标 PR base 固定 `feat/library-lab`；仅修改 E13/E14/E15 条目和本进度。
+- **E13 PhotoSwipe**：图库 basic/business/advanced 可见集合与原图尺寸/唯一ID由同源 `examples/gallery-policy.mjs` 约束。切 level 或切换第四张图片时销毁并重建当前 gallery 的 Lightbox；删除第四张前调用真实 `pswp.close()`，卸载仍使用官方 `lightbox.destroy()`。不对图库外元素绑定选择器，不在首次渲染加载核心弹层模块。仅原创内建SVG，生产不允许直接将用户上传SVG作为信任数据。
+- **E14 react-easy-crop**：输入文件类型与≤4MiB字节约束、解码≤1600万像素、裁剪矩形须在真实源图内部且为有效整数、PNG输出≤400万像素；检查在分配Canvas前调用 `checkCropArea`。修改 crop/zoom/选择文件立即使旧导出失效，`activeExport` 使用同步ID门禁防止双击，旧finally不能解锁新任务；`createImageBitmap`总在finally close。限制真实使用在裁剪代码而不是仅写在测试中。
+- **E15 pica**：`resize-policy.mjs` 统一非空文件、格式、字节、解码像素与240/480/800最长边契约。选择新文件/更改尺寸取消旧 `cancelToken`、使generation失效、清空旧结果；单飞 `operationRef` 保持到旧Promise结算，不能在仍在解码/编码时重启重型任务；各level使用keyed session避免跨层异步回写。真正调用 `pica().resize/toBlob`，没有用Mock替代SDK。
+- 每个条目同步了 `library.json` 三层 `sourceFiles`、`guide.md`、`agent.md`、目录 `AGENTS.md`，新增独立 `.mjs/.d.mts/.test.mjs` 同源模块。验证状态仍严格按目标 SDK/build/browser 独立区分，不把内容数量当运行覆盖。
+
+### 本轮真实测试、证据与阻塞
+
+- Node **v22.16.0**：真实执行
+  `node --test /mnt/data/reactloom-ef-wave19/E13/examples/gallery-policy.test.mjs /mnt/data/reactloom-ef-wave19/E14/examples/crop-policy.test.mjs /mnt/data/reactloom-ef-wave19/E15/examples/resize-policy.test.mjs`，
+  得 **12 PASS、0 FAIL**（E13 3/E14 5/E15 4）。这是独立原生Node**纯业务策略测试**，不导入PhotoSwipe/react-easy-crop/pica，也不证明第三方SDK已验证。
+- 六份真实执行的本地源码通过 `git hash-object` 与GitHub Blob SHA逐一核对一致：
+  E13 policy `c58750ff594e99f4a1480bb66ece98a93c702e87` / test `76e32797b073b6b4b464302997595706bb2174a4`；
+  E14 policy `b4d423e13c55e85af49361d59abdc1433466b2d1` / test `dab4788887a7a3db48a5a1b4127d96f96b56f62d`；
+  E15 policy `dff7c98df39378f7c457ddb0c39e55ede67dd51b` / test `b8f4e68d7a928e4ab185fd75dc21e8222df27f56`。
+- 真实 PhotoSwipe弹层、Cropper手势、pica Worker/Canvas导出、Chromium/CSP/资源泄漏、目标SDK导入及全量TypeScript/Vite构建 **NOT_RUN/BLOCKED**。本容器无私有Git完整checkout、node_modules和Chromium；GitHub CI此前无有效Runner step，不重试已知安装/DNS故障，不制造执行结果。新增Node策略PASS**不会回填**SDK/browser `verification.json` 的PASS。
+- **dependencyRequests**：无新增第三方依赖。当前manifest `photoswipe@5.4.4` MIT、`react-easy-crop@6.2.4` MIT、`pica@10.0.3` MIT；PLATFORM须以实际锁文件/peer/官方API与生产环境重新核验，唯一修改package/lock/CI。尤其pica官方v10说明 `cancelToken` 只保证resize内部拒绝，不能取消File解码/PNG编码或保证Worker立即退出；浏览器还需核对Web Worker的CSP策略及空闲释放。外部许可代码/收费密钥未引入。
+- 集成审核待做：在能运行的设备执行 `node --test packages/library-lab/entries/E{13-photoswipe,14-react-easy-crop,15-pica}/examples/*.test.mjs`（shell展开须使用合法实际路径）、`pnpm --filter @reactloom/library-lab catalog:check` / `typecheck` / `build`，并为三个条目运行真实Chromium快速切换level、反复改裁剪区域、选取新文件并取消/重启及Blob URL / Worker生命周期测试。
+- **下一队列**：PLATFORM生产构建反馈优先纠正本批类型/API问题；随后检查 F10 Orval真实CLI生成输出与覆盖旧产物风险，E05 Monaco Worker、F11 MSW scoped service worker / CSP，以及E19 FFmpeg WASM。EF原有 **37/37** 仅是源码/指南/三层场景覆盖，不是可生产上线或37 SDK PASS。
+
+代码提交链：E13 `df6d205bd60b07ed31ced7216a23acf0cde835ee`；E14 `e462e0c1493bc8d93d014fe3bb6bb8b0a71eca6f`；E15 `7b8ed7cf10d2c114a9da72abd58f5013cfe227ff`。GitHub Compare审核仅可写路径；未涉及main、root、公共依赖、CI、目录索引、部署或PR #3。PR与Issue #7链接待本轮末尾补充。
+
+**runCount=19/24**。
