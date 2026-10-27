@@ -1,4 +1,5 @@
 /** Bounded ZIP-directory preflight. Never a replacement for an isolated parser with hard CPU/memory limits. */
+import {verifyLocalZipEntry} from './zip-entry-policy.mjs';
 export const ARCHIVE_LIMITS = Object.freeze({
   maxBytes: 2_000_000, maxFiles: 80, maxEntryBytes: 4_000_000,
   maxInflatedBytes: 8_000_000, maxRatio: 200,
@@ -73,7 +74,7 @@ export function preflightXlsx(bytes) {
     }
     if (bytes.subarray(localOffset + 30, localOffset + 30 + nameLen)
       .some((b, j) => b !== nameBytes[j])) fail('ZIP 本地和中央文件名不一致');
-    slices.push([dataStart, dataStart + compressed]);
+    slices.push(verifyLocalZipEntry(bytes, {centralOffset:offset, localOffset, directoryStart, nameBytes, flags, method, compressed, uncompressed}));
     offset = end;
   }
   if (offset !== eocd) fail('中央目录包含隐藏数据');
