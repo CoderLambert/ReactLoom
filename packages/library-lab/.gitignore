@@ -7,3 +7,5 @@ src/generated/
 playwright-report/
 test-results/
 *.tsbuildinfo
+public/ffmpeg-core/
+public/.ffmpeg-core-staging-*/

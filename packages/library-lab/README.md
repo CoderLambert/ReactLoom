@@ -83,3 +83,7 @@ node packages/library-lab/scripts/readiness.mjs --json > /tmp/library-lab-readin
 ```
 
 该命令只读取本地 `library.json`、指南、Agent 规则、真实示例文件与 `verification.json`，逐源文件计算 SHA-256 和统一 `sourceFingerprint`；返回源代码接入数、三层配置声明数、运行类型数及 SDK/构建/浏览器证据状态。**只有当前源码指纹与 command/evidence 一致的 PASS 才保留**。缺文件或路径越界明确失败；本报告不安装 npm 包，不验证软件许可，也不替代真实运行日志。正式 SDK/生产构建/浏览器仍需要可执行环境。
+
+## FFmpeg Core 授权与构建（E19）
+
+包声明包含 `@ffmpeg/ffmpeg@0.12.15`（JS wrapper）及 `@ffmpeg/core@0.12.10`（大体积单线程二进制，GPL-2.0-or-later）。**默认不复制核心 WASM，也不把 E19 标成已运行。** 仅在完成目标分发形式的许可证、编解码器和 NOTICE 审核后，设置 `LIBRARY_LAB_FFMPEG_CORE_LICENSE_REVIEWED=true` 再运行 `pnpm --filter @reactloom/library-lab build`。构建脚本会校验准确版本/许可，生成带 SHA-256 的同源 `public/ffmpeg-core/`，卸载旧生成资产时不碰用户手工文件。核心资源不提交 Git、不自动从 CDN 拉取。开关并不代表法律授权；实际交付仍需手动核验许可证与浏览器 WASM/Worker/CSP。未设置开关时用户访问 E19 看到真实阻塞，而不是假演示。官方来源：https://www.npmjs.com/package/@ffmpeg/core
