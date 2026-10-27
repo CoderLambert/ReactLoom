@@ -442,3 +442,10 @@ runCount: **14/24**。本轮依赖/测试阶段最新提交 81ec09ac04a05b6bb826
 **下批：**在真实Node>=22.18、pnpm10和可用registry/Runner上生成审查root lock并恢复frozen；按需执行类型、Vite、目标SDK、生产Chromium，重点验证A01/B13/B14/B17、C04/D14、E05 Worker/F10 Orval以及F11 MSW、PDF Worker、D16 SW origin。运行环境仍阻断时继续无下载依赖的公共代码实做，不刷重复无步骤CI。
 
 **runCount: 17/24。** PR #8维持open/Draft待用户验收，main、PR #3、原模板及公开部署均未触碰。
+
+
+### 第17轮同批收口：生产preview导航回归与实施文档同步
+
+- 公共提交 6a0685722da75405b9e560b1d322238c43db8c89：e2e/library.spec.ts 新增真实浏览器计划中的 Setext 标题、重复slug、围栏假标题目录点击测试，固定拦截仅 C20 guide.md 的审查用Markdown fixture；**仅提交 NOT_RUN**，不冒充Chromium。TypeScript 5.8.3 对独立新TS测试片段做 transpileModule 静态诊断=0，非完整构建。
+- 公共提交 eefc0a3eaba75fa8be98b8d8cdbf3071632e5a4f：IMPLEMENTATION.md LL04 更新为已接线安全目录/按需高亮/本地链接，同时注明浏览器未验收；同步第17轮结果。未编辑任何worker所有权文件。
+- runCount仍 **17/24**，后续代码与本进度提交以 PR #8 实际HEAD为准。分组PR #68/#69/#70 已合并，PR #8 仍 Draft；完整SDK/锁/tsc/Vite/Chromium状态保持 NOT_RUN/BLOCKED。
