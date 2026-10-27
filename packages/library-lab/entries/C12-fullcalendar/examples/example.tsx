@@ -30,7 +30,9 @@ export default function CalendarExample({level}:{level:Level}){
  const calendarRef=useRef<FullCalendar|null>(null);
  const memoEvents=useMemo(()=>events,[events]);
  function add(){
-  if(!title.trim()||!/^\d{4}-\d{2}-\d{2}$/.test(date)){setStatus('标题及日历日期必须有效');return;}
+  const validDate=/^\d{4}-\d{2}-\d{2}$/.test(date)&&Number.isFinite(new Date(date+'T00:00:00Z').getTime())&&
+    new Date(date+'T00:00:00Z').toISOString().slice(0,10)===date;
+  if(!title.trim()||!validDate){setStatus('标题及日历日期必须有效（不允许自动进位）');return;}
   const next={id:'item-'+String(Date.now()),title:title.trim(),start:date,allDay:true};
   setEvents(old=>[...old,next]);setTitle('');setStatus('本地事件已添加，未写入服务端');
  }

@@ -2,6 +2,11 @@ import {useEffect,useMemo,useRef,useState} from 'react';
 import './gantt.css';
 type Level='basic'|'business'|'advanced';
 type Task={id:string;name:string;start:string;end:string;progress:number;dependencies:string};
+export function validCivilDate(value:string):boolean {
+ if(!/^\d{4}-\d{2}-\d{2}$/.test(value))return false;
+ const date=new Date(value+'T00:00:00Z');
+ return Number.isFinite(date.getTime())&&date.toISOString().slice(0,10)===value;
+}
 const BASE:Task[]=[
  {id:'research',name:'需求评审',start:'2026-10-27',end:'2026-10-29',progress:100,dependencies:''},
  {id:'frontend',name:'前端开发',start:'2026-10-30',end:'2026-11-04',progress:45,dependencies:'research'},
@@ -11,8 +16,8 @@ export function validatePlan(tasks:Task[]):string|null {
  const ids=new Set(tasks.map(t=>t.id));
  if(ids.size!==tasks.length)return '任务 ID 不允许重复';
  for(const task of tasks){
-  if(!/^\d{4}-\d{2}-\d{2}$/.test(task.start)||!(/^\d{4}-\d{2}-\d{2}$/.test(task.end))||
-    Number.isNaN(Date.parse(task.start))||Number.isNaN(Date.parse(task.end))||task.start>task.end)return task.id+' 的日期区间无效';
+  if(!validCivilDate(task.start)||!validCivilDate(task.end)||task.start>task.end)
+   return task.id+' 的日期区间无效';
   if(task.progress<0||task.progress>100)return task.id+' 的进度必须在 0-100';
   for(const id of task.dependencies.split(',').map(s=>s.trim()).filter(Boolean)){
    if(!ids.has(id)||id===task.id)return task.id+' 存在非法任务依赖';
