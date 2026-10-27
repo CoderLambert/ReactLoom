@@ -11,3 +11,9 @@
 ## 本条目新增的规则文件
 
 同时迁移 `examples/graph-rules.ts` 与 `examples/example.tsx`，不能只复制 ReactFlow 组件并删除 `validateConnection` / `pruneEdgesForRemovedNodes`。两处防护：`isValidConnection` 阻止无效连接交互，`onConnect` 拒绝提交非法边。节点 remove 时同步清除关联边；本地 DAG 校验不替代服务端版本、权限、句柄语义或执行引擎审查。运行纯规则测试后仍需真实SDK与Chromium验证。
+
+
+## wave19 场景一致性与可访问编辑
+
+复制 `examples/workflow-preset.ts` 与原有 graph-rules 一起使用；切换 level 时不得复用首次初始化的受控图或变异 preset。键盘 select/按钮和画布共用 onConnect 校验与 addEdge，删除按钮共用 handleNodesChange 与 incident edges 清理。保留非交互式可读关系表，仍需真实 React Flow 与 Chromium 交互验收。
+
