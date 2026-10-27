@@ -28,3 +28,7 @@
 ## 参考
 
 https://github.com/microsoft/monaco-editor/blob/main/docs/integrate-esm.md
+
+## MonacoEnvironment迁移约束（第12轮）
+
+需要连同`workers.ts`复制`worker-lease.mjs`及TypeScript声明。调用`installMonacoWorkers()`保存release，必须先释放Monaco editor/model再release。共享页面已有MonacoEnvironment的场景应交由宿主统一配置，**不要**替换或删除其它编辑器的全局映射。引用计数**不保证**实际Worker线程销毁，必须实测生产`worker-src`及diagnostics。

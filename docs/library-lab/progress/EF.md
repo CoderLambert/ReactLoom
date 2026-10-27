@@ -379,3 +379,20 @@ runCount=6/24。本轮不把5库源代码和30+例子等同完整生产交付；
 - Draft PR [#43](https://github.com/CoderLambert/ReactLoom/pull/43)，目标 `feat/library-lab`；关键源码提交 `772139aae64dfdfde41bb86c187f9436ad75fd8f`。该提交修复了F03导入抽取时遗漏的演示fixtures；PR审查应采用最新head。
 - `git compare` 对比集成 `0733f237ddfbc4ab3204c531255f386c46abec27`：18个变更文件均在EF授权范围。实际纯策略Node用例7 PASS；第三方SDK真实运行仍 NOT_RUN。
 - Issue [#7](https://github.com/CoderLambert/ReactLoom/issues/7) 已留有本轮代码、验证和下步执行要求。PLATFORM集成后，若本分支需要下一轮代码修复，应从更新的集成head另建wave分支，不重写已合入PR。
+
+
+## 第十二轮：Worker作用域/生命周期与本地PDF并发修复（2026-10-27）
+
+- 基线：集成 `feat/library-lab@363009eb24230fee8c4e5103bcef950ed129a649`（#43已集成），工作分支 `feat/library-lab-ef-wave12-worker-lifecycle`，只写E05/F11/F09条目及本进度；不改公共src、依赖、lockfile、CI、main或既有PR。
+- **E05 Monaco**：真正Vite Worker构造器不变。新增租约计数，拒绝覆盖外部`MonacoEnvironment`，多编辑器最后释放配置；创建model/editor失败也清理；不声称Monaco内部Worker已terminate。
+- **F11 MSW**：先检查同scope已有注册的脚本所有权；启动后不仅核对registration，而且核对frame controller及真实scoped`fetch`结果。不成功立即stop；新建注册由本会话stop+unregister，已有注册只stop；PLATFORM仍须提供隔离iframe/Worker静态脚本及跨tab策略和CSP。
+- **F09 pdf-lib**：同步single-flight避免连点并行解析，level切换使旧Promise结果及finally失效，React DOM commit后才回收旧Blob URL，unmount回收未提交URL。pdf-lib解析不可取消且字节预筛非恶意PDF沙箱。
+- **真正执行的离线范围**：Node v22.16.0、`node --test`三组独立纯策略：E05 `worker-lease.test.mjs` 4 PASS、F11 `registration-policy.test.mjs` 4 PASS、F09 `operation-gate.test.mjs` 3 PASS，合计**11 PASS / 0 FAIL**。这些测试**没有加载monaco-editor、msw或pdf-lib**，绝不计目标SDK或Browser PASS。新增测试源码已随条目提交。
+- **真实未跑**：Monaco Worker/JSON诊断、MSW真实SW intercept/CSP、pdf-lib实际SDK与浏览器下载交互、全量TypeScript/Vite生产构建，仍**NOT_RUN/BLOCKED**（公共pnpm锁文件/可运行Runner暂无本轮证据）。新文件目录结构检查不等于运行。
+- **dependencyRequests**：无新增依赖；沿用`monaco-editor@0.57.0`(MIT)、`msw@3.0.3`(MIT，Node>=22/TS>=5.9)、`pdf-lib@1.17.1`(MIT)，由PLATFORM唯一维护package/lock与实际安装。请平台定向运行`catalog:check` / `typecheck` / `build`，再在Chromium验证三库的Worker/下载生命周期；若脚本/Worker失败，保持verification BLOCKED。
+- **下一队列**：真实SDK/Runner具备时首先消除其TS/构建故障；随后检查E05多实例/StrictMode、F11预存SW/多tab重入、F09连续文件/Tab切换和Blob泄漏。EF内容覆盖**37/37**，不是生产验收完成；**runCount=12/24**。若所有可独立推进工作确实完成再按规定停用，不以37个目录存在冒充最终PASS。
+
+### 第十二轮交付索引
+
+- Draft PR [#46](https://github.com/CoderLambert/ReactLoom/pull/46)，base=`feat/library-lab`、head=`feat/library-lab-ef-wave12-worker-lifecycle`。最新代码/文档提交 `ef66a81d100a9978c245858c45558fd0e463151b`，之前两个提交 `32335aeacec70aa23a3aa3430d22b050af7488d6`、`9cfedb8c8629e979dd871f61e992a5ef8fa2634a`，均只针对EF条目。
+- 对比当轮集成基线：3 commits、25个变更文件，全部满足EF授权目录规则；11项Node纯策略PASS，不等同SDK/浏览器PASS。下一轮应在#46被PLATFORM集成后，从最新集成分支继续创建新wave，不重写合入后的旧分支。

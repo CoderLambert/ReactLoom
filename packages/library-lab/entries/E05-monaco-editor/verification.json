@@ -1,7 +1,7 @@
 {
   "source": {
     "status": "NOT_RUN",
-    "note": "待官方SDK及源文件依赖解析"
+    "note": "第12轮仅执行纯JS生命周期和注册策略的定向Node测试；没有实际导入目标SDK，不计SDK或浏览器PASS"
   },
   "sdk": {
     "status": "NOT_RUN",

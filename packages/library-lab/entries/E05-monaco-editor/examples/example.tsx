@@ -22,23 +22,40 @@ export default function MonacoExample({level}: Props) {
   useEffect(() => {
     const container = holder.current
     if (!container) return
-    installMonacoWorkers()
+    let releaseWorkers: () => void
+    try {
+      releaseWorkers = installMonacoWorkers()
+    } catch (error) {
+      setMessage('Monaco Worker 配置冲突：' + String(error))
+      return
+    }
     const json = level === 'advanced'
     const language = json ? 'json' : 'typescript'
-    const model = monaco.editor.createModel(
-      snippets[level],
-      language,
-      monaco.Uri.parse(`inmemory://reactloom-library/e05/${crypto.randomUUID()}.${json ? 'json' : 'ts'}`),
-    )
-    const instance = monaco.editor.create(container, {
-      model,
-      theme: 'vs-light',
-      ariaLabel: 'Monaco 代码编辑区域',
-      minimap: {enabled: false},
-      scrollBeyondLastLine: false,
-      automaticLayout: false,
-      wordWrap: 'on',
-    })
+    let model: monaco.editor.ITextModel | undefined
+    let instance: monaco.editor.IStandaloneCodeEditor | undefined
+    try {
+      model = monaco.editor.createModel(
+        snippets[level],
+        language,
+        monaco.Uri.parse(`inmemory://reactloom-library/e05/${crypto.randomUUID()}.${json ? 'json' : 'ts'}`),
+      )
+      instance = monaco.editor.create(container, {
+        model,
+        theme: 'vs-light',
+        ariaLabel: 'Monaco 代码编辑区域',
+        minimap: {enabled: false},
+        scrollBeyondLastLine: false,
+        automaticLayout: false,
+        wordWrap: 'on',
+      })
+    } catch (error) {
+      instance?.dispose()
+      model?.dispose()
+      releaseWorkers()
+      setMessage('编辑器创建失败：' + String(error))
+      return
+    }
+    if (!model || !instance) {releaseWorkers();return}
     active.current = instance
     setCode(model.getValue())
     setProblemCount(0)
@@ -60,6 +77,7 @@ export default function MonacoExample({level}: Props) {
       active.current = null
       instance.dispose()
       model.dispose()
+      releaseWorkers()
     }
   }, [level])
 

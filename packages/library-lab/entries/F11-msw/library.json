@@ -96,7 +96,9 @@
         "examples/routes.mjs",
         "examples/handlers.mjs",
         "examples/browser-worker.mjs",
-        "tests/routes.test.mjs"
+        "tests/routes.test.mjs",
+        "examples/registration-policy.mjs",
+        "examples/registration-policy.test.mjs"
       ],
       "capabilities": [
         "node-process",

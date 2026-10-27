@@ -10,5 +10,9 @@
   "browser": {
     "status": "NOT_RUN",
     "note": "未进行真实Chromium运行"
+  },
+  "source": {
+    "status": "NOT_RUN",
+    "note": "第12轮仅执行纯JS生命周期和注册策略的定向Node测试；没有实际导入目标SDK，不计SDK或浏览器PASS"
   }
 }
