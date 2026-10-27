@@ -706,3 +706,10 @@ A09/A10/B05 的三层 \`library.json\` 均引用新增规则源码；四库共12
 ### 后续队列与平台交接
 
 PLATFORM审核本PR的base/head、授权路径并合入私有 \`feat/library-lab\` 后，需要优先恢复真实pnpm锁文件/Runner日志，并按本批4库定向验收：Excalidraw导入/重置竞态与URL点击；tldraw大文档快照、下载URL清理和许可；Rive后台/跨level/WASM与WebGL资源；Floating UI剪贴板拒绝、Escape/Tab焦点恢复及中文IME。再对39条A/B按明确TSX构建报错补修，而非重新生成页面。主Draft #8保持未合并main；不修改PR #3/模板/公开部署。
+
+### wave17 PR/CI 最终回读（2026-10-27）
+
+- 已创建 **[Draft PR #65](https://github.com/CoderLambert/ReactLoom/pull/65)**，head \`feat/library-lab-ab-wave17\`，base **\`feat/library-lab\`**，主PR #8继续Draft且未合并main。
+- 本批代码及进度提交后相对精确集成起点 \`caef398bfa3568b1e9bf690366b39ae5448769de\` 的 GitHub Compare 为 **22/22 文件全部在AB授权范围，ahead=4、behind=0**。6/6 Node独立helper/test Git Blob字节与实际执行一致；四库12/12个Demo源码引用有效。
+- 真实GitHub Actions：提交 \`f2b7ced9b565c3889ba1793101cbbf549a41e0e6\` 触发 CI run **40494818121** 与 Library Lab run **40494817999**，二者状态均为 \`failure\`；对应 \`runtime-bootstrap\` job **122157477021**、\`catalogue\` job **122157477399** 均为 \`steps=[]\`；两份Job日志均返回 **404 BlobNotFound**。因此没有任何可用构建步骤证据，不能归因源码TS错误或虚报SDK/build/browser通过；公共runner/锁文件修复仍由PLATFORM负责。
+- 本批 **runCount=17/24**、依赖新增0。下一轮优先根据真实SDK/完整TypeScript报错修复四库或其他AB目录可复现缺陷，避免在没有runner情况下反复重试相同失败。
