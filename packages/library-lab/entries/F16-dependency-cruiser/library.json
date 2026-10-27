@@ -58,7 +58,9 @@
         "examples/workspace/config.cjs",
         "examples/workspace/basic/src/main.ts",
         "examples/workspace/basic/src/domain/get-article.ts",
-        "examples/workspace/basic/src/ui/render-title.ts"
+        "examples/workspace/basic/src/ui/render-title.ts",
+        "examples/result-policy.mjs",
+        "examples/result-policy.test.mjs"
       ],
       "capabilities": [
         "node-process",
@@ -78,7 +80,9 @@
         "examples/workspace/config.cjs",
         "examples/workspace/business/src/main.ts",
         "examples/workspace/business/src/domain/summary.ts",
-        "examples/workspace/business/src/ui/badge.ts"
+        "examples/workspace/business/src/ui/badge.ts",
+        "examples/result-policy.mjs",
+        "examples/result-policy.test.mjs"
       ],
       "capabilities": [
         "node-process",
@@ -98,7 +102,9 @@
         "examples/workspace/config.cjs",
         "examples/workspace/advanced/src/first.ts",
         "examples/workspace/advanced/src/second.ts",
-        "examples/verify.mjs"
+        "examples/verify.mjs",
+        "examples/result-policy.mjs",
+        "examples/result-policy.test.mjs"
       ],
       "capabilities": [
         "node-process",

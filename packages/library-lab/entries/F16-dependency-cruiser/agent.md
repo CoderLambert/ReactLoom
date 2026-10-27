@@ -14,3 +14,5 @@
 **禁止**：对用户全部源码执行无明确许可的自动删除；只靠热力图宣称架构健康；人工制造JSON报告冒充真实CLI；将允许的跨层业务特例全部消灭。
 
 必要验证命令：node entries/F16-dependency-cruiser/examples/verify.mjs（在packages/library-lab根运行），包括真实包导入与CLI。当前NOT_RUN/BLOCKED，详见verification.json。官方：https://github.com/sverweij/dependency-cruiser
+
+**新增迁移门禁**：保留固定工作目录，分别使用JSON与err报告器；检查真实summary的规则名/严重度与明确退出码。`result-policy.test.mjs`的模拟JSON只验证解析器，不代表目标depcruise真实执行。
