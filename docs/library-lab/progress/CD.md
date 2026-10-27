@@ -226,3 +226,8 @@ PLATFORM 在 packages/library-lab/package.json 及真实 pnpm-lock.yaml 中统�
 - 本轮从 **30/43 提升至 35/43 有真实 SDK import 源码和文档**，剩余 **8 条**：C04 JSON Forms、C08 AG Grid、C12 FullCalendar、C13 Frappe Gantt、C22 Moment 历史迁移、D13 RTK Query、D16 Workbox、D21 Pagefind。35 只是源码接入数，不是 SDK 正式验收数。
 - 下一批优先 C04 + C08；结合 v7 FullCalendar 的 React 单包结构实施 C12，防止误用 v6 拆分插件安装；随后 C13/D13 和需要 SW/CLI 隔离的 D16/D21，历史 C22 使用迁移示例而非安装旧 Moment SDK。
 - 本批 worker PR 仅以 `feat/library-lab` 为 base，交由 PLATFORM 统一依赖/审查/合并。没有变更 main、旧模板、PR #3 或其他通道。
+### 第七批 GitHub 交付定位
+
+- 真实功能提交：`26e005da1b129c57e0876e2c4e3cbaa954553eab`。
+- Draft PR：[#31](https://github.com/CoderLambert/ReactLoom/pull/31)，base=`feat/library-lab`，等待 PLATFORM 审核与依赖接入。
+- GitHub compare：41/41 文件只在 CD 允许路径；五库各八个条目文件，另一个 progress 文件；当前结果属于**源码层**而非 SDK PASS。
