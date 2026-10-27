@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {CLI_RECIPES,parseCliSelection,selectedRecipes,executeRecipes} from '../scripts/cli-runner.mjs';
-test('fixed registry contains six checked-in CLI verifier recipes',()=>{
- assert.deepEqual(Object.keys(CLI_RECIPES),['D16','D21','F04','F10','F16','F18']);
+test('fixed registry contains seven checked-in CLI verifier recipes',()=>{
+ assert.deepEqual(Object.keys(CLI_RECIPES),['D16','D21','F04','F10','F15','F16','F18']);
  assert.deepEqual(selectedRecipes(parseCliSelection(['--entries=F18,F04,F04'])).map(r=>r.id),['F04','F18']);
 });
 test('unknown targets and injection payloads fail instead of silently passing',()=>{
@@ -33,4 +33,21 @@ test('D16 and D21 use fixed local real SDK runners rather than a web shell',()=>
   assert.match(command.args[0],/^entries\/D(?:16-workbox|21-pagefind)\/examples\/(?:basic|business|advanced)\.mjs$/u);
   assert.equal(command.opts.cwd,'/fixtures');
  }
+});
+
+
+test('F15 Knip verifier is fixed to the checked-in Node harness and never executes user input',()=>{
+ const recipes=selectedRecipes(parseCliSelection(['--entry=F15']));
+ assert.equal(recipes.length,1);
+ assert.equal(recipes[0].id,'F15');
+ assert.deepEqual(recipes[0].scripts,['entries/F15-knip/examples/verify.mjs']);
+ const calls=[];
+ const spawn=(binary,args,options)=>{calls.push({binary,args,options});return {status:0,error:null,signal:null};};
+ assert.equal(executeRecipes(recipes,{cwd:'/fixtures',spawn,stdout:()=>{}}),1);
+ assert.equal(calls[0].binary,process.execPath);
+ assert.deepEqual(calls[0].args,['entries/F15-knip/examples/verify.mjs']);
+ assert.equal(calls[0].options.shell,false);
+ assert.equal(calls[0].options.cwd,'/fixtures');
+ for (const bad of ['--entry=F15;rm','--entry=F15/../F16','--entry=F150'])
+   assert.throws(()=>parseCliSelection([bad]),/Invalid|No CLI verifier/);
 });
