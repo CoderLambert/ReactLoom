@@ -60,6 +60,8 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/rss-policy.mjs",
+        "examples/rss-policy.d.mts",
         "examples/demo.tsx"
       ],
       "capabilities": []
@@ -73,6 +75,8 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/rss-policy.mjs",
+        "examples/rss-policy.d.mts",
         "examples/demo.tsx"
       ],
       "capabilities": []
@@ -86,6 +90,8 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/rss-policy.mjs",
+        "examples/rss-policy.d.mts",
         "examples/demo.tsx"
       ],
       "capabilities": []

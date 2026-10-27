@@ -3,7 +3,7 @@
 ## 恢复与分支
 
 - Issue #6、主 Epic #4，目标集成分支 feat/library-lab。前一批 PR #10 **已合入**，本批从最新集成提交 df4674d501bac029f8529ff940ba9b8c8707347c 新建 feat/library-lab-cd-wave2，避免在旧已合并分支继续开发。
-- runCount：13 / 24（下方旧批次各自数字为历史记录）；仅写 entries/C*、entries/D* 及此进度文件。公共 package/lockfile/CI/生成器由 PLATFORM 独占。
+- 最新累计 runCount：**18 / 24**（下方旧小节数字均为历史记录；以末尾最新批次为准）；仅写 entries/C*、entries/D* 及此进度文件。公共 package/lockfile/CI/生成器由 PLATFORM 独占。
 - 本轮 Git commit / PR 见本通道新 PR；用户的主 PR #8 仍为 Draft，不写 main。
 
 ## 本轮新增 4 个完整垂直条目
@@ -436,3 +436,20 @@ C13 Frappe Gantt 1.2.2 上游 `src/index.js` 的 `bind_bar_events` 会向 `docum
 - **dependencyRequests：本轮无新增包**。既有的 `immer@11.2.9`（MIT）、`frappe-gantt@1.2.2`（MIT）、`@fullcalendar/react@7.1.3` 与 `temporal-polyfill@1.0.4`（需 PLATFORM 按实际安装复核许可/API）仍由 PLATFORM 安装与锁定；本通道未修改任何 package/lock、CI、公共组件、生成索引、其他分组或 main。
 - **当前覆盖**：CD 共 **43/43** 个源码/指南/Agent/三层入口（129 个分层选择）已有覆盖；本轮新增目标 SDK / build / browser PASS 为 **0**。覆盖不等于可运行验收。
 - **下一队列**：PLATFORM 审核合并 #62；可用依赖环境先执行 C12/C13/D06 的 `tests/sdk.test.mjs`，再完整 `typecheck`、`build` 和 Chromium：同毫秒创建两个事件、DST 重叠时间拖拽/偏移缺失回滚、Gantt 闭环保存拒绝/StrictMode 动态 import 监听清理、Immer 乐观更新→立即撤销。出现实际 SDK/TS 报错后依据固定源码指纹精修，不在 CD 通道伪造 BUILD/SDK PASS。
+
+
+---
+
+## 第十八轮（2026-10-27）— C02/C03/C05 三套 Schema 输入合同真实修复
+
+- **runCount=18/24**。先从 GitHub 核查 COORDINATION、IMPLEMENTATION、根/本包 AGENTS、types/catalog、自己的 progress、PR #62/#8、Issue #6。确认上一 CD PR #62 已由 PLATFORM 合并。从集成 `feat/library-lab@caef398bfa3568b1e9bf690366b39ae5448769de` 创建 **`feat/library-lab-cd-wave18`**，Draft [PR #66](https://github.com/CoderLambert/ReactLoom/pull/66) 仅指向 `feat/library-lab`；不操作 main。
+- **C02 Zod 4.6.5**：原 `source.url.toLowerCase()` 会把大小写敏感的 RSS 路径/查询错误合并，现直接由 `boundary-policy.mjs` 生成无凭据 HTTPS 规范化身份，只统一 host/443/hash；OPML 文件名拒绝路径/反斜杠；TTL 拒绝 `1e1` 这类非十进制用户输入。表单 JSON 编辑与示例 level 切换后清空过期成功输出。新增独立 Node 策略测试及**真实 Zod** SDK 测试源码。
+- **C03 Valibot 1.4.2**：输入 URL 由前缀检查改为解析 HTTPS 且拒绝嵌入凭据；`v.isoDate` 后进一步使用 `isRealCivilDate` 核对公历闰年、世纪年、每月天数，避免仅靠格式放过 2026-02-29、1900-02-29。实际 `v.safeParse` 失败输出精确字段路径；输入改变、示例 level 切换清除旧结果。扩充真实 Valibot SDK 测试源码。
+- **C05 Ajv 8.20.0**：原 `uniqueItems:true` 只能比较整对象，两个不同 id 但相同 URL 仍可能通过。现在真实 Ajv 结构校验成功后，再由 `rss-policy.mjs` 检查 HTTPS 凭据、规范化 URL 业务重复并报告 JSON Pointer 路径。大小写 HTTPS 协议先通过静态模式，实际解析由第二层完成。输入更新后清空旧结论。扩充真实 Ajv SDK 测试源码。
+- 三个条目均维持原来的 `library.json/guide.md/agent.md/AGENTS.md/verification.json` 与 basic/business/advanced 三个实际 Demo；`sourceFiles` 已按真实导入同时列出新 `.mjs` 策略及 `.d.mts` 声明，**9 个演示入口不维护重复源码**。代码/文档分两次提交：[`173e7688`](https://github.com/CoderLambert/ReactLoom/commit/173e7688a68353d6d0c2042addd17e902155cf10)、[`401613d3`](https://github.com/CoderLambert/ReactLoom/commit/401613d3b6fb1fb2a84e77ab9b419eaa6fa6915d)。本次 progress 再单独提交。
+- **真实执行证据**：Node `v22.16.0`，按 GitHub 提交 blob 完整恢复/核对六份策略源码与测试：C02 `756287f8d351e505e221f486ebcaded7b64cdd99` / `73e757c1a8e83b70a1783dbcab680ec88dedcaba`，C03 `22dab21d9d134212d51c4d5ab334699f7e6f600c` / `1e93bac87b1dd7069d0a1cb0e5824a12fbf2761e`，C05 `d742dc0f39412ffe84d07cf53da2d9709a4a2496` / `b3c7cc1086cf4774b420a6fd01517bae3296005a`。`node --check` 六份均通过；`node --test` 三份各自的 `tests/*policy.test.mjs` **9 PASS / 0 FAIL**。这些测试使用 Node 原生 URL 与手写域规则，**不导入第三方 SDK**。
+- 三份 `.d.mts` 声明与 GitHub Git blob 一致：C02 `032ff97d9a9cb2ab520d28de5f0669f79ba33ea3`、C03 `021caab9456d4ed181e6fc2775ad463268578bfe`、C05 `9f17ea991abe3ac7828d963cabb475a4f16db17b`。在隔离目录执行 **TypeScript 5.8.3** `tsc --noEmit --strict --target ES2022 --module nodenext --moduleResolution nodenext` 孤立声明检查通过；这不是依赖齐全的应用 TypeScript 检查。
+- **明确 NOT_RUN**：`C02/C03/C05/tests/sdk.test.mjs` 均真实导入目标 SDK，但目标固定包未安装，没有执行；Library Lab 整体 typecheck、Vite production build、Chromium/IME/SSR/browser 均 **NOT_RUN**。单次 `getent ahostsv4 registry.npmjs.org` 无解析，退出码 2；未重复重试网络，也没有给 SDK/Browser 编造 PASS。三项原 `verification.json` 仍为 NOT_RUN。
+- **依赖与权限**：无新增 dependencyRequests。沿用 PLATFORM 已声明 `zod@4.6.5`、`valibot@1.4.2`、`ajv@8.20.0`（三库原条目均标 MIT，实际安装仍由 PLATFORM 验证上游 API/许可/版本）。compare 在进度写入前为 **27/27 变更文件均在授权的 C02/C03/C05 目录**；补本进度后应为 28/28。未改根或包 manifest、锁文件、CI、公共模块/生成目录、旧模板、其他通道、PR #3 或 main。
+- **累计源码覆盖**：仍是 **43/43 条 / 129 个层级入口**；这只是源码/教学完成，不是目标 SDK、完整 TS、Vite 或浏览器验收通过。本轮新增真实第三方 SDK PASS 数为 **0**。
+- **下一队列**：由 PLATFORM 审核合并 #66 后，在已安装固定依赖的环境依次执行 `node --test packages/library-lab/entries/C02-zod/tests/sdk.test.mjs packages/library-lab/entries/C03-valibot/tests/sdk.test.mjs packages/library-lab/entries/C05-ajv/tests/sdk.test.mjs`、`pnpm --filter @reactloom/library-lab typecheck`、`build` 与浏览器：URL 差异/OPML 文件名/TTL、Valibot 非法闰日、Ajv 两个不同 id 相同订阅 URL。发现真实 SDK 或类型错误再在新的 CD 授权分支精修，生成新 sourceFingerprint 和持久证据，不把纯策略通过升级为 SDK PASS。

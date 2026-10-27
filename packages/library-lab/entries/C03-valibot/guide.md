@@ -43,3 +43,9 @@ pnpm add valibot@1.4.2
 - https://github.com/fabian-hiller/valibot
 
 许可：MIT。示例数据为本项目 fixture。
+
+## 民用日与源地址的边界验证
+
+`v.isoDate` 校验格式后，实际示例继续执行 `isRealCivilDate`，拒绝 1900-02-29、2026-02-29 与 04-31；2000-02-29 允许。按公历闰年计算而不是 `Date.UTC`（0–99 年特殊重映射），且不把此结果当时区或 DST 验证。HTTPS 解析拒绝 URL 内嵌凭据，主机统一但路径查询保留大小写。Valibot `issues[].path` 显示真实字段位置；修改输入/切换 level 清除旧提示。
+
+`tests/boundary-policy.test.mjs` 是独立纯策略，`tests/sdk.test.mjs` 才调用真实 Valibot；两者不互相替代。URL 合法也不等于服务器允许 fetch，SSRF 在后端处理。

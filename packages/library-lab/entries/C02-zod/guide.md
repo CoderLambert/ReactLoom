@@ -73,3 +73,9 @@ C01 RHF 管表单字段、焦点和 dirty；Zod 管值/结构校验。集成时�
 - [Zod 官网](https://zod.dev/)
 - [Zod 仓库](https://github.com/colinhacks/zod)
 - [Zod 4 迁移指南](https://zod.dev/v4/changelog)
+
+## 已加固的 URI、OPML 与结果所有权
+
+演示真实导入 `examples/boundary-policy.mjs`：主机名/默认端口经 URL 规范化，path/query 保持大小写，忽略 fragment，拒绝凭据、非 HTTPS、控制符。不得把整串 URL 转小写以判断重复；错误定位到第二条 `sources[n].url`。OPML 元数据仅允许单独文件名，不允许路径；TTL 不接受指数记数法。修改 JSON 或切换 level 会清除旧验证结果。此处并不是服务端 SSRF/重定向/DNS 防线。
+
+无依赖策略测试：`node --test packages/library-lab/entries/C02-zod/tests/boundary-policy.test.mjs`；真实 Zod SDK 需独立执行 `tests/sdk.test.mjs`。

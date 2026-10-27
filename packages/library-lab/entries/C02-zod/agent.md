@@ -27,3 +27,7 @@
 ## 参考
 
 https://zod.dev/ · https://github.com/colinhacks/zod
+
+## 迁移注意
+
+带走 `boundary-policy.mjs` 和其 `.d.mts`，不要跨条目依赖。URL path/query 大小写不能抹平；不能接受凭据。拒绝 OPML 路径名以及 `1e1` 等不符合产品输入合同的 TTL。输入变化后旧 PASS 必须失效；纯策略测试不能冒充真实 Zod SDK。

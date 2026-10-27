@@ -1,4 +1,5 @@
-import {useMemo, useState} from 'react';
+import {useEffect, useMemo, useState} from 'react';
+import {validateFeedBoundaries} from './rss-policy.mjs';
 import Ajv from 'ajv';
 
 type Level = 'basic' | 'business' | 'advanced';
@@ -10,7 +11,7 @@ export const feedSchema = {
   properties: {
     id: {type: 'string', minLength: 1, maxLength: 40, pattern: '^[a-z0-9-]+$'},
     title: {type: 'string', minLength: 2, maxLength: 80},
-    url: {type: 'string', minLength: 9, pattern: '^https://'},
+    url: {type: 'string', minLength: 9, pattern: '^[Hh][Tt][Tt][Pp][Ss]://'},
   },
 } as const;
 export const batchSchema = {
@@ -39,13 +40,21 @@ const validator = new Ajv({strict: true, allErrors: true, coerceTypes: false, us
 export default function AjvExample({level}: Props) {
   const [input, setInput] = useState(() => JSON.stringify(samples[level], null, 2));
   const [output, setOutput] = useState('点击验证，执行真实 Ajv 编译后的校验器');
+  useEffect(() => {
+    setInput(JSON.stringify(samples[level], null, 2));
+    setOutput('场景已切换，请重新校验');
+  }, [level]);
   const validate = useMemo(() => validator.compile(schemas[level]), [level]);
   function run() {
     let value: unknown;
     try { value = JSON.parse(input) as unknown; }
     catch (error) { setOutput('JSON 解析失败：' + String(error)); return; }
     if (validate(value)) {
-      setOutput('PASS：' + JSON.stringify(value, null, 2));
+      // uniqueItems checks full JSON objects, NOT canonical URL identity.
+      const domainIssues = validateFeedBoundaries(level, value);
+      setOutput(domainIssues.length
+        ? 'FAIL（RSS 业务规则）：' + domainIssues.map(issue => issue.path + ' · ' + issue.message).join('\n')
+        : 'PASS：' + JSON.stringify(value, null, 2));
       return;
     }
     setOutput('FAIL：' + (validate.errors ?? []).map(item =>
@@ -56,11 +65,14 @@ export default function AjvExample({level}: Props) {
     <h2>{level === 'basic' ? '运行时 schema 验证' : level === 'business' ? '团队 RSS 批量导入' : '条件规则与多条错误'}</h2>
     <p>{level === 'advanced' ? '故意提供超出范围的并发值和未知字段，演示 allErrors 与条件校验。' : '模式是项目审查过的静态 JSON Schema；不会使用网络提供的可执行 schema。'}</p>
     <label htmlFor="c05-input">输入 JSON</label>
-    <textarea id="c05-input" value={input} onChange={event => setInput(event.target.value)}
+    <textarea id="c05-input" value={input} onChange={event => {
+        setInput(event.target.value);
+        setOutput('输入已修改，请重新运行校验');
+      }}
       style={{width: '100%', minHeight: 170, display: 'block', fontFamily: 'monospace'}} />
     <div className="demo-controls"><button type="button" onClick={run}>调用 Ajv.validate</button>
       <button type="button" onClick={() => {setInput(JSON.stringify(samples[level], null, 2)); setOutput('已重置');}}>恢复样例</button></div>
     <output className="demo-output" aria-live="polite" data-testid="ajv-result">{output}</output>
-    <p>仅检查字符串结构、HTTPS 前缀等静态合同；真正 URL 安全、抓取权限和 SSRF 必须在服务端完成。</p>
+    <p>Ajv 先执行静态 JSON Schema，再做无凭据 HTTPS 与规范化 URL 去重。客户端仍不负责网络访问授权、DNS/重定向 SSRF 防护。</p>
   </section>;
 }

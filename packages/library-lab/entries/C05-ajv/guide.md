@@ -35,3 +35,11 @@ C04 JSON Forms 负责根据 JSON Schema 渲染控件，Ajv 负责值校验。C02
 - [npm v8.20.0](https://www.npmjs.com/package/ajv)
 
 授权 MIT。源码写入不等于已安装/通过，执行状态以 `verification.json` 和具备源码指纹的日志为准。
+
+## 双阶段 RSS 数据合同（本轮修复）
+
+`uniqueItems:true` 只比较整个 JSON 对象；`{id:'a',url:'https://x/rss'}` 与 `{id:'b',url:'https://x/rss'}` 在 JSON Schema 里**不是**重复项，却可能违反 RSS 订阅业务规则。现在示例先执行真实 Ajv 结构校验，再调用同目录 `rss-policy.mjs` 做 URL 解析、去掉 fragment、统一主机/默认端口、保留 path/query 大小写，拒绝用户名/密码及规范化后重复 URL。错误使用 `/feeds/1/url` 等可定位路径。高级配置不误套 RSS 合同。
+
+Schema HTTPS 前缀现可识别大写 scheme，但这仍不是完整 URL 格式校验；实际 URL 解析由第二阶段补齐。用户编辑输入或切换场景后清空旧 PASS。复制代码时必须同时复制 `rss-policy.mjs` 与 `.d.mts`，否则只留下不完整的 Ajv 结构约束。业务服务器仍须验证 DNS/私网/重定向和权限。
+
+纯策略：`node --test packages/library-lab/entries/C05-ajv/tests/rss-policy.test.mjs`；真实 Ajv：`tests/sdk.test.mjs`，不能将两者混报。
