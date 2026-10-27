@@ -237,3 +237,5 @@ runCount：**9 / 24**。PR #8 继续 Draft；main/旧模板/PR #3 未修改，�
 **准确实测范围：**本地 Node 22.16.0 独立材料重新执行了 A/B 四份纯策略测试 `--experimental-strip-types --test`：**16 PASS、0 FAIL**；本地隔离平台策略/SDK 发现器类比代码：**5 PASS、0 FAIL**。这些证据只覆盖纯函数与测试选择器模拟，不代表完整远端HEAD的 `npm test` 或任何目标SDK；已对 GitHub 提交代码的正则和语法作静态复核。实际依赖安装、生成合法 pnpm-lock、TypeScript、Vite、全部真实SDK和 Chromium：**BLOCKED/NOT_RUN**。GitHub Actions依旧在Runner前失败，继续单点追踪#12，勿无限重试同一已知失败。
 
 **目录不变：**119条身份/源码/guide/agent/验证记录与357场景配置声明；零个SDK可因本轮纯Node PASS自动改成PASS。可执行的异步网络/Worker/Canvas/浏览器证据仍待环境恢复。主PR #8继续Draft；未改main、PR #3或原模板。**runCount 10/24**。下一轮优先获取真正pnpm解析/锁文件与运行证据，并补独立MSW iframe及PDF/Monaco/图表浏览器对照；在执行环境仍受限时继续非依赖型平台改进。
+
+**本轮同一批后续CI接线：** `dd6ef7e734c2ee31e4df038387ecd230675e9e3a` 在无安装的 `catalogue` job 加入 `node scripts/policy-runner.mjs`，将纯逻辑回归与需要真实包安装的 `runtime-bootstrap/test:sdk` 严格隔离。GitHub Runner 尚未执行这个新步骤，状态 NOT_RUN，不能将接线视为 CI PASS。
