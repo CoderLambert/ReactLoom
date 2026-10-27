@@ -1,10 +1,10 @@
 # EF 通道持续开发进度
 
-- 通道：EF，Issue #7；当前 wave4 分支 `feat/library-lab-ef-wave4`，Draft PR #20；PR base 为 `feat/library-lab`。
+- 通道：EF，Issue #7；当前 wave18 分支 `feat/library-lab-ef-wave18-cli-verification`，Draft PR #64；PR base 为 `feat/library-lab`。
 - runCount：18 / 24。
 - 基线：`38ed2d247bd82e4f1422b0e8904973e16bca2972`。
 - 本轮日期：2026-10-27（北京时间）。
-- 状态：**累计21/37个库已经接入真实第三方SDK示例或CLI源码、Guide与Agent手册；其余16项待接入。SDK、构建、浏览器验证单独计数，目前不得宣称PASS。**
+- 状态：**37/37个条目已有三层真实示例源码及指南，但目标SDK、完整构建和浏览器验收不因源码覆盖而自动PASS。**
 - 写入所有权：仅 `entries/E*`、`entries/F*` 和本进度文件，公共依赖/CI/runner 未触碰。
 
 ## 首轮交付（5库，详见PR #11；不等于SDK验收）
@@ -524,3 +524,9 @@ runCount=17/24。
 - EF 维持 37/37 条目源码/指南覆盖；生产SDK/浏览器/构建验收远未完全完成。只有实际验收闭环才达到完工。
 
 runCount=18/24.
+
+### 第十八轮持久交付索引
+
+- [Draft PR #64](https://github.com/CoderLambert/ReactLoom/pull/64)，固定 base=`feat/library-lab`；开发提交：F15 `f851855062e6c5d4a21e457fed091497da74f457`，F16 `3024ed0c60338bb82f964debc6d1bf3ad53533dc`，F18 `0747622d80f6956b4cceb117da5f498a4d19ebc4`，进度提交 `0441d24c00e3587e922136df013eed0fcfc5e444`。
+- GitHub compare：**4 commits / 25 files / 0 EF越界**；实测Node纯策略 **10 PASS / 0 FAIL**，六文件 Git Blob 完整 SHA 与测试执行原件一致。真实目标CLI/SDK、完整TS/Vite、Chromium及pnpm锁均**NOT_RUN/BLOCKED**。
+- Issue #7 已发布本轮结果；PR留Draft待PLATFORM审查集成，不修改main或公共平台。
