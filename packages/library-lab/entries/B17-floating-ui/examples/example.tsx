@@ -1,4 +1,5 @@
-import {useId, useState} from 'react';
+import {useId, useRef, useState} from 'react';
+import {shouldApplyFilterOnKeyDown} from './ime-guard';
 import {
   autoUpdate, flip, offset, shift,
   FloatingFocusManager, FloatingPortal, useClick, useDismiss, useFloating,
@@ -11,7 +12,9 @@ export default function FloatingExample({level}: {level: Level}) {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState('未选择');
   const [query, setQuery] = useState('');
-  const [composing, setComposing] = useState(false);
+  // Refs update synchronously even when React batches composition and key events.
+  const composing = useRef(false);
+  const suppressNextEnter = useRef(false);
   const id = useId();
   const {refs, floatingStyles, context, placement} = useFloating({
     open,
@@ -81,18 +84,29 @@ export default function FloatingExample({level}: {level: Level}) {
               id={id + '-query'}
               value={query}
               onChange={event => setQuery(event.target.value)}
-              onCompositionStart={() => setComposing(true)}
-              onCompositionEnd={() => setComposing(false)}
+              onCompositionStart={() => {composing.current = true; suppressNextEnter.current = true;}}
+              onCompositionEnd={() => {composing.current = false; suppressNextEnter.current = true;}}
               onKeyDown={event => {
-                if (event.key === 'Enter' && !composing && !event.nativeEvent.isComposing) {
+                if (shouldApplyFilterOnKeyDown({
+                  key: event.key, composing: composing.current,
+                  nativeComposing: event.nativeEvent.isComposing,
+                  legacyKeyCode: event.nativeEvent.keyCode,
+                  suppressNextEnter: suppressNextEnter.current,
+                })) {
                   event.preventDefault();
                   choose(query.trim() ? `搜索：${query.trim()}` : '清空过滤');
                 }
               }}
+              onKeyUp={event => {
+                if (event.key === 'Enter' && !event.nativeEvent.isComposing && !composing.current) {
+                  suppressNextEnter.current = false;
+                }
+              }}
+              onBlur={() => {if (!composing.current) suppressNextEnter.current = false;}}
               placeholder="支持中文输入法"
               style={{display: 'block', width: '100%', border: '1px solid #cbd6cd', padding: 6}}
             />
-            <p style={{fontSize: 12}}>中文候选字输入期间按 Enter 不提交。也可点击确认。</p>
+            <p style={{fontSize: 12}}>中文输入法合成期间及刚完成合成的同一次 Enter 不提交；随后可正常 Enter 或点击确认。</p>
             <button type="button" onClick={() => choose(query.trim() ? `搜索：${query.trim()}` : '清空过滤')}>应用过滤</button>
           </>}
         </div>
