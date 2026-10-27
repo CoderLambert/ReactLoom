@@ -505,3 +505,25 @@ runCount: **14/24**。本轮依赖/测试阶段最新提交 81ec09ac04a05b6bb826
 - 目录覆盖沿用已核实的119/119源码+双指南+verification，357 basic/business/advanced **配置声明**（不是运行成功数）；本轮新增实际SDK PASS=0，浏览器Demo实测PASS=0，117原资料逐项审核量本轮未重新统计，E11/F05原件仍缺并以recreated处理。
 
 **下批**：真实安装环境恢复后首先生成审查根pnpm-lock并启用frozen CI，执行完整tsc与Vite构建，Chromium重点检查本轮Worker报告的生命周期、复制JSON、迟到事件和卸载，再验证Monaco/F11 MSW/PDF.js/FFmpeg worker。无可用Runner时优先推进独立源码安全与增量回归，不用静态产物冒充生产验收。主 PR #8保持open/Draft，不动main、PR #3、旧模板、公开部署及付费API。
+
+## PLATFORM 第20轮：源码索引跨请求版本绑定（2026-10-27）
+
+**runCount: 20/24。** 从私有集成分支实际HEAD `9d57ccede8413b9822a964912dec6705978727e3` 恢复，读取根/包 AGENTS、COORDINATION、IMPLEMENTATION、本进度、Issue #4/#5/#6/#7、开放PR及CI。当前开放PR仅主 Draft #8 和与本任务无关的 #3，本批没有待合并worker PR；AB/CD/EF 进度文件无新增公共依赖请求。没有触碰worker条目、main、PR #3、其他模板、部署或付费API。
+
+### 本批实质代码交付（提交 `2dab0664a1a4098063964ff3f9720e17cfbed333`）
+
+- 修复源码页原有的一致性缺口：此前各源码文件虽然按 `source-index.json` 的SHA-256核对，但索引本身不受已选库详情约束；当部署/caching不同步、整个索引与源码一同过期时，仍可能显示另一套文件及其自洽摘要。
+- 公共生成器现在为每条库的完整、确定性 `source-index.json` 生成 `sourceIndexSha256`，写入按需 `detail.json` 和 `catalog.json`；首页轻量索引继续只保留 `sourceFingerprint`，详情仍先与首页指纹匹配。源码页在读完128KB上限的JSON、验证路径/字节数/SHA格式后，使用浏览器WebCrypto核对规范化索引摘要；不匹配则停止源码请求/复制，提示刷新重试。旧详情缺少索引摘要会fail closed，不向下兼容未验证版本；在无WebCrypto环境也不伪造校验成功。
+- 同批更新 `Entry` 类型、详情验收合同、生成器/详情/索引/源码定向单测，以及生产preview中的有效但篡改SHA索引负向E2E。共**10个公共源码及测试文件**；未增加库身份、Demo场景或新第三方依赖。页面、生成JSON、源码查看和测试合同使用同一生成事实源。
+
+### 实际测试及证据边界
+
+- 容器 `node --version` 为 `v22.16.0`。从新提交逐字节恢复 `src/lib/source-integrity.mjs`（Git Blob `bf7127064c3242e273cd9a085161b0b099354487`）与 `tests/source-integrity.test.mjs`（`e7660f00cbece1fb6779bc2af7ca8f413c27bf64`），`git hash-object` **2/2** 精确匹配远端。为离线运行只提供与原 `catalog.mjs` 同内容的 `safeRelativePath` 导出最小依赖替身；**不是完整仓库测试**。
+- 实际命令：`node --check /mnt/data/lab-wave20-exact/src/lib/source-integrity.mjs`、`node --check /mnt/data/lab-wave20-exact/tests/source-integrity.test.mjs` => **PASS**；`node --test /mnt/data/lab-wave20-exact/tests/source-integrity.test.mjs` => **7 PASS / 0 FAIL / 0 SKIP**，原始stdout在 [platform-wave20-source-index.tap](../evidence/platform-wave20-source-index.tap)，本地原始TAP SHA256 `91ca5f2473e9f0b8c94f74a7f0fbdb33c96747ae68364508d46fcfb38900ab1f`。测试包含流式字节、目录替换与跨文件索引篡改拒绝，不等于真实SDK导入。
+- **NOT_RUN**：本轮改动后的完整 `generate.test.mjs`、`catalog-payload.test.mjs`、`catalog-index.test.mjs`、完整React/TypeScript、Vite、官方SDK、Chromium生产preview新用例。独立算法原型4 PASS未计入精确源码7 PASS。
+- **BLOCKED**：没有Node>=22.18/pnpm10加registry的完整依赖环境，根pnpm-lock尚无真实 `packages/library-lab` importer。最新本批基线 [Library Lab CI 40527274430](https://github.com/CoderLambert/ReactLoom/actions/runs/40527274430) 两个Job与 [主CI 40527274340](https://github.com/CoderLambert/ReactLoom/actions/runs/40527274340) 七个Job均failure，查询各样本及catalogue/bootstrap的步骤均 `steps=[]`，runner_id=0，且从开始到结束约2秒；不能将其写成真实构建/SDK失败或PASS。共享阻塞继续归 #12，不盲目重跑或伪造锁文件。
+
+### 分离计数和后续
+身份目录仍为**119**，源码/中文guide/Agent/verification结构为**119**，三层Demo声明为**357**；本轮已实际运行浏览器Demo **0**，新增官方SDK PASS **0**；117旧资料实际逐项审核数未重数，E11/F05原件继续按缺失/重建管理。新索引证据属于平台安全逻辑，不修改任何`verification.json`。
+
+下批：可安装环境优先真实解析root pnpm lock、冻结CI、完整TS/Vite及本批generator+详情+浏览器用例；随后优先MSW SW scope、Monaco/PDF.js Worker、生产卸载和资源预算。无可用runner时继续独立公共代码，保持唯一集成分支与主 PR #8 Draft。

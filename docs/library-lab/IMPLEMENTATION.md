@@ -93,3 +93,7 @@ AB #68、CD #69、EF #70 已由PLATFORM核对变更文件范围和固定head后s
 ## 第18轮：三组质量集成与公开JSON传输防护（2026-10-27）
 
 已审核并 squash 合入三组限定目录的 worker PR：AB #71（React Flow/MapLibre/cmdk）、CD #72（Virtuoso/TanStack Virtual/Fuse.js）、EF #73（MSW/PDF.js/react-pdf）。本批仅加固已接入的9项，不增加119身份库或357项三层场景配置。公共平台 `src/lib/bounded-json.mjs` 已把首页 `catalog-index.json`、单条 `detail.json`、源码 `source-index.json` 的 fetch 改为按解压后流字节上限读取，校验MIME并拒绝SPA fallback；有独立Node测试与3项生产preview回归源码，仍保持已有schema与SHA审查。**精确源码同源的Node定向测试6 PASS/0 FAIL、独立类型声明静态检查PASS**；新Playwright、完整React TSX/Vite、真实SDK/Chromium均未运行，不能据此关闭LL06/LL08/LL10。基于官方tag核对MSW 3.0.3、react-pdf 11.0.0及pdfjs-dist 6.3.289的版本/peer/许可；实际pnpm锁解析继续BLOCKED。详见 `progress/PLATFORM.md` 第18轮。PR #8保持Draft。
+
+## 第20轮：源码索引与详情版本同源约束（2026-10-27）
+
+公共生成器为实际源码文件列表、SHA-256及字节数的规范化JSON生成 `sourceIndexSha256`，详情在已与轻量目录sourceFingerprint匹配后提供该摘要。源码面板先验证上限/路径和完整索引摘要，再按文件SHA与大小下载；有效格式的旧索引或整体替换索引不能再静默通过。详情缺摘要或浏览器不支持WebCrypto时fail closed。已提交生成器、协议、Node回归源码与生产preview负例。精确远端源码及测试两Blob的离线Node定向运行7 PASS，但仅覆盖 `source-integrity` 逻辑；生成器完整/浏览器/第三方SDK仍NOT_RUN，根依赖锁与完整tsc/build仍BLOCKED。进度与证据见 `progress/PLATFORM.md` 第20轮；不将静态119条/357场景声明计为验收成功。主PR #8保持Draft。
