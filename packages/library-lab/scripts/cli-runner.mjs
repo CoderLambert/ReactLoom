@@ -4,8 +4,11 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 const root=fileURLToPath(new URL('../',import.meta.url));
 export const CLI_RECIPES=Object.freeze({
+ D16:{label:'Workbox isolated build workshops (no Service Worker registration)',scripts:['entries/D16-workbox/examples/basic.mjs','entries/D16-workbox/examples/business.mjs','entries/D16-workbox/examples/advanced.mjs']},
+ D21:{label:'Pagefind offline search index workshops',scripts:['entries/D21-pagefind/examples/basic.mjs','entries/D21-pagefind/examples/business.mjs','entries/D21-pagefind/examples/advanced.mjs']},
  F04:{label:'ExcelJS workbook round trip',scripts:['entries/F04-exceljs/examples/verify.mjs']},
  F10:{label:'Orval generated client variants',scripts:['entries/F10-orval/examples/basic.mjs','entries/F10-orval/examples/business.mjs','entries/F10-orval/examples/advanced.mjs']},
+ F15:{label:'Knip structured JSON CLI findings (three scenarios)',scripts:['entries/F15-knip/examples/verify.mjs']},
  F16:{label:'dependency-cruiser architecture rules',scripts:['entries/F16-dependency-cruiser/examples/verify.mjs']},
  F18:{label:'rollup-plugin-visualizer real Vite reports',scripts:['entries/F18-rollup-plugin-visualizer/examples/verify.mjs']},
 });
