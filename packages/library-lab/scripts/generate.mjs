@@ -58,10 +58,12 @@ export async function generate(root=packageRoot,{check=false,expectedCount=119}=
   for(const demo of entry.demos){if(demo.entryPoint){await safeRead(folder,demo.entryPoint);if(!names.has(demo.entryPoint))throw new Error(`entryPoint missing from sourceFiles: ${entry.entryId}/${demo.demoId}`);
    if(demo.executionKind==='react')imports.push(`  ${JSON.stringify(`${entry.entryId}/${demo.demoId}`)}: () => import(${JSON.stringify(`../../entries/${dir.name}/${demo.entryPoint}`)}),`);
    if(demo.executionKind==='worker')workerImports.push(`  ${JSON.stringify(`${entry.entryId}/${demo.demoId}`)}: () => new Worker(new URL(${JSON.stringify(`../../entries/${dir.name}/${demo.entryPoint}`)}, import.meta.url), {type:'module'}),`);}}
+  const sourceIndex=sources.map(({path:sourcePath,sha256,content})=>({path:sourcePath,sha256,bytes:Buffer.byteLength(content)}));
+  const sourceIndexSha256=createHash('sha256').update(JSON.stringify(sourceIndex)).digest('hex');
   const assets=await collectAssets(folder);
   const sourceFingerprint=fingerprintOf(entry.packages,sources);
   const verification=verifiedState(rawVerification,sourceFingerprint);
-  entries.push({...entry,directory:dir.name,guideAvailable:guide!==null,agentAvailable:agent!==null,sourceFingerprint,verification});payloads.push({id:entry.entryId,guide,agent,sources,assets});
+  entries.push({...entry,directory:dir.name,guideAvailable:guide!==null,agentAvailable:agent!==null,sourceFingerprint,sourceIndexSha256,verification});payloads.push({id:entry.entryId,guide,agent,sources,sourceIndex,assets});
  }
  if(entries.length!==expectedCount)throw new Error(`expected ${expectedCount} entries; found ${entries.length}`);
  for(const entry of entries)for(const related of entry.related)if(!ids.has(related.entryId))throw new Error(`unknown related ${entry.entryId} -> ${related.entryId}`);
@@ -71,7 +73,7 @@ export async function generate(root=packageRoot,{check=false,expectedCount=119}=
  const out=path.join(root,'public');await mkdir(out,{recursive:true});await rm(path.join(out,'raw'),{recursive:true,force:true});
  const entryById=new Map(entries.map(item=>[item.entryId,item]));
  for(const p of payloads){const dest=path.join(out,'raw',p.id);await mkdir(dest,{recursive:true});await writeFile(path.join(dest,'detail.json'),JSON.stringify(entryById.get(p.id)));if(p.guide!==null)await writeFile(path.join(dest,'guide.md'),p.guide);if(p.agent!==null)await writeFile(path.join(dest,'agent.md'),p.agent);
-  await writeFile(path.join(dest,'source-index.json'),JSON.stringify(p.sources.map(({path:sourcePath,sha256,content})=>({path:sourcePath,sha256,bytes:Buffer.byteLength(content)}))));
+  await writeFile(path.join(dest,'source-index.json'),JSON.stringify(p.sourceIndex));
   for(const source of p.sources){const destination=path.join(dest,'sources',source.path);await mkdir(path.dirname(destination),{recursive:true});await writeFile(destination,source.content);}
   for(const asset of p.assets){const target=path.join(dest,asset.name);await mkdir(path.dirname(target),{recursive:true});await writeFile(target,asset.contents);}}
  await writeFile(path.join(out,'catalog.json'),JSON.stringify(entries));

@@ -17,6 +17,8 @@ export function validateCatalogPayload(value) {
     slugs.add(entry.slug);
     if (!HASH.test(entry.sourceFingerprint ?? ''))
       throw new Error(entry.entryId + ' 的源码摘要缺失或无效');
+    if (!HASH.test(entry.sourceIndexSha256 ?? ''))
+      throw new Error(entry.entryId + ' 的源码索引摘要缺失或无效');
     if (!entry.verification || typeof entry.verification !== 'object' || Array.isArray(entry.verification))
       throw new Error(entry.entryId + ' 缺少独立验证状态');
     for (const kind of KINDS) {

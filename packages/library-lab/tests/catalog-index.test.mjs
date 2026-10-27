@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {toCatalogIndex,validateCatalogIndex,validateCatalogDetail,filterCatalogIndex} from '../src/lib/catalog-index.mjs';
-const detail={schemaVersion:1,entryId:'D03',slug:'p-limit',name:'p-limit',group:'D',summary:'限制批处理并发',tags:['并发'],contentState:'recreated',packages:[{name:'p-limit',version:'7.3.3'}],references:[],related:[],demos:[{demoId:'basic',title:'可运行示例',level:'basic',executionKind:'react',entryPoint:'examples/demo.tsx',sourceFiles:['examples/demo.tsx']}],sourceFingerprint:'e'.repeat(64),verification:{sdk:{status:'NOT_RUN'},build:{status:'BLOCKED'},browser:{status:'NOT_RUN'}}};
+const detail={schemaVersion:1,entryId:'D03',slug:'p-limit',name:'p-limit',group:'D',summary:'限制批处理并发',tags:['并发'],contentState:'recreated',packages:[{name:'p-limit',version:'7.3.3'}],references:[],related:[],demos:[{demoId:'basic',title:'可运行示例',level:'basic',executionKind:'react',entryPoint:'examples/demo.tsx',sourceFiles:['examples/demo.tsx']}],sourceFingerprint:'e'.repeat(64),sourceIndexSha256:'b'.repeat(64),verification:{sdk:{status:'NOT_RUN'},build:{status:'BLOCKED'},browser:{status:'NOT_RUN'}}};
 const index=toCatalogIndex([detail]);
 test('index contains only landing-page data, no source code or claim of successful SDK execution',()=>{
  const [card]=validateCatalogIndex(index);

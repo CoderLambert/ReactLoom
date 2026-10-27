@@ -217,3 +217,18 @@ test('source index JSON transport rejects wrong MIME before downloading source',
  await expect(page.getByRole('button',{name:'复制源码'})).toHaveCount(0);
  expect(downloads).toBe(0);
 });
+
+test('production source index refuses valid-looking stale metadata before a source download',async({page})=>{
+ let downloads=0;
+ page.on('request',request=>{if(request.url().includes('/raw/C20/sources/'))downloads++;});
+ await page.route('**/raw/C20/source-index.json',async route=>{
+  const response=await route.fetch();
+  const index=await response.json() as Array<{path:string;sha256:string;bytes:number}>;
+  index[0]={...index[0],sha256:'a'.repeat(64)};
+  await route.fulfill({response,contentType:'application/json',body:JSON.stringify(index)});
+ });
+ await page.goto('/libraries/clsx?tab=demo&example=basic');
+ await expect(page.locator('.source-viewer [role="alert"]')).toContainText('源码索引与当前库详情版本不匹配');
+ expect(downloads).toBe(0);
+ await expect(page.getByRole('button',{name:'复制源码'})).toHaveCount(0);
+});

@@ -78,3 +78,12 @@ test('landing catalogue is lightweight; full detail is fetched only by ID and bo
  assert.equal(detail.demos[0].entryPoint,'examples/demo.tsx');
  assert.equal(detail.guideAvailable,true);
 });
+
+test('source index bytes are pinned by the generated detail digest',async t=>{
+ const {root}=await setup(t);
+ await generate(root,{expectedCount:1});
+ const detail=JSON.parse(await readFile(path.join(root,'public/raw/D03/detail.json'),'utf8'));
+ const index=await readFile(path.join(root,'public/raw/D03/source-index.json'),'utf8');
+ assert.equal(detail.sourceIndexSha256,createHash('sha256').update(index).digest('hex'));
+ assert.match(detail.sourceIndexSha256,/^[a-f0-9]{64}$/u);
+});

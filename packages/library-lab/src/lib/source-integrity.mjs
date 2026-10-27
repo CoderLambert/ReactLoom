@@ -68,3 +68,18 @@ export async function readBoundedSourceResponse(response, expectedBytes) {
     reader.releaseLock();
   }
 }
+
+/** A detail snapshot pins the complete generated source index. Per-file SHA alone
+ * cannot detect a stale or substituted index where both bytes and SHA changed.
+ * Normalize known keys so JSON property order/whitespace is not significant. */
+export async function verifySourceIndexDigest(value, expectedSha256) {
+  if (!SHA256.test(expectedSha256 ?? '')) throw new Error('库详情未提供有效的源码索引摘要');
+  if (!Array.isArray(value) || value.length > 256) throw new Error('源码索引格式错误');
+  if (!globalThis.crypto?.subtle) throw new Error('当前环境无法校验源码索引 SHA-256');
+  const bytes = new TextEncoder().encode(JSON.stringify(value.map(file=>({path:file.path,sha256:file.sha256,bytes:file.bytes}))));
+  if (bytes.byteLength > 128_000) throw new Error('源码索引校验超出字节预算');
+  const digest = await globalThis.crypto.subtle.digest('SHA-256',bytes);
+  const actual = Array.from(new Uint8Array(digest),byte=>byte.toString(16).padStart(2,'0')).join('');
+  if (actual !== expectedSha256) throw new Error('源码索引与当前库详情版本不匹配，请刷新后重试');
+  return value;
+}

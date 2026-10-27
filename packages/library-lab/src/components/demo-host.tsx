@@ -6,12 +6,12 @@ import {demoLoaders} from '../generated/loaders';
 import {reproductionCommand} from '../lib/reproduction.mjs';
 import {demoRunPolicy,CAPABILITY_DESCRIPTIONS} from '../lib/demo-policy.mjs';
 import {sourceLanguage} from '../lib/source-language.mjs';
-import {validateSourceIndex,readBoundedSourceResponse} from '../lib/source-integrity.mjs';
+import {validateSourceIndex,verifySourceIndexDigest,readBoundedSourceResponse} from '../lib/source-integrity.mjs';
 import {readLimitedJsonResponse,JSON_RESPONSE_LIMITS} from '../lib/bounded-json.mjs';
 import {packageInstallCommand} from '../lib/package-source.mjs';
 import HighlightCode from './highlight-code';
 import {workerFactories} from '../generated/worker-loaders';
-function SourceViewer({entryId,demo}:{entryId:string;demo:Demo}){
+function SourceViewer({entryId,demo,indexDigest}:{entryId:string;demo:Demo;indexDigest:string}){
  const [files,setFiles]=useState<SourceMetadata[]>([]);
  const [selected,setSelected]=useState('');
  const [content,setContent]=useState('');
@@ -24,14 +24,16 @@ function SourceViewer({entryId,demo}:{entryId:string;demo:Demo}){
   const controller=new AbortController();setFiles([]);setSelected('');setError('');
   fetch(import.meta.env.BASE_URL+'raw/'+entryId+'/source-index.json',{signal:controller.signal})
    .then(response=>readLimitedJsonResponse(response,JSON_RESPONSE_LIMITS.sourceIndex))
-   .then((items:unknown)=>{
+   .then(async(items:unknown)=>{
     if(controller.signal.aborted)return;
     const relevant=validateSourceIndex(items,demo.sourceFiles);
+    await verifySourceIndexDigest(items,indexDigest);
+    if(controller.signal.aborted)return;
     setFiles(relevant);setSelected(relevant[0]?.path??'');
    })
    .catch(cause=>{if(!controller.signal.aborted)setError(String(cause));});
   return()=>controller.abort();
- },[entryId,demo]);
+ },[entryId,demo,indexDigest]);
  const current=files.find(file=>file.path===selected);
  const currentKey=current?`${entryId}/${current.path}/${current.sha256}`:'';
  // Never show or copy a previous file while a newly selected file is loading.
@@ -90,5 +92,5 @@ export default function DemoHost({entry,demoId,onSelect}:{entry:Entry;demoId?:st
  useEffect(()=>{setStarted(false);setReset(0);},[key]);
  if(!demo)return <div className="empty"><h2>真实示例正在接入</h2><p>可以先阅读文档与 Agent 指南。当前条目未标记为已完成，也不会用模拟画面代替目标库。</p></div>;
  return <><div className="demo-toolbar"><label>学习场景 <select value={demo.demoId} onChange={e=>onSelect(e.target.value)}>{entry.demos.map(d=><option key={d.demoId} value={d.demoId}>{({basic:'入门',business:'业务',advanced:'边界'})[d.level]} · {d.title}</option>)}</select></label><span className="badge">{demo.executionKind}</span></div><p>{demo.description}</p>
- {Boolean(demo.capabilities?.length)&&<div className="tags" aria-label="运行环境能力">{demo.capabilities?.map(cap=><span className="badge" key={cap}>{CAPABILITY_DESCRIPTIONS[cap]??cap}</span>)}</div>}<div className="install"><span>安装依赖</span><code>{packageInstallCommand(entry.packages)}</code></div><div className="notice">示例源码已接入不等于真实运行验证通过。请核对页面上方的构建、SDK 与浏览器状态。</div><div className="demo-stage">{canStart?started?<ErrorBoundary key={`${key}:${reset}`} fallbackRender={({error,resetErrorBoundary})=><div role="alert"><h3>这个示例加载失败</h3><p>{String(error)}</p><button type="button" onClick={()=>{setReset(n=>n+1);resetErrorBoundary();}}>重新加载示例</button></div>}><Suspense fallback={<p role="status">正在加载当前示例…</p>}>{Component?<Component level={demo.level}/>:workerFactory?<WorkerHost createWorker={workerFactory} level={demo.level} entryId={entry.entryId} demoId={demo.demoId} sourceFingerprint={entry.sourceFingerprint}/>:null}</Suspense></ErrorBoundary>:<div className="start-demo"><span className="play-symbol" aria-hidden="true">▷</span><h3>按需启动，不占用其他页面资源</h3><button className="primary" type="button" onClick={()=>setStarted(true)}>运行当前示例</button></div>:policy.mode==='reproduction'?<Reproduction entry={entry} demo={demo}/>:<section role="note" className="notice">{policy.mode==='react'?'当前示例尚未生成可加载的代码入口。':policy.reason}</section>}</div>{started&&<div className="demo-actions"><button type="button" onClick={()=>setReset(n=>n+1)}>重置此示例</button><button type="button" onClick={()=>setStarted(false)}>停止并卸载</button></div>}<SourceViewer entryId={entry.entryId} demo={demo}/></>;
+ {Boolean(demo.capabilities?.length)&&<div className="tags" aria-label="运行环境能力">{demo.capabilities?.map(cap=><span className="badge" key={cap}>{CAPABILITY_DESCRIPTIONS[cap]??cap}</span>)}</div>}<div className="install"><span>安装依赖</span><code>{packageInstallCommand(entry.packages)}</code></div><div className="notice">示例源码已接入不等于真实运行验证通过。请核对页面上方的构建、SDK 与浏览器状态。</div><div className="demo-stage">{canStart?started?<ErrorBoundary key={`${key}:${reset}`} fallbackRender={({error,resetErrorBoundary})=><div role="alert"><h3>这个示例加载失败</h3><p>{String(error)}</p><button type="button" onClick={()=>{setReset(n=>n+1);resetErrorBoundary();}}>重新加载示例</button></div>}><Suspense fallback={<p role="status">正在加载当前示例…</p>}>{Component?<Component level={demo.level}/>:workerFactory?<WorkerHost createWorker={workerFactory} level={demo.level} entryId={entry.entryId} demoId={demo.demoId} sourceFingerprint={entry.sourceFingerprint}/>:null}</Suspense></ErrorBoundary>:<div className="start-demo"><span className="play-symbol" aria-hidden="true">▷</span><h3>按需启动，不占用其他页面资源</h3><button className="primary" type="button" onClick={()=>setStarted(true)}>运行当前示例</button></div>:policy.mode==='reproduction'?<Reproduction entry={entry} demo={demo}/>:<section role="note" className="notice">{policy.mode==='react'?'当前示例尚未生成可加载的代码入口。':policy.reason}</section>}</div>{started&&<div className="demo-actions"><button type="button" onClick={()=>setReset(n=>n+1)}>重置此示例</button><button type="button" onClick={()=>setStarted(false)}>停止并卸载</button></div>}<SourceViewer entryId={entry.entryId} demo={demo} indexDigest={entry.sourceIndexSha256}/></>;
 }

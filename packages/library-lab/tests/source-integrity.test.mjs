@@ -1,6 +1,7 @@
 import test from 'node:test';
+import {createHash} from 'node:crypto';
 import assert from 'node:assert/strict';
-import {MAX_SOURCE_BYTES, validateSourceIndex, readBoundedSourceResponse} from '../src/lib/source-integrity.mjs';
+import {MAX_SOURCE_BYTES, validateSourceIndex, verifySourceIndexDigest, readBoundedSourceResponse} from '../src/lib/source-integrity.mjs';
 
 const sha = 'a'.repeat(64);
 const one = {path:'examples/example.tsx', sha256:sha, bytes:15};
@@ -44,4 +45,15 @@ test('source stream rejects fallback HTML, non-200 replies and invalid UTF-8', a
 test('source stream accepts empty files and rejects impossible byte expectations', async () => {
   assert.equal(await readBoundedSourceResponse(new Response(''),0),'');
   await assert.rejects(readBoundedSourceResponse(new Response('x'),MAX_SOURCE_BYTES+1),/非法/);
+});
+
+test('source metadata is cryptographically bound to the selected detail before downloading bytes', async () => {
+ const index=[one,two];
+ const digest=createHash('sha256').update(JSON.stringify(index)).digest('hex');
+ assert.deepEqual(await verifySourceIndexDigest(index,digest),index);
+ // Metadata with a valid-looking digest must still fail if swapped after the detail fetch.
+ await assert.rejects(verifySourceIndexDigest([{...one,sha256:'c'.repeat(64)},two],digest),/版本不匹配/);
+ await assert.rejects(verifySourceIndexDigest(index,''),/摘要/);
+ // A different JSON object property order should not change the logical index.
+ assert.deepEqual(await verifySourceIndexDigest([{bytes:one.bytes,path:one.path,sha256:one.sha256},two],digest).then(v=>v.length),2);
 });
