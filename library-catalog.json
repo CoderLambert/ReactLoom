@@ -339,9 +339,9 @@
     "entryId": "C04",
     "name": "JSON Forms",
     "group": "C",
-    "summary": "JSON Schema 驱动动态表单",
+    "summary": "通过 JSON Schema 与 UI Schema 构建可校验的业务表单",
     "path": "packages/library-lab/entries/C04-jsonforms",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "C05",
@@ -371,9 +371,9 @@
     "entryId": "C08",
     "name": "AG Grid",
     "group": "C",
-    "summary": "复杂数据网格与编辑",
+    "summary": "企业级数据网格、稳定行身份与可控编辑",
     "path": "packages/library-lab/entries/C08-ag-grid",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "C09",
@@ -403,17 +403,17 @@
     "entryId": "C12",
     "name": "FullCalendar",
     "group": "C",
-    "summary": "事件日历、时区和排程",
+    "summary": "基于 React 的事件排程、日历视图与时区边界",
     "path": "packages/library-lab/entries/C12-fullcalendar",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "C13",
     "name": "Frappe Gantt",
     "group": "C",
-    "summary": "任务依赖与甘特图",
+    "summary": "交互式任务时间线、依赖关系和日期修改",
     "path": "packages/library-lab/entries/C13-frappe-gantt",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "C14",
@@ -483,9 +483,9 @@
     "entryId": "C22",
     "name": "Moment（历史迁移）",
     "group": "C",
-    "summary": "历史日期库识别与现代迁移",
+    "summary": "将历史 Moment 日期代码迁移到 date-fns、Day.js 与明确的时区模型",
     "path": "packages/library-lab/entries/C22-moment-migration",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "D01",
@@ -587,9 +587,9 @@
     "entryId": "D13",
     "name": "RTK Query",
     "group": "D",
-    "summary": "Redux 数据请求与缓存订阅",
+    "summary": "与 Redux Toolkit 集成的远端缓存、订阅和失效刷新",
     "path": "packages/library-lab/entries/D13-rtk-query",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "D14",
@@ -611,9 +611,9 @@
     "entryId": "D16",
     "name": "Workbox",
     "group": "D",
-    "summary": "Service Worker 缓存与离线更新",
+    "summary": "隔离目录中的真实 Workbox precache 构建、公共 RSS 网络缓存策略与离线回退",
     "path": "packages/library-lab/entries/D16-workbox",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "D17",
@@ -651,9 +651,9 @@
     "entryId": "D21",
     "name": "Pagefind",
     "group": "D",
-    "summary": "构建时静态站点全文搜索",
+    "summary": "真实 Pagefind Node API 为静态文章、RSS 笔记及 HTML 生成离线可部署索引",
     "path": "packages/library-lab/entries/D21-pagefind",
-    "contentState": "missing"
+    "contentState": "recreated"
   },
   {
     "entryId": "E01",

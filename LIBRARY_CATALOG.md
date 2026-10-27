@@ -46,16 +46,16 @@
 |C01|React Hook Form|真实 RSS 订阅表单：动态字段、服务端错误映射与请求取消|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C01-react-hook-form/)|
 |C02|Zod|不可信 RSS / OPML JSON 校验、规范化与跨字段错误|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C02-zod/)|
 |C03|Valibot|模块化 Schema 验证、RSS 数据收窄与跨字段错误定位|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C03-valibot/)|
-|C04|JSON Forms|JSON Schema 驱动动态表单|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C04-jsonforms/)|
+|C04|JSON Forms|通过 JSON Schema 与 UI Schema 构建可校验的业务表单|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C04-jsonforms/)|
 |C05|Ajv|JSON Schema 编译验证、严格输入边界与条件规则|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C05-ajv/)|
 |C06|IMask|数字编号、金额和日期输入掩码；保留光标与中文 IME 边界|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C06-imask/)|
 |C07|TanStack Table|Headless 表格的稳定业务 ID、排序和分页数据所有权|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C07-tanstack-table/)|
-|C08|AG Grid|复杂数据网格与编辑|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C08-ag-grid/)|
+|C08|AG Grid|企业级数据网格、稳定行身份与可控编辑|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C08-ag-grid/)|
 |C09|React Virtuoso|自动测量变高列表、RSS分段加载与历史消息锚定|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C09-react-virtuoso/)|
 |C10|TanStack Virtual|Headless 列表虚拟化、变高测量与稳定业务键|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C10-tanstack-virtual/)|
 |C11|react-arborist|虚拟化树形 RSS 目录、稳定节点 ID、跨分组拖拽和中文搜索|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C11-react-arborist/)|
-|C12|FullCalendar|事件日历、时区和排程|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C12-fullcalendar/)|
-|C13|Frappe Gantt|任务依赖与甘特图|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C13-frappe-gantt/)|
+|C12|FullCalendar|基于 React 的事件排程、日历视图与时区边界|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C12-fullcalendar/)|
+|C13|Frappe Gantt|交互式任务时间线、依赖关系和日期修改|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C13-frappe-gantt/)|
 |C14|date-fns|函数式日期、日历天与 DST 时区运算|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C14-date-fns/)|
 |C15|Day.js|不可变日期、严格校验与时区插件的 RSS 排程实践|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C15-dayjs/)|
 |C16|Luxon|DateTime、Interval 与明确 IANA 时区的日历窗口|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C16-luxon/)|
@@ -64,7 +64,7 @@
 |C19|nuqs|URL 搜索参数的类型安全状态、路由适配、push/replace 和 IME 约束|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C19-nuqs/)|
 |C20|clsx|条件 className 合成|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C20-clsx/)|
 |C21|tailwind-merge|Tailwind v4 工具类冲突合并与可覆盖组件实践|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C21-tailwind-merge/)|
-|C22|Moment（历史迁移）|历史日期库识别与现代迁移|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C22-moment-migration/)|
+|C22|Moment（历史迁移）|将历史 Moment 日期代码迁移到 date-fns、Day.js 与明确的时区模型|表单 · 数据 · 日期|[条目](packages/library-lab/entries/C22-moment-migration/)|
 |D01|es-toolkit|轻量类型安全工具函数：RSS 排序、去重、分组和分页|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D01-es-toolkit/)|
 |D02|Lodash/lodash-es|现代集合去重、分组排序和可清理的输入防抖|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D02-lodash/)|
 |D03|p-limit|Promise 并发上限控制|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D03-p-limit/)|
@@ -77,15 +77,15 @@
 |D10|Zustand|React19 vanilla store、租户状态与受控 persist 迁移|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D10-zustand/)|
 |D11|Jotai|原子和派生状态、写入 atom、Provider Store 多租户隔离|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D11-jotai/)|
 |D12|Redux Toolkit|createSlice/configureStore、团队状态隔离和响应竞态防护|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D12-redux-toolkit/)|
-|D13|RTK Query|Redux 数据请求与缓存订阅|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D13-rtk-query/)|
+|D13|RTK Query|与 Redux Toolkit 集成的远端缓存、订阅和失效刷新|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D13-rtk-query/)|
 |D14|XState|Actor 有限状态机：审稿流程、守卫和重试预算|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D14-xstate/)|
 |D15|Dexie|IndexedDB 事务、复合索引和版本升级，不污染其他站点存储|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D15-dexie/)|
-|D16|Workbox|Service Worker 缓存与离线更新|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D16-workbox/)|
+|D16|Workbox|隔离目录中的真实 Workbox precache 构建、公共 RSS 网络缓存策略与离线回退|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D16-workbox/)|
 |D17|Yjs|Y.Doc 双副本离线编辑、状态向量和 CRDT 增量合并|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D17-yjs/)|
 |D18|Comlink|Web Worker RPC、Transferable 数据传递、回调代理与资源释放|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D18-comlink/)|
 |D19|Fuse.js|浏览器端加权模糊搜索、分组过滤、IME 与动态索引重建|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D19-fusejs/)|
 |D20|MiniSearch|本地全文倒排索引、前缀与拼写容错、查询建议和索引重建|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D20-minisearch/)|
-|D21|Pagefind|构建时静态站点全文搜索|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D21-pagefind/)|
+|D21|Pagefind|真实 Pagefind Node API 为静态文章、RSS 笔记及 HTML 生成离线可部署索引|请求 · 状态 · 工具|[条目](packages/library-lab/entries/D21-pagefind/)|
 |E01|Tiptap|ProseMirror 驱动的 Headless 富文本编辑器：工具栏、JSON 草稿与安全导入|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E01-tiptap/)|
 |E02|BlockNote|开箱即用的块级文档编辑器：块结构、JSON 草稿与变更生命周期|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E02-blocknote/)|
 |E03|Lexical|结构化富文本编辑：真实 EditorState、React Composer、草稿 JSON 和格式命令|编辑 · AI · 多媒体|[条目](packages/library-lab/entries/E03-lexical/)|
