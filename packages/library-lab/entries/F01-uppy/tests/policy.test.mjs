@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readTextPreview } from '../preview-policy.mjs';
+import { readTextPreview } from '../examples/preview-policy.mjs';
 
 test('decodes valid multilingual UTF-8 without network', async () => {
   assert.equal(await readTextPreview(new Blob(['新闻,hello\n'])), '新闻,hello\n');
