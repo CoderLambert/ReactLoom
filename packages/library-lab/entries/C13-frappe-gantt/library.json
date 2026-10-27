@@ -51,7 +51,8 @@
         "examples/example.tsx",
         "examples/demo.tsx",
         "examples/gantt.css",
-        "examples/plan-policy.mjs"
+        "examples/plan-policy.mjs",
+        "examples/plan-policy.d.mts"
       ],
       "description": "实际 SDK 基础交互"
     },
@@ -65,7 +66,8 @@
         "examples/example.tsx",
         "examples/demo.tsx",
         "examples/gantt.css",
-        "examples/plan-policy.mjs"
+        "examples/plan-policy.mjs",
+        "examples/plan-policy.d.mts"
       ],
       "description": "业务数据与生命周期"
     },
@@ -79,7 +81,8 @@
         "examples/example.tsx",
         "examples/demo.tsx",
         "examples/gantt.css",
-        "examples/plan-policy.mjs"
+        "examples/plan-policy.mjs",
+        "examples/plan-policy.d.mts"
       ],
       "description": "失败、时间/并发边界"
     }
