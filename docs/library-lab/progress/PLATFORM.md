@@ -349,3 +349,35 @@ runCount：**9 / 24**。PR #8 继续 Draft；main/旧模板/PR #3 未修改，�
 **下一批**：有Node>=22.18/pnpm10/registry/Runner时先 pnpm verify:library --execute --resolve-lock，审查真实lock恢复frozen，再逐项执行catalog、Node政策回归、E03/F01/F17 SDK、tsc/Vite、Chromium及F06/F07 PDF Worker、E05 Monaco、F11 MSW、D16 Workbox SW隔离；无安装环境不重复伪运行，继续公共协议可独立代码修复。主PR#8继续Draft，不改main、PR#3、模板、生产或公网部署。
 
 runCount: **14/24**。本轮依赖/测试阶段最新提交 81ec09ac04a05b6bb8264292e07f9359c2a58365；progress自身提交见本次GitHub历史。
+
+## PLATFORM 第15轮：三组质量 PR 合入、CLI 白名单修复与条目级增量策略 CI（2026-10-27）
+
+**先读与隔离确认：**恢复最新集成分支的 COORDINATION/IMPLEMENTATION、根和包级 AGENTS、本进度、Issue #4/#5/#6/#7、PR #8、开放 PR 与最近 Actions。三个 worker PR 均以 `feat/library-lab` 为 base，审核所有变更路径（CD 27 / AB 23 / EF 25）严格仅位于各自 A+B/C+D/E+F 条目与独立 progress，没有公共依赖、锁文件、CI 或跨组写入。核对合并时的准确 HEAD，转 Ready 的仅为本批 worker PR；最终主 PR #8 继续 Draft。GitHub 用 expected_head_sha + squash 合并（无 force、不合 main）：
+
+- [CD #62](https://github.com/CoderLambert/ReactLoom/pull/62) head `e7371a869d8be86a4911024f6c3e5a2e3c3c32d2` → 合入 `33cfc9ecc2de9b94bc2840bd581c9faadc548151`：D06 Immer inverse patch 的同步所有权、C13 Frappe Gantt DAG 拓扑环检测、C12 FullCalendar 显式 offset/DST 与单调事件 ID；C13 全局监听器浏览器卸载风险仍未验证。
+- [AB #63](https://github.com/CoderLambert/ReactLoom/pull/63) head `9cc7e85f8ae24993533894fe758897d157bf820c` → 合入 `699deb5b8982907ddaa6c92d6ced153df2516cbb`：A13 Three.js 停止闲置 GPU 循环、A15 Leaflet marker 与选中状态同步、B13 dnd-kit 固定项重排边界、B14 原生拖拽手柄隔离。
+- [EF #64](https://github.com/CoderLambert/ReactLoom/pull/64) head `152ef44dc95bd69d1e266249af0cfe604e3ed33b` → 合入 `e201fa54e3bd9c2a387d45e97208f9cb2516f3e0`：F15 Knip 结构化 JSON/CLI 状态验证、F16 dependency-cruiser 双报告器校验、F18 visualizer 清理旧产物并要求真正分包。三者新增的是**可执行校验源码**，此平台运行中尚未执行实际第三方 CLI。
+
+**PLATFORM 本轮实际代码（仅公共 owner）：**
+
+- `2c5b05de01e692d478df664e624e7b15562e9956` + `24c1c8b579bd4f893764e5134b007ae44db886d7`：修复公共 CLI 注册表**实际只有4项而已提交测试预期6项**的可复现缺陷，补 D16 Workbox、D21 Pagefind 与新 F15 Knip，形成 D16/D21/F04/F10/F15/F16/F18 **7条固定 CLI 配方**及注入/无 shell 断言；无任意路径执行入口，不自动执行 SDK 或 SW 注册。
+- `456a46a221960709bd2991e13dd2257689b83eb5` + `f2e0bde4378b934b8a5122946ab3355e279a69ee`：新增 Git diff SHA 驱动的纯策略测试选择器：条目源、manifest、tests 改动选对应条目；公共平台 src/scripts/tests/package/lock/CI 改动覆盖全部纯策略；指南/Agent/进度文案不重复跑119库。无可用 diff 则保守回退全部策略；无匹配政策 suite 只报 SKIP，**不生成 SDK PASS**；新增三项边界测试。
+- `cdf17dcbb391a1fa9ff2fe1eab865e62358dd795`：Library Lab catalogue CI checkout `fetch-depth: 0` 并对比 PR base / push before SHA，先保留默认 Node 平台目录/依赖测试，再运行按变更范围选取的条目**政策**用例；不删除根 CI、不将旧 bootstrap 当最终锁验收。
+- `75988b5f94ffc5e10caa04b7afb369b45ba2165a`：更新 README 的七项实际 CLI 复现和变更路径增量门禁说明。原始离线 Node TAP 由 `3f5d500d27d0d8c691e17f222035264b97e86027` 保存至 [platform-wave15-node.tap](../evidence/platform-wave15-node.tap)。
+
+**本轮已执行（精确范围/命令/原始证据）：**
+
+- PASS：从 GitHub 拉取运行文件的精确文本到隔离目录 `/mnt/data/reactloom-exact/packages/library-lab`，以 `git hash-object` 对比五份 GitHub blob：CLI源码 `ddf011a0c8154a0d800ea001f487809bb25f0b95` / CLI测试 `456597ebf384ed4ade09191f4e1c10b29d31fcb1` / SDK筛选器 `068c1f32c89ef436bce57543dc895668789083db` / 政策runner `8024ebb324e7449f825176018b50054bc0003a2e` / 政策测试 `244f47bfdf6ae6697328d04d5eaf8f94d112b4f5`，全部一致。
+- `node --test tests/cli-runner.test.mjs`：**7 PASS / 0 FAIL / 0 SKIP**，验证7个配方、固定路径、无 shell、伪造路径拒绝；TAP SHA-256 `80444552d858e0be514321fc9039501aad8927ac45cc98b85654e3ad8bf9d01b`。
+- `node --test tests/policy-runner.test.mjs`：**6 PASS / 0 FAIL / 0 SKIP**，验证SDK与政策分离、单库选择、跨库互不干扰、docs-only SKIP、公共平台变更全策略回退；TAP SHA-256 `10d1992cf9e6ec5c48df55b0bf8ea6f4a6cbdd4c69f7d9a9a2a341f8e4c9328a`。
+- 隔离**合成 Git fixture**：两库 A04/C07 都有策略测试，只提交 A04 源文件改变；`node scripts/policy-runner.mjs --changed-base=08db4c638b87a430b3b1e50bb42d68240de4516d` → `affected IDs: A04`、仅1条政策测试 **PASS**，退出码0，输出 SHA-256 `78a6c49b54d71a3c4251f57d548058b09b343725914bd394013de1368263a73e`。它证明 exact policy runner CLI diff+spawn 接线，但**不表示在完整ReactLoom树执行**。
+- 运行 Node `v22.16.0`，低于项目声明 Node≥22.18，本轮这13项仅为脱离SDK依赖的 Node 平台逻辑，不等于第三方SDK/构建/浏览器通过。
+- NOT_RUN：本轮完整集成HEAD的全部 `pnpm test`、`pnpm test:sdk`、`pnpm typecheck`、`pnpm build`、Chromium E2E、Worker/SW/iframe、F15/F16/F18真实 CLI、GitHub CI的真实 shell 步骤。
+- BLOCKED：仍无完整可联网 pnpm10 + Node≥22.18 工作树；根 `pnpm-lock.yaml` 缺本包合法解析 importer，未伪造 integrity；CI 最近已审查的 Library Lab run [40485132126](https://github.com/CoderLambert/ReactLoom/actions/runs/40485132126) 与主 CI [40485132162](https://github.com/CoderLambert/ReactLoom/actions/runs/40485132162) 所有作业状态 failure，但查询 catalogue/bootstrap job steps 返回 `[]`，**无构建命令结果**；不能归因为 TypeScript/SDK 代码失败。后续最新 run 仍须检查。
+- dependencyRequests：这三组 PR 没有新增公共 package；既有 Knip/depcruise/visualizer/Workbox/Pagefind 的准确 peer/许可/实际安装仍待真实锁与 Node 环境。此次没有升级SDK验证状态或伪造浏览器/第三方工具结果。
+
+**覆盖口径**：沿用上一轮已核对的 A–F 119 身份目录及119份源码/指南/Agent/verification文件，**357个三层配置场景声明，不代表357个已在浏览器成功的Demo**。本批改进均为已有条目，新增目录0；原研究117份，E11/F05以重建资料处理，未新增可确认原件审计数量。本轮新增真实 SDK PASS = **0**；真实成功Demo数量和SDK总PASS不得由目录数推断。
+
+**下批**：优先可用 Node≥22.18/pnpm10/registry 或实际执行的 Actions Runner，运行 `pnpm verify:library --execute --resolve-lock` 真实解析锁文件，再恢复 `--frozen-lockfile`，随后按失败依据修复 TypeScript/Vite并对 D03/F15/F16/F18、E05 Monaco Worker、F06/F07 PDF.js、F11 MSW和D16 Workbox隔离做真实 SDK/浏览器验收；先解决完整运行环境，不重复调用已知无 steps 的CI。保持 Draft 主 PR #8，main/PR #3/模板未改，不公开部署或调用付费API。
+
+**runCount: 15/24**。
