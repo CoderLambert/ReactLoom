@@ -2,6 +2,7 @@ import {useEffect, useMemo, useRef, useState} from 'react';
 import * as maplibregl from 'maplibre-gl';
 import type {GeoJSONSource, Map as MapInstance, MapLayerMouseEvent} from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import {makeLocalStation, MAX_EXTRA_STATIONS} from './station-factory';
 
 // A tile-free laboratory: MapLibre renders genuine vector layers, without map credentials.
 type Level = 'basic' | 'business' | 'advanced';
@@ -98,11 +99,10 @@ export default function MapLibreExample({level}: {level: Level}) {
   }, [visible, ready]);
 
   function addStation() {
-    nextId.current += 1;
-    const id = 'local-' + nextId.current;
-    setStations(old => [...old, {id, label: '本地站点 ' + nextId.current,
-      longitude: 115 + nextId.current * 0.12, latitude: 38.4, healthy: true}]);
-    setSelected(id);
+    if (nextId.current >= MAX_EXTRA_STATIONS) return;
+    const station = makeLocalStation(++nextId.current);
+    setStations(old => [...old, station]);
+    setSelected(station.id);
   }
   function toggle(id: string) {
     setStations(old => old.map(s => s.id === id ? {...s, healthy: !s.healthy} : s));
@@ -115,8 +115,8 @@ export default function MapLibreExample({level}: {level: Level}) {
       <label><input type="checkbox" checked={onlyHealthy}
         onChange={e => setOnlyHealthy(e.target.checked)}/> 只看在线来源</label>
       {level === 'advanced' && <>
-        <button type="button" onClick={addStation}>新增本地站点</button>
-        <button type="button" onClick={() => {setStations(BASE); setSelected('beijing'); setOnlyHealthy(false);}}>恢复初始状态</button>
+        <button type="button" onClick={addStation} disabled={nextId.current >= MAX_EXTRA_STATIONS}>新增本地站点（最多40条）</button>
+        <button type="button" onClick={() => {nextId.current = 0; setStations(BASE); setSelected('beijing'); setOnlyHealthy(false);}}>恢复初始状态</button>
       </>}
     </div>}
     <div ref={host} role="img" aria-label="MapLibre 地图点层，下方有等价的可操作表格"

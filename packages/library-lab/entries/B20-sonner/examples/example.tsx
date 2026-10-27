@@ -1,5 +1,6 @@
 import {useEffect, useRef, useState} from 'react';
 import {Toaster, toast} from 'sonner';
+import {LatestRunGuard} from './latest-run';
 
 type Level = 'basic' | 'business' | 'advanced';
 const toasterId = 'reactloom-b20-demo';
@@ -10,14 +11,26 @@ export default function SonnerExample({level}: {level: Level}) {
   const [failure, setFailure] = useState(false);
   const owned = useRef<Set<string | number>>(new Set());
   const timers = useRef<Set<number>>(new Set());
+  const latestRun = useRef(new LatestRunGuard());
+  const runningToast = useRef<string | number | null>(null);
 
   useEffect(() => () => {
-    for (const timer of timers.current) window.clearTimeout(timer);
-    timers.current.clear();
+    latestRun.current.invalidate();
+    clearPending();
     // Only dismiss toasts owned by this demo; never call toast.dismiss() without an id.
     for (const id of owned.current) toast.dismiss(id);
     owned.current.clear();
   }, []);
+
+  function clearPending() {
+    for (const timer of timers.current) window.clearTimeout(timer);
+    timers.current.clear();
+    if (runningToast.current !== null) {
+      toast.dismiss(runningToast.current);
+      owned.current.delete(runningToast.current);
+      runningToast.current = null;
+    }
+  }
 
   function remember(id: string | number) {
     owned.current.add(id);
@@ -39,12 +52,19 @@ export default function SonnerExample({level}: {level: Level}) {
     }));
   }
   function simulateTask() {
+    // A second click supersedes the first, including any pending toast and callback.
+    const token = latestRun.current.start();
+    clearPending();
+    const shouldFail = failure; // Keep business input frozen for this run.
     const id = toast.loading('正在处理本地演示任务…', {toasterId, duration: Infinity});
     remember(id);
+    runningToast.current = id;
     setResult('任务进行中');
     const timer = window.setTimeout(() => {
       timers.current.delete(timer);
-      if (failure) {
+      if (!latestRun.current.isCurrent(token)) return;
+      runningToast.current = null;
+      if (shouldFail) {
         toast.error('处理失败，请稍后重试', {id, toasterId, description: '只是可控的演示失败，不是后端错误。'});
         setResult('任务失败');
       } else {
@@ -55,8 +75,8 @@ export default function SonnerExample({level}: {level: Level}) {
     timers.current.add(timer);
   }
   function cancelOwn() {
-    for (const timer of timers.current) window.clearTimeout(timer);
-    timers.current.clear();
+    latestRun.current.invalidate();
+    clearPending();
     for (const id of owned.current) toast.dismiss(id);
     owned.current.clear();
     setResult('已停止并清理此演示通知');
@@ -77,6 +97,6 @@ export default function SonnerExample({level}: {level: Level}) {
       <button type="button" onClick={cancelOwn}>取消并清理本演示</button>
     </div>}
     <p role="status" style={{marginTop: 18}}>业务状态：{result}</p>
-    <p style={{fontSize: 12}}>离开此 Tab 会清理该 Demo 拥有的计时器和通知，不影响页面上其他示例。</p>
+    <p style={{fontSize: 12}}>重复运行采用最后一次有效任务；取消或离开此 Tab 会失效旧回调、清理本 Demo 的计时器和通知，不影响页面其他示例。</p>
   </section>;
 }

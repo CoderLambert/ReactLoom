@@ -60,7 +60,8 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/ime-guard.ts"
       ],
       "capabilities": [
         "portal",
@@ -77,7 +78,8 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/ime-guard.ts"
       ],
       "capabilities": [
         "portal",
@@ -94,7 +96,8 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/ime-guard.ts"
       ],
       "capabilities": [
         "portal",

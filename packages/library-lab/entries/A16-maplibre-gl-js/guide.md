@@ -61,3 +61,8 @@ MapLibre 的 GeoJSON 点是 **[longitude, latitude]**，与 Leaflet 的 **[latit
 - [maplibre-gl npm 包](https://www.npmjs.com/package/maplibre-gl)
 
 许可证 **BSD-3-Clause**；本示例点位为本地生成数据，无第三方地图素材。
+
+
+## 高频动态增量与唯一 ID（AB wave8 加固）
+
+演示创建新站点时，事件处理函数必须先通过 `makeLocalStation(++nextId.current)` 固定 ID、标签和地理坐标，再将不可变数据交给 React updater。如果 updater 内读取可变 ref，快速点击可能导致旧条目拿到新坐标。这里限制最多增加40个本地站点，重置恢复初始数量时也重置序列。此限制是演示规模约束，不等于 MapLibre SDK 的容量上限。Node 规则检查只能证实 fixture 身份与坐标，不证明真实 WebGL2/GeoJSON 渲染。

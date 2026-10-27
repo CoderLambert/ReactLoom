@@ -62,3 +62,8 @@ const {getReferenceProps, getFloatingProps} =
 - [React 官方指南](https://floating-ui.com/docs/react)
 - [FloatingFocusManager](https://floating-ui.com/docs/FloatingFocusManager)
 - [GitHub / MIT](https://github.com/floating-ui/floating-ui)
+
+
+## IME 合成完成后的 Enter 竞态（AB wave8 加固）
+
+React 状态更新可能批量化；`compositionend` 若紧邻同一次 Enter 的 `keydown`，只检查 `isComposing` 或旧 state 仍可能误提交。此示例用同步 ref 追踪 composition、合成完成后的下一次 Enter、原生 `isComposing` 与兼容性 keyCode 229；仅由真正的普通 Enter 触发 `choose`。合成期不 `preventDefault`，避免阻断输入法候选确认；在 Enter keyup 或失焦后清除防误提交标志。判断纯函数见 `examples/ime-guard.ts`，Node 定向测试不替代 Chromium/Windows/Linux 中文输入法真实验证。

@@ -378,3 +378,32 @@ A09 Excalidraw、A10 tldraw、A13 Three.js、A14 React Three Fiber、A17 deck.gl
 **验证事实**：Node v22.16.0使用 `node --experimental-strip-types --test` 对相同固定槽位规则的三份本地TS源与测试共执行 **24 PASS、0 FAIL、0 SKIP**（locked/fixed、双向跨越、合法同侧移动、非法索引）。这只证明该领域规则的本地单测，不代表实际SDK/类型/构建/浏览器已通过。本轮没有获取官方SDK/Chromium执行证据，保留 NOT_RUN/BLOCKED。GitHub文件和差异范围还需在提交后核对。
 
 runCount=8/24，待PLATFORM审核合入到feat/library-lab；主要剩余真实依赖/锁文件、tsc/Vite build、浏览器实测及复杂库资源许可检查。
+
+---
+
+## 第8轮（wave8）：Five-library runtime-safety hardening
+
+**runCount=8/24；集成基线** `feat/library-lab@101315e3bdf299047f9c2a39aa670ed59570ec4a`。AB 39/39 条目已具源码及配套文档，不等于真实 SDK 验收。检查到开放的 AB **Draft PR #36**（B13/B14/B22 的 pinned-order 越界修复）；本批使用独立分支 `feat/library-lab-ab-hardening-wave8`，没有覆盖旧 `feat/library-lab-ab` 和 #36 文件，目标仍为 `feat/library-lab`。
+
+**本轮实际代码：Draft PR #37 / 最新提交 `a44ba132940557c9d3d0f079544461ac498593d0`。** 5 库，30 个 AB 条目范围文件，15 个场景清单同步新增纯 helper 的 `sourceFiles`（运行代码与展示源码保持一致）：
+
+| 条目 | 已修复的问题 | 独立测试 |
+|---|---|---|
+| A13 Three.js | 以播放/可见性/系统减少动态/显式覆盖共同裁决GPU动画循环；暂停时保留静态帧，卸载监听；播放变化不重复创建几何体 | `tests/animation-policy.test.mts`，7 tests |
+| A15 Leaflet | 连续新增时预先固定 ID/经纬度，防止React updater延迟读取可变ref；局部示例最多40条 | `tests/station-factory.test.mts`，2 tests |
+| A16 MapLibre GL JS | 同上修复连续点击导致GeoJSON id/坐标错位；恢复初始数据时重置序号；限制示例容量，不代表SDK上限 | `tests/station-factory.test.mts`，2 tests |
+| B17 Floating UI | 中文IME候选确认Enter及compositionend紧邻keydown时不误提交；同步ref、native isComposing、229及回车keyup防重复 | `tests/ime-guard.test.mts`，4 tests |
+| B20 Sonner | 快速重复运行旧timeout回写；代次标记只允许最新结果、清理旧loading和计时器，仅关闭本Demo的toast | `tests/latest-run.test.mts`，3 tests |
+
+**实测证据（严格限定范围）**：在 Node 22.16.0 环境，将当前 PR #37 的 5 个 `.ts` helper 与 5 个 `.test.mts` 测试镜像到独立目录（逐项对照10个Git blob SHA，字节一致），执行：
+```sh
+node --experimental-strip-types --test entries/*/tests/*.test.mts
+# 18 PASS / 0 FAIL / 0 SKIP
+tsc --noEmit --skipLibCheck --target ES2022 --module ESNext --moduleResolution Bundler entries/*/examples/*.ts
+# PASS，TypeScript 5.8.3，仅对5个纯helper
+```
+GitHub compare: 5次提交，30个变更文件全部位于 `packages/library-lab/entries/A*` / `B*`。上述 Node/TS 检查**不代表**React全项目类型检查或第三方SDK真实运行。**target SDK import、完整TS7 typecheck、Vite构建、Chromium（含真实中文输入法与WebGL）均 NOT_RUN/BLOCKED**；本批未改变任何 `verification.json` 的SDK/build/browser状态，不继承历史PASS。
+
+**dependencyRequests**：本批只复用已声明的 `three/leaflet/maplibre-gl/@floating-ui/react/sonner`，不新增包版本请求。根package、pnpm-lock、公共CI由PLATFORM负责；本轮未修改这些文件。GitHub npm下载/runner环境问题不能通过纯逻辑测试替代。
+
+**后续可执行工作**：PLATFORM优先独立审核合入 #36 和 #37，需保留双方对本进度文件的追加记录；有真实安装环境后针对 A13 frame/visibility/GPU释放、A15/A16 连续新增定位及地图卸载、B17 fcitx/Rime 回车、B20 通知重复运行与卸载进行浏览器集成回归。无浏览器环境则继续其他已确认的A/B源码缺陷，不循环重试相同DNS阻塞。主PR #8仍为Draft，禁止合并main/公开部署。

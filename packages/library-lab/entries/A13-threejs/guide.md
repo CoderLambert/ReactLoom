@@ -34,3 +34,8 @@ React只保存业务旋转速度和材质选择，逐帧角度写入Three Mesh�
 - [Three.js releases](https://github.com/mrdoob/three.js/releases)
 
 本地数据与示例代码为原创。使用前核对依赖版本与当前许可证；不请求第三方付费 API。
+
+
+## 动态效果与页面可见性（AB wave8 加固）
+
+三维场景不应在 `document.hidden` 或用户选择 `prefers-reduced-motion: reduce` 时持续 GPU 动画。实际 Demo 将四个输入 `playing / visible / reducedMotion / overrideMotion` 交给 `examples/animation-policy.ts` 的纯函数裁决：页面不可见与显式暂停总是优先于减少动态覆盖；减少动态默认停止动画循环，仍渲染静态帧以保留内容。`matchMedia` 的 change 监听和 visibilitychange 在卸载时释放。高级 Demo 提供明确的减少动态覆盖选项，但默认不覆盖。使用 `node --experimental-strip-types --test entries/A13-threejs/tests/animation-policy.test.mts` 验证这部分纯规则；它不证明 Three.js WebGL、GPU 资源释放或浏览器功能已经通过。
