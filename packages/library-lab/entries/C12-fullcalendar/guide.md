@@ -34,3 +34,6 @@
 ## 官方资料
 https://fullcalendar.io/docs/react
 https://fullcalendar.io/docs/upgrading-from-v6-js
+
+## 本批修复：事件 ID、无偏移拖拽与日期类型
+`examples/calendar-policy.mjs` 是真实示例的输入策略，不是 Date.parse 的宽松包装：全天日期必须严格合法；定时事件要显式 `Z` 或合法 UTC 偏移，`-00:00` 视作未知偏移并拒绝。若日历拖拽返回没有偏移的时间串，调用 `revert()` 并提示，不能悄悄将纽约 DST 回拨时间误当成浏览器本地时间。新建本地事件改为组件内单调序列 ID，避免同一毫秒内多次添加产生相同 React key。进阶层的两个 01:30 仍展示两个真实 UTC instant；正式 named-zone 拖拽要在 FullCalendar v7 + 浏览器中证明输出偏移保真，当前没有 SDK/browser PASS。

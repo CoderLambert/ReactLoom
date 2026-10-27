@@ -55,7 +55,8 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/patch-ownership.mjs"
       ],
       "capabilities": []
     },
@@ -68,7 +69,8 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/patch-ownership.mjs"
       ],
       "capabilities": []
     },
@@ -81,7 +83,8 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/patch-ownership.mjs"
       ],
       "capabilities": []
     }

@@ -14,3 +14,6 @@ CSS skeleton、theme、palette；稳定插件引用；UTC instant 与 IANA zone�
 
 ## 证据
 https://fullcalendar.io/docs/react，verification.json 无 PASS 之前标为待运行。
+
+## 事件输入契约
+迁移 `examples/calendar-policy.mjs` 及对应类型声明；创建全天事件通过 `isCivilDate` 校验；非全天编辑必须验证 `getUtcInstant` 返回非 null（含显式偏移）再更新业务源，否则调用 FullCalendar 的 `info.revert()`。本地 ID 使用 `allocateEventId` 避免 Date.now() 碰撞。若目标 FullCalendar named-zone 插件输出无偏移字段，先补正确时区处理/官方支持的 zone 实现，不能去掉守卫来伪造通过。

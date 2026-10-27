@@ -14,3 +14,6 @@ examples/example.tsx 和 examples/gantt.css。导入 frappe-gantt 的主入口�
 
 ## 资料
 https://github.com/frappe/gantt
+
+## 不可删的拓扑门禁
+迁移时同时复制 `examples/plan-policy.mjs` 和 `.d.mts`，保存前必须运行 `validatePlan(candidate)`。不可用“只有自依赖检查”代替多节点有向环检测，不可用 `progress < 0 || progress > 100` 代替 `Number.isFinite`。测试 `node --test .../tests/plan-policy.test.mjs` 属于纯领域策略，不代表图表 SDK/DOM 已通过。

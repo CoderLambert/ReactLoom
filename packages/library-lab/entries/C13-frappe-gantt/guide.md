@@ -31,3 +31,6 @@ popup 设置为 false，不插入未经净化的服务端 HTML。大量任务应
 ## 官方来源
 https://github.com/frappe/gantt
 https://frappe.io/gantt
+
+## 本批新增：拓扑依赖和非法数字门禁
+示例现在实际导入 `examples/plan-policy.mjs`。在交给 Frappe Gantt 前，先严格校验日期区间、重复任务/依赖 ID、目标不存在、自依赖与整张依赖图的环（Kahn 拓扑遍历）；同时拒绝 `NaN`、`Infinity` 和超出 0–100 的进度。进阶层「模拟依赖闭环」只预览拒绝原因，不改变当前计划。原本只检查直接自依赖，无法拒绝 A→B→C→A。纯 Node 测试见 `tests/plan-policy.test.mjs`，实际 Gantt 浏览器挂载和监听器清理仍未运行。
