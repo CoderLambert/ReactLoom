@@ -3,7 +3,7 @@ import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeSanitize from 'rehype-sanitize';
 import HighlightCode from './highlight-code';
-import {extractDocumentHeadings,resolveDocumentUrl} from '../lib/document-utils.mjs';
+import {extractDocumentHeadings,resolveDocumentUrl,readLimitedMarkdownResponse} from '../lib/document-utils.mjs';
 
 type Props={entryId:string; kind:'guide'|'agent'; available:boolean};
 
@@ -36,11 +36,7 @@ export default function Document({entryId,kind,available}:Props){
     const controller=new AbortController();
     setText('');setError('');setLoading(true);
     if(!available){setLoading(false);return()=>controller.abort();}
-    fetch(url,{signal:controller.signal}).then(async response=>{
-      if(!response.ok || response.headers.get('content-type')?.includes('text/html'))
-        throw new Error('Markdown 原文未生成，或服务器错误地返回了 SPA 页面');
-      return response.text();
-    }).then(body=>{if(!controller.signal.aborted){setText(body);setLoading(false);}})
+    fetch(url,{signal:controller.signal}).then(readLimitedMarkdownResponse).then(body=>{if(!controller.signal.aborted){setText(body);setLoading(false);}})
       .catch(caught=>{if(!controller.signal.aborted){setError(String(caught));setLoading(false);}});
     return()=>controller.abort();
   },[url,available,retry]);
