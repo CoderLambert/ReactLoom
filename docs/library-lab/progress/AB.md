@@ -1,6 +1,6 @@
 # AB 开发进度 — A/B 前端库垂直实现
 
-**最新调度轮次：14 / 最多24；状态：WAVE14_AB_39_SOURCE_HARDENING（39/39仅源码和文档覆盖；SDK、完整构建与浏览器尚未验收）。**
+**最新调度轮次：15 / 最多24；状态：WAVE15_AB_39_SOURCE_HARDENING（39/39仅源码和文档覆盖；SDK、完整构建与浏览器尚未验收）。**
 
 - 分支：`feat/library-lab-ab`，base 提交 `38ed2d247bd82e4f1422b0e8904973e16bca2972`。
 - 集成目标：`feat/library-lab`，集成读取的头提交 `5955b9a03f95545f2107583a109e22cc6e44078c`。
@@ -609,3 +609,32 @@ A08/A17/B04 的每层 `library.json` 已加入新helper至 `sourceFiles`，运�
 - GitHub Actions 本次两组 workflow runs `40472384355`、`40472384309` 均为 **failure**；对应 job 的 `steps=[]`，尝试读取 runtime-bootstrap 日志返回 404 `BlobNotFound`。不具备执行步骤和构建日志，无法归因于 SDK/源码编译失败，更不能标记构建 PASS。PLATFORM 的 runner/lockfile/真实SDK验收仍为待办。
 - 本轮只在可执行的纯策略 helper/test 上得到 11 PASS 与局部严格 TS PASS；浏览器/真实SDK/完整生产构建仍未通过验收。用户侧只在完整批次记录进展，通知集中在 Issue #5。
 
+
+
+---
+
+## 第15轮（wave15）：Recharts / Base UI / Radix / React Aria 状态与业务交互闭环
+
+**runCount=15/24；执行精确基线** `feat/library-lab@b3fa3b0370f50c39078562987400d753390671ee`。先读取集成分支 COORDINATION、IMPLEMENTATION、根及包 AGENTS、types/catalog、本进度与开放 PR。AB #56 已由 PLATFORM 合并，没有开放 AB PR；从最新集成 head 新建 `feat/library-lab-ab-wave15`，每次 Git ref 以预期原 head 执行非 force 快进。本批真实源码提交 `5326b2731bd6a411aa401f672169484fcd9559ed`，交互/UI 与指南加固提交 `c03858b3518178a5012167718a1528bb8bae4471`。
+
+| 条目 | 源码改动 / 用户可见行为 | 独立策略与测试 |
+| --- | --- | --- |
+| A02 Recharts | 抽离图表窗口/稳定标签/收藏率数据边界；高级范围编辑允许输入中间态、失焦规范化，刷新达到上限会禁用，ResponsiveContainer resize debounce=60ms；真实 Recharts 柱/组合图与数据表同一数据源 | `examples/chart-policy.ts` + `tests/chart-policy.test.mts`，4例 |
+| B10 Base UI | 全选与混合态改为仅按未锁定的可选权限计算：锁住 manage 后 read/comment 全选可明确进入 checked 并可再次取消；底层更新拒绝被锁权限，FormData 仍由真实 Checkbox/隐藏输入提交 | `examples/permission-policy.ts` + `tests/permission-policy.test.mts`，6例 |
+| B11 Radix Primitives | 原菜单的筛选/排序/置顶/重命名/删除此前只显示状态文字；现在实际驱动三条本地频道列表，按未读/收藏筛选、按时间/热度排序，锁定删除会在业务规则层拦截，并维护筛选后选中项；仍由 Radix Portal/Menu/Checkbox/Radio/Submenu 处理交互 | `examples/feed-policy.ts` + `tests/feed-policy.test.mts`，4例 |
+| B12 React Aria | ComboBox 受控 ID 与输入文本同步；按频道名/分类统一过滤，避免二次 SDK 文本筛选；异步过期候选不再显示，编辑后旧ID失效，提交前再次校验合法 ID、label、真实 FormData；本地组合输入未结束时不提交 | `examples/channel-policy.ts` + `tests/channel-policy.test.mts`，4例 |
+
+四项 guide.md、agent.md 同步说明生产语义和真实验证边界，library.json 的 basic/business/advanced `sourceFiles` 引用新helper；AGENTS.md/verification.json没有伪改PASS。真实SDK import 原样保留，业务本地fixture不是目标SDK Mock，也没有远程收费 API 或公开部署。
+
+### 实际执行、SHA和结构证据
+
+- 本地 Node **v22.16.0**：`node --experimental-strip-types --test /mnt/data/ab-wave15/{A02,B10,B11,B12}/tests/*.test.mts` → **18 PASS、0 FAIL、0 SKIP**（只验证4个纯领域策略）。
+- 本地 TypeScript **5.8.3**：`tsc --noEmit --strict --skipLibCheck --target ES2022 --module ESNext --moduleResolution Bundler /mnt/data/ab-wave15/{A02,B10,B11,B12}/examples/*.ts` → **PASS，只覆盖4份无第三方依赖的纯helpers**。
+- 8份测试/策略源码本地 `git hash-object` 与 GitHub 提交树的完整 Git Blob SHA **8/8匹配**：A02 `a9515bcc/f90b2612`，B10 `64a52c95/1bee2df9`，B11 `9c13cb05/a743c521`，B12 `e6d8bce3/c3e1be3c`。这只证明离线测试在**已提交的相同字节**上执行。
+- 相对上述精确集成基线的 GitHub Compare：源码/指南 **25/25 个变更路径全部在 A*/B* 所有权内，behind=0**。递归Git树未截断；4项×3 Demo 共 **45/45 sourceFiles 路径实际存在**，入口存在。随后本进度一处变更也属AB所有权。
+- **真实 Recharts/Base UI/Radix/React Aria SDK 加载与React TSX完整类型检查、pnpm/Vite生产构建、Chromium焦点/Portal/IME/FormData/屏幕阅读器均 NOT_RUN/BLOCKED**。运行容器未安装本私有monorepo的受控pnpm依赖；已有Actions job缺执行步骤和可读构建日志，不能推断SDK PASS。不反复跑同一已知 runner/DNS 失败。无本轮新增运行PASS或虚构SDK Mock。
+- 所有资源仍留在私有开发分支；无公共文件、依赖包、lockfile、CI、模板、main、PR #3/#8、其他组的改动。**dependencyRequests新增0**；现有版本仍由PLATFORM统一安装与锁定。
+
+### 集成/后续队列
+
+仅PLATFORM审核并合入本波 worker PR 到 `feat/library-lab`；不得并入main。优先取得真实依赖/runner证据后定向检查 A02 窄屏/resize与高级数字中间态，B10 Space/label与锁定权限 FormData，B11 Portal方向键/焦点返回/子菜单/删除状态，B12 中文拼音合成+Enter、取消旧查询/选中提交。若无runner的新证据，下一独立源码加固队列为 **A13 Three.js、A15 Leaflet、B13 dnd-kit、B14 Pragmatic drag and drop**，只修确证缺陷，不反复重写39项。
