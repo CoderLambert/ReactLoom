@@ -16,6 +16,8 @@
 
 所有已知行在浏览器内：开启 v9 的 `createSortedRowModel/createPaginatedRowModel`；搜索提交而不是输入法组合期间乱跳；筛选改变重置 pageIndex。表格是 Headless，只计算行模型，不负责可访问 DOM 布局：实际用语义化 table/caption/th/td 与可操作按钮。
 
+选择有三个不同范围：`rowSelection` 保存业务 ID；`getSelectedRowModel()` 从传入的完整 `data` 构造选中行，因此客户端分页时包含当前页以外的已载入行；当前可见页的选中行使用 `table.getRowModel().rows.filter(row => row.getIsSelected())`。切换页码不会改变已选择的业务 ID。
+
 ### 进阶：服务端数据所有权
 
 `manualPagination/manualSorting` 告诉 Table **不要**在已分页的数据上再次排序分页。服务器必须返回当前页行和完整匹配的 rowCount；排序、筛选、页号和 pageSize 全部进入查询身份。示例 `fetchLocalPage` 使用延迟的本地 fixture 模拟服务端，绑定 AbortSignal 和递增的 sequence，在快速翻页/排序时旧结果不能回写。故意模拟 503，显示可恢复错误，不能把模拟视为真实 HTTP。
@@ -24,7 +26,7 @@
 
 1. `getRowId` 默认数组 index，排序和选中错位；使用不可变 feed.id。
 2. 手动分页场景仍启用客户端排序，最终仅对当前页排序；用 manualSorting 联动后端。
-3. `rowSelection` 跨页保留 ID，但从 `getSelectedRowModel()` 读全选实体；它只能看到当前 data，有缺失。根据 ID 集合和后端查询获取全量。
+3. 手动服务端分页只传入当前页 `data`，却从 `getSelectedRowModel()` 推断全部跨页实体；它只能构造已提供的行。`rowSelection` 仍能保留其它页 ID，应根据 ID 集合和后端查询获取全量。
 4. 用不稳定 columns/data 引起不必要计算；静态列放模块级，动态数据用明确 state/memo 管理。
 5. 输入查询发生变化但 pageIndex 不归零，结果为空；搜索提交后重设页号。
 6. 以 Promise 顺序保证新结果获胜，切换分页时旧慢请求覆盖；传入 AbortSignal 并检查 sequence。

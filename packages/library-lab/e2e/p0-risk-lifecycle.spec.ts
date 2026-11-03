@@ -52,7 +52,8 @@ test('@B17 actual floating dialog returns focus and protects the IME composition
   await input.dispatchEvent('compositionend');
   await dialog.getByRole('button', {name: '应用过滤'}).click();
   await expect(dialog).toHaveCount(0);
-  await expect(page.getByRole('status')).toContainText('已应用过滤：React');
+  await expect(page.getByRole('region', {name: 'Floating UI 真实交互示例'}).getByRole('status'))
+    .toContainText('已应用过滤：React');
   await page.getByRole('tab', {name: '详细文档'}).click();
   await expect(page.getByRole('dialog', {name: '过滤条件'})).toHaveCount(0);
 });

@@ -14,17 +14,22 @@ test('real Ajv strict validator validates shape without implicit conversion', ()
 });
 
 test('real Ajv checks conditional required field and bounded concurrency', () => {
+  const maxConcurrentSchema = {type: 'integer', minimum: 1, maximum: 8};
   const check = new Ajv({strict: true, allErrors: true}).compile({
     type: 'object', required: ['enabled'], additionalProperties: false,
-    properties: {enabled: {type: 'boolean'}, maxConcurrent: {type: 'integer', minimum: 1, maximum: 8}},
+    properties: {enabled: {type: 'boolean'}, maxConcurrent: maxConcurrentSchema},
     if: {properties: {enabled: {const: true}}, required: ['enabled']},
-    then: {required: ['maxConcurrent']},
+    then: {properties: {maxConcurrent: maxConcurrentSchema}, required: ['maxConcurrent']},
   });
   assert.equal(check({enabled: false}), true);
   assert.equal(check({enabled: true}), false);
   assert.ok(check.errors?.some(error => error.keyword === 'required'));
   assert.equal(check({enabled: true, maxConcurrent: 3}), true);
   assert.equal(check({enabled: true, maxConcurrent: 0}), false);
+  assert.equal(check({enabled: true, maxConcurrent: 9}), false);
+  assert.equal(check({enabled: false, maxConcurrent: 0}), false, 'optional values still obey bounds');
+  assert.equal(check({enabled: true, maxConcurrent: '3'}), false, 'no implicit numeric coercion');
+  assert.equal(check({enabled: true, maxConcurrent: 3, extra: true}), false);
 });
 
 test('real Ajv uniqueItems accepts distinct objects with duplicate canonical RSS URLs; boundary rejects', () => {
