@@ -39,7 +39,7 @@ function snapshot(options){
       pageCount:table.getPageCount(),
       selectedInData:table.getSelectedRowModel().rows.map(row=>row.id),
       selectedOnPage:table.getRowModel().rows.filter(row=>row.getIsSelected()).map(row=>row.id),
-      selectedIds:Object.keys(table.getState().rowSelection).filter(id=>table.getState().rowSelection[id]),
+      selectedIds:table.getSelectedRowIds(),
       canNextPage:table.getCanNextPage(),
     };
     return createElement('p',null,observed.ids.join(','));
