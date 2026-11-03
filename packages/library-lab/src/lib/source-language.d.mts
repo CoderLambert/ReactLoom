@@ -1,1 +1,1 @@
-export function sourceLanguage(filePath: unknown): string;
+export function sourceLanguage(filePath: unknown): string

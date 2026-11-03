@@ -1,20 +1,33 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
-import {createServer} from 'node:http';
-import {createWorkerMiddleware} from '../scripts/msw-runner-server.mjs';
-const id='01234567-89ab-4cde-8fab-0123456789ab';
-test('real HTTP serves the fixed asset only under a unique, narrow session scope',async t=>{
- const bytes=Buffer.from('/* test asset, not MSW */ self.addEventListener("install",()=>{});');
- const middleware=createWorkerMiddleware(bytes);
- const server=createServer((req,res)=>middleware(req,res,()=>{res.statusCode=404;res.end();}));
- await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
- t.after(()=>new Promise(resolve=>server.close(resolve)));
- const origin=`http://127.0.0.1:${server.address().port}`;
- const pathname=`/lab-runners/msw/sessions/${id}/mockServiceWorker.js`;
- const response=await fetch(origin+pathname);
- assert.equal(response.status,200);assert.equal(await response.text(),bytes.toString());
- assert.equal(response.headers.get('service-worker-allowed'),`/lab-runners/msw/sessions/${id}/`);
- assert.match(response.headers.get('content-type'),/javascript/);assert.equal(response.headers.get('x-content-type-options'),'nosniff');
- for(const p of ['/mockServiceWorker.js','/lab-runners/msw/mockServiceWorker.js','/lab-runners/msw/sessions/wrong/mockServiceWorker.js'])assert.notEqual((await fetch(origin+p)).status,200);
- assert.equal((await fetch(origin+pathname,{method:'POST'})).status,405);
-});
+import assert from 'node:assert/strict'
+import { createServer } from 'node:http'
+import test from 'node:test'
+import { createWorkerMiddleware } from '../scripts/msw-runner-server.mjs'
+
+const id = '01234567-89ab-4cde-8fab-0123456789ab'
+test('real HTTP serves the fixed asset only under a unique, narrow session scope', async (t) => {
+  const bytes = Buffer.from('/* test asset, not MSW */ self.addEventListener("install",()=>{});')
+  const middleware = createWorkerMiddleware(bytes)
+  const server = createServer((req, res) =>
+    middleware(req, res, () => {
+      res.statusCode = 404
+      res.end()
+    }),
+  )
+  await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve))
+  t.after(() => new Promise((resolve) => server.close(resolve)))
+  const origin = `http://127.0.0.1:${server.address().port}`
+  const pathname = `/lab-runners/msw/sessions/${id}/mockServiceWorker.js`
+  const response = await fetch(origin + pathname)
+  assert.equal(response.status, 200)
+  assert.equal(await response.text(), bytes.toString())
+  assert.equal(response.headers.get('service-worker-allowed'), `/lab-runners/msw/sessions/${id}/`)
+  assert.match(response.headers.get('content-type'), /javascript/)
+  assert.equal(response.headers.get('x-content-type-options'), 'nosniff')
+  for (const p of [
+    '/mockServiceWorker.js',
+    '/lab-runners/msw/mockServiceWorker.js',
+    '/lab-runners/msw/sessions/wrong/mockServiceWorker.js',
+  ])
+    assert.notEqual((await fetch(origin + p)).status, 200)
+  assert.equal((await fetch(origin + pathname, { method: 'POST' })).status, 405)
+})
