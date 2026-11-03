@@ -99,7 +99,7 @@ export default function UplotExample({ level }: { level: Level }) {
     <p role="status">当前数据点 {end}；窗口上限 {WINDOW}；最后时间戳 {new Date(data[0][end - 1] * 1000).toLocaleString('zh-CN')}</p>
     <div style={{ overflowX: 'auto' }}><table style={{ width: '100%', textAlign: 'left' }}><caption>最近五个采样（Canvas 的文字替代）</caption>
       <thead><tr><th scope="col">采样时间</th><th scope="col">延迟 (ms)</th>{level !== 'basic' && <th scope="col">错误数</th>}</tr></thead>
-      <tbody>{data[0].slice(-5).map((t, i) => {
+      <tbody>{Array.from(data[0].slice(-5)).map((t, i) => {
         const idx = end - Math.min(5, end) + i;
         return <tr key={t}><td>{new Date(t * 1000).toLocaleTimeString('zh-CN')}</td><td>{data[1][idx] ?? '缺失'}</td>
           {level !== 'basic' && <td>{data[2][idx]}</td>}</tr>;

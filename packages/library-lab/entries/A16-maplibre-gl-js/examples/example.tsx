@@ -1,6 +1,6 @@
 import {useEffect, useMemo, useRef, useState} from 'react';
 import * as maplibregl from 'maplibre-gl';
-import type {GeoJSONSource, Map as MapInstance, MapLayerMouseEvent} from 'maplibre-gl';
+import type {ErrorEvent as MapErrorEvent, GeoJSONSource, Map as MapInstance, MapLayerMouseEvent} from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import {makeLocalStation, MAX_EXTRA_STATIONS} from './station-factory';
 import {resolveVisibleStation, canResizeMap} from './selection-policy';
@@ -67,7 +67,7 @@ export default function MapLibreExample({level}: {level: Level}) {
       const id = feature?.properties?.id;
       if (!disposed && typeof id === 'string') setSelected(id);
     };
-    const onError = (event: {error?: Error}) => {
+    const onError = (event: MapErrorEvent) => {
       if (!disposed) setError(event.error?.message ?? 'MapLibre 渲染错误');
     };
     const onContextLost = () => {
@@ -76,7 +76,7 @@ export default function MapLibreExample({level}: {level: Level}) {
     const onContextRestored = () => {
       if (!disposed && mapRef.current === map) {
         setError('');
-        setReady(map.isStyleLoaded());
+        setReady(map.isStyleLoaded() === true);
       }
     };
     const onLoad = () => {

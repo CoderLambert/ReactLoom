@@ -40,7 +40,7 @@ export default function I18nextWorkshop({level}: {level: Level}) {
     let alive = true;
     let owned: i18n | null = null;
     void createLocalI18next().then(local => {
-      if (!alive) {local.destroy(); return;}
+      if (!alive) {local.off('languageChanged'); return;}
       owned = local;
       switcher.current = createLatestLanguageSwitcher(
         next => local.changeLanguage(next),
@@ -53,7 +53,8 @@ export default function I18nextWorkshop({level}: {level: Level}) {
       alive = false;
       switcher.current?.dispose();
       switcher.current = null;
-      owned?.destroy();
+      // Bundled resources own no backend handles; detach this private instance's listeners.
+      owned?.off('languageChanged');
     };
   }, []);
 

@@ -6,6 +6,7 @@ import {
 import {useDebouncedValue} from '@mantine/hooks';
 import '@mantine/core/styles.layer.css';
 import {initialFeedHistory, toggleFeed, undoFeed, updateQuota, validQuota} from './feed-history';
+import type {Feed} from './feed-history';
 
 type Level = 'basic' | 'business' | 'advanced';
 const theme = createTheme({primaryColor: 'teal', fontFamily: 'system-ui, sans-serif'});

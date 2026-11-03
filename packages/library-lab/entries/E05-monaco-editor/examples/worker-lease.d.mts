@@ -1,7 +1,8 @@
 export interface MonacoWorkerHost {
-  MonacoEnvironment?: {getWorker(workerId: string, label: string): Worker};
+  // The SDK permits an absent hook and asynchronous Worker creation on an existing host.
+  MonacoEnvironment?: typeof globalThis.MonacoEnvironment;
 }
 export declare function acquireWorkerEnvironment(
   host: MonacoWorkerHost,
-  factory: () => NonNullable<MonacoWorkerHost['MonacoEnvironment']>,
+  factory: () => {getWorker(workerId: string, label: string): Worker},
 ): () => void;

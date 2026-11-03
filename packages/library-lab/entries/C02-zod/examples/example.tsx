@@ -21,7 +21,7 @@ export const ImportEventSchema = z.discriminatedUnion('kind', [
 ]);
 // 先拒绝空字符串，避免 JS Number('') = 0 被误认为合法 TTL。
 const TTL = z.string().trim().min(1, '请填写 TTL').regex(/^[1-9]\d?$/u, 'TTL 必须是十进制正整数').pipe(
-  z.coerce.number().int().min(1).max(60),
+  z.coerce.number<string>().int().min(1).max(60),
 );
 export const BatchPolicySchema = z.strictObject({
   ttlMinutes: TTL,

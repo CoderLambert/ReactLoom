@@ -30,14 +30,14 @@ test('actual React provider creates separate localized SSR trees', async () => {
   await en.changeLanguage('zh');
   assert.match(render(zh), /Hello/);
   assert.match(render(en), /你好/);
-  zh.destroy(); en.destroy();
+  zh.off('languageChanged'); en.off('languageChanged');
 });
 test('actual Trans uses a React element instead of raw HTML insertion', async () => {
   const i18n = await local('en');
   const markup = renderToStaticMarkup(React.createElement(I18nextProvider,{i18n},
     React.createElement(Trans,{ns:'common',i18nKey:'legal',components:{strong:React.createElement('strong')}})));
   assert.match(markup, /<strong>notice<\/strong>/);
-  i18n.destroy();
+  i18n.off('languageChanged');
 });
 
 
@@ -55,5 +55,5 @@ test('real provider shows latest serialized language rather than stale intent', 
   assert.match(render(), /你好/);
   assert.equal(i18n.language, 'zh');
   queue.dispose();
-  i18n.destroy();
+  i18n.off('languageChanged');
 });

@@ -67,15 +67,15 @@ export default function MaterialUIExample({level}: {level: Level}) {
     {level === 'basic' ? <Card variant="outlined"><CardContent>
       <Stack spacing={2}>
         <TextField size="small" label="工作区名称" value={workspace}
-          onChange={event => setWorkspace(event.target.value)} inputProps={{maxLength: 60}}/>
-        <Stack direction="row" spacing={1} alignItems="center">
+          onChange={event => setWorkspace(event.target.value)} slotProps={{htmlInput: {maxLength: 60}}}/>
+        <Stack direction="row" spacing={1} sx={{alignItems: 'center'}}>
           <Chip color={workspace.trim() ? 'success' : 'warning'}
             label={workspace.trim() ? '工作区已命名' : '请输入名称'}/>
           <Typography component="output" variant="body2">{workspace || '（空）'}</Typography>
         </Stack>
       </Stack>
     </CardContent></Card> : <Stack spacing={2}>
-      <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap">
+      <Stack direction="row" spacing={1} sx={{alignItems: 'center', flexWrap: 'wrap'}}>
         <TextField label="搜索订阅" size="small" value={query}
           onChange={event => setQuery(event.target.value)} sx={{flex: '1 1 200px'}}/>
         {level === 'advanced' && <Button variant="contained" onClick={() => {setEditing(true); setError('');}}>新增订阅</Button>}
@@ -90,7 +90,7 @@ export default function MaterialUIExample({level}: {level: Level}) {
             <TableCell align="right"><FormControlLabel label={row.enabled ? '启用' : '暂停'}
               control={<Switch size="small" checked={row.enabled}
                 onChange={event => toggle(row.id, event.target.checked)}
-                inputProps={{'aria-label': row.title + ' 订阅状态'}}/>}/></TableCell>
+                slotProps={{input: {'aria-label': row.title + ' 订阅状态'}}}/>}/></TableCell>
           </TableRow>)}</TableBody>
         </Table>
       </TableContainer>

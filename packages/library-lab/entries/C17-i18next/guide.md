@@ -26,7 +26,7 @@ createInstance 为每个工作区或请求创建独立实例；init 加载资源
 
 ## 生产实践
 
-初始化在读取 t 之前完成。服务端为不同请求单独创建实例并注入当前用户语言，避免共享 singleton 泄漏状态。资源应按语义分 namespace 并具备提取与审核工作流；长列表避免每一行重复加载语言包。切换语言时对 pending Promise 做版本保护，组件卸载 destroy 并忽略旧回调。
+初始化在读取 t 之前完成。服务端为不同请求单独创建实例并注入当前用户语言，避免共享 singleton 泄漏状态。资源应按语义分 namespace 并具备提取与审核工作流；长列表避免每一行重复加载语言包。切换语言时对 pending Promise 做版本保护，组件卸载时先 dispose 切换队列，再通过 off('languageChanged') 解除私有实例的事件监听并忽略旧回调。i18next 26.4.3 没有 destroy() API；本例仅使用内嵌资源，无后端句柄需要关闭。
 
 ## 错误示例与修正
 
@@ -44,7 +44,7 @@ createInstance 为每个工作区或请求创建独立实例；init 加载资源
 
 1. **切换语言、插值与数量复数**：独立实例与欢迎语，真实使用 i18next.t/changeLanguage
 2. **RSS 多命名空间资源**：common/news 分离，单复数以及共享文本
-3. **缺失键、回退与生命周期**：未配置中文资源时回退英文；卸载销毁独立实例
+3. **缺失键、回退与生命周期**：未配置中文资源时回退英文；卸载释放独立实例的队列和事件监听
 
 ## 练习与迁移
 
@@ -66,6 +66,6 @@ createInstance 为每个工作区或请求创建独立实例；init 加载资源
 
 ## 第16轮：语言切换并发所有权
 
-真实 `changeLanguage` 返回 Promise；只用请求编号阻止旧 `setState` 不足以阻止旧 Promise **修改 i18next 实例本身**。本版 `examples/language-switch.mjs` 将每个独立实例的切换操作串行化，队列只保留最后一次意图；仅最终操作完成时提交当前语言或错误，卸载后 `dispose()` 抛弃未执行请求。不能取消底层语言包 I/O，销毁实例前必须释放队列。可复制 `examples/language-switch.d.mts` 为 TS 类型契约。
+真实 `changeLanguage` 返回 Promise；只用请求编号阻止旧 `setState` 不足以阻止旧 Promise **修改 i18next 实例本身**。本版 `examples/language-switch.mjs` 将每个独立实例的切换操作串行化，队列只保留最后一次意图；仅最终操作完成时提交当前语言或错误，卸载后 `dispose()` 抛弃未执行请求。不能取消底层语言包 I/O，释放实例前必须 dispose 队列，并解除本实例的 languageChanged 监听。可复制 `examples/language-switch.d.mts` 为 TS 类型契约。
 
 无第三方依赖的策略测试：`node --test entries/C17-i18next/tests/language-switch.test.mjs`，覆盖快速切换、旧失败、卸载和之后重试；**真正 SDK 验证**必须另外执行 `node --test entries/C17-i18next/tests/sdk.test.mjs`（其中真实 import i18next，需安装依赖）。浏览器还需覆盖实际语言切换、复数文案、错误和 React Strict Mode 卸载，当前均未执行。

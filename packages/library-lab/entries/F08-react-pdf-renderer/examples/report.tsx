@@ -2,6 +2,15 @@ import {Document,Page,Text,View,StyleSheet} from '@react-pdf/renderer';
 import type {FeedRow} from './report-policy.mjs';
 export type {FeedRow} from './report-policy.mjs';
 export {validatedRows} from './report-policy.mjs';
+const css = StyleSheet.create({
+ page: {padding:36,fontFamily:'Helvetica',fontSize:11,color:'#243229'},
+ title: {fontSize:22,marginBottom:12},
+ intro: {fontSize:10,marginBottom:18,color:'#526259'},
+ row: {flexDirection:'row',paddingVertical:8,borderBottomWidth:1,borderBottomColor:'#dce2dc'},
+ name: {flexGrow:1},
+ value: {width:70,textAlign:'right'},
+ footer: {position:'absolute',bottom:22,left:36,right:36,fontSize:9,textAlign:'center',color:'#526259'},
+});
 export function ReportDocument({title,rows}:{title:string;rows:FeedRow[]}){
  // Only render with already validated rows; do not fetch external images or fonts here.
  return <Document title={title} author="ReactLoom Library Lab" subject="Offline feed summary">

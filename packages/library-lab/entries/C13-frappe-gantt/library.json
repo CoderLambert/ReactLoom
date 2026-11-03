@@ -49,6 +49,7 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/frappe-gantt.d.ts",
         "examples/demo.tsx",
         "examples/gantt.css",
         "examples/plan-policy.mjs",
@@ -64,6 +65,7 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/frappe-gantt.d.ts",
         "examples/demo.tsx",
         "examples/gantt.css",
         "examples/plan-policy.mjs",
@@ -79,6 +81,7 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/frappe-gantt.d.ts",
         "examples/demo.tsx",
         "examples/gantt.css",
         "examples/plan-policy.mjs",

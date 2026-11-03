@@ -7,10 +7,10 @@ const ALIASES: Record<string, string> = {
   js: 'javascript', jsx: 'jsx', ts: 'typescript', tsx: 'tsx',
   sh: 'bash', shell: 'bash', yml: 'yaml', md: 'markdown',
 };
-const SUPPORTED = new Set([
+const SUPPORTED = [
   'javascript', 'jsx', 'typescript', 'tsx', 'bash', 'json',
   'html', 'css', 'yaml', 'markdown', 'python', 'go', 'rust',
-]);
+] as const;
 
 export default function HighlightCode({code, language, showCopy=true}: {code: string; language: string; showCopy?: boolean}) {
   const [snapshot, setSnapshot] = useState<HighlightSnapshot | null>(null);
@@ -20,7 +20,7 @@ export default function HighlightCode({code, language, showCopy=true}: {code: st
   useEffect(() => () => {request.current++;}, []);
 
   const normalized = ALIASES[language] ?? language;
-  const supported = SUPPORTED.has(normalized);
+  const supported = SUPPORTED.find(candidate => candidate === normalized);
   // Only display syntax tokens produced from the currently visible file.
   // Otherwise fast file switching can show stale highlighted code.
   const tokens = snapshot?.source === code && snapshot.language === normalized ? snapshot.tokens : null;
@@ -30,13 +30,14 @@ export default function HighlightCode({code, language, showCopy=true}: {code: st
     setNotice('');
   }, [code, normalized]);
   const highlight = async () => {
+    if (!supported) return;
     const run = ++request.current;
     setLoading(true);
     setNotice('');
     try {
       // Shiki shorthand caches grammars and themes; never parse source as HTML.
       const {codeToTokens} = await import('shiki');
-      const output = await codeToTokens(code, {lang: normalized, theme: 'github-dark'});
+      const output = await codeToTokens(code, {lang: supported, theme: 'github-dark'});
       if (run !== request.current) return;
       setSnapshot({source: code, language: normalized,
         tokens: output.tokens.map(line => line.map(token => ({content: token.content, color: token.color})))});
