@@ -9,10 +9,12 @@ export type SessionUser = {
   name: string
 }
 
-const secretKey = () => new TextEncoder().encode(env.SESSION_SECRET)
+const secretKey = () => {
+  assertProductionSecret()
+  return new TextEncoder().encode(env.SESSION_SECRET)
+}
 
 export async function signSession(user: SessionUser): Promise<string> {
-  assertProductionSecret()
   return new SignJWT({ email: user.email, name: user.name })
     .setProtectedHeader({ alg: 'HS256' })
     .setSubject(user.id)
@@ -22,8 +24,10 @@ export async function signSession(user: SessionUser): Promise<string> {
 }
 
 export async function readSessionToken(token: string): Promise<SessionUser | null> {
+  // Keep configuration errors outside the invalid-token catch: fail closed in production.
+  const key = secretKey()
   try {
-    const { payload } = await jwtVerify(token, secretKey())
+    const { payload } = await jwtVerify(token, key)
     if (!payload.sub || typeof payload.email !== 'string' || typeof payload.name !== 'string')
       return null
     return { id: payload.sub, email: payload.email, name: payload.name }

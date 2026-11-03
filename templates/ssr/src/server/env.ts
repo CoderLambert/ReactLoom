@@ -25,8 +25,21 @@ export const env = createEnv({
   emptyStringAsUndefined: true,
 })
 
-export function assertProductionSecret() {
-  if (env.REACTLOOM_STRICT_SECRETS === 'true' && env.SESSION_SECRET === DEV_SECRET) {
-    throw new Error('Set SESSION_SECRET before running with REACTLOOM_STRICT_SECRETS=true.')
+// The published development secret must never sign or verify production sessions.
+export function assertSessionSecretPolicy(
+  secret: string,
+  nodeEnv: string | undefined,
+  strictSecrets: boolean,
+) {
+  if (secret === DEV_SECRET && (nodeEnv === 'production' || strictSecrets)) {
+    throw new Error('Set a unique SESSION_SECRET before running in production or strict mode.')
   }
+}
+
+export function assertProductionSecret() {
+  assertSessionSecretPolicy(
+    env.SESSION_SECRET,
+    process.env.NODE_ENV,
+    env.REACTLOOM_STRICT_SECRETS === 'true',
+  )
 }
