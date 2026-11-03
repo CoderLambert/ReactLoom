@@ -5,8 +5,8 @@ import { HttpResponse, http } from 'msw'
 import { I18nextProvider } from 'react-i18next'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { createAppRouter } from '@/app/router'
-import { getActiveSession, useAuthStore } from '@/features/auth/store'
 import { isSessionExpired } from '@/features/auth/session-expiration'
+import { getActiveSession, useAuthStore } from '@/features/auth/store'
 import { listTasks } from '@/features/tasks/api'
 import { i18n } from '@/lib/i18n'
 import { createAppQueryClient } from '@/lib/query-client'
@@ -46,10 +46,7 @@ describe('SPA session expiry boundary', () => {
   it('redirects an expired in-memory session before rendering the protected task page', async () => {
     useAuthStore.getState().setSession({ ...demoSession(), expiresAt: Date.now() - 1 })
     const client = createAppQueryClient()
-    const router = createAppRouter(
-      client,
-      createMemoryHistory({ initialEntries: ['/tasks'] }),
-    )
+    const router = createAppRouter(client, createMemoryHistory({ initialEntries: ['/tasks'] }))
 
     render(
       <I18nextProvider i18n={i18n}>
