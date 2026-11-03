@@ -213,7 +213,7 @@ describe('template selection', () => {
         ...spaManifest(),
         packages: { 'api-client': true, tsconfig: ['../next.json'] },
       }),
-    ).toThrow(/Invalid tsconfig preset/)
+    ).toThrow(/packages\.tsconfig.*inside the template/)
   })
 
   it('exports only the presets the template listed', () => {
