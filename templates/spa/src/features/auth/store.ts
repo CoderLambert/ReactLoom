@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { type Session, sessionSchema } from '@/features/auth/schema'
+import { isSessionExpired } from '@/features/auth/session-expiration'
 
 const STORAGE_KEY = 'reactloom.session'
 
@@ -9,7 +10,7 @@ function readSession(): Session | null {
   if (!raw) return null
   try {
     const parsed = sessionSchema.parse(JSON.parse(raw))
-    if (parsed.expiresAt <= Date.now()) {
+    if (isSessionExpired(parsed.expiresAt)) {
       sessionStorage.removeItem(STORAGE_KEY)
       return null
     }
@@ -43,3 +44,13 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ session: null })
   },
 }))
+
+// Re-check on every protected navigation and HTTP request, not only at startup.
+export function getActiveSession(): Session | null {
+  const { session, clearSession } = useAuthStore.getState()
+  if (session && isSessionExpired(session.expiresAt)) {
+    clearSession()
+    return null
+  }
+  return session
+}
