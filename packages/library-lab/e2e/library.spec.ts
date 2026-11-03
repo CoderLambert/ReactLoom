@@ -16,7 +16,18 @@ test('@C20 reset and stop explicitly discard demo state before the next run',asy
  await page.getByRole('button',{name:'运行当前示例'}).click();
  await expect(page.getByLabel('选中',{exact:true})).not.toBeChecked();
 });
-test('@D03 p-limit can complete and cancel batches',async({page})=>{await page.goto('/libraries/p-limit?tab=demo&example=advanced');await page.getByRole('button',{name:'运行当前示例'}).click();await page.getByRole('button',{name:'运行批处理'}).click();await expect(page.getByRole('region',{name:'p-limit 真实并发调度'}).getByRole('status')).toContainText('执行结束：1 个失败');await page.getByRole('button',{name:'运行批处理'}).click();await page.getByRole('button',{name:'取消任务'}).click();await expect(page.getByRole('region',{name:'p-limit 真实并发调度'}).getByRole('status')).toContainText('已取消：运行中任务中断');});
+test('@D03 p-limit can complete and cancel batches', async ({page}) => {
+  await page.goto('/libraries/p-limit?tab=demo&example=advanced');
+  await page.getByRole('button', {name: '运行当前示例'}).click();
+  const status = page.getByRole('region', {name: 'p-limit 真实并发调度'}).getByRole('status');
+  await page.getByRole('button', {name: '运行批处理'}).click();
+  await expect(status).toContainText('执行结束：1 个失败');
+  await expect(status).toBeVisible();
+  await page.getByRole('button', {name: '运行批处理'}).click();
+  await page.getByRole('button', {name: '取消任务'}).click();
+  await expect(status).toContainText('已取消：运行中任务中断');
+  await expect(status).toBeVisible();
+});
 test('source browser downloads only one file at a time and verifies its digest',async({page})=>{
  const sourceRequests:string[]=[];
  page.on('request',request=>{if(request.url().includes('/raw/C20/sources/'))sourceRequests.push(request.url());});
