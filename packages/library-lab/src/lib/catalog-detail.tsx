@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { JSON_RESPONSE_LIMITS, readLimitedJsonResponse } from './bounded-json.mjs'
 import { validateCatalogDetail } from './catalog-index.mjs'
 import { requestGeneratedResource } from './resource-fetch.mjs'
@@ -14,7 +14,12 @@ export function useCatalogDetail(summary?: CatalogEntry) {
   const slug = summary?.slug ?? ''
   const fingerprint = summary?.sourceFingerprint ?? ''
   const key = entryId + ':' + slug + ':' + fingerprint
+  const request = useMemo(
+    () => ({ summary, key, entryId, attempt }),
+    [summary, key, entryId, attempt],
+  )
   useEffect(() => {
+    const { summary, key, entryId } = request
     if (!summary) return
     const controller = new AbortController()
     setState({ key })
@@ -31,7 +36,7 @@ export function useCatalogDetail(summary?: CatalogEntry) {
         if (!controller.signal.aborted) setState({ key, error: String(cause) })
       })
     return () => controller.abort()
-  }, [summary, key, entryId, attempt])
+  }, [request])
   const current = state.key === key ? state : undefined
   return {
     entry: current?.entry,

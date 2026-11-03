@@ -63,7 +63,8 @@ async function boundedFile(root, relative, maxBytes) {
   if (
     typeof relative !== 'string' ||
     relative.startsWith('/') ||
-    /[\\:\u0000-\u001f]/u.test(relative) ||
+    /[\\:]/u.test(relative) ||
+    Array.from(relative).some((character) => character.charCodeAt(0) < 32) ||
     relative.split('/').some((p) => !p || p === '.' || p === '..')
   )
     throw new Error('Invalid evidence path')

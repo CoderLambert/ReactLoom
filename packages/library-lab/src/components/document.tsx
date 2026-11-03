@@ -52,6 +52,7 @@ export default function Document({ entryId, kind, available }: Props) {
   const [loading, setLoading] = useState(true)
   const [retry, setRetry] = useState(0)
   const url = `${import.meta.env.BASE_URL}raw/${entryId}/${kind}.md`
+  const request = useMemo(() => ({ url, available, retry }), [url, available, retry])
   const toc = useMemo(() => extractDocumentHeadings(text), [text])
   const anchors = useMemo(() => new Map(toc.map((h) => [h.line, h.id])), [toc])
   const headingId = (line?: number) => anchors.get(line ?? -1) ?? `section-${line ?? 0}`
@@ -60,11 +61,13 @@ export default function Document({ entryId, kind, available }: Props) {
     setText('')
     setError('')
     setLoading(true)
-    if (!available) {
+    if (!request.available) {
       setLoading(false)
       return () => controller.abort()
     }
-    requestGeneratedResource(url, readLimitedMarkdownResponse, { signal: controller.signal })
+    requestGeneratedResource(request.url, readLimitedMarkdownResponse, {
+      signal: controller.signal,
+    })
       .then((body) => {
         if (!controller.signal.aborted) {
           setText(body)
@@ -78,7 +81,7 @@ export default function Document({ entryId, kind, available }: Props) {
         }
       })
     return () => controller.abort()
-  }, [url, available, retry])
+  }, [request])
   if (!available)
     return (
       <div className="empty">

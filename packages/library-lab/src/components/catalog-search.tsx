@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import {
   normalizeCatalogQuery,
   SEARCH_DEBOUNCE_MS,
@@ -18,12 +18,12 @@ export default function CatalogSearch({ query, onQueryChange }: Props) {
     changeHandler.current = onQueryChange
   }, [onQueryChange])
 
-  const cancel = () => {
+  const cancel = useCallback(() => {
     if (timer.current !== null) {
       clearTimeout(timer.current)
       timer.current = null
     }
-  }
+  }, [])
   const commit = (value: string) => {
     cancel()
     const normalized = normalizeCatalogQuery(value)
@@ -49,7 +49,7 @@ export default function CatalogSearch({ query, onQueryChange }: Props) {
       cancel()
       setDraft(query)
     }
-  }, [query])
+  }, [query, cancel])
   useEffect(
     () => () => {
       if (timer.current !== null) clearTimeout(timer.current)

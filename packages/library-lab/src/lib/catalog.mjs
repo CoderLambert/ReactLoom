@@ -15,12 +15,21 @@ export function safeRelativePath(value) {
     typeof value === 'string' &&
     value.length > 0 &&
     !value.startsWith('/') &&
-    !/[\\\u0000-\u001f:?#]/u.test(value) &&
+    !/[\\:?#]/u.test(value) &&
+    !Array.from(value).some((character) => character.charCodeAt(0) < 32) &&
     value.split('/').every((p) => p && p !== '.' && p !== '..')
   )
 }
 export function safeLink(value) {
-  if (typeof value !== 'string' || /[\u0000-\u0020\u007f\\]/u.test(value)) return ''
+  if (
+    typeof value !== 'string' ||
+    value.includes('\\') ||
+    Array.from(value).some((character) => {
+      const point = character.charCodeAt(0)
+      return point <= 32 || point === 127
+    })
+  )
+    return ''
   if (value.startsWith('#')) return /^#[\p{L}\p{N}_.:-]+$/u.test(value) ? value : ''
   try {
     const url = new URL(value)

@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 
-type Token = { content: string; color?: string }
-type HighlightSnapshot = { source: string; language: string; tokens: Token[][] }
+type Token = { offset: number; content: string; color?: string }
+type TokenLine = { offset: number; tokens: Token[] }
+type HighlightSnapshot = { source: string; language: string; tokens: TokenLine[] }
+type Props = { code: string; language: string; showCopy?: boolean }
 
 const ALIASES: Record<string, string> = {
   js: 'javascript',
@@ -29,15 +31,13 @@ const SUPPORTED = [
   'rust',
 ] as const
 
-export default function HighlightCode({
-  code,
-  language,
-  showCopy = true,
-}: {
-  code: string
-  language: string
-  showCopy?: boolean
-}) {
+export default function HighlightCode(props: Props) {
+  const normalized = ALIASES[props.language] ?? props.language
+  // A source owns its highlighting request, notice, and loading state.
+  return <HighlightCodeSession key={JSON.stringify([props.code, normalized])} {...props} />
+}
+
+function HighlightCodeSession({ code, language, showCopy = true }: Props) {
   const [snapshot, setSnapshot] = useState<HighlightSnapshot | null>(null)
   const [loading, setLoading] = useState(false)
   const [notice, setNotice] = useState('')
@@ -55,11 +55,6 @@ export default function HighlightCode({
   // Otherwise fast file switching can show stale highlighted code.
   const tokens =
     snapshot?.source === code && snapshot.language === normalized ? snapshot.tokens : null
-  useEffect(() => {
-    request.current++
-    setLoading(false)
-    setNotice('')
-  }, [code, normalized])
   const highlight = async () => {
     if (!supported) return
     const run = ++request.current
@@ -70,12 +65,24 @@ export default function HighlightCode({
       const { codeToTokens } = await import('shiki')
       const output = await codeToTokens(code, { lang: supported, theme: 'github-dark' })
       if (run !== request.current) return
+      let lineOffset = 0
       setSnapshot({
         source: code,
         language: normalized,
-        tokens: output.tokens.map((line) =>
-          line.map((token) => ({ content: token.content, color: token.color })),
-        ),
+        tokens: output.tokens.map((line) => {
+          // Identify source ranges, including blank lines and CRLF line endings.
+          const offset = lineOffset
+          const newline = code.indexOf('\n', lineOffset)
+          lineOffset = newline === -1 ? code.length : newline + 1
+          return {
+            offset,
+            tokens: line.map((token) => ({
+              offset: token.offset,
+              content: token.content,
+              color: token.color,
+            })),
+          }
+        }),
       })
     } catch (error) {
       if (run === request.current) setNotice(`高亮不可用，已保留原始源码：${String(error)}`)
@@ -109,10 +116,13 @@ export default function HighlightCode({
       <pre>
         <code>
           {tokens
-            ? tokens.map((line, index) => (
-                <span key={index} className="code-line">
-                  {line.map((token, i) => (
-                    <span key={i} style={token.color ? { color: token.color } : undefined}>
+            ? tokens.map((line) => (
+                <span key={line.offset} className="code-line">
+                  {line.tokens.map((token) => (
+                    <span
+                      key={token.offset}
+                      style={token.color ? { color: token.color } : undefined}
+                    >
                       {token.content}
                     </span>
                   ))}

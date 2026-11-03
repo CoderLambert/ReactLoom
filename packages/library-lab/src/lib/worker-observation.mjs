@@ -76,7 +76,8 @@ export function failWorkerObservation(report, message, at, kind = 'host-error') 
   if (report.outcome !== 'running') return report
   if (kind !== 'host-error' && kind !== 'timeout') throw new Error('Invalid Worker host failure')
   const safeMessage = String(message)
-    .replace(/[\u0000-\u001f\u007f\u202a-\u202e\u2066-\u2069]/gu, ' ')
+    .replace(/\p{Cc}/gu, (character) => (character.charCodeAt(0) < 0x80 ? ' ' : character))
+    .replace(/[\u202a-\u202e\u2066-\u2069]/gu, ' ')
     .slice(0, 4096)
   return {
     ...report,

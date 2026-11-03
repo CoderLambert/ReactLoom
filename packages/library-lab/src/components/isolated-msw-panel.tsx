@@ -104,8 +104,8 @@ export default function IsolatedMswPanel({ level }: { level: Demo['level'] }) {
             </tr>
           </thead>
           <tbody>
-            {requests.map((request, index) => (
-              <tr key={`${request.url}:${index}`}>
+            {requests.map((request) => (
+              <tr key={JSON.stringify([request.method, request.url, request.status, request.body])}>
                 <td>{request.method}</td>
                 <td>{request.status}</td>
                 <td>

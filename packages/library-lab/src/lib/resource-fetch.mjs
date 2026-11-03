@@ -10,7 +10,11 @@ export function assertGeneratedResourcePath(url) {
     url.length > 2048 ||
     !url.startsWith('/') ||
     url.startsWith('//') ||
-    /[?#\\\u0000-\u001f\u007f]/u.test(url)
+    /[?#\\]/u.test(url) ||
+    Array.from(url).some((character) => {
+      const point = character.charCodeAt(0)
+      return point < 32 || point === 127
+    })
   ) {
     throw new TypeError('Generated resource must use a canonical same-origin pathname')
   }
@@ -29,7 +33,11 @@ export function assertGeneratedResourcePath(url) {
     if (
       decoded === '.' ||
       decoded === '..' ||
-      /[/\\\u0000-\u001f\u007f]/u.test(decoded) ||
+      /[/\\]/u.test(decoded) ||
+      Array.from(decoded).some((character) => {
+        const point = character.charCodeAt(0)
+        return point < 32 || point === 127
+      }) ||
       /%[0-9a-f]{2}/iu.test(decoded)
     ) {
       throw new TypeError('Generated resource path contains unsafe encoded segments')

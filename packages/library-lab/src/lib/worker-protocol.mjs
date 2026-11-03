@@ -7,7 +7,8 @@ export function parseWorkerReply(value, runId) {
     return null
   // One visible log item must not impersonate multiple records or reverse labels.
   const message = value.message
-    .replace(/[\u0000-\u001f\u007f\u202a-\u202e\u2066-\u2069]/gu, ' ')
+    .replace(/\p{Cc}/gu, (character) => (character.charCodeAt(0) < 0x80 ? ' ' : character))
+    .replace(/[\u202a-\u202e\u2066-\u2069]/gu, ' ')
     .slice(0, 4096)
   return { type: value.type, message }
 }

@@ -66,7 +66,7 @@ export default function Home() {
               ))}
             </select>
           </label>
-          <label className="search-box">
+          <div className="search-box">
             <span aria-hidden="true">⌕</span>
             <CatalogSearch
               query={search.q}
@@ -74,7 +74,7 @@ export default function Home() {
                 void navigate({ to: '/', search: (prev) => ({ ...prev, q }), replace: true })
               }
             />
-          </label>
+          </div>
           <label className="toggle">
             <input
               type="checkbox"

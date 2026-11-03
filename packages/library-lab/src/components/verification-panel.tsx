@@ -22,7 +22,7 @@ export default function VerificationPanel({ entry }: { entry: Entry }) {
   const checks = Object.entries(entry.verification)
   return (
     <section className="verification-panel" aria-label="当前条目的验证证据">
-      <div className="evidence-strip" aria-label="分项验证状态">
+      <section className="evidence-strip" aria-label="分项验证状态">
         {checks.map(([kind, result]) => (
           <span
             key={kind}
@@ -34,7 +34,7 @@ export default function VerificationPanel({ entry }: { entry: Entry }) {
             <span>{result.status}</span>
           </span>
         ))}
-      </div>
+      </section>
       <details className="evidence-details">
         <summary>查看实际验证命令、证据与阻塞原因</summary>
         <p>

@@ -40,7 +40,7 @@ export default function WorkerHost({
     let worker: Worker | undefined
     const runId =
       globalThis.crypto?.randomUUID?.() ??
-      'lab-' + Date.now() + '-' + Math.random().toString(36).slice(2, 10)
+      `lab-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`
     setReport(
       beginWorkerObservation({
         runId,
@@ -86,7 +86,7 @@ export default function WorkerHost({
           close()
         }
       }
-      worker.onerror = (event) => fail('Worker error: ' + (event.message || '未知异常'))
+      worker.onerror = (event) => fail(`Worker error: ${event.message || '未知异常'}`)
       worker.onmessageerror = () => fail('Worker 返回了无法反序列化的消息')
       timer = setTimeout(() => fail('示例超过45秒执行限额，Worker 已终止', 'timeout'), 45_000)
       worker.postMessage(workerStartMessage(level, runId))
@@ -116,13 +116,9 @@ export default function WorkerHost({
         示例在专用 Worker 中运行；关闭、切换或重置会终止该 Worker。Worker 不是不可信代码的安全沙箱。
       </p>
       <p role="status">{report ? OUTCOMES[report.outcome] : '正在启动'}</p>
-      <ol aria-label="Worker 运行日志">
-        {report?.log.map((line, index) => (
-          <li key={index}>
-            <code>{line}</code>
-          </li>
-        ))}
-      </ol>
+      <pre role="log" aria-label="Worker 运行日志">
+        <code>{report?.log.join('\n')}</code>
+      </pre>
       {report && (
         <div className="demo-controls">
           <small>

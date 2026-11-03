@@ -107,7 +107,7 @@ function SourceViewer({
         if (!controller.signal.aborted) setLoading(false)
       })
     return () => controller.abort()
-  }, [entryId, current?.path, current?.sha256])
+  }, [entryId, current])
   const copy = async () => {
     if (!ready || !verified) return
     try {
@@ -208,24 +208,25 @@ export default function DemoHost({
   onSelect: (id: string) => void
 }) {
   const demo = entry.demos.find((d) => d.demoId === demoId) ?? entry.demos[0]
-  const [startedKey, setStartedKey] = useState<string | null>(null)
-  const [reset, setReset] = useState(0)
   const key = `${entry.entryId}/${demo?.demoId ?? ''}`
+  const [startedKey, setStartedKey] = useState<string | null>(null)
+  const [attempt, setAttempt] = useState({ key, reset: 0 })
   // A scenario change must not inherit authorization from a previously started demo.
   const started = startedKey === key
   const loader = demoLoaders[key]
   const workerFactory = workerFactories[key]
   const policy = demoRunPolicy(demo)
-  const Component = useMemo(
-    () => (policy.mode === 'react' && loader ? lazy(loader) : null),
-    [loader, policy.mode, reset],
+  const run = useMemo(
+    () => ({ ...attempt, Component: policy.mode === 'react' && loader ? lazy(loader) : null }),
+    [loader, policy.mode, attempt],
   )
+  const { Component } = run
   const canStart = Boolean(
     (policy.mode === 'react' && Component) || (policy.mode === 'worker' && workerFactory),
   )
   useEffect(() => {
     setStartedKey(null)
-    setReset(0)
+    setAttempt({ key, reset: 0 })
   }, [key])
   if (!demo)
     return (
@@ -251,13 +252,13 @@ export default function DemoHost({
       </div>
       <p>{demo.description}</p>
       {Boolean(demo.capabilities?.length) && (
-        <div className="tags" aria-label="运行环境能力">
+        <section className="tags" aria-label="运行环境能力">
           {demo.capabilities?.map((cap) => (
             <span className="badge" key={cap}>
               {CAPABILITY_DESCRIPTIONS[cap] ?? cap}
             </span>
           ))}
-        </div>
+        </section>
       )}
       <div className="install">
         <span>安装依赖</span>
@@ -270,7 +271,7 @@ export default function DemoHost({
         {canStart ? (
           started ? (
             <ErrorBoundary
-              key={`${key}:${reset}`}
+              key={`${run.key}:${run.reset}`}
               fallbackRender={({ error, resetErrorBoundary }) => (
                 <div role="alert">
                   <h3>这个示例加载失败</h3>
@@ -278,7 +279,7 @@ export default function DemoHost({
                   <button
                     type="button"
                     onClick={() => {
-                      setReset((n) => n + 1)
+                      setAttempt((previous) => ({ key, reset: previous.reset + 1 }))
                       resetErrorBoundary()
                     }}
                   >
@@ -322,7 +323,10 @@ export default function DemoHost({
       </div>
       {started && (
         <div className="demo-actions">
-          <button type="button" onClick={() => setReset((n) => n + 1)}>
+          <button
+            type="button"
+            onClick={() => setAttempt((previous) => ({ key, reset: previous.reset + 1 }))}
+          >
             重置此示例
           </button>
           <button type="button" onClick={() => setStartedKey(null)}>

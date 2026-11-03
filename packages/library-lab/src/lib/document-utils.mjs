@@ -5,7 +5,12 @@ import { sourceTextPath } from './source-integrity.mjs'
  * /raw/<ID>/assets by the catalogue generator, never served from repository paths.
  */
 export function resolveDocumentUrl(value, entryId, basePath = '/') {
-  if (typeof value !== 'string' || /[\u0000-\u0020\\<>"']/u.test(value)) return ''
+  if (
+    typeof value !== 'string' ||
+    Array.from(value).some((character) => character.charCodeAt(0) <= 32) ||
+    /[\\<>"']/u.test(value)
+  )
+    return ''
   if (value.startsWith('#') && /^#[\p{L}\p{N}_-]+$/u.test(value)) return value
   try {
     const url = new URL(value)
