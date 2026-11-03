@@ -7,7 +7,7 @@ async function start(page: Page, slug: string, level: 'basic'|'business'|'advanc
   await page.getByRole('button', {name: '运行当前示例'}).click();
 }
 
-test('@A01 real chart respects reduced motion and releases the mounted renderer', async ({page}) => {
+test('@A01 real chart pauses for reduced motion and unmounts its DOM', async ({page}) => {
   await page.emulateMedia({reducedMotion: 'reduce'});
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
@@ -72,7 +72,7 @@ test('@C01 real RHF field-array submission and reset preserve default values', a
   await expect(region.locator('output')).toHaveCount(0);
 });
 
-test('@D03 actual p-limit queued work is cancelled on explicit demo unmount', async ({page}) => {
+test('@D03 real p-limit demo unmounts and restarts with fresh batch state', async ({page}) => {
   await start(page, 'p-limit', 'advanced');
   const region = page.getByRole('region', {name: 'p-limit 真实并发调度'});
   await region.getByRole('button', {name: '运行批处理'}).click();
