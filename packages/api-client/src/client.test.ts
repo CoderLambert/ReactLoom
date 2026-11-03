@@ -49,6 +49,54 @@ describe('createApiClient', () => {
     expect(fetchFn).toHaveBeenCalledTimes(2)
   })
 
+  it('retries a 503 with a non-JSON upstream error body', async () => {
+    const fetchFn = vi
+      .fn<typeof fetch>()
+      .mockResolvedValueOnce(
+        new Response('<html>upstream unavailable</html>', {
+          status: 503,
+          headers: { 'content-type': 'text/html' },
+        }),
+      )
+      .mockResolvedValueOnce(jsonResponse({ ok: true }))
+    const client = createApiClient({
+      baseUrl: 'http://api.test',
+      fetchFn,
+      sleep: async () => undefined,
+    })
+
+    await expect(client.request('/items', schema)).resolves.toEqual({ ok: true })
+    expect(fetchFn).toHaveBeenCalledTimes(2)
+  })
+
+  it('retains the unauthorized code for a non-JSON 401 body', async () => {
+    const onUnauthorized = vi.fn()
+    const fetchFn = vi.fn(async () => new Response('login required', { status: 401 }))
+    const client = createApiClient({
+      baseUrl: 'http://api.test',
+      fetchFn,
+      onUnauthorized,
+    })
+
+    await expect(client.request('/me', schema)).rejects.toMatchObject({
+      code: 'unauthorized',
+      status: 401,
+    })
+    expect(onUnauthorized).toHaveBeenCalledOnce()
+    expect(fetchFn).toHaveBeenCalledOnce()
+  })
+
+  it('still classifies malformed JSON on success as validation', async () => {
+    const fetchFn = vi.fn(async () => new Response('not-json', { status: 200 }))
+    const client = createApiClient({ baseUrl: 'http://api.test', fetchFn })
+
+    await expect(client.request('/items', schema)).rejects.toMatchObject({
+      code: 'validation',
+      status: 200,
+    })
+    expect(fetchFn).toHaveBeenCalledOnce()
+  })
+
   it('cancels when the caller aborts', async () => {
     const controller = new AbortController()
     const fetchFn = vi.fn((_input: string | Request | URL, init?: RequestInit) => {

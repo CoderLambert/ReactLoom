@@ -113,13 +113,16 @@ function delayFor(attempt: number, policy: RetryPolicy, response?: Response): nu
   return Math.round(exp * (0.5 + Math.random() * 0.5))
 }
 
-async function readBody(response: Response): Promise<unknown> {
+async function readBody(response: Response, allowPlainText = false): Promise<unknown> {
   if (response.status === 204) return null
   const text = await response.text()
   if (!text) return null
   try {
     return JSON.parse(text) as unknown
   } catch (cause) {
+    // HTTP error bodies can be plain text or proxy-generated HTML. Preserve
+    // the original status/code instead of misclassifying them as validation.
+    if (allowPlainText) return text
     throw new ApiError('The response was not valid JSON.', 'validation', {
       status: response.status,
       details: text,
@@ -194,7 +197,7 @@ export function createApiClient(options: ApiClientOptions) {
 
         if (response.status === 401) {
           options.onUnauthorized?.()
-          const details = await readBody(response)
+          const details = await readBody(response, true)
           throw new ApiError(messageFromDetails(details, 'Sign in is required.'), 'unauthorized', {
             status: 401,
             details,
@@ -202,7 +205,7 @@ export function createApiClient(options: ApiClientOptions) {
         }
 
         if (!response.ok) {
-          const details = await readBody(response)
+          const details = await readBody(response, true)
           const error = new ApiError(
             messageFromDetails(details, `Request failed with status ${response.status}.`),
             'http',
