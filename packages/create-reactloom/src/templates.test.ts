@@ -3,7 +3,10 @@ import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import { parseManifest, readManifest, templateIds } from './templates.js'
 
-const templateRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../templates')
+const templateRoot = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  '../../../templates',
+)
 
 function validManifest(): Record<string, unknown> {
   return {
