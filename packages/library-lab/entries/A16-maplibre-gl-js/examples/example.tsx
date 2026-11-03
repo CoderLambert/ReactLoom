@@ -167,3 +167,4 @@ export default function MapLibreExample({level}: {level: Level}) {
     </table></div>
     {level === 'advanced' && <p>更新仅修改现有 GeoJSONSource；卸载取消 ResizeObserver、rAF、地图事件并调用 map.remove()。不能将此无底图示例宣传为正式地理底图。</p>}
   </section>;
+}

@@ -117,3 +117,4 @@ export default function RadixPrimitivesExample({level}: {level: Level}) {
       置顶：{pinned ? '是' : '否'} · 排序：{sort === 'new' ? '最新' : '热度'} · 筛选：{scope} · {message}</p>
     {level === 'advanced' && <p>使用触发按钮按 Enter/Space 打开、方向键导航、Esc 关闭后返回触发器；锁定项不能选择。没有实现自制全局 keydown/focus trap。</p>}
   </section>;
+}

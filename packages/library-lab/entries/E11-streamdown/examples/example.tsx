@@ -31,3 +31,4 @@ export default function StreamingMarkdownExample({level}:{level:Level}){
   </div>
   {level==='advanced'&&<p>不可信内容必须审查 URL、HTML、插件和外部资源策略；这里只展示未授权脚本的字符串，不运行任意代码。</p>}
  </section>;
+}

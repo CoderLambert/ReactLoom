@@ -119,3 +119,4 @@ export default function MaterialUIExample({level}: {level: Level}) {
       <Alert severity="success" variant="filled" onClose={() => setNotice('')}>{notice}</Alert>
     </Snackbar>
   </Box></ThemeProvider>;
+}
