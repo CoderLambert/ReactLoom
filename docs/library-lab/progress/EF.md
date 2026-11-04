@@ -1,6 +1,6 @@
 # EF 通道持续开发进度
 
-> 2026-11-04：本文件是合并前的通道日志。PR #8 已合并。锁文件已有 Lab importer，其中包括 `msw@3.0.3`、`monaco-editor@0.57.0` 和 `vitest@5.0.5`。Actions run 41779873259 通过仓库级 install / typecheck / build / 52 SDK 文件（153）/ 45 Playwright。这不是 37 条 EF 收据。下文的 Draft、DNS 和「锁文件尚未解析」只描述当时那一轮。
+> 2026-11-04：本文件正文是合并前的通道日志。PR #8 已合并。锁文件已有 Lab importer，其中包括 `msw@3.0.3`、`monaco-editor@0.57.0` 和 `vitest@5.0.5`。Actions run 41779873259 通过的是 #8 那棵树上的仓库级 install / typecheck / build / 52 SDK 文件（153）/ 45 Playwright。这不是 37 条 EF 收据。下文的 Draft、DNS 和「锁文件尚未解析」只描述当时那一轮。E/F 手册深度已由 #98（`fea74cf`）进入 main；E05 与 F11 在 #97。E11 与 F05 没有研究包 GUIDE，没有补造。本文件不因此改写成验收通过。
 
 - 通道：EF，Issue #7。下列 wave 分支和 Draft PR 是历史记录。
 - runCount：23 / 24。

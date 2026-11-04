@@ -13,11 +13,13 @@ worker从GitHub恢复状态，按授权目录写入独立分支，PR base为feat
 
 用户只在实际批次、可运行里程碑或需要外部权限时收到汇报；无变化不反复通知。任务进度和测试事实放GitHub，不依赖Slack。
 
-## 当前环境阻塞（需按事实接续）
+## 历史环境阻塞（2026-10；不是当前 main）
 
-容器 registry.npmjs.org/GitHub 下载域名DNS失败，GitHub连接器仍可读取和提交代码。首个GitHub Actions PR运行40373203132的catalogue和runtime-bootstrap均在分配Runner前失败：runner_id=0，steps=[]。job日志接口返回BlobNotFound404。已知事实不足以判断是否额度/账单/组织策略，不得把猜测当根因，也不得说构建执行过。
+下面两段是调度刚启动时的记录。不要把它读成 2026-11-04 的 main。
 
-平台任务应检查是否有新的可用Runner证据再重试，不修改支付/组织安全设置，不循环重跑同一无Runner工作流。若仍不可执行，保留BLOCKED并继续代码、文档、源文件检查和其他可独立开发；有可运行环境后补锁文件和正式构建。
+当时容器里 registry.npmjs.org / GitHub 下载域名 DNS 失败，GitHub 连接器仍可读取和提交代码。首个 GitHub Actions PR 运行 40373203132 的 catalogue 和 runtime-bootstrap 均在分配 Runner 前失败：runner_id=0，steps=[]。job 日志接口返回 BlobNotFound 404。已知事实不足以判断是否额度、账单或组织策略。那次失败没有执行构建。
+
+随后 PR #8 合并，根锁文件已有 Lab importer。Actions run 41779873259 在 #8 的树上通过了冻结安装、typecheck、生产构建、52 个 SDK 文件（153 项）和 45 项 Playwright。#97 与 #98 把手册和首页计数放上 main（`fea74cf`）。这些都不是 119 条逐库收据，`docs/library-lab/evidence/runs/` 仍然没有收据目录。当前缺口是 `verify:record`，不是「有环境后再补锁文件」。
 
 ## 停止条件
 

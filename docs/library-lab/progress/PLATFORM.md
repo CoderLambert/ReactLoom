@@ -1,11 +1,12 @@
 # PLATFORM 当前进度
 
-## 2026-11-04 main
+## 2026-11-04 main（`fea74cf`）
 
-- PR #8 已合并到 main（`883838087464b4a5577aa4ff4260c4847bfc12a4`）。
-- 根锁文件有 `packages/library-lab` importer。
-- Actions run [41779873259](https://github.com/CoderLambert/ReactLoom/actions/runs/41779873259) 通过 install、typecheck、build、52 个 SDK 文件（153 项）和 45 项 Playwright。Lab 树与该 run 的 head 一致。
-- 这不是 119 条 sdk / build / browser 收据。`docs/library-lab/evidence/runs/` 没有逐库收据时，readiness 的 PASS 保持 0。
+- PR #8 已合并到 main（`883838087464b4a5577aa4ff4260c4847bfc12a4`）。根锁文件有 `packages/library-lab` importer。
+- Actions run [41779873259](https://github.com/CoderLambert/ReactLoom/actions/runs/41779873259) 通过 install、typecheck、build、52 个 SDK 文件（153 项）和 45 项 Playwright。证据只属于 #8 合并时的 Lab 树。#97 和 #98 改过首页和手册之后，不能再说当前树与该 run 的 head 一致。
+- PR #97（`ac38dadffab84a24f6ce8d418a6f2237682db319`）恢复了 A/B 手册，并把首页拆成 `sourceComplete`、`reactMountable`、`nodeCiOnly`、`receiptPass`。
+- PR #98（`fea74cf76dd0a674301f6867024cb481fad85b44`）恢复了 C–F 手册。E11 与 F05 没有研究包 GUIDE，没有补造。
+- 这不是 119 条 sdk / build / browser 收据。`docs/library-lab/evidence/runs/` 没有逐库收据时，readiness 的 PASS 保持 0。CI 变绿也不改变这一点。
 - 下面和归档里的 23/24 轮是合并前的记录，不是当前环境仍缺少锁文件。
 
 ## 合并前的整改记录
@@ -31,4 +32,4 @@
 
 ## 分项口径和下一步
 
-历史静态口径 119 目录 / 357 场景声明仍然有效，但它们不是 PASS。首要工作改成逐库收据和手册是否还在教过时的阻塞。不把策略单测数当成可用程度，也不再把「锁文件还没有」写成当前事实。
+历史静态口径 119 目录 / 357 场景声明仍然有效，但它们不是 PASS。A/B 与 C–F 手册（E11、F05 除外）已在 main，不再把「手册还在教锁文件缺失」当作当前缺口。下一步是逐库收据。不把策略单测数或 Actions 41779873259 当成 119 个 SDK 已验收，也不再把「锁文件还没有」写成当前事实。

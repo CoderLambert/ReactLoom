@@ -1,6 +1,6 @@
 # ReactLoom Library Lab — CD 进度（43 项）
 
-> 2026-11-04：本文件是合并前的通道日志。PR #8 已合并。锁文件已有 Lab importer。Actions run 41779873259 是仓库级 install / typecheck / build / 52 SDK 文件（153）/ 45 Playwright，不是 43 条 CD 收据。下文「PR #8 仍为 Draft」和「DNS / 未安装所以全部 NOT_RUN」只属于当时那一轮。
+> 2026-11-04：本文件正文是合并前的通道日志。PR #8 已合并。锁文件已有 Lab importer。Actions run 41779873259 是 #8 那棵树上的仓库级 install / typecheck / build / 52 SDK 文件（153）/ 45 Playwright，不是 43 条 CD 收据。下文「PR #8 仍为 Draft」和「DNS / 未安装所以全部 NOT_RUN」只属于当时那一轮。C/D 手册深度已由 #98（`fea74cf`）进入 main；C01 与 D03 在 #97。本文件不因此改写成验收通过。E11 不在本组。
 
 ## 恢复与分支
 
