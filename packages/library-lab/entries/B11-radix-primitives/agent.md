@@ -1,29 +1,33 @@
-# B11 Radix Primitives — 给 Agent 的实用手册
+# B11 Radix Dropdown Menu
 
-## 选型
+## 适用
 
-适合建立**自己拥有样式的可访问 React 控件**；演示具体原语为 `@radix-ui/react-dropdown-menu@2.1.25`。需要完整现成视觉系统时先看 B07 MUI / B08 Mantine / B06 Ant Design。此条目不是“全部Radix组件都已完成”。
+自有样式、需要菜单键盘、复选、单选和子菜单时用 `@radix-ui/react-dropdown-menu`。对话框、提示条和异步确认不是这个包。完整皮肤组件库另选。不要自己实现焦点陷阱。
 
-## 可迁移实现
+## 版本
 
-读取 `examples/example.tsx` 和 `examples/dropdown.css`，`examples/demo.tsx` 只是 Lab 导出。复制 Root/Trigger/Content/Item 或 Checkbox/Radio/Sub 的需要部分；业务状态、样式 token、权限检查根据目标项目重建。避免把菜单中的模拟“删除”当成真实后端操作。
+`@radix-ui/react-dropdown-menu@2.1.25`，React 19.3.0。许可证 MIT。当前文件不要改成未安装的统一包 `radix-ui`，也不要顺手加入 Dialog。
 
-## 不可删除的边界
+## 迁移
 
-- Trigger asChild 时只包含一个真实可聚焦子节点（button），保留 type=button。
-- 使用 Radix Root open/onOpenChange 控制显示，不自建全局 document keydown/Escape。
-- Portal 中使用自身样式类；highlight/disabled 与可访问状态对应。
-- CheckboxItem 的保持打开行为仅在适当的多选任务上 preventDefault；普通选择默认关闭。
-- 禁止项必须传 disabled，后端授权仍独立执行。
-- 弹窗控制只属于当前组件；卸载 Tab 时不应留下 Portal 或焦点劫持。
+从手写 div 菜单迁过来时删掉 document keydown。`asChild` 子节点必须转发 props 和 ref。若其他条目使用统一包导入，不要在同一组件混用两套入口。
 
-## 核心验收
+## 不可删的清理
 
-实际SDK键盘 Enter/Space/Arrow/Escape/typeahead；勾选项不关闭菜单，Radio互斥，禁用删除无法执行，焦点返回 Trigger；Tab卸载 Portal 清理、触屏/小窗口定位。用真实原语测试，不 mock @radix-ui SDK 后标 PASS。验证当前为 NOT_RUN，依赖安装和真实浏览器须由 PLATFORM 补验。
+触发器是单个 `button`。CheckboxItem 的 `onSelect` 调用 `preventDefault`。删除同时看 `disabled` 和 `deleteFeed(..., locked)`。筛选后重设选中 id。SubContent 放在 Portal 中。样式只用 data 属性钩子和 `dropdown.css`。
 
-许可 MIT，官方 https://www.radix-ui.com/primitives/docs/components/dropdown-menu
+## 反例
 
+吞掉 asChild 的 props。button 嵌套 button。全局 keydown 陷阱。勾选后菜单被关掉。锁定只做样式。用会立刻关闭的 AlertDialog.Action 发异步删除（且本示例并未挂载 AlertDialog）。`display:none` 隐藏对话框标题。
 
-## Agent 迁移边界：本轮修复：菜单动作驱动真实本地列表
+## 测试断言
 
-旧菜单的筛选、排序、删除大多只替换状态提示，不改变可见数据。现由 `examples/feed-policy.ts` 持有确定性可迁移规则：置顶优先、时间/热度排序、仅未读/有收藏筛选、锁定删除防越权。三层示例仍使用真实 Radix Root、Portal、CheckboxItem、RadioItem、Submenu；列表按钮可键盘选择，选择不同筛选时同步选中第一条可见订阅，删除会更新实际本地集合而不访问后端。 `tests/feed-policy.test.mts` 只证明纯数据规则，Portal/Escape/焦点返回需要浏览器验证。
+`tests/feed-policy.test.mts` 断言 scope 过滤、置顶优先、锁定时 `deleteFeed` 不移除。不证明键盘、typeahead、Portal 或 Esc 回焦。
+
+## 真实限制
+
+已挂载：受控菜单、本地重命名、置顶、排序、子菜单筛选、禁用删除。未挂载：Dialog、AlertDialog、Tooltip、HTTP、IME 字段、触发器被卸载后的焦点回退。
+
+## 证据
+
+sdk、build、browser 为 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有匹配 receipt。Actions run `41779873259` 是仓库级检查，不是本条目 PASS。文档：https://www.radix-ui.com/primitives/docs/components/dropdown-menu
