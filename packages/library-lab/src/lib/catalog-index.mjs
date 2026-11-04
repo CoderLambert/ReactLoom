@@ -11,7 +11,9 @@ const RECEIPT_KINDS = ['sdk', 'build', 'browser']
 
 /** Unique execution kinds, sorted so the index does not treat order as meaning. */
 export function catalogSurfaces(demos) {
-  return [...new Set((demos ?? []).map((demo) => demo?.executionKind))].filter((kind) => SURFACES.has(kind)).sort()
+  return [...new Set((demos ?? []).map((demo) => demo?.executionKind))]
+    .filter((kind) => SURFACES.has(kind))
+    .sort()
 }
 
 /**

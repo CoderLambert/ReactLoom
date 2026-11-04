@@ -81,7 +81,10 @@ test('lightweight search preserves Chinese terms, groups, package names and CLI 
   assert.equal(filterCatalogIndex(index, '批处理 并发', 'D', true).length, 1)
   assert.equal(filterCatalogIndex(index, 'P-LIMIT', 'all', true).length, 1)
   assert.equal(filterCatalogIndex(index, '批处理', 'A', false).length, 0)
-  assert.equal(filterCatalogIndex([{ ...index[0], surfaces: ['node-ci'] }], '', 'all', true).length, 0)
+  assert.equal(
+    filterCatalogIndex([{ ...index[0], surfaces: ['node-ci'] }], '', 'all', true).length,
+    0,
+  )
   assert.equal(
     filterCatalogIndex([{ ...index[0], surfaces: ['browser-frame'] }], '', 'all', true).length,
     1,

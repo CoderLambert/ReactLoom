@@ -14,7 +14,8 @@ function reactMountableCount(entries: CatalogEntry[]) {
 }
 
 function nodeCiOnlyCount(entries: CatalogEntry[]) {
-  return entries.filter((entry) => entry.surfaces.length === 1 && entry.surfaces[0] === 'node-ci').length
+  return entries.filter((entry) => entry.surfaces.length === 1 && entry.surfaces[0] === 'node-ci')
+    .length
 }
 
 function frameCount(entries: CatalogEntry[]) {
@@ -49,7 +50,8 @@ export default function Home() {
           <em>先读边界，再动手跑。</em>
         </h1>
         <p className="hero-copy">
-          这里的条目是源码和中文笔记。能在页面里挂载、只能复制命令、以及带当前收据的 PASS，是三件不同的事。仓库构建通过不会把某一条写成已验收。
+          这里的条目是源码和中文笔记。能在页面里挂载、只能复制命令、以及带当前收据的
+          PASS，是三件不同的事。仓库构建通过不会把某一条写成已验收。
         </p>
         <div className="stats">
           <div>
@@ -71,8 +73,8 @@ export default function Home() {
         </div>
         <p className="hero-copy">
           {frames > 0 ? `另有 ${frames} 个库只在独立画面中打开。` : null}
-          收据 PASS 只计 sdk、build、browser 在当前索引里仍为 PASS 的条数；没有
-          evidence/runs 收据时这里是 0。
+          收据 PASS 只计 sdk、build、browser 在当前索引里仍为 PASS 的条数；没有 evidence/runs
+          收据时这里是 0。
         </p>
       </section>
       <section aria-label="库目录">
