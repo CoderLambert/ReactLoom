@@ -1,29 +1,40 @@
-# E10 DOMPurify — Agent 实施说明
+# E10 DOMPurify — 工程手册
 
-## 选型与版本
+## 适用
 
-React 普通文本用 JSX 转义，不需要 DOMPurify。必须渲染受限 HTML 字符串时采用 `dompurify@3.4.17`（`MPL-2.0 OR Apache-2.0`），关注供应链安全公告。不要以存在 `sanitize()` 调用就宣称通用安全。
+必须把不可信 HTML 显示成有限富文本。普通 React 文本不要绕道净化。
 
-## 迁移路径
+## 版本
 
-读取 `examples/example.tsx`，只复制固定的策略和先净化后展示机制；`examples/demo.tsx` 是 Lab 入口。业务必须明确允许元素、允许 URI、远程图片策略与 DOM 二次加工边界。不执行源字符串，不拼接净化后的 HTML，不把全局 hook 当单组件局部配置。
+`dompurify@3.4.17`。策略在 `examples/html-policy.mjs`，不要改成默认配置。
 
-## 禁止模式
+## 迁移
 
-- `dangerouslySetInnerHTML` 直接传未净化字符串。
-- `sanitize` 后通过其他代码插入未审查标签/属性。
-- 自行写正则去掉 script 当作 HTML sanitizer。
-- 允许任意 data/javascript URI 或所有外部资源。
-- 在 Node 未搭建可靠 DOM 环境时假设浏览器 sanitize 的结果等价。
+`DOMPurify.sanitize(dirty, htmlPolicy)` 整段调用一起带走。允许标签、`href`/`title`、https 正则都要在。不要加 `USE_PROFILES`。
 
-## 必须的测试
+## 不可删的清理
 
-输入含 script/onerror/onclick/javascript URI/SVG 与远程 img；DOM 不应出现危险节点/属性，也不应有外部网络请求；合法文本/粗体/段落保留。对 CSP、浏览器差异和可访问性作独立检查。当前 SDK 和浏览器仍未实测，不能标 PASS。
+输入变化就重新净化，不要复用旧字符串。预览卸载时丢掉对旧 HTML 的引用。不要把净化前后的原文写进持久日志。
 
-## 来源
+## 反例
 
-https://github.com/cure53/DOMPurify
+- 无配置的 `sanitize(userHtml)`。
+- `USE_PROFILES` 和 `ALLOWED_TAGS` 同时开。
+- 允许 `style`、事件属性或任意 URL。
+- 用正则删 `<script>`。
+- 把策略常量测试当成浏览器 XSS 通过。
 
-## 最小迁移不可漏的策略文件
+## 测试断言
 
-`examples/example.tsx` 调用真实DOMPurify并导入 `examples/html-policy.mjs`。只复制sanitize却回到宽泛默认HTML profile不符合本条安全边界。HTTPS-only URL 正则仍只是在净化时限定出站属性，不能替代DOM/XSS/网络验收；纯Node策略用例绝不能标SDK PASS。放宽标签或允许远程媒体前重新评审威胁模型。
+- 允许列表不含 `script`、`img`、`iframe`。
+- 属性只有 `href` 和 `title`。
+- `javascript:`、`data:`、带用户信息的 URL 对不上正则。
+- 浏览器里净化后的 DOM 不含这些节点。后一项还没有收据。
+
+## 真实限制
+
+Lab 没有 Trusted Types，也没有 jsdom 服务端净化。正则不是完整 URL 解析器。
+
+## 证据
+
+没有收据不要写 PASS。`html-policy` 单测不 import DOMPurify。

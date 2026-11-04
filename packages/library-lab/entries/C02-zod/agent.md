@@ -1,33 +1,49 @@
-# C02 Zod — Agent 使用规范
+# C02 Zod — 工程手册
 
-## 决策条件
+## 适用
 
-需要运行时数据契约、输入规范化、判别联合、跨字段验证时适合使用 Zod。仅有静态 TS 类型、现成 JSON Schema 管线或纯 HTML 净化时不要机械引入。研究版本 `zod@4.6.5`（与当前 SPA 模板对齐），MIT。
+不可信 JSON、表单提交和导入配置的运行时边界。单个布尔不必用。不要把 Zod 当成 HTTP 客户端、表单状态或 SSRF 防护。
 
-## 复制路径
+## 版本
 
-从 `examples/example.tsx` 提取 `FeedSchema`、`ImportEventSchema`、`BatchPolicySchema`，放到目标项目 domain/schema；React 页面、示例 JSON 与展示适配层无需复制。下游使用 `z.input` 与 `z.output` 明确处理转换前后类型。遇到不可信数据，保留 `unknown` 直到解析成功。
+`zod@4.6.5`，MIT。研究笔记中的 4.6.7 不是本仓库的 pin。v4 用 `z.strictObject`、`z.discriminatedUnion`、`z.input` / `z.output`。空串必须先挡住再 `z.coerce.number<string>()`。
 
-## 不可删除的语义
+## 迁移
 
-`strictObject` 当前用于拒绝额外键；`HttpsUrl` 禁止 javascript/file 协议；`TTL` 先 .min(1) 再 coerce；`superRefine` 的 path 必须指向重复来源 URL；JSON.parse 语法错误与 Zod issues 分开报告。
+带走 `examples/example.tsx` 的三个 schema 和 `examples/boundary-policy.mjs`（含 `.d.mts`）。`demo.tsx` 只是再导出。用项目的 API client 替换本地 JSON 文本框。异步查重另加 `safeParseAsync`、AbortSignal 和 generation，不要把按钮上的同步 `safeParse` 说成已经防了竞态。
 
-## 不要这么做
+## 不可删的清理
 
-- 未校验就 `as User`。
-- 异步 refinement 用同步 safeParse。
-- 空字符串直接强制 number 并将 0 当合法。
-- 把合法 URL 当作可安全抓取的许可，服务端 SSRF 单独防护。
-- 在每次中文 composition 事件里规范化并替换 DOM 文本。
+schema 放在模块顶层。未知导入用 `strictObject`。URL 必须经过 `canonicalHttpsFeedUrl`，非法 URL 不能当去重键。TTL 的 pipe 保持「先正则、再数值范围」。卸载或草稿被替换时，尚未返回的 async parse 不得写回。
 
-## 最小测试集合
+## 反例
 
-正常 RSS/OPML；额外字段；不允许的协议；TTL 空字符串；TTL "15" 解析成 number 15；重复 URL 错误位于 `sources[1].url`；畸形 JSON 不崩溃 UI。运行 `pnpm --filter @reactloom/library-lab typecheck && pnpm --filter @reactloom/library-lab build`，再针对真实SDK用例验证，浏览器结果独立记录。当前 SDK/构建/浏览器均为 NOT_RUN。
+```ts
+const data = (await res.json()) as Feed
+z.coerce.number() // '' → 0
+schema.safeParse(input) // schema 含 async refine 时不会等待
+z.compile(schema) // 未经 CSP 和热点证据不要默认开
+```
 
-## 参考
+- 用 `z.url()` 放行抓取。
+- 用 `z.object` 导入可能带 `isAdmin` 的配置。
+- composition 期间把 parse 结果写回受控输入。
+- 日志打印 `issues` 或原始 token。
+- 把 `z.toJSONSchema` 当成 `superRefine` 的双向合同。
 
-https://zod.dev/ · https://github.com/colinhacks/zod
+## 测试断言
 
-## 迁移注意
+- `javascript:`、带用户信息的 URL、控制字符失败；`https` 主机大小写与 fragment 被规范化。
+- path 大小写保留，不能因此被当成重复。
+- OPML 文件名不能含 `/` 或 `\`。
+- TTL `''` 不是 0；`'15'` 的 output 是 number。
+- 重复 URL 的 path 是 `sources` 下标加 `url`。
+- 策略单测不是浏览器里跑过 `safeParse` 的证据。
 
-带走 `boundary-policy.mjs` 和其 `.d.mts`，不要跨条目依赖。URL path/query 大小写不能抹平；不能接受凭据。拒绝 OPML 路径名以及 `1e1` 等不符合产品输入合同的 TTL。输入变化后旧 PASS 必须失效；纯策略测试不能冒充真实 Zod SDK。
+## 真实限制
+
+示例不发网络，没有 RHF resolver，没有 `z.compile()`。中文 IME 只在「不要在输入过程中回写」这条原则上被遵守，没有在真实输入法里验收。`canonicalHttpsFeedUrl` 不解析 DNS。
+
+## 证据
+
+没有 `docs/library-lab/evidence/runs/` 收据就不要写 PASS。仓库级 Actions 41779873259 不能抄到本条目。不要改 `verification.json`。

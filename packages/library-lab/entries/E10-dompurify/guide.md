@@ -1,59 +1,91 @@
-# E10 · DOMPurify：受限富文本的输出防护
+# DOMPurify 3.4.17｜先限定词表，再渲染
 
-## 能解决的问题
+Lab 锁定 `dompurify@3.4.17`。它清理 HTML 字符串。它不决定业务能不能发公告，也不代替 CSP。React 默认文本不需要它。只有必须显示受限富文本时才用。
 
-React 默认会转义普通文本，不需要在每个 `<p>{text}</p>` 都进行 HTML 净化。**只有必须把 HTML 字符串呈现为富文本**（例如遗留公告、受限 CMS 文档）时，才应使用 DOMPurify 对输入进行净化，并核对业务允许的标签与 URI 策略。它不能替代服务器验证、鉴权、CSP 或对导入文件的信任审计。
+没有浏览器收据时不要写 PASS。策略单测不 import DOMPurify，不能当成 XSS 已测。Actions [41779873259](https://github.com/CoderLambert/ReactLoom/actions/runs/41779873259) 不是本条目的 DOM 证明。
 
-本条 `dompurify@3.4.17`，许可为 `MPL-2.0 OR Apache-2.0`；版本必须纳入安全升级与漏洞审查，历史版不要盲目复用。
+## Lab 当前示例
 
-## 安装与代码
+[`examples/example.tsx`](examples/example.tsx) 调用 `DOMPurify.sanitize(dirty, htmlPolicy)`。[`examples/html-policy.mjs`](examples/html-policy.mjs) 是固定词表。
 
-```sh
-pnpm add dompurify@3.4.17
+已挂载：
+
+- 允许的标签是 `section`、标题、段落、强调、列表、引用、`code`、`pre`、`a`。没有 `script`、`img`、`iframe`、`style`、`svg`。
+- 属性只有 `href` 和 `title`。
+- `ALLOWED_URI_REGEXP` 只接受 `https://主机` 这种形式。带用户信息的 URL、`javascript:`、`data:` 对不上。
+- 不设置 `USE_PROFILES`。注释写明 profile 会压过 `ALLOWED_TAGS`，所以不要两者一起开。
+- 预览把净化后的字符串交给受控展示。输入是本地样例：普通段落、带 https 链接的公告、以及含攻击字符串的 advanced 样本。
+- 每次 `dirty` 变化重新 sanitize。不要缓存「上次净化结果」给新字符串。
+
+没有挂载：可信类型（Trusted Types）、钩子 `uponSanitizeAttribute`、服务端 jsdom 净化。浏览器里有没有真的去掉 `<script>` 要看 DOM，单测只检查策略常量。
+
+## 1. 顺序
+
+```text
+不可信字符串 → sanitize(html, htmlPolicy) → 再放进预览
 ```
 
-实际示例在 `examples/example.tsx`。先用 `DOMPurify.sanitize(dirty, htmlPolicy)` 得到干净字符串，再交给 React 的 `dangerouslySetInnerHTML`。采用 ALLOWED_TAGS 和 ALLOWED_ATTR 最小允许列表，只保留受限排版元素与 a[href,title]，仅允许无凭据 HTTPS 链接。不要混用 USE_PROFILES 与 ALLOWED_TAGS，前者会覆盖后者。点击外站链接另由产品制定跳转策略。该策略是**教学中的严格子集**，不等于适合所有 CMS 的通用策略。
+先拼接再净化，不要净化 A 和 B 再拼回去。净化后的字符串仍然不要送进 `eval`。
 
-## 三层可交互实验
+## 2. 反例
 
-- **basic**：保留合理的 `strong` 和 `p`，学习净化不会破坏全部格式。
-- **business**：保留公告结构与允许的 HTTPS 链接；只有业务真的需要时才调整 allowlist。
-- **advanced**：包含 script、SVG、事件属性、javascript 协议和定位样式的恶意输入。观察净化后原文的区别，并在浏览器里检查最终 DOM。
+### 反例 1：默认配置当安全策略
 
-## 安全边界与生命周期
+```ts
+DOMPurify.sanitize(userHtml)
+```
 
-**关键规则是净化之后不要再改变 HTML 结构。**如果将已经净化的字符串交给后续第三方插件重新拼接或重新解释，可能重新引入 XSS。不要在 DOMPurify 全局单例上随便增设影响其他组件的 hooks；特别是不要把允许任意事件属性或 `SAFE_FOR_TEMPLATES` 当作默认安全做法。安全版本需要跟踪更新公告，不能只拿“代码里调用了 sanitize”证明没有 XSS。
+默认允许的标签比 Lab 多。业务公告用显式 `ALLOWED_TAGS` / `ALLOWED_ATTR`。
 
-DOMPurify 在浏览器里直接使用 DOM；Node/SSR 运行时需要可靠、受维护的 DOM 实现（如合适版本的 jsdom），不应假装浏览器净化 API 无条件可在服务端直接执行。服务端净化/持久化的责任归业务边界所有；客户端展示前也要根据威胁模型选择是否重新净化。
+### 反例 2：USE_PROFILES 加上允许列表
 
-## 五个实战反例
+```ts
+DOMPurify.sanitize(html, { USE_PROFILES: { html: true }, ALLOWED_TAGS: ['p'] })
+```
 
-1. 直接用 `dangerouslySetInnerHTML={{__html: userHtml}}`：XSS。正确方式是先 sanitize 并限定用途。
-2. 净化后给字符串重新拼接 `<script>` 或未知 HTML：破坏信任边界。禁止二次加工。
-3. 使用过于宽泛的 `ALLOWED_URI_REGEXP`：可能放过危险协议。优先使用默认协议安全策略。
-4. 允许远程 `img` 导致私密 URL/访问事件外泄：确定代理和允许域，不依赖 HTML 安全性判断业务隐私。
-5. 将 Vue/React 的 HTML 输出当作服务端输入校验：净化与权限、字段合法性是不同任务。
+profile 优先，允许列表会被忽略。Lab 只写允许列表。
 
-## 生产策略
+### 反例 3：放开 href
 
-将允许的标签/属性形成明确的业务 policy，记录使用场景、版本与真实攻击样例；为自定义渲染组件单独写 URL 安全检查；给所有展示路径追加 CSP 边界、a11y 回归和供应链更新流程。不要通过正则替代专业 HTML 解析器；不要把一次测试结果当作通用安全证明。
+```ts
+ALLOWED_ATTR: ['href', 'style', 'onerror']
+```
 
-## 两种组合
+`style` 和事件属性不在 Lab 的列表里。链接只留 https。
 
-- 不可信 Markdown：优先 E06 react-markdown + rehype-sanitize 的语义树渲染；不是所有 Markdown 都要先变 HTML 字符串。
-- 后端 CMS：服务器端校验来源、存储结构与允许标签，浏览器按显示策略再次处理，避免富文本存储跨业务复用。
+### 反例 4：用正则自己删 script
 
-## 练习与验收
+```ts
+html.replace(/<script>/gi, '')
+```
 
-练习：在“公告内容”中添加一个带 onclick 的标题，再加一张外部跟踪图片；检查最终 DOM 中没有事件属性、script/svg/img 和危险 URL。再检查合法粗体与段落仍可读；完成 Chrome/Firefox 的渲染回归。只有浏览器里真实执行 DOMPurify 且完成攻击用例才能记 SDK/浏览器 PASS。
+绕过方式很多。用 DOMPurify，并在浏览器里看净化后的 DOM，而不是看字符串里还有没有单词 script。
 
-## 官方参考
+### 反例 5：把净化结果当纯文本又当 HTML
+
+React 文本节点会转义。若预览用 HTML 插入，必须是 sanitize 的返回值，且策略没被调用方改掉。
+
+### 反例 6：策略单测等于 XSS 通过
+
+`html-policy.test.mjs` 只断言标签数组和正则。它不创建 DOM，不跑 `sanitize`。
+
+## 3. 组合
+
+**react-markdown**：Markdown 走 remark，HTML 节点再决定要不要进 DOMPurify。不要两条管道各放宽一次。
+
+**CSP**：净化减少危险标记，CSP 仍要限制脚本源。两者不是替代关系。
+
+## 4. 练习
+
+1. 在 advanced 样例里加入 `<img onerror>` 和 `javascript:` 链接，浏览器里确认预览 DOM 没有这些节点。
+2. 确认 `USE_PROFILES` 没有出现在调用点。
+3. 不要把用户 HTML 写进日志全文。
+
+## 5. 证据
+
+浏览器 DOM 断言和 CSP 都还没有收据。sdk 只有在真实 import `dompurify` 并记录日志之后才是 PASS。
+
+## 6. 资料
 
 - https://github.com/cure53/DOMPurify
 - https://www.npmjs.com/package/dompurify
-
-当前安装和浏览器验证仍为 NOT_RUN/BLOCKED，不继承历史安全结论。
-
-## 固定策略与真实安全证据的区别
-
-策略位于 `examples/html-policy.mjs`。示例切换场景时重置原输入，防止旧攻击样例混进新业务场景。使用 `node --test packages/library-lab/entries/E10-dompurify/examples/html-policy.test.mjs` 只能检查**纯策略**标签/属性名单与 URL 正则（不加载 DOMPurify），不能证明净化 SDK、安全 DOM、网络和 CSP。真正验收须安装官方 dompurify@3.4.17，并在 Chromium 测 script/svg/onclick/远程图片、http:、javascript:、data:、带凭据 URL 等最终 DOM。只有真实证据才能调整 verification 状态。

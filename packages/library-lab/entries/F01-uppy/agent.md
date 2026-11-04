@@ -1,21 +1,47 @@
-# F01 Uppy — Agent 工程指南
+# F01 Uppy — 工程手册
 
-**任务**：复杂批量上传编排、文件队列、断点续传或协议插件。**不适用**：只需一次文件选择、CSV解析、图片转换。基线 @uppy/core@6.1.0 / MIT，真实 npm 解析/类型与React适配仍需由 PLATFORM验收。
+## 适用
 
-## 迁移最短路径
+批量队列、限制、以后要接传输协议。单次选择用 F02。CSV 解析用 F03。本页没有上传。
 
-`examples/example.tsx` 是可复用源码，`examples/demo.tsx` 只是Lab适配器。读取原码，抽取创建Uppy实例、限制、事件监听/取消及卸载清理逻辑；千万不要复制Demo中的文件拒绝造假成服务器级安全策略。
+## 版本
 
-如果只用Core：`new Uppy({id,autoProceed:false,restrictions})` → `addFiles()` → `getFiles()` → `removeFile()` → `destroy()`。React使用effect创建并销毁以避免StrictMode二次mount后复用已destroy实例；任意异步File.read需generation防止回写。
+`@uppy/core@6.1.0`，MIT。导入 `Uppy` from `@uppy/core`。不要把 5.x 的 React `DragDrop` 包装抄进来。Dashboard、XHR、Tus、S3 都未安装在这条示例上。
 
-真正上传：明确后端XHR/Tus/S3协议并添加对应Uppy插件，上传完成需检查每份的成功/失败、服务端token/CORS、权限、幂等/重试。禁止把此Demo视为已具备断点续传或多租户后端。
+## 迁移
 
-## 必须测试
+带走 `examples/example.tsx`、`examples/preview-policy.mjs` 和 `.d.mts`。`demo.tsx` 留在 Lab。实例放在 effect 里，id 保持唯一，`autoProceed: false`。限制保持最多 3 个、1 MiB、`.txt` `.csv` `.md`，除非产品改了文案和测试。
 
-合法 .txt/.md/.csv 可加入；>1MiB或第4份被真正的Uppy限制拒绝；移除单项后队列数量正确；预览只读取允许尺寸且不跨旧请求回写；卸载后事件和File对象被释放。真实上传必须测试服务端403/413/422/断线/重试与超时，不可Mock目标Uppy后标PASS。需要按当前源码fingerprint保存实际浏览器命令和证据。
+接上传时另加官方插件，并单独做服务端校验。不要把 Core 队列当成已入库。
 
-参考：https://uppy.io/docs/uppy/
+## 不可删的清理
 
-## Wave16 迁移必留
+卸载时摘掉 `file-added`、`file-removed`、`restriction-failed`，然后 `destroy()`。`key={level}` 必须留着。预览、删除、清空、换文件都增加 generation；过期的 `readTextPreview` 不能 `setPreview`。预览继续拒绝大于 12 000 字节、非法 UTF-8 和控制字符，显示不超过 4 000 字符。
 
-同时拷贝 `preview-policy.mjs` 和 `.d.mts`，不能恢复无界 `.text()` 读取；客户端扩展名过滤不是内容可信证明。keyed实例销毁和服务端大小/魔数/病毒/ACL验证必须保留。
+## 反例
+
+- 渲染函数里 `new Uppy()`。
+- 用扩展名代替服务端魔数和配额。
+- 把对象存储长期密钥放进前端。
+- 监听 `complete` 就当全部成功。
+- 普通 POST 重试宣传成续传。
+- 服务端模块级共享带用户 id 的实例。
+- 再维护一套百分比 store。
+- 无界 `blob.text()`，或在删除后仍回写预览。
+- 画假进度并称为 XHR 已通过。
+
+## 测试断言
+
+- 合法文本能进队列；第 4 个和大于 1 MiB 的文件被 Uppy 拒绝。
+- 删除后条数减少，预览被清掉。
+- 12 001 字节在读字节前拒绝；含 NUL 和非法 UTF-8 拒绝；8 000 个 `x` 只显示 4 000。
+- 换场景不保留上一棵树的 File。
+- 策略单测不加载 `@uppy/core`。
+
+## 真实限制
+
+页面只做本地选择和有界预览。没有百分比，没有 Tus offset，没有服务端 413。`allowedFileTypes` 不是安全边界。中文文件名不能直接当磁盘路径。
+
+## 证据
+
+没有 `docs/library-lab/evidence/runs/` 收据就不要写 sdk 或 browser PASS。锁文件里有 Core 只说明装得上。仓库级 Actions 41779873259 不能抄到 F01。

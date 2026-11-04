@@ -1,56 +1,79 @@
-# D10 Zustand — 轻量状态、租户隔离与持久化版本迁移
+# Zustand 5.0.16｜选择器、部分持久化和迁移
 
-## 为什么选
+Lab 锁定 `zustand@5.0.16`。它放本页的 UI 状态。服务端列表仍归 Query。不要把 token 放进 persist。
 
-Zustand v5.0.16（MIT）适合客户端短生命周期的 UI 状态，例如筛选、用户选择、布局和开关；远端数据状态优先由 TanStack Query（D07）负责。示例使用 React 19 + zustand/vanilla、zustand/react hook，以及真正的 persist middleware。不会将客户真实数据写入本地存储。
+没有逐库收据时不要写 PASS。Actions [41779873259](https://github.com/CoderLambert/ReactLoom/actions/runs/41779873259) 不是本条目证明。
 
-## 安装
+## Lab 当前示例
 
-~~~sh
-pnpm add zustand@5.0.16
-~~~
+[`examples/example.tsx`](examples/example.tsx) 使用 `createStore`、`useStore` 和 `persist`。[`examples/migration-policy.mjs`](examples/migration-policy.mjs) 把 v1 存档迁到 v2。存储是 Demo 私有的 `Map`，不是 `localStorage`。
 
-~~~ts
-import {createStore} from 'zustand/vanilla'
-import {useStore} from 'zustand'
-import {persist,createJSONStorage} from 'zustand/middleware'
-~~~
+已挂载：
 
-示例实际源码 examples/example.tsx；演示出口 examples/demo.tsx。库版本固定，并优先沿用仓库已有 Zustand 选型。
+- basic：vanilla store 加 React 选择器。组件只订阅 `tenant`、`view` 或当前租户的布尔值，不订阅整个 state。
+- business：按租户切换启用状态。`toggle` 只改 `enabledByTenant[tenant]`，保留另一个租户的值。
+- advanced：`persist`，`version: 2`，`skipHydration: true`。挂载后显式 `rehydrate()`。`partialize` 只写 `view` 和 `enabledByTenant`，不写函数，也不写当前 `tenant` 以外你没列入的字段。
+- 重新加载可以种入 v1 形状 `{ enabled, view }`，`migrate` 把它收成按租户的表。卸载时 `memory.clear()`，避免这个 Map 活过 Demo。
 
-## 三层场景
+没有挂载：`localStorage`、跨标签 `storage` 事件、devtools 中间件、把 Query 数据镜像进 store。
 
-基础：用 createStore 定义 action，React useStore(store,selector) 订阅当前 state；组件无须 Context provider，即使同一页出现多个 store 也可以显式指定。
+## 1. 模型
 
-业务：技术团队 A/B 的启用状态按 tenant ID 分离；切换 team 不应沿用另一个 team 的布尔值。选中的 tenant 是页面会话状态，不进入持久化白名单。
+```text
+createStore → useStore(store, selector) → 只有选中字段变化才渲染
+persist → partialize → JSON → migrate(version)
+```
 
-进阶：persist + createJSONStorage 将存储限定为 view 与 enabledByTenant。为避免实验污染已有应用，使用当前组件独占的 Map 实现 StateStorage；模拟刷新读取同一内存存储；导入 v1 结构时由 migrate 映射到 v2 对应字段。不要把实验内存存储当做刷新浏览器仍保留数据的证明。
+`skipHydration` 让你控制何时读存储。不等待 rehydrate 就渲染，会先闪默认值。Lab 在 effect 里 rehydrate。
 
-## Zustand v5 的类型与订阅语义
+## 2. 反例
 
-- createStore<StoreState>()(...) 返回可在 React 外测试的 vanilla store，便于多实例隔离和 SSR 请求作用域。
-- useStore(store, state => state.enabledByTenant[state.tenant]) 只订阅所需派生值；严格保证 selector 输出稳定，不在 selector 内每次创建新数组或对象。
-- persist 的 partialize 决定写入的数据；函数、token、临时 tenant 不入存储。
-- version + migrate 是 schema 演进机制；skipHydration 防止初始读取时序不受控，明确在 UI 挂载时 rehydrate。
+### 反例 1：订阅整个 store
 
-## 反模式与修复
+```tsx
+const state = useStore(store)
+```
 
-1. 在模块顶层导出所有用户共用的 store 并用于 SSR：跨请求共享隐患。按请求或应用 session 建立 store。
-2. 把服务端列表长期保存 Zustand，又用 Query 缓存同一资源：双份事实源；远端以 QueryClient 为所有权。
-3. selector 每次返回新对象：触发不稳定订阅甚至重复渲染；订阅原子字段或用 shallow。
-4. localStorage 没有命名空间/版本：不同账号覆盖；使用明确 key、partialize、version/migrate。
-5. 无意保存访问 token、医疗或隐私字段：持久存储泄露。持久化白名单只包含非敏感 UI 偏好。
-6. persist hydrate 完成前使用默认值发起业务写入：发生覆盖竞态。通过 skipHydration/hasHydrated 控制。
-7. 卸载后持有上个租户异步回调：旧 store 继续更新。异步请求使用 AbortSignal/身份版本，不能只靠 set。
+任意字段变化都重渲染。按字段选择。
 
-## 验证与安全
+### 反例 2：persist 整个 state
 
-SDK 测试使用真实 zustand/vanilla 与 persist、独立多 store、版本迁移/部分状态序列化；尚未执行则 NOT_RUN。界面按钮明确状态和团队标签，不用颜色代替状态语义。实验存储退出后清理 Map，不触及真实浏览器存储。
+函数和临时草稿会进 JSON，或者在恢复时变成普通对象。`partialize` 只留可序列化的偏好。
 
-官方：https://zustand.docs.pmnd.rs/ · https://zustand.site/en/docs/persist/ · https://github.com/pmndrs/zustand/releases
+### 反例 3：不写 version 就改形状
 
-## v1 存储是未知数据，不是 TypeScript StoreState（第十一轮加固）
+旧用户的 `{ enabled: false }` 会直接进新组件。Lab 的 `migrateChannelPreferences` 认出 version 1。迁移失败不要静默当成空对象并覆盖用户数据；本示例的内存存储可以清，生产存储不行。
 
-示例真实 `persist.migrate` 调用 `examples/migration-policy.mjs`，只接受 v1 的布尔 `enabled` 与 `grid/list` 枚举。恶意/损坏的 `{"enabled":"false"}` **不能**当作 Boolean(false)，旧 token、tenant 等字段不进入新 state。未知版本、null、数组均回退到安全默认 UI 偏好，不能使用 `value as Persisted` 掩盖类型边界。v2 同版本持久化数据的运行时校验尚需另建 schema 防线。
+### 反例 4：用 Zustand 存服务端列表
 
-`node --test packages/library-lab/entries/D10-zustand/tests/migration-policy.test.mjs` 是纯 JS 回归；`node --test packages/library-lab/entries/D10-zustand/tests/sdk.test.mjs` 必须加载真实 zustand SDK 才能证明 middleware 集成。浏览器 hydration/refresh 未完成验收。
+列表会和 Query 各算各的。频道开关若来自服务器，用 mutation。这里的布尔是本页偏好。
+
+### 反例 5：模块级单例被测试污染
+
+Lab 每次 `createChannelStore(storage)`。不要在模块顶层 `create()` 再在测试间共享。切换「重新 hydrate」时换新 store，并重新 rehydrate。
+
+### 反例 6：把密钥放进 persist
+
+`partialize` 没有 token 字段。不要为了方便加上 `session`。
+
+## 3. 组合
+
+**Query**：服务器数据走 Query。Zustand 只留 view 和本页开关。不要在 selector 里读 Query 缓存。
+
+**URL**：若视图要可分享，来源应是 URL，store 只是派生。Lab 没有把 `view` 同步到地址栏。
+
+## 4. 练习
+
+1. 在 team-a 关闭、team-b 打开，再切回 team-a，两个值都还在。
+2. 种入 v1 `{ enabled: false, view: 'grid' }`，rehydrate 后 v2 形状正确，且没有把函数写进 Map。
+3. 卸载 Demo 后内存存储被清空。
+
+## 5. 证据
+
+迁移策略单测不是 `createStore` 的运行证明。sdk PASS 需要真实 import zustand 的收据。
+
+## 6. 资料
+
+- https://zustand.docs.pmnd.rs/getting-started/introduction
+- https://zustand.docs.pmnd.rs/integrations/persisting-store-data
+- https://www.npmjs.com/package/zustand
