@@ -17,6 +17,8 @@ pnpm add react-imask@7.6.1 imask@7.6.1
 ## API 与所有权
 `IMaskInput` 提供 `mask`、`unmask`、`onAccept`，官方明确**不要依赖原生 onChange 获取掩码值**。`unmask=true` 时 onAccept 传入去格式后的字符串；Number mask 可设置 radix 和 scale。组件销毁后应释放插件持有的 DOM 处理，而不能在 React 外重复手动绑定新 mask。需要更复杂 DOM 集成时使用核心 `IMask.createMask` 或 `IMask(element,opts)` 并显式 destroy。
 
+7.6.1 的 Number mask 会规范化 `unmaskedValue`，因此 `1234.50` 对应字符串 `1234.5`；`scale:2` 限制最多两位小数，不保证保留尾零。需要固定两位的显示时可设置 `padFractionalZeros:true`，此时显示值可以是 `1,234.50`，取消格式后的值仍为 `1234.5`。原始小数位数或财务计算精度必须由业务合同另行管理。
+
 ## 五个容易遗漏的实际问题
 1. 在 React 里同时对 `value` 和掩码实例分别赋值，会导致回写环和光标跳动。单一 owner，只有 onAccept 进入表单状态。
 2. 把掩码结果当数据库数据。保存规范化 DTO，展示格式独立处理；服务端再次校验。

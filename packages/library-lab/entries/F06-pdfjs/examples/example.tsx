@@ -32,7 +32,8 @@ export default function PdfViewerExample({level}: Props) {
     setPdf(null)
     setNotice('正在加载 PDF 文档…')
     task.promise.then(document => {
-      if (!active) { void document.destroy(); return }
+      // Cleanup owns task.destroy(), including a late document resolution.
+      if (!active) return
       setPdf(document)
       setNotice(`已加载 ${document.numPages} 页；没有访问远程 URL`)
     }).catch(error => {
@@ -55,7 +56,7 @@ export default function PdfViewerExample({level}: Props) {
       // Serialize the actual canvas painting, not document loading or text extraction.
       // renderTask.cancel() rejects its promise asynchronously; starting a new
       // render immediately can throw "Cannot use the same canvas".
-      await withCanvas.current(async () => {
+      const renderedSize = await withCanvas.current(async () => {
         if (!active) return
         const canvas = canvasRef.current
         const context = canvas?.getContext('2d')
@@ -72,12 +73,13 @@ export default function PdfViewerExample({level}: Props) {
           transform: geometry.ratio !== 1 ? [geometry.ratio,0,0,geometry.ratio,0,0] : undefined,
         })
         await task.promise
+        return {width: canvas.width, height: canvas.height}
       })
-      if (!active) return
+      if (!active || !renderedSize) return
       const text = await page.getTextContent()
       if (!active) return
       setExtracted(text.items.map(item => 'str' in item ? item.str : '').join(' '))
-      setNotice(`第 ${pageNum} / ${pdf.numPages} 页渲染成功，Canvas尺寸 ${canvas.width}×${canvas.height}`)
+      setNotice(`第 ${pageNum} / ${pdf.numPages} 页渲染成功，Canvas尺寸 ${renderedSize.width}×${renderedSize.height}`)
     }
     void render().catch(error => {
       if (active && !(error instanceof Error && error.name === 'RenderingCancelledException')) {

@@ -183,7 +183,7 @@ export default function TableExample({level}:Props){
             :<table.FlexRender header={header}/>}
         </th>;
       })}</tr>)}</thead>
-      <tbody>{visible.map(row=><tr key={row.id}>{row.getVisibleCells().map(cell=>
+      <tbody>{visible.map(row=><tr key={row.id}>{row.getAllCells().map(cell=>
         <td key={cell.id} style={{borderBottom:'1px solid #e1e8db',padding:'10px'}}><table.FlexRender cell={cell}/></td>)}</tr>)}
         {visible.length===0&&<tr><td colSpan={5}>没有匹配的来源</td></tr>}</tbody>
     </table></div>

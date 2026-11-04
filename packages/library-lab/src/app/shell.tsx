@@ -1,5 +1,61 @@
-import {Link,Outlet} from '@tanstack/react-router';
-import {CatalogProvider,useCatalog} from '../lib/catalog-context';
-import {GROUPS} from '../lib/catalog.mjs';
-function Navigation(){const entries=useCatalog();return <><header className="topbar"><Link className="brand" to="/" search={{q:'',group:'all',only:''}}><span className="brand-icon" aria-hidden="true">R</span><span>ReactLoom <strong>Library Lab</strong></span></Link><span className="top-note">Learn. Build. Reuse.</span><a href={`${import.meta.env.BASE_URL}llms.txt`} className="machine-link">Agent 入口 ↗</a></header><div className="layout"><aside className="sidebar" aria-label="库分类"><p className="eyebrow">ENGINEERING LIBRARY</p><Link to="/" search={{q:'',group:'all',only:''}} className="side-link">全部工具库 <span>{entries.length}</span></Link>{Object.entries(GROUPS).map(([id,name])=><Link to="/" key={id} search={{q:'',group:id,only:''}} className="side-link"><span><b className="group-letter">{id}</b>{name}</span><small>{entries.filter(e=>e.group===id).length}</small></Link>)}<div className="side-foot"><strong>真实示例 · 同源代码</strong><p>查阅用途和验证范围，再将实践迁移到项目。收录不代表运行验收通过。</p></div></aside><main id="main"><Outlet/></main></div></>;}
-export function Shell(){return <><a href="#main" className="skip-link">跳转到内容</a><CatalogProvider><Navigation/></CatalogProvider></>;}
+import { Link, Outlet } from '@tanstack/react-router'
+import { GROUPS } from '../lib/catalog.mjs'
+import { CatalogProvider, useCatalog } from '../lib/catalog-context'
+
+function Navigation() {
+  const entries = useCatalog()
+  return (
+    <>
+      <header className="topbar">
+        <Link className="brand" to="/" search={{ q: '', group: 'all', only: '' }}>
+          <span className="brand-icon" aria-hidden="true">
+            R
+          </span>
+          <span>
+            ReactLoom <strong>Library Lab</strong>
+          </span>
+        </Link>
+        <span className="top-note">Learn. Build. Reuse.</span>
+        <a href={`${import.meta.env.BASE_URL}llms.txt`} className="machine-link">
+          Agent 入口 ↗
+        </a>
+      </header>
+      <div className="layout">
+        <aside className="sidebar" aria-label="库分类">
+          <p className="eyebrow">ENGINEERING LIBRARY</p>
+          <Link to="/" search={{ q: '', group: 'all', only: '' }} className="side-link">
+            全部工具库 <span>{entries.length}</span>
+          </Link>
+          {Object.entries(GROUPS).map(([id, name]) => (
+            <Link to="/" key={id} search={{ q: '', group: id, only: '' }} className="side-link">
+              <span>
+                <b className="group-letter">{id}</b>
+                {name}
+              </span>
+              <small>{entries.filter((e) => e.group === id).length}</small>
+            </Link>
+          ))}
+          <div className="side-foot">
+            <strong>真实示例 · 同源代码</strong>
+            <p>查阅用途和验证范围，再将实践迁移到项目。收录不代表运行验收通过。</p>
+          </div>
+        </aside>
+        <main id="main">
+          <Outlet />
+        </main>
+      </div>
+    </>
+  )
+}
+export function Shell() {
+  return (
+    <>
+      <a href="#main" className="skip-link">
+        跳转到内容
+      </a>
+      <CatalogProvider>
+        <Navigation />
+      </CatalogProvider>
+    </>
+  )
+}

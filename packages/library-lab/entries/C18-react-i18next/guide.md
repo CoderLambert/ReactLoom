@@ -67,6 +67,6 @@ Node SSR 可通过真实 react-dom/server + I18nextProvider + hook 验证文本�
 
 ## 第16轮：Provider 范围内的语言切换排序
 
-`LocalizedPanel` 使用 `useMemo` 为 Provider 的 `i18n` 实例创建独立 latest-intent 队列，`useEffect` 清理时 `dispose()`，父 `ScopedTranslation` 仍负责 `destroy()`。旧语言切换的异步完成不得覆盖用户最后一次选择；两个 Provider 之间不共享队列或默认 singleton。真正的 DOM 更新仍由 react-i18next 的 `languageChanged` 订阅触发。
+`LocalizedPanel` 使用 `useMemo` 为 Provider 的 `i18n` 实例创建独立 latest-intent 队列，`useEffect` 清理时 `dispose()`，父 `ScopedTranslation` 通过 `off('languageChanged')` 解除私有实例的事件监听。i18next 26.4.3 没有 `destroy()` API；此处仅使用内嵌资源，无后端句柄需要关闭。旧语言切换的异步完成不得覆盖用户最后一次选择；两个 Provider 之间不共享队列或默认 singleton。真正的 DOM 更新仍由 react-i18next 的 `languageChanged` 订阅触发。
 
 无第三方策略层：`node --test entries/C18-react-i18next/tests/language-switch.test.mjs`；真实 SSR Provider / Trans / 切换行为：`node --test entries/C18-react-i18next/tests/sdk.test.mjs`，后者需目标 SDK 安装。生产仍需浏览器检查快速 A→B→A、键盘焦点、SSR hydration 和 Provider 卸载，不能以纯 Node 队列测试替代。

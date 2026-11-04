@@ -21,11 +21,12 @@ export const batchSchema = {
     feeds: {type: 'array', minItems: 1, maxItems: 5, uniqueItems: true, items: feedSchema},
   },
 } as const;
+const maxConcurrentSchema = {type: 'integer', minimum: 1, maximum: 8} as const;
 export const windowSchema = {
   type: 'object', additionalProperties: false, required: ['enabled'],
-  properties: {enabled: {type: 'boolean'}, maxConcurrent: {type: 'integer', minimum: 1, maximum: 8}},
+  properties: {enabled: {type: 'boolean'}, maxConcurrent: maxConcurrentSchema},
   if: {properties: {enabled: {const: true}}, required: ['enabled']},
-  then: {required: ['maxConcurrent']},
+  then: {properties: {maxConcurrent: maxConcurrentSchema}, required: ['maxConcurrent']},
 } as const;
 const schemas = {basic: feedSchema, business: batchSchema, advanced: windowSchema};
 const samples = {

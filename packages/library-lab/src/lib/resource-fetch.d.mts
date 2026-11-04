@@ -3,8 +3,8 @@ export function requestGeneratedResource<T>(
   url: string,
   parse: (response: Response) => Promise<T>,
   options?: {
-    signal?: AbortSignal;
-    timeoutMs?: number;
-    fetchImpl?: typeof fetch;
+    signal?: AbortSignal
+    timeoutMs?: number
+    fetchImpl?: typeof fetch
   },
-): Promise<T>;
+): Promise<T>

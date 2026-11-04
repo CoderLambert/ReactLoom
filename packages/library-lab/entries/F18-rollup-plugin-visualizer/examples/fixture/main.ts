@@ -1,6 +1,6 @@
 import { summarize } from './helper';
 
-const root = document.querySelector('#root');
+const root = document.querySelector<HTMLElement>('#root');
 const button = document.querySelector<HTMLButtonElement>('#load');
 const summary = summarize([4, 5, 6]);
 if (root) root.dataset.sum = String(summary.sum);

@@ -16,7 +16,7 @@ const BatchSchema = v.object({
 });
 const WindowSchema = v.pipe(
   v.object({
-    start: v.pipe(v.string(), v.isoDate('日期须为YYYY-MM-DD'), v.check(isRealCivilDate, '不存在的公历日期')),
+    start: v.pipe(v.string(), v.isoDate('日期须为YYYY-MM-DD'), v.check(value => isRealCivilDate(value), '不存在的公历日期')),
     end: v.pipe(v.string(), v.isoDate('日期须为YYYY-MM-DD')),
   }),
   v.forward(

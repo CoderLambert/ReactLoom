@@ -1,7 +1,7 @@
 import {useMemo,useRef,useState} from 'react';
 import {isCivilDate,getUtcInstant,allocateEventId} from './calendar-policy.mjs';
 export {getUtcInstant} from './calendar-policy.mjs';
-import FullCalendar from '@fullcalendar/react';
+import FullCalendar, {type CalendarRef} from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/react/daygrid';
 import timeGridPlugin from '@fullcalendar/react/timegrid';
 import interactionPlugin from '@fullcalendar/react/interaction';
@@ -28,7 +28,7 @@ export default function CalendarExample({level}:{level:Level}){
  const [title,setTitle]=useState('RSS 频道审核');
  const [date,setDate]=useState('2026-11-03');
  const [status,setStatus]=useState('演示仅更新组件内存，不连接真实日历服务');
- const calendarRef=useRef<FullCalendar|null>(null);
+ const calendarRef=useRef<CalendarRef|null>(null);
  const localSequence=useRef(1);
  const memoEvents=useMemo(()=>events,[events]);
  function add(){

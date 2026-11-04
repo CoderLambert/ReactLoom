@@ -27,7 +27,7 @@ function TiptapSession({level}: {level: Level}) {
     const update = () => setChars(editor.getText().length)
     editor.on('update', update)
     update()
-    return () => editor.off('update', update)
+    return () => { editor.off('update', update) }
   }, [editor])
 
   function save() {

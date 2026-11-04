@@ -72,7 +72,8 @@ function ScopedTranslation({level, scope, initial}: {
       interpolation: {escapeValue: true},
     }).then(() => {if (alive) setInstance(local);})
       .catch(cause => {if (alive) setError(String(cause));});
-    return () => {alive = false; local.destroy();};
+    // Each provider owns its instance; the panel separately disposes its language queue.
+    return () => {alive = false; local.off('languageChanged');};
   }, [initial]);
   if (!instance) return <p role={error ? 'alert' : 'status'}>{error || '加载独立语言资源…'}</p>;
   return <I18nextProvider i18n={instance} defaultNS="common">

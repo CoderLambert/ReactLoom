@@ -1,22 +1,88 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
-import {validateCatalogPayload} from '../src/lib/catalog-payload.mjs';
-import {normalizeCatalogQuery, SEARCH_QUERY_LIMIT} from '../src/lib/catalog-query.mjs';
-const fixture={schemaVersion:1,entryId:'D03',slug:'p-limit',name:'p-limit',group:'D',summary:'并发控制',tags:['并发'],contentState:'recreated',packages:[{name:'p-limit',version:'7.3.3'}],references:[],related:[],demos:[],sourceFingerprint:'a'.repeat(64),sourceIndexSha256:'b'.repeat(64),verification:{sdk:{status:'NOT_RUN'},build:{status:'BLOCKED'},browser:{status:'NOT_RUN'}}};
-test('generated catalog shape is accepted without claiming runtime PASS',()=>assert.deepEqual(validateCatalogPayload([fixture]),[fixture]));
-test('duplicate identities or slugs never reach Router',()=>{assert.throws(()=>validateCatalogPayload([fixture,{...fixture,slug:'other'}]),/重复/);assert.throws(()=>validateCatalogPayload([fixture,{...fixture,entryId:'D04'}]),/重复/);});
-test('schema, malicious references, and missing arrays fail closed',()=>{assert.throws(()=>validateCatalogPayload([{...fixture,references:[{title:'x',url:'javascript:alert(1)'}]}]),/无效/);assert.throws(()=>validateCatalogPayload([{...fixture,tags:null}]),/无效/);});
-test('missing source fingerprint and verification status fail closed',()=>{assert.throws(()=>validateCatalogPayload([{...fixture,sourceFingerprint:''}]),/源码摘要/);assert.throws(()=>validateCatalogPayload([{...fixture,verification:{sdk:{status:'NOT_RUN'}}}]),/build/);});
-test('catalog length cannot be zero or unbounded',()=>{assert.throws(()=>validateCatalogPayload([]),/受限/);assert.throws(()=>validateCatalogPayload(Array(301).fill(fixture)),/受限/);});
-test('search query is bounded, without replacing Chinese IME characters',()=>{assert.equal(normalizeCatalogQuery('前端 工程'), '前端 工程');assert.equal(normalizeCatalogQuery('x'.repeat(400)).length, SEARCH_QUERY_LIMIT);assert.equal(normalizeCatalogQuery(undefined),'');});
-test('unsubstantiated PASS cannot be rendered as verified',()=>{
-  const verification={...fixture.verification,sdk:{status:'PASS',sourceFingerprint:fixture.sourceFingerprint,command:'',evidence:'unverified'}};
-  assert.throws(()=>validateCatalogPayload([{...fixture,verification}]),/PASS/);
-  verification.sdk={status:'PASS',sourceFingerprint:fixture.sourceFingerprint,command:'node --test',evidence:'docs/evidence/real-run.log'};
-  assert.equal(validateCatalogPayload([{...fixture,verification}]).length,1);
-});
+import assert from 'node:assert/strict'
+import test from 'node:test'
+import { validateCatalogPayload } from '../src/lib/catalog-payload.mjs'
+import { normalizeCatalogQuery, SEARCH_QUERY_LIMIT } from '../src/lib/catalog-query.mjs'
+
+const fixture = {
+  schemaVersion: 1,
+  entryId: 'D03',
+  slug: 'p-limit',
+  name: 'p-limit',
+  group: 'D',
+  summary: '并发控制',
+  tags: ['并发'],
+  contentState: 'recreated',
+  packages: [{ name: 'p-limit', version: '7.3.3' }],
+  references: [],
+  related: [],
+  demos: [],
+  sourceFingerprint: 'a'.repeat(64),
+  sourceIndexSha256: 'b'.repeat(64),
+  verification: {
+    sdk: { status: 'NOT_RUN' },
+    build: { status: 'BLOCKED' },
+    browser: { status: 'NOT_RUN' },
+  },
+}
+test('generated catalog shape is accepted without claiming runtime PASS', () =>
+  assert.deepEqual(validateCatalogPayload([fixture]), [fixture]))
+test('duplicate identities or slugs never reach Router', () => {
+  assert.throws(() => validateCatalogPayload([fixture, { ...fixture, slug: 'other' }]), /重复/)
+  assert.throws(() => validateCatalogPayload([fixture, { ...fixture, entryId: 'D04' }]), /重复/)
+})
+test('schema, malicious references, and missing arrays fail closed', () => {
+  assert.throws(
+    () =>
+      validateCatalogPayload([
+        { ...fixture, references: [{ title: 'x', url: 'javascript:alert(1)' }] },
+      ]),
+    /无效/,
+  )
+  assert.throws(() => validateCatalogPayload([{ ...fixture, tags: null }]), /无效/)
+})
+test('missing source fingerprint and verification status fail closed', () => {
+  assert.throws(() => validateCatalogPayload([{ ...fixture, sourceFingerprint: '' }]), /源码摘要/)
+  assert.throws(
+    () => validateCatalogPayload([{ ...fixture, verification: { sdk: { status: 'NOT_RUN' } } }]),
+    /build/,
+  )
+})
+test('catalog length cannot be zero or unbounded', () => {
+  assert.throws(() => validateCatalogPayload([]), /受限/)
+  assert.throws(() => validateCatalogPayload(Array(301).fill(fixture)), /受限/)
+})
+test('search query is bounded, without replacing Chinese IME characters', () => {
+  assert.equal(normalizeCatalogQuery('前端 工程'), '前端 工程')
+  assert.equal(normalizeCatalogQuery('x'.repeat(400)).length, SEARCH_QUERY_LIMIT)
+  assert.equal(normalizeCatalogQuery(undefined), '')
+})
+test('unsubstantiated PASS cannot be rendered as verified', () => {
+  const verification = {
+    ...fixture.verification,
+    sdk: {
+      status: 'PASS',
+      sourceFingerprint: fixture.sourceFingerprint,
+      command: '',
+      evidence: 'unverified',
+    },
+  }
+  assert.throws(() => validateCatalogPayload([{ ...fixture, verification }]), /PASS/)
+  verification.sdk = {
+    status: 'PASS',
+    sourceFingerprint: fixture.sourceFingerprint,
+    command: 'node --test',
+    evidence: 'docs/evidence/real-run.log',
+  }
+  assert.equal(validateCatalogPayload([{ ...fixture, verification }]).length, 1)
+})
 
 test('missing or invalid source index digest is rejected before rendering', () => {
-  assert.throws(()=>validateCatalogPayload([{...fixture,sourceIndexSha256:''}]),/源码索引摘要/);
-  assert.throws(()=>validateCatalogPayload([{...fixture,sourceIndexSha256:'bad'.repeat(21)}]),/源码索引摘要/);
-});
+  assert.throws(
+    () => validateCatalogPayload([{ ...fixture, sourceIndexSha256: '' }]),
+    /源码索引摘要/,
+  )
+  assert.throws(
+    () => validateCatalogPayload([{ ...fixture, sourceIndexSha256: 'bad'.repeat(21) }]),
+    /源码索引摘要/,
+  )
+})

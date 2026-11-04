@@ -14,6 +14,8 @@ pnpm add ajv@8.20.0
 
 用户可修改 JSON，观察 `instancePath`、`keyword` 和 `message`。语义错误展示通过文本，而非只变颜色。每层对同一个 schema 编译一次，编辑输入时复用 validate 函数。
 
+`strict:true` 包含 `strictRequired`：条件分支中的必填属性应在该分支的 `properties` 明确声明。本例在根对象与 `then` 复用同一份 `maxConcurrentSchema`；启用时必须填写 1–8 的整数，未启用但主动提供该字段时仍受相同约束。不要关闭严格模式来让分支通过编译。
+
 ## 必须理解的运行机制
 `compile(schema)` 产出会执行的 JS 校验逻辑，并将错误存于当前 `validate.errors`。这意味着不应在无信任边界的环境中编译用户任意 Schema；严格 CSP/不允许动态代码生成的环境，需要单独预编译独立校验器，而不是关闭全部安全策略。默认 `coerceTypes:false`、`removeAdditional:false`、`useDefaults:false`，**拒绝**而不是静默修改业务输入。
 

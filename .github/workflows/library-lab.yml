@@ -92,24 +92,24 @@ jobs:
       - name: Frozen installation is mandatory
         run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Typecheck and build the integrated application
+        id: build
         run: |
           pnpm --filter @reactloom/library-lab typecheck
           pnpm --filter @reactloom/library-lab build
       - name: Selected real SDK suites (never policy substitutes)
         id: sdk
-        continue-on-error: true
         working-directory: packages/library-lab
         run: node scripts/ci-targets.mjs sdk
       - name: Install Chromium
+        id: chromium
+        if: ${{ always() && !cancelled() && steps.build.outcome == 'success' }}
         run: pnpm --filter @reactloom/library-lab exec playwright install --with-deps chromium
       - name: Selected production preview interactions
+        if: ${{ always() && !cancelled() && steps.build.outcome == 'success' && steps.chromium.outcome == 'success' }}
         working-directory: packages/library-lab
         env:
           LAB_PREBUILT: '1'
         run: node scripts/ci-targets.mjs browser
-      - name: Preserve SDK failure after browser evidence collection
-        if: ${{ always() && steps.sdk.outcome == 'failure' }}
-        run: exit 1
       - uses: actions/upload-artifact@v4
         if: always()
         with:

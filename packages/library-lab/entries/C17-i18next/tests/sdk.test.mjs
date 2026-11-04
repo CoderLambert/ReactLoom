@@ -18,7 +18,7 @@ test('actual i18next performs interpolation and English plural rules', async () 
   assert.equal(client.t('common:greeting', {name: 'Ada'}), 'Hi Ada');
   assert.equal(client.t('feed:article', {count: 1}), '1 article');
   assert.equal(client.t('feed:article', {count: 2}), '2 articles');
-  client.destroy();
+  client.off('languageChanged');
 });
 test('actual i18next provides configured fallback and isolated instances', async () => {
   const zh = await instance('zh');
@@ -29,7 +29,7 @@ test('actual i18next provides configured fallback and isolated instances', async
   await en.changeLanguage('zh');
   assert.equal(zh.language, 'en');
   assert.equal(en.language, 'zh');
-  zh.destroy(); en.destroy();
+  zh.off('languageChanged'); en.off('languageChanged');
 });
 
 
@@ -48,5 +48,5 @@ test('actual i18next honors latest intent when queued switches serialize', async
   assert.equal(client.language, 'zh');
   assert.deepEqual(committed, ['zh']);
   switcher.dispose();
-  client.destroy();
+  client.off('languageChanged');
 });

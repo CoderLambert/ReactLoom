@@ -39,7 +39,7 @@ function LocalPlayground({level}:{level:Level}){
     </MessagePrimitive.Root>}</ThreadPrimitive.Messages>
    </ThreadPrimitive.Viewport>
    <ComposerPrimitive.Root style={{display:'flex',gap:9,marginTop:12}}>
-    <ComposerPrimitive.Input aria-label="向本地适配器提问" placeholder="输入内容后发送，数据不会离开浏览器…" style={{flex:1,minHeight:70}}/>
+    <ComposerPrimitive.Input aria-label="向本地适配器提问" placeholder="输入内容后发送，数据不会离开浏览器…" minRows={3} style={{flex:1}}/>
     <div style={{display:'flex',flexDirection:'column',gap:5}}><ComposerPrimitive.Send>发送</ComposerPrimitive.Send>
      {level==='advanced'&&<StopResponse/>}
     </div>

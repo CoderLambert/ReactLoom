@@ -37,7 +37,9 @@ function snapshot(options){
     observed={
       ids:table.getRowModel().rows.map(row=>row.id),
       pageCount:table.getPageCount(),
-      selectedOnPage:table.getSelectedRowModel().rows.map(row=>row.id),
+      selectedInData:table.getSelectedRowModel().rows.map(row=>row.id),
+      selectedOnPage:table.getRowModel().rows.filter(row=>row.getIsSelected()).map(row=>row.id),
+      selectedIds:table.getSelectedRowIds(),
       canNextPage:table.getCanNextPage(),
     };
     return createElement('p',null,observed.ids.join(','));
@@ -46,17 +48,27 @@ function snapshot(options){
   return observed;
 }
 test('real v9 client table sorts before pagination and keeps business IDs',()=>{
-  const result=snapshot({sorting:[{id:'title',desc:false}],pageSize:1,selection:{'feed-z':true}});
+  const options={sorting:[{id:'title',desc:false}],pageSize:1,selection:{'feed-z':true}};
+  const result=snapshot(options);
   assert.deepEqual(result.ids,['feed-a']);
-  assert.deepEqual(result.selectedOnPage,[],'off-page selection cannot be read as current-row data');
+  assert.deepEqual(result.selectedIds,['feed-z'],'off-page selection remains in controlled state');
+  assert.deepEqual(result.selectedInData,['feed-z'],'selected row model uses all supplied client data');
+  assert.deepEqual(result.selectedOnPage,[],'visible page has no selected rows');
   assert.equal(result.pageCount,3);
+  const lastPage=snapshot({...options,pageIndex:2});
+  assert.deepEqual(lastPage.ids,['feed-z']);
+  assert.deepEqual(lastPage.selectedIds,['feed-z']);
+  assert.deepEqual(lastPage.selectedInData,['feed-z']);
+  assert.deepEqual(lastPage.selectedOnPage,['feed-z'],'selection follows the stable ID onto its page');
 });
 test('real v9 manual pagination respects server row count, not current-page length',()=>{
   const result=snapshot({
-    manual:true,rows:[seeds[2]],pageIndex:1,pageSize:2,selection:{'feed-a':true},
+    manual:true,rows:[seeds[2]],pageIndex:1,pageSize:2,selection:{'feed-a':true,'feed-b':true},
   });
   assert.deepEqual(result.ids,['feed-b']);
   assert.equal(result.pageCount,3);
   assert.equal(result.canNextPage,true);
-  assert.deepEqual(result.selectedOnPage,[]);
+  assert.deepEqual(result.selectedIds,['feed-a','feed-b'],'selection retains IDs absent from supplied data');
+  assert.deepEqual(result.selectedInData,['feed-b'],'manual page can only materialize supplied selected rows');
+  assert.deepEqual(result.selectedOnPage,['feed-b']);
 });

@@ -23,7 +23,7 @@ export function makeMemoryStorage(){
  return {storage,seed:(raw:string)=>data.set(KEY,raw),inspect:()=>data.get(KEY)??'未写入',clear:()=>data.clear()};
 }
 export function createChannelStore(storage:StateStorage) {
- return createStore<ChannelState>()(persist<ChannelState,Persisted>(
+ return createStore<ChannelState>()(persist<ChannelState,[],[],Persisted>(
   (set)=>({
    tenant:'team-a',view:'list',enabledByTenant:{'team-a':true,'team-b':false},
    setTenant:tenant=>set({tenant}),
