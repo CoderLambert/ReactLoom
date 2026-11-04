@@ -1,6 +1,6 @@
 import { QueryClientProvider } from '@tanstack/react-query'
 import { createMemoryHistory, RouterProvider } from '@tanstack/react-router'
-import { render, screen, waitFor } from '@testing-library/react'
+import { cleanup, render, screen, waitFor } from '@testing-library/react'
 import { HttpResponse, http } from 'msw'
 import { I18nextProvider } from 'react-i18next'
 import { afterEach, describe, expect, it, vi } from 'vitest'
@@ -18,6 +18,7 @@ import { server } from '@/mocks/server'
 const STORAGE_KEY = 'reactloom.session'
 
 afterEach(() => {
+  cleanup()
   vi.restoreAllMocks()
   useAuthStore.getState().clearSession()
 })
