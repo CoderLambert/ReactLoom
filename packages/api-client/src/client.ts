@@ -45,9 +45,16 @@ const noopLogger: ApiLogger = {
 }
 
 function joinUrl(baseUrl: string, path: string): string {
-  const base = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`
+  const base = new URL(baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`)
   const relative = path.startsWith('/') ? path.slice(1) : path
-  return new URL(relative, base).toString()
+  const url = new URL(relative, base)
+
+  // URL resolution accepts absolute URLs, which would otherwise send bearer
+  // credentials to a caller-supplied host instead of the configured API.
+  if (url.origin !== base.origin || (url.protocol !== 'http:' && url.protocol !== 'https:')) {
+    throw new ApiError('Request URL must stay within the configured API origin.', 'validation')
+  }
+  return url.toString()
 }
 
 function defaultSleep(ms: number, signal: AbortSignal): Promise<void> {

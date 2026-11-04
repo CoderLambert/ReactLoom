@@ -153,6 +153,37 @@ describe('createApiClient', () => {
     expect(onUnauthorized).toHaveBeenCalledOnce()
   })
 
+  it.each([
+    'https://outside.test/collect',
+    'http://api.test/collect',
+    'data:text/plain,unexpected',
+  ])('rejects API paths escaping the configured origin: %s', async (path) => {
+    const getAccessToken = vi.fn(() => 'secret-token')
+    const fetchFn = vi.fn(async () => jsonResponse({ ok: true }))
+    const client = createApiClient({
+      baseUrl: 'https://api.test/v1',
+      getAccessToken,
+      fetchFn,
+    })
+
+    await expect(client.request(path, schema)).rejects.toMatchObject({ code: 'validation' })
+    expect(getAccessToken).not.toHaveBeenCalled()
+    expect(fetchFn).not.toHaveBeenCalled()
+  })
+
+  it('permits an absolute URL on the configured origin', async () => {
+    const fetchFn = vi.fn(async () => jsonResponse({ ok: true }))
+    const client = createApiClient({ baseUrl: 'https://api.test/v1', fetchFn })
+
+    await expect(client.request('https://api.test/v1/items', schema)).resolves.toEqual({
+      ok: true,
+    })
+    expect(fetchFn).toHaveBeenCalledWith(
+      'https://api.test/v1/items',
+      expect.objectContaining({ method: 'GET' }),
+    )
+  })
+
   it('does not read credentials or fetch when already cancelled', async () => {
     const controller = new AbortController()
     controller.abort()
