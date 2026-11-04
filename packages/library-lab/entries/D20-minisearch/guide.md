@@ -1,69 +1,79 @@
-# MiniSearch — ReactLoom 工程实战
+# MiniSearch 7.2.0｜倒排索引，分数不是 Fuse 的分数
 
-## 定位与适用范围
+Lab 锁定 `minisearch@7.2.0`。它为标题和摘要建倒排索引。默认分词不是中文专业分词。它也不是权限系统。
 
-MiniSearch 是浏览器/Node 可用的倒排全文检索库，提供索引、字段权重、前缀与模糊词条、查询建议。适合离线资料和中等规模文档目录，不是向量数据库、权限系统或分布式搜索集群。本 Demo 对原创 RSS 文章 fixture 建立真正的 SDK 索引。
+没有逐库收据时不要写 PASS。Actions 41779873259 是仓库级结果。
 
-## 安装及版本约束
+## Lab 当前示例
 
-~~~bash
-pnpm add minisearch@7.2.0
-~~~
+[`examples/example.tsx`](examples/example.tsx) 调用真实的 `MiniSearch`。[`examples/scope-policy.mjs`](examples/scope-policy.mjs) 先按分组留下文档。
 
-采用官方稳定 MiniSearch 7.2.0；搜索评分越高代表相关性越强，不能与 Fuse.js 的越低越相似混为一谈。
+已挂载：
 
-## 真实代码路径
+- `fields` 是 `title` 和 `summary`。`storeFields` 只有 `title` 和 `group`，所以命中对象上不要假设还有完整摘要。
+- 建库时的默认搜索是 `boost: { title: 3 }`、`prefix: true`、`fuzzy: 0.2`。
+- 索引按 `scopedDocs` 重建。`autoSuggest` 和 `search` 用同一份索引，避免建议泄漏其他分组的词。
+- 搜索再带 `filter`，只保留仍在这份集合里的 id，然后 `slice(0, 20)`。先过滤再截断。
+- advanced 才调用 `autoSuggest`，最多 3 条。
+- 组合输入用 ref 挡住未完成的查询。更新文档走替换而不是再 `add` 一个相同 id。
 
-实际入口为 examples/demo.tsx，完整可迁移实现为 examples/example.tsx。Library Lab 展示的代码由这两份源文件生成并计算 SHA-256；三个 Demo 场景共享真实实现，使用 level 切换学习层次。不得为文档另外维护一份看起来相同但不可运行的伪代码。
+没有挂载：Comlink Worker、Dexie 持久化、`vacuum`、`loadJSON`。分组是 UI 分类，不是上游授权。
 
-## 索引模型
+## 1. 反例
 
-创建 MiniSearch 时指定 fields、storeFields 与 searchOptions；addAll 建立倒排结构，search 返回 id、score、terms 等；autoSuggest 提供文本建议。storeFields 只存需要在结果中展示的字段，原始正文完整副本不一定需要与索引全部同步。
+### 反例 1：改完内容再 remove 旧对象
 
-## 三层实战
+`remove` 需要索引里的原文。先改 title 再 remove，可能删不掉。保留快照再 `remove`，或用 `replace` / `discard(id)`。
 
-基础：输入 React，检查 title boost 与排序分数；业务：结合 RSS 技术/产品/开源分类过滤，使用 search filter 在 slice 前控制范围，并对中文输入法组成态暂缓提交；进阶：启用/关闭拼写容错、执行 autoSuggest，修改标题后重建索引使搜索结果真实更新。
+### 反例 2：用 add 更新同一 id
 
-## 常见错误
+id 唯一。再 `add` 不是更新。用 `replace`。
 
-一、修改原文数组后不更新 MiniSearch 索引，结果仍是旧文本；应 replace/remove/add 或重建/增量更新并明确边界。二、先对搜索结果取 topN 才应用分类条件，可能隐藏实际应该展示的匹配；应在查询阶段 filter 或分租户建索引。三、把搜索结果当权限检查，用前端 filter 隐藏敏感文档并认为安全；必须在服务端授权及索引构建阶段控制数据访问。四、把中文整句按默认英文分词保证准确率；真正中文全文检索需设计分词/归一化插件和针对数据的回归语料。
+### 反例 3：discard 之后以为内存立刻没了
 
-## 组合选型
+逻辑删除不等于马上 compact。需要时再 `vacuum`。Lab 用新索引替换旧的，不在页面上 vacuum。
 
-小型候选列表使用 D19 Fuse.js 更直观；规模稍大、需要 prefix/fuzzy/autoSuggest 的正文资料可选择 MiniSearch；纯静态文档可比较 Pagefind 构建时索引。数据量大时将索引构建放入 Worker 并设置内存与时间预算，Lab 中不自动加载外部服务。
+### 反例 4：loadJSON 配一套新的字段
 
-## 运行与测试
+分词和字段必须和当初建库一致。Lab 不加载外部 JSON 索引。
 
-本例基于 React useMemo，文档变化时重建 index；这是小集合的教学简化，大列表应增量维护与异步分批。node:test 真实 import MiniSearch，验证字段搜索、分类过滤、替换索引后的结果。浏览器再验证 IME 和快速输入行为，未运行前保持 NOT_RUN。
+### 反例 5：默认分词搜索整句中文
 
-## 演示场景与预期
+连续中文可能召不回。要 `Intl.Segmenter` 或专门分词时，建库和查询用同一套，并准备回归句。不要把 Fuse 的 threshold 套到 MiniSearch 的 score 上。
 
-1. **倒排索引、字段权重与 score**：添加本地文档后按正文和标题评分检索
-2. **RSS 分类过滤与输入法**：查询后引擎内部过滤，再控制显示数量
-3. **前缀、错拼联想与重新索引**：autoSuggest 与文档更新后建新索引
+### 反例 6：所有短词都 fuzzy: 0.8
 
-## 练习与迁移
+噪声和 CPU 会上去。Lab 的模糊度是 0.2，并且可以关掉。短查询优先前缀。
 
-将本地 NewsHub 频道搜索升级为两个查询模式：名称容错建议和文章正文搜索，并保证租户分组不会出现先截断导致的漏结果。
+### 反例 7：在 render 里同步建巨大索引
 
-## 验证分级与限制
+会卡住点击。大数据放 Worker，卸载时丢掉索引。Lab 只有 6 篇，不能当成容量证明。
 
-本条目包含真实目标包 import 的示例和 Node 定向测试源码。**SDK、TypeScript、生产构建及 Playwright 本轮均未在依赖完整环境执行，状态为 NOT_RUN**。`tests/sdk.test.mjs` 必须在真实依赖安装后执行；Mock 业务数据不等于 Mock 目标库。测试成功后才能按当前源指纹绑定 evidence，不得沿用历史研究报告的 PASS。
+### 反例 8：浏览器里索引全部文档再按权限过滤
 
-## 官方一手资料
+机密已经进了内存，建议词也会漏。授权后的集合才能 `addAll`。Lab 的分组演示不是 ACL。
 
-- [官方 API 与 README](https://github.com/lucaong/minisearch)
-- [npm 稳定版本](https://www.npmjs.com/package/minisearch)
-- [API 文档](https://lucaong.github.io/minisearch/)
+### 反例 9：高亮用 innerHTML
 
-## 授权
+标题用文本节点。不要 `replace` 出 `<mark>` 字符串再写进 HTML。
 
-该条目源码与文字为独立编写的教学材料；目标库使用上游 MIT 许可，未捆绑第三方图片、字体或付费资源。
+## 2. 组合
 
-## 第16轮：搜索建议与索引的分类所有权
+**Comlink**：索引可以住在 Worker 里，但要 `releaseProxy` 和 `terminate`。Lab 没有这条。
 
-过去的演示仅对 `search({filter})` 做分类限制，`autoSuggest` 却基于**完整**索引，切换“技术”分组时仍可能从其他分组词条联想出文字。现在 `scopeSearchDocuments` 在 `buildMiniIndex` 之前裁剪可见分组，同一份 `scopedDocs` 同时驱动 ID 映射、空词结果、`search` 和 `autoSuggest`；切换分类后通过 React `useMemo` 重建真正索引。不是把未授权数据塞入浏览器、只靠展示时过滤的安全措施。
+**Dexie**：索引的 revision 要和文档版本一起变。不要把搜索分当持久排序键。
 
-官方 `autoSuggest` 同样支持 search 的 filter 选项，但索引构建前隔离更便于讲清缓存所有权和误泄漏风险。真实生产必须由服务端先鉴权后给浏览器最小许可文档，浏览器分类只是用户视图；索引里一旦出现敏感正文，UI 过滤不能收回泄露。索引大时要使用分组/租户 key 限定缓存与 Worker 生命周期。
+## 3. 练习
 
-离线策略：`node --test entries/D20-minisearch/tests/scope-policy.test.mjs`；真实 MiniSearch SDK 的 search / autoSuggest 边界回归：`node --test entries/D20-minisearch/tests/sdk.test.mjs`。后一项需要安装目标 SDK，本轮未实际执行。
+1. 切到一个分组，确认建议词里没有其他分组的标题。
+2. 替换一篇的标题，旧词不再命中，新词可以。
+3. 关掉模糊后，差一个字母的查询应掉出结果。
+
+## 4. 证据
+
+`scope-policy` 不 import MiniSearch。sdk PASS 需要真实库的收据。
+
+## 5. 资料
+
+- https://lucaong.github.io/minisearch/
+- https://www.npmjs.com/package/minisearch
