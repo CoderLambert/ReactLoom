@@ -45,6 +45,11 @@ export function workspaceYaml(manifest: TemplateManifest): string {
   if (manifest.configs.includes('lefthook.yml')) {
     lines.push('', 'onlyBuiltDependencies:', '  - lefthook')
   }
+  // axe and other browser tooling must share the runner's exact Page types.
+  if (manifest.e2e?.tool === 'playwright' && manifest.e2e.version) {
+    const version = JSON.stringify(manifest.e2e.version)
+    lines.push('', 'overrides:', `  playwright: ${version}`, `  playwright-core: ${version}`)
+  }
   return `${lines.join('\n')}\n`
 }
 

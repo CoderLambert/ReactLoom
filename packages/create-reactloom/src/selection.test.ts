@@ -213,7 +213,7 @@ describe('template selection', () => {
         ...spaManifest(),
         packages: { 'api-client': true, tsconfig: ['../next.json'] },
       }),
-    ).toThrow(/Invalid tsconfig preset/)
+    ).toThrow(/packages\.tsconfig.*inside the template/)
   })
 
   it('exports only the presets the template listed', () => {
@@ -334,6 +334,26 @@ describe('template selection', () => {
     const withoutHooks = workspaceYaml(manifest)
     expect(withoutHooks).not.toContain('lefthook')
     expect(withoutHooks).not.toContain('onlyBuiltDependencies')
+  })
+
+  it('aligns generated browser tooling with the declared Playwright runner', () => {
+    const manifest = spaManifest()
+    manifest.e2e = {
+      tool: 'playwright',
+      config: 'playwright.config.ts',
+      version: '1.64.0',
+    }
+    const workspace = workspaceYaml(manifest)
+    expect(workspace).toContain('overrides:')
+    expect(workspace).toContain('  playwright: "1.64.0"')
+    expect(workspace).toContain('  playwright-core: "1.64.0"')
+  })
+
+  it('leaves native Maestro projects free of browser overrides', () => {
+    const manifest = spaManifest()
+    manifest.e2e = { tool: 'maestro', config: '.maestro/login.yaml' }
+    expect(workspaceYaml(manifest)).not.toContain('overrides:')
+    expect(workspaceYaml(manifest)).not.toContain('playwright')
   })
 
   it('keeps an SPA free of Next, Expo, and Nest root files', () => {
