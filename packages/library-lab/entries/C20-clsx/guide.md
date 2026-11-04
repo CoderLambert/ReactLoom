@@ -162,12 +162,35 @@ clsx(styles.card, selected && styles.selected)
 
 2.1.1 的对象枚举和数字规则如上。升级小版本后用 advanced 那组输入做回归：`0`、`1`、`null`、嵌套数组、lite 忽略对象、两条 `px-*` 同时存在。不要换成一个「功能类似」的自写函数还继续叫 clsx。
 
+`cardClassInputs` 返回数组，里面的对象只含两个布尔键。clsx 展开后，真键变成类名，假键消失，`null` 语气消失。不要再在 JSX 里写第二套 `` tone-${tone} ``。两套同时存在时，白名单就失效了。
+
+advanced 的 `edge` 把假值、数字和嵌套数组放进同一次调用，用来对照文档，不是卡片的业务类。业务卡片只应出现 `demo-card`、两个 `is-*` 和可选的 `tone-*`。
+
 ## 练习
 
 1. 选中且禁用时，输出同时包含两个状态类，按钮同时有 `aria-pressed` 和 `disabled`。
 2. 传入 `tone: 'danger'` 给 `cardClassInputs`，结果里没有 `tone-danger`。
 3. `clsx(0)` 为空，`clsx(1)` 为 `"1"`，`lite({ a: true })` 为空。
 4. `clsx('px-2', 'px-4')` 含有两段。若要只留 `px-4`，改到 C21 再测。
+
+## 故障排查
+
+| 现象 | 先看 |
+| --- | --- |
+| 明明传了 false 字符串，类还在 | 值是 `'false'`，不是布尔 false |
+| 想要的 `"0"` 没出现 | 数字 0 被当成假。用字符串 |
+| lite 什么都没输出 | 传了对象或数组。lite 只留真值字符串 |
+| `px-4` 没有盖住 `px-2` | clsx 两段都留着。这不是 bug，合并在 C21 |
+| 类名里出现奇怪的键 | 对象来自 JSON 或原型链。改走白名单 |
+| 按钮看起来灰了但仍能提交 | 只加了 `is-disabled` 类，没有 `disabled` 属性 |
+| CSS Modules 类名是原文 | 把逻辑键交给了 clsx，没有先取 `styles[key]` |
+| 栈溢出 | 循环引用或过深数组。先限制输入 |
+
+对象枚举用的是 `for...in`。键为真时写入的是键，不是值。数组会递归。函数和单独的布尔没有类名。`ClassValue` 类型包含 `bigint`，`toVal` 不处理它，所以 `clsx(1n)` 不是 `"1"`。
+
+不要根据结果字符串里有没有某个 token 来做权限判断。服务端状态和 DOM 属性才是事实。把 clsx 的输出写进 `innerHTML` 同样多余，React 的 `className` 已经是属性。
+
+升级或替换实现时，用 advanced 那组输入当回归：假值、数字 1、数字 0、嵌套数组、对象里的假值、lite、两条 padding。少任何一条都可能把「功能类似」的函数误当成 2.1.1。
 
 ## 官方链接
 

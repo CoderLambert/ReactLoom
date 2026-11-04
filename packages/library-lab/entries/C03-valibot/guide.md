@@ -148,6 +148,18 @@ RHF 管订阅和错误焦点。Valibot 管 DTO。服务端再验一次。不要�
 4. 给 Batch 加重复 URL。错误要落到具体下标，非法 URL 不参与去重。
 5. 用同一组负例写一版 Zod 4.6.5 schema，比较未知键和错误路径，而不是比较口号。
 
+## 故障排查
+
+| 现象 | 先看 |
+| --- | --- |
+| 异步规则没有执行 | 是否误用了同步 `safeParse` |
+| 结束日期没有字段路径 | 是否只用了对象级 `check`，而没有 `forward` |
+| 多余的 `isAdmin` 没有报错 | 当前 schema 是 `v.object`，未知键被丢掉 |
+| 空数字变成 0 | `transform(Number)` 前面没有非空检查 |
+| 2 月 30 日通过了格式 | `isoDate` 之后没有 `isRealCivilDate` |
+
+这些问题都要有对应的负例。只让合法样例显示 PASS 不够。
+
 ## 官方链接
 
 - https://valibot.dev/guides/introduction/

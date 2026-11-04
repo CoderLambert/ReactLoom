@@ -136,12 +136,33 @@ console.log(validate.errors) // 可能已经是 b 的结果
 
 从 Ajv 6 上来：`dataPath` 改成 `instancePath`，format 外移，`id` 改成 `$id`，strict 默认更严。用金样本比接受集，不要搜索替换完就上线。JTD 的 `compileSerializer` 不校验输入，不能拿来代替 `validate`。
 
+`allErrors: true` 让这个小文本框一次看到未知属性和范围错误。把它拷到没有字节上限的服务端，等于让校验器把所有分支都跑完。那里改回 `allErrors: false`，并在读 body 时限制长度。客户端示例不能代替那一层。
+
+编译发生在 `useMemo` 里，依赖是 level。三个 schema 是常量，所以每个 level 只会编译一次。若把 schema 对象写进组件函数，每次渲染都是新身份，`compile` 会跟着跑。不要为了消掉这个成本去关 `strict`。
+
 ## 练习
 
 1. 为 rss / web 两个互斥来源写 `if/then` 或判别字段。双 URL、缺 URL、`pollMinutes: "30"` 都要失败，且不能靠类型强制变成数字。
 2. 构造两条只差 fragment 的 feed。`uniqueItems` 通过，域名规则失败。
 3. 连续调用两次 `validate`，确认第一次的 errors 在第二次之后不可再读。
 4. 若要上 standalone，在没有 `unsafe-eval` 的页面加载生成函数，而不是放宽 CSP。
+
+## 故障排查
+
+| 现象 | 先看 |
+| --- | --- |
+| `unknown format` | 没装 `ajv-formats` 却写了 format。不要为此关掉 strict |
+| `strict mode: unknown keyword` | 关键字拼错或草案不对。修正 schema |
+| `missing type` | `if/then` 的子 schema 在 strict 下要自己写 `type` |
+| 缺字段的路径在父对象 | `required` 的 `instancePath` 常常是父级，配合 `params.missingProperty` |
+| 错误一会儿对一会儿错 | `validate.errors` 被下一次调用覆盖。当帧复制 |
+| 通过了却抓到内网 | pattern 只看字符串。SSRF 在解析之后 |
+| 隐藏字段仍在对象里 | UI 隐藏不是 `additionalProperties`。构造新 DTO |
+| CSP 拒绝编译 | 浏览器动态编译需要 eval。改 standalone，不要放宽生产 CSP |
+
+`oneOf` 在两个分支同时通过时失败。分支要互斥。`anyOf` 只需一个通过。不要用 `removeAdditional: 'all'` 在这些组合旁边偷偷改数据。
+
+JTD 的 serializer 不校验。先 `validate` 再序列化。`JSONSchemaType` 对复杂联合有表达限制，类型通过不等于运行时已经拒绝了金样本之外的字段。
 
 ## 官方链接
 

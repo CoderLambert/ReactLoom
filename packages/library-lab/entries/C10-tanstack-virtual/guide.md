@@ -152,6 +152,10 @@ SSR 没有滚动容器。`initialRect` 只能做预估。本 Demo 没有服务�
 
 3.14 的 React 适配器使用 `useVirtualizer` 和 `getItemKey`。不要从 Virtuoso 复制 `computeItemKey`。升级后看 `useFlushSync` 的默认值是否还需要关掉，并在浏览器里滚一次变高列表。
 
+分类 `<select>` 会立刻 `setCategory`，关键词要按「筛选」才 `setQuery`。两次操作都会换 `viewIdentity`，因为 key 含分类、查询和 revision。只改分类时 revision 不变，但分类字符串变了，列表仍会重挂。不要再额外用 index 当 React key。
+
+`getItemKey` 在渲染虚拟行时由库调用。它必须看当前 `items`。把 id 列表提前 map 成闭包而忘了依赖数组，过滤后会读到上一份 id。`stableRowId` 越界就抛，方便在开发里看见，而不是画一个空白行。
+
 ## 练习
 
 1. 数一下首屏 DOM 行，确认接近窗口而不是 8,000。
@@ -159,6 +163,23 @@ SSR 没有滚动容器。`initialRect` 只能做预估。本 Demo 没有服务�
 3. 连续两次提交同一关键词，测量范围回到新列表的开头，而不是停在旧偏移。
 4. 把 `getTotalSize` 拿掉，确认滚动条变短；再加回来。
 5. 给缺 id 的行调用 `stableRowId`，确认抛错而不是生成假键。
+
+## 故障排查
+
+| 现象 | 先看 |
+| --- | --- |
+| 滚动无效，范围一直停在开头 | ref 是否指向有高度且 `overflow: auto` 的节点 |
+| 行叠在左上角 | 是否 `position: absolute` 且 `translateY(row.start)` |
+| 滚动条只有一屏 | 内层是否设置了 `height: getTotalSize()` |
+| 展开后盖住下一行 | 根节点是否同时有 `data-index` 和 `measureElement` |
+| 跳到末尾后位置差一截 | `estimateSize` 是否过小。先给 94 这类偏大估计 |
+| 第二次相同搜索仍停在旧偏移 | `viewIdentity` 是否包含 revision |
+| 滚动时输入卡顿 | `onChange` 是否在 `isScrolling` 时 `setState` |
+| React 19 的 flushSync 警告 | 本示例把 `useFlushSync` 设为 false，仍要在浏览器里滚一次 |
+
+横向虚拟化要第二个 `useVirtualizer({ horizontal: true })`，总宽度和 `translateX` 分开算。当前组件没有这条轴。不要把 `row.index` 当服务端 cursor。裁剪数组之前先定锚点，否则测量下标会集体错位。
+
+`overscan: 5` 是起点。设到几百会把 DOM 几乎全部挂上，虚拟化就没有意义。8,000 只说明数组长度。
 
 ## 官方链接
 

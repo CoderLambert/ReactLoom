@@ -131,6 +131,19 @@ react-i18next 17 配 i18next 26.4.3。升级任一包都要重测 Provider 隔�
 3. advanced 只改工作区 A，B 的语言不变。
 4. 快速连点语言，最终与最后一次选择一致，且卸载无警告。
 
+## 故障排查
+
+| 现象 | 先看 |
+| --- | --- |
+| 切换语言整页不动 | 调用的是全局单例，而组件读的是 Provider 里的另一份实例 |
+| 工作区 B 跟着 A 变 | 两个面板共用了同一个 `i18n` |
+| 快速点击后停在中间语言 | `changeLanguage` 并发，没有队列 |
+| 法律句变成一串带标签的文本 | 用了 `innerHTML`，而不是 `Trans` |
+| 卸载后警告 setState | init 或队列没有看 `alive` / `dispose` |
+| 键名闪一下 | 异步资源却没有就绪态。本 Demo 用内嵌资源和 `useSuspense: false` |
+
+SSR 若共用实例，请求之间会串语言。本文件没有服务器渲染，不能用两个浏览器工作区代替那一项验收。
+
 ## 官方链接
 
 - https://react.i18next.com/latest/usetranslation-hook

@@ -136,12 +136,28 @@ Scheduler 不在本 pin。不要写试用 key 当生产许可。
 - https://fullcalendar.io/docs/eventDrop
 - https://fullcalendar.io/docs/event-parsing
 
+## 故障排查
+
+| 现象 | 先看 |
+| --- | --- |
+| 月视图空白 | `plugins` 是否包含 dayGrid 和主题，CSS 三份是否都引入 |
+| 构建找不到 `@fullcalendar/daygrid` | v7 的路径是 `@fullcalendar/react/daygrid` |
+| 命名时区异常 | `temporal-polyfill@1.0.4` 是否还在依赖里 |
+| 拖完条块停在新日期但数据是旧的 | 没有把 `startStr` 写回 state，或写回前没有 revert 失败路径 |
+| 全天跨度多了一天 | 结束日被当成包含。官方区间是半开的 |
+| 两条 01:30 显示成同一件事 | 存的时候丢掉了偏移 |
+| 标题里的字符被当成标签 | `eventContent` 返回了 `html` 字符串 |
+
+`eventDidMount` 不随标题更新。取数回调若每次渲染都是新函数，可见范围会反复请求。本 Demo 用静态数组和 `useMemo`，没有这条请求。
+
 ## 练习
 
 1. 创建 `2026-02-30`，事件数量不变。
 2. 比较两条 01:30 的 `getUtcInstant`，它们相差一小时。
 3. 拖动 `fold-early`，位置恢复。
 4. 去掉定时值的偏移再走 `move` 的校验，确认 revert。
+
+拖拽回调里的 `allDay` 决定走 `isCivilDate` 还是 `getUtcInstant`。全天值若带了时间部分，应视为无效并 revert，而不是截断前 10 个字符。
 
 ## 证据
 

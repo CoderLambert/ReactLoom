@@ -131,12 +131,32 @@ setStatus('未保存')
 
 v2.5 之后官方推荐独立状态，而不是必须套 React-Redux。旧教程里的 store 绑定不要抄进来。升级 minor 时三个包一起动，并回归 HIDE、`if/then`、`additionalErrors` 和初始化 `onChange`。
 
+保存按钮在 Schema 错误数大于 0 时禁用。这只挡住这一次点击，挡不住已经发出的延迟。所以 advanced 仍要 generation。名称 `duplicate` 的大小写不敏感，是 fixture 的约定，不是通用的唯一索引。服务端冲突仍可能发生在 Schema 完全合法的 payload 上，所以 409 必须能回填到 `/name`，而不是只改状态行。
+
+`toServerError` 抛错的字段不能进 `additionalErrors`。若接口返回了第三个字段，先映射到已知字段或放进 `role="status"` 的总述，不要把任意 `instancePath` 交给 JSON Forms。
+
 ## 练习
 
 1. 加 `delivery: email | webhook`。UI 用 SHOW/HIDE，Schema 用 `if/then`。email 模式的 payload 不得带 webhook URL。
 2. 两个快速保存：先把名称改成 `duplicate`，在 500ms 内改回合法名称。界面不能留下 409。
 3. 组合中文名称时按保存，请求计数不增加。
 4. 用固定字段把 basic 重写成 RHF。比较错误回填和 IME，不要编造耗时数字。
+
+## 故障排查
+
+| 现象 | 先看 |
+| --- | --- |
+| 控件是空的 | `renderers` 和 `cells` 是否传入，三个包是否都是 3.8.0 |
+| 一打开就保存 | `onChange` 被当成了提交。初始化回调一定会出现 |
+| 切到 manual 后请求里还有 url | 只写了 HIDE，没有走 `toSubscriptionPayload` |
+| 409 闪一下就没了 | `additionalErrors` 在每次渲染新建，或数据没变也被清空 |
+| 取消后仍显示成功 | 只调用了 abort，回包没有比较 generation |
+| 中文拼音被截断 | `onChange` 里 trim 并写回 data |
+| 地址带用户名仍能过 Schema | `^https://` 不管 userinfo，要靠 `validateSubmission` |
+
+Vanilla 和 Material 不要叠用。自定义控件若不 `handleChange(path, value)`，界面动了 data 不会动。数字字段要传 number，不要把范围条的字符串留在 integer 上。本 Demo 没有这颗自定义控件。
+
+租户贴来的 Schema 先限制深度、体积和远程 `$ref`。Ajv 在浏览器里编译可能触及 CSP 的 eval。需要禁止 eval 时把校验放到服务端或 standalone 产物，而不是放宽整站策略。
 
 ## 官方链接
 

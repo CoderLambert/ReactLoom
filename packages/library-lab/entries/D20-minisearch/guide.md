@@ -1,79 +1,137 @@
-# MiniSearch 7.2.0｜倒排索引，分数不是 Fuse 的分数
+# MiniSearch 7.2.0｜先裁索引，再搜索和联想
 
-Lab 锁定 `minisearch@7.2.0`。它为标题和摘要建倒排索引。默认分词不是中文专业分词。它也不是权限系统。
+Lab 锁定 `minisearch@7.2.0`（MIT）。它为文档建倒排索引，支持前缀、轻微模糊和 `autoSuggest`。相关性分数越高越匹配。这和 Fuse.js 的“越小越近”相反。它仍然只搜索你放进索引的那些文档。
 
-没有逐库收据时不要写 PASS。Actions 41779873259 是仓库级结果。
+没有匹配收据时 sdk / build / browser 保持 NOT_RUN。Actions 41779873259 是仓库级结果，不是本条目 PASS。
 
 ## Lab 当前示例
 
-[`examples/example.tsx`](examples/example.tsx) 调用真实的 `MiniSearch`。[`examples/scope-policy.mjs`](examples/scope-policy.mjs) 先按分组留下文档。
+[`examples/demo.tsx`](examples/demo.tsx) 重导出 [`examples/example.tsx`](examples/example.tsx)。`buildMiniIndex` 的字段是 `title` 和 `summary`，`storeFields` 只有 `title` 和 `group`。默认搜索选项 `boost: { title: 3 }`、`prefix: true`、`fuzzy: 0.2`。
 
-已挂载：
+[`examples/scope-policy.mjs`](examples/scope-policy.mjs) 的 `scopeSearchDocuments` 在 `addAll` 之前按分组复制或过滤。「全部」返回浅拷贝，避免索引和调用方共享后被意外改写。分组不是授权。无权文档根本不要出现在 `documents` 里。
 
-- `fields` 是 `title` 和 `summary`。`storeFields` 只有 `title` 和 `group`，所以命中对象上不要假设还有完整摘要。
-- 建库时的默认搜索是 `boost: { title: 3 }`、`prefix: true`、`fuzzy: 0.2`。
-- 索引按 `scopedDocs` 重建。`autoSuggest` 和 `search` 用同一份索引，避免建议泄漏其他分组的词。
-- 搜索再带 `filter`，只保留仍在这份集合里的 id，然后 `slice(0, 20)`。先过滤再截断。
-- advanced 才调用 `autoSuggest`，最多 3 条。
-- 组合输入用 ref 挡住未完成的查询。更新文档走替换而不是再 `add` 一个相同 id。
+查询在表单提交时从 draft 写入。`compositionstart` / `compositionend` 挡住组合期间的提交。空查询列出当前范围内的文档，不调用 `search`。
 
-没有挂载：Comlink Worker、Dexie 持久化、`vacuum`、`loadJSON`。分组是 UI 分类，不是上游授权。
+非空查询调用 `index.search`，`fuzzy` 在 advanced 可以由复选框关掉，`prefix` 保持打开。`filter` 再确认 id 仍在 `scopedDocs` 里，然后才 `slice(0, 20)`。先截断再过滤会让当前分组的命中被挤掉。
 
-## 1. 反例
+advanced 的 `autoSuggest` 使用同一个 `index`，所以建议词不会来自未选中的分组。更新 id 为 `1` 的标题和摘要会 `setDocuments`，`useMemo` 重建索引。旧词不应再作为那一篇的标题命中。
 
-### 反例 1：改完内容再 remove 旧对象
+结果用文本渲染。不插入 MiniSearch 的高亮 HTML。
 
-`remove` 需要索引里的原文。先改 title 再 remove，可能删不掉。保留快照再 `remove`，或用 `replace` / `discard(id)`。
+没有挂载：自定义中文分词器、持久化索引、服务端查询。默认 tokenizer 不是专业中文分词，短中文查询可能不如英文标题稳定。
 
-### 反例 2：用 add 更新同一 id
+## 什么时候用
 
-id 唯一。再 `add` 不是更新。用 `replace`。
+文档数超过手写扫描、又需要前缀和拼写容错时用 MiniSearch。很小的列表、主要靠字段权重和错拼时，Fuse 更直接。已经生成的静态 HTML 用 Pagefind，避免把正文都下载到浏览器再建索引。
 
-### 反例 3：discard 之后以为内存立刻没了
+UI 分类必须在建索引前裁掉。只在渲染时隐藏 `<li>` 会让 `autoSuggest` 泄露其他组的词。
 
-逻辑删除不等于马上 compact。需要时再 `vacuum`。Lab 用新索引替换旧的，不在页面上 vacuum。
+## 模型
 
-### 反例 4：loadJSON 配一套新的字段
+`new MiniSearch({ fields, storeFields, searchOptions })` 然后 `addAll`。`fields` 是被分词的内容。`storeFields` 是结果里要带回的原文。Lab 的摘要不在 `storeFields` 里，展示时用 id 回查原文档，这样替换文档后不会从旧存储字段读到旧摘要。
 
-分词和字段必须和当初建库一致。Lab 不加载外部 JSON 索引。
+`search` 返回带 `id` 和 `score` 的结果。`fuzzy: 0.2` 允许轻微错拼；`false` 关掉它。`prefix: true` 让未输完的词仍能命中。`boost` 提高标题相对摘要的权重。
 
-### 反例 5：默认分词搜索整句中文
+`autoSuggest` 走同一索引。它不是独立的安全通道。范围必须已经体现在索引内容上。
 
-连续中文可能召不回。要 `Intl.Segmenter` 或专门分词时，建库和查询用同一套，并准备回归句。不要把 Fuse 的 threshold 套到 MiniSearch 的 score 上。
+更新策略是改不可变数组并重建。也可以 `remove` 再 `add`，但要保证旧 id 被移除。Lab 用重建，避免半更新。
 
-### 反例 6：所有短词都 fuzzy: 0.8
+## 三层示例
 
-噪声和 CPU 会上去。Lab 的模糊度是 0.2，并且可以关掉。短查询优先前缀。
+### 基本
 
-### 反例 7：在 render 里同步建巨大索引
+默认词 `React`。没有分类控件，索引包含全部种子。每条显示分数，文案写明越高越匹配。
 
-会卡住点击。大数据放 Worker，卸载时丢掉索引。Lab 只有 6 篇，不能当成容量证明。
+### 业务
 
-### 反例 8：浏览器里索引全部文档再按权限过滤
+分类变成技术、产品或开源。切换后建议和搜索都只看见该组。这仍是 fixture 上的滤镜。
 
-机密已经进了内存，建议词也会漏。授权后的集合才能 `addAll`。Lab 的分组演示不是 ACL。
+### 进阶
 
-### 反例 9：高亮用 innerHTML
+可以关掉模糊。建议最多三条。更新第一篇标题后，索引随 `documents` 变化重建，新标题能被搜到。
 
-标题用文本节点。不要 `replace` 出 `<mark>` 字符串再写进 HTML。
+## 反例
 
-## 2. 组合
+### 反例 1：只过滤渲染结果
 
-**Comlink**：索引可以住在 Worker 里，但要 `releaseProxy` 和 `terminate`。Lab 没有这条。
+```tsx
+const hits = index.search(query).filter(hit => byId.has(hit.id))
+```
 
-**Dexie**：索引的 revision 要和文档版本一起变。不要把搜索分当持久排序键。
+若索引是全量的，`autoSuggest` 仍会吐出其他组的词。
 
-## 3. 练习
+```tsx
+const index = buildMiniIndex(scopeSearchDocuments(documents, group))
+```
 
-1. 切到一个分组，确认建议词里没有其他分组的标题。
-2. 替换一篇的标题，旧词不再命中，新词可以。
-3. 关掉模糊后，差一个字母的查询应掉出结果。
+### 反例 2：先 slice 再按组过滤
 
-## 4. 证据
+```ts
+index.search(query).slice(0, 20).filter(hit => hit.group === group)
+```
 
-`scope-policy` 不 import MiniSearch。sdk PASS 需要真实库的收据。
+前 20 条可能全是别的组。
 
-## 5. 资料
+```ts
+index.search(query, { filter: result => byId.has(String(result.id)) }).slice(0, 20)
+```
+
+### 反例 3：用 Fuse 的分数方向写 UI
+
+MiniSearch 分数越高越相关。不要写“越小越相似”。
+
+### 反例 4：把建议词插进 HTML
+
+```tsx
+dangerouslySetInnerHTML={{ __html: hit.suggestion }}
+```
+
+建议是纯文本，用字符串拼接进句子即可。
+
+### 反例 5：改标题不重建
+
+旧倒排仍指向旧 token。`setDocuments` 必须让 `useMemo` 依赖到新数组。
+
+### 反例 6：假设中文按词切开
+
+默认分词对英文标题更可预期。中文产品搜索要单独换 tokenizer，并准备语料测试。本示例没有换。
+
+## 组合
+
+**Fuse**：交互式小列表可以两套都试，但分数不能混在一个排序里。权限裁剪放在共用的上游数组。
+
+**Pagefind**：公开站点走构建期索引。MiniSearch 留给浏览器里会变的那一小撮文档。
+
+**Query**：搜索词提交后再改查询。不要每个 `onChange` 都重建大索引。Lab 的种子很小，重建是为了正确性。
+
+## 生产核对清单
+
+1. `addAll` 的数组已经按授权和分组裁过。
+2. `autoSuggest` 与 `search` 共用该索引。
+3. `filter` 在 `slice` 之前。
+4. 分数文案与 Fuse 区分开。
+5. 更新或删除后旧 token 消失。
+6. IME 组合期间不提交。
+7. 不渲染 HTML 高亮。
+8. 中文语料有单独的命中测试，不把英文标题的结果当成中文分词证明。
+
+## 升级
+
+钉 `minisearch@7.2.0`。升级后重跑前缀、`fuzzy: 0.2` 与 `fuzzy: false`、以及分组索引不含他组建议词。分词器变化会悄悄改命中集合。
+
+不要为了存储字段方便把正文秘密放进 `storeFields`。结果对象可能被日志打印。
+
+## 验收
+
+- `React` 与其前缀能命中标题，分数方向是越高越近。
+- 分组索引的 `autoSuggest` 不返回其他组的词。
+- 过滤发生在截断之前；更新标题后旧文案不再命中。
+- 「全部」不修改源数组。
+- 未知分组得到空的可见集合（策略函数的合同）而不是全量。
+- `tests/sdk.test.mjs` 导入真实 `minisearch`。无收据则 NOT_RUN。
+
+## 资料
 
 - https://lucaong.github.io/minisearch/
+- https://github.com/lucaong/minisearch
 - https://www.npmjs.com/package/minisearch

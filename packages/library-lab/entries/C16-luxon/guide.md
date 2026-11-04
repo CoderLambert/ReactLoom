@@ -150,6 +150,20 @@ Luxon 委托 ICU。服务端和浏览器要各验一次春秋样本，并保存 
 3. `2026-03-08T02:30` 在纽约失败。
 4. `dailyWindow` 的 `calendarDays` 为 1，并指出 `elapsedHours` 在哪个样例上不是 24。
 
+## 故障排查
+
+| 现象 | 先看 |
+| --- | --- |
+| `toISO()` 是 null | 没有看 `isValid`，无效对象不会抛错 |
+| 02:30 被存成 03:30 | 只看了 `isValid`，没有回读钟面 |
+| 回拨日总是早的那一次 | 代码取了 `getPossibleOffsets()[0]` |
+| 明天偏了一小时 | 用了 `plus({ hours: 24 })` 或加了 86400000 |
+| 换时区后 instant 变了 | 用了 `keepLocalTime: true` |
+| 测试之间时区串了 | 改过 `Settings.defaultZone` 没有恢复 |
+| 服务器和浏览器差一小时 | 两边 ICU 数据不同。保存 zone、墙上时间和选定偏移 |
+
+`Interval.contains` 不包含终点。和数据库日界对齐时写进接口说明。`datetime-local` 没有 IANA 名，必须另有时区选择。
+
 ## 官方链接
 
 - https://moment.github.io/luxon/api-docs/index.html

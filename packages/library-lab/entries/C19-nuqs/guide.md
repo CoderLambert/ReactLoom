@@ -131,6 +131,12 @@ useEffect(() => setDraft(query), [query])
 
 v2 需要适配器，`throttleMs` 改为 `limitUrlUpdates`，共享的服务端 parser 从 `nuqs/server` 引入。v2 是 ESM。旧的 `next-usequerystate` 教程不要抄。升级后看 `clearOnDefault` 是否把现有链接折成更短的 URL，并为旧链接留兼容。
 
+页码按钮在第一页和最后一页禁用。禁用看的是 `safePage`，不是地址栏里的原始字符串。因此 `ll_c19_page=99` 在只有两页数据时会显示最后一页，按钮状态也按夹取后的数字计算。把原始 99 继续发给接口会造成空页。服务端应返回同样的夹取规则或 422，而不是静默空列表。
+
+`sanitizeQuery` 用码点截断，避免把一个汉字切成半个代理项。比较时 `toLocaleLowerCase` 只用于名称包含判断。不要对 path 或 id 做同样的小写化。空查询写成 `null`，这样默认值不会留在地址栏里变成 `ll_c19_q=`。
+
+宿主参数 `tab` 和 `example` 由 Lab 自己写。示例只调用三个 `ll_c19_` setter。不要 `setQuery` 一个对象把整份 search 换掉。
+
 ## 练习
 
 1. 搜索「官方」，复制地址到新标签，结果相同，且 `tab` / `example` 仍在。
@@ -138,6 +144,33 @@ v2 需要适配器，`throttleMs` 改为 `limitUrlUpdates`，共享的服务端 
 3. advanced 翻页后后退，页码恢复；搜索过程中后退不会按字母回放。
 4. `ll_c19_page=abc` 和 `-1` 都显示合法页码。
 5. 中文组合未结束时，URL 不更新为未确认的拼音。
+
+## 故障排查
+
+| 现象 | 先看 |
+| --- | --- |
+| hook 直接报缺少 adapter | 是否用了 `NuqsAdapter`，并且来自 `nuqs/adapters/tanstack-router` |
+| 刷新后 `tab` 丢了 | 实验键写成了 `tab` 或 `example`。必须带 `ll_c19_` |
+| 后退要按很多次 | 搜索用了 `history: 'push'`。搜索保持 replace |
+| 后退后输入框是旧词 | effect 在组合中把 URL 写回了 draft，或根本没有同步 |
+| 拼音被截断 | `onChange` 在 `compositionStart` 之后仍 `commit` |
+| 页码是负数仍去请求 | 只用了 `parseAsInteger`，没有 `deriveSearchView` 的夹取 |
+| basic 结果比预期少 | 地址栏残留 `ll_c19_group`，而 basic 没有把它强制成 `all` |
+| `await setPage()` 之后以为数据到了 | 这个 Promise 只表示 URL 写完 |
+| Safari 历史报错 | 写入过快。要用 `limitUrlUpdates`，并且请求自己再防抖 |
+| Next 页面数据不刷新 | 那是 `shallow` 和 RSC 的问题。本 SPA 没有这条路径 |
+
+自定义 parser 若用数组当默认值，每次 render 的新引用会让 `clearOnDefault` 失效。需要 `eq`。日期若放进 URL，用 `YYYY-MM-DD` 这种日历日，不要用带本地时区的 `Date.toString()`。
+
+`parseAsNativeArrayOf` 对应重复键 `?tag=a&tag=b`。`parseAsArrayOf` 常用逗号。和旧链接兼容时先定一种，不要两种一起读同一个键。
+
+服务端仍要鉴权、租户隔离和参数化查询。React 文本节点会转义名称。不要把查询串再塞进 HTML。
+
+## 从旧写法迁出
+
+自写的 `history.replaceState` 先列出真正要分享的字段，再收成 parser。删掉散落的 `parseInt`。为后退和 replace 各写一条测试。v1 的 `throttleMs` 换成 `limitUrlUpdates`。`nuqs/parsers` 换成现在的入口。
+
+进阶若要把排序放进 URL，用自定义 `createParser`，`parse` / `serialize` / `eq` 都要写，列名走白名单。界面语言可以是中文，URL 里的分组值仍是 `tech` 和 `business`，不要把翻译后的「技术」写进查询串。
 
 ## 官方链接
 

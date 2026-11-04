@@ -165,6 +165,17 @@ pica 10 可以在 Worker 里做重采样，也可以在 Worker 起不来时回�
 - 不要保留「导入 pica 就是单例、可以并发」的假设。本示例故意单飞。
 - `toBlob` 的 MIME 固定 `image/png`。若要 jpeg，质量和透明通道是另一组参数，当前策略和界面都没有。
 - 滤镜选项（例如锐化）没有设置。加上去之后，advanced 的原生对照就不再只差缩放算法，对比结论要重写。
+- 示例画布的 CSS 宽度约 360，位图仍是 1280×800。验收时量 `canvas.width`，不要量布局框。
+- `sampleCanvas` 在 effect 里绘制一次。若绘制抛错，按钮会在执行时看到「示例画布不存在」或 Canvas 不可用，而不是一张空白成功图。
+- 本地文件路径在 `loadIntoCanvas` 里先 `checkSourceFile`，再 `createImageBitmap`，再 `checkSourcePixels`。跳过中间任何一步都会把策略和界面说成两套。
+- 结果图的 `alt` 分别是「真实 pica 生成的缩小图像」和「原生 Canvas 缩放对照图」。读屏文案不要改成质量评分。
+- 三个最长边按钮和策略集合是同一份：240、480、800。界面若增加 1024，必须先改 `ALLOWED_LONG_EDGES`，否则一点就失败。
+- 取消按钮只在 `running` 为真时可用。单飞期间第二次「调用 pica 缩放」会被 `operationRef` 直接返回，不会排队成第二次 resize。
+- 对照图只在 advanced 且原生 `toBlob` 成功后出现。pica 成功、原生编码失败时，应只看到失败状态，不要补一张假的对照图。
+
+`pica()` 返回的对象可以活过多次按钮点击，但活不过换层。`key={level}` 会卸掉整个 `PicaSession`，连同文件选择和两张结果图。不要把 resizer 提到这个 key 外面去「省一次初始化」，否则 business 的本地文件会留在 basic 的会话里。
+
+卸载清理还会调用当时的 `cancelRef`。已经开始的 `toBlob` 若在卸载后结算，generation 已经变了，不能再 `setResultBlob`。这条和「Worker 是否还在跑」是两件事，后者没有收据。
 
 ## 10. 升级核对
 

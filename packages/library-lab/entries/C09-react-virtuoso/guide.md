@@ -111,12 +111,32 @@ fixture 是纯文本。真实 RSS 正文先净化，再决定能不能作为 HTM
 
 4.18 的列表用 `computeItemKey`，不要写成 C10 的 `getItemKey`。升级后回归：跳到 9000、前插不跳、贴底跟随、展开重测。可变行高若改用函数，在目标浏览器里看滚动条是否抖动，不要凭估计像素承诺。
 
+`loadMore` 在 `token !== generation.current` 时直接返回，不把 `pending` 清掉的路径只存在于定时器回调里。搜索提交会自己把 `pending` 设为 false 并清定时器。若以后把定时器换成 fetch，这两处都要做，不能只在 then 里清。
+
+`nextViewRevision` 作为 setState 的更新函数使用：`setViewRevision(nextViewRevision)` 会用上一值计算下一值。不要写成 `setViewRevision(nextViewRevision(viewRevision))` 同时又在闭包里读旧 revision。
+
 ## 练习
 
 1. 跳到第 9001 条，可见范围包含该条，DOM 节点数远小于 10,000。
 2. 前插之后，原来的 `article-501` 仍展开或仍折叠，不串到新行。
 3. 搜索 A 的加载尚未返回时改成 B，A 的 limit 不加到 B 上。
 4. 不在底部时追加消息，滚动位置保持。
+
+## 故障排查
+
+| 现象 | 先看 |
+| --- | --- |
+| 一万行全在 DOM 里 | 是否还在 `.map`，而不是把数组交给 `Virtuoso` |
+| 跳到 9000 后位置漂移 | `defaultItemHeight` 是否比真实行小太多。测量会纠正，但不要改成写死像素 |
+| 前插后视口跳动 | `firstItemIndex` 是否和更长的 `items` 分了两次 setState |
+| 展开状态串到别的文章 | `computeItemKey` 用了 index |
+| 搜索后仍停在旧底部 | `key` 是否忘了用新的 view revision |
+| 触底连续加载 | `endReached` 没有 `pending` 和 generation |
+| 贴底看历史被拽走 | `followOutput` 恒为 `auto` |
+
+滚动容器要有确定高度。Lab 写了 360 到 390 像素。未挂载的行不在无障碍树上。需要全文时另给分页列表，而不是关掉虚拟化把 10,000 个节点一次挂上。
+
+`TableVirtuoso` 才带表头语义。当前三个 level 都是普通 `Virtuoso`。列排序不要放进 `itemContent` 里对全量数组排序还以为只有 DOM 被排过。
 
 ## 官方链接
 

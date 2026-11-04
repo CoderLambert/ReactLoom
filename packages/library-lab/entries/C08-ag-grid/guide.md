@@ -140,12 +140,28 @@ import 'ag-grid-community/styles/ag-theme-quartz.css'
 
 36.2 的主题是 `theme` 属性。从 32 以前的 CSS 文件迁过来时删掉旧主题 import，再回归编辑、分页和 `getRowId`。Enterprise 功能升级要单独的许可检查，不能随 Community 版本号一起打开。
 
+`rowsRef` 必须在 `setRows` 的同一分支更新。只更新 state、不更新 ref，下一次编辑会拿旧 revision 去比较，把合法修改看成冲突。只更新 ref、不 `setRows`，网格仍画旧行。
+
 ## 练习
 
 1. 改 `feed-0001` 的状态，排序后版本仍加一。
 2. 用 revision 0 再改同一行，结果是 `conflict`，界面行不变。
 3. 慢加载期间把某行 revision 加高，快照返回后该行保持本地状态。
 4. 快照里删掉一个 ID，合并结果里不再出现该行。
+
+## 故障排查
+
+| 现象 | 先看 |
+| --- | --- |
+| 模块缺失或功能是空的 | `AgGridProvider` 是否只注册了 `AllCommunityModule` |
+| 样式叠成两套 | 是否同时引了旧的 `ag-theme-quartz.css` 和 `theme` 属性 |
+| 排序后选中串行 | `getRowId` 是否用了 index |
+| 编辑改了原对象 | 是否忘了 `readOnlyEdit`，在 `onCellValueChanged` 里写了 `event.data` |
+| 翻页仍像在查服务器 | client-side `pagination` 只切已经在内存里的行 |
+| 旧快照盖住新编辑 | `reconcileFeedSnapshot` 是否整表替换，而不是比较 revision |
+| 取消后行仍被替换 | `reload` 的 generation 是否在 `setRows` 前比较 |
+
+Community Infinite 若以后启用：`endRow` 不包含，`successCallback` 和 `failCallback` 只能走一个，`cacheBlockSize` 不得小于页大小。SSRM 的 datasource 类型不同，不能从企业文档复制进来。1500 行没有堆快照，不能写成容量结论。
 
 ## 官方链接
 

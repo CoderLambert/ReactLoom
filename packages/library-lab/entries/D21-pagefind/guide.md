@@ -1,77 +1,131 @@
-# Pagefind 1.5.2｜先有公开 HTML，再在临时目录建索引
+# Pagefind 1.5.2｜只在临时目录写出静态索引
 
-Lab 锁定 `pagefind@1.5.2`。它索引静态 HTML。它不提供访问控制。私密正文只要进了公开站，加 ignore 属性也拦不住读者。
+Lab 锁定 `pagefind@1.5.2`（MIT）。三条示例是 Node 脚本：[`examples/basic.mjs`](examples/basic.mjs)、[`examples/business.mjs`](examples/business.mjs)、[`examples/advanced.mjs`](examples/advanced.mjs)。它们调用 [`examples/workshop.mjs`](examples/workshop.mjs)，用 Pagefind 的 Node API 建索引并 `writeFiles`。返回值里 `visitorSearchExecuted` 是 `false`。入口在 `finally` 里 `pagefind.close()`，并打印：包已经写到磁盘，没有启动浏览器搜索。
 
-页面不启动这个工具。真正的运行是 Node 脚本 [`examples/workshop.mjs`](examples/workshop.mjs)，在操作系统临时目录里建索引并删除。返回值里 `visitorSearchExecuted` 固定是 `false`：没有在浏览器里打开搜索 UI。
+这不是把搜索框挂进 Library Lab 页面。没有 `localhost:5173`，也没有在主源上提供 `/pagefind/` 资源。
 
-没有收据时 sdk / build / browser 是 NOT_RUN。Actions 41779873259 不是本条目 PASS。
+没有匹配收据时 sdk / build / browser 保持 NOT_RUN。Actions 41779873259 是仓库级结果，不是本条目 PASS。
 
 ## Lab 当前示例
 
-`runWorkshop(level)`：
+`runWorkshop` 在 `mkdtemp` 的 `reactloom-pagefind-` 目录里工作。`createIndex({ forceLanguage: 'en', excludeSelectors: ['[data-sensitive]'] })`。语言被固定为英文，因为种子是英文句子。`excludeSelectors` 用来丢掉带敏感标记的节点；种子 HTML 本身不放秘密。
 
-- `pagefind.createIndex({ forceLanguage: 'en', excludeSelectors: ['[data-sensitive]'] })`。
-- basic 只加入两篇公开 HTML。business 再加一篇和一条 `addCustomRecord`。advanced 再 `addDirectory` 一个只含可信静态页的目录。
-- HTML 用 `escapeHtmlText`。fixture 是写死的英文，不是用户粘贴的 Markdown。
-- `assertPublicDocument` 拒绝非 public 记录。
-- `getFiles` 必须有非空字节。`writeFiles` 写到临时目录。`finally` 里 `deleteIndex`，并且默认删掉临时目录。
-- 语言是 `en`。不要把这次结果说成中文分词已经验收。
+每条记录先过 [`examples/publication-policy.mjs`](examples/publication-policy.mjs)。`visibility` 必须是 `'public'`。URL 必须匹配 `/articles/` 或 `/files/` 下的安全路径，拒绝 `..` 和 `//`。标题和正文必须是非空字符串。`escapeHtmlText` 在拼 HTML 时转义 `& < > " '`。不要把未转义的用户 HTML 放进 `addHTMLFile`。
 
-没有挂载：浏览器里的 `/pagefind/pagefind.js`、`PagefindUI`、`data()` 分页、中文拼音搜索。
+- basic：两篇 `addHTMLFile`（Suspense 与 cache）。记录数 2。没有自定义记录，也没有目录扫描。
+- business：第三篇 HTML，再 `addCustomRecord` 一条 `/files/rss-playbook.txt`，带 `filters.category = guide` 和标签。记录数 4。没有 HTTP API。
+- advanced：把一份静态 HTML 写进临时站点目录并 `addDirectory`。记录数 5。目录扫描只看见这个临时文件夹。
 
-## 1. 所有权
+`getFiles` 必须返回非空且每个文件都有 path 和字节。`writeFiles` 写到临时 `out/pagefind`。`keepOutput: false` 时 `finally` 先 `deleteIndex` 再删掉整个 scratch。三个入口为了把 JSON 打出来传入 `keepOutput: true`，目录留在系统 tmp，搜索 UI 仍不运行。
 
-```text
-公开 HTML（构建产物） → createIndex / addHTMLFile → 临时 bundle → 发布时和 HTML 同一版本
+错误数组非空会抛错，不返回半成品成功。
+
+## 什么时候用
+
+公开静态站点在构建期生成搜索文件，让浏览器以后只下载索引分片而不是整库 JSON。内容必须已经是可发布的。
+
+浏览器里会增长的小集合用 MiniSearch 或 Fuse。Pagefind 不负责登录后的文档。把私密 HTML 放进 `addDirectory` 就会进可下载的包。`assertPublicDocument` 是构建期断言，不是上游 ACL。
+
+Workbox 可以缓存公开的搜索静态资源，但不要为了这个在 Lab 主源注册 Service Worker。版本更新时旧的 pagefind 文件要能被清掉。
+
+## 模型
+
+Node API 的顺序是 `createIndex`、添加 HTML 或自定义记录或目录、`getFiles`、`writeFiles`、最后 `deleteIndex` 与 `close`。`addHTMLFile` 接收 URL 和 HTML 字符串，正文应放在 `data-pagefind-body` 里，示例的 `documentHTML` 就是这样拼的。
+
+`addCustomRecord` 用于没有 HTML 文件的笔记，可带 `meta` 和 `filters`。过滤器是搜索 UI 的元数据，不是权限。
+
+`addDirectory` 会扫描路径。advanced 只把临时目录交给它。不要把用户主目录或仓库根传进去。
+
+`forceLanguage: 'en'` 避免对英文种子做错误的语言检测。换成中文文档时要改这个选项并重新准备语料，不能沿用现在的断言。
+
+`visitorSearchExecuted: false` 表示没有加载 Pagefind 的浏览器运行时，也没有执行查询。生成文件存在不等于搜索质量已经在浏览器里看过。
+
+## 三层示例
+
+### 基本
+
+运行 `basic.mjs`。JSON 里 `submittedRecords` 为 2，`wroteActualBundle` 为 true，`visitorSearchExecuted` 为 false。进程结束前 `pagefind.close()`。
+
+### 业务
+
+多一篇文章和一条 RSS 笔记。笔记的 filters 是 `guide` 与 `rss` / `offline`。这些词来自固定 fixture，不是用户输入。
+
+### 进阶
+
+临时 `static.html` 被转义后写入并被目录扫描。若策略拒绝某条未标记 `public` 的记录，`addHTMLFile` 不会被调用。
+
+## 反例
+
+### 反例 1：把未公开文档送进索引
+
+```ts
+await index.addHTMLFile({ url: '/drafts/secret/', content: secretHtml })
 ```
 
-CLI 读的是已经生成的 HTML，不是 Markdown 源文件，也不是 RSS URL。
+```ts
+const doc = assertPublicDocument(record)
+await index.addHTMLFile({ url: doc.url, content: documentHTML(doc.title, doc.content) })
+```
 
-## 2. 反例
+### 反例 2：不转义就拼 HTML
 
-### 反例 1：对 Markdown 目录跑 pagefind
+```ts
+'<title>' + title + '</title>'
+```
 
-未渲染的正文不会进索引。先生成 HTML，再索引。
+标题里的 `<script>` 会变成标记。使用 `escapeHtmlText`。
 
-### 反例 2：私密页靠 data-pagefind-ignore
+### 反例 3：扫描仓库根目录
 
-原文仍在 HTML 里。敏感内容不要输出到公开站，也不要进索引。
+`addDirectory({ path: repoRoot })` 会把内部文档卷进可下载索引。只扫描专门的公开输出目录。
 
-### 反例 3：把 npm 包的 import 当成站点搜索运行时
+### 反例 4：把 filters 当成登录
 
-`import * as pagefind from 'pagefind'` 是 Node API。浏览器要加载这次构建生成的 `pagefind.js`，不是手写一个占位文件。
+`filters: { role: ['admin'] }` 仍会随索引下载。角色过滤必须在生成前丢掉文档。
 
-### 反例 4：只改了链接没改 basePath
+### 反例 5：忘记 close / deleteIndex
 
-索引脚本会 404。`baseUrl` 和 JS 的 `basePath` 一起改，并在子路径上试一次。
+二进制索引进程会留在后面的脚本里。入口的 `finally` 调用 `pagefind.close()`。`runWorkshop` 在 `finally` 里 `deleteIndex`。
 
-### 反例 5：meta.title 用 innerHTML
+### 反例 6：用生成结果宣称浏览器搜索通过
 
-用 `textContent`。链接只允许站内白名单。
+`wroteActualBundle` 只说明文件写过。`visitorSearchExecuted` 必须保持 false，直到有单独的浏览器收据。
 
-### 反例 6：对每条结果立刻 data()
+## 组合
 
-只对当前页取摘要。搜索和 `data()` 都要检查代数，慢的上一轮不能覆盖新查询。
+**MiniSearch / Fuse**：动态集合留在浏览器索引。已经冻结的公开 HTML 交给 Pagefind。不要把两种索引都当成权限层。
 
-### 反例 7：每次按键 destroy 再 init
+**Workbox**：只缓存公开且带版本的 pagefind 资源。注册范围不能是 Lab 主源。更新站点时让旧预缓存失效。
 
-会话内复用实例，离开页面再释放。Lab 的脚本在 `finally` 删除索引，那是 Node 工作坊，不是浏览器组件的生命周期。
+## 生产核对清单
 
-### 反例 8：页面和索引不同版本
+1. 每条记录有显式 `public`，URL 在允许的前缀内。
+2. HTML 文本节点经过转义；敏感选择器被排除。
+3. `addDirectory` 的路径是临时或公开输出目录。
+4. `getFiles` 拒绝空资源；Pagefind 报错数组非空则失败。
+5. 脚本结束 `close()`，索引对象 `deleteIndex()`。
+6. 不在指南或 UI 里声称访客搜索已经运行。
+7. 语言选项和真实文档一致。
+8. 私密文档不进入会被下载的包。
 
-CDN 留着旧 chunk 时，词会指向不存在的 HTML。一起发布，缓存键一起变。
+## 升级
 
-## 3. 练习
+钉 `pagefind@1.5.2`。升级后重跑三个入口，确认文件列表非空、错误会抛出，并且 `close()` 仍在 `finally`。Node API 的返回形状若增加字段，不要把新的错误通道忽略掉。
 
-1. 传入 `visibility` 不是 public 的记录，脚本应在写入前失败。
-2. 跑完 basic，确认临时目录被删，并且返回值没有执行访客搜索。
-3. 若要把索引接到网站，用生成出的 JS，而不是这个 npm 包的浏览器入口。
+不要为了演示改 `forceLanguage` 而不更换种子。
 
-## 4. 证据
+## 验收
 
-`publication-policy` 不调用 Pagefind。Node 工作坊跑过并留下收据之后，sdk 才可以不是 NOT_RUN。浏览器搜索仍是另一项。
+- basic 写出真实包，记录数为 2，没有浏览器查询。
+- business 的自定义记录不经过 HTTP 服务器，filters 来自公开 fixture。
+- advanced 扫描的是临时目录里的已转义 HTML，并清理原生索引。
+- 未标记 public、带 `..` 的 URL、空标题在 `addHTMLFile` 之前失败。
+- 标题中的 `<` 被转成实体。
+- `tests/sdk.test.mjs` 调用真实 `pagefind`。无收据则 NOT_RUN。
 
-## 5. 资料
+## 资料
 
-- https://pagefind.app/
-- https://www.npmjs.com/package/pagefind
+- https://pagefind.app/docs/node-api/
+- https://pagefind.app/docs/api/
+- https://pagefind.app/docs/running-pagefind/
+- https://github.com/Pagefind/pagefind

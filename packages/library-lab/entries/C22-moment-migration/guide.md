@@ -151,7 +151,9 @@ JSON.stringify({ at: moment() })
 
 ## 升级
 
-date-fns 和 Day.js 的 pin 与 C14、C15 相同。升级任一个都要重跑 `2026-02-30`、春季小时数和两个秋季 instant。不要把 Moment 加回 lockfile 来「验证对比」。
+date-fns 和 Day.js 的 pin 与 C14、C15 相同。升级任一个都要重跑 `2026-02-30`、春季小时数和两个秋季 instant。不要为了对照再把 moment 装进本仓库。
+
+`getMigrationReport` 在日期无效时仍返回对象，三个格式字段都是 `INVALID`。调用方要看这些字段，不能只看没有抛错。`formatInstant` 对 `NaN` 返回「无效时间」，不抛异常。两套失败方式都要在界面上看得见：日历日走 alert，instant 走报告里的 INVALID。
 
 ## 练习
 
@@ -160,6 +162,23 @@ date-fns 和 Day.js 的 pin 与 C14、C15 相同。升级任一个都要重跑 `
 3. 同一 UTC instant 在上海和纽约的 `renderedInZone` 不同。
 4. 两个 01:30 的 ISO 不同，小时差为 1。
 5. 在业务代码里搜索 `moment`，确认没有新的 import。
+
+## 故障排查
+
+| 现象 | 先看 |
+| --- | --- |
+| 2 月 30 日变成 3 月 | 解析没有严格模式，或只用了会进位的 `Date` |
+| 同一变量过一天之后原值也变了 | 还留着 Moment 的可变 `add` |
+| 服务器和浏览器差一天 | `startOf('day')` 或 UTC 午夜使用了进程时区 |
+| 纽约夏天仍显示 `-05:00` | 把固定偏移当成了 IANA 时区 |
+| date-fns 的日期变成一年中的第几天 | Moment 的 `DD` 被原样贴了过去 |
+| 两个 01:30 合成一个 instant | 丢掉了偏移 |
+| 接口里出现 `{"_isAMomentObject":true}` | 把 Moment 对象放进了 `JSON.stringify` |
+| 旧保存覆盖新表单 | 只 abort 了请求，没有 generation |
+
+搜索顺序建议是：`from 'moment'`、`.add(`、`.startOf(`、`moment.locale`、`moment.utc`。每处标明换成哪一个函数、哪一个时区参数。不要用「页面还能显示今天」当迁移完成。
+
+春季相邻日历日的小时数以 advanced 的 `TZDate` 输出为准。若结果是 23，那就是跳时，不是计算坏了。秋季两个 ISO 必须同时留下。
 
 ## 官方链接
 

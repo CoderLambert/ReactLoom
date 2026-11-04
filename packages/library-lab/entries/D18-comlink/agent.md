@@ -2,39 +2,58 @@
 
 ## 适用
 
-把 CPU 工作放进 Web Worker，同时用对象式 RPC 调用。它不限制 Promise 并发，也不是不可信代码的沙箱。
+把可结构化克隆的计算放到模块 Worker，并用小的 RPC 表面调用它。大块二进制用显式转移。进度用代理回调。
+
+不要用它限制 HTTP 并发，不要用它代替 Yjs 或鉴权，不要在主线程伪造 Worker 的返回值。
 
 ## 版本
 
-`comlink@4.4.2`，Apache-2.0。Worker 用 `expose`，宿主用 `wrap`。
+`comlink@4.4.2`，MIT。入口是 `wrap`、`expose`、`transfer`、`proxy`、`releaseProxy`。
+
+Worker 使用 `{ type: 'module' }` 和相对于 `import.meta.url` 的 `./worker.ts`。
 
 ## 迁移
 
-带走 `examples/worker.ts` 和 `examples/example.tsx`。生产入口要按打包器的真实 Worker URL 创建，不要假设 Vite 的 `new URL(..., import.meta.url)` 在别的打包器里同样成立。
+从 [`examples/example.tsx`](examples/example.tsx) 带走 `dispose`、epoch 和 `Promise.race`。从 [`examples/worker.ts`](examples/worker.ts) 带走 `summarize`、`sumBytes` 和会 `await` 的 `progress`。
+
+生产任务换成真实计算时保留：构造失败可见、转移列表明确、回调看 epoch、终止不表示成功。
+
+不要把 4000 项的演示改成在主线程先算好再送进 Worker。
 
 ## 不可删的清理
 
-离开页面时 `releaseProxy`，失败也要 `terminate`。每次会话监听 `error` 和 `messageerror`，并和目标 Promise、AbortSignal 一起结束。旧响应用 epoch 挡住。`transfer` 之后不要再读原来的 ArrayBuffer。
+`dispose` 清空 session、abort、尝试 `releaseProxy`，并在 `finally` 里 `worker.terminate()`。释放失败不能跳过终止。
+
+每次 `execute` 和取消都递增 epoch。进度回调和最终 `setResult` 都要 epoch 仍匹配。
+
+结束后移除 `error` 和 `messageerror` 监听。卸载 effect 同样 `dispose`。
 
 ## 反例
 
-- 在主线程返回预设结果，假装 Worker 跑过。
-- 只在业务 catch 里写失败文案，Worker 还活着。
-- 把未授权脚本注入同源 Worker。
-- 用 p-limit 代替线程隔离，或用 Comlink 代替并发上限。
-- 把 Node 的 MessagePort 测试当成浏览器 CSP 通过。
+- 主线程直接 `setResult` 写死词频。
+- 转移后继续读原 `Uint8Array`。
+- 把裸函数传给 Worker。
+- 只 `releaseProxy` 不 `terminate`。
+- `terminate` 之后把界面写成成功。
+- 旧回调覆盖新任务。
+- 为每个元素创建 Worker。
+- 把 `Y.Doc` 当普通参数克隆。
 
 ## 测试断言
 
-- RPC 返回值来自 Worker。
-- 转移后原 buffer 的 `byteLength` 为 0。
-- 取消、切页、重复启动不会留下旧回写。
-- 生产预览的 `worker-src` 没有拦截脚本。后一项需要浏览器收据。
+- 真实 Comlink 经 `MessagePort` 或 Worker 调用 `summarize`。
+- `transfer` 登记的缓冲区在发送侧分离，和为字节之和。
+- 代理回调按顺序收到 1 到 5。
+- `releaseProxy` 失败时仍执行 `terminate`。
+- 取消后的回调不回写。
+- `tests/sdk.test.mjs` 导入真实 `comlink`。无收据则 NOT_RUN。
 
 ## 真实限制
 
-`terminate` 不保证旧 RPC Promise 自己结束。普通函数跨线程要 `Comlink.proxy`。这不是 ffmpeg 的内存预算。
+没有 SharedArrayBuffer，没有 WASM，没有协作式 signal 穿进 `summarize`。4000 项不是容量测试。模块 Worker 可能被 CSP 拒绝，这时界面必须显示构造错误。
+
+`terminate` 不会把远端 Promise resolve 成业务结果。
 
 ## 证据
 
-没有 `docs/library-lab/evidence/runs/` 收据不要写 sdk 或 browser PASS。Node MessageChannel 和 Chromium Worker 分开记账。
+sdk、build、browser 保持 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有匹配收据。Actions 41779873259 不是本条目 PASS。不要改 `verification.json`。
