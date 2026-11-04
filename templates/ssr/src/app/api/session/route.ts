@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import * as z from 'zod'
+import { mutationRequestError } from '@/server/mutation-request'
 import { readRequestSession } from '@/server/session'
 import { SESSION_COOKIE, sessionCookieOptions, signSession } from '@/server/session-token'
 import { authenticate } from '@/server/tasks'
@@ -10,6 +11,8 @@ const loginSchema = z.object({
 })
 
 export async function POST(request: Request) {
+  const error = mutationRequestError(request, true)
+  if (error) return error
   const parsed = loginSchema.safeParse(await request.json().catch(() => null))
   if (!parsed.success) {
     return NextResponse.json({ message: 'Enter a valid email and password.' }, { status: 400 })
@@ -24,7 +27,9 @@ export async function POST(request: Request) {
   return response
 }
 
-export async function DELETE() {
+export async function DELETE(request: Request) {
+  const error = mutationRequestError(request)
+  if (error) return error
   const response = NextResponse.json({ ok: true })
   response.cookies.set(SESSION_COOKIE, '', { ...sessionCookieOptions(), maxAge: 0 })
   return response

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import * as z from 'zod'
+import { mutationRequestError } from '@/server/mutation-request'
 import { readRequestSession } from '@/server/session'
 import { tasks } from '@/server/tasks'
 
@@ -12,6 +13,8 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  const error = mutationRequestError(request, true)
+  if (error) return error
   const user = await readRequestSession()
   if (!user) return NextResponse.json({ message: 'Sign in is required.' }, { status: 401 })
   const parsed = createSchema.safeParse(await request.json().catch(() => null))

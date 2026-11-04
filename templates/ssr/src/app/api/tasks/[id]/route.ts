@@ -1,11 +1,14 @@
 import { NextResponse } from 'next/server'
 import * as z from 'zod'
+import { mutationRequestError } from '@/server/mutation-request'
 import { readRequestSession } from '@/server/session'
 import { tasks } from '@/server/tasks'
 
 const statusSchema = z.object({ status: z.enum(['open', 'done']) })
 
 export async function PATCH(request: Request, context: { params: Promise<{ id: string }> }) {
+  const error = mutationRequestError(request, true)
+  if (error) return error
   const user = await readRequestSession()
   if (!user) return NextResponse.json({ message: 'Sign in is required.' }, { status: 401 })
   const { id } = await context.params
