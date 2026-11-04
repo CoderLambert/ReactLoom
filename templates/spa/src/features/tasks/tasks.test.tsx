@@ -1,10 +1,12 @@
-import { screen, waitFor, within } from '@testing-library/react'
+import { cleanup, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { HttpResponse, http } from 'msw'
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it } from 'vitest'
 import { demoUser } from '@/mocks/fixtures'
 import { server } from '@/mocks/server'
 import { renderApp } from '@/test/render'
+
+afterEach(cleanup)
 
 describe('tasks feature', () => {
   it('signs in, lists tasks, and creates one', async () => {
