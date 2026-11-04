@@ -167,6 +167,8 @@ Vanilla 和 Material 不要叠用。自定义控件若不 `handleChange(path, va
 
 basic 的 schema 没有 url。不要把 business 的 `if/then` 复制到 basic 再抱怨没有地址框。两个 level 的 schema 是故意分开的。重置会 abort、增加 generation，并把 data 和 ref 一起设回 `initial`。只清 state 不清 ref，下一次提交会把旧草稿送出去。
 
+`validationMode` 用 `ValidateAndShow`，错误数来自 `onChange` 的 `errors` 长度。这个数字不是 `additionalErrors`。状态行把两者分开写。把 409 算进 Schema 错误数，会在名称改回合法值之前一直禁用保存，即使用户已经改对了别的字段。Lab 只在 Schema 错误大于 0 时禁用按钮，409 仍显示在字段上，允许再次提交。
+
 ## 证据
 
 `submission-policy` 单测不挂载 JSON Forms。sdk 要真实 import `@jsonforms/react@3.8.0` 并在 `docs/library-lab/evidence/runs/` 留下收据。浏览器还要看 HIDE、409 回填和取消。build 单独计。

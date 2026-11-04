@@ -187,7 +187,9 @@ SSR 没有滚动容器。`initialRect` 只能做预估。本 Demo 没有服务�
 - https://tanstack.com/virtual/latest/docs/framework/react/examples/table
 - https://github.com/TanStack/virtual
 
-`onChange` 在滚动中不写范围文字，避免每个像素一次渲染。停下来才更新「当前测量范围」。若范围一直是「初始化中」，先滚动一下或等首次测量。跳转按钮在 `items.length` 为 0 时禁用，避免 `scrollToIndex(-20)`。
+`onChange` 在滚动中不写范围文字，避免每个像素一次渲染。停下来才更新「当前测量范围」。若范围一直是「初始化中」，先滚动一下或等首次测量。跳转按钮在 `items.length` 为 0 时禁用，避免 `scrollToIndex` 收到负数。
+
+`overscrollBehavior: 'contain'` 让滚动停在窗口里，不把外层 Lab 页面一起带走。去掉它不影响测量正确性，但会让跳转看起来像页面在动。查滚动问题时先确认滚的是 `viewport` 这个 ref。
 
 测量 ref 绑在绝对定位的外层 div 上，而不是内层 article。绑错节点会把 margin 算丢，下一行重叠。改样式时保持 `data-index` 和 ref 在同一个元素上。
 
