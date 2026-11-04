@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test'
 
 test('catalogue has 119 entries and filters by task', async ({ page }) => {
   await page.goto('/')
-  await expect(page.getByRole('link', { name: /C20/ })).toBeVisible()
+  await expect(page.locator('.library-card').filter({ hasText: 'C20' })).toBeVisible()
   await expect(page.locator('.library-card')).toHaveCount(119)
   await page.getByRole('textbox', { name: '搜索工具库' }).fill('p-limit')
   await expect(page.locator('.library-card')).toHaveCount(1)
@@ -18,7 +18,6 @@ test('docs deep link loads raw markdown without starting SDK demo', async ({ pag
 })
 test('@C20 actual clsx demo changes class state and unmounts on tab change', async ({ page }) => {
   await page.goto('/libraries/clsx?tab=demo&example=basic')
-  await page.getByRole('button', { name: '运行当前示例' }).click()
   await page.getByLabel('选中', { exact: true }).check()
   await expect(page.getByTestId('class-output')).toContainText('is-selected')
   await page.getByRole('tab', { name: 'Agent 指南' }).click()
@@ -26,8 +25,7 @@ test('@C20 actual clsx demo changes class state and unmounts on tab change', asy
 })
 test('@C20 reset and stop explicitly discard demo state before the next run', async ({ page }) => {
   await page.goto('/libraries/clsx?tab=demo&example=basic')
-  await expect(page.getByLabel('选中', { exact: true })).toHaveCount(0)
-  await page.getByRole('button', { name: '运行当前示例' }).click()
+  await expect(page.getByLabel('选中', { exact: true })).not.toBeChecked()
   await page.getByLabel('选中', { exact: true }).check()
   await expect(page.getByTestId('class-output')).toContainText('is-selected')
   await page.getByRole('button', { name: '重置此示例' }).click()
@@ -40,7 +38,6 @@ test('@C20 reset and stop explicitly discard demo state before the next run', as
 })
 test('@D03 p-limit can complete and cancel batches', async ({ page }) => {
   await page.goto('/libraries/p-limit?tab=demo&example=advanced')
-  await page.getByRole('button', { name: '运行当前示例' }).click()
   const status = page.getByRole('region', { name: 'p-limit 真实并发调度' }).getByRole('status')
   await page.getByRole('button', { name: '运行批处理' }).click()
   await expect(status).toContainText('执行结束：1 个失败')
@@ -115,9 +112,9 @@ test('source viewer never exposes stale or digest-mismatched bytes as verified c
 test('documentation headings expose stable shareable fragments', async ({ page }) => {
   await page.goto('/libraries/clsx?tab=docs')
   const toc = page.getByRole('navigation', { name: '当前文档目录' })
-  await toc.getByRole('link', { name: '用在哪里' }).click()
-  await expect.poll(() => decodeURIComponent(new URL(page.url()).hash)).toBe('#用在哪里')
-  await expect(page.locator('h2#用在哪里')).toBeVisible()
+  await toc.getByRole('link', { name: '什么时候用' }).click()
+  await expect.poll(() => decodeURIComponent(new URL(page.url()).hash)).toBe('#什么时候用')
+  await expect(page.locator('h2#什么时候用')).toBeVisible()
 })
 test('@F12 Node-CI Vitest recipe shows reproducible command instead of fake shell', async ({
   page,
@@ -161,7 +158,7 @@ test('mobile category picker remains keyboard-usable when the desktop sidebar is
   await expect(page.locator('.library-card')).toHaveCount(19)
   await page.getByRole('textbox', { name: '搜索工具库' }).fill('Monaco')
   await expect(page.locator('.library-card')).toHaveCount(1)
-  await expect(page.getByRole('link', { name: /E05/ })).toBeVisible()
+  await expect(page.locator('.library-card').filter({ hasText: 'E05' })).toBeVisible()
 })
 test('manual tab activation preserves keyboard focus without loading other tabs', async ({
   page,
@@ -203,7 +200,7 @@ test('landing page requests compact index, full detail only after opening one en
   expect(
     requests.filter((path) => path.startsWith('/raw/') && path.endsWith('/detail.json')),
   ).toHaveLength(0)
-  await page.getByRole('link', { name: /C20/ }).click()
+  await page.locator('.library-card').filter({ hasText: 'C20' }).click()
   await expect(page.getByRole('tab', { name: '实战 Demo' })).toBeVisible()
   expect(
     requests.filter((path) => path.startsWith('/raw/') && path.endsWith('/detail.json')),

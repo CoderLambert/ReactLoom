@@ -44,7 +44,6 @@ test('@F06 repeated corrupt probes and unmount release actual Workers before del
     Object.assign(window, { __pdfProbeGate: gate })
   })
   await page.goto('/libraries/pdfjs?tab=demo&example=advanced')
-  await page.getByRole('button', { name: '运行当前示例' }).click()
   const region = page.getByRole('region', { name: 'PDF.js 真实页面渲染' })
   await expect(region.locator('p[role="status"]')).toContainText('页渲染成功')
   const probe = region.getByRole('button', { name: '验证损坏文档不覆盖当前页' })

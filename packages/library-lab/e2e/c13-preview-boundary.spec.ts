@@ -15,7 +15,6 @@ async function startedFrame(page: Page) {
 }
 async function start(page: Page, level: 'basic' | 'business' | 'advanced', authority = '') {
   await page.goto(`${authority}/libraries/frappe-gantt?tab=demo&example=${level}`)
-  await page.getByRole('button', { name: '运行当前示例' }).click()
   return startedFrame(page)
 }
 type FrameTree = {
@@ -95,26 +94,29 @@ async function progress(frame: Frame, id: string) {
   })
 }
 
-test('@C13 explicit basic start isolates real SVG and keeps document listeners bounded across view changes', async ({
+test('@C13 selected scenario auto-loads the isolated frame and keeps document listeners bounded', async ({
   page,
 }) => {
   const sdkRequests: string[] = []
   page.on('request', (request) => {
     if (/\/assets\/frappe-gantt\.es-/u.test(request.url())) sdkRequests.push(request.url())
   })
-  await page.goto('/libraries/frappe-gantt?tab=demo&example=basic')
+  await page.goto('/libraries/frappe-gantt?tab=docs')
   await expect(frameElement(page)).toHaveCount(0)
   expect(sdkRequests).toEqual([])
-  await page.getByRole('combobox', { name: '查看源码文件' }).selectOption('examples/example.tsx')
-  await expect(page.locator('.source-viewer')).toContainText('等效键盘可编辑任务列表')
-  await expect(page.locator('.source-viewer .hash')).toContainText('已校验')
   const observation = await observeDocuments(page)
   try {
     const parentContext = await observation.contextFor(page.mainFrame()),
       baseline = await mouseupCount(observation.cdp, parentContext)
-    await page.getByRole('button', { name: '运行当前示例' }).click()
-    const frame = await startedFrame(page),
-      childContext = await observation.contextFor(frame)
+    await page.getByRole('tab', { name: '实战 Demo' }).click()
+    const frame = await startedFrame(page)
+    const loaded = sdkRequests.length
+    expect(loaded).toBeGreaterThan(0)
+    await page.getByRole('combobox', { name: '查看源码文件' }).selectOption('examples/example.tsx')
+    await expect(page.locator('.source-viewer')).toContainText('等效键盘可编辑任务列表')
+    await expect(page.locator('.source-viewer .hash')).toContainText('已校验')
+    expect(sdkRequests).toHaveLength(loaded)
+    const childContext = await observation.contextFor(frame)
     expect(await mouseupCount(observation.cdp, childContext)).toBe(1)
     for (const view of ['Day', 'Month', 'Week', 'Day', 'Month', 'Week'])
       await frame.getByRole('combobox', { name: '时间尺度' }).selectOption(view)
@@ -231,11 +233,9 @@ test('@C13 advanced refusals preserve the chart and reset/scenario/tab changes d
     await expect(reset.getByRole('spinbutton', { name: '联调回归进度' })).toHaveValue('10')
     await page.getByRole('combobox', { name: '学习场景' }).selectOption('business')
     await gone(page, reset, resetContext, observation)
-    await expect(frameElement(page)).toHaveCount(0)
-    await expect(page.getByRole('button', { name: '运行当前示例' })).toBeVisible()
-    await page.getByRole('button', { name: '运行当前示例' }).click()
     const business = await startedFrame(page),
       businessContext = await observation.contextFor(business)
+    expect(business.url()).not.toBe(reset.url())
     await page.getByRole('tab', { name: 'Agent 指南' }).click()
     await gone(page, business, businessContext, observation)
   } finally {
@@ -265,7 +265,6 @@ test('@C13 stopping during the held real SDK chunk destroys its context before d
   await page.goto('/libraries/frappe-gantt?tab=demo&example=business')
   const observation = await observeDocuments(page)
   try {
-    await page.getByRole('button', { name: '运行当前示例' }).click()
     await expect.poll(() => intercepted).toBe(true)
     oldFrame = page.frames().find((frame) => FRAME.test(frame.url()))
     if (!oldFrame) throw new Error('Missing loading C13 frame')

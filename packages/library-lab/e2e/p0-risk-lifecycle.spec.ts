@@ -4,7 +4,6 @@ import { expect, type Page, test } from '@playwright/test'
 // No page.route mocks, SDK stubs or forced verification.json PASS values.
 async function start(page: Page, slug: string, level: 'basic' | 'business' | 'advanced') {
   await page.goto(`/libraries/${slug}?tab=demo&example=${level}`)
-  await page.getByRole('button', { name: '运行当前示例' }).click()
 }
 
 test('@A01 real chart pauses for reduced motion and unmounts its DOM', async ({ page }) => {

@@ -206,6 +206,92 @@ main {
   font-size: 12px;
   color: var(--muted);
 }
+.catalog-browse {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+.tool-rail {
+  position: sticky;
+  top: 16px;
+  max-height: calc(100vh - 110px);
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--paper);
+  padding: 18px 14px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.tool-rail h2 {
+  font-size: 18px;
+  margin: 0;
+}
+.tool-rail .eyebrow {
+  margin-bottom: 0;
+}
+.tool-rail .search-box {
+  padding: 8px 10px;
+}
+.tool-rail .toggle {
+  white-space: normal;
+}
+.tag-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-inline-size: 0;
+}
+.tag-filters legend {
+  width: 100%;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 6px;
+  padding: 0;
+}
+.tag-filters button {
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 999px;
+}
+.tag-filters button[aria-pressed="true"] {
+  background: var(--green);
+  color: white;
+  border-color: var(--green);
+}
+.tool-count {
+  margin: 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+.tool-picks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.tool-picks a {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 8px;
+  border-radius: 8px;
+  font-size: 13px;
+}
+.tool-picks a:hover {
+  background: #e9eee3;
+}
+.tool-picks .entry-id {
+  flex: none;
+}
 .section-title {
   display: flex;
   align-items: baseline;
@@ -596,6 +682,10 @@ main {
   .layout {
     grid-template-columns: 225px minmax(0, 1fr);
   }
+  .catalog-browse {
+    grid-template-columns: 240px minmax(0, 1fr);
+    gap: 18px;
+  }
 }
 @media (max-width: 760px) {
   .topbar {
@@ -631,6 +721,13 @@ main {
   }
   .cards {
     grid-template-columns: 1fr;
+  }
+  .catalog-browse {
+    grid-template-columns: 1fr;
+  }
+  .tool-rail {
+    position: static;
+    max-height: 420px;
   }
   .search-row {
     flex-direction: column;

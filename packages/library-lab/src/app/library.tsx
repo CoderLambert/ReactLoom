@@ -19,7 +19,7 @@ export default function Library() {
     return (
       <section className="empty">
         <h1>未收录的库</h1>
-        <Link to="/" search={{ q: '', group: 'all', only: '' }}>
+        <Link to="/" search={{ q: '', group: 'all', only: '', tag: '' }}>
           返回全部目录
         </Link>
       </section>
@@ -42,7 +42,7 @@ export default function Library() {
     )
   return (
     <>
-      <Link to="/" search={{ q: '', group: entry.group, only: '' }} className="back-link">
+      <Link to="/" search={{ q: '', group: entry.group, only: '', tag: '' }} className="back-link">
         ← 返回分类目录
       </Link>
       <header className="detail-header">
