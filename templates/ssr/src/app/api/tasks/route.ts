@@ -18,7 +18,6 @@ export async function POST(request: Request) {
   const user = await readRequestSession()
   if (!user) return privateJson({ message: 'Sign in is required.' }, 401)
   const parsed = createSchema.safeParse(await request.json().catch(() => null))
-  if (!parsed.success)
-    return privateJson({ message: 'Give the task a title.' }, 400)
+  if (!parsed.success) return privateJson({ message: 'Give the task a title.' }, 400)
   return privateJson(tasks.create(user.id, parsed.data.title), 201)
 }
