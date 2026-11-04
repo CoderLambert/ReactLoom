@@ -10,17 +10,17 @@ export async function assertSafeSourcePath(repoRoot: string, relative: string): 
   if (
     !withinRoot ||
     withinRoot === '..' ||
-    withinRoot.startsWith('..' + path.sep) ||
+    withinRoot.startsWith(`..${path.sep}`) ||
     path.isAbsolute(withinRoot)
   ) {
-    throw new Error('Template source path must stay inside the repository: ' + relative)
+    throw new Error(`Template source path must stay inside the repository: ${relative}`)
   }
 
   let current = root
   for (const component of withinRoot.split(path.sep)) {
     current = path.join(current, component)
     if ((await lstat(current)).isSymbolicLink()) {
-      throw new Error('Template source symlinks are not allowed: ' + path.relative(root, current))
+      throw new Error(`Template source symlinks are not allowed: ${path.relative(root, current)}`)
     }
   }
 }
@@ -36,7 +36,7 @@ export async function copySafeSource(
       const name = path.basename(entry)
       if (excludedNames.has(name) || name.endsWith('.tsbuildinfo')) return false
       if ((await lstat(entry)).isSymbolicLink()) {
-        throw new Error('Template source symlinks are not allowed: ' + entry)
+        throw new Error(`Template source symlinks are not allowed: ${entry}`)
       }
       return true
     },
