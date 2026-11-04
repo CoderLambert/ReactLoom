@@ -4,8 +4,8 @@
     "note": "True-SDK SSR test added in tests/sdk.test.mjs, not executed until target packages installed"
   },
   "build": {
-    "status": "BLOCKED",
-    "note": "平台lockfile/依赖安装待完成"
+    "status": "NOT_RUN",
+    "note": "根 pnpm-lock.yaml 已包含 Library Lab importer，声明的包可以被冻结安装解析。Actions run 41779873259 的仓库级 typecheck/build 不是本条目的 evidence/runs 收据，所以这里是 NOT_RUN，不是 PASS。"
   },
   "browser": {
     "status": "NOT_RUN",

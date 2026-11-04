@@ -1,6 +1,8 @@
 # EF 通道持续开发进度
 
-- 通道：EF，Issue #7；当前 wave23 分支 `feat/library-lab-ef-wave23-spreadsheet-pdf-bounds`，Draft PR #79；PR base 固定 `feat/library-lab`。
+> 2026-11-04：本文件是合并前的通道日志。PR #8 已合并。锁文件已有 Lab importer，其中包括 `msw@3.0.3`、`monaco-editor@0.57.0` 和 `vitest@5.0.5`。Actions run 41779873259 通过仓库级 install / typecheck / build / 52 SDK 文件（153）/ 45 Playwright。这不是 37 条 EF 收据。下文的 Draft、DNS 和「锁文件尚未解析」只描述当时那一轮。
+
+- 通道：EF，Issue #7。下列 wave 分支和 Draft PR 是历史记录。
 - runCount：23 / 24。
 - 基线：`38ed2d247bd82e4f1422b0e8904973e16bca2972`。
 - 本轮日期：2026-10-27（北京时间）。

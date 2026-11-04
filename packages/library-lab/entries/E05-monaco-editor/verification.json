@@ -1,22 +1,22 @@
 {
   "source": {
     "status": "NOT_RUN",
-    "note": "第24轮新增与真实示例同源的幂等分阶段清理器；隔离Node纯策略测试3 PASS。未运行Monaco SDK/完整React，不能计作source/sdk/build/browser的实际运行PASS。"
+    "note": "后续改动新增与真实示例同源的幂等分阶段清理器；隔离Node纯策略测试3 PASS。未运行Monaco SDK/完整React，不能计作source/sdk/build/browser的实际运行PASS。"
   },
   "sdk": {
     "status": "NOT_RUN",
     "note": "Monaco真实导入和诊断尚未执行"
   },
   "build": {
-    "status": "BLOCKED",
-    "note": "集成平台需安装 monaco-editor 并重建锁文件"
+    "status": "NOT_RUN",
+    "note": "根 pnpm-lock.yaml 已包含 Library Lab importer，声明的包可以被冻结安装解析。Actions run 41779873259 的仓库级 typecheck/build 不是本条目的 evidence/runs 收据，所以这里是 NOT_RUN，不是 PASS。"
   },
   "browser": {
     "status": "NOT_RUN",
     "note": "Worker/CSP/resize/model dispose 需实浏览器E2E"
   },
   "isolation": {
-    "status": "BLOCKED",
-    "note": "第24轮即使disposer抛错也继续释放编辑器/model/Worker映射租约；真正Monaco Worker线程释放、生产CSP及Chromium重挂仍需PLATFORM实测，当前BLOCKED。"
+    "status": "NOT_RUN",
+    "note": "示例清理器会继续释放后续资源。Monaco Worker 线程、生产 CSP 和重挂没有本条目收据，所以是 NOT_RUN。monaco-editor 已在锁文件中。"
   }
 }

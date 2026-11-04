@@ -1,62 +1,249 @@
-# A02 Recharts：声明式业务图表完整实战
+# Recharts 3.10.1｜从简单 React 图表到可维护的数据分析工作台
 
-## 使用与选型
+Lab 锁定 `recharts@3.10.1` 与 `react-is@19.3.0`（与仓库 React 19.3.0 对齐），许可证 MIT。官方安装要求 `react-is` 主版本跟 React 走。研究稿里写过的 `react-is@19.2.8` 不是本仓库的 pin，迁移时不要降回去。
 
-Recharts 以 React 组件声明图表结构，适合中等规模的业务报表、统计卡片和需要与 React 状态同步的可视化。它主要生成 SVG，而不是 GPU 引擎。绘制规模巨大、复杂地图或大量实时点时优先对比 A01 ECharts、A04 uPlot。不要凭名称声称它比 Canvas 方案更轻。
+没有逐库收据时，sdk / build / browser 保持 NOT_RUN。Actions [41779873259](https://github.com/CoderLambert/ReactLoom/actions/runs/41779873259) 是仓库级安装、typecheck、构建和已有测试，不是本条目 PASS。
 
-## 安装与导入
+## Lab 当前示例
 
-    pnpm add recharts@3.10.1 react-is@19.3.0
+[`examples/example.tsx`](examples/example.tsx) 调用真实 Recharts 组件。[`examples/chart-policy.ts`](examples/chart-policy.ts) 负责窗口和刷新预算。[`examples/demo.tsx`](examples/demo.tsx) 只重导出。
 
-官方 README 明确要求 react-is 与宿主 React 版本匹配。ReactLoom 当前为 React 19.3.0，迁移到 React 18 时须调整版本。真实实现位于 examples/example.tsx；examples/demo.tsx 仅作为 Lab adapter 重新导出。
+示例实际做了这些事：
 
-    import {ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip} from 'recharts';
+- 父级给定 `height: 300`、`minWidth: 0`，`ResponsiveContainer` 使用 `debounce={60}`。
+- basic：`BarChart` + `Bar dataKey="reads"`，`YAxis allowDecimals={false}`，下面有同等含义的表。
+- business / advanced：`ComposedChart`。阅读和收藏走 `yAxisId="count"`，收藏率走右侧 `yAxisId="percentage"`（0–100，单位 %）。advanced 可关掉收藏率。
+- 窗口天数经 `normalizeWindow` 收到 3–14。输入框允许暂时不是合法数字，blur 时写回当前合法值。
+- `nextRevision` 把刷新次数封在 `MAX_REVISION = 1000`。`sampleRows` 是确定性本地数据，不请求网络。
 
-## 三层演示
+当前示例**没有**挂载 `syncId` / `syncMethod`、`Brush`、移动平均、`connectNulls`、频道切换的 `AbortController`，也没有把缺失值留成 `null`（样例里的阅读和收藏都是算出来的正数）。下面第 4、5 节是生产教学。照着写进业务代码，不要以为 Lab 页面已经演示了同步和竞态。
 
-**basic**：使用 ResponsiveContainer 和 BarChart 绘制七天阅读量；数据表具备同等含义。每次改变 revision 都通过 React 重新传入数据。
+## 1. 什么时候用
 
-**business**：ComposedChart 组合柱形和折线，阅读与收藏使用左轴，收藏率使用右侧百分比轴；选取业务数据时不能混淆绝对数值与比例。
+Recharts 用 React 组件和 SVG 声明图表，尺度计算借 D3 的模块。你写 `<LineChart>`、`<XAxis>`、`<Tooltip>`、`<Line>`，生命周期跟着 React，而不是 ECharts 那种 `init` / `dispose`。
 
-**advanced**：输入 3–14 天范围，在进入图表前收敛有限非负数；可以关闭收藏率；多次进入/退出 Tab 检查 SVG 资源与 ResizeObserver 的生命周期。
+| 要交付的工作 | 建议 | 原因 |
+| --- | --- | --- |
+| 运营页上几张可定制的趋势图 | 优先在目标数据量上验证 Recharts | 组合方式和主题跟 React 一致 |
+| 大量图表类型、坐标系不统一 | 同时做一版 ECharts（A01） | Recharts 不保证复杂类型开箱即用 |
+| 上万到数十万点的时序 | 先测 uPlot（A04） | SVG 节点和交互成本要用真实数据看 |
+| 任意几何 | D3（A05） | 自由度更高，坐标和图例也归你 |
+| 一个数字旁边的迷你趋势 | 原生 SVG | 不必引入整套图表 |
+| 明确要 Canvas | ECharts 或 Chart.js | Recharts 的核心是声明式 SVG |
 
-## 生产最佳实践
+它不是地图、节点编辑器或 BI 引擎。外部底图和图标的许可与图表库无关。
 
-- 明确容器尺寸：单纯 height:100% 的子级在无父高度时容易得到 0，必须提供真实高度。隐藏 Tab 时不应继续挂载图表。
-- 统一 DTO：在 API adapter 中处理时区、缺失值和非法数字。真正的缺失数据不能自动填为 0；示例 validCount 只用于受控本地 fixture。
-- 轴和单位：千次数和百分比使用独立 YAxis，否则误导用户。
-- React 所有权：不要操作 Recharts 生成的 SVG DOM 来修补状态，统一依赖 React render/unmount。
-- 性能：先聚合再渲染大量事件数据；Tooltip、数据标签和 SVG 节点数越多，越应做真实浏览器测量。
-- 可访问性：SVG 图不是完整的数据表达，必须有文字描述、图例以及可读的表格替代。
-- 安全：不要直接渲染来源不明的 HTML Tooltip，避免把远端 HTML 当作受信任 React 节点。
+v3 迁移指南写的最低线是 React 16.8+、TypeScript 5+、现代语法目标。本仓库用 Node 22 和 React 19.3。移植到 Next.js 时图表放在客户端边界，SSR 首屏量不到容器尺寸，要单独验收 hydration。
 
-## 五组反例与修复
+## 2. 数据流
 
-1. 父节点没有非零高度导致空白图：设置明确像素/布局高度。
-2. 收藏率与阅读量混用 YAxis 导致比例失真：分不同 yAxisId 和单位。
-3. 在 render 中 Math.random 生成数据，使图形每次重绘跳变：通过稳定输入和确定性 fixture 生成。
-4. 将百万原始事件直接送入 SVG，造成大量节点：服务器聚合或采用 Canvas。
-5. 依赖绿色/红色区分趋势、无表格/文本：补充文字统计与可访问数据视图。
+```text
+筛选条件 / API 响应
+        │
+        ▼
+边界校验（空值保留 null，不把未知写成 0）
+        │
+        ├─ KPI 与 <table>
+        ├─ 移动平均 → Line
+        └─ 去掉某一度量缺失行的子集 → Area
+                    │
+         同一 syncId + syncMethod="value"
+```
 
-## 组合应用
+业务记录的权威不在图表 props 里。不要让 Query 缓存、Zustand 和 `data` 各算各的。`dataKey="reads"` 只是从行里取 y；`XAxis dataKey="day"` 是类目身份。库不会知道这是累计还是当日，也不会替你去重。
 
-Recharts + TanStack Query：由 Query 拥有请求/重试/缓存，图表只消费已校验结果，不自造第二套远程数据状态。Recharts + Zod：转换边界校验 DTO，绘图层只处理可用业务数据。
+```tsx
+<ResponsiveContainer width="100%" height={240}>
+  <BarChart data={rows} accessibilityLayer>
+    <XAxis dataKey="day" />
+    <YAxis allowDecimals={false} />
+    <Tooltip />
+    <Bar dataKey="reads" name="阅读量" fill="#236b53" />
+  </BarChart>
+</ResponsiveContainer>
+```
 
-## 迁移练习与验收
+重绘靠 props。不需要 `setOption`。`ResponsiveContainer` 观察父级尺寸；父级没有确定高度，或 flex 子项没写 `min-width: 0`，图会是 0。隐藏的 Tab 不要继续挂着图表。v3 也有图表自己的 `responsive`。本 Demo 只用 `ResponsiveContainer`，一个项目不要两套尺寸策略叠在一起还不写明谁说了算。
 
-练习：把新闻列表转成每日阅读/收藏数据，定义时区和“无数据”语义；模拟 API 的过期响应，确认不会让新筛选器展示旧报表。
+Lab 的双轴是另一件容易看错的事：阅读次数和收藏率不能共用一根轴。次数轴禁止小数；百分比轴域是 0–100。
 
-本轮仅提供真实库代码，SDK、完整 typecheck/build、浏览器仍 NOT_RUN，不能声称运行通过。测试应覆盖非零容器、横向缩放、输入上下限、Tooltip、切换 Tab 卸载和数据表键盘读取。
+## 3. Lab 三层在演示什么
 
-## 一手资料
+**basic**：七天阅读柱，表和柱用同一 `sampleRows`。改 revision 只是换入新数组。
 
+**business**：柱（阅读、收藏）加线（收藏率）。图例打开。绝对量在左，比率在右。
+
+**advanced**：天数输入、可关比率、刷新到 1000 次停止。多次进入离开页面，确认 SVG 随卸载走，而不是留在文档里。`chart-policy` 的单测只证明窗口和上限，不证明 ResizeObserver。
+
+## 4. 生产里更进一步的三层（当前 Demo 未挂载）
+
+### 两张图按日期同步，而不是按下标
+
+当上面的阅读序列和下面「去掉收藏为 null 的日子」长度不同时，默认 `syncMethod="index"` 会把第 i 个点对到另一张图的第 i 个点，日期可能不是同一天。
+
+```tsx
+<LineChart data={chartRows} syncId="report" syncMethod="value">
+  <XAxis dataKey="day" />
+  <Tooltip />
+  <Line dataKey="reads" connectNulls={false} />
+  <Line dataKey="rollingReads" connectNulls={false} />
+</LineChart>
+
+<AreaChart data={nonMissingSaves} syncId="report" syncMethod="value">
+  <XAxis dataKey="day" />
+  <Tooltip />
+  <Area dataKey="saves" />
+</AreaChart>
+```
+
+`value` 按类目值对齐 tooltip。这不等于 `Brush` 的区间过滤也正确。Brush 仍可能按索引共享视窗。不同长度、有缺口时，拖完 Brush 要在浏览器里对两张图的起止日期，对不上就在业务层自己过滤，不要写「已经同步」。
+
+移动平均遇到缺失返回 null。`connectNulls={false}` 把缺口留在线上。比率只使用阅读和收藏都存在的日子，否则分母被不完整的天拉低。
+
+### 实时追加并且不泄漏
+
+```tsx
+useEffect(() => {
+  if (!playing) return
+  const id = window.setInterval(() => {
+    setRows((prev) => appendRealtime(prev, makeNext(prev), 24))
+  }, 1500)
+  return () => window.clearInterval(id)
+}, [playing])
+```
+
+不可变追加，稳定的日期身份，上限防止 SVG 无限变长。`24` 和 `1500` 是教学数字，不是性能阈值。StrictMode 会执行清理再执行一次，interval 不能累积。`prefers-reduced-motion` 时关掉 `isAnimationActive`。Lab 的 A02 示例没有这条流；A01 的流是 ECharts 的，不要混用。
+
+### 请求竞态
+
+频道从 A 切到 B 时，A 的慢响应不能 `setRows`。
+
+```tsx
+useEffect(() => {
+  const controller = new AbortController()
+  loadSegment(segment, controller.signal)
+    .then((rows) => {
+      if (!controller.signal.aborted) setRows(rows)
+    })
+    .catch((error) => {
+      if (!controller.signal.aborted) setError(String(error))
+    })
+  return () => controller.abort()
+}, [segment])
+```
+
+取消不是失败。重试不要在 effect 里无条件循环。Lab 示例的数据是本地函数，没有这条路径。
+
+## 5. 反例
+
+### 反例 1：高度是 auto，子级 100%
+
+```tsx
+<div style={{ height: 'auto' }}>
+  <ResponsiveContainer width="100%" height="100%">
+    <LineChart data={rows}><Line dataKey="reads" /></LineChart>
+  </ResponsiveContainer>
+</div>
+```
+
+父级没有非零高度。正确写法是明确像素高度，网格子项 `minWidth: 0`。用浏览器量 SVG 的 bounding box，折叠侧栏后再量一次。
+
+### 反例 2：长度不同还按 index 同步
+
+```tsx
+<LineChart data={reads} syncId="report">{/* 默认 index */}</LineChart>
+<AreaChart data={saves.filter((row) => row.saves != null)} syncId="report" />
+```
+
+改成两边都 `syncMethod="value"`，并用同一个 `day` 身份。悬停缺口两侧，tooltip 上的日期必须相同。Brush 另测。
+
+### 反例 3：缺失写成 0
+
+```tsx
+const values = apiRows.map((row) => ({ ...row, reads: row.reads ?? 0 }))
+```
+
+未知不是低谷。把 `null` 传进去，`connectNulls={false}`，表格写「缺失」。Lab 的 `sampleRows` 没有缺失，所以它展示不了这个区别。
+
+### 反例 4：无取消的切换
+
+```tsx
+useEffect(() => {
+  void fetch(`/api/stats?segment=${segment}`).then((r) => r.json()).then(setRows)
+}, [segment])
+```
+
+慢的 A 会盖住 B。用 AbortController，或 Query 的 queryKey 把频道算进去。
+
+### 反例 5：每次更新换 key
+
+```tsx
+<LineChart key={Date.now()} data={rows} />
+```
+
+tooltip、Brush 和焦点都会被拆掉。保持组件位置，用 `data` 驱动更新。
+
+### 反例 6：只靠颜色
+
+图外要有标题、表和缺失说明。Recharts 3 的 `accessibilityLayer` 改善键盘，但不是 WCAG 合格证明。`prefers-reduced-motion` 时关动画。不要把不可信 HTML 塞进自定义 tooltip。
+
+### 反例 7：render 里 Math.random
+
+每次渲染柱高都变。用稳定输入。Lab 用 `revision` 和纯函数就是为了这个。
+
+### 反例 8：百万事件直接进 SVG
+
+先聚合。节点数、标签和 tooltip 要在目标数据上量，不要从 14 天演示推断。
+
+## 6. 组合
+
+**Query + Zod**：HTTP 进缓存，schema 在边界解析，领域函数出 KPI，Recharts 和表格吃同一份派生数据。缓存键包含频道、时间范围、语言和租户。tooltip 里格式化过的字符串不是权威数字。
+
+**TanStack Table**：排序和导出用同一批记录。不允许表导出 100 行、图上却是另一批还不说明。
+
+**react-grid-layout**：只有仪表盘真的要拖。拖动中可关动画，松手再重算。不需要 init/dispose。
+
+## 7. 生产清单
+
+| 场景 | 风险 | 处理 |
+| --- | --- | --- |
+| 加载 / 空 / 错误 | 旧图被当成新条件的结果 | 三态写明；空不是 0 |
+| null 与 0 | 比率被缺失拉低 | 契约分开；线断开；表上注释 |
+| 类目很多 | SVG 和轴标签变慢 | 先聚合；用真实数据做 Profiler |
+| 容器动态 | 0px 或藏在 Tab 里 | 明确高度、`min-width: 0` |
+| 竞态 | 旧筛选覆盖新图 | AbortController 或 queryKey |
+| 减少动态 | 动画不停 | `isAnimationActive` 跟媒体查询 |
+| 读屏 | 点读不出来 | 语义表格和摘要 |
+| 导出 | 截图丢掉 tooltip | 从源数据导出 |
+| SSR | 首屏量不到尺寸 | 客户端边界和占位 |
+| 时区 | UTC 日期被本地偏移 | 身份用稳定的日历日，显示层再本地化 |
+| IME | 图表不处理输入法 | 筛选框自己测组合输入 |
+
+性能假设（100 / 1,000 / 10,000 点、关动画、聚合）在本仓库没有浏览器测量，不要写成已经得到的数字。
+
+## 8. v2 到 v3
+
+3.0 换过内部状态，拿掉了 `recharts-scale`、`react-smooth` 等依赖。不要把 v2 文章里的私有状态 API 搬过来。升级时核对 `react-is` 主版本，回归 tooltip、Brush、动画、焦点和 SSR。`Cell` 的去留以 3.10.1 的类型和文档为准，不要用一条未合并的讨论代替。
+
+官方迁移说明：https://github.com/recharts/recharts/wiki/3.0-migration-guide
+
+## 9. 练习
+
+1. 在现有数据上增加「只看阅读 / 只看收藏」，不要做第二份缓存。图表和表一起变；若引入缺失日，不能画成 0。
+2. 用 Query 换掉本地 `sampleRows`。A 切到 B 时不出现过期行；500 和超时可恢复；取消不当成失败。不要用生产密钥。
+3. 两张图保持 `syncMethod="value"`，造不同的缺失日，拖 Brush，记下可见起止日期是否一致。不一致就写进限制，不要声称天然正确。
+
+## 10. 证据
+
+`tests/chart-policy.test.mts` 只覆盖窗口、标签和刷新上限。它不 import 图表渲染。sdk / build / browser 在有收据之前是 NOT_RUN。研究包里「领域模块 9 项单测通过、安装超时」是 2026-10-23 那份稿子的环境记录，不是本仓库的验收。
+
+## 11. 官方资料
+
+- https://recharts.github.io/en-US/
 - https://github.com/recharts/recharts
-- https://recharts.github.io/en-US/api/
 - https://www.npmjs.com/package/recharts
-
-许可证 MIT。本示例仅使用原创本地数据。
-
-
-## 本轮运行前加固：受控范围与刷新预算
-
-新增 `examples/chart-policy.ts` 作为实际运行/源码面板共享的纯规则：3–14 天稳定窗口，14 日标签互不重复，刷新计数限制 1000 次以避免无限增大示例数据；表格与图表消费同一 `sampleRows`。数字输入允许暂时清空后继续输入，在 blur 时恢复合法范围。ResponsiveContainer 启用 60ms resize debounce，父容器仍提供明确高度。对应 `tests/chart-policy.test.mts` 仅验证数据边界，真实 ResizeObserver 与 SVG 仍需 Chromium。
+- https://recharts.github.io/en-US/api/LineChart/
+- https://recharts.github.io/en-US/api/ResponsiveContainer/
+- https://recharts.github.io/en-US/api/Tooltip/
+- https://recharts.github.io/en-US/api/Brush/
+- https://github.com/recharts/recharts/blob/main/storybook/stories/API/Accessibility.mdx

@@ -1,6 +1,10 @@
 # ReactLoom Library Lab
 
-独立前端工具库实战与 Agent 知识应用。119条库的源码示例、中文指南与 Agent 文档已接入，357项三层场景是**声明数量，不是 SDK / 浏览器测试通过数量**。依赖安装、TypeScript 全仓检查与 Vite/Chromium 仍待可用 Runner 验证。
+独立前端工具库实战与 Agent 知识应用。119 条库的源码、中文指南与 Agent 文档已接入。357 项三层场景是**声明数量，不是 SDK / 浏览器测试通过数量**。
+
+`create-reactloom` 不复制本包，模板的 `template.json` 也不包含它。根工作区安装仍会解析本包依赖，其中包括 `@ffmpeg/core`（GPL-2.0-or-later，默认不复制进页面）和 SheetJS CE 的 `cdn.sheetjs.com` tarball。详见 `docs/library-lab/REPAIR.md`。
+
+Actions run [41779873259](https://github.com/CoderLambert/ReactLoom/actions/runs/41779873259) 在与当前 Lab 树一致的提交上通过了冻结安装、typecheck、生产构建、52 个 SDK 文件（153 项）和 45 项 Playwright。这些是仓库级作业。`verification.json` 的 PASS 仍要有 `docs/library-lab/evidence/runs/` 里的当前收据。没有收据时 readiness 的 sdk / build / browser PASS 就是 0。
 
 ```sh
 pnpm install
@@ -14,12 +18,12 @@ pnpm --filter @reactloom/library-lab test:e2e:setup
 pnpm --filter @reactloom/library-lab test:e2e
 ```
 
-依赖锁文件需由集成任务通过真实pnpm生成。没有依赖时可直接运行 `node scripts/generate.mjs` 和 `npm test` 验证目录与平台纯逻辑，不代表 SDK 通过。
+根 `pnpm-lock.yaml` 已有 `packages/library-lab` importer。没有装依赖时仍可运行 `node scripts/generate.mjs` 和 `npm test`，那只覆盖目录和平台逻辑，不代表 SDK 通过。
 
 源码、guide.md、agent.md 与相关关系按 `entries/<ID>-<slug>` 组织。运行 `catalog:generate` 生成原文、源码哈希、动态loader和根索引。主站不自动运行下载大型SDK，不把未接入条目伪装成真实效果。
 
-当前实现：119条目录与分类搜索（含移动端）、四Tab深链接、安全Markdown原文/目录与按需 Shiki 高亮、源码SHA-256清单、显式启动/停止、CLI可复现命令提示、sourceFingerprint 证据失效判定、局部错误边界。已有部分条目接入真实SDK调用源码（含非Web MSW Node入口），准确数量以源目录及生成索引为准；构建/SDK/浏览器运行状态必须以实际验证证据为准。
-待完善：真实依赖安装和冻结锁文件、目标 SDK 与浏览器执行证据、特殊 Worker/SW 独立 runner、许可证复核、CI 与性能验收。119 条源文件及指南的存在不等于运行通过。文档图片仅允许本地审核过的 raster 资产。
+当前实现：119条目录与分类搜索（含移动端）、四Tab深链接、安全Markdown原文/目录与按需 Shiki 高亮、源码SHA-256清单、显式启动/停止、CLI可复现命令提示、sourceFingerprint 证据失效判定、局部错误边界。首页分开显示源码完整、可挂载 React、仅 Node 命令和收据 PASS。F11 有独立 origin 的 MSW runner，C13 有 Gantt 画面。构建、SDK 和浏览器是否通过，只看本条目收据。
+待完善：把已有 CI 命令逐库记成收据、补上没有 Node 套件的条目、以及 E19 在许可证开关打开之前的核心文件。119 条源文件及指南的存在不等于运行通过。文档图片仅允许本地审核过的 raster 资产。
 
 ## 面向 Agent 的离线检索
 

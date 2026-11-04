@@ -66,5 +66,9 @@ export interface CatalogEntry {
   packageNames: string[]
   hasDemo: boolean
   demoCount: number
+  /** How the page can run the entry. This is not a verification receipt. */
+  surfaces: Array<'browser-frame' | 'node-ci' | 'react' | 'worker'>
+  /** sdk/build/browser PASS rows after receipt checks. CI success is not included. */
+  receiptPasses: number
   sourceFingerprint: string
 }

@@ -1,85 +1,130 @@
-# B17 Floating UI — 定位、浮层交互与焦点所有权
+# Floating UI 0.27.20｜定位、非模态焦点、IME 和剪贴板代际
 
-## 什么时候使用
+Lab 锁定 `@floating-ui/react@0.27.20`（MIT）。它解决「浮层相对谁、如何躲开视口、打开时焦点怎么走」。菜单和弹层的完整组件可以先看 Radix 或 Base UI。只有定位和交互原语需要自由组合时再用本库。
 
-当产品需要严格控制 Tooltip、Popover、菜单、选择器或浮动工具栏的定位逻辑、可访问性和动画时，Floating UI 提供定位中间件与 React 交互 hooks。它不是现成主题化组件。若只想立即使用成熟 UI，优先比较 Radix/Base UI；不要重复手写它们已经解决的焦点交互。
+没有逐库收据就不要写 PASS。Actions 41779873259 不是本条目的浏览器收据。
 
-## 安装与入口
+## Lab 当前示例
 
-```bash
-pnpm add @floating-ui/react@0.27.20
+[`examples/example.tsx`](examples/example.tsx) 使用真实的 `useFloating`、`autoUpdate`、`offset`、`flip`、`shift`、`useClick`、`useDismiss`、`useRole`、`FloatingPortal`、`FloatingFocusManager`。
+
+- 参考按钮和浮层都只在 `open` 时挂上浮层。因此 `whileElementsMounted: autoUpdate` 是合适的：两边都在文档里时才跟踪位置。若改成隐藏而不卸载，要自己在 effect 里启动和停掉 autoUpdate。
+- middleware：`offset(10)`、`flip({padding: 12})`、`shift({padding: 12})`。advanced 的 placement 是 `top-start`，其它是 `bottom-start`。实际用的是 hook 返回的 `placement`，不要自己缓存第一次的结果。
+- `useRole(context, {role: 'dialog'})` 加上 `FloatingFocusManager` 的 `modal={false}` 和 `returnFocus`。这是非模态浮层：Tab 可以离开，不是焦点陷阱。不要把它写成模态对话框。
+- 关闭走同一个 `setPopoverOpen(false)`，并在调用时同步 `++clipboardRequest`。Escape、外部点击和选择动作都因此作废进行中的剪贴板 Promise。不要等 `useEffect([open])` 才作废。
+- business：[`business-policy.ts`](examples/business-policy.ts) 的 `toggleArticleAction` 改本地已读 / 稍后阅读；复制使用 `navigator.clipboard.writeText`，失败留在 `role="alert"`，成功才关闭。
+- advanced：[`ime-guard.ts`](examples/ime-guard.ts) 在合成中、`isComposing`、`keyCode === 229` 或刚刚结束合成的那一次 Enter 时不提交。过滤作用于本地标题列表，草稿 `query` 和已提交的 `appliedQuery` 分开。
+
+没有 VirtualElement，没有选区工具条，没有安全上下文以外的剪贴板降级。那些是下面的生产教学。
+
+## 1. 数据流
+
+```text
+open / onOpenChange
+        │
+ useFloating + middleware
+        │
+ refs.setReference / setFloating + floatingStyles
+        │
+ useInteractions(click, dismiss, role)
+        │
+ Portal 把浮层挂到 body，FocusManager 在非模态下移动焦点并归还
 ```
+
+定位结果不是业务状态。已读、过滤和「已复制」放在 React。浮层坐标不要写进 store。
+
+## 2. 三层
+
+### 基本：能躲开视口的 Popover
+
+按钮是锚点。打开后浮层在 Portal 里，`offset` 留缝，`flip` 在放不下时换边，`shift` 把整块拉回视口并留 12px。确认按钮关闭并归还焦点。
+
+动手：把窗口压矮，看 placement 是否变化。不要用固定 `top` 像素代替 middleware。
+
+### 业务：操作要改数据
+
+稍后阅读和已读必须改 `article`，不能只改一句「已收藏」。复制成功才 `choose`。权限拒绝或没有 `clipboard.writeText` 时浮层保持打开，错误可读。
+
+`clipboardRequest` 在关闭、卸载和下一次复制时递增。旧 Promise 只能在编号仍相等时写状态。
+
+### 进阶：中文输入法
+
+合成期间不要 `preventDefault` 以外的提交。Lab 的策略是：合成中和 keyCode 229 不应用过滤；合成结束把 `suppressNextEnter` 设为真，吞掉同一次 Enter；随后的 Enter 才提交。blur 且不在合成中时清除这个抑制。
+
+这不能只靠 `useState` 里的布尔。React 可能批量处理 composition 事件，守卫放在 ref 上。
+
+研究稿里的 VirtualElement（选中文字旁边的工具条）没有实现。要做的话，reference 是 `{ getBoundingClientRect }`，选区消失必须关掉浮层并 `autoUpdate` 停掉。不要把过期的矩形留在页面上。
+
+## 3. 反例
+
+### 反例 1：隐藏了还在 autoUpdate
+
+元素卸掉之后继续 `autoUpdate` 会读到空矩形。条件挂载就用 `whileElementsMounted`。常驻 DOM 就在 cleanup 里停。
+
+### 反例 2：Portal 当成焦点管理
+
+Portal 只改变父节点。没有 FocusManager 时，焦点留在按钮后面，读屏也不知道对话框。Lab 两者都有，并且明确 `modal={false}`。需要陷阱时用真正的模态组件，不要把 `modal` 悄悄改成 true 又不处理滚动锁。
+
+### 反例 3：外部点击和剪贴板各写各的
 
 ```tsx
-const {refs, floatingStyles, context} = useFloating({
-  open, onOpenChange: setOpen,
-  middleware: [offset(10), flip({padding: 12}), shift({padding: 12})],
-  whileElementsMounted: autoUpdate,
-});
-const {getReferenceProps, getFloatingProps} =
-  useInteractions([useClick(context), useDismiss(context), useRole(context, {role: 'dialog'})]);
+onOpenChange: (next) => setOpen(next)
 ```
 
-完整源码 `examples/example.tsx`；宿主 `examples/demo.tsx` 只负责重导出。
+若作废逻辑在 effect 里，关闭和 Promise resolve 的顺序会反。在 `onOpenChange` 变成 false 的同步路径里递增代际。
 
-## 三层 Demo
+### 反例 4：只看 isComposing
 
-基础：锚点旁弹出提示详情，Esc 和点击外部可以关闭。业务：NewsHub 阅读卡片旁出现“稍后阅读/标记已读”动作并返回明确状态。高级：滚动容器、靠近视口边缘时依赖 flip/shift 避免遮挡；输入框组合输入（IME）期间按 Enter 不能误提交。
+部分输入法在 Enter 时 `isComposing` 已经是 false，但 `keyCode` 仍是 229。守卫要同时看 ref、原生事件和 229。合成刚结束的那次 Enter 也不提交。
 
-所有操作都来自真实 `@floating-ui/react` 的 hooks，而不是自写定位计算。
+### 反例 5：两个浮层抢 Escape
 
-## 布局与生命周期
+和 cmdk 或 Radix 菜单叠用时，只允许一个所有者处理 Escape 和焦点。Lab 这一页只有一个浮层。
 
-`refs.setReference` 绑定实际参考节点；`refs.setFloating` 绑定弹层，`floatingStyles` 包含计算后的定位。条件挂载配合 `whileElementsMounted: autoUpdate`，库会管理监听的启动和清理。不要在每次 render 手工注册 DOM listener，也不要在 display:none 常驻模式下照搬条件挂载示例。
+### 反例 6：点击即显示已复制
 
-`FloatingPortal` 让弹层逃离 overflow 祖先；`FloatingFocusManager` 管理必要的键盘/焦点回归。本例采用非模态 `modal={false}`，所以**不能**假装它阻止页面其他区域交互。
+写入失败不能 `choose('已复制')`。没有剪贴板 API 就显示 alert，不要退回「假装成功」。
 
-## 高风险反例
+### 反例 7：过滤改的是另一份列表
 
-1. **视觉定位就当交互完成**：只使用 `useFloating` 而忽略触发、关闭和键盘。需 `useInteractions` 正确组合 `useClick/useDismiss/useRole`。
-2. **始终显示浮层并配置 autoUpdate**：条件不满足官方的 `whileElementsMounted` 建议，可能产生额外监听。该示例仅在 open 时挂载。
-3. **用不受控 document click 自行检测 outside press**：Portal + iframe + 嵌套场景易冲突；优先 `useDismiss` 并测试真实业务。
-4. **自造焦点陷阱**：错误的 Tab/Shift+Tab 会丢失焦点，先使用官方 FocusManager；模态/非模态需求必须明确。
-5. **IME composition 阶段按 Enter 提交**：拼音选字会触发表单误提交；检测 composition state 和 nativeEvent.isComposing。
-6. **把参考节点藏在 disabled 按钮**：disabled 元素不产生相关输入事件；要改变组件结构或语义，不靠给 disabled 按钮挂事件。
+草稿和已提交查询分开。应用之后列表必须变短或变回全文。只改浮层里的一行提示不算过滤。
 
-## 生产建议
+### 反例 8：把交互结果存进 floatingStyles
 
-按业务选择角色：悬停提示 `tooltip` 与可交互 Popover `dialog` 不同；后者包含按钮/输入时需要焦点策略。使用具名按钮与 aria-expanded/aria-controls；浮层在独立滚动区域应验证 flip/shift。支持触摸与键盘，不用颜色承担全部状态。必要的 hover delay/reduced motion 通过正确官方 hook 或 CSS 策略实现，不让浮层永久驻留在 DOM。
+样式是这一帧的定位。刷新后不应从坐标恢复「已读」。
 
-## 验证
+## 4. 故障
 
-- 真实 `@floating-ui/react` 包成功安装和类型通过。
-- Click 打开、Escape/外部关闭、焦点返回、Portal 正确位置。
-- 滚动/窗口变化后视图更新；React StrictMode 反复卸载不出现幽灵浮层。
-- 中文组合输入时 Enter 不提交，组合结束后 Enter 正常触发。
-- 测试时按官方说明排空微任务再断言定位。
+| 现象 | 先查 |
+| --- | --- |
+| 浮层跑到左上角 | 参考元素是否还在；虚拟矩形是否为 0 |
+| 滚动时不跟随 | `autoUpdate` 是否在两边都挂上时才运行 |
+| 焦点出不去 | `modal` 是否被设成 true |
+| 中文回车误提交 | ref 守卫和 keyCode 229 |
+| 关闭后仍出现已复制 | 代际是否在同步路径递增 |
+| 点外面关不掉 | `useDismiss` 的 outsidePress，以及是否有另一层 stopPropagation |
 
-当前提交的是真实 SDK 调用源码，尚未执行 SDK/完整类型/浏览器；verification.json 维持 NOT_RUN。
+z-index 本示例写了 9999。生产环境用设计系统的层，而不是再加一位。
 
-## 参考
+## 5. 组合
 
-- [React 官方指南](https://floating-ui.com/docs/react)
-- [FloatingFocusManager](https://floating-ui.com/docs/FloatingFocusManager)
-- [GitHub / MIT](https://github.com/floating-ui/floating-ui)
+**阅读工作台**：文章状态在列表，浮层只发动作。Query 保存服务端已读时，乐观更新要能回滚，回滚不能依赖浮层还开着。
 
+**选区工具条**：VirtualElement 加 DOMPurify 之后的纯文本。不要把选区 HTML 写进剪贴板。Lexical 或 React Aria 若也管焦点，先定谁听 Escape。
 
-## IME 合成完成后的 Enter 竞态（AB wave8 加固）
+## 6. 练习
 
-React 状态更新可能批量化；`compositionend` 若紧邻同一次 Enter 的 `keydown`，只检查 `isComposing` 或旧 state 仍可能误提交。此示例用同步 ref 追踪 composition、合成完成后的下一次 Enter、原生 `isComposing` 与兼容性 keyCode 229；仅由真正的普通 Enter 触发 `choose`。合成期不 `preventDefault`，避免阻断输入法候选确认；在 Enter keyup 或失焦后清除防误提交标志。判断纯函数见 `examples/ime-guard.ts`，Node 定向测试不替代 Chromium/Windows/Linux 中文输入法真实验证。
+1. 快速点复制然后 Escape。不允许出现「已复制」。
+2. 用中文输入法输入候选词并回车，列表不应被提交；再按一次 Enter 才提交。
+3. 可选：用选区矩形做 VirtualElement。选区折叠时浮层关闭。
 
-### wave17：真正写入剪贴板
+## 7. 证据
 
-业务浮层“复制示例引用”调用浏览器原生`navigator.clipboard.writeText`，**只有Promise成功**才关闭弹层并显示“已复制”；权限拒绝或非安全上下文在当前浮层保留`role=alert`错误，不能用按钮点击冒充复制成功。该文本明确为本地教学引用。必须在HTTPS或localhost下用真实Chromium验证，Floating UI的Portal/焦点/IME回归也不能从源码推断成功。
+`ime-guard` 和 `business-policy` 的单测不是 Portal、焦点或剪贴板权限的证明。浏览器要看翻转、Escape、外部点击、IME 和卸载。没有收据保持 NOT_RUN。
 
-剪贴板写入完成也检查异步请求代次；用户同时选择其他动作、关闭浮层或卸载后，迟到的复制 Promise 不再覆盖结果或关闭下次打开的浮层。
+## 8. 资料
 
-## AB wave18：外部关闭必须同步取消未完成剪贴板回写
-
-旧实现依赖`useEffect([open])`取消剪贴板Promise；点外部或Escape关闭浮层到Effect运行之间存在微任务窗口，成功回调可能误标“已复制”甚至关闭下一次打开的Popover。现在Floating UI的`onOpenChange`立即撤销请求序号并重置输入法状态；业务按钮也走同一关闭函数，组件卸载另外撤销。复制失败仍保留Popover及可访问错误，Clipboard API只能在安全上下文和用户授权下真实验证。需在浏览器通过受控延迟Promise复现“复制中关闭→迟到resolve/reject→再次打开”及Escape焦点归还，不能把代码变更视为浏览器PASS。
-
-## AB wave23：业务状态及搜索必须真正生效
-
-业务级别的“稍后阅读/已读”不再只修改说明文字：每次操作实际更新本地文章状态，重新打开弹层可反向撤销，状态始终在浮层外可访问。高级级别“应用过滤”与非IME Enter 都使用同一提交函数，将关键词写入已应用过滤条件，以 NFKC+大小写规范化匹配一组真实本地文章数据，显示过滤后的结果；尚未应用的输入不影响现有结果。业务数据是教学 fixture，不宣称后端持久化。
-
-新增 `examples/business-policy.ts` 为可迁移业务函数与 Node 策略测试。UI 的 Portal、autoUpdate、焦点和剪贴板仍使用真实SDK/浏览器接口，**SDK/构建/浏览器未执行**。
+- https://floating-ui.com/docs/react
+- https://floating-ui.com/docs/FloatingFocusManager
+- https://floating-ui.com/docs/autoUpdate
+- https://github.com/floating-ui/floating-ui

@@ -1,11 +1,11 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "真实 Uppy Core 已按官方API编写，尚未安装/执行SDK；wave16修改源码，目标SDK/完整构建/浏览器未执行，状态保持。"
+    "note": "根 pnpm-lock.yaml 已包含 Library Lab importer，声明的包可以被冻结安装解析。Actions run 41779873259 的仓库级 typecheck/build 不是本条目的 evidence/runs 收据，所以这里是 NOT_RUN，不是 PASS。"
   },
   "build": {
-    "status": "BLOCKED",
-    "note": "PLATFORM 需统一安装 @uppy/core@6.1.0/lockfile；wave16修改源码，目标SDK/完整构建/浏览器未执行，状态保持。"
+    "status": "NOT_RUN",
+    "note": "根 pnpm-lock.yaml 已包含 Library Lab importer，声明的包可以被冻结安装解析。Actions run 41779873259 的仓库级 typecheck/build 不是本条目的 evidence/runs 收据，所以这里是 NOT_RUN，不是 PASS。"
   },
   "browser": {
     "status": "NOT_RUN",

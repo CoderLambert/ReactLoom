@@ -5,7 +5,7 @@
   },
   "build": {
     "status": "NOT_RUN",
-    "note": "PLATFORM需确认4.37.0/React19 peer及真实pnpm-lock并运行Vite。"
+    "note": "根 pnpm-lock.yaml 已包含 Library Lab importer，声明的包可以被冻结安装解析。Actions run 41779873259 的仓库级 typecheck/build 不是本条目的 evidence/runs 收据，所以这里是 NOT_RUN，不是 PASS。"
   },
   "browser": {
     "status": "NOT_RUN",

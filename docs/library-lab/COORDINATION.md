@@ -2,11 +2,18 @@
 
 用户已批准 v2 并要求直接开发、少于10个任务、尽量连续推进，不因微小进展停止。当前使用4条执行通道。任务不是研究概览，不再向 Slack 重复发送文档完成记录。
 
+## 当前事实（2026-11-04，main）
+
+PR #8 已于 2026-11-04 合并（merge `883838087464b4a5577aa4ff4260c4847bfc12a4`）。根 `pnpm-lock.yaml` 含 `packages/library-lab` importer。GitHub Actions run [41779873259](https://github.com/CoderLambert/ReactLoom/actions/runs/41779873259) 在与该 Lab 树一致的提交上通过了冻结安装、typecheck、生产构建、52 个 SDK 文件 / 153 项测试、45 项 Playwright。
+
+这不是 119 条逐库收据。`verification.json` 的 sdk / build / browser PASS 仍必须来自 `docs/library-lab/evidence/runs/` 里与当前指纹匹配的收据。readiness 在没有收据时保持 PASS 0。`create-reactloom` 不复制 Library Lab。
+
+下面的四通道表是合并前的写入所有权，用来避免同时改锁文件。它不再表示 PR #8 必须保持 Draft，也不再表示锁文件缺少 importer。
+
 ## 事实源与分支
 
-主 Epic #4；基线 main `05b4e41a693663b63d8389abbb1e7b07195a4ed0`。
-集成：`feat/library-lab`，最终对 main 的 PR 保持 Draft。不得更改 main、现有 PR #3、模板生成范围、生产配置或公开部署。
-每轮先读实际最新分支、根/本包 AGENTS、本文件、进度、开放 PR，防止重做或覆盖用户修改。复用已有分支和 PR。
+主 Epic #4。集成开发发生在 `feat/library-lab`，该分支的 PR #8 已经进入 main。不要把 Library Lab 写进模板生成范围、生产配置或公开部署。
+每轮先读实际最新 main、根/本包 AGENTS、本文件和进度，防止重做或覆盖用户修改。
 
 |通道|Issue|分支|写入所有权|
 |---|---|---|---|
@@ -44,7 +51,7 @@ Starter资料ID `file_0000000076f48230883fd95111b3bd2b`，内含119目录和117�
 
 小批次运行对应条目测试和catalog检查；公共变更跑Node单测、typecheck、build及关键E2E。文案修改不重跑119库。缺npm/浏览器时保存代码并标BLOCKED，不每轮重复同一失败。使用GitHub CI（无付费外部服务）能验证则继续，不能只生成本地日志。
 
-当前基础 app 的独立依赖还未写入根锁文件。PLATFORM负责用真实pnpm解析后提交锁文件，不手造integrity。可先通过CI bootstrap生成候选锁文件和构建产物；恢复frozen门禁后才认定完整集成。
+根锁文件已经包含 Lab importer，frozen install 已在 Actions run 41779873259 成功。不要手造 integrity，也不要把这次仓库级通过写成 119 条 PASS。逐库证据仍走 `verify:record`。
 
 ## 队列与停止
 

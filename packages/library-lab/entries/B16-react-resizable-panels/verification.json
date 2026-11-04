@@ -1,7 +1,7 @@
 {
   "content": {
     "status": "NOT_RUN",
-    "note": "既有内容PASS没有当前源码指纹/执行命令/证据；第14轮修订后等待生成器和真实SDK验证。"
+    "note": "既有内容PASS没有当前源码指纹/执行命令/证据；后续改动修订后等待生成器和真实SDK验证。"
   },
   "sdk": {
     "status": "NOT_RUN",

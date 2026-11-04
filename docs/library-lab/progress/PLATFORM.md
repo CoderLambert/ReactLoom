@@ -1,10 +1,18 @@
 # PLATFORM 当前进度
 
-- 分支：`feat/library-lab`；主 Issue #4 / PR #8，必须保持 Open/Draft。
-- 本次为用户明确要求的人工审核整改；基线 `87ea2afe5957ba370f114f0acecb8cde1cd0c5eb`。
-- **scheduled runCount：23/24（不重置；本次人工整改不伪记为新自动轮次）。**
-- 状态：代码修复已实施并有定向回归；完整运行交付仍未完成。
-- 旧0–23轮进度原样归档至 [PLATFORM-rounds-00-23.md](archive/PLATFORM-rounds-00-23.md)。本轮提交 SHA 以本文件所在提交及 PR #8 为准，避免在提交内容中伪造自引用 SHA。
+## 2026-11-04 main
+
+- PR #8 已合并到 main（`883838087464b4a5577aa4ff4260c4847bfc12a4`）。
+- 根锁文件有 `packages/library-lab` importer。
+- Actions run [41779873259](https://github.com/CoderLambert/ReactLoom/actions/runs/41779873259) 通过 install、typecheck、build、52 个 SDK 文件（153 项）和 45 项 Playwright。Lab 树与该 run 的 head 一致。
+- 这不是 119 条 sdk / build / browser 收据。`docs/library-lab/evidence/runs/` 没有逐库收据时，readiness 的 PASS 保持 0。
+- 下面和归档里的 23/24 轮是合并前的记录，不是当前环境仍缺少锁文件。
+
+## 合并前的整改记录
+
+- 整改发生在 `feat/library-lab`，基线 `87ea2afe5957ba370f114f0acecb8cde1cd0c5eb`。
+- **scheduled runCount：23/24（不重置，也不要把后来的文档更正记成第 24 轮）。**
+- 旧 0–23 轮进度原样归档至 [PLATFORM-rounds-00-23.md](archive/PLATFORM-rounds-00-23.md)。
 
 ## 本次直接修复
 
@@ -16,11 +24,11 @@
 
 ## 明确未完成
 
-- BLOCKED：可访问 registry 的 Node>=22.18/pnpm10 完整执行工作树；根 `pnpm-lock.yaml` 真实 Lab importer，未手造 integrity；历史 Actions 作业无执行步骤，原因不臆测为欠费。
-- BLOCKED：本容器 Chromium 导航被管理员策略 `ERR_BLOCKED_BY_ADMINISTRATOR` 拦截，未绕过策略。
-- NOT_RUN：完整项目 npm/pnpm test、真实依赖兼容、完整 TypeScript、Vite生产构建、真实MSW与其他SDK、Chromium E2E、六风险切片和119库验收。新增浏览器源码与未执行命令不是 PASS。
-- 未关闭 #12、#22、#40，不以公共改造证明这些运行/生命周期问题解决。
+- 逐库收据：119 条的 sdk / build / browser PASS 仍是 0。不要把 run 41779873259 批量写进 `verification.json`。
+- E19 的 GPL 核心默认不复制。这是许可证开关，不是锁文件缺失。
+- B05 的远程 `.riv` 和 A09 的远程字体仍然是资产阻塞，不是安装阻塞。
+- 未关闭 #12、#22、#40。公共改造和仓库级 Playwright 不证明这些运行或生命周期问题已经解决。
 
 ## 分项口径和下一步
 
-历史静态口径119目录/119源码文档包/357场景声明沿用，**本次未重新统计完整远端树，也未重审117原文**；本次新增真实SDK PASS=0、浏览器实测成功Demo=0。首要工作只有运行环境、真实锁文件、完整构建与六风险切片，达到关口前不再扩充条目或制造相同阻塞报告。总范围仍未交付，不宣称自动后台保证完成，不擅自超过24轮。
+历史静态口径 119 目录 / 357 场景声明仍然有效，但它们不是 PASS。首要工作改成逐库收据和手册是否还在教过时的阻塞。不把策略单测数当成可用程度，也不再把「锁文件还没有」写成当前事实。

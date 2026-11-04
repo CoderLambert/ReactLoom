@@ -42,6 +42,8 @@ test('index contains only landing-page data, no source code or claim of successf
   const [card] = validateCatalogIndex(index)
   assert.equal(card.hasDemo, true)
   assert.equal(card.demoCount, 1)
+  assert.deepEqual(card.surfaces, ['react'])
+  assert.equal(card.receiptPasses, 0)
   assert.deepEqual(card.packageNames, ['p-limit'])
   for (const field of ['demos', 'verification', 'related', 'packages', 'references'])
     assert.equal(Object.hasOwn(card, field), false)
@@ -79,5 +81,9 @@ test('lightweight search preserves Chinese terms, groups, package names and CLI 
   assert.equal(filterCatalogIndex(index, '批处理 并发', 'D', true).length, 1)
   assert.equal(filterCatalogIndex(index, 'P-LIMIT', 'all', true).length, 1)
   assert.equal(filterCatalogIndex(index, '批处理', 'A', false).length, 0)
-  assert.equal(filterCatalogIndex([{ ...index[0], hasDemo: false }], '', 'all', true).length, 0)
+  assert.equal(filterCatalogIndex([{ ...index[0], surfaces: ['node-ci'] }], '', 'all', true).length, 0)
+  assert.equal(
+    filterCatalogIndex([{ ...index[0], surfaces: ['browser-frame'] }], '', 'all', true).length,
+    1,
+  )
 })
