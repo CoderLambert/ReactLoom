@@ -883,7 +883,7 @@
     "entryId": "F10",
     "name": "Orval",
     "group": "F",
-    "summary": "本地OpenAPI契约生成真实Fetch与TanStack Query代码，按生成目标隔离并检查产物",
+    "summary": "离线 OpenAPI 真实 Orval CLI 双次生成、React Query Hooks、标签分包与产物指纹验收",
     "path": "packages/library-lab/entries/F10-orval",
     "contentState": "recreated"
   },

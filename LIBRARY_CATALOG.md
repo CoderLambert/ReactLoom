@@ -114,7 +114,7 @@
 |F07|react-pdf|React 组件化 PDF 阅读：本地文档、分页、TextLayer 与同版本 Worker|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F07-react-pdf/)|
 |F08|@react-pdf/renderer|React组件声明式生成原生PDF：报告布局、分页文本、受控下载与链接生命周期|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F08-react-pdf-renderer/)|
 |F09|pdf-lib|浏览器真正创建、合并及标注 PDF，处理本地字节边界并释放对象 URL|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F09-pdf-lib/)|
-|F10|Orval|本地OpenAPI契约生成真实Fetch与TanStack Query代码，按生成目标隔离并检查产物|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F10-orval/)|
+|F10|Orval|离线 OpenAPI 真实 Orval CLI 双次生成、React Query Hooks、标签分包与产物指纹验收|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F10-orval/)|
 |F11|MSW|网络层请求 Mock 与场景|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F11-msw/)|
 |F12|Vitest|真实 Vitest 测试配方：数据校验、可注入HTTP状态与取消竞态|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F12-vitest/)|
 |F13|Playwright|真实 Chromium E2E：语义定位、HTTP 场景矩阵与取消竞态（独立 CLI）|文件 · 测试 · 工程|[条目](packages/library-lab/entries/F13-playwright/)|
