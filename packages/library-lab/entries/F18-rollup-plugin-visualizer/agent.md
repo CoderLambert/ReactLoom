@@ -1,24 +1,46 @@
-# F18 rollup-plugin-visualizer — Agent的Bundle排查手册
+# F18 rollup-plugin-visualizer — 工程手册
 
-适用于Vite/Rollup/部分Rollup API构建产物体积分析；不替代Vite编译器、浏览器性能测量或静态依赖分析。精确基线rollup-plugin-visualizer@7.1.1 / MIT，结合实际Vite版本确认选项。
+## 适用
 
-## 可迁移最小文件
+对隔离 Vite 夹具写出 treemap、Markdown 或 raw-data。不分析主应用，不代替依赖规则或 Knip。
 
-examples/vite.config.ts 作为隔离配置示例，examples/fixture/{main.ts,helper.ts,heavy.ts}提供静态/动态import差异，examples/verify.mjs验证真实输出。生产项目只引入visualizer plugin和报告路径，不复制fixture或让主构建受到Lab测试配置影响。
+## 版本
 
-## 有证据的实施流程
+`rollup-plugin-visualizer@7.1.1`，`vite@8.3.4`，MIT。`gzipSize: true`，`open: false`，`minify: 'oxc'`。
 
-1. 明确是入口体积、分路由加载、重复依赖还是CSP/Worker问题。
-2. 针对生产配置开启报告，open:false，不强迫CI启动浏览器。
-3. 阅读treemap与raw-data构成，不先下性能结论。
-4. 根据归属定位源码中的静态import与真实动态import；调整后重新构建并在浏览器测网络请求/执行。
-5. 仅记录真实报告和工具版本；报告包含可能敏感的源码路径与chunk名称，避免公开共享。
-6. 对本例执行 verify.mjs，检查真实vite build、HTML/Markdown/JSON存在和动态chunk分离；没有真实运行不可填PASS。
+## 迁移
 
-## 禁忌
+带走 `vite.config.ts`、`fixture/`、`report-policy.mjs`、`verify.mjs`。命令必须带本 config 和 `--mode`。清理只允许本条目 `reports/` 下的固定文件。
 
-不能把所有lazy chunk求和等于首屏大小，不能把Raw JSON字段未经版本锁定放进长久稳定API，不能在没有合适测试时直接硬编码manualChunks，不能提交生成reports巨型文件，不能使用假体积图或手写报告冒充SDK输出。
+## 不可删的清理
 
-与F16源码依赖规则、F15未用依赖识别互补。验证状态见verification.json；目前真实构建仍BLOCKED。官方：https://github.com/btd/rollup-plugin-visualizer
+构建前删除对应的报告和 `dist-<mode>`。不要把上一次的 JSON 留作本次证据。`heavy.ts` 保持动态 import。不打开浏览器，不写 sourcemap，不把含绝对路径的报告公开。
 
-**可迁移的报告验收**：运行 `examples/verify.mjs` 前只清理工具自己的受控reports，必须重新构建再校验生成文件、版本与chunk，不得借用旧产物。纯Node `report-policy.test.mjs` 只验证解析断言，不能升级build或SDK状态。
+## 反例
+
+- 不带 `--config` 去构建主应用。
+- 用旧 reports 充数。
+- 用一段假 HTML 通过策略测试就写 PASS。
+- `open: true`。
+- 把 gzip 估算当成线上瀑布。
+- 公开 raw-data。
+- 改成顶层 import 仍称懒加载。
+- 用 F16 的零违规代替体积。
+
+## 测试断言
+
+- basic 像完整 HTML；business 有标题和表格；advanced 的 JSON 有 `version`。
+- advanced 的 assets 里至少两个顶层 `.js`。
+- 短于 100 字节的正文失败。
+- `verify.mjs` 在构建失败时抛错，而不是读旧文件。
+- 策略测试不启动 Vite。
+
+## 真实限制
+
+网页不跑构建。treemap 不是性能曲线。夹具只有 helper 和 heavy。主应用的 analyzer 输出不能填到这三个 mode。`open` 保持 false，避免构建时弹出浏览器。
+
+## 证据
+
+build 与 sdk 收据都要来自这条 config 的 Vite 进程，并写入 `docs/library-lab/evidence/runs/`。Actions 41779873259 的生产构建不是 F18。browser 保持 NOT_RUN。
+
+`report-policy.test.mjs` 不启动 Vite。三个 mode 要各自的新产物。

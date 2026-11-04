@@ -1,15 +1,48 @@
-# C11 react-arborist — Agent 工程复用指南
+# C11 react-arborist — 工程手册
 
-**适用**：分组 RSS、文件树、可虚拟滚动+展开+拖拽的层级列表。**不适用**：只是几个无拖拽的扁平菜单，此时简单原生列表更小且更易维护。
+## 适用
 
-## 核心迁移
-`examples/example.tsx` 中的 `Tree`、`moveTree`、`renameTree` 和 `stripTree` 可提取；`examples/demo.tsx` 不需迁移。基线 react-arborist 3.16.0，MIT。业务树 ID 必须稳定、跨过滤排序不更换；给 Tree 明确 height/rowHeight。
+受控的订阅目录：稳定 id、拖拽、重命名、按名称搜索。不要用它代替后端 ACL，也不要假设整棵树可以无限大。
 
-## 关键不可删
-同级 `onMove` index 必须先按当前目标兄弟列表计算 `adjustMoveIndex`。先 remove 后原位 splice 会偏移；移动到自身后代必须被拒绝。受控 data 模式要真正处理 onMove/onRename/onDelete，不要只更新 DOM。输入法候选阶段不提交搜索。
+## 版本
 
-## 必要测试
-真实 SDK adjustMoveIndex 断言；Playwright 拖动同级、跨组、筛选后拖动，验证节点不会丢/重复；键盘/屏幕阅读器、缩放和1800节点视区渲染；IME 候选词输入。单个 helper PASS 不能说明 DnD PASS。当前三项 SDK/build/browser 仍 NOT_RUN。
+`react-arborist@3.16.0`，MIT。示例导入 `Tree` 和 `adjustMoveIndex`。研究笔记的 4.0.1、react-dnd 16 peer 和 ESM 深导入变更不是当前 pin。
 
-## 组合
-TanStack Virtual 适合自定义虚拟化；dnd-kit适合其他交互；Virtuoso更适合列表。参考 https://github.com/jameskerr/react-arborist 。
+## 迁移
+
+带走 `examples/example.tsx` 的 `moveTree`、`renameTree`、`stripTree`。保持受控 `data`。升级到 4 之前不要改传递依赖。搜索继续用自定义 `searchMatch`。
+
+## 不可删的清理
+
+`onMove` 必须先 `adjustMoveIndex`。插入失败时返回原树。id 在重命名和移动中保持不变。组件不要改成 `initialData` 却留下写回调。恢复示例时同时清空搜索和选择。
+
+## 反例
+
+```tsx
+<Tree initialData={nodes} onMove={mutateInPlace} />
+siblings.splice(index, 0, dragged)
+```
+
+- id 用数组下标。
+- 父节点拖进自己的后代仍保存。
+- 父和子被各复制一份。
+- `children: undefined` 表示未加载文件夹。
+- 默认搜索命中整个对象。
+- 组合输入的 Enter 直接改名。
+- `disableDrag` 当成授权。
+
+## 测试断言
+
+- 同级下移使用 `adjustMoveIndex` 后的下标。
+- 拖入自身子树时树不变。
+- 重命名不改 id；空白名称有兜底。
+- 搜索匹配函数只看 `name`。
+- 还没有浏览器拖拽收据时，这些代码审查不能写成 PASS。
+
+## 真实限制
+
+没有服务端 revision，没有第二棵树，没有 v4 DnD provider。1,800 行不是性能数据。高度是写死的 340。中文输入只在搜索框上分了组合态。
+
+## 证据
+
+没有收据不要写 PASS。Actions 41779873259 不是本条目。不要改 `verification.json`。

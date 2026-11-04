@@ -1,19 +1,45 @@
-# F14 Storybook — AI Agent 代码复用与测试规范
+# F14 Storybook — 工程手册
 
-**推荐场景**：组件 Design System、状态样例、交互回归、开发文档。不要把它当成整个产品的 E2E；F13 Playwright 负责真实业务路由，F12 Vitest 负责细粒度状态/逻辑，F17 axe-core 负责选定无障碍规则。
+## 适用
 
-**当前基线**：storybook、@storybook/react-vite、@storybook/addon-a11y 均 10.6.1；与已有 ReactLoom SPA 模板维持主版本一致，不额外安装另一套无校验大版本。MIT 主体，核对每个 addon 的依赖/许可。
+隔离的状态卡、CSF3 args 和 play。不是产品站 6006/6007，也不是端到端。
 
-**最小复制文件**：`examples/components/StatusCard.tsx`、`examples/stories/StatusCard.stories.tsx`、`examples/.storybook/main.ts` 和 `preview.ts`。Storybook 用开发态 CLI 运行，不要导入主站生产入口。CSF 3 `Meta/StoryObj` 和 `play({canvas,userEvent,args})` 保留可重放交互，只有真实CLI测试后才标PASS。
+## 版本
 
-**硬性规则**：变更组件 props 时同步 Story args/play；事件回调用 `fn()`；不只靠 Snapshot/颜色证明禁用；mocks与生产Provider分开；避免把私有fixture嵌入公开文档。a11y addon不是手工读屏合规声明。
+`storybook@10.6.1`、`@storybook/react-vite@10.6.1`、`@storybook/addon-a11y@10.6.1`，MIT。play 从 `storybook/test` 引入 `expect` 和 `fn`。
 
-**真实命令**：`pnpm --filter @reactloom/library-lab exec storybook dev -p 6029 --no-open --config-dir entries/F14-storybook/examples/.storybook`；build 同配置路径输出至dist/storybook-f14。执行环境必须安装所有dev依赖，不能用截图代替。
+## 迁移
 
-**必要断言**：Basic 标题/按钮、Business 按钮点击后状态和回调次数、Advanced disabled和回调0次；检查故事确实被发现与注册、产物中不携带应用密钥。当前 NOT_RUN/BLOCKED 见 verification.json。
+带走 `StatusCard.tsx`、stories、`main.ts`、`preview.ts`。命令使用端口 6029 和本目录 config。不要把故事挂进 Lab 主站冒充已启动。`staticDirs` 保持空。
 
-## 异步mutation迁移警戒（wave17）
+## 不可删的清理
 
-复制 `StatusCard.tsx` 时不要把 `setState(done)` 放在 Promise resolve 前，也不要把用户数据异常的详细堆栈直接渲染。状态需要区分 saving/error/retry；异步回调触发旧Story卸载时利用generation阻止过期setState。Storybook `Recovery` 负例通过一次拒绝和第二次成功验证；每条Story应有独立 `fn()` 以避免跨Story调用计数污染。
+`inFlight` 在 await 之前置位。generation 在卸载以及 title/tone 变化时增加。过期的成功或失败不能写状态。Recovery 的 `mockReset` 留在 play 里。离开 dev server 时停掉 6029，不要留着占端口。
 
-`storybook build` 不运行play；必须另外接入Storybook官方Vitest addon或test-runner才有CLI交互证据。a11y.test=error仅表示实际执行时违反规则应当失败，而非源码提交后就证明无障碍通过。
+## 反例
+
+- play 不 await。
+- 用含糊的 `getByText('归档')`。
+- catch 里设成已归档。
+- 模块级 fn 不复位。
+- 把 `a11y.test: 'error'` 写成已经扫描。
+- 在网页里画假终端或假 iframe。
+- staticDirs 指向用户文件或密钥。
+- 用 dev 启动代替 build 或 play 收据。
+
+## 测试断言
+
+- Basic：待处理、按钮可用、回调 0 次。
+- Business：任务成功 → 点击后已归档、按钮禁用、回调 1 次。
+- Advanced：等待审核、按钮禁用、回调 0 次。
+- Recovery：第一次失败且可再点，第二次成功，回调 2 次。
+
+## 真实限制
+
+Lab 页面不渲染组件。没有视觉基线，没有 MSW。a11y 参数没有执行器记录。四个故事里只有三个对应 demo id，Recovery 仍在同一文件。页面命令不会监听 6029。
+
+## 证据
+
+`storybook dev`、play 和 build 分别要收据，放在 `docs/library-lab/evidence/runs/`。Actions 41779873259 不是 F14 PASS。在那之前 sdk、build、browser 都是 NOT_RUN。
+
+端口能打开也不等于四则 play 已执行。a11y 参数要另有一次规则运行才算扫过。

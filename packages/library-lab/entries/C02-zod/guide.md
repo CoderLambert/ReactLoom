@@ -1,81 +1,165 @@
-# Zod 4：把不可信输入转换为经过验证的业务数据
+# Zod 4.6.5｜把 unknown 收成可提交的 RSS DTO
 
-> C02 · 固定演示版本 `zod@4.6.5`，与现有 ReactLoom SPA 模板一致；MIT。此处为重新编写的教学实现，SDK 测试、构建和浏览器验证尚未执行。
+Lab 锁定 `zod@4.6.5`（MIT）。研究笔记里的 4.6.7 不要写进依赖。Zod 把 `unknown` 收成受约束的数据，不负责发请求、管表单焦点、净化 HTML，也不负责 SSRF 或权限。
 
-## 何时使用
+没有收据时 sdk / build / browser 保持 NOT_RUN。Actions 41779873259 不是本条目 PASS。
 
-从 API、URL、配置、OPML、localStorage、消息队列接收到的值即使声明为 TypeScript 类型，在运行时仍是 **unknown**。Zod 用 schema 提供运行时校验和规范化；**不负责**网络安全、权限、HTML 净化、数据库一致性或 SSRF 防护。现有业务以 JSON Schema 为唯一契约时可对比 C05 Ajv；主要目标是 bundle 极小可对比 C03 Valibot。
+## Lab 当前示例
 
-## 安装与代码
+[`examples/example.tsx`](examples/example.tsx) 在模块顶层声明真实 schema，按钮点击时 `schema.safeParse`。没有 `src/App.tsx`，也没有独立 Vite 5173。三个 level 共用这一个组件，由 Lab 传入 `level`。
 
-```bash
-pnpm add zod@4.6.5
-```
+- **basic**：`FeedSchema = z.strictObject({ title, url })`。标题 `trim().min(2)`。URL 先 `z.string().trim().url()`，再 `refine` 到 [`boundary-policy.mjs`](examples/boundary-policy.mjs) 的 `canonicalHttpsFeedUrl`。有效样例带前后空白；失败样例是短标题、`javascript:` 和多余的 `admin`。
+- **business**：`ImportEventSchema = z.discriminatedUnion('kind', …)`。`rss` 分支只要 HTTPS URL；`opml` 分支用 `isSafeOpmlFilename`（不能含目录）和至少一个分组。挂载样例是 OPML。
+- **advanced**：`BatchPolicySchema`。TTL 先拒绝空串和前导零，再 `pipe(z.coerce.number<string>().int().min(1).max(60))`。`superRefine` 用规范化 URL 去重，issue path 是 `sources.{index}.url`。`z.input` 里 TTL 仍是字符串，`z.output` 里是 number。
+
+`canonicalHttpsFeedUrl` 只接受无用户名密码的 `https:`，丢掉 fragment，主机按 URL 解析规范化，path 和 query 保持原样。这不是 DNS、重定向或内网地址检查。`duplicateFeedIndex` 在 URL 非法时跳过，让字段校验自己报错。
+
+下面仍写异步 refine、RHF resolver、`z.compile()` 和 IndexedDB 迁移。当前 Demo 不挂载它们。
+
+## 什么时候用
+
+表单提交、JSON 导入、`localStorage`、跨窗口消息和第三方 RSS 的边界。多人接口如果以 TypeScript 为契约，Zod 能在运行时拦住缺字段和多字段。
+
+一个布尔开关不必上 schema。OpenAPI 已经是唯一合同时先看 Ajv。包体极敏感时比较 Valibot，并在同一 schema 上测体积，不要引用「小 95%」当本仓库结论。热路径先 profile，再决定要不要 `z.compile()`。
+
+| 场景 | 谁负责 |
+| --- | --- |
+| 输入光标、脏状态、焦点 | React Hook Form |
+| unknown → DTO | Zod |
+| 已有 JSON Schema | Ajv |
+| 抓取目标是否允许 | 服务端出站策略 |
+
+## 数据与模型
+
+TypeScript 的 `as User` 在运行时消失。网络 JSON 先当 `unknown`。
 
 ```ts
-import * as z from 'zod';
-const RSS = z.strictObject({
-  title: z.string().trim().min(2),
-  url: z.string().url().refine(value => value.startsWith('https://')),
-});
-const parsed = RSS.safeParse(JSON.parse(jsonText) as unknown);
-if (!parsed.success) console.log(parsed.error.issues);
-else console.log(parsed.data);
+import * as z from 'zod'
+const TTL = z.string().trim().min(1).regex(/^[1-9]\d?$/u).pipe(
+  z.coerce.number<string>().int().min(1).max(60),
+)
+type TTLInput = z.input<typeof TTL>   // string
+type TTLOutput = z.output<typeof TTL> // number
 ```
 
-实际可执行 schema 与交互见 `examples/example.tsx`；`examples/demo.tsx` 只重新导出，因此站内代码视图与运行源码完全一致。
+`z.coerce.number()` 对 `''` 得到 `0`，因为 `Number('') === 0`。Lab 先用非空正则挡住，再 pipe。金额不要进这条管道。
 
-## 三层教学场景
+`safeParse` 返回判别联合，适合按钮提交后列错误。`parse` 抛错，适合你打算让边界失败直接中断的地方。带异步 refine 的 schema 必须 `safeParseAsync`；同步 `safeParse` 接不住。
 
-### 入门：`safeParse`、`strictObject`、trim
+`z.strictObject` 拒绝未知键，用于导入和权限相关 DTO。`z.object` 剥掉未知键，适合允许服务端加非关键字段的响应。`z.looseObject` 会把未知键留下来，只有透传时才用。Lab 的三个 schema 都是 strict。
 
-编辑 RSS JSON 并点击“运行 safeParse”。成功结果中的 `title` 已 trim。把 `title` 改为一个字符、`url` 改为 `javascript:`，或者增加未知字段，都会形成可展示的结构化错误。Zod `z.object` 默认有不同的未知字段策略，本例选择 `z.strictObject` 明确拒绝额外键。
+`z.url()` 只说明它能被当成 URL。`javascript:` 也能通过格式检查。协议、凭据和 fragment 要另写 refine，而且仍不构成 SSRF 防护。
 
-### 业务：判别联合
+## 三层示例
 
-`z.discriminatedUnion('kind', ...)` 表达 rss/opml 两类输入。opml 必须有 filename 和 groups；rss 只接受 url。相比手写 `if (kind)`，schema 保留明确错误路径，避免把类型断言当作验证。
+### 基本
 
-### 边界：跨字段重复与输入/输出差异
+文本框里是未可信 JSON。点「运行 safeParse」。有效样例的标题空白被去掉，输出是 `result.data`，不是原文。点「加载失败样例」应看到标题太短、URL 被拒，以及 `admin` 触发的未知键。错误列表用 `issue.path` 加 `issue.message`，放在 `role="alert"`。改文本只把状态改成「需要重新校验」，不会在每个按键上 parse 再回写 textarea。
 
-TTL 从字符串进入，使用 `z.string().trim().min(1).pipe(z.coerce.number().int().min(1).max(60))`。这样空字符串不会被 JS `Number('')===0` 误处理。多来源 `superRefine` 检测重复 URL，错误路径精确至 `sources[n].url`。可比较 `z.input<typeof Schema>`（TTL 字符串）和 `z.output<typeof Schema>`（TTL 数字）。
+### 业务
 
-## 生产边界
+切到 OPML 样例。`feeds.txt` 和空 `groups` 失败。`kind` 必须是互斥判别字段。生产里如果 token 模式要进联合，输出进日志前先遮蔽，不要开 `reportInput: true`。
 
-- 永远在不可信边界校验 `unknown`，不要 `as Feed` 绕过。
-- `parse()` 失败抛异常；交互表单推荐 `safeParse()` 结果分支，不要吞掉 `issues`。
-- 涉及异步 refinement 使用 `safeParseAsync()`，不能以同步校验处理异步规则。
-- `z.coerce.number()` 单独用于金额可能产生精度损失；金额/结算应采用十进制库 D05 decimal.js。
-- `z.url()` 和字符串前缀只能证明形式，不证明目标地址可安全抓取；服务端 DNS / 私网 / 重定向策略单独处理。
-- 中文 IME 期间保留原始输入，避免每键解析并覆盖 textarea 光标位置。
-- schema 复杂度与错误对象成本应在真正的批量热路径测量，不能照抄第三方基准作为本项目性能结论。
+研究笔记里的文章/视频 `ContentSchema`、刷新间隔 5–1440、`fullText` 跨字段，以及「服务端响应用 loose object 剥掉 extra」都没有挂进这个组件。需要时另写 schema，不要假装当前按钮已经覆盖。
 
-## 错误反模式
+### 进阶
 
-1. `const x = response as User`：只改静态类型，运行时毫无保证。正确：`safeParse(response)`。
-2. `z.coerce.number().min(0)` 直接接收空输入：可能意外变成 0。正确：先拒绝空白再转换。
-3. `safeParseAsync` 场景却调用 `safeParse`：异步约束未正确执行。正确：依据 refinement 模型选择异步入口。
-4. 验证完 URL 就让服务器 fetch：SSRF 风险仍然存在。
+空 TTL 不能变成 0。两条相同 `https://example.com/feed` 的错误要落在第二条的 `sources.1.url`。把 path 改成不同大小写，按 Lab 策略它们不是同一个键；把主机改成大小写或默认端口，则算重复。
 
-## 与其他库组合
+研究笔记的 `LatestOnly`、380ms 可用性查询和 `safeParseAsync` 不在本示例里。接上真实查重时，schema 不会取消 fetch。调用方保存 AbortSignal 和 generation，回包前再对**当前**输入 `safeParse`。
 
-C01 RHF 管表单字段、焦点和 dirty；Zod 管值/结构校验。集成时应选与当前 Zod 版本兼容的 `@hookform/resolvers`，明确字段路径映射。C05 Ajv 优先使用已存在 JSON Schema 的工程；C03 Valibot 可以做 bundle 大小比较。
+## 反例
 
-## 练习与验收
+### 1. 用断言代替 parse
 
-1. 把第三方 RSS JSON 作为 unknown 输入后做 strict schema 校验，断言非法 URL 和未知字段被拒。
-2. 测试 OPML/r​​ss 判别联合错误路径、两个重复订阅源、空 TTL、变换后数值 TTL。
-3. 使用真实官方 SDK 执行，记录失败与环境；再运行生产浏览器，检查 textarea 可编辑、错误 aria-live。
+```ts
+const user = (await response.json()) as User
+```
 
-当前 `verification.json` 均未声明真实 PASS。
+编译器被骗过，运行时什么都没查。先 `unknown`，成功后再把 `result.data` 放进状态。
 
-## 官方一手资料
+### 2. 空串直接 coerce
 
-- [Zod 官网](https://zod.dev/)
-- [Zod 仓库](https://github.com/colinhacks/zod)
-- [Zod 4 迁移指南](https://zod.dev/v4/changelog)
+```ts
+z.coerce.number() // '' → 0
+```
 
-## 已加固的 URI、OPML 与结果所有权
+TTL、年龄、配额都要先拒绝空白。Lab 的 pipe 是对的。
 
-演示真实导入 `examples/boundary-policy.mjs`：主机名/默认端口经 URL 规范化，path/query 保持大小写，忽略 fragment，拒绝凭据、非 HTTPS、控制符。不得把整串 URL 转小写以判断重复；错误定位到第二条 `sources[n].url`。OPML 元数据仅允许单独文件名，不允许路径；TTL 不接受指数记数法。修改 JSON 或切换 level 会清除旧验证结果。此处并不是服务端 SSRF/重定向/DNS 防线。
+### 3. 用 z.url() 当抓取白名单
 
-无依赖策略测试：`node --test packages/library-lab/entries/C02-zod/tests/boundary-policy.test.mjs`；真实 Zod SDK 需独立执行 `tests/sdk.test.mjs`。
+`https://127.0.0.1/` 和带用户信息的 URL 都可能通过格式检查。`canonicalHttpsFeedUrl` 只去掉凭据和 fragment。DNS、重定向和内网 IP 在服务端做。
+
+### 4. 导入配置用 z.object
+
+未知的 `isAdmin` 会被静默丢掉。导入和事件用 `strictObject`。响应兼容才用会剥离未知键的 `z.object`。
+
+### 5. 异步 refine 配同步 safeParse
+
+同步 API 不会等 Promise。改 `safeParseAsync`，并把 signal 交给真正的 fetch。
+
+### 6. composition 期间把 parse 结果写回输入
+
+拼音会被 trim 或规范化打断。Lab 的 JSON 文本在提交时才解析。真实输入框同样等到 blur 或明确提交。
+
+### 7. 把 issues 或原始 JSON 打进日志
+
+默认 issue 不一定带原文，但你自己的 `console.log(raw)` 会。token 字段先遮蔽。页面只渲染 path 和固定文案。
+
+### 8. 全站打开 z.compile()
+
+```ts
+const compiled = z.compile(FeedSchema)
+```
+
+它走 `new Function`，CSP 禁止 eval 时失败，还会带上编译器体积。异步 refine 和部分递归 schema 会降级。Lab 没有调用它。热点确认后再考虑，或 `z.config({ jitless: true })`。
+
+### 9. 把 toJSONSchema 当成可逆合同
+
+`superRefine` 和自定义 refine 没有忠实的 JSON Schema 等价物。对外合同用独立 DTO 和金样本，双向转换用 `z.codec` 并写测试。
+
+## 组合
+
+**React Hook Form。** RHF 拿 `z.input` 做草稿，resolver 成功后提交 `z.output`。`@hookform/resolvers` 的 Zod 4 类型要和 4.6.5 对过再装。本示例没有 resolver。字段组件不要再写一套矛盾正则。
+
+**Query。** `queryKey` 使用规范化后的 URL，不使用用户原始空白。409 映射到字段 path。缓存里只放 `result.data`。
+
+**OpenAPI。** 生成类型不代替运行时校验。MSW 要有缺字段、多字段和错误体三种。Zod 通过也不等于后端鉴权通过。
+
+**Dexie。** 缓存带 `schemaVersion`。先用旧 schema 读，再迁移，再用新 schema 验证，最后在事务里写。不要用 `.catch(() => 默认值)` 盖掉读失败的用户数据。
+
+## 生产清单
+
+- 模块顶层建 schema。不要在每次渲染里 new 一套再发请求。
+- 交互用 `safeParse`。错误用 path，不用堆栈。
+- 每个输入有 label。失败区域 `role="alert"`。能定位到字段时设 `aria-invalid` 和 `aria-describedby`。Lab 目前是整份 JSON 的列表，迁到分字段表单时补上。
+- 大 JSON 在 parse 前限制字节数。客户端上限不是服务端防 DoS。
+- 富文本通过 schema 也不要丢进 `dangerouslySetInnerHTML`。
+- ISO 日期格式通过，不等于夏令时计算正确。时间交给 C14–C16。
+
+## 升级
+
+Zod 3 的 `object().strict()` / `.passthrough()`、`ZodError.flatten()` 在 4 里改成 `strictObject` / `looseObject` 和 `z.flattenError`。嵌套数组用 `z.treeifyError`。升级时为未知键、空串 coerce、判别联合和异步 refine 各留一条负例。不要只改版本号。
+
+`z.string().min` 近版本按码点计长，不等于屏幕上的字数。中文标题如果要按字素限制，另定规则。
+
+## 练习
+
+1. 给 Feed 增加可选 `website`。`''` 变成省略，`javascript:` 失败，`https://example.com` 通过。写出 `z.input` 和 `z.output`。
+2. 把 TTL 改成 `''`、`'0'`、`'05'`、`'15'`、`'99'`，确认只有 1–60 的十进制正整数能变成 number。
+3. 两条 URL 只差 path 大小写时不报重复；只差主机大小写或默认 443 时报到具体下标。
+4. 接上查重时连续改 URL。旧的 `safeParseAsync` 结果不能覆盖新草稿。卸载要 abort。
+5. 若引入 `z.compile`，在禁止 `unsafe-eval` 的页面上确认失败路径，而不是默认打开。
+
+## 官方链接
+
+- https://zod.dev/
+- https://zod.dev/v4/changelog
+- https://zod.dev/api
+- https://github.com/colinhacks/zod
+
+## 证据
+
+`boundary-policy` 单测不渲染 Zod，也不能写成 sdk PASS。`tests/sdk.test.mjs` 只有在真实 import `zod@4.6.5`、命令与指纹和 `docs/library-lab/evidence/runs/` 里的收据一致时才算 sdk。build 与 browser 同样保持 NOT_RUN，直到各自的收据存在。
+
+GitHub Actions 41779873259 是仓库级安装、typecheck、build、52 个 SDK 文件（153 项测试）和 45 项 Playwright 的结果，不是 C02 的条目 PASS。本页不改 `verification.json`，也不写 PASS。

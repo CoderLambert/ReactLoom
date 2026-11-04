@@ -1,61 +1,269 @@
-# Vitest：可重复的单测、场景矩阵与取消竞态验证
+# Vitest 5.0.5｜夹具里的 URL、状态码和代际
 
-## 选型与职责
+Lab 锁定 `vitest@5.0.5`（MIT）。它已经在锁文件里，不需要再执行一次「把 Vitest 加进依赖」。页面仍然只展示命令。跑过命令之后，还要有 `docs/library-lab/evidence/runs/` 收据，verification 里的 sdk 才能离开 NOT_RUN。
 
-Vitest 是测试发现、执行、断言、Mock/Spy、隔离、覆盖率和项目分组工具。它**不是 Mock 网络服务**，也不等同真实 Chromium E2E。纯函数/类型映射、缓存键、请求重试、取消与状态流优先用 Vitest；网络拦截可配 F11 MSW，真正键盘/拖拽/跨浏览器行为使用 F13 Playwright。
+执行种类是 `node-ci`。网页不启动 Vitest，也不挂载终端。`vi.fn` 返回的 `Response` 是注入的替身，不是连上了后端。
 
-采用研究基线 `vitest@5.0.5`，MIT；在应用内保留 **CLI/Node 的真实测试源码**，而不是伪造一个能在网页里执行测试进程的窗口。目前该库示例设计为 `node-ci` 类型，Demo Tab 应显示源码与命令，执行证据以真实测试日志为准。
+Actions 41779873259 跑过仓库的安装、类型检查、生产构建、52 个 SDK 文件共 153 项测试和 45 项 Playwright。那不是这三份 `examples/*.test.ts` 的 PASS，也不要把它抄进 F12。
 
-## 安装与运行
+## Lab 当前示例
+
+| 文件 | 作用 |
+| --- | --- |
+| `examples/domain.ts` | 业务函数，不 import Vitest，方便拿到产品代码里 |
+| `examples/basic.test.ts` | `it.each`：HTTPS 规范化与拒绝 |
+| `examples/business.test.ts` | 200 / 422 / 503、坏 JSON、AbortSignal |
+| `examples/advanced.test.ts` | `vi.useFakeTimers` 与 `createLatestRequest` |
+
+页面按入口展示，例如：
 
 ```bash
-pnpm --filter @reactloom/library-lab add -D vitest@5.0.5
-cd packages/library-lab
+pnpm exec vitest run entries/F12-vitest/examples/basic.test.ts
+```
+
+工作目录是 `packages/library-lab`。三条命令各自只跑一个文件。没有浏览器项目，没有 jsdom 组件。Testing Library 是组合教学，本目录没有挂载。
+
+## 1. 什么时候用
+
+纯函数、可注入的请求函数、假时钟和取消代际。真实 Chromium 里的点击、焦点和网络栈用 F13。可访问性规则用 F17。拦截 `fetch` 的 Service Worker 用 F11。不要用这一页代替那三件。
+
+单个 `node:assert` 就够的脚本不必为了演示再包一层。这里要展示的是 Vitest 的 `describe` / `it.each` / `vi` / 假时钟。
+
+## 2. 模型
+
+`normalizeFeedURL` 用 `URL`。协议必须是 `https:`，不能有用户名或密码，hash 清掉，其余保留。`javascript:`、`http:` 和 `not-a-url` 抛错。这不是 SSRF 防护。
+
+`verifyCode(request, signal)` 不自己 `fetch`。调用方传入 `(signal) => Promise<Response>`。
+
+```text
+已取消 → AbortError，且不调用 request
+request(signal)
+仍取消 → AbortError
+422 → json → 再看 signal → { kind: 'invalid', code }
+503 → { kind: 'retry', after: 3 }，不读 body
+其它非 ok → throw
+200 → json 必须有字符串 message，否则 Invalid JSON shape
+```
+
+422 的 JSON 若没有字符串 `code`，变成 `UNKNOWN`。读 JSON 之后还要再看 signal，所以取消发生在解析过程中时不能返回成功。
+
+`createLatestRequest` 每次 `run` 先 abort 上一个 controller，generation 加一。只有代号仍是最新且未 abort 才返回值，否则 `null`。`cancel` 增加 generation 并 abort。当前代的真实错误会抛出；取消之后的同样错误变成 `null`。`finally` 只在 `current` 仍是这次的 controller 时清掉它，避免清掉更新的那次。
+
+假时钟只包住使用 `setTimeout` 的那条测试。`afterEach` 恢复真实时钟，免得泄漏到下一个文件。
+
+## 3. 三层
+
+### 基本
+
+两行合法 URL：带 hash 的 RSS 去掉 fragment；带 query 的保留 query。四行非法输入都 `toThrow()`。没有 mock。这是 `it.each` 的表，不是网络。
+
+### 业务
+
+三行矩阵：
+
+| 状态 | 体 | 结果 |
+| --- | --- | --- |
+| 200 | `{ message: '验证码通过' }` | `{ kind: 'ok', message }` |
+| 422 | `{ code: 'OTP_EXPIRED' }` | `{ kind: 'invalid', code }` |
+| 503 | 任意 | `{ kind: 'retry', after: 3 }` |
+
+`vi.fn` 记录调用次数和那次 signal。200 且 JSON 是 `{ unknown: 42 }` 必须抛 `Invalid JSON shape`，不能当成通过。
+
+已 abort 的 signal 不会调用 request。解析开始后 abort，再交 `{ message: 'late-success' }`，结果是 AbortError。422 的解析同样：abort 之后不能收下 `OTP_EXPIRED`。
+
+### 进阶
+
+第一次请求的定时器是 100ms，第二次是 10ms。先 `run` 再 `run`，`advanceTimersByTimeAsync(110)`。旧的结果是 `null`，新的是 `value-2`。
+
+后端忽略 abort、稍后 resolve `'late'` 时，`cancel()` 仍让 promise 变成 `null`。
+
+活动中的 `reject(new Error('real failure'))` 会抛出。取消之后的 `late failure` 变成 `null`，不再抛。
+
+## 4. 反例
+
+### 反例 1：业务文件 import Vitest
+
+```ts
+import { vi } from 'vitest'
+export async function verifyCode() {
+  return vi.fn()
+}
+```
+
+产品代码不能依赖测试包。`domain.ts` 只接收 `request`。mock 留在 `*.test.ts`。
+
+### 反例 2：测试里打真实主机
+
+```ts
+await fetch('https://api.example.com/otp')
+```
+
+会碰到网络、密钥和不稳定。本目录的 URL 只出现在 `new URL` 的解析里。请求函数由测试注入。不要把令牌写进夹具。
+
+### 反例 3：只看 abort 标志，不看代际
+
+```ts
+current.abort()
+const result = await load(signal)
+setState(result)
+```
+
+对端可以忽略 abort，promise 仍会完成。`createLatestRequest` 用 generation 丢掉过期值。只 `expect(signal.aborted).toBe(true)` 不够。
+
+### 反例 4：任意 sleep
+
+```ts
+await new Promise((r) => setTimeout(r, 50))
+```
+
+在真实时钟上会慢，也会和别的测试抢时间。进阶用 `vi.useFakeTimers()` 和 `advanceTimersByTimeAsync`。用完在 `afterEach` 恢复。
+
+### 反例 5：503 当成功
+
+```ts
+if (response.status === 503) return { kind: 'ok', message: 'retry' }
+```
+
+本函数返回 `{ kind: 'retry', after: 3 }`，不读 body。UI 若把所有对象都显示成成功，那是调用方的错。测试要 `toEqual` 整个对象。
+
+### 反例 6：422 解析完就当有效
+
+取消可能发生在 `response.json()` 的 promise 中间。解析后的 `requireActive` 必须留着。删掉它，晚到的 `OTP_EXPIRED` 会变成无效验证码而不是取消。
+
+### 反例 7：假时钟泄漏
+
+在一个 `it` 里 `useFakeTimers`，忘记 `useRealTimers`。下一个文件的超时会停住。本页用 `afterEach`。
+
+### 反例 8：把 vi.fn 说成 HTTP 已连通
+
+`new Response(...)` 没有离开进程。不能写成契约测试或生产 503 演练。那是 F11 或真实环境的事。
+
+### 反例 9：一个文件绿了就填三条 PASS
+
+basic 不覆盖 abort，business 不覆盖假时钟。三条命令分开。页面展示其中一条，不代表三条都跑了。
+
+### 反例 10：用 jsdom 冒充浏览器
+
+本目录没有组件。按钮名、焦点和 aria 在 F13 / F17。Vitest 的 Node 环境看不见它们。
+
+### 反例 11：快照整段错误对象
+
+`toThrow()` 和 `toMatchObject({ name: 'AbortError' })` 钉住行为。不要把堆栈快照进仓库。
+
+### 反例 12：在 domain 里吞掉错误
+
+```ts
+catch { return null }
+```
+
+活动失败必须抛出，取消后的失败才是 `null`。测试把这两条分开。不要为了让 `it` 变绿而改成全吞。
+
+## 5. 组合
+
+**F11 MSW**：handler 提供状态码，Vitest 驱动断言。本目录没有启动 MSW。注入的 `Response` 不能写成 Worker 已控制页面。
+
+**F13 Playwright**：同一套 200/422/503 和过期响应可以在 Chromium 里再做一遍。`page.route` 不是 `vi.fn`。Lab 的 F13 也只是规格文件，不是已经跑过的套件。
+
+**F17 axe-core**：规则要真实 DOM。不要在 Vitest 里 mock `axe.run` 然后说无障碍通过。
+
+**Testing Library**：组件可见文字和角色属于另一层。这里没有 `render`。
+
+## 6. 清单
+
+- `domain.ts` 不出现 `vitest`。
+- 每个请求测试都断言调用次数和 signal。
+- 200 的坏形状会抛，而不是 `kind: 'ok'`。
+- abort 发生在调用前、JSON 中、422 解析中都有断言。
+- 假时钟测试结束恢复真时钟。
+- 旧请求返回 null，新请求保留值。
+- 活动错误抛出，取消后的错误不抛。
+- 不请求外网，不写密钥。
+- 三条 `vitest run` 分开记录。
+- 命令输出还不等于收据。
+
+## 7. 升级
+
+5.0.5 的 `vi.useFakeTimers`、`advanceTimersByTimeAsync`、`it.each` 是合同。升级 minor 时三条文件都要再跑。不要为了新的浏览器模式把这页改成 jsdom，除非同时改 library.json 和测试命令。
+
+v4 的部分 mock 路径和 v5 不同。迁过来时以 https://vitest.dev/guide/learn/writing-tests 和 https://vitest.dev/config/ 为准，不要抄旧的 `vi.setSystemTime` 示例来代替代际。
+
+锁文件已经是 5.0.5。文档不要写成待添加。
+
+## 8. 验收
+
+在 `packages/library-lab`：
+
+```bash
 pnpm exec vitest run entries/F12-vitest/examples/basic.test.ts
 pnpm exec vitest run entries/F12-vitest/examples/business.test.ts
 pnpm exec vitest run entries/F12-vitest/examples/advanced.test.ts
 ```
 
-安装依赖应由 PLATFORM 单独修改 package/lockfile；上面的 add 是可复现的命令，不授权分组通道修改共享依赖。所有测试直接 import `vitest`，必须执行真实 runner 才算 SDK 验收通过。
+页面每次只展示其中一条，并且不执行。退出码要进入收据之后，sdk 才不是 NOT_RUN。build 与 browser 本条目没有单独的构建产物或页面，保持 NOT_RUN，不要记成失败来凑数。仓库那 153 项测试若未包含这三个文件的收据，就不能引用。
 
-## 配方一：基本输入约束
+## 9. 时钟、隔离和假响应
 
-`examples/domain.ts` 的 `normalizeFeedURL` 实现 HTTPS URL 规范化与凭据拒绝；`basic.test.ts` 使用 `it.each` 枚举合法、异常和危险协议。测试反例是把非法 URI 简单跳过而不断言返回预期错误。构造 URL 时没有真实网络请求，适合作为平台快速单元测试。
+`advanced.test.ts` 的 `afterEach` 无条件 `useRealTimers`。即使用例失败，下一个文件也不应继承假时钟。第一条进阶用例在假时钟里用 100ms 和 10ms。`advanceTimersByTimeAsync(110)` 让两个定时器都到期，但旧的那次已经被第二次 `run` abort，resolve 的 `'aborted-1'` 因为代号变了而变成 null。新的一次得到 `value-2`。
 
-## 配方二：业务 Scenario Matrix
+第二条不使用定时器。`cancel()` 之后对端仍 `resolve('late')`。返回值是 null，说明代际比 abort 事件更靠后。若实现只在 catch AbortError 时丢弃，这条会把 `'late'` 漏出去。
 
-`business.test.ts` 的三组固定场景为 HTTP 200、422、503。通过依赖注入的 `request(signal)` 返回本地 `Response`，直接断言解析结果；`vi.fn` 断言请求确实收到相同 signal。**模拟的是业务后端，不是 Mock Vitest 本身。** 如果目标是验证 MSW 的真实拦截，应运行 F11 独立 Node/Service Worker 测试。
+错误所有权：第一次 `run` 的 reject 是活动失败，必须 `rejects.toThrow('real failure')`。接着 `run` 再 `cancel`，同一次 reject 函数若再次被调用，得到的是 null 而不是抛出。测试把 `rejectLoad` 留在闭包里，用来模拟「对端晚到」。不要改成 `try/catch` 后一律 return null，那会吞掉活动失败。
 
-## 配方三：过期结果不回写
+business 的 422 解析用一个永远不自己完成的 `json()`，直到测试 abort 再 `release`。顺序是：请求进入、json 开始、abort、然后才给 body。断言是 AbortError，不是 `OTP_EXPIRED`。200 的晚到成功同样不能变成 `kind: 'ok'`。
 
-`advanced.test.ts` 用 `vi.useFakeTimers()` 和 `advanceTimersByTimeAsync` 实际驱动计时器，验证旧请求取消后即使晚到也返回 null，新的结果生效。另用一个忽略 AbortSignal 的 Promise 检查 generation 防线。通过 `afterEach` 恢复真实计时器，防止污染其他测试。异步 expect 必须 await，尤其是 rejects、poll、事件等待。
+`vi.fn` 的 Response 是进程内对象。没有套接字，没有 TLS，没有 Retry-After 头。503 的 `after: 3` 写死在 domain 里。产品若要读响应头，要改 domain 并加一条断言，而不是把这个数字说成已经解析了头。
 
-## 工程实践
+basic 不使用 mock。URL 解析的四条反例覆盖协议、明文 http、用户信息、非 URL。hash 去掉是为了比较身份；query 保留是因为过滤条件属于地址。不要把整串 `toLowerCase()`，路径大小写可能有意义。本函数没有做这件事，测试也没有要求。
 
-1. **断言行为而非实现细节**：关注输出、取消、错误恢复，而不是复制源码内部对象结构作快照。
-2. **测试分层**：Node 单测和 jsdom DOM 测试不能冒充 Chromium 浏览器或屏幕阅读器；环境选择必须显示在运行报告。
-3. **时间与网络所有权**：fake timers 需要恢复；全局 fetch Mock 可能污染并发测试，业务层优先显式注入请求函数。
-4. **可复现性**：在 CI 中固定 Node、Vitest、Vite 和 lockfile；异步定时事件不要依赖真实 sleep。
-5. **分组回归**：仅受影响条目执行定向文件；共享策略变化再扩大测试，不强迫每次跑全部 119 项。
-6. **测试结果表达**：应保存命令、exit code、commit SHA、依赖和报告。测试源码存在 ≠ PASS；运行环境不可用则 NOT_RUN/BLOCKED。
+文件之间没有共享的 mock server。每个 `it` 自己造 request。不要把 `vi.mock` 提到文件顶上替换 `domain.ts`，否则测的就不是这份实现。
 
-## 常见错误
+和仓库 `pnpm test` 的关系：Library Lab 的平台测试会跑很多文件。Actions 41779873259 记录的是那次 153 项。除非收据写明包含这三个路径，否则不要假设它们在里面。页面每次只展示一条 `vitest run`。
 
-- 把 `vi.fn` 一次被调用当成真实 HTTP 请求已成功。
-- `expect(promise).rejects.toThrow` 不 await，导致异步断言漏执行。
-- fake timers 开启后未恢复，导致其他测试超时或假阳性。
-- 在无 DOM 的 Node 环境使用浏览器组件，错误地判定 SDK 行为失败。
-- 为简单纯函数造全套 E2E，拖慢 CI；按价值与风险选择层次。
+## 10. 故障对照
 
-## 验收
+| 现象 | 先看 |
+| --- | --- |
+| 下个文件超时不动 | 假时钟没有在 afterEach 恢复 |
+| 旧请求返回了 value-1 | generation 没有在第二次 run 时增加 |
+| late 成功变成 ok | JSON 之后没有 `requireActive` |
+| 已取消仍调用了 request | 函数开头的 `requireActive` 被删 |
+| 503 被收成 ok | kind 写错。应是 retry |
+| 测试 import 进了产品包 | domain 必须零依赖 vitest |
+| 命令找不到 vitest | 应在 packages/library-lab 里用 pnpm exec。版本已在锁里，不是缺依赖声明 |
 
-3 个 test 文件实际通过后记录具体命令与输出，并补 `pnpm --filter @reactloom/library-lab typecheck`。E2E/真实网页在本节点并非适用的 SDK 主门槛；无需为每个命令行工具强制添加伪 React Demo。
+不要在测试里 `fetch` 外部主机来「看看真的 422」。那会碰到网络和密钥。注入的 Response 足够说明分支。
 
-官方 [写测试](https://vitest.dev/guide/learn/writing-tests) · [CLI](https://vitest.dev/guide/cli) · [配置](https://vitest.dev/config/)。
+浏览器组件的渲染、IME 和焦点不在这三份文件里。要那些，用 F13 或组件测试，并单独记收据。
 
+## 11. 资料
 
-## 额外边界：响应体异步解析期间取消
+- https://vitest.dev/guide/learn/writing-tests
+- https://vitest.dev/config/
+- https://vitest.dev/guide/cli
+- https://github.com/vitest-dev/vitest/releases/tag/v5.0.5
 
-原实现仅在 HTTP Promise resolve 后检查 AbortSignal；若响应已经到达、JSON 正在解码，AbortSignal 随后触发，则旧数据仍可能被返回。现在在请求之前、响应之后、200/422 响应体解析之后分别检查取消，并保留 createLatestRequest 的 generation 防线。新增真实 Vitest 测试以确定性的 Promise gate 模拟取消发生在 JSON 解码中，以及已取消请求不得调用 HTTP、活动失败必须显式抛出。测试注入的是业务 HTTP 响应，不是替身 Vitest SDK。
+## 12. 三条命令各自证明什么
 
-待平台安装后运行 pnpm --filter @reactloom/library-lab test:vitest 与 typecheck，记录真实命令/退出码/commit；目前没有执行目标 Vitest 5 runner，不能写 PASS。
+`basic.test.ts` 只证明 `normalizeFeedURL`：hash 去掉，query 留下，四种非法输入抛错。它没有 mock，也没有时钟。
+
+`business.test.ts` 证明注入的 200、422、503、坏形状、调用前取消、JSON 中途取消。`vi.fn` 的 Response 不出进程。503 的 `after: 3` 是写死的数字，不是响应头。
+
+`advanced.test.ts` 证明假时钟下旧定时器变成 null、新结果是 `value-2`，以及忽略 abort 的晚到成功仍是 null。活动中的错误抛出，取消后的错误变成 null。`afterEach` 恢复真实时钟。
+
+三条都要在 `packages/library-lab` 里用 `pnpm exec vitest run` 加上对应路径。页面一次只展示一条，并且不执行。锁文件已经是 5.0.5，缺的是收据，不是依赖声明。
+
+不要把 Actions 41779873259 的 153 项测试当成这三份文件。除非收据写明路径和退出码。build 与 browser 本目录没有页面产物，保持 NOT_RUN。不要为了凑浏览器模式把 `domain.ts` 改成依赖 jsdom。
+
+`createLatestRequest` 的 `finally` 只清除仍等于这次的 controller。清掉更新的那次会让后一次请求失去取消句柄。`verifyCode` 在 422 读完 JSON 之后还要看 signal，否则晚到的 `OTP_EXPIRED` 会变成字段错误。
+
+测试夹具里的文案「验证码通过」是本地字符串。不要换成真实短信网关，也不要把口令写进仓库。假时钟用完必须恢复，否则下一个文件的超时会停住。
+
+basic 不覆盖取消。
+
+business 不覆盖假时钟。
+
+advanced 不覆盖 URL 规范化。
+
+三条路径分开记收据。
+
+`domain.ts` 保持不 import vitest。

@@ -1,76 +1,165 @@
-# Jotai — ReactLoom 工程实战
+# Jotai 3.0.1｜原子、派生值和按会话隔离的 Store
 
-## 定位与适用范围
+Lab 锁定 `jotai@3.0.1`（MIT）。v3 是 ESM，文档要求 React 18 以上、TypeScript 5.5 以上。`atom()` 得到的是配置对象，值放在 `Store` 里。同一份配置挂到两个 store，数值各自独立。它管客户端状态图，不管查询缓存和鉴权。
 
-Jotai 通过一个个 atom 配置组织细粒度共享和派生状态。atom 对象只是定义，实际值保存在 Store 中。适合分散 UI 状态、从多个原子推导数值、嵌入式微应用或多租户子树；复杂流程或远端缓存应与专用机制组合，而不是所有数据塞进默认全局 atom。
+3.0.1 修正 3.0.0 里 `useAtomValue` 在挂载时序上的回归。不要为了演示改回 3.0.0。
 
-## 安装及版本约束
+没有匹配收据时 sdk / build / browser 保持 NOT_RUN。Actions 41779873259 是仓库级结果，不是本条目 PASS。
 
-~~~bash
-pnpm add jotai@3.0.1
-~~~
+## Lab 当前示例
 
-Jotai v3.0.1 修复 v3.0.0 中 useAtomValue 订阅回归；v3 为 ESM-only，要求 Node 22.12+、React 18+、TS 5.5+。
+[`examples/demo.tsx`](examples/demo.tsx) 重导出 [`examples/example.tsx`](examples/example.tsx)。原子定义在模块作用域：`counterAtom`、`doubleAtom`、`storiesAtom`、`unreadAtom`、只写的 `toggleReadAtom`。不要在渲染函数里 `atom()`，否则每次都是新配置，订阅会断。
 
-## 真实代码路径
+`TenantWorkspace` 用 `useMemo(() => createStore(), [])` 创建 store，包在 `<Provider store={store}>` 里。没有 Provider 时会落到默认共享 store，团队数据会串。advanced 用 `key={'team-A-session-' + teamASession}`。点击「退出并新建团队 A 会话」会卸载旧 Provider。团队 B 是另一个 key，换 A 的会话不会重置 B。离开 advanced 时 B 的组件卸载，store 一起走。
 
-实际入口为 examples/demo.tsx，完整可迁移实现为 examples/example.tsx。Library Lab 展示的代码由这两份源文件生成并计算 SHA-256；三个 Demo 场景共享真实实现，使用 level 切换学习层次。不得为文档另外维护一份看起来相同但不可运行的伪代码。
+写入原子调用 [`examples/story-policy.mjs`](examples/story-policy.mjs) 的 `toggleStoryRead`。它要求故事 id 唯一且非空，`read` 是布尔。未知 id 返回原数组。重复 id 或坏形状抛错，而不是悄悄改两行。组件列表的 React key 也是 `story.id`。
 
-## 核心对象
+basic 只显示计数和双倍。business 增加未读数和勾选。advanced 并排两个 store。
 
-atom(0) 创建原子配置；atom(get=>...) 追踪读依赖；atom(null,(get,set,...args)=>...) 实现只写 action。useAtom、useAtomValue、useSetAtom 分别用于读写、只读、只写。createStore 和 Provider 明确状态所有权；同一个 atom 在两个 Store 中有不同的值。
+没有挂载：`atomWithStorage`、async atom、Suspense、`onMount`、本地 HTTP。下面仍写这些，因为迁出去之后它们最容易和 Store 生命周期缠在一起。
 
-## 三个场景
+## 什么时候用
 
-入门：点击按钮更新 count，doubleAtom 自动计算。业务：RSS 文章列表有独立稳定 id，通过 toggleReadAtom 更新 articlesAtom，unreadAtom 只从同一 Store 读取。边界：页面同时渲染团队 A/B 的独立 Provider，两端 atom 配置相同，但修改 A 不能改变 B。
+大量彼此独立、又要派生的界面状态，用原子。一个输入框用 `useState` 或 React Hook Form。远程列表的新鲜度用 TanStack Query。互斥流程用 XState。需要全量 action 日志时用 Redux Toolkit。不要给每个 DOM 属性建原子。
 
-## 状态所有权
+官方 `atomWithStorage` 默认走 `localStorage` 和 JSON，并可听 `storage` 事件。JSON 没有 schema，隐私模式会抛配额错误，不能存令牌。Lab 故意不持久化。SSR 不能在模块顶层读 `window`。`getOnInit: true` 会让首帧和服务器 HTML 不一致，要单独设计水合。
 
-不要把 atom 本身当作包含值的对象；没有 Provider 时使用默认 Store，SSR/多租户尤其要审慎。此 Demo 使用 useMemo(createStore,[]) 将 Store 绑定组件实例并在退出时释放引用，不触碰站点默认 Store。原子配置放模块级复用，按业务 ID 创建动态 atom 时应使用 memo 化或专门族工厂，避免每次 render 产生新 identity。
+## 模型
 
-## 错误反例
+读派生原子时，`get` 记下依赖。写函数里的 `get` 不是订阅。`store.get` / `store.set` / `store.sub` 不依赖 React。`sub` 返回取消函数。
 
-错误一：在组件每次渲染重新 atom(0)，引发循环重新订阅；改为模块级静态 atom 或 useMemo。错误二：将服务端响应全塞到 Provider-less 的默认 Store，租户/SSR 可能串数据；使用请求/租户级 Store 及明确 owner。错误三：把可写派生 atom 的副作用当成事务或服务器回滚；异步失败需独立取消、重试、事务规则。错误四：Jotai v3 引入旧 v2 的已移除 atomFamily/loadable 导出；先阅读迁移指南而不是盲目升级。
+`useAtom` 又读又写，都会订阅。`useAtomValue` 只订阅值。`useSetAtom` 拿 setter，不因为值变化而重渲染该按钮。Lab 的「+1」用 `useAtom`，勾选用 `useSetAtom(toggleReadAtom)`。
 
-## 组合和版本
+```tsx
+const doubleAtom = atom(get => get(counterAtom) * 2)
+```
 
-Jotai v3.0.1 的核心 ESM 导入适合现代 Vite 8/React 19。若需要 localStorage，可评估 jotai/utils 的 atomWithStorage，但需键命名空间和 SSR 水合策略，本 Demo 不将令牌写入 storage。对远端数据使用 TanStack Query，与 Zustand 选型看是否需要原子依赖模型或统一 store。
+不要再用 `useEffect` 把 double 抄进另一份 state。
 
-## 验收范围
+async 读原子可以拿到 `signal`。依赖变了，下一次计算前会 abort。把 signal 交给 `fetch`。Suspense 边界要在 Provider 里面，并配 Error Boundary。abort 不是事务回滚。`onMount` 在第一次被订阅时运行，Strict Mode 会多一次卸载和挂载，setup 和 cleanup 要成对。只调用 `useSetAtom` 不会因为没人读值就触发 `onMount`。
 
-node:test 使用真实 createStore/atom，验证派生更新、Store 隔离和订阅；浏览器需验证组件点击及 Strict Mode 重挂载。此处没有对持久化、SSR 并发或大型原子图做性能基准。
+Provider 省略时的默认 store 是进程内共享的。租户、草稿和未读都不能放进去。
 
-## 演示场景与预期
+## 三层示例
 
-1. **基础 atom 与派生 atom**：同一 store 中 count 与 double 响应式更新
-2. **RSS 未读统计与写入 atom**：按稳定行 ID 切换已读，unread derived 自动更新
-3. **两个独立 Provider Store**：同一 atom 配置跨两个团队互不干扰
+### 基本
 
-## 练习与迁移
+团队 A 一个 store。计数加一，派生值跟着翻倍。归零只影响这个 store。此时故事原子还在定义里，界面不订阅它们。
 
-在 NewsHub 加一个不影响后端缓存的阅读筛选面板：每个用户工作区 Provider 分离状态，已读过滤为派生 atom。
+### 业务
 
-## 验证分级与限制
+未读数来自 `unreadAtom`。勾选调用写原子，按 id 翻转。两行的 id 是 `rss-1` 和 `rss-2`。策略函数若发现重复 id，会在写入前抛错。
 
-本条目包含真实目标包 import 的示例和 Node 定向测试源码。**SDK、TypeScript、生产构建及 Playwright 本轮均未在依赖完整环境执行，状态为 NOT_RUN**。`tests/sdk.test.mjs` 必须在真实依赖安装后执行；Mock 业务数据不等于 Mock 目标库。测试成功后才能按当前源指纹绑定 evidence，不得沿用历史研究报告的 PASS。
+### 进阶
 
-## 官方一手资料
+团队 A 和团队 B 同时可见。把 A 的计数加到 3，再新建会话，A 回到 0，B 保持。这是卸载 store，不是把同一个 store 里的原子清零。文案提醒：UI 原子换了，远端缓存和请求也要按身份分开清。
 
-- [Jotai v3 文档](https://jotai.org/docs)
-- [atom API](https://jotai.org/docs/core/atom)
-- [官方 v3.0.1 发布说明](https://github.com/pmndrs/jotai/releases/tag/v3.0.1)
-- [v3 迁移指南](https://jotai.org/docs/guides/migrating-to-v3)
+## 反例
 
-## 授权
+### 反例 1：渲染期间创建原子
 
-该条目源码与文字为独立编写的教学材料；目标库使用上游 MIT 许可，未捆绑第三方图片、字体或付费资源。
+```tsx
+function Panel() {
+  const counterAtom = atom(0)
+  const value = useAtomValue(counterAtom)
+}
+```
 
-## 会话切换与 Store 生命周期（增量实战）
+原子提到模块或 `useMemo` 无法拯救“每次 render 都调用 atom()”的写法。配置必须稳定。
 
-进阶示例新增「退出并新建团队 A 会话」操作。每个 TenantWorkspace 自己用 createStore 创建 Store，外层对该子组件使用随会话编号变化的 React key；退出时旧 Provider 子树卸载，重新挂载时得到新的 Store 与计数、RSS 已读初值。团队 B 组件不受 A 退出影响；离开进阶示例时 B 被卸载，返回后是新 Store。不能只改变页面上的租户名称却复用原 Store，这会让上一账号的 UI 草稿继续存在。
+### 反例 2：默认 store 放租户数据
 
-story-policy.mjs 的 toggleStoryRead 在真正的写 atom 中调用，通过不可变数组快照与稳定业务 ID 更新记录。重复或空 ID、非布尔 read 明确抛错，找不到目标 ID 返回原数组，以免无效事件触发不必要的订阅刷新。源文件与 .d.mts 类型声明作为三个场景共同的真实展示源码。
+```tsx
+useAtomValue(storiesAtom)
+```
 
-注意：本示例只证明本地 Jotai Store 的所有权生命周期，不负责注销网络请求、清理 TanStack Query 缓存、后端鉴权或服务端租户隔离；正式登录切换必须由应用整体编排这些资源。React StrictMode 与快速切换 UI 仍需浏览器真实验收。
+在没有 Provider 的树里，这就是默认 store。Lab 的工作区始终包 Provider。
 
-定向纯策略回归：node --test packages/library-lab/entries/D11-jotai/tests/story-policy.test.mjs；SDK 源码：tests/sdk.test.mjs 真正 import jotai，需要已安装的固定依赖。纯策略 PASS 不等于 SDK / tsc / build / Chromium PASS.
+### 反例 3：用下标当故事身份
+
+```tsx
+set(storiesAtom, stories.map((story, index) => index === target ? { ...story, read: !story.read } : story))
+```
+
+```tsx
+set(storiesAtom, toggleStoryRead(get(storiesAtom), id))
+```
+
+### 反例 4：派生值再抄一份
+
+```tsx
+const doubled = useAtomValue(doubleAtom)
+const [copy, setCopy] = useState(doubled)
+useEffect(() => setCopy(doubled), [doubled])
+```
+
+直接渲染 `doubled`。
+
+### 反例 5：在写原子里发请求并当成缓存
+
+写原子可以编排，但响应数据的主人仍是 Query。不要把列表 JSON 存进原子再持久化。
+
+### 反例 6：async 原子不传 signal
+
+依赖变化后旧请求仍 `set` 到已过期的计算。把 `signal` 交给 fetch，并在卸载时让订阅结束。
+
+### 反例 7：Suspense 放在 Provider 外面
+
+读未完成的 Promise 需要 Provider 内的 Suspense 和 Error Boundary。Lab 没有 async 原子，所以界面上没有这个边界。
+
+### 反例 8：atomWithStorage 存令牌
+
+存储可被同源脚本读到。收藏 id 若要持久化，先做长度和字符校验，并在登出时删键。Lab 不使用该工具。
+
+### 反例 9：依赖 v3 已删除的工具
+
+按 v3 迁移文档改 import。不要从旧博客复制 `jotai/utils` 里已经移除的辅助函数。本示例只用核心 `atom`、`createStore`、`Provider` 和三个 hook。
+
+## 组合
+
+**Query**：搜索条件可以是原子，请求结果不要再写进另一个原子。queryKey 使用原子里的团队 id。切会话时除了卸载 Provider，还要清该身份的 Query 缓存。
+
+**XState**：审批的互斥状态留在机器里。Jotai 只放当前选中的 id。
+
+**Immer**：原子里保存纯数据。若更新很深，在写函数里 `produce` 一次，不要让组件拿到 draft。
+
+## 生产核对清单
+
+1. 原子定义的引用在组件生命周期内稳定。
+2. 每个会话有自己的 store，并用 key 强制卸载。
+3. 写路径按业务 id；重复 id 失败而不是改两行。
+4. 只写按钮用 `useSetAtom`，避免无意义订阅。
+5. 派生值不复制到 `useState`。
+6. 默认 store 没有租户数据。
+7. 若引入 async atom，signal 传到 fetch，Suspense 在 Provider 内。
+8. 持久化有 schema、长度上限和登出删除；不存秘密。
+
+## 升级
+
+钉 `3.0.1`。从 v2 迁到 v3 时按官方迁移指南核对 React、TypeScript 和 Node 要求，以及被删除的 API。3.0.0 的 `useAtomValue` 时序问题由 3.0.1 修正，不要停在 3.0.0。
+
+Store 的 `get/set/sub` 是不经过 hook 的测试入口。升级后用两个 store 断言同一原子配置互不污染。
+
+## 验收
+
+- 计数加一后派生值是两倍；归零只影响当前 store。
+- 勾选只翻转目标 id，另一行的 `read` 不变，原数组不被修改。
+- 未知 id 返回原数组引用。
+- 重复 id、缺 id、非布尔 `read` 抛错。
+- 新建团队 A 会话后 A 的计数消失，B 仍在。
+- `tests/sdk.test.mjs` 使用真实 `jotai` 的 store 与写原子。无收据则 NOT_RUN。
+
+练习：给收藏 id 列表加一个带校验的存储适配器，损坏 JSON 时回到空列表。再把慢请求放进 async 原子，连点时旧 signal 取消，且 Error Boundary 能恢复。
+
+写原子里的 `get` 不会建立订阅。把 `get(storiesAtom)` 放在 `toggleReadAtom` 里只是为了读当前快照。组件要更新，仍需 `useAtomValue`。
+
+## 资料
+
+- https://jotai.org/docs
+- https://jotai.org/docs/core/atom
+- https://jotai.org/docs/core/store
+- https://jotai.org/docs/core/provider
+- https://jotai.org/docs/guides/migrating-to-v3
+- https://jotai.org/docs/guides/async
+- https://jotai.org/docs/utilities/storage
+- https://github.com/pmndrs/jotai/releases/tag/v3.0.1

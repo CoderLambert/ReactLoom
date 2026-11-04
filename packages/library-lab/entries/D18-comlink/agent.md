@@ -1,19 +1,59 @@
-# D18 Comlink — Agent 工程指南
+# D18 Comlink — 工程手册
 
-**任务选型**：需要 Web Worker 隔离 CPU 任务并保留对象式 RPC；Comlink 不是 Promise 并发限制器，也不是远程不可信代码沙箱。
+## 适用
 
-## 迁移核心代码
-读取 `examples/worker.ts` 和 `examples/example.tsx`。Worker 用 expose(api)，宿主用 `new Worker(new URL(...,import.meta.url),{type:'module'})`、`wrap<WorkerAPI>`；生产入口必须测试 bundler 生成的真实 Worker 文件。安装 comlink@4.4.2（Apache-2.0）。
+把可结构化克隆的计算放到模块 Worker，并用小的 RPC 表面调用它。大块二进制用显式转移。进度用代理回调。
 
-## 不能删掉的资源协议
-Worker + Remote 应有明确 owner；离开页面调用 releaseProxy/terminate；旧异步响应由 epoch 或 AbortSignal 阻断。终止不保证旧 RPC Promise 自动完成，要有取消竞速。大二进制包用 transfer 后不再访问原 ArrayBuffer；普通函数跨线程必须用 Comlink.proxy 包装。不要把网络未授权脚本注入同源 Worker。
+不要用它限制 HTTP 并发，不要用它代替 Yjs 或鉴权，不要在主线程伪造 Worker 的返回值。
 
-## 必测场景
-真正 Worker RPC 返回正确值；转移后原 byteLength=0；进度回调到达；按钮取消、Tab 切换、重复启动不会产生悬挂线程和旧回写；CSP/worker-src 在生产 preview 没有拦截。Node sdk.test.mjs 只能验证 Node MessageChannel，不等同 Chromium。状态未运行标 NOT_RUN。
+## 版本
 
-## 组合
-D03 p-limit 负责限制派发并发，D18 Comlink 负责线程消息层，E19 ffmpeg.wasm 可能需要多 Worker/WASM 独立内存预算。参考 https://github.com/GoogleChromeLabs/comlink 。
+`comlink@4.4.2`，MIT。入口是 `wrap`、`expose`、`transfer`、`proxy`、`releaseProxy`。
 
-## 故障与清理修复（第十二批）
+Worker 使用 `{ type: 'module' }` 和相对于 `import.meta.url` 的 `./worker.ts`。
 
-Worker 不一定会回复 RPC：为每次会话监听 `error` / `messageerror`，与目标 Promise、AbortSignal 三方竞速；正确清除监听器。Remote `releaseProxy` 失败时仍要 `terminate()`，不能使释放异常阻止物理线程终止。不要仅在业务 `catch` 写一个文字失败后留下 Worker。SDK 的 Node MessagePort callback + transfer 测试与浏览器 Module Worker/CSP 是两条独立证据，均须执行后才能标记通过。
+## 迁移
+
+从 [`examples/example.tsx`](examples/example.tsx) 带走 `dispose`、epoch 和 `Promise.race`。从 [`examples/worker.ts`](examples/worker.ts) 带走 `summarize`、`sumBytes` 和会 `await` 的 `progress`。
+
+生产任务换成真实计算时保留：构造失败可见、转移列表明确、回调看 epoch、终止不表示成功。
+
+不要把 4000 项的演示改成在主线程先算好再送进 Worker。
+
+## 不可删的清理
+
+`dispose` 清空 session、abort、尝试 `releaseProxy`，并在 `finally` 里 `worker.terminate()`。释放失败不能跳过终止。
+
+每次 `execute` 和取消都递增 epoch。进度回调和最终 `setResult` 都要 epoch 仍匹配。
+
+结束后移除 `error` 和 `messageerror` 监听。卸载 effect 同样 `dispose`。
+
+## 反例
+
+- 主线程直接 `setResult` 写死词频。
+- 转移后继续读原 `Uint8Array`。
+- 把裸函数传给 Worker。
+- 只 `releaseProxy` 不 `terminate`。
+- `terminate` 之后把界面写成成功。
+- 旧回调覆盖新任务。
+- 为每个元素创建 Worker。
+- 把 `Y.Doc` 当普通参数克隆。
+
+## 测试断言
+
+- 真实 Comlink 经 `MessagePort` 或 Worker 调用 `summarize`。
+- `transfer` 登记的缓冲区在发送侧分离，和为字节之和。
+- 代理回调按顺序收到 1 到 5。
+- `releaseProxy` 失败时仍执行 `terminate`。
+- 取消后的回调不回写。
+- `tests/sdk.test.mjs` 导入真实 `comlink`。无收据则 NOT_RUN。
+
+## 真实限制
+
+没有 SharedArrayBuffer，没有 WASM，没有协作式 signal 穿进 `summarize`。4000 项不是容量测试。模块 Worker 可能被 CSP 拒绝，这时界面必须显示构造错误。
+
+`terminate` 不会把远端 Promise resolve 成业务结果。
+
+## 证据
+
+sdk、build、browser 保持 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有匹配收据。Actions 41779873259 不是本条目 PASS。不要改 `verification.json`。

@@ -1,29 +1,46 @@
-# F02 react-dropzone — Agent 复用说明
+# F02 react-dropzone — 工程手册
 
-## 何时使用
+## 适用
 
-只需要文件选择/拖放/文件类型与大小反馈：react-dropzone；需要正式上传、分片、恢复、进度：结合 Uppy 或 API Client。它**不负责上传**。版本 20.1.4，MIT，React ≥18。
+拖放和按钮选择，并在浏览器里按类型、大小、个数拒绝。不负责上传、分片或病毒扫描。CSV 内容交给 F03。
 
-## 实现入口
+## 版本
 
-复用 `examples/example.tsx`：`useDropzone` 返回 `getRootProps/getInputProps/open`；将 input 保留在根容器内，文件数据不需要经过任何后端。Lab 的 demo.tsx 仅转发组件。输入非可信数据，所有客户端筛选必须由服务端复核。
+`react-dropzone@20.1.4`，MIT。使用 `useDropzone`。`useFsAccessApi` 固定 false。
 
-## 必须保留
+## 迁移
 
-- `<input {...getInputProps()} />` 和根属性 getter；不要手动覆盖掉内置事件。
-- 如果有单独按钮调用 `open()`，根应 `noClick:true` 防双重文件对话框。
-- 异步文件读取使用 generation/取消保护，旧结果不能回写新选择；卸载时释放对象引用。
-- 限制文件大小与个数，错误内容文本反馈并可键盘访问，不仅靠颜色。
-- 严禁将文件的任意内容自动传给收费、分析或第三方服务；上传必须明确触发。
+带走 `examples/example.tsx`、`examples/preview.mjs` 和 `.d.mts`。保留 `noClick: true`，对话框只从按钮 `open()`。`accept` 保持 text/plain+.txt 与 text/csv+.csv。basic 与 business 是 1 个文件、256 KiB；advanced 是 2 个、1 KiB。
 
-## 验证
+上传时用应用的 API client，不要在 `onDrop` 里直接 `fetch` 用户文件。
 
-选择合规文本显示文件名/大小；选择过大或不支持格式显示拒绝原因；快速 A→B 更换只能出现 B 预览；离开 Demo 不可继续更新。Browser File API 与拖拽行为要用 Playwright 实测，Node 静态脚本不能代替。
+## 不可删的清理
 
-## 关联与来源
+选择、清空、换 level、卸载都要增加 generation。预览 Promise 只有代号仍匹配才能写入。预览必须 `slice(0, 8192)` 再截到 1600 字符。不要改成整文件 `text()`。
 
-F01 Uppy（上传）；F03 Papa Parse（CSV 解析）；官方：https://react-dropzone.js.org/。当前SDK/浏览器 NOT_RUN/BLOCKED，未实际证明通过。
+## 反例
 
-## 本批迁移约束
+- 把 `onDrop` 当成上传成功。
+- 不展开 `getRootProps` / `getInputProps`。
+- 根可点击又在内部按钮调用 `open()`。
+- 只信扩展名或 `file.type`。
+- 记录 `file.path`。
+- 后完成的读取覆盖新文件。
+- 打开 File System Access 又不处理权限。
+- 为预览创建 Object URL 却不 revoke。
 
-务必连同 `examples/preview.mjs` 迁移；不要回退为全文件 `.text()` 后 slice。8KiB 原始预算/1600字符预览和 react-dropzone 256KiB 接受上限独立。场景切换要使旧 File Promise 失效。Node Blob 测试不能证明浏览器 SDK 行为。
+## 测试断言
+
+- 非法 size 或缺少 `slice` 的输入被 `readLocalTextPreview` 拒绝。
+- 只解码前 8 KiB，可见字符不超过 1600。
+- 拒绝列表展示 `errors[].code`，接受列表不包含被拒文件。
+- 换 level 后列表和预览为空。
+- `preview.test.mjs` 不 import `react-dropzone`。
+
+## 真实限制
+
+页面不发网络请求。256 KiB 和 1 KiB 是教学限额，不是库的上限。同名同大小的 key 会冲突。拖放和键盘要在浏览器里看，策略测试看不见。
+
+## 证据
+
+没有收据不要写 PASS。仓库级 Actions 41779873259 不是 F02 的 sdk 或 browser 收据。

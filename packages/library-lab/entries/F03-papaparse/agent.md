@@ -1,15 +1,46 @@
-# F03 Papa Parse — Agent 实施手册
+# F03 Papa Parse — 工程手册
 
-**适用**：浏览器/Node CSV 格式解析与导出，不是 XLSX、不负责网络上传。建议先读 `library.json` 与真实 `examples/example.tsx`，并在目标项目验证输入编码、字段安全。
+## 适用
 
-**依赖**：papaparse 5.7.0、@types/papaparse 5.5.2（后者仅类型）；许可 MIT。PLATFORM 安装锁定版本前不要标 PASS。
+带引号和换行的 CSV 导入、导出。不是 xlsx，也不抓远程文件。
 
-**迁移**：保留 `Papa.parse<T>({header:true,skipEmptyLines:'greedy',dynamicTyping:false})` 的 `errors/meta` 检查、字段验证与 URL 策略、重复规范化；保留 `Papa.unparse({escapeFormulae:true})` 的公式防护，不直接迁移示例 UI。生产不信任用户 CSV。
-**生命周期**：样例的 file.text 只用于限量本地 CSV；异步文件读取使用 generation 避免卸载旧结果回写。真正大文件需 step/chunk、背压和业务取消策略。
-**负例**：split(',') 手拆、忽略引号换行、以 dynamicTyping 转全量 ID、把 Markdown/XSS sanitizer 当 CSV 公式过滤、不校验 URL 就后端抓取。
-**验证**：真实包 Node 集成文件 `tests/node-scenarios.test.mjs` 含引号换行/错误字段/escapeFormulae；还需TS构建和真实 File API E2E。当前新代码未运行 SDK、build、browser。
-关联 F02/F04/F05；官方 https://www.papaparse.com/docs。
+## 版本
 
-## EF wave11 必保留合同
+`papaparse@5.7.0`，MIT。`header: true`，`skipEmptyLines: 'greedy'`，`dynamicTyping: false`，`escapeFormulae: true`。
 
-迁移时把 `report.mjs` 与 `policy.mjs` 视为同一条导入路径，不可在UI和Node测试分别抄两份。精确校验表头、重命名重复列、结构错误；对无法可靠定位的解析错误**整批拒绝**。`File.text()` 的旧Promise在用户编辑/重置/解析时也必须失效（不仅卸载时）。限制文本大小/长度，导出继续调用真正的 `Papa.unparse({escapeFormulae:true})`；URL只是离线格式筛选，任何后端访问仍需SSRF保护。纯策略Node测试与真实Papa Node测试分开报告。
+## 迁移
+
+带走 `examples/report.mjs`、`examples/policy.mjs` 和两边的 `.d.mts`。UI 只调用 `reportCSV`。表头保持 `title,url,note`。文件上限 256 000 字节，文本框 15 000 字符。不要打开 `download: true`。
+
+## 不可删的清理
+
+选文件、编辑、解析、重置、卸载都增加 generation。超限时先清空 input。`renamedHeaders` 非空或不可恢复的解析错误整批拒绝。只 unparse 已接受行。URL 去掉 fragment 和凭据，仅 https。
+
+## 反例
+
+- `split(',')` 或 `split('\\n')`。
+- `dynamicTyping: true` 处理 id。
+- 忽略重复表头。
+- 只做 HTML 转义就交给 Excel。
+- `Papa.parse(url, { download: true })`。
+- 未闭合引号仍导入前面的行。
+- 把客户端 URL 规范化当成 SSRF 防护。
+- 上传用户表格或把密钥放进夹具。
+
+## 测试断言
+
+- 逗号、`""` 和单元格换行得到一条记录。
+- `=2+3` 导出后带撇号前缀。
+- 多余列、重复表头、未闭合引号不进入 `accepted`。
+- ftp、带用户信息的 URL、重复 https 被拒绝。
+- `policy.test.mjs` 不 import Papa；`node-scenarios.test.mjs` 才加载 SDK。
+
+## 真实限制
+
+页面不上传。256 KB 不是 Papa 的上限。没有 Worker 分块。标准示例不探测编码，非 UTF-8 要另做转换。公式前缀不是宏安全的全部。文本框上限 15 000 字符，和文件上限不是同一个数。
+
+## 证据
+
+本地跑过测试也不等于 verification PASS。收据要落在 `docs/library-lab/evidence/runs/`。Actions 41779873259 不是 F03 的单项验收。
+
+`policy.test.mjs` 与 `node-scenarios.test.mjs` 要分开记录。只有后者加载 Papa。

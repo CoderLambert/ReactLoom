@@ -1,35 +1,47 @@
-# C07 TanStack Table — Agent v9 工程使用手册
+# C07 TanStack Table — 工程手册
 
-本条目版本为 `@tanstack/react-table@9.2.4`（MIT），**不是 v8**。引入 `useTable` + `tableFeatures` + 独立 feature/rowModel factories；请以 `examples/example.tsx` 为源码合同，`examples/demo.tsx` 仅展示包装。
+## 适用
 
-## 迁移到目标项目时
+需要自己拥有表格 DOM 和数据请求的列表。不要把它当成数据源或虚拟化库。开箱网格比较 C08，大 DOM 比较 C10。
 
-首先明确数据所有权：客户端全量还是后端分页？无论哪种都定义稳定的 `getRowId: row => row.id`；服务器查询必须以排序、搜索、页码、pageSize 完整标识；不要在后端分页数据上执行本地排序。用户跨页选择仅以 ID 集合保存，不能从当前页表格模型算全量对象。输入法组合期间谨慎处理搜索、页号重置。
+## 版本
 
-## 必保留的处理
+`@tanstack/react-table@9.2.4`，MIT。入口是 `useTable`、`tableFeatures`、`createColumnHelper<typeof features, Feed>()`。不要从 v8 文章复制 `useReactTable` 或 `getCoreRowModel`。
 
-- v9 `features: tableFeatures`，不混入 v8 `useReactTable`。
-- `manualPagination` 与 `manualSorting` 成对跟随后端能力，同时传入完整 rowCount。
-- 请求支持 AbortSignal，sequence 校验防旧响应覆盖；卸载中止计时器/请求。
-- 无障碍 table/caption/th scope/aria-sort、操作按钮、状态文本。
-- 数据列定义不要在每次渲染不断创建，引起不稳定重算。
+## 迁移
 
-## 常见错误
+带走 `examples/example.tsx` 和 `examples/page-policy.mjs`。用 API client 替换 `fetchLocalPage` 的 `setTimeout`。保持 `manualSorting`、`manualPagination`、`rowCount` 和 `getRowId`。排序字段继续走白名单，服务端再查一次。
 
-索引 rowId、跨页选择丢失、服务端分页之后又在前端排序、未重设页号、旧慢请求覆盖新结果，以及未向 Agent 说明 v8/v9 API 断层。
+## 不可删的清理
 
-## 验证与可信范围
+任何会改变查询身份的操作先 `invalidate`。回包必须 `lease.owns()`。页码被 `clampPageIndex` 改掉时不要提交旧页的行。卸载时 effect cleanup 调用 `lease.cancel()`。行的 React key 使用 `row.id`。
 
-定向测试稳定 rowId/跨页选择、分页排序/搜索、503 恢复、取消竞态、键盘导航。当前仅编写真实 v9 SDK 入口，不代表包已安装、通过 typecheck/build/browser。任何 PASS 需与 sourceFingerprint+命令+日志绑定。
+## 反例
 
-文档：https://tanstack.com/table/latest · https://github.com/TanStack/table
+```tsx
+useTable({ data: onePage }) // 客户端排序被误当成全局排序
+const { getValue } = row
+getValue('title')
+```
 
-## 加固约束（不可在迁移中删除）
+- 省略 `getRowId`。
+- 只 `abort`，不比较 epoch，导致 A→B→A 回写。
+- 用 `getSelectedRowModel()` 当跨页已选集合。
+- `initialState`、`state`、`atoms` 同时写分页。
+- 把 `sortId` 拼进 SQL。
+- 列头只有点击、没有按钮和 `aria-sort`。
 
-后端分页总数减少时按业务 rowCount 校正 pageIndex；超限后重新请求，而不是仅把页码文本改成1。新查询加载时清除旧页的可见记录，避免旧数据闪现。切换 Demo 模式需重新建立 pageSize 所有权，输入法组合确认的 Enter 不提交搜索。纯策略测试和真实 v9/Chromium 验收分开记录。
+## 测试断言
 
-## 最终请求所有权补充（第24轮）
+- 身份函数拒绝未知 sort id、多列排序和非整数页码。
+- `clampPageIndex` 在总数变小时回到最后一页，空表回到 0。
+- gate 的旧 lease 在新的 begin 之后 `owns()` 为假，包括 A→B→A。
+- 策略测试不是浏览器里的表格 PASS。
 
-- 将 `tableQueryIdentity` 覆盖全部后端分页输入；当前渲染不能读另一个 identity 的旧 rows/total/error。业务换租户时还必须包含租户授权身份并清理外部缓存；本示例仅单租户 fixture。
-- `createPageRequestGate` 的 epoch 与 AbortSignal 双重保护不可删：切换排序/页号/筛选/模拟故障先同步 invalidate；真正完成结果必须 `lease.owns()`。**渲染已完成数据也要检查 `lease.generation === gate.revision()`**，避免 A→B→A 等价 key 短暂复活第一次 A 的页面。
-- 先做源码与策略核验，再在真实 `@tanstack/react-table@9.2.4` 环境执行 `tests/sdk.test.mjs`，最后完整 TS/Vite/Chromium 验证。策略 PASS 不等于 SDK PASS；不能因为离线 SDK 不可用而删除测试或模拟目标包。
+## 真实限制
+
+advanced 的 503 和延迟都是本地定时器。没有 Query、没有 URL 状态、没有虚拟行。18 行不是性能数字。中文 Enter 的 80ms 是示例策略。
+
+## 证据
+
+没有收据不要写 PASS。Actions 41779873259 不是本条目。不要改 `verification.json`。

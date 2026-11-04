@@ -1,23 +1,45 @@
-# E18 wavesurfer.js — Agent 实践手册
+# E18 wavesurfer.js — 工程手册
 
-## 选择条件
-需要波形、进度与播放位置，用 `wavesurfer.js@8.0.3`；不是HLS解码、转码或音频后期软件。v8 BSD-3-Clause，校验目标运行环境和是否允许WebAudio/MediaElement。
+## 适用
 
-## 拷贝范围
-复用 `examples/example.tsx` 的WaveSurfer实例生命周期模式：ref、effect、ready/timeupdate监听、destroy/revoke。测试源 `examples/wav.ts` 仅用于原创fixture，产品可替换为受许可且CORS有效的audio URL。宿主DemoHost不要复制。
+播放本地或已授权音频并显示波形、定位和倍速。视频用 E16。HLS 用 E17。转码用 E19。不需要波形时用原生 audio。
 
-## 禁止的反模式
-每次React rerender调用create；destroy之后继续load；URL对象不回收；将load的AbortError当真实服务器失败；播放状态仅靠按钮文案；未经用户动作自动播放含声音的媒体；读取不可信远程URL绕过CORS。
+## 版本
 
-## 断言与复查
-- 初始无自动播放、真实波形loaded后才能控制。
-- ready与timeupdate必须来自WaveSurfer真实实例；跳转位置/倍速生效。
-- 离开Tab旧音频停止并销毁；重进新建实例，Blob URL被回收。
-- StrictMode多次挂载、快速切换、load被覆盖、移动端播放权限需真实Chromium/Android验证。
-- Node目录单测不能代表SDK或浏览器验收；当前状态NOT_RUN/BLOCKED。
+`wavesurfer.js@8.0.3`，BSD-3-Clause。`WaveSurfer.create` 后 `load` 一个由 `makeLabWave` 生成的 1.6 秒 8 kHz WAV。`normalize` 为 false。
 
-官方：<https://github.com/katspaugh/wavesurfer.js>
+## 迁移
 
-## Wave16 迁移必留
+复制 effect 里的 create、事件退订、`destroy` 和 `revokeObjectURL`。`examples/demo.tsx` 只是再导出。`playPause` 必须 catch，并确认 ref 仍是该实例。产品换音频时新建实例，不要在已销毁对象上 `load`。时长标签要和真实 PCM 一致。
 
-保留 keyed session 或等效状态重置，异步播放Promise reject前检查实例所有权；离开页面必须destroy/revoke并在真实浏览器检查不残留声音。
+## 不可删的清理
+
+`on` 返回的函数在清理时全部调用。然后 `destroy()`，再 revoke 本次 URL。`alive` 防止 ready 回调在卸载后 setState。`key={level}` 保证倍速和缩放不留在下一层。AbortError 只忽略中止，不忽略解码失败。
+
+## 反例
+
+- 创建后不 destroy。
+- destroy 之后继续 play 或 load。
+- 渲染路径里 create。
+- 不处理 play 的拒绝。
+- 空 catch 掉所有 load 错误。
+- 默认加载远程 mp3。
+- 用 innerHTML 写曲目标题。
+- 打开 normalize 后把振幅当成响度测量。
+
+## 测试断言
+
+- 生成的 Blob 类型是 `audio/wav`，时长逻辑对应 1.6 秒、8000 Hz。
+- 浏览器：无远程音频请求；播放与暂停一致；离开后无声且 URL 已 revoke。
+- 跳转不超过 `getDuration()`。
+- 没有收据就不要写解码器兼容性 PASS。
+
+## 真实限制
+
+样本是合成音，不是语音识别夹具。没有 peaks 预计算，没有麦克风，没有区域插件。zoom 和倍速没有跨浏览器收据。v8 destroy 不可逆。
+
+## 证据
+
+sdk、build、browser 保持 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有 E18 收据。Actions `41779873259` 是仓库级运行，不是本条目 PASS。
+
+资料：https://github.com/katspaugh/wavesurfer.js 。

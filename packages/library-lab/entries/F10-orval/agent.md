@@ -1,24 +1,47 @@
-# F10 Orval — Agent 使用说明
+# F10 Orval — 工程手册
 
-**任务**：从已审核的OpenAPI文件生成而不是手写TS客户端。检查Node >=22.18、`orval@8.44.0` peer依赖、应用使用的HTTP协议与框架。Orval是**开发时代码生成器**，不是生产运行时代理。
+## 适用
 
-## 迁移文件
-先读 `examples/openapi/news.json` 的path/operationId/状态码，再读 `examples/orval.config.ts` 三项目配置。仅迁移你需要的项目；严格限定input来自已审查本地契约、output进入隔离的generated目录。命令行见 `examples/basic.mjs` / `business.mjs` / `advanced.mjs`。文件复制后必须更新目标路径，不将示例 localhost 硬编码产品。
+由仓库内 OpenAPI 生成 fetch 或 React Query 客户端。不发请求，不代替运行时校验或 MSW。
 
-## 不可删除的工程约束
-- 生成物是派生代码，生成器运行必须在 CI/构建前完成并可重现。
-- 工具只有静态类型承诺，服务端实际payload、错误码/权限和分页仍需真实契约与运行时校验。
-- TypeScript的Query hooks依赖正确Provider，缓存Key、取消/竞态和无效化归业务层所有。
-- 不可将私有契约上传在线代码生成服务或自动运行未知远程spec。
-- 输出目录不得容纳手写业务代码；避免`--clean`影响无关路径。
-- 旧SDK或旧API配置不得照搬；版本与许可确认后才能锁定。
+## 版本
 
-## 必要验收
-`node examples/spec-check.mjs`只验证fixture，不是目标SDK测试。必须真正运行`pnpm exec orval --config ... --project basic/business/advanced`，检查生成产物、React Query hooks、错误响应类型、重复生成 diff稳定性和tsc。CI runner无法执行则状态NOT_RUN/BLOCKED，不能把spec-check PASS当Orval PASS。
+`orval@8.44.0`，MIT。Node ≥ 22.18。输入只读 `examples/openapi/news.json`。baseUrl 是 `http://127.0.0.1:4319`。
 
-官方：<https://orval.dev/docs/>
+## 迁移
 
+带走 `orval.config.ts`、`news.json`、`run.mjs`、`output-policy.mjs`。三个 project 保持 basic / business / advanced。用 `cleanProject` 删除固定目标，不要加 `--clean`。生成两次再比 SHA-256。
 
-## CLI 产物验收与故障恢复（第20轮）
+页面命令会多一个 level 参数，脚本忽略它。
 
-迁移时连同 `examples/output-policy.mjs`、`verify.mjs`、`run.mjs` 与 `orval.config.ts` 一起复制并将固定路径更新为目标包，不能只复制示例日志。分别检查 basic Fetch 的三项 operationId、business React Query Hooks、advanced tags-split 子目录。执行前应清理**仅此项目拥有**的固定输出，拒绝符号链接和越界路径；同配置连续两次生成内容必须确定性一致。不要调用带外部 URL 的任意生成任务或宽泛 `--clean`；不要认为单次CLI零退出码、旧生成物存在或 Node policy PASS 就等于 TypeScript build PASS。运行 Orval 8 至少需要 Node 22.18，React Query 的 Provider 与类型检查必须单独验证。真正运行失败则将SDK/CLI状态保持NOT_RUN/FAIL并附日志，未运行时保持NOT_RUN。
+## 不可删的清理
+
+只删除当前 project 列出的文件或目录。拒绝符号链接、非 ts、超深目录、单文件 1 MiB、128 个文件和合计 6 MiB。空输出失败。不要把旧的 `.ts` 留在目录里充数。
+
+## 反例
+
+- `orval --clean`。
+- 用 `access` 判断生成成功。
+- 把 `spec-check` 或策略单测写成 CLI PASS。
+- 配置指向生产 URL 或含密钥。
+- 两次摘要不同仍提交。
+- 删掉 Node 版本检查。
+- 手改 `generated/`。
+- 认为类型已经处理 409/422。
+
+## 测试断言
+
+- 规范含三个唯一 operationId 和 loopback server。
+- basic 导出 `listSources`、`createSource`、`getSource`。
+- business 再导出三个 `use*` hook。
+- advanced 含 `advanced/` 下的文件。
+- 两次生成的 sha256 和文件数相同。
+- 策略测试不启动 Orval。
+
+## 真实限制
+
+网页不启动进程。`generated/` 不提交。没有 mutator，没有 React 挂载。hook 文本存在不等于 Query 缓存已配置。
+
+## 证据
+
+sdk 收据必须是一次真实的 Orval 进程，日志在 `docs/library-lab/evidence/runs/`。Actions 41779873259 不是 F10 PASS。browser 保持 NOT_RUN。

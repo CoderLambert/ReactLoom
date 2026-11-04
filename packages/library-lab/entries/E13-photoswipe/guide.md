@@ -1,85 +1,217 @@
-# E13 PhotoSwipe：图片灯箱不是普通的图片弹框
+# PhotoSwipe 5.4.4｜按容器初始化的灯箱，离开时 destroy
 
-## 解决哪些问题
+`library.json` 钉住 `photoswipe@5.4.4`，MIT。PhotoSwipe 负责图库灯箱：打开、缩放、键盘和关闭。它不裁剪（E14）、不缩放编码（E15）、也不托管图片数据库。本示例的图片是页面里生成的 SVG data URL，没有图床请求。
 
-对于新闻文章配图、商品图集、文档截图预览，PhotoSwipe 5 提供滑动切换、缩放、键盘导航和弹出/关闭过渡。它不是图库数据源，也不负责上传、缩略图生成或图像裁剪。React 只控制图片列表数据，PhotoSwipe 管理灯箱 DOM 与触控状态；两者的所有权必须明确。
+## Lab 当前示例
 
-研究基线：photoswipe 5.4.4，MIT。新版示例由官方 Getting Started API 独立重建；历史研究文件可参考，但**本次尚未完成浏览器实际运行验证**。
+真实组件是 [`examples/example.tsx`](examples/example.tsx)。[`examples/demo.tsx`](examples/demo.tsx) 只再导出。张数选择在 [`examples/gallery-policy.mjs`](examples/gallery-policy.mjs) 的 `visibleArtwork`。
 
-## 安装和关键 API
-
-```sh
-pnpm add photoswipe@5.4.4
-```
+用户点开 Demo 后才 `new PhotoSwipeLightbox`。核心模块要等用户第一次打开灯箱才 `import('photoswipe')`。没有 `localhost:5173`。
 
 ```tsx
-import PhotoSwipeLightbox from 'photoswipe/lightbox';
-import 'photoswipe/style.css';
-
-useEffect(() => {
-  const lightbox = new PhotoSwipeLightbox({
-    gallery: galleryRef.current,
-    children: 'a',
-    pswpModule: () => import('photoswipe'),
-  });
-  lightbox.init();
-  return () => lightbox.destroy();
-}, []);
+const lightbox = new PhotoSwipeLightbox({
+  gallery,
+  children: 'a',
+  pswpModule: () => import('photoswipe'),
+  bgOpacity: 0.88,
+  showHideAnimationType: 'fade',
+})
+lightbox.init()
+return () => { lightbox.destroy() }
 ```
 
-完整可复制源码：examples/example.tsx；Lab 入口 examples/demo.tsx 只做导出。代码面板由真实文件生成，不维护文档展示副本。
+`gallery` 是这一块 div 的 ref。选择器限制在容器里，避免把 Lab 外壳的链接收进图库。
 
-## 三层实战
+每张图是 1200×800 的原创 SVG，缩略图 `loading="lazy"`，链接上有 `data-pswp-width` 和 `data-pswp-height`。说明文字是 React `<figcaption>`，不是 HTML 字符串。
 
-| 场景 | 业务任务 | 操作和预期 |
-|---|---|---|
-| Basic | 单图预览 | 点击一张本地SVG，按需加载PhotoSwipe核心，Escape关闭 |
-| Business | 文章配图 | 多图缩略图、图片说明、左右方向键、触屏滑动 |
-| Advanced | 动态图集 | 追加/移除第四张图片，不重复创建全页面灯箱；离开时destroy |
+| 层 | `visibleArtwork` | 额外控件 |
+| --- | --- | --- |
+| basic | 1 张 | 无 |
+| business | 3 张 | 显示说明的复选框 |
+| advanced | 3 张，可变成 4 张 | 先 `pswp.close()` 再切换张数 |
 
-本示例图像均来自页面内构造的原创 SVG Data URL，不请求远程图片、也不借用未许可的摄影素材。图像宽高通过 data-pswp-width/data-pswp-height 告诉PhotoSwipe；这些值必须和真实原图尺寸一致。
+effect 依赖 `level` 和 `includeExtra`。张数变化会 destroy 再 init。清理函数只销毁这一次创建的实例。
 
-## 机制和资源所有权
+`visibleArtwork` 检查 id 唯一、src、非空 alt、宽高为不超过 32768 的正整数。它不验证 SVG 字节是否安全。图片来自本地模板字符串，不是用户上传。
 
-1. PhotoSwipeLightbox 初始化时绑定 gallery 作用域的点击委托，避免监听整个 document。
-2. pswpModule 返回 Promise，核心只有首次需要时才会通过 bundler 加载；外部图片本身仍需按资源策略加载。
-3. React 控制缩略图集合；PhotoSwipe 控制弹出层和内置事件；组件卸载必须显式调用 destroy()。
-4. 生产缩略图应有可读 alt、尺寸信息和直接URL作为非JS降级；不能只绘制无语义背景。
+没有挂载：远程 URL、`preload` 全库、服务端 caption 的 innerHTML、把 dataSource 当数据库、失败时的普通链接以外的重试队列。
 
-## 实际项目必须避免的错误
+键盘和 Esc、焦点回到触发器，写在页面说明里，**没有浏览器收据**。
 
-### 反例一：useEffect每次渲染都重复实例化
+## 1. 定位
 
-灯箱反复绑定监听器、多个Popup互相争抢。正确做法：稳定gallery Ref、明确effect依赖、清理同一实例，并在React StrictMode双重挂载中检查重复行为。
+| 任务 | 判断 |
+| --- | --- |
+| 文章配图要点开放大、缩放、方向键 | 适合，并提供宽高 |
+| 要裁剪导出 | E14 |
+| 要高质量缩小文件 | E15 |
+| 只有一张装饰图、不需要灯箱 | 普通 img |
+| 用户提供任意 URL | 先做允许列表。本示例没有这条路径 |
 
-### 反例二：用缩略图尺寸冒充原图尺寸
+官方：[入门](https://photoswipe.com/getting-started/)、[选项](https://photoswipe.com/options/)、[仓库](https://github.com/dimsemenov/PhotoSwipe)。
 
-图片打开动画与缩放定位错误。正确做法：明确数据源提供原始width/height；如要响应式srcset，官方 data-pswp-srcset 不能缺最大的真实尺寸。
+## 2. 对象
 
-### 反例三：未经验证的跨站图片
+```text
+图库 div（ref）
+    └─ a[data-pswp-width][data-pswp-height] > img
+            │ 用户点击
+            ▼
+PhotoSwipeLightbox.init
+            │ 首次打开
+            ▼
+import('photoswipe') → 灯箱实例
+            │ 卸载 / 张数变化
+            ▼
+destroy()
+```
 
-直接使用第三方 URL 会引起可用性、鉴权、CORS及内容版权问题。生产中通过合法图床/签名URL及许可管理；本实验统一使用本地SVG。不能因为图片能在img显示就推断Canvas可读取其像素。
+Lightbox 拥有监听。React 拥有有哪些 `<a>`。不要在 render 里 `new PhotoSwipeLightbox`。
 
-### 反例四：卸载后遗留DOM与快捷键
+`preload` 选项指的是当前张附近的预载，不是把整个媒体库下载下来。本示例没有设置预载张数，不要在文档里写成已预载四张原图。
 
-离开详情后仍出现按键响应与样式层叠。使用 lightbox.destroy；同时进行真实浏览器检查。库内部资源是否完全释放不能仅凭开发者代码推断。
+## 3. 三层
 
-## 与其他库组合
+在 Library Lab 打开 E13 再运行，然后点击图片。
 
-与 E14 react-easy-crop：PhotoSwipe负责“看”，Cropper负责“选”；不要把裁剪逻辑写入灯箱事件。与 E15 pica：大图预览可先生成合适像素的缩略图，但原图应能按需打开，不必预先解码全部图片。若图集很大，用浏览器资源加载策略、分页与虚拟化处理缩略图DOM，不要简单把所有原图一次性下载。
+### 基本
 
-## 验证命令与人工检查
+只有一张。打开后应出现灯箱而不是浏览器直接导航到 data URL（PhotoSwipe 会拦截该链接）。关闭后缩略图还在。若灯箱打不开，先看核心模块是否在点击后才出现在网络面板。
 
-安装依赖后由PLATFORM执行 pnpm --filter @reactloom/library-lab typecheck/build，然后通过Chromium检查：点击打开、Esc关闭、左右导航、动态增删、切换Tab退出、StrictMode重挂、移动端焦点与触摸。浏览器网络面板确认首页不主动加载photoswipe核心。**当前SDK NOT_RUN，build BLOCKED，browser NOT_RUN**，不采用历史结果冒充通过。
+### 业务
 
-## 官方资料
+三张说明可以开关。说明不进灯箱的 HTML 注入。方向键是否切换，要在浏览器里看，本指南不记为已通过。
+
+### 进阶
+
+「添加第四张」会先关闭已打开的灯箱，再让 effect 重建。这是为了避免旧实例还指着已经卸下的锚点。移除第四张同样重建。
+
+## 4. 反例（带代码）
+
+### 反例 1：每次 render 都 init
+
+```tsx
+const lightbox = new PhotoSwipeLightbox({ gallery: '#app', children: 'a' })
+lightbox.init()
+```
+
+监听会叠，外壳的链接也会被选中。放进 effect，选择器限于 ref，清理时 `destroy()`。
+
+### 反例 2：不给原始像素
+
+```html
+<a href={src}><img src={src} /></a>
+```
+
+没有 `data-pswp-width` / `height` 时，开场动画和比例会错。Lab 写的是 1200 和 800，和 SVG 的 viewBox 一致。不要填一个拍脑袋的 100 冒充原图尺寸。
+
+### 反例 3：进页面就 import 核心
+
+```tsx
+import PhotoSwipe from 'photoswipe'
+```
+
+Lab 把核心放在 `pswpModule: () => import('photoswipe')`。样式表 `photoswipe/style.css` 是静态引入，核心 JS 仍按第一次打开加载。不要为了「快」在路由入口同步导入核心却声称按需。
+
+### 反例 4：caption 用 innerHTML
+
+```ts
+lightbox.on('uiRegister', () => {
+  el.innerHTML = item.captionHtml
+})
+```
+
+说明来自不可信 CMS 时这是 XSS。Lab 用 React 文本。若灯箱里要说明，先净化或只用文本节点。
+
+### 反例 5：dataSource 充当数据库
+
+灯箱的数据是打开时的视图。文章 id、权限和原图 URL 的权威在你们的数据层。不要只把 PhotoSwipe 的 items 数组存进数据库。
+
+### 反例 6：preload 当成整库下载
+
+```ts
+preload: [1, 20]
+```
+
+这会按窗口去取邻近张，不是离线包。本示例没有设这个选项。
+
+### 反例 7：没有可打开的链接
+
+灯箱初始化失败时，用户仍应能打开图片。Lab 的 `<a href>` 指向同一 SVG。不要用空 `href="#"` 且只靠点击脚本。
+
+### 反例 8：任意 URL 都当幻灯片
+
+远程地址会发请求，也可能不是图片。本示例只使用自己生成的 data URL。产品接入上传时要有类型、大小和主机名单。
+
+### 反例 9：用数组下标当 React key
+
+```tsx
+{visible.map((item, index) => <figure key={index}>)}
+```
+
+增删第四张时下标会串。Lab 用 `item.id`。
+
+## 5. 选项与迁移
+
+常用且本示例真正设置了的：`gallery`、`children`、`pswpModule`、`bgOpacity`、`showHideAnimationType`。其余选项以 [options](https://photoswipe.com/options/) 为准，不要从 v4 的 jQuery 初始化抄 `items` 数组到 v5。
+
+| 选项 | 本示例 | 不要误读成 |
+| --- | --- | --- |
+| `gallery` + `children: 'a'` | 只扫描这块 div 里的链接 | 全页所有 `<a>` |
+| `pswpModule` | 函数返回动态 `import` | 页面加载时的同步核心 |
+| `bgOpacity: 0.88` | 遮罩透明度 | 图片本身的不透明度 |
+| `showHideAnimationType: 'fade'` | 开合动画 | 已读取 `prefers-reduced-motion` |
+| `data-pswp-width` / `height` | 1200 与 800，和 SVG viewBox 一致 | 缩略图 CSS 的 300×200 |
+
+缩略图的 `width={300}` 只影响布局。灯箱用的是 data 属性上的原始像素。把两者写成同一个数会让开场比例错。
+
+焦点：打开灯箱后，键盘循环应留在对话框里；关闭后应回到刚才的链接。本示例没有手写焦点恢复代码，依赖 PhotoSwipe 的默认行为。没有浏览器记录之前，只把它列为待查，不写已通过。
+
+`loading="lazy"` 只影响缩略图。它不阻止用户打开灯箱时再解码同一份 data URL。不要把它写成带宽优化的证据。
+
+四张图都是同一套模板函数生成的，调色板按索引循环。换色不代表换了拍摄主体，也不能拿来做「图床缓存命中」的结论。
+
+v5 的生命周期是 Lightbox 加动态 import。卸载必须 `destroy()`，它会关掉还开着的对话框并解绑。不要只删 DOM 节点。
+
+`prefers-reduced-motion`：本示例把动画设为 `fade`，没有读取系统减少动态的设置。需要时再改选项，并在浏览器里看。
+
+## 6. 组合（未挂载）
+
+**E14。** 灯箱负责看大图。裁剪导出是另一条 Canvas 路径。不要让 PhotoSwipe 的缩放比例冒充裁剪像素。
+
+**E15。** 缩略图可以用 pica 生成。灯箱的 `href` 仍应指向你们允许的原图或预览图，并带真实宽高。
+
+## 7. 故障
+
+| 现象 | 先看 |
+| --- | --- |
+| 点了直接下载或打开 SVG | 灯箱是否 init，点击是否发生在 `a` 上 |
+| 比例不对 | data 属性是否等于真实像素 |
+| 换层后灯箱还在 | effect 是否 `destroy` |
+| 外壳链接被当成图片 | gallery 是否限定在 ref |
+| 第四张点了没反应 | 是否仍持有已关闭的旧实例。Lab 会重建 |
+| 说明里出现 HTML | 不应。figcaption 是文本 |
+
+## 8. 练习（未挂载）
+
+1. 灯箱说明只用文本节点，内容来自 alt。验收：字符串里的 `<script>` 不成为元素。
+2. 连续打开关闭 10 次后，页面上只有一个 lightbox 监听集。没有测量工具就不要写泄漏数字，只记录 destroy 是否被调用。
+
+## 9. 验收
+
+清单，未执行则不能写通过：
+
+1. 点运行前没有 photoswipe 核心请求；第一次打开才有。
+2. basic 只一张；business 三张；advanced 可在 3 和 4 之间切换。
+3. 离开 Demo 后灯箱关闭，监听不再响应外壳上的 Esc。
+4. 缩略图有宽高和 alt。
+5. 键盘切换和焦点返回要有浏览器记录才算做过。
+
+sdk、build、browser 保持 **NOT_RUN**。没有 `docs/library-lab/evidence/runs/` 的 E13 收据就不能写 PASS。Actions `41779873259` 是仓库级运行，不是本条目通过。
+
+## 10. 资料
 
 - https://photoswipe.com/getting-started/
 - https://photoswipe.com/options/
 - https://github.com/dimsemenov/PhotoSwipe
-
-## 动态图集生命周期加固（EF wave19）
-
-新增 `examples/gallery-policy.mjs` 作为场景选择和原始尺寸/重复ID的**同源业务约束**；Node测试 `examples/gallery-policy.test.mjs` 只覆盖纯数据契约，绝不表示PhotoSwipe已在Chromium运行。示例在 `level` 或动态图片集合变化时销毁旧 `PhotoSwipeLightbox` 并重新初始化该gallery作用域；移除第四张前显式 `pswp.close()`，避免持有已经退出React列表的slide。官方说明 `destroy()` 可关闭已打开灯箱并取消绑定；不能推断所有内核懒加载已在浏览器验证。SVG data URL是**本地代码生成的可信固定素材**，此policy不做不可信SVG净化，生产接入应使用已审查的媒体资产和正确的CSP `img-src`。
-
-重现实测：`node --test packages/library-lab/entries/E13-photoswipe/examples/gallery-policy.test.mjs`。PLATFORM后续在真实Chromium按 Esc/焦点恢复/动态移除正在查看的第四张/StrictMode卸载重挂/CSP检查；仅文档和数据测试通过不更改 `verification.json` 中SDK/browser状态。
+- https://www.npmjs.com/package/photoswipe

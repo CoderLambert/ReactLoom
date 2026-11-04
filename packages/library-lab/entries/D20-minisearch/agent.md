@@ -1,47 +1,58 @@
-# D20 MiniSearch — Agent 复用手册
+# D20 MiniSearch — 工程手册
 
-## 快速选型
+## 适用
 
-MiniSearch 是浏览器/Node 可用的倒排全文检索库，提供索引、字段权重、前缀与模糊词条、查询建议。适合离线资料和中等规模文档目录，不是向量数据库、权限系统或分布式搜索集群。本 Demo 对原创 RSS 文章 fixture 建立真正的 SDK 索引。
+浏览器内会变化的文档集合：倒排索引、前缀、轻微错拼和查询建议。分数越高越相关。
 
-## 实际文件及部署前置
+分组和授权都要在 `addAll` 之前完成。不要把 Fuse 的分数方向抄过来，也不要输出 HTML 高亮。默认分词不是中文分词器。
 
-`library.json`（版本与依赖）→ `examples/example.tsx`（完整逻辑）→ `examples/demo.tsx`（Lab 导出）→ `verification.json`（分项证据）。前置依赖：minisearch@7.2.0。默认不向外部 API 发起请求。
+## 版本
 
-## 迁移指令
+`minisearch@7.2.0`，MIT。字段 `title`、`summary`；存储字段 `title`、`group`；标题 `boost` 为 3；`prefix: true`；`fuzzy` 默认 0.2。
 
-先评估数据量、全文语料语言、更新频率和权限边界。最小迁移是 buildMiniIndex 与数据 ID Map；将源文档与索引生命周期绑定，数据更新后增量维护或重建。搜索后排序由真实 score 决定，谨慎控制字段 boost。
+advanced 可以把 `fuzzy` 设为 `false`。建议最多 3 条，搜索结果最多 20 条。
 
-## 禁止的反模式
+## 迁移
 
-禁止将 MiniSearch 当安全 ACL；禁止直接注入 HTML 高亮片段；禁止把 Fuse.js 评分语义直接套到 MiniSearch；中文全文不能假设默认 tokenizer 具备专业分词能力。
+从 [`examples/example.tsx`](examples/example.tsx) 带走 `buildMiniIndex` 和提交型查询。裁剪来自 [`examples/scope-policy.mjs`](examples/scope-policy.mjs)。
 
-## 必须保留的能力边界
+重建索引依赖文档数组的引用变化。替换一篇时返回新数组。
 
-创建 MiniSearch 时指定 fields、storeFields 与 searchOptions；addAll 建立倒排结构，search 返回 id、score、terms 等；autoSuggest 提供文本建议。storeFields 只存需要在结果中展示的字段，原始正文完整副本不一定需要与索引全部同步。
+展示用 id 回查当前文档，不信任索引里可能过期的存储字段去显示摘要。
 
-## 最小测试断言
+## 不可删的清理
 
-真实索引对标题和正文关键词返回正确文档；search({filter}) 排除非所属组；新建索引后更新的 title 可被查询；浏览器组成输入期间不触发错误搜索提交。
+`scopeSearchDocuments` 对「全部」返回拷贝。过滤后的数组才进入 `MiniSearch`。
 
-## 版本 / 证据
+`autoSuggest` 不得另建一个全量索引。
 
-采用官方稳定 MiniSearch 7.2.0；搜索评分越高代表相关性越强，不能与 Fuse.js 的越低越相似混为一谈。 当前示例未获得实际 SDK、完整类型检查、构建或浏览器 PASS；迁移到目标项目需要按目标锁文件重新测试，不能声称历史 PASS 可继承。
+组合输入期间不要 `setQuery`。
 
-## 选型关系
+## 反例
 
-alternative D19：Fuse.js 更适合小集合字段加权模糊查询；MiniSearch 对多文档正文采用倒排索引。
+- 全量索引，只在 JSX 里按组隐藏。
+- `slice` 之后再做分组过滤。
+- 写成“分数越小越好”。
+- `dangerouslySetInnerHTML` 渲染建议词。
+- 改标题后继续用旧索引。
+- 把 UI 分类当成后端 ACL。
+- 用英文结果声称中文分词已验证。
+- 把秘密正文放进 `storeFields`。
 
-alternative D21：静态站点可构建期生成 Pagefind 全文索引，减少客户端下载和实时建立索引的成本。
+## 测试断言
 
-## 官方出处
+- 真实 MiniSearch 能按标题和前缀命中。
+- 过滤在截断前；内容更新后重建索引，旧词消失。
+- `autoSuggest` 只来自当前分组的索引。
+- 「全部」不修改源数组；未知分组为空。
+- `tests/sdk.test.mjs` 导入真实 `minisearch`。无收据则 NOT_RUN。
 
-官方 API 与 README：https://github.com/lucaong/minisearch
+## 真实限制
 
-npm 稳定版本：https://www.npmjs.com/package/minisearch
+六篇种子，没有持久化索引，没有自定义 tokenizer。模糊 0.2 是演示。建议列表不是完整词典。
 
-API 文档：https://lucaong.github.io/minisearch/
+分类名是 fixture。真实 ACL 必须在数据进入组件之前完成。
 
-## 分组索引与联想泄露防线（第16轮）
+## 证据
 
-迁移时同时带上 `examples/scope-policy.mjs` 与其类型声明；对最终已授权文档先做 group/tenant 切分，再以 `scopedDocs` 建立 index、ID 映射、搜索和 autoSuggest。旧实现只给 search 添加 filter，仍可能让 autoSuggest 看到跨组词。把 UI 分组当服务器 ACL 属于反例：私有原始文档不能因“前端过滤”进入浏览器。必须测试普通 query、空 query、联想、切换和新增/更新文档；真实 SDK / 浏览器证据缺失不可填 PASS。
+sdk、build、browser 保持 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有匹配收据。Actions 41779873259 不是本条目 PASS。不要改 `verification.json`。

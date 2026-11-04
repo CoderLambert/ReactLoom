@@ -1,19 +1,48 @@
-# C12 FullCalendar v7 — Agent 实施指南
+# C12 FullCalendar — 工程手册
 
-## 选型和版本
-事件日历/排程使用 v7.1.3，依赖 temporal-polyfill。不能按 v6 手册装 @fullcalendar/core + @fullcalendar/daygrid；v7 从 @fullcalendar/react/daygrid 等子路径导入。免费标准功能与付费 Scheduler Premium 严格隔离。
+## 适用
 
-## 核心可迁移代码
-examples/example.tsx 的 PLUGINS/CSS/事件 id、React 状态、calendarRef、拖拽回滚和 DST 两 instant 示范；examples/demo.tsx 是宿主重导出。生产替换内存事件为范围 API，添加 AbortSignal/epoch，服务端验证 revision。
+需要月、周、列表和拖拽提议的排程视图。纯日期计算不必引入它。资源泳道不在 Community MIT 包里。
 
-## 不允许省略
-CSS skeleton、theme、palette；稳定插件引用；UTC instant 与 IANA zone；全天事件结束排他性；失败时 info.revert；语义列表和键盘替代编辑。
+## 版本
 
-## 测试门槛
-官方模块真实导入、Node 日历日与两个 instant、浏览器月/周切换、日期移动成功与冲突回滚、StrictMode清理、键盘/读屏。仅 Node import 不证明 React 浏览器渲染。
+`@fullcalendar/react@7.1.3` 与 `temporal-polyfill@1.0.4`。视图从 `@fullcalendar/react/daygrid`、`timegrid`、`interaction`、`list` 引入。不要安装 v6 独立插件或 `@fullcalendar/luxon3`。
+
+## 迁移
+
+带走 `examples/example.tsx` 和 `examples/calendar-policy.mjs`。用 API client 按可见范围取事件，替换静态数组。拖拽成功前保持 `revert()` 路径。polyfill 留在运行依赖里，即使业务代码不直接 import Temporal。
+
+## 不可删的清理
+
+定时值没有偏移就 revert。全天值必须通过 `isCivilDate`。未知 id 的拖拽 revert。`fold-early` 的冲突演示必须调用 `revert()`。事件数组用 `useMemo`。本地 id 用 `allocateEventId`，不复用已有 `local-N`。
+
+## 反例
+
+```ts
+import dayGridPlugin from '@fullcalendar/daygrid'
+events={[...serverRecords]}
+eventContent: () => ({ html: title })
+```
+
+- 只存纽约墙上的 `01:30`。
+- 全天结束日当成包含。
+- `eventDrop` 忽略 409。
+- 用 `eventDidMount` 刷新标题。
+- 把 Premium 功能当成已包含。
+- 日历、React state 和缓存同时当权威。
+
+## 测试断言
+
+- `2026-02-30` 不是合法公历日。
+- `-04:00` 与 `-05:00` 的 01:30 得到不同的 UTC instant。
+- 无偏移的日期时间、`-00:00`、超出 ±14:00 的偏移被拒绝。
+- id 分配跳过已占用序号，并在安全整数耗尽时抛错。
+- 策略单测没有挂载 FullCalendar。
+
+## 真实限制
+
+没有网络取数，没有 revision 字段，没有 Temporal 调用。polyfill 是为库准备的。春季缺口的完整墙上往返不在 `getUtcInstant` 里。中文输入法未单独验收。
 
 ## 证据
-https://fullcalendar.io/docs/react，verification.json 无 PASS 之前标为待运行。
 
-## 事件输入契约
-迁移 `examples/calendar-policy.mjs` 及对应类型声明；创建全天事件通过 `isCivilDate` 校验；非全天编辑必须验证 `getUtcInstant` 返回非 null（含显式偏移）再更新业务源，否则调用 FullCalendar 的 `info.revert()`。本地 ID 使用 `allocateEventId` 避免 Date.now() 碰撞。若目标 FullCalendar named-zone 插件输出无偏移字段，先补正确时区处理/官方支持的 zone 实现，不能去掉守卫来伪造通过。
+没有收据不要写 PASS。Actions 41779873259 不是本条目。不要改 `verification.json`。

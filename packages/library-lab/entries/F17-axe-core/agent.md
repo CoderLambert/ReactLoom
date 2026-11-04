@@ -1,17 +1,45 @@
-# F17 axe-core — Agent 工程迁移指南
+# F17 axe-core — 工程手册
 
-用于自动化无障碍规则审计，不用于“自动补齐所有WCAG合规”。版本基线 axe-core 4.14.0，MPL-2.0。完整迁移需结合F13 Playwright真实浏览器与人工键盘/屏幕阅读器检查。
+## 适用
 
-## 从实战源码迁移
-从 `examples/example.tsx` 迁移按需 `axe.run(container,{runOnly})` 和 violations/incomplete 的结构化报告。不复制教学中故意缺alt/label/name的组件到生产。根据目标页面场景扩大规则范围；不应只选这3条就作整站验收结论。
+对教学容器跑 `image-alt`、`label`、`button-name`，并对照修复前后。不是整页 WCAG，也不是读屏。
 
-将audit置于明确用户或测试触发的稳定渲染阶段，避免在React每次render自动扫描。扫描需要当前DOM确实已挂载，异步结果要保证代际关系，避免旧结果覆盖新页面。保存测试范围、浏览器环境、源指纹、真实console/CI报告。
+## 版本
 
-## 断言合同
-基础：`image-alt` 检测错误图片；修复版通过目标规则。业务：没有label时触发 `label`；关联label后消失。进阶：无名按钮触发 `button-name`，修复后组合规则无violations。还要检查 `incomplete`，不能把这三个rule无问题推成所有WCAG合规；真实浏览器执行之前为NOT_RUN。
+`axe-core@4.14.0`，MPL-2.0。调用 `axe.run(container, { runOnly })`。不要 mock 这三则规则。
 
-禁止生产站点插入不可信脚本/外部扫描服务；无需付费API。官方：https://github.com/dequelabs/axe-core
+## 迁移
 
-## 跨实例队列迁移限制
+带走 `examples/example.tsx`、`examples/audit-queue.mjs` 和 `.d.mts`。上下文保持 ref 容器。换 level 的 `key` 留着。产品复制时用修复后的 DOM，不要复制故意的缺陷。
 
-同时显示多个待扫描组件时应复用 `audit-queue.mjs` 的单模块排队器；在组件卸载、替换场景后失效化旧请求，并保持 `container.isConnected` 检查。运行中不要调用 `axe.reset()` 中断其他组件的全局规则。此队列只协调同一份 Lab 模块发起的 `axe.run`，不能保证外部代码不会并发扫描。Node 纯队列测试的通过不得标为 axe-core SDK 已验证。
+## 不可删的清理
+
+`running` 在进入时置位，只有当前代号能在 finally 里清掉。generation 在卸载和切换修复时增加。队列跳过已失效的任务，失败不能卡住下一次。扫描中不许改 DOM。不要调用不存在的「取消 axe.run」。
+
+## 反例
+
+- `axe.run(document)`。
+- 不设 `runOnly` 却说只检查了 alt。
+- 违反数为 0 就标记合规。
+- 重叠的 `axe.run`。
+- 采用代号已变的结果。
+- 只靠颜色显示 impact。
+- mock `axe-core`。
+- 把未修复的空按钮抄进产品。
+
+## 测试断言
+
+- 未修复的 basic 含 `image-alt`；business 含 `label`；advanced 能同时列出按钮名。
+- 修复后这三条不再违反；incomplete 单独计数。
+- 排队中的过期任务得到 `skipped`，后续扫描仍可运行。
+- `audit-queue.test.mjs` 不 import axe-core。
+
+## 真实限制
+
+规则只有三条。不能物理取消进行中的 `axe.run`。队列只管本模块。placeholder 不是标签。透明 GIF 不是内容图片。没有键盘脚本。换 level 只丢弃结果，不中断已经开始的调用。
+
+## 证据
+
+浏览器收据要证明真实 `axe.run` 的违反与修复，并放在 `docs/library-lab/evidence/runs/`。队列单测不是 SDK。Actions 41779873259 不是 F17 PASS。
+
+其它页面的 axe 日志不能抄到这三则规则。零违反只覆盖 `runOnly` 里的 id。

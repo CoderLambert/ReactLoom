@@ -1,19 +1,45 @@
-# E01 Tiptap — 面向编码 Agent 的迁移手册
+# E01 Tiptap — 工程手册
 
-**识别任务**：自定义富文本、Schema 扩展、受控工具栏、结构化文档。需要开箱即用的块级产品界面时优先评估 E02 BlockNote；需要 IDE 语义高亮时不要选 Tiptap。
+## 适用
 
-**版本事实**：`@tiptap/react`、`@tiptap/pm`、`@tiptap/starter-kit` 3.32.0，MIT；查看目标项目是否为 React19 和客户端运行环境。当前版本仍未经本Lab实际构建，见 verification.json。
+自定义富文本、Schema 扩展、受控工具栏、结构化 JSON 文档。开箱块界面先评估 E02。代码编辑用 E04 或 E05。只读 Markdown 用 E06。一行备注用 textarea。
 
-**最小迁移路径**：先读 `examples/example.tsx`，复制 `useEditor/EditorContent/StarterKit`、`editor.chain().focus()`、update监听/清理，示例 `demo.tsx` 不是必需业务代码。不要复制整套Lab容器或 CSS。
+## 版本
 
-**必须保留**：编辑器 null 检查；只在稳定实例上订阅/退订 update；限制 JSON 输入尺寸；持久化需要版本、schema、服务端权限；不在 HTML 显示层信任富文本；切文档时明确编辑器/存储所有权；IME 不按单次 keydown 误读文本完成。
+`library.json` 将 `@tiptap/react`、`@tiptap/pm`、`@tiptap/starter-kit` 都钉在 3.32.0，MIT。三包同版本。不要把 v2 的 `setContent(doc, false)` 抄进 v3。StarterKit v3 已含 Link、Underline、ListKeymap，不要再注册同名扩展。
 
-**禁止的反模式**：`document.execCommand` 替代真实命令、在 render 中 new Editor、把 parse 成功当安全验证、每个按键写 sessionStorage、复制 v2 教程到 v3、把私有文档嵌入外部 AI 服务。
+## 迁移
 
-**验收**：选区加粗/撤销、内容保存重进恢复、非法 JSON 与超长输入、两标签页独立、卸载无更新回写；在真实浏览器执行并记录 commit SHA / pkg lock / 截图。命令：`pnpm --filter @reactloom/library-lab typecheck`、`build`、针对 E01 的浏览器检查。NOT_RUN 不能写 PASS。
+从 `examples/example.tsx` 带走 `useEditor`、`immediatelyRender: false`、`EditorContent`、`editor.chain().focus()`、`update` 的成对 `on`/`off`。`examples/demo.tsx` 只是再导出。恢复逻辑必须继续调用 `examples/snapshot-policy.mjs` 的 `parseTiptapSnapshot`，再 `setContent(json, { errorOnInvalidContent: true })`。用产品 API 替换 sessionStorage 时带上 schema 版本和权限。不要复制 Lab 容器样式。
 
-**资料**：https://tiptap.dev/docs/editor/getting-started/install/react 与 https://tiptap.dev/docs/editor/api/editor。
+## 不可删的清理
 
-## EF 迁移补充
+`useEditor` 拥有编辑器实例，卸载时由 Hook 销毁，不要再手动 destroy 一次。`editor.on('update', update)` 的清理函数必须 `editor.off('update', update)`，函数身份相同。`key={level}` 让三层各自挂载，不要用 CSS 把编辑器藏起来继续收事件。恢复失败不得清空当前文档。
 
-复用 `examples/snapshot-policy.mjs` 时保留 20KB / 500节点 / 深度12 / StarterKit 白名单限制及 `errorOnInvalidContent:true`，并针对业务新增 Node/Mark 类型升级校验。独立场景通过子组件 key 重挂，不能把切换 Tab 等同 CSS 隐藏。先跑 `node --test packages/library-lab/entries/E01-tiptap/tests/policy.test.mjs`，再用真正 SDK + Chromium 验证，不能把此纯策略测试记为 SDK PASS。
+## 反例
+
+- 在 render 里 `new Editor()`，或每次击键 `setContent`。
+- `document.execCommand` 代替 `chain().focus()`。
+- `onUpdate` 把整篇 `getJSON()` 写入全局 state 或每个字母写存储。
+- `getHTML()` 直接 `dangerouslySetInnerHTML`。
+- 固定一个 editor 跨路由复用。
+- 恢复时只看 `type === 'doc'`，不跑节点白名单。
+- 新增图片或自定义 mark 却不改 `snapshot-policy.mjs`。
+- 把 Node 策略测试写成 Tiptap SDK 已通过。
+
+## 测试断言
+
+- 超过 20_000 字符、未知节点、过深、`javascript:` 或带凭据的 href 都被 `parseTiptapSnapshot` 拒绝。
+- 合法 StarterKit JSON 才能交给 `setContent(..., { errorOnInvalidContent: true })`。
+- 浏览器里：选区加粗和撤销改变文档；坏草稿留下原文；离开 Demo 后不再 `setState`。
+- 中文输入法组合期间正文不被 effect 重写。没有收据就不要写成已测。
+
+## 真实限制
+
+策略只覆盖这份文本 StarterKit。`errorOnInvalidContent` 拒绝未知 schema，不是 HTML 净化器。示例没有 debounce、没有 `useEditorState`、没有上传、没有协作。`sessionStorage` 可被同源脚本改写。
+
+## 证据
+
+没有 `docs/library-lab/evidence/runs/` 里 E01 的收据时，sdk、build、browser 保持 NOT_RUN。Actions `41779873259` 是仓库级运行，不是本条目 PASS。`node --test packages/library-lab/entries/E01-tiptap/tests/policy.test.mjs` 只证明策略函数。
+
+资料：https://tiptap.dev/docs/editor/getting-started/install/react 与 https://tiptap.dev/docs/editor/api/editor 。

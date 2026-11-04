@@ -1,69 +1,147 @@
-# D19 Fuse.js — 浏览器模糊搜索与 RSS 分组过滤
+# Fuse.js 7.5.0｜先缩小集合，再模糊匹配
 
-## 版本与任务定位
+Lab 锁定 `fuse.js@7.5.0`（MIT）。`Fuse.search` 在浏览器里对当前数组做加权模糊查找。分数越小越接近。它不是服务端全文索引，也不是权限系统。大文档集合应比较 D20 MiniSearch 或 D21 Pagefind。
 
-固定 fuse.js@7.5.0（Apache-2.0），适用于低至中等规模的浏览器本地模糊匹配：频道发现、命令面板、离线收藏。不是向量搜索、权限系统、跨用户同步或服务器全文索引。此条目为重新编写的完整实战源码，不继承旧研究中的测试成功标记。
+没有匹配收据时 sdk / build / browser 保持 NOT_RUN。Actions 41779873259 是仓库级结果，不是本条目 PASS。
 
-## 安装与引用
+## Lab 当前示例
 
-~~~sh
-pnpm add fuse.js@7.5.0
-~~~
+[`examples/demo.tsx`](examples/demo.tsx) 重导出 [`examples/example.tsx`](examples/example.tsx)。索引在 `createArticleIndex`：`includeScore` 和 `includeMatches` 打开，`ignoreLocation: true`，键权重 title 0.65、summary 0.25、tags 0.10。阈值来自当前层级，不来自隐藏控件的残留值。
 
-~~~ts
-import Fuse from 'fuse.js'
-const fuse = new Fuse(data, {
-  keys:[{name:'title',weight:0.65},{name:'summary',weight:0.25},{name:'tags',weight:0.1}],
-  threshold:0.35,includeScore:true,ignoreLocation:true
-})
-const found=fuse.search('React',{limit:20})
-~~~
+[`examples/search-scope.mjs`](examples/search-scope.mjs) 的 `resolveScope`：basic 强制分组「全部」、阈值 0.35；business 使用可见分组，阈值仍是 0.35；advanced 才接受 0、0.15、0.35、0.55。未知分组落到「全部」。`normalizeQuery` 做 NFC，去掉控制字符，trim，并按码点截到 80。输入框 `maxLength` 是 120，真正搜索用规范化后的查询。
 
-实际运行源码 examples/example.tsx，Demo 出口 examples/demo.tsx；三层示例通过相同源码参数切换行为，源码视图不维护副本。
+`visibleDocuments` 在建索引之前按分组过滤。注释写明分组是 UI 滤镜，不是 ACL。`search` 的 `limit: 20` 作用在已经缩小的集合上。空查询不调用 search，直接列出当前分组的文档，分数为 null。
 
-## 三层实际应用
+advanced 用 [`examples/index-lifecycle.mjs`](examples/index-lifecycle.mjs)。`upsertDocument` 按 id 替换或追加，返回新数组。`removeDocument` 按 id 过滤。重复 id 或空 id 在重建索引前抛错。替换「imported-rss」后，旧标题里的 React 不应再被这张新索引命中。组件每次用 `useMemo` 从最新数组 `new Fuse`。
 
-基础：中文/英文标题输入，查看模糊匹配的 score。score 越小越接近，不把浮点数分数当业务“相关性概率”。
+IME：`compositionstart` 把 `composing` 设为真，提交时若仍在组合则不把 draft 推进 `query`。
 
-业务：RSS 频道先根据可见分组裁剪集合再建立 Fuse 索引，最后执行模糊匹配和 limit；不能先在全局索引 limit=20 后再过滤分组，否则可能遗漏组内有效结果；IME 合成阶段不能因为 Enter 误提交。query 为空时回退为经过组别筛选的全部条目，不能让空串命中数量反映未定义行为。
+结果用文本节点渲染标题和摘要，不把命中片段插成 HTML。
 
-进阶：显式调整 threshold（0 更严格，0.55 更宽松）；增加一个本地频道后，在 useMemo 中重建 Fuse 实例，使索引与文档快照一致。也可采用 fuse.setCollection(newData) 显式刷新；不要原地改数组以免索引过期。
+没有挂载：服务端索引、高亮 HTML、多租户 ACL。阈值面板在 basic 和 business 上不出现，隐藏值也不能改变有效阈值。
 
-## 重要机制
+## 什么时候用
 
-- Keys 权重相对决定排序，需按搜索任务调整；标题通常高于摘要。
-- includeMatches 返回匹配位置，可用于安全文本切片高亮；不要从不可信数据拼 HTML 或使用 dangerouslySetInnerHTML。
-- ignoreLocation 禁用默认“靠前更重要”的影响，适合标题/摘要不同长度的条目。
-- threshold 是模糊容错而不是固定字符相似百分比，应该在真实语料中测试。
-- Fuse 不会内建用户权限过滤，必须将权限范围先收窄后建立索引，或者在最终结果强制过滤，防止敏感项通过结果/时间泄露。
+几百条以内、字段权重和错拼容忍重要时用 Fuse。需要倒排、前缀和联想时看 MiniSearch。静态站点在构建期出索引用 Pagefind。需要权限过滤时，在建索引之前丢掉无权文档，而不是在结果里再藏一行。
 
-## 反例与修正
+Fuse 的分数是距离，越小越好。不要把 MiniSearch 的“越高越相关”抄过来。
 
-1. useMemo 依赖为空，数据列表已更换但索引仍旧：以 data/阈值为依赖重建，或 setCollection。
-2. 搜索结果将用户字符串直接插入 innerHTML：使用 React 文本节点和安全高亮切片。
-3. 以 score 排序替代可信过滤：tenant、权限、内容有效性属于业务契约。
-4. 百万记录全部塞主线程并每个键盘事件重新建索引：使用节流、分片、Worker 或服务端搜索。
-5. 使用索引下标作为唯一身份：动态插入后引用错乱，保留领域 ID。
-6. 认为模糊搜索能够自动匹配中文语义同义词：Fuse 是近似文本匹配，不是语义嵌入模型。
+## 模型
 
-## 与其他库对比
+构造函数接收文档数组和选项。`threshold` 越低越严格，0 接近精确。`ignoreLocation` 让匹配不依赖词在字段里的位置。`keys` 的 `weight` 决定标题比摘要更重要。
 
-D20 MiniSearch 擅长在字段上建立倒排索引和全文检索；D21 Pagefind 更适用于构建时索引的静态站；D04 p-queue 管理任务启动频率，不能代替全文索引。后端最终搜索一般还需要来源权限、索引更新和持久化。
+`search(query, { limit })` 返回 `{ item, score, matches }`。Lab 把 `matches` 收成字段名列表。泛型不会在运行时验证文档。
+
+`setCollection` 会换掉索引所用的数组引用意义上的内容；Lab 选择每次用新的不可变快照 `new Fuse`，避免在旧实例上原地改调用方数组。测试要求重建后的索引不再包含已删除或已替换的正文。
+
+索引不是安全边界。先 `visibleDocuments`，再构造 Fuse。若先索引全部文档再在结果上按组过滤，`limit` 可能被别的组占满，当前组一条都看不到。
+
+## 三层示例
+
+### 基本
+
+默认查询 `React`。分组控件不出现，有效分组是全部，阈值 0.35。带「Ract」错拼的那条可以因为模糊匹配出现。分数显示在每条下面。
+
+### 业务
+
+可以选择技术、商业或开源。切换分组会重建索引，而不是只隐藏 `<li>`。搜索仍在提交时发生，组合输入不提交。
+
+### 进阶
+
+改阈值后用同一查询比较条数。新增 `imported-rss` 后应能找到 React Query 那条。同 id 替换成 TypeScript 标题后，旧 React 句子不再属于该 id。删除后条数回到种子。未知 id 的删除返回原数组。
+
+## 反例
+
+### 反例 1：结果 HTML 拼接
+
+```tsx
+<li dangerouslySetInnerHTML={{ __html: hit.item.summary }} />
+```
+
+```tsx
+<li><strong>{item.title}</strong><p>{item.summary}</p></li>
+```
+
+### 反例 2：先搜索再按权限过滤
+
+```ts
+engine.search(query, { limit: 20 }).filter(hit => hit.item.group === group)
+```
+
+无权或他组文档会占满 limit。
+
+```ts
+const engine = new Fuse(visibleDocuments(docs, group), options)
+engine.search(query, { limit: 20 })
+```
+
+### 反例 3：原地改文档还用旧 Fuse
+
+```ts
+docs[0].title = '新标题'
+engine.search('新标题')
+```
+
+旧索引仍可能命中旧词。
+
+```ts
+setDocs(old => upsertDocument(old, next))
+```
+
+然后用新数组构造 Fuse。
+
+### 反例 4：basic 仍沿用 advanced 的阈值
+
+用户在 advanced 选了 0.55，切回 basic 时若直接读 state，容错会变宽。`resolveScope` 在 basic 和 business 把阈值钉在 0.35。
+
+### 反例 5：把分组当成 ACL
+
+下拉框是客户端状态。真正的租户过滤发生在可信数据进入 `docs` 之前。
+
+### 反例 6：用分数排序规则套到别的库
+
+Fuse 越小越近。展示时不要写成“越高越匹配”。
+
+## 组合
+
+**MiniSearch**：同一份已授权数组可以另建倒排索引做前缀。不要混用两种分数的文案。Lab 的 D20 是独立条目。
+
+**Pagefind**：已发布的静态 HTML 走构建期索引，而不是把整站文章下载到 Fuse。
+
+**Query**：搜索框的提交词可以进 queryKey。Fuse 只过滤已经下载并且允许看见的那一页时，要在文案里说明这不是全库搜索。
+
+## 生产核对清单
+
+1. 建索引前按授权和分组缩小数组。
+2. `limit` 加在缩小之后。
+3. 同 id 替换和删除都会丢掉旧 token。
+4. 层级切换时隐藏控件不能改变有效阈值或分组。
+5. 查询去掉控制字符并限制长度。
+6. IME 组合期间不提交。
+7. 结果是文本，不是 HTML。
+8. 空查询的含义写明：当前分组的全部文档，不是一次空字符串搜索的分数。
+
+## 升级
+
+钉 `fuse.js@7.5.0`。升级后用固定文档集比较 `threshold` 0 与 0.35 的命中 id，避免默认分数公式变化不被发现。不要改权重而不更新验收列表。
+
+从旧版 `keys: ['title']` 迁到带权重的对象时，重测摘要里的词是否还会压过标题。
 
 ## 验收
 
-tests/sdk.test.mjs 直接真实 import Fuse 并验证搜索、limit、setCollection。浏览器需验证 IME、组别过滤和数据更新。没有实际跑依赖/浏览器则状态 NOT_RUN；Mock SDK 或编造命中率不得记 PASS。
+- `React` 查询命中带标题权重的文档，并返回 id 与分数。
+- `limit` 生效；索引本身不含未授权分组时，那些文档不会出现。
+- basic 忽略界面上残留的分组和 0.55 阈值。
+- 同 id 替换后旧标题不再被索引；删除后该 id 消失。
+- 重复 id 在 `upsert` 前抛错。
+- 控制字符被去掉，超长查询被截断。
+- `tests/sdk.test.mjs` 导入真实 `fuse.js`。无收据则 NOT_RUN。
 
-官方：https://www.fusejs.io/ · https://www.fusejs.io/api/options.html · https://github.com/krisk/Fuse/releases
+空查询列出当前分组，是为了让阈值实验有可见的全集。不要把这个行为抄成“空字符串应该匹配所有字段得分”。
 
-## 补充：隐藏设置不得继续影响基础模式
+## 资料
 
-原版在高级模式设置容错阈值、业务模式选择分组后，回到基础模式虽然隐藏了两项控件，却继续使用上一次的 `group` 和 `threshold`。这会令基础搜索不可预期地缺少文章、得分不同。现在组件每次由 `resolveScope({level, group, threshold})` 派生生效设置：basic 永远全部分组 + 0.35；business 保留可见分组但固定 0.35；advanced 才使用合法高级阈值。 `visibleDocuments` 在建 Fuse 索引之前筛选，`normalizeQuery` 有 NFC、控制字符清理、80 码点长度限制。helper 源码与声明同时在三层 sourceFiles 展示。该分组是 UI 条件，不是租户授权；生产权限仍须在服务端或数据交付阶段完成。
-
-## 数据更新必须更换索引快照：新增 / 替换 / 删除
-
-进阶场景现在有三个真实交互：新增带固定业务 ID 的 RSS、将同 ID 记录替换成 TypeScript 标题、删除该 ID。组件真正从 index-lifecycle.mjs 引入 upsertDocument 与 removeDocument，使用 React setDocs(old => ...) 的函数式更新，确保连续操作顺序确定。旧快照不可原地修改；useMemo 看到新 docs 后先做分组裁剪，再重新 new Fuse，旧标题不能残留在搜索结果。
-
-upsertDocument 保持既有 ID 的列表位置，插入时追加；removeDocument 删除特定 ID，不存在时返回原数组。源数据含重复/空 ID 则拒绝更新，防止 index 与 React key 产生二义性。三个层级共用 example.tsx、index-lifecycle.mjs/.d.mts 和既有 search-scope.mjs/.d.mts；不要维护第二份展示代码。索引是本地 UI 能力，不是可代替后端 tenant ACL 的边界。
-
-运行 node --test packages/library-lab/entries/D19-fusejs/tests/index-lifecycle.test.mjs 只证明不可变快照规则；tests/sdk.test.mjs 另外包含真实 Fuse 构建后新增、替换、删除及分组迁移断言。浏览器应验证先新增再替换时旧 React 命中消失、TypeScript 新命中出现，删除后不再命中，并测试中文 IME 与隐藏筛选模式。未执行 SDK/浏览器时仍保持 NOT_RUN。
+- https://www.fusejs.io/
+- https://www.fusejs.io/api/options.html
+- https://www.fusejs.io/api/methods.html
+- https://github.com/krisk/Fuse

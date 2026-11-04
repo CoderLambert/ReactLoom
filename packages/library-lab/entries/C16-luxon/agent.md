@@ -1,23 +1,47 @@
-# C16 Luxon — Agent 工程移植指南
+# C16 Luxon — 工程手册
 
-## 适用条件
-业务时间伴随 IANA zone、需要 DateTime/Interval/Duration 和跨 DST 的可解释行为；当前参考 luxon@3.7.2，Types @types/luxon@3.7.6，MIT。轻量渲染可比较 C15 Day.js。
+## 适用
 
-## 源码入口
-examples/example.tsx 的 parseCalendarDay、dailyWindow、ambiguousFallback。examples/demo.tsx 是 Lab 按需加载适配出口；复制到目标工程时无需 DemoHost。
+需要 `DateTime`、`Interval` 和 `getPossibleOffsets` 的排程。不要从 UI 语言推断时区，也不要改全局 `Settings.defaultZone`。
 
-## 必须保留
-对 DateTime 解析检查 isValid、invalidExplanation；明确 zone 与 locale；区别 .plus({days:1}) 和 .plus({hours:24})；绝对事件存 ISO UTC；处理回拨歧义使用 getPossibleOffsets() 并选择/提示明确 offset。多租户服务端不共享 Settings.defaultZone 可变配置。
+## 版本
 
-## 禁止
-以 JS Date 自动进位、设备默认时区、直接字符串截取构建时间、用前端计时器替代后端排程、在源码未变但依赖版本变化后沿用旧 PASS。
+`luxon@3.7.2`，MIT。zone 每次传入。回拨日由调用方给偏移。宿主 ICU 决定具体 TZ 数据。
 
-## 验证
-先 node --test entries/C16-luxon/tests/sdk.test.mjs，复核春秋 DST 与回拨；再类型检查、构建、浏览器。没有实际安装/运行时为 NOT_RUN。对应 C14/C15 的 API 不是 Luxon API，不得照搬。
+## 迁移
 
-官方：https://moment.github.io/luxon/api-docs/index.html
+带走 `examples/example.tsx`、`examples/wall-time.mjs` 和 `examples/wall-time-policy.mjs`。日历日继续中午构造并回读。墙上时间继续「语法 → isValid → 钟面回读 → 多候选必须选偏移」。
 
+## 不可删的清理
 
-## 强制消歧代码路径
+`resolveWallTime` 在候选多于一个且没有 `selectedOffset` 时抛错。春季回读不等于输入时抛错。不要改成静默取 `candidates[0]`。卸载没有订阅要拆，但不要把结果写进模块级缓存。
 
-不能只调用 `DateTime.fromISO(wall,{zone})` 后检查 `isValid`：Luxon 对春季 DST 缺失时间可能平移，对秋季重复时刻可能选一个偏移。复制 `examples/wall-time.mjs` 和 `wall-time-policy.mjs`，必须保留墙上时间回查、`getPossibleOffsets` 和可显式选择的偏移；对未知偏移报错，不能自动选择第一项。纯 Node 和真实 Luxon SDK 测试分项记录。
+## 反例
+
+```ts
+new Date('2026-11-01T01:30')
+DateTime.fromISO(wall, { zone }).toISO() // 未看 isValid
+dt.plus({ hours: 24 }) // 被当成明天同一钟面
+Settings.defaultZone = 'UTC'
+```
+
+- `keepLocalTime: true` 用来换时区展示。
+- 本地化字符串当排序键。
+- `Interval.contains(end)` 当成包含终点。
+- 只用 `isValid` 接受 DST 缺口。
+
+## 测试断言
+
+- 墙上语法只接受 `YYYY-MM-DDTHH:mm`，并拒绝非法月日。
+- 多个偏移时缺少选择会失败。
+- 选中的 `ZZ` 必须在候选中。
+- 回读钟面不一致时失败。
+- 语法单测没有证明 `getPossibleOffsets` 已执行。
+
+## 真实限制
+
+没有 HTTP revision，没有移动端日期控件收据。`ambiguousFallback` 仅展示候选。区间小时数以运行结果为准。浏览器和服务器的 ICU 可能不同。
+
+## 证据
+
+没有收据不要写 PASS。Actions 41779873259 不是本条目。不要改 `verification.json`。

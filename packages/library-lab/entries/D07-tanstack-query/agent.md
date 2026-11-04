@@ -1,30 +1,65 @@
-# D07 TanStack Query v5 — Agent 工程指导
+# D07 TanStack Query — 工程手册
 
-目标 SDK `@tanstack/react-query@5.104.1`（MIT）。用于缓存与同步外部异步数据，**不是**全局 UI Zustand store 的替代品。先读 library.json/verification.json，再从 `examples/example.tsx` 提取 query keys、queryFn、mutation callback 和 Provider 生命周期。
+## 适用
 
-## 迁移时保留
+共享的服务端快照：按键去重、失效、取消、分页和带版本的写入。HTTP 细节留在 Ky、Axios 或 API client。表单草稿和主题留在组件或 Zustand。
 
-- queryKey 覆盖用户/租户和所有数据入参，但不存明文凭据；
-- 所有 queryFn 从函数上下文解构 signal，传给可取消网络客户端；
-- 对相同资源更新前 cancelQueries，再 snapshot → optimistic update → error rollback → invalidate；
-- 多次 mutation 需串行 scope 或更细粒度版本化，以免旧快照覆盖并发成功结果；
-- 正确区分 staleTime（是否 fresh）、gcTime（无人观察者的生命周期）、refetchInterval（轮询）；
-- SSR 需要单独设计 QueryClient 生命周期和 dehydration/hydration，不能将本地 client-side demo 直接当作完整 SSR 实现。
+不要把 Query 当成数据库或鉴权。已有 Redux 中心时先比较 RTK Query，避免两套缓存。
 
-## 可丢弃
+## 版本
 
-本例的内存 fixture server、初始任务名称、ReactLab 视觉控件和本地延迟；替换为真实HTTP时保留 signal / status / 租户隔离策略。示例只清理自己的 QueryClient，不执行全局 cache.clear 或退出登录动作。
+`@tanstack/react-query@5.104.1`，MIT。对象 API。`gcTime`、`isPending` 与 `isFetching` 按 v5 理解。
 
-## 测试
+Lab 的 client 默认 `retry: false`。这是示例选择，不是官方默认（查询失败通常会重试）。不要把 5.104.5 写进依赖。
 
-使用目标 SDK 模拟业务服务但不 mock SDK。检查取消信号、旧响应无串线、缓存键隔离、乐观 409 回滚、成功失效重拉及卸载资源。项目 SDK/类型/构建/浏览器此提交未真实通过，不能继承历史研究测试结果。
+## 迁移
 
-官方：https://tanstack.com/query/latest/docs/framework/react/overview
+从 [`examples/example.tsx`](examples/example.tsx) 带走键工厂、独立 `QueryClient`、fixture 的 signal，以及 [`examples/optimistic-policy.mjs`](examples/optimistic-policy.mjs)。`demo.tsx` 只重导出。
 
-## 旧工作区 mutation 防串线
+每个演示实例在卸载时 `clear()` 自己。不要去清宿主的全局 client。
 
-缓存键隔离仍不足以隔离 UI 通知；执行异步 `onMutate` 时先记录租户 generation/epoch，返回 mutation context，成功与失败回调仅在 context epoch 与当前工作区 epoch 相等时显示 toast/状态。即使已切换 A → B → A，也不能显示先前 A 的过期完成通知。**原始租户的回滚和失效查询仍必须执行**，不能因为 UI 已切换而遗漏数据一致性处理。实际乐观写回、服务器端提交不是可自动取消的业务事务。重点补浏览器 E2E：旧租户成功和409都不得串线。
+搜索使用提交后的字符串。不要在 `onChange` 里直接改 queryKey，除非产品确定每个按键都是一次新查询。
 
-## 第23轮迁移规则：禁止整页过期回滚
+## 不可删的清理
 
-必须保留 `expectedRev` 的服务端 CAS，以及业务 ID + token 的细粒度乐观操作所有权；409 只撤销当前行，不能对整页做无条件 `setQueryData(oldSnapshot)`。查询失效需延迟至相同租户最后一个 mutation 结束，避免较旧操作的 refetch 写回覆盖尚在途的乐观更新。切换租户之后旧 callback 只能处理旧租户数据，不能展示旧身份提示；UI 防双击不是跨进程锁，生产端仍需真实的版本冲突处理。SDK/完整类型/构建/浏览器没有执行前一律不得声明 PASS。
+`queryFn` 必须使用入参 `signal`。列表取消按钮取消 `keys.feeds(tenant)`。
+
+乐观路径：`cancelQueries` → 只快照目标行 → `optimisticRow` 写入 token → 失败 `rollbackRow` → 成功 `commitRow`。token 或 `rev` 对不上就保持原页。
+
+`tenantEpoch` 在切换和卸载时增加。写提示前比较 epoch 和租户。`onSettled` 在仍有其他同键 mutation 时不要失效。
+
+`inFlightRows` 只防连点。服务端仍用 `rev` 做比较并交换。
+
+## 反例
+
+- queryKey 只有 `['feeds']`。
+- 键里放 `Date.now()`。
+- 丢掉 `signal`，或另造一个用不上的 AbortController。
+- `response.ok` 为假仍返回 JSON。
+- 渲染函数里 `new QueryClient()`。
+- 原地 `push` 改缓存。
+- 失败时恢复整页旧快照。
+- 无条件占位数据跨租户显示。
+- 切团队后仍提交上一轮的成功文案。
+- 把 `placeholderData` 加回去却不检查键。
+
+## 测试断言
+
+- 两个租户的缓存条目不互相覆盖。
+- `cancelQueries` 会 abort 传给 queryFn 的 signal。
+- 乐观补丁只改匹配 id 且 `rev` 相符、尚未持有 token 的行。
+- 回滚只恢复仍属于该 token 的行，保留同页其他编辑。
+- 迟到的错误不能撤销更新的 token。
+- 提交使用服务端 `rev`，并去掉临时 token。
+- 缺页、缺行时原样返回，不制造空页。
+- `tests/sdk.test.mjs` 构造真实 QueryClient。无收据则 NOT_RUN。
+
+## 真实限制
+
+fixture 不走网络。延迟和 409 是本地开关。没有 SSR 脱水，没有持久化，没有 `placeholderData`。UI 串行 scope 不等于数据库事务。
+
+`staleTime` 10 秒和 3 秒是演示。生产按数据变化速度另定，并记住默认值是 0。
+
+## 证据
+
+sdk、build、browser 保持 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有匹配收据。Actions 41779873259 不是本条目 PASS。不要改 `verification.json`。

@@ -1,14 +1,58 @@
-# D12 Redux Toolkit — Agent 选型与迁移手册
+# D12 Redux Toolkit — 工程手册
 
-推荐用于复杂跨组件共享客户端状态、事件可追踪和团队业务流程；不要替代查询缓存/后端权限。简单本地 store 可优先 D10 Zustand 或 D11 Jotai。
+## 适用
 
-## 最小移植
-从 `examples/example.tsx` 复用 `feedsSlice` 与 `createFeedStore`，不要机械复制教学按钮。必须对团队/账户边界确定唯一 store owner，reducer 更新一律通过 typed action，不能在外部直接 mutate state。请求身份 `startRequest/finishRequest` 的陈旧响应保护应结合真实 AbortSignal；本 Demo 的计时器是本地 fixture，不是真 HTTP。
+需要可追踪动作的客户端状态：计数、按 id 维护的列表、用请求 id 挡住过期回写。reducer 使用 slice 里的 Immer draft。
 
-## 依赖与 React 接线
-包 `@reduxjs/toolkit@2.13.0`，本 Demo 用 `useSyncExternalStore` 展示不依赖 react-redux 的模式。正式大型项目可选官方 `react-redux`，需额外核实版本和订阅策略。远端缓存选 D13 RTK Query 或 D07 TanStack Query，不重复维护第二份 cache。
+一个开关不必上 Redux。服务端缓存优先 Query；若缓存也要进 Redux，用 RTK Query，而不是把响应数组拷进 slice。
 
-## 验收
-`node --test entries/D12-redux-toolkit/tests/sdk.test.mjs` 运行真实 SDK，断言 immutable snapshots、租户隔离、requestId 边界；TypeScript/production build、浏览器切换/卸载单独标记。当前 NOT_RUN，不允许引用之前的历史脚本宣称 PASS。
+## 版本
 
-官方 https://redux-toolkit.js.org/ 。
+`@reduxjs/toolkit@2.13.0`，MIT。`configureStore` 默认中间件保留。示例关闭 DevTools。
+
+不要在 reducer 里再导入 `produce`。不要把 1.x 教程里关闭序列化检查的写法抄进来。
+
+## 迁移
+
+从 [`examples/example.tsx`](examples/example.tsx) 带走 `feedsSlice` 和 `createFeedStore`。订阅层可以换成 `react-redux`，但请求 id 的判断留在 `finishRequest`。
+
+两个团队继续用两个 store，或改成一个 store 内的租户键。UI 下拉框不是隔离边界。
+
+演示 timer 换成真实请求时，保留“不匹配的完成动作只增加 `ignored`”。
+
+## 不可删的清理
+
+`useEffect` 依赖当前 store：清理时清除全部 timeout，并 `dispatch(cancelRequest())`。再次进入 advanced 会重新绑定。
+
+`demonstrateRace` 在开新一轮之前清掉上一轮 timer，避免多个旧 id 同时完成。
+
+`addFeed` 遇到已有 id 直接返回。`toggleRead` 找不到 id 时不改别的行。
+
+## 反例
+
+- 在 `getState()` 的返回值上修改字段。
+- reducer 内再 `produce`。
+- 用数组下标当 payload。
+- 完成动作不比较 `activeRequest`。
+- 把 `AbortController` 放进 state。
+- 一个 store 靠渲染过滤假装多租户。
+- 用 slice 保存本该由 Query 失效的列表。
+- 卸载后仍让 timeout `dispatch`。
+
+## 测试断言
+
+- 真实 slice 不修改动作之前的状态；两个 store 的计数隔离。
+- 乱序完成时，只有匹配的请求 id 写入 `result`，另一个增加 `ignored`。
+- 重复 feed id 不会插入第二行。
+- `reset` 清空 `result` 和 `ignored`。
+- `tests/sdk.test.mjs` 导入真实 `@reduxjs/toolkit`。无收据则 NOT_RUN。
+
+## 真实限制
+
+竞态是 `setTimeout`，没有 HTTP 状态码，也没有权限。`ignored` 只说明 reducer 拒绝了载荷，不说明服务器没处理写操作。
+
+`useSyncExternalStore` 订阅整棵树。正式应用要改选择器。DevTools 关闭，所以浏览器扩展里看不到这些动作。
+
+## 证据
+
+sdk、build、browser 保持 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有匹配收据。Actions 41779873259 不是本条目 PASS。不要改 `verification.json`。

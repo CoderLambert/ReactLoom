@@ -1,75 +1,131 @@
-# Pagefind：把公开静态页面编译成可部署的全文索引
+# Pagefind 1.5.2｜只在临时目录写出静态索引
 
-## 何时使用
+Lab 锁定 `pagefind@1.5.2`（MIT）。三条示例是 Node 脚本：[`examples/basic.mjs`](examples/basic.mjs)、[`examples/business.mjs`](examples/business.mjs)、[`examples/advanced.mjs`](examples/advanced.mjs)。它们调用 [`examples/workshop.mjs`](examples/workshop.mjs)，用 Pagefind 的 Node API 建索引并 `writeFiles`。返回值里 `visitorSearchExecuted` 是 `false`。入口在 `finally` 里 `pagefind.close()`，并打印：包已经写到磁盘，没有启动浏览器搜索。
 
-Pagefind 适合技术文档、静态文章、公开 RSS 聚合内容的构建时全文索引：生成文件后浏览器可以按需加载，不需要搜索后端。它不适合每秒变化的私有动态数据索引，也**不具备租户授权或访问控制**。本例针对 pagefind 1.5.2（MIT）的真实 Node API 和本地原创 fixture，不在网页伪造 shell 或搜索结果。
+这不是把搜索框挂进 Library Lab 页面。没有 `localhost:5173`，也没有在主源上提供 `/pagefind/` 资源。
 
-## 安装与运行
+没有匹配收据时 sdk / build / browser 保持 NOT_RUN。Actions 41779873259 是仓库级结果，不是本条目 PASS。
 
-PLATFORM 负责统一安装、锁文件与 CLI 注册：
+## Lab 当前示例
 
-~~~sh
-pnpm --filter @reactloom/library-lab add -D pagefind@1.5.2
-pnpm --filter @reactloom/library-lab exec node entries/D21-pagefind/examples/basic.mjs
-pnpm --filter @reactloom/library-lab exec node entries/D21-pagefind/examples/business.mjs
-pnpm --filter @reactloom/library-lab exec node entries/D21-pagefind/examples/advanced.mjs
-pnpm --filter @reactloom/library-lab exec node --test entries/D21-pagefind/tests/sdk.test.mjs
-~~~
+`runWorkshop` 在 `mkdtemp` 的 `reactloom-pagefind-` 目录里工作。`createIndex({ forceLanguage: 'en', excludeSelectors: ['[data-sensitive]'] })`。语言被固定为英文，因为种子是英文句子。`excludeSelectors` 用来丢掉带敏感标记的节点；种子 HTML 本身不放秘密。
 
-实际逻辑在 examples/workshop.mjs；页面源码标签展示真实入口与 SDK 测试文件。Node 使用 pagefind.createIndex/addHTMLFile/addCustomRecord/addDirectory/getFiles/writeFiles/deleteIndex，CLI 成功后会报告输出文件名和实际字节数，生成目录位于唯一随机临时目录；没有凭据、远程 HTTP 调用或匿名遥测的业务代码。
+每条记录先过 [`examples/publication-policy.mjs`](examples/publication-policy.mjs)。`visibility` 必须是 `'public'`。URL 必须匹配 `/articles/` 或 `/files/` 下的安全路径，拒绝 `..` 和 `//`。标题和正文必须是非空字符串。`escapeHtmlText` 在拼 HTML 时转义 `& < > " '`。不要把未转义的用户 HTML 放进 `addHTMLFile`。
 
-## 三层真实实验
+- basic：两篇 `addHTMLFile`（Suspense 与 cache）。记录数 2。没有自定义记录，也没有目录扫描。
+- business：第三篇 HTML，再 `addCustomRecord` 一条 `/files/rss-playbook.txt`，带 `filters.category = guide` 和标签。记录数 4。没有 HTTP API。
+- advanced：把一份静态 HTML 写进临时站点目录并 `addDirectory`。记录数 5。目录扫描只看见这个临时文件夹。
 
-### basic：静态文章索引
+`getFiles` 必须返回非空且每个文件都有 path 和字节。`writeFiles` 写到临时 `out/pagefind`。`keepOutput: false` 时 `finally` 先 `deleteIndex` 再删掉整个 scratch。三个入口为了把 JSON 打出来传入 `keepOutput: true`，目录留在系统 tmp，搜索 UI 仍不运行。
 
-两篇可信 HTML 使用 addHTMLFile({url,content}) 加入索引，再 getFiles/writeFiles 输出原生 Pagefind Bundle。每篇文档有完整 html 标签、lang、title 和 data-pagefind-body。检查 files 非空、所有文件 content 字节大于零，不能用自行编造的 JSON 文件冒充 Pagefind 索引。
+错误数组非空会抛错，不返回半成品成功。
 
-### business：RSS 领域笔记
+## 什么时候用
 
-在三篇 HTML 之外通过 addCustomRecord 注入 RSS 笔记。url、content、language 必需，meta 的 title/category 应是扁平字符串，filters.category/tags 为字符串数组。索引是在本地离线生成，实际的分类过滤和中文分词效果还需要浏览器/目标语言对应实测。
+公开静态站点在构建期生成搜索文件，让浏览器以后只下载索引分片而不是整库 JSON。内容必须已经是可发布的。
 
-### advanced：静态目录扫描与产物生命周期
+浏览器里会增长的小集合用 MiniSearch 或 Fuse。Pagefind 不负责登录后的文档。把私密 HTML 放进 `addDirectory` 就会进可下载的包。`assertPublicDocument` 是构建期断言，不是上游 ACL。
 
-添加临时站点 HTML，再用 addDirectory 扫描生成目录，与内存页面/自定义记录合并；getFiles 记录输出，writeFiles 写到隔离 out/pagefind；finally 中 deleteIndex 释放 native index。各 CLI 入口关闭 Pagefind 子进程。输出目录不指向正在运行的 Library Lab 生产根目录。
+Workbox 可以缓存公开的搜索静态资源，但不要为了这个在 Lab 主源注册 Service Worker。版本更新时旧的 pagefind 文件要能被清掉。
 
-## 运行时与构建时的区别
+## 模型
 
-Node 构建 API 负责生成静态资源；浏览器检索须部署生成的 pagefind.js、索引分片和关联资源，按实际 public basePath 初始化：
+Node API 的顺序是 `createIndex`、添加 HTML 或自定义记录或目录、`getFiles`、`writeFiles`、最后 `deleteIndex` 与 `close`。`addHTMLFile` 接收 URL 和 HTML 字符串，正文应放在 `data-pagefind-body` 里，示例的 `documentHTML` 就是这样拼的。
 
-~~~js
-const engine = await import('/pagefind/pagefind.js');
-const result = await engine.search('React');
-const details = await Promise.all(result.results.map(item => item.data()));
-~~~
+`addCustomRecord` 用于没有 HTML 文件的笔记，可带 `meta` 和 `filters`。过滤器是搜索 UI 的元数据，不是权限。
 
-上面是**生产集成示意**，本例未在浏览器执行，不能用本文示意结果宣称搜索成功。部署在子路径下，要核实 bundlePath、静态路由、Content-Type、缓存和错误回退。
+`addDirectory` 会扫描路径。advanced 只把临时目录交给它。不要把用户主目录或仓库根传进去。
 
-## 五种失败模式
+`forceLanguage: 'en'` 避免对英文种子做错误的语言检测。换成中文文档时要改这个选项并重新准备语料，不能沿用现在的断言。
 
-1. **把 SSR 或运行中的 SPA 内存数据直接交给静态索引**：构建时页面没有实际渲染成 HTML 就搜不到。应在静态导出之后运行，或用 Node addHTMLFile 传入完整 HTML。
-2. **秘密资料进入索引**：隐藏 CSS 并不安全；索引和摘要仍是公开资源。生成前按授权过滤，永远不索引私有 token/租户数据。
-3. **错把 DOM 文本转为可执行 HTML**：本例只构建可信固定字符串；真实用户内容应进行安全转义，不将不可信 HTML 直接拼进模板。
-4. **只上传 pagefind.js 不上传分片**：浏览器会找不到索引数据。发布整个 outputPath 目录，核查 URL 与缓存策略。
-5. **多语言分词和过滤未经检验**：英文字词索引不是中文搜索通过的证据。添加真实中文内容、CJK 切词与组合输入 E2E；区分纯 Node 构建与浏览器全文召回。
-6. **忘记 native 进程/索引清理**：在长时间运行的构建服务中及时 deleteIndex，结束独立 CLI 时 close。
+`visitorSearchExecuted: false` 表示没有加载 Pagefind 的浏览器运行时，也没有执行查询。生成文件存在不等于搜索质量已经在浏览器里看过。
 
-## 与 MiniSearch 和 Fuse.js 对比
+## 三层示例
 
-MiniSearch 适合在客户端把应用中的文档数组构造成倒排索引，并且能够实时更新；Fuse.js 适合对较小集合做加权模糊匹配。Pagefind 则适合已经编译成可公开下载的文档：构建时间换取运行时更小的下载量。Workbox 可为公开资源增加离线缓存，但要控制 Worker 作用域及索引版本。
+### 基本
 
-## 验证清单
+运行 `basic.mjs`。JSON 里 `submittedRecords` 为 2，`wroteActualBundle` 为 true，`visitorSearchExecuted` 为 false。进程结束前 `pagefind.close()`。
 
-SDK：真实 native indexer 返回文件、写盘的目录存在、HTML/CustomRecord/Directory 成功。构建：把生成的所有文件部署到测试子路径。浏览器：加载搜索引擎、输入法 composition、不同查询结果、筛选、无结果、缺失分片/网络离线与索引版本更新。当前 SDK/build/browser = NOT_RUN；不能把存在源码和日志模板当执行证据。
+### 业务
 
-## 官方来源
+多一篇文章和一条 RSS 笔记。笔记的 filters 是 `guide` 与 `rss` / `offline`。这些词来自固定 fixture，不是用户输入。
+
+### 进阶
+
+临时 `static.html` 被转义后写入并被目录扫描。若策略拒绝某条未标记 `public` 的记录，`addHTMLFile` 不会被调用。
+
+## 反例
+
+### 反例 1：把未公开文档送进索引
+
+```ts
+await index.addHTMLFile({ url: '/drafts/secret/', content: secretHtml })
+```
+
+```ts
+const doc = assertPublicDocument(record)
+await index.addHTMLFile({ url: doc.url, content: documentHTML(doc.title, doc.content) })
+```
+
+### 反例 2：不转义就拼 HTML
+
+```ts
+'<title>' + title + '</title>'
+```
+
+标题里的 `<script>` 会变成标记。使用 `escapeHtmlText`。
+
+### 反例 3：扫描仓库根目录
+
+`addDirectory({ path: repoRoot })` 会把内部文档卷进可下载索引。只扫描专门的公开输出目录。
+
+### 反例 4：把 filters 当成登录
+
+`filters: { role: ['admin'] }` 仍会随索引下载。角色过滤必须在生成前丢掉文档。
+
+### 反例 5：忘记 close / deleteIndex
+
+二进制索引进程会留在后面的脚本里。入口的 `finally` 调用 `pagefind.close()`。`runWorkshop` 在 `finally` 里 `deleteIndex`。
+
+### 反例 6：用生成结果宣称浏览器搜索通过
+
+`wroteActualBundle` 只说明文件写过。`visitorSearchExecuted` 必须保持 false，直到有单独的浏览器收据。
+
+## 组合
+
+**MiniSearch / Fuse**：动态集合留在浏览器索引。已经冻结的公开 HTML 交给 Pagefind。不要把两种索引都当成权限层。
+
+**Workbox**：只缓存公开且带版本的 pagefind 资源。注册范围不能是 Lab 主源。更新站点时让旧预缓存失效。
+
+## 生产核对清单
+
+1. 每条记录有显式 `public`，URL 在允许的前缀内。
+2. HTML 文本节点经过转义；敏感选择器被排除。
+3. `addDirectory` 的路径是临时或公开输出目录。
+4. `getFiles` 拒绝空资源；Pagefind 报错数组非空则失败。
+5. 脚本结束 `close()`，索引对象 `deleteIndex()`。
+6. 不在指南或 UI 里声称访客搜索已经运行。
+7. 语言选项和真实文档一致。
+8. 私密文档不进入会被下载的包。
+
+## 升级
+
+钉 `pagefind@1.5.2`。升级后重跑三个入口，确认文件列表非空、错误会抛出，并且 `close()` 仍在 `finally`。Node API 的返回形状若增加字段，不要把新的错误通道忽略掉。
+
+不要为了演示改 `forceLanguage` 而不更换种子。
+
+## 验收
+
+- basic 写出真实包，记录数为 2，没有浏览器查询。
+- business 的自定义记录不经过 HTTP 服务器，filters 来自公开 fixture。
+- advanced 扫描的是临时目录里的已转义 HTML，并清理原生索引。
+- 未标记 public、带 `..` 的 URL、空标题在 `addHTMLFile` 之前失败。
+- 标题中的 `<` 被转成实体。
+- `tests/sdk.test.mjs` 调用真实 `pagefind`。无收据则 NOT_RUN。
+
+## 资料
 
 - https://pagefind.app/docs/node-api/
 - https://pagefind.app/docs/api/
 - https://pagefind.app/docs/running-pagefind/
 - https://github.com/Pagefind/pagefind
-
-## 第十三轮加固：公开索引的生成前拒绝与文本转义
-
-原示例信任内置 fixture，若开发者日后将输入换成 CMS/RSS 字符串后直接拼接 HTML，就可能把不可信 markup 插进待索引文档。现在 `examples/publication-policy.mjs` 提供 `assertPublicDocument` 和 `escapeHtmlText`：每条记录必须显式 `visibility: 'public'`、只允许 `/articles/` 或 `/files/` 已审查的站内路径、拥有非空标题正文；任何未标公开/非法路径在提交给 Pagefind 之前立即报错。HTML 通过字符实体转义，不把传入内容当 HTML 运行。
-
-此策略不是审查器，**无法发现公开标识被错误赋给私密内容**。真实构建流水线必须先用可信 ACL/发布状态筛选，不能把用户输入 `visibility=public` 当授权。参见 `node --test entries/D21-pagefind/tests/publication-policy.test.mjs` 的纯策略回归；页面标题转义和 indexer 构建仍需真实 Pagefind SDK 测试，最终访问控制不能依靠搜索结果过滤。

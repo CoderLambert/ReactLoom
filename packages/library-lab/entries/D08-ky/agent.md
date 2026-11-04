@@ -1,27 +1,63 @@
-# D08 Ky v2.2 · Agent 迁移与使用规则
+# D08 Ky — 工程手册
 
-## 角色
+## 适用
 
-Ky 是基于 Fetch 的 HTTP transport，不是缓存、队列、Schema 或重试型业务工作流。基线 ky@2.2.0（MIT / ESM / Node22+）；已有 Axios 基建不应为了“更现代”而机械迁移。
+已有 `fetch` 的浏览器或 Node 22，需要统一非 2xx、JSON、超时和有限重试。一个 `ky.create()` 收口传输策略。
 
-## 最小迁移文件
+缓存、去重、乐观更新用 TanStack Query。并发和区间限额用 p-queue。单次调用不必引入。不要把重试当成恰好一次提交。
 
-先读 examples/example.tsx 的 createFixtureTransport 与 KyWorkshop；examples/demo.tsx 只是 Lab 适配。生产项目**不能**复制 fixture fetch 作为真实 HTTP 网关，必须改用目标受控 origin 的 fetch；保留有限 retry、timeout、totalTimeout、AbortSignal、JSON运行时校验、错误类型区分与日志脱敏。对跨 origin 的请求必须设 allowlist，不能让用户输入任意绝对URL绕开 baseUrl。
+## 版本
 
-## v2 与历史教程差异
+`ky@2.2.0`，MIT，ESM。v2 使用 `prefix`，错误体在 `HTTPError.data`，并用 `timeout` 加 `totalTimeout`。2.2 提供 `maxResponseSize` 和 `isResponseSizeError`。
 
-- prefixUrl 改名 prefix；优先核实 baseUrl 解析。
-- HTTPError.data 已包含已解析错误体，不要再读已消费的 response.json()。
-- Hook 参数统一 state 对象。beforeRetry 在确定要重试之后运行，不用于决定是否重试；应该在 retry.shouldRetry 决策。
-- timeout 不覆盖整个 retry 生命周期；必要时 totalTimeout。
-- maxResponseSize 对读取响应体生效，不代表阻止所有缓冲或业务解码成本。
+不要安装已归档的 `ky-universal`。不要把默认分支的 README 当成 2.2.0 的选项表。
 
-## 防错测试
+## 迁移
 
-(GET) 503 最多一次重试、总尝试=2；(POST) 409 不重试；(GET) 显式 AbortSignal 取消；(GET) 大 body 触发尺寸上限；(DELETE) 204 不解析 JSON；旧慢请求不得覆盖新请求。真实业务端点可 mock，但目标 Ky SDK 必须是真正安装调用。SDK/build/browser证据仍NOT_RUN，不能继承旧报告的 Node 模型 PASS。
+从 [`examples/example.tsx`](examples/example.tsx) 带走 `createFixtureTransport` 的 origin 限制、`validateSources`、generation 和 advanced 里对 503/409/204/尺寸的分法。生产把 fixture `fetch` 换成真正的 fetch，保留 `ky.create` 的重试表。
 
-官方：https://github.com/sindresorhus/ky/blob/v2.2.0/readme.md
+实例重试：`limit: 1`、仅 `get`、仅 503。单次冲突和超限请求再传 `retry: { limit: 0 }`。
 
-## 重复演示的一致性
+搜索保持 abort 当前 controller 并递增 ticket。卸载时两者都做，并清理 `setTimeout`。
 
-`createFixtureTransport.resetTransient` 只重置演示中 `GET:/transient` 的本地计数；连续点两次 503 按钮都应经历第一次失败和有限重试。真实服务端的请求状态不应被客户端“重置”，并且不能把 fixture 结果当作后端可用性测试。
+## 不可删的清理
+
+`useEffect` 清理函数增加 generation、abort、清除 timer。过期 ticket 不能 `setData` 或改写 advanced 结果。
+
+每次演示 503 前调用 `resetTransient()`，否则第二次点击不再出现第一次 503。
+
+`describeError` 对 `isHTTPError` 只报告状态码，不展开私密正文。`HTTPError` 上不要再次 `response.json()`。
+
+DELETE 204 使用 `response.status`。超限请求设置 `maxResponseSize`。
+
+## 反例
+
+- 不判断 `response.ok` 的裸 `fetch`。
+- v1 `prefixUrl` 和旧 hook 签名。
+- 再次读取已经被消费的错误体。
+- `delete().json()` 解析 204。
+- 把 `timeout` 当成包含重试的总预算。
+- POST 使用 `retry: 3`。
+- 只靠泛型 `json<T>()`。
+- 任意绝对 URL 仍附带 Authorization。
+- 只 abort，不比较代际。
+- 组合输入期间按 Enter 就搜索。
+
+## 测试断言
+
+- 真实 Ky 对幂等 GET 的 503 会再试，对 POST 409 不会。
+- 超过 `maxResponseSize` 失败，204 不解析 JSON。
+- 来源列表拒绝非 HTTPS、缺字段和超长数组。
+- 慢请求之后的快请求赢得界面；取消显示 AbortError。
+- 未知 origin 在 fixture 里被拒绝。
+- `tests/sdk.test.mjs` 导入真实 `ky`。无收据则 NOT_RUN。
+
+## 真实限制
+
+传输是 `lab.invalid` 上的内存 Response。没有 CORS、没有 Cookie、没有令牌刷新、没有真实 Retry-After。`timeout` 1200 与 `totalTimeout` 2500 是演示预算。
+
+`validateSources` 不是服务端 SSRF 防护。Ky 也不会清洗 HTML。
+
+## 证据
+
+sdk、build、browser 保持 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有匹配收据。Actions 41779873259 不是本条目 PASS。不要改 `verification.json`。

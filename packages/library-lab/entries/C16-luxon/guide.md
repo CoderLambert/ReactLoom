@@ -1,57 +1,176 @@
-# C16 Luxon — DateTime / Interval 工程时间模型
+# Luxon 3.7.2｜墙上时间要回读，回拨日要选定偏移
 
-## 适用任务与版本
+Lab 锁定 `luxon@3.7.2`（MIT）。`DateTime` 不可变。时区运算交给宿主的 Intl，而不是一份随 npm 包发货的完整 TZDB。同一版本在不同系统上仍可能因 ICU 数据不同而有差别。
 
-固定 Luxon 3.7.2；面向明确 IANA 时区的日历事件、报表窗口、持续时间与国际化展示。Luxon 的 DateTime 是不可变对象，Interval 表达起止区间。它使用运行环境提供的 Intl 时区数据，不是可靠的后端调度器。
+没有收据时 sdk / build / browser 保持 NOT_RUN。Actions 41779873259 不是本条目 PASS。
 
-## 安装
+## Lab 当前示例
 
-~~~sh
-pnpm add luxon@3.7.2
-pnpm add -D @types/luxon@3.7.6
-~~~
+[`examples/example.tsx`](examples/example.tsx) 使用真实的 `DateTime` 和 `Interval`。歧义消解在 [`wall-time.mjs`](examples/wall-time.mjs)，语法在 [`wall-time-policy.mjs`](examples/wall-time-policy.mjs)。`demo.tsx` 只做再导出。没有内存里的排程 HTTP，也没有 5173。
 
-~~~ts
-import {DateTime,Interval} from 'luxon'
-const start=DateTime.fromISO('2026-03-07T12:00:00',{zone:'America/New_York'})
-const end=start.plus({days:1})
-const hours=Interval.fromDateTimes(start,end).length('hours')
-~~~
+- **basic**：`parseCalendarDay` 把 `YYYY-MM-DD` 配上 `T12:00:00`，`zone` 来自下拉框，`setZone: true`，`locale: 'zh-CN'`。`toISODate()` 必须等于输入，否则抛 `invalidExplanation`。按钮展示 `DateTime.DATE_FULL`。
+- **business**：`dailyWindow` 用 `plus({ days: 1 })` 得到次日中午，再用 `Interval.fromDateTimes` 取 `length('hours')`，并用 `diff(..., 'days')` 取日历天数。注释写明日历加一天不等于加 86400000 毫秒。
+- **advanced**：固定打印纽约春季 `2026-03-07` 和秋季 `2026-10-31` 的窗口。`ambiguousFallback` 对无偏移的 `2026-11-01T01:30:00` 调用 `getPossibleOffsets()`。`resolveWallTime` 要求调用方在有多个候选时传入 `-04:00` 或 `-05:00`。不选就抛错。按钮可以把墙上时间改成 `2026-03-08T02:30`，这段在纽约春季不存在。
 
-目标示例源码 examples/example.tsx，入口 examples/demo.tsx，支持 basic/business/advanced 三层。
+`assertWallTimeSyntax` 只接受 `YYYY-MM-DDTHH:mm`。它拒绝带秒、带偏移和宽松的 `Date.parse` 输入，并按公历检查月日。这是语法，不是 DST 判断。DST 在 Luxon 回读里做。
 
-## 场景与可见结果
+## 什么时候用
 
-基础：拒绝 2026-02-30 等不合法日期；用 locale zh-CN 生成完整本地化文本，不把服务器系统时区当业务时区。
+要表达区间、要列出回拨日的多个偏移、并且希望 API 把 zone 放在每次调用里。轻量加减用 date-fns。已有 Day.js 插件且核对过 DST 时不必替换。Luxon 不负责把任务写进队列，也不负责鉴权。
 
-业务：给 RSS 频道定义每天本地中午的时间窗口，+1 day 保持当地时间，而非 +24 hours；计算两个本地事件的真实经过小时数。
+不要用 `Settings.defaultZone = 'UTC'` 当业务规则。测试若改了 `Settings.now` 或默认 zone，结束时改回去。示例每次都把 zone 传进 `fromISO`。
 
-进阶：纽约 DST 春季相邻中午只过23小时，秋季则25小时；利用 DateTime#getPossibleOffsets() 获取 2026-11-01 01:30 的两种真实 offset，再把两种结果转换为 ISO UTC。
+## 数据与模型
 
-## 核心语义
+四个概念：
 
-DateTime.fromISO(value,{zone}) 用显式 zone 解析当地日期；toUTC() 保持 instant 仅改变显示时区；setZone(zone,{keepLocalTime:true}) 将本地墙上时间重新解释为新时区，可能改变绝对时刻。Interval.fromDateTimes(start,end) 为半开区间 [start,end)，业务数据库起止约定需一致。
+| 概念 | Lab 的做法 |
+| --- | --- |
+| 日历日 | 该 zone 的中午，再 `toISODate()` 回读 |
+| 墙上时间 | `YYYY-MM-DDTHH:mm` 加 IANA zone |
+| 偏移 | `toFormat('ZZ')`，回拨日由用户选择 |
+| 区间 | `Interval`，`length('hours')` 是经过的小时 |
 
-## 专属反模式
+`plus({ days: 1 })` 是日历。`plus({ hours: 24 })` 是经过的时间。DST 当天两者不同。示例的窗口用前者。
 
-1. 将 DateTime.fromISO 返回值不检查 isValid 就入库，非法输入扩散。
-2. 把 +1 day 当作 +24 hours，跨夏令时发生小时偏差。
-3. 使用机器本地 now() 隐式处理外部用户的订阅时区；明确传业务 zone。
-4. 对回拨的 01:30 不检测 getPossibleOffsets()，悄然选了一个 instant。
-5. 混用保留 offset 的解析与忽略 offset 的转换，导致二次偏移。
-6. 长期定时任务由浏览器 setTimeout 承担；标签休眠就会失去精确调度。
+`fromISO` 返回的对象可能 `isValid === false`，不会抛错。每次都看 `isValid` 和 `invalidExplanation`。只看 isValid 仍不够：春季缺口可能被规范化成另一个钟面。`resolveWallTime` 用 `toFormat("yyyy-MM-dd'T'HH:mm")` 和输入比较，不一致就说明这段本地时间不存在。
 
-## 生产推荐
+回拨日 `getPossibleOffsets()` 给出两个 `DateTime`。没有 `selectedOffset` 时抛错，不默认取第一个。有偏移时在候选里找 `ZZ` 相等的那一个。找不到就抛错。返回值包含 wall、zone、offset 和 `toUTC().toISO()`。
 
-持久化绝对事件时采用 ISO UTC 和独立 IANA zone 字段；对未来重复事件存“当地时间规则+zone”，每次重新计算下一 instant。错误提示应暴露 invalidExplanation；跨平台比较采用统一 TZ 数据和确定性测试时钟。与 C14 date-fns、C15 Day.js 对照选择，不全仓重复引入三个日期库。
+`setZone(zone)` 保持瞬间、改变钟面。`keepLocalTime: true` 会改掉瞬间。展示「纽约此刻在上海是几点」用普通 `setZone`。示例没有用 keepLocalTime。
 
-## 真实验证
+`Interval` 是半开的 `[start, end)`。`contains` 不包含终点。和 SQL 的日界对齐时使用同一约定。
 
-node:test 直接使用 luxon SDK，检查无效日期、Interval DST 23/25小时与 getPossibleOffsets()。SDK/build/browser没有运行则必须保留 NOT_RUN。实际命令见 tests/sdk.test.mjs，严格不得用 mock 库记 PASS。
+`toLocaleString` 和 `toFormat` 不能做排序键。存 `toUTC().toISO()` 或毫秒。中文 locale 只影响 basic 的展示。
 
-官方：https://moment.github.io/luxon/api-docs/index.html
+纽约 2026 年要记住的两天：
 
+| 墙上时间 | 事实 |
+| --- | --- |
+| 2026-03-08 02:30 | 春季跳时，02:00–02:59 不存在。必须拒绝，不能静默变成 03:30 |
+| 2026-11-01 01:30 | 出现两次，UTC 分别是 05:30 和 06:30。必须选定偏移 |
 
-## 进阶补充：不存在与重复的本地时刻
+`ambiguousFallback` 把无偏移解析后的候选列出来，供人看。真正保存走 `resolveWallTime`，并且缺偏移就失败。
 
-`examples/wall-time.mjs` 是实际演示调用的独立 Luxon 适配器。先由纯 `wall-time-policy.mjs` 校验严格的 `YYYY-MM-DDTHH:mm`，再由真实 `DateTime.fromISO(...,{zone})` 解释为本地时间；解析后回查墙上时间，阻止 Luxon 对春季 DST 缺失的 `2026-03-08T02:30` 自动前移成 03:30。秋季的 `2026-11-01T01:30` 必须借助 `getPossibleOffsets()` 和用户明确选择 `-04:00` 或 `-05:00`，才可形成 UTC instant。这个教学合约刻意拒绝歧义，不默默采用运行机猜测。纯策略 Node 检查不验证 Luxon SDK；SDK 需要独立安装运行。
+## 三层示例
+
+### 基本
+
+`2026-02-30` 失败。合法日期出现中文长日期。切换上海和 UTC，`toISODate` 仍等于输入。不要用格式化后的长日期再解析回去。
+
+### 业务
+
+输出里的 `calendarDays` 是 1。`elapsedHours` 在跨 DST 的日子上不是 24。把 `elapsedHours === 24` 写成断言之前，先选定一个不跨 DST 的日子。note 写明没有把「明天」实现成加 86400000。
+
+### 进阶
+
+不选偏移就运行，回拨日应 alert「必须明确选择 UTC 偏移」。选 `-04:00` 和 `-05:00` 各跑一次，`instant` 相差一小时，`offset` 与选择一致。点春季 02:30，应报不存在，而不是返回一个有效 ISO。`ambiguous` 字段列出候选，那是展示；`resolved` 才是选中的结果。
+
+## 反例
+
+### 1. new Date('2026-11-01T01:30') 当成纽约
+
+原生解析依赖系统时区。用 `DateTime.fromISO(wall, { zone, setZone: true })`，再回读。
+
+### 2. 不看 isValid
+
+```ts
+const date = DateTime.fromISO(value, { zone })
+date.toISO() // 无效时是 null
+```
+
+先看 `isValid`。
+
+### 3. 缺口只看 isValid
+
+规范化后的对象可能有效，但钟面已经不是 02:30。比较 format 和输入。
+
+### 4. 回拨日取 getPossibleOffsets()[0]
+
+这是替用户做了不可见的选择。Lab 在候选多于一个且没有 `selectedOffset` 时抛错。
+
+### 5. plus({ hours: 24 }) 表示明天同一钟面
+
+用 `plus({ days: 1 })`。24 小时后重试用小时或毫秒。
+
+### 6. keepLocalTime 用来「换个时区看看」
+
+那会改 epoch。展示用 `setZone(zone)`。
+
+### 7. 用本地化字符串排序
+
+存 UTC ISO。中文格式会随 locale 变。
+
+### 8. Duration.fromObject({ months: 1 }).as('days')
+
+月的天数取决于起点。用两个 `DateTime` 的 `diff`。示例没有这条 API，迁移时不要补上一个固定的 30。
+
+### 9. Interval.contains(end) 期望为真
+
+终点在区间外。日窗口的结束是次日中午，不包含那个瞬间本身要在产品里说清楚。
+
+### 10. 全局 Settings.defaultZone
+
+别的测试和请求会继承。每次调用传入 zone。
+
+### 11. 认为 npm 版本相同则 TZ 规则相同
+
+Luxon 委托 ICU。服务端和浏览器要各验一次春秋样本，并保存 zone 名、墙上时间和选定的 offset。
+
+### 12. input datetime-local 自带 IANA zone
+
+浏览器控件没有 zone。示例用独立的 `<select>`。移动端控件外观未验收。
+
+## 组合
+
+**FullCalendar。** 日历显示条。保存前用 `resolveWallTime`。不要把 FullCalendar 的 `startStr` 无偏移地交给 `fromISO` 就当纽约时间。v7 不再使用 `@fullcalendar/luxon3`。
+
+**i18next。** `locale: 'zh-CN'` 只影响这次 DateTime 的展示。界面语言用 i18next。不要从语言推断时区。
+
+**Day.js / date-fns。** 权威运算只留一套。对照样本用 2026-03-08 02:30 和 2026-11-01 01:30 的两个偏移。
+
+## 生产清单
+
+- 每次构造都带 zone，并检查 `isValid`。
+- 墙上时间回读，缺口拒绝。
+- 多个 `getPossibleOffsets()` 必须由调用方选定。
+- 日历 `plus({ days })` 和经过时间分开。
+- 持久化 UTC instant、IANA zone、墙上时间和选中的 offset。
+- 不改 `Settings.defaultZone`。
+- 区间终点约定写进接口说明。
+
+## 升级
+
+3.7.2 的 `getPossibleOffsets` 是文档化 API。升级后用同一组纽约样例重跑，不要换一套未写下来的消歧算法。若宿主 ICU 更新，把新旧 instant 的差异当成数据问题处理，而不是当成前端状态偶然不一致。
+
+## 练习
+
+1. `2026-02-30` 失败，合法日期的 `toISODate` 等于输入。
+2. 不选偏移时，`2026-11-01T01:30` 失败；选两个偏移得到两个 instant。
+3. `2026-03-08T02:30` 在纽约失败。
+4. `dailyWindow` 的 `calendarDays` 为 1，并指出 `elapsedHours` 在哪个样例上不是 24。
+
+## 故障排查
+
+| 现象 | 先看 |
+| --- | --- |
+| `toISO()` 是 null | 没有看 `isValid`，无效对象不会抛错 |
+| 02:30 被存成 03:30 | 只看了 `isValid`，没有回读钟面 |
+| 回拨日总是早的那一次 | 代码取了 `getPossibleOffsets()[0]` |
+| 明天偏了一小时 | 用了 `plus({ hours: 24 })` 或加了 86400000 |
+| 换时区后 instant 变了 | 用了 `keepLocalTime: true` |
+| 测试之间时区串了 | 改过 `Settings.defaultZone` 没有恢复 |
+| 服务器和浏览器差一小时 | 两边 ICU 数据不同。保存 zone、墙上时间和选定偏移 |
+
+`Interval.contains` 不包含终点。和数据库日界对齐时写进接口说明。`datetime-local` 没有 IANA 名，必须另有时区选择。
+
+## 官方链接
+
+- https://moment.github.io/luxon/api-docs/index.html
+- https://github.com/moment/luxon
+
+## 证据
+
+`wall-time-policy` 只检查字符串形状。`resolveWallTime` 才调用 Luxon。sdk 要真实 import `luxon@3.7.2` 并在 `docs/library-lab/evidence/runs/` 留下收据。browser 看下拉框和 alert。
+
+GitHub Actions 41779873259 是仓库级安装、typecheck、build、52 个 SDK 文件（153 项测试）和 45 项 Playwright 的结果，不是 C16 的条目 PASS。不要改 `verification.json`。

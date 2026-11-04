@@ -1,23 +1,46 @@
-# F08 @react-pdf/renderer — Agent 迁移指南
+# F08 @react-pdf/renderer — 工程手册
 
-## 任务选型
-新报告PDF排版用 `@react-pdf/renderer@4.9.0`；已有PDF阅读是 `react-pdf`（F07），对现有字节合并/标注是 `pdf-lib`（F09）。不要把三个近似名称混为同一个包。
+## 适用
 
-## 迁移最小文件
-拿走 `examples/report.tsx` 真实的 Document/Page/Text/StyleSheet/Flexbox模式；UI触发下载参考 `examples/example.tsx`，目标应用可以替换实际数据接口，但保留输入 schema 和按需生成策略。
+用 React 原语生成新的 PDF。阅读已有文件用 F07。修改已有字节用 F09。
 
-## 生产必须保留
-- 对行数、字节数、字符集做上限，特别是Unicode字体/网络图片的许可与CORS。
-- 表格长文档分页策略、`wrap={false}`、`fixed` Footer。
-- 生成只在明确用户意图时启动，异步epoch避免旧结果覆盖。
-- BlobURL更新/卸载都revoke；不得在React render中直接异步生成PDF。
-- 避免把生成PDF当成可视化预览器；真实pdfjs能读取才代表互操作检查。
+## 版本
 
-## 测试约定
-浏览器点击后有实际application/pdf Blob，PDF.js解析页数和文本、100行跨页、卸载内存释放、失败恢复、键盘交互；还需检查字体编码与商业分发权。模拟Blob不等于真实SDK测试。当前该库sdk/build/browser均NOT_RUN/BLOCKED。
+`@react-pdf/renderer@4.9.0`，MIT。调用 `pdf(element).toBlob()`。字体只用 Helvetica。
 
-官方：<https://react-pdf.org/docs/v4>
+## 迁移
 
-## Wave16 迁移必留
+带走 `examples/report.tsx`、`examples/example.tsx`、`examples/report-policy.mjs` 和 `.d.mts`。生成必须发生在点击之后。行数据先过 `validatedRows`。不要嵌入网络字体或图片。
 
-`report.tsx` 复用 `report-policy.mjs` 和 `.d.mts`，禁止将原始数据多余字段注入PDF；保留同步running ref、keyed session和Blob URL清理。真实PDF序列化、PDF.js解析、字体/分页需SDK/browser验收。
+## 不可删的清理
+
+`running` 在 await 之前置位。`epoch` 在卸载时增加，过期 Blob 不创建 URL。替换和失败都 `revokeObjectURL`。卸载 effect 再收一次。行数 1–140，名称仅可打印 ASCII。
+
+## 反例
+
+- 挂载时 `toBlob`。
+- 只靠 `disabled` 防连点。
+- 泄漏 object URL。
+- 把中文直接交给 Helvetica。
+- 使用 `div` / HTML CSS。
+- 去掉 140 行上限。
+- `<Image src="https://...">`。
+- 过期 Promise 仍 `setUrl`。
+
+## 测试断言
+
+- 非 ASCII、重复 id、空行、141 行、非法文章数被拒绝。
+- Blob 不是 `application/pdf` 或小于 100 字节时失败并回收 URL。
+- 连点第二次被 ref 挡住。
+- 100 行夹具仍能通过校验。
+- `policy.test.mjs` 不 import renderer。
+
+## 真实限制
+
+没有中文字体，没有服务端 `renderToBuffer`，没有内嵌阅读器。100 字节只是空文件门槛。分页外观要打开真实 PDF 才算看过。100 行夹具不是压力上限，上限仍是 140 行。
+
+## 证据
+
+没有 `docs/library-lab/evidence/runs/` 收据就不要写 sdk 或 browser PASS。Actions 41779873259 不是 F08 的单项验收。
+
+`tests/policy.test.mjs` 不调用 `pdf().toBlob()`。

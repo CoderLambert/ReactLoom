@@ -1,19 +1,46 @@
-# E02 BlockNote — AI Agent 工程复用说明
+# E02 BlockNote — 工程手册
 
-**任务匹配**：块级富文本/Notion式编辑、组合编辑 UI。需要完全自定义编辑交互时比较 E01 Tiptap；纯代码编辑选 E04 CodeMirror或E05 Monaco，不要只因存在ContentEditable就用BlockNote。
+## 适用
 
-**依赖与许可证**：同步选 `@blocknote/core`、`@blocknote/react`、`@blocknote/mantine` 0.56.0，Mantine peers 让平台核对；MPL-2.0 的源码修改义务须遵守；`@blocknote/xl-*` GPL/商用独立审查，默认禁止复制。
+需要斜杠菜单、块拖拽和现成工具栏的文档。完全自绘工具栏用 E01。命令级 EditorState 用 E03。代码用 E04 或 E05。只读排版不要挂 BlockNote。
 
-**真实源码**：`examples/example.tsx`；demo.tsx仅导出。保留 `useCreateBlockNote`、`<BlockNoteView editor={editor}/>`、官方CSS；业务替换 sessionStorage 时需要文档版本和访问授权。不要在根布局 import 庞大的编辑器依赖。
+## 版本
 
-**清理与能力边界**：onChange 返回 unsubscribe 必须在组件卸载调用；React Hook 自行拥有编辑器实例；不要跨路由保持全局实例。默认图片和资源扩展的授权、存储/上传不在此示例范围，必须经明确业务设计。
+`library.json`：`@blocknote/core`、`@blocknote/react`、`@blocknote/mantine` 均为 0.56.0，MPL-2.0。`@mantine/core`、`@mantine/hooks`、`@mantine/utils` 在条目里是 `version: null`。Lab `package.json` 另写 `@mantine/core@9.7.3`、`@mantine/hooks@9.7.3`、`@mantine/utils@6.0.22`，utils 6 与 core 9 主版本错位。不要把编辑器写成已验证。不要引入 `@blocknote/xl-*`。
 
-**输入与安全**：块JSON只进行浅层预检不是 schema 验证；版本升级仍可能报错，捕获后不要清空现有文档；导出HTML要另行净化，禁止富文本直接使用 dangerouslySetInnerHTML。中文IME/手机滚动/浮动工具条要专门实测。
+## 迁移
 
-**验证**：真实SDK挂载/输入/插块，数据量限制、损坏JSON、恢复失败不覆盖、卸载监听解除、跨文档切换；TypeScript/Bundler/Mantine peer 和 CSS检查。未运行SDK、浏览器继续保持 NOT_RUN。
+复制 `examples/example.tsx` 的 `useCreateBlockNote`、`BlockNoteView` 和两份 CSS。`examples/demo.tsx` 只是再导出。恢复必须先过 `parseBlockSnapshot`，再 `replaceBlocks`。用产品 API 替换 sessionStorage 时保留块 JSON 为事实源，Markdown 只做有损交换。0.55 的 `blockTypeSelectItems(dict)`、根路径导出的 `UniqueID`、以及旧历史组件路径都要按 0.56 发布说明改。
 
-**官方依据**：https://www.blocknotejs.org/docs/getting-started 和 https://www.blocknotejs.org/docs/reference/editor/events
+## 不可删的清理
 
-## EF 迁移补充
+`editor.onChange` 的返回值必须在 effect 清理时调用。`key={level}`（产品里用文档 id）重建实例，不要只改 `initialContent`。`parseBlockSnapshot` 丢掉持久化块 id。`sessionStorage` 的读写都在 try/catch 里。恢复失败不要假设 `replaceBlocks` 已回滚，也不要清空成空数组来“修好”。
 
-保留 `examples/snapshot-policy.mjs` 对快照深度/数量/外链的约束，并明确当前只支持文本块，媒体/表格及其他 block schema 必须专门扩展。恢复时包括 `sessionStorage.getItem` 的异常路径；不可把 `replaceBlocks` 抛错当作事务回滚保证。切换场景 key 必须让旧 BlockNote 实例完整释放。先跑 `node --test packages/library-lab/entries/E02-blocknote/tests/policy.test.mjs`；再在目标 SDK/浏览器实测。
+## 反例
+
+- 每个字符 `setState(editor.document)` 再整篇替换。
+- `blocksToMarkdownLossy` 当唯一数据库。
+- 输入过程中 `replaceBlocks`，打断中文输入法。
+- 不退订 `onChange`。
+- `uploadFile` 返回 base64。
+- `blocksToFullHTML` 直接 `dangerouslySetInnerHTML`。
+- 并发保存不带文档 id 和 ETag。
+- 把 XL 包当成 MPL 核心。
+- 忽略 Mantine utils 6 / core 9，宣称编辑器已验证。
+
+## 测试断言
+
+- 快照超过 60_000、超过 100 块、未知块类型、非 HTTPS 外链被拒绝。
+- 图片、文件、视频块不能从这份策略恢复。
+- 浏览器里：斜杠菜单和 `insertBlocks` 改变块数；坏草稿不覆盖；换层后订阅解除。
+- Node 测试不加载 `@blocknote/react`。Mantine 样式是否泄漏到外壳要单独看。
+
+## 真实限制
+
+策略不是完整 schema。`initialContent` 不是受控 value。示例没有防抖、没有双文章键、没有上传、没有协作。`replaceBlocks` 的原子性没有 SDK 收据。
+
+## 证据
+
+不要写 PASS。sdk、build、browser 保持 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有 E02 收据。Actions `41779873259` 是仓库级运行。Mantine 主版本错位是不把编辑器标成已验证的直接原因。
+
+资料：https://www.blocknotejs.org/docs/getting-started 与 https://www.blocknotejs.org/docs/reference/editor/events 。

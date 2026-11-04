@@ -1,69 +1,139 @@
-# MiniSearch — ReactLoom 工程实战
+# MiniSearch 7.2.0｜先裁索引，再搜索和联想
 
-## 定位与适用范围
+Lab 锁定 `minisearch@7.2.0`（MIT）。它为文档建倒排索引，支持前缀、轻微模糊和 `autoSuggest`。相关性分数越高越匹配。这和 Fuse.js 的“越小越近”相反。它仍然只搜索你放进索引的那些文档。
 
-MiniSearch 是浏览器/Node 可用的倒排全文检索库，提供索引、字段权重、前缀与模糊词条、查询建议。适合离线资料和中等规模文档目录，不是向量数据库、权限系统或分布式搜索集群。本 Demo 对原创 RSS 文章 fixture 建立真正的 SDK 索引。
+没有匹配收据时 sdk / build / browser 保持 NOT_RUN。Actions 41779873259 是仓库级结果，不是本条目 PASS。
 
-## 安装及版本约束
+## Lab 当前示例
 
-~~~bash
-pnpm add minisearch@7.2.0
-~~~
+[`examples/demo.tsx`](examples/demo.tsx) 重导出 [`examples/example.tsx`](examples/example.tsx)。`buildMiniIndex` 的字段是 `title` 和 `summary`，`storeFields` 只有 `title` 和 `group`。默认搜索选项 `boost: { title: 3 }`、`prefix: true`、`fuzzy: 0.2`。
 
-采用官方稳定 MiniSearch 7.2.0；搜索评分越高代表相关性越强，不能与 Fuse.js 的越低越相似混为一谈。
+[`examples/scope-policy.mjs`](examples/scope-policy.mjs) 的 `scopeSearchDocuments` 在 `addAll` 之前按分组复制或过滤。「全部」返回浅拷贝，避免索引和调用方共享后被意外改写。分组不是授权。无权文档根本不要出现在 `documents` 里。
 
-## 真实代码路径
+查询在表单提交时从 draft 写入。`compositionstart` / `compositionend` 挡住组合期间的提交。空查询列出当前范围内的文档，不调用 `search`。
 
-实际入口为 examples/demo.tsx，完整可迁移实现为 examples/example.tsx。Library Lab 展示的代码由这两份源文件生成并计算 SHA-256；三个 Demo 场景共享真实实现，使用 level 切换学习层次。不得为文档另外维护一份看起来相同但不可运行的伪代码。
+非空查询调用 `index.search`，`fuzzy` 在 advanced 可以由复选框关掉，`prefix` 保持打开。`filter` 再确认 id 仍在 `scopedDocs` 里，然后才 `slice(0, 20)`。先截断再过滤会让当前分组的命中被挤掉。
 
-## 索引模型
+advanced 的 `autoSuggest` 使用同一个 `index`，所以建议词不会来自未选中的分组。更新 id 为 `1` 的标题和摘要会 `setDocuments`，`useMemo` 重建索引。旧词不应再作为那一篇的标题命中。
 
-创建 MiniSearch 时指定 fields、storeFields 与 searchOptions；addAll 建立倒排结构，search 返回 id、score、terms 等；autoSuggest 提供文本建议。storeFields 只存需要在结果中展示的字段，原始正文完整副本不一定需要与索引全部同步。
+结果用文本渲染。不插入 MiniSearch 的高亮 HTML。
 
-## 三层实战
+没有挂载：自定义中文分词器、持久化索引、服务端查询。默认 tokenizer 不是专业中文分词，短中文查询可能不如英文标题稳定。
 
-基础：输入 React，检查 title boost 与排序分数；业务：结合 RSS 技术/产品/开源分类过滤，使用 search filter 在 slice 前控制范围，并对中文输入法组成态暂缓提交；进阶：启用/关闭拼写容错、执行 autoSuggest，修改标题后重建索引使搜索结果真实更新。
+## 什么时候用
 
-## 常见错误
+文档数超过手写扫描、又需要前缀和拼写容错时用 MiniSearch。很小的列表、主要靠字段权重和错拼时，Fuse 更直接。已经生成的静态 HTML 用 Pagefind，避免把正文都下载到浏览器再建索引。
 
-一、修改原文数组后不更新 MiniSearch 索引，结果仍是旧文本；应 replace/remove/add 或重建/增量更新并明确边界。二、先对搜索结果取 topN 才应用分类条件，可能隐藏实际应该展示的匹配；应在查询阶段 filter 或分租户建索引。三、把搜索结果当权限检查，用前端 filter 隐藏敏感文档并认为安全；必须在服务端授权及索引构建阶段控制数据访问。四、把中文整句按默认英文分词保证准确率；真正中文全文检索需设计分词/归一化插件和针对数据的回归语料。
+UI 分类必须在建索引前裁掉。只在渲染时隐藏 `<li>` 会让 `autoSuggest` 泄露其他组的词。
 
-## 组合选型
+## 模型
 
-小型候选列表使用 D19 Fuse.js 更直观；规模稍大、需要 prefix/fuzzy/autoSuggest 的正文资料可选择 MiniSearch；纯静态文档可比较 Pagefind 构建时索引。数据量大时将索引构建放入 Worker 并设置内存与时间预算，Lab 中不自动加载外部服务。
+`new MiniSearch({ fields, storeFields, searchOptions })` 然后 `addAll`。`fields` 是被分词的内容。`storeFields` 是结果里要带回的原文。Lab 的摘要不在 `storeFields` 里，展示时用 id 回查原文档，这样替换文档后不会从旧存储字段读到旧摘要。
 
-## 运行与测试
+`search` 返回带 `id` 和 `score` 的结果。`fuzzy: 0.2` 允许轻微错拼；`false` 关掉它。`prefix: true` 让未输完的词仍能命中。`boost` 提高标题相对摘要的权重。
 
-本例基于 React useMemo，文档变化时重建 index；这是小集合的教学简化，大列表应增量维护与异步分批。node:test 真实 import MiniSearch，验证字段搜索、分类过滤、替换索引后的结果。浏览器再验证 IME 和快速输入行为，未运行前保持 NOT_RUN。
+`autoSuggest` 走同一索引。它不是独立的安全通道。范围必须已经体现在索引内容上。
 
-## 演示场景与预期
+更新策略是改不可变数组并重建。也可以 `remove` 再 `add`，但要保证旧 id 被移除。Lab 用重建，避免半更新。
 
-1. **倒排索引、字段权重与 score**：添加本地文档后按正文和标题评分检索
-2. **RSS 分类过滤与输入法**：查询后引擎内部过滤，再控制显示数量
-3. **前缀、错拼联想与重新索引**：autoSuggest 与文档更新后建新索引
+## 三层示例
 
-## 练习与迁移
+### 基本
 
-将本地 NewsHub 频道搜索升级为两个查询模式：名称容错建议和文章正文搜索，并保证租户分组不会出现先截断导致的漏结果。
+默认词 `React`。没有分类控件，索引包含全部种子。每条显示分数，文案写明越高越匹配。
 
-## 验证分级与限制
+### 业务
 
-本条目包含真实目标包 import 的示例和 Node 定向测试源码。**SDK、TypeScript、生产构建及 Playwright 本轮均未在依赖完整环境执行，状态为 NOT_RUN**。`tests/sdk.test.mjs` 必须在真实依赖安装后执行；Mock 业务数据不等于 Mock 目标库。测试成功后才能按当前源指纹绑定 evidence，不得沿用历史研究报告的 PASS。
+分类变成技术、产品或开源。切换后建议和搜索都只看见该组。这仍是 fixture 上的滤镜。
 
-## 官方一手资料
+### 进阶
 
-- [官方 API 与 README](https://github.com/lucaong/minisearch)
-- [npm 稳定版本](https://www.npmjs.com/package/minisearch)
-- [API 文档](https://lucaong.github.io/minisearch/)
+可以关掉模糊。建议最多三条。更新第一篇标题后，索引随 `documents` 变化重建，新标题能被搜到。
 
-## 授权
+## 反例
 
-该条目源码与文字为独立编写的教学材料；目标库使用上游 MIT 许可，未捆绑第三方图片、字体或付费资源。
+### 反例 1：只过滤渲染结果
 
-## 第16轮：搜索建议与索引的分类所有权
+```tsx
+const hits = index.search(query).filter(hit => byId.has(hit.id))
+```
 
-过去的演示仅对 `search({filter})` 做分类限制，`autoSuggest` 却基于**完整**索引，切换“技术”分组时仍可能从其他分组词条联想出文字。现在 `scopeSearchDocuments` 在 `buildMiniIndex` 之前裁剪可见分组，同一份 `scopedDocs` 同时驱动 ID 映射、空词结果、`search` 和 `autoSuggest`；切换分类后通过 React `useMemo` 重建真正索引。不是把未授权数据塞入浏览器、只靠展示时过滤的安全措施。
+若索引是全量的，`autoSuggest` 仍会吐出其他组的词。
 
-官方 `autoSuggest` 同样支持 search 的 filter 选项，但索引构建前隔离更便于讲清缓存所有权和误泄漏风险。真实生产必须由服务端先鉴权后给浏览器最小许可文档，浏览器分类只是用户视图；索引里一旦出现敏感正文，UI 过滤不能收回泄露。索引大时要使用分组/租户 key 限定缓存与 Worker 生命周期。
+```tsx
+const index = buildMiniIndex(scopeSearchDocuments(documents, group))
+```
 
-离线策略：`node --test entries/D20-minisearch/tests/scope-policy.test.mjs`；真实 MiniSearch SDK 的 search / autoSuggest 边界回归：`node --test entries/D20-minisearch/tests/sdk.test.mjs`。后一项需要安装目标 SDK，本轮未实际执行。
+### 反例 2：先 slice 再按组过滤
+
+```ts
+index.search(query).slice(0, 20).filter(hit => hit.group === group)
+```
+
+前 20 条可能全是别的组。
+
+```ts
+index.search(query, { filter: result => byId.has(String(result.id)) }).slice(0, 20)
+```
+
+### 反例 3：用 Fuse 的分数方向写 UI
+
+MiniSearch 分数越高越相关。不要写“越小越相似”。
+
+### 反例 4：把建议词插进 HTML
+
+```tsx
+dangerouslySetInnerHTML={{ __html: hit.suggestion }}
+```
+
+建议是纯文本，用字符串拼接进句子即可。
+
+### 反例 5：改标题不重建
+
+旧倒排仍指向旧 token。`setDocuments` 必须让 `useMemo` 依赖到新数组。
+
+### 反例 6：假设中文按词切开
+
+默认分词对英文标题更可预期。中文产品搜索要单独换 tokenizer，并准备语料测试。本示例没有换。
+
+## 组合
+
+**Fuse**：交互式小列表可以两套都试，但分数不能混在一个排序里。权限裁剪放在共用的上游数组。
+
+**Pagefind**：公开站点走构建期索引。MiniSearch 留给浏览器里会变的那一小撮文档。
+
+**Query**：搜索词提交后再改查询。不要每个 `onChange` 都重建大索引。Lab 的种子很小，重建是为了正确性。
+
+## 生产核对清单
+
+1. `addAll` 的数组已经按授权和分组裁过。
+2. `autoSuggest` 与 `search` 共用该索引。
+3. `filter` 在 `slice` 之前。
+4. 分数文案与 Fuse 区分开。
+5. 更新或删除后旧 token 消失。
+6. IME 组合期间不提交。
+7. 不渲染 HTML 高亮。
+8. 中文语料有单独的命中测试，不把英文标题的结果当成中文分词证明。
+
+## 升级
+
+钉 `minisearch@7.2.0`。升级后重跑前缀、`fuzzy: 0.2` 与 `fuzzy: false`、以及分组索引不含他组建议词。分词器变化会悄悄改命中集合。
+
+不要为了存储字段方便把正文秘密放进 `storeFields`。结果对象可能被日志打印。
+
+## 验收
+
+- `React` 与其前缀能命中标题，分数方向是越高越近。
+- 分组索引的 `autoSuggest` 不返回其他组的词。
+- 过滤发生在截断之前；更新标题后旧文案不再命中。
+- 「全部」不修改源数组。
+- 未知分组得到空的可见集合（策略函数的合同）而不是全量。
+- `tests/sdk.test.mjs` 导入真实 `minisearch`。无收据则 NOT_RUN。
+
+重建索引用 `useMemo` 依赖 `scopedDocs`。原地 `documents.push` 不会换引用，索引会停在旧词上。更新按钮必须返回新数组。
+
+## 资料
+
+- https://lucaong.github.io/minisearch/
+- https://github.com/lucaong/minisearch
+- https://www.npmjs.com/package/minisearch

@@ -1,63 +1,171 @@
-# Papa Parse：CSV 导入、字段校验与安全导出
+# Papa Parse 5.7.0｜引号、表头、HTTPS 和公式前缀
 
-## 适用范围
+Lab 锁定 `papaparse@5.7.0`（MIT）。类型包 `@types/papaparse` 若需要，跟 DefinitelyTyped 走，不改变运行时版本。它解析和生成 CSV。它不是工作簿，也不抓取 URL。
 
-Papa Parse 处理 CSV 文本/文件/Stream，理解引号转义、逗号、多行文本以及编码元信息；它**不是 XLSX 编辑器**，也不承担网络上传或后端数据迁移。首选用于 RSS 导入清单、运营表格的 CSV 入口、管理后台的 CSV 预览与导出。需要 xlsx 单元格样式、公式计算、工作簿格式时比较 F04 ExcelJS 和 F05 SheetJS。
+包已在锁文件中。没有 `docs/library-lab/evidence/runs/` 收据时 sdk、build、browser 保持 NOT_RUN。Actions 41779873259 是仓库级结果（安装、类型检查、构建、52 个 SDK 文件 / 153 项测试、45 项 Playwright），不是本条目 PASS。
 
-基线：`papaparse@5.7.0`、开发期 `@types/papaparse@5.5.2`（分属运行包与 DefinitelyTyped），MIT；本库按照官方文档独立重写，不继承历史模拟测试 PASS。
+## Lab 当前示例
 
-## 直接安装与导入
+执行种类是 `react`。显式启动后挂载 [`examples/demo.tsx`](examples/demo.tsx) → [`examples/example.tsx`](examples/example.tsx)。解析函数是 [`examples/report.mjs`](examples/report.mjs) 的 `reportCSV`，UI 和 Node 套件共用它。
 
-```bash
-pnpm add papaparse@5.7.0
-pnpm add -D @types/papaparse@5.5.2
+| 文件 | 作用 |
+| --- | --- |
+| `examples/example.tsx` | 三份本地夹具、256 000 字节文件上限、15 000 字符文本框 |
+| `examples/report.mjs` | `Papa.parse` / `Papa.unparse`，表头失败则不导入行 |
+| `examples/policy.mjs` | 表头必须是 `title,url,note`；HTTPS、去重、长度 |
+| `tests/node-scenarios.test.mjs` | 直接 import `papaparse` 和 `reportCSV` |
+| `tests/policy.test.mjs` | 不加载 Papa 的纯契约 |
+
+`header: true`，`skipEmptyLines: 'greedy'`，`dynamicTyping: false`。导出只包含已接受的行，`escapeFormulae: true`，列顺序固定。
+
+文本框和本地文件都停在页面里。没有上传，也没有 `download: true` 那种远程拉取。旧指南里的 Worker 分块是生产教学，本页没有挂 `worker: true`。
+
+## 1. 什么时候用
+
+运营表格、RSS 清单、需要保留引号和单元格内换行的 CSV。要样式、多表、公式求值时看 F04 ExcelJS 或 F05，不要把 CSV 装成 xlsx。
+
+选文件的交互可以交给 F02。Papa 不负责拖放，也不负责把文件存进对象存储。
+
+## 2. 模型
+
+```text
+字符串或 File.text()
+  → 去掉开头的 U+FEFF
+  → Papa.parse
+  → 表头 / 不可恢复错误？整批拒绝
+  → 列数不对的行单独拒绝
+  → normalizeFeed
+  → Papa.unparse({ escapeFormulae: true })
 ```
+
+`meta.fields` 必须恰好是 `title`、`url`、`note`，顺序一致。`meta.renamedHeaders` 只要非空就拒绝：重复表头会被 Papa 改名，不能静默导入。
+
+`TooManyFields` / `TooFewFields` 且行号可信时，只拒绝那一行，并看 `__parsed_extra`。其它解析错误整批拒绝，避免半截坏文件进库。
+
+`normalizeFeed` 去掉首尾空白。title ≤ 160，url ≤ 2048，note ≤ 2000。note 允许换行，其它字段拒绝控制字符。URL 必须是无用户名密码的 `https:`，比较前丢掉 fragment。重复用规范化后的 `href`。这不是服务端抓取防护：没有内网地址判断，也没有跟随重定向。
+
+generation 在输入、选文件、解析、重置、卸载时增加。超限文件会先把 `<input value>` 清掉，同一文件还能再选。
+
+## 3. 三层
+
+### 基本
+
+夹具是一行带逗号的标题、转义引号，以及单元格里的换行：
+
+```text
+title,url,note
+"React, Loom",https://example.org/feeds,"带引号 ""文本"" 和
+下一行"
+```
+
+点「解析并校验」后看通过条数、拒绝原因和转义后的 CSV。不要用 `split(',')` 对照。
+
+### 业务
+
+夹具含重复的 `https://example.org/rss` 和 `ftp://`。通过的只有合法且未重复的 HTTPS。也可以选本地 `.csv`，大于 256 000 字节直接提示，并说明更大的文件要另做 step/chunk 和 Worker。本页没有实现那条路径。
+
+### 进阶
+
+夹具含 `=2+3`、一条合法行，以及「too,many,cells」。公式行若通过校验，导出里应出现 Papa 加上的前缀。多出来的列进入拒绝，而不是塞进 note。文案写明：HTML 转义不能代替 CSV 公式防护。
+
+## 4. 反例
+
+### 反例 1：手写分割
 
 ```ts
-import Papa from 'papaparse'
-const parsed = Papa.parse<{title:string,url:string}>(
- 'title,url\nReactLoom,https://example.org',
- {header:true,skipEmptyLines:'greedy',dynamicTyping:false}
-)
-if (parsed.errors.length) throw new Error(parsed.errors[0].message)
-const safeCsv = Papa.unparse(parsed.data,{escapeFormulae:true})
+rows = text.split('\n').map((line) => line.split(','))
 ```
 
-示例真实完整实现见 `examples/example.tsx`；Node 目标 SDK 断言见 `tests/node-scenarios.test.mjs`。这个页面不会上传选择的 CSV，也不会使用远程下载参数。
+引号里的逗号和换行会裂开。用 `Papa.parse`。
 
-## 三层案例
+### 反例 2：打开 dynamicTyping
 
-- **basic**：带逗号的标题、跨行备注、`""` 引号转义。直接观察 `result.data/errors`。
-- **business**：从当前浏览器选择本地 CSV（最多 256KB），校验必填字段、HTTPS 协议、重复 URL 与无凭据策略；报错必须呈现用户可理解的行号，不要只提示解析成功。
-- **advanced**：演示错误列数、恶意表格公式与 `Papa.unparse({escapeFormulae:true})`。导入并不等于批准；只有经过域模型校验的记录才能导出安全预览。
+```ts
+Papa.parse(csv, { header: true, dynamicTyping: true })
+```
 
-## 实际机制
+邮编、前导零和超过安全整数的 id 会被改掉。本页保持 false，再按字段做校验。
 
-解析结果含 `data`、`errors`、`meta`；`header:true` 将首行用作键名，重复表头会被自动改名并出现在 meta，不能假设所有字段总是唯一。默认 `dynamicTyping:false` 能避免订阅 ID、邮编、超长数字因类型转换而损坏。CSV 内容用纯文本呈现，不得用 innerHTML；导出到 Excel/表格客户端时需要针对以 =/+/-/@ 开头的公式做 CSV 注入防护。
+### 反例 3：重复表头照单全收
 
-## 工程边界
+`title,url,title` 会进 `renamedHeaders`。不检查它，后一列会换名字混进来。`validateHeaders` 直接抛错，整批不导入。
 
-1. **文件来源**：本地 `File.text()` 处理少量样例；无法推断编码，非 UTF-8 数据需显式选择编码策略/转换器。
-2. **大文件**：256KB 只是本 Demo 的界限，不是 Papa 上限。百万行应评估 step/chunk、背压、Worker 兼容性及 UI 虚拟化，不能只调 `worker:true` 后假设一切已经高性能。
-3. **过期回写**：文件异步读取后核对 generation；卸载时使代次失效。重复读取同一文件须允许重新选择。
-4. **错误行**：`meta.renamedHeaders`、字段多/少、引号不闭合等需向用户显示并允许修改；不能丢掉 ParserError。
-5. **安全**：CSV 公式防护在每个导出路径执行；不允许上传带密钥的原始表格到第三方服务；相同 URL 规范化去重不等于 SSRF 安全，真正网络抓取在受保护的后端执行。
-6. **取消**：浏览器大规模 step 解析可用 parser.abort，但必须查看官方不同输入类型的中止语义，不可将 `File.text()` 误写为可直接取消。
+### 反例 4：只做 HTML 转义
 
-## 组合和反例
+```ts
+cell.replaceAll('<', '&lt;')
+```
 
-与 F02 react-dropzone 组合负责拖入/选择，但本地选择 ≠ 已上传。与 F04 ExcelJS 不同，不能给 CSV 增加字体、工作表或样式。错误：`input.split('\n').map(s=>s.split(','))` 无法处理引号/跨行；使用 Papa.parse。错误：`dynamicTyping:true` 无条件处理 ID；保留原始字符串做 schema 验证。错误：只净化 HTML 不处理 CSV 注入；开启 `escapeFormulae`。
+Excel 仍会把 `=HYPERLINK(...)` 当公式。导出用 `escapeFormulae: true`。导入时不要把已经加过撇号的文本再当成原始公式。
 
-## 验证
+### 反例 5：远程 URL 选项
 
-PLATFORM 安装依赖后：`node --test packages/library-lab/entries/F03-papaparse/tests/node-scenarios.test.mjs`；`pnpm --filter @reactloom/library-lab typecheck && pnpm --filter @reactloom/library-lab build`；E2E 检查本地文件、分隔文本、恶意公式、字段错误和重复选择。缺少实际执行日志时 sdk/browser 保持 NOT_RUN。
+```ts
+Papa.parse('https://example.com/users.csv', { download: true })
+```
 
-官方：[Docs](https://www.papaparse.com/docs) · [Releases](https://github.com/mholt/PapaParse/releases) · [GitHub](https://github.com/mholt/PapaParse)。
+那会让浏览器去拉取。Lab 只解析手头的字符串。抓取属于后端，并要处理重定向和内网地址。
 
-## 增量安全修正：严校验与文件读取所有权（EF wave11）
+### 反例 6：坏引号仍导入前几行
 
-UI 与 Node 目标SDK测试现在共享 `examples/report.mjs` 的真正 Papa Parse 解析路径；`examples/policy.mjs` 是无第三方依赖的纯业务契约，`tests/policy.test.mjs` 可离线执行。表头必须严格 `title,url,note` 且列数/顺序唯一，防止 `meta.renamedHeaders` 使重复列被默默改名。只有列数失配且有明确行位置时按行拒绝；非列数型、行定位不可信的解析错误整批拒绝，避免半个损坏 CSV 被误导入。
+未闭合引号是不可恢复错误。`reportCSV` 在这种情况下 `accepted` 为空。不要展示「已导入一部分」。
 
-业务名称限制160字符、备注2000字符、URL2048字符；禁止控制字符、凭据 URL 和非 HTTPS，保留引号内真实换行备注；仅导出通过检验的记录且开启 `escapeFormulae`。这只是**离线清洗**，不能替代抓取端针对DNS重绑定、内网IP和重定向的SSRF防护。
+### 反例 7：File.text 回写
 
-切换文件、手动输入、解析或重置都会递增 generation，旧 `File.text()` 无权覆盖新文本。选中File后同步清空input，使超大文件被拒绝后仍能选同一文件。离线纯逻辑测试通过不意味着 Papa SDK/浏览器已运行。
+选了大文件又立刻改文本框时，晚到的 `file.text()` 不能覆盖用户正在改的内容。代号不对就返回。
+
+## 5. 组合
+
+**react-dropzone**：它给 `File`。Papa 给记录。两边的大小上限要说清楚：dropzone 示例和这里的 256 000 字节不是同一个数。
+
+**ExcelJS**：CSV 清洗之后，需要样式和 SUM 缓存时再生成 xlsx。不要让 Papa 去画冻结表头。
+
+**Zod**：`normalizeFeed` 是本地规则。产品可以把同样的字段放进 schema，但不要用 Papa 的 `dynamicTyping` 代替 schema。
+
+## 6. 清单
+
+- 表头严格三列，拒绝改名。
+- 只导出 `accepted`，并打开 `escapeFormulae`。
+- 非列数类解析错误整批失败。
+- 文件输入在读取前清空，卸载时增加 generation。
+- 预览用文本节点，不用 `innerHTML`。
+- 不把规范化 URL 当成允许服务器去请求。
+- 不上传带密钥的表格。夹具全是 example.org。
+
+## 7. 升级
+
+5.7 的 `skipEmptyLines: 'greedy'` 和 `escapeFormulae` 按当前文档使用。升级 minor 时重跑 `tests/node-scenarios.test.mjs`，因为引号和错误码是行为合同。不要把 v4 的回调风格混进这段同步 `Papa.parse`。
+
+大文件的 `worker: true` 还要看打包和 CSP。本页没有打开它，升级文档不能写成「已经在 Worker 里跑过」。
+
+## 8. 验收
+
+```bash
+node --test packages/library-lab/entries/F03-papaparse/tests/node-scenarios.test.mjs
+node --test packages/library-lab/entries/F03-papaparse/tests/policy.test.mjs
+```
+
+前者会加载 Papa，但没有写入收据之前，verification 里的 sdk 仍是 NOT_RUN。后者完全不加载 SDK。浏览器还要看：夹具解析、本地文件超限后能重选、公式导出、坏行文案。仓库绿标不能抄过来。
+
+## 9. 故障对照
+
+| 现象 | 先看 |
+| --- | --- |
+| 逗号把标题拆开 | 用了 `split`，没有走 `Papa.parse` |
+| 表头看起来对却整批拒绝 | `renamedHeaders` 非空，或列顺序不是 title,url,note |
+| 只有半行进了 accepted | 不可恢复错误的分支被删了。未闭合引号必须整批空 |
+| 备注里的换行丢了 | 策略对 note 允许换行，title 和 url 不允许控制字符 |
+| 同一文件不能再选 | input 没有在读取前清空 |
+| 文本框被刚刚的文件覆盖 | generation 在手动输入时没有增加 |
+| 导出仍以 `=` 开头 | `unparse` 没有 `escapeFormulae: true`，或导出了未接受的行 |
+| 256 KB 以上没进度 | 本页直接拒绝。step/chunk 与 Worker 没有挂载 |
+
+编码：夹具按 UTF-8。文件开头的 U+FEFF 会先去掉。其它编码要在进 `reportCSV` 之前转换，不要开 `dynamicTyping` 来「碰运气」。
+
+可访问性：错误用 `role="alert"`，计数用 `role="status"`。结果是 `<pre>` 文本，不是 HTML。移动端文件选择走同一 input，不假设有拖放。
+
+## 10. 资料
+
+- https://www.papaparse.com/docs
+- https://github.com/mholt/PapaParse
+- https://github.com/mholt/PapaParse/releases

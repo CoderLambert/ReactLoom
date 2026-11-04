@@ -1,63 +1,158 @@
-# React Virtuoso · 业务长列表的虚拟化
+# React Virtuoso 4.18.19｜变高列表只少挂 DOM
 
-## 适用与边界
+Lab 锁定 `react-virtuoso@4.18.19`（MIT）。Virtuoso 测量变高行并只挂载窗口内的 DOM。它不减少你已经创建的 JS 数组，不发请求，也不提供表格语义。
 
-React Virtuoso 把大量数据映射到有限的可见 DOM，自动测量可变高度，适合 RSS 阅读流、搜索结果、审计日志和历史消息。对于较短列表，先使用普通列表。它**不管理业务分页、请求缓存、服务器过滤、授权与数据持久化**。对复杂自由布局和底层测量策略，参考 C10 TanStack Virtual。
+没有收据时 sdk / build / browser 保持 NOT_RUN。Actions 41779873259 不是本条目 PASS。
 
-基线 react-virtuoso 4.18.19（MIT）；React 19 兼容性仍待此分支真实浏览器验证。独立 @virtuoso.dev/message-list 产品不属于本包，不能由本包 MIT 许可推断其商业许可。
+## Lab 当前示例
 
-## 安装与入口
+[`examples/example.tsx`](examples/example.tsx) 按 level 渲染三个真实 `<Virtuoso>`。`demo.tsx` 只做再导出。没有独立 Vite 工程。
 
-~~~bash
-pnpm add react-virtuoso@4.18.19
-~~~
+- **basic**：10,000 条变长摘要。`defaultItemHeight={86}`。`computeItemKey` 返回 `article.id`。`scrollToIndex({ index: 9000, align: 'center' })`。`rangeChanged` 把可见区间写进 `role="status"`。
+- **business**：630 条里先按关键词过滤，再只把前 `limit` 条交给 Virtuoso。`endReached` 和按钮都走 `loadMore`。260ms 定时器模拟等待。generation 对不上就不再 `setLimit`。搜索提交 [`view-policy.mjs`](examples/view-policy.mjs) 的 `normalizeFeedQuery`（NFC、去掉控制字符、最多 80 个码点）。`key={viewRevision}` 在每次提交时增加，即使查询词相同也丢掉旧的滚动位置。组合期间不提交。
+- **advanced**：`firstItemIndex` 从 100000 起。前插 10 条时，新的 `firstItemIndex` 和更长的 `items` 在同一次 `setState` 里更新。`followOutput` 只在已经贴底时为 `'auto'`。展开用业务 ID 存在 `Set` 里，并插入多行文本迫使重测高度。
 
-真实实现：examples/example.tsx；页面适配入口：examples/demo.tsx。Library Lab 先加载分类，不启动示例；点击运行后才动态引入 SDK。
+`nextWindowLimit` 拒绝负数和非安全整数。`nextViewRevision` 拒绝把 revision 加过 `MAX_SAFE_INTEGER`。
 
-~~~tsx
-import {Virtuoso} from 'react-virtuoso';
-<Virtuoso style={{height: 360}} data={articles}
-  computeItemKey={(_index, item) => item.id}
-  itemContent={(_index, item) => <article>{item.title}</article>} />
-~~~
+`TableVirtuoso`、Query 无限滚动和 DOMPurify 没有挂载。
 
-## 三个真实示例
+## 什么时候用
 
-**入门**：10,000 条变长虚构文章，显示真实窗口范围，支持跳转靠近末尾。窗口化节省 DOM 节点，不减少 10,000 个 JS 对象的占用。检查可见 DOM 数时必须在浏览器完成，不能虚构性能数字。
+行高不固定、要保持滚动位置的消息流和文章流。行高固定、要自己控制 DOM 时用 C10。需要列、键盘网格和企业编辑时用 C07 或 C08。几百行的静态列表不必虚拟化。
 
-**业务**：固定数据的 RSS 搜索和按段加载；中文 IME 由显式提交控制，避免每次拼音合成触发请求；endReached 重复触发由同步 pending ref 门禁隔离；切换筛选取消旧的模拟延迟并重建滚动测量上下文。没有真实 HTTP，不能标记网络请求层验收。
+虚拟化之后，屏幕阅读器默认读不到未挂载的行。关键数据要另有可分页的语义列表，或接受这个取舍并写进产品说明。
 
-**进阶**：历史前插与 firstItemIndex 在同一次状态更新中同步减量；computeItemKey 使用 id；展开消息增加实际 DOM 高度后交由 Virtuoso 重测；仅当用户位于底部时追加消息自动跟随。该示例不等于商业聊天消息列表组件。
+## 数据与模型
 
-## 工作机制
+`data` 是当前要展示的数组。`computeItemKey` 必须稳定，不能用数组下标。前插时如果 key 跟着 index 走，展开状态和测量会串行。
 
-状态所有权：外部保存数据、游标、搜索和权限；Virtuoso 只负责可见窗口、滚动尺寸和视图快照。组件数据变化必须维持稳定业务 id，不要将 index 当永久键。容器必须有明确高度（普通高度或祖先 flex + min-height:0）。
+`firstItemIndex` 告诉库：数组第 0 项在整个逻辑列表里的下标是多少。前插时把它减去新增条数，并同时换掉 `data`。分两次 setState 会先跳滚动位置。
 
-需要向前插入时 firstItemIndex 需要保留足够余量，且保持非负。restoreStateFrom 是测量与位置快照，**不是数据快照**：搜索、用户或排序变化不能盲目复用。正文以 padding 控制内距，避免子元素外边距塌陷影响测量。dynamic data 下 defaultItemHeight 是估计，不能错误配置 fixedItemHeight。
+`followOutput` 返回 false 时，用户正在看历史，新消息不把他拽到底。Lab 用 `atBottomStateChange` 记录这一点。
 
-## 专属反例与修复
+`endReached` 会在短列表上反复触发。`pending` ref 和 `hasMore` 挡住重入。错误发生时不要自动再调 `loadMore`，否则会打成请求环。本示例没有错误分支的 HTTP，只有定时器。
 
-1. **无容器高度导致空白**：明确视口高度，检查 flex 祖先 min-height:0。
-2. **index 当业务 key**：新增、删除、筛选和前插后会错误重用内容；使用 computeItemKey。
-3. **endReached 无限翻页**：同步锁、hasMore 和响应版本双重门禁，不能只依赖 loading state。
-4. **在 itemContent 内发请求**：滚动回收会触发重复副作用；请求归独立数据层管理。
-5. **插入历史仅修改数组**：firstItemIndex 与数组同时原子更新，不靠估计 scrollTop。
-6. **误把本地 fixture 当接口验收**：浏览器动态测量需要 Playwright/Chromium 或真实环境验证。
+过滤或语言一变，旧的测量不能留给新数组。Lab 用 `key={viewRevision}` 换掉整个列表。不要把上一轮的 `initialMeasurementsCache` 无条件塞回来。
 
-## 组合与练习
+10,000 是逻辑条数。DOM 节点数应接近视口加 overscan，而不是 10,000。没有 Performance 记录就不能写帧率。
 
-与 TanStack Query 组合时 Query 拥有异步数据和缓存键，Virtuoso 管窗口；与 TanStack Table 组合时 Table 管业务行和排序模型。练习：为新闻列表加入数据来源变化后的滚动定位策略、错误页重试以及每页游标的后台合同测试。
+## 三层示例
 
-## 验证
+### 基本
 
-本次仅提交针对真实 SDK 的入口与源码，未运行 npm 安装、真实 SDK 集成、TS 类型检查、构建或浏览器测量；verification.json 为 NOT_RUN。必须在实际浏览器测：滚动跳转、动态高度、前插锚点、键盘焦点和卸载。
+打开后状态行出现可见范围，而不是 1–10000。点「跳至第 9001 条」，范围应靠近 9001。文本长度随 `index % 8` 变化，行高不应被写成一个固定像素。
 
-## 一手资料
+### 业务
 
-- https://virtuoso.dev/react-virtuoso/
-- https://virtuoso.dev/react-virtuoso/api-reference/virtuoso/
-- https://github.com/petyosi/react-virtuoso/releases/tag/react-virtuoso%404.18.19
+组合中文时状态写「不会提交搜索」。结束后再点搜索，列表 key 变化，窗口回到前 30 条。滚到底或点按钮，260ms 后增加最多 30 条，且不超过过滤后的总数。搜索词在等待期间被换掉时，旧定时器不能把 limit 加到新结果上。
 
-## 补充：同条件重新搜索也必须恢复窗口身份
+### 进阶
 
-业务层即使重复提交相同关键词，也会从头加载 30 条，因此 `Virtuoso key={query}` 不足以重置仍停留在底部的滚动位置。当前实际示例使用独立 `viewRevision` 作为 viewport key，`nextViewRevision` 每次合法提交递增；筛选词由 `normalizeFeedQuery` 做 NFC/控制字符和 80 码点上界，`nextWindowLimit` 对最后一页设定明确上界。相同 helper 在 `examples/view-policy.mjs`，由组件直接 import，`tests/view-policy.test.mjs` 执行纯 Node 回归。它们并不证明 Virtuoso 的浏览器滚动已经通过，真实窗口重置、IME、末页 endReached 和滚动锚点仍需 Chromium 验证。
+点「向前加载 10 条」。已有消息的 `article-N` 不变，窗口起点减少。贴底时「添加最新消息」会跟着到底；先往上滚，状态变成「正在阅读历史」，再追加不应强制滚动。展开后行变高，下一项仍从新的测量位置开始，而不是叠在长文本上。
+
+## 反例
+
+### 1. key 用 index
+
+```tsx
+computeItemKey={(index) => index}
+```
+
+前插后展开状态落到别的文章上。用 `article.id`。
+
+### 2. 前插只改数组
+
+不减 `firstItemIndex`，视口会跳。两个字段同一次更新。
+
+### 3. followOutput 恒为 auto
+
+用户翻历史时被新消息拽走。Lab 的回调先看是否贴底。
+
+### 4. endReached 没有门闩
+
+短列表和 StrictMode 会连续加载。用 `pending`、generation 和「已经没有更多」。
+
+### 5. 同名查询复用旧滚动
+
+第二次搜索相同关键词仍停在上次的末尾。`nextViewRevision` 即使查询相同也要变，并作为 Virtuoso 的 `key`。
+
+### 6. 把虚拟下标当后端 cursor
+
+`range.endIndex` 不是服务器游标。游标由接口返回。裁剪已加载数组会改变 index，必须同时改锚点。
+
+### 7. 用 Virtuoso 代替表格可访问性
+
+未挂载行对读屏器不可见。不要声称 10,000 条都能被线性朗读。需要时另给分页 `<table>`。
+
+### 8. 把 HTML 摘要直接插入
+
+fixture 是纯文本。真实 RSS 正文先净化，再决定能不能作为 HTML。虚拟化不净化字符串。
+
+## 组合
+
+**Query。** `useInfiniteQuery` 拥有页和 `signal`。Virtuoso 只接收已经 flatten 的只读数组，并在 `endReached` 里调用 `fetchNextPage`。queryKey 包含筛选条件。本 Demo 用本地数组代替了这一层。
+
+**Table。** `TableVirtuoso` 才能和表头、行一起虚拟化。当前组件是普通 `Virtuoso`。列排序仍属于 TanStack Table 或 AG Grid，不要在 item 渲染器里自己排整个 10,000 数组还以为只有 DOM 被排序。
+
+**DOMPurify。** 只有要把可信策略之后的 HTML 放进文章时才需要。现在的 `summary` 是文本节点。
+
+## 生产清单
+
+- `computeItemKey` 使用业务 ID。
+- 前插同时更新 `firstItemIndex` 和 `data`。
+- 查询变化换新的 view revision，不复用测量缓存。
+- `endReached` 有并发门闩和 generation。
+- 给滚动容器一个确定高度。Lab 是 360–390px。
+- 展开按钮有 `aria-expanded`。加载文案在 `role="status"`。
+- 不要为了读屏器一次挂载全部行。另给非虚拟入口。
+- 卸载时增加 generation 并清掉定时器。
+
+## 升级
+
+4.18 的列表用 `computeItemKey`，不要写成 C10 的 `getItemKey`。升级后回归：跳到 9000、前插不跳、贴底跟随、展开重测。可变行高若改用函数，在目标浏览器里看滚动条是否抖动，不要凭估计像素承诺。
+
+`loadMore` 在 `token !== generation.current` 时直接返回，不把 `pending` 清掉的路径只存在于定时器回调里。搜索提交会自己把 `pending` 设为 false 并清定时器。若以后把定时器换成 fetch，这两处都要做，不能只在 then 里清。
+
+`nextViewRevision` 作为 setState 的更新函数使用：`setViewRevision(nextViewRevision)` 会用上一值计算下一值。不要写成 `setViewRevision(nextViewRevision(viewRevision))` 同时又在闭包里读旧 revision。
+
+## 练习
+
+1. 跳到第 9001 条，可见范围包含该条，DOM 节点数远小于 10,000。
+2. 前插之后，原来的 `article-501` 仍展开或仍折叠，不串到新行。
+3. 搜索 A 的加载尚未返回时改成 B，A 的 limit 不加到 B 上。
+4. 不在底部时追加消息，滚动位置保持。
+
+## 故障排查
+
+| 现象 | 先看 |
+| --- | --- |
+| 一万行全在 DOM 里 | 是否还在 `.map`，而不是把数组交给 `Virtuoso` |
+| 跳到 9000 后位置漂移 | `defaultItemHeight` 是否比真实行小太多。测量会纠正，但不要改成写死像素 |
+| 前插后视口跳动 | `firstItemIndex` 是否和更长的 `items` 分了两次 setState |
+| 展开状态串到别的文章 | `computeItemKey` 用了 index |
+| 搜索后仍停在旧底部 | `key` 是否忘了用新的 view revision |
+| 触底连续加载 | `endReached` 没有 `pending` 和 generation |
+| 贴底看历史被拽走 | `followOutput` 恒为 `auto` |
+
+滚动容器要有确定高度。Lab 写了 360 到 390 像素。未挂载的行不在无障碍树上。需要全文时另给分页列表，而不是关掉虚拟化把 10,000 个节点一次挂上。
+
+`TableVirtuoso` 才带表头语义。当前三个 level 都是普通 `Virtuoso`。列排序不要放进 `itemContent` 里对全量数组排序还以为只有 DOM 被排过。
+
+## 官方链接
+
+- https://virtuoso.dev/
+- https://github.com/petyosi/react-virtuoso
+
+`sampleArticle` 的 id 是 `article-` 加序号。前插用第一条 id 的数字倒推。若以后改成 UUID，前插必须改用服务器给的更早 id，不能再 `split('-')`。展开 Set 只认 id 字符串，序号变了但 id 没变时，展开应保持。
+
+`followOutput` 的参数表示当前是否贴底。返回 `'auto'` 才会跟着新消息。返回 `false` 时用户留在历史位置。不要写成常量 `'auto'`。`atBottomStateChange` 只更新说明文字，不反向滚动。用它来 `scrollToIndex` 会和 `followOutput` 打架。
+
+business 的 `Virtuoso` 只收到 `visible`，也就是当前 limit 切片，不是 630 条全量。`endReached` 增加 limit 之后，data 变长，库才会多挂几行。把全量数组直接交给它，分页门闩就没有意义。
+
+`normalizeFeedQuery` 先于 `includes`。控制字符被去掉之后，搜索不会因为零宽字符对不上标题。
+
+## 证据
+
+`view-policy` 单测不挂载 Virtuoso，也不能证明滚动和测量。sdk 要真实 import `react-virtuoso@4.18.19` 并在 `docs/library-lab/evidence/runs/` 留下收据。browser 单独计。
+
+GitHub Actions 41779873259 是仓库级安装、typecheck、build、52 个 SDK 文件（153 项测试）和 45 项 Playwright 的结果，不是 C09 的条目 PASS。不要改 `verification.json`。

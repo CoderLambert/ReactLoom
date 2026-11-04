@@ -1,73 +1,211 @@
-# clsx：条件类名与组件状态
+# clsx 2.1.1｜条件类名，不负责冲突和权限
 
-## 用在哪里
+Lab 锁定 `clsx@2.1.1`（MIT）。它把真值拼成一条 `className` 字符串。它不去重，不看 CSS 优先级，不合并 Tailwind，也不知道 `disabled` 这个类是否应该让按钮真的禁用。
 
-clsx 把字符串、数组和条件对象合成为 className。适合按钮、卡片、列表项等具有多种状态的组件。它不加载 CSS，不验证类是否存在，也不解决 Tailwind 的冲突。研究包原件存在；本页与 Demo 为此次应用重新编写，不继承旧报告的运行通过结论。
+没有收据时 sdk / build / browser 保持 NOT_RUN。Actions 41779873259 不是本条目 PASS。
 
-## 安装和引入
+## Lab 当前示例
 
-```bash
-pnpm add clsx@2.1.1
+[`examples/example.tsx`](examples/example.tsx) 同时导入完整的 `clsx` 和 `clsx/lite`。业务类先经过 [`class-policy.mjs`](examples/class-policy.mjs) 的 `cardClassInputs`，再展开给 `clsx`。`demo.tsx` 只做再导出。没有独立的 `npm run dev` 站点。
+
+- **basic**：选中和禁用两个复选框。输出展示 `clsx` 的实际字符串。卡片上的按钮另有原生 `disabled` 和 `aria-pressed`。类名不是这两件事的替身。
+- **business**：增加 `tone` 下拉框，只允许 `neutral`、`success`、`warning`。策略函数把后两者映射成 `tone-success` 或 `tone-warning`。其它值变成 `null`，clsx 会丢掉它。
+- **advanced**：额外展示一组边界：`clsx('px-2', false, null, undefined, 0, 1, ['px-4', { active: true, inactive: false }])`，以及 `lite` 只保留真值字符串。数字 `1` 会变成 `"1"`，`0` 被丢掉。`px-2` 和 `px-4` 同时保留。说明文字写明 lite 不是完整 clsx 的透明替换，Tailwind 冲突要交给 C21。
+
+`cardClassInputs` 返回 `['demo-card', { 'is-selected': ..., 'is-disabled': ... }, tone]`。对象的键在值为真时进入结果，值本身不会进入结果。
+
+## 什么时候用
+
+组件有若干布尔状态，要拼到已有的类名上。只有一个字符串时直接写 `className`。Tailwind 工具互相覆盖时用 `twMerge(clsx(...))`，见 C21。CSS Modules 的 `classnames/bind` 不会因为换成 clsx 就自动映射哈希类名。
+
+clsx 没有订阅，没有定时器，没有需要在卸载时销毁的实例。成本大约是输入节点数加上结果字符串的长度。它不保护循环引用和特别深的数组。
+
+## 数据与模型
+
+对 2.1.1 的运行时，可以按下面的规则读结果。类型声明和运行时不完全一样：`ClassValue` 允许 `bigint`，但实现不会把 `bigint` 收成类名。不要传 `1n`。
+
+1. 多个参数按顺序检查。`false`、`0`、`NaN`、`''`、`null`、`undefined` 不产生输出。
+2. 字符串原样写入。真值数字变成十进制字符串。`2` 得到 `"2"`。`0` 在真值判断时已经被丢掉，所以不能靠 `clsx(0)` 得到 `"0"`。
+3. 数组递归展开，片段之间加空格。
+4. 普通对象用可枚举的键。值为真时追加**键名**。`'false'` 这种非空字符串是真，所以 `{ active: 'false' }` 会得到 `active`。
+5. 对象枚举包括原型链上可枚举的键。不要把接口 JSON 直接传进去。
+6. 单独的布尔、函数不产生类名。
+7. 不去重。`clsx(['a', 'a'])` 是 `"a a"`。
+8. `clsx/lite` 只保留真值字符串。对象、数组和数字被静默忽略，不抛错。
+
+顺序不是 CSS 优先级。`clsx('px-2', 'px-4')` 得到 `"px-2 px-4"`。哪一条生效取决于样式表、层和特异性。Tailwind 的冲突分组要另做。
+
+类名也不是业务状态。按钮能不能点，看 `disabled` 属性。是否按下，看 `aria-pressed` 或数据。不要 `className.includes('is-disabled')` 再决定要不要提交。
+
+## 三层示例
+
+### 基本
+
+勾选「选中」。输出里出现 `is-selected`，按钮 `aria-pressed` 为真。勾选「禁用操作」。输出里出现 `is-disabled`，并且按钮的 `disabled` 属性为真。只改类、不改属性，键盘仍能点到按钮。
+
+### 业务
+
+切到「已归档」和「待审核」，输出分别带 `tone-success` 和 `tone-warning`。切回「普通」，没有 `tone-neutral`。策略函数不给未知语气造类名。不要把下拉框改成自由文本后再拼 `` `tone-${server}` ``。
+
+### 进阶
+
+看 `<pre>` 里的 `full`、`lite`、`truthy-number`、`zero-ignored` 和 `tailwind-not-merged`。`lite('base', selected && 'selected')` 在选中时是字符串条件，这是 lite 能做的形状。`lite({ active: selected })` 不会得到 `active`。`px-2` 与 `px-4` 两个都在。若视觉上必须只留后者，这里还没有调用 `twMerge`。
+
+## 反例
+
+### 1. 字符串 'false' 当布尔
+
+```ts
+clsx({ active: 'false' }) // "active"
 ```
 
-```tsx
-import clsx from 'clsx';
-const className = clsx('card', { 'is-selected': selected, 'is-disabled': disabled });
+用 `clsx({ active: isActive === true })`。策略函数已经用 `=== true`。
+
+### 2. 想输出数字 0
+
+```ts
+clsx(0) // ""
 ```
 
-具体运行代码见本条目 `examples/example.tsx`，演示入口为 `examples/demo.tsx`。Demo 源码面板由同一源文件生成，含 SHA-256。
+需要字符时用 `clsx(String(0))`。一般的类名里不应该出现这个需求。
 
-## 三层实验
+### 3. 用 lite 传对象
 
-入门切换“选中/禁用”，观察实际 className。业务层增加已归档、待审核状态，理解样式状态与业务语义的映射。边界层直接执行 clsx，显示数字、空值、嵌套数组和重复 Tailwind 工具类的真实返回值。
+```ts
+import { clsx as lite } from 'clsx/lite'
+lite({ active: true }) // ""
+```
 
-预期：选中时加入 is-selected，取消时移除；按钮 disabled 必须同步原生属性，而不是仅变灰。高级层 `clsx('px-2','px-4')` 同时保留两者。
+完整版用默认导入。lite 只写 `lite(active && 'active')`。
 
-## 数据流
+### 4. 以为后者覆盖 Tailwind
 
-React 状态 -> 有限状态映射 -> clsx 输出字符串 -> className -> 浏览器 CSS。函数本身无资源生命周期；状态监听和异步操作仍归宿主组件所有。不要用 useEffect 存储可直接计算的 className，也不需要为这类微小纯计算默认加入 useMemo。
+```ts
+clsx('px-2', 'px-4') // "px-2 px-4"
+```
 
-## 专属反例与修复
+冲突交给 `twMerge`。自定义 token 还要配置 tailwind-merge，见 C21。
 
-### 1. 只写禁用样式
+### 5. 以为会去重
 
-错误：`className={clsx({disabled})}` 却仍可点击。正确：同时设置 `<button disabled={disabled}>`，保留焦点与键盘语义。
+```ts
+clsx('card', 'card') // "card card"
+```
 
-### 2. 把 Tailwind 冲突交给 clsx
+若设计系统要求唯一，在自己的 token 列表里处理。clsx 不改语义。
 
-错误：认为最后一个 class 一定决定 CSS 优先级。正确：不要制造冲突，或用经过版本兼容核对的 tailwind-merge 包裹 clsx；CSS 生成顺序不是字符串顺序。
+### 6. 把响应对象直接传入
 
-### 3. lite 与完整版混用
+```ts
+clsx(await response.json())
+```
 
-错误：向 `clsx/lite` 传入条件对象，期待和完整版一样。正确：lite 只传字符串表达式，复杂对象使用完整版；不要仅为了体积盲目切换。
+可枚举的键，包括继承来的，都可能变成类。先映射到自己的普通对象。`cardClassInputs` 就是这道门。
 
-### 4. 将任意响应对象展开为样式
+### 7. 拼接后端状态
 
-错误：`clsx(serverPayload)`。正确：先映射为有限、审查过的类名，业务数据不能决定任意隐藏/定位/覆盖类。
+```ts
+clsx('badge-' + backendStatus)
+```
 
-## 两种组合
+未知状态会变成任意类，甚至打断属性。用有限枚举，缺省回退到空。
 
-CSS Modules：把 `styles.card`、`styles.selected` 等实际导出值交给 clsx，模块类名不硬编码。设计系统：clsx 负责状态组合，CVA 负责 variants，tailwind-merge 负责工具类冲突；按项目实际需要选取，不把三者全部强制安装。
+### 8. 深递归不可信数组
 
-## 性能、安全与可访问性
+实现是递归。循环引用会撑栈。业务输入先限制深度，再交给 clsx。
 
-不要凭包宣传数字报告页面性能。成本通常来自组件树和样式计算，不是几次类名拼接。clsx 不是输入净化库；React 文本转义不代表任意类名都是安全产品行为。状态必须由 aria-pressed、disabled、错误描述和文本共同表达，不能只靠颜色。界面样式由项目维护，不由 clsx 提供。
+### 9. 用类名判断能不能操作
 
-## 迁移练习
+```ts
+if (className.includes('is-disabled')) return
+```
 
-练习一：将字符串三元拼接改为状态映射，保持 disabled/aria-pressed 的行为测试。练习二：从 classnames 迁移一个组件，列出 falsy、数字、嵌套数组和现有组件 API 的回归样例，而不是全仓机械替换。
+类可以被改掉。看数据里的 `disabled` 和原生属性。
 
-## 当前验证
+### 10. 全局把 classnames/bind 换成 clsx
 
-示例真实 import `clsx` 和 `clsx/lite`；本次环境尚不能下载 npm 依赖，SDK/浏览器验证为 NOT_RUN，正式构建 BLOCKED。平台的目录单测不代表本库运行通过。安装后执行 `pnpm --filter @reactloom/library-lab test:sdk` 与对应 E2E。
+CSS Modules 需要 `styles[key]`。`bind` 的键映射不会自动出现。先列调用点，再换。
 
-## 官方来源
+### 11. bigint
 
-- [官方源码与文档](https://github.com/lukeed/clsx)
-- [v2.1.1 源码](https://github.com/lukeed/clsx/tree/v2.1.1)
+类型上能过，运行时没有类名。不要用 `1n` 当开关。
 
-MIT 许可；本示例不包含第三方媒体资产。
+### 12. 服务端字段当 tone
 
-## 第22轮：有限样式语义与 SDK 用例
+即使过了 TypeScript 的字符串索引，仍要走 `cardClassInputs` 那种白名单。`success` 以外的值不是 `tone-success`。
 
-示例改为先由 `examples/class-policy.mjs` 映射有限业务状态，再交给**真实 clsx** 合成类名。布尔状态仅接受 `true`，tone 只允许 success/warning，未知服务端文案不会被拼接成 `hidden/fixed` 等任意样式。CSS 并不由策略提供，按钮的原生 `disabled` 和 `aria-pressed` 仍是操作语义来源。新增 `tests/class-policy.test.mjs` 已有纯 Node 检查；`tests/sdk.test.mjs` 直接 import `clsx`/`clsx/lite` 检查合并、falsy 与 Tailwind 类保留，**需要实际安装运行**，不从策略测试推断 SDK PASS。
+## 组合
+
+**tailwind-merge。** `twMerge(clsx(...))` 先拼条件，再按 Tailwind 分组丢掉冲突。顺序因此才变得有意义。单独的 clsx 没有这一步。本 Demo 的 advanced 故意把未合并的结果印出来。
+
+**CSS Modules。**
+
+```ts
+clsx(styles.card, selected && styles.selected)
+```
+
+传入的是已经映射好的类字符串。不要 `clsx({ selected })` 再指望构建工具把键改成哈希。
+
+**设计系统。** `demo-card`、`is-selected`、`is-disabled`、`tone-*` 是本示例允许的集合。调用方可以加自己的布局类，但语气和状态仍走策略函数。C21 讨论覆盖接口时，默认类和外部类要分清谁在后面。
+
+## 生产清单
+
+- 状态类来自白名单对象，不来自字符串拼接。
+- 交互状态同时写在 DOM 属性上。
+- 不把 JSON 响应传给 clsx。
+- lite 和完整版不要混用同一种调用形状。
+- Tailwind 冲突不要停在 clsx。
+- 不靠类名做安全判断。
+- 不把 clsx 的结果写进 `innerHTML`。
+
+## 升级
+
+2.1.1 的对象枚举和数字规则如上。升级小版本后用 advanced 那组输入做回归：`0`、`1`、`null`、嵌套数组、lite 忽略对象、两条 `px-*` 同时存在。不要换成一个「功能类似」的自写函数还继续叫 clsx。
+
+`cardClassInputs` 返回数组，里面的对象只含两个布尔键。clsx 展开后，真键变成类名，假键消失，`null` 语气消失。不要再在 JSX 里写第二套 `` tone-${tone} ``。两套同时存在时，白名单就失效了。
+
+advanced 的 `edge` 把假值、数字和嵌套数组放进同一次调用，用来对照文档，不是卡片的业务类。业务卡片只应出现 `demo-card`、两个 `is-*` 和可选的 `tone-*`。
+
+## 练习
+
+1. 选中且禁用时，输出同时包含两个状态类，按钮同时有 `aria-pressed` 和 `disabled`。
+2. 传入 `tone: 'danger'` 给 `cardClassInputs`，结果里没有 `tone-danger`。
+3. `clsx(0)` 为空，`clsx(1)` 为 `"1"`，`lite({ a: true })` 为空。
+4. `clsx('px-2', 'px-4')` 含有两段。若要只留 `px-4`，改到 C21 再测。
+
+## 故障排查
+
+| 现象 | 先看 |
+| --- | --- |
+| 明明传了 false 字符串，类还在 | 值是 `'false'`，不是布尔 false |
+| 想要的 `"0"` 没出现 | 数字 0 被当成假。用字符串 |
+| lite 什么都没输出 | 传了对象或数组。lite 只留真值字符串 |
+| `px-4` 没有盖住 `px-2` | clsx 两段都留着。这不是 bug，合并在 C21 |
+| 类名里出现奇怪的键 | 对象来自 JSON 或原型链。改走白名单 |
+| 按钮看起来灰了但仍能提交 | 只加了 `is-disabled` 类，没有 `disabled` 属性 |
+| CSS Modules 类名是原文 | 把逻辑键交给了 clsx，没有先取 `styles[key]` |
+| 栈溢出 | 循环引用或过深数组。先限制输入 |
+
+对象枚举用的是 `for...in`。键为真时写入的是键，不是值。数组会递归。函数和单独的布尔没有类名。`ClassValue` 类型包含 `bigint`，`toVal` 不处理它，所以 `clsx(1n)` 不是 `"1"`。
+
+不要根据结果字符串里有没有某个 token 来做权限判断。服务端状态和 DOM 属性才是事实。把 clsx 的输出写进 `innerHTML` 同样多余，React 的 `className` 已经是属性。
+
+升级或替换实现时，用 advanced 那组输入当回归：假值、数字 1、数字 0、嵌套数组、对象里的假值、lite、两条 padding。少任何一条都可能把「功能类似」的函数误当成 2.1.1。
+
+## 官方链接
+
+- https://github.com/lukeed/clsx
+
+以标签 `2.1.1` 的 `src/index.js` 和 `clsx/lite` 为准。类型里有、运行时没有的 `bigint` 不要当成已支持。
+
+卡片的 `<article className={result}>` 使用的就是这次 `clsx` 的返回值。改策略函数而不改输出区，或改输出区而不改 className，两边会不一致。advanced 的 `<pre>` 是另一组调用，不要把它的 `px-2` 当成卡片的类。`tone` 为 `neutral` 时策略返回 `null`，输出里不应出现 `tone-neutral` 或字符串 `"null"`。`clsx` 不会把 `null` 收成类名。若有人改成 `tone || 'tone-neutral'`，普通状态会一直带着语气类。
+
+`lite` 的示例是 `lite('base', selected && 'selected')`。选中时结果含 `selected`，未选中时条件是 `false`，lite 把它丢掉。不要用这个输出驱动按钮的 `disabled`。按钮的禁用只看组件里的 `disabled` state。
+
+选中状态同理，只看 `aria-pressed` 和 `selected`，不看类名里有没有 `is-selected`。
+
+## 证据
+
+`class-policy` 单测只检查白名单数组，不调用 `clsx`。sdk 要真实 import `clsx@2.1.1` 和 `clsx/lite`，并在 `docs/library-lab/evidence/runs/` 留下收据。
+
+GitHub Actions 41779873259 是仓库级安装、typecheck、build、52 个 SDK 文件（153 项测试）和 45 项 Playwright 的结果，不是 C20 的条目 PASS。不要改 `verification.json`。

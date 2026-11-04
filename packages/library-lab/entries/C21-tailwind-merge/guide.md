@@ -1,71 +1,143 @@
-# tailwind-merge：为可覆盖组件正确合并 Tailwind 工具类
+# tailwind-merge 3.7.0｜按 Tailwind 分组留最后的冲突类
 
-> C21 · 示例固定 `tailwind-merge@3.7.0`、`clsx@2.1.1`，与 ReactLoom 的 Tailwind CSS v4 工具链对齐。MIT，真实 SDK、打包和浏览器验证待执行。
+Lab 锁定 `tailwind-merge@3.7.0` 和 `clsx@2.1.1`（MIT）。`twMerge` 知道 Tailwind 的冲突组。`twJoin` 只拼接。`clsx` 负责条件。三者不要互相冒充。
 
-## 推荐与不推荐
+没有收据时 sdk / build / browser 保持 NOT_RUN。Actions 41779873259 不是本条目 PASS。
 
-当通用组件暴露 `className` 允许调用方覆写内边距、颜色等 Tailwind 类时，`twMerge` 可以删除已被后继类完整覆盖的冲突分组。它不是 CSS 编译器、HTML 净化工具，也不能凭空生成不存在的 Tailwind token。
+## Lab 当前示例
 
-仅拼接类名可用 C20 clsx；纯 CSS Modules、不允许外部覆盖或固定样式的场景无需额外依赖。
+[`examples/example.tsx`](examples/example.tsx) 调用真实的 `twJoin`、`twMerge` 和 `clsx`。`cn` 是 `twMerge(clsx(...))`，定义在模块顶层，避免每次渲染造一套配置。`demo.tsx` 只做再导出。没有第二台终端，也没有 `http://127.0.0.1:5173` 的独立站。
 
-## 安装与引入
+- **basic**：两个输入框。页面同时显示 `twJoin(base, override)` 和 `twMerge(base, override)`。默认 `px-3 pr-4` 再覆盖 `pr-8` 时，合并结果应留下后面的右边距，而不是两份 `pr-*`。
+- **business**：卡片用 `clsx` 拼默认类、选中时的 `bg-green-100`、舒适尺寸的 `px-7 py-5`，再 `twMerge(composed, override)`。按钮有 `aria-pressed`。下面还演示 `cn('p-2', { 'p-4': selected, 'p-3': !selected })`。
+- **advanced**：固定五组，都是当场执行的 `twMerge`：`px-2`/`px-6`，`pr-4`/`px-3` 两个方向，`md:p-2`/`md:p-6`/`p-4`，以及两个 `hover:bg-*`。说明写明它不是 CSS 编译器，也不认识未配置的自定义 token。
 
-```bash
-pnpm add tailwind-merge@3.7.0 clsx@2.1.1
+研究笔记里的 `extendTailwindMerge` 和项目主题扩展没有挂在这个文件里。默认类和外部类的先后顺序是当前要看的行为。
+
+## 什么时候用
+
+组件允许调用方用 Tailwind 类覆盖默认间距、颜色或排版，并且这些类属于库认识的分组。纯条件拼接用 clsx。没有 Tailwind 的类名用 clsx 即可，merge 不会按你的 CSS Modules 哈希去消冲突。
+
+不要用正则删掉前面的 `px-`。`px-3` 和 `pr-4` 不是同一组里的完全替换，方向会留下另一边。
+
+## 数据与模型
+
+`twJoin` 把参数用空格接起来，真值过滤类似简单拼接。冲突类都还在。
+
+`twMerge` 按分组决定谁留下来。后面的类赢，但是「赢」的范围是同一冲突组：
+
+| 输入 | 应看到的关系 |
+| --- | --- |
+| `px-2` 然后 `px-6` | 只留 `px-6` |
+| `pr-4` 然后 `px-3` | 后面的水平 padding 盖掉先前的右侧 |
+| `px-3` 然后 `pr-4` | 左侧仍来自 `px-3`，右侧来自 `pr-4` |
+| `md:p-2` 与 `md:p-6`，另有 `p-4` | 只合并同一修饰符下的冲突，无修饰的 `p-4` 还在 |
+| 两个 `hover:bg-*` | 留下后面的 hover 背景 |
+
+修饰符不会互相误删。`md:p-6` 不应吃掉无前缀的 `p-4`。`hover:` 也不和静止背景合成一组。
+
+自定义 token、任意值以外的插件类，默认配置可能当成不相干的类同时保留。那不是合并器坏了，是分组里没有这条规则。要支持项目 token，用 `extendTailwindMerge` 声明分组，并用一组冲突样例测试。本 Demo 没有扩展配置。
+
+`twMerge` 不生成 CSS，也不检查类名是否安全。把用户原文拼进 class 字符串，仍然是注入面。覆盖接口只接受你准备支持的工具类，或在设计系统边界说明「这是开发者写的 className」。
+
+`cn` 的顺序是：先 clsx 处理布尔，再 merge。若写成 `clsx(twMerge(a), twMerge(b))`，两组结果又被当成普通字符串接上，冲突会复活。
+
+## 三层示例
+
+### 基本
+
+改覆盖框为 `px-6`。join 的输出仍含默认里的 `px-3` 和 `pr-4`。merge 的输出不应同时保留两个 `px-*`。再改回 `pr-8`，确认 `px-3` 的左内边距还在。两个 `<output>` 的 test id 是 `tw-joined` 和 `tw-merged`。
+
+### 业务
+
+勾选已选中。背景类应从 `bg-slate-100` 变成只留 `bg-green-100`（若两者在同一背景色组）。切到舒适尺寸，`px-7 py-5` 替换默认的 `px-3 py-2`。覆盖框里的类最后参与 merge，所以它能压过卡片默认值。按钮的按下状态不靠类名判断。
+
+`cn` 那一行在选中时是 `p-4`，未选中时是 `p-3`，不会两个 padding 都留下。
+
+### 进阶
+
+对照列表里的五句说明和 `<output>` 的实时结果。特别是两个方向的 `px`/`pr`：先全轴再单边，和先单边再全轴，结果不是简单地把前面的类全部删掉。响应式那一行应同时看到无修饰的 `p-4` 和 `md:p-6`。
+
+## 反例
+
+### 1. 用正则删前一个 px-
+
+```ts
+classes.replace(/\bpx-\S+/g, '')
 ```
 
-```tsx
-import clsx from 'clsx';
-import {twMerge} from 'tailwind-merge';
-const cn = (...values: Parameters<typeof clsx>) => twMerge(clsx(...values));
-const card = cn('p-2 rounded', active && 'p-4');
+会误伤 `md:px-2`、任意值和你不打算当成 padding 的名字。用 `twMerge`。
+
+### 2. 只 twJoin 就当覆盖成功
+
+```ts
+twJoin('px-2', 'px-6') // 两份都在
 ```
 
-完整运行与展示源码均来自 `examples/example.tsx`，`examples/demo.tsx` 是 Lab 适配导出。安装命令中的两包都在此业务组合中被实际 import。
+视觉上谁生效交给 CSS 文件顺序，不稳定。覆盖接口用 `twMerge`。
 
-## 三层任务
+### 3. 先 merge 再 clsx 拼接
 
-### 入门：拼接与冲突的区别
+```ts
+clsx(twMerge('px-2'), twMerge('px-6'))
+```
 
-编辑 base 和 override 的输入。对比 `twJoin('px-3 pr-4','pr-8')` 与 `twMerge(...)`。后者知道 `pr` 分组冲突，只保留最终右内边距。注意 `twJoin` 不接受 clsx 式的对象映射。
+两段都是普通字符串，冲突不再被看。先条件，再一次 merge。
 
-### 业务：可覆盖的卡片组件
+### 4. 认为任意类名都能互相覆盖
 
-状态组合由 clsx 执行，Tailwind 冲突解析由 twMerge 执行。示例展示真实 `className` 输出，允许调整紧凑/舒适密度与已选中状态。公开 className 本身是组件 API：调用方可改变布局，产品侧应声明哪些覆盖被允许。
+`foo-bar` 和自定义 `shadow-card` 若没有分组，会同时留下。要么扩展配置，要么不要承诺覆盖。
 
-### 进阶：非对称覆盖和 modifier
+### 5. 修饰符被当成同一组
 
-`twMerge('pr-4', 'px-3')` 应只保留 `px-3`，因为后者已覆盖水平两侧。
+删掉 `p-4` 只因为后面有 `md:p-6`，断点以下的间距会丢。advanced 的样例就是为了挡住这件事。
 
-`twMerge('px-3', 'pr-4')` 应保留两个类，因为前者的左侧仍有效。这不是简单“从左到右删除相似字符串”，冲突关系具有方向性。响应式 `md:p-2` 与普通 `p-4` 属于不同 modifier，上下文不同不能混合删除。
+### 6. 把用户搜索词拼进 class
 
-## 生产最佳实践
+```ts
+twMerge('bg-white', `bg-${userColor}`)
+```
 
-- 把 `cn` 放在组件库可复用工具模块级，没必要每次 render 创建合并器配置。
-- `tailwind-merge` 的配置与 Tailwind 构建配置不是自动同步的；自定义 token 需要显式 `extendTailwindMerge` 并写回归用例。
-- CSS 规则是否真的存在由 Tailwind 编译器决定；`twMerge` 只能处理字符串上的冲突语义。
-- 服务端传来的任意类名不应直接注入 UI 皮肤；`twMerge` 不负责过滤恶意业务配置。
-- 组合 `clsx + twMerge` 和仅用 `twJoin` 不是等价替换，后者既不处理冲突也不支持对象条件。
-- Tailwind v3 项目不要直接安装 v3 的 tailwind-merge；按官方支持矩阵选择对应大版本。
+这不是净化。颜色来自白名单映射后再 merge。
 
-## 反模式与可复现实例
+### 7. 每个组件 new 一份配置
 
-1. 用 `Set(classes.split(' '))` 去重：`px-3` 与 `pr-4` 不相等却存在方向性的冲突。
-2. 认为后面任何包含 `p` 的类都会删除所有 padding 类：会误删仍生效的一侧。
-3. 每个渲染周期构造 `extendTailwindMerge`：缓存和配置反复创建，开销不必要。
-4. 用合并字符串的结果断言实际 CSS 优先级：最终视觉还受生成的样式、层、specificity 影响。
-5. 对业务开放任意 `className` 却没有覆盖策略：无意中使布局、隐藏甚至可访问性不可控。
+默认 `twMerge` 可以复用。真要 `extendTailwindMerge`，把结果放在模块级常量，不要放进渲染。
 
-## 相关库和迁移练习
+## 组合
 
-C20 clsx 是互补组合，B09 shadcn/ui 的常见组件风格可用该模式（不是必须依赖）。练习：将 NewsHub 卡片组件的默认/选中/警告覆盖分开声明，针对 px/pr、hover、responsive 做真实用例；在 Tailwind 更换版本时重新校验规则。
+**clsx。** 条件布尔交给 clsx，冲突交给 twMerge。`cn` 已是这个顺序。C20 的 advanced 故意展示未合并的 `px-2 px-4`，用来对照。
 
-## 验证状态
+**设计系统。** 组件文档写清哪些属性是类名逃生口。默认类放在前面，调用方的 `className` 放在最后。不要在内部再追加一条默认 `px-*`，否则调用方的覆盖会被自己人吃掉。
 
-示例代码采用真实导入 `twMerge`、`twJoin`，但当前还未安装/运行新目标包。SDK、typecheck、build、浏览器保持 NOT_RUN，不能引用其他环境旧研究的 PASS。参见 `verification.json`。
+## 生产清单
 
-## 官方资料
+- 覆盖路径使用一次 `twMerge`。
+- 不手写删除类名的正则。
+- 自定义 token 有分组测试后再扩展。
+- 用户输入不直接变成工具类。
+- `cn` 保持 clsx 在前、merge 在后。
+- 不把合并结果当成已经生成的 CSS。
 
-- [官方仓库](https://github.com/dcastil/tailwind-merge)
-- [API reference](https://github.com/dcastil/tailwind-merge/blob/main/docs/api-reference.md)
-- [适用与限制](https://github.com/dcastil/tailwind-merge/blob/main/docs/when-and-how-to-use-it.md)
+## 升级
+
+3.7.0 面向当前 Tailwind v4 的分组。升级后重跑 advanced 的五组，尤其是 `px`/`pr` 的两个方向和 `md:` / `hover:`。不要用旧主版的分组假设解释 v4 的新工具。
+
+## 练习
+
+1. join 与 merge 对 `px-3 pr-4` + `pr-8` 的字符串不同。
+2. `px-2` + `px-6` 只留后者。
+3. `px-3` + `pr-4` 与 `pr-4` + `px-3` 的结果不同。
+4. `md:p-2` + `md:p-6` + `p-4` 仍保留无修饰的 `p-4`。
+5. 选中卡片时两个背景色类不要同时留在 `tw-business` 的输出里。
+
+## 官方链接
+
+- https://github.com/dcastil/tailwind-merge
+- https://github.com/dcastil/tailwind-merge/blob/main/docs/api-reference.md
+
+## 证据
+
+本条目没有单独的策略单测文件。sdk 仍要真实 import `tailwind-merge@3.7.0` 并在 `docs/library-lab/evidence/runs/` 留下收据。屏幕上最终像素还要 browser，字符串合并本身不等于样式表已加载。
+
+GitHub Actions 41779873259 是仓库级安装、typecheck、build、52 个 SDK 文件（153 项测试）和 45 项 Playwright 的结果，不是 C21 的条目 PASS。不要改 `verification.json`。

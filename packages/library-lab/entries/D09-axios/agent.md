@@ -1,27 +1,62 @@
-# D09 Axios — Agent 在其他项目复用的操作手册
+# D09 Axios — 工程手册
 
-## 何时使用
-项目已有 Axios 调用、请求/响应拦截器、统一 HTTP 错误模型，或需要 upload/Node HTTP adapters。新项目仅使用 Fetch 可对比 D08 Ky。当前固定 axios@1.20.0/MIT；不能使用 2026年供应链污染的 1.14.1 / 0.30.4。
+## 适用
 
-## 源码引用
-examples/example.tsx：makeFixtureClient() 展示隔离实例、拦截器注册与 eject；boundedGetRetry() 展示 GET 503 有界重试；search() 展示 AbortController + generation。examples/demo.tsx 只是 Lab 出口，不能复制内存 adapter 当生产网络服务。
+需要实例、拦截器、`AxiosError` 和显式 adapter 的 HTTP 传输。浏览器与 Node 可以共用调用形状，但每种 adapter 的流和进度要单独看。
 
-## 强制保留
-- 实例级配置，拦截器生命周期受控；不在 render 中重复注册。
-- 请求取消时中止运输；新请求版本检查阻止旧结果回写。
-- 认证令牌从安全会话获得，禁止带到 URL/文档/演示日志。
-- 只对明确幂等操作做有限重试；POST 409 不自动重发。
-- JSON 响应进行运行时验证；不能相信泛型静态类型。
-- 真实适配器下超时、异常及流式响应需要重新集成测试。
+默认不重试、不缓存。服务端状态用 Query。轻量 Fetch 包装用 Ky。不要在 `axios.defaults` 上放令牌。
 
-## 禁止
-全局 default 污染、多处重复重试、强制所有错误 HTTP 200、只判断 message、不核对 error.response?.status、把自定义 adapter 的 status 处理当真实 HTTP 服务端结果。
+## 版本
 
-## 验证
-node --test entries/D09-axios/tests/sdk.test.mjs，再 typecheck/build/浏览器。运行真实axios导入但模拟后端：可以记录“SDK行为已测”，不能记录“真实网络/生产服务器通过”。检查本条 verification.json 和 sourceFingerprint。
+`axios@1.20.0`，MIT，类型在包内。取消使用 `AbortSignal`。`CancelToken` 不要写进新代码。
 
-官方：https://github.com/axios/axios/releases/tag/v1.20.0
+钉这个版本是为了避开已知的短命恶意发布 `1.14.1` 和 `0.30.4`。锁定版本不能代替对历史锁文件的检查。
 
-## 必检可重复操作
+## 迁移
 
-`makeFixtureClient.resetTransient()` 仅在新一轮 GET retry fixture 前调用。连续点击两次都应各自先遭遇模拟 503，再经真实 Axios GET 重新请求成功。该 fixture 不模拟真实网络/服务器请求幂等性，不能替代集成测试。
+从 [`examples/example.tsx`](examples/example.tsx) 带走 `makeFixtureClient`、`boundedGetRetry` 和 `validate`。生产替换 adapter，保留 `baseURL`、超时、`eject` 和代际。
+
+路由依赖 `axios.getUri(config)`，这样 params 已经进入 URL。不要在 adapter 里只读未序列化的 `config.url`。
+
+每次新的 503 演示调用 `resetTransient()`。POST 409 不进入重试循环。
+
+## 不可删的清理
+
+卸载时递增 generation、abort、清 timer，并 `dispose()` 以 `eject` 请求和响应拦截器。
+
+写结果前比较 token 和 `signal.aborted`。取消文案与 `AxiosError` 的 HTTP 状态分开。
+
+`boundedGetRetry` 只接受 503，最多两次 GET。abort 或非 503 立即抛出。
+
+## 反例
+
+- `axios.defaults.headers.common.Authorization`。
+- 把用户字符串直接交给 `api.get`。
+- 把 `AxiosResponse` 当成业务数组。
+- 新代码使用 `CancelToken`。
+- 组件渲染期间 `interceptors.use` 且不 `eject`。
+- 捕获后无条件 `instance(error.config)`。
+- `validateStatus: status => status < 500`。
+- await 之后无条件 `setState`。
+- `console.log(error)` 带出请求头。
+- Query 键不含租户，却指望 Axios 隔离缓存。
+
+## 测试断言
+
+- 真实拦截器链能看见隔离头，adapter 拒绝非 `lab.invalid`。
+- 自定义 adapter 的 409 被识别为 `AxiosError`。
+- 预先 abort 的 signal 不会返回成功数据。
+- `getUri` 同时包含 baseURL 和查询参数。
+- GET 503 最多再试一次；POST 409 只有一次。
+- 慢请求的结果不会覆盖后一次搜索。
+- `tests/sdk.test.mjs` 导入真实 `axios`。无收据则 NOT_RUN。
+
+## 真实限制
+
+没有浏览器 XHR 往返，没有上传进度，没有 401 刷新，没有 Cookie。超时 2000ms 只覆盖单次 adapter 调用。租户过滤是 fixture 参数，不是授权。
+
+`X-Lab-Request` 是演示头，不要把它当成会话。
+
+## 证据
+
+sdk、build、browser 保持 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有匹配收据。Actions 41779873259 不是本条目 PASS。不要改 `verification.json`。

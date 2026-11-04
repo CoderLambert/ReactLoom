@@ -1,47 +1,45 @@
-# C18 react-i18next — Agent 复用手册
+# C18 react-i18next — 工程手册
 
-## 快速选型
+## 适用
 
-解决 React 组件如何订阅语言变化、如何将资源映射到声明式 UI。核心仍是 i18next，react-i18next 不是另一个翻译后端。尤其适合租户级语言偏好、可访问性提示、SSR hydration 与持续增长的产品文案。示例不加载第三方在线词条。
+让 React 树订阅某份 i18next 实例，并用白名单组件渲染少量富文本。无 UI 的翻译用 C17。`Trans` 不是通用 HTML 渲染器。
 
-## 实际文件及部署前置
+## 版本
 
-`library.json`（版本与依赖）→ `examples/example.tsx`（完整逻辑）→ `examples/demo.tsx`（Lab 导出）→ `verification.json`（分项证据）。前置依赖：react-i18next@17.0.16，i18next@26.4.3。默认不向外部 API 发起请求。
+`react-i18next@17.0.16` 与 `i18next@26.4.3`，MIT。`useTranslation(..., { useSuspense: false })`。每个工作区 `createInstance` 后包进 `I18nextProvider`。
 
-## 迁移指令
+## 迁移
 
-复制 examples/example.tsx 中 ScopedTranslation/LocalizedPanel 的模式；生产项目已有 i18n owner 时复用它，只有需要请求或租户隔离才 createInstance。保留 provider 的实例清理和异步状态；避免与全局 initReactI18next 的所有权冲突。
+带走 `examples/example.tsx` 和 `examples/language-switch.mjs`。保持一棵子树一份实例。`Trans` 的 `components` 继续只包含 `strong`。不要改成默认单例。若启用 Suspense，同时加上边界，而不是删掉 `useSuspense: false` 就当完成。
 
-## 禁止的反模式
+## 不可删的清理
 
-禁止将 Trans 当任意 HTML 注入器；禁止一边使用 Provider 一边修改未受控的 default singleton；禁止声称有 Suspense 的默认解决方案能处理全部异步加载；不得将服务器端渲染测试冒充浏览器 hydration。
+每个面板在卸载时 `switcher.dispose()`。实例 effect 清理时 `off('languageChanged')`。init 完成时若已卸载，不要 `setInstance`。语言队列必须串行，不能只用一个 epoch 丢掉 setState 却让 `changeLanguage` 并发。
 
-## 必须保留的能力边界
+## 反例
 
-useTranslation 读取 I18nextProvider 的 instance 与 namespace，监听 languageChanged 并触发 React 重新渲染。Trans 使用受控组件映射来处理强调标记，不能因为配置里出现 HTML 就允许任意标签或脚本。示例中 strong 映射为安全 React 元素。
+```tsx
+<div dangerouslySetInnerHTML={{ __html: t('legal') }} />
+import i18next from 'i18next'
+i18next.changeLanguage('en')
+```
 
-## 最小测试断言
+- 两个工作区共用一个实例还声称互不影响。
+- `t(userInput)` 或把用户文本拼进 keyPrefix。
+- 模块加载时缓存 `t()` 结果。
+- 把客户端双 Provider 写成 SSR 隔离已验证。
 
-实际 React SSR 两个 Provider 的文本不同且无交叉，语言切换后各自 DOM 更新；每种语言的复数和 rich Trans 安全标签正确。
+## 测试断言
 
-## 版本 / 证据
+- 队列只接受最新语言，dispose 后不 commit。
+- 工作区 A 的 `changeLanguage` 不改变工作区 B 的实例。这需要浏览器或渲染测试，队列单测本身不够。
+- `Trans` 只映射 `strong`。
+- 英文单复数键与中文 other 键符合资源文件。
 
-与当前模板配套 i18next 26.4.3 + react-i18next 17.0.16；保留现有 React 19 主版本，不修改 SPA 默认配置。 当前示例未获得实际 SDK、完整类型检查、构建或浏览器 PASS；迁移到目标项目需要按目标锁文件重新测试，不能声称历史 PASS 可继承。
+## 真实限制
 
-## 选型关系
+没有异步后端，没有路由级 namespace，没有 SSR。`useSuspense: false` 是因为资源已经内嵌。法律句的词条是源码，不是不可信 CMS。
 
-complements C17：i18next core 决定资源、fallback 和 t；react-i18next 负责 React 订阅、Provider 与 Trans。
+## 证据
 
-## 官方出处
-
-useTranslation 官方文档：https://react.i18next.com/latest/usetranslation-hook
-
-I18nextProvider 官方文档：https://react.i18next.com/latest/i18nextprovider
-
-Trans 受控富文本说明：https://react.i18next.com/latest/trans-component
-
-官方源代码：https://github.com/i18next/react-i18next
-
-## 最新语言意图和组件生命周期（第16轮）
-
-同时迁移 `examples/example.tsx`、`examples/language-switch.mjs` 与声明文件；将队列与 provider 的实例 identity 绑定，unmount 先 dispose 后释放实例。不要只加请求序号：这无法阻止旧 `changeLanguage` Promise 本身更改词库当前语言。保留真实 react-i18next hook 与 Trans，不得声称纯策略 PASS 等于组件已完成浏览器验收。
+没有收据不要写 PASS。Actions 41779873259 不是本条目。不要改 `verification.json`。

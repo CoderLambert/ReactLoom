@@ -1,46 +1,60 @@
-# D06 Immer — Agent 复用手册
+# D06 Immer — 工程手册
 
-## 快速选型
+## 适用
 
-Immer 让程序在函数体里写可变语法，却产出全新的不可变状态。适合树形/深层数据、React reducer、表单编辑草稿和乐观 UI，但不负责网络请求、持久化和跨租户授权。默认自动冻结生成对象，Patch 功能需显式 enablePatches。
+嵌套纯数据的不可变更新，以及一次本地乐观编辑的正向 / 逆向 Patch。按业务 id 改字段，让未改分支保持原引用。
 
-## 实际文件及部署前置
+不要用它做 HTTP、权限、Query 失效或多人合并。Redux Toolkit reducer 里不要再包 `produce`。Patch 不是 CRDT。
 
-`library.json`（版本与依赖）→ `examples/example.tsx`（完整逻辑）→ `examples/demo.tsx`（Lab 导出）→ `verification.json`（分项证据）。前置依赖：immer@11.2.9。默认不向外部 API 发起请求。
+## 版本
 
-## 迁移指令
+`immer@11.2.9`，MIT。具名导入。`enablePatches()` 在模块加载时调用一次，否则 `produceWithPatches` 不可用。
 
-把具体 reducer 抽成不依赖 React 的 produce 函数；示例可迁移文件 examples/example.tsx。仅在需要 patches 时调用 enablePatches，不要改变项目已有 Immer 全局配置。保留不可变结果和版本化回滚策略。
+11.2.9 是 Lab 的钉，不是研究笔记里的 11.1.21。`enableArrayMethods()` 仍是可选插件，本示例没有打开。
 
-## 禁止的反模式
+## 迁移
 
-不得泄漏 draft 到异步操作；不得把 Patch 当经过授权的外部命令；不得回滚过期 inverse 到已经变化的最新缓存；不得直接修改 React state 或使用数组索引当稳定业务 ID。
+从 [`examples/example.tsx`](examples/example.tsx) 带走 `toggleStory`、乐观 `produceWithPatches`，以及 [`examples/patch-ownership.mjs`](examples/patch-ownership.mjs) 的 `takeUndo`。`demo.tsx` 只重导出。
 
-## 必须保留的能力边界
+初始状态用 `structuredClone`，避免测试或重置改到模块级种子。故事身份是 `id` 字符串。
 
-必须先 enablePatches()；produceWithPatches 返回 [next, patches, inversePatches]。applyPatches 不验证请求是否已经过期。JSON Patch 差异并不总是最短的事务变更集，也不能自动充当跨端权限验证。需要回滚时保存请求原始快照、匹配的 revision 或任务 ID。
+确认按钮只清本地 inverse。接到真服务器时，成功响应要带版本，失败才应用当时取走的那一份 inverse。
 
-## 最小测试断言
+## 不可删的清理
 
-真实 produce 更新后原对象值保持不变、未修改分支引用稳定；enablePatches + produceWithPatches + applyPatches 回到原数据；进阶 UI 在冲突写入锁定期间不会让操作交错。
+回滚必须先 `takeUndo(ref)`，再把返回的数组放进 `setState` 的 updater。禁止在 updater 里读 `ref.current`。
 
-## 版本 / 证据
+乐观进行中，ref 非空。此时不要再产生第二份 inverse，示例用锁定做到这一点。若产品允许并发编辑，每份 inverse 要绑定 revision 或 token，不能覆盖更新的结果。
 
-采用 2026-10-22 官方发布的 11.2.9；主要 API 已由官方 Patches 文档确认，目标运行平台仍需进行实际解析。 当前示例未获得实际 SDK、完整类型检查、构建或浏览器 PASS；迁移到目标项目需要按目标锁文件重新测试，不能声称历史 PASS 可继承。
+recipe 保持同步。不要把 draft 传出 `produce`。
 
-## 选型关系
+## 反例
 
-complements D12：Redux Toolkit 使用 Immer 处理 reducer 的草稿变更，但应用仍需把异步副作用与缓存更新所有权区分开。
+- `draft = { ...draft }` 重新绑定参数。
+- 同时修改 draft 和 `return` 新对象。
+- `return undefined` 想清空状态。
+- `async` recipe 或 `setTimeout` 里改 draft。
+- `applyPatches(current, undo.current ?? [])` 延迟读 ref。
+- 用数组下标或对象引用当故事身份。
+- 未 `enablePatches()` 就 `produceWithPatches`。
+- 把未校验的远端 Patch 应用到最新缓存。
+- 在 Array Methods 回调里修改元素。
 
-complements D07：在 TanStack Query 的乐观更新中可使用 produce 生成不可变缓存状态；回滚必须检查竞态。
+## 测试断言
 
-## 官方出处
+- 真实 `produce` 翻转嵌套 `read` 且不修改入参。
+- 未修改的故事引用可以与原树共享。
+- 一份 inverse 能撤销对应的那一次插入。
+- `takeUndo` 之后 ref 为空；推迟的 updater 仍使用已取走的数组。
+- 第二次回滚不会偷走另一次乐观变更。
+- `tests/sdk.test.mjs` 导入真实 `immer`。无收据则 NOT_RUN。
 
-Immer 官方文档：https://immerjs.github.io/immer/
+## 真实限制
 
-Patches API：https://immerjs.github.io/immer/patches/
+没有网络，没有服务器 revision，没有 Map/Set 插件，没有自动冻结开关。锁定是整份 feed，不是按故事。界面上看不见引用共享，必须用断言看 `===`。
 
-官方 v11.2.9 发行：https://github.com/immerjs/immer/releases/tag/v11.2.9
+Patch JSON 只用于教学展示。它不是审计日志格式。
 
-## React updater 竞态修复
-对延迟执行的 `setFeed(current => ...)`，不能在 updater 内重新读取稍后会被清空的 `undo.current`。先同步 `const inverse = takeUndo(undo)`，再闭包捕获 `inverse`。迁移时带上 `examples/patch-ownership.mjs`、类型声明和两级测试；纯 Node 策略通过仍不等于真实 Immer/React 浏览器通过。
+## 证据
+
+sdk、build、browser 保持 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有匹配收据。Actions 41779873259 不是本条目 PASS。不要改 `verification.json`。

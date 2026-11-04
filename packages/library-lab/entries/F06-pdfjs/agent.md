@@ -1,24 +1,46 @@
-# F06 PDF.js — Agent 实施要点
+# F06 PDF.js — 工程手册
 
-用于已有PDF可视化读取，不用于生成/编辑PDF；与F07 React-PDF（封装阅读）、F08 @react-pdf/renderer（生成）、F09 pdf-lib（编辑）按职责比较。基线pdfjs-dist 6.3.289（Apache-2.0），浏览器必须核验API和Worker真实构建。
+## 适用
 
-## 可复用源码
-- `examples/fixture.ts` 为原创测试PDF生成器，提供无需第三方PDF的E2E样本；不是生产PDF创建方案。
-- `examples/example.tsx` 为真实 Worker + getDocument + page.render + getTextContent 运行源码；`examples/demo.tsx` 为Lab出口。
-- Worker使用 `pdfjs-dist/build/pdf.worker.min.mjs?url` 本地构建并匹配SDK版本，切忌混用CDN不一致Worker。
-- 页码/缩放改变必须先取消旧renderTask；文件变化/卸载销毁loadingTask，持续会话可缓存PDFDocumentProxy但别泄漏旧实例。
-- 损坏文档探测的 loadingTask 也必须被独立持有；重复探测与卸载时请求销毁，不等解析 promise 结算。旧任务的 finally 不可清除新任务的 ref。SDK 销毁可能等待初始化/transport，需以真实 Worker close 事件验收，不能只观察 destroy 被调用。
-- 每页DPR与Canvas像素上限必须有预算；长文档虚拟页/缩略图和异步加载另行设计。
-- 业务文件入口需校验类型、大小和权限，所有SVG/HTML附件与任意远程URL按不可信输入处理；本地演示限制3MiB且无网络上传。
-- 真实PDF扫描件可能没有文本层：getTextContent成功不等于OCR成功。
+在 Canvas 上阅读已有 PDF。生成用 F08，修改字节用 F09，React 组件用 F07。不要拉远程 URL。
 
-## 验证
-`pnpm --filter @reactloom/library-lab typecheck`、`build`、真实Chromium加载/分页/缩放/损坏文件/卸载；检查Worker资产路径、CSP与版本；记录源码fingerprint+命令+日志才可PASS。当前待执行。官方：https://mozilla.github.io/pdf.js/api/
+## 版本
 
-## 跨库接入和并发绘制
+`pdfjs-dist@6.3.289`，Apache-2.0。Worker 入口是 `pdfjs-dist/build/pdf.worker.min.mjs?url`，与 F07 同一声明。没有浏览器收据就不要说 Worker 已加载。
 
-Lab 与 F07 react-pdf 11 使用同一 `pdfjs-dist@6.3.289` 及本地 Worker；实际锁文件/hoist 由 PLATFORM 检查。若升级 react-pdf，先核对其 PDF.js 精确依赖并同步 F06/F07，不能只改一个 Worker URL。单个 Canvas 的渲染需复用 `examples/render-gate.mjs`，在 cleanup 调用 `task.cancel()`，并等待旧 promise 结算后再 `render`；过期页不得设置新状态。测试 `render-gate.test.mjs` 和 `worker-version.test.mjs` 为纯 Node 逻辑/静态合同，不代表浏览器 PDF SDK 已验证。
+## 迁移
 
-## Wave21 Canvas预算迁移
+带走 `examples/example.tsx`、`examples/fixture.ts`、`examples/render-gate.mjs`、`examples/render-budget.mjs` 和对应的 `.d.mts`。`getDocument` 只接收 `data` 的副本。绘制必须进 `withCanvas`。分配像素前调用 `boundedCanvasSize`。
 
-除 `render-gate.mjs` 外同时迁移 `render-budget.mjs` / `.d.mts`。从 `page.getViewport` 得到宽高后，必须先 `boundedCanvasSize(viewport,devicePixelRatio)` 再给canvas设置像素，否则文件体积限制挡不住巨大页。测试 `node --test entries/F06-pdfjs/examples/render-budget.test.mjs` 是纯策略，目标SDK和浏览器仍需PLATFORM实际运行。
+## 不可删的清理
+
+换 `bytes` 时 `destroy()` 加载任务。换页或缩放时 `cancel()` 渲染任务。`active` 阻止过期 `setState`。探测任务单独 destroy，finally 只清理仍属于自己的那次。卸载增加 `fileGeneration`。DPR 不超过 2，CSS 和背板边长不超过 4096，像素不超过 800 万。
+
+## 反例
+
+- CDN 上的另一版 Worker。
+- 只升 F06 不升 F07。
+- `cancel()` 后立刻再 `render` 同一 Canvas。
+- 用 3 MiB 输入上限代替页面尺寸预算。
+- 把 `getTextContent` 当成 OCR。
+- `getDocument({ url })` 打开用户粘贴的地址。
+- 只改 CSS 尺寸导致高分屏模糊。
+- 一次画出全部页面的高分辨率位图。
+
+## 测试断言
+
+- 队列在拒绝后仍接受下一次操作，过期操作不再写结果。
+- 非有限尺寸、超长边、超 800 万像素被拒绝。
+- F06 与 F07 的声明版本都是 6.3.289。
+- 损坏字节的探测不替换当前 `bytes`。
+- 上述 Node 测试不 import `pdfjs-dist`。
+
+## 真实限制
+
+默认夹具只有两页。没有 CMap、加密或表单验收。文本层不是阅读顺序保证。Worker 脚本是否被浏览器取得，要看网络面板和收据，源码赋值不够。探测用的五字节不能写进当前文档的 state。
+
+## 证据
+
+sdk 与 browser 在缺少 `docs/library-lab/evidence/runs/` 收据时保持 NOT_RUN。版本字符串测试不是 Worker 收据。Actions 41779873259 不是 F06 PASS。
+
+`render-budget` 与 `render-gate` 的 Node 测试同样不加载 pdfjs-dist。

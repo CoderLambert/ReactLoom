@@ -1,29 +1,46 @@
-# E10 DOMPurify — Agent 实施说明
+# E10 DOMPurify — 工程手册
 
-## 选型与版本
+## 适用
 
-React 普通文本用 JSX 转义，不需要 DOMPurify。必须渲染受限 HTML 字符串时采用 `dompurify@3.4.17`（`MPL-2.0 OR Apache-2.0`），关注供应链安全公告。不要以存在 `sanitize()` 调用就宣称通用安全。
+浏览器里必须把有限富文本 HTML 放进唯一 sink 时。纯文本用 React 子节点。Markdown 用 E06。hast 流水线用 E08。代码用 E09。不要为了显示脚本或 iframe 放宽策略。
 
-## 迁移路径
+## 版本
 
-读取 `examples/example.tsx`，只复制固定的策略和先净化后展示机制；`examples/demo.tsx` 是 Lab 入口。业务必须明确允许元素、允许 URI、远程图片策略与 DOM 二次加工边界。不执行源字符串，不拼接净化后的 HTML，不把全局 hook 当单组件局部配置。
+`dompurify@3.4.17`，许可 MPL-2.0 OR Apache-2.0。配置对象只有 `examples/html-policy.mjs`。不设置 `USE_PROFILES`。不使用无配置的 `sanitize(dirty)`。
 
-## 禁止模式
+## 迁移
 
-- `dangerouslySetInnerHTML` 直接传未净化字符串。
-- `sanitize` 后通过其他代码插入未审查标签/属性。
-- 自行写正则去掉 script 当作 HTML sanitizer。
-- 允许任意 data/javascript URI 或所有外部资源。
-- 在 Node 未搭建可靠 DOM 环境时假设浏览器 sanitize 的结果等价。
+保持 `useMemo(() => DOMPurify.sanitize(dirty, htmlPolicy), [dirty])`，并且 `dangerouslySetInnerHTML` 只接收该结果。`<pre>` 打印同一字符串。文本框保留 12_000 上限。换 level 重置输入。不要把策略内联到组件。产品增加标签时同时改负例。
 
-## 必须的测试
+## 不可删的清理
 
-输入含 script/onerror/onclick/javascript URI/SVG 与远程 img；DOM 不应出现危险节点/属性，也不应有外部网络请求；合法文本/粗体/段落保留。对 CSP、浏览器差异和可访问性作独立检查。当前 SDK 和浏览器仍未实测，不能标 PASS。
+禁止 `USE_PROFILES` 与 `ALLOWED_TAGS` 组合。禁止 `setConfig` 和 `addHook`。禁止在 `clean` 之后拼接标签。禁止把 `dirty` 绑到预览。`ALLOWED_URI_REGEXP` 保持无凭据 https。卸载或换层时不要留下上一份 HTML 冒充新输入。
 
-## 来源
+## 反例
 
-https://github.com/cure53/DOMPurify
+- 先 innerHTML 再 sanitize。
+- 打开 `USE_PROFILES`。
+- 默认 `sanitize` 不传 `htmlPolicy`。
+- 正则删除 `<script`。
+- `afterSanitizeAttributes` 里写回用户 href。
+- 用 `DOMPurify.removed` 判断输入可信。
+- 同一 `clean` 进入邮件、PDF 或 `document.write`。
+- 把 advanced 样例的目视检查写成 XSS 已在浏览器测试。
 
-## 最小迁移不可漏的策略文件
+## 测试断言
 
-`examples/example.tsx` 调用真实DOMPurify并导入 `examples/html-policy.mjs`。只复制sanitize却回到宽泛默认HTML profile不符合本条安全边界。HTTPS-only URL 正则仍只是在净化时限定出站属性，不能替代DOM/XSS/网络验收；纯Node策略用例绝不能标SDK PASS。放宽标签或允许远程媒体前重新评审威胁模型。
+- 策略模块不含 `USE_PROFILES`。
+- 事件属性、`script`、`svg`、`javascript:`、`style` 不出现在净化字符串里。
+- 符合正则的 https 才可能留下 `href`。
+- 预览 sink 与 `<pre>` 使用同一 `clean`。
+- 浏览器 XSS 没有收据时不得写成通过。Node 策略测试不是 DOM 利用验证。
+
+## 真实限制
+
+未检查 `isSupported`。未启用 Trusted Types。12_000 字符不是深度限制。正则不限制主机名为自家域名。没有 jsdom 服务端路径。与 E08 的 schema 不是同一份名单。
+
+## 证据
+
+sdk、build、browser 保持 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有 E10 收据。Actions `41779873259` 是仓库级运行，不是本条目 PASS。不要声称 XSS 已做浏览器测试。
+
+资料：https://github.com/cure53/DOMPurify 与 https://www.npmjs.com/package/dompurify 。

@@ -1,23 +1,49 @@
-# C20 clsx — Agent 实施手册
+# C20 clsx — 工程手册
 
-## 选型
-用于 className 条件组合；不负责样式定义、Tailwind 冲突、表单验证或状态管理。版本基线 clsx 2.1.1，MIT。先查 library.json 与 verification.json，不能继承历史 PASS。
+## 适用
 
-## 最小迁移
-读取 `examples/example.tsx`，依赖只有 React 和 clsx；`examples/demo.tsx` 是 Lab 适配出口。实际产品只复制必要的状态映射，不复制实验页全部控件；保留与状态匹配的 disabled/aria-pressed 和文本反馈。样式类需在目标项目定义。
+把布尔和白名单类名拼成一条字符串。不合并 Tailwind，不去重，不表达禁用或权限。
 
-## 推荐模式
-使用有限 union 状态映射。直接在渲染中计算 className。不把派生字符串同步进 useEffect/state。不向 clsx 传入任意远端对象。lite 只用于字符串条件表达式。采用 tailwind-merge 时分别核对 Tailwind 和 tailwind-merge 兼容版本。
+## 版本
 
-## 必须断言
-未选中没有选中类；选中后有对应类及 aria-pressed；禁用原生按钮确实不能执行操作；falsy 输入不变成字符串 false/null；不要断言 CSS 优先级等于类名排列顺序。
+`clsx@2.1.1`，MIT。完整导入和 `clsx/lite` 行为不同。不要传 `bigint`。不要把接口对象直接交给它。
 
-## 命令与证据
-在仓库根运行 `pnpm --filter @reactloom/library-lab test:sdk`、`typecheck`、`build`；对应浏览器文件 `e2e/library.spec.ts`。目标 SDK 不可 mock 后记 PASS。当前真实 SDK、生产构建与浏览器仍未通过本环境验证。
+## 迁移
 
-## 来源
-https://github.com/lukeed/clsx
+带走 `examples/example.tsx` 和 `examples/class-policy.mjs`。状态类继续走 `cardClassInputs`。按钮保留 `disabled` 和 `aria-pressed`。需要覆盖 `px-*` 时改用 C21 的 `twMerge`，不要在这里手写正则删类。
 
-## 第22轮有限类名白名单
+## 不可删的清理
 
-复制示例时连同 `examples/class-policy.mjs` 和声明使用，避免把服务端任意 tone/状态直接拼成类名；采用确定的有限状态映射后再调用 clsx。永远同步 button 的 disabled 和 aria-pressed 等原生语义。新增真实 `clsx`/lite SDK 测试源码但尚未运行，不能用纯策略测试替代。
+没有实例要销毁。不要在渲染外缓存一份 className 当永久状态。语气枚举以外的值必须变成 `null`。不要为了「像 clsx」而改用字符串拼接。
+
+## 反例
+
+```ts
+clsx({ active: 'false' })
+clsx(0)
+lite({ active: true })
+clsx('badge-' + status)
+clsx('px-2', 'px-4')
+```
+
+- 用 `className.includes` 决定是否提交。
+- 把 JSON 响应当对象参数。
+- 用 lite 替换所有对象调用。
+- 把 `classnames/bind` 全局替换成 clsx 却不映射 CSS Modules。
+
+## 测试断言
+
+- `selected` / `disabled` 只有严格 `true` 才产生对应键。
+- `tone` 只有 `success` 和 `warning` 映射到固定类名。
+- `0` 不产生类，真值数字会变成数字字符串。
+- lite 忽略对象。
+- `px-2` 与 `px-4` 同时保留。
+- 策略单测没有执行 clsx。
+
+## 真实限制
+
+示例不加载 Tailwind 编译器。advanced 的预览只证明字符串，不证明最终像素。没有 CSS Modules。原型链投毒需要调用方不要传入外来对象，库本身不隔离。
+
+## 证据
+
+没有收据不要写 PASS。Actions 41779873259 不是本条目。不要改 `verification.json`。

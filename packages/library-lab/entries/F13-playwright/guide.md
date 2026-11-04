@@ -1,54 +1,173 @@
-# Playwright：真正的浏览器证据，而不是页面脚本演示
+# Playwright 1.64.0｜规格在仓库里，套件是否跑过要看收据
 
-## 定位
+Lab 锁定 `@playwright/test@1.64.0`（Apache-2.0）。示例是独立 CLI 配方：`setContent` 一段静态 HTML，再用 `page.route` 拦住 `https://api.lab.invalid`。它不打开 Library Lab 应用，也不碰生产接口。
 
-适合跨真实 Chromium/Firefox/WebKit 验证路由、键盘、输入、网络结果、资源取消和页面可访问性。不是单纯的函数测试，也不等于对真实第三方 API 进行测试。演示使用 **Node CLI 的真实 @playwright/test**，不是在网页上伪造一个终端。
+执行种类是 `node-ci`。页面展示命令，不启动浏览器。规格文件存在，不等于这套用例跑过。仓库 Actions 41779873259 里的 45 项 Playwright 是 Lab 自己的端到端，不是这三份 `examples/*.spec.ts` 的收据。
 
-## 安装及运行
+没有 `docs/library-lab/evidence/runs/` 收据时 sdk、build、browser 保持 NOT_RUN。
 
-Lab 已由 PLATFORM 声明 `@playwright/test@1.64.0`；运行前先安装 Node 和真正的 Chromium，不要执行未经授权的下载或收费服务。
+## Lab 当前示例
+
+| 文件 | 作用 |
+| --- | --- |
+| `examples/playwright.config.ts` | 只跑本目录，Chromium，headless，workers 1，失败保留 trace |
+| `examples/fixtures.ts` | 三段不依赖产品服务器的 HTML |
+| `examples/basic.spec.ts` | 角色定位和保存状态 |
+| `examples/business.spec.ts` | 状态码、坏 JSON、断网、提交中的按钮 |
+| `examples/advanced.spec.ts` | 旧请求晚到也不能盖住新结果 |
+
+页面命令：
 
 ```bash
-pnpm --filter @reactloom/library-lab exec playwright install chromium
-pnpm --filter @reactloom/library-lab exec playwright test --config entries/F13-playwright/examples/playwright.config.ts
+pnpm exec playwright test --config=entries/F13-playwright/examples/playwright.config.ts entries/F13-playwright/examples/basic.spec.ts
 ```
 
-可传路径选择某个场景，或者用 `--grep 'basic:|business:|advanced:'`。三个层次的独立测试入口为 `examples/basic.spec.ts`、`business.spec.ts` 和 `advanced.spec.ts`；`fixtures.ts` 是原创HTML，与主应用及生产后端隔离。
+business 和 advanced 换对应文件。配置里的 `outputDir` 是 `examples/.playwright-artifacts`。不要改主站的 Playwright 配置来迁就这三份规格。
 
-## 三层真实场景
+`api.lab.invalid` 只作为夹具主机名。测试必须 `page.route`。没有路由时，页面应显示「网络不可用」。不要把这个主机换成生产地址，也不要在夹具里放密钥。
 
-**basic（真实DOM）**：使用 `getByRole` / `getByLabel` 定位输入与按钮；先断言空值提示，再输入内容，检查最终状态。不要用 `waitForTimeout` 代替正常 UI 断言。
+## 1. 什么时候用
 
-**business（请求场景）**：用 `page.route` 拦截目标固定 `https://api.lab.invalid`，提供 200、422 和 503 的 HTTP 响应。业务页面真实执行 `fetch`，测试捕获次数并断言用户看见的状态。请勿把 `page.route` 的 Mock 当成真实生产服务调用，也不要把网络Mock误认成MSW Worker。
+要点击、等待可访问名称、看按钮禁用，并在浏览器里拦截 fetch。纯函数用 F12。组件故事用 F14。规则扫描用 F17。MSW 的 Service Worker 是另一层，不要把 `page.route` 写成 MSW 已验证。
 
-**advanced（异步回写）**：旧请求延迟，新请求更快；组件用 `AbortController` 和 generation 防护。验证最终UI只显示新结果；示例以两个Promise barrier严格保证旧请求先被拦截、新请求完成后才释放旧响应；不用固定sleep。此示例虽已写源码，未安装浏览器前不能声称完成了竞态验证。
+没有稳定可观察结果的动画时间轴，不适合当第一条用例。
 
-## 生产级要求
+## 2. 模型
 
-1. 可访问定位器优于 CSS:nth-child，元素应有稳定role/name。
-2. 使用 Playwright 自动等待断言，避免无限 sleep、条件轮询伪通过。
-3. 响应场景必须覆盖空态、网络错误、服务端错误、超时和恢复，不混淆状态码与业务错误。
-4. 执行中等待是测试运行的等待，别写业务里隐藏的测试标记。
-5. 真实后端契约测试和浏览器 E2E 职责不同；Mock 应与业务契约一致并保持最小集。
-6. 各 worker 运行在隔离浏览器context，真实凭据、生产账号、媒体数据不得进入录像/trace。
-7. 平台不用为每个纯CLI库建立可在浏览器运行任意命令的终端。站内只展示源码、命令和真实 CI 产物。
+配置：`fullyParallel: false`，`retries: 0`，`workers: 1`，`trace: 'retain-on-failure'`。教学规格不靠重试变绿。
 
-## 常见错误
+basic 的页面有标题、带 label 的输入、保存按钮和 `aria-live` 的 output。空标题得到「请输入标题」，有文字得到「保存完成」。定位用 `getByRole`，不用 CSS id。
 
-- `page.waitForTimeout(2000)` 代替特定文本或事件条件。
-- 只断言按钮存在，不验证点击后业务行为。
-- 把页面 Mock 成功等同于后端契约通过。
-- 删除请求竞态和取消验收，因为大多数手工测试不容易重现。
-- 将历史无浏览器条件下的 Node PASS 包装成 Playwright PASS。
+business 的脚本在点击时同步把按钮设为 disabled，防止第二次提交。响应先 `json()`。解析失败、非对象、200 但 `ok !== true`、错误体没有合适的 `message`，都显示「响应格式异常」。`message` 必须是长度 1–160 的字符串。fetch 抛错显示「网络不可用」。`finally` 恢复按钮。
 
-## 验证
+advanced 用 generation 和 AbortController。只有当前 id 才写 `data.label`。AbortError 不写成「请求失败」。
 
-SDK / 浏览器的验证属于 Playwright 的同一真实执行路径：必须保存具体命令、exit code、Node/Chromium、版本、源指纹和实际报告；当前尚未执行，`verification.json` 全部保持 NOT_RUN/BLOCKED。官方：[断言](https://playwright.dev/docs/test-assertions) · [Mock](https://playwright.dev/docs/mock) · [配置](https://playwright.dev/docs/test-configuration)。
+## 3. 三层
 
-## 业务场景异常与清理增强（EF wave17）
+### 基本
 
-除 200/422/503 三类 HTTP 响应外，新增 **200 响应体违反契约、422 缺少错误字段、JSON 解析失败和真正网络失败** 四类边界。HTTP 状态码并不保证返回体结构正确；页面将无效响应显示为“响应格式异常”，transport failure 显示为“网络不可用”，而不是不加检查地把任意 200 视为成功。提交时同步禁用按钮，`finally` 无论 JSON 失败或网络异常都恢复交互；真实 Chromium 测试使用 route barrier 验证发送中按钮状态。
+`setContent(basicPage)`。先看到标题「任务编辑」。空保存，状态含「请输入标题」。填入「本地新闻摘要」后再保存，状态恰好是「保存完成」。没有网络。
 
-进阶的旧网络请求在 `try/finally` 中释放拦截屏障，即使中途断言失败也不让测试持有未解决的旧请求。**此处的 `route.fulfill` 和 `route.abort` 仍然只证明浏览器网络契约，不代表后端服务已实际处理请求。**
+### 业务
 
-当前只是提交了 Playwright 源码；真实 Chromium 安装和执行仍由 PLATFORM 负责。命令：`pnpm --filter @reactloom/library-lab exec playwright test --config entries/F13-playwright/examples/playwright.config.ts`，运行后需保存实际 report/trace 与 commit、源码指纹，才可升级browser/sdk状态。
+路由 `https://api.lab.invalid/subscribe**`。矩阵：
+
+| 状态 | 体 | 可见文字 |
+| --- | --- | --- |
+| 200 | `{ ok: true }` | 订阅成功 |
+| 422 | `{ message: '邮箱格式错误' }` | 邮箱格式错误 |
+| 503 | `{ message: '服务暂不可用' }` | 服务暂不可用 |
+| 200 | `{ ok: false }` | 响应格式异常 |
+| 422 | `{}` | 响应格式异常 |
+
+另有 `route.abort('failed')` → 「网络不可用」，以及 200 加 `{invalid-json` → 「响应格式异常」。每次断言拦截次数为 1。
+
+挂起的路由：按钮变为禁用，释放后「订阅成功」且按钮恢复，只拦截一次。`release` 放在 `finally`，断言失败也要放开，避免用例把浏览器挂住。
+
+### 进阶
+
+先点「旧版本」，等到路由看见 `q=old`，再点「新版本」。状态变成「新结果」之后才放开旧请求。旧的 fulfill 可以因取消而抛错，那是预期。状态必须仍是「新结果」。`oldHandlerRan` 为 true。`finally` 里再调一次 `releaseOld`。
+
+## 4. 反例
+
+### 反例 1：用 CSS 和固定等待
+
+```ts
+await page.click('#save')
+await page.waitForTimeout(500)
+```
+
+按钮名和 `getByRole('status')` 会重试到可见。`waitForTimeout` 把慢机器和快机器绑在同一个毫秒上。本规格没有它。
+
+### 反例 2：重试掩盖断言
+
+```ts
+retries: 2
+```
+
+教学配置是 0。偶发失败应看 trace，而不是再跑到绿。
+
+### 反例 3：打到真实 API
+
+```ts
+await page.goto('https://production.example')
+```
+
+夹具是 `setContent`。主机是 `.invalid`。不要为了「更真实」去掉 route，也不要上传账号。
+
+### 反例 4：把 route 当成契约测试
+
+`route.fulfill` 是测试在说话。后端并没有返回 422。契约要另做。不要把这页的绿写成服务已实现。
+
+### 反例 5：忘记放开屏障
+
+旧请求的 `await oldBarrier` 如果断言先失败，用例会停在路由里。两个规格都在 `finally` 里 release。删掉它，下一次调试会看成长时间挂起。
+
+### 反例 6：断网和 422 用同一句文案
+
+`route.abort('failed')` 必须是「网络不可用」。HTTP 422 显示服务端 message。混在一起就无法看出拦截层是否生效。
+
+### 反例 7：200 且 ok:false 算成功
+
+页面要求 `result.ok === true`。测试把 `{ ok: false }` 收成「响应格式异常」。不要改成只要 `response.ok` 就显示成功。
+
+### 反例 8：用主站配置跑这三份文件
+
+主站用例登录、开 axe、走真实路由。这里的 config 是隔离的。混跑会把产品服务器拉起来，或让选择器对上错误的页面。
+
+### 反例 9：仓库 45 项通过就填 F13
+
+那 45 项没有指向 `entries/F13-playwright/examples`。规格仍是 NOT_RUN，直到有针对这条 config 的收据。
+
+## 5. 组合
+
+**F12**：同一业务可以先在 Node 里测函数，再在这里看按钮和 live region。`vi.fn` 的调用次数不是 `intercepted`。
+
+**F11**：MSW 拦的是应用的 fetch。这里拦的是这段 HTML 里的 fetch。两套不要互相填写 PASS。
+
+**F17**：可以在 `setContent` 之后跑 axe。本规格没有 `axe.run`。角色定位不是规则扫描。
+
+**F14**：Story 的 play 在组件 iframe 里。它不覆盖这段手写 HTML 的提交中状态。
+
+## 6. 清单
+
+- 定位用 role 和可访问名称。
+- 不使用 `waitForTimeout`。
+- retries 保持 0，workers 保持 1。
+- 每个 HTTP 场景断言拦截次数。
+- 断网、坏 JSON、畸形成功体分开。
+- 挂起请求期间按钮禁用，结束后恢复。
+- 屏障在 finally 释放。
+- 旧响应不能改写「新结果」。
+- 不改主配置，不访问生产，不放密钥。
+- 命令展示不等于套件已执行。
+
+## 7. 升级
+
+1.64 的 `getByRole`、`page.route`、`toHaveText` 是合同。升级时重跑三个文件，trace 仍只在失败时保留。不要打开并行去「加快教学规格」，屏障假设一次只有一个 worker。
+
+浏览器二进制由平台安装。缺浏览器时命令失败，不要改成跳过并记 PASS。
+
+## 8. 验收
+
+三条命令分开。日志要包含对应标题：basic 的「保存完成」、business 的五种正文加网络和坏 JSON、advanced 的「新结果」。trace 目录不是收据，除非记录命令、退出码和时间。sdk 与 browser 在那之前保持 NOT_RUN。build 对本目录没有单独产物，也保持 NOT_RUN。
+
+## 9. 故障对照
+
+| 现象 | 先看 |
+| --- | --- |
+| 选择器找不到按钮 | 用了 CSS。规格用「保存」「提交订阅」「旧版本」这些名称 |
+| 状态一直是发送中 | 路由没有 fulfill，或 finally 没有把按钮打开 |
+| 用例挂住不结束 | `oldBarrier` / `blocked` 没有在 finally 里 release |
+| 新结果被改回旧结果 | generation 判断被删，或在 abort 之后仍写 label |
+| 422 显示成网络不可用 | 用了 `route.abort` 而不是 `fulfill` |
+| 跑到了产品登录页 | config 不是本目录这份，或用了 `goto` 主站 |
+
+trace 只在失败时保留到 `examples/.playwright-artifacts`。不要把含账号的 trace 提交进仓库。本规格的 HTML 里没有账号。
+
+## 10. 资料
+
+- https://playwright.dev/docs/intro
+- https://playwright.dev/docs/locators
+- https://playwright.dev/docs/test-assertions
+- https://playwright.dev/docs/mock
