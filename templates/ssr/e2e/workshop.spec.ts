@@ -18,3 +18,26 @@ test('signs in with a cookie session and adds a task', async ({ page }) => {
   await page.getByRole('button', { name: 'Add task' }).click()
   await expect(page.getByText('Warp the selvage')).toBeVisible()
 })
+
+
+test('sign out removes the session cookie and blocks access to private tasks', async ({ page }) => {
+  await page.goto('/login')
+  await page.getByLabel('Email').fill('ada@reactloom.dev')
+  await page.getByLabel('Password').fill('loom-demo')
+  await page.getByRole('button', { name: 'Sign in' }).click()
+  await expect(page.getByRole('heading', { name: 'Warp board' })).toBeVisible()
+  await expect(page.getByText('Dress the loom')).toBeVisible()
+
+  const sessionCookies = await page.context().cookies()
+  expect(sessionCookies.some((cookie) => cookie.name === 'rl_session')).toBe(true)
+
+  await page.getByRole('button', { name: 'Sign out' }).click()
+  await expect(page).toHaveURL(/\/login(?:\?.*)?$/)
+  expect((await page.context().cookies()).some((cookie) => cookie.name === 'rl_session')).toBe(
+    false,
+  )
+
+  await page.goto('/tasks')
+  await expect(page).toHaveURL(/\/login(?:\?.*)?$/)
+  await expect(page.getByText('Dress the loom')).toHaveCount(0)
+})

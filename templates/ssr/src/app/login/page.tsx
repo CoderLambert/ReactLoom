@@ -1,11 +1,13 @@
 'use client'
 
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema'
+import { useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 import { getApi } from '@/lib/api'
+import { clearSessionCache } from '@/lib/session-cache'
 
 const schema = z.object({
   email: z.email(),
@@ -20,6 +22,7 @@ type FormValues = z.infer<typeof schema>
 
 export default function LoginPage() {
   const router = useRouter()
+  const queryClient = useQueryClient()
   const [error, setError] = useState<string | null>(null)
   const form = useForm<FormValues>({
     resolver: standardSchemaResolver(schema),
@@ -37,6 +40,7 @@ export default function LoginPage() {
             body: values,
             retry: false,
           })
+          await clearSessionCache(queryClient)
           router.push('/tasks')
           router.refresh()
         } catch (cause) {

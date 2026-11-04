@@ -1,9 +1,11 @@
 'use client'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useRouter } from 'next/navigation'
 import { useRef, useState } from 'react'
 import * as z from 'zod'
 import { getApi } from '@/lib/api'
+import { clearSessionCache } from '@/lib/session-cache'
 
 const taskSchema = z.object({
   id: z.string(),
@@ -14,10 +16,14 @@ const taskSchema = z.object({
 })
 
 const listSchema = z.object({ tasks: z.array(taskSchema) })
+const logoutSchema = z.object({ ok: z.literal(true) })
 
 export default function TasksPage() {
   const queryClient = useQueryClient()
+  const router = useRouter()
   const [title, setTitle] = useState('')
+  const [isSigningOut, setIsSigningOut] = useState(false)
+  const [signOutError, setSignOutError] = useState<string | null>(null)
   const draftRevision = useRef(0)
   const submitting = useRef(false)
   const tasks = useQuery({
@@ -43,9 +49,39 @@ export default function TasksPage() {
     },
   })
 
+  async function signOut() {
+    if (isSigningOut || create.isPending) return
+    setIsSigningOut(true)
+    setSignOutError(null)
+    try {
+      await getApi().request('/api/session', logoutSchema, { method: 'DELETE', retry: false })
+      await clearSessionCache(queryClient)
+      router.replace('/login')
+      router.refresh()
+    } catch (cause) {
+      setSignOutError(cause instanceof Error ? cause.message : 'Sign out failed.')
+      setIsSigningOut(false)
+    }
+  }
+
   return (
     <section className="space-y-6">
-      <h1 className="text-5xl">Warp board</h1>
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <h1 className="text-5xl">Warp board</h1>
+        <button
+          type="button"
+          onClick={() => void signOut()}
+          disabled={isSigningOut || create.isPending}
+          className="rounded-full bg-ink px-4 py-2 text-sm font-semibold text-linen disabled:opacity-60"
+        >
+          {isSigningOut ? 'Signing out…' : 'Sign out'}
+        </button>
+      </div>
+      {signOutError ? (
+        <p role="alert" className="text-sm text-copper">
+          {signOutError}
+        </p>
+      ) : null}
       <p className="text-muted">
         Loaded in the browser, authorized by the httpOnly session cookie.
       </p>
