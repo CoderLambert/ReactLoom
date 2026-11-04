@@ -112,9 +112,9 @@ test('source viewer never exposes stale or digest-mismatched bytes as verified c
 test('documentation headings expose stable shareable fragments', async ({ page }) => {
   await page.goto('/libraries/clsx?tab=docs')
   const toc = page.getByRole('navigation', { name: '当前文档目录' })
-  await toc.getByRole('link', { name: '用在哪里' }).click()
-  await expect.poll(() => decodeURIComponent(new URL(page.url()).hash)).toBe('#用在哪里')
-  await expect(page.locator('h2#用在哪里')).toBeVisible()
+  await toc.getByRole('link', { name: '什么时候用' }).click()
+  await expect.poll(() => decodeURIComponent(new URL(page.url()).hash)).toBe('#什么时候用')
+  await expect(page.locator('h2#什么时候用')).toBeVisible()
 })
 test('@F12 Node-CI Vitest recipe shows reproducible command instead of fake shell', async ({
   page,
