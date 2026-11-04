@@ -86,7 +86,9 @@ describe('createApiClient', () => {
     vi.spyOn(Math, 'random').mockReturnValue(1)
     const fetchFn = vi
       .fn<typeof fetch>()
-      .mockResolvedValueOnce(jsonResponse({ message: 'rate limited' }, 429, { 'retry-after': '-5' }))
+      .mockResolvedValueOnce(
+        jsonResponse({ message: 'rate limited' }, 429, { 'retry-after': '-5' }),
+      )
       .mockResolvedValueOnce(jsonResponse({ ok: true }))
     const sleep = vi.fn(async () => undefined)
     const client = createApiClient({
@@ -103,7 +105,9 @@ describe('createApiClient', () => {
   it('caps numeric Retry-After seconds to the configured maximum', async () => {
     const fetchFn = vi
       .fn<typeof fetch>()
-      .mockResolvedValueOnce(jsonResponse({ message: 'rate limited' }, 429, { 'retry-after': '30' }))
+      .mockResolvedValueOnce(
+        jsonResponse({ message: 'rate limited' }, 429, { 'retry-after': '30' }),
+      )
       .mockResolvedValueOnce(jsonResponse({ ok: true }))
     const sleep = vi.fn(async () => undefined)
     const client = createApiClient({
