@@ -1,6 +1,6 @@
 import { QueryClientProvider } from '@tanstack/react-query'
 import { createMemoryHistory, RouterProvider } from '@tanstack/react-router'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import { HttpResponse, http } from 'msw'
 import { I18nextProvider } from 'react-i18next'
 import { afterEach, describe, expect, it, vi } from 'vitest'
@@ -94,7 +94,7 @@ describe('SPA session expiry boundary', () => {
     expect(
       await screen.findByRole('heading', { name: 'Sign in' }, { timeout: 4_000 }),
     ).toBeVisible()
-    expect(screen.queryByText('Private idle task')).not.toBeInTheDocument()
+    await waitFor(() => expect(screen.queryByText('Private idle task')).not.toBeInTheDocument())
     expect(useAuthStore.getState().session).toBeNull()
     expect(sessionStorage.getItem(STORAGE_KEY)).toBeNull()
     expect(client.getQueryData(taskKeys.list(version))).toBeUndefined()
