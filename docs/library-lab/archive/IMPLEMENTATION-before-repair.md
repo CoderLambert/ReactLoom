@@ -1,5 +1,7 @@
 # Library Lab 实施计划
 
+> 2026-11-04：这是整改前的实施日志，不是当前计划。当前事实在 [IMPLEMENTATION.md](../IMPLEMENTATION.md)。文中的 `feat/library-lab` draft 和「尚未生成锁文件」只描述当时。
+
 用户已审核并授权 v2 直接实现。主任务 #4；独立应用 packages/library-lab，private；集成分支 feat/library-lab，初始基线 05b4e41a693663b63d8389abbb1e7b07195a4ed0。保留已有模板与 PR #3。完整 v2 来源为会话文件 REQUIREMENTS-V2.zh-CN.md（file_0000000046c082309dd28c0aebf26ed7），不得将其“待实施”状态当成需要重新询问用户许可。
 
 ## 已落地的公共协议

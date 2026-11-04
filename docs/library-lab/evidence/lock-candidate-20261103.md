@@ -1,5 +1,7 @@
 # 2026-11-03 Library Lab lock candidate: executed CI evidence, not acceptance
 
+> 2026-11-04：下文是当天的候选锁检查。当时提交的根锁还没有 Lab importer。该 importer 已随 PR #8 进入 main。本文不是当前锁，也不是逐库 PASS。后来的 #97/#98 只恢复了手册和首页计数。
+
 ## Source and exact execution
 - Source branch `fix/library-lab-p0-sdk-browser-20261103`, head `07704c6ece7e01afd32c706dda434d05807de5e0`, PR #90, base `feat/library-lab`.
 - [GitHub Actions run 41679144302](https://github.com/CoderLambert/ReactLoom/actions/runs/41679144302) used allocated GitHub-hosted runner(s) and produced real step logs. This is a **change** from #12's historical runner-allocation failures.

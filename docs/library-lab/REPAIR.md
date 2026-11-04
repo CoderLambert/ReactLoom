@@ -1,6 +1,6 @@
 # Library Lab 审核整改（2026-10-28）
 
-本文件记录合并前的审核整改，并说明这些修复在 main 上的位置。PR #8 已合并。**仓库级 CI 通过不是逐库收据。** 不要把 Library Lab 放进模板、公开部署或计费配置。
+本文件记录合并前的审核整改，并说明这些修复在 main 上的位置。PR #8 已合并。PR #97 和 #98 随后把手册和首页计数放上 main，见 [COORDINATION.md](COORDINATION.md)。**仓库级 CI 通过不是逐库收据。** 不要把 Library Lab 放进模板、公开部署或计费配置。
 
 ## 已实现的改动
 
@@ -24,11 +24,11 @@ F11 在原 Node 复现命令下增加“真实浏览器请求拦截”面板。�
 
 ## 锁文件与验收
 
-main 的根 `pnpm-lock.yaml` 已有 `packages/library-lab` importer。Actions run [41779873259](https://github.com/CoderLambert/ReactLoom/actions/runs/41779873259) 用 `--frozen-lockfile` 完成安装，并跑过 typecheck、生产构建、52 个 SDK 文件（153 项）和 45 项 Playwright。`lock-candidate` 因锁已就绪而跳过。候选 job 仍然不能代替 runtime，也不许用 no-frozen 冒充验收。
+main 的根 `pnpm-lock.yaml` 已有 `packages/library-lab` importer。Actions run [41779873259](https://github.com/CoderLambert/ReactLoom/actions/runs/41779873259) 用 `--frozen-lockfile` 完成安装，并跑过 typecheck、生产构建、52 个 SDK 文件（153 项）和 45 项 Playwright。那次运行对应 #8 合并时的 Lab 树，不覆盖 #97/#98 的手册和首页。`lock-candidate` 因锁已就绪而跳过。候选 job 仍然不能代替 runtime，也不许用 no-frozen 冒充验收。
 
 这次通过覆盖的是当时存在的套件，不是 119 个库。68 个条目没有 `sdk.test.mjs` 或 `node-scenarios.test.mjs`。Playwright 的 `@ID` 只覆盖少数条目。
 
-`create-reactloom` 不复制 Library Lab，模板清单里也没有它。根工作区的 `pnpm install` 仍会下载本包依赖。其中 `@ffmpeg/core@0.12.10` 是 GPL-2.0-or-later：`prepare-ffmpeg-core.mjs` 默认删除生成的 `public/ffmpeg-core/`，除非 `LIBRARY_LAB_FFMPEG_CORE_LICENSE_REVIEWED=true`。`xlsx` 解析到 `cdn.sheetjs.com` 上带 integrity 的 0.20.3 tarball；CDN 不可用时失败的是根安装，不只是 Lab。本 PR 不把包移出工作区。
+`create-reactloom` 不复制 Library Lab，模板清单里也没有它。根工作区的 `pnpm install` 仍会下载本包依赖。其中 `@ffmpeg/core@0.12.10` 是 GPL-2.0-or-later：`prepare-ffmpeg-core.mjs` 默认删除生成的 `public/ffmpeg-core/`，除非 `LIBRARY_LAB_FFMPEG_CORE_LICENSE_REVIEWED=true`。`xlsx` 解析到 `cdn.sheetjs.com` 上带 integrity 的 0.20.3 tarball；CDN 不可用时失败的是根安装，不只是 Lab。整改当时没有把这些包移出工作区，main 也仍然把它们留在工作区里。
 
 在 Node >=22.18 / pnpm 10 的完整工作树中，既有受控入口是：
 
@@ -51,6 +51,6 @@ pnpm --filter @reactloom/library-lab verify:record --entry=F11 --kind=browser --
 
 ## 交付门槛和剩余队列
 
-锁文件、冻结安装、类型检查和生产构建已经在上述 Actions 运行里发生过。下一步是给 A01、B17、C01、D03、E05、F11 写逐库收据，而不是再宣布环境不存在。119 个目录、源码完整、可挂载、Node 命令、浏览器收据和 SDK PASS 仍然分开计数。不伪造 E11/F05 的研究原件。
+锁文件、冻结安装、类型检查和生产构建已经在上述 Actions 运行里发生过，对象是 #8 的树。#97 和 #98 恢复了手册，并让首页分开计数；它们没有新增 `evidence/runs` 收据。下一步是给 A01、B17、C01、D03、E05、F11 写逐库收据，而不是再宣布环境不存在，也不是再改一遍指南。119 个目录、源码完整、可挂载、Node 命令、浏览器收据和 SDK PASS 仍然分开计数。不伪造 E11/F05 的研究原件。
 
 `evidence/repair-validation.md` 记录的是整改当时的定向测试，不是这 119 条的收据。Gantt 和 PDF 的产品风险不能凭公共修复或仓库级 Playwright 关闭。进度档案里的 23/24 轮是历史，不要再开一轮去重复同一句「CI 还没跑」。

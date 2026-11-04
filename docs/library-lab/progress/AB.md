@@ -1,6 +1,6 @@
 # AB 开发进度 — A/B 前端库垂直实现
 
-> 2026-11-04：本文件是合并前的通道日志。PR #8 已在 main。根锁文件已有 Lab importer。Actions run 41779873259 通过了仓库级 install / typecheck / build / 52 个 SDK 文件（153）/ 45 项 Playwright。这不是 39 条 AB 收据，更不是 119 条 PASS。下文里的「PR #8 仍为 Draft」「DNS BLOCKED」「typecheck 全部 NOT_RUN」只描述当时那一轮。
+> 2026-11-04：本文件正文是合并前的通道日志。PR #8 已在 main。根锁文件已有 Lab importer。Actions run 41779873259 通过了 #8 那棵树上的仓库级 install / typecheck / build / 52 个 SDK 文件（153）/ 45 项 Playwright。这不是 39 条 AB 收据，更不是 119 条 PASS。下文里的「PR #8 仍为 Draft」「DNS BLOCKED」「typecheck 全部 NOT_RUN」只描述当时那一轮。A/B 手册深度和首页 `sourceComplete` / `reactMountable` / `nodeCiOnly` / `receiptPass` 已由 #97（`ac38dad`）进入 main；本文件不因此改写成验收通过。
 
 **最新调度轮次：20 / 最多24；状态：WAVE20_AB_39_SOURCE_HARDENING（39/39仅源码和文档覆盖；逐库 SDK / 浏览器收据仍未写入）。**
 

@@ -1,5 +1,7 @@
 # PLATFORM 进度
 
+> 2026-11-04：这是合并前 0–23 轮的原文。Draft PR #8、DNS 和无锁文件都是当时的记录。当前事实在 [PLATFORM.md](../PLATFORM.md)。
+
 状态：PLATFORM_INCREMENTAL_DEVELOPMENT；本轮公共应用/Agent 检索/源码加载/静态依赖门禁已提交。运行环境尚未完整验证。
 初始代码提交：38ed2d247bd82e4f1422b0e8904973e16bca2972，Draft PR #8，主Issue #4。119条身份目录，2库真实SDK import示例（clsx/p-limit，各3层），不代表119个Demo已实现。
 

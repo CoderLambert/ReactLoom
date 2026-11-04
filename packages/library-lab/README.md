@@ -4,7 +4,7 @@
 
 `create-reactloom` 不复制本包，模板的 `template.json` 也不包含它。根工作区安装仍会解析本包依赖，其中包括 `@ffmpeg/core`（GPL-2.0-or-later，默认不复制进页面）和 SheetJS CE 的 `cdn.sheetjs.com` tarball。详见 `docs/library-lab/REPAIR.md`。
 
-Actions run [41779873259](https://github.com/CoderLambert/ReactLoom/actions/runs/41779873259) 在与当前 Lab 树一致的提交上通过了冻结安装、typecheck、生产构建、52 个 SDK 文件（153 项）和 45 项 Playwright。这些是仓库级作业。`verification.json` 的 PASS 仍要有 `docs/library-lab/evidence/runs/` 里的当前收据。没有收据时 readiness 的 sdk / build / browser PASS 就是 0。
+Actions run [41779873259](https://github.com/CoderLambert/ReactLoom/actions/runs/41779873259) 在 PR #8 合并时的 Lab 树上通过了冻结安装、typecheck、生产构建、52 个 SDK 文件（153 项）和 45 项 Playwright。#97（`ac38dad`）恢复了 A/B 手册，并把首页拆成 `sourceComplete`、`reactMountable`、`nodeCiOnly`、`receiptPass`。#98（`fea74cf`）恢复了 C–F 手册。这两次合并之后，不能再说当前树与 41779873259 的 head 一致。这些都是仓库级或文档事实，不是 119 条收据。`verification.json` 的 PASS 仍要有 `docs/library-lab/evidence/runs/` 里的当前收据。没有收据时 readiness 的 sdk / build / browser PASS 就是 0。状态以 [COORDINATION.md](../../docs/library-lab/COORDINATION.md) 为准。
 
 ```sh
 pnpm install
