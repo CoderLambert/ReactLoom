@@ -1,7 +1,7 @@
 import { createApiClient } from '@reactloom/api-client'
 import { demoLogin, type LoginInput, type Session, sessionSchema } from '@/features/auth/schema'
 import { env } from '@/lib/env'
-import { readToken, writeToken } from '@/lib/token-store'
+import { readToken } from '@/lib/token-store'
 
 export async function signIn(input: LoginInput): Promise<Session> {
   if (env.EXPO_PUBLIC_USE_FIXTURES === 'true') {
@@ -13,7 +13,6 @@ export async function signIn(input: LoginInput): Promise<Session> {
       expiresAt: Date.now() + 60 * 60 * 1000,
       user: { id: 'user-ada', name: 'Ada Loom', email: demoLogin.email },
     }
-    await writeToken(session.accessToken)
     return session
   }
 
@@ -26,10 +25,5 @@ export async function signIn(input: LoginInput): Promise<Session> {
     body: input,
     retry: false,
   })
-  await writeToken(session.accessToken)
   return session
-}
-
-export async function signOut() {
-  await writeToken(null)
 }

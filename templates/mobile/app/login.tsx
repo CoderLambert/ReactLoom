@@ -1,5 +1,5 @@
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema'
-import { useRouter } from 'expo-router'
+import { Redirect } from 'expo-router'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -10,12 +10,14 @@ import { type LoginInput, loginSchema } from '@/features/auth/schema'
 export default function LoginScreen() {
   const { t } = useTranslation()
   const auth = useAuth()
-  const router = useRouter()
   const [error, setError] = useState<string | null>(null)
   const form = useForm<LoginInput>({
     resolver: standardSchemaResolver(loginSchema),
     defaultValues: { email: '', password: '' },
   })
+  const message = auth.error ?? error
+
+  if (auth.status === 'authenticated') return <Redirect href="/tasks" />
 
   return (
     <View
@@ -62,14 +64,13 @@ export default function LoginScreen() {
           />
         )}
       />
-      {error ? <Text accessibilityRole="alert">{error}</Text> : null}
+      {message ? <Text accessibilityRole="alert">{message}</Text> : null}
       <Pressable
         accessibilityRole="button"
         onPress={form.handleSubmit(async (values) => {
           try {
             setError(null)
             await auth.signIn(values)
-            router.replace('/tasks')
           } catch (cause) {
             setError(cause instanceof Error ? cause.message : 'Sign in failed.')
           }

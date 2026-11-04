@@ -1,6 +1,6 @@
 # ReactLoom Mobile
 
-Expo SDK 57 and Expo Router. The session token uses `expo-secure-store` on device and `localStorage` on web export. Tasks in fixture mode stay on device; set `EXPO_PUBLIC_USE_FIXTURES=false` to call `@reactloom/api-client`.
+Expo SDK 57 and Expo Router. The full versioned session uses `expo-secure-store` on device and `localStorage` on web export. Tasks in fixture mode stay on device; set `EXPO_PUBLIC_USE_FIXTURES=false` to call `@reactloom/api-client`.
 
 ## Zero to running
 
@@ -24,6 +24,23 @@ pnpm analyze      # Expo Atlas at .expo/atlas.jsonl
 ```
 
 `.maestro/login.yaml` is the device flow. CI does not launch an emulator.
+
+## Session and task data
+
+The complete session is stored as a versioned record in the existing token store: SecureStore on native, localStorage on web. Restore preserves the server's user and `expiresAt` (Unix epoch milliseconds). Legacy bare tokens, malformed records and expired sessions require signing in again. Expiry is checked while active and when the app resumes; the client does not invent a new expiry or refresh endpoint.
+
+With `EXPO_PUBLIC_USE_FIXTURES=true`, task data is an in-memory demo scoped to the current session. It is not durable storage. With fixtures disabled, configure `EXPO_PUBLIC_API_BASE_URL` for a backend implementing this Bearer/JSON contract:
+
+| Request | Request body | Successful response |
+| --- | --- | --- |
+| `POST /api/session` | `{ email, password }` | `{ accessToken, expiresAt, user: { id, name, email } }` |
+| `GET /api/tasks` | — | `{ tasks: [{ id, title, status }] }` |
+| `POST /api/tasks` | `{ title }` | `{ id, title, status }` |
+| `PATCH /api/tasks/:id` | `{ status: "open" | "done" }` | `{ id, title, status }` |
+
+Task requests carry the captured session's Bearer token. The backend must authorize each request and return 401 for an invalid session; late responses must not invalidate a newer session. Task titles are trimmed and limited to 3–80 characters, and mutations are not retried automatically. The screen provides loading, failure, manual retry and pending states.
+
+For the web preview/export, configure the backend's CORS policy for the app origin and Bearer/JSON requests. The Next.js SSR template uses cookie sessions and has a different login response; a backend adapter is required to use it with this Bearer client. For a physical phone, `127.0.0.1` refers to the phone itself: use a development backend address the device can reach. Keep deployment-specific values in `.env.local`, and never put private keys in `EXPO_PUBLIC_*`.
 
 ## Developer productivity
 

@@ -5,10 +5,10 @@ export const loginSchema = z.object({
   password: z.string().min(8),
 })
 
-export const sessionSchema = z.object({
+export const sessionSchema = z.strictObject({
   accessToken: z.string().min(1),
-  expiresAt: z.number(),
-  user: z.object({
+  expiresAt: z.number().finite(),
+  user: z.strictObject({
     id: z.string(),
     name: z.string(),
     email: z.email(),
