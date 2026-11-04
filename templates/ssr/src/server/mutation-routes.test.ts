@@ -1,8 +1,8 @@
 import { NextRequest } from 'next/server'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { POST as login, DELETE as logout } from '@/app/api/session/route'
+import { DELETE as logout, GET as readSession, POST as login } from '@/app/api/session/route'
 import { PATCH as updateTask } from '@/app/api/tasks/[id]/route'
-import { POST as createTask } from '@/app/api/tasks/route'
+import { GET as readTasks, POST as createTask } from '@/app/api/tasks/route'
 import { readSessionToken, SESSION_COOKIE, signSession } from './session-token'
 import { type Task, tasks } from './tasks'
 
@@ -24,6 +24,20 @@ beforeEach(async () => {
     }),
   )
   ownedTask = tasks.create('user-ada', 'Original task')
+})
+
+it.each([
+  { route: 'GET /api/session', run: readSession },
+  { route: 'GET /api/tasks', run: readTasks },
+])('$route response prevents HTTP caching for both session states', async ({ run }) => {
+  const authenticated = await run()
+  expect(authenticated.status).toBe(200)
+  expect(authenticated.headers.get('cache-control')).toBe('private, no-store')
+
+  requestCookies = new NextRequest(origin).cookies
+  const unauthenticated = await run()
+  expect(unauthenticated.status).toBe(401)
+  expect(unauthenticated.headers.get('cache-control')).toBe('private, no-store')
 })
 
 const routes = [
@@ -87,6 +101,7 @@ describe.each(routes)('$name request protection', (route) => {
   it('allows the same-origin mutation and applies its expected side effect', async () => {
     const response = await route.run(requestFor(route, { origin }))
     expect(response.status).toBe(route.success)
+    expect(response.headers.get('cache-control')).toBe('private, no-store')
     if (route.name === 'login') {
       const token = response.headers.get('set-cookie')?.match(/rl_session=([^;]+)/)?.[1]
       expect(token).toBeDefined()
