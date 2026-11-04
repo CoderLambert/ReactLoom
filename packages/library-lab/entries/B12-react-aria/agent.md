@@ -20,6 +20,14 @@
 
 div 按钮。半输入仍提交旧 id。onChange 里 trim。库过滤和应用过滤各做一次。只 abort 不比较代际。把中文标签当主键。禁用项仍写入 selectedKey。宣称装上库就完成了读屏验收。
 
+复用时保留这些不变的约定：
+
+- 许可证按 Apache-2.0 记录，不要写成 MIT。
+- 受控属性保持 `selectedKey` 与 `inputValue`。
+- `defaultFilter={() => true}`，过滤在 `channel-policy`。
+- 组合期间提交直接返回；代际与 AbortController 一起清理。
+- 确认结果是频道 id，禁用项不能留下 key。
+
 ## 测试断言
 
 `tests/channel-policy.test.mts` 断言中文大小写过滤、禁用与名称不一致时 `confirmedChannel` 为 null、忙碌或查询未完成时 `queryRows` 为空。不证明 Popover、IME 候选框或屏幕阅读器。
@@ -27,6 +35,12 @@ div 按钮。半输入仍提交旧 id。onChange 里 trim。库过滤和应用�
 ## 真实限制
 
 已挂载：受控 ComboBox、本地过滤、禁用项、240ms 本地查询、组合期不提交。未挂载：Dialog、FieldError、revision、React Hook Form、Query。延迟不是 HTTP。
+
+复用检查：
+
+- 版本以该条目 `library.json` 为准，不跟研究稿里的 Vite 脚本或 workshop 目录。
+- 未挂载的生产模式留在 `guide.md`，不补进 `examples/`。
+- 不修改 `verification.json`。没有匹配 receipt 时 sdk、build、browser 保持 NOT_RUN。
 
 ## 证据
 

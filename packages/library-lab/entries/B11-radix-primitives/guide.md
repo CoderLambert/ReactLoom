@@ -169,6 +169,59 @@ Dialog 与菜单的焦点转交要实测：从菜单项打开对话框时，菜�
 | 关闭后焦点丢了 | 触发按钮是否已被卸载；需要回退目标。Lab 的触发器一直在 |
 | 读屏不知道菜单名字 | Content 是否有 aria-label |
 
+## 未挂载原语的生产写法
+
+当前锁文件只有 Dropdown Menu。下面的 Dialog 片段是迁移教学，**不要**加进 `example.tsx`，除非 `library.json` 增加对应包并重测。
+
+```tsx
+// 错：按钮套按钮
+<Dialog.Trigger><button type="button">打开</button></Dialog.Trigger>
+
+// 对：asChild 合并成一个按钮，子组件必须转发 ref 和 props
+<Dialog.Trigger asChild>
+  <button type="button">打开</button>
+</Dialog.Trigger>
+```
+
+```tsx
+// 错：AlertDialog.Action 一点就关，503 回来时框已经没了
+<AlertDialog.Action onClick={() => api.delete(id)}>删除</AlertDialog.Action>
+
+// 对：受控 open；请求成功才关闭；失败留在框内并保持焦点
+```
+
+对话框必须有 `Dialog.Title`。不想看见标题时用官方的视觉隐藏，不要 `display:none`，否则可访问名称一起消失。没有描述时按该版本文档处理 `aria-describedby`，不要留一个空描述让读屏读出空白。
+
+从菜单打开确认框时，菜单会关。若触发这条菜单的按钮已经随列表项卸载，关闭确认框前检查焦点目标 `isConnected`，否则回到仍在树上的工具栏按钮。Lab 的「更多操作」按钮一直挂着，所以没有这条回退；一旦删除改成异步并卸掉触发器，就要补上。
+
+Tooltip 只能补充，不能代替按钮名字或错误文案。`Tooltip.Provider` 的延迟是视觉策略，业务状态仍在 `feed-policy`。
+
+中文输入不在菜单内部。若旁边有搜索框，全局快捷键必须忽略 `isComposing` 和 keyCode 229，避免选词 Enter 把菜单打开。不要在 `onChange` 里 `trim` 正在组合的拼音。本文件没有搜索框。
+
+`forceMount` 可以让退出动画留着节点，但删除请求的 abort 不能等节点消失。Portal 仍在 React 树里，Context 还在；被 `overflow: hidden` 的祖先裁切时，把 Content 留在 Portal，而不是为了「好定位」关掉 Portal。
+
+类型检查要覆盖 `onSelect` 的事件对象是否仍有 `preventDefault`。升级 2.1.x 时回归：受控 `open`、子菜单两层 Portal、禁用项不触发删除、CheckboxItem 不会在一次勾选后把菜单关掉。
+
+组合 Query 时，`onSelect` 只发起 mutation。409 用服务端列表替换本地 `feeds`，不要在菜单回调里乐观删掉一行后又让过期响应当成成功。Lab 的 `deleteFeed` 是同步纯函数，没有乐观网络。
+
+## 键盘预期（库的职责，浏览器仍需看）
+
+打开：触发按钮 Enter 或 Space。菜单内：上下方向键移动高亮，Enter 选择，Esc 关闭并应回到触发器。子菜单：右方向或 Enter 进入「更多筛选」，左方向或 Esc 回到父菜单。typeahead 按标签文字跳转。这些是 Radix Dropdown Menu 的模型，Lab 没有自己的 keydown 实现。policy 测试不能代替这次浏览器观察。
+
+CheckboxItem 保持打开是为了连续改置顶。若升级后 `preventDefault` 不再阻止关闭，要先看 2.1.25 的事件顺序，而不是再包一层 `stopPropagation` 把键盘选择弄坏。
+
+RadioGroup 的值只有 `new` 和 `popular`。`onValueChange` 把其他字符串收成 `new`，避免把任意字符串写进排序状态。
+
+## 数据所有权
+
+`visibleFeeds` 不修改入参数组。置顶是 id 集合，不是把频道对象上的布尔写进排序比较时顺手 mutate。删除返回新数组；锁定时返回拷贝，调用方即使忘记看 `disabled` 也不会少一行。选中 id 在删除后改到另一条仍存在的频道，避免菜单标题停在已删除的名字上。
+
+重命名只改当前 id 的 `title`，不改 id。热度和更新时间是 fixture 字段，菜单不提供编辑它们的入口。若产品以后要改热度，那是另一条业务命令，不要塞进 RadioItem 的排序切换里。
+
+空筛选时频道按钮区有一句说明，菜单标签用「无频道」。此时查看详情和重命名应无效果：重命名的 `onSelect` 在没有 `selectedFeed` 时 return。删除项同时 `disabled`。
+
+typeahead 是库的能力：焦点在菜单内时按字符跳到匹配项。Lab 的 CSS 不阻止它。不要再写一套 keydown 去「优化」中文首字母，那会和库冲突，也会在 IME 下误触发。
+
 ## 验收
 
 basic：Enter/Space 打开，Esc 关闭，两项动作只改 status。business：置顶改变列表顺序且菜单可保持；排序单选改变 `heat` / `updated` 次序。advanced：未读筛选不会留下 0 未读；锁定时删除项不可用，策略函数也不删；显示全部能恢复。没有自制全局键盘监听。

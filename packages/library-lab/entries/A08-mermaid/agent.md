@@ -34,6 +34,14 @@ element.innerHTML = userDiagram; // 错：DSL 不是 HTML
 
 DSL 是源码常量，没有编辑器、防抖、HTTP 修订或 `accTitle`。时序图和状态图不会生成可执行流程。iframe 隔离也意味着父页面不能再查询内部 SVG。没有布局耗时数字。
 
+## 断言边界
+
+`tests/render-queue.test.mts` 用替身函数证明过期任务不提交。SDK 用例要 `import mermaid from 'mermaid'`，对合法 flowchart `parse` 再 `render`，对非法片段得到失败且不保留上一张 SVG。iframe 的 sandbox 属性应为空。缺收据时保持 NOT_RUN。`initialize` 只调用一次，配置对象不要展开远程 JSON。
+
 ## 证据
 
 Actions `41779873259` 的仓库级 install、typecheck、build、52 SDK 文件（153 测试）和 45 Playwright 不是 A08 PASS。不要把队列测试或历史研究 PASS 写入 `verification.json`。
+
+对照 `library.json` 的版本编写 import，不要升到条目未钉死的版本。
+`tests/` 中的策略用例不能改写成 sdk 字段的 PASS。
+浏览器与构建未留下收据时，对应字段维持 NOT_RUN。

@@ -141,6 +141,16 @@ apiRef.current?.updateScene({ elements: next });
 - [0.18.1 发布](https://github.com/excalidraw/excalidraw/releases/tag/v0.18.1)
 - [npm](https://www.npmjs.com/package/@excalidraw/excalidraw)
 
+## 导入拒绝与异步代数
+
+`sceneImportError` 的顺序是：扩展名、字节数、元素个数、每条 `element.link`、附件个数。任一失败都不会调用 `updateScene`。`loadFromBlob(file, null, null)` 先跑，再数元素和链接；恶意文件仍会经过 SDK 解析，所以前面的 1.5 MB 限制必须先做。解析完成时若 `operationId` 已经变了，或 `apiRef.current` 不再是发起时那个 API，结果丢弃。这覆盖重置、替换骨架和卸载三件事。
+
+`exportToBlob` 需要 elements、files 和 appState 一起走，否则图片引用会空。`maxWidthOrHeight: 2048` 限制长边。空白场景在调用前返回。Blob URL 进 `urlsRef`，2 秒后 revoke；卸载循环把剩下的都释放。不要在 `click` 同步路径里立刻 revoke，浏览器可能还没开始下载。
+
+字体：官方示例把 `dist/prod/fonts` 放到站点公共目录，并在加载 `@excalidraw/excalidraw` 之前赋值 `window.EXCALIDRAW_ASSET_PATH`。赋值太晚，运行时仍会请求 CDN。Lab 没有 postinstall 拷贝，文档必须把这件事写成部署步骤，而不是已完成的行为。CSP 的 font-src 按实际目录收紧，不要用通配符换一次能显示。
+
+`viewModeEnabled` 只锁编辑器交互。隐藏工具栏不等于隐藏数据：元素仍在内存里，导出按钮在只读时仍可下载 PNG。权限判断放在服务端。
+
 ## 证据
 
 sdk、build、browser 在 `docs/library-lab/evidence/runs/` 有本条目收据之前为 **NOT_RUN**。`scene-policy` 测试只证明扩展名、体积、元素数、链接和附件拒绝，不证明画布或 PNG。Actions run `41779873259` 是仓库级 install、typecheck、build、52 个 SDK 文件（153 个测试）和 45 个 Playwright，不是 A09 的 PASS，不要写入 `verification.json`。

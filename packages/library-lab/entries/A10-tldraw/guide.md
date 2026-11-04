@@ -147,6 +147,43 @@ editor.run(() => {
 - [v5.5.0](https://tldraw.dev/releases/v5.5.0)
 - [npm tldraw](https://www.npmjs.com/package/tldraw)
 
+## 快照、许可和监听范围
+
+`getSnapshot(editor.store)` 同时能取出 document 和 session。下载对象只放 `document`，并包一层 `{ kind, version, source }`。相机、选区留在会话里，换标签不应覆盖别人的视口。`serializeSnapshot` 用 `TextEncoder` 量 UTF-8 字节，超过 3 MB 就抛错，此时还没有 `createObjectURL`。
+
+```ts
+const snapshot = getSnapshot(editor.store);
+downloadJson({
+  kind: 'tldraw-demo-document',
+  version: 1,
+  document: snapshot.document,
+}, 'rss-board.tldraw.json', urls, timers);
+```
+
+`store.listen` 的回调在文档每次变化时运行，包括拖动产生的中间记录。Lab 用数量比较挡住 `setCount`。若改成自动保存，还要 `source: 'user'`，否则远端补丁和程序化 `createShape` 会把保存队列打满。退订函数来自 `onMount` 的返回值，不要再挂一个没有 cleanup 的 `useEffect` 去听同一个 store。
+
+许可门：`canMount` 为假时渲染说明，不渲染 `<Tldraw>`。`licenseKey` 只从 `import.meta.env.VITE_TLDRAW_LICENSE_KEY` 读取。localhost、127.0.0.1 和 `::1` 允许开发预览。不要在源码里写试用 key，也不要检测 `hostname` 之后改写成生产主机。水印是许可的一部分。
+
+`editor.run` 把四个流程节点收成一步撤销。超过 80 个形状时 `createFlow` 直接返回，不部分创建。批量按钮先算剩余容量，再循环 `createShape`，最后 `zoomToFit`。手绘工具不读这个上限，文案必须写明，否则用户会以为画布坏了。
+
+图片导出仍用 `editor.toImage`，格式和 `pixelRatio` 单独限制，空 id 列表要提前返回。Lab 没有这个按钮。PNG 不能代替上面的 JSON。
+
+`toRichText` 是 5.x 的文本载荷，不要再把纯字符串塞进已删除的 `props.text` 字段。`createShapeId()` 每次新建，避免重置时撞上还在 store 里的 id。只读状态下 `createFlow` 和批量按钮在入口就返回；下载快照仍然允许，因为读不是写。服务端若把「前端只读」当成权限，任何人仍可直接调用写接口。
+
+刷新后图形消失是预期：没有 `persistenceKey`。产品要保留草稿时，按 `文档 id` 分 key，或只把 document 快照交给自己的存储，不要两套同时当权威。IndexedDB 的容量和清理策略要写进同一份设计，而不是等用户报「换了浏览器就没了」再补。
+
+`zoomToFit` 会移动相机。减少动态偏好下，产品应提供「不动画」的等价操作，或在调用前查询媒体条件。Lab 的按钮没有这一查询。批量创建用 `editor.run` 包住循环，撤销一次即可去掉整批，而不是一次撤销一个矩形。
+
+80 这个上限只约束程序化按钮。用户用工具栏画第 81 个形状时应当成功，状态文案不能把它说成画布已满。下载前的 3 MB 检查看的是序列化后的 UTF-8，不是形状个数。很多小几何和一个大图片资源，字节数会差一个数量级。Lab 的导出不含图片资源，因为没有 `addImage` 路径。
+
+形状颜色使用 SDK 的命名色，例如 `blue`、`green`，不要写任意 CSS 变量进 `props.color` 除非该版本的类型允许。`geo: 'rectangle'` 配合 `w` 和 `h`。页面坐标从左上角起算，和屏幕 `clientX` 差一个相机变换。自定义落点仍应调用 `screenToPage`。
+
+监听回调里比较的是形状数量。若以后显示侧栏列表，不要在 listen 里 `setState` 整份形状数组。派生列表可以节流，或只在文档 scope 且 source 为 user 时标记脏，再由按钮刷新。卸载时退订，否则已卸载组件仍会 setState。
+
+许可 key 只从环境变量读取。
+本机回环地址可以挂载开发预览。
+其它主机没有 key 时不创建 Editor。
+
 ## 证据
 
 sdk、build、browser 在 `docs/library-lab/evidence/runs/` 有本条目收据之前为 **NOT_RUN**。`serializeSnapshot` 只证明 JSON 字节上限。Actions run `41779873259` 是仓库级 install、typecheck、build、52 个 SDK 文件（153 个测试）和 45 个 Playwright，不是 A10 的 PASS，不要写入 `verification.json`。研究稿的 HTTP 契约测试也不是本仓库的 SDK 验收。

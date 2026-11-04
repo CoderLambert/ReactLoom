@@ -1,25 +1,46 @@
-# A17 deck.gl — Agent 工程迁移指南
+# A17 deck.gl — 工程手册
 
-**适用任务**：无底图的GPU地理点图层，交互拾取、数据增量更新与Deck.finalize。
+## 适用
 
-**选型边界和目标版本**：@deck.gl/core@9.4.0、@deck.gl/layers@9.4.0。适合大量空间点、轨迹、热点图层；不适合少数简单三维模型或需要自定义场景图材质的3D产品。代码采用 `@deck.gl/core` + `@deck.gl/layers` 9.4.0 同版本；不同版本子包不能混装。
+`@deck.gl/core@9.4.0` 与 `@deck.gl/layers@9.4.0` 用命令式 Deck 画像素半径的散点。底图和街道不在本示例里。不要同时引入 `<DeckGL>` 再 `new Deck`。与 MapLibre 叠加时相机只能有一个所有者，且该路径当前没有挂载。
 
-**可迁移核心**：单个Deck实例、parent局部容器、ScatterplotLayer数据和id、setProps更新、getTooltip拾取、ResizeObserver测量、deck.finalize释放。不要直接new全局Deck也不要将地理点包误说成地图底图。静态数据坐标是经纬度顺序[longitude,latitude]。
+## 版本
 
-**安全与许可**：本例没有瓦片URL或第三方地理API；若加入底图必须另审Token隐私、速率、License及归属。WebGL2失败显示HTML可访问表；1200点样本不是性能标杆。
+钉 core 与 layers 9.4.0。图层 id 为 `library-sites`。`getPosition` 使用 `[longitude, latitude]`。`radiusUnits: 'pixels'`。生产保持 WebGL2；WebGPU 另做试验。未依赖 `@deck.gl/react` 或 `@deck.gl/maplibre`。
 
-**验收**：执行真实包导入，筛选后点数变化，Canvas仅一个，切换Tab资源销毁，WebGL2禁用可降级，点Tooltip与键盘表选择产生一致业务状态。
+## 迁移
 
-**唯一源码入口**：`packages/library-lab/entries/A17-deckgl/examples/example.tsx`，`examples/demo.tsx` 是 Library Lab 的动态加载适配出口。先读 library.json 与 verification.json；不可将三种演示选择误算成三个独立产物。
+从 React 包装迁到独立 Deck 时，卸载改为 `finalize`。从米制半径迁到像素半径后重新检查缩放。随机 id 改成稳定 id。选中色若进入 accessor，补 `updateTriggers`。接 MapLibre 时去掉 Deck 的 `controller`，只在 `load` 之后添加一次 overlay。
 
-**迁移时保留的工程合同**：明确资源所有者、异常/空环境回退、卸载清理、异步任务失效与无障碍替代。仅复制目标项目需要的最小实现，不能照搬 Lab 的假业务字段和本地 fixture。
+## 不可删的清理
 
-**资源探测注意**：`getContext('webgl2')` 会实际分配一个 GPU 上下文，探测成功后通过 `WEBGL_lose_context` 释放独立探测画布，避免与 Deck 本体叠加占用；异步渲染错误在 finalize 后不得再更新组件状态。
+探测用的 WebGL2 上下文在创建 Deck 前 `loseContext`。cleanup 断开 ResizeObserver、取消 rAF、`deck.finalize()`。非正尺寸不 `setProps`，边长不超过 4096。tooltip 返回纯字符串或 null。
 
-**必须验证**：真实目标SDK import、React19类型检查、生产构建、浏览器设备适配、快速反复挂载/切Tab无事件/GPU资源泄漏；特殊设备能力缺失时使用数据表退化展示。PASS需当前源码指纹、命令及日志证据，否则为NOT_RUN。
+## 反例
 
-**官方参考**：[deck.gl standalone入门](https://deck.gl/docs/get-started/using-standalone) · [Deck parent与finalize API](https://deck.gl/docs/api-reference/core/deck) · [ScatterplotLayer属性](https://deck.gl/docs/api-reference/layers/scatterplot-layer)。
+```tsx
+return () => { node.hidden = true; }; // 错：上下文还在
+deck.finalize(); // 对
+```
 
-## wave14 边界策略
+`[latitude, longitude]`、原地修改同一 data 引用、高密度却只提供 12 行还声称全量可访问，都不要做。
 
-`examples/deck-size.ts` 是新迁移依赖：ResizeObserver 只将有效、改变后的可见容器尺寸送入 `Deck.setProps`；过滤/交互用 `Location.id`，不要以名称做不稳定身份键。仍须实际 GPU/Chromium 验证隐显切换、resize 去重、picked 过滤、finalize 后 RAF 不更新和硬件资源回收。尺寸规则单测不是官方 SDK PASS。
+## 测试断言
+
+`measuredDeckSize` 拒绝 0 和非有限值，并封顶 4096。`needsDeckResize` 在任一边变化时为真。SDK 收据还要看到真实 `Deck`、`ScatterplotLayer`、`setProps` 和 `finalize`。没有 runs 收据则为 NOT_RUN。
+
+## 真实限制
+
+没有底图、overlay、分页和网络取消。表格固定前 12 行，1200 点时其余点只在 GPU 层。picking 在高密度下仍然开启。极地投影没有样本。没有显存或 FPS 数字。`controller: true` 只适用于这块独立画布。
+
+## 断言边界
+
+`tests/deck-size.test.mts` 只夹尺寸。SDK 用例要 `import { Deck } from '@deck.gl/core'` 和 `ScatterplotLayer`，断言 layer id 稳定、`setProps` 不新增 Deck、卸载调用 `finalize`。探测上下文应先 lose。缺收据时保持 NOT_RUN。卸载调用 `finalize`。表格只有前 12 行，不能把它写成全量分页。半径单位是像素，不是米。
+
+## 证据
+
+Actions `41779873259` 的仓库级 install、typecheck、build、52 SDK 文件（153 测试）和 45 Playwright 不是 A17 PASS。不要把尺寸测试或历史研究 PASS 写入 `verification.json`。
+
+对照 `library.json` 的版本编写 import，不要升到条目未钉死的版本。
+`tests/` 中的策略用例不能改写成 sdk 字段的 PASS。
+浏览器与构建未留下收据时，对应字段维持 NOT_RUN。

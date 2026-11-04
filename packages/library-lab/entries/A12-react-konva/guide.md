@@ -142,6 +142,12 @@ onDragEnd={(event) => {
 - [响应式画布](https://konvajs.org/docs/posts/responsive-canvas.html)
 - [npm react-konva](https://www.npmjs.com/package/react-konva)
 
+## 世界坐标夹取
+
+`clampNodePosition` 把非有限数收成 0，再把 x 限制在 `0 .. 620-132`，y 限制在 `0 .. 260-52`，并四舍五入。`onDragMove` 与 `onDragEnd` 都调用它，所以拖出边界时节点停在内缘，松手后的 state 与实例一致。只在 `onDragEnd` 夹取的话，拖动预览仍会画出世界之外。
+
+`newNodePosition` 按 4 列、3 行铺开，再走同一套夹取。第 24 个节点不会被 `canAddNode` 放行。删除时用剩余节点的 id 更新选中，避免选中指向已经不在数组里的 key。背景 Layer 的折线用相邻节点中心附近的点，不读取 Konva 的临时拖拽坐标；拖动过程中线要等 state 更新才跟上，这是声明式数据流，不是端口约束。
+
 ## 证据
 
 sdk、build、browser 在 `docs/library-lab/evidence/runs/` 有本条目收据之前为 **NOT_RUN**。`stage-policy` 只证明缩放、夹取和 24 节点上限。Actions run `41779873259` 是仓库级 install、typecheck、build、52 个 SDK 文件（153 个测试）和 45 个 Playwright，不是 A12 的 PASS，不要写入 `verification.json`。

@@ -20,6 +20,14 @@ Lab 固定 `@rive-app/react-webgl2@4.37.0`，React 19.3.0。运行时 MIT。`.ri
 
 把 `cdn.rive.app` 的 `vehicles.riv` 下载进仓库。用动画帧决定审核成功。容器高度为 0。每行一个 WebGL context。包装器 cleanup 里双重 `cleanup()`。渲染期 `new Rive()`。把不存在的 `approved` 状态机写进官方样本。
 
+复用时保留这些不变的约定：
+
+- `src` 保持 `cdn.rive.app` 上的官方样本，不把 `.riv` 提交进仓库。
+- 单数 `stateMachine="bumpy"`，`useOffscreenRenderer: true`。
+- 隐藏页卸载子组件，不在包装器里 `rive.cleanup()`。
+- 审核 generation 与 AbortController 一起作废旧结果。
+- View Model 和 `enableGPUCanvas` 未挂载；运行时 MIT 不覆盖素材。
+
 ## 测试断言
 
 `tests/runtime-policy.test.mts` 断言 mount 与 play 分离：隐藏页两者都假；视口外不挂载；减少动画和手动暂停挂载但不播；business 仅 pending 播放。不证明 WebGL、WASM 或 CDN 字节。
@@ -27,6 +35,12 @@ Lab 固定 `@rive-app/react-webgl2@4.37.0`，React 19.3.0。运行时 MIT。`.ri
 ## 真实限制
 
 已挂载：远程官方 URL、`bumpy`、离屏渲染器、本地可取消审核、视口观察器。未挂载：View Model、自有 `.riv`、GPU Canvas、焦点文本输入。离线打不开 CDN 是预期阻断。不要提交 `.riv` 来绕过它。
+
+复用检查：
+
+- 版本以该条目 `library.json` 为准，不跟研究稿里的 Vite 脚本或 workshop 目录。
+- 未挂载的生产模式留在 `guide.md`，不补进 `examples/`。
+- 不修改 `verification.json`。没有匹配 receipt 时 sdk、build、browser 保持 NOT_RUN。
 
 ## 证据
 

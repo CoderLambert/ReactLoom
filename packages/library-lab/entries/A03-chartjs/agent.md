@@ -34,6 +34,14 @@ if (canvasRef.current) new Chart(canvasRef.current, { type: 'bar', data });
 
 当前 demo 没有第二条 series、decimation、PNG、CSV、HTTP 取消或 `prefers-reduced-motion`。`animation: false` 是写死的。Chart.js 自己处理响应式，不要再叠无界 ResizeObserver。没有本地 FPS 数字。
 
+## 断言边界
+
+`tests/chart-stream-policy.test.mts` 只覆盖 revision 夹取和采样门闩。SDK 用例必须 `import` `chart.js` 的 `Chart`，在临时 canvas 上构造柱和线，调用 `update('none')` 与 `destroy`。浏览器路径要点表格按钮并看到 `setActiveElements` 的同一下标。收据要写明命令、退出码和源码指纹。缺收据时保持 NOT_RUN。类型切换必须先 destroy 再构造，避免 canvas already in use。
+
 ## 证据
 
 仓库级 Actions `41779873259`（install、typecheck、build、52 个 SDK 文件 / 153 测试、45 个 Playwright）不是本条目 PASS。不要把策略测试或历史研究 PASS 写入 `verification.json`。
+
+对照 `library.json` 的版本编写 import，不要升到条目未钉死的版本。
+`tests/` 中的策略用例不能改写成 sdk 字段的 PASS。
+浏览器与构建未留下收据时，对应字段维持 NOT_RUN。

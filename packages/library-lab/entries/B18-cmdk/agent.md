@@ -1,36 +1,47 @@
-# B18 cmdk — Agent 复用决策
+# B18 cmdk
 
-目标：在 React 仪表盘中复用可访问命令选择/搜索。它不负责授权、复杂模糊排序、全局热键冲突仲裁或执行后端 API。
+## 适用
 
-## 最小迁移
+少量命令的键盘过滤和分组用 `cmdk`。它不鉴权、不虚拟滚动、不是搜索服务。危险动作必须在数据层再拒绝。React Native 与 Server Component 不在范围内。
 
-读取 library.json、examples/example.tsx、guide.md 和 verification.json。安装 cmdk 1.1.1；将 actions 换成经过权限过滤的业务动作；将 select(action) 接入具体应用服务，但保留每项的稳定 value、key、disabled 和状态反馈。examples/demo.tsx 只导出示例，不是业务逻辑。
+## 版本
 
-## 强制保留
+`cmdk@1.1.1`，React 19.3.0。许可证 MIT。`Command.List` 必填。`Command.Dialog` 才带门户。1.1.1 的输入法修复不能代替应用自己的快捷键判断。
 
-- v1 Command.List 包裹 Command.Item/Group。
-- 热键 effect cleanup；跳过 input/textarea/contentEditable 的快捷键抢占。
-- IME 合成期间不允许 Enter 提交命令。
-- 关闭后焦点应回到触发器，Escape 关闭，必须有按钮替代快捷键。
-- 业务权限服务端验证而非仅 UI disabled。
-- 大规模自定义搜索需要 shouldFilter=false，避免 cmdk 默认再次筛选。
+## 迁移
 
-## 反模式
+1.0 的 value 大小写和 aria 属性变化要回归。不要把查询 state 写进 Item 的 value。远程结果使用 `shouldFilter={false}`，当前示例没有这条路径。
 
-document 永久绑定 Ctrl+K、不同命令使用相同 value、模糊搜索结果改变实际 Action ID、危险操作只靠 aria-disabled、命令实现中调用未授权后台接口。
+## 不可删的清理
 
-## 测试清单
+advanced 的 document 监听必须卸载。`shouldTogglePalette` 在未打开时放过可编辑焦点，并拒绝组合键与 keyCode 229。Enter 抑制保持到组合提交后的 keyup。禁用删除在 UI 和 `select` 里各挡一次。切换 level 重置文章和打开状态。关闭对话框后焦点回到触发按钮。
 
-实际 SDK import + TS build + Chromium 键盘/IME（中文组词）、Tab 焦点、Escape、disabled 与卸载监听计数。React StrictMode 重挂载后 Ctrl+K 只触发一次。当前 SDK/build/browser NOT_RUN，不得冒充通过。
+## 反例
 
-官方参考 https://github.com/pacocoursey/cmdk
+没有 List。全局 Ctrl+K 抢输入框。组字 Enter 执行命令。onSelect 直接删除。把面板当成唯一业务记录。一次渲染两千个 Item。不清理监听。
 
-## 必须迁移的键盘守卫
+复用时保留这些不变的约定：
 
-`examples/example.tsx` 依赖 `examples/keyboard-policy.ts`；快捷键只在本 Demo 生命周期中注册。关闭面板时不拦截其他编辑器 Ctrl/Cmd+K；打开后允许同快捷键关闭。IME candidate 的 compositionend → keydown Enter → keyup Enter 期间，必须抑制“确认候选”被 cmdk 误识别为提交命令。Node纯函数测试不能替代真实操作系统中文输入法E2E。
+- `Command.List` 必填；查询 state 不是 Item value。
+- Ctrl/Cmd+K 的监听在卸载时移除。
+- 可编辑焦点且面板未打开时不抢快捷键。
+- keyCode 229 与组合结束前的 Enter 不执行命令。
+- 删除命令 disabled，处理函数再拒绝一次。
 
+## 测试断言
 
-## wave19 真实动作逻辑
+`keyboard-policy.test.mts` 断言何时切换面板、何时吃掉 Enter。`command-state.test.mts` 断言稍后阅读切换、已读单向、引用和刷新计数。不证明对话框焦点或 IME 候选窗。
 
-迁移时一起复制 `examples/command-state.ts`。业务语义现在在本地 reducer 中实际落地，不是只改 lastAction 提示。将其换成生产授权服务时需要重新实现服务端鉴权与异步错误；当前“模拟刷新”不访问网络、“生成本地引用”不调用剪贴板。禁用动作不得通过命令执行通道绕过。
+## 真实限制
 
+已挂载：内联菜单、分组、关键词、禁用项、本地文章、Ctrl/Cmd+K 对话框。未挂载：远程过滤、Loading、虚拟列表、剪贴板、嵌套页面。
+
+复用检查：
+
+- 版本以该条目 `library.json` 为准，不跟研究稿里的 Vite 脚本或 workshop 目录。
+- 未挂载的生产模式留在 `guide.md`，不补进 `examples/`。
+- 不修改 `verification.json`。没有匹配 receipt 时 sdk、build、browser 保持 NOT_RUN。
+
+## 证据
+
+sdk、build、browser 为 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有匹配 receipt。Actions run `41779873259` 是仓库级检查，不是本条目 PASS。文档：https://github.com/dip/cmdk

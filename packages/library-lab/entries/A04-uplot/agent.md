@@ -35,6 +35,14 @@ render 中构造、缺测填 0、`posToVal(event.clientX)`、用抽样列做账�
 
 窗口上限 100，推流 650ms，没有 HTTP、`setSeries`、`setScale` 策略、坐标往返或 PNG。`setData(data)` 会重置视窗。没有 FPS 或内存数字。减少动态默认停表，勾选覆盖才继续。
 
+## 断言边界
+
+`tests/stream-policy.test.mts` 只判断何时允许 interval。SDK 用例要 `import uPlot from 'uplot'`，用含 `null` 的 `AlignedData` 构造，再 `setData` 与 `destroy`。确认 X 为秒且 `time: true`。不要用假对象代替 `uPlot.AlignedData` 让测试变绿。缺 `docs/library-lab/evidence/runs/` 收据时保持 NOT_RUN。`setData` 省略第二参会重置视窗，测试若要保留缩放须显式传 false。
+
 ## 证据
 
 Actions `41779873259` 的仓库级 install、typecheck、build、52 SDK 文件（153 测试）和 45 Playwright 不是本条目 PASS。策略测试和历史研究 PASS 不能写入 `verification.json`。
+
+对照 `library.json` 的版本编写 import，不要升到条目未钉死的版本。
+`tests/` 中的策略用例不能改写成 sdk 字段的 PASS。
+浏览器与构建未留下收据时，对应字段维持 NOT_RUN。

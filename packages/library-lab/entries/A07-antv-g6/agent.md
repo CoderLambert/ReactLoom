@@ -33,6 +33,14 @@ if (host.current) new Graph({ container: host.current, data }); // 错：在 ren
 
 没有 dagre、节点拖拽、点击事件、PNG、HTTP 修订。节点数是 3 或 4。列表是文本等价物，不是画布命中。没有 FPS 或 GPU 数字。`labelText` 与列表文案必须来自同一次 `dataset()`。
 
+## 断言边界
+
+`tests/graph-sizing.test.mts` 只夹宽度。SDK 用例要 `import { Graph } from '@antv/g6'`，等待 `render()`，在 `destroy()` 之后不再 `setSize`。勾选审校若仍走重建，测试应看到旧实例已销毁。缺收据时保持 NOT_RUN。数据更新优先 `setData` 加 `render`，不要把 Lab 的整实例重建当成唯一写法。颜色变化用 `draw`。
+
 ## 证据
 
 Actions `41779873259` 的仓库级 install、typecheck、build、52 SDK 文件（153 测试）和 45 Playwright 不是 A07 PASS。不要把宽度测试或历史研究 PASS 写入 `verification.json`。
+
+对照 `library.json` 的版本编写 import，不要升到条目未钉死的版本。
+`tests/` 中的策略用例不能改写成 sdk 字段的 PASS。
+浏览器与构建未留下收据时，对应字段维持 NOT_RUN。

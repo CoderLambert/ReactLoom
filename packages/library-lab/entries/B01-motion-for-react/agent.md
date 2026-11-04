@@ -20,6 +20,14 @@ Lab 固定 `motion@14.6.0`，宿主 React 19.3.0。入口只写 `motion/react`�
 
 条件渲染包住整个 `AnimatePresence`，exit 不会播。`key={index}` 在 `moveFirstToEnd` 后张冠李戴。`onAnimationComplete` 里才归档。`motion.div onClick` 冒充按钮。多行列表用 `mode="wait"`。滚动监听里每帧 `setState`。与 Embla 或 dnd-kit 同时改同一节点的 transform。
 
+复用时保留这些不变的约定：
+
+- 业务数组和动画目标分开，归档函数返回新数组。
+- `initial={false}` 避免首屏补播入场。
+- 满 12 条时添加按钮 disabled，而不是在动画结束时再拒绝。
+- 与 B19、B13 同屏时，不要共写一个 DOM 的 transform。
+- 未挂载的 Reorder 和 useScroll 只写在指南里，不补进 example 冒充已实现。
+
 ## 测试断言
 
 `tests/card-policy.test.mts` 断言：追加不改原数组；重复 id 被拒绝；满 12 条不再增长；归档只删目标 id；`moveFirstToEnd` 把首项移到末尾且空列表安全。这些断言不覆盖真实 `motion` 导入、exit 时长或读屏。
@@ -27,6 +35,12 @@ Lab 固定 `motion@14.6.0`，宿主 React 19.3.0。入口只写 `motion/react`�
 ## 真实限制
 
 已挂载：提示卡片 presence、任务列表 layout、减少动画、持焦归档后的焦点恢复、第一项移到末尾。未挂载：Reorder、滚动 MotionValue、`layoutId` 筛选条、`popLayout`、搜索筛选。不要把未挂载模式写进示例冒充已实现。
+
+复用检查：
+
+- 版本以该条目 `library.json` 为准，不跟研究稿里的 Vite 脚本或 workshop 目录。
+- 未挂载的生产模式留在 `guide.md`，不补进 `examples/`。
+- 不修改 `verification.json`。没有匹配 receipt 时 sdk、build、browser 保持 NOT_RUN。
 
 ## 证据
 

@@ -168,6 +168,58 @@ WASM 解码、每帧渲染和 context 数量都要在目标设备上测。本文
 
 练习 C：为「新请求覆盖旧请求」补测试，取消后的失败不能回写。Lab 的 generation 已经是这个形状，浏览器侧仍要看按钮连点。
 
+## 更多失败模式
+
+容器有宽高仍可能空白：`stateMachine` 拼写成复数属性、WASM 被 CSP 拦住、或 `enableGPUCanvas` 与当前的 `useOffscreenRenderer: true` 同时打开。Lab 没有打开 GPU Canvas。排查顺序是网络面板里的 `.riv` 状态码、控制台里的 `onLoadError` 文案、然后才是 WebGL2 能力。不要把空白当成「文件不存在」后去把官方样本提交进 git。
+
+`onRiveReady` 适合在第一帧之前写入隐私或金额。那些值如果先显示成设计器默认值再跳变，用户会看到错误数字。没有自有文件时不要调用这个回调来「预热」`vehicles.riv`，因为公开样本没有对应的 View Model 属性。
+
+命令式路径只作为对照，当前组件树不要混进去：
+
+```tsx
+useEffect(() => {
+  const rive = new Rive({src: RIVE_SAMPLE_URL, canvas, autoplay: false});
+  return () => rive.cleanup();
+}, []);
+```
+
+这段与 `useRive` 二选一。包装器已经拥有实例时再 `cleanup()` 会双重释放。Lab 选择钩子，所以播放器卸载是唯一释放点。
+
+多个画布默认共享离屏渲染器，是为了少申请 WebGL context。这不是「一百个实例已经测过」的结论。表格行里应放静态图，需要时再挂一个 `RivePlayer`。隐藏页策略是卸载整棵子树，后台标签不应继续 `requestAnimationFrame`。
+
+中文输入即使运行时开始提供 Text Input，表单仍用原生 `<input>`。`compositionupdate` 期间不要把拼音写进 View Model 当作已提交文案。Lab 的审核按钮没有文本字段。
+
+CSP 上，WASM 可能要求脚本策略允许 `wasm-unsafe-eval`，`connect-src` 只加入 `https://cdn.rive.app` 这一条，而不是任意主机。自有文件改成同源后，把 CDN 从允许列表删掉。用户输入不能拼进 `src`。
+
+Editor 的免费档可以创作，但把 `.riv` 导出到产品里通常要当期付费计划。价格以 https://rive.app/pricing 当时页面为准，不要把某次博客里的月费写死成永久报价。运行时不收 royalty，也不因此获得官方 `vehicles.riv` 的再分发权。
+
+TanStack Query 组合时，`query.isPending` 可以驱动 `play`，但 `query.data.status` 的文字必须渲染在 `<output>` 里。示意资源 `/authorized/review.riv` 不在仓库中。React Aria 的 Dialog 关闭时卸载 `RivePlayer`，焦点回到触发按钮，Canvas 不要留在 Tab 顺序里。
+
+## 播放策略对照
+
+`riveRuntimePolicy` 把「要不要挂载」和「要不要 play」拆开。对照表如下，和测试一致：
+
+| 条件 | mount | play |
+| --- | --- | --- |
+| basic，页面可见，未减少动画，未手动暂停 | 是 | 是 |
+| 页面隐藏 | 否 | 否 |
+| advanced 且不在视口 | 否 | 否 |
+| 减少动画或手动暂停 | 是（若页面可见且在视口策略内） | 否 |
+| business 且 phase 不是 pending | 是 | 否 |
+| business 且 pending，其余允许 | 是 | 是 |
+
+策略返回 play 只表示调用 `rive.play()`。CDN 或 WASM 失败时画布可以是空的，status 必须解释原因。不要把 `play: true` 写成「用户已经看见车辆动画」。
+
+业务 phase 的合法迁移只有：idle → pending → success 或 error，以及 pending → idle（取消）。success 不会因为动画停了变回 idle。切换 level 的 effect 把 phase 打回 idle 并 abort，所以从 business 切到 basic 时，不应再弹出上一次的 503 文案。
+
+## 资源与离线阻断
+
+`examples/asset.ts` 把 URL 和状态机名字分成两个常量，播放器只引用常量。换自有文件时改这两个常量，并保证状态机名字在新文件里真实存在。不要复制 `vehicles.riv` 到 `examples/` 或 `public/` 再改 URL 为相对路径。那样做会把官方二进制放进版本库。
+
+离线时 `onLoadError` 走文案分支，按钮和 `role="status"` 仍在。advanced 若同时在视口外，组件根本不挂载，失败回调也不应再 `setMessage`。`alive` ref 就是为了这条竞态。本地审核的 503 与资源加载失败是两句不同的话，不要合并成一个「失败」。
+
+发布自有文件的最小清单：导出权、内容哈希、artboard 名、状态机名、View Model 属性类型和范围、CSP 主机、404 时的 HTML 兜底。缺任何一项就不要把播放器当成业务成功的证据。
+
 ## 验收
 
 basic：手动暂停后策略为挂载但不播放；恢复后在减少动画关闭且页面可见时请求播放。business：503 勾选只影响下一次本地任务；取消后 status 说明旧任务不得回写。advanced：视口外和后台都是未挂载。CDN 失败时三段文字都还在。

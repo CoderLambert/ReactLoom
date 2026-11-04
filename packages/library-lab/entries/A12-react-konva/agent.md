@@ -34,6 +34,14 @@ useEffect(() => { new Konva.Stage({ container: host.current!, width: 100, height
 
 没有 Transformer、PNG、IME 输入、HTTP 修订或大量裁剪。背景层 `listening={false}`。错误边界必须放在 Stage 内部才覆盖画布子树，本示例没有这种边界。没有内存测量。
 
+## 断言边界
+
+`tests/stage-policy.test.mts` 覆盖缩放、夹取和 24 节点。SDK 用例要 `import { Stage, Layer, Group } from 'react-konva'`，拖拽结束写入夹取后的世界坐标，卸载后不再留下第二块命令式 canvas。缺收据时保持 NOT_RUN。世界坐标保持 620×260，显示缩放只改 Stage 的尺寸和 scale。不要再 `new Konva.Stage`。
+
 ## 证据
 
 Actions `41779873259` 的仓库级 install、typecheck、build、52 SDK 文件（153 测试）和 45 Playwright 不是 A12 PASS。不要把坐标测试或历史研究 PASS 写入 `verification.json`。
+
+对照 `library.json` 的版本编写 import，不要升到条目未钉死的版本。
+`tests/` 中的策略用例不能改写成 sdk 字段的 PASS。
+浏览器与构建未留下收据时，对应字段维持 NOT_RUN。

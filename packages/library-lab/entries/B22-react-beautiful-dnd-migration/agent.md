@@ -1,26 +1,47 @@
-# B22 react-beautiful-dnd（历史迁移） — Agent 迁移卡
+# B22 react-beautiful-dnd 迁移
 
-**典型任务**：把废弃react-beautiful-dnd的Droppable/Draggable列表低风险迁移为React19兼容替代库。当前参考依赖：@hello-pangea/dnd@18.0.1。
+## 适用
 
-**定位** 旧react-beautiful-dnd迁移。当前实际运行替代包`@hello-pangea/dnd@18.0.1`（Apache-2.0，支持React19）；**不是**历史SDK本身已在React19运行通过。
+已有 `DragDropContext` / `Droppable` / `Draggable` 列表、需要在 React 19 上继续跑时，使用 `@hello-pangea/dnd`。不要新装归档的 `react-beautiful-dnd`。自由画布和多类型拖放评估 B14 或 B13。原库与 fork 都是 Apache-2.0。
 
-**最小改动映射**：依赖名与import从react-beautiful-dnd改为@hello-pangea/dnd，保留DragDropContext/Droppable/Draggable、onDragEnd、provided.innerRef、draggableProps、dragHandleProps、placeholder。别把旧历史源码混进现代主Bundle。
+## 版本
 
-**数据所有权**：React items state为单一源，业务id稳定；onDragEnd只接受目标存在、索引合法且权限可移动的操作，排序持久化应异步处理冲突与回滚。拖动输入之外必须有键盘操作路径，StrictMode与SSR相关行为重新验证。
+`@hello-pangea/dnd@18.0.1`，React 19.3.0。许可证 **Apache-2.0**。旧 13.1.1 的 peer 不到 React 19。不要 `--legacy-peer-deps` 把旧包装进来。不要调用已从 fork 18 文档移除的 `resetServerContext` 来推断 SSR。
 
-**反例**：用index作为ID、忘记provided.placeholder、onDragUpdate连发写后端、只换import就承诺React19通过、dragHandle放在整行导致输入冲突、没有定位目标Drop范围。
+## 迁移
 
-**测试**：Space→Arrow→Space、Escape取消、触摸拖动、固定项、删除中途、撤销、重新排序后的id不变、并发提交409回滚。SDK和浏览器未实测标NOT_RUN。
+先改导入，再核对 placeholder、`draggableProps.style`、稳定 `draggableId`、context 不嵌套。index 写入必须经 `isFreshDrop`。键盘路径与拖放走同一个 reducer。跨列和 HTTP 修订不是当前文件已实现的部分。
 
-**可信边界**：`examples/example.tsx` 是真实示例源码，`examples/demo.tsx` 只负责重导出；`library.json` 是元数据，`verification.json` 的 NOT_RUN 不能自动升级为PASS。执行目标仓库的具体类型、构建、SDK、浏览器验证并记录证据后才能复用。
+## 不可删的清理
 
-**迁移流程**：先读条目用途和版本→判断业务状态与React/UI元素所有权→提取最小代码→接入目标项目的依赖/许可证/样式→测试触摸、键盘、IME、快速重挂载和异常回滚→记录源码指纹。不要把演示输入或未经验证的安装版本视为生产承诺。
+`DragDropContext` 随 level 重挂。layout effect 清掉进行中的快照。没有 destination 不写顺序。固定项 `isDragDisabled` 且 `canReorderAroundPinned` 再拒绝。手柄独占 `dragHandleProps`。撤销和重置让 revision 增加，使旧 drop 失效。basic 的隐藏项留在数组后面。
 
-官方：[Hello Pangea DnD](https://github.com/hello-pangea/dnd) / [v18 React19发布](https://github.com/hello-pangea/dnd/releases/tag/v18.0.0) / [历史react-beautiful-dnd](https://github.com/atlassian/react-beautiful-dnd)。
+## 反例
 
-## 固定槽位回归合同
-固定项不仅自己不能拖，也不能被其他项目跨越后挤走。必须在业务 reorder/onDragEnd/onDrop 的最终提交处检查 `canReorderAroundPinned(items, from, to)`；不可只禁用 handle 或仅检查 source/target。拖拽与键盘上下按钮调用同一业务约束，按钮用它计算 disabled。
-提取 `examples/pinned-order.ts` 与单测 `tests/pinned-order.test.mjs`。检查双向跨越、索引边界、非固定段内操作与撤销；真实 SDK/browser 仍须单独验收。旧验证证据应随源码指纹变化降级为 NOT_RUN。
+安装 `react-beautiful-dnd`。`draggableId={String(index)}`。原地 splice。取消也保存。丢掉 placeholder 或 style。整行都是手柄。用开始拖动时的 index 覆盖撤销后的数组。把本地 revision 说成已测的 If-Match。写成 MIT。
 
+复用时保留这些不变的约定：
 
-**wave20追加**：迁移时必须一并复制`examples/pinned-order.ts`中的`reduceOrder`和`isFreshDrop`。所有键盘/拖动入口应以同一Reducer更新状态，拖动开始记录revision、level和业务id顺序，结束时拒绝失效Drop；撤销/重置立刻废止当前拖动。规则测试见`tests/order-history.test.mts`，真实SDK/浏览器仍NOT_RUN。
+- 只导入 `@hello-pangea/dnd`；许可证 Apache-2.0。
+- 不安装 `react-beautiful-dnd`，不用 legacy peer 标志强装。
+- 保留 placeholder 和 `draggableProps.style`。
+- `isFreshDrop` 失败时只提示，不按旧 index 写数组。
+- 三列 HTTP 看板未挂载；本地 revision 不是已测的 ETag。
+
+## 测试断言
+
+`order-history.test.mts` 与 `pinned-order.test.mjs` 断言固定槽不可跨越、过期快照被拒绝、撤销和重置增加 revision。不证明键盘传感器、占位高度或触控。
+
+## 真实限制
+
+已挂载：单列、手柄、固定项、上下按钮、过期 drop、一步撤销。未挂载：三列看板、IME 新建、HTTP 409、虚拟列表、SSR。
+
+复用检查：
+
+- 版本以该条目 `library.json` 为准，不跟研究稿里的 Vite 脚本或 workshop 目录。
+- 未挂载的生产模式留在 `guide.md`，不补进 `examples/`。
+- 不修改 `verification.json`。没有匹配 receipt 时 sdk、build、browser 保持 NOT_RUN。
+
+## 证据
+
+sdk、build、browser 为 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有匹配 receipt。Actions run `41779873259` 是仓库级检查，不是本条目 PASS。文档：https://github.com/hello-pangea/dnd

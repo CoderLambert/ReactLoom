@@ -20,6 +20,14 @@
 
 列表里每个远程 URL 都 autoplay。只提供 hover 播放。把 `complete` 当成保存成功。ref 回调里订阅不清理。`onFrame` 每帧 setState。未 `load` 就 `setFrame`。ErrorBoundary 代替 `loadError`。业务 effect 再 `destroy()` 一次包装器拥有的实例。
 
+复用时保留这些不变的约定：
+
+- `data` 来自仓库内 `pulse.json`，不要换成远程 URL。
+- `autoplay={false}`，播放意图和 `mayPlay` 分开。
+- 监听器与 650ms 定时器在换 level 时清掉。
+- Canvas 不进入 Tab 顺序；失败用 `role="alert"`。
+- Worker、GPU 和 IntersectionObserver 未挂载。
+
 ## 测试断言
 
 `tests/playback-policy.test.mts` 断言 `mayPlay` 与 `playbackLabel`：可见且已加载可播；未加载、隐藏页在 override 下仍拒绝；减少动画需要显式覆盖。不证明 WASM、Canvas 或 650ms 定时器。
@@ -27,6 +35,12 @@
 ## 真实限制
 
 已挂载：本地 `pulse.json`、播放/停止、速度、减少动画覆盖、隐藏页暂停、本地订阅定时器与失败文案。未挂载：Worker、WebGL/WebGPU、IntersectionObserver 卸载、多动画 `animationId`、真实 HTTP。不要把远程资产写回仓库冒充离线样例。
+
+复用检查：
+
+- 版本以该条目 `library.json` 为准，不跟研究稿里的 Vite 脚本或 workshop 目录。
+- 未挂载的生产模式留在 `guide.md`，不补进 `examples/`。
+- 不修改 `verification.json`。没有匹配 receipt 时 sdk、build、browser 保持 NOT_RUN。
 
 ## 证据
 

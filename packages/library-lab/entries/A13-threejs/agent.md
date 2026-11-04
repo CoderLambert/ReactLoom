@@ -36,6 +36,10 @@ render 中 `new WebGLRenderer`、无上限 DPR、把 Scene 放进 React state，
 
 没有 OrbitControls、InstancedMesh、glTF、射线拾取或 HTTP。覆盖减少动态只在 advanced。初始化失败没有上下文恢复流程。`renderer.info` 未读取，也不能当成显存。没有 FPS 数字。
 
+## 断言边界
+
+`tests/animation-policy.test.mts` 只判断循环开关。SDK 用例要 `import * as THREE from 'three'`。没有 WebGL 时断言失败路径可见，而不是把渲染器桩掉。换几何后旧几何已 dispose，卸载调用 `setAnimationLoop(null)`。缺收据时保持 NOT_RUN。
+
 ## 证据
 
 Actions `41779873259` 的仓库级 install、typecheck、build、52 SDK 文件（153 测试）和 45 Playwright 不是 A13 PASS。不要把动画策略测试或历史研究 PASS 写入 `verification.json`。

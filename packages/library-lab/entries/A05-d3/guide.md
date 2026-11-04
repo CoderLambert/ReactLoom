@@ -151,6 +151,29 @@ const request = useQuery({
 - [Zoom](https://d3js.org/d3-zoom)
 - [npm d3](https://www.npmjs.com/package/d3)
 
+## 混合所有权的最小骨架
+
+生产里若改回「React 画柱、D3 只画轴」，结构应是这样，而不是在 Lab 的 `svgRef` 上再叠加 JSX 图形：
+
+```tsx
+<svg viewBox={`0 0 ${width} 280`}>
+  <g ref={xAxis} />
+  <g ref={yAxis} />
+  {visible.map((row) => (
+    <rect key={row.day} x={scaleX(row.day)} y={scaleY(row.views)}
+      width={scaleX.bandwidth()} height={scaleY(0) - scaleY(row.views)} />
+  ))}
+</svg>
+```
+
+轴的 effect 只 `select(xAxis.current).call(axisBottom(scaleX))`，cleanup 时 `select(node).selectAll('*').remove()`。柱的 `key` 用业务 id。Lab 当前没有这条 JSX，它每次清空整张 SVG 再 `join`。两套不要同时启用。
+
+刷选若以后加上，`event.selection` 是像素对。写回 React 的应是 `scaleX.invert` 之后的域，并忽略没有 `sourceEvent` 的程序化事件，否则重置按钮会再次触发状态更新。缩放重置调用创建时那个 zoom behavior 的 `transform`，不要另起一个 `zoom()` 去清画面。
+
+空数据时 `max` 得到 `undefined`。Lab 用 `?? 1` 再抬到至少 10，避免 domain 塌成一点。阈值把所有点滤光后，状态文案走「没有可绘制的数据」，表仍列出该日期窗口里未过阈值的行。这个差异要在界面上说清楚，避免读者以为表和图是同一筛选结果。星期字符串只在这份七天 fixture 里唯一；接上按小时采样的数据后，join key 必须换成不会重复的 id。
+
+`curveMonotoneX` 只用于这份阅读趋势的示意。告警阈值图改回 `curveLinear`，并在图旁写明折线插值不是采样事实。
+
 ## 证据
 
 sdk、build、browser 在 `docs/library-lab/evidence/runs/` 出现本条目收据前为 **NOT_RUN**。`chart-policy` 测试只覆盖窗口、阈值和宽度夹取。Actions run `41779873259` 是仓库级 install、typecheck、build、52 个 SDK 文件（153 个测试）和 45 个 Playwright，不是 A05 的 PASS，不要写入 `verification.json`。研究稿的领域测试通过也不是本仓库的 SDK 验收。

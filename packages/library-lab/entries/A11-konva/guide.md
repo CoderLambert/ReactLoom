@@ -119,6 +119,12 @@ apply(id, { width, height, x: Math.round(group.x()), y: Math.round(group.y()) })
 - [Batch draw](https://konvajs.org/docs/performance/Batch_Draw.html)
 - [仓库](https://github.com/konvajs/konva)
 
+## 缩放锚点
+
+滚轮事件里先读 `stage.getPointerPosition()`。旧缩放是 `scaleX()`，新缩放夹在 0.6 到 2。指针下的世界点是 `(pointer - stagePosition) / oldScale`。新的 stage 位置要让这个世界点仍落在同一指针下：`pointer - world * newScale`。卡片的 x/y 不变。若把指针坐标写进 `apply()`，放大后再拖一次就会漂。
+
+`boundBoxFunc` 收到的是绝对盒子。宽或高的绝对值小于 85 或 48 时退回 `oldBox`，阻止翻转后的负尺寸。`transformend` 仍要用 `rect.width() * group.scaleX()` 得到业务宽，然后 `group.scale({x:1,y:1})`。两步都要，缺一则下次从 React state 绘制会跳回旧尺寸。
+
 ## 证据
 
 sdk、build、browser 在 `docs/library-lab/evidence/runs/` 有本条目收据之前为 **NOT_RUN**。`stage-policy` 只证明宽度夹取、24 张上限和重复 id。Actions run `41779873259` 是仓库级 install、typecheck、build、52 个 SDK 文件（153 个测试）和 45 个 Playwright，不是 A11 的 PASS，不要写入 `verification.json`。

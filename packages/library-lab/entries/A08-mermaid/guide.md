@@ -137,6 +137,78 @@ ELK 布局、长标签、连续更新都会占主线程和 DOM。先限制图的
 
 安全公告要按 12.2.0 再核对一次，不要用旧教程的 v11 默认配置解释现在的布局。
 
+## 配置、队列和文档嵌入
+
+初始化对象保持站点级常量。需要钉住 v11 视觉时显式写布局，而不是依赖 12.2.0 的默认 ELK：
+
+```ts
+mermaid.initialize({
+  startOnLoad: false,
+  securityLevel: 'strict',
+  theme: 'neutral',
+  suppressErrorRendering: true,
+  // 只有在要对照旧截图时才打开下一行；Lab 当前没有写 layout。
+  // layout: 'dagre', look: 'classic', theme: 'default',
+});
+```
+
+`securityLevel: 'strict'` 仍要配服务端配额。官方还有 `maxTextSize` 与 `maxEdges` 一类上限，不要让文章正文覆盖它们。Lab 的三条 DSL 很短，所以上限没有出现在源码里；接到 Markdown 之后必须先裁剪代码块长度，再调用 `parse`。
+
+队列的语义是：全局一条尾巴，后来的任务等前一个 Promise 结束；`isCurrent` 在执行前和提交前各看一次。组件卸载只把闭包里的 `active` 设为 false，不会取消已经进入 Mermaid 布局器的 CPU 工作。生产若要取消，只能丢弃结果，不能假设库提供 AbortSignal。两个 DemoHost 同时挂载时也走这条链，避免两个 `render` 交错改模块级 DOM 状态。
+
+知识库嵌入时，识别语言标记，而不是把所有围栏都交给 Mermaid：
+
+```tsx
+function code({ className, children }: { className?: string; children?: React.ReactNode }) {
+  const source = String(children).replace(/\n$/, '');
+  if (className !== 'language-mermaid') return <code className={className}>{children}</code>;
+  if (source.length > 12_000) return <p role="alert">图表源过长，已拒绝渲染。</p>;
+  return <MermaidFrame definition={source} />;
+}
+```
+
+`remark-gfm` 不消毒 HTML。允许原始 HTML 时另走 rehype 与 DOMPurify。MermaidViewer 即使用了 sandbox，文章里的其它标签仍然危险。
+
+导出 SVG 时序列化 iframe 里的那份 DOM，而不是页面上的 `<pre>`。Blob 下载后延迟 `revokeObjectURL`。导出文件可能引用外部字体，离线打开不必和页面一致。用户上传的 SVG 不要以 `image/svg+xml` 同源托管。
+
+诊断：
+
+| 现象 | 先看 |
+|---|---|
+| `reading 'document'` | 是否在服务端调用了 render |
+| 空白但 parse 成功 | 容器高度、过期任务是否把 svg 清成空串、CSP 是否拦了 worker 或字体 |
+| 非法语法仍显示旧图 | effect 开头有没有 `setSvg('')`。Lab 有 |
+| 升级后折线全变 | 默认布局已不是 Dagre |
+| 两张图的 marker 互相染色 | render id 是否固定成同一个字符串 |
+
+`accTitle` 和 `accDescr` 能进生成的 SVG。Lab 改用页面段落，因为 iframe 的无障碍树和父页面是分开的。两者都写上才接近完整：图内标题给直接打开 SVG 的人，段落给父页面的读屏。
+
+40 个节点、100 条边、12000 字符是应用预算，用来拒绝过大的输入，不是官方性能合格线。没有 Chromium 轨迹之前不要写布局毫秒数。
+
+同一业务图若还要进 React Flow，先有一份节点和边的结构，再分别投影成 DSL 和可编辑节点。不要解析 iframe 里的 SVG 路径去反推边。Flow 的拖拽坐标不会回到 Mermaid。发布时带上修订号：后写的一方得到冲突，而不是用本地字符串覆盖服务器。Lab 的三条常量没有修订号，练习要另做这一层。
+
+`suppressErrorRendering: true` 让库不要往页面插自己的错误图。错误文本由 React 的 `role="status"` 显示。若关掉这个选项，库的错误 SVG 可能和 iframe 策略互相打架。保持打开，并在 parse 返回假值时抛错，让队列走 `reportError`。
+
+序列图里的参与者名称是源码常量。接到用户标题时先放进引号并去掉会截断语法的引号和换行，同时限制长度。这仍不是 HTML 净化。strict 模式不执行图内点击。需要点击时，在表格里放按钮，用节点 id 对应业务对象，而不是打开 `securityLevel: 'loose'`。
+
+v12 的浏览器基线大约是 Safari 17.4，以及上游用于测试的较新 Chromium 与 Firefox。老浏览器上的语法失败要显示文本，不要只留空白 iframe。Node 22.12 是包的引擎声明，Library Lab 的安装由仓库统一处理，不要在条目文档里写一套独立的 npm install 步骤。
+
+tiny 构建不带与完整包相同的布局能力。本条目导入的是 `mermaid` 主包，不要再手动注册一份 `@mermaid-js/layout-elk`，除非确认打包器把 elk 拆掉了。重复注册会让默认布局和回退布局同时存在，截图对比失去意义。
+
+错误恢复的可见标准：按下「尝试无效语法」后，iframe 消失，状态区出现「图形无法渲染」，`<pre>` 里仍是那份非法源，方便改正。按回「恢复合法状态图」后，队列里的失败任务不得把空结果写到新图上。`isCurrent` 在提交前再检查一次，就是为了这个顺序。
+
+可访问性验收不要停在 `role="img"`。父页面的段落要能单独读完流程。iframe 没有同源权限，自动化测试不能钻进去点 SVG。若产品要求图内标题，把 `accTitle` 和 `accDescr` 写进 DSL，并在浏览器里查看生成的 `aria-roledescription`。Lab 目前只用页面段落。
+
+三层常量的图类型不同：flowchart、sequenceDiagram、stateDiagram-v2。切换 level 会换整段源，队列必须丢掉上一段的 SVG。不要复用同一个 render id。状态图的非法示例故意缺目标节点，用来观察失败，不要把它收成「能渲染的近似图」。
+
+和 React Flow 共用模型时，节点 id 在领域层生成，DSL 只用 `n0` 这种内部名字。边的方向以领域数组为准。Mermaid 文本不保存拖拽后的坐标。文档 diff 看 DSL，编辑器看 Flow，两边都不要把对方的运行时对象写回数据库。
+
+安全公告要按 12.2.0 的发行说明再对一次。旧教程里的 `mermaid.init` 和 `securityLevel: 'loose'` 不要抄进新代码。渲染结果进 sandbox iframe，是为了让生成的 SVG 即使含有意外标记也不能当脚本执行。父页面仍然不要把用户原文插进 `innerHTML`。
+
+渲染 id 使用递增前缀 `rl-mermaid-`。
+失败时先清空上一张 SVG，再显示错误文本。
+队列在执行前和提交前都检查任务是否仍属于当前 effect。
+
 ## 证据
 
 sdk、build、browser 在 `docs/library-lab/evidence/runs/` 有本条目收据之前为 **NOT_RUN**。`queueMermaidRender` 的测试只证明过期任务不提交，不证明 `parse`/`render` 或 iframe。Actions run `41779873259` 是仓库级 install、typecheck、build、52 个 SDK 文件（153 个测试）和 45 个 Playwright，不是 A08 的 PASS，不要写入 `verification.json`。

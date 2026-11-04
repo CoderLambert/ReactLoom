@@ -34,6 +34,14 @@ localStorage.setItem('doc', JSON.stringify(editor)); // 错
 
 没有 `toImage`、`loadSnapshot`、协作同步或 HTTP 409。80 的上限不管手绘。`zoomToFit` 不读取减少动态偏好。level 变化不重挂载时，onMount 里的骨架不会自动重建。没有帧率数字。
 
+## 断言边界
+
+`tests/snapshot-policy.test.mts` 只量 JSON 字节。SDK 用例要 `import { Tldraw, getSnapshot, createShapeId } from 'tldraw'`。非本机且没有 key 时不挂载。下载体只有 document。`onMount` 退订后不再 `setCount`。缺收据时保持 NOT_RUN。文本用 `toRichText`。不要把 session 快照写进下载文件。没有合法 key 的非本机页面只显示说明。
+
 ## 证据
 
 Actions `41779873259` 的仓库级 install、typecheck、build、52 SDK 文件（153 测试）和 45 Playwright 不是 A10 PASS。不要把快照字节测试或历史研究 PASS 写入 `verification.json`。
+
+对照 `library.json` 的版本编写 import，不要升到条目未钉死的版本。
+`tests/` 中的策略用例不能改写成 sdk 字段的 PASS。
+浏览器与构建未留下收据时，对应字段维持 NOT_RUN。

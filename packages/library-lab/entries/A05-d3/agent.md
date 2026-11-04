@@ -34,6 +34,14 @@ v5 的 `d3.event` 和分散 enter/exit 改成回调参数和 `selection.join`，
 
 没有 brush、zoom、Canvas、HTTP、CSV。表包含被阈值隐藏的行，图不包含。命中只有 `pointerenter`。`curveMonotoneX` 会插值。星期字符串在这份 fixture 里唯一，不能当成通用主键方案。没有帧率数字。
 
+## 断言边界
+
+`tests/chart-policy.test.mts` 覆盖窗口、阈值、选中回落和宽度。SDK 用例要 `import { select, scaleLinear, line } from 'd3'`，对真实 SVG 元素 `join` 后再 `remove`。不要用字符串快照代替比例尺输出。卸载后子节点应为 0。缺收据时保持 NOT_RUN。不要在同一 SVG 上同时用 JSX 和 `selectAll` 删除对方创建的节点。
+
 ## 证据
 
 Actions `41779873259` 的仓库级 install、typecheck、build、52 SDK 文件（153 测试）和 45 Playwright 不是 A05 PASS。不要把策略测试或历史研究 PASS 写入 `verification.json`。
+
+对照 `library.json` 的版本编写 import，不要升到条目未钉死的版本。
+`tests/` 中的策略用例不能改写成 sdk 字段的 PASS。
+浏览器与构建未留下收据时，对应字段维持 NOT_RUN。

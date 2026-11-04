@@ -34,6 +34,14 @@ render 中构造 Stage、指针坐标直接当世界坐标、只 `remove()` 不 
 
 没有文本编辑、PNG、HTTP ETag 或视口裁剪。basic 不可拖，Transformer 只在 advanced。滚轮缩放未读取 `prefers-reduced-motion`。24 与 0.6..2 是示例边界，不是性能测量。`batchDraw` 在同步后调用了一次，不要在每个属性 setter 后再画。
 
+## 断言边界
+
+`tests/stage-policy.test.mts` 覆盖 24 张上限和宽度。SDK 用例要 `import Konva from 'konva'`，创建 Stage，在 `transformend` 语义下把 scale 乘进宽高并归 1，然后 `destroy`。不要用普通对象模拟 Transformer。缺收据时保持 NOT_RUN。滚轮缩放要保持指针下的世界坐标，卡片 x/y 与 stage 的 position/scale 分开存储。
+
 ## 证据
 
 Actions `41779873259` 的仓库级 install、typecheck、build、52 SDK 文件（153 测试）和 45 Playwright 不是 A11 PASS。不要把策略测试或历史研究 PASS 写入 `verification.json`。
+
+对照 `library.json` 的版本编写 import，不要升到条目未钉死的版本。
+`tests/` 中的策略用例不能改写成 sdk 字段的 PASS。
+浏览器与构建未留下收据时，对应字段维持 NOT_RUN。

@@ -1,20 +1,47 @@
-# B21 react-motion（历史迁移） — Agent 迁移卡
+# B21 react-motion 迁移
 
-**典型任务**：从停滞的react-motion Motion/spring模式迁移至现代motion/react的状态驱动动画。当前参考依赖：motion@14.6.0。
+## 适用
 
-**适用任务** 迁移旧react-motion代码，不将其包装成推荐的2026全新项目技术。现代目标包motion@14.6.0，MIT；旧包仅文档对照不进入Lab运行依赖。
+审计旧的 `Motion`、`TransitionMotion`、`StaggeredMotion` 和 `spring()`，并把新界面写到 `motion/react`。不要为了对照把 `react-motion@0.5.2` 装进 React 19。简单 CSS 不必上动画库。
 
-**核心映射** `<Motion style={{x:spring(1)}}>{value => ...}</Motion>` → `<motion.div animate={{x:target}} transition={{type:'spring',...}}/>`；`TransitionMotion` → `AnimatePresence`（稳定id及exit）；旧spring常量与Motion stiffness/damping不能机械视为相同物理意义。
+## 版本
 
-**生命周期** React中的AnimatePresence负责退出元素的存在期，业务状态由React持有；focus/aria-expanded要跟数据而不是帧过渡。减少动画使用useReducedMotion并实时响应。
+目标包 `motion@14.6.0`，React 19.3.0。两份许可证都是 MIT，但 Motion+ 另计。旧 peer 只有 React 16 及更早。入口是 `motion/react`。
 
-**验证** 快速开合、连续删除/撤销、列表稳定ID、键盘焦点、关闭系统动画后的零位移；不要宣称旧SDK本身执行通过。
+## 迁移
 
-**可信边界**：`examples/example.tsx` 是真实示例源码，`examples/demo.tsx` 只负责重导出；`library.json` 是元数据，`verification.json` 的 NOT_RUN 不能自动升级为PASS。执行目标仓库的具体类型、构建、SDK、浏览器验证并记录证据后才能复用。
+`spring(n)` 改成数字目标加 `transition.type = 'spring'`。`willLeave` 改成先更新 reducer 再写 `exit`。列表 key 用永久 id。`StaggeredMotion` 的跟随不是 `staggerChildren`。`onRest` 不承担保存。参数相同不保证轨迹相同。
 
-**迁移流程**：先读条目用途和版本→判断业务状态与React/UI元素所有权→提取最小代码→接入目标项目的依赖/许可证/样式→测试触摸、键盘、IME、快速重挂载和异常回滚→记录源码指纹。不要把演示输入或未经验证的安装版本视为生产承诺。
+## 不可删的清理
 
-官方：[Motion React文档](https://motion.dev/docs/react-animation) / [AnimatePresence](https://motion.dev/docs/react-animate-presence) / [reduced motion](https://motion.dev/docs/react-use-reduced-motion) / [react-motion历史库](https://github.com/chenglou/react-motion)。
+不添加 `react-motion` 依赖。`AnimatePresence initial={false}`。列表用 `popLayout`，不要 `mode="wait"`。减少动画去掉位移和 scale。删除持焦按钮后在 `useLayoutEffect` 里把焦点交给邻居或添加按钮。撤销只恢复一份快照。id 单调增加，上限 24。
 
+## 反例
 
-**状态事务和焦点（wave20）**：复制`examples/example.tsx`时也要复制`examples/task-history.ts`，由Reducer序列化删除/添加/撤销；禁止在`setUndo(items);setItems(...)`中抓取过期render闭包。删除持有焦点的按钮需在提交后显式转移焦点；reduced-motion应同时控制layout动画。核对`tests/task-history.test.mts`，SDK/TSX/Chromium继续NOT_RUN。
+`--legacy-peer-deps` 安装旧包。`animate={{x: spring(10)}}`。`setTimeout` 之后才删除。`key={index}`。动画回调里发请求。把完成回调当成事务成功。列表套 `mode="wait"`。宣称 stagger 已经复刻跟随链。
+
+复用时保留这些不变的约定：
+
+- 不把 `react-motion` 写进依赖或 import。
+- `spring()` 描述对象不能放进 `animate`。
+- 先 dispatch 再播 exit，不用 setTimeout 延迟删除。
+- 列表 `popLayout`，单卡不要套到多子节点的 `mode="wait"`。
+- `StaggeredMotion` 的跟随链未挂载，不要用 staggerChildren 宣称等价。
+
+## 测试断言
+
+`tests/task-history.test.mts` 断言添加上限、新 id、撤销、非法选择不变。不证明 `motion` 运行时或减少动画的视觉。
+
+## 真实限制
+
+已挂载：折叠卡片、列表进出、layout、一步撤销、焦点恢复。未挂载：旧包源码对照、跟随弹簧、HTTP、大列表虚拟化、IME 搜索。
+
+复用检查：
+
+- 版本以该条目 `library.json` 为准，不跟研究稿里的 Vite 脚本或 workshop 目录。
+- 未挂载的生产模式留在 `guide.md`，不补进 `examples/`。
+- 不修改 `verification.json`。没有匹配 receipt 时 sdk、build、browser 保持 NOT_RUN。
+
+## 证据
+
+sdk、build、browser 为 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有匹配 receipt。Actions run `41779873259` 是仓库级检查，不是本条目 PASS。文档：https://motion.dev/docs/react-installation

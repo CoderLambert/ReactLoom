@@ -20,6 +20,14 @@
 
 用 div 模拟勾选导致表单为空。父级分母忽略锁定。只加灰色 class 而不 `disabled`。提交只读可能过期的 React 数组。从错误的包导入。Indicator 代替状态文字。
 
+复用时保留这些不变的约定：
+
+- 从 `@base-ui/react/checkbox` 导入，不使用 `@mui/base` 或 `asChild`。
+- 外层 label；子项带 `name` 和 `value`。
+- 父级分母来自 `eligiblePermissions`。
+- 锁定同时设置 `disabled` 并由策略函数拒绝。
+- 提交读 FormData。Dialog 与 Popover 未挂载。
+
 ## 测试断言
 
 `tests/permission-policy.test.mts` 断言可选 id、部分选择为混合、锁定后全选不含 manage、对锁定 id 的写入被拒绝。不证明键盘、隐藏 input 或浏览器 FormData。
@@ -27,6 +35,12 @@
 ## 真实限制
 
 已挂载：受控 Checkbox、批量选择、混合态、禁用和本地 FormData。未挂载：Dialog、Popover、Field、HTTP 冲突。遮罩焦点和异步关闭不在本文件里。
+
+复用检查：
+
+- 版本以该条目 `library.json` 为准，不跟研究稿里的 Vite 脚本或 workshop 目录。
+- 未挂载的生产模式留在 `guide.md`，不补进 `examples/`。
+- 不修改 `verification.json`。没有匹配 receipt 时 sdk、build、browser 保持 NOT_RUN。
 
 ## 证据
 

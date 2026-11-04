@@ -20,6 +20,14 @@
 
 `Number(value) || 0`。`clampBehavior` 默认夹紧后假装用户确认了边界值。每个卡片一个 Provider。两个通知容器。表格 `key={index}`。用未安装的 form 包 API 描述当前示例。
 
+复用时保留这些不变的约定：
+
+- core 与 hooks 同为 9.7.3；React 18 不要使用本主版本。
+- `NumberInput` 草稿保留字符串中间态。
+- `validQuota` 拒绝空串、减号和非整数。
+- 样式入口是 `styles.layer.css`；不安装 form 与 notifications。
+- 非法保存不写 `before` 快照。
+
 ## 测试断言
 
 `tests/feed-history.test.mts` 断言配额守卫、相同值不记历史、撤销恢复上一份行。不证明 Modal 焦点或 150ms 防抖的浏览器时序。
@@ -27,6 +35,12 @@
 ## 真实限制
 
 已挂载：浅色主题、防抖筛选、开关、配额弹层和中间态。未挂载：useForm、通知、HTTP revision、脏检查关闭。遮罩关闭会丢掉未保存草稿，这是当前边界。
+
+复用检查：
+
+- 版本以该条目 `library.json` 为准，不跟研究稿里的 Vite 脚本或 workshop 目录。
+- 未挂载的生产模式留在 `guide.md`，不补进 `examples/`。
+- 不修改 `verification.json`。没有匹配 receipt 时 sdk、build、browser 保持 NOT_RUN。
 
 ## 证据
 

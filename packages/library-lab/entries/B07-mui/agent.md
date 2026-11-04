@@ -20,6 +20,14 @@ v5 教程的 InputProps、JSS 和 DataGrid 导入不能直接贴。X 的 Pro 许
 
 `inputProps`。`key={index}`。只在 Snackbar 报校验错误。客户端 URL 通过后就 `fetch` 用户地址。渲染期 `createTheme`。Dialog 没有 `aria-labelledby`。把 `DataGridPro` 当成已授权依赖。
 
+复用时保留这些不变的约定：
+
+- TextField 用 `slotProps`，不用已删除的 `inputProps`。
+- `createTheme` 放在模块作用域。
+- 行 key 用订阅 id；错误留在 Dialog 的 Alert 里。
+- Snackbar 关闭不调用撤销。
+- 不安装 MUI X，不把 Core 的 MIT 延伸到 Pro 网格。
+
 ## 测试断言
 
 `tests/feed-history.test.mts` 断言启用切换记快照、重复 endpoint 不追加、撤销恢复 `before`。不证明 Theme、Portal 或焦点回到触发按钮。
@@ -27,6 +35,12 @@ v5 教程的 InputProps、JSS 和 DataGrid 导入不能直接贴。X 的 Pro 许
 ## 真实限制
 
 已挂载：固定浅色主题、过滤表、一步撤销、HTTPS 校验、模拟 409。未挂载：暗色、服务端分页、Autocomplete IME、AbortController、revision。过滤是同步内存运算。
+
+复用检查：
+
+- 版本以该条目 `library.json` 为准，不跟研究稿里的 Vite 脚本或 workshop 目录。
+- 未挂载的生产模式留在 `guide.md`，不补进 `examples/`。
+- 不修改 `verification.json`。没有匹配 receipt 时 sdk、build、browser 保持 NOT_RUN。
 
 ## 证据
 

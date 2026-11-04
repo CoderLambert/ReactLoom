@@ -33,6 +33,14 @@
 
 没有服务器 revision。只读只是 `viewModeEnabled`。教学导入不接受图片附件。宿主若不重挂载，`initialData` 不会随 level 更新。PNG 上限 2048，不是视口保证。没有协作和 FPS 数字。
 
+## 断言边界
+
+`tests/scene-policy.test.mts` 不打开编辑器。SDK 用例要导入 `Excalidraw`、`convertToExcalidrawElements`、`exportToBlob` 和 `loadFromBlob`。空场景不导出。代数变化后的导入不得 `updateScene`。缺收据时保持 NOT_RUN。`initialData` 不是受控值；宿主不重挂载时要用 `updateScene`。版本保持 0.18.1 或更高修复版。
+
 ## 证据
 
 Actions `41779873259` 的仓库级 install、typecheck、build、52 SDK 文件（153 测试）和 45 Playwright 不是 A09 PASS。不要把导入策略测试或历史研究 PASS 写入 `verification.json`。
+
+对照 `library.json` 的版本编写 import，不要升到条目未钉死的版本。
+`tests/` 中的策略用例不能改写成 sdk 字段的 PASS。
+浏览器与构建未留下收据时，对应字段维持 NOT_RUN。

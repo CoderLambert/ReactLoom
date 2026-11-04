@@ -35,6 +35,14 @@ setEdges((current) =>
 
 没有自定义节点、坐标转换、JSON 修订、409、IME。键盘连接和画布共用同一校验。MiniMap 在 basic 不渲染。节点文案不是可执行脚本。没有规模或帧率数字。
 
+## 断言边界
+
+`tests/graph-rules.test.mts` 与 `tests/workflow-preset.test.mts` 不渲染画布。SDK 用例要 `import { ReactFlow, addEdge } from '@xyflow/react'`，容器高度大于 0，非法连接后边数不变，删除节点后相关边消失。不要用假的 nodes 数组宣称 Handle 可用。缺收据时保持 NOT_RUN。样式表路径是 `@xyflow/react/dist/style.css`，漏引会让画布看起来像库失败。
+
 ## 证据
 
 Actions `41779873259` 的仓库级 install、typecheck、build、52 SDK 文件（153 测试）和 45 Playwright 不是 A06 PASS。不要把规则测试或历史研究 PASS 写入 `verification.json`。
+
+对照 `library.json` 的版本编写 import，不要升到条目未钉死的版本。
+`tests/` 中的策略用例不能改写成 sdk 字段的 PASS。
+浏览器与构建未留下收据时，对应字段维持 NOT_RUN。

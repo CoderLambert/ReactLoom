@@ -20,6 +20,14 @@ v5 先清弃用警告再上 v6。图标包若存在必须与主包同主版本�
 
 `Switch` 放进 `Form.Item` 却不设 `valuePropName="checked"`。只 toast 不回填字段。`initialValues` 当受控更新。`rowKey` 用 index。服务端分页再写本地 `sorter` 函数。静态 `message.success`。`onChange` 里 `trim`。依赖 `.ant-*` 私有结构。
 
+复用时保留这些不变的约定：
+
+- `App.useApp()` 取 message，不从 `antd` 静态导入 message。
+- 409 用 `form.setFields` 回到 `url` 字段。
+- 搜索草稿与 `query` 分离，`onSearch` 才过滤。
+- `rowKey="id"`；本地 sorter 只对全量 fixture 成立。
+- Drawer、revision 和真实 HTTP 未挂载。
+
 ## 测试断言
 
 `tests/feed-history.test.mts` 断言重复 id/url 不追加、撤销恢复上一份且只退一步、开关值不变则返回原状态。不证明 antd 运行时、Portal 或 IME。
@@ -27,6 +35,12 @@ v5 先清弃用警告再上 v6。图标包若存在必须与主包同主版本�
 ## 真实限制
 
 已挂载：主题 Token、Form 规则、内存表、模拟 409、一步撤销、搜索提交时才过滤。未挂载：HTTP、revision、Drawer、断点、`token.motion`、服务端排序。本地 `sorter` 只对这份全量 fixture 成立。
+
+复用检查：
+
+- 版本以该条目 `library.json` 为准，不跟研究稿里的 Vite 脚本或 workshop 目录。
+- 未挂载的生产模式留在 `guide.md`，不补进 `examples/`。
+- 不修改 `verification.json`。没有匹配 receipt 时 sdk、build、browser 保持 NOT_RUN。
 
 ## 证据
 
