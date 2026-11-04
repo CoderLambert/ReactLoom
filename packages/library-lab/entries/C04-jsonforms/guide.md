@@ -171,7 +171,7 @@ basic 的 schema 没有 url。不要把 business 的 `if/then` 复制到 basic �
 
 手动模式的 payload 不带 `url`，但表单 data 里可以仍有旧地址。切回 rss 时，旧地址会重新出现在 payload 里。若产品要求切到手动就忘掉地址，要在切换时显式删除，不能靠 HIDE。
 
-`subscriptionSchema` 的 `then` 分支要求 url 至少 8 个字符且匹配 `^https://`。`https://a` 这种过短的字符串应停在 Schema，走不到 `validateSubmission`。长度够但带用户信息的地址才会落到第二层。
+`subscriptionSchema` 的 `then` 分支要求 url 至少 8 个字符且匹配 `^https://`。`https://a` 这种过短的字符串应停在 Schema，走不到 `validateSubmission`。长度够但带用户信息的地址才会落到第二层。过短的 `https://` 前缀不应被说成 SSRF 检查已经执行。
 
 ## 证据
 
