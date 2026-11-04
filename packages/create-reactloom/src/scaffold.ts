@@ -1,5 +1,5 @@
 import { spawn } from 'node:child_process'
-import { cp, mkdir, readFile, rename, rm, stat, writeFile } from 'node:fs/promises'
+import { mkdir, readFile, rename, rm, stat, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { adaptBestPractices, installAiConfig } from './ai-config.js'
@@ -13,6 +13,7 @@ import {
   unselectedFrameworkFiles,
   workspaceYaml,
 } from './selection.js'
+import { assertSafeSourcePath, copySafeSource } from './source-safety.js'
 import { findRepoRoot, readManifest, type TemplateId, type TemplateManifest } from './templates.js'
 
 const SKIP_DIRS = new Set([
@@ -57,21 +58,19 @@ async function assertDestination(directory: string): Promise<void> {
 }
 
 async function copyFiltered(source: string, destination: string): Promise<void> {
-  await cp(source, destination, {
-    recursive: true,
-    filter: (entry) => {
-      const base = path.basename(entry)
-      return !SKIP_DIRS.has(base) && !base.endsWith('.tsbuildinfo')
-    },
-  })
+  await copySafeSource(source, destination, SKIP_DIRS)
 }
 
 async function copyRepoPath(repoRoot: string, relative: string, directory: string): Promise<void> {
   const source = path.join(repoRoot, relative)
   try {
+    await assertSafeSourcePath(repoRoot, relative)
     await stat(source)
-  } catch {
-    throw new Error(`Manifest path does not exist: ${relative}`)
+  } catch (error) {
+    if (error instanceof Error && 'code' in error && error.code === 'ENOENT') {
+      throw new Error(`Manifest path does not exist: ${relative}`)
+    }
+    throw error
   }
   const destination = path.join(directory, relative)
   await mkdir(path.dirname(destination), { recursive: true })
@@ -85,12 +84,14 @@ async function copySharedPackages(
 ): Promise<void> {
   await mkdir(path.join(directory, 'packages'), { recursive: true })
   if (manifest.packages['api-client']) {
+    await assertSafeSourcePath(repoRoot, 'packages/api-client')
     await copyFiltered(
       path.join(repoRoot, 'packages', 'api-client'),
       path.join(directory, 'packages', 'api-client'),
     )
   }
   if (manifest.packages.devtools) {
+    await assertSafeSourcePath(repoRoot, 'packages/devtools')
     await copyFiltered(
       path.join(repoRoot, 'packages', 'devtools'),
       path.join(directory, 'packages', 'devtools'),
@@ -98,12 +99,14 @@ async function copySharedPackages(
   }
   if (manifest.packages.tsconfig.length === 0) return
 
+  await assertSafeSourcePath(repoRoot, 'packages/tsconfig')
   const sourceDir = path.join(repoRoot, 'packages', 'tsconfig')
   const destDir = path.join(directory, 'packages', 'tsconfig')
   await mkdir(destDir, { recursive: true })
   await copyFiltered(path.join(sourceDir, 'package.json'), path.join(destDir, 'package.json'))
   for (const preset of manifest.packages.tsconfig) {
     const relative = path.posix.join('packages/tsconfig', preset)
+    await assertSafeSourcePath(repoRoot, relative)
     try {
       await stat(path.join(sourceDir, preset))
     } catch {
@@ -130,6 +133,7 @@ async function copyManifestFiles(
       )
     }
     if (adapt && relative.startsWith('docs/best-practices/')) {
+      await assertSafeSourcePath(repoRoot, relative)
       const source = path.join(repoRoot, relative)
       let contents: string
       try {
@@ -581,6 +585,7 @@ export async function scaffold(options: ScaffoldOptions): Promise<void> {
     throw new Error(`template.json id "${manifest.id}" does not match ${options.template}.`)
   }
 
+  await assertSafeSourcePath(repoRoot, path.join('templates', options.template))
   await copyFiltered(templateDir, options.directory)
   await copySharedPackages(repoRoot, options.directory, manifest)
   await copyManifestFiles(repoRoot, options.directory, manifest.configs)
