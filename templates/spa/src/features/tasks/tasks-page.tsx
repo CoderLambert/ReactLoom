@@ -57,17 +57,26 @@ export function TasksPage() {
 
       <form
         className="flex flex-col gap-3 sm:flex-row sm:items-end"
-        onSubmit={form.handleSubmit(async (values) => {
-          await create.mutateAsync(values.title)
-          form.reset()
+        onSubmit={form.handleSubmit((values) => {
+          create.mutate(values.title, { onSuccess: () => form.reset() })
         })}
       >
         <div className="grow space-y-2">
           <Label htmlFor="title">{t('tasks.titleLabel')}</Label>
-          <Input id="title" placeholder={t('tasks.placeholder')} {...form.register('title')} />
+          <Input
+            id="title"
+            placeholder={t('tasks.placeholder')}
+            aria-describedby={create.isError ? 'task-create-error' : undefined}
+            {...form.register('title')}
+          />
           {form.formState.errors.title ? (
             <p className="text-sm text-copper" role="alert">
               {form.formState.errors.title.message}
+            </p>
+          ) : null}
+          {create.isError ? (
+            <p id="task-create-error" className="text-sm text-copper" role="alert">
+              {t('tasks.createError')}
             </p>
           ) : null}
         </div>
