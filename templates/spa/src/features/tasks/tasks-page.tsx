@@ -1,10 +1,12 @@
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema'
 import { Link, useSearch } from '@tanstack/react-router'
+import { useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { getActiveSession, useAuthStore } from '@/features/auth/store'
 import { useCreateTask, useSetTaskStatus, useTasks } from '@/features/tasks/hooks'
 import { type CreateTaskInput, createTaskSchema } from '@/features/tasks/schema'
 import { isApiError } from '@/lib/api'
@@ -17,6 +19,8 @@ export function TasksPage() {
   const tasks = useTasks()
   const create = useCreateTask()
   const update = useSetTaskStatus()
+  const draftRevision = useRef(0)
+  const submitting = useRef<{ version: number; revision: number } | null>(null)
   const form = useForm<CreateTaskInput>({
     resolver: standardSchemaResolver(createTaskSchema),
     defaultValues: { title: '' },
@@ -27,6 +31,11 @@ export function TasksPage() {
     ? tasks.error.message
     : tasks.isError
       ? t('tasks.error')
+      : null
+  const updateError = isApiError(update.error)
+    ? update.error.message
+    : update.isError
+      ? t('tasks.updateError')
       : null
 
   return (
@@ -57,9 +66,32 @@ export function TasksPage() {
 
       <form
         className="flex flex-col gap-3 sm:flex-row sm:items-end"
-        onSubmit={form.handleSubmit((values) => {
-          create.mutate(values.title, { onSuccess: () => form.reset() })
-        })}
+        onSubmit={async (event) => {
+          const version = useAuthStore.getState().sessionVersion
+          if (submitting.current?.version === version) {
+            event.preventDefault()
+            return
+          }
+          const attempt = { version, revision: draftRevision.current }
+          submitting.current = attempt
+          try {
+            await form.handleSubmit(async (values) => {
+              if (useAuthStore.getState().sessionVersion !== version || !getActiveSession()) return
+              await create.mutateAsync(values.title)
+              if (
+                useAuthStore.getState().sessionVersion === version &&
+                getActiveSession() &&
+                draftRevision.current === attempt.revision
+              ) {
+                form.reset()
+              }
+            })(event)
+          } catch {
+            // Mutation errors are rendered below; keep the editable draft for retry.
+          } finally {
+            if (submitting.current === attempt) submitting.current = null
+          }
+        }}
       >
         <div className="grow space-y-2">
           <Label htmlFor="title">{t('tasks.titleLabel')}</Label>
@@ -67,7 +99,11 @@ export function TasksPage() {
             id="title"
             placeholder={t('tasks.placeholder')}
             aria-describedby={create.isError ? 'task-create-error' : undefined}
-            {...form.register('title')}
+            {...form.register('title', {
+              onChange: () => {
+                draftRevision.current += 1
+              },
+            })}
           />
           {form.formState.errors.title ? (
             <p className="text-sm text-copper" role="alert">
@@ -77,6 +113,7 @@ export function TasksPage() {
           {create.isError ? (
             <p id="task-create-error" className="text-sm text-copper" role="alert">
               {t('tasks.createError')}
+              {isApiError(create.error) ? ` ${create.error.message}` : null}
             </p>
           ) : null}
         </div>
@@ -97,6 +134,11 @@ export function TasksPage() {
       {!tasks.isPending && !tasks.isError && visible.length === 0 ? (
         <p>{t('tasks.empty')}</p>
       ) : null}
+      {updateError ? (
+        <p className="text-sm text-copper" role="alert">
+          {updateError}
+        </p>
+      ) : null}
 
       <ul className="divide-y divide-line overflow-hidden rounded-3xl bg-card ring-1 ring-line">
         {visible.map((task) => (
@@ -109,6 +151,7 @@ export function TasksPage() {
             </div>
             <Button
               variant="ghost"
+              disabled={update.isPending || (create.isPending && task.id.startsWith('tmp-'))}
               onClick={() =>
                 update.mutate({
                   id: task.id,

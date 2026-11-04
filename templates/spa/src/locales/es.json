@@ -35,6 +35,7 @@
     "retry": "Reintentar",
     "error": "No se pudo cargar la lista de tareas.",
     "createError": "No se pudo añadir la tarea. Inténtalo de nuevo.",
+    "updateError": "No se pudo guardar el estado de la tarea. Inténtalo de nuevo.",
     "loading": "Cargando tareas…",
     "markDone": "Marcar hecha",
     "reopen": "Reabrir",

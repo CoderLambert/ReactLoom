@@ -35,6 +35,7 @@
     "retry": "Try again",
     "error": "The task list could not be loaded.",
     "createError": "Could not add the task. Try again.",
+    "updateError": "The task status could not be saved. Try again.",
     "loading": "Loading tasks…",
     "markDone": "Mark done",
     "reopen": "Reopen",

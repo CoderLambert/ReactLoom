@@ -42,11 +42,25 @@ export function useCreateTask() {
       queryClient.setQueryData<{ tasks: Task[] }>(taskKeys.list(version), {
         tasks: [optimistic, ...(previous?.tasks ?? [])],
       })
-      return { previous }
+      return { optimisticId: optimistic.id }
+    },
+    onSuccess: (task, _title, context) => {
+      if (isCurrentSession(version) && context) {
+        queryClient.setQueryData<{ tasks: Task[] }>(taskKeys.list(version), (current) => {
+          if (!current) return current
+          const tasks = current.tasks.filter((item) => item.id !== context.optimisticId)
+          // A concurrent refetch may already contain a newer version of the server task.
+          return { tasks: tasks.some((item) => item.id === task.id) ? tasks : [task, ...tasks] }
+        })
+      }
     },
     onError: (_error, _title, context) => {
-      if (isCurrentSession(version) && context?.previous) {
-        queryClient.setQueryData(taskKeys.list(version), context.previous)
+      if (isCurrentSession(version) && context) {
+        queryClient.setQueryData<{ tasks: Task[] }>(taskKeys.list(version), (current) =>
+          current
+            ? { tasks: current.tasks.filter((task) => task.id !== context.optimisticId) }
+            : current,
+        )
       }
     },
     onSettled: async () => {
