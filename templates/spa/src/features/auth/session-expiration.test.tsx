@@ -9,9 +9,9 @@ import { createAppRouter } from '@/app/router'
 import { isSessionExpired } from '@/features/auth/session-expiration'
 import { getActiveSession, useAuthStore } from '@/features/auth/store'
 import { listTasks } from '@/features/tasks/api'
+import { taskKeys } from '@/features/tasks/keys'
 import { i18n } from '@/lib/i18n'
 import { createAppQueryClient } from '@/lib/query-client'
-import { taskKeys } from '@/features/tasks/keys'
 import { demoSession } from '@/mocks/fixtures'
 import { server } from '@/mocks/server'
 
@@ -63,7 +63,6 @@ describe('SPA session expiry boundary', () => {
     expect(useAuthStore.getState().session).toBeNull()
     expect(sessionStorage.getItem(STORAGE_KEY)).toBeNull()
   })
-
 
   it('expires a mounted private task screen while idle and removes the cached data', async () => {
     server.use(
