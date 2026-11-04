@@ -1,8 +1,8 @@
 import { NextRequest } from 'next/server'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { DELETE as logout, GET as readSession, POST as login } from '@/app/api/session/route'
+import { POST as login, DELETE as logout, GET as readSession } from '@/app/api/session/route'
 import { PATCH as updateTask } from '@/app/api/tasks/[id]/route'
-import { GET as readTasks, POST as createTask } from '@/app/api/tasks/route'
+import { POST as createTask, GET as readTasks } from '@/app/api/tasks/route'
 import { readSessionToken, SESSION_COOKIE, signSession } from './session-token'
 import { type Task, tasks } from './tasks'
 
