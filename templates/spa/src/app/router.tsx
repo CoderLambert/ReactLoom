@@ -9,7 +9,7 @@ import {
 import { type JSX, type LazyExoticComponent, lazy, Suspense } from 'react'
 import { Shell } from '@/app/shell'
 import { Fallback } from '@/components/errors/fallback'
-import { useAuthStore } from '@/features/auth/store'
+import { getActiveSession } from '@/features/auth/store'
 import { queryClient } from '@/lib/query-client'
 
 const HomePage = lazy(() =>
@@ -65,7 +65,7 @@ const tasksRoute = createRoute({
     return { status: 'all' }
   },
   beforeLoad: () => {
-    if (!useAuthStore.getState().session) {
+    if (!getActiveSession()) {
       throw redirect({ to: '/login' })
     }
   },
