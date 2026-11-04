@@ -1,5 +1,6 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
+import { assertSafeSourcePath } from './source-safety.js'
 import type { TemplateId } from './templates.js'
 
 const TEMPLATE_PACKAGE: Record<TemplateId, string> = {
@@ -104,7 +105,9 @@ export async function installAiConfig(options: {
   const rulesDir = path.join(options.directory, '.cursor', 'rules')
   await mkdir(rulesDir, { recursive: true })
   for (const rule of options.rules) {
-    const source = await readFile(path.join(options.repoRoot, '.cursor', 'rules', rule), 'utf8')
+    const relative = path.join('.cursor', 'rules', rule)
+    await assertSafeSourcePath(options.repoRoot, relative)
+    const source = await readFile(path.join(options.repoRoot, relative), 'utf8')
     await writeFile(
       path.join(rulesDir, rule),
       adaptAiText(source, options.template, options.projectName),
@@ -112,6 +115,7 @@ export async function installAiConfig(options: {
   }
 
   for (const relative of options.pointers) {
+    await assertSafeSourcePath(options.repoRoot, relative)
     const source = await readFile(path.join(options.repoRoot, relative), 'utf8')
     const destination = path.join(options.directory, relative)
     await mkdir(path.dirname(destination), { recursive: true })
