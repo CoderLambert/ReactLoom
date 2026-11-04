@@ -1,6 +1,6 @@
 import * as z from 'zod'
-import { privateJson } from '@/server/private-response'
 import { mutationRequestError } from '@/server/mutation-request'
+import { privateJson } from '@/server/private-response'
 import { readRequestSession } from '@/server/session'
 import { tasks } from '@/server/tasks'
 
@@ -20,5 +20,5 @@ export async function POST(request: Request) {
   const parsed = createSchema.safeParse(await request.json().catch(() => null))
   if (!parsed.success)
     return privateJson({ message: 'Give the task a title.' }, 400)
-  return privateJson(tasks.create(user.id, parsed.data.title), { status: 201 })
+  return privateJson(tasks.create(user.id, parsed.data.title), 201)
 }
