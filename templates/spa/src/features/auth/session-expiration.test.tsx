@@ -91,7 +91,9 @@ describe('SPA session expiry boundary', () => {
     )
 
     expect(await screen.findByText('Private idle task')).toBeVisible()
-    expect(await screen.findByRole('heading', { name: 'Sign in' }, { timeout: 4_000 })).toBeVisible()
+    expect(
+      await screen.findByRole('heading', { name: 'Sign in' }, { timeout: 4_000 }),
+    ).toBeVisible()
     expect(screen.queryByText('Private idle task')).not.toBeInTheDocument()
     expect(useAuthStore.getState().session).toBeNull()
     expect(sessionStorage.getItem(STORAGE_KEY)).toBeNull()
