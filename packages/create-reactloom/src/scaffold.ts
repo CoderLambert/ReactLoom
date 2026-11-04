@@ -1,5 +1,5 @@
 import { spawn } from 'node:child_process'
-import { mkdir, readFile, rename, rm, stat, writeFile } from 'node:fs/promises'
+import { lstat, mkdir, readFile, rename, rm, stat, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { adaptBestPractices, installAiConfig } from './ai-config.js'
@@ -59,6 +59,29 @@ async function assertDestination(directory: string): Promise<void> {
 
 async function copyFiltered(source: string, destination: string): Promise<void> {
   await copySafeSource(source, destination, SKIP_DIRS)
+}
+
+/**
+ * A manifest rename must never silently replace an existing scaffold file.
+ * The destination is private to this new project; check the staged filesystem
+ * before applying the manifest's rename mapping.
+ */
+export async function renameManifestFile(
+  directory: string,
+  source: string,
+  target: string,
+): Promise<void> {
+  const destination = path.join(directory, target)
+  try {
+    await lstat(destination)
+  } catch (error) {
+    if (error instanceof Error && 'code' in error && error.code === 'ENOENT') {
+      await rename(path.join(directory, source), destination)
+      return
+    }
+    throw error
+  }
+  throw new Error(`template.json rename target already exists: ${target}`)
 }
 
 async function copyRepoPath(repoRoot: string, relative: string, directory: string): Promise<void> {
@@ -604,7 +627,7 @@ export async function scaffold(options: ScaffoldOptions): Promise<void> {
   await writeFile(path.join(options.directory, 'pnpm-workspace.yaml'), workspaceYaml(manifest))
 
   for (const [from, to] of Object.entries(manifest.rename ?? {})) {
-    await rename(path.join(options.directory, from), path.join(options.directory, to))
+    await renameManifestFile(options.directory, from, to)
   }
 
   for (const relative of manifest.replacements ?? []) {
