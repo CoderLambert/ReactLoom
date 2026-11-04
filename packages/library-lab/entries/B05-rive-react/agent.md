@@ -1,39 +1,33 @@
-# B05 Rive React Runtime — Agent 工程实施卡
+# B05 Rive React
 
-## 选型
+## 适用
 
-要高保真交互美术资产且设计师负责动画状态机时选 Rive。普通 DOM 布局过渡优先 B01 Motion；简单 Lottie 播放评估 B04 dotLottie。资产与 SDK 分开授权，不得假定 .riv 与 MIT runtime 同许可。
+已有合法 `.riv`、需要状态机或 View Model 与产品状态对齐时使用 `@rive-app/react-webgl2`。简单过渡用 CSS 或 Motion。表单、付款结果和读屏文案必须留在 DOM。Canvas 只做装饰时 `aria-hidden`。
 
-## 固定证据与入口
+## 版本
 
-SDK：`@rive-app/react-webgl2@4.37.0`。
-实际代码：`examples/example.tsx`；
-远程资产声明：`examples/asset.ts`；
-样式：`examples/styles.css`；
-验证范围：`verification.json`。
+Lab 固定 `@rive-app/react-webgl2@4.37.0`，React 19.3.0。运行时 MIT。`.riv`、字体和 Editor 导出权另计。新代码用单数 `stateMachine`。不要启用与 `useOffscreenRenderer: true` 冲突的 `enableGPUCanvas`。
 
-只使用官方示例资产 URL，不复制未授权 .riv 二进制到代码仓库。Node/GPU验证未跑时标 NOT_RUN。
+## 迁移
 
-## 项目迁移必须保留
+旧教程的 `stateMachines` 和 `useStateMachineInput` 不要复制进新文件。View Model 绑定需要设计器契约；没有契约文件就不要调用 `useViewModelInstance*`。命令式 `new Rive()` 与 `useRive` 的清理路径不同，不能混用。
 
-- 按路由/显式操作懒加载整个 Rive SDK；Rive WebGL2 + WASM 不放在应用入口。
-- 使用单数 `stateMachine` 与经资产核对的名字。不存在的 View Model 字段不能硬凑接口。
-- RiveComponent 在明确尺寸容器中渲染，先检查加载错误和 CSP/CDN。useRive 的异步加载回调须受播放器挂载生命周期约束；调用 play/pause 需要处理运行时异常。请求播放不等于CDN载入成功。
-- Rive 只负责视觉；真实业务状态与失败、取消逻辑由 React/Domain 层表达。
-- AbortController + generation 防止取消、重复请求与卸载后旧结果覆盖新页面。
-- 监听页面可见性、用户 reduced-motion 与视口；暂停不可见实例，需要时卸载 SDK 子组件。
-- 以 HTML 文字/按钮提供键盘和屏幕阅读器替代，不能只靠 Canvas 变色。
+## 不可删的清理
 
-## 禁忌
+播放器是子组件，卸载即释放包装器拥有的实例，不要再 `rive.cleanup()`。页面隐藏和 advanced 视口外都卸载，不只是 pause。`onLoadError` 在播放器已卸载后不得 setState。审核用 AbortController 和 generation，切换 level 时 abort。减少动画和手动暂停只停播。
 
-重复创建 WebGL 实例而不卸载；在 reducer 中管理 WebGL API；从视觉帧推断业务成功；对官方样本假设有新的 data-binding field；把本地模拟审核称为真实后端；在没有运行时代码实测时宣称内存优化。
+## 反例
 
-## 迁移后必测
+把 `cdn.rive.app` 的 `vehicles.riv` 下载进仓库。用动画帧决定审核成功。容器高度为 0。每行一个 WebGL context。包装器 cleanup 里双重 `cleanup()`。渲染期 `new Rive()`。把不存在的 `approved` 状态机写进官方样本。
 
-真正 npm 安装/TS/Build、CDN资产加载、UI播放/暂停、隐藏页面暂停、系统 reduced-motion、卸载 GPU、请求取消/重试/503、StrictMode双挂载和移动端 WebGL。结果连源码指纹存档，不能复制历史原研究的23个Node纯逻辑 PASS。
+## 测试断言
 
-官方：https://rive.app/docs/runtimes/react/react
+`tests/runtime-policy.test.mts` 断言 mount 与 play 分离：隐藏页两者都假；视口外不挂载；减少动画和手动暂停挂载但不播；business 仅 pending 播放。不证明 WebGL、WASM 或 CDN 字节。
 
-### wave17 运行时约束
+## 真实限制
 
-复制 `examples/runtime-policy.ts`；隐藏页面/高级场景离开视口时卸载RivePlayer而不是只暂停动画。业务异步模拟在level切换与unmount时Abort并增加generation；保持SDK内部实例由官方hook拥有。Node测试只能证明布尔门禁，不证明GPU释放。
+已挂载：远程官方 URL、`bumpy`、离屏渲染器、本地可取消审核、视口观察器。未挂载：View Model、自有 `.riv`、GPU Canvas、焦点文本输入。离线打不开 CDN 是预期阻断。不要提交 `.riv` 来绕过它。
+
+## 证据
+
+sdk、build、browser 为 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有匹配 receipt。Actions run `41779873259` 是仓库级检查，不是本条目 PASS。文档：https://rive.app/docs/runtimes/react/react

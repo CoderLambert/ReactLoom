@@ -1,29 +1,33 @@
-# B08 Mantine — Agent 移植手册
+# B08 Mantine
 
-## 选型条件
+## 适用
 
-适合统一 Mantine UI 体系的 React19 项目；基线 `@mantine/core@9.7.3`、`@mantine/hooks@9.7.3`。已有 MUI/Ant Design 时不要仅为单控件混用多个大设计系统。二者 CSS/Portal 体系不同。
+需要默认主题、表格和弹层、并能接受 Mantine 的 Provider 时使用 core 与 hooks。React 18 不要上 9。无样式系统、Ant Design 密度或 MUI X 网格另选。不要同时挂第二套带皮肤的库。
 
-## 实际可复用文件
+## 版本
 
-`examples/example.tsx` 是真实 demo；`examples/demo.tsx` 只是出口。可迁移的是 Provider/Theme 初始化、各业务组件状态、NumberInput union 校验和受控 Modal；Lab 内模拟的 RSS 记录不是正式数据源。导入 `styles.layer.css` 与 `styles.css` 只选一套，`MantineProvider` 生产放真正根节点，别复制到每条列表。
+`@mantine/core@9.7.3`，`@mantine/hooks@9.7.3`，React 19.3.0。许可证 MIT。不安装 `@mantine/form` 和 `@mantine/notifications`。样式用 `styles.layer.css`。Mantine 9 要求 React ≥ 19.2。
 
-## 必须保留
+## 迁移
 
-- NumberInput `number|string` 中间态；不要把空、短横线、无效超界数字直接转成业务数值。
-- 类型和区间校验通过后更新状态，后端再次校验 409/422。
-- 以稳定业务 ID 更新 Table 行；保留语义表头和状态文字。
-- Modal 的键盘焦点、Portal/CSS token 作用域与 Tab 卸载清理。
-- 外部源字符串不能注入 CSS、HTML 或任意 JS，样式变量来自可信配置。
+8 到 9 时 core 与 hooks 一起升，并核对样式入口。非受控 form 的 `form.values` 不是实时值；本示例没有 form 包，不要把教程里的 `useForm` 贴进 `example.tsx`。
 
-## 建议测试
+## 不可删的清理
 
-真实SDK渲染 TextInput、Badge、Table、Switch、NumberInput、Modal；中文 IME；输入空字符串、负号、边界1/100/101、大整数；更改/撤销准确恢复；Dialog关闭后焦点返回；一个 Lab Tab 卸载后无残存 Portal。测试的 API/锁文件版本需与 verification.json 指纹绑定。
+根上一个 Provider。`forceColorScheme="light"` 只为这条 Lab 演示，产品级暗色要单独设计。`NumberInput` 草稿保留 `number | string`。`validQuota` 拒绝空串和 `'-'`。debounce 只用于筛选。行 key 用 id。非法保存不写撤销快照。
 
-## 证据边界
+## 反例
 
-本轮未执行真实 SDK / tsc / Vite / Chromium；不可标 PASS。可 Mock 业务后端，但不能 Mock Mantine 后声称库验证成功。MIT，官方 https://mantine.dev/ 。
+`Number(value) || 0`。`clampBehavior` 默认夹紧后假装用户确认了边界值。每个卡片一个 Provider。两个通知容器。表格 `key={index}`。用未安装的 form 包 API 描述当前示例。
 
-## 第11轮迁移补充
+## 测试断言
 
-将 `examples/feed-history.ts` 与 `example.tsx` 一起迁走；选中项只保留业务 ID，使用函数式 `setFeedHistory` 更新并维护同状态的单步撤销快照。不能将领域规则 Node PASS 推断为 Mantine NumberInput/Modal 的真实SDK行为；运行浏览器时检查焦点返回、IME和 Portal 卸载。
+`tests/feed-history.test.mts` 断言配额守卫、相同值不记历史、撤销恢复上一份行。不证明 Modal 焦点或 150ms 防抖的浏览器时序。
+
+## 真实限制
+
+已挂载：浅色主题、防抖筛选、开关、配额弹层和中间态。未挂载：useForm、通知、HTTP revision、脏检查关闭。遮罩关闭会丢掉未保存草稿，这是当前边界。
+
+## 证据
+
+sdk、build、browser 为 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有匹配 receipt。Actions run `41779873259` 是仓库级检查，不是本条目 PASS。文档：https://mantine.dev/getting-started/

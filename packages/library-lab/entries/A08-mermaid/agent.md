@@ -1,21 +1,39 @@
-# A08 Mermaid — Agent 实施手册
+# A08 Mermaid — 工程手册
 
-选型：可版本化文本流程、时序、状态图；标准数据图表选择 A01/A02，富编辑白板选择 A09/A10。
+## 适用
 
-基线 `mermaid@12.2.0` / MIT。读 `library.json` → `examples/example.tsx` → `guide.md` → `verification.json`。只有固定 presets 的 Mermaid DSL 在本演示里可渲染；不把任意用户输入升级成可信 HTML。
+`mermaid@12.2.0` 把受信任的 DSL 编成 SVG。可拖节点用 A06，关系探索用 A07。不要把用户文章里的原始字符串直接 `initialize`，也不要把 SVG 灌进页面 HTML。
 
-## 必须保留
-- 动态 import，避免首页装入 Mermaid 全量解析器。
-- 可信配置 `initialize({startOnLoad:false,securityLevel:'strict'})`，绝不能传入远程 JSON。
-- `parse(...,{suppressErrors:true})` 先验证、每次 `render()` 使用独立 ID；异步结果要被 mounted flag 拦截。
-- 将 SVG 放入不带 allow-scripts/allow-same-origin 的 sandbox iframe，保留 DSL 原文和语义说明。若业务要点选交互，应另设计受信任隔离及消息协议。
+## 版本
 
-## 反例和安全
-不要调用旧 `mermaid.init`；不要把 `render` SVG 直接当可信 HTML 注入宿主；不要接受未受限的图节点数/递归复杂度；特别核对 GitHub advisory GHSA-c4c3-pg64-4m4v 的受影响范围。用户自定义配置必须拒绝，不能只靠字符串替换净化。
+钉 `mermaid@12.2.0`，MIT，ESM。`startOnLoad: false`，`securityLevel: 'strict'`，`theme: 'neutral'`。v12 默认布局可能是 ELK；本示例没有钉 `layout` / `look`。Node 门槛 22.12 来自上游，不是浏览器验收。
+
+## 迁移
+
+弃用 `mermaid.init` 扫全文档。受控路径是一次 `initialize`、`parse`、唯一 id 的 `render`。业务 id 映射成 `n0` 这类内部 id。从 v11 升上来要显式写出布局和主题再比截图。不要为了点击改成 `loose`。
+
+## 不可删的清理
+
+`queueMermaidRender` 在调用解析前和提交前都看 `isCurrent()`。effect 清理把代数作废。失败和换图时清空上一张 SVG。iframe `sandbox` 保持空字符串。不要调用 `bindFunctions`。
+
+## 反例
+
+```ts
+mermaid.initialize({ ...remoteConfig, securityLevel: 'loose' }); // 错
+element.innerHTML = userDiagram; // 错：DSL 不是 HTML
+// 对：常量配置 initialize 一次；只把 render 返回的 svg 放进 sandbox iframe
+```
+
+固定 render id、每键布局、用 `parse` 代替领域校验，都不要做。
 
 ## 测试断言
-有效 flowchart / sequence / state 均显示；无效 DSL 显示失败，修复后恢复；切页后旧 promise 不回写；iframe 不可运行脚本；本 SDK 构建实际 PASS 前所有文档保持 NOT_RUN。官网 https://mermaid.ai/open-source/config/setup/mermaid/interfaces/Mermaid.html
 
-## 并发与取消（wave14）
+队列测试断言：过期任务不调用 render、不提交结果；失败只报告给仍当前的主人。SDK 收据还要看到真实 `parse`/`render`、非法 DSL 不保留旧图、iframe 无脚本权限。没有 runs 收据则为 NOT_RUN。
 
-迁移多个 Mermaid 图时，必须同时复制 `examples/render-queue.ts`：相同模块中所有组件共用一个串行队列；effect 清理仅使任务失效，并不真正取消正在执行的 Promise。不能把纯队列测试当作 SDK PASS，仍需实际启动 Mermaid，验证快速切换、StrictMode、渲染异常后恢复和 sandbox CSP。
+## 真实限制
+
+DSL 是源码常量，没有编辑器、防抖、HTTP 修订或 `accTitle`。时序图和状态图不会生成可执行流程。iframe 隔离也意味着父页面不能再查询内部 SVG。没有布局耗时数字。
+
+## 证据
+
+Actions `41779873259` 的仓库级 install、typecheck、build、52 SDK 文件（153 测试）和 45 Playwright 不是 A08 PASS。不要把队列测试或历史研究 PASS 写入 `verification.json`。

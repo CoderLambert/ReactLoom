@@ -1,14 +1,39 @@
-# A05 D3 — Agent 工程实施指南
+# A05 D3 — 工程手册
 
-**适用任务**：要求细粒度控制 SVG、scale/axis/shape、品牌化定制交互的图表。常规业务图优先评估 A01/A02，不必默认使用 D3。
-**版本与来源**：d3 7.9.0 / ISC；API https://d3js.org/api 。详细限制见 library.json 和 verification.json（当前 SDK/构建/浏览器均未运行）。
-**可迁移代码**：examples/example.tsx 中真实绘制算法及 ResizeObserver cleanup；examples/demo.tsx 只是 Lab 适配层。不要从文档粘贴一份可能过期的伪源码。
-**React 集成规则**：ref 限定 SVG 的所有权；useEffect 处理数据变化；draw 前清旧图元；return 执行 interrupt、事件解绑及 DOM 移除；ResizeObserver 必须 disconnect。不得修改 document.body 或共享组件的全局 class。
-**数据正确性**：空数据时 max 返回空值，应给合理域；比例尺 domain 与图元 key 相符；明确 px/SVG viewBox 与响应宽度的关系。生产业务必须提供数据表或同等无障碍内容。
-**常见误用**：useEffect 之外命令式改 DOM；数组 index 当稳定数据ID；依赖尺寸未变化仍重绘；漏清理 transition；把高频 pointermove 更新每个 React 子组件。
-**验收**：在真实依赖安装后 pnpm --filter @reactloom/library-lab typecheck、build；浏览器检查三层场景、键盘/屏幕阅读器替代表格、resize 与卸载后 observer 数。缺测试时必须保持 NOT_RUN，不将纯静态校验当 SDK PASS。
-**相关库**：A01 ECharts / A02 Recharts 替代；数据来源可由 D07 TanStack Query 驱动，但数据拉取与缓存不交给 D3。
+## 适用
 
-## 第11轮迁移补充
+`d3@7.9.0` 做比例尺、轴和 SVG 联结。标准报表优先 A01/A02/A03，对齐时序优先 A04。Lab 把整张 `svgRef` 交给 D3；生产混合模式则让 React 画 mark，D3 只碰专用 `<g>`。不要两种写者操作同一批节点。
 
-复制 `examples/chart-policy.ts`；确保绘制集合、选中说明、空集状态使用相同 `visibleSeries` 结果。ResizeObserver的隐藏/零宽不应回填虚假的620px，窄屏只省略重复刻度、不丢原始表格数据。实际 D3 SVG 测试待SDK安装和浏览器运行。
+## 版本
+
+钉 `d3@7.9.0`，ISC，ESM。从 `d3` 按名导入 `scaleBand`、`scaleLinear`、`axisBottom`、`axisLeft`、`line`、`curveMonotoneX`、`max`、`select`。不要并行安装一份版本不同的 `d3-scale`。类型若来自 `@types/d3`，版本号可以和主包不同，以 API 为准。
+
+## 迁移
+
+v5 的 `d3.event` 和分散 enter/exit 改成回调参数和 `selection.join`，key 用业务 id。ECharts 迁过来时列出 tooltip、空态、表格和导出的新主人。`nice()` 的端点只用于刻度。告警序列不要用 `curveMonotoneX` 冒充原始尖峰。
+
+## 不可删的清理
+
+绘图 effect 的 cleanup 必须 `interrupt`、去掉 `pointerenter`、`remove` 子节点。`ResizeObserver` 断开。若加上 brush/zoom，用命名空间 `.on('.brush', null)` / `.on('.zoom', null)`，并取消 RAF 和 fetch。不要在 render 里 append。
+
+## 反例
+
+```tsx
+// 错：React 与 D3 同时拥有 circle
+<svg>{rows.map((row) => <circle key={row.day} />)}</svg>
+// 对：要么 JSX 独占 mark，要么像 Lab 一样 effect 独占 svgRef
+```
+
+下标做 join key、brush 像素当时间、卸载不 remove、8 万 SVG 圆、把缺失画成 0，都不要做。
+
+## 测试断言
+
+策略测试断言尾部窗口、阈值过滤、选中项必须仍可见、宽度夹在 1..4096 且拒绝 0。SDK 收据还要看到真实 `select`/`join`/`axis`/`line`、卸载后 SVG 清空、宽度变化更新 viewBox。没有 runs 收据则为 NOT_RUN。
+
+## 真实限制
+
+没有 brush、zoom、Canvas、HTTP、CSV。表包含被阈值隐藏的行，图不包含。命中只有 `pointerenter`。`curveMonotoneX` 会插值。星期字符串在这份 fixture 里唯一，不能当成通用主键方案。没有帧率数字。
+
+## 证据
+
+Actions `41779873259` 的仓库级 install、typecheck、build、52 SDK 文件（153 测试）和 45 Playwright 不是 A05 PASS。不要把策略测试或历史研究 PASS 写入 `verification.json`。

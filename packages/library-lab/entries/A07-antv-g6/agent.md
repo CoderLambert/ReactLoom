@@ -1,25 +1,38 @@
-# A07 AntV G6 — AI Agent 工程迁移手册
+# A07 AntV G6 — 工程手册
 
-## 任务选择
-当需要呈现关系网络、依赖拓扑、知识图谱时选择 G6；常规图表优先 A01/A02，拖拽流程画布考虑 A06。当前 SDK 基线 `@antv/g6@5.1.1`（MIT），严格区别 4.x 接口。
+## 适用
 
-## 先读取
-`library.json` → `examples/example.tsx` → `guide.md` → `verification.json`。目标项目只移植 Graph 的数据映射、容器管理和 cleanup；实验室控制按钮与 fixture 不需要复制。
+`@antv/g6@5.1.1` 画关系网。可编辑端口和 DAG 约束用 A06，静态 DSL 用 A08。Lab 用固定坐标的圆和箭头，behavior 只有拖动画布和缩放。不要把每次数据变化都写成 `new Graph`。
 
-## 实施要点
-- Graph 挂载到 ref，给容器确定高度；节点 ID 稳定、边引用合法。
-- 构造/渲染异步：使用 mount-generation 或 disposed 守卫，避免卸载后写状态。
-- 卸载必须取消 ResizeObserver 与事件，然后 Graph.destroy()。StrictMode 二次挂载应无残余实例。
-- 高频数据变化考虑 `setData`/`render` 而非频繁构造 GPU/Canvas。
-- Canvas 图提供 DOM 表格/列表，键盘可访问的业务动作不绑在纯 Canvas 上。
+## 版本
 
-## 禁忌与验证
-不得混用 G6 4.x 的 `changeData`；不得默认所有图边无环；不得从用户输入拼接任意 HTML 标签；不得只看静态截图声称交互有效。验证真实 import、node/edge 更新、resize、StrictMode 重挂载、销毁、窄屏和辅助技术数据表。没有当前 sourceFingerprint 的实际证据保持 NOT_RUN。
+包名 `@antv/g6@5.1.1`。不要 `import from 'g6'`，不要混入 v4 `changeData` / `save` / `read`。React 扩展包不在本条目依赖里。MIT 不覆盖外部字体、底图和图片。
 
-## 官方来源
-https://g6.antv.antgroup.com/en/manual/getting-started/integration/react
+## 迁移
 
+v4 数据入口改成 `setData` + `render`。只改变样式时 `updateNodeData` + `draw`。节点 id 改为稳定业务 id，边在投影前检查端点。Lab 现在把 `extended` 放进 effect 依赖，勾选会销毁重建；迁到增量更新时保留 `disposed`，避免对已销毁实例 `setSize`。
 
-### 第10轮资源与响应式约束
+## 不可删的清理
 
-迁移时用实际宿主宽度设定 Graph 初始及更新尺寸，不将 360px 硬编码为移动端最低宽度。`examples/graph-sizing.ts` 仅为确定性尺寸规范化；必须保留 ResizeObserver → requestAnimationFrame 合并更新，以及卸载 cancelAnimationFrame/observer.disconnect/graph.destroy。G6 render 为异步过程，竞态仍需真实 Chromium 挂载/切换/卸载验证，不可将尺寸单测冒充 SDK 成功。
+cleanup 设置 `disposed`，`observer.disconnect()`，`cancelAnimationFrame`，`graph.destroy()`。`render()` 的 then/catch 在 `disposed` 后不得 `setState` 或 `observe`。宽度小于 1 或非有限时不调用 `setSize`。
+
+## 反例
+
+```ts
+if (host.current) new Graph({ container: host.current, data }); // 错：在 render 中
+// 对：effect 内构造；换数据 graph.setData(data); await graph.render();
+```
+
+用下标当 id、`clientX` 写入 `style.x`、用 PNG 代替 JSON、改颜色却 `render()`，都不要做。
+
+## 测试断言
+
+`measuredGraphWidth` 拒绝无效宽度并封顶 4096。SDK 收据还要看到真实 `Graph` 构造、`render`、`setSize`、`destroy`，以及 StrictMode 下 canvas 不累积。没有 runs 收据则为 NOT_RUN。
+
+## 真实限制
+
+没有 dagre、节点拖拽、点击事件、PNG、HTTP 修订。节点数是 3 或 4。列表是文本等价物，不是画布命中。没有 FPS 或 GPU 数字。`labelText` 与列表文案必须来自同一次 `dataset()`。
+
+## 证据
+
+Actions `41779873259` 的仓库级 install、typecheck、build、52 SDK 文件（153 测试）和 45 Playwright 不是 A07 PASS。不要把宽度测试或历史研究 PASS 写入 `verification.json`。
