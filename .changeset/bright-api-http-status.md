@@ -7,3 +7,5 @@ Keep non-JSON HTTP error responses classified by their status, so transient upst
 Apply caller cancellation and per-attempt timeouts while awaiting asynchronous credentials, and prevent a cancelled credential lookup from sending a late request.
 
 Reject request URLs that resolve outside the configured API origin before reading credentials or issuing a fetch.
+
+Honor `Retry-After` HTTP dates for rate-limit responses and avoid negative retry delays; numeric values remain capped by the configured maximum.
