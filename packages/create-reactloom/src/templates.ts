@@ -201,7 +201,7 @@ export function parseManifest(value: unknown): TemplateManifest {
     replacements: optionalReplacements(record.replacements),
     packages: { 'api-client': packageRecord['api-client'], devtools, tsconfig },
     configs: stringList(record.configs, 'configs'),
-    ci: record.ci,
+    ci: templateFile(record.ci, 'ci'),
     docker: record.docker,
     ai: {
       pointers: stringList(aiRecord.pointers, 'ai.pointers'),
@@ -227,7 +227,7 @@ function stringList(value: unknown, label: string): string[] {
   ) {
     throw new Error(`template.json ${label} must be an array of paths.`)
   }
-  return value
+  return value.map((entry) => templateFile(entry, label))
 }
 
 function optionalReactScan(value: unknown): TemplateManifest['reactScan'] {
@@ -522,8 +522,11 @@ function templateFile(value: unknown, label: string): string {
   if (
     typeof value !== 'string' ||
     value.length === 0 ||
-    value.includes('..') ||
-    path.isAbsolute(value)
+    path.isAbsolute(value) ||
+    value.includes('\\') ||
+    value.includes(':') ||
+    value.split('/').some((segment) => segment === '' || segment === '.' || segment === '..') ||
+    [...value].some((char) => char.charCodeAt(0) < 32 || char.charCodeAt(0) === 127)
   ) {
     throw new Error(`template.json ${label} must be a file inside the template.`)
   }
@@ -542,8 +545,7 @@ function optionalRename(value: unknown): Record<string, string> | undefined {
   }
   const rename: Record<string, string> = {}
   for (const [from, to] of Object.entries(value)) {
-    if (typeof to !== 'string') throw new Error('template.json rename values must be strings.')
-    rename[from] = to
+    rename[templateFile(from, 'rename source')] = templateFile(to, 'rename target')
   }
   return rename
 }
@@ -565,7 +567,11 @@ function optionalReplacements(
     ) {
       throw new Error('template.json replacements need file, from, and to strings.')
     }
-    return { file: replacement.file, from: replacement.from, to: replacement.to }
+    return {
+      file: templateFile(replacement.file, 'replacements.file'),
+      from: replacement.from,
+      to: replacement.to,
+    }
   })
 }
 
