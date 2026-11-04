@@ -210,6 +210,18 @@ TanStack Query 组合时，`query.isPending` 可以驱动 `play`，但 `query.da
 
 策略返回 play 只表示调用 `rive.play()`。CDN 或 WASM 失败时画布可以是空的，status 必须解释原因。不要把 `play: true` 写成「用户已经看见车辆动画」。
 
+`RivePlayer` 在 `onLoadError` 里检查 `alive`。视口外卸载和网络失败可能重叠：组件已经离开，晚到的错误不能再 `setMessage`。播放 `try/catch` 同样遵守这个标记。手动暂停不卸载，只把 `play` 设为 false，这样恢复时不必重新下载；隐藏整页则卸载，避免后台继续占着 WebGL。这两条不要合成一个布尔。
+
+```tsx
+const runtime = riveRuntimePolicy({
+  level, pageVisible, inView, reducedMotion: reduced, manuallyPaused, phase,
+});
+const shouldMount = runtime.mount;
+const playing = runtime.play;
+```
+
+示例把这两个布尔交给子组件：不挂载时显示占位文案，挂载但不播放时留下静止画布。占位文案区分「视口外」和「页面在后台」。
+
 业务 phase 的合法迁移只有：idle → pending → success 或 error，以及 pending → idle（取消）。success 不会因为动画停了变回 idle。切换 level 的 effect 把 phase 打回 idle 并 abort，所以从 business 切到 basic 时，不应再弹出上一次的 503 文案。
 
 ## 资源与离线阻断

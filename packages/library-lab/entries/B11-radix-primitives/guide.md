@@ -212,6 +212,12 @@ CheckboxItem 保持打开是为了连续改置顶。若升级后 `preventDefault
 
 RadioGroup 的值只有 `new` 和 `popular`。`onValueChange` 把其他字符串收成 `new`，避免把任意字符串写进排序状态。
 
+筛选「只看未读」之后，选中 id 改到过滤结果的第一项，而不是留在已经被藏起来的频道上。恢复「显示全部」时同样重选。置顶 id 若指向已删除频道，删除分支会从 `pinnedIds` 里拿掉它，避免星标集合泄漏。这些更新都发生在 React state，不写 DOM。
+
+子菜单的 `SubContent` 放在自己的 `Portal` 里，`sideOffset={6}`，避免贴在父菜单边缘点不中。父级 `Content` 的 `sideOffset` 是 8。两层 Portal 都还在 React 树中，不要为了定位改成手动 `appendChild`。
+
+`dropdown.css` 只用类名和 `data-highlighted` / `data-disabled`。不要写死第 n 个子节点的选择器，升级 DOM 结构时会失效。
+
 ## 数据所有权
 
 `visibleFeeds` 不修改入参数组。置顶是 id 集合，不是把频道对象上的布尔写进排序比较时顺手 mutate。删除返回新数组；锁定时返回拷贝，调用方即使忘记看 `disabled` 也不会少一行。选中 id 在删除后改到另一条仍存在的频道，避免菜单标题停在已删除的名字上。
