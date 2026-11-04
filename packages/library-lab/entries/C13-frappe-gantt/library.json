@@ -45,7 +45,7 @@
       "demoId": "basic",
       "title": "最小入门",
       "level": "basic",
-      "executionKind": "react",
+      "executionKind": "browser-frame",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
@@ -55,13 +55,13 @@
         "examples/plan-policy.mjs",
         "examples/plan-policy.d.mts"
       ],
-      "description": "实际 SDK 基础交互"
+      "description": "共享页面预览暂停：document mouseup 监听无公开释放 API，需专用隔离运行器；仍可阅读源码和键盘表格示例。"
     },
     {
       "demoId": "business",
       "title": "实际业务",
       "level": "business",
-      "executionKind": "react",
+      "executionKind": "browser-frame",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
@@ -71,13 +71,13 @@
         "examples/plan-policy.mjs",
         "examples/plan-policy.d.mts"
       ],
-      "description": "业务数据与生命周期"
+      "description": "共享页面预览暂停：document mouseup 监听无公开释放 API，需专用隔离运行器；仍可阅读源码和键盘表格示例。"
     },
     {
       "demoId": "advanced",
       "title": "异常与边界",
       "level": "advanced",
-      "executionKind": "react",
+      "executionKind": "browser-frame",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
@@ -87,7 +87,7 @@
         "examples/plan-policy.mjs",
         "examples/plan-policy.d.mts"
       ],
-      "description": "失败、时间/并发边界"
+      "description": "共享页面预览暂停：document mouseup 监听无公开释放 API，需专用隔离运行器；仍可阅读源码和键盘表格示例。"
     }
   ],
   "provenance": {

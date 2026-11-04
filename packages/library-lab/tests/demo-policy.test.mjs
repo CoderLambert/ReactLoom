@@ -1,8 +1,21 @@
 import assert from 'node:assert/strict'
+import { readFile } from 'node:fs/promises'
 import test from 'node:test'
 import { CAPABILITY_DESCRIPTIONS, demoRunPolicy } from '../src/lib/demo-policy.mjs'
 
 const base = { executionKind: 'react', entryPoint: 'examples/demo.tsx', capabilities: [] }
+test('C13 policy blocks shared-origin execution while retaining canonical table sources', async () => {
+  const root = new URL('../entries/C13-frappe-gantt/', import.meta.url)
+  const entry = JSON.parse(await readFile(new URL('library.json', root), 'utf8'))
+  for (const demo of entry.demos) {
+    assert.equal(demoRunPolicy(demo).mode, 'isolated', demo.demoId)
+    assert.match(demo.description, /document.*mouseup/u)
+    assert.ok(demo.sourceFiles.includes('examples/example.tsx'))
+    assert.ok(demo.sourceFiles.includes('examples/plan-policy.mjs'))
+  }
+  for (const name of ['examples/example.tsx', 'examples/plan-policy.mjs'])
+    assert.ok((await readFile(new URL(name, root))).byteLength > 0)
+})
 test('safe React demos still launch only through the explicit host', () => {
   assert.equal(demoRunPolicy(base).mode, 'react')
   assert.equal(

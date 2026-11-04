@@ -8,7 +8,7 @@
     "note": "待平台执行 TypeScript 和生产构建"
   },
   "browser": {
-    "status": "NOT_RUN",
-    "note": "待真实 Chromium 交互、卸载和可访问性测试"
+    "status": "BLOCKED",
+    "note": "frappe-gantt@1.2.2 发布包的 document mouseup 监听没有公开 destroy/dispose；删除 SVG 不能解除监听。三层示例已停止在共享页面执行，保留规范源码/键盘表格；需专用隔离运行器及真实浏览器生命周期验收后恢复。"
   }
 }
