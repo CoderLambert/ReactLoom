@@ -51,9 +51,7 @@ describe('tasks feature', () => {
     await user.type(title, 'Retry this task')
     await user.click(screen.getByRole('button', { name: 'Add task' }))
 
-    expect(await screen.findByRole('alert')).toHaveTextContent(
-      'Could not add the task. Try again.',
-    )
+    expect(await screen.findByRole('alert')).toHaveTextContent('Could not add the task. Try again.')
     expect(title).toHaveValue('Retry this task')
     expect(title).toHaveAttribute('aria-describedby', 'task-create-error')
 
