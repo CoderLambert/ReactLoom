@@ -147,7 +147,14 @@ function delayFor(attempt: number, policy: RetryPolicy, response?: Response): nu
   const header = response?.headers.get('retry-after')
   if (header) {
     const seconds = Number(header)
-    if (Number.isFinite(seconds)) return Math.min(policy.maxDelayMs, seconds * 1000)
+    if (Number.isFinite(seconds)) {
+      if (seconds >= 0) return Math.min(policy.maxDelayMs, seconds * 1000)
+    } else {
+      const retryAt = Date.parse(header)
+      if (Number.isFinite(retryAt)) {
+        return Math.min(policy.maxDelayMs, Math.max(0, retryAt - Date.now()))
+      }
+    }
   }
   const exp = Math.min(policy.maxDelayMs, policy.baseDelayMs * 2 ** attempt)
   return Math.round(exp * (0.5 + Math.random() * 0.5))
