@@ -30,6 +30,10 @@ const home = createRoute({
     q: typeof s.q === 'string' ? s.q.slice(0, 200) : '',
     group: typeof s.group === 'string' && /^[A-F]$/.test(s.group) ? s.group : 'all',
     only: s.only === 'runnable' ? 'runnable' : '',
+    tag:
+      typeof s.tag === 'string' && s.tag.length <= 40 && /^[\p{L}\p{N} ._+#-]+$/u.test(s.tag)
+        ? s.tag
+        : '',
   }),
   component: () => (
     <Suspense fallback={<p role="status">正在加载目录…</p>}>

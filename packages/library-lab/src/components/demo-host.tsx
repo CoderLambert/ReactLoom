@@ -171,9 +171,7 @@ function Reproduction({ entry, demo }: { entry: Entry; demo: Demo }) {
             在 <code>packages/library-lab</code> 目录安装依赖后执行下方命令。Node.js 与 Vitest
             分别使用真实运行器；网页只展示命令，不执行任意 shell。
           </p>
-          <pre>
-            <code>{command}</code>
-          </pre>
+          <HighlightCode code={command} language="bash" showCopy={false} />
           <button
             type="button"
             onClick={() =>
@@ -211,14 +209,11 @@ export default function DemoHost({
 }) {
   const demo = entry.demos.find((d) => d.demoId === demoId) ?? entry.demos[0]
   const key = `${entry.entryId}/${demo?.demoId ?? ''}`
-  const [startedKey, setStartedKey] = useState<string | null>(null)
-  const [attempt, setAttempt] = useState({ key, reset: 0 })
-  // A scenario change must not inherit authorization from a previously started demo.
-  const started = startedKey === key
   const loader = demoLoaders[key]
   const workerFactory = workerFactories[key]
   const policy = demoRunPolicy(demo)
   const gantt = isRegisteredGanttDemo(entry.entryId, demo)
+  const [attempt, setAttempt] = useState({ key, reset: 0 })
   const run = useMemo(
     () => ({ ...attempt, Component: policy.mode === 'react' && loader ? lazy(loader) : null }),
     [loader, policy.mode, attempt],
@@ -227,10 +222,11 @@ export default function DemoHost({
   const canStart = Boolean(
     gantt || (policy.mode === 'react' && Component) || (policy.mode === 'worker' && workerFactory),
   )
-  useEffect(() => {
-    setStartedKey(null)
-    setAttempt({ key, reset: 0 })
-  }, [key])
+  // The library page remounts this host when the scenario id changes.
+  // The selected scenario is already the instance to show, so mount it immediately.
+  // Stop stays stopped until "运行当前示例" or another scenario selection.
+  const [startedKey, setStartedKey] = useState<string | null>(canStart ? key : null)
+  const started = startedKey === key
   if (!demo)
     return (
       <div className="empty">

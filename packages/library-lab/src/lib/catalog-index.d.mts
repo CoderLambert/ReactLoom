@@ -7,4 +7,5 @@ export function filterCatalogIndex(
   query?: string,
   group?: string,
   onlyDemos?: boolean,
+  tag?: string,
 ): CatalogEntry[]

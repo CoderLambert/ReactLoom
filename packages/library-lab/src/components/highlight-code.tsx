@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 type Token = { offset: number; content: string; color?: string }
 type TokenLine = { offset: number; tokens: Token[] }
@@ -42,20 +42,13 @@ function HighlightCodeSession({ code, language, showCopy = true }: Props) {
   const [loading, setLoading] = useState(false)
   const [notice, setNotice] = useState('')
   const request = useRef(0)
-  useEffect(
-    () => () => {
-      request.current++
-    },
-    [],
-  )
-
   const normalized = ALIASES[language] ?? language
   const supported = SUPPORTED.find((candidate) => candidate === normalized)
   // Only display syntax tokens produced from the currently visible file.
   // Otherwise fast file switching can show stale highlighted code.
   const tokens =
     snapshot?.source === code && snapshot.language === normalized ? snapshot.tokens : null
-  const highlight = async () => {
+  const highlight = useCallback(async () => {
     if (!supported) return
     const run = ++request.current
     setLoading(true)
@@ -89,7 +82,14 @@ function HighlightCodeSession({ code, language, showCopy = true }: Props) {
     } finally {
       if (run === request.current) setLoading(false)
     }
-  }
+  }, [code, normalized, supported])
+  useEffect(() => {
+    if (!supported) return
+    void highlight()
+    return () => {
+      request.current += 1
+    }
+  }, [highlight, supported])
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(code)
@@ -102,9 +102,9 @@ function HighlightCodeSession({ code, language, showCopy = true }: Props) {
     <section className="code-block" aria-label={`${language || '纯文本'} 代码段`}>
       <div className="code-actions">
         <span>{language || 'text'}</span>
-        {supported && !tokens && (
+        {supported && notice.startsWith('高亮不可用') && (
           <button type="button" disabled={loading} onClick={() => void highlight()}>
-            {loading ? '高亮加载中…' : '启用高亮'}
+            重试高亮
           </button>
         )}
         {showCopy && (
@@ -133,7 +133,7 @@ function HighlightCodeSession({ code, language, showCopy = true }: Props) {
         </code>
       </pre>
       <small role="status" className="code-status">
-        {notice}
+        {loading ? '正在高亮…' : notice}
       </small>
     </section>
   )

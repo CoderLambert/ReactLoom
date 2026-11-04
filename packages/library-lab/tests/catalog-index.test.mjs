@@ -90,3 +90,17 @@ test('lightweight search preserves Chinese terms, groups, package names and CLI 
     1,
   )
 })
+test('tag filter matches one catalog tag and leaves an empty tag unconstrained', () => {
+  const other = {
+    ...index[0],
+    entryId: 'D04',
+    slug: 'other-tool',
+    name: 'other',
+    summary: '另一个工具',
+    tags: ['缓存'],
+  }
+  assert.equal(filterCatalogIndex([index[0], other], '', 'all', false, '并发').length, 1)
+  assert.equal(filterCatalogIndex([index[0], other], '', 'all', false, '缓存')[0].entryId, 'D04')
+  assert.equal(filterCatalogIndex([index[0], other], '', 'all', false, '').length, 2)
+  assert.equal(filterCatalogIndex([index[0]], '', 'all', false, '没有这个标签').length, 0)
+})

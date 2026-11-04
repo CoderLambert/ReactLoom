@@ -104,10 +104,18 @@ export function validateCatalogDetail(value, summary) {
   return detail
 }
 
-export function filterCatalogIndex(entries, query = '', group = 'all', onlyDemos = false) {
+export function filterCatalogIndex(
+  entries,
+  query = '',
+  group = 'all',
+  onlyDemos = false,
+  tag = '',
+) {
   const terms = query.trim().toLocaleLowerCase().split(/\s+/u).filter(Boolean)
+  const wanted = typeof tag === 'string' ? tag : ''
   return entries.filter((item) => {
     if (group !== 'all' && item.group !== group) return false
+    if (wanted && !item.tags.includes(wanted)) return false
     if (onlyDemos && !item.surfaces.some((kind) => kind === 'react' || kind === 'browser-frame'))
       return false
     const searchable = [

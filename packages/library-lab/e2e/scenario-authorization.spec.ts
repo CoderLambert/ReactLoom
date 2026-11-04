@@ -1,19 +1,19 @@
 import { expect, test } from '@playwright/test'
 
-test('@C20 scenario switch never inherits an already-started demo or eager-loads its SDK', async ({
+test('@C20 selecting a scenario loads that demo and drops the previous run state', async ({
   page,
 }) => {
   await page.goto('/libraries/clsx?tab=demo&example=basic')
-  await page.getByRole('button', { name: '运行当前示例' }).click()
-  await expect(page.getByTestId('class-output')).toBeVisible()
+  await expect(page.getByRole('heading', { name: '条件类名' })).toBeVisible()
+  await page.getByLabel('选中', { exact: true }).check()
+  await expect(page.getByTestId('class-output')).toContainText('is-selected')
   const scenario = page.getByRole('combobox', { name: '学习场景' })
   await scenario.selectOption('business')
-  await expect(page.getByRole('button', { name: '运行当前示例' })).toBeVisible()
-  await expect(page.getByRole('button', { name: '停止并卸载' })).toHaveCount(0)
-  await expect(page.getByTestId('class-output')).toHaveCount(0)
+  await expect(page.getByRole('heading', { name: '新闻卡片状态' })).toBeVisible()
+  await expect(page.getByLabel('选中', { exact: true })).not.toBeChecked()
+  await expect(page.getByTestId('class-output')).not.toContainText('is-selected')
   await scenario.selectOption('basic')
-  await expect(page.getByRole('button', { name: '运行当前示例' })).toBeVisible()
-  await expect(page.getByTestId('class-output')).toHaveCount(0)
-  await page.getByRole('button', { name: '运行当前示例' }).click()
-  await expect(page.getByTestId('class-output')).toBeVisible()
+  await expect(page.getByRole('heading', { name: '条件类名' })).toBeVisible()
+  await expect(page.getByLabel('选中', { exact: true })).not.toBeChecked()
+  await expect(page.getByTestId('class-output')).not.toContainText('is-selected')
 })

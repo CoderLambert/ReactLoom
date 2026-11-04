@@ -7,7 +7,7 @@ function Navigation() {
   return (
     <>
       <header className="topbar">
-        <Link className="brand" to="/" search={{ q: '', group: 'all', only: '' }}>
+        <Link className="brand" to="/" search={{ q: '', group: 'all', only: '', tag: '' }}>
           <span className="brand-icon" aria-hidden="true">
             R
           </span>
@@ -23,11 +23,16 @@ function Navigation() {
       <div className="layout">
         <aside className="sidebar" aria-label="库分类">
           <p className="eyebrow">ENGINEERING LIBRARY</p>
-          <Link to="/" search={{ q: '', group: 'all', only: '' }} className="side-link">
+          <Link to="/" search={{ q: '', group: 'all', only: '', tag: '' }} className="side-link">
             全部工具库 <span>{entries.length}</span>
           </Link>
           {Object.entries(GROUPS).map(([id, name]) => (
-            <Link to="/" key={id} search={{ q: '', group: id, only: '' }} className="side-link">
+            <Link
+              to="/"
+              key={id}
+              search={{ q: '', group: id, only: '', tag: '' }}
+              className="side-link"
+            >
               <span>
                 <b className="group-letter">{id}</b>
                 {name}
