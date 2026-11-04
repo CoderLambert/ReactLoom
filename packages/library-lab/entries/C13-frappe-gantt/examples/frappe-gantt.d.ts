@@ -23,5 +23,8 @@ declare module 'frappe-gantt' {
       tasks: GanttTask[],
       options?: GanttOptions,
     );
+    refresh(tasks: GanttTask[]): void;
+    change_view_mode(mode: 'Day' | 'Week' | 'Month', maintain_pos?: boolean): void;
   }
 }
+

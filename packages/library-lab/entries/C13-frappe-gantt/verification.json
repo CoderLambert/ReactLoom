@@ -8,7 +8,7 @@
     "note": "待平台执行 TypeScript 和生产构建"
   },
   "browser": {
-    "status": "BLOCKED",
-    "note": "frappe-gantt@1.2.2 发布包的 document mouseup 监听没有公开 destroy/dispose；删除 SVG 不能解除监听。三层示例已停止在共享页面执行，保留规范源码/键盘表格；需专用隔离运行器及真实浏览器生命周期验收后恢复。"
+    "status": "NOT_RUN",
+    "note": "已接入 C13 专用 loopback 4321 文档运行器；父文档不加载图表。单文档实例使用 refresh/change_view_mode，退出销毁整个 iframe。当前输入的真实 Chromium 文档监听数量、旧 frame/context 销毁和业务回归仍待 CI 执行，未提升 PASS。"
   }
 }

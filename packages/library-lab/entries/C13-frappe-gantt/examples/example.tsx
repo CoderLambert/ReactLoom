@@ -11,16 +11,31 @@ const BASE:Task[]=[
 ];
 function GanttCanvas({tasks,view}:{tasks:Task[];view:'Day'|'Week'|'Month'}) {
  const host=useRef<HTMLDivElement|null>(null);
+ const chart=useRef<import('frappe-gantt').default|null>(null);
+ const latest=useRef({tasks,view});
+ const applied=useRef({tasks,view});
  const [error,setError]=useState('');
  useEffect(()=>{
   const el=host.current;if(!el)return;let alive=true;el.replaceChildren();setError('');
-  // Frappe Gantt mutates its task descriptors. Never hand it React's authoritative objects.
   import('frappe-gantt').then(({default:Gantt})=>{
    if(!alive)return;
-   const copied=tasks.map(t=>({...t}));
-   new Gantt(el,copied,{view_mode:view,readonly:true,popup:false,scroll_to:'start'});
+   // One constructor per dedicated document. The SDK mutates its copied descriptors.
+   const current=latest.current;
+   chart.current=new Gantt(el,current.tasks.map(t=>({...t})),{view_mode:current.view,readonly:true,popup:false,scroll_to:'start'});
+   applied.current=current;
   }).catch(e=>{if(alive)setError(String(e));});
-  return()=>{alive=false;el.replaceChildren();};
+  // DOM removal alone cannot release upstream's document mouseup closure.
+  // The registered runner destroys the entire frame on stop/reset/leave.
+  return()=>{alive=false;chart.current=null;el.replaceChildren();};
+ },[]);
+ useEffect(()=>{
+  latest.current={tasks,view};
+  const instance=chart.current;if(!instance)return;
+  try {
+   if(applied.current.tasks!==tasks)instance.refresh(tasks.map(t=>({...t})));
+   if(applied.current.view!==view)instance.change_view_mode(view);
+   applied.current={tasks,view};
+  } catch(e){setError(String(e));}
  },[tasks,view]);
  return <div className="rl-c13"><div ref={host} className="rl-c13-chart" role="img"
     aria-label="任务时间线图，仅作视觉展示；下方的语义表格可使用键盘编辑"/>
@@ -33,7 +48,8 @@ export default function FrappeGanttExample({level}:{level:Level}){
  const [status,setStatus]=useState('内存任务，未连接真实项目服务');
  const shown=useMemo(()=>tasks.filter(t=>t.name.includes(filter)),[tasks,filter]);
  function save(task:Task,form:FormData){
-  const next:Task={...task,start:String(form.get('start')),end:String(form.get('end')),progress:Number(form.get('progress'))};
+  const rawProgress=form.get('progress');
+  const next:Task={...task,start:String(form.get('start')),end:String(form.get('end')),progress:typeof rawProgress==='string'&&rawProgress.trim()!==''?Number(rawProgress):NaN};
   const candidate=tasks.map(t=>t.id===task.id?next:t);
   const error=validatePlan(candidate);
   if(error){setStatus('已拒绝保存，视图保持不变：'+error);return;}
@@ -57,11 +73,12 @@ export default function FrappeGanttExample({level}:{level:Level}){
    {shown.map(task=><tr key={task.id}><td>{task.name}</td><td>{task.dependencies||'—'}</td><td>
     {level==='basic'?task.start+' → '+task.end:
     <form key={task.id+task.start+task.end+task.progress} onSubmit={e=>{e.preventDefault();save(task,new FormData(e.currentTarget));}}
+      onKeyDown={e=>{if(e.key==='Enter'&&e.target instanceof HTMLInputElement&&!e.nativeEvent.isComposing){e.preventDefault();save(task,new FormData(e.currentTarget));}}}
       className="demo-controls">
      <label>开始 <input aria-label={task.name+'开始日期'} type="date" name="start" defaultValue={task.start} required/></label>
      <label>结束 <input aria-label={task.name+'结束日期'} type="date" name="end" defaultValue={task.end} required/></label>
      <label>进度 <input aria-label={task.name+'进度'} type="number" name="progress" min={0} max={100} defaultValue={task.progress} required/></label>
-     <button type="submit">保存</button>
+     <button type="button" onClick={e=>{const form=e.currentTarget.form;if(form)save(task,new FormData(form));}}>保存</button>
     </form>}
    </td></tr>)}
   </tbody></table></div>
@@ -69,3 +86,4 @@ export default function FrappeGanttExample({level}:{level:Level}){
   {level==='advanced'&&<p>将结束日改为早于开始日触发拒绝；保存“联调回归”模拟 409。本地依赖闭环/非有限进度已校验；跨时区与服务端 revision 仍需要独立契约测试。</p>}
  </section>;
 }
+

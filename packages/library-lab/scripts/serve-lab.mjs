@@ -15,8 +15,14 @@ async function close() {
   )
 }
 try {
-  for (const relative of ['../runners/msw/vite.config.mjs', '../vite.config.ts']) {
-    const options = { configFile: fileURLToPath(new URL(relative, import.meta.url)) }
+  for (const relative of [
+    '../runners/msw/vite.config.mjs',
+    '../runners/gantt/vite.config.ts',
+    '../vite.config.ts',
+  ]) {
+    const options = {
+      configFile: fileURLToPath(new URL(relative, import.meta.url)),
+    }
     const server = mode === 'dev' ? await createServer(options) : await preview(options)
     servers.push(server)
     if (mode === 'dev') await server.listen()

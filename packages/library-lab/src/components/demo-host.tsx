@@ -2,12 +2,14 @@ import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
 
 const WorkerHost = lazy(() => import('./worker-host'))
 const IsolatedMswPanel = lazy(() => import('./isolated-msw-panel'))
+const IsolatedGanttPanel = lazy(() => import('./isolated-gantt-panel'))
 
 import { ErrorBoundary } from 'react-error-boundary'
 import { demoLoaders } from '../generated/loaders'
 import { workerFactories } from '../generated/worker-loaders'
 import { JSON_RESPONSE_LIMITS, readLimitedJsonResponse } from '../lib/bounded-json.mjs'
 import { CAPABILITY_DESCRIPTIONS, demoRunPolicy } from '../lib/demo-policy.mjs'
+import { isRegisteredGanttDemo } from '../lib/gantt-frame-session.mjs'
 import { packageInstallCommand } from '../lib/package-source.mjs'
 import { reproductionCommand } from '../lib/reproduction.mjs'
 import { requestGeneratedResource } from '../lib/resource-fetch.mjs'
@@ -216,13 +218,14 @@ export default function DemoHost({
   const loader = demoLoaders[key]
   const workerFactory = workerFactories[key]
   const policy = demoRunPolicy(demo)
+  const gantt = isRegisteredGanttDemo(entry.entryId, demo)
   const run = useMemo(
     () => ({ ...attempt, Component: policy.mode === 'react' && loader ? lazy(loader) : null }),
     [loader, policy.mode, attempt],
   )
   const { Component } = run
   const canStart = Boolean(
-    (policy.mode === 'react' && Component) || (policy.mode === 'worker' && workerFactory),
+    gantt || (policy.mode === 'react' && Component) || (policy.mode === 'worker' && workerFactory),
   )
   useEffect(() => {
     setStartedKey(null)
@@ -289,7 +292,9 @@ export default function DemoHost({
               )}
             >
               <Suspense fallback={<p role="status">正在加载当前示例…</p>}>
-                {Component ? (
+                {gantt ? (
+                  <IsolatedGanttPanel level={demo.level} />
+                ) : Component ? (
                   <Component level={demo.level} />
                 ) : workerFactory ? (
                   <WorkerHost

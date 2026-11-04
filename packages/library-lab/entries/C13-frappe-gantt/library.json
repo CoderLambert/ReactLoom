@@ -55,7 +55,7 @@
         "examples/plan-policy.mjs",
         "examples/plan-policy.d.mts"
       ],
-      "description": "共享页面预览暂停：document mouseup 监听无公开释放 API，需专用隔离运行器；仍可阅读源码和键盘表格示例。"
+      "description": "独立文档中的真实甘特图与语义任务表格，显式启停。"
     },
     {
       "demoId": "business",
@@ -71,7 +71,7 @@
         "examples/plan-policy.mjs",
         "examples/plan-policy.d.mts"
       ],
-      "description": "共享页面预览暂停：document mouseup 监听无公开释放 API，需专用隔离运行器；仍可阅读源码和键盘表格示例。"
+      "description": "键盘表格编辑、内存任务保存与完整依赖图；独立文档负责图表生命周期。"
     },
     {
       "demoId": "advanced",
@@ -87,7 +87,7 @@
         "examples/plan-policy.mjs",
         "examples/plan-policy.d.mts"
       ],
-      "description": "共享页面预览暂停：document mouseup 监听无公开释放 API，需专用隔离运行器；仍可阅读源码和键盘表格示例。"
+      "description": "无效日期、依赖环和模拟 409 拒绝；停止或离开时销毁执行文档。"
     }
   ],
   "provenance": {
