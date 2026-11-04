@@ -1,4 +1,5 @@
 // Calendar days and dependency graphs belong to the domain, not the Gantt widget.
+export const MAX_PLAN_SPAN_DAYS = 730;
 export function validCivilDate(value) {
   if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
   const parsed = new Date(value + 'T00:00:00Z');
@@ -15,9 +16,17 @@ export function validatePlan(tasks) {
   }
   const pending = new Map();
   const downstream = new Map([...byId.keys()].map(id => [id, []]));
+  let earliestStart = Infinity;
+  let latestEnd = -Infinity;
   for (const task of tasks) {
     if (!validCivilDate(task.start) || !validCivilDate(task.end) || task.start > task.end)
       return task.id + ' 的日期区间无效';
+    // Upstream parses with new Date(year, ...), which aliases years 0000–0099 to 1900–1999.
+    if (task.start < '0100-01-01' || task.end < '0100-01-01')
+      return task.id + ' 的日期年份必须不小于 0100（SDK 年份兼容限制）';
+    // Use already validated UTC calendar dates; numeric Date constructors normalize years 0–99.
+    earliestStart = Math.min(earliestStart, Date.parse(task.start + 'T00:00:00Z'));
+    latestEnd = Math.max(latestEnd, Date.parse(task.end + 'T00:00:00Z'));
     if (!Number.isFinite(task.progress) || task.progress < 0 || task.progress > 100)
       return task.id + ' 的进度必须是有限的 0–100 数字';
     if (typeof task.dependencies !== 'string') return task.id + ' 的依赖格式无效';
@@ -29,6 +38,8 @@ export function validatePlan(tasks) {
     }
     pending.set(task.id, deps.length);
   }
+  if (latestEnd - earliestStart > MAX_PLAN_SPAN_DAYS * 86400000)
+    return '演示计划跨度不能超过 ' + MAX_PLAN_SPAN_DAYS + ' 个 UTC 日';
   const queue = [...pending].filter(([, degree]) => degree === 0).map(([id]) => id);
   let processed = 0;
   for (let index = 0; index < queue.length; index++) {

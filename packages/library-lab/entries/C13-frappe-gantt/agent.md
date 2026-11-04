@@ -20,5 +20,5 @@ examples/example.tsx、examples/gantt.css、examples/plan-policy.mjs 与对应 .
 https://github.com/frappe/gantt
 
 ## 不可删的拓扑门禁
-迁移时同时复制 `examples/plan-policy.mjs` 和 `.d.mts`，保存前必须运行 `validatePlan(candidate)`。不可用“只有自依赖检查”代替多节点有向环检测，不可用 `progress < 0 || progress > 100` 代替 `Number.isFinite`。测试 `node --test .../tests/plan-policy.test.mjs` 属于纯领域策略，不代表图表 SDK/DOM 已通过。
+迁移时同时复制 `examples/plan-policy.mjs` 和 `.d.mts`，保存前必须运行 `validatePlan(candidate)`。整份计划最早开始至最晚结束的 UTC 日差最多 730；此门禁同样在异步 import 完成后的构造、refresh/视图更新之前执行。图表保持只读，没有绕过校验的拖拽保存通道。不可删除跨度预算或仅检查单个任务的工期。SDK 数值 Date 构造器会把 0000–0099 映射为 1900–1999；validatePlan 额外拒绝早于 0100-01-01 的日期，不能把 ISO 日期有效当作 SDK 年份兼容。不可用“只有自依赖检查”代替多节点有向环检测，不可用 `progress < 0 || progress > 100` 代替 `Number.isFinite`。测试 `node --test .../tests/plan-policy.test.mjs` 属于纯领域策略，不代表图表 SDK/DOM 已通过。
 

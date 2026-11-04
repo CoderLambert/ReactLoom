@@ -2,14 +2,23 @@ import assert from 'node:assert/strict'
 import { readFile } from 'node:fs/promises'
 import test from 'node:test'
 import { CAPABILITY_DESCRIPTIONS, demoRunPolicy } from '../src/lib/demo-policy.mjs'
+import { isRegisteredGanttDemo } from '../src/lib/gantt-frame-session.mjs'
 
 const base = { executionKind: 'react', entryPoint: 'examples/demo.tsx', capabilities: [] }
-test('C13 policy blocks shared-origin execution while retaining canonical table sources', async () => {
+test('C13 dedicated preview keeps the canonical entry isolated from the shared origin', async () => {
   const root = new URL('../entries/C13-frappe-gantt/', import.meta.url)
   const entry = JSON.parse(await readFile(new URL('library.json', root), 'utf8'))
+  assert.deepEqual(
+    entry.demos.map((demo) => demo.demoId),
+    ['basic', 'business', 'advanced'],
+  )
   for (const demo of entry.demos) {
+    assert.equal(demo.executionKind, 'browser-frame', demo.demoId)
+    assert.equal(demo.entryPoint, 'examples/demo.tsx', demo.demoId)
     assert.equal(demoRunPolicy(demo).mode, 'isolated', demo.demoId)
-    assert.match(demo.description, /document.*mouseup/u)
+    assert.equal(isRegisteredGanttDemo('C13', demo), true, demo.demoId)
+    assert.equal(isRegisteredGanttDemo('C12', demo), false)
+    assert.ok(demo.sourceFiles.includes('examples/demo.tsx'))
     assert.ok(demo.sourceFiles.includes('examples/example.tsx'))
     assert.ok(demo.sourceFiles.includes('examples/plan-policy.mjs'))
   }

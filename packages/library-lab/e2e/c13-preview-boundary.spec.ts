@@ -192,6 +192,27 @@ test('@C13 advanced refusals preserve the chart and reset/scenario/tab changes d
       .getByRole('button', { name: '保存' })
       .click()
     await expect(frame.getByRole('status')).toContainText('已拒绝保存，视图保持不变')
+    const frontendBar = frame.locator('.bar-wrapper[data-id="frontend"] .bar')
+    const bounds = await frontendBar.evaluate((element) => [
+      element.getAttribute('x'),
+      element.getAttribute('width'),
+    ])
+    await frame.getByLabel('前端开发开始日期', { exact: true }).fill('0100-01-01')
+    await frame.getByLabel('前端开发结束日期', { exact: true }).fill('0100-01-02')
+    await frame
+      .getByRole('row')
+      .filter({ hasText: '前端开发' })
+      .getByRole('button', { name: '保存' })
+      .click()
+    await expect(frame.getByRole('status')).toContainText(/730.*UTC/u)
+    expect(
+      await frontendBar.evaluate((element) => [
+        element.getAttribute('x'),
+        element.getAttribute('width'),
+      ]),
+    ).toEqual(bounds)
+    await frame.getByLabel('前端开发开始日期', { exact: true }).fill('2026-10-30')
+    await frame.getByLabel('前端开发结束日期', { exact: true }).fill('2026-11-04')
     await frame.getByRole('spinbutton', { name: '联调回归进度' }).fill('80')
     await frame
       .getByRole('row')

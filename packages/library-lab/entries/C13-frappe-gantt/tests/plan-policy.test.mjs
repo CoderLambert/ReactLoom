@@ -33,3 +33,34 @@ test('reject duplicated task IDs and nonfinite progress',()=>{
 test('invalid range fails before being rendered by the SDK',()=>{
  const a=fixture();a[1].end='2026-10-29';assert.match(validatePlan(a),/日期区间/);
 });
+test('bound the whole plan to 730 UTC days, including gaps between short tasks',()=>{
+ const plan=[
+  {id:'early',start:'2024-01-01',end:'2024-01-02',progress:0,dependencies:''},
+  {id:'late',start:'2025-12-30',end:'2025-12-31',progress:0,dependencies:'early'},
+ ];
+ assert.equal(validatePlan(plan),null,'730 UTC days must remain accepted');
+ plan[1].end='2026-01-01';
+ assert.match(validatePlan(plan),/730.*UTC/,'731 UTC days must be rejected');
+});
+test('valid distant years cannot expand the current project into an unbounded chart',()=>{
+ for(const year of ['0100','9999']){
+  const plan=fixture();plan[1].start=year+'-01-01';plan[1].end=year+'-01-02';
+  const before=structuredClone(plan);
+  assert.match(validatePlan(plan),/730.*UTC/,year);
+  assert.deepEqual(plan,before,'rejected validation must not mutate task descriptors');
+ }
+});
+test('span calculation uses validated UTC dates within supported SDK years',()=>{
+ for(const [start,end] of [['0100-01-01','0102-01-01'],['9997-01-01','9999-01-01'],['2024-11-03','2026-11-03']]){
+  assert.equal(validatePlan([{id:'bounded',start,end,progress:0,dependencies:''}]),null);
+ }
+});
+test('reject SDK numeric-Date year aliasing across the 0099 to 0100 boundary',()=>{
+ assert.equal(validCivilDate('0099-12-30'),true,'ISO validity does not establish SDK year compatibility');
+ const plan=[
+  {id:'old',start:'0099-12-30',end:'0099-12-31',progress:0,dependencies:''},
+  {id:'next',start:'0100-01-01',end:'0100-01-02',progress:0,dependencies:'old'},
+ ];
+ assert.match(validatePlan(plan),/0100.*SDK/);
+});
+

@@ -1,6 +1,6 @@
 import {useEffect,useMemo,useRef,useState} from 'react';
 import './gantt.css';
-import {validatePlan} from './plan-policy.mjs';
+import {MAX_PLAN_SPAN_DAYS,validatePlan} from './plan-policy.mjs';
 export {validatePlan,validCivilDate} from './plan-policy.mjs';
 type Level='basic'|'business'|'advanced';
 type Task={id:string;name:string;start:string;end:string;progress:number;dependencies:string};
@@ -21,6 +21,8 @@ function GanttCanvas({tasks,view}:{tasks:Task[];view:'Day'|'Week'|'Month'}) {
    if(!alive)return;
    // One constructor per dedicated document. The SDK mutates its copied descriptors.
    const current=latest.current;
+   const issue=validatePlan(current.tasks);
+   if(issue){setError(issue);return;}
    chart.current=new Gantt(el,current.tasks.map(t=>({...t})),{view_mode:current.view,readonly:true,popup:false,scroll_to:'start'});
    applied.current=current;
   }).catch(e=>{if(alive)setError(String(e));});
@@ -29,6 +31,8 @@ function GanttCanvas({tasks,view}:{tasks:Task[];view:'Day'|'Week'|'Month'}) {
   return()=>{alive=false;chart.current=null;el.replaceChildren();};
  },[]);
  useEffect(()=>{
+  const issue=validatePlan(tasks);
+  if(issue){setError(issue);return;}
   latest.current={tasks,view};
   const instance=chart.current;if(!instance)return;
   try {
@@ -82,7 +86,7 @@ export default function FrappeGanttExample({level}:{level:Level}){
     </form>}
    </td></tr>)}
   </tbody></table></div>
-  <p>甘特图只负责可视化，日期更改由语义表格完成。筛选只作用于表格，不能将缺少依赖的子集交给甘特引擎。</p>
+  <p>甘特图只负责可视化，日期更改由语义表格完成。筛选只作用于表格，不能将缺少依赖的子集交给甘特引擎。演示计划最早开始至最晚结束最多相隔 {MAX_PLAN_SPAN_DAYS} 个 UTC 日，超限拒绝保存。</p>
   {level==='advanced'&&<p>将结束日改为早于开始日触发拒绝；保存“联调回归”模拟 409。本地依赖闭环/非有限进度已校验；跨时区与服务端 revision 仍需要独立契约测试。</p>}
  </section>;
 }
