@@ -147,6 +147,10 @@ fixture 是纯文本。真实 RSS 正文先净化，再决定能不能作为 HTM
 
 `followOutput` 的参数表示当前是否贴底。返回 `'auto'` 才会跟着新消息。返回 `false` 时用户留在历史位置。不要写成常量 `'auto'`。`atBottomStateChange` 只更新说明文字，不反向滚动。用它来 `scrollToIndex` 会和 `followOutput` 打架。
 
+business 的 `Virtuoso` 只收到 `visible`，也就是当前 limit 切片，不是 630 条全量。`endReached` 增加 limit 之后，data 变长，库才会多挂几行。把全量数组直接交给它，分页门闩就没有意义。
+
+`normalizeFeedQuery` 先于 `includes`。控制字符被去掉之后，搜索不会因为零宽字符对不上标题。
+
 ## 证据
 
 `view-policy` 单测不挂载 Virtuoso，也不能证明滚动和测量。sdk 要真实 import `react-virtuoso@4.18.19` 并在 `docs/library-lab/evidence/runs/` 留下收据。browser 单独计。

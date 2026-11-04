@@ -194,6 +194,10 @@ const [page, setPage] = useQueryState(
 
 `deriveSearchView` 先清洗查询，再决定分组，再过滤，再算页数，最后夹页码。顺序反了会出现「页码合法但切片为空」。`pageItems` 只给 business 和 advanced 的列表。basic 渲染全部 `matches`，否则每页 2 条会让入门看起来像坏了。清除按钮同时 `setQuery(null)`、`setPage(null)` 和 `setGroup(null)`，并清空 draft。只清 draft 会在 effect 里被 URL 填回来。
 
+`PAGE_SIZE` 是 2，五条数据最多 3 页。改 page size 而不改夹取公式，最后一页会空。公式是 `Math.ceil(matches.length / PAGE_SIZE)`，再把请求页夹到这个范围内。
+
+分组按钮把 `all` 写成 `null`。地址栏里因此没有 `ll_c19_group=all`。测试不要期望这个默认值出现在 query 里。
+
 `history: 'replace'` 的搜索仍会触发使用这些 state 的组件渲染。没有接口时只是本地过滤。接上 Query 之后，queryKey 用 `safeQuery` 和 `safeGroup`，不要用尚未提交的 `draft`，否则组合中的拼音会打出请求。
 
 ## 证据

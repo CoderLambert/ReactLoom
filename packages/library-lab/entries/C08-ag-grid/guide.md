@@ -173,6 +173,8 @@ Community Infinite 若以后启用：`endRow` 不包含，`successCallback` 和 
 
 过滤用 `toLocaleLowerCase` 比较频道名，再把结果数组交给 `rowData`。网格自己的列过滤器仍然开着。两套过滤会叠在一起。教学时先清空列过滤，再看输入框，避免把「没有行」误判成 revision 冲突。编辑请求仍用 `rowsRef` 里的全量行，不使用过滤后的数组去 `applyStatusEdit`，否则被滤掉的行会变成 `not-found`。`getRowId` 同样读全量行上的 `id`，过滤只改变传入网格的数组。
 
+状态列的编辑器只给出三个枚举。回调里再查一次 `STATUSES`，避免以后有人改 `cellEditorParams` 时把任意字符串写进行。
+
 ## 证据
 
 `edit-policy` 单测不创建网格。sdk 要真实 import `ag-grid-react@36.2.0` 并在 `docs/library-lab/evidence/runs/` 留下收据。键盘和滚动属于 browser。

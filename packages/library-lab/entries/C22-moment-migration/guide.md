@@ -191,6 +191,8 @@ date-fns 和 Day.js 的 pin 与 C14、C15 相同。升级任一个都要重跑 `
 
 `getMigrationReport` 的 `dateFnsLocalFormat` 使用 `parseISO` 加 `format`，没有传 `tz()`。它只证明日历日字符串能被格式化，不证明显示时区。时区在 `renderedInZone` 和 advanced 的 `TZDate` 里。不要用斜线日期那一栏判断纽约偏移。秋季两个 `Date` 的差用毫秒除以 3600000，结果应是 1。若变成 0，说明两个字符串被解析成了同一个 instant，偏移已经丢了。
 
+basic 不渲染时区下拉框。不要在 basic 的输出里找 `chosenZone`。那一栏从 business 才进入 `report`。
+
 ## 证据
 
 本条目的运行库是 date-fns、`@date-fns/tz` 和 Day.js。没有 moment 的 sdk 可写。收据仍要出现在 `docs/library-lab/evidence/runs/`，并且命令 import 的是上述三个 pin。把「没有安装 Moment」写成 Moment PASS 是错的。browser 看非法日期的 alert 和 advanced 的 JSON。

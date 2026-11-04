@@ -177,6 +177,10 @@ JTD 的 serializer 不校验。先 `validate` 再序列化。`JSONSchemaType` �
 
 `uniqueItems` 用 JSON 比较。两条 feed 只差标题、URL 相同，Ajv 认为它们不同。域名规则仍应报重复。相反，两条完全相同的对象会先死在 `uniqueItems`，走不到域名规则。测试要覆盖这两种，不能只留一种。`windowSchema` 在 advanced 不跑 URL 规则。给它一条 feed 并期待 `/url` 错误，是测错了 schema。条件失败应出现在 `maxConcurrent` 或根上的 additionalProperties。
 
+`id` 的 pattern 拒绝大写。`Frontend` 不是合法 id，即使用户觉得它只是标题。标题字段允许中文和空格，长度 2 到 80。不要把标题的规则抄到 id 上。
+
+批量 schema 的 `maxItems` 是 5。第 6 条是 Schema 错误，不是域名规则的「太多 URL」。
+
 ## 证据
 
 `rss-policy` 单测不是 Ajv 编译通过。sdk 要真实 `import Ajv from 'ajv'` 并在 `docs/library-lab/evidence/runs/` 有收据。build 与 browser 保持 NOT_RUN，直到各自收据存在。

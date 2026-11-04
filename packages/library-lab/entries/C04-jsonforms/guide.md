@@ -169,6 +169,10 @@ basic 的 schema 没有 url。不要把 business 的 `if/then` 复制到 basic �
 
 `validationMode` 用 `ValidateAndShow`，错误数来自 `onChange` 的 `errors` 长度。这个数字不是 `additionalErrors`。状态行把两者分开写。把 409 算进 Schema 错误数，会在名称改回合法值之前一直禁用保存，即使用户已经改对了别的字段。Lab 只在 Schema 错误大于 0 时禁用按钮，409 仍显示在字段上，允许再次提交。组合期间的提交在进 delay 之前返回，generation 不会为了那一次点击增加。否则一次被拒绝的拼音确认会把正在进行的保存取消掉。
 
+手动模式的 payload 不带 `url`，但表单 data 里可以仍有旧地址。切回 rss 时，旧地址会重新出现在 payload 里。若产品要求切到手动就忘掉地址，要在切换时显式删除，不能靠 HIDE。
+
+`subscriptionSchema` 的 `then` 分支要求 url 至少 8 个字符且匹配 `^https://`。`https://a` 这种过短的字符串应停在 Schema，走不到 `validateSubmission`。长度够但带用户信息的地址才会落到第二层。
+
 ## 证据
 
 `submission-policy` 单测不挂载 JSON Forms。sdk 要真实 import `@jsonforms/react@3.8.0` 并在 `docs/library-lab/evidence/runs/` 留下收据。浏览器还要看 HIDE、409 回填和取消。build 单独计。

@@ -191,6 +191,10 @@ SSR 没有滚动容器。`initialRect` 只能做预估。本 Demo 没有服务�
 
 `overscrollBehavior: 'contain'` 让滚动停在窗口里，不把外层 Lab 页面一起带走。去掉它不影响测量正确性，但会让跳转看起来像页面在动。查滚动问题时先确认滚的是 `viewport` 这个 ref。`estimateSize` 返回常数 94。展开后的高度只来自测量。把展开高度写进 `estimateSize` 又保留 `measureElement`，两套尺寸会抢同一行。
 
+`viewIdentity` 用 `JSON.stringify([group, query, revision])`。不要改成 `group + query`。`a` + `bc` 和 `ab` + `c` 会变成同一个 key，两套测量就会串。
+
+空 id 在 `stableRowId` 抛 `TypeError`。捕获后不要渲染一个占位行再继续滚，先修数据。
+
 测量 ref 绑在绝对定位的外层 div 上，而不是内层 article。绑错节点会把 margin 算丢，下一行重叠。改样式时保持 `data-index` 和 ref 在同一个元素上。
 
 ## 证据

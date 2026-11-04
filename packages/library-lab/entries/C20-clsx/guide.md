@@ -200,6 +200,8 @@ advanced 的 `edge` 把假值、数字和嵌套数组放进同一次调用，用
 
 卡片的 `<article className={result}>` 使用的就是这次 `clsx` 的返回值。改策略函数而不改输出区，或改输出区而不改 className，两边会不一致。advanced 的 `<pre>` 是另一组调用，不要把它的 `px-2` 当成卡片的类。`tone` 为 `neutral` 时策略返回 `null`，输出里不应出现 `tone-neutral` 或字符串 `"null"`。`clsx` 不会把 `null` 收成类名。若有人改成 `tone || 'tone-neutral'`，普通状态会一直带着语气类。
 
+`lite` 的示例是 `lite('base', selected && 'selected')`。选中时结果含 `selected`，未选中时条件是 `false`，lite 把它丢掉。不要用这个输出驱动按钮的 `disabled`。
+
 ## 证据
 
 `class-policy` 单测只检查白名单数组，不调用 `clsx`。sdk 要真实 import `clsx@2.1.1` 和 `clsx/lite`，并在 `docs/library-lab/evidence/runs/` 留下收据。
