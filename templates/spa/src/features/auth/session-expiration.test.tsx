@@ -4,12 +4,14 @@ import { render, screen } from '@testing-library/react'
 import { HttpResponse, http } from 'msw'
 import { I18nextProvider } from 'react-i18next'
 import { afterEach, describe, expect, it, vi } from 'vitest'
+import { Providers } from '@/app/providers'
 import { createAppRouter } from '@/app/router'
 import { isSessionExpired } from '@/features/auth/session-expiration'
 import { getActiveSession, useAuthStore } from '@/features/auth/store'
 import { listTasks } from '@/features/tasks/api'
 import { i18n } from '@/lib/i18n'
 import { createAppQueryClient } from '@/lib/query-client'
+import { taskKeys } from '@/features/tasks/keys'
 import { demoSession } from '@/mocks/fixtures'
 import { server } from '@/mocks/server'
 
@@ -60,6 +62,41 @@ describe('SPA session expiry boundary', () => {
     expect(screen.queryByRole('heading', { name: 'Warp board' })).not.toBeInTheDocument()
     expect(useAuthStore.getState().session).toBeNull()
     expect(sessionStorage.getItem(STORAGE_KEY)).toBeNull()
+  })
+
+
+  it('expires a mounted private task screen while idle and removes the cached data', async () => {
+    server.use(
+      http.get('*/api/tasks', () =>
+        HttpResponse.json({
+          tasks: [
+            {
+              id: 'idle-private-task',
+              title: 'Private idle task',
+              status: 'open',
+              createdAt: '2026-11-04T00:00:00.000Z',
+            },
+          ],
+        }),
+      ),
+    )
+    useAuthStore.getState().setSession({ ...demoSession(), expiresAt: Date.now() + 1_500 })
+    const version = useAuthStore.getState().sessionVersion
+    const client = createAppQueryClient()
+    const router = createAppRouter(client, createMemoryHistory({ initialEntries: ['/tasks'] }))
+
+    render(
+      <Providers client={client}>
+        <RouterProvider router={router} />
+      </Providers>,
+    )
+
+    expect(await screen.findByText('Private idle task')).toBeVisible()
+    expect(await screen.findByRole('heading', { name: 'Sign in' })).toBeVisible()
+    expect(screen.queryByText('Private idle task')).not.toBeInTheDocument()
+    expect(useAuthStore.getState().session).toBeNull()
+    expect(sessionStorage.getItem(STORAGE_KEY)).toBeNull()
+    expect(client.getQueryData(taskKeys.list(version))).toBeUndefined()
   })
 
   it('never attaches an expired bearer token to a task API request', async () => {
