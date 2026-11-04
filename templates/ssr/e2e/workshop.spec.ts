@@ -19,7 +19,6 @@ test('signs in with a cookie session and adds a task', async ({ page }) => {
   await expect(page.getByText('Warp the selvage')).toBeVisible()
 })
 
-
 test('sign out removes the session cookie and blocks access to private tasks', async ({ page }) => {
   await page.goto('/login')
   await page.getByLabel('Email').fill('ada@reactloom.dev')
