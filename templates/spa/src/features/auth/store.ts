@@ -5,43 +5,56 @@ import { isSessionExpired } from '@/features/auth/session-expiration'
 const STORAGE_KEY = 'reactloom.session'
 
 function readSession(): Session | null {
-  if (typeof sessionStorage === 'undefined') return null
-  const raw = sessionStorage.getItem(STORAGE_KEY)
-  if (!raw) return null
   try {
+    if (typeof sessionStorage === 'undefined') return null
+    const raw = sessionStorage.getItem(STORAGE_KEY)
+    if (!raw) return null
     const parsed = sessionSchema.parse(JSON.parse(raw))
     if (isSessionExpired(parsed.expiresAt)) {
-      sessionStorage.removeItem(STORAGE_KEY)
+      writeSession(null)
       return null
     }
     return parsed
   } catch {
-    sessionStorage.removeItem(STORAGE_KEY)
+    writeSession(null)
     return null
   }
 }
 
 function writeSession(session: Session | null) {
-  if (typeof sessionStorage === 'undefined') return
-  if (!session) sessionStorage.removeItem(STORAGE_KEY)
-  else sessionStorage.setItem(STORAGE_KEY, JSON.stringify(session))
+  try {
+    if (typeof sessionStorage === 'undefined') return
+    if (!session) sessionStorage.removeItem(STORAGE_KEY)
+    else sessionStorage.setItem(STORAGE_KEY, JSON.stringify(session))
+  } catch {
+    // Storage can be denied or full; it must not prevent in-memory auth transitions.
+  }
 }
 
 type AuthState = {
   session: Session | null
+  sessionVersion: number
+  authOperation: number
+  beginAuthOperation: () => number
   setSession: (session: Session) => void
   clearSession: () => void
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
+export const useAuthStore = create<AuthState>((set, get) => ({
   session: readSession(),
+  sessionVersion: 0,
+  authOperation: 0,
+  beginAuthOperation: () => {
+    set((state) => ({ authOperation: state.authOperation + 1 }))
+    return get().authOperation
+  },
   setSession: (session) => {
     writeSession(session)
-    set({ session })
+    set((state) => ({ session, sessionVersion: state.sessionVersion + 1 }))
   },
   clearSession: () => {
     writeSession(null)
-    set({ session: null })
+    set((state) => ({ session: null, sessionVersion: state.sessionVersion + 1 }))
   },
 }))
 

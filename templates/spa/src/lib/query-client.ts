@@ -1,5 +1,14 @@
 import { isApiError } from '@reactloom/api-client'
 import { QueryClient } from '@tanstack/react-query'
+import { useAuthStore } from '@/features/auth/store'
+
+export function bindSessionQueryCache(client: QueryClient) {
+  return useAuthStore.subscribe((state, previous) => {
+    if (state.sessionVersion === previous.sessionVersion) return
+    void client.cancelQueries()
+    client.removeQueries()
+  })
+}
 
 export function createAppQueryClient() {
   return new QueryClient({
