@@ -1,0 +1,82 @@
+TAP version 13
+# Subtest: safe React demos still launch only through the explicit host
+ok 1 - safe React demos still launch only through the explicit host
+  ---
+  duration_ms: 2.656606
+  type: 'test'
+  ...
+# Subtest: Service Workers and privileged scripts cannot run in the host origin
+ok 2 - Service Workers and privileged scripts cannot run in the host origin
+  ---
+  duration_ms: 0.391842
+  type: 'test'
+  ...
+# Subtest: Node, Worker and frame demos never turn into a fake React runtime
+ok 3 - Node, Worker and frame demos never turn into a fake React runtime
+  ---
+  duration_ms: 0.224599
+  type: 'test'
+  ...
+# Subtest: unknown or traversal entries cannot be imported
+ok 4 - unknown or traversal entries cannot be imported
+  ---
+  duration_ms: 0.262066
+  type: 'test'
+  ...
+# Subtest: capability labels for privileged features are explicit
+ok 5 - capability labels for privileged features are explicit
+  ---
+  duration_ms: 0.311401
+  type: 'test'
+  ...
+# Subtest: reviewed module workers can run while service workers remain isolated
+ok 6 - reviewed module workers can run while service workers remain isolated
+  ---
+  duration_ms: 0.179721
+  type: 'test'
+  ...
+# Subtest: network interception never runs on the shared SPA origin
+ok 7 - network interception never runs on the shared SPA origin
+  ---
+  duration_ms: 0.306944
+  type: 'test'
+  ...
+# Subtest: Node process capability is CLI-only, not React or Worker execution
+ok 8 - Node process capability is CLI-only, not React or Worker execution
+  ---
+  duration_ms: 0.188645
+  type: 'test'
+  ...
+# Subtest: worker start contract is explicit and limited to three recognized stages
+ok 9 - worker start contract is explicit and limited to three recognized stages
+  ---
+  duration_ms: 1.776165
+  type: 'test'
+  ...
+# Subtest: host ignores stale, malformed and arbitrary script messages
+ok 10 - host ignores stale, malformed and arbitrary script messages
+  ---
+  duration_ms: 0.294696
+  type: 'test'
+  ...
+# Subtest: worker log rows discard controls, embedded newlines and bidi spoofing
+ok 11 - worker log rows discard controls, embedded newlines and bidi spoofing
+  ---
+  duration_ms: 0.201995
+  type: 'test'
+  ...
+# Subtest: bounded Worker transcript retains the terminal result and error at capacity
+ok 12 - bounded Worker transcript retains the terminal result and error at capacity
+  ---
+  duration_ms: 0.346855
+  type: 'test'
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 12
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 79.827085

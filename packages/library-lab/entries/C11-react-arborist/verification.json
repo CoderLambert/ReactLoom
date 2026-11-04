@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "公开 react-arborist adjustMoveIndex helper Node测试未执行"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "PLATFORM 统一检查 React19/peer/打包"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "需真实拖拽/IME/焦点/虚拟滚动 E2E"
+  }
+}

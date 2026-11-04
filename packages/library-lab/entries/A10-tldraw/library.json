@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "entryId": "A10",
+  "slug": "tldraw",
+  "name": "tldraw",
+  "group": "A",
+  "summary": "可编程无限画布与业务白板，明确生产许可证限制",
+  "tags": [
+    "白板",
+    "无限画布",
+    "形状",
+    "授权",
+    "数据快照"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "tldraw",
+      "version": "5.5.2"
+    }
+  ],
+  "references": [
+    {
+      "title": "tldraw 官方安装",
+      "url": "https://tldraw.dev/installation"
+    },
+    {
+      "title": "Editor API",
+      "url": "https://tldraw.dev/sdk-features/editor"
+    },
+    {
+      "title": "只读模式",
+      "url": "https://tldraw.dev/sdk-features/readonly"
+    },
+    {
+      "title": "License Key 与生产使用",
+      "url": "https://tldraw.dev/sdk-features/license-key"
+    },
+    {
+      "title": "npm 版本 5.5.2",
+      "url": "https://www.npmjs.com/package/tldraw"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "A09",
+      "relation": "alternative",
+      "reason": "Excalidraw更适合手绘式快速协作；tldraw更强调可编程形状模型，但两者都需核对生产分发条件。"
+    },
+    {
+      "entryId": "A06",
+      "relation": "alternative",
+      "reason": "React Flow适合有输入输出连线约束的DAG业务编排，和自由画布的交互及数据模型不同。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "画布嵌入与绘制工具",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/styles.css",
+        "examples/snapshot-policy.ts"
+      ],
+      "capabilities": [
+        "canvas",
+        "local-download"
+      ],
+      "description": "官方 Tldraw 真实绘图和工具栏，容器尺寸/外部焦点"
+    },
+    {
+      "demoId": "business",
+      "title": "RSS 流程节点与快照",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/styles.css",
+        "examples/snapshot-policy.ts"
+      ],
+      "capabilities": [
+        "canvas",
+        "local-download"
+      ],
+      "description": "调用 Editor API 创建原生geo形状并下载文档快照"
+    },
+    {
+      "demoId": "advanced",
+      "title": "批量节点、只读权限与撤销边界",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/styles.css",
+        "examples/snapshot-policy.ts"
+      ],
+      "capabilities": [
+        "canvas",
+        "local-download"
+      ],
+      "description": "程序化新增80总量上限（原生手绘不受限）、只读实例状态、离开卸载"
+    }
+  ],
+  "license": {
+    "spdx": null,
+    "notes": "tldraw SDK 为自定义许可证而非 MIT/Apache 等常规开源许可；非本机生产部署必须自备适当有效授权。演示不注入假key，不移除水印。"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "archive": "ReactLoom_119_Full_Research_2026-10-24.zip",
+    "note": "查阅历史5.5.2 workshop，独立适配 Library Lab; 未继承历史测试状态。"
+  }
+}

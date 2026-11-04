@@ -1,0 +1,114 @@
+{
+  "schemaVersion": 1,
+  "entryId": "E11",
+  "slug": "streamdown",
+  "name": "Streamdown",
+  "group": "E",
+  "summary": "面向流式 Markdown 的真实增量显示、未闭合语法与安全输出",
+  "tags": [
+    "Streaming",
+    "Markdown",
+    "AI",
+    "Incremental",
+    "Security"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "streamdown",
+      "version": "2.6.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "官方仓库",
+      "url": "https://github.com/vercel/streamdown"
+    },
+    {
+      "title": "官方文档",
+      "url": "https://streamdown.ai"
+    },
+    {
+      "title": "npm 发行说明",
+      "url": "https://www.npmjs.com/package/streamdown"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "E06",
+      "relation": "alternative",
+      "reason": "静态 Markdown 优先 react-markdown，持续生成内容使用 Streamdown。"
+    },
+    {
+      "entryId": "E12",
+      "relation": "complements",
+      "reason": "assistant-ui 管理聊天流程，Streamdown 可负责消息文本渲染。"
+    },
+    {
+      "entryId": "E09",
+      "relation": "complements",
+      "reason": "复杂代码块需要时加入 Shiki，避免首页预装语言包。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "level": "basic",
+      "executionKind": "react",
+      "title": "半截标题/加粗标记继续呈现",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "local-text",
+        "timer",
+        "no-remote-model"
+      ],
+      "description": "入门：半截标题/加粗标记继续呈现。结果必须由真实SDK执行，未验收不得显示PASS。"
+    },
+    {
+      "demoId": "business",
+      "level": "business",
+      "executionKind": "react",
+      "title": "业务表格与 checklist 渐进渲染",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "local-text",
+        "timer",
+        "no-remote-model"
+      ],
+      "description": "业务：业务表格与 checklist 渐进渲染。结果必须由真实SDK执行，未验收不得显示PASS。"
+    },
+    {
+      "demoId": "advanced",
+      "level": "advanced",
+      "executionKind": "react",
+      "title": "未闭合代码围栏与恶意URL边界",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "local-text",
+        "timer",
+        "no-remote-model"
+      ],
+      "description": "边界：未闭合代码围栏与恶意URL边界。结果必须由真实SDK执行，未验收不得显示PASS。"
+    }
+  ],
+  "license": {
+    "spdx": "Apache-2.0",
+    "assets": "示例全部使用本地/原创数据，不重新分发第三方媒体与付费资源"
+  },
+  "provenance": {
+    "originalRecovery": "SUMMARY_ONLY",
+    "note": "2026-10-27按官方重写；研究ZIP中原 GUIDE/SOURCE/DEMO 不可访问，不能冒充恢复。"
+  }
+}

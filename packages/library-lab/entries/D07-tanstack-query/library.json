@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "entryId": "D07",
+  "slug": "tanstack-query",
+  "name": "TanStack Query",
+  "group": "D",
+  "summary": "远程状态的查询键、缓存、取消与乐观更新生命周期",
+  "tags": [
+    "TanStack Query",
+    "异步状态",
+    "缓存",
+    "AbortSignal",
+    "乐观更新"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "@tanstack/react-query",
+      "version": "5.104.1"
+    }
+  ],
+  "references": [
+    {
+      "title": "TanStack Query 官方文档",
+      "url": "https://tanstack.com/query/latest/docs/framework/react/overview"
+    },
+    {
+      "title": "取消与信号官方指南",
+      "url": "https://tanstack.com/query/latest/docs/framework/react/guides/query-cancellation"
+    },
+    {
+      "title": "重要默认值",
+      "url": "https://tanstack.com/query/latest/docs/framework/react/guides/important-defaults"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "D13",
+      "relation": "alternative",
+      "reason": "若业务中心已使用 Redux Toolkit 可对比 RTK Query 的 store 集成与缓存模型。"
+    },
+    {
+      "entryId": "D08",
+      "relation": "complements",
+      "reason": "Query 的 queryFn 可调用 ky 等客户端，但传递 AbortSignal 和稳定 queryKey 不可省略。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "查询缓存、fresh/stale 与手动刷新",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/optimistic-policy.mjs",
+        "examples/optimistic-policy.d.mts",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "timer"
+      ],
+      "description": "查询缓存、fresh/stale 与手动刷新"
+    },
+    {
+      "demoId": "business",
+      "title": "RSS 列表、搜索/分页与租户隔离",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/optimistic-policy.mjs",
+        "examples/optimistic-policy.d.mts",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "timer"
+      ],
+      "description": "RSS 列表、搜索/分页与租户隔离"
+    },
+    {
+      "demoId": "advanced",
+      "title": "AbortSignal、乐观更新、409 回滚",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/optimistic-policy.mjs",
+        "examples/optimistic-policy.d.mts",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "timer"
+      ],
+      "description": "AbortSignal、乐观更新、409 回滚"
+    }
+  ],
+  "license": {
+    "spdx": "MIT"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "针对现有 SPA 使用的 Query 5.104.1 改写；原研究5.104.5的测试不继承"
+  }
+}

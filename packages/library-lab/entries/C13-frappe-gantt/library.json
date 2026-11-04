@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "entryId": "C13",
+  "slug": "frappe-gantt",
+  "name": "Frappe Gantt",
+  "group": "C",
+  "summary": "交互式任务时间线、依赖关系和日期修改",
+  "tags": [
+    "甘特图",
+    "任务",
+    "依赖关系",
+    "排程"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "frappe-gantt",
+      "version": "1.2.2"
+    }
+  ],
+  "references": [
+    {
+      "title": "官方仓库",
+      "url": "https://github.com/frappe/gantt"
+    },
+    {
+      "title": "官方文档",
+      "url": "https://frappe.io/gantt"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "C12",
+      "relation": "alternative",
+      "reason": "面向会议事件与日期视图选择 FullCalendar；项目依赖任务用甘特图。"
+    },
+    {
+      "entryId": "C14",
+      "relation": "complements",
+      "reason": "需要日历时区/日期比较时使用 date-fns 处理领域规则。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "最小入门",
+      "level": "basic",
+      "executionKind": "browser-frame",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/frappe-gantt.d.ts",
+        "examples/demo.tsx",
+        "examples/gantt.css",
+        "examples/plan-policy.mjs",
+        "examples/plan-policy.d.mts"
+      ],
+      "description": "独立文档中的真实甘特图与语义任务表格，显式启停。"
+    },
+    {
+      "demoId": "business",
+      "title": "实际业务",
+      "level": "business",
+      "executionKind": "browser-frame",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/frappe-gantt.d.ts",
+        "examples/demo.tsx",
+        "examples/gantt.css",
+        "examples/plan-policy.mjs",
+        "examples/plan-policy.d.mts"
+      ],
+      "description": "键盘表格编辑、内存任务保存与完整依赖图；独立文档负责图表生命周期。"
+    },
+    {
+      "demoId": "advanced",
+      "title": "异常与边界",
+      "level": "advanced",
+      "executionKind": "browser-frame",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/frappe-gantt.d.ts",
+        "examples/demo.tsx",
+        "examples/gantt.css",
+        "examples/plan-policy.mjs",
+        "examples/plan-policy.d.mts"
+      ],
+      "description": "无效日期、依赖环和模拟 409 拒绝；停止或离开时销毁执行文档。"
+    }
+  ],
+  "provenance": {
+    "collection": "RFL-20261023",
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "基于官方材料重新编写，仅参考旧研究，不继承既有示例的运行验收结论"
+  },
+  "license": {
+    "spdx": "MIT",
+    "assets": "自制示例数据，无付费扩展"
+  }
+}

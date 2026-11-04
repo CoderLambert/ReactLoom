@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "entryId": "D10",
+  "slug": "zustand",
+  "name": "Zustand",
+  "group": "D",
+  "summary": "React19 vanilla store、租户状态与受控 persist 迁移",
+  "tags": [
+    "客户端状态",
+    "Zustand",
+    "persist",
+    "SSR",
+    "租户隔离"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "zustand",
+      "version": "5.0.16"
+    }
+  ],
+  "references": [
+    {
+      "title": "Zustand 官方文档",
+      "url": "https://zustand.docs.pmnd.rs/"
+    },
+    {
+      "title": "官方持久化说明",
+      "url": "https://zustand.site/en/docs/persist/"
+    },
+    {
+      "title": "仓库源码",
+      "url": "https://github.com/pmndrs/zustand"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "D07",
+      "relation": "complements",
+      "reason": "服务端数据缓存由 Query 管理，UI 偏好由 Zustand 管理。"
+    },
+    {
+      "entryId": "D11",
+      "relation": "alternative",
+      "reason": "更适合局部原子依赖图时选择 Jotai。"
+    },
+    {
+      "entryId": "D14",
+      "relation": "alternative",
+      "reason": "复杂业务事件转换和状态机可采用 XState。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "vanilla store 与精细订阅",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/migration-policy.mjs",
+        "examples/migration-policy.d.mts",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [],
+      "description": "vanilla store 与精细订阅"
+    },
+    {
+      "demoId": "business",
+      "title": "两租户频道状态隔离",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/migration-policy.mjs",
+        "examples/migration-policy.d.mts",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [],
+      "description": "两租户频道状态隔离"
+    },
+    {
+      "demoId": "advanced",
+      "title": "partialize 持久化与 v1→v2 迁移",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/migration-policy.mjs",
+        "examples/migration-policy.d.mts",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [],
+      "description": "partialize 持久化与 v1→v2 迁移"
+    }
+  ],
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "基于官方当前稳定标签重写；资料回收状态不等于本应用 SDK 验收。"
+  },
+  "license": {
+    "spdx": "MIT",
+    "note": "示例数据和说明原创，不包含真实生产凭据。"
+  }
+}

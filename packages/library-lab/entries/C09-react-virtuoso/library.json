@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "entryId": "C09",
+  "slug": "react-virtuoso",
+  "name": "React Virtuoso",
+  "group": "C",
+  "summary": "自动测量变高列表、RSS分段加载与历史消息锚定",
+  "tags": [
+    "虚拟化",
+    "变高行",
+    "RSS",
+    "历史记录"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "react-virtuoso",
+      "version": "4.18.19"
+    }
+  ],
+  "references": [
+    {
+      "title": "Virtuoso 官方文档",
+      "url": "https://virtuoso.dev/react-virtuoso/"
+    },
+    {
+      "title": "Virtuoso v4.18.19 发布",
+      "url": "https://github.com/petyosi/react-virtuoso/releases/tag/react-virtuoso%404.18.19"
+    },
+    {
+      "title": "官方许可证",
+      "url": "https://github.com/petyosi/react-virtuoso/blob/main/LICENSE"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "C10",
+      "relation": "alternative",
+      "reason": "更需要自主定位、测量与布局时选择 TanStack Virtual。"
+    },
+    {
+      "entryId": "C07",
+      "relation": "complements",
+      "reason": "表格列模型与业务排序归 TanStack Table，Virtuoso只解决可见行渲染。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "一万条虚构文章的可变高度虚拟窗口",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/view-policy.mjs",
+        "examples/view-policy.d.mts"
+      ],
+      "capabilities": [],
+      "description": "一万条虚构文章的可变高度虚拟窗口"
+    },
+    {
+      "demoId": "business",
+      "title": "RSS 搜索、分段加载与中文输入法",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/view-policy.mjs",
+        "examples/view-policy.d.mts"
+      ],
+      "capabilities": [],
+      "description": "RSS 搜索、分段加载与中文输入法"
+    },
+    {
+      "demoId": "advanced",
+      "title": "历史消息前插、展开和底部跟随",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/view-policy.mjs",
+        "examples/view-policy.d.mts"
+      ],
+      "capabilities": [],
+      "description": "历史消息前插、展开和底部跟随"
+    }
+  ],
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "按官方稳定版本与旧研究重新实现；历史测试不算本次运行验收。"
+  },
+  "license": {
+    "spdx": "MIT",
+    "note": "自有确定性模拟文章数据；无收费资源及外部网络请求"
+  }
+}

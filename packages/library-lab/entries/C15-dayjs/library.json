@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "entryId": "C15",
+  "slug": "dayjs",
+  "name": "Day.js",
+  "group": "C",
+  "summary": "不可变日期、严格校验与时区插件的 RSS 排程实践",
+  "tags": [
+    "日期",
+    "时区",
+    "DST",
+    "严格校验",
+    "i18n"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "dayjs",
+      "version": "1.11.23"
+    }
+  ],
+  "references": [
+    {
+      "title": "Day.js Timezone",
+      "url": "https://day.js.org/docs/en/plugin/timezone"
+    },
+    {
+      "title": "Day.js Strict Parse",
+      "url": "https://day.js.org/docs/en/parse/string-format"
+    },
+    {
+      "title": "官方 GitHub release",
+      "url": "https://github.com/iamkun/dayjs/releases/tag/v1.11.23"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "C14",
+      "relation": "alternative",
+      "reason": "函数式 TZDate 操作适合 C14 date-fns；Day.js 更偏链式插件。"
+    },
+    {
+      "entryId": "C16",
+      "relation": "alternative",
+      "reason": "需要显式 Interval/歧义时间检测时参考 Luxon。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "严格日历日期和中文本地化",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/offset-instant.mjs",
+        "examples/offset-instant.d.mts"
+      ],
+      "capabilities": [],
+      "description": "严格日历日期和中文本地化"
+    },
+    {
+      "demoId": "business",
+      "title": "RSS IANA 时区每日窗口",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/offset-instant.mjs",
+        "examples/offset-instant.d.mts"
+      ],
+      "capabilities": [],
+      "description": "RSS IANA 时区每日窗口"
+    },
+    {
+      "demoId": "advanced",
+      "title": "DST 23/25h、回拨同名时刻",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/offset-instant.mjs",
+        "examples/offset-instant.d.mts"
+      ],
+      "capabilities": [],
+      "description": "DST 23/25h、回拨同名时刻"
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "note": "示例源码与测试数据为本项目新写，不包含第三方图片或时区数据包。"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "根据官方文档重新编写三层示例；旧资料未被当作SDK或浏览器验证结果。"
+  }
+}

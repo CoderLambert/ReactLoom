@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 1,
+  "entryId": "B18",
+  "slug": "cmdk",
+  "name": "cmdk",
+  "group": "B",
+  "summary": "可访问命令菜单、搜索分组与中文输入法快捷键",
+  "contentState": "recreated",
+  "tags": [
+    "Command",
+    "命令面板",
+    "搜索",
+    "Ctrl+K",
+    "IME",
+    "键盘"
+  ],
+  "packages": [
+    {
+      "name": "cmdk",
+      "version": "1.1.1"
+    }
+  ],
+  "references": [
+    {
+      "title": "cmdk 官方仓库与组件 API",
+      "url": "https://github.com/pacocoursey/cmdk"
+    },
+    {
+      "title": "npm cmdk 1.1.1",
+      "url": "https://www.npmjs.com/package/cmdk"
+    },
+    {
+      "title": "cmdk 1.1.1 IME 修复记录",
+      "url": "https://github.com/pacocoursey/cmdk/releases/tag/v1.1.1"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "B17",
+      "relation": "complements",
+      "reason": "Floating UI 负责锚点 Popover 定位，cmdk 负责命令检索/选择；不要让两者同时管理同一浮层焦点。"
+    },
+    {
+      "entryId": "D19",
+      "relation": "complements",
+      "reason": "若命令数量巨大且需要复杂模糊搜索，可先用 Fuse.js 做受控预过滤，再启用 shouldFilter=false，避免双重排序。"
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "assets": "使用原创固定命令和本地状态"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "本轮重写；不复用旧版演示代码及测试结论。"
+  },
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "内联命令菜单",
+      "description": "使用真实 Command.Input/List/Group/Item/Empty 进行键盘选择",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/keyboard-policy.ts",
+        "examples/command-state.ts",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "keyboard",
+        "ime",
+        "portal"
+      ]
+    },
+    {
+      "demoId": "business",
+      "title": "新闻工作台操作集合",
+      "description": "分组搜索、快捷字、disabled 保护及操作反馈",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/keyboard-policy.ts",
+        "examples/command-state.ts",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "keyboard",
+        "ime",
+        "portal"
+      ]
+    },
+    {
+      "demoId": "advanced",
+      "title": "局部 Ctrl/Cmd+K 对话框",
+      "description": "Ctrl/Cmd+K 关闭面板时不抢其他输入，面板开启时可切换关闭；IME 尾随 Enter 保护",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/keyboard-policy.ts",
+        "examples/command-state.ts",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "keyboard",
+        "ime",
+        "portal"
+      ]
+    }
+  ]
+}

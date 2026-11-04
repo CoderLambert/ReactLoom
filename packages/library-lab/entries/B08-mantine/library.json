@@ -1,0 +1,127 @@
+{
+  "schemaVersion": 1,
+  "entryId": "B08",
+  "slug": "mantine",
+  "name": "Mantine",
+  "group": "B",
+  "summary": "主题控件、业务表格、模态编辑及 NumberInput 中间值校验",
+  "tags": [
+    "design system",
+    "form",
+    "table",
+    "theme",
+    "modal",
+    "accessibility",
+    "numeric input"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "@mantine/core",
+      "version": "9.7.3"
+    },
+    {
+      "name": "@mantine/hooks",
+      "version": "9.7.3"
+    }
+  ],
+  "references": [
+    {
+      "title": "Mantine Getting Started",
+      "url": "https://mantine.dev/getting-started/"
+    },
+    {
+      "title": "CSS Styles & Layers",
+      "url": "https://mantine.dev/styles/mantine-styles/"
+    },
+    {
+      "title": "NumberInput docs",
+      "url": "https://mantine.dev/core/number-input/"
+    },
+    {
+      "title": "MantineProvider docs",
+      "url": "https://mantine.dev/theming/mantine-provider/"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "B07",
+      "relation": "alternative",
+      "reason": "MUI采用 Material Design 与Emotion体系；不建议同时上两套主题基建。"
+    },
+    {
+      "entryId": "B06",
+      "relation": "alternative",
+      "reason": "Ant Design偏企业控制台流程与表格，需评估中文/表单习惯。"
+    },
+    {
+      "entryId": "B11",
+      "relation": "alternative",
+      "reason": "只需要可访问交互原语时考虑Radix，避免整套视觉组件。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "ThemeProvider / Card / TextInput",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/feed-history.ts",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "css-layer",
+        "portal",
+        "focus",
+        "a11y"
+      ]
+    },
+    {
+      "demoId": "business",
+      "title": "RSS 表格与启用状态",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/feed-history.ts",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "css-layer",
+        "portal",
+        "focus",
+        "a11y"
+      ]
+    },
+    {
+      "demoId": "advanced",
+      "title": "Modal 与数字中间态校验",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/feed-history.ts",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "css-layer",
+        "portal",
+        "focus",
+        "a11y"
+      ]
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "assets": "无第三方素材或收费功能；仅使用开源 core/hooks。"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "参考当前官方文档重新实现，历史PASS不继承。"
+  }
+}

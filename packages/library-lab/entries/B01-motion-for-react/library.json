@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 1,
+  "entryId": "B01",
+  "slug": "motion-for-react",
+  "name": "Motion for React",
+  "group": "B",
+  "summary": "React 入场/离场、列表布局过渡与减少动画偏好",
+  "contentState": "recreated",
+  "tags": [
+    "动画",
+    "AnimatePresence",
+    "layout",
+    "reduced-motion",
+    "React 19",
+    "生命周期"
+  ],
+  "packages": [
+    {
+      "name": "motion",
+      "version": "14.6.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "Motion React 安装和 API",
+      "url": "https://motion.dev/docs/react-installation"
+    },
+    {
+      "title": "React AnimatePresence 指南",
+      "url": "https://motion.dev/docs/react-animate-presence"
+    },
+    {
+      "title": "React 可访问 reduced motion",
+      "url": "https://motion.dev/docs/react-accessibility"
+    },
+    {
+      "title": "npm motion@14.6.0",
+      "url": "https://www.npmjs.com/package/motion"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "B03",
+      "relation": "alternative",
+      "reason": "react-spring 用于基于弹簧物理的持续状态；Motion 适合声明式入场、布局及退出动画。"
+    },
+    {
+      "entryId": "B19",
+      "relation": "complements",
+      "reason": "Motion 可装饰 Embla slide 内的局部内容，但不能和 Embla 同时控制 slide 的 transform 或拖动。"
+    },
+    {
+      "entryId": "B21",
+      "relation": "alternative",
+      "reason": "B21 记录历史 react-motion 迁移：由旧库迁向 Motion 需逐个验证 spring 参数和交互语义。"
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "assets": "原创任务文案，无音视频资产"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "当前独立实现，依据 motion/react 正式文档；不继承旧资料的测试结论。"
+  },
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "AnimatePresence 入场与退出",
+      "description": "真实动画组件添加/删除，切换期间元素按退出规则管理",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/card-policy.ts",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "animation",
+        "reduced-motion"
+      ]
+    },
+    {
+      "demoId": "business",
+      "title": "通知队列的增删与布局",
+      "description": "新增和归档任务，Motion 布局过渡，键盘焦点恢复",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/card-policy.ts",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "animation",
+        "reduced-motion"
+      ]
+    },
+    {
+      "demoId": "advanced",
+      "title": "重排、重复操作与减少动画",
+      "description": "动态排列、快速切换，遵循系统 prefers-reduced-motion",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/card-policy.ts",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "animation",
+        "reduced-motion"
+      ]
+    }
+  ]
+}

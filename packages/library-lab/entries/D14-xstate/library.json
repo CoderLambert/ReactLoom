@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "entryId": "D14",
+  "slug": "xstate",
+  "name": "XState",
+  "group": "D",
+  "summary": "Actor 有限状态机：审稿流程、守卫和重试预算",
+  "tags": [
+    "statechart",
+    "actor",
+    "状态机",
+    "guard",
+    "retry",
+    "审核"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "xstate",
+      "version": "5.33.3"
+    }
+  ],
+  "references": [
+    {
+      "title": "机器与状态转换",
+      "url": "https://stately.ai/docs/machines"
+    },
+    {
+      "title": "Actors",
+      "url": "https://stately.ai/docs/actors"
+    },
+    {
+      "title": "npm 当前版本",
+      "url": "https://www.npmjs.com/package/xstate"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "D10",
+      "relation": "alternative",
+      "reason": "Zustand适合轻量客户端状态；复杂事件守卫/流程编排考虑 XState。 "
+    },
+    {
+      "entryId": "C01",
+      "relation": "complements",
+      "reason": "RHF 负责输入字段，XState 负责提交与审稿状态生命周期。 "
+    },
+    {
+      "entryId": "D07",
+      "relation": "complements",
+      "reason": "TanStack Query 持有服务端缓存，状态机只管理流程与事件。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "level": "basic",
+      "title": "状态转换基础",
+      "description": "draft/reviewing/published 明确有限状态",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/review-policy.mjs",
+        "examples/review-policy.d.mts"
+      ],
+      "capabilities": []
+    },
+    {
+      "demoId": "business",
+      "level": "business",
+      "title": "业务审核与驳回",
+      "description": "驳回原因、重新提交与唯一合法流转",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/review-policy.mjs",
+        "examples/review-policy.d.mts"
+      ],
+      "capabilities": []
+    },
+    {
+      "demoId": "advanced",
+      "level": "advanced",
+      "title": "guard 限制重试次数",
+      "description": "两次重试预算、无效事件安全阻断",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/review-policy.mjs",
+        "examples/review-policy.d.mts"
+      ],
+      "capabilities": []
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "note": "本地原创状态机与课程数据"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "mode": "recreated",
+    "note": "XState 5 API 与 npm@5.33.3 于2026-10-27重新校对，SDK未运行。"
+  }
+}

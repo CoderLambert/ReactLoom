@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "真实目标 SDK 运行待执行；待真实加载 Tiptap v3 EditorContent 和 ProseMirror 扩展。 本批有纯策略快照负例源码，不意味着已加载真实目标 SDK。"
+  },
+  "build": {
+    "status": "BLOCKED",
+    "note": "PLATFORM 尚未统一安装新依赖并真实更新 pnpm-lock.yaml，未执行 Vite/TypeScript 构建。"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "尚未在目标浏览器进行交互、资源卸载和无障碍核验。"
+  }
+}

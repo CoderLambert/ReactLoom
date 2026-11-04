@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "entryId": "C20",
+  "slug": "clsx",
+  "name": "clsx",
+  "group": "C",
+  "summary": "条件 className 合成",
+  "tags": [],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "clsx",
+      "version": "2.1.1"
+    }
+  ],
+  "references": [
+    {
+      "title": "官方源码与使用说明",
+      "url": "https://github.com/lukeed/clsx"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "C21",
+      "relation": "complements",
+      "reason": "clsx 处理条件组合；Tailwind 冲突消解由 tailwind-merge 处理。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "最小使用",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/class-policy.mjs",
+        "examples/class-policy.d.mts",
+        "tests/class-policy.test.mjs",
+        "tests/sdk.test.mjs"
+      ],
+      "capabilities": []
+    },
+    {
+      "demoId": "business",
+      "title": "实际业务状态",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/class-policy.mjs",
+        "examples/class-policy.d.mts",
+        "tests/class-policy.test.mjs",
+        "tests/sdk.test.mjs"
+      ],
+      "capabilities": []
+    },
+    {
+      "demoId": "advanced",
+      "title": "类名语义边界",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/class-policy.mjs",
+        "examples/class-policy.d.mts",
+        "tests/class-policy.test.mjs",
+        "tests/sdk.test.mjs"
+      ],
+      "capabilities": []
+    }
+  ],
+  "provenance": {
+    "collection": "RFL-20261023",
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "sourceArchiveSha256": "69b6f9fe39310d10021bfe79c30a46b3118540caa5423b2ad38a0d092e3dddb5",
+    "sourcePath": "ReactLoom_119_Full_Research_2026-10-24/LIBRARY/C/C20-clsx/DEMO-ORIGINAL.zip",
+    "note": "本轮独立实现；历史研究作为参考，未将历史测试升级为 SDK 实测。"
+  },
+  "license": {
+    "spdx": "MIT",
+    "assets": "原创文本与本地示例，不含第三方媒体"
+  }
+}

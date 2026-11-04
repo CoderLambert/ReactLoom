@@ -1,0 +1,18 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "目标SDK源码已接入，但本轮依赖未安装，尚未执行真实SDK"
+  },
+  "build": {
+    "status": "BLOCKED",
+    "note": "PLATFORM需更新准确依赖与根pnpm锁文件后运行typecheck/build"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "浏览器、卸载和资源清理行为待PLATFORM真实Chromium测试"
+  },
+  "policy": {
+    "status": "NOT_RUN",
+    "note": "gallery-policy.test.mjs已在独立Node环境执行12项整批策略测试中的3项；此字段不宣称SDK/浏览器PASS。运行证据与SHA见progress/EF.md。"
+  }
+}

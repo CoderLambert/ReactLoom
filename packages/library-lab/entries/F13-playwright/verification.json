@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "已新增网络失败、非法响应和双击门禁的Playwright测试源码；尚未执行真实@playwright/test"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "Node CLI示例，需验证独立config的类型和Playwright解析"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "Chromium网络场景矩阵、竞态barrier和按钮恢复仍NOT_RUN"
+  }
+}

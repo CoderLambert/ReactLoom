@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "entryId": "C04",
+  "slug": "jsonforms",
+  "name": "JSON Forms",
+  "group": "C",
+  "summary": "通过 JSON Schema 与 UI Schema 构建可校验的业务表单",
+  "tags": [
+    "Schema-driven",
+    "表单",
+    "校验",
+    "RSS"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "@jsonforms/core",
+      "version": "3.8.0"
+    },
+    {
+      "name": "@jsonforms/react",
+      "version": "3.8.0"
+    },
+    {
+      "name": "@jsonforms/vanilla-renderers",
+      "version": "3.8.0"
+    },
+    {
+      "name": "ajv",
+      "version": "8.20.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "React 官方集成",
+      "url": "https://jsonforms.io/docs/integrations/react/"
+    },
+    {
+      "title": "JSON Forms 源码",
+      "url": "https://github.com/eclipsesource/jsonforms"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "C05",
+      "relation": "complements",
+      "reason": "JSON Forms 底层校验能力来自 Ajv；跨字段规则仍需显式 Schema。"
+    },
+    {
+      "entryId": "C01",
+      "relation": "alternative",
+      "reason": "字段数量有限且需要精细表单 UX 时优先 React Hook Form。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "最小入门",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/submission-policy.mjs",
+        "examples/submission-policy.d.mts"
+      ],
+      "description": "真实 SDK 入门交互"
+    },
+    {
+      "demoId": "business",
+      "title": "业务实战",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/submission-policy.mjs",
+        "examples/submission-policy.d.mts"
+      ],
+      "description": "订阅中心业务场景"
+    },
+    {
+      "demoId": "advanced",
+      "title": "错误与边界",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/submission-policy.mjs",
+        "examples/submission-policy.d.mts"
+      ],
+      "description": "竞态、错误与边界条件"
+    }
+  ],
+  "provenance": {
+    "collection": "RFL-20261023",
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "旧研究归档仅供审查，本页面内容与示例重新编写，未继承旧环境测试的PASS"
+  },
+  "license": {
+    "spdx": "MIT",
+    "assets": "仅使用自制 fixture，不包含第三方媒体或企业授权资源"
+  }
+}

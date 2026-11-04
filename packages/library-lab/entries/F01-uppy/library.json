@@ -1,0 +1,132 @@
+{
+  "schemaVersion": 1,
+  "entryId": "F01",
+  "slug": "uppy",
+  "name": "Uppy",
+  "group": "F",
+  "summary": "文件选择、限制、排队与本地预览：真实 Uppy Core，不使用假上传进度",
+  "tags": [
+    "Uppy",
+    "文件队列",
+    "上传",
+    "拖拽",
+    "File API",
+    "权限",
+    "事件与生命周期"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "@uppy/core",
+      "version": "6.1.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "Uppy Core 官方API",
+      "url": "https://uppy.io/docs/uppy/"
+    },
+    {
+      "title": "Uppy React组件与Hooks",
+      "url": "https://uppy.io/docs/react/"
+    },
+    {
+      "title": "上传协议选型",
+      "url": "https://uppy.io/docs/guides/choosing-uploader/"
+    },
+    {
+      "title": "GitHub / License",
+      "url": "https://github.com/transloadit/uppy"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "F02",
+      "relation": "alternative",
+      "reason": "只需要本地文件选择与拖拽，不需要上传状态/重试/协议时首选react-dropzone。"
+    },
+    {
+      "entryId": "F03",
+      "relation": "complements",
+      "reason": "选择CSV文件后可用Papa Parse独立验证数据；Uppy本身不是CSV解析器。"
+    },
+    {
+      "entryId": "E15",
+      "relation": "complements",
+      "reason": "上传前图片质量和尺寸处理可用pica，真实上传阶段独立设计。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "level": "basic",
+      "title": "选择与队列限制",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/preview-policy.mjs",
+        "examples/preview-policy.d.mts",
+        "tests/policy.test.mjs"
+      ],
+      "capabilities": [
+        "local-file-picker",
+        "file-drop",
+        "local-preview",
+        "uppy-core"
+      ],
+      "description": "真实核心状态和大小/类型/数量限制。"
+    },
+    {
+      "demoId": "business",
+      "level": "business",
+      "title": "本地预览和移除",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/preview-policy.mjs",
+        "examples/preview-policy.d.mts",
+        "tests/policy.test.mjs"
+      ],
+      "capabilities": [
+        "local-file-picker",
+        "file-drop",
+        "local-preview",
+        "uppy-core"
+      ],
+      "description": "本地文本预览及队列删除，不传输。"
+    },
+    {
+      "demoId": "advanced",
+      "level": "advanced",
+      "title": "超额拒绝与实例清理",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/preview-policy.mjs",
+        "examples/preview-policy.d.mts",
+        "tests/policy.test.mjs"
+      ],
+      "capabilities": [
+        "local-file-picker",
+        "file-drop",
+        "local-preview",
+        "uppy-core"
+      ],
+      "description": "主动验证Uppy限制并清理实例。"
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "assets": "没有第三方图片；输入全由本机用户选择，本Demo不上传"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "基于Uppy Core官方API重写；本轮只验证接口结构，未安装运行。"
+  }
+}

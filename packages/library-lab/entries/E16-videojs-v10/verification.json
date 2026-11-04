@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "新增本地File/签名策略；未安装执行Video.js v10目标SDK"
+  },
+  "build": {
+    "status": "BLOCKED",
+    "note": "公共锁文件及真实bundle尚待PLATFORM在可用网络环境核验"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "真实MediaRecorder、MP4/WebM解码、Blob URL与源切换/卸载仍未在Chromium/Firefox/WebKit运行"
+  }
+}

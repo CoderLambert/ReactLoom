@@ -1,0 +1,149 @@
+{
+  "schemaVersion": 1,
+  "entryId": "E02",
+  "slug": "blocknote",
+  "name": "BlockNote",
+  "group": "E",
+  "summary": "开箱即用的块级文档编辑器：块结构、JSON 草稿与变更生命周期",
+  "tags": [
+    "块编辑",
+    "React",
+    "ProseMirror",
+    "Mantine",
+    "JSON",
+    "BlockNote"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "@blocknote/core",
+      "version": "0.56.0"
+    },
+    {
+      "name": "@blocknote/react",
+      "version": "0.56.0"
+    },
+    {
+      "name": "@blocknote/mantine",
+      "version": "0.56.0"
+    },
+    {
+      "name": "@mantine/core",
+      "version": null
+    },
+    {
+      "name": "@mantine/hooks",
+      "version": null
+    },
+    {
+      "name": "@mantine/utils",
+      "version": null
+    }
+  ],
+  "references": [
+    {
+      "title": "BlockNote 入门",
+      "url": "https://www.blocknotejs.org/docs/getting-started"
+    },
+    {
+      "title": "BlockNote 变更事件",
+      "url": "https://www.blocknotejs.org/docs/reference/editor/events"
+    },
+    {
+      "title": "BlockNote React API",
+      "url": "https://www.blocknotejs.org/docs/react/overview"
+    },
+    {
+      "title": "BlockNote 使用条款与许可",
+      "url": "https://github.com/TypeCellOS/BlockNote"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "E01",
+      "relation": "alternative",
+      "reason": "Tiptap Headless 更易设计定制工具栏/ProseMirror 编辑层；BlockNote以块编辑和开箱UI为优势。"
+    },
+    {
+      "entryId": "E03",
+      "relation": "alternative",
+      "reason": "Lexical是另一种编辑架构与节点模型，不能直接移植BlockNote JSON。"
+    },
+    {
+      "entryId": "E10",
+      "relation": "complements",
+      "reason": "展示来自用户/第三方的富HTML需要净化与允许列表；编辑器数据模型不能代替输出安全控制。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "level": "basic",
+      "title": "块编辑器最小集成",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/snapshot-policy.mjs",
+        "examples/snapshot-policy.d.mts"
+      ],
+      "capabilities": [
+        "contenteditable",
+        "session-storage",
+        "editor-disposal",
+        "style-isolation"
+      ],
+      "description": "真实 useCreateBlockNote 与 Mantine BlockNoteView，编辑段落与块内容。"
+    },
+    {
+      "demoId": "business",
+      "level": "business",
+      "title": "块 JSON 草稿与恢复",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/snapshot-policy.mjs",
+        "examples/snapshot-policy.d.mts"
+      ],
+      "capabilities": [
+        "contenteditable",
+        "session-storage",
+        "editor-disposal",
+        "style-isolation"
+      ],
+      "description": "同一编辑器保存/恢复本地块结构，不使用上传服务。"
+    },
+    {
+      "demoId": "advanced",
+      "level": "advanced",
+      "title": "插入块与文档容量守卫",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/snapshot-policy.mjs",
+        "examples/snapshot-policy.d.mts",
+        "tests/policy.test.mjs"
+      ],
+      "capabilities": [
+        "contenteditable",
+        "session-storage",
+        "editor-disposal",
+        "style-isolation"
+      ],
+      "description": "真实 insertBlocks、变更订阅解绑与有限数据恢复。"
+    }
+  ],
+  "license": {
+    "spdx": "MPL-2.0",
+    "assets": "示例输入由 ReactLoom 原创生成，不含第三方照片、字体包副本或付费功能。"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "按2026-10-27官方文档重新编写；旧归档的测试结果不作为本次真实SDK验证证据。"
+  }
+}

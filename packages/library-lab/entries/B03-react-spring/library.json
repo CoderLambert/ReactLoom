@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "entryId": "B03",
+  "slug": "react-spring",
+  "name": "react-spring",
+  "group": "B",
+  "summary": "基于 spring 物理的 React 动画与列表进出场；局部减少动画兼容",
+  "tags": [
+    "spring",
+    "useSpring",
+    "useTransition",
+    "a11y",
+    "reduced-motion"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "@react-spring/web",
+      "version": "10.1.2"
+    }
+  ],
+  "references": [
+    {
+      "title": "useSpring 官方文档",
+      "url": "https://www.react-spring.dev/docs/components/use-spring"
+    },
+    {
+      "title": "useTransition 官方文档",
+      "url": "https://www.react-spring.dev/docs/components/use-transition"
+    },
+    {
+      "title": "reduced motion 官方文档",
+      "url": "https://www.react-spring.dev/docs/utilities/use-reduced-motion"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "B01",
+      "relation": "alternative",
+      "reason": "Motion在布局动画和presence组合时更直观；react-spring更偏弹簧物理与可控轨迹。"
+    },
+    {
+      "entryId": "B02",
+      "relation": "alternative",
+      "reason": "GSAP更适合复杂跨元素时间线；spring适合与React状态直接绑定。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "单元素弹簧",
+      "description": "按钮切换通知卡展开/淡化，useSpring 以状态为目标。",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/article-policy.ts"
+      ],
+      "capabilities": [
+        "animation",
+        "match-media",
+        "keyboard"
+      ]
+    },
+    {
+      "demoId": "business",
+      "title": "列表入场与退出",
+      "description": "对新闻卡添加与删除，useTransition保留退出期间的节点与稳定key。",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/article-policy.ts"
+      ],
+      "capabilities": [
+        "animation",
+        "match-media",
+        "keyboard"
+      ]
+    },
+    {
+      "demoId": "advanced",
+      "title": "减少动画与焦点",
+      "description": "系统偏好变化时immediate跳到终态、快速添加/删除并恢复键盘焦点。",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/article-policy.ts"
+      ],
+      "capabilities": [
+        "animation",
+        "match-media",
+        "keyboard"
+      ]
+    }
+  ],
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "基于当期官方API重新编写真实SDK示例；未继承历史测试结论。"
+  },
+  "license": {
+    "spdx": "MIT",
+    "assets": "本地确定性数据与原创示例；不打包外部素材。"
+  }
+}

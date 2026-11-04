@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "entryId": "E12",
+  "slug": "assistant-ui",
+  "name": "assistant-ui",
+  "group": "E",
+  "summary": "真实 LocalRuntime 聊天原语、离线 Adapter、流式输出与取消",
+  "tags": [
+    "Chat",
+    "Runtime",
+    "Composer",
+    "AbortSignal",
+    "React"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "@assistant-ui/react",
+      "version": "0.15.21"
+    }
+  ],
+  "references": [
+    {
+      "title": "官方 LocalRuntime 文档",
+      "url": "https://www.assistant-ui.com/docs/runtimes/custom/local-runtime"
+    },
+    {
+      "title": "官方 primitives API",
+      "url": "https://www.assistant-ui.com/docs/primitives"
+    },
+    {
+      "title": "官方源码",
+      "url": "https://github.com/assistant-ui/assistant-ui"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "E11",
+      "relation": "complements",
+      "reason": "Streamdown 适合渲染流式助手消息。"
+    },
+    {
+      "entryId": "D07",
+      "relation": "complements",
+      "reason": "业务数据缓存与助手会话运行时分层，不能有两个状态所有者。"
+    },
+    {
+      "entryId": "F11",
+      "relation": "complements",
+      "reason": "MSW 构造错误与断流的可重现业务场景。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "level": "basic",
+      "executionKind": "react",
+      "title": "真实 runtime 管理聊天消息",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/reply-policy.mjs",
+        "examples/reply-policy.d.mts",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "offline-adapter",
+        "abort",
+        "no-paid-model"
+      ],
+      "description": "入门：真实 runtime 管理聊天消息。结果必须由真实SDK执行，未验收不得显示PASS。"
+    },
+    {
+      "demoId": "business",
+      "level": "business",
+      "executionKind": "react",
+      "title": "本地确定性流式研究回答",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/reply-policy.mjs",
+        "examples/reply-policy.d.mts",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "offline-adapter",
+        "abort",
+        "no-paid-model"
+      ],
+      "description": "业务：本地确定性流式研究回答。结果必须由真实SDK执行，未验收不得显示PASS。"
+    },
+    {
+      "demoId": "advanced",
+      "level": "advanced",
+      "executionKind": "react",
+      "title": "AbortSignal 和停止响应",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/reply-policy.mjs",
+        "examples/reply-policy.d.mts",
+        "examples/demo.tsx",
+        "examples/reply-policy.test.mjs"
+      ],
+      "capabilities": [
+        "offline-adapter",
+        "abort",
+        "no-paid-model"
+      ],
+      "description": "边界：AbortSignal 和停止响应。结果必须由真实SDK执行，未验收不得显示PASS。"
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "assets": "示例全部使用本地/原创数据，不重新分发第三方媒体与付费资源"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "2026-10-27根据当前 LocalRuntime/Primitives 官方文档重新实现；0.15.x仍须真实类型/浏览器验收。"
+  }
+}

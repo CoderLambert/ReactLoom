@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "待真实 nuqs/server parser测试"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "PLATFORM 安装目标版本并类型检查"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "待 TanStack Router adapter深链接/IME/Back测试"
+  }
+}

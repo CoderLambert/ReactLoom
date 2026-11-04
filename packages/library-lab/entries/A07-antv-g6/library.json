@@ -1,0 +1,115 @@
+{
+  "schemaVersion": 1,
+  "entryId": "A07",
+  "slug": "antv-g6",
+  "name": "AntV G6",
+  "group": "A",
+  "summary": "关系网络的节点、边、拓扑与交互画布（基于 G6 5.1.1）",
+  "tags": [
+    "图可视化",
+    "关系网络",
+    "Graph",
+    "Canvas",
+    "生命周期"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "@antv/g6",
+      "version": "5.1.1"
+    }
+  ],
+  "references": [
+    {
+      "title": "G6 React integration",
+      "url": "https://g6.antv.antgroup.com/en/manual/getting-started/integration/react"
+    },
+    {
+      "title": "G6 Graph API",
+      "url": "https://g6.antv.antgroup.com/en/api/graph"
+    },
+    {
+      "title": "官方仓库",
+      "url": "https://github.com/antvis/G6"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "A06",
+      "relation": "alternative",
+      "reason": "需要在 React 里编辑节点与连线时优先 React Flow；G6 更侧重可视化关系分析。"
+    },
+    {
+      "entryId": "A01",
+      "relation": "alternative",
+      "reason": "ECharts 适用于常规数据统计；G6 适用于拓扑网络与节点关系。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "最小拓扑",
+      "description": "G6 Graph 绘制来源→转换→索引的三节点有向关系，并提供等价文本表。",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/graph-sizing.ts",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "canvas",
+        "resize-observer",
+        "pointer",
+        "graph"
+      ]
+    },
+    {
+      "demoId": "business",
+      "title": "新闻处理依赖图",
+      "description": "通过可操作按钮增删审校步骤，观察边和节点随数据重建。",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/graph-sizing.ts",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "canvas",
+        "resize-observer",
+        "pointer",
+        "graph"
+      ]
+    },
+    {
+      "demoId": "advanced",
+      "title": "更新与销毁边界",
+      "description": "切换紧凑/扩展模式、观察宽度与实例清理；验证不遗留旧 Canvas。",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/graph-sizing.ts",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "canvas",
+        "resize-observer",
+        "pointer",
+        "graph"
+      ]
+    }
+  ],
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "新实现：官方文档和当前库 API 独立核对；没有继承历史测试 PASS。"
+  },
+  "license": {
+    "spdx": "MIT",
+    "assets": "本地生成的确定性数据；不打包第三方商业媒体。"
+  }
+}

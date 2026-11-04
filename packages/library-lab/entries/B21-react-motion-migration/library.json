@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 1,
+  "entryId": "B21",
+  "slug": "react-motion-migration",
+  "name": "react-motion（历史迁移）",
+  "group": "B",
+  "summary": "从停滞的react-motion Motion/spring模式迁移至现代motion/react的状态驱动动画",
+  "tags": [
+    "migration",
+    "spring",
+    "AnimatePresence",
+    "reduced-motion"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "motion",
+      "version": "14.6.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "Motion React文档",
+      "url": "https://motion.dev/docs/react-animation"
+    },
+    {
+      "title": "AnimatePresence",
+      "url": "https://motion.dev/docs/react-animate-presence"
+    },
+    {
+      "title": "reduced motion",
+      "url": "https://motion.dev/docs/react-use-reduced-motion"
+    },
+    {
+      "title": "react-motion历史库",
+      "url": "https://github.com/chenglou/react-motion"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "B01",
+      "relation": "migration-to",
+      "reason": "推荐迁移至B01 Motion for React以减少长期维护，保留一致业务状态而非硬复制旧interpolate配置。"
+    },
+    {
+      "entryId": "B03",
+      "relation": "alternative",
+      "reason": "如需更接近旧弹簧Controller语义可评估react-spring，仍需测试退出动画。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "Motion.spring状态迁移",
+      "description": "使用真实react-motion（历史迁移）接口：Motion.spring状态迁移",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/task-history.ts"
+      ],
+      "capabilities": [
+        "animation",
+        "reduced-motion",
+        "migration"
+      ]
+    },
+    {
+      "demoId": "business",
+      "title": "列表enter/leave与稳定key",
+      "description": "使用真实react-motion（历史迁移）接口：列表enter/leave与稳定key",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/task-history.ts"
+      ],
+      "capabilities": [
+        "animation",
+        "reduced-motion",
+        "migration"
+      ]
+    },
+    {
+      "demoId": "advanced",
+      "title": "减少动画、撤销及取消",
+      "description": "使用真实react-motion（历史迁移）接口：减少动画、撤销及取消",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/task-history.ts",
+        "tests/task-history.test.mts"
+      ],
+      "capabilities": [
+        "animation",
+        "reduced-motion",
+        "migration"
+      ]
+    }
+  ],
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "基于历史研究背景，按当前官方资料独立重写代码与中文指南，未沿用旧PASS。"
+  },
+  "license": {
+    "spdx": "MIT",
+    "assets": "使用原创新媒体/结构化数据，不包含第三方收费资产。"
+  }
+}

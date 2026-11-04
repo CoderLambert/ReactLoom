@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 1,
+  "entryId": "B14",
+  "slug": "pragmatic-drag-and-drop",
+  "name": "Pragmatic drag and drop",
+  "group": "B",
+  "summary": "原生DOM拖放适配器、drop targets、监视器与严格事件作用域",
+  "tags": [
+    "native",
+    "drag",
+    "DOM",
+    "keyboard",
+    "drop-target",
+    "monitor",
+    "cleanup"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "@atlaskit/pragmatic-drag-and-drop",
+      "version": "1.8.1"
+    }
+  ],
+  "references": [
+    {
+      "title": "Atlassian Core",
+      "url": "https://atlassian.design/components/pragmatic-drag-and-drop/core-package/"
+    },
+    {
+      "title": "Element adapter",
+      "url": "https://atlassian.design/components/pragmatic-drag-and-drop/core-package/adapters/element"
+    },
+    {
+      "title": "监听隔离",
+      "url": "https://atlassian.design/components/pragmatic-drag-and-drop/core-package/recipes/isolating-experiences/"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "B13",
+      "relation": "alternative",
+      "reason": "dnd-kit提供React Sortable传感器预设；Pragmatic更贴近原生HTML drag adapter并适用于多种框架。"
+    },
+    {
+      "entryId": "B22",
+      "relation": "migration-to",
+      "reason": "react-beautiful-dnd迁移可保持列表语义，Pragmatic需要重建DOM节点和监视器的生命周期。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "最小原生拖放",
+      "description": "使用真实Pragmatic drag and drop接口：最小原生拖放",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/pinned-order.ts"
+      ],
+      "capabilities": [
+        "native-drag-drop",
+        "keyboard-fallback",
+        "cleanup",
+        "isolated-drag-handle"
+      ]
+    },
+    {
+      "demoId": "business",
+      "title": "NewsHub频道排序",
+      "description": "使用真实Pragmatic drag and drop接口：NewsHub频道排序",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/pinned-order.ts"
+      ],
+      "capabilities": [
+        "native-drag-drop",
+        "keyboard-fallback",
+        "cleanup",
+        "isolated-drag-handle"
+      ]
+    },
+    {
+      "demoId": "advanced",
+      "title": "监视器作用域、撤销与键盘回退",
+      "description": "使用真实Pragmatic drag and drop接口：监视器作用域、撤销与键盘回退",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/pinned-order.ts",
+        "tests/pinned-order.test.mjs",
+        "tests/drag-session.test.mts"
+      ],
+      "capabilities": [
+        "native-drag-drop",
+        "keyboard-fallback",
+        "cleanup",
+        "isolated-drag-handle"
+      ]
+    }
+  ],
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "基于历史研究背景，按当前官方资料独立重写代码与中文指南，未沿用旧PASS。"
+  },
+  "license": {
+    "spdx": "Apache-2.0",
+    "assets": "使用原创新媒体/结构化数据，不包含第三方收费资产。"
+  }
+}

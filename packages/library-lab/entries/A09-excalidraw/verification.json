@@ -1,0 +1,18 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "已写真实@excalidraw/excalidraw SDK调用；未有当前集成运行证据。"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "PLATFORM需先加入正式依赖、生成可信pnpm-lock，再执行TS/Vite。"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "未运行Chromium、字体网络、导出/导入与StrictMode检查。"
+  },
+  "assets": {
+    "status": "BLOCKED",
+    "note": "Excalidraw默认远程字体；未将未知许可字体复制入仓库，离线字体需单独处理。"
+  }
+}

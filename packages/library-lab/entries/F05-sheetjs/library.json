@@ -1,0 +1,145 @@
+{
+  "schemaVersion": 1,
+  "entryId": "F05",
+  "slug": "sheetjs",
+  "name": "SheetJS",
+  "group": "F",
+  "summary": "SheetJS CE 0.20.3 的真实工作簿往返与危险表格输入边界",
+  "tags": [
+    "Excel",
+    "XLSX",
+    "CSV",
+    "Security",
+    "Node CLI",
+    "CE"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "xlsx",
+      "version": "0.20.3"
+    }
+  ],
+  "references": [
+    {
+      "title": "SheetJS CE 官方安装",
+      "url": "https://docs.sheetjs.com/docs/getting-started/installation/frameworks/"
+    },
+    {
+      "title": "官方 CDN 发行清单",
+      "url": "https://cdn.sheetjs.com/"
+    },
+    {
+      "title": "源码和许可",
+      "url": "https://github.com/SheetJS/sheetjs"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "F04",
+      "relation": "alternative",
+      "reason": "ExcelJS适合精细管理XLSX样式，SheetJS CE有广泛格式读取。"
+    },
+    {
+      "entryId": "F03",
+      "relation": "complements",
+      "reason": "Papa Parse作为CSV外部输入预检/解析。"
+    },
+    {
+      "entryId": "F02",
+      "relation": "complements",
+      "reason": "react-dropzone只选择文件；读取和验证应单独实现。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "level": "basic",
+      "executionKind": "node-ci",
+      "title": "内存 XLSX 导出再导入",
+      "entryPoint": "examples/basic.mjs",
+      "sourceFiles": [
+        "examples/core.mjs",
+        "examples/basic.mjs",
+        "examples/business.mjs",
+        "examples/advanced.mjs",
+        "examples/verify.mjs",
+        "examples/validation.mjs",
+        "examples/validation.test.mjs",
+        "examples/archive-policy.mjs",
+        "examples/archive-policy.test.mjs",
+        "examples/zip-entry-policy.mjs",
+        "examples/zip-entry-policy.test.mjs"
+      ],
+      "capabilities": [
+        "node-process",
+        "real-sdk",
+        "offline-fixture",
+        "untrusted-spreadsheet"
+      ],
+      "description": "入门：内存 XLSX 导出再导入。结果必须由真实SDK执行，未验收不得显示PASS。"
+    },
+    {
+      "demoId": "business",
+      "level": "business",
+      "executionKind": "node-ci",
+      "title": "NewsHub 分类订阅报表",
+      "entryPoint": "examples/business.mjs",
+      "sourceFiles": [
+        "examples/core.mjs",
+        "examples/basic.mjs",
+        "examples/business.mjs",
+        "examples/advanced.mjs",
+        "examples/verify.mjs",
+        "examples/validation.mjs",
+        "examples/validation.test.mjs",
+        "examples/archive-policy.mjs",
+        "examples/archive-policy.test.mjs",
+        "examples/zip-entry-policy.mjs",
+        "examples/zip-entry-policy.test.mjs"
+      ],
+      "capabilities": [
+        "node-process",
+        "real-sdk",
+        "offline-fixture",
+        "untrusted-spreadsheet"
+      ],
+      "description": "业务：NewsHub 分类订阅报表。结果必须由真实SDK执行，未验收不得显示PASS。"
+    },
+    {
+      "demoId": "advanced",
+      "level": "advanced",
+      "executionKind": "node-ci",
+      "title": "恶意单元格与无效数据拒绝",
+      "entryPoint": "examples/advanced.mjs",
+      "sourceFiles": [
+        "examples/core.mjs",
+        "examples/basic.mjs",
+        "examples/business.mjs",
+        "examples/advanced.mjs",
+        "examples/verify.mjs",
+        "examples/validation.mjs",
+        "examples/validation.test.mjs",
+        "examples/archive-policy.mjs",
+        "examples/archive-policy.test.mjs",
+        "examples/zip-entry-policy.mjs",
+        "examples/zip-entry-policy.test.mjs"
+      ],
+      "capabilities": [
+        "node-process",
+        "real-sdk",
+        "offline-fixture",
+        "untrusted-spreadsheet"
+      ],
+      "description": "边界：恶意单元格与无效数据拒绝。结果必须由真实SDK执行，未验收不得显示PASS。"
+    }
+  ],
+  "license": {
+    "spdx": "Apache-2.0",
+    "assets": "示例全部使用本地/原创数据，不重新分发第三方媒体与付费资源"
+  },
+  "provenance": {
+    "originalRecovery": "SUMMARY_ONLY",
+    "note": "原始全量研究缺失，使用官方SheetJS CE 0.20.3重新实现，供应链安装必须由PLATFORM单独核验。"
+  }
+}

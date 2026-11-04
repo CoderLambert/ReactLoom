@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "真实 @base-ui/react/checkbox 源码已写入但未安装执行。"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "等待平台锁文件与TS/Vite真实构建。"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "Space/label/indeterminate/disabled/FormData尚未在浏览器执行。"
+  }
+}

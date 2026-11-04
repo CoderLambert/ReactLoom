@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 1,
+  "entryId": "B22",
+  "slug": "react-beautiful-dnd-migration",
+  "name": "react-beautiful-dnd（历史迁移）",
+  "group": "B",
+  "summary": "把废弃react-beautiful-dnd的Droppable/Draggable列表低风险迁移为React19兼容替代库",
+  "tags": [
+    "migration",
+    "react19",
+    "drag-drop",
+    "keyboard",
+    "rollback"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "@hello-pangea/dnd",
+      "version": "18.0.1"
+    }
+  ],
+  "references": [
+    {
+      "title": "Hello Pangea DnD",
+      "url": "https://github.com/hello-pangea/dnd"
+    },
+    {
+      "title": "v18 React19发布",
+      "url": "https://github.com/hello-pangea/dnd/releases/tag/v18.0.0"
+    },
+    {
+      "title": "历史react-beautiful-dnd",
+      "url": "https://github.com/atlassian/react-beautiful-dnd"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "B13",
+      "relation": "alternative",
+      "reason": "改造为任意网格与自定义传感器时可选择dnd-kit，但不再是仅替换import的迁移。"
+    },
+    {
+      "entryId": "B14",
+      "relation": "alternative",
+      "reason": "Pragmatic Drag and Drop为底层DOM事件系统，适合复杂drop targets或框架无关业务。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "稳定DraggableId",
+      "description": "使用真实react-beautiful-dnd（历史迁移）接口：稳定DraggableId",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/pinned-order.ts"
+      ],
+      "capabilities": [
+        "drag-drop",
+        "keyboard",
+        "migration",
+        "rollback"
+      ]
+    },
+    {
+      "demoId": "business",
+      "title": "订阅源排序与拖动手柄",
+      "description": "使用真实react-beautiful-dnd（历史迁移）接口：订阅源排序与拖动手柄",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/pinned-order.ts"
+      ],
+      "capabilities": [
+        "drag-drop",
+        "keyboard",
+        "migration",
+        "rollback"
+      ]
+    },
+    {
+      "demoId": "advanced",
+      "title": "锁定、撤销与持久化边界",
+      "description": "使用真实react-beautiful-dnd（历史迁移）接口：锁定、撤销与持久化边界",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/pinned-order.ts",
+        "tests/pinned-order.test.mjs",
+        "tests/order-history.test.mts"
+      ],
+      "capabilities": [
+        "drag-drop",
+        "keyboard",
+        "migration",
+        "rollback"
+      ]
+    }
+  ],
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "基于历史研究背景，按当前官方资料独立重写代码与中文指南，未沿用旧PASS。"
+  },
+  "license": {
+    "spdx": "Apache-2.0",
+    "assets": "使用原创新媒体/结构化数据，不包含第三方收费资产。"
+  }
+}

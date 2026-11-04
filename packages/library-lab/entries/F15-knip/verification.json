@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "CLI 示例/配置和原创fixture已写，但尚未执行真正Knip扫描；退出码受故意unused文件影响；新增真实CLI结构化验证脚本和纯Node解析测试，尚未运行目标Knip"
+  },
+  "build": {
+    "status": "BLOCKED",
+    "note": "共享依赖/锁文件尚待PLATFORM统一安装和真实构建"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "尚未执行真实Storybook/Chromium或独立浏览器验证；Node CLI条目如不适用则不强制制造浏览器PASS"
+  }
+}

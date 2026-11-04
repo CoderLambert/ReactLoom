@@ -1,0 +1,132 @@
+{
+  "schemaVersion": 1,
+  "entryId": "F07",
+  "slug": "react-pdf",
+  "name": "react-pdf",
+  "group": "F",
+  "summary": "React 组件化 PDF 阅读：本地文档、分页、TextLayer 与同版本 Worker",
+  "tags": [
+    "PDF",
+    "React",
+    "Document",
+    "Page",
+    "Worker",
+    "本地文件"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "react-pdf",
+      "version": "11.0.0"
+    },
+    {
+      "name": "pdfjs-dist",
+      "version": "6.3.289"
+    }
+  ],
+  "references": [
+    {
+      "title": "react-pdf 官方入门及 Worker 配置",
+      "url": "https://github.com/wojtekmaj/react-pdf"
+    },
+    {
+      "title": "react-pdf npm 11.0.0",
+      "url": "https://www.npmjs.com/package/react-pdf"
+    },
+    {
+      "title": "PDF.js Worker API",
+      "url": "https://mozilla.github.io/pdf.js/api/"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "F06",
+      "relation": "complements",
+      "reason": "react-pdf封装pdfjs-dist渲染。需要精细控制图层、加载和Worker细节时参考F06原生PDF.js。"
+    },
+    {
+      "entryId": "F08",
+      "relation": "alternative",
+      "reason": "@react-pdf/renderer生成新PDF，不渲染现有PDF，不应混用职责。"
+    },
+    {
+      "entryId": "F09",
+      "relation": "complements",
+      "reason": "pdf-lib生成或修改PDF后可交给react-pdf预览，但仍需二者版本与字节输入的兼容验证。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "level": "basic",
+      "title": "本地 PDF 首屏阅读",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/fixture.ts",
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/worker-payload.mjs",
+        "examples/worker-payload.d.mts"
+      ],
+      "capabilities": [
+        "pdf-worker",
+        "local-file",
+        "offline",
+        "render-text-layer"
+      ],
+      "description": "真实 <Document>/<Page> 配合同版 PDF.js Worker，使用原创两页 PDF fixture。"
+    },
+    {
+      "demoId": "business",
+      "level": "business",
+      "title": "分页与文字层",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/fixture.ts",
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/worker-payload.mjs",
+        "examples/worker-payload.d.mts"
+      ],
+      "capabilities": [
+        "pdf-worker",
+        "local-file",
+        "offline",
+        "render-text-layer"
+      ],
+      "description": "两页导航、页面状态与可选择文本层，保持离线输入。"
+    },
+    {
+      "demoId": "advanced",
+      "level": "advanced",
+      "title": "本地文件、损坏恢复与清理",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/fixture.ts",
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/worker-payload.mjs",
+        "examples/worker-payload.d.mts",
+        "examples/worker-payload.test.mjs"
+      ],
+      "capabilities": [
+        "pdf-worker",
+        "local-file",
+        "offline",
+        "render-text-layer"
+      ],
+      "description": "≤3MiB本地文件读取、过期回写防护、错误反馈和重置。"
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "assets": "示例输入由 ReactLoom 原创生成，不含第三方照片、字体包副本或付费功能。"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "按2026-10-27官方文档重新编写；旧归档的测试结果不作为本次真实SDK验证证据。"
+  }
+}

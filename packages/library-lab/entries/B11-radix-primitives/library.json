@@ -1,0 +1,122 @@
+{
+  "schemaVersion": 1,
+  "entryId": "B11",
+  "slug": "radix-primitives",
+  "name": "Radix Primitives",
+  "group": "B",
+  "summary": "DropdownMenu 原语的键盘、焦点、复选、单选与嵌套菜单实战",
+  "tags": [
+    "headless UI",
+    "accessibility",
+    "keyboard",
+    "focus",
+    "portal",
+    "dropdown",
+    "Radix"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "@radix-ui/react-dropdown-menu",
+      "version": "2.1.25"
+    }
+  ],
+  "references": [
+    {
+      "title": "Radix DropdownMenu 官方文档",
+      "url": "https://www.radix-ui.com/primitives/docs/components/dropdown-menu"
+    },
+    {
+      "title": "源码",
+      "url": "https://github.com/radix-ui/primitives"
+    },
+    {
+      "title": "npm",
+      "url": "https://www.npmjs.com/package/@radix-ui/react-dropdown-menu"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "B09",
+      "relation": "complements",
+      "reason": "shadcn/ui 常组合 Radix 原语并由项目维护最终组件代码，但需核对其具体实现。"
+    },
+    {
+      "entryId": "B10",
+      "relation": "alternative",
+      "reason": "Base UI 也是可访问的 Headless 原语体系，应按 React/交互需求选其一。"
+    },
+    {
+      "entryId": "B17",
+      "relation": "complements",
+      "reason": "自定义复合浮层可使用 Floating UI，但已有 Radix 定位时勿重复管理焦点与事件。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "基础 DropdownMenu 和键盘",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/feed-policy.ts",
+        "examples/dropdown.css",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "portal",
+        "keyboard",
+        "focus",
+        "a11y"
+      ]
+    },
+    {
+      "demoId": "business",
+      "title": "收藏复选/排序单选",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/feed-policy.ts",
+        "examples/dropdown.css",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "portal",
+        "keyboard",
+        "focus",
+        "a11y"
+      ]
+    },
+    {
+      "demoId": "advanced",
+      "title": "子菜单、权限禁用与焦点",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/feed-policy.ts",
+        "examples/dropdown.css",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "portal",
+        "keyboard",
+        "focus",
+        "a11y"
+      ]
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "assets": "原创菜单样式、业务fixture，无商业内容。"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "基于Radix官方DropdownMenu 2.1文档实现代表性原语，不继承历史执行状态。"
+  }
+}

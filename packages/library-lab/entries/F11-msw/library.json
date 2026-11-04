@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 1,
+  "entryId": "F11",
+  "slug": "msw",
+  "name": "MSW",
+  "group": "F",
+  "summary": "网络层请求 Mock 与场景",
+  "tags": [
+    "Network",
+    "Mock",
+    "Vitest",
+    "Playwright",
+    "Service Worker",
+    "Scenario Matrix"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "msw",
+      "version": "3.0.3"
+    }
+  ],
+  "references": [
+    {
+      "title": "MSW 官方 Quick Start",
+      "url": "https://mswjs.io/docs/quick-start"
+    },
+    {
+      "title": "MSW Vite 官方集成",
+      "url": "https://mswjs.io/guides/integrations/vite"
+    },
+    {
+      "title": "MSW 浏览器 Worker 官方说明",
+      "url": "https://mswjs.io/guides/integrations/browser"
+    },
+    {
+      "title": "MSW v3.0.3 发行记录",
+      "url": "https://github.com/mswjs/msw/releases/tag/v3.0.3"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "F12",
+      "relation": "complements",
+      "reason": "Vitest 可用同一批 handlers 做稳定的请求场景测试。"
+    },
+    {
+      "entryId": "F13",
+      "relation": "complements",
+      "reason": "Playwright 可以验证真实浏览器行为；须区分其 page.route Mock 和 MSW Worker Mock。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "GET 正常返回",
+      "level": "basic",
+      "executionKind": "node-ci",
+      "entryPoint": "examples/node-runner.mjs",
+      "sourceFiles": [
+        "examples/node-runner.mjs",
+        "examples/routes.mjs",
+        "examples/handlers.mjs",
+        "examples/session-gate.mjs"
+      ],
+      "capabilities": [
+        "node-process",
+        "network-interception"
+      ],
+      "description": "真实 MSW Node 拦截 fetch，返回固定文章，断言响应及 JSON。"
+    },
+    {
+      "demoId": "business",
+      "title": "业务成功与字段错误",
+      "level": "business",
+      "executionKind": "node-ci",
+      "entryPoint": "examples/node-runner.mjs",
+      "sourceFiles": [
+        "examples/node-runner.mjs",
+        "examples/routes.mjs",
+        "examples/handlers.mjs",
+        "examples/session-gate.mjs"
+      ],
+      "capabilities": [
+        "node-process",
+        "network-interception"
+      ],
+      "description": "模拟验证码成功和 422 结构化校验错误；真实客户端 fetch 不需要改业务实现。"
+    },
+    {
+      "demoId": "advanced",
+      "title": "可恢复网络故障",
+      "level": "advanced",
+      "executionKind": "node-ci",
+      "entryPoint": "examples/node-runner.mjs",
+      "sourceFiles": [
+        "examples/node-runner.mjs",
+        "examples/routes.mjs",
+        "examples/handlers.mjs",
+        "examples/browser-worker.mjs",
+        "tests/routes.test.mjs",
+        "examples/registration-policy.mjs",
+        "examples/registration-policy.test.mjs",
+        "examples/session-gate.mjs",
+        "examples/session-gate.test.mjs",
+        "examples/worker-script-preflight.mjs",
+        "examples/worker-script-preflight.test.mjs"
+      ],
+      "capabilities": [
+        "node-process",
+        "network-interception"
+      ],
+      "description": "首个请求 503、第二次成功，并断言两次网络拦截；附浏览器 Worker 隔离配接文件。"
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "assets": "原创测试夹具，不含真实账号/令牌"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "基于 2026-10-10 发布的 MSW v3.0.3 官方接口重新编写；未继承历史运行结果。"
+  }
+}

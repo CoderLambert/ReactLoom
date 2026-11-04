@@ -1,0 +1,46 @@
+TAP version 13
+# Subtest: guide and progress-only changes skip expensive runtime work
+ok 1 - guide and progress-only changes skip expensive runtime work
+  ---
+  duration_ms: 2.412517
+  type: 'test'
+  ...
+# Subtest: source changes select only the corresponding real SDK suites
+ok 2 - source changes select only the corresponding real SDK suites
+  ---
+  duration_ms: 0.251477
+  type: 'test'
+  ...
+# Subtest: entry-local unknown paths are treated as runtime until proven documentation
+ok 3 - entry-local unknown paths are treated as runtime until proven documentation
+  ---
+  duration_ms: 0.124367
+  type: 'test'
+  ...
+# Subtest: public code, package, lock and workflow changes require full verification
+ok 4 - public code, package, lock and workflow changes require full verification
+  ---
+  duration_ms: 0.244787
+  type: 'test'
+  ...
+# Subtest: invalid or missing git comparison base fails closed to full runtime checks
+ok 5 - invalid or missing git comparison base fails closed to full runtime checks
+  ---
+  duration_ms: 0.528322
+  type: 'test'
+  ...
+# Subtest: real git rename-free diff preserves targeted plan, not an empty false success
+ok 6 - real git rename-free diff preserves targeted plan, not an empty false success
+  ---
+  duration_ms: 45.525393
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 105.194519

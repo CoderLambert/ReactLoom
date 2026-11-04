@@ -1,0 +1,114 @@
+{
+  "schemaVersion": 1,
+  "entryId": "E14",
+  "slug": "react-easy-crop",
+  "name": "react-easy-crop",
+  "group": "E",
+  "summary": "可拖拽缩放裁剪框、真实像素区域、PNG本地输出与文件资源清理",
+  "tags": [
+    "裁剪",
+    "React",
+    "Cropper",
+    "本地图片",
+    "File API"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "react-easy-crop",
+      "version": "6.2.4"
+    }
+  ],
+  "references": [
+    {
+      "title": "react-easy-crop 官方源码与示例",
+      "url": "https://github.com/ValentinH/react-easy-crop"
+    },
+    {
+      "title": "npm 包与Props",
+      "url": "https://www.npmjs.com/package/react-easy-crop"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "E13",
+      "relation": "complements",
+      "reason": "裁剪完成后可交由PhotoSwipe以灯箱模式浏览原图/裁剪图。"
+    },
+    {
+      "entryId": "E15",
+      "relation": "complements",
+      "reason": "先裁剪业务内容，再以pica缩小尺寸以控制导出图片像素与大小。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "level": "basic",
+      "title": "固定方形裁剪区域",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/crop-policy.mjs",
+        "examples/crop-policy.d.mts",
+        "examples/crop-policy.test.mjs",
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "canvas",
+        "object-url",
+        "file-input"
+      ],
+      "description": "真实Cropper坐标/缩放回调，不使用伪静态裁剪框。"
+    },
+    {
+      "demoId": "business",
+      "level": "business",
+      "title": "16:9新闻配图裁剪并导出",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/crop-policy.mjs",
+        "examples/crop-policy.d.mts",
+        "examples/crop-policy.test.mjs",
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "canvas",
+        "object-url",
+        "file-input"
+      ],
+      "description": "按裁剪像素调用Canvas drawImage生成PNG Blob，不把坐标结果冒充图片文件。"
+    },
+    {
+      "demoId": "advanced",
+      "level": "advanced",
+      "title": "本地文件尺寸与资源回收边界",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/crop-policy.mjs",
+        "examples/crop-policy.d.mts",
+        "examples/crop-policy.test.mjs",
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "canvas",
+        "object-url",
+        "file-input"
+      ],
+      "description": "限制文件类型/大小/解码像素，切换文件与卸载释放ObjectURL。"
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "assets": "原创本地SVG/Canvas演示数据，未上传外部图片，未包含付费或第三方媒体资源。"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "2026-10-27独立重建示例；参考官方API。未执行真实SDK/浏览器验收，不继承历史PASS。"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "真实 SDK import/行为测试已写，待安装依赖并执行"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "待平台执行 TypeScript 和生产构建"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "已接入 C13 专用 loopback 4321 文档运行器；父文档不加载图表。单文档实例使用 refresh/change_view_mode，退出销毁整个 iframe。当前输入的真实 Chromium 文档监听数量、旧 frame/context 销毁和业务回归仍待 CI 执行，未提升 PASS。"
+  }
+}

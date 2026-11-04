@@ -1,0 +1,18 @@
+{
+  "content": {
+    "status": "NOT_RUN",
+    "note": "既有内容PASS没有当前源码指纹/执行命令/证据；第14轮修订后等待生成器和真实SDK验证。"
+  },
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "待统一安装 react-resizable-panels@4.14.1"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "无本提交TS/build证据"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "真实拖动、键盘、窄屏未执行"
+  }
+}

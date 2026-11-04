@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "entryId": "F14",
+  "slug": "storybook",
+  "name": "Storybook",
+  "group": "F",
+  "summary": "组件隔离开发、CSF Stories、Play交互断言与可访问性反馈",
+  "tags": [
+    "Storybook",
+    "CSF3",
+    "React",
+    "Vite",
+    "play",
+    "a11y"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "storybook",
+      "version": "10.6.1"
+    },
+    {
+      "name": "@storybook/react-vite",
+      "version": "10.6.1"
+    },
+    {
+      "name": "@storybook/addon-a11y",
+      "version": "10.6.1"
+    }
+  ],
+  "references": [
+    {
+      "title": "Storybook Play functions",
+      "url": "https://storybook.js.org/docs/writing-stories/play-function"
+    },
+    {
+      "title": "Storybook React + Vite",
+      "url": "https://storybook.js.org/docs/get-started/frameworks/react-vite"
+    },
+    {
+      "title": "Storybook Main Config",
+      "url": "https://storybook.js.org/docs/api/main-config"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "F12",
+      "relation": "complements",
+      "reason": "Vitest提供纯函数及浏览器项目单测，Storybook管理具名组件场景与交互展示。"
+    },
+    {
+      "entryId": "F13",
+      "relation": "complements",
+      "reason": "Playwright验收真正的浏览器用户旅程与跨页流程，而Play函数主要覆盖组件故事内部行为。"
+    },
+    {
+      "entryId": "F17",
+      "relation": "complements",
+      "reason": "Storybook a11y addon可借助axe规则，不能取代人工读屏与键盘验收。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "level": "basic",
+      "title": "CSF 基础状态卡",
+      "executionKind": "node-ci",
+      "entryPoint": "examples/stories/StatusCard.stories.tsx",
+      "sourceFiles": [
+        "examples/.storybook/main.ts",
+        "examples/.storybook/preview.ts",
+        "examples/stories/StatusCard.stories.tsx",
+        "examples/components/StatusCard.tsx"
+      ],
+      "capabilities": [
+        "node-process",
+        "real-cli",
+        "isolated-fixture"
+      ],
+      "description": "真实Storybook发现CSF3元数据、参数并渲染可访问的React组件。"
+    },
+    {
+      "demoId": "business",
+      "level": "business",
+      "title": "业务交互Play断言",
+      "executionKind": "node-ci",
+      "entryPoint": "examples/stories/StatusCard.stories.tsx",
+      "sourceFiles": [
+        "examples/.storybook/main.ts",
+        "examples/.storybook/preview.ts",
+        "examples/stories/StatusCard.stories.tsx",
+        "examples/components/StatusCard.tsx"
+      ],
+      "capabilities": [
+        "node-process",
+        "real-cli",
+        "isolated-fixture"
+      ],
+      "description": "使用Storybook内建 play/canvas/userEvent 执行真实交互、断言反馈。"
+    },
+    {
+      "demoId": "advanced",
+      "level": "advanced",
+      "title": "禁用态与交互约束",
+      "executionKind": "node-ci",
+      "entryPoint": "examples/stories/StatusCard.stories.tsx",
+      "sourceFiles": [
+        "examples/.storybook/main.ts",
+        "examples/.storybook/preview.ts",
+        "examples/stories/StatusCard.stories.tsx",
+        "examples/components/StatusCard.tsx"
+      ],
+      "capabilities": [
+        "node-process",
+        "real-cli",
+        "isolated-fixture"
+      ],
+      "description": "实际Storybook同时覆盖禁用态与首次异步回调失败后重试；需要执行Story play方可验证。"
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "assets": "原创 fixture 和例子；无需付费服务、密钥或第三方素材。"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "2026-10-27复核当前官方文档后新增独立示例。实际CLI、SDK、浏览器和依赖构建仍待执行。"
+  }
+}

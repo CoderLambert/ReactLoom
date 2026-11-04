@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "真实 React Aria Components 调用代码已提交但未在本环境执行。"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "等待 PLATFORM 核验 React19 与真实 npm 依赖并执行类型/生产构建。"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "IME、焦点、键盘、禁用项和异步结果还未做浏览器验收。"
+  }
+}

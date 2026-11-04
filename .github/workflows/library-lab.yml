@@ -1,0 +1,122 @@
+name: Library Lab
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: ['main', 'feat/library-lab']
+    paths: ['packages/library-lab/**', 'packages/tsconfig/**', 'docs/library-lab/**', '.github/workflows/library-lab.yml', 'pnpm-lock.yaml', 'package.json', 'pnpm-workspace.yaml', '.npmrc', 'AGENTS.md', 'LIBRARY_CATALOG.md', 'library-catalog.json']
+  push:
+    branches: ['feat/library-lab']
+    paths: ['packages/library-lab/**', 'packages/tsconfig/**', 'docs/library-lab/**', '.github/workflows/library-lab.yml', 'pnpm-lock.yaml', 'package.json', 'pnpm-workspace.yaml', '.npmrc', 'AGENTS.md', 'LIBRARY_CATALOG.md', 'library-catalog.json']
+permissions:
+  contents: read
+concurrency:
+  group: library-lab-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  catalogue:
+    runs-on: ubuntu-latest
+    outputs:
+      runtime: ${{ steps.scope.outputs.runtime }}
+      lock_ready: ${{ steps.scope.outputs.lock_ready }}
+    env:
+      POLICY_COMPARE_BASE: ${{ github.event.pull_request.base.sha || github.event.before || '' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Plan affected verification
+        id: scope
+        working-directory: packages/library-lab
+        run: node scripts/ci-scope.mjs
+      - name: Check committed Agent indexes before generation
+        if: ${{ github.event_name != 'pull_request' || github.event.pull_request.base.ref == 'main' }}
+        working-directory: packages/library-lab
+        run: node scripts/root-catalog.mjs --committed
+      - name: Validate catalogue and platform logic
+        working-directory: packages/library-lab
+        run: |
+          node scripts/generate.mjs --check
+          node scripts/validate-dependencies.mjs
+          npm test
+          node scripts/policy-runner.mjs "--changed-base=${POLICY_COMPARE_BASE}"
+      - name: Source-aware readiness (not SDK proof)
+        if: always()
+        working-directory: packages/library-lab
+        run: node scripts/readiness.mjs --json > readiness-report.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: library-lab-plan-${{ github.sha }}
+          path: |
+            packages/library-lab/ci-scope.json
+            packages/library-lab/readiness-report.json
+          retention-days: 7
+  lock-candidate:
+    needs: catalogue
+    if: ${{ always() && needs.catalogue.outputs.runtime == 'true' && needs.catalogue.outputs.lock_ready == 'false' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.3
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Resolve a candidate only; never counts as acceptance
+        run: pnpm install --lockfile-only --no-frozen-lockfile --ignore-scripts
+      - uses: actions/upload-artifact@v4
+        with:
+          name: library-lab-lock-candidate-${{ github.sha }}
+          path: pnpm-lock.yaml
+          retention-days: 7
+  runtime:
+    needs: catalogue
+    if: ${{ needs.catalogue.outputs.runtime == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: library-lab-plan-${{ github.sha }}
+          path: packages/library-lab
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.3
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Frozen installation is mandatory
+        run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Typecheck and build the integrated application
+        id: build
+        run: |
+          pnpm --filter @reactloom/library-lab typecheck
+          pnpm --filter @reactloom/library-lab build
+      - name: Selected real SDK suites (never policy substitutes)
+        id: sdk
+        working-directory: packages/library-lab
+        run: node scripts/ci-targets.mjs sdk
+      - name: Install Chromium
+        id: chromium
+        if: ${{ always() && !cancelled() && steps.build.outcome == 'success' }}
+        run: pnpm --filter @reactloom/library-lab exec playwright install --with-deps chromium
+      - name: Selected production preview interactions
+        if: ${{ always() && !cancelled() && steps.build.outcome == 'success' && steps.chromium.outcome == 'success' }}
+        working-directory: packages/library-lab
+        env:
+          LAB_PREBUILT: '1'
+        run: node scripts/ci-targets.mjs browser
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: library-lab-runtime-${{ github.sha }}
+          path: |
+            packages/library-lab/dist
+            packages/library-lab/dist-runners
+            packages/library-lab/playwright-report
+            packages/library-lab/test-results
+          retention-days: 7

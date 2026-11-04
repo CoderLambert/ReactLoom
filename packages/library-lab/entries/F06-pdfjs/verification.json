@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "F06 SDK与Worker 6.3.289已在源文件/manifest对齐F07；实际 pdfjs-dist import与解析尚未运行，不能标PASS"
+  },
+  "build": {
+    "status": "BLOCKED",
+    "note": "静态根清单版本为6.3.289，pnpm实际依赖解析/TypeScript/Vite构建由PLATFORM运行；当前未验收"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "待Chromium快速切页/缩放验证RenderTask取消后Canvas串行、Worker加载与两页内容 Wave21新增真实渲染路径中的8MP/4096px预算及Node独立策略测试；未运行真实pdfjs-dist或Chromium。"
+  }
+}

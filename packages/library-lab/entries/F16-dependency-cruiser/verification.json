@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "真实CLI配方与fixture已提交，但尚未安装或运行对应工具；JSON规则与err退出码双报告器真实执行脚本已写，CLI仍NOT_RUN"
+  },
+  "build": {
+    "status": "BLOCKED",
+    "note": "PLATFORM需解析真实npm版本与workspace锁文件"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "node-ci类型不需要站内在线终端；报告打开浏览器检查尚未执行"
+  }
+}

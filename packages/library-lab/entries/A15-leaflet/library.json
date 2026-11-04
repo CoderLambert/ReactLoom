@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "entryId": "A15",
+  "slug": "leaflet",
+  "name": "Leaflet",
+  "group": "A",
+  "summary": "无需远程底图的地点数据浏览、图层与地图交互",
+  "tags": [
+    "map",
+    "geo",
+    "tile policy",
+    "offline",
+    "accessibility"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "leaflet",
+      "version": "1.9.4"
+    }
+  ],
+  "references": [
+    {
+      "title": "Leaflet 官方 API",
+      "url": "https://leafletjs.com/reference.html"
+    },
+    {
+      "title": "Leaflet 快速开始",
+      "url": "https://leafletjs.com/examples/quick-start/"
+    },
+    {
+      "title": "npm 1.9.4",
+      "url": "https://www.npmjs.com/package/leaflet"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "A16",
+      "relation": "alternative",
+      "reason": "需要矢量瓦片与数据驱动样式时考虑MapLibre；Leaflet更适合轻量地图与HTML/SVG覆盖物。"
+    },
+    {
+      "entryId": "A17",
+      "relation": "complements",
+      "reason": "大规模地理点云或GPU图层可以与deck.gl搭配，但不应因此在轻量场景默认引入WebGL。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "坐标点与地图交互",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/station-factory.ts",
+        "examples/location-policy.ts"
+      ],
+      "capabilities": [
+        "ResizeObserver",
+        "cleanup",
+        "offline"
+      ]
+    },
+    {
+      "demoId": "business",
+      "title": "新闻来源覆盖与过滤",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/station-factory.ts",
+        "examples/location-policy.ts"
+      ],
+      "capabilities": [
+        "ResizeObserver",
+        "cleanup",
+        "offline"
+      ]
+    },
+    {
+      "demoId": "advanced",
+      "title": "实时点位更新、离线与清理",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/station-factory.ts",
+        "examples/location-policy.ts",
+        "tests/location-policy.test.mts"
+      ],
+      "capabilities": [
+        "ResizeObserver",
+        "cleanup",
+        "offline"
+      ]
+    }
+  ],
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "本次基于官方Leaflet 1.9 API独立实现本地演示；旧验收不继承。"
+  },
+  "license": {
+    "spdx": "BSD-2-Clause",
+    "assets": "不包含任何远程瓦片、第三方图片或地图素材。"
+  }
+}

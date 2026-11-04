@@ -1,0 +1,118 @@
+{
+  "schemaVersion": 1,
+  "entryId": "A09",
+  "slug": "excalidraw",
+  "name": "Excalidraw",
+  "group": "A",
+  "summary": "手绘白板嵌入、业务流程草图、导入导出和协作边界",
+  "tags": [
+    "白板",
+    "手绘",
+    "图示",
+    "导出",
+    "键盘隔离"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "@excalidraw/excalidraw",
+      "version": "0.18.1"
+    }
+  ],
+  "references": [
+    {
+      "title": "官方安装与字体资源",
+      "url": "https://docs.excalidraw.com/docs/@excalidraw/excalidraw/installation"
+    },
+    {
+      "title": "官方 API 与编辑器实例",
+      "url": "https://docs.excalidraw.com/docs/@excalidraw/excalidraw/api/props/excalidraw-api"
+    },
+    {
+      "title": "官方简化元素创建",
+      "url": "https://docs.excalidraw.com/docs/@excalidraw/excalidraw/api/excalidraw-element-skeleton"
+    },
+    {
+      "title": "npm 0.18.1",
+      "url": "https://www.npmjs.com/package/@excalidraw/excalidraw"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "A10",
+      "relation": "alternative",
+      "reason": "tldraw 适合可编程无限画布与形状模型，但生产部署存在单独授权要求。"
+    },
+    {
+      "entryId": "A08",
+      "relation": "complements",
+      "reason": "Mermaid 适合可版本控制的文本流程图；Excalidraw 更适合自由手绘和评审。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "嵌入式手绘画板",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/styles.css",
+        "examples/scene-policy.ts"
+      ],
+      "capabilities": [
+        "canvas",
+        "local-download"
+      ],
+      "description": "真正渲染 Excalidraw 画布，测试选择、文字、绘制和撤销"
+    },
+    {
+      "demoId": "business",
+      "title": "RSS 流程草图与结构化初始元素",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/styles.css",
+        "examples/scene-policy.ts"
+      ],
+      "capabilities": [
+        "canvas",
+        "local-download"
+      ],
+      "description": "初始场景由官方 convertToExcalidrawElements 构建，再用真实编辑器操作"
+    },
+    {
+      "demoId": "advanced",
+      "title": "安全导入、PNG 导出与只读边界",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/styles.css",
+        "examples/scene-policy.ts"
+      ],
+      "capabilities": [
+        "canvas",
+        "local-download",
+        "file-input"
+      ],
+      "description": "限制文件大小及元素链接，使用 SDK 读写与导出，保护 Lab 全局键盘事件"
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "notes": "官方 npm 嵌入代码 MIT；Excalidraw 字体/品牌及第三方图片仍需逐项审查，禁止无许可素材再分发。"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "archive": "ReactLoom_119_Full_Research_2026-10-24.zip",
+    "note": "阅读历史 A09 Workshop 并结合 2026-10 官方API重新实现，未沿用历史 PASS。"
+  }
+}

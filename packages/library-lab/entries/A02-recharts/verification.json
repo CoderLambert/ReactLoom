@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "未在本分组环境安装运行 Recharts 3.10.1"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "需由 PLATFORM 统一加入 recharts/react-is 与锁文件后执行"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "响应式图表、数据表、交互/卸载未做浏览器实测"
+  }
+}

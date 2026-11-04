@@ -1,0 +1,122 @@
+{
+  "schemaVersion": 1,
+  "entryId": "C01",
+  "slug": "react-hook-form",
+  "name": "React Hook Form",
+  "group": "C",
+  "summary": "真实 RSS 订阅表单：动态字段、服务端错误映射与请求取消",
+  "tags": [
+    "表单",
+    "动态字段",
+    "React",
+    "服务端错误",
+    "IME"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "react-hook-form",
+      "version": "7.89.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "官方使用说明",
+      "url": "https://react-hook-form.com/"
+    },
+    {
+      "title": "字段数组 API",
+      "url": "https://react-hook-form.com/docs/usefieldarray"
+    },
+    {
+      "title": "服务端错误 API",
+      "url": "https://react-hook-form.com/docs/useform/seterror"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "C02",
+      "relation": "complements",
+      "reason": "Zod 提供独立的数据 schema；RHF 管输入订阅、状态和错误。"
+    },
+    {
+      "entryId": "C04",
+      "relation": "alternative",
+      "reason": "需要 JSON Schema 动态生成完整表单时考虑 JSON Forms。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "必填与 HTTPS 校验",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/feed-url-policy.mjs",
+        "examples/feed-url-policy.d.mts",
+        "tests/url-policy.test.mjs",
+        "examples/form-policy.mjs",
+        "examples/form-policy.d.mts",
+        "tests/form-policy.test.mjs",
+        "tests/sdk.test.mjs"
+      ],
+      "capabilities": [],
+      "description": "真实 RHF register/handleSubmit，不访问外部服务。"
+    },
+    {
+      "demoId": "business",
+      "title": "动态 RSS 源管理",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/feed-url-policy.mjs",
+        "examples/feed-url-policy.d.mts",
+        "tests/url-policy.test.mjs",
+        "examples/form-policy.mjs",
+        "examples/form-policy.d.mts",
+        "tests/form-policy.test.mjs",
+        "tests/sdk.test.mjs"
+      ],
+      "capabilities": [],
+      "description": "useFieldArray 使用字段 id 保持稳定行身份。"
+    },
+    {
+      "demoId": "advanced",
+      "title": "服务端 409、取消与竞态",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/feed-url-policy.mjs",
+        "examples/feed-url-policy.d.mts",
+        "tests/url-policy.test.mjs",
+        "examples/form-policy.mjs",
+        "examples/form-policy.d.mts",
+        "tests/form-policy.test.mjs",
+        "tests/sdk.test.mjs"
+      ],
+      "capabilities": [
+        "timer",
+        "abort"
+      ],
+      "description": "本地 409 fixture 与 AbortSignal，非真实 API。"
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "note": "本目录源码和说明独立撰写；未打包第三方源码"
+  },
+  "provenance": {
+    "origin": "RFL-20261023/C/react-hook-form",
+    "mode": "recreated",
+    "note": "参照已有资料与官方 API 重新实现；不继承旧验收"
+  }
+}

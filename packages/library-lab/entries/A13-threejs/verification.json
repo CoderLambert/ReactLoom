@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "尚无官方SDK执行日志；真实import不等于验证通过"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "未完成安装、TypeScript与生产构建"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "未执行Chromium与实际GPU压力测试"
+  }
+}

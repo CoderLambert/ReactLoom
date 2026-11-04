@@ -1,0 +1,118 @@
+{
+  "schemaVersion": 1,
+  "entryId": "F02",
+  "slug": "react-dropzone",
+  "name": "react-dropzone",
+  "group": "F",
+  "summary": "文件选择与拖放输入",
+  "tags": [
+    "File",
+    "DragDrop",
+    "Upload",
+    "Validation",
+    "Accessibility"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "react-dropzone",
+      "version": "20.1.4"
+    }
+  ],
+  "references": [
+    {
+      "title": "react-dropzone 官方文档",
+      "url": "https://react-dropzone.js.org/"
+    },
+    {
+      "title": "react-dropzone 官方代码",
+      "url": "https://github.com/react-dropzone/react-dropzone"
+    },
+    {
+      "title": "react-dropzone npm 20.1.4",
+      "url": "https://www.npmjs.com/package/react-dropzone"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "F01",
+      "relation": "complements",
+      "reason": "react-dropzone 仅负责浏览器文件选择，真正上传和断点续传可交给 Uppy 或业务 API 客户端。"
+    },
+    {
+      "entryId": "F03",
+      "relation": "complements",
+      "reason": "选中 CSV 文件后应交给 Papa Parse 做结构化解析，避免自己 split(',')。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "选择文本文件",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/preview.mjs",
+        "examples/preview.d.mts",
+        "examples/preview.test.mjs",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "file-picker",
+        "drag-drop",
+        "File-API"
+      ],
+      "description": "限制 MIME/扩展名，查看所选文件的信息与大小。"
+    },
+    {
+      "demoId": "business",
+      "title": "CSV/文本预览",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/preview.mjs",
+        "examples/preview.d.mts",
+        "examples/preview.test.mjs",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "file-picker",
+        "drag-drop",
+        "File-API"
+      ],
+      "description": "读取受限大小的本地文件内容，只在当前示例中预览，不执行网络上传。"
+    },
+    {
+      "demoId": "advanced",
+      "title": "拒绝策略与取消",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/preview.mjs",
+        "examples/preview.d.mts",
+        "examples/preview.test.mjs",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "file-picker",
+        "drag-drop",
+        "File-API"
+      ],
+      "description": "限制文件个数和大小，并用 generation 防止旧异步读取覆盖新的内容。"
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "assets": "演示不上传或持久化任何用户文件内容"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "基于react-dropzone v20 官方文档重新编写；运行状态待SDK与浏览器验证。"
+  }
+}

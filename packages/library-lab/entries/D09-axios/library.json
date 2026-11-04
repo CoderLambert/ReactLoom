@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "entryId": "D09",
+  "slug": "axios",
+  "name": "Axios",
+  "group": "D",
+  "summary": "HTTP 实例拦截器、取消、幂等请求重试与 409 失败分支",
+  "tags": [
+    "HTTP",
+    "Axios",
+    "AbortSignal",
+    "拦截器",
+    "取消",
+    "409"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "axios",
+      "version": "1.20.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "官方 Interceptors",
+      "url": "https://axios-http.com/docs/interceptors"
+    },
+    {
+      "title": "官方取消指南",
+      "url": "https://axios-http.com/docs/cancellation"
+    },
+    {
+      "title": "受信 release tag",
+      "url": "https://github.com/axios/axios/releases/tag/v1.20.0"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "D08",
+      "relation": "alternative",
+      "reason": "Fetch 优先、较少拦截基础设施时比较 Ky。"
+    },
+    {
+      "entryId": "D07",
+      "relation": "complements",
+      "reason": "Query 管理远端缓存与乐观更新，Axios 仅作 HTTP transport。"
+    },
+    {
+      "entryId": "D04",
+      "relation": "complements",
+      "reason": "复杂频率预算交给队列，并核对整体重试上限。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "隔离 Axios 实例与拦截器",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [],
+      "description": "隔离 Axios 实例与拦截器"
+    },
+    {
+      "demoId": "business",
+      "title": "租户搜索、IME 与取消旧请求",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [],
+      "description": "租户搜索、IME 与取消旧请求"
+    },
+    {
+      "demoId": "advanced",
+      "title": "GET 503 有限重试 / POST 409 冲突",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [],
+      "description": "GET 503 有限重试 / POST 409 冲突"
+    }
+  ],
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "基于官方当前稳定标签重写；资料回收状态不等于本应用 SDK 验收。"
+  },
+  "license": {
+    "spdx": "MIT",
+    "note": "示例数据和说明原创，不包含真实生产凭据。"
+  }
+}

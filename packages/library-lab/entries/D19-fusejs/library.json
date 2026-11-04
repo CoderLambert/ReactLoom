@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "entryId": "D19",
+  "slug": "fusejs",
+  "name": "Fuse.js",
+  "group": "D",
+  "summary": "浏览器端加权模糊搜索、分组过滤、IME 与动态索引重建",
+  "tags": [
+    "Fuse",
+    "搜索",
+    "模糊匹配",
+    "RSS",
+    "IME",
+    "索引"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "fuse.js",
+      "version": "7.5.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "官方文档",
+      "url": "https://www.fusejs.io/"
+    },
+    {
+      "title": "API 选项",
+      "url": "https://www.fusejs.io/api/options.html"
+    },
+    {
+      "title": "源码",
+      "url": "https://github.com/krisk/Fuse"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "D20",
+      "relation": "alternative",
+      "reason": "需要浏览器全文倒排索引而非短列表容错时评估 MiniSearch。"
+    },
+    {
+      "entryId": "D21",
+      "relation": "alternative",
+      "reason": "静态网站构建期全文索引采用 Pagefind。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "Fuse.search 加权评分",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/search-scope.mjs",
+        "examples/search-scope.d.mts",
+        "examples/index-lifecycle.mjs",
+        "examples/index-lifecycle.d.mts"
+      ],
+      "capabilities": [],
+      "description": "Fuse.search 加权评分"
+    },
+    {
+      "demoId": "business",
+      "title": "RSS 分组过滤与输入法处理",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/search-scope.mjs",
+        "examples/search-scope.d.mts",
+        "examples/index-lifecycle.mjs",
+        "examples/index-lifecycle.d.mts"
+      ],
+      "capabilities": [],
+      "description": "RSS 分组过滤与输入法处理"
+    },
+    {
+      "demoId": "advanced",
+      "title": "索引新增、同 ID 替换、删除",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/search-scope.mjs",
+        "examples/search-scope.d.mts",
+        "examples/index-lifecycle.mjs",
+        "examples/index-lifecycle.d.mts"
+      ],
+      "capabilities": [],
+      "description": "真实 Fuse 索引按不可变文档快照重建，不残留旧内容"
+    }
+  ],
+  "license": {
+    "spdx": "Apache-2.0",
+    "note": "不转载第三方数据/图像，保留上游许可证标识"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "官方文档重新实现；历史测试未继承"
+  }
+}

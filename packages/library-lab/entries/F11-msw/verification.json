@@ -1,0 +1,22 @@
+{
+  "source": {
+    "status": "NOT_RUN",
+    "note": "第24轮新增真实browser-worker启动前的受限同源Worker脚本响应预检；隔离Node纯策略测试5 PASS。没导入msw官方SDK，不计SDK/浏览器通过。"
+  },
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "node-runner.mjs 已编写，但缺实际 msw 安装/运行"
+  },
+  "build": {
+    "status": "BLOCKED",
+    "note": "需要 PLATFORM 添加 msw@3.0.3 至 package/lock"
+  },
+  "browser": {
+    "status": "BLOCKED",
+    "note": "需PLATFORM提供MSW v3官方scoped脚本、独立iframe和CSP worker-src/connect-src，运行真实Chromium registration/controller/fetch/stop；第24轮Node预检不等于浏览器SW实测，仍BLOCKED。"
+  },
+  "security": {
+    "status": "NOT_RUN",
+    "note": "校验脚本路径、重定向、响应MIME、实际响应大小和SPA fallback的纯策略5 PASS；跨标签scope、脚本授权、CSP、MSW真实SW启动仍NOT_RUN。"
+  }
+}

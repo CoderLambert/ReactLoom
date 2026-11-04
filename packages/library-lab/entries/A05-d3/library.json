@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "entryId": "A05",
+  "slug": "d3",
+  "name": "D3",
+  "group": "A",
+  "summary": "可定制SVG可视化：比例尺、坐标轴、数据联结与动态重绘",
+  "tags": [
+    "svg",
+    "dataviz",
+    "比例尺",
+    "React",
+    "cleanup"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "d3",
+      "version": "7.9.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "D3 官方API",
+      "url": "https://d3js.org/getting-started"
+    },
+    {
+      "title": "d3 npm",
+      "url": "https://www.npmjs.com/package/d3"
+    },
+    {
+      "title": "D3 API Reference",
+      "url": "https://d3js.org/api"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "A01",
+      "relation": "alternative",
+      "reason": "ECharts适合完整报表与内建交互，D3适合完全控制图元和数据映射。"
+    },
+    {
+      "entryId": "A02",
+      "relation": "alternative",
+      "reason": "Recharts快速实现常见SVG图表，D3更灵活但需自行维护DOM与无障碍。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "基础柱状图",
+      "description": "D3比例尺和axis绘制数量图，原生SVG和可访问数据表同步",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/chart-policy.ts",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "svg",
+        "resize-observer",
+        "pointer"
+      ]
+    },
+    {
+      "demoId": "business",
+      "title": "新闻双指标折线",
+      "description": "轴和折线使用真实D3 shape、scale与事件处理",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/chart-policy.ts",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "svg",
+        "resize-observer",
+        "pointer"
+      ]
+    },
+    {
+      "demoId": "advanced",
+      "title": "动态窗口/筛选",
+      "description": "调整日期窗口与异常阈值，检查重绘、移除监听及卸载",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/chart-policy.ts",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "svg",
+        "resize-observer",
+        "pointer"
+      ]
+    }
+  ],
+  "license": {
+    "spdx": "ISC",
+    "assets": "原创业务数据，没有第三方媒体和远程瓦片"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "基于公开官方API重新编写；未继承历史Demo和测试通过状态。"
+  }
+}

@@ -1,0 +1,130 @@
+{
+  "schemaVersion": 1,
+  "entryId": "F09",
+  "slug": "pdf-lib",
+  "name": "pdf-lib",
+  "group": "F",
+  "summary": "浏览器真正创建、合并及标注 PDF，处理本地字节边界并释放对象 URL",
+  "tags": [
+    "PDF",
+    "表单",
+    "文档合并",
+    "本地文件",
+    "浏览器",
+    "Uint8Array"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "pdf-lib",
+      "version": "1.17.1"
+    }
+  ],
+  "references": [
+    {
+      "title": "pdf-lib官方GitHub示例与API",
+      "url": "https://github.com/Hopding/pdf-lib"
+    },
+    {
+      "title": "pdf-lib站点",
+      "url": "https://pdf-lib.js.org/"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "F06",
+      "relation": "complements",
+      "reason": "PDF.js偏阅读渲染；pdf-lib负责创建与修改PDF字节，不负责可视化渲染。"
+    },
+    {
+      "entryId": "F07",
+      "relation": "complements",
+      "reason": "react-pdf可显示通过pdf-lib修改后的PDF，阅读Worker由react-pdf管理。"
+    },
+    {
+      "entryId": "F08",
+      "relation": "alternative",
+      "reason": "@react-pdf/renderer以React树布局生成新PDF，pdf-lib擅长读取/编辑现有文件。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "新建带文字的PDF",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/document.ts",
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/operation-gate.mjs",
+        "examples/operation-gate.d.mts",
+        "examples/document-policy.mjs",
+        "examples/document-policy.d.mts",
+        "examples/document-policy.test.mjs"
+      ],
+      "capabilities": [
+        "local-pdf",
+        "download",
+        "object-url"
+      ],
+      "description": "入门：理解库的实际 API 和输出。"
+    },
+    {
+      "demoId": "business",
+      "title": "两份报告合并为多页PDF",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/document.ts",
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/operation-gate.mjs",
+        "examples/operation-gate.d.mts",
+        "examples/document-policy.mjs",
+        "examples/document-policy.d.mts",
+        "examples/document-policy.test.mjs"
+      ],
+      "capabilities": [
+        "local-pdf",
+        "download",
+        "object-url"
+      ],
+      "description": "业务：将真实API组合为可复用的工程流程。"
+    },
+    {
+      "demoId": "advanced",
+      "title": "本地PDF验证、标注与损坏文件回退",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/document.ts",
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/operation-gate.mjs",
+        "examples/operation-gate.d.mts",
+        "examples/operation-gate.test.mjs",
+        "examples/document-policy.mjs",
+        "examples/document-policy.d.mts",
+        "examples/document-policy.test.mjs"
+      ],
+      "capabilities": [
+        "local-pdf",
+        "download",
+        "object-url"
+      ],
+      "description": "边界：使用真实API覆盖异常/资源边界，不伪造成功。"
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "assets": "原创英文测试PDF，无第三方字体或文件，浏览器本地处理"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "按官方1.17 API重新实现；历史导出与测试记录不转移为本条目PASS。"
+  }
+}

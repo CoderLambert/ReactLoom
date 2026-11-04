@@ -1,0 +1,115 @@
+> @reactloom/library-lab@0.1.0 test
+> node --test tests/catalog.test.mjs tests/generate.test.mjs
+
+TAP version 13
+# Subtest: entry identity is validated
+ok 1 - entry identity is validated
+  ---
+  duration_ms: 2.845213
+  type: 'test'
+  ...
+# Subtest: unknown category is rejected
+ok 2 - unknown category is rejected
+  ---
+  duration_ms: 0.440673
+  type: 'test'
+  ...
+# Subtest: group/id mismatch is rejected
+ok 3 - group/id mismatch is rejected
+  ---
+  duration_ms: 0.100782
+  type: 'test'
+  ...
+# Subtest: invalid slug is rejected
+ok 4 - invalid slug is rejected
+  ---
+  duration_ms: 0.091488
+  type: 'test'
+  ...
+# Subtest: text search supports name and Chinese task
+ok 5 - text search supports name and Chinese task
+  ---
+  duration_ms: 0.296386
+  type: 'test'
+  ...
+# Subtest: search is a term intersection
+ok 6 - search is a term intersection
+  ---
+  duration_ms: 0.239932
+  type: 'test'
+  ...
+# Subtest: group filter excludes other categories
+ok 7 - group filter excludes other categories
+  ---
+  duration_ms: 0.094822
+  type: 'test'
+  ...
+# Subtest: tag search is case insensitive
+ok 8 - tag search is case insensitive
+  ---
+  duration_ms: 0.081482
+  type: 'test'
+  ...
+# Subtest: paths reject traversal and backslashes
+ok 9 - paths reject traversal and backslashes
+  ---
+  duration_ms: 0.463318
+  type: 'test'
+  ...
+# Subtest: links reject executable and remote asset protocols
+ok 10 - links reject executable and remote asset protocols
+  ---
+  duration_ms: 0.589758
+  type: 'test'
+  ...
+# Subtest: only four tabs are accepted
+ok 11 - only four tabs are accepted
+  ---
+  duration_ms: 0.151609
+  type: 'test'
+  ...
+# Subtest: references must be safe https URLs
+ok 12 - references must be safe https URLs
+  ---
+  duration_ms: 0.103516
+  type: 'test'
+  ...
+# Subtest: source files cannot escape an entry
+ok 13 - source files cannot escape an entry
+  ---
+  duration_ms: 0.215615
+  type: 'test'
+  ...
+# Subtest: generates exact source hashes, lazy loaders and raw markdown
+ok 14 - generates exact source hashes, lazy loaders and raw markdown
+  ---
+  duration_ms: 25.105707
+  type: 'test'
+  ...
+# Subtest: rejects missing SDK demo source rather than silently downgrade
+ok 15 - rejects missing SDK demo source rather than silently downgrade
+  ---
+  duration_ms: 6.561136
+  type: 'test'
+  ...
+# Subtest: rejects unknown relationship target
+ok 16 - rejects unknown relationship target
+  ---
+  duration_ms: 4.621435
+  type: 'test'
+  ...
+# Subtest: catalogue generation is repeatable
+ok 17 - catalogue generation is repeatable
+  ---
+  duration_ms: 16.844312
+  type: 'test'
+  ...
+1..17
+# tests 17
+# suites 0
+# pass 17
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 117.098668

@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "entryId": "E04",
+  "slug": "codemirror6",
+  "name": "CodeMirror 6",
+  "group": "E",
+  "summary": "模块化源代码编辑器：真实 EditorState / EditorView、草稿恢复、可更新配置与卸载",
+  "tags": [
+    "代码编辑",
+    "CodeMirror 6",
+    "EditorState",
+    "EditorView",
+    "IME",
+    "生命周期",
+    "React"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "codemirror",
+      "version": "6.0.2"
+    },
+    {
+      "name": "@codemirror/state",
+      "version": "6.7.6"
+    },
+    {
+      "name": "@codemirror/lang-javascript",
+      "version": "6.2.5"
+    }
+  ],
+  "references": [
+    {
+      "title": "CodeMirror 官方指南",
+      "url": "https://codemirror.net/docs/guide/"
+    },
+    {
+      "title": "CodeMirror API 参考",
+      "url": "https://codemirror.net/docs/ref/"
+    },
+    {
+      "title": "CodeMirror 只读示例",
+      "url": "https://codemirror.net/examples/readonly/"
+    },
+    {
+      "title": "CodeMirror 更新日志",
+      "url": "https://codemirror.net/docs/changelog/"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "E05",
+      "relation": "alternative",
+      "reason": "Monaco 提供更完整的 IDE/语言服务体验，但资源与 Worker 管理成本更高；CodeMirror 更适合嵌入式轻量编辑。"
+    },
+    {
+      "entryId": "E09",
+      "relation": "alternative",
+      "reason": "Shiki 面向只读代码块高亮；不需要输入和光标时无需加载 EditorView。"
+    },
+    {
+      "entryId": "E06",
+      "relation": "complements",
+      "reason": "CodeMirror 编辑 Markdown 原文，预览交给独立受约束的 Markdown 渲染器。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "level": "basic",
+      "title": "最小编辑与高亮",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/draft-policy.mjs",
+        "examples/draft-policy.d.mts"
+      ],
+      "capabilities": [
+        "dom-editor",
+        "local-session-storage",
+        "editor-cleanup"
+      ],
+      "description": "真实 EditorView 可编辑文本和统计长度。"
+    },
+    {
+      "demoId": "business",
+      "level": "business",
+      "title": "项目配置草稿与恢复",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/draft-policy.mjs",
+        "examples/draft-policy.d.mts"
+      ],
+      "capabilities": [
+        "dom-editor",
+        "local-session-storage",
+        "editor-cleanup"
+      ],
+      "description": "仅按钮触发当前选项卡的会话存储与恢复，不写全局键。"
+    },
+    {
+      "demoId": "advanced",
+      "level": "advanced",
+      "title": "只读切换、IME 与卸载边界",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "tests/node-scenarios.test.mjs",
+        "examples/draft-policy.mjs",
+        "examples/draft-policy.d.mts",
+        "tests/policy.test.mjs"
+      ],
+      "capabilities": [
+        "dom-editor",
+        "local-session-storage",
+        "editor-cleanup"
+      ],
+      "description": "Compartment 重新配置只读，测试卸载后销毁 View。"
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "assets": "原创配置和本地输入，无第三方字体/语言服务器"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "按 CodeMirror 官方状态/视图架构重新实现；原研究备查，不沿用历史 PASS。"
+  }
+}

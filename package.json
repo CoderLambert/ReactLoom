@@ -10,6 +10,7 @@
   },
   "scripts": {
     "dev:spa": "turbo run dev --ui=tui --filter=@reactloom/template-spa",
+    "dev:library": "turbo run dev --ui=tui --filter=@reactloom/library-lab",
     "dev:ssr": "turbo run dev --ui=tui --filter=@reactloom/template-ssr",
     "dev:mobile": "turbo run dev --ui=tui --filter=@reactloom/template-mobile",
     "lint": "turbo run lint lint:root",
@@ -29,7 +30,12 @@
     "prepare": "node scripts/setup-git.mjs",
     "create-reactloom": "pnpm --filter create-reactloom build && node ./packages/create-reactloom/dist/cli.js",
     "changeset": "changeset",
-    "version-packages": "changeset version"
+    "version-packages": "changeset version",
+    "build:library": "turbo run build --filter=@reactloom/library-lab",
+    "test:library": "pnpm --filter @reactloom/library-lab test",
+    "library:find": "node packages/library-lab/scripts/find-library.mjs",
+    "library:status": "node packages/library-lab/scripts/readiness.mjs",
+    "verify:library": "node packages/library-lab/scripts/local-verify.mjs"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.15",

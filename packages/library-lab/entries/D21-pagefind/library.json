@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "entryId": "D21",
+  "slug": "pagefind",
+  "name": "Pagefind",
+  "group": "D",
+  "summary": "真实 Pagefind Node API 为静态文章、RSS 笔记及 HTML 生成离线可部署索引",
+  "tags": [
+    "静态全文索引",
+    "WASM 搜索",
+    "离线构建",
+    "内容发现",
+    "构建产物",
+    "RSS"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "pagefind",
+      "version": "1.5.2"
+    }
+  ],
+  "references": [
+    {
+      "title": "Pagefind Node API",
+      "url": "https://pagefind.app/docs/node-api/"
+    },
+    {
+      "title": "Pagefind 浏览器检索 API",
+      "url": "https://pagefind.app/docs/api/"
+    },
+    {
+      "title": "Pagefind CLI 与静态站点",
+      "url": "https://pagefind.app/docs/running-pagefind/"
+    },
+    {
+      "title": "Pagefind 源码",
+      "url": "https://github.com/Pagefind/pagefind"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "D20",
+      "relation": "alternative",
+      "reason": "MiniSearch 在运行时索引浏览器内动态集合；Pagefind 在构建时输出静态索引，适合公开内容网站。"
+    },
+    {
+      "entryId": "D19",
+      "relation": "alternative",
+      "reason": "Fuse.js 搜索内存数组、容错和排序；Pagefind 针对已生成的 HTML 提供静态搜索文件。"
+    },
+    {
+      "entryId": "D16",
+      "relation": "complements",
+      "reason": "可用 Workbox 为公开静态搜索资源提供离线缓存，但必须明确版本更新和 SW scope。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "level": "basic",
+      "executionKind": "node-ci",
+      "title": "真实 HTML 页面索引",
+      "description": "使用真实 createIndex/addHTMLFile/getFiles/writeFiles，对两篇原创 HTML 生成静态搜索包。",
+      "entryPoint": "examples/basic.mjs",
+      "sourceFiles": [
+        "examples/workshop.mjs",
+        "examples/publication-policy.mjs",
+        "examples/basic.mjs",
+        "tests/sdk.test.mjs"
+      ],
+      "capabilities": [
+        "node-process",
+        "real-cli",
+        "native-indexer",
+        "isolated-build"
+      ]
+    },
+    {
+      "demoId": "business",
+      "level": "business",
+      "executionKind": "node-ci",
+      "title": "RSS 笔记与类型筛选元数据",
+      "description": "使用真实 addCustomRecord 为 RSS 文字资料生成索引，并维护 category、tags 元数据。",
+      "entryPoint": "examples/business.mjs",
+      "sourceFiles": [
+        "examples/workshop.mjs",
+        "examples/publication-policy.mjs",
+        "examples/business.mjs",
+        "tests/sdk.test.mjs"
+      ],
+      "capabilities": [
+        "node-process",
+        "real-cli",
+        "native-indexer",
+        "isolated-build"
+      ]
+    },
+    {
+      "demoId": "advanced",
+      "level": "advanced",
+      "executionKind": "node-ci",
+      "title": "目录扫描、静态 Bundle 输出与清理",
+      "description": "组合 addDirectory 与内存页面、严格处理 errors、清理 native index，展示实际 bundle 路径与字节规模。",
+      "entryPoint": "examples/advanced.mjs",
+      "sourceFiles": [
+        "examples/workshop.mjs",
+        "examples/publication-policy.mjs",
+        "examples/advanced.mjs",
+        "tests/sdk.test.mjs"
+      ],
+      "capabilities": [
+        "node-process",
+        "real-cli",
+        "native-indexer",
+        "isolated-build"
+      ]
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "scope": "Pagefind Node wrapper 和索引资源以官方发行包许可为准；本地网页 fixture 原创"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "mode": "recreated",
+    "note": "基于 pagefind.app v1.5.2 Node API 独立重写；并未恢复旧运行日志或执行浏览器搜索。"
+  }
+}

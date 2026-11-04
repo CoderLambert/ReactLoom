@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "未在当前运行环境安装执行 cmdk 1.1.1"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "PLATFORM 尚需统一锁文件与构建验证"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "IME/快捷键/焦点/卸载仍需 Chromium 交互实测"
+  }
+}

@@ -1,0 +1,17 @@
+node_modules/
+dist/
+public/raw/
+public/catalog.json
+public/llms.txt
+src/generated/
+playwright-report/
+test-results/
+*.tsbuildinfo
+public/ffmpeg-core/
+public/.ffmpeg-core-staging-*/
+public/catalog-index.json
+.local-evidence/
+public/lab-runners/msw/mockServiceWorker.js
+dist-runners/
+runners/msw/public/mockServiceWorker.js
+ci-scope.json

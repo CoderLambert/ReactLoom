@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "entryId": "C18",
+  "slug": "react-i18next",
+  "name": "react-i18next",
+  "group": "C",
+  "summary": "React useTranslation、Trans 富文本与多工作区 I18nextProvider 隔离",
+  "tags": [
+    "React 19",
+    "国际化",
+    "Provider",
+    "Trans",
+    "语言切换"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "react-i18next",
+      "version": "17.0.16"
+    },
+    {
+      "name": "i18next",
+      "version": "26.4.3"
+    }
+  ],
+  "references": [
+    {
+      "title": "useTranslation 官方文档",
+      "url": "https://react.i18next.com/latest/usetranslation-hook"
+    },
+    {
+      "title": "I18nextProvider 官方文档",
+      "url": "https://react.i18next.com/latest/i18nextprovider"
+    },
+    {
+      "title": "Trans 受控富文本说明",
+      "url": "https://react.i18next.com/latest/trans-component"
+    },
+    {
+      "title": "官方源代码",
+      "url": "https://github.com/i18next/react-i18next"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "C17",
+      "relation": "complements",
+      "reason": "i18next core 决定资源、fallback 和 t；react-i18next 负责 React 订阅、Provider 与 Trans。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "useTranslation 与按钮切换语言",
+      "description": "真实 useTranslation 订阅当前实例的 languageChanged",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/language-switch.mjs",
+        "examples/language-switch.d.mts",
+        "examples/demo.tsx"
+      ],
+      "capabilities": []
+    },
+    {
+      "demoId": "business",
+      "title": "多 namespace 和 Trans 富文本",
+      "description": "I18nextProvider 注入本地实例，映射安全 strong 组件",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/language-switch.mjs",
+        "examples/language-switch.d.mts",
+        "examples/demo.tsx"
+      ],
+      "capabilities": []
+    },
+    {
+      "demoId": "advanced",
+      "title": "两个独立租户语言 Provider",
+      "description": "同一组资源，两组 provider 互不更改对方语言",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/language-switch.mjs",
+        "examples/language-switch.d.mts",
+        "examples/demo.tsx"
+      ],
+      "capabilities": []
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "note": "原生 SDK 依赖遵守上游 MIT；本条目不分发第三方媒体，许可仍需目标产品核对"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "mode": "recreated",
+    "note": "根据官方 API 独立编写；不沿用旧研究源文件或历史测试 PASS"
+  }
+}

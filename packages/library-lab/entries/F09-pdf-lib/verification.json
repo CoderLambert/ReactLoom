@@ -1,0 +1,18 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "目标SDK的实际运行尚待统一依赖安装；wave23仅离线纯Node策略回归，不导入目标SDK，实际SDK/CLI仍NOT_RUN"
+  },
+  "build": {
+    "status": "BLOCKED",
+    "note": "缺完整已验证的pnpm安装和锁文件"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "未进行真实Chromium运行"
+  },
+  "source": {
+    "status": "NOT_RUN",
+    "note": "第12轮仅执行纯JS生命周期和注册策略的定向Node测试；没有实际导入目标SDK，不计SDK或浏览器PASS"
+  }
+}

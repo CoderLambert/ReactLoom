@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "entryId": "C08",
+  "slug": "ag-grid",
+  "name": "AG Grid",
+  "group": "C",
+  "summary": "企业级数据网格、稳定行身份与可控编辑",
+  "tags": [
+    "Grid",
+    "表格",
+    "虚拟化",
+    "编辑"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "ag-grid-community",
+      "version": "36.2.0"
+    },
+    {
+      "name": "ag-grid-react",
+      "version": "36.2.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "官方 React 安装",
+      "url": "https://www.ag-grid.com/react-data-grid/installation/"
+    },
+    {
+      "title": "Community 与 Enterprise",
+      "url": "https://www.ag-grid.com/react-data-grid/community-vs-enterprise/"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "C07",
+      "relation": "alternative",
+      "reason": "高度自定义无样式表格优先 TanStack Table；AG Grid 开箱提供完整网格。"
+    },
+    {
+      "entryId": "C10",
+      "relation": "complements",
+      "reason": "复杂列表以外的独立窗口/视图可使用 TanStack Virtual。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "最小入门",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/edit-policy.mjs",
+        "examples/edit-policy.d.mts",
+        "examples/demo.tsx"
+      ],
+      "description": "真实 SDK 入门交互"
+    },
+    {
+      "demoId": "business",
+      "title": "业务实战",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/edit-policy.mjs",
+        "examples/edit-policy.d.mts",
+        "examples/demo.tsx"
+      ],
+      "description": "订阅中心业务场景"
+    },
+    {
+      "demoId": "advanced",
+      "title": "错误与边界",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/edit-policy.mjs",
+        "examples/edit-policy.d.mts",
+        "examples/demo.tsx"
+      ],
+      "description": "竞态、错误与边界条件"
+    }
+  ],
+  "provenance": {
+    "collection": "RFL-20261023",
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "旧研究归档仅供审查，本页面内容与示例重新编写，未继承旧环境测试的PASS"
+  },
+  "license": {
+    "spdx": "MIT",
+    "assets": "仅使用自制 fixture，不包含第三方媒体或企业授权资源"
+  }
+}

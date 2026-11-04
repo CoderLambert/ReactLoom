@@ -1,0 +1,46 @@
+TAP version 13
+# Subtest: generated catalogue, detail and source indexes have independent byte ceilings
+ok 1 - generated catalogue, detail and source indexes have independent byte ceilings
+  ---
+  duration_ms: 1.321392
+  type: 'test'
+  ...
+# Subtest: valid JSON and split UTF-8 code points survive streaming
+ok 2 - valid JSON and split UTF-8 code points survive streaming
+  ---
+  duration_ms: 53.638932
+  type: 'test'
+  ...
+# Subtest: oversized decompressed JSON cancels the stream despite forged content-length
+ok 3 - oversized decompressed JSON cancels the stream despite forged content-length
+  ---
+  duration_ms: 1.911902
+  type: 'test'
+  ...
+# Subtest: HTML fallback, HTTP failures, absent body and invalid byte budgets fail closed
+ok 4 - HTML fallback, HTTP failures, absent body and invalid byte budgets fail closed
+  ---
+  duration_ms: 0.93551
+  type: 'test'
+  ...
+# Subtest: malformed JSON, broken UTF-8 and length underbudget are not accepted
+ok 5 - malformed JSON, broken UTF-8 and length underbudget are not accepted
+  ---
+  duration_ms: 1.881236
+  type: 'test'
+  ...
+# Subtest: structured application plus-json MIME remains supported
+ok 6 - structured application plus-json MIME remains supported
+  ---
+  duration_ms: 0.568878
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 191.015247

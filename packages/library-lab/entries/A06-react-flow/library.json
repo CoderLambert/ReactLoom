@@ -1,0 +1,118 @@
+{
+  "schemaVersion": 1,
+  "entryId": "A06",
+  "slug": "react-flow",
+  "name": "React Flow",
+  "group": "A",
+  "summary": "React 节点工作流编辑器：受控节点和边、连接校验与画布交互",
+  "tags": [
+    "nodes",
+    "edges",
+    "workflow",
+    "canvas",
+    "keyboard"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "@xyflow/react",
+      "version": "12.12.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "React Flow 官方快速入门",
+      "url": "https://reactflow.dev/learn"
+    },
+    {
+      "title": "React Flow addEdge API",
+      "url": "https://reactflow.dev/api-reference/utils/add-edge"
+    },
+    {
+      "title": "官方npm包",
+      "url": "https://www.npmjs.com/package/@xyflow/react"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "A07",
+      "relation": "alternative",
+      "reason": "G6适合关系网络和图结构分析；React Flow专注可编辑节点应用。"
+    },
+    {
+      "entryId": "A08",
+      "relation": "complements",
+      "reason": "Mermaid适合以文本生成静态说明图，React Flow适合交互式编辑。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "两节点连线",
+      "description": "ReactFlow受控节点和边，Controls与Background画布",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/graph-rules.ts",
+        "examples/workflow-preset.ts",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "svg",
+        "canvas",
+        "pointer",
+        "keyboard"
+      ]
+    },
+    {
+      "demoId": "business",
+      "title": "新闻加工管线",
+      "description": "输入->清洗->摘要->发布，用户拖动节点并尝试连接",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/graph-rules.ts",
+        "examples/workflow-preset.ts",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "svg",
+        "canvas",
+        "pointer",
+        "keyboard"
+      ]
+    },
+    {
+      "demoId": "advanced",
+      "title": "新增节点与连接保护",
+      "description": "连接拒绝缺失/重复/自环/成环，节点删除清理关联边并可重置",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/graph-rules.ts",
+        "examples/workflow-preset.ts",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "svg",
+        "canvas",
+        "pointer",
+        "keyboard"
+      ]
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "note": "使用开放核心组件，不包含React Flow Pro付费示例或资源。"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "本轮按官方接口独立编写新代码、文档与Agent指南；原研究的PASS未继承。"
+  }
+}

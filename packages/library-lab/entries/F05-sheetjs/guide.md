@@ -1,0 +1,56 @@
+# F05 SheetJS CE 0.20.3 — 工作簿导入/导出与供应链
+
+## 重要：资料来源说明
+该条目历史原始 GUIDE/SOURCE/DEMO ZIP 缺失，仅有 Slack 摘要；本目录根据 SheetJS 当前官方文档**重新编写**，不宣称恢复了研究原件，也不使用旧研究的 PASS 记录。
+
+## 安装（不要误用 npm 旧版本）
+官方 **cdn.sheetjs.com** 才是 CE 0.20.3 的软件发行渠道，公共 npm 的 `xlsx` 包可能停留在旧版本。独立复现：
+```bash
+pnpm add https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz
+node packages/library-lab/entries/F05-sheetjs/examples/basic.mjs
+node packages/library-lab/entries/F05-sheetjs/examples/business.mjs
+node packages/library-lab/entries/F05-sheetjs/examples/advanced.mjs
+node packages/library-lab/entries/F05-sheetjs/examples/verify.mjs
+```
+不要自动修改公共 package.json；PLATFORM 核对来源/校验值、vendor 方案、许可及 lockfile 后统一安装。不得从不可信 CDN 任意执行脚本。
+
+## 运行源码
+`examples/core.mjs` 导入真实 `xlsx`：`utils.json_to_sheet`、`book_new`、`book_append_sheet`、`write`、`read` 和 `sheet_to_json`。三层脚本输入与输出来自真实 SDK，**不创建网页假终端**，不写磁盘上的个人文件。
+- 入门：三条原创订阅记录在 XLSX Buffer 往返。
+- 业务：两个 NewsHub 类别数据导出并回读，计算访问量总和。
+- 进阶：对公式起始字符做保守转义，拒绝负数/非整数/重复字段；对 Buffer 大小做约束。CLI 期望输出由实际执行得出，不预造 JSON 报告。
+
+## 生产风险
+1. CSV/XLSX 公式注入：单纯 `json_to_sheet` 不等于安全过滤；所有不可信文本必须保守转义，且需用实际 Excel/LibreOffice 验证各格式。
+2. ZIP 炸弹/超大表格：只看输入 Buffer 长度不代表解压后资源安全；生产必须隔离 Worker/服务器、限制膨胀倍数、Sheet/行/列/CPU预算。
+3. 混淆 CE 与 Pro：CE 基础导入导出可用，复杂样式/模板/公式求值不是可免费假设的能力。
+4. 导入后字段类型不稳定：明确 schema，拒绝空行、重复ID、无效数字、日期序号与二义时区。
+5. 滥用 `writeFile`：浏览器端下载有权限/手势限制；这个 Node 演示坚持只在内存中工作。
+
+## 何时改用其它库
+F04 ExcelJS 更侧重 XLSX 样式/对象模型；F03 Papa Parse 更适合纯 CSV；F02 react-dropzone 只是文件选择，并不做解析或上传。跨库组合应有明确输入/输出 Schema，不通过任意 XLSX 执行公式。
+
+## 执行证据
+本轮提交源码但当前没有真正解析 SheetJS 官方包并运行 `verify.mjs`。SDK/CLI NOT_RUN，完整构建 BLOCKED。只有实际执行后才能更新证据。Apache-2.0 CE。官方 https://docs.sheetjs.com/docs/getting-started/installation/frameworks/ 。
+
+
+## 受信任表头与工作簿公式边界（2026-10-27增强）
+
+演示用的导入器只接受 `channel / views / kind` 三列，顺序必须一致；工作表必须从 A1 开始，200 行上限，在解析时启用 `sheetRows` 并结合 `!fullref` 核对原始范围。不能只对 `sheet_to_json` 输出取几个字段——缺表头可能被 `String(undefined)` 伪装成合法业务数据，额外列会悄悄丢失。导入时开启 `cellFormula` 仅用于**检测并拒绝公式单元格**，不是执行公式。避免不可信工作簿的公式/宏、隐藏列带来的内容绕行。本约束适用于本次三列原型，不是通用 Excel 导入器。
+
+新增框架无关的 `examples/validation.mjs` 和 `examples/validation.test.mjs`。已在 Node v22.16.0 上实际运行后者 **7 PASS / 0 FAIL**，验证行模式、危险前缀、大小限制和重复频道；`examples/verify.mjs` 的真实 XLSX 公式/列结构检查仍需官方 `xlsx` 依赖安装后执行，不能把前述纯逻辑测试记为 SheetJS SDK PASS。输入2MiB限制只约束压缩前上传文件体积，不能作为对 ZIP bomb 的绝对防护：服务端处理仍需运行资源、超时和内存隔离。
+
+## ZIP 中央目录轻量预检（本批）
+
+examples/archive-policy.mjs 在真正的 XLSX.read() 前执行ZIP目录级预算：2MiB上传、80个文件、单项声明最大4MiB、整体声明解压最大8MiB、单项声明压缩比上限200；拒绝多磁盘/ZIP64、加密、重复名、路径穿越、声明超额、本地头异常、重叠数据和宏/嵌入条目。必须有 [Content_Types].xml 与 xl/workbook.xml。严格限制专为本演示三列表格，不是通用SheetJS功能规范。
+
+**重要限制**：ZIP中央目录的长度和比例都可被恶意文件伪造，不能代替解压过程的CPU/内存硬限制、ZIP处理器安全审核或独立进程隔离。真实服务仍须在可终止的Worker或进程中解析不可信工作簿，提供独立内存/CPU与超时上限。node --test examples/archive-policy.test.mjs 仅验证典型恶意目录被拦截，不能算SheetJS SDK安全测试。
+
+examples/verify.mjs 的PASS日志移至全部负例断言后，避免早报通过。
+
+
+## 第23轮：中央目录与本地ZIP头一致性
+
+`preflightXlsx` 现在调用 `zip-entry-policy.mjs`：校验本地头与中央目录 flags、方法、CRC32、压缩/原始尺寸、文件名及边界完全一致；只允许UTF-8标志位或零，拒绝data descriptor（bit 3）及其它ZIP变体。重叠检查包含本地文件头，不只压缩字节。该策略是当前三列表格的保守导入子集，可能拒绝其他合法ZIP，**不是通用ZIP解析/杀毒工具**。
+
+使用 `node --test packages/library-lab/entries/F05-sheetjs/examples/archive-policy.test.mjs packages/library-lab/entries/F05-sheetjs/examples/zip-entry-policy.test.mjs` 重现结构测试。压缩体积可以伪报，真实 `XLSX.read` 必须置于可中止/可限制CPU与内存的进程。官方CE包依赖仍需PLATFORM用官方tarball复核并运行。

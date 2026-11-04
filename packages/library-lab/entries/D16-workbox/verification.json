@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "需安装 workbox-build@7.4.1 后执行真实 Node SDK 测试"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "尚未执行隔离构建的真实 SDK 运行"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "未注册任何 Service Worker，未进行离线 Chromium 测试"
+  }
+}

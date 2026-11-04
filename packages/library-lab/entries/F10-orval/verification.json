@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "Orval 8.44.0 真实 CLI及双次生成/TS产物未执行；Node 22.16.0 当前不满足 >=22.18。仅独立 Node output-policy.test.mjs 6 PASS (policy only; not target SDK)."
+  },
+  "build": {
+    "status": "BLOCKED",
+    "note": "PLATFORM需提供Node>=22.18、依赖锁、tsc与生产构建证据；本轮未执行。"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "Node-CI配方不伪造浏览器终端"
+  }
+}

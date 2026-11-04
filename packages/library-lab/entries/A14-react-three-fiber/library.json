@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 1,
+  "entryId": "A14",
+  "slug": "react-three-fiber",
+  "name": "React Three Fiber",
+  "group": "A",
+  "summary": "React19声明式三维场景、useFrame与可见性节能的实践",
+  "tags": [
+    "R3F",
+    "React",
+    "Canvas",
+    "useFrame",
+    "reduced-motion"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "@react-three/fiber",
+      "version": "9.8.2"
+    },
+    {
+      "name": "three",
+      "version": "0.186.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "R3F Canvas官方API",
+      "url": "https://r3f.docs.pmnd.rs/api/canvas"
+    },
+    {
+      "title": "R3F useFrame官方API",
+      "url": "https://r3f.docs.pmnd.rs/api/hooks"
+    },
+    {
+      "title": "React19兼容发布说明",
+      "url": "https://github.com/pmndrs/react-three-fiber/releases/tag/v9.8.2"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "A13",
+      "relation": "complements",
+      "reason": "R3F以React declarative tree托管Three.js对象与生命周期，基础渲染器知识仍需掌握。"
+    },
+    {
+      "entryId": "A17",
+      "relation": "alternative",
+      "reason": "deck.gl更适合大量地理点/图层渲染，R3F更灵活地表达3D产品交互。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "声明式Mesh与灯光",
+      "description": "理解 React Three Fiber 的最小真实用法",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/frame-policy.ts",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "WebGL",
+        "GPU",
+        "cleanup"
+      ]
+    },
+    {
+      "demoId": "business",
+      "title": "产品状态和指针交互",
+      "description": "面向真实项目的产品状态和指针交互",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/frame-policy.ts",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "WebGL",
+        "GPU",
+        "cleanup"
+      ]
+    },
+    {
+      "demoId": "advanced",
+      "title": "帧循环、减少动画与重置",
+      "description": "验证React Three Fiber的资源和交互边界",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/frame-policy.ts",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "WebGL",
+        "GPU",
+        "cleanup"
+      ]
+    }
+  ],
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "依据官方资料重新编写，历史报告的测试结果不继承；使用真实运行源码。"
+  },
+  "license": {
+    "spdx": "MIT",
+    "assets": "本地原创数据与界面，无第三方地图瓦片、图片或收费资源。"
+  }
+}

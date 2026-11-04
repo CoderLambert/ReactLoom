@@ -1,0 +1,130 @@
+{
+  "schemaVersion": 1,
+  "entryId": "E16",
+  "slug": "videojs-v10",
+  "name": "Video.js",
+  "group": "E",
+  "summary": "Video.js v10 React 真正播放器：原创WebM、本地切换、生命周期与跨版本迁移",
+  "tags": [
+    "Video",
+    "React",
+    "MediaRecorder",
+    "Playback",
+    "CSP"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "@videojs/react",
+      "version": "10.2.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "v10 React官方安装",
+      "url": "https://videojs.org/docs/guides/installation/react"
+    },
+    {
+      "title": "v10 GA发行记录",
+      "url": "https://videojs.org/changelog/10.0.0"
+    },
+    {
+      "title": "Video.js项目",
+      "url": "https://github.com/videojs/video.js"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "E17",
+      "relation": "complements",
+      "reason": "hls.js承担浏览器不支持的HLS数据流加载。"
+    },
+    {
+      "entryId": "E18",
+      "relation": "complements",
+      "reason": "wavesurfer.js专门处理音频时间波形。"
+    },
+    {
+      "entryId": "E19",
+      "relation": "complements",
+      "reason": "ffmpeg.wasm生成可播放的新媒体文件。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "level": "basic",
+      "executionKind": "react",
+      "title": "通过本地原创Canvas录制生成真正WebM并播放",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/clip.ts",
+        "examples/video-file-policy.mjs",
+        "examples/video-file-policy.d.mts",
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "user-gesture",
+        "MediaRecorder",
+        "local-blob",
+        "no-camera",
+        "no-microphone"
+      ],
+      "description": "通过本地原创Canvas录制生成真正WebM并播放。真实 SDK 接入，媒体能力需浏览器环境验证；不预报运行成功。"
+    },
+    {
+      "demoId": "business",
+      "level": "business",
+      "executionKind": "react",
+      "title": "两种片头源切换及新播放器挂载",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/clip.ts",
+        "examples/video-file-policy.mjs",
+        "examples/video-file-policy.d.mts",
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "user-gesture",
+        "MediaRecorder",
+        "local-blob",
+        "no-camera",
+        "no-microphone"
+      ],
+      "description": "两种片头源切换及新播放器挂载。真实 SDK 接入，媒体能力需浏览器环境验证；不预报运行成功。"
+    },
+    {
+      "demoId": "advanced",
+      "level": "advanced",
+      "executionKind": "react",
+      "title": "导入本地MP4/WebM并释放资源",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/clip.ts",
+        "examples/video-file-policy.mjs",
+        "examples/video-file-policy.d.mts",
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/video-file-policy.test.mjs"
+      ],
+      "capabilities": [
+        "user-gesture",
+        "MediaRecorder",
+        "local-blob",
+        "no-camera",
+        "no-microphone"
+      ],
+      "description": "导入本地MP4/WebM并释放资源。真实 SDK 接入，媒体能力需浏览器环境验证；不预报运行成功。"
+    }
+  ],
+  "license": {
+    "spdx": "Apache-2.0",
+    "assets": "生成的纯本地Canvas素材；外部公共HLS测试流必须用户显式选择，不下载付费资源"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "Video.js v10已于2026-10-01稳定发布；官方10.2.0 React安装示例；真实浏览器未执行。"
+  }
+}

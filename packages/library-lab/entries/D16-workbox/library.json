@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "entryId": "D16",
+  "slug": "workbox",
+  "name": "Workbox",
+  "group": "D",
+  "summary": "隔离目录中的真实 Workbox precache 构建、公共 RSS 网络缓存策略与离线回退",
+  "tags": [
+    "Service Worker",
+    "Precache",
+    "离线缓存",
+    "作用域隔离",
+    "缓存更新",
+    "Node 构建"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "workbox-build",
+      "version": "7.4.1"
+    }
+  ],
+  "references": [
+    {
+      "title": "Workbox Build 官方文档",
+      "url": "https://developer.chrome.com/docs/workbox/modules/workbox-build"
+    },
+    {
+      "title": "Workbox 版本与源码",
+      "url": "https://github.com/GoogleChrome/workbox"
+    },
+    {
+      "title": "Service Worker Scope 规范",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerContainer/register"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "D15",
+      "relation": "complements",
+      "reason": "Workbox 缓存响应资源，Dexie 管理结构化 IndexedDB 记录与事务。"
+    },
+    {
+      "entryId": "F11",
+      "relation": "complements",
+      "reason": "MSW 在开发或测试期间拦截请求，不能与离线 Workbox 的 SW 控制作用域混用。"
+    },
+    {
+      "entryId": "D07",
+      "relation": "complements",
+      "reason": "TanStack Query 的内存远端状态缓存不等于 Service Worker 的离线资源缓存。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "level": "basic",
+      "executionKind": "node-ci",
+      "title": "构建严格限定范围的预缓存",
+      "description": "使用真实 workbox-build.getManifest / generateSW 对本地隔离站点生成 sw.js，验证预缓存范围，不注册 Service Worker。",
+      "entryPoint": "examples/basic.mjs",
+      "sourceFiles": [
+        "examples/workshop.mjs",
+        "examples/cache-policy.mjs",
+        "examples/basic.mjs",
+        "tests/sdk.test.mjs"
+      ],
+      "capabilities": [
+        "node-process",
+        "real-cli",
+        "isolated-build",
+        "service-worker-no-registration"
+      ]
+    },
+    {
+      "demoId": "business",
+      "level": "business",
+      "executionKind": "node-ci",
+      "title": "只缓存公开 RSS GET 请求",
+      "description": "为专用域名和路径添加 NetworkFirst 公共 GET 运行时规则，并验证只接受 200 响应。",
+      "entryPoint": "examples/business.mjs",
+      "sourceFiles": [
+        "examples/workshop.mjs",
+        "examples/cache-policy.mjs",
+        "examples/business.mjs",
+        "tests/sdk.test.mjs"
+      ],
+      "capabilities": [
+        "node-process",
+        "real-cli",
+        "isolated-build",
+        "service-worker-no-registration"
+      ]
+    },
+    {
+      "demoId": "advanced",
+      "level": "advanced",
+      "executionKind": "node-ci",
+      "title": "离线导航回退与私有资源排除",
+      "description": "增加 offline.html 导航回退，排除 private 子目录；演示构建安全边界，不伪装浏览器离线验收。",
+      "entryPoint": "examples/advanced.mjs",
+      "sourceFiles": [
+        "examples/workshop.mjs",
+        "examples/cache-policy.mjs",
+        "examples/advanced.mjs",
+        "tests/sdk.test.mjs"
+      ],
+      "capabilities": [
+        "node-process",
+        "real-cli",
+        "isolated-build",
+        "service-worker-no-registration"
+      ]
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "scope": "workbox-build 包和生成的 runtime；须遵守其许可证保留要求，示例 fixture 原创"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "mode": "recreated",
+    "note": "依照 Workbox 7.4.1 官方文档重写；只生成隔离 Service Worker，未执行注册，未继承历史测试结果。"
+  }
+}

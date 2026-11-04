@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "已增加异步归档与Recovery story负例；真实Storybook SDK/Play仍未执行"
+  },
+  "build": {
+    "status": "BLOCKED",
+    "note": "Storybook build及独立test runner均未执行；需PLATFORM安装依赖、浏览器并保存CI证据"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "Story play / a11y.test=error尚未在实际浏览器运行"
+  }
+}

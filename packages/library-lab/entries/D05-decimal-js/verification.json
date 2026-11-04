@@ -1,0 +1,18 @@
+{
+  "content": {
+    "status": "NOT_RUN",
+    "note": "新教学文档待校对"
+  },
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "decimal.js@10.6.0 尚未真实安装/执行"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "等待统一依赖与类型、构建验证"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "金额输入/舍入 Demo 尚未执行 Playwright"
+  }
+}

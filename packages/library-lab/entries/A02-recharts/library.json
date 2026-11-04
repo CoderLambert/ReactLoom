@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "entryId": "A02",
+  "slug": "recharts",
+  "name": "Recharts",
+  "group": "A",
+  "summary": "React 声明式 SVG 图表与可访问数据表",
+  "contentState": "recreated",
+  "tags": [
+    "SVG",
+    "React",
+    "数据可视化",
+    "业务报表",
+    "ResizeObserver"
+  ],
+  "packages": [
+    {
+      "name": "recharts",
+      "version": "3.10.1"
+    },
+    {
+      "name": "react-is",
+      "version": "19.3.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "官方 README 与安装说明",
+      "url": "https://github.com/recharts/recharts"
+    },
+    {
+      "title": "Recharts API",
+      "url": "https://recharts.github.io/en-US/api/"
+    },
+    {
+      "title": "npm 稳定发布",
+      "url": "https://www.npmjs.com/package/recharts"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "A01",
+      "relation": "alternative",
+      "reason": "ECharts 适合大量点、复杂联动和 Canvas；Recharts 强调 React 组件组合。应针对真实数据规模测量。"
+    },
+    {
+      "entryId": "A03",
+      "relation": "alternative",
+      "reason": "Chart.js 的 Canvas 绘制减少大量 SVG DOM，但扩展性与组件模型不同。"
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "assets": "仅原创测试数据，不含第三方资产"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "示例与说明本轮根据官方 API 独立重写，旧研究测试结果未继承。"
+  },
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "响应式阅读量柱状图",
+      "description": "真实 ResponsiveContainer/BarChart 绘制七天阅读量，并提供等价可访问表格",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/chart-policy.ts",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "svg",
+        "resize-observer"
+      ]
+    },
+    {
+      "demoId": "business",
+      "title": "阅读与收藏双指标",
+      "description": "真实 ComposedChart 混合柱线图与独立百分比轴",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/chart-policy.ts",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "svg",
+        "resize-observer"
+      ]
+    },
+    {
+      "demoId": "advanced",
+      "title": "动态数据范围与边界",
+      "description": "3–14 天范围、刷新确定性数据、关闭折线、卸载后恢复",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/chart-policy.ts",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "svg",
+        "resize-observer"
+      ]
+    }
+  ]
+}

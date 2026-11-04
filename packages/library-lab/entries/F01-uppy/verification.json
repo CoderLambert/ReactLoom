@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "真实 Uppy Core 已按官方API编写，尚未安装/执行SDK；wave16修改源码，目标SDK/完整构建/浏览器未执行，状态保持。"
+  },
+  "build": {
+    "status": "BLOCKED",
+    "note": "PLATFORM 需统一安装 @uppy/core@6.1.0/lockfile；wave16修改源码，目标SDK/完整构建/浏览器未执行，状态保持。"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "文件选择、拖拽、限制和预览竞态尚未在真实浏览器验证；wave16修改源码，目标SDK/完整构建/浏览器未执行，状态保持。"
+  }
+}

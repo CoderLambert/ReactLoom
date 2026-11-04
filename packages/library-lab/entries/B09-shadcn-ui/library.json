@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 1,
+  "entryId": "B09",
+  "slug": "shadcn-ui",
+  "name": "shadcn/ui",
+  "group": "B",
+  "summary": "从注册表复制源码的设计系统，CVA变体与Radix Slot组合、组件源码所有权和可访问性",
+  "tags": [
+    "设计系统",
+    "源代码分发",
+    "Button",
+    "CVA",
+    "Radix",
+    "asChild"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "class-variance-authority",
+      "version": "0.7.1"
+    },
+    {
+      "name": "@radix-ui/react-slot",
+      "version": "1.5.0"
+    },
+    {
+      "name": "clsx",
+      "version": "2.1.1"
+    },
+    {
+      "name": "tailwind-merge",
+      "version": "3.7.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "shadcn/ui Button组件官方指南",
+      "url": "https://ui.shadcn.com/docs/components/radix/button"
+    },
+    {
+      "title": "组件源代码模式与初始化",
+      "url": "https://ui.shadcn.com/docs/installation/vite"
+    },
+    {
+      "title": "2026 Radix组件统一包迁移",
+      "url": "https://ui.shadcn.com/docs/changelog/2026-02-radix-ui"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "B10",
+      "relation": "alternative",
+      "reason": "可选Base UI作为底层交互原语；shadcn代码可以有Radix/Base UI版本，不能假设同一个package。"
+    },
+    {
+      "entryId": "B11",
+      "relation": "complements",
+      "reason": "此示例采用兼容的Radix Slot复用语义组件；Dialog/Menu复杂行为可借鉴Radix primitives。"
+    },
+    {
+      "entryId": "C20",
+      "relation": "complements",
+      "reason": "clsx负责条件类合成，设计系统button variant由CVA控制。"
+    },
+    {
+      "entryId": "C21",
+      "relation": "complements",
+      "reason": "tailwind-merge用于解决Tailwind工具类冲突，clsx本身不具备此能力。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "真实Button源码及变体",
+      "description": "本地源码+variant，而非想象中的shadcn runtime",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/ui/button.tsx",
+        "examples/archive-policy.ts"
+      ],
+      "capabilities": [
+        "source-owned",
+        "keyboard",
+        "accessible",
+        "design-system"
+      ]
+    },
+    {
+      "demoId": "business",
+      "title": "业务列表和异步状态",
+      "description": "RSS文章多选、归档与busy反馈",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/ui/button.tsx",
+        "examples/archive-policy.ts"
+      ],
+      "capabilities": [
+        "source-owned",
+        "keyboard",
+        "accessible",
+        "design-system"
+      ]
+    },
+    {
+      "demoId": "advanced",
+      "title": "Slot/asChild与权限反馈",
+      "description": "复合链接、ARIA、恢复和禁用语义",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/ui/button.tsx",
+        "examples/archive-policy.ts"
+      ],
+      "capabilities": [
+        "source-owned",
+        "keyboard",
+        "accessible",
+        "design-system"
+      ]
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "note": "shadcn/ui组件源码为开放分发模式；依赖各自另有MIT/Apache许可，实施前再核实。"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "按2026 shadcn官方文档独立创建原创的Radix风格Button，并非通过CLI安装的逐字快照，不能冒充官方自动生成代码。"
+  }
+}

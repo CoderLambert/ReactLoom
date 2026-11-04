@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "entryId": "D02",
+  "slug": "lodash",
+  "name": "Lodash/lodash-es",
+  "group": "D",
+  "summary": "现代集合去重、分组排序和可清理的输入防抖",
+  "tags": [
+    "lodash-es",
+    "去重",
+    "分组",
+    "排序",
+    "debounce",
+    "RSS"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "lodash-es",
+      "version": "4.18.1"
+    }
+  ],
+  "references": [
+    {
+      "title": "Lodash 官网",
+      "url": "https://lodash.com/"
+    },
+    {
+      "title": "lodash-es npm",
+      "url": "https://www.npmjs.com/package/lodash-es"
+    },
+    {
+      "title": "源码与许可",
+      "url": "https://github.com/lodash/lodash"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "D01",
+      "relation": "alternative",
+      "reason": "es-toolkit 提供现代 TypeScript 工具函数，评估需要的函数覆盖及打包结果。 "
+    },
+    {
+      "entryId": "D19",
+      "relation": "complements",
+      "reason": "先用 Lodash 收窄待搜索数据，再使用 Fuse.js 对文本进行模糊匹配。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "level": "basic",
+      "title": "主键去重和分批",
+      "description": "uniqBy 保留第一条，chunk 划分来源批次",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "timer"
+      ]
+    },
+    {
+      "demoId": "business",
+      "level": "business",
+      "title": "RSS分组与稳定排序",
+      "description": "groupBy + orderBy 处理稳定业务排序",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "timer"
+      ]
+    },
+    {
+      "demoId": "advanced",
+      "level": "advanced",
+      "title": "输入防抖与清理",
+      "description": "真实 debounce.flush/cancel，正确回收未执行计时器",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "timer"
+      ]
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "note": "只使用公开 API 与本地构造 fixture"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "mode": "recreated",
+    "note": "2026-10-27 基于 npm lodash-es 4.18.1 和官方API重写，未继承历史PASS。"
+  }
+}

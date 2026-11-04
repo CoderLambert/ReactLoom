@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "entryId": "B16",
+  "slug": "react-resizable-panels",
+  "name": "react-resizable-panels",
+  "group": "B",
+  "summary": "可调整尺寸的面板布局",
+  "tags": [
+    "布局",
+    "拖动",
+    "键盘",
+    "尺寸约束",
+    "工作台"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "react-resizable-panels",
+      "version": "4.14.1"
+    }
+  ],
+  "references": [
+    {
+      "title": "官方 README 与 API",
+      "url": "https://github.com/bvaughn/react-resizable-panels"
+    },
+    {
+      "title": "v4 迁移说明",
+      "url": "https://github.com/bvaughn/react-resizable-panels/blob/main/CHANGELOG.md"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "B15",
+      "relation": "alternative",
+      "reason": "react-grid-layout适合自由二维拖动的仪表盘，这个库适合由分割条控制的线性面板组。"
+    },
+    {
+      "entryId": "B13",
+      "relation": "complements",
+      "reason": "dnd-kit处理内容项排序或跨列表拖放，与面板尺寸调整不同，避免让多个手势系统抢事件。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "两个分割面板",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "pointer",
+        "keyboard"
+      ],
+      "description": "拖动或键盘调整两个面板，观察尺寸约束"
+    },
+    {
+      "demoId": "business",
+      "title": "编辑器三栏布局",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "pointer",
+        "keyboard"
+      ],
+      "description": "组合资源树、编辑器和检查器的实际三栏布局"
+    },
+    {
+      "demoId": "advanced",
+      "title": "垂直切换、约束与重置",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "pointer",
+        "keyboard"
+      ],
+      "description": "在横向/纵向之间切换并复位布局，同时验证最小尺寸"
+    }
+  ],
+  "license": {
+    "spdx": "MIT"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "此示例按v4当前 API重写，没有复用旧版PanelGroup/PanelResizeHandle示例。"
+  }
+}

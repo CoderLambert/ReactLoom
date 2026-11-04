@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "entryId": "A13",
+  "slug": "threejs",
+  "name": "Three.js",
+  "group": "A",
+  "summary": "WebGL 3D场景、动画循环、尺寸管理与显存回收的原生引擎实验",
+  "tags": [
+    "3D",
+    "WebGL",
+    "scene",
+    "resize",
+    "dispose"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "three",
+      "version": "0.186.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "Three.js 官方入门",
+      "url": "https://threejs.org/manual/pages/creating-a-scene.html"
+    },
+    {
+      "title": "WebGLRenderer API",
+      "url": "https://threejs.org/docs/pages/WebGLRenderer.html"
+    },
+    {
+      "title": "Three.js releases",
+      "url": "https://github.com/mrdoob/three.js/releases"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "A14",
+      "relation": "complements",
+      "reason": "React项目可由React Three Fiber托管Renderer、场景与组件生命周期；需要细粒度渲染器控制则使用Three.js。"
+    },
+    {
+      "entryId": "A17",
+      "relation": "alternative",
+      "reason": "deck.gl面向GPU地理数据图层；Three.js面向任意3D模型与材质。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "旋转网格与相机",
+      "description": "理解 Three.js 的最小真实用法",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/animation-policy.ts"
+      ],
+      "capabilities": [
+        "WebGL",
+        "GPU",
+        "cleanup"
+      ]
+    },
+    {
+      "demoId": "business",
+      "title": "产品状态3D模型",
+      "description": "面向真实项目的产品状态3D模型",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/animation-policy.ts"
+      ],
+      "capabilities": [
+        "WebGL",
+        "GPU",
+        "cleanup"
+      ]
+    },
+    {
+      "demoId": "advanced",
+      "title": "暂停、切换网格与彻底销毁",
+      "description": "验证Three.js的资源和交互边界",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/animation-policy.ts",
+        "tests/animation-policy.test.mts"
+      ],
+      "capabilities": [
+        "WebGL",
+        "GPU",
+        "cleanup"
+      ]
+    }
+  ],
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "依据官方资料重新编写，历史报告的测试结果不继承；使用真实运行源码。"
+  },
+  "license": {
+    "spdx": "MIT",
+    "assets": "本地原创数据与界面，无第三方地图瓦片、图片或收费资源。"
+  }
+}

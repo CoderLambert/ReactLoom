@@ -1,0 +1,122 @@
+{
+  "schemaVersion": 1,
+  "entryId": "F08",
+  "slug": "react-pdf-renderer",
+  "name": "@react-pdf/renderer",
+  "group": "F",
+  "summary": "React组件声明式生成原生PDF：报告布局、分页文本、受控下载与链接生命周期",
+  "tags": [
+    "PDF",
+    "React",
+    "Flexbox",
+    "生成下载",
+    "分页",
+    "Blob"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "@react-pdf/renderer",
+      "version": "4.9.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "官方React-PDF v4快速入门",
+      "url": "https://react-pdf.org/docs/v4"
+    },
+    {
+      "title": "官方Blob/API生命周期",
+      "url": "https://react-pdf.org/docs/v4/advanced/on-the-fly-rendering"
+    },
+    {
+      "title": "4.9.0变更说明",
+      "url": "https://react-pdf.org/changelog"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "F07",
+      "relation": "alternative",
+      "reason": "react-pdf（wojtekmaj）浏览已有PDF，@react-pdf/renderer负责生成；包名近似而职责不同。"
+    },
+    {
+      "entryId": "F09",
+      "relation": "complements",
+      "reason": "声明式生成PDF交给renderer，编辑合并现有PDF字节可再用pdf-lib。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "level": "basic",
+      "executionKind": "react",
+      "title": "单页报告创建",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/report.tsx",
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/report-policy.mjs",
+        "examples/report-policy.d.mts",
+        "tests/policy.test.mjs"
+      ],
+      "capabilities": [
+        "pdf-renderer",
+        "pdf-blob",
+        "object-url"
+      ],
+      "description": "用户点击按钮后才真正调用@react-pdf/renderer的pdf().toBlob()；不上传资料。"
+    },
+    {
+      "demoId": "business",
+      "level": "business",
+      "executionKind": "react",
+      "title": "多来源清单与自动换页",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/report.tsx",
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/report-policy.mjs",
+        "examples/report-policy.d.mts",
+        "tests/policy.test.mjs"
+      ],
+      "capabilities": [
+        "pdf-renderer",
+        "pdf-blob",
+        "object-url"
+      ],
+      "description": "用户点击按钮后才真正调用@react-pdf/renderer的pdf().toBlob()；不上传资料。"
+    },
+    {
+      "demoId": "advanced",
+      "level": "advanced",
+      "executionKind": "react",
+      "title": "长文档、输入上限和错误回退",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/report.tsx",
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "examples/report-policy.mjs",
+        "examples/report-policy.d.mts",
+        "tests/policy.test.mjs"
+      ],
+      "capabilities": [
+        "pdf-renderer",
+        "pdf-blob",
+        "object-url"
+      ],
+      "description": "用户点击按钮后才真正调用@react-pdf/renderer的pdf().toBlob()；不上传资料。"
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "assets": "仅原创ASCII本地数据；未嵌入第三方中文字体"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "按react-pdf v4.9官方文档新写，历史Node/浏览器结果不等于当前验收。"
+  }
+}

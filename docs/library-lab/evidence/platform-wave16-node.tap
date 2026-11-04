@@ -1,0 +1,40 @@
+TAP version 13
+# Subtest: new source invalidates both old PASS and old FAIL
+ok 1 - new source invalidates both old PASS and old FAIL
+  ---
+  duration_ms: 1.655083
+  type: 'test'
+  ...
+# Subtest: malformed evidence cannot substantiate a result
+ok 2 - malformed evidence cannot substantiate a result
+  ---
+  duration_ms: 0.453075
+  type: 'test'
+  ...
+# Subtest: unexecuted statuses remain visible and missing kinds default NOT_RUN
+ok 3 - unexecuted statuses remain visible and missing kinds default NOT_RUN
+  ---
+  duration_ms: 0.172441
+  type: 'test'
+  ...
+# Subtest: source fingerprint changes when package version or source changes
+ok 4 - source fingerprint changes when package version or source changes
+  ---
+  duration_ms: 0.708601
+  type: 'test'
+  ...
+# Subtest: malformed status rejected instead of claiming evidence
+ok 5 - malformed status rejected instead of evidence
+  ---
+  duration_ms: 0.757275
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 102.174735

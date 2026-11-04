@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "entryId": "E10",
+  "slug": "dompurify",
+  "name": "DOMPurify",
+  "group": "E",
+  "summary": "HTML 净化和输出安全",
+  "tags": [
+    "XSS",
+    "sanitize",
+    "HTML",
+    "DOM",
+    "security"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "dompurify",
+      "version": "3.4.17"
+    }
+  ],
+  "references": [
+    {
+      "title": "DOMPurify 官方源码与安全注意事项",
+      "url": "https://github.com/cure53/DOMPurify"
+    },
+    {
+      "title": "DOMPurify 3.4.17 npm",
+      "url": "https://www.npmjs.com/package/dompurify"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "E06",
+      "relation": "alternative",
+      "reason": "如果内容原本是 Markdown，默认优先用 react-markdown 安全地构建 React 元素。"
+    },
+    {
+      "entryId": "E08",
+      "relation": "complements",
+      "reason": "在 AST 流水线中可使用 rehype-sanitize，而不是让 DOMPurify 变成任意 HTML 执行器。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "最小 HTML 净化",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/html-policy.mjs",
+        "examples/html-policy.d.mts",
+        "examples/html-policy.test.mjs",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "dom-sanitization"
+      ],
+      "description": "真实 DOMPurify 允许简单格式并移除事件属性。"
+    },
+    {
+      "demoId": "business",
+      "title": "富文本公告预览",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/html-policy.mjs",
+        "examples/html-policy.d.mts",
+        "examples/html-policy.test.mjs",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "dom-sanitization"
+      ],
+      "description": "同源富文本内容净化并保持普通文本与标记。"
+    },
+    {
+      "demoId": "advanced",
+      "title": "攻击输入与净化差异",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/html-policy.mjs",
+        "examples/html-policy.d.mts",
+        "examples/html-policy.test.mjs",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "dom-sanitization"
+      ],
+      "description": "script、SVG、javascript: 等输入必须不能产生可执行代码。"
+    }
+  ],
+  "license": {
+    "spdx": "MPL-2.0 OR Apache-2.0",
+    "assets": "本条示例 HTML 为原创演示，不包含生产用户输入"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "基于官方 DOMPurify 3.4.17 API 重新编写；安全状态必须经真实DOM验收。"
+  }
+}

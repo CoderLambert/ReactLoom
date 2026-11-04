@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "entryId": "B12",
+  "slug": "react-aria",
+  "name": "React Aria",
+  "group": "B",
+  "summary": "React Aria Components ComboBox 的键盘、IME、ARIA 与异步建议实战",
+  "tags": [
+    "accessibility",
+    "ComboBox",
+    "IME",
+    "keyboard",
+    "ListBox",
+    "async suggestions",
+    "React"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "react-aria-components",
+      "version": "1.21.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "React Aria ComboBox 官方 API",
+      "url": "https://react-aria.adobe.com/ComboBox"
+    },
+    {
+      "title": "React Spectrum 源码",
+      "url": "https://github.com/adobe/react-spectrum"
+    },
+    {
+      "title": "npm",
+      "url": "https://www.npmjs.com/package/react-aria-components"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "B11",
+      "relation": "alternative",
+      "reason": "Radix Primitives同为无样式可访问原语，避免单个组合框混用焦点系统。"
+    },
+    {
+      "entryId": "B10",
+      "relation": "alternative",
+      "reason": "Base UI也是可访问无样式交互体系，需按设计系统和维护成本选一套。"
+    },
+    {
+      "entryId": "B18",
+      "relation": "complements",
+      "reason": "cmdk侧重命令面板，ComboBox侧重输入选项与表单字段；场景相关但不可无脑替代。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "固定候选与键盘选择",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/channel-policy.ts",
+        "examples/combobox.css",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "keyboard",
+        "IME",
+        "portal",
+        "a11y",
+        "local-async-fixture"
+      ]
+    },
+    {
+      "demoId": "business",
+      "title": "RSS 频道发现和禁用项",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/channel-policy.ts",
+        "examples/combobox.css",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "keyboard",
+        "IME",
+        "portal",
+        "a11y",
+        "local-async-fixture"
+      ]
+    },
+    {
+      "demoId": "advanced",
+      "title": "竞态安全异步建议和真实表单",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/channel-policy.ts",
+        "examples/combobox.css",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "keyboard",
+        "IME",
+        "portal",
+        "a11y",
+        "local-async-fixture"
+      ]
+    }
+  ],
+  "license": {
+    "spdx": "Apache-2.0",
+    "assets": "原创RSS示例数据与局部CSS，无第三方资产。"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "独立按2026年官方 React Aria API 重写，不继承历史研究的运行验证。"
+  }
+}

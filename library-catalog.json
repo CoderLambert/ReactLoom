@@ -1,0 +1,954 @@
+[
+  {
+    "entryId": "A01",
+    "name": "Apache ECharts",
+    "group": "A",
+    "summary": "业务仪表盘和多类型交互图表",
+    "path": "packages/library-lab/entries/A01-echarts",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "A02",
+    "name": "Recharts",
+    "group": "A",
+    "summary": "React 声明式 SVG 图表与可访问数据表",
+    "path": "packages/library-lab/entries/A02-recharts",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "A03",
+    "name": "Chart.js",
+    "group": "A",
+    "summary": "模块化 Canvas 图表与 React 生命周期边界",
+    "path": "packages/library-lab/entries/A03-chartjs",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "A04",
+    "name": "uPlot",
+    "group": "A",
+    "summary": "有界内存的时间序列趋势图与实时遥测",
+    "path": "packages/library-lab/entries/A04-uplot",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "A05",
+    "name": "D3",
+    "group": "A",
+    "summary": "可定制SVG可视化：比例尺、坐标轴、数据联结与动态重绘",
+    "path": "packages/library-lab/entries/A05-d3",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "A06",
+    "name": "React Flow",
+    "group": "A",
+    "summary": "React 节点工作流编辑器：受控节点和边、连接校验与画布交互",
+    "path": "packages/library-lab/entries/A06-react-flow",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "A07",
+    "name": "AntV G6",
+    "group": "A",
+    "summary": "关系网络的节点、边、拓扑与交互画布（基于 G6 5.1.1）",
+    "path": "packages/library-lab/entries/A07-antv-g6",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "A08",
+    "name": "Mermaid",
+    "group": "A",
+    "summary": "将受控 Mermaid DSL 编译成流程图、时序图和状态图",
+    "path": "packages/library-lab/entries/A08-mermaid",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "A09",
+    "name": "Excalidraw",
+    "group": "A",
+    "summary": "手绘白板嵌入、业务流程草图、导入导出和协作边界",
+    "path": "packages/library-lab/entries/A09-excalidraw",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "A10",
+    "name": "tldraw",
+    "group": "A",
+    "summary": "可编程无限画布与业务白板，明确生产许可证限制",
+    "path": "packages/library-lab/entries/A10-tldraw",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "A11",
+    "name": "Konva",
+    "group": "A",
+    "summary": "Canvas 2D 场景图、图元拖拽、选择与变换",
+    "path": "packages/library-lab/entries/A11-konva",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "A12",
+    "name": "react-konva",
+    "group": "A",
+    "summary": "React 19.3 声明式二维画布与编辑状态",
+    "path": "packages/library-lab/entries/A12-react-konva",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "A13",
+    "name": "Three.js",
+    "group": "A",
+    "summary": "WebGL 3D场景、动画循环、尺寸管理与显存回收的原生引擎实验",
+    "path": "packages/library-lab/entries/A13-threejs",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "A14",
+    "name": "React Three Fiber",
+    "group": "A",
+    "summary": "React19声明式三维场景、useFrame与可见性节能的实践",
+    "path": "packages/library-lab/entries/A14-react-three-fiber",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "A15",
+    "name": "Leaflet",
+    "group": "A",
+    "summary": "无需远程底图的地点数据浏览、图层与地图交互",
+    "path": "packages/library-lab/entries/A15-leaflet",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "A16",
+    "name": "MapLibre GL JS",
+    "group": "A",
+    "summary": "无需瓦片服务的 WebGL GeoJSON 点层、过滤及生命周期实践",
+    "path": "packages/library-lab/entries/A16-maplibre-gl-js",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "A17",
+    "name": "deck.gl",
+    "group": "A",
+    "summary": "无底图的GPU地理点图层，交互拾取、数据增量更新与Deck.finalize",
+    "path": "packages/library-lab/entries/A17-deckgl",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "B01",
+    "name": "Motion for React",
+    "group": "B",
+    "summary": "React 入场/离场、列表布局过渡与减少动画偏好",
+    "path": "packages/library-lab/entries/B01-motion-for-react",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "B02",
+    "name": "GSAP",
+    "group": "B",
+    "summary": "有时间线、重播、反转与减少动画偏好控制的交互动画",
+    "path": "packages/library-lab/entries/B02-gsap",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "B03",
+    "name": "react-spring",
+    "group": "B",
+    "summary": "基于 spring 物理的 React 动画与列表进出场；局部减少动画兼容",
+    "path": "packages/library-lab/entries/B03-react-spring",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "B04",
+    "name": "dotLottie 播放器",
+    "group": "B",
+    "summary": "本地矢量动画、播放控制与减少动态效果",
+    "path": "packages/library-lab/entries/B04-dotlottie",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "B05",
+    "name": "Rive React Runtime",
+    "group": "B",
+    "summary": "Rive WebGL2 动画播放、可访问状态反馈和运行时生命周期",
+    "path": "packages/library-lab/entries/B05-rive-react",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "B06",
+    "name": "Ant Design",
+    "group": "B",
+    "summary": "企业组件、受控表单、表格与反馈",
+    "path": "packages/library-lab/entries/B06-ant-design",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "B07",
+    "name": "MUI",
+    "group": "B",
+    "summary": "Material UI 主题、表格、可访问弹窗与业务错误回填",
+    "path": "packages/library-lab/entries/B07-mui",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "B08",
+    "name": "Mantine",
+    "group": "B",
+    "summary": "主题控件、业务表格、模态编辑及 NumberInput 中间值校验",
+    "path": "packages/library-lab/entries/B08-mantine",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "B09",
+    "name": "shadcn/ui",
+    "group": "B",
+    "summary": "从注册表复制源码的设计系统，CVA变体与Radix Slot组合、组件源码所有权和可访问性",
+    "path": "packages/library-lab/entries/B09-shadcn-ui",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "B10",
+    "name": "Base UI",
+    "group": "B",
+    "summary": "无样式 Checkbox 的语义、混合态、授权禁用与真实 FormData",
+    "path": "packages/library-lab/entries/B10-base-ui",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "B11",
+    "name": "Radix Primitives",
+    "group": "B",
+    "summary": "DropdownMenu 原语的键盘、焦点、复选、单选与嵌套菜单实战",
+    "path": "packages/library-lab/entries/B11-radix-primitives",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "B12",
+    "name": "React Aria",
+    "group": "B",
+    "summary": "React Aria Components ComboBox 的键盘、IME、ARIA 与异步建议实战",
+    "path": "packages/library-lab/entries/B12-react-aria",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "B13",
+    "name": "dnd-kit",
+    "group": "B",
+    "summary": "真实鼠标/触控/键盘排序与稳定身份、受限拖拽的工程示例",
+    "path": "packages/library-lab/entries/B13-dnd-kit",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "B14",
+    "name": "Pragmatic drag and drop",
+    "group": "B",
+    "summary": "原生DOM拖放适配器、drop targets、监视器与严格事件作用域",
+    "path": "packages/library-lab/entries/B14-pragmatic-drag-and-drop",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "B15",
+    "name": "react-grid-layout",
+    "group": "B",
+    "summary": "可拖拽、缩放与响应式仪表盘布局（2.3.0 控制式接口）",
+    "path": "packages/library-lab/entries/B15-react-grid-layout",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "B16",
+    "name": "react-resizable-panels",
+    "group": "B",
+    "summary": "可调整尺寸的面板布局",
+    "path": "packages/library-lab/entries/B16-react-resizable-panels",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "B17",
+    "name": "Floating UI",
+    "group": "B",
+    "summary": "浮层定位、碰撞和焦点管理",
+    "path": "packages/library-lab/entries/B17-floating-ui",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "B18",
+    "name": "cmdk",
+    "group": "B",
+    "summary": "可访问命令菜单、搜索分组与中文输入法快捷键",
+    "path": "packages/library-lab/entries/B18-cmdk",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "B19",
+    "name": "Embla Carousel",
+    "group": "B",
+    "summary": "可访问的触控轮播、滑动吸附和动态卡片",
+    "path": "packages/library-lab/entries/B19-embla-carousel",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "B20",
+    "name": "Sonner",
+    "group": "B",
+    "summary": "即时通知和操作反馈",
+    "path": "packages/library-lab/entries/B20-sonner",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "B21",
+    "name": "react-motion（历史迁移）",
+    "group": "B",
+    "summary": "从停滞的react-motion Motion/spring模式迁移至现代motion/react的状态驱动动画",
+    "path": "packages/library-lab/entries/B21-react-motion-migration",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "B22",
+    "name": "react-beautiful-dnd（历史迁移）",
+    "group": "B",
+    "summary": "把废弃react-beautiful-dnd的Droppable/Draggable列表低风险迁移为React19兼容替代库",
+    "path": "packages/library-lab/entries/B22-react-beautiful-dnd-migration",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "C01",
+    "name": "React Hook Form",
+    "group": "C",
+    "summary": "真实 RSS 订阅表单：动态字段、服务端错误映射与请求取消",
+    "path": "packages/library-lab/entries/C01-react-hook-form",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "C02",
+    "name": "Zod",
+    "group": "C",
+    "summary": "不可信 RSS / OPML JSON 校验、规范化与跨字段错误",
+    "path": "packages/library-lab/entries/C02-zod",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "C03",
+    "name": "Valibot",
+    "group": "C",
+    "summary": "模块化 Schema 验证、RSS 数据收窄与跨字段错误定位",
+    "path": "packages/library-lab/entries/C03-valibot",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "C04",
+    "name": "JSON Forms",
+    "group": "C",
+    "summary": "通过 JSON Schema 与 UI Schema 构建可校验的业务表单",
+    "path": "packages/library-lab/entries/C04-jsonforms",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "C05",
+    "name": "Ajv",
+    "group": "C",
+    "summary": "JSON Schema 编译验证、严格输入边界与条件规则",
+    "path": "packages/library-lab/entries/C05-ajv",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "C06",
+    "name": "IMask",
+    "group": "C",
+    "summary": "数字编号、金额和日期输入掩码；保留光标与中文 IME 边界",
+    "path": "packages/library-lab/entries/C06-imask",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "C07",
+    "name": "TanStack Table",
+    "group": "C",
+    "summary": "Headless 表格的稳定业务 ID、排序和分页数据所有权",
+    "path": "packages/library-lab/entries/C07-tanstack-table",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "C08",
+    "name": "AG Grid",
+    "group": "C",
+    "summary": "企业级数据网格、稳定行身份与可控编辑",
+    "path": "packages/library-lab/entries/C08-ag-grid",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "C09",
+    "name": "React Virtuoso",
+    "group": "C",
+    "summary": "自动测量变高列表、RSS分段加载与历史消息锚定",
+    "path": "packages/library-lab/entries/C09-react-virtuoso",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "C10",
+    "name": "TanStack Virtual",
+    "group": "C",
+    "summary": "Headless 列表虚拟化、变高测量与稳定业务键",
+    "path": "packages/library-lab/entries/C10-tanstack-virtual",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "C11",
+    "name": "react-arborist",
+    "group": "C",
+    "summary": "虚拟化树形 RSS 目录、稳定节点 ID、跨分组拖拽和中文搜索",
+    "path": "packages/library-lab/entries/C11-react-arborist",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "C12",
+    "name": "FullCalendar",
+    "group": "C",
+    "summary": "基于 React 的事件排程、日历视图与时区边界",
+    "path": "packages/library-lab/entries/C12-fullcalendar",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "C13",
+    "name": "Frappe Gantt",
+    "group": "C",
+    "summary": "交互式任务时间线、依赖关系和日期修改",
+    "path": "packages/library-lab/entries/C13-frappe-gantt",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "C14",
+    "name": "date-fns",
+    "group": "C",
+    "summary": "函数式日期、日历天与 DST 时区运算",
+    "path": "packages/library-lab/entries/C14-date-fns",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "C15",
+    "name": "Day.js",
+    "group": "C",
+    "summary": "不可变日期、严格校验与时区插件的 RSS 排程实践",
+    "path": "packages/library-lab/entries/C15-dayjs",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "C16",
+    "name": "Luxon",
+    "group": "C",
+    "summary": "DateTime、Interval 与明确 IANA 时区的日历窗口",
+    "path": "packages/library-lab/entries/C16-luxon",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "C17",
+    "name": "i18next",
+    "group": "C",
+    "summary": "独立语言实例、命名空间、复数、插值和 fallback 的核心 i18n 工作坊",
+    "path": "packages/library-lab/entries/C17-i18next",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "C18",
+    "name": "react-i18next",
+    "group": "C",
+    "summary": "React useTranslation、Trans 富文本与多工作区 I18nextProvider 隔离",
+    "path": "packages/library-lab/entries/C18-react-i18next",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "C19",
+    "name": "nuqs",
+    "group": "C",
+    "summary": "URL 搜索参数的类型安全状态、路由适配、push/replace 和 IME 约束",
+    "path": "packages/library-lab/entries/C19-nuqs",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "C20",
+    "name": "clsx",
+    "group": "C",
+    "summary": "条件 className 合成",
+    "path": "packages/library-lab/entries/C20-clsx",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "C21",
+    "name": "tailwind-merge",
+    "group": "C",
+    "summary": "Tailwind v4 工具类冲突合并与可覆盖组件实践",
+    "path": "packages/library-lab/entries/C21-tailwind-merge",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "C22",
+    "name": "Moment（历史迁移）",
+    "group": "C",
+    "summary": "将历史 Moment 日期代码迁移到 date-fns、Day.js 与明确的时区模型",
+    "path": "packages/library-lab/entries/C22-moment-migration",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "D01",
+    "name": "es-toolkit",
+    "group": "D",
+    "summary": "轻量类型安全工具函数：RSS 排序、去重、分组和分页",
+    "path": "packages/library-lab/entries/D01-es-toolkit",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "D02",
+    "name": "Lodash/lodash-es",
+    "group": "D",
+    "summary": "现代集合去重、分组排序和可清理的输入防抖",
+    "path": "packages/library-lab/entries/D02-lodash",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "D03",
+    "name": "p-limit",
+    "group": "D",
+    "summary": "Promise 并发上限控制",
+    "path": "packages/library-lab/entries/D03-p-limit",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "D04",
+    "name": "p-queue",
+    "group": "D",
+    "summary": "并发、滑动窗口限流与任务优先级调度",
+    "path": "packages/library-lab/entries/D04-p-queue",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "D05",
+    "name": "decimal.js",
+    "group": "D",
+    "summary": "从字符串到精确金额：decimal.js 的税率、舍入和对账边界",
+    "path": "packages/library-lab/entries/D05-decimal-js",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "D06",
+    "name": "Immer",
+    "group": "D",
+    "summary": "不可变嵌套更新、结构共享、Patch / inversePatches 乐观回滚",
+    "path": "packages/library-lab/entries/D06-immer",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "D07",
+    "name": "TanStack Query",
+    "group": "D",
+    "summary": "远程状态的查询键、缓存、取消与乐观更新生命周期",
+    "path": "packages/library-lab/entries/D07-tanstack-query",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "D08",
+    "name": "Ky",
+    "group": "D",
+    "summary": "基于 Fetch 的 HTTP 客户端：重试、超时、响应校验与取消",
+    "path": "packages/library-lab/entries/D08-ky",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "D09",
+    "name": "Axios",
+    "group": "D",
+    "summary": "HTTP 实例拦截器、取消、幂等请求重试与 409 失败分支",
+    "path": "packages/library-lab/entries/D09-axios",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "D10",
+    "name": "Zustand",
+    "group": "D",
+    "summary": "React19 vanilla store、租户状态与受控 persist 迁移",
+    "path": "packages/library-lab/entries/D10-zustand",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "D11",
+    "name": "Jotai",
+    "group": "D",
+    "summary": "原子和派生状态、写入 atom、Provider Store 多租户隔离",
+    "path": "packages/library-lab/entries/D11-jotai",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "D12",
+    "name": "Redux Toolkit",
+    "group": "D",
+    "summary": "createSlice/configureStore、团队状态隔离和响应竞态防护",
+    "path": "packages/library-lab/entries/D12-redux-toolkit",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "D13",
+    "name": "RTK Query",
+    "group": "D",
+    "summary": "与 Redux Toolkit 集成的远端缓存、订阅和失效刷新",
+    "path": "packages/library-lab/entries/D13-rtk-query",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "D14",
+    "name": "XState",
+    "group": "D",
+    "summary": "Actor 有限状态机：审稿流程、守卫和重试预算",
+    "path": "packages/library-lab/entries/D14-xstate",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "D15",
+    "name": "Dexie",
+    "group": "D",
+    "summary": "IndexedDB 事务、复合索引和版本升级，不污染其他站点存储",
+    "path": "packages/library-lab/entries/D15-dexie",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "D16",
+    "name": "Workbox",
+    "group": "D",
+    "summary": "隔离目录中的真实 Workbox precache 构建、公共 RSS 网络缓存策略与离线回退",
+    "path": "packages/library-lab/entries/D16-workbox",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "D17",
+    "name": "Yjs",
+    "group": "D",
+    "summary": "Y.Doc 双副本离线编辑、状态向量和 CRDT 增量合并",
+    "path": "packages/library-lab/entries/D17-yjs",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "D18",
+    "name": "Comlink",
+    "group": "D",
+    "summary": "Web Worker RPC、Transferable 数据传递、回调代理与资源释放",
+    "path": "packages/library-lab/entries/D18-comlink",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "D19",
+    "name": "Fuse.js",
+    "group": "D",
+    "summary": "浏览器端加权模糊搜索、分组过滤、IME 与动态索引重建",
+    "path": "packages/library-lab/entries/D19-fusejs",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "D20",
+    "name": "MiniSearch",
+    "group": "D",
+    "summary": "本地全文倒排索引、前缀与拼写容错、查询建议和索引重建",
+    "path": "packages/library-lab/entries/D20-minisearch",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "D21",
+    "name": "Pagefind",
+    "group": "D",
+    "summary": "真实 Pagefind Node API 为静态文章、RSS 笔记及 HTML 生成离线可部署索引",
+    "path": "packages/library-lab/entries/D21-pagefind",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "E01",
+    "name": "Tiptap",
+    "group": "E",
+    "summary": "ProseMirror 驱动的 Headless 富文本编辑器：工具栏、JSON 草稿与安全导入",
+    "path": "packages/library-lab/entries/E01-tiptap",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "E02",
+    "name": "BlockNote",
+    "group": "E",
+    "summary": "开箱即用的块级文档编辑器：块结构、JSON 草稿与变更生命周期",
+    "path": "packages/library-lab/entries/E02-blocknote",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "E03",
+    "name": "Lexical",
+    "group": "E",
+    "summary": "结构化富文本编辑：真实 EditorState、React Composer、草稿 JSON 和格式命令",
+    "path": "packages/library-lab/entries/E03-lexical",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "E04",
+    "name": "CodeMirror 6",
+    "group": "E",
+    "summary": "模块化源代码编辑器：真实 EditorState / EditorView、草稿恢复、可更新配置与卸载",
+    "path": "packages/library-lab/entries/E04-codemirror6",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "E05",
+    "name": "Monaco Editor",
+    "group": "E",
+    "summary": "IDE 级代码编辑与 Worker",
+    "path": "packages/library-lab/entries/E05-monaco-editor",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "E06",
+    "name": "react-markdown",
+    "group": "E",
+    "summary": "安全的 React Markdown 展示",
+    "path": "packages/library-lab/entries/E06-react-markdown",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "E07",
+    "name": "remark",
+    "group": "E",
+    "summary": "Markdown 结构化处理：真实 mdast 解析、GFM 规范化和危险链接审计",
+    "path": "packages/library-lab/entries/E07-remark",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "E08",
+    "name": "rehype",
+    "group": "E",
+    "summary": "HTML AST 转换与安全输出：rehype-sanitize 净化及沙箱预览",
+    "path": "packages/library-lab/entries/E08-rehype",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "E09",
+    "name": "Shiki",
+    "group": "E",
+    "summary": "只读代码语法着色：按需 token 化，使用 React 文本节点安全渲染",
+    "path": "packages/library-lab/entries/E09-shiki",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "E10",
+    "name": "DOMPurify",
+    "group": "E",
+    "summary": "HTML 净化和输出安全",
+    "path": "packages/library-lab/entries/E10-dompurify",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "E11",
+    "name": "Streamdown",
+    "group": "E",
+    "summary": "面向流式 Markdown 的真实增量显示、未闭合语法与安全输出",
+    "path": "packages/library-lab/entries/E11-streamdown",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "E12",
+    "name": "assistant-ui",
+    "group": "E",
+    "summary": "真实 LocalRuntime 聊天原语、离线 Adapter、流式输出与取消",
+    "path": "packages/library-lab/entries/E12-assistant-ui",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "E13",
+    "name": "PhotoSwipe",
+    "group": "E",
+    "summary": "响应式图库灯箱：PhotoSwipe Lightbox、触控缩放、键盘关闭与实例销毁",
+    "path": "packages/library-lab/entries/E13-photoswipe",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "E14",
+    "name": "react-easy-crop",
+    "group": "E",
+    "summary": "可拖拽缩放裁剪框、真实像素区域、PNG本地输出与文件资源清理",
+    "path": "packages/library-lab/entries/E14-react-easy-crop",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "E15",
+    "name": "pica",
+    "group": "E",
+    "summary": "浏览器本地高质量像素缩放与PNG导出：真实pica.resize/ toBlob",
+    "path": "packages/library-lab/entries/E15-pica",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "E16",
+    "name": "Video.js",
+    "group": "E",
+    "summary": "Video.js v10 React 真正播放器：原创WebM、本地切换、生命周期与跨版本迁移",
+    "path": "packages/library-lab/entries/E16-videojs-v10",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "E17",
+    "name": "hls.js",
+    "group": "E",
+    "summary": "真实 HLS.js MSE引擎、清单与码率、致命错误与网络资源销毁",
+    "path": "packages/library-lab/entries/E17-hlsjs",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "E18",
+    "name": "wavesurfer.js",
+    "group": "E",
+    "summary": "真实波形播放器与音频片段交互：本地合成WAV、播放位置、倍速缩放与销毁",
+    "path": "packages/library-lab/entries/E18-wavesurferjs8",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "E19",
+    "name": "ffmpeg.wasm",
+    "group": "E",
+    "summary": "FFmpeg.wasm 真实 Worker 转换、WASM显式加载、取消与内存边界",
+    "path": "packages/library-lab/entries/E19-ffmpeg-wasm",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "F01",
+    "name": "Uppy",
+    "group": "F",
+    "summary": "文件选择、限制、排队与本地预览：真实 Uppy Core，不使用假上传进度",
+    "path": "packages/library-lab/entries/F01-uppy",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "F02",
+    "name": "react-dropzone",
+    "group": "F",
+    "summary": "文件选择与拖放输入",
+    "path": "packages/library-lab/entries/F02-react-dropzone",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "F03",
+    "name": "Papa Parse",
+    "group": "F",
+    "summary": "真实 CSV 解析/导出：引号换行、表头与URL验证、本地文件及公式注入防护",
+    "path": "packages/library-lab/entries/F03-papaparse",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "F04",
+    "name": "ExcelJS",
+    "group": "F",
+    "summary": "Excel工作簿真实生成与读取：冻结表头、统计公式、RSS数据和不可信单元格处理",
+    "path": "packages/library-lab/entries/F04-exceljs",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "F05",
+    "name": "SheetJS",
+    "group": "F",
+    "summary": "SheetJS CE 0.20.3 的真实工作簿往返与危险表格输入边界",
+    "path": "packages/library-lab/entries/F05-sheetjs",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "F06",
+    "name": "PDF.js",
+    "group": "F",
+    "summary": "真正的 pdfjs-dist Worker、PDF 解析、Canvas 分页渲染和取消清理",
+    "path": "packages/library-lab/entries/F06-pdfjs",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "F07",
+    "name": "react-pdf",
+    "group": "F",
+    "summary": "React 组件化 PDF 阅读：本地文档、分页、TextLayer 与同版本 Worker",
+    "path": "packages/library-lab/entries/F07-react-pdf",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "F08",
+    "name": "@react-pdf/renderer",
+    "group": "F",
+    "summary": "React组件声明式生成原生PDF：报告布局、分页文本、受控下载与链接生命周期",
+    "path": "packages/library-lab/entries/F08-react-pdf-renderer",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "F09",
+    "name": "pdf-lib",
+    "group": "F",
+    "summary": "浏览器真正创建、合并及标注 PDF，处理本地字节边界并释放对象 URL",
+    "path": "packages/library-lab/entries/F09-pdf-lib",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "F10",
+    "name": "Orval",
+    "group": "F",
+    "summary": "离线 OpenAPI 真实 Orval CLI 双次生成、React Query Hooks、标签分包与产物指纹验收",
+    "path": "packages/library-lab/entries/F10-orval",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "F11",
+    "name": "MSW",
+    "group": "F",
+    "summary": "网络层请求 Mock 与场景",
+    "path": "packages/library-lab/entries/F11-msw",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "F12",
+    "name": "Vitest",
+    "group": "F",
+    "summary": "真实 Vitest 测试配方：数据校验、可注入HTTP状态与取消竞态",
+    "path": "packages/library-lab/entries/F12-vitest",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "F13",
+    "name": "Playwright",
+    "group": "F",
+    "summary": "真实 Chromium E2E：语义定位、HTTP 场景矩阵与取消竞态（独立 CLI）",
+    "path": "packages/library-lab/entries/F13-playwright",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "F14",
+    "name": "Storybook",
+    "group": "F",
+    "summary": "组件隔离开发、CSF Stories、Play交互断言与可访问性反馈",
+    "path": "packages/library-lab/entries/F14-storybook",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "F15",
+    "name": "Knip",
+    "group": "F",
+    "summary": "检查 Monorepo 无用文件、导出及依赖：最小项目、业务入口与生产模式的真实 CLI 练习",
+    "path": "packages/library-lab/entries/F15-knip",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "F16",
+    "name": "dependency-cruiser",
+    "group": "F",
+    "summary": "源码级依赖图与架构边界约束：真实CLI检测跨层引用和循环依赖",
+    "path": "packages/library-lab/entries/F16-dependency-cruiser",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "F17",
+    "name": "axe-core",
+    "group": "F",
+    "summary": "真实 axe.run 局部审计，定位缺少alt/label/button-name并展示修复前后",
+    "path": "packages/library-lab/entries/F17-axe-core",
+    "contentState": "recreated"
+  },
+  {
+    "entryId": "F18",
+    "name": "rollup-plugin-visualizer",
+    "group": "F",
+    "summary": "真实Vite8构建报告：Treemap、Markdown体积清单与Raw-data JSON",
+    "path": "packages/library-lab/entries/F18-rollup-plugin-visualizer",
+    "contentState": "recreated"
+  }
+]

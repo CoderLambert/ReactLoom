@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "使用真实包 import，当前依赖下载 DNS 受阻，未运行 SDK；第22轮新增/更新真实 SDK 测试源码，但仍未执行目标库 SDK"
+  },
+  "build": {
+    "status": "BLOCKED",
+    "note": "registry.npmjs.org DNS 无法解析"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "；第22轮交互改动未在 Chromium 验收"
+  }
+}

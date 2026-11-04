@@ -1,0 +1,123 @@
+{
+  "schemaVersion": 1,
+  "entryId": "F13",
+  "slug": "playwright",
+  "name": "Playwright",
+  "group": "F",
+  "summary": "真实 Chromium E2E：语义定位、HTTP 场景矩阵与取消竞态（独立 CLI）",
+  "tags": [
+    "E2E",
+    "Chromium",
+    "可访问性",
+    "Locator",
+    "Network Mock",
+    "AbortSignal",
+    "Playwright"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "@playwright/test",
+      "version": "1.64.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "Playwright Testing",
+      "url": "https://playwright.dev/docs/intro"
+    },
+    {
+      "title": "Locator 最佳实践",
+      "url": "https://playwright.dev/docs/locators"
+    },
+    {
+      "title": "自动重试断言",
+      "url": "https://playwright.dev/docs/test-assertions"
+    },
+    {
+      "title": "网络 Mock",
+      "url": "https://playwright.dev/docs/mock"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "F11",
+      "relation": "complements",
+      "reason": "MSW适合应用层模拟服务接口；Playwright route在浏览器E2E中控制网络。要说明拦截来自哪个层级。"
+    },
+    {
+      "entryId": "F12",
+      "relation": "complements",
+      "reason": "Vitest单测降低反馈成本，Playwright补真实Chromium交互证据。"
+    },
+    {
+      "entryId": "F17",
+      "relation": "complements",
+      "reason": "axe-core提供规则检查，Playwright驱动屏幕尺寸、焦点与键盘行为。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "level": "basic",
+      "title": "语义定位与断言",
+      "executionKind": "node-ci",
+      "entryPoint": "examples/basic.spec.ts",
+      "sourceFiles": [
+        "examples/fixtures.ts",
+        "examples/playwright.config.ts",
+        "examples/basic.spec.ts"
+      ],
+      "capabilities": [
+        "node-process",
+        "real-chromium",
+        "network-fixture"
+      ],
+      "description": "通过真正的浏览器点击按钮、输入和等待状态。"
+    },
+    {
+      "demoId": "business",
+      "level": "business",
+      "title": "200 / 422 / 503 网络场景",
+      "executionKind": "node-ci",
+      "entryPoint": "examples/business.spec.ts",
+      "sourceFiles": [
+        "examples/fixtures.ts",
+        "examples/playwright.config.ts",
+        "examples/business.spec.ts"
+      ],
+      "capabilities": [
+        "node-process",
+        "real-chromium",
+        "network-fixture"
+      ],
+      "description": "page.route 截取真实浏览器 fetch，逐状态断言。"
+    },
+    {
+      "demoId": "advanced",
+      "level": "advanced",
+      "title": "AbortSignal 取消与旧请求回写",
+      "executionKind": "node-ci",
+      "entryPoint": "examples/advanced.spec.ts",
+      "sourceFiles": [
+        "examples/fixtures.ts",
+        "examples/playwright.config.ts",
+        "examples/advanced.spec.ts"
+      ],
+      "capabilities": [
+        "node-process",
+        "real-chromium",
+        "network-fixture"
+      ],
+      "description": "先旧后新请求，验证最后结果不会被已取消/迟到的旧结果覆盖。"
+    }
+  ],
+  "license": {
+    "spdx": "Apache-2.0",
+    "assets": "原创静态HTML和测试夹具，不依赖外部站点或真实账号"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "独立 Playwright CLI 配方，使用已有 @playwright/test 版本；此前归档测试不作为本条目 PASS。"
+  }
+}

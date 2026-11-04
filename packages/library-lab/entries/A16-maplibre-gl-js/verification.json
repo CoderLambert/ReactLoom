@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "仅编写真实 MapLibre GL JS API 调用源码；未运行 SDK。"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "等待 PLATFORM 将真实依赖加入并完成 pnpm typecheck/build。"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "WebGL、无网络瓦片请求、离线回退及卸载尚未实测。"
+  }
+}

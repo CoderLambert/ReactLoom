@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "SDK未运行；F07和F06元数据/根清单已共同声明pdfjs-dist@6.3.289，真实锁文件解析与Worker验证仍待PLATFORM Wave21改为独立Uint8Array Worker传输副本且纯Node structuredClone测试；没有运行实际react-pdf。"
+  },
+  "build": {
+    "status": "BLOCKED",
+    "note": "PLATFORM 尚未统一安装新依赖并真实更新 pnpm-lock.yaml，未执行 Vite/TypeScript 构建。"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "尚未在目标浏览器进行交互、资源卸载和无障碍核验。"
+  }
+}

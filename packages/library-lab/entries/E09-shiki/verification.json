@@ -1,0 +1,18 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "已提交真实 SDK imports，但依赖/锁文件与运行环境由 PLATFORM 集成后验证。"
+  },
+  "build": {
+    "status": "BLOCKED",
+    "note": "需要平台真实 build，当前仅已声明 shiki 依赖。"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "需要真实 Chromium 验证动态加载、卸载及键盘/IME/语法显示。"
+  },
+  "security": {
+    "status": "NOT_RUN",
+    "note": "HTML/token 安全、资源清理等需真实运行校验。"
+  }
+}

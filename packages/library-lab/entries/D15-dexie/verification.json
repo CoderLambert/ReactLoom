@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "待真实 Dexie 4.4.7 + fake-indexeddb 6.2.6 运行"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "需 PLATFORM 真实安装解析并 TS 校验"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "需 Chromium IDB migration/事务/清理"
+  }
+}

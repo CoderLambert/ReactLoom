@@ -1,0 +1,14 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "SDK test 源码存在但尚未执行，不得宣称通过"
+  },
+  "build": {
+    "status": "NOT_RUN",
+    "note": "目标依赖未在本执行环境实际完成构建"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "Playwright与真实浏览器尚未执行"
+  }
+}

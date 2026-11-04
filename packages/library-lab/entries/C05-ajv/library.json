@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "entryId": "C05",
+  "slug": "ajv",
+  "name": "Ajv",
+  "group": "C",
+  "summary": "JSON Schema 编译验证、严格输入边界与条件规则",
+  "tags": [
+    "JSON Schema",
+    "合同校验",
+    "RSS导入",
+    "strict",
+    "运行时验证"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "ajv",
+      "version": "8.20.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "Ajv 官方指南",
+      "url": "https://ajv.js.org/guide/getting-started.html"
+    },
+    {
+      "title": "Strict mode",
+      "url": "https://ajv.js.org/strict-mode.html"
+    },
+    {
+      "title": "npm 包与许可",
+      "url": "https://www.npmjs.com/package/ajv"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "C04",
+      "relation": "complements",
+      "reason": "JSON Forms 可将 JSON Schema 渲染为表单，Ajv 负责运行时校验。"
+    },
+    {
+      "entryId": "C02",
+      "relation": "alternative",
+      "reason": "Zod 更适合 TS-first Schema 与推断，Ajv 在 JSON Schema 作为外部事实源时更直接。"
+    },
+    {
+      "entryId": "C03",
+      "relation": "alternative",
+      "reason": "Valibot 采用显式 action 组合，需对比外部 JSON Schema 互操作要求。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "最小 JSON 合同",
+      "description": "验证必填、属性范围与未知字段",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/rss-policy.mjs",
+        "examples/rss-policy.d.mts",
+        "examples/demo.tsx"
+      ],
+      "capabilities": []
+    },
+    {
+      "demoId": "business",
+      "title": "批量 RSS 配置",
+      "description": "按组校验来源并限制集合大小",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/rss-policy.mjs",
+        "examples/rss-policy.d.mts",
+        "examples/demo.tsx"
+      ],
+      "capabilities": []
+    },
+    {
+      "demoId": "advanced",
+      "title": "条件规则与失败聚合",
+      "description": "严格条件必填、错误路径以及不隐式转换",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/rss-policy.mjs",
+        "examples/rss-policy.d.mts",
+        "examples/demo.tsx"
+      ],
+      "capabilities": []
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "note": "自行编写的代码与 fixture，不再分发外部数据。"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "mode": "recreated",
+    "note": "基于 2026-10-27 Ajv 官方 docs/npm 重新编写，不继承历史测试状态。"
+  }
+}

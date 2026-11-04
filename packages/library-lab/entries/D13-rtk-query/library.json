@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "entryId": "D13",
+  "slug": "rtk-query",
+  "name": "RTK Query",
+  "group": "D",
+  "summary": "与 Redux Toolkit 集成的远端缓存、订阅和失效刷新",
+  "tags": [
+    "RTK Query",
+    "服务端状态",
+    "缓存",
+    "租户隔离"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "@reduxjs/toolkit",
+      "version": "2.13.0"
+    },
+    {
+      "name": "react-redux",
+      "version": "9.3.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "RTK Query 官方指南",
+      "url": "https://redux.js.org/toolkit/rtk-query/overview"
+    },
+    {
+      "title": "缓存行为文档",
+      "url": "https://redux.js.org/toolkit/rtk-query/usage/cache-behavior"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "D07",
+      "relation": "alternative",
+      "reason": "如果项目没有 Redux，优先比较 TanStack Query；已有 Redux store 时 RTK Query 更自然。"
+    },
+    {
+      "entryId": "D12",
+      "relation": "complements",
+      "reason": "Redux Toolkit 为 RTK Query 提供统一 store 与同步状态管理。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "title": "最小入门",
+      "level": "basic",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "description": "实际 SDK 基础交互"
+    },
+    {
+      "demoId": "business",
+      "title": "实际业务",
+      "level": "business",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "description": "业务数据与生命周期"
+    },
+    {
+      "demoId": "advanced",
+      "title": "异常与边界",
+      "level": "advanced",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "description": "失败、时间/并发边界"
+    }
+  ],
+  "provenance": {
+    "collection": "RFL-20261023",
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "基于官方材料重新编写，仅参考旧研究，不继承既有示例的运行验收结论"
+  },
+  "license": {
+    "spdx": "MIT",
+    "assets": "自制示例数据，无付费扩展"
+  }
+}

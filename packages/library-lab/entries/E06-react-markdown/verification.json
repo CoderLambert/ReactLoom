@@ -1,0 +1,18 @@
+{
+  "sdk": {
+    "status": "NOT_RUN",
+    "note": "True-SDK SSR test added in tests/sdk.test.mjs, not executed until target packages installed"
+  },
+  "build": {
+    "status": "BLOCKED",
+    "note": "平台lockfile/依赖安装待完成"
+  },
+  "browser": {
+    "status": "NOT_RUN",
+    "note": "NOT_RUN: external network, clicks, CSP and level navigation require Chromium"
+  },
+  "security": {
+    "status": "NOT_RUN",
+    "note": "需真实DOM与外链请求检查"
+  }
+}

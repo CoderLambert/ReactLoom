@@ -1,0 +1,85 @@
+# React Hook Form：RSS 订阅编辑的三层实战
+
+> C01 · 研究版：7.89.0（与 ReactLoom SPA 模板一致） · MIT · 当前源文件为本次独立实现，尚未完成真实 SDK、构建、浏览器验收。
+
+## 适用与边界
+
+React Hook Form（RHF）是**表单交互与校验状态的所有者**，不是网络缓存、认证、通用 UI 组件或 JSON Schema 生成器。适合大量非受控字段、动态订阅源和服务器字段错误；两个简单输入框可直接用原生 HTML Form。
+
+## 安装与引入
+
+```bash
+pnpm add react-hook-form@7.89.0
+```
+
+```tsx
+import {useForm, useFieldArray} from 'react-hook-form';
+
+type Draft = {group: string; sources: {name: string; url: string}[]};
+const {register, control, handleSubmit, setError, formState: {errors}} =
+  useForm<Draft>({defaultValues: {group: '技术', sources: [{name: '', url: ''}]}});
+const {fields, append, remove} = useFieldArray({control, name: 'sources'});
+```
+
+完整、可迁移的实现文件是 [examples/example.tsx](./examples/example.tsx)，Lab 的 [examples/demo.tsx](./examples/demo.tsx) 仅重新导出。这两个文件是源码面板唯一来源。
+
+## 三个实际使用层次
+
+### 入门：注册与字段级反馈
+
+维护分组名和一个 RSS URL，输入校验通过 `register` 和 `handleSubmit` 执行，错误从 `formState.errors` 呈现。浏览器 `type=url` 是辅助，不替代 `validateHttps`。禁用和焦点状态以原生属性表达，不仅靠颜色。
+
+### 业务：动态订阅源
+
+`useFieldArray` 返回的 **`field.id` 用作 React key**，不要用数组下标；动态字段名使用 `sources.${index}.url`。删除最后一条来源被示例禁用，实际生产可用 Zod 或后端规则要求至少一条。重复 URL 通过业务校验反馈到 `root.server`。
+
+### 进阶：异步字段错误与取消
+
+输入 `https://example.com/duplicate`，本地 fixture 模拟服务端 HTTP 409，调用 `setError('sources.0.url', ...)` 和 `setError('root.server', ...)`。**演示不会发真实 HTTP 请求**。请求使用 AbortController；generation 标记阻止取消或卸载后旧响应回写。此机制在真实请求中应由 API Client 与服务端协作。
+
+## 关键生命周期与状态归属
+
+- Query/Loader 持有服务端记录，RHF 持有编辑副本；不要把每次按键同时写两套缓存。
+- `defaultValues` 是基线。异步读取初始记录后用 `reset(record)` 或明确的 `values` 方案；服务端刷新不能悄悄覆盖用户脏字段。
+- 无必要不将原生输入转为完全受控组件；第三方受控组件才使用 `Controller`，并正确透传 value/onChange/onBlur/ref。
+- `setError` 应基于服务端字段路径做白名单映射；不能将服务端任意字段名直接注入表单状态。
+- 中文输入法组合输入期间不要每键规范化并回写 DOM。本示例仅防止组合态 Enter 意外提交。
+
+## 三个真实反模式
+
+1. **数组用下标作为 React key**：删除第二行时可能将下一行的输入状态错误复用。正确做法：`key={field.id}`。
+2. **表单重新加载就 reset**：正在输入的内容被服务端刷新覆盖。正确做法：定义数据所有权，必要时保留 dirty fields。
+3. **请求返回不检查身份就 setError/reset**：切换条目或取消后旧结果覆盖新表单。正确做法：AbortSignal + generation 校验。
+
+另需避免只用红色表达错误、把 `isSubmitting` 当成幂等保障（后端仍需幂等/唯一索引）、用客户端 URL 校验代替 SSRF 防护。
+
+## 与其他库组合
+
+C02 Zod 管运行时约束，RHF 管字段/错误与提交；若采用 `@hookform/resolvers`，应确认 resolver 与 Zod 主版本兼容。C04 JSON Forms 负责 JSON Schema 驱动的表单生成，本例没有动态生成 UI。
+
+## 学习练习与验证要求
+
+将本地 fixture 替换成内部 API，分别覆盖“成功保存并更新 dirty 基线”“字段422/409”“服务器500/超时”“中途关闭弹窗”“两次请求乱序”；动态数组删除/新增后焦点和字段值仍正确。用 Playwright 实测中文 IME、屏幕阅读器提示。
+
+**当前状态**：源码已编写；SDK、类型、构建、浏览器均未验证。历史研究资料的通过记录不迁移为本条证据。参见 [verification.json](./verification.json)。
+
+## 官方资料
+
+- [React Hook Form](https://react-hook-form.com/)
+- [useFieldArray](https://react-hook-form.com/docs/usefieldarray)
+- [setError](https://react-hook-form.com/docs/useform/seterror)
+- [reset](https://react-hook-form.com/docs/useform/reset)
+
+## 本轮加固：RSS URL 身份与草稿竞态
+
+- 使用 `examples/feed-url-policy.mjs` 计算**请求地址身份**：HTTPS、无 URL 内嵌凭据、规范化大小写不敏感的主机名和默认 443 端口、去掉 fragment；**不得对 path/query 整串 `toLowerCase()`**，因为服务端可能区分 `/Feed` 与 `/feed`。客户端策略不是服务端 SSRF 保护，真正抓取仍需校验 DNS/内网地址/重定向。
+- 重复源现在反馈到具体 `sources.N.url` 字段，并保留整体提示。非法 URL 由字段校验拒绝，不参与重复分组计算。
+- `useWatch` 覆盖输入变化、增删来源与重置；草稿变化会中断本地未结算提交、使旧结果失去回写资格。已保存预览是不可变快照；修改后不再展示与当前草稿不匹配的旧预览。
+- 无第三方依赖的定向检查：`node --test packages/library-lab/entries/C01-react-hook-form/tests/url-policy.test.mjs`。当前 Node 本地纯逻辑测试不代表 RHF React 交互或真实网络已验收。还需 Chromium 验证编辑过程中取消、字段错误清理和动态行。
+
+## 第22轮：真实输入身份与 IME 提交边界
+
+- 新增且**实际在 JSX 调用**的 `examples/form-policy.mjs`。提交开始即取得字段值指纹；异步 409 或成功回写前，必须同时满足 **generation 未变、AbortSignal 未中止、RHF getValues() 与提交快照一致**，不能仅凭 `isSubmitting` 或定时器结算推断草稿未变。
+- `onChangeCapture` 在浏览器输入事件发生时先同步终止旧提交；`useWatch` 继续覆盖 `append/remove/reset` 一类程序化字段变化。动态增删之前同样主动失效当前提交，避免旧字段索引的 409 回写到删除后的另一行。
+- 中文输入法保护覆盖 `isComposing`、组合态、`keyCode=229` 和结束后的 80ms Enter 边界。该短保护只针对键盘 Enter，点击按钮仍走正常 RHF 提交。不要在每个中文候选键上对字段值执行 trim/reset。
+- 无依赖策略回归：`node --test packages/library-lab/entries/C01-react-hook-form/tests/form-policy.test.mjs`；真实 RHF `useForm/useFieldArray` 的 Node SDK 验证源码位于 `tests/sdk.test.mjs`。策略回归只证明纯逻辑，正式还需在已安装 RHF/ReactDOM 的环境执行 SDK、tsc、Vite 和 Chromium 输入法/409/删除竞态验收。

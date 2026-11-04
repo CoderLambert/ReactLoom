@@ -1,0 +1,118 @@
+{
+  "schemaVersion": 1,
+  "entryId": "E09",
+  "slug": "shiki",
+  "name": "Shiki",
+  "group": "E",
+  "summary": "只读代码语法着色：按需 token 化，使用 React 文本节点安全渲染",
+  "tags": [
+    "TextMate",
+    "Syntax Highlight",
+    "Shiki",
+    "Token",
+    "Markdown",
+    "代码高亮",
+    "按需加载"
+  ],
+  "contentState": "recreated",
+  "packages": [
+    {
+      "name": "shiki",
+      "version": "4.5.0"
+    }
+  ],
+  "references": [
+    {
+      "title": "Shiki 安装与 API",
+      "url": "https://shiki.style/guide/install"
+    },
+    {
+      "title": "Shiki 性能优化",
+      "url": "https://shiki.style/guide/best-performance"
+    },
+    {
+      "title": "Shiki 包体积与 Bundle",
+      "url": "https://shiki.style/guide/bundles"
+    },
+    {
+      "title": "Shiki 官方仓库",
+      "url": "https://github.com/shikijs/shiki"
+    }
+  ],
+  "related": [
+    {
+      "entryId": "E04",
+      "relation": "alternative",
+      "reason": "CodeMirror 为可编辑内容提供选区与文档状态，静态展示优先 Shiki。"
+    },
+    {
+      "entryId": "E05",
+      "relation": "alternative",
+      "reason": "Monaco 包含复杂编辑器与语言服务，纯静态代码高亮无需加载编辑器 Worker。"
+    },
+    {
+      "entryId": "E06",
+      "relation": "complements",
+      "reason": "react-markdown 可将 fenced code 原文交给 Shiki 按需高亮，保持文本安全策略。"
+    }
+  ],
+  "demos": [
+    {
+      "demoId": "basic",
+      "level": "basic",
+      "title": "TypeScript 行级 token",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "async-highlight",
+        "safe-tokens"
+      ],
+      "description": "使用真实 codeToTokens 的 TypeScript token 列表。"
+    },
+    {
+      "demoId": "business",
+      "level": "business",
+      "title": "业务代码片段与主题选择",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx"
+      ],
+      "capabilities": [
+        "async-highlight",
+        "safe-tokens"
+      ],
+      "description": "真实 Shiki 词法高亮、语言选择与轻量主题策略。"
+    },
+    {
+      "demoId": "advanced",
+      "level": "advanced",
+      "title": "不可信字符串安全着色",
+      "executionKind": "react",
+      "entryPoint": "examples/demo.tsx",
+      "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
+        "tests/node-scenarios.test.mjs"
+      ],
+      "capabilities": [
+        "async-highlight",
+        "safe-tokens"
+      ],
+      "description": "渲染可疑 HTML 字符串为文本 token，而不插入 innerHTML。"
+    }
+  ],
+  "license": {
+    "spdx": "MIT",
+    "assets": "Shiki 内置语法/主题许可证请随依赖审查"
+  },
+  "provenance": {
+    "originalRecovery": "ORIGINAL_RECOVERED",
+    "note": "在 Shiki 4 官方 API 基础上新写安全 token 渲染，非复用旧运行结果。"
+  }
+}
