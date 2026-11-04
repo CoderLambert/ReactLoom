@@ -140,11 +140,33 @@ setResult('完成')
 7. 取消文案不写成任务成功。
 8. 不在日志里打印用户文件的全部字节。
 
+## 会话和错误通道
+
+一次点击对应一个 `Session`：worker、remote、controller。`execute` 开始时先 `dispose` 旧会话，所以连点不会留下两个线程。`working` 在 `finally` 里恢复，但只有 epoch 仍是这一次时才 `dispose` 和 `setWorking(false)`。取消按钮已经增加了 epoch 并自己 dispose，晚到的 `finally` 不能再终止新的 Worker。
+
+`Promise.race` 的失败原因可能是 `AbortError`、脚本错误或反序列化错误。文案统一带上 `String(error)`，不区分成“服务器 500”。这里没有服务器。
+
+`sumBytes` 假设数组里是数字。转移来的 `Uint8Array` 满足这一点。不要把字符串数组用同一方法相加。`summarize` 对每个值做键，对象会被收成 `"[object Object]"` 这类无用键。调用方应传字符串。
+
+模块 Worker 在打包后的 URL 必须仍能加载 `comlink`。若构建把 Worker 打成经典脚本，`import` 会失败，构造或首条消息会报错。验收时看网络里 Worker 脚本的类型，而不是只看主包。
+
+回调里的 `setResult` 在进度过程中覆盖输出，最终 JSON 再覆盖一次。取消若发生在两者之间，epoch 让最终 JSON 写不进去。测试可以在第三次回调时取消，并断言界面停留在取消文案。
+
+不要把 `releaseProxy` 的返回值忽略成未处理拒绝。示例用 `Promise.resolve(...).catch` 吃掉它，再 `terminate`。未处理拒绝会在控制台变成红色，容易被当成计算失败。
+
 ## 升级
 
 钉 `comlink@4.4.2`。升级后重测转移所有权、代理回调顺序和 `releaseProxy` 失败时是否仍会 `terminate`。API 表面长期稳定，仍不要换掉 `Comlink.transfer` 的参数顺序。
 
 打包器必须把 `worker.ts` 当成模块 Worker 入口。只改指南里的 import 路径是不够的。
+
+`progress` 的 `total` 若是 0，循环不调用回调并返回 0。示例固定传 5。不要把用户输入直接当 `total` 而不设上限，否则回调次数可以拖住主线程的消息处理。
+
+`sumBytes` 对空数组返回 0。转移空缓冲区仍然会使主线程的 `byteLength` 变成 0。示例用五个非零字节，是为了让和 75 能被看出来。
+
+构造 Worker 失败时不会调用 `dispose` 去终止一个不存在的线程。`session.current` 仍是 null。下一次点击可以再试。不要在 catch 里 `terminate` 未赋值的变量。
+
+`Comlink.wrap` 的类型参数是 `WorkerAPI`。运行时没有校验。若 Worker 忘记 `expose`，第一次调用会拒绝。界面走 catch，而不是一直 `working`。
 
 ## 验收
 
@@ -172,6 +194,18 @@ CSP 若禁止 `worker-src`，构造函数抛错。界面保持 `working === fals
 转移列表里只能放属于该视图的 `buffer`。把别的 `ArrayBuffer` 放进列表会在发送时抛错，或转移错内存。示例只转移 `bytes.buffer`。
 
 类型 `WorkerAPI` 来自 worker 模块的 `typeof api`。它不会在运行时校验返回值。`summarize` 的频率对象若被 Worker 改成数组，主线程的 JSON 仍会显示。关键字段要在主线程再看一眼类型，至少在测试里断言 `count` 是数字。
+
+`new URL('./worker.ts', import.meta.url)` 必须出现在会被打包器扫描的源码里，不能拼成运行时字符串。否则 Worker 文件不会进产物，点击只得到构造错误。
+
+`summarize` 的频率对象按值累加。顺序不重要，测试应比较键和次数，而不是 `JSON.stringify` 的键顺序。4000 项里偶数下标是 `tech`，奇数是 `business`，各 2000。
+
+进度的 45ms 只是让界面能看见中间句。测试可以 mock 时间，但浏览器演示没有假装这是帧预算。五次回调都 `await`，总等待大约 225ms 加上消息开销。
+
+`detachedBytesOnMainThread` 记录的是转移之后的 `byteLength`。若它不是 0，说明 `transfer` 没有生效，主线程仍持有拷贝或原缓冲。这个字段是验收的一部分。
+
+取消与完成的竞态用同一个 epoch。在 `await` 之后再读 `epoch.current`，不要使用 `execute` 开头闭包里已经过期的比较函数以外的旧布尔。
+
+Worker 的 `error` 监听是 `once`。若脚本在第一次错误后继续活着，后续错误不会再被转成拒绝。`terminate` 会结束这种半死状态。不要去掉 `once` 却忘记在 `finally` 里 `removeEventListener`，否则下一次任务会接到上一个 Worker 的监听器。
 
 ## 资料
 

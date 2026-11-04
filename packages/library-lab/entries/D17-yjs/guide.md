@@ -126,11 +126,21 @@ expect(title).toBe('B 的标题')
 7. 64 KiB 只是演示上限；生产上限与鉴权分开设计。
 8. 持久化保存的是更新或经过证明的快照流程，不是单方 JSON 覆盖。
 
+`getMap('feeds').toJSON()` 得到普通对象，适合放进 React state。不要把 `Y.Map` 本身放进 state，渲染期间读它会绕过快照。示例在每次编辑和同步后调用 `inspect`。
+
+事务 origin 可以让以后的观察者区分本地和远程。它不是访问控制。日志里可以打印 origin，不要打印整份更新字节，里面可能有用户正文。
+
+若两份 Doc 的共享类型名字写错一个字母，同步会成功但界面仍是空的。测试要断言具体的 feed 键，而不是只断言 `byteLength > 0`。
+
 ## 升级
 
 钉 `yjs@13.6.33`。升级小版本后重跑：离线双端合并、重复投递、错误文档 id 不改目标。不要同时升级未在 `library.json` 里的 provider 而不看其对等版本。
 
 `Y.applyUpdate` 的第三个参数 origin 只用于本地观察。不要用 origin 做安全判断。
+
+basic 不同步。只点 A 时，B 的 Doc 仍然存在于 ref 里，只是这一层不渲染它。不要在 basic 的测试里断言 B 的 JSON 可见，但销毁时仍然要 `destroy` B。
+
+`envelope` 把 scope 和字节包在一起。`validateYjsEnvelope` 返回的是 `update` 字节，不是整个对象。`applyUpdate` 收到的必须是这个返回值。把整个对象传进去会抛出或损坏文档。
 
 ## 验收
 
@@ -148,6 +158,12 @@ expect(title).toBe('B 的标题')
 `Y.UndoManager` 没有在示例里创建。若加上，它跟踪的是本地 origin，不要把 `demo-sync` 的远程更新也放进撤销栈，否则用户会撤销别人的编辑。销毁 Doc 之前先停掉 UndoManager 的监听。
 
 跨标签可以用 `BroadcastChannel` 传更新字节，但仍然要走信封。Lab 把两份 Doc 放在同一个组件里，是为了不打开频道。不要把这个按钮理解成已经做了多标签同步。
+
+`nextId` 只在当前挂载里递增。销毁 Doc 之后 id 会从 1 再开始，因为 ref 和组件状态一起重置。不要把这个数字当成全局文档版本。
+
+同步抛错时，已经应用到一侧的更新不会自动滚回。`syncReplicas` 在两次 `applyUpdate` 之前都先校验，两份字节要么都合法要么在应用前抛错。不要把校验挪到第一次 `applyUpdate` 之后。
+
+状态句里的字节数是编码结果的长度，包含 CRDT 开销。它不是标题的 UTF-8 长度。不要用它做配额账单。
 
 ## 资料
 

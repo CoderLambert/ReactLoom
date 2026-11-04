@@ -173,6 +173,8 @@ basic 的 schema 没有 url。不要把 business 的 `if/then` 复制到 basic �
 
 `subscriptionSchema` 的 `then` 分支要求 url 至少 8 个字符且匹配 `^https://`。`https://a` 这种过短的字符串应停在 Schema，走不到 `validateSubmission`。长度够但带用户信息的地址才会落到第二层。过短的 `https://` 前缀不应被说成 SSRF 检查已经执行。
 
+第二层仍不解析 DNS，也不跟随重定向。
+
 ## 证据
 
 `submission-policy` 单测不挂载 JSON Forms。sdk 要真实 import `@jsonforms/react@3.8.0` 并在 `docs/library-lab/evidence/runs/` 留下收据。浏览器还要看 HIDE、409 回填和取消。build 单独计。

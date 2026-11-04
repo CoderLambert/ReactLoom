@@ -125,11 +125,25 @@ Cache API 不验证用户。公开 RSS 必须在放进构建目录之前已经�
 7. warnings 让构建失败。
 8. 临时目录在不需要留存时删除；留存的目录仍在 `tmpdir`，不在应用 `public/`。
 
+`globPatterns` 只包含 html、js、css。图片若要进预缓存，必须先确认它们是公开的，并仍然受 512 KiB 上限约束。SVG 和 HTML 不要作为可执行页面被另外托管；生成器写出的是脚本文本，不是第二套站点。
+
+`mode: 'production'` 让生成的 worker 走压缩构建。调试时不要为了可读日志把这个值改掉后又提交。`sourcemap: false` 避免把源路径写进临时脚本。
+
+`matchPublicRssRequest` 要求 `request.headers.has` 存在。不完整的测试桩若缺少 headers，应返回 false，而不是抛错中断安装。单元测试覆盖了这种输入。
+
+NetworkFirst 的 `networkTimeoutSeconds: 2` 只在浏览器真正跑 worker 时生效。Node 脚本不会等待两秒去打 `lab.example.test`。不要把生成耗时当成这个超时。
+
 ## 升级
 
 钉 `workbox-build@7.4.1`。7.4 的发布说明主要是构建链维护，不要假设出现了新的运行时 API。若要 `workbox-window` 或 background sync，先把包写进条目自己的依赖评审，而不是在指南里假装已经安装。
 
 从 `injectManifest` 教程迁到本示例时，删掉手写 `clientsClaim()` 和 `SKIP_WAITING` 消息。那些属于另一条更新协议。
+
+`index.html` 的标题是隔离工坊，正文是公开离线文档。它不是 Lab 的首页。`app.js` 只设置一个 dataset 标记，没有 `register` 调用。读生成后的 `sw.js` 时可以确认字符串里没有 Lab 的源站主机名。
+
+`private/tokens.js` 的内容是一句会抛错的脚本。它若出现在清单里，测试失败。不要把它改成真实令牌来“看得更真”。排除规则失败时，真实令牌会进预缓存。
+
+三个入口都传 `keepOutput: true`。在本机反复运行会留下多个 tmp 目录。这是脚本的展示行为，不是服务。自动化若改成 `keepOutput: false`，仍应断言返回的计数字段，而不是去读已删除的路径。
 
 ## 验收
 
@@ -153,6 +167,14 @@ Service Worker 的安装、等待和激活是浏览器的状态机。`generateSW
 运行时缓存和预缓存是两套 CacheStorage 名字。`cleanupOutdatedCaches` 清理的是这个 `cacheId` 下过期的预缓存，不会自动删掉 `rl-workbox-public-rss-v1` 里的旧 GET。改缓存策略时要换 `cacheName` 或在激活时删除旧名。Lab 不执行激活，所以这条只作为以后接到真实注册时的清单。
 
 `maximumFileSizeToCacheInBytes` 是 512 KiB。更大的教学文件会被排除或警告。警告在本脚本里是失败。不要为了让大图通过而把上限调到几十兆，那会在真正安装时占满存储配额。
+
+`cacheId` 和运行时 `cacheName` 是不同字符串。改其中一个不会迁移另一个里的响应。将来若真的在隔离 scope 下注册，发版说明要写清旧缓存名是否删除。
+
+`globDirectory` 指向临时站点而不是仓库的 `packages/library-lab`。这样生成器不会把 Lab 的应用脚本打进预缓存。保持这个路径来自 `mkdtemp`。
+
+入口脚本的最后一行是给人读的说明，机器可读的字段仍是 JSON 里的 `registrationExecuted`。解析输出时用 JSON，不要靠中文或英文句子做断言。
+
+`offline.html` 在 basic 也被写进目录，但只有 advanced 把它设为 `navigateFallback`。文件在磁盘上不等于它已是导航兜底。结果字段 `fallback` 才是合同。
 
 ## 资料
 

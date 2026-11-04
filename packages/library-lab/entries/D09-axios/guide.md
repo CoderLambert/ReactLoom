@@ -184,6 +184,12 @@ useQuery({ queryKey: ['feeds'], queryFn: () => client.get('/feeds', { params: { 
 9. 进度回调不代表服务器已落盘。
 10. 依赖锁定在 1.20.0，并确认历史构建没有 1.14.1 / 0.30.4。
 
+`xsrfCookieName` 与 `xsrfHeaderName` 只在你们的后端确实读这个头时才有意义。前端单独改名不会完成 CSRF 防护。Lab 的 adapter 不发 Cookie。
+
+下载 CSV 若以后加上，用 `responseType: 'blob'`，点击后创建对象 URL，用完立刻 `revokeObjectURL`。不要把 Blob 留在 state 里跨页面。Node 侧不要用 `arraybuffer` 把未知大小的 RSS 全读进内存。
+
+多个并行 401 应共享一个刷新 Promise。刷新请求使用没有拦截器的实例。失败后清空身份并停止再试。Lab 没有这一段，接入时要单独测试“十个请求只刷新一次”。
+
 ## 升级
 
 钉 `1.20.0`。从 0.x 迁出时删除 `CancelToken`，把 `response` 的使用改成 `response.data`，把全局 defaults 拆成按后端划分的实例。
@@ -191,6 +197,10 @@ useQuery({ queryKey: ['feeds'], queryFn: () => client.get('/feeds', { params: { 
 1.16 和 1.19 的发布说明里有 Fetch adapter 与长度限制相关变更。升级越过这些版本时重测 `maxContentLength` 和自定义 adapter。1.20.0 本身不是“已免疫供应链”的证书。
 
 `@types/axios` 不需要。`index.d.ts` 随包提供。
+
+拦截器 id 存在闭包里，`dispose` 只卸自己注册的那两个。不要 `eject` 一个猜出来的数字。响应拦截器目前原样拒绝，是为了让 `AxiosError` 到达 `boundedGetRetry` 和界面。若以后在拦截器里把 409 转成普通 `Error`，重试判断和 `isAxiosError` 会一起失效。
+
+租户切换会立刻搜索空字符串。这会 abort 上一次标题过滤。结果区在代际匹配前保持上一句或变成「请求进行中」。不要在 `onChange` 里同步 `setResult` 成另一租户的旧 JSON。
 
 ## 验收
 
@@ -216,6 +226,12 @@ useQuery({ queryKey: ['feeds'], queryFn: () => client.get('/feeds', { params: { 
 上传进度的 `total` 可能缺失，也不等于服务器已落盘。Node 大响应用 `responseType: 'stream'`，并设置 `maxContentLength`。官方默认的最大长度是无限制，Lab 用 30 条的校验补了一道应用边界，生产仍要在网关限制解压后的大小。
 
 `params` 里的 `null` 和数组如何序列化，要和 API 合同一起测。`withCredentials` 默认不会跨域带 Cookie。打开它之前先写清 CSRF。
+
+适配器日志只保留方法、路径、状态和次数，最多十条。这是界面上的环形缓冲，不是审计日志。生产日志还要去掉查询串里的令牌。
+
+`axios.get` 的配置在第二个参数，`post` 的请求体在第二个参数、配置在第三个。把 `{ signal }` 误传成 POST 的 body，会把取消控制器序列化进 JSON。Lab 的冲突按钮把 `{ signal }` 放在第三参。
+
+自定义 `validate` 拒绝租户不在 `a` 或 `b` 的行。adapter 本身会把未知租户收成 `a`。两层都在，是为了防止以后有人改 adapter 时放进非法行。不要只留其中一层。
 
 ## 资料
 

@@ -202,6 +202,8 @@ advanced 的 `edge` 把假值、数字和嵌套数组放进同一次调用，用
 
 `lite` 的示例是 `lite('base', selected && 'selected')`。选中时结果含 `selected`，未选中时条件是 `false`，lite 把它丢掉。不要用这个输出驱动按钮的 `disabled`。按钮的禁用只看组件里的 `disabled` state。
 
+选中状态同理，只看 `aria-pressed` 和 `selected`，不看类名里有没有 `is-selected`。
+
 ## 证据
 
 `class-policy` 单测只检查白名单数组，不调用 `clsx`。sdk 要真实 import `clsx@2.1.1` 和 `clsx/lite`，并在 `docs/library-lab/evidence/runs/` 留下收据。

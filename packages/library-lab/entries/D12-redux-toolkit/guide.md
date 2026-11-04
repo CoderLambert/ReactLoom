@@ -128,11 +128,29 @@ finishRequest(state, action) {
 7. DevTools 在生产构建关闭或做动作过滤，避免把正文打进扩展。
 8. `reset` 的返回值覆盖全部字段，测试断言没有残留 `result`。
 
+## 不可变检查和动作设计
+
+默认中间件会在开发时冻结状态并检查意外变更。在测试里把 `getState().feeds` 传进一个会 `push` 的函数，应立刻失败。这比界面“有时多一行”更容易定位。不要用展开运算符把检查关掉。
+
+动作载荷保持扁平：`{ id, value }` 而不是整个 feed 外加回调。`finishRequest` 的 id 是字符串。组件生成 id 时用团队前缀，避免 A 和 B 的序号碰巧相同却被写进错误的心智模型。即便 store 隔离，日志里仍要能看出团队。
+
+`reset` 返回新对象时，Immer 会用它替换 slice。忘记某个字段会在下一轮竞态里留下旧的 `activeRequest`，于是新的完成动作被当成过期。验收要列出全部字段。
+
+从手写 `useReducer` 迁过来时，先把非法组合写成测试：旧请求后到、重复 id、只重置当前团队。再把 reducer 移进 `createSlice`。不要在迁移的同时改竞态规则。
+
+DevTools 关闭是为了演示不被扩展影响。本地调试可以临时打开，但动作里不要放响应正文。生产构建保持关闭，或使用会过滤的配置。时间旅行会重放 `addFeed`，所以 `addFeed` 必须对重复 id 幂等。
+
 ## 升级
 
 钉 `@reduxjs/toolkit@2.13.0`。从 1.x 迁到 2.x 时核对 Immer 主版本和 listener middleware 的类型。默认中间件仍会检查序列化，不要为了塞 Promise 关掉它。
 
 `createAsyncThunk` 的 `condition` 和 `abort` 要和 `activeRequest` 对齐，避免 thunk 和手写 timer 各写一次结果。Lab 没有 thunk，接入时删掉演示用的 `setTimeout`。
+
+`useSyncExternalStore` 的第三个参数是服务端快照。示例把 `getState` 同时用于客户端和服务端。这个组件没有真正的 SSR 数据。若放进会预渲染的页面，两个 store 的初始状态必须稳定，不能在渲染期间 `dispatch`。
+
+切换 `<select>` 会换 `active`，effect 重新订阅。上一个 effect 的清理会清掉上一个 store 的 timer。新 store 不会继承上一个的 `activeRequest`。界面上的「已忽略」数字因此只属于当前团队。
+
+`add` 用 `seq` ref 而不是 `feeds.length`。删除若以后加上，长度会回退，id 仍继续增加，避免和已有 id 相撞。当前没有删除按钮，但序号策略已经按这个方向写了。
 
 ## 验收
 
@@ -160,6 +178,14 @@ listener middleware 适合“动作发生后写日志或导航”。不要在 li
 Immer 在 slice 内的草稿不能传出 reducer。`prepare` 回调适合生成 id 和校验载荷，失败时不要 dispatch。Lab 的 id 在组件里生成，校验很薄：重复 id 被跳过。生产的 `prepare` 应该拒绝空字符串。
 
 重置用返回新对象，是因为逐字段赋值容易留下 `result`。测试要断言 `ignored` 也是 0。从 1.x 升级到 2.13 时，动作创建器的类型和 `PayloadAction` 的导入路径保持 `@reduxjs/toolkit`，不要从内部 `dist` 路径导入。
+
+`startRequest` 覆盖 `activeRequest`。连续两次调用时，第一次的 id 立刻过期，即使它的 timer 先触发也会被忽略。示例故意先登记 old 再登记 new，于是先回来的 new 被接受，后回来的 old 被计数。若产品要排队而不是覆盖，应使用队列条目而不是单个字符串。那已经超出本 slice。
+
+`cancelRequest` 把 `activeRequest` 设为 `null`。之后到达的完成动作都会增加 `ignored`，因为没有任何 id 等于 `null` 以外的当前值。清理函数依赖这一点，防止卸载后的 timer 写入 `result`。
+
+添加频道的标题是「新闻源」加 id。这是展示文案，不是排序键。不要用标题做 React key。
+
+计数和列表在同一 slice，是为了少一个 reducer。正式应用可以把计数拆出去，但重置必须仍然一次清空两边，否则会留下孤儿 feed。Lab 的 `reset` 返回完整初始对象，避免这个裂缝。
 
 ## 资料
 
