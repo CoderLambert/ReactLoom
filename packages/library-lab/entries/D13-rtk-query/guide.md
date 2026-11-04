@@ -188,6 +188,26 @@ onChange={event => setSearch(event.target.value)}
 
 练习：给每行加 `revision`，409 时展示服务端正文并保持标签。再把 `fetchBaseQuery` 接上本地 MSW，断言取消后的 PATCH 没有第二次写。
 
+## 缓存生命周期和序列化
+
+查询订阅开始时，若缓存缺失或标签已失效，middleware 调用 `baseQuery`。同一参数的第二个订阅会共享这次在途请求。Lab 的面板用 key 卸掉旧订阅，所以切换租户时旧的 list 不再保持组件订阅，但 store 里的缓存条目还在，直到 `resetApiState` 或缓存被回收。这就是 advanced 能说“两个租户都在 store 里”的原因：条目可以同时存在，界面只读当前参数的 `currentData`。
+
+`providesTags` 在结果还没回来时也可以提供类型级标签。Lab 只提供带租户 id 的标签，避免一个失败的 list 把所有租户标脏。mutation 的 `invalidatesTags` 收到的 `result` 在错误路径是 `undefined`。用 `result ? tags : []` 把 409 留在缓存外。若产品要在 409 之后强制重取，应显式 `refetch`，而不是让所有错误都失效。
+
+轮询 `pollingInterval` 没有打开。打开后，离开页面要停掉，否则后台会继续打 fixture。`refetchOnFocus` 也不在默认演示里。需要时只对当前租户的端点开启。
+
+固定缓存键还包含序列化后的参数。搜索字符串的首尾空白在提交时已经 `trim`。不要把未 trim 的 draft 放进 hook 参数，否则 `"React"` 和 `"React "` 会变成两条缓存。
+
+`baseQuery` 的错误对象只有 `status` 和 `data` 字符串，能通过 Redux 的序列化检查。不要把 `Response` 或 `AbortSignal` 放进 `error.data`。取消用 499 这个演示状态，不是标准 HTTP。界面把它显示成拒绝，而不是成功的空列表。
+
+乐观更新若以后加上，用 `updateQueryData` 改当前参数的缓存，并在 `patchQueryData` 的 undo 上绑定请求 id。Lab 现在让 fixture 先改内存，再靠标签重取。失败路径不改内存，所以不需要 undo。不要一半改内存、一半只改缓存。
+
+`react-redux` 的 `Provider` 必须包住调用 `useListQuery` 的组件。把 Provider 放在面板内部是因为 store 属于这个示例。提升到应用根上时，不要和另一个 `createApi` 共用 `reducerPath`。
+
+代码生成工具可以产出端点，但生成的 `invalidatesTags` 往往默认成功失败都失效。生成后要按本条目的 409 规则改掉，并把 signal 从 `baseQuery` 传到 `fetch`。
+
+分页若加入参数，标签 id 要决定是整租户失效还是单页失效。整租户简单，但会重取每一页的订阅。Lab 没有页码，搜索词已经在查询参数里，所以一个租户标签足够。
+
 ## 资料
 
 - https://redux.js.org/toolkit/rtk-query/overview

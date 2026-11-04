@@ -145,7 +145,7 @@ fixture 是纯文本。真实 RSS 正文先净化，再决定能不能作为 HTM
 
 `sampleArticle` 的 id 是 `article-` 加序号。前插用第一条 id 的数字倒推。若以后改成 UUID，前插必须改用服务器给的更早 id，不能再 `split('-')`。展开 Set 只认 id 字符串，序号变了但 id 没变时，展开应保持。
 
-`followOutput` 的参数表示当前是否贴底。返回 `'auto'` 才会跟着新消息。返回 `false` 时用户留在历史位置。不要写成常量 `'auto'`。
+`followOutput` 的参数表示当前是否贴底。返回 `'auto'` 才会跟着新消息。返回 `false` 时用户留在历史位置。不要写成常量 `'auto'`。`atBottomStateChange` 只更新说明文字，不反向滚动。用它来 `scrollToIndex` 会和 `followOutput` 打架。
 
 ## 证据
 

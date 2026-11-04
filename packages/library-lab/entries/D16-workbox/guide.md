@@ -140,6 +140,20 @@ Cache API 不验证用户。公开 RSS 必须在放进构建目录之前已经�
 - 空的 `sw.js` 或 warnings 会抛错。
 - `tests/sdk.test.mjs` 调用真实 `workbox-build`。无收据则 NOT_RUN。浏览器项保持 NOT_RUN，因为没有在 Lab 源安装 worker。
 
+## 生命周期和更新
+
+Service Worker 的安装、等待和激活是浏览器的状态机。`generateSW` 只产生脚本。脚本要生效，还必须被某个页面注册，并且 scope 覆盖该页面。本条目在这三步里只做第一步的文件生成，而且文件在临时目录。
+
+新的 worker 默认停在 waiting，直到旧页面都关掉。`skipWaiting` 会让它离开 waiting。`clientsClaim` 会让它立即控制已经打开的页。两者都是 false，是为了即使文件被错误复制，也不会自动接管 Lab。正确的防护仍然是代码里没有 `register`。
+
+更新提示若在别的产品里存在，应使用 `workbox-window` 监听 waiting，由用户确认后再 `postMessage`。那个包没有钉在本条目。不要从旧教程复制 `clientsClaim()` 到一个尚未评审的手写 SW。
+
+预缓存在 install 时拉取清单里的 URL。那些 URL 是相对生成时的目录的。把 `sw.js` 拿到另一个主机上，清单会指向错误的资源。因此不要把临时目录的产物当成可以部署到 Lab 源的构建结果。
+
+运行时缓存和预缓存是两套 CacheStorage 名字。`cleanupOutdatedCaches` 清理的是这个 `cacheId` 下过期的预缓存，不会自动删掉 `rl-workbox-public-rss-v1` 里的旧 GET。改缓存策略时要换 `cacheName` 或在激活时删除旧名。Lab 不执行激活，所以这条只作为以后接到真实注册时的清单。
+
+`maximumFileSizeToCacheInBytes` 是 512 KiB。更大的教学文件会被排除或警告。警告在本脚本里是失败。不要为了让大图通过而把上限调到几十兆，那会在真正安装时占满存储配额。
+
 ## 资料
 
 - https://developer.chrome.com/docs/workbox/modules/workbox-build

@@ -145,6 +145,22 @@ finishRequest(state, action) {
 
 练习：把 `setTimeout` 换成带 `AbortSignal` 的请求，id 仍进 slice。再为 thunk 写一个在 `condition` 里拒绝过期租户的用例。
 
+## 异步动作和选择器
+
+`createAsyncThunk` 生成 pending、fulfilled、rejected 三种动作。`condition` 可以在发请求前看当前 `activeRequest` 和租户，返回 false 就不再启动。`signal` 要传给真正的 HTTP。fulfilled 里仍然调用与 `finishRequest` 相同的 id 比较，不能假设 thunk 的闭包一定是最新的。
+
+Lab 用 `setTimeout` 是为了不碰网络。换成 thunk 时删掉组件里的 timer，避免两套完成路径。`abort` 一个 thunk 不会撤销已经到达服务器的 POST。
+
+listener middleware 适合“动作发生后写日志或导航”。不要在 listener 里再改同一份 feed 而不经过 reducer，否则 DevTools 看不懂。序列化检查失败时，先把不可克隆的对象移出 action，而不是关掉中间件。
+
+`useSyncExternalStore` 的 `getState` 返回整棵根状态。计数变化会让只关心列表的子树也收到新快照。正式代码用 `useSelector(state => state.feeds.counter)` 这种字段选择，并保证选择结果是原始值或记忆化的数组。不要在选择器里 `filter` 出新数组而不做浅比较。
+
+两个 store 的做法让隔离在测试里很明显：给 A `dispatch` 不会改变 B 的 `getState()`。若改成单 store，动作载荷要带 `tenant`，reducer 在 id 前缀不匹配时返回原 state。UI 上的 `<select>` 不能算这一层。
+
+Immer 在 slice 内的草稿不能传出 reducer。`prepare` 回调适合生成 id 和校验载荷，失败时不要 dispatch。Lab 的 id 在组件里生成，校验很薄：重复 id 被跳过。生产的 `prepare` 应该拒绝空字符串。
+
+重置用返回新对象，是因为逐字段赋值容易留下 `result`。测试要断言 `ignored` 也是 0。从 1.x 升级到 2.13 时，动作创建器的类型和 `PayloadAction` 的导入路径保持 `@reduxjs/toolkit`，不要从内部 `dist` 路径导入。
+
 ## 资料
 
 - https://redux-toolkit.js.org/introduction/getting-started

@@ -205,6 +205,18 @@ useQuery({ queryKey: ['feeds'], queryFn: () => client.get('/feeds', { params: { 
 
 练习：把三个组件里的 `axios.defaults` 收成两个实例，20 次连续筛选只显示最后一次。再让 10 个并行 401 共用一个刷新 Promise，刷新失败不再递归；POST 503 不自动重发。
 
+## 故障定位
+
+401 与 403 要分开：过期登录、角色不够、Cookie 的 CORS、CSRF。拦截器若在刷新时再次进入自己，会循环。Lab 没有刷新逻辑，接入时用单独的、没有业务拦截器的实例去换令牌，并给原请求加一次标记。
+
+`ERR_CANCELED` 是用户或新请求取消的，不要弹成系统故障。`ECONNABORTED` 才更接近超时。`status` 为空和 `response.status === 503` 是两类。
+
+409 展示当前版本并让人决定，不自动覆盖。422 读字段错误。浏览器 CORS 由服务端响应决定，Vite 代理只存在于开发，不能写成 Axios 的缺陷。
+
+上传进度的 `total` 可能缺失，也不等于服务器已落盘。Node 大响应用 `responseType: 'stream'`，并设置 `maxContentLength`。官方默认的最大长度是无限制，Lab 用 30 条的校验补了一道应用边界，生产仍要在网关限制解压后的大小。
+
+`params` 里的 `null` 和数组如何序列化，要和 API 合同一起测。`withCredentials` 默认不会跨域带 Cookie。打开它之前先写清 CSRF。
+
 ## 资料
 
 - https://axios-http.com/docs/intro

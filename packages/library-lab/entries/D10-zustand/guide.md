@@ -142,6 +142,32 @@ migrate: (value, version) => migrateChannelPreferences(value, version)
 
 练习：加一个只订阅 `view` 的组件，确认 toggle 启用状态时它不重渲染。再把 v1 迁移接到真实 `localStorage` 键上，并在登出时只 `removeItem` 该键。
 
+## 选择器、订阅和 SSR
+
+`useStore` 在 v5 里把选择结果交给 `useSyncExternalStore`。快照函数若每次返回新对象，React 会认为外部存储在撕裂。修法是选择数字、字符串、布尔，或用 `zustand/react/shallow` 的 `useShallow` 做浅比较。Lab 没有导入 `useShallow`，所以不要在这个文件里临时写返回对象的选择器。
+
+非 React 代码用 `store.subscribe(listener)`。listener 收到下一状态和上一状态。若只关心 `view`，先比较再做事，或加上 `subscribeWithSelector` 中间件。无论哪一种，都保存取消函数。Lab 的 React 订阅由 hook 管理，内存存储的清理在卸载 effect。
+
+`getServerSnapshot` 是 5.0.16 修过的路径。服务端渲染时，同一个模块级 store 会把用户 A 的 `setTenant` 留到用户 B 的请求。每个请求调用 `createChannelStore`。在存储可读之前保持 `skipHydration`，避免在没有 `window` 时读 `localStorage`。水合 Promise 要能重入，Strict Mode 会让 effect 跑两次。
+
+`persist` 的 storage 事件可以让其他标签页改同一键。Lab 的 Map 没有 `storage` 事件，所以不会演示跨标签。接到 `localStorage` 时，要决定后写的标签是否覆盖前一个，以及登出时 `removeItem` 是否通知其他标签重新 hydrate 成默认值。
+
+`setState(partial, true)` 的第二个参数表示替换。替换会丢掉 `toggle` 等函数。示例里的动作都用浅合并，嵌套字段自己展开。
+
+## 迁移练习和故障
+
+从 v4 的 `create` 默认相等行为迁到 v5 时，先找出所有返回对象或数组的选择器。给它们换成字段选择或 `useShallow`，再跑一次“只改启用标记时视图订阅不渲染”的断言。
+
+把内存 Map 换成浏览器存储时，保留 `version: 2` 和 `migrateChannelPreferences`。准备三条旧数据：合法 v1、字符串布尔、缺 `view`。三条都要得到可渲染状态，而不是白屏。
+
+故障对照：刷新后团队跳回 team-a，是因为 `tenant` 不在 `partialize` 里，这是合同不是丢数据。两个团队的开关变成同一个值，是浅合并覆盖了整份 `enabledByTenant`。v1 导入后 team-b 变成 true，是迁移把非布尔当成了真值；当前函数只在 `typeof enabled === 'boolean'` 时采用。水合两次写出默认值，是 Strict Mode 下没有跳过尚未完成的 `rehydrate`。
+
+DevTools 中间件不在本示例里。若加上，动作名不要包含令牌或文章正文。时间旅行会重放 `set`，嵌套对象必须仍是可结构化的纯数据。
+
+官方 v5 迁移说明还要求 TypeScript 4.5 以上。自定义 `equalityFn` 需要安装与 Zustand 匹配的 `use-sync-external-store`。Lab 没有使用自定义相等函数，不要在修复选择器时随手加一个总是返回 true 的比较，那会冻结界面。
+
+持久化 JSON 的形状是 `{ state, version }`。测试可以直接 `seed` 这个字符串，然后 `rehydrate`。不要依赖中间件的内部键名以外的未文档字段。`createJSONStorage` 负责 `JSON.parse`，解析失败应落到迁移函数的默认分支，而不是让组件抛出未捕获异常。生产存储适配器要把配额错误记成可恢复的“本次不持久化”，下一次写入再试，而不是清空用户的其他键。
+
 ## 资料
 
 - https://zustand.docs.pmnd.rs/

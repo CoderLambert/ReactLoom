@@ -192,7 +192,7 @@ const [page, setPage] = useQueryState(
 
 页码 parser 在 advanced 和另外两层不一样。切换 level 时 nuqs 会按当前选项解释同一个键。不要在三个组件里各写一个 `page` 键。分组的 `setGroup(null)` 表示回到默认 `all` 并从 URL 去掉该键。传 `'all'` 会把默认值写进地址栏，和「空即全部」的约定相反。
 
-`deriveSearchView` 先清洗查询，再决定分组，再过滤，再算页数，最后夹页码。顺序反了会出现「页码合法但切片为空」。`pageItems` 只给 business 和 advanced 的列表。basic 渲染全部 `matches`，否则每页 2 条会让入门看起来像坏了。
+`deriveSearchView` 先清洗查询，再决定分组，再过滤，再算页数，最后夹页码。顺序反了会出现「页码合法但切片为空」。`pageItems` 只给 business 和 advanced 的列表。basic 渲染全部 `matches`，否则每页 2 条会让入门看起来像坏了。清除按钮同时 `setQuery(null)`、`setPage(null)` 和 `setGroup(null)`，并清空 draft。只清 draft 会在 effect 里被 URL 填回来。
 
 `history: 'replace'` 的搜索仍会触发使用这些 state 的组件渲染。没有接口时只是本地过滤。接上 Query 之后，queryKey 用 `safeQuery` 和 `safeGroup`，不要用尚未提交的 `draft`，否则组合中的拼音会打出请求。
 

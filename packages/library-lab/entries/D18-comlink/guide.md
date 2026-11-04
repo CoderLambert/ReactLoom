@@ -157,6 +157,22 @@ setResult('完成')
 
 练习：给 `summarize` 增加 signal 参数，在循环里检查它。再断言 `terminate` 之后主线程不再采纳进度。
 
+## 克隆、转移和测试形状
+
+结构化克隆能带走普通对象、数组、`Map`、`Set`、`ArrayBuffer` 和 TypedArray 的拷贝。它带不走函数、DOM 节点、类的原型方法，也带不走尚未分离的“还想在两边一起改”的缓冲区。需要回调时用 `proxy`。需要零拷贝时用 `transfer`，并在发送前复制仍要保留的字节。
+
+`MessagePort` 测试可以不启动真实 Worker：两端各 `expose` / `wrap` 一对端口，断言 `summarize` 的词频。这证明 Comlink 的 RPC，不证明打包后的模块 Worker 能在目标浏览器启动。浏览器收据仍要单独记录。Lab 的 SDK 测试若使用端口，不要把它写成 Playwright 已通过。
+
+Worker 脚本里的 `setTimeout` 在 `terminate` 之后不会再回调主线程，但已经发出的消息可能还在通道里。epoch 就是用来丢掉这最后一条的。不要在 `terminate` 之后立刻复用同一个 `remote`。
+
+进度回调若不同步 `await`，主线程可能先看到 5 再看到 1。Worker 里的循环等待每次 `report` 的 Promise。主线程回调要短，不要在里面再 `await remote.summarize`，否则两个方向的 RPC 会互相卡住。
+
+CSP 若禁止 `worker-src`，构造函数抛错。界面保持 `working === false`，用户可以再试。不要捕获之后改在主线程跑 4000 项循环。
+
+转移列表里只能放属于该视图的 `buffer`。把别的 `ArrayBuffer` 放进列表会在发送时抛错，或转移错内存。示例只转移 `bytes.buffer`。
+
+类型 `WorkerAPI` 来自 worker 模块的 `typeof api`。它不会在运行时校验返回值。`summarize` 的频率对象若被 Worker 改成数组，主线程的 JSON 仍会显示。关键字段要在主线程再看一眼类型，至少在测试里断言 `count` 是数字。
+
 ## 资料
 
 - https://github.com/GoogleChromeLabs/comlink

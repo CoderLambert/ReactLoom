@@ -171,7 +171,7 @@ Community Infinite 若以后启用：`endRow` 不包含，`successCallback` 和 
 - https://www.ag-grid.com/react-data-grid/value-setters/
 - https://www.ag-grid.com/react-data-grid/react-hooks/
 
-过滤用 `toLocaleLowerCase` 比较频道名，再把结果数组交给 `rowData`。网格自己的列过滤器仍然开着。两套过滤会叠在一起。教学时先清空列过滤，再看输入框，避免把「没有行」误判成 revision 冲突。编辑请求仍用 `rowsRef` 里的全量行，不使用过滤后的数组去 `applyStatusEdit`，否则被滤掉的行会变成 `not-found`。
+过滤用 `toLocaleLowerCase` 比较频道名，再把结果数组交给 `rowData`。网格自己的列过滤器仍然开着。两套过滤会叠在一起。教学时先清空列过滤，再看输入框，避免把「没有行」误判成 revision 冲突。编辑请求仍用 `rowsRef` 里的全量行，不使用过滤后的数组去 `applyStatusEdit`，否则被滤掉的行会变成 `not-found`。`getRowId` 同样读全量行上的 `id`，过滤只改变传入网格的数组。
 
 ## 证据
 

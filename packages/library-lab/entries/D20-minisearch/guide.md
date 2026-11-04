@@ -130,6 +130,8 @@ dangerouslySetInnerHTML={{ __html: hit.suggestion }}
 - 未知分组得到空的可见集合（策略函数的合同）而不是全量。
 - `tests/sdk.test.mjs` 导入真实 `minisearch`。无收据则 NOT_RUN。
 
+重建索引用 `useMemo` 依赖 `scopedDocs`。原地 `documents.push` 不会换引用，索引会停在旧词上。更新按钮必须返回新数组。
+
 ## 资料
 
 - https://lucaong.github.io/minisearch/

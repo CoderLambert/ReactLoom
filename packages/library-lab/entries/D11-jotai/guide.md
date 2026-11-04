@@ -151,6 +151,8 @@ Store 的 `get/set/sub` 是不经过 hook 的测试入口。升级后用两个 s
 
 练习：给收藏 id 列表加一个带校验的存储适配器，损坏 JSON 时回到空列表。再把慢请求放进 async 原子，连点时旧 signal 取消，且 Error Boundary 能恢复。
 
+写原子里的 `get` 不会建立订阅。把 `get(storiesAtom)` 放在 `toggleReadAtom` 里只是为了读当前快照。组件要更新，仍需 `useAtomValue`。
+
 ## 资料
 
 - https://jotai.org/docs

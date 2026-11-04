@@ -175,7 +175,7 @@ JTD 的 serializer 不校验。先 `validate` 再序列化。`JSONSchemaType` �
 
 `feedSchema` 的 url pattern 写成大小写不敏感的 http(s) 前缀，是为了让「Schema 通过、域名规则失败」这种分层看得见。若把 pattern 改成完整的 URL 语法，就测不出 `canonicalHttpsFeedUrl` 还在起作用。两层都要留。
 
-`uniqueItems` 用 JSON 比较。两条 feed 只差标题、URL 相同，Ajv 认为它们不同。域名规则仍应报重复。相反，两条完全相同的对象会先死在 `uniqueItems`，走不到域名规则。测试要覆盖这两种，不能只留一种。
+`uniqueItems` 用 JSON 比较。两条 feed 只差标题、URL 相同，Ajv 认为它们不同。域名规则仍应报重复。相反，两条完全相同的对象会先死在 `uniqueItems`，走不到域名规则。测试要覆盖这两种，不能只留一种。`windowSchema` 在 advanced 不跑 URL 规则。给它一条 feed 并期待 `/url` 错误，是测错了 schema。条件失败应出现在 `maxConcurrent` 或根上的 additionalProperties。
 
 ## 证据
 
