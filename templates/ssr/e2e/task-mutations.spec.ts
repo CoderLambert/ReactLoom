@@ -38,7 +38,7 @@ test('retains a server-rejected draft and accepts a corrected retry', async ({ p
   const rejectedResponse = page.waitForResponse(isTaskCreate)
   await page.getByRole('button', { name: 'Add task' }).click()
   expect((await rejectedResponse).status()).toBe(400)
-  await expect(page.getByRole('alert')).toContainText('Give the task a title.')
+  await expect(page.locator('#create-task-error')).toContainText('Give the task a title.')
   await expect(title).toHaveValue(rejected)
 
   const corrected = `Retry draft ${randomUUID()}`
@@ -48,7 +48,7 @@ test('retains a server-rejected draft and accepts a corrected retry', async ({ p
   expect((await saved).status()).toBe(201)
   await expect(page.getByText(corrected, { exact: true })).toBeVisible()
   await expect(title).toHaveValue('')
-  await expect(page.getByRole('alert')).toHaveCount(0)
+  await expect(page.locator('#create-task-error')).toHaveCount(0)
 })
 
 test('retains a draft after a network failure and retries only on request', async ({ page }) => {
@@ -65,7 +65,7 @@ test('retains a draft after a network failure and retries only on request', asyn
   const title = page.getByLabel('Task title')
   await title.fill(draft)
   await page.getByRole('button', { name: 'Add task' }).click()
-  await expect(page.getByRole('alert')).toContainText('The network request failed.')
+  await expect(page.locator('#create-task-error')).toContainText('The network request failed.')
   await expect(title).toHaveValue(draft)
   await expect(page.getByRole('button', { name: 'Try again' })).toBeEnabled()
   expect(requests).toBe(1)
@@ -76,7 +76,7 @@ test('retains a draft after a network failure and retries only on request', asyn
   expect((await saved).status()).toBe(201)
   await expect(page.getByText(draft, { exact: true })).toBeVisible()
   await expect(title).toHaveValue('')
-  await expect(page.getByRole('alert')).toHaveCount(0)
+  await expect(page.locator('#create-task-error')).toHaveCount(0)
 })
 
 test('keeps the pending draft and prevents synchronous duplicate form submissions', async ({
