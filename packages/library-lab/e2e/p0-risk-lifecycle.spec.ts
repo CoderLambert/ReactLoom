@@ -92,7 +92,7 @@ test('@D03 real p-limit demo unmounts and restarts with fresh batch state', asyn
   await expect(page.getByRole('region', { name: 'p-limit 真实并发调度' })).toContainText('尚未运行')
 })
 
-test('@D03 cancelling active p-limit work settles its queue before a fresh run', async ({ page }) => {
+test('@D03 active cancellation settles the queued batch before restart', async ({ page }) => {
   await start(page, 'p-limit', 'advanced')
   const region = page.getByRole('region', { name: 'p-limit 真实并发调度' })
   // One active job leaves enough queued work to exercise rejectOnClear in the UI.
