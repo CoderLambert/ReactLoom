@@ -6,6 +6,24 @@ const ID = /^[A-F]\d{2}$/u
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/u
 const GROUPS = new Set(['A', 'B', 'C', 'D', 'E', 'F'])
 const CONTENT_STATES = new Set(['missing', 'imported', 'reviewed', 'recreated'])
+const SURFACES = new Set(['browser-frame', 'node-ci', 'react', 'worker'])
+const RECEIPT_KINDS = ['sdk', 'build', 'browser']
+
+/** Unique execution kinds, sorted so the index does not treat order as meaning. */
+export function catalogSurfaces(demos) {
+  return [...new Set((demos ?? []).map((demo) => demo?.executionKind))]
+    .filter((kind) => SURFACES.has(kind))
+    .sort()
+}
+
+/**
+ * Count of sdk/build/browser rows already marked PASS.
+ * Callers must pass verification that has already dropped PASS values without a receipt.
+ */
+export function receiptPassCount(verification) {
+  if (!verification || typeof verification !== 'object' || Array.isArray(verification)) return 0
+  return RECEIPT_KINDS.filter((kind) => verification[kind]?.status === 'PASS').length
+}
 
 export function toCatalogIndex(entries) {
   return entries.map((entry) => ({
@@ -19,6 +37,8 @@ export function toCatalogIndex(entries) {
     packageNames: entry.packages.map((item) => item.name),
     hasDemo: entry.demos.some((demo) => Boolean(demo.entryPoint)),
     demoCount: entry.demos.length,
+    surfaces: catalogSurfaces(entry.demos),
+    receiptPasses: receiptPassCount(entry.verification),
     sourceFingerprint: entry.sourceFingerprint,
   }))
 }
@@ -51,6 +71,14 @@ export function validateCatalogIndex(value) {
       item.demoCount < 0 ||
       item.demoCount > 12 ||
       (item.hasDemo && item.demoCount === 0) ||
+      !Array.isArray(item.surfaces) ||
+      item.surfaces.length < 1 ||
+      item.surfaces.length > 4 ||
+      item.surfaces.some((kind) => !SURFACES.has(kind)) ||
+      JSON.stringify(item.surfaces) !== JSON.stringify([...item.surfaces].sort()) ||
+      !Number.isSafeInteger(item.receiptPasses) ||
+      item.receiptPasses < 0 ||
+      item.receiptPasses > 3 ||
       !FINGERPRINT.test(item.sourceFingerprint ?? '')
     ) {
       throw new Error('目录索引包含无效条目：' + String(item?.entryId ?? '?'))
@@ -80,7 +108,8 @@ export function filterCatalogIndex(entries, query = '', group = 'all', onlyDemos
   const terms = query.trim().toLocaleLowerCase().split(/\s+/u).filter(Boolean)
   return entries.filter((item) => {
     if (group !== 'all' && item.group !== group) return false
-    if (onlyDemos && !item.hasDemo) return false
+    if (onlyDemos && !item.surfaces.some((kind) => kind === 'react' || kind === 'browser-frame'))
+      return false
     const searchable = [
       item.entryId,
       item.name,

@@ -1,21 +1,47 @@
-# B13 dnd-kit — Agent 迁移说明
+# B13 dnd-kit
 
-**任务**：实现可访问、可控制顺序的业务列表。基础版本 @dnd-kit/core 6.3.1 + sortable 10.0.0（MIT，旧架构）；新 @dnd-kit/react 0.x API 不可直接混用，先核验目标项目选择版本。
-**可迁移文件**：examples/example.tsx（真实运行代码），examples/demo.tsx 为宿主适配层。完整判断见 library.json / verification.json。
-**数据合同**：items 的业务 id 必须稳定唯一，onDragEnd 检查 active/over 都存在且合法，arrayMove 用 id 查到的当前 index；排序持久化与回滚由上层负责。
-**交互合同**：PointerSensor 限制误触，KeyboardSensor + sortableKeyboardCoordinates，独立拖动手柄与 touchAction:none，附带上下移动键盘按钮，业务禁用必须校验到数据层。
-**重点反例**：在 handleDragOver 中直接提交排序导致抖动；将 array index 用作 id；全行注册监听导致输入框失焦；把 CSS disabled 当权限；卸载后沿用 stale drag context；缺键盘/屏幕阅读器反馈。
-**目标验收**：实际 SDK import、typecheck/build、Chromium Space/Arrow/Escape、touch模拟、拖动后业务顺序、锁定、撤销，焦点保留。未执行则维持 NOT_RUN，不把 UI 代码存在当成 SDK PASS。
-**参考**：https://dndkit.com/legacy/presets/sortable/overview/；其他方案 B14 Pragmatic drag and drop，迁移 B22 旧 Beautiful DnD。
+## 适用
 
-## 固定槽位回归合同
-固定项不仅自己不能拖，也不能被其他项目跨越后挤走。必须在业务 reorder/onDragEnd/onDrop 的最终提交处检查 `canReorderAroundPinned(items, from, to)`；不可只禁用 handle 或仅检查 source/target。拖拽与键盘上下按钮调用同一业务约束，按钮用它计算 disabled。
-提取 `examples/pinned-order.ts` 与单测 `tests/pinned-order.test.mjs`。检查双向跨越、索引边界、非固定段内操作与撤销；真实 SDK/browser 仍须单独验收。旧验证证据应随源码指纹变化降级为 NOT_RUN。
+维护 React 列表排序，并且要指针距离约束、键盘传感器和自定义锁定时，使用本条目的遗留 `@dnd-kit/core` + `@dnd-kit/sortable`。操作系统文件、树和无框架 DOM 拖放另选。新包 `@dnd-kit/react` 不要写进这个示例。
 
-## wave16 快照语义
+## 版本
 
-保留 `itemsRef` 作为拖拽回调的当前数据来源，`reorderVisible` 对当前快照一次生成完整新数组，切换basic模式仍保留未显示的频道尾部。成功变更时从变更前的 `itemsRef.current` 保存一层撤销快照；撤销要同步恢复ref和React state。不要在React updater里做副作用或混用旧闭包数据。纯策略PASS不替代SDK交互验收。
+`@dnd-kit/core@6.3.1`，`@dnd-kit/sortable@10.0.0`，React 19.3.0。许可证 MIT。API 是 `DndContext`、`SortableContext`、`useSortable`。不是 `DragDropProvider`。
 
-## wave18拖拽代次不变式
+## 迁移
 
-DndContext的onDragStart捕获activeId+revision+level，onDragEnd先清空会话再检查isCurrentDragSession；对键盘按钮/撤销/重置的每一次合法写入推进revision，level改变清除会话，onDragCancel清除。必须保留核心Sortable/useSortable和稳定id；真实浏览器复测拖动中操作按钮、Esc取消和焦点。Node会话测试仅说明业务不变式。
+从手写 HTML5 拖放迁入时保留业务 id。若将来改 `@dnd-kit/react`，单独开模块并重写传感器注册，不能半文件混用。B22 的 `Draggable` 形状也不是这个包。
+
+## 不可删的清理
+
+手柄独占 listeners。`touch-action: none` 不放到整行。`DragSession` 绑定 revision 和 level。撤销、重置、键盘移动和切换 level 都作废进行中的 drop。锁定用 `canReorderAroundPinned`，拖放和按钮共用。`reorderVisible` 保留不可见后缀。
+
+## 反例
+
+index 当 id。整行展开 listeners。忽略会话把旧 drop 写回。原地 splice。只禁用手柄却让上移跨过锁。导入 `@dnd-kit/react`。用本库读取桌面文件。和 Motion 共写一个 transform。
+
+复用时保留这些不变的约定：
+
+- 只使用 `@dnd-kit/core` 6.3.1 与 `@dnd-kit/sortable` 10。
+- 不导入 `@dnd-kit/react` 的 DragDropProvider。
+- listeners 只在手柄；锁定规则拖放和按钮共用。
+- drop 必须通过 revision 与 level 组成的会话检查。
+- 操作系统文件拖入不是这个示例的能力。
+
+## 测试断言
+
+`reorder-policy.test.mts`、`drag-session.test.mts`、`pinned-order.test.mjs` 断言锁定区间、唯一 id、可见前缀、会话的 id/revision/level。不证明碰撞检测或键盘传感器。
+
+## 真实限制
+
+已挂载：单列、6px 指针约束、键盘坐标传感器、锁定、撤销、basic 只显示前三项。未挂载：多列、空列、HTTP 409、虚拟列表、新 React 适配层。
+
+复用检查：
+
+- 版本以该条目 `library.json` 为准，不跟研究稿里的 Vite 脚本或 workshop 目录。
+- 未挂载的生产模式留在 `guide.md`，不补进 `examples/`。
+- 不修改 `verification.json`。没有匹配 receipt 时 sdk、build、browser 保持 NOT_RUN。
+
+## 证据
+
+sdk、build、browser 为 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有匹配 receipt。Actions run `41779873259` 是仓库级检查，不是本条目 PASS。文档：https://docs.dndkit.com/

@@ -1,19 +1,19 @@
 {
   "source": {
     "status": "NOT_RUN",
-    "note": "第24轮新增真实browser-worker启动前的受限同源Worker脚本响应预检；隔离Node纯策略测试5 PASS。没导入msw官方SDK，不计SDK/浏览器通过。"
+    "note": "后续改动新增真实browser-worker启动前的受限同源Worker脚本响应预检；隔离Node纯策略测试5 PASS。没导入msw官方SDK，不计SDK/浏览器通过。"
   },
   "sdk": {
     "status": "NOT_RUN",
-    "note": "node-runner.mjs 已编写，但缺实际 msw 安装/运行"
+    "note": "根 pnpm-lock.yaml 已包含 Library Lab importer，声明的包可以被冻结安装解析。Actions run 41779873259 的仓库级 typecheck/build 不是本条目的 evidence/runs 收据，所以这里是 NOT_RUN，不是 PASS。"
   },
   "build": {
-    "status": "BLOCKED",
-    "note": "需要 PLATFORM 添加 msw@3.0.3 至 package/lock"
+    "status": "NOT_RUN",
+    "note": "根 pnpm-lock.yaml 已包含 Library Lab importer，声明的包可以被冻结安装解析。Actions run 41779873259 的仓库级 typecheck/build 不是本条目的 evidence/runs 收据，所以这里是 NOT_RUN，不是 PASS。"
   },
   "browser": {
-    "status": "BLOCKED",
-    "note": "需PLATFORM提供MSW v3官方scoped脚本、独立iframe和CSP worker-src/connect-src，运行真实Chromium registration/controller/fetch/stop；第24轮Node预检不等于浏览器SW实测，仍BLOCKED。"
+    "status": "NOT_RUN",
+    "note": "隔离 runner 已在 127.0.0.1:4320，按会话 scope 注册。Actions run 41779873259 的 @F11 不是 evidence/runs 收据，所以浏览器状态是 NOT_RUN。"
   },
   "security": {
     "status": "NOT_RUN",

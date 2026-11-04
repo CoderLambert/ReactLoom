@@ -1,45 +1,156 @@
-# B09 shadcn/ui — 组件源码归属与可维护的设计系统
+# shadcn/ui｜源码归你，不是一个运行时包
 
-## 不是一个普通npm运行时
-shadcn/ui的主要交付方式是使用CLI从registry将UI组件**源码**安装到自己的项目，并不是把“shadcn/ui”当成一个通用React Button runtime来import。2026官方提供Base UI和Radix两种基础原语选择，本案例特意使用Radix Slot路径，便于对比现有B10 Base UI、B11 Radix Primitives。
+shadcn/ui 是一套用 CLI 把组件源码复制进应用仓库的分发方式。`npm install shadcn` 得到的是开发工具，不是 `<Button>` 的运行时。复制之后，`npm update shadcn` 不会改写 `components/ui`。升级等于对上游 diff 做一次有审查的合并。
 
-**该页面真实运行的是本条目`examples/ui/button.tsx`，它是基于公开接口重新编写的组件，并非CLI原样生成的组件快照**。不可宣称官网所有样式、注册表更新和未来命令已由此一份实验覆盖。
+Lab 的按钮是**按公开写法手写的教学实现**，不是某次 `shadcn add button` 的 Registry 原文。它使用 Radix Slot，而不是 2026 年中之后新项目默认的 Base UI。不要把这份文件说成官方组件，也不要在它旁边再接一套 Base UI 的 `data-*` 选择器。
 
-## 从项目中正式安装
-```bash
-# 在自己的项目初始化shadcn registry配置（交互式，先确认设计系统和CSS变量）
-pnpm dlx shadcn@latest init
-pnpm dlx shadcn@latest add button
+锁定版本：`class-variance-authority@0.7.1`、`@radix-ui/react-slot@1.5.0`、`clsx@2.1.1`、`tailwind-merge@3.7.0`。`cn` 在按钮文件里本地写成 `twMerge(clsx(...))`，不是后来独立发布的 `cn` 包。
+
+没有逐库收据时不要写 PASS。Actions 41779873259 不是本条目验收。
+
+## Lab 当前示例
+
+- [`examples/ui/button.tsx`](examples/ui/button.tsx)：`cva` 变体 `default | secondary | outline | destructive`，尺寸 `default | sm | lg`。`asChild` 时根节点换成 `Slot`，否则是 `<button>`。`data-slot="button"`。焦点环是 `focus-visible:ring-2`，disabled 同时 `pointer-events-none` 和降低透明度。
+- [`examples/example.tsx`](examples/example.tsx)：本地文章列表。basic 切换变体；business / advanced 选择后归档。
+- [`examples/archive-policy.ts`](examples/archive-policy.ts)：只归档当前选中且尚未归档的 id；`isCurrentArchiveRun` 用 epoch 丢掉过期回调。切换 level 或卸载会增加 epoch 并清掉 timer。
+
+没有 Dialog、Table、`components.json`、官方 CLI 流程，也没有服务端。归档只改这块浏览器内存。
+
+## 1. 什么时候用
+
+| 场景 | 建议 | 不要 |
+| --- | --- | --- |
+| 品牌要改组件内部结构 | 把源码放进仓库并自己回归 | 改完不测键盘和对比度 |
+| 只要一套现成中后台 | Ant Design 或 Mantine | 用 shadcn 重写所有企业组件 |
+| 菜单、弹层、焦点 | 选定 Radix、Base UI 或 React Aria 之一再包一层 | 自己重写 focus trap |
+| 大表 | TanStack Table 或专用网格，皮肤可以用这套 token | 把无头 `<Table>` 当成企业网格 |
+| 拖拽、动画 | dnd-kit、Motion | 用按钮 hover 冒充拖拽 |
+
+开源核心多为 MIT，Radix 也是 MIT。第三方块、图标、字体和付费 Registry 另算。本 Demo 不下载这些素材。
+
+## 2. 四个所有权
+
+```text
+CLI / Registry     只负责把文件写进仓库
+        │
+components/ui      应用拥有，改动要审查
+        │
+React 状态         选中、busy、文案
+        │
+服务端             真正的归档和版本号
 ```
-成功后根据components.json检查导入路径、基础原语选择、Tailwind配置。若只迁移此教学实现，显式安装：
-```bash
-pnpm add class-variance-authority@0.7.1 @radix-ui/react-slot@1.5.0 clsx@2.1.1 tailwind-merge@3.7.0
-```
+
+`components.json` 是生成配置，不是运行时 store。选定 Base UI 之后，不能继续把 Radix 组件的类型和选择器当成同一套。文件进仓库后，CLI 版本号和组件内容是两件事。
+
+Lab 故意停在 Radix Slot。官方文档现在同时存在 Radix、Base UI 和 React Aria 分支。新项目用 CLI 且不传基座时，默认可能已经是 Base UI。迁到那种输出之前，先 diff，不要假设 `asChild` 和 `Slot` 还在。
+
+## 3. 三层
+
+### 基础：Button
+
+变体是 CVA 的闭集，不是任意字符串。`className` 走 `tailwind-merge`，后面的冲突类可以覆盖前面的，但不是任意 CSS 注入口。不要把用户输入拼进 `className`。
+
+`asChild` 把属性和 ref 合并到**单个**子元素。包两个子节点会报错或丢掉行为。Slot 不会替你补 `type="button"`。
+
+### 业务：归档一代人
+
+`pendingArchiveIds` 去掉已经归档的 id，避免重复提交把计数算大。点击之后记下 epoch，超时回调里 `isCurrentArchiveRun` 为假就什么都不写。切换 Tab 必须让上一代失效。这是本地 `setTimeout`，不是 API。生产环境换成可取消的请求时，仍然要保留「这一代还是不是当前代」。
+
+列表选择在 `busy` 时不改，避免归档集合和勾选集合分叉。
+
+### 进阶：键盘和失败
+
+disabled 必须真的不能按。焦点环在键盘聚焦时可见，鼠标点击不必一直留着环（`focus-visible`）。失败文案用文本，不靠颜色。本示例没有失败分支：定时器总会成功。你要补的是拒绝后恢复 busy、允许重试，并且过期的失败不能写到下一代。
+
+## 4. 反例
+
+### 反例 1：把它当 npm 组件库
+
 ```tsx
-import {Button} from './ui/button';
-<Button variant="outline" type="button">保存</Button>;
+import { Button } from 'shadcn-ui'
 ```
-这些依赖的确切版本由PLATFORM核实、生成锁文件后，才可标识构建通过。
 
-## 三层业务示例
-**basic**：CVA variant+size的真实Button，Radix Slot可选择渲染child；**business**：RSS多选操作，按钮正确继承disabled、aria及loading态；**advanced**：asChild的链接不会自动拥有原生button的disabled行为，展示带rel安全属性的官网链接和本地操作恢复，强调权限语义。
+没有这个稳定的运行时入口。从你仓库里的 `button.tsx` 导入。
 
-## 源码事实与生命周期
-`examples/ui/button.tsx`维护`buttonVariants`和`cn`，项目可以按实际设计token修改这些源文件。`examples/example.tsx`是可交互使用例；`examples/demo.tsx`只是Lab的懒加载出口。不要为每个业务页面复制一份Button，需集中维护组件设计系统。示例业务的250ms延迟明确是本地数据演练，没有向服务端提交；生产代码应使用AbortSignal和正确错误回滚。
+### 反例 2：className 不用 merge
 
-## 常见错误
-1. 认为`shadcn/ui`是可直接import的React库：它是可复制源码的组件体系；应从本地`components/ui/button`引入。2. 替换类名后忘记变体、专用设计tokens，Tailwind JIT没有扫描源码时界面看似空白。3. 将`asChild`当成任意HTML标签替换，忽略子元素自身语义、focus、disabled。4. 不区分Radix和Base UI组件版本，混用不同Slot/trigger上下文。5. 组件更新后直接覆盖本地改造，未检查registry diff和回归。6. 纯样式disabled而没有真实disabled属性或onClick权限校验。
+```tsx
+<button className={buttonVariants({ variant }) + ' ' + className} />
+```
 
-## 组合练习
-将此原子Button接入React Hook Form提交状态，检查loading/重复提交/错误反馈；将CVA变体用于统一NewsHub管理员按钮，在少量组件文件集中维护变体，而非业务页面散落大量Tailwind字符串。
+`px-4` 和传入的 `px-2` 会同时留下。用 `twMerge`。
 
-## 来源与许可
-- [官方Button](https://ui.shadcn.com/docs/components/radix/button)
-- [官方Vite安装](https://ui.shadcn.com/docs/installation/vite)
-- [2026 Radix包迁移说明](https://ui.shadcn.com/docs/changelog/2026-02-radix-ui)
+### 反例 3：asChild 包了片段
 
-当前源码已编写但SDK/tsc/生产构建/浏览器均NOT_RUN。
+```tsx
+<Button asChild>
+  <>
+    <a href="/a">A</a>
+    <a href="/b">B</a>
+  </>
+</Button>
+```
 
+只放一个元素。链接按钮要保证名字、禁用和键盘都还在那个元素上。
 
-## 归档事务快照与异步取消补丁（2026-10-27）
-归档时提取仍待归档ID快照，期间禁用checkbox与提交，不依赖250ms后可变`selected`。重置、切换demo级别和卸载均递增operationEpoch并取消本地定时器；过期回调不得写回新场景。已归档ID不重复计算成功量；模拟延迟不是实际HTTP请求或持久化。`archive-policy.ts`提供规则测试，真实Slot/CVA和浏览器交互仍待验收。
+### 反例 4：Radix 源码配 Base UI 选择器
+
+```css
+button[data-base-ui-pressed] { }
+```
+
+Lab 按钮只有 `data-slot="button"`。换基座时整份组件一起换，不要混。
+
+### 反例 5：归档没有代际
+
+```tsx
+setTimeout(() => setArticles(archiveByIds(articles, selected)), 400)
+```
+
+闭包里的 `articles` 是点击时的快照还好，但卸载之后仍会 `setState`。用 epoch，卸载时加一。
+
+### 反例 6：覆盖变体却不测对比度
+
+`destructive` 是深底白字。改成浅黄底白字会过不了对比度。改 token 要连焦点环一起看。
+
+### 反例 7：用 Button 做拖拽手柄
+
+hover 位移不是拖放。键盘、抓取取消和放置目标用 dnd-kit 或 Pragmatic DnD。
+
+### 反例 8：表格皮肤当成行模型
+
+排序、分页、行 id 属于表格库。Button 和 class 只负责外观。
+
+## 5. 组合
+
+**Query + Zod**：按钮进入 busy，请求带 AbortSignal。409 显示字段错误，不把乐观归档当成已提交。generation 和 Query 的请求 id 对齐。
+
+**TanStack Table + 虚拟列表**：表头和行高用这套 token，行身份用 table 的 row id。不要在 Button 里缓存行数据。
+
+**MSW + Playwright + axe**：MSW 提供 200 / 422。Playwright 看键盘路径。axe 看名字和对比度。三者都不能证明 Registry 和你手里的文件字节相同。
+
+## 6. 升级
+
+1. 记下现在的基座（Lab 是 Radix Slot 1.5.0）。
+2. 在空目录运行你选定版本的 CLI，看新按钮还是不是 Slot。
+3. `git diff` 每一份复制进来的文件。不要整目录覆盖本地改过的焦点环和中文文案。
+4. 回归：变体、disabled、asChild、键盘、对比度、归档代际。
+
+官方若把 `cn` 抽成独立包，那是新的依赖决定。在你改 import 之前，Lab 仍是本地函数。
+
+## 7. 练习
+
+1. 给归档补一个失败：第一次拒绝，第二次成功。过期回调不能改下一代的文章。
+2. 用 `asChild` 渲染一个链接，检查禁用时链是否还会导航。
+3. 把按钮换到 Base UI 的官方输出时，单独开分支，列出删除的 Radix API。
+
+## 8. 证据
+
+`archive-policy` 单测不渲染按钮。浏览器要看变体、disabled、焦点环和卸载后的定时器。没有收据就保持 NOT_RUN。
+
+## 9. 资料
+
+- https://ui.shadcn.com/docs/components/radix/button
+- https://www.radix-ui.com/primitives/docs/utilities/slot
+- https://cva.style/docs
+- https://github.com/dcastil/tailwind-merge

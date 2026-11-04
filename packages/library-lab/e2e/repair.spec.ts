@@ -6,7 +6,11 @@ async function openScenario(page: Page, level: string) {
   await page.goto(`/libraries/msw?tab=demo&example=${level}`)
   await panel(page).getByRole('button', { name: '运行 MSW 浏览器场景' }).click()
   await expect(panel(page).getByRole('status')).toHaveText('已收到浏览器请求结果')
-  return (await panel(page).locator('details code').textContent())!
+  const scope = await panel(page).locator('details code').textContent()
+  if (typeof scope !== 'string' || scope.length === 0) {
+    throw new Error('MSW runner did not report a session scope')
+  }
+  return scope
 }
 async function stopScenario(page: Page) {
   await panel(page).getByRole('button', { name: '停止 MSW 并清理' }).click()

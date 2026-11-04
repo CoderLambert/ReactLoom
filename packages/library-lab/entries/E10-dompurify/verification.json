@@ -4,8 +4,8 @@
     "note": "需安装 dompurify@3.4.17 并真实调用"
   },
   "build": {
-    "status": "BLOCKED",
-    "note": "依赖版本/锁文件由 PLATFORM 集成"
+    "status": "NOT_RUN",
+    "note": "根 pnpm-lock.yaml 已包含 Library Lab importer，声明的包可以被冻结安装解析。Actions run 41779873259 的仓库级 typecheck/build 不是本条目的 evidence/runs 收据，所以这里是 NOT_RUN，不是 PASS。"
   },
   "browser": {
     "status": "NOT_RUN",

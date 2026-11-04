@@ -1,23 +1,48 @@
-# A04 uPlot — Agent 工程迁移规则
+# A04 uPlot — 工程手册
 
-**任务识别**：时间序列Canvas监控。只有需求是每秒/分钟曲线、滚动趋势、大数据窗口且不需要现成丰富图表时优先考虑。复杂商务报表选A01，普通Canvas图表选A03。
+## 适用
 
-**版本/许可**：uplot@1.6.32（MIT），需真实pnpm锁和React/Vite构建证明；当前SDK、构建、浏览器均NOT_RUN。
+`uplot@1.6.32` 画对齐的 Canvas 时序。React 持有采样点数、shift 和推流开关；`uPlot` 实例只在宿主 div 挂上之后创建。地图、桑基、自由标注不要放这里。X 严重不对齐时换数据模型或换库，不要造巨型 null 矩阵。
 
-**读取顺序**：`library.json` → `examples/example.tsx` → `verification.json` → `guide.md`。Lab主站只是容器，不能把源码面板当独立可复用模块。
+## 版本
 
-**最小迁移**：导入uPlot及CSS、定义单调秒时间戳列数据、在组件DOM host ref挂载、data更新调用setData、ResizeObserver调setSize，cleanup disconnect+cancelAnimationFrame+destroy；不要复制演示用本地随机/数学数据生成器。
+钉 `uplot@1.6.32`。默认导入，CSS 用 `uplot/dist/uPlot.min.css`，类型用包内 `dist/uPlot.d.ts`。不要调用 master 上尚未出现在该 d.ts 的方法。X 用 Unix 秒，`scales.x.time: true`。
 
-**不能删除**：列对齐、缺失值null、窗口上限、毫秒/秒转换、resize去抖、instance.destroy、用户可读取的数据替代。跨项目接入真实订阅时还需AbortSignal取消异步更新，避免旧请求写入新序列。
+## 迁移
 
-**反例**：new uPlot 放render；每次数据变化销毁重建；忘记CSS；所有点无限堆积；盲用高性能宣传数字作为目标产品实测；Canvas无任何文本替代。
+行对象先变成 `[x[], y1[], y2[]]`，列等长，缺测为 `null`。毫秒时间戳先换成秒，或显式改轴单位，禁止混用。结构（轴、series 数量）变化才销毁重建；推流只 `setData`。隐藏一条线用 `setSeries`，不要改 options 重建。用户框选之后用 `setData(data, false)` 并暂停自动 `setScale`。Lab 当前省略第二参，等于重置 scale，因为演示窗口在滑动。
 
-**必须断言**：同索引x/y长度一致，最后时间单调，数据更新保留实例，卸载Canvas/Observer/interval为0，缺失点不被误算为0，表格文本可读，旧采样回调不能改写新视图。
+## 不可删的清理
 
-**可执行命令**：`pnpm --filter @reactloom/library-lab catalog:check`、`typecheck`、`build`，并在真实浏览器运行对应Demo。缺SDK依赖不可标PASS。
+effect cleanup 要 `ResizeObserver.disconnect`、`cancelAnimationFrame`、`instance.destroy()`，并在 ref 仍指向该实例时置空。推流 interval、`visibilitychange`、`matchMedia('change')` 成对解除。已销毁的 plot 上禁止 `setData`。
 
-**官方来源**：https://github.com/leeoniya/uPlot 。
+## 反例
 
-### 第10轮回归门槛
+```ts
+// 错
+new uPlot(opts, [{ t: Date.now(), y: 0 }], host);
+// 对
+const data: uPlot.AlignedData = [[Math.floor(Date.now() / 1000)], [null]];
+```
 
-滚动时间轴 `setData(data)` 应重算自动尺度，不要把固定静态图例上的 `resetScales=false` 直接搬到移动窗口。`examples/stream-policy.ts` 是暂停规则事实源：后台永远不采样、减少动态默认暂停、显式恢复不绕过页面隐藏；监听 visibilitychange 与媒体查询必须在卸载时对称释放。Node 单测不是 uPlot Canvas 验收。
+render 中构造、缺测填 0、`posToVal(event.clientX)`、用抽样列做账单，都不要做。
+
+## 测试断言
+
+`shouldRunStream` 只在 advanced、已请求、可见、且未减少动态（或显式覆盖）时为真。SDK 收据还要覆盖真实构造、`setData`、`setSize`、`destroy`、时间轴秒单位和 `null` 断线。没有 `docs/library-lab/evidence/runs/` 收据则为 NOT_RUN。
+
+## 真实限制
+
+窗口上限 100，推流 650ms，没有 HTTP、`setSeries`、`setScale` 策略、坐标往返或 PNG。`setData(data)` 会重置视窗。没有 FPS 或内存数字。减少动态默认停表，勾选覆盖才继续。
+
+## 断言边界
+
+`tests/stream-policy.test.mts` 只判断何时允许 interval。SDK 用例要 `import uPlot from 'uplot'`，用含 `null` 的 `AlignedData` 构造，再 `setData` 与 `destroy`。确认 X 为秒且 `time: true`。不要用假对象代替 `uPlot.AlignedData` 让测试变绿。缺 `docs/library-lab/evidence/runs/` 收据时保持 NOT_RUN。`setData` 省略第二参会重置视窗，测试若要保留缩放须显式传 false。
+
+## 证据
+
+Actions `41779873259` 的仓库级 install、typecheck、build、52 SDK 文件（153 测试）和 45 Playwright 不是本条目 PASS。策略测试和历史研究 PASS 不能写入 `verification.json`。
+
+对照 `library.json` 的版本编写 import，不要升到条目未钉死的版本。
+`tests/` 中的策略用例不能改写成 sdk 字段的 PASS。
+浏览器与构建未留下收据时，对应字段维持 NOT_RUN。

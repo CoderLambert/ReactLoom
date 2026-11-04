@@ -8,7 +8,7 @@ Agent retrieval: root LIBRARY_CATALOG.md -> entry library.json -> agent.md -> ex
 
 Use pnpm --filter @reactloom/library-lab catalog:check / test / test:sdk / typecheck / build / test:e2e. test is offline platform logic; test:sdk loads actual SDKs and must not silently skip. Do not claim SDK/browser PASS from isolated domain tests. Check only affected scope per batch; preserve errors and blockers.
 
-Only PLATFORM edits common source, scripts, runners, package/lockfile, CI and generated catalogues. AB/CD/EF own their entry directories and progress files. No deployment, paid API, global storage clearing or arbitrary code execution endpoints. Keep root branch main unchanged and PR #8 Draft.
+Only PLATFORM edits common source, scripts, runners, package/lockfile, CI and generated catalogues. AB/CD/EF own their entry directories and progress files. No deployment, paid API, global storage clearing or arbitrary code execution endpoints. PR #8 is merged. Do not treat that merge, the lockfile importer, or a green Actions run as 119 per-entry PASS receipts.
 
 ## Verification evidence binding
 
@@ -30,4 +30,4 @@ Complete content must include guide.md, agent.md, entry AGENTS.md, verification.
 
 ## Remediation priority
 
-Finish a real frozen install, full type/build and the six first-risk entry executions before expanding scope again. Lock-candidate CI may resolve/upload a candidate but is never the acceptance job. Original checks remain. Preserve the 24-round cap; the manual repair does not reset scheduled runCount.
+The root lockfile already has a Library Lab importer. Actions run 41779873259 passed install, typecheck, production build, 52 SDK files (153 tests) and 45 Playwright tests on this lab tree. That is not 119 per-entry receipts. Record sdk, build or browser PASS only with `verify:record` and files under `docs/library-lab/evidence/runs/`. Lock-candidate CI is never the acceptance job. Preserve the historical 24-round cap; do not invent a new round to restate these facts.

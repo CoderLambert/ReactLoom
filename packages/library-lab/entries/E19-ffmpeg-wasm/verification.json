@@ -1,11 +1,11 @@
 {
   "sdk": {
     "status": "BLOCKED",
-    "note": "PLATFORM尚未部署真实@ffmpeg/core/WASM；新增RIFF/PCM策略不能作为FFmpeg SDK PASS"
+    "note": "@ffmpeg/core 已在锁文件中，但 prepare-ffmpeg-core 默认不复制 GPL-2.0-or-later 的 wasm/js，除非 LIBRARY_LAB_FFMPEG_CORE_LICENSE_REVIEWED=true。没有转码收据，不能记 PASS。"
   },
   "build": {
-    "status": "BLOCKED",
-    "note": "依赖包和锁文件由PLATFORM独占"
+    "status": "NOT_RUN",
+    "note": "依赖包已在根锁文件中。仓库级生产构建不是本条目收据。GPL 核心默认不复制，因此 sdk 仍是 BLOCKED；build 本身没有收据，保持 NOT_RUN。"
   },
   "browser": {
     "status": "NOT_RUN",

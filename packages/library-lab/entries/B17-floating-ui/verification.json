@@ -1,8 +1,4 @@
 {
-  "content": {
-    "status": "PASS",
-    "note": "官方React API与示例已审阅，源码重新编写"
-  },
   "sdk": {
     "status": "NOT_RUN",
     "note": "等待集成任务安装@floating-ui/react 0.27.20"

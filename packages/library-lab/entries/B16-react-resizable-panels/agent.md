@@ -1,25 +1,47 @@
-# B16 react-resizable-panels — Agent 工程笔记
+# B16 react-resizable-panels
 
-适用于有一个方向分割的 IDE/邮箱/知识工作台；不适合自由二维摆放内容（B15）或拖动卡片排序（B13）。使用 `react-resizable-panels@4.14.1`，MIT。
+## 适用
 
-直接阅读 `examples/example.tsx` 与独立 `library.json`。迁移时复用 `Group > Panel / Separator / Panel` 结构，而不是复制整个 Library Lab 页面。业务侧仅保留必要的方向开关、样式和回调。
+相邻窗格要拖动边界、约束最小最大、并用键盘调分割条时使用 v4。二维仪表盘用 B15。不调整尺寸的页面用 CSS。本库不保存文章数据。
 
-### 关键约束
+## 版本
 
-- v4 组件是 `Group, Panel, Separator`，不能照旧导入 `PanelGroup`。
-- 数值 size 按像素解释；% 必须写成字符串，避免不可控的30px侧栏。
-- Separator 提供真实焦点与键盘调整，不自己仅实现 mousemove。
-- minSize/maxSize 设置合理可访问的上下界，并验证极窄窗口。
-- 持久化用官方 `useDefaultLayout` 等契约，命名空间专有；本示例只观察`onLayoutChanged`，未实现存储。
-- 区分 onLayoutChange（持续）与 onLayoutChanged（稳定保存），不要每个 pointer move 做昂贵同步更新。
-- 与dnd-kit/react-grid-layout组合时先明确手势竞争。
+`react-resizable-panels@4.14.1`，React 19.3.0。许可证 MIT。组件名是 `Group`、`Panel`、`Separator`，属性是 `orientation`。百分比用 `"25%"` 这种字符串。研究笔记中的 4.14.8 不是当前锁。
 
-### 迁移验收
+## 迁移
 
-实际SDK import+typecheck+build、浏览器拖动和键盘、纵向切换、最小约束、重置与卸载。业务布局数据可以自造，但不能mock Panel库后标 SDK PASS。现 verification.json 尚无真实 SDK/浏览器通过证据。
+v3 的 `PanelGroup`、`PanelResizeHandle`、`direction`、`autoSaveId` 不要留在新代码里。数字 `30` 不是 30%。升级补丁版本前先改锁文件，不要把更新日志里的修复提前写成已包含。
 
-官方 https://github.com/bvaughn/react-resizable-panels 。
+## 不可删的清理
 
-## wave14 响应式约束
+`useId` 隔离 id。容器有高度且 `minWidth: 0`。分割条有 `aria-label` 和 `touch-action: none`。方向或复位用 `key` 重挂默认尺寸。只把 `onLayoutChanged` 的结果写入状态，不在拖动中间回调里发请求。
 
-把示例复制到多面板业务前保留 `useId` 实例命名空间，防止跨实例重复 Group/Panel/Separator ID；容器不得设置固定大于实际手机可视区域的 `minWidth`。只对分割条设置 `touchAction:'none'`，不要禁用整个编辑器面板的触摸滚动。需要真实触摸和键盘回归；现 SDK/build/browser NOT_RUN。
+## 反例
+
+v3 组件名。`defaultSize={30}`。用 div 冒充 Separator。固定 id 导致多实例串扰。`onLayoutChange` 里 PUT。面板和正文共用一个权威对象。声称有 collapse 或服务器恢复。
+
+复用时保留这些不变的约定：
+
+- 组件是 Group、Panel、Separator；尺寸百分比用字符串。
+- 锁是 4.14.1，不要把 4.14.8 的修复写成已包含。
+- id 来自 `useId`；复位靠 key 重挂。
+- 只读 `onLayoutChanged`，不在拖动中回调里 PUT。
+- 没有 collapse、usePanelRef 或服务器布局。
+
+## 测试断言
+
+本目录没有 policy 测试。不要把布局 JSON 的出现写成测试通过。浏览器里应断言分割条角色、方向键和最小尺寸，但那些检查尚未形成 receipt。
+
+## 真实限制
+
+已挂载：两栏和三栏、纵向切换、复位、结束时的布局字符串。未挂载：`usePanelRef`、折叠、`useDefaultLayout`、嵌套 Group、预览模式、HTTP。刷新丢失尺寸是当前边界。
+
+复用检查：
+
+- 版本以该条目 `library.json` 为准，不跟研究稿里的 Vite 脚本或 workshop 目录。
+- 未挂载的生产模式留在 `guide.md`，不补进 `examples/`。
+- 不修改 `verification.json`。没有匹配 receipt 时 sdk、build、browser 保持 NOT_RUN。
+
+## 证据
+
+sdk、build、browser 为 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有匹配 receipt。Actions run `41779873259` 是仓库级检查，不是本条目 PASS。文档：https://github.com/bvaughn/react-resizable-panels

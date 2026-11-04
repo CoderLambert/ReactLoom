@@ -1,41 +1,47 @@
-# A10 tldraw — Agent 选型、集成和授权核对
+# A10 tldraw — 工程手册
 
-## 何时采用
+## 适用
 
-无限画布、可编辑形状数据库和复杂画笔交互。不是普通按钮/节点连线控件。对严格DAG优先评估A06 React Flow，对手绘头脑风暴可比A09 Excalidraw。
+`tldraw@5.5.2` 做无限画布和形状模型。手绘嵌入且希望 MIT 包时看 A09；端口 DAG 看 A06。非本机没有合法 `VITE_TLDRAW_LICENSE_KEY` 就不要挂载，也不要伪造 key 或去掉水印。
 
-## 开发前必要核对
+## 版本
 
-- SDK：`tldraw@5.5.2`。该库采用**定制许可证**，不属于常规 MIT；生产环境需要匹配使用场景的合法 key。不可模拟 key/绕过水印。
-- 源文件：`examples/example.tsx` 与 `examples/styles.css`，`examples/demo.tsx` 仅指向同一真实实现。
-- 集成范围：独立动态加载；导入 `tldraw/tldraw.css`，为容器分配非零尺寸；父应用负责独立宿主 z-index、键盘和路由。
-- 状态：业务文档与 Editor 实例态分离，不默认向 Lab 共享 storage 里写 persistenceKey。
+钉 `tldraw@5.5.2`。导入 `Tldraw`、`createShapeId`、`getSnapshot`、`toRichText` 和 `tldraw/tldraw.css`。许可证不是 MIT。`setCamera` 拒绝非有限数。不要使用已废弃的包入口 `@tldraw/tldraw` 作为新代码的默认导入。
 
-## 迁移步骤
+## 迁移
 
-1. 本地合规开发环境里加载编辑器；记录实际包版本和 license 条件。
-2. 在 `onMount` 保存 Editor，监听 store 文档改变；回调返回 unsubscribe。
-3. `Editor.createShape` 使用 `toRichText` 处理文字，批量创建用 `Editor.run`，避免手工操作 DOM 节点。
-4. `Editor.updateInstanceState({isReadonly})` 仅处理客户端只读，真实后端仍须授权。
-5. 快照只传输所需 `getSnapshot(editor.store).document`，导入应通过 SDK 校验和版本迁移且支持回滚；本演示不提供未审查的任意文件恢复。
-6. 本例80形状限制仅适用于自带的程序化新增按钮，原生工具仍可手动绘图；如产品需要硬性总额，必须单独设计经过SDK支持的全局业务约束，服务端保存时也需校验。
-7. 为上限、取消、错误和资源释放写定向检查；完整编译与 SDK 浏览器运行未通过前别宣称生产适用。
+外部创建形状改为 `editor.run` + `createShape`，文本用 `toRichText`。持久化从 `JSON.stringify(editor)` 改为 `getSnapshot` 的 document。若启用 `persistenceKey`，按文档隔离；Lab 故意不加，避免 IndexedDB 串数据。只读用 `updateInstanceState`，并在服务端再鉴权。
 
-## 禁止的反模式
+## 不可删的清理
 
-- 无授权推送公开/商业生产；
-- 只有 readonly UI 而后端可修改；
-- 全部编辑器实例复用一个 persistenceKey 或不受控清除 IndexedDB；
-- 依赖截图重建可编辑图；
-- 用 Canvas 冒充已覆盖屏幕阅读器的结构化业务信息；
-- 无限创建节点后报告所谓毫秒性能数字。
+`onMount` 返回的函数必须退订 `store.listen`。卸载时撤销 Blob URL 并清除定时器。程序化按钮在超过 80 个形状前返回。快照超过 3 MB 时在 `createObjectURL` 之前抛错。已卸载的 Editor 不再调用。
 
-## 关键验收
+## 反例
 
-本机挂载成功、真实形状增删、画布缩放、只读拒绝修改、JSON文档结构含 shapes、再次挂载订阅无泄漏、键盘 Tab/Escape 不影响主应用、未授权非本机宿主显示合规提示。版本、执行命令、日志和源码指纹写 verification，缺测维持 NOT_RUN。
+```tsx
+editor.createShape({ type: 'geo', x: 0, y: 0 }); // 错：放在组件 render
+localStorage.setItem('doc', JSON.stringify(editor)); // 错
+// 对：在按钮中 editor.run(() => editor.createShape({ id: createShapeId(), ... }))
+```
 
-官方：https://tldraw.dev/sdk-features/license-key
+高度为 0、拖动时 setState 全量形状、只读当成授权，都不要做。
 
-### wave17 快照约束
+## 测试断言
 
-同时迁移 `examples/snapshot-policy.ts`，保留UTF-8 3MB限制、URL/timeout实例级Set与卸载清理。不要把下载成功当服务器持久化或SDK完整验收；涉及blob/浏览器下载仍需真实Chromium验证。
+`serializeSnapshot` 拒绝无法序列化的值和超过 3 MB 的 UTF-8。SDK 收据还要看到真实 `Tldraw` 只在许可条件下挂载、`createShape`、`getSnapshot` 不含 session、卸载退订。没有 runs 收据则为 NOT_RUN。
+
+## 真实限制
+
+没有 `toImage`、`loadSnapshot`、协作同步或 HTTP 409。80 的上限不管手绘。`zoomToFit` 不读取减少动态偏好。level 变化不重挂载时，onMount 里的骨架不会自动重建。没有帧率数字。
+
+## 断言边界
+
+`tests/snapshot-policy.test.mts` 只量 JSON 字节。SDK 用例要 `import { Tldraw, getSnapshot, createShapeId } from 'tldraw'`。非本机且没有 key 时不挂载。下载体只有 document。`onMount` 退订后不再 `setCount`。缺收据时保持 NOT_RUN。文本用 `toRichText`。不要把 session 快照写进下载文件。没有合法 key 的非本机页面只显示说明。
+
+## 证据
+
+Actions `41779873259` 的仓库级 install、typecheck、build、52 SDK 文件（153 测试）和 45 Playwright 不是 A10 PASS。不要把快照字节测试或历史研究 PASS 写入 `verification.json`。
+
+对照 `library.json` 的版本编写 import，不要升到条目未钉死的版本。
+`tests/` 中的策略用例不能改写成 sdk 字段的 PASS。
+浏览器与构建未留下收据时，对应字段维持 NOT_RUN。

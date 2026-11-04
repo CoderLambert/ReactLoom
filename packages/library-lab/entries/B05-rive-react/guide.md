@@ -1,75 +1,257 @@
-# B05 · Rive React Runtime：WebGL2 动效和业务状态分离
+# B05 Rive React：WebGL2 运行时与状态机
 
-## 核心定位
+Rive 的价值是设计器产出的同一个 `.riv`：Artboard、动画、State Machine、View Model 和事件由 React 控制，并与产品状态对齐。它不是 GIF 播放器，也不是业务状态管理器。按钮淡入先考虑 CSS 或 B01。Library Lab 固定 `@rive-app/react-webgl2@4.37.0`，宿主 React 19.3.0。运行时许可证是 MIT，没有单独的 runtime 费用。Editor 订阅和 `.riv` 导出权是另一套条款。MIT 不等于可以导出、修改或再分发任意官方素材。
 
-Rive 是设计时制作的状态机 / 艺术板运行时。与 Motion/GSAP 直接控制 DOM 不同，Rive 把复杂插画和状态机模型封装在 `.riv` 文件里。React 只管理输入、播放条件和业务数据。适用于品牌动效、交互提示、UI 游戏化与设计师参与维护的高保真动画。
+## Lab 当前示例
 
-本实验采用 `@rive-app/react-webgl2@4.37.0` 和官方示例 `https://cdn.rive.app/animations/vehicles.riv`，状态机名称 `bumpy`。这是官方 React 文档公开的远程样本，**本仓库不拷贝、不声称拥有其二进制授权，离线无法加载**。商业项目应由团队合法导出自己的 .riv 文件并验证资源来源。
+`examples/demo.tsx` 再导出 `examples/example.tsx`。样式在 `examples/styles.css`。资产常量在 `examples/asset.ts`：
 
-## 安装与导入
+```ts
+export const RIVE_SAMPLE_URL = 'https://cdn.rive.app/animations/vehicles.riv';
+export const RIVE_SAMPLE_STATE_MACHINE = 'bumpy';
+```
 
-~~~bash
-pnpm add @rive-app/react-webgl2@4.37.0
-~~~
+**官方 `.riv` 没有打进仓库，也不要提交。** 运行时 MIT 不覆盖这份远程样本的再分发。离线或内网打不开 `cdn.rive.app` 时，画面可以失败，HTML 状态必须还在。这是真实的离线阻断，不是文档疏忽。若要离线验收，使用**另行授权**、版本化、哈希固定的自有 `.riv`，并保持同一状态机契约。不要把下载来的官方二进制提交进 git，也不要在代码里伪造一个空的 `.riv`。
 
-~~~tsx
-import { useRive } from '@rive-app/react-webgl2';
+已挂载：
 
-function Demo() {
-  const { rive, RiveComponent } = useRive({
-    src: 'https://cdn.rive.app/animations/vehicles.riv',
-    stateMachine: 'bumpy',
-    autoplay: false,
-  }, { useOffscreenRenderer: true });
-  return <div style={{ width: 320, height: 220 }}><RiveComponent /></div>;
-}
-~~~
+- `useRive({ src, stateMachine: 'bumpy', autoplay: false, onLoadError })`，第二参数 `{useOffscreenRenderer: true}`。渲染 `<RiveComponent />`，容器 `aria-hidden="true"`。
+- 播放由 `riveRuntimePolicy` 决定，和挂载是两件不同的事。页面隐藏时 `mount: false`，子组件卸载，把 WebGL 实例交还给包装器，而不是只 `pause` 留在树上。
+- `advanced` 用 `IntersectionObserver`（阈值 0.05）。没有该 API 时视为在视口内。滚出视口则卸载。
+- 减少动画或手动暂停：仍然挂载（页面可见且在视口内时），但 `play: false`。
+- `business` 只在 `phase === 'pending'` 时请求播放。审核成功/失败/空闲都不靠动画帧推断。
+- 本地审核：`AbortController` + `generation`。新请求作废旧请求；取消或切换 level 会 abort，迟到结果写不回来。失败路径是本地抛出的「模拟 HTTP 503」，没有真实接口。
+- `onLoadError` 若发生在播放器已经卸载之后，用 `alive` ref 丢掉，避免 setState 写到已离开的层级。播放控制包在 try/catch 里，错误进入 `role="status"` 文案。
 
-提示：`rive` 在文件加载完成前可能为 null；不要调用空对象。播放意图与实际渲染状态不同：没有拿到浏览器 SDK/资源加载证据前，不能把UI的“请求播放”当作已播放。远程资源错误和播放 API 错误回调必须在子组件卸载后失效。画布尺寸由父容器提供。WebGL2 使用有限 GPU 上下文，列表中若大量同时挂载应考虑替代 renderer 或复用策略。
+**没有**在包装器 cleanup 里调用 `rive.cleanup()`。`useRive` 拥有实例。只有自己 `new Rive({...})` 的命令式 Web API 才在 effect cleanup 里 `cleanup()`。
 
-## 三层真实场景
+未挂载：`useViewModelInstanceNumber`、`autoBind`、`onRiveReady`、自有 `health.riv`、`enableGPUCanvas`、`enableInkbleed`、React Aria Dialog 组合。`vehicles.riv` 只确认了公开示例状态机 `bumpy`，没有核实过的 `approved` / `failed` 属性。不要写不存在的字段假装业务画面会变。
 
-**基础**：组件式 `useRive` 挂载，手动暂停/恢复。动画视觉层标注 `aria-hidden`，由旁边的 HTML 文字提供语义等价信息。
+## 什么时候使用
 
-**业务**：本地模拟审核请求（可以选择 success/503）。真正调用 Rive 的播放接口，同时 React 控制实际 `idle / pending / success / error` 业务状态。新请求先 abort 旧请求并递增代号，取消和卸载后旧 Promise 不回写。Rive 不承担判断审核成功的职责。
+| 任务 | 是否优先 | 理由 |
+| --- | --- | --- |
+| 复杂插画、角色微交互、多端同一视觉状态 | 优先考虑 | 状态迁移可留在设计器；对比 B04 更偏状态机和 View Model |
+| 数据驱动的引导、进度插画 | 有条件 | 必须已有合法 `.riv` 和书面 VM 契约；事实仍在 React |
+| Hover、按钮变色 | 通常不用 | CSS / Motion 更轻，DOM 语义还在 |
+| 表格每一行一个 WebGL 上下文 | 先测量 | WASM、解码和 context 都不是免费的 |
+| 关键表单、主按钮、读屏流程 | 不能单独承担 | Canvas 不等于表单 |
+| SEO 正文、纯 SSR | 不适用 | 服务端只输出 HTML 兜底 |
 
-**进阶**：按 `IntersectionObserver` 视口状态控制子 Rive 组件挂载；后台页面、系统减少动态效果、手动暂停都会通过 `rive.pause()` 停止播放；离开视口时卸载子组件，让 SDK 自行清理 WebGL/WASM 相关上下文。没有执行 GPU Profiler 前不可宣称内存释放量。
+```text
+用户操作 / 本地审核结果
+  → React phase（idle | pending | success | error）
+  → riveRuntimePolicy → mount / play
+  → useRive 管理加载、canvas、resize
+  → WASM 解析 .riv → Artboard → State Machine → Renderer
+  → WebGL2 只是视觉；旁边的 button 和 status 才是业务
+```
 
-主实现：`examples/example.tsx`，静态资源信息在 `examples/asset.ts`，引导入口在 `examples/demo.tsx`，局部样式在 `examples/styles.css`。代码查看器读取实际这四个文件。
+不要从状态机当前帧反推审核是否成功。
 
-## 2026 API 更新必须注意
+## 版本与 API 边界
 
-官方 2026-08-31 更新将旧 `stateMachines`（复数）与 `useStateMachineInput` 标为弃用；当前新代码使用单数 `stateMachine`。有 View Model/Data Binding 的正式动画，优先使用新绑定 Hook，但它要求资产确实含对应字段，不能借官方车辆样本假装实现一个不存在的 `health` 参数。这里仅控制现有官方状态机播放，不虚构 View Model 资产。
+| 项 | Lab |
+| --- | --- |
+| 包 | `@rive-app/react-webgl2@4.37.0` |
+| 渲染路线 | 文档首选 WebGL2。`react-canvas` 与 `react-canvas-lite` 效果不同，本条目不混用 |
+| 状态机属性 | 新代码用单数 `stateMachine`。复数 `stateMachines` 与 `useStateMachineInput` 在 2026-08 前后的运行时更新里已弃用 |
+| 数据绑定 | 新设计用 View Model hooks。Lab 示例没有对应资产，所以不调用 |
+| GPU Canvas | `enableGPUCanvas` 与 `useOffscreenRenderer: true` 冲突。本示例选择离屏渲染器，不打开 GPU Canvas |
+| 文本输入 | 运行时开始有早期 Focus / Text Input。这不等于中文 IME、候选框和移动光标已经等同原生 `<input>` |
 
-Rive runtime 是 MIT，但动画资源、美术模板、导出服务或其他产品订阅不必然同为 MIT。无拥有权的 .riv 只能作已授权引用，不能拷入 npm 发行包。
+4.37.0 引入 `enableInkbleed`。本示例不启用用不上的特性。
 
-## 五个反模式
+## 三层渐进
 
-1. 把旧复数 `stateMachines` 照搬进新版本，忽略弃用和实际动画名字；
-2. 没有非零尺寸的 div，渲染黑屏时误判 SDK 装错；
-3. 将 Canvas 动效当成唯一状态反馈：屏幕阅读器和网络错误路径不能依赖帧；
-4. 页面隐藏和减动效开启时仍让 WASM/WebGL 持续运行；
-5. 用户连续触发异步业务时旧结果覆盖新状态，或组件卸载后继续 setState；
-6. 把 CDN 资产引用当成可合法重分发的文件，把运行时 MIT 误读为资产 MIT。
+### Demo ① 播放器（已挂载）
 
-## 使用建议
+打开 basic：可见且未减少动画、未手动暂停时，策略要求播放。容器在 `styles.css` 里必须有确定宽高。高度为 0 时会白块且没有明显异常。网络失败时 status 保留「资源/渲染失败」或初始说明，按钮仍可点。
 
-大列表先评估只挂载视口内实例与 OffscreenRenderer 的影响。React 组件返回的 RiveComponent 需要完整生命周期，不要把同一个 Canvas DOM 随意搬到不同宿主。切换示例后应触发真正 unmount；动态导入本身不负责 GPU 清理。图形支持高保真动效，但复杂状态仍必须有符合语义的 HTML 按钮、文本、键盘及读屏替代。
+最小形态是官方 `<Rive src stateMachine autoplay />`。Lab 不用这个无钩子组件，因为播放必须随可见性和减少动画变化。用 `key` 强迫重建简单组件可以换源，但会反复申请上下文；这里用 `useRive` 的 `play()` / `pause()`。
 
-## 真实验收路线
+### Demo ② 审核（已挂载的本地状态机；视觉状态机未绑定）
 
-1. PLATFORM 核对 npm 正式版本和 React19 peer，统一写入 package/lock；
-2. 在可用网络检查官方 .riv 请求、MIME 与 CSP，运行 `pnpm --filter @reactloom/library-lab typecheck` / `build`；
-3. Playwright + 实机：播放暂停、503与取消、快速重复启动、隐藏Tab、reduce-motion、视口退出重新进入、StrictMode双挂载、WebGL资源释放和移动端兼容；
-4. 源码指纹与真正 SDK/browser 日志匹配后，才更新 `verification.json` 中相应 PASS。
+「启动 / 重试审核」约 450ms 后成功，或在勾选「下次模拟 503」后失败。连续点击会 abort 上一次。取消把 phase 打回 idle，并作废 generation。播放只在 pending 且允许动画时发生。成功文案写明：HTML 呈现业务，Rive 不决定任务成功。
 
-## 官方一手资料
+要把 approved/failed 画进文件里，设计器必须提供 `status` 或 `progress` 的 View Model，再按下一节绑定。当前远程样本做不到这一点。
 
-- [React runtime 官方指南](https://rive.app/docs/runtimes/react/react)
-- [2026-08-31 Runtime更新](https://community.rive.app/c/announcements/rive-runtime-updates-august-31-2026)
-- [React Runtime MIT仓库](https://github.com/rive-app/rive-react)
-- [状态机概念](https://rive.app/docs/runtimes/react/state-machines)
+### Demo ③ 视口与生命周期（已挂载）
 
-### wave17：后台GPU与场景取消
+滚出卡片：占位文案说明组件已卸载。回到视口再加载。页面进后台同样卸载，而不是在后台继续刷帧。手动暂停和减少动画留下静态播放器（若仍挂载）。不要把「一个实例的策略测试」说成一百个实例的性能证明。
 
-`examples/runtime-policy.ts` 统一挂载和播放判定：后台页面**卸载**Rive播放器（不是仅设 `play=false`），高级场景脱离视口也卸载；可见但减少动画或手动暂停时保留静态实例并停止播放。场景切换会取消正在执行的本地业务计时器，代次拦截旧任务回写。播放器卸载时由官方`useRive`运行时释放WebGL2资源，是否真正释放GPU/WASM需Chromium和目标SDK实测。
+## 现代数据绑定（生产教学，当前 demo 不挂载）
+
+新文件约定应写成契约，而不是散落的字符串：
+
+```text
+artboard: DemoArtboard
+stateMachine: State Machine 1
+viewModel: HealthModel
+viewModelInstance: HealthModelDefault
+property: health（number，0..100）
+```
+
+```tsx
+import {useRive, useViewModelInstanceNumber} from '@rive-app/react-webgl2';
+
+const {rive, RiveComponent} = useRive({
+  src: '/health.riv',
+  stateMachine: 'State Machine 1',
+  autoBind: true,
+  autoplay: false,
+});
+const {setValue} = useViewModelInstanceNumber('health', rive?.viewModelInstance);
+```
+
+`/health.riv` 不是本仓库文件。`autoBind` 不会猜一个不存在的 View Model 名字。hooks 往往在装载后才写入属性，第一帧可能仍是设计器默认值。隐私、金额、权限这类初值不要靠动画遮住闪烁。官方有 `onRiveReady` 可在初帧前绑定，必须对着真实 schema 测。
+
+自有资产的发布步骤：确认当期计划允许导出；固定内容哈希和属性名；放到受控地址；CSP 与主机白名单限制来源；404 和跨域时显示非动画兜底。不要把用户输入拼进 CDN 路径。
+
+## 反例
+
+| 错误 | 后果 | 正确 |
+| --- | --- | --- |
+| `stateMachines: 'bumpy'` | 弃用警告，后续升级风险 | 单数 `stateMachine: 'bumpy'`，与 `asset.ts` 一致 |
+| 新代码继续 `useStateMachineInput('progress')` | 弱类型旧接口 | 设计器建 View Model，再用对应 hook |
+| 渲染期间 `new Rive()` | StrictMode 下重复创建 | `useRive`；命令式只在 effect 里 new，并在 cleanup `cleanup()` |
+| 包装器里再 `rive.cleanup()` | 双重释放 | 卸载子组件即可。Lab 的 `RivePlayer` 就是这样做的 |
+| 外层没有高度 | 空白且无异常 | 明确宽高，resize 交给包装器 |
+| 用帧事件决定付款成功 | 资源没加载就被当成失败或成功 | reducer / 服务器结果 + 可读 status |
+| 每行一个 WebGL2 context | context 上限和掉帧 | 按需挂载；多实例优先考虑 `useOffscreenRenderer: true`；列表用静态缩略图 |
+| `enableGPUCanvas` 同时 `useOffscreenRenderer: true` | 官方说明不渲染 | 要 GPU Canvas 时显式关闭离屏渲染并实测 |
+| 动画代替按钮和错误文案 | 键盘和读屏不知道结果 | 原生 button、`aria-live`、Canvas 仅装饰 |
+| 把 MIT 理解成可提交官方 `.riv` | 运行时和素材授权混淆 | 远程 URL 保持远程；自有文件单独授权后再入库 |
+
+系统 `prefers-reduced-motion` 时不要自动播放。后台标签页要释放或至少暂停。Lab 选择释放。加载失败必须有文字，不能只剩一块画布。
+
+## 可访问性与输入
+
+2026 年运行时的 Focus / Text Input 仍是早期能力。表单继续用 HTML：label、错误说明、提交按钮。拼音 `compositionstart/update/end`、移动候选框、语音输入、Tab 顺序都不要假设与原生 input 等价。装饰画布 `aria-hidden="true"`。若画布本身必须可操作，就要另做 DOM 替代，不能一边隐藏一边指望它承载唯一信息。
+
+触摸目标放在 DOM 上。Canvas 指针只留给真正属于场景的交互。CSS 尺寸不等于绘图缓冲尺寸。横竖屏要看裁切。
+
+## 性能、CSP 与故障
+
+| 现象 | 处理 |
+| --- | --- |
+| 空白 | 看 `.riv` 是否 200、WASM、CORS/CSP、WebGL2、状态机拼写、容器高度 |
+| 路由离开后仍占显存 | 包装器是否卸载；手写 `new Rive` 是否 `cleanup()`；观察器是否还在 |
+| GPU Canvas 不出画 | 与离屏渲染器互斥 |
+| 离线 | 不注入不受控脚本；HTML 状态仍可用。不要把官方样本下载进仓库来「修复」离线 |
+| CSP | WASM 可能需要 `wasm-unsafe-eval`；`connect-src` 只放行需要的主机。不要无边界放开 `unsafe-eval` |
+| SSR | 运行时放客户端边界。服务端输出标题和状态文本。本示例是 Vite 浏览器入口，没有做 Next.js 水合验收 |
+
+WASM 解码、每帧渲染和 context 数量都要在目标设备上测。本文不写虚构的 FPS 或包体。
+
+## 组合（未安装、未挂载）
+
+**TanStack Query**：缓存、失效、取消归 Query。Rive 只读 `isPending` / `isError` / `data.status`。动画卸载不能让业务状态消失。不要用动画当交易凭证。示意里的 `/authorized/review.riv` 必须是你自己的契约文件。
+
+**React Aria / Radix**：菜单和 Dialog 的焦点、键盘、Portal 归无头组件。Rive 画打开后的插画。关闭时卸载播放器，焦点回到触发器。减少动画时停播。Canvas 不要截走 Tab。
+
+**Zustand**：可以保存审核 phase 和任务 id。不要把 WebGL 实例放进全局 store 当状态容器。跨页面共用文件必须由设计器维护兼容的 View Model。
+
+| 方案 | 强项 | 不用的时候 |
+| --- | --- | --- |
+| Rive | 状态机 + 数据绑定 + 多端同素材 | 简单 CSS、真表单 |
+| dotLottie | 时间轴资产 | 交互主要在 JS 里重写 |
+| Motion | DOM 过渡和 layout | 高保真角色 |
+| GSAP | 时间线 | 一个状态图标 |
+| CSS/SVG | 低依赖 | 设计交接很重时 |
+
+## 升级与练习
+
+练习 A：列出旧仓库的 `stateMachines` 和 `useStateMachineInput`，在设计器建立对应属性，改成单数 `stateMachine` 和 `useViewModelInstance*`。旧接口过渡期不要假装已经删除。验收：服务端错误仍然是文字；离开路由不再抛弃用警告。
+
+练习 B：先判断是否真的需要状态机。没有交互就继续用 B04。拿到合法导出后替换 URL，加入减少动画、HTML 兜底和延迟挂载。验收：下载失败有文字；重复进出不泄漏；小屏控件还在。不要为了练习把 `vehicles.riv` 提交进仓库。
+
+练习 C：为「新请求覆盖旧请求」补测试，取消后的失败不能回写。Lab 的 generation 已经是这个形状，浏览器侧仍要看按钮连点。
+
+## 更多失败模式
+
+容器有宽高仍可能空白：`stateMachine` 拼写成复数属性、WASM 被 CSP 拦住、或 `enableGPUCanvas` 与当前的 `useOffscreenRenderer: true` 同时打开。Lab 没有打开 GPU Canvas。排查顺序是网络面板里的 `.riv` 状态码、控制台里的 `onLoadError` 文案、然后才是 WebGL2 能力。不要把空白当成「文件不存在」后去把官方样本提交进 git。
+
+`onRiveReady` 适合在第一帧之前写入隐私或金额。那些值如果先显示成设计器默认值再跳变，用户会看到错误数字。没有自有文件时不要调用这个回调来「预热」`vehicles.riv`，因为公开样本没有对应的 View Model 属性。
+
+命令式路径只作为对照，当前组件树不要混进去：
+
+```tsx
+useEffect(() => {
+  const rive = new Rive({src: RIVE_SAMPLE_URL, canvas, autoplay: false});
+  return () => rive.cleanup();
+}, []);
+```
+
+这段与 `useRive` 二选一。包装器已经拥有实例时再 `cleanup()` 会双重释放。Lab 选择钩子，所以播放器卸载是唯一释放点。
+
+多个画布默认共享离屏渲染器，是为了少申请 WebGL context。这不是「一百个实例已经测过」的结论。表格行里应放静态图，需要时再挂一个 `RivePlayer`。隐藏页策略是卸载整棵子树，后台标签不应继续 `requestAnimationFrame`。
+
+中文输入即使运行时开始提供 Text Input，表单仍用原生 `<input>`。`compositionupdate` 期间不要把拼音写进 View Model 当作已提交文案。Lab 的审核按钮没有文本字段。
+
+CSP 上，WASM 可能要求脚本策略允许 `wasm-unsafe-eval`，`connect-src` 只加入 `https://cdn.rive.app` 这一条，而不是任意主机。自有文件改成同源后，把 CDN 从允许列表删掉。用户输入不能拼进 `src`。
+
+Editor 的免费档可以创作，但把 `.riv` 导出到产品里通常要当期付费计划。价格以 https://rive.app/pricing 当时页面为准，不要把某次博客里的月费写死成永久报价。运行时不收 royalty，也不因此获得官方 `vehicles.riv` 的再分发权。
+
+TanStack Query 组合时，`query.isPending` 可以驱动 `play`，但 `query.data.status` 的文字必须渲染在 `<output>` 里。示意资源 `/authorized/review.riv` 不在仓库中。React Aria 的 Dialog 关闭时卸载 `RivePlayer`，焦点回到触发按钮，Canvas 不要留在 Tab 顺序里。
+
+## 播放策略对照
+
+`riveRuntimePolicy` 把「要不要挂载」和「要不要 play」拆开。对照表如下，和测试一致：
+
+| 条件 | mount | play |
+| --- | --- | --- |
+| basic，页面可见，未减少动画，未手动暂停 | 是 | 是 |
+| 页面隐藏 | 否 | 否 |
+| advanced 且不在视口 | 否 | 否 |
+| 减少动画或手动暂停 | 是（若页面可见且在视口策略内） | 否 |
+| business 且 phase 不是 pending | 是 | 否 |
+| business 且 pending，其余允许 | 是 | 是 |
+
+策略返回 play 只表示调用 `rive.play()`。CDN 或 WASM 失败时画布可以是空的，status 必须解释原因。不要把 `play: true` 写成「用户已经看见车辆动画」。
+
+`RivePlayer` 在 `onLoadError` 里检查 `alive`。视口外卸载和网络失败可能重叠：组件已经离开，晚到的错误不能再 `setMessage`。播放 `try/catch` 同样遵守这个标记。手动暂停不卸载，只把 `play` 设为 false，这样恢复时不必重新下载；隐藏整页则卸载，避免后台继续占着 WebGL。这两条不要合成一个布尔。
+
+```tsx
+const runtime = riveRuntimePolicy({
+  level, pageVisible, inView, reducedMotion: reduced, manuallyPaused, phase,
+});
+const shouldMount = runtime.mount;
+const playing = runtime.play;
+```
+
+示例把这两个布尔交给子组件：不挂载时显示占位文案，挂载但不播放时留下静止画布。占位文案区分「视口外」和「页面在后台」。
+
+业务 phase 的合法迁移只有：idle → pending → success 或 error，以及 pending → idle（取消）。success 不会因为动画停了变回 idle。切换 level 的 effect 把 phase 打回 idle 并 abort，所以从 business 切到 basic 时，不应再弹出上一次的 503 文案。
+
+## 资源与离线阻断
+
+`examples/asset.ts` 把 URL 和状态机名字分成两个常量，播放器只引用常量。换自有文件时改这两个常量，并保证状态机名字在新文件里真实存在。不要复制 `vehicles.riv` 到 `examples/` 或 `public/` 再改 URL 为相对路径。那样做会把官方二进制放进版本库。
+
+离线时 `onLoadError` 走文案分支，按钮和 `role="status"` 仍在。advanced 若同时在视口外，组件根本不挂载，失败回调也不应再 `setMessage`。`alive` ref 就是为了这条竞态。本地审核的 503 与资源加载失败是两句不同的话，不要合并成一个「失败」。
+
+发布自有文件的最小清单：导出权、内容哈希、artboard 名、状态机名、View Model 属性类型和范围、CSP 主机、404 时的 HTML 兜底。缺任何一项就不要把播放器当成业务成功的证据。
+
+## 验收
+
+basic：手动暂停后策略为挂载但不播放；恢复后在减少动画关闭且页面可见时请求播放。business：503 勾选只影响下一次本地任务；取消后 status 说明旧任务不得回写。advanced：视口外和后台都是未挂载。CDN 失败时三段文字都还在。
+
+`verification.json` 的 sdk、build、browser 为 NOT_RUN。`docs/library-lab/evidence/runs/` 没有匹配 receipt 时，policy 测试不是 Rive SDK PASS，也不是 WebGL PASS。Actions run `41779873259` 是仓库级 install、typecheck、build、52 个 SDK 文件 / 153 项测试、45 个 Playwright，不是 B05 的 PASS。
+
+```bash
+node --experimental-strip-types --test packages/library-lab/entries/B05-rive-react/tests/runtime-policy.test.mts
+```
+
+断言：basic 默认可挂载并播放；隐藏页 mount 与 play 都为 false；advanced 视口外不分配；减少动画和手动暂停保持挂载但停播；business 仅 pending 播放。不证明 `useRive` 加载了远程文件。
+
+## 官方资料
+
+- https://rive.app/docs/runtimes/react/react
+- https://rive.app/docs/runtimes/react/parameters-and-return-values
+- https://rive.app/docs/runtimes/react/state-machines
+- https://rive.app/docs/runtimes/react/data-binding
+- https://github.com/rive-app/rive-react
+- https://github.com/rive-app/rive-react/releases/tag/v4.37.0
+- https://www.npmjs.com/package/@rive-app/react-webgl2
+- https://rive.app/pricing
+- https://rive.app/blog/rive-s-new-9-mo-plan

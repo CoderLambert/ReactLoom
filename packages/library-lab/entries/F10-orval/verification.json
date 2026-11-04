@@ -4,8 +4,8 @@
     "note": "Orval 8.44.0 真实 CLI及双次生成/TS产物未执行；Node 22.16.0 当前不满足 >=22.18。仅独立 Node output-policy.test.mjs 6 PASS (policy only; not target SDK)."
   },
   "build": {
-    "status": "BLOCKED",
-    "note": "PLATFORM需提供Node>=22.18、依赖锁、tsc与生产构建证据；本轮未执行。"
+    "status": "NOT_RUN",
+    "note": "根 pnpm-lock.yaml 已包含 Library Lab importer，声明的包可以被冻结安装解析。Actions run 41779873259 的仓库级 typecheck/build 不是本条目的 evidence/runs 收据，所以这里是 NOT_RUN，不是 PASS。"
   },
   "browser": {
     "status": "NOT_RUN",

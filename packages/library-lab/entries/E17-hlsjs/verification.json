@@ -4,8 +4,8 @@
     "note": "未实际安装执行对应第三方SDK；wave16修改源码，目标SDK/完整构建/浏览器未执行，状态保持。"
   },
   "build": {
-    "status": "BLOCKED",
-    "note": "公共锁文件及真实bundle尚待PLATFORM在可用网络环境核验；wave16修改源码，目标SDK/完整构建/浏览器未执行，状态保持。"
+    "status": "NOT_RUN",
+    "note": "根 pnpm-lock.yaml 已包含 Library Lab importer，声明的包可以被冻结安装解析。Actions run 41779873259 的仓库级 typecheck/build 不是本条目的 evidence/runs 收据，所以这里是 NOT_RUN，不是 PASS。"
   },
   "browser": {
     "status": "NOT_RUN",

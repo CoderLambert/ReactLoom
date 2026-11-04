@@ -1,23 +1,43 @@
-# D03 p-limit — Agent 实施手册
+# D03 p-limit — 工程手册
 
-解决同时运行的 Promise 数量，不解决每秒速率、自动重试或线程池。基线 p-limit 7.3.3 / MIT；Node v7 系列需20+。核对目标项目环境与锁文件，不直接升全仓依赖。
+## 适用
 
-先读 `examples/example.tsx`：可迁移核心是 `limit(() => work())`、逐项结算、AbortSignal 与 generation。React 界面只是状态展示，目标项目可提取为框架无关 service。
+限制同时运行的 Promise 数量。不负责 QPS、重试、去重、缓存或 Worker。更复杂的队列看 p-queue。
 
-必须保留：在 limiter 回调内启动工作；一批或一个共享服务只拥有预期的 limiter；真实工作监听 signal；卸载/新批次后旧回调不得回写；结果部分失败使用 allSettled 或明确事务策略。
+## 版本
 
-禁止：先启动所有 fetch 再包装；把 activeCount 保存后当队列事实；把 clearQueue 当作正在运行任务的 abort；假设 async CPU 工作已离开主线程；一次创建无限排队任务。
+`p-limit@7.3.3`，MIT。使用 `pLimit({ concurrency, rejectOnClear: true })`。
 
-运行：`pnpm --filter @reactloom/library-lab test:sdk`、`typecheck`、`build`。SDK 测试断言实际最大并发、返回顺序与拒绝；浏览器再测开始/取消/卸载，尤其确认 rejectOnClear=true 下 queued Promise 能结算且没有旧结果回写。可 mock 业务延迟，不能 mock p-limit 后算 SDK PASS。
+## 迁移
 
-当前依赖安装 DNS BLOCKED，SDK 与浏览器 NOT_RUN。相关库 D04 p-queue 用于更复杂队列需求，D18 Comlink 用于 Worker 通信但并不替代调度。
+带走 `examples/example.tsx` 的批次所有权和 `examples/job-policy.mjs`。在 limiter 回调里启动真正的工作，并把 AbortSignal 传进去。换成真实请求时不要保留本地 `pause`。
 
-官方：https://github.com/sindresorhus/p-limit
+## 不可删的清理
 
-## 定向实际 SDK 检查
+取消和卸载：先 abort 运行中的信号，再 `clearQueue()`。level、租户或批次变化时增加 generation，旧回调直接返回。`transitionJob` 禁止终态回到 running。一个界面批次不要共用别人的 limiter。
 
-`node --test packages/library-lab/entries/D03-p-limit/tests/sdk.test.mjs`：真实 `p-limit` 上限、clearQueue 的 queued AbortError 结算，以及 running 使用单独 AbortSignal 的边界。浏览器仍须验证任务取消后旧结果不回写；不能凭 Node 测试通过宣称 React 生命周期验收。
+## 反例
 
-## 第22轮终态/层级切换迁移
+- 先 `fetch` 再包 limit。
+- 认为 `clearQueue` 会停掉已经在跑的任务。
+- 关掉 `rejectOnClear`，队列 Promise 不结算。
+- 把 `activeCount` 存起来当事实来源。
+- 一次排进无限任务。
+- 在 limit 内部吞错，外面却以为全部成功。
+- mock 掉 p-limit 再写 SDK PASS。
 
-同时迁移实际 import 的 `examples/job-policy.mjs` 和 `.d.mts`。使用 `transitionJob` 防迟到回调让 cancelled/done/error 回到 running；使用 `cancelUnsettledJobs` 保留已完成条目。level/组件会话变化必须 abort + `clearQueue` + generation，旧 Promise 不可回写新视图。该 UI 策略只是状态呈现，不会自动中止真实 Fetch；实际业务必须传递 AbortSignal。单测纯策略与真实 SDK 分别报告。
+## 测试断言
+
+- 并发 2 时峰值 active 为 2，结果顺序与输入下标一致，结束后 active 和 pending 为 0。
+- `clearQueue` 后排队任务是 AbortError，且那些函数没有开始。
+- 运行中的任务只在自己的 signal 上取消。
+- UI：取消后没有 queued 或 running；切换 level 后旧状态不可写。
+- 浏览器按钮和 Node 套件分开记账。
+
+## 真实限制
+
+示例没有网络。客户端并发限制不是 SSRF 防护，也不是速率限制。`activeCount` 只在读取的那一刻有效。
+
+## 证据
+
+没有收据不要写 PASS。DNS 或锁文件不再是阻塞理由；缺的是本条目的执行收据。

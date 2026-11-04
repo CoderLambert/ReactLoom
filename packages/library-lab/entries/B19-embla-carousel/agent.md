@@ -1,32 +1,47 @@
-# B19 Embla Carousel — Agent 工程接入指引
+# B19 Embla Carousel
 
-## 场景判断
+## 适用
 
-需要可滑动的连续卡片、惯性和 snap 时选择 Embla；若只是静态横向列表可考虑原生 scroll-snap。拖放排序应使用 B13 dnd-kit。版本固定 embla-carousel-react 8.6.0；v9 RC 的 goToNext/goToPrev 不能套到 v8。
+小规模横向卡片需要拖动和按钮时用 v8 `useEmblaCarousel`。万行列表、画布和单张静态图不要用。引擎不提供皮肤、数据和自动的圆点。
 
-## 最小迁移路径
+## 版本
 
-先读 library.json、examples/example.tsx、guide.md、verification.json。引用 viewport ref、flex container/slide 结构和 useEmblaCarousel。替换 originals 为目标业务的稳定 ID 数据；保留按内容更新的 reInit 和事件对称解绑。
+`embla-carousel-react@8.6.0`，React 19.3.0。许可证 MIT。方法名保持 `scrollNext` / `scrollPrev` / `scrollTo` / `reInit` / `scrollSnapList`。不要写入 v9 的 `goToNext`。不要添加未在 `library.json` 声明的 autoplay 包。
 
-## 不能删除的机制
+## 迁移
 
-- useEffect(on select/reInit) 和返回 cleanup off，同函数引用。
-- Hook 拥有创建与销毁；卸载时不用手动 destroy。
-- 父 viewport overflow:hidden，slide min-width:0，手势允许 pan-y。
-- 导航按钮放在拖动容器外，disabled 取自 SDK canScrollPrev/Next。
-- 不做默认自动播放；新增自动播放时提供暂停、reduced-motion/可访问性策略。
+从 v9 示例回退到本锁时替换方法名，并把 ref 放回 viewport。自建 `setInterval` 不要代替官方插件。圆点按 snap 列表生成，不按卡片数组。
 
-## 必测
+## 不可删的清理
 
-真实 v8 API 安装与编译；滚动选中索引、增删后 snap 边界、loop 重置、触摸与页面纵向滚动、键盘导航、卸载释放 observer 与监听。当前SDK/build/browser NOT_RUN；不能仅凭源码生成标记 PASS。
+`select` 与 `reInit` 用同一函数 `off`。卡片变化后 `reInit`。复位用代数触发 `scrollTo(0, true)`。减少动画时 jump。键盘只在 viewport 持焦且 canScroll 允许时触发。id 经 `allocateSlideId`，不复用。`touch-action` 保留纵向平移。
 
-官方：https://www.embla-carousel.com/docs/v8/get-started/react
+## 反例
 
+ref 挂在轨道上。把 snap 序号当卡片下标。监听不解除。删除后复用 id。window 级方向键。v9 API。未声明的自动播放定时器。和 Motion 同时平移轨道。
 
-### 第10轮异步渲染与身份
+复用时保留这些不变的约定：
 
-`setSlides` 后不能立即依据旧DOM调用 `scrollTo`；通过一次性resetEpoch在布局提交后 `reInit + scrollTo`。动态列表变化用ID签名而非仅数组长度；新ID采用单调分配，snap index使用真实 `scrollSnapList().length` clamp。卸载释放真实 Embla instance 和事件订阅。检查同长度替换、删除末尾选中项、重置、之后再次追加卡片以及窄屏loop，不得将Node纯逻辑测试误认为触控SDK通过。
+- 只用 v8：`scrollNext`、`scrollPrev`、`reInit`、`scrollSnapList`。
+- ref 在 overflow hidden 的 viewport 上。
+- snap 序号不等于卡片下标；`trimSnaps` 已打开。
+- 监听用同一函数引用 `off`；id 不复用。
+- 不添加未声明的 autoplay 包，也不写 setInterval。
 
-## wave21 迁移断言
+## 测试断言
 
-保留carouselArrow键盘边界策略、聚焦region和每张slide的group/幻灯片信息。只在viewport自身收到左右箭头时调`emblaApi.scrollPrev(reducedMotion)`或`scrollNext(reducedMotion)`；禁止捕获嵌套控件的事件。真实snap数量和卡片数量分别显示。系统减少动画监听要在卸载时解除，SDK/浏览器仍NOT_RUN。
+`tests/slide-policy.test.mts` 断言 `boundedSnap`、`carouselArrow` 的焦点条件、id 单调且不复用。不证明引擎测量或循环拖动。
+
+## 真实限制
+
+已挂载：start 对齐、trimSnaps、advanced 循环、增删上限 24、按钮和 viewport 键盘、减少动画跳转。未挂载：Autoplay、圆点、slidesInView、HTTP、断点配置。
+
+复用检查：
+
+- 版本以该条目 `library.json` 为准，不跟研究稿里的 Vite 脚本或 workshop 目录。
+- 未挂载的生产模式留在 `guide.md`，不补进 `examples/`。
+- 不修改 `verification.json`。没有匹配 receipt 时 sdk、build、browser 保持 NOT_RUN。
+
+## 证据
+
+sdk、build、browser 为 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有匹配 receipt。Actions run `41779873259` 是仓库级检查，不是本条目 PASS。文档：https://www.embla-carousel.com/docs/v8/get-started/react

@@ -1,10 +1,12 @@
 # ReactLoom Library Lab — CD 进度（43 项）
 
+> 2026-11-04：本文件是合并前的通道日志。PR #8 已合并。锁文件已有 Lab importer。Actions run 41779873259 是仓库级 install / typecheck / build / 52 SDK 文件（153）/ 45 Playwright，不是 43 条 CD 收据。下文「PR #8 仍为 Draft」和「DNS / 未安装所以全部 NOT_RUN」只属于当时那一轮。
+
 ## 恢复与分支
 
-- Issue #6、主 Epic #4，目标集成分支 feat/library-lab。前一批 PR #10 **已合入**，本批从最新集成提交 df4674d501bac029f8529ff940ba9b8c8707347c 新建 feat/library-lab-cd-wave2，避免在旧已合并分支继续开发。
-- 最新累计 runCount：**18 / 24**（下方旧小节数字均为历史记录；以末尾最新批次为准）；仅写 entries/C*、entries/D* 及此进度文件。公共 package/lockfile/CI/生成器由 PLATFORM 独占。
-- 本轮 Git commit / PR 见本通道新 PR；用户的主 PR #8 仍为 Draft，不写 main。
+- Issue #6、主 Epic #4。前一批 PR #10 **已合入**。下列分支和 runCount 是历史。
+- 最新累计 runCount：**18 / 24**（下方旧小节数字均为历史记录；以末尾最新批次为准）；当时只写 entries/C*、entries/D* 及此进度文件。
+- 写这些段落时主 PR #8 仍为 Draft。该句不是 2026-11-04 的 main。
 
 ## 本轮新增 4 个完整垂直条目
 

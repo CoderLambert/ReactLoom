@@ -1,38 +1,46 @@
-# A09 · Excalidraw — Agent 工程迁移卡
+# A09 Excalidraw — 工程手册
 
-**任务定位**：自由草图、产品共创、RSS/流程可视化评审。**不适用**：超大关系图计算、严格节点业务拓扑、全自动流程执行。先比较 A06 React Flow 与 A08 Mermaid。
+## 适用
 
-## 首先核对
+`@excalidraw/excalidraw@0.18.1` 做手绘白板。可执行节点用 A06，文本流程用 A08，可编程无限画布先核对 A10 的许可证。不要把箭头当成工作流引擎，也不要用 0.18.0。
 
-- 版本：`@excalidraw/excalidraw@0.18.1`，与目标 React/Vite/SSR/浏览器能力核对 peer 和构建。
-- 源码：`examples/example.tsx`、`examples/styles.css`；适配入口 `examples/demo.tsx`。网站代码面板来自同一文件。
-- 验证：`verification.json`，无 SDK/浏览器 PASS 证据时，不能按生产可靠性引用。
-- 资产：代码 MIT ≠ 图片、字体和品牌素材已授权；需要自托管时遵循官方字体目录说明。
+## 版本
 
-## 迁移最小模式
+钉 0.18.1，MIT 嵌入包。必须导入 `index.css`。容器高度非零。`langCode="zh-CN"`，`autoFocus={false}`，`handleKeyboardGlobally={false}`。字体自托管不是当前示例的实现，生产要在模块加载前设置 `EXCALIDRAW_ASSET_PATH`。
 
-1. 客户端懒加载 Excalidraw + CSS，父容器必须有尺寸。
-2. 使用 `convertToExcalidrawElements` 形成初始场景，之后通过 `excalidrawAPI.updateScene` 更新。
-3. `handleKeyboardGlobally={false}`、`autoFocus={false}` 避免嵌入组件抢占整个产品键盘和焦点。
-4. 原始 scene 数据归业务文档层，编辑器渲染状态归 SDK；异步保存需分代校验，避免覆盖用户新编辑。
-5. 文件导入限制体积、元素数、安全链接与附件；生产另审访问控制、存储 schema 和协作策略。
-6. 导入/导出使用递增 operationId 隔离异步结果：重置场景、重新加载模板、显式忽略结果或卸载时使旧结果失效。底层 loadFromBlob/exportToBlob 未提供信号取消，不得声称已中止底层运算。
-7. 卸载释放 Blob URL、回收计时器（包括延后URL释放任务）和本组件资源，不全局清缓存。
+## 迁移
 
-## 禁止的常见反模式
+删掉 `readyPromise` 和把 API 当作 ref 的写法，只留 `excalidrawAPI`。`initialData` 只在挂载时生效；换场景用 `updateScene` 或更换组件 key。远程更新选择 `captureUpdate`，避免全部进入本地撤销栈。安全补丁低于 0.18.1 的版本不要留。
 
-- 绘制每次改变就立刻同步保存全量大 JSON；
-- 直接改变 `initialData` 期待挂载实例自动更新；
-- 把 PNG 当唯一可编辑源文档；
-- 不隔离本地 Excalidraw 快捷键、字体远程请求；
-- 将静态源码完整性或旧归档 PASS 写成当前 SDK/浏览器 PASS。
+## 不可删的清理
 
-## 必要断言
+卸载时递增 `operationId`、清空 API ref、撤销 Blob URL、清除下载和防抖定时器。导入和导出完成时比对代数、挂载标志和 API 身份，不一致就丢弃结果。`onLinkOpen` 拒绝非 https 或带凭据的链接。
 
-画布高度非零、真实绘图和编辑、API 更新、限制导入/阻止危险链接、PNG 下载、只读不允许修改、Escape/Tab 焦点不污染外部页面、切换 Tab 无旧回调/Blob URL 残留。按库版本跑真正类型检查与 Chromium，记录源码指纹和日志。
+## 反例
 
-**官方**：https://docs.excalidraw.com/docs/@excalidraw/excalidraw/installation
+```tsx
+<Excalidraw initialData={{ elements }} onChange={setElements} /> // 错：把初始值当受控源
+// 对：onChange 只更新 ref 或防抖计数；更换场景调用 updateScene
+```
 
-### wave17 导入规则
+高度为 0、持久化整份 appState、每个指针事件 PUT、导入不限制大小，都不要做。
 
-迁移必须同时复制 `examples/scene-policy.ts`。所有不可信文件在 SDK 解码前检查后缀/字节，在恢复后检查元素/附件/HTTPS链接；用户点击链接同样走 `isSafeSceneLink`。不要把Node纯策略测试认作Excalidraw官方SDK/浏览器安全审计。
+## 测试断言
+
+`sceneImportError` 拒绝错误扩展名、空文件、超过 1.5 MB、超过 200 元素、不安全链接和任何附件。`isSafeSceneLink` 只接受无用户信息的 https。SDK 收据还要看到真实 `Excalidraw`、`convertToExcalidrawElements`、`exportToBlob` 和 `loadFromBlob`。没有 runs 收据则为 NOT_RUN。
+
+## 真实限制
+
+没有服务器 revision。只读只是 `viewModeEnabled`。教学导入不接受图片附件。宿主若不重挂载，`initialData` 不会随 level 更新。PNG 上限 2048，不是视口保证。没有协作和 FPS 数字。
+
+## 断言边界
+
+`tests/scene-policy.test.mts` 不打开编辑器。SDK 用例要导入 `Excalidraw`、`convertToExcalidrawElements`、`exportToBlob` 和 `loadFromBlob`。空场景不导出。代数变化后的导入不得 `updateScene`。缺收据时保持 NOT_RUN。`initialData` 不是受控值；宿主不重挂载时要用 `updateScene`。版本保持 0.18.1 或更高修复版。
+
+## 证据
+
+Actions `41779873259` 的仓库级 install、typecheck、build、52 SDK 文件（153 测试）和 45 Playwright 不是 A09 PASS。不要把导入策略测试或历史研究 PASS 写入 `verification.json`。
+
+对照 `library.json` 的版本编写 import，不要升到条目未钉死的版本。
+`tests/` 中的策略用例不能改写成 sdk 字段的 PASS。
+浏览器与构建未留下收据时，对应字段维持 NOT_RUN。

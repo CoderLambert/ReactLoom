@@ -3,39 +3,79 @@ import CatalogSearch from '../components/catalog-search'
 import { GROUPS } from '../lib/catalog.mjs'
 import { useCatalog } from '../lib/catalog-context'
 import { filterCatalogIndex } from '../lib/catalog-index.mjs'
+import type { CatalogEntry } from '../lib/types'
+
+function sourceCompleteCount(entries: CatalogEntry[]) {
+  return entries.filter((entry) => entry.contentState !== 'missing').length
+}
+
+function reactMountableCount(entries: CatalogEntry[]) {
+  return entries.filter((entry) => entry.surfaces.includes('react')).length
+}
+
+function nodeCiOnlyCount(entries: CatalogEntry[]) {
+  return entries.filter((entry) => entry.surfaces.length === 1 && entry.surfaces[0] === 'node-ci')
+    .length
+}
+
+function frameCount(entries: CatalogEntry[]) {
+  return entries.filter((entry) => entry.surfaces.includes('browser-frame')).length
+}
+
+function receiptPassCount(entries: CatalogEntry[]) {
+  return entries.reduce((sum, entry) => sum + entry.receiptPasses, 0)
+}
+
+function cardState(entry: CatalogEntry) {
+  if (entry.surfaces.includes('react')) return '可挂载 React · 待收据'
+  if (entry.surfaces.includes('browser-frame')) return '独立画面 · 待收据'
+  if (entry.surfaces.includes('worker')) return 'Worker · 待收据'
+  if (entry.surfaces.includes('node-ci')) return '仅命令复现 · 页面不挂载'
+  return '待接入'
+}
+
 export default function Home() {
   const entries = useCatalog()
   const search = useSearch({ from: '/' })
   const navigate = useNavigate({ from: '/' })
   const filtered = filterCatalogIndex(entries, search.q, search.group, search.only === 'runnable')
-  const runnable = entries.filter((e) => e.hasDemo).length
+  const frames = frameCount(entries)
   return (
     <>
       <section className="hero">
-        <p className="eyebrow">FROM KNOWLEDGE TO WORKING CODE</p>
+        <p className="eyebrow">SOURCE, NOTES, THEN A RECEIPT</p>
         <h1>
-          前端工具，
+          前端工具库，
           <br />
-          <em>在这里真正用起来。</em>
+          <em>先读边界，再动手跑。</em>
         </h1>
         <p className="hero-copy">
-          从真实示例理解原理，用工程笔记掌握边界。让每一次实践，都成为开发者与 AI Agent
-          可以复用的知识。
+          这里的条目是源码和中文笔记。能在页面里挂载、只能复制命令、以及带当前收据的
+          PASS，是三件不同的事。仓库构建通过不会把某一条写成已验收。
         </p>
         <div className="stats">
           <div>
-            <strong>{entries.length}</strong>
-            <span>工具库条目</span>
+            <strong>{sourceCompleteCount(entries)}</strong>
+            <span>源码完整</span>
           </div>
           <div>
-            <strong>6</strong>
-            <span>工程领域</span>
+            <strong>{reactMountableCount(entries)}</strong>
+            <span>可挂载 React</span>
           </div>
           <div>
-            <strong>{runnable}</strong>
-            <span>已有示例</span>
+            <strong>{nodeCiOnlyCount(entries)}</strong>
+            <span>仅 Node 命令</span>
+          </div>
+          <div>
+            <strong>{receiptPassCount(entries)}</strong>
+            <span>收据 PASS</span>
           </div>
         </div>
+        <p className="hero-copy">
+          {frames > 0 ? `另有 ${frames} 个库只在独立画面中打开。` : null}
+          收据 PASS 只计 sdk、build、browser 在当前索引里仍为 PASS 的条数；没有 evidence/runs
+          收据时这里是 0。
+        </p>
       </section>
       <section aria-label="库目录">
         <div className="section-title">
@@ -87,7 +127,7 @@ export default function Home() {
                 })
               }
             />
-            仅看已有示例
+            仅看可在页面挂载
           </label>
         </div>
         <div className="cards">
@@ -108,7 +148,7 @@ export default function Home() {
               <h3>{entry.name}</h3>
               <p>{entry.summary}</p>
               <div className="card-bottom">
-                <span>{entry.hasDemo ? '示例已接入 · 待核验' : '待接入'}</span>
+                <span>{cardState(entry)}</span>
                 <small>{entry.contentState === 'missing' ? '资料待补' : '资料可读'}</small>
               </div>
             </Link>

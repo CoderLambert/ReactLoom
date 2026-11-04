@@ -1,6 +1,6 @@
 # Library Lab 审核整改（2026-10-28）
 
-本文件记录用户要求“全部修复”后的人工整改，取代继续扩充未经运行验收的条目。基线 `87ea2afe5957ba370f114f0acecb8cde1cd0c5eb`；唯一远端集成分支 `feat/library-lab`，主 PR #8 必须保持 Draft。**代码修复不是完整运行验收。** 不改 main、PR #3、模板、公开部署或计费配置。
+本文件记录合并前的审核整改，并说明这些修复在 main 上的位置。PR #8 已合并。**仓库级 CI 通过不是逐库收据。** 不要把 Library Lab 放进模板、公开部署或计费配置。
 
 ## 已实现的改动
 
@@ -16,7 +16,7 @@
 
 ## 本地运行入口和安全边界
 
-`pnpm --filter @reactloom/library-lab dev` 同时监听 `http://127.0.0.1:4319`（主站）与 `http://127.0.0.1:4320`（MSW runner）。`build` 构建两个产物，`preview` 启动两个预览服务器；只监听 loopback，不进行部署。独立端口是不同 origin，不是任意代码沙箱。
+`pnpm --filter @reactloom/library-lab dev` 同时监听 `http://127.0.0.1:4319`（主站）、`http://127.0.0.1:4320`（MSW runner）和 `http://127.0.0.1:4321`（C13 Gantt runner）。`build` 与 `preview` 一起提供这些 loopback 服务，不进行部署。独立端口是不同 origin，不是任意代码沙箱。
 
 F11 在原 Node 复现命令下增加“真实浏览器请求拦截”面板。每次显式启动生成 UUID scope `/lab-runners/msw/sessions/<uuid>/`。只有已注册 runner origin、对应 iframe Window、协议与 session 全匹配的消息才被接收。关闭先等待 stop/unregister ACK；超时标记“清理未确认”，不能当作卸载通过。`pagehide` 是尽力清理，不保证浏览器进程被强杀后立即删除 SW。不同会话不做全局存储/Worker 清空。
 
@@ -24,16 +24,20 @@ F11 在原 Node 复现命令下增加“真实浏览器请求拦截”面板。�
 
 ## 锁文件与验收
 
-现有根锁文件尚无可信的 Lab importer，本轮**没有手造锁文件或修改版本 pin**。CI 将“生成候选锁文件”与“接受构建”分开：候选 job 只能上传实际解析结果；runtime job 必须 `--frozen-lockfile`。没有锁文件时验收应失败，不可用 no-frozen 冒充恢复成功。
+main 的根 `pnpm-lock.yaml` 已有 `packages/library-lab` importer。Actions run [41779873259](https://github.com/CoderLambert/ReactLoom/actions/runs/41779873259) 用 `--frozen-lockfile` 完成安装，并跑过 typecheck、生产构建、52 个 SDK 文件（153 项）和 45 项 Playwright。`lock-candidate` 因锁已就绪而跳过。候选 job 仍然不能代替 runtime，也不许用 no-frozen 冒充验收。
 
-在能够访问 registry 的完整工作树、Node >=22.18 / pnpm10 环境中，运行既有受控入口：
+这次通过覆盖的是当时存在的套件，不是 119 个库。68 个条目没有 `sdk.test.mjs` 或 `node-scenarios.test.mjs`。Playwright 的 `@ID` 只覆盖少数条目。
+
+`create-reactloom` 不复制 Library Lab，模板清单里也没有它。根工作区的 `pnpm install` 仍会下载本包依赖。其中 `@ffmpeg/core@0.12.10` 是 GPL-2.0-or-later：`prepare-ffmpeg-core.mjs` 默认删除生成的 `public/ffmpeg-core/`，除非 `LIBRARY_LAB_FFMPEG_CORE_LICENSE_REVIEWED=true`。`xlsx` 解析到 `cdn.sheetjs.com` 上带 integrity 的 0.20.3 tarball；CDN 不可用时失败的是根安装，不只是 Lab。本 PR 不把包移出工作区。
+
+在 Node >=22.18 / pnpm 10 的完整工作树中，既有受控入口是：
 
 ```sh
-# 仓库根目录；分支必须为 feat/library-lab，已有 lock 编辑必须先协调
-pnpm verify:library --execute --resolve-lock --sdk --browser --setup-browser
+# 仓库根目录。锁文件已在 main 上，不要为了重跑而手改 integrity。
+pnpm verify:library --execute --sdk --browser --setup-browser
 ```
 
-审查真正生成的锁文件、依赖 peer/许可和日志后再提交。不能修改账单/权限来绕过授权，也不能删除原检查。这个命令是恢复入口，不是本轮已执行结果。
+`--resolve-lock` 只在确实要更新锁的分支上使用。审查 peer、许可和日志后再提交。不能修改账单或权限来绕过检查。上面的 Actions 运行是仓库级结果，不是这个命令在每个条目上的收据。
 
 需记录逐库可接受证据时，在干净的已提交输入上运行：
 
@@ -47,6 +51,6 @@ pnpm --filter @reactloom/library-lab verify:record --entry=F11 --kind=browser --
 
 ## 交付门槛和剩余队列
 
-先完成可信锁文件、干净冻结安装、完整类型/构建，再验收 A01/B17/C01/D03/E05/F11 六个风险切片，之后才扩大运行验收范围。119 目录、原文审核、源码完整条目、浏览器成功演示、SDK 通过分别计数；不修改 117 份原资料的审核口径，不伪造 E11/F05 原件。
+锁文件、冻结安装、类型检查和生产构建已经在上述 Actions 运行里发生过。下一步是给 A01、B17、C01、D03、E05、F11 写逐库收据，而不是再宣布环境不存在。119 个目录、源码完整、可挂载、Node 命令、浏览器收据和 SDK PASS 仍然分开计数。不伪造 E11/F05 的研究原件。
 
-本次实际验证范围与原始命令在 `evidence/repair-validation.md`。运行基线、完整生产构建和真实浏览器仍缺证据。原 Gantt/#40 和 PDF 相关风险不能凭本轮公共修复关闭。旧自动轮数保留 23/24，不创建新的 24 轮循环；历史进度原样归档，后续只汇报可运行结果或明确权限需求。
+`evidence/repair-validation.md` 记录的是整改当时的定向测试，不是这 119 条的收据。Gantt 和 PDF 的产品风险不能凭公共修复或仓库级 Playwright 关闭。进度档案里的 23/24 轮是历史，不要再开一轮去重复同一句「CI 还没跑」。

@@ -4,8 +4,8 @@
     "note": "CLI 示例/配置和原创fixture已写，但尚未执行真正Knip扫描；退出码受故意unused文件影响；新增真实CLI结构化验证脚本和纯Node解析测试，尚未运行目标Knip"
   },
   "build": {
-    "status": "BLOCKED",
-    "note": "共享依赖/锁文件尚待PLATFORM统一安装和真实构建"
+    "status": "NOT_RUN",
+    "note": "根 pnpm-lock.yaml 已包含 Library Lab importer，声明的包可以被冻结安装解析。Actions run 41779873259 的仓库级 typecheck/build 不是本条目的 evidence/runs 收据，所以这里是 NOT_RUN，不是 PASS。"
   },
   "browser": {
     "status": "NOT_RUN",

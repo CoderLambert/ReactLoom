@@ -1,8 +1,4 @@
 {
-  "content": {
-    "status": "PASS",
-    "note": "基于官网和API编写的真实Sonner调用和Agent文档"
-  },
   "sdk": {
     "status": "NOT_RUN",
     "note": "待集成安装 sonner@2.0.8"

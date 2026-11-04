@@ -1,30 +1,47 @@
-# A03 Chart.js — Agent 工程实现说明
+# A03 Chart.js — 工程手册
 
-目标库 chart.js 4.6.1，Canvas 绘图；适用于标准图表。若需要复杂地图、多个联动/大型仪表盘评估 A01 ECharts；需要 React SVG 直接声明评估 A02 Recharts。
+## 适用
 
-## 必须先读取
+`chart.js@4.6.1` 画有界的柱线统计。React 持有 revision 和选中下标，Chart 实例只在 effect 里存在。复杂联动仪表盘看 A01，声明式 SVG 看 A02，高密对齐时序看 A04。不要用包装器再包住已经 `new Chart` 的同一块 canvas。
 
-library.json → examples/example.tsx → guide.md → verification.json。运行、展示源是同一实际文件；demo.tsx 只做出口。本版本源码 recreated，未验证真实 SDK，不得继承历史 PASS。
+## 版本
 
-## 接入规则
+钉死 `chart.js@4.6.1`。研究稿里的 4.5.1 和 `react-chartjs-2@5.3.1` 都不是本条目依赖。类型随主包。只 `register` Bar/Line 用到的 controller、element、category/linear scale、Legend、Tooltip。不要改成 `chart.js/auto`，除非单独量过包体。
 
-- 从 chart.js 显式导入 Chart/对应 Controller/Element/Scale/Plugin，注册所需类型。
-- useRef 保存 Canvas 与 Chart 实例；useEffect 创建，返回 cleanup chart.destroy()。
-- 同一 Canvas 在旧 Chart 完成 destroy 前不得创建第二个实例。
-- 更新数据使用 chart.data + chart.update；重建仅用于图形类型或真正需要重配生命周期的场景。
-- 可视父节点有固定有效高度，Canvas 对应数据表必须可访问。
-- 数据校验区分真实业务缺失与数值零；不要静默篡改。
+## 迁移
+
+从 v2 迁出 `xAxes`、`horizontalBar` 和 bundle 脚本，改成 `scales.x/y`、`indexAxis` 和显式 `register`。若引入 react-chartjs-2，删除手写构造，并把系列身份放到 `datasetIdKey`，id 不随文案翻译。Lab 路径是原生构造：类型变化才 destroy/create，数字变化只 `update('none')`。
+
+## 不可删的清理
+
+创建 Chart 的 effect 必须 `return` 里 `chart.destroy()` 并清空 ref。自动采样的 `setInterval` 在隐藏页签、离开 advanced、revision 到 10000、卸载时清除。`visibilitychange` 监听成对移除。同一 canvas 在旧实例 destroy 完成前不能再 `new Chart`。
+
+## 反例
+
+```tsx
+// 错：render 里构造，数据一变就再来一次
+if (canvasRef.current) new Chart(canvasRef.current, { type: 'bar', data });
+// 对：effect 构造并 destroy；counts 变化时 chart.update('none')
+```
+
+未注册就 `type:'line'`、父容器高度为 0、把 canvas 下标当主键、用 0 填缺失、冻结 dataset 再开 decimation，都不要做。
 
 ## 测试断言
 
-真实 SDK import、typecheck/build、两类 controller 注册成功；按钮更新不重复创建 Chart；类型切换与 StrictMode 双挂载不抛 Canvas already in use；离开页面销毁；响应式尺寸和等价数据表；无异常输出。未运行填 NOT_RUN。
+策略测试只断言 `nextRevision` 停在 10000、`shouldAutoSample` 在非 advanced、隐藏或饱和时为 false、`chartCounts` 与 revision 同步。SDK 收据还要看到真实 `Chart` 构造、`update('none')`、`setActiveElements`、柱线切换不抛 already in use、卸载后 destroy。未拿到 `docs/library-lab/evidence/runs/` 收据就保持 NOT_RUN。
 
-官方：https://www.chartjs.org/docs/latest/getting-started/integration.html
+## 真实限制
 
-## 第13轮执行注意
+当前 demo 没有第二条 series、decimation、PNG、CSV、HTTP 取消或 `prefers-reduced-motion`。`animation: false` 是写死的。Chart.js 自己处理响应式，不要再叠无界 ResizeObserver。没有本地 FPS 数字。
 
-保留 `chart-stream-policy.ts` 与图表/HTML表共用的同一数据源；background/非advanced不继续高频采样，取消 interval/visibilitychange；切换类型初始 Chart 数据不得短暂回滚，最终必须 `chart.destroy()`。定向 policy 测试在 `tests/chart-stream-policy.test.mts`，SDK/浏览器仍需独立证据。
+## 断言边界
 
-## wave21 接入约束
+`tests/chart-stream-policy.test.mts` 只覆盖 revision 夹取和采样门闩。SDK 用例必须 `import` `chart.js` 的 `Chart`，在临时 canvas 上构造柱和线，调用 `update('none')` 与 `destroy`。浏览器路径要点表格按钮并看到 `setActiveElements` 的同一下标。收据要写明命令、退出码和源码指纹。缺收据时保持 NOT_RUN。类型切换必须先 destroy 再构造，避免 canvas already in use。
 
-保留`chart-stream-policy.ts`的采样上界，调用`shouldAutoSample(auto, level, visible, revision)`，依赖包含revision，达到10000不再启动interval。Chart.js`onClick`和HTML数据表button使用同一个selectedDay，调用真实`chart.setActiveElements`来反映键盘选择；Canvas下必须保留可访问的数字表格/状态提示。不要把Node业务策略通过记为官方SDK、TSX、Canvas或浏览器PASS。
+## 证据
+
+仓库级 Actions `41779873259`（install、typecheck、build、52 个 SDK 文件 / 153 测试、45 个 Playwright）不是本条目 PASS。不要把策略测试或历史研究 PASS 写入 `verification.json`。
+
+对照 `library.json` 的版本编写 import，不要升到条目未钉死的版本。
+`tests/` 中的策略用例不能改写成 sdk 字段的 PASS。
+浏览器与构建未留下收据时，对应字段维持 NOT_RUN。

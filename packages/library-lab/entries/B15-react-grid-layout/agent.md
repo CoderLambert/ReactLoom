@@ -1,25 +1,47 @@
-# B15 react-grid-layout — Agent 实施指南
+# B15 react-grid-layout
 
-## 何时采用
-二维固定网格、模块尺寸/位置编辑、仪表盘布局持久化选 react-grid-layout；普通 split pane 选 B16，单维拖放选 B13。当前基线 react-grid-layout@2.3.0 和 react-resizable@4.0.2（MIT）；与 1.x API 不兼容。
+## 适用
 
-## 迁移路径
-依次看 library.json / examples/example.tsx / guide.md / verification.json。核心代码为 `Layout` 状态、`useContainerWidth`、GridLayout 配置与响应式投影；Lab 的固定新闻示例数据应替换为目标项目 schema。
+离散格子上的拖动和缩放仪表盘用 v2 `GridLayout`。单列文章、自由画布、左右分栏不要用它。库不负责键盘拖放规范，所以要另有按钮。
 
-## 必须保留
-- 真实宽度测量；width 不能在隐藏容器读取零。
-- 稳定业务 ID 对应 `layout[i]` 和 React key，进入 store 前做 Schema 校验与版本化。
-- v2 `gridConfig`/`dragConfig`/`resizeConfig`，明确 `layout` 与 `onLayoutChange` 的所有权，克隆回调数据。
-- 样式导入 react-grid-layout + react-resizable；只拖句柄，不让卡片按钮被视为拖动。
-- 屏幕尺寸变化时避免不可逆压缩用户已保存布局；正式系统使用多断点布局。
-- 对不能依赖指针的用户提供键盘移动和宽度调整操作，并对 static 项禁用全部移动控件。
+## 版本
 
-## 禁忌
-不要混用 `react-grid-layout/legacy` 的 `WidthProvider` 与本例 v2；不要把旧 localStorage 当可信 schema；不要在每次渲染重置 layout；不要引入未验证的碰撞策略或在回调中直接修改 readonly 输入。
+`react-grid-layout@2.3.0`，`react-resizable@4.0.2`，React 19.3.0。许可证 MIT。不要写 v1 的 `WidthProvider` 或 `data-grid`。研究笔记里的 2.2.4 不是本锁。不要使用有缺陷记录的 2.2.0。
 
-## 实测清单
-真实 SDK import、typecheck/build、拖动和调整尺寸、状态和 JSON 一致、窄屏6列、锁定、键盘可用、卸载无 ResizeObserver 泄露。尚未实际运行：sdk/build/browser 保持 NOT_RUN。官方 https://github.com/react-grid-layout/react-grid-layout
+## 迁移
 
-## 第13轮断点策略与边界
+v1 改为 `width`、`layout`、`gridConfig`、`dragConfig`、`resizeConfig`。保存时按断点分份，不要只存当前 `layout`。回调对象按只读处理。
 
-宽/窄布局使用不同的受控保存槽，不可在 `onLayoutChange` 把6列压缩结果写回12列用户配置；锁定标志仅属于当前交互状态，不能泄漏到持久化 schema。窄屏键盘上下相邻移动，宽屏左右移动；检查边界和 static 后禁用非法操作。保留 `layout-policy.ts` 与 `tests/layout-policy.test.mts`，实际RGL v2 compactor/drag/resize仍需Chromium证据。
+## 不可删的清理
+
+`useContainerWidth` 在 `mounted && width > 0` 之后才渲染。宽窄布局分开。`key` 用断点。相等几何不增加变更计数。手柄与按钮 class 分离。锁定项同时 `static` 并用上一份坐标盖回。键盘规则在 `layout-policy.ts`。不写 localStorage。
+
+## 反例
+
+`onLayoutChange` 里 PUT。用 0 宽度渲染。`i` 用数组下标。把像素存进 `x`。输入框放进拖动手柄。只保存当前断点覆盖另一份。直接修改回调里的 layout 对象。
+
+复用时保留这些不变的约定：
+
+- 包版本是 2.3.0，不是研究笔记里的 2.2.4。
+- v2 必须传入测得的 `width`，不要用 WidthProvider。
+- 宽窄两份布局分开存；`onLayoutChange` 不发请求。
+- 手柄 class 与按钮 class 分离。
+- 锁定同时写 `static` 并在纯函数里拒绝。
+
+## 测试断言
+
+`tests/layout-policy.test.mts` 断言列投影、窄布局独立堆叠、几何比较、锁定拒绝键盘移动和改宽。不证明 compactor 或指针。
+
+## 真实限制
+
+已挂载：12/6 列、手柄拖动、右下缩放、锁定、键盘、JSON 投影。未挂载：`Responsive` 五断点、HTTP 修订、图表 resize、持久化。
+
+复用检查：
+
+- 版本以该条目 `library.json` 为准，不跟研究稿里的 Vite 脚本或 workshop 目录。
+- 未挂载的生产模式留在 `guide.md`，不补进 `examples/`。
+- 不修改 `verification.json`。没有匹配 receipt 时 sdk、build、browser 保持 NOT_RUN。
+
+## 证据
+
+sdk、build、browser 为 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有匹配 receipt。Actions run `41779873259` 是仓库级检查，不是本条目 PASS。文档：https://github.com/react-grid-layout/react-grid-layout

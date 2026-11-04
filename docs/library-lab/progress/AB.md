@@ -1,6 +1,8 @@
 # AB 开发进度 — A/B 前端库垂直实现
 
-**最新调度轮次：20 / 最多24；状态：WAVE20_AB_39_SOURCE_HARDENING（39/39仅源码和文档覆盖；SDK、完整构建与浏览器尚未验收）。**
+> 2026-11-04：本文件是合并前的通道日志。PR #8 已在 main。根锁文件已有 Lab importer。Actions run 41779873259 通过了仓库级 install / typecheck / build / 52 个 SDK 文件（153）/ 45 项 Playwright。这不是 39 条 AB 收据，更不是 119 条 PASS。下文里的「PR #8 仍为 Draft」「DNS BLOCKED」「typecheck 全部 NOT_RUN」只描述当时那一轮。
+
+**最新调度轮次：20 / 最多24；状态：WAVE20_AB_39_SOURCE_HARDENING（39/39仅源码和文档覆盖；逐库 SDK / 浏览器收据仍未写入）。**
 
 - 当前本批分支：`feat/library-lab-ab-wave20`，精确集成base `f96f43fad9ba6e227b71a85596c9b91eb1ff1dfb`；初始公共提交 `38ed2d247bd82e4f1422b0e8904973e16bca2972` 仅作历史，不使用force覆盖。
 - 集成目标：`feat/library-lab`；本轮开始读取的最新头提交 `f96f43fad9ba6e227b71a85596c9b91eb1ff1dfb`，前轮 PR #71 已被 PLATFORM 合并。

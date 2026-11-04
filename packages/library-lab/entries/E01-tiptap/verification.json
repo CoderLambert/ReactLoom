@@ -4,8 +4,8 @@
     "note": "真实目标 SDK 运行待执行；待真实加载 Tiptap v3 EditorContent 和 ProseMirror 扩展。 本批有纯策略快照负例源码，不意味着已加载真实目标 SDK。"
   },
   "build": {
-    "status": "BLOCKED",
-    "note": "PLATFORM 尚未统一安装新依赖并真实更新 pnpm-lock.yaml，未执行 Vite/TypeScript 构建。"
+    "status": "NOT_RUN",
+    "note": "根 pnpm-lock.yaml 已包含 Library Lab importer，声明的包可以被冻结安装解析。Actions run 41779873259 的仓库级 typecheck/build 不是本条目的 evidence/runs 收据，所以这里是 NOT_RUN，不是 PASS。"
   },
   "browser": {
     "status": "NOT_RUN",
