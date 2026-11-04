@@ -1,21 +1,39 @@
-# A11 Konva — Agent 复用约束
+# A11 Konva — 工程手册
 
-**选型**：需要原生2D场景图、框架外Canvas、精确拖拽/变换或大量节点事件。需要高层React声明式时先评估A12 react-konva，成熟产品白板优先比较A09/A10。
+## 适用
 
-**版本**：konva@10.9.0 / MIT；平台未完成SDK/build/browser实测，读取验证指纹后在目标环境重跑。
+`konva@10.9.0` 用命令式场景图做二维拖拽和变换。已经用 React 描述图元时改用 A12，不要再 `new Konva.Stage` 包住同一容器。白板产品不要从零复刻，先看 A09/A10。
 
-**迁移文件**：`examples/example.tsx`为实际节点创建、增量状态同步、拖拽、resize与cleanup；`examples/demo.tsx`只是宿主导出。将`Card`领域数据换成目标Domain Model，保持稳定id和变更事件语义。
+## 版本
 
-**必须保留**：一个Stage单一owner；ResizeObserver断开+RAF取消+stage.destroy；dragend后写回领域位置；transformend把scale并入长宽并重置；节点Map以ID对齐；Canvas之外提供键盘操作与DOM等价文本。
+钉 `konva@10.9.0`，MIT。Stage、Layer、Group、Rect、Text、Transformer 来自这个包。自动批绘制从 Konva 8 起就是默认行为；`beginUpdateBatch` 不是每帧都要调用的 API。
 
-**禁止反模式**：React render里new Stage；render时destroy整个树；给所有节点上无限监听；用Konva坐标当数据库事实；混用react-konva另一个Root控制相同Canvas；默认导出未知跨源图片。
+## 迁移
 
-**验收清单**：动效与缩放真实SDK对象可操作；重复挂载无残余Canvas；拖动及键盘步进同样更新模型；Transformer resize两次几何不累乘；按需销毁无document listener；读屏可从HTML列表读到节点。无浏览器不能声称视觉效果已验证。
+手写 canvas 循环改成 Group + `dragend`。持久化从 `stage.toJSON()` 改成带版本的卡片数组。Transformer 的 scale 在 `transformend` 乘进宽高并归 1。若改成 react-konva，删掉手动 `new Stage`，避免两个所有者。
 
-**命令**：`pnpm --filter @reactloom/library-lab catalog:check`，`typecheck`，`build`，专项浏览器交互及卸载测试。当前为NOT_RUN。
+## 不可删的清理
 
-**来源**：https://konvajs.org/docs/index.html 。
+舞台 effect 必须 `observer.disconnect`、`cancelAnimationFrame`、`stage.off('wheel')`、`stage.destroy()`，并清空 Map。被过滤掉的卡片要 `group.destroy()`。宽度非有限或小于等于 0 时不调用 `stage.width`。
 
-## 第11轮迁移补充
+## 反例
 
-`examples/stage-policy.ts` 定义可测的 Stage 测量和节点上限，必须与 `examples/example.tsx` 一起复制。不要把宿主窄屏强制扩成320px，也不要在 React 函数式 updater 内递增 ID ref（StrictMode重放会制造不可预测ID）；生成 ID 放到点击事件，再使用纯 updater。Canvas实际拖拽/Transform后记得在真浏览器检查资源释放。
+```ts
+rect.width(group.width()); // 错：忽略 scaleX
+const width = Math.max(85, Math.round(rect.width() * group.scaleX()));
+group.scale({ x: 1, y: 1 }); // 对
+```
+
+render 中构造 Stage、指针坐标直接当世界坐标、只 `remove()` 不 `destroy()`，都不要做。
+
+## 测试断言
+
+`canAddCard` / `appendCard` 在 24 张或重复 id 时不增长。`stageWidth` 夹在 1..4096。SDK 收据还要看到真实 Stage、拖拽写回、变换后 scale 为 1、卸载后 canvas 消失。没有 runs 收据则为 NOT_RUN。
+
+## 真实限制
+
+没有文本编辑、PNG、HTTP ETag 或视口裁剪。basic 不可拖，Transformer 只在 advanced。滚轮缩放未读取 `prefers-reduced-motion`。24 与 0.6..2 是示例边界，不是性能测量。`batchDraw` 在同步后调用了一次，不要在每个属性 setter 后再画。
+
+## 证据
+
+Actions `41779873259` 的仓库级 install、typecheck、build、52 SDK 文件（153 测试）和 45 Playwright 不是 A11 PASS。不要把策略测试或历史研究 PASS 写入 `verification.json`。
