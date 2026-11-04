@@ -13,7 +13,9 @@ async function fixture() {
 }
 
 afterEach(async () => {
-  await Promise.all(created.splice(0).map((directory) => rm(directory, { recursive: true, force: true })))
+  await Promise.all(
+    created.splice(0).map((directory) => rm(directory, { recursive: true, force: true })),
+  )
 })
 
 describe('scaffold source confinement', () => {
