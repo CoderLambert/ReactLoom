@@ -204,6 +204,10 @@ team-b 的 `conflict` 行 id 是稳定的。测试可以连续 toggle 两次，�
 
 搜索提交用 `trim` 后的 draft。只含空格的查询会变成空字符串，从而显示该租户的全部行。这和“没有匹配”不同。空结果句只在过滤后数组长度为 0 且不在加载时出现。
 
+`baseQuery` 在 abort 时返回 499，不抛 `DOMException`。中间件因此把这次记成查询或变更错误，而不是未捕获异常。界面用 `JSON.stringify` 显示它。不要在 `wait` 里重新抛出，否则 epoch 逻辑和标签逻辑会走到另一条路径。
+
+成功的 list 始终返回新数组，不把内部 `feeds` 的同一引用交给缓存。调用方稍后的 `toggle` 替换内部对象，不应偷偷改到已经缓存的旧数组元素。过滤时已经拷贝了行。
+
 ## 验收
 
 - team-a 与 team-b 的缓存条目同时存在且内容不同。
@@ -249,6 +253,18 @@ team-b 的 `conflict` 行 id 是稳定的。测试可以连续 toggle 两次，�
 404 来自找不到的 id。界面没有按钮能发出未知 id，但 baseQuery 仍返回 404 而不是抛异常。生成的客户端若把未知 id 当成成功空对象，就会违反这条。
 
 标签 id 用租户字符串而不是数组下标。team-a 与 team-b 的失效互不影响。测试可以在 team-a 成功 toggle 后读取 team-b 的缓存时间戳，它不应因为这次失效而更新。
+
+`createApi` 的 `endpoints` 在运行时闭包了 `feeds` 数组。热更新若保留旧的 `runtime` state，会继续用旧数组。完全刷新页面才会重新执行初始化函数。调试时若种子看起来不更新，先看是不是同一个 runtime。
+
+`key={JSON.stringify([tenant, search])}` 在中文搜索词上是稳定的。不要把函数或含循环引用的对象放进这个数组。换 key 会卸掉面板并 abort 其 mutation。store 里的缓存还在，所以回到同一租户和同一搜索时，`currentData` 可以立刻有值，同时 `isFetching` 可能再次为真。
+
+空列表文案在 `data.length === 0 && !isLoading`。错误时不显示这句，避免“没有订阅”和“查询失败”叠在一起。错误走 `role="alert"`。
+
+提示句在 epoch 不匹配时保持上一次的文字。换租户的处理函数会主动把提示清成空字符串，所以离开团队时不会把上一句带到新团队。这是换租户的路径，不是 mutation 回调。回调只在 epoch 仍等于当前值时写提示。
+
+`draftSearch` 在换租户时不一定清空。当前实现只在示例的搜索 state 上保持输入。若产品要求换租户清空输入框，要在 `setTenant` 旁同时 `setDraftSearch('')` 和 `setSearch('')`。现在没有这行，避免把参数变化和输入框被擦掉混成一件事。
+
+`reducerPath` 出现在 Redux state 的顶层键上。调试时展开 `rlCD13RtkApi`，不要在 `feeds` 这个不存在的键里找缓存。
 
 ## 资料
 

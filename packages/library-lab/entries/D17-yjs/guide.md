@@ -165,6 +165,8 @@ basic 不同步。只点 A 时，B 的 Doc 仍然存在于 ref 里，只是这�
 
 状态句里的字节数是编码结果的长度，包含 CRDT 开销。它不是标题的 UTF-8 长度。不要用它做配额账单。
 
+`inspect` 在 Doc 刚创建时返回空对象和空标题。第一次渲染不是同步失败。按钮在 ref 尚未就绪时直接返回。测试要等 effect 提交后再 `syncReplicas`，或者直接调用导出的函数而不点按钮。
+
 ## 资料
 
 - https://docs.yjs.dev/api/y.doc

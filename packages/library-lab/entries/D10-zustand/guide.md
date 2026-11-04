@@ -166,6 +166,10 @@ Immer 中间件和手写展开不要叠用。`enabledByTenant` 只有两层，�
 
 两个团队的默认值写在 store 初始状态和迁移默认值两处。改其中一个时改另一个，否则“导入坏数据”和“首次打开”会不一致。测试应两边都断言 team-a 为 true、team-b 为 false、view 为 list。
 
+首次渲染在 `rehydrate` 完成前显示初始 `team-a`。这是 `skipHydration` 的结果，不是迁移把数据弄丢了。若要避免闪烁，在 `rehydrate` 的 Promise 完成前不要画出开关。示例为了让按钮可点，没有加这道门闩。
+
+`persist` API 上的 `hasHydrated` 可以用来做那道门闩。接入时不要在渲染里同步读 `localStorage` 作为它的替代，否则 SSR 会拿到 `window` 错误。
+
 ## 验收
 
 - 两个团队的 `enabled` 互不影响。
@@ -225,6 +229,20 @@ team-b 在 v1 里没有独立字段。迁移把它设为 `false`，而不是复�
 若两个组件各自 `createChannelStore(同一个 storage)`，后一次 `rehydrate` 会覆盖内存里的 Map 内容到自己的 store，但两个 store 对象仍然是两份状态，直到它们都重新水合。示例用一个 store 引用避免这个分叉。生产的单页也应只有一个偏好 store。
 
 `skipHydration` 为 true 时，创建瞬间的状态是初始值，不是磁盘值。第一帧可能闪一下 team-a 的默认开关。若这不可接受，在 rehydrate 完成前不要渲染开关，或接受这帧。Lab 没有加载门闩，所以第一帧是初始状态。
+
+`createJSONStorage` 包住 Map 适配器。不要把 `persist` 的 `storage` 直接设成 Map。中间件期待的是带 `getItem` 的接口，而不是 `Storage` 的全部方法。`removeItem` 在迁移失败时不一定被调用。示例不在失败时删键，因为种子就是要被读到的那一份坏数据，迁移函数自己返回默认值。
+
+高级面板的「导入旧版」会覆盖当前 Map。若用户先改了 team-b 再导入 v1，team-b 回到 false。按钮文案是导入并迁移，不是合并。需要保留时要另写迁移，不能改这个函数的默认值碰运气。
+
+`useStore` 三个字段选择器各自订阅。把它们合成一个对象返回会在 v5 里造成额外渲染。文件顶部没有 `useShallow` 导入。添加合并选择器时同时加上浅比较，并补一条“只改 view 时启用按钮不重渲染”的测试。否则不要合并。
+
+内存 Map 在卸载时 `clear`。快速切换层级会卸载并清空，下一次挂载是空存储。这和 localStorage 不同。不要把“模拟刷新”按钮的结果理解成关掉浏览器标签还能看见。那个按钮只在同一次页面里换 store。
+
+`version` 传给 `migrate` 的是持久化 JSON 里的版本，不是库的 npm 版本。把 `5.0.16` 写进 JSON 会落进默认分支，因为函数只认识版本号 1。
+
+`setView` 和 `setTenant` 都是替换顶层字段。它们不会顺带重置 `enabledByTenant`。连续切换视图再切换团队，两个布尔都还在。测试若只断言当前布尔，会漏掉另一个团队被清掉的回归。
+
+`name` 字段含 `channels:v2`。换存储介质时沿用这个键，才能读到已迁移的 JSON。新建一个键等于放弃旧数据，`migrate` 不会被调用。
 
 ## 资料
 

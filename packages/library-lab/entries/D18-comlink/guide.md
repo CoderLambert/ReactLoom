@@ -168,6 +168,10 @@ setResult('完成')
 
 `Comlink.wrap` 的类型参数是 `WorkerAPI`。运行时没有校验。若 Worker 忘记 `expose`，第一次调用会拒绝。界面走 catch，而不是一直 `working`。
 
+`working` 在构造失败时回到 false，启动按钮可以再点。成功路径在 `finally` 里同样回到 false，但要看 epoch，避免把新一轮的 working 提前清掉。
+
+监听器在 `finally` 移除。若在 `race` 之前抛错，移除仍然发生，不会把旧的 `error` 监听留在已经 `terminate` 的对象上。
+
 ## 验收
 
 - basic 的词频来自 Worker 方法，而不是主线程常量。
@@ -206,6 +210,12 @@ CSP 若禁止 `worker-src`，构造函数抛错。界面保持 `working === fals
 取消与完成的竞态用同一个 epoch。在 `await` 之后再读 `epoch.current`，不要使用 `execute` 开头闭包里已经过期的比较函数以外的旧布尔。
 
 Worker 的 `error` 监听是 `once`。若脚本在第一次错误后继续活着，后续错误不会再被转成拒绝。`terminate` 会结束这种半死状态。不要去掉 `once` 却忘记在 `finally` 里 `removeEventListener`，否则下一次任务会接到上一个 Worker 的监听器。
+
+`session` ref 在 `dispose` 开头就置空，然后再异步释放代理。这样第二次进入 `dispose` 不会终止两次，也不会在 `await` 期间被别的调用看见旧 remote。终止放在 `finally`，覆盖同步抛错。
+
+进度回调使用 `Comlink.proxy`。不要把 `setResult` 直接传入。结构化克隆会丢掉函数，调用在 Worker 里失败，主线程看到拒绝而不是进度。
+
+`epoch` 用数字而不是布尔 `cancelled`。布尔在快速重入时会把新任务也标成已取消。每次启动和每次取消都加一，比较的是当时捕获的 `current`。
 
 ## 资料
 

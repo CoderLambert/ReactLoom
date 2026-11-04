@@ -233,6 +233,10 @@ useQuery({ queryKey: ['feeds'], queryFn: () => client.get('/feeds', { params: { 
 
 自定义 `validate` 拒绝租户不在 `a` 或 `b` 的行。adapter 本身会把未知租户收成 `a`。两层都在，是为了防止以后有人改 adapter 时放进非法行。不要只留其中一层。
 
+`makeFixtureClient` 的 `onTrace` 在 adapter 里同步调用。React 18 允许在事件处理里 `setState`。不要在渲染阶段创建 client，否则日志 `setLogs` 会在渲染中触发更新。示例把工厂放在 `useState` 的初始化函数里，只创建一次。
+
+列表校验限制 30 条。fixture 只有三行，上限是为了挡住以后把 adapter 换成会返回大数组的实现。超过上限时结果区是错误字符串，不是半截列表。
+
 ## 资料
 
 - https://axios-http.com/docs/intro

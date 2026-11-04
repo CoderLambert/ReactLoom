@@ -145,6 +145,8 @@ NetworkFirst 的 `networkTimeoutSeconds: 2` 只在浏览器真正跑 worker 时�
 
 三个入口都传 `keepOutput: true`。在本机反复运行会留下多个 tmp 目录。这是脚本的展示行为，不是服务。自动化若改成 `keepOutput: false`，仍应断言返回的计数字段，而不是去读已删除的路径。
 
+`cleanupOutdatedCaches` 只在生成的脚本被浏览器激活后才有意义。Node 侧的一次 `generateSW` 不会去删用户浏览器里的旧 CacheStorage。不要在脚本跑完后声称本机缓存已被清空。
+
 ## 验收
 
 - 三个入口都打印未注册，`registrationExecuted` 为 false。
@@ -175,6 +177,10 @@ Service Worker 的安装、等待和激活是浏览器的状态机。`generateSW
 入口脚本的最后一行是给人读的说明，机器可读的字段仍是 JSON 里的 `registrationExecuted`。解析输出时用 JSON，不要靠中文或英文句子做断言。
 
 `offline.html` 在 basic 也被写进目录，但只有 advanced 把它设为 `navigateFallback`。文件在磁盘上不等于它已是导航兜底。结果字段 `fallback` 才是合同。
+
+`ISOLATED_SCOPE` 以斜线开头和结尾。拼到临时目录时用 `slice(1)`，避免绝对路径跑到文件系统根上。改这个常量时同时改策略函数里的路径字面量。两边不一致会让预缓存范围和运行时规则描述的不是同一前缀。
+
+生成文件名列表用 `path.basename`。不要把临时目录的绝对路径写进返回 JSON，以免日志带上本机用户名。`outputDirectory` 仅在 `keepOutput` 时保留。
 
 ## 资料
 

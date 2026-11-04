@@ -152,6 +152,10 @@ DevTools 关闭是为了演示不被扩展影响。本地调试可以临时打�
 
 `add` 用 `seq` ref 而不是 `feeds.length`。删除若以后加上，长度会回退，id 仍继续增加，避免和已有 id 相撞。当前没有删除按钮，但序号策略已经按这个方向写了。
 
+`ignored` 只增不减，直到 `reset`。不要在成功的 `finishRequest` 里把它清零，否则后到的旧请求会把计数抹掉，测试就看不见拒绝。示例把清零放在整份初始状态里。
+
+切换团队不会把 A 的 `ignored` 加到 B 上。两个 store 的该字段各自从 0 开始。
+
 ## 验收
 
 - `increment` 不修改传入的旧测试对象；两个 store 的计数互不影响。
@@ -186,6 +190,14 @@ Immer 在 slice 内的草稿不能传出 reducer。`prepare` 回调适合生成 
 添加频道的标题是「新闻源」加 id。这是展示文案，不是排序键。不要用标题做 React key。
 
 计数和列表在同一 slice，是为了少一个 reducer。正式应用可以把计数拆出去，但重置必须仍然一次清空两边，否则会留下孤儿 feed。Lab 的 `reset` 返回完整初始对象，避免这个裂缝。
+
+`configureStore` 的 `reducer` 键是 `feeds`，slice 的 `name` 是 `labFeeds`。动作类型前缀来自 slice name。选择状态时读 `state.feeds`，不要读 `state.labFeeds`。测试若用字符串比较 action type，要写成 `labFeeds/increment` 这一类。
+
+`devTools: false` 对两个 store 都生效。打开一个、关掉一个会让调试时只看见一半团队。保持一致。
+
+竞态按钮在 basic 和 business 不渲染，但 reducer 仍接受 `finishRequest`。测试可以不经过按钮直接 dispatch。界面隐藏不是安全边界。
+
+`feeds` 初始是空数组，不是 `null`。`map` 之前不必再判断空值。`reset` 也回到空数组，而不是留下 `undefined`。
 
 ## 资料
 
