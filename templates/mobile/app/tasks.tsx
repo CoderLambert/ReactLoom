@@ -1,3 +1,4 @@
+import { Redirect } from 'expo-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, Pressable, Text, TextInput, View } from 'react-native'
@@ -10,6 +11,19 @@ const repository = createTaskRepository([
 ])
 
 export default function TasksScreen() {
+  const auth = useAuth()
+  if (auth.status === 'loading') {
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Text>Loading session…</Text>
+      </View>
+    )
+  }
+  if (auth.status !== 'authenticated') return <Redirect href="/login" />
+  return <AuthenticatedTasksScreen />
+}
+
+function AuthenticatedTasksScreen() {
   const { t } = useTranslation()
   const auth = useAuth()
   const [title, setTitle] = useState('')
@@ -62,7 +76,13 @@ export default function TasksScreen() {
           </Text>
         )}
       />
-      <Pressable accessibilityRole="button" onPress={() => void auth.signOut()}>
+      <Pressable
+        accessibilityRole="button"
+        onPress={() => {
+          // Storage failures are exposed by the provider on the login screen.
+          void auth.signOut().catch(() => undefined)
+        }}
+      >
         <Text>Sign out</Text>
       </Pressable>
     </View>

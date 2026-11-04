@@ -36,7 +36,7 @@ From this directory:
 
 ## API client
 
-`templates/mobile/src/features/auth/service.ts` builds a client with `getAccessToken: readToken` when fixtures are off. Pass a Zod schema and `retry: false` on the login POST. Persist the returned access token with `writeToken`.
+`templates/mobile/src/features/auth/service.ts` builds a client with `getAccessToken: readToken` when fixtures are off. Pass a Zod schema and `retry: false` on the login POST. The auth controller persists the returned access token with `writeToken` only while the login is current, and serializes token writes with logout.
 
 ## Testing
 

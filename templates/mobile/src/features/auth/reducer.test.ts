@@ -8,6 +8,13 @@ const session = {
 }
 
 describe('authReducer', () => {
+  it('does not let late hydration restore a signed-out session', () => {
+    const signedOut = authReducer(initialAuthState, { type: 'signed-out' })
+    expect(authReducer(signedOut, { type: 'hydrated', session })).toEqual({
+      status: 'anonymous',
+    })
+  })
+
   it('moves from loading to anonymous or authenticated', () => {
     expect(authReducer(initialAuthState, { type: 'hydrated', session: null })).toEqual({
       status: 'anonymous',
