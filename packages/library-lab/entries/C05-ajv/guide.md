@@ -173,6 +173,8 @@ JTD 的 serializer 不校验。先 `validate` 再序列化。`JSONSchemaType` �
 - https://ajv.js.org/standalone.html
 - https://github.com/ajv-validator/ajv
 
+`feedSchema` 的 url pattern 写成大小写不敏感的 http(s) 前缀，是为了让「Schema 通过、域名规则失败」这种分层看得见。若把 pattern 改成完整的 URL 语法，就测不出 `canonicalHttpsFeedUrl` 还在起作用。两层都要留。
+
 ## 证据
 
 `rss-policy` 单测不是 Ajv 编译通过。sdk 要真实 `import Ajv from 'ajv'` 并在 `docs/library-lab/evidence/runs/` 有收据。build 与 browser 保持 NOT_RUN，直到各自收据存在。

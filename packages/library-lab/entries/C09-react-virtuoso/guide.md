@@ -143,6 +143,8 @@ fixture 是纯文本。真实 RSS 正文先净化，再决定能不能作为 HTM
 - https://virtuoso.dev/
 - https://github.com/petyosi/react-virtuoso
 
+`sampleArticle` 的 id 是 `article-` 加序号。前插用最后一条 id 的数字倒推。若以后改成 UUID，前插必须改用服务器给的更早 id，不能再 `split('-')`。展开 Set 只认 id 字符串，序号变了但 id 没变时，展开应保持。
+
 ## 证据
 
 `view-policy` 单测不挂载 Virtuoso，也不能证明滚动和测量。sdk 要真实 import `react-virtuoso@4.18.19` 并在 `docs/library-lab/evidence/runs/` 留下收据。browser 单独计。

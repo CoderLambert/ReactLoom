@@ -179,6 +179,10 @@ v2 需要适配器，`throttleMs` 改为 `limitUrlUpdates`，共享的服务端 
 - https://nuqs.dev/docs/parsers/built-in
 - https://github.com/47ng/nuqs
 
+SSR 若以后要做，`createSearchParamsCache` 必须在当前请求里 `parse`，不能放进模块级变量跨用户复用。本 Lab 是客户端路由，初始值来自浏览器地址栏。hydration 不一致的修法是适配器拿到同一次 search，而不是在 effect 里先渲染默认值再改 URL。
+
+`history: 'replace'` 的搜索仍会触发使用这些 state 的组件渲染。没有接口时只是本地过滤。接上 Query 之后，queryKey 用 `safeQuery` 和 `safeGroup`，不要用尚未提交的 `draft`，否则组合中的拼音会打出请求。
+
 ## 证据
 
 `url-policy` 单测不经过 TanStack Router，也没有 history。sdk 要真实 import `nuqs@2.10.1` 并在 `docs/library-lab/evidence/runs/` 留下收据。后退和 IME 属于 browser。

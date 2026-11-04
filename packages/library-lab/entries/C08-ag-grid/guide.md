@@ -171,6 +171,8 @@ Community Infinite 若以后启用：`endRow` 不包含，`successCallback` 和 
 - https://www.ag-grid.com/react-data-grid/value-setters/
 - https://www.ag-grid.com/react-data-grid/react-hooks/
 
+过滤用 `toLocaleLowerCase` 比较频道名，再把结果数组交给 `rowData`。网格自己的列过滤器仍然开着。两套过滤会叠在一起。教学时先清空列过滤，再看输入框，避免把「没有行」误判成 revision 冲突。
+
 ## 证据
 
 `edit-policy` 单测不创建网格。sdk 要真实 import `ag-grid-react@36.2.0` 并在 `docs/library-lab/evidence/runs/` 留下收据。键盘和滚动属于 browser。

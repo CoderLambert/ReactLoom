@@ -187,6 +187,8 @@ date-fns 和 Day.js 的 pin 与 C14、C15 相同。升级任一个都要重跑 `
 - https://day.js.org/docs/en/parse/parse
 - https://github.com/date-fns/tz
 
+`hourCycle: 'h23'` 避免中午被格式化成 24 点或上午下午标记，方便和 ISO 对照。换掉这个选项之前，先看同一 instant 在上海和纽约的字符串是否还能对上小时。日历日输入有 `maxLength={10}`，挡不住粘贴进位，所以仍要 `validCalendarDay`。
+
 ## 证据
 
 本条目的运行库是 date-fns、`@date-fns/tz` 和 Day.js。没有 moment 的 sdk 可写。收据仍要出现在 `docs/library-lab/evidence/runs/`，并且命令 import 的是上述三个 pin。把「没有安装 Moment」写成 Moment PASS 是错的。browser 看非法日期的 alert 和 advanced 的 JSON。

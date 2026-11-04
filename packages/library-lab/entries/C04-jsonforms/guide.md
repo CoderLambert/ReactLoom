@@ -165,6 +165,8 @@ Vanilla 和 Material 不要叠用。自定义控件若不 `handleChange(path, va
 - https://jsonforms.io/docs/i18n/
 - https://github.com/eclipsesource/jsonforms
 
+basic 的 schema 没有 url。不要把 business 的 `if/then` 复制到 basic 再抱怨没有地址框。两个 level 的 schema 是故意分开的。重置会 abort、增加 generation，并把 data 和 ref 一起设回 `initial`。只清 state 不清 ref，下一次提交会把旧草稿送出去。
+
 ## 证据
 
 `submission-policy` 单测不挂载 JSON Forms。sdk 要真实 import `@jsonforms/react@3.8.0` 并在 `docs/library-lab/evidence/runs/` 留下收据。浏览器还要看 HIDE、409 回填和取消。build 单独计。
