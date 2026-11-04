@@ -21,6 +21,7 @@ pnpm add pdfjs-dist@6.3.289
 ## 关键生命周期
 
 - `getDocument` 返回loadingTask，含Worker/数据流；页面卸载或文件改变时 `loadingTask.destroy()` 释放。
+- 损坏文档探测单独持有一个 loadingTask：重复探测先请求销毁旧任务，卸载也请求销毁；旧探测的 `finally` 仅在仍持有本次任务时清理，不能清空新探测的所有权。不能只等解析成功/失败后再销毁。
 - `page.render()` 返回renderTask；参数变更/卸载调用 `renderTask.cancel()`，不能复用正在绘制的同一个Canvas。
 - Canvas像素为 CSS尺寸×DPR，需要内存预算：600×800×2×2≈7.7MiB/单页（RGBA）。不要一次渲染100页全部高分辨率位图。
 - 尽量用受控 `Uint8Array`、对象URL并在不需要时revoke；本示例不使用外部PDF URL，降低SSRF与版权风险。
@@ -37,7 +38,7 @@ pnpm add pdfjs-dist@6.3.289
 
 ## 验收
 
-需要实际安装SDK、Worker、Chromium后：第一页和第二页内容不同，getTextContent包含预期关键词，缩放/切换迅速时无“same canvas”并发错误，坏文档提示不清空有效文档，卸载停止Worker相关资源。当前只有源码提交，不能称SDK或浏览器PASS。官方 [PDF.js仓库](https://github.com/mozilla/pdf.js) · [API](https://mozilla.github.io/pdf.js/api/) · [npm](https://www.npmjs.com/package/pdfjs-dist)。
+需要实际安装SDK、Worker、Chromium后：第一页和第二页内容不同，getTextContent包含预期关键词，缩放/切换迅速时无“same canvas”并发错误，坏文档提示不清空有效文档，卸载停止Worker相关资源。新增 `@F06` 浏览器回归延迟真实解析器的 `DocException`，验证重复探测与卸载在解析结果交付前关闭对应 Worker；该回归仍待实际执行。`loadingTask.destroy()` 本身会等待 SDK 初始化及 transport 清理，不代表尚未加载脚本的 Worker 能同步终止。官方 [PDF.js仓库](https://github.com/mozilla/pdf.js) · [API](https://mozilla.github.io/pdf.js/api/) · [npm](https://www.npmjs.com/package/pdfjs-dist)。
 
 ## React-PDF 11 的跨条目版本合同
 

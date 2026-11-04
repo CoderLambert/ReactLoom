@@ -7,6 +7,7 @@
 - `examples/example.tsx` 为真实 Worker + getDocument + page.render + getTextContent 运行源码；`examples/demo.tsx` 为Lab出口。
 - Worker使用 `pdfjs-dist/build/pdf.worker.min.mjs?url` 本地构建并匹配SDK版本，切忌混用CDN不一致Worker。
 - 页码/缩放改变必须先取消旧renderTask；文件变化/卸载销毁loadingTask，持续会话可缓存PDFDocumentProxy但别泄漏旧实例。
+- 损坏文档探测的 loadingTask 也必须被独立持有；重复探测与卸载时请求销毁，不等解析 promise 结算。旧任务的 finally 不可清除新任务的 ref。SDK 销毁可能等待初始化/transport，需以真实 Worker close 事件验收，不能只观察 destroy 被调用。
 - 每页DPR与Canvas像素上限必须有预算；长文档虚拟页/缩略图和异步加载另行设计。
 - 业务文件入口需校验类型、大小和权限，所有SVG/HTML附件与任意远程URL按不可信输入处理；本地演示限制3MiB且无网络上传。
 - 真实PDF扫描件可能没有文本层：getTextContent成功不等于OCR成功。

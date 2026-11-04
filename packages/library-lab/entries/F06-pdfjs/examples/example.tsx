@@ -16,6 +16,7 @@ GlobalWorkerOptions.workerSrc = workerSrc
 export default function PdfViewerExample({level}: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const fileGeneration = useRef(0)
+  const probeTask = useRef<ReturnType<typeof getDocument> | null>(null)
   // The same HTMLCanvasElement may not be used by concurrent PDF.js RenderTasks.
   // A cancelled task must settle before the next one begins drawing.
   const withCanvas = useRef(createRenderGate())
@@ -92,7 +93,12 @@ export default function PdfViewerExample({level}: Props) {
     }
   }, [pdf,pageNum,scale])
 
-  useEffect(() => () => {fileGeneration.current++}, [])
+  useEffect(() => () => {
+    fileGeneration.current++
+    const pending = probeTask.current
+    probeTask.current = null
+    void pending?.destroy().catch(() => {})
+  }, [])
 
   async function loadLocalFile(file: File | undefined) {
     if (!file) return
@@ -112,14 +118,21 @@ export default function PdfViewerExample({level}: Props) {
 
   async function probeCorrupt() {
     const token = ++fileGeneration.current
+    const previous = probeTask.current
+    probeTask.current = null
+    void previous?.destroy().catch(() => {})
     const task = getDocument({data: new Uint8Array([1,2,3,4,5])})
+    probeTask.current = task
     try {
       await task.promise
       if (token === fileGeneration.current) setNotice('意外：损坏 PDF 被接受，请检查解析器版本')
     } catch {
       if (token === fileGeneration.current) setNotice('已正确捕获损坏 PDF，不覆盖当前已加载文档')
     } finally {
-      await task.destroy().catch(() => {})
+      if (probeTask.current === task) {
+        probeTask.current = null
+        await task.destroy().catch(() => {})
+      }
     }
   }
 
