@@ -1,17 +1,45 @@
-# F15 Knip — Agent 删除审计实施手册
+# F15 Knip — 工程手册
 
-**何时使用**：检查无用 imports/exports、孤立文件、无用dependencies/unlisted；不替代 F16 分层依赖图，也不以报告代替 TypeScript、测试和构建。已核对 knip@6.41.0 (ISC)，当前未运行。
+## 适用
 
-**切入路径**：先读 `examples/workspace/package.json` 和3个 `knip.*.json`，之后读 `src/index.ts/tasks.ts/unused.ts`。这是完全隔离的培训fixture，禁止直接把它的条目路径写到生产仓库配置。
+在隔离夹具里看未使用文件、导出和依赖。不删除代码，不扫描产品仓库。
 
-**最小命令**：在 `packages/library-lab` 执行 `pnpm exec knip --directory entries/F15-knip/examples/workspace --config knip.basic.json`；business切换knip.business.json；advanced切换knip.advanced.json并加`--production`。结果异常非零可能是预期未使用问题，必须检查原始报告分类。
+## 版本
 
-**迁移到别的项目**：先读取项目的 `package.json`、pnpm-workspace.yaml、TS aliases、React路由/生成产物规则；先不开 --fix，收集按文件路径分类的真正问题；对仅反射/动态引用的组件/测试配置做有证据的特例；修复前检查公共 API 使用者。Knip 配置的entry/project可能需根据框架插件更新。
+`knip@6.41.0`，ISC。入口配置用 `entry` / `project`。advanced 打开 `includeEntryExports` 并加 `--production`。
 
-**不可删除的保护线**：公开exports、动态导入约定、CLI入口、workers、migrations、测试fixtures、用户通过字符串定位的运行时资源。自动fix之前需要用户安全确认，不允许把报告中每项都断言可删。
+## 迁移
 
-**验收**：三个隔离配置按实际knip版本执行，保存命令/退出码/stdout/commit/依赖锁；证明一个未使用文件被报告、加入有理由的ignore后分类变化，生产模式排除测试上下文。未跑之前sdk=NOT_RUN。
+带走 `examples/workspace` 下的源码和三份 `knip.*.json`，以及 `verify.mjs` 与 `report-policy.mjs`。`--directory` 必须留在夹具内。页面命令没有 JSON reporter；脚本里的验证才有。
 
-参考：https://knip.dev/reference/configuration 与 https://knip.dev/reference/cli
+## 不可删的清理
 
-**机器验收门禁**：依次读取 `examples/report-policy.mjs`、真实 `examples/verify.mjs` 和CLI标准输出。不可把退出码2当成预期lint的1；只运行 `report-policy.test.mjs` 不得写SDK PASS。
+不要删 `unused.ts` 来让 basic 变安静。`ignoreIssues` 只覆盖该文件的 `files`，注释里的理由要留着。`clsx` 保持未被 import，用来代表未使用依赖。不运行 `--fix`。
+
+## 反例
+
+- 在 monorepo 根目录裸跑 knip。
+- 按报告直接删教学文件。
+- 用大范围 ignore 换退出码 0。
+- 把 `report-policy.test.mjs` 当成 CLI。
+- 让测试文件在 production 模式里充当引用。
+- 忽略非常量动态 import 造成的漏报。
+- 公开含本机绝对路径的 JSON。
+
+## 测试断言
+
+- basic 退出码 1 且报告含 `src/unused.ts`。
+- business 不再把该文件当孤立文件。
+- 退出码与发现条数一致；其它 status 失败。
+- 非 JSON 或超限 stdout 被拒绝。
+- 策略函数不启动 Knip。
+
+## 真实限制
+
+网页不执行命令。漏报可能来自动态路径。`unusedPublic` 是否出现取决于本次生产分析，不要用旧笔记顶替。夹具不是 ReactLoom 的依赖图。页面命令没有 `--reporter json`。
+
+## 证据
+
+只有 `verify.mjs` 或等价的真实 Knip 进程可以成为 sdk 收据，并且要落在 `docs/library-lab/evidence/runs/`。Actions 41779873259 不是 F15 PASS。browser 保持 NOT_RUN。
+
+`report-policy.test.mjs` 使用合成 JSON，不能补上这一条收据。

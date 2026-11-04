@@ -1,19 +1,40 @@
-# D18 Comlink — Agent 工程指南
+# D18 Comlink — 工程手册
 
-**任务选型**：需要 Web Worker 隔离 CPU 任务并保留对象式 RPC；Comlink 不是 Promise 并发限制器，也不是远程不可信代码沙箱。
+## 适用
 
-## 迁移核心代码
-读取 `examples/worker.ts` 和 `examples/example.tsx`。Worker 用 expose(api)，宿主用 `new Worker(new URL(...,import.meta.url),{type:'module'})`、`wrap<WorkerAPI>`；生产入口必须测试 bundler 生成的真实 Worker 文件。安装 comlink@4.4.2（Apache-2.0）。
+把 CPU 工作放进 Web Worker，同时用对象式 RPC 调用。它不限制 Promise 并发，也不是不可信代码的沙箱。
 
-## 不能删掉的资源协议
-Worker + Remote 应有明确 owner；离开页面调用 releaseProxy/terminate；旧异步响应由 epoch 或 AbortSignal 阻断。终止不保证旧 RPC Promise 自动完成，要有取消竞速。大二进制包用 transfer 后不再访问原 ArrayBuffer；普通函数跨线程必须用 Comlink.proxy 包装。不要把网络未授权脚本注入同源 Worker。
+## 版本
 
-## 必测场景
-真正 Worker RPC 返回正确值；转移后原 byteLength=0；进度回调到达；按钮取消、Tab 切换、重复启动不会产生悬挂线程和旧回写；CSP/worker-src 在生产 preview 没有拦截。Node sdk.test.mjs 只能验证 Node MessageChannel，不等同 Chromium。状态未运行标 NOT_RUN。
+`comlink@4.4.2`，Apache-2.0。Worker 用 `expose`，宿主用 `wrap`。
 
-## 组合
-D03 p-limit 负责限制派发并发，D18 Comlink 负责线程消息层，E19 ffmpeg.wasm 可能需要多 Worker/WASM 独立内存预算。参考 https://github.com/GoogleChromeLabs/comlink 。
+## 迁移
 
-## 故障与清理修复（第十二批）
+带走 `examples/worker.ts` 和 `examples/example.tsx`。生产入口要按打包器的真实 Worker URL 创建，不要假设 Vite 的 `new URL(..., import.meta.url)` 在别的打包器里同样成立。
 
-Worker 不一定会回复 RPC：为每次会话监听 `error` / `messageerror`，与目标 Promise、AbortSignal 三方竞速；正确清除监听器。Remote `releaseProxy` 失败时仍要 `terminate()`，不能使释放异常阻止物理线程终止。不要仅在业务 `catch` 写一个文字失败后留下 Worker。SDK 的 Node MessagePort callback + transfer 测试与浏览器 Module Worker/CSP 是两条独立证据，均须执行后才能标记通过。
+## 不可删的清理
+
+离开页面时 `releaseProxy`，失败也要 `terminate`。每次会话监听 `error` 和 `messageerror`，并和目标 Promise、AbortSignal 一起结束。旧响应用 epoch 挡住。`transfer` 之后不要再读原来的 ArrayBuffer。
+
+## 反例
+
+- 在主线程返回预设结果，假装 Worker 跑过。
+- 只在业务 catch 里写失败文案，Worker 还活着。
+- 把未授权脚本注入同源 Worker。
+- 用 p-limit 代替线程隔离，或用 Comlink 代替并发上限。
+- 把 Node 的 MessagePort 测试当成浏览器 CSP 通过。
+
+## 测试断言
+
+- RPC 返回值来自 Worker。
+- 转移后原 buffer 的 `byteLength` 为 0。
+- 取消、切页、重复启动不会留下旧回写。
+- 生产预览的 `worker-src` 没有拦截脚本。后一项需要浏览器收据。
+
+## 真实限制
+
+`terminate` 不保证旧 RPC Promise 自己结束。普通函数跨线程要 `Comlink.proxy`。这不是 ffmpeg 的内存预算。
+
+## 证据
+
+没有 `docs/library-lab/evidence/runs/` 收据不要写 sdk 或 browser PASS。Node MessageChannel 和 Chromium Worker 分开记账。

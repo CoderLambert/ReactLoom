@@ -1,13 +1,46 @@
-# E17 hls.js — Agent 复用契约
+# E17 hls.js — 工程手册
 
-定位：浏览器 HLS 分段/自适应码率播放引擎，不是视频 UI 或上传。发行基线 hls.js@1.7.3 Apache-2.0。
-复制源码：`examples/example.tsx`，按目标站点替换固定测试流；不要把测试 CDN URL 发布成业务媒体地址。
-必须保留：先检查支持度，明确MSE/原生HLS分支；真实 `attachMedia→loadSource`；仅从已加载的levels选择码率；fatal错误保护；destroy和清理video.src；取消后generation检查。
-重要安全：CORS/HTTPS/DRM许可/字幕隐私/资源域名白名单须由产品部署配置；不应用户访问页面就请求第三方测试媒体。
-常见错误：把 `video.pause()` 当资源释放、对错误无限重试、假设Safari一定走hls.js、将Manifest读取算实际媒体可播放。
-验收：需要媒体服务器和实际浏览器。检查清单与分段请求、质量切换、失败恢复、停止后网络无持续下载、Worker/CSP。不能用TypeScript解析或Mock播放器标SDK PASS。
-相关E16 Video.js v10，E19 ffmpeg.wasm，E18 wavesurfer.js。官方：https://github.com/video-dev/hls.js
+## 适用
 
-## Wave16 迁移必留
+在支持 MSE 的浏览器里按用户意图播放 HLS。单个 MP4 用原生 video。v10 皮肤用 E16，且不要两个引擎绑同一个元素。
 
-保留 keyed HlsSession 或等效严格销毁，fatal 时使generation失效；只允许manifest真实levels的质量index。原生Safari分支不要误认为Hls.js初始化成功。
+## 版本
+
+`hls.js@1.7.3`，Apache-2.0。实例配置是 `enableWorker: false` 和 `maxBufferLength: 12`。测试清单是 `https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8`，只作为 opt-in 常量。
+
+## 迁移
+
+复制 `examples/example.tsx` 的按钮、`stop`、generation 和 fatal 销毁。`examples/demo.tsx` 只是再导出。`loadSource` 只能写在点击处理函数里，放在 `MEDIA_ATTACHED` 回调中。不要在 effect 里加载，不要加隐藏 script，不要自动 `video.play()`。
+
+## 不可删的清理
+
+`stop` 和卸载都要 `destroy`、暂停、移除 `src`、调用 media `load()`，并递增 generation。fatal 错误作废该次 generation 后销毁，不自动 `startLoad`。过期的 `MANIFEST_PARSED` 和 `ERROR` 不能 `setState`。质量 index 必须属于当前 levels。
+
+## 反例
+
+- `useEffect` 里 `loadSource(TEST_HLS)`。
+- 用 script 或 prefetch 默默请求 Mux。
+- fatal 后无限重试。
+- 渲染期间 `new Hls()`。
+- 与 Video.js 共享一个 video 元素。
+- 忽略 generation。
+- 挂载时 `play()`。
+- 失败时换一段本地视频伪装成功。
+
+## 测试断言
+
+- 不点击则没有清单请求。
+- 点击后才 `attachMedia` / `loadSource` 或原生 src。
+- 不支持 MSE 且不支持原生 HLS 时零请求。
+- fatal 后实例被销毁，再次播放是新的 `Hls`。
+- 没有浏览器收据就不要写 ABR 或 CORS 已通过。
+
+## 真实限制
+
+Worker 关闭。缓冲 12 秒只为演示。没有字幕 UI，没有 DRM，没有自动播放。测试流不代表生产片源。`canPlayType` 不是解码保证。
+
+## 证据
+
+sdk、build、browser 保持 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有 E17 收据。Actions `41779873259` 是仓库级运行，不是本条目 PASS。
+
+资料：https://github.com/video-dev/hls.js/releases/tag/v1.7.3 。

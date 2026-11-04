@@ -1,29 +1,46 @@
-# E06 react-markdown — Agent 工程手册
+# E06 react-markdown — 工程手册
 
-## 决策入口
+## 适用
 
-React 需要显示 Markdown：优先 react-markdown；需要编辑复杂块文档时选 Tiptap/BlockNote；需要执行 MDX JSX 属于另一条明确授信的渲染路径，不能把不可信 Markdown 当 MDX 执行。
+把完整 Markdown 字符串渲染成 React 元素：报告、知识库、RSS 预览。编辑源码用 E04。结构审计用 E07。已是 HTML 的字符串用 E08 或 E10。流式半截标记不要直接当本库的已完成场景。
 
-## 可复用文件
+## 版本
 
-`examples/example.tsx` 中的 `Markdown`、`remarkGfm`、`rehypeSanitize`、`skipHtml`、`render-policy.mjs` 中的 `safeMarkdownURL` 和 `markdownComponents` 是核心，`examples/demo.tsx` 是 Lab 的懒加载适配。包：react-markdown@10.1.0、remark-gfm@4.0.1、rehype-sanitize@6.0.0。锁文件与真实依赖安装由目标工程确认。
+`react-markdown@10.1.0`、`remark-gfm@4.0.1`、`rehype-sanitize@6.0.0`，MIT。三包按 `library.json` 一起锁定。不要从 v9 教程删除 `skipHtml` 或 `urlTransform`。
 
-## 不可删除的保护
+## 迁移
 
-- 不支持任意执行 JSX；不把用户字符串直接交给 `innerHTML`。
-- 不可信 HTML 默认跳过；若启用 rehype-raw，重新审计 sanitizer 插件链。
-- 自定义链接组件不得放过 javascript/data/file 协议或不可信重定向。
-- 外部图片默认禁止或由产品制定清晰允许域/代理；避免泄漏私密 URL。
-- 动态编辑/长文档内容的高亮与解析可能开销大，需按需加载。
+复制 `examples/example.tsx` 的 `remarkPlugins`、`rehypePlugins`、`skipHtml`、`urlTransform` 和 `components`。URL 与链接、图片组件以 `examples/render-policy.mjs` 为唯一实现，不要在 JSX 里再写一套正则。`examples/demo.tsx` 只是再导出。产品数据用 Query 传入字符串，不要把预览 DOM 存回数据库。
 
-## 测试重点
+## 不可删的清理
 
-basic：粗体与安全链接可访问。business：GFM table 和任务清单正确生成。advanced：script、事件处理器不进入 DOM；javascript 链接不能被点击执行；图像不触发外部资源下载。测试必须在真正安装包与浏览器时运行，不用静态语义判断假设安全。
+`skipHtml` 必须留下。`rehypeSanitize` 必须留下。`safeMarkdownURL` 只接受无凭据 `https:` 和有限页内锚，失败返回 `''`。`components` 禁止展开未知 props。`img` 不读取 `src`。level 变化时若组件不卸载，effect 要重置原文。文本框保持上限。
 
-## 相关
+## 反例
 
-E07 remark / E08 rehype / E09 Shiki / E10 DOMPurify；当前SDK/浏览器状态未实测。官方：https://github.com/remarkjs/react-markdown
+- `rehype-raw` 或去掉 `skipHtml`。
+- 默认 `urlTransform` 或自己用正则删 `<script`。
+- `a: (props) => <a {...props} />`。
+- `<img src={src}>` 打开展示跟踪图。
+- 把 `innerHTML` 当存储。
+- 每个键击写入全局 store。
+- 用 advanced 样例的视觉正常宣称 XSS 已在浏览器测过。
+- 把 GFM 样例表格里的 PASS 文字写成条目验收。
 
-## 新增同源安全规则
+## 测试断言
 
-复制 `examples/example.tsx` 时必须连同 `examples/render-policy.mjs`，否则会漏掉外链与跟踪图片策略。不随意增加相对 URL、图片或 MDX；变更后先运行真实 SDK SSR 套件，再在浏览器观察真实网络、CSP 与场景切换。尚无实际执行证据时保持SDK/Browser NOT_RUN。
+- `javascript:`、带用户名的 URL、含控制字符的地址变成空，链接降级为 `span`。
+- 页内锚字符集以外的 hash 被拒绝。
+- 图片组件不输出 `src`。
+- 浏览器里 advanced 样例的 DOM 没有 `script`、事件属性或可导航的危险 href。没有收据就保持未测。
+- 策略模块与渲染组件必须继续引用同一文件。
+
+## 真实限制
+
+`rehype-sanitize` 在这里是默认调用，不是 E08 那份更窄的 schema。12_000 字符是文本框限制。示例不拉远程文章，不做 Shiki，不做流式重解析。SSR 水合未测。
+
+## 证据
+
+sdk、build、browser 保持 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有 E06 收据。Actions `41779873259` 是仓库级运行，不是本条目 PASS。不要把未跑的 XSS 观察写成通过。
+
+资料：https://github.com/remarkjs/react-markdown 与 https://github.com/rehypejs/rehype-sanitize 。

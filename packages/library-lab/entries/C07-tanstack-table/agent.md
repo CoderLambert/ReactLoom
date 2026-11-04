@@ -2,40 +2,46 @@
 
 ## 适用
 
-无样式的排序、分页、行选择。要现成表格皮肤用别的组件库，把本库放在头less 层。不要从 v8 文档抄 API。
+需要自己拥有表格 DOM 和数据请求的列表。不要把它当成数据源或虚拟化库。开箱网格比较 C08，大 DOM 比较 C10。
 
 ## 版本
 
-`@tanstack/react-table@9.2.4`。入口是 `useTable` 和 `tableFeatures`。
+`@tanstack/react-table@9.2.4`，MIT。入口是 `useTable`、`tableFeatures`、`createColumnHelper<typeof features, Feed>()`。不要从 v8 文章复制 `useReactTable` 或 `getCoreRowModel`。
 
 ## 迁移
 
-带走 `examples/example.tsx` 的列定义和 `examples/page-policy.mjs`。`getRowId` 必须是业务 id。advanced 的手动分页和手动排序要一起保留，除非你明确改回客户端全量数据。
+带走 `examples/example.tsx` 和 `examples/page-policy.mjs`。用 API client 替换 `fetchLocalPage` 的 `setTimeout`。保持 `manualSorting`、`manualPagination`、`rowCount` 和 `getRowId`。排序字段继续走白名单，服务端再查一次。
 
 ## 不可删的清理
 
-请求租约在新的查询开始时递增。写回 `setRemote` 前核对 identity 和 generation。卸载或切换 level 时旧响应不能落地。页码用 `clampPageIndex`。
+任何会改变查询身份的操作先 `invalidate`。回包必须 `lease.owns()`。页码被 `clampPageIndex` 改掉时不要提交旧页的行。卸载时 effect cleanup 调用 `lease.cancel()`。行的 React key 使用 `row.id`。
 
 ## 反例
 
-- `useReactTable` / `getCoreRowModel`。
-- 行 key 用数组下标。
-- 手动排序又在客户端重排当前页。
-- 不取消的 fetch 覆盖新筛选。
-- 把当前页全选说成选中全部结果。
-- 用 HTML 字符串渲染不可信标题。
+```tsx
+useTable({ data: onePage }) // 客户端排序被误当成全局排序
+const { getValue } = row
+getValue('title')
+```
+
+- 省略 `getRowId`。
+- 只 `abort`，不比较 epoch，导致 A→B→A 回写。
+- 用 `getSelectedRowModel()` 当跨页已选集合。
+- `initialState`、`state`、`atoms` 同时写分页。
+- 把 `sortId` 拼进 SQL。
+- 列头只有点击、没有按钮和 `aria-sort`。
 
 ## 测试断言
 
-- 同一 id 在排序后仍被选中。
-- 身份不匹配的响应被丢弃。
-- 总数变小后页码不会停在空页。
-- 策略单测不是浏览器表格证明。
+- 身份函数拒绝未知 sort id、多列排序和非整数页码。
+- `clampPageIndex` 在总数变小时回到最后一页，空表回到 0。
+- gate 的旧 lease 在新的 begin 之后 `owns()` 为假，包括 A→B→A。
+- 策略测试不是浏览器里的表格 PASS。
 
 ## 真实限制
 
-种子数据是本地 18 行。没有列虚拟化，没有服务端「选择全部」。失败文案必须和空结果区分。
+advanced 的 503 和延迟都是本地定时器。没有 Query、没有 URL 状态、没有虚拟行。18 行不是性能数字。中文 Enter 的 80ms 是示例策略。
 
 ## 证据
 
-没有收据不要写 PASS。仓库级 CI 不能抄到本条目。
+没有收据不要写 PASS。Actions 41779873259 不是本条目。不要改 `verification.json`。

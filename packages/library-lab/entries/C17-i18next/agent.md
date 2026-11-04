@@ -1,45 +1,48 @@
-# C17 i18next — Agent 复用手册
+# C17 i18next — 工程手册
 
-## 快速选型
+## 适用
 
-负责资源加载、复数、插值、回退和语言决策，而不是机器翻译。适合客户端、Node、SSR 共享相同翻译词条的业务。React 的视图订阅应交给 react-i18next，单独调用核心 t 并不会自动让所有 React 组件刷新。本示例只使用本地数据，无翻译服务和网络依赖。
+框架无关的文案、复数、插值和回退。React 订阅用 C18。不要用全局单例跨租户改语言。
 
-## 实际文件及部署前置
+## 版本
 
-`library.json`（版本与依赖）→ `examples/example.tsx`（完整逻辑）→ `examples/demo.tsx`（Lab 导出）→ `verification.json`（分项证据）。前置依赖：i18next@26.4.3。默认不向外部 API 发起请求。
+`i18next@26.4.3`，MIT。不是笔记里的 26.5.3。`createInstance`，`initAsync: false`，`interpolation.escapeValue: true`，`fallbackLng: 'en'`。
 
-## 迁移指令
+## 迁移
 
-先查目标项目是否已有 i18next 实例和资源命名；不要再初始化第二个默认实例。模块化复用 resources 与 createInstance，服务端每请求单独生成实例，UI 借助 react-i18next 绑定。对用户输入只通过 t 插值输出文本，切换语言需等待 Promise 并加 generation/卸载保护。
+带走 `examples/example.tsx` 的资源和 `examples/language-switch.mjs`。每个所有者 `createInstance`。渲染时调用 `t`。语言切换继续走队列。React 绑定不要塞回这个文件。
 
-## 禁止的反模式
+## 不可删的清理
 
-禁止将翻译结果用 dangerouslySetInnerHTML 输出；禁止把同步 t() 输出缓存为永不刷新的模块级常量；禁止通过全局 changeLanguage 操作租户间共享模块；资源缺失或 sdk 未运行不可标 PASS。
+卸载时 `dispose()` 并 `off('languageChanged')`。init 完成时若 effect 已清理，不要 `setState`。队列在 dispose 后不得 `onCommit`。不要缓存 `t()` 的返回值。
 
-## 必须保留的能力边界
+## 反例
 
-初始化在读取 t 之前完成。服务端为不同请求单独创建实例并注入当前用户语言，避免共享 singleton 泄漏状态。资源应按语义分 namespace 并具备提取与审核工作流；长列表避免每一行重复加载语言包。切换语言时对 pending Promise 做版本保护，组件卸载 destroy 并忽略旧回调。
+```ts
+import i18next from 'i18next'
+const title = i18next.t('title')
+void i18n.changeLanguage('en')
+void i18n.changeLanguage('zh')
+```
 
-## 最小测试断言
+- `dangerouslySetInnerHTML` 渲染译文。
+- 用用户字符串当键。
+- 中文资源只抄英文的 `_one`。
+- 缺键没有 defaultValue 仍当正常 UI。
+- 跨 demo 共用一个可变单例。
 
-Node SDK 实际断言：en 的1条/2条复数、中文回退英文、两实例语言隔离、未知键 defaultValue。生产接线补 browser 切换和 SSR 不串语言的断言。
+## 测试断言
 
-## 版本 / 证据
+- 队列只提交最后一次语言；dispose 之后不提交。
+- 并发调用被串行化，后完成的旧请求不能覆盖更新的意图。
+- 英文 count 1 与其他数量使用不同键；中文使用 other。
+- `editorial` 在中文缺失时回退英文。
+- 队列单测不是 i18next init 的 PASS。
 
-采用现有 ReactLoom SPA 已固定的 i18next 26.4.3，不擅自升级模板；2026-10-25 官方发布过更新版，未来由平台统一做兼容核验。 当前示例未获得实际 SDK、完整类型检查、构建或浏览器 PASS；迁移到目标项目需要按目标锁文件重新测试，不能声称历史 PASS 可继承。
+## 真实限制
 
-## 选型关系
+资源是内嵌对象。没有 HTTP 后端，没有语言探测器，没有 SSR。快速切换的浏览器行为需要 browser 收据。`escapeValue` 不是 HTML 净化器。
 
-complements C18：React 组件订阅语言变化应使用 react-i18next 的 Provider/hook；核心 i18next 可用于服务端与框架无关工具。
+## 证据
 
-## 官方出处
-
-i18next 官方 API：https://www.i18next.com/overview/api
-
-配置选项与初始化：https://www.i18next.com/overview/configuration-options
-
-官方项目：https://github.com/i18next/i18next
-
-## 最新意图切换合同（第16轮）
-
-迁移时将 `examples/language-switch.mjs` 与 `examples/language-switch.d.mts` 一并复制；单实例一条队列，新的语言意图覆盖尚未开始的旧意图，但**绝不并发调用同一实例的 changeLanguage**。UI 的最终显示由 onCommit 驱动，旧失败不得覆盖新意图；卸载先 dispose，再 destroy。不要把无SDK队列测试当成真实 i18next / SSR / 浏览器 PASS。
+没有收据不要写 PASS。Actions 41779873259 不是本条目。不要改 `verification.json`。

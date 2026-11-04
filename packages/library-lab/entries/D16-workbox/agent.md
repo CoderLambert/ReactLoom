@@ -1,48 +1,59 @@
-# D16 Workbox — Agent 实施指引
+# D16 Workbox — 工程手册
 
-## 何时选用
+## 适用
 
-只在需求明确包括可靠的静态文件预缓存、公开资源离线或 PWA 导航 fallback 时引入 Workbox。动态多租户记录适合 Dexie/后端；纯远端状态应先考虑 TanStack Query。固定评估目标 workbox-build 7.4.1（MIT），Node >=20；以安装时真实依赖、锁文件和官方文档再核对。
+在 Node 里用 `workbox-build` 为隔离目录生成预缓存，并可选地描述一条公开 GET 的运行时策略。产物是临时文件。
 
-## 可迁移源码
+不要用它给 Library Lab 主源安装 Service Worker。不要缓存带凭据的响应。不要把 CacheStorage 当成数据库或鉴权。
 
-- examples/workshop.mjs：generateSW/getManifest 配置、临时隔离构建、manifest 安全断言、输出及清理。
-- examples/basic.mjs：静态预缓存入口。
-- examples/business.mjs：仅针对公开 GET 的 NetworkFirst 白名单。
-- examples/advanced.mjs：离线 fallback 和更新策略。
-- tests/sdk.test.mjs：真实 SDK 构建断言，不是 Mock。
+## 版本
 
-主站的 node-ci 展示页面不是可运行终端。工程迁移时抽取配置函数，替换自己的真实静态构建目录/独立 worker 输出目录，不复制演示 tmp fixture 为生产资产。
+`workbox-build@7.4.1`，MIT。示例没有安装 `workbox-window`、`workbox-precaching` 或 background sync 包。
 
-## 不可删除的边界
+生成选项里 `skipWaiting: false`，`clientsClaim: false`，`cacheId` 带 `isolated`。
 
-1. Service Worker 只由明确的独立 origin / 固定子路径负责；不要让 Lab 根目录或共享 origin 被默认 scope 接管。
-2. 缓存公开 GET，必须限定 method、origin、pathname、响应状态和 TTL；不可缓存用户授权或敏感数据。
-3. globFollow:false、private 目录排除和最大文件体积阈值；不得预缓存源码映射中的密钥、账户或隐私内容。
-4. skipWaiting:false / clientsClaim:false，更新要由前端明确确认；清理仅本应用命名空间。
-5. Node 生成行为、浏览器控制与离线行为分项取证；新构建指纹变化，旧证据无效。
+## 迁移
 
-## 典型错误
+从 [`examples/workshop.mjs`](examples/workshop.mjs) 带走 `workboxOptions` 和 `runWorkshop`。匹配函数来自 [`examples/cache-policy.mjs`](examples/cache-policy.mjs)。三个入口只负责选择 level。
 
-直接在根 /sw.js 注册；通配 .* 缓存所有服务端路径；随意删所有 CacheStorage；将工作线程注册当作普通 React useEffect 副作用、卸载时未处理所有权；以 Node 生成成功宣称浏览器离线 PASS。
+生产构建若复用选项，输出目录仍不得是 Lab 应用的站点根。注册必须缺席。`registrationExecuted` 保持 false。
 
-## 复现与验证
+`matchPublicRssRequest` 继续自包含，不引用模块级变量。
 
-~~~sh
-pnpm --filter @reactloom/library-lab exec node entries/D16-workbox/examples/advanced.mjs
-pnpm --filter @reactloom/library-lab exec node --test entries/D16-workbox/tests/sdk.test.mjs
-~~~
+## 不可删的清理
 
-核验生成结果包含 index.html/app.js、没有 private/tokens.js，sw.js 非空；业务路由不匹配其他 origin / 私有 URL。浏览器另建隔离部署，实际断网、重新上线、版本更新并核对 root 页面不受控制。未执行前 verification.json 不得写 PASS。
+`keepOutput` 不是 true 时，`finally` 删除整个 `mkdtemp` 目录。入口为了展示传入 true，调用方仍不要把该目录注册进浏览器。
 
-## 依赖交接
+清单包含 `private/`、warnings 非空、或 `sw.js` 为空时抛错，不返回部分成功。
 
-PLATFORM 独占 package/lock/CI 和正式 Service Worker runner；需加入 devDependency workbox-build@7.4.1、定向 Node CLI recipe、隔离 origin E2E。不能从此条目要求 CD worker 修改公共文件。
+不要添加 `navigator.serviceWorker.register`。不要把 scope 改成 `/`。
 
-## 官方资料
+## 反例
 
-https://developer.chrome.com/docs/workbox/modules/workbox-build
+- 在 React 效果里注册 `/sw.js`。
+- `skipWaiting: true` 且 `clientsClaim: true`。
+- `urlPattern` 匹配整个 origin。
+- 匹配函数闭合外部常量，导致生成后的 worker 引用失败。
+- 缓存带 Cookie 或 Authorization 的 GET。
+- 用忽略规则保管真正的秘密文件。
+- 把 Query 失效当成 SW 缓存已更新。
+- 在 SSR 里访问 `navigator.serviceWorker`。
 
-## 新增不可删除的匿名缓存边界
+## 测试断言
 
-三层源码通过 `examples/cache-policy.mjs` 的 `matchPublicRssRequest` 精确匹配公开 RSS。必须保留 `credentials: 'omit'`、HTTPS origin/path 白名单、GET 与敏感请求头拒绝；正则仅靠 URL 匹配不足以避免认证数据缓存。Workbox 的 `urlPattern` 序列化函数不得捕获模块级变量或 React 对象。按 `tests/cache-policy.test.mjs` 运行纯策略断言后，还需要目标 Workbox 7.4.1 真正生成 sw.js 的 SDK 测试，浏览器验证缓存/隔离；不能将纯策略测试算 SDK PASS。
+- 真实 `generateSW` 写出非空 worker，且不执行注册。
+- 预缓存 URL 含 `index.html` 与 `app.js`，不含 `private/`。
+- 运行时策略只描述匿名的精确公开路径。
+- advanced 包含 `offline.html` 回退，私有目录仍排除。
+- 错方法、错凭据、错路径、禁止头返回 false；不完整参数返回 false。
+- `tests/sdk.test.mjs` 导入真实 `workbox-build`。无收据则 NOT_RUN。
+
+## 真实限制
+
+Node 生成不等于浏览器已安装 worker。没有更新弹窗，没有 Background Sync，没有离线往返。`NetworkFirst` 只出现在生成配置里，本进程没有拦截 `https://lab.example.test`。
+
+临时目录在 `keepOutput` 时会留在系统 tmp。那不是部署物。
+
+## 证据
+
+sdk、build、browser 保持 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有匹配收据。Actions 41779873259 不是本条目的 SW 安装证明。不要改 `verification.json`。

@@ -1,52 +1,149 @@
-# axe-core：自动化发现可访问性问题，但不能替代人的体验
+# axe-core 4.14.0｜三则规则，只扫当前容器
 
-## 用途与安装
+Lab 锁定 `axe-core@4.14.0`（MPL-2.0）。示例对一块自己的 DOM 调用 `axe.run`。它不证明整页 WCAG，也不代替读屏和键盘走查。
 
-axe-core 是针对真实 DOM 的开源 WCAG/最佳实践规则引擎，适合组件库、业务页面、设计系统与 CI 的基础可访问性门槛。它不是一个 React 组件库，也不是替开发者完成焦点流、键盘操作、屏幕阅读器和人工感知测试的工具。
+用户显式启动后挂载 [`examples/demo.tsx`](examples/demo.tsx) → [`examples/example.tsx`](examples/example.tsx)。换 level 会换 `key`，审计会话重新挂上。
 
-```bash
-pnpm add -D axe-core@4.14.0
+没有 `docs/library-lab/evidence/runs/` 收据时 sdk、build、browser 保持 NOT_RUN。Actions 41779873259 是仓库级安装、类型检查、构建、52 个 SDK 文件 / 153 项测试和 45 项 Playwright，不是 F17 的 PASS。那 45 项里若有别的页面的 axe，也不能抄到这三则规则。
+
+## Lab 当前示例
+
+| 文件 | 作用 |
+| --- | --- |
+| `examples/example.tsx` | 缺陷 DOM 与修复 DOM，按钮触发 `axe.run` |
+| `examples/audit-queue.mjs` | 串行化本模块的扫描；排队期间失效则跳过 |
+| `examples/audit-queue.test.mjs` | 队列策略，不调用 axe |
+
+只运行 `image-alt`、`label`、`button-name`。图片是 1×1 的透明 GIF data URL，没有第三方媒体。修复前：business 以外的图没有 `alt`；basic 以外的输入只有视觉上的 `<span>`，没有 `<label htmlFor>`；advanced 的按钮没有文字也没有 `aria-label`。
+
+修复后：alt 为「示例内容封面」；label 关联 `useId()`；按钮 `aria-label` 为「添加当前RSS频道」并有可见文字「添加」。
+
+勾选修复会增加 generation 并清掉旧结果。扫描进行中不能切换，避免 DOM 在 `axe.run` 中途被换掉后还写回。
+
+`enqueueAxeAudit` 保证本模块不会重叠调用 `axe.run`（库会拒绝重叠）。失败不会把队列卡死。`isCurrent` 为假时返回 `{ skipped: true }`，不把过期结果写进状态。它协调不了页面上其它代码发起的 `axe.run`。
+
+## 1. 什么时候用
+
+组件刚写完，想看这几条能自动算出来的名字问题：图没有替代文本、输入没有标签、按钮没有可访问名称。流程是否做得成、焦点是否掉进端口、对比度是否在真实主题下合格，都要另测。
+
+React Aria（B12）提供组件行为。挂上它之后仍要跑规则和键盘。不要互相代替。
+
+## 2. 模型
+
+```text
+点击
+  → running ref 挡住重入
+  → generation++
+  → enqueue → axe.run(container, { runOnly: { type: 'rule', values: [...] } })
+  → 仍是当前代号且未 skipped
+  → violations 映射 id / impact / description / target
+  → incomplete 只计数
 ```
 
-Demo 用 `examples/example.tsx` 真实调用 `axe.run(container,{runOnly:{type:'rule',values:['image-alt','label','button-name']}})`。这里故意限定 3 条规则，仅测试当前局部 DOM；不会扫描网站所有分区，也不会把“本次没有 violations”宣称整个网站无障碍合规。
+上下文是 `ref` 上的 div，不是 `document`。因此旁边的 Lab 导航不在这次结果里。换 level 卸载会话，旧扫描只能被丢弃，不能说成已经从引擎里物理取消。`axe.run` 一旦开始，就会跑完；代号不对就忽略结果。
 
-## 三层运行示例
+`incomplete` 是规则无法确定的项，不是违反，也不是通过。文案要求人工判定。
 
-**basic**：透明示例图片没有 alt，运行审计后展示真实 axe 违反项。勾选修复版会为图片提供准确的 `alt`，再运行比较结果。装饰性图片应使用空 alt，而不是无 alt 属性。
+修复勾选和「通过这 3 条」的空列表都写明：不等于 WCAG 全部合格。
 
-**business**：RSS 输入框的可见文字故意只用 `span`，未与 `input` 关联。修复版使用 `<label htmlFor=...>` + 稳定 `useId()`。`placeholder` 不能替代可靠的字段标签；提交错误也需要可读提示。
+## 3. 三层
 
-**advanced**：叠加图片alt、label、按钮名称缺失，获取每条违反规则的 target/impact/description。修复后重新审计，注意状态变化期间避免重入同一个axe扫描；仍可能存在 `incomplete` 或在其他WCAG规则中发现的问题。
+### 基本
 
-## 核心 API 和证据
+只有一张缺 alt 的图。标题是「图片缺少替代文本」。未修复时，`image-alt` 应出现在违反列表。修复后这三条里不应再有它。其它规则没有跑。
 
-`axe.run(context,options)` 的context可以是DOM元素、选择器或包含include/exclude的范围。结果中的 `violations` 表示特定规则检测失败；`incomplete` 表示不能确定需要人工核对；`passes` 不是产品全功能通行证。正式环境通常用 `@axe-core/playwright` 在真实Chromium中对多个状态与路径分别运行，结合手工键盘/屏幕阅读器检查。
+### 业务
 
-## 生产最佳实践
+没有那张图，只有未关联的「RSS 订阅地址」和输入框。未修复时应看到 `label`。修复后用真正的 `<label htmlFor>`。placeholder 不是标签。
 
-- 在关键业务状态和弹窗打开后的DOM上运行，不只扫描静态首页。
-- 断言具体规则失败/通过和元素，不依赖完整HTML快照。
-- 常见自动化盲点：焦点顺序、复杂ARIA交互、动态错误播报、触屏操作和目标大小的人工判断。
-- 避免将生产敏感字段、内部文档或访问令牌写入外部报告；axe-core本体在本地运行，CI产物仍受访问控制。
-- 失败规则应当修复生产标记和组件语义，不要通过 `runOnly` 或规则忽略来隐藏已知问题。
-- 本演示中的故意不合规DOM只存在教学容器，**不可直接复制进生产组件**。
+### 进阶
 
-## 常见误区
+图、输入和空按钮都在。未修复时三条都可以出现。修复版同时补 alt、label 和按钮名。空列表旁边的句子仍然限制范围。动态焦点和读屏不在这次调用里。
 
-- 把零 violations 说成100% WCAG合规。
-- 在尚未渲染到DOM的React组件上运行axe。
-- 让aria-label覆盖有效可见名称而不顾用户预期。
-- 对可访问性测试采用颜色/截图相似度作为唯一断言。
-- 用jsdom的局限为所有浏览器情况做结论。
+## 4. 反例
 
-## 验证与来源
+### 反例 1：扫整个 document
 
-需实际浏览器运行三层：缺陷版出现对应rule，修复版目标规则消失，其他区域不被误扫，点击快速切换不触发重叠运行。当前SDK/浏览器未执行，verification未标PASS。官方 [axe-core](https://github.com/dequelabs/axe-core) · [API](https://github.com/dequelabs/axe-core/blob/develop/doc/API.md)。许可证MPL-2.0，作为浏览器依赖使用时须遵守许可及第三方依赖条款。
+```ts
+await axe.run(document)
+```
 
-## 并发审计与场景生命周期（EF wave17）
+会把 Lab 外壳算进来，也会让结果无法对应这块教材。传入容器 ref。
 
-axe-core 同一实例不允许并发 `axe.run`，两张并排 Demo 或切换 level 时很容易触发 `Axe is already running`。本条目新增同源 `examples/audit-queue.mjs` 将本演示内的扫描排队；`isCurrent` 在队列轮到任务之前检查当前 DOM 是否仍挂载与本次 token 是否有效，旧请求直接跳过而不会启动新的 axe 扫描。Promise 拒绝不会阻断后续任务。
+### 反例 2：不限制规则却宣称只修了 alt
 
-React 外层使用 `key={level}` 让不同难度各有独立会话，卸载时废弃 token；调用中按 `running` 同步门禁阻止双击。**正在执行的 axe.run 无法被这段队列取消**，其他独立导入 axe-core 的应用也不在此序列化边界内；不要在不同应用之间推断全局互斥。
+默认规则集比这三条多。本页用 `runOnly`。若产品要全量，就不要复制这组 `values`，并且准备好 incomplete 和主题对比度。
 
-纯逻辑可运行：`node --test packages/library-lab/entries/F17-axe-core/examples/audit-queue.test.mjs`。它仅测排队、跳过与故障恢复，不导入 axe-core，**不是目标 SDK 或浏览器 PASS**。真正需要用 Chromium 验证两实例同时点击、level 快速切换、规则变化、CSP 和真实 `axe.run` 结果。
+### 反例 3：违反数为 0 就写 WCAG 通过
+
+```tsx
+if (report.violations.length === 0) markCompliant()
+```
+
+空列表只说明这三条没有违反。`incomplete` 还要人看。键盘顺序、放大、读屏没有测。
+
+### 反例 4：重叠调用
+
+连续点两次，或两个 demo 实例同时 `axe.run`，库会拒绝。`running` ref 加上队列。换 level 用 `key` 卸掉旧会话。
+
+### 反例 5：中途改 DOM 仍采用结果
+
+修复勾选若发生在扫描中，结果对的是旧树或一半新树。扫描时禁用勾选；若代号变了，直接 return。
+
+### 反例 6：用 impact 颜色代替文本
+
+列表写出 id、impact、description 和 target。不要只画红点。`impact` 可能为空，显示「未定级」。
+
+### 反例 7：mock axe.run
+
+```ts
+vi.mock('axe-core', () => ({ default: { run: async () => ({ violations: [], incomplete: [] }) } }))
+```
+
+这不是 SDK。队列测试故意不 import axe。浏览器里必须看到真实违反和修复后的变化。
+
+### 反例 8：把教学缺陷抄进产品
+
+未勾选的 DOM 是故意坏的。复制组件时用修复版：有 alt、有 label、按钮有名称。不要把 data URL 图当成内容图。
+
+## 5. 组合
+
+**F13**：在每个状态下 `setContent` 或打开路由后再 `axe.run`。Playwright 的角色定位不是规则结果。本页没有 Playwright。
+
+**F12**：Node 里没有这块 DOM。不要在 Vitest 的默认环境里期待 `image-alt`。
+
+**F14**：addon 的 `a11y.test: 'error'` 不会自动覆盖这三则缺陷。状态卡故事是另一份 DOM。
+
+**B12**：原语减少一些错误。集成后仍跑 `axe.run`，并手测键盘。
+
+## 6. 清单
+
+- 上下文是容器，规则只有三条。
+- 手动触发，不在挂载时扫描。
+- 换 level 重挂会话；过期结果丢弃。
+- 队列失败不阻塞下一次。
+- 修复路径使用 label、alt、按钮名，而不是 placeholder 或仅颜色。
+- 展示 incomplete 的数量。
+- 不上传页面 HTML，不包含用户数据。
+- 零违反不写成合规认证。
+
+## 7. 升级
+
+4.14 的 `axe.run(context, { runOnly })` 是合同。升级后用未修复和修复各跑一次，确认规则 id 仍是 `image-alt`、`label`、`button-name`。id 若改名，示例和断言一起改。
+
+MPL-2.0 的文件头不要删。不要把 axe 的源码副本另存进条目。
+
+## 8. 验收
+
+```bash
+node --test packages/library-lab/entries/F17-axe-core/examples/audit-queue.test.mjs
+```
+
+它不加载 axe-core。浏览器要看到：未修复有对应 id，修复后这三条的违反下降，incomplete 被单独计数，快速换 level 不把旧结果写上来。这些需要收据。策略通过保持 sdk NOT_RUN。仓库其它页面的 axe 日志不是这一页的 browser 收据。
+
+## 9. 资料
+
+- https://github.com/dequelabs/axe-core
+- https://github.com/dequelabs/axe-core/blob/develop/doc/API.md
+- https://github.com/dequelabs/axe-core/blob/develop/doc/context.md
+- https://www.npmjs.com/package/axe-core

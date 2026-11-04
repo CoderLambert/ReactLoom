@@ -1,68 +1,184 @@
-# Immer — ReactLoom 工程实战
+# Immer 11.2.9｜结构共享、显式 Patch 和同步回滚
 
-## 定位与适用范围
+Lab 锁定 `immer@11.2.9`（MIT）。研究笔记里的 11.1.21 不是当前钉。用 `import { produce, produceWithPatches, applyPatches, enablePatches } from 'immer'`。它描述嵌套数据的下一份不可变状态，并在未改动的分支上复用引用。它不拥有网络、权限、Query 缓存或 CRDT。
 
-Immer 让程序在函数体里写可变语法，却产出全新的不可变状态。适合树形/深层数据、React reducer、表单编辑草稿和乐观 UI，但不负责网络请求、持久化和跨租户授权。默认自动冻结生成对象，Patch 功能需显式 enablePatches。
+没有匹配收据时 sdk / build / browser 保持 NOT_RUN。Actions 41779873259 是仓库级结果，不是本条目 PASS。
 
-## 安装及版本约束
+## Lab 当前示例
 
-~~~bash
-pnpm add immer@11.2.9
-~~~
+[`examples/demo.tsx`](examples/demo.tsx) 重导出 [`examples/example.tsx`](examples/example.tsx)。模块加载时调用一次 `enablePatches()`。初始状态是两篇本地故事，没有请求。
 
-采用 2026-10-22 官方发布的 11.2.9；主要 API 已由官方 Patches 文档确认，目标运行平台仍需进行实际解析。
+`toggleStory` 用 `produce`：按 `id` 找到故事并翻转 `read`，然后 `revision++`。分组改名同样在 recipe 里改 `draft.section.name`。React state 始终换成 produce 的返回值，不在渲染期间改上一份 state。
 
-## 真实代码路径
+advanced 用 `produceWithPatches` 在列表头部插入一条乐观故事，正向 patches 显示在 `<pre>` 里，逆向 patches 放进 ref。回滚调用 [`examples/patch-ownership.mjs`](examples/patch-ownership.mjs) 的 `takeUndo`：先同步读出 inverse 并清空 ref，再把这份数组交给 `setFeed(current => applyPatches(current, inverse))`。React 可能推迟 updater，若在 updater 里再读 ref，会读到已经被清掉的值，或者误用下一次乐观更新的 inverse。
 
-实际入口为 examples/demo.tsx，完整可迁移实现为 examples/example.tsx。Library Lab 展示的代码由这两份源文件生成并计算 SHA-256；三个 Demo 场景共享真实实现，使用 level 切换学习层次。不得为文档另外维护一份看起来相同但不可运行的伪代码。
+乐观未确认时输入和切换被禁用。确认只是本地丢掉 inverse，没有网络提交。文案写明：并发写入时，逆向 Patch 不能无条件盖住更新的服务器结果。
 
-## 更新语义
+没有挂载：`enableMapSet`、`enableArrayMethods`、`current` / `original`、Query 的 `setQueryData`、Redux reducer、requestId 竞态控制器。这些仍要在生产里遵守，只是当前按钮没跑它们。
 
-produce(base,draft=>...) 记录草稿写入并对发生变化的路径进行拷贝；未修改分支可以维持引用。不要将 draft 泄漏到 async 回调或作用域外使用。结构共享是结果语义，不保证每次更新都比手写浅拷贝更快。
+## 什么时候用
 
-## 三层实战
+多层嵌套、按业务 id 改一行、需要本地撤销时，用 produce 比手写多层 spread 更不容易漏分支。`articlesById` 加顺序列表会让更新路径更短。
 
-基础：修改 section.name 并保留原状态引用，查看 revision。业务：通过稳定 RSS id 切换 read，避免按当前渲染索引误更新其他行。进阶：对尚未提交服务器的插入生成 patches/inverse，失败时 rollback；单独提供本地确认动作。
+`{ count }`、一次 `map`、只存在服务器上的列表、每帧数值，不必上 Immer。Redux Toolkit 的 `createSlice` 已经在 reducer 里启用 Immer，不要再包一层 `produce`。服务端缓存的主人是 TanStack Query。多人同时编辑用 Yjs，不要把 Immer Patch 当成 CRDT。
 
-## 反例与修复
+## 模型
 
-一、直接 state.section.name = 'x' 可能污染 React 旧快照；必须通过 produce/setState。二、先 await 再访问 draft，代理已结束生命周期；应先完成草稿更新，异步在函数外处理。三、只保存 inversePatches 就允许期间执行任何其他写入，回滚可能覆盖后续有效变化；应锁定该示例的冲突写入，生产应使用版本/乐观上下文。四、在 draft 对 Map/Set 更新却未 enableMapSet，会报错；需要能力再显式启用，而不是默认把大多数 polyfill 带进首页。
+```text
+baseState
+  → produce(base, recipe)
+  → 同步 recipe 里的 Proxy draft
+  → 改过的祖先路径复制，未改的子树保留原引用
+  → nextState
+```
 
-## Patch 生命周期
+没有语义变化时可以返回原引用。这只说明生产者没有制造新树，不保证 React 一定跳过渲染。
 
-必须先 enablePatches()；produceWithPatches 返回 [next, patches, inversePatches]。applyPatches 不验证请求是否已经过期。JSON Patch 差异并不总是最短的事务变更集，也不能自动充当跨端权限验证。需要回滚时保存请求原始快照、匹配的 revision 或任务 ID。
+Draft 不是普通对象。不要把它交给 `setTimeout`、`fetch` 的回调、`postMessage`、IndexedDB 或另一份状态库。recipe 结束之后 draft 已经终结。调试时可以短时间 `current(draft)`，派生数据用结束后的 `nextState`。
 
-## 实际组合
+`produce` 里要么改 draft，要么 `return` 一个替换值。两样一起做会冲突。`return undefined` 表示“没有返回值”，不是把状态设成 `undefined`。需要整体变成 undefined 时返回 `nothing`，并且类型允许。
 
-与 D07 TanStack Query 结合时，缓存所有权仍属于 query client，乐观写入发生在特定 queryKey 上；与 D10 Zustand 结合时，store 更新方法决定何时应用 produce。不要同时从 React 本地 state、外部 store、服务端缓存维护相同业务对象的三份真相。
+`produceWithPatches` 在 `enablePatches()` 之后给出 `[next, patches, inversePatches]`。Patch 不是最小 diff，也不是授权过的远程命令。`path` 是数组。应用前要有版本、来源和路径白名单。
 
-## 边界与验收
+`enableArrayMethods()` 是 11.1 起的可选插件。`filter` 一类回调拿到的是原对象，在回调里赋值会直接改到 base。Lab 没有打开这个插件。
 
-目标 SDK 测试必须真实 import Immer，覆盖原对象未修改、嵌套引用变化、稳定未改分支、Patch 可逆及错误路径。浏览器确认点击、撤销、重置都可观察，不拿 JSON 展示等同于并发回滚正确性。
+`setAutoFreeze` 改的是全局冻结行为。保持默认，除非有测量过的理由。
 
-## 演示场景与预期
+## 三层示例
 
-1. **produce 深层更新与结构共享**：子对象仅按需复制，不原地修改基础数据
-2. **RSS 分组和阅读状态批量编辑**：真实 produce 更新 nested array 与 revision
-3. **乐观 Patch 与可控回滚**：produceWithPatches/applyPatches 配合禁止冲突写入
+### 基本
 
-## 练习与迁移
+改分组名。recipe 写入 `draft.section.name`，空标题落到「未命名分类」，`revision` 增加。旧的 state 对象不会被原地改写；界面展示的是新快照。
 
-将 NewsHub 已读列表原地修改改为纯函数，并为请求409设计带版本检查的乐观更新与回滚。
+### 业务
 
-## 验证分级与限制
+勾选按故事 `id` 翻转 `read`。查找用 `find`，不用数组下标当身份。未点到的那一篇应保持原引用，这是结构共享要在测试里断言的事，界面 JSON 看不出引用是否相同。
 
-本条目包含真实目标包 import 的示例和 Node 定向测试源码。**SDK、TypeScript、生产构建及 Playwright 本轮均未在依赖完整环境执行，状态为 NOT_RUN**。`tests/sdk.test.mjs` 必须在真实依赖安装后执行；Mock 业务数据不等于 Mock 目标库。测试成功后才能按当前源指纹绑定 evidence，不得沿用历史研究报告的 PASS。
+### 进阶
 
-## 官方一手资料
+「生成乐观更新」插入 `optimistic-<revision>`。此时 ref 持有 inverse，控件锁定。「模拟失败并撤销」用 `applyPatches` 走 inverse。「确认本地变更」丢掉 inverse，不向任何服务器 POST。
 
-- [Immer 官方文档](https://immerjs.github.io/immer/)
-- [Patches API](https://immerjs.github.io/immer/patches/)
-- [官方 v11.2.9 发行](https://github.com/immerjs/immer/releases/tag/v11.2.9)
+研究包里的慢请求 / 快请求和 `requestId` 没有挂上。生产仍要在 await 之后再 `produce(latestState)`，并核对请求身份。只 abort 不够，因为对端可以忽略信号。
 
-## 授权
+## 反例
 
-该条目源码与文字为独立编写的教学材料；目标库使用上游 MIT 许可，未捆绑第三方图片、字体或付费资源。
+### 反例 1：给 draft 参数重新赋值
 
-## 本批真实修复：延迟更新中的 inverse 所有权
-旧实现调用 `setFeed(current => applyPatches(current, undo.current ?? []))` 后立刻把 `undo.current` 清零。React 在批量处理时可能晚于清零执行 updater，最终应用空 Patch，UI 看似点击撤销但实际不变。现在先用 `takeUndo(undo)` **同步认领 inverse**，把不可变的局部 `inverse` 传入 updater，重复撤销不会消费另一个操作。领域纯测试见 `tests/patch-ownership.test.mjs`；`tests/sdk.test.mjs` 另用真实 Immer 生成 inverse 作为回归测试源码，但未在安装 SDK 的环境执行。生产异步服务还须用 revision/请求身份阻止过期 inverse 覆盖新缓存。
+```ts
+produce(state, draft => { draft = { ...draft, revision: 2 } })
+```
+
+参数绑定换了，树没有改。
+
+```ts
+produce(state, draft => { draft.revision += 1 })
+```
+
+### 反例 2：又改 draft 又 return
+
+```ts
+produce(state, draft => { draft.revision += 1; return { revision: 9 } })
+```
+
+二选一。替换整棵树时只 return。
+
+### 反例 3：await 期间握住 draft
+
+```ts
+produce(state, async draft => { await save(); draft.revision += 1 })
+```
+
+先拿到响应和下一次的 base，再同步 produce。Lab 的乐观更新在点击当次是同步的。
+
+### 反例 4：回滚时再读 ref
+
+```ts
+setFeed(current => applyPatches(current, undo.current ?? []))
+undo.current = null
+```
+
+updater 可能晚于清空。
+
+```ts
+const inverse = takeUndo(undo)
+if (inverse) setFeed(current => applyPatches(current, inverse))
+```
+
+### 反例 5：用对象引用在 draft 数组里找下标
+
+draft 元素和原始对象不是 `===`。按 `id` 找，或在只读场景用 `original`。
+
+### 反例 6：把外部对象塞进 draft 后立刻改它
+
+新对象不会自动变成 draft，改的是外部引用。先拷贝成纯数据，或在下一次 produce 里改。
+
+### 反例 7：嵌套 produce 丢掉返回值
+
+```ts
+produce(draft.user, user => { user.name = 'A' })
+```
+
+内层结果要赋回去：`draft.user = produce(draft.user, ...)`，或者合成一次 recipe。
+
+### 反例 8：在 Array Methods 回调里赋值
+
+回调收到的是原对象。回调只做筛选，修改走 draft 上的路径。Lab 未启用该插件，开启前先审计。
+
+### 反例 9：把远端 Patch 当权威
+
+未校验的 path 可以越权。协作合并用 Yjs 或带版本的服务端事件，不用 inverse 覆盖别人的新写入。
+
+### 反例 10：在 RTK reducer 里再 produce
+
+`createSlice` 的 `state` 已经是 draft。直接改字段。再包一层会造成所有权混乱。
+
+## 组合
+
+**Query + Zod**：Zod 在网络边界裁掉多余字段。Query 拥有缓存。Immer 只在 `setQueryData` 里 produce 下一份值，并返回新对象。乐观更新要保存快照、在错误时按操作 token 回滚、在结束时失效。Lab 的 inverse 没有和 Query 的 revision 绑定。
+
+**Redux Toolkit**：reducer 里直接改 draft。撤销若存在，只覆盖明确的本地 slice，并在远端快照替换时清空历史，避免旧 path 打到新形状上。
+
+**Zustand**：`zustand/middleware/immer` 和手写 `set(state => produce(state, recipe))` 选一个。
+
+## 生产核对清单
+
+1. recipe 同步结束，没有把 draft 放进微任务。
+2. 更新按业务 id，不用数组 index 当身份。
+3. no-op 与未改分支的引用在测试里断言。
+4. `enablePatches()` 在使用 patches 之前调用一次。
+5. inverse 在进入 React updater 之前被同步取走。
+6. 乐观锁定期的策略写明了：示例是整页锁定；产品可以改成按 id 锁定，但不能把旧 inverse 应用到新 revision。
+7. 远端 JSON 先白名单重建，限制条数和字段长度。
+8. 不把 Patch 日志里的敏感字段发到不可信通道。
+
+## 升级
+
+钉 `11.2.9`。从 v10 迁到 v11 时看官方 release：最终化流程有变，默认导入改为具名 `produce`。`enableArrayMethods()` 仍是可选步骤，不是升级必选项。
+
+不要假设 Patch 的条数和顺序在版本之间不变。对比语义状态。Map/Set 要显式 `enableMapSet()`，并且 JSON 序列化自己写。
+
+历史版本里有过原型相关修复与回滚记录。上线前看当前 tag 的安全说明，不要用未运行的 Demo 代替公告核对。
+
+## 验收
+
+- `toggleStory` 不修改入参；目标故事的 `read` 翻转；`revision` 增加。
+- 改分组名只影响名称路径。
+- 乐观插入后，`takeUndo` 得到的 inverse 能 `applyPatches` 回到插入前的故事列表。
+- 连续两次回滚不会吃掉下一次乐观更新的 inverse。
+- 锁定期间不能改名或勾选。
+- `tests/sdk.test.mjs` 导入真实 `immer`。`patch-ownership` 单测不代替 SDK。无收据则 NOT_RUN。
+
+练习：把手写 spread 改成 `produce`，断言未修改故事引用相同。再把“保存整棵 state 的撤销栈”改成有上限的 inverse，并在不兼容快照到达时清空栈。
+
+## 资料
+
+- https://immerjs.github.io/immer/
+- https://immerjs.github.io/immer/produce/
+- https://immerjs.github.io/immer/patches/
+- https://immerjs.github.io/immer/pitfalls/
+- https://immerjs.github.io/immer/return/
+- https://immerjs.github.io/immer/async/
+- https://immerjs.github.io/immer/map-set/
+- https://immerjs.github.io/immer/performance/
+- https://immerjs.github.io/immer/typescript/
+- https://github.com/immerjs/immer/releases/tag/v11.2.9

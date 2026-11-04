@@ -1,13 +1,46 @@
-# E07 remark — Agent 工程手册
+# E07 remark — 工程手册
 
-适用：Markdown 结构化分析与变换，不是 HTML 净化/浏览器编辑器。与 E06 react-markdown、E08 rehype 联用需审查完整插件顺序。
+## 适用
 
-源码：`examples/example.tsx` 真正调用 `remark().use(remarkGfm).parse/processSync`；`examples/demo.tsx` 只是入口。复制业务需要的 mdast 扫描与规则；不要照搬 UI 壳。
+入库前解析 Markdown、抽标题、规范化 GFM、列出危险链接。给人看的页面用 E06。HTML 净化用 E08 或 E10。remark 的 stringify 不是 HTML。
 
-规则：仅可信代码静态注册插件；限定来源输入长度；结构变换使用 AST 而非正则；链接与图片 URL 独立执行允许列表；对最终 HTML 再净化；不要用纯字符串输出证明安全。
-测试：GFM table/task、嵌套 heading、dangerous javascript:、raw HTML、长文本/取消边界和生成格式；真实 remark SDK 必须执行测试，不能用手写 Markdown parser 冒充。
-当前 SDK/build/browser 不是 PASS。版本 remark 15.0.1 + remark-gfm 4.0.1；许可证 MIT。
-参考 https://github.com/remarkjs/remark
+## 版本
 
+`remark@15.0.1`、`remark-gfm@4.0.1`，MIT。与 E06 的 gfm 版本保持一致。不要用 remark 12 的教程改 15 的 processor 调用。
 
-迁移新增：统一从 examples/audit-policy.mjs 取 AST 非递归审计、嵌套标题提取和 safeReference，输入先经真实 remark().use(remarkGfm).parse；保持 24KiB、4096节点的成本限制，并按实际工作量调优。HTTPS URL 审计不是 HTML 安全渲染策略。React 重用实例切换 level 时清空旧结果；不得复制旧 mdast 到新的场景。
+## 迁移
+
+复制 `transform`：先卡 24_000 字节，再 `remark().use(remarkGfm)`，`parse` 一次，同一棵树交给 `auditMarkdownTree` 和 `stringify`。策略只放在 `examples/audit-policy.mjs`。按钮触发，不要在 onChange 里解析。结果放文本节点。`examples/demo.tsx` 只是再导出。
+
+## 不可删的清理
+
+换 level 必须清空结果和错误。节点行走有 4096 上限，用显式栈。审计不改树；危险 URL 留在报告里并标 `safe: false`。不要把 Markdown 字符串写入 `dangerouslySetInnerHTML`。超限抛错后不要保留上一次成功结果冒充本次。
+
+## 反例
+
+- stringify 结果当 HTML。
+- 审计和序列化各 parse 一次。
+- 每个键击 parse。
+- 正则抽取 URL。
+- 全部 `safe: true` 才保存，但从不删除不安全链接，调用方以为原文已干净。
+- 无上限递归。
+- 把 `//host` 当成站内路径。
+- 以为 remark 会丢掉原始 HTML 节点。
+
+## 测试断言
+
+- `javascript:`、协议相对 URL、带用户名的 https、超长 URL 为不安全。
+- 无凭据 https、单个斜杠的站内路径、合法 hash 可以为安全。
+- 超过 4096 个节点抛错。
+- 页面输出是 Markdown 字符串。advanced 不执行 script。
+- 纯函数测试不是 remark SDK PASS。
+
+## 真实限制
+
+示例不改写 AST，不渲染 React Markdown，不访问网络。24KiB 是字节上限，文本框还有 12_000 字符上限。GFM 样例里的 PASS 字样不是验收结论。
+
+## 证据
+
+sdk、build、browser 保持 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有 E07 收据。Actions `41779873259` 是仓库级运行，不是本条目 PASS。
+
+资料：https://github.com/remarkjs/remark 与 https://github.com/remarkjs/remark-gfm 。

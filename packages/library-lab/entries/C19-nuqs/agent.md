@@ -1,21 +1,47 @@
-# C19 nuqs — Agent 使用决策
+# C19 nuqs — 工程手册
 
-**使用时机**：搜索、分页、排序、非敏感的展示状态需要在 URL 深链接中持久化。优先尊重现有 Router 状态模型；并非必须因为存在 nuqs 就在所有页面使用。
+## 适用
 
-## 迁移代码和依赖
-读取 `examples/example.tsx`，核心是 `nuqs` parsers、`useQueryState` 和当前路由对应的 `NuqsAdapter`。本例针对 TanStack Router 用 `nuqs/adapters/tanstack-router`，不能粘贴成 Next/React Router adapter；nuqs 2.10.1、MIT。运行 `examples/demo.tsx` 只是 Lab 展示出口。
+可分享的筛选、分组和页码。不要存放 token、草稿长文或服务端错误。适配器必须是 TanStack Router 这一份。
 
-## 需要保留的工程属性
-- 参数命名空间不能覆盖宿主路由自己的 tab/example。
-- 关键词 replace；用户明确翻页 push；不要让 IME composition 推动路由更新。
-- parseAsInteger 允许语法收窄但并不负责上下限，后端参数仍做严格白名单与 ACL。
-- 复杂页面先明确谁管理 search：TanStack Router validateSearch 或 nuqs；二者不要出现竞态双写。
-- URL 不放 token、用户隐私、短期敏感数据，浏览器 history 可持久保存。
+## 版本
 
-## 测试合同
-Node 真正 import `nuqs/server` 完成 parser 断言；Chromium 确保深链接、刷新、浏览器 Back、Tab 保留、IME 与非法/越界参数都工作。server parser PASS 绝不等同浏览器适配器 PASS。当前无真实运行证据，NOT_RUN。
+`nuqs@2.10.1`，MIT。从 `nuqs` 引入 `useQueryState`、`parseAsString`、`parseAsInteger`，从 `nuqs/adapters/tanstack-router` 引入 `NuqsAdapter`。不要用 `nuqs/parsers` 或 Next 适配器。
 
-## 关联
-TanStack Router 原生 typed search 是替代；D07 TanStack Query 管服务器缓存；C01 RHF 管输入草稿。官方 https://nuqs.dev/docs/adapters 。
+## 迁移
 
-一并迁移 `examples/url-policy.mjs` 与声明，避免隐藏 URL group 造成基础模式暗中过滤。当前越界页码仅钳制 UI，不强行规范化地址栏；生产 Router 的 search 所有权需要一致，不能在 render 内写历史栈。
+带走 `examples/example.tsx` 和 `examples/url-policy.mjs`。键保持 `ll_c19_` 前缀，除非产品路由确认没有冲突。搜索继续 `history: 'replace'`。需要后退的翻页才 `push`。清洗函数留在 URL 写入和列表过滤两边。
+
+## 不可删的清理
+
+组合期间不要 `commit`，也不要用 URL 覆盖 draft。卸载没有额外的订阅要拆，但不要在 unmount 后继续 `setQuery`。清空参数用 `null`。basic 必须忽略残留分组。
+
+## 反例
+
+```tsx
+useQueryState('page', parseAsInteger.withOptions({ history: 'push' }))
+useEffect(() => setDraft(query), [query])
+```
+
+- 搜索每个按键都 push。
+- 认为整数 parser 已经排除负数。
+- `await setQuery()` 当成接口成功。
+- `limitUrlUpdates` 当成 fetch 防抖。
+- 把密钥放进查询串。
+- 同一键使用两套 parser。
+
+## 测试断言
+
+- 控制字符被去掉，长度按码点不超过 80。
+- basic 的分组恒为 `all`。
+- 非法页码变成 1，超出最后一页被夹住。
+- 空搜索得到 `null` 而不是空键。
+- 策略单测没有适配器和浏览器历史。
+
+## 真实限制
+
+五条数据是本地数组。没有 Query、没有 SSR `createSearchParamsCache`。advanced 的 push 只有页码。中文 IME 需要 browser 收据。`sanitizeQuery` 不是授权。
+
+## 证据
+
+没有收据不要写 PASS。Actions 41779873259 不是本条目。不要改 `verification.json`。

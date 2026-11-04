@@ -1,25 +1,45 @@
-# F04 ExcelJS — Agent 工程复用
+# F04 ExcelJS — 工程手册
 
-**只在明确需要真正 XLSX、样式或公式存储时选用**；CSV 用 F03 Papa Parse。版本基线 `exceljs@4.4.0`，Node脚本，不把API示例部署为任意命令执行端点。
+## 适用
 
-## 文件迁移
-复制 `examples/core.mjs` 的输入校验、`generateWorkbook` 与 `inspectWorkbook` 到目标项目的报表层，调用端参考 `examples/business.mjs`。输入类型用目标业务 schema 限制，不能照搬RSS样例。不要复制展示日志代替Excel实际产物。
+要样式、冻结表头和一份内存 xlsx。CSV 用 F03。不要把它当公式计算器。
 
-## 不可删除的边界
-- **每个字段**校验类型、行数、文本长度及可识别的公式前缀。
-- ExcelJS 不计算公式；公式 result 仅供缓存并应由产生方提供正确值。
-- `writeBuffer/load` 内存随文件规模上涨；真正大报表改 streaming writer，并测试压缩包膨胀限制。
-- 区分 Sheet 名、行列数、业务ID和样式继承；导出不可携带用户敏感信息。
-- 禁止伪造“已完成计算”“已导出文件”，本示例是内存数据验证。
+## 版本
 
-## 必要断言
-`node entries/F04-exceljs/examples/verify.mjs`：真实调用ExcelJS，检查构造/往返、冻结表头、公式及缓存值、恶意前缀处理、非法数值拒绝。需要本地和CI安装依赖后运行；目前NOT_RUN，构建BLOCKED。
+`exceljs@4.4.0`，MIT。API 是 `Workbook`、`addWorksheet`、`xlsx.writeBuffer`、`xlsx.load`。
 
-官方：<https://github.com/exceljs/exceljs>
+## 迁移
 
-## EF wave11 迁移约束
+带走 `examples/core.mjs` 和 `examples/row-policy.mjs`。三个场景脚本只选 level。`checkRows` 必须在 `new ExcelJS.Workbook()` 之前。不要把流式 writer 或浏览器大文件路径一起抄走，除非产品单独验证。
 
-保留 `row-policy.mjs` 的严格文本/字段/总量检查，调用 `generateWorkbook` 前不能靠 `String(undefined)` 自动转成业务名称；ID 去重要求 trim+casefold，合计不能超过MAX_SAFE_INTEGER。应用展示与CLI共用该检查，不许为让示例通过而删除校验。`row-policy.test.mjs` 的无依赖测试PASS不等于ExcelJS SDK PASS。
+页面命令形如 `node entries/F04-exceljs/examples/basic.mjs basic`。脚本忽略多余参数。
 
+## 不可删的清理
 
-EF wave23迁移注意：必须复制 `row-policy.mjs` 中的 `MAX_EXCEL_INTEGER`；勿把JS `Number.MAX_SAFE_INTEGER` 当作Excel无损上限。超出15位的大整数应转文本并单独设计合计策略；离线policy通过不代表ExcelJS/Excel公式真实验收。
+文本必须以字符串进入 `safeSpreadsheetText`，`= + - @` 加撇号。id 按 trim + en-US 小写去重。reads/stars 单项和合计都是非负整数，合计不超过 `999_999_999_999_999`。只 load 刚写出的字节。不写用户磁盘。
+
+## 反例
+
+- 省略 `result` 或把 `result` 说成已求值。
+- 用户字符串直接 `addRow`。
+- 无上限 `xlsx.load` 外部文件。
+- 在浏览器 Demo 里调用 Node streaming writer。
+- 用 `Number.isSafeInteger` 代替 15 位有效数字上限。
+- 绕过 `checkRows` 写行。
+- 把策略单测写成 SDK PASS。
+
+## 测试断言
+
+- 三层都冻结，B2 为 `React Updates`。
+- business/advanced 的 C 列公式是 `SUM(C2:C4)`，缓存 115。
+- HYPERLINK 文本读回为带撇号的字符串。
+- NaN、Infinity、非字符串、重复 id、过大合计在创建工作簿前拒绝。
+- `row-policy.test.mjs` 不 import exceljs。
+
+## 真实限制
+
+网页不启动 Node。公式不会在库内重算。夹具只有三行加一条恶意文本。没有中文字体或打印版式验收。
+
+## 证据
+
+sdk 收据只能来自真实执行 ExcelJS 的命令，并且写进 `docs/library-lab/evidence/runs/`。Actions 41779873259 不是 F04 PASS。browser 保持 NOT_RUN。

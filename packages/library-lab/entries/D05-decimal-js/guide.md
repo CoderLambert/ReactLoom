@@ -1,81 +1,176 @@
-# decimal.js：前端金额、税率与十进制精度
+# decimal.js 10.6.0｜字符串金额、舍入点和隔离构造器
 
-> D05 · decimal.js@10.6.0 · MIT。官方包版本与源码已核查；新示例 SDK/构建/浏览器在当前环境未执行，状态必须保持 NOT_RUN。
+Lab 锁定 `decimal.js@10.6.0`（MIT，自带类型，不要再装 `@types/decimal.js`）。它用十进制有效数字做运算，消除的是 `0.1 + 0.2` 这类二进制浮点误差。它不决定币种小数位、税法、幂等扣款或“前端合计可以被支付”。
 
-## 解决什么，不解决什么
+示例里的税率和舍入顺序是写明的教学合同，不是某个国家的发票规范。
 
-JS Number 采用二进制浮点，对十进制表示存在不可避免的舍入误差（例如 `0.1+0.2`）。decimal.js 提供可配置的高精度十进制运算。它不自动定义“货币怎样舍入”“税应在哪一步舍入”“哪种汇率可信”这些业务规则，也不是财务认证系统。
+没有匹配收据时 sdk / build / browser 保持 NOT_RUN。Actions 41779873259 是仓库级结果，不是本条目 PASS。
 
-计费、采购、佣金、税率、折扣、价格校验可以考虑 decimal.js。纯计数且在安全整数范围内不必引入；结算边界也可用整数最小货币单位，但涉及复杂税/汇率和比例时应重新审查规则。
+## Lab 当前示例
 
-## 安装和真实导入
+[`examples/demo.tsx`](examples/demo.tsx) 重导出 [`examples/example.tsx`](examples/example.tsx)。计算在 [`examples/invoice.mjs`](examples/invoice.mjs)，入参形状在 [`examples/amount-policy.mjs`](examples/amount-policy.mjs)。
 
-```bash
-pnpm add decimal.js@10.6.0
+三层都展示 `new Decimal('0.1').plus('0.2').toString()` 与 `String(0.1 + 0.2)`。前者按十进制得到 `0.3`，后者是二进制浮点的字符串。
+
+business 和 advanced 共用同一张发票：单价、数量、税率都是字符串。`normalizeAmount` 只接受非负十进制，最多 10 位整数和 4 位小数，拒绝科学计数、前导零和逗号。数量是 `1`–`9999` 的整数字符串。税率数值不超过 100。
+
+`Money = Decimal.clone({ precision: 28, rounding: Decimal.ROUND_HALF_UP })`。合同是：行小计 `unit.times(quantity).toDecimalPlaces(2)`，再对这个小计算税并舍入到分，最后 `toFixed(2)` 输出字符串。改任一输入会清掉上次结果，避免旧合计还挂在新字段旁边。
+
+advanced 另有 `Bankers = Decimal.clone({ precision: 28, rounding: Decimal.ROUND_HALF_EVEN })`。`roundingContrast` 展示 `1.005` 在两种舍入下的 `toFixed(2)`，以及 `0.335 × 3`：先按行金额舍入，和先把单价舍入再乘数量，结果不同。
+
+没有挂载：多行 SKU、折扣、RHF、Excel 导出、Worker。那些是生产组合，不是当前按钮。
+
+## 什么时候用
+
+需要可控有效数字、非整数幂或银行家舍入对照时用 decimal.js。只有加减、且包体积敏感时，比较同作者的 `big.js` 或 `decimal.js-light`。金额全程是整数最小单位、除法规则自己写时，用 `BigInt`。图表坐标继续用 `Number`。
+
+任何库都不替代服务端按权威价格重算。客户端结果是预览。
+
+| 维度 | Lab 的钉 |
+| --- | --- |
+| 包 | `decimal.js@10.6.0` |
+| 许可 | MIT |
+| 导入 | `import Decimal from 'decimal.js'` |
+| 类型 | 包内 `decimal.d.ts`；10.6.0 的类型更新包含 BigInt 声明 |
+| 运行时 | 纯计算，不依赖 DOM |
+
+## 模型
+
+`Decimal` 用符号、十进制指数和系数数组表示值。`.d`、`.e`、`.s` 不是数据库协议，也不要改它们。
+
+`precision` 是有效数字个数，不是小数位数。`precision: 28` 不会自动把输入截成两位小数。`toDecimalPlaces(2)` 返回 Decimal。`toFixed(2)` 返回固定刻度字符串。`toString()` 和 `toJSON()` 可能丢掉末尾零，`1.20` 可以变成 `1.2`。持久化用 `toFixed`。
+
+```js
+new Decimal('0.1').plus('0.2').toString() // '0.3'
+new Decimal(0.1 + 0.2).toString()          // 误差已经在构造前发生
 ```
 
-```ts
-import Decimal from 'decimal.js';
-const Money = Decimal.clone({precision: 28, rounding: Decimal.ROUND_HALF_UP});
-const result = new Money('0.1').plus('0.2').toString(); // '0.3'
+`Decimal.set` 改的是该构造器上的共享配置。业务模块用 `Decimal.clone`。Lab 的发票和银行家舍入是两个 clone，互不影响。
+
+比较用 `.greaterThan()`、`.equals()`。不要用 `<` 或 `==` 触发隐式转换。`NaN` 和 `Infinity` 能被 Decimal 表示，接口层仍要拒绝。
+
+默认源码里的 `precision: 20`、`rounding: 4` 是库默认值。Lab 覆盖为 28 位有效数字和明确的舍入常量，不要假设全局默认就是发票合同。
+
+## 三层示例
+
+### 基本
+
+只看两个 `<output>`：原生 Number 与 decimal.js。输入是字符串 `'0.1'` 和 `'0.2'`，不是先加再包进去。
+
+### 业务
+
+默认 `19.99 × 3`，税率 `7.5`。行小计先到分，再算税。点计算后 JSON 里是 `subtotal`、`tax`、`total` 三个字符串。这是 fixture 合同：税额只在小计上舍入一次。真实税务可能按行、按品类或多币种，不能照搬 7.5%。
+
+非法单价或数量时，`role="alert"` 显示 `normalizeAmount` / `normalizeQuantity` 的错误，结果区清空。
+
+### 进阶
+
+同一屏展示 HALF_UP 与 HALF_EVEN，以及两种舍入点。文案要求以合同指定的舍入点为准。全局 `Decimal.set` 不在这条路径上。
+
+## 反例
+
+### 反例 1：用 Number 做完再构造
+
+```js
+new Decimal(0.1 + 0.2)
 ```
 
-全量实际示例在 `examples/example.tsx`，演示包装仅 `examples/demo.tsx`。注意输入 **字符串** 而不是先 `Number(text)` 再构造 Decimal；在转换前损失的精度不会被库恢复。
+```js
+new Decimal('0.1').plus('0.2')
+```
 
-## 三层 Demo
+接口金额保持字符串。`parseFloat` 同样会先毁掉十进制。
 
-### 入门：Native Number 和 Decimal 对照
+### 反例 2：把 precision 当成两位小数
 
-页面真实执行 `String(0.1 + 0.2)` 与 `new Decimal('0.1').plus('0.2')`，突出浮点误差来源。不要由此得出 Number 一律不可用；坐标、动画和一般统计完全可以继续用 Number。
+```js
+Decimal.clone({ precision: 2 })
+```
 
-### 业务：订阅采购发票
+运算有效数字和展示小数位是两件事。业务边界调用 `toDecimalPlaces(2, mode)` 或 `toFixed(2, mode)`。
 
-价格、数量和税率使用受控文本输入。校验只允许有限长度的十进制，不允许 Infinity、科学计数法、负数或无穷小数位。乘法后 `toDecimalPlaces(2)` 计算行小计；税率在小计之后计算。返回的三个金额全部 `toFixed(2)` 输出字符串，不用 `toNumber()` 持久化。
+### 反例 3：每一步都 toFixed
 
-### 进阶：舍入规则差异
+过早舍入会累积分差。Lab 只在行小计和税额两处舍入。`0.335 × 3` 的两个结果就是证据。
 
-`ROUND_HALF_UP` 和 `ROUND_HALF_EVEN` 在恰好半分时可能得到不同结果：样例字符串 `1.005` 保留两位时分别得到 `1.01` 和 `1.00`。不同合同或司法辖区对发票、税额、折扣的舍入规定可能不同，必须先确定业务规则，再选择 mode 和舍入位置。
+### 反例 4：全局 Decimal.set
 
-## 关键 API 与所有权
+```js
+Decimal.set({ rounding: Decimal.ROUND_HALF_EVEN })
+```
 
-- `Decimal.clone(config)`：创建独立配置域，避免对全局 `Decimal.set` 造成跨模块副作用。
-- `new Money(str)`：从原始十进制字符串构造，无丢失前置 Number 精度。
-- `.plus/.minus/.times/.dividedBy`：返回新的 Decimal，不直接修改已有实例。
-- `.toDecimalPlaces(2)`：显式定义舍入步骤。
-- `.toFixed(2)`：控制展示精度并输出字符串；不要将展示字符串直接视为货币区域格式。
-- `.isFinite()/.isNaN()`：库允许非有限数作为对象；业务输入仍必须拒绝。
+其他模块的异步计算会被改掉。
 
-Decimal 的 `precision` 是**有效数字位数**，不等同于“保留几位小数”。因此业务最终舍入应明确执行 `toDecimalPlaces`。
+```js
+const Money = Decimal.clone({ precision: 28, rounding: Decimal.ROUND_HALF_UP })
+```
 
-## 专项反模式
+### 反例 5：指望 JSON 保留 1.20
 
-1. **`new Decimal(0.1+0.2)`**：误差已产生。正确：`new Decimal('0.1').plus('0.2')`。
-2. **全局 `Decimal.set`**：同页另一模块舍入变了。正确：`Decimal.clone` 明确隔离业务配置。
-3. **混合多个舍入点**：单项先舍入和汇总后舍入结果可不同。正确：合同/测试指定顺序。
-4. **用 JS Number 序列化金额**：小数或大整数精度可再次丢失。正确：以字符串、明确货币代码与单位存储和传递。
-5. **无校验直接解析任意精度字符串**：可能造成无界输入和资源开销。正确：约束长度、小数位、范围与正负号。
+```js
+JSON.stringify({ amount: new Decimal('1.20') })
+```
 
-## 相关组合
+```js
+JSON.stringify({ amount: money.toFixed(2) })
+```
 
-C02 Zod 可作为格式、精度和业务范围边界；后端也须验证相同规则，不能信任客户端。与 Redux/Query 等数据状态工具组合时，应在 DTO 中约定金额字符串，避免序列化 Decimal 实例造成契约歧义。
+支付请求传字符串或整数最小单位，不传 `toNumber()`。
 
-## 可迁移练习
+### 反例 6：科学计数和超长字符串直接构造
 
-把单价×数量×税率做成框架无关函数，写对账黄金样本（0.1+0.2、1.005、零税率、超长输入、小数位过多、金额溢出）。必要时和后端 Decimal/SQL numeric 的舍入规则逐个核对；不要拿 JS `toFixed` 当黄金标准。
+`1e1000000`、`Infinity`、`001.00`、`1,234.50` 在 `normalizeAmount` 被拒绝。库能解析某些数学写法，不代表业务接口接受它们。
 
-## 运行与验证
+### 反例 7：输入过程中格式化
 
-新示例执行需要平台集中安装 `decimal.js@10.6.0`。等待真实 SDK 单测、TypeScript、Vite build 和浏览器运行后更新 verification.json；旧研究结果不迁移为新源码的 PASS。
+用户还在输入 `0.` 或组合中文时，不要 `toFixed(2)` 写回输入框。Lab 把原始字符串留在 state，提交时再校验。失焦规范化是产品决定，不是库的默认行为。
 
-## 官方资料
+### 反例 8：相信浏览器传来的 total
 
-- [GitHub 仓库](https://github.com/MikeMcl/decimal.js/)
-- [package.json (v10.6.0)](https://github.com/MikeMcl/decimal.js/blob/master/package.json)
-- [API 参考](https://mikemcl.github.io/decimal.js/)
+服务端用权威单价重算。前端字符串再精确也不是结算权。
 
+## 组合
 
-## 同源可执行账单计算与结果所有权
+**React Hook Form + Zod**：RHF 保存中间态字符串。Zod 校验语法和区间。通过后再交给 `calculateInvoice`。`Intl.NumberFormat` 只负责展示，本地化后的字符串不能直接喂给 Decimal。Lab 没有装这两样。
 
-核心金额函数已抽到实际 UI 导入的 `examples/invoice.mjs`（仍直接加载 decimal.js），字符串输入校验使用 `examples/amount-policy.mjs`。独立真实 SDK 回归 `tests/sdk.test.mjs` 复用相同金额函数，不再复制一套可能分叉的计算逻辑。
+**Query + 表格导出**：缓存 `{ unitPrice: '19.99' }` 这种字符串。导出写 `toFixed` 的结果，并注明单元格里的 Number 仍是二进制浮点。
 
-专门演示 `0.335 × 3`：**先乘行金额后四舍五入得 1.01**，**先舍入单价再乘数量得 1.02**。这不是哪一种永远正确，而是计价合同要求的两个不同舍入点。三项输入一经更改即清除旧发票结果和旧错误，避免旧输出伪装成新输入的账单；正式后端仍需核对价格、权限、币种与税法。纯格式策略测试与真实 decimal.js SDK 测试严格分开。
+**Worker**：大量计算时把字符串传进 Worker，在 Worker 内 `clone`。少量发票不必为了隔离再加一层 Comlink。
+
+## 生产核对清单
+
+1. 金额字段的传输类型是字符串或整数最小单位，测试里没有 `number`。
+2. 舍入模式、舍入点（单价、行、税、合计）写在合同里，并有黄金用例。
+3. 每个业务域自己的 `Decimal.clone`，模块顶层没有 `Decimal.set`。
+4. 入参有长度、小数位和范围。科学计数进不了价格字段。
+5. 持久化与 HTTP body 使用 `toFixed`，不用 `toJSON()` 的默认字符串。
+6. 服务器忽略客户端 `total`，按商品版本重算。
+7. 输入框在提交前保留 `0.` 这类中间态。
+8. 不可信批量计算有条数上限；高 `precision` 和 `pow` 不直接对着开放接口。
+
+## 升级
+
+钉 `10.6.0`。这一版的公开变更重点是 TypeScript 对 BigInt 的声明，不要把它说成新增了 React hook。升级时用同一组发票快照对比 HALF_UP、HALF_EVEN、负数和尾零。
+
+从 `big.js` 或 `bignumber.js` 迁入时，列出“有效数字”和“小数位”各自对应哪个选项。`1/7`、`19.985`、超大整数和 `NaN` 都要有契约测试。不要一次改掉全局精度。
+
+从 `Math.round(x * 100) / 100` 迁出时，先把行级和税级舍入写进测试，再换实现。
+
+## 验收
+
+- `'0.1' + '0.2'` 的 Decimal 字符串是 `0.3`。
+- `19.99 × 3` 后的小计、税额、合计是两位小数字符串，且税额发生在已舍入的小计上。
+- `1.005` 的 HALF_UP 与 HALF_EVEN 都能在 advanced 读到，且彼此的差异被保留。
+- `0.335 × 3` 的行舍入和单价舍入不相等。
+- 科学计数、负数、空字符串、超量小数、数量 `0` 或 `10000` 在构造 Decimal 之前失败。
+- 编辑字段后旧发票从界面消失。
+- `tests/sdk.test.mjs` 导入真实 `decimal.js`。`amount-policy` 单测不代替 SDK。没有收据则 NOT_RUN。
+
+## 资料
+
+- https://mikemcl.github.io/decimal.js/
+- https://github.com/MikeMcl/decimal.js
+- https://github.com/MikeMcl/decimal.js/blob/master/CHANGELOG.md
+- https://github.com/MikeMcl/decimal.js/blob/master/decimal.mjs
+- https://github.com/MikeMcl/decimal.js/blob/master/LICENCE.md
+- https://www.npmjs.com/package/decimal.js

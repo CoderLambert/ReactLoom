@@ -1,37 +1,49 @@
-# C22 Moment → 现代日期工具：Agent 实施手册
+# C22 Moment 迁移 — 工程手册
 
-## 任务定位与边界
+## 适用
 
-识别 Moment 旧代码并按语义迁移，不是替旧项目添加一个新的 Moment 包。当前 Lab 使用 date-fns 4.4.0、@date-fns/tz 1.5.0、Day.js 1.11.23；实际 Node SDK、TypeScript、浏览器仍是 NOT_RUN。明确区分“日期（日历字段）”“时间点（UTC instant）”“本地墙上时间 + IANA 时区”。
+拆掉历史 Moment 调用：可变对象、宽松解析、日历日和 instant 混用、DST 被当成 24 小时。新功能不要新增 `moment` 依赖。
 
-## 选型判断
+## 版本
 
-- 函数式、静态 Tree Shaking 和纯日期计算：优先 C14 date-fns。
-- 旧项目大量 Moment 风格链式 API，易于人工比对：C15 Day.js，但插件、strict parsing、mutability 与 locale 必须审查。
-- 明确的 zone、Interval 和民用时间：C16 Luxon。不能把 Date.toString 当稳定业务协议。
+运行 pin 是 `date-fns@4.4.0`、`@date-fns/tz@1.5.0`、`dayjs@1.11.23`。Moment 不是 Lab 依赖。格式令牌按目标库重写，不能全局替换。
 
-## 迁移约束
+## 迁移
 
-1. 检索旧调用点的 `moment().add`、`startOf`、`utc`、`tz`、`format`、`isValid`、`diff`，逐个记录输入类型和现有时区。
-2. **旧 Moment 可变**；新 Day.js 对象通常不可变，date-fns 函数返回新 Date。更新赋值/共享状态假设，不能机械替换方法名。
-3. 格式化 token 有差异：Moment 的 `YYYY-DD` 与 date-fns 的 `yyyy-dd` 不等价；禁止批量字符串替换后跳过真实测试。
-4. 服务端只用 ISO 8601 + 偏移或者 UTC instant 存具体时刻；日期字段按 `YYYY-MM-DD` 存民用日，不能无理由附加午夜 Z。
-5. 不能通过 `new Date('2026-02-30')` 或宽松 parser 校验输入；严格按模式与实际日历值双重检查。
-6. 跨 DST 添加一天，使用带时区的日历日操作，而非 86,400,000 ms；秋季回拨同一个 01:30 对应两个不同 instant。
-7. 在 React 渲染里做稳定派生值；不要把可以直接计算的格式化结果塞入 Effect/state。
+带走 `examples/example.tsx` 的 `validCalendarDay`、`getMigrationReport` 和 `TZDate` 段落。日历日继续双库严格校验。显示继续 `Intl` 加显式 `timeZone`。需要用户选择回拨偏移时改用 C16，不要在这里猜。
 
-## 最小迁移文件
+## 不可删的清理
 
-真实可执行文件：`examples/example.tsx`。宿主导出：`examples/demo.tsx`。不复制 Lab 导航和 CSS。依赖声明与官方来源见 `library.json`。迁移到其他项目时保留严格输入、明确时区与错误状态，验证目标项目运行时支持的 Intl 时区数据库。
+不要把 `moment` 加回 package。不要把日历日存成 UTC 午夜。`addDays` 必须带 `{ in: tz(zone) }`。非法日期保持 `INVALID`，不要进位。可变 `add` / `startOf` 的调用点改为使用返回值。
 
-## 必须测试
+## 反例
 
-- 2026-02-30 无效，2026-02-28 有效；
-- 同一 Instant 在 `America/New_York`、`Asia/Shanghai` 显示不同；
-- 纽约 2026-03-07 中午跨到下一民用日是 23 小时；
-- 纽约 2026-11-01 两个 01:30 instant 间隔 1 小时；
-- 不继承旧对象的可变副作用；取消/刷新不会覆盖新输入。
+```ts
+moment(value).add(1, 'day') // 改了原对象，也不等于加 24h
+moment('2026-02-30')
+JSON.stringify({ at: moment() })
+new Date('2026-11-01T01:30')
+```
 
-## 运行与证据
+- 把 `-05:00` 当成纽约。
+- 把 Moment 的 `YYYY` 令牌贴进 date-fns。
+- `startOf('day')` 不写时区。
+- 回拨日只留一个 instant。
+- 从请求参数调用全局 locale。
+- 只 abort、不看 generation 的保存请求。
 
-`node --test packages/library-lab/entries/C22-moment-migration/tests/sdk.test.mjs`；随后 Lab typecheck/build 和 Playwright 验证。SDK test 运行前保持 NOT_RUN；没有安装 Moment 不代表丧失此迁移条目意义。上游参考 https://momentjs.com/docs/#/-project-status/。
+## 测试断言
+
+- `2026-02-30` 对 Day.js 严格模式和 `parseISO` 都无效。
+- 合法日历日的下一天是日历次日。
+- 两个带不同偏移的 01:30 得到不同 ISO，相差 1 小时。
+- 报告把日历字段和 instant 字段分开。
+- 测试若没有 import moment，不能写成 Moment SDK PASS。
+
+## 真实限制
+
+示例不执行 Moment。春季小时数以 `TZDate` 运行结果为准。没有发布计划的 HTTP 409。缺口时间的拒绝在 C15 和 C16 的函数里，不在本文件的按钮上。
+
+## 证据
+
+没有收据不要写 PASS。Actions 41779873259 不是本条目。不要改 `verification.json`。

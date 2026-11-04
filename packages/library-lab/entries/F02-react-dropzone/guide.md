@@ -127,7 +127,23 @@ node --test packages/library-lab/entries/F02-react-dropzone/examples/preview.tes
 
 这只覆盖 Blob 切片，不是 dropzone SDK。浏览器还要看：对话框、拖入合法与非法文件、1 KiB 拒绝后仍能再选、A 然后立刻 B 只显示 B、换场景不留旧预览。没有收据就保持 NOT_RUN。
 
-## 9. 资料
+## 9. 故障对照
+
+| 现象 | 先看 |
+| --- | --- |
+| 拖入没反应 | `getRootProps` 是否展开；Demo 是否已启动 |
+| 点区域不开对话框 | 这是 `noClick: true`。用下面的按钮 |
+| 对话框开两次 | 根节点又变成可点击，并且按钮也调用了 `open()` |
+| 合法 csv 被拒绝 | `accept` 同时看 MIME 和扩展名。空 type 的文件可能被拒，服务端仍要自己判断 |
+| 预览是上一份 | generation 没有在第二次选择时增加 |
+| 换场景还留着字 | level 的 effect 应清空 items、preview 和 message |
+| 想看到上传进度 | 本页没有。接到 F01 或 API client 之后才有传输状态 |
+
+键盘验收：按钮可聚焦，Enter 或 Space 触发 `open()`。拖放本身要在真实指针设备上看。触屏通常没有拖放，按钮是必要路径。高对比不靠边框颜色单独传达拒绝。
+
+和原生 input 的差别只在拖放状态和拒绝对象。一个文件的表单可以不引入这个包。和 Uppy 的差别是：这里没有队列事件，也没有以后的协议插件。
+
+## 10. 资料
 
 - https://react-dropzone.js.org/
 - https://github.com/react-dropzone/react-dropzone

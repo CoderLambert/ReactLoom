@@ -1,19 +1,47 @@
-# F13 Playwright — 面向编码 Agent 的实战迁移指南
+# F13 Playwright — 工程手册
 
-**适用**：登录、交互流程、动态请求、键盘/拖拽、真实浏览器多路由；单纯业务函数用F12 Vitest。基线 @playwright/test 1.64.0 / Apache-2.0，使用Lab已有devDependency，独立配置 `examples/playwright.config.ts` 不能误修改全局工作区配置。
+## 适用
 
-## 最小复制
-将 `examples/fixtures.ts` 里的独立演示数据替换成项目专有 fixture，将 `basic.spec.ts` 的 role-based 断言迁移到现有 UI 组件。业务场景优先复用 `business.spec.ts` 的 `route.fulfill` 显式HTTP状态；竞态关注 `advanced.spec.ts` 中的AbortController/generation目标行为。将测试归入目标项目 E2E 包，而非把 Lab 页面整个复制过去。
+独立 HTML 上的角色定位、拦截后的状态码、提交中的按钮、旧响应不能覆盖新结果。不是产品站的套件，也不是 MSW。
 
-## 必须保留
-语义role/name定位；自动重试 expect；Mock层级明确；真实浏览器执行；失败 trace；Mock接口不访问生产域名；新旧请求竞争最终结果断言。此独立课件不需访问外网或真实身份。
+## 版本
 
-## 不能做
-不把 `route.fulfill` 叫真实后端请求；不以组件存在当业务成功；不对用户生产站点运行测试；不使用任意shell输入；不把 Jest/jsdom PASS 等同Browser通过；不长时间等待固定毫秒作为所有同步手段。
+`@playwright/test@1.64.0`，Apache-2.0。配置在 `examples/playwright.config.ts`：Chromium、headless、retries 0、workers 1。
 
-## 命令与证据
-`pnpm --filter @reactloom/library-lab exec playwright install chromium`; `pnpm --filter @reactloom/library-lab exec playwright test --config entries/F13-playwright/examples/playwright.config.ts`。如真实执行，保存报告和提交SHA、sourceFingerprint；现在未验证故不标PASS。
+## 迁移
 
-## 失败路径与双击防护迁移（wave17）
+带走 `fixtures.ts`、三份 spec 和这份 config。不要并进主站 Playwright 配置。主机保持 `api.lab.invalid`。页面命令不会启动浏览器。
 
-将 HTTP 非2xx、网络层失败和响应JSON/Schema错误分开；成功态必须要求 `result.ok === true` 而非仅以HTTP 200判断。提交锁在发起请求前同步设置，并在 `finally` 解锁，不丢失失败后的用户操作机会。Playwright 场景采用可确定释放的 Promise barrier，且 `finally` 释放挂起路由，不能在断言异常后留下未完成异步工作。以上是待运行源码，不可填真实浏览器PASS。
+## 不可删的清理
+
+business 和 advanced 的屏障必须在 `finally` 里释放。按钮在请求期间禁用，并在 `finally` 恢复。advanced 只有当前 generation 能写结果。失败 trace 留在本目录的 `.playwright-artifacts`，不要提交密钥或生产 HAR。
+
+## 反例
+
+- `waitForTimeout` 或 CSS id 定位。
+- 提高 retries 让教学用例变绿。
+- 去掉 route 去打真实主机。
+- 把 `page.route` 写成后端或 MSW 已通过。
+- 断言失败后不放开挂起的路由。
+- 断网和 422 共用文案。
+- `{ ok: false }` 显示成订阅成功。
+- 用仓库 45 项 Playwright 填写本条目。
+
+## 测试断言
+
+- 空标题提示输入；「本地新闻摘要」得到「保存完成」。
+- 200/`ok:true`、422 文案、503 文案、`ok:false`、空 422、坏 JSON、abort 各有固定文字，且拦截次数为 1。
+- 挂起时按钮禁用，结束后启用。
+- 先旧后新，放开旧请求后状态仍是「新结果」。
+
+## 真实限制
+
+不启动 Lab 应用。不测键盘全序、视觉像素或 axe。单 worker 是为了屏障，不是性能结论。规格在仓库里不是执行记录。页面展示的命令不会打开 Chromium。
+
+## 证据
+
+针对这条 config 的命令、退出码和日志要进入 `docs/library-lab/evidence/runs/`。在那之前 sdk 与 browser 都是 NOT_RUN。Actions 41779873259 的 45 项不是这三份 spec。
+
+三份 spec 要分开记。一条命令通过不能填写另外两层。
+
+页面不打开浏览器，trace 目录本身也不是收据。

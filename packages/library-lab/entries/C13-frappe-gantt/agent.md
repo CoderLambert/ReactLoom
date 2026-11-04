@@ -1,24 +1,47 @@
-# C13 Frappe Gantt — Agent 工程准则
+# C13 Frappe Gantt — 工程手册
 
-## 定位
-交付任务依赖和进度图可用 Frappe Gantt v1.2.2；若业务是事件日历则比较 C12 FullCalendar。图形编辑应存在键盘/语义表格替代。
+## 适用
 
-## 最小迁移文件
-examples/example.tsx、examples/gantt.css、examples/plan-policy.mjs 与对应 .d.mts。规范源码保留浅复制任务、只读 SVG 和键盘表格，供隔离环境复用；将领域校验/并发保存放在独立 service，不把模拟状态逻辑直接复制到生产 API。
+少量任务的只读时间线图，外加一张真正可编辑的表。不要把它当成日历、关键路径引擎或可在主 React 树里随便挂卸的组件。
 
-## 当前运行限制
+## 版本
 
-三层 manifest 使用 `browser-frame`，平台只为 C13 的规范入口注册专用 4321 文档，用户明确启动后才挂载。已检查的 `frappe-gantt@1.2.2` 发布包无条件注册捕获实例的 `document mouseup` 监听，没有公开 `destroy` / `dispose`；`replaceChildren` 不能释放它。不得只改回 `react` 或把 DOM 删除当作卸载通过。规范示例在一个文档中只构造一次实例，后续调用发布包的 refresh/change_view_mode，并复制任务。停止、重置或离开会销毁整个 iframe；不把 React unmount 当作上游监听器释放。runner 不使用 StrictMode 重复挂载。真实浏览器必须验证重复操作后子文档 mouseup 数量不增长、父文档保持基线和旧 frame/context 销毁；源码中的键盘表格和领域校验保持同源。
+`frappe-gantt@1.2.2`，MIT。CSS 不走未声明的 dist 子路径。弹层关闭，条只读。
 
-## 禁止
-不要直接操作原 React 任务对象；不要接受任意 popup HTML；不要丢失稳定 ID；不要因过滤破坏依赖拓扑；不要假设 package exports 暴露 dist/frappe-gantt.css；不要仅看图表动画就认为卸载彻底。
+## 迁移
 
-## 验收
-图表真实挂载、视图切换、相同任务的键盘编辑、无效日期拒绝/409回滚、StrictMode双挂载/卸载资源观察。Node SDK import 只能证明入口加载，不代表SVG生命周期已验证；源码与证据在 verification.json。
+带走 `examples/example.tsx`、`examples/plan-policy.mjs` 和 runner 对 4321 文档的约束。业务项目若没有专用 iframe，就要自己保证一份 document 只构造一次，并在离开时丢掉整份 document。不要只调用 `replaceChildren`。用 API client 替换模拟 409。过滤继续只作用于表。
 
-## 资料
-https://github.com/frappe/gantt
+## 不可删的清理
 
-## 不可删的拓扑门禁
-迁移时同时复制 `examples/plan-policy.mjs` 和 `.d.mts`，保存前必须运行 `validatePlan(candidate)`。整份计划最早开始至最晚结束的 UTC 日差最多 730；此门禁同样在异步 import 完成后的构造、refresh/视图更新之前执行。图表保持只读，没有绕过校验的拖拽保存通道。不可删除跨度预算或仅检查单个任务的工期。SDK 数值 Date 构造器会把 0000–0099 映射为 1900–1999；validatePlan 额外拒绝早于 0100-01-01 的日期，不能把 ISO 日期有效当作 SDK 年份兼容。不可用“只有自依赖检查”代替多节点有向环检测，不可用 `progress < 0 || progress > 100` 代替 `Number.isFinite`。测试 `node --test .../tests/plan-policy.test.mjs` 属于纯领域策略，不代表图表 SDK/DOM 已通过。
+构造函数只在挂载 effect 里跑一次。任务变化用 `refresh`，视图变化用 `change_view_mode`。传入副本。`validatePlan` 失败时不 `setState` 也不 `refresh`。卸载标志 `alive` 必须阻止动态 import 返回后的构造。停止会话时销毁 iframe。
 
+## 反例
+
+```tsx
+new Gantt(el, tasks) // 每次 tasks 变化都新实例
+<GanttCanvas tasks={shown} /> // 过滤子集破坏依赖
+```
+
+- `popup` 渲染不可信名称。
+- 直接修改 React state 里的任务对象再交给库。
+- 空进度变成 0。
+- 年份 0000–0099 交给 SDK 的 Date 构造。
+- 依赖成环仍保存。
+- 把主应用卸载当成 `mouseup` 已释放。
+
+## 测试断言
+
+- 结束早于开始、非有限进度、重复 id、自依赖、未知依赖、环，都返回错误字符串。
+- 跨度超过 730 个 UTC 日失败。
+- 年份小于 `0100-01-01` 失败。
+- 合法的三项种子计划返回 null。
+- 策略单测没有打开 4321，也没有构造 Gantt。
+
+## 真实限制
+
+409 是本地分支，不是 HTTP。没有时区时刻，只有日历日。没有公开 destroy。监听器是否在真实 Chromium 里不增长，要看 browser 收据。演示跨度上限不是产品合同。
+
+## 证据
+
+没有收据不要写 PASS。Actions 41779873259 不是本条目。不要改 `verification.json`。

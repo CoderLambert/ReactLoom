@@ -1,75 +1,151 @@
-# Workbox：隔离作用域内生成离线资源缓存
+# Workbox 7.4.1｜只在临时目录生成 Service Worker
 
-## 适用任务与非目标
+Lab 只锁定 `workbox-build@7.4.1`（MIT）。三条示例都是 Node 脚本：[`examples/basic.mjs`](examples/basic.mjs)、[`examples/business.mjs`](examples/business.mjs)、[`examples/advanced.mjs`](examples/advanced.mjs)。它们调用 [`examples/workshop.mjs`](examples/workshop.mjs) 的 `runWorkshop`。
 
-适合 PWA 静态资源预缓存、离线回退以及 **已审查、无凭据、公开** 的 GET 资源缓存。本条目使用真实 workbox-build 7.4.1（MIT，Node.js >=20），但仅在 Node 临时目录生成 Service Worker；绝不在 Library Lab 主站注册 Worker，也不证明真实断网切换成功。它不是浏览器 IndexedDB、远端状态缓存或 React 状态容器。
+这些脚本用 `workbox-build` 的 `getManifest` 和 `generateSW` 在操作系统临时目录里写文件。返回值里 `registrationExecuted` 固定是 `false`。入口脚本打印：产物留在专用临时目录，没有注册 Service Worker。
 
-## 安装与复现
+不要在 Library Lab 的页面、布局或主源上调用 `navigator.serviceWorker.register`。不要把生成的 `sw.js` 拷进应用的站点根，也不要使用 `/` 作为 scope。隔离范围常量是 `/__library_lab_workbox__/`。`skipWaiting` 和 `clientsClaim` 都是 `false`，因此即便有人误把文件注册到别处，它也不会自己接管已打开的客户端。本条目的正确做法仍是根本不注册。
 
-在仓库根安装时由 PLATFORM 管理依赖及锁文件（不要在 CD worker 修改）：
+没有匹配收据时 sdk / build / browser 保持 NOT_RUN。Actions 41779873259 是仓库级结果，不是本条目 PASS。仓库级 Playwright 没有把这个临时 Service Worker 安装到 Lab 源。
 
-~~~sh
-pnpm --filter @reactloom/library-lab add -D workbox-build@7.4.1
-pnpm --filter @reactloom/library-lab exec node entries/D16-workbox/examples/basic.mjs
-pnpm --filter @reactloom/library-lab exec node entries/D16-workbox/examples/business.mjs
-pnpm --filter @reactloom/library-lab exec node entries/D16-workbox/examples/advanced.mjs
-pnpm --filter @reactloom/library-lab exec node --test entries/D16-workbox/tests/sdk.test.mjs
-~~~
+## Lab 当前示例
 
-三个入口共同调用 examples/workshop.mjs 的真实 getManifest 和 generateSW。运行结果会报告 precacheUrls、precacheCount、precacheBytes、swBytes、generatedFiles、outputDirectory。实际数字依运行版本而定，本页不填写虚构值。CLI 保留产物供查看；定向测试会释放自己的临时目录。
+`runWorkshop` 用 `mkdtemp` 得到 `reactloom-workbox-` 前缀的目录，站点文件写在它下面的隔离路径里。内容是教学用的 `index.html`、`app.js`、`offline.html`，以及 `private/tokens.js`。`globIgnores` 排除 `private/**`、`sw.js` 和 `workbox-*.js`。清单若包含 `private/` 会抛错。单文件上限 512 KiB。`globFollow` 为 false，不跟随链接。
 
-## 三层实验
+`getManifest` 的 warnings 或 `generateSW` 的 warnings 都会使本次失败。生成后的文件数必须和清单条数一致，`sw.js` 不能是空文件。
 
-### 入门：静态文件预缓存
+- basic：只有预缓存，`runtimeStrategy` 为 `precache-only`。没有 `runtimeCaching`。
+- business：增加一条运行时规则。`urlPattern` 是 [`examples/cache-policy.mjs`](examples/cache-policy.mjs) 的 `matchPublicRssRequest`。方法只允许 GET，`credentials` 必须是 `omit`，协议 `https:`，origin 必须是 `https://lab.example.test`，路径必须恰好是 `/__library_lab_workbox__/api/public/rss`。带 `authorization`、`cookie` 或 `proxy-authorization` 的请求不匹配。策略名是 `NetworkFirst`，只缓存状态 200，最多 12 条，最多 1 小时，网络超时 2 秒。缓存名 `rl-workbox-public-rss-v1`。
+- advanced：在上述规则之外设置 `navigateFallback: 'offline.html'`。私有文件仍不进预缓存。
 
-生成 index.html、app.js、offline.html 和仅供排除检查的 private/tokens.js。getManifest 校核 URL 列表，再调用 generateSW 输出 sw.js。globFollow:false 避免符号链接穿透；仅收录已审查的 HTML、JS、CSS，检查 private 路径没有进入 precache。
+默认 `keepOutput: false` 时，`finally` 递归删除临时目录。三个入口为了打印结果传入 `keepOutput: true`，目录留在本机临时路径，仍然没有 `register()`。
 
-### 业务：公开 RSS API 的运行时缓存
+没有挂载：`workbox-window`、`injectManifest`、Background Sync、页面上的“立即更新”按钮。`library.json` 没有钉那些运行时包。生产若要它们，单独评审，并且 scope 不能是 Lab 主应用。
 
-基于真实 runtimeCaching 创建 NetworkFirst 规则：只对示例域名 lab.example.test 下 /__library_lab_workbox__/api/public/rss 的 GET 生效，maxEntries 12、maxAgeSeconds 3600、networkTimeoutSeconds 2，响应状态只准 200。这是配置层演示：**未进行真实网络请求，也未触发浏览器策略处理器**。生产应把域名改为经过授权的目标域名并复核 credentials、私有数据和多租户隔离。
+## 什么时候用
 
-### 进阶：离线导航回退与更新
+需要在构建期得到带修订版本的预缓存清单，或给公开 GET 写运行时缓存策略时，用 `workbox-build`。离线可用还要求浏览器真的安装了 Service Worker 并且用户留下了缓存。只运行本示例不会让 Lab 离线打开。
 
-使用 navigateFallback: offline.html、cleanupOutdatedCaches:true，但 skipWaiting:false 和 clientsClaim:false；需要应用显式决定更新时机，防止未保存表单被新版本抢占。导航 fallback URL 必须在隔离 scope 中。服务端要正确配置 Worker 脚本位置、允许的 scope、HTTP 缓存头及 HTTPS。
+不要用 Workbox 做授权、不要缓存带 Cookie 的 HTML、不要把唯一副本只放在 CacheStorage、不要在 SSR 里访问 `navigator.serviceWorker`。结构化记录用 Dexie。服务端状态用 Query。极小的缓存需求可以手写 Cache API，避免无范围的生成器。
 
-## 机制和边界
+## 模型
 
-build 阶段：本地文件 → getManifest 内容哈希 → generateSW 生成服务工作线程文件；浏览器阶段：部署 → navigator.serviceWorker.register → install/activate/fetch → 运行时路由；二者不能混为一谈。
+`generateSW` 根据选项写出完整的 `sw.js`。`self.__WB_MANIFEST` 那类注入点属于 `injectManifest` 流程；Lab 没有手写 SW 源文件，所以用的是生成器而不是注入。
 
-本 Demo 产物的预期部署目录是 /__library_lab_workbox__/，注册示意（**不要在本应用运行**）：
+预缓存清单是文件内容的修订版本，不是运行时再去拉一份 JSON 配置。`private/tokens.js` 被忽略，是为了证明排除规则，不是为了把秘密放进仓库再指望忽略总能生效。秘密不该出现在会被扫描的目录里。
 
-~~~js
-await navigator.serviceWorker.register('/__library_lab_workbox__/sw.js', {
-  scope: '/__library_lab_workbox__/',
-});
-~~~
+`matchPublicRssRequest` 会被序列化进生成的 worker。它不能闭合外部变量。匹配函数自己接收 `{ url, request }`。缺字段时返回 false，而不是抛到安装阶段。
 
-实际 scope 由部署脚本位置、register 配置及 Service-Worker-Allowed 响应头限制决定，并非 generateSW 可以强制保障。要在另一 origin/隔离目录中进行真实浏览器验收；不能把同源 iframe 当不可信 Service Worker 的安全沙箱。
+`NetworkFirst` 会先试网络。超时或失败才看缓存。这不保证数据新鲜，只保证弱网时可能看到上一次的 200。`cacheableResponse.statuses: [200]` 避免把 401 页面缓存下来。
 
-## 四种常见错误
+`navigateFallback` 只在 advanced 写入。它影响导航请求的兜底文档，不是 API 的 JSON 兜底。不要把带身份的导航缓存进这份 fallback。
 
-1. **将 sw.js 放在根路径**：Worker 可能控制 Lab 主页及所有子路由。正确做法是独立 origin 或限定脚本路径及 scope；browser 验收证明主页不受控制。
-2. **缓存私有 API**：NetworkFirst 或 CacheFirst 可能把令牌相关数据存入跨会话缓存。只匹配白名单公开 GET，并且默认不缓存有凭据响应或非 200 响应。
-3. **忽视更新生命周期**：无条件 skipWaiting/clientsClaim 可能让旧文档被新代码控制。使用显式更新提示、缓存版本化和旧数据迁移规则。
-4. **把清空所有 CacheStorage 当重置**：会影响同 origin 其他应用。只删除本 Worker 自己的 cacheName；演示 Node 构建本身不接触浏览器缓存。
-5. **没有实际离线验收就标 PASS**：Node 只证明生成了产物，离线网络、激活、导航 fallback 与 Safari/Firefox 差异必须单独在浏览器执行。
+`cleanupOutdatedCaches: true` 让新的生成结果清掉自己的旧预缓存。`cacheId` 固定为 `reactloom-library-workbox-isolated`，避免和别的应用缓存名混用。
 
-## 与其他工具组合
+## 三层示例
 
-Dexie 用于结构化离线数据的事务与索引；Workbox 用于网络响应缓存，所有权完全不同。配合 MSW 做场景测试时，必须避免两种 Service Worker 同时试图控制相同 scope；不要把 mock 响应的成功误认为 Workbox 真正完成网络策略。
+### 基本
 
-## 验证要求
+运行 `basic.mjs`。结果 JSON 里 `precacheUrls` 含 `index.html` 和 `app.js`，不含 `private/`。`fallback` 为 null。`registrationExecuted` 为 false。控制台最后一行说明没有注册。
 
-Node SDK：读取真实 Workbox 构建结果，校验 manifest、隐藏资源排除、sw.js 非空、规则白名单及更新选项。Browser：在隔离 origin 安装后查看 registration.scope、controller、CacheStorage 命名空间，断网导航和更新、卸载及不同租户登录。当前 sdk/build/browser = NOT_RUN；源码与测试文件存在不代表这些检查已经运行。
+### 业务
 
-## 官方来源
+同样生成预缓存，并带上公开 GET 的 NetworkFirst 配置。用策略函数对错 origin、错路径、带 Cookie 的请求做单元断言。生成器不会在 Node 里真正拦截那些 URL。
+
+### 进阶
+
+多一个离线导航回退文件名 `offline.html`。私有脚本仍被拒绝。若 warnings 非空，脚本抛错而不是带着警告退出 0。
+
+## 反例
+
+### 反例 1：在 Lab 源注册
+
+```ts
+await navigator.serviceWorker.register('/sw.js')
+```
+
+这会让主应用进入 Service Worker 控制，刷新和缓存都会缠在一起。
+
+```ts
+const result = await runWorkshop('basic')
+// result.registrationExecuted === false
+```
+
+### 反例 2：skipWaiting 加 clientsClaim
+
+```js
+skipWaiting: true
+clientsClaim: true
+```
+
+新的 worker 会立刻接管已打开的页面。Lab 两样都是 false，并且仍然不注册。
+
+### 反例 3：缓存所有同源 GET
+
+```js
+urlPattern: ({ url }) => url.origin === self.location.origin
+```
+
+账户接口和静态页会被一起放进 CacheStorage。
+
+```js
+urlPattern: matchPublicRssRequest
+```
+
+路径、方法、凭据和禁止头都要同时成立。
+
+### 反例 4：匹配函数引用外部常量
+
+生成器序列化函数时看不到模块里的 `ORIGIN`。把字面量写在函数体内，像现在的 `https://lab.example.test`。
+
+### 反例 5：用 Workbox 做登录墙
+
+Cache API 不验证用户。公开 RSS 必须在放进构建目录之前已经去掉秘密。`private/` 排除是演示，不是权限系统。
+
+### 反例 6：把 Query 数据只放进运行时缓存
+
+失效和租户键属于 Query。SW 缓存没有那些键。两边同时存会看到旧列表。
+
+## 组合
+
+**Dexie**：公开响应可以缓存。需要按 id 查询和事务的数据放 IndexedDB。不要在 SW 里打开用户的 Dexie 库名并删库。
+
+**MSW**：开发时的模拟 Service Worker 和这份生成物不是同一个注册。不要在开着 MSW 的源上再注册 Workbox。Lab 的 F11 运行器有自己的范围，本条目不加入那个注册。
+
+**Query**：内存里的服务端状态不是 offline 文档。若产品要离线读文章，先定义公开文档的 URL，再生成清单。
+
+## 生产核对清单
+
+1. 代码路径上不存在 `serviceWorker.register`。
+2. scope 若将来使用，是 `/__library_lab_workbox__/` 这一隔离前缀，不是 `/`。
+3. `skipWaiting` 与 `clientsClaim` 保持 false，直到产品有单独的更新提示。
+4. 预缓存忽略私有目录，清单断言不含 `private/`。
+5. 运行时规则只匹配匿名 GET，并且拒绝 Authorization 和 Cookie。
+6. 只缓存 200，有条数和时长上限。
+7. warnings 让构建失败。
+8. 临时目录在不需要留存时删除；留存的目录仍在 `tmpdir`，不在应用 `public/`。
+
+## 升级
+
+钉 `workbox-build@7.4.1`。7.4 的发布说明主要是构建链维护，不要假设出现了新的运行时 API。若要 `workbox-window` 或 background sync，先把包写进条目自己的依赖评审，而不是在指南里假装已经安装。
+
+从 `injectManifest` 教程迁到本示例时，删掉手写 `clientsClaim()` 和 `SKIP_WAITING` 消息。那些属于另一条更新协议。
+
+## 验收
+
+- 三个入口都打印未注册，`registrationExecuted` 为 false。
+- 清单含公开 html/js，不含 `private/tokens.js`。
+- 策略函数拒绝非 GET、非 omit、错 origin、错路径、带禁止头的请求；缺字段返回 false。
+- advanced 的结果写明 `offline.html`，basic 的 fallback 为 null。
+- 空的 `sw.js` 或 warnings 会抛错。
+- `tests/sdk.test.mjs` 调用真实 `workbox-build`。无收据则 NOT_RUN。浏览器项保持 NOT_RUN，因为没有在 Lab 源安装 worker。
+
+## 资料
 
 - https://developer.chrome.com/docs/workbox/modules/workbox-build
+- https://developer.chrome.com/docs/workbox/modules/workbox-precaching
+- https://developer.chrome.com/docs/workbox/modules/workbox-strategies
+- https://developer.chrome.com/docs/workbox/service-worker-lifecycle
 - https://github.com/GoogleChrome/workbox
+- https://github.com/GoogleChrome/workbox/releases/tag/v7.4.1
 - https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerContainer/register
-
-## 第十三轮加固：避免缓存带凭据的公开 URL 响应
-
-URL 是公开路径，不保证 **响应** 是公开数据。原先的正则只检测 URL，默认的 same-origin Request 即使携带 Cookie，也可能匹配并进入 CacheStorage。现在 `examples/cache-policy.mjs` 提供无外部闭包的 Workbox `RouteMatchCallback`（会被 generateSW 序列化至 SW），必须同时匹配精确 HTTPS origin/path、`GET`、`request.credentials === 'omit'`，并拒绝 Authorization/Cookie/Proxy-Authorization 请求头。默认 `same-origin` 和 `include` 一律绕过这个 runtime cache；客户端显式匿名 fetch 才满足规则，不能强改其他用户请求的凭据模式。
-
-此规则只是一层构建策略保护，不会检查服务端业务是否误返回私有内容，也不替代发布前的数据分级、Cache-Control 策略或隔离 origin 验收。单独运行纯规则回归：`node --test entries/D16-workbox/tests/cache-policy.test.mjs`；仍须真实 Workbox SDK 构建验证生成器是否正确序列化回调，以及隔离浏览器的 credentials/cached-response 测试。

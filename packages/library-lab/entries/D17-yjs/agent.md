@@ -1,18 +1,60 @@
-# D17 Yjs — Agent 协作实现指南
+# D17 Yjs — 工程手册
 
-适用于可接受**最终收敛**的富文本/白板/离线协作数据；需要强事务、支付、ACL 或“最后审批结果”时，仍应由有权限的服务端确认。
+## 适用
 
-## 移植入口
-读取 `examples/example.tsx` 的 `syncReplicas` 了解 state vector + V1 update；教程同时展示一对 Y.Doc 的生命周期。生产应用应把 Doc 按 tenant/documentId 实例化，明确 Owner；组件离开时 detach observers，确实不再被使用才 `destroy`，不能误毁共享 Doc。
+两份及以上副本离线编辑同一 CRDT 文档，再用状态向量交换增量。Lab 只在内存里演示 `Y.Map`。
 
-## 不可漏的生产边界
-`Y.Doc` 不是 provider，不提供登录、权限或持久化。使用远端 update 必须校验请求者文档权限、payload 字节大小和存储额度。V1/V2 更新编码需要双方版本协商；不要混用。并发同键胜者不等于业务最新时间戳，不要覆盖人工审批结果。
+不要用 JSON 覆盖模拟合并。不要把收敛结果解释成业务上的最后写入。不要连接未评审的协作服务。
 
-## 测试
-直接运行 `node --test entries/D17-yjs/tests/sdk.test.mjs`，断言双端独立修改合并、相同键最终收敛、增量重复应用不会造成分歧；再测浏览器卸载、网络乱序、断网恢复、协作权限。当前sdk/build/browser仍 NOT_RUN，绝不因为 CRDT 理论保证就记 PASS。
+## 版本
 
-关联：D15 Dexie 浏览器存储、D18 Comlink Worker、E01 Tiptap 富文本。官方 https://docs.yjs.dev/ 。
+`yjs@13.6.33`，MIT。更新信封的演示格式是 `yjs-v1`，最大 64 KiB。这个上限不是协议常量。
 
-## 新增 transport 校验契约
+不安装 y-websocket、y-indexeddb 或 awareness。需要它们时单独核版本，不要假设与 13.6.33 任意组合都能用。
 
-移植前读取 `examples/update-transport.mjs` 与其 `.d.mts` 类型，业务必须先绑定 tenant/document/协议版本及大小门禁，再对明确归属的 `Y.Doc` 调用 `Y.applyUpdate`。当前 Demo 只检查 envelope，无法证明 sender 身份或 Yjs payload 语义安全，真实远端 update 必须经服务端鉴权和配额。进阶按钮在真实 SDK 运行路径重复投递二进制更新，测试应验证乱序/重复后的收敛，不能以纯策略测试替代。
+## 迁移
+
+从 [`examples/example.tsx`](examples/example.tsx) 带走 `syncReplicas` 和 effect 里的 `destroy`。校验来自 [`examples/update-transport.mjs`](examples/update-transport.mjs)。`demo.tsx` 只重导出。
+
+生产替换 `demoScope` 时，租户和文档 id 必须来自已鉴权的会话，而不是页面上的可编辑字符串。先校验再 `applyUpdate`。
+
+编码顺序保持：先读两边向量，再生成两份更新，再应用。replay 只用于证明幂等。
+
+## 不可删的清理
+
+卸载 effect 对 `left` 和 `right` 调用 `destroy()`，并清空 ref。同步函数在 ref 为空时直接返回。
+
+信封失败时不要应用部分字节。错误只进入状态句。
+
+不要把 Doc 存进模块级单例给下一个挂载复用。
+
+## 反例
+
+- `clear()` 后按 JSON 重放另一端。
+- 不带状态向量的全量更新被当成增量协议。
+- 跳过 `validateYjsEnvelope`。
+- 断言某个标题字符串一定获胜。
+- 卸载后不 `destroy`。
+- 用 64 KiB 检查代替服务器 ACL。
+- 只持久化 `toJSON()` 并当作同步日志。
+- 用 `origin` 参数做鉴权。
+
+## 测试断言
+
+- 断开期间的两边编辑在交换后都保留。
+- 同一键冲突后两份 Doc 的该键相等，且测试不写死赢家。
+- 同步之后的再次增量可以安全重放。
+- 乱序和重复投递仍收敛。
+- 文档 id 或租户不匹配时目标 Doc 不变。
+- 空字节、非 `Uint8Array`、超长字节被拒绝。
+- `tests/sdk.test.mjs` 导入真实 `yjs`。无收据则 NOT_RUN。
+
+## 真实限制
+
+没有网络和持久化。64 KiB 与固定租户只覆盖演示误用。标题冲突的可见结果依赖 Yjs 的当前实现，界面不把它写成产品规则。
+
+两份 Doc 都在主线程。没有光标，没有撤销栈。
+
+## 证据
+
+sdk、build、browser 保持 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有匹配收据。Actions 41779873259 不是本条目 PASS。不要改 `verification.json`。

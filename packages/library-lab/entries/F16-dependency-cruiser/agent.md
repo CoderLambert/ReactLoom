@@ -1,18 +1,45 @@
-# F16 dependency-cruiser — Agent架构守卫手册
+# F16 dependency-cruiser — 工程手册
 
-场景：审查层级依赖、循环关系、越界模块引用。不是体积分析器、未使用依赖清理器或运行时故障工具。基线dependency-cruiser@18.5.0，MIT；请核对目标Node版本、解析方式和真实CLI报告。
+## 适用
 
-**最小迁移来源**：examples/workspace/config.cjs、examples/workspace/{basic,business,advanced}/src和examples/verify.mjs。先只迁移命中目标架构的必要规则，不复制虚构路径或三个故意坏掉的fixture到生产项目。
+隔离夹具上的依赖方向和环。不扫描产品树，不代替 Knip 或打包体积。
 
-执行顺序：
-1. 从目标仓库真实路径设计 from/to 正则，明确domain、ui、infra的边界。
-2. 首先用真实CLI输出json检查是否正确识别入边、出边；为已有合理例外建立书面理由。
-3. 添加no-circular rule并标明检测范围，区分工具发现的静态环与实测运行错误。
-4. 选择应用CI增量路径，确定错误级别/退出码，保留实际报告供审查。
-5. 必须运行positive和negative fixture，验证bad case确实非零，不能只检查config文件存在。
+## 版本
 
-**禁止**：对用户全部源码执行无明确许可的自动删除；只靠热力图宣称架构健康；人工制造JSON报告冒充真实CLI；将允许的跨层业务特例全部消灭。
+`dependency-cruiser@18.5.0`，MIT。配置 `examples/workspace/config.cjs`。报告器至少包括 `json` 和 `err`。
 
-必要验证命令：node entries/F16-dependency-cruiser/examples/verify.mjs（在packages/library-lab根运行），包括真实包导入与CLI。当前NOT_RUN/BLOCKED，详见verification.json。官方：https://github.com/sverweij/dependency-cruiser
+## 迁移
 
-**新增迁移门禁**：保留固定工作目录，分别使用JSON与err报告器；检查真实summary的规则名/严重度与明确退出码。`result-policy.test.mjs`的模拟JSON只验证解析器，不代表目标depcruise真实执行。
+带走 config、三份 src、`run.mjs`、`verify.mjs`、`result-policy.mjs`。命令只接收 `basic|business|advanced`。不要把 cruiser 指到仓库其它目录。
+
+## 不可删的清理
+
+`domain-must-not-import-ui` 与 `no-circular-dependencies` 两条都留着。`verify.mjs` 必须各跑一次 JSON 和 err。JSON 不拿来证明退出码，err 不拿来证明规则名。不跟随 `node_modules`。
+
+## 反例
+
+- 扫描 `packages/` 或模板。
+- 放宽 to 路径让 business 变绿。
+- 只保存一种报告器。
+- 用策略单测代替 `depcruise`。
+- 在网页里画假图。
+- 用 chunk 大小推断没有环。
+- 公开带绝对路径的 JSON。
+
+## 测试断言
+
+- basic：error 数 0，err 退出码 0，modules 非空。
+- business：违规里有 `domain-must-not-import-ui`，err 退出码 > 0。
+- advanced：违规里有 `no-circular-dependencies`，err 退出码 > 0。
+- `summary.error` 等于 severity 为 error 的条数。
+- 超限或损坏 JSON 被拒绝。
+
+## 真实限制
+
+网页不启动 CLI。`second.ts` 的环是 import，不是一次真实递归调用。类型导入算不算边，以这次 18.5 的输出为准。没有 Mermaid 产物。json 报告器的退出码不能代替 err。
+
+## 证据
+
+sdk 收据来自真实 `depcruise` 进程，写入 `docs/library-lab/evidence/runs/`。Actions 41779873259 不是 F16 PASS。browser 保持 NOT_RUN。
+
+只跑 `run.mjs` 的 json 输出还缺 err 报告器的退出码合同。

@@ -1,47 +1,159 @@
-# Ajv 8.20.0：让 JSON Schema 成为运行时合同
+# Ajv 8.20.0｜可信 JSON Schema 与 RSS 域名规则分开
 
-## 适用任务与边界
-在接收外部 RSS 导入清单、第三方 OpenAPI 响应、插件配置或版本化 JSON 时，TypeScript 的 `as` 不能防止恶意或错误数据进入业务状态。Ajv 将**受信任的 Schema** 编译为校验函数，兼容 JSON Schema 的多种草案。本例使用默认 draft-07；跨项目切换 draft-2020-12 时需要按对应入口创建 Ajv 实例，不能混合版本。
+Lab 锁定 `ajv@8.20.0`（MIT）。Ajv 编译 JSON Schema 并校验数据。它不画表单，不发请求，也不判断一个 HTTPS 地址能不能被服务器抓取。
 
-## 安装与真实源码
-```bash
-pnpm add ajv@8.20.0
+没有收据时 sdk / build / browser 保持 NOT_RUN。Actions 41779873259 不是本条目 PASS。
+
+## Lab 当前示例
+
+[`examples/example.tsx`](examples/example.tsx) 在模块顶层创建唯一实例：
+
+```ts
+const validator = new Ajv({
+  strict: true,
+  allErrors: true,
+  coerceTypes: false,
+  useDefaults: false,
+  removeAdditional: false,
+})
 ```
-示例来自 `examples/example.tsx`，入口 `examples/demo.tsx`；测试文件 `tests/sdk.test.mjs` 直接导入官方 Ajv。代码面板只展示这两份运行文件，不维护手抄副本。
 
-## 三层场景
-**入门：**用 `type/properties/required/additionalProperties` 校验 RSS 源对象，拒绝错误类型和未知字段。**业务：**验证含多个来源的分组，限制数组长度和条目格式。**进阶：**使用 `if/then` 强制启用任务时提供合法并发数；`allErrors: true` 汇报所有 schema 错误。
+`useMemo` 按 level 编译 `feedSchema`、`batchSchema` 或 `windowSchema`。这些 schema 是源码常量，不是远程下发的可执行文档。`demo.tsx` 只做再导出。没有单独的 `npm run demo:business` 端口。
 
-用户可修改 JSON，观察 `instancePath`、`keyword` 和 `message`。语义错误展示通过文本，而非只变颜色。每层对同一个 schema 编译一次，编辑输入时复用 validate 函数。
+- **basic**：对象必须有 `id`、`title`、`url`，`additionalProperties: false`。`id` 只允许小写、数字和连字符。`url` 的 pattern 只要求以 `http://` 或 `https://` 开头（大小写不敏感）。Ajv 通过后再跑 [`rss-policy.mjs`](examples/rss-policy.mjs) 的 `validateFeedBoundaries`。
+- **business**：`feeds` 1 到 5 条，`uniqueItems: true`。Ajv 的 unique 比较整份对象，不比较规范化 URL。重复身份由 `canonicalHttpsFeedUrl` 再查。
+- **advanced**：`enabled === true` 时 `if/then` 要求 `maxConcurrent` 为 1–8 的整数。样例故意带 `maxConcurrent: 0` 和未知键 `unreviewed`。这一层 `validateFeedBoundaries` 直接返回空数组，因为窗口 schema 没有 URL。
 
-`strict:true` 包含 `strictRequired`：条件分支中的必填属性应在该分支的 `properties` 明确声明。本例在根对象与 `then` 复用同一份 `maxConcurrentSchema`；启用时必须填写 1–8 的整数，未启用但主动提供该字段时仍受相同约束。不要关闭严格模式来让分支通过编译。
+`canonicalHttpsFeedUrl` 拒绝非 HTTPS、用户信息和空主机，丢掉 fragment。它不是 SSRF 白名单。
 
-## 必须理解的运行机制
-`compile(schema)` 产出会执行的 JS 校验逻辑，并将错误存于当前 `validate.errors`。这意味着不应在无信任边界的环境中编译用户任意 Schema；严格 CSP/不允许动态代码生成的环境，需要单独预编译独立校验器，而不是关闭全部安全策略。默认 `coerceTypes:false`、`removeAdditional:false`、`useDefaults:false`，**拒绝**而不是静默修改业务输入。
+## 什么时候用
 
-## 五个常见生产错误
-1. **把远程 schema 直接交给 compile：**schema 不等同于可信输入，需来源审核、大小/深度限制及版本白名单。
-2. **假定 Ajv 自带 email/url/date format：**v8 的标准 formats 通常需 `ajv-formats`；本实验刻意只用内置关键字与 HTTPS 前缀模式，不能冒充 URL 安全校验。
-3. **校验失败后再调用同一个 validate：**`validate.errors` 可能被后一次调用覆盖；应立即快照错误后再异步处理。
-4. **假定 JSON Schema 等于 SSRF 防护：**服务端必须重新检查解析后的域名/IP/跳转及最终访问目标。
-5. **关闭 strict 逃避未知关键字：**优先修正规范和关键词；严格模式帮助发现拼错或未支持的 Schema。
+OpenAPI 或已发布的 JSON Schema 是合同、要和 JSON Forms 共用同一份文件时用 Ajv。TypeScript 手写对象、需要 input/output 转换时用 Zod 或 Valibot。Ajv 的 `coerceTypes` 会改写数据，本示例关掉了。
 
-## 组合、测试与替代
-C04 JSON Forms 负责根据 JSON Schema 渲染控件，Ajv 负责值校验。C02 Zod 与 C03 Valibot 更适合 TS-first 数据合同；API-first 系统若上游已生成标准 JSON Schema，则 Ajv 避免重复手工维护类型定义。业务输入变化应配置 schema 版本迁移，不直接覆盖旧配置。
+不要编译用户上传的 schema。官方把 schema 视作应用代码：恶意 `pattern`、深层 `$ref` 和 `uniqueItems` 都能吃掉 CPU。
 
-至少断言：合法数据通过；错误类型和额外字段均失败；条件必填正确；服务端仍做独立权限/URL 安全校验。Node SDK 测试验证上述函数，不证明浏览器 CSP 或复杂 schema 规模性能。
+## 数据与模型
 
-## 事实与来源
-- [官方文档](https://ajv.js.org/guide/getting-started.html)
-- [严格模式](https://ajv.js.org/strict-mode.html)
-- [npm v8.20.0](https://www.npmjs.com/package/ajv)
+一次校验的顺序是：`JSON.parse` → 已编译的 `validate(value)` → 若通过再跑域名规则。失败时立刻读 `validate.errors` 并写成字符串。这个数组会被下一次调用覆盖，不能在 `await` 之后再读。
 
-授权 MIT。源码写入不等于已安装/通过，执行状态以 `verification.json` 和具备源码指纹的日志为准。
+`allErrors: true` 适合这个小示例把多条错误一次显示出来。服务端面对不可信大文档时用 `allErrors: false`，并在 Ajv 之外限制字节、深度和数组长度。客户端的 `maxItems: 5` 不是防 DoS。
 
-## 双阶段 RSS 数据合同（本轮修复）
+`removeAdditional` 会改对象，和 `oneOf` / `anyOf` 叠在一起时结果难测。Lab 用 `additionalProperties: false` 拒绝未知键，而不是默默删掉。
 
-`uniqueItems:true` 只比较整个 JSON 对象；`{id:'a',url:'https://x/rss'}` 与 `{id:'b',url:'https://x/rss'}` 在 JSON Schema 里**不是**重复项，却可能违反 RSS 订阅业务规则。现在示例先执行真实 Ajv 结构校验，再调用同目录 `rss-policy.mjs` 做 URL 解析、去掉 fragment、统一主机/默认端口、保留 path/query 大小写，拒绝用户名/密码及规范化后重复 URL。错误使用 `/feeds/1/url` 等可定位路径。高级配置不误套 RSS 合同。
+`if/then` 里的子 schema 在 strict 模式下要自带 `type`。缺了会在编译期报错，不要关掉 `strict` 来消警告。
 
-Schema HTTPS 前缀现可识别大写 scheme，但这仍不是完整 URL 格式校验；实际 URL 解析由第二阶段补齐。用户编辑输入或切换场景后清空旧 PASS。复制代码时必须同时复制 `rss-policy.mjs` 与 `.d.mts`，否则只留下不完整的 Ajv 结构约束。业务服务器仍须验证 DNS/私网/重定向和权限。
+默认草案是 draft-07。不要在同一个实例里混 draft-2020-12。`format: 'uri'` 从 Ajv 7 起不在核心里，本示例没有装 `ajv-formats`，也没有使用 format 关键字。需要时显式注册，并单独看正则是否有 ReDoS。
 
-纯策略：`node --test packages/library-lab/entries/C05-ajv/tests/rss-policy.test.mjs`；真实 Ajv：`tests/sdk.test.mjs`，不能将两者混报。
+浏览器里编译通常需要 `script-src 'unsafe-eval'`。强 CSP 应在构建期用 standalone 生成校验函数，而不是给生产站加 eval。本 Demo 没有做 standalone。
+
+## 三层示例
+
+### 基本
+
+合法样例先过 Ajv，再过 HTTPS 规则，输出 PASS 和原对象（没有类型强制）。把 `url` 改成 `http://example.org/rss`：pattern 能过，域名规则失败，路径是 `/url`。加上 `"role":"admin"`：Ajv 因未知属性失败。`id` 写成 `Frontend` 会失败在 pattern。
+
+### 业务
+
+两条 feed 的 URL 规范化后相同（主机大小写、默认端口或 fragment 不同）时，Ajv 的 `uniqueItems` 仍可能成功，随后 RSS 规则报「规范化后的 RSS URL 已存在」。两条对象完全一样才由 `uniqueItems` 拒绝。不要用前者代替后者。
+
+`feeds` 超过 5 条、空数组、team 缺失都是 Schema 错误。研究笔记里的 HTTP 201/409/422 服务没有挂在这里。那些状态码是生产合同，要由服务端在 Ajv 之后用数据库唯一索引实现。
+
+### 进阶
+
+`enabled: true` 且 `maxConcurrent: 0` 应失败在范围。`unreviewed` 应失败在 additionalProperties。把 `enabled` 改成 `false` 并删掉 `maxConcurrent`，条件分支不再要求并发数。错误行包含 `instancePath`、`keyword` 和 `message`。不要 `eval` 路径，也不要把 `message` 插进 HTML。
+
+## 反例
+
+### 1. 每次输入都 new Ajv().compile
+
+编译进渲染热路径。Lab 把 `new Ajv` 放在模块顶层，只按 schema 身份编译。
+
+### 2. coerceTypes 开着还当输入没变
+
+```ts
+new Ajv({ coerceTypes: true })
+```
+
+`'30'` 会变成数字，React 草稿和审计日志都被改写。生产默认关闭。要转换就先克隆，再显式解析。
+
+### 3. removeAdditional: 'all' 当安全过滤
+
+未知的 `role` 消失，审查看不见。用 `additionalProperties: false` 拒绝，通过后再映射白名单 DTO。
+
+### 4. await 之后读 validate.errors
+
+```ts
+validate(a)
+await something()
+console.log(validate.errors) // 可能已经是 b 的结果
+```
+
+失败当帧复制出来。
+
+### 5. 用 uniqueItems 当 URL 去重
+
+它比较 JSON 值。`https://Example.com/a` 和 `https://example.com/a` 不是同一对象。域名规则另做，且仍不是 SSRF。
+
+### 6. if/then 只藏表单字段
+
+隐藏的 `url` 还在对象里。条件 schema 要拒绝错误分支的字段，提交时构造新对象。JSON Forms 那一侧的 HIDE 同样不算删除。
+
+### 7. 用户上传的 schema 直接 compile
+
+只编译构建期审核过的文档。`$id` 不是自动下载。远程 `$ref` 要走固定白名单和 `loadSchema`，并限额。
+
+### 8. instancePath.split('/') 当属性访问
+
+`~0` 和 `~1` 是转义。把指针当展示用的字段 ID。写入时用显式映射表，不要把路径拼进对象。
+
+### 9. 校验通过就开始抓取
+
+`https://127.0.0.1/` 可以满足字符串 pattern。抓取层检查解析后的 IP、重定向每一跳和云元数据地址。本示例从不请求输入的 URL。
+
+### 10. format 当邮箱已安装
+
+未装 `ajv-formats` 时 `format: 'email'` 在 strict 模式下会编译失败。不要为了这个关掉 strict。
+
+## 组合
+
+**JSON Forms。** 渲染用 C04 的同一份 Schema。Ajv 实例仍由应用拥有时，避免每个控件再 `new Ajv`。隐藏字段用 DTO 函数删，不用 `removeAdditional` 碰用户正在编辑的对象。
+
+**React Hook Form。** 把 `instancePath` 映射到已知字段名再 `setError`。不要按指针动态赋值。IME 期间不要每个按键都跑整份 schema。
+
+**Zod。** 新应用内部 DTO 可以用 Zod。已经发布给别人的 JSON Schema 继续用 Ajv，避免两套规则悄悄分叉。
+
+## 生产清单
+
+- `strict: true`，`coerceTypes: false`，`useDefaults: false`，`removeAdditional: false`。
+- 错误立刻快照。服务端默认 `allErrors: false`。
+- 入站字节、深度、数组上限在 Ajv 外面。
+- 排序字段和 URL 协议用白名单，不把 schema 通过当成授权。
+- 错误用文本节点。字段控件另加 `aria-invalid`。本 Demo 把多行结果放在 `aria-live="polite"` 的 `<output>` 里。
+- 中文长度不要假设 `minLength` 等于屏幕字数。需要字素时另定规则，合同不要因此漂移。
+- 禁止 eval 的页面改用 standalone 产物。
+
+## 升级
+
+从 Ajv 6 上来：`dataPath` 改成 `instancePath`，format 外移，`id` 改成 `$id`，strict 默认更严。用金样本比接受集，不要搜索替换完就上线。JTD 的 `compileSerializer` 不校验输入，不能拿来代替 `validate`。
+
+## 练习
+
+1. 为 rss / web 两个互斥来源写 `if/then` 或判别字段。双 URL、缺 URL、`pollMinutes: "30"` 都要失败，且不能靠类型强制变成数字。
+2. 构造两条只差 fragment 的 feed。`uniqueItems` 通过，域名规则失败。
+3. 连续调用两次 `validate`，确认第一次的 errors 在第二次之后不可再读。
+4. 若要上 standalone，在没有 `unsafe-eval` 的页面加载生成函数，而不是放宽 CSP。
+
+## 官方链接
+
+- https://ajv.js.org/guide/getting-started.html
+- https://ajv.js.org/strict-mode.html
+- https://ajv.js.org/security.html
+- https://ajv.js.org/guide/modifying-data.html
+- https://ajv.js.org/standalone.html
+- https://github.com/ajv-validator/ajv
+
+## 证据
+
+`rss-policy` 单测不是 Ajv 编译通过。sdk 要真实 `import Ajv from 'ajv'` 并在 `docs/library-lab/evidence/runs/` 有收据。build 与 browser 保持 NOT_RUN，直到各自收据存在。
+
+GitHub Actions 41779873259 是仓库级安装、typecheck、build、52 个 SDK 文件（153 项测试）和 45 项 Playwright 的结果，不是 C05 的条目 PASS。不要改 `verification.json`。

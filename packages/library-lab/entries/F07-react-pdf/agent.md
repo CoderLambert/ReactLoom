@@ -1,20 +1,45 @@
-# F07 react-pdf — AI Agent 集成准则
+# F07 react-pdf — 工程手册
 
-**用途**：展示已有 PDF、分页/文本层/Annotation，React19。需要创建文档用 F08 @react-pdf/renderer；需要编辑现有 PDF 用 F09 pdf-lib；需要自定义 Canvas 渲染用 F06 PDF.js。
+## 适用
 
-**来源与版本**：官方 react-pdf v11.0.0 (MIT)；主线程 pdfjs 与 worker 必须同版本；当前 react-pdf 11.0.0 与 F06 约定 pdfjs-dist 6.3.289，安装后仍须从实际锁文件核对解析到的依赖，不复制随手找到的其他 worker。Node>=22.13，React>=19。读 `library.json` 和 `verification.json`，不可照搬未实测的 PASS。
+用 React 组件阅读已有 PDF。生成用 F08，改字节用 F09，直接管 Canvas 用 F06。
 
-**迁移源码**：`examples/example.tsx`、`examples/fixture.ts`。业务代码只需 Document、Page、worker同模块配置、page state和处理 onLoadSuccess/onLoadError；fixture 仅教学使用。按业务引入TextLayer.css，决定 Annotation layer 是否开启。
+## 版本
 
-**硬性工程约束**：pdfjs-dist 使用本地构建版本相同 worker，不使用无版本的外链；用户PDF受权限/大小/密码保护，不能未经许可发第三方CDN；本地File读取要避免旧请求回写；大量页按需渲染，控制Canvas与文本层内存。SPA懒加载不等于Worker/字体一定被清理，需实测。
+`react-pdf@11.0.0` 与 `pdfjs-dist@6.3.289`，阅读器 MIT。Worker 与 Document 写在同一模块。没有浏览器收据就不要声称 Worker 已加载。
 
-**验证指令**：typecheck/build，Chromium打开原创2页PDF/第二页导航、坏文档错误、恢复、文件尺寸拒绝、离开Tab取消异步读取；检查网络面板只加载本地Worker，无上传/外链。没有这些证据，所有SDK/build/browser仍 NOT_RUN/BLOCKED。
+## 迁移
 
-**官方文档**：https://github.com/wojtekmaj/react-pdf
+带走 `examples/example.tsx`、`examples/fixture.ts`、`examples/worker-payload.mjs` 和 `.d.mts`。`file` 必须是 `{ data: source.slice() }`。`key` 使用 `documentGeneration`。文字层 CSS 只在打开 `renderTextLayer` 时引入。批注层保持 false。
 
+## 不可删的清理
 
-静态合同回归：`node --test entries/F06-pdfjs/examples/worker-version.test.mjs`；浏览器还要验证 F06 与 F07 交替挂载时没有版本错误、重复Worker或已销毁状态回写。禁止将该静态测试记为SDK PASS。
+空字节和大于 3 MiB 不能进 Worker payload。选择、重置、卸载增加 `readTurn`。换文档时页数归零并换 key。不要把 React state 的 buffer 交给 Document。卸载由页签离开完成，不要另做全局缓存。
 
-## Wave21 Worker迁移注意
+## 反例
 
-不要直接把React可复用PDF数据或内建fixture作为`Document.file`传给PDF.js Worker。迁移 `worker-payload.mjs/.d.mts`，经 `createPdfWorkerPayload(bytes)` 建独立Uint8Array，`useMemo`保持file对象身份，文档generation变化才重建。没有真实SDK/浏览器运行证据，Node transfer策略PASS不能升级verification。
+- Worker 配在别的文件或 CDN。
+- 只升级 F07 或只升级 F06。
+- `<Document file={bytes}>` 交出原 buffer。
+- 按页数一次挂上所有 `<Page>`。
+- 把文件选择当成上传。
+- base64 进长期状态。
+- 打开批注层却没有样式和 CSP。
+- 用 v10 的加载 API。
+- 两页夹具成功就宣称任意 PDF、密码和 CMap 都可用。
+
+## 测试断言
+
+- payload 是新的 `Uint8Array`，原件在 transfer 后仍可读。
+- 大于 3 MiB 或空数组被拒绝。
+- 损坏字节替换文档并走错误文案；恢复回到夹具。
+- 非 basic 才有文字层；批注层关闭。
+- `worker-payload.test.mjs` 不加载 react-pdf。
+
+## 真实限制
+
+没有 4096 像素预算（那在 F06）。没有密码、字体包和 wasm。缩放档只有四档。文字层不等于抽取结构。损坏按钮会替换当前文档，不像 F06 那样只探测。
+
+## 证据
+
+sdk 与 browser 需要 `docs/library-lab/evidence/runs/` 收据。版本声明测试和 transfer 策略都不是 Worker 收据。Actions 41779873259 不是 F07 PASS。

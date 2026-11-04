@@ -1,20 +1,61 @@
-# D13 RTK Query — Agent 工程手册
+# D13 RTK Query — 工程手册
 
-## 选型
-已有 Redux store 时优先考虑 RTK Query；无 Redux 的项目比较 D07 TanStack Query。@reduxjs/toolkit 2.13.0 和 react-redux 9.3.0 必须核实 peer/lock。
+## 适用
 
-## 迁移范围
-examples/example.tsx 的 createDemoRuntime 是隔离教学 store；生产项目通常把 createApi 单例与 store 配置移到服务层。必须保留 api.reducer、api.middleware、查询缓存完整身份、Provider/useQuery 与 mutation tags。不要把本地 baseQuery fixture 拷成真实 HTTP 客户端。
+已经有 Redux store，希望端点缓存、标签失效和 hook 订阅放在同一套中间件里。参数必须包含租户和搜索。
 
-## 安全和限制
-客户端 tenant 键是缓存隔离，不是授权校验。服务器按认证上下文实施 ACL；登出/切租户清理敏感缓存。变更 query 参数后旧结果不可覆盖新租户；失败 mutation 需可访问提示和真实回滚策略；不要静默 swallow 409。
+没有 Redux 时用 TanStack Query。不要把 RTK Query 当成鉴权或上传协议。不要和 Query 同时拥有同一资源。
 
-## 最小验收
-Node 真实 createApi+configureStore dispatch 与 cache 查询状态；browser SDK hook 切换 tenant/search、mutation invalidation、409 错误展示、卸载停止订阅。verification.json 无实际指纹/日志 PASS 则不可声称通过。
+## 版本
 
-## 参考
-https://redux.js.org/toolkit/rtk-query/overview
+`@reduxjs/toolkit@2.13.0` 与 `react-redux@9.3.0`，MIT。API 从 `@reduxjs/toolkit/query/react` 导入。
 
-## 请求所有权加固（第十二批）
+`reducerPath` 使用 `rlCD13RtkApi`。升级 Toolkit 时保持“有结果才失效”的写法，不要换成旧教程里无条件 `invalidatesTags`。
 
-复制列表时优先使用 `currentData`，不能在新 tenant/search 请求尚未返回时显示旧 `data`。租户或已提交搜索条件变化时重建子面板的订阅上下文；保存 RTK Query mutation 返回的可 abort 请求句柄，卸载时 `abort()` 并使用请求 epoch 阻止旧提示回写。客户端取消不能撤销已在服务器提交的动作，后端必须使用版本/幂等合同。409 时不要无条件 invalidatesTags；按业务确认后触发失效。中文 IME composition 内不得提交半成品查询。SDK 两租户失效测试仅是 Node 层，浏览器需要覆盖 A→B→A、409、连续搜索及卸载后旧请求。
+## 迁移
+
+从 [`examples/example.tsx`](examples/example.tsx) 带走 `createDemoRuntime`、`currentData`、epoch 和 IME 判断。生产可以换 `fetchBaseQuery`，但保留 signal、标签 id 和 409 不失效。
+
+`Provider` 包住使用 hooks 的面板。`createApi` 只创建一次。
+
+卸载和高级按钮的 `resetApiState` 只作用于这个 runtime 的 store。
+
+## 不可删的清理
+
+面板卸载时递增 `requestEpoch` 并 `abort()` 进行中的 mutation。示例卸载时 `resetApiState()`。
+
+新的切换先 abort 上一次触发器。`unwrap` 前后都看 epoch，`finally` 只有当前 epoch 才清空 in-flight 引用。
+
+搜索在组合态和 `keyCode === 229` 时不把 draft 推进 `search`。
+
+## 反例
+
+- store 没有 `api.middleware`。
+- 渲染 `data` 导致上一租户闪现。
+- 409 仍 `invalidatesTags`。
+- 标签不带租户 id。
+- `baseQuery` 不读 `signal`。
+- 每次渲染 `createApi`。
+- `onChange` 直接改查询参数。
+- 在全应用 store 上随意 `resetApiState`。
+- 再把结果复制进另一个 slice。
+- 把参数里的 tenant 当成已经鉴权。
+
+## 测试断言
+
+- 真实端点为不同租户保存不同缓存条目。
+- 成功 mutation 只使该租户标签失效；409 不失效。
+- `currentData` 不渲染上一组参数的行。
+- `conflict` 行的 `paused` 在 409 后保持原值。
+- 过期 epoch 不写提示。
+- `tests/sdk.test.mjs` 导入真实 RTK Query。无收据则 NOT_RUN。
+
+## 真实限制
+
+baseQuery 是内存 fixture。延迟 700ms 不是网络。409 正文是字符串 `stale-revision`，没有 ETag。没有轮询和乐观补丁。
+
+IME 的 229 判断要在真实输入法下再看一次。fixture 允许任意租户参数，服务端必须拒绝。
+
+## 证据
+
+sdk、build、browser 保持 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有匹配收据。Actions 41779873259 不是本条目 PASS。不要改 `verification.json`。

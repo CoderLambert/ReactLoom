@@ -1,16 +1,46 @@
-# E12 assistant-ui — Agent 集成指导
+# E12 assistant-ui — 工程手册
 
-**目标**：复用聊天运行时、消息原语和取消，不重复造一套会话状态机。适用于自有模型网关、局域网 AI、测试模式。演示使用真实助手 UI SDK + 本地确定性 `ChatModelAdapter`，未使用真实 AI，不应对外宣传为模型执行。
-**基线**：`@assistant-ui/react@0.15.21`（安装前核实当前发行与 React19 peer）。参考官方 LocalRuntime 文档，避免旧 v0.12 的 API 示例。
-**迁移入口**：`examples/example.tsx`；先复制 Adapter 的运行时接线与 Provider，再替换后端执行。UI 原语可按产品样式替换，不要把模拟回答复制进产品。
-**必须保留**：AbortSignal 贯穿异步输出；流式多次 yield 为完整累计文本；Provider 环绕 primitives；未授权工具调用不能直接执行；服务端鉴权与数据保存策略另做。
-**不要做**：混用旧 hooks / 新 primitives；通过客户端调用密钥；复制用户历史到测试fixture；擅自启用Cloud/付费功能；把断开的网络流伪装为回复完成。
-**最小验收**：不挂载Provider时故意失败用例；用户发送、流式渲染、取消、卸载、重进、IME 和键盘无障碍。SDK/typecheck/build/browser 全部需要独立实际证据。
-**关联**：E11 Streamdown流式文本、D07 Query请求缓存、F11 MSW网络场景矩阵。
-**出处**：https://www.assistant-ui.com/docs/runtimes/custom/local-runtime
+## 适用
 
+需要会话原语、composer 和可取消的本地 runtime。不提供模型。流式 Markdown 渲染用别的库。服务端消息副本不要和 runtime 抢写。
 
-**取消语义警告**：不能用 `ComposerPrimitive.Cancel` 替代 `aui.thread.cancelRun()`。参考 `examples/example.tsx` 中 `StopResponse` 的 `useAui/useAuiState`，按 `thread.isRunning && thread.capabilities.cancel` 控制。Adapter 遇到 abortSignal 必须终止后续 yield；真实 DOM 需在点击停止后验证流不再追加。官方：https://www.assistant-ui.com/docs/guides/state-outside-the-thread 。
+## 版本
 
+`@assistant-ui/react@0.15.21`，MIT。适配器是 `ChatModelAdapter`，runtime 是 `useLocalRuntime`。回复策略在 `examples/reply-policy.mjs`。
 
-**离线fixture新入口**：配对复制 `examples/reply-policy.mjs`、`.d.mts` 和 `example.tsx`。用户输入必须来自 `run({messages})`，只消费最近user文本、限160字、排除tool/assistant内容；每段yield完整累计字符串。目标项目替换成真实模型网关时另做认证、服务端上下文预算、流中错误/取消，并禁止将本地回复当成可信模型事实或真实RSS。
+## 迁移
+
+复制 `examples/example.tsx` 的 provider、primitives 和生成器。`examples/demo.tsx` 只是再导出。保持累计 yield，不改成 delta。`makeLocalReply` 只读最近 user 文本。产品替换适配器时保留 AbortSignal 检查，密钥不要进仓库。
+
+## 不可删的清理
+
+`key={level}` 重建 runtime。sleep 必须订阅 abort 并在清理时清定时器。signal 已中止就 return，不再 yield。停止按钮只在 `isRunning && capabilities.cancel` 时可用。换层或卸载不得继续写已卸下的会话。
+
+## 反例
+
+- yield 增量片段。
+- 适配器里 fetch 模型或执行工具命令。
+- 读取 tool 消息里的秘密。
+- 忽略 AbortSignal。
+- 不设 key 换层。
+- `dangerouslySetInnerHTML` 渲染回复。
+- Query 和 runtime 双写同一数组。
+- 把模板回复当成模型评测 PASS。
+
+## 测试断言
+
+- 空消息有固定占位。文本被裁到 160 个码位，控制字符被替换。
+- `cumulativeChunks` 的后一项包含前一项。
+- 未知 level 抛错。
+- 浏览器：停止后不再增长；没有外网聊天请求。
+- 策略测试不是 assistant-ui SDK PASS。
+
+## 真实限制
+
+没有持久化、没有工具确认 UI、没有 Markdown 渲染、没有真实流式模型。延迟是 `setTimeout`，不是 token 速率。读屏未测。
+
+## 证据
+
+sdk、build、browser 保持 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有 E12 收据。Actions `41779873259` 是仓库级运行，不是本条目 PASS。
+
+资料：https://www.assistant-ui.com/docs/runtimes/custom/local-runtime 。

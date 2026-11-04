@@ -1,71 +1,194 @@
-# E15 pica：可观察的浏览器本地像素缩放
+# pica 10.0.3｜浏览器里的像素缩小，不是上传组件
 
-## 典型任务
+`library.json` 钉住 `pica@10.0.3`，MIT。pica 把一幅画布高质量缩小到另一幅画布，并可 `toBlob`。它不选择文件、不裁剪构图、不上传。v10 的入口是工厂函数 `pica()`，不是旧教程里的一些默认单例写法。
 
-降低文章配图长边、生成离线缩略图、减少上传前图片像素。pica是像素缩放引擎，提供 resize 与 toBlob；不会替代选择文件、图片裁剪、EXIF方向处理、图片上传或服务器校验。Node环境官方更推荐sharp，不要为了复用本例强行在服务器运行浏览器Canvas。
+## Lab 当前示例
 
-基线 pica 10.0.3，MIT。v10 默认导出是工厂函数 pica()；旧版 new pica() 不是正确的v10迁移方式。
+真实组件是 [`examples/example.tsx`](examples/example.tsx)。[`examples/demo.tsx`](examples/demo.tsx) 只再导出。尺寸和类型在 [`examples/resize-policy.mjs`](examples/resize-policy.mjs)。`PicaExample` 用 `key={level}` 包一层 `PicaSession`，换层丢弃文件和结果。
 
-```sh
-pnpm add pica@10.0.3
-```
+用户点开 Demo 之后才执行 `useMemo(() => pica(), [])`。没有 CDN 脚本，也没有 `localhost:5173`。
+
+挂载的调用：
+
+- 示例画布 1280×800，由 `paint` 画渐变和文字，不下载图片。
+- 按钮才 `resizer.resize(source, target, { cancelToken })`，然后 `resizer.toBlob(target, 'image/png')`。
+- 最长边只允许 240、480、800。`targetDimensions` 只缩小不放大。
+- business 起可选本地 png、jpeg、webp，最大 4MiB。解码后像素超过 1600 万拒绝。`createImageBitmap` 在 finally 里 `close()`。
+- advanced 另外用原生 `drawImage` 得到一张对照 PNG。字节数差不是画质结论，页面写明了这一点。
+- 取消：`cancelToken` 的 reject，外加 generation。取消或换边长、换文件会作废旧结果。
+- 单飞：`operationRef` 在函数入口同步置位，避免 React disabled 挡不住的第二次点击。新任务要等旧 Promise 结束才真正跑完 finally。
+- 卸载时 generation 递增并调用当前的 cancel。
+
+没有挂载：`unsharpAmount` 等滤镜参数、WebWorker 的自定义路径、把结果 POST 到服务器、image-blob-reduce。Worker 是否创建、CSP 是否允许，页面只提示需要浏览器验证，**没有收据**。
+
+## 1. 决策
+
+| 任务 | 判断 |
+| --- | --- |
+| 把大图缩到封面尺寸，人在浏览器里完成 | 适合 pica |
+| 先决定裁哪一块 | E14，然后再缩小 |
+| 只显示缩略图、不在乎算法 | 可以先用 Canvas，对照见 advanced |
+| 上传或断点续传 | 别的库。pica 只出 Blob |
+| 服务端批量转码 | 不要把 wasm 或 pica 说成转码集群 |
+
+## 2. 数字的含义
+
+源画布的宽高是像素，不是 CSS 像素的布局宽度。示例画布显示成最多 360 CSS 像素，位图仍是 1280×800。内存大致随宽乘高涨。4MiB 是文件上限，1600 万是解码像素上限，两者都要卡。
+
+目标尺寸：`scale = min(1, longEdge / max(width, height))`，再四舍五入，并且至少 1。所以 800 的边不会把 1280 的图放大。
+
+## 3. API
 
 ```ts
-import pica from 'pica';
-const resizer = pica();
-const outputCanvas = document.createElement('canvas');
-outputCanvas.width = 480;
-outputCanvas.height = 300;
-await resizer.resize(inputCanvas, outputCanvas, { cancelToken });
-const blob = await resizer.toBlob(outputCanvas, 'image/png');
+const resizer = pica()
+await resizer.resize(source, target, { cancelToken })
+const blob = await resizer.toBlob(target, 'image/png')
 ```
 
-输入是HTMLCanvasElement/Image/ImageBitmap，不是JPEG二进制Buffer。File先经过浏览器解码，之后才能resize。示例真实源码 examples/example.tsx。
+| 点 | Lab |
+| --- | --- |
+| `pica()` | 每个会话一个实例，`useMemo` |
+| `resize` | 按钮触发，带 cancelToken |
+| `toBlob` | 只编码 pica 的目标画布 |
+| 原生 drawImage | 仅 advanced 对照 |
+| Worker | 库自己的空闲策略。本文件不传自定义 worker 路径 |
 
-## 三层真实演示
+v10 迁移要以仓库说明为准：[pica](https://github.com/nodeca/pica)。不要把 v7 的调用原样贴进 `pica()` 的选项里。补充阅读：[image-blob-reduce](https://github.com/nodeca/image-blob-reduce)，本示例没有用它。
 
-| 层级 | 处理对象 | 结果 |
-|---|---|---|
-| Basic | 内存生成的1280×800原创Canvas画布 | 真实resize到最长边≤480、pica.toBlob输出PNG |
-| Business | 文件选择PNG/JPEG/WebP，文件≤4MiB、解码像素≤1600万 | 原本机像素经pica处理、输出本地Blob，不上传 |
-| Advanced | 原生Canvas drawImage与pica各生成PNG | 可观察两个输出，但体积/样子不能当真实质量基准；可取消旧任务 |
+取消令牌是一个会 reject 的 Promise，不是 `AbortSignal`。Lab 在用户点取消时 reject 它。`resize` 已经结束后，取消只防止 `toBlob` 的结果回写，因为令牌在 resize 结算后被清掉。这是源码里的注释，不要写成「toBlob 也可被同一令牌打断」的更强保证。
 
-### 尺寸策略
+## 4. 三层
 
-比例 s=min(1,targetMax/max(width,height))，输出宽高需>=1且按像素取整；默认不放大小图以避免虚假清晰度。pica可以使用worker/WASM优化，但不同浏览器可能回退到JS；本Demo不宣称一定并行或固定性能。
+在 Library Lab 打开 E15，运行，再点「调用 pica 缩放」。
 
-## 机制、取消与内存
+### 基本
 
-- 复用同一Pica实例而不是为每张图创建一个Worker池；官方说明v10实例间的Worker池不再隐式共享。
-- 为本次resize传入 cancelToken Promise，并在任务取消/卸载时拒绝该Promise；generation标识只允许当前批次提交结果。SDK的实际取消响应与Worker归还需用真实浏览器证明。
-- File和ImageBitmap解码后调用 bitmap.close，画布和Blob输出在组件范围持有；ObjectURL从URL.createObjectURL创建必须revoke。
-- 大批文件不要一次创建无限Promise和像素画布，按任务队列与内存预算处理；真正高负载性能验证需固定浏览器/设备/输入，不虚构吞吐。
+源是画布上的「ReactLoom / pica」。默认最长边 480。完成后显示 PNG。未点按钮时不应有缩小结果。
 
-## 不同于原生Canvas的部分
+### 业务
 
-Canvas drawImage已有简单缩放能力，pica主要在高质量重采样滤镜/分块和可用运行环境下的加速。对比必须固定样本、分辨率、质量准则、输出mime与压缩参数；**文件体积不是感知清晰度的直接指标**。
+选文件后旧结果失效。不合法类型在 `checkSourceFile` 抛错，不进入解码。整个过程没有上传。
 
-## 专属反例
+### 进阶
 
-1. **将压缩Blob直接传入resize**：pica处理像素容器，先解码格式；必要时用image-blob-reduce。
-2. **使用v9位置参数或new默认导出**：v10使用工厂 pica()，filter通过options指定，旧quality参数迁移需查看官方说明。
-3. **直接导入远程图片并画Canvas**：缺CORS将无法导出安全像素；本例使用内存图/本地文件。
-4. **文件字节限制等于像素限制**：可能解压炸弹和大Canvas失败，必须限制总像素和输出最大边。
-5. **取消仅setState(false)**：异步resize仍可能完成且回写，必须结合cancelToken和generation；是否真正释放Worker还需测量。
-6. **默认保留EXIF与方向**：Canvas重编码可能丢失元数据；若需保留，使用业务认可的图像处理库和服务端元数据策略。
+两张图并排。文件大小可以不同。不要根据谁更小判断谁更清晰。取消按钮只在 `running` 时可用。
 
-## 组合建议
+## 5. 反例（带代码）
 
-E14裁剪几何区、pica缩放裁剪后的Canvas；E13预览原图或缩小图。上传场景可结合F01 Uppy管理队列，但发送/取消与鉴权必须由实际上传插件实现，本例完全不发送文件。
+### 反例 1：把 CSS 宽度当导出尺寸
 
-## 验证状态
+```tsx
+<img style={{ width: 480 }} />
+```
 
-真实SDK源已写，缺根锁文件/依赖解析，本环境未运行真实pica.resize、Chromium或bundle。SDK NOT_RUN / build BLOCKED / browser NOT_RUN。安装后核查输出PNG字节、尺寸、取消中断、反复开始/卸载、浏览器内存与Worker清理，不以Mock计算成功。
+布局变小，文件没变。要调用 `resize`。
 
-官方：https://github.com/nodeca/pica
+### 反例 2：每个渲染 `pica()`
 
-## EF wave19：文件替换、取消与任务单飞
+```tsx
+const resizer = pica()
+```
 
-此前只在运行开始时读取 `file`，用户在运行途中选新文件不会废弃旧异步结果；且不同 `level` 复用组件时可能显示上一层结果。本轮新增真实数据流中的 `examples/resize-policy.mjs`：非空文件与合法MIME/4MiB约束、1600万安全像素上界、仅允许240/480/800目标最长边；真实 `pica.resize/toBlob` API未被Mock。选文件或改最长边立刻失效旧generation、取消`cancelToken`并清除旧Blob；`operationRef` 同步单飞防止解码/缩放重叠，取消时界面显示等待旧任务结算才解锁运行按钮。`key={level}`让每个场景独立重挂，旧任务卸载后不可回写。
+放在组件函数体里会反复建实例。Lab 用 `useMemo`。换 level 由外层 key 重建会话。
 
-注意pica官方文档中 `cancelToken` 通过Promise rejection结束resize任务，但不能取消已进行的ImageBitmap解码、PNG编码，也无法证明Worker已经terminate；Worker可能按配置 idle 时间复用。禁止把仅设置`running=false`冒充真实取消。本地复现：`node --test packages/library-lab/entries/E15-pica/examples/resize-policy.test.mjs`（只覆盖纯尺寸/输入策略）。PLATFORM仍须在Chromium运行真实pica、反复更换文件/取消/重挂，测量Blob URL、Worker/内存回收与CSP，并运行typecheck/build。
+### 反例 3：不看取消，总是 setState
+
+```ts
+await resizer.resize(source, target)
+setResultBlob(await resizer.toBlob(target, 'image/png'))
+```
+
+换边长或卸载后会把旧图写回来。比较 generation。
+
+### 反例 4：并行两次 resize
+
+共用一个实例又同时写两块目标，是竞态。Lab 单飞，并在状态里说明要等旧 Promise。
+
+### 反例 5：用字节数当质量分
+
+```ts
+score = nativeBlob.size < picaBlob.size ? 'native' : 'pica'
+```
+
+advanced 的说明禁止这个结论。
+
+### 反例 6：跳过像素检查
+
+只看 `file.size` 挡不住解压炸弹。`checkSourcePixels` 在 `drawImage` 之前。
+
+### 反例 7：把 Worker 失败当成功能已关闭
+
+pica 可能在 Worker 不可用时走主线程。没有控制台记录就不能说「已在 Worker 中完成」或「CSP 已允许」。本指南两句都不写。
+
+### 反例 8：从 CDN 加载 pica
+
+依赖来自包管理器里的 `pica@10.0.3`。不要再插脚本标签。
+
+## 6. 怎么测才算数
+
+看输出宽高是否符合 `targetDimensions`，看取消后状态不再被旧 Blob 覆盖，看离开页面后是否还在跑。视觉对比要人眼或固定夹具，不能用文件大小。Worker 与 CSP 要看浏览器的网络和安全面板。现在没有这些收据。
+
+## 7. 组合（未挂载）
+
+**E14 → pica。** 裁剪出一块画布，再缩到 480。裁剪像素和缩放像素都要过各自的上限。
+
+**选择文件的库。** 选择和 MIME 可以在外面做，但进入 `loadIntoCanvas` 前仍要 `checkSourceFile`。不要信任组件库已经限额。
+
+**上传。** Blob 准备好之后才进队列。失败保留本地预览 URL，成功后再 revoke 或交给下一页。
+
+## 8. 故障
+
+| 现象 | 先看 |
+| --- | --- |
+| 按钮点了没结果 | 是否抛在解码。status 里有失败字符串 |
+| 尺寸没变小 | 源的长边是否已经小于目标。策略不放大 |
+| 取消后仍出现图 | generation 判断是否被删 |
+| 第二次点不到 | 旧任务是否还占用 `operationRef`。这是单飞 |
+| 内存高 | bitmap 是否 close，结果 URL 是否 revoke |
+| 和原生看起来一样 | 允许。不要编造差异百分比 |
+
+## 9. Worker、CSP 与 v10 迁移
+
+pica 10 可以在 Worker 里做重采样，也可以在 Worker 起不来时回到主线程。Lab 没有传入 `createWorker` 或自定义脚本 URL，因此实际走哪条路径取决于库的默认和页面的 CSP。要核对的是：
+
+- `worker-src` 是否允许库要创建的 blob 或同源 Worker。
+- 控制台是否出现 Worker 构造失败后的回退。
+- 回退时按钮是否仍能在主线程完成，而不是一直停在「正在调用真实 pica.resize…」。
+
+这三件事都要在浏览器里看。现在没有收据，所以既不能写「Worker 已启用」，也不能写「已确认回退到主线程」。
+
+取消令牌和 Worker 的关系：reject `cancelToken` 是在请求库中断这次 `resize`。它不销毁整个 `pica()` 实例。下一次按钮会复用 `useMemo` 里的同一个 resizer。卸载会话时外层 `key` 会丢掉这个实例；不要在已卸载的组件上再 `resize`。
+
+从旧版迁到 10.0.3 时：
+
+- 调用写成 `const resizer = pica()`，再使用返回对象的 `resize` / `toBlob`。
+- 不要保留「导入 pica 就是单例、可以并发」的假设。本示例故意单飞。
+- `toBlob` 的 MIME 固定 `image/png`。若要 jpeg，质量和透明通道是另一组参数，当前策略和界面都没有。
+- 滤镜选项（例如锐化）没有设置。加上去之后，advanced 的原生对照就不再只差缩放算法，对比结论要重写。
+
+## 10. 升级核对
+
+- 使用 `pica()` 工厂，锁定 10.0.3。
+- `resize` 的选项只传本文件已有的 `cancelToken`，除非你读过 v10 文档再加。
+- 最长边集合改了就要改 `ALLOWED_LONG_EDGES` 和界面上的 select，避免界面能选出策略拒绝的值。
+
+## 11. 练习（未挂载）
+
+1. 把 E14 的 PNG 画进源画布再缩小。验收：输出长边不超过所选值，取消不回写。
+2. 在支持的浏览器里看是否出现 Worker。只记录观察到的脚本 URL，不把一次观察写成所有浏览器的结论。
+
+## 12. 验收
+
+1. 未点按钮没有结果图。
+2. 480 边的输出尺寸与策略函数一致。
+3. 取消或换文件后旧 PNG 不出现。
+4. advanced 的两张图都有字节说明，且文案不比较质量。
+5. 没有上传请求。
+
+sdk、build、browser 保持 **NOT_RUN**。没有 `docs/library-lab/evidence/runs/` 的 E15 收据就不能写 PASS。Actions `41779873259` 是仓库级运行，不是本条目通过。
+
+## 13. 资料
+
+- https://github.com/nodeca/pica
+- https://www.npmjs.com/package/pica
+- https://github.com/nodeca/image-blob-reduce

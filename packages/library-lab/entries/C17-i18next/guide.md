@@ -1,71 +1,149 @@
-# i18next — ReactLoom 工程实战
+# i18next 26.4.3｜每个演示一块自己的实例
 
-## 定位与适用范围
+Lab 锁定 `i18next@26.4.3`（MIT）。研究笔记里的 26.5.3 不是 pin。本条目使用核心 `createInstance`，不使用 React 绑定。组件订阅语言要看 C18。
 
-负责资源加载、复数、插值、回退和语言决策，而不是机器翻译。适合客户端、Node、SSR 共享相同翻译词条的业务。React 的视图订阅应交给 react-i18next，单独调用核心 t 并不会自动让所有 React 组件刷新。本示例只使用本地数据，无翻译服务和网络依赖。
+没有收据时 sdk / build / browser 保持 NOT_RUN。Actions 41779873259 不是本条目 PASS。
 
-## 安装及版本约束
+## Lab 当前示例
 
-~~~bash
-pnpm add i18next@26.4.3
-~~~
+[`examples/example.tsx`](examples/example.tsx) 在 effect 里 `createInstance()` 并 `init`。资源是文件里的对象，没有后端插件，也没有语言探测。`demo.tsx` 只做再导出。
 
-采用现有 ReactLoom SPA 已固定的 i18next 26.4.3，不擅自升级模板；2026-10-25 官方发布过更新版，未来由平台统一做兼容核验。
+```ts
+await instance.init({
+  lng: 'zh',
+  fallbackLng: 'en',
+  supportedLngs: ['zh', 'en'],
+  defaultNS: 'common',
+  ns: ['common', 'news'],
+  resources,
+  initAsync: false,
+  interpolation: { escapeValue: true },
+})
+```
 
-## 真实代码路径
+- **basic**：`common:welcome` 插值 `name`，`news:article` 带 `count`。中文资源只有 `article_other`。英文有 `article_one` 和 `article_other`。
+- **business**：再显示 `news:section` 和 `news:refresh`。
+- **advanced**：`news:editorial` 只存在于英文。中文界面应落到英文回退。`news:not_found` 用 `defaultValue`，不把键名直接扔给用户。
 
-实际入口为 examples/demo.tsx，完整可迁移实现为 examples/example.tsx。Library Lab 展示的代码由这两份源文件生成并计算 SHA-256；三个 Demo 场景共享真实实现，使用 level 切换学习层次。不得为文档另外维护一份看起来相同但不可运行的伪代码。
+[`language-switch.mjs`](examples/language-switch.mjs) 的 `createLatestLanguageSwitcher` 串行化 `changeLanguage`。新的请求只保留最后一次目标。只有队列空且实例仍存活时才 `onCommit`。卸载调用 `dispose`，并把 `pending` 清掉。effect 还 `off('languageChanged')`。返回时若 init 尚未完成，`alive` 为假，则不再 `setState`。
 
-## 核心模型
+不要在模块顶层 `i18next.t(...)` 把结果存成常量。语言一切换，那串字就是旧的。
 
-createInstance 为每个工作区或请求创建独立实例；init 加载资源并设置默认 ns、fallbackLng 和支持的语言。t('news:article',{count}) 使用 Intl.PluralRules 选择资源复数后缀；en 区分 one/other，zh 常落入 other。changeLanguage 返回 Promise，UI 需处理并发切换，不能假设同步完成。
+## 什么时候用
 
-## 三层实战
+服务端、脚本和与框架无关的文案。React 树里要跟着语言重渲染时用 react-i18next 的 Provider，而不是自己订 `languageChanged` 再把整棵应用套上。一个布尔按钮的两句中文不必引入 i18next。
 
-基础：切换中文/英文、输入昵称并观察 HTML 文本插值。业务：通过 common 和 news 命名空间渲染 RSS 文章数和栏目标签。进阶：中文没有 editorial 键，使用 fallbackLng:'en' 返回英文；不存在的键显式给 defaultValue，避免将原始 key 直接展示为产品文案。
+`escapeValue: true` 会转义插值。这不等于可以 `dangerouslySetInnerHTML`。翻译结果用文本节点。
 
-## 生产实践
+## 数据与模型
 
-初始化在读取 t 之前完成。服务端为不同请求单独创建实例并注入当前用户语言，避免共享 singleton 泄漏状态。资源应按语义分 namespace 并具备提取与审核工作流；长列表避免每一行重复加载语言包。切换语言时对 pending Promise 做版本保护，组件卸载时先 dispose 切换队列，再通过 off('languageChanged') 解除私有实例的事件监听并忽略旧回调。i18next 26.4.3 没有 destroy() API；本例仅使用内嵌资源，无后端句柄需要关闭。
+实例拥有语言、命名空间和资源。Lab 不碰默认导出的单例，避免一个 demo 的 `changeLanguage` 改到别的条目。
 
-## 错误示例与修正
+键用 `namespace:key`。缺省命名空间是 `common`，调用处仍写全称，避免以后改 defaultNS 时串台。
 
-错误一：模块初始化期间 const title = i18n.t('title')，之后语言切换不会更新；改为语言变化时重新计算。错误二：每个组件调用 default i18next.init，彼此覆盖当前语言；改为由应用 owner 初始化一次，隔离场景使用 createInstance。错误三：用字符串替换自行实现复数、将 HTML 字符串直接注入 DOM；改为真实 t 复数规则与 React 安全文本，富文本交给受控组件映射。错误四：省略 fallbackLng，默认为 dev，导致部署环境出现原样键名；显式指定主语言和可观测的缺失键策略。
+复数：英文 `count === 1` 走 `article_one`，其余走 `article_other`。中文没有 one，会用 other。不要在中文资源里抄英文的 one 规则。数量先夹到 0–99。
 
-## 组合方案
+回退链是当前语言然后 `en`。缺键又没有 `defaultValue` 时，用户会看到键。advanced 对未知键给了明确的缺省句。
 
-与 react-i18next 组合时由 I18nextProvider/hook 订阅语言变化；与 SSR 服务组合时根据请求 Accept-Language/用户偏好建立隔离资源上下文。若只有单一页面几个静态文本，不一定需要引入整个资源管理体系。
+`changeLanguage` 返回 Promise。两个下拉框快速切换如果并发 await，完成顺序可能和点击顺序相反。switcher 用 `pending` 只留最新目标，并且同一时间只有一个 `drain` 在跑。dispose 之后不再 commit，也不再把错误写进已卸载组件。
 
-## 边界与验收
+`initAsync: false` 配合内嵌资源，init 的 Promise 仍要处理。示例在它完成前显示「正在初始化」。
 
-生产环境需要校对语言资源、XSS/HTML 输出策略、翻译缺失指标和中文 IME。取消旧切换 Promise 的结果回写不等于真正取消语言包加载。示例的成功标准是官方 SDK 的初始化、切换、复数与 fallback 断言，不是仅测试一份自己写的字典对象。
+## 三层示例
 
-## 演示场景与预期
+### 基本
 
-1. **切换语言、插值与数量复数**：独立实例与欢迎语，真实使用 i18next.t/changeLanguage
-2. **RSS 多命名空间资源**：common/news 分离，单复数以及共享文本
-3. **缺失键、回退与生命周期**：未配置中文资源时回退英文；卸载释放独立实例的队列和事件监听
+切到 English，欢迎语和数量句变成英文。count 为 1 时应看到单数 article。改昵称，插值跟着变，不需要重新 init。输出在 `data-testid="i18next-output"`。
 
-## 练习与迁移
+### 业务
 
-将一个 NewsHub RSS 分组页抽离 common/feed 两个 namespace，编写请求隔离、中文缺失回退与英语 1/2 条复数断言。
+中英文的「技术 / Technology」和刷新按钮文案都来自 `news`。不要把这两句写进组件。命名空间没加载时应看到缺键，而不是空白假装成功。本资源在 init 时就放进了两个 ns。
 
-## 验证分级与限制
+### 进阶
 
-本条目包含真实目标包 import 的示例和 Node 定向测试源码。**SDK、TypeScript、生产构建及 Playwright 本轮均未在依赖完整环境执行，状态为 NOT_RUN**。`tests/sdk.test.mjs` 必须在真实依赖安装后执行；Mock 业务数据不等于 Mock 目标库。测试成功后才能按当前源指纹绑定 evidence，不得沿用历史研究报告的 PASS。
+停在中文，editorial 那一行应出现英文 Editors pick。未知键出现「（未配置翻译）」。快速连点语言，最终界面与最后一次选择一致。离开 demo 后再回来，不应残留上一次实例的监听。
 
-## 官方一手资料
+## 反例
 
-- [i18next 官方 API](https://www.i18next.com/overview/api)
-- [配置选项与初始化](https://www.i18next.com/overview/configuration-options)
-- [官方项目](https://github.com/i18next/i18next)
+### 1. 使用全局单例
 
-## 授权
+```ts
+import i18next from 'i18next'
+i18next.changeLanguage('en')
+```
 
-该条目源码与文字为独立编写的教学材料；目标库使用上游 MIT 许可，未捆绑第三方图片、字体或付费资源。
+别的模块会一起变。`createInstance`。
 
-## 第16轮：语言切换并发所有权
+### 2. 模块级缓存 t() 的结果
 
-真实 `changeLanguage` 返回 Promise；只用请求编号阻止旧 `setState` 不足以阻止旧 Promise **修改 i18next 实例本身**。本版 `examples/language-switch.mjs` 将每个独立实例的切换操作串行化，队列只保留最后一次意图；仅最终操作完成时提交当前语言或错误，卸载后 `dispose()` 抛弃未执行请求。不能取消底层语言包 I/O，释放实例前必须 dispose 队列，并解除本实例的 languageChanged 监听。可复制 `examples/language-switch.d.mts` 为 TS 类型契约。
+```ts
+const title = i18n.t('common:title')
+```
 
-无第三方依赖的策略测试：`node --test entries/C17-i18next/tests/language-switch.test.mjs`，覆盖快速切换、旧失败、卸载和之后重试；**真正 SDK 验证**必须另外执行 `node --test entries/C17-i18next/tests/sdk.test.mjs`（其中真实 import i18next，需安装依赖）。浏览器还需覆盖实际语言切换、复数文案、错误和 React Strict Mode 卸载，当前均未执行。
+语言切换后 title 不变。在渲染时调用 `t`。
+
+### 3. 并发 changeLanguage
+
+两次点击的 Promise 后完成的那次覆盖新选择。用 `createLatestLanguageSwitcher`。
+
+### 4. 卸载后仍 setState
+
+init 或 changeLanguage 的回调要看 `alive` 和 `dispose`。示例两者都有。
+
+### 5. 把翻译插进 HTML
+
+```tsx
+<div dangerouslySetInnerHTML={{ __html: instance.t('news:section') }} />
+```
+
+即使 `escapeValue` 为真，也不要把整句当 HTML。富文本用 C18 的 `Trans`，并且组件映射是白名单。
+
+### 6. 中文复制英文的 _one
+
+中文复数不靠 one/other 同一套。缺了 other 会在数量不为 1 时露键。本资源的中文只有 other。
+
+### 7. 用用户输入当键
+
+`t(userString)` 会读到任意词条。键是源码里的字面量。昵称只做插值。
+
+### 8. 缺键当功能开关
+
+回退到英文不等于该功能在中文里关闭。缺键要有 `defaultValue` 或在发布前检查资源。
+
+## 组合
+
+**react-i18next。** 核心实例仍按这里的方式创建。Provider 和 `useTranslation` 在 C18。不要在 C17 的组件里再引一套全局 i18n。
+
+**表单。** 校验文案用键，不要把 Zod 的英文默认句和 i18next 各写一套还不同步。本 Demo 没有表单。
+
+## 生产清单
+
+- 每块 UI 自己的实例，或应用级一个实例但绝不是跨租户共享可变单例。
+- `escapeValue: true`，输出用文本。
+- 语言切换串行，卸载 `dispose` 并 `off`。
+- 复数键按语言补齐。
+- 回退语言和 `supportedLngs` 写明。
+- 不在模块加载时调用 `t` 并缓存。
+
+## 升级
+
+锁 26.4.3。若笔记或博客写 26.5，先改 pin 再谈行为差异。升级后重测：英文单复数、中文回退、快速切换、卸载后无 setState。
+
+## 练习
+
+1. count 为 1 和 2 时，英文句子不同，中文都走 other。
+2. 中文界面读到 `editorial` 的英文。
+3. 连续切换语言，最终与最后一次选择一致。
+4. 离开页面，不出现对已卸载组件的更新警告。
+
+## 官方链接
+
+- https://www.i18next.com/overview/api
+- https://www.i18next.com/overview/configuration-options
+- https://github.com/i18next/i18next
+
+## 证据
+
+`language-switch` 单测不 init i18next。sdk 要真实 import `i18next@26.4.3` 并在 `docs/library-lab/evidence/runs/` 留下收据。
+
+GitHub Actions 41779873259 是仓库级安装、typecheck、build、52 个 SDK 文件（153 项测试）和 45 项 Playwright 的结果，不是 C17 的条目 PASS。不要改 `verification.json`。

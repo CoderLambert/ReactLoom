@@ -1,39 +1,155 @@
-# Redux Toolkit 2.13.0：可审计业务状态与单向更新
+# Redux Toolkit 2.13.0｜slice、隔离的 store 和过期响应
 
-## 为什么使用
-当业务需要跨组件共享复杂、可审计的事件状态、开发工具追踪或统一中间件时，Redux Toolkit 把 `configureStore/createSlice` 作为标准入口。ReactLoom 的简单 UI 状态未必需要 Redux，选型时先比较 D10 Zustand、D11 Jotai。RTK Query 单独解决请求缓存，不能将所有远端数据都塞进 reducer。
+Lab 锁定 `@reduxjs/toolkit@2.13.0`（MIT）。示例用 `configureStore` 和 `createSlice`。reducer 里的 `state` 已经是 Immer draft，直接改字段。React 订阅使用 `useSyncExternalStore`，没有安装 `react-redux`。多组件应用可以改用 `react-redux`，不必把 Lab 的订阅方式当成唯一写法。
 
-## 安装与使用
-```bash
-pnpm add @reduxjs/toolkit@2.13.0
+没有匹配收据时 sdk / build / browser 保持 NOT_RUN。Actions 41779873259 是仓库级结果，不是本条目 PASS。
+
+## Lab 当前示例
+
+[`examples/demo.tsx`](examples/demo.tsx) 重导出 [`examples/example.tsx`](examples/example.tsx)。`createFeedStore` 把 `feedsSlice.reducer` 挂到 `feeds`，并关闭 DevTools，避免演示往浏览器扩展发动作。
+
+状态是 `{ counter, feeds, activeRequest, result, ignored }`。`addFeed` 按 `id` 去重。`toggleRead` 按 `id` 翻转。`reset` 返回全新初始对象，而不是在 draft 上逐个清空。
+
+business 和 advanced 持有两个 store：`stores.A` 和 `stores.B`。下拉框只切换 `useSyncExternalStore` 订阅哪一个。重置只 `dispatch` 到当前 store。
+
+advanced 的 `demonstrateRace` 连续 `startRequest(first)` 再 `startRequest(latest)`。90ms 后完成 latest，200ms 后完成 first。`finishRequest` 在 `state.activeRequest !== action.payload.id` 时只增加 `ignored` 并返回。旧句子「旧请求不该覆盖」不会写进 `result`。计时器 id 存在 ref 里，切换 store 或卸载时全部 `clearTimeout`，并 `cancelRequest`。
+
+没有挂载：`createAsyncThunk`、RTK Query、`react-redux` 的 `Provider`、真实 HTTP。竞态用的是 `setTimeout`，不是网络。下面的 thunk 规则是生产教学。
+
+## 什么时候用
+
+动作需要可追踪、多个模块共享同一份可预测状态时用 Redux Toolkit。一个计数器或面板开关用 Zustand 或 `useState`。派生原子用 Jotai。服务端缓存若还没有 Redux，优先 TanStack Query；已经决定用 Redux 时再看 D13 RTK Query，不要两套缓存。
+
+切片适合“发生了什么”比“当前有哪些布尔”更重要的流程。它仍不是鉴权，也不是数据库。
+
+## 模型
+
+`createSlice` 根据 reducer 名字生成 action creators。`PayloadAction<T>` 描述载荷。Immer 允许 `state.feeds.push`，前提是这是 slice 交给你的 draft。不要再 `produce(state, ...)`。
+
+`configureStore` 默认带不可变检查和 thunk 中间件。Lab 关闭 DevTools。序列化检查会拒绝把函数、Promise 和 `AbortController` 放进 action 或 state。请求句柄留在组件 ref 或 thunk 的闭包里，不要塞进 slice。
+
+`useSyncExternalStore(store.subscribe, store.getState, store.getState)` 订阅整个根状态。Lab 的根状态很小。正式界面应按切片选择，避免无关字段触发大树渲染。`react-redux` 的 `useSelector` 做这件事。
+
+过期响应的合同在 reducer 里：只有 `activeRequest` 等于完成动作的 id 才写入 `result`。UI 禁用按钮不能代替这个判断，因为计时器已经排队。
+
+`reset` 返回新对象，等于替换整棵 slice 状态。其他 reducer 若也想清空，要显式列出字段，不要依赖“返回 undefined 表示清空”。在 Immer 里返回 `undefined` 表示不替换。
+
+## 三层示例
+
+### 基本
+
+只有计数。每次点击 `increment`，输出里的数字加一。`reset` 回到 0。这个层级不创建 feed。
+
+### 业务
+
+在团队 A 添加频道，id 形如 `A-1`。切到团队 B，列表是空的，计数也是 B 自己的。再切回 A，频道还在。勾选按 feed id 翻转 `read`。重复添加同一 id 不会插入第二行；示例的 id 来自递增序号，所以正常点击不会撞车。
+
+### 进阶
+
+点「模拟先后返回的两个请求」。先看到「新请求已采用」和 `ignored` 仍为 0，约 200ms 后 `ignored` 变成 1，`result` 仍是新请求的句子。切换团队会清掉上一个 store 的计时器并取消其 `activeRequest`，避免旧 timeout 写到已经离开的订阅上。注意：timeout 回调里用的是当时的 `active`。清理函数必须清掉那些 timer，否则会 dispatch 到已经不在屏幕上的 store。这不会自动变成另一个团队的结果，因为两个 store 是分开的，但会污染你刚离开的那个团队的 `ignored`。
+
+## 反例
+
+### 反例 1：在 reducer 外 mutate
+
+```ts
+const state = store.getState()
+state.feeds.counter += 1
 ```
-示例直接 `import {configureStore, createSlice} from '@reduxjs/toolkit'`。完整源码在 `examples/example.tsx`；应用使用 React `useSyncExternalStore` 显示当前 store。生产复杂 React 应用可采用与当前版本兼容的 `react-redux`，但本独立示例不偷偷增加共享依赖。
 
-## 三层真实 Demo
-**入门：**通过 slice 的 `increment` action 修改计数；`configureStore` 持有 store，组件由 `useSyncExternalStore` 订阅。**业务：**两个团队分别创建独立 store；切换团队时频道状态不会互相泄漏。通过稳定 ID `addFeed/toggleRead` 更新条目。**进阶：**按 request ID `startRequest/finishRequest` 处理两个假设异步返回，第二个请求先完成，旧请求返回时不会覆盖新数据。计时器只是演示业务后端的顺序，Redux Toolkit SDK 为真实依赖。
+```ts
+store.dispatch(actions.increment())
+```
 
-## 数据所有权
-Store 在本示例组件生命周期内创建，每个 tenant 一份；目标项目应根据租户、用户和会话边界决定实例生命周期。RTK reducer 可以使用“可变式”语法，但 Immer 负责产生不可变结果；不能在 reducer 外改写已获取的 state 对象。
+### 反例 2：reducer 里再包 produce
 
-`useSyncExternalStore` 的 snapshot 必须在状态未变化时返回稳定引用，RTK store 的 `getState` 满足这一模型。切换租户需要重新订阅目标 store，且异步效果也需要按租户 ID / generation 过滤。
+```ts
+increment(state) { return produce(state, draft => { draft.counter += 1 }) }
+```
 
-## 典型错误和修复
-1. **在每次 render 创建 store：**丢失状态并不断重建订阅；提升所有权或只创建一次。
-2. **把所有用户/团队放到同一持久化 key：**产生租户信息串读；使用独立 store 或严格命名空间、退出清理。
-3. **在 reducer 外修改 snapshot：**跳过通知、不满足引用一致性；只能通过 action。
-4. **只检查 loading，没有请求身份：**慢的旧结果覆盖新的业务数据；在状态里记录 requestId 或使用 RTK Query 的受控缓存。
-5. **在 UI 开发时直接分发远端授权状态：**客户端 action 不等于权限；服务端必须重新鉴权。
+```ts
+increment(state) { state.counter += 1 }
+```
 
-## 与请求层的关系
-D13 RTK Query 与 RTK store 集成，提供 endpoint cache、tags invalidation；D07 TanStack Query 也是远端状态方案。尽量选一个服务端状态事实源，避免重复缓存与含混 invalidation。D06 Immer 可帮助理解 reducer 中的代理更新，但 RTK 已内置 Immer，不必手工在每个 reducer 包裹一次 `produce`。
+### 反例 3：用数组下标当 id
 
-## 测试
-SDK Node test 直接运行 configureStore/createSlice，断言不可变性、租户隔离和旧响应保护。浏览器再验证订阅、切换租户、计时器卸载。网络/服务器权限不由这些单测覆盖，不能声称部署验收。
+```tsx
+<input onChange={() => dispatch(actions.toggleRead(index))} />
+```
 
-## 参考
+删除中间行之后下标指向别的 feed。动作用 `feed.id`。
+
+### 反例 4：谁后返回谁写入
+
+```ts
+finishRequest(state, action) { state.result = action.payload.value }
+```
+
+```ts
+finishRequest(state, action) {
+  if (state.activeRequest !== action.payload.id) { state.ignored += 1; return }
+  state.result = action.payload.value
+  state.activeRequest = null
+}
+```
+
+### 反例 5：把 AbortController 放进 state
+
+它过不了序列化检查，也不能在 DevTools 里时间旅行。id 用字符串，控制器留在 ref。
+
+### 反例 6：所有租户共用一个 store 再靠过滤
+
+过滤只影响渲染。动作仍可能改到另一租户的行。Lab 用两个 `configureStore`。正式产品也可以在一个 store 里按租户分 key，但 reducer 必须拒绝跨租户 id。
+
+### 反例 7：用 slice 缓存服务端列表
+
+失效、重试和去重不是 `addFeed` 的职责。列表进 RTK Query 或 TanStack Query。slice 只留 `activeRequest` 这类流程字段。
+
+### 反例 8：卸载不清 timer
+
+组件走了，200ms 后仍 `dispatch`。effect 清理要 `clearTimeout` 并 `cancelRequest`。
+
+## 组合
+
+**RTK Query**：同一个 store 挂上 API reducer 和 middleware。slice 管本地流程，Query 管端点缓存。不要在两边各存一份 feed 数组。Lab 的 D13 是独立条目，有自己的 store。
+
+**TanStack Query**：若没有 Redux 中心，不要为了这个竞态示例引入 RTK。Query 的 queryKey 和 abort 已覆盖“旧响应不回写”。slice 适合还要审计动作的地方。
+
+**react-redux**：多组件用 `Provider` 和 `useSelector`。把 Lab 的 `useSyncExternalStore` 留在单面板演示。
+
+## 生产核对清单
+
+1. reducer 不调用 `produce`。
+2. 实体用业务 id，React key 与之相同。
+3. 异步完成动作带请求 id，不匹配就计数并返回。
+4. 卸载清理 timer 和 `activeRequest`。
+5. state 和 action 可序列化。
+6. 租户隔离在 store 或 reducer 里，不只在 UI 过滤。
+7. DevTools 在生产构建关闭或做动作过滤，避免把正文打进扩展。
+8. `reset` 的返回值覆盖全部字段，测试断言没有残留 `result`。
+
+## 升级
+
+钉 `@reduxjs/toolkit@2.13.0`。从 1.x 迁到 2.x 时核对 Immer 主版本和 listener middleware 的类型。默认中间件仍会检查序列化，不要为了塞 Promise 关掉它。
+
+`createAsyncThunk` 的 `condition` 和 `abort` 要和 `activeRequest` 对齐，避免 thunk 和手写 timer 各写一次结果。Lab 没有 thunk，接入时删掉演示用的 `setTimeout`。
+
+## 验收
+
+- `increment` 不修改传入的旧测试对象；两个 store 的计数互不影响。
+- 添加的 feed 按 id 唯一。
+- 后完成的旧请求不改变 `result`，`ignored` 增加。
+- 切换团队后，上一组 timer 被清除。
+- `reset` 只影响当前 store。
+- `tests/sdk.test.mjs` 使用真实 `configureStore`。无收据则 NOT_RUN。
+
+练习：把 `setTimeout` 换成带 `AbortSignal` 的请求，id 仍进 slice。再为 thunk 写一个在 `condition` 里拒绝过期租户的用例。
+
+## 资料
+
 - https://redux-toolkit.js.org/introduction/getting-started
 - https://redux-toolkit.js.org/api/createSlice
 - https://redux-toolkit.js.org/api/configureStore
+- https://redux-toolkit.js.org/api/createAsyncThunk
+- https://redux-toolkit.js.org/usage/usage-guide
 - https://www.npmjs.com/package/@reduxjs/toolkit
-
-许可 MIT。

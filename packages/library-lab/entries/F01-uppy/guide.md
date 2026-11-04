@@ -164,7 +164,20 @@ node --test packages/library-lab/entries/F01-uppy/tests/policy.test.mjs
 
 还缺的浏览器观察：拖入合法文件、第 4 个被拒绝、1 MiB+1 被拒绝、删除后预览不回写、换 level 后队列为空、卸载后不再收到事件。这些要有收据才能改 verification。网络上传在本条目是未设计，不要记成失败或成功。
 
-## 9. 资料
+## 9. 故障对照
+
+| 现象 | 在本页的含义 |
+| --- | --- |
+| 拖进去没有反应 | 先看是否已点启动；根节点只是原生 drag 事件，不是 Dashboard |
+| 状态写「Uppy 拒绝文件」 | restrictions 已执行。第 4 个或大于 1 MiB 属于这一种 |
+| 预览仍是上一份 | generation 对不上就该丢弃。若仍显示，就是清理被删了 |
+| 换场景后文件还在 | `key={level}` 被去掉了。effect 的 destroy 只清理当前树 |
+| 看不到百分比 | 本页没有传输插件。不要补一个定时器 |
+| 想证明续传 | 需要未挂载的 Tus 和真实服务器的 offset。Lab 不提供 |
+
+生产里的 413 先对代理限额和 `maxFileSize`。401 先对会话，而不是对 Core。这些状态码在本页不会出现。
+
+## 10. 资料
 
 - https://uppy.io/docs/uppy/
 - https://uppy.io/docs/react/

@@ -1,27 +1,45 @@
+# C14 date-fns — 工程手册
 
-# C14 date-fns — Agent 工程复用指南
+## 适用
 
-适用于纯函数日期运算，版本 `date-fns@4.4.0` + `@date-fns/tz@1.5.0`（MIT）。前置问题：目标数据是“日历日期”“绝对事件时间”还是“经过时长”？是否已有业务 IANA 时区？
+函数式的日历日和带偏移 instant。不要用它注册 cron，也不要混用设备时区。区间和歧义时刻列表更适合 Luxon。
 
-## 实施流程
+## 版本
 
-首先读取 library.json 和 verification.json，再打开 `examples/example.tsx`。提取 `parseCivilDate`、`parseInstant`、`planCivilDays` 时保留业务时区和严格校验；不要把 React 控件复制进服务端。展示文件 `examples/demo.tsx` 是 Lab 入口，不是生产必需依赖。
+`date-fns@4.4.0` 与 `@date-fns/tz@1.5.0`，MIT。时区运算使用 `TZDate` 和 `addDays(..., { in: tz(zone) })`。
 
-## 不允许删去的保障
+## 迁移
 
-严格 YYYY-MM-DD + 日历回查；绝对瞬间 ISO 必须带时区/偏移；显式 `tz(zone)` 进行业务日历差值；跨 DST 不使用固定 24 小时；取消使用无业务所有权的浏览器计时器做可靠调度。SSR 应避免客户端/服务端默认时区差异导致水合不一致。
+带走 `examples/example.tsx` 的 `parseCivilDate`、`planCivilDays`、`parseInstant` 和 `examples/instant-policy.mjs`。任何绝对时间先 `assertExplicitInstant` 再 `parseISO`。格式化带上 `{ in: tz(zone) }`。
 
-## 可迁移模式
+## 不可删的清理
 
-定期 RSS 发布按 zone 日历日计算，具体任务由后端调度器执行。仅展示相对日期或偏移日数时可以选纯 date-fns；需要复杂 recurrence、节假日或 cron 请加专用调度与持久化规则。
+日历日构造后回读年月日。天数限制为 1–14 的安全整数。`-00:00` 和非法偏移在策略层拒绝。不要把 `differenceInHours` 的结果写成「日历上的明天」。
 
-## 测试与结论边界
+## 反例
 
-NY 2026-03-07→03-08 23h；10-31→11-01 25h；`2026-02-30`、无偏移回拨 01:30 拒绝。版本/API/构建/浏览器必须在目标项目再验证。本分支未实际运行这些 SDK 用例，不能写 PASS。
+```ts
+new Date(ms + 86400000)
+parseISO('2026-11-01T01:30:00')
+format(date, 'yyyy-MM-dd') // 未指定 zone
+```
 
-来源：https://github.com/date-fns/date-fns · https://github.com/date-fns/tz
+- 用 `Date` 进位接受 2 月 30 日。
+- 把 `-04:00` 当成纽约的永久规则。
+- 用日历差表示 24 小时重试。
+- 在渲染时读取操作系统时区作为发布地。
 
+## 测试断言
 
-## 迁移前的额外输入契约
+- 无偏移、`-00:00`、超出 ±14:00、非法月日被拒绝。
+- 闰年 2 月 29 日按公历，不靠自动进位。
+- 两条纽约 01:30 得到不同的 UTC instant。
+- 策略单测没有构造 `TZDate`。
 
-复制 `assertExplicitInstant` 和 `parseInstant` 时必须保留两段校验：正则与日历日期范围确保事件带明确偏移，真实 `parseISO` 将其转换为 instant。尤其 `-00:00` 不是已知 UTC 偏移；不要把 SDK 宽松解析当业务 schema。校验自身的纯 Node 测试与真正 date-fns SDK 测试分别报告。
+## 真实限制
+
+没有 `startOfWeek`、工作日或相对时间演示。没有服务端对照时钟。春季和秋季的小时数要在运行结果里看，指南不写死未执行的数字当唯一答案。浏览器时区显示未单独验收。
+
+## 证据
+
+没有收据不要写 PASS。Actions 41779873259 不是本条目。不要改 `verification.json`。

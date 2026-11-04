@@ -1,21 +1,48 @@
-# C05 Ajv — Agent 工程指南
+# C05 Ajv — 工程手册
 
-**推荐任务：**外部 JSON Schema 合同、第三方 API 配置验证、动态表单值校验。**不要用：**替代后端权限/SSRF 检查、在前端执行用户提供的任意 Schema、伪装 TypeScript 运行时类型守卫。
+## 适用
 
-## 读取与迁移
-先看 `library.json` 和 `verification.json`，再读 `examples/example.tsx` 及 `tests/sdk.test.mjs`。保留受信任的静态 Schema、`strict:true`、`allErrors:true`、`coerceTypes:false`、`removeAdditional:false`；不要复制 Lab 的状态按钮到目标项目。
+已经有可信 JSON Schema、要和别的服务共用 draft-07 合同时使用。手写 TypeScript 转换用 Zod 或 Valibot。不要编译用户粘贴的 schema，不要用校验通过代替抓取授权。
 
-## 真实 API
-`import Ajv from 'ajv'; const ajv = new Ajv(...); const validate = ajv.compile(schema);`。解析外部 JSON 为 `unknown`，编译在组件外或 memo 生命周期内，`validate(data)` 失败立即保存 `validate.errors`。多草案和 format 插件不可乱混；字段校验不是访问目标白名单。
+## 版本
 
-## 工程底线
-禁止全局禁用 strict，禁止将未经审查的外部 schema 直接交给编译器。遇严格 CSP 请采用 build-time standalone 方案并独立验证；不得通过放宽 CSP 解决。性能评估需要真实 schema 与输入；不能凭“最快校验器”宣传作结论。
+`ajv@8.20.0`，MIT。实例选项保持 `strict: true`、`allErrors: true`（仅此小示例）、`coerceTypes: false`、`useDefaults: false`、`removeAdditional: false`。未安装 `ajv-formats`。
 
-## 验收断言
-合法 payload、缺字段、额外字段、类型混淆、条件必填、schema 编译失败都要验证；SDK Node 与 Browser CSP 分别记证据。运行 `node --test entries/C05-ajv/tests/sdk.test.mjs`、`pnpm --filter @reactloom/library-lab typecheck` 和生产预览 E2E。当前状态 NOT_RUN，不得继承历史报告 PASS。
+## 迁移
 
-官方： https://ajv.js.org/ 。替代方案：C02 Zod / C03 Valibot；互补 C04 JSON Forms。
+带走 `examples/example.tsx` 的三个 schema 和 `examples/rss-policy.mjs`。Ajv 实例留在模块顶层，按 schema 编译一次。域名规则留在 schema 通过之后。服务端若面对大请求，把 `allErrors` 改回 false，并在外面限制体积。
 
-## RSS 专项规则不能依赖 uniqueItems
+## 不可删的清理
 
-静态 schema 可保证字段形状和集合大小，但不同 id/title 的重复 URL 不受 `uniqueItems` 约束；拷贝示例时还须携带 `examples/rss-policy.mjs` 和声明，结构验证成功后再次校验无凭据 HTTPS 与规范化业务身份。输入变化清理过期结果，明确区分 Ajv PASS 与纯策略 PASS。服务端仍需单独负责 SSRF/权限。
+失败时立刻复制 `validate.errors`。不要在 await 之后读它。不要对不可信 schema 做无限缓存。组件卸载不需要销毁这个纯函数校验器，但任何随后的 setState 仍要有 generation。
+
+## 反例
+
+```ts
+new Ajv({ coerceTypes: true, removeAdditional: 'all', strict: false })
+validate(payload)
+await save()
+use(validate.errors)
+```
+
+- 用 `uniqueItems` 代替规范化 URL 去重。
+- pattern `^https://` 当作拒绝了用户名密码。
+- `instancePath.split('/')` 后直接写入对象。
+- 校验通过就 `fetch(userUrl)`。
+- 未注册 format 却写 `format: 'uri'`，再用关 strict 来消错。
+
+## 测试断言
+
+- 未知属性失败，而不是被删掉。
+- `http://` 能过 pattern，不能过 `canonicalHttpsFeedUrl`。
+- 只差 fragment 或主机大小写的两条 URL，Schema 可能通过，域名规则必须失败。
+- `enabled: true` 且 `maxConcurrent: 0` 失败；`enabled: false` 可以不带并发数。
+- 策略单测没有 `new Ajv`，不能写成 sdk PASS。
+
+## 真实限制
+
+示例不发 HTTP，没有 standalone 构建，没有 `ajv-formats`。`allErrors: true` 不适合原样搬到无上限的服务端输入。CSP 与浏览器编译未在本条目单独验收。
+
+## 证据
+
+没有 `docs/library-lab/evidence/runs/` 收据不要写 PASS。Actions 41779873259 不是本条目。不要改 `verification.json`。

@@ -1,39 +1,162 @@
-# AG Grid Community：React 数据网格实战
+# AG Grid Community 36.2.0｜网格画视图，revision 决定能不能改
 
-## 什么时候选择
-当业务需要排序、筛选、编辑、列配置和大量数据时，AG Grid Community 可以减少大量底层网格代码。若要完全自定义无样式组件，比较 C07 TanStack Table。不要把收费的 Enterprise 分组、透视、SSRM 功能混作免费。
+Lab 锁定 `ag-grid-community@36.2.0` 和 `ag-grid-react@36.2.0`（MIT）。只注册 `AllCommunityModule`。没有 Enterprise 包，没有 license key，也没有 Server-Side Row Model。行数是教学用的 fixture，不是吞吐承诺。
 
-## 安装与版本
-基线 ag-grid-react 与 ag-grid-community 均为 36.2.0，版本必须同步。安装：
+没有收据时 sdk / build / browser 保持 NOT_RUN。Actions 41779873259 不是本条目 PASS。
 
-    pnpm add ag-grid-react@36.2.0 ag-grid-community@36.2.0
+## Lab 当前示例
 
-遵循 36.x 的 AgGridProvider + AllCommunityModule 显式注册方式；新主题使用 themeQuartz.withParams。完整真实源码为 examples/example.tsx。
+[`examples/example.tsx`](examples/example.tsx) 使用真实的 `AgGridProvider` 和 `AgGridReact`。主题是 `themeQuartz.withParams`，不要再叠旧的 `ag-theme-quartz.css`。`demo.tsx` 只做再导出。没有 `localhost:4178` 的 API。
 
-## 入门：列、排序、状态编辑
-ColDef<Source>[] 强类型声明列，getRowId 返回稳定 feed ID，client-side row model 做排序、筛选；readOnlyEdit 模式将编辑事件交给 React，由 onCellEditRequest 做不可变更新，业务后端若存在则在服务端完成权限与版本检查。
+- **basic**：12 行。状态列 `editable`，编辑器是 `agSelectCellEditor`，值只允许 `active`、`paused`、`error`。`readOnlyEdit` 加上 `onCellEditRequest`。真正改数据的是 [`edit-policy.mjs`](examples/edit-policy.mjs) 的 `applyStatusEdit`。
+- **business**：150 行，频道名称过滤在 React 里做，网格开分页，每页 25，可选 25/50/100。过滤后的数组才是 `rowData`。
+- **advanced**：1500 行。慢加载 700ms、快加载 100ms，用 generation 和 `AbortController`。返回的快照经过 `reconcileFeedSnapshot`：按稳定 ID 保留 revision 更高的本地状态，服务器快照里已经没有的 ID 不会被本地行复活。`applyStatusEdit(..., 0)` 期望 `conflict`。拖动或双击状态列时，请求带上编辑开始时看到的 `revision`。
 
-## 业务：RSS 来源后台
-将显示结果从服务数据派生而不是让网格内部变成唯一持有者；当租户/分组改变时，清理旧请求并刷新数据源。示例通过 150 条 fixtures 展示分页、过滤与状态修改，真实网格负责行与列的交互，未连接外部 HTTP。
+`rowsRef` 在渲染之外保存同步副本，避免慢请求和编辑互相读到旧的 `useState`。
 
-## 进阶：大表与请求竞态
-1500 条数据在 client-side 模型下仍可展示，但生产中不能假设服务器端分页和 row virtualization 等于同一件事。慢/快本地数据加载使用 AbortController 与递增 generation，防旧结果回写。跨页选择、服务端事务、排序字段映射需要目标 API 另行设计。
+研究笔记里的 Infinite datasource、`successCallback`、`cacheBlockSize` 和 SSRM 没有挂载。那些规则写在下面，避免把当前的 client-side 分页说成服务端分页。
 
-## 关键反模式
-1. 使用数组 index 当 rowId：排序和插入后将错配编辑/选中状态。
-2. 同时修改 Grid 内部行与 React 数据：两个事实源产生覆盖。示例选择 readOnlyEdit。
-3. 把 Community 与 Enterprise 组件随意混装、或混用 35/36 major：模块注册与许可可能不一致。
-4. 每次渲染重建 columnDefs/getRowId，产生额外重置与高成本更新。
+## 什么时候用
 
-## 可访问性、性能与验证
-排序与筛选需键盘/读屏可用，动态可编辑单元格的错误信息不能只靠颜色。对 10k+ 服务数据应明确选择 client-side/infinite/SSRM 模式及对应授权；不要拿本地 1500 行 mock 断言生产性能。新包未在本分支实际构建，所有 SDK/browser 结果以 verification.json 为准。
+需要排序、列过滤、单元格编辑和键盘网格、又不想自己画表头时，Community 足够。列透视、行分组的企业模型和高级导出要先看官方功能矩阵再采购。高度自定义、无样式的表用 C07。
 
-## 官方来源
-https://www.ag-grid.com/react-data-grid/installation/
-https://www.ag-grid.com/react-data-grid/community-vs-enterprise/
+Client-side 分页只是把已经在浏览器里的行分成页。它不会按页去服务器取数。
 
-## 本轮重要更正：可编辑行的版本所有权
+## 数据与模型
 
-`onCellEditRequest` 携带 Grid 显示时的 `event.data.revision`，交由示例真实调用的 `examples/edit-policy.mjs` 做 compare-and-swap。若同一行已经有更新版本，旧编辑返回 `conflict`，不再让过期编辑覆盖较新的状态。业务接口应映射 `If-Match`/版本字段，并向用户呈现 409；此处仅为本地 fixture，不证明服务器并发一致性。
+`getRowId={(params) => params.data.id}` 返回 `feed-0001` 这种稳定字符串。排序和过滤不能改这个 ID。不要用数组下标。
 
-慢加载回包通过 `reconcileFeedSnapshot` 逐行按稳定 ID 比较版本：只保留较新的本地可编辑 `status`，其他服务器字段由新快照持有；服务器删除的行不会复活。生产端需有权威 revision、冲突处理和取消策略，不能拿纯前端计数器当分布式版本号。`tests/edit-policy.test.mjs` 使用 Node 验证领域规则；AG Grid 真实编辑/排序/分页仍需要 SDK、类型与浏览器测试。
+`readOnlyEdit` 让网格提出变更，React 决定是否接受。默认的 `onCellValueChanged` 可能直接改你传进去的行对象，和不可变 state 冲突。
+
+`applyStatusEdit` 是比较并交换：
+
+- 状态不在白名单，或 revision 不是非负安全整数：`invalid`
+- 找不到 ID：`not-found`
+- `current.revision !== expectedRevision`：`conflict`
+- 状态相同：`unchanged`
+- 否则新数组里该行 `revision + 1`
+
+`reconcileFeedSnapshot` 只遍历**新快照**里的 ID。本地有更新的 revision 就保留本地状态；本地有、快照没有的行被丢掉。
+
+列定义和 `defaultColDef` 用 `useMemo` 固定引用。主题对象是模块常量。
+
+Community Infinite 若以后要接：`endRow` 不包含，`cacheBlockSize` 不得小于 `paginationPageSize`，`successCallback(rows, lastRow)` 和 `failCallback()` 二选一。那不是现在这个组件。SSRM 的 datasource 类型也不同，不能把企业示例塞进 Community。
+
+## 三层示例
+
+### 基本
+
+双击状态列，改成另一个枚举值。状态行出现「已按 revision 提交」，版本列加一。再排序，同一 ID 仍是新状态。非法值在回调里被丢掉。
+
+### 业务
+
+过滤「Frontend」。显示计数变小，网格分页只针对过滤后的行。清空过滤，150 行还在。这是客户端过滤，不是服务端 `filterModel`。
+
+### 进阶
+
+先点慢加载，再点快加载或取消。只有 generation 仍匹配的那次能 `setRows`。点「模拟旧版本编辑」，`applyStatusEdit` 用 revision 0，结果应是 `conflict`，行不变。在慢加载返回前把某一行改到更高 revision，随后到达的旧快照不能把状态改回去。
+
+1500 只说明循环造了多少对象。没有帧时间和堆快照，就不能写性能结论。
+
+## 反例
+
+### 1. 新旧主题一起上
+
+```tsx
+import 'ag-grid-community/styles/ag-theme-quartz.css'
+<AgGridReact theme={themeQuartz} />
+```
+
+36.x 用 Theming API。旧 CSS 另做迁移，不要叠。
+
+### 2. 不注册模块
+
+`<AgGridReact>` 外面要有 `AgGridProvider modules={[AllCommunityModule]}`，或按需模块。本示例用全量 Community，没有 Enterprise。
+
+### 3. getRowId 用 index
+
+排序后选择和编辑打到别的频道。用 `params.data.id`。
+
+### 4. 让网格直接改行对象
+
+```tsx
+<AgGridReact onCellValueChanged={event => { event.data.status = event.newValue }} />
+```
+
+改为 `readOnlyEdit` 和 `onCellEditRequest`，用新数组更新。
+
+### 5. 把 client-side pagination 当成服务端分页
+
+用户以为换页会查数据库。真分页要用 Infinite 或自己的请求，并说明排序发生在哪一层。当前 Demo 的 1500 行都在内存里。
+
+### 6. Infinite 只排序已加载的 50 行
+
+`sortModel` 要交给后端，返回的是全局顺序里的那一截。Lab 还没做这一层。
+
+### 7. cacheBlockSize 小于 pageSize
+
+官方不支持。若以后同时开 Infinite 和分页，两者至少对齐。现在的 25/50/100 只是 client-side 的页大小。
+
+### 8. 卸载后仍 successCallback
+
+旧 Promise 会打到已经销毁的网格。用 abort 和 generation。Lab 的 `reload` 已经这样做。
+
+### 9. Community 里打开 SSRM
+
+企业模型不会因为 import 路径像就免费。先对矩阵，再谈实现。
+
+### 10. 单元格用 HTML 拼接标题
+
+返回 React 文本。RSS 名称不需要 `dangerouslySetInnerHTML`。
+
+### 11. 把「当前页选中」当成全集
+
+未加载的行不在选择里。批量操作把明确的 ID 或查询条件交给服务端。
+
+### 12. 过滤掉的行仍参与一个有依赖的图
+
+本网格没有依赖图。若和甘特图共用数据，不要把过滤后的子集交给需要完整拓扑的引擎。
+
+## 组合
+
+**Query。** 网格消费查询结果。mutation 携带所见 revision。409 时不要乐观留下新状态。refetch 用 `reconcileFeedSnapshot` 的规则合并，而不是整表替换掉更新的本地行。本 Demo 没有 Query。
+
+**TanStack Table。** 要完全自己画 DOM、没有内置列过滤器时用 C07。不要两套网格同时拥有同一份选择状态。
+
+**Virtual。** AG Grid 自己有行虚拟化。旁边的非网格长列表才考虑 C10。关掉行虚拟化去「方便读屏」会改变内存，应另给语义表格，而不是默认 `suppressRowVirtualisation`。
+
+## 生产清单
+
+- 只注册付过费或确定免费的模块。本条目只有 Community。
+- `getRowId`、`readOnlyEdit`、列定义引用稳定。
+- 编辑携带 revision。冲突不写行。
+- 快照合并不复活已删除 ID。
+- 加载用 abort 和 generation。卸载时两者都作废。
+- 状态不只靠颜色。Lab 把结果写在 `role="status"`。
+- 键盘：Tab、方向键、Enter、Escape 要在浏览器里看。网格的 `role="grid"` 不等于已经用 NVDA 验收。
+- 搜索如果以后防抖，组合期间不要发请求。当前过滤是受控输入的本地 `includes`，没有请求。
+
+## 升级
+
+36.2 的主题是 `theme` 属性。从 32 以前的 CSS 文件迁过来时删掉旧主题 import，再回归编辑、分页和 `getRowId`。Enterprise 功能升级要单独的许可检查，不能随 Community 版本号一起打开。
+
+## 练习
+
+1. 改 `feed-0001` 的状态，排序后版本仍加一。
+2. 用 revision 0 再改同一行，结果是 `conflict`，界面行不变。
+3. 慢加载期间把某行 revision 加高，快照返回后该行保持本地状态。
+4. 快照里删掉一个 ID，合并结果里不再出现该行。
+
+## 官方链接
+
+- https://www.ag-grid.com/react-data-grid/installation/
+- https://www.ag-grid.com/react-data-grid/community-vs-enterprise/
+- https://www.ag-grid.com/react-data-grid/row-ids/
+- https://www.ag-grid.com/react-data-grid/value-setters/
+- https://www.ag-grid.com/react-data-grid/react-hooks/
+
+## 证据
+
+`edit-policy` 单测不创建网格。sdk 要真实 import `ag-grid-react@36.2.0` 并在 `docs/library-lab/evidence/runs/` 留下收据。键盘和滚动属于 browser。
+
+GitHub Actions 41779873259 是仓库级安装、typecheck、build、52 个 SDK 文件（153 项测试）和 45 项 Playwright 的结果，不是 C08 的条目 PASS。不要改 `verification.json`。
