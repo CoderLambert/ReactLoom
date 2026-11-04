@@ -12,19 +12,25 @@ describe('authReducer', () => {
     const signedOut = authReducer(initialAuthState, { type: 'signed-out' })
     expect(authReducer(signedOut, { type: 'hydrated', session })).toEqual({
       status: 'anonymous',
+      revision: 0,
     })
   })
 
   it('moves from loading to anonymous or authenticated', () => {
     expect(authReducer(initialAuthState, { type: 'hydrated', session: null })).toEqual({
       status: 'anonymous',
+      revision: 0,
     })
     expect(authReducer(initialAuthState, { type: 'hydrated', session })).toEqual({
       status: 'authenticated',
       session,
+      revision: 1,
     })
-    expect(authReducer({ status: 'authenticated', session }, { type: 'signed-out' })).toEqual({
+    expect(
+      authReducer({ status: 'authenticated', session, revision: 1 }, { type: 'signed-out' }),
+    ).toEqual({
       status: 'anonymous',
+      revision: 2,
     })
   })
 })

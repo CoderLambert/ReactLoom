@@ -1,75 +1,132 @@
 import type { AuthEvent } from './reducer'
-import type { LoginInput, Session } from './schema'
+import { type LoginInput, type Session, sessionSchema } from './schema'
 
 type AuthDependencies = {
-  readToken: () => Promise<string | null>
-  writeToken: (token: string | null) => Promise<void>
+  readSession: () => Promise<Session | null>
+  writeSession: (session: Session | null) => Promise<void>
   requestSignIn: (input: LoginInput) => Promise<Session>
   dispatch: (event: AuthEvent) => void
+  subscribeToForeground: (listener: () => void) => () => void
 }
 
+// Native and browser timers overflow delays beyond this signed 32-bit bound.
+const MAX_EXPIRY_DELAY = 2_147_483_647
+
 export function createAuthController({
-  readToken,
-  writeToken,
+  readSession,
+  writeSession,
   requestSignIn,
   dispatch,
+  subscribeToForeground,
 }: AuthDependencies) {
   let active = false
   let initialized = false
   let generation = 0
-  let committedToken: string | null = null
+  let committedSession: Session | null = null
   let writes = Promise.resolve()
+  let expiryTimer: ReturnType<typeof setTimeout> | undefined
+  let unsubscribe: (() => void) | undefined
   const current = (operation: number) => active && operation === generation
-  const storageFailed = () => {
+  const expired = (session: Session) => session.expiresAt <= Date.now()
+
+  function clearExpiry() {
+    if (expiryTimer !== undefined) clearTimeout(expiryTimer)
+    expiryTimer = undefined
+  }
+
+  function storageFailed() {
     initialized = true
-    committedToken = null
+    committedSession = null
+    clearExpiry()
     if (active) dispatch({ type: 'storage-failed' })
   }
 
-  function persist(token: string | null, operation: number, commit: () => void) {
+  function scheduleExpiry() {
+    clearExpiry()
+    if (!active || !committedSession) return
+    const expectedSession = committedSession
+    expiryTimer = setTimeout(
+      () => {
+        expiryTimer = undefined
+        if (committedSession === expectedSession) void checkExpiry().catch(() => undefined)
+      },
+      Math.min(Math.max(0, expectedSession.expiresAt - Date.now()), MAX_EXPIRY_DELAY),
+    )
+  }
+
+  async function checkExpiry() {
+    if (!active || !committedSession) return
+    if (expired(committedSession)) await invalidateSession(committedSession)
+    else scheduleExpiry()
+  }
+
+  function persist(session: Session | null, operation: number, commit: () => void) {
     const write = writes.then(async () => {
       // Logout deletion remains required after a newer login or provider cleanup.
-      if (token !== null && !current(operation)) return
+      if (session !== null && !current(operation)) return
+      if (session && expired(session)) throw new Error('Session has expired. Please sign in again.')
       try {
-        await writeToken(token)
-        if (token === null) return
-        if (!current(operation)) {
+        await writeSession(session)
+        if (session === null) return
+        if (!current(operation) || expired(session)) {
           // A write cannot be cancelled. Restore the last committed session before
           // allowing a newer write to run, even if its login request failed.
-          await writeToken(committedToken)
+          const previous = committedSession
+          if (previous && expired(previous)) void checkExpiry().catch(() => undefined)
+          await writeSession(committedSession)
+        } else {
+          committedSession = session
+          commit()
+          scheduleExpiry()
           return
         }
-        committedToken = token
-        commit()
       } catch (error) {
         storageFailed()
         throw error
       }
+      if (current(operation)) throw new Error('Session has expired. Please sign in again.')
     })
     writes = write.catch(() => undefined)
     return write
   }
 
+  async function signOut() {
+    if (!active) return
+    const operation = ++generation
+    initialized = true
+    committedSession = null
+    clearExpiry()
+    dispatch({ type: 'signed-out' })
+    await persist(null, operation, () => {})
+  }
+
+  async function invalidateSession(expectedSession: Session) {
+    if (!active || committedSession !== expectedSession) return
+    await signOut()
+  }
+
   return {
     async start() {
       active = true
+      unsubscribe?.()
+      unsubscribe = subscribeToForeground(() => {
+        void checkExpiry().catch(() => undefined)
+      })
       const operation = ++generation
-      if (initialized) return
+      if (initialized) {
+        await checkExpiry().catch(() => undefined)
+        return
+      }
       try {
-        const token = await readToken()
+        const stored = await readSession()
         if (!current(operation)) return
         initialized = true
-        committedToken = token
-        dispatch({
-          type: 'hydrated',
-          session: token
-            ? {
-                accessToken: token,
-                expiresAt: Date.now() + 60 * 60 * 1000,
-                user: { id: 'user-ada', name: 'Ada Loom', email: 'ada@reactloom.dev' },
-              }
-            : null,
-        })
+        const result = sessionSchema.safeParse(stored)
+        const session = result.success && !expired(result.data) ? result.data : null
+        committedSession = session
+        dispatch({ type: 'hydrated', session })
+        if (session) scheduleExpiry()
+        else await persist(null, operation, () => {})
       } catch {
         if (current(operation)) storageFailed()
       }
@@ -77,6 +134,9 @@ export function createAuthController({
     stop() {
       active = false
       generation += 1
+      clearExpiry()
+      unsubscribe?.()
+      unsubscribe = undefined
     },
     async signIn(input: LoginInput) {
       if (!active) return
@@ -85,17 +145,13 @@ export function createAuthController({
         initialized = true
         dispatch({ type: 'signed-out' })
       }
-      const session = await requestSignIn(input)
+      const response = await requestSignIn(input)
       if (!current(operation)) return
-      await persist(session.accessToken, operation, () => dispatch({ type: 'signed-in', session }))
+      const session = sessionSchema.parse(response)
+      if (expired(session)) throw new Error('Session has expired. Please sign in again.')
+      await persist(session, operation, () => dispatch({ type: 'signed-in', session }))
     },
-    async signOut() {
-      if (!active) return
-      const operation = ++generation
-      initialized = true
-      committedToken = null
-      dispatch({ type: 'signed-out' })
-      await persist(null, operation, () => {})
-    },
+    signOut,
+    invalidateSession,
   }
 }
