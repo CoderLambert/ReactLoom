@@ -76,6 +76,39 @@ function toAbortError(signal: AbortSignal): ApiError {
   return new ApiError('The request was cancelled.', 'aborted', { cause: reason })
 }
 
+function readAccessToken(
+  getAccessToken: ApiClientOptions['getAccessToken'],
+  signal: AbortSignal,
+): Promise<string | null | undefined> {
+  return new Promise((resolve, reject) => {
+    const onAbort = () => {
+      signal.removeEventListener('abort', onAbort)
+      reject(toAbortError(signal))
+    }
+    if (signal.aborted) {
+      onAbort()
+      return
+    }
+    signal.addEventListener('abort', onAbort, { once: true })
+    Promise.resolve()
+      .then(() => {
+        if (signal.aborted) throw toAbortError(signal)
+        return getAccessToken?.()
+      })
+      .then(
+        (token) => {
+          signal.removeEventListener('abort', onAbort)
+          if (signal.aborted) reject(toAbortError(signal))
+          else resolve(token)
+        },
+        (error: unknown) => {
+          signal.removeEventListener('abort', onAbort)
+          reject(error)
+        },
+      )
+  })
+}
+
 function isTimeoutReason(reason: unknown): boolean {
   return reason instanceof Error && (reason.name === 'TimeoutError' || reason.name === 'AbortError')
     ? reason.name === 'TimeoutError'
@@ -180,7 +213,8 @@ export function createApiClient(options: ApiClientOptions) {
 
       const url = joinUrl(options.baseUrl, path)
       try {
-        const token = await options.getAccessToken?.()
+        const token = await readAccessToken(options.getAccessToken, signal)
+        if (signal.aborted) throw toAbortError(signal)
         const headers = new Headers(init.headers)
         if (init.body !== undefined && !headers.has('content-type')) {
           headers.set('content-type', 'application/json')

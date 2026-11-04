@@ -18,6 +18,14 @@ function jsonResponse(body: unknown, status = 200, headers?: Record<string, stri
   })
 }
 
+function deferred<T>() {
+  let resolve: (value: T) => void = () => undefined
+  const promise = new Promise<T>((done) => {
+    resolve = done
+  })
+  return { promise, resolve }
+}
+
 describe('createApiClient', () => {
   afterEach(() => {
     vi.restoreAllMocks()
@@ -143,5 +151,75 @@ describe('createApiClient', () => {
 
     await expect(client.request('/me', schema)).rejects.toMatchObject({ code: 'unauthorized' })
     expect(onUnauthorized).toHaveBeenCalledOnce()
+  })
+
+  it('does not read credentials or fetch when already cancelled', async () => {
+    const controller = new AbortController()
+    controller.abort()
+    const getAccessToken = vi.fn(() => 'token')
+    const fetchFn = vi.fn(async () => jsonResponse({ ok: true }))
+    const client = createApiClient({ baseUrl: 'http://api.test', getAccessToken, fetchFn })
+
+    await expect(
+      client.request('/items', schema, { signal: controller.signal, retry: false }),
+    ).rejects.toMatchObject({ code: 'aborted' })
+    expect(getAccessToken).not.toHaveBeenCalled()
+    expect(fetchFn).not.toHaveBeenCalled()
+  })
+
+  it('cancels while credentials are still loading and never sends a late token', async () => {
+    const controller = new AbortController()
+    const token = deferred<string | null>()
+    const started = deferred<void>()
+    const fetchFn = vi.fn(async () => jsonResponse({ ok: true }))
+    const client = createApiClient({
+      baseUrl: 'http://api.test',
+      getAccessToken: () => {
+        started.resolve()
+        return token.promise
+      },
+      fetchFn,
+    })
+    const pending = client.request('/items', schema, { signal: controller.signal, retry: false })
+    const outcome = pending.then(
+      () => 'success',
+      (error: unknown) => (isApiError(error) ? error.code : 'unexpected'),
+    )
+    await started.promise
+    controller.abort()
+    try {
+      expect(
+        await Promise.race([
+          outcome,
+          new Promise((resolve) => setImmediate(() => resolve('pending'))),
+        ]),
+      ).toBe('aborted')
+    } finally {
+      token.resolve('late-token')
+      await outcome
+    }
+    expect(fetchFn).not.toHaveBeenCalled()
+  })
+
+  it('times out stalled credential loading before sending a request', async () => {
+    const token = deferred<string | null>()
+    const fetchFn = vi.fn(async () => jsonResponse({ ok: true }))
+    const client = createApiClient({
+      baseUrl: 'http://api.test',
+      getAccessToken: () => token.promise,
+      fetchFn,
+    })
+    const outcome = client.request('/items', schema, { timeoutMs: 5, retry: false }).then(
+      () => 'success',
+      (error: unknown) => (isApiError(error) ? error.code : 'unexpected'),
+    )
+    const deadline = setTimeout(() => token.resolve('late-token'), 100)
+    try {
+      expect(await outcome).toBe('timeout')
+      expect(fetchFn).not.toHaveBeenCalled()
+    } finally {
+      clearTimeout(deadline)
+      token.resolve(null)
+    }
   })
 })
