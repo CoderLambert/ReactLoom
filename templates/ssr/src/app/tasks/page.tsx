@@ -1,7 +1,7 @@
 'use client'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import * as z from 'zod'
 import { getApi } from '@/lib/api'
 
@@ -18,19 +18,28 @@ const listSchema = z.object({ tasks: z.array(taskSchema) })
 export default function TasksPage() {
   const queryClient = useQueryClient()
   const [title, setTitle] = useState('')
+  const draftRevision = useRef(0)
+  const submitting = useRef(false)
   const tasks = useQuery({
     queryKey: ['tasks'],
     queryFn: ({ signal }) => getApi().request('/api/tasks', listSchema, { signal }),
   })
   const create = useMutation({
-    mutationFn: (nextTitle: string) =>
+    mutationFn: ({ title: nextTitle }: { title: string; revision: number }) =>
       getApi().request('/api/tasks', taskSchema, {
         method: 'POST',
         body: { title: nextTitle },
         retry: false,
       }),
+    onSuccess: (_task, submitted) => {
+      if (draftRevision.current === submitted.revision) setTitle('')
+    },
     onSettled: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['tasks'] })
+      try {
+        await queryClient.invalidateQueries({ queryKey: ['tasks'] })
+      } finally {
+        submitting.current = false
+      }
     },
   })
 
@@ -41,13 +50,15 @@ export default function TasksPage() {
         Loaded in the browser, authorized by the httpOnly session cookie.
       </p>
       <form
+        aria-busy={create.isPending}
         className="flex flex-col gap-3 sm:flex-row"
         onSubmit={(event) => {
           event.preventDefault()
+          if (submitting.current || create.isPending) return
           const next = title.trim()
           if (next.length < 3) return
-          create.mutate(next)
-          setTitle('')
+          submitting.current = true
+          create.mutate({ title: next, revision: draftRevision.current })
         }}
       >
         <label className="grow space-y-2 text-sm font-semibold" htmlFor="title">
@@ -55,17 +66,27 @@ export default function TasksPage() {
           <input
             id="title"
             value={title}
-            onChange={(event) => setTitle(event.target.value)}
+            onChange={(event) => {
+              draftRevision.current += 1
+              setTitle(event.target.value)
+            }}
+            aria-describedby={create.isError ? 'create-task-error' : undefined}
             className="w-full rounded-2xl bg-card px-3 py-2 font-normal ring-1 ring-line"
           />
         </label>
         <button
           type="submit"
-          className="self-end rounded-full bg-ink px-4 py-2 text-sm font-semibold text-linen"
+          disabled={create.isPending}
+          className="self-end rounded-full bg-ink px-4 py-2 text-sm font-semibold text-linen disabled:opacity-60"
         >
-          Add task
+          {create.isPending ? 'Adding task…' : create.isError ? 'Try again' : 'Add task'}
         </button>
       </form>
+      {create.isError ? (
+        <p id="create-task-error" role="alert" className="text-sm text-copper">
+          {create.error instanceof Error ? create.error.message : 'The task could not be added.'}
+        </p>
+      ) : null}
       {tasks.isPending ? <p>Loading tasks…</p> : null}
       {tasks.isError ? (
         <p role="alert">
