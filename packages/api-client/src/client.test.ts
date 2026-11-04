@@ -57,6 +57,66 @@ describe('createApiClient', () => {
     expect(fetchFn).toHaveBeenCalledTimes(2)
   })
 
+  it('honors HTTP-date Retry-After on rate-limited responses', async () => {
+    const now = Date.parse('2026-11-04T16:00:00.000Z')
+    vi.spyOn(Date, 'now').mockReturnValue(now)
+    const fetchFn = vi
+      .fn<typeof fetch>()
+      .mockResolvedValueOnce(
+        jsonResponse({ message: 'rate limited' }, 429, {
+          'retry-after': new Date(now + 45_000).toUTCString(),
+        }),
+      )
+      .mockResolvedValueOnce(jsonResponse({ ok: true }))
+    const sleep = vi.fn(async () => undefined)
+    const client = createApiClient({
+      baseUrl: 'https://api.test',
+      fetchFn,
+      sleep,
+      retry: { maxDelayMs: 120_000 },
+    })
+
+    await expect(client.request('/items', schema)).resolves.toEqual({ ok: true })
+    expect(sleep).toHaveBeenCalledOnce()
+    expect(sleep).toHaveBeenCalledWith(45_000, expect.any(AbortSignal))
+    expect(fetchFn).toHaveBeenCalledTimes(2)
+  })
+
+  it('ignores negative Retry-After seconds instead of scheduling a negative delay', async () => {
+    vi.spyOn(Math, 'random').mockReturnValue(1)
+    const fetchFn = vi
+      .fn<typeof fetch>()
+      .mockResolvedValueOnce(jsonResponse({ message: 'rate limited' }, 429, { 'retry-after': '-5' }))
+      .mockResolvedValueOnce(jsonResponse({ ok: true }))
+    const sleep = vi.fn(async () => undefined)
+    const client = createApiClient({
+      baseUrl: 'https://api.test',
+      fetchFn,
+      sleep,
+      retry: { baseDelayMs: 200, maxDelayMs: 120_000 },
+    })
+
+    await expect(client.request('/items', schema)).resolves.toEqual({ ok: true })
+    expect(sleep).toHaveBeenCalledWith(200, expect.any(AbortSignal))
+  })
+
+  it('caps numeric Retry-After seconds to the configured maximum', async () => {
+    const fetchFn = vi
+      .fn<typeof fetch>()
+      .mockResolvedValueOnce(jsonResponse({ message: 'rate limited' }, 429, { 'retry-after': '30' }))
+      .mockResolvedValueOnce(jsonResponse({ ok: true }))
+    const sleep = vi.fn(async () => undefined)
+    const client = createApiClient({
+      baseUrl: 'https://api.test',
+      fetchFn,
+      sleep,
+      retry: { maxDelayMs: 1_000 },
+    })
+
+    await expect(client.request('/items', schema)).resolves.toEqual({ ok: true })
+    expect(sleep).toHaveBeenCalledWith(1_000, expect.any(AbortSignal))
+  })
+
   it('retries a 503 with a non-JSON upstream error body', async () => {
     const fetchFn = vi
       .fn<typeof fetch>()
