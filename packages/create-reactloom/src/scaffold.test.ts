@@ -1,4 +1,4 @@
-import { mkdtemp, readFile, rm, stat, symlink } from 'node:fs/promises'
+import { mkdir, mkdtemp, readFile, rm, stat, symlink, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -12,7 +12,7 @@ import {
   resolveStartup,
   run,
 } from './cli.js'
-import { scaffold } from './scaffold.js'
+import { renameManifestFile, scaffold } from './scaffold.js'
 import { findRepoRoot, readManifest, type TemplateId, templateIds } from './templates.js'
 
 const created: string[] = []
@@ -207,6 +207,43 @@ describe('create-reactloom', () => {
       if (previousInit === undefined) delete process.env.INIT_CWD
       else process.env.INIT_CWD = previousInit
     }
+  })
+
+  it('renames a scaffold file when the target does not exist', async () => {
+    const directory = await tempParent()
+    await writeFile(path.join(directory, 'Dockerfile.standalone'), 'standalone\\n')
+
+    await renameManifestFile(directory, 'Dockerfile.standalone', 'Dockerfile')
+
+    expect(await readFile(path.join(directory, 'Dockerfile'), 'utf8')).toBe('standalone\\n')
+    await expect(stat(path.join(directory, 'Dockerfile.standalone'))).rejects.toThrow()
+  })
+
+  it('rejects a manifest rename that would silently overwrite an existing file', async () => {
+    const directory = await tempParent()
+    await writeFile(path.join(directory, 'Dockerfile.standalone'), 'standalone\\n')
+    await writeFile(path.join(directory, 'Dockerfile'), 'original\\n')
+
+    await expect(
+      renameManifestFile(directory, 'Dockerfile.standalone', 'Dockerfile'),
+    ).rejects.toThrow(/rename target already exists: Dockerfile/)
+
+    expect(await readFile(path.join(directory, 'Dockerfile'), 'utf8')).toBe('original\\n')
+    expect(await readFile(path.join(directory, 'Dockerfile.standalone'), 'utf8')).toBe(
+      'standalone\\n',
+    )
+  })
+
+  it('rejects renaming onto an existing directory', async () => {
+    const directory = await tempParent()
+    await writeFile(path.join(directory, 'config.txt'), 'source')
+    await mkdir(path.join(directory, 'config'))
+
+    await expect(renameManifestFile(directory, 'config.txt', 'config')).rejects.toThrow(
+      /rename target already exists: config/,
+    )
+    expect(await readFile(path.join(directory, 'config.txt'), 'utf8')).toBe('source')
+    await expect(stat(path.join(directory, 'config'))).resolves.toBeTruthy()
   })
 
   it('rejects unsafe project names', async () => {
