@@ -79,6 +79,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # A PR's default synthetic merge commit is not its auditable source HEAD.
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - uses: actions/download-artifact@v4
         with:
           name: library-lab-plan-${{ github.sha }}
@@ -110,6 +113,29 @@ jobs:
         env:
           LAB_PREBUILT: '1'
         run: node scripts/ci-targets.mjs browser
+      - name: Record independent P0 SDK and browser receipts
+        if: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'feat/library-lab' }}
+        working-directory: packages/library-lab
+        env:
+          LAB_PREBUILT: '1'
+        run: |
+          # The recorder rejects dirty inputs, absent lock importers, missing
+          # @ID browser suites and SDK scripts; a failed target stops the gate.
+          set -eu
+          for entry in A01 B17 C01 D03 F11; do
+            node scripts/record-verification.mjs "--entry=$entry" --kind=sdk --execute
+          done
+          # E05 Monaco requires its real browser worker; it has no Node SDK suite.
+          for entry in A01 B17 C01 D03 E05 F11; do
+            node scripts/record-verification.mjs "--entry=$entry" --kind=browser --execute
+          done
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() && github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'feat/library-lab' }}
+        with:
+          name: library-lab-p0-receipts-${{ github.event.pull_request.head.sha }}
+          path: docs/library-lab/evidence/runs/
+          retention-days: 7
+          if-no-files-found: ignore
       - uses: actions/upload-artifact@v4
         if: always()
         with:
