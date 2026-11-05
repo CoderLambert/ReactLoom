@@ -23,6 +23,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          # Catalogue fingerprints must use the same immutable PR HEAD as runtime
+          # and the persisted per-entry receipts (never the synthetic merge ref).
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
