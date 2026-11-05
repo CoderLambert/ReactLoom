@@ -4,15 +4,21 @@
     "note": "官方React API与示例已审阅，源码重新编写"
   },
   "sdk": {
-    "status": "NOT_RUN",
-    "note": "等待集成任务安装@floating-ui/react 0.27.20"
+    "status": "PASS",
+    "sourceFingerprint": "046062d817bc5b4213b8b12527d365b1a01310a5bda50c2b4726fd69e00d858c",
+    "command": "node scripts/sdk-runner.mjs --entry=B17",
+    "evidence": "docs/library-lab/evidence/runs/2026-11-05T17-01-36-984Z-B17-sdk.json",
+    "evidenceSha256": "d57727485006c98af1955b4ddffc294cd8f8d3aeba4bdfb7a76eafff70b0d850"
   },
   "build": {
     "status": "NOT_RUN",
     "note": "真实TypeScript构建未运行"
   },
   "browser": {
-    "status": "NOT_RUN",
-    "note": "浮层焦点与滚动未在浏览器实测"
+    "status": "PASS",
+    "sourceFingerprint": "046062d817bc5b4213b8b12527d365b1a01310a5bda50c2b4726fd69e00d858c",
+    "command": "pnpm exec playwright test --grep @B17\\b",
+    "evidence": "docs/library-lab/evidence/runs/2026-11-05T17-01-49-497Z-B17-browser.json",
+    "evidenceSha256": "5a45a1fb9b19896aabb332c1f4b1cc5b628d60ab36e2514881b62e3954890378"
   }
 }

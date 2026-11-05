@@ -4,15 +4,21 @@
     "note": "官方文档核对并原创写入指南和真实 API 示例；未执行目标库"
   },
   "sdk": {
-    "status": "NOT_RUN",
-    "note": "缺少 echarts 实际安装及运行环境"
+    "status": "PASS",
+    "sourceFingerprint": "dbcecab6683359bde362778701abc5d9928054197f323a7db34eaf32d151a108",
+    "command": "node scripts/sdk-runner.mjs --entry=A01",
+    "evidence": "docs/library-lab/evidence/runs/2026-11-05T17-01-35-863Z-A01-sdk.json",
+    "evidenceSha256": "14c6d3c0b91462749f5895a902b9fd628cf2c394fc2b33a98b8a2d09fa6264be"
   },
   "build": {
     "status": "NOT_RUN",
     "note": "仅新增源码；TypeScript/Vite尚未验证"
   },
   "browser": {
-    "status": "NOT_RUN",
-    "note": "无 Chromium 实测结果"
+    "status": "PASS",
+    "sourceFingerprint": "dbcecab6683359bde362778701abc5d9928054197f323a7db34eaf32d151a108",
+    "command": "pnpm exec playwright test --grep @A01\\b",
+    "evidence": "docs/library-lab/evidence/runs/2026-11-05T17-01-39-751Z-A01-browser.json",
+    "evidenceSha256": "21e8e06fb056ca4ea775ec5ac691baee847b2025de9f3688165f6948fd67741a"
   }
 }

@@ -1,0 +1,19 @@
+$ node scripts/sdk-runner.mjs --entry=B17
+Real SDK suites selected: 1 file(s)
+TAP version 13
+# Subtest: B17 real Floating UI React hooks compose semantic reference and dialog props
+ok 1 - B17 real Floating UI React hooks compose semantic reference and dialog props
+  ---
+  duration_ms: 9.798566
+  type: 'test'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 163.511233
+

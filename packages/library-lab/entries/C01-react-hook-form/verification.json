@@ -4,15 +4,21 @@
     "note": "本轮代码和知识手册已创建，仍待独立校对"
   },
   "sdk": {
-    "status": "NOT_RUN",
-    "note": "尚未在本轮环境安装并运行 react-hook-form 7.89.0；第22轮新增/更新真实 SDK 测试源码，但仍未执行目标库 SDK"
+    "status": "PASS",
+    "sourceFingerprint": "b84cd86fd428620ed33fc80e9c8682c8f76a5daeeec78608b6bd7d212eb8453a",
+    "command": "node scripts/sdk-runner.mjs --entry=C01",
+    "evidence": "docs/library-lab/evidence/runs/2026-11-05T17-01-37-645Z-C01-sdk.json",
+    "evidenceSha256": "6a63332532133c89cceadf1da843995fbef295b1996c7446f90db3e73a22ab32"
   },
   "build": {
     "status": "NOT_RUN",
     "note": "需平台集中更新锁文件后运行类型与构建"
   },
   "browser": {
-    "status": "NOT_RUN",
-    "note": "需实测 useFieldArray、IME、409 和取消；第22轮交互改动未在 Chromium 验收"
+    "status": "PASS",
+    "sourceFingerprint": "b84cd86fd428620ed33fc80e9c8682c8f76a5daeeec78608b6bd7d212eb8453a",
+    "command": "pnpm exec playwright test --grep @C01\\b",
+    "evidence": "docs/library-lab/evidence/runs/2026-11-05T17-01-54-597Z-C01-browser.json",
+    "evidenceSha256": "c0735f4dcd0eef52ea9140267f8f70396f48b6b8b3adbb18274e1d4c19ccdd2c"
   }
 }

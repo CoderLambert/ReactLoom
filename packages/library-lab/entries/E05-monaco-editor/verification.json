@@ -12,8 +12,11 @@
     "note": "集成平台需安装 monaco-editor 并重建锁文件"
   },
   "browser": {
-    "status": "NOT_RUN",
-    "note": "Worker/CSP/resize/model dispose 需实浏览器E2E"
+    "status": "PASS",
+    "sourceFingerprint": "35b0986e9bf419d5a2182e8a4c6fb8108d19575374f99c4227f5fcc9e7110cbd",
+    "command": "pnpm exec playwright test --grep @E05\\b",
+    "evidence": "docs/library-lab/evidence/runs/2026-11-05T17-02-09-536Z-E05-browser.json",
+    "evidenceSha256": "002afc760e3669bdf25b0e80d57b5edd733b59a9c3ded24ada0931e52d46fb96"
   },
   "isolation": {
     "status": "BLOCKED",

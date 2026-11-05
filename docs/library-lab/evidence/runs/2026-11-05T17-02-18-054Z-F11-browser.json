@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "kind": "browser",
+  "entryId": "F11",
+  "sourceFingerprint": "b0f0d6ba4cbc79a87b5fa1a3168eadaf6a14545b17da5068a50fcc47667873a0",
+  "command": "pnpm exec playwright test --grep @F11\\b",
+  "status": "PASS",
+  "exitCode": 0,
+  "head": "52e579ed68b2155411f7410df2fb0654ad9b35d3",
+  "node": "22.23.4",
+  "lockSha256": "1d255c4858effcb7967cead058f46358a8dc31d646804616b133683bef144b1d",
+  "startedAt": "2026-11-05T17:02:18.054Z",
+  "finishedAt": "2026-11-05T17:02:28.616Z",
+  "log": {
+    "path": "docs/library-lab/evidence/runs/2026-11-05T17-02-18-054Z-F11-browser.log",
+    "sha256": "a5c09b2bc7010c741e0b12fc96a968cfd1e75162fa3ee7ccc263a02bb6edadbe",
+    "bytes": 575
+  }
+}
