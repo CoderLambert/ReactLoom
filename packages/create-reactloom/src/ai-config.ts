@@ -90,6 +90,21 @@ function splitGlobs(value: string): string[] {
   return globs
 }
 
+/** Do not let AI pointers or rules overwrite files supplied by a template. */
+async function writeNewAiFile(directory: string, relative: string, contents: string): Promise<void> {
+  const destination = path.join(directory, relative)
+  await mkdir(path.dirname(destination), { recursive: true })
+  try {
+    // Exclusive creation also refuses existing symlinks and avoids a check/write race.
+    await writeFile(destination, contents, { flag: 'wx' })
+  } catch (error) {
+    if (error instanceof Error && 'code' in error && error.code === 'EEXIST') {
+      throw new Error(`AI configuration target already exists: ${relative}`)
+    }
+    throw error
+  }
+}
+
 export async function installAiConfig(options: {
   repoRoot: string
   directory: string
@@ -102,14 +117,13 @@ export async function installAiConfig(options: {
   const agents = await readFile(agentsPath, 'utf8')
   await writeFile(agentsPath, adaptAiText(agents, options.template, options.projectName))
 
-  const rulesDir = path.join(options.directory, '.cursor', 'rules')
-  await mkdir(rulesDir, { recursive: true })
   for (const rule of options.rules) {
     const relative = path.join('.cursor', 'rules', rule)
     await assertSafeSourcePath(options.repoRoot, relative)
     const source = await readFile(path.join(options.repoRoot, relative), 'utf8')
-    await writeFile(
-      path.join(rulesDir, rule),
+    await writeNewAiFile(
+      options.directory,
+      relative,
       adaptAiText(source, options.template, options.projectName),
     )
   }
@@ -117,11 +131,9 @@ export async function installAiConfig(options: {
   for (const relative of options.pointers) {
     await assertSafeSourcePath(options.repoRoot, relative)
     const source = await readFile(path.join(options.repoRoot, relative), 'utf8')
-    const destination = path.join(options.directory, relative)
-    await mkdir(path.dirname(destination), { recursive: true })
     const adapted = relative.endsWith('mcp.json')
       ? adaptMcpJson(source, options.template)
       : adaptAiText(source, options.template, options.projectName)
-    await writeFile(destination, adapted)
+    await writeNewAiFile(options.directory, relative, adapted)
   }
 }
