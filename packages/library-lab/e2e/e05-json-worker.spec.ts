@@ -31,9 +31,11 @@ test('@E05 real JSON language worker validates edits across stop and remount', a
 
   await editor.click()
   await page.keyboard.press('ControlOrMeta+A')
-  await page.keyboard.insertText('{"name":"ReactLoom"}')
+  // A JSON primitive avoids Monaco's paired-quote/bracket auto-insertion
+  // affecting a synthetic insertText operation in the browser harness.
+  await page.keyboard.insertText('true')
+  await expect(status).toContainText('当前 4 字符')
   await expect(status).toContainText('0 个 Monaco 诊断标记', { timeout: 20_000 })
-  await expect(status).toContainText('当前 20 字符')
 
   // Stop must release the editor and the Lab-owned MonacoEnvironment lease.
   // Monaco can keep an idle language worker cached: its immediate termination
