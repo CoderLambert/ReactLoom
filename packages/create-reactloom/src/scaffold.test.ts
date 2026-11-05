@@ -286,9 +286,7 @@ describe('create-reactloom', () => {
 
     await copyManifestFiles(root, directory, ['configs/tool.json'])
 
-    expect(await readFile(path.join(directory, 'configs', 'tool.json'), 'utf8')).toBe(
-      'root config',
-    )
+    expect(await readFile(path.join(directory, 'configs', 'tool.json'), 'utf8')).toBe('root config')
   })
 
   it('rejects unsafe project names', async () => {
