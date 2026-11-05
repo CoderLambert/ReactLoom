@@ -243,6 +243,10 @@ export function createApiClient(options: ApiClientOptions) {
           credentials: options.credentials ?? 'same-origin',
         })
 
+        // Custom fetch adapters may settle after cancellation. Never let a stale
+        // response trigger onUnauthorized or resolve as a successful request.
+        if (signal.aborted) throw toAbortError(signal)
+
         if (response.status === 401) {
           options.onUnauthorized?.()
           const details = await readBody(response, true)
