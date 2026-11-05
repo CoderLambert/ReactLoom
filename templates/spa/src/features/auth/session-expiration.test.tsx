@@ -1,6 +1,6 @@
 import { QueryClientProvider } from '@tanstack/react-query'
 import { createMemoryHistory, RouterProvider } from '@tanstack/react-router'
-import { cleanup, render, screen, waitFor } from '@testing-library/react'
+import { act, cleanup, render, screen, waitFor } from '@testing-library/react'
 import { HttpResponse, http } from 'msw'
 import { I18nextProvider } from 'react-i18next'
 import { afterEach, describe, expect, it, vi } from 'vitest'
@@ -17,10 +17,31 @@ import { server } from '@/mocks/server'
 
 const STORAGE_KEY = 'reactloom.session'
 
+class TestLogoutChannel {
+  static channels = new Set<TestLogoutChannel>()
+  onmessage: ((event: { data: unknown }) => void) | null = null
+
+  constructor(_name: string) {
+    TestLogoutChannel.channels.add(this)
+  }
+
+  postMessage(data: unknown) {
+    for (const channel of TestLogoutChannel.channels) {
+      if (channel !== this) channel.onmessage?.({ data })
+    }
+  }
+
+  close() {
+    TestLogoutChannel.channels.delete(this)
+  }
+}
+
 afterEach(() => {
   cleanup()
   vi.restoreAllMocks()
   useAuthStore.getState().clearSession()
+  vi.unstubAllGlobals()
+  TestLogoutChannel.channels.clear()
 })
 
 describe('SPA session expiry boundary', () => {
@@ -139,6 +160,39 @@ describe('SPA session expiry boundary', () => {
     expect(useAuthStore.getState().session).toBeNull()
     expect(sessionStorage.getItem(STORAGE_KEY)).toBeNull()
     expect(client.getQueryData(taskKeys.list(version))).toBeUndefined()
+  })
+
+  it('ignores a delayed logout from a previous login but revokes a matching session', async () => {
+    vi.stubGlobal('BroadcastChannel', TestLogoutChannel)
+    useAuthStore.getState().setSession(demoSession())
+    const previousId = useAuthStore.getState().sessionId
+    const client = createAppQueryClient()
+    const router = createAppRouter(client, createMemoryHistory({ initialEntries: ['/'] }))
+
+    render(
+      <Providers client={client}>
+        <RouterProvider router={router} />
+      </Providers>,
+    )
+
+    expect(await screen.findByRole('button', { name: 'Sign out' })).toBeVisible()
+
+    // A newer sign-in must not be revoked by an earlier tab's delayed message.
+    act(() => useAuthStore.getState().setSession(demoSession()))
+    const replacement = useAuthStore.getState().session
+    const replacementId = useAuthStore.getState().sessionId
+    expect(replacementId).not.toBe(previousId)
+
+    const sender = new TestLogoutChannel('reactloom.session-logout')
+    act(() => sender.postMessage({ type: 'logout', sessionId: previousId }))
+    expect(useAuthStore.getState().session).toEqual(replacement)
+    expect(sessionStorage.getItem(STORAGE_KEY)).not.toBeNull()
+
+    // The same mounted Shell must still honor a revocation for its current nonce.
+    act(() => sender.postMessage({ type: 'logout', sessionId: replacementId }))
+    await waitFor(() => expect(useAuthStore.getState().session).toBeNull())
+    expect(sessionStorage.getItem(STORAGE_KEY)).toBeNull()
+    sender.close()
   })
 
   it('never attaches an expired bearer token to a task API request', async () => {
