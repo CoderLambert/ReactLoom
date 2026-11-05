@@ -169,6 +169,30 @@ describe('createApiClient', () => {
     expect(fetchFn).toHaveBeenCalledOnce()
   })
 
+  it.each([401, 200])(
+    'ignores a late %i response when a custom fetch resolves after cancellation',
+    async (status) => {
+      const controller = new AbortController()
+      const onUnauthorized = vi.fn()
+      const fetchFn = vi.fn(async () => {
+        // This adapter intentionally ignores the abort signal and settles late.
+        controller.abort()
+        return jsonResponse(status === 401 ? { message: 'expired' } : { ok: true }, status)
+      })
+      const client = createApiClient({
+        baseUrl: 'https://api.test',
+        fetchFn,
+        onUnauthorized,
+      })
+
+      await expect(
+        client.request('/items', schema, { signal: controller.signal }),
+      ).rejects.toMatchObject({ code: 'aborted' })
+      expect(fetchFn).toHaveBeenCalledOnce()
+      expect(onUnauthorized).not.toHaveBeenCalled()
+    },
+  )
+
   it('cancels when the caller aborts', async () => {
     const controller = new AbortController()
     const fetchFn = vi.fn((_input: string | Request | URL, init?: RequestInit) => {
