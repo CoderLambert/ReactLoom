@@ -41,7 +41,7 @@ test('sign out removes the session cookie and blocks access to private tasks', a
   await expect(page.getByText('Dress the loom')).toHaveCount(0)
 })
 
-test('revalidates a background tab after another tab signs out', async ({ page, context }) => {
+test('revokes the cached view in another tab after sign-out', async ({ page, context }) => {
   await page.goto('/login')
   await page.getByLabel('Email').fill('ada@reactloom.dev')
   await page.getByLabel('Password').fill('loom-demo')
@@ -55,15 +55,9 @@ test('revalidates a background tab after another tab signs out', async ({ page, 
   await secondTab.getByRole('button', { name: 'Sign out' }).click()
   await expect(secondTab).toHaveURL(/\/login(?:\?.*)?$/)
 
-  const invalidated = page.waitForResponse(
-    (response) =>
-      new URL(response.url()).pathname === '/api/session' &&
-      response.request().method() === 'GET' &&
-      response.status() === 401,
-  )
+  // BroadcastChannel delivers the revocation even when Chromium does not
+  // dispatch a visibilitychange after bringToFront in headless mode.
   await page.bringToFront()
-  await invalidated
-
   await expect(page).toHaveURL(/\/login(?:\?.*)?$/)
   await expect(page.getByText('Dress the loom')).toHaveCount(0)
 })

@@ -8,6 +8,7 @@ import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 import { getApi } from '@/lib/api'
 import { clearSessionCache } from '@/lib/session-cache'
+import { broadcastSessionEvent } from '@/lib/session-events'
 
 const schema = z.object({
   email: z.email(),
@@ -41,6 +42,7 @@ export default function LoginPage() {
             retry: false,
           })
           await clearSessionCache(queryClient)
+          broadcastSessionEvent('signed-in')
           router.push('/tasks')
           router.refresh()
         } catch (cause) {

@@ -3,10 +3,11 @@
 import { isApiError } from '@reactloom/api-client'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import * as z from 'zod'
 import { getApi } from '@/lib/api'
 import { clearSessionCache } from '@/lib/session-cache'
+import { broadcastSessionEvent, subscribeSessionEvents } from '@/lib/session-events'
 
 const taskSchema = z.object({
   id: z.string(),
@@ -26,6 +27,7 @@ export default function TasksPage() {
   const queryClient = useQueryClient()
   const router = useRouter()
   const redirecting = useRef(false)
+  const [revoked, setRevoked] = useState(false)
   const session = useQuery({
     queryKey: ['session'],
     queryFn: ({ signal }) =>
@@ -37,25 +39,37 @@ export default function TasksPage() {
     retry: false,
   })
 
-  useEffect(() => {
-    if (
-      redirecting.current ||
-      !session.isError ||
-      !isApiError(session.error) ||
-      session.error.code !== 'unauthorized'
-    ) {
-      return
-    }
+  const revokeSession = useCallback(() => {
+    if (redirecting.current) return
     redirecting.current = true
+    setRevoked(true)
     void clearSessionCache(queryClient).then(() => {
       router.replace('/login')
       router.refresh()
     })
-  }, [queryClient, router, session.error, session.isError])
+  }, [queryClient, router])
 
-  // Keep an unsent draft mounted, but do not show cached private data while
-  // the httpOnly cookie is revalidated after a tab returns to the foreground.
-  const verified = session.isSuccess && !session.isFetching
+  useEffect(() => {
+    if (session.isError && isApiError(session.error) && session.error.code === 'unauthorized') {
+      revokeSession()
+    }
+  }, [revokeSession, session.error, session.isError])
+
+  useEffect(
+    () =>
+      subscribeSessionEvents((event) => {
+        if (event === 'signed-out') {
+          revokeSession()
+        } else {
+          void queryClient.invalidateQueries({ queryKey: ['session'] })
+        }
+      }),
+    [queryClient, revokeSession],
+  )
+
+  // Keep an unsent draft mounted, but hide private data during verification
+  // or as soon as another same-origin tab reports a successful sign-out.
+  const verified = !revoked && session.isSuccess && !session.isFetching
   return (
     <>
       {!verified ? (
@@ -121,6 +135,7 @@ function AuthenticatedTasks({ userId }: { userId: string }) {
     try {
       await getApi().request('/api/session', logoutSchema, { method: 'DELETE', retry: false })
       await clearSessionCache(queryClient)
+      broadcastSessionEvent('signed-out')
       router.replace('/login')
       router.refresh()
     } catch (cause) {
