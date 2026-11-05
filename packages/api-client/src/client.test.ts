@@ -193,6 +193,35 @@ describe('createApiClient', () => {
     },
   )
 
+  it.each([401, 200])(
+    'discards a %i response when the request is cancelled during body reading',
+    async (status) => {
+      const controller = new AbortController()
+      const bodyStarted = deferred<void>()
+      const body = deferred<string>()
+      const onUnauthorized = vi.fn()
+      const parse = vi.fn(schema.parse)
+      const responseBody = status === 401 ? { message: 'expired' } : { ok: true }
+      const response = jsonResponse(responseBody, status)
+      vi.spyOn(response, 'text').mockImplementation(() => {
+        bodyStarted.resolve()
+        return body.promise
+      })
+      const fetchFn = vi.fn(async () => response)
+      const client = createApiClient({ baseUrl: 'https://api.test', fetchFn, onUnauthorized })
+
+      const pending = client.request('/items', { parse }, { signal: controller.signal })
+      await bodyStarted.promise
+      controller.abort()
+      body.resolve(JSON.stringify(responseBody))
+
+      await expect(pending).rejects.toMatchObject({ code: 'aborted' })
+      expect(fetchFn).toHaveBeenCalledOnce()
+      expect(onUnauthorized).not.toHaveBeenCalled()
+      expect(parse).not.toHaveBeenCalled()
+    },
+  )
+
   it('cancels when the caller aborts', async () => {
     const controller = new AbortController()
     const fetchFn = vi.fn((_input: string | Request | URL, init?: RequestInit) => {

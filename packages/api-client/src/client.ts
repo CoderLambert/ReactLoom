@@ -248,8 +248,11 @@ export function createApiClient(options: ApiClientOptions) {
         if (signal.aborted) throw toAbortError(signal)
 
         if (response.status === 401) {
-          options.onUnauthorized?.()
           const details = await readBody(response, true)
+          // A custom fetch adapter may finish the headers before the body.
+          // Do not invalidate a newer session if cancellation wins the body read.
+          if (signal.aborted) throw toAbortError(signal)
+          options.onUnauthorized?.()
           throw new ApiError(messageFromDetails(details, 'Sign in is required.'), 'unauthorized', {
             status: 401,
             details,
@@ -258,6 +261,7 @@ export function createApiClient(options: ApiClientOptions) {
 
         if (!response.ok) {
           const details = await readBody(response, true)
+          if (signal.aborted) throw toAbortError(signal)
           const error = new ApiError(
             messageFromDetails(details, `Request failed with status ${response.status}.`),
             'http',
@@ -281,6 +285,7 @@ export function createApiClient(options: ApiClientOptions) {
         }
 
         const payload = await readBody(response)
+        if (signal.aborted) throw toAbortError(signal)
         try {
           return schema.parse(payload)
         } catch (cause) {

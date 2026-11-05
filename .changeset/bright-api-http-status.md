@@ -11,3 +11,5 @@ Reject request URLs that resolve outside the configured API origin before readin
 Honor `Retry-After` HTTP dates for rate-limit responses and avoid negative retry delays; numeric values remain capped by the configured maximum.
 
 Discard successful or unauthorized responses from custom fetch adapters that settle after cancellation, preventing stale 401 callbacks from invalidating a newer session.
+
+Discard late HTTP error and success bodies when a request is cancelled during asynchronous body reading, so stale 401 responses cannot invalidate a newer session or return obsolete data.
