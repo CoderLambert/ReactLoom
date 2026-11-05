@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { type Session, sessionSchema } from '@/features/auth/schema'
-import { publishSessionLogout } from '@/features/auth/session-sync'
 import { isSessionExpired } from '@/features/auth/session-expiration'
+import { publishSessionLogout } from '@/features/auth/session-sync'
 
 const STORAGE_KEY = 'reactloom.session'
 const SESSION_ID_KEY = 'reactloom.session.id'
