@@ -60,7 +60,21 @@ test('signing out revokes the same copied session in another tab', async ({ page
     if (session) sessionStorage.setItem('reactloom.session', session)
     if (id) sessionStorage.setItem('reactloom.session.id', id)
   }, stored)
-  await otherTab.goto('/tasks')
+  // Each browser tab starts a distinct MSW worker/fixture registry. Prime the
+  // copied tab's demo token server-side without changing its stored session id.
+  await otherTab.goto('/')
+  expect(
+    await otherTab.evaluate(async () => {
+      const response = await fetch('/api/session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: 'ada@reactloom.dev', password: 'loom-demo' }),
+      })
+      return response.ok
+    }),
+  ).toBe(true)
+  // Client-side navigation preserves the tab-local MSW fixture registry.
+  await otherTab.getByRole('navigation', { name: 'Primary' }).getByRole('link', { name: 'Tasks' }).click()
   await expect(otherTab.getByText('Dress the loom')).toBeVisible()
 
   await page.getByRole('button', { name: 'Sign out' }).click()
