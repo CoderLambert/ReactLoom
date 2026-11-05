@@ -13,7 +13,10 @@ async function fixture() {
   const directory = path.join(root, 'generated')
   await mkdir(path.join(repoRoot, '.cursor', 'rules'), { recursive: true })
   await mkdir(directory)
-  await writeFile(path.join(repoRoot, '.cursor', 'rules', 'general.mdc'), 'See templates/mobile/app\n')
+  await writeFile(
+    path.join(repoRoot, '.cursor', 'rules', 'general.mdc'),
+    'See templates/mobile/app\n',
+  )
   await writeFile(path.join(repoRoot, 'CLAUDE.md'), 'Open templates/mobile/app\n')
   await writeFile(path.join(directory, 'AGENTS.md'), 'Use templates/mobile/app\n')
   return { root, repoRoot, directory }
@@ -31,7 +34,9 @@ function options(repoRoot: string, directory: string) {
 }
 
 afterEach(async () => {
-  await Promise.all(created.splice(0).map((directory) => rm(directory, { recursive: true, force: true })))
+  await Promise.all(
+    created.splice(0).map((directory) => rm(directory, { recursive: true, force: true })),
+  )
 })
 
 describe('AI configuration target collisions', () => {
