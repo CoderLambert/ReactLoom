@@ -33,6 +33,10 @@ export default function TasksPage() {
     queryFn: ({ signal }) =>
       getApi().request('/api/session', sessionSchema, { signal, retry: false }),
     staleTime: 0,
+    // An open foreground tab must not retain private data indefinitely when a
+    // cookie expires or is revoked outside this app (no BroadcastChannel event).
+    refetchInterval: 30_000,
+    refetchIntervalInBackground: false,
     refetchOnMount: 'always',
     refetchOnWindowFocus: 'always',
     refetchOnReconnect: 'always',
