@@ -74,7 +74,10 @@ test('signing out revokes the same copied session in another tab', async ({ page
     }),
   ).toBe(true)
   // Client-side navigation preserves the tab-local MSW fixture registry.
-  await otherTab.getByRole('navigation', { name: 'Primary' }).getByRole('link', { name: 'Tasks' }).click()
+  await otherTab
+    .getByRole('navigation', { name: 'Primary' })
+    .getByRole('link', { name: 'Tasks' })
+    .click()
   await expect(otherTab.getByText('Dress the loom')).toBeVisible()
 
   await page.getByRole('button', { name: 'Sign out' }).click()
