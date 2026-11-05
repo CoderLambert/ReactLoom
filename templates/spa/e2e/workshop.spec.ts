@@ -63,6 +63,8 @@ test('signing out revokes the same copied session in another tab', async ({ page
   // Each browser tab starts a distinct MSW worker/fixture registry. Prime the
   // copied tab's demo token server-side without changing its stored session id.
   await otherTab.goto('/')
+  // SPA rendering waits for worker.start(); do not race the mock registration.
+  await expect(otherTab.getByRole('heading', { level: 1 })).toBeVisible()
   expect(
     await otherTab.evaluate(async () => {
       const response = await fetch('/api/session', {
