@@ -39,3 +39,33 @@ test('expires a private task view on focus after a suspended tab resumes', async
   await expect(page.getByText('Dress the loom')).toHaveCount(0)
   expect(await page.evaluate(() => sessionStorage.getItem('reactloom.session'))).toBeNull()
 })
+
+test('signing out revokes the same copied session in another tab', async ({ page, context }) => {
+  await page.goto('/login')
+  await page.getByLabel('Email').fill('ada@reactloom.dev')
+  await page.getByLabel('Password').fill('loom-demo')
+  await page.getByRole('main').getByRole('button', { name: 'Sign in' }).click()
+  await expect(page.getByRole('heading', { name: 'Warp board' })).toBeVisible()
+
+  // Duplicated tabs receive an initial copy of sessionStorage, but later
+  // mutations are isolated; reproduce that browser behavior deterministically.
+  const stored = await page.evaluate(() => ({
+    session: sessionStorage.getItem('reactloom.session'),
+    id: sessionStorage.getItem('reactloom.session.id'),
+  }))
+  expect(stored.session).not.toBeNull()
+  expect(stored.id).not.toBeNull()
+  const otherTab = await context.newPage()
+  await otherTab.addInitScript(({ session, id }) => {
+    if (session) sessionStorage.setItem('reactloom.session', session)
+    if (id) sessionStorage.setItem('reactloom.session.id', id)
+  }, stored)
+  await otherTab.goto('/tasks')
+  await expect(otherTab.getByText('Dress the loom')).toBeVisible()
+
+  await page.getByRole('button', { name: 'Sign out' }).click()
+  await expect(otherTab.getByRole('heading', { name: 'Sign in' })).toBeVisible()
+  await expect(otherTab.getByText('Dress the loom')).toHaveCount(0)
+  expect(await otherTab.evaluate(() => sessionStorage.getItem('reactloom.session'))).toBeNull()
+  expect(await otherTab.evaluate(() => sessionStorage.getItem('reactloom.session.id'))).toBeNull()
+})

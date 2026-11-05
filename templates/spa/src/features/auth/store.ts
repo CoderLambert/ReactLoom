@@ -1,31 +1,48 @@
 import { create } from 'zustand'
 import { type Session, sessionSchema } from '@/features/auth/schema'
+import { publishSessionLogout } from '@/features/auth/session-sync'
 import { isSessionExpired } from '@/features/auth/session-expiration'
 
 const STORAGE_KEY = 'reactloom.session'
+const SESSION_ID_KEY = 'reactloom.session.id'
 
-function readSession(): Session | null {
+function newSessionId() {
+  const bytes = crypto.getRandomValues(new Uint8Array(16))
+  return Array.from(bytes, (byte) => byte.toString(16).padStart(2, '0')).join('')
+}
+
+type StoredSession = { session: Session | null; sessionId: string | null }
+
+function readSession(): StoredSession {
+  const empty = { session: null, sessionId: null }
   try {
-    if (typeof sessionStorage === 'undefined') return null
+    if (typeof sessionStorage === 'undefined') return empty
     const raw = sessionStorage.getItem(STORAGE_KEY)
-    if (!raw) return null
+    if (!raw) return empty
     const parsed = sessionSchema.parse(JSON.parse(raw))
     if (isSessionExpired(parsed.expiresAt)) {
       writeSession(null)
-      return null
+      return empty
     }
-    return parsed
+    const sessionId = sessionStorage.getItem(SESSION_ID_KEY) || newSessionId()
+    sessionStorage.setItem(SESSION_ID_KEY, sessionId)
+    return { session: parsed, sessionId }
   } catch {
     writeSession(null)
-    return null
+    return empty
   }
 }
 
-function writeSession(session: Session | null) {
+function writeSession(session: Session | null, sessionId: string | null = null) {
   try {
     if (typeof sessionStorage === 'undefined') return
-    if (!session) sessionStorage.removeItem(STORAGE_KEY)
-    else sessionStorage.setItem(STORAGE_KEY, JSON.stringify(session))
+    if (!session) {
+      sessionStorage.removeItem(STORAGE_KEY)
+      sessionStorage.removeItem(SESSION_ID_KEY)
+    } else {
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(session))
+      if (sessionId) sessionStorage.setItem(SESSION_ID_KEY, sessionId)
+    }
   } catch {
     // Storage can be denied or full; it must not prevent in-memory auth transitions.
   }
@@ -33,15 +50,19 @@ function writeSession(session: Session | null) {
 
 type AuthState = {
   session: Session | null
+  sessionId: string | null
   sessionVersion: number
   authOperation: number
   beginAuthOperation: () => number
   setSession: (session: Session) => void
-  clearSession: () => void
+  clearSession: (options?: { broadcast?: boolean }) => void
 }
 
+const restored = readSession()
+
 export const useAuthStore = create<AuthState>((set, get) => ({
-  session: readSession(),
+  session: restored.session,
+  sessionId: restored.sessionId,
   sessionVersion: 0,
   authOperation: 0,
   beginAuthOperation: () => {
@@ -49,12 +70,15 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     return get().authOperation
   },
   setSession: (session) => {
-    writeSession(session)
-    set((state) => ({ session, sessionVersion: state.sessionVersion + 1 }))
+    const sessionId = newSessionId()
+    writeSession(session, sessionId)
+    set((state) => ({ session, sessionId, sessionVersion: state.sessionVersion + 1 }))
   },
-  clearSession: () => {
+  clearSession: (options) => {
+    const sessionId = get().sessionId
     writeSession(null)
-    set((state) => ({ session: null, sessionVersion: state.sessionVersion + 1 }))
+    set((state) => ({ session: null, sessionId: null, sessionVersion: state.sessionVersion + 1 }))
+    if (sessionId && options?.broadcast !== false) publishSessionLogout(sessionId)
   },
 }))
 

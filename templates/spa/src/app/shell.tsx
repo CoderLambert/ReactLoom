@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { SkipLink } from '@/components/layout/skip-link'
 import { Button } from '@/components/ui/button'
 import { useLogout } from '@/features/auth/hooks'
+import { subscribeToSessionLogout } from '@/features/auth/session-sync'
 import { getActiveSession, useAuthStore } from '@/features/auth/store'
 import { useMatchMedia } from '@/hooks/use-match-media'
 import { i18n } from '@/lib/i18n'
@@ -22,6 +23,19 @@ export function Shell() {
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark')
   }, [theme])
+
+  // A duplicated tab can retain its own sessionStorage and Query cache after
+  // another tab signs out. Only revoke an exact session nonce, not a new login.
+  useEffect(
+    () =>
+      subscribeToSessionLogout((sessionId) => {
+        const current = useAuthStore.getState()
+        if (!current.session || current.sessionId !== sessionId) return
+        current.clearSession({ broadcast: false })
+        if (pathname === '/tasks') void navigate({ to: '/login' })
+      }),
+    [navigate, pathname],
+  )
 
   // A mounted protected route must not retain a private task screen indefinitely
   // after its token expires without another navigation or API request.
