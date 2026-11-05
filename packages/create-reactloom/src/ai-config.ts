@@ -91,7 +91,11 @@ function splitGlobs(value: string): string[] {
 }
 
 /** Do not let AI pointers or rules overwrite files supplied by a template. */
-async function writeNewAiFile(directory: string, relative: string, contents: string): Promise<void> {
+async function writeNewAiFile(
+  directory: string,
+  relative: string,
+  contents: string,
+): Promise<void> {
   const destination = path.join(directory, relative)
   await mkdir(path.dirname(destination), { recursive: true })
   try {
