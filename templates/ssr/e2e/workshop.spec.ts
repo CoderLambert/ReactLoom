@@ -61,3 +61,33 @@ test('revokes the cached view in another tab after sign-out', async ({ page, con
   await expect(page).toHaveURL(/\/login(?:\?.*)?$/)
   await expect(page.getByText('Dress the loom')).toHaveCount(0)
 })
+
+test('revalidates a foreground tab after its session cookie is revoked externally', async ({
+  page,
+  context,
+}) => {
+  // Install before navigation so TanStack Query's interval uses the test clock.
+  // The browser stays in the foreground: no focus/visibility event or channel message.
+  await page.clock.install()
+  await page.goto('/login')
+  await page.getByLabel('Email').fill('ada@reactloom.dev')
+  await page.getByLabel('Password').fill('loom-demo')
+  await page.getByRole('button', { name: 'Sign in' }).click()
+  await expect(page.getByRole('heading', { name: 'Warp board' })).toBeVisible()
+  await expect(page.getByText('Dress the loom')).toBeVisible()
+
+  // Simulates cookie expiry/revocation outside the template, not a UI sign-out.
+  await context.clearCookies()
+  await expect(page.getByText('Dress the loom')).toBeVisible()
+
+  const rejectedSession = page.waitForResponse(
+    (response) =>
+      new URL(response.url()).pathname === '/api/session' &&
+      response.request().method() === 'GET' &&
+      response.status() === 401,
+  )
+  await page.clock.fastForward(30_001)
+  await rejectedSession
+  await expect(page).toHaveURL(/\/login(?:\?.*)?$/)
+  await expect(page.getByText('Dress the loom')).toHaveCount(0)
+})
