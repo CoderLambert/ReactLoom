@@ -61,6 +61,20 @@ async function copyFiltered(source: string, destination: string): Promise<void> 
   await copySafeSource(source, destination, SKIP_DIRS)
 }
 
+/** A selected config or doc must not overwrite a file staged by the template. */
+async function assertManifestCopyTargetAvailable(
+  directory: string,
+  relative: string,
+): Promise<void> {
+  try {
+    await lstat(path.join(directory, relative))
+  } catch (error) {
+    if (error instanceof Error && 'code' in error && error.code === 'ENOENT') return
+    throw error
+  }
+  throw new Error(`template.json copy target already exists: ${relative}`)
+}
+
 /**
  * A manifest rename must never silently replace an existing scaffold file.
  * The destination is private to this new project; check the staged filesystem
@@ -96,6 +110,7 @@ async function copyRepoPath(repoRoot: string, relative: string, directory: strin
     throw error
   }
   const destination = path.join(directory, relative)
+  await assertManifestCopyTargetAvailable(directory, relative)
   await mkdir(path.dirname(destination), { recursive: true })
   await copyFiltered(source, destination)
 }
@@ -143,7 +158,7 @@ async function copySharedPackages(
   await writeFile(packagePath, `${JSON.stringify(pruned, null, 2)}\n`)
 }
 
-async function copyManifestFiles(
+export async function copyManifestFiles(
   repoRoot: string,
   directory: string,
   relativePaths: readonly string[],
@@ -165,6 +180,7 @@ async function copyManifestFiles(
         throw new Error(`Manifest path does not exist: ${relative}`)
       }
       const destination = path.join(directory, relative)
+      await assertManifestCopyTargetAvailable(directory, relative)
       await mkdir(path.dirname(destination), { recursive: true })
       await writeFile(destination, adaptBestPractices(contents, adapt.template, adapt.projectName))
       continue

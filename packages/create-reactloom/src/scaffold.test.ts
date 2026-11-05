@@ -12,7 +12,7 @@ import {
   resolveStartup,
   run,
 } from './cli.js'
-import { renameManifestFile, scaffold } from './scaffold.js'
+import { copyManifestFiles, renameManifestFile, scaffold } from './scaffold.js'
 import { findRepoRoot, readManifest, type TemplateId, templateIds } from './templates.js'
 
 const created: string[] = []
@@ -244,6 +244,51 @@ describe('create-reactloom', () => {
     )
     expect(await readFile(path.join(directory, 'config.txt'), 'utf8')).toBe('source')
     await expect(stat(path.join(directory, 'config'))).resolves.toBeTruthy()
+  })
+
+  it('rejects a manifest config that would replace a staged template file', async () => {
+    const root = await tempParent()
+    const directory = path.join(root, 'generated')
+    await mkdir(path.join(root, 'configs'))
+    await mkdir(path.join(directory, 'configs'), { recursive: true })
+    await writeFile(path.join(root, 'configs', 'tool.json'), 'root config')
+    await writeFile(path.join(directory, 'configs', 'tool.json'), 'template config')
+
+    await expect(copyManifestFiles(root, directory, ['configs/tool.json'])).rejects.toThrow(
+      /copy target already exists: configs\/tool.json/,
+    )
+    expect(await readFile(path.join(directory, 'configs', 'tool.json'), 'utf8')).toBe(
+      'template config',
+    )
+  })
+
+  it('rejects adapted documentation that would replace staged template content', async () => {
+    const root = await tempParent()
+    const relative = 'docs/best-practices/README.md'
+    const directory = path.join(root, 'generated')
+    await mkdir(path.join(root, 'docs', 'best-practices'), { recursive: true })
+    await mkdir(path.join(directory, 'docs', 'best-practices'), { recursive: true })
+    await writeFile(path.join(root, relative), 'Shared practice')
+    await writeFile(path.join(directory, relative), 'Template guidance')
+
+    await expect(
+      copyManifestFiles(root, directory, [relative], { template: 'mobile', projectName: 'app' }),
+    ).rejects.toThrow(/copy target already exists: docs\/best-practices\/README.md/)
+    expect(await readFile(path.join(directory, relative), 'utf8')).toBe('Template guidance')
+  })
+
+  it('continues copying manifest config files when the destination is absent', async () => {
+    const root = await tempParent()
+    const directory = path.join(root, 'generated')
+    await mkdir(path.join(root, 'configs'))
+    await mkdir(directory)
+    await writeFile(path.join(root, 'configs', 'tool.json'), 'root config')
+
+    await copyManifestFiles(root, directory, ['configs/tool.json'])
+
+    expect(await readFile(path.join(directory, 'configs', 'tool.json'), 'utf8')).toBe(
+      'root config',
+    )
   })
 
   it('rejects unsafe project names', async () => {
