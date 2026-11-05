@@ -9,3 +9,5 @@ Apply caller cancellation and per-attempt timeouts while awaiting asynchronous c
 Reject request URLs that resolve outside the configured API origin before reading credentials or issuing a fetch.
 
 Honor `Retry-After` HTTP dates for rate-limit responses and avoid negative retry delays; numeric values remain capped by the configured maximum.
+
+Discard successful or unauthorized responses from custom fetch adapters that settle after cancellation, preventing stale 401 callbacks from invalidating a newer session.
