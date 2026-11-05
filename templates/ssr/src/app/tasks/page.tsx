@@ -1,8 +1,9 @@
 'use client'
 
+import { isApiError } from '@reactloom/api-client'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import * as z from 'zod'
 import { getApi } from '@/lib/api'
 import { clearSessionCache } from '@/lib/session-cache'
@@ -17,8 +18,72 @@ const taskSchema = z.object({
 
 const listSchema = z.object({ tasks: z.array(taskSchema) })
 const logoutSchema = z.object({ ok: z.literal(true) })
+const sessionSchema = z.object({
+  user: z.object({ id: z.string(), email: z.string(), name: z.string() }),
+})
 
 export default function TasksPage() {
+  const queryClient = useQueryClient()
+  const router = useRouter()
+  const redirecting = useRef(false)
+  const session = useQuery({
+    queryKey: ['session'],
+    queryFn: ({ signal }) =>
+      getApi().request('/api/session', sessionSchema, { signal, retry: false }),
+    staleTime: 0,
+    refetchOnMount: 'always',
+    refetchOnWindowFocus: 'always',
+    refetchOnReconnect: 'always',
+    retry: false,
+  })
+
+  useEffect(() => {
+    if (
+      redirecting.current ||
+      !session.isError ||
+      !isApiError(session.error) ||
+      session.error.code !== 'unauthorized'
+    ) {
+      return
+    }
+    redirecting.current = true
+    void clearSessionCache(queryClient).then(() => {
+      router.replace('/login')
+      router.refresh()
+    })
+  }, [queryClient, router, session.error, session.isError])
+
+  // Keep an unsent draft mounted, but do not show cached private data while
+  // the httpOnly cookie is revalidated after a tab returns to the foreground.
+  const verified = session.isSuccess && !session.isFetching
+  return (
+    <>
+      {!verified ? (
+        session.isError ? (
+          <p role="alert">
+            {session.error instanceof Error
+              ? session.error.message
+              : 'The session could not be checked.'}{' '}
+            {isApiError(session.error) && session.error.code === 'unauthorized' ? null : (
+              <button type="button" onClick={() => void session.refetch()}>
+                Try again
+              </button>
+            )}
+          </p>
+        ) : (
+          <p role="status">Checking session…</p>
+        )
+      ) : null}
+      {session.data ? (
+        <div hidden={!verified}>
+          <AuthenticatedTasks key={session.data.user.id} userId={session.data.user.id} />
+        </div>
+      ) : null}
+    </>
+  )
+}
+
+function AuthenticatedTasks({ userId }: { userId: string }) {
   const queryClient = useQueryClient()
   const router = useRouter()
   const [title, setTitle] = useState('')
@@ -27,7 +92,7 @@ export default function TasksPage() {
   const draftRevision = useRef(0)
   const submitting = useRef(false)
   const tasks = useQuery({
-    queryKey: ['tasks'],
+    queryKey: ['tasks', userId],
     queryFn: ({ signal }) => getApi().request('/api/tasks', listSchema, { signal }),
   })
   const create = useMutation({
@@ -42,7 +107,7 @@ export default function TasksPage() {
     },
     onSettled: async () => {
       try {
-        await queryClient.invalidateQueries({ queryKey: ['tasks'] })
+        await queryClient.invalidateQueries({ queryKey: ['tasks', userId] })
       } finally {
         submitting.current = false
       }

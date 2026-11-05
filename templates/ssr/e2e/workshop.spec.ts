@@ -40,3 +40,30 @@ test('sign out removes the session cookie and blocks access to private tasks', a
   await expect(page).toHaveURL(/\/login(?:\?.*)?$/)
   await expect(page.getByText('Dress the loom')).toHaveCount(0)
 })
+
+test('revalidates a background tab after another tab signs out', async ({ page, context }) => {
+  await page.goto('/login')
+  await page.getByLabel('Email').fill('ada@reactloom.dev')
+  await page.getByLabel('Password').fill('loom-demo')
+  await page.getByRole('button', { name: 'Sign in' }).click()
+  await expect(page.getByRole('heading', { name: 'Warp board' })).toBeVisible()
+  await expect(page.getByText('Dress the loom')).toBeVisible()
+
+  const secondTab = await context.newPage()
+  await secondTab.goto('/tasks')
+  await expect(secondTab.getByRole('heading', { name: 'Warp board' })).toBeVisible()
+  await secondTab.getByRole('button', { name: 'Sign out' }).click()
+  await expect(secondTab).toHaveURL(/\/login(?:\?.*)?$/)
+
+  const invalidated = page.waitForResponse(
+    (response) =>
+      new URL(response.url()).pathname === '/api/session' &&
+      response.request().method() === 'GET' &&
+      response.status() === 401,
+  )
+  await page.bringToFront()
+  await invalidated
+
+  await expect(page).toHaveURL(/\/login(?:\?.*)?$/)
+  await expect(page.getByText('Dress the loom')).toHaveCount(0)
+})
