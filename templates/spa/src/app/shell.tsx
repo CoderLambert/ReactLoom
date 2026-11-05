@@ -32,6 +32,8 @@ export function Shell() {
     const checkExpiry = () => {
       // An old timer must not clear or redirect a replacement session.
       if (useAuthStore.getState().session !== session) return
+      // Foreground checks can run before a throttled background timer fires.
+      clearTimeout(timer)
       const remaining = session.expiresAt - Date.now()
       if (remaining <= 0) {
         getActiveSession()
@@ -41,9 +43,18 @@ export function Shell() {
       // Browser timers cannot represent delays beyond a signed 32-bit integer.
       timer = setTimeout(checkExpiry, Math.min(remaining, 2_147_483_647))
     }
+    const checkWhenVisible = () => {
+      if (document.visibilityState === 'visible') checkExpiry()
+    }
 
     checkExpiry()
-    return () => clearTimeout(timer)
+    window.addEventListener('focus', checkExpiry)
+    document.addEventListener('visibilitychange', checkWhenVisible)
+    return () => {
+      clearTimeout(timer)
+      window.removeEventListener('focus', checkExpiry)
+      document.removeEventListener('visibilitychange', checkWhenVisible)
+    }
   }, [session, pathname, navigate])
 
   return (

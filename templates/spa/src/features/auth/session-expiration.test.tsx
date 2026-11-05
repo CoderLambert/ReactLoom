@@ -101,6 +101,46 @@ describe('SPA session expiry boundary', () => {
     expect(client.getQueryData(taskKeys.list(version))).toBeUndefined()
   })
 
+  it('rechecks a backgrounded task view on focus before its throttled timer fires', async () => {
+    server.use(
+      http.get('*/api/tasks', () =>
+        HttpResponse.json({
+          tasks: [
+            {
+              id: 'resumed-private-task',
+              title: 'Resumed private task',
+              status: 'open',
+              createdAt: '2026-11-04T00:00:00.000Z',
+            },
+          ],
+        }),
+      ),
+    )
+    const now = Date.now()
+    const clock = vi.spyOn(Date, 'now').mockReturnValue(now)
+    useAuthStore.getState().setSession({ ...demoSession(), expiresAt: now + 3_600_000 })
+    const version = useAuthStore.getState().sessionVersion
+    const client = createAppQueryClient()
+    const router = createAppRouter(client, createMemoryHistory({ initialEntries: ['/tasks'] }))
+
+    render(
+      <Providers client={client}>
+        <RouterProvider router={router} />
+      </Providers>,
+    )
+    expect(await screen.findByText('Resumed private task')).toBeVisible()
+
+    // Simulate wall-clock time advancing while the scheduled timer is suspended.
+    clock.mockReturnValue(now + 3_600_001)
+    window.dispatchEvent(new Event('focus'))
+
+    expect(await screen.findByRole('heading', { name: 'Sign in' })).toBeVisible()
+    await waitFor(() => expect(screen.queryByText('Resumed private task')).not.toBeInTheDocument())
+    expect(useAuthStore.getState().session).toBeNull()
+    expect(sessionStorage.getItem(STORAGE_KEY)).toBeNull()
+    expect(client.getQueryData(taskKeys.list(version))).toBeUndefined()
+  })
+
   it('never attaches an expired bearer token to a task API request', async () => {
     let authorization: string | null | undefined
     server.use(
