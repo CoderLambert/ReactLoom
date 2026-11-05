@@ -23,9 +23,11 @@ test('@E05 real JSON language worker validates edits across stop and remount', a
   await expect(status).toContainText(/[1-9][0-9]* 个 Monaco 诊断标记/u, {
     timeout: 20_000,
   })
-  await expect.poll(() => page.workers().some((worker) => /json\.worker/iu.test(worker.url())), {
-    timeout: 20_000,
-  }).toBe(true)
+  await expect
+    .poll(() => page.workers().some((worker) => /json\.worker/iu.test(worker.url())), {
+      timeout: 20_000,
+    })
+    .toBe(true)
 
   await editor.click()
   await page.keyboard.press('ControlOrMeta+A')
