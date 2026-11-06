@@ -73,7 +73,9 @@ export default function TasksPage() {
 
   // Keep an unsent draft mounted, but hide private data during verification
   // or as soon as another same-origin tab reports a successful sign-out.
-  const verified = !revoked && session.isSuccess && !session.isFetching
+  // A successful cached session is not verified while an offline refresh is
+  // paused: isFetching is false in TanStack Query's 'paused' fetchStatus.
+  const verified = !revoked && session.isSuccess && session.fetchStatus === 'idle'
   return (
     <>
       {!verified ? (
