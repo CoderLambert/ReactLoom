@@ -91,3 +91,33 @@ test('revalidates a foreground tab after its session cookie is revoked externall
   await expect(page).toHaveURL(/\/login(?:\?.*)?$/)
   await expect(page.getByText('Dress the loom')).toHaveCount(0)
 })
+
+test('keeps sign-in and sign-out usable when session BroadcastChannel is denied', async ({
+  page,
+  context,
+}) => {
+  // Some restricted browser contexts expose BroadcastChannel but reject
+  // construction. Only the template session channel is blocked in this test.
+  await page.addInitScript(() => {
+    const NativeChannel = window.BroadcastChannel
+    window.BroadcastChannel = class extends NativeChannel {
+      constructor(name: string) {
+        if (name === 'reactloom-session') {
+          throw new DOMException('Session messaging is denied', 'SecurityError')
+        }
+        super(name)
+      }
+    }
+  })
+
+  await page.goto('/login')
+  await page.getByLabel('Email').fill('ada@reactloom.dev')
+  await page.getByLabel('Password').fill('loom-demo')
+  await page.getByRole('button', { name: 'Sign in' }).click()
+  await expect(page.getByRole('heading', { name: 'Warp board' })).toBeVisible()
+  await expect(page.getByText('Dress the loom')).toBeVisible()
+
+  await page.getByRole('button', { name: 'Sign out' }).click()
+  await expect(page).toHaveURL(/\/login(?:\?.*)?$/)
+  expect((await context.cookies()).some((cookie) => cookie.name === 'rl_session')).toBe(false)
+})
