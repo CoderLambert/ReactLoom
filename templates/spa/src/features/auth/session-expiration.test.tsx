@@ -177,8 +177,14 @@ describe('SPA session expiry boundary', () => {
 
     expect(await screen.findByRole('button', { name: 'Sign out' })).toBeVisible()
 
+    // Replacing the login must revoke other tabs that retained the old nonce.
+    const observer = new TestLogoutChannel('reactloom.session-logout')
+    const broadcasts: unknown[] = []
+    observer.onmessage = ({ data }) => broadcasts.push(data)
+
     // A newer sign-in must not be revoked by an earlier tab's delayed message.
     act(() => useAuthStore.getState().setSession(demoSession()))
+    expect(broadcasts).toContainEqual({ type: 'logout', sessionId: previousId })
     const replacement = useAuthStore.getState().session
     const replacementId = useAuthStore.getState().sessionId
     expect(replacementId).not.toBe(previousId)
@@ -193,6 +199,7 @@ describe('SPA session expiry boundary', () => {
     await waitFor(() => expect(useAuthStore.getState().session).toBeNull())
     expect(sessionStorage.getItem(STORAGE_KEY)).toBeNull()
     sender.close()
+    observer.close()
   })
 
   it('never attaches an expired bearer token to a task API request', async () => {

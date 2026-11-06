@@ -70,9 +70,13 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     return get().authOperation
   },
   setSession: (session) => {
+    const previousSessionId = get().sessionId
     const sessionId = newSessionId()
     writeSession(session, sessionId)
     set((state) => ({ session, sessionId, sessionVersion: state.sessionVersion + 1 }))
+    // Switching accounts revokes copied tabs bound to the previous session.
+    // Publish after the new nonce is active so this tab cannot revoke itself.
+    if (previousSessionId) publishSessionLogout(previousSessionId)
   },
   clearSession: (options) => {
     const sessionId = get().sessionId
