@@ -15,3 +15,5 @@ Discard successful or unauthorized responses from custom fetch adapters that set
 Discard late HTTP error and success bodies when a request is cancelled during asynchronous body reading, so stale 401 responses cannot invalidate a newer session or return obsolete data.
 
 Settle caller cancellations and per-attempt timeouts even when a custom fetch adapter or response body reader never resolves its promise; ignore late adapter outcomes.
+
+Caller cancellation now settles retry backoff even when a custom sleep function ignores the supplied AbortSignal and remains pending; late sleep outcomes cannot start a retry.

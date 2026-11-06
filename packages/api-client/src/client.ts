@@ -223,6 +223,18 @@ export function createApiClient(options: ApiClientOptions) {
       globalThis.fetch(input, init))
   const logger = options.logger ?? noopLogger
   const sleep = options.sleep ?? defaultSleep
+  // A custom retry scheduler may ignore AbortSignal and never resolve.
+  // Race its promise so caller cancellation still settles request().
+  function waitForRetry(ms: number, signal: AbortSignal): Promise<void> {
+    return awaitWithAbort(
+      Promise.resolve().then(() => {
+        if (signal.aborted) throw toAbortError(signal)
+        return sleep(ms, signal)
+      }),
+      signal,
+    )
+  }
+
   const policy: RetryPolicy = {
     attempts: options.retry?.attempts ?? 3,
     baseDelayMs: options.retry?.baseDelayMs ?? 200,
@@ -244,6 +256,7 @@ export function createApiClient(options: ApiClientOptions) {
             ? policy.attempts
             : 1
 
+    const retrySignal = init.signal ?? new AbortController().signal
     let lastError: ApiError | undefined
     for (let attempt = 0; attempt < attempts; attempt += 1) {
       const timeoutSignal = AbortSignal.timeout(init.timeoutMs ?? options.defaultTimeoutMs ?? 8_000)
@@ -307,10 +320,7 @@ export function createApiClient(options: ApiClientOptions) {
               status: response.status,
               attempt,
             })
-            await sleep(
-              delayFor(attempt, policy, response),
-              init.signal ?? new AbortController().signal,
-            )
+            await waitForRetry(delayFor(attempt, policy, response), retrySignal)
             lastError = error
             continue
           }
@@ -337,7 +347,7 @@ export function createApiClient(options: ApiClientOptions) {
             code: normalized.code,
             attempt,
           })
-          await sleep(delayFor(attempt, policy), init.signal ?? new AbortController().signal)
+          await waitForRetry(delayFor(attempt, policy), retrySignal)
           lastError = normalized
           continue
         }

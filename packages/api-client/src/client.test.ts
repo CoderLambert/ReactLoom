@@ -324,6 +324,45 @@ describe('createApiClient', () => {
     }
   })
 
+  it.each(['http', 'network'] as const)(
+    'cancels non-cooperative retry backoff after %s failure',
+    async (kind) => {
+      const controller = new AbortController()
+      const sleepStarted = deferred<void>()
+      const releaseSleep = deferred<void>()
+      const sleep = vi.fn((_ms: number, _signal: AbortSignal) => {
+        sleepStarted.resolve()
+        return releaseSleep.promise
+      })
+      const fetchFn = vi.fn(async () => {
+        if (kind === 'network') throw new Error('offline')
+        return jsonResponse({ message: 'temporarily unavailable' }, 503)
+      })
+      const client = createApiClient({ baseUrl: 'https://api.test', fetchFn, sleep })
+      const pending = client.request('/items', schema, { signal: controller.signal }).then(
+        () => 'success',
+        (error: unknown) => (isApiError(error) ? error.code : 'unexpected'),
+      )
+
+      await sleepStarted.promise
+      controller.abort()
+      try {
+        expect(
+          await Promise.race([
+            pending,
+            new Promise<string>((resolve) => setImmediate(() => resolve('pending'))),
+          ]),
+        ).toBe('aborted')
+        expect(fetchFn).toHaveBeenCalledOnce()
+      } finally {
+        releaseSleep.resolve()
+        await pending
+      }
+      expect(sleep).toHaveBeenCalledOnce()
+      expect(sleep).toHaveBeenCalledWith(expect.any(Number), controller.signal)
+    },
+  )
+
   it('cancels when the caller aborts', async () => {
     const controller = new AbortController()
     const fetchFn = vi.fn((_input: string | Request | URL, init?: RequestInit) => {
