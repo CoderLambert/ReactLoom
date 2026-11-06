@@ -22,8 +22,7 @@ export function parseRecordArgs(args) {
       !result.entries
     )
       result.entries = arg.slice(10).split(',')
-    else if (/^--kind=(sdk|build|browser)$/u.test(arg) && !result.kind)
-      result.kind = arg.slice(7)
+    else if (/^--kind=(sdk|build|browser)$/u.test(arg) && !result.kind) result.kind = arg.slice(7)
     else throw new Error('Usage: --entry=D03 --kind=sdk|build|browser [--execute]')
   }
   if (
