@@ -116,6 +116,32 @@ function readAccessToken(
   })
 }
 
+function awaitWithAbort<T>(promise: Promise<T>, signal: AbortSignal): Promise<T> {
+  return new Promise((resolve, reject) => {
+    const onAbort = () => {
+      signal.removeEventListener('abort', onAbort)
+      reject(toAbortError(signal))
+    }
+    if (signal.aborted) onAbort()
+    else signal.addEventListener('abort', onAbort, { once: true })
+
+    // Observe late adapter settlements without waiting for them after abort.
+    // Native fetch and custom adapters need the same cancellation contract.
+    promise.then(
+      (value) => {
+        signal.removeEventListener('abort', onAbort)
+        if (signal.aborted) reject(toAbortError(signal))
+        else resolve(value)
+      },
+      (error: unknown) => {
+        signal.removeEventListener('abort', onAbort)
+        if (signal.aborted) reject(toAbortError(signal))
+        else reject(error)
+      },
+    )
+  })
+}
+
 function isTimeoutReason(reason: unknown): boolean {
   return reason instanceof Error && (reason.name === 'TimeoutError' || reason.name === 'AbortError')
     ? reason.name === 'TimeoutError'
@@ -160,9 +186,13 @@ function delayFor(attempt: number, policy: RetryPolicy, response?: Response): nu
   return Math.round(exp * (0.5 + Math.random() * 0.5))
 }
 
-async function readBody(response: Response, allowPlainText = false): Promise<unknown> {
+async function readBody(
+  response: Response,
+  signal: AbortSignal,
+  allowPlainText = false,
+): Promise<unknown> {
   if (response.status === 204) return null
-  const text = await response.text()
+  const text = await awaitWithAbort(response.text(), signal)
   if (!text) return null
   try {
     return JSON.parse(text) as unknown
@@ -235,20 +265,23 @@ export function createApiClient(options: ApiClientOptions) {
         }
         if (token) headers.set('authorization', `Bearer ${token}`)
 
-        const response = await fetchFn(url, {
-          method,
-          headers,
-          body: init.body === undefined ? undefined : JSON.stringify(init.body),
+        const response = await awaitWithAbort(
+          fetchFn(url, {
+            method,
+            headers,
+            body: init.body === undefined ? undefined : JSON.stringify(init.body),
+            signal,
+            credentials: options.credentials ?? 'same-origin',
+          }),
           signal,
-          credentials: options.credentials ?? 'same-origin',
-        })
+        )
 
         // Custom fetch adapters may settle after cancellation. Never let a stale
         // response trigger onUnauthorized or resolve as a successful request.
         if (signal.aborted) throw toAbortError(signal)
 
         if (response.status === 401) {
-          const details = await readBody(response, true)
+          const details = await readBody(response, signal, true)
           // A custom fetch adapter may finish the headers before the body.
           // Do not invalidate a newer session if cancellation wins the body read.
           if (signal.aborted) throw toAbortError(signal)
@@ -260,7 +293,7 @@ export function createApiClient(options: ApiClientOptions) {
         }
 
         if (!response.ok) {
-          const details = await readBody(response, true)
+          const details = await readBody(response, signal, true)
           if (signal.aborted) throw toAbortError(signal)
           const error = new ApiError(
             messageFromDetails(details, `Request failed with status ${response.status}.`),
@@ -284,7 +317,7 @@ export function createApiClient(options: ApiClientOptions) {
           throw error
         }
 
-        const payload = await readBody(response)
+        const payload = await readBody(response, signal)
         if (signal.aborted) throw toAbortError(signal)
         try {
           return schema.parse(payload)
