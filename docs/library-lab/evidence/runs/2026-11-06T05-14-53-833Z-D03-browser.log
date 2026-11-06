@@ -1,0 +1,10 @@
+$ pnpm exec playwright test --grep @D03\b
+
+Running 3 tests using 1 worker
+
+  ✓  1 e2e/library.spec.ts:41:1 › @D03 p-limit can complete and cancel batches (3.7s)
+  ✓  2 e2e/p0-risk-lifecycle.spec.ts:84:1 › @D03 real p-limit demo unmounts and restarts with fresh batch state (1.6s)
+  ✓  3 e2e/p0-risk-lifecycle.spec.ts:95:1 › @D03 active cancellation settles the queued batch before restart (1.7s)
+
+  3 passed (8.7s)
+
