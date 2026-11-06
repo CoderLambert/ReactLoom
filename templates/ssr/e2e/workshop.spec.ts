@@ -122,10 +122,7 @@ test('keeps sign-in and sign-out usable when session BroadcastChannel is denied'
   expect((await context.cookies()).some((cookie) => cookie.name === 'rl_session')).toBe(false)
 })
 
-test('hides cached tasks while an offline session refresh is paused', async ({
-  page,
-  context,
-}) => {
+test('hides cached tasks while an offline session refresh is paused', async ({ page, context }) => {
   // Drive the foreground session timer without waiting 30 seconds in real time.
   await page.clock.install()
   await page.goto('/login')
