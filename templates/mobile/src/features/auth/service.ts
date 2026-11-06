@@ -3,7 +3,7 @@ import { demoLogin, type LoginInput, type Session, sessionSchema } from '@/featu
 import { env } from '@/lib/env'
 import { readToken } from '@/lib/token-store'
 
-export async function signIn(input: LoginInput): Promise<Session> {
+export async function signIn(input: LoginInput, signal?: AbortSignal): Promise<Session> {
   if (env.EXPO_PUBLIC_USE_FIXTURES === 'true') {
     if (input.email !== demoLogin.email || input.password !== demoLogin.password) {
       throw new Error('Those credentials were not recognized.')
@@ -24,6 +24,7 @@ export async function signIn(input: LoginInput): Promise<Session> {
     method: 'POST',
     body: input,
     retry: false,
+    signal,
   })
   return session
 }

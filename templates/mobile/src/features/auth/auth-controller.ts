@@ -4,7 +4,7 @@ import { type LoginInput, type Session, sessionSchema } from './schema'
 type AuthDependencies = {
   readSession: () => Promise<Session | null>
   writeSession: (session: Session | null) => Promise<void>
-  requestSignIn: (input: LoginInput) => Promise<Session>
+  requestSignIn: (input: LoginInput, signal: AbortSignal) => Promise<Session>
   dispatch: (event: AuthEvent) => void
   subscribeToForeground: (listener: () => void) => () => void
 }
@@ -25,9 +25,15 @@ export function createAuthController({
   let committedSession: Session | null = null
   let writes = Promise.resolve()
   let expiryTimer: ReturnType<typeof setTimeout> | undefined
+  let pendingLogin: AbortController | undefined
   let unsubscribe: (() => void) | undefined
   const current = (operation: number) => active && operation === generation
   const expired = (session: Session) => session.expiresAt <= Date.now()
+
+  function cancelPendingLogin() {
+    pendingLogin?.abort()
+    pendingLogin = undefined
+  }
 
   function clearExpiry() {
     if (expiryTimer !== undefined) clearTimeout(expiryTimer)
@@ -93,6 +99,7 @@ export function createAuthController({
   async function signOut() {
     if (!active) return
     const operation = ++generation
+    cancelPendingLogin()
     initialized = true
     committedSession = null
     clearExpiry()
@@ -134,6 +141,7 @@ export function createAuthController({
     stop() {
       active = false
       generation += 1
+      cancelPendingLogin()
       clearExpiry()
       unsubscribe?.()
       unsubscribe = undefined
@@ -141,11 +149,24 @@ export function createAuthController({
     async signIn(input: LoginInput) {
       if (!active) return
       const operation = ++generation
+      cancelPendingLogin()
+      const controller = new AbortController()
+      pendingLogin = controller
       if (!initialized) {
         initialized = true
         dispatch({ type: 'signed-out' })
       }
-      const response = await requestSignIn(input)
+      let response: Session
+      try {
+        response = await requestSignIn(input, controller.signal)
+      } catch (error) {
+        // Cancellation from logout, replacement login, or unmount is not a
+        // failure of the current sign-in attempt.
+        if (!current(operation)) return
+        throw error
+      } finally {
+        if (pendingLogin === controller) pendingLogin = undefined
+      }
       if (!current(operation)) return
       const session = sessionSchema.parse(response)
       if (expired(session)) throw new Error('Session has expired. Please sign in again.')

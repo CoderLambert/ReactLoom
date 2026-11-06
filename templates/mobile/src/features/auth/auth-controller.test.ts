@@ -354,6 +354,73 @@ describe('auth controller', () => {
     expect(app.state()).toEqual({ status: 'authenticated', session: newerSession })
   })
 
+  it('aborts an in-flight login on sign-out and ignores its obsolete rejection', async () => {
+    let aborted = false
+    const app = setup({
+      requestSignIn: (_input, signal) =>
+        new Promise<Session>((_resolve, reject) => {
+          signal.addEventListener(
+            'abort',
+            () => {
+              aborted = true
+              reject(new Error('Request aborted'))
+            },
+            { once: true },
+          )
+        }),
+    })
+    await app.controller.start()
+    const pending = app.controller.signIn(input)
+    await app.controller.signOut()
+    await expect(pending).resolves.toBeUndefined()
+    expect(aborted).toBe(true)
+    expect(app.state()).toEqual({ status: 'anonymous' })
+    expect(app.storage.session).toBeNull()
+  })
+
+  it('aborts a superseded login without losing the newer session', async () => {
+    let calls = 0
+    let firstSignal: AbortSignal | undefined
+    const app = setup({
+      requestSignIn: (_input, signal) => {
+        if (++calls === 2) return Promise.resolve(newerSession)
+        firstSignal = signal
+        return new Promise<Session>((_resolve, reject) => {
+          signal.addEventListener('abort', () => reject(new Error('Request aborted')), {
+            once: true,
+          })
+        })
+      },
+    })
+    await app.controller.start()
+    const previous = app.controller.signIn(input)
+    const latest = app.controller.signIn(input)
+    await Promise.all([previous, latest])
+    expect(firstSignal?.aborted).toBe(true)
+    expect(app.storage.session).toEqual(newerSession)
+    expect(app.state()).toEqual({ status: 'authenticated', session: newerSession })
+  })
+
+  it('aborts a pending login when the auth provider is stopped', async () => {
+    let signal: AbortSignal | undefined
+    const app = setup({
+      requestSignIn: (_input, requestSignal) => {
+        signal = requestSignal
+        return new Promise<Session>((_resolve, reject) => {
+          requestSignal.addEventListener('abort', () => reject(new Error('Request aborted')), {
+            once: true,
+          })
+        })
+      },
+    })
+    await app.controller.start()
+    const pending = app.controller.signIn(input)
+    app.controller.stop()
+    await expect(pending).resolves.toBeUndefined()
+    expect(signal?.aborted).toBe(true)
+    expect(app.storage.session).toBeNull()
+  })
+
   it('commits only the latest login when responses arrive out of order', async () => {
     const first = deferred<Session>()
     const second = deferred<Session>()
