@@ -88,3 +88,74 @@ test('signing out revokes the same copied session in another tab', async ({ page
   expect(await otherTab.evaluate(() => sessionStorage.getItem('reactloom.session'))).toBeNull()
   expect(await otherTab.evaluate(() => sessionStorage.getItem('reactloom.session.id'))).toBeNull()
 })
+
+test('replacing a session revokes copied tabs but preserves the replacement', async ({
+  page,
+  context,
+}) => {
+  await page.goto('/login')
+  await page.getByLabel('Email').fill('ada@reactloom.dev')
+  await page.getByLabel('Password').fill('loom-demo')
+  await page.getByRole('main').getByRole('button', { name: 'Sign in' }).click()
+  await expect(page.getByRole('heading', { name: 'Warp board' })).toBeVisible()
+
+  const original = await page.evaluate(() => ({
+    session: sessionStorage.getItem('reactloom.session'),
+    id: sessionStorage.getItem('reactloom.session.id'),
+  }))
+  expect(original.session).not.toBeNull()
+  expect(original.id).not.toBeNull()
+
+  const copiedTab = await context.newPage()
+  await copiedTab.addInitScript(({ session, id }) => {
+    if (session) sessionStorage.setItem('reactloom.session', session)
+    if (id) sessionStorage.setItem('reactloom.session.id', id)
+  }, original)
+  await copiedTab.goto('/')
+  await expect(copiedTab.getByRole('heading', { level: 1 })).toBeVisible()
+
+  // The demo MSW worker has a separate token registry for each tab. Prime
+  // the copied tab without changing its sessionStorage nonce.
+  expect(
+    await copiedTab.evaluate(async () => {
+      const response = await fetch('/api/session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: 'ada@reactloom.dev', password: 'loom-demo' }),
+      })
+      return response.ok
+    }),
+  ).toBe(true)
+  await copiedTab
+    .getByRole('navigation', { name: 'Primary' })
+    .getByRole('link', { name: 'Tasks' })
+    .click()
+  await expect(copiedTab.getByText('Dress the loom')).toBeVisible()
+
+  // /login remains public for an authenticated tab; signing in again rotates
+  // this tab's nonce, which must revoke only tabs holding the previous nonce.
+  await page.goto('/login')
+  await page.getByLabel('Email').fill('ada@reactloom.dev')
+  await page.getByLabel('Password').fill('loom-demo')
+  await page.getByRole('main').getByRole('button', { name: 'Sign in' }).click()
+  await expect(page.getByRole('heading', { name: 'Warp board' })).toBeVisible()
+
+  const replacement = await page.evaluate(() => ({
+    session: sessionStorage.getItem('reactloom.session'),
+    id: sessionStorage.getItem('reactloom.session.id'),
+  }))
+  expect(replacement.session).not.toBeNull()
+  expect(replacement.id).not.toBeNull()
+  expect(replacement.id).not.toBe(original.id)
+
+  await expect(copiedTab.getByRole('heading', { name: 'Sign in' })).toBeVisible()
+  await expect(copiedTab.getByText('Dress the loom')).toHaveCount(0)
+  expect(await copiedTab.evaluate(() => sessionStorage.getItem('reactloom.session'))).toBeNull()
+  expect(await copiedTab.evaluate(() => sessionStorage.getItem('reactloom.session.id'))).toBeNull()
+
+  // A delayed old-session revocation must not log out the replacement tab.
+  await expect(page.getByText('Dress the loom')).toBeVisible()
+  expect(await page.evaluate(() => sessionStorage.getItem('reactloom.session.id'))).toBe(
+    replacement.id,
+  )
+})
