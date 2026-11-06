@@ -40,7 +40,9 @@ describe('sign-in credential isolation', () => {
     await expect(signIn(input, controller.signal)).resolves.toEqual(session)
 
     expect(fetchMock).toHaveBeenCalledTimes(1)
-    const [url, request] = fetchMock.mock.calls[0]
+    const call = fetchMock.mock.calls[0]
+    if (!call) throw new Error('Expected a sign-in fetch call')
+    const [url, request] = call
     expect(url).toBe('https://api.example.test/api/session')
     expect(request?.method).toBe('POST')
     expect(request?.body).toBe(JSON.stringify(input))
