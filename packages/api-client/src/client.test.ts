@@ -222,6 +222,110 @@ describe('createApiClient', () => {
     },
   )
 
+  it('settles immediately on cancellation when a custom fetch never resolves', async () => {
+    const controller = new AbortController()
+    const started = deferred<void>()
+    const lateResponse = deferred<Response>()
+    const onUnauthorized = vi.fn()
+    const fetchFn = vi.fn(() => {
+      started.resolve()
+      return lateResponse.promise
+    })
+    const client = createApiClient({ baseUrl: 'https://api.test', fetchFn, onUnauthorized })
+    const pending = client.request('/items', schema, { signal: controller.signal }).then(
+      () => 'success',
+      (error: unknown) => (isApiError(error) ? error.code : 'unexpected'),
+    )
+
+    await started.promise
+    controller.abort()
+    try {
+      expect(
+        await Promise.race([
+          pending,
+          new Promise<string>((resolve) => setImmediate(() => resolve('pending'))),
+        ]),
+      ).toBe('aborted')
+      expect(onUnauthorized).not.toHaveBeenCalled()
+    } finally {
+      lateResponse.resolve(jsonResponse({ message: 'expired' }, 401))
+      await pending
+    }
+    expect(fetchFn).toHaveBeenCalledOnce()
+    expect(onUnauthorized).not.toHaveBeenCalled()
+  })
+
+  it.each([401, 200])(
+    'settles immediately on cancellation while a %i response body remains pending',
+    async (status) => {
+      const controller = new AbortController()
+      const started = deferred<void>()
+      const lateBody = deferred<string>()
+      const onUnauthorized = vi.fn()
+      const parse = vi.fn(schema.parse)
+      const response = jsonResponse(status === 401 ? { message: 'expired' } : { ok: true }, status)
+      vi.spyOn(response, 'text').mockImplementation(() => {
+        started.resolve()
+        return lateBody.promise
+      })
+      const fetchFn = vi.fn(async () => response)
+      const client = createApiClient({ baseUrl: 'https://api.test', fetchFn, onUnauthorized })
+      const pending = client
+        .request('/items', { parse }, { signal: controller.signal })
+        .then(
+          () => 'success',
+          (error: unknown) => (isApiError(error) ? error.code : 'unexpected'),
+        )
+
+      await started.promise
+      controller.abort()
+      try {
+        expect(
+          await Promise.race([
+            pending,
+            new Promise<string>((resolve) => setImmediate(() => resolve('pending'))),
+          ]),
+        ).toBe('aborted')
+        expect(onUnauthorized).not.toHaveBeenCalled()
+        expect(parse).not.toHaveBeenCalled()
+      } finally {
+        lateBody.resolve(JSON.stringify(status === 401 ? { message: 'expired' } : { ok: true }))
+        await pending
+      }
+    },
+  )
+
+  it('times out while a custom response body remains pending', async () => {
+    const started = deferred<void>()
+    const lateBody = deferred<string>()
+    const response = jsonResponse({ ok: true })
+    vi.spyOn(response, 'text').mockImplementation(() => {
+      started.resolve()
+      return lateBody.promise
+    })
+    const client = createApiClient({
+      baseUrl: 'https://api.test',
+      fetchFn: vi.fn(async () => response),
+    })
+    const pending = client.request('/items', schema, { retry: false, timeoutMs: 200 }).then(
+      () => 'success',
+      (error: unknown) => (isApiError(error) ? error.code : 'unexpected'),
+    )
+
+    try {
+      await started.promise
+      expect(
+        await Promise.race([
+          pending,
+          new Promise<string>((resolve) => setTimeout(() => resolve('pending'), 2_000)),
+        ]),
+      ).toBe('timeout')
+    } finally {
+      lateBody.resolve(JSON.stringify({ ok: true }))
+      await pending
+    }
+  })
+
   it('cancels when the caller aborts', async () => {
     const controller = new AbortController()
     const fetchFn = vi.fn((_input: string | Request | URL, init?: RequestInit) => {
