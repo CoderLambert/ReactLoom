@@ -7,13 +7,13 @@ const request = vi.hoisted(() => vi.fn())
 vi.mock('@reactloom/api-client', () => ({
   createApiClient: () => ({ request }),
 }))
-vi.mock('@/lib/env', () => ({
+vi.mock('../../lib/env', () => ({
   env: {
     EXPO_PUBLIC_USE_FIXTURES: 'false',
     EXPO_PUBLIC_API_BASE_URL: 'https://api.example.test',
   },
 }))
-vi.mock('@/lib/token-store', () => ({ readToken: async () => null }))
+vi.mock('../../lib/token-store', () => ({ readToken: async () => null }))
 
 describe('HTTP sign-in', () => {
   it('forwards the caller cancellation signal and disables retries for POST', async () => {

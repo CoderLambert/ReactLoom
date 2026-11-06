@@ -1,7 +1,7 @@
 import { createApiClient } from '@reactloom/api-client'
-import { demoLogin, type LoginInput, type Session, sessionSchema } from '@/features/auth/schema'
-import { env } from '@/lib/env'
-import { readToken } from '@/lib/token-store'
+import { demoLogin, type LoginInput, type Session, sessionSchema } from './schema'
+import { env } from '../../lib/env'
+import { readToken } from '../../lib/token-store'
 
 export async function signIn(input: LoginInput, signal?: AbortSignal): Promise<Session> {
   if (env.EXPO_PUBLIC_USE_FIXTURES === 'true') {
