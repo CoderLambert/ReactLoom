@@ -44,3 +44,20 @@ test('receipt CLI plans by default, rejects shell and arbitrary target arguments
   ])
     assert.throws(() => parseRecordArgs(args))
 })
+
+test('P0 build receipt batch plans one build and rejects unsafe selections', async () => {
+  const options = parseRecordArgs(['--entries=A01,B17,C01,D03,E05,F11', '--kind=build'])
+  assert.deepEqual(await recordVerification(options), {
+    mode: 'plan',
+    command: ['pnpm', 'build'],
+  })
+  for (const args of [
+    ['--entries=A01,A01', '--kind=build'],
+    ['--entries=A01,B17', '--kind=sdk'],
+    ['--entries=A01,B17', '--kind=browser'],
+    ['--entries=A01,B17', '--entry=C01', '--kind=build'],
+    ['--entries=A01,../B17', '--kind=build'],
+    ['--entries=A01,B17,C01,D03,E05,F11,D01', '--kind=build'],
+  ])
+    assert.throws(() => parseRecordArgs(args))
+})

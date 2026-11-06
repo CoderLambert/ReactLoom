@@ -101,7 +101,11 @@ jobs:
         id: build
         run: |
           pnpm --filter @reactloom/library-lab typecheck
-          pnpm --filter @reactloom/library-lab build
+          if [ "$GITHUB_EVENT_NAME" = "pull_request" ] && [ "$GITHUB_BASE_REF" = "feat/library-lab" ]; then
+            (cd packages/library-lab && node scripts/record-verification.mjs --entries=A01,B17,C01,D03,E05,F11 --kind=build --execute)
+          else
+            pnpm --filter @reactloom/library-lab build
+          fi
       - name: Selected real SDK suites (never policy substitutes)
         id: sdk
         working-directory: packages/library-lab
