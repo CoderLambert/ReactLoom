@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { readToken } from '../../lib/token-store'
-import { type Session } from './schema'
+import type { Session } from './schema'
 import { signIn } from './service'
 
 vi.mock('../../lib/env', () => ({
@@ -27,11 +27,12 @@ describe('sign-in credential isolation', () => {
       expiresAt: 4_000_000_000_000,
       user: { id: 'ada', name: 'Ada', email: input.email },
     }
-    const fetchMock = vi.fn(async (_url: unknown, _init?: RequestInit) =>
-      new Response(JSON.stringify(session), {
-        status: 200,
-        headers: { 'content-type': 'application/json' },
-      }),
+    const fetchMock = vi.fn(
+      async (_url: unknown, _init?: RequestInit) =>
+        new Response(JSON.stringify(session), {
+          status: 200,
+          headers: { 'content-type': 'application/json' },
+        }),
     )
     vi.stubGlobal('fetch', fetchMock)
 
