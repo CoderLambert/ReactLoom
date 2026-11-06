@@ -121,3 +121,30 @@ test('keeps sign-in and sign-out usable when session BroadcastChannel is denied'
   await expect(page).toHaveURL(/\/login(?:\?.*)?$/)
   expect((await context.cookies()).some((cookie) => cookie.name === 'rl_session')).toBe(false)
 })
+
+test('hides cached tasks while an offline session refresh is paused', async ({
+  page,
+  context,
+}) => {
+  // Drive the foreground session timer without waiting 30 seconds in real time.
+  await page.clock.install()
+  await page.goto('/login')
+  await page.getByLabel('Email').fill('ada@reactloom.dev')
+  await page.getByLabel('Password').fill('loom-demo')
+  await page.getByRole('button', { name: 'Sign in' }).click()
+  await expect(page.getByRole('heading', { name: 'Warp board' })).toBeVisible()
+  await expect(page.getByText('Dress the loom')).toBeVisible()
+
+  // TanStack Query preserves successful data during an offline refetch, but
+  // switches fetchStatus to 'paused' (isFetching is false). Hide private UI
+  // until the cookie can be verified again.
+  await context.setOffline(true)
+  await page.clock.fastForward(30_001)
+  await expect(page.getByText('Checking session…')).toBeVisible()
+  await expect(page.getByText('Dress the loom')).toBeHidden()
+
+  // A successful server revalidation restores the same draft and task view.
+  await context.setOffline(false)
+  await expect(page.getByRole('heading', { name: 'Warp board' })).toBeVisible()
+  await expect(page.getByText('Dress the loom')).toBeVisible()
+})
