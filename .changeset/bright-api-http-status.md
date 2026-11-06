@@ -13,3 +13,5 @@ Honor `Retry-After` HTTP dates for rate-limit responses and avoid negative retry
 Discard successful or unauthorized responses from custom fetch adapters that settle after cancellation, preventing stale 401 callbacks from invalidating a newer session.
 
 Discard late HTTP error and success bodies when a request is cancelled during asynchronous body reading, so stale 401 responses cannot invalidate a newer session or return obsolete data.
+
+Settle caller cancellations and per-attempt timeouts even when a custom fetch adapter or response body reader never resolves its promise; ignore late adapter outcomes.
