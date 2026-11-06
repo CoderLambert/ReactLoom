@@ -270,12 +270,10 @@ describe('createApiClient', () => {
       })
       const fetchFn = vi.fn(async () => response)
       const client = createApiClient({ baseUrl: 'https://api.test', fetchFn, onUnauthorized })
-      const pending = client
-        .request('/items', { parse }, { signal: controller.signal })
-        .then(
-          () => 'success',
-          (error: unknown) => (isApiError(error) ? error.code : 'unexpected'),
-        )
+      const pending = client.request('/items', { parse }, { signal: controller.signal }).then(
+        () => 'success',
+        (error: unknown) => (isApiError(error) ? error.code : 'unexpected'),
+      )
 
       await started.promise
       controller.abort()
