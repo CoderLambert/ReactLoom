@@ -139,7 +139,6 @@ export async function recordVerification(options) {
   return options.entries
     ? { entries: results }
     : { entryId: entryIds[0], [options.kind]: results[entryIds[0]] }
-
 }
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   try {
