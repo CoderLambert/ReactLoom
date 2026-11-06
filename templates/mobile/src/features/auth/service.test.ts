@@ -13,7 +13,6 @@ vi.mock('../../lib/env', () => ({
     EXPO_PUBLIC_API_BASE_URL: 'https://api.example.test',
   },
 }))
-vi.mock('../../lib/token-store', () => ({ readToken: async () => null }))
 
 describe('HTTP sign-in', () => {
   it('forwards the caller cancellation signal and disables retries for POST', async () => {
