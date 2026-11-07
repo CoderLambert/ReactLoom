@@ -223,6 +223,14 @@ export function createApiClient(options: ApiClientOptions) {
       globalThis.fetch(input, init))
   const logger = options.logger ?? noopLogger
   const sleep = options.sleep ?? defaultSleep
+  // Diagnostic hooks must not change retries or replace the original API error.
+  function warnRetry(message: string, extra: Record<string, unknown>): void {
+    try {
+      logger.warn(message, extra)
+    } catch {
+      // Application-provided loggers are best-effort observers.
+    }
+  }
   // A custom retry scheduler may ignore AbortSignal and never resolve.
   // Race its promise so caller cancellation still settles request().
   function waitForRetry(ms: number, signal: AbortSignal): Promise<void> {
@@ -324,7 +332,7 @@ export function createApiClient(options: ApiClientOptions) {
             { status: response.status, details },
           )
           if (attempt < attempts - 1 && shouldRetry(error)) {
-            logger.warn('Retrying failed request', {
+            warnRetry('Retrying failed request', {
               path,
               method,
               status: response.status,
@@ -351,7 +359,7 @@ export function createApiClient(options: ApiClientOptions) {
       } catch (error) {
         const normalized = normalizeTransportError(error, signal)
         if (attempt < attempts - 1 && shouldRetry(normalized)) {
-          logger.warn('Retrying transport failure', {
+          warnRetry('Retrying transport failure', {
             path,
             method,
             code: normalized.code,

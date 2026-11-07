@@ -188,6 +188,32 @@ describe('createApiClient', () => {
     },
   )
 
+  it.each(['http', 'network'] as const)(
+    'retries %s failures even when the diagnostic logger throws',
+    async (kind) => {
+      const warn = vi.fn(() => {
+        throw new Error('logging backend unavailable')
+      })
+      const fetchFn = vi.fn<typeof fetch>()
+      if (kind === 'http') {
+        fetchFn.mockResolvedValueOnce(jsonResponse({ message: 'busy' }, 503))
+      } else {
+        fetchFn.mockRejectedValueOnce(new TypeError('offline'))
+      }
+      fetchFn.mockResolvedValueOnce(jsonResponse({ ok: true }))
+      const client = createApiClient({
+        baseUrl: 'https://api.test',
+        fetchFn,
+        logger: { debug: vi.fn(), warn },
+        sleep: async () => undefined,
+      })
+
+      await expect(client.request('/items', schema)).resolves.toEqual({ ok: true })
+      expect(fetchFn).toHaveBeenCalledTimes(2)
+      expect(warn).toHaveBeenCalledOnce()
+    },
+  )
+
   it('still classifies malformed JSON on success as validation', async () => {
     const fetchFn = vi.fn(async () => new Response('not-json', { status: 200 }))
     const client = createApiClient({ baseUrl: 'http://api.test', fetchFn })

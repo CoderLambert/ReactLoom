@@ -19,3 +19,5 @@ Settle caller cancellations and per-attempt timeouts even when a custom fetch ad
 Caller cancellation now settles retry backoff even when a custom sleep function ignores the supplied AbortSignal and remains pending; late sleep outcomes cannot start a retry.
 
 Preserve the original 401 unauthorized result without retries if the application unauthorized callback or its logger throws.
+
+Throwing application retry loggers no longer suppress HTTP or network retries or replace original API errors; HTTP 503 and transport-failure paths have dedicated regression tests.
