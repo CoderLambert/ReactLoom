@@ -62,6 +62,43 @@ test('revokes the cached view in another tab after sign-out', async ({ page, con
   await expect(page.getByText('Dress the loom')).toHaveCount(0)
 })
 
+
+test('rechecks a delayed sign-out event instead of revoking a newer cookie session', async ({
+  page,
+  context,
+}) => {
+  await page.goto('/login')
+  await page.getByLabel('Email').fill('ada@reactloom.dev')
+  await page.getByLabel('Password').fill('loom-demo')
+  await page.getByRole('button', { name: 'Sign in' }).click()
+  await expect(page.getByRole('heading', { name: 'Warp board' })).toBeVisible()
+
+  await page.getByRole('button', { name: 'Sign out' }).click()
+  await expect(page).toHaveURL(/\/login(?:\?.*)?$/)
+  await page.getByLabel('Email').fill('ada@reactloom.dev')
+  await page.getByLabel('Password').fill('loom-demo')
+  await page.getByRole('button', { name: 'Sign in' }).click()
+  await expect(page.getByText('Dress the loom')).toBeVisible()
+  expect((await context.cookies()).some((cookie) => cookie.name === 'rl_session')).toBe(true)
+
+  // Simulate delivery of an old tab's queued sign-out after a replacement
+  // login has already established an authorized cookie.
+  const recheckedSession = page.waitForResponse(
+    (response) =>
+      new URL(response.url()).pathname === '/api/session' &&
+      response.request().method() === 'GET' &&
+      response.status() === 200,
+  )
+  await page.evaluate(() => {
+    const channel = new BroadcastChannel('reactloom-session')
+    channel.postMessage('signed-out')
+    channel.close()
+  })
+  await recheckedSession
+  await expect(page).toHaveURL(/\/tasks(?:\?.*)?$/)
+  await expect(page.getByText('Dress the loom')).toBeVisible()
+})
+
 test('revalidates a foreground tab after its session cookie is revoked externally', async ({
   page,
   context,

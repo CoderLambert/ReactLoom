@@ -28,6 +28,7 @@ export default function TasksPage() {
   const router = useRouter()
   const redirecting = useRef(false)
   const [revoked, setRevoked] = useState(false)
+  const [checkingSessionEvent, setCheckingSessionEvent] = useState(false)
   const session = useQuery({
     queryKey: ['session'],
     queryFn: ({ signal }) =>
@@ -59,23 +60,35 @@ export default function TasksPage() {
     }
   }, [revokeSession, session.error, session.isError])
 
-  useEffect(
-    () =>
-      subscribeSessionEvents((event) => {
-        if (event === 'signed-out') {
+  useEffect(() => {
+    let active = true
+    let generation = 0
+    const unsubscribe = subscribeSessionEvents(() => {
+      // BroadcastChannel messages can arrive after a newer sign-in has replaced
+      // the cookie. Neither event is proof of the current server session.
+      const current = ++generation
+      setCheckingSessionEvent(true)
+      void session.refetch({ cancelRefetch: true }).then((result) => {
+        if (!active || current !== generation) return
+        if (result.isError && isApiError(result.error) && result.error.code === 'unauthorized') {
           revokeSession()
         } else {
-          void queryClient.invalidateQueries({ queryKey: ['session'] })
+          setCheckingSessionEvent(false)
         }
-      }),
-    [queryClient, revokeSession],
-  )
+      })
+    })
+    return () => {
+      active = false
+      unsubscribe()
+    }
+  }, [revokeSession, session.refetch])
 
   // Keep an unsent draft mounted, but hide private data during verification
   // or as soon as another same-origin tab reports a successful sign-out.
   // A successful cached session is not verified while an offline refresh is
   // paused: isFetching is false in TanStack Query's 'paused' fetchStatus.
-  const verified = !revoked && session.isSuccess && session.fetchStatus === 'idle'
+  const verified =
+    !revoked && !checkingSessionEvent && session.isSuccess && session.fetchStatus === 'idle'
   return (
     <>
       {!verified ? (
