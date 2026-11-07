@@ -17,3 +17,5 @@ Discard late HTTP error and success bodies when a request is cancelled during as
 Settle caller cancellations and per-attempt timeouts even when a custom fetch adapter or response body reader never resolves its promise; ignore late adapter outcomes.
 
 Caller cancellation now settles retry backoff even when a custom sleep function ignores the supplied AbortSignal and remains pending; late sleep outcomes cannot start a retry.
+
+Preserve the original 401 unauthorized result without retries if the application unauthorized callback or its logger throws.

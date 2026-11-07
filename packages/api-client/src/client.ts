@@ -298,7 +298,17 @@ export function createApiClient(options: ApiClientOptions) {
           // A custom fetch adapter may finish the headers before the body.
           // Do not invalidate a newer session if cancellation wins the body read.
           if (signal.aborted) throw toAbortError(signal)
-          options.onUnauthorized?.()
+          try {
+            options.onUnauthorized?.()
+          } catch {
+            // A broken application callback must not turn a 401 into a retryable
+            // network error or override the original HTTP status.
+            try {
+              logger.warn('Unauthorized handler failed')
+            } catch {
+              // Diagnostic logging is best-effort and must not mask a 401.
+            }
+          }
           throw new ApiError(messageFromDetails(details, 'Sign in is required.'), 'unauthorized', {
             status: 401,
             details,

@@ -158,6 +158,36 @@ describe('createApiClient', () => {
     expect(fetchFn).toHaveBeenCalledOnce()
   })
 
+  it.each([false, true])(
+    'preserves HTTP 401 when the unauthorized callback throws (logger throws: %s)',
+    async (loggerThrows) => {
+      const onUnauthorized = vi.fn(() => {
+        throw new Error('UI callback failed')
+      })
+      const warn = vi.fn(() => {
+        if (loggerThrows) throw new Error('Logger failed')
+      })
+      const fetchFn = vi.fn(async () => jsonResponse({ message: 'expired' }, 401))
+      const client = createApiClient({
+        baseUrl: 'https://api.test',
+        fetchFn,
+        onUnauthorized,
+        logger: { debug: vi.fn(), warn },
+        sleep: async () => undefined,
+      })
+
+      await expect(client.request('/me', schema)).rejects.toMatchObject({
+        code: 'unauthorized',
+        status: 401,
+        message: 'expired',
+      })
+      expect(fetchFn).toHaveBeenCalledOnce()
+      expect(onUnauthorized).toHaveBeenCalledOnce()
+      expect(warn).toHaveBeenCalledOnce()
+      expect(warn).toHaveBeenCalledWith('Unauthorized handler failed')
+    },
+  )
+
   it('still classifies malformed JSON on success as validation', async () => {
     const fetchFn = vi.fn(async () => new Response('not-json', { status: 200 }))
     const client = createApiClient({ baseUrl: 'http://api.test', fetchFn })
