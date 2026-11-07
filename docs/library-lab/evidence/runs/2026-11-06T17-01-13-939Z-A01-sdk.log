@@ -1,0 +1,19 @@
+$ node scripts/sdk-runner.mjs --entry=A01
+Real SDK suites selected: 1 file(s)
+TAP version 13
+# Subtest: A01 real ECharts SVG renderer creates, updates and disposes an instance
+ok 1 - A01 real ECharts SVG renderer creates, updates and disposes an instance
+  ---
+  duration_ms: 34.417847
+  type: 'test'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 466.754562
+

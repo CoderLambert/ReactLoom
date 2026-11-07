@@ -13,10 +13,10 @@
   },
   "browser": {
     "status": "PASS",
-    "sourceFingerprint": "35b0986e9bf419d5a2182e8a4c6fb8108d19575374f99c4227f5fcc9e7110cbd",
+    "sourceFingerprint": "f0eae2dbf2f952f8f5a77ce1aa4f2a0299aa2740dc012186b213b59852cff7ea",
     "command": "pnpm exec playwright test --grep @E05\\b",
-    "evidence": "docs/library-lab/evidence/runs/2026-11-05T17-02-09-536Z-E05-browser.json",
-    "evidenceSha256": "002afc760e3669bdf25b0e80d57b5edd733b59a9c3ded24ada0931e52d46fb96"
+    "evidence": "docs/library-lab/evidence/runs/2026-11-06T17-01-44-426Z-E05-browser.json",
+    "evidenceSha256": "63ea80b25f77f6d121525c73a7bde8b1aa1ec4522c0d8f0ef97951a0d8eb4618"
   },
   "isolation": {
     "status": "BLOCKED",

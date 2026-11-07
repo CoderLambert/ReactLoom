@@ -5,10 +5,10 @@
   },
   "sdk": {
     "status": "PASS",
-    "sourceFingerprint": "046062d817bc5b4213b8b12527d365b1a01310a5bda50c2b4726fd69e00d858c",
+    "sourceFingerprint": "841ae6e9b1898e45144e15b2fe7e1412eeeaab5b458fae6b13ae5a26acf3ec8c",
     "command": "node scripts/sdk-runner.mjs --entry=B17",
-    "evidence": "docs/library-lab/evidence/runs/2026-11-05T17-01-36-984Z-B17-sdk.json",
-    "evidenceSha256": "d57727485006c98af1955b4ddffc294cd8f8d3aeba4bdfb7a76eafff70b0d850"
+    "evidence": "docs/library-lab/evidence/runs/2026-11-06T17-01-14-764Z-B17-sdk.json",
+    "evidenceSha256": "af426415ea3b14c8ebf3866426aafbdcb4f3396fa0937ffa73d38bd66a1bc74a"
   },
   "build": {
     "status": "NOT_RUN",
@@ -16,9 +16,9 @@
   },
   "browser": {
     "status": "PASS",
-    "sourceFingerprint": "046062d817bc5b4213b8b12527d365b1a01310a5bda50c2b4726fd69e00d858c",
+    "sourceFingerprint": "841ae6e9b1898e45144e15b2fe7e1412eeeaab5b458fae6b13ae5a26acf3ec8c",
     "command": "pnpm exec playwright test --grep @B17\\b",
-    "evidence": "docs/library-lab/evidence/runs/2026-11-05T17-01-49-497Z-B17-browser.json",
-    "evidenceSha256": "5a45a1fb9b19896aabb332c1f4b1cc5b628d60ab36e2514881b62e3954890378"
+    "evidence": "docs/library-lab/evidence/runs/2026-11-06T17-01-25-586Z-B17-browser.json",
+    "evidenceSha256": "7a4310d6e676909958514c25943feacd449ec081f4e176f7693a05379da22a8c"
   }
 }
