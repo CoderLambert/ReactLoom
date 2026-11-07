@@ -159,3 +159,63 @@ test('replacing a session revokes copied tabs but preserves the replacement', as
     replacement.id,
   )
 })
+
+test('revokes copied private tasks when the session BroadcastChannel is blocked', async ({
+  page,
+  context,
+}) => {
+  // Keep MSW's own BroadcastChannel available while simulating a browser
+  // that refuses the application's cross-tab session channel.
+  await context.addInitScript(() => {
+    const NativeChannel = window.BroadcastChannel
+    window.BroadcastChannel = class extends NativeChannel {
+      constructor(name: string) {
+        if (name === 'reactloom.session-logout') throw new Error('channel blocked')
+        super(name)
+      }
+    }
+  })
+
+  await page.goto('/login')
+  await page.getByLabel('Email').fill('ada@reactloom.dev')
+  await page.getByLabel('Password').fill('loom-demo')
+  await page.getByRole('main').getByRole('button', { name: 'Sign in' }).click()
+  await expect(page.getByText('Dress the loom')).toBeVisible()
+
+  const stored = await page.evaluate(() => ({
+    session: sessionStorage.getItem('reactloom.session'),
+    id: sessionStorage.getItem('reactloom.session.id'),
+  }))
+  expect(stored.session).not.toBeNull()
+  expect(stored.id).not.toBeNull()
+
+  const copied = await context.newPage()
+  await copied.addInitScript(({ session, id }) => {
+    if (session) sessionStorage.setItem('reactloom.session', session)
+    if (id) sessionStorage.setItem('reactloom.session.id', id)
+  }, stored)
+  await copied.goto('/')
+  await expect(copied.getByRole('heading', { level: 1 })).toBeVisible()
+  expect(
+    await copied.evaluate(async () => {
+      const response = await fetch('/api/session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: 'ada@reactloom.dev', password: 'loom-demo' }),
+      })
+      return response.ok
+    }),
+  ).toBe(true)
+  await copied
+    .getByRole('navigation', { name: 'Primary' })
+    .getByRole('link', { name: 'Tasks' })
+    .click()
+  await expect(copied.getByText('Dress the loom')).toBeVisible()
+
+  await page.getByRole('button', { name: 'Sign out' }).click()
+  await expect(copied.getByRole('heading', { name: 'Sign in' })).toBeVisible()
+  await expect(copied.getByText('Dress the loom')).toHaveCount(0)
+  expect(await copied.evaluate(() => sessionStorage.getItem('reactloom.session'))).toBeNull()
+  expect(await copied.evaluate(() => sessionStorage.getItem('reactloom.session.id'))).toBeNull()
+  expect(await page.evaluate(() => localStorage.getItem('reactloom.session-logout-event'))).toBeNull()
+})
