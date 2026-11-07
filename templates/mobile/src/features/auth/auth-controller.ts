@@ -12,6 +12,30 @@ type AuthDependencies = {
 // Native and browser timers overflow delays beyond this signed 32-bit bound.
 const MAX_EXPIRY_DELAY = 2_147_483_647
 
+// Even if a platform transport ignores AbortSignal, cancelling a superseded login
+// must settle the caller; observe the transport's eventual outcome without committing it.
+function awaitSignInOrAbort(request: Promise<Session>, signal: AbortSignal): Promise<Session> {
+  return new Promise<Session>((resolve, reject) => {
+    const onAbort = () => {
+      signal.removeEventListener('abort', onAbort)
+      reject(new Error('Sign-in request was cancelled.'))
+    }
+    signal.addEventListener('abort', onAbort, { once: true })
+    if (signal.aborted) onAbort()
+    void request.then(
+      (session) => {
+        signal.removeEventListener('abort', onAbort)
+        resolve(session)
+      },
+      (error) => {
+        signal.removeEventListener('abort', onAbort)
+        reject(error)
+      },
+    )
+  })
+}
+
+
 export function createAuthController({
   readSession,
   writeSession,
@@ -158,7 +182,7 @@ export function createAuthController({
       }
       let response: Session
       try {
-        response = await requestSignIn(input, controller.signal)
+        response = await awaitSignInOrAbort(requestSignIn(input, controller.signal), controller.signal)
       } catch (error) {
         // Cancellation from logout, replacement login, or unmount is not a
         // failure of the current sign-in attempt.
