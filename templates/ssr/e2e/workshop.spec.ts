@@ -181,3 +181,44 @@ test('hides cached tasks while an offline session refresh is paused', async ({ p
   await expect(page.getByRole('heading', { name: 'Warp board' })).toBeVisible()
   await expect(page.getByText('Dress the loom')).toBeVisible()
 })
+
+test('revokes a second tab via storage when session BroadcastChannel is denied', async ({
+  page,
+  context,
+}) => {
+  // Block only this template's channel, not other libraries' channels.
+  await context.addInitScript(() => {
+    const NativeChannel = window.BroadcastChannel
+    window.BroadcastChannel = class extends NativeChannel {
+      constructor(name: string) {
+        if (name === 'reactloom-session') {
+          throw new DOMException('Session messaging is denied', 'SecurityError')
+        }
+        super(name)
+      }
+    }
+  })
+
+  await page.goto('/login')
+  await page.getByLabel('Email').fill('ada@reactloom.dev')
+  await page.getByLabel('Password').fill('loom-demo')
+  await page.getByRole('button', { name: 'Sign in' }).click()
+  await expect(page.getByText('Dress the loom')).toBeVisible()
+
+  const secondTab = await context.newPage()
+  await secondTab.goto('/tasks')
+  await expect(secondTab.getByText('Dress the loom')).toBeVisible()
+
+  // A 401 on the original (background) tab proves immediate storage
+  // notification, not a focus event or the 30-second polling fallback.
+  const revokedSession = page.waitForResponse(
+    (response) =>
+      new URL(response.url()).pathname === '/api/session' &&
+      response.request().method() === 'GET' &&
+      response.status() === 401,
+  )
+  await secondTab.getByRole('button', { name: 'Sign out' }).click()
+  await revokedSession
+  await expect(page).toHaveURL(/\/login(?:\?.*)?$/)
+  await expect(page.getByText('Dress the loom')).toHaveCount(0)
+})
