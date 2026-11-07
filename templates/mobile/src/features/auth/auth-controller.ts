@@ -181,7 +181,10 @@ export function createAuthController({
       }
       let response: Session
       try {
-        response = await awaitSignInOrAbort(requestSignIn(input, controller.signal), controller.signal)
+        response = await awaitSignInOrAbort(
+          requestSignIn(input, controller.signal),
+          controller.signal,
+        )
       } catch (error) {
         // Cancellation from logout, replacement login, or unmount is not a
         // failure of the current sign-in attempt.
