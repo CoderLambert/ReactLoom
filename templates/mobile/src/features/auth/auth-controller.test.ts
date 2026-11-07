@@ -378,6 +378,55 @@ describe('auth controller', () => {
     expect(app.storage.session).toBeNull()
   })
 
+  it('settles logout even when a sign-in transport ignores its abort signal', async () => {
+    const stalled = deferred<Session>()
+    let loginSignal: AbortSignal | undefined
+    const app = setup({
+      requestSignIn: (_input, signal) => {
+        loginSignal = signal
+        return stalled.promise
+      },
+    })
+    await app.controller.start()
+    const pending = app.controller.signIn(input)
+    await app.controller.signOut()
+
+    // The underlying promise has not resolved or rejected. The caller must
+    // nonetheless finish, and a late rejection must not resurrect the session.
+    await expect(pending).resolves.toBeUndefined()
+    expect(loginSignal?.aborted).toBe(true)
+    stalled.reject(new Error('Late transport failure'))
+    await Promise.resolve()
+    expect(app.state()).toEqual({ status: 'anonymous' })
+    expect(app.storage.session).toBeNull()
+  })
+
+  it('settles the superseded sign-in before its transport completes', async () => {
+    const stalled = deferred<Session>()
+    let requests = 0
+    let oldSignal: AbortSignal | undefined
+    const app = setup({
+      requestSignIn: (_input, signal) => {
+        if (++requests === 1) {
+          oldSignal = signal
+          return stalled.promise
+        }
+        return Promise.resolve(newerSession)
+      },
+    })
+    await app.controller.start()
+    const previous = app.controller.signIn(input)
+    const current = app.controller.signIn(input)
+
+    await expect(previous).resolves.toBeUndefined()
+    await current
+    expect(oldSignal?.aborted).toBe(true)
+    expect(app.storage.session).toEqual(newerSession)
+    stalled.resolve(session)
+    await Promise.resolve()
+    expect(app.state()).toEqual({ status: 'authenticated', session: newerSession })
+  })
+
   it('aborts a superseded login without losing the newer session', async () => {
     let calls = 0
     let firstSignal: AbortSignal | undefined
