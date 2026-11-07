@@ -217,5 +217,7 @@ test('revokes copied private tasks when the session BroadcastChannel is blocked'
   await expect(copied.getByText('Dress the loom')).toHaveCount(0)
   expect(await copied.evaluate(() => sessionStorage.getItem('reactloom.session'))).toBeNull()
   expect(await copied.evaluate(() => sessionStorage.getItem('reactloom.session.id'))).toBeNull()
-  expect(await page.evaluate(() => localStorage.getItem('reactloom.session-logout-event'))).toBeNull()
+  expect(
+    await page.evaluate(() => localStorage.getItem('reactloom.session-logout-event')),
+  ).toBeNull()
 })
