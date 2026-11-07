@@ -35,7 +35,6 @@ function awaitSignInOrAbort(request: Promise<Session>, signal: AbortSignal): Pro
   })
 }
 
-
 export function createAuthController({
   readSession,
   writeSession,
