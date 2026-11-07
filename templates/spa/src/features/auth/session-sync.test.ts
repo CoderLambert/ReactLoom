@@ -1,6 +1,8 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { publishSessionLogout, subscribeToSessionLogout } from '@/features/auth/session-sync'
 
+const STORAGE_EVENT_KEY = 'reactloom.session-logout-event'
+
 class FakeBroadcastChannel {
   static channels = new Set<FakeBroadcastChannel>()
   static sent: unknown[] = []
@@ -23,7 +25,9 @@ class FakeBroadcastChannel {
 }
 
 afterEach(() => {
+  vi.restoreAllMocks()
   vi.unstubAllGlobals()
+  localStorage.clear()
   FakeBroadcastChannel.channels.clear()
   FakeBroadcastChannel.sent = []
 })
@@ -56,5 +60,66 @@ describe('cross-tab SPA session revocation', () => {
     vi.stubGlobal('BroadcastChannel', undefined)
     expect(() => publishSessionLogout('nonce-123')).not.toThrow()
     expect(() => subscribeToSessionLogout(() => undefined)()).not.toThrow()
+  })
+
+  it('uses a transient nonce-only storage event when BroadcastChannel is missing', () => {
+    vi.stubGlobal('BroadcastChannel', undefined)
+    const setItem = vi.spyOn(Storage.prototype, 'setItem')
+    const removeItem = vi.spyOn(Storage.prototype, 'removeItem')
+
+    publishSessionLogout('previous-session-nonce')
+    expect(setItem).toHaveBeenCalledWith(STORAGE_EVENT_KEY, 'previous-session-nonce')
+    expect(removeItem).toHaveBeenCalledWith(STORAGE_EVENT_KEY)
+    expect(localStorage.getItem(STORAGE_EVENT_KEY)).toBeNull()
+  })
+
+  it('accepts storage revocations from other tabs and removes its listener on unmount', () => {
+    vi.stubGlobal('BroadcastChannel', undefined)
+    const onLogout = vi.fn()
+    const unsubscribe = subscribeToSessionLogout(onLogout)
+    const send = (key: string, sessionId: string | null) => {
+      window.dispatchEvent(
+        new StorageEvent('storage', {
+          key,
+          newValue: sessionId,
+          storageArea: localStorage,
+        }),
+      )
+    }
+
+    send('unrelated-key', 'old')
+    send(STORAGE_EVENT_KEY, null)
+    expect(onLogout).not.toHaveBeenCalled()
+
+    send(STORAGE_EVENT_KEY, 'copied-session-nonce')
+    expect(onLogout).toHaveBeenCalledWith('copied-session-nonce')
+    expect(onLogout).toHaveBeenCalledTimes(1)
+
+    unsubscribe()
+    send(STORAGE_EVENT_KEY, 'later-session')
+    expect(onLogout).toHaveBeenCalledTimes(1)
+  })
+
+  it('keeps the storage fallback active if BroadcastChannel construction throws', () => {
+    class DisabledBroadcastChannel {
+      constructor() {
+        throw new Error('BroadcastChannel disabled')
+      }
+    }
+    vi.stubGlobal('BroadcastChannel', DisabledBroadcastChannel)
+    const onLogout = vi.fn()
+    const unsubscribe = subscribeToSessionLogout(onLogout)
+    expect(() => publishSessionLogout('active-nonce')).not.toThrow()
+    expect(localStorage.getItem(STORAGE_EVENT_KEY)).toBeNull()
+
+    window.dispatchEvent(
+      new StorageEvent('storage', {
+        key: STORAGE_EVENT_KEY,
+        newValue: 'active-nonce',
+        storageArea: localStorage,
+      }),
+    )
+    expect(onLogout).toHaveBeenCalledWith('active-nonce')
+    unsubscribe()
   })
 })
