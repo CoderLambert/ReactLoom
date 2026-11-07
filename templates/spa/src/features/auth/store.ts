@@ -24,8 +24,13 @@ function readSession(): StoredSession {
       writeSession(null)
       return empty
     }
-    const sessionId = sessionStorage.getItem(SESSION_ID_KEY) || newSessionId()
-    sessionStorage.setItem(SESSION_ID_KEY, sessionId)
+    const sessionId = sessionStorage.getItem(SESSION_ID_KEY)
+    if (!sessionId) {
+      // Legacy sessions have no shared revocation nonce. Generating one per tab
+      // would make copied tabs impossible to revoke when another tab signs out.
+      writeSession(null)
+      return empty
+    }
     return { session: parsed, sessionId }
   } catch {
     writeSession(null)

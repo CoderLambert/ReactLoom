@@ -40,6 +40,26 @@ test('expires a private task view on focus after a suspended tab resumes', async
   expect(await page.evaluate(() => sessionStorage.getItem('reactloom.session'))).toBeNull()
 })
 
+test('rejects legacy session storage without a revocation nonce after reload', async ({ page }) => {
+  await page.goto('/login')
+  await page.getByLabel('Email').fill('ada@reactloom.dev')
+  await page.getByLabel('Password').fill('loom-demo')
+  await page.getByRole('main').getByRole('button', { name: 'Sign in' }).click()
+  await expect(page.getByRole('heading', { name: 'Warp board' })).toBeVisible()
+
+  const legacySession = await page.evaluate(() => {
+    sessionStorage.removeItem('reactloom.session.id')
+    return sessionStorage.getItem('reactloom.session')
+  })
+  expect(legacySession).not.toBeNull()
+  await page.reload()
+
+  await expect(page.getByRole('heading', { name: 'Sign in' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Warp board' })).toHaveCount(0)
+  expect(await page.evaluate(() => sessionStorage.getItem('reactloom.session'))).toBeNull()
+  expect(await page.evaluate(() => sessionStorage.getItem('reactloom.session.id'))).toBeNull()
+})
+
 test('signing out revokes the same copied session in another tab', async ({ page, context }) => {
   await page.goto('/login')
   await page.getByLabel('Email').fill('ada@reactloom.dev')
