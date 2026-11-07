@@ -3,7 +3,7 @@ import { QueryClient } from '@tanstack/react-query'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import type {} from 'vitest/node'
 import { createTaskQueryScope } from './query-scope'
-import { createTaskRepository } from './repository'
+import { createTaskRepository, type Task } from './repository'
 
 const clients: QueryClient[] = []
 const servers: ReturnType<typeof createServer>[] = []
@@ -119,6 +119,59 @@ describe('task query scope', () => {
       { id: 'fresh', title: 'Fresh cloth', status: 'open' },
     ])
     expect(requests).toBe(2)
+  })
+
+  it('settles a disposed mutation when its repository ignores abort', async () => {
+    const late = deferred<Task>()
+    let requestSignal: AbortSignal | undefined
+    const repository = {
+      list: async () => [] as Task[],
+      create: (_title: string, signal?: AbortSignal) => {
+        requestSignal = signal
+        return late.promise
+      },
+      setStatus: async () => {
+        throw new Error('Unused')
+      },
+    }
+    const queryClient = client()
+    const scope = createTaskQueryScope(queryClient, 14, repository)
+    queryClient.setQueryData(scope.queryOptions.queryKey, [])
+    const mutation = scope.create('Abandoned draft')
+    const rejected = expect(mutation).rejects.toMatchObject({ code: 'aborted' })
+
+    scope.dispose()
+    await rejected
+    expect(requestSignal?.aborted).toBe(true)
+    expect(queryClient.getQueryData(scope.queryOptions.queryKey)).toBeUndefined()
+
+    // A late success from the old account must never repopulate its removed cache.
+    late.resolve({ id: 'late', title: 'Abandoned draft', status: 'open' })
+    await Promise.resolve()
+    expect(queryClient.getQueryData(scope.queryOptions.queryKey)).toBeUndefined()
+  })
+
+  it('settles a cancelled list even when its repository never responds', async () => {
+    const late = deferred<Task[]>()
+    const repository = {
+      list: () => late.promise,
+      create: async () => {
+        throw new Error('Unused')
+      },
+      setStatus: async () => {
+        throw new Error('Unused')
+      },
+    }
+    const scope = createTaskQueryScope(client(), 15, repository)
+    const controller = new AbortController()
+    const pending = scope.queryOptions.queryFn({ signal: controller.signal })
+    const rejected = expect(pending).rejects.toMatchObject({ code: 'aborted' })
+
+    controller.abort()
+    await rejected
+    late.resolve([])
+    await Promise.resolve()
+    scope.dispose()
   })
 
   it('blocks duplicate creates before React can rerender', async () => {
