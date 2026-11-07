@@ -62,7 +62,6 @@ test('revokes the cached view in another tab after sign-out', async ({ page, con
   await expect(page.getByText('Dress the loom')).toHaveCount(0)
 })
 
-
 test('rechecks a delayed sign-out event instead of revoking a newer cookie session', async ({
   page,
   context,
