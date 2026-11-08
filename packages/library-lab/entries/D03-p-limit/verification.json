@@ -7,8 +7,11 @@
     "evidenceSha256": "66c0fccdab76a576802c1b43fd1ff1246b4ebcd6f0a93ddddcfc49619ec8162b"
   },
   "build": {
-    "status": "NOT_RUN",
-    "note": "全 Lab 生产构建已在 Actions #42166617630 执行成功，但本条 build 收据及完整日志尚未持久化，暂不计作逐库 Build PASS"
+    "status": "PASS",
+    "sourceFingerprint": "91ae62ef33fd38d802b61e1fb85358e8d952b44bdeae4a6288c3aa7bbc8ae3c0",
+    "command": "pnpm build",
+    "evidence": "docs/library-lab/evidence/runs/2026-11-07T05-00-25-679Z-batch-build-D03.json",
+    "evidenceSha256": "7731923cb53d9551c28dba39bfe1b6622008c5673e6f46ac055625647736579b"
   },
   "browser": {
     "status": "PASS",

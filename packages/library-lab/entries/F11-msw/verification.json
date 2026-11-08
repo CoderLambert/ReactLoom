@@ -11,8 +11,11 @@
     "evidenceSha256": "58a5c2cf28a4db13dda3a25c95b2a5175d2f3b06d98556801f9c18b5d6dcd040"
   },
   "build": {
-    "status": "BLOCKED",
-    "note": "需要 PLATFORM 添加 msw@3.0.3 至 package/lock"
+    "status": "PASS",
+    "sourceFingerprint": "c7aae06a203dd6a3b10503d83c36a249b387007d72ed7e982225d742af3463fd",
+    "command": "pnpm build",
+    "evidence": "docs/library-lab/evidence/runs/2026-11-07T05-00-25-679Z-batch-build-F11.json",
+    "evidenceSha256": "4b92ee84667e21d5c8c9e8369327424ef3356a2a4a82bd80dc5b0f12434778f2"
   },
   "browser": {
     "status": "PASS",

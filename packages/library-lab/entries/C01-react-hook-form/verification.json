@@ -11,8 +11,11 @@
     "evidenceSha256": "d23970800c406bad5d73eb38d96d5a9d5d693d5360367100ea9669206d8cc814"
   },
   "build": {
-    "status": "NOT_RUN",
-    "note": "需平台集中更新锁文件后运行类型与构建"
+    "status": "PASS",
+    "sourceFingerprint": "26da6f42331a1cfe0fd701483a96cd8794c05774f98e9c5b792a736a3ac12af4",
+    "command": "pnpm build",
+    "evidence": "docs/library-lab/evidence/runs/2026-11-07T05-00-25-679Z-batch-build-C01.json",
+    "evidenceSha256": "782b6e37f966a33c919223e4fc8ff0111693b042a7630b0f5c38130a637cbe64"
   },
   "browser": {
     "status": "PASS",

@@ -11,8 +11,11 @@
     "evidenceSha256": "605049c670d6c567c0bd6e1b0fd2441f737bd2a70cc974e7cf9c57f5115977c8"
   },
   "build": {
-    "status": "NOT_RUN",
-    "note": "仅新增源码；TypeScript/Vite尚未验证"
+    "status": "PASS",
+    "sourceFingerprint": "beac035c0b5bf4416fedda594629c89dc98210cf75260f3eb5fd17e9ef0ed4c5",
+    "command": "pnpm build",
+    "evidence": "docs/library-lab/evidence/runs/2026-11-07T05-00-25-679Z-batch-build-A01.json",
+    "evidenceSha256": "78d1236cceaa0f8c943311cda05693be4051d66c696fcba7848b298387e30030"
   },
   "browser": {
     "status": "PASS",

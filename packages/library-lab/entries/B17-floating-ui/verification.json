@@ -11,8 +11,11 @@
     "evidenceSha256": "af426415ea3b14c8ebf3866426aafbdcb4f3396fa0937ffa73d38bd66a1bc74a"
   },
   "build": {
-    "status": "NOT_RUN",
-    "note": "真实TypeScript构建未运行"
+    "status": "PASS",
+    "sourceFingerprint": "841ae6e9b1898e45144e15b2fe7e1412eeeaab5b458fae6b13ae5a26acf3ec8c",
+    "command": "pnpm build",
+    "evidence": "docs/library-lab/evidence/runs/2026-11-07T05-00-25-679Z-batch-build-B17.json",
+    "evidenceSha256": "c9f71b55b9d19701535ae2a81f2ce24d58bf50a7cc419f178e67812f4a9f5244"
   },
   "browser": {
     "status": "PASS",

@@ -8,8 +8,11 @@
     "note": "Monaco真实导入和诊断尚未执行"
   },
   "build": {
-    "status": "BLOCKED",
-    "note": "集成平台需安装 monaco-editor 并重建锁文件"
+    "status": "PASS",
+    "sourceFingerprint": "f0eae2dbf2f952f8f5a77ce1aa4f2a0299aa2740dc012186b213b59852cff7ea",
+    "command": "pnpm build",
+    "evidence": "docs/library-lab/evidence/runs/2026-11-07T05-00-25-679Z-batch-build-E05.json",
+    "evidenceSha256": "97e311a73f5555a6a2db3f2119e8e1d2d8fd56c3e4bea5e680cb1f34847ec0a6"
   },
   "browser": {
     "status": "PASS",
