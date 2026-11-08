@@ -38,12 +38,26 @@ function readSession(): StoredSession {
   }
 }
 
+function discardStoredValue(key: string) {
+  try {
+    sessionStorage.removeItem(key)
+    if (sessionStorage.getItem(key) === null) return
+  } catch {
+    // Some storage policies reject deletion but permit overwriting.
+  }
+  try {
+    sessionStorage.setItem(key, '')
+  } catch {
+    // When all persistence writes are denied, only memory can be cleared.
+  }
+}
+
 function writeSession(session: Session | null, sessionId: string | null = null) {
   try {
     if (typeof sessionStorage === 'undefined') return
     if (!session) {
-      sessionStorage.removeItem(STORAGE_KEY)
-      sessionStorage.removeItem(SESSION_ID_KEY)
+      discardStoredValue(STORAGE_KEY)
+      discardStoredValue(SESSION_ID_KEY)
     } else {
       sessionStorage.setItem(STORAGE_KEY, JSON.stringify(session))
       if (sessionId) sessionStorage.setItem(SESSION_ID_KEY, sessionId)
