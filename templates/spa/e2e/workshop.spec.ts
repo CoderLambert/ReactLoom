@@ -251,7 +251,7 @@ test('does not restore credentials on reload when storage deletion is blocked', 
 
   await page.evaluate(() => {
     const originalRemove = Storage.prototype.removeItem
-    Storage.prototype.removeItem = function (key: string) {
+    Storage.prototype.removeItem = function (this: Storage, key: string) {
       if (this === sessionStorage) {
         throw new DOMException('Deletion denied', 'SecurityError')
       }
