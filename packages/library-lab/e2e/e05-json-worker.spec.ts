@@ -62,3 +62,75 @@ test('@E05 real JSON language worker validates edits across stop and remount', a
   expect(workerFallbacks).toEqual([])
   expect(errors).toEqual([])
 })
+
+
+// Inject a synchronous observer failure after Monaco allocated its real model
+// and editor. This exercises the partial-initialization cleanup path, not a
+// mocked SDK. A failed first mount must not poison the next worker lease.
+test('@E05 failed ResizeObserver setup disposes the editor and permits a clean remount', async ({
+  page,
+}) => {
+  const errors: string[] = []
+  page.on('pageerror', (error) => errors.push(error.message))
+  await page.addInitScript(() => {
+    const host = globalThis as typeof globalThis & {
+      __e05NativeObserver?: typeof ResizeObserver
+      __e05InjectedFailures?: number
+    }
+    const NativeObserver = globalThis.ResizeObserver
+    host.__e05NativeObserver = NativeObserver
+    globalThis.ResizeObserver = class extends NativeObserver {
+      observe(target: Element, options?: ResizeObserverOptions): void {
+        if (target instanceof HTMLElement && target.dataset.testid === 'monaco-editor-root') {
+          host.__e05InjectedFailures = (host.__e05InjectedFailures ?? 0) + 1
+          throw new Error('E05_INJECTED_OBSERVER_FAILURE')
+        }
+        super.observe(target, options)
+      }
+    }
+  })
+
+  await page.goto('/libraries/monaco-editor?tab=demo&example=advanced')
+  await page.getByRole('button', { name: '运行当前示例' }).click()
+  const region = page.getByRole('region', { name: 'Monaco Editor 真实运行示例' })
+  await expect(region).toContainText(
+    '编辑器创建、监听或布局初始化失败：Error: E05_INJECTED_OBSERVER_FAILURE',
+    { timeout: 20_000 },
+  )
+  expect(
+    await page.evaluate(
+      () =>
+        (globalThis as typeof globalThis & { __e05InjectedFailures?: number })
+          .__e05InjectedFailures,
+    ),
+  ).toBeGreaterThan(0)
+  // The React host remains mounted, so DOM removal alone cannot pass this check.
+  await expect(region.locator('.monaco-editor')).toHaveCount(0)
+  await expect
+    .poll(() =>
+      page.evaluate(
+        () =>
+          (globalThis as typeof globalThis & { MonacoEnvironment?: unknown }).MonacoEnvironment ===
+          undefined,
+      ),
+    )
+    .toBe(true)
+
+  await page.evaluate(() => {
+    const native = (globalThis as typeof globalThis & {
+      __e05NativeObserver?: typeof ResizeObserver
+    }).__e05NativeObserver
+    if (!native) throw new Error('Missing original ResizeObserver')
+    globalThis.ResizeObserver = native
+  })
+  await page.getByRole('button', { name: '停止并卸载' }).click()
+  await page.getByRole('button', { name: '运行当前示例' }).click()
+  await expect(region.locator('.monaco-editor')).toBeVisible({ timeout: 20_000 })
+  await expect(region.getByRole('status')).toContainText(/[1-9][0-9]* 个 Monaco 诊断标记/u, {
+    timeout: 20_000,
+  })
+  await expect
+    .poll(() => page.workers().some((worker) => /json\\.worker/iu.test(worker.url())))
+    .toBe(true)
+  expect(errors).toEqual([])
+})
