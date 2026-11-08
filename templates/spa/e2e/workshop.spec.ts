@@ -242,7 +242,9 @@ test('revokes copied private tasks when the session BroadcastChannel is blocked'
   ).toBeNull()
 })
 
-test('does not restore credentials on reload when storage deletion is blocked', async ({ page }) => {
+test('does not restore credentials on reload when storage deletion is blocked', async ({
+  page,
+}) => {
   await page.goto('/login')
   await page.getByLabel('Email').fill('ada@reactloom.dev')
   await page.getByLabel('Password').fill('loom-demo')
@@ -265,7 +267,10 @@ test('does not restore credentials on reload when storage deletion is blocked', 
   expect(await page.evaluate(() => sessionStorage.getItem('reactloom.session.id'))).toBe('')
 
   await page.reload()
-  await page.getByRole('navigation', { name: 'Primary' }).getByRole('link', { name: 'Tasks' }).click()
+  await page
+    .getByRole('navigation', { name: 'Primary' })
+    .getByRole('link', { name: 'Tasks' })
+    .click()
   await expect(page.getByRole('heading', { name: 'Sign in' })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'Warp board' })).toHaveCount(0)
 })
