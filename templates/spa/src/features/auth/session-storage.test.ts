@@ -98,4 +98,58 @@ describe('session storage denial', () => {
     expect(restoredStore.getState().session).toBeNull()
     expect(restoredStore.getState().sessionId).toBeNull()
   })
+
+
+  it.each(['reactloom.session', 'reactloom.session.id'])(
+    'does not restore partial credentials when a replacement write to %s fails',
+    async (deniedKey) => {
+      useAuthStore.getState().setSession(demoSession())
+      const oldId = useAuthStore.getState().sessionId
+      const replacement = { ...demoSession(), accessToken: 'replacement-token' }
+      const originalSetItem = Storage.prototype.setItem
+      vi.spyOn(Storage.prototype, 'setItem').mockImplementation(function (
+        this: Storage,
+        key: string,
+        value: string,
+      ) {
+        if (this === sessionStorage && key === deniedKey) {
+          throw new DOMException('Session write denied.', 'QuotaExceededError')
+        }
+        return originalSetItem.call(this, key, value)
+      })
+
+      expect(() => useAuthStore.getState().setSession(replacement)).not.toThrow()
+      expect(useAuthStore.getState().session).toEqual(replacement)
+      expect(useAuthStore.getState().sessionId).not.toBe(oldId)
+      expect(sessionStorage.getItem('reactloom.session')).toBeNull()
+      expect(sessionStorage.getItem('reactloom.session.id')).toBeNull()
+
+      vi.restoreAllMocks()
+      vi.resetModules()
+      const { useAuthStore: restoredStore } = await import('@/features/auth/store')
+      expect(restoredStore.getState().session).toBeNull()
+    },
+  )
+
+  it('invalidates a replacement when storage silently drops the rotated nonce', () => {
+    useAuthStore.getState().setSession(demoSession())
+    const previousNonce = sessionStorage.getItem('reactloom.session.id')
+    const originalSetItem = Storage.prototype.setItem
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(function (
+      this: Storage,
+      key: string,
+      value: string,
+    ) {
+      if (this === sessionStorage && key === 'reactloom.session.id') return
+      return originalSetItem.call(this, key, value)
+    })
+
+    const replacement = { ...demoSession(), accessToken: 'replacement-token' }
+    useAuthStore.getState().setSession(replacement)
+
+    expect(useAuthStore.getState().session).toEqual(replacement)
+    expect(useAuthStore.getState().sessionId).not.toBe(previousNonce)
+    expect(sessionStorage.getItem('reactloom.session')).toBeNull()
+    expect(sessionStorage.getItem('reactloom.session.id')).toBeNull()
+  })
 })

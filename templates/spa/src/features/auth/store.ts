@@ -59,8 +59,26 @@ function writeSession(session: Session | null, sessionId: string | null = null) 
       discardStoredValue(STORAGE_KEY)
       discardStoredValue(SESSION_ID_KEY)
     } else {
-      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(session))
-      if (sessionId) sessionStorage.setItem(SESSION_ID_KEY, sessionId)
+      try {
+        // Each login rotates its revocation nonce. A partial write must never
+        // leave a new bearer token paired with a previous login's nonce.
+        if (!sessionId) throw new Error('Session revocation nonce is missing')
+        const serialized = JSON.stringify(session)
+        sessionStorage.setItem(SESSION_ID_KEY, sessionId)
+        sessionStorage.setItem(STORAGE_KEY, serialized)
+        if (
+          sessionStorage.getItem(SESSION_ID_KEY) !== sessionId ||
+          sessionStorage.getItem(STORAGE_KEY) !== serialized
+        ) {
+          throw new Error('Session persistence was not committed')
+        }
+      } catch {
+        // Storage can reject or silently ignore a write. Keep the new login
+        // in memory, but invalidate both persisted keys instead of restoring a
+        // mismatched or previous account after reload.
+        discardStoredValue(STORAGE_KEY)
+        discardStoredValue(SESSION_ID_KEY)
+      }
     }
   } catch {
     // Storage can be denied or full; it must not prevent in-memory auth transitions.

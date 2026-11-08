@@ -274,3 +274,37 @@ test('does not restore credentials on reload when storage deletion is blocked', 
   await expect(page.getByRole('heading', { name: 'Sign in' })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'Warp board' })).toHaveCount(0)
 })
+
+
+test('does not restore a replacement token after nonce persistence fails', async ({ page }) => {
+  await page.goto('/login')
+  await page.getByLabel('Email').fill('ada@reactloom.dev')
+  await page.getByLabel('Password').fill('loom-demo')
+  await page.getByRole('main').getByRole('button', { name: 'Sign in' }).click()
+  await expect(page.getByRole('heading', { name: 'Warp board' })).toBeVisible()
+
+  // The login route is public. Navigate back without reloading so a second
+  // sign-in replaces the existing session in the same mounted store.
+  await page.goBack()
+  await expect(page.getByRole('heading', { name: 'Sign in' })).toBeVisible()
+  await page.evaluate(() => {
+    const originalSetItem = Storage.prototype.setItem
+    Storage.prototype.setItem = function (this: Storage, key: string, value: string) {
+      if (this === sessionStorage && key === 'reactloom.session.id') {
+        throw new DOMException('Nonce write denied', 'QuotaExceededError')
+      }
+      return originalSetItem.call(this, key, value)
+    }
+  })
+
+  await page.getByLabel('Email').fill('ada@reactloom.dev')
+  await page.getByLabel('Password').fill('loom-demo')
+  await page.getByRole('main').getByRole('button', { name: 'Sign in' }).click()
+  await expect(page.getByRole('heading', { name: 'Warp board' })).toBeVisible()
+  expect(await page.evaluate(() => sessionStorage.getItem('reactloom.session'))).toBeNull()
+  expect(await page.evaluate(() => sessionStorage.getItem('reactloom.session.id'))).toBeNull()
+
+  await page.reload()
+  await expect(page.getByRole('heading', { name: 'Sign in' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Warp board' })).toHaveCount(0)
+})
