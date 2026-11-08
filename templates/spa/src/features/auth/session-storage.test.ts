@@ -77,7 +77,10 @@ describe('session storage denial', () => {
     expect(sessionStorage.getItem('reactloom.session')).not.toBeNull()
     expect(sessionStorage.getItem('reactloom.session.id')).not.toBeNull()
     const originalRemoveItem = Storage.prototype.removeItem
-    vi.spyOn(Storage.prototype, 'removeItem').mockImplementation(function (this: Storage, key: string) {
+    vi.spyOn(Storage.prototype, 'removeItem').mockImplementation(function (
+      this: Storage,
+      key: string,
+    ) {
       if (this === sessionStorage) {
         throw new DOMException('Storage deletion is denied.', 'SecurityError')
       }
