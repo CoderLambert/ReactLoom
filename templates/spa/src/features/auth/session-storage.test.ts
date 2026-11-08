@@ -72,14 +72,27 @@ describe('session storage denial', () => {
     expect(useAuthStore.getState().session).toEqual(session)
   })
 
-  it('invalidates the in-memory session when removing persistence fails', () => {
+  it('cannot restore signed-out credentials when deletion is denied but overwriting works', async () => {
     useAuthStore.getState().setSession(demoSession())
-    vi.spyOn(Storage.prototype, 'removeItem').mockImplementation(() => {
-      throw new DOMException('Storage is denied.', 'SecurityError')
+    expect(sessionStorage.getItem('reactloom.session')).not.toBeNull()
+    expect(sessionStorage.getItem('reactloom.session.id')).not.toBeNull()
+    const originalRemoveItem = Storage.prototype.removeItem
+    vi.spyOn(Storage.prototype, 'removeItem').mockImplementation(function (key) {
+      if (this === sessionStorage) {
+        throw new DOMException('Storage deletion is denied.', 'SecurityError')
+      }
+      return originalRemoveItem.call(this, key)
     })
 
     expect(() => useAuthStore.getState().clearSession()).not.toThrow()
-
     expect(useAuthStore.getState().session).toBeNull()
+    expect(sessionStorage.getItem('reactloom.session')).toBe('')
+    expect(sessionStorage.getItem('reactloom.session.id')).toBe('')
+
+    vi.restoreAllMocks()
+    vi.resetModules()
+    const { useAuthStore: restoredStore } = await import('@/features/auth/store')
+    expect(restoredStore.getState().session).toBeNull()
+    expect(restoredStore.getState().sessionId).toBeNull()
   })
 })
