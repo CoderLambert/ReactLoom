@@ -416,7 +416,56 @@ describe('createApiClient', () => {
         await pending
       }
       expect(sleep).toHaveBeenCalledOnce()
-      expect(sleep).toHaveBeenCalledWith(expect.any(Number), controller.signal)
+      expect(sleep).toHaveBeenCalledWith(expect.any(Number), expect.any(AbortSignal))
+      expect(sleep.mock.calls[0]?.[1]?.aborted).toBe(true)
+    },
+  )
+
+  it.each(['http', 'network'] as const)(
+    'bounds a stalled %s retry scheduler even without a caller signal',
+    async (kind) => {
+      const started = deferred<void>()
+      const releaseSleep = deferred<void>()
+      const sleep = vi.fn((_ms: number, _signal: AbortSignal) => {
+        started.resolve()
+        // This scheduler intentionally ignores the supplied AbortSignal.
+        return releaseSleep.promise
+      })
+      const fetchFn = vi.fn(async () => {
+        if (kind === 'network') throw new Error('offline')
+        return jsonResponse({ message: 'temporarily unavailable' }, 503)
+      })
+      const client = createApiClient({
+        baseUrl: 'https://api.test',
+        fetchFn,
+        sleep,
+        defaultTimeoutMs: 200,
+        retry: { baseDelayMs: 0, maxDelayMs: 0 },
+      })
+      const pending = client.request('/items', schema).then(
+        () => 'success',
+        (error: unknown) => (isApiError(error) ? error.code : 'unexpected'),
+      )
+
+      await started.promise
+      let timeout: ReturnType<typeof setTimeout> | undefined
+      try {
+        expect(
+          await Promise.race([
+            pending,
+            new Promise<string>((resolve) => {
+              timeout = setTimeout(() => resolve('pending'), 1_000)
+            }),
+          ]),
+        ).toBe('timeout')
+        expect(fetchFn).toHaveBeenCalledOnce()
+        expect(sleep).toHaveBeenCalledOnce()
+        expect(sleep.mock.calls[0]?.[1]?.aborted).toBe(true)
+      } finally {
+        if (timeout) clearTimeout(timeout)
+        releaseSleep.resolve()
+        await pending
+      }
     },
   )
 

@@ -23,3 +23,5 @@ Preserve the original 401 unauthorized result without retries if the application
 Throwing application retry loggers no longer suppress HTTP or network retries or replace original API errors; HTTP 503 and transport-failure paths have dedicated regression tests.
 
 Prevent Fetch from following HTTP redirects, including cross-origin 307 responses, when sending API requests. Fail closed on 3xx and browser opaque-redirect responses; injected fetch adapters must honor the manual redirect policy to prevent forwarding credentials.
+
+Bound noncooperative custom retry schedulers even when callers omit AbortSignal: the backoff may run for its requested delay plus one attempt timeout, then settles with a timeout error rather than waiting forever or repeating the failed backoff. The provided scheduler signal also observes that deadline.

@@ -231,15 +231,17 @@ export function createApiClient(options: ApiClientOptions) {
       // Application-provided loggers are best-effort observers.
     }
   }
-  // A custom retry scheduler may ignore AbortSignal and never resolve.
-  // Race its promise so caller cancellation still settles request().
-  function waitForRetry(ms: number, signal: AbortSignal): Promise<void> {
+  // Even without a caller signal, a noncooperative retry scheduler must not
+  // keep the request pending forever. Allow the delay plus one attempt timeout.
+  function waitForRetry(ms: number, signal: AbortSignal, timeoutMs: number): Promise<void> {
+    const deadline = AbortSignal.timeout(ms + timeoutMs)
+    const retryWaitSignal = AbortSignal.any([signal, deadline])
     return awaitWithAbort(
       Promise.resolve().then(() => {
-        if (signal.aborted) throw toAbortError(signal)
-        return sleep(ms, signal)
+        if (retryWaitSignal.aborted) throw toAbortError(retryWaitSignal)
+        return sleep(ms, retryWaitSignal)
       }),
-      signal,
+      retryWaitSignal,
     )
   }
 
@@ -267,7 +269,8 @@ export function createApiClient(options: ApiClientOptions) {
     const retrySignal = init.signal ?? new AbortController().signal
     let lastError: ApiError | undefined
     for (let attempt = 0; attempt < attempts; attempt += 1) {
-      const timeoutSignal = AbortSignal.timeout(init.timeoutMs ?? options.defaultTimeoutMs ?? 8_000)
+      const timeoutMs = init.timeoutMs ?? options.defaultTimeoutMs ?? 8_000
+      const timeoutSignal = AbortSignal.timeout(timeoutMs)
       const signals = [timeoutSignal, init.signal].filter((signal): signal is AbortSignal =>
         Boolean(signal),
       )
@@ -277,6 +280,7 @@ export function createApiClient(options: ApiClientOptions) {
       }
 
       const url = joinUrl(options.baseUrl, path)
+      let waitingForRetry = false
       try {
         const token = await readAccessToken(options.getAccessToken, signal)
         if (signal.aborted) throw toAbortError(signal)
@@ -354,7 +358,9 @@ export function createApiClient(options: ApiClientOptions) {
               status: response.status,
               attempt,
             })
-            await waitForRetry(delayFor(attempt, policy, response), retrySignal)
+            waitingForRetry = true
+            await waitForRetry(delayFor(attempt, policy, response), retrySignal, timeoutMs)
+            waitingForRetry = false
             lastError = error
             continue
           }
@@ -374,6 +380,8 @@ export function createApiClient(options: ApiClientOptions) {
         }
       } catch (error) {
         const normalized = normalizeTransportError(error, signal)
+        // A failed backoff is not another failed transport request to retry.
+        if (waitingForRetry) throw normalized
         if (attempt < attempts - 1 && shouldRetry(normalized)) {
           warnRetry('Retrying transport failure', {
             path,
@@ -381,7 +389,7 @@ export function createApiClient(options: ApiClientOptions) {
             code: normalized.code,
             attempt,
           })
-          await waitForRetry(delayFor(attempt, policy), retrySignal)
+          await waitForRetry(delayFor(attempt, policy), retrySignal, timeoutMs)
           lastError = normalized
           continue
         }
