@@ -1,3 +1,4 @@
+import { createServer } from 'node:http'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { createApiClient } from './client.js'
 import { isApiError } from './errors.js'
@@ -497,6 +498,82 @@ describe('createApiClient', () => {
       expect.objectContaining({ method: 'GET' }),
     )
   })
+
+  it('prevents a real cross-origin redirect from making another authenticated request', async () => {
+    let destinationHits = 0
+    let originHits = 0
+    let originAuthorization: string | undefined
+    const destination = createServer((_request, response) => {
+      destinationHits += 1
+      response.writeHead(200, { 'content-type': 'application/json' })
+      response.end('{"ok":true}')
+    })
+    const origin = createServer((request, response) => {
+      originHits += 1
+      originAuthorization = request.headers.authorization
+      const address = destination.address()
+      if (!address || typeof address === 'string') {
+        response.writeHead(500)
+        response.end()
+        return
+      }
+      response.writeHead(307, { location: `http://127.0.0.1:${address.port}/collect` })
+      response.end()
+    })
+
+    try {
+      await new Promise<void>((resolve) => destination.listen(0, '127.0.0.1', resolve))
+      await new Promise<void>((resolve) => origin.listen(0, '127.0.0.1', resolve))
+      const address = origin.address()
+      if (!address || typeof address === 'string') throw new Error('Origin fixture failed to bind')
+      const client = createApiClient({
+        baseUrl: `http://127.0.0.1:${address.port}`,
+        getAccessToken: () => 'private-token',
+        credentials: 'include',
+      })
+
+      await expect(client.request('/redirect', schema)).rejects.toMatchObject({
+        code: 'validation',
+        status: 307,
+      })
+      expect(originHits).toBe(1)
+      expect(originAuthorization).toBe('Bearer private-token')
+      expect(destinationHits).toBe(0)
+    } finally {
+      origin.closeAllConnections()
+      destination.closeAllConnections()
+      await Promise.all(
+        [origin, destination]
+          .filter((server) => server.listening)
+          .map((server) => new Promise<void>((resolve) => server.close(() => resolve()))),
+      )
+    }
+  })
+
+  it.each(['opaqueredirect', 'redirected'] as const)(
+    'rejects %s results from a custom fetch adapter instead of parsing them',
+    async (kind) => {
+      const response = jsonResponse({ ok: true })
+      if (kind === 'opaqueredirect') {
+        Object.defineProperty(response, 'type', { value: 'opaqueredirect' })
+      } else {
+        Object.defineProperty(response, 'redirected', { value: true })
+      }
+      const fetchFn = vi.fn(async () => response)
+      const parse = vi.fn(schema.parse)
+      const client = createApiClient({ baseUrl: 'https://api.test', fetchFn })
+
+      await expect(client.request('/items', { parse })).rejects.toMatchObject({
+        code: 'validation',
+      })
+      expect(fetchFn).toHaveBeenCalledOnce()
+      expect(fetchFn).toHaveBeenCalledWith(
+        'https://api.test/items',
+        expect.objectContaining({ redirect: 'manual' }),
+      )
+      expect(parse).not.toHaveBeenCalled()
+    },
+  )
 
   it('does not read credentials or fetch when already cancelled', async () => {
     const controller = new AbortController()

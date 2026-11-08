@@ -293,6 +293,9 @@ export function createApiClient(options: ApiClientOptions) {
             body: init.body === undefined ? undefined : JSON.stringify(init.body),
             signal,
             credentials: options.credentials ?? 'same-origin',
+            // A redirect is a new network request. Never let Fetch automatically
+            // forward authenticated requests (or ambient cookies) to its target.
+            redirect: 'manual',
           }),
           signal,
         )
@@ -300,6 +303,19 @@ export function createApiClient(options: ApiClientOptions) {
         // Custom fetch adapters may settle after cancellation. Never let a stale
         // response trigger onUnauthorized or resolve as a successful request.
         if (signal.aborted) throw toAbortError(signal)
+
+        // Browsers expose manual redirects as opaque responses; Node and some
+        // adapters expose the 3xx status. Reject both, and also reject adapters
+        // that ignored redirect: 'manual' and followed a redirect anyway.
+        if (
+          response.type === 'opaqueredirect' ||
+          response.redirected ||
+          (response.status >= 300 && response.status < 400)
+        ) {
+          throw new ApiError('API redirects are not allowed.', 'validation', {
+            status: response.status,
+          })
+        }
 
         if (response.status === 401) {
           const details = await readBody(response, signal, true)
