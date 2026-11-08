@@ -31,7 +31,7 @@ export default function TasksPage() {
   const [checkingSessionEvent, setCheckingSessionEvent] = useState(false)
   const [verificationError, setVerificationError] = useState<string | null>(null)
   const sessionRevision = useRef(0)
-  const handledUnauthorized = useRef<{ at: number; revision: number } | null>(null)
+  const handledUnauthorized = useRef<{ count: number; revision: number } | null>(null)
   const session = useQuery({
     queryKey: ['session'],
     queryFn: ({ signal }) =>
@@ -64,15 +64,15 @@ export default function TasksPage() {
       !isApiError(session.error) ||
       session.error.code !== 'unauthorized' ||
       session.fetchStatus !== 'idle' ||
-      (handledUnauthorized.current?.at === session.errorUpdatedAt &&
+      (handledUnauthorized.current?.count === session.errorUpdateCount &&
         handledUnauthorized.current.revision === revision)
     ) {
       return
     }
 
-    // errorUpdatedAt uses Date.now() and may collide across rapid failed
-    // checks. A newer session event must still receive its own confirmation.
-    handledUnauthorized.current = { at: session.errorUpdatedAt, revision }
+    // errorUpdatedAt uses millisecond precision and may repeat for distinct
+    // failures. Count each Query error and bind it to the current event revision.
+    handledUnauthorized.current = { count: session.errorUpdateCount, revision }
     // A 401 may come from a request sent before another login changed the
     // shared cookie. Confirm it with a fresh request before revoking.
     let active = true
@@ -105,7 +105,7 @@ export default function TasksPage() {
     queryClient,
     revokeSession,
     session.error,
-    session.errorUpdatedAt,
+    session.errorUpdateCount,
     session.fetchStatus,
     session.isError,
   ])
