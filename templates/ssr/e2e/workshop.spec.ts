@@ -289,3 +289,61 @@ test('rechecks a stale 401 before revoking a session replaced during the request
     await page.unroute('**/api/session')
   }
 })
+
+
+test('confirms the latest 401 when rapid session events share an error timestamp', async ({
+  page,
+  context,
+}) => {
+  await page.goto('/login')
+  await page.getByLabel('Email').fill('ada@reactloom.dev')
+  await page.getByLabel('Password').fill('loom-demo')
+  await page.getByRole('button', { name: 'Sign in' }).click()
+  await expect(page.getByText('Dress the loom')).toBeVisible()
+
+  // React Query's errorUpdatedAt uses Date.now(), so two requests can fail
+  // in the same millisecond. Freeze the clock to make the collision reliable.
+  await page.evaluate(() => {
+    const now = Date.now()
+    Date.now = () => now
+  })
+  await context.clearCookies()
+
+  const confirmationStarted = Promise.withResolvers<void>()
+  const releaseFirstConfirmation = Promise.withResolvers<void>()
+  let getCount = 0
+  await page.route('**/api/session', async (route) => {
+    if (route.request().method() !== 'GET') {
+      await route.continue()
+      return
+    }
+    getCount += 1
+    if (getCount === 2) {
+      confirmationStarted.resolve()
+      await releaseFirstConfirmation.promise
+    }
+    await route.continue()
+  })
+
+  const notify = () => {
+    const channel = new BroadcastChannel('reactloom-session')
+    channel.postMessage('signed-out')
+    channel.close()
+  }
+  try {
+    await page.evaluate(notify)
+    // First event refetch: 401. Its confirmation is held in flight.
+    await confirmationStarted.promise
+
+    // A second event must confirm its own 401 even though the two Query
+    // errors have identical errorUpdatedAt values. The first confirmation
+    // cannot be allowed to decide the newer event's authorization.
+    await page.evaluate(notify)
+    await expect(page).toHaveURL(/\/login(?:\?.*)?$/)
+    expect(getCount).toBeGreaterThanOrEqual(4)
+    await expect(page.getByText('Dress the loom')).toHaveCount(0)
+  } finally {
+    releaseFirstConfirmation.resolve()
+    await page.unroute('**/api/session')
+  }
+})
