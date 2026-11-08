@@ -222,3 +222,70 @@ test('revokes a second tab via storage when session BroadcastChannel is denied',
   await expect(page).toHaveURL(/\/login(?:\?.*)?$/)
   await expect(page.getByText('Dress the loom')).toHaveCount(0)
 })
+
+test('rechecks a stale 401 before revoking a session replaced during the request', async ({
+  page,
+  context,
+}) => {
+  await page.goto('/login')
+  await page.getByLabel('Email').fill('ada@reactloom.dev')
+  await page.getByLabel('Password').fill('loom-demo')
+  await page.getByRole('button', { name: 'Sign in' }).click()
+  await expect(page.getByText('Dress the loom')).toBeVisible()
+
+  const started = Promise.withResolvers<void>()
+  const release = Promise.withResolvers<void>()
+  let held = false
+  await page.route('**/api/session', async (route) => {
+    if (route.request().method() !== 'GET' || held) {
+      await route.continue()
+      return
+    }
+    held = true
+    started.resolve()
+    await release.promise
+    await route.fulfill({
+      status: 401,
+      contentType: 'application/json',
+      body: JSON.stringify({ message: 'Sign in is required.' }),
+    })
+  })
+
+  try {
+    const oldResponse = page.waitForResponse(
+      (response) =>
+        new URL(response.url()).pathname === '/api/session' &&
+        response.request().method() === 'GET' &&
+        response.status() === 401,
+    )
+    const freshResponse = page.waitForResponse(
+      (response) =>
+        new URL(response.url()).pathname === '/api/session' &&
+        response.request().method() === 'GET' &&
+        response.status() === 200,
+    )
+
+    await page.evaluate(() => {
+      const channel = new BroadcastChannel('reactloom-session')
+      channel.postMessage('signed-out')
+      channel.close()
+    })
+    await started.promise
+
+    // Replace the cookie without emitting a session event. The delayed
+    // response belongs to the old request, not the current authentication.
+    const login = await context.request.post('/api/session', {
+      data: { email: 'ada@reactloom.dev', password: 'loom-demo' },
+    })
+    expect(login.status()).toBe(200)
+    release.resolve()
+
+    await oldResponse
+    await freshResponse
+    await expect(page).toHaveURL(/\/tasks(?:\?.*)?$/)
+    await expect(page.getByText('Dress the loom')).toBeVisible()
+  } finally {
+    release.resolve()
+    await page.unroute('**/api/session')
+  }
+})
