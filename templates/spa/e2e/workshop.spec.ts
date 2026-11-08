@@ -275,7 +275,6 @@ test('does not restore credentials on reload when storage deletion is blocked', 
   await expect(page.getByRole('heading', { name: 'Warp board' })).toHaveCount(0)
 })
 
-
 test('does not restore a replacement token after nonce persistence fails', async ({ page }) => {
   await page.goto('/login')
   await page.getByLabel('Email').fill('ada@reactloom.dev')

@@ -99,7 +99,6 @@ describe('session storage denial', () => {
     expect(restoredStore.getState().sessionId).toBeNull()
   })
 
-
   it.each(['reactloom.session', 'reactloom.session.id'])(
     'does not restore partial credentials when a replacement write to %s fails',
     async (deniedKey) => {
