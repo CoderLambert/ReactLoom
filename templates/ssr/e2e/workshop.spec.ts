@@ -325,8 +325,9 @@ test('confirms the latest 401 when rapid session events share an error timestamp
       try {
         await route.abort('aborted')
       } catch (error) {
-        if (!(error instanceof Error && error.message.includes('Route is already handled')))
+        if (!(error instanceof Error && error.message.includes('Route is already handled'))) {
           throw error
+        }
       }
       return
     }
