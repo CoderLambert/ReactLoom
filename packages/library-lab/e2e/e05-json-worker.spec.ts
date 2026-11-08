@@ -63,7 +63,6 @@ test('@E05 real JSON language worker validates edits across stop and remount', a
   expect(errors).toEqual([])
 })
 
-
 // Inject a synchronous observer failure after Monaco allocated its real model
 // and editor. This exercises the partial-initialization cleanup path, not a
 // mocked SDK. A failed first mount must not poison the next worker lease.
@@ -117,9 +116,11 @@ test('@E05 failed ResizeObserver setup disposes the editor and permits a clean r
     .toBe(true)
 
   await page.evaluate(() => {
-    const native = (globalThis as typeof globalThis & {
-      __e05NativeObserver?: typeof ResizeObserver
-    }).__e05NativeObserver
+    const native = (
+      globalThis as typeof globalThis & {
+        __e05NativeObserver?: typeof ResizeObserver
+      }
+    ).__e05NativeObserver
     if (!native) throw new Error('Missing original ResizeObserver')
     globalThis.ResizeObserver = native
   })
