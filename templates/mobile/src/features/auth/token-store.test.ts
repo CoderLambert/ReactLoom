@@ -7,15 +7,19 @@ import type { Session } from './schema'
 const native = vi.hoisted(() => ({
   platform: { OS: 'web' },
   values: new Map<string, string>(),
+  deleteError: null as Error | null,
+  setError: null as Error | null,
 }))
 
 vi.mock('react-native', () => ({ Platform: native.platform }))
 vi.mock('expo-secure-store', () => ({
   getItemAsync: async (key: string) => native.values.get(key) ?? null,
   setItemAsync: async (key: string, value: string) => {
+    if (native.setError) throw native.setError
     native.values.set(key, value)
   },
   deleteItemAsync: async (key: string) => {
+    if (native.deleteError) throw native.deleteError
     native.values.delete(key)
   },
 }))
@@ -32,6 +36,8 @@ describe('session storage', () => {
   beforeEach(() => {
     values.clear()
     native.values.clear()
+    native.deleteError = null
+    native.setError = null
     native.platform.OS = 'web'
     vi.useFakeTimers()
     vi.setSystemTime(1_000)
@@ -88,6 +94,48 @@ describe('session storage', () => {
     expect(values.has(key)).toBe(false)
     await writeSession(null)
     expect(native.values.has(key)).toBe(false)
+  })
+
+  it('overwrites a native session when deletion fails, preventing login restoration on restart', async () => {
+    native.platform.OS = 'ios'
+    await writeSession(session)
+    native.deleteError = new Error('Keychain delete blocked')
+    let state: AuthState = initialAuthState
+    const createController = () =>
+      createAuthController({
+        readSession,
+        writeSession,
+        requestSignIn: async () => session,
+        subscribeToForeground: () => () => {},
+        dispatch: (event) => {
+          state = authReducer(state, event)
+        },
+      })
+
+    const controller = createController()
+    await controller.start()
+    await expect(controller.signOut()).resolves.toBeUndefined()
+    controller.stop()
+    expect(native.values.get(key)).toBe('{"version":1,"session":null}')
+    expect(await readToken()).toBeNull()
+
+    native.deleteError = null
+    state = initialAuthState
+    const restarted = createController()
+    await restarted.start()
+    expect(state).toEqual({ status: 'anonymous', revision: 0 })
+    expect(native.values.has(key)).toBe(false)
+    restarted.stop()
+  })
+
+  it('reports a native storage failure if neither deletion nor overwrite succeeds', async () => {
+    native.platform.OS = 'android'
+    await writeSession(session)
+    native.deleteError = new Error('Keychain delete blocked')
+    native.setError = new Error('Keychain write blocked')
+
+    await expect(writeSession(null)).rejects.toThrow('Keychain delete blocked')
+    expect(native.values.get(key)).toContain('server-token')
   })
 
   it.each([

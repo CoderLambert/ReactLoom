@@ -34,6 +34,20 @@ export async function writeSession(session: Session | null): Promise<void> {
     return
   }
   const SecureStore = await import('expo-secure-store')
-  if (value !== null) await SecureStore.setItemAsync(KEY, value)
-  else await SecureStore.deleteItemAsync(KEY)
+  if (value !== null) {
+    await SecureStore.setItemAsync(KEY, value)
+    return
+  }
+  try {
+    await SecureStore.deleteItemAsync(KEY)
+  } catch (deletionError) {
+    // A failed native delete may still permit an overwrite. Replace the token
+    // with a schema-invalid tombstone so a later launch cannot restore it.
+    // If both operations fail, report the storage error rather than claiming logout succeeded.
+    try {
+      await SecureStore.setItemAsync(KEY, '{"version":1,"session":null}')
+    } catch {
+      throw deletionError
+    }
+  }
 }
