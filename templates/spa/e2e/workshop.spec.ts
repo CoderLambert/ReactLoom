@@ -260,11 +260,12 @@ test('does not restore credentials on reload when storage deletion is blocked', 
   })
 
   await page.getByRole('button', { name: 'Sign out' }).click()
-  await expect(page.getByRole('heading', { name: 'Sign in' })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Sign in' })).toBeVisible()
   expect(await page.evaluate(() => sessionStorage.getItem('reactloom.session'))).toBe('')
   expect(await page.evaluate(() => sessionStorage.getItem('reactloom.session.id'))).toBe('')
 
   await page.reload()
+  await page.getByRole('navigation', { name: 'Primary' }).getByRole('link', { name: 'Tasks' }).click()
   await expect(page.getByRole('heading', { name: 'Sign in' })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'Warp board' })).toHaveCount(0)
 })
