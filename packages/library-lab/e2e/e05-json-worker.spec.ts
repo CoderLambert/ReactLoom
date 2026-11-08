@@ -130,7 +130,7 @@ test('@E05 failed ResizeObserver setup disposes the editor and permits a clean r
     timeout: 20_000,
   })
   await expect
-    .poll(() => page.workers().some((worker) => /json\\.worker/iu.test(worker.url())))
+    .poll(() => page.workers().some((worker) => /json\.worker/iu.test(worker.url())))
     .toBe(true)
   expect(errors).toEqual([])
 })
