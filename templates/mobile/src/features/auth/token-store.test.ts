@@ -67,6 +67,59 @@ describe('session storage', () => {
     expect(await readSession()).toBeNull()
   })
 
+  it('tombstones a web session when deletion is blocked, including after restart', async () => {
+    await writeSession(session)
+    vi.stubGlobal('localStorage', {
+      getItem: (name: string) => values.get(name) ?? null,
+      setItem: (name: string, value: string) => {
+        values.set(name, value)
+      },
+      removeItem: () => {
+        throw new Error('Web storage deletion blocked')
+      },
+    })
+
+    let state: AuthState = initialAuthState
+    const createController = () =>
+      createAuthController({
+        readSession,
+        writeSession,
+        requestSignIn: async () => session,
+        subscribeToForeground: () => () => {},
+        dispatch: (event) => {
+          state = authReducer(state, event)
+        },
+      })
+
+    const controller = createController()
+    await controller.start()
+    await expect(controller.signOut()).resolves.toBeUndefined()
+    controller.stop()
+    expect(values.get(key)).toBe('{"version":1,"session":null}')
+    expect(await readToken()).toBeNull()
+
+    state = initialAuthState
+    const restarted = createController()
+    await restarted.start()
+    expect(state).toEqual({ status: 'anonymous', revision: 0 })
+    restarted.stop()
+  })
+
+  it('reports web storage failure if neither removal nor overwrite works', async () => {
+    await writeSession(session)
+    vi.stubGlobal('localStorage', {
+      getItem: (name: string) => values.get(name) ?? null,
+      setItem: () => {
+        throw new Error('Web storage write blocked')
+      },
+      removeItem: () => {
+        throw new Error('Web storage deletion blocked')
+      },
+    })
+    await expect(writeSession(null)).rejects.toThrow('Web storage deletion blocked')
+    expect(values.get(key)).toContain('server-token')
+  })
+
   it('deletes a legacy token during hydration and requires login', async () => {
     values.set(key, 'legacy-token')
     let state: AuthState = initialAuthState

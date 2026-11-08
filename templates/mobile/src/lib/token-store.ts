@@ -3,6 +3,7 @@ import * as z from 'zod'
 import { type Session, sessionSchema } from '../features/auth/schema'
 
 const KEY = 'reactloom.session'
+const INVALIDATED_SESSION = '{"version":1,"session":null}'
 const storedSessionSchema = z.strictObject({ version: z.literal(1), session: sessionSchema })
 
 export async function readSession(): Promise<Session | null> {
@@ -29,8 +30,21 @@ export async function writeSession(session: Session | null): Promise<void> {
   const value =
     session === null ? null : JSON.stringify({ version: 1, session: sessionSchema.parse(session) })
   if (Platform.OS === 'web') {
-    if (value !== null) globalThis.localStorage.setItem(KEY, value)
-    else globalThis.localStorage.removeItem(KEY)
+    if (value !== null) {
+      globalThis.localStorage.setItem(KEY, value)
+    } else {
+      try {
+        globalThis.localStorage.removeItem(KEY)
+      } catch (deletionError) {
+        // A denied remove can leave a valid bearer token for the next reload.
+        // If writes are still permitted, persist an invalid session tombstone.
+        try {
+          globalThis.localStorage.setItem(KEY, INVALIDATED_SESSION)
+        } catch {
+          throw deletionError
+        }
+      }
+    }
     return
   }
   const SecureStore = await import('expo-secure-store')
@@ -45,7 +59,7 @@ export async function writeSession(session: Session | null): Promise<void> {
     // with a schema-invalid tombstone so a later launch cannot restore it.
     // If both operations fail, report the storage error rather than claiming logout succeeded.
     try {
-      await SecureStore.setItemAsync(KEY, '{"version":1,"session":null}')
+      await SecureStore.setItemAsync(KEY, INVALIDATED_SESSION)
     } catch {
       throw deletionError
     }
