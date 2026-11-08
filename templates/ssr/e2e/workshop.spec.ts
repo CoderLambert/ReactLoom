@@ -320,6 +320,15 @@ test('confirms the latest 401 when rapid session events share an error timestamp
     if (getCount === 2) {
       confirmationStarted.resolve()
       await releaseFirstConfirmation.promise
+      // A newer confirmed 401 redirects while this obsolete request remains
+      // intercepted. Navigation may already have canceled its Route.
+      try {
+        await route.abort('aborted')
+      } catch (error) {
+        if (!(error instanceof Error && error.message.includes('Route is already handled')))
+          throw error
+      }
+      return
     }
     await route.continue()
   })
