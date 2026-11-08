@@ -96,7 +96,7 @@ describe('session storage', () => {
     expect(native.values.has(key)).toBe(false)
   })
 
-  it('overwrites a native session when deletion fails, preventing login restoration on restart', async () => {
+  it('tombstones the native session when SecureStore deletion fails', async () => {
     native.platform.OS = 'ios'
     await writeSession(session)
     native.deleteError = new Error('Keychain delete blocked')
