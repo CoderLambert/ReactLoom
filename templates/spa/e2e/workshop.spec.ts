@@ -241,3 +241,30 @@ test('revokes copied private tasks when the session BroadcastChannel is blocked'
     await page.evaluate(() => localStorage.getItem('reactloom.session-logout-event')),
   ).toBeNull()
 })
+
+test('does not restore credentials on reload when storage deletion is blocked', async ({ page }) => {
+  await page.goto('/login')
+  await page.getByLabel('Email').fill('ada@reactloom.dev')
+  await page.getByLabel('Password').fill('loom-demo')
+  await page.getByRole('main').getByRole('button', { name: 'Sign in' }).click()
+  await expect(page.getByRole('heading', { name: 'Warp board' })).toBeVisible()
+
+  await page.evaluate(() => {
+    const originalRemove = Storage.prototype.removeItem
+    Storage.prototype.removeItem = function (key: string) {
+      if (this === sessionStorage) {
+        throw new DOMException('Deletion denied', 'SecurityError')
+      }
+      return originalRemove.call(this, key)
+    }
+  })
+
+  await page.getByRole('button', { name: 'Sign out' }).click()
+  await expect(page.getByRole('heading', { name: 'Sign in' })).toBeVisible()
+  expect(await page.evaluate(() => sessionStorage.getItem('reactloom.session'))).toBe('')
+  expect(await page.evaluate(() => sessionStorage.getItem('reactloom.session.id'))).toBe('')
+
+  await page.reload()
+  await expect(page.getByRole('heading', { name: 'Sign in' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Warp board' })).toHaveCount(0)
+})
