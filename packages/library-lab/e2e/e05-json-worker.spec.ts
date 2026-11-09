@@ -151,7 +151,7 @@ test('@E05 idle JSON language worker eventually terminates and starts anew', asy
   await expect(region.getByRole('status')).toContainText(/[1-9][0-9]* 个 Monaco 诊断标记/u, {
     timeout: 20_000,
   })
-  const firstWorker = page.workers().find((worker) => /json\\.worker/iu.test(worker.url()))
+  const firstWorker = page.workers().find((worker) => /json\.worker/iu.test(worker.url()))
   if (!firstWorker) throw new Error('Real Monaco JSON Worker did not start')
 
   await page.getByRole('button', { name: '停止并卸载' }).click()
@@ -167,7 +167,7 @@ test('@E05 idle JSON language worker eventually terminates and starts anew', asy
     timeout: 20_000,
   })
   await expect
-    .poll(() => page.workers().some((worker) => /json\\.worker/iu.test(worker.url())), {
+    .poll(() => page.workers().some((worker) => /json\.worker/iu.test(worker.url())), {
       timeout: 20_000,
     })
     .toBe(true)
