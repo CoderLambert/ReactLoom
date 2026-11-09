@@ -219,7 +219,7 @@ function AuthenticatedTasks({ userId }: { userId: string }) {
   }
 
   return (
-    <section className="space-y-6">
+    <section aria-busy={isSigningOut} className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <h1 className="text-5xl">Warp board</h1>
         <button
@@ -236,10 +236,12 @@ function AuthenticatedTasks({ userId }: { userId: string }) {
           {signOutError}
         </p>
       ) : null}
-      <p className="text-muted">
+      {isSigningOut ? <p role="status">Confirming sign-out…</p> : null}
+      <p hidden={isSigningOut} className="text-muted">
         Loaded in the browser, authorized by the httpOnly session cookie.
       </p>
       <form
+        hidden={isSigningOut}
         aria-busy={create.isPending}
         className="flex flex-col gap-3 sm:flex-row"
         onSubmit={(event) => {
@@ -273,13 +275,13 @@ function AuthenticatedTasks({ userId }: { userId: string }) {
         </button>
       </form>
       {create.isError ? (
-        <p id="create-task-error" role="alert" className="text-sm text-copper">
+        <p hidden={isSigningOut} id="create-task-error" role="alert" className="text-sm text-copper">
           {create.error instanceof Error ? create.error.message : 'The task could not be added.'}
         </p>
       ) : null}
-      {tasks.isPending ? <p>Loading tasks…</p> : null}
+      {tasks.isPending ? <p hidden={isSigningOut}>Loading tasks…</p> : null}
       {tasks.isError ? (
-        <p role="alert">
+        <p hidden={isSigningOut} role="alert">
           {tasks.error instanceof Error
             ? tasks.error.message
             : 'The task list could not be loaded.'}{' '}
@@ -288,7 +290,10 @@ function AuthenticatedTasks({ userId }: { userId: string }) {
           </button>
         </p>
       ) : null}
-      <ul className="divide-y divide-line overflow-hidden rounded-3xl bg-card ring-1 ring-line">
+      <ul
+        hidden={isSigningOut}
+        className="divide-y divide-line overflow-hidden rounded-3xl bg-card ring-1 ring-line"
+      >
         {tasks.data?.tasks.map((task) => (
           <li key={task.id} className="px-4 py-3">
             {task.title}

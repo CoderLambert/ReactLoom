@@ -66,6 +66,54 @@ test('sign out removes the session cookie and blocks access to private tasks', a
   await expect(page.getByText('Dress the loom')).toHaveCount(0)
 })
 
+test('conceals private tasks during delayed sign-out and restores the draft on failure', async ({
+  page,
+  context,
+}) => {
+  await page.goto('/login')
+  await page.getByLabel('Email').fill('ada@reactloom.dev')
+  await page.getByLabel('Password').fill('loom-demo')
+  await page.getByRole('button', { name: 'Sign in' }).click()
+  await expect(page.getByText('Dress the loom')).toBeVisible()
+
+  const logoutStarted = Promise.withResolvers<void>()
+  const releaseLogout = Promise.withResolvers<void>()
+  await page.route('**/api/session', async (route) => {
+    if (route.request().method() !== 'DELETE') {
+      await route.continue()
+      return
+    }
+    logoutStarted.resolve()
+    await releaseLogout.promise
+    await route.fulfill({
+      status: 503,
+      contentType: 'application/json',
+      body: JSON.stringify({ message: 'Session service unavailable.' }),
+    })
+  })
+
+  try {
+    const draft = page.getByLabel('Task title')
+    await draft.fill('Draft before sign-out')
+    await page.getByRole('button', { name: 'Sign out' }).click()
+    await logoutStarted.promise
+
+    await expect(page.getByRole('button', { name: 'Signing out…' })).toBeDisabled()
+    await expect(page.getByRole('status')).toHaveText('Confirming sign-out…')
+    await expect(page.getByText('Dress the loom')).toBeHidden()
+    await expect(draft).toBeHidden()
+
+    releaseLogout.resolve()
+    await expect(page.getByRole('alert')).toBeVisible()
+    await expect(page.getByText('Dress the loom')).toBeVisible()
+    await expect(draft).toHaveValue('Draft before sign-out')
+    expect((await context.cookies()).some((cookie) => cookie.name === 'rl_session')).toBe(true)
+  } finally {
+    releaseLogout.resolve()
+    await page.unroute('**/api/session')
+  }
+})
+
 test('revokes the cached view in another tab after sign-out', async ({ page, context }) => {
   await page.goto('/login')
   await page.getByLabel('Email').fill('ada@reactloom.dev')
