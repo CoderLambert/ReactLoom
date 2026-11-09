@@ -67,7 +67,10 @@ describe('auth operation session boundaries', () => {
       expect(client.getQueryData(['tasks', 'private'])).toBeUndefined()
       expect(authorization).toBe('Bearer slow-logout-session')
       expect(
-        client.getMutationCache().getAll().some((mutation) => mutation.state.status === 'pending'),
+        client
+          .getMutationCache()
+          .getAll()
+          .some((mutation) => mutation.state.status === 'pending'),
       ).toBe(true)
     } finally {
       release()
@@ -75,7 +78,10 @@ describe('auth operation session boundaries', () => {
 
     await waitFor(() =>
       expect(
-        client.getMutationCache().getAll().every((mutation) => mutation.state.status !== 'pending'),
+        client
+          .getMutationCache()
+          .getAll()
+          .every((mutation) => mutation.state.status !== 'pending'),
       ).toBe(true),
     )
   })
