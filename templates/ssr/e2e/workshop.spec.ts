@@ -19,7 +19,6 @@ test('signs in with a cookie session and adds a task', async ({ page }) => {
   await expect(page.getByText('Warp the selvage')).toBeVisible()
 })
 
-
 test('announces invalid login fields and accepts corrections', async ({ page }) => {
   await page.goto('/login')
   const email = page.getByLabel('Email')
