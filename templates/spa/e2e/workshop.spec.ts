@@ -1,6 +1,25 @@
 import AxeBuilder from '@axe-core/playwright'
 import { expect, test } from '@playwright/test'
 
+test('links invalid sign-in fields to their errors and permits correction', async ({ page }) => {
+  await page.goto('/login')
+  await page.getByRole('main').getByRole('button', { name: 'Sign in' }).click()
+
+  const email = page.getByLabel('Email')
+  const password = page.getByLabel('Password')
+  await expect(email).toHaveAttribute('aria-invalid', 'true')
+  await expect(email).toHaveAttribute('aria-describedby', 'login-email-error')
+  await expect(page.locator('#login-email-error')).toBeVisible()
+  await expect(password).toHaveAttribute('aria-invalid', 'true')
+  await expect(password).toHaveAttribute('aria-describedby', 'login-password-error')
+  await expect(page.locator('#login-password-error')).toBeVisible()
+
+  await email.fill('ada@reactloom.dev')
+  await password.fill('loom-demo')
+  await page.getByRole('main').getByRole('button', { name: 'Sign in' }).click()
+  await expect(page.getByRole('heading', { name: 'Warp board' })).toBeVisible()
+})
+
 test('signs in and adds a task', async ({ page }) => {
   await page.goto('/')
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible()

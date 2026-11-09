@@ -37,9 +37,16 @@ export function LoginPage() {
         >
           <div className="space-y-2">
             <Label htmlFor="email">{t('login.email')}</Label>
-            <Input id="email" type="email" autoComplete="username" {...form.register('email')} />
+            <Input
+              id="email"
+              type="email"
+              autoComplete="username"
+              aria-invalid={form.formState.errors.email ? true : undefined}
+              aria-describedby={form.formState.errors.email ? 'login-email-error' : undefined}
+              {...form.register('email')}
+            />
             {form.formState.errors.email ? (
-              <p className="text-sm text-copper" role="alert">
+              <p id="login-email-error" className="text-sm text-copper" role="alert">
                 {form.formState.errors.email.message}
               </p>
             ) : null}
@@ -50,10 +57,12 @@ export function LoginPage() {
               id="password"
               type="password"
               autoComplete="current-password"
+              aria-invalid={form.formState.errors.password ? true : undefined}
+              aria-describedby={form.formState.errors.password ? 'login-password-error' : undefined}
               {...form.register('password')}
             />
             {form.formState.errors.password ? (
-              <p className="text-sm text-copper" role="alert">
+              <p id="login-password-error" className="text-sm text-copper" role="alert">
                 {form.formState.errors.password.message}
               </p>
             ) : null}
