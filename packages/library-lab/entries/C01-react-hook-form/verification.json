@@ -5,23 +5,23 @@
   },
   "sdk": {
     "status": "PASS",
-    "sourceFingerprint": "26da6f42331a1cfe0fd701483a96cd8794c05774f98e9c5b792a736a3ac12af4",
+    "sourceFingerprint": "d21ffcf7d10245fb1443b73789b434b20460e5b80fa912c4d6d6c210429f967b",
     "command": "node scripts/sdk-runner.mjs --entry=C01",
-    "evidence": "docs/library-lab/evidence/runs/2026-11-06T17-01-15-254Z-C01-sdk.json",
-    "evidenceSha256": "d23970800c406bad5d73eb38d96d5a9d5d693d5360367100ea9669206d8cc814"
+    "evidence": "docs/library-lab/evidence/runs/2026-11-08T17-24-12-085Z-C01-sdk.json",
+    "evidenceSha256": "e72a4eac9867e647368dae905cfaf281c33f249abc30876d2a2b8ee7ef85b950"
   },
   "build": {
     "status": "PASS",
-    "sourceFingerprint": "26da6f42331a1cfe0fd701483a96cd8794c05774f98e9c5b792a736a3ac12af4",
+    "sourceFingerprint": "d21ffcf7d10245fb1443b73789b434b20460e5b80fa912c4d6d6c210429f967b",
     "command": "pnpm build",
-    "evidence": "docs/library-lab/evidence/runs/2026-11-07T05-00-25-679Z-batch-build-C01.json",
-    "evidenceSha256": "782b6e37f966a33c919223e4fc8ff0111693b042a7630b0f5c38130a637cbe64"
+    "evidence": "docs/library-lab/evidence/runs/2026-11-08T17-21-43-423Z-batch-build-C01.json",
+    "evidenceSha256": "58c48c075a7905d0594e368a723d61ec7cedc3a3f712277db62ad76f208019b7"
   },
   "browser": {
     "status": "PASS",
-    "sourceFingerprint": "26da6f42331a1cfe0fd701483a96cd8794c05774f98e9c5b792a736a3ac12af4",
+    "sourceFingerprint": "d21ffcf7d10245fb1443b73789b434b20460e5b80fa912c4d6d6c210429f967b",
     "command": "pnpm exec playwright test --grep @C01\\b",
-    "evidence": "docs/library-lab/evidence/runs/2026-11-06T17-01-30-022Z-C01-browser.json",
-    "evidenceSha256": "9bfbe540c3cebf2736148f7d886b4abd5e428f4f31131b5f3aa1bb05d61ac30e"
+    "evidence": "docs/library-lab/evidence/runs/2026-11-08T17-24-28-917Z-C01-browser.json",
+    "evidenceSha256": "7abfd7a7c69915aaaa5a72908674a5bb93267bc023e4b6ad6078ed6d5d721dca"
   }
 }

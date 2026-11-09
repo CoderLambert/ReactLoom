@@ -5,23 +5,23 @@
   },
   "sdk": {
     "status": "PASS",
-    "sourceFingerprint": "beac035c0b5bf4416fedda594629c89dc98210cf75260f3eb5fd17e9ef0ed4c5",
+    "sourceFingerprint": "070f7e85bf83ad346af8f408cf450e3587a38842dd956ce40e80446bab863097",
     "command": "node scripts/sdk-runner.mjs --entry=A01",
-    "evidence": "docs/library-lab/evidence/runs/2026-11-06T17-01-13-939Z-A01-sdk.json",
-    "evidenceSha256": "605049c670d6c567c0bd6e1b0fd2441f737bd2a70cc974e7cf9c57f5115977c8"
+    "evidence": "docs/library-lab/evidence/runs/2026-11-08T17-24-10-405Z-A01-sdk.json",
+    "evidenceSha256": "f0eacd24d57f1edc7a0048ad5fe481a9215cd99dd781660d24e6645880474637"
   },
   "build": {
     "status": "PASS",
-    "sourceFingerprint": "beac035c0b5bf4416fedda594629c89dc98210cf75260f3eb5fd17e9ef0ed4c5",
+    "sourceFingerprint": "070f7e85bf83ad346af8f408cf450e3587a38842dd956ce40e80446bab863097",
     "command": "pnpm build",
-    "evidence": "docs/library-lab/evidence/runs/2026-11-07T05-00-25-679Z-batch-build-A01.json",
-    "evidenceSha256": "78d1236cceaa0f8c943311cda05693be4051d66c696fcba7848b298387e30030"
+    "evidence": "docs/library-lab/evidence/runs/2026-11-08T17-21-43-423Z-batch-build-A01.json",
+    "evidenceSha256": "2ef1828394c1ac414693bb397cd51c609ac659db7aaf139ca642fec94fdc7020"
   },
   "browser": {
     "status": "PASS",
-    "sourceFingerprint": "beac035c0b5bf4416fedda594629c89dc98210cf75260f3eb5fd17e9ef0ed4c5",
+    "sourceFingerprint": "070f7e85bf83ad346af8f408cf450e3587a38842dd956ce40e80446bab863097",
     "command": "pnpm exec playwright test --grep @A01\\b",
-    "evidence": "docs/library-lab/evidence/runs/2026-11-06T17-01-16-796Z-A01-browser.json",
-    "evidenceSha256": "5c9c780db444578c2e0b61b452f508f0addf94db0cc1f0e7e304663b6fef86fd"
+    "evidence": "docs/library-lab/evidence/runs/2026-11-08T17-24-14-097Z-A01-browser.json",
+    "evidenceSha256": "8e607dfff432612a9e3e1e2bf3f6ea99681fcb95fc0f1b7a0843c93debab2d94"
   }
 }

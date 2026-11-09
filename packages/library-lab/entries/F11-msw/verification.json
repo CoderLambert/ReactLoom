@@ -5,24 +5,24 @@
   },
   "sdk": {
     "status": "PASS",
-    "sourceFingerprint": "c7aae06a203dd6a3b10503d83c36a249b387007d72ed7e982225d742af3463fd",
+    "sourceFingerprint": "ce41402eeb0353dcacee7549898190b93b00cad00e1d7136e0307a86c25bb68d",
     "command": "node scripts/sdk-runner.mjs --entry=F11",
-    "evidence": "docs/library-lab/evidence/runs/2026-11-06T17-01-16-153Z-F11-sdk.json",
-    "evidenceSha256": "58a5c2cf28a4db13dda3a25c95b2a5175d2f3b06d98556801f9c18b5d6dcd040"
+    "evidence": "docs/library-lab/evidence/runs/2026-11-08T17-24-13-233Z-F11-sdk.json",
+    "evidenceSha256": "e7c4d39088883db5cb4450efc467fd1407eac81534177af081a8d2d98eb8a317"
   },
   "build": {
     "status": "PASS",
-    "sourceFingerprint": "c7aae06a203dd6a3b10503d83c36a249b387007d72ed7e982225d742af3463fd",
+    "sourceFingerprint": "ce41402eeb0353dcacee7549898190b93b00cad00e1d7136e0307a86c25bb68d",
     "command": "pnpm build",
-    "evidence": "docs/library-lab/evidence/runs/2026-11-07T05-00-25-679Z-batch-build-F11.json",
-    "evidenceSha256": "4b92ee84667e21d5c8c9e8369327424ef3356a2a4a82bd80dc5b0f12434778f2"
+    "evidence": "docs/library-lab/evidence/runs/2026-11-08T17-21-43-423Z-batch-build-F11.json",
+    "evidenceSha256": "39915eef923f9514ebedeacf3e0b0e677493c41ab09491575229365768c063bb"
   },
   "browser": {
     "status": "PASS",
-    "sourceFingerprint": "c7aae06a203dd6a3b10503d83c36a249b387007d72ed7e982225d742af3463fd",
+    "sourceFingerprint": "ce41402eeb0353dcacee7549898190b93b00cad00e1d7136e0307a86c25bb68d",
     "command": "pnpm exec playwright test --grep @F11\\b",
-    "evidence": "docs/library-lab/evidence/runs/2026-11-06T17-01-51-756Z-F11-browser.json",
-    "evidenceSha256": "2f2e673a8cceb5159a5b46fd616818568cf88a0e42aaa43f1c33da7f2ab65fd8"
+    "evidence": "docs/library-lab/evidence/runs/2026-11-08T17-24-54-494Z-F11-browser.json",
+    "evidenceSha256": "4baed5eaa8ca4fe8d8dbd2695c42e870ab0fa0cf5ef827c7acc359f69f996730"
   },
   "security": {
     "status": "NOT_RUN",

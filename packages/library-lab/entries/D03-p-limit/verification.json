@@ -1,23 +1,23 @@
 {
   "sdk": {
     "status": "PASS",
-    "sourceFingerprint": "91ae62ef33fd38d802b61e1fb85358e8d952b44bdeae4a6288c3aa7bbc8ae3c0",
+    "sourceFingerprint": "cfc263aefcfa1c0e6a594535b307aff611ba870751031a766fda1e701343ddbb",
     "command": "node scripts/sdk-runner.mjs --entry=D03",
-    "evidence": "docs/library-lab/evidence/runs/2026-11-06T05-14-32-997Z-D03-sdk.json",
-    "evidenceSha256": "66c0fccdab76a576802c1b43fd1ff1246b4ebcd6f0a93ddddcfc49619ec8162b"
+    "evidence": "docs/library-lab/evidence/runs/2026-11-08T17-24-12-674Z-D03-sdk.json",
+    "evidenceSha256": "cf9b7b000c6fc424ad86e54c55ce28b112c52b8e8d2611138ba9193d5916cda3"
   },
   "build": {
     "status": "PASS",
-    "sourceFingerprint": "91ae62ef33fd38d802b61e1fb85358e8d952b44bdeae4a6288c3aa7bbc8ae3c0",
+    "sourceFingerprint": "cfc263aefcfa1c0e6a594535b307aff611ba870751031a766fda1e701343ddbb",
     "command": "pnpm build",
-    "evidence": "docs/library-lab/evidence/runs/2026-11-07T05-00-25-679Z-batch-build-D03.json",
-    "evidenceSha256": "7731923cb53d9551c28dba39bfe1b6622008c5673e6f46ac055625647736579b"
+    "evidence": "docs/library-lab/evidence/runs/2026-11-08T17-21-43-423Z-batch-build-D03.json",
+    "evidenceSha256": "c0968c174160f4eb51eeee02d68d17785feb866aa12cc6fd0ec14d85cb2ffc87"
   },
   "browser": {
     "status": "PASS",
-    "sourceFingerprint": "91ae62ef33fd38d802b61e1fb85358e8d952b44bdeae4a6288c3aa7bbc8ae3c0",
+    "sourceFingerprint": "cfc263aefcfa1c0e6a594535b307aff611ba870751031a766fda1e701343ddbb",
     "command": "pnpm exec playwright test --grep @D03\\b",
-    "evidence": "docs/library-lab/evidence/runs/2026-11-06T05-14-53-833Z-D03-browser.json",
-    "evidenceSha256": "3edafe81abfba962d58a722be8b32ccf3e3b068ce68c5ea26e339867dfe8f20c"
+    "evidence": "docs/library-lab/evidence/runs/2026-11-08T17-24-33-872Z-D03-browser.json",
+    "evidenceSha256": "de2050373d60144123e9a924b098777260b07842af1e7387a2ab593a939b07b7"
   }
 }

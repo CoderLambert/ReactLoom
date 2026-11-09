@@ -9,17 +9,17 @@
   },
   "build": {
     "status": "PASS",
-    "sourceFingerprint": "f0eae2dbf2f952f8f5a77ce1aa4f2a0299aa2740dc012186b213b59852cff7ea",
+    "sourceFingerprint": "3277851be14a3d1c3d671aae609e5dc4cb764432c573ed89ff8e8e211b3232d0",
     "command": "pnpm build",
-    "evidence": "docs/library-lab/evidence/runs/2026-11-07T05-00-25-679Z-batch-build-E05.json",
-    "evidenceSha256": "97e311a73f5555a6a2db3f2119e8e1d2d8fd56c3e4bea5e680cb1f34847ec0a6"
+    "evidence": "docs/library-lab/evidence/runs/2026-11-08T17-21-43-423Z-batch-build-E05.json",
+    "evidenceSha256": "45811977c080a169142196ca0533a8e7d2966dedfe634feff1926338f77c63e7"
   },
   "browser": {
     "status": "PASS",
-    "sourceFingerprint": "f0eae2dbf2f952f8f5a77ce1aa4f2a0299aa2740dc012186b213b59852cff7ea",
+    "sourceFingerprint": "3277851be14a3d1c3d671aae609e5dc4cb764432c573ed89ff8e8e211b3232d0",
     "command": "pnpm exec playwright test --grep @E05\\b",
-    "evidence": "docs/library-lab/evidence/runs/2026-11-06T17-01-44-426Z-E05-browser.json",
-    "evidenceSha256": "63ea80b25f77f6d121525c73a7bde8b1aa1ec4522c0d8f0ef97951a0d8eb4618"
+    "evidence": "docs/library-lab/evidence/runs/2026-11-08T17-24-43-831Z-E05-browser.json",
+    "evidenceSha256": "c4e3c869b22928f76cc8865bc53f20fb4311cb8b65066bc0b42e40cd380de12e"
   },
   "isolation": {
     "status": "BLOCKED",
