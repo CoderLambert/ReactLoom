@@ -11,6 +11,7 @@ type AuthDependencies = {
 
 // Native and browser timers overflow delays beyond this signed 32-bit bound.
 const MAX_EXPIRY_DELAY = 2_147_483_647
+const HYDRATION_READ_TIMEOUT_MS = 15_000
 
 // Even if a platform transport ignores AbortSignal, cancelling a superseded login
 // must settle the caller; observe the transport's eventual outcome without committing it.
@@ -35,6 +36,36 @@ function awaitSignInOrAbort(request: Promise<Session>, signal: AbortSignal): Pro
   })
 }
 
+// Native keychain reads can hang while the OS is locked or its storage service
+// is unavailable. Bound startup and observe late outcomes without rehydrating
+// a session after the timeout, cancellation or a newer login.
+function awaitHydrationOrTimeout(
+  request: Promise<Session | null>,
+  signal: AbortSignal,
+): Promise<Session | null> {
+  return new Promise<Session | null>((resolve, reject) => {
+    let settled = false
+    const complete = (finish: () => void) => {
+      if (settled) return
+      settled = true
+      clearTimeout(timeout)
+      signal.removeEventListener('abort', onAbort)
+      finish()
+    }
+    const onAbort = () => complete(() => reject(new Error('Session hydration was cancelled.')))
+    const timeout = setTimeout(
+      () => complete(() => reject(new Error('Session storage read timed out.'))),
+      HYDRATION_READ_TIMEOUT_MS,
+    )
+    signal.addEventListener('abort', onAbort, { once: true })
+    if (signal.aborted) onAbort()
+    void request.then(
+      (session) => complete(() => resolve(session)),
+      (error) => complete(() => reject(error)),
+    )
+  })
+}
+
 export function createAuthController({
   readSession,
   writeSession,
@@ -49,6 +80,7 @@ export function createAuthController({
   let writes = Promise.resolve()
   let expiryTimer: ReturnType<typeof setTimeout> | undefined
   let pendingLogin: AbortController | undefined
+  let pendingHydration: AbortController | undefined
   let unsubscribe: (() => void) | undefined
   const current = (operation: number) => active && operation === generation
   const expired = (session: Session) => session.expiresAt <= Date.now()
@@ -56,6 +88,11 @@ export function createAuthController({
   function cancelPendingLogin() {
     pendingLogin?.abort()
     pendingLogin = undefined
+  }
+
+  function cancelPendingHydration() {
+    pendingHydration?.abort()
+    pendingHydration = undefined
   }
 
   function clearExpiry() {
@@ -123,6 +160,7 @@ export function createAuthController({
     if (!active) return
     const operation = ++generation
     cancelPendingLogin()
+    cancelPendingHydration()
     initialized = true
     committedSession = null
     clearExpiry()
@@ -143,12 +181,15 @@ export function createAuthController({
         void checkExpiry().catch(() => undefined)
       })
       const operation = ++generation
+      cancelPendingHydration()
       if (initialized) {
         await checkExpiry().catch(() => undefined)
         return
       }
+      const hydration = new AbortController()
+      pendingHydration = hydration
       try {
-        const stored = await readSession()
+        const stored = await awaitHydrationOrTimeout(readSession(), hydration.signal)
         if (!current(operation)) return
         initialized = true
         const result = sessionSchema.safeParse(stored)
@@ -159,12 +200,15 @@ export function createAuthController({
         else await persist(null, operation, () => {})
       } catch {
         if (current(operation)) storageFailed()
+      } finally {
+        if (pendingHydration === hydration) pendingHydration = undefined
       }
     },
     stop() {
       active = false
       generation += 1
       cancelPendingLogin()
+      cancelPendingHydration()
       clearExpiry()
       unsubscribe?.()
       unsubscribe = undefined
@@ -173,6 +217,7 @@ export function createAuthController({
       if (!active) return
       const operation = ++generation
       cancelPendingLogin()
+      cancelPendingHydration()
       const controller = new AbortController()
       pendingLogin = controller
       if (!initialized) {
