@@ -32,6 +32,7 @@ export default function LoginPage() {
 
   return (
     <form
+      noValidate
       className="mx-auto max-w-md space-y-4 rounded-3xl bg-card p-6 ring-1 ring-line"
       onSubmit={form.handleSubmit(async (values) => {
         setError(null)
@@ -58,20 +59,34 @@ export default function LoginPage() {
           id="email"
           type="email"
           autoComplete="username"
+          aria-invalid={Boolean(form.formState.errors.email)}
+          aria-describedby={form.formState.errors.email ? 'email-error' : undefined}
           className="w-full rounded-2xl bg-linen px-3 py-2 font-normal ring-1 ring-line"
           {...form.register('email')}
         />
       </label>
+      {form.formState.errors.email ? (
+        <p id="email-error" role="alert" className="text-sm text-copper">
+          {form.formState.errors.email.message}
+        </p>
+      ) : null}
       <label className="block space-y-2 text-sm font-semibold" htmlFor="password">
         Password
         <input
           id="password"
           type="password"
           autoComplete="current-password"
+          aria-invalid={Boolean(form.formState.errors.password)}
+          aria-describedby={form.formState.errors.password ? 'password-error' : undefined}
           className="w-full rounded-2xl bg-linen px-3 py-2 font-normal ring-1 ring-line"
           {...form.register('password')}
         />
       </label>
+      {form.formState.errors.password ? (
+        <p id="password-error" role="alert" className="text-sm text-copper">
+          {form.formState.errors.password.message}
+        </p>
+      ) : null}
       {error ? (
         <p role="alert" className="text-sm text-copper">
           {error}
