@@ -32,6 +32,54 @@ afterEach(() => {
 })
 
 describe('auth operation session boundaries', () => {
+  it('clears local session and private cache before a slow logout response', async () => {
+    let release = () => {}
+    const pending = new Promise<void>((resolve) => {
+      release = resolve
+    })
+    let requestStarted = () => {}
+    const started = new Promise<void>((resolve) => {
+      requestStarted = resolve
+    })
+    let authorization: string | null = null
+    server.use(
+      http.post('*/api/session/logout', async ({ request }) => {
+        authorization = request.headers.get('authorization')
+        requestStarted()
+        await pending
+        return new HttpResponse(null, { status: 204 })
+      }),
+    )
+
+    const old = { ...demoSession(), accessToken: 'slow-logout-session' }
+    useAuthStore.getState().setSession(old)
+    const user = userEvent.setup()
+    const { client, router } = renderRouter('/tasks')
+    client.setQueryData(['tasks', 'private'], { tasks: [{ title: 'Private task' }] })
+
+    try {
+      await user.click(await screen.findByRole('button', { name: 'Sign out' }))
+      await started
+
+      await waitFor(() => expect(router.state.location.pathname).toBe('/'))
+      expect(useAuthStore.getState().session).toBeNull()
+      expect(sessionStorage.getItem('reactloom.session')).toBeNull()
+      expect(client.getQueryData(['tasks', 'private'])).toBeUndefined()
+      expect(authorization).toBe('Bearer slow-logout-session')
+      expect(
+        client.getMutationCache().getAll().some((mutation) => mutation.state.status === 'pending'),
+      ).toBe(true)
+    } finally {
+      release()
+    }
+
+    await waitFor(() =>
+      expect(
+        client.getMutationCache().getAll().every((mutation) => mutation.state.status !== 'pending'),
+      ).toBe(true),
+    )
+  })
+
   it('returns home when the logout request itself clears the session with 401', async () => {
     server.use(
       http.post('*/api/session/logout', () =>
@@ -263,7 +311,7 @@ describe('auth operation session boundaries', () => {
             .filter((mutation) => mutation.state.status === 'pending'),
         ).toHaveLength(1),
       )
-      expect(useAuthStore.getState().session).toEqual(initial)
+      expect(useAuthStore.getState().session).toBeNull()
       expect(router.state.location.pathname).toBe('/login')
       releaseLogin()
       await waitFor(() => expect(useAuthStore.getState().session).toEqual(replacement))
