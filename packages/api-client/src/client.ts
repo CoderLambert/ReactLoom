@@ -38,6 +38,30 @@ export type RequestOptions = {
 
 const RETRY_STATUSES = new Set([408, 429, 500, 502, 503, 504])
 const IDEMPOTENT = new Set(['GET', 'HEAD'])
+const MAX_RETRY_ATTEMPTS = 20
+// Node timers lose their intended deadline beyond the signed 32-bit range.
+const MAX_TIMER_MS = 2_147_483_647
+
+function validateAttempts(value: number, allowZero = false): number {
+  if (!Number.isSafeInteger(value) || value < (allowZero ? 0 : 1) || value > MAX_RETRY_ATTEMPTS) {
+    throw new ApiError(
+      `retry attempts must be an integer between ${allowZero ? 0 : 1} and ${MAX_RETRY_ATTEMPTS}.`,
+      'validation',
+    )
+  }
+  // Preserve request-level retry: 0 as one attempt (no retry).
+  return Math.max(1, value)
+}
+
+function validateTimerMs(value: number, label: string, allowZero = false): number {
+  if (!Number.isSafeInteger(value) || value < (allowZero ? 0 : 1) || value > MAX_TIMER_MS) {
+    throw new ApiError(
+      `${label} must be an integer between ${allowZero ? 0 : 1} and ${MAX_TIMER_MS} milliseconds.`,
+      'validation',
+    )
+  }
+  return value
+}
 
 const noopLogger: ApiLogger = {
   debug: () => undefined,
@@ -234,7 +258,7 @@ export function createApiClient(options: ApiClientOptions) {
   // Even without a caller signal, a noncooperative retry scheduler must not
   // keep the request pending forever. Allow the delay plus one attempt timeout.
   function waitForRetry(ms: number, signal: AbortSignal, timeoutMs: number): Promise<void> {
-    const deadline = AbortSignal.timeout(ms + timeoutMs)
+    const deadline = AbortSignal.timeout(Math.min(MAX_TIMER_MS, ms + timeoutMs))
     const retryWaitSignal = AbortSignal.any([signal, deadline])
     return awaitWithAbort(
       Promise.resolve().then(() => {
@@ -246,10 +270,11 @@ export function createApiClient(options: ApiClientOptions) {
   }
 
   const policy: RetryPolicy = {
-    attempts: options.retry?.attempts ?? 3,
-    baseDelayMs: options.retry?.baseDelayMs ?? 200,
-    maxDelayMs: options.retry?.maxDelayMs ?? 2_000,
+    attempts: validateAttempts(options.retry?.attempts ?? 3),
+    baseDelayMs: validateTimerMs(options.retry?.baseDelayMs ?? 200, 'baseDelayMs', true),
+    maxDelayMs: validateTimerMs(options.retry?.maxDelayMs ?? 2_000, 'maxDelayMs', true),
   }
+  const defaultTimeoutMs = validateTimerMs(options.defaultTimeoutMs ?? 8_000, 'defaultTimeoutMs')
 
   async function request<T>(
     path: string,
@@ -261,15 +286,15 @@ export function createApiClient(options: ApiClientOptions) {
       init.retry === false
         ? 1
         : typeof init.retry === 'number'
-          ? Math.max(1, init.retry)
+          ? validateAttempts(init.retry, true)
           : IDEMPOTENT.has(method)
             ? policy.attempts
             : 1
+    const timeoutMs = validateTimerMs(init.timeoutMs ?? defaultTimeoutMs, 'timeoutMs')
 
     const retrySignal = init.signal ?? new AbortController().signal
     let lastError: ApiError | undefined
     for (let attempt = 0; attempt < attempts; attempt += 1) {
-      const timeoutMs = init.timeoutMs ?? options.defaultTimeoutMs ?? 8_000
       const timeoutSignal = AbortSignal.timeout(timeoutMs)
       const signals = [timeoutSignal, init.signal].filter((signal): signal is AbortSignal =>
         Boolean(signal),

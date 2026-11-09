@@ -42,6 +42,64 @@ describe('createApiClient', () => {
     expect(fetchFn).toHaveBeenCalledOnce()
   })
 
+  it.each([Number.NaN, Infinity, -Infinity, -1, 1.5, 21])(
+    'rejects invalid per-request retry count %s before reading credentials or fetching',
+    async (retry) => {
+      const getAccessToken = vi.fn(() => 'secret-token')
+      const fetchFn = vi.fn(async () => jsonResponse({ ok: true }))
+      const client = createApiClient({ baseUrl: 'https://api.test', getAccessToken, fetchFn })
+
+      await expect(client.request('/items', schema, { retry })).rejects.toMatchObject({
+        code: 'validation',
+      })
+      expect(getAccessToken).not.toHaveBeenCalled()
+      expect(fetchFn).not.toHaveBeenCalled()
+    },
+  )
+
+  it.each([Number.NaN, Infinity, -Infinity, -1, 0, 1.5, 2_147_483_648])(
+    'rejects invalid request timeout %s before fetching',
+    async (timeoutMs) => {
+      const fetchFn = vi.fn(async () => jsonResponse({ ok: true }))
+      const client = createApiClient({ baseUrl: 'https://api.test', fetchFn })
+
+      await expect(client.request('/items', schema, { timeoutMs })).rejects.toMatchObject({
+        code: 'validation',
+      })
+      expect(fetchFn).not.toHaveBeenCalled()
+    },
+  )
+
+  it.each([
+    ['nonfinite policy attempts', { retry: { attempts: Infinity } }],
+    ['fractional policy attempts', { retry: { attempts: 1.5 } }],
+    ['too many policy attempts', { retry: { attempts: 21 } }],
+    ['negative base delay', { retry: { baseDelayMs: -1 } }],
+    ['nonfinite maximum delay', { retry: { maxDelayMs: Number.NaN } }],
+    ['oversized maximum delay', { retry: { maxDelayMs: 2_147_483_648 } }],
+    ['nonfinite default timeout', { defaultTimeoutMs: Infinity }],
+    ['zero default timeout', { defaultTimeoutMs: 0 }],
+  ] as const)('rejects invalid client configuration: %s', (_label, invalid) => {
+    expect(() => createApiClient({ baseUrl: 'https://api.test', ...invalid })).toThrowError(
+      /must be an integer|retry attempts must be an integer/,
+    )
+  })
+
+  it('retains one attempt for request retry: 0 and permits zero retry delay', async () => {
+    const fetchFn = vi.fn(async () => jsonResponse({ message: 'busy' }, 503))
+    const client = createApiClient({
+      baseUrl: 'https://api.test',
+      fetchFn,
+      retry: { baseDelayMs: 0, maxDelayMs: 0 },
+    })
+
+    await expect(client.request('/items', schema, { retry: 0 })).rejects.toMatchObject({
+      code: 'http',
+      status: 503,
+    })
+    expect(fetchFn).toHaveBeenCalledOnce()
+  })
+
   it('retries idempotent requests and then succeeds', async () => {
     const fetchFn = vi
       .fn<typeof fetch>()
