@@ -219,7 +219,7 @@ function AuthenticatedTasks({ userId }: { userId: string }) {
   }
 
   return (
-    <section aria-busy={isSigningOut} className="space-y-6">
+    <section className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <h1 className="text-5xl">Warp board</h1>
         <button
@@ -275,7 +275,12 @@ function AuthenticatedTasks({ userId }: { userId: string }) {
         </button>
       </form>
       {create.isError ? (
-        <p hidden={isSigningOut} id="create-task-error" role="alert" className="text-sm text-copper">
+        <p
+          hidden={isSigningOut}
+          id="create-task-error"
+          role="alert"
+          className="text-sm text-copper"
+        >
           {create.error instanceof Error ? create.error.message : 'The task could not be added.'}
         </p>
       ) : null}

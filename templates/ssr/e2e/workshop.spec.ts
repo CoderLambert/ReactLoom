@@ -93,7 +93,7 @@ test('conceals private tasks during delayed sign-out and restores the draft on f
   })
 
   try {
-    const draft = page.getByLabel('Task title')
+    const draft = page.locator('#title')
     await draft.fill('Draft before sign-out')
     await page.getByRole('button', { name: 'Sign out' }).click()
     await logoutStarted.promise
