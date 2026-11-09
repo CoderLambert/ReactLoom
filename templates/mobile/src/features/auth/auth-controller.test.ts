@@ -280,6 +280,40 @@ describe('auth controller', () => {
     expect(app.state()).toEqual({ status: 'anonymous', error: 'Session storage is unavailable.' })
   })
 
+  it('fails closed when native session hydration never settles and allows a fresh login', async () => {
+    vi.useFakeTimers()
+    const read = deferred<Session | null>()
+    const app = setup({ readSession: () => read.promise })
+    const hydration = app.controller.start()
+    await vi.advanceTimersByTimeAsync(14_999)
+    expect(app.state()).toEqual({ status: 'loading' })
+    await vi.advanceTimersByTimeAsync(1)
+    await hydration
+    expect(app.state()).toEqual({ status: 'anonymous', error: 'Session storage is unavailable.' })
+    expect(vi.getTimerCount()).toBe(0)
+
+    await app.controller.signIn(input)
+    read.resolve(newerSession)
+    await Promise.resolve()
+    expect(app.state()).toEqual({ status: 'authenticated', session })
+    expect(app.storage.session).toEqual(session)
+  })
+
+  it('cancels an unresolved hydration on provider cleanup without a lingering timeout', async () => {
+    vi.useFakeTimers()
+    const read = deferred<Session | null>()
+    const app = setup({ readSession: () => read.promise })
+    const hydration = app.controller.start()
+    expect(vi.getTimerCount()).toBe(1)
+    app.controller.stop()
+    await hydration
+    expect(vi.getTimerCount()).toBe(0)
+
+    read.resolve(session)
+    await Promise.resolve()
+    expect(app.state()).toEqual({ status: 'loading' })
+  })
+
   it('ignores hydration that completes after sign out', async () => {
     const read = deferred<Session | null>()
     const app = setup({ readSession: () => read.promise })
