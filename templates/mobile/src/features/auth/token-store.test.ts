@@ -9,6 +9,8 @@ const native = vi.hoisted(() => ({
   values: new Map<string, string>(),
   deleteError: null as Error | null,
   setError: null as Error | null,
+  ignoreDelete: false,
+  ignoreSet: false,
 }))
 
 vi.mock('react-native', () => ({ Platform: native.platform }))
@@ -16,11 +18,11 @@ vi.mock('expo-secure-store', () => ({
   getItemAsync: async (key: string) => native.values.get(key) ?? null,
   setItemAsync: async (key: string, value: string) => {
     if (native.setError) throw native.setError
-    native.values.set(key, value)
+    if (!native.ignoreSet) native.values.set(key, value)
   },
   deleteItemAsync: async (key: string) => {
     if (native.deleteError) throw native.deleteError
-    native.values.delete(key)
+    if (!native.ignoreDelete) native.values.delete(key)
   },
 }))
 
@@ -38,6 +40,8 @@ describe('session storage', () => {
     native.values.clear()
     native.deleteError = null
     native.setError = null
+    native.ignoreDelete = false
+    native.ignoreSet = false
     native.platform.OS = 'web'
     vi.useFakeTimers()
     vi.setSystemTime(1_000)
@@ -103,6 +107,33 @@ describe('session storage', () => {
     await restarted.start()
     expect(state).toEqual({ status: 'anonymous', revision: 0 })
     restarted.stop()
+  })
+
+  it('tombstones a web bearer when removeItem silently ignores deletion', async () => {
+    await writeSession(session)
+    vi.stubGlobal('localStorage', {
+      getItem: (name: string) => values.get(name) ?? null,
+      setItem: (name: string, value: string) => {
+        values.set(name, value)
+      },
+      removeItem: () => {},
+    })
+
+    await expect(writeSession(null)).resolves.toBeUndefined()
+    expect(values.get(key)).toBe('{"version":1,"session":null}')
+    expect(await readToken()).toBeNull()
+  })
+
+  it('reports a silently ignored web delete and tombstone instead of claiming logout', async () => {
+    await writeSession(session)
+    vi.stubGlobal('localStorage', {
+      getItem: (name: string) => values.get(name) ?? null,
+      setItem: () => {},
+      removeItem: () => {},
+    })
+
+    await expect(writeSession(null)).rejects.toThrow('Session storage deletion was ignored.')
+    expect(await readToken()).toBe('server-token')
   })
 
   it('reports web storage failure if neither removal nor overwrite works', async () => {
@@ -179,6 +210,26 @@ describe('session storage', () => {
     expect(state).toEqual({ status: 'anonymous', revision: 0 })
     expect(native.values.has(key)).toBe(false)
     restarted.stop()
+  })
+
+  it('tombstones a native bearer when SecureStore silently ignores deletion', async () => {
+    native.platform.OS = 'android'
+    await writeSession(session)
+    native.ignoreDelete = true
+
+    await expect(writeSession(null)).resolves.toBeUndefined()
+    expect(native.values.get(key)).toBe('{"version":1,"session":null}')
+    expect(await readToken()).toBeNull()
+  })
+
+  it('reports silently ignored native delete and overwrite instead of claiming logout', async () => {
+    native.platform.OS = 'ios'
+    await writeSession(session)
+    native.ignoreDelete = true
+    native.ignoreSet = true
+
+    await expect(writeSession(null)).rejects.toThrow('Session storage deletion was ignored.')
+    expect(await readToken()).toBe('server-token')
   })
 
   it('reports a native storage failure if neither deletion nor overwrite succeeds', async () => {
