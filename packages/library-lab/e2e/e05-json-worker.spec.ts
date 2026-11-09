@@ -135,3 +135,42 @@ test('@E05 failed ResizeObserver setup disposes the editor and permits a clean r
     .toBe(true)
   expect(errors).toEqual([])
 })
+
+// This is a real Chromium Worker lifecycle assertion, not an inference from
+// editor DOM or the MonacoEnvironment lease. Monaco's JSON language manager
+// may cache its worker after model disposal; advance the *page clock* beyond
+// its idle-check budget and observe the actual Worker being destroyed.
+test('@E05 idle JSON language worker eventually terminates and starts anew', async ({ page }) => {
+  const errors: string[] = []
+  page.on('pageerror', (error) => errors.push(error.message))
+  await page.clock.install()
+  await page.goto('/libraries/monaco-editor?tab=demo&example=advanced')
+  await page.getByRole('button', { name: '运行当前示例' }).click()
+
+  const region = page.getByRole('region', { name: 'Monaco Editor 真实运行示例' })
+  await expect(region.getByRole('status')).toContainText(/[1-9][0-9]* 个 Monaco 诊断标记/u, {
+    timeout: 20_000,
+  })
+  const firstWorker = page.workers().find((worker) => /json\\.worker/iu.test(worker.url()))
+  expect(firstWorker, 'real Monaco JSON Worker must exist').toBeDefined()
+
+  await page.getByRole('button', { name: '停止并卸载' }).click()
+  await expect(region).toHaveCount(0)
+  // fastForward advances actual Monaco idle timers without sleeping for
+  // minutes in CI. It does not mock the SDK or terminate the Worker for it.
+  await page.clock.fastForward(180_000)
+  await expect.poll(() => page.workers().includes(firstWorker!), { timeout: 15_000 }).toBe(false)
+
+  await page.getByRole('button', { name: '运行当前示例' }).click()
+  await expect(region.locator('.monaco-editor')).toBeVisible({ timeout: 20_000 })
+  await expect(region.getByRole('status')).toContainText(/[1-9][0-9]* 个 Monaco 诊断标记/u, {
+    timeout: 20_000,
+  })
+  await expect
+    .poll(() => page.workers().some((worker) => /json\\.worker/iu.test(worker.url())), {
+      timeout: 20_000,
+    })
+    .toBe(true)
+  expect(page.workers()).not.toContain(firstWorker)
+  expect(errors).toEqual([])
+})
