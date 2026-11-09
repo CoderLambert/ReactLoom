@@ -19,6 +19,31 @@ test('signs in with a cookie session and adds a task', async ({ page }) => {
   await expect(page.getByText('Warp the selvage')).toBeVisible()
 })
 
+
+test('announces invalid login fields and accepts corrections', async ({ page }) => {
+  await page.goto('/login')
+  const email = page.getByLabel('Email')
+  const password = page.getByLabel('Password')
+  await email.fill('not-an-email')
+  await password.fill('short')
+  await page.getByRole('button', { name: 'Sign in' }).click()
+
+  await expect(page).toHaveURL(/\/login(?:\?.*)?$/)
+  await expect(page.getByRole('alert')).toHaveCount(2)
+  await expect(email).toHaveAttribute('aria-invalid', 'true')
+  await expect(email).toHaveAttribute('aria-describedby', 'email-error')
+  await expect(password).toHaveAttribute('aria-invalid', 'true')
+  await expect(password).toHaveAttribute('aria-describedby', 'password-error')
+  await expect(page.locator('#email-error')).not.toBeEmpty()
+  await expect(page.locator('#password-error')).not.toBeEmpty()
+  await expect(email).toBeFocused()
+
+  await email.fill('ada@reactloom.dev')
+  await password.fill('loom-demo')
+  await page.getByRole('button', { name: 'Sign in' }).click()
+  await expect(page.getByRole('heading', { name: 'Warp board' })).toBeVisible()
+})
+
 test('sign out removes the session cookie and blocks access to private tasks', async ({ page }) => {
   await page.goto('/login')
   await page.getByLabel('Email').fill('ada@reactloom.dev')
