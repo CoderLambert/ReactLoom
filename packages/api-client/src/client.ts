@@ -378,7 +378,6 @@ export function createApiClient(options: ApiClientOptions) {
           )
           if (attempt < attempts - 1 && shouldRetry(error)) {
             warnRetry('Retrying failed request', {
-              path,
               method,
               status: response.status,
               attempt,
@@ -409,7 +408,6 @@ export function createApiClient(options: ApiClientOptions) {
         if (waitingForRetry) throw normalized
         if (attempt < attempts - 1 && shouldRetry(normalized)) {
           warnRetry('Retrying transport failure', {
-            path,
             method,
             code: normalized.code,
             attempt,

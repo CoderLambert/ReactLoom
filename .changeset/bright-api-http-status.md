@@ -27,3 +27,5 @@ Prevent Fetch from following HTTP redirects, including cross-origin 307 response
 Bound noncooperative custom retry schedulers even when callers omit AbortSignal: the backoff may run for its requested delay plus one attempt timeout, then settles with a timeout error rather than waiting forever or repeating the failed backoff. The provided scheduler signal also observes that deadline.
 
 Reject nonfinite, fractional, negative or excessive retry/timeout/backoff settings as validation errors before scheduling timers or making network requests; cap retries to 20 attempts, preserve request-level `retry: 0` as one attempt, and keep combined retry deadlines within the Node timer range.
+
+Avoid logging raw request paths in retry diagnostics: URL segments and query parameters can contain credentials or personal data. Retry logs retain method, status/error code, and attempt metadata.

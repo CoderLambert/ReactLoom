@@ -273,6 +273,41 @@ describe('createApiClient', () => {
     },
   )
 
+  it.each(['http', 'network'] as const)(
+    'keeps raw URL secrets out of %s retry diagnostics',
+    async (kind) => {
+      const warn = vi.fn()
+      const fetchFn = vi.fn<typeof fetch>()
+      if (kind === 'http') {
+        fetchFn.mockResolvedValueOnce(jsonResponse({ message: 'busy' }, 503))
+      } else {
+        fetchFn.mockRejectedValueOnce(new TypeError('offline'))
+      }
+      fetchFn.mockResolvedValueOnce(jsonResponse({ ok: true }))
+      const client = createApiClient({
+        baseUrl: 'https://api.test',
+        fetchFn,
+        logger: { debug: vi.fn(), warn },
+        sleep: async () => undefined,
+      })
+      const path = '/users/private-id?access_token=secret-query#secret-fragment'
+
+      await expect(client.request(path, schema)).resolves.toEqual({ ok: true })
+      expect(fetchFn).toHaveBeenCalledTimes(2)
+      expect(warn).toHaveBeenCalledOnce()
+      const details =
+        kind === 'http'
+          ? { method: 'GET', status: 503, attempt: 0 }
+          : { method: 'GET', code: 'network', attempt: 0 }
+      expect(warn).toHaveBeenCalledWith(
+        kind === 'http' ? 'Retrying failed request' : 'Retrying transport failure',
+        details,
+      )
+      expect(JSON.stringify(warn.mock.calls)).not.toContain('secret-query')
+      expect(JSON.stringify(warn.mock.calls)).not.toContain('private-id')
+    },
+  )
+
   it('still classifies malformed JSON on success as validation', async () => {
     const fetchFn = vi.fn(async () => new Response('not-json', { status: 200 }))
     const client = createApiClient({ baseUrl: 'http://api.test', fetchFn })
