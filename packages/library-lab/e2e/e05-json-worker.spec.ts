@@ -152,14 +152,14 @@ test('@E05 idle JSON language worker eventually terminates and starts anew', asy
     timeout: 20_000,
   })
   const firstWorker = page.workers().find((worker) => /json\\.worker/iu.test(worker.url()))
-  expect(firstWorker, 'real Monaco JSON Worker must exist').toBeDefined()
+  if (!firstWorker) throw new Error('Real Monaco JSON Worker did not start')
 
   await page.getByRole('button', { name: '停止并卸载' }).click()
   await expect(region).toHaveCount(0)
   // fastForward advances actual Monaco idle timers without sleeping for
   // minutes in CI. It does not mock the SDK or terminate the Worker for it.
   await page.clock.fastForward(180_000)
-  await expect.poll(() => page.workers().includes(firstWorker!), { timeout: 15_000 }).toBe(false)
+  await expect.poll(() => page.workers().includes(firstWorker), { timeout: 15_000 }).toBe(false)
 
   await page.getByRole('button', { name: '运行当前示例' }).click()
   await expect(region.locator('.monaco-editor')).toBeVisible({ timeout: 20_000 })
