@@ -141,6 +141,30 @@ describe('createApiClient', () => {
     expect(fetchFn).toHaveBeenCalledTimes(2)
   })
 
+  it.each([
+    ['0.0001', 1],
+    ['0.0015', 2],
+  ])('rounds fractional Retry-After %s seconds up before scheduling', async (header, expectedMs) => {
+    const fetchFn = vi
+      .fn<typeof fetch>()
+      .mockResolvedValueOnce(
+        jsonResponse({ message: 'rate limited' }, 429, { 'retry-after': header }),
+      )
+      .mockResolvedValueOnce(jsonResponse({ ok: true }))
+    const sleep = vi.fn(async () => undefined)
+    const client = createApiClient({
+      baseUrl: 'https://api.test',
+      fetchFn,
+      sleep,
+      retry: { maxDelayMs: 120_000 },
+    })
+
+    await expect(client.request('/items', schema)).resolves.toEqual({ ok: true })
+    expect(sleep).toHaveBeenCalledOnce()
+    expect(sleep).toHaveBeenCalledWith(expectedMs, expect.any(AbortSignal))
+    expect(fetchFn).toHaveBeenCalledTimes(2)
+  })
+
   it('ignores negative Retry-After seconds instead of scheduling a negative delay', async () => {
     vi.spyOn(Math, 'random').mockReturnValue(1)
     const fetchFn = vi

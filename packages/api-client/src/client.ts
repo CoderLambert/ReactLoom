@@ -198,7 +198,7 @@ function delayFor(attempt: number, policy: RetryPolicy, response?: Response): nu
   if (header) {
     const seconds = Number(header)
     if (Number.isFinite(seconds)) {
-      if (seconds >= 0) return Math.min(policy.maxDelayMs, seconds * 1000)
+      if (seconds >= 0) return Math.ceil(Math.min(policy.maxDelayMs, seconds * 1000))
     } else {
       const retryAt = Date.parse(header)
       if (Number.isFinite(retryAt)) {
