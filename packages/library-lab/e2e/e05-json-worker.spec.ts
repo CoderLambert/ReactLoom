@@ -156,9 +156,10 @@ test('@E05 idle JSON language worker eventually terminates and starts anew', asy
 
   await page.getByRole('button', { name: '停止并卸载' }).click()
   await expect(region).toHaveCount(0)
-  // fastForward advances actual Monaco idle timers without sleeping for
-  // minutes in CI. It does not mock the SDK or terminate the Worker for it.
-  await page.clock.fastForward(180_000)
+  // runFor fires each scheduled idle check, whereas fastForward invokes
+  // overdue intervals at most once. The Worker must exit without an artificial
+  // terminate() call or a real three-minute sleep.
+  await page.clock.runFor(180_000)
   await expect.poll(() => page.workers().includes(firstWorker), { timeout: 15_000 }).toBe(false)
 
   await page.getByRole('button', { name: '运行当前示例' }).click()
