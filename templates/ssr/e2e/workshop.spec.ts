@@ -84,7 +84,8 @@ test('single-flights sign-in while pending and permits retry after failure', asy
     // A synthetic reentrant submit bypasses the disabled button. It must
     // still not issue a second POST or release the original pending lock.
     await page.locator('form').evaluate((form) => {
-      ;(form as HTMLFormElement).requestSubmit()
+      const loginForm = form as HTMLFormElement
+      loginForm.requestSubmit()
     })
     await expect(page.getByRole('button', { name: 'Signing in…' })).toBeDisabled()
 
