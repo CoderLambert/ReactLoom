@@ -4,15 +4,24 @@
     "note": "官方文档核对并原创写入指南和真实 API 示例；未执行目标库"
   },
   "sdk": {
-    "status": "NOT_RUN",
-    "note": "缺少 echarts 实际安装及运行环境"
+    "status": "PASS",
+    "sourceFingerprint": "070f7e85bf83ad346af8f408cf450e3587a38842dd956ce40e80446bab863097",
+    "command": "node scripts/sdk-runner.mjs --entry=A01",
+    "evidence": "docs/library-lab/evidence/runs/2026-11-08T17-24-10-405Z-A01-sdk.json",
+    "evidenceSha256": "f0eacd24d57f1edc7a0048ad5fe481a9215cd99dd781660d24e6645880474637"
   },
   "build": {
-    "status": "NOT_RUN",
-    "note": "仅新增源码；TypeScript/Vite尚未验证"
+    "status": "PASS",
+    "sourceFingerprint": "070f7e85bf83ad346af8f408cf450e3587a38842dd956ce40e80446bab863097",
+    "command": "pnpm build",
+    "evidence": "docs/library-lab/evidence/runs/2026-11-08T17-21-43-423Z-batch-build-A01.json",
+    "evidenceSha256": "2ef1828394c1ac414693bb397cd51c609ac659db7aaf139ca642fec94fdc7020"
   },
   "browser": {
-    "status": "NOT_RUN",
-    "note": "无 Chromium 实测结果"
+    "status": "PASS",
+    "sourceFingerprint": "070f7e85bf83ad346af8f408cf450e3587a38842dd956ce40e80446bab863097",
+    "command": "pnpm exec playwright test --grep @A01\\b",
+    "evidence": "docs/library-lab/evidence/runs/2026-11-08T17-24-14-097Z-A01-browser.json",
+    "evidenceSha256": "8e607dfff432612a9e3e1e2bf3f6ea99681fcb95fc0f1b7a0843c93debab2d94"
   }
 }

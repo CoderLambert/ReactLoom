@@ -4,16 +4,25 @@
     "note": "第24轮新增真实browser-worker启动前的受限同源Worker脚本响应预检；隔离Node纯策略测试5 PASS。没导入msw官方SDK，不计SDK/浏览器通过。"
   },
   "sdk": {
-    "status": "NOT_RUN",
-    "note": "node-runner.mjs 已编写，但缺实际 msw 安装/运行"
+    "status": "PASS",
+    "sourceFingerprint": "ce41402eeb0353dcacee7549898190b93b00cad00e1d7136e0307a86c25bb68d",
+    "command": "node scripts/sdk-runner.mjs --entry=F11",
+    "evidence": "docs/library-lab/evidence/runs/2026-11-08T17-24-13-233Z-F11-sdk.json",
+    "evidenceSha256": "e7c4d39088883db5cb4450efc467fd1407eac81534177af081a8d2d98eb8a317"
   },
   "build": {
-    "status": "BLOCKED",
-    "note": "需要 PLATFORM 添加 msw@3.0.3 至 package/lock"
+    "status": "PASS",
+    "sourceFingerprint": "ce41402eeb0353dcacee7549898190b93b00cad00e1d7136e0307a86c25bb68d",
+    "command": "pnpm build",
+    "evidence": "docs/library-lab/evidence/runs/2026-11-08T17-21-43-423Z-batch-build-F11.json",
+    "evidenceSha256": "39915eef923f9514ebedeacf3e0b0e677493c41ab09491575229365768c063bb"
   },
   "browser": {
-    "status": "BLOCKED",
-    "note": "需PLATFORM提供MSW v3官方scoped脚本、独立iframe和CSP worker-src/connect-src，运行真实Chromium registration/controller/fetch/stop；第24轮Node预检不等于浏览器SW实测，仍BLOCKED。"
+    "status": "PASS",
+    "sourceFingerprint": "ce41402eeb0353dcacee7549898190b93b00cad00e1d7136e0307a86c25bb68d",
+    "command": "pnpm exec playwright test --grep @F11\\b",
+    "evidence": "docs/library-lab/evidence/runs/2026-11-08T17-24-54-494Z-F11-browser.json",
+    "evidenceSha256": "4baed5eaa8ca4fe8d8dbd2695c42e870ab0fa0cf5ef827c7acc359f69f996730"
   },
   "security": {
     "status": "NOT_RUN",

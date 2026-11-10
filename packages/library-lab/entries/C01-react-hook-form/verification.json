@@ -4,15 +4,24 @@
     "note": "本轮代码和知识手册已创建，仍待独立校对"
   },
   "sdk": {
-    "status": "NOT_RUN",
-    "note": "尚未在本轮环境安装并运行 react-hook-form 7.89.0；第22轮新增/更新真实 SDK 测试源码，但仍未执行目标库 SDK"
+    "status": "PASS",
+    "sourceFingerprint": "d21ffcf7d10245fb1443b73789b434b20460e5b80fa912c4d6d6c210429f967b",
+    "command": "node scripts/sdk-runner.mjs --entry=C01",
+    "evidence": "docs/library-lab/evidence/runs/2026-11-08T17-24-12-085Z-C01-sdk.json",
+    "evidenceSha256": "e72a4eac9867e647368dae905cfaf281c33f249abc30876d2a2b8ee7ef85b950"
   },
   "build": {
-    "status": "NOT_RUN",
-    "note": "需平台集中更新锁文件后运行类型与构建"
+    "status": "PASS",
+    "sourceFingerprint": "d21ffcf7d10245fb1443b73789b434b20460e5b80fa912c4d6d6c210429f967b",
+    "command": "pnpm build",
+    "evidence": "docs/library-lab/evidence/runs/2026-11-08T17-21-43-423Z-batch-build-C01.json",
+    "evidenceSha256": "58c48c075a7905d0594e368a723d61ec7cedc3a3f712277db62ad76f208019b7"
   },
   "browser": {
-    "status": "NOT_RUN",
-    "note": "需实测 useFieldArray、IME、409 和取消；第22轮交互改动未在 Chromium 验收"
+    "status": "PASS",
+    "sourceFingerprint": "d21ffcf7d10245fb1443b73789b434b20460e5b80fa912c4d6d6c210429f967b",
+    "command": "pnpm exec playwright test --grep @C01\\b",
+    "evidence": "docs/library-lab/evidence/runs/2026-11-08T17-24-28-917Z-C01-browser.json",
+    "evidenceSha256": "7abfd7a7c69915aaaa5a72908674a5bb93267bc023e4b6ad6078ed6d5d721dca"
   }
 }

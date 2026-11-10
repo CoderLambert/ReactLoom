@@ -1,0 +1,8 @@
+$ pnpm exec playwright test --grep @B17\b
+
+Running 1 test using 1 worker
+
+  ✓  1 e2e/p0-risk-lifecycle.spec.ts:29:1 › @B17 actual floating dialog returns focus and protects the IME composition boundary (2.2s)
+
+  1 passed (3.9s)
+

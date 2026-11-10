@@ -1,0 +1,8 @@
+$ pnpm exec playwright test --grep @C01\b
+
+Running 1 test using 1 worker
+
+  ✓  1 e2e/p0-risk-lifecycle.spec.ts:67:1 › @C01 real RHF field-array submission and reset preserve default values (1.9s)
+
+  1 passed (3.6s)
+

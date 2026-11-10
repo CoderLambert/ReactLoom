@@ -10,7 +10,7 @@
     "prepare:msw": "node scripts/prepare-msw-runner.mjs",
     "catalog:generate": "node scripts/generate.mjs",
     "catalog:check": "node scripts/generate.mjs --check && node scripts/validate-dependencies.mjs",
-    "lint": "biome check src scripts tests e2e runners package.json tsconfig.json vite.config.ts playwright.config.ts",
+    "lint": "biome check src scripts tests e2e runners package.json tsconfig.json vite.config.ts playwright.config.ts --max-diagnostics=200",
     "typecheck": "node scripts/generate.mjs && tsc --noEmit",
     "test": "node --test tests/catalog.test.mjs tests/document-utils.test.mjs tests/generate.test.mjs tests/find-library.test.mjs tests/validate-dependencies.test.mjs tests/reproduction.test.mjs tests/sdk-runner.test.mjs tests/demo-policy.test.mjs tests/source-language.test.mjs tests/worker-protocol.test.mjs tests/root-catalog.test.mjs tests/cli-runner.test.mjs tests/entry-gate.test.mjs tests/readiness.test.mjs tests/package-source.test.mjs tests/prepare-ffmpeg-core.test.mjs tests/catalog-payload.test.mjs tests/catalog-index.test.mjs tests/bounded-json.test.mjs tests/policy-runner.test.mjs tests/local-verify.test.mjs tests/source-integrity.test.mjs tests/worker-observation.test.mjs tests/resource-fetch.test.mjs tests/verify-msw-worker.test.mjs tests/source-publication.test.mjs tests/source-consumers.test.mjs tests/root-catalog-committed.test.mjs tests/verification-evidence.test.mjs tests/verification-inputs.test.mjs tests/ci-scope.test.mjs tests/frame-session.test.mjs tests/msw-runner-server.test.mjs tests/ci-targets.test.mjs tests/gantt-frame-session.test.mjs tests/gantt-runner-server.test.mjs",
     "test:e2e": "playwright test",

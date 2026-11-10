@@ -8,12 +8,18 @@
     "note": "Monaco真实导入和诊断尚未执行"
   },
   "build": {
-    "status": "BLOCKED",
-    "note": "集成平台需安装 monaco-editor 并重建锁文件"
+    "status": "PASS",
+    "sourceFingerprint": "3277851be14a3d1c3d671aae609e5dc4cb764432c573ed89ff8e8e211b3232d0",
+    "command": "pnpm build",
+    "evidence": "docs/library-lab/evidence/runs/2026-11-08T17-21-43-423Z-batch-build-E05.json",
+    "evidenceSha256": "45811977c080a169142196ca0533a8e7d2966dedfe634feff1926338f77c63e7"
   },
   "browser": {
-    "status": "NOT_RUN",
-    "note": "Worker/CSP/resize/model dispose 需实浏览器E2E"
+    "status": "PASS",
+    "sourceFingerprint": "3277851be14a3d1c3d671aae609e5dc4cb764432c573ed89ff8e8e211b3232d0",
+    "command": "pnpm exec playwright test --grep @E05\\b",
+    "evidence": "docs/library-lab/evidence/runs/2026-11-08T17-24-43-831Z-E05-browser.json",
+    "evidenceSha256": "c4e3c869b22928f76cc8865bc53f20fb4311cb8b65066bc0b42e40cd380de12e"
   },
   "isolation": {
     "status": "BLOCKED",

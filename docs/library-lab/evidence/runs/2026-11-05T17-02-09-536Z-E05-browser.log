@@ -1,0 +1,9 @@
+$ pnpm exec playwright test --grep @E05\b
+
+Running 2 tests using 1 worker
+
+  ✓  1 e2e/e05-json-worker.spec.ts:5:1 › @E05 real JSON language worker validates edits across stop and remount (3.4s)
+  ✓  2 e2e/p0-risk-lifecycle.spec.ts:122:1 › @E05 real Monaco editor creates a language worker and releases its environment lease (2.0s)
+
+  2 passed (7.2s)
+

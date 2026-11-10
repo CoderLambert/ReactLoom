@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "kind": "sdk",
+  "entryId": "F11",
+  "sourceFingerprint": "ce41402eeb0353dcacee7549898190b93b00cad00e1d7136e0307a86c25bb68d",
+  "command": "node scripts/sdk-runner.mjs --entry=F11",
+  "status": "PASS",
+  "exitCode": 0,
+  "head": "12d22921f164f4388ceb8178ca9a0580c46d50a9",
+  "node": "22.23.4",
+  "lockSha256": "1d255c4858effcb7967cead058f46358a8dc31d646804616b133683bef144b1d",
+  "startedAt": "2026-11-08T17:24:13.233Z",
+  "finishedAt": "2026-11-08T17:24:13.727Z",
+  "log": {
+    "path": "docs/library-lab/evidence/runs/2026-11-08T17-24-13-233Z-F11-sdk.log",
+    "sha256": "fde33251550f9a55867b356a7276428ccad92bd4c9a9bd6fa7336a0d1831f189",
+    "bytes": 714
+  }
+}

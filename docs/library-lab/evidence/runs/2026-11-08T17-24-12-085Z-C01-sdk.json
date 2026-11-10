@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "kind": "sdk",
+  "entryId": "C01",
+  "sourceFingerprint": "d21ffcf7d10245fb1443b73789b434b20460e5b80fa912c4d6d6c210429f967b",
+  "command": "node scripts/sdk-runner.mjs --entry=C01",
+  "status": "PASS",
+  "exitCode": 0,
+  "head": "12d22921f164f4388ceb8178ca9a0580c46d50a9",
+  "node": "22.23.4",
+  "lockSha256": "1d255c4858effcb7967cead058f46358a8dc31d646804616b133683bef144b1d",
+  "startedAt": "2026-11-08T17:24:12.085Z",
+  "finishedAt": "2026-11-08T17:24:12.302Z",
+  "log": {
+    "path": "docs/library-lab/evidence/runs/2026-11-08T17-24-12-085Z-C01-sdk.log",
+    "sha256": "f8a37ce33cafb577416957b9609367e8b84129017df3970978ff2f13511e3217",
+    "bytes": 385
+  }
+}

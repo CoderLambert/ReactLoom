@@ -1,14 +1,23 @@
 {
   "sdk": {
-    "status": "NOT_RUN",
-    "note": "使用真实包 import，当前依赖下载 DNS 受阻，未运行 SDK；第22轮新增/更新真实 SDK 测试源码，但仍未执行目标库 SDK"
+    "status": "PASS",
+    "sourceFingerprint": "cfc263aefcfa1c0e6a594535b307aff611ba870751031a766fda1e701343ddbb",
+    "command": "node scripts/sdk-runner.mjs --entry=D03",
+    "evidence": "docs/library-lab/evidence/runs/2026-11-08T17-24-12-674Z-D03-sdk.json",
+    "evidenceSha256": "cf9b7b000c6fc424ad86e54c55ce28b112c52b8e8d2611138ba9193d5916cda3"
   },
   "build": {
-    "status": "BLOCKED",
-    "note": "registry.npmjs.org DNS 无法解析"
+    "status": "PASS",
+    "sourceFingerprint": "cfc263aefcfa1c0e6a594535b307aff611ba870751031a766fda1e701343ddbb",
+    "command": "pnpm build",
+    "evidence": "docs/library-lab/evidence/runs/2026-11-08T17-21-43-423Z-batch-build-D03.json",
+    "evidenceSha256": "c0968c174160f4eb51eeee02d68d17785feb866aa12cc6fd0ec14d85cb2ffc87"
   },
   "browser": {
-    "status": "NOT_RUN",
-    "note": "；第22轮交互改动未在 Chromium 验收"
+    "status": "PASS",
+    "sourceFingerprint": "cfc263aefcfa1c0e6a594535b307aff611ba870751031a766fda1e701343ddbb",
+    "command": "pnpm exec playwright test --grep @D03\\b",
+    "evidence": "docs/library-lab/evidence/runs/2026-11-08T17-24-33-872Z-D03-browser.json",
+    "evidenceSha256": "de2050373d60144123e9a924b098777260b07842af1e7387a2ab593a939b07b7"
   }
 }

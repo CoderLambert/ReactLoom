@@ -92,6 +92,33 @@ test('@D03 real p-limit demo unmounts and restarts with fresh batch state', asyn
   await expect(page.getByRole('region', { name: 'p-limit 真实并发调度' })).toContainText('尚未运行')
 })
 
+test('@D03 active cancellation settles the queued batch before restart', async ({ page }) => {
+  await start(page, 'p-limit', 'advanced')
+  const region = page.getByRole('region', { name: 'p-limit 真实并发调度' })
+  // One active job leaves enough queued work to exercise rejectOnClear in the UI.
+  await region.getByRole('combobox', { name: '并发数' }).selectOption('1')
+  await region.getByRole('button', { name: '运行批处理' }).click()
+  await expect(region.locator('.demo-job')).toHaveCount(10)
+  await region.getByRole('button', { name: '取消任务' }).click()
+
+  // The terminal status is only rendered after Promise.allSettled settles all ten tasks.
+  await expect(region.getByRole('status')).toHaveText(
+    '已取消：运行中任务中断，排队任务被拒绝并结算',
+  )
+  await expect(
+    region.locator('.demo-job[data-state="queued"], .demo-job[data-state="running"]'),
+  ).toHaveCount(0)
+  await expect(region).toContainText('正在运行 0 / 等待 0')
+
+  await region.getByRole('button', { name: '运行批处理' }).click()
+  await expect(region.getByRole('status')).toHaveText('正在执行真实 p-limit 批次')
+  await expect(region.locator('.demo-job')).toHaveCount(10)
+  await region.getByRole('button', { name: '取消任务' }).click()
+  await expect(region.getByRole('status')).toHaveText(
+    '已取消：运行中任务中断，排队任务被拒绝并结算',
+  )
+})
+
 test('@E05 real Monaco editor creates a language worker and releases its environment lease', async ({
   page,
 }) => {

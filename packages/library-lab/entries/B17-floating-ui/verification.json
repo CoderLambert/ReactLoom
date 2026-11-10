@@ -4,15 +4,24 @@
     "note": "官方React API与示例已审阅，源码重新编写"
   },
   "sdk": {
-    "status": "NOT_RUN",
-    "note": "等待集成任务安装@floating-ui/react 0.27.20"
+    "status": "PASS",
+    "sourceFingerprint": "a52d60eae9cd2eccfc37ae7b2fd8906e82c6578daf2fd4e4bd9c7d560918843b",
+    "command": "node scripts/sdk-runner.mjs --entry=B17",
+    "evidence": "docs/library-lab/evidence/runs/2026-11-08T17-24-11-455Z-B17-sdk.json",
+    "evidenceSha256": "d156a661b53f8c74e7dc7859169eca43b944cfc5af6b4d691fe5d75cd31d8d7c"
   },
   "build": {
-    "status": "NOT_RUN",
-    "note": "真实TypeScript构建未运行"
+    "status": "PASS",
+    "sourceFingerprint": "a52d60eae9cd2eccfc37ae7b2fd8906e82c6578daf2fd4e4bd9c7d560918843b",
+    "command": "pnpm build",
+    "evidence": "docs/library-lab/evidence/runs/2026-11-08T17-21-43-423Z-batch-build-B17.json",
+    "evidenceSha256": "489139e0b24be2310275124f09340838e4febd4356487ebc5ba74f33a77c7382"
   },
   "browser": {
-    "status": "NOT_RUN",
-    "note": "浮层焦点与滚动未在浏览器实测"
+    "status": "PASS",
+    "sourceFingerprint": "a52d60eae9cd2eccfc37ae7b2fd8906e82c6578daf2fd4e4bd9c7d560918843b",
+    "command": "pnpm exec playwright test --grep @B17\\b",
+    "evidence": "docs/library-lab/evidence/runs/2026-11-08T17-24-23-739Z-B17-browser.json",
+    "evidenceSha256": "52a49e224ff1b38658bbcac2bbdf63991039becb739d37aa3ae331193fb4b4a2"
   }
 }
