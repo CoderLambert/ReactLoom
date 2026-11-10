@@ -652,6 +652,22 @@ describe('createApiClient', () => {
     expect(fetchFn).not.toHaveBeenCalled()
   })
 
+  it.each([
+    ['malformed request path', 'https://api.test/v1', 'http://[bad'],
+    ['malformed base URL', 'https://[bad', '/items'],
+  ])('reports %s as validation before resolving credentials', async (_label, baseUrl, path) => {
+    const getAccessToken = vi.fn(() => 'private-token')
+    const fetchFn = vi.fn(async () => jsonResponse({ ok: true }))
+    const client = createApiClient({ baseUrl, getAccessToken, fetchFn })
+
+    await expect(client.request(path, schema)).rejects.toMatchObject({
+      code: 'validation',
+      message: 'Request URL is not valid.',
+    })
+    expect(getAccessToken).not.toHaveBeenCalled()
+    expect(fetchFn).not.toHaveBeenCalled()
+  })
+
   it('permits an absolute URL on the configured origin', async () => {
     const fetchFn = vi.fn(async () => jsonResponse({ ok: true }))
     const client = createApiClient({ baseUrl: 'https://api.test/v1', fetchFn })

@@ -31,3 +31,5 @@ Reject nonfinite, fractional, negative or excessive retry/timeout/backoff settin
 Avoid logging raw request paths in retry diagnostics: URL segments and query parameters can contain credentials or personal data. Retry logs retain method, status/error code, and attempt metadata.
 
 Round fractional numeric `Retry-After` seconds up to whole milliseconds so retry deadline creation cannot throw a timer-range error.
+
+Normalize malformed request paths and invalid API base URLs to validation errors before reading credentials or fetching, instead of exposing raw URL parser TypeErrors.

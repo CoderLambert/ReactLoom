@@ -69,9 +69,16 @@ const noopLogger: ApiLogger = {
 }
 
 function joinUrl(baseUrl: string, path: string): string {
-  const base = new URL(baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`)
-  const relative = path.startsWith('/') ? path.slice(1) : path
-  const url = new URL(relative, base)
+  let base: URL
+  let url: URL
+  try {
+    base = new URL(baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`)
+    const relative = path.startsWith('/') ? path.slice(1) : path
+    url = new URL(relative, base)
+  } catch (cause) {
+    // Malformed caller paths and configuration are input errors, not transport failures.
+    throw new ApiError('Request URL is not valid.', 'validation', { cause })
+  }
 
   // URL resolution accepts absolute URLs, which would otherwise send bearer
   // credentials to a caller-supplied host instead of the configured API.
