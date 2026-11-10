@@ -144,7 +144,7 @@ describe('createApiClient', () => {
   it.each([
     ['0.0001', 1],
     ['0.0015', 2],
-  ])('rounds fractional Retry-After %s seconds up before scheduling', async (header, expectedMs) => {
+  ])('rounds fractional Retry-After %s up before retry', async (header, expectedMs) => {
     const fetchFn = vi
       .fn<typeof fetch>()
       .mockResolvedValueOnce(
