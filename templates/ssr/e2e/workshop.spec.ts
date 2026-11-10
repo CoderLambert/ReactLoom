@@ -44,6 +44,66 @@ test('announces invalid login fields and accepts corrections', async ({ page }) 
   await expect(page.getByRole('heading', { name: 'Warp board' })).toBeVisible()
 })
 
+test('single-flights sign-in while pending and permits retry after failure', async ({ page }) => {
+  await page.goto('/login')
+  const email = page.getByLabel('Email')
+  const password = page.getByLabel('Password')
+  await email.fill('ada@reactloom.dev')
+  await password.fill('loom-demo')
+
+  const firstStarted = Promise.withResolvers<void>()
+  const releaseFirst = Promise.withResolvers<void>()
+  let attempts = 0
+  await page.route('**/api/session', async (route) => {
+    if (route.request().method() !== 'POST') {
+      await route.continue()
+      return
+    }
+    attempts += 1
+    if (attempts === 1) {
+      firstStarted.resolve()
+      await releaseFirst.promise
+      await route.fulfill({
+        status: 503,
+        contentType: 'application/json',
+        body: JSON.stringify({ message: 'Temporary sign-in failure.' }),
+      })
+      return
+    }
+    await route.continue()
+  })
+
+  try {
+    await page.getByRole('button', { name: 'Sign in' }).click()
+    await firstStarted.promise
+    await expect(page.getByRole('button', { name: 'Signing in…' })).toBeDisabled()
+    await expect(email).toHaveAttribute('readonly', '')
+    await expect(password).toHaveAttribute('readonly', '')
+    await expect(page.locator('form')).toHaveAttribute('aria-busy', 'true')
+
+    // A synthetic reentrant submit bypasses the disabled button. It must
+    // still not issue a second POST or release the original pending lock.
+    await page.locator('form').evaluate((form) => {
+      ;(form as HTMLFormElement).requestSubmit()
+    })
+    await expect(page.getByRole('button', { name: 'Signing in…' })).toBeDisabled()
+
+    releaseFirst.resolve()
+    await expect(page.getByRole('alert')).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Sign in' })).toBeEnabled()
+    expect(attempts).toBe(1)
+    await expect(email).not.toHaveAttribute('readonly', '')
+    await expect(password).not.toHaveAttribute('readonly', '')
+
+    await page.getByRole('button', { name: 'Sign in' }).click()
+    await expect(page.getByText('Dress the loom')).toBeVisible()
+    expect(attempts).toBe(2)
+  } finally {
+    releaseFirst.resolve()
+    await page.unroute('**/api/session')
+  }
+})
+
 test('sign out removes the session cookie and blocks access to private tasks', async ({ page }) => {
   await page.goto('/login')
   await page.getByLabel('Email').fill('ada@reactloom.dev')
