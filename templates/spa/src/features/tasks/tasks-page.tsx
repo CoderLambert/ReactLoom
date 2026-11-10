@@ -26,6 +26,12 @@ export function TasksPage() {
     defaultValues: { title: '' },
   })
 
+  const titleError = form.formState.errors.title
+  const titleDescriptionIds = [
+    titleError && 'task-title-error',
+    create.isError && 'task-create-error',
+  ].filter(Boolean).join(' ')
+
   const visible = (tasks.data ?? []).filter((task) => status === 'all' || task.status === status)
   const errorMessage = isApiError(tasks.error)
     ? tasks.error.message
@@ -98,16 +104,17 @@ export function TasksPage() {
           <Input
             id="title"
             placeholder={t('tasks.placeholder')}
-            aria-describedby={create.isError ? 'task-create-error' : undefined}
+            aria-invalid={titleError ? true : undefined}
+            aria-describedby={titleDescriptionIds || undefined}
             {...form.register('title', {
               onChange: () => {
                 draftRevision.current += 1
               },
             })}
           />
-          {form.formState.errors.title ? (
-            <p className="text-sm text-copper" role="alert">
-              {form.formState.errors.title.message}
+          {titleError ? (
+            <p id="task-title-error" className="text-sm text-copper" role="alert">
+              {titleError.message}
             </p>
           ) : null}
           {create.isError ? (

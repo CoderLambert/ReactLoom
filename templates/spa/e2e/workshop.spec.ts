@@ -37,6 +37,25 @@ test('signs in and adds a task', async ({ page }) => {
   await expect(page.getByText('Warp the selvage')).toBeVisible()
 })
 
+test('announces invalid task titles and permits correction', async ({ page }) => {
+  await page.goto('/login')
+  await page.getByLabel('Email').fill('ada@reactloom.dev')
+  await page.getByLabel('Password').fill('loom-demo')
+  await page.getByRole('main').getByRole('button', { name: 'Sign in' }).click()
+  await expect(page.getByRole('heading', { name: 'Warp board' })).toBeVisible()
+
+  const title = page.getByLabel('Task title')
+  await page.getByRole('button', { name: 'Add task' }).click()
+  await expect(title).toHaveAttribute('aria-invalid', 'true')
+  await expect(title).toHaveAttribute('aria-describedby', 'task-title-error')
+  await expect(page.locator('#task-title-error')).toHaveAttribute('role', 'alert')
+
+  await title.fill('Weave a new task')
+  await page.getByRole('button', { name: 'Add task' }).click()
+  await expect(page.getByText('Weave a new task')).toBeVisible()
+  await expect(title).not.toHaveAttribute('aria-invalid')
+})
+
 test('expires a private task view on focus after a suspended tab resumes', async ({ page }) => {
   await page.goto('/login')
   await page.getByLabel('Email').fill('ada@reactloom.dev')
