@@ -31,7 +31,21 @@ export async function writeSession(session: Session | null): Promise<void> {
     session === null ? null : JSON.stringify({ version: 1, session: sessionSchema.parse(session) })
   if (Platform.OS === 'web') {
     if (value !== null) {
-      globalThis.localStorage.setItem(KEY, value)
+      let writeError: unknown
+      try {
+        globalThis.localStorage.setItem(KEY, value)
+        if (globalThis.localStorage.getItem(KEY) === value) return
+      } catch (error) {
+        writeError = error
+      }
+      // A silently ignored replacement must not leave an old account's bearer
+      // available for hydration after a failed sign-in.
+      try {
+        await writeSession(null)
+      } catch {
+        // Revocation is best-effort; never report the new session as persisted.
+      }
+      throw writeError ?? new Error('Session storage write was not persisted.')
     } else {
       let deletionError: unknown
       try {
@@ -53,8 +67,21 @@ export async function writeSession(session: Session | null): Promise<void> {
   }
   const SecureStore = await import('expo-secure-store')
   if (value !== null) {
-    await SecureStore.setItemAsync(KEY, value)
-    return
+    let writeError: unknown
+    try {
+      await SecureStore.setItemAsync(KEY, value)
+      if ((await SecureStore.getItemAsync(KEY)) === value) return
+    } catch (error) {
+      writeError = error
+    }
+    // SecureStore can report success without changing the original credential.
+    // Invalidate any previous bearer before failing the new authentication.
+    try {
+      await writeSession(null)
+    } catch {
+      // No writable storage fallback exists; surface persistence failure.
+    }
+    throw writeError ?? new Error('Session storage write was not persisted.')
   }
   let deletionError: unknown
   try {

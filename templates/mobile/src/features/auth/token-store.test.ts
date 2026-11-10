@@ -71,6 +71,23 @@ describe('session storage', () => {
     expect(await readSession()).toBeNull()
   })
 
+  it('rejects an ignored web session replacement and revokes the old bearer', async () => {
+    await writeSession(session)
+    vi.stubGlobal('localStorage', {
+      getItem: (name: string) => values.get(name) ?? null,
+      setItem: () => {},
+      removeItem: (name: string) => {
+        values.delete(name)
+      },
+    })
+
+    await expect(writeSession({ ...session, accessToken: 'new-token' })).rejects.toThrow(
+      'Session storage write was not persisted.',
+    )
+    expect(values.has(key)).toBe(false)
+    expect(await readToken()).toBeNull()
+  })
+
   it('tombstones a web session when deletion is blocked, including after restart', async () => {
     await writeSession(session)
     vi.stubGlobal('localStorage', {
@@ -178,6 +195,31 @@ describe('session storage', () => {
     expect(values.has(key)).toBe(false)
     await writeSession(null)
     expect(native.values.has(key)).toBe(false)
+  })
+
+  it('rejects an ignored SecureStore replacement and removes the previous session', async () => {
+    native.platform.OS = 'ios'
+    await writeSession(session)
+    native.ignoreSet = true
+
+    await expect(writeSession({ ...session, accessToken: 'new-token' })).rejects.toThrow(
+      'Session storage write was not persisted.',
+    )
+    expect(native.values.has(key)).toBe(false)
+    expect(await readToken()).toBeNull()
+  })
+
+  it('reports a failed native replacement even when the old bearer cannot be revoked', async () => {
+    native.platform.OS = 'android'
+    await writeSession(session)
+    native.ignoreSet = true
+    native.ignoreDelete = true
+
+    await expect(writeSession({ ...session, accessToken: 'new-token' })).rejects.toThrow(
+      'Session storage write was not persisted.',
+    )
+    // Both operations were ignored: do not claim a successful sign-in or cleanup.
+    expect(await readToken()).toBe('server-token')
   })
 
   it('tombstones the native session when SecureStore deletion fails', async () => {
