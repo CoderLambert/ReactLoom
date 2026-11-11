@@ -31,6 +31,36 @@ test.beforeEach(async ({ page }) => {
   await expect(page.getByText('Dress the loom', { exact: true })).toBeVisible()
 })
 
+test('announces a short task title and accepts a corrected submission', async ({ page }) => {
+  let createRequests = 0
+  await page.route('**/api/tasks', async (route) => {
+    if (route.request().method() === 'POST') createRequests += 1
+    await route.continue()
+  })
+
+  const title = page.getByLabel('Task title')
+  await title.fill('ab')
+  await page.getByRole('button', { name: 'Add task' }).click()
+  const error = page.locator('#create-task-error')
+  await expect(error).toHaveAttribute('role', 'alert')
+  await expect(error).toHaveText('Task title must contain at least 3 characters.')
+  await expect(title).toHaveAttribute('aria-invalid', 'true')
+  await expect(title).toHaveAttribute('aria-describedby', 'create-task-error')
+  expect(createRequests).toBe(0)
+
+  const corrected = `Corrected title ${randomUUID()}`
+  await title.fill(corrected)
+  await expect(error).toHaveCount(0)
+  await expect(title).toHaveAttribute('aria-invalid', 'false')
+  await expect(title).not.toHaveAttribute('aria-describedby', 'create-task-error')
+
+  const saved = page.waitForResponse(isTaskCreate)
+  await page.getByRole('button', { name: 'Add task' }).click()
+  expect((await saved).status()).toBe(201)
+  await expect(page.getByText(corrected, { exact: true })).toBeVisible()
+  expect(createRequests).toBe(1)
+})
+
 test('retains a server-rejected draft and accepts a corrected retry', async ({ page }) => {
   const title = page.getByLabel('Task title')
   const rejected = 'x'.repeat(81)
@@ -39,6 +69,8 @@ test('retains a server-rejected draft and accepts a corrected retry', async ({ p
   await page.getByRole('button', { name: 'Add task' }).click()
   expect((await rejectedResponse).status()).toBe(400)
   await expect(page.locator('#create-task-error')).toContainText('Give the task a title.')
+  await expect(title).toHaveAttribute('aria-invalid', 'true')
+  await expect(title).toHaveAttribute('aria-describedby', 'create-task-error')
   await expect(title).toHaveValue(rejected)
 
   const corrected = `Retry draft ${randomUUID()}`
