@@ -177,6 +177,7 @@ function AuthenticatedTasks({ userId }: { userId: string }) {
   const [title, setTitle] = useState('')
   const [isSigningOut, setIsSigningOut] = useState(false)
   const [signOutError, setSignOutError] = useState<string | null>(null)
+  const [titleValidationError, setTitleValidationError] = useState<string | null>(null)
   const draftRevision = useRef(0)
   const submitting = useRef(false)
   const tasks = useQuery({
@@ -248,7 +249,11 @@ function AuthenticatedTasks({ userId }: { userId: string }) {
           event.preventDefault()
           if (submitting.current || create.isPending) return
           const next = title.trim()
-          if (next.length < 3) return
+          if (next.length < 3) {
+            setTitleValidationError('Task title must contain at least 3 characters.')
+            return
+          }
+          setTitleValidationError(null)
           submitting.current = true
           create.mutate({ title: next, revision: draftRevision.current })
         }}
@@ -260,9 +265,11 @@ function AuthenticatedTasks({ userId }: { userId: string }) {
             value={title}
             onChange={(event) => {
               draftRevision.current += 1
+              setTitleValidationError(null)
               setTitle(event.target.value)
             }}
-            aria-describedby={create.isError ? 'create-task-error' : undefined}
+            aria-invalid={Boolean(titleValidationError || create.isError)}
+            aria-describedby={titleValidationError || create.isError ? 'create-task-error' : undefined}
             className="w-full rounded-2xl bg-card px-3 py-2 font-normal ring-1 ring-line"
           />
         </label>
@@ -274,14 +281,15 @@ function AuthenticatedTasks({ userId }: { userId: string }) {
           {create.isPending ? 'Adding task…' : create.isError ? 'Try again' : 'Add task'}
         </button>
       </form>
-      {create.isError ? (
+      {titleValidationError || create.isError ? (
         <p
           hidden={isSigningOut}
           id="create-task-error"
           role="alert"
           className="text-sm text-copper"
         >
-          {create.error instanceof Error ? create.error.message : 'The task could not be added.'}
+          {titleValidationError ??
+            (create.error instanceof Error ? create.error.message : 'The task could not be added.')}
         </p>
       ) : null}
       {tasks.isPending ? <p hidden={isSigningOut}>Loading tasks…</p> : null}
