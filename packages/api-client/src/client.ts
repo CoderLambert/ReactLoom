@@ -101,6 +101,19 @@ function serializeRequestBody(body: unknown): string | undefined {
   }
 }
 
+function createRequestHeaders(init: RequestOptions): Headers {
+  try {
+    const headers = new Headers(init.headers)
+    if (init.body !== undefined && !headers.has('content-type')) {
+      headers.set('content-type', 'application/json')
+    }
+    return headers
+  } catch (cause) {
+    // Malformed names/values are caller input errors, not retryable network failures.
+    throw new ApiError('Request headers are not valid.', 'validation', { cause })
+  }
+}
+
 function defaultSleep(ms: number, signal: AbortSignal): Promise<void> {
   return new Promise((resolve, reject) => {
     if (signal.aborted) {
@@ -315,6 +328,7 @@ export function createApiClient(options: ApiClientOptions) {
     const retrySignal = init.signal ?? new AbortController().signal
     if (retrySignal.aborted) throw toAbortError(retrySignal)
     const serializedBody = serializeRequestBody(init.body)
+    const requestHeaders = createRequestHeaders(init)
     let lastError: ApiError | undefined
     for (let attempt = 0; attempt < attempts; attempt += 1) {
       const timeoutSignal = AbortSignal.timeout(timeoutMs)
@@ -331,10 +345,7 @@ export function createApiClient(options: ApiClientOptions) {
       try {
         const token = await readAccessToken(options.getAccessToken, signal)
         if (signal.aborted) throw toAbortError(signal)
-        const headers = new Headers(init.headers)
-        if (init.body !== undefined && !headers.has('content-type')) {
-          headers.set('content-type', 'application/json')
-        }
+        const headers = new Headers(requestHeaders)
         if (token) headers.set('authorization', `Bearer ${token}`)
 
         const response = await awaitWithAbort(
