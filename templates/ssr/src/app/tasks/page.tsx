@@ -219,6 +219,8 @@ function AuthenticatedTasks({ userId }: { userId: string }) {
     }
   }
 
+  const hasTaskError = Boolean(titleValidationError || create.isError)
+
   return (
     <section className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
@@ -268,8 +270,8 @@ function AuthenticatedTasks({ userId }: { userId: string }) {
               setTitleValidationError(null)
               setTitle(event.target.value)
             }}
-            aria-invalid={Boolean(titleValidationError || create.isError)}
-            aria-describedby={titleValidationError || create.isError ? 'create-task-error' : undefined}
+            aria-invalid={hasTaskError}
+            aria-describedby={hasTaskError ? 'create-task-error' : undefined}
             className="w-full rounded-2xl bg-card px-3 py-2 font-normal ring-1 ring-line"
           />
         </label>
@@ -281,7 +283,7 @@ function AuthenticatedTasks({ userId }: { userId: string }) {
           {create.isPending ? 'Adding task…' : create.isError ? 'Try again' : 'Add task'}
         </button>
       </form>
-      {titleValidationError || create.isError ? (
+      {hasTaskError ? (
         <p
           hidden={isSigningOut}
           id="create-task-error"
