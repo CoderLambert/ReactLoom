@@ -101,6 +101,62 @@ describe('createApiClient', () => {
     expect(fetchFn).not.toHaveBeenCalled()
   })
 
+  it.each([
+    ['invalid name', { 'invalid header': 'value' }],
+    ['injected newline', { 'x-safe': 'one\\r\\ntwo' }],
+  ])('rejects %s headers before authentication or retry', async (_label, headers) => {
+    const getAccessToken = vi.fn(() => 'private-token')
+    const fetchFn = vi.fn(async () => jsonResponse({ ok: true }))
+    const warn = vi.fn()
+    const client = createApiClient({
+      baseUrl: 'https://api.test',
+      getAccessToken,
+      fetchFn,
+      logger: { debug: vi.fn(), warn },
+    })
+
+    await expect(client.request('/items', schema, { headers })).rejects.toMatchObject({
+      code: 'validation',
+      message: 'Request headers are not valid.',
+    })
+    expect(getAccessToken).not.toHaveBeenCalled()
+    expect(fetchFn).not.toHaveBeenCalled()
+    expect(warn).not.toHaveBeenCalled()
+  })
+
+  it('preserves valid headers while refreshing authorization on retry', async () => {
+    let issued = 0
+    const getAccessToken = vi.fn(() => (++issued === 1 ? 'older-token' : 'fresh-token'))
+    const attempts: Array<{ authorization: string | null; trace: string | null }> = []
+    const fetchFn = vi.fn(async (_input: string | Request | URL, init?: RequestInit) => {
+      const headers = new Headers(init?.headers)
+      attempts.push({
+        authorization: headers.get('authorization'),
+        trace: headers.get('x-trace-id'),
+      })
+      return attempts.length === 1
+        ? jsonResponse({ message: 'unavailable' }, 503)
+        : jsonResponse({ ok: true })
+    })
+    const client = createApiClient({
+      baseUrl: 'https://api.test',
+      getAccessToken,
+      fetchFn,
+      sleep: async () => undefined,
+    })
+
+    await expect(
+      client.request('/items', schema, {
+        headers: { 'x-trace-id': 'trace-123', authorization: 'Bearer supplied' },
+      }),
+    ).resolves.toMatchObject({ ok: true })
+    expect(getAccessToken).toHaveBeenCalledTimes(2)
+    expect(attempts).toEqual([
+      { authorization: 'Bearer older-token', trace: 'trace-123' },
+      { authorization: 'Bearer fresh-token', trace: 'trace-123' },
+    ])
+  })
+
   it('normalizes HTTP errors and does not retry POST by default', async () => {
     const fetchFn = vi.fn(async () => jsonResponse({ message: 'nope' }, 500))
     const client = createApiClient({ baseUrl: 'http://api.test', fetchFn })
