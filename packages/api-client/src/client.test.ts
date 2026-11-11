@@ -104,7 +104,7 @@ describe('createApiClient', () => {
   it.each([
     ['invalid name', { 'invalid header': 'value' }],
     ['injected newline', { 'x-safe': 'one\r\ntwo' }],
-  ])('rejects %s headers before authentication or retry', async (_label, headers) => {
+  ] as Array<[string, Record<string, string>]>)('rejects %s headers before authentication or retry', async (_label, headers) => {
     const getAccessToken = vi.fn(() => 'private-token')
     const fetchFn = vi.fn(async () => jsonResponse({ ok: true }))
     const warn = vi.fn()
