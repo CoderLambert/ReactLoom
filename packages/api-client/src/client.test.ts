@@ -27,9 +27,56 @@ function deferred<T>() {
   return { promise, resolve }
 }
 
+const circularBody: { self?: unknown } = {}
+circularBody.self = circularBody
+
 describe('createApiClient', () => {
   afterEach(() => {
     vi.restoreAllMocks()
+  })
+
+  it.each([
+    ['circular object', circularBody],
+    ['BigInt field', { value: 1n }],
+    ['unsupported root value', () => 'not JSON'],
+  ])('rejects %s bodies before authentication or transport', async (_label, body) => {
+    const getAccessToken = vi.fn(() => 'private-token')
+    const fetchFn = vi.fn(async () => jsonResponse({ ok: true }))
+    const client = createApiClient({
+      baseUrl: 'https://api.test',
+      getAccessToken,
+      fetchFn,
+    })
+
+    await expect(client.request('/items', schema, { method: 'POST', body })).rejects.toMatchObject({
+      code: 'validation',
+      message: 'Request body must be JSON serializable.',
+    })
+    expect(getAccessToken).not.toHaveBeenCalled()
+    expect(fetchFn).not.toHaveBeenCalled()
+  })
+
+  it('serializes an explicitly retried JSON body only once', async () => {
+    const toJSON = vi.fn(() => ({ value: 1 }))
+    const fetchFn = vi
+      .fn()
+      .mockResolvedValueOnce(jsonResponse({ message: 'unavailable' }, 503))
+      .mockResolvedValueOnce(jsonResponse({ ok: true }))
+    const sleep = vi.fn(async () => undefined)
+    const client = createApiClient({
+      baseUrl: 'https://api.test',
+      fetchFn,
+      sleep,
+      retry: { baseDelayMs: 0, maxDelayMs: 0 },
+    })
+
+    await expect(
+      client.request('/items', schema, { method: 'POST', body: { toJSON }, retry: 2 }),
+    ).resolves.toMatchObject({ ok: true })
+    expect(fetchFn).toHaveBeenCalledTimes(2)
+    expect(toJSON).toHaveBeenCalledOnce()
+    expect(fetchFn.mock.calls[0]?.[1]?.body).toBe('{"value":1}')
+    expect(fetchFn.mock.calls[1]?.[1]?.body).toBe('{"value":1}')
   })
 
   it('normalizes HTTP errors and does not retry POST by default', async () => {

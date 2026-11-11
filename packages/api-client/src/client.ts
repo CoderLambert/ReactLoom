@@ -88,6 +88,19 @@ function joinUrl(baseUrl: string, path: string): string {
   return url.toString()
 }
 
+function serializeRequestBody(body: unknown): string | undefined {
+  if (body === undefined) return undefined
+  try {
+    const serialized = JSON.stringify(body)
+    if (serialized === undefined) {
+      throw new TypeError('JSON serialization produced no request body.')
+    }
+    return serialized
+  } catch (cause) {
+    throw new ApiError('Request body must be JSON serializable.', 'validation', { cause })
+  }
+}
+
 function defaultSleep(ms: number, signal: AbortSignal): Promise<void> {
   return new Promise((resolve, reject) => {
     if (signal.aborted) {
@@ -299,6 +312,7 @@ export function createApiClient(options: ApiClientOptions) {
             : 1
     const timeoutMs = validateTimerMs(init.timeoutMs ?? defaultTimeoutMs, 'timeoutMs')
 
+    const serializedBody = serializeRequestBody(init.body)
     const retrySignal = init.signal ?? new AbortController().signal
     let lastError: ApiError | undefined
     for (let attempt = 0; attempt < attempts; attempt += 1) {
@@ -326,7 +340,7 @@ export function createApiClient(options: ApiClientOptions) {
           fetchFn(url, {
             method,
             headers,
-            body: init.body === undefined ? undefined : JSON.stringify(init.body),
+            body: serializedBody,
             signal,
             credentials: options.credentials ?? 'same-origin',
             // A redirect is a new network request. Never let Fetch automatically
