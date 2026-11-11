@@ -80,6 +80,15 @@ export function useSetTaskStatus() {
       if (!isCurrentSession(version)) throw new Error('The session has changed.')
       return setTaskStatus(id, status)
     },
+    onSuccess: (task) => {
+      if (!isCurrentSession(version)) return
+      // A successful write must remain visible if the follow-up read fails.
+      queryClient.setQueryData<{ tasks: Task[] }>(taskKeys.list(version), (current) =>
+        current
+          ? { tasks: current.tasks.map((item) => (item.id === task.id ? task : item)) }
+          : current,
+      )
+    },
     onSettled: async () => {
       if (isCurrentSession(version)) {
         await queryClient.invalidateQueries({ queryKey: taskKeys.session(version) })

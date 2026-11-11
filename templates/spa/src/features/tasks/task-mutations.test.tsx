@@ -268,6 +268,29 @@ describe('task mutation feedback', () => {
     expect(screen.queryByText('Old task')).not.toBeInTheDocument()
   })
 
+  it('keeps the confirmed status when the post-update task refresh fails', async () => {
+    const user = await openBoard()
+    let refreshes = 0
+    server.use(
+      http.patch('*/api/tasks/task-1', () =>
+        HttpResponse.json({ ...seedTasks()[0], status: 'done' }),
+      ),
+      http.get('*/api/tasks', () => {
+        refreshes += 1
+        return HttpResponse.json({ message: 'Refresh is unavailable.' }, { status: 404 })
+      }),
+    )
+
+    const row = screen.getByText('Dress the loom').closest('li')
+    if (!row) throw new Error('The task row is missing.')
+    await user.click(within(row).getByRole('button', { name: 'Mark done' }))
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('Refresh is unavailable.')
+    expect(refreshes).toBe(1)
+    expect(within(row).getByText('done')).toBeVisible()
+    expect(within(row).getByRole('button', { name: 'Reopen' })).toBeEnabled()
+  })
+
   it('reports a status failure, preserves the original status, and permits retry without duplicate updates', async () => {
     let release = () => {}
     const pending = new Promise<void>((resolve) => {
