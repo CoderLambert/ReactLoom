@@ -124,6 +124,26 @@ describe('createApiClient', () => {
     expect(warn).not.toHaveBeenCalled()
   })
 
+  it('rejects an invalid bearer token once without transport or retry', async () => {
+    const getAccessToken = vi.fn(() => 'secret\r\nInjected: value')
+    const fetchFn = vi.fn(async () => jsonResponse({ ok: true }))
+    const warn = vi.fn()
+    const client = createApiClient({
+      baseUrl: 'https://api.test',
+      getAccessToken,
+      fetchFn,
+      logger: { debug: vi.fn(), warn },
+    })
+
+    await expect(client.request('/items', schema)).rejects.toMatchObject({
+      code: 'validation',
+      message: 'Access token is not a valid header value.',
+    })
+    expect(getAccessToken).toHaveBeenCalledOnce()
+    expect(fetchFn).not.toHaveBeenCalled()
+    expect(warn).not.toHaveBeenCalled()
+  })
+
   it('preserves valid headers while refreshing authorization on retry', async () => {
     let issued = 0
     const getAccessToken = vi.fn(() => (++issued === 1 ? 'older-token' : 'fresh-token'))
