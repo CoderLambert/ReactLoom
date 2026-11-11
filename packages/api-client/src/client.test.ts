@@ -104,25 +104,28 @@ describe('createApiClient', () => {
   it.each([
     ['invalid name', { 'invalid header': 'value' }],
     ['injected newline', { 'x-safe': 'one\r\ntwo' }],
-  ] as Array<[string, Record<string, string>]>)('rejects %s headers before authentication or retry', async (_label, headers) => {
-    const getAccessToken = vi.fn(() => 'private-token')
-    const fetchFn = vi.fn(async () => jsonResponse({ ok: true }))
-    const warn = vi.fn()
-    const client = createApiClient({
-      baseUrl: 'https://api.test',
-      getAccessToken,
-      fetchFn,
-      logger: { debug: vi.fn(), warn },
-    })
+  ] as Array<[string, Record<string, string>]>)(
+    'rejects %s headers before authentication or retry',
+    async (_label, headers) => {
+      const getAccessToken = vi.fn(() => 'private-token')
+      const fetchFn = vi.fn(async () => jsonResponse({ ok: true }))
+      const warn = vi.fn()
+      const client = createApiClient({
+        baseUrl: 'https://api.test',
+        getAccessToken,
+        fetchFn,
+        logger: { debug: vi.fn(), warn },
+      })
 
-    await expect(client.request('/items', schema, { headers })).rejects.toMatchObject({
-      code: 'validation',
-      message: 'Request headers are not valid.',
-    })
-    expect(getAccessToken).not.toHaveBeenCalled()
-    expect(fetchFn).not.toHaveBeenCalled()
-    expect(warn).not.toHaveBeenCalled()
-  })
+      await expect(client.request('/items', schema, { headers })).rejects.toMatchObject({
+        code: 'validation',
+        message: 'Request headers are not valid.',
+      })
+      expect(getAccessToken).not.toHaveBeenCalled()
+      expect(fetchFn).not.toHaveBeenCalled()
+      expect(warn).not.toHaveBeenCalled()
+    },
+  )
 
   it('rejects an invalid bearer token once without transport or retry', async () => {
     const getAccessToken = vi.fn(() => 'secret\r\nInjected: value')
