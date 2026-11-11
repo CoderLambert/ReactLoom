@@ -70,6 +70,9 @@ test(
     const packagePath = fileURLToPath(new URL('../package.json', import.meta.url))
     const pkg = JSON.parse(await readFile(packagePath, 'utf8'))
     assert.equal(pkg.scripts.prepare, 'node scripts/prepare.mjs')
-    assert.equal(pkg.scripts.test, 'vitest run && node --test scripts/prepare.test.mjs')
+    assert.equal(
+      pkg.scripts.test,
+      'vitest run && node --test scripts/prepare.test.mjs scripts/doctor-editor.test.mjs',
+    )
   },
 )
