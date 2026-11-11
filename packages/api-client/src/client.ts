@@ -346,7 +346,13 @@ export function createApiClient(options: ApiClientOptions) {
         const token = await readAccessToken(options.getAccessToken, signal)
         if (signal.aborted) throw toAbortError(signal)
         const headers = new Headers(requestHeaders)
-        if (token) headers.set('authorization', `Bearer ${token}`)
+        if (token) {
+          try {
+            headers.set('authorization', `Bearer ${token}`)
+          } catch (cause) {
+            throw new ApiError('Access token is not a valid header value.', 'validation', { cause })
+          }
+        }
 
         const response = await awaitWithAbort(
           fetchFn(url, {
