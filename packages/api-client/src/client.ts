@@ -312,8 +312,9 @@ export function createApiClient(options: ApiClientOptions) {
             : 1
     const timeoutMs = validateTimerMs(init.timeoutMs ?? defaultTimeoutMs, 'timeoutMs')
 
-    const serializedBody = serializeRequestBody(init.body)
     const retrySignal = init.signal ?? new AbortController().signal
+    if (retrySignal.aborted) throw toAbortError(retrySignal)
+    const serializedBody = serializeRequestBody(init.body)
     let lastError: ApiError | undefined
     for (let attempt = 0; attempt < attempts; attempt += 1) {
       const timeoutSignal = AbortSignal.timeout(timeoutMs)

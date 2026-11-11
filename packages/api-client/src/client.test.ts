@@ -58,10 +58,13 @@ describe('createApiClient', () => {
 
   it('serializes an explicitly retried JSON body only once', async () => {
     const toJSON = vi.fn(() => ({ value: 1 }))
-    const fetchFn = vi
-      .fn()
-      .mockResolvedValueOnce(jsonResponse({ message: 'unavailable' }, 503))
-      .mockResolvedValueOnce(jsonResponse({ ok: true }))
+    const bodies: Array<RequestInit['body']> = []
+    const fetchFn = vi.fn(async (_input: string | Request | URL, init?: RequestInit) => {
+      bodies.push(init?.body)
+      return bodies.length === 1
+        ? jsonResponse({ message: 'unavailable' }, 503)
+        : jsonResponse({ ok: true })
+    })
     const sleep = vi.fn(async () => undefined)
     const client = createApiClient({
       baseUrl: 'https://api.test',
@@ -75,8 +78,27 @@ describe('createApiClient', () => {
     ).resolves.toMatchObject({ ok: true })
     expect(fetchFn).toHaveBeenCalledTimes(2)
     expect(toJSON).toHaveBeenCalledOnce()
-    expect(fetchFn.mock.calls[0]?.[1]?.body).toBe('{"value":1}')
-    expect(fetchFn.mock.calls[1]?.[1]?.body).toBe('{"value":1}')
+    expect(bodies).toEqual(['{"value":1}', '{"value":1}'])
+  })
+
+  it('keeps cancellation ahead of body serialization for pre-aborted requests', async () => {
+    const controller = new AbortController()
+    controller.abort()
+    const toJSON = vi.fn(() => ({ value: 1 }))
+    const getAccessToken = vi.fn(() => 'private-token')
+    const fetchFn = vi.fn(async () => jsonResponse({ ok: true }))
+    const client = createApiClient({ baseUrl: 'https://api.test', getAccessToken, fetchFn })
+
+    await expect(
+      client.request('/items', schema, {
+        method: 'POST',
+        body: { toJSON },
+        signal: controller.signal,
+      }),
+    ).rejects.toMatchObject({ code: 'aborted' })
+    expect(toJSON).not.toHaveBeenCalled()
+    expect(getAccessToken).not.toHaveBeenCalled()
+    expect(fetchFn).not.toHaveBeenCalled()
   })
 
   it('normalizes HTTP errors and does not retry POST by default', async () => {
