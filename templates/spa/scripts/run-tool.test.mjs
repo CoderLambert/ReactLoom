@@ -109,3 +109,26 @@ test('missing scripts and unsupported modes never report success', (t) => {
   assert.notEqual(f.run('preview').status, 0)
   assert.notEqual(f.run('something-else').status, 0)
 })
+
+test('analyze executes Vite with ANALYZE=true and preserves its exit code', (t) => {
+  const f = fixture(t)
+  const bin = join(f.project, 'node_modules', 'vite', 'bin')
+  mkdirSync(bin, { recursive: true })
+  writeFileSync(
+    join(bin, 'vite.js'),
+    [
+      "const { writeFileSync } = require('node:fs')",
+      "writeFileSync(process.env.TEST_MARKER, JSON.stringify({ mode: process.env.ANALYZE, args: process.argv.slice(2), cwd: process.cwd() }))",
+      'process.exit(Number(process.env.TEST_EXIT_CODE || 0))',
+      '',
+    ].join('\n'),
+  )
+  const result = f.run('analyze', ['--mode', 'staging'])
+  assert.equal(result.status, 0, result.stderr)
+  assert.deepEqual(JSON.parse(readFileSync(f.marker, 'utf8')), {
+    mode: 'true',
+    args: ['build', '--mode', 'staging'],
+    cwd: f.project,
+  })
+  assert.equal(f.run('analyze', [], 27).status, 27)
+})

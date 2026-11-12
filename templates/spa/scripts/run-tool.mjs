@@ -27,20 +27,26 @@ const commands = {
       ...extra,
     ],
   },
+  analyze: {
+    binary: viteBin,
+    args: ['build', ...extra],
+    env: { ANALYZE: 'true' },
+  },
   'doctor:editor': { script: 'open-in-editor.mjs', args: ['--doctor', ...extra] },
 }
 
 const command = commands[mode]
 if (!command) {
-  console.error('Usage: node scripts/run-tool.mjs <dev|preview|doctor:editor> [args...]')
+  console.error('Usage: node scripts/run-tool.mjs <dev|preview|analyze|doctor:editor> [args...]')
   process.exitCode = 1
 } else {
-  const local = join(root, 'scripts', command.script)
-  const shared = resolve(root, '..', '..', 'scripts', command.script)
-  const target = existsSync(local) ? local : shared
+  const local = command.script && join(root, 'scripts', command.script)
+  const shared = command.script && resolve(root, '..', '..', 'scripts', command.script)
+  const target = command.binary ?? (local && existsSync(local) ? local : shared)
   const child = spawn(process.execPath, [target, ...command.args], {
     cwd: root,
     stdio: 'inherit',
+    env: { ...process.env, ...command.env },
   })
   const stop = (signal) => child.kill(signal)
   process.on('SIGINT', stop)

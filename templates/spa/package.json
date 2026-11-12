@@ -19,7 +19,7 @@
     "test:affected": "pnpm --filter \"...[HEAD]\" --if-present test",
     "test:e2e:setup": "playwright install chromium",
     "test:e2e": "playwright test",
-    "analyze": "ANALYZE=true vite build",
+    "analyze": "node scripts/run-tool.mjs analyze",
     "doctor:editor": "node scripts/run-tool.mjs doctor:editor",
     "storybook": "STORYBOOK=true storybook dev -p 6006 --no-open",
     "build-storybook": "STORYBOOK=true storybook build",
