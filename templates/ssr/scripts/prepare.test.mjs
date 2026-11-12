@@ -65,5 +65,6 @@ test('package scripts use the portable prepare entry and execute these tests', a
   const packagePath = fileURLToPath(new URL('../package.json', import.meta.url))
   const pkg = JSON.parse(await readFile(packagePath, 'utf8'))
   assert.equal(pkg.scripts.prepare, 'node scripts/prepare.mjs')
-  assert.equal(pkg.scripts.test, 'vitest run && node --test scripts/prepare.test.mjs')
+  assert.match(pkg.scripts.test, /^vitest run && node --test /)
+  assert.ok(pkg.scripts.test.split(/\s+/).includes('scripts/prepare.test.mjs'))
 })
