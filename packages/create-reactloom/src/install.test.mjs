@@ -46,7 +46,7 @@ test('POSIX invokes pnpm directly without a shell', () => {
   assert.deepEqual(installInvocation('linux'), { command: 'pnpm', args: ['install'] })
 })
 
-test('runs the actual install subprocess from a destination containing shell metacharacters', async () => {
+test('runs pnpm from a destination with shell metacharacters', async () => {
   const f = await fixture()
   await runInstall(f.cwd, f.env, 'linux')
   assert.equal(await readFile(f.trace, 'utf8'), f.cwd + '\ninstall\n')
