@@ -36,6 +36,36 @@ describe('createApiClient', () => {
   })
 
   it.each([
+    ['whitespace in method', 'GE T', undefined, 'Request method is not valid.'],
+    ['CRLF in method', 'GET\r\nX-Injected: true', undefined, 'Request method is not valid.'],
+    ['forbidden TRACE method', 'TRACE', undefined, 'Request method is not valid.'],
+    ['forbidden CONNECT method', 'CONNECT', undefined, 'Request method is not valid.'],
+    ['GET with a body', 'GET', { id: 1 }, 'GET and HEAD requests cannot have a body.'],
+    ['HEAD with a body', 'HEAD', { id: 1 }, 'GET and HEAD requests cannot have a body.'],
+  ] as Array<[string, string, unknown, string]>)(
+    'rejects %s before credential lookup or transport',
+    async (_label, method, body, message) => {
+      const getAccessToken = vi.fn(() => 'private-token')
+      const fetchFn = vi.fn(async () => jsonResponse({ ok: true }))
+      const warn = vi.fn()
+      const client = createApiClient({
+        baseUrl: 'https://api.test',
+        getAccessToken,
+        fetchFn,
+        logger: { debug: vi.fn(), warn },
+      })
+
+      await expect(client.request('/items', schema, { method, body })).rejects.toMatchObject({
+        code: 'validation',
+        message,
+      })
+      expect(getAccessToken).not.toHaveBeenCalled()
+      expect(fetchFn).not.toHaveBeenCalled()
+      expect(warn).not.toHaveBeenCalled()
+    },
+  )
+
+  it.each([
     ['circular object', circularBody],
     ['BigInt field', { value: 1n }],
     ['unsupported root value', () => 'not JSON'],
