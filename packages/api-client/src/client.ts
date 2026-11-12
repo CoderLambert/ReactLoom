@@ -278,6 +278,17 @@ async function readBody(
   }
 }
 
+async function readHttpErrorBody(response: Response, signal: AbortSignal): Promise<unknown> {
+  try {
+    return await readBody(response, signal, true)
+  } catch {
+    // The received HTTP status is authoritative even if an optional error
+    // body stream fails. Explicit cancellation and timeout still take priority.
+    if (signal.aborted) throw toAbortError(signal)
+    return null
+  }
+}
+
 function messageFromDetails(details: unknown, fallback: string): string {
   if (typeof details === 'object' && details !== null && 'message' in details) {
     const message = details.message
@@ -400,7 +411,7 @@ export function createApiClient(options: ApiClientOptions) {
         }
 
         if (response.status === 401) {
-          const details = await readBody(response, signal, true)
+          const details = await readHttpErrorBody(response, signal)
           // A custom fetch adapter may finish the headers before the body.
           // Do not invalidate a newer session if cancellation wins the body read.
           if (signal.aborted) throw toAbortError(signal)
@@ -422,7 +433,7 @@ export function createApiClient(options: ApiClientOptions) {
         }
 
         if (!response.ok) {
-          const details = await readBody(response, signal, true)
+          const details = await readHttpErrorBody(response, signal)
           if (signal.aborted) throw toAbortError(signal)
           const error = new ApiError(
             messageFromDetails(details, `Request failed with status ${response.status}.`),

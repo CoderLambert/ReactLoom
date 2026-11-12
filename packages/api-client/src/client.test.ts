@@ -402,6 +402,66 @@ describe('createApiClient', () => {
     expect(fetchFn).toHaveBeenCalledTimes(2)
   })
 
+  it.each([
+    [401, 'unauthorized', 1],
+    [403, 'http', 1],
+    [503, 'http', 2],
+  ] as const)(
+    'preserves HTTP %i after the error body stream rejects',
+    async (status, code, expectedFetches) => {
+      const brokenResponse = jsonResponse({ message: 'unreadable' }, status)
+      vi.spyOn(brokenResponse, 'text').mockRejectedValue(new TypeError('body stream failed'))
+      const fetchFn = vi
+        .fn<typeof fetch>()
+        .mockResolvedValueOnce(brokenResponse)
+        .mockResolvedValueOnce(jsonResponse({ ok: true }))
+      const onUnauthorized = vi.fn()
+      const warn = vi.fn()
+      const client = createApiClient({
+        baseUrl: 'https://api.test',
+        fetchFn,
+        onUnauthorized,
+        logger: { debug: vi.fn(), warn },
+        sleep: async () => undefined,
+      })
+
+      if (status === 503) {
+        await expect(client.request('/items', schema)).resolves.toEqual({ ok: true })
+        expect(warn).toHaveBeenCalledWith('Retrying failed request', {
+          method: 'GET',
+          status: 503,
+          attempt: 0,
+        })
+      } else {
+        await expect(client.request('/items', schema)).rejects.toMatchObject({
+          code,
+          status,
+        })
+        expect(warn).not.toHaveBeenCalled()
+      }
+      expect(fetchFn).toHaveBeenCalledTimes(expectedFetches)
+      expect(onUnauthorized).toHaveBeenCalledTimes(status === 401 ? 1 : 0)
+    },
+  )
+
+  it('keeps cancellation ahead of a failed 401 body stream', async () => {
+    const controller = new AbortController()
+    const response = jsonResponse({ message: 'expired' }, 401)
+    vi.spyOn(response, 'text').mockImplementation(async () => {
+      controller.abort()
+      throw new TypeError('body stream failed after abort')
+    })
+    const onUnauthorized = vi.fn()
+    const fetchFn = vi.fn(async () => response)
+    const client = createApiClient({ baseUrl: 'https://api.test', fetchFn, onUnauthorized })
+
+    await expect(
+      client.request('/me', schema, { signal: controller.signal }),
+    ).rejects.toMatchObject({ code: 'aborted' })
+    expect(fetchFn).toHaveBeenCalledOnce()
+    expect(onUnauthorized).not.toHaveBeenCalled()
+  })
+
   it('retains the unauthorized code for a non-JSON 401 body', async () => {
     const onUnauthorized = vi.fn()
     const fetchFn = vi.fn(async () => new Response('login required', { status: 401 }))
