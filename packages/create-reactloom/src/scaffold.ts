@@ -1,8 +1,8 @@
-import { spawn } from 'node:child_process'
 import { cp, mkdir, readFile, rename, rm, stat, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { adaptBestPractices, installAiConfig } from './ai-config.js'
+import { runInstall } from './install.js'
 import { type DeployTarget, writeDeployFiles } from './deploy.js'
 import {
   DOCKER_FILES,
@@ -650,15 +650,4 @@ export async function scaffold(options: ScaffoldOptions): Promise<void> {
   if (options.install) {
     await runInstall(options.directory)
   }
-}
-
-function runInstall(cwd: string): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const child = spawn('pnpm', ['install'], { cwd, stdio: 'inherit' })
-    child.on('error', reject)
-    child.on('exit', (code) => {
-      if (code === 0) resolve()
-      else reject(new Error(`pnpm install exited with code ${code ?? 'unknown'}`))
-    })
-  })
 }
