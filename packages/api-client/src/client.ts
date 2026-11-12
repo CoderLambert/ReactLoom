@@ -38,6 +38,8 @@ export type RequestOptions = {
 
 const RETRY_STATUSES = new Set([408, 429, 500, 502, 503, 504])
 const IDEMPOTENT = new Set(['GET', 'HEAD'])
+const FORBIDDEN_METHODS = new Set(['CONNECT', 'TRACE', 'TRACK'])
+const METHOD_TOKEN = /^[!#$%&'*+.^_`|~0-9A-Za-z-]+$/
 const MAX_RETRY_ATTEMPTS = 20
 // Node timers lose their intended deadline beyond the signed 32-bit range.
 const MAX_TIMER_MS = 2_147_483_647
@@ -98,6 +100,17 @@ function serializeRequestBody(body: unknown): string | undefined {
     return serialized
   } catch (cause) {
     throw new ApiError('Request body must be JSON serializable.', 'validation', { cause })
+  }
+}
+
+function validateRequestMethod(method: string, body: unknown): void {
+  // Fetch rejects malformed/forbidden HTTP methods and GET/HEAD request bodies.
+  // Report these as caller errors before reading credentials or starting retries.
+  if (!METHOD_TOKEN.test(method) || FORBIDDEN_METHODS.has(method)) {
+    throw new ApiError('Request method is not valid.', 'validation')
+  }
+  if (IDEMPOTENT.has(method) && body !== undefined) {
+    throw new ApiError('GET and HEAD requests cannot have a body.', 'validation')
   }
 }
 
@@ -327,6 +340,7 @@ export function createApiClient(options: ApiClientOptions) {
 
     const retrySignal = init.signal ?? new AbortController().signal
     if (retrySignal.aborted) throw toAbortError(retrySignal)
+    validateRequestMethod(method, init.body)
     const serializedBody = serializeRequestBody(init.body)
     const requestHeaders = createRequestHeaders(init)
     let lastError: ApiError | undefined
