@@ -72,7 +72,7 @@ test(
     assert.equal(pkg.scripts.prepare, 'node scripts/prepare.mjs')
     assert.equal(
       pkg.scripts.test,
-      'vitest run && node --test scripts/prepare.test.mjs scripts/doctor-editor.test.mjs',
+      'vitest run && node --test scripts/prepare.test.mjs scripts/doctor-editor.test.mjs scripts/analyze.test.mjs',
     )
   },
 )

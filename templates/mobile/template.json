@@ -54,7 +54,7 @@
     "package": "expo-atlas",
     "version": "0.4.3",
     "config": "package.json",
-    "script": "EXPO_ATLAS=true expo export --platform web --output-dir dist && expo-atlas .expo/atlas.jsonl",
+    "script": "node scripts/analyze.mjs",
     "marker": "EXPO_ATLAS"
   },
   "propsDiff": {

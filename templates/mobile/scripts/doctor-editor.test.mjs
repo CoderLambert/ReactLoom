@@ -75,6 +75,6 @@ test('package wiring runs the portable doctor entry and both Node suites', async
   assert.equal(pkg.scripts['doctor:editor'], 'node scripts/doctor-editor.mjs')
   assert.equal(
     pkg.scripts.test,
-    'vitest run && node --test scripts/prepare.test.mjs scripts/doctor-editor.test.mjs',
+    'vitest run && node --test scripts/prepare.test.mjs scripts/doctor-editor.test.mjs scripts/analyze.test.mjs',
   )
 })
