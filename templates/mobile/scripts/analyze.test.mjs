@@ -66,7 +66,7 @@ afterEach(async () => {
   await Promise.all(fixtures.splice(0).map((root) => rm(root, { recursive: true, force: true })))
 })
 
-test('exports with Expo Atlas enabled, then opens its report in the project directory', async () => {
+test('exports with Atlas enabled and opens the report from the project root', async () => {
   const f = await fixture()
   assert.equal(run(f).status, 0)
   assert.deepEqual(await traces(f), [
@@ -79,7 +79,7 @@ test('exports with Expo Atlas enabled, then opens its report in the project dire
   ])
 })
 
-test('failed Expo export prevents opening an old Atlas report and propagates exit code', async () => {
+test('failed export skips a stale Atlas report and propagates exit code', async () => {
   const f = await fixture()
   assert.equal(
     run(f, { REACTLOOM_ATLAS_FAIL_STAGE: 'expo', REACTLOOM_ATLAS_FAIL_CODE: '19' }).status,
