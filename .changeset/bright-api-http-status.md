@@ -35,3 +35,5 @@ Round fractional numeric `Retry-After` seconds up to whole milliseconds so retry
 Normalize malformed request paths and invalid API base URLs to validation errors before reading credentials or fetching, instead of exposing raw URL parser TypeErrors.
 
 Reject malformed request header names and values as validation errors before invoking the token provider or transport. Retried requests preserve custom headers and refresh authorization for each attempt. Invalid bearer token values are also reported as validation failures without retrying or making network requests.
+
+Reject malformed or forbidden HTTP methods and GET/HEAD requests with bodies before reading credentials or sending network requests; these invalid Fetch inputs no longer masquerade as retryable network failures.
