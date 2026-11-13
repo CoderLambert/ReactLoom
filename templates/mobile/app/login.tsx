@@ -5,6 +5,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { Pressable, Text, TextInput, View } from 'react-native'
 import { useAuth } from '@/features/auth/auth-context'
+import { loginValidationErrorKeys } from '@/features/auth/login-validation'
 import { type LoginInput, loginSchema } from '@/features/auth/schema'
 
 export default function LoginScreen() {
@@ -16,6 +17,7 @@ export default function LoginScreen() {
     defaultValues: { email: '', password: '' },
   })
   const message = auth.error ?? error
+  const fieldErrors = loginValidationErrorKeys(form.formState.errors)
 
   if (auth.status === 'authenticated') return <Redirect href="/tasks" />
 
@@ -39,6 +41,7 @@ export default function LoginScreen() {
         render={({ field }) => (
           <TextInput
             accessibilityLabel={t('email')}
+            accessibilityHint={fieldErrors.email ? t(fieldErrors.email) : undefined}
             autoCapitalize="none"
             autoComplete="username"
             keyboardType="email-address"
@@ -49,12 +52,14 @@ export default function LoginScreen() {
           />
         )}
       />
+      {fieldErrors.email && <Text accessibilityRole="alert">{t(fieldErrors.email)}</Text>}
       <Controller
         control={form.control}
         name="password"
         render={({ field }) => (
           <TextInput
             accessibilityLabel={t('password')}
+            accessibilityHint={fieldErrors.password ? t(fieldErrors.password) : undefined}
             secureTextEntry
             autoComplete="current-password"
             value={field.value}
@@ -64,6 +69,7 @@ export default function LoginScreen() {
           />
         )}
       />
+      {fieldErrors.password && <Text accessibilityRole="alert">{t(fieldErrors.password)}</Text>}
       {message ? <Text accessibilityRole="alert">{message}</Text> : null}
       <Pressable
         accessibilityRole="button"
