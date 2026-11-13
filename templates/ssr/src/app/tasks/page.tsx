@@ -213,10 +213,12 @@ function AuthenticatedTasks({ userId }: { userId: string }) {
       // A rejected response is not proof that the server kept its cookie.
       // Recheck before restoring any previously cached private content.
       try {
-        await getApi().request('/api/session', sessionSchema, { retry: false })
-        setSignOutError(cause instanceof Error ? cause.message : 'Sign out failed.')
-        setIsSigningOut(false)
-        return
+        const confirmed = await getApi().request('/api/session', sessionSchema, { retry: false })
+        if (confirmed.user.id === userId) {
+          setSignOutError(cause instanceof Error ? cause.message : 'Sign out failed.')
+          setIsSigningOut(false)
+          return
+        }
       } catch {
         // The cookie may already be revoked, or verification may be offline.
         // In either case fail closed rather than displaying cached tasks.

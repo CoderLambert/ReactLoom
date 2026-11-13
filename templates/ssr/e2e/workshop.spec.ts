@@ -167,7 +167,7 @@ test('does not reveal cached tasks when sign-out commits but its response is rej
     await recheck
 
     expect(upstreamStatus).toBe(200)
-    await expect(page).toHaveURL(/\\/login(?:\\?.*)?$/)
+    await expect(page).toHaveURL(/\/login(?:\?.*)?$/)
     await expect(page.getByText('Dress the loom')).toHaveCount(0)
     expect((await context.cookies()).some((cookie) => cookie.name === 'rl_session')).toBe(false)
   } finally {
