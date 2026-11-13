@@ -80,6 +80,12 @@ export function useSetTaskStatus() {
       if (!isCurrentSession(version)) throw new Error('The session has changed.')
       return setTaskStatus(id, status)
     },
+    onMutate: async () => {
+      if (!isCurrentSession(version)) return
+      // An earlier GET can complete after PATCH and replace the confirmed status
+      // with stale data. Stop only this session's reads before sending the write.
+      await queryClient.cancelQueries({ queryKey: taskKeys.session(version) })
+    },
     onSuccess: (task) => {
       if (!isCurrentSession(version)) return
       // A successful write must remain visible if the follow-up read fails.
