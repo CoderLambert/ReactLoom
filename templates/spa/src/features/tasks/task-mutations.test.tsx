@@ -8,9 +8,9 @@ import { useAuthStore } from '@/features/auth/store'
 import { useSetTaskStatus } from '@/features/tasks/hooks'
 import { taskKeys } from '@/features/tasks/keys'
 import type { Task } from '@/features/tasks/schema'
+import { createAppQueryClient } from '@/lib/query-client'
 import { demoSession, demoUser, seedTasks } from '@/mocks/fixtures'
 import { server } from '@/mocks/server'
-import { createAppQueryClient } from '@/lib/query-client'
 import { renderApp } from '@/test/render'
 
 async function openBoard() {
@@ -62,9 +62,13 @@ describe('task mutation feedback', () => {
         staleTime: 0,
         retry: false,
         queryFn: ({ signal }) => {
-          signal.addEventListener('abort', () => {
-            wasAborted = true
-          }, { once: true })
+          signal.addEventListener(
+            'abort',
+            () => {
+              wasAborted = true
+            },
+            { once: true },
+          )
           markReadStarted()
           return staleRead
         },
@@ -77,14 +81,16 @@ describe('task mutation feedback', () => {
         await result.current.mutateAsync({ id: 'task-1', status: 'done' })
       })
       expect(wasAborted).toBe(true)
-      expect(client.getQueryData<{ tasks: Task[] }>(taskKeys.list(version))?.tasks[0]?.status)
-        .toBe('done')
+      expect(
+        client.getQueryData<{ tasks: Task[] }>(taskKeys.list(version))?.tasks[0]?.status,
+      ).toBe('done')
 
       // Even a transport that ignores AbortSignal cannot commit its stale result.
       releaseRead()
       await pendingRead
-      expect(client.getQueryData<{ tasks: Task[] }>(taskKeys.list(version))?.tasks[0]?.status)
-        .toBe('done')
+      expect(
+        client.getQueryData<{ tasks: Task[] }>(taskKeys.list(version))?.tasks[0]?.status,
+      ).toBe('done')
     } finally {
       releaseRead()
       await pendingRead
