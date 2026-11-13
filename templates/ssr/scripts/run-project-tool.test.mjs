@@ -26,6 +26,24 @@ async function script(pathname, content) {
 const recorder =
   "import { writeFileSync } from 'node:fs'; writeFileSync('runner-args.json', JSON.stringify(process.argv.slice(2)))\n"
 
+const storybookRecorder =
+  "import { writeFileSync } from 'node:fs'; writeFileSync('runner-args.json', JSON.stringify({ args: process.argv.slice(2), storybook: process.env.STORYBOOK }))\\n"
+
+async function mockStorybook(project, content = storybookRecorder) {
+  const directory = path.join(project, 'node_modules', 'storybook')
+  await script(
+    path.join(directory, 'package.json'),
+    JSON.stringify({
+      name: 'storybook',
+      version: '10.6.1',
+      type: 'module',
+      exports: { './package.json': './package.json' },
+      bin: './dist/bin/dispatcher.js',
+    }),
+  )
+  await script(path.join(directory, 'dist', 'bin', 'dispatcher.js'), content)
+}
+
 function run(project, mode, args = []) {
   return spawnSync(process.execPath, [runner, mode, ...args], { cwd: project, encoding: 'utf8' })
 }
@@ -106,11 +124,46 @@ test('missing Next executable fails before spawning the preview wrapper', async 
   assert.match(result.stderr, /Cannot find module 'next\/dist\/bin\/next'/)
 })
 
+test('Storybook dev invokes the installed CLI without a shell and enables the build env', async () => {
+  const { project } = await fixture()
+  await mockStorybook(project)
+  assert.equal(run(project, 'storybook', ['--debug']).status, 0)
+  assert.deepEqual(JSON.parse(await readFile(path.join(project, 'runner-args.json'), 'utf8')), {
+    args: ['dev', '-p', '6007', '--no-open', '--debug'],
+    storybook: 'true',
+  })
+})
+
+test('Storybook static build sets STORYBOOK and forwards output arguments', async () => {
+  const { project } = await fixture()
+  await mockStorybook(project)
+  assert.equal(run(project, 'build-storybook', ['--output-dir', 'out']).status, 0)
+  assert.deepEqual(JSON.parse(await readFile(path.join(project, 'runner-args.json'), 'utf8')), {
+    args: ['build', '--output-dir', 'out'],
+    storybook: 'true',
+  })
+})
+
+test('Storybook failures preserve the actual CLI exit status', async () => {
+  const { project } = await fixture()
+  await mockStorybook(project, 'process.exit(23)\\n')
+  assert.equal(run(project, 'build-storybook').status, 23)
+})
+
+test('Missing Storybook dependency exits before creating a child process', async () => {
+  const { project } = await fixture()
+  const result = run(project, 'storybook')
+  assert.equal(result.status, 1)
+  assert.match(result.stderr, /storybook\\/package\\.json/)
+})
+
 test('package scripts invoke the portable tool runner and include its regression tests', async () => {
   const packagePath = fileURLToPath(new URL('../package.json', import.meta.url))
   const pkg = JSON.parse(await readFile(packagePath, 'utf8'))
   assert.equal(pkg.scripts.dev, 'node scripts/run-project-tool.mjs dev')
   assert.equal(pkg.scripts.preview, 'node scripts/run-project-tool.mjs preview')
+  assert.equal(pkg.scripts.storybook, 'node scripts/run-project-tool.mjs storybook')
+  assert.equal(pkg.scripts['build-storybook'], 'node scripts/run-project-tool.mjs build-storybook')
   assert.equal(pkg.scripts['doctor:editor'], 'node scripts/run-project-tool.mjs doctor')
   assert.equal(
     pkg.scripts.test,
