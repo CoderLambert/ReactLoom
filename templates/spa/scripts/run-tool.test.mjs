@@ -132,3 +132,48 @@ test('analyze executes Vite with ANALYZE=true and preserves its exit code', (t) 
   })
   assert.equal(f.run('analyze', [], 27).status, 27)
 })
+
+function stubStorybook(f, bin = './bin/index.cjs') {
+  const packageDir = join(f.project, 'node_modules', 'storybook')
+  mkdirSync(join(packageDir, 'bin'), { recursive: true })
+  writeFileSync(join(packageDir, 'package.json'), JSON.stringify({ bin: { storybook: bin } }))
+  writeFileSync(
+    join(packageDir, 'bin', 'index.cjs'),
+    [
+      "const { writeFileSync } = require('node:fs')",
+      'writeFileSync(process.env.TEST_MARKER, JSON.stringify({ mode: process.env.STORYBOOK, args: process.argv.slice(2), cwd: process.cwd() }))',
+      'process.exit(Number(process.env.TEST_EXIT_CODE || 0))',
+      '',
+    ].join('\n'),
+  )
+}
+
+test('Storybook dev sets env and preserves port, no-open, and extra arguments', (t) => {
+  const f = fixture(t)
+  stubStorybook(f)
+  const result = f.run('storybook', ['--ci', '--some-arg=with spaces'])
+  assert.equal(result.status, 0, result.stderr)
+  assert.deepEqual(JSON.parse(readFileSync(f.marker, 'utf8')), {
+    mode: 'true',
+    args: ['dev', '-p', '6006', '--no-open', '--ci', '--some-arg=with spaces'],
+    cwd: f.project,
+  })
+})
+
+test('Storybook build sets env and propagates nonzero exit status', (t) => {
+  const f = fixture(t)
+  stubStorybook(f)
+  assert.equal(f.run('build-storybook', ['--output-dir', 'my builds'], 23).status, 23)
+  assert.deepEqual(JSON.parse(readFileSync(f.marker, 'utf8')), {
+    mode: 'true',
+    args: ['build', '--output-dir', 'my builds'],
+    cwd: f.project,
+  })
+})
+
+test('missing Storybook dependency does not silently succeed', (t) => {
+  const f = fixture(t)
+  const result = f.run('storybook')
+  assert.notEqual(result.status, 0)
+  assert.match(result.stderr, /ENOENT|storybook/i)
+})

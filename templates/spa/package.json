@@ -21,8 +21,8 @@
     "test:e2e": "playwright test",
     "analyze": "node scripts/run-tool.mjs analyze",
     "doctor:editor": "node scripts/run-tool.mjs doctor:editor",
-    "storybook": "STORYBOOK=true storybook dev -p 6006 --no-open",
-    "build-storybook": "STORYBOOK=true storybook build",
+    "storybook": "node scripts/run-tool.mjs storybook",
+    "build-storybook": "node scripts/run-tool.mjs build-storybook",
     "lighthouse": "pnpm build && lhci autorun"
   },
   "dependencies": {
