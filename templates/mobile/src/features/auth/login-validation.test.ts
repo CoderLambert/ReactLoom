@@ -13,7 +13,7 @@ async function validate(email: string, password: string) {
 }
 
 describe('mobile login validation feedback', () => {
-  it('provides messages for invalid email and password instead of silently ignoring submit', async () => {
+  it('shows field messages for invalid email and password', async () => {
     expect(await validate('not-an-email', 'short')).toEqual({
       email: 'emailInvalid',
       password: 'passwordInvalid',
