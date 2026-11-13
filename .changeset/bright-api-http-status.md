@@ -41,3 +41,5 @@ Reject malformed or forbidden HTTP methods and GET/HEAD requests with bodies bef
 Keep received HTTP error statuses authoritative when their optional response body stream fails: 401 still invalidates the session, 403 stays non-retryable, and 503 still follows HTTP retry policy. Preserve caller abort and timeout priority over failed body reading.
 
 Normalize unexpected synchronous or asynchronous credential-provider failures to non-retryable validation errors instead of retrying GET requests as network failures; preserve explicit ApiError codes and abort/timeout priority.
+
+Catch asynchronous unauthorized callback rejections as best-effort diagnostic failures, preserving the received 401 without producing unhandled promise rejections, even if the diagnostic logger throws.

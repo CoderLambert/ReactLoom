@@ -327,6 +327,13 @@ export function createApiClient(options: ApiClientOptions) {
       // Application-provided loggers are best-effort observers.
     }
   }
+  function warnUnauthorizedHandlerFailure(): void {
+    try {
+      logger.warn('Unauthorized handler failed')
+    } catch {
+      // Diagnostics must never override the original unauthorized result.
+    }
+  }
   // Even without a caller signal, a noncooperative retry scheduler must not
   // keep the request pending forever. Allow the delay plus one attempt timeout.
   function waitForRetry(ms: number, signal: AbortSignal, timeoutMs: number): Promise<void> {
@@ -431,15 +438,12 @@ export function createApiClient(options: ApiClientOptions) {
           // Do not invalidate a newer session if cancellation wins the body read.
           if (signal.aborted) throw toAbortError(signal)
           try {
-            options.onUnauthorized?.()
+            // Async functions are assignable to void-returning callbacks.
+            // Observe their rejections without waiting to report the 401.
+            const completion: unknown = options.onUnauthorized?.()
+            void Promise.resolve(completion).catch(warnUnauthorizedHandlerFailure)
           } catch {
-            // A broken application callback must not turn a 401 into a retryable
-            // network error or override the original HTTP status.
-            try {
-              logger.warn('Unauthorized handler failed')
-            } catch {
-              // Diagnostic logging is best-effort and must not mask a 401.
-            }
+            warnUnauthorizedHandlerFailure()
           }
           throw new ApiError(messageFromDetails(details, 'Sign in is required.'), 'unauthorized', {
             status: 401,

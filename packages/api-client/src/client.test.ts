@@ -509,6 +509,38 @@ describe('createApiClient', () => {
     },
   )
 
+  it.each([false, true])(
+    'preserves HTTP 401 when an async unauthorized handler rejects (logger throws: %s)',
+    async (loggerThrows) => {
+      const onUnauthorized = vi.fn(async () => {
+        await Promise.resolve()
+        throw new Error('Async logout failed')
+      })
+      const warn = vi.fn(() => {
+        if (loggerThrows) throw new Error('Logger failed')
+      })
+      const fetchFn = vi.fn(async () => jsonResponse({ message: 'expired' }, 401))
+      const client = createApiClient({
+        baseUrl: 'https://api.test',
+        fetchFn,
+        onUnauthorized,
+        logger: { debug: vi.fn(), warn },
+      })
+
+      await expect(client.request('/me', schema)).rejects.toMatchObject({
+        code: 'unauthorized',
+        status: 401,
+        message: 'expired',
+      })
+      // Flush the rejected callback's asynchronous error path.
+      await new Promise<void>((resolve) => setImmediate(resolve))
+      expect(fetchFn).toHaveBeenCalledOnce()
+      expect(onUnauthorized).toHaveBeenCalledOnce()
+      expect(warn).toHaveBeenCalledOnce()
+      expect(warn).toHaveBeenCalledWith('Unauthorized handler failed')
+    },
+  )
+
   it.each(['http', 'network'] as const)(
     'retries %s failures even when the diagnostic logger throws',
     async (kind) => {
