@@ -39,3 +39,5 @@ Reject malformed request header names and values as validation errors before inv
 Reject malformed or forbidden HTTP methods and GET/HEAD requests with bodies before reading credentials or sending network requests; these invalid Fetch inputs no longer masquerade as retryable network failures.
 
 Keep received HTTP error statuses authoritative when their optional response body stream fails: 401 still invalidates the session, 403 stays non-retryable, and 503 still follows HTTP retry policy. Preserve caller abort and timeout priority over failed body reading.
+
+Normalize unexpected synchronous or asynchronous credential-provider failures to non-retryable validation errors instead of retrying GET requests as network failures; preserve explicit ApiError codes and abort/timeout priority.

@@ -1009,6 +1009,34 @@ describe('createApiClient', () => {
     expect(fetchFn).not.toHaveBeenCalled()
   })
 
+  it.each(['sync', 'async'] as const)(
+    'does not retry %s access-token provider errors as network failures',
+    async (kind) => {
+      const failure = new Error('credential store is unavailable')
+      const getAccessToken = vi.fn(() => {
+        if (kind === 'sync') throw failure
+        return Promise.reject(failure)
+      })
+      const fetchFn = vi.fn(async () => jsonResponse({ ok: true }))
+      const warn = vi.fn()
+      const client = createApiClient({
+        baseUrl: 'https://api.test',
+        getAccessToken,
+        fetchFn,
+        logger: { debug: vi.fn(), warn },
+      })
+
+      await expect(client.request('/items', schema)).rejects.toMatchObject({
+        code: 'validation',
+        message: 'Access token lookup failed.',
+        cause: failure,
+      })
+      expect(getAccessToken).toHaveBeenCalledOnce()
+      expect(fetchFn).not.toHaveBeenCalled()
+      expect(warn).not.toHaveBeenCalled()
+    },
+  )
+
   it('cancels while credentials are still loading and never sends a late token', async () => {
     const controller = new AbortController()
     const token = deferred<string | null>()

@@ -186,6 +186,21 @@ function readAccessToken(
   })
 }
 
+async function resolveAccessToken(
+  getAccessToken: ApiClientOptions['getAccessToken'],
+  signal: AbortSignal,
+): Promise<string | null | undefined> {
+  try {
+    return await readAccessToken(getAccessToken, signal)
+  } catch (cause) {
+    if (signal.aborted) throw toAbortError(signal)
+    // Unexpected credential-store errors are local failures. Retrying a GET
+    // must not re-read a broken token provider as if the transport had failed.
+    if (isApiError(cause)) throw cause
+    throw new ApiError('Access token lookup failed.', 'validation', { cause })
+  }
+}
+
 function awaitWithAbort<T>(promise: Promise<T>, signal: AbortSignal): Promise<T> {
   return new Promise((resolve, reject) => {
     const onAbort = () => {
@@ -368,7 +383,7 @@ export function createApiClient(options: ApiClientOptions) {
       const url = joinUrl(options.baseUrl, path)
       let waitingForRetry = false
       try {
-        const token = await readAccessToken(options.getAccessToken, signal)
+        const token = await resolveAccessToken(options.getAccessToken, signal)
         if (signal.aborted) throw toAbortError(signal)
         const headers = new Headers(requestHeaders)
         if (token) {
