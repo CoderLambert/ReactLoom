@@ -1,17 +1,20 @@
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema'
 import { Redirect } from 'expo-router'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { Pressable, Text, TextInput, View } from 'react-native'
 import { useAuth } from '@/features/auth/auth-context'
 import { loginValidationErrorKeys } from '@/features/auth/login-validation'
+import { submitOnce } from '@/features/auth/submit-once'
 import { type LoginInput, loginSchema } from '@/features/auth/schema'
 
 export default function LoginScreen() {
   const { t } = useTranslation()
   const auth = useAuth()
   const [error, setError] = useState<string | null>(null)
+  const [isSigningIn, setIsSigningIn] = useState(false)
+  const submitPending = useRef(false)
   const form = useForm<LoginInput>({
     resolver: standardSchemaResolver(loginSchema),
     defaultValues: { email: '', password: '' },
@@ -73,22 +76,32 @@ export default function LoginScreen() {
       {message ? <Text accessibilityRole="alert">{message}</Text> : null}
       <Pressable
         accessibilityRole="button"
+        accessibilityState={{ disabled: isSigningIn, busy: isSigningIn }}
+        disabled={isSigningIn}
         onPress={form.handleSubmit(async (values) => {
-          try {
+          await submitOnce(submitPending, async () => {
+            setIsSigningIn(true)
             setError(null)
-            await auth.signIn(values)
-          } catch (cause) {
-            setError(cause instanceof Error ? cause.message : 'Sign in failed.')
-          }
+            try {
+              await auth.signIn(values)
+            } catch (cause) {
+              setError(cause instanceof Error ? cause.message : 'Sign in failed.')
+            } finally {
+              setIsSigningIn(false)
+            }
+          })
         })}
         style={{
           backgroundColor: '#1c1915',
           borderRadius: 999,
           paddingVertical: 12,
           alignItems: 'center',
+          opacity: isSigningIn ? 0.6 : 1,
         }}
       >
-        <Text style={{ color: '#f4f0e6', fontWeight: '600' }}>{t('signIn')}</Text>
+        <Text style={{ color: '#f4f0e6', fontWeight: '600' }}>
+          {t(isSigningIn ? 'signingIn' : 'signIn')}
+        </Text>
       </Pressable>
     </View>
   )
