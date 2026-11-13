@@ -127,6 +127,54 @@ test('sign out removes the session cookie and blocks access to private tasks', a
   await expect(page.getByText('Dress the loom')).toHaveCount(0)
 })
 
+test('does not reveal cached tasks when sign-out commits but its response is rejected', async ({
+  page,
+  context,
+}) => {
+  await page.goto('/login')
+  await page.getByLabel('Email').fill('ada@reactloom.dev')
+  await page.getByLabel('Password').fill('loom-demo')
+  await page.getByRole('button', { name: 'Sign in' }).click()
+  await expect(page.getByText('Dress the loom')).toBeVisible()
+
+  let upstreamStatus: number | undefined
+  await page.route('**/api/session', async (route) => {
+    if (route.request().method() !== 'DELETE') {
+      await route.continue()
+      return
+    }
+    // Let the real handler commit the logout, then simulate a gateway
+    // reporting 503. The client cannot treat that failure as proof that
+    // the authenticated cookie still exists.
+    const response = await route.fetch()
+    upstreamStatus = response.status()
+    await context.clearCookies()
+    await route.fulfill({
+      status: 503,
+      contentType: 'application/json',
+      body: JSON.stringify({ message: 'The logout acknowledgement was lost.' }),
+    })
+  })
+
+  try {
+    const recheck = page.waitForResponse(
+      (response) =>
+        new URL(response.url()).pathname === '/api/session' &&
+        response.request().method() === 'GET' &&
+        response.status() === 401,
+    )
+    await page.getByRole('button', { name: 'Sign out' }).click()
+    await recheck
+
+    expect(upstreamStatus).toBe(200)
+    await expect(page).toHaveURL(/\\/login(?:\\?.*)?$/)
+    await expect(page.getByText('Dress the loom')).toHaveCount(0)
+    expect((await context.cookies()).some((cookie) => cookie.name === 'rl_session')).toBe(false)
+  } finally {
+    await page.unroute('**/api/session')
+  }
+})
+
 test('conceals private tasks during delayed sign-out and restores the draft on failure', async ({
   page,
   context,
