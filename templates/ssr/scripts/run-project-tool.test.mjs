@@ -27,7 +27,7 @@ const recorder =
   "import { writeFileSync } from 'node:fs'; writeFileSync('runner-args.json', JSON.stringify(process.argv.slice(2)))\n"
 
 const storybookRecorder =
-  "import { writeFileSync } from 'node:fs'; writeFileSync('runner-args.json', JSON.stringify({ args: process.argv.slice(2), storybook: process.env.STORYBOOK }))\\n"
+  "import { writeFileSync } from 'node:fs'; writeFileSync('runner-args.json', JSON.stringify({ args: process.argv.slice(2), storybook: process.env.STORYBOOK }))\n"
 
 async function mockStorybook(project, content = storybookRecorder) {
   const directory = path.join(project, 'node_modules', 'storybook')
@@ -146,7 +146,7 @@ test('Storybook static build sets STORYBOOK and forwards output arguments', asyn
 
 test('Storybook failures preserve the actual CLI exit status', async () => {
   const { project } = await fixture()
-  await mockStorybook(project, 'process.exit(23)\\n')
+  await mockStorybook(project, 'process.exit(23)\n')
   assert.equal(run(project, 'build-storybook').status, 23)
 })
 
@@ -154,7 +154,7 @@ test('Missing Storybook dependency exits before creating a child process', async
   const { project } = await fixture()
   const result = run(project, 'storybook')
   assert.equal(result.status, 1)
-  assert.match(result.stderr, /storybook\\/package\\.json/)
+  assert.match(result.stderr, /storybook\/package\.json/)
 })
 
 test('package scripts invoke the portable tool runner and include its regression tests', async () => {
