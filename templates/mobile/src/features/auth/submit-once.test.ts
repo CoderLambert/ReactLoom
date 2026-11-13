@@ -19,12 +19,18 @@ describe('mobile login submission lock', () => {
       await finish.promise
     })
     expect(pending.current).toBe(true)
-    expect(await submitOnce(pending, async () => { calls += 1 })).toBe(false)
+    const ignored = await submitOnce(pending, async () => {
+      calls += 1
+    })
+    expect(ignored).toBe(false)
     expect(calls).toBe(1)
     finish.release()
     expect(await first).toBe(true)
     expect(pending.current).toBe(false)
-    expect(await submitOnce(pending, async () => { calls += 1 })).toBe(true)
+    const retried = await submitOnce(pending, async () => {
+      calls += 1
+    })
+    expect(retried).toBe(true)
     expect(calls).toBe(2)
   })
 
