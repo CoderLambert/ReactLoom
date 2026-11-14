@@ -1,11 +1,22 @@
 import assert from 'node:assert/strict'
-import { cp, mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises'
+import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { test } from 'node:test'
 import { shouldCopyScaffoldEntry } from './copy-filter.ts'
 
-const SKIPPED = new Set(['node_modules', 'dist', '.next', '.expo', 'coverage', 'playwright-report', 'test-results', '.turbo', 'storybook-static', '.git'])
+const SKIPPED = new Set([
+  'node_modules',
+  'dist',
+  '.next',
+  '.expo',
+  'coverage',
+  'playwright-report',
+  'test-results',
+  '.turbo',
+  'storybook-static',
+  '.git',
+])
 
 test('excludes local environment files and nested Git metadata', async () => {
   const root = await mkdtemp(path.join(tmpdir(), 'reactloom-copy-filter-'))
@@ -26,25 +37,48 @@ test('excludes local environment files and nested Git metadata', async () => {
     await writeFile(path.join(source, '.git', 'config'), 'private remote')
     await cp(source, target, {
       recursive: true,
-      filter: entry => shouldCopyScaffoldEntry(entry, SKIPPED),
+      filter: (entry) => shouldCopyScaffoldEntry(entry, SKIPPED),
     })
-    for (const relative of ['.env', '.env.local', '.env.production', '.env.staging.local', 'src/.env.test.local', '.git/config']) {
+    for (const relative of [
+      '.env',
+      '.env.local',
+      '.env.production',
+      '.env.staging.local',
+      'src/.env.test.local',
+      '.git/config',
+    ]) {
       await assert.rejects(readFile(path.join(target, relative), 'utf8'), { code: 'ENOENT' })
     }
     for (const name of ['.env.example', '.env.development', '.gitignore', 'package.json']) {
       assert.equal(await readFile(path.join(target, name), 'utf8'), `safe-${name}`)
     }
-    assert.equal(await readFile(path.join(target, 'src', 'nested', 'app.ts'), 'utf8'), 'export const value = 1')
+    assert.equal(
+      await readFile(path.join(target, 'src', 'nested', 'app.ts'), 'utf8'),
+      'export const value = 1',
+    )
   } finally {
     await rm(root, { recursive: true, force: true })
   }
 })
 
 test('excludes generated caches but retains unrelated hidden files', () => {
-  for (const entry of ['.git', 'node_modules', 'dist', 'state.tsbuildinfo', '.env.local', '.env.production.local']) {
+  for (const entry of [
+    '.git',
+    'node_modules',
+    'dist',
+    'state.tsbuildinfo',
+    '.env.local',
+    '.env.production.local',
+  ]) {
     assert.equal(shouldCopyScaffoldEntry(`/source/${entry}`, SKIPPED), false, entry)
   }
-  for (const entry of ['.gitignore', '.env.development', '.env.example', '.editorconfig', 'app.tsx']) {
+  for (const entry of [
+    '.gitignore',
+    '.env.development',
+    '.env.example',
+    '.editorconfig',
+    'app.tsx',
+  ]) {
     assert.equal(shouldCopyScaffoldEntry(`/source/${entry}`, SKIPPED), true, entry)
   }
 })

@@ -3,8 +3,8 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { adaptBestPractices, installAiConfig } from './ai-config.js'
 import { shouldCopyScaffoldEntry } from './copy-filter.js'
-import { runInstall } from './install.js'
 import { type DeployTarget, writeDeployFiles } from './deploy.js'
+import { runInstall } from './install.js'
 import {
   DOCKER_FILES,
   type PackageJson,
