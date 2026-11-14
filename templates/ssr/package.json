@@ -12,7 +12,7 @@
     "preview": "node scripts/run-project-tool.mjs preview",
     "lint": "biome check .",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "vitest run && node --test scripts/prepare.test.mjs scripts/run-project-tool.test.mjs",
+    "test": "vitest run && node --test scripts/prepare.test.mjs scripts/run-project-tool.test.mjs scripts/docker-lockfile.test.mjs",
     "test:coverage": "vitest run --coverage",
     "test:ui": "vitest --ui",
     "typecheck:affected": "pnpm --filter \"...[HEAD]\" --if-present typecheck",
