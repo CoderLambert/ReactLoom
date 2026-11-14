@@ -34,4 +34,7 @@ export const api: ApiClient = {
   },
 }
 
+// Public sign-in must not forward an existing session's bearer or clear it on 401.
+export const publicApi: ApiClient = createApiClient({ baseUrl: env.VITE_API_BASE_URL })
+
 export { isApiError }

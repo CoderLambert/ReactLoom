@@ -1,9 +1,14 @@
-import { act, cleanup, fireEvent, screen, waitFor, within } from '@testing-library/react'
+import { QueryClientProvider } from '@tanstack/react-query'
+import { act, cleanup, fireEvent, renderHook, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { HttpResponse, http } from 'msw'
+import type { ReactNode } from 'react'
 import { afterEach, describe, expect, it } from 'vitest'
 import { useAuthStore } from '@/features/auth/store'
+import { useSetTaskStatus } from '@/features/tasks/hooks'
+import { taskKeys } from '@/features/tasks/keys'
 import type { Task } from '@/features/tasks/schema'
+import { createAppQueryClient } from '@/lib/query-client'
 import { demoSession, demoUser, seedTasks } from '@/mocks/fixtures'
 import { server } from '@/mocks/server'
 import { renderApp } from '@/test/render'
@@ -24,6 +29,76 @@ afterEach(() => {
 })
 
 describe('task mutation feedback', () => {
+  it('cancels an older task read before a confirmed status change can be overwritten', async () => {
+    act(() => useAuthStore.getState().setSession(demoSession()))
+    const version = useAuthStore.getState().sessionVersion
+    const client = createAppQueryClient()
+    const initial = seedTasks()
+    client.setQueryData(taskKeys.list(version), { tasks: initial })
+
+    let releaseRead = () => {}
+    const staleRead = new Promise<{ tasks: Task[] }>((resolve) => {
+      releaseRead = () => resolve({ tasks: initial })
+    })
+    let markReadStarted = () => {}
+    const readStarted = new Promise<void>((resolve) => {
+      markReadStarted = resolve
+    })
+    let wasAborted = false
+    server.use(
+      http.patch('*/api/tasks/task-1', () =>
+        HttpResponse.json({ ...initial[0], status: 'done' }),
+      ),
+    )
+
+    const { result, unmount } = renderHook(() => useSetTaskStatus(), {
+      wrapper: ({ children }: { children: ReactNode }) => (
+        <QueryClientProvider client={client}>{children}</QueryClientProvider>
+      ),
+    })
+    const pendingRead = client
+      .fetchQuery({
+        queryKey: taskKeys.list(version),
+        staleTime: 0,
+        retry: false,
+        queryFn: ({ signal }) => {
+          signal.addEventListener(
+            'abort',
+            () => {
+              wasAborted = true
+            },
+            { once: true },
+          )
+          markReadStarted()
+          return staleRead
+        },
+      })
+      .catch(() => undefined)
+
+    try {
+      await readStarted
+      await act(async () => {
+        await result.current.mutateAsync({ id: 'task-1', status: 'done' })
+      })
+      expect(wasAborted).toBe(true)
+      expect(
+        client.getQueryData<{ tasks: Task[] }>(taskKeys.list(version))?.tasks[0]?.status,
+      ).toBe('done')
+
+      // Even a transport that ignores AbortSignal cannot commit its stale result.
+      releaseRead()
+      await pendingRead
+      expect(
+        client.getQueryData<{ tasks: Task[] }>(taskKeys.list(version))?.tasks[0]?.status,
+      ).toBe('done')
+    } finally {
+      releaseRead()
+      await pendingRead
+      unmount()
+      client.clear()
+    }
+  })
+
   it.each([
     { failure: '400', message: 'Choose another title.' },
     { failure: '500', message: 'Creation is unavailable.' },
@@ -266,6 +341,29 @@ describe('task mutation feedback', () => {
     expect(input).toHaveValue('Next draft')
     expect(screen.getByText('Replacement task')).toBeVisible()
     expect(screen.queryByText('Old task')).not.toBeInTheDocument()
+  })
+
+  it('keeps the confirmed status when the post-update task refresh fails', async () => {
+    const user = await openBoard()
+    let refreshes = 0
+    server.use(
+      http.patch('*/api/tasks/task-1', () =>
+        HttpResponse.json({ ...seedTasks()[0], status: 'done' }),
+      ),
+      http.get('*/api/tasks', () => {
+        refreshes += 1
+        return HttpResponse.json({ message: 'Refresh is unavailable.' }, { status: 404 })
+      }),
+    )
+
+    const row = screen.getByText('Dress the loom').closest('li')
+    if (!row) throw new Error('The task row is missing.')
+    await user.click(within(row).getByRole('button', { name: 'Mark done' }))
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('Refresh is unavailable.')
+    expect(refreshes).toBe(1)
+    expect(within(row).getByText('done')).toBeVisible()
+    expect(within(row).getByRole('button', { name: 'Reopen' })).toBeEnabled()
   })
 
   it('reports a status failure, preserves the original status, and permits retry without duplicate updates', async () => {

@@ -1,8 +1,8 @@
 import { type LoginInput, loginSchema, sessionSchema } from '@/features/auth/schema'
-import { api } from '@/lib/api'
+import { api, publicApi } from '@/lib/api'
 
 export function login(input: LoginInput, signal?: AbortSignal) {
-  return api.request('/api/session', sessionSchema, {
+  return publicApi.request('/api/session', sessionSchema, {
     method: 'POST',
     body: loginSchema.parse(input),
     signal,

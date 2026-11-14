@@ -1,5 +1,6 @@
 import { HttpResponse, http } from 'msw'
 import { afterEach, describe, expect, it, vi } from 'vitest'
+import { login } from '@/features/auth/api'
 import { useAuthStore } from '@/features/auth/store'
 import { createTask, listTasks } from '@/features/tasks/api'
 import { demoSession, seedTasks } from '@/mocks/fixtures'
@@ -11,6 +12,46 @@ afterEach(() => {
 })
 
 describe('request session identity', () => {
+  it('does not forward the current session bearer to public login or revoke it on 401', async () => {
+    const existing = { ...demoSession(), accessToken: 'existing-session' }
+    useAuthStore.getState().setSession(existing)
+    let authorization: string | null | undefined
+    server.use(
+      http.post('*/api/session', ({ request }) => {
+        authorization = request.headers.get('authorization')
+        return HttpResponse.json({ message: 'Wrong credentials.' }, { status: 401 })
+      }),
+    )
+
+    await expect(
+      login({ email: 'other@reactloom.dev', password: 'invalid-password' }),
+    ).rejects.toMatchObject({ code: 'unauthorized', status: 401 })
+
+    expect(authorization).toBeNull()
+    expect(useAuthStore.getState().session).toEqual(existing)
+    expect(sessionStorage.getItem('reactloom.session')).toContain('existing-session')
+  })
+
+  it('never attaches the previous account bearer to a successful public login', async () => {
+    const existing = { ...demoSession(), accessToken: 'existing-session' }
+    const next = { ...demoSession(), accessToken: 'next-session' }
+    useAuthStore.getState().setSession(existing)
+    let authorization: string | null | undefined
+    server.use(
+      http.post('*/api/session', ({ request }) => {
+        authorization = request.headers.get('authorization')
+        return HttpResponse.json(next)
+      }),
+    )
+
+    const result = await login({ email: 'other@reactloom.dev', password: 'valid-password' })
+
+    expect(authorization).toBeNull()
+    expect(result).toEqual(next)
+    // The request returns the candidate session; only the login hook commits it.
+    expect(useAuthStore.getState().session).toEqual(existing)
+  })
+
   it('keeps the replacement session when an old request returns 401', async () => {
     let release = () => {}
     const pending = new Promise<void>((resolve) => {

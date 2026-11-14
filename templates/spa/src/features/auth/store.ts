@@ -1,31 +1,85 @@
 import { create } from 'zustand'
 import { type Session, sessionSchema } from '@/features/auth/schema'
 import { isSessionExpired } from '@/features/auth/session-expiration'
+import { publishSessionLogout } from '@/features/auth/session-sync'
 
 const STORAGE_KEY = 'reactloom.session'
+const SESSION_ID_KEY = 'reactloom.session.id'
 
-function readSession(): Session | null {
+function newSessionId() {
+  const bytes = crypto.getRandomValues(new Uint8Array(16))
+  return Array.from(bytes, (byte) => byte.toString(16).padStart(2, '0')).join('')
+}
+
+type StoredSession = { session: Session | null; sessionId: string | null }
+
+function readSession(): StoredSession {
+  const empty = { session: null, sessionId: null }
   try {
-    if (typeof sessionStorage === 'undefined') return null
+    if (typeof sessionStorage === 'undefined') return empty
     const raw = sessionStorage.getItem(STORAGE_KEY)
-    if (!raw) return null
+    if (!raw) return empty
     const parsed = sessionSchema.parse(JSON.parse(raw))
     if (isSessionExpired(parsed.expiresAt)) {
       writeSession(null)
-      return null
+      return empty
     }
-    return parsed
+    const sessionId = sessionStorage.getItem(SESSION_ID_KEY)
+    if (!sessionId) {
+      // Legacy sessions have no shared revocation nonce. Generating one per tab
+      // would make copied tabs impossible to revoke when another tab signs out.
+      writeSession(null)
+      return empty
+    }
+    return { session: parsed, sessionId }
   } catch {
     writeSession(null)
-    return null
+    return empty
   }
 }
 
-function writeSession(session: Session | null) {
+function discardStoredValue(key: string) {
+  try {
+    sessionStorage.removeItem(key)
+    if (sessionStorage.getItem(key) === null) return
+  } catch {
+    // Some storage policies reject deletion but permit overwriting.
+  }
+  try {
+    sessionStorage.setItem(key, '')
+  } catch {
+    // When all persistence writes are denied, only memory can be cleared.
+  }
+}
+
+function writeSession(session: Session | null, sessionId: string | null = null) {
   try {
     if (typeof sessionStorage === 'undefined') return
-    if (!session) sessionStorage.removeItem(STORAGE_KEY)
-    else sessionStorage.setItem(STORAGE_KEY, JSON.stringify(session))
+    if (!session) {
+      discardStoredValue(STORAGE_KEY)
+      discardStoredValue(SESSION_ID_KEY)
+    } else {
+      try {
+        // Each login rotates its revocation nonce. A partial write must never
+        // leave a new bearer token paired with a previous login's nonce.
+        if (!sessionId) throw new Error('Session revocation nonce is missing')
+        const serialized = JSON.stringify(session)
+        sessionStorage.setItem(SESSION_ID_KEY, sessionId)
+        sessionStorage.setItem(STORAGE_KEY, serialized)
+        if (
+          sessionStorage.getItem(SESSION_ID_KEY) !== sessionId ||
+          sessionStorage.getItem(STORAGE_KEY) !== serialized
+        ) {
+          throw new Error('Session persistence was not committed')
+        }
+      } catch {
+        // Storage can reject or silently ignore a write. Keep the new login
+        // in memory, but invalidate both persisted keys instead of restoring a
+        // mismatched or previous account after reload.
+        discardStoredValue(STORAGE_KEY)
+        discardStoredValue(SESSION_ID_KEY)
+      }
+    }
   } catch {
     // Storage can be denied or full; it must not prevent in-memory auth transitions.
   }
@@ -33,15 +87,19 @@ function writeSession(session: Session | null) {
 
 type AuthState = {
   session: Session | null
+  sessionId: string | null
   sessionVersion: number
   authOperation: number
   beginAuthOperation: () => number
   setSession: (session: Session) => void
-  clearSession: () => void
+  clearSession: (options?: { broadcast?: boolean }) => void
 }
 
+const restored = readSession()
+
 export const useAuthStore = create<AuthState>((set, get) => ({
-  session: readSession(),
+  session: restored.session,
+  sessionId: restored.sessionId,
   sessionVersion: 0,
   authOperation: 0,
   beginAuthOperation: () => {
@@ -49,12 +107,19 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     return get().authOperation
   },
   setSession: (session) => {
-    writeSession(session)
-    set((state) => ({ session, sessionVersion: state.sessionVersion + 1 }))
+    const previousSessionId = get().sessionId
+    const sessionId = newSessionId()
+    writeSession(session, sessionId)
+    set((state) => ({ session, sessionId, sessionVersion: state.sessionVersion + 1 }))
+    // Switching accounts revokes copied tabs bound to the previous session.
+    // Publish after the new nonce is active so this tab cannot revoke itself.
+    if (previousSessionId) publishSessionLogout(previousSessionId)
   },
-  clearSession: () => {
+  clearSession: (options) => {
+    const sessionId = get().sessionId
     writeSession(null)
-    set((state) => ({ session: null, sessionVersion: state.sessionVersion + 1 }))
+    set((state) => ({ session: null, sessionId: null, sessionVersion: state.sessionVersion + 1 }))
+    if (sessionId && options?.broadcast !== false) publishSessionLogout(sessionId)
   },
 }))
 
