@@ -40,6 +40,7 @@ describe('login page', () => {
     }
 
     expect(await screen.findByRole('alert')).toHaveTextContent('Sign-in failed.')
+    expect(attempts).toBe(1)
     server.resetHandlers()
     await user.click(within(screen.getByRole('main')).getByRole('button', { name: 'Sign in' }))
     expect(await screen.findByRole('heading', { name: 'Warp board' })).toBeVisible()
