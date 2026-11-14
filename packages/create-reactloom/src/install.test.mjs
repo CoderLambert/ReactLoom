@@ -3,7 +3,7 @@ import { chmod, mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises
 import os from 'node:os'
 import path from 'node:path'
 import { afterEach, test } from 'node:test'
-import { installInvocation, runInstall } from './install.ts'
+import { devInvocation, installInvocation, runInstall } from './install.ts'
 
 const roots = []
 
@@ -44,6 +44,21 @@ test('Windows uses cmd.exe to resolve pnpm.cmd without interpolating the destina
 
 test('POSIX invokes pnpm directly without a shell', () => {
   assert.deepEqual(installInvocation('linux'), { command: 'pnpm', args: ['install'] })
+})
+
+test('Windows dev launches pnpm.cmd through cmd.exe with a fixed command', () => {
+  assert.deepEqual(devInvocation('win32', 'C:\\Windows\\System32\\cmd.exe'), {
+    command: 'C:\\Windows\\System32\\cmd.exe',
+    args: ['/d', '/s', '/c', 'pnpm dev'],
+  })
+  assert.deepEqual(devInvocation('win32'), {
+    command: 'cmd.exe',
+    args: ['/d', '/s', '/c', 'pnpm dev'],
+  })
+})
+
+test('POSIX dev launches pnpm without a shell', () => {
+  assert.deepEqual(devInvocation('linux'), { command: 'pnpm', args: ['dev'] })
 })
 
 test('runs pnpm from a destination with shell metacharacters', async () => {
