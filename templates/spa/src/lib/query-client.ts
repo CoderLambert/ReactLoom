@@ -18,15 +18,9 @@ export function createAppQueryClient() {
         gcTime: 5 * 60_000,
         refetchOnWindowFocus: false,
         retry: (failureCount, error) => {
-          if (!isApiError(error)) return failureCount < 2
-          if (
-            error.code === 'aborted' ||
-            error.code === 'validation' ||
-            error.code === 'unauthorized'
-          ) {
-            return false
-          }
-          if (error.status === 404 || error.status === 403) return false
+          // The API client already retries eligible GET failures with backoff.
+          // Retrying its final ApiError here multiplies the network requests.
+          if (isApiError(error)) return false
           return failureCount < 2
         },
       },
