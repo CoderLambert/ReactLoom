@@ -87,6 +87,11 @@ function joinUrl(baseUrl: string, path: string): string {
   if (url.origin !== base.origin || (url.protocol !== 'http:' && url.protocol !== 'https:')) {
     throw new ApiError('Request URL must stay within the configured API origin.', 'validation')
   }
+  // URL.origin excludes userinfo. A credential-bearing same-origin URL would
+  // otherwise reach custom fetch adapters alongside an application bearer token.
+  if (base.username || base.password || url.username || url.password) {
+    throw new ApiError('Request URL must not contain credentials.', 'validation')
+  }
   return url.toString()
 }
 
