@@ -2,6 +2,7 @@ import { cp, mkdir, readFile, rename, rm, stat, writeFile } from 'node:fs/promis
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { adaptBestPractices, installAiConfig } from './ai-config.js'
+import { shouldCopyScaffoldEntry } from './copy-filter.js'
 import { runInstall } from './install.js'
 import { type DeployTarget, writeDeployFiles } from './deploy.js'
 import {
@@ -25,6 +26,7 @@ const SKIP_DIRS = new Set([
   'test-results',
   '.turbo',
   'storybook-static',
+  '.git',
 ])
 
 export type ScaffoldOptions = {
@@ -59,10 +61,7 @@ async function assertDestination(directory: string): Promise<void> {
 async function copyFiltered(source: string, destination: string): Promise<void> {
   await cp(source, destination, {
     recursive: true,
-    filter: (entry) => {
-      const base = path.basename(entry)
-      return !SKIP_DIRS.has(base) && !base.endsWith('.tsbuildinfo')
-    },
+    filter: (entry) => shouldCopyScaffoldEntry(entry, SKIP_DIRS),
   })
 }
 
