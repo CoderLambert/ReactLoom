@@ -322,14 +322,18 @@ export function createApiClient(options: ApiClientOptions) {
   // Diagnostic hooks must not change retries or replace the original API error.
   function warnRetry(message: string, extra: Record<string, unknown>): void {
     try {
-      logger.warn(message, extra)
+      // Async loggers are valid implementations of void-returning callbacks.
+      // Observe rejected promises without delaying the request/retry.
+      const completion: unknown = logger.warn(message, extra)
+      void Promise.resolve(completion).catch(() => undefined)
     } catch {
       // Application-provided loggers are best-effort observers.
     }
   }
   function warnUnauthorizedHandlerFailure(): void {
     try {
-      logger.warn('Unauthorized handler failed')
+      const completion: unknown = logger.warn('Unauthorized handler failed')
+      void Promise.resolve(completion).catch(() => undefined)
     } catch {
       // Diagnostics must never override the original unauthorized result.
     }

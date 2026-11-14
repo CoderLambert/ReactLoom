@@ -43,3 +43,5 @@ Keep received HTTP error statuses authoritative when their optional response bod
 Normalize unexpected synchronous or asynchronous credential-provider failures to non-retryable validation errors instead of retrying GET requests as network failures; preserve explicit ApiError codes and abort/timeout priority.
 
 Catch asynchronous unauthorized callback rejections as best-effort diagnostic failures, preserving the received 401 without producing unhandled promise rejections, even if the diagnostic logger throws.
+
+Observe rejected promises from async retry/unauthorized diagnostic loggers as best-effort failures without changing the original HTTP status, retries or callback timing.

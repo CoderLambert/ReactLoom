@@ -568,6 +568,62 @@ describe('createApiClient', () => {
   )
 
   it.each(['http', 'network'] as const)(
+    'observes asynchronous %s retry logger failures without changing the result',
+    async (kind) => {
+      const warn = vi.fn(async () => {
+        await Promise.resolve()
+        throw new Error('Async retry logger failed')
+      })
+      const fetchFn = vi.fn<typeof fetch>()
+      if (kind === 'http') {
+        fetchFn.mockResolvedValueOnce(jsonResponse({ message: 'busy' }, 503))
+      } else {
+        fetchFn.mockRejectedValueOnce(new TypeError('offline'))
+      }
+      fetchFn.mockResolvedValueOnce(jsonResponse({ ok: true }))
+      const client = createApiClient({
+        baseUrl: 'https://api.test',
+        fetchFn,
+        logger: { debug: vi.fn(), warn },
+        sleep: async () => undefined,
+      })
+
+      await expect(client.request('/items', schema)).resolves.toEqual({ ok: true })
+      await new Promise<void>((resolve) => setImmediate(resolve))
+      expect(fetchFn).toHaveBeenCalledTimes(2)
+      expect(warn).toHaveBeenCalledOnce()
+    },
+  )
+
+  it('observes asynchronous unauthorized diagnostic logger failures', async () => {
+    const warn = vi.fn(async () => {
+      await Promise.resolve()
+      throw new Error('Async unauthorized diagnostic logger failed')
+    })
+    const onUnauthorized = vi.fn(() => {
+      throw new Error('Session cleanup failed')
+    })
+    const fetchFn = vi.fn(async () => jsonResponse({ message: 'expired' }, 401))
+    const client = createApiClient({
+      baseUrl: 'https://api.test',
+      fetchFn,
+      onUnauthorized,
+      logger: { debug: vi.fn(), warn },
+    })
+
+    await expect(client.request('/me', schema)).rejects.toMatchObject({
+      code: 'unauthorized',
+      status: 401,
+      message: 'expired',
+    })
+    await new Promise<void>((resolve) => setImmediate(resolve))
+    expect(fetchFn).toHaveBeenCalledOnce()
+    expect(onUnauthorized).toHaveBeenCalledOnce()
+    expect(warn).toHaveBeenCalledOnce()
+    expect(warn).toHaveBeenCalledWith('Unauthorized handler failed')
+  })
+
+  it.each(['http', 'network'] as const)(
     'keeps raw URL secrets out of %s retry diagnostics',
     async (kind) => {
       const warn = vi.fn()
