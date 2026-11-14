@@ -15,7 +15,7 @@
     "prepare": "tsc -p tsconfig.build.json",
     "lint": "biome check .",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "vitest run",
+    "test": "vitest run && node --experimental-strip-types --test src/install.test.mjs",
     "test:coverage": "vitest run --coverage",
     "test:ui": "vitest --ui",
     "start": "node dist/cli.js"

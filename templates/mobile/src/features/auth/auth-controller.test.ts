@@ -280,6 +280,40 @@ describe('auth controller', () => {
     expect(app.state()).toEqual({ status: 'anonymous', error: 'Session storage is unavailable.' })
   })
 
+  it('fails closed when native session hydration never settles and allows a fresh login', async () => {
+    vi.useFakeTimers()
+    const read = deferred<Session | null>()
+    const app = setup({ readSession: () => read.promise })
+    const hydration = app.controller.start()
+    await vi.advanceTimersByTimeAsync(14_999)
+    expect(app.state()).toEqual({ status: 'loading' })
+    await vi.advanceTimersByTimeAsync(1)
+    await hydration
+    expect(app.state()).toEqual({ status: 'anonymous', error: 'Session storage is unavailable.' })
+    expect(vi.getTimerCount()).toBe(0)
+
+    await app.controller.signIn(input)
+    read.resolve(newerSession)
+    await Promise.resolve()
+    expect(app.state()).toEqual({ status: 'authenticated', session })
+    expect(app.storage.session).toEqual(session)
+  })
+
+  it('cancels an unresolved hydration on provider cleanup without a lingering timeout', async () => {
+    vi.useFakeTimers()
+    const read = deferred<Session | null>()
+    const app = setup({ readSession: () => read.promise })
+    const hydration = app.controller.start()
+    expect(vi.getTimerCount()).toBe(1)
+    app.controller.stop()
+    await hydration
+    expect(vi.getTimerCount()).toBe(0)
+
+    read.resolve(session)
+    await Promise.resolve()
+    expect(app.state()).toEqual({ status: 'loading' })
+  })
+
   it('ignores hydration that completes after sign out', async () => {
     const read = deferred<Session | null>()
     const app = setup({ readSession: () => read.promise })
@@ -352,6 +386,122 @@ describe('auth controller', () => {
     expect(writes).toEqual([null, newerSession])
     expect(persisted).toEqual(newerSession)
     expect(app.state()).toEqual({ status: 'authenticated', session: newerSession })
+  })
+
+  it('aborts an in-flight login on sign-out and ignores its obsolete rejection', async () => {
+    let aborted = false
+    const app = setup({
+      requestSignIn: (_input, signal) =>
+        new Promise<Session>((_resolve, reject) => {
+          signal.addEventListener(
+            'abort',
+            () => {
+              aborted = true
+              reject(new Error('Request aborted'))
+            },
+            { once: true },
+          )
+        }),
+    })
+    await app.controller.start()
+    const pending = app.controller.signIn(input)
+    await app.controller.signOut()
+    await expect(pending).resolves.toBeUndefined()
+    expect(aborted).toBe(true)
+    expect(app.state()).toEqual({ status: 'anonymous' })
+    expect(app.storage.session).toBeNull()
+  })
+
+  it('settles logout even when a sign-in transport ignores its abort signal', async () => {
+    const stalled = deferred<Session>()
+    let loginSignal: AbortSignal | undefined
+    const app = setup({
+      requestSignIn: (_input, signal) => {
+        loginSignal = signal
+        return stalled.promise
+      },
+    })
+    await app.controller.start()
+    const pending = app.controller.signIn(input)
+    await app.controller.signOut()
+
+    // The underlying promise has not resolved or rejected. The caller must
+    // nonetheless finish, and a late rejection must not resurrect the session.
+    await expect(pending).resolves.toBeUndefined()
+    expect(loginSignal?.aborted).toBe(true)
+    stalled.reject(new Error('Late transport failure'))
+    await Promise.resolve()
+    expect(app.state()).toEqual({ status: 'anonymous' })
+    expect(app.storage.session).toBeNull()
+  })
+
+  it('settles the superseded sign-in before its transport completes', async () => {
+    const stalled = deferred<Session>()
+    let requests = 0
+    let oldSignal: AbortSignal | undefined
+    const app = setup({
+      requestSignIn: (_input, signal) => {
+        if (++requests === 1) {
+          oldSignal = signal
+          return stalled.promise
+        }
+        return Promise.resolve(newerSession)
+      },
+    })
+    await app.controller.start()
+    const previous = app.controller.signIn(input)
+    const current = app.controller.signIn(input)
+
+    await expect(previous).resolves.toBeUndefined()
+    await current
+    expect(oldSignal?.aborted).toBe(true)
+    expect(app.storage.session).toEqual(newerSession)
+    stalled.resolve(session)
+    await Promise.resolve()
+    expect(app.state()).toEqual({ status: 'authenticated', session: newerSession })
+  })
+
+  it('aborts a superseded login without losing the newer session', async () => {
+    let calls = 0
+    let firstSignal: AbortSignal | undefined
+    const app = setup({
+      requestSignIn: (_input, signal) => {
+        if (++calls === 2) return Promise.resolve(newerSession)
+        firstSignal = signal
+        return new Promise<Session>((_resolve, reject) => {
+          signal.addEventListener('abort', () => reject(new Error('Request aborted')), {
+            once: true,
+          })
+        })
+      },
+    })
+    await app.controller.start()
+    const previous = app.controller.signIn(input)
+    const latest = app.controller.signIn(input)
+    await Promise.all([previous, latest])
+    expect(firstSignal?.aborted).toBe(true)
+    expect(app.storage.session).toEqual(newerSession)
+    expect(app.state()).toEqual({ status: 'authenticated', session: newerSession })
+  })
+
+  it('aborts a pending login when the auth provider is stopped', async () => {
+    let signal: AbortSignal | undefined
+    const app = setup({
+      requestSignIn: (_input, requestSignal) => {
+        signal = requestSignal
+        return new Promise<Session>((_resolve, reject) => {
+          requestSignal.addEventListener('abort', () => reject(new Error('Request aborted')), {
+            once: true,
+          })
+        })
+      },
+    })
+    await app.controller.start()
+    const pending = app.controller.signIn(input)
+    app.controller.stop()
+    await expect(pending).resolves.toBeUndefined()
+    expect(signal?.aborted).toBe(true)
+    expect(app.storage.session).toBeNull()
   })
 
   it('commits only the latest login when responses arrive out of order', async () => {

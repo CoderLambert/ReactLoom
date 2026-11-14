@@ -10,8 +10,11 @@ void i18n.use(initReactI18next).init({
       translation: {
         title: 'A workshop in your pocket.',
         signIn: 'Sign in',
+        signingIn: 'Signing in…',
         email: 'Email',
         password: 'Password',
+        emailInvalid: 'Enter a valid email address.',
+        passwordInvalid: 'Password must be at least 8 characters.',
         tasks: 'Warp board',
         add: 'Add task',
         taskTitle: 'Task title',
@@ -34,8 +37,11 @@ void i18n.use(initReactI18next).init({
       translation: {
         title: 'Un taller en el bolsillo.',
         signIn: 'Entrar',
+        signingIn: 'Iniciando sesión…',
         email: 'Correo',
         password: 'Contraseña',
+        emailInvalid: 'Introduce un correo electrónico válido.',
+        passwordInvalid: 'La contraseña debe tener al menos 8 caracteres.',
         tasks: 'Tablero de urdimbre',
         add: 'Añadir tarea',
         taskTitle: 'Título de la tarea',

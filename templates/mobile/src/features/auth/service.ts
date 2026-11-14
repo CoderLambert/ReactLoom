@@ -1,9 +1,8 @@
 import { createApiClient } from '@reactloom/api-client'
-import { demoLogin, type LoginInput, type Session, sessionSchema } from '@/features/auth/schema'
-import { env } from '@/lib/env'
-import { readToken } from '@/lib/token-store'
+import { env } from '../../lib/env'
+import { demoLogin, type LoginInput, type Session, sessionSchema } from './schema'
 
-export async function signIn(input: LoginInput): Promise<Session> {
+export async function signIn(input: LoginInput, signal?: AbortSignal): Promise<Session> {
   if (env.EXPO_PUBLIC_USE_FIXTURES === 'true') {
     if (input.email !== demoLogin.email || input.password !== demoLogin.password) {
       throw new Error('Those credentials were not recognized.')
@@ -16,14 +15,17 @@ export async function signIn(input: LoginInput): Promise<Session> {
     return session
   }
 
+  // Authentication must never forward a previously persisted account's token
+  // or ambient browser cookies to the sign-in endpoint.
   const api = createApiClient({
     baseUrl: env.EXPO_PUBLIC_API_BASE_URL,
-    getAccessToken: readToken,
+    credentials: 'omit',
   })
   const session = await api.request('/api/session', sessionSchema, {
     method: 'POST',
     body: input,
     retry: false,
+    signal,
   })
   return session
 }

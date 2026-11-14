@@ -1,21 +1,26 @@
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema'
 import { Redirect } from 'expo-router'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { Pressable, Text, TextInput, View } from 'react-native'
 import { useAuth } from '@/features/auth/auth-context'
+import { loginValidationErrorKeys } from '@/features/auth/login-validation'
+import { submitOnce } from '@/features/auth/submit-once'
 import { type LoginInput, loginSchema } from '@/features/auth/schema'
 
 export default function LoginScreen() {
   const { t } = useTranslation()
   const auth = useAuth()
   const [error, setError] = useState<string | null>(null)
+  const [isSigningIn, setIsSigningIn] = useState(false)
+  const submitPending = useRef(false)
   const form = useForm<LoginInput>({
     resolver: standardSchemaResolver(loginSchema),
     defaultValues: { email: '', password: '' },
   })
   const message = auth.error ?? error
+  const fieldErrors = loginValidationErrorKeys(form.formState.errors)
 
   if (auth.status === 'authenticated') return <Redirect href="/tasks" />
 
@@ -39,6 +44,7 @@ export default function LoginScreen() {
         render={({ field }) => (
           <TextInput
             accessibilityLabel={t('email')}
+            accessibilityHint={fieldErrors.email ? t(fieldErrors.email) : undefined}
             autoCapitalize="none"
             autoComplete="username"
             keyboardType="email-address"
@@ -49,12 +55,14 @@ export default function LoginScreen() {
           />
         )}
       />
+      {fieldErrors.email && <Text accessibilityRole="alert">{t(fieldErrors.email)}</Text>}
       <Controller
         control={form.control}
         name="password"
         render={({ field }) => (
           <TextInput
             accessibilityLabel={t('password')}
+            accessibilityHint={fieldErrors.password ? t(fieldErrors.password) : undefined}
             secureTextEntry
             autoComplete="current-password"
             value={field.value}
@@ -64,25 +72,36 @@ export default function LoginScreen() {
           />
         )}
       />
+      {fieldErrors.password && <Text accessibilityRole="alert">{t(fieldErrors.password)}</Text>}
       {message ? <Text accessibilityRole="alert">{message}</Text> : null}
       <Pressable
         accessibilityRole="button"
+        accessibilityState={{ disabled: isSigningIn, busy: isSigningIn }}
+        disabled={isSigningIn}
         onPress={form.handleSubmit(async (values) => {
-          try {
+          await submitOnce(submitPending, async () => {
+            setIsSigningIn(true)
             setError(null)
-            await auth.signIn(values)
-          } catch (cause) {
-            setError(cause instanceof Error ? cause.message : 'Sign in failed.')
-          }
+            try {
+              await auth.signIn(values)
+            } catch (cause) {
+              setError(cause instanceof Error ? cause.message : 'Sign in failed.')
+            } finally {
+              setIsSigningIn(false)
+            }
+          })
         })}
         style={{
           backgroundColor: '#1c1915',
           borderRadius: 999,
           paddingVertical: 12,
           alignItems: 'center',
+          opacity: isSigningIn ? 0.6 : 1,
         }}
       >
-        <Text style={{ color: '#f4f0e6', fontWeight: '600' }}>{t('signIn')}</Text>
+        <Text style={{ color: '#f4f0e6', fontWeight: '600' }}>
+          {t(isSigningIn ? 'signingIn' : 'signIn')}
+        </Text>
       </Pressable>
     </View>
   )
