@@ -176,6 +176,8 @@ function AuthenticatedTasks({ userId }: { userId: string }) {
   const router = useRouter()
   const [title, setTitle] = useState('')
   const [isSigningOut, setIsSigningOut] = useState(false)
+  // React state updates may be batched across reentrant click handlers.
+  const signingOut = useRef(false)
   const [signOutError, setSignOutError] = useState<string | null>(null)
   const [titleValidationError, setTitleValidationError] = useState<string | null>(null)
   const draftRevision = useRef(0)
@@ -204,7 +206,8 @@ function AuthenticatedTasks({ userId }: { userId: string }) {
   })
 
   async function signOut() {
-    if (isSigningOut || create.isPending) return
+    if (signingOut.current || isSigningOut || create.isPending) return
+    signingOut.current = true
     setIsSigningOut(true)
     setSignOutError(null)
     try {
@@ -216,6 +219,7 @@ function AuthenticatedTasks({ userId }: { userId: string }) {
         const confirmed = await getApi().request('/api/session', sessionSchema, { retry: false })
         if (confirmed.user.id === userId) {
           setSignOutError(cause instanceof Error ? cause.message : 'Sign out failed.')
+          signingOut.current = false
           setIsSigningOut(false)
           return
         }

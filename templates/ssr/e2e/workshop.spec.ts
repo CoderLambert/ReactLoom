@@ -223,6 +223,59 @@ test('conceals private tasks during delayed sign-out and restores the draft on f
   }
 })
 
+test('single-flights reentrant sign-out and releases its lock after a retained session', async ({
+  page,
+}) => {
+  await page.goto('/login')
+  await page.getByLabel('Email').fill('ada@reactloom.dev')
+  await page.getByLabel('Password').fill('loom-demo')
+  await page.getByRole('button', { name: 'Sign in' }).click()
+  await expect(page.getByText('Dress the loom')).toBeVisible()
+
+  const deleteStarted = Promise.withResolvers<void>()
+  const releaseDelete = Promise.withResolvers<void>()
+  let deleteRequests = 0
+  await page.route('**/api/session', async (route) => {
+    if (route.request().method() !== 'DELETE') {
+      await route.continue()
+      return
+    }
+    deleteRequests += 1
+    deleteStarted.resolve()
+    await releaseDelete.promise
+    await route.fulfill({
+      status: 503,
+      contentType: 'application/json',
+      body: JSON.stringify({ message: 'Temporary sign-out failure.' }),
+    })
+  })
+
+  try {
+    // Deliver both events in one browser task, before React commits the
+    // disabled state. Only a synchronous lock can guarantee one DELETE.
+    await page.getByRole('button', { name: 'Sign out' }).evaluate((button) => {
+      const click = () => button.dispatchEvent(new MouseEvent('click', { bubbles: true }))
+      click()
+      click()
+    })
+    await deleteStarted.promise
+    await expect(page.getByRole('button', { name: 'Signing out…' })).toBeDisabled()
+    expect(deleteRequests).toBe(1)
+
+    releaseDelete.resolve()
+    await expect(page.getByRole('alert')).toBeVisible()
+    await expect(page.getByText('Dress the loom')).toBeVisible()
+    expect(deleteRequests).toBe(1)
+
+    // A verified same-user 503 must release the lock for an explicit retry.
+    await page.getByRole('button', { name: 'Sign out' }).click()
+    await expect.poll(() => deleteRequests).toBe(2)
+  } finally {
+    releaseDelete.resolve()
+    await page.unroute('**/api/session')
+  }
+})
+
 test('revokes the cached view in another tab after sign-out', async ({ page, context }) => {
   await page.goto('/login')
   await page.getByLabel('Email').fill('ada@reactloom.dev')
