@@ -994,6 +994,38 @@ describe('createApiClient', () => {
     expect(fetchFn).not.toHaveBeenCalled()
   })
 
+  it.each([
+    ['username/password in API base', 'https://alice:secret@api.test/v1', '/items'],
+    ['password-only in API base', 'https://:secret@api.test/v1', '/items'],
+    [
+      'username/password in absolute request',
+      'https://api.test/v1',
+      'https://alice:secret@api.test/v1/items',
+    ],
+    ['password-only in absolute request', 'https://api.test/v1', 'https://:secret@api.test/v1/items'],
+  ])(
+    'rejects %s before resolving bearer tokens or making requests',
+    async (_label, baseUrl, path) => {
+      const getAccessToken = vi.fn(() => 'private-token')
+      const fetchFn = vi.fn(async () => jsonResponse({ ok: true }))
+      const warn = vi.fn()
+      const client = createApiClient({
+        baseUrl,
+        getAccessToken,
+        fetchFn,
+        logger: { debug: vi.fn(), warn },
+      })
+
+      await expect(client.request(path, schema)).rejects.toMatchObject({
+        code: 'validation',
+        message: 'Request URL must not contain credentials.',
+      })
+      expect(getAccessToken).not.toHaveBeenCalled()
+      expect(fetchFn).not.toHaveBeenCalled()
+      expect(warn).not.toHaveBeenCalled()
+    },
+  )
+
   it('permits an absolute URL on the configured origin', async () => {
     const fetchFn = vi.fn(async () => jsonResponse({ ok: true }))
     const client = createApiClient({ baseUrl: 'https://api.test/v1', fetchFn })
