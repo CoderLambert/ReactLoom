@@ -45,3 +45,5 @@ Normalize unexpected synchronous or asynchronous credential-provider failures to
 Catch asynchronous unauthorized callback rejections as best-effort diagnostic failures, preserving the received 401 without producing unhandled promise rejections, even if the diagnostic logger throws.
 
 Observe rejected promises from async retry/unauthorized diagnostic loggers as best-effort failures without changing the original HTTP status, retries or callback timing.
+
+Reject username/password userinfo embedded in the API base URL or same-origin request URLs before reading bearer credentials or reaching custom transports. URL.origin alone does not distinguish credentialed URLs.
