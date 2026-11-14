@@ -1002,7 +1002,11 @@ describe('createApiClient', () => {
       'https://api.test/v1',
       'https://alice:secret@api.test/v1/items',
     ],
-    ['password-only in absolute request', 'https://api.test/v1', 'https://:secret@api.test/v1/items'],
+    [
+      'password-only in absolute request',
+      'https://api.test/v1',
+      'https://:secret@api.test/v1/items',
+    ],
   ])(
     'rejects %s before resolving bearer tokens or making requests',
     async (_label, baseUrl, path) => {
