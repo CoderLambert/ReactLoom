@@ -26,13 +26,21 @@ test('excludes local environment files and nested Git metadata', async () => {
     await mkdir(path.join(source, 'src'), { recursive: true })
     await mkdir(path.join(source, '.git'), { recursive: true })
     await mkdir(path.join(source, 'src', 'nested'), { recursive: true })
-    for (const name of ['.env', '.env.local', '.env.production', '.env.staging.local']) {
+    for (const name of [
+      '.env',
+      '.env.local',
+      '.env.production',
+      '.env.staging.local',
+      '.envrc',
+      '.envrc.local',
+    ]) {
       await writeFile(path.join(source, name), `secret-${name}`)
     }
     for (const name of ['.env.example', '.env.development', '.gitignore', 'package.json']) {
       await writeFile(path.join(source, name), `safe-${name}`)
     }
     await writeFile(path.join(source, 'src', '.env.test.local'), 'nested-secret')
+    await writeFile(path.join(source, 'src', 'nested', '.envrc.personal'), 'nested-direnv-secret')
     await writeFile(path.join(source, 'src', 'nested', 'app.ts'), 'export const value = 1')
     await writeFile(path.join(source, '.git', 'config'), 'private remote')
     await cp(source, target, {
@@ -44,7 +52,10 @@ test('excludes local environment files and nested Git metadata', async () => {
       '.env.local',
       '.env.production',
       '.env.staging.local',
+      '.envrc',
+      '.envrc.local',
       'src/.env.test.local',
+      'src/nested/.envrc.personal',
       '.git/config',
     ]) {
       await assert.rejects(readFile(path.join(target, relative), 'utf8'), { code: 'ENOENT' })
@@ -69,6 +80,8 @@ test('excludes generated caches but retains unrelated hidden files', () => {
     'state.tsbuildinfo',
     '.env.local',
     '.env.production.local',
+    '.envrc',
+    '.envrc.local',
   ]) {
     assert.equal(shouldCopyScaffoldEntry(`/source/${entry}`, SKIPPED), false, entry)
   }
