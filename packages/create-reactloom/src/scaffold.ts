@@ -14,6 +14,7 @@ import {
   unselectedFrameworkFiles,
   workspaceYaml,
 } from './selection.js'
+import { assertStorybookScripts, usesPortableStorybookRunner } from './storybook-scripts.js'
 import { findRepoRoot, readManifest, type TemplateId, type TemplateManifest } from './templates.js'
 
 const SKIP_DIRS = new Set([
@@ -413,15 +414,11 @@ async function assertStorybook(directory: string, manifest: TemplateManifest): P
         'template.json storybook.config must load the framework, the a11y addon, and msw-storybook-addon.',
       )
     }
-    if (!pkg.scripts?.storybook?.includes('storybook dev')) {
-      throw new Error('package.json storybook must run storybook dev.')
-    }
-    const built = pkg.scripts?.['build-storybook'] ?? ''
-    if (!built.includes('STORYBOOK=true') || !built.includes('storybook build')) {
-      throw new Error(
-        'package.json build-storybook must set STORYBOOK=true and run storybook build.',
-      )
-    }
+    const scripts = pkg.scripts ?? {}
+    const runnerSource = usesPortableStorybookRunner(scripts)
+      ? await readTemplateText(directory, 'scripts/run-project-tool.mjs', 'storybook runner')
+      : undefined
+    assertStorybookScripts(scripts, runnerSource)
     for (const relative of storybook.stories ?? []) {
       await readTemplateText(directory, relative, 'story')
     }
