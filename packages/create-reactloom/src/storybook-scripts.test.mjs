@@ -34,9 +34,13 @@ describe('CLI Storybook scaffold validation', () => {
     assert.equal(usesPortableStorybookRunner(portable), true)
     assert.doesNotThrow(() => assertStorybookScripts(portable, runner))
   })
-  it('rejects missing or mismatched commands instead of treating any Node script as Storybook', () => {
+  it('rejects mismatched scripts rather than treating any Node script as Storybook', () => {
     assert.throws(
-      () => assertStorybookScripts({ ...portable, storybook: 'node scripts/noop.mjs storybook' }, runner),
+      () =>
+        assertStorybookScripts(
+          { ...portable, storybook: 'node scripts/noop.mjs storybook' },
+          runner,
+        ),
       /must launch Storybook/,
     )
     assert.throws(
@@ -49,17 +53,29 @@ describe('CLI Storybook scaffold validation', () => {
   })
   it('rejects a runner without the build-time STORYBOOK flag', () => {
     assert.throws(
-      () => assertStorybookScripts(portable, runner.replace("STORYBOOK: 'true'", "STORYBOOK: 'false'")),
+      () =>
+        assertStorybookScripts(
+          portable,
+          runner.replace("STORYBOOK: 'true'", "STORYBOOK: 'false'"),
+        ),
       /environment flag/,
     )
   })
   it('rejects a runner that does not execute the installed Storybook binary', () => {
     assert.throws(
-      () => assertStorybookScripts(portable, runner.replace('storybook/package.json', 'nonexistent/package.json')),
+      () =>
+        assertStorybookScripts(
+          portable,
+          runner.replace('storybook/package.json', 'nonexistent/package.json'),
+        ),
       /installed Storybook package/,
     )
     assert.throws(
-      () => assertStorybookScripts(portable, runner.replace('spawn(process.execPath', 'spawn(command')),
+      () =>
+        assertStorybookScripts(
+          portable,
+          runner.replace('spawn(process.execPath', 'spawn(command'),
+        ),
       /Node CLI invocation/,
     )
   })

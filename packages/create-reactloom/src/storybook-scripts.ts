@@ -28,7 +28,7 @@ export function assertStorybookScripts(
   }
   if (!usesPortableStorybookRunner(scripts)) {
     throw new Error(
-      'package.json must launch Storybook dev/build with STORYBOOK=true, either directly or through the supported Node runner.',
+      'package.json must launch Storybook dev/build with STORYBOOK=true (directly or via Node).',
     )
   }
   if (!portableRunnerSource) {
