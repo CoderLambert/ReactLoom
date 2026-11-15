@@ -41,6 +41,8 @@ jobs:
             turbo-${{ runner.os }}-
       - name: Install
         run: pnpm install --frozen-lockfile
+      - name: Test root Lighthouse startup guard
+        run: node --test scripts/with-lighthouse.test.mjs
       - name: Check Storybook AI rule versions
         run: node scripts/check-ai-rules-sync.mjs
       - name: Lint
