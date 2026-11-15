@@ -4,7 +4,7 @@ import path from 'node:path'
 export function shouldCopyScaffoldEntry(entry: string, skippedNames: ReadonlySet<string>): boolean {
   const name = path.basename(entry)
   if (skippedNames.has(name) || name.endsWith('.tsbuildinfo')) return false
-  if (name === '.env') return false
+  if (name === '.env' || name === '.envrc' || name.startsWith('.envrc.')) return false
   if (name.startsWith('.env.') && name !== '.env.example' && name !== '.env.development') {
     return false
   }
