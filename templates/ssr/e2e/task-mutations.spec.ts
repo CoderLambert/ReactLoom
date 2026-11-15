@@ -170,3 +170,42 @@ for (const restoreSubmitted of [false, true]) {
     }
   })
 }
+
+test('revokes cached tasks when the API response belongs to another session', async ({ page }) => {
+  // The initial verified session has already cached Ada's task list.
+  // Simulate a cookie change racing the subsequent refetch by returning
+  // another account's data under Ada's previous Query key.
+  const foreignTitle = `Foreign private task ${randomUUID()}`
+  let foreignReads = 0
+  await page.route('**/api/tasks', async (route) => {
+    if (route.request().method() !== 'GET') {
+      await route.continue()
+      return
+    }
+    foreignReads += 1
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        tasks: [{
+          id: 'foreign-task',
+          title: foreignTitle,
+          status: 'open',
+          ownerId: 'different-user',
+          createdAt: new Date().toISOString(),
+        }],
+      }),
+    })
+  })
+
+  try {
+    await page.getByLabel('Task title').fill(`Trigger refetch ${randomUUID()}`)
+    await page.getByRole('button', { name: 'Add task' }).click()
+    await expect(page).toHaveURL(/\/login(?:\?.*)?$/)
+    expect(foreignReads).toBeGreaterThan(0)
+    await expect(page.getByText(foreignTitle)).toHaveCount(0)
+    await expect(page.getByText('Dress the loom')).toHaveCount(0)
+  } finally {
+    await page.unroute('**/api/tasks')
+  }
+})

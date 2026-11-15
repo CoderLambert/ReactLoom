@@ -7,6 +7,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import * as z from 'zod'
 import { getApi } from '@/lib/api'
 import { clearSessionCache } from '@/lib/session-cache'
+import { assertTaskForUser, assertTasksForUser, TaskSessionMismatchError } from '@/lib/task-ownership'
 import { broadcastSessionEvent, subscribeSessionEvents } from '@/lib/session-events'
 
 const taskSchema = z.object({
@@ -164,14 +165,24 @@ export default function TasksPage() {
       ) : null}
       {session.data ? (
         <div hidden={!verified}>
-          <AuthenticatedTasks key={session.data.user.id} userId={session.data.user.id} />
+          <AuthenticatedTasks
+            key={session.data.user.id}
+            userId={session.data.user.id}
+            onSessionMismatch={revokeSession}
+          />
         </div>
       ) : null}
     </>
   )
 }
 
-function AuthenticatedTasks({ userId }: { userId: string }) {
+function AuthenticatedTasks({
+  userId,
+  onSessionMismatch,
+}: {
+  userId: string
+  onSessionMismatch: () => void
+}) {
   const queryClient = useQueryClient()
   const router = useRouter()
   const [title, setTitle] = useState('')
@@ -184,15 +195,22 @@ function AuthenticatedTasks({ userId }: { userId: string }) {
   const submitting = useRef(false)
   const tasks = useQuery({
     queryKey: ['tasks', userId],
-    queryFn: ({ signal }) => getApi().request('/api/tasks', listSchema, { signal }),
+    queryFn: async ({ signal }) =>
+      assertTasksForUser(await getApi().request('/api/tasks', listSchema, { signal }), userId),
+    // An identity mismatch cannot be repaired by retrying under the same stale key.
+    retry: (failures, error) =>
+      !(error instanceof TaskSessionMismatchError) && failures < 1,
   })
   const create = useMutation({
-    mutationFn: ({ title: nextTitle }: { title: string; revision: number }) =>
-      getApi().request('/api/tasks', taskSchema, {
-        method: 'POST',
-        body: { title: nextTitle },
-        retry: false,
-      }),
+    mutationFn: async ({ title: nextTitle }: { title: string; revision: number }) =>
+      assertTaskForUser(
+        await getApi().request('/api/tasks', taskSchema, {
+          method: 'POST',
+          body: { title: nextTitle },
+          retry: false,
+        }),
+        userId,
+      ),
     onSuccess: (_task, submitted) => {
       if (draftRevision.current === submitted.revision) setTitle('')
     },
@@ -204,6 +222,14 @@ function AuthenticatedTasks({ userId }: { userId: string }) {
       }
     },
   })
+
+  const ownerMismatch =
+    tasks.error instanceof TaskSessionMismatchError ||
+    create.error instanceof TaskSessionMismatchError
+
+  useEffect(() => {
+    if (ownerMismatch) onSessionMismatch()
+  }, [ownerMismatch, onSessionMismatch])
 
   async function signOut() {
     if (signingOut.current || isSigningOut || create.isPending) return
@@ -237,7 +263,7 @@ function AuthenticatedTasks({ userId }: { userId: string }) {
   const hasTaskError = Boolean(titleValidationError || create.isError)
 
   return (
-    <section className="space-y-6">
+    <section hidden={ownerMismatch} className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <h1 className="text-5xl">Warp board</h1>
         <button
