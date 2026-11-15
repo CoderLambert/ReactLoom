@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { spawnSync } from 'node:child_process'
-import { existsSync, mkdtempSync, mkdirSync, rmSync, writeFileSync, copyFileSync } from 'node:fs'
+import { copyFileSync, existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { test } from 'node:test'
@@ -31,9 +31,11 @@ function installFakePlaywright(projectRoot, executable) {
 }
 
 function invoke(root, ...args) {
-  return spawnSync(process.execPath, [join(root, 'scripts', 'print-playwright-chrome.mjs'), ...args], {
-    encoding: 'utf8',
-  })
+  return spawnSync(
+    process.execPath,
+    [join(root, 'scripts', 'print-playwright-chrome.mjs'), ...args],
+    { encoding: 'utf8' },
+  )
 }
 
 test('standalone resolves the Playwright-owned browser, not the first cache entry', () => {
