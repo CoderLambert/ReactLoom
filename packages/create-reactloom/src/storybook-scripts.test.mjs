@@ -38,9 +38,10 @@ describe('CLI Storybook scaffold validation', () => {
     assert.throws(
       () => assertStorybookScripts({ ...portable, storybook: 'node scripts/noop.mjs storybook' }, runner),
       /must launch Storybook/,
+    )
     assert.throws(
       () => assertStorybookScripts({ ...portable, 'build-storybook': 'echo noop' }, runner),
-      /must launch Storyboook/,
+      /must launch Storybook/,
     )
   })
   it('rejects a missing runner even with matching package scripts', () => {
