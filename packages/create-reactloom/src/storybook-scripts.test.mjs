@@ -59,7 +59,7 @@ describe('CLI Storybook scaffold validation', () => {
       /installed Storybook package/,
     )
     assert.throws(
-      () => assertStorybookScripts(portable, runner.replace('spawn(process.execPath', 'spawn(command'),
+      () => assertStorybookScripts(portable, runner.replace('spawn(process.execPath', 'spawn(command')),
       /Node CLI invocation/,
     )
   })
