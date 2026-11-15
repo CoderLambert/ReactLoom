@@ -43,6 +43,8 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Test root Lighthouse startup guard
         run: node --test scripts/with-lighthouse.test.mjs
+      - name: Test Playwright Chromium resolution
+        run: node --test scripts/print-playwright-chrome.test.mjs
       - name: Check Storybook AI rule versions
         run: node scripts/check-ai-rules-sync.mjs
       - name: Lint
@@ -175,7 +177,7 @@ jobs:
         if: steps.playwright-cache.outputs.cache-hit == 'true'
         run: pnpm --filter "${{ matrix.filter }}" exec playwright install-deps chromium
       - name: Point Lighthouse at Playwright Chromium
-        run: echo "CHROME_PATH=$(node scripts/print-playwright-chrome.mjs)" >> "$GITHUB_ENV"
+        run: echo "CHROME_PATH=$(node scripts/print-playwright-chrome.mjs "${{ matrix.name }}")" >> "$GITHUB_ENV"
       - name: Lighthouse
         run: pnpm exec turbo run lighthouse --filter="${{ matrix.filter }}"
 
