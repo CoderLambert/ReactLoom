@@ -18,11 +18,18 @@ try {
   const { chromium } = require('@playwright/test')
   const executable = chromium.executablePath()
   if (!existsSync(executable)) {
-    throw new Error('Playwright Chromium is not installed at ' + executable + '. Run playwright install chromium.')
+    throw new Error(
+      'Playwright Chromium is not installed at ' +
+        executable +
+        '. Run playwright install chromium.',
+    )
   }
   process.stdout.write(executable)
 } catch (error) {
   const message = error instanceof Error ? error.message : String(error)
-  process.stderr.write('Cannot resolve Playwright Chromium for ' + (template ?? 'standalone project') + ': ' + message + '\n')
+  const projectName = template ?? 'standalone project'
+  process.stderr.write(
+    'Cannot resolve Playwright Chromium for ' + projectName + ': ' + message + '\n',
+  )
   process.exitCode = 1
 }
