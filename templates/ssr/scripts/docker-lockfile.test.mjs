@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { spawnSync } from 'node:child_process'
-import { chmodSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { chmodSync, copyFileSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 import test from 'node:test'
@@ -84,4 +84,29 @@ test('failure without a lockfile propagates the installer exit status', () => {
 test('package test lifecycle includes the Docker lockfile contract', () => {
   const manifest = JSON.parse(readFileSync(path.join(projectRoot, 'package.json'), 'utf8'))
   assert.match(manifest.scripts.test, /node --test .*scripts\/docker-lockfile\.test\.mjs/)
+})
+
+
+test('standalone deps copies its prepare lifecycle before the pnpm install step', () => {
+  const deps = dockerfile.split('FROM base AS deps')[1]?.split('FROM base AS build')[0]
+  assert.ok(deps, 'Dockerfile must include a deps stage')
+  const prepareCopy = deps.match(/^COPY scripts\/prepare\.mjs scripts\/setup-git\.mjs \.\/scripts\/$/m)?.[0]
+  assert.ok(prepareCopy, 'copy both scripts before pnpm runs the package prepare lifecycle')
+  const install = deps.indexOf('RUN if [ -f pnpm-lock.yaml ]; then')
+  assert.ok(install > deps.indexOf(prepareCopy), 'scripts must exist before dependency installation')
+
+  const cwd = mkdtempSync(path.join(os.tmpdir(), 'reactloom-ssr-docker-prepare-'))
+  try {
+    mkdirSync(path.join(cwd, 'scripts'))
+    copyFileSync(path.join(projectRoot, 'scripts/prepare.mjs'), path.join(cwd, 'scripts/prepare.mjs'))
+    writeFileSync(
+      path.join(cwd, 'scripts/setup-git.mjs'),
+      "import { writeFileSync } from 'node:fs'; writeFileSync('prepared.txt', 'ok')\n",
+    )
+    const result = spawnSync(process.execPath, ['scripts/prepare.mjs'], { cwd, encoding: 'utf8' })
+    assert.equal(result.status, 0, result.stderr)
+    assert.equal(readFileSync(path.join(cwd, 'prepared.txt'), 'utf8'), 'ok')
+  } finally {
+    rmSync(cwd, { recursive: true, force: true })
+  }
 })
