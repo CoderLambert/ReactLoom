@@ -1,14 +1,46 @@
-import { cleanup, screen, waitFor, within } from '@testing-library/react'
+import { createMemoryHistory, RouterProvider } from '@tanstack/react-router'
+import { act, cleanup, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { HttpResponse, http } from 'msw'
 import { afterEach, describe, expect, it } from 'vitest'
-import { demoUser } from '@/mocks/fixtures'
+import { Providers } from '@/app/providers'
+import { createAppRouter } from '@/app/router'
+import { useAuthStore } from '@/features/auth/store'
+import { createAppQueryClient } from '@/lib/query-client'
+import { demoSession, demoUser } from '@/mocks/fixtures'
 import { server } from '@/mocks/server'
 import { renderApp } from '@/test/render'
 
 afterEach(cleanup)
 
 describe('tasks feature', () => {
+  it('discards an unsent task draft when another session replaces it without route navigation', async () => {
+    server.use(http.get('*/api/tasks', () => HttpResponse.json({ tasks: [] })))
+    useAuthStore.getState().setSession({ ...demoSession(), accessToken: 'first-account' })
+    const client = createAppQueryClient()
+    const router = createAppRouter(client, createMemoryHistory({ initialEntries: ['/tasks'] }))
+    render(
+      <Providers client={client}>
+        <RouterProvider router={router} />
+      </Providers>,
+    )
+
+    const user = userEvent.setup()
+    const originalInput = await screen.findByRole('textbox', { name: 'Task title' })
+    await user.type(originalInput, 'Confidential first-account draft')
+    expect(originalInput).toHaveValue('Confidential first-account draft')
+
+    act(() => {
+      useAuthStore.getState().setSession({ ...demoSession(), accessToken: 'second-account' })
+    })
+
+    const nextInput = await screen.findByRole('textbox', { name: 'Task title' })
+    expect(nextInput).not.toBe(originalInput)
+    expect(nextInput).toHaveValue('')
+    expect(screen.queryByDisplayValue('Confidential first-account draft')).not.toBeInTheDocument()
+    client.clear()
+  })
+
   it('signs in, lists tasks, and creates one', async () => {
     const user = userEvent.setup()
     renderApp('/login')

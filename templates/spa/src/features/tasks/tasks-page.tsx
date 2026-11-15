@@ -13,7 +13,14 @@ import { isApiError } from '@/lib/api'
 
 const filters = ['all', 'open', 'done'] as const
 
+// Remount form state on every login/logout/replacement so another account
+// never inherits an unsent private draft or a previous mutation's UI state.
 export function TasksPage() {
+  const version = useAuthStore((state) => state.sessionVersion)
+  return <SessionTasksPage key={version} />
+}
+
+function SessionTasksPage() {
   const { t } = useTranslation()
   const { status } = useSearch({ from: '/tasks' })
   const tasks = useTasks()
