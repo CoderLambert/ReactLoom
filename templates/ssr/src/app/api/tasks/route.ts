@@ -9,7 +9,7 @@ const createSchema = z.object({ title: z.string().trim().min(3).max(80) })
 export async function GET() {
   const user = await readRequestSession()
   if (!user) return privateJson({ message: 'Sign in is required.' }, 401)
-  return privateJson({ tasks: tasks.list(user.id) })
+  return privateJson({ ownerId: user.id, tasks: tasks.list(user.id) })
 }
 
 export async function POST(request: Request) {

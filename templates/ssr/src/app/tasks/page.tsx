@@ -18,7 +18,7 @@ const taskSchema = z.object({
   createdAt: z.string(),
 })
 
-const listSchema = z.object({ tasks: z.array(taskSchema) })
+const listSchema = z.object({ ownerId: z.string(), tasks: z.array(taskSchema) })
 const logoutSchema = z.object({ ok: z.literal(true) })
 const sessionSchema = z.object({
   user: z.object({ id: z.string(), email: z.string(), name: z.string() }),

@@ -12,10 +12,12 @@ export function assertTaskForUser<T extends { ownerId: string }>(task: T, userId
   return task
 }
 
-export function assertTasksForUser<T extends { tasks: readonly { ownerId: string }[] }>(
+export function assertTasksForUser<T extends { ownerId: string; tasks: readonly { ownerId: string }[] }>(
   result: T,
   userId: string,
 ): T {
+  // The list identity is mandatory: an empty array cannot prove ownership.
+  if (result.ownerId !== userId) throw new TaskSessionMismatchError()
   for (const task of result.tasks) assertTaskForUser(task, userId)
   return result
 }
