@@ -18,7 +18,7 @@ async function withServer(handler, task) {
   }
 }
 
-test('accepts the first non-5xx response', async () => {
+test('accepts the first successful 2xx response', async () => {
   await withServer((_req, res) => {
     res.writeHead(204)
     res.end()
@@ -74,4 +74,29 @@ test('running the wrapper with no command still returns the usage error', async 
     () => execFileSync(process.execPath, [script], { encoding: 'utf8', stdio: 'pipe' }),
     (error) => error.status === 1 && /usage: node scripts\/with-lighthouse/.test(error.stderr),
   )
+})
+
+test('does not report readiness for a wrong service returning 404', async () => {
+  await withServer((_req, res) => {
+    res.writeHead(404)
+    res.end('not found')
+  }, async (url) => {
+    await assert.rejects(
+      waitForUrl(url, { timeoutMs: 100, retryDelayMs: 5 }),
+      /Timed out waiting for/,
+    )
+  })
+})
+
+test('waits through temporary 401, 302 and 429 responses before healthy 200', async () => {
+  const statuses = [401, 302, 429, 200]
+  let hits = 0
+  await withServer((_req, res) => {
+    res.writeHead(statuses[Math.min(hits, statuses.length - 1)])
+    hits += 1
+    res.end()
+  }, async (url) => {
+    await waitForUrl(url, { timeoutMs: 1_000, retryDelayMs: 5 })
+  })
+  assert.equal(hits, statuses.length)
 })

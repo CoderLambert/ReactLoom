@@ -88,7 +88,9 @@ export async function waitForUrl(target, { timeoutMs = 60_000, retryDelayMs = 50
         redirect: 'manual',
         signal: AbortSignal.timeout(remainingMs),
       })
-      if (response.status < 500) return
+      // A 3xx redirect, 401/403 auth failure, 404, or rate limit is not
+      // evidence that the intended Lighthouse target is ready.
+      if (response.ok) return
     } catch {
       // The server is still starting or a stalled probe reached the deadline.
     }
