@@ -3,6 +3,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { adaptBestPractices, installAiConfig } from './ai-config.js'
 import { shouldCopyScaffoldEntry } from './copy-filter.js'
+import { claimScaffoldDestination } from './destination.js'
 import { type DeployTarget, writeDeployFiles } from './deploy.js'
 import { runInstall } from './install.js'
 import {
@@ -43,19 +44,6 @@ const NAME_PATTERN = /^[a-z][a-z0-9-]*$/
 export function assertProjectName(name: string): void {
   if (!NAME_PATTERN.test(name)) {
     throw new Error('Project name must be lowercase and start with a letter (a-z, 0-9, hyphen).')
-  }
-}
-
-async function assertDestination(directory: string): Promise<void> {
-  try {
-    const info = await stat(directory)
-    if (!info.isDirectory()) {
-      throw new Error(`Destination exists and is not a directory: ${directory}`)
-    }
-    throw new Error(`Destination already exists: ${directory}`)
-  } catch (error) {
-    if (error instanceof Error && 'code' in error && error.code === 'ENOENT') return
-    throw error
   }
 }
 
@@ -567,7 +555,7 @@ async function rewriteChangesetIgnore(directory: string, projectName: string): P
 export async function scaffold(options: ScaffoldOptions): Promise<void> {
   assertProjectName(options.name)
   await mkdir(path.dirname(options.directory), { recursive: true })
-  await assertDestination(options.directory)
+  await claimScaffoldDestination(options.directory)
 
   const here = path.dirname(fileURLToPath(import.meta.url))
   const repoRoot = await findRepoRoot(here)
