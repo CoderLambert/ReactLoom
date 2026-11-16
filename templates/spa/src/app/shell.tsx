@@ -81,8 +81,8 @@ export function Shell() {
     if (unauthorizedTasksView && !signingOut.current) void navigate({ to: '/login' })
   }, [navigate, unauthorizedTasksView])
   useEffect(() => {
-    if (pathname !== '/tasks') signingOut.current = false
-  }, [pathname])
+    if (pathname !== '/tasks' || session) signingOut.current = false
+  }, [pathname, session])
 
   return (
     <div className="min-h-screen">
