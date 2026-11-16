@@ -71,6 +71,14 @@ export function Shell() {
     }
   }, [session, pathname, navigate])
 
+  // A 401 can clear the bearer while /tasks stays mounted. The route's
+  // beforeLoad guard only runs on navigation, not on this store transition.
+  // Remove the protected view immediately and redirect to the sign-in route.
+  const unauthorizedTasksView = pathname === '/tasks' && !session
+  useEffect(() => {
+    if (unauthorizedTasksView) void navigate({ to: '/login' })
+  }, [navigate, unauthorizedTasksView])
+
   return (
     <div className="min-h-screen">
       <SkipLink />
@@ -118,7 +126,7 @@ export function Shell() {
         </nav>
       </header>
       <main id="content" className="mx-auto max-w-5xl px-5 pt-6 pb-20">
-        <Outlet />
+        {unauthorizedTasksView ? null : <Outlet />}
       </main>
     </div>
   )
