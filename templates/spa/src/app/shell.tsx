@@ -1,5 +1,5 @@
 import { Link, Outlet, useNavigate, useRouterState } from '@tanstack/react-router'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SkipLink } from '@/components/layout/skip-link'
 import { Button } from '@/components/ui/button'
@@ -16,6 +16,7 @@ export function Shell() {
   const theme = useTheme((state) => state.theme)
   const toggleTheme = useTheme((state) => state.toggle)
   const logout = useLogout()
+  const signingOut = useRef(false)
   const navigate = useNavigate()
   const pathname = useRouterState({ select: (state) => state.location.pathname })
   const compact = useMatchMedia('(max-width: 640px)')
@@ -76,8 +77,12 @@ export function Shell() {
   // Remove the protected view immediately and redirect to the sign-in route.
   const unauthorizedTasksView = pathname === '/tasks' && !session
   useEffect(() => {
-    if (unauthorizedTasksView) void navigate({ to: '/login' })
+    // Explicit sign-out already navigates home; do not race it with a 401 redirect.
+    if (unauthorizedTasksView && !signingOut.current) void navigate({ to: '/login' })
   }, [navigate, unauthorizedTasksView])
+  useEffect(() => {
+    if (pathname !== '/tasks') signingOut.current = false
+  }, [pathname])
 
   return (
     <div className="min-h-screen">
@@ -98,7 +103,13 @@ export function Shell() {
             {t('nav.tasks')}
           </Link>
           {session ? (
-            <Button variant="ghost" onClick={() => logout.mutate()}>
+            <Button
+              variant="ghost"
+              onClick={() => {
+                signingOut.current = true
+                logout.mutate()
+              }}
+            >
               {t('nav.signOut')}
             </Button>
           ) : (
