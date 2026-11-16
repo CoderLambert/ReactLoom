@@ -202,6 +202,50 @@ describe('SPA session expiry boundary', () => {
     observer.close()
   })
 
+  it('hides mounted private tasks and redirects after an API 401 revokes the session', async () => {
+    let reads = 0
+    server.use(
+      http.get('*/api/tasks', () => {
+        reads += 1
+        if (reads === 1) {
+          return HttpResponse.json({
+            tasks: [
+              {
+                id: 'revoked-private-task',
+                title: 'Private task before server revocation',
+                status: 'open',
+                createdAt: '2026-11-04T00:00:00.000Z',
+              },
+            ],
+          })
+        }
+        return HttpResponse.json({ message: 'The session was revoked.' }, { status: 401 })
+      }),
+    )
+    useAuthStore.getState().setSession(demoSession())
+    const version = useAuthStore.getState().sessionVersion
+    const client = createAppQueryClient()
+    const router = createAppRouter(client, createMemoryHistory({ initialEntries: ['/tasks'] }))
+
+    render(
+      <Providers client={client}>
+        <RouterProvider router={router} />
+      </Providers>,
+    )
+    expect(await screen.findByText('Private task before server revocation')).toBeVisible()
+
+    await act(async () => {
+      await client.invalidateQueries({ queryKey: taskKeys.session(version) })
+    })
+
+    expect(await screen.findByRole('heading', { name: 'Sign in' })).toBeVisible()
+    expect(router.state.location.pathname).toBe('/login')
+    expect(screen.queryByText('Private task before server revocation')).not.toBeInTheDocument()
+    expect(client.getQueryData(taskKeys.list(version))).toBeUndefined()
+    expect(useAuthStore.getState().session).toBeNull()
+    expect(reads).toBe(2)
+  })
+
   it('never attaches an expired bearer token to a task API request', async () => {
     let authorization: string | null | undefined
     server.use(
