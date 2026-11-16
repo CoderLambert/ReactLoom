@@ -41,11 +41,13 @@ test('excludes local environment files and nested Git metadata', async () => {
     }
     await writeFile(path.join(source, 'src', '.env.test.local'), 'nested-secret')
     await writeFile(path.join(source, 'src', 'nested', '.envrc.personal'), 'nested-direnv-secret')
+    await writeFile(path.join(source, 'src', 'nested', '.env.development'), 'nested-development-secret')
     await writeFile(path.join(source, 'src', 'nested', 'app.ts'), 'export const value = 1')
     await writeFile(path.join(source, '.git', 'config'), 'private remote')
     await cp(source, target, {
       recursive: true,
-      filter: (entry) => shouldCopyScaffoldEntry(entry, SKIPPED),
+      filter: (entry) =>
+        shouldCopyScaffoldEntry(entry, SKIPPED, path.join(source, '.env.development')),
     })
     for (const relative of [
       '.env',
@@ -56,6 +58,7 @@ test('excludes local environment files and nested Git metadata', async () => {
       '.envrc.local',
       'src/.env.test.local',
       'src/nested/.envrc.personal',
+      'src/nested/.env.development',
       '.git/config',
     ]) {
       await assert.rejects(readFile(path.join(target, relative), 'utf8'), { code: 'ENOENT' })
@@ -85,13 +88,37 @@ test('excludes generated caches but retains unrelated hidden files', () => {
   ]) {
     assert.equal(shouldCopyScaffoldEntry(`/source/${entry}`, SKIPPED), false, entry)
   }
-  for (const entry of [
-    '.gitignore',
-    '.env.development',
-    '.env.example',
-    '.editorconfig',
-    'app.tsx',
-  ]) {
+  for (const entry of ['.gitignore', '.env.example', '.editorconfig', 'app.tsx']) {
     assert.equal(shouldCopyScaffoldEntry(`/source/${entry}`, SKIPPED), true, entry)
+  }
+  assert.equal(shouldCopyScaffoldEntry('/source/.env.development', SKIPPED), false)
+  assert.equal(
+    shouldCopyScaffoldEntry('/source/.env.development', SKIPPED, '/source/.env.development'),
+    true,
+  )
+  assert.equal(
+    shouldCopyScaffoldEntry('/source/src/.env.development', SKIPPED, '/source/.env.development'),
+    false,
+  )
+})
+
+test('never copies .env.development from shared packages', async () => {
+  const root = await mkdtemp(path.join(tmpdir(), 'reactloom-shared-env-'))
+  try {
+    const source = path.join(root, 'package')
+    const target = path.join(root, 'generated')
+    await mkdir(source)
+    await writeFile(path.join(source, '.env.development'), 'FAKE_SHARED_TOKEN=fixture')
+    await writeFile(path.join(source, 'package.json'), '{"name":"fixture"}')
+    await cp(source, target, {
+      recursive: true,
+      filter: (entry) => shouldCopyScaffoldEntry(entry, SKIPPED),
+    })
+    await assert.rejects(readFile(path.join(target, '.env.development'), 'utf8'), {
+      code: 'ENOENT',
+    })
+    assert.equal(await readFile(path.join(target, 'package.json'), 'utf8'), '{"name":"fixture"}')
+  } finally {
+    await rm(root, { recursive: true, force: true })
   }
 })

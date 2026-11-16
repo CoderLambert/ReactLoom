@@ -47,10 +47,17 @@ export function assertProjectName(name: string): void {
   }
 }
 
-async function copyFiltered(source: string, destination: string): Promise<void> {
+async function copyFiltered(
+  source: string,
+  destination: string,
+  allowDevelopmentEnv = false,
+): Promise<void> {
+  const permittedDevelopmentEnv = allowDevelopmentEnv
+    ? path.join(source, '.env.development')
+    : undefined
   await cp(source, destination, {
     recursive: true,
-    filter: (entry) => shouldCopyScaffoldEntry(entry, SKIP_DIRS),
+    filter: (entry) => shouldCopyScaffoldEntry(entry, SKIP_DIRS, permittedDevelopmentEnv),
   })
 }
 
@@ -565,7 +572,7 @@ export async function scaffold(options: ScaffoldOptions): Promise<void> {
     throw new Error(`template.json id "${manifest.id}" does not match ${options.template}.`)
   }
 
-  await copyFiltered(templateDir, options.directory)
+  await copyFiltered(templateDir, options.directory, true)
   await copySharedPackages(repoRoot, options.directory, manifest)
   await copyManifestFiles(repoRoot, options.directory, manifest.configs)
   await copyManifestFiles(repoRoot, options.directory, manifest.docs, {
