@@ -366,6 +366,52 @@ describe('task mutation feedback', () => {
     expect(within(row).getByRole('button', { name: 'Reopen' })).toBeEnabled()
   })
 
+  it('ignores two same-turn status clicks and permits another update after completion', async () => {
+    const user = await openBoard()
+    let release = () => {}
+    const pending = new Promise<void>((resolve) => {
+      release = resolve
+    })
+    let requests = 0
+    let savedStatus: 'open' | 'done' = 'open'
+    server.use(
+      http.patch('*/api/tasks/task-1', async ({ request }) => {
+        requests += 1
+        const { status } = (await request.json()) as { status: 'open' | 'done' }
+        if (requests === 1) await pending
+        savedStatus = status
+        return HttpResponse.json({ ...seedTasks()[0], status: savedStatus })
+      }),
+      http.get('*/api/tasks', () =>
+        HttpResponse.json({
+          tasks: seedTasks().map((task) =>
+            task.id === 'task-1' ? { ...task, status: savedStatus } : task,
+          ),
+        }),
+      ),
+    )
+    const row = screen.getByText('Dress the loom').closest('li')
+    if (!row) throw new Error('The task row is missing.')
+    const button = within(row).getByRole('button', { name: 'Mark done' })
+
+    try {
+      act(() => {
+        fireEvent.click(button)
+        fireEvent.click(button)
+      })
+      await waitFor(() => expect(requests).toBe(1))
+    } finally {
+      release()
+    }
+
+    await waitFor(() => expect(within(row).getByRole('button', { name: 'Reopen' })).toBeEnabled())
+    await user.click(within(row).getByRole('button', { name: 'Reopen' }))
+    await waitFor(() => expect(requests).toBe(2))
+    await waitFor(() =>
+      expect(within(row).getByRole('button', { name: 'Mark done' })).toBeEnabled(),
+    )
+  })
+
   it('reports a status failure, preserves the original status, and permits retry without duplicate updates', async () => {
     let release = () => {}
     const pending = new Promise<void>((resolve) => {

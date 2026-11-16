@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { getActiveSession, useAuthStore } from '@/features/auth/store'
 import { useCreateTask, useSetTaskStatus, useTasks } from '@/features/tasks/hooks'
+import { createSingleFlightAction } from '@/features/tasks/status-action'
 import { type CreateTaskInput, createTaskSchema } from '@/features/tasks/schema'
 import { isApiError } from '@/lib/api'
 
@@ -28,6 +29,7 @@ function SessionTasksPage() {
   const update = useSetTaskStatus()
   const draftRevision = useRef(0)
   const submitting = useRef<{ version: number; revision: number } | null>(null)
+  const submitStatus = useRef(createSingleFlightAction())
   const form = useForm<CreateTaskInput>({
     resolver: standardSchemaResolver(createTaskSchema),
     defaultValues: { title: '' },
@@ -166,10 +168,15 @@ function SessionTasksPage() {
             <Button
               variant="ghost"
               disabled={update.isPending || (create.isPending && task.id.startsWith('tmp-'))}
-              onClick={() =>
-                update.mutate({
-                  id: task.id,
-                  status: task.status === 'done' ? 'open' : 'done',
+              onClick={() => {
+                // The ref-based guard activates before React can render isPending.
+                void submitStatus.current(() =>
+                  update.mutateAsync({
+                    id: task.id,
+                    status: task.status === 'done' ? 'open' : 'done',
+                  }),
+                ).catch(() => {
+                  // TanStack Query renders the mutation error above the task list.
                 })
               }
             >
