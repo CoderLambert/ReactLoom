@@ -41,7 +41,10 @@ test('excludes local environment files and nested Git metadata', async () => {
     }
     await writeFile(path.join(source, 'src', '.env.test.local'), 'nested-secret')
     await writeFile(path.join(source, 'src', 'nested', '.envrc.personal'), 'nested-direnv-secret')
-    await writeFile(path.join(source, 'src', 'nested', '.env.development'), 'nested-development-secret')
+    await writeFile(
+      path.join(source, 'src', 'nested', '.env.development'),
+      'nested-development-secret',
+    )
     await writeFile(path.join(source, 'src', 'nested', 'app.ts'), 'export const value = 1')
     await writeFile(path.join(source, '.git', 'config'), 'private remote')
     await cp(source, target, {
