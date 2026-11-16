@@ -16,9 +16,9 @@ describe('task response session boundary', () => {
 
   it('rejects foreign mutation results and mixed-owner lists', () => {
     expect(() => assertTaskForUser(foreign, 'user-ada')).toThrow(TaskSessionMismatchError)
-    expect(() => assertTasksForUser({ ownerId: 'user-ada', tasks: [own, foreign] }, 'user-ada')).toThrow(
-      TaskSessionMismatchError,
-    )
+    expect(() =>
+      assertTasksForUser({ ownerId: 'user-ada', tasks: [own, foreign] }, 'user-ada'),
+    ).toThrow(TaskSessionMismatchError)
   })
 
   it('rejects a foreign-account GET before it enters the Query cache', async () => {
@@ -26,12 +26,14 @@ describe('task response session boundary', () => {
     await expect(
       client.fetchQuery({
         queryKey: ['tasks', 'user-ada'],
-        queryFn: async () => assertTasksForUser({ ownerId: 'someone-else', tasks: [foreign] }, 'user-ada'),
+        queryFn: async () =>
+          assertTasksForUser({ ownerId: 'someone-else', tasks: [foreign] }, 'user-ada'),
       }),
     ).rejects.toBeInstanceOf(TaskSessionMismatchError)
     expect(client.getQueryData(['tasks', 'user-ada'])).toBeUndefined()
     client.clear()
   })
+
   it('rejects an empty list from a replaced cookie session before caching it', async () => {
     // No task item exists to expose a mismatched ownerId, so the envelope
     // itself must identify the authenticated owner.
@@ -45,5 +47,4 @@ describe('task response session boundary', () => {
     expect(client.getQueryData(['tasks', 'user-ada'])).toBeUndefined()
     client.clear()
   })
-
 })

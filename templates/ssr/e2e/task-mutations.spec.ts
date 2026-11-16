@@ -188,13 +188,15 @@ test('revokes cached tasks when the API response belongs to another session', as
       contentType: 'application/json',
       body: JSON.stringify({
         ownerId: 'different-user',
-        tasks: [{
-          id: 'foreign-task',
-          title: foreignTitle,
-          status: 'open',
-          ownerId: 'different-user',
-          createdAt: new Date().toISOString(),
-        }],
+        tasks: [
+          {
+            id: 'foreign-task',
+            title: foreignTitle,
+            status: 'open',
+            ownerId: 'different-user',
+            createdAt: new Date().toISOString(),
+          },
+        ],
       }),
     })
   })
@@ -210,7 +212,6 @@ test('revokes cached tasks when the API response belongs to another session', as
     await page.unroute('**/api/tasks')
   }
 })
-
 
 test('revokes a stale session even when the replacement account has no tasks', async ({ page }) => {
   // An empty result has no task.ownerId to check. The response owner must
