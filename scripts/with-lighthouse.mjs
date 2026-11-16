@@ -90,7 +90,16 @@ export async function waitForUrl(target, { timeoutMs = 60_000, retryDelayMs = 50
       })
       // A 3xx redirect, 401/403 auth failure, 404, or rate limit is not
       // evidence that the intended Lighthouse target is ready.
-      if (response.ok) return
+      const ready = response.ok
+      // Fetch resolves after headers; a failed preview may stream its body
+      // indefinitely. Release the unread stream before another poll so each
+      // retry does not retain a separate HTTP connection.
+      try {
+        await response.body?.cancel()
+      } catch {
+        // Cancellation can race the probe deadline; status remains authoritative.
+      }
+      if (ready) return
     } catch {
       // The server is still starting or a stalled probe reached the deadline.
     }

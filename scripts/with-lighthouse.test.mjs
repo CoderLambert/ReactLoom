@@ -100,3 +100,45 @@ test('waits through temporary 401, 302 and 429 responses before healthy 200', as
   })
   assert.equal(hits, statuses.length)
 })
+
+
+test('releases streaming 503 responses before retrying a preview readiness probe', async () => {
+  const sockets = new Set()
+  let hits = 0
+  let peakConnections = 0
+  const server = createServer((_request, response) => {
+    hits += 1
+    if (hits <= 6) {
+      // Send the status and body prefix but deliberately never end the stream.
+      response.writeHead(503, { 'content-type': 'text/plain' })
+      response.write('still starting')
+    } else {
+      response.writeHead(204)
+      response.end()
+    }
+  })
+  server.on('connection', (socket) => {
+    sockets.add(socket)
+    peakConnections = Math.max(peakConnections, sockets.size)
+    socket.on('close', () => sockets.delete(socket))
+  })
+  await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve))
+  const address = server.address()
+  assert.ok(address && typeof address !== 'string')
+  try {
+    await waitForUrl(`http://127.0.0.1:${address.port}/`, {
+      timeoutMs: 2_000,
+      retryDelayMs: 15,
+    })
+    assert.equal(hits, 7)
+    assert.ok(
+      peakConnections <= 3,
+      `readiness polling leaked ${peakConnections} simultaneous HTTP connections`,
+    )
+  } finally {
+    server.closeAllConnections()
+    await new Promise((resolve, reject) =>
+      server.close((error) => (error ? reject(error) : resolve())),
+    )
+  }
+})
