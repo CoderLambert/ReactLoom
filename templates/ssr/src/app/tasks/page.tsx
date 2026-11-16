@@ -207,6 +207,7 @@ function AuthenticatedTasks({
         await getApi().request('/api/tasks', taskSchema, {
           method: 'POST',
           body: { title: nextTitle },
+          headers: { 'x-reactloom-expected-task-owner': userId },
           retry: false,
         }),
         userId,
@@ -225,7 +226,8 @@ function AuthenticatedTasks({
 
   const ownerMismatch =
     tasks.error instanceof TaskSessionMismatchError ||
-    create.error instanceof TaskSessionMismatchError
+    create.error instanceof TaskSessionMismatchError ||
+    (isApiError(create.error) && create.error.status === 409)
 
   useEffect(() => {
     if (ownerMismatch) onSessionMismatch()

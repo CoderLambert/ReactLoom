@@ -239,3 +239,34 @@ test('revokes a stale session even when the replacement account has no tasks', a
     await page.unroute('**/api/tasks')
   }
 })
+
+test('binds task writes to the verified account and revokes a stale session on 409', async ({
+  page,
+}) => {
+  let expectedOwner: string | null = null
+  await page.route('**/api/tasks', async (route) => {
+    if (route.request().method() !== 'POST') {
+      await route.continue()
+      return
+    }
+    expectedOwner = route.request().headers()['x-reactloom-expected-task-owner'] ?? null
+    await route.fulfill({
+      status: 409,
+      contentType: 'application/json',
+      headers: { 'cache-control': 'private, no-store' },
+      body: JSON.stringify({ message: 'The signed-in account changed. Please sign in again.' }),
+    })
+  })
+
+  try {
+    const draft = `Old-account write ${randomUUID()}`
+    await page.getByLabel('Task title').fill(draft)
+    await page.getByRole('button', { name: 'Add task' }).click()
+    await expect(page).toHaveURL(/\/login(?:\?.*)?$/)
+    expect(expectedOwner).toBe('user-ada')
+    await expect(page.getByText('Dress the loom')).toHaveCount(0)
+    await expect(page.getByText(draft, { exact: true })).toHaveCount(0)
+  } finally {
+    await page.unroute('**/api/tasks')
+  }
+})

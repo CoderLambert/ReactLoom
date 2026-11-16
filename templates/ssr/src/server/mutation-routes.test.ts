@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { POST as login, DELETE as logout, GET as readSession } from '@/app/api/session/route'
 import { PATCH as updateTask } from '@/app/api/tasks/[id]/route'
 import { POST as createTask, GET as readTasks } from '@/app/api/tasks/route'
+import { EXPECTED_TASK_OWNER_HEADER } from './mutation-request'
 import { readSessionToken, SESSION_COOKIE, signSession } from './session-token'
 import { type Task, tasks } from './tasks'
 
@@ -172,3 +173,40 @@ it('preserves authentication and ownership failures for valid requests', async (
   expect((await routes[3].run(requestFor(routes[3], { origin }))).status).toBe(404)
   expect(tasks.list('user-ada').find((task) => task.id === ownedTask.id)?.status).toBe('open')
 })
+
+describe.each(routes.filter((route) => route.name.startsWith('task ')))(
+  '$name cookie replacement guard',
+  (route) => {
+    it('rejects an old-tab write before reading its body or modifying the replacement account', async () => {
+      requestCookies.set(
+        SESSION_COOKIE,
+        await signSession({
+          id: 'replacement-user',
+          email: 'replacement@reactloom.dev',
+          name: 'Replacement user',
+        }),
+      )
+      const before = tasks.list('replacement-user').map((task) => ({ ...task }))
+      const request = requestFor(route, {
+        origin,
+        [EXPECTED_TASK_OWNER_HEADER]: 'user-ada',
+      })
+      const response = await route.run(request)
+
+      expect(response.status).toBe(409)
+      expect(response.headers.get('cache-control')).toBe('private, no-store')
+      expect(await response.json()).toMatchObject({ message: expect.any(String) })
+      expect(request.bodyUsed).toBe(false)
+      expect(tasks.list('replacement-user')).toEqual(before)
+    })
+
+    it('accepts a bound write when the requested and authenticated owners match', async () => {
+      const request = requestFor(route, {
+        origin,
+        [EXPECTED_TASK_OWNER_HEADER]: 'user-ada',
+      })
+      const response = await route.run(request)
+      expect(response.status).toBe(route.success)
+    })
+  },
+)

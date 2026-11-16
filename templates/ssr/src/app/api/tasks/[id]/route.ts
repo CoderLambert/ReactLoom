@@ -1,5 +1,5 @@
 import * as z from 'zod'
-import { mutationRequestError } from '@/server/mutation-request'
+import { mutationRequestError, taskMutationSessionError } from '@/server/mutation-request'
 import { privateJson } from '@/server/private-response'
 import { readRequestSession } from '@/server/session'
 import { tasks } from '@/server/tasks'
@@ -11,6 +11,8 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
   if (error) return error
   const user = await readRequestSession()
   if (!user) return privateJson({ message: 'Sign in is required.' }, 401)
+  const sessionError = taskMutationSessionError(request, user.id)
+  if (sessionError) return sessionError
   const { id } = await context.params
   const parsed = statusSchema.safeParse(await request.json().catch(() => null))
   if (!parsed.success) return privateJson({ message: 'Unknown status.' }, 400)
