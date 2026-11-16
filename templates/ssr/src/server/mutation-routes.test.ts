@@ -177,7 +177,7 @@ it('preserves authentication and ownership failures for valid requests', async (
 describe.each(routes.filter((route) => route.name.startsWith('task ')))(
   '$name cookie replacement guard',
   (route) => {
-    it('rejects an old-tab write before reading its body or modifying the replacement account', async () => {
+    it('rejects a stale owner before consuming the body or modifying tasks', async () => {
       requestCookies.set(
         SESSION_COOKIE,
         await signSession({
