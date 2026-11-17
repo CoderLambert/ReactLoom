@@ -36,6 +36,20 @@ describe('local Lighthouse bridge', () => {
     expect(isLocalDevtoolsRequest(null, null)).toBe(false)
   })
 
+  it('rejects malformed Host authorities even if the parsed hostname is loopback', () => {
+    for (const host of [
+      'evil@localhost:4318',
+      'localhost:4318/__reactloom/lighthouse',
+      'localhost:4318?run=true',
+      'localhost:4318#fragment',
+      'localhost:4318\\path',
+    ]) {
+      expect(isLocalDevtoolsRequest(host, null)).toBe(false)
+      expect(isLocalDevtoolsRequest(host, 'http://localhost:4318')).toBe(false)
+    }
+    expect(isLocalDevtoolsRequest('[::1]:4318', 'http://[::1]:4318')).toBe(true)
+  })
+
   it('summarizes scores and metrics, excluding passed and manual audits', () => {
     const summary = summarizeLighthouse(report)
     expect(summary?.categories.map((item) => item.score)).toEqual([0.91, null])

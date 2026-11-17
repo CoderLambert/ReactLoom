@@ -119,7 +119,9 @@ export function createLighthouseServer(root: string, url: string) {
 }
 
 export function isLocalDevtoolsRequest(host: string | null, origin: string | null): boolean {
-  if (!host) return false
+  // Host must be an HTTP authority. URL parsing alone accepts userinfo and
+  // path/query fragments (for example, evil@localhost) as a local hostname.
+  if (!host || /[\/?#@\\\s]/.test(host)) return false
   try {
     const target = new URL(`http://${host}`)
     if (!['localhost', '127.0.0.1', '[::1]'].includes(target.hostname)) return false
