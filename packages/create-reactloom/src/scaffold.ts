@@ -15,6 +15,7 @@ import {
   unselectedFrameworkFiles,
   workspaceYaml,
 } from './selection.js'
+import { assertSafeScaffoldSource } from './source-safety.js'
 import { assertStorybookScripts, usesPortableStorybookRunner } from './storybook-scripts.js'
 import { findRepoRoot, readManifest, type TemplateId, type TemplateManifest } from './templates.js'
 
@@ -68,6 +69,7 @@ async function copyRepoPath(repoRoot: string, relative: string, directory: strin
   } catch {
     throw new Error(`Manifest path does not exist: ${relative}`)
   }
+  await assertSafeScaffoldSource(repoRoot, relative)
   const destination = path.join(directory, relative)
   await mkdir(path.dirname(destination), { recursive: true })
   await copyFiltered(source, destination)
@@ -80,12 +82,14 @@ async function copySharedPackages(
 ): Promise<void> {
   await mkdir(path.join(directory, 'packages'), { recursive: true })
   if (manifest.packages['api-client']) {
+    await assertSafeScaffoldSource(repoRoot, 'packages/api-client')
     await copyFiltered(
       path.join(repoRoot, 'packages', 'api-client'),
       path.join(directory, 'packages', 'api-client'),
     )
   }
   if (manifest.packages.devtools) {
+    await assertSafeScaffoldSource(repoRoot, 'packages/devtools')
     await copyFiltered(
       path.join(repoRoot, 'packages', 'devtools'),
       path.join(directory, 'packages', 'devtools'),
@@ -96,6 +100,7 @@ async function copySharedPackages(
   const sourceDir = path.join(repoRoot, 'packages', 'tsconfig')
   const destDir = path.join(directory, 'packages', 'tsconfig')
   await mkdir(destDir, { recursive: true })
+  await assertSafeScaffoldSource(repoRoot, 'packages/tsconfig/package.json')
   await copyFiltered(path.join(sourceDir, 'package.json'), path.join(destDir, 'package.json'))
   for (const preset of manifest.packages.tsconfig) {
     const relative = path.posix.join('packages/tsconfig', preset)
@@ -104,6 +109,7 @@ async function copySharedPackages(
     } catch {
       throw new Error(`Manifest path does not exist: ${relative}`)
     }
+    await assertSafeScaffoldSource(repoRoot, relative)
     await copyFiltered(path.join(sourceDir, preset), path.join(destDir, preset))
   }
   const packagePath = path.join(destDir, 'package.json')
@@ -125,6 +131,7 @@ async function copyManifestFiles(
       )
     }
     if (adapt && relative.startsWith('docs/best-practices/')) {
+      await assertSafeScaffoldSource(repoRoot, relative)
       const source = path.join(repoRoot, relative)
       let contents: string
       try {
@@ -567,6 +574,7 @@ export async function scaffold(options: ScaffoldOptions): Promise<void> {
   const here = path.dirname(fileURLToPath(import.meta.url))
   const repoRoot = await findRepoRoot(here)
   const templateDir = path.join(repoRoot, 'templates', options.template)
+  await assertSafeScaffoldSource(repoRoot, path.posix.join('templates', options.template))
   const manifest = await readManifest(templateDir)
   if (manifest.id !== options.template) {
     throw new Error(`template.json id "${manifest.id}" does not match ${options.template}.`)
