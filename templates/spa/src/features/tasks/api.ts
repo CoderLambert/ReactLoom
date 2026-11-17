@@ -5,6 +5,7 @@ import {
   taskListSchema,
   taskSchema,
 } from '@/features/tasks/schema'
+import { taskResourcePath } from '@/features/tasks/task-path'
 import { api } from '@/lib/api'
 
 export function listTasks(signal?: AbortSignal) {
@@ -21,7 +22,7 @@ export function createTask(input: CreateTaskInput, signal?: AbortSignal) {
 }
 
 export function setTaskStatus(id: string, status: TaskStatus, signal?: AbortSignal) {
-  return api.request(`/api/tasks/${id}`, taskSchema, {
+  return api.request(taskResourcePath(id), taskSchema, {
     method: 'PATCH',
     body: { status },
     signal,
