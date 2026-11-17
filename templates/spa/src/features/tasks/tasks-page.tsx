@@ -1,6 +1,6 @@
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema'
 import { Link, useSearch } from '@tanstack/react-router'
-import { useRef } from 'react'
+import { useId, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
@@ -30,6 +30,7 @@ function SessionTasksPage() {
   const draftRevision = useRef(0)
   const submitting = useRef<{ version: number; revision: number } | null>(null)
   const submitStatus = useRef(createSingleFlightAction())
+  const taskListId = useId()
   const form = useForm<CreateTaskInput>({
     resolver: standardSchemaResolver(createTaskSchema),
     defaultValues: { title: '' },
@@ -157,10 +158,13 @@ function SessionTasksPage() {
       ) : null}
 
       <ul className="divide-y divide-line overflow-hidden rounded-3xl bg-card ring-1 ring-line">
-        {visible.map((task) => (
+        {visible.map((task, index) => (
           <li key={task.id} className="flex items-center justify-between gap-4 px-4 py-3">
             <div>
-              <p className={task.status === 'done' ? 'text-muted line-through' : 'font-medium'}>
+              <p
+                id={`${taskListId}-title-${index}`}
+                className={task.status === 'done' ? 'text-muted line-through' : 'font-medium'}
+              >
                 {task.title}
               </p>
               <p className="text-xs text-muted">{task.status}</p>
@@ -168,6 +172,7 @@ function SessionTasksPage() {
             <Button
               variant="ghost"
               disabled={update.isPending || (create.isPending && task.id.startsWith('tmp-'))}
+              aria-describedby={`${taskListId}-title-${index}`}
               onClick={() => {
                 // The ref-based guard activates before React can render isPending.
                 void submitStatus.current(() =>

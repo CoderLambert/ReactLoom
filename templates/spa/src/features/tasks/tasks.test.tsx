@@ -41,6 +41,24 @@ describe('tasks feature', () => {
     client.clear()
   })
 
+  it('describes each keyboard-accessible status action with its task title', async () => {
+    const user = userEvent.setup()
+    renderApp('/login')
+    await user.type(await screen.findByLabelText('Email'), demoUser.email)
+    await user.type(screen.getByLabelText('Password'), demoUser.password)
+    await user.click(within(screen.getByRole('main')).getByRole('button', { name: 'Sign in' }))
+    await screen.findByText('Dress the loom')
+
+    for (const { title, action } of [
+      { title: 'Dress the loom', action: 'Mark done' },
+      { title: 'Wind a bobbin', action: 'Reopen' },
+    ]) {
+      const row = screen.getByText(title).closest('li')
+      if (!row) throw new Error(`Missing task row: ${title}`)
+      expect(within(row).getByRole('button', { name: action })).toHaveAccessibleDescription(title)
+    }
+  })
+
   it('signs in, lists tasks, and creates one', async () => {
     const user = userEvent.setup()
     renderApp('/login')
