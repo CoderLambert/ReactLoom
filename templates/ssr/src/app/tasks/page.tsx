@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import * as z from 'zod'
 import { getApi } from '@/lib/api'
+import { isUnauthorizedTaskResponse } from '@/lib/task-auth-error'
 import { clearSessionCache } from '@/lib/session-cache'
 import { assertTaskForUser, assertTasksForUser, TaskSessionMismatchError } from '@/lib/task-ownership'
 import { broadcastSessionEvent, subscribeSessionEvents } from '@/lib/session-events'
@@ -199,7 +200,7 @@ function AuthenticatedTasks({
       assertTasksForUser(await getApi().request('/api/tasks', listSchema, { signal }), userId),
     // An identity mismatch cannot be repaired by retrying under the same stale key.
     retry: (failures, error) =>
-      !(error instanceof TaskSessionMismatchError) && failures < 1,
+      !(error instanceof TaskSessionMismatchError) && !isUnauthorizedTaskResponse(error) && failures < 1,
   })
   const create = useMutation({
     mutationFn: async ({ title: nextTitle }: { title: string; revision: number }) =>
@@ -224,14 +225,19 @@ function AuthenticatedTasks({
     },
   })
 
-  const ownerMismatch =
+  // Failed task requests do not evict successful Query data. An expired cookie
+  // must therefore hide the cached board immediately, not at the next 30s
+  // session poll. 401 from a stale request may conservatively require re-login.
+  const invalidSession =
     tasks.error instanceof TaskSessionMismatchError ||
     create.error instanceof TaskSessionMismatchError ||
+    isUnauthorizedTaskResponse(tasks.error) ||
+    isUnauthorizedTaskResponse(create.error) ||
     (isApiError(create.error) && create.error.status === 409)
 
   useEffect(() => {
-    if (ownerMismatch) onSessionMismatch()
-  }, [ownerMismatch, onSessionMismatch])
+    if (invalidSession) onSessionMismatch()
+  }, [invalidSession, onSessionMismatch])
 
   async function signOut() {
     if (signingOut.current || isSigningOut || create.isPending) return
@@ -265,7 +271,7 @@ function AuthenticatedTasks({
   const hasTaskError = Boolean(titleValidationError || create.isError)
 
   return (
-    <section hidden={ownerMismatch} className="space-y-6">
+    <section hidden={invalidSession} className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <h1 className="text-5xl">Warp board</h1>
         <button

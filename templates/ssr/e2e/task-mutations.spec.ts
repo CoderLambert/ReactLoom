@@ -270,3 +270,60 @@ test('binds task writes to the verified account and revokes a stale session on 4
     await page.unroute('**/api/tasks')
   }
 })
+
+test('revokes cached tasks immediately when a task GET receives 401', async ({ page }) => {
+  let unauthorizedReads = 0
+  await page.route('**/api/tasks', async (route) => {
+    if (route.request().method() !== 'GET') {
+      await route.continue()
+      return
+    }
+    unauthorizedReads += 1
+    await route.fulfill({
+      status: 401,
+      contentType: 'application/json',
+      headers: { 'cache-control': 'private, no-store' },
+      body: JSON.stringify({ message: 'Sign in is required.' }),
+    })
+  })
+
+  try {
+    // This page already displays tasks from its initial successful request.
+    // Mutating a task invalidates the list and reproduces an expired-cookie 401
+    // without waiting for the separate 30s session polling interval.
+    await page.getByLabel('Task title').fill(`Trigger expired GET ${randomUUID()}`)
+    await page.getByRole('button', { name: 'Add task' }).click()
+    await expect(page).toHaveURL(/\/login(?:\?.*)?$/)
+    expect(unauthorizedReads).toBeGreaterThan(0)
+    await expect(page.getByText('Dress the loom', { exact: true })).toHaveCount(0)
+  } finally {
+    await page.unroute('**/api/tasks')
+  }
+})
+
+test('revokes cached tasks immediately when a task POST receives 401', async ({ page }) => {
+  let unauthorizedWrites = 0
+  await page.route('**/api/tasks', async (route) => {
+    if (route.request().method() !== 'POST') {
+      await route.continue()
+      return
+    }
+    unauthorizedWrites += 1
+    await route.fulfill({
+      status: 401,
+      contentType: 'application/json',
+      headers: { 'cache-control': 'private, no-store' },
+      body: JSON.stringify({ message: 'Sign in is required.' }),
+    })
+  })
+
+  try {
+    await page.getByLabel('Task title').fill(`Trigger expired POST ${randomUUID()}`)
+    await page.getByRole('button', { name: 'Add task' }).click()
+    await expect(page).toHaveURL(/\/login(?:\?.*)?$/)
+    expect(unauthorizedWrites).toBe(1)
+    await expect(page.getByText('Dress the loom', { exact: true })).toHaveCount(0)
+  } finally {
+    await page.unroute('**/api/tasks')
+  }
+})
