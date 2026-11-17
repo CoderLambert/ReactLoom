@@ -12,7 +12,7 @@
     "prepare": "node scripts/prepare-git.mjs",
     "lint": "biome check .",
     "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.node.json --noEmit",
-    "test": "vitest run --project unit && node --test scripts/prepare-git.test.mjs scripts/run-tool.test.mjs && node --experimental-strip-types --test scripts/session-request.test.mjs && node --experimental-strip-types --test scripts/task-status-action.test.mjs",
+    "test": "vitest run --project unit && node --test scripts/prepare-git.test.mjs scripts/run-tool.test.mjs && node --experimental-strip-types --test scripts/session-request.test.mjs && node --experimental-strip-types --test scripts/task-status-action.test.mjs && node --experimental-strip-types --test scripts/task-path.test.mjs",
     "test:coverage": "vitest run --coverage --project unit",
     "test:ui": "vitest --ui --project unit",
     "typecheck:affected": "pnpm --filter \"...[HEAD]\" --if-present typecheck",
