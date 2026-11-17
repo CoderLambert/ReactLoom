@@ -245,18 +245,28 @@ function AuthenticatedTasks({
     setIsSigningOut(true)
     setSignOutError(null)
     try {
-      await getApi().request('/api/session', logoutSchema, { method: 'DELETE', retry: false })
+      await getApi().request('/api/session', logoutSchema, {
+        method: 'DELETE',
+        headers: { 'x-reactloom-expected-session-owner': userId },
+        retry: false,
+      })
     } catch (cause) {
       // A rejected response is not proof that the server kept its cookie.
       // Recheck before restoring any previously cached private content.
       try {
         const confirmed = await getApi().request('/api/session', sessionSchema, { retry: false })
-        if (confirmed.user.id === userId) {
-          setSignOutError(cause instanceof Error ? cause.message : 'Sign out failed.')
-          signingOut.current = false
-          setIsSigningOut(false)
+        if (confirmed.user.id !== userId) {
+          // Another tab signed in as someone else. The rejected sign-out did
+          // not revoke that cookie: discard our stale identity without
+          // broadcasting a false sign-out or redirecting the new account.
+          await clearSessionCache(queryClient)
+          queryClient.setQueryData(['session'], confirmed)
           return
         }
+        setSignOutError(cause instanceof Error ? cause.message : 'Sign out failed.')
+        signingOut.current = false
+        setIsSigningOut(false)
+        return
       } catch {
         // The cookie may already be revoked, or verification may be offline.
         // In either case fail closed rather than displaying cached tasks.

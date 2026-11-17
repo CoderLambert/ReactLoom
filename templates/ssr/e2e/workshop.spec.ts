@@ -591,3 +591,61 @@ test('confirms the latest 401 when rapid session events share an error timestamp
     await page.unroute('**/api/session')
   }
 })
+
+
+test('does not revoke a replacement login when old-tab sign-out receives 409', async ({ page }) => {
+  await page.goto('/login')
+  await page.getByLabel('Email').fill('ada@reactloom.dev')
+  await page.getByLabel('Password').fill('loom-demo')
+  await page.getByRole('button', { name: 'Sign in' }).click()
+  await expect(page.getByText('Dress the loom')).toBeVisible()
+
+  let expectedOwner: string | null = null
+  await page.route('**/api/session', async (route) => {
+    if (route.request().method() === 'DELETE') {
+      expectedOwner = route.request().headers()['x-reactloom-expected-session-owner'] ?? null
+      await route.fulfill({
+        status: 409,
+        contentType: 'application/json',
+        headers: { 'cache-control': 'private, no-store' },
+        body: JSON.stringify({ message: 'The signed-in account changed.' }),
+      })
+    } else if (route.request().method() === 'GET') {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          user: {
+            id: 'replacement-user',
+            email: 'replacement@reactloom.dev',
+            name: 'Replacement user',
+          },
+        }),
+      })
+    } else {
+      await route.continue()
+    }
+  })
+  await page.route('**/api/tasks', async (route) => {
+    if (route.request().method() === 'GET') {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ ownerId: 'replacement-user', tasks: [] }),
+      })
+    } else {
+      await route.continue()
+    }
+  })
+  try {
+    await page.getByRole('button', { name: 'Sign out' }).click()
+    await expect(page).toHaveURL(/\/tasks(?:\?.*)?$/)
+    await expect(page.getByRole('heading', { name: 'Warp board' })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Sign out' })).toBeEnabled()
+    await expect(page.getByText('Dress the loom')).toHaveCount(0)
+    expect(expectedOwner).toBe('user-ada')
+  } finally {
+    await page.unroute('**/api/session')
+    await page.unroute('**/api/tasks')
+  }
+})

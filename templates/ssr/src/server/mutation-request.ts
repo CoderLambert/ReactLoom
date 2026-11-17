@@ -54,3 +54,18 @@ export function taskMutationSessionError(
     { status: 409, headers: { 'Cache-Control': 'private, no-store' } },
   )
 }
+
+// Opt-in, identity-bound sign-out: do not expire the cookie of a user who
+// replaced the initiating tab's session. An absent current session is already
+// signed out; do not send a stale Set-Cookie that could erase a newer login.
+export const EXPECTED_SESSION_OWNER_HEADER = 'x-reactloom-expected-session-owner'
+
+export function sessionLogoutDecision(
+  request: Request,
+  authenticatedUserId: string | null,
+): 'logout' | 'already-signed-out' | 'changed-account' {
+  const expectedOwner = request.headers.get(EXPECTED_SESSION_OWNER_HEADER)
+  if (expectedOwner === null) return 'logout' // Retain legacy API callers.
+  if (authenticatedUserId === null) return 'already-signed-out'
+  return expectedOwner === authenticatedUserId ? 'logout' : 'changed-account'
+}

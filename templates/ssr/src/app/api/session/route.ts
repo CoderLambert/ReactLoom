@@ -1,5 +1,9 @@
 import * as z from 'zod'
-import { mutationRequestError } from '@/server/mutation-request'
+import {
+  EXPECTED_SESSION_OWNER_HEADER,
+  mutationRequestError,
+  sessionLogoutDecision,
+} from '@/server/mutation-request'
 import { privateJson } from '@/server/private-response'
 import { readRequestSession } from '@/server/session'
 import { SESSION_COOKIE, sessionCookieOptions, signSession } from '@/server/session-token'
@@ -30,6 +34,16 @@ export async function POST(request: Request) {
 export async function DELETE(request: Request) {
   const error = mutationRequestError(request)
   if (error) return error
+  if (request.headers.has(EXPECTED_SESSION_OWNER_HEADER)) {
+    const user = await readRequestSession()
+    const decision = sessionLogoutDecision(request, user?.id ?? null)
+    if (decision === 'changed-account') {
+      return privateJson({ message: 'The signed-in account changed. Sign out again to confirm.' }, 409)
+    }
+    // No session was authenticated when this request arrived. Sending an
+    // expiry Set-Cookie could erase a newer login completed in another tab.
+    if (decision === 'already-signed-out') return privateJson({ ok: true })
+  }
   const response = privateJson({ ok: true })
   response.cookies.set(SESSION_COOKIE, '', { ...sessionCookieOptions(), maxAge: 0 })
   return response

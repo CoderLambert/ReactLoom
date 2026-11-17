@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { POST as login, DELETE as logout, GET as readSession } from '@/app/api/session/route'
 import { PATCH as updateTask } from '@/app/api/tasks/[id]/route'
 import { POST as createTask, GET as readTasks } from '@/app/api/tasks/route'
-import { EXPECTED_TASK_OWNER_HEADER } from './mutation-request'
+import { EXPECTED_SESSION_OWNER_HEADER, EXPECTED_TASK_OWNER_HEADER } from './mutation-request'
 import { readSessionToken, SESSION_COOKIE, signSession } from './session-token'
 import { type Task, tasks } from './tasks'
 
@@ -210,3 +210,43 @@ describe.each(routes.filter((route) => route.name.startsWith('task ')))(
     })
   },
 )
+
+
+describe('sign-out identity binding', () => {
+  it('rejects an old tab logout without clearing the replacement account cookie', async () => {
+    requestCookies.set(
+      SESSION_COOKIE,
+      await signSession({
+        id: 'replacement-user',
+        email: 'replacement@reactloom.dev',
+        name: 'Replacement user',
+      }),
+    )
+    const response = await logout(
+      requestFor(routes[1], { origin, [EXPECTED_SESSION_OWNER_HEADER]: 'user-ada' }),
+    )
+
+    expect(response.status).toBe(409)
+    expect(response.headers.get('cache-control')).toBe('private, no-store')
+    expect(response.headers.has('set-cookie')).toBe(false)
+    expect((await (await readSession()).json()).user.id).toBe('replacement-user')
+  })
+
+  it('expires only the cookie belonging to the expected account', async () => {
+    const response = await logout(
+      requestFor(routes[1], { origin, [EXPECTED_SESSION_OWNER_HEADER]: 'user-ada' }),
+    )
+    expect(response.status).toBe(200)
+    expect(response.headers.get('set-cookie')).toContain('Max-Age=0')
+  })
+
+  it('treats an already-expired bound session as signed out without a clearing cookie', async () => {
+    requestCookies = new NextRequest(origin).cookies
+    const response = await logout(
+      requestFor(routes[1], { origin, [EXPECTED_SESSION_OWNER_HEADER]: 'user-ada' }),
+    )
+    expect(response.status).toBe(200)
+    expect(response.headers.has('set-cookie')).toBe(false)
+    await expect(response.json()).resolves.toEqual({ ok: true })
+  })
+})
