@@ -4,7 +4,9 @@ import { isUnauthorizedTaskResponse } from './task-auth-error'
 
 describe('task authorization failure detection', () => {
   it('requires re-authentication for expired-cookie task reads and writes', () => {
-    expect(isUnauthorizedTaskResponse(new ApiError('Sign in required.', 'unauthorized', { status: 401 }))).toBe(true)
+    expect(
+      isUnauthorizedTaskResponse(new ApiError('Sign in required.', 'unauthorized', { status: 401 })),
+    ).toBe(true)
   })
 
   it.each(['network', 'timeout', 'aborted', 'http', 'validation'] as const)(
