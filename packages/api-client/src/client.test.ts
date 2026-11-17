@@ -1,7 +1,7 @@
 import { createServer } from 'node:http'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { createApiClient } from './client.js'
-import { isApiError } from './errors.js'
+import { ApiError, isApiError } from './errors.js'
 
 const schema = {
   parse: (data: unknown) => {
@@ -909,6 +909,32 @@ describe('createApiClient', () => {
         releaseSleep.resolve()
         await pending
       }
+    },
+  )
+
+  it.each([
+    ['caller cancellation', undefined, 'aborted'],
+    ['deadline expiration', new DOMException('deadline', 'TimeoutError'), 'timeout'],
+  ])(
+    'preserves %s when a custom fetch adapter aborts then throws an ApiError',
+    async (_scenario, reason, code) => {
+      const controller = new AbortController()
+      const warn = vi.fn()
+      const fetchFn = vi.fn(() => {
+        controller.abort(reason)
+        throw new ApiError('stale adapter error', 'http', { status: 503 })
+      })
+      const client = createApiClient({
+        baseUrl: 'https://api.test',
+        fetchFn,
+        logger: { debug: vi.fn(), warn },
+      })
+
+      await expect(
+        client.request('/items', schema, { signal: controller.signal, retry: false }),
+      ).rejects.toMatchObject({ code })
+      expect(fetchFn).toHaveBeenCalledOnce()
+      expect(warn).not.toHaveBeenCalled()
     },
   )
 

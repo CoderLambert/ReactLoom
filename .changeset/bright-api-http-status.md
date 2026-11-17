@@ -47,3 +47,5 @@ Catch asynchronous unauthorized callback rejections as best-effort diagnostic fa
 Observe rejected promises from async retry/unauthorized diagnostic loggers as best-effort failures without changing the original HTTP status, retries or callback timing.
 
 Reject username/password userinfo embedded in the API base URL or same-origin request URLs before reading bearer credentials or reaching custom transports. URL.origin alone does not distinguish credentialed URLs.
+
+Keep caller cancellation and timeout authoritative when an injected fetch adapter synchronously throws its own ApiError after the request signal is aborted, rather than surfacing stale transport errors.

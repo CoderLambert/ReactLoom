@@ -239,8 +239,10 @@ function isTimeoutReason(reason: unknown): boolean {
 }
 
 function normalizeTransportError(error: unknown, signal: AbortSignal): ApiError {
-  if (isApiError(error)) return error
+  // Cancellation or timeout must win if an injected adapter throws an ApiError
+  // synchronously after invalidating the request's signal.
   if (signal.aborted) return toAbortError(signal)
+  if (isApiError(error)) return error
   if (error instanceof Error && error.name === 'TimeoutError') {
     return new ApiError('The request timed out.', 'timeout', { cause: error })
   }
