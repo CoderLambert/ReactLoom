@@ -2,7 +2,7 @@ import { cp, mkdir, readFile, rename, rm, stat, writeFile } from 'node:fs/promis
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { adaptBestPractices, installAiConfig } from './ai-config.js'
-import { shouldCopyScaffoldEntry } from './copy-filter.js'
+import { shouldCopySafeScaffoldEntry } from './copy-filter.js'
 import { claimScaffoldDestination } from './destination.js'
 import { type DeployTarget, writeDeployFiles } from './deploy.js'
 import { runInstall } from './install.js'
@@ -57,7 +57,7 @@ async function copyFiltered(
     : undefined
   await cp(source, destination, {
     recursive: true,
-    filter: (entry) => shouldCopyScaffoldEntry(entry, SKIP_DIRS, permittedDevelopmentEnv),
+    filter: (entry) => shouldCopySafeScaffoldEntry(entry, SKIP_DIRS, permittedDevelopmentEnv),
   })
 }
 
