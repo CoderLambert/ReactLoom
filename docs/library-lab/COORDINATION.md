@@ -28,7 +28,9 @@ main 上有三层已经合并的工作，它们不是同一棵 Lab 树：
 
 ## GitHub Pages
 
-用户批准公开发布目录、指南、展示源码和普通浏览器示例。Actions 的 Library Lab Pages 工作流从 `main` 手动触发，只上传 `build:pages` 生成的 `dist-pages`。Pages 构建为各条目生成静态入口，支持直接打开、刷新及指南目录锚点。公开构建只复制生成的目录数据和原文，C13、F11 和 E19 在页面上提供本机运行说明。FFmpeg 核心仍限已获准的本机验收。
+用户批准公开发布目录、指南、展示源码和普通浏览器示例。站点使用 `gh-pages` 分支根目录发布。更新时在明确的 `main` 提交上执行 `pnpm --filter @reactloom/library-lab build:pages`，将 `dist-pages` 的静态产物发布到 `gh-pages`，保留 `.nojekyll`，并更新 `build-commit.txt` 和 `release.json` 的源提交记录。若将 Pages 的发布源切换为 GitHub Actions，可在 `main` 上手动触发 Library Lab Pages 工作流。
+
+Pages 构建为各条目生成静态入口，支持直接打开、刷新及指南目录锚点。公开构建只复制生成的目录数据和原文，C13、F11 和 E19 在页面上提供本机运行说明。FFmpeg 核心仍限已获准的本机验收。 [公开站点](https://coderlambert.github.io/ReactLoom/)
 
 ## 协作与集成（历史合同，2026-10）
 
