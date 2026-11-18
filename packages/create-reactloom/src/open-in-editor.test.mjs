@@ -82,6 +82,18 @@ describe('splitCommand', () => {
   it('rejects an unclosed quote', () => {
     expect(() => splitCommand('cursor "broken')).toThrow(/未闭合/)
   })
+
+  it('preserves backslashes in a double-quoted Windows editor path', () => {
+    expect(
+      splitCommand('"C:\\Program Files\\Microsoft VS Code\\bin\\code.cmd" --reuse-window'),
+    ).toEqual(['C:\\Program Files\\Microsoft VS Code\\bin\\code.cmd', '--reuse-window'])
+    expect(splitCommand('cursor path\\ with\\ spaces "a\\"b" "c\\\\d"')).toEqual([
+      'cursor',
+      'path with spaces',
+      'a"b',
+      'c\\d',
+    ])
+  })
 })
 
 describe('planLaunch', () => {
@@ -157,6 +169,11 @@ describe('planLaunch', () => {
       location,
       nvimContext({
         env: { LAUNCH_EDITOR: 'nvim --clean' },
+        which: whichMap({
+          code: '/usr/bin/code',
+          'xdg-open': '/usr/bin/xdg-open',
+          nvim: '/usr/bin/nvim',
+        }),
         isSocket: (address) => address === '/tmp/proj/.nvim.sock',
         probeNvim: () => ({ ok: true, cwd: '/tmp/proj' }),
       }),
@@ -244,7 +261,7 @@ describe('planLaunch', () => {
     expect(plan.args).not.toContain('/run/foreign.sock')
   })
 
-  it('skips stale sockets, removes only a confirmed project .nvim.sock, and logs both', () => {
+  it('preserves failed project sockets and selects a valid runtime socket', () => {
     const removeSocket = vi.fn()
     const plan = planLaunch(
       location,
@@ -262,9 +279,29 @@ describe('planLaunch', () => {
       }),
     )
     expect(plan.args).toContain('/run/live.sock')
-    expect(removeSocket).toHaveBeenCalledWith('/tmp/proj/.nvim.sock')
-    expect(removeSocket).not.toHaveBeenCalledWith('/run/stale.sock')
+    expect(removeSocket).not.toHaveBeenCalled()
     expect(plan.debug.join('\n')).toContain('失效运行时 socket')
+  })
+
+  it('preserves the project socket when a busy Neovim probe times out', () => {
+    const removeSocket = vi.fn()
+    const plan = planLaunch(
+      location,
+      nvimContext({
+        isSocket: (address) => address === '/tmp/proj/.nvim.sock',
+        spawnSync: () => ({
+          error: Object.assign(new Error('spawnSync nvim ETIMEDOUT'), { code: 'ETIMEDOUT' }),
+          status: null,
+          signal: 'SIGTERM',
+          stdout: '',
+          stderr: '',
+        }),
+        removeSocket,
+        processes: [{ comm: 'cursor', exe: '/usr/bin/cursor' }],
+      }),
+    )
+    expect(plan.method).toBe('正在运行的 Cursor / VS Code')
+    expect(removeSocket).not.toHaveBeenCalled()
   })
 
   it('escapes spaces and Ex-special characters in the remote-send path', () => {

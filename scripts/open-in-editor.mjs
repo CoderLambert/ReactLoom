@@ -123,6 +123,7 @@ export function splitCommand(command) {
 
   for (const character of command.trim()) {
     if (escaped) {
+      if (quote === '"' && !['"', '\\', '$', '`', '\n'].includes(character)) current += '\\'
       current += character
       escaped = false
       started = true
@@ -193,7 +194,6 @@ export function planLaunch(location, context = {}) {
   const which = context.which ?? whichCommand
   const exists = context.exists ?? fs.existsSync
   const isSocket = context.isSocket ?? isSocketPath
-  const removeSocket = context.removeSocket ?? ((address) => fs.unlinkSync(address))
   const scanSockets = context.scanSockets ?? (() => scanRuntimeSockets(env))
   const spawnSyncImpl = context.spawnSync ?? spawnSync
   const hasTty = context.hasTty ?? Boolean(process.stdin.isTTY && process.stdout.isTTY)
@@ -242,7 +242,7 @@ export function planLaunch(location, context = {}) {
   }
 
   const vscode = resolveExecutable('code', which, exists)
-  if (vscode) {
+  if (vscode && !preferredNvim) {
     const desktopOpener =
       platform === 'linux' ? resolveExecutable('xdg-open', which, exists) : undefined
     return finishPlan(
@@ -279,7 +279,6 @@ export function planLaunch(location, context = {}) {
       nvim,
       isSocket,
       probe,
-      removeSocket,
       scanSockets,
       debug,
     })
@@ -442,6 +441,7 @@ export function failureReason(attempts = []) {
     '- 默认使用 VS Code；请确认 code 命令在 PATH 中。',
     '- 在模板目录的 .env.local 设置 LAUNCH_EDITOR（也支持 CODE_EDITOR / REACT_EDITOR），命令可以带引号参数。',
     '- 推荐让 Neovim 在每个项目的 git 根创建 .nvim.sock；也可以手动运行 nvim --listen .nvim.sock。',
+    '- 探测失败不会自动删除 .nvim.sock；确认没有 Neovim 使用该路径后，可手动清理失效 socket。',
     '- init.lua：local root = vim.fs.root(0, ".git") or vim.fn.getcwd(); local sock = root .. "/.nvim.sock"; if not vim.uv.fs_stat(sock) then pcall(vim.fn.serverstart, sock) end',
     '- 设置 REACTLOOM_EDITOR_DEBUG=1 可查看 socket 和编辑器解析过程；pnpm doctor:editor [文件:行] 只诊断，不打开。',
   ].join('\n')
@@ -568,17 +568,7 @@ function resolveNvim(editor, which, exists) {
   return command ? { command, args: editor.args ?? [] } : undefined
 }
 
-function findNvimServer({
-  file,
-  gitRoot,
-  env,
-  nvim,
-  isSocket,
-  probe,
-  removeSocket,
-  scanSockets,
-  debug,
-}) {
+function findNvimServer({ file, gitRoot, env, nvim, isSocket, probe, scanSockets, debug }) {
   for (const address of projectSocketCandidates(path.dirname(file), gitRoot)) {
     if (!isSocket(address)) {
       debug.push(`项目 socket 不存在或不是 socket：${address}`)
@@ -593,13 +583,8 @@ function findNvimServer({
       debug.push(`跳过项目 socket ${address}：Neovim cwd=${result.cwd} 不在 ${gitRoot} 内`)
       continue
     }
-    debug.push(`失效项目 socket：${address}（${result.reason}）`)
-    try {
-      removeSocket(address)
-      debug.push(`已删除确认失效的项目 socket：${address}`)
-    } catch (error) {
-      debug.push(`无法删除失效项目 socket ${address}：${error.message}`)
-    }
+    // A busy editor can time out even while its socket is still live.
+    debug.push(`项目 socket 探测失败，保留路径：${address}（${result.reason}）`)
   }
 
   for (const [key, address] of [
