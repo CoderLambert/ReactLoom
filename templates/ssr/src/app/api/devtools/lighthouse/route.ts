@@ -5,11 +5,14 @@ import {
 
 const server = createLighthouseServer(process.cwd(), 'http://127.0.0.1:4318/')
 
-function allowed(request: Request) {
+function allowed(request: Request, requireOrigin = false) {
+  const host = request.headers.get('host')
+  const origin = request.headers.get('origin')
   return (
     process.env.NODE_ENV === 'development' &&
     process.env.NEXT_PUBLIC_DEVTOOLS !== 'false' &&
-    isLocalDevtoolsRequest(request.headers.get('host'), request.headers.get('origin'))
+    (!requireOrigin || origin !== null) &&
+    isLocalDevtoolsRequest(host, origin)
   )
 }
 
@@ -19,7 +22,7 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  if (!allowed(request)) return new Response(null, { status: 404 })
+  if (!allowed(request, true)) return new Response(null, { status: 404 })
   server.run()
   return Response.json(await server.state(), { headers: { 'Cache-Control': 'no-store' } })
 }
