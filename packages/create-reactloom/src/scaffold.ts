@@ -6,6 +6,7 @@ import { shouldCopySafeScaffoldEntry } from './copy-filter.js'
 import { claimScaffoldDestination } from './destination.js'
 import { type DeployTarget, writeDeployFiles } from './deploy.js'
 import { runInstall } from './install.js'
+import { assertManifestCopyTargetAvailable } from './manifest-target.js'
 import {
   DOCKER_FILES,
   type PackageJson,
@@ -71,6 +72,7 @@ async function copyRepoPath(repoRoot: string, relative: string, directory: strin
   }
   await assertSafeScaffoldSource(repoRoot, relative)
   const destination = path.join(directory, relative)
+  await assertManifestCopyTargetAvailable(directory, relative)
   await mkdir(path.dirname(destination), { recursive: true })
   await copyFiltered(source, destination)
 }
@@ -118,7 +120,7 @@ async function copySharedPackages(
   await writeFile(packagePath, `${JSON.stringify(pruned, null, 2)}\n`)
 }
 
-async function copyManifestFiles(
+export async function copyManifestFiles(
   repoRoot: string,
   directory: string,
   relativePaths: readonly string[],
@@ -140,6 +142,7 @@ async function copyManifestFiles(
         throw new Error(`Manifest path does not exist: ${relative}`)
       }
       const destination = path.join(directory, relative)
+      await assertManifestCopyTargetAvailable(directory, relative)
       await mkdir(path.dirname(destination), { recursive: true })
       await writeFile(destination, adaptBestPractices(contents, adapt.template, adapt.projectName))
       continue
