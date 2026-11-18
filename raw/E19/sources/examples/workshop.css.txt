@@ -1,0 +1,49 @@
+.e19-workshop {
+  min-width: 0;
+}
+.e19-workshop .demo-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-block: 1rem;
+}
+.e19-workshop button,
+.e19-workshop input {
+  max-width: 100%;
+}
+.e19-workshop :focus-visible {
+  outline: 3px solid #276b50;
+  outline-offset: 3px;
+}
+.e19-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));
+  gap: 12px;
+}
+.e19-details div {
+  padding: 12px;
+  border: 1px solid #c1d2c5;
+  border-radius: 8px;
+}
+.e19-details dt {
+  font-weight: 600;
+}
+.e19-details dd {
+  margin: 6px 0 0;
+  overflow-wrap: anywhere;
+}
+.e19-workshop pre,
+.e19-workshop output {
+  display: block;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  padding: 12px;
+  border-radius: 8px;
+  background: #edf4ed;
+}
+.e19-workshop audio {
+  display: block;
+  max-width: 100%;
+  margin-block: 1rem;
+}

@@ -1,0 +1,1 @@
+var e=(e,t=21)=>(n=t)=>{let r=``,i=n|0;for(;i-->0;)r+=e[Math.random()*e.length|0];return r},t=(e=21)=>{let t=``,n=e|0;for(;n-->0;)t+=`57X6y3wQZNzYjJB2L_10pxbackgroundhimselfUTF-8DEMOGRAPHICSVqvt4KW9`[Math.random()*64|0];return t};export{t as n,e as t};

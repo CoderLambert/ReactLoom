@@ -1,0 +1,6 @@
+.lexical-example .lexical-example-bold {
+  font-weight: 700;
+}
+.lexical-example .lexical-example-paragraph {
+  margin: 0 0 0.5rem;
+}

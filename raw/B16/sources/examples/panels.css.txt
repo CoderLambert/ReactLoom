@@ -1,0 +1,78 @@
+.b16-workshop {
+  max-width: 100%;
+  min-width: 0;
+}
+.b16-workshop .b16-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+.b16-workshop .b16-controls label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.b16-workshop .b16-frame {
+  height: 320px;
+  width: 100%;
+  min-width: 0;
+  border: 1px solid #d7dfd5;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.b16-workshop .b16-content {
+  padding: 1rem;
+  box-sizing: border-box;
+  overflow: auto;
+}
+.b16-workshop .b16-explorer {
+  background: #eef3eb;
+}
+.b16-workshop .b16-main {
+  background: #fffef9;
+}
+.b16-workshop .b16-inspector {
+  background: #f7f6ed;
+}
+.b16-workshop .b16-separator {
+  width: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #d5e5d8;
+  color: #234e36;
+  cursor: col-resize;
+}
+.b16-workshop[data-orientation="vertical"] .b16-separator {
+  width: auto;
+  height: 12px;
+  cursor: row-resize;
+}
+.b16-workshop .b16-separator[data-separator="hover"],
+.b16-workshop .b16-separator[data-separator="active"] {
+  background: #b4d5bd;
+}
+.b16-workshop .b16-separator:focus-visible {
+  outline: 3px solid #2264c7;
+  outline-offset: -3px;
+}
+.b16-workshop .b16-sizes {
+  width: 100%;
+  border-collapse: collapse;
+}
+.b16-workshop .b16-sizes th,
+.b16-workshop .b16-sizes td {
+  padding: 0.35rem 0.5rem;
+  text-align: left;
+  border-bottom: 1px solid #d7dfd5;
+}
+.b16-workshop pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 0.8rem;
+}
+.b16-workshop .b16-note {
+  font-size: 0.875rem;
+}

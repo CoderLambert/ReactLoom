@@ -1,0 +1,28 @@
+.c04-workshop {
+  max-width: 720px;
+  min-width: 0;
+}
+.c04-workshop input:not([type="checkbox"]),
+.c04-workshop select {
+  box-sizing: border-box;
+  max-width: 100%;
+  padding: 0.5rem;
+  margin: 0.25rem 0;
+}
+.c04-workshop label {
+  display: inline-block;
+  margin-top: 0.4rem;
+}
+.c04-workshop .c04-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+.c04-workshop pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  padding: 0.75rem;
+  border: 1px solid #d1d9ce;
+  border-radius: 8px;
+}

@@ -1,0 +1,58 @@
+.b02-workshop {
+  min-width: 0;
+}
+.b02-workshop .demo-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-block: 1rem;
+}
+.b02-workshop label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.b02-workshop button,
+.b02-workshop select {
+  padding: 7px 10px;
+}
+.b02-workshop :focus-visible {
+  outline: 3px solid #286d50;
+  outline-offset: 3px;
+}
+.b02-stage {
+  box-sizing: border-box;
+  padding: 14px;
+  border: 1px solid #c3d8c7;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.b02-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+.b02-card {
+  box-sizing: border-box;
+  padding: 14px;
+  border: 1px solid #acc9b7;
+  background: #f4f8f1;
+  border-radius: 8px;
+}
+.b02-single {
+  width: min(220px, calc(100% - 70px));
+}
+.b02-workshop progress {
+  display: block;
+  width: 100%;
+  margin-block: 12px;
+}
+.b02-workshop pre {
+  max-height: 25rem;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  background: #edf5ed;
+  padding: 12px;
+}

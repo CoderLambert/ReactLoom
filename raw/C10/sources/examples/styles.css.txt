@@ -1,0 +1,63 @@
+.c10-workshop {
+  min-width: 0;
+  max-width: 100%;
+}
+.c10-workshop .c10-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.75rem 0;
+}
+.c10-workshop input,
+.c10-workshop select {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+.c10-workshop .c10-model {
+  display: block;
+  overflow-wrap: anywhere;
+  margin-block: 0.75rem;
+}
+.c10-workshop .c10-viewport {
+  height: 365px;
+  overflow-y: auto;
+  position: relative;
+  overscroll-behavior: contain;
+  border: 1px solid #cbd7cd;
+}
+.c10-workshop .c10-spacer {
+  width: 100%;
+  position: relative;
+}
+.c10-workshop .c10-row {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 4px 10px;
+}
+.c10-workshop article {
+  padding: 12px;
+  background: #fff;
+  border: 1px solid #e0e6db;
+  border-radius: 6px;
+  overflow-wrap: anywhere;
+}
+.c10-workshop h3 {
+  margin: 0;
+  font-size: 14px;
+}
+.c10-workshop article p {
+  font-size: 13px;
+  margin: 4px 0;
+}
+.c10-workshop article .c10-long {
+  margin: 6px 0;
+  white-space: pre-wrap;
+}
+.c10-workshop :is(input, select, button, .c10-viewport):focus-visible {
+  outline: 3px solid #287151;
+  outline-offset: 2px;
+}

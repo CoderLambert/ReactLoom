@@ -1,0 +1,61 @@
+.b13-workshop {
+  min-width: 0;
+}
+.b13-workshop h2 {
+  font-size: 1.3rem;
+}
+.b13-list {
+  list-style: none;
+  padding: 0;
+  margin-block: 1rem;
+}
+.b13-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid #b5ccbd;
+  border-radius: 8px;
+  background: white;
+  margin-bottom: 8px;
+}
+.b13-row[data-locked="true"] {
+  background: #f1f3ed;
+}
+.b13-title {
+  flex: 1;
+  min-width: 5rem;
+  overflow-wrap: anywhere;
+}
+.b13-handle {
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+}
+.b13-workshop button:focus-visible {
+  outline: 3px solid #216d51;
+  outline-offset: 3px;
+}
+.b13-workshop .demo-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-block: 1rem;
+}
+.b13-workshop .demo-output {
+  overflow-wrap: anywhere;
+}
+.b13-inspector {
+  margin-block: 1rem;
+}
+.b13-inspector summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+.b13-inspector pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  padding: 1rem;
+  background: #edf4ed;
+  border-radius: 8px;
+}

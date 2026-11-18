@@ -1,0 +1,54 @@
+.c07-workshop {
+  min-width: 0;
+  color: #1d3b2e;
+}
+.c07-workshop .demo-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-block: 1rem;
+}
+.c07-workshop label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+.c07-workshop button {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #8ca797;
+  border-radius: 0.35rem;
+  background: #fff;
+  color: #1d3b2e;
+  cursor: pointer;
+}
+.c07-workshop button:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+.c07-workshop button:focus-visible,
+.c07-workshop input:focus-visible,
+.c07-workshop select:focus-visible {
+  outline: 3px solid #267c5b;
+  outline-offset: 2px;
+}
+.c07-workshop table {
+  min-width: 560px;
+  font-size: 0.9rem;
+}
+.c07-workshop caption {
+  padding: 0.6rem;
+  text-align: left;
+  font-weight: 600;
+}
+.c07-workshop details {
+  margin-block: 1rem;
+}
+.c07-workshop pre {
+  max-height: 24rem;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  padding: 0.8rem;
+  background: #eff6f1;
+}

@@ -1,0 +1,9 @@
+{
+  "name": "@reactloom/knip-demo-fixture",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "dependencies": {
+    "clsx": "2.1.1"
+  }
+}

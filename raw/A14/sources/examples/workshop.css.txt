@@ -1,0 +1,38 @@
+.a14-workshop {
+  min-width: 0;
+}
+.a14-workshop .demo-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-block: 1rem;
+}
+.a14-workshop label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.a14-workshop button,
+.a14-workshop select {
+  padding: 7px 10px;
+}
+.a14-workshop :focus-visible {
+  outline: 3px solid #287353;
+  outline-offset: 3px;
+}
+.a14-stage {
+  height: 300px;
+  min-width: 0;
+  background: #eaf0e9;
+  border-radius: 9px;
+  overflow: hidden;
+}
+.a14-workshop pre {
+  padding: 12px;
+  background: #edf5ed;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  overflow: auto;
+  max-height: 24rem;
+}

@@ -1,0 +1,56 @@
+.e05-workshop {
+  min-width: 0;
+  color: #19352d;
+}
+.e05-workshop h2,
+.e05-workshop h3 {
+  margin-block: 0.8rem;
+}
+.e05-workshop .e05-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-block: 0.8rem;
+}
+.e05-workshop button {
+  padding: 0.45rem 0.75rem;
+  border: 1px solid #819c90;
+  border-radius: 0.4rem;
+  background: #fff;
+  color: #19352d;
+  cursor: pointer;
+}
+.e05-workshop button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.e05-workshop button:focus-visible {
+  outline: 3px solid #087b63;
+  outline-offset: 2px;
+}
+.e05-workshop .e05-editor {
+  height: 320px;
+  min-width: 0;
+  border: 1px solid #819c90;
+}
+.e05-workshop .e05-output {
+  margin-block: 1rem;
+  padding: 0.8rem;
+  background: #f3f8f5;
+  border: 1px solid #c8d9d0;
+  border-radius: 0.5rem;
+}
+.e05-workshop .e05-output pre {
+  max-height: 240px;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.e05-workshop details code {
+  display: block;
+  overflow-wrap: anywhere;
+  padding-block: 0.5rem;
+}
+.e05-workshop li {
+  margin-block: 0.5rem;
+}

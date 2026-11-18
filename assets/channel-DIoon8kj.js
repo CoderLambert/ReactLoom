@@ -1,0 +1,1 @@
+import{S as e,x as t}from"./rough.esm-R7OXq8Lw.js";var n=(n,r)=>e.lang.round(t.parse(n)[r]);export{n as t};

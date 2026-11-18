@@ -1,0 +1,66 @@
+.c11-workshop {
+  min-width: 0;
+  max-width: 100%;
+}
+.c11-workshop .c11-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: center;
+  margin: 0.75rem 0;
+}
+.c11-workshop input {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+.c11-workshop .c11-tree {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  border: 1px solid #688976;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.c11-workshop [role="treeitem"][aria-selected="true"] {
+  background: #d7ebda;
+}
+.c11-workshop [role="treeitem"]:focus {
+  outline: 2px solid #287151;
+  outline-offset: -2px;
+}
+.c11-workshop .c11-node {
+  height: 34px;
+  box-sizing: border-box;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.c11-workshop .c11-node > button {
+  flex: 0 0 26px;
+  padding: 0;
+  min-height: 24px;
+}
+.c11-workshop .c11-leaf {
+  flex: 0 0 26px;
+  text-align: center;
+}
+.c11-workshop .c11-name {
+  white-space: nowrap;
+}
+.c11-workshop .c11-editor {
+  height: 30px;
+  width: 220px;
+}
+.c11-workshop .c11-observation {
+  display: block;
+  overflow-wrap: anywhere;
+  margin-block: 0.5rem;
+}
+.c11-workshop pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.c11-workshop :is(button, input):focus-visible {
+  outline: 3px solid #287151;
+  outline-offset: 2px;
+}

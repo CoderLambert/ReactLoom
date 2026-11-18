@@ -1,0 +1,39 @@
+.b21-workshop {
+  min-width: 0;
+  max-width: 100%;
+}
+.b21-workshop .b21-details {
+  border: 1px solid #bfd0c1;
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 0.75rem 0;
+}
+.b21-workshop .b21-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 0.75rem 0;
+}
+.b21-workshop .b21-tasks {
+  position: relative;
+  list-style: none;
+  padding: 0;
+}
+.b21-workshop .b21-task {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  box-sizing: border-box;
+  padding: 0.625rem;
+  margin-bottom: 0.5rem;
+  border: 1px solid #d6ddd5;
+  border-radius: 8px;
+}
+.b21-workshop .b21-task[data-present="false"] {
+  pointer-events: none;
+}
+.b21-workshop pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}

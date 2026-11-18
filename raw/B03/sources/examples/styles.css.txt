@@ -1,0 +1,52 @@
+.b03-workshop {
+  display: grid;
+  gap: 1rem;
+  max-width: 54rem;
+}
+.b03-workshop p {
+  margin: 0.25rem 0;
+}
+.b03-workshop button,
+.b03-workshop input {
+  font: inherit;
+}
+.b03-controls {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.b03-card {
+  background: #e7f1e8;
+  color: #18261d;
+  border: 1px solid #91b49d;
+  border-radius: 0.75rem;
+  padding: 1.125rem;
+  margin-bottom: 1.125rem;
+}
+.b03-list {
+  display: grid;
+  gap: 0.6rem;
+}
+.b03-article {
+  background: #fff;
+  color: #18261d;
+  border: 1px solid #c3d1c1;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  display: flex;
+  gap: 0.75rem;
+  justify-content: space-between;
+  align-items: center;
+}
+.b03-article[inert] {
+  pointer-events: none;
+}
+.b03-workshop output {
+  overflow-wrap: anywhere;
+}
+.b03-workshop button:focus-visible,
+.b03-workshop input:focus-visible {
+  outline: 3px solid #356dcd;
+  outline-offset: 3px;
+}

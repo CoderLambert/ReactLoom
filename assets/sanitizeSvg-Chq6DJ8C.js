@@ -1,0 +1,1 @@
+export{t as sanitizeSvg}from"./demo-DW-Xwyhu.js";

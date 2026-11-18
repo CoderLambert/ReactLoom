@@ -1,0 +1,43 @@
+.c15-workshop {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+.c15-workshop .c15-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  margin-block: 0.7rem;
+}
+.c15-workshop label {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+  max-width: 100%;
+}
+.c15-workshop input,
+.c15-workshop select {
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: 100%;
+  padding: 0.4rem;
+}
+.c15-workshop input[aria-label="纽约带偏移的绝对事件"] {
+  width: 20rem;
+}
+.c15-workshop pre {
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 28rem;
+}
+.c15-workshop .c15-error {
+  min-height: 2rem;
+}
+.c15-workshop :is(input, select, button):focus-visible {
+  outline: 3px solid #326dcc;
+  outline-offset: 2px;
+}

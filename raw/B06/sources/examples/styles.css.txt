@@ -1,0 +1,25 @@
+.b06-workshop {
+  min-width: 0;
+  max-width: 68rem;
+}
+.b06-stack {
+  display: grid;
+  gap: 1rem;
+  min-width: 0;
+}
+.b06-controls {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+.b06-field {
+  min-height: 112px;
+  margin-bottom: 0;
+}
+.b06-url {
+  overflow-wrap: anywhere;
+}
+.b06-workshop :focus-visible {
+  outline: 3px solid #356dcd;
+  outline-offset: 3px;
+}

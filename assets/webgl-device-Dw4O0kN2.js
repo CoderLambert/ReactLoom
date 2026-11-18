@@ -1,0 +1,1 @@
+export{n as WebGLDevice}from"./demo-DTe2NOqt.js";

@@ -1,0 +1,44 @@
+.c03-workshop {
+  min-width: 0;
+}
+.c03-workshop textarea {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  min-height: 220px;
+  font-family: monospace;
+  padding: 0.75rem;
+}
+.c03-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.75rem 0;
+}
+.c03-workshop output {
+  display: block;
+  max-height: 24rem;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  padding: 0.75rem;
+  border: 1px solid #b9cbbb;
+  border-radius: 0.5rem;
+}
+.c03-workshop table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.75rem;
+}
+.c03-workshop th,
+.c03-workshop td {
+  text-align: left;
+  overflow-wrap: anywhere;
+  padding: 0.5rem;
+  border-bottom: 1px solid #c6d3c8;
+}
+.c03-workshop textarea:focus-visible,
+.c03-workshop button:focus-visible {
+  outline: 3px solid #326dcc;
+  outline-offset: 2px;
+}

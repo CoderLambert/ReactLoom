@@ -1,0 +1,19 @@
+.b20-workshop {
+  max-width: 100%;
+  min-width: 0;
+}
+.b20-workshop .b20-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+.b20-workshop .b20-controls label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.b20-workshop .b20-note {
+  font-size: 0.875rem;
+  overflow-wrap: anywhere;
+}

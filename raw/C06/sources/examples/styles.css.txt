@@ -1,0 +1,40 @@
+.c06-workshop {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.c06-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem;
+  margin: 1rem 0;
+}
+.c06-workshop input {
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
+  padding: 0.5rem;
+}
+.c06-workshop label {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+.c06-workshop pre {
+  max-height: 22rem;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  padding: 0.75rem;
+  border: 1px solid #c6d3c8;
+  border-radius: 0.5rem;
+}
+.c06-workshop input[aria-invalid="true"] {
+  border-color: #a22c35;
+}
+.c06-workshop input:focus-visible,
+.c06-workshop button:focus-visible {
+  outline: 3px solid #326dcc;
+  outline-offset: 2px;
+}

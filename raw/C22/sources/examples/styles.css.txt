@@ -1,0 +1,46 @@
+.c22-workshop {
+  display: grid;
+  gap: 0.9rem;
+  max-width: 56rem;
+}
+.c22-workshop h2,
+.c22-workshop p {
+  margin: 0;
+}
+.c22-workshop label {
+  display: grid;
+  gap: 0.35rem;
+  max-width: 42rem;
+}
+.c22-workshop input,
+.c22-workshop select,
+.c22-workshop button {
+  padding: 0.5rem 0.7rem;
+  border: 1px solid currentColor;
+  border-radius: 0.35rem;
+  color: inherit;
+  background: transparent;
+}
+.c22-workshop input:focus-visible,
+.c22-workshop select:focus-visible,
+.c22-workshop button:focus-visible {
+  outline: 3px solid #6d9cff;
+  outline-offset: 2px;
+}
+.c22-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.c22-workshop pre {
+  padding: 1rem;
+  border: 1px solid currentColor;
+  border-radius: 0.35rem;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.c22-workshop [role="alert"] {
+  padding-left: 0.75rem;
+  border-left: 4px solid #ca5a20;
+}

@@ -1,0 +1,145 @@
+.rf-primer {
+  margin-bottom: 24px;
+  padding: 22px;
+  border: 1px solid #cbdad6;
+  border-radius: 14px;
+  background: #f5f9f7;
+  color: #183d34;
+  font-size: 14px;
+}
+.rf-primer *,
+.rf-primer *::before,
+.rf-primer *::after {
+  box-sizing: border-box;
+}
+.rf-primer h2 {
+  margin: 8px 0;
+  font-size: 22px;
+}
+.rf-primer h3 {
+  margin-top: 0;
+  font-size: 15px;
+}
+.rf-primer p {
+  line-height: 1.7;
+}
+.rf-primer .rf-primer-kicker {
+  margin: 0;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: #4c6c60;
+}
+.rf-primer .rf-primer-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 18px 0;
+}
+.rf-primer button {
+  min-height: 36px;
+  border: 1px solid #aabfb4;
+  border-radius: 6px;
+  padding: 7px 11px;
+  background: white;
+  color: #173f32;
+  cursor: pointer;
+}
+.rf-primer button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.rf-primer :focus-visible {
+  outline: 3px solid #258bce;
+  outline-offset: 3px;
+}
+.rf-primer .rf-primer-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 230px;
+  gap: 16px;
+}
+.rf-primer .rf-primer-canvas {
+  height: 300px;
+  min-width: 0;
+  border: 1px solid #b1c9bb;
+  border-radius: 8px;
+  overflow: hidden;
+  background: white;
+}
+.rf-primer .rf-primer-inspector {
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid #d2e0d7;
+  border-radius: 8px;
+  background: white;
+}
+.rf-primer label {
+  display: grid;
+  gap: 6px;
+  font-size: 12px;
+}
+.rf-primer input {
+  width: 100%;
+  min-width: 0;
+  padding: 8px;
+  border: 1px solid #abc1b3;
+  border-radius: 5px;
+  font: inherit;
+}
+.rf-primer .rf-primer-inspector p {
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.rf-primer .rf-primer-node {
+  width: 146px;
+  padding: 16px;
+  display: grid;
+  gap: 8px;
+  border: 1px solid #73a78c;
+  border-radius: 8px;
+  background: #ecf7f0;
+}
+.rf-primer .rf-primer-node small {
+  font-size: 9px;
+  color: #406650;
+}
+.rf-primer .rf-primer-node strong {
+  overflow-wrap: anywhere;
+}
+.rf-primer .react-flow__handle {
+  width: 12px;
+  height: 12px;
+  background: #087f70;
+  border: 2px solid white;
+}
+.rf-primer .react-flow__node.selected .rf-primer-node {
+  outline: 2px solid #087f70;
+  outline-offset: 3px;
+}
+.rf-primer details {
+  margin-top: 16px;
+}
+.rf-primer summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+.rf-primer pre {
+  max-height: 320px;
+  overflow: auto;
+  padding: 12px;
+  background: #102b24;
+  color: #e6fff1;
+  font-size: 12px;
+}
+.rf-primer .rf-primer-note {
+  margin-bottom: 0;
+  font-size: 12px;
+  color: #4d685a;
+}
+@media (max-width: 680px) {
+  .rf-primer {
+    padding: 14px;
+  }
+  .rf-primer .rf-primer-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
