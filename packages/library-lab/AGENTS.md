@@ -1,6 +1,6 @@
 # ReactLoom Library Lab
 
-Read root AGENTS.md, docs/library-lab/COORDINATION.md, IMPLEMENTATION.md and REPAIR.md before editing. This private standalone app must not leak its dependencies or files into create-reactloom templates.
+Read root AGENTS.md, docs/library-lab/COORDINATION.md, IMPLEMENTATION.md and REPAIR.md before editing. This standalone app must not leak its dependencies or files into create-reactloom templates.
 
 Six tabs: docs/demo/readme/website/agent/related; unspecified routes open docs. Entry metadata is library.json; source viewer is generated from the actual example files. Do not manually maintain a second copy of executable source. Only active tabs mount; demos must clean up on leave. Official README snapshots preserve upstream bytes and pinned provenance; external homepage previews use the separate website panel, not an execution runner.
 
@@ -8,7 +8,7 @@ Agent retrieval: root LIBRARY_CATALOG.md -> entry library.json -> agent.md -> ex
 
 Use pnpm --filter @reactloom/library-lab catalog:check / test / test:sdk / typecheck / build / test:e2e. test is offline platform logic; test:sdk loads actual SDKs and must not silently skip. Do not claim SDK/browser PASS from isolated domain tests. Check only affected scope per batch; preserve errors and blockers.
 
-Only PLATFORM edits common source, scripts, runners, package/lockfile, CI and generated catalogues. AB/CD/EF own their entry directories and progress files. No deployment, paid API, global storage clearing or arbitrary code execution endpoints. PR #8, #97, and #98 are on main. #97 restored A/B handbook depth and the homepage counts `sourceComplete`, `reactMountable`, `nodeCiOnly`, and `receiptPass`. #98 restored C–F handbook depth. E11 and F05 still have no research-pack guide. Do not treat those merges, the lockfile importer, or a green Actions run as 119 per-entry PASS receipts. Current facts live in `docs/library-lab/COORDINATION.md`.
+Only PLATFORM edits common source, scripts, runners, package/lockfile, CI and generated catalogues. AB/CD/EF own their entry directories and progress files. Use the approved [GitHub Pages release profile](../../docs/library-lab/COORDINATION.md#github-pages) for public releases. No paid API, global storage clearing or arbitrary code execution endpoints. PR #8, #97, and #98 are on main. #97 restored A/B handbook depth and the homepage counts `sourceComplete`, `reactMountable`, `nodeCiOnly`, and `receiptPass`. #98 restored C–F handbook depth. E11 and F05 still have no research-pack guide. Do not treat those merges, the lockfile importer, or a green Actions run as 119 per-entry PASS receipts. Current facts live in `docs/library-lab/COORDINATION.md`.
 
 ## Verification evidence binding
 

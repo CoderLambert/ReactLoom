@@ -5,6 +5,12 @@ const IsolatedMswPanel = lazy(() => import('./isolated-msw-panel'))
 const IsolatedGanttPanel = lazy(() => import('./isolated-gantt-panel'))
 const BuildReport = lazy(() => import('./build-report'))
 
+const localOnlyReasons: Record<string, string> = {
+  C13: '甘特图需要独立的本机运行器。',
+  E19: 'FFmpeg 转码需要经许可暂存的本机核心。',
+  F11: 'MSW 浏览器示例需要独立的本机 Service Worker 运行器。',
+}
+
 import { ErrorBoundary } from 'react-error-boundary'
 import { demoLoaders } from '../generated/loaders'
 import { workerFactories } from '../generated/worker-loaders'
@@ -214,6 +220,8 @@ export default function DemoHost({
   const loader = demoLoaders[key]
   const workerFactory = workerFactories[key]
   const policy = demoRunPolicy(demo)
+  const localOnlyReason =
+    import.meta.env.MODE === 'pages' ? localOnlyReasons[entry.entryId] : undefined
   const gantt = isRegisteredGanttDemo(entry.entryId, demo)
   const [attempt, setAttempt] = useState({ key, reset: 0 })
   const run = useMemo(
@@ -222,7 +230,10 @@ export default function DemoHost({
   )
   const { Component } = run
   const canStart = Boolean(
-    gantt || (policy.mode === 'react' && Component) || (policy.mode === 'worker' && workerFactory),
+    !localOnlyReason &&
+      (gantt ||
+        (policy.mode === 'react' && Component) ||
+        (policy.mode === 'worker' && workerFactory)),
   )
   // The library page remounts this host when the scenario id changes.
   // The selected scenario is already the instance to show, so mount it immediately.
@@ -269,7 +280,12 @@ export default function DemoHost({
         示例源码已接入不等于真实运行验证通过。请核对页面上方的构建、SDK 与浏览器状态。
       </div>
       <div className="demo-stage">
-        {canStart ? (
+        {localOnlyReason ? (
+          <section role="note" className="notice">
+            <h3>此示例在本机运行</h3>
+            <p>{localOnlyReason} 此页提供指南和源码，请按指南在本地运行。</p>
+          </section>
+        ) : canStart ? (
           started ? (
             <ErrorBoundary
               key={`${run.key}:${run.reset}`}
@@ -337,7 +353,7 @@ export default function DemoHost({
           </button>
         </div>
       )}
-      {entry.entryId === 'F11' && (
+      {!localOnlyReason && entry.entryId === 'F11' && (
         <Suspense fallback={<p role="status">正在加载浏览器运行面板…</p>}>
           <IsolatedMswPanel key={key} level={demo.level} />
         </Suspense>

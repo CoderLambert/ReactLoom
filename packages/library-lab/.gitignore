@@ -13,5 +13,6 @@ public/catalog-index.json
 .local-evidence/
 public/lab-runners/msw/mockServiceWorker.js
 dist-runners/
+dist-pages/
 runners/msw/public/mockServiceWorker.js
 ci-scope.json

@@ -10,7 +10,7 @@ const root = createRootRoute({
   notFoundComponent: () => (
     <section className="empty">
       <h1>没有这个页面</h1>
-      <a href="/">返回目录</a>
+      <a href={import.meta.env.BASE_URL}>返回目录</a>
     </section>
   ),
   errorComponent: ({ error }) => (

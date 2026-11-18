@@ -1,0 +1,51 @@
+name: Library Lab Pages
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: library-lab-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 10.33.3
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm --filter @reactloom/library-lab... install --frozen-lockfile --ignore-scripts
+      - name: Build the public demo
+        run: |
+          pnpm --filter @reactloom/library-lab build:pages
+          test -s packages/library-lab/dist-pages/catalog-index.json
+          test ! -e packages/library-lab/dist-pages/ffmpeg-core
+          printf '%s\n' "$GITHUB_SHA" > packages/library-lab/dist-pages/build-commit.txt
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: packages/library-lab/dist-pages
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - name: Deploy Library Lab
+        id: deploy
+        uses: actions/deploy-pages@v4

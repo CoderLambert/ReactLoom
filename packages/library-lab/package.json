@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "node scripts/generate.mjs && node scripts/prepare-ffmpeg-core.mjs && pnpm run prepare:msw && node scripts/serve-lab.mjs dev",
     "build": "node scripts/generate.mjs && node scripts/prepare-ffmpeg-core.mjs && pnpm run prepare:msw && vite build && vite build --config runners/msw/vite.config.mjs && vite build --config runners/gantt/vite.config.ts",
+    "build:pages": "node scripts/build-pages.mjs",
     "preview": "node scripts/serve-lab.mjs preview",
     "prepare:msw": "node scripts/prepare-msw-runner.mjs",
     "catalog:generate": "node scripts/generate.mjs",

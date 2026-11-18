@@ -16,7 +16,7 @@ main 上有三层已经合并的工作，它们不是同一棵 Lab 树：
 
 ## 事实源与分支
 
-主 Epic #4。集成开发曾经发生在 `feat/library-lab`，该分支的 PR #8 已经进入 main。手册恢复在 #97 和 #98，也已经在 main。不要把 Library Lab 写进模板生成范围、生产配置或公开部署。
+主 Epic #4。集成开发曾经发生在 `feat/library-lab`，该分支的 PR #8 已经进入 main。手册恢复在 #97 和 #98，也已经在 main。Library Lab 独立于模板生成范围，公开发布仅使用下方获准的 Pages 配置。
 每轮先读实际最新 main、根/本包 AGENTS、本文件和进度，防止重做或覆盖用户修改。
 
 |通道|Issue|分支|写入所有权|
@@ -25,6 +25,10 @@ main 上有三层已经合并的工作，它们不是同一棵 Lab 树：
 |AB|#5|feat/library-lab-ab|entries/A*、entries/B*、progress/AB.md|
 |CD|#6|feat/library-lab-cd|entries/C*、entries/D*、progress/CD.md|
 |EF|#7|feat/library-lab-ef|entries/E*、entries/F*、progress/EF.md|
+
+## GitHub Pages
+
+用户批准公开发布目录、指南、展示源码和普通浏览器示例。Actions 的 Library Lab Pages 工作流从 `main` 手动触发，只上传 `build:pages` 生成的 `dist-pages`。Pages 构建为各条目生成静态入口，支持直接打开、刷新及指南目录锚点。公开构建只复制生成的目录数据和原文，C13、F11 和 E19 在页面上提供本机运行说明。FFmpeg 核心仍限已获准的本机验收。
 
 ## 协作与集成（历史合同，2026-10）
 
