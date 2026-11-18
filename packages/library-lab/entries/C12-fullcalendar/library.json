@@ -4,13 +4,8 @@
   "slug": "fullcalendar",
   "name": "FullCalendar",
   "group": "C",
-  "summary": "基于 React 的事件排程、日历视图与时区边界",
-  "tags": [
-    "日历",
-    "事件排程",
-    "DST",
-    "v7"
-  ],
+  "summary": "真实React v7视图与事件模型、全天创建和改期提议，区分DST重复时刻与同步revert",
+  "tags": ["日历", "事件排程", "DST", "v7"],
   "contentState": "recreated",
   "packages": [
     {
@@ -30,6 +25,10 @@
     {
       "title": "v7 迁移指南",
       "url": "https://fullcalendar.io/docs/upgrading-from-v6-js"
+    },
+    {
+      "title": "匹配7.1.3 React包原文",
+      "url": "https://github.com/fullcalendar/fullcalendar/blob/6b890e803c66d1e6db2fb21c449936155b7e81fc/packages/react/README.md"
     }
   ],
   "related": [
@@ -47,45 +46,51 @@
   "demos": [
     {
       "demoId": "basic",
-      "title": "最小入门",
+      "title": "视图、事件与半开范围",
       "level": "basic",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
-        "examples/example.tsx",
         "examples/demo.tsx",
+        "examples/example.tsx",
+        "examples/calendar-contract.ts",
         "examples/calendar-policy.mjs",
-        "examples/calendar-policy.d.mts"
+        "examples/calendar-policy.d.mts",
+        "examples/styles.css"
       ],
-      "description": "实际 SDK 基础交互"
+      "description": "真实中文视图导航、datesSet与getEvents，区分React数组和日历模型。"
     },
     {
       "demoId": "business",
-      "title": "实际业务",
+      "title": "全天创建与真实改期",
       "level": "business",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
-        "examples/example.tsx",
         "examples/demo.tsx",
+        "examples/example.tsx",
+        "examples/calendar-contract.ts",
         "examples/calendar-policy.mjs",
-        "examples/calendar-policy.d.mts"
+        "examples/calendar-policy.d.mts",
+        "examples/styles.css"
       ],
-      "description": "业务数据与生命周期"
+      "description": "严格日期/唯一ID创建，真实drop与resize回调接受后回写React。"
     },
     {
       "demoId": "advanced",
-      "title": "异常与边界",
+      "title": "DST与同步冲突回滚",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
-        "examples/example.tsx",
         "examples/demo.tsx",
+        "examples/example.tsx",
+        "examples/calendar-contract.ts",
         "examples/calendar-policy.mjs",
-        "examples/calendar-policy.d.mts"
+        "examples/calendar-policy.d.mts",
+        "examples/styles.css"
       ],
-      "description": "失败、时间/并发边界"
+      "description": "重复墙上时刻的不同instant，真实拖动fold-early调用revert并保持权威数据。"
     }
   ],
   "provenance": {
@@ -96,5 +101,25 @@
   "license": {
     "spdx": "MIT",
     "assets": "自制示例数据，无付费扩展"
+  },
+  "official": {
+    "readme": {
+      "repository": "fullcalendar/fullcalendar",
+      "commit": "6b890e803c66d1e6db2fb21c449936155b7e81fc",
+      "path": "packages/react/README.md",
+      "sourceUrl": "https://github.com/fullcalendar/fullcalendar/blob/6b890e803c66d1e6db2fb21c449936155b7e81fc/packages/react/README.md",
+      "snapshotPath": "official/readme.md",
+      "language": "en",
+      "version": "7.1.3",
+      "syncedAt": "2026-11-10T16:12:48.628022+00:00",
+      "sha256": "9deb5ffbab60d6d8010097a95149614ec8ae0c41b06508db187b80c136ac983b"
+    },
+    "homepage": {
+      "url": "https://fullcalendar.io/",
+      "status": "blocked",
+      "reason": "Actual enforced complete response headers restrict cross-origin framing.",
+      "checkedAt": "2026-11-10T16:12:46.924051+00:00",
+      "kind": "website"
+    }
   }
 }

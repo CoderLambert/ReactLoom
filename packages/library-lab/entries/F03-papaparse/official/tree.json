@@ -1,0 +1,462 @@
+{
+  "sha": "555c1c1b6175e7a043adf8694983776a1e6fdeeb",
+  "url": "https://api.github.com/repos/mholt/PapaParse/git/trees/555c1c1b6175e7a043adf8694983776a1e6fdeeb",
+  "tree": [
+    {
+      "path": ".eslintrc.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "97a672654b7836ca0a972b3c8e9abd3795105e53",
+      "size": 7017,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/97a672654b7836ca0a972b3c8e9abd3795105e53"
+    },
+    {
+      "path": ".github",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "5a4fa5b026f093e8f36027e22acfabc53b15b23c",
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/trees/5a4fa5b026f093e8f36027e22acfabc53b15b23c"
+    },
+    {
+      "path": ".github/workflows",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "f1e10d4ce2d8a8c509711fd7f80b636defc320c4",
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/trees/f1e10d4ce2d8a8c509711fd7f80b636defc320c4"
+    },
+    {
+      "path": ".github/workflows/node.js.yml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ed0b6d4027e3c9af3ebfba518334544578745f2b",
+      "size": 831,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/ed0b6d4027e3c9af3ebfba518334544578745f2b"
+    },
+    {
+      "path": ".gitignore",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fc85cd2e7616129f8cebd8ac9c1ec25e5d50220f",
+      "size": 72,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/fc85cd2e7616129f8cebd8ac9c1ec25e5d50220f"
+    },
+    {
+      "path": ".npmignore",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e988a5441578de8f3039d6c90c7b0b1a6b1d0e7e",
+      "size": 50,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/e988a5441578de8f3039d6c90c7b0b1a6b1d0e7e"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cb39f9f1bd8e3598375a4de74b86cc42a4d9fe7d",
+      "size": 2557,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/cb39f9f1bd8e3598375a4de74b86cc42a4d9fe7d"
+    },
+    {
+      "path": "Gruntfile.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "93b1256f3513bba347ede190998d597c254f614b",
+      "size": 462,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/93b1256f3513bba347ede190998d597c254f614b"
+    },
+    {
+      "path": "LICENSE",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "12f5b3503d99c72a03b654ac1b7ac51d6c408a05",
+      "size": 1079,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/12f5b3503d99c72a03b654ac1b7ac51d6c408a05"
+    },
+    {
+      "path": "README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "62222953ceefaf6e29ca2dd050cdc2f71c7d7e09",
+      "size": 3586,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/62222953ceefaf6e29ca2dd050cdc2f71c7d7e09"
+    },
+    {
+      "path": "bower.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "62e9ab54d22445eab42cbb633841d934455c94d0",
+      "size": 653,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/62e9ab54d22445eab42cbb633841d934455c94d0"
+    },
+    {
+      "path": "docs",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "0d4b0875286935116759ea9be67bc3aa33e9e720",
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/trees/0d4b0875286935116759ea9be67bc3aa33e9e720"
+    },
+    {
+      "path": "docs/CNAME",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "39e4319a2565746f316896e402b7b8180f51e78c",
+      "size": 17,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/39e4319a2565746f316896e402b7b8180f51e78c"
+    },
+    {
+      "path": "docs/Caddyfile",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b4e0490c2be39cee8d951c6282047be392d569fa",
+      "size": 19,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/b4e0490c2be39cee8d951c6282047be392d569fa"
+    },
+    {
+      "path": "docs/demo.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7fff047aa73a8e702a1fe1c01b353a2d126d1640",
+      "size": 8042,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/7fff047aa73a8e702a1fe1c01b353a2d126d1640"
+    },
+    {
+      "path": "docs/docs.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c86bddf7b13c0ad6731568ddd074d5c2c2b39f75",
+      "size": 32991,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/c86bddf7b13c0ad6731568ddd074d5c2c2b39f75"
+    },
+    {
+      "path": "docs/faq.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "403461c1843c8acabe9533d8e3428de2d91962fe",
+      "size": 15628,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/403461c1843c8acabe9533d8e3428de2d91962fe"
+    },
+    {
+      "path": "docs/favicon.ico",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "13b625ae35ddc315b3ae7d639dee1448d518fc0e",
+      "size": 16958,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/13b625ae35ddc315b3ae7d639dee1448d518fc0e"
+    },
+    {
+      "path": "docs/index.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "93819a4873b7834cce987c255dae117e316d2550",
+      "size": 18369,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/93819a4873b7834cce987c255dae117e316d2550"
+    },
+    {
+      "path": "docs/resources",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "01ec3307d45d75d922346b789e588c98a0c48751",
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/trees/01ec3307d45d75d922346b789e588c98a0c48751"
+    },
+    {
+      "path": "docs/resources/css",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "e6973b71defb88a114a04b3af20e425488feb6a4",
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/trees/e6973b71defb88a114a04b3af20e425488feb6a4"
+    },
+    {
+      "path": "docs/resources/css/common.css",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "813113b2e5785f3de867f544fa6abadeec0bca9f",
+      "size": 7025,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/813113b2e5785f3de867f544fa6abadeec0bca9f"
+    },
+    {
+      "path": "docs/resources/css/demo.css",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "12299aea6b1a78f5329dc1a106b1c57158603a65",
+      "size": 2012,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/12299aea6b1a78f5329dc1a106b1c57158603a65"
+    },
+    {
+      "path": "docs/resources/css/home.css",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0b975d78a4d04416526c2c4470d20e7dac8987b4",
+      "size": 3352,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/0b975d78a4d04416526c2c4470d20e7dac8987b4"
+    },
+    {
+      "path": "docs/resources/css/tomorrow.highlight.css",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4b5052fc0992252e6bdf7c6d10a525d0243642d3",
+      "size": 1475,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/4b5052fc0992252e6bdf7c6d10a525d0243642d3"
+    },
+    {
+      "path": "docs/resources/css/unsemantic.css",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "019397650aef7ed13082210dd348d8de3fd4cc81",
+      "size": 12902,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/019397650aef7ed13082210dd348d8de3fd4cc81"
+    },
+    {
+      "path": "docs/resources/files",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "c4e50ced801beacc7092dc6cbe0c79dd7d38e284",
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/trees/c4e50ced801beacc7092dc6cbe0c79dd7d38e284"
+    },
+    {
+      "path": "docs/resources/files/big.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d653c817aa823740c9e7de0e722734de6b86d536",
+      "size": 50173280,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/d653c817aa823740c9e7de0e722734de6b86d536"
+    },
+    {
+      "path": "docs/resources/files/malformed.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d3a8747b762cd5b6fa58b63daefc70b5599ccb67",
+      "size": 367,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/d3a8747b762cd5b6fa58b63daefc70b5599ccb67"
+    },
+    {
+      "path": "docs/resources/files/normal.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1bfa2f5ba9e8cddef7e7249e7487b44f092426d9",
+      "size": 254743,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/1bfa2f5ba9e8cddef7e7249e7487b44f092426d9"
+    },
+    {
+      "path": "docs/resources/js",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "0f417c1433e96506d3995d033593617371229694",
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/trees/0f417c1433e96506d3995d033593617371229694"
+    },
+    {
+      "path": "docs/resources/js/common.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8c5df4d9e32e8171c15b5df6e405a8cea1fb0a08",
+      "size": 585,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/8c5df4d9e32e8171c15b5df6e405a8cea1fb0a08"
+    },
+    {
+      "path": "docs/resources/js/demo.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a59be3c5d03d5b4cd2155c391f6aac36c2ebf00c",
+      "size": 5346,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/a59be3c5d03d5b4cd2155c391f6aac36c2ebf00c"
+    },
+    {
+      "path": "docs/resources/js/highlight.min.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7f8a6dd94e3d16bd2e15ee0b6b2717401fefc163",
+      "size": 14329,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/7f8a6dd94e3d16bd2e15ee0b6b2717401fefc163"
+    },
+    {
+      "path": "docs/resources/js/home.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "63dd775d79c9faaba13757b56969d71d74b74540",
+      "size": 10307,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/63dd775d79c9faaba13757b56969d71d74b74540"
+    },
+    {
+      "path": "docs/resources/js/jquery.min.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e5ace116b6f53cfec96eb5175ecd36f727ad4047",
+      "size": 84245,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/e5ace116b6f53cfec96eb5175ecd36f727ad4047"
+    },
+    {
+      "path": "docs/resources/js/lovers.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1c939510d700d2c3f0fa0c681009d7d698f245db",
+      "size": 5600,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/1c939510d700d2c3f0fa0c681009d7d698f245db"
+    },
+    {
+      "path": "docs/resources/js/papaparse.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9dd7fa275613e4405e847fbc3dd3e424a9931184",
+      "size": 50646,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/9dd7fa275613e4405e847fbc3dd3e424a9931184"
+    },
+    {
+      "path": "docs/resources/js/skrollr.min.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0b826cfd94f6aa3c24b35335642eed525ac09c0f",
+      "size": 12552,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/0b826cfd94f6aa3c24b35335642eed525ac09c0f"
+    },
+    {
+      "path": "package.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "931fd43b22070246efa738da8d07a9557b3c4c21",
+      "size": 1398,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/931fd43b22070246efa738da8d07a9557b3c4c21"
+    },
+    {
+      "path": "papaparse.js",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "5229936a13e3bdb466d5799c57bbcc3aea2fa7d3",
+      "size": 51214,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/5229936a13e3bdb466d5799c57bbcc3aea2fa7d3"
+    },
+    {
+      "path": "papaparse.min.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c8b41d27a1fce26b31f29132effe936a52c4d03f",
+      "size": 18874,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/c8b41d27a1fce26b31f29132effe936a52c4d03f"
+    },
+    {
+      "path": "player",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "4b3e2d5b9f87f354e32d9380fcb3931b1b32263b",
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/trees/4b3e2d5b9f87f354e32d9380fcb3931b1b32263b"
+    },
+    {
+      "path": "player/player.css",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a6b4d5d7f92ca15d146fc7e6fab7f967f5a0aeae",
+      "size": 12326,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/a6b4d5d7f92ca15d146fc7e6fab7f967f5a0aeae"
+    },
+    {
+      "path": "player/player.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "48015e3518413e2b2546e082e302ce81303d4491",
+      "size": 2967,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/48015e3518413e2b2546e082e302ce81303d4491"
+    },
+    {
+      "path": "player/player.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f8b8e3ac85081fe4e4921254167ac3f0cc4b6d63",
+      "size": 4050,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/f8b8e3ac85081fe4e4921254167ac3f0cc4b6d63"
+    },
+    {
+      "path": "tests",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "a2f4dc088fed86ca3c984768e80a9c3961f2267a",
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/trees/a2f4dc088fed86ca3c984768e80a9c3961f2267a"
+    },
+    {
+      "path": "tests/.eslintrc.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f75898e0cfa781cd3fb62893946b9167badd5023",
+      "size": 144,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/f75898e0cfa781cd3fb62893946b9167badd5023"
+    },
+    {
+      "path": "tests/long-sample.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "59f09941eaceaeb0edba5fc71d6e7694b22ec723",
+      "size": 1209,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/59f09941eaceaeb0edba5fc71d6e7694b22ec723"
+    },
+    {
+      "path": "tests/node-tests.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cad8058e17bb7426013c303851774927c9d84271",
+      "size": 8274,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/cad8058e17bb7426013c303851774927c9d84271"
+    },
+    {
+      "path": "tests/sample-header.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bc2472b85447761b170d0199461c6b77615f3667",
+      "size": 52,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/bc2472b85447761b170d0199461c6b77615f3667"
+    },
+    {
+      "path": "tests/sample.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0930f8f1270698515cc96a544e7b3bc13bc9e40b",
+      "size": 11,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/0930f8f1270698515cc96a544e7b3bc13bc9e40b"
+    },
+    {
+      "path": "tests/slow-sample.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "898e2642f73d2ca46524ba8ff831d8e82c90222a",
+      "size": 12,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/898e2642f73d2ca46524ba8ff831d8e82c90222a"
+    },
+    {
+      "path": "tests/test-cases.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "72c540ae9868c6bd7d3740e6c15ebe0320f4e926",
+      "size": 81506,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/72c540ae9868c6bd7d3740e6c15ebe0320f4e926"
+    },
+    {
+      "path": "tests/test.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ffbcdb212a8d2ba97b5ad61666bd83cd1ddab276",
+      "size": 948,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/ffbcdb212a8d2ba97b5ad61666bd83cd1ddab276"
+    },
+    {
+      "path": "tests/tests.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a3ce51e7e30431aca512c7999bf3bc6cdbe8fc5d",
+      "size": 510,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/a3ce51e7e30431aca512c7999bf3bc6cdbe8fc5d"
+    },
+    {
+      "path": "tests/utf-8-bom-sample.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4f85ff06c615e52f77011fd15f469cf40dcce911",
+      "size": 15,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/4f85ff06c615e52f77011fd15f469cf40dcce911"
+    },
+    {
+      "path": "tests/verylong-sample.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "14bc5272b1c63f0c33985f4c8cd583a3a5eae9fb",
+      "size": 70940,
+      "url": "https://api.github.com/repos/mholt/PapaParse/git/blobs/14bc5272b1c63f0c33985f4c8cd583a3a5eae9fb"
+    }
+  ],
+  "truncated": false
+}

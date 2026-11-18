@@ -1,0 +1,15 @@
+{
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "argv": [
+    "pnpm",
+    "exec",
+    "biome",
+    "check",
+    "packages/library-lab/entries/F01-uppy/examples",
+    "packages/library-lab/entries/F01-uppy/tests",
+    "packages/library-lab/entries/F01-uppy/library.json",
+    "packages/library-lab/entries/F01-uppy/verification.json",
+    "packages/library-lab/entries/F01-uppy/validation/browser.spec.ts"
+  ],
+  "exitCode": 0
+}

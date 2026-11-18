@@ -1,47 +1,13 @@
-# B04 dotLottie React
+# B04 dotLottie React 复用指南
 
-## 适用
+解决可信 Lottie JSON/.lottie 的播放，不承担 DOM 布局动画。先读 library.json、guide.md、实际 examples 与 local-validation.md。React包0.20.0依赖Web播放器0.81.0，peer为React17/18/19。运行时MIT与资产许可分开。
 
-播放可信的 Lottie JSON 或 `.lottie`。DOM 布局动画、拖放、表单焦点不要交给 Canvas 播放器。简单加载环优先 CSS。资产许可与运行时 MIT 分开。
+复制4个 sourceFiles，保留原创pulse.json与浏览器挂载前提。完整组件初始化读取window/document；服务端仅加'use client'不够，需要延迟挂载。即使JSON本地，首次引擎仍从SDK固定版本CDN加载WASM；离线部署另行许可核对并在实例前setWasmUrl，不导入.pnpm内部路径。
 
-## 版本
+三个目标：基础播放/暂停/停止与真实getter快照；业务650ms本地确认与动效解耦；高级帧定位/速度/减少动态显式覆盖/损坏数据恢复。没有网络业务、Worker/GPU后端或编辑器。load才是资源完成；ready不是。读取按钮采样真实实例，策略文字不冒充实时引擎状态。
 
-`@lottiefiles/dotlottie-react@0.20.0`，React 19.3.0。许可证 MIT。不要再装归档的 `@lottiefiles/react-lottie-player`，也不要另钉一份可能冲突的 `dotlottie-web`。0.x 升级要回归 props 和事件名。
+保留mayPlay三门：已load、页面可见、减少动态被遵守或明确覆盖。覆盖不能放开后台播放。停止意图单独调用stop，不能又被pause覆盖；frame输入夹取合法范围。错误听loadError/renderError，不靠ErrorBoundary；坏数据恢复重挂载真实播放器。
 
-## 迁移
+包装器销毁实例；应用暂停并解除自己的普通监听、媒体查询、visibility和业务timer，不重复destroy。用于验收的destroy观察器只标记旧Canvas真实事件，由SDK最终清空；StrictMode相同实例替换旧观察器。共享WASM缓存不属于单例清理范围。
 
-旧播放器的 `lottie-react` 事件名和 ref 形状不能照搬。`src` URL 与 `data` 字符串是两条加载路径；Lab 用本地 JSON 的 `data`。Worker / GPU 子路径是另一套生命周期，当前示例没有挂。
-
-## 不可删的清理
-
-`autoplay={false}`。`load` / `loadError` / `renderError` 成对解除，cleanup 时 `pause()`。`visibilitychange` 与业务 timeout 在卸载和切换 level 时清掉。减少动画默认 `setFrame(0)`。隐藏页不能被「允许动画」覆盖。Canvas `aria-hidden` 且 `tabIndex={-1}`。
-
-## 反例
-
-列表里每个远程 URL 都 autoplay。只提供 hover 播放。把 `complete` 当成保存成功。ref 回调里订阅不清理。`onFrame` 每帧 setState。未 `load` 就 `setFrame`。ErrorBoundary 代替 `loadError`。业务 effect 再 `destroy()` 一次包装器拥有的实例。
-
-复用时保留这些不变的约定：
-
-- `data` 来自仓库内 `pulse.json`，不要换成远程 URL。
-- `autoplay={false}`，播放意图和 `mayPlay` 分开。
-- 监听器与 650ms 定时器在换 level 时清掉。
-- Canvas 不进入 Tab 顺序；失败用 `role="alert"`。
-- Worker、GPU 和 IntersectionObserver 未挂载。
-
-## 测试断言
-
-`tests/playback-policy.test.mts` 断言 `mayPlay` 与 `playbackLabel`：可见且已加载可播；未加载、隐藏页在 override 下仍拒绝；减少动画需要显式覆盖。不证明 WASM、Canvas 或 650ms 定时器。
-
-## 真实限制
-
-已挂载：本地 `pulse.json`、播放/停止、速度、减少动画覆盖、隐藏页暂停、本地订阅定时器与失败文案。未挂载：Worker、WebGL/WebGPU、IntersectionObserver 卸载、多动画 `animationId`、真实 HTTP。不要把远程资产写回仓库冒充离线样例。
-
-复用检查：
-
-- 版本以该条目 `library.json` 为准，不跟研究稿里的 Vite 脚本或 workshop 目录。
-- 未挂载的生产模式留在 `guide.md`，不补进 `examples/`。
-- 不修改 `verification.json`。没有匹配 receipt 时 sdk、build、browser 保持 NOT_RUN。
-
-## 证据
-
-sdk、build、browser 为 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有匹配 receipt。Actions run `41779873259` 是仓库级检查，不是本条目 PASS。文档：https://docs.lottiefiles.com/en/runtimes/distributions/react
+官方英文README固定提交/path/哈希在library.json和official/source-audit.json，优先检查过上游目录，无官方中文候选。官网GET200+XFO DENY为blocked。六项和真实运行以本条local-validation和主控结果为准；正式收据未满足条件仍NOT_RUN，不以policy/文件完整替代SDK。

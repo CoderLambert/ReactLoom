@@ -4,3 +4,5 @@ packages:
 
 onlyBuiltDependencies:
   - lefthook
+patchedDependencies:
+  react-grid-layout@2.3.0: packages/library-lab/entries/B15-react-grid-layout/examples/react-grid-layout@2.3.0.patch

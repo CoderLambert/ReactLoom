@@ -1,0 +1,8 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+ARGV: ["pnpm", "exec", "--", "tsc", "--ignoreConfig", "--noEmit", "--target", "ES2022", "--lib", "ES2022,DOM,DOM.Iterable", "--module", "ESNext", "--moduleResolution", "Bundler", "--strict", "--skipLibCheck", "--esModuleInterop", "--allowImportingTsExtensions", "--types", "node", "entries/A07-antv-g6/validation/browser-proposal.ts"]
+START: 2026-11-10T11:51:25.755432+00:00
+END: 2026-11-10T11:51:26.013011+00:00
+EXIT: 0
+STDOUT:
+
+STDERR:

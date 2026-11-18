@@ -5,12 +5,7 @@
   "name": "RTK Query",
   "group": "D",
   "summary": "与 Redux Toolkit 集成的远端缓存、订阅和失效刷新",
-  "tags": [
-    "RTK Query",
-    "服务端状态",
-    "缓存",
-    "租户隔离"
-  ],
+  "tags": ["RTK Query", "服务端状态", "缓存", "租户隔离"],
   "contentState": "recreated",
   "packages": [
     {
@@ -47,39 +42,33 @@
   "demos": [
     {
       "demoId": "basic",
-      "title": "最小入门",
+      "title": "两个订阅共享一次查询",
       "level": "basic",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
-      "sourceFiles": [
-        "examples/example.tsx",
-        "examples/demo.tsx"
-      ],
-      "description": "实际 SDK 基础交互"
+      "sourceFiles": ["examples/example.tsx", "examples/demo.tsx", "examples/runtime.ts"],
+      "description": "启用同参数第二订阅，观察 baseQuery 次数不增加；主动刷新会增加。",
+      "capabilities": ["timer"]
     },
     {
       "demoId": "business",
-      "title": "实际业务",
+      "title": "租户与搜索缓存隔离",
       "level": "business",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
-      "sourceFiles": [
-        "examples/example.tsx",
-        "examples/demo.tsx"
-      ],
-      "description": "业务数据与生命周期"
+      "sourceFiles": ["examples/example.tsx", "examples/demo.tsx", "examples/runtime.ts"],
+      "description": "参数进入缓存键，返回原参数命中缓存；currentData 不展示旧参数行。",
+      "capabilities": ["timer"]
     },
     {
       "demoId": "advanced",
-      "title": "异常与边界",
+      "title": "409、取消与定向失效",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
-      "sourceFiles": [
-        "examples/example.tsx",
-        "examples/demo.tsx"
-      ],
-      "description": "失败、时间/并发边界"
+      "sourceFiles": ["examples/example.tsx", "examples/demo.tsx", "examples/runtime.ts"],
+      "description": "成功标签只刷新当前租户，409 不重取，清理会取消在途操作。",
+      "capabilities": ["timer"]
     }
   ],
   "provenance": {
@@ -90,5 +79,25 @@
   "license": {
     "spdx": "MIT",
     "assets": "自制示例数据，无付费扩展"
+  },
+  "official": {
+    "readme": {
+      "repository": "reduxjs/redux-toolkit",
+      "commit": "370f7eb6403bdfdb1a2ab5b90fbcfd8eaee7d57b",
+      "path": "packages/toolkit/README.md",
+      "sha256": "ad9190021870ba6d98c4c53436d3518eaafa01ae68bfbcb21c78c08255d22fae",
+      "sourceUrl": "https://github.com/reduxjs/redux-toolkit/blob/370f7eb6403bdfdb1a2ab5b90fbcfd8eaee7d57b/packages/toolkit/README.md",
+      "snapshotPath": "official/readme.md",
+      "language": "en",
+      "version": "2.13.0",
+      "syncedAt": "2026-11-17T16:42:36.862089+00:00"
+    },
+    "homepage": {
+      "url": "https://redux.js.org/toolkit/rtk-query/overview",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-17T16:42:36.862089+00:00",
+      "reason": "实际GET及响应头见official/source-evidence.json；未从Lab origin确认嵌入，保留官方直达。"
+    }
   }
 }

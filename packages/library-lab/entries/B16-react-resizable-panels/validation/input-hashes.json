@@ -1,0 +1,82 @@
+{
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+  "checkedAt": "2026-11-10T14:10:58.324723+00:00",
+  "head": "1218066e706a90ba03fac8dff8c9b843dd2429c4",
+  "files": [
+    {
+      "path": "AGENTS.md",
+      "bytes": 339,
+      "sha256": "d9617061f0abe5d3e06e05abdf781bbfceddd9f5fefdbc9e34430bc8b755a3e7"
+    },
+    {
+      "path": "library.json",
+      "bytes": 3805,
+      "sha256": "a7d7546bc522f342da607661ad62e74e3ce3f450411d0ee08780e4a3e4ffb3c9"
+    },
+    {
+      "path": "guide.md",
+      "bytes": 8750,
+      "sha256": "54ec409e06999e328c16ed7d91b290d618f52471d502e9d801090906b4abe5f8"
+    },
+    {
+      "path": "agent.md",
+      "bytes": 3952,
+      "sha256": "1afc4d1efa7adf271d2df4cf14235c7c711752523b0710f4b09295ef096d03a2"
+    },
+    {
+      "path": "verification.json",
+      "bytes": 695,
+      "sha256": "cc628b32c23cd145506f06c4247ca643de49475e337aa8eca60134208e198401"
+    },
+    {
+      "path": "examples/example.tsx",
+      "bytes": 6082,
+      "sha256": "f682674564e1b62b11114fe6c01186b80bc103ef3abc7bad40abf9ac077a0c15"
+    },
+    {
+      "path": "examples/demo.tsx",
+      "bytes": 36,
+      "sha256": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038"
+    },
+    {
+      "path": "examples/panels.css",
+      "bytes": 1571,
+      "sha256": "c341bea5c1c9e8dcae0bcb5dec914583f5c942d69ddca8dfe614abfc4bb7aca5"
+    },
+    {
+      "path": "tests/sdk.test.mjs",
+      "bytes": 2750,
+      "sha256": "e46cb12a2df3435adb3ef4ad0794910d7d6bb297197e2dcdf681f98cfcbfad20"
+    },
+    {
+      "path": "official/readme.md",
+      "bytes": 27652,
+      "sha256": "d27812bc8cf8a5e07f0a58bcf68a8f48cc3cac4d22f917777e62662ab61c231c"
+    },
+    {
+      "path": "official/source-evidence.json",
+      "bytes": 13356,
+      "sha256": "4967ced0a9f2a3750e9345feca195c8ca1abf660c58b398c60d4e6276e723eae"
+    },
+    {
+      "path": "validation/sdk-source-audit.json",
+      "bytes": 42955,
+      "sha256": "95c25fd421552b928d731c6fd79b0bc7b39f7057f354baa0c7afb93f3d757bc7"
+    },
+    {
+      "path": "validation/metadata-check.mjs",
+      "bytes": 2223,
+      "sha256": "060b93023bb1e9ea7080fa8a3ccc0ac4faea668932d651b23c9aafd3918d1c23"
+    },
+    {
+      "path": "validation/browser-proposal.txt",
+      "bytes": 9450,
+      "sha256": "da780e979c75349082830e1f8f2a97e1c15e645adbdbf7f0ce5ba14ea72a0d9f"
+    },
+    {
+      "path": "local-validation.md",
+      "bytes": 9779,
+      "sha256": "04e6c7d011bf5dabbe75abb5c973957ee78fd9d13bc3ced4c474746f93adcff4"
+    }
+  ]
+}

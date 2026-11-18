@@ -7,7 +7,10 @@ export function createRenderGate() {
   let settled = Promise.resolve()
   return function withCanvas(operation) {
     const current = settled.then(operation)
-    settled = current.then(() => undefined, () => undefined)
+    settled = current.then(
+      () => undefined,
+      () => undefined,
+    )
     return current
   }
 }

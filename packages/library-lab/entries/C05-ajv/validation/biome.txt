@@ -1,0 +1,30 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+command=pnpm exec biome check --write packages/library-lab/entries/C05-ajv/examples packages/library-lab/entries/C05-ajv/tests packages/library-lab/entries/C05-ajv/library.json packages/library-lab/entries/C05-ajv/verification.json
+Skipped 1 suggested fixes.
+If you wish to apply the suggested (unsafe) fixes, use the command biome check --write --unsafe
+
+Checked 10 files in 8ms. Fixed 9 files.
+Found 1 info.
+packages/library-lab/entries/C05-ajv/examples/rss-policy.mjs:30:47 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    28 │   const issues = []
+    29 │   rows.forEach((row, index) => {
+  > 30 │     const path = level === 'basic' ? '/url' : '/feeds/' + index + '/url'
+       │                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    31 │     const key = canonicalHttpsFeedUrl(row?.url)
+    32 │     if (key === null) issues.push({ path, message: 'RSS URL 必须是无凭据的 HTTPS 完整地址' })
+  
+  i Unsafe fix: Use a template literal.
+  
+    28 28 │     const issues = []
+    29 29 │     rows.forEach((row, index) => {
+    30    │ - ····const·path·=·level·===·'basic'·?·'/url'·:·'/feeds/'·+·index·+·'/url'
+       30 │ + ····const·path·=·level·===·'basic'·?·'/url'·:·`/feeds/${index}/url`
+    31 31 │       const key = canonicalHttpsFeedUrl(row?.url)
+    32 32 │       if (key === null) issues.push({ path, message: 'RSS URL 必须是无凭据的 HTTPS 完整地址' })
+  
+
+
+exitCode=0

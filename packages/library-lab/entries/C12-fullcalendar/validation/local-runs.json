@@ -1,0 +1,343 @@
+{
+  "runs": [
+    {
+      "label": "official-fetch",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "python3",
+        "packages/library-lab/entries/C12-fullcalendar/validation/fetch-official.py"
+      ],
+      "start": "2026-11-10T16:12:30.760044+00:00",
+      "end": "2026-11-10T16:12:48.634555+00:00",
+      "exitCode": 0,
+      "log": "official-fetch.txt"
+    },
+    {
+      "label": "format-code",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "check",
+        "--write",
+        "entries/C12-fullcalendar/examples",
+        "entries/C12-fullcalendar/tests",
+        "entries/C12-fullcalendar/library.json"
+      ],
+      "start": "2026-11-10T16:13:19.065718+00:00",
+      "end": "2026-11-10T16:13:19.293506+00:00",
+      "exitCode": 0,
+      "log": "format-code.txt"
+    },
+    {
+      "label": "types",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--target",
+        "es2022",
+        "--module",
+        "esnext",
+        "--moduleResolution",
+        "bundler",
+        "--jsx",
+        "react-jsx",
+        "--strict",
+        "--skipLibCheck",
+        "--esModuleInterop",
+        "--types",
+        "vite/client,node",
+        "entries/C12-fullcalendar/examples/demo.tsx"
+      ],
+      "start": "2026-11-10T16:13:19.293675+00:00",
+      "end": "2026-11-10T16:13:19.534358+00:00",
+      "exitCode": 0,
+      "log": "types.txt"
+    },
+    {
+      "label": "sdk",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "node",
+        "--test",
+        "entries/C12-fullcalendar/tests/sdk.test.mjs"
+      ],
+      "start": "2026-11-10T16:13:19.534505+00:00",
+      "end": "2026-11-10T16:13:19.671633+00:00",
+      "exitCode": 0,
+      "log": "sdk.txt"
+    },
+    {
+      "label": "policy",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "node",
+        "--test",
+        "entries/C12-fullcalendar/tests/calendar-policy.test.mjs"
+      ],
+      "start": "2026-11-10T16:13:19.671820+00:00",
+      "end": "2026-11-10T16:13:19.737671+00:00",
+      "exitCode": 0,
+      "log": "policy.txt"
+    },
+    {
+      "label": "checkpoint-format",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "check",
+        "--write",
+        "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C12-fullcalendar/examples",
+        "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C12-fullcalendar/library.json",
+        "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C12-fullcalendar/official/source-evidence.json"
+      ],
+      "start": "2026-11-10T16:25:49.723722+00:00",
+      "end": "2026-11-10T16:25:49.952887+00:00",
+      "exitCode": 0,
+      "log": "checkpoint-format.txt"
+    },
+    {
+      "label": "checkpoint-types",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "pnpm",
+        "--dir",
+        "packages/library-lab",
+        "exec",
+        "tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--target",
+        "es2022",
+        "--module",
+        "esnext",
+        "--moduleResolution",
+        "bundler",
+        "--jsx",
+        "react-jsx",
+        "--strict",
+        "--skipLibCheck",
+        "--esModuleInterop",
+        "--types",
+        "vite/client,node",
+        "entries/C12-fullcalendar/examples/demo.tsx"
+      ],
+      "start": "2026-11-10T16:25:49.953081+00:00",
+      "end": "2026-11-10T16:25:50.200161+00:00",
+      "exitCode": 0,
+      "log": "checkpoint-types.txt"
+    },
+    {
+      "label": "source-tool-transport-fixture",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "python3",
+        "entries/C12-fullcalendar/validation/source-tool-transport-fixture.py"
+      ],
+      "start": "2026-11-10T16:46:20.181175+00:00",
+      "end": "2026-11-10T16:46:20.242438+00:00",
+      "exitCode": 0,
+      "log": "source-tool-transport-fixture.txt"
+    },
+    {
+      "label": "final-format",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "check",
+        "--write",
+        "entries/C12-fullcalendar/validation/metadata-check.mjs",
+        "entries/C12-fullcalendar/validation/sdk-source-audit.json",
+        "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C12-fullcalendar/validation/.proposal-types-0xy4qx37/browser-proposal.spec.ts"
+      ],
+      "start": "2026-11-10T16:46:20.243144+00:00",
+      "end": "2026-11-10T16:46:20.472323+00:00",
+      "exitCode": 0,
+      "log": "final-format.txt"
+    },
+    {
+      "label": "proposal-types",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--target",
+        "es2022",
+        "--module",
+        "esnext",
+        "--moduleResolution",
+        "bundler",
+        "--strict",
+        "--skipLibCheck",
+        "--esModuleInterop",
+        "--types",
+        "vite/client,node",
+        "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C12-fullcalendar/validation/.proposal-types-0xy4qx37/browser-proposal.spec.ts"
+      ],
+      "start": "2026-11-10T16:46:20.472760+00:00",
+      "end": "2026-11-10T16:46:20.714441+00:00",
+      "exitCode": 0,
+      "log": "proposal-types.txt"
+    },
+    {
+      "label": "metadata",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "node",
+        "entries/C12-fullcalendar/validation/metadata-check.mjs"
+      ],
+      "start": "2026-11-10T16:46:20.714842+00:00",
+      "end": "2026-11-10T16:46:20.746078+00:00",
+      "exitCode": 0,
+      "log": "metadata.txt"
+    },
+    {
+      "label": "notes-format",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "check",
+        "--write",
+        "entries/C12-fullcalendar/verification.json",
+        "entries/C12-fullcalendar/validation/platform-binding.json"
+      ],
+      "start": "2026-11-10T16:49:29.218461+00:00",
+      "end": "2026-11-10T16:49:29.427316+00:00",
+      "exitCode": 0,
+      "log": "notes-format.txt"
+    },
+    {
+      "label": "final-check",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "python3",
+        "entries/C12-fullcalendar/validation/final-check.py"
+      ],
+      "start": "2026-11-10T16:49:29.427636+00:00",
+      "end": "2026-11-10T16:49:29.449057+00:00",
+      "exitCode": 0,
+      "log": "final-check.txt"
+    },
+    {
+      "label": "diff-check",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "packages/library-lab/entries/C12-fullcalendar"
+      ],
+      "start": "2026-11-10T16:49:29.449324+00:00",
+      "end": "2026-11-10T16:49:29.452339+00:00",
+      "exitCode": 0,
+      "log": "diff-check.txt"
+    },
+    {
+      "label": "candidate17-ui-probe-red",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "node",
+        "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C12-fullcalendar/validation/candidate17-ui-probe.mjs"
+      ],
+      "start": "2026-11-10T16:52:50.968178+00:00",
+      "end": "2026-11-10T16:52:55.974470+00:00",
+      "exitCode": 1,
+      "log": "candidate17-ui-probe-red.txt"
+    },
+    {
+      "label": "candidate17-ui-probe-green",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "node",
+        "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C12-fullcalendar/validation/candidate17-ui-probe.mjs",
+        "--corrected"
+      ],
+      "start": "2026-11-10T16:53:28.658333+00:00",
+      "end": "2026-11-10T16:53:33.041247+00:00",
+      "exitCode": 0,
+      "log": "candidate17-ui-probe-green.txt"
+    },
+    {
+      "label": "ui-diagnosis-format",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "check",
+        "--write",
+        "entries/C12-fullcalendar/validation/candidate17-ui-probe.mjs",
+        "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C12-fullcalendar/validation/.proposal-types-ao82e4mj/browser-proposal.spec.ts"
+      ],
+      "start": "2026-11-10T16:54:15.632015+00:00",
+      "end": "2026-11-10T16:54:15.846211+00:00",
+      "exitCode": 0,
+      "log": "ui-diagnosis-format.txt"
+    },
+    {
+      "label": "ui-proposal-types",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--target",
+        "es2022",
+        "--module",
+        "esnext",
+        "--moduleResolution",
+        "bundler",
+        "--strict",
+        "--skipLibCheck",
+        "--esModuleInterop",
+        "--types",
+        "vite/client,node",
+        "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C12-fullcalendar/validation/.proposal-types-ao82e4mj/browser-proposal.spec.ts"
+      ],
+      "start": "2026-11-10T16:54:15.846681+00:00",
+      "end": "2026-11-10T16:54:16.084233+00:00",
+      "exitCode": 0,
+      "log": "ui-proposal-types.txt"
+    },
+    {
+      "label": "ui-diff-check",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "packages/library-lab/entries/C12-fullcalendar"
+      ],
+      "start": "2026-11-10T16:56:06.181598+00:00",
+      "end": "2026-11-10T16:56:06.183928+00:00",
+      "exitCode": 0,
+      "log": "ui-diff-check.txt"
+    }
+  ]
+}

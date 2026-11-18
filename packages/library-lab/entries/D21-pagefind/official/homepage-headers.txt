@@ -1,0 +1,13 @@
+HTTP/2 200 
+accept-ranges: bytes
+cache-control: public, max-age=0, must-revalidate
+content-length: 22398
+content-type: text/html; charset=utf-8
+etag: "dmju9j4a4mps-ha6"
+last-modified: Sun, 01 Nov 2026 11:30:55 GMT
+server: Fly/781f3a6652 (2026-11-10)
+vary: Accept-Encoding
+date: Tue, 17 Nov 2026 17:08:46 GMT
+via: 2 fly.io
+fly-request-id: 01M7N7Q1PXHKXEBBX8GKX77EHF-nrt
+

@@ -1,0 +1,19 @@
+{
+  "url": "https://projects.wojtekmaj.pl/react-pdf/",
+  "status": 200,
+  "headers": {
+    "Content-Type": "text/html",
+    "Content-Length": "1067",
+    "Connection": "close",
+    "Server": "AmazonS3",
+    "Last-Modified": "Fri, 13 Nov 2026 11:38:38 GMT",
+    "Date": "Tue, 17 Nov 2026 18:38:11 GMT",
+    "Cache-Control": "public, max-age=180",
+    "ETag": "\"8d95a199d727a36ec3203ca74f939595\"",
+    "X-Cache": "RefreshHit from cloudfront",
+    "Via": "1.1 f39fa6f6cd0e738ae90b86c041ace0a8.cloudfront.net (CloudFront)",
+    "X-Amz-Cf-Pop": "FRA56-P16",
+    "Alt-Svc": "h3=\":443\"; ma=86400",
+    "X-Amz-Cf-Id": "B7mpEQVdD1ootla-poY2ISNf3OOzJ6CI3b7TtMPFmyr67X2n9qPw_Q=="
+  }
+}

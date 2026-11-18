@@ -1,0 +1,41 @@
+.c17-workshop {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+.c17-workshop .c17-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  margin-block: 0.75rem;
+}
+.c17-workshop label {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+  max-width: 100%;
+}
+.c17-workshop :is(input, select) {
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
+  padding: 0.4rem;
+}
+.c17-workshop .c17-observation {
+  display: block;
+  overflow-wrap: anywhere;
+  margin-block: 0.5rem;
+}
+.c17-workshop pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  overflow: auto;
+  max-height: 22rem;
+}
+.c17-workshop :is(input, select, button):focus-visible {
+  outline: 3px solid #326dcc;
+  outline-offset: 2px;
+}

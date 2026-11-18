@@ -1,0 +1,19 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+ARGV: ["node", "entries/A07-antv-g6/validation/metadata-check.mjs"]
+START: 2026-11-10T11:52:17.323092+00:00
+END: 2026-11-10T11:52:17.349174+00:00
+EXIT: 0
+STDOUT:
+{
+  "metadataIssues": [],
+  "completenessIssues": [],
+  "runtimeFiles": 7,
+  "installedVersion": "5.1.1",
+  "readmeBytes": 6017,
+  "readmeSha256": "cf2ef1137aac0a35d0f70f11e2046576e321e0db6996812b9cee58419f5fdb1e",
+  "officialHomepage": "unknown",
+  "formal": "NOT_RUN",
+  "inputs": 17
+}
+
+STDERR:

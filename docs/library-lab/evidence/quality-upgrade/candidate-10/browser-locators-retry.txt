@@ -1,0 +1,47 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=pnpm exec playwright test --config=.local-evidence/quality-playwright.config.ts e2e/quality-remediation-ant-design.spec.ts e2e/quality-remediation-dotlottie.spec.ts --grep Form rules|frame seek|trusted native
+
+Running 3 tests using 2 workers
+
+(node:1456188) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1456187) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 e2e/quality-remediation-dotlottie.spec.ts:101:1 › @B04 actual frame seek speed media changes and decoder failure recover without stale Canvas (6.7s)
+  ✓  3 e2e/quality-remediation-dotlottie.spec.ts:134:1 › @B04 trusted native hidden tab pauses actual playback and preserves manual intent (5.0s)
+  ✘  2 e2e/quality-remediation-ant-design.spec.ts:46:1 › @B06 real Form rules feed stable Table rows, composition-safe search and Modal focus (30.2s)
+
+
+  1) e2e/quality-remediation-ant-design.spec.ts:46:1 › @B06 real Form rules feed stable Table rows, composition-safe search and Modal focus 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByTestId('b06-workshop').getByRole('button', { name: '搜索', exact: true })
+
+
+      90 |   await expect(app.getByTestId('b06-records')).toContainText('当前匹配 2')
+      91 |   await search.fill('')
+    > 92 |   await app.getByRole('button', { name: '搜索', exact: true }).click()
+         |                                                              ^
+      93 |   await expect(app.getByTestId('b06-records')).toContainText('当前匹配 3')
+      94 |
+      95 |   const enabled = row(app, 'feed-1').getByRole('switch', { name: '工程实践 启用', exact: true })
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-ant-design.spec.ts:92:62
+
+    Error Context: test-results/quality-remediation-ant-de-4828b-safe-search-and-Modal-focus/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-remediation-ant-de-4828b-safe-search-and-Modal-focus/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-remediation-ant-de-4828b-safe-search-and-Modal-focus/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    e2e/quality-remediation-ant-design.spec.ts:46:1 › @B06 real Form rules feed stable Table rows, composition-safe search and Modal focus 
+  2 passed (30.8s)
+
+exitCode=1

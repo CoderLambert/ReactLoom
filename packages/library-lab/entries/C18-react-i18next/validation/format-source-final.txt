@@ -1,0 +1,198 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['pnpm', 'exec', 'biome', 'check', '--write', 'entries/C18-react-i18next/examples', 'entries/C18-react-i18next/tests', 'entries/C18-react-i18next/library.json']
+startedAt: 2026-11-10T17:44:30.245111+00:00
+exit: 0
+Skipped 9 suggested fixes.
+If you wish to apply the suggested (unsafe) fixes, use the command biome check --write --unsafe
+
+Checked 12 files in 9ms. Fixed 2 files.
+Found 9 infos.
+entries/C18-react-i18next/examples/example.tsx:33:48 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    31 │   if (!ready) return <p role="status">等待命名空间就绪…</p>
+    32 │   return (
+  > 33 │     <article className="c18-panel" aria-label={scope + '翻译面板'} data-testid={'c18-' + scope}>
+       │                                                ^^^^^^^^^^^^^^^^^^
+    34 │       <h3>
+    35 │         {scope} · {t('common:title')}
+  
+  i Unsafe fix: Use a template literal.
+  
+     31  31 │     if (!ready) return <p role="status">等待命名空间就绪…</p>
+     32  32 │     return (
+     33     │ - ····<article·className="c18-panel"·aria-label={scope·+·'翻译面板'}·data-testid={'c18-'·+·scope}>
+         33 │ + ····<article·className="c18-panel"·aria-label={`${scope}翻译面板`}·data-testid={'c18-'·+·scope}>
+     34  34 │         <h3>
+     35  35 │           {scope} · {t('common:title')}
+  
+
+entries/C18-react-i18next/examples/example.tsx:33:77 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    31 │   if (!ready) return <p role="status">等待命名空间就绪…</p>
+    32 │   return (
+  > 33 │     <article className="c18-panel" aria-label={scope + '翻译面板'} data-testid={'c18-' + scope}>
+       │                                                                                 ^^^^^^^^^^^^^^
+    34 │       <h3>
+    35 │         {scope} · {t('common:title')}
+  
+  i Unsafe fix: Use a template literal.
+  
+     31  31 │     if (!ready) return <p role="status">等待命名空间就绪…</p>
+     32  32 │     return (
+     33     │ - ····<article·className="c18-panel"·aria-label={scope·+·'翻译面板'}·data-testid={'c18-'·+·scope}>
+         33 │ + ····<article·className="c18-panel"·aria-label={scope·+·'翻译面板'}·data-testid={`c18-${scope}`}>
+     34  34 │         <h3>
+     35  35 │           {scope} · {t('common:title')}
+  
+
+entries/C18-react-i18next/examples/example.tsx:41:25 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    39 │           语言{' '}
+    40 │           <select
+  > 41 │             aria-label={scope + '语言'}
+       │                         ^^^^^^^^^^^^^^
+    42 │             value={view.requested}
+    43 │             onChange={(event) => {
+  
+  i Unsafe fix: Use a template literal.
+  
+     39  39 │             语言{' '}
+     40  40 │             <select
+     41     │ - ············aria-label={scope·+·'语言'}
+         41 │ + ············aria-label={`${scope}语言`}
+     42  42 │               value={view.requested}
+     43  43 │               onChange={(event) => {
+  
+
+entries/C18-react-i18next/examples/example.tsx:55:25 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    53 │           未读数量{' '}
+    54 │           <input
+  > 55 │             aria-label={scope + '未读数量'}
+       │                         ^^^^^^^^^^^^^^^^^^
+    56 │             type="number"
+    57 │             min="0"
+  
+  i Unsafe fix: Use a template literal.
+  
+     53  53 │             未读数量{' '}
+     54  54 │             <input
+     55     │ - ············aria-label={scope·+·'未读数量'}
+         55 │ + ············aria-label={`${scope}未读数量`}
+     56  56 │               type="number"
+     57  57 │               min="0"
+  
+
+entries/C18-react-i18next/examples/example.tsx:73:25 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    71 │           用户昵称{' '}
+    72 │           <input
+  > 73 │             aria-label={scope + '用户昵称'}
+       │                         ^^^^^^^^^^^^^^^^^^
+    74 │             maxLength={80}
+    75 │             value={name}
+  
+  i Unsafe fix: Use a template literal.
+  
+     71  71 │             用户昵称{' '}
+     72  72 │             <input
+     73     │ - ············aria-label={scope·+·'用户昵称'}
+         73 │ + ············aria-label={`${scope}用户昵称`}
+     74  74 │               maxLength={80}
+     75  75 │               value={name}
+  
+
+entries/C18-react-i18next/examples/example.tsx:80:48 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    78 │         </label>
+    79 │       )}
+  > 80 │       <div className="c18-output" data-testid={'react-i18next-' + scope}>
+       │                                                ^^^^^^^^^^^^^^^^^^^^^^^^
+    81 │         <p data-testid="c18-greeting">{t('common:greeting', { name })}</p>
+    82 │         <p data-testid="c18-unread">
+  
+  i Unsafe fix: Use a template literal.
+  
+     78  78 │           </label>
+     79  79 │         )}
+     80     │ - ······<div·className="c18-output"·data-testid={'react-i18next-'·+·scope}>
+         80 │ + ······<div·className="c18-output"·data-testid={`react-i18next-${scope}`}>
+     81  81 │           <p data-testid="c18-greeting">{t('common:greeting', { name })}</p>
+     82  82 │           <p data-testid="c18-unread">
+  
+
+entries/C18-react-i18next/examples/example.tsx:99:27 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+     97 │             <input
+     98 │               type="checkbox"
+   > 99 │               aria-label={scope + '手动放行切换'}
+        │                           ^^^^^^^^^^^^^^^^^^^^^^
+    100 │               checked={view.manual}
+    101 │               onChange={(event) => workspace.setManual(event.currentTarget.checked)}
+  
+  i Unsafe fix: Use a template literal.
+  
+     97  97 │               <input
+     98  98 │                 type="checkbox"
+     99     │ - ··············aria-label={scope·+·'手动放行切换'}
+         99 │ + ··············aria-label={`${scope}手动放行切换`}
+    100 100 │                 checked={view.manual}
+    101 101 │                 onChange={(event) => workspace.setManual(event.currentTarget.checked)}
+  
+
+entries/C18-react-i18next/examples/example.tsx:177:17 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    175 │         重置当前演示
+    176 │       </button>
+  > 177 │       <div key={level + ':' + revision} className="c18-workspaces">
+        │                 ^^^^^^^^^^^^^^^^^^^^^^
+    178 │         <ScopedTranslation level={level} scope="工作区 A" initial="zh" />
+    179 │         {level === 'advanced' && <ScopedTranslation level={level} scope="工作区 B" initial="en" />}
+  
+  i Unsafe fix: Use a template literal.
+  
+    175 175 │           重置当前演示
+    176 176 │         </button>
+    177     │ - ······<div·key={level·+·':'·+·revision}·className="c18-workspaces">
+        177 │ + ······<div·key={`${level}:${revision}`}·className="c18-workspaces">
+    178 178 │           <ScopedTranslation level={level} scope="工作区 A" initial="zh" />
+    179 179 │           {level === 'advanced' && <ScopedTranslation level={level} scope="工作区 B" initial="en" />}
+  
+
+entries/C18-react-i18next/examples/workspace.mjs:86:17 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    84 │         activeTarget = null
+    85 │         status = 'error'
+  > 86 │         error = '切换失败：' + String(cause instanceof Error ? cause.message : cause)
+       │                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    87 │         publish()
+    88 │       },
+  
+  i Unsafe fix: Use a template literal.
+  
+     84  84 │           activeTarget = null
+     85  85 │           status = 'error'
+     86     │ - ········error·=·'切换失败：'·+·String(cause·instanceof·Error·?·cause.message·:·cause)
+         86 │ + ········error·=·`切换失败：${String(cause·instanceof·Error·?·cause.message·:·cause)}`
+     87  87 │           publish()
+     88  88 │         },
+  
+

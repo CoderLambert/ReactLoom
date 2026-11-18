@@ -1,0 +1,31 @@
+{
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+  "head": "1218066e706a90ba03fac8dff8c9b843dd2429c4",
+  "checkedAt": "2026-11-10T14:15:22.850848+00:00",
+  "status": "",
+  "fileCount": 10,
+  "sha256": {
+    "AGENTS.md": "59bc1d29e5d381ba7d866883c2f907f54e70f549a64c3807003698ad12a33f86",
+    "library.json": "80d50a41db026df2162adba6245170fcce4647c83bc49044029d12d49110939a",
+    "agent.md": "91d6c6dfdcafcc54235053f67822c8998d0fd9b366795660c9df4ce81193e711",
+    "guide.md": "32f439b6af929a062625a18fd50f471f392ba1ce7b95c24c534eca1d07a74c5e",
+    "verification.json": "037dba3b8aaff2068dba337807e6574c3ef2391d828f21c6f0e62f352778e3f4",
+    "examples/demo.tsx": "254591932548c36c414610bd0d0c7ce7ef1648162f1996fbbe7381b8c1751690",
+    "examples/example.tsx": "03e50f27107868e824fe88cbb848865181e837ecbcf3297dd615920aa39b2c36",
+    "examples/latest-run.ts": "037fd88bf24b764a2f7246d3a360b07800e51654de14bb1691db6236a0c3a9c4",
+    "tests/latest-run.test.mts": "dd2c6a2f7f950fc5c6c22da0a1c616700a218ec4d44cc3e43fd656356f09b4aa",
+    "tests/undo-ownership.test.mts": "dae5273cfad0c367a2f7a47c801fb539d06d83ee020d3ab1a5b749b107872bdc"
+  },
+  "problems": [
+    "同id终态继承loading Infinity而不自动关闭",
+    "固定Toaster id多实例冲突",
+    "旧文portal/CSS/visibleToasts/onDismiss叙述不精确",
+    "源码高密度/必要样式与官方证据缺失",
+    "sourceFiles混入纯策略测试"
+  ],
+  "goals": [
+    "实际通知与持久业务反馈分离",
+    "最新一次保存拥有一次撤销",
+    "本地异步同id更新/有限终态/取消和卸载清理"
+  ]
+}

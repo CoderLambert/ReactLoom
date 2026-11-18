@@ -1,0 +1,7 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node entries/A02-recharts/validation/sdk-probe.mjs
+exit: 0
+Actual SDK SSR markup: <div width="600" height="300" class="recharts-wrapper" style="position:relative;cursor:default;width:600px;height:300px"></div>
+SVG elements: 0
+Bar rectangles: 0
+NOT_RUN: browser SVG layout/data/interaction; wrapper output is not chart-rendering PASS.

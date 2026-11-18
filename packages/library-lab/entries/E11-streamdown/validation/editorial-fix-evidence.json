@@ -1,0 +1,152 @@
+{
+  "entryId": "E11",
+  "scope": "documentation-only P2 correction",
+  "checkedAt": "2026-11-11T06:00:35.971405+00:00",
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "command": "python - (inline static document/link/hash/record checks; no SDK/UI/HTTP/build execution)",
+  "exitCode": 0,
+  "baselineHashes": {
+    "packages/library-lab/entries/E11-streamdown/AGENTS.md": "fc69a871173903dab33b7c8872619f51aca47e204f3b2692d740996451ceacf9",
+    "packages/library-lab/entries/E11-streamdown/agent.md": "8919a1f19434ba3fe41092032e3c71a855eb8c93b139715d805a1a825dd1c4f7",
+    "packages/library-lab/entries/E11-streamdown/examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+    "packages/library-lab/entries/E11-streamdown/examples/example.tsx": "7e840086260df373d1acd33cb92124d34037e7bfcee5a5f3c5f3df490a899180",
+    "packages/library-lab/entries/E11-streamdown/examples/fixtures.d.mts": "f9e7c1b7ce4cca38574b2246cb8c76aca34d71f28b3d56be91f7f09574df93b6",
+    "packages/library-lab/entries/E11-streamdown/examples/fixtures.mjs": "f432cb0f875f712c8d7ec3edb0350cbc0ab00eb05d30de410c5b09bf27d379cd",
+    "packages/library-lab/entries/E11-streamdown/examples/markdown-policy.d.mts": "75b81377327617cbcd76f285c037113d2365906d495801a66b76019880ced1f3",
+    "packages/library-lab/entries/E11-streamdown/examples/markdown-policy.mjs": "d1c96e0a764959f4786366eb9860c0dbe58602b497f81b431276a02624a1d3ac",
+    "packages/library-lab/entries/E11-streamdown/examples/stream-session.d.mts": "2206f7dc622d56b7403073a2867b544fc488ed35ae7642d523bc42937dd4b785",
+    "packages/library-lab/entries/E11-streamdown/examples/stream-session.mjs": "55cfd3377cc5e50cc5df199c3f48e10b0b72c593d45898f5f51cd564d3c410e7",
+    "packages/library-lab/entries/E11-streamdown/examples/workshop.css": "0bdd55856ba99de01b437daf71a41ccbd60af0fee2b44fa5e56a12c6bb48fc10",
+    "packages/library-lab/entries/E11-streamdown/guide.md": "0ff0b450428f53bd582d6c93195f04e8e42d7c7cb25eb28c1981d3ba45ea9bf7",
+    "packages/library-lab/entries/E11-streamdown/library.json": "e43fca3c34e1fedad9477dda86b7fda41b2882f748f05ba52150ea0c47608856",
+    "packages/library-lab/entries/E11-streamdown/local-validation.md": "2533ebe03c62721b50d010bd11cd962f0c99e95bb4fe1bd37ea3967a25c2a750",
+    "packages/library-lab/entries/E11-streamdown/official/readme.md": "e64c6eb295a58af2a0f3a2eaf6d8edefab5b2b39ea320250072596bd5b0943f8",
+    "packages/library-lab/entries/E11-streamdown/official/source-audit.json": "ffa687065ed83392fb929b3a75c116f5f085628961d5dc79e52c6fe99f55a911",
+    "packages/library-lab/entries/E11-streamdown/tests/sdk.test.mjs": "966c66f5241e5667c2bb7ee699ee1c55c5a261894ad696238edc1639ca53280b",
+    "packages/library-lab/entries/E11-streamdown/tests/stream-session.test.mjs": "f62dd24f95d9da1c1a55b97ec1106b044f69258414730ecdd345d47194903fb8",
+    "packages/library-lab/entries/E11-streamdown/validation/biome-final.txt": "a3e87ffd531dc40bf1d236423b256ee0afde197b46bb5c390cb53bf1536e04cc",
+    "packages/library-lab/entries/E11-streamdown/validation/biome-helper.txt": "ae5c241dbc1edb9c438f14a01dc2c331ada1b5436aad58b1349b9157c5a90196",
+    "packages/library-lab/entries/E11-streamdown/validation/biome.txt": "099c73f16a8240bff737a9e9d07175fc2a8ff6fa8589e99a033ed3006324da6c",
+    "packages/library-lab/entries/E11-streamdown/validation/check-entry.mjs": "d4e99be1bb056e5f4b351982cc467723474a07047df06f725e096d6247740e8d",
+    "packages/library-lab/entries/E11-streamdown/validation/diff-check.txt": "7e8a7ea02183fcc6225c8fb35640ca5dcbf1bf74361da9d2fccc79076856f8a2",
+    "packages/library-lab/entries/E11-streamdown/validation/metadata.txt": "dc1988e8f4d8d0f7ad2a6ae77dec0af273fa2c5ea3dc34ee9f58a701d62cd3c8",
+    "packages/library-lab/entries/E11-streamdown/validation/review-fix-biome.txt": "7d543d3ce672060002c082762151b11020c95542db872f8cd080efb295d7fa2a",
+    "packages/library-lab/entries/E11-streamdown/validation/review-fix-typecheck.txt": "cf56d502d998ed9f844e576affaee23868abc754a284c2f17e7f66b0132f949c",
+    "packages/library-lab/entries/E11-streamdown/validation/sdk-initial-failure.txt": "abeda2f4837a54aae0abb688ba8e5fc6b0b76538ee2304a0a32c9660a1b19832",
+    "packages/library-lab/entries/E11-streamdown/validation/sdk.txt": "b7455762744106d7642c53a269d30ea4a667db168f2d3b5fc48b593ed02c3267",
+    "packages/library-lab/entries/E11-streamdown/validation/session.txt": "587e8cec62e2e37f9ef5eaa5edae4bd3509e59b363ddbc44cfe369ec2912ab53",
+    "packages/library-lab/entries/E11-streamdown/validation/typecheck-initial-failure.txt": "d4d995c4002fb0f4acfbd44275a12640d78d93e040c284700c0d05c4a1a633b6",
+    "packages/library-lab/entries/E11-streamdown/validation/typecheck.txt": "cf56d502d998ed9f844e576affaee23868abc754a284c2f17e7f66b0132f949c",
+    "packages/library-lab/entries/E11-streamdown/verification.json": "80f276889e6b6bd8fd6fdd235d45e33bb4b616f55a83a93f8c854a0dc138ae9a"
+  },
+  "currentExistingHashes": {
+    "packages/library-lab/entries/E11-streamdown/AGENTS.md": "fc69a871173903dab33b7c8872619f51aca47e204f3b2692d740996451ceacf9",
+    "packages/library-lab/entries/E11-streamdown/agent.md": "8919a1f19434ba3fe41092032e3c71a855eb8c93b139715d805a1a825dd1c4f7",
+    "packages/library-lab/entries/E11-streamdown/examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+    "packages/library-lab/entries/E11-streamdown/examples/example.tsx": "7e840086260df373d1acd33cb92124d34037e7bfcee5a5f3c5f3df490a899180",
+    "packages/library-lab/entries/E11-streamdown/examples/fixtures.d.mts": "f9e7c1b7ce4cca38574b2246cb8c76aca34d71f28b3d56be91f7f09574df93b6",
+    "packages/library-lab/entries/E11-streamdown/examples/fixtures.mjs": "f432cb0f875f712c8d7ec3edb0350cbc0ab00eb05d30de410c5b09bf27d379cd",
+    "packages/library-lab/entries/E11-streamdown/examples/markdown-policy.d.mts": "75b81377327617cbcd76f285c037113d2365906d495801a66b76019880ced1f3",
+    "packages/library-lab/entries/E11-streamdown/examples/markdown-policy.mjs": "d1c96e0a764959f4786366eb9860c0dbe58602b497f81b431276a02624a1d3ac",
+    "packages/library-lab/entries/E11-streamdown/examples/stream-session.d.mts": "2206f7dc622d56b7403073a2867b544fc488ed35ae7642d523bc42937dd4b785",
+    "packages/library-lab/entries/E11-streamdown/examples/stream-session.mjs": "55cfd3377cc5e50cc5df199c3f48e10b0b72c593d45898f5f51cd564d3c410e7",
+    "packages/library-lab/entries/E11-streamdown/examples/workshop.css": "0bdd55856ba99de01b437daf71a41ccbd60af0fee2b44fa5e56a12c6bb48fc10",
+    "packages/library-lab/entries/E11-streamdown/guide.md": "5ccaf98e4eab5d28eefffacf3418e38ea452dd8c485bacd33a99de0aded9b90c",
+    "packages/library-lab/entries/E11-streamdown/library.json": "e43fca3c34e1fedad9477dda86b7fda41b2882f748f05ba52150ea0c47608856",
+    "packages/library-lab/entries/E11-streamdown/local-validation.md": "343daa9ee05766cc0d097ba96c904f990db1e5f632996ebd52259a24a232e7ab",
+    "packages/library-lab/entries/E11-streamdown/official/readme.md": "e64c6eb295a58af2a0f3a2eaf6d8edefab5b2b39ea320250072596bd5b0943f8",
+    "packages/library-lab/entries/E11-streamdown/official/source-audit.json": "ffa687065ed83392fb929b3a75c116f5f085628961d5dc79e52c6fe99f55a911",
+    "packages/library-lab/entries/E11-streamdown/tests/sdk.test.mjs": "966c66f5241e5667c2bb7ee699ee1c55c5a261894ad696238edc1639ca53280b",
+    "packages/library-lab/entries/E11-streamdown/tests/stream-session.test.mjs": "f62dd24f95d9da1c1a55b97ec1106b044f69258414730ecdd345d47194903fb8",
+    "packages/library-lab/entries/E11-streamdown/validation/biome-final.txt": "a3e87ffd531dc40bf1d236423b256ee0afde197b46bb5c390cb53bf1536e04cc",
+    "packages/library-lab/entries/E11-streamdown/validation/biome-helper.txt": "ae5c241dbc1edb9c438f14a01dc2c331ada1b5436aad58b1349b9157c5a90196",
+    "packages/library-lab/entries/E11-streamdown/validation/biome.txt": "099c73f16a8240bff737a9e9d07175fc2a8ff6fa8589e99a033ed3006324da6c",
+    "packages/library-lab/entries/E11-streamdown/validation/check-entry.mjs": "d4e99be1bb056e5f4b351982cc467723474a07047df06f725e096d6247740e8d",
+    "packages/library-lab/entries/E11-streamdown/validation/diff-check.txt": "7e8a7ea02183fcc6225c8fb35640ca5dcbf1bf74361da9d2fccc79076856f8a2",
+    "packages/library-lab/entries/E11-streamdown/validation/metadata.txt": "dc1988e8f4d8d0f7ad2a6ae77dec0af273fa2c5ea3dc34ee9f58a701d62cd3c8",
+    "packages/library-lab/entries/E11-streamdown/validation/review-fix-biome.txt": "7d543d3ce672060002c082762151b11020c95542db872f8cd080efb295d7fa2a",
+    "packages/library-lab/entries/E11-streamdown/validation/review-fix-typecheck.txt": "cf56d502d998ed9f844e576affaee23868abc754a284c2f17e7f66b0132f949c",
+    "packages/library-lab/entries/E11-streamdown/validation/sdk-initial-failure.txt": "abeda2f4837a54aae0abb688ba8e5fc6b0b76538ee2304a0a32c9660a1b19832",
+    "packages/library-lab/entries/E11-streamdown/validation/sdk.txt": "b7455762744106d7642c53a269d30ea4a667db168f2d3b5fc48b593ed02c3267",
+    "packages/library-lab/entries/E11-streamdown/validation/session.txt": "587e8cec62e2e37f9ef5eaa5edae4bd3509e59b363ddbc44cfe369ec2912ab53",
+    "packages/library-lab/entries/E11-streamdown/validation/typecheck-initial-failure.txt": "d4d995c4002fb0f4acfbd44275a12640d78d93e040c284700c0d05c4a1a633b6",
+    "packages/library-lab/entries/E11-streamdown/validation/typecheck.txt": "cf56d502d998ed9f844e576affaee23868abc754a284c2f17e7f66b0132f949c",
+    "packages/library-lab/entries/E11-streamdown/verification.json": "80f276889e6b6bd8fd6fdd235d45e33bb4b616f55a83a93f8c854a0dc138ae9a"
+  },
+  "changedExistingPaths": [
+    "packages/library-lab/entries/E11-streamdown/guide.md",
+    "packages/library-lab/entries/E11-streamdown/local-validation.md"
+  ],
+  "protectedExistingFileCount": 30,
+  "declaredSourcesMatchCandidate03": [
+    "examples/demo.tsx",
+    "examples/example.tsx",
+    "examples/fixtures.d.mts",
+    "examples/fixtures.mjs",
+    "examples/markdown-policy.d.mts",
+    "examples/markdown-policy.mjs",
+    "examples/stream-session.d.mts",
+    "examples/stream-session.mjs",
+    "examples/workshop.css",
+    "tests/sdk.test.mjs",
+    "tests/stream-session.test.mjs"
+  ],
+  "relativeLinks": [
+    {
+      "document": "guide.md",
+      "target": "../E06-react-markdown/guide.md"
+    },
+    {
+      "document": "guide.md",
+      "target": "examples/fixtures.mjs"
+    },
+    {
+      "document": "guide.md",
+      "target": "examples/stream-session.mjs"
+    },
+    {
+      "document": "guide.md",
+      "target": "examples/example.tsx"
+    },
+    {
+      "document": "guide.md",
+      "target": "examples/markdown-policy.mjs"
+    },
+    {
+      "document": "guide.md",
+      "target": "examples/fixtures.mjs"
+    },
+    {
+      "document": "guide.md",
+      "target": "official/source-audit.json"
+    },
+    {
+      "document": "guide.md",
+      "target": "local-validation.md"
+    },
+    {
+      "document": "local-validation.md",
+      "target": "../../../../docs/library-lab/evidence/quality-upgrade/reviews/E11-reopen-review.md"
+    },
+    {
+      "document": "local-validation.md",
+      "target": "../../../../docs/library-lab/evidence/quality-upgrade/candidate-02/browser-retry.txt"
+    },
+    {
+      "document": "local-validation.md",
+      "target": "../../../../docs/library-lab/evidence/quality-upgrade/candidate-02/browser-retry.json"
+    },
+    {
+      "document": "local-validation.md",
+      "target": "../../../../docs/library-lab/evidence/quality-upgrade/candidate-03/browser-initial.txt"
+    },
+    {
+      "document": "local-validation.md",
+      "target": "../../../../docs/library-lab/evidence/quality-upgrade/candidate-03/browser-initial.json"
+    }
+  ],
+  "formalSdkBuildBrowser": "NOT_RUN",
+  "homepageIframe": "unknown",
+  "reuse": "candidate02 five PASS/one original FAIL + candidate03 repaired original case PASS; no rerun",
+  "independentDelta": "NOT_RUN pending controller"
+}

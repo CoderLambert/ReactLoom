@@ -1,0 +1,3 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: pnpm exec biome format --stdin-file-path=entries/B06-ant-design/validation/browser-proposal.ts < entries/B06-ant-design/validation/browser-proposal.txt
+exit: 0

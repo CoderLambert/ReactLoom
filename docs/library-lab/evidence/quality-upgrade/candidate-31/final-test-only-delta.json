@@ -1,0 +1,12 @@
+[
+  {
+    "path": "packages/library-lab/e2e/quality-resume-assistant-ui.spec.ts",
+    "previous": "00a4dbca1ce0e6e0c4069c5aefe3387ba47f4eb739bd0a5d605f1b6956aa8b5a",
+    "final": "da60d1aaf29c91ee601a6cabc88a17c5bf5e1b367c04af458af34ddc9920f760"
+  },
+  {
+    "path": "packages/library-lab/e2e/quality-resume-photoswipe.spec.ts",
+    "previous": "15a9dc929bad3f0fdd05e353ddce0e99bdb15ee250da26d6acb93b525e0dc0bf",
+    "final": "15a9dc929bad3f0fdd05e353ddce0e99bdb15ee250da26d6acb93b525e0dc0bf"
+  }
+]

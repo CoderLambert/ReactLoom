@@ -1,0 +1,18 @@
+{
+  "capturedAt": "2026-11-10T14:45:54.801360+00:00",
+  "head": "1218066e706a90ba03fac8dff8c9b843dd2429c4",
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "status": "",
+  "files": {
+    "AGENTS.md": "20656cfbfcd34e47a8fb5f55c55b4d5f2627741c490f3987c580c87edd912550",
+    "agent.md": "42757d76693a61fc3fb06b324ebee9681216ea97f5b53262e01b49e605dbdb0b",
+    "examples/demo.tsx": "254591932548c36c414610bd0d0c7ce7ef1648162f1996fbbe7381b8c1751690",
+    "examples/example.tsx": "c14bd1f3bc1fbe531d92c47ab77ad6cbe125bbaeffa1e72cda8f987dec2909ed",
+    "examples/pinned-order.ts": "fba473ec29314f6cdaab8f33c9ff5d0a95fdb73502f2d46cdd552ba04e27ba7f",
+    "guide.md": "94f2c58aea015ef62d6fa83ce6527a6a66b744cfff9c3d736518500cc9ba5cd6",
+    "library.json": "03f3f46fc29d2e86cae06a0cd7e86e54c1d5a4331a6d452c7b6c6eaa24e9c9e0",
+    "tests/order-history.test.mts": "9b8470eab418561d6a7616fe6511a39b0bdf1f0f529514f3aad7e8534057648f",
+    "tests/pinned-order.test.mjs": "f6043259e326c6928c66cdb14369b76745175a0b5aa904eca8bb57bcf582feb1",
+    "verification.json": "68e6396df191bde47e5a747f95e8a8002704e812122e46614881e815a659613b"
+  }
+}

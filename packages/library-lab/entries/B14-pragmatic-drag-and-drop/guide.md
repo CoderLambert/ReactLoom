@@ -1,160 +1,74 @@
-# B14 Pragmatic drag and drop：元素适配器与事件作用域
+# 用原生拖放重排频道，并保留业务约束
 
-`@atlaskit/pragmatic-drag-and-drop` 是一层浏览器拖放适配器：`draggable`、`dropTargetForElements`、`monitorForElements`。它不是带键盘排序的成品列表，也不是逐帧手势引擎。**许可证 Apache-2.0，不是 MIT。** Library Lab 固定 `1.8.1`，宿主 React 19.3.0。
+频道设置页已有 DOM 和样式，现在要加拖动排序，固定频道还必须保持原位。`@atlaskit/pragmatic-drag-and-drop` 提供浏览器原生拖放的源、目标和事件观察器，业务数组、锁定规则、撤销以及键盘操作由应用拥有。它适合希望保留现有组件树、愿意自己组织交互的工程；若希望直接得到传感器和键盘排序预设，可先比较 dnd-kit。
 
-原研究稿按后来的 4.x 讨论了导入路径迁移（`adapter/element-adapter`，并弃用旧的再导出）。**那不是这一份锁文件。** 当前示例的导入是 1.8.1 上真实存在、并且源码正在使用的路径：
+本例固定核心包 **1.8.1 / Apache-2.0**。核心不依赖 React，本例用 React19.3.0 管理节点和状态。没有外部资源、网络保存或服务端版本。官方当前文档/主分支可能更新，导入与关键模型按安装1.8.1的公开类型和实际源码核对。
 
-```ts
-import {draggable, dropTargetForElements, monitorForElements}
-  from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
-import {combine} from '@atlaskit/pragmatic-drag-and-drop/combine';
-```
-
-不要为了贴 4.x 笔记去改这些导入，除非 `library.json`、锁文件和示例一起升级并重测。4.x 的破坏性变更不能倒写成 1.8.1 已经具备。
-
-## Lab 当前示例
-
-`examples/demo.tsx` 再导出 `examples/example.tsx`。锁定规则在 `examples/pinned-order.ts`，与 B13 的纯函数同形，但拖放注册完全不同。
-
-已挂载：
-
-- 每个列表一个 `useId()` scope。`getInitialData` / `getData` 带上 `scope` 和类型：`reactloom-entry` 或 `reactloom-target`。
-- `canDrop` 与 `canMonitor` 都要求 scope 和类型匹配，避免页面上另一个示例接收这次拖动。
-- 非锁定行在 effect 里 `combine(draggable, dropTargetForElements)`。拖动手柄是 `dragHandle`。cleanup 是 combine 的返回函数。锁定行不注册。
-- 手柄 `aria-hidden`，标题写明指针拖动、键盘请用上下按钮。官方无障碍说明：核心**不会**自动提供键盘拖拽。Lab 用上移/下移走同一套 `canReorderAroundPinned`。
-- `monitorForElements` 在列表级 effect 里注册一次。`onDragStart` 记录会话；`onDrop` 读 `location.current.dropTargets[0]`，类型必须是 target，且 `isCurrentDragSession` 为真才 `reorder`。cleanup 清会话并 `detach()`。
-- 数据 revision：提交、撤销、重置都会递增，使旧 drop 失效。basic 只重排前三项，隐藏项保留。
-- advanced 提供撤销和重置。撤销用 ref 里的上一份数组，避免渲染延迟期间读到旧闭包。
-
-未挂载：多列、外部文件、`utils/reorder`（1.8.1 示例自己 splice 出新数组）、服务端版本、自动滚动虚拟列表。触控和滚动冲突必须真机看，文档里的「支持移动端」不是本条目的浏览器 PASS。
-
-## 什么时候使用
-
-适合已经有 DOM 和样式、需要原生拖放、并且愿意自己做键盘和读屏。不适合：希望几行代码得到和 beautiful-dnd 一样的键盘拖动、或需要指针轨迹被弹簧逐帧接管。简单列表若已经在用 dnd-kit 的传感器，不必为了换库重写。跨列看板可以做，但 Lab 没有第二列。
-
-SSR：注册必须在 `useEffect`，模块顶层不能碰 `document`。本示例是客户端。
-
-## 模型
+## 四个接口怎样形成一个实验
 
 ```text
-pointerdown 在手柄上
-  → draggable 发出带 scope 的 data
-  → drop target 的 canDrop 过滤
-  → monitor onDrop 取最内层 dropTargets[0]
-  → 会话的 revision 仍等于当前数据才改数组
+DOM行/手柄 → draggable → source.data {scope,type,id}
+                        ↓ 浏览器原生drag事件
+DOM目标行 → dropTargetForElements → location.current.dropTargets
+                        ↓
+列表monitor → 当前scope/会话校验 → 业务锁定规则 → SDK reorder → React数组
 ```
 
-`location.current.dropTargets` 的顺序是嵌套投放区。Lab 每行只有一个目标，取第 0 个。若以后行内再套目标，要明确哪一层才是排序行。
+`draggable` 让整个行成为原生源，`dragHandle` 把允许起拖的位置限制为左侧⠿。上移/下移按钮在手柄之外，不需要展开一组 `provided.*` 属性。
 
-拖动样式是 `data-state`，不是库替你写的预览层。没有 `provided.draggableProps.style` 这种必须展开的对象；那是 B22 的 API。
+目标用 `canDrop` 过滤其它列表的来源。`monitorForElements` 在列表层观察当前体验，`canMonitor` 也检查 scope/type；`onDrop` 取最内层目标 `dropTargets[0]`。本例只有一层行目标，未来嵌套区域必须重新决定哪层代表排序。
 
-## 三层渐进
+适配器告诉我们源/目标 **ID**；应用用当前可见数组计算索引，先执行 `canReorderAroundPinned`，再调用实际 SDK：
 
-### Demo ① 前三项（已挂载）
-
-AI、前端、开源。拖到另一行松手，output 改变。拖到列表外：monitor 看到的 target 类型不对就返回。上下按钮对前三项有效，不会把隐藏的国际资讯卷进这次 basic 重排。
-
-### Demo ② 含锁定频道（已挂载）
-
-国际资讯 `locked`，不注册 draggable，也不注册 drop target。从别的行拖到它上面没有目标。按钮在路径含锁时禁用。status 会说明顺序未改变。
-
-### Demo ③ 作用域和撤销（已挂载）
-
-两个实例会有不同的 `useId` scope，monitor 互不处理。撤销恢复上一份并作废会话。重置写回 `INITIAL`。拖动途中点撤销，随后的 drop 不得覆盖。
-
-未挂载的生产教学：松手后 PUT 带预期修订号；409 拉回权威顺序；abort 不等于服务端没写入。过滤视图在拖动期间应冻结，否则 index 会漂。
-
-## 反例
-
-```tsx
-// 错：按 4.x 笔记改 1.8.1 的源码导入
-import {draggable} from '@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter';
-
-// 对：与 example.tsx 一致
-import {draggable} from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
+```ts
+const next = reorderList({ list: visible, startIndex: source, finishIndex: target });
 ```
 
-```tsx
-// 错：模块顶层 monitor，SSR 和多列表互相丢事件，且没有 detach
-monitorForElements({onDrop: () => setItems(...)});
+`reorder` 返回新数组，保留行对象身份，不负责锁定权限。固定频道及跨越固定位置的移动被应用拒绝；浅绿目标提示说明 SDK 接收这个目标，最终业务规则仍可能拒绝此次变动。
 
-// 对：useEffect 里按 scope 注册，return detach
-```
+## 实验一：把拖放接到真实 DOM
 
-```tsx
-// 错：不看 drop target 类型，把拖动源自己的 data 当成落点
-const to = source.data.id;
+基础实验只有 AI、前端、开源三行。抓住 AI 左侧手柄，拖到开源行中部后松手，目标行浅绿，下面顺序变为 `frontend → opensource → ai`。从标题或列表外松手不会作为有效目标排序。
 
-// 对：target.data.type === 'reactloom-target' 且 scope 相同
-```
+再聚焦“上移 AI / 模型”并按 Enter，数组通过同一条重排路径更新。上下按钮是本例自建的键盘回退，核心没有自动提供“空格提起、箭头拖动”的交互。它也不代表真实读屏或触摸设备已验收。
 
-```tsx
-// 错：键盘用户没有任何路径，文档却写「可拖拽排序」
-// 对：上移/下移调用同一 reorder，手柄对读屏隐藏
-```
+基础实验重排前三项后拼回隐藏尾部；隐藏的固定频道和深度阅读仍在内存原位，没有用当前显示的三行覆盖整个数据集。
 
-```tsx
-// 错：锁定行仍然 draggable，只是光标变成 not-allowed
-// 对：locked 时 effect 直接 return，不注册
-```
+## 实验二：固定位置是业务规则
 
-```tsx
-// 错：onDrop 忽略 revision，撤销后的原生 drop 写回旧顺序
-// 对：isCurrentDragSession(snapshot, id, revision, level)
-```
+业务实验显示五行，国际资讯固定在第4位：它不注册拖放源或目标，上下按钮禁用。把 AI 拖到前端可以成功；拖到末尾“深度阅读”会跨过固定行，状态说明拒绝，顺序不变。键盘按钮也使用同一个区间检查，不能从另一条交互路径绕过。
 
-```tsx
-// 错：把 Apache-2.0 写成 MIT，或假定所有 Atlaskit 包同一许可证
-// 对：核心 1.8.1 是 Apache-2.0；额外包逐个看
-```
+`ItemRow` 在 effect 中注册；`item.id`、锁定状态或 scope 变化时先清理再绑定。数组重排保留稳定 `key={item.id}`，不因位置变化重建节点。浅绿目标、拖动源底色由 SDK 回调更新，不用手写一套 drop 事件冒充库。
 
-不要在拖动时卸载行组件却留下监听。effect 依赖 `item.id` 和 `locked`，id 变化会先清理再注册。
+## 实验三：两套实例、撤销和过期会话
 
-## 组合
+高级实验挂载“频道排序主列表”和“隔离对照列表”，两者使用同一组件和原始数据，但分别有自己的 `useId` scope、数组和 monitor。
 
-**Pragmatic + React**：React 只渲染和在 effect 里注册。不要在渲染期间调用 `draggable()`。
+1. 在主列表重排，点击“撤销排序”，恢复上一份数组；再点一次撤销不可用。
+2. 将主列表手柄拖到对照列表：两个数组都不应变化。接着在对照列表内部拖动，只有对照列表改变。这是同页真实两个实例，不是复制一份结果文字。
+3. 主列表“重置频道”恢复原始顺序，并让当前拖动会话过期。未发生顺序变化时不制造新的撤销点；已有一次撤销快照保留。
 
-**Pragmatic + Query**：monitor 的 onDrop 里调用 mutation，不要在 `onDrag` 每帧打网络。冲突时用服务端顺序替换，并递增 revision 丢掉迟到的 drop。
+原生拖动开始时记录 `{activeId, revision, level}`，松手时同时检查它们。键盘改序、撤销、重置会递增 revision，场景切换会清空会话，因此旧 drop 不能覆盖后来数据。revision 是本地防旧回调机制，不能当成服务端并发协议。
 
-**Pragmatic + 无头按钮**：上下按钮是无障碍路径。若产品需要「空格提起、箭头移动、空格放下」，那是另一套交互，要自己设计公告，库不会附送。
+## 为什么清理分成行和列表
 
-**不要**和 dnd-kit 同时注册在同一 DOM 上。选一个事件主人。
+每行返回 `combine(draggable(...), dropTargetForElements(...))` 的清理函数；列表 effect 返回 monitor 的 detach 并清空会话。React 负责 effect 何时结束，SDK 清理自己注册的资源；应用不在模块顶层建立 monitor，也不清除其它列表的注册。
 
-## 生产清单
+事件回调通过 ref 读取最新数组/重排函数，避免把首次渲染的顺序固化到长期 monitor。ref 不是第二个数据仓库：`commit` 同步更新 ref 和 React state，并保存一次撤销快照。移动、撤销和重置共享这条状态边界。
 
-- scope 隔离每个列表实例。
-- data 里只放 id 和类型，不放函数或 DOM 节点。
-- cleanup 一定调用。
-- 锁定不注册源和目标。
-- 键盘替代与拖放共用纯函数。
-- 手柄不抢按钮的点击（按钮在手柄之外）。
-- `touch-action: none` 只在手柄，避免整页不能滚动。
-- 真机看 iOS/Android 的滚动和拖动谁赢。
-- 大列表的自动滚动和虚拟窗口会让 index 失效，应改用 id。
+复制 `demo.tsx`、`example.tsx`、`pinned-order.ts` 即可；样式在组件内，数据原创，无 Lab alias。安装固定核心包，保留 `/element/adapter`、`/combine`、`/reorder` 这些1.8.1公开子路径。注册发生在 effect，实际拖放要求浏览器 DOM；服务端输出静态列表不等于拖放已运行。
 
-## 升级
+## 实际取舍与验证入口
 
-留在 1.8.1 时保持 `/element/adapter` 与 `/combine`。若要上 4.x，先读那一版 CHANGELOG 的导出表，改 `library.json` 和全部导入，再跑会话测试和浏览器拖放。不要只改指南里的路径。
+原生拖放不等于逐帧手势引擎，不适合用它追求弹簧跟手轨迹。大量数据的虚拟滚动、自动滚动和跨列移动需要另外设计，本例没有这些行为。移动端滚动/拖动冲突也需要设备验收；仅手柄设置 `touch-action: none`，不阻断整个页面滚动。
 
-从 react-beautiful-dnd 迁到 Pragmatic 时，键盘、预览和占位高度都要重做。想少改组件树应看 B22 的 fork，而不是假装 Pragmatic 兼容 `provided.placeholder`。
+Node SDK 检查只验证真实 `reorder` 的新数组/行身份和 `combine` 的清理调用，不证明 DOM 绑定。12项业务规则测试只覆盖固定区间与会话。真实浏览器需核对原生事件、手柄限制、锁定、双实例隔离、撤销和卸载；实际命令与结论在 `local-validation.md`，正式收据独立记录。
 
-## 验收
+npm1.8.1发布记录没有gitHead，也未找到对应tag；按其2026-04-22发布时间定位官方公开镜像commit `1287861b7c77439f906dc108c21f6236b34c8f53`，固定packages/core/package.json确为1.8.1。这是匹配版本公开源码，不冒称已证明npm发布构建的精确commit。该提交完整README候选无中文，目标包packages/core/README.md原文216B，保持短原文不拼接项目介绍。
 
-basic：拖动改变前三项 output，后两项 id 仍在数据末尾。business：锁不能被拖走，也不能被当作落点跨过。advanced：第二个列表的拖动不改变第一个（scope）；撤销后顺序恢复；拖动中重置使随后 drop 无效。只用键盘时，上下按钮仍能重排未锁定项。
+官方原文与固定提交/语言/同步时间/摘要在 `official/` 和 `library.json`，原文未改写，中文讲解单独维护。官网面板按真实响应依据记录允许/禁止/未知，不能从 iframe load 推定成功。
 
-sdk、build、browser 为 NOT_RUN。没有匹配 receipt 就不能写成适配器 PASS。Actions run `41779873259` 是仓库级 install、typecheck、build、52 个 SDK 文件 / 153 项测试、45 个 Playwright，不是 B14 的 PASS。
-
-```bash
-node --experimental-strip-types --test packages/library-lab/entries/B14-pragmatic-drag-and-drop/tests/drag-session.test.mts packages/library-lab/entries/B14-pragmatic-drag-and-drop/tests/pinned-order.test.mjs
-```
-
-断言锁定区间和会话匹配。不证明原生 dragover 或触摸。
-
-## 官方资料
-
-- https://atlassian.design/components/pragmatic-drag-and-drop/core-package
-- https://atlassian.design/components/pragmatic-drag-and-drop/core-package/drop-targets
-- https://atlassian.design/components/pragmatic-drag-and-drop/core-package/monitors
-- https://atlassian.design/components/pragmatic-drag-and-drop/accessibility
-- https://www.npmjs.com/package/@atlaskit/pragmatic-drag-and-drop
-- https://github.com/atlassian/pragmatic-drag-and-drop
+- [官方核心说明](https://atlassian.design/components/pragmatic-drag-and-drop/core-package/)
+- [元素适配器](https://atlassian.design/components/pragmatic-drag-and-drop/core-package/adapters/element)
+- [隔离体验](https://atlassian.design/components/pragmatic-drag-and-drop/core-package/recipes/isolating-experiences/)
+- [官方可访问性说明](https://atlassian.design/components/pragmatic-drag-and-drop/accessibility)

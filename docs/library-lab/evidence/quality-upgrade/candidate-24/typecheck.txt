@@ -1,0 +1,16 @@
+
+> @reactloom/library-lab@0.1.0 typecheck /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+> node scripts/generate.mjs && tsc --noEmit
+
+file:///home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/scripts/generate.mjs:81
+    if (errors.length) throw new Error(`${dir.name}: ${errors.join('; ')}`)
+                             ^
+
+Error: D10-zustand: invalid official README metadata
+    at generate (file:///home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/scripts/generate.mjs:81:30)
+    at async file:///home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/scripts/generate.mjs:261:20
+
+Node.js v26.13.1
+/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @reactloom/library-lab@0.1.0 typecheck: `node scripts/generate.mjs && tsc --noEmit`
+Exit status 1

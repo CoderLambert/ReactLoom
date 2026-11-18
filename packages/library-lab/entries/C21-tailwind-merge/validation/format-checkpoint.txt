@@ -1,0 +1,5 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['pnpm', 'exec', 'biome', 'check', '--write', 'entries/C21-tailwind-merge/examples', 'entries/C21-tailwind-merge/library.json']
+startedAt: 2026-11-10T18:07:03.821674+00:00
+exit: 0
+Checked 6 files in 7ms. Fixed 5 files.

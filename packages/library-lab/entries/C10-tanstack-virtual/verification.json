@@ -1,14 +1,14 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "需要实际安装并运行所声明的 SDK；不能用领域 fixture 冒充"
+    "note": "本地实际SDK3（React SSR/公开core无DOM模型）与policy6已通过，candidate17三目标+官网4browser case另记local-validation；没有正式SDK收据，仍NOT_RUN。"
   },
   "build": {
     "status": "NOT_RUN",
-    "note": "当前提交未执行真实 TypeScript/Vite 构建"
+    "note": "入口strict与root candidate17共享编译通过，六运行源未改；共享构建不等于本条目正式build收据，仍NOT_RUN。"
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "真实 ResizeObserver、scrollTop、测量和浏览器E2E仍待运行"
+    "note": "root candidate17输入13e1e74d…f4d0下C10三目标+固定原文/blocked官网4PASS，原始browser.txt与提案绑定见local-validation；OS/SSR等未测，正式收据仍NOT_RUN。"
   }
 }

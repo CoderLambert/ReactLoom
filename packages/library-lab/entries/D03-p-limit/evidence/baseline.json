@@ -1,0 +1,19 @@
+{
+  "capturedAt": "2026-11-10T10:10:06.738438+00:00",
+  "head": "1218066e706a90ba03fac8dff8c9b843dd2429c4",
+  "entryVisibleFiles": 11,
+  "entryRelativeSha256": "7440994d0f09f549b9b737a55545c59fe3bfc254960a0d627d8f92cc1ebc085f",
+  "files": {
+    "AGENTS.md": "05a3959c979f980a915e158e44c3f4c494d1736dbe6f4a24c2872c82d5b44667",
+    "agent.md": "e7095e32e8f200b0dd657b001efac0a174df22aa1803225ea77fa6045ee07d6a",
+    "examples/demo.tsx": "254591932548c36c414610bd0d0c7ce7ef1648162f1996fbbe7381b8c1751690",
+    "examples/example.tsx": "e9143f668236bc0dc449d30c40e7503647ceb71d59c4f4d5261d2c5737833e71",
+    "examples/job-policy.d.mts": "18781351d4dc4bcea5107533980752017ea974ee16cb1c2c0247b7aeb6594e16",
+    "examples/job-policy.mjs": "5d57734fb7086909753f0a5f5754c15a73514c776343c5882163d85b1cee2e8f",
+    "guide.md": "721cdc5fc4fea476b460dce893185d175ce16dd493d3ffb4fe78fa5aba367a14",
+    "library.json": "329cef35a69eca0a92c1b29a8ccf15af671dbfd15ffd2193100636a14784c8ca",
+    "tests/job-policy.test.mjs": "b542d2f01358a1ef8286832ce07a07346e255f34908b14c08e31671945c97bb3",
+    "tests/sdk.test.mjs": "b1ba6dfb105f85c4c0003474a8594f4bd6b1101b68ccdef727b5161560925acd",
+    "verification.json": "6007630ea248f4a1de6072d4eaf096fbc467e7e9b42bb1e16a2b683773028763"
+  }
+}

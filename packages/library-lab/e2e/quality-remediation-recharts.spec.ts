@@ -1,0 +1,134 @@
+// Ready Playwright proposal, not executed by the entry author.
+// Root integrates into shared e2e after candidate build. No SDK mock, route, fake SVG or screenshot assertion.
+import { expect, type Locator, type Page, test } from '@playwright/test'
+
+async function mountA02(page: Page, level: 'basic' | 'business' | 'advanced') {
+  // Exercise the real SDK's auto reduced-motion path, without replacing matchMedia or chart code.
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.goto(`/libraries/recharts?tab=demo&example=${level}`)
+  const app = page.getByTestId('a02-workshop')
+  const svg = app.locator('.recharts-wrapper > svg.recharts-surface')
+  await expect(svg).toHaveCount(1)
+  await expect(app.locator('.a02-reads .recharts-bar-rectangle')).toHaveCount(7)
+  return { app, svg }
+}
+
+async function assertTableTotal(app: Locator) {
+  const total = await app
+    .getByTestId('a02-table')
+    .locator('tbody tr')
+    .evaluateAll((rows) =>
+      rows.reduce((sum, row) => sum + Number(row.querySelector('td')?.textContent), 0),
+    )
+  await expect(app.getByTestId('a02-total')).toHaveText(String(total))
+}
+
+test('@A02 basic updates real SVG bars, tooltip and the same-source accessible table', async ({
+  page,
+}) => {
+  const { app, svg } = await mountA02(page, 'basic')
+  const rows = app.getByTestId('a02-table').locator('tbody tr')
+  await expect(rows).toHaveCount(7)
+  await expect(rows.first().locator('td').first()).toHaveText('140')
+  await expect(app.getByTestId('a02-total')).toHaveText('1613')
+  const bars = app.locator('.a02-reads .recharts-bar-rectangle .recharts-rectangle')
+  await expect(bars).toHaveCount(7)
+  const before = await bars.first().getAttribute('d')
+  expect(before).toBeTruthy()
+  await bars.first().hover()
+  const tooltip = app.locator('.recharts-tooltip-wrapper')
+  await expect(tooltip).toBeVisible()
+  await expect(tooltip).toContainText('周一')
+  await expect(tooltip).toContainText('140')
+  await app.getByRole('button', { name: '增加阅读数据', exact: true }).click()
+  await expect(app).toHaveAttribute('data-revision', '1')
+  await expect(rows.first().locator('td').first()).toHaveText('142')
+  await expect(app.getByTestId('a02-total')).toHaveText('1648')
+  await expect.poll(() => bars.first().getAttribute('d')).not.toBe(before)
+  await assertTableTotal(app)
+  // P2 regression: an aria-hidden visual chart must not retain the default SVG tab stop.
+  await expect(app.getByTestId('a02-chart')).toHaveAttribute('aria-hidden', 'true')
+  expect(await svg.getAttribute('tabindex')).toBeNull()
+  await expect(app.getByTestId('a02-chart').locator('[tabindex]:not([tabindex="-1"])')).toHaveCount(
+    0,
+  )
+  await expect(app.getByRole('table', { name: /图表同源数据表/u })).toBeVisible()
+})
+
+test('@A02 business has two actual bar series and a percent line on the independent axis', async ({
+  page,
+}) => {
+  const { app } = await mountA02(page, 'business')
+  await expect(app.locator('.a02-saved .recharts-bar-rectangle')).toHaveCount(7)
+  await expect(app.locator('.a02-rate .recharts-line-curve')).toHaveCount(1)
+  // Recharts 3.10 renders tick text in a separate SVG label layer.
+  await expect(app.locator('svg text[orientation="right"]')).toHaveText([
+    '0%',
+    '25%',
+    '50%',
+    '75%',
+    '100%',
+  ])
+  const first = app.getByTestId('a02-table').locator('tbody tr').first()
+  await expect(first.locator('td')).toHaveText(['140', '22', '16%'])
+  await app.locator('.a02-reads .recharts-bar-rectangle .recharts-rectangle').first().hover()
+  const tooltip = app.locator('.recharts-tooltip-wrapper')
+  await expect(tooltip).toBeVisible()
+  await expect(tooltip).toContainText('阅读量')
+  await expect(tooltip).toContainText('收藏量')
+  await expect(tooltip).toContainText('收藏率')
+  await expect(tooltip).toContainText('16%')
+  await assertTableTotal(app)
+})
+
+test('@A02 advanced range, series toggle, responsive layout and unmount use the actual chart', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1200, height: 1000 })
+  const { app, svg } = await mountA02(page, 'advanced')
+  const windowInput = app.getByRole('spinbutton', { name: '窗口天数', exact: true })
+  const rows = app.getByTestId('a02-table').locator('tbody tr')
+  await windowInput.fill('14')
+  await windowInput.press('Tab')
+  await expect(rows).toHaveCount(14)
+  await expect(app.locator('.a02-reads .recharts-bar-rectangle')).toHaveCount(14)
+  const labels = await rows.evaluateAll((items) => items.map((row) => row.getAttribute('data-day')))
+  expect(new Set(labels).size).toBe(14)
+  await expect(rows.nth(7).locator('th')).toHaveText('周一·2')
+  await assertTableTotal(app)
+  await app.getByRole('checkbox', { name: '显示收藏率', exact: true }).uncheck()
+  await expect(app.locator('.a02-rate')).toHaveCount(0)
+  await expect(app.locator('.a02-percentage-axis')).toHaveCount(0)
+  await expect(rows.first().locator('td').last()).toHaveText('16%')
+  await expect(app.locator('.a02-saved .recharts-bar-rectangle')).toHaveCount(14)
+  await app.getByRole('checkbox', { name: '显示收藏率', exact: true }).check()
+  await expect(app.locator('.a02-rate .recharts-line-curve')).toHaveCount(1)
+  await windowInput.fill('1')
+  await windowInput.press('Tab')
+  await expect(windowInput).toHaveValue('3')
+  await expect(rows).toHaveCount(3)
+  await expect(app.locator('.a02-reads .recharts-bar-rectangle')).toHaveCount(3)
+  await windowInput.fill('')
+  await expect(rows).toHaveCount(3)
+  await windowInput.press('Tab')
+  await expect(windowInput).toHaveValue('3')
+  const wideBox = await svg.boundingBox()
+  if (!wideBox) throw new Error('真实SVG未布局')
+  expect(wideBox.height).toBeGreaterThan(0)
+  await page.setViewportSize({ width: 640, height: 1000 })
+  await expect.poll(async () => (await svg.boundingBox())?.width ?? 0).toBeLessThan(wideBox.width)
+  expect((await svg.boundingBox())?.width ?? 0).toBeGreaterThan(0)
+  await page.getByRole('button', { name: '停止并卸载', exact: true }).click()
+  await expect(app).toHaveCount(0)
+  await expect(page.locator('.recharts-wrapper')).toHaveCount(0)
+  await page.getByRole('button', { name: '运行当前示例', exact: true }).click()
+  await expect(app).toHaveAttribute('data-window', '7')
+  await expect(app).toHaveAttribute('data-revision', '0')
+  await expect(app.getByRole('checkbox', { name: '显示收藏率', exact: true })).toBeChecked()
+  await expect(rows).toHaveCount(7)
+  await page.getByRole('tab', { name: 'Agent 指南', exact: true }).click()
+  await expect(page.locator('.recharts-wrapper')).toHaveCount(0)
+})
+
+// Not covered: production-scale performance, touch, IME, screen-reader acceptance or SSR hydration.
+// Policy tests cover the 1000-revision cap; no need to click 1000 times in the browser.

@@ -1,0 +1,4 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["git", "diff", "--check", "--", "packages/library-lab/entries/B15-react-grid-layout"], "utc": "2026-11-10T14:47:52.317128+00:00", "exitCode": 0}
+STDOUT
+
+STDERR

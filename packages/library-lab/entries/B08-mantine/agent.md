@@ -1,47 +1,22 @@
-# B08 Mantine
+# B08 Mantine 工程入口
 
-## 适用
+core/hooks9.7.3，MIT；实际React/ReactDOM peer^19.2.0，宿主19.3.0。官网已9.8.0，API按安装与tag。未引入form/notifications/modals包，无服务端功能。
 
-需要默认主题、表格和弹层、并能接受 Mantine 的 Provider 时使用 core 与 hooks。React 18 不要上 9。无样式系统、Ant Design 密度或 MUI X 网格另选。不要同时挂第二套带皮肤的库。
+三个目标：basic局部主题与受控工作区确认；business150ms真实useDebouncedValue筛选、稳定ID表格Switch与原子一步撤销；advanced真实Modal/NumberInput草稿、提交校验和回焦。只用三行本地fixture。
 
-## 版本
+迁移example.tsx、feed-history.ts、local-color-scheme.ts、styles.css与demo适配器。保留styles.layer.css。Provider自有root(useId)，cssVariablesSelector/getRootElement配置与Modal portalProps.target成套；内存colorSchemeManager不碰宿主localStorage。withGlobalClasses=false；官方导入CSS基础层仍文档级，不称ShadowDOM隔离。生产可统一根Provider，不重复每个组件。
 
-`@mantine/core@9.7.3`，`@mantine/hooks@9.7.3`，React 19.3.0。许可证 MIT。不安装 `@mantine/form` 和 `@mantine/notifications`。样式用 `styles.layer.css`。Mantine 9 要求 React ≥ 19.2。
+NumberInput默认number模式onChange为number|string；保留空/减号等字符串。decimalScale2允许实际小数，validQuota仅1–100安全整数。min/max配clampBehavior=none，不偷偷夹紧。error关联输入，Alert摘要；非法不写before，合法form submit原子更新rows/before，同值不造历史。取消/Escape/遮罩丢草稿，edit重新加载，不声称脏检查保护。
 
-## 迁移
+Modal为真实Portal，保留trapFocus/returnFocus/data-autofocus。SDK拥有滚动锁/焦点/hook timer，应用只卸载自己的树，不清全局存储或共享资源。useDebouncedValue新值清旧timer、卸载cancel源码已核，未用env=test绕过Portal/过渡。
 
-8 到 9 时 core 与 hooks 一起升，并核对样式入口。非受控 form 的 `form.values` 不是实时值；本示例没有 form 包，不要把教程里的 `useForm` 贴进 `example.tsx`。
+定位b08-workshop data-filter/selected；b08-table行data-feed-id/quota/enabled；b08-count、b08-filter-draft/applied；Modal内b08-quota-draft来自真实onChange。控件工作区/确认工作区、筛选订阅、撤销上一次、标题+状态Switch、编辑+标题+配额、每小时请求上限、保存配额/取消编辑/关闭配额编辑。
 
-## 不可删的清理
+反例Number(value)||0、只收number、index key、无变化覆盖撤销点、默认Provider写页面root、Portal无主题继承、禁Portal假测。无useForm/HTTP/版本冲突/真实取消/分页/性能承诺。
 
-根上一个 Provider。`forceColorScheme="light"` 只为这条 Lab 演示，产品级暗色要单独设计。`NumberInput` 草稿保留 `number | string`。`validQuota` 拒绝空串和 `'-'`。debounce 只用于筛选。行 key 用 id。非法保存不写撤销快照。
+SDK2为真实SSR/初值，policy4仅规则；不当实际数字输入/计时/焦点/PortalPASS。browser完整提案在validation，正式sdk/build/browser全NOT_RUN。
 
-## 反例
+官方9.7.3 commit2d0a040f42011e791caf0bc56b9fbdd36ce55cef，core343B原文优先，hooks334B/root3799B另存，完整tree无中文候选，精确hash/path/version/lang/time见official/source-audit。官网200全头未见XFO/CSP、iframe未测unknown，详见local-validation。
 
-`Number(value) || 0`。`clampBehavior` 默认夹紧后假装用户确认了边界值。每个卡片一个 Provider。两个通知容器。表格 `key={index}`。用未安装的 form 包 API 描述当前示例。
 
-复用时保留这些不变的约定：
-
-- core 与 hooks 同为 9.7.3；React 18 不要使用本主版本。
-- `NumberInput` 草稿保留字符串中间态。
-- `validQuota` 拒绝空串、减号和非整数。
-- 样式入口是 `styles.layer.css`；不安装 form 与 notifications。
-- 非法保存不写 `before` 快照。
-
-## 测试断言
-
-`tests/feed-history.test.mts` 断言配额守卫、相同值不记历史、撤销恢复上一份行。不证明 Modal 焦点或 150ms 防抖的浏览器时序。
-
-## 真实限制
-
-已挂载：浅色主题、防抖筛选、开关、配额弹层和中间态。未挂载：useForm、通知、HTTP revision、脏检查关闭。遮罩关闭会丢掉未保存草稿，这是当前边界。
-
-复用检查：
-
-- 版本以该条目 `library.json` 为准，不跟研究稿里的 Vite 脚本或 workshop 目录。
-- 未挂载的生产模式留在 `guide.md`，不补进 `examples/`。
-- 不修改 `verification.json`。没有匹配 receipt 时 sdk、build、browser 保持 NOT_RUN。
-
-## 证据
-
-sdk、build、browser 为 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有匹配 receipt。Actions run `41779873259` 是仓库级检查，不是本条目 PASS。文档：https://mantine.dev/getting-started/
+候选10真实CSS发现Lab无层button规则覆盖mantine层；本例styles.css只在公开控件类/自有根对font、background、border、radius、padding、cursor、opacity逐属性revert-layer，保留SDK值和本例焦点环，不用all/硬编码teal。Switch在onChange内先捕获enabled再交给函数式updater，禁止延迟读取event.currentTarget。此修正影响B08三个场景，下候选三项定向browser复验，SSR/policy不重跑。

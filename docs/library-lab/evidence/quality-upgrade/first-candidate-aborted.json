@@ -1,0 +1,5 @@
+{
+  "time": "2026-11-10T09:35:54.046178+00:00",
+  "reason": "Typecheck failed in new Playwright interval instrumentation (DOM/Node timer overload); corrected test types. F05 independent review P2 released only for focused fix before build. No build ran for first candidate.",
+  "next": "After F05 stable, snapshot revised input and rerun failed typecheck plus remaining unrun shared checks."
+}

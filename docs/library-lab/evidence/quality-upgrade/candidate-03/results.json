@@ -1,0 +1,71 @@
+[
+  {
+    "name": "platform-tests",
+    "status": "REUSED",
+    "from": "candidate-02/platform-tests.txt",
+    "reason": "No platform runtime/Node test logic changed; entry modifications and new e2e covered by targeted checks."
+  },
+  {
+    "name": "platform-lint",
+    "status": "REUSED",
+    "from": "candidate-02/lint.txt",
+    "reason": "Entry lint already directed by owners; only new public e2e lint below."
+  },
+  {
+    "name": "new-e2e-lint",
+    "command": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "packages/library-lab/e2e/quality-remediation-next.spec.ts"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-10T09:50:06.317218+00:00",
+    "finishedAt": "2026-11-10T09:50:06.526400+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-03/new-e2e-lint.txt"
+  },
+  {
+    "name": "typecheck",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "typecheck"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-10T09:50:06.526649+00:00",
+    "finishedAt": "2026-11-10T09:50:08.105348+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-03/typecheck.txt"
+  },
+  {
+    "name": "build",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "build"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-10T09:50:08.105599+00:00",
+    "finishedAt": "2026-11-10T09:50:14.588144+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-03/build.txt"
+  },
+  {
+    "name": "catalog",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "catalog:check"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-10T09:50:14.588547+00:00",
+    "finishedAt": "2026-11-10T09:50:14.958210+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-03/catalog.txt"
+  }
+]

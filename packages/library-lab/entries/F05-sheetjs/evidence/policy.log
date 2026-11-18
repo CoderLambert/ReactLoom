@@ -1,0 +1,26 @@
+✔ accepts a small bounded ZIP containing the workbook parts (1.376283ms)
+✔ rejects damaged central directories (0.426414ms)
+✔ rejects traversal, duplicate names, encryption and macro entries (0.334384ms)
+✔ rejects declared inflation bombs before invoking XLSX.read (0.161167ms)
+✔ rejects mismatched local flags and declared sizes before XLSX.read (0.266981ms)
+✔ rejects local data descriptors even if central and local bits agree (0.126458ms)
+✔ preserves validated structured input (0.864931ms)
+✔ escapes dangerous formula prefixes exactly once across repeated normalization (0.751481ms)
+✔ trims and rejects invalid headers/extra fields (0.224811ms)
+✔ rejects whitespace-only and control-containing labels (0.112926ms)
+✔ rejects number edge cases and prototype-like records (0.154323ms)
+✔ rejects duplicate channel regardless of capitalization and leading whitespace (0.083603ms)
+✔ enforces 200 row cap before export (0.919944ms)
+✔ accepts matching local and central headers; returns header-inclusive bounds (0.856373ms)
+✔ rejects the data descriptor flag even when both records agree (0.275296ms)
+✔ rejects local flag, compressed length, original length or CRC mismatches (0.198185ms)
+✔ rejects local filenames that do not match central names (0.21713ms)
+✔ rejects invalid local bounds and offsets before reading beyond the DataView (0.132085ms)
+ℹ tests 18
+ℹ suites 0
+ℹ pass 18
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 45.093077

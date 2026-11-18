@@ -1,0 +1,72 @@
+{
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "gitHead": "1218066e706a90ba03fac8dff8c9b843dd2429c4",
+  "utc": "2026-11-10T17:06:46.517028+00:00",
+  "files": [
+    {
+      "path": "AGENTS.md",
+      "bytes": 422,
+      "sha256": "04354c765d93f94fd0e741925e17e938e0a56b4076fe0aba2f498b48cde10c34"
+    },
+    {
+      "path": "agent.md",
+      "bytes": 1746,
+      "sha256": "70b7f9371ff517f6cc4b39459901a3d1c9bf74984178a5a8372ef3991b9528b0"
+    },
+    {
+      "path": "examples/demo.tsx",
+      "bytes": 35,
+      "sha256": "254591932548c36c414610bd0d0c7ce7ef1648162f1996fbbe7381b8c1751690"
+    },
+    {
+      "path": "examples/example.tsx",
+      "bytes": 4109,
+      "sha256": "0e8134b4ac725574888d4dc0e2e3ded8aa9184558f2c96da497cf43f61a4d639"
+    },
+    {
+      "path": "examples/wall-time-policy.d.mts",
+      "bytes": 70,
+      "sha256": "2ec9da9775e67691b0b481c94707dc019873866dcd6aef3a22300d63d9ed8fc3"
+    },
+    {
+      "path": "examples/wall-time-policy.mjs",
+      "bytes": 760,
+      "sha256": "6250167dfe4d4896de75dff531a59d52dcd88c138bf759fea58f9d8d0a5d329a"
+    },
+    {
+      "path": "examples/wall-time.d.mts",
+      "bytes": 207,
+      "sha256": "7ce0b288630633b1c579dd49f3adaab065f1b42f6f1a7afae24d4357a3c7e650"
+    },
+    {
+      "path": "examples/wall-time.mjs",
+      "bytes": 1223,
+      "sha256": "c87f9539b5b4bbe4167866f3e97c5128cb03904d4076d4c42306475a68f537b2"
+    },
+    {
+      "path": "guide.md",
+      "bytes": 9168,
+      "sha256": "f5b0f7eeeea1d0548da793c525dc8c54b047b898cb4db7071381e3456e7fa50a"
+    },
+    {
+      "path": "library.json",
+      "bytes": 2786,
+      "sha256": "a0cc44a59e5ff3b4d5806b18de1ed393e966b6d5b53aa4a397374293970f2265"
+    },
+    {
+      "path": "tests/sdk.test.mjs",
+      "bytes": 1718,
+      "sha256": "077552050a26f2632467a24d104953aae989c07b1a16213ce031386f6cc78e07"
+    },
+    {
+      "path": "tests/wall-time-policy.test.mjs",
+      "bytes": 794,
+      "sha256": "26cc1045eddb8bde405f5748a5adb11a3e95566bbcd65c1b0ed7d532ffcaffe4"
+    },
+    {
+      "path": "verification.json",
+      "bytes": 356,
+      "sha256": "d9a35940bb79c2f434f70232b195d11388f298c60f3eb64e8c2b97d573feb975"
+    }
+  ]
+}

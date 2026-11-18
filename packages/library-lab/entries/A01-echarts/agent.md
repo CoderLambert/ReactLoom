@@ -1,45 +1,31 @@
-# A01 ECharts — 工程手册
+# A01 ECharts：复用与验证
 
-## 适用
+## 适用与核心模型
 
-多系列、图例、轴上 tooltip、需要命令式更新的报表。简单声明式 SVG 先看 A02。密集时序先用真实数据对比 A04，不要从七日柱状图推断。
+桌面业务报表需要多系列、共享坐标轴、提示和命令式更新时使用；React组件式简单SVG可比较A02，密集时序用真实数据对比A04。版本echarts6.1.0，Apache-2.0；地图、字体和第三方数据另核许可。
 
-## 版本
-
-`echarts@6.1.0`，Apache-2.0。从 `echarts/core` 按需 `use()`，不要把整包 `echarts` 打进首页。地图和第三方瓦片另核许可。
+React values是业务数据源；reading-option.ts把同一组七日指标映射为xAxis类目、yAxis数值、series；实例保存ref，setOption更新，数据表/合计直接读values。不从getOption重建业务状态，不在每次tick重新init。模块顶层use注册实际图表/组件/唯一renderer。
 
 ## 迁移
 
-带走 `examples/example.tsx` 的注册、init、setOption、ResizeObserver 和 cleanup。`examples/demo.tsx` 只给 Lab 用。播放门禁带走 `examples/stream-policy.ts` 的 `shouldAdvanceReadingStream` 与 `advanceReadingCounts`。业务数据换成你的数组，不要复制七日样例。动态 import 这个模块，不要在 SPA 入口静态引入。
+复制examples/example.tsx、reading-option.ts、stream-policy.ts、workshop.css，保持相对导入，安装echarts@6.1.0。调用默认组件level=basic/business/advanced；demo.tsx只是Lab适配。确保容器有真实宽度和300px高度；SSR只在客户端初始化。根据应用路由动态导入，按需模块不等于已有体积/性能基准。
 
-## 不可删的清理
+basic修改周一+5并验证option/图/表/合计同源；business移除/恢复previous-reads，并同步表行；advanced保留1200ms轮流+3、120次上限和尺寸/清理边界。数据和周期生成均为原创本地业务逻辑，非远程实时服务。
 
-effect 的 cleanup 必须 `observer.disconnect()`、取消未执行的 rAF、`chart.off('click', handler)`、`dispose()`，并把 ref 置空。隐藏页面和离屏用同一套「意图」与「是否真的在走表」分离，不要在不可见时继续 setState。复位要同时清 tick ref 和计数 ref。`setOption` 若依赖整份替换，保留 `notMerge: true`；改成合并更新时补上 `replaceMerge`，不要两头都不管。
+## 不能删的所有权
 
-## 反例
+ResizeObserver断开、rAF取消、click handler以相同引用off、chart.dispose并清ref；IntersectionObserver、matchMedia和visibilitychange监听分别清理。实例不能跨DOM共享。每次数据更新仅setOption；图表实例id在更新和resize时保持不变。
 
-- render 期间 `init`。
-- 只监听 `window.resize`。
-- `on('click')` 不 `off`。
-- 删除系列仍用默认合并，旧 series 残留。
-- 把 `NaN` 或缺失值写成 0。
-- 用 HTML tooltip 拼接不可信字段。
-- 没有等价表格，只靠颜色区分系列。
-- mock 掉 `echarts` 再写 SDK PASS。
+live是用户意图，playbackActive由advanced/可见/视口内/未耗尽/动态偏好共同决定。隐藏或离屏停止interval，重回可见且意图仍在时恢复；allowMotion仅覆盖减少动态。复位同时清tick ref、count ref和state。dispose不取消外部网络订阅。
 
-## 测试断言
+本例完整option以notMerge:true/lazyUpdate:true应用，删除系列不残留，但图例等内部状态会重置。不能改成默认合并后仍声称旧series自动删除；若迁到replaceMerge，需要验证自己的交互状态。未使用dataset/encode/dataZoom；SDK套件用SVG SSR，Demo用Canvas，两者边界分开。
 
-- 顶层 `use()` 含当前 series 用到的图表和唯一 renderer。
-- 卸载后 `dispose` 被调用，重复挂载不共享上一个 DOM 的实例。
-- 容器宽或高为 0 时不 `resize()`。
-- advanced：隐藏、离屏、减少动态时 interval 停；未到 120 次且用户意图仍在时恢复；到顶后不再创建定时器。
-- 表格按钮与 `dispatchAction({type:'showTip'})` 指向同一 seriesIndex / dataIndex。
-- 纯规则命令不能代替浏览器里的像素、tooltip 和读屏。
+## 断言与证据
 
-## 真实限制
+- basic初始周一12/合计158；+5后17/163，a01-option同步，data-instance-id不变；表格按钮触发真实showTip和最近点击文本。
+- business默认两系列current-reads/previous-reads，两表行；取消显示上周对照后只剩current-reads且上周表行消失；恢复后重现，不重建实例。
+- advanced实际1200ms tick；减少动态、隐藏、离屏均暂停；用户允许动态不能覆盖隐藏；达到120次停止，复位清全部计数。缩小容器至65%时a01-chart-size显示getWidth变化，height仍300，实例不变。
+- 离开Demo/停止时Canvas与监听/Observer/interval应释放；重新进入不累积旧实例。不能单凭DOM消失推断dispose或interval归零，应做对应浏览器观测。
+- tests/sdk.test.mjs实际import echarts，消费同源reading-option并用SVG SSR验证轴/系列/更新/移除/resize/dispose；stream-policy测试不执行SDK。两层与真实浏览器分别报告。
 
-本示例没有 dataset/encode，也没有服务端 SVG。`dispose` 释放的是这个 React 实例持有的图表，不要假设它替你关掉页面上别的 ECharts。Canvas 不是无障碍的完整表达。
-
-## 证据
-
-读 `verification.json`。没有 `docs/library-lab/evidence/runs/` 的当前收据，sdk、build、browser 都不是 PASS。Actions 41779873259 的仓库结果不能抄到本条目。
+未测Canvas、tooltip、可见性和读屏时，不从Node SSR或类型检查推出browser PASS；正式verification遵循当前收据。官方英文README固定6.1.0提交c5a48f5f97d23e5379720870b8444cd05b50ffb4，中文主README未提供；中文官网明确sameorigin/frame-ancestors self而blocked，保留直达。详见local-validation.md。

@@ -4,14 +4,8 @@
   "slug": "tanstack-query",
   "name": "TanStack Query",
   "group": "D",
-  "summary": "远程状态的查询键、缓存、取消与乐观更新生命周期",
-  "tags": [
-    "TanStack Query",
-    "异步状态",
-    "缓存",
-    "AbortSignal",
-    "乐观更新"
-  ],
+  "summary": "从同键共享与fresh/stale，到后台刷新、身份分页、可取消查询和按行乐观回滚",
+  "tags": ["TanStack Query", "异步状态", "缓存", "AbortSignal", "乐观更新"],
   "contentState": "recreated",
   "packages": [
     {
@@ -31,6 +25,10 @@
     {
       "title": "重要默认值",
       "url": "https://tanstack.com/query/latest/docs/framework/react/guides/important-defaults"
+    },
+    {
+      "title": "5.104.1固定官方源码",
+      "url": "https://github.com/TanStack/query/tree/29859ae60c8dca0a5cdbf8abccc775b655cf43e2/packages/react-query"
     }
   ],
   "related": [
@@ -48,54 +46,63 @@
   "demos": [
     {
       "demoId": "basic",
-      "title": "查询缓存、fresh/stale 与手动刷新",
+      "title": "共享查询、fresh/stale与后台刷新",
       "level": "basic",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
+        "examples/demo.tsx",
         "examples/example.tsx",
+        "examples/cache-primer.tsx",
+        "examples/fixture-backend.ts",
+        "examples/query-keys.ts",
+        "examples/shared-query.ts",
         "examples/optimistic-policy.mjs",
         "examples/optimistic-policy.d.mts",
-        "examples/demo.tsx"
+        "examples/workshop.css"
       ],
-      "capabilities": [
-        "timer"
-      ],
-      "description": "查询缓存、fresh/stale 与手动刷新"
+      "capabilities": ["timer"],
+      "description": "两个真实useQuery共享同一请求和缓存；观察3秒新鲜期、源数据变化与保留旧值后台刷新。"
     },
     {
       "demoId": "business",
-      "title": "RSS 列表、搜索/分页与租户隔离",
+      "title": "身份、搜索与分页缓存边界",
       "level": "business",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
+        "examples/demo.tsx",
         "examples/example.tsx",
+        "examples/cache-primer.tsx",
+        "examples/fixture-backend.ts",
+        "examples/query-keys.ts",
+        "examples/shared-query.ts",
         "examples/optimistic-policy.mjs",
         "examples/optimistic-policy.d.mts",
-        "examples/demo.tsx"
+        "examples/workshop.css"
       ],
-      "capabilities": [
-        "timer"
-      ],
-      "description": "RSS 列表、搜索/分页与租户隔离"
+      "capabilities": ["timer"],
+      "description": "保留独立团队键与提交后筛选；列表每页3条，区分首次加载与后台请求。"
     },
     {
       "demoId": "advanced",
-      "title": "AbortSignal、乐观更新、409 回滚",
+      "title": "取消、一次409与按行恢复",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
+        "examples/demo.tsx",
         "examples/example.tsx",
+        "examples/cache-primer.tsx",
+        "examples/fixture-backend.ts",
+        "examples/query-keys.ts",
+        "examples/shared-query.ts",
         "examples/optimistic-policy.mjs",
         "examples/optimistic-policy.d.mts",
-        "examples/demo.tsx"
+        "examples/workshop.css"
       ],
-      "capabilities": [
-        "timer"
-      ],
-      "description": "AbortSignal、乐观更新、409 回滚"
+      "capabilities": ["timer"],
+      "description": "把signal转到真实fixture延迟，取消后可恢复；保留ID/rev/token行级回滚与身份epoch。"
     }
   ],
   "license": {
@@ -103,6 +110,26 @@
   },
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
-    "note": "针对现有 SPA 使用的 Query 5.104.1 改写；原研究5.104.5的测试不继承"
+    "note": "保留现有独立QueryClient、行级ID/rev/token与tenantEpoch逻辑，新增真实共享缓存实验并依据5.104.1源码核实；历史研究测试和正式收据不继承。"
+  },
+  "official": {
+    "readme": {
+      "repository": "TanStack/query",
+      "commit": "29859ae60c8dca0a5cdbf8abccc775b655cf43e2",
+      "path": "packages/react-query/README.md",
+      "sourceUrl": "https://github.com/TanStack/query/blob/29859ae60c8dca0a5cdbf8abccc775b655cf43e2/packages/react-query/README.md",
+      "snapshotPath": "official/readme.md",
+      "language": "en",
+      "version": "5.104.1",
+      "syncedAt": "2026-11-10T09:55:39.107202+00:00",
+      "sha256": "0f689c3e8fcec5578fcd13b5a40980b2b3d5f5422452e75542f722d6db20b1c6"
+    },
+    "homepage": {
+      "url": "https://tanstack.com/query/latest",
+      "kind": "website",
+      "status": "blocked",
+      "checkedAt": "2026-11-10T09:55:39.107202+00:00",
+      "reason": "GET200，最终URL不变，X-Frame-Options: DENY明确禁止iframe；完整响应头见official/source-evidence.json，提供官网直达。"
+    }
   }
 }

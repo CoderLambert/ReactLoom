@@ -1,0 +1,20 @@
+[
+  {
+    "level": "basic",
+    "reporter": "json",
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/F16-dependency-cruiser/examples/workspace/",
+    "args": [
+      "exec",
+      "depcruise",
+      "--config",
+      "config.cjs",
+      "--output-type",
+      "json",
+      "basic/src"
+    ],
+    "status": 254,
+    "signal": null,
+    "stdout": "undefined\n/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/F16-dependency-cruiser/examples/workspace:\n\u2009ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL\u2009 Command \"depcruise\" not found\n\nDid you mean \"pnpm exec depcruise\"?\n",
+    "stderr": ""
+  }
+]

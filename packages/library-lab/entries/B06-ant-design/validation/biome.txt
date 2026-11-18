@@ -1,0 +1,4 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: pnpm exec biome check --write entries/B06-ant-design/examples entries/B06-ant-design/tests entries/B06-ant-design/validation/check-entry.mjs entries/B06-ant-design/library.json entries/B06-ant-design/verification.json entries/B06-ant-design/official/source-audit.json entries/B06-ant-design/official/homepage-response.json
+exit: 0
+Checked 13 files in 13ms. Fixed 9 files.

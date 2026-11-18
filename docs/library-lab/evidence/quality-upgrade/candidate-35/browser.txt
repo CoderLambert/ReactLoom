@@ -1,0 +1,169 @@
+[WebServer] (node:2460661) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:2460673) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 9 tests using 3 workers
+
+(node:2460750) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2460756) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2460749) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 e2e/quality-resume-official-f06-f08.spec.ts:8:3 › @F08 pinned official original and honest homepage fallback (1.3s)
+  ✓  3 e2e/quality-resume-official-f06-f08.spec.ts:8:3 › @F06 pinned official original and honest homepage fallback (1.8s)
+  ✓  1 e2e/quality-resume-official-f06-f08.spec.ts:8:3 › @F07 pinned official original and honest homepage fallback (2.0s)
+  ✓  5 e2e/quality-resume-pdf-renderer.spec.ts:70:1 › @F08 single flight, invalid rows clear old URL and late real PDF completion is ignored (1.7s)
+  ✓  4 e2e/quality-resume-pdf-renderer.spec.ts:32:1 › @F08 real renderer creates downloadable one-row, summary and multipage PDFs (3.4s)
+  ✘  7 e2e/quality-resume-pdfjs.spec.ts:74:1 › @F06 invalid newer input, level switch and unmount invalidate actual held file reads (1.5s)
+(node:2461450) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  6 e2e/quality-resume-pdfjs.spec.ts:11:1 › @F06 real worker canvas, text, serialized zoom, corrupt preservation and pixel budget (3.3s)
+  ✘  8 e2e/quality-resume-react-pdf.spec.ts:11:1 › @F07 real worker/canvas, text layer, paging, bounded geometry and corrupt recovery (5.1s)
+  ✘  9 e2e/quality-resume-react-pdf.spec.ts:82:1 › @F07 invalid newest selection, level reset and unmount discard held file buffers (5.2s)
+
+
+  1) e2e/quality-resume-pdfjs.spec.ts:11:1 › @F06 real worker canvas, text, serialized zoom, corrupt preservation and pixel budget 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('region', { name: 'PDF.js 真实页面渲染', exact: true }).getByRole('status')
+    Expected substring: "第 1 / 2 页渲染成功"
+    Error: strict mode violation: getByRole('region', { name: 'PDF.js 真实页面渲染', exact: true }).getByRole('status') resolved to 2 elements:
+        1) <p role="status">第 1 / 2 页渲染成功，Canvas尺寸 704×911</p> aka getByText('第 1 / 2 页渲染成功，Canvas尺寸 704×')
+        2) <output data-testid="pdf-text">ReactLoom PDF Guide Page One: basic render</output> aka getByTestId('pdf-text')
+
+    Call log:
+      - Expect "toContainText" getByRole('region', { name: 'PDF.js 真实页面渲染', exact: true }).getByRole('status') with timeout 5000ms
+      - waiting for getByRole('region', { name: 'PDF.js 真实页面渲染', exact: true }).getByRole('status')
+
+
+      34 |   await expect(app.getByTestId('pdf-text')).toContainText('Page One: basic render')
+      35 |   for (const scale of ['2', '0.8', '1.5', '1']) await app.getByLabel('缩放').selectOption(scale)
+    > 36 |   await expect(app.getByRole('status')).toContainText('第 1 / 2 页渲染成功')
+         |                                         ^
+      37 |   await app.getByRole('button', { name: '验证损坏文档不覆盖当前页' }).click()
+      38 |   await expect(app.getByRole('status')).toContainText('已正确捕获损坏 PDF')
+      39 |   await expect(app.getByTestId('pdf-text')).toContainText('Page One: basic render')
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-resume-pdfjs.spec.ts:36:41
+
+    Error Context: test-results/quality-resume-pdfjs--F06--53cdc-eservation-and-pixel-budget/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-resume-pdfjs--F06--53cdc-eservation-and-pixel-budget/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-resume-pdfjs--F06--53cdc-eservation-and-pixel-budget/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) e2e/quality-resume-pdfjs.spec.ts:74:1 › @F06 invalid newer input, level switch and unmount invalidate actual held file reads 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('region', { name: 'PDF.js 真实页面渲染', exact: true }).getByRole('status')
+    Expected substring: "只接受 PDF 文件名"
+    Error: strict mode violation: getByRole('region', { name: 'PDF.js 真实页面渲染', exact: true }).getByRole('status') resolved to 2 elements:
+        1) <p role="status">本示例只接受 PDF 文件名；仍需实际解析校验</p> aka getByText('本示例只接受 PDF 文件名；仍需实际解析校验')
+        2) <output data-testid="pdf-text">ReactLoom PDF Guide Page One: basic render</output> aka getByTestId('pdf-text')
+
+    Call log:
+      - Expect "toContainText" getByRole('region', { name: 'PDF.js 真实页面渲染', exact: true }).getByRole('status') with timeout 5000ms
+      - waiting for getByRole('region', { name: 'PDF.js 真实页面渲染', exact: true }).getByRole('status')
+
+
+      89 |     buffer: Buffer.from('invalid'),
+      90 |   })
+    > 91 |   await expect(app.getByRole('status')).toContainText('只接受 PDF 文件名')
+         |                                         ^
+      92 |   await releaseFileReads(page)
+      93 |   await expect(app.getByTestId('pdf-text')).toContainText('Page One: basic render')
+      94 |   await holdFileReads(page)
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-resume-pdfjs.spec.ts:91:41
+
+    Error Context: test-results/quality-resume-pdfjs--F06--a2df0-date-actual-held-file-reads/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-resume-pdfjs--F06--a2df0-date-actual-held-file-reads/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-resume-pdfjs--F06--a2df0-date-actual-held-file-reads/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) e2e/quality-resume-react-pdf.spec.ts:11:1 › @F07 real worker/canvas, text layer, paging, bounded geometry and corrupt recovery 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('region', { name: 'react-pdf 文档预览', exact: true }).getByTestId('react-pdf-status')
+    Expected substring: "解析成功，共2页"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toContainText" getByRole('region', { name: 'react-pdf 文档预览', exact: true }).getByTestId('react-pdf-status') with timeout 5000ms
+      - waiting for getByRole('region', { name: 'react-pdf 文档预览', exact: true }).getByTestId('react-pdf-status')
+
+
+      16 |   const app = page.getByRole('region', { name, exact: true })
+      17 |   const canvas = app.locator('canvas')
+    > 18 |   await expect(app.getByTestId('react-pdf-status')).toContainText('解析成功，共2页')
+         |                                                     ^
+      19 |   await expect(canvas).toBeVisible()
+      20 |   await expect
+      21 |     .poll(async () =>
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-resume-react-pdf.spec.ts:18:53
+
+    Error Context: test-results/quality-resume-react-pdf---b13ac-ometry-and-corrupt-recovery/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-resume-react-pdf---b13ac-ometry-and-corrupt-recovery/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-resume-react-pdf---b13ac-ometry-and-corrupt-recovery/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) e2e/quality-resume-react-pdf.spec.ts:82:1 › @F07 invalid newest selection, level reset and unmount discard held file buffers 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('region', { name: 'react-pdf 文档预览', exact: true }).locator('.react-pdf__Page__textContent')
+    Expected substring: "Page One: demo"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toContainText" getByRole('region', { name: 'react-pdf 文档预览', exact: true }).locator('.react-pdf__Page__textContent') with timeout 5000ms
+      - waiting for getByRole('region', { name: 'react-pdf 文档预览', exact: true }).locator('.react-pdf__Page__textContent')
+
+
+      88 |   const app = page.getByRole('region', { name, exact: true })
+      89 |   const input = app.locator('input[type=file]')
+    > 90 |   await expect(app.locator('.react-pdf__Page__textContent')).toContainText('Page One: demo')
+         |                                                              ^
+      91 |   await holdFileReads(page)
+      92 |   await input.setInputFiles(originalPdf('Late rejected selection'))
+      93 |   await expect.poll(async () => (await readFileProbe(page)).pending).toBe(1)
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-resume-react-pdf.spec.ts:90:62
+
+    Error Context: test-results/quality-resume-react-pdf---89785-t-discard-held-file-buffers/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-resume-react-pdf---89785-t-discard-held-file-buffers/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-resume-react-pdf---89785-t-discard-held-file-buffers/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4 failed
+    e2e/quality-resume-pdfjs.spec.ts:11:1 › @F06 real worker canvas, text, serialized zoom, corrupt preservation and pixel budget 
+    e2e/quality-resume-pdfjs.spec.ts:74:1 › @F06 invalid newer input, level switch and unmount invalidate actual held file reads 
+    e2e/quality-resume-react-pdf.spec.ts:11:1 › @F07 real worker/canvas, text layer, paging, bounded geometry and corrupt recovery 
+    e2e/quality-resume-react-pdf.spec.ts:82:1 › @F07 invalid newest selection, level reset and unmount discard held file buffers 
+  5 passed (11.4s)
+undefined
+/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: playwright test e2e/quality-resume-pdfjs.spec.ts e2e/quality-resume-react-pdf.spec.ts e2e/quality-resume-pdf-renderer.spec.ts e2e/quality-resume-official-f06-f08.spec.ts --workers=3

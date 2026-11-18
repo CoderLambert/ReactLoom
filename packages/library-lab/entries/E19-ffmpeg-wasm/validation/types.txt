@@ -1,0 +1,4 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ["pnpm", "exec", "--", "tsc", "--ignoreConfig", "--noEmit", "--target", "ES2022", "--lib", "ES2022,DOM,DOM.Iterable", "--module", "ESNext", "--moduleResolution", "Bundler", "--jsx", "react-jsx", "--strict", "--skipLibCheck", "--esModuleInterop", "--allowSyntheticDefaultImports", "--allowImportingTsExtensions", "--types", "vite/client,node", "entries/E19-ffmpeg-wasm/examples/demo.tsx"]
+exit: 0
+

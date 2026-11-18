@@ -1,0 +1,12 @@
+{
+  "commit": "6a85c4057dc7c0906381664249e0b1bac300cd92",
+  "checkedAt": "2026-11-17T16:49:46.497865+00:00",
+  "readmeSelection": "固定版本官方递归树中根README.md为英文，未发现中文README；tree.json保留完整列表",
+  "homepage": "https://stately.ai/docs/xstate",
+  "embedding": "unknown pending actual Lab-origin browser",
+  "commands": [
+    "git ls-remote https://github.com/statelyai/xstate.git refs/tags/xstate@5.33.3*",
+    "curl -fsSL https://raw.githubusercontent.com/statelyai/xstate/6a85c4057dc7c0906381664249e0b1bac300cd92/README.md",
+    "curl -fsSL -D official/homepage-headers.txt https://stately.ai/docs/xstate"
+  ]
+}

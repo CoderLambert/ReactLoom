@@ -1,0 +1,5 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['pnpm', 'exec', 'biome', 'check', '--write', 'entries/C09-react-virtuoso/validation/browser-proposal.check.ts']
+startedAt: 2026-11-10T15:54:12.390176+00:00
+exit: 0
+Checked 1 file in 12ms. Fixed 1 file.

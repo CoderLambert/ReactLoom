@@ -1,211 +1,105 @@
-# clsx 2.1.1｜条件类名，不负责冲突和权限
+# clsx：把组件状态组合成 className
 
-Lab 锁定 `clsx@2.1.1`（MIT）。它把真值拼成一条 `className` 字符串。它不去重，不看 CSS 优先级，不合并 Tailwind，也不知道 `disabled` 这个类是否应该让按钮真的禁用。
+卡片同时有“选中”“禁用”“提示语气”时，手写模板字符串容易留下多余空格，也容易把分支散落在 JSX 中。`clsx@2.1.1`（MIT）把字符串、条件对象和数组组合为一个字符串，适合已有 CSS 类、需要按状态选择类名的 React 组件。它是纯函数，不管理 React 状态，也不生成样式。
 
-没有收据时 sdk / build / browser 保持 NOT_RUN。Actions 41779873259 不是本条目 PASS。
+只有一个固定类名时直接写 `className` 即可。需要一套可复用的尺寸、语气和组合变体接口时，可以在 clsx 之上封装变体函数；需要消解 Tailwind 工具类冲突时，再组合 tailwind-merge（C21）（C21）。
 
-## Lab 当前示例
+## 最小接入
 
-[`examples/example.tsx`](examples/example.tsx) 同时导入完整的 `clsx` 和 `clsx/lite`。业务类先经过 [`class-policy.mjs`](examples/class-policy.mjs) 的 `cardClassInputs`，再展开给 `clsx`。`demo.tsx` 只做再导出。没有独立的 `npm run dev` 站点。
+```tsx
+import clsx from 'clsx';
 
-- **basic**：选中和禁用两个复选框。输出展示 `clsx` 的实际字符串。卡片上的按钮另有原生 `disabled` 和 `aria-pressed`。类名不是这两件事的替身。
-- **business**：增加 `tone` 下拉框，只允许 `neutral`、`success`、`warning`。策略函数把后两者映射成 `tone-success` 或 `tone-warning`。其它值变成 `null`，clsx 会丢掉它。
-- **advanced**：额外展示一组边界：`clsx('px-2', false, null, undefined, 0, 1, ['px-4', { active: true, inactive: false }])`，以及 `lite` 只保留真值字符串。数字 `1` 会变成 `"1"`，`0` 被丢掉。`px-2` 和 `px-4` 同时保留。说明文字写明 lite 不是完整 clsx 的透明替换，Tailwind 冲突要交给 C21。
+const selected = true;
+const disabled = false;
+const className = clsx('card', {
+  'is-selected': selected,
+  'is-disabled': disabled,
+});
+// 'card is-selected'
 
-`cardClassInputs` 返回 `['demo-card', { 'is-selected': ..., 'is-disabled': ... }, tone]`。对象的键在值为真时进入结果，值本身不会进入结果。
-
-## 什么时候用
-
-组件有若干布尔状态，要拼到已有的类名上。只有一个字符串时直接写 `className`。Tailwind 工具互相覆盖时用 `twMerge(clsx(...))`，见 C21。CSS Modules 的 `classnames/bind` 不会因为换成 clsx 就自动映射哈希类名。
-
-clsx 没有订阅，没有定时器，没有需要在卸载时销毁的实例。成本大约是输入节点数加上结果字符串的长度。它不保护循环引用和特别深的数组。
-
-## 数据与模型
-
-对 2.1.1 的运行时，可以按下面的规则读结果。类型声明和运行时不完全一样：`ClassValue` 允许 `bigint`，但实现不会把 `bigint` 收成类名。不要传 `1n`。
-
-1. 多个参数按顺序检查。`false`、`0`、`NaN`、`''`、`null`、`undefined` 不产生输出。
-2. 字符串原样写入。真值数字变成十进制字符串。`2` 得到 `"2"`。`0` 在真值判断时已经被丢掉，所以不能靠 `clsx(0)` 得到 `"0"`。
-3. 数组递归展开，片段之间加空格。
-4. 普通对象用可枚举的键。值为真时追加**键名**。`'false'` 这种非空字符串是真，所以 `{ active: 'false' }` 会得到 `active`。
-5. 对象枚举包括原型链上可枚举的键。不要把接口 JSON 直接传进去。
-6. 单独的布尔、函数不产生类名。
-7. 不去重。`clsx(['a', 'a'])` 是 `"a a"`。
-8. `clsx/lite` 只保留真值字符串。对象、数组和数字被静默忽略，不抛错。
-
-顺序不是 CSS 优先级。`clsx('px-2', 'px-4')` 得到 `"px-2 px-4"`。哪一条生效取决于样式表、层和特异性。Tailwind 的冲突分组要另做。
-
-类名也不是业务状态。按钮能不能点，看 `disabled` 属性。是否按下，看 `aria-pressed` 或数据。不要 `className.includes('is-disabled')` 再决定要不要提交。
-
-## 三层示例
-
-### 基本
-
-勾选「选中」。输出里出现 `is-selected`，按钮 `aria-pressed` 为真。勾选「禁用操作」。输出里出现 `is-disabled`，并且按钮的 `disabled` 属性为真。只改类、不改属性，键盘仍能点到按钮。
-
-### 业务
-
-切到「已归档」和「待审核」，输出分别带 `tone-success` 和 `tone-warning`。切回「普通」，没有 `tone-neutral`。策略函数不给未知语气造类名。不要把下拉框改成自由文本后再拼 `` `tone-${server}` ``。
-
-### 进阶
-
-看 `<pre>` 里的 `full`、`lite`、`truthy-number`、`zero-ignored` 和 `tailwind-not-merged`。`lite('base', selected && 'selected')` 在选中时是字符串条件，这是 lite 能做的形状。`lite({ active: selected })` 不会得到 `active`。`px-2` 与 `px-4` 两个都在。若视觉上必须只留后者，这里还没有调用 `twMerge`。
-
-## 反例
-
-### 1. 字符串 'false' 当布尔
-
-```ts
-clsx({ active: 'false' }) // "active"
+<button className={className} disabled={disabled} aria-pressed={selected}>
+  收藏文章
+</button>;
 ```
 
-用 `clsx({ active: isActive === true })`。策略函数已经用 `=== true`。
+对象里值为真的**键名**进入结果。`is-selected` 的样式由 CSS 定义；原生 `disabled` 控制按钮能否操作，`aria-pressed` 表达开关状态。添加一个类不会替你设置这些属性。
 
-### 2. 想输出数字 0
+## 互动实验：状态与输入边界
 
-```ts
-clsx(0) // ""
-```
+本条目只有一个完整实验，[运行源码](examples/example.tsx) 真实导入 `clsx` 与 `clsx/lite`，两部分始终可操作。所有数据来自本地状态或固定预设，没有后端请求。
 
-需要字符时用 `clsx(String(0))`。一般的类名里不应该出现这个需求。
+### 1. 从状态到卡片样式
 
-### 3. 用 lite 传对象
+卡片调用 `clsx(...cardClassInputs({ selected, disabled, tone }))`。输入面板显示这一次调用的参数，输出面板显示返回字符串，卡片直接把同一字符串赋给 `className`。
 
-```ts
-import { clsx as lite } from 'clsx/lite'
-lite({ active: true }) // ""
-```
-
-完整版用默认导入。lite 只写 `lite(active && 'active')`。
-
-### 4. 以为后者覆盖 Tailwind
-
-```ts
-clsx('px-2', 'px-4') // "px-2 px-4"
-```
-
-冲突交给 `twMerge`。自定义 token 还要配置 tailwind-merge，见 C21。
-
-### 5. 以为会去重
-
-```ts
-clsx('card', 'card') // "card card"
-```
-
-若设计系统要求唯一，在自己的 token 列表里处理。clsx 不改语义。
-
-### 6. 把响应对象直接传入
-
-```ts
-clsx(await response.json())
-```
-
-可枚举的键，包括继承来的，都可能变成类。先映射到自己的普通对象。`cardClassInputs` 就是这道门。
-
-### 7. 拼接后端状态
-
-```ts
-clsx('badge-' + backendStatus)
-```
-
-未知状态会变成任意类，甚至打断属性。用有限枚举，缺省回退到空。
-
-### 8. 深递归不可信数组
-
-实现是递归。循环引用会撑栈。业务输入先限制深度，再交给 clsx。
-
-### 9. 用类名判断能不能操作
-
-```ts
-if (className.includes('is-disabled')) return
-```
-
-类可以被改掉。看数据里的 `disabled` 和原生属性。
-
-### 10. 全局把 classnames/bind 换成 clsx
-
-CSS Modules 需要 `styles[key]`。`bind` 的键映射不会自动出现。先列调用点，再换。
-
-### 11. bigint
-
-类型上能过，运行时没有类名。不要用 `1n` 当开关。
-
-### 12. 服务端字段当 tone
-
-即使过了 TypeScript 的字符串索引，仍要走 `cardClassInputs` 那种白名单。`success` 以外的值不是 `tone-success`。
-
-## 组合
-
-**tailwind-merge。** `twMerge(clsx(...))` 先拼条件，再按 Tailwind 分组丢掉冲突。顺序因此才变得有意义。单独的 clsx 没有这一步。本 Demo 的 advanced 故意把未合并的结果印出来。
-
-**CSS Modules。**
-
-```ts
-clsx(styles.card, selected && styles.selected)
-```
-
-传入的是已经映射好的类字符串。不要 `clsx({ selected })` 再指望构建工具把键改成哈希。
-
-**设计系统。** `demo-card`、`is-selected`、`is-disabled`、`tone-*` 是本示例允许的集合。调用方可以加自己的布局类，但语气和状态仍走策略函数。C21 讨论覆盖接口时，默认类和外部类要分清谁在后面。
-
-## 生产清单
-
-- 状态类来自白名单对象，不来自字符串拼接。
-- 交互状态同时写在 DOM 属性上。
-- 不把 JSON 响应传给 clsx。
-- lite 和完整版不要混用同一种调用形状。
-- Tailwind 冲突不要停在 clsx。
-- 不靠类名做安全判断。
-- 不把 clsx 的结果写进 `innerHTML`。
-
-## 升级
-
-2.1.1 的对象枚举和数字规则如上。升级小版本后用 advanced 那组输入做回归：`0`、`1`、`null`、嵌套数组、lite 忽略对象、两条 `px-*` 同时存在。不要换成一个「功能类似」的自写函数还继续叫 clsx。
-
-`cardClassInputs` 返回数组，里面的对象只含两个布尔键。clsx 展开后，真键变成类名，假键消失，`null` 语气消失。不要再在 JSX 里写第二套 `` tone-${tone} ``。两套同时存在时，白名单就失效了。
-
-advanced 的 `edge` 把假值、数字和嵌套数组放进同一次调用，用来对照文档，不是卡片的业务类。业务卡片只应出现 `demo-card`、两个 `is-*` 和可选的 `tone-*`。
-
-## 练习
-
-1. 选中且禁用时，输出同时包含两个状态类，按钮同时有 `aria-pressed` 和 `disabled`。
-2. 传入 `tone: 'danger'` 给 `cardClassInputs`，结果里没有 `tone-danger`。
-3. `clsx(0)` 为空，`clsx(1)` 为 `"1"`，`lite({ a: true })` 为空。
-4. `clsx('px-2', 'px-4')` 含有两段。若要只留 `px-4`，改到 C21 再测。
-
-## 故障排查
-
-| 现象 | 先看 |
+| 操作 | 可观察结果 |
 | --- | --- |
-| 明明传了 false 字符串，类还在 | 值是 `'false'`，不是布尔 false |
-| 想要的 `"0"` 没出现 | 数字 0 被当成假。用字符串 |
-| lite 什么都没输出 | 传了对象或数组。lite 只留真值字符串 |
-| `px-4` 没有盖住 `px-2` | clsx 两段都留着。这不是 bug，合并在 C21 |
-| 类名里出现奇怪的键 | 对象来自 JSON 或原型链。改走白名单 |
-| 按钮看起来灰了但仍能提交 | 只加了 `is-disabled` 类，没有 `disabled` 属性 |
-| CSS Modules 类名是原文 | 把逻辑键交给了 clsx，没有先取 `styles[key]` |
-| 栈溢出 | 循环引用或过深数组。先限制输入 |
+| 勾选“选中”，或点击“收藏文章” | 输入中的 `is-selected` 为 `true`；结果增加 `is-selected`；卡片出现蓝色边框，按钮的 `aria-pressed` 为 `true` |
+| 勾选“禁用操作” | 结果增加 `is-disabled`；卡片边框变为虚线，按钮灰显且无法点击；其他状态控件仍可操作 |
+| 语气选“已归档”或“待审核” | 结果增加 `tone-success` 或 `tone-warning`，卡片背景和状态文字随之变化 |
+| 语气切回“普通” | 输入末项为 `null`；结果移除语气类，恢复普通背景 |
 
-对象枚举用的是 `for...in`。键为真时写入的是键，不是值。数组会递归。函数和单独的布尔没有类名。`ClassValue` 类型包含 `bigint`，`toVal` 不处理它，所以 `clsx(1n)` 不是 `"1"`。
+这些样式由随示例提供的 [class-names.css](examples/class-names.css) 定义，无需 Tailwind 或 Lab 的全局样式。语气文字由 React 状态渲染，clsx 只负责类名字符串。
 
-不要根据结果字符串里有没有某个 token 来做权限判断。服务端状态和 DOM 属性才是事实。把 clsx 的输出写进 `innerHTML` 同样多余，React 的 `className` 已经是属性。
+### 2. full / lite 同输入对照
 
-升级或替换实现时，用 advanced 那组输入当回归：假值、数字 1、数字 0、嵌套数组、对象里的假值、lite、两条 padding。少任何一条都可能把「功能类似」的函数误当成 2.1.1。
+下拉框选择 [固定输入预设](examples/comparison-presets.mjs)。两个输出分别执行 `clsx(...preset.inputs)` 与 `lite(...preset.inputs)`；引号仅用于清楚显示字符串边界。
 
-## 官方链接
+| 预设 | 完整版实际返回值 | lite 实际返回值 | 要观察的机制 |
+| --- | --- | --- | --- |
+| 字符串与条件结果 | `card is-selected` | `card is-selected` | 两者保留字符串，忽略 `false` 与空字符串 |
+| 对象状态映射 | `card is-selected` | `card` | 完整版选择真值键名；lite 忽略整个对象 |
+| 嵌套数组 | `card is-selected tone-success` | `card` | 完整版递归展开；lite 忽略整个数组 |
+| 数字与空值 | `card 1` | `card` | 完整版接收真值数字；两者忽略 `0`、`null`、`undefined`、`false` |
+| 重复与 Tailwind 冲突 | `px-2 px-4 px-4` | `px-2 px-4 px-4` | 两者都不去重、不解释 CSS 工具类 |
 
-- https://github.com/lukeed/clsx
+表格由真实 SDK 回归断言覆盖，浏览器面板会重新计算返回值。这个预设不加载 Tailwind，因此只能观察字符串保留规则，不能据此判断最终 CSS 覆盖效果。
 
-以标签 `2.1.1` 的 `src/index.js` 和 `clsx/lite` 为准。类型里有、运行时没有的 `bigint` 不要当成已支持。
+## 机制：JavaScript 先求值，clsx 再组合
 
-卡片的 `<article className={result}>` 使用的就是这次 `clsx` 的返回值。改策略函数而不改输出区，或改输出区而不改 className，两边会不一致。advanced 的 `<pre>` 是另一组调用，不要把它的 `px-2` 当成卡片的类。`tone` 为 `neutral` 时策略返回 `null`，输出里不应出现 `tone-neutral` 或字符串 `"null"`。`clsx` 不会把 `null` 收成类名。若有人改成 `tone || 'tone-neutral'`，普通状态会一直带着语气类。
+`selected && 'is-selected'` 先由 JavaScript 得到字符串或 `false`，再传入 clsx。clsx 按参数顺序处理输入，非空片段间加入一个空格：
 
-`lite` 的示例是 `lite('base', selected && 'selected')`。选中时结果含 `selected`，未选中时条件是 `false`，lite 把它丢掉。不要用这个输出驱动按钮的 `disabled`。按钮的禁用只看组件里的 `disabled` state。
+- 字符串原样保留；真值数字转成字符串。数字 `0` 被忽略，字符串 `'0'` 会保留。
+- 数组递归处理；对象中值为真的键名加入结果。因此 `{ active: 'false' }` 仍产生 `active`，非空字符串是真值。
+- `false`、`null`、`undefined`、空字符串、`0` 和 `NaN` 不产生片段。单独的布尔值也不产生类名。
+- `lite` 只处理字符串参数；对象、数组和数字被忽略。即使类型检查允许同一种参数，也不代表运行结果相同。
 
-选中状态同理，只看 `aria-pressed` 和 `selected`，不看类名里有没有 `is-selected`。
+本例卡片传入对象，所以不能仅替换 import 为 `clsx/lite`。只有所有调用都使用字符串及条件结果时，才适合选择 lite。
 
-## 证据
+2.1.1 的类型包含 `bigint`，安装包实现没有把它转成类名；避免依赖 `clsx(1n)`。对象实现使用 `for...in`，也会看到原型链上的可枚举键。将来自接口的对象先转为本地需要的字段，再交给 clsx。
 
-`class-policy` 单测只检查白名单数组，不调用 `clsx`。sdk 要真实 import `clsx@2.1.1` 和 `clsx/lite`，并在 `docs/library-lab/evidence/runs/` 留下收据。
+## 业务状态先做有限映射
 
-GitHub Actions 41779873259 是仓库级安装、typecheck、build、52 个 SDK 文件（153 项测试）和 45 项 Playwright 的结果，不是 C20 的条目 PASS。不要改 `verification.json`。
+[cardClassInputs](examples/class-policy.mjs) 是本示例自建的业务策略：只有严格的布尔 `true` 开启状态类，只有 `success` 和 `warning` 映射为固定语气类，其余语气产生 `null`。clsx 随后负责组合这些已选定的片段。
+
+```ts
+clsx(...cardClassInputs({ selected: true, disabled: false, tone: 'success' }));
+// 'demo-card is-selected tone-success'
+
+clsx(...cardClassInputs({ tone: 'hidden fixed' }));
+// 'demo-card'
+```
+
+有限映射让组件只暴露约定的视觉状态，避免接口字段意外改变布局。clsx 自身不会校验类名，也不会清洗输入。React 的 `className` 将结果写入类属性；这里的风险是接受了不受控的样式 token，不能把它描述成类名会自动注入其他 HTML 属性。
+
+## 与现有样式体系组合
+
+**普通 CSS / CSS Modules。** 普通 CSS 直接传类名。CSS Modules 先取构建工具生成的字符串，再传入 `clsx(styles.card, selected && styles.selected)`；clsx 不负责将逻辑键映射成哈希类名。
+
+**Tailwind。** `clsx('px-2', 'px-4')` 返回两个类。需要提供调用方覆盖默认类的接口时，使用 `twMerge(clsx(...inputs))`，并单独验证 tailwind-merge 版本与项目 Tailwind 配置。类在字符串中的先后并不能单独决定 CSS 层叠结果。
+
+**变体 API。** 少量条件可以保持本例的有限映射；当尺寸、语气、组合条件需要跨组件复用时，将映射提升为独立变体 API。clsx 仍只完成最终的条件组合。
+
+## 迁入业务项目
+
+已有 React 应用安装 `clsx@2.1.1`。直接复用此实验时，复制 `example.tsx`、`class-policy.mjs`、`class-policy.d.mts`、`comparison-presets.mjs`、`comparison-presets.d.mts` 和 `class-names.css`，保持相对路径后挂载默认组件。`demo.tsx` 只是 Lab 的再导出适配。
+
+业务组件通常只需要 clsx 调用、有限状态映射和自己的 CSS；比较预设与输入输出面板是教学界面，可按需去掉。样式全部以 `.clsx-lab` 为作用域，迁移时保留包装类或同步修改选择器。这里没有实例、监听、定时器或持久化资源需要清理，卸载后本地 React 状态随组件释放。
+
+## 核对与来源
+
+- [clsx 官方使用说明](https://github.com/lukeed/clsx#readme)：完整输入与 `clsx/lite` 用法。
+- 本例核对安装包 `clsx@2.1.1` 的 `dist/clsx.mjs`、`dist/lite.mjs` 和 `clsx.d.mts`；类型与运行时不一致之处以上面的实际实现规则为准。
+- [SDK 回归](tests/sdk.test.mjs) 真实导入两个入口，验证卡片策略与页面使用的预设；[策略回归](tests/class-policy.test.mjs) 只验证有限映射。
+
+浏览器验收需要按上面的操作逐项确认样式和原生按钮行为。正式验收状态以本条目的 `verification.json` 和匹配收据为准，Node 断言不能代替浏览器结果。

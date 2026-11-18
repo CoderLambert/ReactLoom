@@ -1,0 +1,47 @@
+{
+  "checkedAt": "2026-11-17T16:26:18.890345+00:00",
+  "tag": "v11.2.9",
+  "commit": "75a290e44ba14bd723c8ef8546b6559c8ef3ae88",
+  "readmePaths": [
+    "__tests__/__prod_snapshots__/readme.js.snap",
+    "__tests__/__snapshots__/readme.js.snap",
+    "__tests__/readme.js",
+    "_site/readme",
+    "_site/readme/index.html",
+    "perf-testing/README.md",
+    "readme.md"
+  ],
+  "languageSelection": "No Chinese README in pinned repository tree; retain English upstream bytes.",
+  "homepage": {
+    "url": "https://immerjs.github.io/immer/zh-CN/",
+    "status": 200,
+    "headers": {
+      "Connection": "close",
+      "Content-Length": "35592",
+      "Server": "GitHub.com",
+      "Content-Type": "text/html; charset=utf-8",
+      "x-origin-cache": "HIT",
+      "Last-Modified": "Tue, 10 Nov 2026 14:48:47 GMT",
+      "Access-Control-Allow-Origin": "*",
+      "Strict-Transport-Security": "max-age=31556952",
+      "ETag": "\"6af32ecf-8b08\"",
+      "expires": "Tue, 17 Nov 2026 16:36:18 GMT",
+      "Cache-Control": "max-age=600",
+      "x-proxy-cache": "MISS",
+      "X-GitHub-Request-Id": "DD34:92B59:1EEC8:21EAE:6AFC8029",
+      "x-github-edge-region": "westus3",
+      "Accept-Ranges": "bytes",
+      "Age": "0",
+      "Date": "Tue, 17 Nov 2026 16:26:18 GMT",
+      "Via": "1.1 varnish",
+      "X-Served-By": "cache-pao-kpao1770056-PAO",
+      "X-Cache": "MISS",
+      "X-Cache-Hits": "0",
+      "X-Timer": "S1794932778.976353,VS0,VE90",
+      "Vary": "Accept-Encoding",
+      "X-Fastly-Request-ID": "bd04b3b9f77c11a56f2096b988e82cf424d6dd25"
+    },
+    "bodySha256": "854f81c619c1d977833d81387c8bd8267ab69122b2265e64b030af4bee43fe46"
+  },
+  "apiTypes": "node_modules/immer/dist/immer.d.ts (11.2.9): produce, produceWithPatches, applyPatches, enablePatches"
+}

@@ -1,18 +1,18 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "Node SDK测试源已提交，尚无真实papaparse安装或执行日志。"
+    "note": "本地sdk证据见local-validation.md及candidate-34；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
   },
   "build": {
     "status": "NOT_RUN",
-    "note": "根 pnpm-lock.yaml 已包含 Library Lab importer，声明的包可以被冻结安装解析。Actions run 41779873259 的仓库级 typecheck/build 不是本条目的 evidence/runs 收据，所以这里是 NOT_RUN，不是 PASS。"
+    "note": "本地build证据见local-validation.md及candidate-34；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "本地文件、CSV导出和错误可见性尚待真实浏览器验收。"
+    "note": "本地browser证据见local-validation.md及candidate-34；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
   },
   "security": {
     "status": "NOT_RUN",
-    "note": "escapeFormulae注入拦截、恶意协议和大文件策略尚未真实执行测试。"
+    "note": "有限公式前缀/协议/预算策略见独立SDK与policy日志；不是完整电子表格安全认证，formalNOT_RUN"
   }
 }

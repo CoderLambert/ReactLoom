@@ -1,0 +1,348 @@
+{
+  "at": "2026-11-10T18:18:18.931454+00:00",
+  "scope": "Static editorial candidates only; local-runtime vs formal-receipt/other environment scope must be independently reviewed before a finding. No code changes or test verdict.",
+  "items": [
+    {
+      "entryId": "E05",
+      "file": "packages/library-lab/entries/E05-monaco-editor/guide.md",
+      "line": 117,
+      "text": "上文操作结果是浏览器验收目标；本轮实际命令、日志和剩余项在条目维护材料 `local-validation.md`。纯 Node 测试只证明草稿策略和清理所有权，不能证明 DOM 编辑、语言 Worker、CSP 或卸载后的线程状态。正式 `verification.json` 没有本条目的匹配收据，继续保留 NOT_RUN。"
+    },
+    {
+      "entryId": "E11",
+      "file": "packages/library-lab/entries/E11-streamdown/guide.md",
+      "line": 26,
+      "text": "“开始自动追加”每 700ms 接收一段。“暂停”保留当前正文，“继续自动追加”从下一段恢复；“提前结束”保留已收正文并封闭本轮，必须“重置”才能重开。自动收完也会停止定时器。重置让段数与正文归零，不会重开已关闭的修复开关。"
+    },
+    {
+      "entryId": "E11",
+      "file": "packages/library-lab/entries/E11-streamdown/guide.md",
+      "line": 87,
+      "text": "[local-validation.md](local-validation.md) 区分了真实 SDK 的 Node 静态渲染、应用状态测试、类型检查与尚待主控完成的浏览器交互。SSR 输出不证明浏览器计时器、焦点、布局和网络行为；`verification.json` 的正式 SDK/build/browser 状态仍遵守收据协议。"
+    },
+    {
+      "entryId": "F05",
+      "file": "packages/library-lab/entries/F05-sheetjs/guide.md",
+      "line": 84,
+      "text": "本轮真实执行得到 8,851 字节 XLSX。这个数字是本地 fixture 产物大小，不是线上性能指标。输出文件可交给人查看；本轮没有在 Excel 或 LibreOffice 中人工打开验收。"
+    },
+    {
+      "entryId": "F05",
+      "file": "packages/library-lab/entries/F05-sheetjs/guide.md",
+      "line": 94,
+      "text": "**可观察结果**：4 条记录形成 `Summary / Category-1 / Category-2 / Category-3`；RSS 有 2 条、160 次访问，推荐为 63，专题为 27，总计 250。脚本重新读取真实 XLSX，逐张核对汇总和明细。本轮产物为 11,071 字节。"
+    },
+    {
+      "entryId": "F05",
+      "file": "packages/library-lab/entries/F05-sheetjs/guide.md",
+      "line": 129,
+      "text": "[官网](https://sheetjs.com/) 本轮 HTTP GET 返回 200，未见禁止嵌入的响应头；没有从实际 Lab origin 做浏览器确认，官网页签状态是 **unknown**，保留直达入口。Apache-2.0 是 CE 代码许可；公式求值、复杂模板和高级样式等 Pro 能力不能由本实验推定免费可用。"
+    },
+    {
+      "entryId": "F05",
+      "file": "packages/library-lab/entries/F05-sheetjs/guide.md",
+      "line": 131,
+      "text": "本轮三条 CLI、真实 SDK 套件及纯策略测试的命令、退出码、原始日志和产物见 [local-validation.md](local-validation.md)。这些是本地执行证据；`verification.json` 的正式 sdk/build/browser 保持 NOT_RUN，不能用 dirty 工作区日志替代绑定提交和指纹的正式收据。"
+    },
+    {
+      "entryId": "B09",
+      "file": "packages/library-lab/entries/B09-shadcn-ui/guide.md",
+      "line": 41,
+      "text": "关键源码：[归档策略](examples/archive-policy.ts)、[失败/取消/重试](examples/example.tsx)。失败开关的取值在启动本轮时捕获，不能在处理中改变已经发出的结果。"
+    },
+    {
+      "entryId": "B09",
+      "file": "packages/library-lab/entries/B09-shadcn-ui/guide.md",
+      "line": 91,
+      "text": "本地定向检查把实际 Button 源码在内存中转为 JS，真实运行 CVA/Slot/clsx/tailwind-merge 并做 React SSR；策略测试只验证归档 helper。它们不能证明键盘事件、视觉排版、异步失败恢复和卸载计时器已经在浏览器通过，也不能证明 CLI 生成一致性。正式收据状态与本轮局部结果分别记录，不借用其他库或旧 CI 的通过。"
+    },
+    {
+      "entryId": "A06",
+      "file": "packages/library-lab/entries/A06-react-flow/guide.md",
+      "line": 185,
+      "text": "[官网](https://reactflow.dev/)本轮GET200，未见X-Frame-Options/CSP frame-ancestors限制；尚未从实际Lab origin用浏览器核实嵌入，所以状态保持unknown，保留直达入口。新入门交互的当轮验收状态见 [local-validation.md](local-validation.md)；2026-11-09原工作台的20策略/5浏览器历史本地证据仍保留，不能直接替代新增小图的浏览器验证。正式verification仍分别NOT_RUN。"
+    },
+    {
+      "entryId": "A01",
+      "file": "packages/library-lab/entries/A01-echarts/guide.md",
+      "line": 104,
+      "text": "SDK 套件使用真实 ECharts SVG SSR，并共享同一配置函数，能证明轴、系列、更新/移除、逻辑 resize 和 dispose 的 SDK 行为；它不能证明浏览器 Canvas、Observer、提示框、离屏暂停或读屏。以上浏览器操作由独立验收确认，正式收据状态继续读取 verification.json。本轮实际命令、日志、六项复核和未测项记录在 local-validation.md。"
+    },
+    {
+      "entryId": "C01",
+      "file": "packages/library-lab/entries/C01-react-hook-form/guide.md",
+      "line": 92,
+      "text": "本轮命令/退出码/原始输出/六项和未测项见 [local-validation.md](local-validation.md)。正式verification的sdk/build/browser仍NOT_RUN；本地SDK执行与干净提交收据分开，不继承旧Actions结论。"
+    },
+    {
+      "entryId": "C01",
+      "file": "packages/library-lab/entries/C01-react-hook-form/guide.md",
+      "line": 98,
+      "text": "原文保持上游字节、署名、图片/链接，不把本地中文教学冒称官方翻译；精确语言/版本/日期/SHA-256在library.json和official/source-evidence.json。[官网](https://react-hook-form.com/)本轮GET200，未见明确跨源嵌入限制头，尚未经Lab origin浏览器确认，所以unknown并保留直达入口。"
+    },
+    {
+      "entryId": "F11",
+      "file": "packages/library-lab/entries/F11-msw/guide.md",
+      "line": 37,
+      "text": "在`packages/library-lab`目录则使用`node entries/F11-msw/examples/node-runner.mjs business`。执行前需要已安装`msw@3.0.3`、Node至少22.12；本轮实际执行版本与输出保存在维护记录中，不把展示出来的命令当执行结果。"
+    },
+    {
+      "entryId": "F11",
+      "file": "packages/library-lab/entries/F11-msw/guide.md",
+      "line": 103,
+      "text": "本轮真实Node SDK和策略、浏览器运行与正式收据分别记录。局部Node通过不证明Service Worker、CSP、多会话隔离或清理ACK；公共历史CI也不替代当前逐条收据。未测项保持准确状态。"
+    },
+    {
+      "entryId": "A10",
+      "file": "packages/library-lab/entries/A10-tldraw/guide.md",
+      "line": 88,
+      "text": "本地两项真实 SDK 检查覆盖 Store 文档恢复与 document/session 分离；三项纯策略覆盖序列化失败及 UTF-8 上限，均不证明工具栏、焦点、许可或卸载。浏览器提案在 `validation/browser-proposal.txt`，待主控接入并实跑；中文输入法、屏幕阅读器和生产授权未测。正式 `verification.json` 不借用历史仓库级收据，仍为 NOT_RUN。实际命令、退出码和六项结论见 `local-validation.md`。"
+    },
+    {
+      "entryId": "B17",
+      "file": "packages/library-lab/entries/B17-floating-ui/guide.md",
+      "line": 96,
+      "text": "真实SDK套件包括React hooks语义接线与公开custom platform上的真实computePosition/碰撞算法；后者的几何输入是固定fixture，不是浏览器DOM。IME和文章策略测试独立记账。它们不能证明焦点返回、Portal、实际滚动、复制权限或卸载清理。局部命令/日志/六项状态见local-validation.md；正式verification保持NOT_RUN，浏览器由主控在匹配候选执行。"
+    },
+    {
+      "entryId": "B17",
+      "file": "packages/library-lab/entries/B17-floating-ui/guide.md",
+      "line": 98,
+      "text": "本轮官方根README原文4922字节，英文，SHA256 `b352baf175998877bad6168b0e55cf887690ede7a85acdfea344de996744d123`；同ref没有中文根/目标包候选，React包README仅73字节简介，选择内容完整的根README。官网GET200完整响应头无XFO/CSP，真实Lab-origin iframe未跑，状态为unknown，保留官网直达。"
+    },
+    {
+      "entryId": "A02",
+      "file": "packages/library-lab/entries/A02-recharts/guide.md",
+      "line": 80,
+      "text": "Node真实SSR探查在3.10.1只输出图表wrapper，未执行浏览器effects，未得到SVG；它不是图表绘制PASS。既有4项纯策略检查也不能证明SDK布局。正式verification保持NOT_RUN；真实柱高变化、Tooltip、双轴、响应式、动画门禁和卸载由主控执行`validation/browser-proposal.txt`中的真实Playwright提案。六项结论与实际命令见`local-validation.md`。没有新增SDK mock、伪SVG或截图替代结果。"
+    },
+    {
+      "entryId": "A03",
+      "file": "packages/library-lab/entries/A03-chartjs/guide.md",
+      "line": 93,
+      "text": "本轮Node SDK使用已锁定、已安装的原生Canvas生成了初始柱图、更新柱图和重建折线PNG，真实验证update/active/hit/resize/destroy；Node没有DOM事件或CSS响应式。原生fixture没有中文字体fallback，图中文字方框不证明浏览器文字可用。策略测试只核对fixture和采样门闩。真实浏览器每目标提案、命令/退出码/日志/实际PNG摘要和六项状态见 [local-validation](local-validation.md)，formal verification保持NOT_RUN。"
+    },
+    {
+      "entryId": "A04",
+      "file": "packages/library-lab/entries/A04-uplot/guide.md",
+      "line": 90,
+      "text": "Node能运行真实join对齐工具，但没有真实document/Canvas。本地SDK3项只证明对齐工具与同源fixture，绘图生命周期不在Node SDK套件中，明确NOT_RUN，没有伪DOM或假context；纯暂停策略4项另外记账。真实图、更新/resize/销毁、移动布局仍待主控浏览器，提案覆盖全部三个目标。局部命令和六项状态见local-validation.md，正式verification三项保持NOT_RUN。"
+    },
+    {
+      "entryId": "A05",
+      "file": "packages/library-lab/entries/A05-d3/guide.md",
+      "line": 86,
+      "text": "Node SDK仅执行真实尺度/shape算法，纯窗口/阈值/宽度策略另记；没有伪造document或SVG来宣布绘图通过。轴、keyed节点身份、指针、键盘、resize和卸载仍由主控运行三目标真实浏览器提案。完整命令/退出码/日志/六项见 [local-validation](local-validation.md)，formal verification保持NOT_RUN。"
+    },
+    {
+      "entryId": "A09",
+      "file": "packages/library-lab/entries/A09-excalidraw/guide.md",
+      "line": 75,
+      "text": "普通Node导入真实SDK在当前Node26环境遇open-color JSON import attribute错误，未进入转换函数；这不是Vite浏览器失败，也不通过mock或改loader造SDK PASS。纯政策测试和入口类型不证明画布、字体或PNG。主控使用`validation/browser-proposal.txt`里的真实Playwright提案执行三个目标；正式verification保持NOT_RUN，六项与命令见local-validation.md。"
+    },
+    {
+      "entryId": "A12",
+      "file": "packages/library-lab/entries/A12-react-konva/guide.md",
+      "line": 77,
+      "text": "两项真实Node SDK检查把实际react-konva renderer挂到脱离Canvas的真实Konva.Group，验证props/身份同步、事件替换和卸载；不是应用的第二套Stage实现，也不证明绘图、命中或浏览器资源清理。五项纯政策检查只验证坐标/尺寸/上限。主控通过validation/browser-proposal.txt验证真实指针和Canvas像素/表格，正式verification保持NOT_RUN。六项和实际命令见local-validation.md。"
+    },
+    {
+      "entryId": "A15",
+      "file": "packages/library-lab/entries/A15-leaflet/guide.md",
+      "line": 90,
+      "text": "Node真实导入Leaflet会因window未定义退出；没有构造伪DOM来宣称SDK地图PASS。7项纯策略检查只证明选中回落、有限坐标和额外容量。真实SVG投影、弹窗/图层身份、键盘、resize、卸载和无外站请求均待主控匹配构建运行 `validation/browser-proposal.txt`。官网两种HTTP客户端都在TLS握手阶段失败，没有响应头可供嵌入判断，状态unknown；不能由此宣称blocked或allowed。实际命令、日志与六项见local-validation，正式verification仍NOT_RUN。"
+    },
+    {
+      "entryId": "A16",
+      "file": "packages/library-lab/entries/A16-maplibre-gl-js/guide.md",
+      "line": 64,
+      "text": "6.15.0还有SDK全局RTL dispatcher所有权：Style构造调用`rtlMainThreadPluginFactory()`，其单例取得`getGlobalDispatcher()`，以`global-dispatcher`身份引用同一WorkerPool。`Map.remove()`只释放该地图的dispatcher引用；全局owner仍在时Worker不会关闭。主控candidate09原生`page.workers()`/CDP观察确认停止后同1个DedicatedWorker仍存活，重进复用且没有新增Worker。不能把“停止单地图后全页Worker为0”作为这里的清理契约，也不能调用全局dispatcher.remove或清预热池迎合测试；应用只负责当前Map及自己的监听/RO/rAF。原提案的Worker close=0断言过强，保留为历史，更新验收看真实remove/Canvas0及重进Worker集合不增长；记录见local-validation。"
+    },
+    {
+      "entryId": "A16",
+      "file": "packages/library-lab/entries/A16-maplibre-gl-js/guide.md",
+      "line": 90,
+      "text": "Node两项真实SDK检查只覆盖LngLat/Mercator和Evented监听所有权；六项政策不创建Map。真实Map/Worker/WebGL只能主控在浏览器运行validation/browser-proposal.txt验证；不以Node输出或静态检查冒充图形结果。正式verification保持NOT_RUN，六项状态与实际命令见local-validation.md。"
+    },
+    {
+      "entryId": "A17",
+      "file": "packages/library-lab/entries/A17-deckgl/guide.md",
+      "line": 92,
+      "text": "真实Node两项仅检查生产Layer描述符/accessors/trigger及WebMercatorViewport投影，明确descriptor未GPU初始化；六项纯政策覆盖尺寸、样本和全量分页。真实Deck/WebGL拾取、属性更新和finalize由主控运行validation/browser-proposal.txt。正式verification保持NOT_RUN，六项记录与命令见local-validation.md。"
+    },
+    {
+      "entryId": "B02",
+      "file": "packages/library-lab/entries/B02-gsap/guide.md",
+      "line": 75,
+      "text": "真实Node SDK3项只在普通数值对象上运行共享Tween/Timeline、缓动、标签和revert，没有伪造DOM/CSS或自动时钟；纯策略6项另记。实际DOM动画、播放时钟、减少动态、visibility和卸载样式还原均待主控运行validation/browser-proposal.txt。正式verification仍NOT_RUN，完整命令/日志/六项见local-validation.md。"
+    },
+    {
+      "entryId": "B03",
+      "file": "packages/library-lab/entries/B03-react-spring/guide.md",
+      "line": 81,
+      "text": "Node真实SDK测试2项直接操作SpringValue并使用公开 advance 驱动真实物理积分，覆盖收敛、immediate和取消。它不挂载hook或animated DOM；5项策略只覆盖容量/身份/焦点目的地。真实 DOM 插值、离场隔离、键盘焦点、系统偏好更新与卸载由主控按 validation/browser-proposal.txt 在稳定候选验证。正式sdk/build/browser均NOT_RUN，实际命令、日志和六项结论在local-validation.md。"
+    },
+    {
+      "entryId": "B05",
+      "file": "packages/library-lab/entries/B05-rive-react/guide.md",
+      "line": 86,
+      "text": "真实WASM两项、原策略五项、类型/格式/metadata与浏览器提案边界详见 [local-validation](local-validation.md)。在线渲染由主控匹配候选执行提案；离线授权文件仍未提供，assets保留相应BLOCKED，formal sdk/build/browser保持NOT_RUN。"
+    },
+    {
+      "entryId": "B07",
+      "file": "packages/library-lab/entries/B07-mui/guide.md",
+      "line": 75,
+      "text": "真实Node SDK2项检查主题计算和真实TextField服务端HTML，纯业务策略6项另记；它们不证明Dialog/Portal、键盘焦点、浏览器Emotion样式或Snackbar真实时间。三目标的完整真实浏览器源码在validation/browser-proposal.txt，主控运行，正式verification仍NOT_RUN。日志和六项结论见local-validation.md。"
+    },
+    {
+      "entryId": "B08",
+      "file": "packages/library-lab/entries/B08-mantine/guide.md",
+      "line": 77,
+      "text": "Node真实SDK2只覆盖Provider变量和组件SSR、NumberInput静态值及useDebouncedValue初值；4项policy仅配额/history和本地manager隔离，不证明计时、输入、Portal或焦点。完整真实Playwright提案在validation/browser-proposal.txt，由主控稳定候选运行；正式verification三项NOT_RUN，实际命令/日志/六项在local-validation.md。"
+    },
+    {
+      "entryId": "B11",
+      "file": "packages/library-lab/entries/B11-radix-primitives/guide.md",
+      "line": 84,
+      "text": "Node真实SDK2只覆盖React SSR下的asChild单button/ARIA，以及公开forceMount且不使用Portal的静态checkbox/radio/disabled语义；这不是当前Demo客户端Portal路径。6项policy只覆盖过滤/排序/删除/可见选择，不证明键盘或焦点。完整真实Playwright提案在validation/browser-proposal.txt，主控统一运行，正式sdk/build/browser保持NOT_RUN；实际命令和六项见local-validation.md。"
+    },
+    {
+      "entryId": "B12",
+      "file": "packages/library-lab/entries/B12-react-aria/guide.md",
+      "line": 84,
+      "text": "本地真实SDK2项验证兼容/新选择属性的SSR key、受控文字和实例描述关系；纯策略4项验证过滤/业务确认/查询对齐，二者不证明Portal、IME或键盘运行。实际日志/六项与未测见local-validation，完整真实浏览器提案在validation/browser-proposal.txt，主控匹配构建运行；formal三项NOT_RUN。"
+    },
+    {
+      "entryId": "B15",
+      "file": "packages/library-lab/entries/B15-react-grid-layout/guide.md",
+      "line": 61,
+      "text": "“重置宽窄布局”同时恢复两份初始文档、解除锁定并清本轮SDK回调记录，几何changes计数继续累计；容器宽度设置不变。没有localStorage、下载导出、后端保存、revision或撤销栈；JSON只是可序列化观察，不把它写成已持久化。"
+    },
+    {
+      "entryId": "B15",
+      "file": "packages/library-lab/entries/B15-react-grid-layout/guide.md",
+      "line": 84,
+      "text": "本地真实SDK3仅验证core格子/像素换算、压缩/静态碰撞与Hook SSR初值；pure policy6是应用规则。它们不证明DOM排版、拖动、缩放、RO或资源清理。完整三case真实Playwright提案见validation/browser-proposal.txt，主控匹配构建运行；正式verification全NOT_RUN，实际命令、六项和剩余见local-validation.md。"
+    },
+    {
+      "entryId": "B16",
+      "file": "packages/library-lab/entries/B16-react-resizable-panels/guide.md",
+      "line": 86,
+      "text": "本轮 Node SDK 静态 SSR、条目严格类型、metadata 检查和提案检查的真实命令/退出码见 [local-validation.md](local-validation.md)。三项目标的完整 Playwright 提案在 [browser-proposal.txt](validation/browser-proposal.txt)，实际指针、键盘、几何约束、窄屏和卸载由主控统一执行。正式 verification 的 sdk/build/browser 仍为 NOT_RUN；本地静态检查不构成运行收据。"
+    },
+    {
+      "entryId": "B18",
+      "file": "packages/library-lab/entries/B18-cmdk/guide.md",
+      "line": 86,
+      "text": "真实SDK局部检查运行默认filter与React SSR；policy只检查业务和键盘规则。实际过滤/高亮、Dialog焦点/门户、原生快捷键、IME事件协议与卸载由主控按[完整提案](validation/browser-proposal.txt)验收，尚未运行时保留NOT_RUN。实际命令与六项见[local-validation.md](local-validation.md)，正式sdk/build/browser不从局部或共享CI推导PASS。"
+    },
+    {
+      "entryId": "B20",
+      "file": "packages/library-lab/entries/B20-sonner/guide.md",
+      "line": 83,
+      "text": "局部 SDK、纯规则、类型/格式/metadata 的实际命令与边界在 [local-validation.md](local-validation.md)。完整三个真实 Playwright 案例在 [browser-proposal.txt](validation/browser-proposal.txt)，实际通知皮肤、焦点/action、有限时长、取消和卸载由主控统一执行。正式 sdk/build/browser 仍 NOT_RUN，不用 Node store 或旧仓库 CI 代替浏览器收据。"
+    },
+    {
+      "entryId": "B22",
+      "file": "packages/library-lab/entries/B22-react-beautiful-dnd-migration/guide.md",
+      "line": 85,
+      "text": "真实SDK局部检查只运行替代库的React19 SSR绑定与双context身份；17项policy验证本地规则。真实传感器/位移/占位/取消/焦点/清理需主控按[完整浏览器提案](validation/browser-proposal.txt)运行。六项、实际cwd/命令/exit/日志见[local-validation.md](local-validation.md)；正式三项NOT_RUN，更不能由替代库局部通过推导原库PASS。"
+    },
+    {
+      "entryId": "C03",
+      "file": "packages/library-lab/entries/C03-valibot/guide.md",
+      "line": 83,
+      "text": "本地SDK6包含实际共享Feed/Batch/Window合同；纯helper policy2另记。日历缺口红日志真实exit1已保留，修正后SDK全通过，但这不是客户端输入/ARIA/移动端验收。完整三case真实Playwright提案见validation/browser-proposal.txt，主控统一运行；formal全NOT_RUN，六项/命令/未测见local-validation.md。"
+    },
+    {
+      "entryId": "C04",
+      "file": "packages/library-lab/entries/C04-jsonforms/guide.md",
+      "line": 77,
+      "text": "局部真实SDK3是Vanilla初始SSR标签/HIDE、同Schema Ajv和NoValidation下additionalErrors显示；原pure4只验证payload与字段映射，均不能证明动态onChange/焦点/IME或取消。实际命令/六项见[local-validation.md](local-validation.md)，完整三条[browser提案](validation/browser-proposal.txt)交主控统一运行。触屏/读屏、真实OS输入法、SSR hydration、远程schema/HTTP授权与资源普查未验收；正式sdk/build/browser仍NOT_RUN。"
+    },
+    {
+      "entryId": "C06",
+      "file": "packages/library-lab/entries/C06-imask/guide.md",
+      "line": 36,
+      "text": "点击“重置当前控件”才清本轮快照/计数并增加generation重挂input。普通accept绝不换key。场景外层key=level使切换后不会出现新空DOM配旧编号输出；重置和切换会销毁旧SDK实例，不承诺保留焦点或草稿。"
+    },
+    {
+      "entryId": "C06",
+      "file": "packages/library-lab/entries/C06-imask/guide.md",
+      "line": 68,
+      "text": "原模型SDK3与新增日期模型对照、calendar纯策略分开记录；它们都不证明真实React输入。完整三个真实浏览器提案由主控匹配候选执行，无SDK mock；正式verification保持NOT_RUN。具体命令、来源与六项状态见local-validation.md。"
+    },
+    {
+      "entryId": "C08",
+      "file": "packages/library-lab/entries/C08-ag-grid/guide.md",
+      "line": 71,
+      "text": "[local-validation.md](local-validation.md)区分真实SDK配置调用、纯策略、类型和真实浏览器；[完整三目标Playwright提案](validation/browser-proposal.txt)由主控统一接入。Node未造DOM，配置/theme调用不等于网格行模型/编辑/分页已运行。键盘、焦点、实际滚动、DOM清理、OS读屏/触摸和SSR hydration仍NOT_RUN，正式verification不升级。"
+    },
+    {
+      "entryId": "C10",
+      "file": "packages/library-lab/entries/C10-tanstack-virtual/guide.md",
+      "line": 82,
+      "text": "[local-validation.md](local-validation.md)区分SDK3、policy6、入口类型、静态内容和真实浏览器；[完整三目标提案](validation/browser-proposal.txt)由主控接入。DOM数量、原生滚动、真实变高/resize、重复查询清测量/卸载、OS输入法/读屏和SSR hydration未运行前都保持NOT_RUN，正式verification不升级。"
+    },
+    {
+      "entryId": "C12",
+      "file": "packages/library-lab/entries/C12-fullcalendar/guide.md",
+      "line": 72,
+      "text": "level切换创建独立Session，显式“重置本地日历”才增加本日历epoch并重挂SDK；清事件/序号/输入与本轮观察。普通标题输入不换日历key。alive/epoch只拒旧子树回调，不能称已实现远程请求取消。CalendarRef.getApi为真实SDK ref；应用不调用全局destroy或手动删除其他日历监听。"
+    },
+    {
+      "entryId": "C12",
+      "file": "packages/library-lab/entries/C12-fullcalendar/guide.md",
+      "line": 84,
+      "text": "Node SDK2为真实共享插件/locale与公开FullCalendar formatter（05:30/06:30）；原纯Date差值不再算SDK。策略4只验证时间/ID，均不证明Calendar DOM、拖/缩放/revert。完整三目标浏览器提案交主控匹配构建运行；正式verification三项NOT_RUN，命令/六项和实际剩余见local-validation.md。"
+    },
+    {
+      "entryId": "C14",
+      "file": "packages/library-lab/entries/C14-date-fns/guide.md",
+      "line": 59,
+      "text": "React 持有输入草稿、当前结果、错误。编辑清结果，避免旧 JSON 冒充新草稿结果；运行同步调用真实 SDK；失败清旧结果；重置恢复默认。场景用 level key 新建 session，切换和离开自然清本轮 React 状态。"
+    },
+    {
+      "entryId": "C14",
+      "file": "packages/library-lab/entries/C14-date-fns/guide.md",
+      "line": 85,
+      "text": "匹配 v4.4.0 的固定提交为 cd53d2538cfa318404eff7ade6449b49bf34562e。该 monorepo 的 pkgs/core/package.json 是 4.4.0，pkgs/tz/package.json 是 1.5.0；旧独立 tz 仓库不是本轮 1.5.0 的版本依据。两包 npm 元数据均没有 gitHead，使用实际 tag 与固定 manifest 交叉确认。"
+    },
+    {
+      "entryId": "C14",
+      "file": "packages/library-lab/entries/C14-date-fns/guide.md",
+      "line": 91,
+      "text": "本地真实 SDK 共 5 项按影响分两次验证，纯输入 policy 3 项；初始低年 FAIL、收窄后的真实 1901 边界与独立低年 instant PASS 分开保留。本地验证记录另列命令、退出码、范围与未测项。主控 candidate18 已执行三目标真实交互与官方来源共 4 项通过；源码与固定构建输入一致。正式 verification 三状态仍保持 NOT_RUN，详细收据在本地记录；不能由这四项推断任意部署环境、真实 OS 输入法或所有浏览器 TZDB 验收。"
+    },
+    {
+      "entryId": "C18",
+      "file": "packages/library-lab/entries/C18-react-i18next/guide.md",
+      "line": 58,
+      "text": "状态 JSON 中 requested 是最后意图，actual 是真实实例当前语言，committed 是队列最后一次完成提交；本地等待也有 activeTarget/awaitingRelease。串行化不等于原子语言事务：已开始的请求完成时，SDK仍可能发中间 languageChanged，页面可以显示中间语言。队列合并等待中的意图，只让最新完成提交/错误更新本轮状态；它不撤销已经发出的 SDK 事件。"
+    },
+    {
+      "entryId": "C18",
+      "file": "packages/library-lab/entries/C18-react-i18next/guide.md",
+      "line": 88,
+      "text": "本地真实SDK5项（含Provider/Trans静态渲染及实际core队列）与纯policy4项分别通过；主控固定candidate19三目标和官方blocked共4项真实浏览器通过，九运行源保持一致。正式verification三状态仍NOT_RUN，本地收据层级另记；不由这些样本推断全浏览器、SSR hydration、OS IME或任意资源安全已通过。"
+    },
+    {
+      "entryId": "B01",
+      "file": "packages/library-lab/entries/B01-motion-for-react/guide.md",
+      "line": 76,
+      "text": "Node真实React SSR检查只证明Motion组件/上下文与initial=false静态目标；原4项策略只证明数组规则。两者都不证明退出动画、布局、偏好切换或键盘焦点。实际命令/日志与六项见 [local-validation](local-validation.md)，真实浏览器提案在validation/browser-proposal.txt；formal verification三项仍NOT_RUN。"
+    },
+    {
+      "entryId": "B10",
+      "file": "packages/library-lab/entries/B10-base-ui/guide.md",
+      "line": 87,
+      "text": "局部真实SSR测试验证SDK渲染的role/mixed/原生input属性；原六项policy验证权限计算。它们不证明label点击、Space/Tab、DOM indeterminate或实际FormData。三条真实浏览器提案与命令、日志见[local-validation.md](local-validation.md)；正式sdk/build/browser没有匹配收据仍NOT_RUN。"
+    },
+    {
+      "entryId": "B21",
+      "file": "packages/library-lab/entries/B21-react-motion-migration/guide.md",
+      "line": 84,
+      "text": "本地严格类型、现代SDK局部SSR、pure reducer、格式/metadata与提案的真实命令/退出码在[local-validation.md](local-validation.md)。[完整三项目标Playwright提案](validation/browser-proposal.txt)交root统一执行；真实退出/打断、按钮/焦点、布局、实时减动和卸载仍NOT_RUN。旧runtime、跟随弹簧、HTTP、读屏/触摸、SSR hydration和大列表性能均未验收。正式sdk/build/browser不升级。"
+    }
+  ]
+}

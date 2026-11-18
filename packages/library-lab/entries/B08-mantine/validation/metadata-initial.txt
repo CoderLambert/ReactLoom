@@ -1,0 +1,27 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node entries/B08-mantine/validation/check-entry.mjs
+exit: 1
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node entries/B08-mantine/validation/check-entry.mjs
+node:internal/modules/run_main:111
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
++ actual - expected
+
++ [
++   'invalid official README metadata'
++ ]
+- []
+
+    at file:///home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/B08-mantine/validation/check-entry.mjs:11:8 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: [ 'invalid official README metadata' ],
+  expected: [],
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v26.13.0

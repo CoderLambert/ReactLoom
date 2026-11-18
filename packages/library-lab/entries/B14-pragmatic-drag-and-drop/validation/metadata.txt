@@ -1,0 +1,5 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+argv=["node", "packages/library-lab/entries/B14-pragmatic-drag-and-drop/validation/check-metadata.mjs"]
+{"demos":3,"sourceFiles":3,"originalBytes":216,"hash":"bd43a66cfa1697781045dae0873d9fa77ac34ef31e6ecb5fba8583eb23a3e4e2"}
+
+exit=0

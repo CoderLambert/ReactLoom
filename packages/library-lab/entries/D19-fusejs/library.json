@@ -5,14 +5,7 @@
   "name": "Fuse.js",
   "group": "D",
   "summary": "浏览器端加权模糊搜索、分组过滤、IME 与动态索引重建",
-  "tags": [
-    "Fuse",
-    "搜索",
-    "模糊匹配",
-    "RSS",
-    "IME",
-    "索引"
-  ],
+  "tags": ["Fuse", "搜索", "模糊匹配", "RSS", "IME", "索引"],
   "contentState": "recreated",
   "packages": [
     {
@@ -59,7 +52,9 @@
         "examples/search-scope.mjs",
         "examples/search-scope.d.mts",
         "examples/index-lifecycle.mjs",
-        "examples/index-lifecycle.d.mts"
+        "examples/index-lifecycle.d.mts",
+        "examples/article-index.mjs",
+        "examples/article-index.d.mts"
       ],
       "capabilities": [],
       "description": "Fuse.search 加权评分"
@@ -76,7 +71,9 @@
         "examples/search-scope.mjs",
         "examples/search-scope.d.mts",
         "examples/index-lifecycle.mjs",
-        "examples/index-lifecycle.d.mts"
+        "examples/index-lifecycle.d.mts",
+        "examples/article-index.mjs",
+        "examples/article-index.d.mts"
       ],
       "capabilities": [],
       "description": "RSS 分组过滤与输入法处理"
@@ -93,7 +90,9 @@
         "examples/search-scope.mjs",
         "examples/search-scope.d.mts",
         "examples/index-lifecycle.mjs",
-        "examples/index-lifecycle.d.mts"
+        "examples/index-lifecycle.d.mts",
+        "examples/article-index.mjs",
+        "examples/article-index.d.mts"
       ],
       "capabilities": [],
       "description": "真实 Fuse 索引按不可变文档快照重建，不残留旧内容"
@@ -106,5 +105,25 @@
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
     "note": "官方文档重新实现；历史测试未继承"
+  },
+  "official": {
+    "readme": {
+      "repository": "krisk/Fuse",
+      "commit": "45bac9fe2e71fe8c680c861a35a8b226c4ae6d5a",
+      "path": "README.md",
+      "sha256": "ddeea10c54ccf1d6d21bcc31f89ca305db4b50c3197f3cd105dbb7b0c01ef72d",
+      "sourceUrl": "https://github.com/krisk/Fuse/blob/45bac9fe2e71fe8c680c861a35a8b226c4ae6d5a/README.md",
+      "snapshotPath": "official/readme.md",
+      "language": "en",
+      "version": "7.5.0",
+      "syncedAt": "2026-11-17T16:59:16.330Z"
+    },
+    "homepage": {
+      "url": "https://www.fusejs.io/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-17T16:59:16.330Z",
+      "reason": "实际GET及完整响应头见official/source-evidence.json；尚未从Lab origin确认嵌入，保留unknown和官网直达。"
+    }
   }
 }

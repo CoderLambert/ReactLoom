@@ -1,24 +1,42 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
-import React from 'react';
-import {renderToStaticMarkup} from 'react-dom/server';
-import {Virtuoso} from 'react-virtuoso';
+import assert from 'node:assert/strict'
+import test from 'node:test'
+import React from 'react'
+import { renderToStaticMarkup } from 'react-dom/server'
+import { Virtuoso } from 'react-virtuoso'
 
-test('real react-virtuoso exports a renderable SSR shell (not browser scrolling)', () => {
-  const html=renderToStaticMarkup(React.createElement(Virtuoso, {
-    totalCount: 4, initialItemCount: 2, itemContent: index => React.createElement('p',null,'item-'+index),
-    style:{height:240},
-  }));
-  assert.equal(typeof html,'string');
-  assert.match(html,/item-0|<div/u);
-});
+const data = [
+  { id: 'rss-a', title: 'first' },
+  { id: 'rss-b', title: 'second' },
+  { id: 'rss-c', title: 'third' },
+]
+function render(firstItemIndex = 0) {
+  return renderToStaticMarkup(
+    React.createElement(Virtuoso, {
+      data,
+      initialItemCount: 2,
+      firstItemIndex,
+      computeItemKey: (_index, item) => item.id,
+      itemContent: (index, item) =>
+        React.createElement('article', { 'data-article-id': item.id }, `${index}:${item.title}`),
+      style: { height: 240 },
+    }),
+  )
+}
 
-test('actual Virtuoso can remount an identical query as an independent viewport identity', () => {
-  const data=[{id:'rss-1',title:'first'},{id:'rss-2',title:'second'}];
-  const props={data,initialItemCount:2,computeItemKey:(_index,item)=>item.id,
-    itemContent:(_index,item)=>React.createElement('span',null,item.title),style:{height:240}};
-  const first=renderToStaticMarkup(React.createElement(Virtuoso,{...props,key:1}));
-  const second=renderToStaticMarkup(React.createElement(Virtuoso,{...props,key:2}));
-  assert.equal(first,second);
-  // This is a real SDK SSR check; actual viewport reset remains a browser assertion.
-});
+test('real Virtuoso SSR initialItemCount renders two actual data rows, not the full array', () => {
+  const html = render()
+  assert.equal((html.match(/<article /gu) ?? []).length, 2)
+  assert.match(html, /data-article-id="rss-a">0:first/u)
+  assert.match(html, /data-article-id="rss-b">1:second/u)
+  assert.doesNotMatch(html, /rss-c|third/u)
+  assert.match(html, /data-virtuoso-scroller="true"/u)
+})
+
+test('real Virtuoso SSR offsets logical indices with firstItemIndex while retaining data IDs', () => {
+  const html = render(1000)
+  assert.match(html, /data-item-index="1000"/u)
+  assert.match(html, /data-item-index="1001"/u)
+  assert.match(html, /data-article-id="rss-a">1000:first/u)
+  assert.match(html, /data-article-id="rss-b">1001:second/u)
+  // SSR proves these supported inputs and actual rows, not scrolling, ResizeObserver or prepend anchoring.
+})

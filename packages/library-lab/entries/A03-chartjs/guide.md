@@ -1,194 +1,93 @@
-# A03 Chart.js：Canvas 图表、实例所有权与 React 边界
+# Chart.js：业务数据归React，Canvas实例归图表
 
-Chart.js 画的是 HTML Canvas，不是 SVG 节点树。`Chart` 实例拥有 context、controller、scale 和动画监听；React 只拥有业务数字、选中态和可访问表格。包装器 `react-chartjs-2` 不是 Chart.js 本体。Library Lab 钉的是 `chart.js@4.6.1`，当前示例直接 `new Chart`，不安装包装器。
+七天阅读量要同时显示成图和精确表格，更新数据后还要继续点选、缩放布局。Chart.js负责Canvas绘制、坐标轴、命中检测与响应式尺寸；React负责业务数字和选中哪一天。本例直接使用 `chart.js@4.6.1`（MIT），没有react-chartjs-2包装器、新闻接口或远程请求。
 
-## Lab 当前示例
+适合常见柱线统计且愿意明确管理一个Canvas实例。需要React声明式SVG可比较Recharts；复杂联动、地图等另看ECharts。Canvas没有逐点DOM文本，精确数字、键盘路径和读屏内容必须另外提供；这里的HTML表和图使用同一份数据，不从像素反算数字。
 
-挂载入口是 `examples/demo.tsx`，它只再导出 `examples/example.tsx`。纯策略在 `examples/chart-stream-policy.ts`。三层共用同一个组件，靠 `level` 切换控件。
+## 先认识四种组件和一个实例
 
-已挂载的行为：
+[chart-model.ts](examples/chart-model.ts) 按需导入并注册：
 
-- 模块顶层 `Chart.register` 只登记 Bar/Line 的 controller、element、`CategoryScale`、`LinearScale`、`Legend`、`Tooltip`。没有 `import 'chart.js/auto'`。
-- `useEffect` 在 canvas 的 2d context 上 `new Chart`，cleanup 里 `chart.destroy()`。柱/线切换改变 `effectiveKind`，先销毁再新建，避免同一 canvas 上叠两个实例。
-- 阅读量来自 `chartCounts(revision)`。按钮和 400ms 计时器只改 revision，随后 `chart.data.datasets[0].data = [...counts]` 再 `chart.update('none')`。类型不变时不重建 Chart。
-- 构造当下就用当前 revision 填数据，避免类型切换的瞬间画回 revision 0。
-- `options.onClick` 用命中元素的 `index` 写入 `selectedDay`。表格按钮写同一个状态；另一个 effect 调 `chart.setActiveElements` 再 `update('none')`。
-- advanced 才允许自动采样。`shouldAutoSample` 要求 advanced、勾选、页签可见，且 revision 小于 `MAX_REVISION`（10000）。隐藏页签、离开 advanced、到达上界都会清掉 interval。`visibilitychange` 在卸载时移除。
-- 父容器 `height: 310` 且 `position: relative`。`responsive: true`、`maintainAspectRatio: false`、`animation: false`。Canvas 带 `role="img"`，精确数字在 HTML 表里。
+| 类型 | 本例注册 | 用途 |
+| --- | --- | --- |
+| controller | BarController / LineController | 将dataset组织为柱/线图 |
+| element | BarElement / LineElement / PointElement | 绘制实际柱、线与点 |
+| scale | CategoryScale / LinearScale | 周一到周日的类别轴、阅读量数值轴 |
+| plugin | Legend / Tooltip | 图例与提示 |
 
-当前 demo **没有**挂上、但仍是生产教学的部分：`react-chartjs-2`、`datasetIdKey`、第二条 series、`parsing: false` / `normalized`、Decimation、`toBase64Image`、CSV、可取消 HTTP、503 时保留上次成功数据。下面按 4.6.1 的官方契约写这些，不要把它们当成已经在 Lab 里跑过。
+这份共同模块支持两类图，因此basic也会加载本例注册的Bar/Line组件；没有把basic另拆成只含Bar的包，也没有测量包体收益。`chart.js/auto`会替你注册所有类型，本例明确列出实际使用项，方便理解模块边界。
 
-## 何时用、何时不用
-
-适合运营看板里的柱、线、饼和有界的近实时趋势，以及用户需要一张 PNG 预览的场景。Canvas 在点数上来之后通常比“每个点一个 SVG 元素”轻，但这不是无限数据和帧率保证。默认输出是 Canvas，不是可选择的 SVG 文本。
-
-| 需求 | 优先比较 | 理由 |
-|---|---|---|
-| 少量常规统计图 | Chart.js 或 Recharts | Chart.js 手动持有 Canvas；Recharts 把 SVG 交给 React |
-| 多种联动图、地图、统一 option | ECharts | 组件系统更完整，生命周期也是另一套 |
-| 百万级对齐时序 | uPlot | 列式 Canvas 时序更贴这个任务，仍要用真实数据测 |
-| 非标准视觉编码 | D3 | 比例尺和形状自己负责 |
-| 地图 / 流程拓扑 | MapLibre、React Flow | Chart.js 没有这些模型 |
-
-不适合：开发者要直接改大量 SVG 节点、读屏必须逐点拿到 DOM 文本、海量高频时序还没做基准、或把图表当成业务数据库。Chart.js 没有内置数据表，键盘和读屏路径要另做。官方无障碍说明见 [accessibility](https://www.chartjs.org/docs/latest/general/accessibility.html)。
-
-## 版本与安装
-
-| 依赖 | Lab 钉死的版本 | 说明 |
-|---|---|---|
-| `chart.js` | **4.6.1** | MIT。研究稿核对过的 4.5.1 不是本条目的 pin |
-| `react-chartjs-2` | 未安装 | 研究稿写过 5.3.1。生产若引入，peer 需覆盖本仓库 React 19，并且不要和手写 `new Chart` 抢同一块 canvas |
-| React | 模板 Web 侧 19.3 | Chart 只能在客户端 effect 里创建。SSR 用 `use client` 加动态导入，服务端不要碰 Canvas |
-
-浏览器需要现代 Canvas。IE11 不在支持范围内。第三方插件、字体、图标的许可证要单独看，不能从主库 MIT 外推。
-
-按需注册（与当前示例一致）：
-
-```ts
-import {
-  Chart, BarController, BarElement, LineController, LineElement, PointElement,
-  CategoryScale, LinearScale, Legend, Tooltip,
-} from 'chart.js';
-
-Chart.register(
-  BarController, BarElement, LineController, LineElement, PointElement,
-  CategoryScale, LinearScale, Legend, Tooltip,
-);
-```
-
-漏掉 `LineController` 却 `type: 'line'`，控制台是 `"line" is not a registered controller`。`chart.js/auto` 能省事，也会把没用到的控制器打进包。
-
-## 数据模型与生命周期
-
-`Chart` 持有的是可视化副本，不是业务仓库。顺序是：`new Chart(context, config)` → 改 `chart.data` → `chart.update(mode)` → 需要时 `chart.resize()` → 卸载 `chart.destroy()`。`update('none')` 跳过更新动画，适合采样。官方更新说明：[updates](https://www.chartjs.org/docs/latest/developers/updates.html)。
-
-Lab 的数据流：
+数据是7个有限整数，`chartCounts(revision)` 的初值为110、127、144、161、178、195、212，总量1127。每次本地revision增加，七天分别增加3至9，总量增加42。它代表可控fixture，按钮不是接口请求。
 
 ```text
-revision (0..10000)
-  -> chartCounts() 七日整数
-  -> React counts 与 HTML 表
-  -> datasets[0].data 浅拷贝
-  -> chart.update('none')
-点击 canvas 或表格按钮
-  -> selectedDay
-  -> setActiveElements + update('none')
+React revision → chartCounts → counts ─┬→ HTML表和总量
+                                      └→ chart.data → update('none') → Canvas
+Canvas命中index / 表格按钮 → selectedDay → setActiveElements → 同一选择反馈
 ```
 
-点的下标只在 `labels` 与 `data` 同序时等于“周几”。排序或筛选必须同时改两边，不能把 index 当全局主键。
+labels与data保持同序，这里下标才对应星期；改变排序或过滤时必须同步映射，不把index当永久业务ID。Chart持有用于绘制的副本，不是缓存或业务数据库。
 
-若改用 `react-chartjs-2`，包装器内部也会 `new Chart` 并在卸载时 `destroy`。业务组件不要再写第二份构造和销毁。系列身份默认靠 `label`。`label` 为空、重复或被翻译时，更新会串线。应设 `datasetIdKey="id"`，id 用稳定的 `reads` / `saves`，不要用会随语言变化的文案。匹配看的是这个键，不是数组下标。Lab 目前只有一条「阅读量」，还没有这条身份问题，但一加上第二条线就必须处理。
-
-Canvas 尺寸量的是**父容器**。父级要有真实高度。不要写 `<canvas style="height:40vh">` 或手改 DPR。Chart.js 自己听尺寸变化，通常不必再套一个无界 `ResizeObserver`。从 `display:none` 恢复、打印前后，按文档补一次 `resize()`。[responsive](https://www.chartjs.org/docs/latest/configuration/responsive.html)。
-
-Decimation 只在同时满足这些条件时才有意义：折线、`indexAxis: 'x'`、x 为 linear 或 time、`parsing: false`、数据点超过阈值、dataset 对象可变。插件会改写 `data` 并把原数组留在 `_data`，不要把冻结对象直接交进去。`parsing: false` 时期望的是 `{x:number,y:number}` 且 x 唯一升序。乱序字符串、日期字符串或 `NaN` 会让降采样不生效。这些都还没挂到当前 demo。
-
-## 三层 Demo：挂载了什么，生产还要补什么
-
-### 01 最小：柱状图与键盘等价
-
-basic 固定柱形。点第一根柱或 Tab 到表格按钮，状态文案都来自同一个 `selectedDay`。表格能复制、能读屏；Canvas 只是 `role="img"` 加一段名称，不是数据本身。
-
-### 02 业务：复用实例更新
-
-business 仍是单系列柱图。点「模拟新增阅读」增加 revision，实例不重建。`output` 读出七日合计。生产教学里还应有第二条线、隐藏某一系列、可取消请求、503 时保留上一份成功数据、CSV 公式注入防护。Lab 没有 HTTP，不要把按钮点击说成接口验收。
-
-### 03 进阶：类型切换、有界采样、高亮
-
-advanced 用下拉在 bar/line 之间切换，effect 销毁旧图再建新图。勾选自动采样后每 400ms `nextRevision`，页签隐藏或到 10000 即停。达到上界时按钮禁用。选中态在类型切换后仍通过 `setActiveElements` 对齐。
-
-生产侧的流式图还应：批处理而不是每个点一次 React 提交、窗口截断（研究稿用 180 点，Lab 用 revision 上界而不是点数上界）、`pointRadius: 0`、`prefers-reduced-motion` 为真时禁止动画、`chart.toBase64Image()` 导出并处理跨域污染。当前示例把动画直接关掉，没有读 `prefers-reduced-motion`，也没有 PNG。
-
-## 反例：错误写法和对应修法
-
-在 render 里构造，StrictMode 会打两次，canvas 报 already in use：
-
-```tsx
-function Bad({ rows }: { rows: number[] }) {
-  const ref = useRef<HTMLCanvasElement>(null);
-  if (ref.current) new Chart(ref.current, { type: 'bar', data: { datasets: [{ data: rows }] } });
-  return <canvas ref={ref} />;
-}
-```
-
-构造和销毁放在 effect，数据变化只 update：
+## 最小接入与React所有权
 
 ```tsx
 useEffect(() => {
-  const canvas = canvasRef.current;
-  if (!canvas) return;
-  const chart = new Chart(canvas, { type, data, options: { animation: false, responsive: true, maintainAspectRatio: false } });
-  chartRef.current = chart;
-  return () => { chartRef.current = null; chart.destroy(); };
-}, [type]);
-
-useEffect(() => {
-  const chart = chartRef.current;
-  if (!chart) return;
-  chart.data.datasets[0].data = counts.slice();
-  chart.update('none');
-}, [counts, type]);
+  const canvas = canvasRef.current
+  const context = canvas?.getContext('2d')
+  if (!context) return
+  const chart = new Chart(context, createReadingConfig(kind, initialCounts))
+  chartRef.current = chart
+  return () => {
+    chartRef.current = null
+    chart.destroy()
+  }
+}, [kind])
 ```
 
-| 错误 | 后果 | 正确做法 |
-|---|---|---|
-| 忘记 `Chart.register` 对应控制器 | `"bar" is not a registered controller` | 按实际 type 注册 controller、element、scale、插件 |
-| 多条线没有稳定 id，只靠可翻译的 `label` | 更新后串线 | `datasetIdKey="id"`，id 不参与 i18n |
-| 每个采样都 `new Chart`，数组无限增长 | 监听泄漏、主线程变长 | 有界窗口 + `update('none')`；类型变化才 destroy |
-| `parsing: false` 却传入字符串或 NaN | 轴错、降采样条件不成立 | 先校验有限数，x 升序，缺失不要静默当 0 |
-| 父容器高度为 0 却 `maintainAspectRatio: false` | 空白或发糊 | 父级 `position:relative` 加明确高度 |
-| 只有 Canvas，没有表格 | 读屏拿不到数字 | `aria-label` 只是名称；完整值放 `<table>` 和按钮 |
-| 数据集被冻结后开 Decimation | 插件改写 `data` 失败 | 浅拷贝可变 dataset，并满足折线/linear/parsing 前提 |
-| 跨域图片进了插件再 `toBase64Image` | `SecurityError` | 同源或合法 CORS；导出放 try/catch。本 demo 无外链图片 |
-| 手写 Chart 再套一层 react-chartjs-2 包住同一 canvas | 双重 destroy / already in use | 一个 canvas 只允许一个所有者 |
+上面解释构造/销毁的形状；完整可运行接线见 [example.tsx](examples/example.tsx)。构造只在effect。数据变化复用实例，修改dataset后 `update('none')` 跳过更新动画；类型变化先销毁旧实例再创建。创建时取当前counts，不短暂画回revision0。选中态另行写入新实例，类型切换后继续指向同一天。
 
-## 组合
+SDK注册信息属于模块；实例、Canvas事件、内部尺寸观察属于该Chart；React拥有显式400ms采样和页面/媒体监听。cleanup释放自己持有的Chart和监听，不清其他图表的全局registry。StrictMode可能在开发时多做一次挂载清理，因此观察相对计数和当前chartId，不把“永远只创建一次”当契约。
 
-**Chart.js + TanStack Query + Zod。** Query 拥有缓存、重试和 `signal`。Zod 在边界把 `unknown` 收成有限数，分清缺失和 0。Chart 只吃映射后的 `ChartData`。不要把 `chart.data` 当服务器缓存，也不要在 `onClick` 里无界 refetch。500 时保留上次成功数据并标明陈旧。Lab 尚未接入 Query。
+## 实验一：绘制、Canvas输入和等价表格
 
-**Chart.js + 布局库 + ExcelJS。** 布局库管面板矩形，图表父容器的真实高度决定 canvas。Excel 从同一份领域行导出，不从像素反读数值。导出单元格要对 `=`、`+`、`-`、`@` 做前缀处理。`datasetIdKey` 不随语言变。
+打开“注册组件、绘制与选择”，看7根柱和精确数字表。点击第一根柱，状态应变为“周一：110次阅读”；表格周一按钮的aria-pressed与同一选中态一致。用Tab聚焦某天的表格按钮并按Enter，选中反馈和SDK活动元素应指向该天。
 
-**Chart.js + MSW + Playwright。** MSW 模拟 503、超时和坏 JSON；Playwright 点表格按钮、切类型、离开路由后确认没有残留 tooltip。这是迁移练习，不是当前示例的运行路径。
+展开“查看真实实例和绘制结果”：chartId/type/data/active、尺寸和centers来自真实实例与公开元素方法。centers是Canvas逻辑坐标，不能直接当页面坐标；未来浏览器点击会结合真实DOMRect和尺寸换算。没有用静态坐标或提示文字替代SDK命中检测。
 
-## 生产清单
+本例自有观察plugin在afterInit/afterUpdate/afterDestroy累计created/destroyed/updates；这些是应用记录的实际SDK回调，不是SDK公开资源计数，也不证明全部原生监听都已释放。图表文字的可读性仍需真实浏览器检查。
 
-1. 客户端 effect 创建，cleanup `destroy()`，StrictMode 双挂载不抛 already in use。
-2. 只注册用到的控制器；不要用 `auto` 把整库打进去，除非测量过包体。
-3. 数据更新走 `update`，重建只留给 type 或 scale 结构变化。
-4. 父容器有高度；打印和从隐藏变为可见时补 `resize()`。
-5. 系列 id 稳定；点下标不作为主键。
-6. 采样有上界，后台页签停止计时器。
-7. 动画默认关，或听从 `prefers-reduced-motion`。
-8. Canvas 旁有表格、状态文案和键盘路径。
-9. Tooltip 回调不插入未净化 HTML。
-10. PNG 与 CSV 分开：图是预览，表是数据。跨域 canvas 导出要失败得可见。
+## 实验二：更新数字，保留实例
 
-## 升级与迁移
+打开“复用实例更新统计”。先记录chartId和data，点击“模拟新增阅读”：周一从110到113，总量从1127到1169，表格与SDK dataset同步。chartId应保持不变，created/destroyed不因这次数字更新改变，updates增加。
 
-**练习 A：Chart.js 2 配置迁到 4.6.1。** 旧的 `xAxes` / `yAxes`、`horizontalBar`、`Chart.bundle.js` 要换成 `scales.x` / `scales.y`、`indexAxis: 'y'` 和按需 `register`。点击从旧 props 迁到 `onClick` 或包装器的 `getElementAtEvent`。在 StrictMode 里挂载卸载 10 次，确认没有残留 tooltip。[v3 migration](https://www.chartjs.org/docs/latest/migration/v3-migration.html)。
+真实更新代码是：
 
-**练习 B：定时器采样换成可取消增量。** 用 MSW 提供乱序时间、重复 id、空数组、503 和超时。只有最新请求能回写；10000 这个上界是 Lab 的 revision 帽，点数窗口要另定。导出 CSV 与 PNG，并保持表格与 `prefers-reduced-motion`。不要把 `chart-stream-policy` 的纯函数测试当成 Chart 运行时验收。
+```ts
+chart.data.datasets[0].data = [...counts]
+chart.update('none')
+```
 
-## 故障排查
+只换数组不会自动重新绘制，update才会重新处理尺度和图形。若每次数字更新都new Chart，会增加资源工作并争用同一Canvas；如果忘记先destroy，重建时会报Canvas已被占用。本例没有第二条series、服务端错误或请求重试，不用这些未挂载功能扩张实验。
 
-无图：先看父容器高度、canvas 是否还在、控制台是否未注册控制器、数据是否含 NaN。切换后还画着旧系列：查是不是只改了数组下标、没有稳定 dataset id。打印缺图：`beforeprint` 里 `resize`。隐藏 Tab 回来变形：显示后再 `resize()`。
+## 实验三：类型、尺寸和动态采样
 
-性能先减 DOM、批处理、关动画、限制点数，再谈 `normalized` 和 decimation。官方有 OffscreenCanvas + Worker 的可选路径，但函数和 DOM 插件不能直接跨线程。本条目没有本地帧率或内存数字。
+打开“类型、尺寸与实例所有权”，先选中某天，再从柱形切成折线：新chartId、真实type=line，旧destroyed与新created各增加，选中index和当前数据保留。
 
-## 官方链接
+点击“缩窄图表容器”，容器真实宽度变为70%，SDK响应式更新Canvas与坐标，chartId仍相同；“恢复容器宽度”反向变化。“重新测量尺寸”调用当前实例resize，可用于布局恢复后的显式测量。这里只改变容器，不手写Canvas DPR或叠加自己的ResizeObserver。
 
-- [集成与 tree-shaking](https://www.chartjs.org/docs/latest/getting-started/integration.html)
-- [响应式](https://www.chartjs.org/docs/latest/configuration/responsive.html)
-- [更新与动画模式](https://www.chartjs.org/docs/latest/developers/updates.html)
-- [性能](https://www.chartjs.org/docs/latest/general/performance.html)
-- [无障碍](https://www.chartjs.org/docs/latest/general/accessibility.html)
-- [Decimation 前提](https://www.chartjs.org/docs/latest/configuration/decimation.html)
-- [npm chart.js](https://www.npmjs.com/package/chart.js)
+Chart.js以专用父容器的实际尺寸为依据；[workshop.css](examples/workshop.css) 给它position:relative和310px高度，Canvas独占这个容器。responsive=true、maintainAspectRatio=false。Canvas位图像素受DPR影响，不必与DOMRect逐像素相等；SDK width/height用于逻辑坐标。
 
-比较表是适用性判断，不是未经测量的 FPS 排名。
+自动采样默认关闭。勾选后每400ms增加revision，后台页签、离开advanced或达到10000上界时停止interval。动画始终关闭；系统要求减少动态效果时，先暂停自动变化，用户另勾“允许自动变化”才开始。matchMedia变化监听和visibilitychange随卸载移除；重新打开是新实例。上界限制的是本地revision，始终只有7个数据点，不是长时流数据窗口或性能基准。
 
-## 证据
+## 迁移必要文件和取舍
 
-本条目的 sdk、build、browser 在 `docs/library-lab/evidence/runs/` 出现对应该条目的收据之前保持 **NOT_RUN**。`examples/chart-stream-policy.ts` 的策略测试只证明 revision 上界和采样开关，不证明 Canvas、`Chart.update`、`destroy`、Resize 或 Chromium。
+安装 `chart.js@4.6.1`，复制example.tsx、chart-model.ts、chart-stream-policy.ts、workshop.css，保留相对路径；demo.tsx只是Lab重导出。需要React浏览器环境和2D Canvas。SSR应只在客户端effect创建，不让服务端触碰window/document；不额外引入包装器与同一Canvas争抢所有权。
 
-GitHub Actions run `41779873259` 是仓库级 install、typecheck、build、52 个 SDK 文件（153 个测试）和 45 个 Playwright 的结果。它不是 A03 的逐条目 PASS，也不能写进 `verification.json`。历史研究稿里的领域测试通过同样不是本仓库的 SDK PASS。
+真实数据接入时先校验有限数，明确缺失值与0；再把同一领域数据映射到表格和dataset。这里没有HTTP、CSV、PNG下载、decimation、跨图联动或大数据承诺。多个图表应各有独立Canvas/实例；同一Chart不能同时归手写effect和包装器管理。图例、tooltip和插件扩展分别按需要注册，不因主包MIT外推素材许可。
+
+## 官方原文与实际证据
+
+`v4.6.1` 是直接指向commit `76d8cf895a7485dc838c90ef37e2bc9d9e388fcb` 的官方tag，该处package.json声明4.6.1。完整tree仅根README.md，无官方中文候选；保留英语 [原文快照](official/readme.md) 与 [固定出处](https://github.com/chartjs/Chart.js/blob/76d8cf895a7485dc838c90ef37e2bc9d9e388fcb/README.md)。原文2605字节，SHA-256 `30418232ad2cc5a51fa0938e12dc97e31cfd1fb3b0bc352132f281c0c10da348`，日期和完整来源见 [source-evidence](official/source-evidence.json)。
+
+[集成/注册](https://www.chartjs.org/docs/latest/getting-started/integration.html)、[响应式](https://www.chartjs.org/docs/latest/configuration/responsive.html)、[实例API](https://www.chartjs.org/docs/latest/developers/api.html)与本地4.6.1类型/实现共同核对。官网GET200完整头无XFO/CSP，未从Lab origin实际嵌入，保持unknown和直达；不把README raw响应的deny头混成官网策略。
+
+本轮Node SDK使用已锁定、已安装的原生Canvas生成了初始柱图、更新柱图和重建折线PNG，真实验证update/active/hit/resize/destroy；Node没有DOM事件或CSS响应式。原生fixture没有中文字体fallback，图中文字方框不证明浏览器文字可用。策略测试只核对fixture和采样门闩。真实浏览器每目标提案、命令/退出码/日志/实际PNG摘要和六项状态见 [local-validation](local-validation.md)，formal verification保持NOT_RUN。

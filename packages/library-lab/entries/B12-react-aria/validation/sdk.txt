@@ -1,0 +1,21 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab", "argv": ["pnpm", "test:sdk", "--entry=B12"], "start": "2026-11-10T13:41:30.613005+00:00", "end": "2026-11-10T13:41:31.144092+00:00", "exitCode": 0}
+STDOUT
+
+> @reactloom/library-lab@0.1.0 test:sdk /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+> node scripts/sdk-runner.mjs --entry=B12
+
+Real SDK suites selected: 1 file(s)
+Actual legacy-prop ComboBox SSR bytes: 908
+Actual modern-prop two-instance SSR bytes: 1827
+✔ real ComboBox compatibility selection serializes key and controlled text into distinct inputs (13.735435ms)
+✔ matching 1.21 also supports value/onChange and per-instance description identities (3.581459ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 278.717226
+
+STDERR

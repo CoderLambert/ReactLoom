@@ -1,0 +1,23 @@
+{
+  "recordedAt": "2026-11-10T16:59:48.764917+00:00",
+  "kind": "LOCAL_COMPLETION_NOT_FORMAL_RECEIPT",
+  "candidate": "candidate-17",
+  "result": "three goals plus official presentation, four C12 PASS combined",
+  "scenarios": {
+    "basic": "browser-fullcalendar-basic-retry.txt exit0 one case",
+    "business": "browser-fullcalendar-business-retry.txt exit0 one case",
+    "advanced": "original browser-fullcalendar.txt PASS retained",
+    "official": "browser.txt @C12 fixed original/blocked PASS retained"
+  },
+  "artifacts": {
+    "docs/library-lab/evidence/quality-upgrade/candidate-17/browser-fullcalendar.txt": "9594283a05cbeb2f0961769accb285ffd176afac0e3b0bfec140b2204e299d7a",
+    "docs/library-lab/evidence/quality-upgrade/candidate-17/browser-fullcalendar-basic-retry.txt": "142127462f309081dafac7da52ca4a5dbd94cb598e6c42a1b4875701fbb55475",
+    "docs/library-lab/evidence/quality-upgrade/candidate-17/browser-fullcalendar-business-retry.txt": "bf3c33ed6824d4dc66a2352ad195668aa49890688d800c48e2cadde52cbb06ca",
+    "docs/library-lab/evidence/quality-upgrade/candidate-17/browser.txt": "4fa72949d8d5c1ebe84c76de681f1251e4b28cd5221ab9c35028ef68285eae24",
+    "packages/library-lab/entries/C12-fullcalendar/validation/independent-review.md": "42bd0e649324c00a1a739b164c96de011fe1a30c162f774aa03057c361765594"
+  },
+  "proposalEqualsPublicSpec": true,
+  "proposalSha256": "78b4293c041578f0a300d8018c74deda131a941f303579301c6639b6e8899c8f",
+  "formalStatus": "NOT_RUN",
+  "productionSourceChanges": 0
+}

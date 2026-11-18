@@ -1,58 +1,32 @@
-# D12 Redux Toolkit — 工程手册
+# D12 Redux Toolkit 迁移指南
 
-## 适用
+目标版本 `@reduxjs/toolkit@2.13.0`，MIT，自带类型。适用于多模块共享、事件规则复杂且需要统一action流的客户端状态。小组件用useState；服务端缓存用Query；不要为了一个计数器强行采用Redux。
 
-需要可追踪动作的客户端状态：计数、按 id 维护的列表、用请求 id 挡住过期回写。reducer 使用 slice 里的 Immer draft。
+## 最小落地
 
-一个开关不必上 Redux。服务端缓存优先 Query；若缓存也要进 Redux，用 RTK Query，而不是把响应数组拷进 slice。
+在已有React/TSX项目根 `pnpm add @reduxjs/toolkit@2.13.0`。复制 `examples/store.mjs` 与 `store.d.mts`；界面再复制 `example.tsx`，传入basic/business/advanced的level。`demo.tsx`仅Lab适配，可省略。无环境变量、Provider、网络或额外配置；demo CSS类可替换。React/hooks由宿主项目提供。react-redux为多组件可选路线，本例不依赖它。
 
-## 版本
+createFeedStore将slice挂在state.feeds，slice.name=labFeeds只决定action前缀。组件lazy useState创建两个稳定store；useSyncExternalStore订阅active，切换团队只切订阅源。SSR须每请求创建并提供一致初始快照。
 
-`@reduxjs/toolkit@2.13.0`，MIT。`configureStore` 默认中间件保留。示例关闭 DevTools。
+SDK createSlice提供Immer draft与action creators，configureStore提供store/default middleware；ID去重、团队store分离、activeRequest比较、ignored计数和timer回包全是本例自建逻辑。fixture不是HTTP、API权限或自动取消。DevTools显式关闭，默认检查保留；序列化警告不是输入校验，不要声称它拒绝非法动作。
 
-不要在 reducer 里再导入 `produce`。不要把 1.x 教程里关闭序列化检查的写法抄进来。
+## 不可删的规则与清理
 
-## 迁移
+- 只通过dispatch写状态，case reducer内部允许改draft；不要在外部修改getState返回值。
+- addFeed按稳定ID去重，toggleRead按ID查找；未知ID不影响其他行。
+- finishRequest仅在ID匹配时写result并清空activeRequest；不匹配增加ignored。
+- timers保留在组件ref，不进state。切换active/卸载clearTimeout并cancelRequest；新一轮及重置也清旧timer。
+- useSyncExternalStore负责取消store订阅。没有全局存储/监听需要清空。
+- reset完整替换slice，且只dispatch到当前store；不能用UI过滤冒充租户或服务端隔离。
 
-从 [`examples/example.tsx`](examples/example.tsx) 带走 `feedsSlice` 和 `createFeedStore`。订阅层可以换成 `react-redux`，但请求 id 的判断留在 `finishRequest`。
+## 错误与生产边界
 
-两个团队继续用两个 store，或改成一个 store 内的租户键。UI 下拉框不是隔离边界。
+SDK没有替本例验证任意外部feed载荷；接API时加schema与错误UI。timer无HTTP失败/重试，不能把忽略旧响应当成撤销服务器POST。真实请求在transport传AbortSignal，身份guard仍保留。Promise/AbortController留ref或闭包；不要关闭默认中间件来塞不可序列化对象。
 
-演示 timer 换成真实请求时，保留“不匹配的完成动作只增加 `ignored`”。
+整树useSyncExternalStore会对无关字段更新订阅者；正式多组件应用改react-redux字段选择器。远程缓存交给RTK Query/TanStack Query，避免双份响应数组。
 
-## 不可删的清理
+## 验证与来源
 
-`useEffect` 依赖当前 store：清理时清除全部 timeout，并 `dispatch(cancelRequest())`。再次进入 advanced 会重新绑定。
+`node --test packages/library-lab/entries/D12-redux-toolkit/tests/sdk.test.mjs`真实导入SDK与同一store.mjs，不复制另一套reducer作为证据。断言旧快照不变、独立store、重复/未知ID、两种响应顺序、cancel和完整reset。浏览器另验订阅切换、计时器清理与重置恢复，提案在validation/browser.spec.ts。
 
-`demonstrateRace` 在开新一轮之前清掉上一轮 timer，避免多个旧 id 同时完成。
-
-`addFeed` 遇到已有 id 直接返回。`toggleRead` 找不到 id 时不改别的行。
-
-## 反例
-
-- 在 `getState()` 的返回值上修改字段。
-- reducer 内再 `produce`。
-- 用数组下标当 payload。
-- 完成动作不比较 `activeRequest`。
-- 把 `AbortController` 放进 state。
-- 一个 store 靠渲染过滤假装多租户。
-- 用 slice 保存本该由 Query 失效的列表。
-- 卸载后仍让 timeout `dispatch`。
-
-## 测试断言
-
-- 真实 slice 不修改动作之前的状态；两个 store 的计数隔离。
-- 乱序完成时，只有匹配的请求 id 写入 `result`，另一个增加 `ignored`。
-- 重复 feed id 不会插入第二行。
-- `reset` 清空 `result` 和 `ignored`。
-- `tests/sdk.test.mjs` 导入真实 `@reduxjs/toolkit`。无收据则 NOT_RUN。
-
-## 真实限制
-
-竞态是 `setTimeout`，没有 HTTP 状态码，也没有权限。`ignored` 只说明 reducer 拒绝了载荷，不说明服务器没处理写操作。
-
-`useSyncExternalStore` 订阅整棵树。正式应用要改选择器。DevTools 关闭，所以浏览器扩展里看不到这些动作。
-
-## 证据
-
-sdk、build、browser 保持 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有匹配收据。Actions 41779873259 不是本条目 PASS。不要改 `verification.json`。
+官方README为reduxjs/redux-toolkit固定提交370f7eb6403bdfdb1a2ab5b90fbcfd8eaee7d57b的packages/toolkit/README.md；无官方中文README，采用包级英文原文。官网unknown，HTTP200不能推出嵌入允许。原始证据见official/source-evidence.json，本地命令见local-validation.md。正式sdk/build/browser保持NOT_RUN直到匹配committed receipt。

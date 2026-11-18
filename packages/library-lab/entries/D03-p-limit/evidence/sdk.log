@@ -1,0 +1,14 @@
+✔ actual p-limit measures peak 1 and returns values in input order (33.768976ms)
+✔ actual p-limit measures peak 2 and returns values in input order (16.856985ms)
+✔ actual p-limit measures peak 4 and returns values in input order (8.842486ms)
+✔ a rejected task releases its slot and the remaining queue still completes (21.131355ms)
+✔ rejectOnClear settles every queued promise with AbortError (0.595345ms)
+✔ clearing queue does not abort running work without its own signal (0.383214ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 128.90031

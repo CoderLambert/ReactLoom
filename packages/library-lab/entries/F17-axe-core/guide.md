@@ -1,149 +1,39 @@
-# axe-core 4.14.0｜三则规则，只扫当前容器
+# axe-core：局部 DOM 的三条规则与修复对照
 
-Lab 锁定 `axe-core@4.14.0`（MPL-2.0）。示例对一块自己的 DOM 调用 `axe.run`。它不证明整页 WCAG，也不代替读屏和键盘走查。
+固定axe-core4.14.0，MPL-2.0。给React组件做自动可访问性检查，得到规则id、impact、说明和受影响节点；适合在测试里快速发现可计算的语义问题。自动规则无法替代键盘走查、人工读屏或完整WCAG验收。本例只运行image-alt、label、button-name，不扫描整站。
 
-用户显式启动后挂载 [`examples/demo.tsx`](examples/demo.tsx) → [`examples/example.tsx`](examples/example.tsx)。换 level 会换 `key`，审计会话重新挂上。
+## 三个实验
 
-没有 `docs/library-lab/evidence/runs/` 收据时 sdk、build、browser 保持 NOT_RUN。Actions 41779873259 是仓库级安装、类型检查、构建、52 个 SDK 文件 / 153 项测试和 45 项 Playwright，不是 F17 的 PASS。那 45 项里若有别的页面的 axe，也不能抄到这三则规则。
+| 目标 | 操作 | 未修复预期 | 修复后预期 |
+| --- | --- | --- | --- |
+| basic：替代文本 | 点击审计，再勾选修复重审 | image-alt共1条 | 0条 |
+| business：关联标签 | 同样对照输入框 | label共1条 | 0条 |
+| advanced：组合与作用域 | 同时观察图/输入/空按钮 | 三规则共3条 | 0条 |
 
-## Lab 当前示例
+Chromium 实测缺陷版为 1、1、3，修复版均为 0。运行证据见 [local-validation.md](local-validation.md)。
 
-| 文件 | 作用 |
-| --- | --- |
-| `examples/example.tsx` | 缺陷 DOM 与修复 DOM，按钮触发 `axe.run` |
-| `examples/audit-queue.mjs` | 串行化本模块的扫描；排队期间失效则跳过 |
-| `examples/audit-queue.test.mjs` | 队列策略，不调用 axe |
+## 4.14规则实际边界
 
-只运行 `image-alt`、`label`、`button-name`。图片是 1×1 的透明 GIF data URL，没有第三方媒体。修复前：business 以外的图没有 `alt`；basic 以外的输入只有视觉上的 `<span>`，没有 `<label htmlFor>`；advanced 的按钮没有文字也没有 `aria-label`。
+实装axe.js的label规则any包含implicit-label、explicit-label、aria-label、aria-labelledby、non-empty-title、**non-empty-placeholder**。所以原夹具虽然只有视觉span，但非空placeholder仍让此规则通过。已把缺陷态placeholder移除，修复态才可出现；修复真正依靠label htmlFor=useId关联input，不靠placeholder。placeholder不是持久可见标签、不是完整表单体验，但不能因此错误预测4.14的label必失败。零违反仍仅说明选定规则未发现问题。
 
-修复后：alt 为「示例内容封面」；label 关联 `useId()`；按钮 `aria-label` 为「添加当前RSS频道」并有可见文字「添加」。
+图片为原创透明1×1 GIF数据，占位背景不是实拍素材；修复补示例alt仅为教学规则，不推广到生产内容描述。advanced空按钮缺文字/aria-label，修复同时添加可见“添加”和明确aria-label。
 
-勾选修复会增加 generation 并清掉旧结果。扫描进行中不能切换，避免 DOM 在 `axe.run` 中途被换掉后还写回。
+## 完整迁入与调用
 
-`enqueueAxeAudit` 保证本模块不会重叠调用 `axe.run`（库会拒绝重叠）。失败不会把队列卡死。`isCurrent` 为假时返回 `{ skipped: true }`，不把过期结果写进状态。它协调不了页面上其它代码发起的 `axe.run`。
+React19、axe-core4.14.0、TypeScript DOM/react-jsx/Bundler；复制example.tsx和audit-queue.mjs/.d.mts三个原件。demo.tsx仅Lab适配，不必复制。挂载 `<AxeAuditExample level="business" />`，生产只复制修复态DOM，不能把故意缺陷或这三条runOnly当完整审计策略。
 
-## 1. 什么时候用
+数据路径：ref容器→用户手动audit→同步running防重入→共享队列→真实axe.run(container,{runOnly:{type:'rule',values:[...]}})→当前generation才写violations/incomplete。输出的违反数是规则数量，不是违规节点数量；target保留节点定位。incomplete单独计数且要求人工判定。
 
-组件刚写完，想看这几条能自动算出来的名字问题：图没有替代文本、输入没有标签、按钮没有可访问名称。流程是否做得成、焦点是否掉进端口、对比度是否在真实主题下合格，都要另测。
+队列自建，不是axe SDK。模块单例tail串行，失败通过尾promise恢复；排队前检查token、ref相同、isConnected，失效返回skipped不开始SDK调用。它仅协调使用同一helper实例的扫描，无法约束第三方另外调用axe.run；不要声称全页全局锁。
 
-React Aria（B12）提供组件行为。挂上它之后仍要跑规则和键盘。不要互相代替。
+## 清理与限制
 
-## 2. 模型
+level作为key重挂会话。卸载增加generation、清自身running，排队任务会跳过；已开始的axe.run无法物理取消，结束后旧结果/错误/finally不会写入新会话。修复切换也失效旧代次并清结果，扫描期间修复控件禁用，避免修改被扫描DOM。没有添加全局监听、timer、Worker或URL，不需要伪造SDK destroy。若底层扫描永不settle，队列也会等待；本例不提供引擎中止。
 
-```text
-点击
-  → running ref 挡住重入
-  → generation++
-  → enqueue → axe.run(container, { runOnly: { type: 'rule', values: [...] } })
-  → 仍是当前代号且未 skipped
-  → violations 映射 id / impact / description / target
-  → incomplete 只计数
-```
+axe局部上下文只包含ref子树；Lab外壳故意坏DOM不应污染结果。换层可卸载已扫描容器，旧任务可能失败，仍只丢弃；停止/重挂必须观察新会话可再次扫描，不以DOM消失称SDK取消成功。真实浏览器验证由主控已有quality-resume-axe配方执行，覆盖1/1/3→0、外部坏DOM与停止重挂。作者本次不跑共享浏览器。
 
-上下文是 `ref` 上的 div，不是 `document`。因此旁边的 Lab 导航不在这次结果里。换 level 卸载会话，旧扫描只能被丢弃，不能说成已经从引擎里物理取消。`axe.run` 一旦开始，就会跑完；代号不对就忽略结果。
+## 可复核证据
 
-`incomplete` 是规则无法确定的项，不是违反，也不是通过。文案要求人工判定。
+Node audit-queue.test四项仅证明串行/失效跳过/异步与同步失败恢复，不import axe-core，不叫规则SDK PASS。三个原件隔离strict和scopedBiome另记。正式verification无收据均NOT_RUN。Chromium 也验证了容器外缺陷不进入结果，以及卸载后的旧结果不会发布到新会话。
 
-修复勾选和「通过这 3 条」的空列表都写明：不等于 WCAG 全部合格。
-
-## 3. 三层
-
-### 基本
-
-只有一张缺 alt 的图。标题是「图片缺少替代文本」。未修复时，`image-alt` 应出现在违反列表。修复后这三条里不应再有它。其它规则没有跑。
-
-### 业务
-
-没有那张图，只有未关联的「RSS 订阅地址」和输入框。未修复时应看到 `label`。修复后用真正的 `<label htmlFor>`。placeholder 不是标签。
-
-### 进阶
-
-图、输入和空按钮都在。未修复时三条都可以出现。修复版同时补 alt、label 和按钮名。空列表旁边的句子仍然限制范围。动态焦点和读屏不在这次调用里。
-
-## 4. 反例
-
-### 反例 1：扫整个 document
-
-```ts
-await axe.run(document)
-```
-
-会把 Lab 外壳算进来，也会让结果无法对应这块教材。传入容器 ref。
-
-### 反例 2：不限制规则却宣称只修了 alt
-
-默认规则集比这三条多。本页用 `runOnly`。若产品要全量，就不要复制这组 `values`，并且准备好 incomplete 和主题对比度。
-
-### 反例 3：违反数为 0 就写 WCAG 通过
-
-```tsx
-if (report.violations.length === 0) markCompliant()
-```
-
-空列表只说明这三条没有违反。`incomplete` 还要人看。键盘顺序、放大、读屏没有测。
-
-### 反例 4：重叠调用
-
-连续点两次，或两个 demo 实例同时 `axe.run`，库会拒绝。`running` ref 加上队列。换 level 用 `key` 卸掉旧会话。
-
-### 反例 5：中途改 DOM 仍采用结果
-
-修复勾选若发生在扫描中，结果对的是旧树或一半新树。扫描时禁用勾选；若代号变了，直接 return。
-
-### 反例 6：用 impact 颜色代替文本
-
-列表写出 id、impact、description 和 target。不要只画红点。`impact` 可能为空，显示「未定级」。
-
-### 反例 7：mock axe.run
-
-```ts
-vi.mock('axe-core', () => ({ default: { run: async () => ({ violations: [], incomplete: [] }) } }))
-```
-
-这不是 SDK。队列测试故意不 import axe。浏览器里必须看到真实违反和修复后的变化。
-
-### 反例 8：把教学缺陷抄进产品
-
-未勾选的 DOM 是故意坏的。复制组件时用修复版：有 alt、有 label、按钮有名称。不要把 data URL 图当成内容图。
-
-## 5. 组合
-
-**F13**：在每个状态下 `setContent` 或打开路由后再 `axe.run`。Playwright 的角色定位不是规则结果。本页没有 Playwright。
-
-**F12**：Node 里没有这块 DOM。不要在 Vitest 的默认环境里期待 `image-alt`。
-
-**F14**：addon 的 `a11y.test: 'error'` 不会自动覆盖这三则缺陷。状态卡故事是另一份 DOM。
-
-**B12**：原语减少一些错误。集成后仍跑 `axe.run`，并手测键盘。
-
-## 6. 清单
-
-- 上下文是容器，规则只有三条。
-- 手动触发，不在挂载时扫描。
-- 换 level 重挂会话；过期结果丢弃。
-- 队列失败不阻塞下一次。
-- 修复路径使用 label、alt、按钮名，而不是 placeholder 或仅颜色。
-- 展示 incomplete 的数量。
-- 不上传页面 HTML，不包含用户数据。
-- 零违反不写成合规认证。
-
-## 7. 升级
-
-4.14 的 `axe.run(context, { runOnly })` 是合同。升级后用未修复和修复各跑一次，确认规则 id 仍是 `image-alt`、`label`、`button-name`。id 若改名，示例和断言一起改。
-
-MPL-2.0 的文件头不要删。不要把 axe 的源码副本另存进条目。
-
-## 8. 验收
-
-```bash
-node --test packages/library-lab/entries/F17-axe-core/examples/audit-queue.test.mjs
-```
-
-它不加载 axe-core。浏览器要看到：未修复有对应 id，修复后这三条的违反下降，incomplete 被单独计数，快速换 level 不把旧结果写上来。这些需要收据。策略通过保持 sdk NOT_RUN。仓库其它页面的 axe 日志不是这一页的 browser 收据。
-
-## 9. 资料
-
-- https://github.com/dequelabs/axe-core
-- https://github.com/dequelabs/axe-core/blob/develop/doc/API.md
-- https://github.com/dequelabs/axe-core/blob/develop/doc/context.md
-- https://www.npmjs.com/package/axe-core
+官方README固定v4.14.0 commit e797173108eadfa4355fe06af331791734e1757f原文（该树根只有英文README），与LICENSE/package字段保存在official，重新GET比对。官网deque.com/axe真实GET200但CSP frame-ancestors 'self'，跨源Lab blocked，保留直达。声明许可与规则解释都按实际安装/固定源码核对，不按记忆推测。

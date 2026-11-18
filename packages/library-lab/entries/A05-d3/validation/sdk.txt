@@ -1,0 +1,20 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ["node", "--test", "entries/A05-d3/tests/sdk.test.mjs"]
+startedAt: 2026-11-10T11:47:45.992279+00:00
+finishedAt: 2026-11-10T11:47:46.119444+00:00
+exitCode: 0
+
+STDOUT
+Actual D3 geometry: {"xDomain":["周一","周二","周三","周四","周五","周六","周日"],"yDomain":[0,130],"bandwidth":55.95867768595041,"pathLengths":[284,287]}
+✔ real linear/band scales map the shared fixture into reversed SVG coordinates (1.442434ms)
+✔ real line/monotone paths encode distinct metrics and defined() gaps without fake zeroes (1.38052ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 102.554776
+
+STDERR

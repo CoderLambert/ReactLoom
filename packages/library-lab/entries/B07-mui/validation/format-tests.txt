@@ -1,0 +1,9 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+ARGV: ["pnpm", "exec", "--", "biome", "check", "--write", "entries/B07-mui/tests"]
+START: 2026-11-10T13:08:03.743802+00:00
+END: 2026-11-10T13:08:03.984796+00:00
+EXIT: 0
+STDOUT:
+Checked 3 files in 5ms. Fixed 3 files.
+
+STDERR:

@@ -1,0 +1,10 @@
+{
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "utc": "2026-11-10T15:53:33.498911+00:00",
+  "operation": "Read-only SHA compare of seven runtime files with intermediate-types/candidate15 input; Python acquisition recipe AST parse; classify saved effective frame-ancestors",
+  "runtimeFiles": 7,
+  "mismatches": [],
+  "pythonRecipe": "syntax valid",
+  "website": "blocked for loopback Lab by actual frame-ancestors; no repeated HTTP acquisition",
+  "exit": 0
+}

@@ -1,46 +1,27 @@
-# A14 React Three Fiber — 工程手册
+# A14 React Three Fiber 工程入口
 
-## 适用
+先读library/guide、实际examples和verification。实际R3F9.8.2、Three0.186.0、React19.3.0；peer React>=19<19.4/Three>=0.156满足。MIT，只有本地原创几何，无纹理、模型、drei、WebGPU或HTTP。Canvas与手写Renderer不能共管画布。
 
-`@react-three/fiber@9.8.2` 与 `three@0.186.0` 用声明式 Canvas 托管一个网格和帧循环。命令式渲染器见 A13，二者不要共管 canvas。海量地理点不放在这里。
+## 三目标与迁移
 
-## 版本
+basic：静态demand，理解真实Mesh/Geometry/Material/灯光及场景单位；business：射线hover/click与HTML等价按钮共用active，颜色更新复用Mesh/Material；advanced：useFrame秒delta、同Mesh换几何、帧门闩与整Canvas重挂载。不是三份同名业务壳。
 
-钉 9.8.2，配合 React 19。`dpr` 上限 1.5，`powerPreference: 'low-power'`。未安装 drei。几何用 `<boxGeometry args>` / `<sphereGeometry args>`，不要在 render 里 `new BoxGeometry`。
+sourceFiles六份：example/scene/frame-policy/visibility/workshop.css和demo适配器。整个查看器初始state读浏览器偏好，SSR集成需client-only/禁该子树预渲染，非已验证SSR-safe组件。容器高度300，DPR1..1.5、low-power；没有Lab alias或额外资源。React管HTML/业务状态，R3F协调Three对象，useFrame只改ref。无每帧setState；检查器主动读取，memo隔离检查器重绘，快照需要重新读。
 
-## 迁移
+真实UUID、geometry/type/vertices、material.color、rotation/scale、root frameloop/DPR/size和renderer.info来自对象。frameCallbacks只是本例回调次数，不是GPU指标。null表示当前generation未提交；每代Canvas拥有独立handle ref，卸载核对身份，旧Canvas不写新代ref。
 
-从 A13 的 `setAnimationLoop` 迁到 `useFrame`，delta 乘速度并夹在 0.1 秒。静止、隐藏、离屏或减少动态时把 `frameloop` 设为 `demand`。场景切换优先换子树；`key` 重挂载只用于学习卸载。InstancedMesh 要 `needsUpdate`，demand 模式下还要 `invalidate`。
+## 必须保留
 
-## 不可删的清理
+原shouldRunFrames和boundedFrameDelta，0..0.1秒封顶；暂停/系统减动/文档隐藏/离屏/零速度使advanced demand。demand仍允许必要更新帧，回调执行不等于正在旋转。matchMedia/visibility监听与IO都按所有权清理。基本和业务场景静态按需，advanced才持续旋转。
 
-`matchMedia`、`visibilitychange`、`IntersectionObserver` 在 effect cleanup 解除。`useFrame` 在暂停时返回，禁止每帧 `setState`。不要对 R3F 创建的几何再手动 dispose 一次，除非通过 `primitive` 或 `dispose={null}` 接管了所有权。
+声明式geometry/material由R3F释放，不再手动重复dispose；本例没有primitive/dispose=null/共享缓存或外部renderer。几何变化保持Mesh，Canvas key只用于学习完整重建，产品优先复用Canvas。安装包释放可异步/空闲调度，DOM卸载不能等价全部GPU已释放。
 
-## 反例
+Canvas fallback不是通用WebGL错误恢复。局部错误边界显示configure异常，外层HTML仍可操作；没有上下文丢失自动恢复。缺真实WebGL时BLOCKED，不mock GL来通过。射线必须真实Canvas点击；HTML按钮单独通过不证明拾取。
 
-```tsx
-useFrame(() => setSpin((n) => n + 1)); // 错：帧率绑在 React 上
-<mesh geometry={new BoxGeometry()} /> // 错：每次 render 分配
-```
+## 验证与官方
 
-Canvas 外调用 `useThree`、无上限 DPR、用换 key 当路由方案，都不要做。
+Node SDK仅真实R3F applyProps/buildGraph/dispose与实际Three对象，纯帧策略另记；不证明Canvas/useFrame/WebGL。三目标真实浏览器源码提案在validation/browser-proposal.txt，root统一接入。定位region React Three Fiber 实战，a14-workshop/stage/canvas-host/status/sdk-state；展开检查器后点“读取真实场景”。
 
-## 测试断言
+官方v9.8.2 tag commit d74622ea8ed717f7212d7e19d65ff3e325508389的manifest实际9.8.1；npm/安装9.8.2及公开gitHead raw404分别保留。运行API按经官方npm sha512和bundle字节核对的安装9.8.2，不伪造manifest版本。tag完整tree无中文README，英语根readme原文14301B及sha/日期/完整HTTP证据在official；官网GET200无XFO/CSP但未Lab iframe，unknown。
 
-`shouldRunFrames` 在暂停、减少动态、不可见或速度不为正时为 false。`boundedFrameDelta` 把非有限数变成 0，并把过大 delta 夹到 0.1。SDK 收据还要看到真实 Canvas 和 useFrame。没有 runs 收据则为 NOT_RUN。
-
-## 真实限制
-
-没有 InstancedMesh、纹理、drei、射线以外的拾取索引或 HTTP。减少动态没有「显式覆盖」开关，这一点与 A13 不同。离屏检测依赖 IntersectionObserver。没有 draw call 或显存数字。fallback 只在 Canvas 报告不支持时出现。
-
-## 断言边界
-
-`tests/frame-policy.test.mts` 覆盖 `shouldRunFrames` 和 delta 夹取。SDK 用例要 `import { Canvas, useFrame } from '@react-three/fiber'`。钩子测试必须渲染在 Canvas 内。`frameloop="demand"` 时零速度不应持续要帧。缺收据时保持 NOT_RUN。`useFrame` 内不要 `setState`。离屏、隐藏和减少动态时使用 `frameloop="demand"`。delta 夹在 0.1 秒。
-
-## 证据
-
-Actions `41779873259` 的仓库级 install、typecheck、build、52 SDK 文件（153 测试）和 45 Playwright 不是 A14 PASS。不要把帧策略测试或历史研究 PASS 写入 `verification.json`。
-
-对照 `library.json` 的版本编写 import，不要升到条目未钉死的版本。
-`tests/` 中的策略用例不能改写成 sdk 字段的 PASS。
-浏览器与构建未留下收据时，对应字段维持 NOT_RUN。
+完整状态/命令/日志/产物见local-validation，正式sdk/build/browser仍NOT_RUN。未声明InstancedMesh/资源加载/海量性能/实际GPU压力或屏幕阅读器验收。

@@ -1,0 +1,43 @@
+{
+  "tag": "v1.17.1",
+  "commit": "4beebbef7a261ed0be089bb1d63a5b6e28cc488a",
+  "treeTruncated": false,
+  "readmeCandidates": [
+    "README.md",
+    "assets/fonts/fantasque/README.md",
+    "assets/fonts/fantasque/Webfonts/README.md",
+    "assets/fonts/ubuntu/README.txt",
+    "assets/images/pngsuite/PngSuite.README",
+    "assets/pdfs/pdf20examples/README.md"
+  ],
+  "selected": "README.md",
+  "license": "LICENSE.md",
+  "homepage": {
+    "status": 200,
+    "headers": {
+      "Connection": "close",
+      "Content-Length": "84453",
+      "Server": "GitHub.com",
+      "Content-Type": "text/html; charset=utf-8",
+      "Last-Modified": "Sat, 16 Oct 2021 21:26:55 GMT",
+      "Access-Control-Allow-Origin": "*",
+      "ETag": "\"616b439f-149e5\"",
+      "expires": "Mon, 16 Nov 2026 23:59:14 GMT",
+      "Cache-Control": "max-age=600",
+      "x-proxy-cache": "MISS",
+      "X-GitHub-Request-Id": "72B2:15FC8B:1451BE:1568E9:6AFB967A",
+      "x-github-edge-region": "japaneast",
+      "Accept-Ranges": "bytes",
+      "Age": "0",
+      "Date": "Tue, 17 Nov 2026 18:52:22 GMT",
+      "Via": "1.1 varnish",
+      "X-Served-By": "cache-nrt-rjaa8190026-NRT",
+      "X-Cache": "HIT",
+      "X-Cache-Hits": "0",
+      "X-Timer": "S1794941542.094020,VS0,VE189",
+      "Vary": "Accept-Encoding",
+      "X-Fastly-Request-ID": "0a359ce7aa5eb289c1de1b2b52bc2c778c8e1693"
+    }
+  },
+  "checkedAt": "2026-11-17T18:52:21.765286+00:00"
+}

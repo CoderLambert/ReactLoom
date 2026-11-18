@@ -1,59 +1,33 @@
-# D16 Workbox — 工程手册
+# D16 Workbox Build 可迁移说明
 
-## 适用
+## 选型与版本
 
-在 Node 里用 `workbox-build` 为隔离目录生成预缓存，并可选地描述一条公开 GET 的运行时策略。产物是临时文件。
+`workbox-build@7.4.1`，MIT，Node>=20。构建期生成预缓存和常见SW路由时适用；复杂自定义SW另评估injectManifest；数据库用Dexie、客户端远端缓存用Query。不要把Workbox当成权限或唯一持久化。
 
-不要用它给 Library Lab 主源安装 Service Worker。不要缓存带凭据的响应。不要把 CacheStorage 当成数据库或鉴权。
+## 最小迁移
 
-## 版本
+独立Node项目根 `pnpm add -D workbox-build@7.4.1`。复制 `examples/workshop.mjs`、`cache-policy.mjs` 和需要的basic/business/advanced.mjs。`.mjs`无需type:module，无env/React/Provider/样式配置。仓库根命令为 `node packages/library-lab/entries/D16-workbox/examples/<level>.mjs`；迁入项目为 `node examples/<level>.mjs`。
 
-`workbox-build@7.4.1`，MIT。示例没有安装 `workbox-window`、`workbox-precaching` 或 background sync 包。
+runWorkshop在mkdtemp目录生成fixture、getManifest清单、generateSW脚本与runtime。CLI输出JSON后另有英文说明，解析首个JSON对象或直接调用模块。scope字段仅是声明/目录前缀，没有实际browser registration。
 
-生成选项里 `skipWaiting: false`，`clientsClaim: false`，`cacheId` 带 `isolated`。
+## 三实验与不可删边界
 
-## 迁移
+basic检查三条revision清单且private缺席；business增加匿名精确RSS端点的NetworkFirst/200过滤/12条/1小时/2秒等待配置；advanced增加NavigationRoute指向预缓存offline.html。本例navigateFallback不是仅网络失败才回退，且没有导航allowlist/denylist；globIgnores排除private文件不能当作导航访问控制。
 
-从 [`examples/workshop.mjs`](examples/workshop.mjs) 带走 `workboxOptions` 和 `runWorkshop`。匹配函数来自 [`examples/cache-policy.mjs`](examples/cache-policy.mjs)。三个入口只负责选择 level。
+matcher必须自包含，不闭合导入变量；要求HTTPS、固定origin+pathname、GET、credentials omit、无Authorization/Cookie/Proxy-Authorization，查询字符串允许变化。不能扩大到整个origin。
 
-生产构建若复用选项，输出目录仍不得是 Lab 应用的站点根。注册必须缺席。`registrationExecuted` 保持 false。
+严禁在Lab origin或根scope注册，严禁把临时产物复制到Lab public/root，不新造执行宿主。skipWaiting:false、clientsClaim:false不是scope安全保证，首次安装或消息触发仍有生命周期行为；真正边界是没有注册。
 
-`matchPublicRssRequest` 继续自包含，不引用模块级变量。
+保留globFollow:false、512KiB大小上限、private/sw/runtime排除；warnings、空worker、清单/生成计数不同均失败。private fixture只有抛错语句，不能换成真令牌。
 
-## 不可删的清理
+## 清理和错误
 
-`keepOutput` 不是 true 时，`finally` 删除整个 `mkdtemp` 目录。入口为了展示传入 true，调用方仍不要把该目录注册进浏览器。
+默认keepOutput:false在finally删除本次随机根；CLI展示用true，读完后核对并只删除此次outputDirectory上级的reactloom-workbox-*目录。true时失败也可能留目录；不要扫描删除其他任务的目录。不得清空浏览器缓存或注销他人SW。
 
-清单包含 `private/`、warnings 非空、或 `sw.js` 为空时抛错，不返回部分成功。
+Node异常应保留非零退出与原始错误。generateSW只写文件，不做网络请求；NetworkFirst不意味着HTTP已测试；cleanupOutdatedCaches不意味着Node删除了浏览器CacheStorage。它也不会清理所有命名运行时缓存。
 
-不要添加 `navigator.serviceWorker.register`。不要把 scope 改成 `/`。
+## 检查与来源
 
-## 反例
+三条声明CLI已经实际运行，输出与*.txt原始产物在validation；tests/sdk.test.mjs实际调用workbox-build并检查生成，cache-policy.test.mjs独立为纯策略，不能混算。浏览器只可验Lab命令/源码展示，绝不可注册此条SW。离线、安装/激活、缓存更新均未运行，正式receipt维持NOT_RUN。
 
-- 在 React 效果里注册 `/sw.js`。
-- `skipWaiting: true` 且 `clientsClaim: true`。
-- `urlPattern` 匹配整个 origin。
-- 匹配函数闭合外部常量，导致生成后的 worker 引用失败。
-- 缓存带 Cookie 或 Authorization 的 GET。
-- 用忽略规则保管真正的秘密文件。
-- 把 Query 失效当成 SW 缓存已更新。
-- 在 SSR 里访问 `navigator.serviceWorker`。
-
-## 测试断言
-
-- 真实 `generateSW` 写出非空 worker，且不执行注册。
-- 预缓存 URL 含 `index.html` 与 `app.js`，不含 `private/`。
-- 运行时策略只描述匿名的精确公开路径。
-- advanced 包含 `offline.html` 回退，私有目录仍排除。
-- 错方法、错凭据、错路径、禁止头返回 false；不完整参数返回 false。
-- `tests/sdk.test.mjs` 导入真实 `workbox-build`。无收据则 NOT_RUN。
-
-## 真实限制
-
-Node 生成不等于浏览器已安装 worker。没有更新弹窗，没有 Background Sync，没有离线往返。`NetworkFirst` 只出现在生成配置里，本进程没有拦截 `https://lab.example.test`。
-
-临时目录在 `keepOutput` 时会留在系统 tmp。那不是部署物。
-
-## 证据
-
-sdk、build、browser 保持 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有匹配收据。Actions 41779873259 不是本条目的 SW 安装证明。不要改 `verification.json`。
+官方原文是GoogleChrome/workbox提交62b9d8ba8eb3c1a2ab8aac9d84c90cda7865d6a3下packages/workbox-build/README.md；包级固定版本无官方中文原文，采用英文快照。Chrome中文官网CSP禁止Lab嵌入，按blocked直达。摘要、响应头与路径见official/source-evidence.json/library.json；本地六维与命令记录见local-validation.md。

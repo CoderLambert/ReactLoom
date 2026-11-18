@@ -1,0 +1,17 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+command=python - (inline static document/link/hash/record checks)
+exitCode=0
+changedExistingPaths=['packages/library-lab/entries/E11-streamdown/guide.md', 'packages/library-lab/entries/E11-streamdown/local-validation.md']
+protectedExistingFilesUnchanged=30
+declaredSourcesMatchingCandidate03=11
+relativeLinksExisting=13
+formal sdk/build/browser=NOT_RUN
+homepage iframe=unknown
+REUSED browser: candidate02 E11 5 PASS + original basic FAIL; candidate03 repaired same basic PASS
+SDK/UI/HTTP/build=NOT_RUN in this documentation task
+
+command=['git', 'diff', '--check', '--', 'packages/library-lab/entries/E11-streamdown/guide.md', 'packages/library-lab/entries/E11-streamdown/local-validation.md']
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+stdout=
+stderr=
+exitCode=0

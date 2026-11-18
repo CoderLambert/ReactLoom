@@ -1,0 +1,15 @@
+{"label": "policy", "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab", "argv": ["node", "--test", "entries/C06-imask/tests/calendar-policy.test.mjs"], "start": "2026-11-10T15:52:00.686143+00:00", "end": "2026-11-10T15:52:00.754393+00:00", "exitCode": 0, "log": "policy.txt"}
+STDOUT
+✔ year 0096 is not silently remapped to 1996 (0.568262ms)
+✔ Gregorian leap years and invalid days (0.100763ms)
+✔ reject invalid calendar-only formats and astronomical year zero (0.095868ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 44.887774
+
+STDERR

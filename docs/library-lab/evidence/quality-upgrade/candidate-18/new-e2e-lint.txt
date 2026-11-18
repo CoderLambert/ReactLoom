@@ -1,0 +1,27 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+command=pnpm exec biome check packages/library-lab/e2e/quality-remediation-arborist.spec.ts packages/library-lab/e2e/quality-remediation-date-fns.spec.ts packages/library-lab/e2e/quality-remediation-primitives-sources.spec.ts
+packages/library-lab/e2e/quality-remediation-date-fns.spec.ts:16:19 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    14 │ }
+    15 │ async function start(page: Page, level: 'basic' | 'business' | 'advanced') {
+  > 16 │   await page.goto('/libraries/date-fns?tab=demo&example=' + level)
+       │                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    17 │   const app = page.getByTestId('c14-workshop')
+    18 │   await expect(app).toBeVisible()
+  
+  i Unsafe fix: Use a template literal.
+  
+     14  14 │   }
+     15  15 │   async function start(page: Page, level: 'basic' | 'business' | 'advanced') {
+     16     │ - ··await·page.goto('/libraries/date-fns?tab=demo&example='·+·level)
+         16 │ + ··await·page.goto(`/libraries/date-fns?tab=demo&example=${level}`)
+     17  17 │     const app = page.getByTestId('c14-workshop')
+     18  18 │     await expect(app).toBeVisible()
+  
+
+Checked 3 files in 7ms. No fixes applied.
+Found 1 info.
+
+exitCode=0

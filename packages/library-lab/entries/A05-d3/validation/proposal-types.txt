@@ -1,0 +1,13 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ["pnpm", "exec", "--", "tsc", "--ignoreConfig", "--noEmit", "--target", "ES2022", "--lib", "ES2022,DOM,DOM.Iterable", "--module", "ESNext", "--moduleResolution", "Bundler", "--jsx", "react-jsx", "--strict", "--skipLibCheck", "--esModuleInterop", "--allowSyntheticDefaultImports", "--allowImportingTsExtensions", "--types", "vite/client,node", "entries/A05-d3/validation/browser-proposal-check.ts"]
+startedAt: 2026-11-10T11:47:45.992930+00:00
+finishedAt: 2026-11-10T11:47:46.259124+00:00
+exitCode: 1
+
+STDOUT
+entries/A05-d3/validation/browser-proposal-check.ts(123,31): error TS2339: Property 'ownerSVGElement' does not exist on type 'HTMLElement | SVGElement'.
+  Property 'ownerSVGElement' does not exist on type 'HTMLElement'.
+entries/A05-d3/validation/browser-proposal-check.ts(159,31): error TS2339: Property 'ownerSVGElement' does not exist on type 'HTMLElement | SVGElement'.
+  Property 'ownerSVGElement' does not exist on type 'HTMLElement'.
+
+STDERR

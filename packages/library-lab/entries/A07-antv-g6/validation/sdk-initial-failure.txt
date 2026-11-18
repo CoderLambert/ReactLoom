@@ -1,0 +1,55 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+ARGV: ["pnpm", "test:sdk", "--entry=A07"]
+START: 2026-11-10T11:41:59.606348+00:00
+END: 2026-11-10T11:42:00.084588+00:00
+EXIT: 1
+STDOUT:
+
+> @reactloom/library-lab@0.1.0 test:sdk /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+> node scripts/sdk-runner.mjs --entry=A07
+
+Real SDK suites selected: 1 file(s)
+✔ real 5.1.1 Graph exposes stable nodes and directed edges from the Demo fixture (2.487482ms)
+✖ real setData replaces the topology on the same model and removes obsolete edges (1.469564ms)
+✔ real Graph model preserves all endpoint IDs and remains unrendered without a graphics backend (0.393638ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 2
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 217.298657
+
+✖ failing tests:
+
+test at entries/A07-antv-g6/tests/sdk.test.mjs:29:1
+✖ real setData replaces the topology on the same model and removes obsolete edges (1.469564ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+      'source',
+      'parse',
+  +   'index',
+      'review',
+  -   'index'
+    ]
+  
+      at TestContext.<anonymous> (file:///home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/A07-antv-g6/tests/sdk.test.mjs:35:12)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'source', 'parse', 'index', 'review' ],
+    expected: [ 'source', 'parse', 'review', 'index' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+ ELIFECYCLE  Command failed with exit code 1.
+
+STDERR:

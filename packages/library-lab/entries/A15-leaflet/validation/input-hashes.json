@@ -1,0 +1,27 @@
+{
+  "installed": {
+    "name": "leaflet",
+    "version": "1.9.4",
+    "packagePath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/leaflet@1.9.4/node_modules/leaflet/package.json",
+    "source": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/leaflet@1.9.4/node_modules/leaflet/src/map/Map.js",
+    "typesVersion": "1.9.22"
+  },
+  "files": {
+    "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+    "examples/example.tsx": "3bb8865e82e82cb05a6133a96c6d18a112acb834f88ccfce96063fe37bcf8c11",
+    "examples/location-data.ts": "79cf253a40e8c5a6181e6efec335ba862e05c25c8672e6f5bdf7450854699cd7",
+    "examples/map-controller.ts": "5e89fb53ebbb7e7c87bba57f297d222457d4f45d0404ff4c101e817049b9f564",
+    "examples/location-policy.ts": "9a765c68e2fb93563b6ba5e2cfd97a2ce7385984449da6e7729222495c3abf2f",
+    "examples/station-factory.ts": "eb45aa2320fc01acb4f4aa3cfb772e481299dc1917bcac7bfc6a825823d791ae",
+    "examples/workshop.css": "ef2a56d84c35d052f5b69ca3cb792bb4c75238ee18e2451d0cdc323aa3dbd394",
+    "tests/location-policy.test.mts": "d81a3bddf22689b61fcc0c302b71b29c74be4eaab834b3403517ea105f4cfa56",
+    "tests/station-factory.test.mts": "b3163f10b03fcb723b82765d7b29fd353e51cb0cb2c2aa26323f70993c8021b9",
+    "library.json": "b23533b9f5ef40bb8cc84add082c7f908fe13731caa3d9433b08bf2b3c0583e5",
+    "guide.md": "4c5d5ec3dea153fb4219ff2f888d62fd179ba0da3c9d114245fffb3bc5584a05",
+    "agent.md": "84b0c2fe633e8a80337051ab20f865aeb4f48273643ce5d5c5407e84c4e5c0d4",
+    "verification.json": "c5ee01302313ba071895a939f64b5001e241e16bdc135aedd1bbd316818ee357",
+    "official/readme.md": "85c5270e168a1f0021605f7bceaf2ef8fd5a6d195392a242c1f25b833fe91b5f",
+    "official/source-evidence.json": "76c5e260714f960b4bf959ab1bbee8bc80e59f7c0da2628d710f25073645647a",
+    "validation/browser-proposal.txt": "fa9caf752e30cce9fe466ab39742c93e7efd9b82e8b217804c9a141b45800b11"
+  }
+}

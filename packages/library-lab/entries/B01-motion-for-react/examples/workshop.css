@@ -1,0 +1,44 @@
+.b01-workshop {
+  min-width: 0;
+}
+.b01-controls {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-block: 1rem;
+}
+.b01-workshop button {
+  padding: 7px 10px;
+}
+.b01-workshop :focus-visible {
+  outline: 3px solid #287353;
+  outline-offset: 3px;
+}
+.b01-notice-slot {
+  min-height: 170px;
+  margin-top: 15px;
+}
+.b01-card {
+  padding: 16px;
+  background: #e4f0e5;
+  border-radius: 10px;
+}
+.b01-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.b01-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+.b01-row p {
+  font-size: 13px;
+  margin: 5px 0;
+}
+.b01-workshop small {
+  color: #42584a;
+}

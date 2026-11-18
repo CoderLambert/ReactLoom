@@ -1,0 +1,68 @@
+# D07 TanStack Query 本地质量整改与稳定交接
+
+日期2026-11-10，owner `/root/quality_e05`。实际仓库cwd `/home/lambert/githubRepos/lambert/ReactLoom`，Git HEAD `1218066e706a90ba03fac8dff8c9b843dd2429c4`。起始本条目11个文件无diff；先只读研究并完成其他条目独立复核，主控释放D07写入后才修改。本记录不是正式verify:record收据。
+
+## 范围与变动
+
+只修改本条目，没有改共享src/scripts/tests/e2e/runners、依赖锁、根索引、队列/results，未运行全目录generate/typecheck/build/浏览器，没有提交推送。已读根/本包/条目规则、协作事实文档和质量Skill三个references，以及全部原examples/tests/verification。
+
+保留原QueryWorkspace的独立QueryClient/内存backend、tenant/search/page键形状、查询signal、mutation scope、ID/rev/token行级回滚、inFlightRows、tenantEpoch和最后mutation失效策略。optimistic-policy及其测试只格式化，未变算法。原fixture拆出为同源TypeScript模块，增加可观察统计request序号和basic手动源数据变化；不重写为真实网络。
+
+新增examples/cache-primer.tsx、fixture-backend.ts、query-keys.ts、shared-query.ts、workshop.css；修改example.tsx/demo.tsx、optimistic-policy.mjs/.d.mts、tests/sdk.test.mjs和optimistic-policy.test.mjs；改写guide/agent，更新library/verification说明；新增official原文和完整HTTP证据、validation/*.txt和本记录。AGENTS不改。正式verification的sdk/build/browser状态均保持NOT_RUN。
+
+## 三个独立目标与实现
+
+| 场景 | 工程问题与可见路径 | SDK / 自建边界 |
+| --- | --- | --- |
+| basic | 两组件同键共享；600ms首读，3秒fresh→stale；改源数据不直接改缓存；后台刷新保留旧值 | 真useQuery/queryOptions/QueryClient；计数/延迟/新增来源是fixture |
+| business | tenant/search/page定义独立快照；提交搜索、分页与空状态 | 真键缓存；本地列表数据、分页3条为业务fixture |
+| advanced | signal取消初次查询后不永久加载，手动恢复；一次409按行恢复，再成功rev递增 | 真取消/失效/mutation；409和240ms写入是fixture |
+
+basic关闭focus/reconnect自动刷新以控制实验请求数，不声称SDK默认如此；业务/进阶保持通常默认。所有场景retry:false、gcTime60000为示例选择。3秒stale不会自动轮询。统计源A初始9/5，B初始6/3；A新增一条后刷新为10/6。取消首次读取后pending+idle显示“查询已停止”，不把isPending等同正在fetch。
+
+取消按钮只作用本租户feeds前缀，queryFn把signal交给pause。toggle不接signal，client.clear不会停止已开始mutation；保留原240ms有界fixture写入，旧epoch不回写UI、行级操作只触及本client，指南明确此限制，不宣称取消服务端写入或资源隔离。scope和UI防连点不等于数据库事务。
+
+## 官方来源与版本核实
+
+- 安装包@tanstack/react-query与其query-core均5.104.1，MIT；React peer ^18或^19。query-core不能从Lab顶层直接找到，按react-query依赖路径解析后读取本地src，未把路径解析失败当依赖缺失。
+- `git ls-remote --tags https://github.com/TanStack/query.git '*5.104.1*'`实际找到`@tanstack/react-query@5.104.1`，固定提交 `29859ae60c8dca0a5cdbf8abccc775b655cf43e2`。最初按v5.104.1查询404只是标签命名不符；随后按实际标签和同commit package.json核对版本5.104.1。
+- 同ref完整tree的根/目标包README候选只有README.md和packages/react-query/README.md，无目标官方中文README；选择包README，英文原文3876bytes，SHA-256 `0f689c3e8fcec5578fcd13b5a40980b2b3d5f5422452e75542f722d6db20b1c6`。未翻译或格式化原文。
+- 官方raw URL、tag/commit、packageVersion、候选、时间和所有响应完整头/字节摘要在official/source-evidence.json，library元数据一致。
+- 官网 `https://tanstack.com/query/latest` GET200且最终URL不变，但返回`X-Frame-Options: DENY`，因此blocked；不能因没做Lab-origin浏览器确认而忽略明确禁止，也不能标allowed。
+- 本地react-query/src/QueryClientProvider.tsx证明Provider持有mount/unmount订阅；query-core/src/queryObserver.ts的stale timer与fetchStatus/result映射、query.ts:isStaleByTime、queryClient.ts:invalidateQueries/refetchQueries与API类型支持关键断言。官方important-defaults/query-keys/query-cancellation同步只读核对；Context7已知月配额耗尽，不重复请求凭据，使用匹配安装源码和官方资料。
+
+## 实际定向命令与日志
+
+SDK/策略/类型检查cwd为`/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab`；格式与元数据cwd为仓库根。每份日志保存实际argv/cwd/起止时间/退出码，采用非忽略txt。
+
+| 命令 | 结果与边界 | 原始日志 |
+| --- | --- | --- |
+| `pnpm test:sdk --entry=D07` | exit0，6真实SDK PASS，0FAIL/0SKIP。保留原3项，新增同源options/backend去重/fresh/失效、实际fixture取消、实际409重试 | validation/sdk.txt |
+| `pnpm test:policy --entry=D07` | exit0，6纯策略PASS，0FAIL/0SKIP。ID/token/其他行/晚回调/版本/缺页边界 | validation/policy.txt |
+| `pnpm exec tsc --ignoreConfig --noEmit --module ESNext --moduleResolution Bundler --target ES2022 --jsx react-jsx --strict --skipLibCheck --esModuleInterop --allowImportingTsExtensions --types vite/client,node entries/D07-tanstack-query/examples/demo.tsx` | exit0，只有本条目入口依赖图，不生成 | validation/entry-typecheck.txt |
+| `pnpm exec biome check packages/library-lab/entries/D07-tanstack-query/examples packages/library-lab/entries/D07-tanstack-query/tests packages/library-lab/entries/D07-tanstack-query/library.json packages/library-lab/entries/D07-tanstack-query/verification.json packages/library-lab/entries/D07-tanstack-query/official/source-evidence.json` | exit0，14文件，无更改 | validation/biome.txt |
+| `node --input-type=module`，完整stdin程序见日志 | exit0；调用现有validateEntry/entryCompletenessIssues，3场景、9实际源码路径、README摘要/文档链接 | validation/entry-metadata.txt |
+
+没有为文案或记录重跑已通过的SDK/策略；没有把纯策略套件改名成SDK套件。真实SDK使用QueryClient，不Mock SDK；fixture明确标注。Node结果不覆盖React observer的浏览器时间边界、点击或布局。
+
+## 六项复核
+
+| 维度 | 状态与层级 | 依据与限制 |
+| --- | --- | --- |
+| 技术准确 | PASS · 匹配源码/类型/真实SDK | 同源queryOptions/键/backend、signal取消、rev/token回滚，6项SDK通过；fresh/stale、isPending/fetchStatus与独立client界限清楚 |
+| 解释清楚 | PASS · 静态教学复核 | 先共享/fresh-stale/后台刷新，再身份分页和写入取消；每目标有操作、可见输入输出和真实源码路径 |
+| Demo有用 | NOT_RUN · React浏览器待验 | 三个目标静态与Node支持齐全；两个observer、600ms/3秒状态、后台UI与取消/409实际控件待主控 |
+| 源码可迁移 | PASS · 静态/类型/局部SDK | 9必要源码文件和局部CSS、React peer/固定依赖/TS扩展名前提完整；原独立cache和ID/token/epoch所有权保留 |
+| 官方来源可靠 | PASS · 固定ref原文/完整HTTP | 匹配5.104.1，包README英文候选/3876bytes摘要正确；官网DENY而blocked，保留直达 |
+| 结果可复核 | NOT_RUN · 局部通过/核心浏览器缺口 | SDK6/策略6/入口类型/格式/metadata日志真实，不能替代React浏览器或当前干净提交正式收据 |
+
+## 交给主控的browser协议
+
+1. basic根d07-cache-primer；卡d07-observer-a/b有data-stale和data-fetch-status，值d07-stat-value-a/b，键d07-shared-key。A首读9/5/request1；在途或fresh挂载B不另发一次读取；两卡序号相同。3秒后stale且idle，不自动轮询。
+2. “在本地数据源新增1条”后旧缓存仍9；“后台刷新共享统计”过程中旧值保留并显示后台刷新，完成10/6/request2。仅在未先触发其他stale挂载的流程中序号应为2；额外合法重取会增加序号。开发StrictMode或已取消的开始尝试也可能改变起始序号，固定1/2断言仅用于无额外触发的生产预览流程。
+3. 工作区select切A/B，键/data不串。业务保留“RSS搜索”“查询”“上一页”“下一页”；d07-query-key含提交search和page。
+4. advanced选择900ms，切到无缓存的新团队/key后“取消当前列表查询”：d07-query-state应pending+idle并显示已停止，无永久spinner；“重新获取当前列表”恢复。d07-fetching统计真实useIsFetching。
+5. d07-row-a-1等行包含enabled/rev/token；“模拟下一次更新409”被消费后自动取消勾选，一次错误按行回滚、其他团队/行不变；d07-message明确错误；下一次成功rev1→2，临时token消失。切A→B→A旧epoch提示不复活。
+6. 离开/停止只清本例client及查询，重进fixture初始；不能据此声称已开始mutation被服务端回滚。README/website显示固定原文与blocked直达，窄屏控制和key文本不使整页横向溢出。
+
+主控已承接对应e2e。当前交付review_pending候选；浏览器通过与独立复核后主控裁定内容状态，正式verification继续NOT_RUN。

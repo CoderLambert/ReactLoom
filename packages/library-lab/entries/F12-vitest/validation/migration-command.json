@@ -1,0 +1,20 @@
+{
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "argv": [
+    "pnpm",
+    "--filter",
+    "@reactloom/library-lab",
+    "exec",
+    "tsc",
+    "-p",
+    "/tmp/f12-portable-i_2lf6dk/tsconfig.json"
+  ],
+  "exitCode": 0,
+  "files": [
+    "vitest.config.ts",
+    "examples/domain.ts",
+    "examples/basic.test.ts",
+    "examples/business.test.ts",
+    "examples/advanced.test.ts"
+  ]
+}

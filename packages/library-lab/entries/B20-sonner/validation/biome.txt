@@ -1,0 +1,43 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['pnpm', 'exec', 'biome', 'check', '--write', 'entries/B20-sonner/examples', 'entries/B20-sonner/tests', 'entries/B20-sonner/library.json', 'entries/B20-sonner/verification.json', 'entries/B20-sonner/official/source-evidence.json', 'entries/B20-sonner/validation/metadata-check.mjs', 'entries/B20-sonner/validation/sdk-source-audit.json']
+startedAt: 2026-11-10T14:22:20.426073+00:00
+exit: 1
+Skipped 1 suggested fixes.
+If you wish to apply the suggested (unsafe) fixes, use the command biome check --write --unsafe
+
+Checked 12 files in 8ms. Fixed 10 files.
+Found 1 error.
+entries/B20-sonner/examples/example.tsx:44:3 lint/correctness/useExhaustiveDependencies  FIXABLE  ━━━━━━━━━━
+
+  × This hook specifies more dependencies than necessary: level.
+  
+    42 │   }, [clearPending])
+    43 │ 
+  > 44 │   useEffect(() => {
+       │   ^^^^^^^^^
+    45 │     // A public level change starts a fresh local workshop, just like a new mount.
+    46 │     setSaved(false)
+  
+  i Outer scope values aren't valid dependencies because mutating them doesn't re-render the component.
+  
+    49 │     setLastToastId(null)
+    50 │     return clearOwn
+  > 51 │   }, [level, clearOwn])
+       │       ^^^^^
+    52 │ 
+    53 │   function remember(id: string | number) {
+  
+  i React relies on hook dependencies to determine when to re-compute Effects.
+    Specifying more dependencies than required can lead to unnecessary re-rendering
+    and degraded performance.
+  
+  i Unsafe fix: Remove the extra dependencies from the list.
+  
+    51 │ ··},·[level,·clearOwn])
+       │       -------          
+
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while applying fixes.
+  
+

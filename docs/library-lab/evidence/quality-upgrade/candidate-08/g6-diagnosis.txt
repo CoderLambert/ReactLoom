@@ -1,0 +1,189 @@
+cwd=packages/library-lab
+argv=["node", "--input-type=module", "-e", "import {chromium} from '@playwright/test';const browser=await chromium.launch();try{const page=await browser.newPage({viewport:{width:1280,height:1100}});await page.goto('http://localhost:4319/libraries/antv-g6?tab=demo&example=advanced');const app=page.getByTestId('a07-workshop');await app.getByTestId('a07-status').filter({hasText:'\u5df2\u6e32\u67d3'}).waitFor();const summarize=async()=>await app.getByTestId('a07-owned-canvas').locator('canvas').evaluateAll(canvases=>canvases.map(canvas=>{const context=canvas.getContext('2d');const data=context.getImageData(0,0,canvas.width,canvas.height).data;const colors=new Map();for(let i=0;i<data.length;i+=4)if(data[i+3]){const color=[...data.slice(i,i+4)].join(',');colors.set(color,(colors.get(color)||0)+1)}const r=canvas.getBoundingClientRect();return {width:canvas.width,height:canvas.height,bounds:{x:r.x,y:r.y,w:r.width,h:r.height},colors:[...colors].sort((a,b)=>b[1]-a[1]).slice(0,8)}}));console.log('first',JSON.stringify(await summarize()));await page.waitForTimeout(200);console.log('later',JSON.stringify(await summarize()));await app.getByRole('checkbox',{name:'\u4f7f\u7528\u7a84\u5bb9\u5668',exact:true}).check();await page.waitForTimeout(200);const host=app.getByTestId('a07-graph');const bounds=await host.boundingBox();console.log('narrowBounds',JSON.stringify(bounds));console.log('before',await app.getByTestId('a07-sdk-state').textContent());await host.scrollIntoViewIfNeeded();await app.getByRole('button',{name:'\u91cd\u65b0\u9002\u914d\u89c6\u53e3',exact:true}).click();await page.waitForTimeout(100);console.log('scrolledBounds',JSON.stringify(await host.boundingBox()));await host.hover();await page.mouse.wheel(0,-180);await page.waitForTimeout(200);console.log('after',await app.getByTestId('a07-sdk-state').textContent());await host.screenshot({path:'../../docs/library-lab/evidence/quality-upgrade/candidate-08/g6-diagnosis.png'});}finally{await browser.close()}"]
+exit=0
+first [{"width":858,"height":330,"bounds":{"x":338,"y":996.171875,"w":858,"h":330},"colors":[]},{"width":858,"height":330,"bounds":{"x":338,"y":996.171875,"w":858,"h":330},"colors":[["217,231,223,255",14085],["50,107,87,255",2069],["108,147,128,255",1355],["0,0,0,217",879],["0,0,0,106",226],["0,0,0,55",162],["0,0,0,159",42],["0,0,0,212",41]]},{"width":858,"height":330,"bounds":{"x":338,"y":996.171875,"w":858,"h":330},"colors":[]},{"width":858,"height":330,"bounds":{"x":338,"y":996.171875,"w":858,"h":330},"colors":[]}]
+later [{"width":858,"height":330,"bounds":{"x":338,"y":996.171875,"w":858,"h":330},"colors":[]},{"width":858,"height":330,"bounds":{"x":338,"y":996.171875,"w":858,"h":330},"colors":[["217,231,223,255",14085],["50,107,87,255",2069],["108,147,128,255",1355],["0,0,0,217",879],["0,0,0,106",226],["0,0,0,55",162],["0,0,0,159",42],["0,0,0,212",41]]},{"width":858,"height":330,"bounds":{"x":338,"y":996.171875,"w":858,"h":330},"colors":[]},{"width":858,"height":330,"bounds":{"x":338,"y":996.171875,"w":858,"h":330},"colors":[]}]
+narrowBounds {"x":337,"y":995.171875,"width":320,"height":332}
+before {
+  "instance": 1,
+  "rendered": true,
+  "size": [
+    318,
+    330
+  ],
+  "zoom": 0.5680181365594756,
+  "renderEvents": 1,
+  "drawEvents": 2,
+  "sizeEvents": 1,
+  "nodes": [
+    {
+      "id": "source",
+      "label": "RSS来源",
+      "position": [
+        100,
+        110,
+        0
+      ],
+      "client": [
+        375.823809504509,
+        1141.859260648489,
+        0
+      ],
+      "states": []
+    },
+    {
+      "id": "parse",
+      "label": "正文解析",
+      "position": [
+        242,
+        160,
+        0
+      ],
+      "client": [
+        456.48238494992256,
+        1170.2601678669453,
+        0
+      ],
+      "states": []
+    },
+    {
+      "id": "review",
+      "label": "质量审校",
+      "position": [
+        384,
+        110,
+        0
+      ],
+      "client": [
+        537.1409603953362,
+        1141.859260648489,
+        0
+      ],
+      "states": []
+    },
+    {
+      "id": "index",
+      "label": "内容索引",
+      "position": [
+        526,
+        160,
+        0
+      ],
+      "client": [
+        617.799540579319,
+        1170.2601678669453,
+        0
+      ],
+      "states": []
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge-source-parse",
+      "source": "source",
+      "target": "parse"
+    },
+    {
+      "id": "edge-parse-review",
+      "source": "parse",
+      "target": "review"
+    },
+    {
+      "id": "edge-review-index",
+      "source": "review",
+      "target": "index"
+    }
+  ]
+}
+scrolledBounds {"x":337,"y":769.171875,"width":320,"height":332}
+after {
+  "instance": 1,
+  "rendered": true,
+  "size": [
+    318,
+    330
+  ],
+  "zoom": 0.8520272370029081,
+  "renderEvents": 1,
+  "drawEvents": 2,
+  "sizeEvents": 1,
+  "nodes": [
+    {
+      "id": "source",
+      "label": "RSS来源",
+      "position": [
+        100,
+        110,
+        0
+      ],
+      "client": [
+        315.23570477962494,
+        906.7888891845942,
+        0
+      ],
+      "states": []
+    },
+    {
+      "id": "parse",
+      "label": "正文解析",
+      "position": [
+        242,
+        160,
+        0
+      ],
+      "client": [
+        436.22358453273773,
+        949.3902500122786,
+        0
+      ],
+      "states": []
+    },
+    {
+      "id": "review",
+      "label": "质量审校",
+      "position": [
+        384,
+        110,
+        0
+      ],
+      "client": [
+        557.211454808712,
+        906.7888891845942,
+        0
+      ],
+      "states": []
+    },
+    {
+      "id": "index",
+      "label": "内容索引",
+      "position": [
+        526,
+        160,
+        0
+      ],
+      "client": [
+        678.1993250846863,
+        949.3902500122786,
+        0
+      ],
+      "states": []
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge-source-parse",
+      "source": "source",
+      "target": "parse"
+    },
+    {
+      "id": "edge-parse-review",
+      "source": "parse",
+      "target": "review"
+    },
+    {
+      "id": "edge-review-index",
+      "source": "review",
+      "target": "index"
+    }
+  ]
+}

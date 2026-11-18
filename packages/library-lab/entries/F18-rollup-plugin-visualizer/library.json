@@ -4,15 +4,8 @@
   "slug": "rollup-plugin-visualizer",
   "name": "rollup-plugin-visualizer",
   "group": "F",
-  "summary": "真实Vite8构建报告：Treemap、Markdown体积清单与Raw-data JSON",
-  "tags": [
-    "bundle分析",
-    "Vite",
-    "Rollup",
-    "按需分包",
-    "raw-data",
-    "CLI"
-  ],
+  "summary": "从模块归因到真实改动：比较静态与点击加载入口，测量首屏依赖闭包并设置构建预算",
+  "tags": ["bundle分析", "Vite 8", "Rolldown", "模块归因", "动态import", "体积预算", "CLI"],
   "contentState": "recreated",
   "packages": [
     {
@@ -54,65 +47,89 @@
     {
       "demoId": "basic",
       "level": "basic",
-      "title": "Treemap真实HTML产物",
+      "title": "从真实模块图定位入口组成",
       "executionKind": "node-ci",
       "entryPoint": "examples/vite.config.ts",
       "sourceFiles": [
+        "examples/verify.mjs",
         "examples/vite.config.ts",
+        "examples/summary-reader.mjs",
+        "examples/report-policy.mjs",
+        "examples/check-budget.mjs",
         "examples/fixture/index.html",
         "examples/fixture/main.ts",
+        "examples/fixture/main-lazy.ts",
+        "examples/fixture/view.ts",
         "examples/fixture/helper.ts",
-        "examples/report-policy.mjs",
+        "examples/fixture/heavy.ts",
         "examples/report-policy.test.mjs"
       ],
       "capabilities": [
         "node-process",
         "real-vite-build",
-        "report"
+        "report",
+        "artifact-digest",
+        "bundle-budget"
       ],
-      "description": "pnpm exec vite build --mode basic 生成统计HTML；不是站内模拟体积图。"
+      "description": "构建 static fixture，结合 treemap 的体积与 network 的导入边，追踪 main → view/helper/heavy，而不是凭 package.json 猜测。"
     },
     {
       "demoId": "business",
       "level": "business",
-      "title": "Markdown构建尺寸摘要",
+      "title": "静态导入与点击加载：改动后测量",
       "executionKind": "node-ci",
       "entryPoint": "examples/vite.config.ts",
       "sourceFiles": [
+        "examples/verify.mjs",
         "examples/vite.config.ts",
-        "examples/fixture/main.ts",
-        "examples/fixture/heavy.ts",
-        "examples/fixture/helper.ts",
+        "examples/summary-reader.mjs",
         "examples/report-policy.mjs",
+        "examples/check-budget.mjs",
+        "examples/fixture/index.html",
+        "examples/fixture/main.ts",
+        "examples/fixture/main-lazy.ts",
+        "examples/fixture/view.ts",
+        "examples/fixture/helper.ts",
+        "examples/fixture/heavy.ts",
         "examples/report-policy.test.mjs"
       ],
       "capabilities": [
         "node-process",
         "real-vite-build",
-        "report"
+        "report",
+        "artifact-digest",
+        "bundle-budget"
       ],
-      "description": "使用markdown模板生成构建报告；字节数来自本次真实Vite构建。"
+      "description": "构建同功能 static/lazy 两份入口，核对 heavy.ts 是否离开静态闭包，并对比初始和全部 JS 的真实字节；不预设拆包会变小。"
     },
     {
       "demoId": "advanced",
       "level": "advanced",
-      "title": "Raw-data JSON与懒加载chunk",
+      "title": "用真实产物执行预算门禁",
       "executionKind": "node-ci",
       "entryPoint": "examples/vite.config.ts",
       "sourceFiles": [
-        "examples/vite.config.ts",
-        "examples/fixture/main.ts",
-        "examples/fixture/heavy.ts",
         "examples/verify.mjs",
+        "examples/vite.config.ts",
+        "examples/summary-reader.mjs",
         "examples/report-policy.mjs",
+        "examples/check-budget.mjs",
+        "examples/fixture/index.html",
+        "examples/fixture/main.ts",
+        "examples/fixture/main-lazy.ts",
+        "examples/fixture/view.ts",
+        "examples/fixture/helper.ts",
+        "examples/fixture/heavy.ts",
         "examples/report-policy.test.mjs"
       ],
       "capabilities": [
         "node-process",
         "real-vite-build",
-        "report"
+        "report",
+        "artifact-digest",
+        "bundle-budget"
       ],
-      "description": "使用raw-data生成机器可读取报告，验证动态import在构建中产生chunk。"
+      "description": "复用 static/lazy 构建检查初始 JS gzip 预算；独立 check-budget 命令可以通过或以非零退出触发失败。"
     }
   ],
   "license": {
@@ -121,6 +138,26 @@
   },
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
-    "note": "以ReactLoom现有rollup-plugin-visualizer@7.1.1为基准新编写隔离fixture；真实Vite构建未运行。"
+    "note": "以锁定的 visualizer 7.1.1、Vite 8.3.4、实际 Rolldown 1.2.13 重写隔离 fixture；本地真实构建与预算检查记录在 local-validation.md，未生成正式逐库收据。"
+  },
+  "official": {
+    "readme": {
+      "repository": "btd/rollup-plugin-visualizer",
+      "commit": "3374f6e6e7bc109e266cfe035db7c69be4973f37",
+      "path": "README.md",
+      "sha256": "7826e3f874637491646a3d9bd06494dcda3c2081f1bbdaaef76a75dd5b802cb3",
+      "sourceUrl": "https://github.com/btd/rollup-plugin-visualizer/blob/3374f6e6e7bc109e266cfe035db7c69be4973f37/README.md",
+      "snapshotPath": "official/readme.md",
+      "language": "en",
+      "version": "7.1.1",
+      "syncedAt": "2026-11-10T08:22:53.907508+00:00"
+    },
+    "homepage": {
+      "url": "https://github.com/btd/rollup-plugin-visualizer",
+      "kind": "repository",
+      "status": "blocked",
+      "checkedAt": "2026-11-10T08:22:53.907508+00:00",
+      "reason": "X-Frame-Options: deny; Content-Security-Policy: frame-ancestors 'none'"
+    }
   }
 }

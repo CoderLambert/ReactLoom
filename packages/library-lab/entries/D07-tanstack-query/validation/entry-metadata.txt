@@ -1,0 +1,35 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom
+command: node --input-type=module
+stdin:
+import {readFile,stat} from 'node:fs/promises'
+import {createHash} from 'node:crypto'
+import {validateEntry} from './packages/library-lab/src/lib/catalog.mjs'
+import {entryCompletenessIssues} from './packages/library-lab/scripts/entry-gate.mjs'
+const base='packages/library-lab/entries/D07-tanstack-query/'
+const entry=JSON.parse(await readFile(base+'library.json','utf8'))
+const problems=[...validateEntry(entry),...entryCompletenessIssues(entry,{guide:true,agent:true,agents:true,verification:true})]
+for(const file of new Set(entry.demos.flatMap(d=>d.sourceFiles))){if(!(await stat(base+file)).isFile())problems.push(file)}
+const snapshot=await readFile(base+entry.official.readme.snapshotPath)
+if(createHash('sha256').update(snapshot).digest('hex')!==entry.official.readme.sha256)problems.push('README digest')
+for(const name of ['guide.md','agent.md']){
+ const text=await readFile(base+name,'utf8')
+ for(const [,href] of text.matchAll(/\]\(([^)]+)\)/gu)){
+  if(href.startsWith('https:')||href.startsWith('#'))continue
+  if(!(await stat(base+href)).isFile())problems.push(name+':'+href)
+ }
+}
+console.log(JSON.stringify({entryId:entry.entryId,demos:entry.demos.length,sourceFiles:new Set(entry.demos.flatMap(d=>d.sourceFiles)).size,readmeBytes:snapshot.length,problems},null,2))
+if(problems.length)process.exitCode=1
+
+stdout:
+{
+  "entryId": "D07",
+  "demos": 3,
+  "sourceFiles": 9,
+  "readmeBytes": 3876,
+  "problems": []
+}
+
+stderr:
+
+exitCode: 0

@@ -1,0 +1,48 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+command=pnpm exec biome check packages/library-lab/e2e/quality-remediation-data.spec.ts packages/library-lab/e2e/repair.spec.ts
+packages/library-lab/e2e/repair.spec.ts:53:28 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    51 │     const inspector = await context.newPage()
+    52 │     try {
+  > 53 │       await inspector.goto(RUNNER + '/lab-runners/msw/')
+       │                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    54 │       await expect
+    55 │         .poll(() =>
+  
+  i Unsafe fix: Use a template literal.
+  
+     51  51 │       const inspector = await context.newPage()
+     52  52 │       try {
+     53     │ - ······await·inspector.goto(RUNNER·+·'/lab-runners/msw/')
+         53 │ + ······await·inspector.goto(`${RUNNER}/lab-runners/msw/`)
+     54  54 │         await expect
+     55  55 │           .poll(() =>
+  
+
+packages/library-lab/e2e/repair.spec.ts:92:26 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    90 │       secondScope = await openScenario(second, 'business')
+    91 │     expect(firstScope).not.toBe(secondScope)
+  > 92 │     await inspector.goto(RUNNER + '/lab-runners/msw/')
+       │                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    93 │     await page.getByRole('tab', { name: '详细文档' }).click()
+    94 │     await expect
+  
+  i Unsafe fix: Use a template literal.
+  
+     90  90 │         secondScope = await openScenario(second, 'business')
+     91  91 │       expect(firstScope).not.toBe(secondScope)
+     92     │ - ····await·inspector.goto(RUNNER·+·'/lab-runners/msw/')
+         92 │ + ····await·inspector.goto(`${RUNNER}/lab-runners/msw/`)
+     93  93 │       await page.getByRole('tab', { name: '详细文档' }).click()
+     94  94 │       await expect
+  
+
+Checked 2 files in 6ms. No fixes applied.
+Found 2 infos.
+
+exitCode=0

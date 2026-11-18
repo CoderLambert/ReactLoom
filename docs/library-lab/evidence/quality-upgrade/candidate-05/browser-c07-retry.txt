@@ -1,0 +1,42 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=pnpm exec playwright test --config=.local-evidence/quality-playwright.config.ts quality-remediation-order.spec.ts --grep server pagination clamps
+
+Running 1 test using 1 worker
+
+(node:863665) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 e2e/quality-remediation-order.spec.ts:125:1 › @C07 server pagination clamps after shrinking and distinguishes 503 from empty results (30.0s)
+
+
+  1) e2e/quality-remediation-order.spec.ts:125:1 › @C07 server pagination clamps after shrinking and distinguishes 503 from empty results 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByTestId('c07-workshop').getByRole('button', { name: '模拟服务端503', exact: true })
+
+
+      136 |   await expect(rows).toHaveCount(2)
+      137 |   await expect(app.getByTestId('c07-pager')).toContainText(/第\s*1\s*\/\s*1\s*页/u)
+    > 138 |   await app.getByRole('button', { name: '模拟服务端503', exact: true }).click()
+          |                                                                    ^
+      139 |   await expect(app.getByTestId('c07-status')).toHaveAttribute('data-error', 'true')
+      140 |   await expect(app.getByTestId('c07-status')).toContainText('503')
+      141 |   await app.getByRole('button', { name: '恢复并刷新', exact: true }).click()
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-order.spec.ts:138:68
+
+    Error Context: test-results/quality-remediation-order--bccae-shes-503-from-empty-results/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-remediation-order--bccae-shes-503-from-empty-results/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-remediation-order--bccae-shes-503-from-empty-results/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    e2e/quality-remediation-order.spec.ts:125:1 › @C07 server pagination clamps after shrinking and distinguishes 503 from empty results 
+
+exitCode=1

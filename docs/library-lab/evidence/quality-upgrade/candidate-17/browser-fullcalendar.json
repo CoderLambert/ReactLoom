@@ -1,0 +1,17 @@
+{
+  "command": [
+    "pnpm",
+    "exec",
+    "playwright",
+    "test",
+    "--config=.local-evidence/quality-playwright.config.ts",
+    "e2e/quality-remediation-fullcalendar.spec.ts",
+    "--trace=off"
+  ],
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+  "startedAt": "2026-11-10T16:48:16.355043+00:00",
+  "finishedAt": "2026-11-10T16:48:47.250412+00:00",
+  "exitCode": 1,
+  "implicitBuild": false,
+  "log": "docs/library-lab/evidence/quality-upgrade/candidate-17/browser-fullcalendar.txt"
+}

@@ -1,0 +1,207 @@
+{
+  "checkedAt": "2026-11-10T17:16:33.424505+00:00",
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+  "kind": "READ_ONLY_INSTALLED_SOURCE_AND_TYPES_AUDIT_NOT_SDK_OR_BROWSER",
+  "files": [
+    {
+      "package": "date-fns",
+      "file": "package.json",
+      "realPath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/date-fns@4.4.0/node_modules/date-fns/package.json",
+      "sha256": "815ce62b8bb1c951e2d2310833c0904c987279f82d74b998f11094ec27ca0e07",
+      "bytes": 199018
+    },
+    {
+      "package": "date-fns",
+      "file": "addDays.js",
+      "realPath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/date-fns@4.4.0/node_modules/date-fns/addDays.js",
+      "sha256": "12865eaa5a0eebe103cb157d612724ed6904f0cb7a7ccb1c29fece47f55188d1",
+      "bytes": 2639
+    },
+    {
+      "package": "date-fns",
+      "file": "addDays.d.ts",
+      "realPath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/date-fns@4.4.0/node_modules/date-fns/addDays.d.ts",
+      "sha256": "73b7e3d5300ad64f9231f5bb145fca4892574d85e2d1a015ce095628f16915ca",
+      "bytes": 2526
+    },
+    {
+      "package": "date-fns",
+      "file": "differenceInCalendarDays.js",
+      "realPath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/date-fns@4.4.0/node_modules/date-fns/differenceInCalendarDays.js",
+      "sha256": "7a04a2f022ec18533bb3139ef5d74d4ecfd1fcb4787908ef750b1b88f838557c",
+      "bytes": 2104
+    },
+    {
+      "package": "date-fns",
+      "file": "differenceInCalendarDays.d.ts",
+      "realPath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/date-fns@4.4.0/node_modules/date-fns/differenceInCalendarDays.d.ts",
+      "sha256": "8f567d63ab28f074ab2be3ddc2da27107de8022488f4a3bd91609752045bb612",
+      "bytes": 1329
+    },
+    {
+      "package": "date-fns",
+      "file": "differenceInHours.js",
+      "realPath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/date-fns@4.4.0/node_modules/date-fns/differenceInHours.js",
+      "sha256": "b13e703608be4993abb65e888fd9d1ec782cc2083106d7041d2dcf183889f0be",
+      "bytes": 1182
+    },
+    {
+      "package": "date-fns",
+      "file": "differenceInHours.d.ts",
+      "realPath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/date-fns@4.4.0/node_modules/date-fns/differenceInHours.d.ts",
+      "sha256": "bf6060c0585e76d2670629cc4c592e1dd938ac356e974916ced7f46587ba8181",
+      "bytes": 960
+    },
+    {
+      "package": "date-fns",
+      "file": "format.js",
+      "realPath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/date-fns@4.4.0/node_modules/date-fns/format.js",
+      "sha256": "3bcb2a92b32ca514a1034b8a4a15067eae44cbe4c449bf8325fc6bcd7ad46cfa",
+      "bytes": 25019
+    },
+    {
+      "package": "date-fns",
+      "file": "format.d.ts",
+      "realPath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/date-fns@4.4.0/node_modules/date-fns/format.d.ts",
+      "sha256": "f67c58823afbf2590f2c239d09a46aba9d3456327eee05b593c48ee248758ce0",
+      "bytes": 21050
+    },
+    {
+      "package": "date-fns",
+      "file": "parseISO.js",
+      "realPath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/date-fns@4.4.0/node_modules/date-fns/parseISO.js",
+      "sha256": "c7abf9ffe197b23b29d8bcc4096e97392bea5c04c24b672708eded8644661f3e",
+      "bytes": 8113
+    },
+    {
+      "package": "date-fns",
+      "file": "parseISO.d.ts",
+      "realPath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/date-fns@4.4.0/node_modules/date-fns/parseISO.d.ts",
+      "sha256": "6cf0bf08cc2ffa6d25c7a9852e58f7de9b26122a42380a89105c201e8bde13c8",
+      "bytes": 1773
+    },
+    {
+      "package": "date-fns",
+      "file": "isValid.js",
+      "realPath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/date-fns@4.4.0/node_modules/date-fns/isValid.js",
+      "sha256": "d97f3110836b8c9738e278c711528ed18109fe6d77bf0ba5214931de27ca2f92",
+      "bytes": 1020
+    },
+    {
+      "package": "date-fns",
+      "file": "constructFrom.js",
+      "realPath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/date-fns@4.4.0/node_modules/date-fns/constructFrom.js",
+      "sha256": "7b3e579c016294f97bea3456908ca4d880beabf1619c26bd8ac59434c0386c7d",
+      "bytes": 1885
+    },
+    {
+      "package": "date-fns",
+      "file": "toDate.js",
+      "realPath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/date-fns@4.4.0/node_modules/date-fns/toDate.js",
+      "sha256": "5d3a68565e536e5f6fd8ab008fc4934b39b5c362fd8eb2c8d4f78ecec2f57790",
+      "bytes": 1763
+    },
+    {
+      "package": "date-fns",
+      "file": "types.d.ts",
+      "realPath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/date-fns@4.4.0/node_modules/date-fns/types.d.ts",
+      "sha256": "a62e448d3f09fee63ec1230acb23fb54f8f6ccf8d6f0001c7b94fd51594b7c9b",
+      "bytes": 9063
+    },
+    {
+      "package": "date-fns",
+      "file": "_lib/getRoundingMethod.js",
+      "realPath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/date-fns@4.4.0/node_modules/date-fns/_lib/getRoundingMethod.js",
+      "sha256": "7fd065f3353d6cd559b83c5cb4628d7ca9e2ff6e3cd6a1684ab3583141246a5c",
+      "bytes": 229
+    },
+    {
+      "package": "date-fns",
+      "file": "_lib/normalizeDates.js",
+      "realPath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/date-fns@4.4.0/node_modules/date-fns/_lib/normalizeDates.js",
+      "sha256": "5be14f66c30058054ddf845ba866430c66e5c277d5c376d8faeaef57c35191c5",
+      "bytes": 257
+    },
+    {
+      "package": "@date-fns/tz",
+      "file": "package.json",
+      "realPath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@date-fns+tz@1.5.0/node_modules/@date-fns/tz/package.json",
+      "sha256": "39e0ec042da229112a2f1ee71e11dfcf78bc6d0b4ee7c94811ad7c4e5a0416f2",
+      "bytes": 2484
+    },
+    {
+      "package": "@date-fns/tz",
+      "file": "date/index.js",
+      "realPath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@date-fns+tz@1.5.0/node_modules/@date-fns/tz/date/index.js",
+      "sha256": "a0059a5c459257e588d77451e69e349041db6bd19f51759b3c808e8c5fe87ebf",
+      "bytes": 2379
+    },
+    {
+      "package": "@date-fns/tz",
+      "file": "date/index.d.ts",
+      "realPath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@date-fns+tz@1.5.0/node_modules/@date-fns/tz/date/index.d.ts",
+      "sha256": "60924ca0c60f0674f208bfa1eaaa54e6973ced7650df7c7a81ae069730ef665a",
+      "bytes": 8196
+    },
+    {
+      "package": "@date-fns/tz",
+      "file": "date/mini.js",
+      "realPath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@date-fns+tz@1.5.0/node_modules/@date-fns/tz/date/mini.js",
+      "sha256": "2ba16f0db5d1ccc8d5b8f7d35001d92f4d3c6bb0a6142312eb0d4a2116f875e2",
+      "bytes": 18809
+    },
+    {
+      "package": "@date-fns/tz",
+      "file": "tz/index.js",
+      "realPath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@date-fns+tz@1.5.0/node_modules/@date-fns/tz/tz/index.js",
+      "sha256": "646d764b09c031e27d4348c0f093a74bb6c52e5e491a93996a9ef6e4ad5243e3",
+      "bytes": 498
+    },
+    {
+      "package": "@date-fns/tz",
+      "file": "tz/index.d.ts",
+      "realPath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@date-fns+tz@1.5.0/node_modules/@date-fns/tz/tz/index.d.ts",
+      "sha256": "c42d5cbf94816659c01f7c2298d0370247f1a981f8ca6370301b7a03b3ced950",
+      "bytes": 510
+    },
+    {
+      "package": "@date-fns/tz",
+      "file": "tzOffset/index.js",
+      "realPath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@date-fns+tz@1.5.0/node_modules/@date-fns/tz/tzOffset/index.js",
+      "sha256": "e7d7213eee121dbb60f9f18830b39da3a876384c766138b306eb6aa34afba0eb",
+      "bytes": 2211
+    },
+    {
+      "package": "@date-fns/tz",
+      "file": "index.d.ts",
+      "realPath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@date-fns+tz@1.5.0/node_modules/@date-fns/tz/index.d.ts",
+      "sha256": "5fc13d24a2d0328eac00c4e73cc052a987fbced2151bc0d3b7eb8f3ba4d0f4e2",
+      "bytes": 241
+    }
+  ],
+  "candidate18Runtime": {
+    "examples/date-contract.ts": "23a4020a2f9b41fec7e759b8c97a7ba22319bbe8211cddb8dd9b58fd72ec992d",
+    "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+    "examples/example.tsx": "0ac3e2242192d1349f0ddedfabadd0a1e31e63695c173852f13b3f67bb897e1d",
+    "examples/instant-policy.d.mts": "69563ce40e725398601e1de4ee263b46cd50b11dedc77abbba56f312259d904b",
+    "examples/instant-policy.mjs": "328a4b90f05672db7f75c982f686de2b359b1477225687633d0322fb452dde78",
+    "examples/styles.css": "1118f3c0f0bc7d6d632a09c0fa68a422d520293fd424688ff7850f2de97daae9"
+  },
+  "runtimeUnchangedSinceCandidate18Checkpoint": true,
+  "packages": {
+    "date-fns": {
+      "name": "date-fns",
+      "version": "4.4.0",
+      "license": "MIT",
+      "installedReadmeSHA": "87237646806588ea43e8a7d4c13880d09b42b14ab0a4b0bbb944855f25b82232",
+      "installedReadmeSameAsFixedSnapshot": true
+    },
+    "@date-fns/tz": {
+      "name": "@date-fns/tz",
+      "version": "1.5.0",
+      "license": "MIT",
+      "installedReadmeSHA": "dc3a4466b53f9a5d2f06e0e3a5d38ce2858f565481471ec3747aee5f0718b264",
+      "installedReadmeSameAsFixedSnapshot": true
+    }
+  }
+}

@@ -1,0 +1,180 @@
+[
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "python3",
+      "entries/B21-react-motion-migration/validation/fetch-official.py"
+    ],
+    "startedAt": "2026-11-10T14:44:55.189974+00:00",
+    "exitCode": 0,
+    "log": "validation/official-fetch.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "entries/B21-react-motion-migration/examples",
+      "entries/B21-react-motion-migration/tests",
+      "entries/B21-react-motion-migration/library.json",
+      "entries/B21-react-motion-migration/verification.json",
+      "entries/B21-react-motion-migration/official/source-evidence.json",
+      "entries/B21-react-motion-migration/validation/metadata-check.mjs",
+      "entries/B21-react-motion-migration/validation/sdk-source-audit.json"
+    ],
+    "startedAt": "2026-11-10T14:49:07.297869+00:00",
+    "exitCode": 0,
+    "log": "validation/biome.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "node",
+      "--test",
+      "entries/B21-react-motion-migration/tests/sdk.test.mjs"
+    ],
+    "startedAt": "2026-11-10T14:49:07.617953+00:00",
+    "exitCode": 0,
+    "log": "validation/sdk.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "node",
+      "--test",
+      "entries/B21-react-motion-migration/tests/task-history.test.mts"
+    ],
+    "startedAt": "2026-11-10T14:49:07.875698+00:00",
+    "exitCode": 0,
+    "log": "validation/policy.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "tsc",
+      "--ignoreConfig",
+      "--noEmit",
+      "--target",
+      "es2022",
+      "--module",
+      "esnext",
+      "--moduleResolution",
+      "bundler",
+      "--jsx",
+      "react-jsx",
+      "--strict",
+      "--skipLibCheck",
+      "--esModuleInterop",
+      "--types",
+      "vite/client,node",
+      "entries/B21-react-motion-migration/examples/demo.tsx"
+    ],
+    "startedAt": "2026-11-10T14:49:08.074641+00:00",
+    "exitCode": 0,
+    "log": "validation/typecheck.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "node",
+      "entries/B21-react-motion-migration/validation/metadata-check.mjs"
+    ],
+    "startedAt": "2026-11-10T14:49:08.421858+00:00",
+    "exitCode": 0,
+    "log": "validation/metadata.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "entries/B21-react-motion-migration/validation/browser-proposal.check.ts"
+    ],
+    "startedAt": "2026-11-10T14:52:23.218637+00:00",
+    "exitCode": 0,
+    "log": "validation/proposal-format.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "tsc",
+      "--ignoreConfig",
+      "--noEmit",
+      "--target",
+      "es2022",
+      "--module",
+      "esnext",
+      "--moduleResolution",
+      "bundler",
+      "--strict",
+      "--skipLibCheck",
+      "--types",
+      "node",
+      "entries/B21-react-motion-migration/validation/browser-proposal.check.ts"
+    ],
+    "startedAt": "2026-11-10T14:52:23.461988+00:00",
+    "exitCode": 1,
+    "log": "validation/proposal-typecheck.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "entries/B21-react-motion-migration/validation/browser-proposal.check.ts"
+    ],
+    "startedAt": "2026-11-10T14:52:50.732424+00:00",
+    "exitCode": 0,
+    "log": "validation/proposal-format-fixed.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "tsc",
+      "--ignoreConfig",
+      "--noEmit",
+      "--target",
+      "es2022",
+      "--module",
+      "esnext",
+      "--moduleResolution",
+      "bundler",
+      "--strict",
+      "--skipLibCheck",
+      "--types",
+      "node",
+      "entries/B21-react-motion-migration/validation/browser-proposal.check.ts"
+    ],
+    "startedAt": "2026-11-10T14:52:50.967565+00:00",
+    "exitCode": 0,
+    "log": "validation/proposal-typecheck-fixed.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "git",
+      "diff",
+      "--check",
+      "--",
+      "entries/B21-react-motion-migration"
+    ],
+    "startedAt": "2026-11-10T14:55:04.859239+00:00",
+    "exitCode": 0,
+    "log": "validation/diff-check.txt"
+  }
+]

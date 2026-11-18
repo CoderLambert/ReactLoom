@@ -4,14 +4,8 @@
   "slug": "dotlottie",
   "name": "dotLottie 播放器",
   "group": "B",
-  "summary": "本地矢量动画、播放控制与减少动态效果",
-  "tags": [
-    "lottie",
-    "animation",
-    "canvas",
-    "a11y",
-    "reduced-motion"
-  ],
+  "summary": "用本地原创JSON观察真实WASM播放、业务结果分离与减少动态/错误恢复",
+  "tags": ["lottie", "animation", "canvas", "a11y", "reduced-motion"],
   "contentState": "recreated",
   "packages": [
     {
@@ -58,7 +52,7 @@
         "examples/demo.tsx",
         "examples/pulse.json"
       ],
-      "capabilities": []
+      "capabilities": ["animation", "cleanup"]
     },
     {
       "demoId": "business",
@@ -72,11 +66,11 @@
         "examples/demo.tsx",
         "examples/pulse.json"
       ],
-      "capabilities": []
+      "capabilities": ["animation", "cleanup"]
     },
     {
       "demoId": "advanced",
-      "title": "动画速度、暂停策略及减少动态",
+      "title": "帧定位、减少动态与损坏数据恢复",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
@@ -86,10 +80,7 @@
         "examples/demo.tsx",
         "examples/pulse.json"
       ],
-      "capabilities": [
-        "cleanup",
-        "interaction"
-      ]
+      "capabilities": ["animation", "cleanup"]
     }
   ],
   "provenance": {
@@ -99,5 +90,25 @@
   "license": {
     "spdx": "MIT",
     "assets": "全部用本地原创演示数据；无商用图片或收费资源。"
+  },
+  "official": {
+    "readme": {
+      "repository": "LottieFiles/dotlottie-web",
+      "commit": "e34f2cf2dc609ebae482615f64be4dee4218a4eb",
+      "path": "packages/react/README.md",
+      "sourceUrl": "https://github.com/LottieFiles/dotlottie-web/blob/e34f2cf2dc609ebae482615f64be4dee4218a4eb/packages/react/README.md",
+      "snapshotPath": "official/readme.md",
+      "language": "en",
+      "version": "0.20.0",
+      "syncedAt": "2026-11-10T13:14:27.172394+00:00",
+      "sha256": "5b8263be74ae7e5bd91155c66eb688f82954a7e3d6c205cc4949b86bfc86235c"
+    },
+    "homepage": {
+      "url": "https://docs.lottiefiles.com/en/runtimes/distributions/react?utm_source=npm&utm_medium=package",
+      "kind": "website",
+      "status": "blocked",
+      "checkedAt": "2026-11-10T13:14:27.172394+00:00",
+      "reason": "匹配包manifest指向的官方文档实际GET200，响应X-Frame-Options: DENY，CSP没有覆盖它的frame-ancestors。禁止跨源Lab iframe，提供官方直达；详见official/source-audit.json。"
+    }
   }
 }

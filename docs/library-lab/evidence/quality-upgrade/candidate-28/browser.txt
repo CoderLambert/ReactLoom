@@ -1,0 +1,152 @@
+[WebServer] (node:1945368) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:1945383) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 8 tests using 2 workers
+
+(node:1945456) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1945455) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  2 e2e/quality-resume-blocknote.spec.ts:49:1 › @E02 real insert/save/restore generates new IDs and rejects bad drafts unchanged (1.8s)
+(node:1945778) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  3 e2e/quality-resume-blocknote.spec.ts:97:1 › @E02 Storage access failures are visible without replacing editor content (1.6s)
+(node:1945943) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  4 e2e/quality-resume-official-d21-e02.spec.ts:8:3 › @D21 pinned official original and honest homepage fallback (1.8s)
+  ✓  5 e2e/quality-resume-official-d21-e02.spec.ts:8:3 › @E01 pinned official original and honest homepage fallback (1.7s)
+  ✓  6 e2e/quality-resume-official-d21-e02.spec.ts:8:3 › @E02 pinned official original and honest homepage fallback (1.7s)
+  ✓  7 e2e/quality-resume-pagefind.spec.ts:3:1 › @D21 three Node recipes display commands without launching a search host (2.7s)
+  ✘  8 e2e/quality-resume-tiptap.spec.ts:9:1 › E01 real editor commands, structured drafts, rejected restore and hook disposal @E01 (3.6s)
+  ✘  1 e2e/quality-resume-blocknote.spec.ts:5:1 › @E02 actual BlockNote typing, slash menu and onChange (30.1s)
+
+
+  1) e2e/quality-resume-blocknote.spec.ts:5:1 › @E02 actual BlockNote typing, slash menu and onChange 
+
+    Test timeout of 30000ms exceeded.
+
+    Error Context: test-results/quality-resume-blocknote---abf87-ing-slash-menu-and-onChange/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-resume-blocknote---abf87-ing-slash-menu-and-onChange/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-resume-blocknote---abf87-ing-slash-menu-and-onChange/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) e2e/quality-resume-blocknote.spec.ts:49:1 › @E02 real insert/save/restore generates new IDs and rejects bad drafts unchanged 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('region', { name: 'BlockNote 块编辑实验', exact: true }).getByRole('status')
+    Expected substring: "无法恢复"
+    Error: strict mode violation: getByRole('region', { name: 'BlockNote 块编辑实验', exact: true }).getByRole('status') resolved to 3 elements:
+        1) <output data-testid="blocknote-changes">2</output> aka getByTestId('blocknote-changes')
+        2) <output data-testid="blocknote-count">2</output> aka getByTestId('blocknote-count')
+        3) <p role="status">无法恢复该版本草稿：SyntaxError: Expected property name or …</p> aka getByText('无法恢复该版本草稿：SyntaxError:')
+
+    Call log:
+      - Expect "toContainText" getByRole('region', { name: 'BlockNote 块编辑实验', exact: true }).getByRole('status') with timeout 5000ms
+      - waiting for getByRole('region', { name: 'BlockNote 块编辑实验', exact: true }).getByRole('status')
+
+
+      76 |     await page.evaluate(({ key, raw }) => sessionStorage.setItem(key, raw), { key: KEY, raw })
+      77 |     await restore.click()
+    > 78 |     await expect(app.getByRole('status')).toContainText('无法恢复')
+         |                                           ^
+      79 |     expect(await editable.innerText()).toBe(before)
+      80 |     await expect(app.getByTestId('blocknote-count')).toHaveText('2')
+      81 |   }
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-resume-blocknote.spec.ts:78:43
+
+    Error Context: test-results/quality-resume-blocknote---ce277-ejects-bad-drafts-unchanged/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-resume-blocknote---ce277-ejects-bad-drafts-unchanged/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-resume-blocknote---ce277-ejects-bad-drafts-unchanged/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) e2e/quality-resume-blocknote.spec.ts:97:1 › @E02 Storage access failures are visible without replacing editor content 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('region', { name: 'BlockNote 块编辑实验', exact: true }).getByRole('status')
+    Expected substring: "QuotaExceededError"
+    Error: strict mode violation: getByRole('region', { name: 'BlockNote 块编辑实验', exact: true }).getByRole('status') resolved to 3 elements:
+        1) <output data-testid="blocknote-changes">0</output> aka getByTestId('blocknote-changes')
+        2) <output data-testid="blocknote-count">2</output> aka getByTestId('blocknote-count')
+        3) <p role="status">存储/内容失败：QuotaExceededError: test quota</p> aka getByText('存储/内容失败：QuotaExceededError:')
+
+    Call log:
+      - Expect "toContainText" getByRole('region', { name: 'BlockNote 块编辑实验', exact: true }).getByRole('status') with timeout 5000ms
+      - waiting for getByRole('region', { name: 'BlockNote 块编辑实验', exact: true }).getByRole('status')
+
+
+      114 |   }, KEY)
+      115 |   await app.getByRole('button', { name: '保存会话草稿', exact: true }).click()
+    > 116 |   await expect(app.getByRole('status')).toContainText('QuotaExceededError')
+          |                                         ^
+      117 |   await app.getByRole('button', { name: '恢复会话草稿', exact: true }).click()
+      118 |   await expect(app.getByRole('status')).toContainText('SecurityError')
+      119 |   expect(await app.locator('[contenteditable="true"]').first().innerText()).toBe(before)
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-resume-blocknote.spec.ts:116:41
+
+    Error Context: test-results/quality-resume-blocknote---a13e2-ut-replacing-editor-content/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-resume-blocknote---a13e2-ut-replacing-editor-content/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-resume-blocknote---a13e2-ut-replacing-editor-content/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) e2e/quality-resume-tiptap.spec.ts:9:1 › E01 real editor commands, structured drafts, rejected restore and hook disposal @E01 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('region', { name: 'Tiptap 编辑器实验' }).getByRole('status')
+    Expected substring: "已保存"
+    Error: strict mode violation: getByRole('region', { name: 'Tiptap 编辑器实验' }).getByRole('status') resolved to 2 elements:
+        1) <output data-testid="tiptap-count">20</output> aka getByTestId('tiptap-count')
+        2) <p role="status">已保存 JSON 草稿 142 字符；仅本标签页。</p> aka getByText('已保存 JSON 草稿 142 字符；仅本标签页。')
+
+    Call log:
+      - Expect "toContainText" getByRole('region', { name: 'Tiptap 编辑器实验' }).getByRole('status') with timeout 5000ms
+      - waiting for getByRole('region', { name: 'Tiptap 编辑器实验' }).getByRole('status')
+
+
+      27 |   await body.fill('session acceptance')
+      28 |   await region.getByRole('button', { name: '保存草稿', exact: true }).click()
+    > 29 |   await expect(region.getByRole('status')).toContainText('已保存')
+         |                                            ^
+      30 |   await body.fill('changed')
+      31 |   await region.getByRole('button', { name: '恢复草稿', exact: true }).click()
+      32 |   await expect(body).toHaveText('session acceptance')
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-resume-tiptap.spec.ts:29:44
+
+    Error Context: test-results/quality-resume-tiptap-E01--24700-store-and-hook-disposal-E01/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-resume-tiptap-E01--24700-store-and-hook-disposal-E01/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-resume-tiptap-E01--24700-store-and-hook-disposal-E01/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4 failed
+    e2e/quality-resume-blocknote.spec.ts:5:1 › @E02 actual BlockNote typing, slash menu and onChange 
+    e2e/quality-resume-blocknote.spec.ts:49:1 › @E02 real insert/save/restore generates new IDs and rejects bad drafts unchanged 
+    e2e/quality-resume-blocknote.spec.ts:97:1 › @E02 Storage access failures are visible without replacing editor content 
+    e2e/quality-resume-tiptap.spec.ts:9:1 › E01 real editor commands, structured drafts, rejected restore and hook disposal @E01 
+  4 passed (31.0s)
+undefined
+/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: playwright test e2e/quality-resume-pagefind.spec.ts e2e/quality-resume-tiptap.spec.ts e2e/quality-resume-blocknote.spec.ts e2e/quality-resume-official-d21-e02.spec.ts --workers=2

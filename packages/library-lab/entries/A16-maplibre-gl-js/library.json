@@ -4,15 +4,8 @@
   "slug": "maplibre-gl-js",
   "name": "MapLibre GL JS",
   "group": "A",
-  "summary": "无需瓦片服务的 WebGL GeoJSON 点层、过滤及生命周期实践",
-  "tags": [
-    "WebGL",
-    "GeoJSON",
-    "vector",
-    "offline style",
-    "resize",
-    "cleanup"
-  ],
+  "summary": "本地GeoJSON到真实WebGL点层，区分源数据、渲染结果与Worker生命周期",
+  "tags": ["WebGL", "GeoJSON", "vector", "offline style", "resize", "cleanup"],
   "contentState": "recreated",
   "packages": [
     {
@@ -57,14 +50,11 @@
         "examples/example.tsx",
         "examples/demo.tsx",
         "examples/selection-policy.ts",
-        "examples/station-factory.ts"
+        "examples/station-factory.ts",
+        "examples/styles.css"
       ],
-      "capabilities": [
-        "webgl",
-        "resize-observer",
-        "geojson",
-        "cleanup"
-      ]
+      "capabilities": ["webgl", "resize-observer", "geojson", "cleanup"],
+      "description": "真实MapLibre/standalone Worker加载两站点，通过SDK实际渲染要素和投影与表格对应"
     },
     {
       "demoId": "business",
@@ -76,14 +66,11 @@
         "examples/example.tsx",
         "examples/demo.tsx",
         "examples/selection-policy.ts",
-        "examples/station-factory.ts"
+        "examples/station-factory.ts",
+        "examples/styles.css"
       ],
-      "capabilities": [
-        "webgl",
-        "resize-observer",
-        "geojson",
-        "cleanup"
-      ]
+      "capabilities": ["webgl", "resize-observer", "geojson", "cleanup"],
+      "description": "同源GeoJSON过滤与选择回落，复用同一个Map/source/layer"
     },
     {
       "demoId": "advanced",
@@ -95,14 +82,11 @@
         "examples/example.tsx",
         "examples/demo.tsx",
         "examples/selection-policy.ts",
-        "examples/station-factory.ts"
+        "examples/station-factory.ts",
+        "examples/styles.css"
       ],
-      "capabilities": [
-        "webgl",
-        "resize-observer",
-        "geojson",
-        "cleanup"
-      ]
+      "capabilities": ["webgl", "resize-observer", "geojson", "cleanup"],
+      "description": "本地增量站点/健康切换与恢复，响应式和自有资源卸载，表格持续可操作"
     }
   ],
   "license": {
@@ -112,5 +96,25 @@
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
     "note": "基于 MapLibre 官方文档重新编写，不继承历史研究 PASS。"
+  },
+  "official": {
+    "readme": {
+      "repository": "maplibre/maplibre-gl-js",
+      "commit": "638b3f9ecab4b743fd4d086d3bfd19bce7b7b032",
+      "path": "README.md",
+      "sha256": "f293e4b84fcabba75a923fe54ff861b6bd4e7f2cddaf09082bcee97f57c0847b",
+      "sourceUrl": "https://github.com/maplibre/maplibre-gl-js/blob/638b3f9ecab4b743fd4d086d3bfd19bce7b7b032/README.md",
+      "language": "en",
+      "version": "6.15.0",
+      "syncedAt": "2026-11-10T12:06:31.120720+00:00",
+      "snapshotPath": "official/readme.md"
+    },
+    "homepage": {
+      "url": "https://maplibre.org/maplibre-gl-js/docs/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-10T12:06:31.896258+00:00",
+      "reason": "官方SDK文档GET200，完整响应头见official/homepage-response.json，XFO/CSP均null；未从Lab origin做iframe实测，保持unknown并保留直达。"
+    }
   }
 }

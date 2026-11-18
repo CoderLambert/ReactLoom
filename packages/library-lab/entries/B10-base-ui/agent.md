@@ -1,47 +1,17 @@
-# B10 Base UI
+# B10 Base UI复用指南
 
-## 适用
+适合已有设计系统、需要无样式React交互原语的项目。当前三个目标仅覆盖Checkbox：基础label/Space；手工父级混合选择；禁用规则与浏览器FormData。不扩成Dialog/Popover教学，原生单个checkbox已足够时优先原生。
 
-已有视觉系统、需要无样式复选框语义时用 `@base-ui/react` 的 Checkbox。完整后台皮肤用 B06/B07/B08。不要把勾选结果当成服务端授权。
+实际@base-ui/react1.9.0，React/DOM19.3.0，peer17/18/19，MIT。不是@mui/base或Uber baseui。按路径从@base-ui/react/checkbox导入；不要套用Radix asChild。
 
-## 版本
+Root默认span role=checkbox，旁侧是CSS隐藏的原生type=checkbox input。onCheckedChange第一参严格boolean，indeterminate是独立prop；SDK写aria-checked=mixed和客户端DOM属性。保留外层label、input id/htmlFor、稳定aria-labelledby、说明aria-describedby、Indicator aria-hidden与CSS focus-visible。不自行重写Space/Enter，也不把hidden input加入Tab顺序。
 
-`@base-ui/react@1.9.0`，从 `@base-ui/react/checkbox` 导入。React 19.3.0。许可证 MIT。不是 `@mui/base`，不是 Uber `baseui`，没有 Radix `asChild`。
+复制library.json列出的4源：demo出口、example、permission-policy、checkbox.css。无Lab alias/外部资源/存储。SDK拥有自己的事件，应用仅用inputRef读真实属性；ref随卸载解除。本例没有全局listener/timer要自行清除。
 
-## 迁移
+手工父级由permissionSummary在eligible集合内推导，不传CheckboxGroup专用parent。子项保留name=permissions和value=真实id，提交直接new FormData(form).getAll，不拿React数组伪装浏览器结果。normalize/changePermission/bulk规则是本地业务fixture，不是授权服务；锁定同时删除manage并disabled，清除旧提交和诊断快照，解锁不自动恢复权限。服务端仍须重新授权。
 
-从 `@mui/base` 迁移时重写 Root/Indicator 和 CSS，并回归混合态与禁用。不要把 Dialog 教程贴进当前只挂载 Checkbox 的示例。
+b10-workshop带data-level；b10-parent/read/comment/manage是实际Root；b10-input-reading为inputRef当次DOM快照，b10-form-data为实际提交数组。按钮“读取实际输入”“提交本地 FormData”可观察。基础标签、三权限和原锁定语义保留，多个实例useId隔离。
 
-## 不可删的清理
+真实SDK Node检查只做React SSR：role/mixed/native input name/value/checked/disabled，不证明DOM效果、键盘、FormData或hydration。原六policy只验业务规则。浏览器提案必须用真实库/label/Space/Tab和FormData，不mock SDK或写DOM checked；主控统一运行。
 
-外层 `<label>`。父级 `indeterminate` 来自可选集合而不是写死的 3。锁定 `manage` 时 Root `disabled`，策略函数再拒绝一次。子项保留 `name` 和 `value`，提交读 `FormData`。样式留在 `checkbox.css`。
-
-## 反例
-
-用 div 模拟勾选导致表单为空。父级分母忽略锁定。只加灰色 class 而不 `disabled`。提交只读可能过期的 React 数组。从错误的包导入。Indicator 代替状态文字。
-
-复用时保留这些不变的约定：
-
-- 从 `@base-ui/react/checkbox` 导入，不使用 `@mui/base` 或 `asChild`。
-- 外层 label；子项带 `name` 和 `value`。
-- 父级分母来自 `eligiblePermissions`。
-- 锁定同时设置 `disabled` 并由策略函数拒绝。
-- 提交读 FormData。Dialog 与 Popover 未挂载。
-
-## 测试断言
-
-`tests/permission-policy.test.mts` 断言可选 id、部分选择为混合、锁定后全选不含 manage、对锁定 id 的写入被拒绝。不证明键盘、隐藏 input 或浏览器 FormData。
-
-## 真实限制
-
-已挂载：受控 Checkbox、批量选择、混合态、禁用和本地 FormData。未挂载：Dialog、Popover、Field、HTTP 冲突。遮罩焦点和异步关闭不在本文件里。
-
-复用检查：
-
-- 版本以该条目 `library.json` 为准，不跟研究稿里的 Vite 脚本或 workshop 目录。
-- 未挂载的生产模式留在 `guide.md`，不补进 `examples/`。
-- 不修改 `verification.json`。没有匹配 receipt 时 sdk、build、browser 保持 NOT_RUN。
-
-## 证据
-
-sdk、build、browser 为 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有匹配 receipt。Actions run `41779873259` 是仓库级检查，不是本条目 PASS。文档：https://base-ui.com/react/components/checkbox
+官方原文1856B来自v1.9.0固定commit ad7ecda5296b0295b41a51ecb01fce6204acd099/packages/react/README.md；根/包目录无中文候选，完整证据/hash见official和library.json。官网GET200、CSP frame-ancestors *覆盖XFO SAMEORIGIN的限制判断；没有真实iframe确认前unknown。六项和命令见local-validation，formal三项保持NOT_RUN，不从仓库CI或静态/SSR/policy推导整库PASS。

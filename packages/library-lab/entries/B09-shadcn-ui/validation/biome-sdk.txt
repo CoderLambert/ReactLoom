@@ -1,0 +1,5 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: pnpm exec biome check entries/B09-shadcn-ui/tests/sdk.test.mjs
+exit: 0
+
+Checked 1 file in 5ms. No fixes applied.

@@ -1,0 +1,1123 @@
+{
+  "checkedAt": "2026-11-10T16:58:15.548631+00:00",
+  "packagePath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/react-arborist@3.16.0_@types+node@22.20.5_@types+react@19.3.0_react-dom@19.3.0_react@19.3.0__react@19.3.0/node_modules/react-arborist",
+  "package": {
+    "name": "react-arborist",
+    "version": "3.16.0",
+    "keywords": [
+      "arborist",
+      "dnd",
+      "filterable",
+      "multiselection",
+      "react",
+      "react-arborist",
+      "tree",
+      "treeview",
+      "virtualized"
+    ],
+    "homepage": "https://react-arborist.netlify.app",
+    "bugs": "https://github.com/jameskerr/react-arborist/issues",
+    "license": "MIT",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/jameskerr/react-arborist.git"
+    },
+    "source": "src/index.ts",
+    "files": ["src", "dist"],
+    "sideEffects": false,
+    "main": "dist/main/index.js",
+    "module": "dist/module/index.js",
+    "types": "dist/module/index.d.ts",
+    "scripts": {
+      "build:cjs": "tsc --outDir dist/main",
+      "build:es": "tsc --outDir dist/module --module es2022 --moduleResolution node",
+      "build": "npm-run-all clean -p 'build:**'",
+      "clean": "rimraf dist",
+      "prepack": "yarn build",
+      "test": "jest",
+      "watch": "yarn build:es --watch"
+    },
+    "dependencies": {
+      "react-dnd": "^14.0.3",
+      "react-dnd-html5-backend": "^14.0.3",
+      "react-window": "^1.8.11",
+      "redux": "^5.0.0",
+      "use-sync-external-store": "^1.2.0"
+    },
+    "devDependencies": {
+      "@testing-library/dom": "^9.3.0",
+      "@testing-library/react": "^14.0.0",
+      "@types/jest": "^29.5.11",
+      "@types/react": "^18.2.43",
+      "@types/react-dom": "^18.2.0",
+      "@types/react-window": "^1.8.8",
+      "@types/use-sync-external-store": "^0.0.6",
+      "jest": "^29.7.0",
+      "jest-environment-jsdom": "^29.7.0",
+      "npm-run-all": "^4.1.5",
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0",
+      "rimraf": "^5.0.5",
+      "ts-jest": "^29.1.1",
+      "typescript": "^5.6.0"
+    },
+    "peerDependencies": {
+      "react": ">= 16.14",
+      "react-dom": ">= 16.14"
+    }
+  },
+  "files": {
+    "src/types/tree-props.ts": {
+      "sha256": "c5f1f0d97df06cbcdcf7bc25b27b8327f3314ca54e5b4714b914c3d552aca00a",
+      "lines": [
+        {
+          "line": 31,
+          "text": "  /* Sizes */"
+        },
+        {
+          "line": 32,
+          "text": "  rowHeight?: number | RowHeightAccessor<T>;"
+        },
+        {
+          "line": 33,
+          "text": "  overscanCount?: number;"
+        },
+        {
+          "line": 34,
+          "text": "  width?: number | string;"
+        },
+        {
+          "line": 35,
+          "text": "  height?: number;"
+        },
+        {
+          "line": 36,
+          "text": "  indent?: number;"
+        },
+        {
+          "line": 37,
+          "text": "  paddingTop?: number;"
+        },
+        {
+          "line": 38,
+          "text": "  paddingBottom?: number;"
+        },
+        {
+          "line": 39,
+          "text": "  padding?: number;"
+        },
+        {
+          "line": 40,
+          "text": ""
+        },
+        {
+          "line": 41,
+          "text": "  /* Config */"
+        },
+        {
+          "line": 42,
+          "text": "  childrenAccessor?: string | ((d: T) => readonly T[] | null);"
+        },
+        {
+          "line": 44,
+          "text": "  openByDefault?: boolean;"
+        },
+        {
+          "line": 45,
+          "text": "  selectionFollowsFocus?: boolean;"
+        },
+        {
+          "line": 46,
+          "text": "  disableMultiSelection?: boolean;"
+        },
+        {
+          "line": 47,
+          "text": "  disableDeselectOnClick?: boolean;"
+        },
+        {
+          "line": 48,
+          "text": "  disableSelect?: string | boolean | BoolFunc<T>;"
+        },
+        {
+          "line": 49,
+          "text": "  disableEdit?: string | boolean | BoolFunc<T>;"
+        },
+        {
+          "line": 50,
+          "text": "  disableDrag?: string | boolean | BoolFunc<T>;"
+        },
+        {
+          "line": 51,
+          "text": "  disableDrop?:"
+        },
+        {
+          "line": 52,
+          "text": "    | string"
+        },
+        {
+          "line": 53,
+          "text": "    | boolean"
+        },
+        {
+          "line": 63,
+          "text": "  /* Selection */"
+        },
+        {
+          "line": 64,
+          "text": "  selection?: string;"
+        },
+        {
+          "line": 65,
+          "text": ""
+        },
+        {
+          "line": 66,
+          "text": "  /* Open State */"
+        },
+        {
+          "line": 67,
+          "text": "  initialOpenState?: OpenMap;"
+        },
+        {
+          "line": 68,
+          "text": ""
+        },
+        {
+          "line": 69,
+          "text": "  /* Search */"
+        },
+        {
+          "line": 70,
+          "text": "  searchTerm?: string;"
+        },
+        {
+          "line": 71,
+          "text": "  searchMatch?: (node: NodeApi<T>, searchTerm: string) => boolean;"
+        },
+        {
+          "line": 72,
+          "text": ""
+        }
+      ]
+    },
+    "src/interfaces/tree-api.ts": {
+      "sha256": "226bb59d06390670be570fd9fc4ffc1dd85fff6190310f61946054a0efac34ea",
+      "lines": [
+        {
+          "line": 326,
+          "text": ""
+        },
+        {
+          "line": 327,
+          "text": "  async delete(node: Identity | T | (string | IdObj | T)[]) {"
+        },
+        {
+          "line": 328,
+          "text": "    if (!node) return;"
+        },
+        {
+          "line": 329,
+          "text": "    const idents = Array.isArray(node) ? node : [node];"
+        },
+        {
+          "line": 330,
+          "text": "    const ids = idents.map((i) => this.identify(i));"
+        },
+        {
+          "line": 331,
+          "text": "    const nodes = ids.map((id) => this.get(id)!).filter((n) => !!n);"
+        },
+        {
+          "line": 332,
+          "text": "    /* Guard against Math.min(...[]) === Infinity when no ids resolve to nodes. */"
+        },
+        {
+          "line": 333,
+          "text": "    const fromIndex = nodes.length ? Math.min(...nodes.map((n) => n.rowIndex ?? 0)) : 0;"
+        },
+        {
+          "line": 334,
+          "text": "    await safeRun(this.props.onDelete, { nodes, ids });"
+        },
+        {
+          "line": 335,
+          "text": "    this.redrawList(fromIndex);"
+        },
+        {
+          "line": 348,
+          "text": ""
+        },
+        {
+          "line": 349,
+          "text": "  async submit(identity: Identity | T, value: string) {"
+        },
+        {
+          "line": 350,
+          "text": "    if (!identity) return;"
+        },
+        {
+          "line": 351,
+          "text": "    const id = this.identify(identity);"
+        },
+        {
+          "line": 352,
+          "text": "    await safeRun(this.props.onRename, {"
+        },
+        {
+          "line": 353,
+          "text": "      id,"
+        },
+        {
+          "line": 354,
+          "text": "      name: value,"
+        },
+        {
+          "line": 355,
+          "text": "      node: this.get(id)!,"
+        },
+        {
+          "line": 356,
+          "text": "    });"
+        },
+        {
+          "line": 357,
+          "text": "    this.dispatch(edit(null));"
+        },
+        {
+          "line": 362,
+          "text": ""
+        },
+        {
+          "line": 363,
+          "text": "  reset() {"
+        },
+        {
+          "line": 364,
+          "text": "    this.dispatch(edit(null));"
+        },
+        {
+          "line": 365,
+          "text": "    this.resolveEdit({ cancelled: true });"
+        },
+        {
+          "line": 366,
+          "text": "    this.redrawList();"
+        },
+        {
+          "line": 367,
+          "text": "    setTimeout(() => this.onFocus()); // Return focus to element;"
+        },
+        {
+          "line": 368,
+          "text": "  }"
+        },
+        {
+          "line": 369,
+          "text": ""
+        },
+        {
+          "line": 370,
+          "text": "  activate(id: Identity | T) {"
+        },
+        {
+          "line": 371,
+          "text": "    const node = this.get(this.identifyNull(id));"
+        },
+        {
+          "line": 496,
+          "text": ""
+        },
+        {
+          "line": 497,
+          "text": "  deselectAll() {"
+        },
+        {
+          "line": 498,
+          "text": "    // setSelection fires onSelect; don't fire it again here (see #332)."
+        },
+        {
+          "line": 499,
+          "text": "    this.setSelection({ ids: [], anchor: null, mostRecent: null });"
+        },
+        {
+          "line": 500,
+          "text": "  }"
+        },
+        {
+          "line": 501,
+          "text": ""
+        },
+        {
+          "line": 502,
+          "text": "  selectAll() {"
+        },
+        {
+          "line": 503,
+          "text": "    const allSelectableNodes = this.filterSelectableNodes(Object.keys(this.idToIndex));"
+        },
+        {
+          "line": 504,
+          "text": "    // setSelection fires onSelect; don't fire it again here (see #332)."
+        },
+        {
+          "line": 505,
+          "text": "    this.setSelection({"
+        },
+        {
+          "line": 563,
+          "text": ""
+        },
+        {
+          "line": 564,
+          "text": "  canDrop() {"
+        },
+        {
+          "line": 565,
+          "text": "    if (this.isFiltered) return false;"
+        },
+        {
+          "line": 566,
+          "text": "    const parentNode = this.get(this.state.dnd.parentId) ?? this.root;"
+        },
+        {
+          "line": 567,
+          "text": "    const dragNodes = this.dragNodes;"
+        },
+        {
+          "line": 568,
+          "text": "    const isDisabled = this.props.disableDrop;"
+        },
+        {
+          "line": 569,
+          "text": ""
+        },
+        {
+          "line": 570,
+          "text": "    for (const drag of dragNodes) {"
+        },
+        {
+          "line": 571,
+          "text": "      if (!drag) return false;"
+        },
+        {
+          "line": 572,
+          "text": "      if (!parentNode) return false;"
+        },
+        {
+          "line": 593,
+          "text": "  /* Called by the drop hooks on every hover. Records the computed target for"
+        },
+        {
+          "line": 594,
+          "text": "     the drop guard (canDrop() and drop() read state.dnd.parentId), then — only"
+        },
+        {
+          "line": 595,
+          "text": "     when that target is actually droppable — surfaces it to consumers"
+        },
+        {
+          "line": 596,
+          "text": "     (willReceiveDrop, dragDestinationParent) and shows the cursor. When it"
+        },
+        {
+          "line": 597,
+          "text": "     isn't droppable, the consumer-facing destination and the cursor are both"
+        },
+        {
+          "line": 598,
+          "text": "     cleared so they never disagree with canDrop() (#247); the guard still sees"
+        },
+        {
+          "line": 599,
+          "text": "     the real target, so releasing over an invalid spot is rejected rather than"
+        },
+        {
+          "line": 600,
+          "text": "     falling back to a root drop. */"
+        },
+        {
+          "line": 601,
+          "text": "  hover(drop: DropResult | null, cursor: Cursor | null) {"
+        },
+        {
+          "line": 602,
+          "text": "    if (drop) this.dispatch(dnd.hovering(drop.parentId, drop.index));"
+        },
+        {
+          "line": 603,
+          "text": "    if (drop && this.canDrop()) {"
+        },
+        {
+          "line": 604,
+          "text": "      this.dispatch(dnd.setDestination(drop.parentId, drop.index));"
+        },
+        {
+          "line": 605,
+          "text": "      if (cursor) this.showCursor(cursor);"
+        },
+        {
+          "line": 606,
+          "text": "    } else {"
+        },
+        {
+          "line": 607,
+          "text": "      this.dispatch(dnd.setDestination(null, null));"
+        },
+        {
+          "line": 608,
+          "text": "      this.hideCursor();"
+        },
+        {
+          "line": 609,
+          "text": "    }"
+        },
+        {
+          "line": 610,
+          "text": "  }"
+        },
+        {
+          "line": 611,
+          "text": ""
+        },
+        {
+          "line": 779,
+          "text": "   * built (see createList), so reading it never re-traverses the tree. */"
+        },
+        {
+          "line": 780,
+          "text": "  get filteredCount() {"
+        },
+        {
+          "line": 781,
+          "text": "    return this.matchCount;"
+        },
+        {
+          "line": 782,
+          "text": "  }"
+        },
+        {
+          "line": 783,
+          "text": ""
+        },
+        {
+          "line": 784,
+          "text": "  get hasFocus() {"
+        },
+        {
+          "line": 785,
+          "text": "    return this.state.nodes.focus.treeFocused;"
+        },
+        {
+          "line": 786,
+          "text": "  }"
+        },
+        {
+          "line": 787,
+          "text": ""
+        },
+        {
+          "line": 788,
+          "text": "  get hasNoSelection() {"
+        }
+      ]
+    },
+    "src/components/default-node.tsx": {
+      "sha256": "88f6969f6d12a13415ee0cbfed1c40c89bbedf4d1e55e34f1b5c2c901fa33ea6",
+      "lines": [
+        {
+          "line": 28,
+          "text": ""
+        },
+        {
+          "line": 29,
+          "text": "function Edit<T>({ node }: NodeRendererProps<T>) {"
+        },
+        {
+          "line": 30,
+          "text": "  const input = useRef<any>();"
+        },
+        {
+          "line": 31,
+          "text": ""
+        },
+        {
+          "line": 32,
+          "text": "  useEffect(() => {"
+        },
+        {
+          "line": 33,
+          "text": "    input.current?.focus();"
+        },
+        {
+          "line": 34,
+          "text": "    input.current?.select();"
+        },
+        {
+          "line": 35,
+          "text": "  }, []);"
+        },
+        {
+          "line": 36,
+          "text": ""
+        },
+        {
+          "line": 37,
+          "text": "  return ("
+        },
+        {
+          "line": 44,
+          "text": "        if (e.key === \"Escape\") node.reset();"
+        },
+        {
+          "line": 45,
+          "text": "        if (e.key === \"Enter\") node.submit(input.current?.value || \"\");"
+        },
+        {
+          "line": 46,
+          "text": "      }}"
+        },
+        {
+          "line": 47,
+          "text": "    ></input>"
+        },
+        {
+          "line": 48,
+          "text": "  );"
+        },
+        {
+          "line": 49,
+          "text": "}"
+        }
+      ]
+    },
+    "src/components/default-row.tsx": {
+      "sha256": "24772e772af6b499e0c83563a28198f88477c34463988d1ba64d97fc7cb4ff44",
+      "lines": [
+        {
+          "line": 5,
+          "text": "  return ("
+        },
+        {
+          "line": 6,
+          "text": "    <div {...attrs} ref={innerRef} onFocus={(e) => e.stopPropagation()} onClick={node.handleClick}>"
+        },
+        {
+          "line": 7,
+          "text": "      {children}"
+        },
+        {
+          "line": 8,
+          "text": "    </div>"
+        },
+        {
+          "line": 9,
+          "text": "  );"
+        },
+        {
+          "line": 10,
+          "text": "}"
+        }
+      ]
+    },
+    "src/components/row-container.tsx": {
+      "sha256": "9b2fdb3a9795650bdaa0a86813f95ced06b67180f49fd3b078a57748ae3e37b8",
+      "lines": [
+        {
+          "line": 12,
+          "text": "export const RowContainer = React.memo(function RowContainer<T>({ index, style }: Props) {"
+        },
+        {
+          "line": 13,
+          "text": "  /* When will the <Row> will re-render."
+        },
+        {
+          "line": 14,
+          "text": "   *"
+        },
+        {
+          "line": 15,
+          "text": "   * The row component is memo'd so it will only render"
+        },
+        {
+          "line": 16,
+          "text": "   * when a new instance of the NodeApi class is passed"
+        },
+        {
+          "line": 17,
+          "text": "   * to it."
+        },
+        {
+          "line": 18,
+          "text": "   *"
+        },
+        {
+          "line": 19,
+          "text": "   * The TreeApi instance is stable. It does not"
+        },
+        {
+          "line": 20,
+          "text": "   * change when the internal state changes."
+        },
+        {
+          "line": 21,
+          "text": "   *"
+        },
+        {
+          "line": 59,
+          "text": "  );"
+        },
+        {
+          "line": 60,
+          "text": "  const rowAttrs: React.HTMLAttributes<any> = {"
+        },
+        {
+          "line": 61,
+          "text": "    role: \"treeitem\","
+        },
+        {
+          "line": 62,
+          "text": "    \"aria-level\": node.level + 1,"
+        },
+        {
+          "line": 63,
+          "text": "    \"aria-selected\": node.isSelected,"
+        },
+        {
+          "line": 64,
+          "text": "    \"aria-expanded\": node.isOpen,"
+        },
+        {
+          "line": 65,
+          "text": "    style: rowStyle,"
+        },
+        {
+          "line": 66,
+          "text": "    tabIndex: -1,"
+        },
+        {
+          "line": 67,
+          "text": "    className: tree.props.rowClassName,"
+        },
+        {
+          "line": 68,
+          "text": "  };"
+        },
+        {
+          "line": 79,
+          "text": "  return ("
+        },
+        {
+          "line": 80,
+          "text": "    <Row node={node} innerRef={innerRef} attrs={rowAttrs}>"
+        },
+        {
+          "line": 81,
+          "text": "      <Node node={node} tree={tree} style={nodeStyle} dragHandle={dragRef} />"
+        },
+        {
+          "line": 82,
+          "text": "    </Row>"
+        },
+        {
+          "line": 83,
+          "text": "  );"
+        },
+        {
+          "line": 84,
+          "text": "});"
+        }
+      ]
+    },
+    "src/components/default-container.tsx": {
+      "sha256": "a4e1f3ed418663004f7bd3d2b6e100da8ecb6f8489d10040e487f786ed9d5bc7",
+      "lines": [
+        {
+          "line": 20,
+          "text": "    <div"
+        },
+        {
+          "line": 21,
+          "text": "      role=\"tree\""
+        },
+        {
+          "line": 22,
+          "text": "      aria-label={tree.props[\"aria-label\"]}"
+        },
+        {
+          "line": 23,
+          "text": "      aria-labelledby={tree.props[\"aria-labelledby\"]}"
+        },
+        {
+          "line": 24,
+          "text": "      aria-multiselectable={!tree.props.disableMultiSelection || undefined}"
+        },
+        {
+          "line": 25,
+          "text": "      style={{"
+        },
+        {
+          "line": 26,
+          "text": "        height: tree.height,"
+        },
+        {
+          "line": 27,
+          "text": "        width: tree.width,"
+        },
+        {
+          "line": 28,
+          "text": "        minHeight: 0,"
+        },
+        {
+          "line": 29,
+          "text": "        minWidth: 0,"
+        },
+        {
+          "line": 49,
+          "text": "        // element (e.g. an <input> inside a modal rendered within the tree)."
+        },
+        {
+          "line": 50,
+          "text": "        // Their events bubble up to this handler, where shortcuts like Space"
+        },
+        {
+          "line": 51,
+          "text": "        // would otherwise call preventDefault and swallow the character. Rows"
+        },
+        {
+          "line": 52,
+          "text": "        // are plain divs, so navigation is unaffected. (#257)"
+        },
+        {
+          "line": 53,
+          "text": "        const target = e.target;"
+        },
+        {
+          "line": 54,
+          "text": "        if ("
+        },
+        {
+          "line": 55,
+          "text": "          target instanceof Element &&"
+        },
+        {
+          "line": 56,
+          "text": "          target !== e.currentTarget &&"
+        },
+        {
+          "line": 57,
+          "text": "          target.closest("
+        },
+        {
+          "line": 58,
+          "text": "            \"input, textarea, select, [contenteditable]:not([contenteditable='false'])\","
+        },
+        {
+          "line": 62,
+          "text": "        }"
+        },
+        {
+          "line": 63,
+          "text": "        if (e.key === \"Backspace\") {"
+        },
+        {
+          "line": 64,
+          "text": "          if (!tree.props.onDelete) return;"
+        },
+        {
+          "line": 65,
+          "text": "          const ids = Array.from(tree.selectedIds);"
+        },
+        {
+          "line": 66,
+          "text": "          if (ids.length > 1) {"
+        },
+        {
+          "line": 67,
+          "text": "            let nextFocus = tree.mostRecentNode;"
+        },
+        {
+          "line": 68,
+          "text": "            while (nextFocus && nextFocus.isSelected) {"
+        },
+        {
+          "line": 69,
+          "text": "              nextFocus = nextFocus.nextSibling;"
+        },
+        {
+          "line": 70,
+          "text": "            }"
+        },
+        {
+          "line": 71,
+          "text": "            if (!nextFocus) nextFocus = tree.lastNode;"
+        },
+        {
+          "line": 94,
+          "text": "        }"
+        },
+        {
+          "line": 95,
+          "text": "        if (e.key === \"ArrowDown\") {"
+        },
+        {
+          "line": 96,
+          "text": "          e.preventDefault();"
+        },
+        {
+          "line": 97,
+          "text": "          const next = tree.nextNode;"
+        },
+        {
+          "line": 98,
+          "text": "          if (e.metaKey) {"
+        },
+        {
+          "line": 99,
+          "text": "            tree.select(tree.focusedNode);"
+        },
+        {
+          "line": 100,
+          "text": "            tree.activate(tree.focusedNode);"
+        },
+        {
+          "line": 101,
+          "text": "            return;"
+        },
+        {
+          "line": 102,
+          "text": "          } else if (!e.shiftKey || tree.props.disableMultiSelection) {"
+        },
+        {
+          "line": 103,
+          "text": "            tree.focus(next);"
+        },
+        {
+          "line": 184,
+          "text": "          if (!node.isEditable || !tree.props.onRename) return;"
+        },
+        {
+          "line": 185,
+          "text": "          setTimeout(() => {"
+        },
+        {
+          "line": 186,
+          "text": "            if (node) tree.edit(node);"
+        },
+        {
+          "line": 187,
+          "text": "          });"
+        },
+        {
+          "line": 188,
+          "text": "          return;"
+        },
+        {
+          "line": 189,
+          "text": "        }"
+        },
+        {
+          "line": 190,
+          "text": "        if (e.key === \" \") {"
+        },
+        {
+          "line": 191,
+          "text": "          e.preventDefault();"
+        },
+        {
+          "line": 192,
+          "text": "          const node = tree.focusedNode;"
+        },
+        {
+          "line": 193,
+          "text": "          if (!node) return;"
+        },
+        {
+          "line": 223,
+          "text": "        focusSearchTerm += e.key;"
+        },
+        {
+          "line": 224,
+          "text": "        timeoutId = setTimeout(() => {"
+        },
+        {
+          "line": 225,
+          "text": "          focusSearchTerm = \"\";"
+        },
+        {
+          "line": 226,
+          "text": "        }, 600);"
+        },
+        {
+          "line": 227,
+          "text": "        const node = tree.visibleNodes.find((n) => {"
+        },
+        {
+          "line": 228,
+          "text": "          // @ts-ignore"
+        },
+        {
+          "line": 229,
+          "text": "          const name = n.data.name;"
+        },
+        {
+          "line": 230,
+          "text": "          if (typeof name === \"string\") {"
+        },
+        {
+          "line": 231,
+          "text": "            return name.toLowerCase().startsWith(focusSearchTerm);"
+        },
+        {
+          "line": 232,
+          "text": "          } else return false;"
+        },
+        {
+          "line": 262,
+          "text": ""
+        },
+        {
+          "line": 263,
+          "text": "  if (typeof tree.props.rowHeight === \"function\") {"
+        },
+        {
+          "line": 264,
+          "text": "    return ("
+        },
+        {
+          "line": 265,
+          "text": "      // @ts-ignore"
+        },
+        {
+          "line": 266,
+          "text": "      <VariableSizeList {...commonProps} itemSize={tree.rowHeightAt} ref={tree.list}>"
+        },
+        {
+          "line": 267,
+          "text": "        {RowContainer}"
+        },
+        {
+          "line": 268,
+          "text": "      </VariableSizeList>"
+        },
+        {
+          "line": 269,
+          "text": "    );"
+        },
+        {
+          "line": 270,
+          "text": "  }"
+        },
+        {
+          "line": 271,
+          "text": ""
+        }
+      ]
+    },
+    "src/data/adjust-move-index.ts": {
+      "sha256": "baeddef54c198699c28d02163df23b8ee3100f7d7bb19580373d17552cc283f4",
+      "lines": [
+        {
+          "line": 26,
+          "text": " */"
+        },
+        {
+          "line": 27,
+          "text": "export function adjustMoveIndex(args: {"
+        },
+        {
+          "line": 28,
+          "text": "  index: number;"
+        },
+        {
+          "line": 29,
+          "text": "  dragIds: string[];"
+        },
+        {
+          "line": 30,
+          "text": "  siblingIds: string[];"
+        },
+        {
+          "line": 31,
+          "text": "}): number {"
+        },
+        {
+          "line": 32,
+          "text": "  const { index, dragIds, siblingIds } = args;"
+        },
+        {
+          "line": 33,
+          "text": "  const dragging = new Set(dragIds);"
+        },
+        {
+          "line": 34,
+          "text": "  // `index` is a slot in [0, siblingIds.length]; clamp defensively so an"
+        },
+        {
+          "line": 35,
+          "text": "  // out-of-range value yields a usable post-removal insertion index on its own"
+        },
+        {
+          "line": 41,
+          "text": "  }"
+        },
+        {
+          "line": 42,
+          "text": "  return slot - shift;"
+        },
+        {
+          "line": 43,
+          "text": "}"
+        }
+      ]
+    },
+    "src/components/tree.tsx": {
+      "sha256": "670aa318670faa23c3d8119486b54934ee139766637fc808a3dd44e96c6b58d4",
+      "lines": [
+        {
+          "line": 21,
+          "text": ""
+        },
+        {
+          "line": 22,
+          "text": "export const Tree = forwardRef(TreeComponent) as <T>("
+        },
+        {
+          "line": 23,
+          "text": "  props: TreeProps<T> & { ref?: React.ForwardedRef<TreeApi<T> | undefined> },"
+        },
+        {
+          "line": 24,
+          "text": ") => ReturnType<typeof TreeComponent>;"
+        }
+      ]
+    }
+  },
+  "installedDependencies": {
+    "react-dnd": {
+      "version": "14.0.5",
+      "peerDependencies": {
+        "@types/hoist-non-react-statics": ">= 3.3.1",
+        "@types/node": ">= 12",
+        "@types/react": ">= 16",
+        "react": ">= 16.14"
+      },
+      "license": "MIT",
+      "packagePath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/react-dnd@14.0.5_@types+node@22.20.5_@types+react@19.3.0_react@19.3.0/node_modules/react-dnd/package.json"
+    },
+    "react-dnd-html5-backend": {
+      "version": "14.1.0",
+      "license": "MIT",
+      "packagePath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/react-dnd-html5-backend@14.1.0/node_modules/react-dnd-html5-backend/package.json"
+    },
+    "react-window": {
+      "version": "1.8.11",
+      "peerDependencies": {
+        "react": "^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0",
+        "react-dom": "^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0"
+      },
+      "license": "MIT",
+      "packagePath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/react-window@1.8.11_react-dom@19.3.0_react@19.3.0__react@19.3.0/node_modules/react-window/package.json"
+    }
+  },
+  "scope": "Installed source/type evidence only; no DOM/DnD/IME execution."
+}

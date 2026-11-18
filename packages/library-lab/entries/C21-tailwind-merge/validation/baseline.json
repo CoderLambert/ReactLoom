@@ -1,0 +1,15 @@
+{
+  "at": "2026-11-10T18:07:03.782033+00:00",
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+  "head": "1218066e706a90ba03fac8dff8c9b843dd2429c4",
+  "status": "",
+  "files": {
+    "AGENTS.md": "429599cd244ee8ea551aff7cf584b803378ee20e2275c6d877a514c770a0392f",
+    "agent.md": "331bfea8b1718fbb0b2d24faddf334338a1424886355e0496503affbad1533c9",
+    "examples/demo.tsx": "254591932548c36c414610bd0d0c7ce7ef1648162f1996fbbe7381b8c1751690",
+    "examples/example.tsx": "58cebc8f5a928fe23d390af0b3bf5bcaac9f249aa1e8ce50cd31f1993119961d",
+    "guide.md": "80e405905a7770f9f3dbfb899726651ce1b77bb3c1c8faa789edc4ff571fdc32",
+    "library.json": "64026a4facadd73e2eadbfa797ef51483128f942fe3de3f48c90802bcc2a515d",
+    "verification.json": "ce1d982f7e599f155a954a3a1470dc28166fe1ae5d607f3f9a61c3fb050a43b7"
+  }
+}

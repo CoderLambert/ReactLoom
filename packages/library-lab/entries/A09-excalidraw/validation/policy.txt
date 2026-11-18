@@ -1,0 +1,16 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node --test entries/A09-excalidraw/tests/scene-policy.test.mts
+exit: 0
+✔ safe URL policy accepts empty/HTTPS and rejects script, HTTP and credential URLs (0.532535ms)
+✔ valid scene, filename case and document-only links (0.193861ms)
+✔ empty, oversized or malformed file rejected (0.202656ms)
+✔ invalid elements, dangerous links, binary attachments rejected (0.130839ms)
+✔ teaching import accepts geometry/text and rejects resource or embedded element types (0.135901ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 64.444118

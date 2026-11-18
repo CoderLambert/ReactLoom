@@ -1,0 +1,98 @@
+{
+  "checkedAt": "2026-11-10T18:17:05.142590+00:00",
+  "scope": "Existing recorded validation reused read-only; no new SDK/HTTP/browser/build. Final guide/agent/AGENTS are post20 documentation and checked by local publisher metadata only.",
+  "protectedInputs": {
+    "packages/library-lab/entries/C17-i18next/examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+    "packages/library-lab/entries/C17-i18next/examples/example.tsx": "085785e16b3ae4a81544ed4c75a88572bc429364d774596ec864ff620d55b436",
+    "packages/library-lab/entries/C17-i18next/examples/i18n-client.d.mts": "a35e6ce297ae7881e0648089747edd77c1e5109dff2c7380b2ae3385fecbbee0",
+    "packages/library-lab/entries/C17-i18next/examples/i18n-client.mjs": "8e3886441674f2edaf12ab9f45304c0b1055e379ad4f286f7f4e11ca28013a79",
+    "packages/library-lab/entries/C17-i18next/examples/language-switch.d.mts": "4c8df1590b46b218210e2041241d626acea904f6f09e723df6ba9dfb0f1127f7",
+    "packages/library-lab/entries/C17-i18next/examples/language-switch.mjs": "4276db049efc9915912ce875b00b75881984be3461b0fc9ecec89a9b602aebb5",
+    "packages/library-lab/entries/C17-i18next/examples/styles.css": "e7a0871adeb3eaec1122342f32127cc0f269fe8a110f9daee9f6bb0676c7717b",
+    "packages/library-lab/entries/C17-i18next/library.json": "ff7baf54f4d959dd3d09548f28ca0cde1288948046c25f2e3f76734785dbee2d",
+    "packages/library-lab/entries/C17-i18next/official/readme.md": "3964fe947138fb6369c58bbc7779eacc8877cf220d41db7647c9e4bd7c466966",
+    "packages/library-lab/entries/C17-i18next/official/source-evidence.json": "071958b3caf42b97d0cbbf948bf3369d7250d8c91b7f1736e437f7b9e68e6224",
+    "packages/library-lab/entries/C17-i18next/tests/sdk.test.mjs": "55f9eafc08749b399b6251938dbe7cd5f4c3c9bc48d7a5137b67b368ff41c0e3",
+    "packages/library-lab/entries/C17-i18next/tests/language-switch.test.mjs": "fea24d8973132f94712b51a3d3cbdbe495ee0ed5da8bc949093ffaea7a81719c",
+    "packages/library-lab/entries/C17-i18next/validation/browser-proposal.txt": "5f043b01c606b698130a70825c939ef8daba98f35d30fe3061b0317a8b0135ea"
+  },
+  "evidence": {
+    "docs/library-lab/evidence/quality-upgrade/candidate-19/browser-i18next.txt": "608e3ff9bb54496f24cacd029eff04f4d48d087843aa45ed4f58eaa4865646fa",
+    "docs/library-lab/evidence/quality-upgrade/candidate-19/c17-runtime-reuse.json": "6d2fd55c83f01a3c1f24ab2f6d85d24e0fd8aae2f7e6171e240e24ef8fe1485b",
+    "docs/library-lab/evidence/quality-upgrade/candidate-20/browser.txt": "03e40d05ba39afc1a759fde1e1776efd27338ad8ce175121aa8456650d51687c",
+    "docs/library-lab/evidence/quality-upgrade/candidate-20/results.json": "d7be00ccf0d8746b6c51d67313a04f3b33d93bc64727dae4f16a5dd1eef3560d",
+    "docs/library-lab/evidence/quality-upgrade/candidate-20/inputs.json": "cf12ab926348e31bd87d3d15edad68e3b60c5b1e8aa2263aaeda00096371ee41",
+    "docs/library-lab/evidence/quality-upgrade/candidate-20/input-stability.json": "a40e25d61b9ccfa3d532ae44156bfd97bf9957368e6a898822822cd83f0c9896",
+    "docs/library-lab/evidence/quality-upgrade/candidate-20/browser-build-binding.json": "84a70879aafbdac8ac380c33e41fdbdcb7bd6de3f0c34ea8b7cdd4a74809bc17"
+  },
+  "candidate19": {
+    "runtimeSources": 7,
+    "uiCasesPassed": 3,
+    "logExitCode": 0,
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "command": [
+      "pnpm",
+      "exec",
+      "playwright",
+      "test",
+      "--config=.local-evidence/quality-playwright.config.ts",
+      "e2e/quality-remediation-i18next.spec.ts",
+      "--trace=off"
+    ]
+  },
+  "candidate20": {
+    "inputSha256": "793aba254832cfac7345dd05141599a1cf3fe739b9cbc54ef2f017e80d7f9f4d",
+    "sharedChecks": [
+      {
+        "name": "new-e2e-lint",
+        "exitCode": 0,
+        "command": [
+          "pnpm",
+          "exec",
+          "biome",
+          "check",
+          "packages/library-lab/src/lib/source-integrity.mjs",
+          "packages/library-lab/src/lib/source-integrity.d.mts",
+          "packages/library-lab/src/lib/document-utils.mjs",
+          "packages/library-lab/src/components/demo-host.tsx",
+          "packages/library-lab/tests/source-integrity.test.mjs",
+          "packages/library-lab/tests/document-utils.test.mjs",
+          "packages/library-lab/e2e/quality-document-links.spec.ts",
+          "packages/library-lab/e2e/quality-remediation-i18next.spec.ts",
+          "packages/library-lab/e2e/quality-remediation-primitives-sources.spec.ts",
+          "packages/library-lab/e2e/quality-remediation-nuqs.spec.ts"
+        ],
+        "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+        "log": "docs/library-lab/evidence/quality-upgrade/candidate-20/new-e2e-lint.txt"
+      },
+      {
+        "name": "typecheck",
+        "exitCode": 0,
+        "command": ["pnpm", "--filter", "@reactloom/library-lab", "typecheck"],
+        "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+        "log": "docs/library-lab/evidence/quality-upgrade/candidate-20/typecheck.txt"
+      },
+      {
+        "name": "build",
+        "exitCode": 0,
+        "command": ["pnpm", "--filter", "@reactloom/library-lab", "build"],
+        "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+        "log": "docs/library-lab/evidence/quality-upgrade/candidate-20/build.txt"
+      },
+      {
+        "name": "catalog",
+        "exitCode": 0,
+        "command": ["pnpm", "--filter", "@reactloom/library-lab", "catalog:check"],
+        "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+        "log": "docs/library-lab/evidence/quality-upgrade/candidate-20/catalog.txt"
+      }
+    ],
+    "unchanged": true,
+    "entryOfficialCasePassed": 1,
+    "wholeBrowserCommandPassed": 2,
+    "wholeBrowserCommandFailed": 3,
+    "wholeBrowserExitCode": 1,
+    "note": "C17 official README/framing presentation passed. The full mixed command failed on C19, not a whole-suite PASS."
+  },
+  "formalStatuses": "sdk/build/browser remain NOT_RUN; root protocol receipts not issued here."
+}

@@ -1,0 +1,237 @@
+{
+  "runs": [
+    {
+      "label": "checkpoint-format",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "check",
+        "--write",
+        "entries/C15-dayjs/examples",
+        "entries/C15-dayjs/tests",
+        "entries/C15-dayjs/library.json"
+      ],
+      "start": "2026-11-10T17:09:22.341307+00:00",
+      "end": "2026-11-10T17:09:22.583968+00:00",
+      "exitCode": 0,
+      "log": "checkpoint-format.txt"
+    },
+    {
+      "label": "checkpoint-types",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--target",
+        "es2022",
+        "--module",
+        "esnext",
+        "--moduleResolution",
+        "bundler",
+        "--jsx",
+        "react-jsx",
+        "--strict",
+        "--skipLibCheck",
+        "--esModuleInterop",
+        "--types",
+        "vite/client,node",
+        "entries/C15-dayjs/examples/demo.tsx"
+      ],
+      "start": "2026-11-10T17:09:22.584227+00:00",
+      "end": "2026-11-10T17:09:22.839277+00:00",
+      "exitCode": 0,
+      "log": "checkpoint-types.txt"
+    },
+    {
+      "label": "sdk",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "node",
+        "--test",
+        "entries/C15-dayjs/tests/sdk.test.mjs"
+      ],
+      "start": "2026-11-10T17:09:22.839526+00:00",
+      "end": "2026-11-10T17:09:22.930959+00:00",
+      "exitCode": 0,
+      "log": "sdk.txt"
+    },
+    {
+      "label": "official-fetch-initial",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "python3",
+        "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C15-dayjs/validation/fetch-official.py"
+      ],
+      "start": "2026-11-10T17:16:45.577247+00:00",
+      "end": "2026-11-10T17:16:49.668069+00:00",
+      "exitCode": 1,
+      "log": "official-fetch-initial.txt"
+    },
+    {
+      "label": "official-fetch",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "python3",
+        "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C15-dayjs/validation/fetch-official.py"
+      ],
+      "start": "2026-11-10T17:19:17.144777+00:00",
+      "end": "2026-11-10T17:19:24.969765+00:00",
+      "exitCode": 0,
+      "log": "official-fetch.txt"
+    },
+    {
+      "label": "source-tool-transport-fixture",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "python3",
+        "entries/C15-dayjs/validation/source-tool-transport-fixture.py"
+      ],
+      "start": "2026-11-10T17:25:17.935242+00:00",
+      "end": "2026-11-10T17:25:17.994110+00:00",
+      "exitCode": 0,
+      "log": "source-tool-transport-fixture.txt"
+    },
+    {
+      "label": "final-format",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "check",
+        "--write",
+        "entries/C15-dayjs/library.json",
+        "entries/C15-dayjs/verification.json",
+        "entries/C15-dayjs/official/source-evidence.json",
+        "entries/C15-dayjs/validation/sdk-source-audit.json",
+        "entries/C15-dayjs/validation/metadata-check.mjs",
+        "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C15-dayjs/validation/.proposal-types-xxnraxiw/browser-proposal.spec.ts"
+      ],
+      "start": "2026-11-10T17:25:17.994608+00:00",
+      "end": "2026-11-10T17:25:18.215332+00:00",
+      "exitCode": 0,
+      "log": "final-format.txt"
+    },
+    {
+      "label": "proposal-types",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--target",
+        "es2022",
+        "--module",
+        "esnext",
+        "--moduleResolution",
+        "bundler",
+        "--strict",
+        "--skipLibCheck",
+        "--esModuleInterop",
+        "--types",
+        "vite/client,node",
+        "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C15-dayjs/validation/.proposal-types-xxnraxiw/browser-proposal.spec.ts"
+      ],
+      "start": "2026-11-10T17:25:18.215694+00:00",
+      "end": "2026-11-10T17:25:18.452772+00:00",
+      "exitCode": 0,
+      "log": "proposal-types.txt"
+    },
+    {
+      "label": "metadata",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "node",
+        "entries/C15-dayjs/validation/metadata-check.mjs"
+      ],
+      "start": "2026-11-10T17:25:18.453177+00:00",
+      "end": "2026-11-10T17:25:18.478631+00:00",
+      "exitCode": 0,
+      "log": "metadata.txt"
+    },
+    {
+      "label": "binding-format",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "check",
+        "--write",
+        "entries/C15-dayjs/validation/platform-binding.json"
+      ],
+      "start": "2026-11-10T17:29:02.400631+00:00",
+      "end": "2026-11-10T17:29:02.605087+00:00",
+      "exitCode": 0,
+      "log": "binding-format.txt"
+    },
+    {
+      "label": "final-check",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "python3",
+        "entries/C15-dayjs/validation/final-check.py"
+      ],
+      "start": "2026-11-10T17:29:02.605402+00:00",
+      "end": "2026-11-10T17:29:02.627675+00:00",
+      "exitCode": 0,
+      "log": "final-check.txt"
+    },
+    {
+      "label": "diff-check",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "packages/library-lab/entries/C15-dayjs"
+      ],
+      "start": "2026-11-10T17:29:02.627903+00:00",
+      "end": "2026-11-10T17:29:02.630702+00:00",
+      "exitCode": 0,
+      "log": "diff-check.txt"
+    },
+    {
+      "label": "publisher-fix-format",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "check",
+        "--write",
+        "entries/C15-dayjs/validation/publisher-links-check.mjs"
+      ],
+      "start": "2026-11-10T17:45:13.470167+00:00",
+      "end": "2026-11-10T17:45:13.676425+00:00",
+      "exitCode": 0,
+      "log": "publisher-fix-format.txt"
+    },
+    {
+      "label": "publisher-links",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "node",
+        "entries/C15-dayjs/validation/publisher-links-check.mjs"
+      ],
+      "start": "2026-11-10T17:45:13.676877+00:00",
+      "end": "2026-11-10T17:45:13.701279+00:00",
+      "exitCode": 0,
+      "log": "publisher-links.txt"
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['git', 'diff', '--check', '--', 'entries/C21-tailwind-merge']
+startedAt: 2026-11-10T18:20:55.980550+00:00
+exit: 0

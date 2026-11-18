@@ -1,0 +1,12 @@
+✔ foreground loaded player may animate with normal preferences (0.486404ms)
+✔ loading and hidden tabs cannot play, even when motion override is set (0.095283ms)
+✔ reduced motion requires explicit override (0.082671ms)
+✔ frame seek uses the decoded animation range and rejects invalid measurements (0.084979ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 75.789726

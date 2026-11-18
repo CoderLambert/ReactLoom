@@ -1,0 +1,16 @@
+{
+  "commit": "41edd0f96a450616431cec1e57c2cb70e7c1a9e7",
+  "tag": "@uppy/core@6.1.0",
+  "treeTruncated": false,
+  "readmeCandidates": [
+    "BUNDLE-README.md",
+    "README.md",
+    "packages/@uppy/core/README.md",
+    "packages/@uppy/core/src/utils/getDroppedFiles/README.md"
+  ],
+  "selected": "packages/@uppy/core/README.md",
+  "language": "en",
+  "licensePaths": [
+    "LICENSE"
+  ]
+}

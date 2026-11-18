@@ -1,0 +1,88 @@
+[
+  {
+    "name": "typecheck",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "typecheck"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T17:06:36.813922+00:00",
+    "finishedAt": "2026-11-17T17:06:38.537466+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-27/typecheck.txt"
+  },
+  {
+    "name": "build",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "build"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T17:06:45.287660+00:00",
+    "finishedAt": "2026-11-17T17:06:52.108657+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-27/build.txt"
+  },
+  {
+    "name": "lint",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "biome",
+      "check",
+      "e2e/quality-resume-comlink.spec.ts",
+      "e2e/quality-resume-fusejs.spec.ts",
+      "e2e/quality-resume-minisearch.spec.ts",
+      "e2e/quality-resume-official-d18-d20.spec.ts",
+      "entries/D19-fusejs/library.json"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T17:06:58.456677+00:00",
+    "finishedAt": "2026-11-17T17:06:58.690529+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-27/lint.txt"
+  },
+  {
+    "name": "catalog",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "catalog:check"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T17:07:10.277071+00:00",
+    "finishedAt": "2026-11-17T17:07:10.668519+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-27/catalog.txt"
+  },
+  {
+    "name": "browser",
+    "command": [
+      "env",
+      "LAB_PREBUILT=1",
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "playwright",
+      "test",
+      "e2e/quality-resume-comlink.spec.ts",
+      "e2e/quality-resume-fusejs.spec.ts",
+      "e2e/quality-resume-minisearch.spec.ts",
+      "e2e/quality-resume-official-d18-d20.spec.ts",
+      "--workers=2"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T17:07:10.896614+00:00",
+    "finishedAt": "2026-11-17T17:07:24.029722+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-27/browser.txt"
+  }
+]

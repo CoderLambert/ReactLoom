@@ -1,167 +1,84 @@
-# B12 React Aria Components：ComboBox、IME 与选择身份
+# React Aria：输入文本与频道身份分开
 
-React Aria Components 把键盘、焦点、弹出层和 ARIA 状态做成可样式化的零件。它不保存业务数据库，也不证明整站 WCAG 已经通过。Library Lab 固定 `react-aria-components@1.21.0`，宿主 React 19.3.0。**许可证是 Apache-2.0，不是 MIT。** 样式和示例文案是原创的，没有第三方素材。
+用户想从RSS频道中搜索、用键盘选项，再把稳定id提交到表单。输入“React”只是查询草稿，不等于已经选择频道。React Aria Components负责组合框、列表框、弹出层与键盘/ARIA状态；应用负责过滤、禁用业务规则、异步数据和最终确认。需要设计系统自己的外观又愿意写CSS时适合它；固定少量选项可先用原生select。安装本库不等于整站WCAG或读屏验收通过。
 
-1.21.0 的组合框使用 `selectedKey` / `onSelectionChange` 与 `inputValue` / `onInputChange`，列表项是 `ListBoxItem` 的 `id`。不要把别的次版本教程里的 `value` / `onChange` 或旧 alpha 的 `Item` 贴进来覆盖当前文件。类型以锁文件里的 1.21.0 为准。
+固定 `react-aria-components@1.21.0`，Apache-2.0，宿主React19.3.0；安装peer覆盖React/ReactDOM16.8、17、18、19系列，不表示这些组合均已测试。样式与频道fixture为本地原创，没有HTTP、字体下载或第三方素材。
 
-## Lab 当前示例
-
-`examples/demo.tsx` 再导出 `examples/example.tsx`。样式是 `examples/combobox.css`。纯函数在 `examples/channel-policy.ts`。没有原研究稿的整页 RSS 表单、`validationErrors`、Mock HTTP 或 `LatestTask` 类。
-
-已挂载：
-
-- `ComboBox` 带 `name="channel"`，以便原生表单带上选中 key。`defaultFilter={() => true}`，过滤由应用负责，避免库的默认过滤再筛一次。
-- `Label`、`Input`、展开 `Button`、`Text slot="description"`、`Popover`、`ListBox`、`ListBoxItem`。空列表用 `renderEmptyState`。
-- 选中项必须存在且未 `disabled`。`安全紧急通告` 带 `isDisabled`，不能成为确认结果。
-- `confirmedChannel` 要求 key 对应的名称和输入框文本一致。只敲了半个名字时，旧 key 会被清掉，提交失败。
-- `basic` 只给前四个频道，`menuTrigger="input"`。`business` 用全表，含禁用项。`advanced`：`menuTrigger="focus"`，本地 `setTimeout` 240ms。`generation` 加 `AbortController` 丢掉过期结果。忙碌或输入与已完成查询不一致时，`queryRows` 返回空列表，避免旧候选闪一下。
-- `Input` 记录 `compositionstart/end`。提交时若仍在组合，直接 return，不把拼音确认键当成表单提交。
-- 切换 level 清空 key、输入和消息。卸载 effect 清定时器并 abort。
-- 提交读 `FormData` 的 `channel`，并要求它等于确认过的 id。status 写出 id，而不是只写中文名。
-
-未挂载：Dialog / Modal、FieldError 与服务端 422 字段映射、脏数据拦截 Escape、React Hook Form、TanStack Query、MSW。那些组合留在生产教学，不要说当前 Popover 已经是完整订阅后台。
-
-## 什么时候使用
-
-适合要国际化键盘模型、组合框、列表框和弹出层，并且团队愿意写 CSS。不适合：要现成中后台皮肤、或只是一个原生 select 且选项从不变化。移动 React Native 不在这个包的范围。宣称「用了 React Aria 就自动 WCAG 合规」是错的，仍要做键盘、读屏、缩放和触控验收。
-
-## 模型
+## 模型：三个值各有职责
 
 ```text
-键盘 / 触控 / 读屏
-  → ComboBox（焦点、弹出、选中公告）
-  → 应用：inputValue、selectedKey、busy、resolvedQuery
-  → filterChannels / confirmedChannel / queryRows
-  → 提交：FormData 里的 id
+Input原始字符串 → 应用过滤 / 本地延迟查询 → ListBox候选
+ListBoxItem.id → selectedKey              显示文字 → textValue/name
+selectedKey + 完整名称匹配 → confirmedChannel → FormData.channel的id
 ```
 
-展示名和 id 分离。`ListBoxItem` 的 `textValue` 是「React 组件工程」，`id` 是 `react`。把中文标签存进数据库会在改文案时毁掉外键。
+展示名称可改，id应稳定。`selectedKey`与`inputValue`分别受控；应用在选中有效项时同步完整名称；SDK的null选择通知只清身份，不清文本。输入改变时清除不再匹配的旧key，用户明确点击“清空选择”、按Escape撤销未确认文本或切换场景时才清文本；否则异步候选变化带来的null回调会覆盖刚键入的新查询。提交同时核对业务确认和真实FormData的channel，避免半输入还提交旧身份。
 
-`defaultFilter={() => true}` 的意思是：库不要再按自己的规则删行。应用在 `items` 里给出当前行。若再打开库过滤，空状态和异步清空会很难解释。
+**匹配版本的接口事实**：1.21.0仍兼容selectedKey/onSelectionChange，但其依赖react-stately3.50.0已经将这两个属性标deprecated，并支持value/onChange。本例保留有效兼容实现，不能再说value/onChange是此版本不存在的API。新项目可按匹配类型选择新接口；不要混控两套选择属性，inputValue仍是独立文本。
 
-advanced 的延迟是本地 fixture。它不代表网络。旧定时器返回时，generation 已经前进，就不能 `setResolved`。
+## 目标一：键盘选择与真实表单
 
-## 三层渐进
-
-### Demo ① 键盘选择（已挂载）
-
-四个技术/资讯项。方向键移动，Enter 选择，Escape 关闭。描述文本说明了这些键。提交前必须选中完整名称。清空按钮把 key 和输入都复位。
-
-### Demo ② 频道发现（已挂载）
-
-全表过滤，`toLocaleLowerCase('zh-CN')`。禁用的安全通告仍出现，但 `isDisabled`，选择它不会留下 key。分类显示在选项旁，禁用项显示「暂不可订阅」。
-
-### Demo ③ 异步与输入法（已挂载的本地延迟）
-
-输入改变后 status 为查询中，列表先空。240ms 后若代际仍匹配，才写入结果。快速改字只保留最后一次。组合期间按 Enter 不提交。组件说明写明：不另写一套 Enter 键逻辑去代替组件。
-
-未挂载的生产教学：服务端 422 用 `Form validationErrors` 和 `FieldError` 按 `name` 关联；409 用 revision；脏对话框不要一点遮罩就丢稿，但必须仍能退出。`LatestTask` 若与 Query 同时包装同一次请求，会有两个主人。Lab 只有代际和 AbortController。
-
-## 反例
+打开“键盘选择与频道身份”。四个固定候选：React组件工程、后端架构实践、开源趋势、国际新闻。输入React，按ArrowDown/Enter选择，或点“显示可选频道”后选择。Escape沿SDK revert撤销未确认查询并关闭弹层（身份已清时回到空串；已有有效选择则恢复其名称），焦点保持输入；点击“提交真实表单”应显示 `真实表单选中频道 ID：react`。
 
 ```tsx
-// 错：div 当按钮
-<div onClick={open}>展开</div>
-
-// 对：react-aria-components 的 Button，或原生 button
-<Button aria-label="显示可选频道">▾</Button>
+<ComboBox name="channel" selectedKey={selectedKey}
+  onSelectionChange={select} inputValue={inputValue}
+  onInputChange={changeInput} allowsEmptyCollection
+  defaultFilter={() => true}>
+  <Label>选择 RSS 频道</Label>
+  <Input aria-describedby={hintId} />
+  <Button aria-label="显示可选频道">展开</Button>
+  <Text slot="description" id={hintId}>使用方向键选择</Text>
+  <Popover><ListBox items={items}>{renderItem}</ListBox></Popover>
+</ComboBox>
 ```
 
-```tsx
-// 错：只加 role="dialog"，没有焦点和标题
-<div role="dialog">...</div>
+Input只在非组合输入的Escape捕获阶段同步这份受控文本，随后仍让SDK执行revert/关闭/焦点；不拦事件，不用全局键处理或手动open状态。若null通知一律保留文本却不参与SDK的撤销契约，SDK关闭后的自动打开effect会重新开菜单。
 
-// 对：DialogTrigger、Modal、Heading slot="title"。本示例没有 Dialog
+`name`默认按key而非文字生成隐藏表单input；服务端静态HTML测试检查了真实SDK的两份值，但真实键盘/表单交互仍需浏览器。描述id由React useId每个实例生成，不使用固定全局id。SDK管理组合框焦点、aria-expanded/controls/activedescendant与选中公告；没有手写全局方向键逻辑。
+
+展开“查看受控状态与候选”直接看React状态和传入的候选id。选择后把文本改成半个名字再提交，结果应被拒绝；“清空选择”把文本和身份一起清掉。确认不把中文名当外键，也不靠输入框有文字就算成功。
+
+## 目标二：分类查询与禁用项
+
+打开“分类过滤、禁用与表单确认”。完整七项可按名称或分类过滤；输入“技术”，React、后端、开源和安全通告都应出现。过滤用trim+zh-CN locale大小写匹配，原始输入state不trim。禁用的“安全紧急通告”可见，SDK isDisabled阻止交互；应用确认函数也再拒绝禁用id。
+
+`defaultFilter={() => true}`关闭SDK内部二次筛选，实际items由应用产生，否则分类命中却名称不命中的行可能又被删掉。`ListBoxItem id/textValue`分别提供身份与可读文字。输入无匹配词会看到真正ListBox的“暂无匹配频道”（SDK可把空态容器暴露为一个占位option，真实数据候选应以visibleIds=[]确认，不能按role option总数当业务数量）；显式allowsEmptyCollection允许空集合仍开弹层，默认行为会关闭空列表，只有renderEmptyState不足以保证空态可见。
+
+清空恢复全表。选中合法频道后原生FormData提交id；候选被禁用或输入与完整名称不一致都不能确认。只有前端本地规则，没有授权服务或后端订阅。
+
+## 目标三：异步结果先对齐，再展示
+
+advanced在focus时尝试打开列表。输入改变立即显示“正在查询本地数据…”，候选先空；240ms后只显示与当前输入对齐的结果。这个setTimeout是明确的本地fixture，不是网络请求或性能指标。
+
+```ts
+const id = ++generation.current;
+const controller = new AbortController();
+const timer = setTimeout(() => {
+  if (controller.signal.aborted || generation.current !== id) return;
+  // 写入查询结果、对应query和busy=false
+}, 240);
+return () => {
+  clearTimeout(timer);
+  controller.abort();
+  generation.current++;
+};
 ```
 
-```tsx
-// 错：把 1.21 的 selectedKey 改成别的版本文档的 value，类型和表单 name 一起坏
-<ComboBox value={selectedKey} onChange={setSelectedKey} />
+`busy || resolvedQuery !== inputValue`时queryRows返回空集，旧候选不会在新输入后暂留。快速从React改到开源，只能看到最后查询；清空或卸载也会使旧代际失效。AbortSignal在此是本地取消标记，定时器并不自动遵守signal，clearTimeout和代际比较各有职责。接真实API时仍须传signal并处理服务端失败，本文没有实现网络错误/重试。
 
-// 对：保持当前文件的 selectedKey / onSelectionChange / inputValue / onInputChange
-```
+Input的compositionstart/end只记录当前是否组合；submit在组合期间直接返回。Enter如何导航/确认仍由真实SDK与浏览器处理，不加吞下一次Enter的额外守卫。自动化的合成composition事件只验证此应用guard，不等于OS输入法候选框通过；真实中文输入法/触摸/读屏需另验。
 
-```tsx
-// 错：每个 onChange 都 trim，拼音被截断
-onInputChange={value => setInputValue(value.trim())}
+## 迁移和所有权
 
-// 对：原始字符串进入 state；确认发生在提交。组合期间提交函数直接返回
-```
+复制四个sourceFiles：example.tsx、channel-policy.ts、combobox.css和demo.tsx（仅重导出）。真实运行代码和展示源码相同，无Lab alias。Popover物理Portal不依赖父节点CSS后代选择器，专用全局前缀类仅为该浮层服务；SDK提供定位、碰撞与交互状态，应用CSS负责可见外观、焦点提示和窄屏最大宽度。没有额外动画。
 
-```tsx
-// 错：提交中文名
-formData.set('channel', 'React 组件工程');
+应用拥有受控状态、240ms timer、AbortController与代际；cleanup同时清timer/abort/推进代际。React Aria拥有Popover/集合/输入焦点及自身监听，卸载自己的React子树即可，不能清全局SDK资源。公共level prop变化也重置身份和文本，迁出Lab后依然有效。SSR静态标记不代表hydration、Portal和设备交互已通过；旧兼容属性升级时应连同类型/表单行为一起核对。
 
-// 对：FormData 里是 id。confirmedChannel 还要求名称与输入一致，防止半输入提交旧 id
-```
+## 原文与验收范围
 
-```tsx
-// 错：只 abort，不比较代际。不遵守 signal 的定时器仍 setState
-return () => controller.abort();
+精确npm1.21.0和安装gitHead均为 [`0a2a7e68`](https://github.com/adobe/react-spectrum/blob/0a2a7e68e4d896b3ac46c3647fe48fac9ea3ae2e/packages/react-aria-components/README.md)。实际递归tree有246个README候选、未截断、无官方中文，优先目标包英文原文1915B；完整原文与版本/语言/时间/sha及五个HTTP请求的完整头保存在official和library元数据。本地中文讲解与原文分开。
 
-// 对：Lab 在 cleanup 里 abort 并且 generation++；回调里再比较 id
-```
+官网此次GET200的enforced CSP为 `frame-ancestors 'self'`，限制跨源Lab嵌入，标blocked并保留直达；这不是网络未知或浏览器allowed。没有放宽公共frame-src。
 
-```tsx
-// 错：默认过滤再加一层应用过滤
-<ComboBox items={filterChannels(rows, input)}>
-
-// 对：defaultFilter={() => true}，items 已经是应用结果
-```
-
-```tsx
-// 错：禁用项仍可确认
-if (key) setSelectedKey(String(key));
-
-// 对：找到项且 !disabled 才留下 id
-```
-
-```tsx
-// 错：全局 outline: none，错误只靠红色
-// 对：保留 :focus-visible，错误走 role=status / role=alert 和字段说明
-```
-
-服务端若真去抓用户填写的 URL，前端 `URL` 解析防不住 SSRF。本示例的频道是写死的 fixture，不抓取。
-
-## 组合（未挂载）
-
-**React Hook Form + Zod**：RAC 组件做可访问输入，schema 做规则。`Controller` 绑定 `value` / `onChange`。不要又给组件 `defaultValue` 又让 RHF 注册第二份。需要另装 `react-hook-form`、`zod`、`@hookform/resolvers`，并重测 IME。这段不是当前依赖。
-
-**TanStack Query**：`queryFn` 接收 `signal`。保存成功后 `invalidateQueries`。不要在组件里再留一份会和缓存打架的服务器数组。不要把 Lab 的 generation 和 Query 再包同一请求。
-
-**CSS**：Popover 是浮层，不要用 `.parent > .popover` 当定位合同。z-index 和移动软键盘要在设备上看。`[data-entering]` 一类动画要服从 `prefers-reduced-motion`。
-
-## 生产清单
-
-- 每个组合框有 Label，描述用 `aria-describedby` 连到说明。
-- 选项 id 稳定，文案可改。
-- 禁用项可见但不可确认。
-- 异步结果过期不回写；卸载清定时器。
-- 组合输入期间不提交。
-- 空状态是一句话，不是空白浮层。
-- 触控目标包括展开按钮，不只靠输入框边缘。
-- 读屏验收选中公告和禁用原因。库不会自动完成 NVDA 或 VoiceOver 测试。
-
-## 升级
-
-锁在 1.21.0。升级前对照 ComboBox 的受控属性名、`ListBoxItem` 的 `id`、`defaultFilter` 和表单 `name`。Apache-2.0 的 NOTICE 要求随版本保持。不要为了对齐某篇 1.22 笔记去改已挂载的 props，除非示例、类型和测试一起改。
-
-## 验收
-
-basic：方向键选择后提交得到 id；半截文本提交被拒绝。business：安全通告不能选中；清空后 status 为已清空。advanced：快速输入只应用最后一次本地查询；查询未完成时列表为空；拼音组合中的 Enter 不提交；离开层级后定时器不能把结果写进下一层。
-
-sdk、build、browser 为 NOT_RUN。没有匹配 receipt 就不能写成 React Aria PASS。Actions run `41779873259` 是仓库级 install、typecheck、build、52 个 SDK 文件 / 153 项测试、45 个 Playwright，不是 B12 的 PASS。
-
-```bash
-node --experimental-strip-types --test packages/library-lab/entries/B12-react-aria/tests/channel-policy.test.mts
-```
-
-断言过滤、禁用项不能确认、名称不一致时确认失败、忙碌或查询未对齐时行集为空。不证明弹出层焦点或读屏。
-
-## 官方资料
-
-- https://react-spectrum.adobe.com/react-aria/react-aria-components.html
-- https://react-spectrum.adobe.com/react-aria/ComboBox.html
-- https://react-spectrum.adobe.com/react-aria/forms.html
-- https://www.npmjs.com/package/react-aria-components
-- https://github.com/adobe/react-spectrum/blob/main/packages/react-aria-components/LICENSE
+本地真实SDK2项验证兼容/新选择属性的SSR key、受控文字和实例描述关系；纯策略4项验证过滤/业务确认/查询对齐，二者不证明Portal、IME或键盘运行。实际日志/六项与未测见local-validation，完整真实浏览器提案在validation/browser-proposal.txt，主控匹配构建运行；formal三项NOT_RUN。

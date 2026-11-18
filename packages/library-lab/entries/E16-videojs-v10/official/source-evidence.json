@@ -1,0 +1,14 @@
+{
+  "commit": "1042afd430d4d661606a71abf98a3ca87c2fb6be",
+  "tag": "@videojs/react@10.2.0",
+  "treeTruncated": false,
+  "readmeCandidates": [
+    "README.md",
+    "packages/react/README.md"
+  ],
+  "selected": "packages/react/README.md",
+  "language": "en",
+  "licensePaths": [
+    "LICENSE"
+  ]
+}

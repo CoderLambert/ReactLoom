@@ -1,0 +1,11 @@
+{
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "utc": "2026-11-10T15:55:54.985284+00:00",
+  "operation": "Re-read 18 input SHA256s and local guide/agent/validation links; scoped diff check",
+  "inputFiles": 18,
+  "mismatches": [],
+  "localLinks": 29,
+  "exit": 0,
+  "runtime": "NOT_RUN",
+  "formal": "NOT_RUN"
+}

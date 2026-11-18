@@ -1,0 +1,7 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+command=python packages/library-lab/.local-evidence/c04-fetch-smoke.py
+C04 fixed 6075bcee93205c8fbe1f88eec19ed9058ad0f965, original packages/react/README.md 4592B; 8 complete headers; homepage: {'requestIndex': 7, 'xFrameOptions': 'SAMEORIGIN', 'contentSecurityPolicy': "frame-ancestors 'self'", 'status': 'blocked', 'reason': '仅按实际最终完整响应头判断；frame-ancestors self限制跨源Lab，正文NOT_READ；没有实际iframe允许证明。'}
+CONTROLLED TRANSPORT FIXTURE ONLY: source-script full path, 8 requests, original README bytes preserved; no external-source or SDK receipt.
+CONTROLLED FAILURE: previous successful evidence and original bytes preserved; failed attempt separate.
+
+exitCode=0

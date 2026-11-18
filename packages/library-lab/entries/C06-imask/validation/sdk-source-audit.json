@@ -1,0 +1,130 @@
+{
+  "records": [
+    {
+      "name": "react-imask",
+      "version": "7.6.1",
+      "license": "MIT",
+      "peerDependencies": {
+        "react": ">=0.14.0"
+      },
+      "installedPath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/react-imask@7.6.1_react@19.3.0/node_modules/react-imask",
+      "files": [
+        {
+          "path": "package.json",
+          "sha256": "01942c4383ba55d07059755bddb6ff72af0b81604accb273d34b6c6cd6b6ef4a",
+          "excerpts": []
+        },
+        {
+          "path": "esm/mixin.js",
+          "sha256": "191c2c188a5c7df466a8d40f95e7f96cc926ec68ec1d21c390beae47203544dd",
+          "excerpts": [
+            {
+              "needle": "componentWillUnmount()",
+              "line": 85,
+              "source": "componentWillUnmount() {\n      this.destroyMask();\n    }\n    _inputRef(el) {\n      this.element = el;\n      if (this.props.inputRef) {\n        if (Object.prototype.hasOwnProperty.call(this.props.inputRef, 'current')) this.props.inputRef.current = el;else this.props.inputRef(el);\n      }\n    }\n    initMask(maskOptions) {\n      if (maskOptions === void 0) {\n        maskOptions = this._extractMaskOptionsFromProps(this.props);\n      }\n      this.maskRef = IMask(this.element, maskOptions).on('accept', this._onAccept.bind(this)).on('complete', this._"
+            },
+            {
+              "needle": "destroyMask()",
+              "line": 78,
+              "source": "destroyMask();\n        if ('value' in props && props.value !== undefined) {\n          var _this$element;\n          if ((_this$element = this.element) != null && _this$element.isContentEditable && this.element.tagName !== 'INPUT' && this.element.tagName !== 'TEXTAREA') this.element.textContent = props.value;else this.element.value = props.value;\n        }\n      }\n    }\n    componentWillUnmount() {\n      this.destroyMask();\n    }\n    _inputRef(el) {\n      this.element = el;\n      if (this.props.inputRef) {\n        if (Object.prototype.hasOwnPrope"
+            },
+            {
+              "needle": "get maskValue()",
+              "line": 129,
+              "source": "get maskValue() {\n      if (!this.maskRef) return '';\n      if (this.props.unmask === 'typed') return this.maskRef.typedValue;\n      if (this.props.unmask) return this.maskRef.unmaskedValue;\n      return this.maskRef.value;\n    }\n    set maskValue(value) {\n      if (!this.maskRef) return;\n      value = value == null && this.props.unmask !== 'typed' ? '' : value;\n      if (this.props.unmask === 'typed') this.maskRef.typedValue = value;else if (this.props.unmask) this.maskRef.unmaskedValue = value;else this.maskRef.value = value;\n    }\n    _onAcc"
+            },
+            {
+              "needle": "_onAccept(e)",
+              "line": 140,
+              "source": "_onAccept(e) {\n      if (this.props.onAccept && this.maskRef) this.props.onAccept(this.maskValue, this.maskRef, e);\n    }\n    _onComplete(e) {\n      if (this.props.onComplete && this.maskRef) this.props.onComplete(this.maskValue, this.maskRef, e);\n    }\n    render() {\n      return React.createElement(ComposedComponent, {\n        ...this._extractNonMaskProps(this.props),\n        inputRef: this._inputRef\n      });\n    }\n  }, _Class.displayName = void 0, _Class.propTypes = void 0, _Class);\n  const nestedComponentName = ComposedComponent.displayNam"
+            },
+            {
+              "needle": "destroy()",
+              "line": 103,
+              "source": "destroy();\n        delete this.maskRef;\n      }\n    }\n    _extractMaskOptionsFromProps(props) {\n      const {\n        ...cloneProps\n      } = props;\n\n      // keep only mask options\n      Object.keys(cloneProps).filter(prop => MASK_OPTIONS_NAMES.indexOf(prop) < 0).forEach(nonMaskProp => {\n        delete cloneProps[nonMaskProp];\n      });\n      return cloneProps;\n    }\n    _extractNonMaskProps(props) {\n      const {\n        ...cloneProps\n      } = props;\n      MASK_PROPS_NAMES.forEach(maskProp => {\n        if (maskProp !== 'maxLength') delete cl"
+            }
+          ]
+        },
+        {
+          "path": "esm/mixin.d.ts",
+          "sha256": "d5e8d2bb083f71e5d979c9f1981e65815513f6de0928c30888fb01828f861816",
+          "excerpts": []
+        },
+        {
+          "path": "esm/input.js",
+          "sha256": "09cc430eb42bbbf99254d1c1b2ec246b6858ea5d9f8ebb8ef56efba73f115a17",
+          "excerpts": []
+        }
+      ]
+    },
+    {
+      "name": "imask",
+      "version": "7.6.1",
+      "license": "MIT",
+      "peerDependencies": null,
+      "installedPath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/imask@7.6.1/node_modules/imask",
+      "files": [
+        {
+          "path": "package.json",
+          "sha256": "b054a94da754b78a235c4fb9f10d7e902098c38c5565e91b603e1f9ef2a42e47",
+          "excerpts": []
+        },
+        {
+          "path": "esm/controls/input.js",
+          "sha256": "518b019c07505ae31d8faa4056c1f81a71e0d6068f3e93181fa527582ed5471d",
+          "excerpts": [
+            {
+              "needle": "destroy()",
+              "line": 342,
+              "source": "destroy() {\n    this._unbindEvents();\n    this._listeners.length = 0;\n    delete this.el;\n  }\n}\nIMask.InputMask = InputMask;\n\nexport { InputMask as default };\n"
+            },
+            {
+              "needle": "unbindEvents()",
+              "line": 129,
+              "source": "unbindEvents() {\n    if (this.el) this.el.unbindEvents();\n  }\n\n  /** Fires custom event */\n  _fireEvent(ev, e) {\n    const listeners = this._listeners[ev];\n    if (!listeners) return;\n    listeners.forEach(l => l(e));\n  }\n\n  /** Current selection start */\n  get selectionStart() {\n    return this._cursorChanging ? this._changingCursorPos : this.el.selectionStart;\n  }\n\n  /** Current cursor position */\n  get cursorPos() {\n    return this._cursorChanging ? this._changingCursorPos : this.el.selectionEnd;\n  }\n  set cursorPos(pos) {\n    if (!this.el |"
+            }
+          ]
+        },
+        {
+          "path": "esm/controls/html-mask-element.js",
+          "sha256": "695d4736c4c80957e98973859ad5fd51ebacb680c06c62f768ad7c8206d68401",
+          "excerpts": [
+            {
+              "needle": "bindEvents(handlers)",
+              "line": 30,
+              "source": "bindEvents(handlers) {\n    this.input.addEventListener('keydown', this._onKeydown);\n    this.input.addEventListener('input', this._onInput);\n    this.input.addEventListener('beforeinput', this._onBeforeinput);\n    this.input.addEventListener('compositionend', this._onCompositionEnd);\n    this.input.addEventListener('drop', handlers.drop);\n    this.input.addEventListener('click', handlers.click);\n    this.input.addEventListener('focus', handlers.focus);\n    this.input.addEventListener('blur', handlers.commit);\n    this._handlers = handlers;\n  }\n"
+            },
+            {
+              "needle": "unbindEvents()",
+              "line": 70,
+              "source": "unbindEvents() {\n    this.input.removeEventListener('keydown', this._onKeydown);\n    this.input.removeEventListener('input', this._onInput);\n    this.input.removeEventListener('beforeinput', this._onBeforeinput);\n    this.input.removeEventListener('compositionend', this._onCompositionEnd);\n    this.input.removeEventListener('drop', this._handlers.drop);\n    this.input.removeEventListener('click', this._handlers.click);\n    this.input.removeEventListener('focus', this._handlers.focus);\n    this.input.removeEventListener('blur', this._handlers.co"
+            }
+          ]
+        },
+        {
+          "path": "esm/masked/number.js",
+          "sha256": "c1bf2ae1c6f1b189289514cc8f8d1c60c83d9fbd8bb44b9393c05fc4e8804306",
+          "excerpts": [
+            {
+              "needle": "normalizeZeros: true",
+              "line": 304,
+              "source": "normalizeZeros: true,\n  padFractionalZeros: false,\n  parse: Number,\n  format: n => n.toLocaleString('en-US', {\n    useGrouping: false,\n    maximumFractionDigits: 20\n  })\n};\nIMask.MaskedNumber = MaskedNumber;\n\nexport { MaskedNumber as default };\n"
+            },
+            {
+              "needle": "padFractionalZeros: false",
+              "line": 305,
+              "source": "padFractionalZeros: false,\n  parse: Number,\n  format: n => n.toLocaleString('en-US', {\n    useGrouping: false,\n    maximumFractionDigits: 20\n  })\n};\nIMask.MaskedNumber = MaskedNumber;\n\nexport { MaskedNumber as default };\n"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "conclusion": "真实wrapper onAccept/unmask getters；卸载destroy解绑自己的八种直接view DOM事件并删除el；不等于清除全部内部订阅或主动取消已排cursor任务。纯createMask不证明React/浏览器。",
+  "lifecycleBoundary": {
+    "destroy": "_unbindEvents(); _listeners.length=0; delete el;",
+    "listeners": "_listeners初始是对象，length赋0不删除accept/complete键；本例不长期持有maskRef。",
+    "cursor": "destroy不调用_abortUpdateCursor；已排10ms callback可能暂存，回调检查!this.el后跳过失效元素。",
+    "testedProposalScope": "仅观察八种同身份直接view DOM事件解绑；不是完整内部订阅/计时器资源普查。"
+  }
+}

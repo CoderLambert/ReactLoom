@@ -1,14 +1,14 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "需安装 pagefind@1.5.2 并加载 native indexer 进行 Node 真实 SDK 测试"
+    "note": "本地sdk证据见local-validation.md及candidate-28；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
   },
   "build": {
     "status": "NOT_RUN",
-    "note": "尚未执行实际索引写盘与运行时代码校验"
+    "note": "本地build证据见local-validation.md及candidate-28；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "未部署 Pagefind bundle，也未调用真实 browser search API"
+    "note": "本地browser证据见local-validation.md及candidate-28；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
   }
 }

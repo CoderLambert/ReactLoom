@@ -1,0 +1,8 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom
+ARGV: ["git", "diff", "--check", "--", "packages/library-lab/entries/B02-gsap"]
+START: 2026-11-10T12:53:01.802689+00:00
+END: 2026-11-10T12:53:01.806378+00:00
+EXIT: 0
+STDOUT:
+
+STDERR:

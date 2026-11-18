@@ -1,0 +1,17 @@
+{
+  "capturedAt": "2026-11-10T10:52:49.091437+00:00",
+  "head": "1218066e706a90ba03fac8dff8c9b843dd2429c4",
+  "visibleFiles": 9,
+  "entryRelativeSha256": "207dc5ec1698c1ae1241e3d8f42cb422b1d62e3e3478c0868d9b96e9929fce0e",
+  "files": {
+    "AGENTS.md": "eda671490c71e9e33065a9155501b6c126e8e96f57b20458f386836d4c0029ba",
+    "agent.md": "b123beac9c30554ea1ecf112f7d60cae31a0019c158c734d5f8da3e055bdf426",
+    "examples/chart-stream-policy.ts": "44c643b0080d8644e18c0500baa19f6f29d8345e333274c789b91b3c81b41278",
+    "examples/demo.tsx": "254591932548c36c414610bd0d0c7ce7ef1648162f1996fbbe7381b8c1751690",
+    "examples/example.tsx": "b9ff72c51653a4722cf8f18ad279b51348e3e3a730a46e1fd3d45d0e6d02f8cd",
+    "guide.md": "a7de7f0dd348731a663f3edb87fbbefac2dd804ec135b8147406c23b9046c8a9",
+    "library.json": "ebacd2b7adef0aaa2c45c642b9e5ad547edb255af9a7c1f91cf42dfe340746cd",
+    "tests/chart-stream-policy.test.mts": "80babe776ba29ce6ef726ce802a750f1e3502e62d27d6abe9885bc30eec5ef62",
+    "verification.json": "366041f570906699177ebe81636bdd09ba9f0c37f106dbcb274b6b54aa4fca47"
+  }
+}

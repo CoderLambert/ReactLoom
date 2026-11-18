@@ -1,0 +1,40 @@
+{
+  "checkedAt": "2026-11-10T11:07:55.908592+00:00",
+  "inputFiles": {
+    "examples/chart-options.ts": "7fea5d4052c5ae49a37e91dc55f04648aaca3497a986e7115282f81d464c2923",
+    "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+    "examples/example.tsx": "15100fde9b758d97627387b4b54760bf9f9f854c669ad7e7f5a8e4f14237e4e8",
+    "examples/series-data.ts": "57e71c337f9de6966bb47a8a601e1b8a211208ac2559f104db631cd6b4a1420f",
+    "examples/stream-policy.ts": "f0a29a9ca4ad27749a3330ebf228907cdad4a327dbea78638fa2d221287969d7",
+    "examples/workshop.css": "7ef3cc1472cf82d77b56a6945f0b26128c96cf7f605ac3838f973a73f69f95e0",
+    "library.json": "1b18e89210c45a6a7b9456091cb524f8924e1d08d6ad4e9d8bcdfda23538c4e7",
+    "official/readme.md": "8fd11454911e4e8db65d53fe9791daec932dd4208d51f07a68c3f3721ad5947b",
+    "official/source-evidence.json": "d1a265902aee60b725acaf2241f3d0d9497c86567701244c133d9e15ce90140c",
+    "tests/sdk.test.mjs": "67dce5fd216415a0b8e0b3b12e5577c392186d886f1c246a7ece9f00dd8a2bcc",
+    "tests/stream-policy.test.mts": "a32cadff62effb9e72f6b20b8b7edabe19d48cfaf323346daa87cacc4f463b65",
+    "verification.json": "1fd47005eb60b91bd918f27b072683a293bd5fcf180f3882502ac982a0720008"
+  },
+  "logs": {
+    "validation/biome.txt": "869be4fd24d705f405d16824389403b68f12496c00fad4d7afce36fb6ce47502",
+    "validation/diff-check.txt": "74683bf68d9199c352996dd2a958e998bb835bc33733847dd4b1901790abcf4e",
+    "validation/entry-metadata.txt": "f5bb92f04b010eaa7dcea740fbd0e97c62e328223d2845886112b980d1667045",
+    "validation/entry-typecheck-final.txt": "d51928f96a21251cc254edf0e80a83673dfe53fce530e8c9f784356c308a027e",
+    "validation/entry-typecheck.txt": "4a2645783bfa14114d4e992e8b02cc1335f92daaea266b389d96f1ae5c5af0e6",
+    "validation/format-final.txt": "87f0cff46e1705e5fc5ac1f96950fcfb0ff7aa1b9cc32b320428019d80f6dc17",
+    "validation/format-metadata-final.txt": "3a9f7bb368e5bca575320c44dc592c6834090008762472d87366bd94f52f190a",
+    "validation/format-metadata.txt": "6146f0944b6100ada72fe45c45661ccf0c8120a90587085da06adbef6b6f8698",
+    "validation/format.txt": "c025eaca5a89d816d6d387dd6e290d8e1509025022e04b86db37d92a0131773f",
+    "validation/policy.txt": "2ec4e598482760cb215a330a0651134ad87daeb9ddd71960c3c5b3a38e77ad56",
+    "validation/proposal-format.txt": "1bbf99aeb6979b60b1ebc132078e9231e734910396a0878da27a33268f157685",
+    "validation/proposal-typecheck.txt": "2b0c3f5b09ff96dd4605e6e2da3026411c2ed56da0bbe680a102673bc7c571d5",
+    "validation/sdk.txt": "1034ce120bd11436e84a5232bd37bb6694e56b646dfddbc5f3cde4d6f02264bc",
+    "validation/source-fetch.txt": "aa088e38247e446834953f55f3cfb8f0f8798523a774ebcbaf580288a9d280f3"
+  },
+  "reviewArtifacts": {
+    "guide.md": "0bb634267b0650e33683de62418e4f54109d9bf8b516c1674d3e1a6abcd3b88c",
+    "agent.md": "b83a4e8876fc5771cdbf15f9343b58872933fa46d1eb2761e3bab451f5624d94",
+    "local-validation.md": "0e3457495d3b50d2fdba600e5bf06cf69d96f95a34854943d74e3f1bb1b4cddd",
+    "validation/browser-proposal.txt": "e6c4757869757a5af6663b84a8aceaa1516ef352d46d865bfea7f8af5d77cac3"
+  },
+  "sdkReuseNote": "Historical SDK log: 3 actual join PASS + 1 unexecuted Canvas SKIP. Only that explanatory skip block was removed; the three executed assertion bodies and shared series-data inputs remain unchanged. No rerun of valid SDK/policy. Real Canvas lifecycle is NOT_RUN and outside discovered Node SDK tests."
+}

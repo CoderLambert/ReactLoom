@@ -1,0 +1,23 @@
+{
+  "repository": "ant-design/ant-design",
+  "targetPackage": "antd",
+  "tag": "6.6.7",
+  "commit": "dc3a92dcf2fd4d707418c2288901ecc86f26f647",
+  "path": "README-zh_CN.md",
+  "language": "zh-CN",
+  "version": "6.6.7",
+  "syncedAt": "2026-11-10T12:59:54.671643+00:00",
+  "sourceUrl": "https://github.com/ant-design/ant-design/blob/dc3a92dcf2fd4d707418c2288901ecc86f26f647/README-zh_CN.md",
+  "sha256": "9459513f975ed488f297ea22a0d724000fa039b6c0c5991e991f59587d00de06",
+  "bytes": 12801,
+  "treeTruncated": false,
+  "readmeCandidates": ["README-zh_CN.md", "README.md"],
+  "treeUrl": "https://api.github.com/repos/ant-design/ant-design/git/trees/dc3a92dcf2fd4d707418c2288901ecc86f26f647?recursive=1",
+  "selectionReason": "The full pinned tree was inspected. Official Simplified Chinese README-zh_CN.md is preferred for the root antd package; bytes preserved unchanged.",
+  "upstreamPackageVersion": "6.6.7",
+  "upstreamReactPeers": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "packageJsonSourceUrl": "https://raw.githubusercontent.com/ant-design/ant-design/dc3a92dcf2fd4d707418c2288901ecc86f26f647/package.json"
+}

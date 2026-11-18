@@ -1,0 +1,27 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node --test entries/F11-msw/tests/routes.test.mjs entries/F11-msw/examples/registration-policy.test.mjs entries/F11-msw/examples/session-gate.test.mjs entries/F11-msw/examples/worker-script-preflight.test.mjs
+exit: 0
+
+✔ global root worker is never mistaken for scoped MSW registration (0.465331ms)
+✔ strict scope and worker script validation (0.338635ms)
+✔ installing worker is accepted while the same script is being activated (3.672938ms)
+✔ foreign updates cannot be hidden beside the expected script (0.137191ms)
+✔ lease is taken synchronously before any async setup can overlap (0.734698ms)
+✔ release is idempotent and cannot release a later owner (0.098921ms)
+✔ a failed start may release explicitly; a failed stop retains its lease (0.13311ms)
+✔ preflights only the exact same-origin scoped Worker asset (18.11635ms)
+✔ rejects root workers, other origins, query strings and remote files (0.325634ms)
+✔ rejects redirects, missing scripts and SPA fallbacks before registration (0.515541ms)
+✔ enforces actual streamed size even if Content-Length lies or is absent (0.638431ms)
+✔ rejects empty response bodies and unsupported body readers (0.340803ms)
+✔ Node fixtures use a non-routable .invalid origin (0.528493ms)
+✔ browser fixtures resolve within the same-origin runner scope (0.164718ms)
+✔ rejects malformed or ambiguous base URLs (3.820988ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 15
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 62.224781

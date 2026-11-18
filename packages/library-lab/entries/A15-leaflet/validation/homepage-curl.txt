@@ -1,0 +1,11 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+ARGV: ["curl", "--silent", "--show-error", "--location", "--max-time", "25", "--dump-header", "-", "--output", "/dev/null", "--write-out", "\nRESULT %{http_code} %{url_effective}\n", "https://leafletjs.com/"]
+START: 2026-11-10T12:09:20.868740+00:00
+END: 2026-11-10T12:09:25.882163+00:00
+EXIT: 35
+STDOUT:
+
+RESULT 000 https://leafletjs.com/
+
+STDERR:
+curl: (35) TLS connect error: error:0A000126:SSL routines::unexpected eof while reading

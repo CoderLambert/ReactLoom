@@ -1,14 +1,14 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "需要安装 imask@7.6.1 并执行 Node tests"
+    "note": "正式NOT_RUN；本地模型SDK4与calendar纯策略3分开，不证明React onAccept/光标/生命周期。"
   },
   "build": {
     "status": "NOT_RUN",
-    "note": "PLATFORM 统一解析 react-imask@7.6.1 和 TypeScript"
+    "note": "正式NOT_RUN；局部入口/提案严格类型与主控共享candidate另记，不作独立收据。"
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "需 Chromium onAccept、IME、光标、重置验证"
+    "note": "正式NOT_RUN；本地candidate16 basic/business/官网PASS，candidate17受影响advanced新构建PASS，三目标闭环；SDK4/policy3复用。八所属DOM事件清理不外推全部订阅/timer，composition非OS IME。见local-validation与validation/browser-binding.json。"
   }
 }

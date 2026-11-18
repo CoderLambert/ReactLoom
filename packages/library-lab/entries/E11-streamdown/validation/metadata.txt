@@ -1,0 +1,4 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node entries/E11-streamdown/validation/check-entry.mjs
+PASS: metadata, 2 scenarios, all 11 source files, README sha256 e64c6eb295a58af2a0f3a2eaf6d8edefab5b2b39ea320250072596bd5b0943f8
+exit: 0

@@ -1,0 +1,51 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['pnpm', 'exec', '--', 'biome', 'check', '--write', 'entries/C15-dayjs/examples', 'entries/C15-dayjs/tests', 'entries/C15-dayjs/library.json']
+startedAt: 2026-11-10T17:09:22.341307+00:00
+exit: 0
+Skipped 2 suggested fixes.
+If you wish to apply the suggested (unsafe) fixes, use the command biome check --write --unsafe
+
+Checked 9 files in 10ms. Fixed 8 files.
+Found 2 infos.
+entries/C15-dayjs/examples/date-operations.mjs:42:26 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    40 │     dayjs.utc(startDate, 'YYYY-MM-DD', true).add(1, 'day').format('YYYY-MM-DD'),
+    41 │   )
+  > 42 │   const start = dayjs.tz(startDate + ' 12:00', 'YYYY-MM-DD HH:mm', zone)
+       │                          ^^^^^^^^^^^^^^^^^^^^
+    43 │   const end = dayjs.tz(nextCivil + ' 12:00', 'YYYY-MM-DD HH:mm', zone)
+    44 │   return {
+  
+  i Unsafe fix: Use a template literal.
+  
+    40 40 │       dayjs.utc(startDate, 'YYYY-MM-DD', true).add(1, 'day').format('YYYY-MM-DD'),
+    41 41 │     )
+    42    │ - ··const·start·=·dayjs.tz(startDate·+·'·12:00',·'YYYY-MM-DD·HH:mm',·zone)
+       42 │ + ··const·start·=·dayjs.tz(`${startDate}·12:00`,·'YYYY-MM-DD·HH:mm',·zone)
+    43 43 │     const end = dayjs.tz(nextCivil + ' 12:00', 'YYYY-MM-DD HH:mm', zone)
+    44 44 │     return {
+  
+
+entries/C15-dayjs/examples/date-operations.mjs:43:24 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    41 │   )
+    42 │   const start = dayjs.tz(startDate + ' 12:00', 'YYYY-MM-DD HH:mm', zone)
+  > 43 │   const end = dayjs.tz(nextCivil + ' 12:00', 'YYYY-MM-DD HH:mm', zone)
+       │                        ^^^^^^^^^^^^^^^^^^^^
+    44 │   return {
+    45 │     zone,
+  
+  i Unsafe fix: Use a template literal.
+  
+    41 41 │     )
+    42 42 │     const start = dayjs.tz(startDate + ' 12:00', 'YYYY-MM-DD HH:mm', zone)
+    43    │ - ··const·end·=·dayjs.tz(nextCivil·+·'·12:00',·'YYYY-MM-DD·HH:mm',·zone)
+       43 │ + ··const·end·=·dayjs.tz(`${nextCivil}·12:00`,·'YYYY-MM-DD·HH:mm',·zone)
+    44 44 │     return {
+    45 45 │       zone,
+  
+

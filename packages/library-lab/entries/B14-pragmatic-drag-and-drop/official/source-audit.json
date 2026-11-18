@@ -1,0 +1,358 @@
+{
+  "repository": "atlassian/pragmatic-drag-and-drop",
+  "commit": "1287861b7c77439f906dc108c21f6236b34c8f53",
+  "path": "packages/core/README.md",
+  "language": "en",
+  "version": "1.8.1",
+  "syncedAt": "2026-11-10T13:49:49.884571+00:00",
+  "readmeCandidates": [
+    "README.md",
+    "packages/auto-scroll/README.md",
+    "packages/core/README.md",
+    "packages/documentation/README.md",
+    "packages/documentation/examples/data/people/images/README.md",
+    "packages/flourish/README.md",
+    "packages/hitbox/README.md",
+    "packages/live-region/README.md",
+    "packages/react-accessibility/README.md",
+    "packages/react-beautiful-dnd-autoscroll/README.md",
+    "packages/react-beautiful-dnd-migration/README.md",
+    "packages/react-drop-indicator/README.md",
+    "packages/react-drop-indicator/src/internal/README.md",
+    "packages/unit-testing/README.md"
+  ],
+  "treeTruncated": false,
+  "npm": {
+    "bugs": {
+      "url": "https://github.com/atlassian/pragmatic-drag-and-drop/issues"
+    },
+    "dist": {
+      "shasum": "fa28f91c8e0f837830eb70565055c7caeb33114f",
+      "tarball": "https://registry.npmjs.org/@atlaskit/pragmatic-drag-and-drop/-/pragmatic-drag-and-drop-1.8.1.tgz",
+      "fileCount": 409,
+      "integrity": "sha512-uXWNPpL8n4OmTVbduH7nq8pk8htqGo/prR5cYEE8sVCPJGAUMWn6lzvWTfI+4VCeQvHiDRODVz4YzH06OVAxhw==",
+      "signatures": [
+        {
+          "sig": "MEUCIQDaLRLButwuUjog2hpUBdRJda3v9WhfWOA6yi5deKJdXgIgS6zAeNGLIkCFQmZCVYu5zSEnOA5uaRgzqlCjFqzujIs=",
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+        }
+      ],
+      "unpackedSize": 499952
+    },
+    "main": "dist/cjs/index.js",
+    "name": "@atlaskit/pragmatic-drag-and-drop",
+    "_from": "file:/tmp/package-1-69e8ac0a-b5c02083839fed5537f9a9cd-1.tgz",
+    "types": "dist/types/index.d.ts",
+    "author": {
+      "name": "Atlassian Pty Ltd"
+    },
+    "module": "dist/esm/index.js",
+    "license": "Apache-2.0",
+    "_npmUser": {
+      "name": "atlassianartifactteam",
+      "email": "eng-development-tooling-artifacts@atlassian.com"
+    },
+    "homepage": "https://atlassian.design/components/pragmatic-drag-and-drop/",
+    "_resolved": "/tmp/package-1-69e8ac0a-b5c02083839fed5537f9a9cd-1.tgz",
+    "atlassian": {
+      "team": "Design System Team",
+      "website": {
+        "name": "Core",
+        "category": "Libraries"
+      },
+      "integrationTests": {
+        "additionalBrowsers": ["desktop-firefox", "desktop-webkit"]
+      }
+    },
+    "techstack": {
+      "@repo/internal": {
+        "styling": ["emotion", "static"],
+        "analytics": "analytics-next",
+        "dom-events": "use-bind-event-listener",
+        "deprecation": "no-deprecated-imports",
+        "design-tokens": ["color"],
+        "ui-components": "lite-mode"
+      },
+      "@atlassian/frontend": {
+        "import-structure": ["atlassian-conventions"],
+        "circular-dependencies": ["file-and-folder-level"]
+      }
+    },
+    "_integrity": "sha512-uXWNPpL8n4OmTVbduH7nq8pk8htqGo/prR5cYEE8sVCPJGAUMWn6lzvWTfI+4VCeQvHiDRODVz4YzH06OVAxhw==",
+    "repository": {
+      "url": "git+https://github.com/atlassian/pragmatic-drag-and-drop.git",
+      "type": "git"
+    },
+    "_npmVersion": "10.8.2",
+    "description": "The core package for Pragmatic drag and drop - enabling fast drag and drop for any experience on any tech stack",
+    "directories": {},
+    "maintainers": [
+      {
+        "name": "atlassianartifactteam",
+        "email": "eng-development-tooling-artifacts@atlassian.com"
+      }
+    ],
+    "sideEffects": true,
+    "_nodeVersion": "20.20.0",
+    "atlaskit:src": "src/index.ts",
+    "dependencies": {
+      "raf-schd": "^4.0.3",
+      "@babel/runtime": "^7.0.0",
+      "bind-event-listener": "^3.0.0"
+    },
+    "module:es2019": "dist/es2019/index.js",
+    "publishConfig": {
+      "registry": "https://registry.npmjs.org/"
+    },
+    "typesVersions": {
+      ">=4.5 <4.9": {
+        "*": ["dist/types-ts4.5/*", "dist/types-ts4.5/index.d.ts"]
+      }
+    },
+    "_hasShrinkwrap": false,
+    "devDependencies": {
+      "react": "^18.2.0",
+      "globby": "^6.1.0",
+      "react-dom": "^18.2.0",
+      "@atlaskit/link": "^3.4.0",
+      "@emotion/react": "^11.7.1",
+      "tiny-invariant": "^1.2.0",
+      "@types/raf-schd": "^4.0.1",
+      "wait-for-expect": "^1.2.0",
+      "@testing-library/dom": "^10.1.0",
+      "@testing-library/react": "^16.3.0",
+      "@af/integration-testing": "workspace:^",
+      "@atlassian/a11y-jest-testing": "^0.11.0",
+      "@atlassian/a11y-playwright-testing": "^0.9.0"
+    },
+    "_npmOperationalInternal": {
+      "tmp": "tmp/pragmatic-drag-and-drop_1.8.1_1776856079171_0.7259384147395644",
+      "host": "s3://npm-registry-packages-npm-production"
+    },
+    "_id": "@atlaskit/pragmatic-drag-and-drop@1.8.1",
+    "version": "1.8.1"
+  },
+  "package": {
+    "name": "@atlaskit/pragmatic-drag-and-drop",
+    "version": "1.8.1",
+    "description": "The core package for Pragmatic drag and drop - enabling fast drag and drop for any experience on any tech stack",
+    "repository": "https://github.com/atlassian/pragmatic-drag-and-drop",
+    "author": "Atlassian Pty Ltd",
+    "license": "Apache-2.0",
+    "main": "dist/cjs/index.js",
+    "module": "dist/esm/index.js",
+    "module:es2019": "dist/es2019/index.js",
+    "types": "dist/types/index.d.ts",
+    "sideEffects": true,
+    "publishConfig": {
+      "registry": "https://registry.npmjs.org/"
+    },
+    "exports": {
+      ".": "./src/index.ts",
+      "./element/adapter": "./src/entry-point/element/adapter.ts",
+      "./element/set-custom-native-drag-preview": "./src/entry-point/element/set-custom-native-drag-preview.ts",
+      "./element/pointer-outside-of-preview": "./src/entry-point/element/pointer-outside-of-preview.ts",
+      "./element/center-under-pointer": "./src/entry-point/element/center-under-pointer.ts",
+      "./element/preserve-offset-on-source": "./src/entry-point/element/preserve-offset-on-source.ts",
+      "./element/disable-native-drag-preview": "./src/entry-point/element/disable-native-drag-preview.ts",
+      "./element/scroll-just-enough-into-view": "./src/entry-point/element/scroll-just-enough-into-view.ts",
+      "./element/format-urls-for-external": "./src/entry-point/element/format-urls-for-external.ts",
+      "./element/block-dragging-to-iframes": "./src/entry-point/element/block-dragging-to-iframes.ts",
+      "./external/adapter": "./src/entry-point/external/adapter.ts",
+      "./external/file": "./src/entry-point/external/file.ts",
+      "./external/html": "./src/entry-point/external/html.ts",
+      "./external/text": "./src/entry-point/external/text.ts",
+      "./external/url": "./src/entry-point/external/url.ts",
+      "./external/some": "./src/entry-point/external/some.ts",
+      "./private/get-element-from-point-without-honey-pot": "./src/entry-point/private/get-element-from-point-without-honey-pot.ts",
+      "./text-selection/adapter": "./src/entry-point/text-selection/adapter.ts",
+      "./combine": "./src/entry-point/combine.ts",
+      "./once": "./src/entry-point/once.ts",
+      "./reorder": "./src/entry-point/reorder.ts",
+      "./prevent-unhandled": "./src/entry-point/prevent-unhandled.ts",
+      "./types": "./src/entry-point/types.ts"
+    },
+    "dependencies": {
+      "@babel/runtime": "^7.0.0",
+      "bind-event-listener": "^3.0.0",
+      "raf-schd": "^4.0.3"
+    },
+    "devDependencies": {
+      "@atlaskit/link": "^3.4.0",
+      "@emotion/react": "^11.7.1",
+      "@testing-library/dom": "^10.1.0",
+      "@testing-library/react": "^16.3.0",
+      "@types/raf-schd": "^4.0.1",
+      "globby": "^6.1.0",
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0",
+      "tiny-invariant": "^1.2.0",
+      "wait-for-expect": "^1.2.0"
+    },
+    "homepage": "https://atlassian.design/components/pragmatic-drag-and-drop/"
+  },
+  "requests": [
+    {
+      "url": "https://registry.npmjs.org/@atlaskit%2fpragmatic-drag-and-drop/1.8.1",
+      "finalUrl": "https://registry.npmjs.org/@atlaskit%2fpragmatic-drag-and-drop/1.8.1",
+      "status": 200,
+      "headers": {
+        "Date": "Tue, 10 Nov 2026 13:49:40 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "3087",
+        "Connection": "close",
+        "CF-Ray": "a5858597ac783ca3-LAX",
+        "CF-Cache-Status": "DYNAMIC",
+        "Access-Control-Allow-Origin": "*",
+        "Server": "cloudflare",
+        "set-cookie": "__cf_bm=0Jnox090JdYZ3y3OK.VzbBKQf0GrGDRYJLEDSAiM0B4-1794318580.4273837-1.0.1.1-.k1dNalp3mByAw9tZtitxuhGlD.3GpqxSS_l7T6gJZcjgRNjq0.DJwTfz00uD1l2QrzwGMhhc0UvLIJJhqIOohD18UXscPD3f906alqEedPSOatLwJRm7pf.K.0RMSdg; HttpOnly; SameSite=None; Partitioned; Secure; Path=/; Domain=npmjs.org; Expires=Tue, 10 Nov 2026 14:19:40 GMT"
+      },
+      "bytes": 3087,
+      "sha256": "ee6663bfb6f261e866d51d57808df9db1558c123351ba06fd376a7515919a5d5"
+    },
+    {
+      "url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/git/trees/1287861b7c77439f906dc108c21f6236b34c8f53?recursive=1",
+      "finalUrl": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/git/trees/1287861b7c77439f906dc108c21f6236b34c8f53?recursive=1",
+      "status": 200,
+      "headers": {
+        "Date": "Tue, 10 Nov 2026 13:49:43 GMT",
+        "Content-Type": "application/json; charset=utf-8",
+        "Cache-Control": "public, max-age=86400, s-maxage=86400",
+        "Vary": "Accept,Accept-Encoding, Accept, X-Requested-With",
+        "ETag": "W/\"68ead2f1dd594231c98b4612cd29fde6d78aad5d8448953c5e956c72af076058\"",
+        "Last-Modified": "Tue, 10 Nov 2026 09:00:11 GMT",
+        "X-GitHub-Media-Type": "github.v3; format=json",
+        "x-github-api-version-selected": "2022-11-28",
+        "Access-Control-Expose-Headers": "ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset, Warning",
+        "Access-Control-Allow-Origin": "*",
+        "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+        "X-Frame-Options": "deny",
+        "X-Content-Type-Options": "nosniff",
+        "X-XSS-Protection": "0",
+        "Referrer-Policy": "origin-when-cross-origin, strict-origin-when-cross-origin",
+        "Content-Security-Policy": "default-src 'none'",
+        "Server": "github.com",
+        "Accept-Ranges": "bytes",
+        "X-RateLimit-Limit": "60",
+        "X-RateLimit-Remaining": "49",
+        "X-RateLimit-Used": "11",
+        "X-RateLimit-Resource": "core",
+        "X-RateLimit-Reset": "1794321456",
+        "Transfer-Encoding": "chunked",
+        "X-GitHub-Request-Id": "AA70:1E3E4C:10E6414:123AE34:6AF320F6",
+        "x-github-edge-region": "westus3",
+        "connection": "close"
+      },
+      "bytes": 415089,
+      "sha256": "8d298db455098cf8a1a227af343babebf63ac56e18105df920c410f2f0f64d4c"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/atlassian/pragmatic-drag-and-drop/1287861b7c77439f906dc108c21f6236b34c8f53/packages/core/package.json",
+      "finalUrl": "https://raw.githubusercontent.com/atlassian/pragmatic-drag-and-drop/1287861b7c77439f906dc108c21f6236b34c8f53/packages/core/package.json",
+      "status": 200,
+      "headers": {
+        "Connection": "close",
+        "Content-Length": "2881",
+        "Cache-Control": "max-age=300",
+        "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+        "Content-Type": "text/plain; charset=utf-8",
+        "ETag": "\"cb9794ed19a192886a48412c63b6cd65c85b2da7a223b086c5a8399a04985e39\"",
+        "Strict-Transport-Security": "max-age=31536000",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "deny",
+        "X-XSS-Protection": "1; mode=block",
+        "X-GitHub-Request-Id": "6664:34819A:39E129:487534:6AF320FA",
+        "x-github-edge-region": "westus3",
+        "Accept-Ranges": "bytes",
+        "Date": "Tue, 10 Nov 2026 13:49:46 GMT",
+        "Via": "1.1 varnish",
+        "X-Served-By": "cache-pao-kpao1770045-PAO",
+        "X-Cache": "MISS",
+        "X-Cache-Hits": "0",
+        "X-Timer": "S1794318587.714463,VS0,VE112",
+        "Vary": "Authorization,Accept-Encoding",
+        "Access-Control-Allow-Origin": "*",
+        "Cross-Origin-Resource-Policy": "cross-origin",
+        "X-Fastly-Request-ID": "22c02dc4a20cbe4948dff4444c50b2170a1df907",
+        "Expires": "Tue, 10 Nov 2026 13:54:46 GMT",
+        "Source-Age": "0"
+      },
+      "bytes": 2881,
+      "sha256": "999759b5429582a33f618ca20b2ca796a8e538a03b3455cb820c5799e6c676ae"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/atlassian/pragmatic-drag-and-drop/1287861b7c77439f906dc108c21f6236b34c8f53/packages/core/README.md",
+      "finalUrl": "https://raw.githubusercontent.com/atlassian/pragmatic-drag-and-drop/1287861b7c77439f906dc108c21f6236b34c8f53/packages/core/README.md",
+      "status": 200,
+      "headers": {
+        "Connection": "close",
+        "Content-Length": "216",
+        "Cache-Control": "max-age=300",
+        "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+        "Content-Type": "text/plain; charset=utf-8",
+        "ETag": "\"9364580e8af46410ce858f9eea4cb656fe61f17b9b57baea2f9896cb09363c34\"",
+        "Strict-Transport-Security": "max-age=31536000",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "deny",
+        "X-XSS-Protection": "1; mode=block",
+        "X-GitHub-Request-Id": "22F4:BFE3:387231:470474:6AF320FB",
+        "x-github-edge-region": "westus3",
+        "Accept-Ranges": "bytes",
+        "Date": "Tue, 10 Nov 2026 13:49:48 GMT",
+        "Via": "1.1 varnish",
+        "X-Served-By": "cache-pao-kpao1770048-PAO",
+        "X-Cache": "MISS",
+        "X-Cache-Hits": "0",
+        "X-Timer": "S1794318589.678240,VS0,VE137",
+        "Vary": "Authorization,Accept-Encoding",
+        "Access-Control-Allow-Origin": "*",
+        "Cross-Origin-Resource-Policy": "cross-origin",
+        "X-Fastly-Request-ID": "a97f992ac3e2127e8a7f10570ed2059c14373b9e",
+        "Expires": "Tue, 10 Nov 2026 13:54:48 GMT",
+        "Source-Age": "0"
+      },
+      "bytes": 216,
+      "sha256": "bd43a66cfa1697781045dae0873d9fa77ac34ef31e6ecb5fba8583eb23a3e4e2"
+    },
+    {
+      "url": "https://atlassian.design/components/pragmatic-drag-and-drop/",
+      "finalUrl": "https://atlassian.design/components/pragmatic-drag-and-drop/",
+      "status": 200,
+      "headers": {
+        "Content-Type": "text/html",
+        "Content-Length": "81",
+        "Connection": "close",
+        "Date": "Tue, 10 Nov 2026 13:49:49 GMT",
+        "Set-Cookie": "Bifrost-Atl-Ctx-Cloud-Service-Provider=AWS; path=/; samesite=lax",
+        "Content-Security-Policy": "",
+        "Content-Security-Policy-Report-Only": "base-uri 'self'; default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' *.public.atl-paas.net https://www.google.com.au/ads/ga-audiences; font-src 'self' *.public.atl-paas.net; frame-ancestors 'none'; form-action 'self'; report-uri https://web-security-reports.services.atlassian.com/csp-report/design-system-docs-bifrost; report-to csp-default-endpoint",
+        "Reporting-Endpoints": "csp-default-endpoint=\"https://web-security-reports.services.atlassian.com/csp-report/design-system-docs-bifrost\"",
+        "Server": "AtlassianEdge",
+        "X-Amz-Replication-Status": "COMPLETED",
+        "Last-Modified": "Tue, 10 Nov 2026 02:04:38 GMT",
+        "ETag": "\"0f0254bac5d87b94850bc7387b6df343\"",
+        "X-Amz-Server-Side-Encryption": "AES256",
+        "Cache-Control": "no-store, max-age=0, stale-if-error=0",
+        "X-Amz-Version-Id": "zUrQdubSUHgyVWnADKPhQOXTLT.oAphL",
+        "Report-To": "{\"endpoints\": [{\"url\": \"https://dz8aopenkvv6s.cloudfront.net\"}], \"group\": \"endpoint-1\", \"include_subdomains\": true, \"max_age\": 600}",
+        "Via": "1.1 a73c4443f00fb366a3a7226697ad0b6c.cloudfront.net (CloudFront), 1.1 58410c89721cac11e105ea12ba32c4bc.cloudfront.net (CloudFront)",
+        "X-Amz-Cf-Pop": "HIO52-P5",
+        "Nel": "{\"failure_fraction\": 0.01, \"include_subdomains\": true, \"max_age\": 600, \"report_to\": \"endpoint-1\"}",
+        "X-Cache-Status": "MISS",
+        "Accept-Ranges": "bytes",
+        "X-Content-Type-Options": "nosniff",
+        "X-Xss-Protection": "1; mode=block",
+        "Atl-Traceid": "eda7b2d365174f0eac76b7dcb5b7e3ea",
+        "Atl-Request-Id": "eda7b2d3-6517-4f0e-ac76-b7dcb5b7e3ea",
+        "Strict-Transport-Security": "max-age=63072000; preload",
+        "X-Cache": "Miss from cloudfront",
+        "Alt-Svc": "h3=\":443\"; ma=86400",
+        "X-Amz-Cf-Id": "EsOSuJ5R2qiJIbUuZ_I0cce_-6c_Ra8wUGId4gVB4siJh6znhsrNsw==",
+        "Age": "41914",
+        "Server-Timing": "cdn-upstream-layer;desc=\"REC\",cdn-upstream-dns;dur=0,cdn-upstream-connect;dur=0,cdn-upstream-fbl;dur=53,atl-edge;dur=53,atl-edge-internal;dur=2,atl-edge-upstream;dur=51,atl-edge-pop;desc=\"aws-us-west-2\",cdn-cache-miss,cdn-pop;desc=\"YVR52-P1\",cdn-rid;desc=\"EsOSuJ5R2qiJIbUuZ_I0cce_-6c_Ra8wUGId4gVB4siJh6znhsrNsw==\",cdn-downstream-fbl;dur=74"
+      },
+      "bytes": 81,
+      "sha256": "1e24e2a1393eca8fb04d87fb0e83a31ab0cd116fded9c7efff4b86c8ea241b46"
+    }
+  ]
+}

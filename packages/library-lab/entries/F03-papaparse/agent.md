@@ -1,46 +1,11 @@
-# F03 Papa Parse — 工程手册
+# F03 Papa Parse：迁入与验收入口
 
-## 适用
+使用CSV带引号/换行导入导出时选papaparse5.7.0/MIT；不是XLS/XLSX/宏/远程抓取。先读guide、verification及实际全部sourceFiles。完整迁入五份example.tsx、report.mjs/.d.mts、policy.mjs/.d.mts，pnpm add papaparse@5.7.0，ReactDOM/TSX ESM Bundler/DOM/Blob/TextDecoder目标，挂载default组件level="business"；无需Provider/CSS/env/server，demo可省。
 
-带引号和换行的 CSV 导入、导出。不是 xlsx，也不抓远程文件。
+真实reportCSV共源：header:true、greedy空行、dynamicTyping:false；严格title,url,note与renamedHeaders非空全拒；字段数不符仅拒该记录，未闭引号等其它错误全拒。业务trim/字段长度/无凭据HTTPS/去fragment规范化去重。不联网，URL验证不是SSRF或ACL。
 
-## 版本
+输入预算：textarea手工15,000 UTF16码元；文件≤256,000原始字节先检查再arrayBuffer+fatalUTF8，report任何来源≤256,000 UTF8bytes。文件程序设值可超textarea手工maxLength，单位不可混淆。keyed level确保新fixture；编辑/parse/reset/选择/卸载失效generation，旧成功/错误均不回写，未物理abort读取。
 
-`papaparse@5.7.0`，MIT。`header: true`，`skipEmptyLines: 'greedy'`，`dynamicTyping: false`，`escapeFormulae: true`。
+导出仅accepted，真实unparse escapeFormulae用前缀正则/^[=+\-@\t\r]/，覆盖含内嵌换行公式单元格；5.7默认true的.*$可能漏跨行，不能改回而删回归。CSV不是Excel宏安全证明；页面pre纯文本，不HTML执行/URL抓取/文件下载。
 
-## 迁移
-
-带走 `examples/report.mjs`、`examples/policy.mjs` 和两边的 `.d.mts`。UI 只调用 `reportCSV`。表头保持 `title,url,note`。文件上限 256 000 字节，文本框 15 000 字符。不要打开 `download: true`。
-
-## 不可删的清理
-
-选文件、编辑、解析、重置、卸载都增加 generation。超限时先清空 input。`renamedHeaders` 非空或不可恢复的解析错误整批拒绝。只 unparse 已接受行。URL 去掉 fragment 和凭据，仅 https。
-
-## 反例
-
-- `split(',')` 或 `split('\\n')`。
-- `dynamicTyping: true` 处理 id。
-- 忽略重复表头。
-- 只做 HTML 转义就交给 Excel。
-- `Papa.parse(url, { download: true })`。
-- 未闭合引号仍导入前面的行。
-- 把客户端 URL 规范化当成 SSRF 防护。
-- 上传用户表格或把密钥放进夹具。
-
-## 测试断言
-
-- 逗号、`""` 和单元格换行得到一条记录。
-- `=2+3` 导出后带撇号前缀。
-- 多余列、重复表头、未闭合引号不进入 `accepted`。
-- ftp、带用户信息的 URL、重复 https 被拒绝。
-- `policy.test.mjs` 不 import Papa；`node-scenarios.test.mjs` 才加载 SDK。
-
-## 真实限制
-
-页面不上传。256 KB 不是 Papa 的上限。没有 Worker 分块。标准示例不探测编码，非 UTF-8 要另做转换。公式前缀不是宏安全的全部。文本框上限 15 000 字符，和文件上限不是同一个数。
-
-## 证据
-
-本地跑过测试也不等于 verification PASS。收据要落在 `docs/library-lab/evidence/runs/`。Actions 41779873259 不是 F03 的单项验收。
-
-`policy.test.mjs` 与 `node-scenarios.test.mjs` 要分开记录。只有后者加载 Papa。
+本地真实SDK与纯policy分日志，不能合并称SDK；真实 input、错误、公式前缀、场景切换和迟到读取见本地 Chromium 证据。formal三NOT_RUN，详情local-validation。固定官方原文/hash/license/header在official，官网未宿主嵌入验证unknown。

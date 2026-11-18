@@ -1,14 +1,14 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "SDK未运行；F07和F06元数据/根清单已共同声明pdfjs-dist@6.3.289，真实锁文件解析与Worker验证仍待PLATFORM Wave21改为独立Uint8Array Worker传输副本且纯Node structuredClone测试；没有运行实际react-pdf。"
+    "note": "本地sdk证据见local-validation.md及candidate-36；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
   },
   "build": {
     "status": "NOT_RUN",
-    "note": "根 pnpm-lock.yaml 已包含 Library Lab importer，声明的包可以被冻结安装解析。Actions run 41779873259 的仓库级 typecheck/build 不是本条目的 evidence/runs 收据，所以这里是 NOT_RUN，不是 PASS。"
+    "note": "本地build证据见local-validation.md及candidate-36；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "尚未在目标浏览器进行交互、资源卸载和无障碍核验。"
+    "note": "本地browser证据见local-validation.md及candidate-36；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
   }
 }

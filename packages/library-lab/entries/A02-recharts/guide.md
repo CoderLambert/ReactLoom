@@ -1,249 +1,80 @@
-# Recharts 3.10.1｜从简单 React 图表到可维护的数据分析工作台
+# Recharts：让状态同时驱动 SVG 图表和数据表
 
-Lab 锁定 `recharts@3.10.1` 与 `react-is@19.3.0`（与仓库 React 19.3.0 对齐），许可证 MIT。官方安装要求 `react-is` 主版本跟 React 走。研究稿里写过的 `react-is@19.2.8` 不是本仓库的 pin，迁移时不要降回去。
+运营页要看七天阅读变化，也要准确读出每一天的收藏量和比率。Recharts 用 React 组件声明坐标轴、柱、线和 Tooltip，适合跟 React 状态一起更新的 SVG 业务报表。这里用 `recharts@3.10.1`、`react-is@19.3.0`，图表与原生表格始终读取同一 `rows`。数据来自本地确定性函数，不是在线统计或模型服务。
 
-没有逐库收据时，sdk / build / browser 保持 NOT_RUN。Actions [41779873259](https://github.com/CoderLambert/ReactLoom/actions/runs/41779873259) 是仓库级安装、typecheck、构建和已有测试，不是本条目 PASS。
+本条目保留原研究来源，当前内容为 `recreated`，不继承历史测试结果。需要很多图表类型或复杂坐标系可对照 A01 ECharts；密集时序先在目标点数上测量 A04 uPlot。14天示例不能推出万点性能结论。
 
-## Lab 当前示例
+## 三个目标怎样操作
 
-[`examples/example.tsx`](examples/example.tsx) 调用真实 Recharts 组件。[`examples/chart-policy.ts`](examples/chart-policy.ts) 负责窗口和刷新预算。[`examples/demo.tsx`](examples/demo.tsx) 只重导出。
+### 1. 看见 React 数据更新
 
-示例实际做了这些事：
+打开“响应式阅读量柱状图”。初始7行、7根阅读柱，合计1613次；表第一行周一为140次。点“增加阅读数据”，数据轮次变1，同一行变142次，合计1648次，真实柱图和悬浮数据一起更新。
 
-- 父级给定 `height: 300`、`minWidth: 0`，`ResponsiveContainer` 使用 `debounce={60}`。
-- basic：`BarChart` + `Bar dataKey="reads"`，`YAxis allowDecimals={false}`，下面有同等含义的表。
-- business / advanced：`ComposedChart`。阅读和收藏走 `yAxisId="count"`，收藏率走右侧 `yAxisId="percentage"`（0–100，单位 %）。advanced 可关掉收藏率。
-- 窗口天数经 `normalizeWindow` 收到 3–14。输入框允许暂时不是合法数字，blur 时写回当前合法值。
-- `nextRevision` 把刷新次数封在 `MAX_REVISION = 1000`。`sampleRows` 是确定性本地数据，不请求网络。
+`sampleRows(7, revision)`生成数组，`BarChart data={rows}`和表格`rows.map`共用它；`Bar dataKey="reads"`读取阅读值，`XAxis dataKey="day"`读取稳定的类目身份。没有手工修改 SVG 或调用 `setOption`。
 
-当前示例**没有**挂载 `syncId` / `syncMethod`、`Brush`、移动平均、`connectNulls`、频道切换的 `AbortController`，也没有把缺失值留成 `null`（样例里的阅读和收藏都是算出来的正数）。下面第 4、5 节是生产教学。照着写进业务代码，不要以为 Lab 页面已经演示了同步和竞态。
+### 2. 次数与比率使用不同轴
 
-## 1. 什么时候用
+打开“阅读与收藏双指标”。阅读和收藏是两个柱系列，共用左侧`yAxisId="count"`；收藏率是折线，对应右侧`yAxisId="percentage"`，范围0–100、单位%。周一初始收藏22次、收藏率16%，比率按`Math.round(100 * saved / reads)`计算。
 
-Recharts 用 React 组件和 SVG 声明图表，尺度计算借 D3 的模块。你写 `<LineChart>`、`<XAxis>`、`<Tooltip>`、`<Line>`，生命周期跟着 React，而不是 ECharts 那种 `init` / `dispose`。
+```tsx
+<ComposedChart data={rows} accessibilityLayer={false}>
+  <XAxis dataKey="day" />
+  <YAxis yAxisId="count" allowDecimals={false} />
+  <YAxis yAxisId="percentage" orientation="right" domain={[0, 100]} unit="%" />
+  <Tooltip />
+  <Bar dataKey="reads" yAxisId="count" name="阅读量" />
+  <Bar dataKey="saved" yAxisId="count" name="收藏量" />
+  <Line dataKey="rate" yAxisId="percentage" name="收藏率" unit="%" />
+</ComposedChart>
+```
 
-| 要交付的工作 | 建议 | 原因 |
-| --- | --- | --- |
-| 运营页上几张可定制的趋势图 | 优先在目标数据量上验证 Recharts | 组合方式和主题跟 React 一致 |
-| 大量图表类型、坐标系不统一 | 同时做一版 ECharts（A01） | Recharts 不保证复杂类型开箱即用 |
-| 上万到数十万点的时序 | 先测 uPlot（A04） | SVG 节点和交互成本要用真实数据看 |
-| 任意几何 | D3（A05） | 自由度更高，坐标和图例也归你 |
-| 一个数字旁边的迷你趋势 | 原生 SVG | 不必引入整套图表 |
-| 明确要 Canvas | ECharts 或 Chart.js | Recharts 的核心是声明式 SVG |
+`dataKey`只取值，不知道业务单位。次数和百分比不能因为都用number就共用刻度。Tooltip里的收藏率也带%，不只在轴上注明单位。图例用于解释系列，当前没有接图例点击隐藏；不要把它当筛选按钮。
 
-它不是地图、节点编辑器或 BI 引擎。外部底图和图标的许可与图表库无关。
+### 3. 改范围，区分数据与显示
 
-v3 迁移指南写的最低线是 React 16.8+、TypeScript 5+、现代语法目标。本仓库用 Node 22 和 React 19.3。移植到 Next.js 时图表放在客户端边界，SSR 首屏量不到容器尺寸，要单独验收 hydration。
+打开“动态数据范围与边界”。把“窗口天数”改为14，图和表变为14天；第二周用“周一·2”等唯一标签，不与第一周复用身份。输入1收敛为3天，20收敛为14天；清空或暂时输入非法内容时保留上一组合法数据，失焦把输入框写回当前合法天数。
 
-## 2. 数据流
+取消“显示收藏率”：折线、右轴和对应图例项消失，阅读/收藏柱及原始表格的收藏率列保留。这个开关改变视觉系列，不删除原数据。再次勾选恢复。刷新数据保留当前范围和开关；最多1000轮，达到上限后按钮禁用。
+
+宿主“重置此示例”或停止后重新运行，回到7天、轮次0、收藏率开启。离开Demo页签卸载图表；没有网络、轮询或持久化，重进不会保留上次范围。
+
+## 数据、尺寸和生命周期
 
 ```text
-筛选条件 / API 响应
-        │
-        ▼
-边界校验（空值保留 null，不把未知写成 0）
-        │
-        ├─ KPI 与 <table>
-        ├─ 移动平均 → Line
-        └─ 去掉某一度量缺失行的子集 → Area
-                    │
-         同一 syncId + syncMethod="value"
+原生控件 → count / revision / showRate
+                 ↓
+          sampleRows → rows
+                 ├→ 合计与语义table
+                 └→ Recharts data/dataKey → SVG
+父容器尺寸 → ResponsiveContainer → 图表布局
 ```
 
-业务记录的权威不在图表 props 里。不要让 Query 缓存、Zustand 和 `data` 各算各的。`dataKey="reads"` 只是从行里取 y；`XAxis dataKey="day"` 是类目身份。库不会知道这是累计还是当日，也不会替你去重。
+`chart-policy.ts`只负责本地fixture和边界：窗口3–14，revision有限整数且上限1000，类目唯一，收藏量不超过阅读量。生产API需要独立校验空值、重复日期、时区和单位；本例没有请求取消、错误重试或缺失值场景，不把未知数据补成0。
 
-```tsx
-<ResponsiveContainer width="100%" height={240}>
-  <BarChart data={rows} accessibilityLayer>
-    <XAxis dataKey="day" />
-    <YAxis allowDecimals={false} />
-    <Tooltip />
-    <Bar dataKey="reads" name="阅读量" fill="#236b53" />
-  </BarChart>
-</ResponsiveContainer>
-```
+复制`examples/example.tsx`、`chart-policy.ts`、`styles.css`；`demo.tsx`是Lab适配出口，可按业务入口替换。依赖按宿主React版本对齐`react-is`，本仓库两者均19.3.0。官方README要求与已安装React版本匹配，不只看本例能否编译。
 
-重绘靠 props。不需要 `setOption`。`ResponsiveContainer` 观察父级尺寸；父级没有确定高度，或 flex 子项没写 `min-width: 0`，图会是 0。隐藏的 Tab 不要继续挂着图表。v3 也有图表自己的 `responsive`。本 Demo 只用 `ResponsiveContainer`，一个项目不要两套尺寸策略叠在一起还不写明谁说了算。
+父容器有320px高度、100%宽度和`min-width:0`；`ResponsiveContainer`使用百分比宽高与`debounce={60}`。3.10.1内部使用ResizeObserver并在卸载disconnect，debounce参数实际走尾沿throttle；应用不另造observer或操作内部SVG。容器隐藏/宽度为0会影响测量，必须在真实浏览器检查宽窄变化，不从类型通过推定布局通过。
 
-Lab 的双轴是另一件容易看错的事：阅读次数和收藏率不能共用一根轴。次数轴禁止小数；百分比轴域是 0–100。
+Bar/Line显式保留`isAnimationActive="auto"`：3.10.1在SSR或系统`prefers-reduced-motion: reduce`时关闭动画，正常浏览器按SDK默认时长播放。SDK负责媒体查询监听和动画资源清理；本例没有强制true绕过门禁。Tooltip也保留该版本默认auto。
 
-## 3. Lab 三层在演示什么
+## 可访问数据表与焦点
 
-**basic**：七天阅读柱，表和柱用同一 `sampleRows`。改 revision 只是换入新数组。
+图形是视觉视图，容器`aria-hidden="true"`；语义表格提供标题、列头、行头和所有数值，控件使用原生button/input。3.10.1默认开启图表的`accessibilityLayer`并给SVG `tabIndex=0`，因此这里明确`accessibilityLayer={false}`，避免辅助技术隐藏的SVG仍被Tab聚焦。
 
-**business**：柱（阅读、收藏）加线（收藏率）。图例打开。绝对量在左，比率在右。
+这是一项明确的产品取舍：图表Tooltip保留指针查看，键盘和辅助技术从表格读取，不声称实现SDK图表键盘导航或全面WCAG验收。表格内容可由辅助技术逐行读取；表格本身无需额外tabIndex，也不把每个单元格变成Tab停靠点。
 
-**advanced**：天数输入、可关比率、刷新到 1000 次停止。多次进入离开页面，确认 SVG 随卸载走，而不是留在文档里。`chart-policy` 的单测只证明窗口和上限，不证明 ResizeObserver。
+| 常见问题 | 本例做法 |
+| --- | --- |
+| 容器auto高度但图高100% | 父级明确高度，flex/grid子项可收缩 |
+| 图表与表分别随机造数据 | 同一rows；render里不随机 |
+| 比率和次数共用一根轴 | 不同yAxisId，百分比域与单位明确 |
+| 隐藏图形但留下SDK焦点 | aria-hidden与accessibilityLayer=false配套 |
+| 数据更新就改图表key | 保持组件身份，用data props更新 |
 
-## 4. 生产里更进一步的三层（当前 Demo 未挂载）
+## 官方来源与当前证据
 
-### 两张图按日期同步，而不是按下标
+固定官方`recharts/recharts`提交`ffb918798051ef040bb7f9922d3850c9c189f39f`（v3.10.1）根README原文在`official/readme.md`，4046字节，SHA-256 `b7261f5d2719719a297a001d673f01d49363542660b408a6b8de627143adb04e`。完整tree的8个README候选无中文版本；官网有[官方中文入口](https://recharts.github.io/zh-CN/)，但不能把网页当中文README。语言、日期、路径与固定版本在`official/source-audit.json`及library.json。
 
-当上面的阅读序列和下面「去掉收藏为 null 的日子」长度不同时，默认 `syncMethod="index"` 会把第 i 个点对到另一张图的第 i 个点，日期可能不是同一天。
+中文官网本次GET200，完整响应头在`official/homepage-response.json`；XFO/CSP均null，未从Lab origin做iframe实测，状态为unknown，保留直达。当前在线文档可能随release变化，关键行为以已装3.10.1源码/类型为准。
 
-```tsx
-<LineChart data={chartRows} syncId="report" syncMethod="value">
-  <XAxis dataKey="day" />
-  <Tooltip />
-  <Line dataKey="reads" connectNulls={false} />
-  <Line dataKey="rollingReads" connectNulls={false} />
-</LineChart>
-
-<AreaChart data={nonMissingSaves} syncId="report" syncMethod="value">
-  <XAxis dataKey="day" />
-  <Tooltip />
-  <Area dataKey="saves" />
-</AreaChart>
-```
-
-`value` 按类目值对齐 tooltip。这不等于 `Brush` 的区间过滤也正确。Brush 仍可能按索引共享视窗。不同长度、有缺口时，拖完 Brush 要在浏览器里对两张图的起止日期，对不上就在业务层自己过滤，不要写「已经同步」。
-
-移动平均遇到缺失返回 null。`connectNulls={false}` 把缺口留在线上。比率只使用阅读和收藏都存在的日子，否则分母被不完整的天拉低。
-
-### 实时追加并且不泄漏
-
-```tsx
-useEffect(() => {
-  if (!playing) return
-  const id = window.setInterval(() => {
-    setRows((prev) => appendRealtime(prev, makeNext(prev), 24))
-  }, 1500)
-  return () => window.clearInterval(id)
-}, [playing])
-```
-
-不可变追加，稳定的日期身份，上限防止 SVG 无限变长。`24` 和 `1500` 是教学数字，不是性能阈值。StrictMode 会执行清理再执行一次，interval 不能累积。`prefers-reduced-motion` 时关掉 `isAnimationActive`。Lab 的 A02 示例没有这条流；A01 的流是 ECharts 的，不要混用。
-
-### 请求竞态
-
-频道从 A 切到 B 时，A 的慢响应不能 `setRows`。
-
-```tsx
-useEffect(() => {
-  const controller = new AbortController()
-  loadSegment(segment, controller.signal)
-    .then((rows) => {
-      if (!controller.signal.aborted) setRows(rows)
-    })
-    .catch((error) => {
-      if (!controller.signal.aborted) setError(String(error))
-    })
-  return () => controller.abort()
-}, [segment])
-```
-
-取消不是失败。重试不要在 effect 里无条件循环。Lab 示例的数据是本地函数，没有这条路径。
-
-## 5. 反例
-
-### 反例 1：高度是 auto，子级 100%
-
-```tsx
-<div style={{ height: 'auto' }}>
-  <ResponsiveContainer width="100%" height="100%">
-    <LineChart data={rows}><Line dataKey="reads" /></LineChart>
-  </ResponsiveContainer>
-</div>
-```
-
-父级没有非零高度。正确写法是明确像素高度，网格子项 `minWidth: 0`。用浏览器量 SVG 的 bounding box，折叠侧栏后再量一次。
-
-### 反例 2：长度不同还按 index 同步
-
-```tsx
-<LineChart data={reads} syncId="report">{/* 默认 index */}</LineChart>
-<AreaChart data={saves.filter((row) => row.saves != null)} syncId="report" />
-```
-
-改成两边都 `syncMethod="value"`，并用同一个 `day` 身份。悬停缺口两侧，tooltip 上的日期必须相同。Brush 另测。
-
-### 反例 3：缺失写成 0
-
-```tsx
-const values = apiRows.map((row) => ({ ...row, reads: row.reads ?? 0 }))
-```
-
-未知不是低谷。把 `null` 传进去，`connectNulls={false}`，表格写「缺失」。Lab 的 `sampleRows` 没有缺失，所以它展示不了这个区别。
-
-### 反例 4：无取消的切换
-
-```tsx
-useEffect(() => {
-  void fetch(`/api/stats?segment=${segment}`).then((r) => r.json()).then(setRows)
-}, [segment])
-```
-
-慢的 A 会盖住 B。用 AbortController，或 Query 的 queryKey 把频道算进去。
-
-### 反例 5：每次更新换 key
-
-```tsx
-<LineChart key={Date.now()} data={rows} />
-```
-
-tooltip、Brush 和焦点都会被拆掉。保持组件位置，用 `data` 驱动更新。
-
-### 反例 6：只靠颜色
-
-图外要有标题、表和缺失说明。Recharts 3 的 `accessibilityLayer` 改善键盘，但不是 WCAG 合格证明。`prefers-reduced-motion` 时关动画。不要把不可信 HTML 塞进自定义 tooltip。
-
-### 反例 7：render 里 Math.random
-
-每次渲染柱高都变。用稳定输入。Lab 用 `revision` 和纯函数就是为了这个。
-
-### 反例 8：百万事件直接进 SVG
-
-先聚合。节点数、标签和 tooltip 要在目标数据上量，不要从 14 天演示推断。
-
-## 6. 组合
-
-**Query + Zod**：HTTP 进缓存，schema 在边界解析，领域函数出 KPI，Recharts 和表格吃同一份派生数据。缓存键包含频道、时间范围、语言和租户。tooltip 里格式化过的字符串不是权威数字。
-
-**TanStack Table**：排序和导出用同一批记录。不允许表导出 100 行、图上却是另一批还不说明。
-
-**react-grid-layout**：只有仪表盘真的要拖。拖动中可关动画，松手再重算。不需要 init/dispose。
-
-## 7. 生产清单
-
-| 场景 | 风险 | 处理 |
-| --- | --- | --- |
-| 加载 / 空 / 错误 | 旧图被当成新条件的结果 | 三态写明；空不是 0 |
-| null 与 0 | 比率被缺失拉低 | 契约分开；线断开；表上注释 |
-| 类目很多 | SVG 和轴标签变慢 | 先聚合；用真实数据做 Profiler |
-| 容器动态 | 0px 或藏在 Tab 里 | 明确高度、`min-width: 0` |
-| 竞态 | 旧筛选覆盖新图 | AbortController 或 queryKey |
-| 减少动态 | 动画不停 | `isAnimationActive` 跟媒体查询 |
-| 读屏 | 点读不出来 | 语义表格和摘要 |
-| 导出 | 截图丢掉 tooltip | 从源数据导出 |
-| SSR | 首屏量不到尺寸 | 客户端边界和占位 |
-| 时区 | UTC 日期被本地偏移 | 身份用稳定的日历日，显示层再本地化 |
-| IME | 图表不处理输入法 | 筛选框自己测组合输入 |
-
-性能假设（100 / 1,000 / 10,000 点、关动画、聚合）在本仓库没有浏览器测量，不要写成已经得到的数字。
-
-## 8. v2 到 v3
-
-3.0 换过内部状态，拿掉了 `recharts-scale`、`react-smooth` 等依赖。不要把 v2 文章里的私有状态 API 搬过来。升级时核对 `react-is` 主版本，回归 tooltip、Brush、动画、焦点和 SSR。`Cell` 的去留以 3.10.1 的类型和文档为准，不要用一条未合并的讨论代替。
-
-官方迁移说明：https://github.com/recharts/recharts/wiki/3.0-migration-guide
-
-## 9. 练习
-
-1. 在现有数据上增加「只看阅读 / 只看收藏」，不要做第二份缓存。图表和表一起变；若引入缺失日，不能画成 0。
-2. 用 Query 换掉本地 `sampleRows`。A 切到 B 时不出现过期行；500 和超时可恢复；取消不当成失败。不要用生产密钥。
-3. 两张图保持 `syncMethod="value"`，造不同的缺失日，拖 Brush，记下可见起止日期是否一致。不一致就写进限制，不要声称天然正确。
-
-## 10. 证据
-
-`tests/chart-policy.test.mts` 只覆盖窗口、标签和刷新上限。它不 import 图表渲染。sdk / build / browser 在有收据之前是 NOT_RUN。研究包里「领域模块 9 项单测通过、安装超时」是 2026-10-23 那份稿子的环境记录，不是本仓库的验收。
-
-## 11. 官方资料
-
-- https://recharts.github.io/en-US/
-- https://github.com/recharts/recharts
-- https://www.npmjs.com/package/recharts
-- https://recharts.github.io/en-US/api/LineChart/
-- https://recharts.github.io/en-US/api/ResponsiveContainer/
-- https://recharts.github.io/en-US/api/Tooltip/
-- https://recharts.github.io/en-US/api/Brush/
-- https://github.com/recharts/recharts/blob/main/storybook/stories/API/Accessibility.mdx
+Node真实SSR探查在3.10.1只输出图表wrapper，未执行浏览器effects，未得到SVG；它不是图表绘制PASS。既有4项纯策略检查也不能证明SDK布局。正式verification保持NOT_RUN；真实柱高变化、Tooltip、双轴、响应式、动画门禁和卸载由主控执行`validation/browser-proposal.txt`中的真实Playwright提案。六项结论与实际命令见`local-validation.md`。没有新增SDK mock、伪SVG或截图替代结果。

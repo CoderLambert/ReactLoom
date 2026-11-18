@@ -4,15 +4,9 @@
   "slug": "chartjs",
   "name": "Chart.js",
   "group": "A",
-  "summary": "模块化 Canvas 图表与 React 生命周期边界",
+  "summary": "模块化Canvas图表：选择同步、复用实例更新，以及类型/尺寸变化时的React所有权",
   "contentState": "recreated",
-  "tags": [
-    "Canvas",
-    "ResizeObserver",
-    "destroy",
-    "tree-shaking",
-    "React"
-  ],
+  "tags": ["Canvas", "ResizeObserver", "destroy", "tree-shaking", "React"],
   "packages": [
     {
       "name": "chart.js",
@@ -56,54 +50,71 @@
   "demos": [
     {
       "demoId": "basic",
-      "title": "按需注册柱状图",
-      "description": "仅注册 bar 所需控制器与图形组件，真实 Canvas 绘制",
+      "title": "注册组件、绘制与选择",
+      "description": "真实Canvas点选与等价表格共用选择，观察SDK实际元素和数据。",
       "level": "basic",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
         "examples/chart-stream-policy.ts",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/chart-model.ts",
+        "examples/workshop.css"
       ],
-      "capabilities": [
-        "canvas",
-        "resize-observer"
-      ]
+      "capabilities": ["canvas", "resize-observer"]
     },
     {
       "demoId": "business",
-      "title": "NewsHub 订阅指标更新",
-      "description": "可刷新本地统计数据，复用 Chart 实例 update 而不是重复 new",
+      "title": "复用实例更新统计",
+      "description": "本地revision更新同一Chart，比较实例ID、实际dataset与合计。",
       "level": "business",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
         "examples/chart-stream-policy.ts",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/chart-model.ts",
+        "examples/workshop.css"
       ],
-      "capabilities": [
-        "canvas",
-        "resize-observer"
-      ]
+      "capabilities": ["canvas", "resize-observer"]
     },
     {
       "demoId": "advanced",
-      "title": "图形切换、销毁与无效数据边界",
-      "description": "Bar/Line 切换时销毁旧实例，防 NaN 与固定 Canvas 尺寸",
+      "title": "类型、尺寸与实例所有权",
+      "description": "柱线切换先销毁再创建，容器变宽/窄真实resize；有界采样遵守后台和减少动态效果。",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
         "examples/chart-stream-policy.ts",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/chart-model.ts",
+        "examples/workshop.css"
       ],
-      "capabilities": [
-        "canvas",
-        "resize-observer"
-      ]
+      "capabilities": ["canvas", "resize-observer"]
     }
-  ]
+  ],
+  "official": {
+    "readme": {
+      "repository": "chartjs/Chart.js",
+      "commit": "76d8cf895a7485dc838c90ef37e2bc9d9e388fcb",
+      "path": "README.md",
+      "sourceUrl": "https://github.com/chartjs/Chart.js/blob/76d8cf895a7485dc838c90ef37e2bc9d9e388fcb/README.md",
+      "snapshotPath": "official/readme.md",
+      "language": "en",
+      "version": "4.6.1",
+      "sha256": "30418232ad2cc5a51fa0938e12dc97e31cfd1fb3b0bc352132f281c0c10da348",
+      "syncedAt": "2026-11-10T10:49:57.727675+00:00"
+    },
+    "homepage": {
+      "url": "https://www.chartjs.org/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-10T10:49:42.664628+00:00",
+      "reason": "实际GET200，完整最终URL和响应头见official/source-evidence.json；没有XFO/CSP，未从Lab origin浏览器确认嵌入，保持unknown及直达。只取官网完整头，没有声称正文摘要。"
+    }
+  }
 }

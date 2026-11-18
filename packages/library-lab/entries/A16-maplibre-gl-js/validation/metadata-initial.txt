@@ -1,0 +1,13 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node entries/A16-maplibre-gl-js/validation/check-entry.mjs
+exit: 1
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node entries/A16-maplibre-gl-js/validation/check-entry.mjs
+file:///home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/A16-maplibre-gl-js/validation/check-entry.mjs:24
+const bytes = await readFile(root + entry.official.readme.snapshotPath)
+                                                   ^
+
+TypeError: Cannot read properties of undefined (reading 'readme')
+    at file:///home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/A16-maplibre-gl-js/validation/check-entry.mjs:24:52
+
+Node.js v26.13.0

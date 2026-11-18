@@ -1,0 +1,5 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+command=pnpm exec biome check packages/library-lab/e2e/quality-remediation-jsonforms.spec.ts packages/library-lab/e2e/quality-document-security.spec.ts packages/library-lab/e2e/quality-remediation-cmdk.spec.ts packages/library-lab/e2e/quality-remediation-grid-layout.spec.ts packages/library-lab/e2e/quality-remediation-motion-migration.spec.ts packages/library-lab/e2e/quality-remediation-beautiful-dnd-migration.spec.ts packages/library-lab/e2e/quality-remediation-zod.spec.ts packages/library-lab/e2e/quality-remediation-valibot.spec.ts packages/library-lab/e2e/quality-remediation-primitives-sources.spec.ts packages/library-lab/src/components/document.tsx packages/library-lab/src/components/official-readme.tsx packages/library-lab/src/lib/readme-html-fallback.mjs packages/library-lab/src/lib/readme-html-fallback.d.mts packages/library-lab/tests/readme-html-fallback.test.mjs packages/library-lab/package.json
+Checked 15 files in 9ms. No fixes applied.
+
+exitCode=0

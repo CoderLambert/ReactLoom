@@ -1,167 +1,75 @@
-# B07 Material UI：主题、表格与对话框
+# Material UI：主题负责样式，业务状态负责数据
 
-Material UI（`@mui/material`）是带 Material 语义的样式化组件库：按钮、输入、表格、对话框、主题和设计 token。它不负责服务器缓存、鉴权、复杂网格授权或路由。它也不是无样式原语。Library Lab 固定 `@mui/material@9.5.0`、`@emotion/react@11.14.0`、`@emotion/styled@11.14.1`，宿主 React 19.3.0。Core 许可证 MIT。`@mui/icons-material` 本示例不安装。MUI X 的 Community 组件另包；Pro / Premium（列固定、Excel 导出、日期范围等）是商业许可。看到 `DataGridPro` 示例不等于可以投产。本条目没有许可证密钥，也不调用付费 API。
+一个RSS设置面板需要统一输入外观、筛选订阅、编辑草稿和回填错误。Material UI提供带样式的表单、表格、Dialog、Snackbar和主题；业务数组、校验规则、冲突与撤销由应用决定。它适合接受Material交互的管理页面；需要完全自定义外观和DOM时可比较无样式原语，已有另一套主组件体系时先评估引入成本。
 
-v9 稳定线不要换成 `v10.0.0-alpha`。官方安装页的 React peer 覆盖 17/18/19，但 v9 的浏览器目标已经提高（当时文档列出 Chrome 117、Edge 121、Firefox 121、Safari 17 一档）。React 版本匹配不等于旧浏览器仍被支持。SSR 还要处理 Emotion 注入顺序，本示例没有做。
+本例固定 `@mui/material@9.5.0`、`@emotion/react@11.14.0`、`@emotion/styled@11.14.1`，React19.3.0。安装包的React/ReactDOM peer覆盖17/18/19，不等于这些版本或所有浏览器都已验收。Core与Emotion为MIT；没有安装图标包、MUI X或商业网格，Core许可不能替代其它产品的许可。没有新闻接口或远程素材。
 
-## Lab 当前示例
-
-`examples/demo.tsx` 再导出 `examples/example.tsx`。没有 `workshop/src/components/FeedDashboard.tsx`、Mock API 或 `127.0.0.1:4817`。`examples/feed-history.ts` 保存行、上一份快照和 `nextId`。
-
-已挂载：
-
-- 模块级 `createTheme`：主色 `#2b674e`，辅色 `#987a45`，圆角 10。`ThemeProvider` 包住整段。主题对象不在每次渲染里新建。
-- `basic`：`TextField` 用 v9 的 `slotProps.htmlInput.maxLength`。`Chip` 和 `<output>` 表达名称是否为空。
-- `business` / `advanced`：搜索 `TextField` 直接过滤内存行（标题 + `endpoint`）。`Table` 用 `key={row.id}`，地址格允许换行。`Switch` 走 `slotProps.input` 的 `aria-label`，`toggleFeed` 只在值变化时记快照。
-- `advanced`：`Dialog` 受控 `open`，`aria-labelledby` 指向标题。保存前用 `URL` 解析，协议必须是 `https:`，名称 1–60 字。冲突或重复地址写入 `Alert role="alert"`，不关闭对话框。成功才清空草稿并 `Snackbar`。撤销按钮在没有 `before` 时禁用。
-- `addFeed` 拒绝空标题、空地址和重复 endpoint，新 id 为 `local-` 加递增序号。
-
-未挂载：暗色切换、`CssBaseline`、`TablePagination` 的服务端 `total`、`TableSortLabel`、`Autocomplete` 的 `inputValue` 与 IME、`fullScreen` 媒体查询、AbortController、409 的 revision。Dialog 在所有层都挂在树上，但只有 advanced 会把它打开。`Snackbar` 的 `autoHideDuration` 只关通知，不撤销业务。
-
-## 什么时候使用
-
-适合接受 Material 交互、需要统一 token 的管理界面和中等密度配置台。不适合：DOM 和样式必须完全自有（B10/B11/B12）、已经有另一套 ThemeProvider 的产品（不要两套皮肤同时加载）、上万行同步网格（TanStack Table 或 AG Grid，许可分开）、只有两个原生控件的页面。明确要支持 Safari 16 或更老的环境时，v9 的浏览器目标对不上。
-
-## 模型
+## 先分清四份状态
 
 ```text
-ThemeProvider(createTheme)
-  ├── basic：workspace 字符串
-  └── 列表：feed-history 为唯一列表权威
-        ├── Table 只显示过滤结果
-        ├── Dialog 草稿（title/url/error）与列表分离
-        └── Snackbar 只投影最近一次说明
+稳定主题 → ThemeProvider → MUI组件/Emotion生成样式
+权威history.rows → 同步过滤 → Table / 受控Switch
+Dialog草稿 → 本地字段校验/一次模拟409 → 成功后addFeed
+通知 → Snackbar计时/关闭     撤销 → history.before
 ```
 
-`palette` / `shape` / `components` 是视觉权威。局部差异用 `sx`。不要在 200 行 JSX 里每次 `createTheme`。列表不是数据库。客户端 URL 检查不能代替服务端校验，更不能当 SSRF 防护。
+通知关闭不会恢复数据，Dialog取消也不改列表。表格只显示数据，不承担请求、缓存或授权。页面没有DataGrid、服务端分页、后台同步或真实HTTP409，不能把这些本地fixture写成网络验收。
 
-v9 移除了 `inputProps`、`InputProps` 这类旧 TextField 属性。新代码用 `slotProps.htmlInput`、`slotProps.input`。不要粘贴 v5 教程。
+## 目标一：看见主题怎样到达组件
 
-## 三层渐进
-
-### Demo ① 主题与输入（已挂载）
-
-改工作区名称，Chip 在空与非空之间变化。没有 HTTP。焦点环应仍可见；Lab 没有全局去掉 outline。
-
-### Demo ② 订阅表（已挂载的过滤；服务端表未挂载）
-
-搜索是受控输入，过滤大小写不敏感。开关改 `enabled` 并记一步撤销。status 报匹配数和总行数，数据只在组件状态里。
-
-生产教学：分页用接口的 `total`，不要用当前页 `rows.length`。排序点击后 page 回到 0。effect 里 `AbortController`，StrictMode cleanup 把 `active` 设为 false，旧搜索不能覆盖新结果。Lab 的过滤是同步的，没有这条竞态。
-
-### Demo ③ 对话框（已挂载的本地校验）
-
-保存：非法 URL、非 https、空名称或超长，错误留在对话框里。勾选「下一次保存注入 409」或地址已存在，同样留在框内，并清掉注入标记，避免每次都失败。成功关闭对话框并 Snackbar。取消清错误。
-
-未挂载的 Autocomplete：`value` 与 `inputValue` 分开，`isOptionEqualToValue` 按 id。`freeSolo` 时选项类型会变成 `string | Option`。composition 期间不要提交查询。Dialog 默认 Portal 到 body，关闭后焦点应回到触发按钮——这是组件职责，仍要在浏览器里看，policy 测试看不到。
-
-## 反例
+打开“局部主题与受控输入”。修改“工作区名称”，TextField是受控输入，原字符串写回React；Chip根据trim后的值显示“工作区已命名”或“请输入名称”，下方output同时说明输入与有效名称。`slotProps.htmlInput.maxLength=60`把约束交给真实HTML input；它不是MUI业务校验器。
 
 ```tsx
-// 错：v5 的 inputProps 在 v9 已移除
-<TextField inputProps={{maxLength: 60}} />
-
-// 对：Lab 的 basic 字段
-<TextField slotProps={{htmlInput: {maxLength: 60}}} />
+<ThemeProvider theme={themes.light}>
+  <TextField label="工作区名称" value={workspace}
+    onChange={event => setWorkspace(event.target.value)}
+    slotProps={{ htmlInput: { maxLength: 60 } }} />
+</ThemeProvider>
 ```
 
-```tsx
-// 错：key={index}，撤销或追加后行对错
-{rows.map((row, index) => <TableRow key={index} />)}
+勾“仅本例深色主题”，Card/Paper、文字与输入外观应变，站点其余区域不换主题。展开“查看实际主题”，JSON直接读useTheme返回的mode、primary、paper、text、圆角和spacing；不是预填另一套颜色。主色固定#2b674e，圆角10，spacing(2)为16px。
 
-// 对
-{rows.map(row => <TableRow key={row.id} />)}
+两个主题在theme.ts模块级创建，重渲染不会反复createTheme。此例显式cssVariables:false，通过React context选择浅/深主题，不使用全局颜色存储、color-scheme控制器或CssBaseline。没有覆盖页面body/reset；这是一种便于独立迁移的接入选择，不是所有MUI项目都必须关闭CSS变量。
+
+## 目标二：表格、开关和一步撤销
+
+打开“订阅筛选、开关与一步撤销”。初始三行，工程实践/设计系统启用，资讯观察暂停。搜索标题或地址会同步过滤本地数组；无匹配有明确空态，清空搜索恢复。筛选不删除数据，也不记录撤销。
+
+键盘或鼠标切换“工程实践 订阅状态”，真实Switch的checked和该行文字变化，history.before保存上一份数组；点“撤销”只回退最近一次有效写入。连续改两行后撤销，前一次改动保留；再撤销按钮禁用。关闭成功通知不影响rows或before。
+
+```ts
+setHistory(previous => toggleFeed(previous, id, enabled));
+setHistory(undoFeed);
 ```
 
-```tsx
-// 错：把显示文本当主键，或只在 Snackbar 里报字段错误
-setNotice('地址不对');
+event里的checked先作为布尔值传入，不在延迟state updater里重读可变DOM。行key是稳定id，不是数组下标；无效id或重复同值不覆盖before。新增local-N使用单调序号，撤销后也不回退nextId。它是一步快照，不是无限撤销栈或数据库事务。
 
-// 对：字段级 Alert 留在 Dialog 里，Snackbar 只做成功摘要
-{error && <Alert severity="error" role="alert">{error}</Alert>}
-```
+## 目标三：Dialog草稿、错误与恢复
 
-```tsx
-// 错：客户端过了就当服务端会抓取这个 URL
-fetch(userUrl);
+打开“Dialog草稿、错误与恢复”，点“新增订阅”。真实Dialog默认Portal到body，同时保留React主题context；名称自动聚焦。标题和说明分别用useId关联，Tab应留在弹层、Escape关闭后焦点返回触发按钮。没有关闭MUI的focus trap或restore功能；这些结果仍须真实浏览器验收。
 
-// 对：本示例不发请求。生产服务端重验协议、主机、重定向和内网
-```
+内部是实际form，按钮type=submit，Enter与鼠标走同一保存路径。noValidate让本地校验结果可观察：名称trim后1–60（按JS length），URL必须可解析且是HTTPS，成功时使用URL.href规范化。本例只校验字段，不会抓取用户地址。
 
-```tsx
-// 错：每个按键新建 theme，或再包一个第二套 ThemeProvider
-const theme = createTheme({palette: {primary: {main: color}}});
+空保存会在TextField的error/helperText和Alert显示错误，焦点转到首个错误字段，草稿留在框内。修正后重试；“下一次保存注入409”只让下一次**通过字段校验**的保存失败一次，不清草稿、不改列表。注入被消费后同值重试可成功；真正的本地重复地址仍须换地址。这是自建业务fixture，不是Dialog自动生成的HTTP结果。
 
-// 对：稳定的 createTheme，放在模块或 useMemo
-```
+成功才addFeed、关闭Dialog、清空草稿并显示Snackbar。取消、Escape或背景关闭保留草稿，清错误和未消费的注入标记，不修改history。再次打开可继续编辑。保存后“撤销”回到保存前数组，新id计数仍前进。
 
-```tsx
-// 错：Dialog 没有标题关联
-<Dialog open><DialogContent>...</DialogContent></Dialog>
+Snackbar由MUI的3000ms计时器管理，悬停/聚焦或页面失焦可能暂停/重设剩余时长；不要把它当精确业务时钟。每条新通知有独立key；关闭按通知id校验，迟到的旧close不能抹掉新通知。点击外部不关闭，显式“关闭通知”或SDK timeout只改通知，绝不执行撤销。
 
-// 对：Lab 使用 aria-labelledby="mui-lab-dialog-title"
-```
+## 迁移与所有权
 
-```tsx
-// 错：撤销把 Snackbar 当成状态源，关掉通知就恢复数据
-onClose={() => undo()}
+复制六个sourceFiles：demo.tsx、example.tsx、theme.ts、feed-history.ts、draft-policy.ts、styles.css。demo只重导出，源码无Lab alias；MUI组件用sx与主题，少量CSS仅作用本条目。默认字体栈有Roboto/Helvetica/Arial等回退，本例不下载字体，不保证与官网字体完全相同。
 
-// 对：撤销按钮读 feed-history.before；通知关闭只清 notice
-```
+保留Emotion运行依赖、ThemeProvider位置、slotProps和稳定id。Dialog Portal的物理DOM可在body，React context仍来自Provider；只用宿主CSS后代选择器不能假定会命中Portal。不要把默认焦点管理改成手写timeout聚焦，也不要让MUI和另一套组件库同时拥有同一弹层。
 
-`DataGridPro` 不在依赖里。需要列固定或 Excel 导出时先走许可评审，不要从 Core 的 `Table` 推断已经买了 X。
+应用没有自建timer、监听或网络任务；Dialog/FocusTrap/Portal/过渡与Snackbar timer/窗口监听由SDK拥有并清理。卸载打开的Dialog后应无Portal残留，重新运行回到三行默认值，body滚动限制和焦点行为需要浏览器观察。减少动态通过真实useMediaQuery读取，Dialog transitionDuration为0；没有假称所有第三方过渡都已完成减动验收。
 
-## 组合
+宿主是客户端SPA。SSR迁移需要单独配置Emotion缓存/插入顺序、媒体查询与hydration策略，本文的静态SSR标记测试不等于完整应用SSR已通过。MUI旧教程的inputProps/InputProps不能替换本例9.5.0的slotProps；也不要因Core有Table就假定已经安装或授权MUI X。
 
-**MUI + TanStack Query**：表格显示 Query 数据，mutation 成功后失效对应 key。不要把 rows 再复制进 Zustand。Dialog 草稿可以是本地 state，提交结果以响应为准。
+## 官方原文与验收范围
 
-**MUI + React Hook Form**：只能有一个字段主人。若用 RHF，不要同时再维护一套和 `value` 打架的 MUI 内部状态。Lab 的对话框是直接受控 state，没有 RHF。
+官方v9.5.0解引用到commit [`1c3f8b49`](https://github.com/mui/material-ui/blob/1c3f8b4903f21cfad12c102edb3db4ceba2e8c8c/packages/mui-material/README.md)。检查该提交根目录与目标包，只有英文README候选，主快照是目标包原文2284B。版本/路径/语言/时间/sha与全部HTTP头见official元数据；本页中文教学与原文分开。
 
-**不要**与 Ant Design 或 Mantine 的 Provider 叠在同一棵产品树上「看看哪个好看」。Lab 把它们分成不同条目。
+官网此次HTTP200同时含XFO SAMEORIGIN与enforced CSP frame-ancestors *。按 [CSP与XFO优先级](https://w3c.github.io/webappsec-csp/#frame-ancestors-and-frame-options)，有效frame-ancestors覆盖XFO，不能只看XFO就判blocked；也未从实际Lab origin确认可用，所以保留unknown和直达。没有放宽公共iframe策略。
 
-## 生产清单
-
-- 文本用 React 子节点，错误字符串不要进 `dangerouslySetInnerHTML`。
-- 焦点可见、不单靠颜色。Chip 的 success/warning 旁边还有文字。
-- 触摸目标和 200% 缩放下 Dialog 仍可用。窄屏的 `fullScreen` 本示例没开。
-- `prefers-reduced-motion` 不会自动关掉每一个第三方动画。本示例没有自建循环动画。
-- 自己创建的 debounce、请求和观察器要 cleanup。Lab 没有这些订阅。
-- Emotion 缓存和 SSR 样式顺序在 Next 里单独验证。本宿主是 Library Lab 的客户端页。
-
-## 升级
-
-从 v5/v7 教程升级：替换 `inputProps` / `InputProps`，核对 `Autocomplete` 的 `freeSolo` 类型，不要引入 v10 alpha。X 的包版本和 Core 版本分开锁。主题从 JSS 迁到 Emotion 的旧项目要看注入顺序，而不是只改 import。
-
-## 故障排查
-
-| 现象 | 检查 |
-| --- | --- |
-| 类型报 inputProps 不存在 | 改 `slotProps` |
-| 换行后开关仍是旧行 | key 是否稳定；`toggleFeed` 是否因值相同提前返回 |
-| 保存后列表没增加 | URL 解析失败、非 https、重名，错误应留在 Dialog |
-| 撤销无效 | `before` 为 null 时按钮应禁用；连续两次撤销不是栈 |
-| 通知关了数据也没了 | 把业务写进了 Snackbar onClose |
-| 对话框标题读屏读不到 | 缺 `aria-labelledby` |
-| 样式闪或和 Tailwind 打架 | Emotion 插入点与 reset 的顺序 |
-
-## 验收
-
-basic：空名称是 warning Chip，有名称是 success，output 与输入一致。business：搜索即时过滤；开关记入可撤销历史；重复点同一状态不制造新快照。advanced：坏 URL 不关闭；注入 409 只影响下一次；成功后 Snackbar 出现且列表多一行；撤销回到保存前。
-
-sdk、build、browser 为 NOT_RUN。没有匹配 receipt 就不能写成 MUI PASS。Actions run `41779873259` 是仓库级 install、typecheck、build、52 个 SDK 文件 / 153 项测试、45 个 Playwright，不是 B07 的 PASS。
-
-```bash
-node --experimental-strip-types --test packages/library-lab/entries/B07-mui/tests/feed-history.test.mts
-```
-
-断言开关、追加和撤销的纯函数。不证明 Dialog 焦点或 Emotion 样式。
-
-## 官方资料
-
-- https://mui.com/material-ui/getting-started/
-- https://mui.com/material-ui/migration/upgrade-to-v9/
-- https://mui.com/material-ui/react-text-field/
-- https://mui.com/material-ui/react-dialog/
-- https://mui.com/material-ui/customization/theming/
-- https://mui.com/x/introduction/licensing/
-- https://github.com/mui/material-ui/blob/master/LICENSE
+真实Node SDK2项检查主题计算和真实TextField服务端HTML，纯业务策略6项另记；它们不证明Dialog/Portal、键盘焦点、浏览器Emotion样式或Snackbar真实时间。三目标的完整真实浏览器源码在validation/browser-proposal.txt，主控运行，正式verification仍NOT_RUN。日志和六项结论见local-validation.md。

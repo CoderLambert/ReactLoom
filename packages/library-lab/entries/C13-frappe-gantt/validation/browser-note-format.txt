@@ -1,0 +1,5 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['pnpm', 'exec', 'biome', 'check', '--write', 'entries/C13-frappe-gantt/verification.json']
+startedAt: 2026-11-10T16:46:08.605040+00:00
+exit: 0
+Checked 1 file in 2ms. No fixes applied.

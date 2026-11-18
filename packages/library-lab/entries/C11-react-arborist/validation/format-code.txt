@@ -1,0 +1,67 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["pnpm", "exec", "biome", "check", "--write", "packages/library-lab/entries/C11-react-arborist/examples", "packages/library-lab/entries/C11-react-arborist/tests"], "utc": "2026-11-10T16:55:14.396086+00:00", "exit": 1}
+packages/library-lab/entries/C11-react-arborist/examples/example.tsx:63:3 lint/correctness/useExhaustiveDependencies  FIXABLE  ━━━━━━━━━━
+
+  × This hook specifies more dependencies than necessary: nodes, search, selected, epoch.
+  
+    61 │     guard.current = createCompositionGuard()
+    62 │   }, [level])
+  > 63 │   useLayoutEffect(() => {
+       │   ^^^^^^^^^^^^^^^
+    64 │     const api = tree.current
+    65 │     if (!api) return
+  
+  i This dependency can be removed from the list.
+  
+    76 │       if (api.firstNode) api.focus(api.firstNode.id)
+    77 │     }
+  > 78 │   }, [nodes, search, selected, epoch])
+       │       ^^^^^
+    79 │ 
+    80 │   function restore() {
+  
+  i This dependency can be removed from the list.
+  
+    76 │       if (api.firstNode) api.focus(api.firstNode.id)
+    77 │     }
+  > 78 │   }, [nodes, search, selected, epoch])
+       │              ^^^^^^
+    79 │ 
+    80 │   function restore() {
+  
+  i This dependency can be removed from the list.
+  
+    76 │       if (api.firstNode) api.focus(api.firstNode.id)
+    77 │     }
+  > 78 │   }, [nodes, search, selected, epoch])
+       │                      ^^^^^^^^
+    79 │ 
+    80 │   function restore() {
+  
+  i This dependency can be removed from the list.
+  
+    76 │       if (api.firstNode) api.focus(api.firstNode.id)
+    77 │     }
+  > 78 │   }, [nodes, search, selected, epoch])
+       │                                ^^^^^
+    79 │ 
+    80 │   function restore() {
+  
+  i React relies on hook dependencies to determine when to re-compute Effects.
+    Specifying more dependencies than required can lead to unnecessary re-rendering
+    and degraded performance.
+  
+  i Unsafe fix: Remove the extra dependencies from the list.
+  
+    78 │ ··},·[nodes,·search,·selected,·epoch])
+       │       ------------------------------  
+
+Skipped 2 suggested fixes.
+If you wish to apply the suggested (unsafe) fixes, use the command biome check --write --unsafe
+
+Checked 9 files in 13ms. Fixed 9 files.
+Found 1 error.
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while applying fixes.
+  
+

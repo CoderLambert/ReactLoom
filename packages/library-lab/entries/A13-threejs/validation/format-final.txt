@@ -1,0 +1,11 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv=["pnpm", "exec", "biome", "check", "--write", "entries/A13-threejs/examples", "entries/A13-threejs/tests", "entries/A13-threejs/library.json", "entries/A13-threejs/official/source-evidence.json"]
+exit=0
+/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/A13-threejs/official/source-evidence.json internalError/io  INTERNAL  ━━━━━━━━━━
+
+  × No such file or directory (os error 2)
+  
+  ! This diagnostic was derived from an internal Biome error. Potential bug, please report it if necessary.
+  
+
+Checked 7 files in 10ms. Fixed 1 file.

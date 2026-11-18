@@ -4,15 +4,8 @@
   "slug": "react-arborist",
   "name": "react-arborist",
   "group": "C",
-  "summary": "虚拟化树形 RSS 目录、稳定节点 ID、跨分组拖拽和中文搜索",
-  "tags": [
-    "树组件",
-    "虚拟化",
-    "拖拽",
-    "分组",
-    "键盘",
-    "IME"
-  ],
+  "summary": "受控订阅树：稳定ID、SDK选择与焦点、真实拖放及1807节点虚拟窗口",
+  "tags": ["树组件", "虚拟化", "拖拽", "分组", "键盘", "IME"],
   "contentState": "recreated",
   "packages": [
     {
@@ -22,16 +15,16 @@
   ],
   "references": [
     {
-      "title": "react-arborist 官方文档",
-      "url": "https://github.com/jameskerr/react-arborist"
+      "title": "3.16.0固定官方README",
+      "url": "https://github.com/jameskerr/react-arborist/blob/d74c4ec696ba98c1a4e981075f6d60cdff3e290b/README.md"
     },
     {
-      "title": "v3.16.0 发布说明",
-      "url": "https://github.com/jameskerr/react-arborist/releases/tag/v3.16.0"
+      "title": "3.16.0目标包manifest",
+      "url": "https://github.com/jameskerr/react-arborist/blob/d74c4ec696ba98c1a4e981075f6d60cdff3e290b/modules/react-arborist/package.json"
     },
     {
-      "title": "npm 与许可证",
-      "url": "https://www.npmjs.com/package/react-arborist"
+      "title": "官方交互演示",
+      "url": "https://react-arborist.netlify.app"
     }
   ],
   "related": [
@@ -54,57 +47,86 @@
   "demos": [
     {
       "demoId": "basic",
-      "title": "键盘选中与展开折叠",
-      "description": "真实树节点和 ARIA 交互",
+      "title": "树的键盘导航与实际选择",
+      "description": "默认SDK Row保留ARIA/ref，折叠、焦点、选择与恢复",
       "level": "basic",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/tree-model.ts",
+        "examples/move-tree.ts",
+        "examples/tree-node.tsx",
+        "examples/ime-guard.ts",
+        "examples/styles.css",
         "examples/demo.tsx"
       ],
-      "capabilities": [
-        "drag-and-drop"
-      ]
+      "capabilities": ["drag-and-drop"]
     },
     {
       "demoId": "business",
-      "title": "RSS 分组移动与重命名",
-      "description": "受控 data 与 onMove/pre-removal index 修正",
+      "title": "受控移动、改名与删除",
+      "description": "真实HTML5拖放及独立键盘fallback，输入法守卫与稳定ID",
       "level": "business",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/tree-model.ts",
+        "examples/move-tree.ts",
+        "examples/tree-node.tsx",
+        "examples/ime-guard.ts",
+        "examples/styles.css",
         "examples/demo.tsx"
       ],
-      "capabilities": [
-        "drag-and-drop"
-      ]
+      "capabilities": ["drag-and-drop"]
     },
     {
       "demoId": "advanced",
-      "title": "1800节点虚拟化与 IME 搜索",
-      "description": "大规模节点、保留稳定 id 和自定义 searchMatch",
+      "title": "1807节点模型、搜索与虚拟窗口",
+      "description": "模型和DOM分层，名称搜索/祖先、原生滚动、窄屏与卸载",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/tree-model.ts",
+        "examples/move-tree.ts",
+        "examples/tree-node.tsx",
+        "examples/ime-guard.ts",
+        "examples/styles.css",
         "examples/demo.tsx"
       ],
-      "capabilities": [
-        "drag-and-drop"
-      ]
+      "capabilities": ["drag-and-drop"]
     }
   ],
   "license": {
     "spdx": "MIT",
-    "note": "上游 react-dnd 等间接依赖须由 PLATFORM 安装核验"
+    "note": "实装MIT；SDK自带react-dnd14.0.5/html5-backend14.1.0/react-window1.8.11，当前React19 peer由实装核对，无远程资产。"
   },
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
     "mode": "recreated",
-    "note": "基于官方 3.16.0 API 独立实现，未将旧研究当实测"
+    "note": "保留稳定ID、受控data、adjustMoveIndex摘取/插入算法；修正实际SDK选择清空、当前level恢复与自定义IME编辑器，匹配3.16.0源码独立整理。"
+  },
+  "official": {
+    "readme": {
+      "repository": "jameskerr/react-arborist",
+      "commit": "d74c4ec696ba98c1a4e981075f6d60cdff3e290b",
+      "path": "README.md",
+      "version": "3.16.0",
+      "language": "en",
+      "snapshotPath": "official/readme.md",
+      "sha256": "0c3ba42abd227ddce29578749b9765b5513797d446cb2d3d2b96281a429fa80a",
+      "sourceUrl": "https://github.com/jameskerr/react-arborist/blob/d74c4ec696ba98c1a4e981075f6d60cdff3e290b/README.md",
+      "syncedAt": "2026-11-10T16:53:37.522420+00:00"
+    },
+    "homepage": {
+      "url": "https://react-arborist.netlify.app",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-10T16:53:35.960473+00:00",
+      "reason": "历史GET200的headers字典未捕获XFO/CSP，同名重复项未保留；未从Lab origin确认iframe可用，故unknown，不当allowed。原始字典记录保留，未补造或重抓。"
+    }
   }
 }

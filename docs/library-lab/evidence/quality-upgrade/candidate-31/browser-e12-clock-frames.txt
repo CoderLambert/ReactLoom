@@ -1,0 +1,52 @@
+[WebServer] (node:2176033) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:2176065) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:2176121) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 e2e/quality-resume-assistant-ui.spec.ts:47:1 › E12 actual stop/unmount/level change abort owned pending sleeps under controlled clock @E12 (7.5s)
+
+
+  1) e2e/quality-resume-assistant-ui.spec.ts:47:1 › E12 actual stop/unmount/level change abort owned pending sleeps under controlled clock @E12 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  getByRole('region', { name: 'assistant-ui真实运行时实验', exact: true }).getByTestId('assistant-text').last()
+    Expected: "取消与流式实验"
+    Received: "取消与流式实验：controlled"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveText" getByRole('region', { name: 'assistant-ui真实运行时实验', exact: true }).getByTestId('assistant-text').last() with timeout 5000ms
+      - waiting for getByRole('region', { name: 'assistant-ui真实运行时实验', exact: true }).getByTestId('assistant-text').last()
+        14 × locator resolved to <div data-testid="assistant-text">…</div>
+           - unexpected value "取消与流式实验：controlled"
+
+
+       96 |   expect(after.aborts).toBeGreaterThan(before.aborts)
+       97 |   await page.clock.runFor(1800)
+    >  98 |   await expect(app.getByTestId('assistant-text').last()).toHaveText(stopped ?? '')
+          |                                                          ^
+       99 |   expect((await probe(page)).fired).toBe(after.fired)
+      100 |   await send(page, 'fresh response')
+      101 |   await expect.poll(async () => {
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-resume-assistant-ui.spec.ts:98:58
+
+    Error Context: test-results/quality-resume-assistant-u-7a589--under-controlled-clock-E12/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-resume-assistant-u-7a589--under-controlled-clock-E12/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-resume-assistant-u-7a589--under-controlled-clock-E12/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    e2e/quality-resume-assistant-ui.spec.ts:47:1 › E12 actual stop/unmount/level change abort owned pending sleeps under controlled clock @E12 
+undefined
+/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: playwright test e2e/quality-resume-assistant-ui.spec.ts --grep actual stop --workers=1

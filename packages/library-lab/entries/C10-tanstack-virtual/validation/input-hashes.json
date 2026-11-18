@@ -1,0 +1,18 @@
+{
+  "examples/example.tsx": "998dca39552cfa546f679e72a30d30cef77a3e5ded05b8f67969e952c47dd32b",
+  "examples/virtual-contract.ts": "afdcd5ce7e31388a576b75ca1dd43f661601474c9f2a7bdaa37e59ea9195a3df",
+  "examples/filter-policy.mjs": "4d23b63c1f8dec1a86cf4c70ab3aa4f95ec89a9d2c9112b3667ecbe7d9ae49ae",
+  "examples/filter-policy.d.mts": "b9d7c601382bda078c97bdee62a2051db86d85853664c009790b6b17747f302c",
+  "examples/styles.css": "929b7f0a75c64be4f712978d4f96898f1940c71408434d097a8c3805994aaaf7",
+  "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+  "AGENTS.md": "1b5e9cda1bbe7606ca4d6bd392528e11aa17ab0513d4d691868b20cdc7b0754f",
+  "guide.md": "d0e7cc54f6f39a704ebec3675084714ab0698e3828c636b4d53c8c6f788a6d0f",
+  "agent.md": "7272814824b894e87d735070be71d78339b84225c1387697a9299593e5c8b338",
+  "library.json": "f9125dddd1af894c94b5f429ba053104c3ab7cd2ab98cb736e20ea01ab07f3fe",
+  "verification.json": "aaab31f48c9612f842a63aaafc3647bb3e0ca532e1465d3a79911f3a8f63b9a4",
+  "tests/sdk.test.mjs": "c901f0ba295bb18fc1db6c81a1d1c545979c97f7bb7108be46d1e3140465d168",
+  "tests/filter-policy.test.mjs": "e6f63c1aabdd53653e5bb7199b32fb7fe0f9ba6774afbaf1ef7579124adf7c33",
+  "official/readme.md": "24bd3ff93da253313681dbe66adab7b012caca06f03edc516dfd875a1274ff00",
+  "official/source-evidence.json": "5dac85f7c1d9bc741bbf0ae66baebd33271807d30e4526bcdb6e5f35fad12b5f",
+  "validation/browser-proposal.txt": "0076dddec6621fb847581cffee0b863df952c2988fd02e281a56bd03732ffd2d"
+}

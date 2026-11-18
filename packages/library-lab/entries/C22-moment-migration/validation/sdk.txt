@@ -1,0 +1,49 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=pnpm test:sdk --entry=C22
+startedAt=2026-11-11T06:02:24.894248+00:00
+finishedAt=2026-11-11T06:02:26.344134+00:00
+exitCode=1
+
+
+> @reactloom/library-lab@0.1.0 test:sdk /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+> node scripts/sdk-runner.mjs --entry=C22
+
+Real SDK suites selected: 1 file(s)
+✔ shared real Day.js/date-fns path strictly validates calendar days and leap years (26.949811ms)
+✔ shared real SDK path maps tokens and uses immutable add return values (0.328989ms)
+✔ shared date-fns ISO path rejects missing offsets, overflow dates and 24:00 recipe inputs (0.890887ms)
+✔ real offset parsing preserves the two fall-back instants while Intl changes only display (0.461385ms)
+✔ real TZDate/addDays/addHours distinguishes 23/25/24-hour NY civil days (0.754873ms)
+✖ SDK helpers keep their declared semantics in a process whose OS timezone skips a civil date (527.080178ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 5
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1213.952135
+
+✖ failing tests:
+
+test at entries/C22-moment-migration/tests/sdk.test.mjs:59:1
+✖ SDK helpers keep their declared semantics in a process whose OS timezone skips a civil date (527.080178ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  false !== true
+  
+      at TestContext.<anonymous> (file:///home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C22-moment-migration/tests/sdk.test.mjs:68:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+ ELIFECYCLE  Command failed with exit code 1.

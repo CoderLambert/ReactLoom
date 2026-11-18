@@ -1,0 +1,30 @@
+{
+  "browser": {
+    "command": [
+      "pnpm",
+      "exec",
+      "playwright",
+      "test",
+      "--config=.local-evidence/quality-playwright.config.ts",
+      "e2e/quality-remediation-luxon.spec.ts",
+      "--trace=off"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "startedAt": "2026-11-10T17:26:56.701111+00:00",
+    "finishedAt": "2026-11-10T17:27:01.032386+00:00",
+    "exitCode": 0,
+    "implicitBuild": false,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-18/browser-luxon.txt"
+  },
+  "browserLogSHA": "178e55ae1eef1c909a60cefab0d537d3979b4cae83f32c035e60d53e11fd0cc8",
+  "observedC16Cases": [
+    "  ✓  1 e2e/quality-remediation-luxon.spec.ts:37:1 › @C16 explicit source zone defines noon while display-zone conversion preserves the instant; invalid input recovers (1.7s)",
+    "  ✓  2 e2e/quality-remediation-luxon.spec.ts:72:1 › @C16 real calendar-day windows expose 23/25/24 elapsed hours, fixed-24-hour contrast and half-open bounds (1.8s)",
+    "  ✓  3 e2e/quality-remediation-luxon.spec.ts:105:1 › @C16 real overlap candidates require a matching offset; gaps/malformed input reject, then recover and reset on remount (1.8s)"
+  ],
+  "publicProposalSHA": "7ca19087adcb3de317827d3d71d5c57726a6b475b8d8bd6c1ffc3b1b8126d737",
+  "runtimeSource": "candidate18 unchanged nine source files",
+  "officialDisplay": "NOT_RUN on new metadata/alias build; do not count fourth official case",
+  "iframe": "unknown",
+  "reusedNotRerun": true
+}

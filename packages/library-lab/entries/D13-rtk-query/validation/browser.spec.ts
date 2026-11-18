@@ -1,0 +1,41 @@
+import { expect, test } from '@playwright/test'
+
+test('@D13 shared subscribers reuse the actual query and refetch increments reads', async ({
+  page,
+}) => {
+  await page.goto('/libraries/rtk-query?tab=demo&example=basic')
+  const cache = page.getByTestId('d13-cache')
+  await expect(page.getByTestId('d13-rows')).toContainText('科技日报')
+  await expect(cache).toContainText('"team-a":1')
+  await page.getByLabel('第二个相同参数订阅').check()
+  await expect(page.getByTestId('d13-second')).toContainText('2 行')
+  await expect(cache).toContainText('"team-a":1')
+  await page.getByRole('button', { name: '重新获取本租户' }).click()
+  await expect(cache).toContainText('"team-a":2')
+})
+
+test('@D13 tenant currentData safety and successful invalidation versus 409', async ({ page }) => {
+  await page.goto('/libraries/rtk-query?tab=demo&example=advanced')
+  const cache = page.getByTestId('d13-cache')
+  const rows = page.getByTestId('d13-rows')
+  await expect(rows).toContainText('科技日报')
+  await rows.locator('li').filter({ hasText: '科技日报' }).getByRole('button').click()
+  await expect(rows).toContainText('科技日报 — 暂停')
+  await expect(cache).toContainText('"team-a":2')
+  await page.getByLabel('租户').selectOption('team-b')
+  await expect(rows).not.toContainText('科技日报')
+  await expect(rows).toContainText('只读受保护频道')
+  await rows.locator('li').filter({ hasText: '只读受保护频道' }).getByRole('button').click()
+  await expect(page.getByRole('status')).toContainText('409')
+  await expect(cache).toContainText('"team-b":1')
+  await expect(rows).toContainText('只读受保护频道 — 启用')
+  await page.getByRole('button', { name: '模拟慢传输' }).click()
+  await rows.locator('li').filter({ hasText: '安全研究' }).getByRole('button').click()
+  await page.getByLabel('租户').selectOption('team-a')
+  await expect(rows).toContainText('科技日报')
+  await expect(page.getByRole('status')).not.toContainText('409')
+  await page.getByRole('button', { name: '停止并卸载', exact: true }).click()
+  await expect(rows).toHaveCount(0)
+  await page.getByRole('button', { name: '运行当前示例', exact: true }).click()
+  await expect(rows).toContainText('科技日报 — 启用')
+})

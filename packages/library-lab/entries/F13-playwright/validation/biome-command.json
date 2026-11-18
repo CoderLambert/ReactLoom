@@ -1,0 +1,19 @@
+{
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "argv": [
+    "pnpm",
+    "exec",
+    "biome",
+    "check",
+    "packages/library-lab/entries/F13-playwright/examples/fixtures.ts",
+    "packages/library-lab/entries/F13-playwright/examples/playwright.config.ts",
+    "packages/library-lab/entries/F13-playwright/examples/basic.spec.ts",
+    "packages/library-lab/entries/F13-playwright/examples/business.spec.ts",
+    "packages/library-lab/entries/F13-playwright/examples/advanced.spec.ts",
+    "packages/library-lab/entries/F13-playwright/library.json",
+    "packages/library-lab/entries/F13-playwright/verification.json",
+    "packages/library-lab/entries/F13-playwright/validation/browser.spec.ts",
+    "packages/library-lab/entries/F13-playwright/validation/check-official.mjs"
+  ],
+  "exitCode": 0
+}

@@ -1,0 +1,8 @@
+{
+  "checkedAt": "2026-11-17T16:40:11.857858+00:00",
+  "changed": [
+    "packages/library-lab/e2e/quality-resume-axios.spec.ts"
+  ],
+  "unchanged": false,
+  "explanation": "Only controller e2e probe changed after successful build: TypeScript window timer overload fixes plus stronger frozen-clock assertions. Runtime/source/metadata unchanged; no duplicate product build required."
+}

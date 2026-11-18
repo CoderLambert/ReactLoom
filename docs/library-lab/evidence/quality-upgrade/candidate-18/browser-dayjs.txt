@@ -1,0 +1,16 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=pnpm exec playwright test --config=.local-evidence/quality-playwright.config.ts e2e/quality-remediation-dayjs.spec.ts --trace=off
+
+Running 3 tests using 2 workers
+
+(node:2257616) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2257617) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 e2e/quality-remediation-dayjs.spec.ts:40:1 › @C15 real strict parse, Chinese weekday and immutable add with clean drafts/reset (1.6s)
+  ✓  2 e2e/quality-remediation-dayjs.spec.ts:79:1 › @C15 actual noon windows distinguish NY23/25 hours and Shanghai/UTC24 hours (1.6s)
+  ✓  3 e2e/quality-remediation-dayjs.spec.ts:120:1 › @C15 actual offset roundtrip rejects NY gap, preserves two fold instants and owns level/unmount state (2.1s)
+
+  3 passed (4.1s)
+
+exitCode=0

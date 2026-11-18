@@ -1,0 +1,8 @@
+{
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "recordedAt": "2026-11-10T16:44:25.157784+00:00",
+  "operation": "Final local-link inspection before diff log was created",
+  "exit": 1,
+  "error": "AssertionError: ('local-validation.md', 'validation/diff-check.txt')",
+  "resolution": "Create actual scoped diff log before validating links; no product or SDK change"
+}

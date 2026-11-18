@@ -1,81 +1,288 @@
-import {useEffect,useRef,useState} from 'react';
-import gsap from 'gsap';
-import {progressPercent, shouldPlayTimeline, shouldPublishProgress} from './timeline-policy';
-type Props={level:'basic'|'business'|'advanced'};
-export default function GsapTimelineWorkshop({level}:Props){
-  const scope=useRef<HTMLDivElement>(null);
-  const timeline=useRef<gsap.core.Timeline|null>(null);
-  const displayedProgress=useRef(-1);
-  const [generation,setGeneration]=useState(0);
-  const [progress,setProgress]=useState(0);
-  const [paused,setPaused]=useState(false);
-  const [reduce,setReduce]=useState(()=>typeof window!=='undefined'&&window.matchMedia('(prefers-reduced-motion: reduce)').matches);
-  const [visible,setVisible]=useState(()=>typeof document==='undefined'||!document.hidden);
-  useEffect(()=>{
-    const host=scope.current;if(!host)return;
-    const query=window.matchMedia('(prefers-reduced-motion: reduce)');
-    const sync=()=>setReduce(query.matches);
-    sync();query.addEventListener('change',sync);
-    return()=>query.removeEventListener('change',sync);
-  },[]);
-  useEffect(()=>{
-    const sync=()=>setVisible(!document.hidden);
-    document.addEventListener('visibilitychange',sync);
-    sync();
-    return()=>document.removeEventListener('visibilitychange',sync);
-  },[]);
-  useEffect(()=>{
-    const host=scope.current;if(!host)return;
-    const context=gsap.context(()=>{
-      gsap.set('.gsap-lab-item',{clearProps:'all'});
-      const startProgress=reduce?100:0;
-      displayedProgress.current=startProgress;
-      setProgress(startProgress);
-      if(reduce)return;
-      const tl=gsap.timeline({paused:document.hidden,onUpdate:()=>{
-        const next=progressPercent(tl.progress());
-        if(shouldPublishProgress(displayedProgress.current,next)){
-          displayedProgress.current=next;
-          setProgress(next);
-        }
-      }});
-      tl.fromTo('.gsap-lab-item',
-        {autoAlpha:0,y:level==='basic'?12:32},
-        {autoAlpha:1,y:0,duration:.48,ease:'power2.out',stagger:level==='basic'?0:.12})
-        .fromTo('.gsap-lab-detail',{autoAlpha:0},{autoAlpha:1,duration:.2},'-=.12');
-      timeline.current=tl;setPaused(false);
-    },host);
-    return()=>{timeline.current=null;context.revert();};
-  },[level,generation,reduce]);
-  useEffect(()=>{
-    const tl=timeline.current;if(!tl)return;
-    if(shouldPlayTimeline({reducedMotion:reduce,pageVisible:visible,userPaused:paused}))tl.resume();
-    else tl.pause();
-  },[level,generation,reduce,visible,paused]);
-  const pauseOrResume=()=>{
-    if(!timeline.current)return;
-    setPaused(value=>!value);
-  };
-  return <section ref={scope} aria-label="GSAP timeline 实战">
-    <h2>{level==='basic'?'GSAP 缓动入场':level==='business'?'新闻卡片时间线':'动画生命周期与播放控制'}</h2>
-    <p>每个示例使用独立 gsap.context 绑定自身DOM；卸载时 revert，避免动画修改其他实验。</p>
-    <div className="demo-controls">
-      <button type="button" onClick={()=>setGeneration(x=>x+1)}>重播动画</button>
-      {level==='advanced'&&<>
-        <button type="button" disabled={reduce||!visible} onClick={pauseOrResume}>{paused?'继续':'暂停'}</button>
-        <button type="button" disabled={reduce||!visible} onClick={()=>{const tl=timeline.current;if(!tl)return;tl.reverse();setPaused(false);}}>反向播放</button>
-      </>}
-    </div>
-    {reduce&&<p role="status">系统启用减少动态效果：直接显示内容，不启动动画。</p>}
-    {!visible&&<p role="status">页面处于后台：时间线暂停；返回前台后仅恢复用户未手动暂停的动画。</p>}
-    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(125px,1fr))',gap:12}}>
-      {(level==='basic'?['最新进展','阅读精选']:['每日摘要','需要关注','收藏热点','后续行动']).map((name,index)=>
-        <article className="gsap-lab-item" key={name}
-          style={{border:'1px solid #acc9b7',padding:16,borderRadius:10,background:'#f4f8f1'}}>
-          <small>模块 {index+1}</small><h3>{name}</h3><p>可用键盘正常浏览的内容</p>
-        </article>)}
-    </div>
-    <p className="gsap-lab-detail">GSAP 通过目标元素样式推进，而不是每帧更新 React 状态；这里只在onUpdate更新进度展示。</p>
-    <label>播放进度 <progress max={100} value={reduce?100:progress} style={{width:'100%'}}/></label>
-  </section>;
+import { gsap } from 'gsap'
+import { useEffect, useRef, useState } from 'react'
+import { createCardSequence, createCardTween } from './motion'
+import { progressPercent, shouldPlayTimeline, shouldPublishProgress } from './timeline-policy'
+import './workshop.css'
+
+type Props = { level: 'basic' | 'business' | 'advanced' }
+type Owner = { animation: gsap.core.Tween | gsap.core.Timeline; instance: number }
+type Snapshot = {
+  instance: number
+  kind: string
+  progress: number
+  time: number
+  duration: number
+  totalDuration: number
+  paused: boolean
+  reversed: boolean
+  active: boolean
+  labels: Record<string, number>
+  children: { start: number; duration: number }[]
+  targets: {
+    name: string | undefined
+    x: unknown
+    y: unknown
+    opacity: unknown
+    transform: string
+  }[]
+}
+
+export default function GsapTimelineWorkshop({ level }: Props) {
+  const scope = useRef<HTMLElement>(null)
+  const owner = useRef<Owner | null>(null)
+  const sequence = useRef(0)
+  const displayed = useRef(-1)
+  const [generation, setGeneration] = useState(0)
+  const [progress, setProgress] = useState(0)
+  const [userPaused, setUserPaused] = useState(false)
+  const [ease, setEase] = useState('power2.out')
+  const [reduce, setReduce] = useState(
+    () =>
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+  )
+  const [visible, setVisible] = useState(() => typeof document === 'undefined' || !document.hidden)
+  const [status, setStatus] = useState('准备动画')
+  const [snapshot, setSnapshot] = useState<Snapshot | null>(null)
+  const advanced = level === 'advanced'
+  useEffect(() => {
+    const query = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const sync = () => setReduce(query.matches)
+    query.addEventListener('change', sync)
+    sync()
+    return () => query.removeEventListener('change', sync)
+  }, [])
+  useEffect(() => {
+    const sync = () => setVisible(!document.hidden)
+    document.addEventListener('visibilitychange', sync)
+    sync()
+    return () => document.removeEventListener('visibilitychange', sync)
+  }, [])
+  // biome-ignore lint/correctness/useExhaustiveDependencies: generation explicitly reverts and recreates the owned animation for replay.
+  useEffect(() => {
+    const host = scope.current
+    if (!host) return
+    const nodes = [...host.querySelectorAll<HTMLElement>('.b02-card,.b02-detail')]
+    for (const node of nodes) {
+      node.dataset.b02Reverted = 'false'
+      delete node.dataset.b02RemainingTweens
+    }
+    let disposed = false
+    const id = ++sequence.current
+    displayed.current = reduce ? 100 : 0
+    setProgress(displayed.current)
+    setSnapshot(null)
+    const publish = (value: number) => {
+      if (disposed) return
+      const next = progressPercent(value)
+      if (shouldPublishProgress(displayed.current, next)) {
+        displayed.current = next
+        setProgress(next)
+      }
+    }
+    const context = gsap.context(() => {
+      if (reduce) {
+        setStatus('减少动态：静态显示全部内容，不创建动画')
+        return
+      }
+      const animation = advanced
+        ? createCardSequence('.b02-card', '.b02-detail', publish)
+        : createCardTween('.b02-card', ease, publish)
+      animation.eventCallback('onComplete', () => {
+        if (!disposed) setStatus('正向视觉动画完成')
+      })
+      animation.eventCallback('onReverseComplete', () => {
+        if (!disposed) setStatus('反向视觉动画完成')
+      })
+      owner.current = { animation, instance: id }
+      setStatus(advanced ? '已创建真实 GSAP Timeline' : '已创建真实 GSAP Tween')
+    }, host)
+    return () => {
+      disposed = true
+      if (owner.current?.instance === id) owner.current = null
+      context.revert({ suppressEvents: true })
+      for (const node of nodes) {
+        node.dataset.b02Reverted = 'true'
+        node.dataset.b02RemainingTweens = String(gsap.getTweensOf(node).length)
+      }
+    }
+  }, [advanced, generation, ease, reduce])
+  // biome-ignore lint/correctness/useExhaustiveDependencies: a recreated owner must receive current intent even when the intent itself did not change.
+  useEffect(() => {
+    const animation = owner.current?.animation
+    if (!animation) return
+    if (shouldPlayTimeline({ reducedMotion: reduce, pageVisible: visible, userPaused }))
+      animation.resume()
+    else animation.pause()
+  }, [advanced, generation, ease, reduce, visible, userPaused])
+
+  function read() {
+    const current = owner.current
+    const host = scope.current
+    if (!current || !host) {
+      setSnapshot(null)
+      return
+    }
+    const animation = current.animation
+    const timeline = animation instanceof gsap.core.Timeline ? animation : null
+    setSnapshot({
+      instance: current.instance,
+      kind: timeline ? 'Timeline' : 'Tween',
+      progress: animation.progress(),
+      time: animation.time(),
+      duration: animation.duration(),
+      totalDuration: animation.totalDuration(),
+      paused: animation.paused(),
+      reversed: animation.reversed(),
+      active: animation.isActive(),
+      labels: timeline ? { ...timeline.labels } : {},
+      children: timeline
+        ? timeline
+            .getChildren(false, true, true)
+            .map((child) => ({ start: child.startTime(), duration: child.totalDuration() }))
+        : [],
+      targets: [...host.querySelectorAll<HTMLElement>('.b02-card,.b02-detail')].map((node) => ({
+        name: node.dataset.motionName,
+        x: gsap.getProperty(node, 'x'),
+        y: gsap.getProperty(node, 'y'),
+        opacity: gsap.getProperty(node, 'opacity'),
+        transform: getComputedStyle(node).transform,
+      })),
+    })
+  }
+  function seek(percent: number) {
+    const animation = owner.current?.animation
+    if (!animation || reduce) return
+    animation.pause().progress(percent / 100, true)
+    setUserPaused(true)
+    displayed.current = percent
+    setProgress(percent)
+    setStatus('手动定位并暂停；位置来自真实 GSAP progress')
+  }
+  return (
+    <section
+      ref={scope}
+      className="b02-workshop"
+      aria-label="GSAP timeline 实战"
+      data-testid="b02-workshop"
+    >
+      <h2>{advanced ? '时间编排、方向与局部所有权' : 'Tween 的时间比例与缓动映射'}</h2>
+      <p>
+        本地摘要卡片只演示视觉参数；真实GSAP修改宿主内transform/opacity，没有发布接口、滚动插件或业务流程状态机。
+      </p>
+      <div className="demo-controls">
+        {!advanced && (
+          <label>
+            缓动
+            <select value={ease} onChange={(event) => setEase(event.target.value)}>
+              <option value="none">线性 none</option>
+              <option value="power2.out">power2.out</option>
+            </select>
+          </label>
+        )}
+        <button
+          type="button"
+          disabled={reduce}
+          onClick={() => {
+            setUserPaused(false)
+            setGeneration((value) => value + 1)
+          }}
+        >
+          重播动画
+        </button>
+        <button
+          type="button"
+          disabled={reduce || !visible}
+          onClick={() => setUserPaused((value) => !value)}
+        >
+          {userPaused ? '继续' : '暂停'}
+        </button>
+        {advanced && (
+          <>
+            <button
+              type="button"
+              disabled={reduce || !visible || progress === 0}
+              onClick={() => {
+                owner.current?.animation.reverse()
+                setUserPaused(false)
+              }}
+            >
+              反向播放
+            </button>
+            <button
+              type="button"
+              disabled={reduce}
+              onClick={() => {
+                const animation = owner.current?.animation
+                if (!(animation instanceof gsap.core.Timeline)) return
+                animation.pause().seek('detail', true)
+                const percent = progressPercent(animation.progress())
+                displayed.current = percent
+                setProgress(percent)
+                setUserPaused(true)
+                setStatus('已定位详情标签并暂停')
+              }}
+            >
+              定位详情标签
+            </button>
+          </>
+        )}
+        <label>
+          手动时间进度
+          <input
+            aria-label="手动时间进度"
+            type="range"
+            min="0"
+            max="100"
+            value={progress}
+            disabled={reduce}
+            onChange={(event) => seek(Number(event.target.value))}
+          />
+          {progress}%
+        </label>
+      </div>
+      <p role="status" data-testid="b02-status">
+        {status}
+      </p>
+      <p data-testid="b02-conditions">
+        减少动态：{reduce ? '开启' : '关闭'}；页面：{visible ? '可见' : '后台'}；用户意图：
+        {userPaused ? '暂停' : '播放'}。
+      </p>
+      <div className={`b02-stage ${advanced ? 'b02-grid' : ''}`} data-testid="b02-stage">
+        {(advanced ? ['每日摘要', '需要关注', '收藏热点', '后续行动'] : ['阅读摘要']).map(
+          (name, index) => (
+            <article
+              className={`b02-card ${advanced ? '' : 'b02-single'}`}
+              key={name}
+              data-motion-name={`card-${index}`}
+              data-testid={`b02-card-${index}`}
+            >
+              <small>本地模块 {index + 1}</small>
+              <h3>{name}</h3>
+              <p>同一份内容在暂停和减少动态时仍可阅读。</p>
+            </article>
+          ),
+        )}
+        {advanced && (
+          <p className="b02-detail" data-motion-name="detail" data-testid="b02-detail">
+            详情在0.7秒标签开始，与前四张卡片尾段重叠。
+          </p>
+        )}
+      </div>
+      <label>
+        实际时间进度
+        <progress max={100} value={progress} data-testid="b02-progress" />
+      </label>
+      <details>
+        <summary>查看真实动画与样式</summary>
+        <button type="button" onClick={read}>
+          读取真实动画状态
+        </button>
+        <pre data-testid="b02-sdk-state">{JSON.stringify(snapshot, null, 2)}</pre>
+        <p>
+          快照显式读取真实Tween/Timeline和getProperty/计算样式；进度条按至少5个百分点及端点发布，手动定位即时更新。视觉完成不是业务请求成功。
+        </p>
+      </details>
+    </section>
+  )
 }

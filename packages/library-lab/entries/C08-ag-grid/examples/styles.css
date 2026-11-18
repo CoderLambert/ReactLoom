@@ -1,0 +1,22 @@
+.c08-workshop {
+  min-width: 0;
+  max-width: 100%;
+}
+.c08-workshop .c08-grid {
+  height: 370px;
+  width: 100%;
+  min-width: 0;
+}
+.c08-workshop input {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+.c08-workshop .c08-observation {
+  display: block;
+  overflow-wrap: anywhere;
+  margin: 0.75rem 0;
+}
+.c08-workshop pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}

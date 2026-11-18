@@ -1,0 +1,20 @@
+cwd=packages/library-lab
+argv=["node", "--input-type=module", "-e", "import {chromium} from '@playwright/test';const browser=await chromium.launch();try{const page=await browser.newPage();const requests=[],failures=[],errors=[];page.on('response',r=>{if(r.url().includes('.wasm'))requests.push({url:r.url(),status:r.status(),type:r.headers()['content-type']})});page.on('requestfailed',r=>failures.push({url:r.url(),reason:r.failure()?.errorText}));page.on('pageerror',e=>errors.push(e.message));await page.goto('http://127.0.0.1:4319/libraries/dotlottie?tab=demo&example=basic');const app=page.getByRole('region',{name:'dotLottie React \u64ad\u653e\u5668',exact:true});await app.waitFor();const canvas=app.locator('canvas');await canvas.scrollIntoViewIfNeeded();try{await app.getByText('\u77e2\u91cf\u52a8\u753b\u8d44\u6e90\u5df2\u52a0\u8f7d',{exact:false}).waitFor({timeout:12000});}catch(e){console.log('load-wait',e.message)}console.log(JSON.stringify({text:await app.innerText(),requests,failures,errors,pixels:await canvas.evaluate(c=>{const d=c.getContext('2d')?.getImageData(0,0,c.width,c.height).data;let count=0;if(d)for(let i=3;i<d.length;i+=4)if(d[i])count++;return {width:c.width,height:c.height,nonempty:count}})},null,2));}finally{await browser.close()}"]
+exit=0
+{
+  "text": "本地脉冲动画\n\n真实 DotLottieReact，资源来自仓库 `examples/pulse.json`（不是远程资产）。默认不自动播放；播放状态不决定业务是否成功。\n\n矢量动画资源已加载 · 业务状态由下方文字提供\n播放\n停止并回到首帧\n\n业务：尚未提交； 播放：已暂停；页面：可见；减少动态：关闭。",
+  "requests": [
+    {
+      "url": "https://cdn.jsdelivr.net/npm/@lottiefiles/dotlottie-web@0.81.0/dist/dotlottie-player.wasm",
+      "status": 200,
+      "type": "application/wasm"
+    }
+  ],
+  "failures": [],
+  "errors": [],
+  "pixels": {
+    "width": 185,
+    "height": 155,
+    "nonempty": 2557
+  }
+}

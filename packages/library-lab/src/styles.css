@@ -1004,3 +1004,30 @@ main {
 .evidence-details .hash {
   overflow-wrap: anywhere;
 }
+.official-source-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+.official-source-header h2 {
+  margin: 0 0 0.5rem;
+}
+.official-source-header p {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.official-source-header a {
+  flex-shrink: 0;
+}
+.official-website-frame {
+  display: block;
+  width: 100%;
+  min-height: 660px;
+  border: 1px solid var(--border, #c8d7cd);
+  border-radius: 12px;
+  background: #fff;
+  margin-top: 1rem;
+}

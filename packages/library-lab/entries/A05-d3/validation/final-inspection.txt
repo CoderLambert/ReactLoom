@@ -1,0 +1,8 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom
+command: Python scoped final inspection (sourceFiles/local links/README/log digests/three proposals/no temporary file/git diff --check)
+startedAt: 2026-11-10T11:50:24.268377+00:00
+finishedAt: 2026-11-10T11:50:24.271001+00:00
+exitCode: 0
+
+6 runtime sourceFiles exist; guide/agent/current local-validation relative links exist; fixed README754B/hash unchanged; all prior run log hashes match; 3 @A05 browser goals; no temporary proposal check source; scoped git diff --check exit0.
+SDK2/2 + policy3/3 + entry types and fixed proposal types/Biome logs preserved. No browser execution.

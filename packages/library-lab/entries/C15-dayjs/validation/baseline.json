@@ -1,0 +1,19 @@
+{
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "utc": "2026-11-10T17:02:39.848965+00:00",
+  "head": "1218066e706a90ba03fac8dff8c9b843dd2429c4",
+  "status": "",
+  "fileCount": 10,
+  "files": {
+    "AGENTS.md": "8468d2a86d6f6371dee06ac824d0d1b149a949ffd853115eee6249718aeb5d60",
+    "agent.md": "b0df641b90c2262e1dd7ba7db768d89bb5d94d63b11ef8ea63e247e5cd9842a6",
+    "examples/demo.tsx": "254591932548c36c414610bd0d0c7ce7ef1648162f1996fbbe7381b8c1751690",
+    "examples/example.tsx": "f88c1ad239b77e06b8c9772722be61d24924ebde8158fc198c898b2eea8b2788",
+    "examples/offset-instant.d.mts": "d616bc1badee7b41a336db190bb3ee9ce2aa1422fa47b5ec757ad521e3615431",
+    "examples/offset-instant.mjs": "ffde95dd6c1777a0b16a1eac7881412d1b0dfa7f2983da1e11a12cc6a7220aff",
+    "guide.md": "e36d57033ac52dd0e40300980fe194fdd00ef20c8920b74f5cec89ac000f2c97",
+    "library.json": "30e22c34078eef161a1ddd4b83fc2791ce8ff1a13f2e36bb71a567fe5d844697",
+    "tests/sdk.test.mjs": "f9d19b60910f2051612fa727e32c6487849339e26fc9d7648495191be98a1f83",
+    "verification.json": "d9a35940bb79c2f434f70232b195d11388f298c60f3eb64e8c2b97d573feb975"
+  }
+}

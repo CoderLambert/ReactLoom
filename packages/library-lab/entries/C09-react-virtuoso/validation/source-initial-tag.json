@@ -1,0 +1,84 @@
+{
+  "repository": "petyosi/react-virtuoso",
+  "version": "4.18.19",
+  "requests": [
+    {
+      "url": "https://registry.npmjs.org/react-virtuoso/4.18.19",
+      "finalUrl": "https://registry.npmjs.org/react-virtuoso/4.18.19",
+      "status": 200,
+      "checkedAt": "2026-11-10T15:45:28.259387+00:00",
+      "headers": {
+        "Date": "Tue, 10 Nov 2026 15:45:28 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "3055",
+        "Connection": "close",
+        "CF-Ray": "a5862f3b784e4d3c-LAX",
+        "CF-Cache-Status": "DYNAMIC",
+        "Access-Control-Allow-Origin": "*",
+        "Cache-Control": "max-age=300",
+        "Server": "cloudflare",
+        "Vary": "accept-encoding, accept",
+        "set-cookie": "__cf_bm=DbeaK0bVvCurN_a9F0mTJAXx_Y4onJ9asE2uEpoYTNU-1794325528.881658-1.0.1.1-CoZjZoPT10IBMcxgRBAdPOTSDaQO04RE3x1wE5xLTdxc1LwG4K6z3oBK.lRpWLOmVQjgoSxFMU4ZlNMVSsrKcXxQ5Uj7ywBtsnUx66T.1jdeEe7zrTKgYsGlAvVhQ7VT; HttpOnly; SameSite=None; Partitioned; Secure; Path=/; Domain=npmjs.org; Expires=Tue, 10 Nov 2026 16:15:28 GMT"
+      },
+      "bodyStatus": "READ",
+      "bytes": 3055,
+      "sha256": "0bab3d7b9ced51163ec1d90bb2ddb3215b97cba6f53c0300704dbf375f1b254e"
+    },
+    {
+      "url": "https://api.github.com/repos/petyosi/react-virtuoso/git/ref/tags/react-virtuoso%404.18.19",
+      "finalUrl": "https://api.github.com/repos/petyosi/react-virtuoso/git/ref/tags/react-virtuoso%404.18.19",
+      "status": 200,
+      "checkedAt": "2026-11-10T15:45:29.017414+00:00",
+      "headers": {
+        "Date": "Tue, 10 Nov 2026 15:45:30 GMT",
+        "Content-Type": "application/json; charset=utf-8",
+        "Cache-Control": "public, max-age=60, s-maxage=60",
+        "Vary": "Accept,Accept-Encoding, Accept, X-Requested-With",
+        "ETag": "W/\"32055d4bc2365d48e07fb050d9a8b6925d72b9b7a986f72b487cbdf517f0616c\"",
+        "Last-Modified": "Tue, 10 Nov 2026 11:10:34 GMT",
+        "X-Poll-Interval": "300",
+        "X-GitHub-Media-Type": "github.v3; format=json",
+        "x-github-api-version-selected": "2022-11-28",
+        "Access-Control-Expose-Headers": "ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset, Warning",
+        "Access-Control-Allow-Origin": "*",
+        "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+        "X-Frame-Options": "deny",
+        "X-Content-Type-Options": "nosniff",
+        "X-XSS-Protection": "0",
+        "Referrer-Policy": "origin-when-cross-origin, strict-origin-when-cross-origin",
+        "Content-Security-Policy": "default-src 'none'",
+        "Server": "github.com",
+        "Accept-Ranges": "bytes",
+        "X-RateLimit-Limit": "60",
+        "X-RateLimit-Remaining": "58",
+        "X-RateLimit-Used": "2",
+        "X-RateLimit-Resource": "core",
+        "X-RateLimit-Reset": "1794328266",
+        "Content-Length": "399",
+        "X-GitHub-Request-Id": "CD22:386BE3:4466FC3:620C62B:6AF33C1A",
+        "x-github-edge-region": "sea",
+        "connection": "close"
+      },
+      "bodyStatus": "READ",
+      "bytes": 399,
+      "sha256": "32055d4bc2365d48e07fb050d9a8b6925d72b9b7a986f72b487cbdf517f0616c"
+    }
+  ],
+  "package": {
+    "name": "react-virtuoso",
+    "version": "4.18.19",
+    "gitHead": null,
+    "license": "MIT",
+    "repository": {
+      "url": "git+https://github.com/petyosi/react-virtuoso.git",
+      "type": "git",
+      "directory": "packages/react-virtuoso"
+    },
+    "homepage": "https://virtuoso.dev/",
+    "peerDependencies": {
+      "react": ">=16 || >=17 || >= 18 || >= 19",
+      "react-dom": ">=16 || >=17 || >= 18 || >=19"
+    }
+  },
+  "syncedAt": "2026-11-10T15:45:31.045218+00:00"
+}

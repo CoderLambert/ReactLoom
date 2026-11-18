@@ -1,0 +1,11 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["pnpm", "--dir", "packages/library-lab", "exec", "node", "--test", "entries/C16-luxon/tests/wall-time-policy.test.mjs"], "utc": "2026-11-10T17:08:05.215279+00:00", "exit": 0}
+✔ accepts both DST transition wall labels without pretending they exist (0.523669ms)
+✔ rejects invalid civil input without default-zone parsing (0.291978ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 37.486099

@@ -1,0 +1,32 @@
+{
+  "recordedAt": "2026-11-10T17:55:49.738825+00:00",
+  "scope": "C15 local completion: candidate18 three real goals plus candidate19 one official presentation PASS; formal NOT_RUN",
+  "browserLog": "docs/library-lab/evidence/quality-upgrade/candidate-18/browser-dayjs.txt",
+  "browserLogSha256": "5cbb1d58e405dec4bb5f7250868d3261e6ea4e668b79312f554bfea0fcbab819",
+  "browserResult": "3 C15 PASS, exit0, no implicit build per root execution binding",
+  "publicSpecSha256": "f2fe1cd8e8166a2ae513653f95924ae303da16173343d9e6169f14381eb24d99",
+  "entryProposalSha256": "f2fe1cd8e8166a2ae513653f95924ae303da16173343d9e6169f14381eb24d99",
+  "independentReviewSha256BeforeDelta": "63245487935454c7549e9d3e067b73ef9e0244b38d1581c43eb14cbb38f53057",
+  "sourceFiles": {
+    "examples/date-operations.d.mts": "50bc1ee00aa05d10fad3bdde36e35b5a6ad353491a7249ef606be7fa71436f8e",
+    "examples/date-operations.mjs": "1623c5924d7334ab8f5580f65bbd9d39cc0acb14042f0c70398409556fc42d3d",
+    "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+    "examples/example.tsx": "ec7b5490c149e85619f07927e485ee6a05a18435f026b5d826ffdd7fab1ee833",
+    "examples/offset-instant.d.mts": "c5cce5377df20572dff54e78a0d26ebbacc98df341a280d6285f9cc96e22149d",
+    "examples/offset-instant.mjs": "4dd913f719462cdf29bfd0d7753c4aae2987238525a22d40158f102809095bcf",
+    "examples/styles.css": "5ee5f7d7a3dee6f5a2d68b8776426de5a9e8cb4156238836ecd807c84e3f67a0"
+  },
+  "formal": "NOT_RUN",
+  "remaining": "No remaining mandatory local C15 content/runtime/official check per root; broader previously untested matrices and formal receipts remain NOT_RUN",
+  "result": "4 C15 PASS combined from two real executions",
+  "officialCase": {
+    "candidate": "candidate-19",
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-19/browser.txt",
+    "logSha256": "2ac374c02a400a494e97bd7473c230a4a9edf4834d6ec46cdde310dc231cfc22",
+    "case": "@C15 original fixed README and evidenced homepage unknown",
+    "caseResult": "PASS",
+    "wholeCommandResult": "11PASS1FAIL exit1; unrelated failed case not attributed to C15"
+  },
+  "independentReviewClosedSha256": "dfb0392465bcf7b0d9e60369a6f17cea0b6bf41e744426662acd13e2e29b77bb",
+  "iframe": "unknown; presentation PASS is not embedding permission"
+}

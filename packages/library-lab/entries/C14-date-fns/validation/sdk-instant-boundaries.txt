@@ -1,0 +1,13 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['pnpm', 'exec', 'node', '--test', '--test-name-pattern', 'actual explicit-offset low/high-year', 'entries/C14-date-fns/tests/sdk.test.mjs']
+startedAt: 2026-11-10T17:03:49.278601+00:00
+exit: 0
+✔ actual explicit-offset low/high-year instants remain independent of modern calendar limits (10.69878ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 593.002714

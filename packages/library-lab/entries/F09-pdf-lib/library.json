@@ -5,14 +5,7 @@
   "name": "pdf-lib",
   "group": "F",
   "summary": "浏览器真正创建、合并及标注 PDF，处理本地字节边界并释放对象 URL",
-  "tags": [
-    "PDF",
-    "表单",
-    "文档合并",
-    "本地文件",
-    "浏览器",
-    "Uint8Array"
-  ],
+  "tags": ["PDF", "表单", "文档合并", "本地文件", "浏览器", "Uint8Array"],
   "contentState": "recreated",
   "packages": [
     {
@@ -55,20 +48,15 @@
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
-        "examples/document.ts",
         "examples/example.tsx",
-        "examples/demo.tsx",
-        "examples/operation-gate.mjs",
-        "examples/operation-gate.d.mts",
+        "examples/document.ts",
         "examples/document-policy.mjs",
         "examples/document-policy.d.mts",
-        "examples/document-policy.test.mjs"
+        "examples/operation-gate.mjs",
+        "examples/operation-gate.d.mts",
+        "examples/demo.tsx"
       ],
-      "capabilities": [
-        "local-pdf",
-        "download",
-        "object-url"
-      ],
+      "capabilities": ["local-pdf", "download", "object-url"],
       "description": "入门：理解库的实际 API 和输出。"
     },
     {
@@ -78,20 +66,15 @@
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
-        "examples/document.ts",
         "examples/example.tsx",
-        "examples/demo.tsx",
-        "examples/operation-gate.mjs",
-        "examples/operation-gate.d.mts",
+        "examples/document.ts",
         "examples/document-policy.mjs",
         "examples/document-policy.d.mts",
-        "examples/document-policy.test.mjs"
+        "examples/operation-gate.mjs",
+        "examples/operation-gate.d.mts",
+        "examples/demo.tsx"
       ],
-      "capabilities": [
-        "local-pdf",
-        "download",
-        "object-url"
-      ],
+      "capabilities": ["local-pdf", "download", "object-url"],
       "description": "业务：将真实API组合为可复用的工程流程。"
     },
     {
@@ -101,21 +84,15 @@
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
-        "examples/document.ts",
         "examples/example.tsx",
-        "examples/demo.tsx",
-        "examples/operation-gate.mjs",
-        "examples/operation-gate.d.mts",
-        "examples/operation-gate.test.mjs",
+        "examples/document.ts",
         "examples/document-policy.mjs",
         "examples/document-policy.d.mts",
-        "examples/document-policy.test.mjs"
+        "examples/operation-gate.mjs",
+        "examples/operation-gate.d.mts",
+        "examples/demo.tsx"
       ],
-      "capabilities": [
-        "local-pdf",
-        "download",
-        "object-url"
-      ],
+      "capabilities": ["local-pdf", "download", "object-url"],
       "description": "边界：使用真实API覆盖异常/资源边界，不伪造成功。"
     }
   ],
@@ -126,5 +103,25 @@
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
     "note": "按官方1.17 API重新实现；历史导出与测试记录不转移为本条目PASS。"
+  },
+  "official": {
+    "readme": {
+      "repository": "Hopding/pdf-lib",
+      "commit": "4beebbef7a261ed0be089bb1d63a5b6e28cc488a",
+      "path": "README.md",
+      "sourceUrl": "https://github.com/Hopding/pdf-lib/blob/4beebbef7a261ed0be089bb1d63a5b6e28cc488a/README.md",
+      "snapshotPath": "official/readme.md",
+      "sha256": "79c7bc975fdb63897ce8f7f42305a38d06695f2d68e5a86a75916cc249fd01e4",
+      "language": "en",
+      "version": "1.17.1",
+      "syncedAt": "2026-11-17T18:52:21.765286+00:00"
+    },
+    "homepage": {
+      "url": "https://pdf-lib.js.org/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-17T18:52:21.765286+00:00",
+      "reason": "实际GET响应见official/source-evidence.json，无Lab-origin嵌入确认，unknown直达。"
+    }
   }
 }

@@ -1,0 +1,97 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=pnpm exec playwright test --config=.local-evidence/quality-playwright.config.ts e2e/quality-remediation-d3.spec.ts e2e/quality-remediation-g6.spec.ts e2e/quality-remediation-graphics.spec.ts e2e/quality-remediation-excalidraw.spec.ts e2e/quality-remediation-konva.spec.ts e2e/quality-remediation-react-konva.spec.ts --grep @A05|@A07|@A09|@A11|@A12
+
+Running 22 tests using 2 workers
+
+(node:1161890) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1161891) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 e2e/quality-remediation-d3.spec.ts:76:1 › @A05 two actual metric paths contain D3 geometry and retain original values (1.7s)
+  ✓   2 e2e/quality-remediation-d3.spec.ts:28:1 › @A05 actual scale axes and bars share pointer and keyboard table selection (1.8s)
+  ✓   3 e2e/quality-remediation-d3.spec.ts:107:1 › @A05 keyed identity survives filtering and actual resize, exits and teardown remove owned nodes (2.4s)
+  ✓   4 e2e/quality-remediation-excalidraw.spec.ts:68:1 › @A09 actual rectangle drawing and native undo change the SDK scene (2.4s)
+  ✓   5 e2e/quality-remediation-excalidraw.spec.ts:78:1 › @A09 real skeleton conversion, edit, reset and restore remain local (2.7s)
+  ✓   6 e2e/quality-remediation-excalidraw.spec.ts:98:1 › @A09 real import rejection/recovery, PNG bytes, readonly and unmount (3.0s)
+  ✓   8 e2e/quality-remediation-excalidraw.spec.ts:205:1 › @A09 official original README and current homepage have fixed provenance (1.7s)
+  ✓   7 e2e/quality-remediation-excalidraw.spec.ts:169:1 › @A09 seeded Chinese text exports a real PNG for visual font review (3.0s)
+  ✘   9 e2e/quality-remediation-g6.spec.ts:32:1 › @A07 basic real Canvas, directed topology and NodeEvent selection (1.5s)
+(node:1162795) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  10 e2e/quality-remediation-g6.spec.ts:93:1 › @A07 business setData/render retains instance and deletes old topology (1.7s)
+  ✓  12 e2e/quality-remediation-g6.spec.ts:186:1 › @A07 mobile measured width does not impose a desktop minimum (1.5s)
+  ✓  13 e2e/quality-remediation-graphics.spec.ts:8:3 › @A05 original README has immutable provenance and checked official homepage (1.7s)
+  ✓  14 e2e/quality-remediation-graphics.spec.ts:8:3 › @A07 original README has immutable provenance and checked official homepage (1.7s)
+  ✘  11 e2e/quality-remediation-g6.spec.ts:131:1 › @A07 advanced actual viewport, narrow fit, rebuild and owner teardown (6.6s)
+(node:1163247) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  15 e2e/quality-remediation-graphics.spec.ts:8:3 › @A12 original README has immutable provenance and checked official homepage (1.8s)
+  ✓  16 e2e/quality-remediation-konva.spec.ts:32:1 › @A11 basic actual Canvas hit selection and keyboard controls update the same scene graph (1.8s)
+  ✓  17 e2e/quality-remediation-konva.spec.ts:69:1 › @A11 business pointer drag commits world coordinates and actual container resize preserves nodes (2.1s)
+  ✓  18 e2e/quality-remediation-konva.spec.ts:98:1 › @A11 actual Transformer folds scale, wheel keeps the world point, deletion and destruction release owned stage (2.9s)
+  ✓  19 e2e/quality-remediation-konva.spec.ts:177:1 › @A11 pinned official README and checked homepage use shared panels (1.8s)
+  ✓  20 e2e/quality-remediation-react-konva.spec.ts:52:1 › @A12 React props update actual Canvas paint and the accessible row through native keyboard (1.6s)
+  ✓  21 e2e/quality-remediation-react-konva.spec.ts:76:1 › @A12 real drag commits world coordinates and clamps the card inside the 620x260 world (2.2s)
+  ✓  22 e2e/quality-remediation-react-konva.spec.ts:93:1 › @A12 lock affects dragging only; stable add/delete, responsive scaling and unmount keep one owner (2.3s)
+
+
+  1) e2e/quality-remediation-g6.spec.ts:32:1 › @A07 basic real Canvas, directed topology and NodeEvent selection 
+
+    Error: expect(received).toBeGreaterThan(expected)
+
+    Expected: > 20
+    Received:   0
+
+      60 |     return found
+      61 |   })
+    > 62 |   expect(greenPixels).toBeGreaterThan(20)
+         |                       ^
+      63 |   await app.getByRole('button', { name: '重新适配视口', exact: true }).click()
+      64 |   await ready(app)
+      65 |   const point = (await state(app)).nodes.find((node) => node.id === 'source')?.client
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-g6.spec.ts:62:23
+
+    Error Context: test-results/quality-remediation-g6--A0-3a744-ogy-and-NodeEvent-selection/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-remediation-g6--A0-3a744-ogy-and-NodeEvent-selection/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-remediation-g6--A0-3a744-ogy-and-NodeEvent-selection/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) e2e/quality-remediation-g6.spec.ts:131:1 › @A07 advanced actual viewport, narrow fit, rebuild and owner teardown 
+
+    Error: expect(received).not.toBe(expected) // Object.is equality
+
+    Expected: not 0.5680181365594756
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      152 |   await page.mouse.move(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2)
+      153 |   await page.mouse.wheel(0, -180)
+    > 154 |   await expect.poll(async () => (await state(app)).zoom).not.toBe(narrow.zoom)
+          |                                                              ^
+      155 |   await app.getByRole('button', { name: '重新适配视口', exact: true }).click()
+      156 |   await ready(app)
+      157 |   await expect.poll(async () => Math.abs((await state(app)).zoom - narrow.zoom)).toBeLessThan(0.01)
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-g6.spec.ts:154:62
+
+    Error Context: test-results/quality-remediation-g6--A0-fc514--rebuild-and-owner-teardown/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-remediation-g6--A0-fc514--rebuild-and-owner-teardown/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-remediation-g6--A0-fc514--rebuild-and-owner-teardown/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    e2e/quality-remediation-g6.spec.ts:32:1 › @A07 basic real Canvas, directed topology and NodeEvent selection 
+    e2e/quality-remediation-g6.spec.ts:131:1 › @A07 advanced actual viewport, narrow fit, rebuild and owner teardown 
+  20 passed (26.7s)
+
+exitCode=1

@@ -1,180 +1,69 @@
-# remark 15.0.1｜mdast 解析、GFM 规范化和链接审计
+# remark：同一棵mdast，结构分析与Markdown规范化
 
-`library.json` 钉住 `remark@15.0.1` 与 `remark-gfm@4.0.1`，MIT。remark 把 Markdown 变成 mdast，再可以把这棵树序列化回 Markdown。它不创建 React 元素，不执行 HTML，也不是 sanitizer。安全展示用 E06。HTML 树用 E08。浏览器里的 HTML 字符串用 E10。
+文章入库前要提取标题、统一GFM表格写法，再列出可疑链接。remark把Markdown解析为mdast，插件可以扩展语法/转换树，stringify再输出Markdown。它不创建React元素、不执行HTML，也不是sanitizer。给人看的预览用react-markdown；HTML树与净化另选rehype/DOMPurify。
 
-## Lab 当前示例
+本例真实使用remark15.0.1和remark-gfm4.0.1，实装均MIT/ESM。三个目标是结构分析、GFM规范化、只读审计，不是同一结果换标题。没有网络、文件上传、自动保存或远程服务。GFM样例的PASS/NOT_RUN只是文章文字。
 
-真实组件是 [`examples/example.tsx`](examples/example.tsx)。[`examples/demo.tsx`](examples/demo.tsx) 只再导出。审计函数在 [`examples/audit-policy.mjs`](examples/audit-policy.mjs)。
+## 完整最小接入
 
-用户点开 Demo 后看到文本框。**解析不会在每个键击发生。** 要点「解析与规范化」。换 level 会清空结果和错误。没有独立工作台，也没有 `localhost:5173`。
+已有React/TypeScript浏览器打包项目执行：
 
-`transform` 的顺序：
-
-1. `TextEncoder` 字节数超过 24_000 就抛错。文本框另有 `maxLength={12000}`。
-2. `remark().use(remarkGfm)` 得到一个 processor。
-3. `processor.parse(source)` 得到一棵树。
-4. 同一棵树交给 `auditMarkdownTree`，再 `processor.stringify(ast)`。不解析第二次。
-5. 页面展示审计 JSON 和重新序列化的 Markdown 字符串。两者都在 `<pre>` 里，不是 HTML。
-
-审计统计节点数，超过 4096 抛错。标题收集纯文本。`link` 和 `image` 的 `url` 用 `safeReference` 标 `safe: true/false`。危险 URL 仍留在审计结果里，这是信号，不是已经净化的输出。
-
-`safeReference`：空串、超 2048、含控制字符为不安全。页内 `#` 锚用 Unicode 字母数字和 `_. :-`。站内路径必须以单个 `/` 开头，不能是 `//`，不能含反斜杠。绝对地址必须是无用户名密码的 `https:`。
-
-| 层 | 样例 | 挂载行为 |
-| --- | --- | --- |
-| basic | 标题和列表 | 点按钮后看到标题列表和节点数 |
-| business | GFM 表和任务列表 | 规范化 Markdown 仍是 Markdown |
-| advanced | https 链接、`javascript:`、`<script>` 文本、远程图片 | 文案写明 remark 不是 sanitizer |
-
-没有挂载：Worker、自动保存、把结果交给 react-markdown、Tiptap 导出质检按钮。
-
-## 1. 一句话选型
-
-要大纲、要统一 GFM 写法、要在入库前列出危险链接，用 remark。要给人看的安全页面，把字符串交给 E06，或把 HTML 交给 E08 / E10。不要用 remark 的 stringify 结果做 `dangerouslySetInnerHTML`。
-
-## 2. 模型
-
-```text
-Markdown 字符串
-    │ parse（一次）
-    ▼
-mdast（本示例的审计对象）
-    ├─ headings / links / node count
-    └─ stringify → 规范化 Markdown 字符串
+```sh
+pnpm add remark@15.0.1 remark-gfm@4.0.1
 ```
 
-所有权：文本框拥有原文。按钮按下后的结果是只读快照。下一次编辑不会自动更新 `<pre>`，除非再点按钮。这是故意的，避免把半成品和已审计结果混在一起。
+复制examples/example.tsx、workshop.mjs/.d.mts、audit-policy.mjs/.d.mts，保持相对目录。demo.tsx只是Lab转发可省。渲染 `<RemarkExample level="basic" />`。ESM/TSX打包器需能解析声明文件；无需CSS、Provider、账号、env或Lab内部模块。纯Node复用workshop.mjs时不需要React/DOM，保持ESM导入并安装同版本两包即可。
 
-插件只加了 `remark-gfm`。表格、任务列表、删除线属于这个插件。不在本文件里写自定义访问者去改树。审计是只读行走。
-
-官方入口：[remark](https://github.com/remarkjs/remark)、[remark-gfm](https://github.com/remarkjs/remark-gfm)。
-
-## 3. 三层怎么操作
-
-在 Library Lab 打开 E07，运行 Demo，编辑，再点按钮。
-
-### 基本
-
-预期标题数组里有文档标题和 “Getting started”。节点数大于 1。序列化结果仍可阅读，空行和标记可能被规范成 remark 的写法。不要把格式化差异当成解析失败。
-
-### 业务
-
-样例表格里的 PASS / NOT_RUN 是文章文字。规范化输出里应仍能看到表格结构。这不是从 RSS 服务器拉来的数据，没有请求。
-
-### 进阶
-
-审计 JSON 里应同时出现安全的 https 和不安全的 `javascript:`，后者 `safe: false`。原始 HTML 在 mdast 里通常是 html 节点，本审计不把它删掉。页面上的说明要求下一步走 E08 或 E10。看到危险 URL 被列出来，不等于 XSS 已测。
-
-## 4. 反例（带代码）
-
-### 反例 1：把 stringify 当 HTML
-
-```tsx
-<div dangerouslySetInnerHTML={{ __html: String(processor.stringify(ast)) }} />
+```js
+const processor = remark().use(remarkGfm)
+const ast = processor.parse(source)
+const audit = auditMarkdownTree(ast)
+const normalized = String(processor.stringify(ast))
 ```
 
-stringify 的产物是 Markdown。要 HTML 得走 rehype，并且先净化。
+真实共享workshop.mjs只parse一次，将**同一个ast**交给审计和stringify。按钮触发；键击只改原文，结果是上次点击的快照，不会自动更新。换层/恢复案例清空结果；处理失败也清空旧结果，避免旧成功报告冒充本次成功。
 
-### 反例 2：解析两遍导致审计和输出不一致
+## parse不是run：GFM为什么仍然生效
 
-```ts
-const audit = auditMarkdownTree(remark().parse(source))
-const normalized = String(remark().use(remarkGfm).processSync(source))
-```
+unified处理有parse→run→stringify阶段。`parse`会初始化/冻结processor，使语法扩展生效，但**不执行transformer插件**。remark-gfm注册解析/序列化扩展，所以本例无需run也能读写table/task/delete节点；这不代表任意 `.use(plugin)` 转换都会跑。
 
-插件不同、解析两次，审计的链接集合可能和最终字符串不一致。Lab 对同一 `ast` 做审计和 stringify。
+若后来添加会改树的transformer，应在parse后执行 `processor.runSync(ast)`（异步插件用await run），取得其返回树，再对那一棵最终树审计与stringify。不能审计旧树、输出新树，也不能把processSync暗中多parse一次。当前示例无transformer，无自定义改写，审计只读。
 
-### 反例 3：在键击时 parse 大文档
+## 基础：结构与大纲
 
-```tsx
-onChange={e => setAudit(auditMarkdownTree(remark().parse(e.target.value)))}
-```
+默认Markdown有两个标题和列表。点击解析，预期headings为ReactLoom Note、Getting started，nodeTypes.list为1；输出依然是Markdown，空行/列表标记可能规范化。节点数不是正文字符数。标题纯文本采集text/inlineCode和图片alt，不把HTML标签拼进标题。它不是任意自定义mdast节点的语义解释器。
 
-大文档和半截粘贴会卡住输入。Lab 用按钮。生产若要实时，放到可取消的任务里，并保留 24KiB 这类上限。
+## 业务：GFM工程报告
 
-### 反例 4：审计通过就插入链接
+输入表格、任务列表与删除线。预期nodeTypes.table=1、delete=1，输出保留表格、[x]/[ ]、~~旧方案~~。页面没有HTML table，只有pre里的字符串。规范化可能改变排版，不保证原始字节完全一致；当前固定fixture规范化后再次规范化稳定，由真实SDK测试核实。
 
-```ts
-if (audit.links.every(link => link.safe)) save(source)
-```
+## 进阶：URL与raw HTML审计
 
-`safe: false` 的链接仍然在原文里。审计没有改写树。入库要么拒绝，要么另写一个会改 URL 的插件，并说明改了什么。本示例不改写。
+默认包含HTTPS、javascript链接、raw script、远程图片和reference-style链接。审计列出link/image及definition的URL，因此引用链接的定义也能显示data:为false，**包括未被使用的定义**；links长度不是实际点击链接次数。rawHtmlNodes数只报告html节点，不删除它。
 
-### 反例 5：用正则找链接代替 mdast
+`safeReference`是本例自建URL语法规则：最多2048个UTF16单元；控制字符、空白、反斜杠、协议相对URL、凭据被拒绝；允许无凭据HTTPS、单/开头站内路径和有限Unicode锚点。标safe=true不表示域名可信、无追踪、无重定向风险或已通过浏览器XSS测试。图片HTTPS可以被标true，但本页根本不渲染img、不下载图片。
 
-```ts
-source.match(/https?:\/\/\S+/g)
-```
+危险URL/raw HTML仍留在原树与输出Markdown中。这是审计信号，不是安全发布产物。下一步发布可拒绝文档，或明确执行另一个改写/净化管线；不能看到safe字段就把normalized送入dangerouslySetInnerHTML。本例两个pre使用React文本插值，script只是文字。
 
-会漏掉角括号自动链接、漏掉图片，也会把代码块里的例子当真实链接。用节点类型 `link` 和 `image`。
+## 有界输入与行走
 
-### 反例 6：不限制节点数
+处理上限是**24,000 UTF-8字节**，不是24KiB（24KiB是24,576字节）。输入框另限12,000个JavaScript UTF16单元。中文通常每字3字节，8,001个“中”只有8,001单元却有24,003字节，可以在UI触发处理错误；emoji通常2个单元/4字节。不要把textarea maxLength误写成字节保护。
 
-恶意嵌套可以让递归访问爆栈。Lab 用显式栈，超过 4096 节点抛错。不要改成无上限递归。
+审计显式栈遍历最多4096对象节点，并用WeakSet拒绝循环/重复共享节点；标题采集同样有预算，不能绕过主行走造成无限循环。这个额外保护面向直接调用helper的非remark树，正常mdast是树。字节限制在parse前，节点限制在parse之后；它们不是严格CPU/内存时限。要实时处理大文章，另设计Worker/取消/资源预算，不在每键里同步解析。
 
-### 反例 7：把相对协议当成站内路径
+## 操作与错误恢复
 
-`//evil.example` 不是以单个斜杠开头的站内路径。`safeReference` 拒绝它。不要为了「支持 CDN」放宽成任意协议。
+1. basic点击，检查两标题/列表与Markdown输出。
+2. business点击，查看nodeTypes及GFM文字输出；不是浏览器表格。
+3. advanced点击，检查safe true/false、rawHtmlNodes与reference definition；输出危险文字仍在。
+4. 先成功，再输入8,001个“中”点击：alert显示字节错误，旧audit/output消失。恢复案例再运行应成功。
 
-### 反例 8：html 节点当成已删除
+本例没有定时器、订阅、Worker或持久化需要销毁；React仅管理文本/结果状态，换层effect重置。本地浏览器检查了恶意输入按文本展示、脚本不执行和远程图片 URL 无请求。真实NodeSDK/policy与DOM安全行为分别记证，不能用Node无DOM自动推出浏览器无网络。
 
-remark 默认会保留原始 HTML 节点。`skipHtml` 是 react-markdown 的渲染选项，不在这里。advanced 文案就是这个边界。
+## 生产组合与升级
 
-## 5. 和其他库的边界
+编辑器拥有原文，remark拥有一次处理快照；预览层用E06，HTML发布层用E08/E10。Query可以缓存原文，但不能把审计报告当第二份正文真相。多文档缓存包含内容/策略版本；审计错误应阻止发布但不删除本地输入。
 
-| 库 | 责任 |
-| --- | --- |
-| E07 remark | mdast、规范化、列出链接 |
-| E06 | React 预览，`skipHtml` 与 URL 变换 |
-| E08 | HTML → hast → 允许列表 |
-| E04 | 编辑原文 |
-| E01 | 富文本 JSON，不是 Markdown |
+固定remark15.0.1/gfm4.0.1。升级或新增转换插件后核对AST节点、同树审计/输出、GFM规范化和UTF8边界。安全标签属于业务策略，不能由目录收录或生成脚本推成SDK/安全PASS。
 
-组合方案都没有挂成 Demo：
-
-**E04 + remark + 预览。** 编辑器拥有源码。按钮或防抖把字符串交给 remark 做审计，再交给 E06 显示。审计失败不阻止本地编辑，但阻止发布。
-
-**E01 导出 Markdown。** Tiptap 导出是有损的。remark 质检只能看导出结果，不能证明编辑器 JSON 完整。发布前仍要 rehype 或 DOMPurify，如果下一步是 HTML。
-
-**Query + 归档。** 服务器原文进入 remark 之前先卡字节数。Query 的缓存键包含 schema 版本。不要把审计 JSON 当成第二份正文。
-
-## 6. 故障
-
-| 现象 | 原因 |
-| --- | --- |
-| 点了没反应 | 看 alert 区。超过 24KiB 或节点过多会抛错 |
-| 表格消失 | 没有 `remark-gfm` |
-| 输出和手写空行不同 | stringify 会规范化 |
-| 危险链接还在输出里 | 审计不删除。这是信号 |
-| 换层后还显示上一份结果 | effect 应清空。若你删了 effect，结果会串层 |
-| 中文标题统计奇怪 | 标题文本来自节点 value 拼接，不含标记符号 |
-
-## 7. 升级核对
-
-- `remark@15` 与更早主版本的插件签名不同。锁定 15.0.1。
-- `remark-gfm@4.0.1` 与 E06 保持同一版本，避免同一仓库两套 GFM。
-- 自定义插件若改树，必须仍用同一棵树做审计，或明确审计发生在改写之前。
-- 不要为了通过样例而把 `javascript:` 从审计里过滤掉不显示。
-
-## 8. 练习（未挂载）
-
-1. 写一个只读插件，把不安全的链接改成纯文本节点，并保留原文在日志里。验收：输出 Markdown 不再含该 URL，审计发生在改写前的树上一份、改写后的树上一份。
-2. 对 10 篇带表格和脚注的样本做往返，记录 stringify 改变了哪些空行。不要把差异叫数据丢失，除非节点类型变了。
-
-## 9. 验收
-
-1. basic：标题数量与肉眼标题一致。
-2. business：输出仍是 Markdown 表格，不是 HTML table。
-3. advanced：`javascript:` 的 `safe` 为 false，https 为 true，页面没有执行脚本。
-4. 超限输入显示 `role="alert"`，不留下半份结果。
-
-这些是待浏览器和 SDK 执行的清单。`examples/audit-policy.test.mjs` 只跑纯函数。
-
-sdk、build、browser 保持 **NOT_RUN**。没有 `docs/library-lab/evidence/runs/` 的 E07 收据就不能写 PASS。Actions `41779873259` 是仓库级运行，不是本条目通过。
-
-## 10. 资料
-
-- https://github.com/remarkjs/remark
-- https://github.com/remarkjs/remark/tree/main/packages/remark
-- https://github.com/remarkjs/remark-gfm
-- https://github.com/syntax-tree/mdast
+官方原文采用固定15.0.1 monorepo中对应packages/remark/readme.md，与本中文讲解分开；未发现固定版本官方中文对应README，使用en。许可/主页响应与具体运行日志见official和local-validation.md；主页未实际Lab嵌入确认保持unknown。正式verification维持NOT_RUN直至匹配收据。

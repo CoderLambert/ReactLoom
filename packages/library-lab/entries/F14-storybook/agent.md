@@ -1,45 +1,11 @@
-# F14 Storybook — 工程手册
+# F14 Storybook工程复用
 
-## 适用
+固定storybook/react-vite/addon-a11y10.6.1 MIT，组件开发隔离，不是产品6006/6007，也不是Lab在线Shell。
 
-隔离的状态卡、CSF3 args 和 play。不是产品站 6006/6007，也不是端到端。
+迁入4原件：StatusCard.tsx、StatusCard.stories.tsx、main.ts、preview.ts；目录保持components/stories/.storybook。React19/TypeScript/Vite及三包。staticDirs空；autodocs标签不保证Docs页（未装addon-docs）。guide给独立dev/build/静态server命令；Lab复制的现有dev配方为6029，本次build静态验收为6037，两用途可兼容，不占4319/20/21。
 
-## 版本
+三个任务：Basic状态合同、Business归档play、Advanced禁用+Recovery拒绝后重试。回调为fn fixture，不是HTTP。inFlight同步先置、generation屏蔽旧结果/错误/finally；title/tone变化与unmount失效。没有实际取消Promise；held回调+args/unmount未运行验收，只静态审计。Recovery mockReset保留。
 
-`storybook@10.6.1`、`@storybook/react-vite@10.6.1`、`@storybook/addon-a11y@10.6.1`，MIT。play 从 `storybook/test` 引入 `expect` 和 `fn`。
+真实build exit0；静态站Chromium同iframe切Basic/Business/Advanced/Recovery/Business，storyFinished成功且addon实际axe4.14报告均0violations/0incomplete。addon10.6.1普通story afterEach也扫描；test:error仅报告，普通build不替浏览器抛失败。validation/browser-check.mjs必须显式assert report，不能只检测iframe加载。没有运行addon-vitest或test-runner。
 
-## 迁移
-
-带走 `StatusCard.tsx`、stories、`main.ts`、`preview.ts`。命令使用端口 6029 和本目录 config。不要把故事挂进 Lab 主站冒充已启动。`staticDirs` 保持空。
-
-## 不可删的清理
-
-`inFlight` 在 await 之前置位。generation 在卸载以及 title/tone 变化时增加。过期的成功或失败不能写状态。Recovery 的 `mockReset` 留在 play 里。离开 dev server 时停掉 6029，不要留着占端口。
-
-## 反例
-
-- play 不 await。
-- 用含糊的 `getByText('归档')`。
-- catch 里设成已归档。
-- 模块级 fn 不复位。
-- 把 `a11y.test: 'error'` 写成已经扫描。
-- 在网页里画假终端或假 iframe。
-- staticDirs 指向用户文件或密钥。
-- 用 dev 启动代替 build 或 play 收据。
-
-## 测试断言
-
-- Basic：待处理、按钮可用、回调 0 次。
-- Business：任务成功 → 点击后已归档、按钮禁用、回调 1 次。
-- Advanced：等待审核、按钮禁用、回调 0 次。
-- Recovery：第一次失败且可再点，第二次成功，回调 2 次。
-
-## 真实限制
-
-Lab 页面不渲染组件。没有视觉基线，没有 MSW。a11y 参数没有执行器记录。四个故事里只有三个对应 demo id，Recovery 仍在同一文件。页面命令不会监听 6029。
-
-## 证据
-
-`storybook dev`、play 和 build 分别要收据，放在 `docs/library-lab/evidence/runs/`。Actions 41779873259 不是 F14 PASS。在那之前 sdk、build、browser 都是 NOT_RUN。
-
-端口能打开也不等于四则 play 已执行。a11y 参数要另有一次规则运行才算扫过。
+完整raw和来源local-validation；固定包code/core README与MIT LICENSE原文、三个package字段；homepage200未知嵌入。正式verification无receipt仍NOT_RUN，不推广为整站WCAG/真实服务/视觉基线。

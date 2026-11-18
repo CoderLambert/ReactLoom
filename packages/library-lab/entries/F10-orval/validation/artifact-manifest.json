@@ -1,0 +1,97 @@
+[
+  {
+    "path": "examples/generated/basic.ts",
+    "bytes": 4395,
+    "sha256": "a1ab713fecacf34bac98b050d45e0889e495fb954da8080c257fc357b956a783"
+  },
+  {
+    "path": "examples/generated/business.ts",
+    "bytes": 13539,
+    "sha256": "f382d21346c33b5903ade533f3a34322c2960be6eaa2b5a8185d409582e559a3"
+  },
+  {
+    "path": "examples/generated/basic-models/source.ts",
+    "bytes": 289,
+    "sha256": "6b51ea94d82f0f879edce7974cf2ea24d0c5d018144d66806ac8521374f35860"
+  },
+  {
+    "path": "examples/generated/basic-models/createSource.ts",
+    "bytes": 264,
+    "sha256": "a07da7e5a1e12310738543bfff075b8489ca94024a36b36fa654d2ca80998033"
+  },
+  {
+    "path": "examples/generated/basic-models/error.ts",
+    "bytes": 239,
+    "sha256": "22dd107eed3a1f2f9dfd974d252d873f2d64e39fbdfb6dac21069db5d350551e"
+  },
+  {
+    "path": "examples/generated/basic-models/listSourcesParams.ts",
+    "bytes": 268,
+    "sha256": "37be6af2137728590cae5f608bd5868c016b6c6d3cc0a03ac8abe972e9ac7917"
+  },
+  {
+    "path": "examples/generated/basic-models/index.ts",
+    "bytes": 309,
+    "sha256": "39dbc14a79f8fdf5b1ba6ca061d7f76490ad8ca69fbef05623d152f48b1fd73e"
+  },
+  {
+    "path": "examples/generated/business-models/source.ts",
+    "bytes": 289,
+    "sha256": "6b51ea94d82f0f879edce7974cf2ea24d0c5d018144d66806ac8521374f35860"
+  },
+  {
+    "path": "examples/generated/business-models/createSource.ts",
+    "bytes": 264,
+    "sha256": "a07da7e5a1e12310738543bfff075b8489ca94024a36b36fa654d2ca80998033"
+  },
+  {
+    "path": "examples/generated/business-models/error.ts",
+    "bytes": 239,
+    "sha256": "22dd107eed3a1f2f9dfd974d252d873f2d64e39fbdfb6dac21069db5d350551e"
+  },
+  {
+    "path": "examples/generated/business-models/listSourcesParams.ts",
+    "bytes": 268,
+    "sha256": "37be6af2137728590cae5f608bd5868c016b6c6d3cc0a03ac8abe972e9ac7917"
+  },
+  {
+    "path": "examples/generated/business-models/index.ts",
+    "bytes": 309,
+    "sha256": "39dbc14a79f8fdf5b1ba6ca061d7f76490ad8ca69fbef05623d152f48b1fd73e"
+  },
+  {
+    "path": "examples/generated/advanced-models/source.ts",
+    "bytes": 289,
+    "sha256": "6b51ea94d82f0f879edce7974cf2ea24d0c5d018144d66806ac8521374f35860"
+  },
+  {
+    "path": "examples/generated/advanced-models/createSource.ts",
+    "bytes": 264,
+    "sha256": "a07da7e5a1e12310738543bfff075b8489ca94024a36b36fa654d2ca80998033"
+  },
+  {
+    "path": "examples/generated/advanced-models/error.ts",
+    "bytes": 239,
+    "sha256": "22dd107eed3a1f2f9dfd974d252d873f2d64e39fbdfb6dac21069db5d350551e"
+  },
+  {
+    "path": "examples/generated/advanced-models/listSourcesParams.ts",
+    "bytes": 268,
+    "sha256": "37be6af2137728590cae5f608bd5868c016b6c6d3cc0a03ac8abe972e9ac7917"
+  },
+  {
+    "path": "examples/generated/advanced-models/index.ts",
+    "bytes": 309,
+    "sha256": "39dbc14a79f8fdf5b1ba6ca061d7f76490ad8ca69fbef05623d152f48b1fd73e"
+  },
+  {
+    "path": "examples/generated/advanced/index.ts",
+    "bytes": 38,
+    "sha256": "b50e30d9e1c69e77bfbb3c8a09fc78bed7657b1aa2b08cb6d73a4f40f6911ab7"
+  },
+  {
+    "path": "examples/generated/advanced/sources/sources.ts",
+    "bytes": 4403,
+    "sha256": "4968c9aecdbcb2705fbdc7edb608cfad84c48f0aadfee3d4cb22de19ba6ca634"
+  }
+]

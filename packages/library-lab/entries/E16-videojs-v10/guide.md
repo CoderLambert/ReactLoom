@@ -1,202 +1,63 @@
-# Video.js 10.2.0｜React 播放器、本地 WebM 和显式换源
+# Video.js v10 React：真实播放器、原创WebM与资源所有权
 
-先分清代际。本条目使用 `@videojs/react@10.2.0`（Apache-2.0），组件来自 `@videojs/react/video`：`VideoPlayer`、`VideoSkin`、`Video`。这不是 `video.js@8` 的 `videojs()` 工厂，也不能把 v8 的插件选项对象套进这些组件。
+页面要播放新闻片头，同时提供统一控件、换源与本地文件入口。`@videojs/react@10.2.0`（Apache-2.0）提供React播放器/皮肤/媒体组件。它不是旧video.js@8的videojs()工厂；v8的插件对象与player.dispose不能直接套用。仅简单短片也可以原生video；HLS/MSE另选一个加载引擎，不要给同一个元素再挂两套。
 
-播放器负责控件和生命周期。它不生成媒体。本示例的画面来自 Canvas 和 MediaRecorder，不打开摄像头或麦克风，也不自动请求第三方片源。
+播放器不生成媒体。本例用户点击后才由Canvas/MediaRecorder生成原创WebM，或者显式选择本地MP4/WebM。没有自动远程src、HLS、摄像头/麦克风、上传、DRM或字幕服务。由本例生成的图形不是第三方影片。
 
-## Lab 当前示例
+## 完整迁入与实装API
 
-真实组件是 [`examples/example.tsx`](examples/example.tsx)。[`examples/demo.tsx`](examples/demo.tsx) 只再导出。录制在 [`examples/clip.ts`](examples/clip.ts)。文件头在 [`examples/video-file-policy.mjs`](examples/video-file-policy.mjs)。
+已有React/ReactDOM18或19、TypeScript>=5的DOM浏览器项目：
 
-`key={level}` 使三层各自一份会话。用户点开 Demo 之后页面仍是「未创建视频」。要点按钮才录制。没有 `localhost:5173`，没有自动 `src`。
-
-| 层 | 按钮 | 媒体 |
-| --- | --- | --- |
-| basic | 制作本地片头、移除 | 浅色 Canvas → WebM Blob |
-| business | 再加深色片头 | 换 Blob 就换播放器 |
-| advanced | 再加本地文件 | mp4 或 webm，先校验再播放 |
-
-录制细节：
-
-- 320×180 画布，约 1.45 秒，`captureStream(12)`。
-- MIME 只在浏览器声明支持 `video/webm;codecs=vp8` 或 `video/webm` 时使用。
-- 没有 MediaRecorder、不能捕获画布、不能录 WebM 时抛错，文案建议改用 advanced 的本地文件。
-- `AbortSignal` 会停掉录制。新的一次录制会 abort 上一次。
-- 轨道在 finally 里 `stop`。
-
-播放器：
-
-- 只有 `url` 非空才渲染 `VideoPlayer`。`key={url}`，换地址就挂上新的播放器。
-- `Video` 的 `src` 是 blob URL，`playsInline`。
-- 旧的 blob URL 放进 `retiredUrls`，在 **下一次** `url` 提交后再 `revokeObjectURL`，避免刚换上的播放器还在读就被收回。
-- 卸载时 generation 递增、abort 录制、revoke 当前和退役的 URL。
-
-本地文件：
-
-- `validateVideoMetadata`：类型只能是 `video/mp4` 或 `video/webm`，大小 12 字节到 8MiB。
-- 只读前 32 字节。`validateVideoHeader` 核对 `ftyp` 或 EBML 头。不一致就拒绝，不创建 URL。
-- 通过后把整个 `File` 交给 `URL.createObjectURL`。文件仍在浏览器里，不上传。
-
-没有挂载：hls.js、字幕轨道编辑、广告插件、远程 MP4、DRM、摄像头采集。
-
-## 1. 什么时候用
-
-| 任务 | 判断 |
-| --- | --- |
-| 要皮肤、控件、可更换的媒体元素 | Video.js v10 的 React 包 |
-| 只有一个短 MP4、不需要皮肤 | 原生 `<video>` |
-| HLS 清单和 ABR | E17，或播放器的 HLS 适配。不要两个引擎绑同一个元素 |
-| 音频波形 | E18 |
-| 转码 | E19，而且有 GPL 核心约束 |
-
-v8 教程里的 `videojs(el, options)`、`player.dispose()` 和插件注册表不是这份源码的 API。迁移要换组件，而不是改个版本号。
-
-官方：[React 安装](https://videojs.org/docs/guides/installation/react)、[10.0.0 说明](https://videojs.org/changelog/10.0.0)、[仓库](https://github.com/videojs/video.js)。
-
-## 2. 生命周期
-
-```text
-用户点击
-    │
-    ├─ createLocalClip → Blob → object URL
-    └─ 或 File → 32 字节头 → object URL
-            │
-            ▼
-VideoPlayer key={url}
-    Video src={url}
-            │
-            ▼
-换 url：先记下旧 URL，提交后再 revoke
-卸载：abort 录制并 revoke
+```sh
+pnpm add @videojs/react@10.2.0
 ```
 
-React 提交和媒体元素的网络缓冲不是同一时刻。所以 revoke 放在依赖 `url` 的 effect 里，而不是在 setState 之前。
-
-## 3. 三层
-
-在 Library Lab 打开 E16，运行，再点「制作本地片头」。
-
-### 基本
-
-状态从「正在录制」到带有 KiB 大小的「已加载」。然后才出现播放器。用原生控件播放。失败时读 status，常见原因是浏览器没有 MediaRecorder。
-
-### 业务
-
-再点深色片头。播放器因 `key` 更换。上一份 URL 在新地址提交后收回。快速连点时，旧的 generation 不能把过期 Blob 写回来。
-
-### 进阶
-
-选择本地 mp4 或 webm。错误类型、过小、超过 8MiB、文件头不符，都停在校验失败，不出现播放器。移除按钮清空地址并进入退役列表。
-
-iOS 上 MediaRecorder 和编码支持没有在本条目里测试。源码把这条写成需要测的项，不是已通过。
-
-## 4. 反例（带代码）
-
-### 反例 1：继续用 v8 工厂
-
-```ts
-import videojs from 'video.js'
-const player = videojs(ref.current, { sources: [{ src }] })
-```
-
-本条目的依赖是 `@videojs/react`。混用两套会得到两个播放器堆在一个元素上。
-
-### 反例 2：未点击就写远程 src
+复制example.tsx、clip.ts、video-file-policy.mjs/.d.mts、media-cleanup.mjs/.d.mts，保持相对目录；demo.tsx仅Lab转发可省。ESM/TSX打包器使用ESNext模块与Bundler解析，保留 `@videojs/react/video/skin.css`。无需env、Provider、账号、远程字体或Lab内部模块；VideoPlayer已提供自己的播放器context。本例不提供SSR媒体捕获接线。
 
 ```tsx
-<Video src="https://cdn.example/trailer.mp4" />
+import {VideoPlayer, VideoSkin, Video} from '@videojs/react/video'
+import '@videojs/react/video/skin.css'
+<VideoPlayer>
+  <VideoSkin>
+    <Video src={ownedBlobURL} playsInline preload="metadata" />
+  </VideoSkin>
+</VideoPlayer>
 ```
 
-Lab 在没有 blob URL 时只显示说明，不发媒体请求。
+实装随包docs/README.md与reference/components/video.md说明：Video转发native属性/事件，ref是真正HTMLVideoElement；它在Player中自动注册媒体，外部单独用则是原生video。VideoPlayer有标准video功能，VideoSkin提供自定义控件，不把它误写成只有原生controls。包docs/guides/typescript.md要求TS5+和正确package exports解析。内置可选HLS/第三方适配器不等于本例已加载它们。
 
-### 反例 3：换 src 不换播放器实例
+## 基础：媒体产物与播放分开看
 
-有的状态机会留着上一份缓冲。Lab 用 `key={url}` 重新挂载。不要只改 prop 就声称内部状态已重置，除非你在浏览器里看过。
+点击制作，clip.ts画320×180图形、captureStream(12)，每80ms更新画面，尝试浏览器支持的WebM/VP8或WebM。1450ms后请求停止，收集真正MediaRecorder chunks为Blob；这不是Base64预制片或摄像头输入。录制调度约1.45秒不保证容器duration字段恰好1.45（WebM元数据可能不同）。
 
-### 反例 4：立刻 revoke 还在使用的 URL
+没有MediaRecorder/Canvas捕获/WebM编码时显示明确失败，并建议advanced选择本地文件。5秒watchdog处理没有正常stop的录制；成功、失败、abort均清stop/watchdog/ticker、解绑录制回调、尝试stop并结束所有captureStream tracks。不把“录制成功”当成浏览器已解码播放。
 
-```ts
-const url = URL.createObjectURL(blob)
-setUrl(url)
-URL.revokeObjectURL(url)
-```
+Blob生成后才createObjectURL并挂播放器，状态先显示等待解码；实际loadedmetadata才显示原生videoWidth/videoHeight与readyState。真实播放器错误事件显示解码失败code，不假装文件头通过就可以播放。本地浏览器已点击真实 Play 控件并观察 currentTime 增长。
 
-元素还没加载完。Lab 把旧 URL 推迟到下一次提交。
+## 业务：换源与旧播放器退役
 
-### 反例 5：不校验文件头
+浅/深两种Canvas片头生成不同Blob。新URL让 `key={url}` 重挂整个VideoPlayer，旧原生video通过稳定ref清理：pause→removeAttribute('src')→load，停止使用旧源；这不是虚构v8 dispose。每一步独立尝试，即便pause异常仍尝试释放src/load，helper返回诊断，不在卸载后setState。
 
-MIME 可以由用户改。32 字节检查挡住明显的伪装。它不是完整的容器解析，也不证明编码能播。
+旧URL先放retiredUrls，等React提交新播放器或移除后才revoke；不是create完马上revoke，也不是在还渲染旧播放器时先撤销。URL回收不等于原生媒体已停止，所以两项都做。用户可检查外层保留的旧video已detached、paused、src为空、readyState收敛0，以及对应旧URL实际revoke。Video.js内部store/media attach/detach仍由包管理，本例没有声称遍历内部所有监听或测得泄漏数字。
 
-### 反例 6：用摄像头代替 Canvas
+## 进阶：本地导入与代次隔离
 
-`getUserMedia` 不在这个 Demo。不要为了「更像视频」打开设备。`createLocalClip` 只画布。
+File先过同源video-file-policy：MIME只接受video/mp4或video/webm，12字节到8MiB（含上下限），再仅读前32字节。MP4检查offset4..7为ftyp，WebM检查开头EBML魔数；两者只是明显伪装筛选，不是完整容器解析/解码器/安全扫描。只看到ftyp的12字节垃圾也能通过头检查，后续仍可能真实解码失败。MP4不同编码组合/iOS兼容不是这层策略的保证。
 
-### 反例 7：卸载不停录制
+校验后才把整个原File交给objectURL，不上传。非法文件不创建新URL；如果已有可播放素材，保留原播放器，而不是宣称所有错误都会让播放器消失。file input清空自身值允许再次选择同一文件。
 
-MediaRecorder 和定时器必须在清理函数里停。Lab abort 控制器并 `stop` 轨道。
+录制和arrayBuffer读取都有generation代次。新录制/导入/移除/卸载使旧代次失效，过期Blob或文件头读取结果不能createURL或回写状态。导入会abort旧录制；移除按钮也可在busy时取消，按钮禁用不是唯一竞态防线。切level的Session key重建，不能跨场景复用旧媒体。
 
-### 反例 8：同一个 video 再挂 hls.js
+## 清理与证据边界
 
-v10 若已经有 HLS 源处理，再 `new Hls(); hls.attachMedia(video)` 会抢 MSE。E17 是单独的 `<video>`。组合时只能有一个引擎。本示例没有 HLS。
+录制fixture的stop/track ended，不是播放器destroy；原生video pause/src/load，不是录制轨道证明；URL revoke也不是DOM卸载。三类资源分别观察。整个Session卸载递增generation、abort录制并收回current/retired URL；子Video ref在提交卸载阶段先释放原生源。没有全局URL清空，也不关别的页面媒体。
 
-## 5. 安全、无障碍、授权
+随包React源码确认Video转发ref，Player通过store attach/detach和useDestroy管理自身生命周期；不在本例调用旧版videojs()。Chrome上Canvas/MediaRecorder、实际WebM解码、皮肤Play/键盘及所有回收都需DOM环境，没有Node媒体SDK冒充验收。
 
-Blob 留在本地。不要把用户文件读进日志。8MiB 是拒绝阈值，不是播放性能承诺。
+validation/browser.spec.ts保存给主控的操作/外层probe：真实320×180 WebM与Play/currentTime；浅/深替换旧video原生状态和URL；复用原创Blob为合法本地File、非法头保留旧媒体；remove收回本例URL；录制中remove和host卸载，外部记录真正tracks/MediaRecorder状态。probe只包装调用并转发原native API，不返回假播放结果。原生iOS/移动端、完整MP4编码矩阵/辅助技术另行测试。
 
-控件来自 VideoSkin。键盘和字幕是否完整，没有 axe 或手工记录。不要写已通过。
+## 生产迁移与官方来源
 
-片头是程序绘制的图形和「Library Lab」文字，不是第三方成片。若换成有版权的文件，许可不在本条目里。
+自有媒体要规划URL授权、字幕、错误恢复、带宽与编码矩阵。HLS适配用包对应组件或E17一种引擎；转码用E19，不能把32字节检查当转码。SSR阅读页与客户端播放器分开设计。源码中的原创Canvas clip和策略是教学fixture，不等于真实流媒体服务。
 
-CSP 若禁止 blob 媒体，播放会失败。那是部署问题，本指南没有浏览器收据。
-
-## 6. 组合（未挂载）
-
-**E17。** HLS 引擎和 Video.js 二选一绑定元素，或使用 v10 文档里的单一适配路径。不要两个 `attachMedia`。
-
-**E18。** 波形是音频时间轴，不是这个播放器的皮肤。
-
-**E19。** 转码产物若是浏览器能播的 WebM 或 MP4，再走本条目的文件头校验和 blob URL。ffmpeg 核心的 GPL 不因播放器是 Apache-2.0 而消失。
-
-**Query。** 媒体元数据可以在 Query 里。可播放的 URL 仍要有代次，过期响应不能 `setUrl`。
-
-## 7. 同类
-
-| 方案 | 何时 |
-| --- | --- |
-| `@videojs/react` 10.2.0 | 要 v10 皮肤和 React 组件 |
-| 原生 video | 一个文件、控件够用 |
-| E17 | 自己控制 HLS |
-| video.js 8 | 不要和本文件的组件混用 |
-
-## 8. 升级核对
-
-- 依赖名是 `@videojs/react@10.2.0`，样式是 `@videojs/react/video/skin.css`。
-- 不从 v8 复制 `dispose` 教程。换源用新的 `key` 和 URL 回收。
-- 录制 MIME 列表以 `MediaRecorder.isTypeSupported` 为准，不要写死一种编码却不检查。
-
-## 9. 故障
-
-| 现象 | 先看 |
-| --- | --- |
-| 没有播放器 | 还没点按钮，或录制抛错。读 status |
-| 一换片就黑屏且报错 | URL 是否被过早 revoke |
-| 本地文件被拒绝 | 类型、大小、前 32 字节 |
-| 深色片头不出现 | 旧 generation 是否仍在写 |
-| 离开页面还在画布上跑 | 清理函数是否 abort |
-
-## 10. 验收
-
-1. 打开 Demo 的网络面板没有媒体请求。
-2. 点录制后出现本地播放器，能播放或给出真实错误。
-3. 换片后旧 URL 最终被 revoke，且当前片仍能播。
-4. 伪造文件头的文件不会得到 URL。
-5. 卸载后轨道停止。
-
-sdk、build、browser 保持 **NOT_RUN**。没有 `docs/library-lab/evidence/runs/` 的 E16 收据就不能写 PASS。Actions `41779873259` 是仓库级运行，不是本条目通过。
-
-## 11. 资料
-
-- https://videojs.org/docs/guides/installation/react
-- https://videojs.org/changelog/10.0.0
-- https://github.com/videojs/video.js
-- https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder
+官方README选固定@videojs/react10.2.0提交的packages/react/README.md（对应实际包，不用旧v8根介绍替代），MIT旧代资料不覆盖本包Apache-2.0。固定树无官方中文对应README则en；首页实际响应头另存，未确认Lab-origin嵌入时unknown。版本/许可、原始命令日志和六项状态见local-validation.md；正式verification仍NOT_RUN。

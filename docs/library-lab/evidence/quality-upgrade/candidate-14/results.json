@@ -1,0 +1,62 @@
+[
+  {
+    "name": "platform-tests",
+    "status": "REUSED",
+    "from": "candidate-02/platform-tests.txt",
+    "reason": "No common runtime changes since candidate-10 scoped README validator; targeted 16 PASS and unchanged platform baseline reused."
+  },
+  {
+    "name": "platform-lint",
+    "status": "REUSED",
+    "from": "candidate-02/lint.txt",
+    "reason": "Entry lint directed by owners; changed public e2e checked below."
+  },
+  {
+    "name": "new-e2e-lint",
+    "status": "REUSED",
+    "from": "initial-typecheck-failure/new-e2e-lint.txt",
+    "reason": "No public e2e changes; only entry Level type and matching heading changed, directed entry lint PASS."
+  },
+  {
+    "name": "typecheck",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "typecheck"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-10T14:39:04.034981+00:00",
+    "finishedAt": "2026-11-10T14:39:05.898447+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-14/typecheck.txt"
+  },
+  {
+    "name": "build",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "build"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-10T14:39:05.898839+00:00",
+    "finishedAt": "2026-11-10T14:39:13.841189+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-14/build.txt"
+  },
+  {
+    "name": "catalog",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "catalog:check"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-10T14:39:13.841823+00:00",
+    "finishedAt": "2026-11-10T14:39:14.273549+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-14/catalog.txt"
+  }
+]

@@ -1,0 +1,10 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ["pnpm", "exec", "--", "biome", "check", "--write", "entries/A05-d3/examples", "entries/A05-d3/tests", "entries/A05-d3/library.json", "entries/A05-d3/verification.json", "entries/A05-d3/official/source-evidence.json", "entries/A05-d3/validation/baseline.json"]
+startedAt: 2026-11-10T11:47:27.196188+00:00
+finishedAt: 2026-11-10T11:47:27.412098+00:00
+exitCode: 0
+
+STDOUT
+Checked 12 files in 9ms. Fixed 3 files.
+
+STDERR

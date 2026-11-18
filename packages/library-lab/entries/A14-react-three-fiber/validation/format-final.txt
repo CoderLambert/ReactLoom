@@ -1,0 +1,48 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ["pnpm", "exec", "--", "biome", "check", "--write", "entries/A14-react-three-fiber/examples", "entries/A14-react-three-fiber/tests", "entries/A14-react-three-fiber/library.json", "entries/A14-react-three-fiber/verification.json", "entries/A14-react-three-fiber/validation/metadata-check.mjs", "entries/A14-react-three-fiber/validation/source-audit.mjs"]
+startedAt: 2026-11-10T12:12:17.193757+00:00
+finishedAt: 2026-11-10T12:12:17.409290+00:00
+exitCode: 1
+
+STDOUT
+Skipped 1 suggested fixes.
+If you wish to apply the suggested (unsafe) fixes, use the command biome check --write --unsafe
+
+Checked 12 files in 7ms. Fixed 2 files.
+Found 1 error.
+
+STDERR
+entries/A14-react-three-fiber/examples/example.tsx:92:21 lint/correctness/useExhaustiveDependencies  FIXABLE  ━━━━━━━━━━
+
+  × This hook specifies more dependencies than necessary: sceneKey.
+  
+    90 │   const [sceneKey, setSceneKey] = useState(0)
+    91 │   // The replaced Canvas keeps its own ref, including any deferred SDK teardown.
+  > 92 │   const accessRef = useMemo<RefObject<SceneAccess | null>>(() => ({ current: null }), [sceneKey])
+       │                     ^^^^^^^
+    93 │   const [snapshot, setSnapshot] = useState<SceneSnapshot | null>(null)
+    94 │   const select = useCallback(() => setActive((value) => !value), [])
+  
+  i This dependency can be removed from the list.
+  
+    90 │   const [sceneKey, setSceneKey] = useState(0)
+    91 │   // The replaced Canvas keeps its own ref, including any deferred SDK teardown.
+  > 92 │   const accessRef = useMemo<RefObject<SceneAccess | null>>(() => ({ current: null }), [sceneKey])
+       │                                                                                        ^^^^^^^^
+    93 │   const [snapshot, setSnapshot] = useState<SceneSnapshot | null>(null)
+    94 │   const select = useCallback(() => setActive((value) => !value), [])
+  
+  i React relies on hook dependencies to determine when to re-compute Effects.
+    Specifying more dependencies than required can lead to unnecessary re-rendering
+    and degraded performance.
+  
+  i Unsafe fix: Remove the extra dependencies from the list.
+  
+    92 │ ··const·accessRef·=·useMemo<RefObject<SceneAccess·|·null>>(()·=>·({·current:·null·}),·[sceneKey])
+       │                                                                                        --------  
+
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while applying fixes.
+  
+

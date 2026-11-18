@@ -1,0 +1,107 @@
+{
+  "sha": "7f272ab5ff2254c0dc2537b7977e88ede1cd55e8",
+  "url": "https://api.github.com/repos/sindresorhus/p-queue/git/trees/7f272ab5ff2254c0dc2537b7977e88ede1cd55e8",
+  "tree": [
+    {
+      "path": ".editorconfig",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1c6314a31833395fd5ff016a6506bdd51860657c",
+      "size": 175,
+      "url": "https://api.github.com/repos/sindresorhus/p-queue/git/blobs/1c6314a31833395fd5ff016a6506bdd51860657c"
+    },
+    {
+      "path": ".gitattributes",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6313b56c57848efce05faa7aa7e901ccfc2886ea",
+      "size": 19,
+      "url": "https://api.github.com/repos/sindresorhus/p-queue/git/blobs/6313b56c57848efce05faa7aa7e901ccfc2886ea"
+    },
+    {
+      "path": ".github",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "96734bc8f3d1e229e04d4de13aa518f7654b4ac4",
+      "url": "https://api.github.com/repos/sindresorhus/p-queue/git/trees/96734bc8f3d1e229e04d4de13aa518f7654b4ac4"
+    },
+    {
+      "path": ".gitignore",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "52089227c634c3d082b780b48a84dc8e80688378",
+      "size": 40,
+      "url": "https://api.github.com/repos/sindresorhus/p-queue/git/blobs/52089227c634c3d082b780b48a84dc8e80688378"
+    },
+    {
+      "path": ".npmrc",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "43c97e719a5a824700932f72e6e7e6748ce45d01",
+      "size": 19,
+      "url": "https://api.github.com/repos/sindresorhus/p-queue/git/blobs/43c97e719a5a824700932f72e6e7e6748ce45d01"
+    },
+    {
+      "path": "bench.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "aa8ca891905571652389e9087fcc23be08b8e175",
+      "size": 2091,
+      "url": "https://api.github.com/repos/sindresorhus/p-queue/git/blobs/aa8ca891905571652389e9087fcc23be08b8e175"
+    },
+    {
+      "path": "license",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fa7ceba3eb4a9657a9db7f3ffca4e4e97a9019de",
+      "size": 1117,
+      "url": "https://api.github.com/repos/sindresorhus/p-queue/git/blobs/fa7ceba3eb4a9657a9db7f3ffca4e4e97a9019de"
+    },
+    {
+      "path": "package.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e311104cff44d3bcefc3db6ca9a1b55b59682031",
+      "size": 1750,
+      "url": "https://api.github.com/repos/sindresorhus/p-queue/git/blobs/e311104cff44d3bcefc3db6ca9a1b55b59682031"
+    },
+    {
+      "path": "readme.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "481738754141b9c8b98e3e7c4dcc84f3f195665d",
+      "size": 30085,
+      "url": "https://api.github.com/repos/sindresorhus/p-queue/git/blobs/481738754141b9c8b98e3e7c4dcc84f3f195665d"
+    },
+    {
+      "path": "source",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "9bd8765391017ac37550d1d2cb89c2eba1c915d7",
+      "url": "https://api.github.com/repos/sindresorhus/p-queue/git/trees/9bd8765391017ac37550d1d2cb89c2eba1c915d7"
+    },
+    {
+      "path": "test-d",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "edacb47c716c5b4bf18a3f01bd69236691bfa58c",
+      "url": "https://api.github.com/repos/sindresorhus/p-queue/git/trees/edacb47c716c5b4bf18a3f01bd69236691bfa58c"
+    },
+    {
+      "path": "test",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "51b3dcd2c5b13e0b8364eda4d5323681bd755202",
+      "url": "https://api.github.com/repos/sindresorhus/p-queue/git/trees/51b3dcd2c5b13e0b8364eda4d5323681bd755202"
+    },
+    {
+      "path": "tsconfig.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0f9c78b51c49455f3617c073f52d62dd421813f8",
+      "size": 166,
+      "url": "https://api.github.com/repos/sindresorhus/p-queue/git/blobs/0f9c78b51c49455f3617c073f52d62dd421813f8"
+    }
+  ],
+  "truncated": false
+}

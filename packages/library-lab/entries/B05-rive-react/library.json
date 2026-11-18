@@ -4,14 +4,8 @@
   "slug": "rive-react",
   "name": "Rive React Runtime",
   "group": "B",
-  "summary": "Rive WebGL2 动画播放、可访问状态反馈和运行时生命周期",
-  "tags": [
-    "Rive",
-    "交互动画",
-    "WASM",
-    "WebGL2",
-    "请求取消"
-  ],
+  "summary": "远程Rive文件、真实播放/Layout与React业务分离，观察SDK契约和共享渲染器所有权",
+  "tags": ["Rive", "交互动画", "WASM", "WebGL2", "请求取消"],
   "contentState": "recreated",
   "packages": [
     {
@@ -21,24 +15,20 @@
   ],
   "references": [
     {
-      "title": "Rive 官方 React 使用指南",
+      "title": "4.37.0 官方固定README",
+      "url": "https://github.com/rive-app/rive-react/blob/ed0614c0050923db382df43196de80ecb38f9abd/README.md"
+    },
+    {
+      "title": "官方React接入（当前文档）",
       "url": "https://rive.app/docs/runtimes/react/react"
     },
     {
-      "title": "状态机输入与运行时接口",
-      "url": "https://rive.app/docs/runtimes/react/state-machines"
+      "title": "包装器参数与所有权（当前文档）",
+      "url": "https://rive.app/docs/runtimes/react/parameters-and-return-values"
     },
     {
-      "title": "2026年8月单数stateMachine API变更",
-      "url": "https://community.rive.app/c/announcements/rive-runtime-updates-august-31-2026"
-    },
-    {
-      "title": "官方 CDN 演示资源来源",
-      "url": "https://rive.app/docs/runtimes/react/react"
-    },
-    {
-      "title": "官方 MIT React Runtime 仓库",
-      "url": "https://github.com/rive-app/rive-react"
+      "title": "4.37.0 官方发布",
+      "url": "https://github.com/rive-app/rive-react/releases/tag/v4.37.0"
     }
   ],
   "related": [
@@ -62,16 +52,13 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/player.tsx",
         "examples/demo.tsx",
         "examples/styles.css",
         "examples/asset.ts",
         "examples/runtime-policy.ts"
       ],
-      "capabilities": [
-        "wasm",
-        "webgl2",
-        "remote-official-asset"
-      ],
+      "capabilities": ["wasm", "webgl2", "remote-official-asset"],
       "description": "真实Rive useRive加载官方 CDN 示例，停止与继续播放"
     },
     {
@@ -82,16 +69,13 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/player.tsx",
         "examples/demo.tsx",
         "examples/styles.css",
         "examples/asset.ts",
         "examples/runtime-policy.ts"
       ],
-      "capabilities": [
-        "wasm",
-        "webgl2",
-        "remote-official-asset"
-      ],
+      "capabilities": ["wasm", "webgl2", "remote-official-asset"],
       "description": "业务状态由 React 管理，Rive 只做视觉反馈；演示后端任务为本地可取消计时器"
     },
     {
@@ -102,16 +86,13 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/player.tsx",
         "examples/demo.tsx",
         "examples/styles.css",
         "examples/asset.ts",
         "examples/runtime-policy.ts"
       ],
-      "capabilities": [
-        "wasm",
-        "webgl2",
-        "remote-official-asset"
-      ],
+      "capabilities": ["wasm", "webgl2", "remote-official-asset"],
       "description": "页面隐藏、视口退出、系统 reduced-motion、卸载时暂停/清理，须Chrome实测"
     }
   ],
@@ -123,5 +104,25 @@
     "originalRecovery": "ORIGINAL_RECOVERED",
     "archive": "ReactLoom_119_Full_Research_2026-10-24.zip",
     "note": "参照旧4.37.0 workshop与最新官方API重新适配，未继承23个domain测试为SDK PASS。"
+  },
+  "official": {
+    "readme": {
+      "repository": "rive-app/rive-react",
+      "commit": "ed0614c0050923db382df43196de80ecb38f9abd",
+      "path": "README.md",
+      "sourceUrl": "https://github.com/rive-app/rive-react/blob/ed0614c0050923db382df43196de80ecb38f9abd/README.md",
+      "snapshotPath": "official/readme.md",
+      "language": "en",
+      "version": "4.37.0",
+      "syncedAt": "2026-11-10T12:52:55.572259+00:00",
+      "sha256": "d3db576862ff069a0889157166a11e3f3136ec74a4736cb6acbac172ab835262"
+    },
+    "homepage": {
+      "url": "https://rive.app/docs/runtimes/react/react",
+      "kind": "website",
+      "status": "blocked",
+      "checkedAt": "2026-11-10T12:52:55.572259+00:00",
+      "reason": "实际GET200，但完整头X-Frame-Options DENY与CSP frame-ancestors仅自身/Mintlify，Lab origin不允许；保留直达，不尝试绕过。证据official/source-evidence.json。"
+    }
   }
 }

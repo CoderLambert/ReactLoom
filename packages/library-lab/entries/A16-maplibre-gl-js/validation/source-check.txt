@@ -1,0 +1,7 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: git ls-remote --tags https://github.com/maplibre/maplibre-gl-js.git *6.15.0*
+exit: 0
+638b3f9ecab4b743fd4d086d3bfd19bce7b7b032 refs/tags/v6.15.0
+
+During read-only research Python urllib fetched pinned recursive tree truncated=false (20 README candidates, no Chinese) and original root README. Actual remote bytes 13392, SHA f293e4b84fcabba75a923fe54ff861b6bd4e7f2cddaf09082bcee97f57c0847b. At write stage the installed original README is independently byte-identical by SHA and copied after a fresh network timeout; source-audit records this acquisition path. No rewritten translation.
+Standalone dist/maplibre-gl-worker.mjs inspected: no relative shared imports; defaultWorkerUrl uses adjacent module path.

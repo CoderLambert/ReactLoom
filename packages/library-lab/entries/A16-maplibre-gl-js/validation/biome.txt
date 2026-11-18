@@ -1,0 +1,4 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: pnpm exec biome check --write entries/A16-maplibre-gl-js/examples entries/A16-maplibre-gl-js/tests entries/A16-maplibre-gl-js/validation/check-entry.mjs entries/A16-maplibre-gl-js/library.json entries/A16-maplibre-gl-js/verification.json entries/A16-maplibre-gl-js/official/source-audit.json entries/A16-maplibre-gl-js/official/homepage-response.json
+exit: 0
+Checked 13 files in 12ms. Fixed 1 file.

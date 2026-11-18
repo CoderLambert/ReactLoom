@@ -1,0 +1,28 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+ARGV: ["pnpm", "test:policy", "--entry=A15"]
+START: 2026-11-10T12:07:14.069960+00:00
+END: 2026-11-10T12:07:14.380827+00:00
+EXIT: 0
+STDOUT:
+
+> @reactloom/library-lab@0.1.0 test:policy /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+> node scripts/policy-runner.mjs --entry=A15
+
+Pure entry policy suites selected: 2 (not SDK evidence)
+✔ selection stays tied to visible markers with offline filter (0.481817ms)
+✔ coordinate shift clamps to Leaflet world limits without mutation (0.420992ms)
+✔ invalid delta and missing locations never add invalid markers (0.120384ms)
+✔ sequential clicks capture unique Leaflet marker identity (0.955734ms)
+✔ invalid Leaflet fixture sequences are rejected (0.269424ms)
+✔ deletion restores capacity without reusing marker identity (0.137999ms)
+✔ normal source records do not consume simulated marker capacity (0.144802ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 68.503153
+
+STDERR:

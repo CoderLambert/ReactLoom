@@ -1,0 +1,62 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['python3', 'entries/C14-date-fns/validation/fetch-official.py']
+startedAt: 2026-11-10T17:03:20.105489+00:00
+exit: 0
+{
+  "commit": "cd53d2538cfa318404eff7ade6449b49bf34562e",
+  "manifests": {
+    "date-fns": {
+      "path": "pkgs/core/package.json",
+      "name": "date-fns",
+      "version": "4.4.0",
+      "license": "MIT",
+      "repository": "https://github.com/date-fns/date-fns"
+    },
+    "@date-fns/tz": {
+      "path": "pkgs/tz/package.json",
+      "name": "@date-fns/tz",
+      "version": "1.5.0",
+      "license": "MIT",
+      "repository": {
+        "type": "git",
+        "url": "git+https://github.com/date-fns/date-fns.git"
+      }
+    }
+  },
+  "readmes": {
+    "date-fns": {
+      "path": "README.md",
+      "snapshotPath": "official/readme.md",
+      "language": "en",
+      "bytes": 1814,
+      "sha256": "87237646806588ea43e8a7d4c13880d09b42b14ab0a4b0bbb944855f25b82232"
+    },
+    "@date-fns/tz": {
+      "path": "pkgs/tz/README.md",
+      "snapshotPath": "official/tz-readme.md",
+      "language": "en",
+      "bytes": 9377,
+      "sha256": "dc3a4466b53f9a5d2f06e0e3a5d38ce2858f565481471ec3747aee5f0718b264"
+    }
+  },
+  "preferredReadmeCandidates": [
+    "README.md",
+    "pkgs/core/examples/cdn/README.md",
+    "pkgs/core/examples/lodash-fp/README.md",
+    "pkgs/core/examples/node-esm/README.md",
+    "pkgs/core/examples/rollup/README.md",
+    "pkgs/core/examples/typescript/README.md",
+    "pkgs/core/examples/vite/README.md",
+    "pkgs/core/examples/webpack/README.md",
+    "pkgs/tz/README.md"
+  ],
+  "homepage": {
+    "url": "https://date-fns.org/",
+    "requestIndex": 8,
+    "status": "unknown",
+    "xFrameOptions": null,
+    "contentSecurityPolicy": null,
+    "browserFromLabOrigin": "NOT_RUN",
+    "reason": "依据最终完整原始响应头；官网正文未读取，未从Lab origin浏览器确认可嵌入。"
+  }
+}

@@ -1,0 +1,66 @@
+Checked 5 files in 10ms. Fixed 5 files.
+Found 3 errors.
+entries/B10-base-ui/examples/example.tsx:104:9 lint/a11y/noLabelWithoutControl ━━━━━━━━━━━━━━━━━━━━━
+
+  × A form label must be associated with an input.
+  
+    102 │       </p>
+    103 │       {level === 'basic' ? (
+  > 104 │         <label className="rl-base-row">
+        │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  > 105 │           <Checkbox.Root
+         ...
+  > 120 │           <strong aria-hidden="true">{single ? '已选择' : '未选择'}</strong>
+  > 121 │         </label>
+        │         ^^^^^^^^
+    122 │       ) : (
+    123 │         <form ref={form} onSubmit={submitForm}>
+  
+  i Consider adding a "for" or "htmlFor" attribute to the label element or moving the input element to inside the label element.
+  
+
+entries/B10-base-ui/examples/example.tsx:141:13 lint/a11y/noLabelWithoutControl ━━━━━━━━━━━━━━━━━━━━
+
+  × A form label must be associated with an input.
+  
+    139 │           <fieldset className="rl-base-fieldset">
+    140 │             <legend>可授予的订阅权限</legend>
+  > 141 │             <label className="rl-base-row rl-base-parent">
+        │             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  > 142 │               <Checkbox.Root
+         ...
+  > 158 │               </strong>
+  > 159 │             </label>
+        │             ^^^^^^^^
+    160 │             <div className="rl-base-list">
+    161 │               {OPTIONS.map((option) => (
+  
+  i Consider adding a "for" or "htmlFor" attribute to the label element or moving the input element to inside the label element.
+  
+
+entries/B10-base-ui/examples/example.tsx:162:17 lint/a11y/noLabelWithoutControl ━━━━━━━━━━━━━━━━━━━━
+
+  × A form label must be associated with an input.
+  
+    160 │             <div className="rl-base-list">
+    161 │               {OPTIONS.map((option) => (
+  > 162 │                 <label className="rl-base-row" key={option.id}>
+        │                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  > 163 │                   <Checkbox.Root
+         ...
+  > 185 │                   </span>
+  > 186 │                 </label>
+        │                 ^^^^^^^^
+    187 │               ))}
+    188 │             </div>
+  
+  i Consider adding a "for" or "htmlFor" attribute to the label element or moving the input element to inside the label element.
+  
+
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while applying fixes.
+  
+
+
+exitCode=1

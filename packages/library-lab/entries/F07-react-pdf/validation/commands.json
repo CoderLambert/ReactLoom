@@ -1,0 +1,92 @@
+[
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": "node --test packages/library-lab/entries/F07-react-pdf/examples/worker-payload.test.mjs packages/library-lab/entries/F07-react-pdf/examples/render-budget.test.mjs",
+    "exit": 0,
+    "log": "validation/policy.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": "pnpm exec biome check --write packages/library-lab/entries/F07-react-pdf/examples packages/library-lab/entries/F07-react-pdf/validation/browser.spec.ts",
+    "exit": 0,
+    "log": "validation/biome-final.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": "pnpm --filter @reactloom/library-lab exec tsc -p /tmp/f07-portable-44gipwpm/tsconfig.json",
+    "exit": 0,
+    "log": "validation/portable-types.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": "node packages/library-lab/entries/F07-react-pdf/validation/official-check.mjs",
+    "exit": 1,
+    "log": "validation/official-check.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": "pnpm exec biome check --write packages/library-lab/entries/F07-react-pdf/examples packages/library-lab/entries/F07-react-pdf/validation",
+    "exit": 0,
+    "log": "validation/biome-final2.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": "node packages/library-lab/entries/F07-react-pdf/validation/official-check.mjs",
+    "exit": 0,
+    "log": "validation/official-check-final.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": "pnpm exec biome check --write packages/library-lab/entries/F07-react-pdf/examples packages/library-lab/entries/F07-react-pdf/validation",
+    "exit": 0,
+    "log": "validation/biome-final3.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": "pnpm --filter @reactloom/library-lab exec tsc -p /tmp/f07-final-zhqwvijf/tsconfig.json",
+    "exit": 1,
+    "log": "validation/portable-final.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": "pnpm --filter @reactloom/library-lab exec tsc -p /tmp/f07-final2-adtx1n5c/tsconfig.json",
+    "exit": 0,
+    "log": "validation/portable-final2.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": "pnpm exec biome check --write packages/library-lab/entries/F07-react-pdf/examples packages/library-lab/entries/F07-react-pdf/validation",
+    "exit": 0,
+    "log": "validation/biome-final4.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": "node --test packages/library-lab/entries/F07-react-pdf/examples/worker-payload.test.mjs",
+    "exit": 1,
+    "log": "validation/buffer-delta-red.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": "node --test packages/library-lab/entries/F07-react-pdf/examples/worker-payload.test.mjs",
+    "exit": 0,
+    "log": "validation/buffer-delta-green.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": "pnpm exec biome check --write packages/library-lab/entries/F07-react-pdf/examples",
+    "exit": 0,
+    "log": "validation/delta-biome.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": "pnpm --filter @reactloom/library-lab exec tsc -p /tmp/f07-no-suspense-ylxtxcla/tsconfig.json",
+    "exit": 0,
+    "log": "validation/suspense-delta-types.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": "pnpm exec biome check --write packages/library-lab/entries/F07-react-pdf/examples/example.tsx",
+    "exit": 0,
+    "log": "validation/suspense-delta-biome.log"
+  }
+]

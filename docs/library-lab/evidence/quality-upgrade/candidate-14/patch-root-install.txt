@@ -1,0 +1,9 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+command=pnpm install --filter @reactloom/library-lab --frozen-lockfile --offline --ignore-scripts
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+.                                        |   +1   -1 +-
+Progress: resolved 1, reused 1, downloaded 0, added 1, done
+Done in 849ms using pnpm v10.33.3
+
+exitCode=0

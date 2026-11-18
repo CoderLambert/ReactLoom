@@ -1,0 +1,6 @@
+{
+  "changed": [
+    "packages/library-lab/e2e/quality-resume-shiki.spec.ts"
+  ],
+  "reason": "Only browser probe clearTimeout DOM/Node signature fixed after build. Runtime sources unchanged. Final tsc and catalog pass; build-inputs.json remains exact build snapshot."
+}

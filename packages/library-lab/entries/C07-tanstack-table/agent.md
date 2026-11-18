@@ -1,47 +1,27 @@
-# C07 TanStack Table — 工程手册
+# C07 TanStack Table v9复用指南
 
-## 适用
+需要拥有表格DOM/样式/数据请求，同时使用行模型、排序、分页、选择时使用。开箱网格比较C08；C10虚拟化不代替分页。固定@tanstack/react-table9.2.4（MIT），React>=18。
 
-需要自己拥有表格 DOM 和数据请求的列表。不要把它当成数据源或虚拟化库。开箱网格比较 C08，大 DOM 比较 C10。
+## 真实API与迁移
 
-## 版本
+v9是useTable/tableFeatures，features里注册rowSortingFeature/rowPaginationFeature/rowSelectionFeature及sortedRowModel/createSortedRowModel、paginatedRowModel/createPaginatedRowModel。core自动包含，不传v8 getCoreRowModel工厂；table.getCoreRowModel实例读取仍存在。列用createColumnHelper<typeof features,Feed>()，渲染table.FlexRender，不解构依赖this的方法。
 
-`@tanstack/react-table@9.2.4`，MIT。入口是 `useTable`、`tableFeatures`、`createColumnHelper<typeof features, Feed>()`。不要从 v8 文章复制 `useReactTable` 或 `getCoreRowModel`。
+带走example.tsx、table-data.ts、fixture-page.ts、page-policy.mjs/.d.mts、workshop.css，保持相对导入；.ts导入需allowImportingTsExtensions或目标构建器对应写法。features/columns/data保持稳定引用；应用写table/th/td、aria-sort和命名checkbox，SDK不输出样式/DOM。
 
-## 迁移
+## 数据与三个目标
 
-带走 `examples/example.tsx` 和 `examples/page-policy.mjs`。用 API client 替换 `fetchLocalPage` 的 `setTimeout`。保持 `manualSorting`、`manualPagination`、`rowCount` 和 `getRowId`。排序字段继续走白名单，服务端再查一次。
+basic：原18行→core18→sorted18→DOM18，排序改变ID顺序但稳定rowId选择不变。business：应用JS先filter，再给Table全部匹配数据，SDK排序后分页；默认5/18，“技术”6条时第一页5/下一页1。advanced：360ms本地fixture完成排序/分页，manual flags让SDK不再处理，传入5行/rowCount18时各模型只有当前5行。
 
-## 不可删的清理
+c07-model-summary与c07-row-model展示同份数据/模型ID；c07-table行data-row-id；c07-selection保存跨页ID。getSelectedRowModel只物化当前传入data范围：客户端可能有离开当前页的行，服务端不能凭空恢复未加载页。批量操作由服务端重新鉴权。
 
-任何会改变查询身份的操作先 `invalidate`。回包必须 `lease.owns()`。页码被 `clampPageIndex` 改掉时不要提交旧页的行。卸载时 effect cleanup 调用 `lease.cancel()`。行的 React key 使用 `row.id`。
+## 不能删的边界
 
-## 反例
+getRowId=业务id；受控sorting/pagination/rowSelection；single-sort与排序/搜索归零；pageSize按SDK计算位置。manualSorting/manualPagination/rowCount与真实数据处理所有权一致，不能给一页却当成全局排序。
 
-```tsx
-useTable({ data: onePage }) // 客户端排序被误当成全局排序
-const { getValue } = row
-getValue('title')
-```
+page-policy的query identity包含页/大小/排序/query/fail/limit；每次身份改变invalidate推进epoch并abort；提交必须lease.owns，展示回包/错误需当前generation，A→B→A旧结果不能复活。总数缩小时clamp后重新读取，不提交旧页。effect cleanup只取消本lease。保留中文IME保护与失败/加载/空状态区分。
 
-- 省略 `getRowId`。
-- 只 `abort`，不比较 epoch，导致 A→B→A 回写。
-- 用 `getSelectedRowModel()` 当跨页已选集合。
-- `initialState`、`state`、`atoms` 同时写分页。
-- 把 `sortId` 拼进 SQL。
-- 列头只有点击、没有按钮和 `aria-sort`。
+## 定向验收
 
-## 测试断言
+真实SDK测试覆盖同源features/fixture、排序→分页→SSR DOM、稳定ID/选择、manual bypass与rowCount；10项page-policy是纯策略。browser需实际头部按钮/aria-sort、跨页checkbox、中文Enter、503恢复、缩至2条及竞态，不从SSR/类型推出PASS。
 
-- 身份函数拒绝未知 sort id、多列排序和非整数页码。
-- `clampPageIndex` 在总数变小时回到最后一页，空表回到 0。
-- gate 的旧 lease 在新的 begin 之后 `owns()` 为假，包括 A→B→A。
-- 策略测试不是浏览器里的表格 PASS。
-
-## 真实限制
-
-advanced 的 503 和延迟都是本地定时器。没有 Query、没有 URL 状态、没有虚拟行。18 行不是性能数字。中文 Enter 的 80ms 是示例策略。
-
-## 证据
-
-没有收据不要写 PASS。Actions 41779873259 不是本条目。不要改 `verification.json`。
+固定官方包README来自d01c01bedbab0ff6c2641f18b2fc9a11545d9bf6（9.2.4），英文回退有候选依据；官网GET200的X-Frame-Options: DENY明确禁止iframe，按blocked保留直达入口；Lab-origin浏览器未运行，不冒称allowed。正式sdk/build/browser保持NOT_RUN直到匹配收据；局部结果与来源见local-validation.md。

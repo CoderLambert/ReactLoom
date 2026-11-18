@@ -1,0 +1,15 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node --test entries/B08-mantine/tests/feed-history.test.mts entries/B08-mantine/tests/local-color-scheme.test.mts
+exit: 0
+✔ rapid sequential changes keep one-step undo snapshot accurate (0.536276ms)
+✔ NumberInput intermediate and boundary values preserve state (0.160153ms)
+✔ noop and unknown records do not replace the undo point (0.096119ms)
+✔ each public color scheme manager owns its in-memory value (0.504594ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 74.20811

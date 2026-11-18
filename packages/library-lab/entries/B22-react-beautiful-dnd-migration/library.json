@@ -4,14 +4,8 @@
   "slug": "react-beautiful-dnd-migration",
   "name": "react-beautiful-dnd（历史迁移）",
   "group": "B",
-  "summary": "把废弃react-beautiful-dnd的Droppable/Draggable列表低风险迁移为React19兼容替代库",
-  "tags": [
-    "migration",
-    "react19",
-    "drag-drop",
-    "keyboard",
-    "rollback"
-  ],
+  "summary": "在React19运行@hello-pangea/dnd18.0.1，保留历史RBD列表形状并核对真实传感器与最终写入守卫",
+  "tags": ["migration", "react19", "drag-drop", "keyboard", "rollback"],
   "contentState": "recreated",
   "packages": [
     {
@@ -21,15 +15,15 @@
   ],
   "references": [
     {
-      "title": "Hello Pangea DnD",
-      "url": "https://github.com/hello-pangea/dnd"
+      "title": "实际替代SDK18.0.1固定源码",
+      "url": "https://github.com/hello-pangea/dnd/blob/410173402853654f64436d116d68e3f89359d496/README.md"
     },
     {
-      "title": "v18 React19发布",
-      "url": "https://github.com/hello-pangea/dnd/releases/tag/v18.0.0"
+      "title": "18.0.1发布说明",
+      "url": "https://github.com/hello-pangea/dnd/releases/tag/v18.0.1"
     },
     {
-      "title": "历史react-beautiful-dnd",
+      "title": "历史原库（归档/未运行）",
       "url": "https://github.com/atlassian/react-beautiful-dnd"
     }
   ],
@@ -49,45 +43,37 @@
     {
       "demoId": "basic",
       "title": "稳定DraggableId",
-      "description": "使用真实react-beautiful-dnd（历史迁移）接口：稳定DraggableId",
+      "description": "真实替代SDK鼠标/键盘传感器与稳定ID；保留隐藏尾部。",
       "level": "basic",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
         "examples/demo.tsx",
-        "examples/pinned-order.ts"
+        "examples/pinned-order.ts",
+        "examples/styles.css"
       ],
-      "capabilities": [
-        "drag-drop",
-        "keyboard",
-        "migration",
-        "rollback"
-      ]
+      "capabilities": ["drag-drop", "keyboard", "migration"]
     },
     {
       "demoId": "business",
       "title": "订阅源排序与拖动手柄",
-      "description": "使用真实react-beautiful-dnd（历史迁移）接口：订阅源排序与拖动手柄",
+      "description": "单列固定区间与独立手柄，上下按钮复用业务守卫。",
       "level": "business",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
         "examples/demo.tsx",
-        "examples/pinned-order.ts"
+        "examples/pinned-order.ts",
+        "examples/styles.css"
       ],
-      "capabilities": [
-        "drag-drop",
-        "keyboard",
-        "migration",
-        "rollback"
-      ]
+      "capabilities": ["drag-drop", "keyboard", "migration"]
     },
     {
       "demoId": "advanced",
-      "title": "锁定、撤销与持久化边界",
-      "description": "使用真实react-beautiful-dnd（历史迁移）接口：锁定、撤销与持久化边界",
+      "title": "取消、撤销与过期快照",
+      "description": "真实CANCEL/回调读数、一次撤销、重置与最终revision校验。",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
@@ -95,15 +81,9 @@
         "examples/example.tsx",
         "examples/demo.tsx",
         "examples/pinned-order.ts",
-        "tests/pinned-order.test.mjs",
-        "tests/order-history.test.mts"
+        "examples/styles.css"
       ],
-      "capabilities": [
-        "drag-drop",
-        "keyboard",
-        "migration",
-        "rollback"
-      ]
+      "capabilities": ["drag-drop", "keyboard", "migration", "rollback"]
     }
   ],
   "provenance": {
@@ -113,5 +93,25 @@
   "license": {
     "spdx": "Apache-2.0",
     "assets": "使用原创新媒体/结构化数据，不包含第三方收费资产。"
+  },
+  "official": {
+    "readme": {
+      "repository": "hello-pangea/dnd",
+      "commit": "410173402853654f64436d116d68e3f89359d496",
+      "path": "README.md",
+      "sourceUrl": "https://github.com/hello-pangea/dnd/blob/410173402853654f64436d116d68e3f89359d496/README.md",
+      "snapshotPath": "official/readme.md",
+      "language": "en",
+      "version": "18.0.1",
+      "syncedAt": "2026-11-10T14:56:39.719071+00:00",
+      "sha256": "cb8eefef4209f565a8f57e27bcd107d9ea4a59e8b86d22a1c03c24e311436851"
+    },
+    "homepage": {
+      "url": "https://dnd.hellopangea.com",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-10T14:56:37.578122+00:00",
+      "reason": "公开请求与完整最终响应头已保存；未从Lab origin确认iframe内容可用，因此unknown并保留直达/重试。"
+    }
   }
 }

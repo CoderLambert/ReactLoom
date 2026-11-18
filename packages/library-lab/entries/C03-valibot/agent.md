@@ -1,47 +1,18 @@
-# C03 Valibot — 工程手册
+# C03 Valibot 1.4.2
 
-## 适用
+unknown运行时边界、pipeline和字段路径适合Valibot；不是授权、SSRF/日期时区或表单状态库。MIT、TypeScript peer>=5，实装TS7.0.2；React19.3仅本例UI。无网络/存储/async schema。
 
-TypeScript 手写的运行时边界，尤其是要按 action 裁剪包体、把跨字段错误指到具体键的表单和导入。不要把它当成鉴权或 SSRF。已有 Zod 4 契约时先测量再决定是否重写。
+三目标：basic trim/object去未知键与字段错误；business共享Feed的1–3项批量合同/feeds.1.url嵌套路径；advanced两端真实公历+partialCheck/forward到end，无关note类型错误不屏蔽顺序问题。UI和SDK测同一schemas.ts，禁止另写影子validator。
 
-## 版本
+保留：
 
-`valibot@1.4.2`，MIT。研究笔记的 1.5.0 不是 pin。v1 的写法是 `v.pipe(v.string(), v.trim(), …)`，不是 `v.string([actions])`。
+- JSON.parse只得到unknown；safeParse同步/abortEarly:false，成功只读output。JSON语法与schema错误分开；编辑不自动解析，清旧结果并标dirty。
+- Feed.name先trim再minLength；普通object去未知键，不冒称strict模式/权限。URL v.url+canonicalHttpsFeedUrl布尔检查保留，先trim外围空白，禁止凭据/剩余地址中的控制字符/非HTTPS；未接transform，输出URL并未规范化/移fragment，不是SSRF。
+- start/end都isoDate+真实公历helper。isoDate不判月天数，0000拒绝、闰世纪/0–99年不得Date.UTC重映射。无效日期先报自身，顺序predicate不追加误导问题。
+- partialCheck只选start/end、forward到end；note独立类型错时仍能报end顺序。getDotPath+message用于UI，不输出/持久记录含input的issue整包。
 
-## 迁移
+迁移demo/example/schemas/boundary-policy.mjs及.d.mts/styles六文件，无Lab alias/资产。useId每实例textarea；同步state无额外资源可dispose。不要把未接入RHF/async/持久化/服务器约束写成当前能力。
 
-带走 `examples/example.tsx`、`examples/boundary-policy.mjs` 和声明文件。`demo.tsx` 留下。提交边界继续 `v.safeParse(..., { abortEarly: false })`。导入协议如果不能容忍未知键，把 `v.object` 换成 `v.strictObject`，并补负例。异步规则改 `safeParseAsync`，不要沿用按钮上的同步调用。
+控件“输入 JSON”“运行 safeParse”“恢复示例”；basic载入字段错误，business载入批量错误/载入超量批次，advanced载入非法结束日/载入联合错误/载入合法区间。c03-workshop data-level、c03-result data-status idle/dirty/json/success/schema；保留valibot-output，c03-issues为真实字段/消息表。完整浏览器提案在validation。
 
-## 不可删的清理
-
-URL 继续走 `canonicalHttpsFeedUrl`。公历继续走 `isRealCivilDate`，不要改成 `Date.UTC` 解析 0–99 年。日期顺序保持 `partialCheck` + `forward` 到 `end`。issue 不要整包写入日志。组件卸载后，尚未完成的 async parse 不得 `setState`。
-
-## 反例
-
-```ts
-v.pipe(v.string(), v.transform(Number)) // '' → 0
-v.pipe(schema, v.check(input => input.start <= input.end)) // 类型失败时可能不执行
-v.safeParse(asyncSchema, input) // 异步 pipe 不会在这里跑
-```
-
-- 草稿 state 用 `InferOutput`。
-- `v.object` 导入可能带越权字段的配置。
-- 把 `v.url()` 或 `v.isoDate()` 当成安全或历法的全部。
-- 在组合输入期间把 trim 结果写回控件。
-- 在 SSR 单例上 `setGlobalConfig` 切换语言。
-
-## 测试断言
-
-- 非 HTTPS、带用户信息、控制字符的 URL 不能通过。
-- `2026-02-30` 失败，`2024-02-29` 通过，`1900-02-29` 失败。
-- 结束早于开始时，路径键是 `end`。
-- `abortEarly: false` 时可以同时看到多条 issue。
-- 策略单测没有执行 `v.safeParse`，不能冒充 SDK。
-
-## 真实限制
-
-示例不发网络，没有 resolver，没有 `strictObject` 演示。当前 `v.object` 会丢掉未知键，这和导入场景的推荐相反，迁移时要改。中文 IME 未在真机验收。
-
-## 证据
-
-没有收据不要写 PASS。Actions 41779873259 是仓库级结果，不是本条目。不要改 `verification.json`。
+实际SDK6与pure policy2分开，日历red→green日志见local-validation；不当浏览器输入/ARIA PASS，formal全NOT_RUN。官方open-circle/valibot tag/npm1.4.2 commit0dc26ea88cf07a414653375f0da43f97e0eed607，目标library/README英文5343B，完整tree八候选无中文，date/sha/fullheaders在official；官网GET200无XFO/CSP未实测Lab iframe→unknown。

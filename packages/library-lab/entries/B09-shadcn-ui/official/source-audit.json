@@ -1,0 +1,17 @@
+{
+  "repository": "shadcn-ui/ui",
+  "commit": "8ab27715521cbd4f87ae6886cd989cbb678f6de7",
+  "readmeCandidates": [".changeset/README.md", "README.md", "packages/shadcn/README.md"],
+  "chosenReadme": "packages/shadcn/README.md",
+  "language": "en",
+  "selectionReason": "Target CLI package README; no Chinese README among the target package and root candidates. Root README describes the general platform.",
+  "packageVersion": "4.23.0",
+  "scope": "CLI documentation snapshot only; the Lab Button is original teaching source, no CLI was executed.",
+  "readmeSha256": "13d1235d1690dad504c4dd423d4f237a9a74eb8f2e49e7ee39f9c995ba7c0856",
+  "readmeBytes": 1317,
+  "sourceUrl": "https://raw.githubusercontent.com/shadcn-ui/ui/8ab27715521cbd4f87ae6886cd989cbb678f6de7/packages/shadcn/README.md",
+  "upstreamButtonPath": "apps/v4/registry/new-york-v4/ui/button.tsx",
+  "upstreamButtonSha256": "79dd6f75f8136394442202d6b8b922fb269eaad0a5dba579397c9d5b41f893bb",
+  "upstreamButtonDifference": "Pinned source imports cn and radix-ui; six variants and eight sizes. Local source uses local cn, @radix-ui/react-slot, four variants and three sizes, explicit native type=button default.",
+  "checkedAt": "2026-11-10T09:40:38.845457+00:00"
+}

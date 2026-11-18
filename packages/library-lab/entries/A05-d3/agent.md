@@ -1,47 +1,27 @@
-# A05 D3 — 工程手册
+# A05 D3 接入与所有权
 
-## 适用
+先读library/guide、实际examples及verification。锁定d3@7.9.0（ISC）、@types/d3@7.4.3；数据为本地固定7天阅读/收藏，没有HTTP、采样服务或历史PASS继承。标准报表可比较其他图表库，D3适合自己定义数据编码和图元。
 
-`d3@7.9.0` 做比例尺、轴和 SVG 联结。标准报表优先 A01/A02/A03，对齐时序优先 A04。Lab 把整张 `svgRef` 交给 D3；生产混合模式则让 React 画 mark，D3 只碰专用 `<g>`。不要两种写者操作同一批节点。
+## 模型与迁移
 
-## 版本
+React创建SVG容器/通用属性，管理控件、表格与selected；D3仅在传入svgRef上设置viewBox并独占内部轴/柱/path/circle。不能让JSX和D3写同一批子节点。另一个合法方案是D3只计算尺度/shape，JSX渲染；不要混成两个写者。
 
-钉 `d3@7.9.0`，ISC，ESM。从 `d3` 按名导入 `scaleBand`、`scaleLinear`、`axisBottom`、`axisLeft`、`line`、`curveMonotoneX`、`max`、`select`。不要并行安装一份版本不同的 `d3-scale`。类型若来自 `@types/d3`，版本号可以和主包不同，以 API 为准。
+复制example.tsx、chart-policy.ts、chart-geometry.ts、draw-chart.ts、workshop.css；demo.tsx只重导出。fixture和原策略在chart-policy；geometry真实调用scaleBand/scaleLinear/line；draw-chart真实axis与keyed join。SVG Y反向range，nice仅改显示域。band无连续invert，命中直接用datum.day。
 
-## 迁移
+## 三目标
 
-v5 的 `d3.event` 和分散 enter/exit 改成回调参数和 `selection.join`，key 用业务 id。ECharts 迁过来时列出 tooltip、空态、表格和导出的新主人。`nice()` 的端点只用于刻度。告警序列不要用 `curveMonotoneX` 冒充原始尖峰。
+basic：7根阅读柱，D3返回尺度/坐标轴与实际DOM属性，指针/表格按钮同步选择；business：阅读/收藏两条真实路径，共用次数轴，阅读圆点命中；advanced：3/5/7天和0..115阈值，按day保留更新节点、移除退出节点，空态/恢复/真实窄容器重绘。
 
-## 不可删的清理
+表格保留日期窗口内阈值隐藏项并禁用隐藏行选择；状态明确原选择已不在图中。day在当前fixture唯一，生产须永久唯一ID与有序输入。curveMonotoneX在单调X前提下保持Y单调段，不制造相邻点间新极值；插值仍不是实际采样。
 
-绘图 effect 的 cleanup 必须 `interrupt`、去掉 `pointerenter`、`remove` 子节点。`ResizeObserver` 断开。若加上 brush/zoom，用命名空间 `.on('.brush', null)` / `.on('.zoom', null)`，并取消 RAF 和 fetch。不要在 render 里 append。
+## 清理和观察
 
-## 反例
+更新不清空SVG：真实data(rows,key).join返回enter/update/exit，当前主图元计数来自selection，marks/paths读取绘后属性，domain/range来自真实SDK。选择/resize也会更新，joined不是累计资源指标。
 
-```tsx
-// 错：React 与 D3 同时拥有 circle
-<svg>{rows.map((row) => <circle key={row.day} />)}</svg>
-// 对：要么 JSX 独占 mark，要么像 Lab 一样 effect 独占 svgRef
-```
+pointerenter.a05命名空间更新/退出/卸载可精确移除；重绘interrupt，卸载才clearChart全子树，ResizeObserver成对disconnect。只操作自有SVG，不清全站DOM或别人的事件。无活动transition/brush/zoom/RAF/网络，不制造相应运行PASS。data-d3-cleaned只是实际clearChart结束标记，不能据此声称逐native资源都已验收。
 
-下标做 join key、brush 像素当时间、卸载不 remove、8 万 SVG 圆、把缺失画成 0，都不要做。
+## 验证
 
-## 测试断言
+SDK仅真实D3尺度/line算法，不用伪DOM/假SVG；原3策略独立。真实轴、join、节点身份、事件、resize 和清理的 Chromium 覆盖见 local-validation.md。观察点a05-workshop/svg/status/summary/observation及实际.a05-bar/.a05-dot[data-day/data-selected]、.a05-line[data-series]、.a05-x/y-axis。
 
-策略测试断言尾部窗口、阈值过滤、选中项必须仍可见、宽度夹在 1..4096 且拒绝 0。SDK 收据还要看到真实 `select`/`join`/`axis`/`line`、卸载后 SVG 清空、宽度变化更新 viewBox。没有 runs 收据则为 NOT_RUN。
-
-## 真实限制
-
-没有 brush、zoom、Canvas、HTTP、CSV。表包含被阈值隐藏的行，图不包含。命中只有 `pointerenter`。`curveMonotoneX` 会插值。星期字符串在这份 fixture 里唯一，不能当成通用主键方案。没有帧率数字。
-
-## 断言边界
-
-`tests/chart-policy.test.mts` 覆盖窗口、阈值、选中回落和宽度。SDK 用例要 `import { select, scaleLinear, line } from 'd3'`，对真实 SVG 元素 `join` 后再 `remove`。不要用字符串快照代替比例尺输出。卸载后子节点应为 0。缺收据时保持 NOT_RUN。不要在同一 SVG 上同时用 JSX 和 `selectAll` 删除对方创建的节点。
-
-## 证据
-
-Actions `41779873259` 的仓库级 install、typecheck、build、52 SDK 文件（153 测试）和 45 Playwright 不是 A05 PASS。不要把策略测试或历史研究 PASS 写入 `verification.json`。
-
-对照 `library.json` 的版本编写 import，不要升到条目未钉死的版本。
-`tests/` 中的策略用例不能改写成 sdk 字段的 PASS。
-浏览器与构建未留下收据时，对应字段维持 NOT_RUN。
+官方v7.9.0→commit1f8dd3b92960f58726006532c11e9457864513ec，根英语原文754B、无中文候选，精确sha/date/响应见official。官网完整GET200无XFO/CSP，未真实Lab iframe所以unknown。完整六项/日志/实际命令见local-validation；formal sdk/build/browser全NOT_RUN。

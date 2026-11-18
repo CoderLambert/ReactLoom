@@ -1,156 +1,75 @@
-# A09 Excalidraw 0.18.1：场景数据、导入边界和键盘隔离
+# Excalidraw：编辑草图，再验证导入和只读边界
 
-Excalidraw 是手绘白板：图形、文字、箭头、缩放和撤销。它不执行 DAG，也不做自动布局。强端口约束用 React Flow，关系探索用 G6，可 diff 的流程文本用 Mermaid，自研图元用 Konva，地图用 Leaflet 或 MapLibre。更强调可编程形状时再评估 tldraw，并单独看授权。
+RSS流程评审需要移动节点、补充文字和导出图片，而不是执行一套自动化管道。`@excalidraw/excalidraw@0.18.1`提供真实手绘编辑器；本例用官方骨架转换API创建草图，观察元素身份与位置，再处理受限导入、PNG和只读。数据只在当前实例内存，不接RSS服务、模型、账号或协作后端。
 
-Library Lab 钉 `@excalidraw/excalidraw@0.18.1`。不要使用 0.18.0：官方说明该版本的 Mermaid 序列图标签有 XSS 风险，0.18.1 才是修复版。[GHSA-39h7-pwv7-rc3x](https://github.com/advisories/GHSA-39h7-pwv7-rc3x)。npm 上的嵌入包是 MIT。Excalidraw+ 的云协作、账号和共享后端不是这份 MIT 自动附带的。
+当前内容为重新适配的`recreated`，历史研究来源保留，历史PASS不继承。需要端口和执行约束时看A06；文本可版本控制的图看A08。自由手绘内容不会自动变成可执行工作流。
 
-## Lab 当前示例
+## 三个实验
 
-`examples/demo.tsx` 导出 `examples/example.tsx`。样式在 `examples/styles.css`，并导入 `@excalidraw/excalidraw/index.css`。导入规则在 `examples/scene-policy.ts`。
+### 1. 从指针操作到场景元素
 
-已挂载：
+打开“嵌入式手绘画板”。点击矩形工具，在画布空白处按下、移动、松开；“非删除元素数”在停止变动约160ms后增加。展开“查看当前元素身份、位置与文字”，可读出真实SDK返回的id/type/x/y。用SDK撤销快捷键撤回，数量回到原值。
 
-- `<Excalidraw langCode="zh-CN" autoFocus={false} handleKeyboardGlobally={false} />`。全局快捷键关掉，避免抢页面按钮和输入法。
-- basic 的 `initialData` 是 `undefined`（空画布）。business / advanced 用 `convertToExcalidrawElements` 生成三块矩形（RSS 获取、清洗 / 分类、人工审核）和两支箭头，背景 `#fffdf7`。
-- `initialData` **不是受控属性**。`seed` 随 `level` 用 `useMemo` 变化，但若宿主不重挂载组件，切换层级不会自动换场景。恢复要靠按钮里的 `updateScene({ elements: initialWorkflow() })`。
-- `excalidrawAPI` 写入 ref。0.17 已去掉 `readyPromise` 和把 API 当 `ref` 的旧写法。
-- `onChange` 防抖 160ms，只数未删除元素，避免每个指针事件都重渲染。
-- advanced：只读 `viewModeEnabled`、PNG、`.excalidraw`/`.json` 导入。「忽略当前导入或导出」递增 `operationId`，让进行中的 `loadFromBlob` / `exportToBlob` 不能再 `updateScene` 或触发下载。SDK 内部工作可能还在跑。
-- PNG 用 `exportToBlob`，带上 `getSceneElements()`、`getFiles()`、`getAppState()`，`maxWidthOrHeight: 2048`，空场景直接拒绝。Blob URL 约 2 秒后 `revoke`，卸载时清掉剩余 URL 和定时器。
-- 导入先看扩展名、1.5 MB 上限、最多 200 个元素、链接必须是无用户名密码的 `https:`、拒绝任何二进制附件。通过后才 `updateScene`。失败保持原画布。
-- `onLinkOpen` 对不安全链接 `preventDefault`。
-- 文案写明数据只在页面内存里。离开或换场景会释放。字体默认仍可能请求官方 CDN；自托管要在加载模块前设置 `window.EXCALIDRAW_ASSET_PATH` 并复制 `dist/prod/fonts`。本示例没有做这一步。
+这是Canvas编辑器，不是用截图或伪SVG模拟。导入官方`index.css`，父容器必须有非零高度。`autoFocus={false}`不在挂载时抢焦点；`handleKeyboardGlobally={false}`让快捷键只在SDK自己的交互范围处理，不把宿主页面输入当白板命令。
 
-没有挂上：服务端 revision、409、503、`scrollToContent`、协作、把 `appState` 白名单进磁盘。元素上限 200 和 1.5 MB 是教学阈值，不是官方极限，也不是性能数字。
+### 2. 草图来自结构化骨架
 
-## 对象与坐标
+打开“RSS流程草图与结构化初始元素”。`convertToExcalidrawElements`接收3个带label的矩形和2个箭头。label会生成独立绑定文字，因此初始正常场景是8个元素（3矩形、3文字、2箭头），不是5个。
 
-- **elements。** 稳定 id、类型、场景坐标和样式。`isDeleted` 的项仍可能留在数组里，计数时要滤掉。Lab 的导入检查不是完整 schema 校验器。
-- **appState。** 工具、选区和面板是瞬时状态。长期保存只留业务真正需要的字段，例如背景色。不要把整份 appState 当文档。
-- **files。** 图片常以 data URL 挂在 fileId 上。只存 elements 会丢图。Lab 的教学导入直接拒绝附件，避免在浏览器里接收未审查的二进制。
-- **坐标。** `x/y` 是场景坐标，不是 `clientX`。缩放和滚动之后要用官方换算，不能只减容器偏移。
-- **更新。** 首次用 `initialData`。之后用 `updateScene` 或换 `key` 重挂载。远程协作要选 `captureUpdate`：`IMMEDIATELY`、`EVENTUALLY` 或 `NEVER`。不要把别人的每次远端变更都推进本地撤销栈。[updateScene](https://docs.excalidraw.com/docs/@excalidraw/excalidraw/api/props/excalidraw-api)。
+移动一个节点，观察同id的坐标变化；可编辑文字。点“重置当前画布”清空当前实例，再点“恢复流程草图”调用`updateScene`重新生成骨架。恢复使用新生成的元素身份，不是恢复之前保存的快照；本例没有保存文档按钮。
+
+`initialData`只用于首次挂载，不是受控属性。用户操作后不把onChange数组写回initialData。恢复和导入是本地明确动作，使用`CaptureUpdateAction.IMMEDIATELY`记录历史；远端协作更新应另行设计captureUpdate，不能照搬成本地撤销步。
+
+### 3. 导入、拒绝恢复与只读
+
+进阶层提供文件输入、PNG和“只读演示”。导入只接受`.excalidraw`/`.json`，先限制非空且不超过1.5MB，再交给真实`loadFromBlob`解析，之后检查最多200元素、无凭据HTTPS链接、无附件，以及几何/箭头/文字/自由绘制类型白名单。图片、embeddable、frame等不在教学导入范围。SDK嵌入验证也显式关闭。
+
+导入成功通过`updateScene`替换当前元素；失败保留原画布并显示原因，可立即再选合法文件。文件输入会清空value，允许重试同一个文件。白名单是本例应用政策，不是Excalidraw能力上限，也不是完整通用schema安全审核。
+
+勾选只读：SDK启用`viewModeEnabled`，应用同时禁用导入、重置和恢复；切换时递增操作代数，使进行中的导入/导出结果失效。PNG读取仍允许。取消只读不会复活旧操作。服务端写接口仍需自己的权限判断，前端只读不是授权。
+
+“下载PNG”读取当前elements/files/appState，通过`exportToBlob`生成PNG，长边上限2048；空场景拒绝。字体、图片、浏览器Canvas或资源网络失败都可能使导出失败，错误会显示，不伪造成功图片。成功后本地下载，不上传。
+
+## 生命周期和异步所有权
 
 ```text
-initialData 只在挂载时进入编辑器
-onChange -> 防抖计数（不写回 initialData）
-按钮 -> updateScene / resetScene / exportToBlob / loadFromBlob
-operationId 使迟到的异步结果失效
+官方骨架 → initialData / updateScene → SDK场景
+SDK onChange → 160ms派生观察（不回写场景）
+文件 → 字节限制 → loadFromBlob → 场景政策 → updateScene
+PNG → exportToBlob → token/mounted/API身份检查 → 本地下载
+重置 / 恢复 / 切只读 / 忽略 / 卸载 → 旧操作代数失效
 ```
 
-## 三层
+`operationId`不是AbortSignal：SDK底层解析/导出可能继续，但旧结果不得更新画布、触发下载或覆盖新状态。“忽略当前导入或导出”明确表达这个边界。成功提交前同时核对代数、mounted、发起时API身份；导入还检查当前只读状态。
 
-### 01 空画布
+0.18.1在SDK构造函数交付excalidrawAPI。StrictMode会重放外层effect清理，但不保证再交付同一个API；因此组件保留私有candidate供effect恢复，只有active apiRef可执行命令，inactive时清空。真正卸载后组件引用随实例释放，不对外保存API。onChange在未挂载时不安排报告，计时回调也检查挂载标志。
 
-画矩形、文字、撤销，都由官方编辑器完成，不是模拟 SVG。容器在 CSS 里必须有非零高度，库会撑满父盒。高度为 0 时看起来像库坏了。
+卸载递增代数、清active API、防抖报告和下载timer，撤销本例创建的所有Blob URL；普通下载约2秒后撤销URL。SDK负责内部Canvas与输入监听，不遍历清理全站存储或其它条目资源。
 
-### 02 流程草图
+## 迁移必要内容
 
-三块矩形和箭头是骨架，不是可执行的 RSS 任务。箭头不是 React Flow 的合法边。按钮可以重新 `updateScene` 这份骨架。保存到服务器不在本文件里。
+复制`example.tsx`、`scene-policy.ts`、`styles.css`，按产品入口替换`demo.tsx`重导出。安装匹配0.18.1并导入官方CSS；使用客户端运行环境，不把浏览器SDK直接放进SSR服务端模块。0.18.1修复了0.18.0的特定Mermaid序列图标签漏洞，不代表所有外部内容都安全。[官方安全公告](https://github.com/excalidraw/excalidraw/security/advisories/GHSA-39h7-pwv7-rc3x)。
 
-### 03 只读、PNG、受限导入
+| 对象 | 这里如何处理 |
+| --- | --- |
+| elements | SDK场景事实；id稳定于一次编辑，报告过滤isDeleted |
+| appState | 瞬时工具/选区；导入只应用本例背景色，不盲目恢复整个外部状态 |
+| files | PNG需带上；教学导入拒绝附件和image元素 |
+| link | 导入及onLinkOpen都拒绝非HTTPS/凭据URL；不是域名信任审核 |
+| 初始场景 | initialData一次性；后续通过API更新 |
 
-只读只改 `viewModeEnabled`，不是后端授权。PNG 限制 2048。导入拒绝 javascript:、带凭据的 URL、超大文件和图片附件。重置会 `resetScene` 并作废进行中的操作。
+不要在render里创建元素、把initialData当双向受控源、每个pointermove同步保存、仅改按钮却遗漏在途回写，或把PNG当可编辑文档备份。外部场景进入产品前仍要做资源/权限/恶意复杂度及服务器边界检查。
 
-研究稿里的双标签 409、PUT `baseRevision`、模拟 503，仍是生产要做的事：编辑器不解决文档冲突。Abort 也不能撤回已经写上的版本。
+## 字体和当前资源事实
 
-## 反例
+目标包README明确默认从CDN下载使用到的字体；自托管需复制匹配版本fonts并在模块加载前设置`window.EXCALIDRAW_ASSET_PATH`。本例没有复制字体、修改全局资源路径或接入离线资产。外部字体网络、中文显示和PNG字形要在真实浏览器观察。旧assets BLOCKED缺少当前失败证据，现如实为NOT_RUN；不能据此猜测画布不能运行，也不能宣称离线已完成。
 
-把 onChange 写回 initialData：
+嵌入包为MIT；第三方图片、字体和品牌的具体分发条件分别核对。这里不复制未经确认的资源。当前Canvas不是可访问结构化内容的替代，三步RSS说明和元素观察提供文本入口；完整读屏、触控和中文IME仍需设备验收。
 
-```tsx
-// 错：每次变更都当成“受控初始值”，触发混乱重挂载
-<Excalidraw initialData={{ elements }} onChange={(elements) => setElements(elements)} />
+## 官方来源和验收边界
 
-// 对：ref 保存最新快照；外部更换用 updateScene
-onChange={(elements) => { latest.current = elements; }}
-apiRef.current?.updateScene({ elements: next });
-```
+`official/readme.md`保留目标包原文，固定v0.18.1提交`a2ec2889babf7d2295469c6d90ebe77fae57df84`的`packages/excalidraw/README.md`，英文1631字节，SHA-256 `d3458f4ffe1617432989dfa40896255e805f0ddbad194873808ba7e8996e1f45`。固定完整tree共7个README候选，无上游中文README；locales/README是翻译贡献说明。具体时间、版本、候选在source-audit.json和library.json。
 
-| 错误 | 正确 |
-|---|---|
-| 父级没有高度 | 明确高度，移动端再量溢出 |
-| 忘了 `index.css`，或在服务端直接执行 | 客户端导入；Next 用 `ssr: false` 动态加载 |
-| 全量持久化 appState | 白名单 |
-| 只 `JSON.stringify(elements)` | 需要图片时连同 files；Lab 教学路径则拒绝附件 |
-| 用点击坐标当元素 x/y | 场景坐标 API |
-| 停留在 0.18.0 | 至少 0.18.1，并继续看安全公告 |
-| 每个 pointermove 都 PUT | ref + 手动保存或去抖，带 revision |
-| PNG 不限制像素、URL 不释放 | `maxWidthOrHeight`，卸载 revoke。Lab 2048 与 2 秒延迟 |
-| 共享 JSON 就当多人协作 | 409 只是文档冲突；实时协作要协议、权限和合并 |
-| `handleKeyboardGlobally` 默认开着 | 嵌入页关掉，需要时再聚焦。Lab 已关 |
-| `onLinkOpen` 不检查协议 | 只允许无凭据 https。Lab 用 `isSafeSceneLink` |
-| 任意 Mermaid 贴进画布 | 转换模块单独审核；0.18.1 修的是特定序列图标签，不是所有 HTML |
+官网docs.excalidraw.com现重定向到plus.excalidraw.com/docs/sdk，GET200；完整响应头、最终URL和XFO/CSP null在official/homepage-response.json。未从Lab originiframe实测，因此unknown并保留直达。
 
-## 生命周期
-
-| 阶段 | 做法 |
-|---|---|
-| 挂载 | CSS、非零高度、初始数据。StrictMode 下请求不能残留 |
-| 编辑 | onChange 只写 ref 或防抖派生值，不要在回调里同步 `updateScene` 造成递归 |
-| 异步 | `operationId` 加挂载标志。Lab 用它代替 AbortController，因为导入导出没有 fetch |
-| 卸载 | 清定时器、revoke URL、丢掉 API ref |
-
-自由画笔点数、图片字节、字体和 DPR 决定内存，不要引用没有测过的 FPS。
-
-## 安全与输入法
-
-0.18.1 不表示可以执行任意 SVG、iframe 或链接。导出的 `.excalidraw` 含原始文本和结构，权限和加密在服务端。CSP 按实际字体和图片来源收紧，不要用 `*` 或无条件 `unsafe-eval`。
-
-中文输入由编辑器处理。宿主不要在 `compositionstart` 到 `compositionend` 之间提交。Lab 没有单独的 DOM 输入框。触控和画布滚动手势要在设备上看。图形列表不能只靠画布：示例用有序列表写出三步 RSS。`prefers-reduced-motion` 管不到库内部的全部缩放动画。
-
-## 组合
-
-**Mermaid + Excalidraw。** DSL 是可 diff 的语义；白板是批注。不要从自由元素反推语法。转换器单独引入并保持安全补丁。
-
-**Excalidraw + React Flow + TanStack Query。** 人工确认后才映射成带业务 id 和端口的 nodes/edges。两种编辑器不要同时写同一份状态。Query 处理 409。
-
-**Excalidraw + PDF。** 用受限 PNG 或经过净化的 SVG 当插图。位图失去可选文本。不要先放任超大导出再嵌进 PDF。
-
-## 生产清单
-
-1. 0.18.1 或更新的修复版，CSS 和高度齐全。
-2. 全局键盘关闭，直到用户进入画布。
-3. `initialData` 只做首次；更新走 API。
-4. onChange 去抖，不递归 updateScene。
-5. 导入限制扩展名、大小、元素数、链接和附件。
-6. 异步结果带代数，卸载作废。
-7. PNG 有像素上限，URL 释放。
-8. 只读不是授权。
-9. 字体自托管策略写进部署，而不是假设 CDN 可用。
-10. 场景 JSON 与后端 revision 分开。
-
-## 升级与练习
-
-练习：画四步中文草稿，导出 JSON，在新页面用同一套 `sceneImportError` 导入；故意放入 `javascript:` 链接，确认前端拒绝。两标签同时改同一 revision 时，后保存的得到 409，本地草稿还在。Chrome 与移动 Safari 上看 IME、2048 PNG 和焦点。没有这些记录就仍是 NOT_RUN。
-
-从旧教程迁移时删掉 `readyPromise`，API 只从 `excalidrawAPI` 回调拿。
-
-## 故障排查
-
-空白：高度和 CSS。图片导入后不见：files 没加回，或被 Lab 规则拒绝。保存覆盖了别人：把 initialData 当成受控了。快捷键乱飞：`handleKeyboardGlobally`。字体仍打 CDN：资源路径设置晚于模块求值。卸载后仍 setState：缺 `mounted` 或代数。多端不一致：进程内状态不是数据库。
-
-## 官方链接
-
-- [安装与字体](https://docs.excalidraw.com/docs/@excalidraw/excalidraw/installation)
-- [集成与 SSR](https://docs.excalidraw.com/docs/@excalidraw/excalidraw/integration)
-- [Props](https://docs.excalidraw.com/docs/@excalidraw/excalidraw/api/props)
-- [excalidrawAPI](https://docs.excalidraw.com/docs/@excalidraw/excalidraw/api/props/excalidraw-api)
-- [元素骨架](https://docs.excalidraw.com/docs/@excalidraw/excalidraw/api/excalidraw-element-skeleton)
-- [工具函数与导出](https://docs.excalidraw.com/docs/@excalidraw/excalidraw/api/utils)
-- [0.18.1 发布](https://github.com/excalidraw/excalidraw/releases/tag/v0.18.1)
-- [npm](https://www.npmjs.com/package/@excalidraw/excalidraw)
-
-## 导入拒绝与异步代数
-
-`sceneImportError` 的顺序是：扩展名、字节数、元素个数、每条 `element.link`、附件个数。任一失败都不会调用 `updateScene`。`loadFromBlob(file, null, null)` 先跑，再数元素和链接；恶意文件仍会经过 SDK 解析，所以前面的 1.5 MB 限制必须先做。解析完成时若 `operationId` 已经变了，或 `apiRef.current` 不再是发起时那个 API，结果丢弃。这覆盖重置、替换骨架和卸载三件事。
-
-`exportToBlob` 需要 elements、files 和 appState 一起走，否则图片引用会空。`maxWidthOrHeight: 2048` 限制长边。空白场景在调用前返回。Blob URL 进 `urlsRef`，2 秒后 revoke；卸载循环把剩下的都释放。不要在 `click` 同步路径里立刻 revoke，浏览器可能还没开始下载。
-
-字体：官方示例把 `dist/prod/fonts` 放到站点公共目录，并在加载 `@excalidraw/excalidraw` 之前赋值 `window.EXCALIDRAW_ASSET_PATH`。赋值太晚，运行时仍会请求 CDN。Lab 没有 postinstall 拷贝，文档必须把这件事写成部署步骤，而不是已完成的行为。CSP 的 font-src 按实际目录收紧，不要用通配符换一次能显示。
-
-`viewModeEnabled` 只锁编辑器交互。隐藏工具栏不等于隐藏数据：元素仍在内存里，导出按钮在只读时仍可下载 PNG。权限判断放在服务端。
-
-## 证据
-
-sdk、build、browser 在 `docs/library-lab/evidence/runs/` 有本条目收据之前为 **NOT_RUN**。`scene-policy` 测试只证明扩展名、体积、元素数、链接和附件拒绝，不证明画布或 PNG。Actions run `41779873259` 是仓库级 install、typecheck、build、52 个 SDK 文件（153 个测试）和 45 个 Playwright，不是 A09 的 PASS，不要写入 `verification.json`。
+普通Node导入真实SDK在当前Node26环境遇open-color JSON import attribute错误，未进入转换函数；这不是Vite浏览器失败，也不通过mock或改loader造SDK PASS。纯政策测试和入口类型不证明画布、字体或PNG。主控使用`validation/browser-proposal.txt`里的真实Playwright提案执行三个目标；正式verification保持NOT_RUN，六项与命令见local-validation.md。

@@ -1,0 +1,16 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node --test entries/B09-shadcn-ui/tests/sdk.test.mjs
+exit: 0
+
+✔ actual Button classes use CVA and merge the caller spacing after the selected size (3.391259ms)
+✔ actual default Button remains a native disabled button and defaults to type button (3.487162ms)
+✔ actual asChild executes Radix Slot and keeps a single native link root (1.169173ms)
+✔ actual Slot rejects multiple root children (0.555038ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 135.894775

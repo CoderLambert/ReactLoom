@@ -1,0 +1,72 @@
+.rl-b22-workshop {
+  max-width: 720px;
+}
+.rl-b22-list {
+  padding: 0;
+  margin: 12px 0;
+  list-style: none;
+}
+.rl-b22-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 56px;
+  border: 1px solid #bacbbd;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 8px;
+  background: #fffefa;
+  color: #223a2d;
+}
+.rl-b22-row[data-dragging="true"] {
+  background: #e0eee0;
+  box-shadow: 0 4px 14px #1c3b292b;
+}
+.rl-b22-title {
+  flex: 1;
+}
+.rl-b22-workshop button {
+  min-width: 40px;
+  min-height: 40px;
+  border: 1px solid #6b8971;
+  border-radius: 6px;
+  padding: 8px;
+  background: #f5f9f0;
+  color: #223a2d;
+}
+.rl-b22-workshop button:focus-visible {
+  outline: 3px solid #39724b;
+  outline-offset: 2px;
+}
+.rl-b22-workshop button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.rl-b22-handle {
+  cursor: grab;
+  touch-action: none;
+}
+.rl-b22-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0;
+}
+.rl-b22-event {
+  box-sizing: border-box;
+  height: 190px;
+  overflow: auto;
+  padding: 12px;
+  border-radius: 8px;
+  background: #edf4e9;
+  font-size: 12px;
+}
+@media (max-width: 560px) {
+  .rl-b22-row {
+    gap: 5px;
+    padding: 8px;
+  }
+  .rl-b22-workshop button {
+    min-width: 36px;
+  }
+}

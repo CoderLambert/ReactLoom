@@ -1,0 +1,20 @@
+{
+  "validation/browser-proposal.txt": "0076dddec6621fb847581cffee0b863df952c2988fd02e281a56bd03732ffd2d",
+  "validation/checkpoint-metadata.txt": "342c2d14c64b8e97d4a66e178eea32ffd91bc994c3a7b58e713569ba4c7832c4",
+  "validation/diff-check.txt": "5c048f031b45e44ae4e10a7bd053831b90302ac9c3e268557433491c08fec87f",
+  "validation/final-files.txt": "3ea0c3cb1f4fd293c2b993c80e54b2b8416ca8c2a70e97cb26c649a4f77c3fc8",
+  "validation/final-inspection-initial.txt": "c0791581114d25b611fcce6f2b7eaae663ff1b5fa3a7153aa9ae9835fe650abf",
+  "validation/final-inspection.txt": "a51678e61d0c7e45d785afae36e488aa396bbeeb6e45f100c4dbb401a1c14045",
+  "validation/format-code-fixed.txt": "7b46a026c15cbdf4ad6a58db0173dcbcc7ea1e92f24074c3f3d6d25f51db81dd",
+  "validation/format-code.txt": "020ebf259d557f4439e75a02168bbbd95986492ea047cbb1319833a3f1881f80",
+  "validation/format-metadata.txt": "4f84a9bd53f71ad36de52a2c22439593e289ea8464ec0a1ac586c6bc7757c3fe",
+  "validation/metadata-final.txt": "8fd97711a8c576cd3f6da9871d0697f1a1260636ed7c867d0963ea60f221a818",
+  "validation/metadata.txt": "f62f02faff77d29fa9c8bb96f79b946a5deccdfed9d75bf164029799f52fbc70",
+  "validation/official-fetch.txt": "6b0705669cba09c703d2fca3290c1d098c323f7a75fd0ce607e4d7cc61bdedfa",
+  "validation/policy.txt": "a4e3a3cc8a08d466db3430f09f085d150677ac0b12dc435639f3ff8127288ee9",
+  "validation/proposal-format.txt": "e819af555a905c39e9d541d33b8ccf721c1f5253f4b3e62c993dce15fb6761c5",
+  "validation/proposal-types.txt": "6e3e0c7433f7dac530806fb2066e144b8f4d35dfb036e7b3751b95097338077f",
+  "validation/sdk.txt": "db0179e8c3e4c033d7dab6e1ce941424513ef1a3927ff990c2544905e831f908",
+  "validation/types-fixed.txt": "5e5cd644293460e40e55c2f4754289d3085752966e90dd24fb7f16368e9eec88",
+  "validation/types.txt": "a8f1684b4486ebc71c942723d9b6e1be7ec13e5895588a4b808584109a581fd0"
+}

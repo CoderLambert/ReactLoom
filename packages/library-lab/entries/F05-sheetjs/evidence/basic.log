@@ -1,0 +1,48 @@
+{
+  "scenario": "basic",
+  "sdkVersion": "0.20.3",
+  "flow": [
+    "rows",
+    "worksheet",
+    "workbook",
+    "xlsx bytes",
+    "readback rows"
+  ],
+  "sheetNames": [
+    "Subscriptions"
+  ],
+  "range": "A1:C4",
+  "cells": {
+    "A2": {
+      "t": "s",
+      "v": "Frontend"
+    },
+    "B2": {
+      "t": "n",
+      "v": 128
+    }
+  },
+  "rows": [
+    {
+      "channel": "Frontend",
+      "views": 128,
+      "kind": "订阅"
+    },
+    {
+      "channel": "AI",
+      "views": 63,
+      "kind": "推荐"
+    },
+    {
+      "channel": "DevOps",
+      "views": 32,
+      "kind": "专题"
+    }
+  ],
+  "artifact": {
+    "workbook": ".artifacts/basic.xlsx",
+    "result": ".artifacts/basic.json",
+    "bytes": 8851,
+    "sha256": "f238dfd5a6bc88402719cb7fe5f4086d4a2e6d56750c100feaf7a0d3de3f50ed"
+  }
+}

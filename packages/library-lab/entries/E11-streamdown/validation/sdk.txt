@@ -1,0 +1,15 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node --test entries/E11-streamdown/tests/sdk.test.mjs
+exit: 0
+
+✔ real Streamdown repairs an incomplete emphasis without modifying source (30.05376ms)
+✔ real Streamdown renders an incomplete fenced code block as code (15.642872ms)
+✔ real Streamdown renders GFM table and task list with the shared application policy (30.782146ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 213.465776

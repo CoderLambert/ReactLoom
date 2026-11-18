@@ -1,0 +1,9 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['python3', 'entries/C09-react-virtuoso/validation/fetch-official.py']
+startedAt: 2026-11-10T15:45:28.233740+00:00
+exit: 1
+Traceback (most recent call last):
+  File "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C09-react-virtuoso/validation/fetch-official.py", line 22, in <module>
+    assert tag['object']['type']=='commit'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

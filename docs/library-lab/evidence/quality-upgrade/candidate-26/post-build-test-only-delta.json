@@ -1,0 +1,5 @@
+{
+  "path": "packages/library-lab/e2e/quality-resume-xstate.spec.ts",
+  "sha256": "e0cd715cc3430d76f36877a608f78c4bf96b0ff5990ffcc4c51fa502e178b565",
+  "reason": "After frozen runtime build, add basic-level UI test only; next entry writers already released. Runtime input manifest remains inputs.json."
+}

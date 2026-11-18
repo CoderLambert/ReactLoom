@@ -1,0 +1,27 @@
+{
+  "checkedAt": "2026-11-10T09:53:55.833749+00:00",
+  "requestedUrl": "https://mswjs.io",
+  "finalUrl": "https://mswjs.io",
+  "method": "GET",
+  "status": 200,
+  "headers": {
+    "Accept-Ranges": "bytes",
+    "Access-Control-Allow-Origin": "*",
+    "Age": "39535",
+    "Cache-Control": "public, max-age=0, must-revalidate",
+    "Content-Disposition": "inline",
+    "Content-Length": "267025",
+    "Content-Type": "text/html; charset=utf-8",
+    "Date": "Tue, 10 Nov 2026 09:53:55 GMT",
+    "Etag": "\"cbd1956749216c5e8497d930e809e9f6\"",
+    "Last-Modified": "Mon, 09 Nov 2026 22:54:59 GMT",
+    "Server": "Vercel",
+    "Strict-Transport-Security": "max-age=63072000",
+    "X-Vercel-Cache": "HIT",
+    "X-Vercel-Id": "sin1::tgx7g-1794304435678-aa55eedafc2b",
+    "Connection": "close"
+  },
+  "xFrameOptions": null,
+  "contentSecurityPolicy": null,
+  "browserFromLabOrigin": "NOT_RUN"
+}

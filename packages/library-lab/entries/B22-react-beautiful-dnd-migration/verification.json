@@ -1,14 +1,14 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "真实目标SDK源码已编写，未执行runtime验收"
+    "note": "正式NOT_RUN；实际替代@hello-pangea/dnd18.0.1本地SSR2/policy17与主控真实传感器结果另记。原react-beautiful-dnd SDK未导入执行，不能把迁移成功记旧SDK PASS。"
   },
   "build": {
     "status": "NOT_RUN",
-    "note": "缺本通道完整pnpm依赖解析与tsc/build报告"
+    "note": "正式NOT_RUN；主控匹配候选16共享type/build/catalog通过属于本地范围，未取得本条目授权干净提交/固定记录器正式收据。原SDK未运行。"
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "未运行浏览器交互与资源清理E2E"
+    "note": "正式NOT_RUN；本地3目标及官方展示已由主控闭环：candidate16 basic/advanced PASS，fixed slot真实SDK键盘Space+4ArrowDown+Space的定向重试PASS且dest4/拒绝断言未放宽；官网既有PASS复用。实际替代库18.0.1，旧原库未运行。"
   }
 }

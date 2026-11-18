@@ -57,3 +57,11 @@ Pagefind 返回的 `errors` 非空要抛错，不要继续 `writeFiles`。
 ## 证据
 
 sdk、build、browser 保持 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有匹配收据。Actions 41779873259 不是本条目 PASS。不要改 `verification.json`。
+
+## 完整迁入/配置
+
+`pnpm add pagefind@1.5.2`；复制workshop.mjs、publication-policy.mjs和所需三个CLI入口，保留相对ESM路径。需要Node、匹配平台optional native binary、可执行权限和tmp读写；无React/CSS/服务账号依赖。入口close是进程级所有权，不让并发共享服务的单个任务关掉兄弟索引。
+
+getFiles与writeFiles分别生成，不假设带hash名字/字节相同。结果memoryFileCount/memoryBundleBytes对应内存；assets/fileCount/bundleBytes来自实际磁盘读取摘要。失败即清理本次scratch，包括keepOutput=true但构建或deleteIndex失败。CLI成功保留产物，调用者检查完仅删除该次打印目录所属临时根。
+
+生产把整个输出部署到/pagefind并独立调用search/results.data验证；当前visitorSearchExecuted=false。索引URL不自动创建对应HTML/文本页面，尤其customRecord的RSS路径须部署真实目标。过滤器/metadata与索引都公开，非ACL；原始fixture无秘密，excludeSelectors不是私密内容的安全兜底。官方README与实际响应头见official，测试证据与构建/浏览器分项见local-validation.md。

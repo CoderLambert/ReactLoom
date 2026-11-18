@@ -1,0 +1,15 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node --test entries/B08-mantine/tests/sdk.test.mjs
+exit: 0
+Real scoped Mantine SSR bytes: 26757
+Real NumberInput/hook initial SSR bytes: 28685
+✔ real scoped Mantine provider generates variables and accessible static controls (9.853366ms)
+✔ real NumberInput and hook initial value render; no browser timer/Portal claim (4.769839ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 300.219325

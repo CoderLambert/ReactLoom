@@ -19,8 +19,12 @@ test('pending catalogue entries must not expose fake runnable demos', () => {
     /must not declare/,
   )
 })
-test('three real levels plus four required files mark an entry structurally complete', () => {
-  assert.deepEqual(entryCompletenessIssues(complete, docs), [])
+test('one to three source-backed levels are complete when basic is present', () => {
+  for (const length of [1, 2, 3])
+    assert.deepEqual(
+      entryCompletenessIssues({ ...complete, demos: complete.demos.slice(0, length) }, docs),
+      [],
+    )
 })
 test('reviewed entries fail when guide, scoped Agent rules or evidence are absent', () => {
   const failures = entryCompletenessIssues(complete, { guide: true })
@@ -28,8 +32,15 @@ test('reviewed entries fail when guide, scoped Agent rules or evidence are absen
   assert.ok(failures.some((e) => e.includes('verification file')))
 })
 test('rejects duplicate, missing or orphaned entryPoints and avoids a false complete status', () => {
-  const missing = entryCompletenessIssues({ ...complete, demos: complete.demos.slice(0, 2) }, docs)
-  assert.ok(missing.some((e) => e.includes('three demos')))
+  for (const demos of [[], [...complete.demos, complete.demos[0]]])
+    assert.ok(
+      entryCompletenessIssues({ ...complete, demos }, docs).some((e) => e.includes('one to three')),
+    )
+  assert.ok(
+    entryCompletenessIssues({ ...complete, demos: complete.demos.slice(1) }, docs).some((e) =>
+      e.includes('basic'),
+    ),
+  )
   const orphaned = entryCompletenessIssues(
     { ...complete, demos: complete.demos.map((d) => ({ ...d, sourceFiles: [] })) },
     docs,
@@ -39,5 +50,5 @@ test('rejects duplicate, missing or orphaned entryPoints and avoids a false comp
     { ...complete, demos: complete.demos.map((d) => ({ ...d, level: 'basic' })) },
     docs,
   )
-  assert.ok(dup.some((e) => e.includes('one business demo')))
+  assert.ok(dup.some((e) => e.includes('duplicate demo level')))
 })

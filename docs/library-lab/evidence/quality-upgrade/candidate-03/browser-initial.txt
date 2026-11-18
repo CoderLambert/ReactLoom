@@ -1,0 +1,29 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=pnpm exec playwright test --config=.local-evidence/quality-playwright.config.ts quality-remediation-next.spec.ts a06-approval.spec.ts p0-risk-lifecycle.spec.ts quality-remediation.spec.ts --grep @A01|@A06|@B09|cumulative deltas
+
+Running 16 tests using 2 workers
+
+(node:744487) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:744491) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   2 e2e/a06-approval.spec.ts:52:1 › @A06 small requests and rejection, old instances remain pinned to their release (2.2s)
+  ✓   1 e2e/a06-approval.spec.ts:18:1 › @A06 configured fields render; large requests execute real branches and survive reload (3.6s)
+  ✓   3 e2e/a06-approval.spec.ts:75:1 › @A06 invalid connections, node deletion and corrupt import preserve existing data (3.2s)
+  ✓   4 e2e/a06-approval.spec.ts:100:1 › @A06 a changed threshold drives execution and stale tabs cannot erase requests (4.6s)
+  ✓   5 e2e/a06-approval.spec.ts:122:1 › @A06 real canvas drag and Handle reconnection persist; mobile fits the screen (3.5s)
+  ✓   7 e2e/quality-remediation-next.spec.ts:3:1 › @B09 local variants compose real classes and native disabled blocks activation (1.7s)
+  ✓   8 e2e/quality-remediation-next.spec.ts:25:1 › @B09 failed archiving preserves selection and retry or cancellation changes actual rows (1.9s)
+  ✓   6 e2e/p0-risk-lifecycle.spec.ts:9:1 › @A01 real chart pauses for reduced motion and unmounts its DOM (4.4s)
+  ✓   9 e2e/quality-remediation-next.spec.ts:55:1 › @B09 Slot preserves link navigation and permission removal restores non-link semantics (1.7s)
+  ✓  10 e2e/quality-remediation-next.spec.ts:71:1 › @A06 the minimal controlled graph moves, reconnects real Handles, and resets (2.1s)
+  ✓  11 e2e/quality-remediation-next.spec.ts:113:1 › @A01 setOption updates the actual chart and table without replacing the instance (1.7s)
+  ✓  12 e2e/quality-remediation-next.spec.ts:131:1 › @A01 comparison series can actually be removed and resize preserves its instance (2.7s)
+  ✓  13 e2e/quality-remediation-next.spec.ts:159:3 › @B09 official README and homepage limitation retain traceable exits (1.7s)
+  ✓  14 e2e/quality-remediation-next.spec.ts:159:3 › @A06 official README and homepage limitation retain traceable exits (1.3s)
+  ✓  15 e2e/quality-remediation-next.spec.ts:159:3 › @A01 official README and homepage limitation retain traceable exits (1.7s)
+  ✓  16 e2e/quality-remediation.spec.ts:67:1 › @E11 cumulative deltas render incomplete syntax and finish with real Markdown (1.9s)
+
+  16 passed (21.0s)
+
+exitCode=0

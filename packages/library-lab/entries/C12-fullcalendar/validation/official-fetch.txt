@@ -1,0 +1,21 @@
+{"label": "official-fetch", "cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["python3", "packages/library-lab/entries/C12-fullcalendar/validation/fetch-official.py"], "start": "2026-11-10T16:12:30.760044+00:00", "end": "2026-11-10T16:12:48.634555+00:00", "exitCode": 0, "log": "official-fetch.txt"}
+STDOUT
+{
+  "commit": "6b890e803c66d1e6db2fb21c449936155b7e81fc",
+  "readme": {
+    "path": "packages/react/README.md",
+    "language": "en",
+    "bytes": 2405,
+    "sha256": "9deb5ffbab60d6d8010097a95149614ec8ae0c41b06508db187b80c136ac983b"
+  },
+  "homepage": {
+    "url": "https://fullcalendar.io/",
+    "status": "blocked",
+    "reason": "Actual enforced complete response headers restrict cross-origin framing.",
+    "checkedAt": "2026-11-10T16:12:46.924051+00:00",
+    "browserFromLabOrigin": "NOT_RUN"
+  },
+  "requests": 8
+}
+
+STDERR

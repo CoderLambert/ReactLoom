@@ -1,0 +1,35 @@
+{
+  "repository": "GoogleChrome/workbox",
+  "commit": "62b9d8ba8eb3c1a2ab8aac9d84c90cda7865d6a3",
+  "readmePaths": [
+    "README.md",
+    "packages/workbox-build/README.md"
+  ],
+  "tag": "v7.4.1",
+  "checkedAt": "2026-11-17T16:49:47.098070+00:00",
+  "readmeSelection": "Package-specific official English README; matched package/root README paths have no Chinese original.",
+  "homepage": {
+    "requestedUrl": "https://developer.chrome.com/docs/workbox?hl=zh-cn",
+    "finalUrl": "https://developer.chrome.com/docs/workbox?hl=zh-cn",
+    "status": 200,
+    "headers": {
+      "last-modified": "Mon, 03 Jun 2024 20:11:58 GMT",
+      "vary": "Accept, Cookie",
+      "content-type": "text/html; charset=utf-8",
+      "content-security-policy": "base-uri 'self'; object-src 'none'; script-src 'strict-dynamic' 'unsafe-inline' https: http: 'nonce-Cl1H57chgz+xhTFL76Fu+F2L0b8b4t' 'unsafe-eval'; frame-ancestors 'self' https://developers.google.com/_d/analytics-iframe; report-uri https://csp.withgoogle.com/csp/devsite/v2",
+      "strict-transport-security": "max-age=63072000; includeSubdomains; preload",
+      "x-xss-protection": "0",
+      "x-content-type-options": "nosniff",
+      "cache-control": "no-cache, must-revalidate",
+      "expires": "0",
+      "pragma": "no-cache",
+      "x-cloud-trace-context": "ec2bcaa20af79ac983ac93813f04edff",
+      "date": "Tue, 17 Nov 2026 16:49:46 GMT",
+      "server": "Google Frontend",
+      "Content-Length": "129350",
+      "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+      "Connection": "close"
+    },
+    "bodySha256": "04481b56eb77c837b682e068c5972075c676d1cc2cd7d673f43bc21bd9b01281"
+  }
+}

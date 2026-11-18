@@ -1,0 +1,20 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ["node", "--test", "entries/A14-react-three-fiber/tests/frame-policy.test.mts"]
+startedAt: 2026-11-10T12:05:51.481766+00:00
+finishedAt: 2026-11-10T12:05:51.577370+00:00
+exitCode: 0
+
+STDOUT
+✔ runs only while foreground, allowed and actually rotating (0.50172ms)
+✔ refuses invalid speed and clamps long frame gaps (0.10658ms)
+✔ intersection and document visibility jointly stop the frame loop (0.086516ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 69.739906
+
+STDERR

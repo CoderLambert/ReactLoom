@@ -1,0 +1,107 @@
+.b17-workshop {
+  min-width: 0;
+}
+.b17-stage {
+  box-sizing: border-box;
+  max-width: 530px;
+  border: 1px dashed #8caa97;
+  padding: 18px;
+  border-radius: 10px;
+}
+.b17-stage-basic {
+  position: relative;
+  height: 360px;
+  overflow: hidden;
+  background: #f5f9f6;
+}
+.b17-anchor {
+  position: absolute;
+}
+.b17-anchor-top-left {
+  top: 20px;
+  left: 20px;
+}
+.b17-anchor-bottom-right {
+  bottom: 20px;
+  right: 20px;
+}
+.b17-stage-business {
+  min-height: 125px;
+}
+.b17-stage-advanced {
+  height: 190px;
+  overflow: auto;
+}
+.b17-scroll-anchor {
+  padding-top: 80px;
+}
+.b17-scroll-space {
+  height: 260px;
+}
+.b17-dialog {
+  box-sizing: border-box;
+  z-index: 9999;
+  width: 260px;
+  max-width: calc(100vw - 24px);
+  padding: 16px;
+  background: #fffefa;
+  color: #243a30;
+  border: 1px solid #adc7b4;
+  border-radius: 10px;
+  box-shadow: 0 12px 28px #1d392b33;
+}
+.b17-dialog-advanced {
+  width: 300px;
+}
+.b17-dialog label {
+  display: block;
+  margin-block: 10px;
+}
+.b17-dialog select,
+.b17-dialog input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 6px;
+  border: 1px solid #a0b5a6;
+  border-radius: 4px;
+}
+.b17-actions {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+.b17-workshop button,
+.b17-dialog button {
+  padding: 7px 10px;
+}
+.b17-workshop :focus-visible,
+.b17-dialog :focus-visible {
+  outline: 3px solid #267552;
+  outline-offset: 3px;
+}
+.b17-workshop pre {
+  max-height: 20rem;
+  overflow: auto;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  padding: 12px;
+  background: #eff6f1;
+}
+.b17-dialog-basic p {
+  margin: 8px 0;
+  font-size: 12px;
+  line-height: 1.4;
+}
+.b17-dialog-basic label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.b17-dialog-basic select {
+  width: auto;
+  min-width: 0;
+  flex: 1;
+}

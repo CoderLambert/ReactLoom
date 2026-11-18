@@ -1,0 +1,43 @@
+.a16-workshop {
+  min-width: 0;
+}
+.a16-workshop .a16-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-block: 1rem;
+  padding: 0.75rem;
+  min-inline-size: 0;
+  border: 1px solid #ccd9d0;
+  border-radius: 8px;
+}
+.a16-workshop .a16-controls legend {
+  padding-inline: 0.35rem;
+}
+.a16-workshop .a16-map {
+  height: 320px;
+  width: 100%;
+  background: #e8ede6;
+  border-radius: 8px;
+}
+.a16-workshop .a16-table-scroll {
+  overflow-x: auto;
+}
+.a16-workshop table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+.a16-workshop th,
+.a16-workshop td {
+  padding: 0.5rem;
+  border-bottom: 1px solid #ccd9d0;
+}
+.a16-workshop pre {
+  max-height: 20rem;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 0.8rem;
+}

@@ -1,0 +1,47 @@
+.a12-workshop {
+  min-width: 0;
+}
+.a12-workshop .a12-stage-host {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid #ccd9d0;
+  border-radius: 9px;
+  overflow: hidden;
+  background: #fdfdf8;
+}
+.a12-workshop .a12-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-block: 1rem;
+  padding: 0.75rem;
+  min-inline-size: 0;
+  border: 1px solid #ccd9d0;
+  border-radius: 8px;
+}
+.a12-workshop .a12-controls legend {
+  padding-inline: 0.35rem;
+}
+.a12-workshop .a12-controls label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.a12-workshop .a12-table-scroll {
+  overflow-x: auto;
+}
+.a12-workshop table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+.a12-workshop th,
+.a12-workshop td {
+  padding: 0.5rem;
+  border-bottom: 1px solid #ccd9d0;
+}
+.a12-workshop caption {
+  text-align: left;
+  padding-block: 0.5rem;
+}

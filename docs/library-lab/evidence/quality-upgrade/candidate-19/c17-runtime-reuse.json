@@ -1,0 +1,15 @@
+{
+  "at": "2026-11-10T18:00:53.560087+00:00",
+  "runtimeFiles": {
+    "packages/library-lab/entries/C17-i18next/examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+    "packages/library-lab/entries/C17-i18next/examples/example.tsx": "085785e16b3ae4a81544ed4c75a88572bc429364d774596ec864ff620d55b436",
+    "packages/library-lab/entries/C17-i18next/examples/i18n-client.d.mts": "a35e6ce297ae7881e0648089747edd77c1e5109dff2c7380b2ae3385fecbbee0",
+    "packages/library-lab/entries/C17-i18next/examples/i18n-client.mjs": "8e3886441674f2edaf12ab9f45304c0b1055e379ad4f286f7f4e11ca28013a79",
+    "packages/library-lab/entries/C17-i18next/examples/language-switch.d.mts": "4c8df1590b46b218210e2041241d626acea904f6f09e723df6ba9dfb0f1127f7",
+    "packages/library-lab/entries/C17-i18next/examples/language-switch.mjs": "4276db049efc9915912ce875b00b75881984be3461b0fc9ecec89a9b602aebb5",
+    "packages/library-lab/entries/C17-i18next/examples/styles.css": "e7a0871adeb3eaec1122342f32127cc0f269fe8a110f9daee9f6bb0676c7717b"
+  },
+  "candidate": "candidate-19",
+  "unchanged": true,
+  "officialDisplay": "NOT_RUN-new-metadata-after19"
+}

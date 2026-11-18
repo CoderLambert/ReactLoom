@@ -1,0 +1,19 @@
+{
+  "command": [
+    "pnpm",
+    "exec",
+    "playwright",
+    "test",
+    "--config=.local-evidence/quality-playwright.config.ts",
+    "quality-remediation.spec.ts",
+    "p0-risk-lifecycle.spec.ts",
+    "--grep",
+    "@E05|@E11|@F05"
+  ],
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+  "startedAt": "2026-11-10T09:39:39.104521+00:00",
+  "finishedAt": "2026-11-10T09:39:54.003880+00:00",
+  "exitCode": 1,
+  "implicitBuild": false,
+  "log": "docs/library-lab/evidence/quality-upgrade/candidate-02/browser-retry.txt"
+}

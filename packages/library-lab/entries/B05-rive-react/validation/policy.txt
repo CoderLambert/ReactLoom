@@ -1,0 +1,22 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ["node", "--test", "entries/B05-rive-react/tests/runtime-policy.test.mts"]
+startedAt: 2026-11-10T13:01:14.710953+00:00
+finishedAt: 2026-11-10T13:01:14.814104+00:00
+exitCode: 0
+
+STDOUT
+✔ basic player mounts and can play (0.916731ms)
+✔ hidden page releases Rive WebGL2 instance instead of merely pausing (0.102085ms)
+✔ advanced player does not allocate an offscreen renderer (0.079394ms)
+✔ reduced motion and explicit pause leave static player without autoplay (0.081629ms)
+✔ business animation only runs during active review (0.093193ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 76.53396
+
+STDERR

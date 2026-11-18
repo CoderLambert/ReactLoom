@@ -1,0 +1,9 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom
+argv: ["git", "diff", "--check", "--", "packages/library-lab/entries/A05-d3"]
+startedAt: 2026-11-10T11:53:28.423292+00:00
+finishedAt: 2026-11-10T11:53:28.425956+00:00
+exitCode: 0
+
+STDOUT
+
+STDERR

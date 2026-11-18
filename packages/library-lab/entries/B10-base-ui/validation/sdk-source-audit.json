@@ -1,0 +1,99 @@
+{
+  "installedPath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@base-ui+react@1.9.0_@date-fns+tz@1.5.0_@types+react@19.3.0_date-fns@4.4.0_react-dom@19.3.0_react@19.3.0__react@19.3.0/node_modules/@base-ui/react",
+  "package": {
+    "name": "@base-ui/react",
+    "version": "1.9.0",
+    "license": "MIT",
+    "peerDependencies": {
+      "@date-fns/tz": "^1.2.0",
+      "@types/react": "^17 || ^18 || ^19",
+      "date-fns": "^4.0.0",
+      "react": "^17 || ^18 || ^19",
+      "react-dom": "^17 || ^18 || ^19"
+    },
+    "peerDependenciesMeta": {
+      "@date-fns/tz": {
+        "optional": true
+      },
+      "@types/react": {
+        "optional": true
+      },
+      "date-fns": {
+        "optional": true
+      }
+    }
+  },
+  "files": {
+    "checkbox/root/CheckboxRoot.d.ts": {
+      "sha256": "de891487efb6123561267114713d4cb57556032a36ad49c4ec054054a95332bf",
+      "excerpts": [
+        {
+          "line": 9,
+          "source": " * Represents the checkbox itself.\n * Renders a `<span>` element and a hidden `<input>` beside.\n *\n * Documentation: [Base UI Checkbox](https://base-ui.com/react/components/checkbox)\n */"
+        },
+        {
+          "line": 73,
+          "source": "   */\n  onCheckedChange?: ((checked: boolean, eventDetails: CheckboxRootChangeEventDetails) => void) | undefined;\n  /**\n   * Whether the user should be unable to tick or untick the checkbox.\n   * @default false"
+        }
+      ]
+    },
+    "checkbox/root/CheckboxRoot.mjs": {
+      "sha256": "2564872d30f6f651ae671fc975378fde211760655371a9655ca6232c02d70056",
+      "excerpts": [
+        {
+          "line": 35,
+          "source": " * Represents the checkbox itself.\n * Renders a `<span>` element and a hidden `<input>` beside.\n *\n * Documentation: [Base UI Checkbox](https://base-ui.com/react/components/checkbox)\n */"
+        },
+        {
+          "line": 148,
+          "source": "      // Re-assert on `checked` changes too: clicking the input natively resets `indeterminate`.\n      inputRef.current.indeterminate = computedIndeterminate;\n    }\n    // Inside a group, the group derives the filled state from its value.\n    if (!groupContext) {"
+        },
+        {
+          "line": 168,
+          "source": "    // parent checkboxes unset `name` to be excluded from form submission\n    name: parent ? undefined : name,\n    // Set `id` to stop Chrome warning about an unassociated input.\n    // When using a native button, the `id` is applied to the button instead.\n    id: nativeButton ? undefined : controlId,"
+        },
+        {
+          "line": 175,
+          "source": "    style: name ? visuallyHiddenInput : visuallyHidden,\n    tabIndex: -1,\n    type: 'checkbox',\n    'aria-hidden': true,\n    onChange(event) {"
+        },
+        {
+          "line": 176,
+          "source": "    tabIndex: -1,\n    type: 'checkbox',\n    'aria-hidden': true,\n    onChange(event) {\n      // Workaround for https://github.com/react/react/issues/9023"
+        },
+        {
+          "line": 178,
+          "source": "    'aria-hidden': true,\n    onChange(event) {\n      // Workaround for https://github.com/react/react/issues/9023\n      if (event.nativeEvent.defaultPrevented) {\n        return;"
+        },
+        {
+          "line": 241,
+          "source": "      id: rootId,\n      role: 'checkbox',\n      'aria-checked': computedIndeterminate ? 'mixed' : computedChecked,\n      'aria-readonly': readOnly || undefined,\n      'aria-required': required || undefined,"
+        },
+        {
+          "line": 242,
+          "source": "      role: 'checkbox',\n      'aria-checked': computedIndeterminate ? 'mixed' : computedChecked,\n      'aria-readonly': readOnly || undefined,\n      'aria-required': required || undefined,\n      'aria-labelledby': ariaLabelledBy,"
+        },
+        {
+          "line": 295,
+          "source": "          if (!preventDefaultCalledAfterPropagation) {\n            getDefaultFormSubmitter(formToSubmit)?.click();\n          }\n        });\n      },"
+        }
+      ]
+    },
+    "checkbox/indicator/CheckboxIndicator.mjs": {
+      "sha256": "f44f5554a20544fd961cd11d05e77eb7f8971df34dc3bd8899a6958bc6915bd3",
+      "excerpts": [
+        {
+          "line": 13,
+          "source": " * Indicates whether the checkbox is ticked.\n * Renders a `<span>` element.\n *\n * Documentation: [Base UI Checkbox](https://base-ui.com/react/components/checkbox)\n */"
+        },
+        {
+          "line": 22,
+          "source": "    style,\n    keepMounted = false,\n    ...elementProps\n  } = componentProps;\n  const rootState = useCheckboxRootContext();"
+        },
+        {
+          "line": 26,
+          "source": "  const rootState = useCheckboxRootContext();\n  const rendered = rootState.checked || rootState.indeterminate;\n  const {\n    mounted,\n    transitionStatus,"
+        }
+      ]
+    }
+  }
+}

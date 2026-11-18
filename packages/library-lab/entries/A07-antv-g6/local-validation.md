@@ -1,0 +1,88 @@
+# A07 AntV G6 本地交付与验证
+
+## 范围、基线与结果边界
+
+实际仓库 cwd：`/home/lambert/githubRepos/lambert/ReactLoom`；定向检查 cwd：`/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab`。Git HEAD：`1218066e706a90ba03fac8dff8c9b843dd2429c4`（[实际输出](validation/git-head.txt)）。开始研究时本条目9个受控文件，无本条目既有 diff；这是条目文件基线，不是把内容摘要当 Git SHA。
+
+只修改 `entries/A07-antv-g6/**`。保留其他工作者修改；未改公共源码/测试/e2e、依赖锁、索引、队列/results，未提交/推送/发布。未执行全目录 generate/typecheck/build 或启动隐式 build 的浏览器。主控统一构建、独立评审及浏览器收据。
+
+当前完成三目标源码、中文教学、官方来源和定向静态/模型验证。**真实 Canvas 及浏览器交互 NOT_RUN；正式 verification 的 sdk/build/browser 均 NOT_RUN**。Node 模型3 PASS 和纯策略7 PASS不等于图形或正式收据PASS。
+
+## 工程变化与逐目标验收预期
+
+| 目标 | 真实 SDK 与自建分界 | 可操作步骤和应观察结果 |
+| --- | --- | --- |
+| basic：节点/边/交互 | 自建确定性步骤 DTO；真实 Graph.render、NodeEvent.CLICK、setElementState、getter | 3节点2边；实际 Canvas 命中与键盘文本按钮都改变真实 selected；拖放/缩放和 fitView；snapshot 从真实SDK读取，不重印 fixture |
+| business：同实例拓扑更新 | 自建审校开关；同一 Graph setData + await render | 4节点3边→取消审校3/2→恢复4/3；instance不变、renderEvents增加，parse后继和旧边同步改变；移除选中审校清空选择 |
+| advanced：视口与所有权 | 真实 setSize/fitView/事件/destroy；自建 ResizeObserver+rAF与串行lease | 窄容器最多320CSS px（SDK内容宽度扣边框），节点中心留在视口；显式重建instance增加；旧容器立即detach，SDK任务结算后最终destroy；停止/恢复不遗留旧实例 |
+
+`size:42` 已改为尺寸/直径，固定 x/y 不冒充布局。配置关闭动画，默认 Canvas，无 WebGL/持续布局/定时器。每次拓扑 render 自动 fit，明确会重置用户相机。G6 模型更新保留插入顺序，业务步骤顺序不依赖 getNodeData 返回顺序。
+
+每实例 async-owner 串行化完整当前意图，跳过未开始旧任务，await 后检查所有权再写 UI。卸载撤销代际、解绑事件、observer/rAF清理、分离专属 mount，等待任务结算后 destroy 一次。它不是 AbortSignal，不声称中断 CPU/GPU 或永不结算的第三方操作。快速resize返回已应用宽度时，也先取消旧rAF，避免迟到尺寸覆盖。
+
+## 六项独立复核
+
+| 维度 | 状态与证据层级 | 依据及限制 |
+| --- | --- | --- |
+| 技术准确 | PASS：静态/真实SDK数据模型；图形行为NOT_RUN | 安装5.1.1类型/源码与固定官方Graph/Canvas源码对应；实际构造、getData、关系查询、setData、destroy模型3PASS。没有render的Node结果不证明Canvas |
+| 解释清楚 | PASS：静态内容复核 | guide按新闻处理依赖→nodes/edges→接入顺序→同实例变化→视口/异步边界展开；输入/调用/结果与SDK和自建职责明确，不沿用旧“勾选即重建”或“半径42”描述 |
+| Demo有用 | NOT_RUN：浏览器；三目标静态设计复核PASS | 上表三独立目标有实际控件与getter输出，非仅更名或数据量变化；真实Canvas命中/像素/缩放/清理待主控 |
+| 源码可迁移 | PASS：静态/类型；浏览器迁移运行NOT_RUN | 每Demo列七个实际运行文件，含CSS/配置/纯所有权；无Lab alias/额外资源；入口局部strict类型exit0。异步生命周期由每实例独占容器负责 |
+| 官方来源可靠 | PASS：固定原文/HTTP证据；嵌入NOT_RUN | 官方zh-CN原文6017字节、固定commit/版本/时间/sha一致；官网完整GET响应头已保存，缺限制头只得unknown，不写allowed |
+| 结果可复核 | PASS：本地静态/模型日志；图形运行NOT_RUN | 真实命令/cwd/退出码/UTC/原始输出、红绿SDK日志及17文件输入摘要已保留。Playwright提案只过类型与格式，不能计browser PASS |
+
+## 官方来源与匹配版本
+
+- 包：`@antv/g6@5.1.1`，MIT。安装包路径与匹配 `src/runtime/graph.ts` 路径由 [metadata.txt](validation/metadata.txt) 和 [输入摘要](validation/input-hashes.json) 记录。Graph.render/draw/fitView/setElementState异步、prepare等待Canvas.ready、destroy清空context的事实按该安装源码与同提交源码核对。Canvas默认CanvasRenderer，没有配置WebGL renderer。
+- `git ls-remote --tags https://github.com/antvis/G6.git '*5.1.1*'` 研究输出确认 tag5.1.1→`5a5551cea13d021d12c90a87116e3c6092d53210`；正式快照又以固定ref请求官方根目录与包版本核对。根目录API发现 README.md 和 README.zh-CN.md，选择上游中文，未自行翻译。
+- 原文：[official/readme.md](official/readme.md)，来源 `antvis/G6` / `README.zh-CN.md`，固定提交如上，版本5.1.1，语言zh-CN，同步UTC `2026-11-10T11:41:24.810393+00:00`，6017字节，sha256 `cf2ef1137aac0a35d0f70f11e2046576e321e0db6996812b9cee58419f5fdb1e`。原文未拼入本地讲解。
+- [完整来源证据](official/source-evidence.json) 保存四次实际请求的URL/最终URL/状态/全部响应头：固定根目录API200、原文200、`packages/g6/package.json`200且version5.1.1、官网GET200最终 `https://g6.antv.antgroup.com/`。前三个body记录字节与sha；官网只读完整头，不伪造body摘要。
+- 官网此次没有 X-Frame-Options、Content-Security-Policy；Lab-origin实际iframe未运行，因此 **unknown**。不会凭HTTP200或load事件改allowed。以前研究中部分旧API无尾斜杠路径404、React文档超时不作为成功来源；核心事实改用固定源码/安装类型。
+
+## 实际定向检查、命令与原始日志
+
+下表均在上述 Lab cwd 执行，日志逐项包含实际 ARGV、UTC起止、退出码、stdout/stderr；Git检查单独记录仓库cwd。没有使用force-exit、SDK mock、伪DOM/Canvas或跳过占位测试。
+
+| 命令 | 退出码与实际结果 | 原始日志 |
+| --- | --- | --- |
+| `pnpm test:sdk --entry=A07` 首次 | 1；2PASS/1FAIL，错误假设setData后节点数组重新排序 | [sdk-initial-failure.txt](validation/sdk-initial-failure.txt) |
+| `pnpm test:sdk --entry=A07` 修正断言后 | 0；3PASS，0SKIP；真实G6模型，未render | [sdk.txt](validation/sdk.txt) |
+| `pnpm test:policy --entry=A07` | 0；7PASS，0SKIP：串行/代际/cleanup/错误恢复4项+保留宽度3项 | [policy.txt](validation/policy.txt) |
+| 局部 strict tsc（完整参数见下） | 0；真实组件/数据/配置/所有权/CSS入口类型 | [types-final.txt](validation/types-final.txt) |
+| 同样局部 tsc 检查提案临时 `.ts`（types=node，无jsx） | 0；仅提案静态类型，不运行Chromium | [proposal-types.txt](validation/proposal-types.txt) |
+| `pnpm exec -- biome check --write` 指定examples/tests/metadata/提案 | 0；正常排版，最初metadata拼接字符串1info后手工修正 | [format-final.txt](validation/format-final.txt) |
+| `pnpm exec -- biome check` 指定examples/tests/library/verification/metadata脚本 | 0；13文件，无修复、无info | [format-check.txt](validation/format-check.txt) |
+| `node entries/A07-antv-g6/validation/metadata-check.mjs` | 0；validateEntry/completeness均[]，七运行文件、实际5.1.1、README字节/sha/官方元数据/正式NOT_RUN一致 | [metadata.txt](validation/metadata.txt) |
+| Python官方获取脚本，完整ARGV在日志 | 0；官方原文、包版本与官网完整头 | [source-fetch.txt](validation/source-fetch.txt) |
+
+入口类型完整命令：
+
+```sh
+pnpm exec -- tsc --ignoreConfig --noEmit --target ES2022 --lib ES2022,DOM,DOM.Iterable --module ESNext --moduleResolution Bundler --strict --skipLibCheck --esModuleInterop --allowImportingTsExtensions --jsx react-jsx --types vite/client,node entries/A07-antv-g6/examples/demo.tsx
+```
+
+提案格式化时暂复制为 `validation/browser-proposal.ts`，过Biome后写回txt；类型检查结束删除临时ts，没有改公共e2e。提案4项覆盖basic真实像素/节点命中/键盘选择、business同实例删边与快速意图、advanced真实wheel/fit/narrow/重建与最终destroy、mobile无最小宽度溢出。提案与最终源码摘要都在 [input-hashes.json](validation/input-hashes.json)。
+
+早期 `implementation-types.txt` 的 Point 类型失败保留：G6 Point允许Float32Array，最终使用Array.from保留坐标值，未用断言掩盖。`implementation-format.txt` 是首次排版；初期检查日志不替代上表最终结果。SDK红绿改变的是错误的测试顺序假设，没有改fixture“凑PASS”。之后仅文案、格式及metadata变化复用有效SDK/策略结果，没有重复全套。
+
+## 变动文件与剩余验收
+
+- 修改：guide.md、agent.md、library.json、verification.json（仅更新真实NOT_RUN说明）；examples/example.tsx；demo.tsx、graph-sizing.ts、tests/graph-sizing.test.mts只有Biome排版，原夹取策略不变。
+- 新增运行文件：examples/graph-data.ts、graph-options.ts、async-owner.ts、workshop.css。
+- 新增验证：tests/sdk.test.mjs、async-owner.test.mts；official/readme.md、source-evidence.json；本记录及validation下官方抓取脚本、元数据脚本、输入摘要、浏览器提案和全部实际日志。
+- 完整清单及scoped diff检查见 [final-files.txt](validation/final-files.txt)、[diff-check.txt](validation/diff-check.txt)。全部写入仅限本条目。
+
+剩余 **NOT_RUN**：真实Canvas绘制/箭头与中文排版、实际节点命中、滚轮/fitView与手机窄屏、真实卸载后旧Graph最终destroy、快速更新/重建时无迟到UI、真实Lab-origin官网预览。主控应接入 [browser-proposal.txt](validation/browser-proposal.txt)，匹配当前构建运行并保存实际截图/日志；不支持某项环境则明确NOT_RUN，不mock SDK。大图性能/布局/WebGL/远程请求未声明为本例能力。
+
+## 冻结记录
+
+候选07曾在9原文件未改时请求中间冻结：`checkpoint-types.txt` 只证明旧入口可编译，`checkpoint-diff.txt` 当时无代码diff，UTC `2026-11-10T11:35:09.278022+00:00` INTERMEDIATE STABLE。候选07完成后主控明确释放写入，本记录已更新为实际交付，不能把旧检查点当作新示例通过。当前整库完成后的稳定时间在本文件末尾记录；STABLE只表示停止写入待独立复核，不表示正式verification PASS或content_done。
+
+完整交付 STABLE：`2026-11-10T11:53:59.327234+00:00`。本条目写入停止，等待主控独立复核/匹配构建的真实浏览器；正式verification仍NOT_RUN。
+
+
+## 主控本地运行闭环
+
+candidate-08稳定1870输入，类型/build/catalog及新e2e lint exit0；非作者独立复核无未处置P1/P2，真实Chromium本库全部选定目标通过。首轮basic误读background层、advanced wheel点y1161超1100视口；逐层真实像素探针与trace已证实，无产品缺陷。只改公共观测主Canvas(index1)/可见画面与hover，两个失败case定向重跑2 PASS；business/mobile/official原3 PASS复用。
+
+最终状态content_done，实际命令/候选摘要/首轮FAIL与必要重跑/独立评论和范围见[逐库结果](../../../../openspec/roadmaps/upgrade-library-quality/results/A07.md)。正式sdk/build/browser仍NOT_RUN；dev StrictMode重放、完整读屏/触控/跨浏览器/大规模性能未由生产预览通过推定。

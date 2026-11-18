@@ -18,11 +18,13 @@ export function createSamplePdf(): Uint8Array {
   const offsets: number[] = []
   objects.forEach((content, index) => {
     offsets.push(encoder.encode(pdf).length)
-    pdf += `${index+1} 0 obj\n${content}\nendobj\n`
+    pdf += `${index + 1} 0 obj\n${content}\nendobj\n`
   })
   const xref = encoder.encode(pdf).length
-  pdf += `xref\n0 ${objects.length+1}\n0000000000 65535 f \n`
-  offsets.forEach(offset => {pdf += `${String(offset).padStart(10,'0')} 00000 n \n`})
-  pdf += `trailer\n<< /Size ${objects.length+1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF\n`
+  pdf += `xref\n0 ${objects.length + 1}\n0000000000 65535 f \n`
+  offsets.forEach((offset) => {
+    pdf += `${String(offset).padStart(10, '0')} 00000 n \n`
+  })
+  pdf += `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF\n`
   return encoder.encode(pdf)
 }

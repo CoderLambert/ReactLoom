@@ -1,47 +1,19 @@
-# A12 react-konva — 工程手册
+# A12 react-konva 工程入口
 
-## 适用
+React声明式二维场景，目标react-konva19.3.2/konva10.9.0，与React/DOM19.3.0匹配，MIT。当前recreated，原研究来源保留，不继承验收。实际examples是唯一实现。
 
-`react-konva@19.3.2` 加 `konva@10.9.0` 用声明式 Stage 画二维节点。命令式场景图用 A11，不要两个 Stage 抢一个容器。`<Text>` 不是输入框。虚线只按数组顺序装饰，不是端口模型。
+三个目标：basic原生DOM右移/选择→同源Canvas与表；business真实拖拽预览→受限世界坐标提交；advanced稳定id增删/24上限/仅锁拖拽/响应式和卸载。数据为本地教学草图，不执行RSS/翻译服务。
 
-## 版本
+必要文件example.tsx、stage-policy.ts、styles.css，demo.tsx只适配。世界620×260，卡片132×52；scale=min(1,width/620)，宽度1..4096保护；x0..488/y0..208取整，非有限回0。窄屏只缩Stage像素/scale，不改业务坐标。
 
-与 React 19.3 对齐的 19.3.2。不要用会漂到不兼容版本的范围。全量入口即可；`ReactKonvaCore` 必须自行注册形状。`_useStrictMode` 不是 React StrictMode。
+React state唯一持有nodes/selected/locked，稳定id作key。onDragMove直接夹取实例，onDragEnd同时校正真实位置和state。默认非strict仅同步变动props，不要在预览时旧state覆盖。_useStrictMode与ReactStrictMode不同。背景层和文字关闭命中，虚线是数组相邻装饰，松手提交后才更新。
 
-## 迁移
+锁定拖拽不是只读：DOM移动/增删仍可用。允许第24节点，之后禁用并在setter再检查。删除选中后回剩余首项；空时删除禁用。level变化按原语义重置本地fixture，id序号不复用存活节点。
 
-从 A11 的 Map 同步改为 `<Group draggable onDragEnd>`。世界坐标保持 620×260，显示缩放只改 Stage 的 width/height/scale。若加入 Transformer，scale 乘进宽高后归 1。持久化保存节点数组，不保存 `stage.toJSON()`。
+只渲染Stage，禁止另new Konva.Stage。react-konva负责Stage/子图元销毁；本组件只disconnect RO/cancel rAF。不因state更新手动destroy。Stage独立renderer root，错误边界需内部Konva fallback，本例没有Transformer/PNG/文字输入/HTTP/协作。
 
-## 不可删的清理
+观察：a12-workshop含data-level/width/scale/selected/count/locked；a12-stage-host内真实2层Canvas；a12-table tr含data-node-id/x/y/selected；a12-status。控件“选择节点”“键盘替代：右移12px”“锁定拖拽”“新增节点（上限 24）”“删除当前”，表按钮“选中”加节点标题。
 
-`ResizeObserver` 与 rAF 在 effect cleanup 里解除。不要在 state 变化时手动 destroy 声明式 Stage。拖拽位置经过 `clampNodePosition`。新增前看 `canAddNode`。锁定时 `draggable` 为 false。
+真实Node SDK2项调用公开KonvaRenderer在真实Group上同步props、替换事件和移除节点；不创建Canvas，不证明Stage/RO/命中。政策5项只坐标/范围。validation/browser-proposal.txt为完整真实Playwright提案，由主控接e2e执行；没有截图代替结果/SDKmock。
 
-## 反例
-
-```tsx
-useEffect(() => { new Konva.Stage({ container: host.current!, width: 100, height: 100 }); }, []);
-// 错：与 <Stage> 双重所有
-// 对：只渲染 <Stage width={width} height={height} scaleX={scale} scaleY={scale}>
-```
-
-把指针像素当世界坐标、把 Text 当可访问名称、拖拽中用旧坐标覆盖节点，都不要做。
-
-## 测试断言
-
-`stageScale` 在窄容器上小于 1，宽容器上不超过 1。`clampNodePosition` 把卡片限制在世界内。`canAddNode` 在 24 张时为 false。SDK 收据还要看到真实 Stage 拖拽写回和卸载后 canvas 消失。没有 runs 收据则为 NOT_RUN。
-
-## 真实限制
-
-没有 Transformer、PNG、IME 输入、HTTP 修订或大量裁剪。背景层 `listening={false}`。错误边界必须放在 Stage 内部才覆盖画布子树，本示例没有这种边界。没有内存测量。
-
-## 断言边界
-
-`tests/stage-policy.test.mts` 覆盖缩放、夹取和 24 节点。SDK 用例要 `import { Stage, Layer, Group } from 'react-konva'`，拖拽结束写入夹取后的世界坐标，卸载后不再留下第二块命令式 canvas。缺收据时保持 NOT_RUN。世界坐标保持 620×260，显示缩放只改 Stage 的尺寸和 scale。不要再 `new Konva.Stage`。
-
-## 证据
-
-Actions `41779873259` 的仓库级 install、typecheck、build、52 SDK 文件（153 测试）和 45 Playwright 不是 A12 PASS。不要把坐标测试或历史研究 PASS 写入 `verification.json`。
-
-对照 `library.json` 的版本编写 import，不要升到条目未钉死的版本。
-`tests/` 中的策略用例不能改写成 sdk 字段的 PASS。
-浏览器与构建未留下收据时，对应字段维持 NOT_RUN。
+官方v19.3.2固定README与完整2候选无中文，commit/path/hash/time在source-audit.json。官网React入口SAMEORIGIN，blocked+直达，完整头保存。六项/真实cwd/command/exit见local-validation，正式sdk/build/browser保持NOT_RUN。触控/IME/读屏/大规模性能/SSR hydration未测。

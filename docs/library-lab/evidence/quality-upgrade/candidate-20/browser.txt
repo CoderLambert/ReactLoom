@@ -1,0 +1,90 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=pnpm exec playwright test --config=.local-evidence/quality-playwright.config.ts e2e/quality-document-links.spec.ts e2e/quality-remediation-primitives-sources.spec.ts e2e/quality-remediation-nuqs.spec.ts --grep versioned migration patch|@C17|@C19 --trace=off
+
+Running 5 tests using 2 workers
+
+(node:2355615) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2355614) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 e2e/quality-document-links.spec.ts:79:1 › @platform-document a versioned migration patch link serves only inert declared source text (1.8s)
+  ✘  2 e2e/quality-remediation-nuqs.spec.ts:33:1 › @C19 real query state shares/reloads, clears only owned keys, and keeps IME/space drafts out of URL until apply (6.4s)
+(node:2356154) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  3 e2e/quality-remediation-nuqs.spec.ts:83:1 › @C19 actual grouped parser update applies query/group/page together, uses replace and recovers empty results (6.3s)
+(node:2356339) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  5 e2e/quality-remediation-primitives-sources.spec.ts:32:3 › @C17 original fixed README and evidenced homepage blocked (1.7s)
+  ✘  4 e2e/quality-remediation-nuqs.spec.ts:119:1 › @C19 real push/replace history restores Back/Forward; raw deep-link parse differs from business clamping and survives remount (6.4s)
+
+
+  1) e2e/quality-remediation-nuqs.spec.ts:33:1 › @C19 real query state shares/reloads, clears only owned keys, and keeps IME/space drafts out of URL until apply 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "React 官方"
+    Received: "React 官方?tab=docs"
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      45 |   await expect(app.getByTestId('c19-result-row')).toHaveCount(5)
+      46 |   await input.press('Enter')
+    > 47 |   await expect.poll(() => url(page).searchParams.get('ll_c19_q')).toBe('React 官方')
+         |                                                                   ^
+      48 |   await expect(app.getByTestId('c19-result-row')).toHaveCount(1)
+      49 |   await expect(app.locator('[data-feed-id="rss-001"]')).toBeVisible()
+      50 |   expect(await historyLength(page)).toBe(before)
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-nuqs.spec.ts:47:67
+
+    Error Context: test-results/quality-remediation-nuqs---75602-afts-out-of-URL-until-apply/error-context.md
+
+  2) e2e/quality-remediation-nuqs.spec.ts:83:1 › @C19 actual grouped parser update applies query/group/page together, uses replace and recovers empty results 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "2"
+    Received: "2?tab=docs"
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      87 |   const before = await historyLength(page)
+      88 |   await app.getByRole('button', { name: '下一页', exact: true }).click()
+    > 89 |   await expect.poll(() => url(page).searchParams.get('ll_c19_page')).toBe('2')
+         |                                                                      ^
+      90 |   expect(await historyLength(page)).toBe(before)
+      91 |   await expect(app.locator('[data-feed-id="rss-003"]')).toBeVisible()
+      92 |   await app.getByRole('combobox', { name: '分组筛选', exact: true }).selectOption('tech')
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-nuqs.spec.ts:89:70
+
+    Error Context: test-results/quality-remediation-nuqs---ced1d--and-recovers-empty-results/error-context.md
+
+  3) e2e/quality-remediation-nuqs.spec.ts:119:1 › @C19 real push/replace history restores Back/Forward; raw deep-link parse differs from business clamping and survives remount 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "2"
+    Received: "2?tab=docs"
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      126 |   for (const value of ['2', '3']) {
+      127 |     await app.getByRole('button', { name: '下一页', exact: true }).click()
+    > 128 |     await expect.poll(() => url(page).searchParams.get('ll_c19_page')).toBe(value)
+          |                                                                        ^
+      129 |   }
+      130 |   expect(await historyLength(page)).toBe(before + 2)
+      131 |   await page.goBack()
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-nuqs.spec.ts:128:72
+
+    Error Context: test-results/quality-remediation-nuqs---05a34-amping-and-survives-remount/error-context.md
+
+  3 failed
+    e2e/quality-remediation-nuqs.spec.ts:33:1 › @C19 real query state shares/reloads, clears only owned keys, and keeps IME/space drafts out of URL until apply 
+    e2e/quality-remediation-nuqs.spec.ts:83:1 › @C19 actual grouped parser update applies query/group/page together, uses replace and recovers empty results 
+    e2e/quality-remediation-nuqs.spec.ts:119:1 › @C19 real push/replace history restores Back/Forward; raw deep-link parse differs from business clamping and survives remount 
+  2 passed (13.5s)
+
+exitCode=1

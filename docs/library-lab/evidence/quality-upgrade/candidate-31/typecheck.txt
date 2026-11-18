@@ -1,0 +1,10 @@
+
+> @reactloom/library-lab@0.1.0 typecheck /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+> node scripts/generate.mjs && tsc --noEmit
+
+{"entries":119,"loaders":306}
+e2e/quality-resume-assistant-ui.spec.ts(43,16): error TS2352: Conversion of type 'Window & typeof globalThis' to type 'Window & { e12Probe: Probe; }' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Property 'e12Probe' is missing in type 'Window & typeof globalThis' but required in type '{ e12Probe: Probe; }'.
+/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @reactloom/library-lab@0.1.0 typecheck: `node scripts/generate.mjs && tsc --noEmit`
+Exit status 1

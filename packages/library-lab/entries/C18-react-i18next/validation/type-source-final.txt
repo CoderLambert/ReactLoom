@@ -1,0 +1,4 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['pnpm', 'exec', 'tsc', '--ignoreConfig', '--noEmit', '--target', 'es2022', '--module', 'esnext', '--moduleResolution', 'bundler', '--jsx', 'react-jsx', '--strict', '--skipLibCheck', '--esModuleInterop', '--types', 'vite/client,node', 'entries/C18-react-i18next/examples/demo.tsx']
+startedAt: 2026-11-10T17:44:30.479626+00:00
+exit: 0

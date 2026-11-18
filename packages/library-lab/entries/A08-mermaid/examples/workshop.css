@@ -1,0 +1,19 @@
+.a08-workshop label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.a08-workshop iframe {
+  width: 100%;
+  min-height: 320px;
+  border: 1px solid #d6e3d6;
+  border-radius: 8px;
+  background: #fff;
+}
+.a08-workshop pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  padding: 0.75rem;
+  background: #f1f5f9;
+  color: #172033;
+}

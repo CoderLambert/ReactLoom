@@ -1,0 +1,18 @@
+{
+  "command": [
+    "pnpm",
+    "exec",
+    "playwright",
+    "test",
+    "--config=.local-evidence/quality-playwright.config.ts",
+    "e2e/quality-remediation-ant-design.spec.ts",
+    "--grep",
+    "Form rules"
+  ],
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+  "startedAt": "2026-11-10T13:33:44.976245+00:00",
+  "finishedAt": "2026-11-10T13:33:50.260057+00:00",
+  "exitCode": 0,
+  "implicitBuild": false,
+  "log": "docs/library-lab/evidence/quality-upgrade/candidate-10/browser-ant-search-retry.txt"
+}

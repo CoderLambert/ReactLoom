@@ -1,0 +1,16 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['pnpm', 'exec', 'node', '--test', 'entries/C18-react-i18next/tests/language-switch.test.mjs']
+startedAt: 2026-11-10T17:41:38.735169+00:00
+exit: 0
+✔ rapid intents are serialized and only the latest result commits (5.44151ms)
+✔ stale failure does not overwrite the later successful request (0.478943ms)
+✔ dispose discards pending language and late completion (0.298048ms)
+✔ latest rejection reports one error and later requests still work (0.389766ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 39.254194

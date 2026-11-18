@@ -1,0 +1,19 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=pnpm exec playwright test --config=.local-evidence/quality-playwright.config.ts e2e/quality-remediation-nuqs.spec.ts e2e/quality-remediation-tailwind-merge.spec.ts e2e/quality-remediation-primitives-sources.spec.ts --grep @C19|@C21 --trace=off
+
+Running 6 tests using 2 workers
+
+(node:2406919) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2406920) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 e2e/quality-remediation-nuqs.spec.ts:83:1 › @C19 actual grouped parser update applies query/group/page together, uses replace and recovers empty results (2.0s)
+  ✓  1 e2e/quality-remediation-nuqs.spec.ts:33:1 › @C19 real query state shares/reloads, clears only owned keys, and keeps IME/space drafts out of URL until apply (3.3s)
+  ✓  4 e2e/quality-remediation-primitives-sources.spec.ts:34:3 › @C19 original fixed README and evidenced homepage unknown (1.5s)
+  ✓  5 e2e/quality-remediation-primitives-sources.spec.ts:34:3 › @C21 original fixed README and evidenced homepage blocked (1.7s)
+  ✓  3 e2e/quality-remediation-nuqs.spec.ts:119:1 › @C19 real push/replace history restores Back/Forward; raw deep-link parse differs from business clamping and survives remount (6.2s)
+  ✓  6 e2e/quality-remediation-tailwind-merge.spec.ts:27:1 › @C21 base/variants/caller produce real merge output, loaded utility styles and custom-group boundaries in one experiment (1.8s)
+
+  6 passed (8.7s)
+
+exitCode=0

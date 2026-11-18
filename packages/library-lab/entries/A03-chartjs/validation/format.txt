@@ -1,0 +1,88 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ["pnpm", "exec", "--", "biome", "check", "--write", "entries/A03-chartjs/examples", "entries/A03-chartjs/tests", "entries/A03-chartjs/library.json", "entries/A03-chartjs/verification.json", "entries/A03-chartjs/official/source-evidence.json", "entries/A03-chartjs/validation/baseline.json"]
+exit: 1
+
+Skipped 6 suggested fixes.
+If you wish to apply the suggested (unsafe) fixes, use the command biome check --write --unsafe
+
+Checked 11 files in 17ms. Fixed 7 files.
+Found 3 errors.
+entries/A03-chartjs/examples/example.tsx:204:22 lint/a11y/noRedundantRoles  FIXABLE  ━━━━━━━━━━━━━━━
+
+  × Using the role attribute 'status' on the 'output' element is redundant, because it is implied by its semantic.
+  
+    202 │           七日总阅读：{counts.reduce((a, b) => a + b, 0)}
+    203 │         </output>
+  > 204 │         <output role="status" data-testid="a03-selection">
+        │                      ^^^^^^^^
+    205 │           {selectedDay === null
+    206 │             ? '可点选图形或使用下方表格按钮'
+  
+  i Unsafe fix: Remove the role attribute.
+  
+    204 │ ········<output·role="status"·data-testid="a03-selection">
+        │                 --------------                            
+
+entries/A03-chartjs/examples/example.tsx:125:3 lint/correctness/useExhaustiveDependencies  FIXABLE  ━━━━━━━━━━
+
+  × This hook specifies more dependencies than necessary: effectiveKind.
+  
+    123 │     }
+    124 │   }, [effectiveKind, observationPlugin])
+  > 125 │   useEffect(() => {
+        │   ^^^^^^^^^
+    126 │     const chart = chartRef.current
+    127 │     if (!chart) return
+  
+  i This dependency can be removed from the list.
+  
+    128 │     chart.data.datasets[0].data = [...counts]
+    129 │     chart.update('none')
+  > 130 │   }, [counts, effectiveKind])
+        │               ^^^^^^^^^^^^^
+    131 │   useEffect(() => {
+    132 │     const chart = chartRef.current
+  
+  i React relies on hook dependencies to determine when to re-compute Effects.
+    Specifying more dependencies than required can lead to unnecessary re-rendering
+    and degraded performance.
+  
+  i Unsafe fix: Remove the extra dependencies from the list.
+  
+    130 │ ··},·[counts,·effectiveKind])
+        │             ---------------  
+
+entries/A03-chartjs/examples/example.tsx:131:3 lint/correctness/useExhaustiveDependencies  FIXABLE  ━━━━━━━━━━
+
+  × This hook specifies more dependencies than necessary: effectiveKind.
+  
+    129 │     chart.update('none')
+    130 │   }, [counts, effectiveKind])
+  > 131 │   useEffect(() => {
+        │   ^^^^^^^^^
+    132 │     const chart = chartRef.current
+    133 │     if (!chart) return
+  
+  i This dependency can be removed from the list.
+  
+    134 │     chart.setActiveElements(selectedDay === null ? [] : [{ datasetIndex: 0, index: selectedDay }])
+    135 │     chart.update('none')
+  > 136 │   }, [selectedDay, effectiveKind])
+        │                    ^^^^^^^^^^^^^
+    137 │ 
+    138 │   return (
+  
+  i React relies on hook dependencies to determine when to re-compute Effects.
+    Specifying more dependencies than required can lead to unnecessary re-rendering
+    and degraded performance.
+  
+  i Unsafe fix: Remove the extra dependencies from the list.
+  
+    136 │ ··},·[selectedDay,·effectiveKind])
+        │                  ---------------  
+
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while applying fixes.
+  
+

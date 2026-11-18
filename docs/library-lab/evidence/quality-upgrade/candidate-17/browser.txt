@@ -1,0 +1,25 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=pnpm exec playwright test --config=.local-evidence/quality-playwright.config.ts e2e/quality-remediation-imask.spec.ts e2e/quality-remediation-tanstack-virtual.spec.ts e2e/c13-preview-boundary.spec.ts e2e/quality-remediation-primitives-sources.spec.ts --grep @C06 actual date|@C10|@C13|@C12 original --trace=off
+
+Running 12 tests using 2 workers
+
+(node:2074520) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2074521) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   2 e2e/c13-preview-boundary.spec.ts:137:1 › @C13 business keyboard saves update the real chart without adding document listeners (1.3s)
+  ✓   1 e2e/c13-preview-boundary.spec.ts:97:1 › @C13 selected scenario auto-loads the isolated frame and keeps document listeners bounded (1.9s)
+  ✓   3 e2e/c13-preview-boundary.spec.ts:182:1 › @C13 advanced refusals preserve the chart and reset/scenario/tab changes destroy old documents (1.6s)
+  ✓   4 e2e/c13-preview-boundary.spec.ts:267:1 › @C13 stopping during the held real SDK chunk destroys its context before download completion (1.2s)
+  ✓   6 e2e/quality-remediation-imask.spec.ts:180:1 › @C06 actual date Pattern completion differs from calendar validity, free Chinese text and owned teardown (1.6s)
+  ✓   5 e2e/c13-preview-boundary.spec.ts:312:1 › @C13 two pages own independent documents and stopping one preserves the other (2.1s)
+  ✓   7 e2e/quality-remediation-primitives-sources.spec.ts:26:3 › @C10 original fixed README and evidenced homepage blocked (1.7s)
+  ✓   8 e2e/quality-remediation-primitives-sources.spec.ts:26:3 › @C12 original fixed README and evidenced homepage blocked (1.7s)
+  ✓   9 e2e/quality-remediation-primitives-sources.spec.ts:26:3 › @C13 original fixed README and evidenced homepage blocked (1.7s)
+  ✓  10 e2e/quality-remediation-tanstack-virtual.spec.ts:37:1 › @C10 actual 8000-row data renders a bounded DOM window and responds to native scroll and real deep jumps (2.0s)
+  ✓  11 e2e/quality-remediation-tanstack-virtual.spec.ts:64:1 › @C10 committed category/query identity rebuilds real views, handles empty results and preserves the composition submit boundary (1.8s)
+  ✓  12 e2e/quality-remediation-tanstack-virtual.spec.ts:118:1 › @C10 actual measureElement changes geometry/total for expanded rows, works at depth, and rebuild/unmount clear owned views (2.0s)
+
+  12 passed (11.2s)
+
+exitCode=0

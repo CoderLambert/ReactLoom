@@ -1,0 +1,15 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["pnpm", "--dir", "packages/library-lab", "exec", "node", "--test", "entries/C19-nuqs/tests/url-policy.test.mjs"], "utc": "2026-11-10T17:58:09.044481+00:00", "exit": 0}
+✔ basic ignores hidden group left from a previous advanced level (0.543571ms)
+✔ clamps huge/invalid deep-link pages without losing stable result order (0.926537ms)
+✔ sanitizes control characters and caps Unicode code points (0.134807ms)
+✔ business selection uses both normalized group and query (0.101199ms)
+✔ composition-confirming Enter suppresses form submission until keyup; later ordinary Enter is available (0.123322ms)
+✔ Space or mouse composition confirmation does not consume the next ordinary Enter; native composition flag also protects (0.069086ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 44.829069

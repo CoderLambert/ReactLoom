@@ -1,0 +1,9 @@
+{
+  "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+  "examples/example.tsx": "5b212dcf7d5e8031ca235813b7b2492b89268737b858c4e8fae66b8dadc0630a",
+  "examples/fixture.ts": "20132ebe64c74e4ef48271c0fdc6a2481f9a3d8961514ccad6ef9036aea9f223",
+  "examples/render-budget.d.mts": "ad9f40b4ab2e32d0aa193e92977315d7ffd95b5c8c943fa429494d85e23bfd2b",
+  "examples/render-budget.mjs": "ca32b60d776e3edf57aebc85374dfc2ffdd1dccd8c0ba1a8659a963517825f32",
+  "examples/render-gate.d.mts": "92cfa6be4884dee4f9e2dd225de76c6db63266eb779f424fc784e10c0c61f0d8",
+  "examples/render-gate.mjs": "7541d6d5a8d9289fbbd08655a57dae815034987e4652209e8d76473972c190f0"
+}

@@ -1,14 +1,14 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "F06 SDK与Worker 6.3.289已在源文件/manifest对齐F07；实际 pdfjs-dist import与解析尚未运行，不能标PASS"
+    "note": "本地sdk证据见local-validation.md及candidate-35；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
   },
   "build": {
     "status": "NOT_RUN",
-    "note": "根 pnpm-lock.yaml 已包含 Library Lab importer，声明的包可以被冻结安装解析。Actions run 41779873259 的仓库级 typecheck/build 不是本条目的 evidence/runs 收据，所以这里是 NOT_RUN，不是 PASS。"
+    "note": "本地build证据见local-validation.md及candidate-35；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "待Chromium快速切页/缩放验证RenderTask取消后Canvas串行、Worker加载与两页内容 Wave21新增真实渲染路径中的8MP/4096px预算及Node独立策略测试；未运行真实pdfjs-dist或Chromium。"
+    "note": "本地browser证据见local-validation.md及candidate-35；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
   }
 }

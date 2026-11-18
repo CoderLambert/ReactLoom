@@ -1,47 +1,19 @@
-# B05 Rive React
+# B05 Rive React 工程入口
 
-## 适用
+先读library/guide、实际examples与verification。React包装器4.37.0→WebGL2 runtime2.45.0，React19.3.0满足peer。运行时MIT不覆盖设计资产。既有官方文档vehicles.riv+bumpy只远程引用，禁止下载再分发/伪造.riv；离线需另行授权文件与版本化契约。
 
-已有合法 `.riv`、需要状态机或 View Model 与产品状态对齐时使用 `@rive-app/react-webgl2`。简单过渡用 CSS 或 Motion。表单、付款结果和读屏文案必须留在 DOM。Canvas 只做装饰时 `aria-hidden`。
+三目标：basic真实加载/状态机契约/播放/Layout；business本地可取消审核只请求播放，业务与渲染错误分开；advanced原生IO/减动/文档可见性、实例卸载。没有approved/failed/health属性绑定，也没有View Model、文本输入、GPU Canvas或inkbleed。
 
-## 版本
+六必要文件example/player/runtime-policy/asset/styles和demo适配器。固定尺寸，autoplay=false，单数stateMachine，useOffscreenRenderer=true；useRive拥有实例，不重复cleanup。WASM保留SDK固定2.45.0 unpkg主/jsDelivr备网络路线，未扩公共依赖或复制资源。
 
-Lab 固定 `@rive-app/react-webgl2@4.37.0`，React 19.3.0。运行时 MIT。`.riv`、字体和 Editor 导出权另计。新代码用单数 `stateMachine`。不要启用与 `useOffscreenRenderer: true` 冲突的 `enableGPUCanvas`。
+以hook选中的已加载rive对象为权威；核stateMachineNames确有bumpy才请求播放。读取实际artboard/机器/播放布尔/playingMachines/bounds/Layout与Canvas尺寸。instance是应用挂载身份，objectIdentity是WeakMap标记真实SDK引用，不是SDK公开ID；observedAdvanceEvents仅说明真实推进，非绘制/GPU计数，首次订阅前推进可能不计。WebGL2 2.45.0有Draw枚举却无派发，不能订阅它验证绘制；真实Canvas连续帧差与暂停稳定另测。
 
-## 迁移
+应用Rive监听在layout cleanup先摘，再由包装器处理SDK实例；probe身份/当前实例与alive隔离最终卸载后的回写。全局WASM/共享离屏WebGL context不保证随单组件卸载销毁，旧Canvas断开/清零不是全GPU回收证明。不要清全站资源。
 
-旧教程的 `stateMachines` 和 `useStateMachineInput` 不要复制进新文件。View Model 绑定需要设计器契约；没有契约文件就不要调用 `useViewModelInstance*`。命令式 `new Rive()` 与 `useRive` 的清理路径不同，不能混用。
+保留AbortSignal+generation、本地450ms任务输入快照、切场景/卸载取消。业务message和runtimeError互不覆盖。runtime-policy的mount/play只是意图，不能凭true宣称画面成功。系统减动/手动暂停停播，文档隐藏与advanced离屏卸载。
 
-## 不可删的清理
+观测：b05-workshop data-phase/runtime-mount/requested-play/reduced/in-view；b05-viewport/player/canvas/status/runtime-error/sdk-state。展开“查看真实Rive对象与推进事件”，点“读取真实播放器”。原审核/取消/下次503控件保留，画面适配Contain/Cover应复用真实对象引用。
 
-播放器是子组件，卸载即释放包装器拥有的实例，不要再 `rive.cleanup()`。页面隐藏和 advanced 视口外都卸载，不只是 pause。`onLoadError` 在播放器已卸载后不得 setState。审核用 AbortController 和 generation，切换 level 时 abort。减少动画和手动暂停只停播。
+Node SDK2真实读取安装MIT WASM并执行布局内核（finally delete自有矩阵/点），不读.riv、不建Canvas；原policy5只断言纯门闩。实际文件/渲染/播放/IO/清理由主控运行validation/browser-proposal.txt，不能mock SDK后PASS。正式三项NOT_RUN，离线授权资产BLOCKED，完整六项/命令/日志见local-validation。
 
-## 反例
-
-把 `cdn.rive.app` 的 `vehicles.riv` 下载进仓库。用动画帧决定审核成功。容器高度为 0。每行一个 WebGL context。包装器 cleanup 里双重 `cleanup()`。渲染期 `new Rive()`。把不存在的 `approved` 状态机写进官方样本。
-
-复用时保留这些不变的约定：
-
-- `src` 保持 `cdn.rive.app` 上的官方样本，不把 `.riv` 提交进仓库。
-- 单数 `stateMachine="bumpy"`，`useOffscreenRenderer: true`。
-- 隐藏页卸载子组件，不在包装器里 `rive.cleanup()`。
-- 审核 generation 与 AbortController 一起作废旧结果。
-- View Model 和 `enableGPUCanvas` 未挂载；运行时 MIT 不覆盖素材。
-
-## 测试断言
-
-`tests/runtime-policy.test.mts` 断言 mount 与 play 分离：隐藏页两者都假；视口外不挂载；减少动画和手动暂停挂载但不播；business 仅 pending 播放。不证明 WebGL、WASM 或 CDN 字节。
-
-## 真实限制
-
-已挂载：远程官方 URL、`bumpy`、离屏渲染器、本地可取消审核、视口观察器。未挂载：View Model、自有 `.riv`、GPU Canvas、焦点文本输入。离线打不开 CDN 是预期阻断。不要提交 `.riv` 来绕过它。
-
-复用检查：
-
-- 版本以该条目 `library.json` 为准，不跟研究稿里的 Vite 脚本或 workshop 目录。
-- 未挂载的生产模式留在 `guide.md`，不补进 `examples/`。
-- 不修改 `verification.json`。没有匹配 receipt 时 sdk、build、browser 保持 NOT_RUN。
-
-## 证据
-
-sdk、build、browser 为 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有匹配 receipt。Actions run `41779873259` 是仓库级检查，不是本条目 PASS。文档：https://rive.app/docs/runtimes/react/react
+官方v4.37.0 commit ed0614c0050923db382df43196de80ecb38f9abd，英语原文4388B/无中文候选，sha/date/path与完整响应在official。官网XFO DENY且CSP frame-ancestors不含Lab，blocked+直达。样本GET仅头200，未读正文/哈希，不能推断CORS或再分发许可。

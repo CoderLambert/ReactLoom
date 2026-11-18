@@ -4,14 +4,8 @@
   "slug": "luxon",
   "name": "Luxon",
   "group": "C",
-  "summary": "DateTime、Interval 与明确 IANA 时区的日历窗口",
-  "tags": [
-    "时间区间",
-    "DST",
-    "IANA",
-    "DateTime",
-    "RSS"
-  ],
+  "summary": "显式时区与同一瞬间、23/25小时日历窗口、DST缺口拒绝与回拨偏移选择",
+  "tags": ["时间区间", "DST", "IANA", "DateTime", "RSS"],
   "contentState": "recreated",
   "packages": [
     {
@@ -21,12 +15,16 @@
   ],
   "references": [
     {
-      "title": "官方 API v3.7.2",
+      "title": "3.7.2固定官方README",
+      "url": "https://github.com/moment/luxon/blob/4262a38ded7762e22608a9feb9f117b40d338ced/README.md"
+    },
+    {
+      "title": "Luxon 3.7.2官方API",
       "url": "https://moment.github.io/luxon/api-docs/index.html"
     },
     {
-      "title": "Luxon 源码",
-      "url": "https://github.com/moment/luxon"
+      "title": "匹配版本DateTime源码",
+      "url": "https://github.com/moment/luxon/blob/4262a38ded7762e22608a9feb9f117b40d338ced/src/datetime.js"
     }
   ],
   "related": [
@@ -44,62 +42,91 @@
   "demos": [
     {
       "demoId": "basic",
-      "title": "严格解析与本地化显示",
+      "title": "显式日期与同一瞬间",
       "level": "basic",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx",
+        "examples/calendar.mjs",
+        "examples/calendar.d.mts",
         "examples/wall-time.mjs",
         "examples/wall-time.d.mts",
         "examples/wall-time-policy.mjs",
-        "examples/wall-time-policy.d.mts"
+        "examples/wall-time-policy.d.mts",
+        "examples/styles.css",
+        "examples/demo.tsx"
       ],
       "capabilities": [],
-      "description": "严格解析与本地化显示"
+      "description": "源zone解释中午、显示zone保持epoch，非法日期恢复"
     },
     {
       "demoId": "business",
-      "title": "DateTime + Interval 日历排程",
+      "title": "日历窗口与经过小时",
       "level": "business",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx",
+        "examples/calendar.mjs",
+        "examples/calendar.d.mts",
         "examples/wall-time.mjs",
         "examples/wall-time.d.mts",
         "examples/wall-time-policy.mjs",
-        "examples/wall-time-policy.d.mts"
+        "examples/wall-time-policy.d.mts",
+        "examples/styles.css",
+        "examples/demo.tsx"
       ],
       "capabilities": [],
-      "description": "DateTime + Interval 日历排程"
+      "description": "真实Interval半开端点，日历一天与固定24小时对照"
     },
     {
       "demoId": "advanced",
-      "title": "春秋 DST 与 getPossibleOffsets",
+      "title": "DST缺口与回拨选择",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx",
+        "examples/calendar.mjs",
+        "examples/calendar.d.mts",
         "examples/wall-time.mjs",
         "examples/wall-time.d.mts",
         "examples/wall-time-policy.mjs",
-        "examples/wall-time-policy.d.mts"
+        "examples/wall-time-policy.d.mts",
+        "examples/styles.css",
+        "examples/demo.tsx"
       ],
       "capabilities": [],
-      "description": "春秋 DST 与 getPossibleOffsets"
+      "description": "候选检查不替代解析，gap拒绝/overlap显式offset和失败恢复"
     }
   ],
   "license": {
     "spdx": "MIT",
-    "note": "示例源码与测试数据为本项目新写，不包含第三方图片或时区数据包。"
+    "note": "MIT；本地确定性排程和局部CSS无外部资产；时区/locale规则来自宿主Intl/ICU，独立@types/luxon3.7.6也为MIT。"
   },
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
-    "note": "根据官方文档重新编写三层示例；旧资料未被当作SDK或浏览器验证结果。"
+    "note": "保留原日历回读与resolveWallTime语法/isValid/钟面回查/显式offset合同，抽共享calendar、添加候选检查和真实区间对照；固定3.7.2官方原文，未以策略或类型替代浏览器。"
+  },
+  "official": {
+    "readme": {
+      "repository": "moment/luxon",
+      "commit": "4262a38ded7762e22608a9feb9f117b40d338ced",
+      "path": "README.md",
+      "version": "3.7.2",
+      "language": "en",
+      "snapshotPath": "official/readme.md",
+      "sha256": "5e57e6afc44eed949d850075c7e1a9206a757c058afa6b93aab83264f07cf622",
+      "sourceUrl": "https://github.com/moment/luxon/blob/4262a38ded7762e22608a9feb9f117b40d338ced/README.md",
+      "syncedAt": "2026-11-10T17:08:12.781404+00:00"
+    },
+    "homepage": {
+      "url": "https://moment.github.io/luxon/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-10T17:08:11.616081+00:00",
+      "reason": "历史GET200的headers字典未捕获XFO/CSP；字典不保同名重复头，未从Lab origin确认iframe可用，unknown不当allowed。历史证据保留且未补造rawHeaders。"
+    }
   }
 }

@@ -1,84 +1,139 @@
-import {useMemo,useState} from 'react';
-import dayjs from 'dayjs';
-import customParseFormat from 'dayjs/plugin/customParseFormat';
-import {addDays,format,isValid,parseISO} from 'date-fns';
-import {TZDate,tz} from '@date-fns/tz';
+import { useState } from 'react'
+import {
+  calendarReport,
+  DISPLAY_ZONES,
+  type DisplayZone,
+  DST_FIXTURES,
+  type FixtureId,
+  instantReport,
+  isDisplayZone,
+  scheduleComparison,
+} from './migration.mjs'
+import './styles.css'
 
-dayjs.extend(customParseFormat);
+type Level = 'basic' | 'business' | 'advanced'
 
-type Level='basic'|'business'|'advanced';
-type Zone='Asia/Shanghai'|'America/New_York'|'UTC';
-const ZONES:Zone[]=['Asia/Shanghai','America/New_York','UTC'];
-const DATE_PATTERN=/^\d{4}-\d{2}-\d{2}$/;
+function Report({ value, testId }: { value: unknown; testId: string }) {
+  return <pre data-testid={testId}>{JSON.stringify(value, null, 2)}</pre>
+}
 
-function validCalendarDay(value:string) {
- if(!DATE_PATTERN.test(value))return false;
- const parsed=dayjs(value,'YYYY-MM-DD',true);
- return parsed.isValid()&&isValid(parseISO(value));
+function CalendarDemo() {
+  const [day, setDay] = useState('2026-11-01')
+  const result = calendarReport(day)
+  return (
+    <>
+      <h2>迁移日期字段：严格解析与不可变返回值</h2>
+      <p>输入账单的日历日期，比较两套格式令牌，并观察加一天后原值是否变化。</p>
+      <label>
+        日历日期
+        <input value={day} onChange={(event) => setDay(event.target.value)} maxLength={10} />
+      </label>
+      <div className="c22-actions">
+        <button type="button" onClick={() => setDay('2026-02-30')}>
+          试无效日期
+        </button>
+        <button type="button" onClick={() => setDay('2026-11-01')}>
+          恢复有效日期
+        </button>
+      </div>
+      {!result.valid && <p role="alert">{result.reason}</p>}
+      <Report value={result} testId="calendar-report" />
+      <p>
+        UTC 只用于让日期校验避开操作系统时区，业务日继续保存为字符串。两套 SDK 都返回下一天，原
+        Day.js 值保留。
+      </p>
+    </>
+  )
 }
-function formatInstant(instant:string,zone:Zone){
- const date=new Date(instant);
- if(Number.isNaN(date.getTime()))return '无效时间';
- return new Intl.DateTimeFormat('zh-CN',{
-  timeZone:zone,year:'numeric',month:'2-digit',day:'2-digit',
-  hour:'2-digit',minute:'2-digit',hourCycle:'h23'
- }).format(date);
+
+function InstantDemo() {
+  const [instant, setInstant] = useState('2026-11-01T05:30:00Z')
+  const [zone, setZone] = useState<DisplayZone>('America/New_York')
+  const result = instantReport(instant, zone)
+  return (
+    <>
+      <h2>迁移发布时间：时间点与显示时区分开</h2>
+      <p>同一时间点换地区只改变显示。回拨日两个 01:30 通过偏移保留各自身份。</p>
+      <label>
+        带偏移 ISO 时间点
+        <input
+          value={instant}
+          onChange={(event) => setInstant(event.target.value)}
+          maxLength={45}
+        />
+      </label>
+      <label>
+        显示时区
+        <select
+          value={zone}
+          onChange={(event) => {
+            if (isDisplayZone(event.target.value)) setZone(event.target.value)
+          }}
+        >
+          {DISPLAY_ZONES.map((item) => (
+            <option key={item} value={item}>
+              {item}
+            </option>
+          ))}
+        </select>
+      </label>
+      <div className="c22-actions">
+        <button type="button" onClick={() => setInstant('2026-11-01T01:30:00-04:00')}>
+          回拨较早 01:30
+        </button>
+        <button type="button" onClick={() => setInstant('2026-11-01T01:30:00-05:00')}>
+          回拨较晚 01:30
+        </button>
+        <button type="button" onClick={() => setInstant('2026-11-01T01:30:00')}>
+          试缺少偏移
+        </button>
+      </div>
+      {!result.valid && <p role="alert">{result.reason}</p>}
+      <Report value={result} testId="instant-report" />
+      <p>
+        按钮里的日期是受控样例；偏移解析由 date-fns 执行，地区显示由浏览器 Intl
+        执行，没有发布请求或服务端排程。
+      </p>
+    </>
+  )
 }
-export function getMigrationReport(day:string,zone:Zone,instant:string){
- const valid=validCalendarDay(day);
- const localDate=valid?parseISO(day):null;
- return {
-  input:day,
-  dayjsStrict:valid?dayjs(day,'YYYY-MM-DD',true).format('YYYY/MM/DD'):'INVALID',
-  dateFnsLocalFormat:localDate?format(localDate,'yyyy/MM/dd'):'INVALID',
-  nextCivilDate:localDate?format(addDays(localDate,1),'yyyy-MM-dd'):'INVALID',
-  isoInstant:Number.isNaN(Date.parse(instant))?'INVALID':new Date(instant).toISOString(),
-  chosenZone:zone,
-  renderedInZone:formatInstant(instant,zone),
- };
+
+function DstDemo() {
+  const [fixture, setFixture] = useState<FixtureId>('spring')
+  const result = scheduleComparison(fixture)
+  return (
+    <>
+      <h2>迁移排程：明天同一时刻与 24 小时后</h2>
+      <p>起点固定在纽约中午。切换春季、秋季和普通日期，比较 addDays 与 addHours 的结果。</p>
+      <label>
+        纽约排程样例
+        <select
+          value={fixture}
+          onChange={(event) => {
+            const selected = DST_FIXTURES.find(({ id }) => id === event.target.value)
+            if (selected) setFixture(selected.id)
+          }}
+        >
+          {DST_FIXTURES.map(({ id, label }) => (
+            <option key={id} value={id}>
+              {label}
+            </option>
+          ))}
+        </select>
+      </label>
+      <Report value={result} testId="dst-report" />
+      <p>
+        calendarNext 保住次日 12:00；elapsedNext 保住 24 个实际小时。TZDate 与函数的 in 参数共同指定
+        IANA 时区。
+      </p>
+    </>
+  )
 }
-export default function MomentMigrationExample({level}:{level:Level}){
- const [day,setDay]=useState('2026-11-01');
- const [instant,setInstant]=useState('2026-11-01T05:30:00Z');
- const [zone,setZone]=useState<Zone>('America/New_York');
- const report=useMemo(()=>getMigrationReport(day,zone,instant),[day,zone,instant]);
- // The date-fns TZDate holds an explicit IANA zone, regardless of the browser's OS zone.
- const dst=useMemo(()=>{
-  const noon=new TZDate(2026,2,7,12,0,0,'America/New_York');
-  const next=addDays(noon,1,{in:tz('America/New_York')});
-  const fallA=new Date('2026-11-01T01:30:00-04:00');
-  const fallB=new Date('2026-11-01T01:30:00-05:00');
-  return {
-   springCivilDayHours:(next.getTime()-noon.getTime())/3_600_000,
-   fallEarly:fallA.toISOString(),fallLate:fallB.toISOString(),
-   repeatedHourGap:(fallB.getTime()-fallA.getTime())/3_600_000
-  };
- },[]);
- return <section aria-label="Moment 日期迁移工作坊">
-  <h2>{level==='basic'?'格式化与严格解析':level==='business'?'RSS 发布时间和显示时区':'DST、民用日和不可变更新'}</h2>
-  <p>此条目是历史迁移教学，不把 Moment 安装回主应用。实际计算由 date-fns、@date-fns/tz 与 Day.js 完成。</p>
-  <div className="demo-controls">
-   <label>日历日期 <input value={day} onChange={e=>setDay(e.target.value)} placeholder="YYYY-MM-DD" maxLength={10} /></label>
-   {level!=='basic'&&<>
-    <label>显示时区 <select value={zone} onChange={e=>setZone(e.target.value as Zone)}>
-     {ZONES.map(z=><option key={z} value={z}>{z}</option>)}
-    </select></label>
-    <label>UTC ISO 时间 <input value={instant} onChange={e=>setInstant(e.target.value)}
-      placeholder="2026-11-01T05:30:00Z" maxLength={45}/></label>
-   </>}
-  </div>
-  {!validCalendarDay(day)&&<p role="alert">日历日期无效，不能悄悄接受 2026-02-30。</p>}
-  <output className="demo-output" data-testid="moment-migration-report">
-   {JSON.stringify(level==='basic'?{
-    dayjs:report.dayjsStrict,dateFns:report.dateFnsLocalFormat,nextDate:report.nextCivilDate
-   }:report,null,2)}
-  </output>
-  {level==='advanced'&&<>
-   <h3>真实 IANA 时区下的时间边界</h3>
-   <pre>{JSON.stringify(dst,null,2)}</pre>
-   <p>纽约春季跳时：以日历日加 1 并非简单加 24 小时。
-    秋季两个 01:30 的墙上时间相同，UTC instant 相差 1 小时，必须保留偏移或时间点身份。</p>
-  </>}
-  <p>迁移时注意：旧 Moment 的 add/startOf 可能修改原对象。替换成不可变 Day.js 或纯函数 date-fns 后，必须更新赋值与比较逻辑。</p>
- </section>;
+
+export default function MomentMigrationExample({ level }: { level: Level }) {
+  return (
+    <section className="c22-workshop" aria-label="Moment 日期迁移工作坊">
+      {level === 'basic' ? <CalendarDemo /> : level === 'business' ? <InstantDemo /> : <DstDemo />}
+    </section>
+  )
 }

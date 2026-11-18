@@ -1,0 +1,5 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+command=pnpm exec biome check --write packages/library-lab/e2e/quality-remediation-ag-grid.spec.ts packages/library-lab/e2e/quality-remediation-beautiful-dnd-migration.spec.ts
+Checked 2 files in 10ms. No fixes applied.
+
+exitCode=0

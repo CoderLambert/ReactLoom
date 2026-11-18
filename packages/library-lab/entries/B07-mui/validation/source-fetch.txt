@@ -1,0 +1,38 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+ARGV: ["python3", "entries/B07-mui/validation/fetch-official.py"]
+START: 2026-11-10T13:08:03.986128+00:00
+END: 2026-11-10T13:08:19.808570+00:00
+EXIT: 0
+STDOUT:
+{
+  "repository": "mui/material-ui",
+  "tag": "v9.5.0",
+  "tagObject": "d4366b2c20b69195dfcf487dbfb5bbef69fedb83",
+  "commit": "1c3f8b4903f21cfad12c102edb3db4ceba2e8c8c",
+  "package": "@mui/material",
+  "browserFromLabOrigin": "NOT_RUN",
+  "checkedAt": "2026-11-10T13:08:19.801218+00:00",
+  "readmeCandidates": [
+    "README.md",
+    "packages/mui-material/README.md"
+  ],
+  "chosenReadme": "packages/mui-material/README.md",
+  "language": "en",
+  "selectionReason": "Inspected release root and target package; upstream Chinese first, otherwise exact target-package original.",
+  "packageVersion": "9.5.0",
+  "reactPeers": {
+    "@emotion/react": "^11.5.0",
+    "@emotion/styled": "^11.3.0",
+    "@mui/material-pigment-css": "workspace:^",
+    "@types/react": "^17.0.0 || ^18.0.0 || ^19.0.0",
+    "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
+  },
+  "homepagePolicyHeaders": {
+    "x-frame-options": "SAMEORIGIN",
+    "content-security-policy": "default-src * data: mediastream: blob: filesystem: about: ws: wss: 'unsafe-eval' 'wasm-unsafe-eval' 'unsafe-inline'; script-src * data: blob: 'unsafe-inline' 'unsafe-eval'; script-src-elem * data: blob: 'unsafe-inline'; connect-src * data: blob: 'unsafe-inline'; img-src * data: blob: 'unsafe-inline'; media-src * data: blob: 'unsafe-inline'; frame-src * data: blob: ; style-src * data: blob: 'unsafe-inline'; font-src * data: blob: 'unsafe-inline'; frame-ancestors *;"
+  }
+}
+README 2284 7101439d2715daf9687af1c610051cfc01f393b1a83d52b6d8c0d10e8a6e1227
+
+STDERR:

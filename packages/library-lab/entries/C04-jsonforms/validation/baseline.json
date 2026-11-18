@@ -1,0 +1,32 @@
+{
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+  "head": "1218066e706a90ba03fac8dff8c9b843dd2429c4",
+  "checkedAt": "2026-11-10T15:12:28.735110+00:00",
+  "status": "",
+  "fileCount": 11,
+  "sha256": {
+    "AGENTS.md": "db93de70798ed6f85711c089613f1d04171e00e70cbb774aa00772912be6f710",
+    "library.json": "85229b211419fd2109d4131ee7a18736c3a3c1ebd9c66b4ad35e66d3c5e3070a",
+    "verification.json": "bed0ec31d7bf864b143c5b750f568439dcf33cf977302093e45d4d6d92d687f9",
+    "agent.md": "fb617c2e37c0df22eca6ed5fde27e1725d877243cf2af3a94e19ceaa3a1bb97b",
+    "guide.md": "291513b9f12010c8ef14b2e5850887f19256bc95dfe5b7643366a98fa9c184a2",
+    "examples/demo.tsx": "254591932548c36c414610bd0d0c7ce7ef1648162f1996fbbe7381b8c1751690",
+    "examples/example.tsx": "f99a56240f25e7fb057cff264ab5961e7e30ff3841308b6a6991f45bc24a9dba",
+    "examples/submission-policy.d.mts": "9ac96e22b9609337c7ac67acd9525bf256c0f52a09c695ad7914f923edb40287",
+    "examples/submission-policy.mjs": "0b677b1d701cff2abde163acb1d9a5b69a7b9d05a12e337faac80badcc26b02f",
+    "tests/sdk.test.mjs": "cfa7bccabee666ff41204d0cb039e12409158e8020d7d0a9e476cf089c09999b",
+    "tests/submission-policy.test.mjs": "c7a1c76f046cd8892f1a8d96ebb67f375e2da731c26b34338b4cb9e5e1371565"
+  },
+  "problems": [
+    "高密度源码和重复维护历史",
+    "缺实际提交快照与已取消/已卸载回调可观察边界",
+    "SDK测试主要module load/泛用Ajv而非实际JSONForms渲染",
+    "URL长度例子与minLength8不符",
+    "缺固定官方原文/完整官网头"
+  ],
+  "goals": [
+    "Schema+Vanilla真实控件/onChange校验与草稿",
+    "HIDE与payload字段白名单分离",
+    "additionalErrors 422/409、提交快照、代际取消/IME/卸载"
+  ]
+}

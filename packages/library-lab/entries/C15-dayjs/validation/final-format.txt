@@ -1,0 +1,5 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['pnpm', 'exec', '--', 'biome', 'check', '--write', 'entries/C15-dayjs/library.json', 'entries/C15-dayjs/verification.json', 'entries/C15-dayjs/official/source-evidence.json', 'entries/C15-dayjs/validation/sdk-source-audit.json', 'entries/C15-dayjs/validation/metadata-check.mjs', '/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C15-dayjs/validation/.proposal-types-xxnraxiw/browser-proposal.spec.ts']
+startedAt: 2026-11-10T17:25:17.994608+00:00
+exit: 0
+Checked 6 files in 9ms. Fixed 4 files.

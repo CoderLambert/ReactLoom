@@ -6,14 +6,7 @@
   "group": "B",
   "summary": "可访问命令菜单、搜索分组与中文输入法快捷键",
   "contentState": "recreated",
-  "tags": [
-    "Command",
-    "命令面板",
-    "搜索",
-    "Ctrl+K",
-    "IME",
-    "键盘"
-  ],
+  "tags": ["Command", "命令面板", "搜索", "Ctrl+K", "IME", "键盘"],
   "packages": [
     {
       "name": "cmdk",
@@ -22,16 +15,16 @@
   ],
   "references": [
     {
-      "title": "cmdk 官方仓库与组件 API",
-      "url": "https://github.com/pacocoursey/cmdk"
+      "title": "匹配1.1.1官方原文",
+      "url": "https://github.com/dip/cmdk/blob/fb4ea04e9ec211777fbb39c6104e3c5f2ee107d2/README.md"
     },
     {
-      "title": "npm cmdk 1.1.1",
-      "url": "https://www.npmjs.com/package/cmdk"
+      "title": "1.1.1 IME官方发布说明",
+      "url": "https://github.com/dip/cmdk/releases/tag/v1.1.1"
     },
     {
-      "title": "cmdk 1.1.1 IME 修复记录",
-      "url": "https://github.com/pacocoursey/cmdk/releases/tag/v1.1.1"
+      "title": "npm cmdk1.1.1",
+      "url": "https://www.npmjs.com/package/cmdk/v/1.1.1"
     }
   ],
   "related": [
@@ -66,13 +59,10 @@
         "examples/example.tsx",
         "examples/keyboard-policy.ts",
         "examples/command-state.ts",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/styles.css"
       ],
-      "capabilities": [
-        "keyboard",
-        "ime",
-        "portal"
-      ]
+      "capabilities": ["keyboard", "ime"]
     },
     {
       "demoId": "business",
@@ -85,13 +75,10 @@
         "examples/example.tsx",
         "examples/keyboard-policy.ts",
         "examples/command-state.ts",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/styles.css"
       ],
-      "capabilities": [
-        "keyboard",
-        "ime",
-        "portal"
-      ]
+      "capabilities": ["keyboard", "ime"]
     },
     {
       "demoId": "advanced",
@@ -104,13 +91,30 @@
         "examples/example.tsx",
         "examples/keyboard-policy.ts",
         "examples/command-state.ts",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/styles.css"
       ],
-      "capabilities": [
-        "keyboard",
-        "ime",
-        "portal"
-      ]
+      "capabilities": ["keyboard", "ime", "portal"]
     }
-  ]
+  ],
+  "official": {
+    "readme": {
+      "repository": "dip/cmdk",
+      "commit": "fb4ea04e9ec211777fbb39c6104e3c5f2ee107d2",
+      "path": "README.md",
+      "sourceUrl": "https://github.com/dip/cmdk/blob/fb4ea04e9ec211777fbb39c6104e3c5f2ee107d2/README.md",
+      "snapshotPath": "official/readme.md",
+      "language": "en",
+      "version": "1.1.1",
+      "syncedAt": "2026-11-10T14:15:50.956495+00:00",
+      "sha256": "3c91f31f521a1f6dc077c0faaa0ecd42aa0bf89ed6e2e76267b4f21fc6198cb4"
+    },
+    "homepage": {
+      "url": "https://github.com/pacocoursey/cmdk#readme",
+      "kind": "repository",
+      "status": "blocked",
+      "checkedAt": "2026-11-10T14:15:43.861745+00:00",
+      "reason": "包声明的旧GitHub主页实际重定向官方dip/cmdk；最终GET200，XFO deny与强制CSP frame-ancestors none明确禁止Lab跨源嵌入。保留官网直达。"
+    }
+  }
 }

@@ -1,0 +1,11 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['node', 'entries/C15-dayjs/validation/publisher-links-check.mjs']
+startedAt: 2026-11-10T17:45:13.676877+00:00
+exit: 0
+{
+  "guideLinks": 5,
+  "publisherResolved": 5,
+  "privatePathsStillDenied": 3,
+  "fixedEnglishOriginal": true,
+  "sdkOrBrowserOrHttp": "NOT_RUN"
+}

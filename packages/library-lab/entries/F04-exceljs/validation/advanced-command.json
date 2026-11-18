@@ -1,0 +1,10 @@
+{
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+  "argv": [
+    "node",
+    "entries/F04-exceljs/examples/advanced.mjs",
+    "advanced"
+  ],
+  "exitCode": 0,
+  "at": "2026-11-17T18:32:25.024984+00:00"
+}

@@ -9,6 +9,6 @@
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "真实 ResizeObserver、scrollTop、测量和浏览器E2E仍待运行"
+    "note": "正式NOT_RUN；root candidate16三个真实目标及官方展示共4PASS，advanced仅修正滚动完成采样门禁，原8px/缺ID/底部跟随未放宽；匹配正式收据另计。"
   }
 }

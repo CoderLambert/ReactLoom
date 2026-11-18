@@ -1,0 +1,2 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["python", "packages/library-lab/entries/C16-luxon/validation/final-inspection.py"], "utc": "2026-11-10T17:21:42.216883+00:00", "exit": 0}
+{"inputFiles": 19, "inputDifferences": 0, "localLinks": 33, "agentsUnchanged": true, "proposalTemporaryFiles": 0, "formal": "NOT_RUN", "browser": "NOT_RUN"}

@@ -1,0 +1,5 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom
+command: ["pnpm", "exec", "biome", "check", "packages/library-lab/entries/E05-monaco-editor/examples", "packages/library-lab/entries/E05-monaco-editor/library.json"]
+Checked 14 files in 8ms. No fixes applied.
+
+exitCode: 0

@@ -1,200 +1,108 @@
-# Moment 迁移｜权威计算是 date-fns 4.4.0 和 Day.js 1.11.23
+# 把 Moment 发布计划迁成明确的日期模型
 
-这一篇不推荐把 Moment 装进新应用。Moment 已经处于维护状态，可变 API 和打包体积都不适合作为 React 状态。Lab **不把 `moment` 列进运行依赖**。挂载示例只用 `date-fns@4.4.0`、`@date-fns/tz@1.5.0` 和 `dayjs@1.11.23`。
+旧系统用一个 Moment 对象表示账单日期、发布时间和“明天中午”。这三种需求在平常日期看起来相似，遇到跨地区显示或夏令时就会分叉：账单的 `2026-11-01` 没有唯一的 UTC 时间点；纽约的次日中午也不总是 24 小时以后。本例把它们拆开，再分别用 Day.js、date-fns 和明确的 IANA 时区实现。
 
-没有收据时 sdk / build / browser 保持 NOT_RUN。Actions 41779873259 不是本条目 PASS。
+Moment 官方将项目定位为维护中的历史项目。已有应用行为稳定时，可以按业务边界逐步迁移；新代码可依据 API 风格和时区需求选择目标库。本例同时展示两套替代 API 是为了做迁移对照，业务项目通常选一套主要计算方式。运行依赖为 `date-fns@4.4.0`、`@date-fns/tz@1.5.0`、`dayjs@1.11.23`；历史 Moment 只查资料，不参与 Demo 运行。
 
-## Lab 当前示例
+## 先确定值的含义
 
-[`examples/example.tsx`](examples/example.tsx) 没有 `import moment`。`demo.tsx` 只做再导出。没有双终端的旧 Moment 服务，也没有 `localhost:5173`。
+| 需求 | 保存的值 | 计算和显示方式 |
+| --- | --- | --- |
+| 账单日、生日 | `YYYY-MM-DD` 字符串 | 严格校验，再做日历运算 |
+| 已确定的发布时间 | 带 `Z` 或数值偏移的 ISO 时间点 | 解析成时间点；显示时另传地区 |
+| 每天纽约中午发布 | 日期、当地时间和 `America/New_York` | 按该地区的日历加一天，再确定时间点 |
+| 24 小时后过期 | 起始时间点和时长 | 按实际经过的小时计算 |
 
-- **basic**：`validCalendarDay` 同时要求正则、`dayjs(value, 'YYYY-MM-DD', true).isValid()` 和 `isValid(parseISO(value))`。`2026-02-30` 不能被悄悄接受。输出对比 Day.js 的 `YYYY/MM/DD` 和 date-fns 的 `yyyy/MM/dd`，以及 `addDays` 得到的下一天。格式令牌并不相同：Moment 的 `YYYY` 不能原样贴进所有库还指望月日补零规则一致。
-- **business**：增加显示时区和一条 UTC ISO。`formatInstant` 用 `Intl.DateTimeFormat`，`timeZone` 来自下拉框，`hourCycle: 'h23'`。报告里的 `isoInstant` 来自 `new Date(instant).toISOString()`。日历日和 instant 分两栏。这不是把日历日转成 UTC 午夜再当事件时间。
-- **advanced**：`TZDate(2026, 2, 7, 12, 0, 0, 'America/New_York')` 再 `addDays(..., { in: tz('America/New_York') })`，用毫秒差除以 3600000 得到春季相邻日历日的小时数。秋季比较 `2026-11-01T01:30:00-04:00` 和 `-05:00` 的 `toISOString()`，以及两者相差的小时。注释写明 TZDate 带的是 IANA 名，不看操作系统时区。
+Day.js 的链式 API 接近 Moment，默认运算返回新实例；date-fns 把日期作为函数参数，返回新的日期值。`@date-fns/tz` 的 `TZDate` 带有 IANA 时区，date-fns 的 `in: tz(zone)` 明确本次运算的地区。它们都需要你先选对业务语义。
 
-页面最后提醒：Moment 的 `add` 和 `startOf` 会改原对象。换成不可变的 Day.js 或 date-fns 之后，赋值和比较都要改。
+## 最小接入：先迁一个日期字段
 
-## 什么时候用
+在支持 ES modules 的 React 工程中安装固定依赖：
 
-代码库里还有 `moment()`、`.add(1, 'day')` 改原对象、或把格式令牌当接口的时候，用这篇做迁移清单。新功能直接选 C14、C15 或 C16 里的一个，不要三套同时当权威。
-
-迁移的目标不是「还能显示今天」。目标是：非法日期会失败、日历日和 instant 分开、DST 的 23/25 小时被看见、回拨日的两个 01:30 不会合成一个。
-
-## 数据与模型
-
-四种值在迁移时最容易被 Moment 的一个对象包在一起：
-
-| 值 | 迁移后放哪 |
-| --- | --- |
-| 日历日 `YYYY-MM-DD` | 严格解析，禁止进位 |
-| 事件 instant | 带 `Z` 或数值偏移的 ISO |
-| 显示时区 | `Intl` 或 `TZDate` 的 IANA 名 |
-| 经过的小时 | 毫秒差，不从日历日差推 |
-
-Moment 默认可变。`const b = a.add(1, 'day')` 之后 `a` 也变了。React state 里如果存的是这个对象，渲染和比较都会脏。Day.js 默认返回新对象。date-fns 不改入参。迁移时搜索 `.add(`、`.subtract(`、`.startOf(`、`.endOf(`，凡是之后还读原变量的地方都要改成使用返回值。
-
-`.add(1, 'day')` 在 Moment 里是日历日，不是 24 小时。DST 日两者不同。不要改写成 `+ 86400000` 就算迁完。示例用 `addDays` 加 `TZDate`。
-
-宽松解析会接受 `2026-02-30` 并进位。Day.js 必须带 `customParseFormat` 和第三参 `true`。date-fns 的 `parseISO` 还要 `isValid`。两个都过，示例才把这一天当日历日。
-
-把日历日 `2026-11-01` 解析成 UTC 午夜，会让纽约的「这一天」偏到前一晚。业务日就存日历字符串。事件另存 instant。
-
-固定偏移不是时区。`-05:00` 不会在夏天自动变成 `-04:00`。显示用 IANA 名。存储用 instant。
-
-格式令牌：Moment `YYYY-MM-DD HH:mm` 与 date-fns `yyyy-MM-dd HH:mm` 的年、日字母不同。Day.js 更接近 Moment 的令牌，但仍要开插件并核对严格模式。不要全局替换字母。
-
-`startOf('day')` 使用当时的默认时区。服务器在 UTC、浏览器在上海，同一调用会得到不同瞬间。迁移后显式传入 zone。
-
-秋季重叠：两个 01:30 相差一小时。必须保留偏移。春季缺口不要静默顺延到存在的时刻还当成功。示例把缺口的完整拒绝放在 C15/C16；这里的 advanced 把两个合法偏移并排显示，避免迁完之后只剩一个 `Date`。
-
-不要从用户提供的 locale 字符串调用 Moment 的全局 `locale()`。那会改进程里的其它请求。Day.js 用实例 `.locale()`，并且只用于展示。
-
-只检查 `AbortSignal` 不够。若迁移的是「保存发布计划」而不是纯函数，仍要 generation，防止旧响应写回。本 Demo 没有请求。
-
-不要把 Moment 换成浏览器的 `Date` 解析就算结束。`Date` 的无偏移字符串依赖系统时区，可变性也没有变得更明确。
-
-## 三层示例
-
-### 基本
-
-输入 `2026-02-30`。alert 出现，输出里的格式化字段为 `INVALID`，`nextDate` 也是 `INVALID`。输入 `2026-11-01`，Day.js 和 date-fns 的斜线日期应表示同一天，下一天是 `2026-11-02`。看令牌：一边是 `YYYY/MM/DD`，一边是 `yyyy/MM/dd`。
-
-### 业务
-
-改时区为上海和纽约，同一条 `2026-11-01T05:30:00Z` 的 `renderedInZone` 不同。改 instant 为非法字符串，`isoInstant` 为 `INVALID`。不要把日历日输入框和 ISO 输入框合成一个。
-
-### 进阶
-
-`<pre>` 里的 `springCivilDayHours` 是纽约 3 月 7 日中午到次日中午的小时数，用来看春季跳时，不应在未运行时被写成永远 24。`fallEarly` 与 `fallLate` 是两个 ISO，`repeatedHourGap` 是它们的小时差。页脚说明可变对象必须改赋值。
-
-## 反例
-
-### 1. Moment 放进 React state
-
-```ts
-const [when, setWhen] = useState(() => moment())
-when.add(1, 'day')
+```sh
+pnpm add date-fns@4.4.0 @date-fns/tz@1.5.0 dayjs@1.11.23
 ```
 
-原对象被改，state 引用没变，可能不渲染。用不可变返回值并 `setState`。
-
-### 2. add(1, 'day') 改成加 24 小时
-
-日历发布日会在 DST 上错一小时。用带 zone 的 `addDays`。
-
-### 3. 宽松解析
-
-`moment('2026-02-30')` 可能不是无效。严格模式或双库回读，失败就停。
-
-### 4. 日历日变成 UTC 午夜
-
-`moment.utc('2026-11-01')` 再存数据库，纽约用户看到的日子会偏。日历日保持字符串。
-
-### 5. 固定偏移当时区
-
-夏天的纽约不是 `-05:00`。存 IANA 名和 instant。
-
-### 6. 原样粘贴格式令牌
-
-Moment 的 `DD` 在 date-fns 是一年中的日。对照 basic 的两套 format。
-
-### 7. 把日期对象放进 JSON
+示例的实际计算在 [migration.mjs](examples/migration.mjs)，React 控件在 [example.tsx](examples/example.tsx)。日期校验的关键路径是：
 
 ```ts
-JSON.stringify({ at: moment() })
+const context = { in: tz('UTC') };
+const parsedDayjs = dayjs.utc(input, 'YYYY-MM-DD', true);
+const parsedDateFns = parseISO(`${input}T00:00:00Z`, context);
 ```
 
-得到不稳定的结构。接口用 ISO 字符串或日历日字符串。
+上面的片段依赖共享模块顶部的完整初始化，不能单独复制后省掉插件：
 
-### 8. startOf('day') 不写时区
+```ts
+import { TZDate, tz } from '@date-fns/tz';
+import { addDays, addHours, format, isValid, parseISO } from 'date-fns';
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat.js';
+import utc from 'dayjs/plugin/utc.js';
 
-进程时区决定结果。显式 zone。
+dayjs.extend(customParseFormat);
+dayjs.extend(utc);
+```
 
-### 9. 回拨日静默选第一个
+插件包含在 `dayjs` 包中，不另装同名包；本例不调用 `dayjs.tz`，所以不需要 Day.js timezone 插件。严格格式解析和 UTC 的前置条件分别见[官方格式解析说明](https://day.js.org/docs/en/parse/string-format)与[UTC 插件说明](https://day.js.org/docs/en/plugin/utc)。时区排程由 `@date-fns/tz` 提供，显示由环境原生 `Intl` 提供；现代浏览器或带 IANA 时区数据的 Node 是运行前提。
 
-两个 01:30 都合法且不同。示例把两个 instant 都打出来。产品里要让用户选，见 C16。
+`customParseFormat` 提供指定格式和严格模式，`utc` 插件让 Day.js 校验载体使用 UTC。date-fns 路径也附加明确的 `Z`，避免无偏移输入依赖操作系统的当地日期。两套结果都要有效，date-fns 再格式化回原字符串后才接收。本例的输入范围是 1000–9999 年、完整的 `YYYY-MM-DD`；这个范围和正则是示例自己的业务规则。
 
-### 10. 春季缺口顺延
+UTC 在这里是稳定的校验载体，不是把账单日期改存为 UTC 午夜。函数返回的业务日期仍是字符串。后面的 `add(1, 'day')` 和 `addDays` 必须使用返回值，不能沿用 Moment 修改原对象后的写法。
 
-不存在的 02:30 被加成 03:30 还显示成功。迁到 C15 的 `resolveExplicitZonedInstant` 或 C16 的回读。
+## 实验一：严格日期、令牌和返回值
 
-### 11. 全局 locale
+进入“从日期字段迁移”。默认 `2026-11-01` 会产生两套斜线日期和各自的下一天：
 
-`moment.locale(userInput)` 影响所有调用。不要从请求参数改全局。
+1. 点击“试无效日期”：输入变成 `2026-02-30`，出现错误提示，报告的 `valid` 为 `false`，不再输出看似成功的格式化日期。
+2. 点击“恢复有效日期”：`dayjsFormat` 和 `dateFnsFormat` 都表示 `2026/11/01`，两条 `Next` 为 `2026-11-02`。
+3. 查看 `originalAfterAdd`：仍是 `2026-11-01`。这就是迁移时需要重新赋值的原因。
 
-### 12. 只 abort 不看 generation
+关键源码是 `calendarReport`。Day.js 使用 `YYYY/MM/DD`，date-fns 使用 `yyyy/MM/dd`；大小写代表不同令牌。不要把 Moment 的格式串机械复制给 date-fns。迁移测试应同时检查有效输入、非法日期和运算后的原值。
 
-旧的保存响应仍会覆盖新表单。纯函数示例没有这条，带接口的迁移必须有。
+## 实验二：时间点不随显示地区变化
 
-### 13. 用原生 Date 当终点
+进入“从发布时间迁移”。`instantReport` 先检查本例的 ISO 输入契约，再调用 date-fns 的 `parseISO` 和 `isValid`；有效结果用 `toISOString()` 规范化。`Intl.DateTimeFormat` 只负责把这个时间点显示到选择的地区。
 
-`new Date('2026-11-01T01:30')` 不是带 zone 的迁移。advanced 用 `TZDate` 和带偏移的字符串。
+1. 保持 `2026-11-01T05:30:00Z`，把显示时区从纽约切到上海：`isoInstant` 不变，`displayed` 从当地 01:30 变为 13:30。
+2. 切回纽约，分别点击“回拨较早 01:30”和“回拨较晚 01:30”：当地显示都是 01:30，规范化时间点分别是 `05:30Z` 和 `06:30Z`，相差一小时。
+3. 点击“试缺少偏移”：报告拒绝 `2026-11-01T01:30:00`。也可手工输入 `2026-02-30T05:30:00Z`，验证非法日期不会进位。
 
-## 组合
+本例要求有秒、可选的 1–3 位毫秒以及 `Z` 或 `±HH:mm` 偏移；这比 ISO 的全部语法更窄，是应用自建的输入合同。偏移只标识该时间点的数值差，不能代表纽约未来一年的时区规则。将来若要求用户输入“纽约当地 01:30”，还需要决定回拨重叠和春季缺口如何处理，可继续看 C16 的显式解析模型。
 
-**date-fns 与 TZDate。** 日历加减和显示时区的小时差。`in: tz(zone)` 不能省。
+## 实验三：明天中午与 24 小时后
 
-**Day.js。** 严格解析和与旧令牌接近的格式化。插件要显式 extend。不要再装 Moment 做「对照运行」。
+进入“从周期排程迁移”。起点是纽约中午，样例下拉框提供春季跳时、秋季回拨和普通冬日三个受控日期。每次选择都真实运行：
 
-**Luxon。** 需要列出 `getPossibleOffsets` 时用 C16，而不是在迁移层再写第三个猜测。
+```ts
+const start = new TZDate(2026, month, day, 12, 0, 0, zone);
+const calendarNext = addDays(start, 1, { in: tz(zone) });
+const elapsedNext = addHours(start, 24, { in: tz(zone) });
+```
 
-## 生产清单
+春季样例中，`calendarNext` 仍为次日 12:00，但实际经过 23 小时；`elapsedNext` 为次日 13:00。秋季样例的日历日经过 25 小时，24 小时后则是次日 11:00。普通冬日两者相同。`originalAfterBoth` 始终保留起点。
 
-- 依赖里没有 `moment`。
-- 搜索可变 `add` / `startOf` 并改为使用返回值。
-- 日历日严格校验，拒绝 2 月 30 日。
-- instant 与日历日分字段。
-- 显示用 IANA 时区，不用固定偏移代表地区。
-- 格式令牌按目标库重写并加测试。
-- DST 样例至少包括纽约 2026-03 的日历日和 2026-11-01 的两个偏移。
-- 不把日期对象放进 JSON。
+选择“每天同一当地时间”时用日历运算，选择“准确经过一段时长”时用小时运算。Fixture 只提供起点，结果由真实 `TZDate`、`addDays`、`addHours` 和格式化函数计算。这个实验不模拟服务端任务队列。
 
-## 升级
+## 把源码迁到项目中
 
-date-fns 和 Day.js 的 pin 与 C14、C15 相同。升级任一个都要重跑 `2026-02-30`、春季小时数和两个秋季 instant。不要为了对照再把 moment 装进本仓库。
+复制 [example.tsx](examples/example.tsx)、[migration.mjs](examples/migration.mjs)、[migration.d.mts](examples/migration.d.mts) 和 [styles.css](examples/styles.css)；[demo.tsx](examples/demo.tsx) 是 Lab 的再导出入口，可用自己路由直接挂载 `MomentMigrationExample`。声明文件让 TypeScript 消费同一份 `.mjs` 实现，测试也直接调用它，没有另一套展示用算法。CSS 使用 `c22-` 命名空间；需要导入 CSS 的 bundler 类型配置。
 
-`getMigrationReport` 在日期无效时仍返回对象，三个格式字段都是 `INVALID`。调用方要看这些字段，不能只看没有抛错。`formatInstant` 对 `NaN` 返回「无效时间」，不抛异常。两套失败方式都要在界面上看得见：日历日走 alert，instant 走报告里的 INVALID。
+在 Vite React + TypeScript 工程中，将四个文件保存在同一目录（保留 `.mjs` 与 `.d.mts` 的同名配对），入口导入 `MomentMigrationExample`，例如 `<MomentMigrationExample level="basic" />`。另两个值为 `business` 和 `advanced`；`level` 是必填参数。保留 `example.tsx` 中的 `import './styles.css'`；`src/vite-env.d.ts` 需有 `/// <reference types="vite/client" />`，TypeScript 使用 `moduleResolution: "bundler"`、`jsx: "react-jsx"`、`allowSyntheticDefaultImports: true`。非 Vite 工程应提供自己的 CSS 模块声明，Next App Router 则须在此交互组件顶部添加 `'use client'`。本条目没有在 Next 中做独立构建验收。
 
-## 练习
+三个场景只持有各自的 React 输入状态，离开时随组件卸载。没有计时器、订阅、请求或临时 URL。Day.js 插件在模块初始化时注册，不更改全局 locale 或默认时区；实际应用应统一管理插件配置，避免另处加载 `BadMutable` 改变默认不可变语义。
 
-1. `2026-02-30` 三套输出都是无效，而不是 3 月 2 日。
-2. `2026-11-01` 的下一天是 `2026-11-02`，与显示时区无关。
-3. 同一 UTC instant 在上海和纽约的 `renderedInZone` 不同。
-4. 两个 01:30 的 ISO 不同，小时差为 1。
-5. 在业务代码里搜索 `moment`，确认没有新的 import。
+## 迁移前逐条核对旧行为
 
-## 故障排查
+- Moment 的 `add` 会修改原实例；替换为 Day.js/date-fns 后，要检查忽略返回值的调用点和 React state 的更新方式。
+- 不应把“宽松解析”理解为所有非法日期都会进位。Moment 2.30.1 的源码会检查日期溢出；本例不声称 `moment('2026-02-30')` 有效。迁移时用现有系统的真实输入建立回归集。
+- Moment 2.30.1 的 `toJSON()` 对有效值调用 `toISOString()`，无效值返回 `null`。序列化通常不会暴露内部字段，但 ISO 结果不能携带原显示地区的完整 IANA 规则。接口应明确保存日历日、时间点和需要保留的地区字段。
+- `hourCycle: 'h23'` 让显示小时使用 00–23。它只控制格式，不改变时间点或时区运算。
 
-| 现象 | 先看 |
-| --- | --- |
-| 2 月 30 日变成 3 月 | 解析没有严格模式，或只用了会进位的 `Date` |
-| 同一变量过一天之后原值也变了 | 还留着 Moment 的可变 `add` |
-| 服务器和浏览器差一天 | `startOf('day')` 或 UTC 午夜使用了进程时区 |
-| 纽约夏天仍显示 `-05:00` | 把固定偏移当成了 IANA 时区 |
-| date-fns 的日期变成一年中的第几天 | Moment 的 `DD` 被原样贴了过去 |
-| 两个 01:30 合成一个 instant | 丢掉了偏移 |
-| 接口里出现 `{"_isAMomentObject":true}` | 把 Moment 对象放进了 `JSON.stringify` |
-| 旧保存覆盖新表单 | 只 abort 了请求，没有 generation |
+这三条历史 API 结论来自固定的官方 2.30.1 源码；本例没有执行旧 Moment，不能用替代库的结果证明旧库运行通过。
 
-搜索顺序建议是：`from 'moment'`、`.add(`、`.startOf(`、`moment.locale`、`moment.utc`。每处标明换成哪一个函数、哪一个时区参数。不要用「页面还能显示今天」当迁移完成。
+## 官方原文与官网
 
-春季相邻日历日的小时数以 advanced 的 `TZDate` 输出为准。若结果是 23，那就是跳时，不是计算坏了。秋季两个 ISO 必须同时留下。
+“官方 README”页使用与运行版本匹配的 date-fns 官方英文原文；对应提交没有官方中文 README。还保存了同提交的 [TZ README](official/tz-readme.md) 和匹配 Day.js 1.11.23 的[官方中文 README](official/dayjs-readme.md)。Moment 的[历史官方 README](official/moment-readme.md) 仅用于核对项目定位。完整仓库、提交、路径、语言、同步时间和摘要见[来源清单](official/source-evidence.json)。
 
-## 官方链接
-
-- https://momentjs.com/docs/#/-project-status/
-- https://date-fns.org/docs/Getting-Started
-- https://day.js.org/docs/en/parse/parse
-- https://github.com/date-fns/tz
-
-`hourCycle: 'h23'` 避免中午被格式化成 24 点或上午下午标记，方便和 ISO 对照。换掉这个选项之前，先看同一 instant 在上海和纽约的字符串是否还能对上小时。日历日输入有 `maxLength={10}`，挡不住粘贴进位，所以仍要 `validCalendarDay`。
-
-`getMigrationReport` 的 `dateFnsLocalFormat` 使用 `parseISO` 加 `format`，没有传 `tz()`。它只证明日历日字符串能被格式化，不证明显示时区。时区在 `renderedInZone` 和 advanced 的 `TZDate` 里。不要用斜线日期那一栏判断纽约偏移。秋季两个 `Date` 的差用毫秒除以 3600000，结果应是 1。若变成 0，说明两个字符串被解析成了同一个 instant，偏移已经丢了。
-
-basic 不渲染时区下拉框。不要在 basic 的输出里找 `chosenZone`。那一栏从 business 才进入 `report`。
-
-## 证据
-
-本条目的运行库是 date-fns、`@date-fns/tz` 和 Day.js。没有 moment 的 sdk 可写。收据仍要出现在 `docs/library-lab/evidence/runs/`，并且命令 import 的是上述三个 pin。把「没有安装 Moment」写成 Moment PASS 是错的。browser 看非法日期的 alert 和 advanced 的 JSON。
-
-GitHub Actions 41779873259 是仓库级安装、typecheck、build、52 个 SDK 文件（153 项测试）和 45 项 Playwright 的结果，不是 C22 的条目 PASS。不要改 `verification.json`。
+官网预览复用 date-fns 的官方入口。已保存的 HTTP 响应未发现嵌入限制头，但尚未从 Lab origin 确认官网内容可用，因此状态为“未知”，保留直达入口。`iframe load` 或无报错不能单独证明允许嵌入。

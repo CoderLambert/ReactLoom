@@ -1,3 +1,5 @@
+import { validateOfficialSources } from './official-sources.mjs'
+
 export const GROUPS = Object.freeze({
   A: '图表 · 画布 · 地图',
   B: '组件 · 动画 · 交互',
@@ -6,9 +8,9 @@ export const GROUPS = Object.freeze({
   E: '编辑 · AI · 多媒体',
   F: '文件 · 测试 · 工程',
 })
-export const TABS = Object.freeze(['demo', 'docs', 'agent', 'related'])
+export const TABS = Object.freeze(['docs', 'demo', 'readme', 'website', 'agent', 'related'])
 export function normalizeTab(value) {
-  return TABS.includes(value) ? value : 'demo'
+  return TABS.includes(value) ? value : 'docs'
 }
 export function safeRelativePath(value) {
   return (
@@ -74,6 +76,7 @@ export function validateEntry(entry) {
     if (!Array.isArray(entry[key])) errors.push(`${key} must be array`)
   for (const ref of Array.isArray(entry.references) ? entry.references : [])
     if (!ref.title || !safeLink(ref.url).startsWith('https:')) errors.push('invalid reference')
+  if (entry.official !== undefined) errors.push(...validateOfficialSources(entry.official))
   const seen = new Set()
   for (const d of Array.isArray(entry.demos) ? entry.demos : []) {
     if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(d.demoId ?? '') || seen.has(d.demoId))

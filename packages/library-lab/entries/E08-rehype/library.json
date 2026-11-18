@@ -5,14 +5,7 @@
   "name": "rehype",
   "group": "E",
   "summary": "HTML AST 转换与安全输出：rehype-sanitize 净化及沙箱预览",
-  "tags": [
-    "HTML",
-    "HAST",
-    "Sanitize",
-    "XSS",
-    "内容处理",
-    "隔离预览"
-  ],
+  "tags": ["HTML", "HAST", "Sanitize", "XSS", "内容处理", "隔离预览"],
   "contentState": "recreated",
   "packages": [
     {
@@ -66,12 +59,11 @@
         "examples/sanitize-policy.mjs",
         "examples/sanitize-policy.d.mts",
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/input-policy.mjs",
+        "examples/input-policy.d.mts"
       ],
-      "capabilities": [
-        "text-transform",
-        "safe-preview"
-      ],
+      "capabilities": ["text-transform", "safe-preview"],
       "description": "HTML 解析与允许列表"
     },
     {
@@ -84,12 +76,11 @@
         "examples/sanitize-policy.mjs",
         "examples/sanitize-policy.d.mts",
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/input-policy.mjs",
+        "examples/input-policy.d.mts"
       ],
-      "capabilities": [
-        "text-transform",
-        "safe-preview"
-      ],
+      "capabilities": ["text-transform", "safe-preview"],
       "description": "RSS 富文本公告净化"
     },
     {
@@ -103,12 +94,10 @@
         "examples/sanitize-policy.d.mts",
         "examples/example.tsx",
         "examples/demo.tsx",
-        "tests/node-scenarios.test.mjs"
+        "examples/input-policy.mjs",
+        "examples/input-policy.d.mts"
       ],
-      "capabilities": [
-        "text-transform",
-        "safe-preview"
-      ],
+      "capabilities": ["text-transform", "safe-preview"],
       "description": "XSS 输入与无脚本 iframe 预览"
     }
   ],
@@ -119,5 +108,25 @@
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
     "note": "根据官方 rehype 13 和 rehype-sanitize 6 编写独立安全样例。"
+  },
+  "official": {
+    "readme": {
+      "repository": "rehypejs/rehype",
+      "commit": "06fd4dc9b13538ece27bce1999a85d396a646817",
+      "path": "packages/rehype/readme.md",
+      "sourceUrl": "https://github.com/rehypejs/rehype/blob/06fd4dc9b13538ece27bce1999a85d396a646817/packages/rehype/readme.md",
+      "snapshotPath": "official/readme.md",
+      "sha256": "b7f74a9ed8b1343a0eab1a8243c18526ff5fd4739b0856356e6fa9aa84e8aeb1",
+      "language": "en",
+      "version": "13.0.2",
+      "syncedAt": "2026-11-17T17:30:28.882908+00:00"
+    },
+    "homepage": {
+      "url": "https://github.com/rehypejs/rehype",
+      "kind": "website",
+      "status": "blocked",
+      "checkedAt": "2026-11-17T17:30:28.882908+00:00",
+      "reason": "实际官方homepage GET返回X-Frame-Options:deny与CSP frame-ancestors none，禁止跨源Lab嵌入；响应头见official/source-evidence.json，保留直达。"
+    }
   }
 }

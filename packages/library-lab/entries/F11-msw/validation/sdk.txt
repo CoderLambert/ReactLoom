@@ -1,0 +1,16 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node --test entries/F11-msw/tests/node-scenarios.test.mjs
+exit: 0
+
+✔ MSW v3 GET handler intercepts a real fetch (25.776611ms)
+✔ MSW v3 POST handler returns explicit field errors (10.703634ms)
+✔ MSW handler override simulates a one-time 503 then recovery (5.512949ms)
+✔ request:match receipts follow the actual 422 -> 200 requests (5.759231ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 136.539609

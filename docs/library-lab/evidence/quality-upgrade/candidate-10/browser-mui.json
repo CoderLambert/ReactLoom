@@ -1,0 +1,16 @@
+{
+  "command": [
+    "pnpm",
+    "exec",
+    "playwright",
+    "test",
+    "--config=.local-evidence/quality-playwright.config.ts",
+    "e2e/quality-remediation-mui.spec.ts"
+  ],
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+  "startedAt": "2026-11-10T13:34:35.747553+00:00",
+  "finishedAt": "2026-11-10T13:35:08.691779+00:00",
+  "exitCode": 1,
+  "implicitBuild": false,
+  "log": "docs/library-lab/evidence/quality-upgrade/candidate-10/browser-mui.txt"
+}

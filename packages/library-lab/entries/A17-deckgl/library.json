@@ -5,13 +5,7 @@
   "name": "deck.gl",
   "group": "A",
   "summary": "无底图的GPU地理点图层，交互拾取、数据增量更新与Deck.finalize",
-  "tags": [
-    "deck.gl",
-    "WebGL2",
-    "geospatial",
-    "ScatterplotLayer",
-    "GPU"
-  ],
+  "tags": ["deck.gl", "WebGL2", "geospatial", "ScatterplotLayer", "GPU"],
   "contentState": "recreated",
   "packages": [
     {
@@ -53,56 +47,53 @@
     {
       "demoId": "basic",
       "title": "离线点层与拾取",
-      "description": "理解 deck.gl 的最小真实用法",
+      "description": "真实WebGL点层、拾取与SDK投影，数据表共享选择",
       "level": "basic",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
         "examples/deck-size.ts",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/deck-data.ts",
+        "examples/deck-layer.ts",
+        "examples/styles.css"
       ],
-      "capabilities": [
-        "WebGL",
-        "GPU",
-        "cleanup"
-      ]
+      "capabilities": ["WebGL", "GPU", "cleanup"]
     },
     {
       "demoId": "business",
       "title": "订阅站点健康监测",
-      "description": "面向真实项目的订阅站点健康监测",
+      "description": "同一Deck/稳定layer id更新健康过滤与半径GPU属性",
       "level": "business",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
         "examples/deck-size.ts",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/deck-data.ts",
+        "examples/deck-layer.ts",
+        "examples/styles.css"
       ],
-      "capabilities": [
-        "WebGL",
-        "GPU",
-        "cleanup"
-      ]
+      "capabilities": ["WebGL", "GPU", "cleanup"]
     },
     {
       "demoId": "advanced",
       "title": "千点数据、过滤与资源释放",
-      "description": "验证deck.gl的资源和交互边界",
+      "description": "1204本地数据全量分页、903健康过滤和自有Deck finalize，不声称压力测试",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
         "examples/deck-size.ts",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/deck-data.ts",
+        "examples/deck-layer.ts",
+        "examples/styles.css"
       ],
-      "capabilities": [
-        "WebGL",
-        "GPU",
-        "cleanup"
-      ]
+      "capabilities": ["WebGL", "GPU", "cleanup"]
     }
   ],
   "provenance": {
@@ -112,5 +103,25 @@
   "license": {
     "spdx": "MIT",
     "assets": "本地原创数据与界面，无第三方地图瓦片、图片或收费资源。"
+  },
+  "official": {
+    "readme": {
+      "repository": "visgl/deck.gl",
+      "commit": "5eded84b438eef83387dc6579c51670389053602",
+      "path": "modules/core/README.md",
+      "sha256": "df90ebef147aced59f88c5c87aa9dee9c9e53a5b189b93d255ecc147b62782ba",
+      "sourceUrl": "https://github.com/visgl/deck.gl/blob/5eded84b438eef83387dc6579c51670389053602/modules/core/README.md",
+      "language": "en",
+      "version": "9.4.0",
+      "syncedAt": "2026-11-10T12:20:16.855358+00:00",
+      "snapshotPath": "official/readme.md"
+    },
+    "homepage": {
+      "url": "https://deck.gl/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-10T12:26:07.723979+00:00",
+      "reason": "官网GET200，完整响应头见official/homepage-response.json，XFO/CSP均null；未Lab originiframe实测，unknown并保留直达。"
+    }
   }
 }

@@ -1,0 +1,16 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+argv=["node", "--test", "packages/library-lab/entries/C02-zod/tests/sdk.test.mjs"]
+✔ actual Demo Feed schema trims output, rejects credentials and unknown fields (1.684798ms)
+✔ actual Demo batch transforms string TTL and reports canonical duplicate paths (1.576022ms)
+✔ actual discriminator selects the RSS or OPML metadata contract (1.01347ms)
+✔ the actual cross-field rule reports every later duplicate rather than a test-only clone (0.192769ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 95.586347
+
+exit=0

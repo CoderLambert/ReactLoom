@@ -1,0 +1,50 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['node', '--test', 'entries/C13-frappe-gantt/tests/plan-policy.test.mjs']
+startedAt: 2026-11-10T16:12:32.156865+00:00
+exit: 1
+✔ valid leap day, reject overflow and invalid dates (4.610233ms)
+✔ valid directed acyclic dependency plan passes (0.297194ms)
+✔ reject three-task dependency cycle, including disconnected cycles (0.188688ms)
+✔ reject missing, duplicate or self dependency (0.157623ms)
+✔ reject duplicated task IDs and nonfinite progress (0.18045ms)
+✔ invalid range fails before being rendered by the SDK (0.083906ms)
+✔ bound the whole plan to 730 UTC days, including gaps between short tasks (0.138251ms)
+✔ valid distant years cannot expand the current project into an unbounded chart (0.535954ms)
+✖ span calculation uses validated UTC dates within supported SDK years (0.679387ms)
+✔ reject SDK numeric-Date year aliasing across the 0099 to 0100 boundary (0.172586ms)
+✔ reject IDs normalized or treated as object prototype keys by the SDK (0.17164ms)
+✔ chart label escaping preserves authoritative text and descriptor ownership (0.172522ms)
+✔ admitted dates reserve padding room while retaining the 730-day span rule (0.151686ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 12
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 51.939643
+
+✖ failing tests:
+
+test at entries/C13-frappe-gantt/tests/plan-policy.test.mjs:53:1
+✖ span calculation uses validated UTC dates within supported SDK years (0.679387ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + '演示计划跨度不能超过 730 个 UTC 日'
+  - null
+  
+      at TestContext.<anonymous> (file:///home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C13-frappe-gantt/tests/plan-policy.test.mjs:55:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '演示计划跨度不能超过 730 个 UTC 日',
+    expected: null,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

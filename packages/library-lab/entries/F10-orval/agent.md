@@ -1,47 +1,13 @@
-# F10 Orval — 工程手册
+# F10 Orval复用
 
-## 适用
+固定orval8.44.0 MIT，Node≥22.18，pnpm；只读本地原创OpenAPI，不运行远程schema。先读guide/library/实际source/verification。
 
-由仓库内 OpenAPI 生成 fetch 或 React Query 客户端。不发请求，不代替运行时校验或 MSW。
+完整运行文件：orval.config.ts、openapi/news.json、run.mjs、output-policy.mjs、三个入口、generated-tsconfig.json。verify/spec-check为可选辅助。迁入后run的labRoot/config要适配包位置，配置input/output按config目录解析，不按cwd；advanced target的父目录必须generated/advanced。
 
-## 版本
+在repo root依次node packages/library-lab/entries/F10-orval/examples/{basic,business,advanced}.mjs，然后pnpm --filter @reactloom/library-lab exec tsc -p entries/F10-orval/examples/generated-tsconfig.json。花括号是三次命令缩写，guide列完整命令。生成TS含.ts barrel，noEmit+allowImportingTsExtensions是实际前提。
 
-`orval@8.44.0`，MIT。Node ≥ 22.18。输入只读 `examples/openapi/news.json`。baseUrl 是 `http://127.0.0.1:4319`。
+每项目只清固定targets，真实CLI两次，对输出读内容/导出/大小/路径摘要，不用--clean，不手改产物。策略suite不计SDK。原始logs与manifest在validation；generated被gitignore，复现需重跑。不要把格式化产物后的摘要与原始摘要混比。
 
-## 迁移
+business只生成Query hooks，未挂Provider/运行HTTP；生成类型和错误响应union不是运行时schema校验。原生fetch产物要进入模板需另配api-client mutator，不跳过仓库规范。网页只是CLI展示，不会启动进程。
 
-带走 `orval.config.ts`、`news.json`、`run.mjs`、`output-policy.mjs`。三个 project 保持 basic / business / advanced。用 `cleanProject` 删除固定目标，不要加 `--clean`。生成两次再比 SHA-256。
-
-页面命令会多一个 level 参数，脚本忽略它。
-
-## 不可删的清理
-
-只删除当前 project 列出的文件或目录。拒绝符号链接、非 ts、超深目录、单文件 1 MiB、128 个文件和合计 6 MiB。空输出失败。不要把旧的 `.ts` 留在目录里充数。
-
-## 反例
-
-- `orval --clean`。
-- 用 `access` 判断生成成功。
-- 把 `spec-check` 或策略单测写成 CLI PASS。
-- 配置指向生产 URL 或含密钥。
-- 两次摘要不同仍提交。
-- 删掉 Node 版本检查。
-- 手改 `generated/`。
-- 认为类型已经处理 409/422。
-
-## 测试断言
-
-- 规范含三个唯一 operationId 和 loopback server。
-- basic 导出 `listSources`、`createSource`、`getSource`。
-- business 再导出三个 `use*` hook。
-- advanced 含 `advanced/` 下的文件。
-- 两次生成的 sha256 和文件数相同。
-- 策略测试不启动 Orval。
-
-## 真实限制
-
-网页不启动进程。`generated/` 不提交。没有 mutator，没有 React 挂载。hook 文本存在不等于 Query 缓存已配置。
-
-## 证据
-
-sdk 收据必须是一次真实的 Orval 进程，日志在 `docs/library-lab/evidence/runs/`。Actions 41779873259 不是 F10 PASS。browser 保持 NOT_RUN。
+本次真实CLI三个项目双次和产物strict已执行；正式verification无收据仍NOT_RUN。官方固定包README/LICENSE/package字段与homepage403 unknown均保留原始证据，不推定可嵌入。

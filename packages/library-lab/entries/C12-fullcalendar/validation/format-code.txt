@@ -1,0 +1,72 @@
+{"label": "format-code", "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab", "argv": ["pnpm", "exec", "--", "biome", "check", "--write", "entries/C12-fullcalendar/examples", "entries/C12-fullcalendar/tests", "entries/C12-fullcalendar/library.json"], "start": "2026-11-10T16:13:19.065718+00:00", "end": "2026-11-10T16:13:19.293506+00:00", "exitCode": 0, "log": "format-code.txt"}
+STDOUT
+Skipped 3 suggested fixes.
+If you wish to apply the suggested (unsafe) fixes, use the command biome check --write --unsafe
+
+Checked 9 files in 11ms. Fixed 9 files.
+Found 3 infos.
+
+STDERR
+entries/C12-fullcalendar/examples/calendar-policy.mjs:4:25 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    2 │ export function isCivilDate(value) {
+    3 │   if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false
+  > 4 │   const date = new Date(value + 'T00:00:00Z')
+      │                         ^^^^^^^^^^^^^^^^^^^^
+    5 │   return Number.isFinite(date.getTime()) && date.toISOString().slice(0, 10) === value
+    6 │ }
+  
+  i Unsafe fix: Use a template literal.
+  
+     2  2 │   export function isCivilDate(value) {
+     3  3 │     if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false
+     4    │ - ··const·date·=·new·Date(value·+·'T00:00:00Z')
+        4 │ + ··const·date·=·new·Date(`${value}T00:00:00Z`)
+     5  5 │     return Number.isFinite(date.getTime()) && date.toISOString().slice(0, 10) === value
+     6  6 │   }
+  
+
+entries/C12-fullcalendar/examples/calendar-policy.mjs:26:23 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    24 │   const occupied = new Set(existingIds)
+    25 │   let next = sequence
+  > 26 │   while (occupied.has('local-' + next)) {
+       │                       ^^^^^^^^^^^^^^^
+    27 │     if (!Number.isSafeInteger(++next)) throw new RangeError('local event sequence exhausted')
+    28 │   }
+  
+  i Unsafe fix: Use a template literal.
+  
+    24 24 │     const occupied = new Set(existingIds)
+    25 25 │     let next = sequence
+    26    │ - ··while·(occupied.has('local-'·+·next))·{
+       26 │ + ··while·(occupied.has(`local-${next}`))·{
+    27 27 │       if (!Number.isSafeInteger(++next)) throw new RangeError('local event sequence exhausted')
+    28 28 │     }
+  
+
+entries/C12-fullcalendar/examples/calendar-policy.mjs:30:16 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    28 │   }
+    29 │   if (!Number.isSafeInteger(next + 1)) throw new RangeError('local event sequence exhausted')
+  > 30 │   return { id: 'local-' + next, nextSequence: next + 1 }
+       │                ^^^^^^^^^^^^^^^
+    31 │ }
+    32 │ 
+  
+  i Unsafe fix: Use a template literal.
+  
+    28 28 │     }
+    29 29 │     if (!Number.isSafeInteger(next + 1)) throw new RangeError('local event sequence exhausted')
+    30    │ - ··return·{·id:·'local-'·+·next,·nextSequence:·next·+·1·}
+       30 │ + ··return·{·id:·`local-${next}`,·nextSequence:·next·+·1·}
+    31 31 │   }
+    32 32 │   
+  
+

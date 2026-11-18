@@ -1,0 +1,51 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+argv=["pnpm", "exec", "biome", "check", "--write", "packages/library-lab/entries/C02-zod/examples", "packages/library-lab/entries/C02-zod/tests"]
+Skipped 2 suggested fixes.
+If you wish to apply the suggested (unsafe) fixes, use the command biome check --write --unsafe
+
+Checked 7 files in 7ms. No fixes applied.
+Found 2 infos.
+packages/library-lab/entries/C02-zod/examples/example.tsx:48:18 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    46 │       input = JSON.parse(raw)
+    47 │     } catch (error) {
+  > 48 │       setErrors(['JSON 语法错误：' + String(error)])
+       │                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    49 │       setOutput('')
+    50 │       setStatus('JSON 解析失败')
+  
+  i Unsafe fix: Use a template literal.
+  
+     46  46 │         input = JSON.parse(raw)
+     47  47 │       } catch (error) {
+     48     │ - ······setErrors(['JSON·语法错误：'·+·String(error)])
+         48 │ + ······setErrors([`JSON·语法错误：${String(error)}`])
+     49  49 │         setOutput('')
+     50  50 │         setStatus('JSON 解析失败')
+  
+
+packages/library-lab/entries/C02-zod/examples/example.tsx:60:18 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    58 │         result.error.issues.map((issue) => {
+    59 │           const field = issue.path.length ? issue.path.join('.') : '(根对象)'
+  > 60 │           return field + '：' + issue.message
+       │                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    61 │         }),
+    62 │       )
+  
+  i Unsafe fix: Use a template literal.
+  
+     58  58 │           result.error.issues.map((issue) => {
+     59  59 │             const field = issue.path.length ? issue.path.join('.') : '(根对象)'
+     60     │ - ··········return·field·+·'：'·+·issue.message
+         60 │ + ··········return·`${field}：${issue.message}`
+     61  61 │           }),
+     62  62 │         )
+  
+
+
+exit=0

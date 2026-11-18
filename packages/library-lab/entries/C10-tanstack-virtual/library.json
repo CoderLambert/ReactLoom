@@ -4,13 +4,8 @@
   "slug": "tanstack-virtual",
   "name": "TanStack Virtual",
   "group": "C",
-  "summary": "Headless 列表虚拟化、变高测量与稳定业务键",
-  "tags": [
-    "虚拟化",
-    "Headless",
-    "可变高度",
-    "React 19"
-  ],
+  "summary": "从范围模型到真实DOM：稳定业务键、统一筛选、变高测量与可重建视图",
+  "tags": ["虚拟化", "Headless", "可变高度", "React 19"],
   "contentState": "recreated",
   "packages": [
     {
@@ -47,56 +42,82 @@
   "demos": [
     {
       "demoId": "basic",
-      "title": "八千条文章的基础虚拟窗口",
+      "title": "基础窗口与键盘滚动",
       "level": "basic",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx",
+        "examples/virtual-contract.ts",
         "examples/filter-policy.mjs",
-        "examples/filter-policy.d.mts"
+        "examples/filter-policy.d.mts",
+        "examples/styles.css",
+        "examples/demo.tsx"
       ],
       "capabilities": [],
-      "description": "八千条文章的基础虚拟窗口"
+      "description": "8000条数据，真实SDK范围和小型DOM窗口，原生滚动与深度定位"
     },
     {
       "demoId": "business",
-      "title": "按需筛选、稳定业务键与滚动定位",
+      "title": "统一筛选与视图身份",
       "level": "business",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx",
+        "examples/virtual-contract.ts",
         "examples/filter-policy.mjs",
-        "examples/filter-policy.d.mts"
+        "examples/filter-policy.d.mts",
+        "examples/styles.css",
+        "examples/demo.tsx"
       ],
       "capabilities": [],
-      "description": "按需筛选、稳定业务键与滚动定位"
+      "description": "3400条数据按分类/词统一提交，稳定业务键、空态与重复查询重建"
     },
     {
       "demoId": "advanced",
-      "title": "展开行重新测量、滚动区间和深度跳转",
+      "title": "变高行测量与视图重建",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx",
+        "examples/virtual-contract.ts",
         "examples/filter-policy.mjs",
-        "examples/filter-policy.d.mts"
+        "examples/filter-policy.d.mts",
+        "examples/styles.css",
+        "examples/demo.tsx"
       ],
       "capabilities": [],
-      "description": "展开行重新测量、滚动区间和深度跳转"
+      "description": "实际measureElement更新尺寸，展开/收起布局与深度跳转"
     }
   ],
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
-    "note": "按官方稳定版本与旧研究重新实现；历史测试不算本次运行验收。"
+    "note": "保留stableRowId/viewIdentity/真实measureElement/useFlushSync:false及有界fixture，统一筛选提交；SDK用公开core模型与SSR分层，不继承历史浏览器结论。"
   },
   "license": {
     "spdx": "MIT",
-    "note": "自有确定性模拟文章数据；无收费资源及外部网络请求"
+    "note": "原创确定性文章fixture与局部CSS，无外部资产；React适配器3.14.21及实际core3.19.6均MIT。"
+  },
+  "official": {
+    "readme": {
+      "repository": "TanStack/virtual",
+      "commit": "28ff2cab7a970f4e0908229d65a0da8803903900",
+      "path": "README.md",
+      "version": "3.14.21",
+      "language": "en",
+      "snapshotPath": "official/readme.md",
+      "sha256": "24bd3ff93da253313681dbe66adab7b012caca06f03edc516dfd875a1274ff00",
+      "sourceUrl": "https://github.com/TanStack/virtual/blob/28ff2cab7a970f4e0908229d65a0da8803903900/README.md",
+      "syncedAt": "2026-11-10T16:23:31.742143+00:00"
+    },
+    "homepage": {
+      "url": "https://tanstack.com/virtual",
+      "kind": "website",
+      "status": "blocked",
+      "checkedAt": "2026-11-10T16:23:29.368577+00:00",
+      "reason": "实际GET最终响应X-Frame-Options: DENY且无CSP frame-ancestors覆盖，禁止嵌入；完整头在official/source-evidence.json，浏览器允许未运行。"
+    }
   }
 }

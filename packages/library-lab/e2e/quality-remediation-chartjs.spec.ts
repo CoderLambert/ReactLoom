@@ -1,0 +1,139 @@
+// Real SDK, Canvas pixels, actual controls and DOM. No Chart mock, forced styles or fake hit result.
+import { expect, type Page, test } from '@playwright/test'
+
+type Snapshot = {
+  chartId: string
+  type: string
+  width: number
+  height: number
+  data: number[]
+  active: number[]
+  centers: { index: number; x: number | null; y: number | null }[]
+  created: number
+  destroyed: number
+  updates: number
+}
+async function state(page: Page): Promise<Snapshot> {
+  return JSON.parse((await page.getByTestId('a03-sdk-state').textContent()) || 'null')
+}
+async function open(page: Page, level: 'basic' | 'business' | 'advanced') {
+  await page.goto(`/libraries/chartjs?tab=demo&example=${level}`)
+  const app = page.getByRole('region', { name: 'Chart.js 真实 Canvas 示例', exact: true })
+  await app.getByText('查看真实实例和绘制结果', { exact: true }).click()
+  await expect.poll(async () => (await state(page))?.centers.length ?? 0).toBe(7)
+  return app
+}
+
+test('@A03 actual Canvas hit and keyboard table selection share real active elements', async ({
+  page,
+}, info) => {
+  const app = await open(page, 'basic')
+  const canvas = app.getByTestId('a03-canvas')
+  const snapshot = await state(page)
+  const point = snapshot.centers.find((p) => p.index === 0)
+  if (!point || typeof point.x !== 'number' || typeof point.y !== 'number')
+    throw new Error('SDK did not provide finite bar geometry')
+  await canvas.scrollIntoViewIfNeeded()
+  const box = await canvas.boundingBox()
+  if (!box || snapshot.width <= 0 || snapshot.height <= 0)
+    throw new Error('Actual Canvas has no layout')
+  const painted = await canvas.evaluate((element) => {
+    if (!(element instanceof HTMLCanvasElement)) throw new Error('not a Canvas')
+    const context = element.getContext('2d')
+    if (!context) throw new Error('no native 2D context')
+    const pixels = context.getImageData(0, 0, element.width, element.height).data
+    let count = 0
+    for (let i = 3; i < pixels.length; i += 4) if (pixels[i] > 0) count++
+    return count
+  })
+  expect(painted).toBeGreaterThan(1000)
+  // Convert actual SDK logical coordinates using the actual DOM dimensions, including DPR.
+  await page.mouse.click(
+    box.x + (point.x / snapshot.width) * box.width,
+    box.y + (point.y / snapshot.height) * box.height,
+  )
+  await expect(app.getByTestId('a03-selection')).toContainText('周一：110 次阅读')
+  await expect(
+    app.getByRole('button', { name: '选中周一的阅读量 110', exact: true }),
+  ).toHaveAttribute('aria-pressed', 'true')
+  await expect.poll(async () => (await state(page)).active).toEqual([0])
+  const thursday = app.getByRole('button', { name: '选中周四的阅读量 161', exact: true })
+  await thursday.focus()
+  await page.keyboard.press('Enter')
+  await expect(app.getByTestId('a03-selection')).toContainText('周四：161 次阅读')
+  await expect(thursday).toHaveAttribute('aria-pressed', 'true')
+  await expect.poll(async () => (await state(page)).active).toEqual([3])
+  await info.attach('actual-chartjs-canvas.png', {
+    body: await canvas.screenshot(),
+    contentType: 'image/png',
+  })
+})
+
+test('@A03 data updates repaint the same Chart instance and match the actual table', async ({
+  page,
+}) => {
+  const app = await open(page, 'business')
+  const before = await state(page)
+  await expect(app.getByTestId('a03-total')).toHaveText('七日总阅读：1127')
+  await app.getByRole('button', { name: '模拟新增阅读', exact: true }).click()
+  await expect(app.getByTestId('a03-total')).toHaveText('七日总阅读：1169')
+  await expect.poll(async () => (await state(page)).data[0]).toBe(113)
+  const next = await state(page)
+  expect(next.chartId).toBe(before.chartId)
+  expect(next.created).toBe(before.created)
+  expect(next.destroyed).toBe(before.destroyed)
+  expect(next.updates).toBeGreaterThan(before.updates)
+  const cells = await app.getByRole('table').locator('tbody button').allTextContents()
+  expect(cells.map(Number)).toEqual(next.data)
+  expect(next.data.reduce((sum, value) => sum + value, 0)).toBe(1169)
+})
+
+test('@A03 type replacement, actual container resize, reduced-motion gating and host teardown', async ({
+  page,
+}) => {
+  const errors: string[] = []
+  page.on('pageerror', (error) => errors.push(error.message))
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  const app = await open(page, 'advanced')
+  await app.getByRole('checkbox', { name: '自动采样（400ms，后台暂停）', exact: true }).check()
+  const still = (await state(page)).data
+  await page.waitForTimeout(950)
+  expect((await state(page)).data).toEqual(still)
+  await app.getByRole('checkbox', { name: '允许自动变化', exact: true }).check()
+  await expect.poll(async () => (await state(page)).data[0]).toBeGreaterThan(still[0])
+  await app.getByRole('checkbox', { name: '自动采样（400ms，后台暂停）', exact: true }).uncheck()
+  const choose = app.getByRole('table').locator('tbody button').nth(2)
+  await choose.click()
+  await expect.poll(async () => (await state(page)).active).toEqual([2])
+  const bar = await state(page)
+  await app.getByRole('combobox', { name: '选择图形类型', exact: true }).selectOption('line')
+  await expect.poll(async () => (await state(page)).type).toBe('line')
+  const line = await state(page)
+  expect(line.chartId).not.toBe(bar.chartId)
+  expect(line.destroyed).toBe(bar.destroyed + 1)
+  expect(line.created).toBe(bar.created + 1)
+  expect(line.data).toEqual(bar.data)
+  await expect.poll(async () => (await state(page)).active).toEqual([2])
+  const canvas = app.getByTestId('a03-canvas')
+  const wide = await canvas.boundingBox()
+  if (!wide) throw new Error('Canvas has no measured size')
+  await app.getByRole('button', { name: '缩窄图表容器', exact: true }).click()
+  await expect.poll(async () => (await state(page)).width).toBeLessThan(line.width)
+  const narrow = await canvas.boundingBox()
+  expect(narrow?.width).toBeLessThan(wide.width)
+  expect((await state(page)).chartId).toBe(line.chartId)
+  await app.getByRole('button', { name: '重新测量尺寸', exact: true }).click()
+  await app.getByRole('button', { name: '恢复容器宽度', exact: true }).click()
+  await expect.poll(async () => (await state(page)).width).toBeGreaterThan((narrow?.width ?? 0) + 1)
+  await page.getByRole('button', { name: '停止并卸载', exact: true }).click()
+  await expect(app).toHaveCount(0)
+  await expect(page.getByTestId('a03-canvas')).toHaveCount(0)
+  await page.getByRole('button', { name: '运行当前示例', exact: true }).click()
+  await expect(app.getByTestId('a03-total')).toHaveText('七日总阅读：1127')
+  await expect(
+    app.getByRole('checkbox', { name: '自动采样（400ms，后台暂停）', exact: true }),
+  ).not.toBeChecked()
+  expect(errors).toEqual([])
+  // DOM disappearance alone does not prove every native observer/listener detached.
+  // Use the controller's existing resource observation for that separate assertion.
+})

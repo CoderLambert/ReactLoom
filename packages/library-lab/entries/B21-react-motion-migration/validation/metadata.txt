@@ -1,0 +1,5 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['node', 'entries/B21-react-motion-migration/validation/metadata-check.mjs']
+startedAt: 2026-11-10T14:49:08.421858+00:00
+exit: 0
+B21 three migration goals / six production sources / modern14.6.0 only / two original README byte+SHA checks / old SDK NOT_RUN / homepage unknown / formal NOT_RUN PASS

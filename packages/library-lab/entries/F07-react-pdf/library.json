@@ -5,14 +5,7 @@
   "name": "react-pdf",
   "group": "F",
   "summary": "React 组件化 PDF 阅读：本地文档、分页、TextLayer 与同版本 Worker",
-  "tags": [
-    "PDF",
-    "React",
-    "Document",
-    "Page",
-    "Worker",
-    "本地文件"
-  ],
+  "tags": ["PDF", "React", "Document", "Page", "Worker", "本地文件"],
   "contentState": "recreated",
   "packages": [
     {
@@ -67,14 +60,11 @@
         "examples/example.tsx",
         "examples/demo.tsx",
         "examples/worker-payload.mjs",
-        "examples/worker-payload.d.mts"
+        "examples/worker-payload.d.mts",
+        "examples/render-budget.mjs",
+        "examples/render-budget.d.mts"
       ],
-      "capabilities": [
-        "pdf-worker",
-        "local-file",
-        "offline",
-        "render-text-layer"
-      ],
+      "capabilities": ["pdf-worker", "local-file", "offline", "render-text-layer"],
       "description": "真实 <Document>/<Page> 配合同版 PDF.js Worker，使用原创两页 PDF fixture。"
     },
     {
@@ -88,14 +78,11 @@
         "examples/example.tsx",
         "examples/demo.tsx",
         "examples/worker-payload.mjs",
-        "examples/worker-payload.d.mts"
+        "examples/worker-payload.d.mts",
+        "examples/render-budget.mjs",
+        "examples/render-budget.d.mts"
       ],
-      "capabilities": [
-        "pdf-worker",
-        "local-file",
-        "offline",
-        "render-text-layer"
-      ],
+      "capabilities": ["pdf-worker", "local-file", "offline", "render-text-layer"],
       "description": "两页导航、页面状态与可选择文本层，保持离线输入。"
     },
     {
@@ -110,14 +97,10 @@
         "examples/demo.tsx",
         "examples/worker-payload.mjs",
         "examples/worker-payload.d.mts",
-        "examples/worker-payload.test.mjs"
+        "examples/render-budget.mjs",
+        "examples/render-budget.d.mts"
       ],
-      "capabilities": [
-        "pdf-worker",
-        "local-file",
-        "offline",
-        "render-text-layer"
-      ],
+      "capabilities": ["pdf-worker", "local-file", "offline", "render-text-layer"],
       "description": "≤3MiB本地文件读取、过期回写防护、错误反馈和重置。"
     }
   ],
@@ -128,5 +111,25 @@
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
     "note": "按2026-10-27官方文档重新编写；旧归档的测试结果不作为本次真实SDK验证证据。"
+  },
+  "official": {
+    "readme": {
+      "repository": "wojtekmaj/react-pdf",
+      "commit": "ca2330bcb862dc27aa39849c74657ccf28c4e13f",
+      "path": "packages/react-pdf/README.md",
+      "sourceUrl": "https://github.com/wojtekmaj/react-pdf/blob/ca2330bcb862dc27aa39849c74657ccf28c4e13f/packages/react-pdf/README.md",
+      "snapshotPath": "official/readme.md",
+      "sha256": "c9c087e5e45eb03a027cbac74c480069b233455df5763e6b7b201be94d692ef1",
+      "language": "en",
+      "version": "11.0.0",
+      "syncedAt": "2026-11-17T18:38:09.031760+00:00"
+    },
+    "homepage": {
+      "url": "https://projects.wojtekmaj.pl/react-pdf/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-17T18:38:09.031760+00:00",
+      "reason": "实际GET见official/homepage-headers.json；无Lab-origin嵌入证据。"
+    }
   }
 }

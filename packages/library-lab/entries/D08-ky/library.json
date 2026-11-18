@@ -5,13 +5,7 @@
   "name": "Ky",
   "group": "D",
   "summary": "基于 Fetch 的 HTTP 客户端：重试、超时、响应校验与取消",
-  "tags": [
-    "Fetch",
-    "HTTP",
-    "重试",
-    "AbortSignal",
-    "RSS"
-  ],
+  "tags": ["Fetch", "HTTP", "重试", "AbortSignal", "RSS"],
   "contentState": "recreated",
   "packages": [
     {
@@ -55,9 +49,11 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/transport.mjs",
+        "examples/transport.d.mts"
       ],
-      "capabilities": [],
+      "capabilities": ["timer"],
       "description": "本地传输 Fixture 的 GET、JSON 校验"
     },
     {
@@ -68,23 +64,27 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/transport.mjs",
+        "examples/transport.d.mts"
       ],
-      "capabilities": [],
+      "capabilities": ["timer"],
       "description": "RSS 搜索取消与新旧请求所有权"
     },
     {
       "demoId": "advanced",
-      "title": "503 有限重试、409 禁止写入重试、响应体尺寸限制",
+      "title": "有限重试、超时、校验与正文边界",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/transport.mjs",
+        "examples/transport.d.mts"
       ],
-      "capabilities": [],
-      "description": "503 有限重试、409 禁止写入重试、响应体尺寸限制"
+      "capabilities": ["timer"],
+      "description": "真实 Ky 的 GET 503 两次、POST 409 一次、30 ms 超时、100 B 上限与 204；自建 schema 拒绝恶意协议。"
     }
   ],
   "provenance": {
@@ -94,5 +94,25 @@
   "license": {
     "spdx": "MIT",
     "note": "仅演示本地确定性 fixture，不请求外部 API"
+  },
+  "official": {
+    "readme": {
+      "repository": "sindresorhus/ky",
+      "commit": "3541888878c4d303a8bc2ad61815f4e048f55a5d",
+      "path": "readme.md",
+      "sourceUrl": "https://github.com/sindresorhus/ky/blob/3541888878c4d303a8bc2ad61815f4e048f55a5d/readme.md",
+      "snapshotPath": "official/readme.md",
+      "language": "en",
+      "version": "2.2.0",
+      "syncedAt": "2026-11-17T16:32:24.041310+00:00",
+      "sha256": "ae9b82f36fd7031f259c7e7c66aaccc9ca18289d3bcd1f3e63aa0fa93dc9ba2d"
+    },
+    "homepage": {
+      "url": "https://github.com/sindresorhus/ky",
+      "kind": "repository",
+      "status": "blocked",
+      "checkedAt": "2026-11-17T16:32:24.041310+00:00",
+      "reason": "GitHub GET 200; X-Frame-Options deny and CSP frame-ancestors none prohibit embedding. See official/source-evidence.json; open repository directly."
+    }
   }
 }

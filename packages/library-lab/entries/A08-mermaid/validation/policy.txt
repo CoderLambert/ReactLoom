@@ -1,0 +1,17 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv=["node", "--test", "entries/A08-mermaid/tests/render-queue.test.mts"]
+start=2026-11-10T11:33:26.481030+00:00
+end=2026-11-10T11:33:26.571908+00:00
+exit=0
+✔ render jobs are serialized, never overlap (0.860515ms)
+✔ invalidated jobs are skipped before parse; stale render result is ignored (0.18562ms)
+✔ inflight render is not committed after unmount (0.127311ms)
+✔ render failures only reach active owner; queue continues afterward (0.196781ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 68.202194

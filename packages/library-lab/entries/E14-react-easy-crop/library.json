@@ -5,13 +5,7 @@
   "name": "react-easy-crop",
   "group": "E",
   "summary": "可拖拽缩放裁剪框、真实像素区域、PNG本地输出与文件资源清理",
-  "tags": [
-    "裁剪",
-    "React",
-    "Cropper",
-    "本地图片",
-    "File API"
-  ],
+  "tags": ["裁剪", "React", "Cropper", "本地图片", "File API"],
   "contentState": "recreated",
   "packages": [
     {
@@ -53,14 +47,16 @@
         "examples/crop-policy.d.mts",
         "examples/crop-policy.test.mjs",
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/sample-image.mjs",
+        "examples/sample-image.d.mts",
+        "examples/image-runtime.mjs",
+        "examples/image-runtime.d.mts",
+        "examples/file-check.mjs",
+        "examples/file-check.d.mts"
       ],
-      "capabilities": [
-        "canvas",
-        "object-url",
-        "file-input"
-      ],
-      "description": "真实Cropper坐标/缩放回调，不使用伪静态裁剪框。"
+      "capabilities": ["canvas", "object-url", "file-input"],
+      "description": "交互式方形裁剪框与真实croppedAreaPixels，不执行导出。"
     },
     {
       "demoId": "business",
@@ -73,14 +69,16 @@
         "examples/crop-policy.d.mts",
         "examples/crop-policy.test.mjs",
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/sample-image.mjs",
+        "examples/sample-image.d.mts",
+        "examples/image-runtime.mjs",
+        "examples/image-runtime.d.mts",
+        "examples/file-check.mjs",
+        "examples/file-check.d.mts"
       ],
-      "capabilities": [
-        "canvas",
-        "object-url",
-        "file-input"
-      ],
-      "description": "按裁剪像素调用Canvas drawImage生成PNG Blob，不把坐标结果冒充图片文件。"
+      "capabilities": ["canvas", "object-url", "file-input"],
+      "description": "16:9封面，真实Image decode→Canvas drawImage→PNG Blob并显示尺寸。"
     },
     {
       "demoId": "advanced",
@@ -93,14 +91,16 @@
         "examples/crop-policy.d.mts",
         "examples/crop-policy.test.mjs",
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/sample-image.mjs",
+        "examples/sample-image.d.mts",
+        "examples/image-runtime.mjs",
+        "examples/image-runtime.d.mts",
+        "examples/file-check.mjs",
+        "examples/file-check.d.mts"
       ],
-      "capabilities": [
-        "canvas",
-        "object-url",
-        "file-input"
-      ],
-      "description": "限制文件类型/大小/解码像素，切换文件与卸载释放ObjectURL。"
+      "capabilities": ["canvas", "object-url", "file-input"],
+      "description": "本地PNG/JPEG/WebP预算与独立文件校验代次、旧导出失效及对象URL清理。"
     }
   ],
   "license": {
@@ -110,5 +110,25 @@
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
     "note": "2026-10-27独立重建示例；参考官方API。未执行真实SDK/浏览器验收，不继承历史PASS。"
+  },
+  "official": {
+    "readme": {
+      "repository": "ValentinH/react-easy-crop",
+      "commit": "91bfd8f0928ead345e5126a539edab4657d82993",
+      "path": "README.md",
+      "sourceUrl": "https://github.com/ValentinH/react-easy-crop/blob/91bfd8f0928ead345e5126a539edab4657d82993/README.md",
+      "snapshotPath": "official/readme.md",
+      "sha256": "104b7fa40dc28745590bf4236cf1150441f6a2f6e5db387ec81a6634f40c980f",
+      "language": "en",
+      "version": "6.2.4",
+      "syncedAt": "2026-11-17T17:56:28.403Z"
+    },
+    "homepage": {
+      "url": "https://valentinh.github.io/react-easy-crop/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-17T17:56:28.403Z",
+      "reason": "实际GET响应头见official/source-evidence.json；未Lab origin嵌入确认，unknown保留直达。"
+    }
   }
 }

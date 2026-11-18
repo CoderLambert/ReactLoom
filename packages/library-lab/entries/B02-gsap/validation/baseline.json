@@ -1,0 +1,15 @@
+{
+  "gitHead": "1218066e706a90ba03fac8dff8c9b843dd2429c4",
+  "files": 9,
+  "hashes": {
+    "AGENTS.md": "3c9e7bd26a4d718d9db90172de21e744afd156b5dda2caec2290cab43e7ffb47",
+    "agent.md": "1e8cbbc7699b6ffa5f240f3bc4d7bda4ea5a0f61c31b8b62fefbf1178e30c59a",
+    "examples/demo.tsx": "254591932548c36c414610bd0d0c7ce7ef1648162f1996fbbe7381b8c1751690",
+    "examples/example.tsx": "c567583ffac4dfd8449d92a36d0a074df787837fd3a9ea2e5d37cb27cb157057",
+    "examples/timeline-policy.ts": "84ea687713ee347f53266af13c178fb0ba3355b45fbfb0509d7e186599847fd7",
+    "guide.md": "91b0e153ce5eaf90dc5bec1e298da130ea1488a4dba637159eba2fe078e3a2d2",
+    "library.json": "ff41823740d36a0a10b1135ac27bd159583d101c849bf6af87302c379606ed32",
+    "tests/timeline-policy.test.mts": "55f16472dfdc676e3567d6d83329917beb192655f370633f780ec4cc2c9b5969",
+    "verification.json": "cf15c2bc1f50c928543eccd50cc05b1183ecdd4a9a4fb662865dfe1bcaed64b4"
+  }
+}

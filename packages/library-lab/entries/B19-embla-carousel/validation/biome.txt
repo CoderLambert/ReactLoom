@@ -1,0 +1,74 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+argv=["pnpm", "exec", "biome", "check", "--write", "packages/library-lab/entries/B19-embla-carousel/examples", "packages/library-lab/entries/B19-embla-carousel/tests", "packages/library-lab/entries/B19-embla-carousel/library.json"]
+Skipped 1 suggested fixes.
+If you wish to apply the suggested (unsafe) fixes, use the command biome check --write --unsafe
+
+Checked 5 files in 13ms. Fixed 5 files.
+Found 3 errors.
+packages/library-lab/entries/B19-embla-carousel/examples/example.tsx:158:9 lint/a11y/useSemanticElements ━━━━━━━━━━
+
+  × The elements with this role can be changed to the following elements:
+    <section>
+  
+    156 │         data-testid="b19-viewport"
+    157 │         data-embla-destroyed="false"
+  > 158 │         role="region"
+        │         ^^^^^^^^^^^^^
+    159 │         aria-roledescription="轮播"
+    160 │         aria-label="新闻专题卡片"
+  
+  i For examples and more information, see WAI-ARIA Roles
+  
+  i Replace with one of these elements:
+  
+  - <section>
+  
+
+packages/library-lab/entries/B19-embla-carousel/examples/example.tsx:161:9 lint/a11y/noNoninteractiveTabindex  FIXABLE  ━━━━━━━━━━
+
+  × The HTML element div is non-interactive. Do not use tabIndex.
+  
+    159 │         aria-roledescription="轮播"
+    160 │         aria-label="新闻专题卡片"
+  > 161 │         tabIndex={0}
+        │         ^^^^^^^^^^^^
+    162 │         onKeyDown={(event) => {
+    163 │           const direction = carouselArrow(
+  
+  i Adding non-interactive elements to the keyboard navigation flow can confuse users.
+  
+  i Unsafe fix: Remove the tabIndex attribute.
+  
+    159 159 │           aria-roledescription="轮播"
+    160 160 │           aria-label="新闻专题卡片"
+    161     │ - ········tabIndex={0}
+    162 161 │           onKeyDown={(event) => {
+    163 162 │             const direction = carouselArrow(
+  
+
+packages/library-lab/entries/B19-embla-carousel/examples/example.tsx:181:15 lint/a11y/useSemanticElements ━━━━━━━━━━
+
+  × The elements with this role can be changed to the following elements:
+    <fieldset>
+  
+    179 │               key={item.id}
+    180 │               data-slide-id={item.id}
+  > 181 │               role="group"
+        │               ^^^^^^^^^^^^
+    182 │               aria-roledescription="幻灯片"
+    183 │               aria-label={`第 ${index + 1} 张，共 ${slides.length} 张：${item.title}`}
+  
+  i For examples and more information, see WAI-ARIA Roles
+  
+  i Replace with one of these elements:
+  
+  - <fieldset>
+  
+
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while applying fixes.
+  
+
+
+exit=1

@@ -1,0 +1,4 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=git diff --check -- entries/B21-react-motion-migration
+
+exitCode=0

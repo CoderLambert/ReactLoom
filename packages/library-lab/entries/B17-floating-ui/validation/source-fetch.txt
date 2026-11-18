@@ -1,0 +1,40 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+ARGV: ["python3", "entries/B17-floating-ui/validation/fetch-official.py"]
+START: 2026-11-10T10:33:58.163266+00:00
+END: 2026-11-10T10:34:16.449811+00:00
+EXIT: 0
+STDOUT:
+{
+  "checkedAt": "2026-11-10T10:34:16.443684+00:00",
+  "repository": "floating-ui/floating-ui",
+  "tag": "@floating-ui/react@0.27.20",
+  "tagObject": "fdeee8bf99a34f88ebe9801f56b42144ad5a9885",
+  "commit": "12d94738472e922e1b3fa31b02b2b61b9ed77e6a",
+  "browserFromLabOrigin": "NOT_RUN",
+  "failedAttempts": [
+    {
+      "operation": "initial recursive tree GET",
+      "error": "RemoteDisconnected: Remote end closed connection without response"
+    },
+    {
+      "operation": "initial multi-resource fetch",
+      "error": "TimeoutError while reading response body; no complete source-evidence saved by that attempt"
+    }
+  ],
+  "readmeCandidates": [
+    "README.md",
+    "packages/react/README.md"
+  ],
+  "chosenReadme": "README.md",
+  "language": "en",
+  "reason": "No Chinese root/React-package README at this ref. React-package README is a 73-byte introduction; choose the substantive official root README at the matching React release commit.",
+  "packageVersion": "0.27.20",
+  "homepagePolicyHeaders": {
+    "x-frame-options": null,
+    "content-security-policy": null
+  }
+}
+README 4922 b352baf175998877bad6168b0e55cf887690ede7a85acdfea344de996744d123
+HOMEPAGE 200 https://floating-ui.com/docs/react {'x-frame-options': None, 'content-security-policy': None}
+
+STDERR:

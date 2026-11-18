@@ -5,15 +5,7 @@
   "name": "Playwright",
   "group": "F",
   "summary": "真实 Chromium E2E：语义定位、HTTP 场景矩阵与取消竞态（独立 CLI）",
-  "tags": [
-    "E2E",
-    "Chromium",
-    "可访问性",
-    "Locator",
-    "Network Mock",
-    "AbortSignal",
-    "Playwright"
-  ],
+  "tags": ["E2E", "Chromium", "可访问性", "Locator", "Network Mock", "AbortSignal", "Playwright"],
   "contentState": "recreated",
   "packages": [
     {
@@ -68,11 +60,7 @@
         "examples/playwright.config.ts",
         "examples/basic.spec.ts"
       ],
-      "capabilities": [
-        "node-process",
-        "real-chromium",
-        "network-fixture"
-      ],
+      "capabilities": ["node-process", "real-chromium", "network-fixture"],
       "description": "通过真正的浏览器点击按钮、输入和等待状态。"
     },
     {
@@ -86,11 +74,7 @@
         "examples/playwright.config.ts",
         "examples/business.spec.ts"
       ],
-      "capabilities": [
-        "node-process",
-        "real-chromium",
-        "network-fixture"
-      ],
+      "capabilities": ["node-process", "real-chromium", "network-fixture"],
       "description": "page.route 截取真实浏览器 fetch，逐状态断言。"
     },
     {
@@ -104,11 +88,7 @@
         "examples/playwright.config.ts",
         "examples/advanced.spec.ts"
       ],
-      "capabilities": [
-        "node-process",
-        "real-chromium",
-        "network-fixture"
-      ],
+      "capabilities": ["node-process", "real-chromium", "network-fixture"],
       "description": "先旧后新请求，验证最后结果不会被已取消/迟到的旧结果覆盖。"
     }
   ],
@@ -119,5 +99,25 @@
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
     "note": "独立 Playwright CLI 配方，使用已有 @playwright/test 版本；此前归档测试不作为本条目 PASS。"
+  },
+  "official": {
+    "readme": {
+      "repository": "microsoft/playwright",
+      "commit": "606ecd8b34bac100db32561b6278ffd76e5eb3cd",
+      "path": "README.md",
+      "sourceUrl": "https://github.com/microsoft/playwright/blob/606ecd8b34bac100db32561b6278ffd76e5eb3cd/README.md",
+      "snapshotPath": "official/readme.md",
+      "sha256": "8d2a2d9027d5d6ae2c8080c6c9752624528c5605398f87da730e18442c7e9a84",
+      "language": "en",
+      "version": "1.64.0",
+      "syncedAt": "2026-11-17T18:58:37.492067+00:00"
+    },
+    "homepage": {
+      "url": "https://playwright.dev/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-17T18:58:37.492067+00:00",
+      "reason": "实际GET响应见official/source-evidence.json；没有Lab-originiframe确认，unknown直达。"
+    }
   }
 }

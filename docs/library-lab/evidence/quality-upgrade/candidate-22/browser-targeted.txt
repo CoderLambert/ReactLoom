@@ -1,0 +1,16 @@
+[WebServer] (node:1583219) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:1583237) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 2 workers
+
+(node:1583305) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1583304) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 e2e/quality-resume-migration.spec.ts:29:1 › @C22 explicit instants survive display-zone changes and distinguish DST overlap (1.6s)
+  ✓  1 e2e/quality-resume-lodash.spec.ts:3:1 › @D02 natural trailing coalesces consecutive input into the latest value (2.8s)
+  ✓  3 e2e/quality-resume-migration.spec.ts:53:1 › @C22 calendar days and elapsed hours diverge across both DST transitions (1.4s)
+
+  3 passed (3.8s)

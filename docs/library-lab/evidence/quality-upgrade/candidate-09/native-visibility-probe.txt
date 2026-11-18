@@ -1,0 +1,10 @@
+cwd=packages/library-lab
+argv=["node", "--input-type=module", "-e", "import {chromium} from '@playwright/test';const browser=await chromium.launch();try{const page=await browser.newPage();await page.goto('http://127.0.0.1:4319/libraries/gsap?tab=demo&example=advanced');const cdp=await page.context().newCDPSession(page);const log=async(stage)=>console.log(stage,await page.evaluate(()=>({hidden:document.hidden,state:document.visibilityState})));await log('initial');const win=await cdp.send('Browser.getWindowForTarget');console.log('window',win);await cdp.send('Browser.setWindowBounds',{windowId:win.windowId,bounds:{windowState:'minimized'}});await page.waitForTimeout(100);await log('minimized');await cdp.send('Browser.setWindowBounds',{windowId:win.windowId,bounds:{windowState:'normal'}});await page.waitForTimeout(100);await log('normal');}finally{await browser.close()}"]
+exit=0
+initial { hidden: false, state: 'visible' }
+window {
+  windowId: 1,
+  bounds: { left: 0, top: 0, width: 1280, height: 720, windowState: 'normal' }
+}
+minimized { hidden: false, state: 'visible' }
+normal { hidden: false, state: 'visible' }

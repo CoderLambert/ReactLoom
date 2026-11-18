@@ -1,148 +1,90 @@
-# A15 Leaflet 1.9.4：无瓦片地图、图层和经纬度
+# Leaflet：让地点、图层和相机各自更新
 
-Leaflet 适合少量点、弹窗和 DOM/SVG 覆盖物。它不是 WebGL 引擎。矢量瓦片和数据驱动样式看 A16。上万 GPU 点看 A17。没有真实地理底图时，不要把示意网格说成行政区划。
+一个来源面板有三个教学地点：Seattle、San Francisco、New York。地图需要把坐标投影为可点击的点，筛掉暂停来源后保留其他点，移动地点时更新覆盖物。Leaflet 提供地图视口、投影、图层及 DOM 弹窗；它不提供来源数据、地理编码、瓦片授权或服务端权限。
 
-Library Lab 钉 `leaflet@1.9.4`，BSD-2-Clause。库的许可证不包含任何瓦片、影像或地名数据。当前示例不加载 `L.tileLayer`，也不请求地图服务。
+这类少量点与 HTML/SVG 覆盖物适合 Leaflet。矢量瓦片和数据驱动样式可看 MapLibre，GPU 大规模点层可看 deck.gl；三个点不能证明海量地图性能。本例固定 `leaflet@1.9.4`，类型包 `@types/leaflet@1.9.22`，二者版本号不同。Leaflet 是 BSD-2-Clause，地图素材另看提供者许可。
 
-## Lab 当前示例
+## 不请求底图也有真实地图
 
-`examples/demo.tsx` 导出 `examples/example.tsx`。策略在 `examples/location-policy.ts` 和 `examples/station-factory.ts`。样式引入 `leaflet/dist/leaflet.css`。
+背景是本例用 polyline 画的经纬网格，不是行政地图。没有 tileLayer、地理编码或定位服务，城市坐标是原创确定性 fixture，不代表真实机构位置。地图代码仍真实运行 Map、LayerGroup、CircleMarker、投影、键盘和弹窗；无瓦片不等于用静态图片替代地图。首次加载应用本身仍需要本地站点提供 JS/CSS，不承诺离线缓存或冷启动离线可用。
 
-已挂载：
-
-- `L.map` 在 effect 里创建一次：`scrollWheelZoom: false`、`zoomControl: true`、`keyboard: true`、`attributionControl: false`。没有第三方署名是因为没有第三方图层。视图中心 `[39.5, -98]`，缩放 4。容器高 310，可聚焦。
-- 经线纬线用 `L.polyline` 画在地图上，颜色很浅，`interactive: false`。这是教学网格，不是底图。
-- 业务点放在 `L.layerGroup`。可见集合变化时 `clearLayers()` 再重建 `circleMarker` 和一条虚线。选中半径 12，其余 8。在线填充绿，暂停填充棕。
-- 弹窗内容是 `document.createElement` 加 `textContent`，不是 HTML 字符串。
-- 点击圆点或表格「地图定位」选中。定位用 `panTo(..., { animate: false })`，避免和减少动态偏好冲突。重置用 `setView`。
-- `onlyOnline` 为真时暂停点不进图层，也不进表。`selectedVisibleId` 保证选中项仍可见，否则落到第一个可见 id。
-- advanced：Seattle 每次纬度经度加 0.25，并夹在纬度 ±85、经度 ±180。新增「备用源」最多 40 个额外点（id 匹配 `site-N`），坐标在芝加哥附近按序号错开。删除当前选中。
-- `ResizeObserver` 加 rAF 调用 `invalidateSize({ pan: false })`。cleanup 断开观察者、`clearLayers`、`map.remove()`。重复 `L.map` 同一节点会报容器已初始化，所以必须 remove。
-
-没有挂上：瓦片、默认 Marker 图标、`moveend` 查询、日期变更线 bbox、HTTP 503、输入法防抖、`preferCanvas`。`circleMarker` 是 Path，可以用 SVG 或 Canvas 渲染器；普通 `L.marker` 即使用 `preferCanvas` 仍是 DOM 图标。Lab 选择 circleMarker，避免默认图标在打包器里 404，也避免把「开了 preferCanvas」误当成海量点优化。
-
-坐标顺序是 Leaflet 的 `[latitude, longitude]`。GeoJSON 和 MapLibre 是 `[longitude, latitude]`。不要把同一数组直接传给两个库。
-
-## 生命周期
+React 保存地点数组、过滤条件和选中 id；`map-controller.ts` 独占创建的 Map 容器及其图层。它以业务 id 保存 CircleMarker，数据更新时复用仍可见的对象。表格是同源数据的等价操作入口，SVG 点不是唯一获取精确坐标的方法。
 
 ```text
-ref 就绪 -> L.map 一次
-ResizeObserver -> invalidateSize
-items / filter -> group.clearLayers + circleMarker
-卸载 -> clearLayers + map.remove
+本地地点数组 → 可见集合 → id到CircleMarker → Leaflet投影/弹窗
+                 ↑              ↓
+             过滤/选中       React selected
+相机是另一份状态：初始适配，或用户明确定位/平移/缩放
 ```
 
-`map.on` 若加上，`off` 必须是同一个函数引用。Lab 的点事件绑在 marker 上，清图层时一起走。隐藏面板再显示时要 `invalidateSize`，不能只靠 `window.resize`。
+## 最小接入：坐标有顺序，半径有单位
 
-Leaflet 没有 Three 那种几何 dispose。它占 DOM、图片缓存和可选的 Canvas。`map.remove()` 是释放入口。
+在挂载后的 HTML 容器上创建地图，并引入 Leaflet CSS。容器必须有实际高度；无瓦片时也要设定视图，否则不能投影图层。
 
-## 三层
+```ts
+import * as L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 
-### 01 三个城市
-
-西雅图、旧金山、纽约。纽约初始为暂停，但仍显示，因为 basic 没有「仅在线」开关。表里有坐标和定位按钮。
-
-### 02 筛选
-
-勾选后暂停点消失，选中状态被纠正。筛选不会 `fitBounds`，避免用户平移后被弹回，也避免和 `moveend` 打成环。研究稿强调这一点；Lab 没有 moveend，但重置按钮是唯一的全图 `setView`。
-
-### 03 更新与清理
-
-移动 Seattle、加点和删除都只改 React 数组，再投影到图层。40 是额外点上限，不是 Leaflet 的性能基准。离开页面会拆地图。不向任何地理服务发送坐标。
-
-生产查询若按视域过滤，`getBounds()` 在跨日期变更线时 `west > east`。判断应是 `lng >= west || lng <= east`，不能当成非法区间丢掉斐济附近的点。Lab 的点都在美国西部到东部的普通范围内，没有这条数据。
-
-## 反例
-
-```tsx
-// 错：render 里初始化，StrictMode 第二次就炸
-function Bad() {
-  const ref = useRef<HTMLDivElement>(null);
-  if (ref.current) L.map(ref.current);
-  return <div ref={ref} />;
-}
-
-// 错：把用户名拼进 HTML
-marker.bindPopup(`<strong>${name}</strong>`);
-
-// 对：effect 一次，弹窗用 textContent
-const popup = document.createElement('div');
-const heading = document.createElement('strong');
-heading.textContent = name;
-popup.append(heading);
-marker.bindPopup(popup);
+const map = L.map(container, {
+  scrollWheelZoom: false,
+  attributionControl: false, // 仅因本例没有第三方图层
+}).setView([39.5, -98], 4, { animate: false });
+const sources = L.layerGroup().addTo(map);
+const point = L.circleMarker([47.6062, -122.3321], { radius: 8 })
+  .addTo(sources);
+// 页面卸载：清自己的监听/观察器，然后 map.remove()
 ```
 
-| 错误 | 正确 |
-|---|---|
-| 每次筛选 `clearLayers` 又希望弹窗状态保持 | 少量点可以重建；大量点用 `Map<id, Layer>` 增量更新。Lab 选择重建，点数很小 |
-| 容器没有高度 | 明确 height。Lab 310 |
-| GeoJSON `[lng,lat]` 传给 `L.marker` | 适配层换成 `[lat,lng]` 并检查范围 |
-| `preferCanvas` 当海量 Marker 开关 | Marker 仍是 DOM。改聚合、circleMarker 或 deck.gl |
-| 只 abort 不挡迟到响应 | 序号。取消不是正确性的全部 |
-| 把跨 180° 的框当成空 | 分开环绕区间 |
-| 用公益 OSM 瓦片做批量预抓 | 离线网格或有授权的服务，并保留对方要求的署名 |
-| 筛选就 `fitBounds` | 只在用户要求「定位全部」时移动 |
-| 悬停是唯一信息 | 表格按钮。Lab 已有 |
-| SSR 顶层 `L.map` | 动态导入 + effect |
+Leaflet 的数组是 `[纬度, 经度]`，GeoJSON Point 是 `[经度, 纬度]`。两库之间不能原样传数组。CircleMarker 的 radius 以像素为单位；Circle 的地理半径才以米计。缩放改变点的屏幕位置，不自动把 8px 变成地理覆盖半径。
 
-## 性能与合规
+上面只说明接入顺序；本页完整源码还管理稳定身份、事件、ResizeObserver、rAF 与卸载。复制片段时不能省掉对应所有权。
 
-服务端若只返回最多 250 条，`total` 是总数不是已画数量。这个帽是应用策略。一万个 DOM Marker 应先聚类或改 GPU，并用目标设备记录滑动和内存。Lab 不做该实验，也不编造数字。
+## 目标一：坐标经过投影，进入真实视口
 
-不要把令牌放进瓦片 URL。弹窗文本不可信。UI 上的城市是教学点，不是对真实机构位置的断言。
+打开「经纬度、覆盖物与真实视口」。初始适配三个点，绿色表示启用，棕色表示暂停。点击 San Francisco 点，应看到“产品更新”弹窗；点选只调整半径/样式，弹窗继续存在。展开「查看真实地图与图层结果」，比较实际 getter 返回的 `latlng`、`geojsonCoordinates`、`containerPoint`、`radius`、`center/zoom/size`。
 
-`flyTo` 一类动画在减少动态时应改成 `setView` / `panTo` 的非动画形式。Lab 的定位已经关掉动画。
+`latlng` 来自 CircleMarker.getLatLng，GeoJSON 坐标来自实际 toGeoJSON；`containerPoint` 来自 map.latLngToContainerPoint，是相对地图容器的像素，不能直接当页面 client 坐标。缩放按钮或聚焦地图后按 `+`/方向键，预期视口改变而点的经纬度保持不变。滚轮缩放关闭，保留正常页面滚动。
 
-导出业务数据用 GeoJSON（`[lng,lat]`），不要把截图当成数据，也不要假设瓦片允许离线再分发。
+用 Tab/Enter 操作“定位 行业资讯”，应选中 New York、用非动画 panTo 定位并打开弹窗。选中点半径12，其余8，是本例业务高亮，不是 Leaflet 内建选中状态。弹窗使用 createElement/textContent，地点字符串不拼成 HTML。
 
-## 组合
+## 目标二：筛选不重建整张地图
 
-**Leaflet + TanStack Query + 表单。** 查询键包含关键词、分类和 bbox。`moveend` 要节流，不要在 `move` 每帧请求。地图只消费结果。Lab 未装 Query。
+打开「过滤、稳定图层与安全弹窗」。先定位暂停的行业资讯，再勾“仅显示已启用来源”：图和表从3项变2项，选中回落为仍可见的技术 RSS。相机留在用户刚才的位置，不因过滤强制 fitBounds。需要重新查看全体时，点“定位全部可见点”；“重置视角”恢复本例固定美国区域中心和zoom4。
 
-**Leaflet + ECharts。** 地图发出范围，图表 `setOption` / `resize` / `dispose` 自己的实例。汇总不要泄漏敏感单点。
+观察两个仍可见点的 `layerId`，它们在筛选前后保持一致；这来自 LayerGroup.getLayerId。退出点解绑本例click、关闭弹窗、unbindPopup、removeLayer；重新显示该退出点会新建图层，不承诺它保留旧身份。关闭要先于unbind，否则1.9.4会先解除remove监听而留下已打开的弹窗。选择和坐标更新没有整组 clearLayers，因此点选不会销毁刚打开的弹窗。
 
-少量点不要为了「现代」叠 deck.gl。投影和事件会变成两套。
+```ts
+// 本例以 Map<业务id, MarkerRecord> 保存对象
+marker.setLatLng(nextCoordinate);       // 位置变化，复用原覆盖物
+marker.setRadius(selected ? 12 : 8);     // 像素半径
+marker.setStyle({ fillColor: '#5db47b' });
+// 对退出项才执行：off本例click、unbindPopup、group.removeLayer(marker)
+```
 
-`react-leaflet@5` 可以在 React 19 下做声明式 MapContainer。它和手写 `L.map` 不要同时拥有节点。`MapContainer` 的许多参数只在初次生效。这是迁移练习，本条目没有该依赖。
+这套 id 映射是应用同步逻辑，不是 Leaflet 自带数据仓库。输入应保证唯一 id、有限坐标、合法状态。表格/高亮/地图来自同一可见集合；过滤后选中项不存在时按原策略落到第一可见项，空集则无选择。没有远程查询、服务器修订或真实“在线”探测。
 
-## 生产清单
+## 目标三：有界增删、尺寸变化与释放
 
-1. `L.map` 一次，`map.remove` 成对。
-2. CSS 和高度齐全。
-3. 没有瓦片就不显示假的 OSM 署名，也不要偷偷请求瓦片。
-4. 弹窗用 DOM 文本节点。
-5. `[lat, lng]` 与 GeoJSON 顺序转换显式存在。
-6. 筛选不强制 fitBounds。
-7. 选中项必须属于可见集合。
-8. 坐标夹取到有限范围。
-9. 容器尺寸变化 `invalidateSize`。
-10. 键盘和表格与圆点同一份数据。
+打开「有界更新、尺寸与地图所有权」。“模拟更新Seattle坐标”将两个坐标各加0.25，实际 setLatLng 更新已有点，layerId保持。纬度夹取±85、经度±180是本例策略，不是 Leaflet 自动校验；非有限增量或目标坐标不参与计算。
 
-## 升级与练习
+“新增模拟来源”在 Chicago 附近生成 site-N，最多同时40个额外点，初始3个普通点不占额外名额。删除恢复容量，再新增使用新序号而不复用已删除业务id。40是本地应用上限，不是性能测量。可仅显示启用来源后删除两初始启用点，观察空态、无选择和禁用定位全部；取消过滤可恢复仍存在的暂停点。
 
-从 `L.map('id')` 迁到 ref effect，确认 StrictMode 不报 already initialized。把 fixture 改成 GeoJSON 后再转 Leaflet 顺序，过滤与表格一致。
+勾“使用窄容器”，预期地图内容宽度随最多320CSS px容器变化。ResizeObserver 合并到rAF后调用 `invalidateSize({ pan:false, animate:false })`，实际 size/resizeEvents随之更新；它不会自动缩放到全体点。需要时再显式定位全部。无有效尺寸时等待，不把逻辑坐标冒充浏览器像素。
 
-5000 点比较 DOM Marker、circleMarker 和聚合，记录浏览器和内存，不引用未跑的 FPS。接入瓦片时核对服务条款和署名，断网时仍能看到网格或空态，而不是死循环重试。
+“重新创建地图”保留当前地点数组，销毁旧实例并在新的专属容器创建 Map。实际 remove 会发 unload、解绑地图内部处理器并清空图层/面板；本例还精确 off 自己的地图/点事件、unbindPopup、disconnect观察器、取消rAF。旧容器只在 remove返回后写自建 `data-map-removed`，同时记录实际 unload事件，随后分离DOM。它不是SDK公开 removed属性，也不单独证明每个原生监听计数。
 
-评估 react-leaflet 时单列：初始参数、点击、弹窗文本和卸载。不要两套 Map 叠在一个 div 上。
+关闭zoom动画、tile淡入、marker缩放动画和惯性；定位API显式非动画。Leaflet原生键盘平移仍可能有短暂pan过渡，不宣称所有用户操作零动画或已经通过减少动态验收。remove负责停止SDK中的当前运动，没有自建持续timer或GPS监听。
 
-## 故障排查
+## 迁移与边界
 
-只有控件没有线：高度或 CSS 没进来。容器已初始化：cleanup 没有 `remove`。默认图标 404：打包器没处理图片；本示例改用 circleMarker 避开它。弹窗不出现：图层被清掉后没有重建。平移后尺寸错：显示面板后没有 `invalidateSize`。点跑到错误半球：经纬度写反。
+复制七个sourceFiles：demo.tsx、example.tsx、location-data.ts、map-controller.ts、location-policy.ts、station-factory.ts、workshop.css。demo只重导出实际组件；其余无Lab alias或运行器依赖。需要React浏览器、Leaflet运行包和相应类型、DOM/SVG/ResizeObserver；引入依赖自带 leaflet/dist/leaflet.css，由正常打包器解析其包内图片路径，本例不复制地图素材或默认Marker图标。不支持Node/SSR直接顶层导入，SSR需客户端动态加载边界。
 
-## 官方链接
+地图容器与React控件必须保持唯一写者，不再用react-leaflet同时拥有同一节点。Map/图层有独立生命周期；不要每次数据修改都 L.map，也不要对别人的容器 remove。新接第三方瓦片时必须核对授权、使用政策和署名，不能沿用本例 attributionControl:false；当前不主动访问任何瓦片服务。
 
-- [API 1.9](https://leafletjs.com/reference.html)
-- [快速开始](https://leafletjs.com/examples/quick-start/)
-- [npm leaflet](https://www.npmjs.com/package/leaflet)
+跨日期变更线时也不要照搬错误的bbox假设：Leaflet 1.9.4 getBounds使用未环绕的经度，边界可超出±180，并非必然 west>east；LatLngBounds扩展取经度min/max。若服务端要求标准范围，应明确归一化及拆分环绕区间。本例没有视域请求或日期变更线实验，不编造其运行结果。
 
-## 可见选中与坐标夹取
+## 官方原文与验证范围
 
-`selectedVisibleId` 先按 `onlyOnline` 过滤。首选 id 还在就保持，否则用可见列表的第一项，列表空则是空串。effect 发现 state 与这个结果不同就 `setSelected`，避免表格高亮一个已经不在地图上的点。删除当前点之后用同一函数在剩余数组上重算。
+匹配版本的 [1.9.4官方API](https://leafletjs.com/reference-1.9.4.html) 与安装源码/类型共同核对。[固定README](https://github.com/Leaflet/Leaflet/blob/d15112c9e8ac339f0f74f563959d0423d291308d/README.md) 是官方英文原文，v1.9.4完整树仅这一候选，无官方中文README；本地原文与本页教学分开。版本/提交/语言/同步日期/sha及官网实际失败证据见official元数据。
 
-`shiftLocation` 只动指定 id。增量或当前纬度不是有限数时原样返回拷贝。新纬度夹在 -85..85，新经度夹在 -180..180。这是演示用的世界范围，不是测量精度，也不是把 Web Mercator 的极地空洞「修」掉。`makeLocalLocation` 要求正的安全整数，序号超出额外名额时仍生成 id，但 `canAddLocalLocation` 会拒绝已经有 40 个 `site-N` 的数组。按钮在拒绝时不 `setItems`。
-
-## 证据
-
-sdk、build、browser 在 `docs/library-lab/evidence/runs/` 有本条目收据之前为 **NOT_RUN**。`location-policy` 和 `station-factory` 只证明选中回落、坐标夹取和 40 个额外点。Actions run `41779873259` 是仓库级 install、typecheck、build、52 个 SDK 文件（153 个测试）和 45 个 Playwright，不是 A15 的 PASS，不要写入 `verification.json`。
+Node真实导入Leaflet会因window未定义退出；没有构造伪DOM来宣称SDK地图PASS。7项纯策略检查只证明选中回落、有限坐标和额外容量。真实 SVG 投影、弹窗和图层、键盘、resize、卸载及网络边界的 Chromium 证据见本地记录。官网两种HTTP客户端都在TLS握手阶段失败，没有响应头可供嵌入判断，状态unknown；不能由此宣称blocked或allowed。实际命令、日志与六项见local-validation，正式verification仍NOT_RUN。

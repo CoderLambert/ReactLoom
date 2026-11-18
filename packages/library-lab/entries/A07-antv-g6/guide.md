@@ -1,150 +1,83 @@
-# A07 AntV G6 5.1.1：Graph 生命周期、render 与坐标
+# AntV G6：把处理步骤变成可以探索的关系网络
 
-G6 画的是关系：节点、边、分组、布局和交互。它不是柱状图库，也不是带端口约束的流程编辑器。编辑器优先 React Flow；静态说明用 Mermaid；手绘用 Excalidraw 或 tldraw。几十万节点的帧率不能从宣传页外推。
+新闻采集经过「RSS来源 → 正文解析 → 内容索引」。加入人工审校后，不仅多一行文字，解析的后继也从索引变成审校。G6 用节点、边和视口把这种关系画出来，适合依赖分析、知识图谱和邻居探索。需要端口编辑和执行约束时看 React Flow；只需随文档发布静态流程图时看 Mermaid。当前小图不能证明大规模关系网络的帧率。
 
-Library Lab 钉 `@antv/g6@5.1.1`，MIT。包名是 `@antv/g6`，不是 `g6`。示例用原生 `Graph`，没有 `@antv/g6-extension-react`。
+本例固定 `@antv/g6@5.1.1`，直接使用 `Graph`，无 React 扩展包。默认后端是真实 Canvas；没有启用 WebGL、自动布局、远程后端或性能采样。MIT 许可不替你授权外部字体、图片和底图。
 
-## Lab 当前示例
+## 从数据到画布
 
-`examples/demo.tsx` 导出 `examples/example.tsx`。宽度夹取在 `examples/graph-sizing.ts`：非有限或小于 1 的宽度丢弃，上限 4096。
-
-已挂载：
-
-- effect 里 `new Graph({ container, width, height: 330, data, node, edge, behaviors })`。节点是半径 42 的圆，边是带箭头的线。`behaviors` 只有 `drag-canvas` 和 `zoom-canvas`，没有拖单个节点。
-- 坐标写在数据的 `style.x` / `style.y` 上，间距 142。没有 dagre，也没有力导向。
-- `graph.render()` 是异步的。`disposed` 为真就不再 `observe`、不再 `setStatus`。
-- `ResizeObserver` 合并到 rAF，宽度变了才 `graph.setSize(width, 330)`。
-- cleanup：`disposed = true`、断开观察者、取消 rAF、`graph.destroy()`。StrictMode 会把 effect 跑两轮，每一轮拥有自己的 Graph。
-- basic 三个节点：RSS来源 → 正文解析 → 内容索引。business / advanced 可用复选框插入「质量审校」。advanced 的「重新创建图实例」只增加 `revision`，从而让 effect 整图销毁再新建。
-- 容器 `role="img"`。有序列表和「有向边」句子是读屏用的文本，不依赖 Canvas 命中。
-
-这条重建路径适合演示所有权，**不适合**当成数据更新的写法。生产里改颜色用 `updateNodeData` + `draw()`，换数据用 `setData` + `render()`，不要每次勾选都 `new Graph`。Lab 把 `extended` 和 `revision` 放进 effect 依赖，所以勾选也会销毁重建。教学上要认得这个差别。
-
-没有挂上：`NodeEvent.CLICK`、`setElementState`、dagre、WebGL 渲染器、`toDataURL`、HTTP 409/422、搜索邻居、标签随数量隐藏。研究稿的 50–2000 节点生成器也不在这里。
-
-## 数据
+业务事实是稳定的步骤 id 及相邻关系。`graph-data.ts` 一次产生 `nodes` 和 `edges`，React 文本按钮、边列表和 G6 使用同一份数据。节点的 `data.label` 是业务标签，`style.labelText` 是画布文字；`style.x/y` 是图数据坐标。边的 `source/target` 必须引用已有节点。数组下标只参与本例固定坐标计算，不充当业务 id。
 
 ```ts
 const data = {
   nodes: [
-    { id: 'source', data: { label: 'RSS来源' }, style: { x: 100, y: 110, labelText: 'RSS来源' } },
+    { id: 'source', data: { label: 'RSS来源' },
+      style: { x: 100, y: 110, labelText: 'RSS来源' } },
+    { id: 'parse', data: { label: '正文解析' },
+      style: { x: 242, y: 160, labelText: '正文解析' } },
   ],
   edges: [{ id: 'edge-source-parse', source: 'source', target: 'parse' }],
 };
+const graph = new Graph({
+  container, width: 640, height: 330, data,
+  animation: false,
+  autoFit: { type: 'view', animation: false }, padding: 24,
+  node: { type: 'circle', style: { size: 42 } },
+  edge: { type: 'line', style: { endArrow: true } },
+  behaviors: ['drag-canvas', 'zoom-canvas'],
+});
+await graph.render();
 ```
 
-id 稳定，边的两端必须存在。不要用数组下标当 id。React 里的步骤列表是事实；`Graph` 的数据是投影。Lab 的 `dataset()` 在渲染期和 effect 里各算一次，两边都从同一函数来，避免列表和画布描述分叉。`labelText` 是画布文字，列表用的是 `data.label`。用户字符串不要走 `innerHTML`。
+`container` 是已挂载且有尺寸的 HTML 元素。构造与 `setData()` 修改模型；`await render()` 才等待准备画布、绘制及自动适配完成。圆节点 `size: 42` 表示尺寸/直径，不是半径。固定坐标便于追踪前后关系；`autoFit` 使三四个节点适应初始视口。没有执行力导向或 dagre 布局。
 
-## draw 和 render
+上面是接入顺序。完整 React 实现还必须处理异步操作与卸载，直接迁移下面列出的源码，不能只复制片段再忽略 cleanup。
 
-- 只改填充色：`updateNodeData` 之后 `await graph.draw()`，避免整图重布局。
-- `setData`、换布局、大量增删：`await graph.render()`。`setData` 本身不绘制。
-- 短时间多次修改合成一批再画。
-- v4 的 `changeData` / `save` / `read` 不要和 5.1.1 混用。对应物是 `setData`、`getData`、`setData` 加 `render`。[upgrade](https://g6.antv.antgroup.com/en/manual/whats-new/upgrade)。
+## 三个可以操作的目标
 
-Lab 的复选框没有走这条增量路径。若改成增量，要在已销毁的实例上禁止 `setData`，并用 `disposed` 丢掉迟到的 `render()` Promise。官方说明 `destroy` 不能取消已经进布局器的任务，浏览器里仍要看残留 canvas。
+### 1. 节点与边怎样落到真实画布
 
-## 坐标和导出
+打开「节点、边与有向关系」。预期看到来源、解析、索引三个圆及两条箭头。拖动空白画布、滚轮缩放，再点「重新适配视口」。展开「查看真实SDK拓扑与视口」，检查 `rendered`、`nodes`、`edges`、`size` 和 `zoom`；它们通过真实 Graph getter 读取，不是把 fixture 再打印一遍。
 
-`style.x/y` 是图数据坐标。`clientX` 是视口坐标。缩放和平移之后用视口 API 换算，不要用 `getBoundingClientRect` 除一个猜测的缩放比。[viewport](https://g6.antv.antgroup.com/en/api/viewport)。
+点击画布节点，或用 Tab/Enter 操作同名文本按钮；预期「当前选择」与对应节点 `states: ["selected"]` 一起变化。`NodeEvent.CLICK` 提供命中元素 id；React 保存选择，`setElementState(states, false)` 应用选中样式。文本按钮给 Canvas 补充可操作的等价入口，不能据此宣称整页符合 WCAG。
 
-`toDataURL({ mode: 'viewport', type: 'image/png' })` 返回 Promise。`overall` 会把整图光栅化，大图内存会涨。插件自己的 DOM 层不一定进这张图。跨域图片会 taint。PNG 不是可编辑的图数据；JSON 另存。Lab 没有导出。
+### 2. 插入审校时更新同一实例
 
-## 三层
-
-### 01 最小拓扑
-
-三个圆、两条箭头。可以拖动画布、滚轮缩放。列表读出 id。容器初始宽度走 `measuredGraphWidth`，量不到就用 330。
-
-### 02 审校节点
-
-勾选后多一个「质量审校」，边改成来源→解析→审校→索引。因为 effect 依赖 `extended`，这是一次销毁重建，不是 `setData`。状态文案在 render 完成前是「正在建立真实 G6 Graph」。
-
-### 03 重建
-
-按钮强制换新实例。离开页面前必须 destroy，不能对旧 Graph 再 `setSize`。观察者在 cleanup 里断开。这仍不是性能基准：节点数始终是 3 或 4。
-
-生产规模手段是服务端只给子图、邻居展开、折叠分组、标签阈值。Force 布局会持续迭代。Worker 或 WebGL 有部署和显存成本，不是默认免费加速。官方支持这些扩展，不等于当前示例启用了它们。[layout overview](https://g6.antv.antgroup.com/en/manual/layout/overview)。
-
-## 反例
+打开「同实例更新新闻处理拓扑」。初始四节点三边：来源 → 解析 → 审校 → 索引。取消「启用审校节点」后，预期三节点两边，解析直接指向索引；再次勾选恢复。观察 SDK 快照：`instance` 保持一致，`renderEvents` 增加，旧审校边消失。
 
 ```ts
-// 错：渲染函数里构造，勾选数据又 new 一次
-function Bad({ extended }: { extended: boolean }) {
-  const host = useRef<HTMLDivElement>(null);
-  if (host.current) new Graph({ container: host.current, data: dataset(extended) });
-  return <div ref={host} />;
-}
-
-// 对：effect 创建并 destroy。仅换数据时：
-// graph.setData(next); await graph.render();
-// 仅换色时：
-// graph.updateNodeData([{ id, style: { fill: '#d9e7df' } }]); await graph.draw();
+graph.setData(nextData);   // 同步替换模型，不会自行绘制
+await graph.render();     // 真实重绘；本例 autoFit 也会重新适配
 ```
 
-| 错误 | 正确 |
-|---|---|
-| StrictMode 不 destroy | 每个 effect 拥有一个 Graph，cleanup 必 `destroy` |
-| 改颜色也 `render()` | `draw()`，除非布局必须重算 |
-| v4 `changeData()` | v5 `setData` |
-| 下标当 id | 稳定业务 id |
-| 边指向不存在的节点 | 投影前校验 source/target |
-| 请求回来就覆盖 state | 序号 + revision；409 提示重载 |
-| 每个节点一套 React DOM | 圆点用 Canvas 元素；少量自定义节点才考虑 React 扩展 |
-| 大图全开标签 | 阈值隐藏，列表保留查找 |
-| 把 PNG 当源数据 | JSON 与图片分开 |
-| `clientX` 写入 `style.x` | 视口坐标转换 |
-| `render` 未完成就卸载仍 `setStatus` | `disposed` 标志，Lab 已做 |
-| 拖节点和拖画布绑成同一个 behavior 却不调触发器 | 分清 `drag-element` 与 `drag-canvas`。[drag-canvas](https://g6.antv.antgroup.com/en/manual/behavior/drag-canvas) |
+这条路径避免把每次数据更新都变成 `new Graph`。稳定 id 让 SDK 对照前后数据。G6 模型保留已有元素的插入顺序，`getNodeData()` 不保证等于新输入数组顺序；拓扑含义由 id 和边决定，页面步骤顺序由业务数组决定。移除当前选中的审校节点会同时清空本地选择。
 
-## 无障碍与安全
+代价也可观察：本例每次拓扑更新自动适配，所以手动平移/缩放可能被重置。需要保留用户相机时，应移除自动适配并决定何时显式 `fitView`。只修改普通节点样式时，可用 `updateNodeData()` 后 `await draw()`；本例选中态走 `setElementState`，无需另一次全图 `render`。
 
-Canvas 上的圆不能代替节点列表。Lab 的 `role="img"` 只是概览，列表才是操作文本。不要凭一个 aria-label 宣称符合 WCAG。当前没有持续动画，但缩放和拖拽仍要在真机上看 `prefers-reduced-motion`。
+### 3. 窄容器、交互与异步实例所有权
 
-校验 id 字符、文本长度、有限坐标、唯一性和边端点。浏览器校验不是授权。
+打开「选择、视口与异步所有权」。勾选「使用窄容器」，预期容器变为最多 320 CSS px，SDK `size[0]` 随实际内容宽度变化，节点仍通过 `fitView` 留在视口中。拖放/滚轮后可重新适配。点击「重新创建图实例」，预期 `instance` 增加，旧专属容器离开 DOM，已运行 SDK 任务结算后销毁旧 Graph。
 
-## 组合
+`ResizeObserver` 读取实际内容宽度，rAF 合并回调，再执行 `setSize(width, 330)` 与 `await fitView({ when: 'always' }, false)`。测量小于 1 或非有限时不渲染、不更新尺寸，上限 4096；不使用会令移动端横向溢出的最小宽度。拖动画布只启用 `drag-canvas`，未启用拖单个节点。显式关闭动画，也没有持续布局/定时器。
 
-**G6 + TanStack Query + Zustand。** Query 按租户、图类型、过滤器和 revision 缓存。Zustand 只存选择和折叠。G6 不反向写回文档。Lab 未装这两库。
+图坐标与浏览器坐标有区别。快照的 `position` 是 SDK 元素位置，`client` 由 `getClientByCanvas(position)` 换算为 CSS 视口坐标；缩放/平移后不能直接用 `style.x/y` 去点击屏幕，也不要猜 bounding-box 缩放比。
 
-**G6 + React Flow。** Flow 编辑可执行步骤；G6 只读展示部署后的依赖。布局结果不要互写。
+## 异步边界为什么需要额外代码
 
-**G6 + ECharts + ExcelJS。** 选中节点后侧栏看时序，表格从同一 DTO 导出，不从像素反读。
+5.1.1 的 `render()` 会跨过微任务和 `Canvas.ready`；`draw()`、`fitView()`、`setElementState()` 也返回 Promise。若立即 destroy 正在初始化的实例，迟到代码可能继续使用已清空的 context。仅在 then 里检查 `disposed` 不能避免 SDK 内部竞争。
 
-## 生产清单
+本例 `async-owner.ts` 是自建任务所有权工具，不是 G6 取消 API。每实例串行执行完整当前意图，尚未开始的旧意图跳过；已运行任务不会被中断，await 之后检查代际才发布 UI。新任务从真实已应用状态继续补齐数据、尺寸及选择，失败显示在状态区且不毒化后续队列。
 
-1. DOM 就绪后构造，cleanup `destroy`。
-2. 宽度无效不 `setSize`，宽度有上界。
-3. 数据更新与实例重建分开。
-4. `draw` 与 `render` 不混用。
-5. v4 API 不出现在 5.1.1 代码里。
-6. 边端点始终存在。
-7. 坐标空间不混用。
-8. 文本列表与画布描述同源。
-9. 导出区分 viewport PNG 和 JSON。
-10. 迟到的 render Promise 看到 `disposed` 就返回。
+卸载时立即撤销所有权，断开 ResizeObserver、取消 rAF、移除本例注册的事件，再分离该实例独占的 DOM 容器。等待队列结算后调用一次 `graph.destroy()`。即使马上重建，新实例也有新容器；旧 render 只能完成在已分离的旧容器内。不声称取消 CPU、布局或 GPU 工作，也不能保证永不结算的第三方任务立即释放资源。没有轮询伪造销毁结果。
 
-## 升级与练习
+## 迁入你的 React 页面
 
-从 v4 迁到 5.1.1 时替换 `changeData` / `save` / `read`，并在 StrictMode 下切换数据 50 次，数 canvas 是否增加。[React 集成](https://g6.antv.antgroup.com/en/manual/getting-started/integration/react)。
+依赖 `@antv/g6@5.1.1`、React 和浏览器 DOM/Canvas/ResizeObserver。复制七个运行文件：`demo.tsx`、`example.tsx`、`graph-data.ts`、`graph-options.ts`、`async-owner.ts`、`graph-sizing.ts`、`workshop.css`。入口只 re-export 实际组件；CSS 由组件相对导入，提供容器高度、窄屏和键盘焦点样式。不依赖 Lab 共享 alias、样式或 runner，没有额外图片/字体。父组件渲染 `<G6Example level="business" />` 即可。
 
-练习：把审校勾选改成 `setData` + `render`，确认缩放不丢；高亮用 `setElementState` + `draw`，看布局是否被重算；点击加节点时用官方坐标转换。409 的合并必须基于服务端版本，不能在本地覆盖。
+用业务 DTO 替换 `createGraphData`，保持 id 唯一、边端点存在、坐标有限。若接远程请求，另行管理取消、租户隔离及权限；G6 不替代服务端授权。未实现的导出、布局、图编辑和大图优化应按需求加入并重新验收。v4 的 `changeData/save/read` 不可套进 5.1.1。
 
-## 故障排查
+## 官方资料和验收范围
 
-空白：容器宽度 0、没 `render`、布局抛错。第二次挂载白屏：异步回调还拿着已 destroy 的引用。删节点有残影：没有 `setData`+`render`，或旧请求写回。滚轮和拖拽冲突：behavior 的 `enable` / `trigger`。PNG 缺一层：插件 DOM 或 CORS。
+官方中文 README 保存为独立原文快照，对应 5.1.1 提交 [`5a5551c`](https://github.com/antvis/G6/blob/5a5551cea13d021d12c90a87116e3c6092d53210/README.zh-CN.md)。核心 API 按同提交 [Graph 源码](https://github.com/antvis/G6/blob/5a5551cea13d021d12c90a87116e3c6092d53210/packages/g6/src/runtime/graph.ts) 和安装声明核对；[官网](https://g6.antv.antgroup.com/) 提供当前文档，可能先于本例升级。README 不是本地教学的替代品。
 
-## 官方链接
-
-- [仓库与 MIT](https://github.com/antvis/G6)
-- [React 集成](https://g6.antv.antgroup.com/en/manual/getting-started/integration/react)
-- [Graph](https://g6.antv.antgroup.com/en/api/graph)
-- [数据](https://g6.antv.antgroup.com/en/api/data)
-- [绘制与渲染](https://g6.antv.antgroup.com/en/api/render)
-- [导出](https://g6.antv.antgroup.com/en/api/export-image)
-- [v4 到 v5](https://g6.antv.antgroup.com/en/manual/whats-new/upgrade)
-- [npm @antv/g6](https://www.npmjs.com/package/@antv/g6)
-
-## 证据
-
-sdk、build、browser 在 `docs/library-lab/evidence/runs/` 有本条目收据之前为 **NOT_RUN**。`measuredGraphWidth` 的测试只证明夹取，不证明 `Graph.render` 或 `destroy`。Actions run `41779873259` 是仓库级 install、typecheck、build、52 个 SDK 文件（153 个测试）和 45 个 Playwright，不是 A07 的 PASS，不要写入 `verification.json`。
+Node 套件真实执行 Graph 模型、setData、关系查询和 destroy，没有调用 render；纯策略验证串行所有权和宽度。两者都不证明 Canvas/WebGL、排版、命中或实际卸载。上述可见结果目前是浏览器验收预期，操作源码在 `validation/browser-proposal.txt`，实际状态与原始日志见 `local-validation.md`；正式 SDK/build/browser 收据仍是 NOT_RUN。

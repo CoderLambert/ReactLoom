@@ -1,0 +1,5 @@
+{"label": "final-check", "cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["python3", "packages/library-lab/entries/C06-imask/validation/final-check.py"], "start": "2026-11-10T15:56:25.662707+00:00", "end": "2026-11-10T15:56:25.680925+00:00", "exitCode": 0, "log": "final-check.txt"}
+STDOUT
+C06 5 portable sources/3 real proposals/links/2 original README hashes/exact release gitHeads/no Chinese candidate/no temporary or binary copies PASS; no SDK/browser executed
+
+STDERR

@@ -1,0 +1,18 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node --test entries/B06-ant-design/tests/feed-history.test.mts entries/B06-ant-design/tests/feed-url.test.mts
+exit: 0
+✔ add and undo commit an atomic snapshot (0.906092ms)
+✔ duplicate URL or stable ID is a no-op (0.11838ms)
+✔ rapid toggles derive from the latest state, not stale closure (0.123585ms)
+✔ no-op edits do not overwrite last undo snapshot (0.078303ms)
+✔ undo is one level and idempotent (0.076193ms)
+✔ HTTPS identity trims, normalizes host/default port and removes fragments (0.606339ms)
+✔ malformed URLs, other protocols and embedded credentials are rejected (0.202719ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 75.293743

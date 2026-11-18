@@ -1,7 +1,7 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "真实 SDK import/行为测试已写，待安装依赖并执行"
+    "note": "正式NOT_RUN；本地SDK4实际原型/日期配方与policy有效13分开，不证明DOM构造/画图/监听。"
   },
   "build": {
     "status": "NOT_RUN",
@@ -9,6 +9,6 @@
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "已接入 C13 专用 loopback 4321 文档运行器；父文档不加载图表。单文档实例使用 refresh/change_view_mode，退出销毁整个 iframe。当前输入的真实 Chromium 文档监听数量、旧 frame/context 销毁和业务回归仍待 CI 执行，未提升 PASS。"
+    "note": "正式NOT_RUN；root candidate17既有五条真实隔离/SVG/键盘/CDP生命周期case与官网blocked共6PASS；抓取工具维护未改运行源。精确附加未测项见local-validation，正式收据另计。"
   }
 }

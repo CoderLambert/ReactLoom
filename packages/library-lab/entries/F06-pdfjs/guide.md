@@ -1,177 +1,66 @@
-# PDF.js 6.3.289｜本地字节、Canvas 预算和同模块 Worker 路径
+# PDF.js 6.3.289：已有 PDF 的本地分页预览
 
-Lab 锁定 `pdfjs-dist@6.3.289`（Apache-2.0）。它解析并画出已有 PDF。它不生成报表（那是 F08），也不改字节（那是 F09）。React 包装看 F07，两边必须同一版 Worker。
+PDF.js 解析已有 PDF，`getPage().render()` 绘制 Canvas，`getTextContent()` 抽取文字层；它不生成或编辑 PDF，也不是 OCR。Lab 固定 `pdfjs-dist@6.3.289`，Apache-2.0，与 F07 的 React-PDF 使用同版底层。需要修改字节看 F09，需要生成报表看 F08。
 
-显式启动后，Demo 页挂载 [`examples/demo.tsx`](examples/demo.tsx) → [`examples/example.tsx`](examples/example.tsx)。源码把 `GlobalWorkerOptions.workerSrc` 设成 Vite 解析的 `pdfjs-dist/build/pdf.worker.min.mjs?url`。这只是构建期的同路径约定。没有浏览器收据之前，不要写成「Worker 已经在页面里加载成功」。
+示例不访问远程 PDF。默认两页由 `fixture.ts` 原创生成，advanced 的用户文件只读入当前浏览器内存，不上传。客户端限制不是文档安全沙箱，也不是服务端验证。
 
-没有 `docs/library-lab/evidence/runs/` 收据时 sdk、build、browser 保持 NOT_RUN。Actions 41779873259 是仓库级安装、类型检查、构建、52 个 SDK 文件 / 153 项测试和 45 项 Playwright，不是本条目 PASS。
+## 三个独立目标
 
-## Lab 当前示例
-
-| 文件 | 作用 |
+| 场景 | 操作与可观察结果 |
 | --- | --- |
-| `examples/fixture.ts` | 本地生成的两页 PDF 字节，不下载第三方文件 |
-| `examples/example.tsx` | `getDocument`、`getPage`、`render`、`getTextContent` |
-| `examples/render-gate.mjs` | 同一 Canvas 上的绘制串行化 |
-| `examples/render-budget.mjs` | CSS 边长、背板边长和 800 万像素上限 |
-| `examples/render-gate.test.mjs` | 队列策略，不 import pdfjs |
-| `examples/render-budget.test.mjs` | 尺寸策略，不 import pdfjs |
-| `examples/worker-version.test.mjs` | 仓库里 F06/F07 声明的版本字符串 |
+| 基本 | 启动后真实 Worker 解析，Canvas 画出 `ReactLoom PDF Guide`；状态包含页码和背板尺寸 |
+| 业务 | 下一页显示第二页，文字输出含 `ReactLoom News Summary` / `Page Two`；两端按钮禁用 |
+| 进阶 | 80%–200% 缩放、本地 PDF 候选解析、独立坏字节探测；失败保留已接受文档，过大页面则清空旧画面并报预算错误 |
 
-输入上限 3 MiB。默认文档来自 `createWorkshopPdf()`。advanced 才允许选择本地 `.pdf` 和探测损坏字节。选择文件只读到内存，不上传。
+文字抽取不保证阅读顺序、表格结构或无障碍文字层。扫描件可以无文字；空输出不表示 PDF 没有内容。Canvas 的图片标签不能代替可选文字与完整阅读器无障碍设计。
 
-CMap、标准字体、WASM 和加密文档是生产教学，本页没有挂这些资源。
+## 最小迁入
 
-## 1. 什么时候用
+安装精确 `pdfjs-dist@6.3.289`，React/ReactDOM 与项目版本一致。复制下面六份文件并保留相对路径：
 
-合同、报表、文章附件要在浏览器里看一页。扫描件没有文字层时，`getTextContent` 会空，那是 OCR 的工作，不是 PDF.js 的失败。要改页、盖章、合并，用 F09，画完再决定要不要回到这里预览。
+- `examples/example.tsx`、`examples/fixture.ts`。
+- `examples/render-gate.mjs`、`examples/render-gate.d.mts`。
+- `examples/render-budget.mjs`、`examples/render-budget.d.mts`。
 
-不要把任意 URL 丢给 `getDocument({ url })`。本页只传 `data`。
+在 Vite React 工程中挂载 `<PdfViewerExample level="business" />`。迁入 TypeScript 工程启用 `jsx: react-jsx`、`moduleResolution: Bundler`、DOM lib 和 `vite/client` 类型以识别 `?url`。`demo.tsx` 只是 Lab 宿主适配，可省。Node 测试不是运行依赖，不必复制。完整声明见每个 demo 的 `sourceFiles`，隔离严格迁入编译记录见 `validation/strict-copy-command.json`。
 
-## 2. 模型
-
-```text
-bytes.slice() → getDocument({ data }).promise
-  → getPage(pageNum)
-  → getViewport({ scale: 1.15 * scale })
-  → boundedCanvasSize
-  → withCanvas(() => page.render(...).promise)
-  → getTextContent（非 basic）
-```
-
-加载 effect 依赖 `bytes`。清理时 `active = false` 并 `task.destroy()`。迟到的 promise 看到 `active` 就不再 `setPdf`。
-
-绘制 effect 依赖 `pdf`、页码和缩放。清理时 `renderTask.cancel()`。`cancel()` 不会同步放开 Canvas。`createRenderGate` 把下一次绘制排到上一次 settled 之后。取消或抛错不会把队列卡死：失败被吞进下一次的链，调用方自己的 promise 仍会 reject。过期任务在进门时看到 `active === false` 就返回。
-
-`RenderingCancelledException` 不覆盖状态文案。其它渲染错误会写到 `role="status"`。
-
-`boundedCanvasSize` 要求 viewport 和 devicePixelRatio 是有限正数。CSS 宽高向上取整后各不超过 4096。背板倍率夹在 1 和 2 之间。像素宽高不超过 4096，乘积不超过 8 000 000。检查发生在给 `canvas.width` 赋值之前。
-
-损坏探测用单独的 `probeTask`。新的探测或卸载会 `destroy` 上一次。`finally` 只销毁仍挂在 ref 上的那一个任务，避免清掉新任务。
-
-文件读取有 `fileGeneration`。超限或非 `.pdf` 后缀直接返回。后缀只是提示，内容仍由解析器判断。
-
-## 3. 三层
-
-### 基本
-
-画第 1 页。没有翻页控件。文案应变成已加载页数，并写明没有访问远程 URL。Canvas 有 `role="img"` 和页码标签。这是解析结果，不是一张事先画好的图片。
-
-### 业务
-
-上一页 / 下一页，范围是 `1..numPages`。翻页会取消旧的 render。文本层用 `getTextContent` 把带 `str` 的 item 拼起来。缺字体映射时文本可能空或乱，要在产品里说明，不能当成 OCR。
-
-### 进阶
-
-缩放下拉 80%–200%，再乘内部的 1.15。本地文件超过 3 MiB 不读。按钮用五字节 `{1,2,3,4,5}` 做探测：失败文案是「已正确捕获损坏 PDF，不覆盖当前已加载文档」。成功反而要当成异常。当前画布上的文档不被这五字节替换。
-
-## 4. 反例
-
-### 反例 1：主线程和 Worker 不同版
+`example.tsx` 在调用 `getDocument` 的同一模块设置：
 
 ```ts
-GlobalWorkerOptions.workerSrc = 'https://cdn.example/pdf.worker.min.mjs'
+import workerSrc from 'pdfjs-dist/build/pdf.worker.min.mjs?url'
+GlobalWorkerOptions.workerSrc = workerSrc
 ```
 
-F06 和 F07 都从锁文件里的 `pdfjs-dist@6.3.289` 取 `pdf.worker.min.mjs`。不要只升一边，也不要换 CDN。源码这样写，仍然不是浏览器已经收到 Worker 脚本的收据。
+这由 Vite 发出本地同版 Worker asset，不能换成未知版本 CDN。部署应允许本地 `worker-src`，实际请求、构造、终止要看浏览器；源码字符串检查不证明 Worker 成功。输入传 `data: source.slice()`，避免 Worker 转移调用方保留的原始 buffer。
 
-### 反例 2：换文件不 destroy
+## 任务所有权和迟到结果
 
-每次 `getDocument` 都留下 Worker 和文档。effect 的清理函数要 `destroy()`，包括 promise 还没完成的那次。
+外层以 `level` 为 key 创建独立会话。切换场景销毁旧会话，不把用户文件/页码带进新会话。acceptedTask 持有已接受文档，pendingTask 持有候选解析，probeTask 只持有坏字节诊断。每个加载任务通过 WeakMap 缓存 destroy promise，避免重复调用销毁；销毁异常被捕获，不表示资源释放已经成功。
 
-### 反例 3：取消后立刻再用同一 Canvas
+任何新的 File 选择都先增加 `fileGeneration` 并销毁旧候选/探测，再检查空文件、3 MiB 上限和 `.pdf` 后缀。即使新选择非法，旧 `arrayBuffer()` 的迟到结果也不会提交。浏览器 File 读取自身不能被取消，这里是忽略结果。取消选择文件（没有 File）不改变会话。后缀不证明内容格式。
 
-```ts
-task.cancel()
-page.render({ canvas, canvasContext, viewport })
-```
+候选解析成功才提交新的 PDF，并取消旧 render、销毁旧 accepted loadingTask。读取/解析失败保留原文档；损坏探测只解析五个坏字节，不替换当前文档。初始文档未加载时文件和探测按钮禁用。卸载增加代次、取消 render，并 destroy accepted/candidate/probe。迟到的解析、页面和文字结果都有代次或 active 检查，不再更新已离开的会话。
 
-可能抛出同一 Canvas 正在使用。先经过 `render-gate`，再在任务里检查 `active`。
+`renderTask.cancel()` 不会同步释放 Canvas。`createRenderGate` 必须保留：下一次实际绘制等上次 promise settled，拒绝不会毒化队列；过期排队项进门后直接跳过。文档加载和文字抽取不用占着 Canvas 队列。渲染失败会排队清零画布，避免把上一页冒充失败页；文字在新渲染开始时清空。取消异常不覆盖状态。
 
-### 反例 4：3 MiB 输入等于安全画布
+## 两种不同的预算
 
-恶意页可以声明巨大的 MediaBox。要在 `render` 前跑 `boundedCanvasSize`。拒绝分配，不要先把 `canvas.width` 设成几十万。
+输入只读非空且不超过 **3 MiB（3,145,728 bytes）** 的文件。体积小也可能声明巨大的 MediaBox，不能据此批准画布。
 
-### 反例 5：文本提取当成表格或 OCR
+`boundedCanvasSize` 在非零背板分配前检查：viewport/DPR 必须有限且为正，CSS 边长向上取整后 ≤4096，DPR 夹在 1–2，背板每边 ≤4096 且乘积 ≤8,000,000。旧 render 结束后先清零旧画布，再做预算；超限不会保留旧像素或分配巨大背板。内部 viewport 为 `1.15 * scale`，所以 200% 不是 CSS 原始页尺寸的两倍以内安全保证。
 
-`getTextContent` 只看文字层。扫描件、复杂版面、阅读顺序都要另做。不要把空字符串显示成「文档是空的」。
+## 限制与反例
 
-### 反例 6：公网 URL 和无限大小
+- 没有配置 CMap、标准字体、WASM、口令、注释/表单层。原创 Helvetica 两页夹具成功不能推出任意中文/复杂 PDF 支持。Node 原始日志里的 `standardFontDataUrl` warning 必须保留。
+- 不提供任意远程 URL 输入。跨域、网络范围请求、鉴权和远程文档访问都没有验收。
+- 不是任意不可信 PDF 的安全隔离服务；生产接收文件需要独立配额、隔离和更新策略。
+- 不在 `cancel()` 后直接 `render` 同一 Canvas；不把清 React state 或 DOM 消失称为 Worker 已终止。
+- 不一次将所有页画成大位图。Canvas 尺寸预算不限制解析器所有内存/CPU，也不是 PDF ZIP bomb 防护。
 
-```ts
-getDocument({ url: userPaste })
-```
+## 分层验证与官方来源
 
-这会遇到跨域、SSRF 和内存峰值。Lab 只用 `Uint8Array`，并且在客户端先卡 3 MiB。服务端若接收 PDF，还要自己的配额和隔离，不要把用户文件上传到教学接口。
+本次本地 Node legacy SDK 2 项：实际解析原创两页并抽取不同文字、坏字节拒绝且已接受文档仍可读取。它使用 `pdfjs-dist/legacy/build/pdf.mjs` 的 Node 路径（同版6.3.289），不是浏览器 Worker/Canvas 验证。纯策略 9 项包括 gate3、budget4、声明/路径2，后者只读仓库元数据，不算 SDK。
 
-### 反例 7：只改 CSS 不改像素
+原始命令、退出码和输出见 `local-validation.md` 与 `validation/`。浏览器方案 `validation/browser.spec.ts` 由主控接入现有宿主执行：Canvas 非白像素/分页/文字、快速缩放、真实 Worker 请求和逐实例 terminate、候选失败保留文档、巨大 MediaBox 拒绝、held File 读取后非法选择/切场景/卸载忽略迟到结果。此文件本身不是执行记录。没有正式 recorder 收据时 `verification.json` 仍 NOT_RUN。
 
-高分屏要设 canvas 的像素尺寸，再用 transform 对齐 viewport。预算函数把 DPR 限制在 2。不要一次把上百页都画成位图。
-
-## 5. 组合
-
-**react-pdf（F07）**：同一 `pdfjs-dist` 版本。它用 Document/Page。这里直接 `getDocument`。两边同时升级。
-
-**pdf-lib（F09）**：改完字节再送回 `data`。不要在 PDF.js 里画批注冒充已写进文件。
-
-**@react-pdf/renderer（F08）**：生成新 PDF 的库。包名相近，职责相反。
-
-## 6. 清单
-
-- `data: bytes.slice()`，不把 React state 的 buffer 直接交出去。
-- 卸载同时取消 render 和 destroy loading task。
-- 探测任务单独持有，finally 不误伤新任务。
-- 分配 Canvas 前检查 4096 与 800 万像素。
-- 取消异常不刷成失败文案。
-- 本地文件先看大小，再看代号。
-- 不从第三方域名拉 PDF。
-- CSP 的 `worker-src` 要在真实部署里看。本页没有那份浏览器记录。
-
-## 7. 升级
-
-升 `pdfjs-dist` 时 F07 的 `react-pdf@11.0.0` 必须一起核对。`worker-version.test.mjs` 只比较仓库里的版本声明，不解析 node_modules，也不发 Worker 请求。
-
-`getDocument` 的参数和 `page.render` 的 canvas 字段以 6.3.289 为准。不要把多年前示例里的全局 `PDFJS.workerSrc` 写回来。
-
-## 8. 验收
-
-```bash
-node --test packages/library-lab/entries/F06-pdfjs/examples/render-gate.test.mjs
-node --test packages/library-lab/entries/F06-pdfjs/examples/render-budget.test.mjs
-node --test packages/library-lab/entries/F06-pdfjs/examples/worker-version.test.mjs
-```
-
-三条都不加载 PDF.js，不是 SDK PASS，更不是 Worker 收据。
-
-浏览器还要看：两页内容不同、文本里有夹具关键词、快速缩放不出现同一 Canvas 错误、坏字节不换掉当前文档、离开页签后不再画。这些观察要有收据。`destroy()` 会等传输清理，不等于脚本还没加载时 Worker 已同步消失。
-
-## 9. 故障对照
-
-| 现象 | 先看 |
-| --- | --- |
-| 画布空白 | Demo 是否已启动；`getDocument` 是否抛错并写进状态 |
-| 同一 Canvas 报错 | `cancel()` 之后没有等 gate。快速改缩放最容易出现 |
-| 坏字节把当前页换掉 | 那是探测路径写进了 `setBytes`。本页的探测不应这么做 |
-| 文本为空 | 文字层缺失或字体映射不够。不是 OCR 失败 |
-| 巨大页面把标签卡死 | `boundedCanvasSize` 被挪到 `canvas.width` 赋值之后 |
-| Worker 地址是 CDN | 源码应是 `pdf.worker.min.mjs?url`。即便如此也没有加载收据 |
-| 和 F07 各用一版 | 声明必须同时是 6.3.289。静态测试不读取已安装文件 |
-
-键盘：翻页按钮可禁用在两端。Canvas 是 `role="img"`，不能代替可选文字。缩放在 advanced 的 select 里，不用滚轮改 scale。移动端宽度靠外层 overflow，不把 CSS 像素设成超过 4096。
-
-离开页签必须同时停掉加载任务和渲染任务。只清 React state 会留下 Worker 侧的文档。
-
-## 10. 资料
-
-- https://github.com/mozilla/pdf.js
-- https://mozilla.github.io/pdf.js/api/
-- https://github.com/mozilla/pdf.js/blob/master/examples/learning/helloworld.html
-- https://www.npmjs.com/package/pdfjs-dist
-
-## 11. 还没挂上的能力
-
-CMap、标准字体、WASM、加密口令和注释层都没有配置。两页夹具能画出来，只说明这条 `getDocument({ data })` 路径能解析自己生成的字节。
-
-`workerSrc` 指向构建期的本地 URL。浏览器是否发出了 Worker 请求、CSP 是否拦截、脚本版本是否和主线程一致，都要有一次带页面的记录。静态 `worker-version.test.mjs` 只比较仓库里的版本字符串。
-
-不要把用户文件发到教学接口。advanced 的选择器读完就留在内存里，离开页签应销毁任务。3 MiB 是读取上限，不是画布安全上限。
+官方根 README 在固定 `v6.3.289` commit `1c8020a7d4e43668ac287a3ecf9a8dbea17e4c56` 的树中只有英文根 README，无官方中文候选；原字节保存在 `official/readme.md`，哈希/完整 URL/包字段见 `official/source-evidence.json`。LICENSE 同样固定原字节。官网实际 GET HTTP200，响应无 XFO 或 CSP frame-ancestors，但没有真实嵌入结果，状态保持 unknown，保留外部直达。

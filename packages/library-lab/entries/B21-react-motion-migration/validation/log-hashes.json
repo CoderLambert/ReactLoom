@@ -1,0 +1,14 @@
+{
+  "biome.txt": "4a1b50ea98f4c931a2046b8d1bde4abddf12029ec2d047e1d9efbffdef55ab66",
+  "browser-proposal.txt": "330f98495d9b6e64cf10c14f20a8ea4d6759d2ca4a6ca7cba59c4880efd6aeab",
+  "diff-check.txt": "537ff432f2181f08d4e511f82748a60ecec75f5045c079e954327508af193e58",
+  "metadata.txt": "335725a65ca4b4a6fdd334733658f11d8785a2635927f0f9b2bb5e97cecaaf38",
+  "official-fetch.txt": "3e7c6c8ee86cb383f7f3d6fb6d25079f3ab28399e16065c8f381352af35b7179",
+  "policy.txt": "40e7082000d418b536303b8d080644cd82186f861735120766d80f63d294103d",
+  "proposal-format-fixed.txt": "83490bbc6a4a578cd402c88fe9319f1cf32f059841a1e08011772e5f0a638238",
+  "proposal-format.txt": "0fee707f4d31c9f1a78dfca18c5b7eb059970bbe3796efaa74e1cb10e1eb1faf",
+  "proposal-typecheck-fixed.txt": "c72002c0e31a5f528a26d8a6c52f388f07193ef74e05ef902bbdecaa547557ee",
+  "proposal-typecheck.txt": "2aa5ad41c8d0cc712e873ae377f56635cf47d7b6630cfdd3ff42d35be12d58ae",
+  "sdk.txt": "bbf71d50fcd703ec442677e5e9568a33bb9710e247df5d116c3cd18d47f4193c",
+  "typecheck.txt": "8ea2ede980ad947171f6e2cb3ad0c8a8161a00ced23e7ef7975a58f9b0ee6db4"
+}

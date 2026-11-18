@@ -1,0 +1,51 @@
+{
+  "checkedAt": "2026-11-17T16:26:01.248733+00:00",
+  "repository": "MikeMcl/decimal.js",
+  "tag": "v10.6.0",
+  "commit": "1a6e845004b29a3b7dcef78fe92b8d786634f4e2",
+  "rootPaths": [
+    ".npmignore",
+    "CHANGELOG.md",
+    "LICENCE.md",
+    "README.md",
+    "decimal.d.ts",
+    "decimal.global.d.ts",
+    "decimal.js",
+    "decimal.mjs",
+    "doc",
+    "package.json",
+    "test"
+  ],
+  "readmeSelection": "Root README.md is official English; no Chinese README in pinned root tree.",
+  "homepage": {
+    "requestedUrl": "https://mikemcl.github.io/decimal.js/",
+    "finalUrl": "https://mikemcl.github.io/decimal.js/",
+    "status": 200,
+    "headers": {
+      "Connection": "close",
+      "Content-Length": "138791",
+      "Server": "GitHub.com",
+      "Content-Type": "text/html; charset=utf-8",
+      "Last-Modified": "Thu, 23 Jan 2025 21:14:49 GMT",
+      "Access-Control-Allow-Origin": "*",
+      "ETag": "\"6792b149-21e27\"",
+      "expires": "Tue, 17 Nov 2026 16:36:00 GMT",
+      "Cache-Control": "max-age=600",
+      "x-proxy-cache": "MISS",
+      "X-GitHub-Request-Id": "3A52:1DBF06:1AE8F:1DEB4:6AFC8017",
+      "x-github-edge-region": "westus3",
+      "Accept-Ranges": "bytes",
+      "Age": "0",
+      "Date": "Tue, 17 Nov 2026 16:26:00 GMT",
+      "Via": "1.1 varnish",
+      "X-Served-By": "cache-pao-kpao1770034-PAO",
+      "X-Cache": "MISS",
+      "X-Cache-Hits": "0",
+      "X-Timer": "S1794932760.160422,VS0,VE91",
+      "Vary": "Accept-Encoding",
+      "X-Fastly-Request-ID": "98b26daf24cf5a01438e36a8aa41952ca08f6910"
+    },
+    "bodySha256": "5dfb7727d2ce40c90a8086d42316ddabbce8074c6bcc3279c3805cccbaf5e174"
+  },
+  "apiAudit": "Installed decimal.js@10.6.0 decimal.mjs and decimal.d.ts; clone, precision, rounding, toDecimalPlaces, toFixed."
+}

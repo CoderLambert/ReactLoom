@@ -1,0 +1,18 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=pnpm exec playwright test --config=.local-evidence/quality-playwright.config.ts e2e/quality-remediation-base-ui.spec.ts e2e/quality-remediation-radix-primitives.spec.ts e2e/quality-remediation-react-aria.spec.ts --grep @B10 lock|@B11|@B12 category
+
+Running 5 tests using 2 workers
+
+(node:1580928) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1580929) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 e2e/quality-remediation-radix-primitives.spec.ts:29:1 › @B11 actual asChild Trigger, native keyboard typeahead, local action and close focus (2.0s)
+  ✓  1 e2e/quality-remediation-base-ui.spec.ts:98:1 › @B10 lock removes stale authority, disables the actual input and leaves a complete eligible subset (2.4s)
+  ✓  3 e2e/quality-remediation-radix-primitives.spec.ts:63:1 › @B11 controlled checkbox and radio update actual row order while preserving the real menu (2.0s)
+  ✓  5 e2e/quality-remediation-react-aria.spec.ts:64:1 › @B12 category filtering exposes disabled options, skips them on keyboard and has a real empty list (1.9s)
+  ✓  4 e2e/quality-remediation-radix-primitives.spec.ts:95:1 › @B11 real nested portals, disabled skip, filtered deletion fallback and SPA teardown (4.5s)
+
+  5 passed (7.4s)
+
+exitCode=0

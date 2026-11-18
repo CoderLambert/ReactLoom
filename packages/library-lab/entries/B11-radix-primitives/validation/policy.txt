@@ -1,0 +1,17 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node --test entries/B11-radix-primitives/tests/feed-policy.test.mts
+exit: 0
+✔ latest and popular sort are applied to actual feed rows (0.829703ms)
+✔ pinned rows precede sort without mutating caller collection (0.125607ms)
+✔ submenus filter the actual visible feed list (0.099582ms)
+✔ delete respects authorization and preserves the source array (0.160511ms)
+✔ selection remains visible and falls back using the filtered, ordered collection (0.110052ms)
+✔ deleting filtered rows never chooses a hidden record, and clearing scope restores it (0.081482ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 71.59342

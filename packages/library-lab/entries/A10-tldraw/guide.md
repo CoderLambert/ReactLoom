@@ -1,189 +1,88 @@
-# A10 tldraw 5.5.2：Editor、文档快照和许可证边界
+# tldraw：编辑画布，再保存和恢复文档
 
-tldraw 是可编程的无限画布 SDK：形状、相机、撤销和 Store。它不是 MIT 组件。生产部署需要符合其许可证的 key。演示可以在本机 localhost 使用开发许可；不要伪造 key、不要去掉水印、不要用脚本改写「是否生产环境」的判断。
+一张 RSS 处理白板需要同时保留形状的身份、文字和位置。截图只能保留外观，直接序列化 Editor 则会混入运行时对象。这里用 `tldraw@5.5.2` 的真实工具栏与 Editor 创建形状，再用 SDK 文档快照完成“保存 → 修改 → 恢复”。四个流程节点是可编辑的白板内容，没有接入 RSS 抓取、模型服务或流程执行引擎。
 
-Library Lab 钉 `tldraw@5.5.2`。包名是 `tldraw`，不是旧的 `@tldraw/tldraw` 默认入口。Excalidraw 更适合手绘草图且嵌入包为 MIT；React Flow 适合端口约束；G6 适合关系布局；Mermaid 适合可 diff 文本。不要因为 UI 完整就拿 tldraw 画几千条关系边。
+本条目保留历史研究来源，当前实现为重新适配的 Library Lab 示例（`contentState: recreated`），不继承历史验收状态。自由画布适合注释、草图和业务形状；需要端口约束的流程编排可对照 A06 React Flow。
 
-## Lab 当前示例
+## 先运行三个独立实验
 
-`examples/demo.tsx` 导出 `examples/example.tsx`。体积检查在 `examples/snapshot-policy.ts`。样式导入 `tldraw/tldraw.css` 和本地 `examples/styles.css`。
+### 1. 从指针输入到真实形状
 
-已挂载：
+打开“画布嵌入与绘制工具”。初始当前页形状为 0。选择 SDK 工具栏的画笔，在画布中按住、移动、松开；数量增加，展开“查看当前页与保存时的形状身份”能看到 `shape:` ID。选择工具可移动形状，清空按钮只删除当前页内容。
 
-- 只有 localhost、127.0.0.1、::1，或存在 `VITE_TLDRAW_LICENSE_KEY` 时才渲染 `<Tldraw>`。其它主机显示说明，不挂画布。`licenseKey` 原样传入，没有占位假 key。
-- `autoFocus={false}`。**没有** `persistenceKey`，因此不会把文档写进跨条目、跨标签的 IndexedDB。
-- `onMount` 拿到 `Editor`。非 basic 会在挂载时 `createFlow`：四个 `geo` 矩形（RSS 获取、正文清洗、分类摘要、人工审核），文字用 `toRichText`，id 用 `createShapeId()`。若宿主切换 `level` 却不重挂载，`onMount` 不会再次执行，骨架只出现在首次挂载；按钮「追加4个流程节点」仍可调用同一函数。
-- 程序化新增上限 `MAX_PROGRAMMATIC_SHAPES = 80`。手绘工具不受这个按钮限制。`editor.run` 把一批 `createShape` 收成一个事务。
-- `store.listen` 的 scope 是 `document`。只有形状数量变化才 `setCount`，拖动不推动 React 渲染。cleanup 退订。
-- 只读调用 `updateInstanceState({ isReadonly })`，并在点击前读 `getIsReadonly()`。这是实例状态，不是服务端 ACL。
-- advanced 再批量最多 36 个，且不超过剩余容量，然后 `zoomToFit`。
-- 「清空当前形状」只 `deleteShapes` 当前页，不清浏览器或其它 Lab 缓存。
-- 下载使用 `getSnapshot(editor.store)` 的 **document** 部分，不含相机和选区。`serializeSnapshot` 拒绝超过 3 MB 的 UTF-8 JSON。Blob URL 约 1.5 秒后 revoke，卸载时清剩余 URL。
+画布是 `<Tldraw autoFocus={false}>`，不是图片或自绘占位。官方 CSS 和有明确高度的父容器共同决定可用区域。没有 `persistenceKey`，刷新、重置示例或停止后重进会回到新实例。`autoFocus={false}` 防止挂载时自动抢焦点，不等于关闭 SDK 的键盘工具。
 
-没有挂上：`editor.toImage`、`loadSnapshot`、`@tldraw/sync`、HTTP 409、`persistenceKey`、自定义 ShapeUtil、`screenToPage` 演示。研究稿的图片导出仍是生产路径：PNG 按形状边界而不是当前视口，空选择不要假设能出图，跨域资源和字体会失败，URL 必须释放。[image export](https://tldraw.dev/sdk-features/image-export)。
+### 2. 保存的是独立 document 副本
 
-## 数据流
+打开“RSS流程节点：保存、修改与恢复”。初始 4 个原生 `geo` 矩形，文字依次为 RSS 获取、正文清洗、分类摘要、人工审核。
 
-```text
-指针 / 键盘 / 富文本
-  -> Editor.run / createShape / updateShape
-  -> Store（page、shape、binding、asset）
-       document：可快照、可同步
-       session：相机和选区，按标签页
-  -> store.listen({ scope: 'document' })
-业务服务拥有文档 id、revision 和权限
-```
-
-`Editor` 是命令入口。形状的 `x/y` 是页面坐标。`clientX` 不能直接写入。自定义落点用 `screenToPage` / `pageToScreen`，并处理缩放和平移。v5.5 的 `setCamera` 对非有限数会抛错，导入的相机值先做 `Number.isFinite`。[Editor](https://tldraw.dev/sdk-features/editor) [v5.5](https://tldraw.dev/releases/v5.5.0)。
-
-`store.listen` 不是 DOM click 日志。保存队列用 `{ scope: 'document', source: 'user' }`，避免相机变化和远端补丁被当成用户编辑。Lab 只按数量刷新，连 source 都没筛选到 `'user'`，因为它不做自动保存。
-
-## 三层
-
-### 01 空白画布
-
-工具栏由 SDK 提供。父容器必须有高度，组件自身是 100% 宽高。高度为 0 就是空白。没有本地持久化，刷新即失。
-
-### 02 四个流程节点
-
-`createShape` 的 `type: 'geo'`、`props.geo: 'rectangle'`、固定宽高和颜色。再次点击追加，直到程序化总数将超过 80。`zoomToFit` 把形状带进视口。列表式说明在画布下方用文字写出四步，供读屏使用。
-
-### 03 只读和批量
-
-只读后创建和清空按钮禁用，下载和缩放仍可用。批量按钮受 80 上限。状态文案写明没有做性能基准。3 MB 快照限制在下载前抛错，不会先造一个巨大的 Object URL。
-
-## 反例
-
-```tsx
-// 错：render 里创建，StrictMode 会复制形状
-function Bad() {
-  const editor = useEditor();
-  editor.createShape({ type: 'geo', x: 0, y: 0 });
-  return null;
-}
-
-// 对：按钮或 onMount 里，并用 editor.run 包批量写入
-editor.run(() => {
-  editor.createShape({ id: createShapeId(), type: 'geo', x: 60, y: 50, props: { geo: 'rectangle', w: 195, h: 96, richText: toRichText('RSS 获取') } });
-});
-```
-
-| 错误 | 正确 |
-|---|---|
-| 父容器高度 auto/0 | 稳定高度。Lab 用画布容器类 |
-| `useState` 镜像全部形状 | Store 是文档事实；React 只留数量、只读和状态句 |
-| `JSON.stringify(editor)` 或共用一个 `persistenceKey` | `getSnapshot` 只取 document；不同文档不同 key。Lab 干脆不用 key |
-| 409 时用本地最后一次覆盖 | revision / If-Match，保留两份。Abort 不能撤销已提交的 PUT |
-| 把 PNG 当源数据 | JSON 快照另存；限制 pixelRatio。Lab 只下载 JSON |
-| 不 revoke Object URL | 定时 revoke，卸载再扫一遍。Lab 已做 |
-| 外部 JSON 不校验就 `loadSnapshot` | 大小、来源和 schema。失败回滚。Lab 只限制导出字节 |
-| 前端只读就当已授权 | 每个写接口按身份校验 |
-| 伪造 license key 或摘掉水印 | 本机预览或合法 `VITE_TLDRAW_LICENSE_KEY` |
-| 每个 pointermove `setState` | listen 里比较派生值。Lab 只比较数量 |
-| 多页导出却只拿当前页 id | `getCurrentPageShapeIds` 不等于全部页 |
-
-## 生命周期与性能
-
-`onMount` 的返回函数退订。不要在 render 里调 `editor.*`，不要保留已卸载的 Editor。切换文档时用 `key` 重建，并为每个文档准备存储策略。Lab 的单实例没有 boardId。
-
-大量形状用 `editor.run` 一次写入，不要为每个形状挂一个 React 订阅。导出前限制倍率。tldraw 的渲染路径是 DOM、SVG 和 2D，不是 Three 场景；图片解码仍可能吃光内存。没有在本条目测过帧时间。
-
-导入阈值不能只有一个数字。生产按记录数、图片字节和 URL 协议分别限制，并在服务器重做。embed 会加载外网 iframe，内网要收紧允许列表。AI 生成形状只是数据操作，不能因此获得跨租户写权限。
-
-## 无障碍与输入法
-
-画布不能代替列表。Tab、Esc、焦点离开后不抢键，要在浏览器里看。中文拼音的 composition 与富文本撤销需要真机。官方支持不等于本 demo 已测。`autoFocus={false}` 避免进页面就抢走焦点。弹窗里还要处理焦点圈和卸载。`prefers-reduced-motion` 下不要加强制相机动画；Lab 的 `zoomToFit` 没有读取该媒体查询。
-
-## 组合
-
-**tldraw + Mermaid + Zustand。** Store 管手绘，Mermaid 管可 diff 文本，Zustand 只管面板开关和文档 id，不复制形状数组。`@tldraw/mermaid` 要单独核对版本。自由图形不能无损变回 DSL，更不能直接当可执行流程。
-
-**tldraw + TanStack Query + Dexie。** Query 管目录和权限，Dexie 管离线队列，Store 管画布，服务端 CAS 管冲突。不要让 `persistenceKey` 和 Dexie 同时成为权威。多人实时再评估 `@tldraw/sync`，并在服务端做每文档鉴权。Lab 的内存快照不是 CRDT。
-
-## 生产清单
-
-1. 非本机必须有合法 key，否则不挂载。
-2. CSS 和容器高度齐全，`autoFocus` 关闭。
-3. 演示不设 `persistenceKey`；产品若开启，按文档隔离。
-4. 创建形状只在事件或 onMount，批量用 `editor.run`。
-5. listen 要退订，且不要在拖动时重渲染宿主。
-6. 快照只含 document，并有字节上限。
-7. 只读不等于授权。
-8. Blob URL 释放。
-9. 相机数值有限。
-10. 不把水印和许可检查当成可选项。
-
-## 升级与练习
-
-从 `@tldraw/tldraw` 迁到 `tldraw`，删掉「这是 MIT」的归类，加上 key 缺失时的拒绝界面。用 `loadSnapshot` 读一份旧导出，记录 rich text 字段差异，而不是 `as any` 绕过校验。
-
-练习：按 `userId/documentId` 生成 persistenceKey，清空当前 key 时不影响其它文档。侧栏列出 id 和标签，点击后移动相机，卸载退订。两个标签对同一 revision 保存，后者 409，并提供本地下载。这些都还没挂在 Lab 示例里。
-
-## API 速查
-
-| API | 用途 | Lab |
-|---|---|---|
-| `<Tldraw licenseKey onMount>` | 挂载并取得 Editor | 有 |
-| `createShape` / `deleteShapes` | 页面坐标 | 有，受 80 上限的是按钮 |
-| `Editor.run` | 一次撤销步 | 有 |
-| `store.listen` | 文档变化 | 有，只看数量 |
-| `getSnapshot` | document / session | 只下载 document |
-| `updateInstanceState({isReadonly})` | 客户端锁 | 有 |
-| `zoomToFit` | 视口 | 有 |
-| `toImage` | PNG/SVG | 无 |
-| `persistenceKey` | IndexedDB | 故意不加 |
-| `useEditor` | 子树内 | 外部按钮用 onMount 注入的实例 |
-
-空白：CSS、高度、是否被许可门挡住。刷新丢图：没有 persistenceKey，这是预期。导入报错：schema 与 5.5.2 不符。协作丢写：先分清本地 key、CAS 和 `@tldraw/sync`，三者保证不同。
-
-## 官方链接
-
-- [安装](https://tldraw.dev/installation)
-- [Editor](https://tldraw.dev/sdk-features/editor)
-- [只读](https://tldraw.dev/sdk-features/readonly)
-- [License key](https://tldraw.dev/sdk-features/license-key)
-- [持久化](https://tldraw.dev/sdk-features/persistence)
-- [导出图片](https://tldraw.dev/sdk-features/image-export)
-- [v5.5.0](https://tldraw.dev/releases/v5.5.0)
-- [npm tldraw](https://www.npmjs.com/package/tldraw)
-
-## 快照、许可和监听范围
-
-`getSnapshot(editor.store)` 同时能取出 document 和 session。下载对象只放 `document`，并包一层 `{ kind, version, source }`。相机、选区留在会话里，换标签不应覆盖别人的视口。`serializeSnapshot` 用 `TextEncoder` 量 UTF-8 字节，超过 3 MB 就抛错，此时还没有 `createObjectURL`。
+1. 点“保存文档到内存”：显示保存时的数量、UTF-8 字节数和形状 ID。
+2. 点“追加4个流程节点”：当前页变为 8，保存时仍为 4。也可拖动旧节点、修改文字或清空当前形状。
+3. 点“恢复已保存文档”：保存后的新增节点消失，旧节点的 ID、文字、位置来自保存时的文档；清空后也能恢复。恢复不会生成另一组随机 ID。
+4. 点“下载文档 JSON”：下载的是**此刻的当前文档**，并非专门下载那份内存副本。文件包裹 `{ kind, version, source, document }`，没有保存时的 session。
 
 ```ts
-const snapshot = getSnapshot(editor.store);
-downloadJson({
-  kind: 'tldraw-demo-document',
-  version: 1,
-  document: snapshot.document,
-}, 'rss-board.tldraw.json', urls, timers);
+const document = getSnapshot(editor.store).document
+serializeSnapshot(document) // 先检查 JSON 与 3 MB UTF-8 上限
+const saved = structuredClone(document)
+// 用户继续编辑……
+loadSnapshot(editor.store, { document: structuredClone(saved) })
 ```
 
-`store.listen` 的回调在文档每次变化时运行，包括拖动产生的中间记录。Lab 用数量比较挡住 `setCount`。若改成自动保存，还要 `source: 'user'`，否则远端补丁和程序化 `createShape` 会把保存队列打满。退订函数来自 `onMount` 的返回值，不要再挂一个没有 cleanup 的 `useEffect` 去听同一个 store。
+保存失败保留上次副本；恢复失败保留副本并显示错误。本例只恢复当前组件自己捕获的同版本对象，没有外部 JSON 上传路径。迁移成外部导入时需要另做来源、资源 URL、大小和 schema 校验及失败恢复，不能把本例按钮当通用导入器。
 
-许可门：`canMount` 为假时渲染说明，不渲染 `<Tldraw>`。`licenseKey` 只从 `import.meta.env.VITE_TLDRAW_LICENSE_KEY` 读取。localhost、127.0.0.1 和 `::1` 允许开发预览。不要在源码里写试用 key，也不要检测 `hostname` 之后改写成生产主机。水印是许可的一部分。
+### 3. 只读约束与实例结束
 
-`editor.run` 把四个流程节点收成一步撤销。超过 80 个形状时 `createFlow` 直接返回，不部分创建。批量按钮先算剩余容量，再循环 `createShape`，最后 `zoomToFit`。手绘工具不读这个上限，文案必须写明，否则用户会以为画布坏了。
+打开“只读、有限批量与实例清理”。初始 4 个节点；“有界批量创建形状”每次最多增加 36 个，当前页不足容量时只补到 80。这个**应用按钮上限**不限制 SDK 原生手绘，也不是性能基准。
 
-图片导出仍用 `editor.toImage`，格式和 `pixelRatio` 单独限制，空 id 列表要提前返回。Lab 没有这个按钮。PNG 不能代替上面的 JSON。
+先保存，再点“切换只读”。创建、批量、清空和恢复按钮禁用；保存、下载和缩放仍可用。SDK 的 `updateInstanceState({ isReadonly: true })` 同时限制画布编辑，退出只读后恢复。只读是客户端实例状态；接入远端写接口仍要由服务端核验权限。
 
-`toRichText` 是 5.x 的文本载荷，不要再把纯字符串塞进已删除的 `props.text` 字段。`createShapeId()` 每次新建，避免重置时撞上还在 store 里的 id。只读状态下 `createFlow` 和批量按钮在入口就返回；下载快照仍然允许，因为读不是写。服务端若把「前端只读」当成权限，任何人仍可直接调用写接口。
+点宿主“停止并卸载”或离开 Demo 页签，再运行：内存副本消失，实例重建，业务骨架重新为 4。应用退订自己的 Store listener、清除自己的下载计时器并撤销 Blob URL；Editor、画布和 SDK 内部监听由 Tldraw 生命周期释放，不遍历清理全站存储或他人的监听。
 
-刷新后图形消失是预期：没有 `persistenceKey`。产品要保留草稿时，按 `文档 id` 分 key，或只把 document 快照交给自己的存储，不要两套同时当权威。IndexedDB 的容量和清理策略要写进同一份设计，而不是等用户报「换了浏览器就没了」再补。
+## 数据和职责怎样分开
 
-`zoomToFit` 会移动相机。减少动态偏好下，产品应提供「不动画」的等价操作，或在调用前查询媒体条件。Lab 的按钮没有这一查询。批量创建用 `editor.run` 包住循环，撤销一次即可去掉整批，而不是一次撤销一个矩形。
+| 对象 | 作用 | 本例行为 |
+| --- | --- | --- |
+| `Editor` | 创建、删除、缩放和实例命令 | `onMount` 注入；过期引用禁止再调用 |
+| `Store` document | 页面、形状、绑定、资源记录等文档内容 | 完整保存和恢复，包含所有页面 |
+| session | 当前页、相机、选择等会话状态 | 不存入内存文档或下载文件 |
+| React 状态 | 当前页 ID 派生值、按钮状态和保存副本 | 不镜像每个形状的位置或完整运行时 |
+| SDK / 应用许可门 | SDK 校验 key；应用避免未配置的远端挂载 | 两层职责不能互相替代 |
 
-80 这个上限只约束程序化按钮。用户用工具栏画第 81 个形状时应当成功，状态文案不能把它说成画布已满。下载前的 3 MB 检查看的是序列化后的 UTF-8，不是形状个数。很多小几何和一个大图片资源，字节数会差一个数量级。Lab 的导出不含图片资源，因为没有 `addImage` 路径。
+`getSnapshot` 返回 `{ document, session }`。仅传 document 给 `loadSnapshot` 时，5.5.2 会单独协调当前 session；没有加载保存时的相机或选择，也不保证恢复后仍能选择已经不存在的记录。文档恢复不是“撤销上一步”。`editor.run` 批处理创建命令，本例没有显式划分历史停止点，不承诺每次按钮恰好一个独立撤销步。
 
-形状颜色使用 SDK 的命名色，例如 `blue`、`green`，不要写任意 CSS 变量进 `props.color` 除非该版本的类型允许。`geo: 'rectangle'` 配合 `w` 和 `h`。页面坐标从左上角起算，和屏幕 `clientX` 差一个相机变换。自定义落点仍应调用 `screenToPage`。
+Store listener 使用 `scope: 'all'`，因为 SDK 页签切换属于会话变化，也需要刷新“当前页”的观察。回调只比较排序后的形状 ID，身份集合不变的拖动、文字和相机操作不会触发宿主 React 更新；观察输出没有复制完整形状数组。画布中的实际内容仍由 SDK Store 渲染。
 
-监听回调里比较的是形状数量。若以后显示侧栏列表，不要在 listen 里 `setState` 整份形状数组。派生列表可以节流，或只在文档 scope 且 source 为 user 时标记脏，再由按钮刷新。卸载时退订，否则已卸载组件仍会 setState。
+文档包含资源记录及其 URL，原生工具也可能加入图片。JSON **不是保证离线可用的媒体包**，远端资源、字体、内联资源的体积及访问权限需要单独处理。3 MB 检查只控制本例序列化输出，不限制绘制成本、图片解码内存或服务端存储。
 
-许可 key 只从环境变量读取。
-本机回环地址可以挂载开发预览。
-其它主机没有 key 时不创建 Editor。
+## 迁移必要文件
 
-## 证据
+复制 `examples/example.tsx`、`snapshot-policy.ts`、`styles.css`，按宿主需要接入 `demo.tsx` 导出。安装匹配的 `tldraw@5.5.2` 和 React；保留 `tldraw/tldraw.css` 导入。这里使用 `createShapeId`、`toRichText` 和原生 `geo` 形状，不使用旧的 `@tldraw/tldraw` 默认入口或已过时的 `props.text` 写法。
 
-sdk、build、browser 在 `docs/library-lab/evidence/runs/` 有本条目收据之前为 **NOT_RUN**。`serializeSnapshot` 只证明 JSON 字节上限。Actions run `41779873259` 是仓库级 install、typecheck、build、52 个 SDK 文件（153 个测试）和 45 个 Playwright，不是 A10 的 PASS，不要写入 `verification.json`。研究稿的 HTTP 契约测试也不是本仓库的 SDK 验收。
+业务初始化放在 `onMount`，批量形状调用放进 `editor.run`；组件内的 WeakSet 防止同一个 Editor 回调重复时再种一遍骨架。按文档重建实例时，存储和文档 ID 策略由产品定义。Lab 没有 IndexedDB、协作同步或服务端保存；内存副本不跨刷新，也不是 CRDT。
+
+`onMount` 返回函数只释放本例 listener 和实例引用。按钮检查当前 active Editor，避免 SDK 因许可或宿主卸载后继续操作旧实例。下载先通过 `serializeSnapshot`，再创建 Object URL；约 1.5 秒后撤销，提前卸载则取消剩余定时器并立即撤销。
+
+| 容易出错的做法 | 本例对应做法 |
+| --- | --- |
+| render 阶段调用 `createShape` | 只在挂载和事件中写入 |
+| `JSON.stringify(editor)` | `getSnapshot(store).document` |
+| 保存当前对象引用后继续编辑 | `structuredClone` 独立保存与恢复输入 |
+| 把前端只读当服务器授权 | SDK 实例约束与服务器鉴权分别实施 |
+| 共用持久化 key 或清全站存储 | Lab 不设 key，仅释放当前实例自有资源 |
+
+## 许可前提必须先成立
+
+5.5.2 使用自定义 tldraw License，不是 MIT。固定版本许可证默认覆盖内部开发、测试、预发等 Development Environment，排除供终端用户正常使用的生产部署；正式用途需要满足适用的试用、商业或其他官方许可条件。[固定版本原文](https://github.com/tldraw/tldraw/blob/be4d5b30cbf896c92436d634e59843a920705cef/LICENSE.md)、[官方许可说明](https://tldraw.dev/community/license)、[License Key](https://tldraw.dev/sdk-features/license-key)。
+
+本机 `localhost`、`127.0.0.1`、IPv6 回环可进入正常开发预览；这只是应用准入条件，不证明生产获准。其它主机没有配置 key 时只显示提示。`VITE_TLDRAW_LICENSE_KEY` 是可选的宿主配置输入，原样传给 SDK；“存在字符串”不等于 key 有效。这里没有读取或借用用户凭据、填假 key、改运行环境、移除水印或修改 SDK 许可判定。
+
+真实浏览器必须观察 SDK 是否持续可用；如果 SDK 显示许可错误或关闭画布，应记录具体错误与合法解除条件，不能忽略错误宣布通过。生产 key、分发范围与授权审批由部署方处理。
+
+## 官方材料与验收边界
+
+官方 README 保存为 `official/readme.md` 原始字节，来自 `tldraw/tldraw` 的 `v5.5.2` 对应提交 `be4d5b30cbf896c92436d634e59843a920705cef`、`packages/tldraw/README.md`，英文、3729 字节，SHA-256 为 `6689bd272a4c368415b8ba88fcbf47b5dfab09f9e88f5a3fed98bacb32478c84`。固定完整树共列出 271 个 README 候选，没有上游中文 README；选择目标包而非贡献者仓库首页。同步时间与版本记录在 `official/source-audit.json` 和 `library.json`；许可证另存原文供核对。
+
+官网完整 GET 响应头在 `official/homepage-response.json`：200，XFO/CSP 字段均为 null；尚无从 Lab origin 的真实 iframe 验证，因此预览状态为 unknown，保留[官网直达](https://tldraw.dev)。没有限制头也不能据此推定 allowed。
+
+本地两项真实 SDK 检查覆盖 Store 文档恢复与 document/session 分离；三项纯策略覆盖序列化失败及 UTF-8 上限，均不证明工具栏、焦点、许可或卸载。实际 Chromium 覆盖见 `local-validation.md`；中文输入法、屏幕阅读器和生产授权未测。正式 `verification.json` 不借用历史仓库级收据，仍为 NOT_RUN。实际命令、退出码和六项结论见 `local-validation.md`。

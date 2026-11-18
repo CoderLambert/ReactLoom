@@ -1,174 +1,35 @@
-# lodash-es 4.18.1｜先到先留的去重、分组排序和可取消防抖
+# lodash-es：集合语义与防抖生命周期
 
-Lab 只锁定 `lodash-es@4.18.1`（MIT）。现代 Vite / React 工程用具名导入。`lodash` 的 CommonJS 构建是同一 API 家族的另一种发行，本条目没有同时安装它，也不要为了对照再打进一份。
+需要复用 Lodash 的去重、分组、多键排序和防抖语义时，ESM React 工程可以选择 `lodash-es@4.18.1`（MIT）。只有简单 map/filter 时原生数组已经足够；新项目可比较 D01 es-toolkit 的类型与函数覆盖。ESM 导入是否减少产物应以你的构建分析为准。本例只使用 lodash-es，没有同时引入 lodash CommonJS。
 
-没有匹配收据时 sdk / build / browser 保持 NOT_RUN。Actions 41779873259 是仓库级结果，不是本条目 PASS。
+## 实验一：处理顺序改变业务结果
 
-## Lab 当前示例
+五条本地 Feed 含两个 ai：前者 81 分、后者 99 分。默认 `uniqBy(rows, 'id')` 留下第一条 81；勾选「先按分数排序再去重」，先 `orderBy` 降序，留下 99。去重后的分组用 `groupBy`，每组按 score 降序、id 升序解决同分，`chunk(unique, 3)` 得到长度 3、1 的批次。
 
-[`examples/demo.tsx`](examples/demo.tsx) 重导出 [`examples/example.tsx`](examples/example.tsx)。数据是七条本地 `Feed`，没有 HTTP。
+操作复选框，对照输出 unique、groups、batches。它们都是真实 SDK 返回值。fixture 不是后端返回，分数也不是实时数据。去重后才排序不能找回已丢弃的高分记录。`chunk` 只划分数组，不会限制异步并发；需要并发上限时考虑 D03。
 
-`buildDigest` 先 `uniqBy(source, 'id')`，再 `groupBy` 分类，组内 `orderBy(['score','id'], ['desc','asc'])`，组按数量降序、分类名升序，最后 `chunk(unique, 3)`。`id: 'ai'` 在种子里出现两次，留下的是数组里的第一条「模型推理实践」（分数 81），后面的「旧版重复记录」（分数 17）被丢掉。这是 `uniqBy` 保留先出现元素的语义，不是“保留最高分”。
+## 实验二：防抖有资源所有权
 
-advanced 用 `debounce(..., 250)`。输入在非组合态才进入计时器；`compositionstart` 会 `cancel()`；`compositionend` 立刻写入已应用查询。卸载时 `schedule.cancel()`。「立即应用」调用 `flush()`。过滤发生在已经去重的标题上，用 `toLocaleLowerCase`，不发请求。界面写明：`cancel` 不会自动处理业务请求的 `AbortSignal`。
+切到进阶，输入 abc 并停手 400ms，外层事件数组新增一次 abc。快速连续输入共用同一个 `debounce` 实例，末尾参数覆盖前面的待执行参数。点击 flush 立刻执行待触发调用；没有待触发调用时不会新增。输入新词后立即 cancel，等待超过 400ms，事件不增加；取消不清空输入框。
 
-没有挂载的生产内容：`get` / `merge` / `cloneDeep` / `keyBy` / `template`、CJS `require('lodash')`、URL 规范化、服务端 path 白名单。D01 才做“先排序再去重以留最新”。
+组合输入开始时取消待执行调用，组合期间 onChange 只更新输入；compositionend 后以最终字符串重新开始 400ms 等待。浏览器自动化可以验证事件策略，真实中文输入法候选体验仍要人工检查。
 
-## 什么时候用
+输入新词后立即点击「卸载输入并观察」。输入组件 effect 清理调用 cancel；650ms 后，仍挂载的外层观察器显示「卸载后新增 0 次」，事件数组保留。只看到输入组件消失无法证明计时器已取消。重新挂载后输入仍可提交。观察器自身计时器也在外层卸载时清理。
 
-历史代码已经大量调用 Lodash，或需要这套稳定语义：`groupBy`、`orderBy`、`uniqBy`、`debounce` 的 `leading` / `trailing` / `maxWait`。新项目若只要少量现代工具，先和 D01、原生 `Object.groupBy` 比较产物体积，再决定是否引入。
+`flush` 不等于每次输入返回一个 Promise；`cancel` 仅取消尚未执行的调用。若回调已经发出请求，还需 AbortController 和旧结果隔离，本例没有网络调用或请求取消实现。异步失败应在业务回调捕获并显示错误，重试由业务决定；debounce 不提供请求错误恢复。
 
-不要用它做：分布式缓存（`memoize` 不懂 staleTime）、请求取消（`debounce` 只清计时器）、并发池（`throttle` 不是 p-limit）、HTML 清洗（`template` 和 `escape` 都不是 sanitizer）、金额。
+## 迁入 React 项目
 
-`lodash` 与 `lodash-es` 不是两套产品。CJS 老项目用 `lodash`；ESM 打包用 `lodash-es`。一个应用选一种，避免两份打进产物。类型包分别是 `@types/lodash` 与 `@types/lodash-es`，Lab 的 `library.json` 只钉运行时 `lodash-es`。
+在目标项目根运行 `pnpm add lodash-es@4.18.1` 和 `pnpm add -D @types/lodash-es@4.17.12`。目标需要 React、React DOM、TypeScript 与支持 ESM/TSX 的构建器；不需要 Lodash provider、CSS、环境变量、后端或额外 Vite 插件。
 
-## 模型
+复制 [examples/example.tsx](examples/example.tsx)，页面导入默认组件并传 `level="basic"` 或 `level="advanced"`；[examples/demo.tsx](examples/demo.tsx) 仅是 Lab 的重导出适配，不必迁入。集合逻辑可单独提取 buildDigest；Feed 类型和 fixture 也在同一文件。要复跑 SDK 断言，复制 [tests/sdk.test.mjs](tests/sdk.test.mjs)，在安装依赖的目标目录运行 `node --test tests/sdk.test.mjs`。
 
-### 去重、排序、分组、索引
+生产搜索可只带 SearchInput，父组件提供稳定的 onApply（useCallback），否则每次父渲染会替换 debounce 并取消旧计时器。保留 useMemo、composition ref、effect cancel。不要在 render 每次新建防抖函数，也不要对 React state 原地 merge。外层 observer 是教学验收设施，不是 SDK API。
 
-`uniqBy(rows, 'id')` 保留第一次命中。想留最新 RSS，要先把时间规范成可比较的值，再降序 `orderBy`，然后 `uniqBy`。Lab 故意不这样做，用来把“先到”展示清楚。
+## 来源与验证
 
-`orderBy(collection, iteratees, orders)` 要写明每个键的方向。`sortBy` 默认升序。ISO 时间字符串只有在同一规范下才能当排序键。
+固定 tag 4.18.1 对应提交 `454999199c880707789e941d14e5a62e0c7527fa`。官方根目录未发现中文 README，因此保留英文原文 [official/readme.md](official/readme.md)，不把本指南冒充官方译文。API 对照匹配版本安装包的 debounce.js、uniqBy.js、groupBy.js、orderBy.js、chunk.js 及 [官方仓库](https://github.com/lodash/lodash/tree/4.18.1)。
 
-`groupBy` 的每个键是数组。`keyBy` 的同键后者覆盖前者。Lab 的分类是种子里的 `'tech' | 'business' | 'news'`，不是外部任意字符串。不稳定 ID 先查重，不要靠 `keyBy` 沉默覆盖。
+官网实际响应 `X-Frame-Options: SAMEORIGIN`，与 Lab 不同源，按 blocked 展示直达入口；原始响应在 validation/homepage-headers.txt。没有凭 iframe load 事件推定允许。
 
-### `get`、`cloneDeep`、`merge`
-
-`get({count:0}, 'count', 9)` 得到 `0`。`null` 不会触发默认值。`|| default` 会吞掉 `0`、`false` 和空字符串。
-
-`cloneDeep` 复制常见嵌套结构，等于快照，也等于校验。函数和部分宿主对象要单独看。React 状态优先不可变更新或 Immer。跨 Worker 的可克隆值用 `structuredClone`。
-
-`merge(target, source)` 修改 target。数组按索引混合：`merge({list:[1,2,3]}, {list:[9]})` 得到 `[9,2,3]`。配置叠层要先决定数组是替换、追加还是按下标合并。
-
-### 防抖和节流
-
-`debounce(fn, wait, {leading, trailing, maxWait})` 在停止触发后再跑，有 `cancel` 和 `flush`。它不返回每次触发各自的 Promise，也不取消进行中的网络。
-
-`throttle` 限制触发频率，仍不是并发池。搜索取消分三层：`debounced.cancel()`、`AbortController.abort()`、代际号丢掉已经无法取消的旧回包。
-
-Lab 只实现了第一层，加上 IME：组合期间取消计时器，组合结束直接应用当前值。
-
-### 4.18 的安全边界
-
-4.17.21 不能再当安全基线。`_.unset` / `_.omit` 的原型链删除，以及 `_.template` 在不可信 `imports` 键上的注入，要看到 4.18.0 才覆盖已披露路径；4.18.1 再修模块化构建里 `template` / `fromPairs` 的 `ReferenceError`。`lodash` 与 `lodash-es` 都在影响范围内。
-
-升级后仍要白名单化用户 path：限制深度和长度，拒绝 `__proto__`、`prototype`、`constructor`。`template` 只编译开发者常量。展示不可信 HTML 用专门 sanitizer。锁文件里的 `lodash.*` 独立模块也要核对，顶层版本不够。
-
-## 三层示例
-
-### 基本
-
-页面直接渲染摘要：原始 7 条，去重后的 id 列表，以及按 3 条一批的批次数。对照种子，`ai` 只出现一次，且是第一条。
-
-### 业务
-
-分组 JSON 里每个分类有 `count` 和已排序的 `items`。组内分数降序，分数相同再按 id 升序。分类键来自种子类型，不是用户输入。
-
-### 进阶
-
-搜索框关联 `d02-query`。停手约 250ms 后「已应用」更新，「合并提交次数」增加。组合输入期间次数不该跟着拼音跳。清空会 `cancel` 并清掉查询。离开示例时 effect 清理计时器。
-
-原始研究里的 `src/02-feed.ts` URL 管道和 `src/03-search.ts` HTTP 代际没有挂载。那些规则仍要在生产里写，只是不能把当前 `<output>` 当成已经测过它们。
-
-## 反例
-
-### 反例 1：去重后再排序，口头说成留最新
-
-```ts
-const ranked = orderBy(uniqBy(articles, 'url'), ['publishedAt'], ['desc'])
-```
-
-排序只影响留下来的那一条的位置，换不回被丢掉的新稿。
-
-```ts
-const ranked = uniqBy(orderBy(normalized, ['publishedAt', 'id'], ['desc', 'asc']), 'url')
-```
-
-Lab 的 `buildDigest` 选择展示第一种语义里的“留第一条”。迁到 RSS 时改成第二种，并加测试。
-
-### 反例 2：外部字段直接 `groupBy` / `keyBy`
-
-奇异键和重复 id 会进对象。先白名单，重复 id 报错。危险键用 `Map`。
-
-### 反例 3：`merge` 当覆盖配置
-
-```ts
-merge(config, incoming)
-```
-
-target 被改，数组按索引混合。
-
-```ts
-const next = { ...config, list: incoming.list }
-```
-
-数组语义写在类型旁边。不要对 React state 原地 `merge`。
-
-### 反例 4：`get(obj, path, fallback) || fallback`
-
-`0` 会被换成 fallback。缺省用 `??`，或在确认 `null` 也算缺省时单独写。
-
-### 反例 5：只防抖、不取消请求
-
-Lab 的 250ms 计时器可以 `cancel`。一旦 `flush` 或回调里发出 fetch，还要 signal 和代际。界面上的那句提示就是这条边界。
-
-### 反例 6：用 `throttle` 限制 HTTP 并发
-
-触发变稀，飞行中的请求数照样涨。并发交给 p-limit / p-queue。
-
-### 反例 7：用户字符串进 `_.template`
-
-只编译常量模板。用户文本转义或净化，不编译。
-
-### 反例 8：`cloneDeep` 当校验或清洗
-
-它不拒绝 `javascript:` URL，也不去掉密钥。校验在拷贝之前。
-
-## 组合
-
-**Query + Zod**：Zod 校验未知 JSON，Query 持有服务端缓存和取消，lodash-es 只做展示层排序分组。不要在 Lodash 里再养一份长期缓存。
-
-**p-limit + Dexie**：去重后的 id 再用有上限的并发去拉，结果写入带版本的 IndexedDB。`keyBy` 不是数据库唯一约束。
-
-**React Hook Form**：白名单路径可以用 `get` 显示错误。用户自定义字段名不能丢进 `set`。动态行不要每个按键深拷贝整张表。
-
-## 生产核对清单
-
-1. 锁文件里的 `lodash`、`lodash-es` 和 `lodash.*` 都不低于已修复的 4.18 线；本 Lab 钉的是 `lodash-es@4.18.1`。
-2. 用户 path 有深度、长度和禁用键。
-3. 去重保留规则写在测试名里：第一条，或排序后的最新一条。
-4. IME：`compositionstart` 取消待触发调用，`compositionend` 再提交。
-5. 卸载调用 `cancel()`；有网络时再 abort，并丢掉过期回包。
-6. 搜索框有 label，结果区在应用后更新；加载和错误用可读状态，不只靠颜色。
-7. 万级列表不要在渲染路径上全量 `cloneDeep`。
-8. 产物里确认只有一份 Lodash 发行。
-
-## 升级
-
-不要为了教程留在 4.17.21。4.18.0 覆盖本轮已披露的原型链与模板问题，4.18.1 修构建回归。升级后跑真实调用：`uniqBy` 顺序、`merge` 数组、`debounce` 的 `maxWait`、`template` 仅常量。
-
-从 CJS `require('lodash')` 迁到 `lodash-es` 时，用同配置比较产物和依赖图。语义要对拍，不凭“ESM 一定更小”签收。
-
-若目标是新的严格类型工具函数，评估 D01，逐个 API 对照空值和迭代器，不要机械替换。
-
-## 验收
-
-- 重复 `ai` 只留种子中的第一条，分数 81，不是 17。
-- 组内 `orderBy` 分数降序、id 升序；`chunk` 批大小为 3。
-- 防抖 250ms 合并输入；`flush` 立即应用；`cancel` 与卸载不再触发待执行调用。
-- 组合输入期间不把未完成的拼音推进已应用查询。
-- `tests/sdk.test.mjs` 覆盖真实 `lodash-es` 的去重、分组排序、`debounce` 的 `flush` / `cancel`。未记录收据则不是 sdk PASS。
-- 浏览器里切换三层，确认 basic 的 id 列表、business 的分组和 advanced 的取消。本页没有把该点击写成浏览器收据。
-
-练习：把模拟过滤换成可取消的本地 HTTP，覆盖慢响应后到、卸载后完成、IME、429 和超时。分别断言计时器取消、abort 和代际。
-
-## 资料
-
-- https://lodash.com/docs/4.18.1
-- https://github.com/lodash/lodash
-- https://github.com/lodash/lodash/releases
-- https://www.npmjs.com/package/lodash-es
-- https://github.com/lodash/lodash/security/advisories/GHSA-f23m-r3pf-42rh
-- https://github.com/lodash/lodash/security/advisories/GHSA-r5fr-rjxr-66jc
-- https://www.npmjs.com/package/@types/lodash-es
-- https://www.npmjs.com/package/@types/lodash
+本地执行和六项状态见 [local-validation.md](local-validation.md)。正式 sdk/build/browser 收据保持 NOT_RUN，不能将本地测试或历史仓库 CI 写成正式 PASS。

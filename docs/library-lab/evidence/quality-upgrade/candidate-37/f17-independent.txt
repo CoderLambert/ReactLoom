@@ -1,0 +1,2 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab consumer=/tmp/reactloom-f17-consumer.EFItpZ
+exit=0

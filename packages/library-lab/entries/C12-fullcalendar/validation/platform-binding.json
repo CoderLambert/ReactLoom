@@ -1,0 +1,46 @@
+{
+  "recordedAt": "2026-11-10T16:47:21.601880+00:00",
+  "scope": "candidate17 shared checks plus C12 official presentation only; interactive goals NOT_RUN",
+  "formal": "NOT_RUN",
+  "baseURL": "http://127.0.0.1:4319",
+  "implicitBuild": false,
+  "browserCommand": {
+    "command": [
+      "pnpm",
+      "exec",
+      "playwright",
+      "test",
+      "--config=.local-evidence/quality-playwright.config.ts",
+      "e2e/quality-remediation-imask.spec.ts",
+      "e2e/quality-remediation-tanstack-virtual.spec.ts",
+      "e2e/c13-preview-boundary.spec.ts",
+      "e2e/quality-remediation-primitives-sources.spec.ts",
+      "--grep",
+      "@C06 actual date|@C10|@C13|@C12 original",
+      "--trace=off"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "startedAt": "2026-11-10T16:39:19.138953+00:00",
+    "finishedAt": "2026-11-10T16:39:30.816229+00:00",
+    "exitCode": 0,
+    "implicitBuild": false,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-17/browser.txt"
+  },
+  "relevantCase": "@C12 original fixed README and evidenced homepage blocked",
+  "artifacts": {
+    "docs/library-lab/evidence/quality-upgrade/candidate-17/browser.txt": "4fa72949d8d5c1ebe84c76de681f1251e4b28cd5221ab9c35028ef68285eae24",
+    "docs/library-lab/evidence/quality-upgrade/candidate-17/browser.json": "f0eab13224e382b18ca2f8b0c9c5d3c3e2769a5dbd573cefade4af46c7094a1b",
+    "docs/library-lab/evidence/quality-upgrade/candidate-17/input-stability.json": "f4ea7cad4a888e9700bd6d35d37ea4abffc74324db5fb28f74ee3d15febf7b5d",
+    "docs/library-lab/evidence/quality-upgrade/candidate-17/typecheck.txt": "cce3b55f574708c09db735f7fb78a1335de2bbf43a1f2f7a319185b3c4a1cfe1",
+    "docs/library-lab/evidence/quality-upgrade/candidate-17/build.txt": "c167179393fe5e513e6239402ba33b7691cf5ec64fe727b1749990e5c7b54d5b",
+    "docs/library-lab/evidence/quality-upgrade/candidate-17/catalog.txt": "aac8eecc30bead3a597e67a542bb8ec7ec74dcd7d3f5d7565af4589b6c90a716"
+  },
+  "productionSources": {
+    "examples/calendar-contract.ts": "691107fb09915159e4ac6202f2b61efa27eaf7a48ef60e9e179423d8af2a7d59",
+    "examples/calendar-policy.d.mts": "c08ee6a5b212393de5eb1ace42165517cdd41bb725e38a84bf336d653a80e603",
+    "examples/calendar-policy.mjs": "afec0b2fc664750ca15cf54bd340dd51a1f36f3dfafe92bc40ccc98075a314da",
+    "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+    "examples/example.tsx": "af776b7a050a284e720347915bd40d770ea43878531565174dda60e00faa8ed5",
+    "examples/styles.css": "d466b064353f371da9bd6ffb2c9b2f666388b3fd43257aa3aeca5919bf40b2bb"
+  }
+}

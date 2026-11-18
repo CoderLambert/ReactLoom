@@ -1,0 +1,5 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['node', 'entries/B16-react-resizable-panels/validation/metadata-check.mjs']
+startedAt: 2026-11-10T14:08:37.017385+00:00
+exit: 0
+B16 three goals / three sources / actual SDK4.14.1 / fixed original README27652B + hash / Chinese candidates / homepage unknown / formal NOT_RUN PASS

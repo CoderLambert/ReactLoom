@@ -1,11 +1,11 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "待真实 Dexie 4.4.7 + fake-indexeddb 6.2.6 运行"
+    "note": "已本地定向执行真实 Dexie 4.4.7 + fake-indexeddb 6.2.6；缺少绑定当前输入的 recorder 收据，正式状态仍为 NOT_RUN"
   },
   "build": {
     "status": "NOT_RUN",
-    "note": "需 PLATFORM 真实安装解析并 TS 校验"
+    "note": "需绑定当前输入的真实构建收据；定向类型检查不等于 build 验收"
   },
   "browser": {
     "status": "NOT_RUN",

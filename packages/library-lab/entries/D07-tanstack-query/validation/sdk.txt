@@ -1,0 +1,25 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: ["pnpm", "test:sdk", "--entry=D07"]
+startedAt: 2026-11-10T09:59:37.887785+00:00
+
+> @reactloom/library-lab@0.1.0 test:sdk /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+> node scripts/sdk-runner.mjs --entry=D07
+
+Real SDK suites selected: 1 file(s)
+✔ actual QueryClient: tenant identity prevents cache aliasing (2.076121ms)
+✔ actual QueryClient: cancelQueries aborts signal forwarded to queryFn (2.399498ms)
+✔ actual QueryClient uses a scoped cache patch and targeted 409 rollback (0.472371ms)
+✔ shared Demo options deduplicate a request, reuse fresh data and refetch after invalidation (1201.862894ms)
+✔ cancelling the actual fixture query ends fetching without manufacturing data (0.557552ms)
+✔ actual fixture 409 can roll back one owned row and retry with authoritative revision (483.091614ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1768.564106
+
+exitCode: 0
+finishedAt: 2026-11-10T09:59:39.882588+00:00

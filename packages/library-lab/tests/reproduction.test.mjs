@@ -7,12 +7,12 @@ const base = {
   executionKind: 'node-ci',
   level: 'basic',
   entryPoint: 'examples/basic.test.ts',
-  sourceFiles: ['examples/basic.test.ts'],
+  sourceFiles: ['examples/basic.test.ts', 'vitest.config.ts'],
 }
 test('Vitest recipes use Vitest not node', () =>
   assert.equal(
     reproductionCommand(entry, base),
-    'pnpm exec vitest run entries/F12-vitest/examples/basic.test.ts',
+    'pnpm exec vitest run --config entries/F12-vitest/vitest.config.ts examples/basic.test.ts',
   ))
 test('Node recipes distinguish executable and test files', () => {
   const e = { directory: 'F11-msw', packages: [{ name: 'msw', version: '3.0.3' }] }
@@ -38,6 +38,7 @@ test('rejects unsafe paths and unsupported modes', () => {
   for (const bad of ['../test.mjs', 'foo;rm.mjs', 'foo\\bar.mjs', '/etc/test.mjs'])
     assert.equal(reproductionCommand(entry, { ...base, entryPoint: bad, sourceFiles: [bad] }), null)
   assert.equal(reproductionCommand(entry, { ...base, sourceFiles: [] }), null)
+  assert.equal(reproductionCommand(entry, { ...base, sourceFiles: [base.entryPoint] }), null)
   assert.equal(reproductionCommand(entry, { ...base, executionKind: 'react' }), null)
   assert.equal(
     reproductionCommand({ directory: 'F12-vitest;echo BAD', packages: entry.packages }, base),
@@ -113,19 +114,24 @@ test('Knip recipes are restricted to the local sample fixture without destructiv
   )
 })
 
-test('dependency-cruiser uses the checked-in Node harness rather than trying to run a TypeScript fixture', () => {
+test('dependency-cruiser scans each fixture through the checked-in Node harness', () => {
   const entry = { directory: 'F16-dependency-cruiser', packages: [{ name: 'dependency-cruiser' }] }
   const fixtures = {
-    basic: 'examples/workspace/basic/src/main.ts',
-    business: 'examples/workspace/business/src/domain/summary.ts',
-    advanced: 'examples/workspace/advanced/src/first.ts',
+    basic: 'examples/workspace/basic/src/main.js',
+    business: 'examples/workspace/business/src/domain/summary.js',
+    advanced: 'examples/workspace/advanced/src/first.js',
   }
   for (const [level, entryPoint] of Object.entries(fixtures)) {
     const demo = {
       executionKind: 'node-ci',
       level,
       entryPoint,
-      sourceFiles: [entryPoint, 'examples/run.mjs', 'examples/workspace/config.cjs'],
+      sourceFiles: [
+        entryPoint,
+        'examples/run.mjs',
+        'examples/cli.mjs',
+        'examples/workspace/config.cjs',
+      ],
     }
     assert.equal(
       reproductionCommand(entry, demo),
@@ -143,11 +149,11 @@ test('visualizer executes standalone Vite config only when its declared package 
     executionKind: 'node-ci',
     level: 'advanced',
     entryPoint: 'examples/vite.config.ts',
-    sourceFiles: ['examples/vite.config.ts', 'examples/fixture/main.ts'],
+    sourceFiles: ['examples/vite.config.ts', 'examples/fixture/main.ts', 'examples/verify.mjs'],
   }
   assert.equal(
     reproductionCommand(entry, demo),
-    'pnpm exec vite build --config entries/F18-rollup-plugin-visualizer/examples/vite.config.ts --mode advanced',
+    'node entries/F18-rollup-plugin-visualizer/examples/verify.mjs --scenario=advanced',
   )
   assert.equal(reproductionCommand({ ...entry, packages: [{ name: 'vite' }] }, demo), null)
   assert.equal(reproductionCommand({ ...entry, directory: '../../evil' }, demo), null)

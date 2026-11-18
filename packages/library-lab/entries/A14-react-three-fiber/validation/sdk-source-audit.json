@@ -1,0 +1,103 @@
+{
+  "checkedAt": "2026-11-10T12:12:47.871Z",
+  "node": "v26.13.0",
+  "fiber": {
+    "version": "9.8.2",
+    "packageRoot": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@react-three+fiber@9.8.2_@types+react@19.3.0_expo-asset@57.0.19_expo@57.0.27_react-nati_e9e945b102acf3fa6a5aea983e56bd5d/node_modules/@react-three/fiber",
+    "packageSha256": "ad7c861bea13fa0dc8021afa4f4778c45e74554ac5c8e7e66c860b938b381f2b",
+    "peerDependencies": {
+      "expo": ">=43.0",
+      "expo-asset": ">=8.4",
+      "expo-file-system": ">=11.0",
+      "expo-gl": ">=11.0",
+      "react": ">=19 <19.4",
+      "react-dom": ">=19 <19.4",
+      "react-native": ">=0.78",
+      "three": ">=0.156"
+    }
+  },
+  "three": {
+    "version": "0.186.0",
+    "packagePath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/three@0.186.0/node_modules/three/package.json"
+  },
+  "sources": [
+    {
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@react-three+fiber@9.8.2_@types+react@19.3.0_expo-asset@57.0.19_expo@57.0.27_react-nati_e9e945b102acf3fa6a5aea983e56bd5d/node_modules/@react-three/fiber/dist/react-three-fiber.esm.js",
+      "bytes": 7067,
+      "sha256": "cc26a8452be261edbeb210365f754784fef2b2d5a8caf1f81f18ea2c305b86f2",
+      "evidence": [
+        {
+          "line": 12,
+          "text": "function CanvasImpl({"
+        },
+        {
+          "line": 71,
+          "text": "  React.useInsertionEffect(() => {"
+        },
+        {
+          "line": 118,
+          "text": "      }).catch(setError);"
+        },
+        {
+          "line": 182,
+          "text": "        children: fallback"
+        }
+      ]
+    },
+    {
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@react-three+fiber@9.8.2_@types+react@19.3.0_expo-asset@57.0.19_expo@57.0.27_react-nati_e9e945b102acf3fa6a5aea983e56bd5d/node_modules/@react-three/fiber/dist/events-e51d7528.esm.js",
+      "bytes": 715919,
+      "sha256": "b42a047098f41a5f0c4f4e0756c37429347fa67a8d68bb8ca94eafad7a03071c",
+      "evidence": [
+        {
+          "line": 1085,
+          "text": "function createRenderer(canvas, gl) {"
+        },
+        {
+          "line": 1105,
+          "text": "function disposeRenderer(gl) {"
+        },
+        {
+          "line": 1115,
+          "text": "    return Promise.resolve(disposed).catch(error => console.warn('[R3F] Error disposing renderer', error)).then(() => attempt$1(() => gl.forceContextLoss == null ? void 0 : gl.forceContextLoss()));"
+        },
+        {
+          "line": 1117,
+          "text": "  attempt$1(() => gl.forceContextLoss == null ? void 0 : gl.forceContextLoss());"
+        },
+        {
+          "line": 1121,
+          "text": "function releaseRenderer(gl, owned) {"
+        },
+        {
+          "line": 1128,
+          "text": "  attempt$1(() => gl.forceContextLoss == null ? void 0 : gl.forceContextLoss());"
+        },
+        {
+          "line": 1414,
+          "text": "function useFrame(callback, renderPriority = 0) {"
+        },
+        {
+          "line": 16754,
+          "text": "function disposeOnIdle(object) {"
+        },
+        {
+          "line": 16770,
+          "text": "function removeChild(parent, child, dispose) {"
+        },
+        {
+          "line": 16790,
+          "text": "  const shouldDispose = child.props.dispose !== null && dispose !== false;"
+        },
+        {
+          "line": 17430,
+          "text": "function unmountComponentAtNode(canvas, callback) {"
+        },
+        {
+          "line": 17587,
+          "text": "function invalidate(state, frames = 1) {"
+        }
+      ]
+    }
+  ]
+}

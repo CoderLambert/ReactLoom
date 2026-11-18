@@ -1,0 +1,16 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['node', '--test', 'entries/C13-frappe-gantt/tests/sdk.test.mjs']
+startedAt: 2026-11-10T16:12:31.981768+00:00
+exit: 0
+✔ real Gantt exports constructor but no public destroy/dispose (0.853514ms)
+✔ actual SDK mutates only the escaped descriptors copied at the application boundary (1.73106ms)
+✔ real SDK padding exposes the low-year arithmetic boundary excluded by our policy (0.534909ms)
+✔ real Day/Week/Month date recipes stay ordered and bounded at both admitted date edges (0.503182ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 54.069003

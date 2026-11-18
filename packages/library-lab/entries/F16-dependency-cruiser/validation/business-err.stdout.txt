@@ -1,0 +1,5 @@
+
+  error domain-must-not-import-ui: business/src/domain/summary.js → business/src/ui/badge.js
+
+x 1 dependency violations (1 errors, 0 warnings). 3 modules, 2 dependencies cruised.
+

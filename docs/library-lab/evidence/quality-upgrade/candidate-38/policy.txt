@@ -1,0 +1,18 @@
+✔ WAV signature accepted but MIME spoof rejected (0.732925ms)
+✔ size limits run before reading oversized media into WASM (0.63185ms)
+✔ supports known MP3/WebM/MP4 signatures, rejects mismatches (0.167506ms)
+✔ an inherited object key is not an allowed MIME type (0.311885ms)
+✔ valid PCM16 mono 16k WAV has bounded duration (0.908352ms)
+✔ the advanced half-second cap accepts its boundary and rejects the next PCM frame (4.08602ms)
+✔ malformed RIFF length, inflated chunks and truncated data fail (0.177703ms)
+✔ rejects codec, channel, sample-rate and byte-rate mismatches (0.199049ms)
+✔ rejects empty data, extra length and durations beyond two seconds (0.162812ms)
+✔ accepts valid ancillary chunks and validates padding (0.10875ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 48.647699

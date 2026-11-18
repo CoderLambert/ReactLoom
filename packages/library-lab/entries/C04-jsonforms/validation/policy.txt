@@ -1,0 +1,16 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['node', '--test', 'entries/C04-jsonforms/tests/submission-policy.test.mjs']
+startedAt: 2026-11-10T15:24:04.801167+00:00
+exit: 0
+✔ manual mode drops stale or hidden RSS URL entirely (0.777511ms)
+✔ conditional schema validates RSS URL only when feedType is rss (0.099573ms)
+✔ server policy rejects credential, fragment, malformed and non-HTTPS RSS URLs (0.65637ms)
+✔ server error uses JSON Forms additionalErrors instancePath (0.293914ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 38.000707

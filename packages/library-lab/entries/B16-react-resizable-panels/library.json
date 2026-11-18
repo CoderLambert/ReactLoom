@@ -4,14 +4,8 @@
   "slug": "react-resizable-panels",
   "name": "react-resizable-panels",
   "group": "B",
-  "summary": "可调整尺寸的面板布局",
-  "tags": [
-    "布局",
-    "拖动",
-    "键盘",
-    "尺寸约束",
-    "工作台"
-  ],
+  "summary": "真实分割条驱动的双栏/三栏约束布局、键盘轴与默认复位",
+  "tags": ["布局", "分割条", "键盘", "尺寸约束", "工作台"],
   "contentState": "recreated",
   "packages": [
     {
@@ -21,12 +15,16 @@
   ],
   "references": [
     {
-      "title": "官方 README 与 API",
-      "url": "https://github.com/bvaughn/react-resizable-panels"
+      "title": "匹配4.14.1官方README",
+      "url": "https://github.com/bvaughn/react-resizable-panels/blob/0cd376c57a19900d22f33aa8eb46f417a7437c12/README.md"
     },
     {
-      "title": "v4 迁移说明",
-      "url": "https://github.com/bvaughn/react-resizable-panels/blob/main/CHANGELOG.md"
+      "title": "官方示例与API",
+      "url": "https://react-resizable-panels.vercel.app/"
+    },
+    {
+      "title": "npm 4.14.1",
+      "url": "https://www.npmjs.com/package/react-resizable-panels/v/4.14.1"
     }
   ],
   "related": [
@@ -44,58 +42,61 @@
   "demos": [
     {
       "demoId": "basic",
-      "title": "两个分割面板",
+      "title": "双栏：拖动与键盘约束",
       "level": "basic",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
-      "sourceFiles": [
-        "examples/example.tsx",
-        "examples/demo.tsx"
-      ],
-      "capabilities": [
-        "pointer",
-        "keyboard"
-      ],
-      "description": "拖动或键盘调整两个面板，观察尺寸约束"
+      "sourceFiles": ["examples/example.tsx", "examples/panels.css", "examples/demo.tsx"],
+      "capabilities": ["pointer", "keyboard", "a11y"],
+      "description": "指针/键盘改变真实面板尺寸，核对16%–60%约束与回调来源"
     },
     {
       "demoId": "business",
-      "title": "编辑器三栏布局",
+      "title": "三栏：独立边界与稳定身份",
       "level": "business",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
-      "sourceFiles": [
-        "examples/example.tsx",
-        "examples/demo.tsx"
-      ],
-      "capabilities": [
-        "pointer",
-        "keyboard"
-      ],
-      "description": "组合资源树、编辑器和检查器的实际三栏布局"
+      "sourceFiles": ["examples/example.tsx", "examples/panels.css", "examples/demo.tsx"],
+      "capabilities": ["pointer", "keyboard", "a11y"],
+      "description": "两根Separator与F6切换，同源观察三栏身份、尺寸与DOM几何"
     },
     {
       "demoId": "advanced",
-      "title": "垂直切换、约束与重置",
+      "title": "方向切换与默认布局复位",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
-      "sourceFiles": [
-        "examples/example.tsx",
-        "examples/demo.tsx"
-      ],
-      "capabilities": [
-        "pointer",
-        "keyboard"
-      ],
-      "description": "在横向/纵向之间切换并复位布局，同时验证最小尺寸"
+      "sourceFiles": ["examples/example.tsx", "examples/panels.css", "examples/demo.tsx"],
+      "capabilities": ["pointer", "keyboard", "a11y"],
+      "description": "纵向轴使用上下键，重挂恢复默认比例并识别初始化回调"
     }
   ],
   "license": {
-    "spdx": "MIT"
+    "spdx": "MIT",
+    "assets": "原创工作台fixture与局部CSS，无外部运行资产。"
   },
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
-    "note": "此示例按v4当前 API重写，没有复用旧版PanelGroup/PanelResizeHandle示例。"
+    "note": "保留已恢复的v4工作台三目标；本轮正常排版并纠正挂载回调来源，未继承历史运行PASS。"
+  },
+  "official": {
+    "readme": {
+      "repository": "bvaughn/react-resizable-panels",
+      "commit": "0cd376c57a19900d22f33aa8eb46f417a7437c12",
+      "path": "README.md",
+      "sourceUrl": "https://github.com/bvaughn/react-resizable-panels/blob/0cd376c57a19900d22f33aa8eb46f417a7437c12/README.md",
+      "snapshotPath": "official/readme.md",
+      "language": "en",
+      "version": "4.14.1",
+      "syncedAt": "2026-11-10T14:03:29.739820+00:00",
+      "sha256": "d27812bc8cf8a5e07f0a58bcf68a8f48cc3cac4d22f917777e62662ab61c231c"
+    },
+    "homepage": {
+      "url": "https://react-resizable-panels.vercel.app/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-10T14:03:27.340046+00:00",
+      "reason": "GET200；完整响应头未见X-Frame-Options或Content-Security-Policy，未从Lab origin实际验证iframe，保持unknown。"
+    }
   }
 }

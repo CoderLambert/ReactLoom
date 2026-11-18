@@ -1,0 +1,66 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=pnpm exec playwright test --config=.local-evidence/quality-playwright.config.ts quality-remediation.spec.ts p0-risk-lifecycle.spec.ts --grep @E05|@E11|@F05
+
+Running 13 tests using 2 workers
+
+(node:708046) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:708047) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 e2e/p0-risk-lifecycle.spec.ts:94:1 › @E05 real Monaco editor creates a language worker and releases its environment lease (1.5s)
+  ✓   2 e2e/quality-remediation.spec.ts:4:1 › @E05 editing and undo operate on the real Monaco model (1.6s)
+  ✓   3 e2e/quality-remediation.spec.ts:15:1 › @E05 explicitly saved session draft survives reload and can be cleared (3.0s)
+  ✓   4 e2e/quality-remediation.spec.ts:37:1 › @E05 JSON worker reports real markers, clears them after repair and releases its lease (3.2s)
+  ✓   6 e2e/quality-remediation.spec.ts:93:1 › @E11 automatic input pauses, ends, and remounts without its old timer (2.1s)
+  ✓   7 e2e/quality-remediation.spec.ts:120:1 › @E11 business output uses GFM and blocks fixture scripts and unknown resources (2.0s)
+  ✓   8 e2e/quality-remediation.spec.ts:138:1 › @E11 leaving a playing demo clears the actual owned interval (1.8s)
+  ✘   5 e2e/quality-remediation.spec.ts:67:1 › @E11 cumulative deltas render incomplete syntax and finish with real Markdown (6.6s)
+(node:709025) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   9 e2e/quality-remediation.spec.ts:173:3 › @E05 the actual demo fits a narrow viewport (1.5s)
+  ✓  10 e2e/quality-remediation.spec.ts:173:3 › @E11 the actual demo fits a narrow viewport (1.6s)
+  ✓  11 e2e/quality-remediation.spec.ts:189:3 › @E05 official original loads with a pinned upstream exit (910ms)
+  ✓  12 e2e/quality-remediation.spec.ts:189:3 › @E11 official original loads with a pinned upstream exit (955ms)
+  ✓  13 e2e/quality-remediation.spec.ts:189:3 › @F05 official original loads with a pinned upstream exit (920ms)
+
+
+  1) e2e/quality-remediation.spec.ts:67:1 › @E11 cumulative deltas render incomplete syntax and finish with real Markdown 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByTestId('e11-rendered').locator('[data-streamdown="strong"]')
+    Expected: 0
+    Received: 1
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByTestId('e11-rendered').locator('[data-streamdown="strong"]') with timeout 5000ms
+      - waiting for getByTestId('e11-rendered').locator('[data-streamdown="strong"]')
+        14 × locator resolved to 1 element
+           - unexpected value "1"
+
+
+      79 |   const partial = await page.getByTestId('e11-markdown-source').textContent()
+      80 |   await page.getByRole('checkbox', { name: '修复未闭合语法' }).uncheck()
+    > 81 |   await expect(emphasis).toHaveCount(0)
+         |                          ^
+      82 |   await expect(page.getByTestId('e11-markdown-source')).toHaveText(partial ?? '')
+      83 |   await page.getByRole('checkbox', { name: '修复未闭合语法' }).check()
+      84 |   for (let n = 0; n < 30 && !(await step.isDisabled()); n++) await step.click()
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation.spec.ts:81:26
+
+    Error Context: test-results/quality-remediation--E11-c-9d117-d-finish-with-real-Markdown/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-remediation--E11-c-9d117-d-finish-with-real-Markdown/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-remediation--E11-c-9d117-d-finish-with-real-Markdown/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    e2e/quality-remediation.spec.ts:67:1 › @E11 cumulative deltas render incomplete syntax and finish with real Markdown 
+  12 passed (14.4s)
+
+exitCode=1

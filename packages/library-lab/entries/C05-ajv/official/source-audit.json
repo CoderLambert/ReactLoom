@@ -1,0 +1,472 @@
+{
+  "repository": "ajv-validator/ajv",
+  "commit": "0fba0b8e649909613cfce0999b149cd08f4a4987",
+  "path": "README.md",
+  "version": "8.20.0",
+  "language": "en",
+  "syncedAt": "2026-11-10T15:38:43.167216+00:00",
+  "readmeCandidates": [
+    "README.md",
+    "docs/README.md",
+    "docs/news/README.md",
+    "docs/packages/README.md",
+    "spec/_json/README.md"
+  ],
+  "treeTruncated": false,
+  "npm": {
+    "nyc": {
+      "exclude": [
+        "**/spec/**",
+        "node_modules"
+      ],
+      "reporter": [
+        "lcov",
+        "text-summary"
+      ]
+    },
+    "bugs": {
+      "url": "https://github.com/ajv-validator/ajv/issues"
+    },
+    "dist": {
+      "shasum": "304b3636add88ba7d936760dd50ece006dea95f9",
+      "tarball": "https://registry.npmjs.org/ajv/-/ajv-8.20.0.tgz",
+      "fileCount": 466,
+      "integrity": "sha512-Thbli+OlOj+iMPYFBVBfJ3OmCAnaSyNn4M1vz9T6Gka5Jt9ba/HIR56joy65tY6kx/FCF5VXNB819Y7/GUrBGA==",
+      "signatures": [
+        {
+          "sig": "MEUCIBfrVdhp5WGXcUASldcdcwqMi+toiB4jnfvInba3JZgCAiEA+gqJmfPQOJlXKjVEQlsjXbBKFxga9bRsHx5m9lSgRyM=",
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+        }
+      ],
+      "unpackedSize": 1033496
+    },
+    "main": "dist/ajv.js",
+    "name": "ajv",
+    "husky": {
+      "hooks": {
+        "pre-commit": "lint-staged && npm test"
+      }
+    },
+    "types": "dist/ajv.d.ts",
+    "author": {
+      "name": "Evgeny Poberezkin"
+    },
+    "funding": {
+      "url": "https://github.com/sponsors/epoberezkin",
+      "type": "github"
+    },
+    "gitHead": "0fba0b8e649909613cfce0999b149cd08f4a4987",
+    "license": "MIT",
+    "scripts": {
+      "test": "npm run json-tests && npm run prettier:check && npm run eslint && npm link && npm link --legacy-peer-deps ajv && npm run test-cov",
+      "build": "rm -rf dist && tsc && cp -r lib/refs dist && rm dist/refs/json-schema-2019-09/index.ts && rm dist/refs/json-schema-2020-12/index.ts && rm dist/refs/jtd-schema.ts",
+      "bundle": "rm -rf bundle && node ./scripts/bundle.js ajv ajv7 ajv7 && node ./scripts/bundle.js 2019 ajv2019 ajv2019 && node ./scripts/bundle.js 2020 ajv2020 ajv2020 && node ./scripts/bundle.js jtd ajvJTD ajvJTD",
+      "eslint": "eslint \"lib/**/*.ts\" \"spec/**/*.*s\" --ignore-pattern spec/JSON-Schema-Test-Suite",
+      "rollup": "rm -rf bundle && rollup -c",
+      "test-ci": "AJV_FULL_TEST=true npm test",
+      "docs:dev": "./scripts/prepare-site && vuepress dev docs",
+      "test-all": "npm run test-cov",
+      "test-cov": "nyc npm run test-spec",
+      "benchmark": "npm i && npm run build && npm link && cd ./benchmark && npm link --legacy-peer-deps ajv && npm i && node ./jtd",
+      "test-spec": "cross-env TS_NODE_PROJECT=spec/tsconfig.json mocha -r ts-node/register \"spec/**/*.spec.{ts,js}\" -R dot",
+      "docs:build": "./scripts/prepare-site && vuepress build docs",
+      "json-tests": "rm -rf spec/_json/*.js && node scripts/jsontests",
+      "prepublish": "npm run build",
+      "test-debug": "npm run test-spec -- --inspect-brk",
+      "test-karma": "karma start",
+      "test-browser": "rm -rf .browser && npm run bundle && scripts/prepare-tests && karma start",
+      "test-codegen": "nyc cross-env TS_NODE_PROJECT=spec/tsconfig.json mocha -r ts-node/register 'spec/codegen.spec.ts' -R spec",
+      "prettier:check": "prettier --list-different \"./**/*.{json,yaml,js,ts}\"",
+      "prettier:write": "prettier --write \"./**/*.{json,yaml,js,ts}\""
+    },
+    "_npmUser": {
+      "name": "esp",
+      "email": "e.poberezkin@me.com"
+    },
+    "homepage": "https://ajv.js.org",
+    "keywords": [
+      "JSON",
+      "schema",
+      "validator",
+      "validation",
+      "jsonschema",
+      "json-schema",
+      "json-schema-validator",
+      "json-schema-validation"
+    ],
+    "prettier": "@ajv-validator/config/prettierrc.json",
+    "collective": {
+      "url": "https://opencollective.com/ajv",
+      "type": "opencollective"
+    },
+    "repository": {
+      "url": "git+https://github.com/ajv-validator/ajv.git",
+      "type": "git"
+    },
+    "_npmVersion": "11.5.2",
+    "description": "Another JSON Schema Validator",
+    "directories": {},
+    "lint-staged": {
+      "*.{json,yaml,js,ts}": "prettier --write"
+    },
+    "maintainers": [
+      {
+        "name": "blakeembrey",
+        "email": "hello@blakeembrey.com"
+      },
+      {
+        "name": "esp",
+        "email": "e.poberezkin@me.com"
+      }
+    ],
+    "sideEffects": false,
+    "_nodeVersion": "22.18.0",
+    "dependencies": {
+      "fast-uri": "^3.0.1",
+      "fast-deep-equal": "^3.1.3",
+      "require-from-string": "^2.0.2",
+      "json-schema-traverse": "^1.0.0"
+    },
+    "_hasShrinkwrap": false,
+    "devDependencies": {
+      "nyc": "^15.1.0",
+      "re2": "^1.20.9",
+      "chai": "^4.4.1",
+      "glob": "^10.3.10",
+      "jimp": "^0.22.10",
+      "dayjs": "^1.11.10",
+      "husky": "^9.0.11",
+      "karma": "^6.4.2",
+      "mocha": "^10.3.0",
+      "tsify": "^5.0.4",
+      "eslint": "^8.57.0",
+      "rollup": "^2.79.1",
+      "uri-js": "^4.4.1",
+      "ts-node": "^10.9.2",
+      "prettier": "3.0.3",
+      "cross-env": "^7.0.3",
+      "browserify": "^17.0.0",
+      "node-fetch": "^3.3.2",
+      "typescript": "5.3.3",
+      "@types/chai": "^4.3.11",
+      "@types/node": "^20.11.30",
+      "ajv-formats": "^3.0.1",
+      "js-beautify": "^1.15.1",
+      "karma-mocha": "^2.0.1",
+      "lint-staged": "^15.2.2",
+      "@types/mocha": "^10.0.6",
+      "dayjs-plugin-utc": "^0.1.2",
+      "json-schema-test": "^2.0.0",
+      "module-from-string": "^3.3.0",
+      "@rollup/plugin-json": "^6.1.0",
+      "rollup-plugin-terser": "^7.0.2",
+      "@ajv-validator/config": "^0.5.0",
+      "karma-chrome-launcher": "^3.2.0",
+      "eslint-config-prettier": "^9.1.0",
+      "@rollup/plugin-commonjs": "^25.0.7",
+      "@rollup/plugin-typescript": "^11.1.6",
+      "@typescript-eslint/parser": "^7.3.1",
+      "@types/require-from-string": "^1.2.3",
+      "@rollup/plugin-node-resolve": "^15.2.3",
+      "@typescript-eslint/eslint-plugin": "^7.3.1"
+    },
+    "runkitExampleFilename": ".runkit_example.js",
+    "_npmOperationalInternal": {
+      "tmp": "tmp/ajv_8.20.0_1777044136383_0.3498001725632829",
+      "host": "s3://npm-registry-packages-npm-production"
+    },
+    "_id": "ajv@8.20.0",
+    "version": "8.20.0"
+  },
+  "manifest": {
+    "name": "ajv",
+    "version": "8.20.0",
+    "description": "Another JSON Schema Validator",
+    "main": "dist/ajv.js",
+    "types": "dist/ajv.d.ts",
+    "files": [
+      "lib/",
+      "dist/",
+      ".runkit_example.js"
+    ],
+    "sideEffects": false,
+    "scripts": {
+      "eslint": "eslint \"lib/**/*.ts\" \"spec/**/*.*s\" --ignore-pattern spec/JSON-Schema-Test-Suite",
+      "prettier:write": "prettier --write \"./**/*.{json,yaml,js,ts}\"",
+      "prettier:check": "prettier --list-different \"./**/*.{json,yaml,js,ts}\"",
+      "test-spec": "cross-env TS_NODE_PROJECT=spec/tsconfig.json mocha -r ts-node/register \"spec/**/*.spec.{ts,js}\" -R dot",
+      "test-codegen": "nyc cross-env TS_NODE_PROJECT=spec/tsconfig.json mocha -r ts-node/register 'spec/codegen.spec.ts' -R spec",
+      "test-debug": "npm run test-spec -- --inspect-brk",
+      "test-cov": "nyc npm run test-spec",
+      "rollup": "rm -rf bundle && rollup -c",
+      "bundle": "rm -rf bundle && node ./scripts/bundle.js ajv ajv7 ajv7 && node ./scripts/bundle.js 2019 ajv2019 ajv2019 && node ./scripts/bundle.js 2020 ajv2020 ajv2020 && node ./scripts/bundle.js jtd ajvJTD ajvJTD",
+      "build": "rm -rf dist && tsc && cp -r lib/refs dist && rm dist/refs/json-schema-2019-09/index.ts && rm dist/refs/json-schema-2020-12/index.ts && rm dist/refs/jtd-schema.ts",
+      "json-tests": "rm -rf spec/_json/*.js && node scripts/jsontests",
+      "test-karma": "karma start",
+      "test-browser": "rm -rf .browser && npm run bundle && scripts/prepare-tests && karma start",
+      "test-all": "npm run test-cov",
+      "test": "npm run json-tests && npm run prettier:check && npm run eslint && npm link && npm link --legacy-peer-deps ajv && npm run test-cov",
+      "test-ci": "AJV_FULL_TEST=true npm test",
+      "prepublish": "npm run build",
+      "benchmark": "npm i && npm run build && npm link && cd ./benchmark && npm link --legacy-peer-deps ajv && npm i && node ./jtd",
+      "docs:dev": "./scripts/prepare-site && vuepress dev docs",
+      "docs:build": "./scripts/prepare-site && vuepress build docs"
+    },
+    "nyc": {
+      "exclude": [
+        "**/spec/**",
+        "node_modules"
+      ],
+      "reporter": [
+        "lcov",
+        "text-summary"
+      ]
+    },
+    "repository": "ajv-validator/ajv",
+    "keywords": [
+      "JSON",
+      "schema",
+      "validator",
+      "validation",
+      "jsonschema",
+      "json-schema",
+      "json-schema-validator",
+      "json-schema-validation"
+    ],
+    "author": "Evgeny Poberezkin",
+    "license": "MIT",
+    "bugs": "https://github.com/ajv-validator/ajv/issues",
+    "homepage": "https://ajv.js.org",
+    "runkitExampleFilename": ".runkit_example.js",
+    "dependencies": {
+      "fast-deep-equal": "^3.1.3",
+      "fast-uri": "^3.0.1",
+      "json-schema-traverse": "^1.0.0",
+      "require-from-string": "^2.0.2"
+    },
+    "devDependencies": {
+      "@ajv-validator/config": "^0.5.0",
+      "@rollup/plugin-commonjs": "^25.0.7",
+      "@rollup/plugin-json": "^6.1.0",
+      "@rollup/plugin-node-resolve": "^15.2.3",
+      "@rollup/plugin-typescript": "^11.1.6",
+      "@types/chai": "^4.3.11",
+      "@types/mocha": "^10.0.6",
+      "@types/node": "^20.11.30",
+      "@types/require-from-string": "^1.2.3",
+      "@typescript-eslint/eslint-plugin": "^7.3.1",
+      "@typescript-eslint/parser": "^7.3.1",
+      "ajv-formats": "^3.0.1",
+      "browserify": "^17.0.0",
+      "chai": "^4.4.1",
+      "cross-env": "^7.0.3",
+      "dayjs": "^1.11.10",
+      "dayjs-plugin-utc": "^0.1.2",
+      "eslint": "^8.57.0",
+      "eslint-config-prettier": "^9.1.0",
+      "glob": "^10.3.10",
+      "husky": "^9.0.11",
+      "jimp": "^0.22.10",
+      "js-beautify": "^1.15.1",
+      "json-schema-test": "^2.0.0",
+      "karma": "^6.4.2",
+      "karma-chrome-launcher": "^3.2.0",
+      "karma-mocha": "^2.0.1",
+      "lint-staged": "^15.2.2",
+      "mocha": "^10.3.0",
+      "module-from-string": "^3.3.0",
+      "node-fetch": "^3.3.2",
+      "nyc": "^15.1.0",
+      "prettier": "3.0.3",
+      "re2": "^1.20.9",
+      "rollup": "^2.79.1",
+      "rollup-plugin-terser": "^7.0.2",
+      "ts-node": "^10.9.2",
+      "tsify": "^5.0.4",
+      "typescript": "5.3.3",
+      "uri-js": "^4.4.1"
+    },
+    "collective": {
+      "type": "opencollective",
+      "url": "https://opencollective.com/ajv"
+    },
+    "funding": {
+      "type": "github",
+      "url": "https://github.com/sponsors/epoberezkin"
+    },
+    "prettier": "@ajv-validator/config/prettierrc.json",
+    "husky": {
+      "hooks": {
+        "pre-commit": "lint-staged && npm test"
+      }
+    },
+    "lint-staged": {
+      "*.{json,yaml,js,ts}": "prettier --write"
+    }
+  },
+  "requests": [
+    {
+      "url": "https://registry.npmjs.org/ajv/8.20.0",
+      "finalUrl": "https://registry.npmjs.org/ajv/8.20.0",
+      "status": 200,
+      "headers": {
+        "Date": "Tue, 10 Nov 2026 15:38:31 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "4682",
+        "Connection": "close",
+        "CF-Ray": "a586250c6d8938ce-SJC",
+        "CF-Cache-Status": "DYNAMIC",
+        "Access-Control-Allow-Origin": "*",
+        "Cache-Control": "max-age=300",
+        "Server": "cloudflare",
+        "Vary": "accept-encoding, accept",
+        "set-cookie": "__cf_bm=MqQ4mxSf1fdt4NYpg.SyXgTl2uRYA0a97FLefd7mq5s-1794325111.7508945-1.0.1.1-2bF.Q.YrNz6J43P8g4Luq_Sxe8SqCVQXLsV1Z2JTllI7ptWuwr_ClK5eBN14Y_ZHUW7O81wUxwBumfdF0ktHek4cWVbJLXclyYd3RrKW2XCgwMmjY3Rfl9XxBVfvLeUq; HttpOnly; SameSite=None; Partitioned; Secure; Path=/; Domain=npmjs.org; Expires=Tue, 10 Nov 2026 16:08:31 GMT"
+      },
+      "bytes": 4682,
+      "sha256": "da1e811c437dcaed32870e5023e0a1fc6e672027023a0648fddfbc122fb84c58",
+      "bodyRead": true
+    },
+    {
+      "url": "https://raw.githubusercontent.com/ajv-validator/ajv/0fba0b8e649909613cfce0999b149cd08f4a4987/package.json",
+      "finalUrl": "https://raw.githubusercontent.com/ajv-validator/ajv/0fba0b8e649909613cfce0999b149cd08f4a4987/package.json",
+      "status": 200,
+      "headers": {
+        "Connection": "close",
+        "Content-Length": "4405",
+        "Cache-Control": "max-age=300",
+        "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+        "Content-Type": "text/plain; charset=utf-8",
+        "ETag": "\"6013128ec55c7e9cfa9930513bc44ed71a43dd2b3336aa0376ac2d70f77af82e\"",
+        "Strict-Transport-Security": "max-age=31536000",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "deny",
+        "X-XSS-Protection": "1; mode=block",
+        "X-GitHub-Request-Id": "8B32:21071:3CC026:4C54C9:6AF33A71",
+        "x-github-edge-region": "westus3",
+        "Accept-Ranges": "bytes",
+        "Date": "Tue, 10 Nov 2026 15:38:33 GMT",
+        "Via": "1.1 varnish",
+        "X-Served-By": "cache-pao-kpao1770082-PAO",
+        "X-Cache": "MISS",
+        "X-Cache-Hits": "0",
+        "X-Timer": "S1794325113.312320,VS0,VE386",
+        "Vary": "Authorization,Accept-Encoding",
+        "Access-Control-Allow-Origin": "*",
+        "Cross-Origin-Resource-Policy": "cross-origin",
+        "X-Fastly-Request-ID": "f12344a8aed1e1159fcca2f00111edbb4ecc3b0d",
+        "Expires": "Tue, 10 Nov 2026 15:43:33 GMT",
+        "Source-Age": "0"
+      },
+      "bytes": 4405,
+      "sha256": "1f9033ee5a6515e7d76938b7072941862d1ed228a6879cc7fe10cdeb75107989",
+      "bodyRead": true
+    },
+    {
+      "url": "https://api.github.com/repos/ajv-validator/ajv/git/trees/0fba0b8e649909613cfce0999b149cd08f4a4987?recursive=1",
+      "finalUrl": "https://api.github.com/repos/ajv-validator/ajv/git/trees/0fba0b8e649909613cfce0999b149cd08f4a4987?recursive=1",
+      "status": 200,
+      "headers": {
+        "Date": "Tue, 10 Nov 2026 15:38:34 GMT",
+        "Content-Type": "application/json; charset=utf-8",
+        "Cache-Control": "public, max-age=86400, s-maxage=86400",
+        "Vary": "Accept,Accept-Encoding, Accept, X-Requested-With",
+        "ETag": "W/\"8868743ce0a37b5ce6e21a8a3ed9bd943dade2ae29a835659fbcf90d8e8e82be\"",
+        "Last-Modified": "Mon, 09 Nov 2026 21:12:06 GMT",
+        "X-GitHub-Media-Type": "github.v3; format=json",
+        "x-github-api-version-selected": "2022-11-28",
+        "Access-Control-Expose-Headers": "ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset, Warning",
+        "Access-Control-Allow-Origin": "*",
+        "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+        "X-Frame-Options": "deny",
+        "X-Content-Type-Options": "nosniff",
+        "X-XSS-Protection": "0",
+        "Referrer-Policy": "origin-when-cross-origin, strict-origin-when-cross-origin",
+        "Content-Security-Policy": "default-src 'none'",
+        "Server": "github.com",
+        "Accept-Ranges": "bytes",
+        "X-RateLimit-Limit": "60",
+        "X-RateLimit-Remaining": "59",
+        "X-RateLimit-Used": "1",
+        "X-RateLimit-Resource": "core",
+        "X-RateLimit-Reset": "1794328714",
+        "Transfer-Encoding": "chunked",
+        "X-GitHub-Request-Id": "ADD2:1E1EF3:1281EC9:13EE5CD:6AF33A7A",
+        "x-github-edge-region": "westus3",
+        "connection": "close"
+      },
+      "bytes": 131132,
+      "sha256": "22d03ac6d8f35432031a8bf14f2e64923b6df2a4b1055e9200435458d669b7aa",
+      "bodyRead": true
+    },
+    {
+      "url": "https://raw.githubusercontent.com/ajv-validator/ajv/0fba0b8e649909613cfce0999b149cd08f4a4987/README.md",
+      "finalUrl": "https://raw.githubusercontent.com/ajv-validator/ajv/0fba0b8e649909613cfce0999b149cd08f4a4987/README.md",
+      "status": 200,
+      "headers": {
+        "Connection": "close",
+        "Content-Length": "13781",
+        "Cache-Control": "max-age=300",
+        "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+        "Content-Type": "text/plain; charset=utf-8",
+        "ETag": "\"9f609a74b93885fc4f42e4747fe5d7e2faf970afb7cc43b81095b741f47153f2\"",
+        "Strict-Transport-Security": "max-age=31536000",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "deny",
+        "X-XSS-Protection": "1; mode=block",
+        "X-GitHub-Request-Id": "2A30:2C6F84:3D051B:4C9A99:6AF33A80",
+        "x-github-edge-region": "westus3",
+        "Accept-Ranges": "bytes",
+        "Date": "Tue, 10 Nov 2026 15:38:40 GMT",
+        "Via": "1.1 varnish",
+        "X-Served-By": "cache-sjc10071-SJC",
+        "X-Cache": "MISS",
+        "X-Cache-Hits": "0",
+        "X-Timer": "S1794325120.306292,VS0,VE212",
+        "Vary": "Authorization,Accept-Encoding",
+        "Access-Control-Allow-Origin": "*",
+        "Cross-Origin-Resource-Policy": "cross-origin",
+        "X-Fastly-Request-ID": "11dbaeb9bcde85ac8c98d8470b2b43d07ad8bf85",
+        "Expires": "Tue, 10 Nov 2026 15:43:40 GMT",
+        "Source-Age": "0"
+      },
+      "bytes": 13781,
+      "sha256": "38d924524762b917dd9dd341ac28837df51a474bf198ac4c26ba69d8f59a27c3",
+      "bodyRead": true
+    },
+    {
+      "url": "https://ajv.js.org/",
+      "finalUrl": "https://ajv.js.org/",
+      "status": 200,
+      "headers": {
+        "Date": "Tue, 10 Nov 2026 15:38:43 GMT",
+        "Content-Type": "text/html; charset=utf-8",
+        "Transfer-Encoding": "chunked",
+        "Connection": "close",
+        "Nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+        "Server": "cloudflare",
+        "Last-Modified": "Fri, 24 Apr 2026 07:41:39 GMT",
+        "Access-Control-Allow-Origin": "*",
+        "ETag": "W/\"69eb1eb3-206fe\"",
+        "expires": "Tue, 10 Nov 2026 15:32:15 GMT",
+        "Cache-Control": "max-age=600",
+        "Report-To": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=nAQjyKUenLYFBNDWpIiuQ1N9g3F4MKrcDofyybMS7jwZfcR%2BrSA4k0Vkk%2FdPvA7KIJUnAaH9BJIj7kf69KtTXu%2Fwb%2BX6%2BQ6HVR6g5Oh0NutB9CPVigg2Q87fQZE9c2bVnOxXy2HIgTs%3D\"}]}",
+        "x-proxy-cache": "HIT",
+        "X-GitHub-Request-Id": "489A:1594:1CEC4C9:1D2A60D:6AF33709",
+        "x-github-edge-region": "fra",
+        "Age": "0",
+        "Via": "1.1 varnish",
+        "X-Served-By": "cache-fra-eddf8230048-FRA",
+        "X-Cache": "HIT",
+        "X-Cache-Hits": "0",
+        "X-Timer": "S1794325123.940658,VS0,VE121",
+        "Vary": "Accept-Encoding",
+        "X-Fastly-Request-ID": "ef06482023dc661c29cc8c5bcc0da8fee36d40e6",
+        "cf-cache-status": "DYNAMIC",
+        "CF-RAY": "a586255229dfc442-FRA"
+      },
+      "bytes": null,
+      "sha256": null,
+      "bodyRead": false
+    }
+  ]
+}

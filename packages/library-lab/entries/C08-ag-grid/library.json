@@ -5,12 +5,7 @@
   "name": "AG Grid",
   "group": "C",
   "summary": "企业级数据网格、稳定行身份与可控编辑",
-  "tags": [
-    "Grid",
-    "表格",
-    "虚拟化",
-    "编辑"
-  ],
+  "tags": ["Grid", "表格", "虚拟化", "编辑"],
   "contentState": "recreated",
   "packages": [
     {
@@ -30,6 +25,10 @@
     {
       "title": "Community 与 Enterprise",
       "url": "https://www.ag-grid.com/react-data-grid/community-vs-enterprise/"
+    },
+    {
+      "title": "匹配36.2.0 React包README",
+      "url": "https://github.com/ag-grid/ag-grid/blob/0fee5b7b1e839ae23fe860e404042448f3c1375d/packages/ag-grid-react/README.md"
     }
   ],
   "related": [
@@ -47,45 +46,54 @@
   "demos": [
     {
       "demoId": "basic",
-      "title": "最小入门",
+      "title": "数据、列与网格行模型",
       "level": "basic",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/grid-contract.ts",
+        "examples/edit-session.ts",
         "examples/edit-policy.mjs",
         "examples/edit-policy.d.mts",
+        "examples/styles.css",
         "examples/demo.tsx"
       ],
-      "description": "真实 SDK 入门交互"
+      "description": "真实GridApi观察排序后的行模型和稳定ID"
     },
     {
       "demoId": "business",
-      "title": "业务实战",
+      "title": "客户端分页与受控编辑",
       "level": "business",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/grid-contract.ts",
+        "examples/edit-session.ts",
         "examples/edit-policy.mjs",
         "examples/edit-policy.d.mts",
+        "examples/styles.css",
         "examples/demo.tsx"
       ],
-      "description": "订阅中心业务场景"
+      "description": "本地过滤/分页与编辑开始版本快照，readOnlyEdit请求由应用CAS提交"
     },
     {
       "demoId": "advanced",
-      "title": "错误与边界",
+      "title": "快照竞态与 revision 冲突",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/grid-contract.ts",
+        "examples/edit-session.ts",
         "examples/edit-policy.mjs",
         "examples/edit-policy.d.mts",
+        "examples/styles.css",
         "examples/demo.tsx"
       ],
-      "description": "竞态、错误与边界条件"
+      "description": "Abort/generation取消旧本地延时，按稳定ID保留较新本地状态"
     }
   ],
   "provenance": {
@@ -96,5 +104,25 @@
   "license": {
     "spdx": "MIT",
     "assets": "仅使用自制 fixture，不包含第三方媒体或企业授权资源"
+  },
+  "official": {
+    "readme": {
+      "repository": "ag-grid/ag-grid",
+      "commit": "0fee5b7b1e839ae23fe860e404042448f3c1375d",
+      "path": "packages/ag-grid-react/README.md",
+      "version": "36.2.0",
+      "language": "en",
+      "snapshotPath": "official/readme.md",
+      "sha256": "7070a8bcf54603483e9b617fce91e7bcaec8e30f77b75ca02809ad0512ca340c",
+      "sourceUrl": "https://github.com/ag-grid/ag-grid/blob/0fee5b7b1e839ae23fe860e404042448f3c1375d/packages/ag-grid-react/README.md",
+      "syncedAt": "2026-11-10T15:44:38.354958+00:00"
+    },
+    "homepage": {
+      "url": "https://www.ag-grid.com/react-data-grid/",
+      "kind": "website",
+      "status": "blocked",
+      "checkedAt": "2026-11-10T15:44:35.876484+00:00",
+      "reason": "实际GET200的CSP frame-ancestors仅允许'self'及https://*.ag-grid.com，排除本地Lab；完整头见official/source-evidence.json，浏览器未运行。"
+    }
   }
 }

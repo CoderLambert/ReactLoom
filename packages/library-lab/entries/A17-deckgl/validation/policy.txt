@@ -1,0 +1,17 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node --test entries/A17-deckgl/tests/deck-size.test.mts entries/A17-deckgl/tests/deck-data.test.mts
+exit: 0
+✔ dense fixture keeps unique finite coordinates and the exact health count (1.90107ms)
+✔ paging reaches every row exactly once and clamps after shrinking (1.005715ms)
+✔ zero or invalid container dimensions do not resize GPU (0.575198ms)
+✔ fractional CSS pixels are rounded to stable integer dimensions (0.393328ms)
+✔ abnormally large containers have bounded GPU allocation (0.083043ms)
+✔ no-op resize and hidden resize are skipped; actual size change runs (0.121659ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 74.359998

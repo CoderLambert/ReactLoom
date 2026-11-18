@@ -5,15 +5,7 @@
   "name": "axe-core",
   "group": "F",
   "summary": "真实 axe.run 局部审计，定位缺少alt/label/button-name并展示修复前后",
-  "tags": [
-    "axe",
-    "可访问性",
-    "WCAG",
-    "审计",
-    "语义标签",
-    "自动化测试",
-    "ARIA"
-  ],
+  "tags": ["axe", "可访问性", "WCAG", "审计", "语义标签", "自动化测试", "ARIA"],
   "contentState": "recreated",
   "packages": [
     {
@@ -69,11 +61,7 @@
         "examples/audit-queue.d.mts",
         "examples/demo.tsx"
       ],
-      "capabilities": [
-        "browser-dom",
-        "a11y-audit",
-        "manual-trigger"
-      ],
+      "capabilities": ["browser-dom", "a11y-audit", "manual-trigger"],
       "description": "对故意缺alt的本地图片运行真实axe-core。"
     },
     {
@@ -88,11 +76,7 @@
         "examples/audit-queue.d.mts",
         "examples/demo.tsx"
       ],
-      "capabilities": [
-        "browser-dom",
-        "a11y-audit",
-        "manual-trigger"
-      ],
+      "capabilities": ["browser-dom", "a11y-audit", "manual-trigger"],
       "description": "测试输入框缺少关联label，修复后复审。"
     },
     {
@@ -105,14 +89,9 @@
         "examples/example.tsx",
         "examples/audit-queue.mjs",
         "examples/audit-queue.d.mts",
-        "examples/demo.tsx",
-        "examples/audit-queue.test.mjs"
+        "examples/demo.tsx"
       ],
-      "capabilities": [
-        "browser-dom",
-        "a11y-audit",
-        "manual-trigger"
-      ],
+      "capabilities": ["browser-dom", "a11y-audit", "manual-trigger"],
       "description": "同时展示图片、表单和按钮名称三种规则。"
     }
   ],
@@ -123,5 +102,25 @@
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
     "note": "基于axe.run官方API重新实现，DOM规则和准确性需要真实浏览器执行方可认可。"
+  },
+  "official": {
+    "readme": {
+      "repository": "dequelabs/axe-core",
+      "commit": "e797173108eadfa4355fe06af331791734e1757f",
+      "path": "README.md",
+      "sourceUrl": "https://github.com/dequelabs/axe-core/blob/e797173108eadfa4355fe06af331791734e1757f/README.md",
+      "snapshotPath": "official/readme.md",
+      "sha256": "b994303ff0df0a44d9bd2fb0faf2ff49670844379f3796047f48e8cb8b9edfaf",
+      "language": "en",
+      "version": "4.14.0",
+      "syncedAt": "2026-11-17T19:03:37.068003+00:00"
+    },
+    "homepage": {
+      "url": "https://www.deque.com/axe/",
+      "kind": "website",
+      "status": "blocked",
+      "checkedAt": "2026-11-17T19:03:37.068003+00:00",
+      "reason": "实际GET200的Content-Security-Policy含frame-ancestors 'self'，禁止Lab跨源嵌入；原头见official/homepage-headers.json。"
+    }
   }
 }

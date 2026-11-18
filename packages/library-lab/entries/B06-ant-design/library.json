@@ -4,15 +4,8 @@
   "slug": "ant-design",
   "name": "Ant Design",
   "group": "B",
-  "summary": "企业组件、受控表单、表格与反馈",
-  "tags": [
-    "form",
-    "table",
-    "feedback",
-    "validation",
-    "React19",
-    "IME"
-  ],
+  "summary": "局部Token与上下文反馈、Form校验到Table、一次冲突回填与撤销恢复",
+  "tags": ["form", "table", "feedback", "validation", "React19", "IME"],
   "contentState": "recreated",
   "packages": [
     {
@@ -58,45 +51,51 @@
   "demos": [
     {
       "demoId": "basic",
-      "title": "主题Button/Input/Alert",
+      "title": "受控确认与局部Token",
       "level": "basic",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
         "examples/feed-history.ts",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/feed-url.ts",
+        "examples/styles.css"
       ],
-      "capabilities": []
+      "capabilities": [],
+      "description": "项目名受控输入、空白禁用与Alert成功态，ConfigProvider局部主题。"
     },
     {
       "demoId": "business",
-      "title": "RSS管理Form + Table",
+      "title": "Form到同源Table",
       "level": "business",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
         "examples/feed-history.ts",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/feed-url.ts",
+        "examples/styles.css"
       ],
-      "capabilities": []
+      "capabilities": [],
+      "description": "Form客户端规则通过后规范化HTTPS地址，Table稳定ID、开关、详情与提交式查找。"
     },
     {
       "demoId": "advanced",
-      "title": "后端冲突模拟、错误回填、撤销与键盘",
+      "title": "字段冲突恢复与一步撤销",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
         "examples/feed-history.ts",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/feed-url.ts",
+        "examples/styles.css"
       ],
-      "capabilities": [
-        "cleanup",
-        "interaction"
-      ]
+      "capabilities": ["cleanup", "interaction"],
+      "description": "下一次有效提交注入一次本地409错误，字段回填后重试成功；原子快照一步撤销。"
     }
   ],
   "provenance": {
@@ -106,5 +105,25 @@
   "license": {
     "spdx": "MIT",
     "assets": "全部用本地原创演示数据；无商用图片或收费资源。"
+  },
+  "official": {
+    "readme": {
+      "repository": "ant-design/ant-design",
+      "commit": "dc3a92dcf2fd4d707418c2288901ecc86f26f647",
+      "path": "README-zh_CN.md",
+      "sourceUrl": "https://github.com/ant-design/ant-design/blob/dc3a92dcf2fd4d707418c2288901ecc86f26f647/README-zh_CN.md",
+      "language": "zh-CN",
+      "version": "6.6.7",
+      "syncedAt": "2026-11-10T12:59:54.671643+00:00",
+      "sha256": "9459513f975ed488f297ea22a0d724000fa039b6c0c5991e991f59587d00de06",
+      "snapshotPath": "official/readme.md"
+    },
+    "homepage": {
+      "url": "https://ant.design/index-cn",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-10T12:59:59.581513+00:00",
+      "reason": "实际GET200完整响应头；未从Lab origin实测iframe，保持unknown。"
+    }
   }
 }

@@ -1,0 +1,5 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["python3", "packages/library-lab/entries/C08-ag-grid/validation/source-tool-transport-fixture.py"], "utc": "2026-11-10T16:03:37.609819+00:00", "exit": 0, "evidenceBoundary": "controlled source-tool fixture only; no external HTTP or SDK"}
+CONTROLLED SUCCESS: 7 fixture transfers; both artifacts staged after full acquisition, replacement checks passed; staging removed.
+CONTROLLED FAILURE 1: old successful README/evidence byte-identical; attempt saved only in separate failed evidence.
+CONTROLLED FAILURE 7: old successful README/evidence byte-identical; attempt saved only in separate failed evidence.
+3 controlled source-tool scenarios PASS; actual entry official pair untouched. No external HTTP, SDK, grid or browser receipt.

@@ -1,0 +1,18 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab", "argv": ["node", "entries/B12-react-aria/validation/metadata-check.mjs"], "utc": "2026-11-10T14:24:08.644409+00:00", "exitCode": 0}
+STDOUT
+{
+  "metadata": [],
+  "completeness": [],
+  "demos": 3,
+  "runtimeFiles": 4,
+  "inputFiles": 13,
+  "packageVersion": "1.21.0",
+  "gitHead": "0a2a7e68e4d896b3ac46c3647fe48fac9ea3ae2e",
+  "readmeBytes": 1915,
+  "sha256": "654cbc0c1d8939a0bd808883ebf1a1cca965e86b9ff657dfdf4378592fcb2960",
+  "homepage": "blocked: enforced frame-ancestors self",
+  "browser": "NOT_RUN",
+  "formal": "NOT_RUN"
+}
+
+STDERR

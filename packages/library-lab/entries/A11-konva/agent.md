@@ -1,47 +1,23 @@
-# A11 Konva — 工程手册
+# Konva 10.9.0 工程复用
 
-## 适用
+适用：自定义二维图元编排，需要Canvas命中、拖拽或Transformer。完整白板先评估Excalidraw/tldraw；React声明式图元用react-konva，并让包装器独占Stage。
 
-`konva@10.9.0` 用命令式场景图做二维拖拽和变换。已经用 React 描述图元时改用 A12，不要再 `new Konva.Stage` 包住同一容器。白板产品不要从零复刻，先看 A09/A10。
+## 迁移路径
 
-## 版本
+读example.tsx的两类effect：Stage资源只在挂载/lesson变化时创建；业务Card数组按id增量同步Group/Rect/Text。必要依赖konva10.9.0和React客户端，复制example.tsx、stage-policy.ts；demo.tsx只是适配重导出，无外部图片或字体。
 
-钉 `konva@10.9.0`，MIT。Stage、Layer、Group、Rect、Text、Transformer 来自这个包。自动批绘制从 Konva 8 起就是默认行为；`beginUpdateBatch` 不是每帧都要调用的 API。
+Card数组是业务事实。拖拽中保留SDK临时位置，dragend提交实际坐标。transformend将Group scale乘进Rect业务宽高后归1；boundBoxFunc绝对盒子除Stage scale，最小85×48世界单位。视口stage position/scale与卡片x/y分开。
 
-## 迁移
+## 三目标与观察
 
-手写 canvas 循环改成 Group + `dragend`。持久化从 `stage.toJSON()` 改成带版本的卡片数组。Transformer 的 scale 在 `transformend` 乘进宽高并归 1。若改成 react-konva，删掉手动 `new Stage`，避免两个所有者。
+basic真实Canvas点选、DOM选择与键盘移动；business真实拖拽提交、容器ResizeObserver；advanced实际Transformer、指针锚定滚轮、新增/删除与销毁。诊断详情读取真实SDK对象和Transformer锚点，属于示例观察面板。DOM列表与SDK快照必须一致。
 
-## 不可删的清理
+## 所有权与清理
 
-舞台 effect 必须 `observer.disconnect`、`cancelAnimationFrame`、`stage.off('wheel')`、`stage.destroy()`，并清空 Map。被过滤掉的卡片要 `group.destroy()`。宽度非有限或小于等于 0 时不调用 `stage.width`。
+Observer断开、rAF取消并检查当前Stage；命名空间wheel.a11和各Group事件随自有节点销毁。Stage.destroy递归销毁，清空自己Map/ref，不清理其他组件的Stage。ready使用Stage版本递增，确保effect重放后重新同步，不能依赖已为true的布尔值。删除卡片也须group.destroy。宽度非法不写Stage。
 
-## 反例
+## 验证边界
 
-```ts
-rect.width(group.width()); // 错：忽略 scaleX
-const width = Math.max(85, Math.round(rect.width() * group.scaleX()));
-group.scale({ x: 1, y: 1 }); // 对
-```
+SDK Node套件真实导入Konva并覆盖场景图父子/变换矩阵/事件卸载/子树destroy，不创建Canvas；policy只验证示例上限/宽度。真实绘图、鼠标命中/拖拽、Transformer手柄、滚轮坐标、RO和destroy必须Chromium观察，不用普通对象模拟SDK。
 
-render 中构造 Stage、指针坐标直接当世界坐标、只 `remove()` 不 `destroy()`，都不要做。
-
-## 测试断言
-
-`canAddCard` / `appendCard` 在 24 张或重复 id 时不增长。`stageWidth` 夹在 1..4096。SDK 收据还要看到真实 Stage、拖拽写回、变换后 scale 为 1、卸载后 canvas 消失。没有 runs 收据则为 NOT_RUN。
-
-## 真实限制
-
-没有文本编辑、PNG、HTTP ETag 或视口裁剪。basic 不可拖，Transformer 只在 advanced。滚轮缩放未读取 `prefers-reduced-motion`。24 与 0.6..2 是示例边界，不是性能测量。`batchDraw` 在同步后调用了一次，不要在每个属性 setter 后再画。
-
-## 断言边界
-
-`tests/stage-policy.test.mts` 覆盖 24 张上限和宽度。SDK 用例要 `import Konva from 'konva'`，创建 Stage，在 `transformend` 语义下把 scale 乘进宽高并归 1，然后 `destroy`。不要用普通对象模拟 Transformer。缺收据时保持 NOT_RUN。滚轮缩放要保持指针下的世界坐标，卡片 x/y 与 stage 的 position/scale 分开存储。
-
-## 证据
-
-Actions `41779873259` 的仓库级 install、typecheck、build、52 SDK 文件（153 测试）和 45 Playwright 不是 A11 PASS。不要把策略测试或历史研究 PASS 写入 `verification.json`。
-
-对照 `library.json` 的版本编写 import，不要升到条目未钉死的版本。
-`tests/` 中的策略用例不能改写成 sdk 字段的 PASS。
-浏览器与构建未留下收据时，对应字段维持 NOT_RUN。
+本例仅内存，无保存/PNG/文字输入/触控缩放。24卡片与0.6–2是示例预算。正式sdk/build/browser凭匹配recorder收据，不能从本地测试或旧CI推定。

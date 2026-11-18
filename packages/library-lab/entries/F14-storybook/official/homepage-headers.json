@@ -1,0 +1,23 @@
+{
+  "url": "https://storybook.js.org/",
+  "status": 200,
+  "headers": {
+    "Age": "142381",
+    "Cache-Control": "public,max-age=0,must-revalidate",
+    "Cache-Status": "\"Netlify Durable\"; hit; ttl=31393620, \"Next.js\"; hit, \"Netlify Edge\"; fwd=miss; fwd-status=200; stored",
+    "Content-Length": "1497716",
+    "Content-Type": "text/html; charset=utf-8",
+    "Date": "Tue, 17 Nov 2026 18:59:47 GMT",
+    "Etag": "\"b1qhgarzhmw331\"",
+    "Netlify-Vary": "query=__nextDataReq|_rsc, header=x-nextjs-data|x-next-debug-logging|next-router-prefetch|next-router-segment-prefetch|next-router-state-tree|next-url|rsc|accept-encoding, cookie=__prerender_bypass|__next_preview_data",
+    "Server": "Netlify",
+    "Strict-Transport-Security": "max-age=31536000",
+    "Vary": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Accept-Encoding",
+    "X-Content-Type-Options": "nosniff",
+    "X-Nextjs-Date": "Mon, 16 Nov 2026 03:33:51 GMT",
+    "X-Nf-Request-Id": "01M7NE2A0P3N8XQR0K373MR7BA",
+    "X-Powered-By": "Next.js",
+    "Connection": "close"
+  },
+  "checkedAt": "2026-11-17T18:59:46.455556+00:00"
+}

@@ -1,0 +1,23 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+ARGV: ["pnpm", "test:sdk", "--entry=B07"]
+START: 2026-11-10T13:08:03.985779+00:00
+END: 2026-11-10T13:08:04.802250+00:00
+EXIT: 0
+STDOUT:
+
+> @reactloom/library-lab@0.1.0 test:sdk /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+> node scripts/sdk-runner.mjs --entry=B07
+
+Real SDK suites selected: 1 file(s)
+✔ real MUI themes resolve light/dark surfaces and stable custom tokens (0.625564ms)
+✔ real TextField server output links label/helper and forwards htmlInput slot constraints (12.136083ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 555.975435
+
+STDERR:

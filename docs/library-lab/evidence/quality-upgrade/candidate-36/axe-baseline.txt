@@ -1,0 +1,52 @@
+[WebServer] (node:2532450) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:2532521) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:2532628) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 e2e/quality-resume-axe.spec.ts:5:1 › @F17 real axe reports scoped rule ids and removes findings after DOM repair (7.1s)
+
+
+  1) e2e/quality-resume-axe.spec.ts:5:1 › @F17 real axe reports scoped rule ids and removes findings after DOM repair 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  getByRole('region', { name: 'axe-core 真实可访问性规则演示', exact: true }).getByTestId('axe-violation-count')
+    Expected: "1"
+    Received: "0"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveText" getByRole('region', { name: 'axe-core 真实可访问性规则演示', exact: true }).getByTestId('axe-violation-count') with timeout 5000ms
+      - waiting for getByRole('region', { name: 'axe-core 真实可访问性规则演示', exact: true }).getByTestId('axe-violation-count')
+        14 × locator resolved to <output data-testid="axe-violation-count">0</output>
+           - unexpected value "0"
+
+
+      33 |     await expect(repair).not.toBeChecked()
+      34 |     await scan.click()
+    > 35 |     await expect(count).toHaveText(String(ids.length))
+         |                         ^
+      36 |     for (const id of ids) await expect(app.getByText(id, { exact: true })).toBeVisible()
+      37 |     await repair.check()
+      38 |     await expect(count).toHaveCount(0)
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-resume-axe.spec.ts:35:25
+
+    Error Context: test-results/quality-resume-axe--F17-re-22714-s-findings-after-DOM-repair/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-resume-axe--F17-re-22714-s-findings-after-DOM-repair/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-resume-axe--F17-re-22714-s-findings-after-DOM-repair/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    e2e/quality-resume-axe.spec.ts:5:1 › @F17 real axe reports scoped rule ids and removes findings after DOM repair 
+undefined
+/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: playwright test e2e/quality-resume-axe.spec.ts -g scoped rule ids --workers=1

@@ -1,0 +1,7 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=pnpm exec node .local-evidence/native-visibility-probe.mjs
+Native observations: hidden=true event.state=hidden,event.isTrusted=true; foreground hidden=false event.state=visible,event.isTrusted=true.
+Exit=1 only final own temporary profile removal raced Chromium child writes (ENOTEMPTY); native state observations succeeded. Harness corrected with bounded fs.rm retry, no document visibility override.
+Playwright1.64 bundled types ConnectOverCDPOptions.noDefaults says focus emulation is not enabled. Protocol per-agent default true cannot be canceled by a second CDP session false; clean owned process+noDefaults avoids original emulator.
+Primary: https://developer.chrome.com/docs/devtools/rendering/apply-effects
+Temporary failed profile=/tmp/reactloom-native-visibility-PGgZPd

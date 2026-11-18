@@ -1,0 +1,21 @@
+{
+  "readmeCandidates": [
+    "README.md",
+    "pagefind_ui/component/README.md",
+    "pagefind_ui/default/README.md",
+    "pagefind_ui/modular/README.md",
+    "pagefind_web/README.md",
+    "wrappers/node/README.md",
+    "wrappers/python/README.md",
+    "wrappers/python/scripts/ci/github/README.md",
+    "wrappers/python/src/pagefind_python_bin/README.md",
+    "wrappers/python/src/tests/README.md"
+  ],
+  "treeTruncated": false,
+  "licensePaths": [
+    "LICENSE"
+  ],
+  "selectedReadme": "README.md",
+  "language": "en",
+  "commit": "bf17396721be637cc67c8ed7ead1dc7b8ac43d96"
+}

@@ -1,0 +1,20 @@
+{
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "gitHead": "1218066e706a90ba03fac8dff8c9b843dd2429c4",
+  "capturedAt": "2026-11-10T15:31:01.839045+00:00",
+  "status": "",
+  "fileCount": 11,
+  "files": {
+    "AGENTS.md": "40dad78b12cdb2a00f29068793d4c1a1f67acc91d714d5a5d2b65fa47ca25f40",
+    "agent.md": "4b194d1f5fe8707b134b7147419eb57baf40ce91279f92e305c2a8e94276cfc4",
+    "examples/calendar-policy.d.mts": "c3d6581aed3d213cc8f279bcb3e7ffc52596c050367b94e3d498eefcfba18957",
+    "examples/calendar-policy.mjs": "138229d95a520b0705a229d3b138602f613c6a2ed13c33a2cf239e69049537e4",
+    "examples/demo.tsx": "254591932548c36c414610bd0d0c7ce7ef1648162f1996fbbe7381b8c1751690",
+    "examples/example.tsx": "898e290927d02e0b8579d8a53151eb3fe8ebb1b37b19d20642830186b159719e",
+    "guide.md": "73c9c8807a377cc103094e9333178ab5e7860560203ab2d8c1dc2ab962897a5a",
+    "library.json": "92ef70a69df604adda70249349e10b828e086eccc723201fad799c95c8aaeebf",
+    "tests/calendar-policy.test.mjs": "cfc8b356eea735df6b1d0f97841c643bf3f3d540a35138f320fafd7db8865748",
+    "tests/sdk.test.mjs": "50fc714edcd2dfdc2ee978db696dee03879f8cd9ef64ceee38b2d6397e6d2776",
+    "verification.json": "2efe84a482bb5493efbb07661eaf3b18e55281abbbc389d2b9b19f9a7c3ab605"
+  }
+}

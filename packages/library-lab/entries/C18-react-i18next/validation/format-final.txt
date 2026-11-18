@@ -1,0 +1,93 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['pnpm', 'exec', 'biome', 'check', '--write', 'entries/C18-react-i18next/validation/metadata-check.mjs', 'entries/C18-react-i18next/verification.json']
+startedAt: 2026-11-10T17:57:31.187749+00:00
+exit: 0
+Skipped 4 suggested fixes.
+If you wish to apply the suggested (unsafe) fixes, use the command biome check --write --unsafe
+
+Checked 2 files in 8ms. Fixed 1 file.
+Found 4 infos.
+entries/C18-react-i18next/validation/metadata-check.mjs:42:28 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    40 │ ]) {
+    41 │   const manifest = JSON.parse(
+  > 42 │     await readFile(new URL('../../../node_modules/' + name + '/package.json', import.meta.url)),
+       │                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    43 │   )
+    44 │   assert.equal(manifest.version, version)
+  
+  i Unsafe fix: Use a template literal.
+  
+     40  40 │   ]) {
+     41  41 │     const manifest = JSON.parse(
+     42     │ - ····await·readFile(new·URL('../../../node_modules/'·+·name·+·'/package.json',·import.meta.url)),
+         42 │ + ····await·readFile(new·URL(`../../../node_modules/${name}/package.json`,·import.meta.url)),
+     43  43 │     )
+     44  44 │     assert.equal(manifest.version, version)
+  
+
+entries/C18-react-i18next/validation/metadata-check.mjs:80:7 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    78 │     assert.ok(
+    79 │       resolveDocumentUrl(url, 'C18', '/', entry.official.readme.snapshotPath),
+  > 80 │       name + ': ' + url,
+       │       ^^^^^^^^^^^^^^^^^
+    81 │     )
+    82 │     if (!url.startsWith('https:')) assert.ok((await stat(new URL(url, base))).isFile())
+  
+  i Unsafe fix: Use a template literal.
+  
+     78  78 │       assert.ok(
+     79  79 │         resolveDocumentUrl(url, 'C18', '/', entry.official.readme.snapshotPath),
+     80     │ - ······name·+·':·'·+·url,
+         80 │ + ······`${name}:·${url}`,
+     81  81 │       )
+     82  82 │       if (!url.startsWith('https:')) assert.ok((await stat(new URL(url, base))).isFile())
+  
+
+entries/C18-react-i18next/validation/metadata-check.mjs:96:34 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    94 │ for (const name of runtime) {
+    95 │   const sha = hash(await readFile(new URL(name, base)))
+  > 96 │   assert.equal(sha, inputs.files['packages/library-lab/entries/C18-react-i18next/' + name])
+       │                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    97 │   runtimeBinding[name] = sha
+    98 │ }
+  
+  i Unsafe fix: Use a template literal.
+  
+     94  94 │   for (const name of runtime) {
+     95  95 │     const sha = hash(await readFile(new URL(name, base)))
+     96     │ - ··assert.equal(sha,·inputs.files['packages/library-lab/entries/C18-react-i18next/'·+·name])
+         96 │ + ··assert.equal(sha,·inputs.files[`packages/library-lab/entries/C18-react-i18next/${name}`])
+     97  97 │     runtimeBinding[name] = sha
+     98  98 │   }
+  
+
+entries/C18-react-i18next/validation/metadata-check.mjs:128:3 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    126 │ await writeFile(
+    127 │   new URL('validation/shared-evidence.json', base),
+  > 128 │   JSON.stringify(shared, null, 2) + '\n',
+        │   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    129 │ )
+    130 │ console.log(
+  
+  i Unsafe fix: Use a template literal.
+  
+    126 126 │   await writeFile(
+    127 127 │     new URL('validation/shared-evidence.json', base),
+    128     │ - ··JSON.stringify(shared,·null,·2)·+·'\n',
+        128 │ + ··`${JSON.stringify(shared,·null,·2)}\n`,
+    129 129 │   )
+    130 130 │   console.log(
+  
+

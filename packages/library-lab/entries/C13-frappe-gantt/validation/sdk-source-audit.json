@@ -1,0 +1,211 @@
+{
+  "checkedAt": "2026-11-10T16:14:41.642266+00:00",
+  "version": "1.2.2",
+  "license": "MIT",
+  "files": [
+    {
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/frappe-gantt@1.2.2/node_modules/frappe-gantt/package.json",
+      "sha256": "54941e9b08e30c7f441bfd65ef4225e7e2adc3d9643fbfd74839496dbef3a287",
+      "bytes": 1543,
+      "excerpts": []
+    },
+    {
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/frappe-gantt@1.2.2/node_modules/frappe-gantt/dist/frappe-gantt.es.js",
+      "sha256": "e2a6320ab5116d5896a806b4f7e8ca9c01d1fe32e5344b90e34138d110b3127a",
+      "bytes": 64343,
+      "excerpts": []
+    },
+    {
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/frappe-gantt@1.2.2/node_modules/frappe-gantt/dist/frappe-gantt.css",
+      "sha256": "74ccfd2390849e729cda95a358439f003b79b94770ff732713217bc8045e7a69",
+      "bytes": 6848,
+      "excerpts": []
+    },
+    {
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/frappe-gantt@1.2.2/node_modules/frappe-gantt/src/index.js",
+      "sha256": "cb094f7cce21ecc1b435deedf02255fdb9bd92907b8d73df013e31a2c6a81e7a",
+      "bytes": 54666,
+      "excerpts": [
+        {
+          "term": "constructor(wrapper",
+          "matches": [
+            {
+              "line": 13,
+              "text": "\nexport default class Gantt {\n    constructor(wrapper, tasks, options) {\n        this.setup_wrapper(wrapper);\n        this.setup_options(options);\n        this.setup_tasks(tasks);\n        this.change_view_mode();\n        this.bind_events();\n    }\n"
+            }
+          ]
+        },
+        {
+          "term": "refresh(tasks)",
+          "matches": [
+            {
+              "line": 233,
+              "text": "    }\n\n    refresh(tasks) {\n        this.setup_tasks(tasks);\n        this.change_view_mode();\n    }\n\n    update_task(id, new_details) {\n        let task = this.tasks.find((t) => t.id === id);\n        let bar = this.bars[task._index];"
+            }
+          ]
+        },
+        {
+          "term": "change_view_mode(",
+          "matches": [
+            {
+              "line": 17,
+              "text": "        this.setup_options(options);\n        this.setup_tasks(tasks);\n        this.change_view_mode();\n        this.bind_events();\n    }\n\n    setup_wrapper(element) {\n        let svg_element, wrapper_element;\n\n        // CSS Selector is passed"
+            },
+            {
+              "line": 137,
+              "text": "    update_options(options) {\n        this.setup_options({ ...this.original_options, ...options });\n        this.change_view_mode(undefined, true);\n    }\n\n    setup_tasks(tasks) {\n        this.tasks = tasks\n            .map((task, i) => {\n                if (!task.start) {\n                    console.error("
+            },
+            {
+              "line": 235,
+              "text": "    refresh(tasks) {\n        this.setup_tasks(tasks);\n        this.change_view_mode();\n    }\n\n    update_task(id, new_details) {\n        let task = this.tasks.find((t) => t.id === id);\n        let bar = this.bars[task._index];\n        Object.assign(task, new_details);\n        bar.refresh();"
+            }
+          ]
+        },
+        {
+          "term": "document.addEventListener('mouseup'",
+          "matches": [
+            {
+              "line": 1346,
+              "text": "        });\n\n        document.addEventListener('mouseup', () => {\n            is_dragging = false;\n            is_resizing_left = false;\n            is_resizing_right = false;\n            this.$container\n                .querySelector('.visible')\n                ?.classList?.remove?.('visible');\n        });"
+            }
+          ]
+        },
+        {
+          "term": "task.id = task.id.replaceAll",
+          "matches": [
+            {
+              "line": 212,
+              "text": "                    task.id = generate_id(task);\n                } else if (typeof task.id === 'string') {\n                    task.id = task.id.replaceAll(' ', '_');\n                } else {\n                    task.id = `${task.id}`;\n                }\n\n                return task;\n            })\n            .filter((t) => t);"
+            }
+          ]
+        },
+        {
+          "term": "this.dependency_map = {}",
+          "matches": [
+            {
+              "line": 224,
+              "text": "\n    setup_dependencies() {\n        this.dependency_map = {};\n        for (let t of this.tasks) {\n            for (let d of t.dependencies) {\n                this.dependency_map[d] = this.dependency_map[d] || [];\n                this.dependency_map[d].push(t.id);\n            }\n        }\n    }"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/frappe-gantt@1.2.2/node_modules/frappe-gantt/src/bar.js",
+      "sha256": "230cb1040b4f75a82d3da3e6b64c5a891db48a934fd3839909aae77caeb7aee8",
+      "bytes": 24344,
+      "excerpts": [
+        {
+          "term": "innerHTML: this.task.name",
+          "matches": [
+            {
+              "line": 226,
+              "text": "            x: x_coord,\n            y: this.y + this.height / 2,\n            innerHTML: this.task.name,\n            class: 'bar-label',\n            append_to: this.bar_group,\n        });\n        // labels get BBox in the next tick\n        requestAnimationFrame(() => this.update_label_position());\n    }\n"
+            }
+          ]
+        },
+        {
+          "term": "requestAnimationFrame",
+          "matches": [
+            {
+              "line": 231,
+              "text": "        });\n        // labels get BBox in the next tick\n        requestAnimationFrame(() => this.update_label_position());\n    }\n\n    draw_thumbnail() {\n        let x_offset = 10,\n            y_offset = 2;\n        let defs, clipPath;\n"
+            }
+          ]
+        },
+        {
+          "term": "readonly",
+          "matches": [
+            {
+              "line": 277,
+              "text": "\n    draw_resize_handles() {\n        if (this.invalid || this.gantt.options.readonly) return;\n\n        const bar = this.$bar;\n        const handle_width = 3;\n        this.handles = [];\n        if (\n            !this.gantt.options.readonly_dates &&\n            !this.gantt.options.fixed_duration"
+            },
+            {
+              "line": 283,
+              "text": "        this.handles = [];\n        if (\n            !this.gantt.options.readonly_dates &&\n            !this.gantt.options.fixed_duration\n        ) {\n            this.handles.push(\n                createSVG('rect', {\n                    x: bar.getEndX() - handle_width / 2,\n                    y: bar.getY() + this.height / 4,\n                    width: handle_width,"
+            },
+            {
+              "line": 312,
+              "text": "            );\n        }\n        if (!this.gantt.options.readonly_progress) {\n            const bar_progress = this.$bar_progress;\n            this.$handle_progress = createSVG('circle', {\n                cx: bar_progress.getEndX(),\n                cy: bar_progress.getY() + bar_progress.getHeight() / 2,\n                r: 4.5,\n                class: 'handle progress',\n                append_to: this.handle_group,"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/frappe-gantt@1.2.2/node_modules/frappe-gantt/src/date_utils.js",
+      "sha256": "aee855ab2b1ddb623e3df43bde20c225e5eada93dc63a26264ae4486872e434d",
+      "bytes": 9726,
+      "excerpts": [
+        {
+          "term": "return new Date(...vals)",
+          "matches": [
+            {
+              "line": 58,
+              "text": "            }\n\n            return new Date(...vals);\n        }\n    },\n\n    to_string(date, with_time = false) {\n        if (!(date instanceof Date)) {\n            throw new TypeError('Invalid argument type');\n        }"
+            },
+            {
+              "line": 178,
+              "text": "    today() {\n        const vals = this.get_date_values(new Date()).slice(0, 3);\n        return new Date(...vals);\n    },\n\n    now() {\n        return new Date();\n    },\n\n    add(date, qty, scale) {"
+            },
+            {
+              "line": 196,
+              "text": "            date.getMilliseconds() + (scale === MILLISECOND ? qty : 0),\n        ];\n        return new Date(...vals);\n    },\n\n    start_of(date, scale) {\n        const scores = {\n            [YEAR]: 6,\n            [MONTH]: 5,\n            [DAY]: 4,"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/frappe-gantt@1.2.2/node_modules/frappe-gantt/src/defaults.js",
+      "sha256": "b05bd99617512ce090c5b5f4eb9860654ae97aad6227fc5b06f224640f6b9b7e",
+      "bytes": 5006,
+      "excerpts": [
+        {
+          "term": "infinite_padding: true",
+          "matches": [
+            {
+              "line": 121,
+              "text": "    lower_header_height: 30,\n    snap_at: null,\n    infinite_padding: true,\n    holidays: { 'var(--g-weekend-highlight-color)': 'weekend' },\n    ignore: [],\n    language: 'en',\n    lines: 'both',\n    move_dependencies: true,\n    padding: 18,\n    popup: (ctx) => {"
+            }
+          ]
+        },
+        {
+          "term": "padding: '2m'",
+          "matches": [
+            {
+              "line": 85,
+              "text": "    {\n        name: 'Month',\n        padding: '2m',\n        step: '1m',\n        column_width: 120,\n        date_format: 'YYYY-MM',\n        lower_text: 'MMMM',\n        upper_text: (d, ld, lang) =>\n            !ld || d.getFullYear() !== ld.getFullYear()\n                ? date_utils.format(d, 'YYYY', lang)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/frappe-gantt@1.2.2/node_modules/frappe-gantt/src/svg_utils.js",
+      "sha256": "e7f9ec2621ed13d0cb28e70769ecc46995c2fc927f40c382adb15dfa3d8cff6e",
+      "bytes": 3453,
+      "excerpts": [
+        {
+          "term": "elem.innerHTML",
+          "matches": [
+            {
+              "line": 14,
+              "text": "            parent.appendChild(elem);\n        } else if (attr === 'innerHTML') {\n            elem.innerHTML = attrs.innerHTML;\n        } else if (attr === 'clipPath') {\n            elem.setAttribute('clip-path', 'url(#' + attrs[attr] + ')');\n        } else {\n            elem.setAttribute(attr, attrs[attr]);\n        }\n    }\n    return elem;"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "conclusions": [
+    "Actual import resolves packaged dist ES module; no upstream declarations, local d.ts is a restricted adapter",
+    "No destroy/dispose, one constructor per isolated document; parent discards entire realm, refresh changes content within existing chart",
+    "readonly does not suppress document mouseup registration; DOM replacement is not a disposer",
+    "SVG task.name uses innerHTML independently of popup, so toChartTasks escapes text on copied descriptors only",
+    "SDK mutates id spaces and uses ordinary-object dependency_map; entry allows restricted ASCII IDs and rejects Object.prototype own names",
+    "Default infinite_padding is true; entry explicitly disables it and restricts views to Day/Week/Month",
+    "Actual SDK headless setup/date methods prove padded lower/upper calendar arithmetic only; no DOM/chart/listener PASS",
+    "SDK uses local date constructors; application span policy is UTC civil-day arithmetic, not a UTC-rendering promise"
+  ]
+}

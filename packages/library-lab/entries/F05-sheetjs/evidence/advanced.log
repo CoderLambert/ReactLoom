@@ -1,0 +1,75 @@
+{
+  "scenario": "advanced",
+  "sdkVersion": "0.20.3",
+  "literalCell": {
+    "t": "s",
+    "v": "'=literal-0"
+  },
+  "rows": [
+    {
+      "channel": "'=literal-0",
+      "views": 0,
+      "kind": "边界样例"
+    },
+    {
+      "channel": "'+literal-1",
+      "views": 1,
+      "kind": "边界样例"
+    },
+    {
+      "channel": "'-literal-2",
+      "views": 2,
+      "kind": "边界样例"
+    },
+    {
+      "channel": "'@literal-3",
+      "views": 3,
+      "kind": "边界样例"
+    }
+  ],
+  "rejected": [
+    {
+      "name": "missing-column",
+      "reason": "工作表必须从A1开始，仅有三列且不超过200行数据"
+    },
+    {
+      "name": "extra-column",
+      "reason": "工作表必须从A1开始，仅有三列且不超过200行数据"
+    },
+    {
+      "name": "wrong-header",
+      "reason": "工作表表头必须精确匹配 channel、views、kind"
+    },
+    {
+      "name": "duplicate-channel",
+      "reason": "重复的订阅频道"
+    },
+    {
+      "name": "negative-count",
+      "reason": "计数必须是非负安全整数"
+    },
+    {
+      "name": "blank-row",
+      "reason": "频道必须是文本"
+    },
+    {
+      "name": "too-many-rows",
+      "reason": "工作表必须从A1开始，仅有三列且不超过200行数据"
+    },
+    {
+      "name": "formula-cell",
+      "reason": "本导入器不接受公式单元格"
+    },
+    {
+      "name": "multiple-sheets",
+      "reason": "仅接受单个工作表"
+    }
+  ],
+  "boundary": "真实 SheetJS 字节往返；不证明 Excel/LibreOffice 展示或解析器资源安全",
+  "artifact": {
+    "workbook": ".artifacts/advanced.xlsx",
+    "result": ".artifacts/advanced.json",
+    "bytes": 8886,
+    "sha256": "e4bc55966c6b749d16413a6b947f25644404bb2025d1ee6c3880bfd5a40f445a"
+  }
+}

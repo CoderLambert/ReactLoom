@@ -1,0 +1,19 @@
+{
+  "capturedAt": "2026-11-10T14:02:05.214542+00:00",
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "head": "1218066e706a90ba03fac8dff8c9b843dd2429c4",
+  "status": "",
+  "files": {
+    "AGENTS.md": "933305f850112e52c351fe8bdb5dd1a017be4da7e51d60f0c52ebcdfc73138ee",
+    "agent.md": "02f2fd281744b207b362e622095668d10b52a8b7323bf4bff9c26871405aea64",
+    "examples/command-state.ts": "37e7a16c8560830a2c3a609c0b5076d8a642beca4068a5f70c19305b05135596",
+    "examples/demo.tsx": "254591932548c36c414610bd0d0c7ce7ef1648162f1996fbbe7381b8c1751690",
+    "examples/example.tsx": "5f3531019d564cf48340cb7cc5a511fa36546ccf78bb9ee195b125956ae4185c",
+    "examples/keyboard-policy.ts": "a6924d1e3d17775ad2857ce2e37a76fb3be31d7f550a4a2c2832b48b2e43c546",
+    "guide.md": "4cd241f54b7b9486559a282db3fe6bfe4455a0d50404687b4532423eb48018e7",
+    "library.json": "df1846a697fba5c88dc22ca7858709ad84186057efb630a89c17e562e6950526",
+    "tests/command-state.test.mts": "31dacc67ff4947c10c2c3e1f1fc4706902c2df8a08e19c6e3f8972ec1ad18b1b",
+    "tests/keyboard-policy.test.mts": "a0d2ea9c814ee270972c9df94c3173aae29a91782f9faf7ca3db6ed30dba39a7",
+    "verification.json": "5d522b998e40121b808394a49cea71d26b5cee07f072ee3bf0c25c33b61e3893"
+  }
+}

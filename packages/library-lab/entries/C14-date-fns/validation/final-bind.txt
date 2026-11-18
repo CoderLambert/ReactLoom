@@ -1,0 +1,19 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['pnpm', 'exec', 'node', 'entries/C14-date-fns/validation/metadata-check.mjs']
+startedAt: 2026-11-10T17:20:36.187523+00:00
+exit: 0
+{
+  "levels": 3,
+  "runtimeFiles": 6,
+  "auditedInstalledFiles": 25,
+  "readmeBytes": {
+    "date-fns": 1814,
+    "@date-fns/tz": 9377
+  },
+  "renderedDocumentLinks": 12,
+  "homepage": "unknown",
+  "reusedBrowserC14Cases": 4,
+  "publicProposalExact": true,
+  "runtimeMatchesCandidate18": true,
+  "formal": "NOT_RUN"
+}

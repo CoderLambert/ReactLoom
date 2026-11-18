@@ -1,0 +1,21 @@
+HTTP/2 200 
+accept-ranges: bytes
+access-control-allow-origin: https://lodash.com
+age: 5604
+cache-control: public,max-age=0,must-revalidate
+cache-status: "Netlify Edge"; hit; ttl=31530396
+content-security-policy: block-all-mixed-content; report-uri https://lodash.report-uri.io/r/default/csp/enforce; default-src 'none'; child-src 'self' data: ms-appx-web: ghbtns.com platform.twitter.com; img-src 'self' data: *.2mdn.net *.adsafeprotected.com ad.atdmt.com *.buysellads.com *.buysellads.net *.c3tag.com *.carbonads.net *.convertro.com ad.doubleclick.net www.google-analytics.com www.launchbit.com launchbit.com assets.servedby-buysellads.com *.serving-sys.com; font-src 'self' data: fonts.gstatic.com cdn.jsdelivr.net; frame-src 'self' data: ms-appx-web: ghbtns.com platform.twitter.com; manifest-src 'self'; script-src 'self' *.carbonads.com srv.carbonads.net adn.fusionads.net www.google-analytics.com www.googletagmanager.com cdn.jsdelivr.net; style-src 'self' cdn.jsdelivr.net; style-src-elem 'self' 'unsafe-inline'; style-src-attr 'unsafe-inline'; connect-src lodash.report-uri.com lodash.report-uri.io 'self' ms-appx-web: ghbtns.com platform.twitter.com *.2mdn.net *.adsafeprotected.com ad.atdmt.com *.buysellads.com *.buysellads.net *.c3tag.com *.carbonads.net *.convertro.com ad.doubleclick.net www.google-analytics.com www.launchbit.com launchbit.com assets.servedby-buysellads.com *.serving-sys.com fonts.gstatic.com cdn.jsdelivr.net *.carbonads.com srv.carbonads.net adn.fusionads.net www.googletagmanager.com 'unsafe-inline';
+content-type: text/html; charset=UTF-8
+date: Tue, 17 Nov 2026 16:18:35 GMT
+etag: "150038dddd92e0a261e6eade575b5f34-ssl"
+link: <//ghbtns.com/>; rel=dns-prefetch; pr=1.0; crossorigin, <//platform.twitter.com/>; rel=dns-prefetch; pr=1.0; crossorigin, </sw.js>; rel=serviceworker, <//cdn.carbonads.com/>; rel=dns-prefetch; pr=0.25, <//srv.carbonads.net/>; rel=dns-prefetch; pr=0.25, </assets/css/main.css>; rel=preload; as=style; pr=1.0, </vendor/cdn.jsdelivr.net/fontawesome/4.7.0/css/font-awesome.min.css>; rel=preload; as=style; pr=1.0, </vendor/cdn.jsdelivr.net/fontawesome/4.7.0/fonts/fontawesome-webfont.woff2?v=4.7.0>; rel=preload; as=font; pr=1.0; crossorigin, </vendor/fonts.gstatic.com/s/sourcecodepro/v6/leqv3v-yTsJNC7nFznSMqSP2LEk6lMzYsRqr3dHFImA.woff2>; rel=preload; as=font; pr=1.0; crossorigin, </vendor/fonts.gstatic.com/s/sourcecodepro/v6/leqv3v-yTsJNC7nFznSMqczFoXZ-Kj537nB_-9jJhlA.woff2>; rel=preload; as=font; pr=1.0; crossorigin, </assets/js/boot.js>; rel=preload; as=script; pr=1.0, </assets/js/home.js>; rel=preload; as=script; pr=1.0
+referrer-policy: origin-when-cross-origin
+server: Netlify
+strict-transport-security: max-age=31536000
+vary: Accept-Encoding
+x-content-type-options: nosniff
+x-frame-options: SAMEORIGIN
+x-nf-request-id: 01M7N4V5G8NJR4JXCJ1979NCXQ
+x-xss-protection: 1; mode=block
+content-length: 7775
+

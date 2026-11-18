@@ -1,176 +1,51 @@
-# react-easy-crop 6.2.4｜受控裁剪框和 Canvas PNG
+# react-easy-crop：选像素区域，再用Canvas导出
 
-`library.json` 钉住 `react-easy-crop@6.2.4`，MIT。它提供拖动和缩放的裁剪框，以及 `onCropComplete` 的像素区域。它不编码图片、不上传、不保留 EXIF。导出是本示例自己的 Canvas。
+新闻封面需要拖动/缩放图像、按16:9选区域，并得到真正的新PNG。react-easy-crop6.2.4（实际package与固定LICENSE为MIT）只提供裁剪选择UI和几何回调，不替你编码、上传或存储。纯浏览选PhotoSwipe，整图重采样选pica；不需要用户选区时无需Cropper。
 
-## Lab 当前示例
+本例默认素材是原创1200×800 SVG data URL，显式width/height/viewBox；不是实拍照片、图床或EXIF样本。高级模式仅本地PNG/JPEG/WebP，无远程资源/上传/账号/旋转/EXIF保留。
 
-真实组件是 [`examples/example.tsx`](examples/example.tsx)。[`examples/demo.tsx`](examples/demo.tsx) 只再导出。边界在 [`examples/crop-policy.mjs`](examples/crop-policy.mjs)。
+## 完整最小迁入
 
-用户点开 Demo 后才挂上 `<Cropper>`。没有 `localhost:5173`。默认图是内联 SVG data URL，不请求外网。
+已有React/TSX DOM项目执行`pnpm add react-easy-crop@6.2.4`。复制example.tsx、crop-policy.mjs/.d.mts、sample-image.mjs/.d.mts、image-runtime.mjs/.d.mts、file-check.mjs/.d.mts，保持相对目录；demo仅Lab转发可省。渲染`<EasyCropExample level="business" />`。需要ESM/TSX打包器、DOM Image.decode/Canvas.toBlob/createImageBitmap/Blob/objectURL；无Provider/env/服务/字体。
 
-挂载行为：
+Cropper默认自动注入样式，必须保留相对定位且有高度的330px父容器；若产品关闭disableAutomaticStylesInjection，需自行引入库styles.css并满足CSP，不能既关闭又漏样式。TS使用Bundler解析。跨源远程图片会涉及CORS/Canvas污染，这里只受控data/本地blob，不假称处理任意远程图片。
 
-- `crop`、`zoom` 受控。`minZoom={1}`，`maxZoom={3}`。
-- 比例：basic 为 1，business 为 16/9，advanced 为 4/3。
-- `onCropComplete` 的第二个参数是像素区域，写入 `area`。检查文件期间不更新 area。
-- 「裁剪并导出 PNG」调用 `cropToPng`：`Image.decode`，`checkImageDimensions`，`checkCropArea`，再 `drawImage` 和 `toBlob(..., 'image/png')`。
-- 源和结果的 object URL 在 effect 清理时 `revokeObjectURL`。
-- `source`、`aspect` 或 `zoom` 变化会作废进行中的导出：递增 generation，清空结果。
-- 双击由 `activeExport` 同步挡住。旧导出的 finally 不能清掉新导出的锁。
-- advanced 才有文件选择：`image/png`、`image/jpeg`、`image/webp`。`checkImageFile` 要求非空且不超过 4MiB。再用 `createImageBitmap` 看像素，不超过 1600 万，然后 `bitmap.close()`。输出像素超过 400 万会在 `checkCropArea` 抛错。
-- 换文件时作废旧结果，缩放和位移回到 1 和原点。
-
-没有旋转。源码写明：若加上 `rotation`，必须同时改导出几何。当前 PNG 不是服务器裁剪，也不保留 EXIF。
-
-没有挂载：Uppy、上传 mutation、PhotoSwipe 预览导出图、pica 二次缩小。
-
-## 1. 产品边界
-
-| 任务 | 判断 |
-| --- | --- |
-| 头像、封面，要在浏览器里选一块矩形 | 适合，导出必须用像素而不是百分比冒充文件 |
-| 只看大图 | E13 |
-| 整图高质量缩小 | E15 |
-| 要旋转、滤镜、多层 | 另做几何和编码，不要只加一个 prop |
-| 要服务端按 EXIF 方向裁 | 本示例做不到 |
-
-百分比坐标不能直接当文件。`croppedAreaPixels` 才是 Canvas 的源矩形，而且库会取整，所以导出前还要 `checkCropArea`。
-
-## 2. 数据流
-
-```text
-SVG 或本地 File
-    │ object URL（File 才需要）
-    ▼
-Cropper（crop / zoom / aspect）
-    │ onCropComplete → 像素
-    ▼
-checkCropArea
-    ▼
-canvas.drawImage → image/png Blob
-    │
-    ▼
-结果 object URL（可另存，不上传）
+```tsx
+<Cropper image={source} crop={crop} zoom={zoom} aspect={16/9}
+  onCropChange={setCrop} onZoomChange={setZoom}
+  onCropAreaChange={(_, pixels) => setArea(pixels)} />
 ```
 
-权威的裁剪结果是 Blob。屏幕上的框是交互状态。两者用 generation 对齐，避免慢的 `decode` 把旧图写到新文件上。
+crop是UI偏移，zoom是缩放，onCropAreaChange第二参数才是源图像素矩形；第一个是百分比，不能送给drawImage。6.2.4纯受控crop坐标变化只emitCropAreaChange，不触发onCropComplete；所以用实时onCropAreaChange同步有效area，既覆盖拖动/缩放，也覆盖程序重置。完成回调也会发area-change，不需手算坐标。真实导出由image-runtime负责：Image.decode→检查自然尺寸→检查整数裁剪矩形→分配Canvas→drawImage源区域→toBlob('image/png')。完成/失败finally清Image.src并将Canvas尺寸置0释放本次缓冲；Blob仍由调用方拥有。
 
-官方入口：[仓库](https://github.com/ValentinH/react-easy-crop)、[npm](https://www.npmjs.com/package/react-easy-crop)。
+## 三个独立目标
 
-## 3. 三层
+### 基础：几何选择而非CSS截图
 
-在 Library Lab 打开 E14 再运行。
+方形框拖动和缩放，观察真实croppedAreaPixels的x/y/width/height；这层只学习选择，不导出。像素宽高随zoom变化，不把屏幕裁剪框尺寸当原图输出尺寸。无旋转，加入rotation必须同步重写导出几何，不能只给Cropper一个属性。
 
-### 基本
+### 业务：真实16:9 PNG
 
-方形框。拖动图片，缩放滑块从 1 到 3。像素 JSON 会变。导出后出现 PNG 预览和字节数。字节数不是画质分数。
+调整封面构图后点击裁剪导出。结果img来自新Blob URL，浏览器decode后自然宽高应等于显示的area.width/height（整数舍入导致比例近似16:9）。PNG字节数只说明编码体积，不是画质/上传成功。输入SVG也会被栅格化成PNG，不保留SVG矢量或原图EXIF。
 
-### 业务
+导出同步ref闸门阻止双击；source/aspect/zoom/crop变化递增导出generation，清旧结果。已开始的解码/编码不物理取消，但旧结果不能回写；旧finally仅在id匹配时清闸门，不释放新导出。按钮失败显示错误；合法重新选择后可重试。
 
-16:9，当作新闻封面教学。仍然是本地 SVG 或你在 advanced 才换上的文件。没有标题字段，没有保存到文章 API。
+### 进阶：本地输入预算和资源所有权
 
-### 进阶
+选择本地PNG/JPEG/WebP前先检查MIME声明、非空、≤4MiB；MIME不证明实际格式，解码失败仍报错。createImageBitmap解码后检查正整数尺寸和总像素≤1600万，并finally.close。**源像素检查发生在解码之后，不能防止第一次解码内存开销。** 4MiB也不保证解码内存小，生产还需格式/元数据/沙箱预算。
 
-选择本地图片。类型或大小不对时，错误写在 `role="alert"`，不替换当前源。超大像素在 bitmap 阶段拒绝。导出期间按钮会显示处理中。换缩放会清掉上一次 PNG。
+成功文件才设置localFile并创建blob URL；检查失败保留当前源与几何、清旧导出，可直接重试。文件校验有独立file-check epoch，不受crop/zoom/export generation影响：修复旧实现校验期间几何变化导致checkingFile永远不清的竞态。新文件或卸载作废旧检查，旧finally不修改新检查；检查时禁用缩放和指针交互、忽略旧onCropAreaChange。恢复默认图片使旧文件检查失效、清本次结果并恢复受控SVG。
 
-## 4. 反例（带代码）
+导出前检查裁剪矩形在源图范围、整数/非负、输出≤400万像素，再分配Canvas。源URL由localFile effect创建/清理，结果URL由resultBlob effect创建/清理；换图/换结果/恢复默认/卸载均revoke自己URL，不global clear。createImageBitmap在迟到/失败时也close；浏览器仍需实测这些资源路径。
 
-### 反例 1：把百分比当像素
+## 生命周期与限制
 
-```ts
-ctx.drawImage(image, areaPercent.x, areaPercent.y, areaPercent.width, areaPercent.height, 0, 0, w, h)
-```
+level作为子组件key，换层会新建实验并作废旧文件检查/导出代次，默认源重新开始。Cropper实装componentWillUnmount解绑监听/观察者，React组件不调用不存在的destroy。图片解码、编码Promise未提供AbortSignal，不能把丢弃结果说成计算取消。
 
-`onCropComplete` 的第一个参数是百分比。Lab 使用第二个参数，并再校验边界。
+输入MIME/大小、尺寸和矩形检查属于自建policy；Cropper负责真正几何回调；Canvas是浏览器API。Node策略不能证明Cropper挂载、图像decode、PNG生成、URL清理或键盘/真实IME。拖动/触摸/辅助技术仍需对应设备。这里没有文字输入法控件，不用合成composition当裁剪验收。
 
-### 反例 2：不限制解码像素
+## 来源与验证范围
 
-```ts
-const bitmap = await createImageBitmap(file)
-canvas.width = bitmap.width
-```
+官方v6.2.4固定commit91bfd8f0928ead345e5126a539edab4657d82993的README/LICENSE原字节保存，固定树无中文README回退en。本页独立中文教学。官网Demo实际GET200但未从Lab origin确认嵌入，unknown保留直达，响应头见official/source-evidence.json。
 
-文件只有几兆也可能解出巨大位图。Lab 在绘制前 `checkImageDimensions`，并在 finally 里 `close()`。
-
-### 反例 3：不释放 object URL
-
-```ts
-setLocalUrl(URL.createObjectURL(file))
-```
-
-每次选择都泄漏。Lab 用 effect 的清理函数 revoke。结果 Blob 同样处理。
-
-### 反例 4：旧导出写回新图
-
-```ts
-const blob = await cropToPng(source, area)
-setResultBlob(blob)
-```
-
-用户已经换文件时，这次 Blob 必须丢掉。Lab 比较 generation 和 `activeExport`。
-
-### 反例 5：双击两次导出
-
-只靠按钮 `disabled` 挡不住同一拍的两次点击。Lab 用 ref 做同步闸门。
-
-### 反例 6：加上 rotation 却沿用同一 drawImage
-
-旋转后的采样矩形不是现在的 `x, y, width, height` 直接平移。源码禁止在未改几何时宣称支持旋转。
-
-### 反例 7：把裁剪框组件当成已上传
-
-导出只留在浏览器。没有 fetch。不要在文案里写「已保存封面」。
-
-### 反例 8：跨域图片不设 crossOrigin
-
-本示例的源是 data URL 或 blob URL。若改成远程 URL，Canvas 会被污染，`toBlob` 失败。那不是本 Demo 的路径。
-
-## 5. 组合（未挂载）
-
-**E13。** 导出 PNG 可以再放进灯箱，但要写真实像素宽高，并 revoke 不再使用的 URL。
-
-**E15。** 先按业务裁剪，再把 PNG 画布交给 pica 缩到允许的最长边。不要用 CSS 缩放冒充已缩小的文件。
-
-**上传队列。** 选择文件、裁剪、上传是三步。上传失败保留 Blob，取消时 revoke。Query 只在服务端确认后更新文章封面 URL。
-
-**E01。** 编辑器只保存最终资源 id。裁剪 UI 不要嵌进每个按键都重渲染的文档事务里。
-
-## 6. 性能与可访问性
-
-滑块有 label。裁剪区是固定高度 330 的容器。键盘是否能操作 Cropper 内部手柄，没有收据。
-
-`createImageBitmap` 和 `drawImage` 都在主线程旁边占用内存。4MiB 与 1600 万像素是拒绝阈值，不是流畅保证。不要写虚构的毫秒数。
-
-中文不进入像素路径。文件名不要当成可信 HTML。
-
-## 7. 升级核对
-
-- 锁定 6.2.4。`onCropComplete` 的参数顺序以 npm 文档和当前源码为准：第二参才是像素。
-- 升级后用一张已知尺寸的 PNG 对比 `checkCropArea` 是否仍拒绝越界。
-- 不要从旧版 class 组件示例里把 crop 改成非受控又和现在的 state 混用。
-
-## 8. 故障
-
-| 现象 | 先看 |
-| --- | --- |
-| 导出按钮一直禁用 | `area` 是否还是 null，或仍在检查文件 |
-| 提示超出源图 | 取整后的像素越界，策略拒绝 |
-| 换图后还是上一张 PNG | generation 是否递增 |
-| 内存涨 | object URL 是否 revoke，bitmap 是否 close |
-| toBlob 失败 | Canvas 是否被跨域污染。本示例不应出现 |
-| 旋转后内容歪 | 本示例没有旋转支持 |
-
-## 9. 验收
-
-1. basic：拖动后像素 JSON 变化，能导出非空 PNG。
-2. business：框是 16:9。
-3. advanced：拒绝超限文件；合法文件替换源；换缩放后旧 PNG 消失。
-4. 离开 Demo 后 blob URL 已 revoke。
-5. 没有请求上传接口。
-
-sdk、build、browser 保持 **NOT_RUN**。没有 `docs/library-lab/evidence/runs/` 的 E14 收据就不能写 PASS。Actions `41779873259` 是仓库级运行，不是本条目通过。
-
-## 10. 资料
-
-- https://github.com/ValentinH/react-easy-crop
-- https://www.npmjs.com/package/react-easy-crop
+policy与资源代次测试分项原始日志见local-validation.md；真实DOM SDK由validation/browser.spec.ts交主控执行，不伪造NodeSDK PASS。正式sdk/build/browser无匹配receipt保持NOT_RUN。

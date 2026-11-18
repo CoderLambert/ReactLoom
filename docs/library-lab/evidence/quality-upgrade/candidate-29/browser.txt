@@ -1,0 +1,24 @@
+[WebServer] (node:2022328) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:2022342) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 11 tests using 2 workers
+
+(node:2022569) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2022570) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 e2e/quality-resume-codemirror6.spec.ts:11:1 › @E04 real input, syntax spans and undo (1.6s)
+  ✓   2 e2e/quality-resume-codemirror6.spec.ts:26:1 › @E04 valid draft restores; NUL/oversized drafts fail without changing text (1.9s)
+  ✓   3 e2e/quality-resume-codemirror6.spec.ts:69:1 › @E04 readonly reconfigures the same view, program reset works, outer view observes destroy (1.7s)
+  ✓   5 e2e/quality-resume-lexical.spec.ts:55:1 › @E03 selection formatting and real HistoryPlugin undo redo (1.6s)
+  ✓   4 e2e/quality-resume-lexical.spec.ts:4:1 › @E03 actual typing, JSON restore and preflight rejection keep document (3.2s)
+  ✓   6 e2e/quality-resume-lexical.spec.ts:72:1 › @E03 real root detaches on unmount and test observer is released (1.5s)
+  ✓   7 e2e/quality-resume-lexical.spec.ts:118:1 › @E03 per-key Storage failures leave live text editable (1.5s)
+  ✓   8 e2e/quality-resume-official-e03-e06.spec.ts:8:3 › @E03 pinned official original and honest homepage fallback (1.8s)
+  ✓   9 e2e/quality-resume-official-e03-e06.spec.ts:8:3 › @E04 pinned official original and honest homepage fallback (1.7s)
+  ✓  10 e2e/quality-resume-official-e03-e06.spec.ts:8:3 › @E06 pinned official original and honest homepage fallback (1.9s)
+  ✓  11 e2e/quality-resume-react-markdown.spec.ts:3:1 › E06 editable markdown GFM and untrusted input without image requests @E06 (4.2s)
+
+  11 passed (13.5s)

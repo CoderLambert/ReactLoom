@@ -1,0 +1,17 @@
+{
+  "diff-check.txt": "1da42ec22e8a8248a861bbef3b1a1e8ba68730497b435d87de90009aa99dbec5",
+  "final-inspection.txt": "3ad9d0871315992678b23cd795f54dc3bda79937156024985080de2e4fdef2da",
+  "format-check.txt": "5fcea4fbec53f109b7f9a2642b4047598e05a98a6e877b0815df5eba37f68b38",
+  "format-final.txt": "b0a85ea43f7670cc542c5f8640ba80a3349aa72d808f7bd110d75408879f89dd",
+  "format-initial.txt": "456e1d2de809120ee9fc1de274d48d4030c26afcaa9b0926b7250722ab8492a0",
+  "homepage-curl.txt": "8b5f191e44ddc60a16603353d59774800720680d6591e33e0ba70999daa47112",
+  "metadata.txt": "ade635f55d0b02bdf8d95d9aa76c6d744db096135081bd3e3952697fe0d61f7f",
+  "node-sdk-environment.txt": "0e9dfa42bc4b07fc784b44c7b523272d6611dc6f599741897e2ec818e0f5bfa6",
+  "policy-location-final.txt": "c04d610459eb2b03b1a7043df529293a3b5c090d98a4376abfc31e0f53a3a3a6",
+  "policy.txt": "87393f8062acdc4ce44a1ef8ebcca8f702ecc1d397f6207541281fe92b700c1e",
+  "proposal-format.txt": "e02e1f03c325754cf4b5d1a6e40c9d4dfe73920bc363374adf4bdeb7edac50d8",
+  "proposal-types.txt": "b5510f7dad37e392b8adf93f56abfcf9277ac178324f0eaae9242a7b9b66c00f",
+  "source-fetch.txt": "d4178f333d8d729f04f1d664a854626417178e84bc6011f5efd02c59b167d151",
+  "types-final.txt": "60adad1f887453f1d26c58934879025163a62c7e9a2ef900c353ae5517cea521",
+  "types.txt": "a8d59ce87afdf7adb876315426381605c7bdf31539d372f1dc9a498540c909bd"
+}

@@ -1,0 +1,4 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: pnpm exec biome check --write entries/A02-recharts/validation/sdk-probe.mjs
+exit: 0
+Checked 1 file in 3ms. Fixed 1 file.

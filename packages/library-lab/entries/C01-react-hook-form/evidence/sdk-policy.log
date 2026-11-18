@@ -1,0 +1,19 @@
+✔ fingerprint follows exact form fields and ordered dynamic rows (0.570848ms)
+✔ late response cannot update edited, aborted or replaced session (0.136767ms)
+✔ IME Enter is suppressed across composition states and keyCode 229 (3.585717ms)
+✔ real RHF registers an array field through its public hooks (6.641293ms)
+✔ real RHF validates registered nested values before calling the valid submit handler (1.64469ms)
+✔ real RHF exposes a mapped server field error and resets to its default nested values (0.492191ms)
+✔ host, default HTTPS port, whitespace and fragments canonicalize (0.575393ms)
+✔ path and query remain case-sensitive instead of lowercasing entire RSS URL (0.121658ms)
+✔ reject credentials, insecure schemes, invalid URLs and control characters (0.644617ms)
+✔ duplicate detection handles canonical fetch identity (0.314645ms)
+✔ invalid entries are handled by field validator and do not form duplicate keys (0.100744ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 66.710547

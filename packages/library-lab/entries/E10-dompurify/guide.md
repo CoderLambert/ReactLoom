@@ -1,263 +1,76 @@
-# DOMPurify 3.4.17｜先净化，再把字符串放进唯一的 HTML 预览
+# DOMPurify：有限HTML字符串的最后一道DOM边界
 
-`library.json` 钉住 `dompurify@3.4.17`。许可是 **MPL-2.0 OR Apache-2.0**，不是 MIT。DOMPurify 在真实 DOM 上按允许列表清理 HTML。它不是 Markdown 解析器，不是富文本编辑器，也不是 CSP。
+CMS公告必须保留段落、强调和少量链接，输入又可能来自不可信来源。DOMPurify使用真实DOM解析并按策略净化，再把返回值交给唯一HTML预览。它不解析Markdown、不实现编辑器、不提供ACL，也不替代CSP。纯文本用React子节点；Markdown优先react-markdown；HTML AST管线比较rehype-sanitize。
 
-本条目只有一个 HTML sink：净化结果的 `dangerouslySetInnerHTML`。输入框和「净化后的 HTML 文本」都是普通文本。顺序是先 `DOMPurify.sanitize`，再预览。
+本例钉住DOMPurify3.4.17，安装包与固定许可核对为 **MPL-2.0 OR Apache-2.0**。三个目标分别是合法格式保留、公告链接的窄属性合同、攻击输入与失败边界。没有远程抓取、上传、商业扩展或服务端DOM实现。安全库版本应结合上游公告和实际回归维护，本页不凭版本号声称已复现/排除全部漏洞。
 
-## Lab 当前示例
+## 完整接入与唯一sink
 
-真实组件是 [`examples/example.tsx`](examples/example.tsx)。[`examples/demo.tsx`](examples/demo.tsx) 只再导出。配置在 [`examples/html-policy.mjs`](examples/html-policy.mjs)，组件和测试共用，禁止在 JSX 里再写一套标签名单。
+在已有React/TypeScript的DOM浏览器宿主安装：
+
+```sh
+pnpm add dompurify@3.4.17
+```
+
+复制example.tsx、html-policy.mjs/.d.mts、sanitize-preview.mjs/.d.mts，保持相对导入；demo.tsx仅Lab转发可省。渲染 `<DOMPurifyExample level="business" />`。需要ESM/TSX打包器与DOM类型，无CSS、Provider、env、账号或Lab内部模块。不提供SSR接线；不能在没有window的服务端直接渲染本组件。
 
 ```tsx
-const clean = useMemo(() => DOMPurify.sanitize(dirty, htmlPolicy), [dirty])
-// 预览只用 clean
-<div dangerouslySetInnerHTML={{ __html: clean }} />
+const purifier = useMemo(() => createDOMPurify(window), [])
+const result = useMemo(() => sanitizePreview(dirty, purifier), [dirty, purifier])
+<div dangerouslySetInnerHTML={{__html: result.html}} />
+<pre>{result.html}</pre>
 ```
 
-`htmlPolicy` 是固定词表，不是 DOMPurify 的宽默认配置：
+每次挂载创建私有DOMPurify实例，避免其他消费者对同一个默认实例setConfig/addHook改变本例行为。仅每次传config不足以抵消同一实例上已设置的全局setConfig。本例不注册钩子/全局配置，不创建网络、定时器或订阅；卸载释放React引用，无虚构destroy调用。
 
-```js
-{
-  ALLOWED_TAGS: ['section', 'h3', 'h4', 'p', 'strong', 'em', 'b', 'i', 'br',
-    'ul', 'ol', 'li', 'blockquote', 'code', 'pre', 'a'],
-  ALLOWED_ATTR: ['href', 'title'],
-  ALLOWED_URI_REGEXP: /^https:\/\/[a-z0-9.-]+(?::\d{1,5})?(?:[/?#]|$)/i,
-}
-```
+原文只在textarea中；pre是普通React文本。仅result.html进入HTML sink，净化后不拼接、不修改、不交第二个会重新解释它的库。一个下游插件若再次写属性、拼HTML或切到SVG/CSS/脚本/邮件模板，是新的安全边界，不能沿用本次“已净化”。
 
-文件头注释写明两件事，迁移时不要删：
+## 保持窄标签与属性
 
-1. 这不是默认的大 HTML profile。
-2. **不要把 `USE_PROFILES` 和 `ALLOWED_TAGS` 一起开。** 官方语义里 profile 会盖过标签名单的直觉。本示例不设置 `USE_PROFILES`。
+html-policy保留既有标签：section、h3/h4、p、strong/em/b/i/br、ul/ol/li、blockquote/code/pre/a。允许普通属性仅href/title。**标签与属性表没有为演示放宽。** 这份公告合同不接受script/style/svg/math/img/iframe/form/object，也不接受事件、style、target/rel等属性。
 
-`ALLOWED_URI_REGEXP` 只匹配无用户信息的 `https://` 加主机名。它不是「任何看起来像网址的字符串」。复杂正则还有回溯成本，不要在生产里把表达式改成由用户配置。
+DOMPurify默认 `ALLOW_DATA_ATTR` 和 `ALLOW_ARIA_ATTR` 都是true，**即使写了ALLOWED_ATTR，data-*和aria-*也可能额外通过**。本例现在明确设为false，使实际行为符合“仅href/title”的窄属性约定；这不是DOMPurify默认行为。如果产品需要无障碍属性，应单独审查语义与对应允许范围，而不是认为ALLOWED_ATTR已经控制所有默认例外。
 
-| 层 | 样例 | 预览应基于 |
-| --- | --- | --- |
-| basic | 段落和 strong | 净化后的字符串 |
-| business | section、h3、一条 https 链接、em | 同上 |
-| advanced | `onclick`、`script`、`img onerror`、`javascript:`、`svg onload`、带 style 的段落 | 同上。页面要求检查 DOM，但 **没有浏览器 XSS 测试记录** |
+不要设置USE_PROFILES与ALLOWED_TAGS组合：实装profile分支会重新建立标签表，覆盖手写标签表。不能为了“预览完整”开启html profile、ADD_TAGS/ADD_ATTR或钩子把删除的用户属性加回来。
 
-文本框 `maxLength={12000}`。换 level 时 effect 重置原文。没有独立的 `workshop/` 工程，也没有 `localhost:5173`。
+## URL正则只是一层前缀约束
 
-没有挂载：`USE_PROFILES`、`RETURN_DOM`、`RETURN_TRUSTED_TYPE`、全局 `setConfig`、`ADD_TAGS`、jsdom 服务端净化、钩子 `afterSanitize*`。advanced 的状态句是给人手看的检查提示，不是已执行的攻击测试。
+当前ALLOWED_URI_REGEXP仍是原有HTTPS主机/可选端口/路径起点正则，没有放宽协议。它拒绝普通http、javascript、data、相对路径、协议相对URL与直接凭据authority；但它**不是完整URL解析器**、域名允许列表或可信来源证明。
 
-## 1. 场景结论
+例如 `https://example.com:99999/path` 能匹配这段正则，但new URL会因非法端口拒绝。路径后续也不是由该前缀表达式完整校验。DOMPurify对属性另有内部检查与规范化，不能把单独regex.test结果冒充浏览器可导航性或完整SDK结论。只有本例声明的href语境适用；title是文本属性，不是URL。
 
-| 任务 | DOMPurify 的位置 | 不适合时 |
-| --- | --- | --- |
-| 公告、CMS、RSS 的有限富文本 | 允许列表之后，唯一的 HTML sink 之前 | 正文只是纯文本。用 React 子节点 |
-| Markdown | 不解析 Markdown。原始 HTML 若被别的库打开，才在该边界净化 | 用 E06 的 `skipHtml` 往往更合适 |
-| 代码片段 | 通常不需要 | 用 E09 的文本 token |
-| 必须保留脚本、iframe、小程序 | 这不是安全富文本 | 换隔离模型，不要放宽本策略来「显示出来」 |
-| 服务端净化 | 需要维护中的 DOM 实现 | 不要假设本浏览器示例等于 SSR 已安全 |
+合法HTTPS链接仍能把人带到外站。业务若只允许本站，需要独立URL解析/host规则与测试，不在sanitize之后把新用户URL拼回DOM。本示例不点击不可信链接，不宣称阻断所有外部导航或所有解析期间网络行为。
 
-原则：净化只对声明的 sink 负责。先定 sink，再定标签、属性和 URL，再准备破坏性样本。一次净化不能变成全站通行证。
+## 三个实际目标
 
-## 2. 安全模型
+### basic：合法格式保留
 
-```text
-未知 HTML 字符串
-    │ 文本框上限 12_000 字符（不是完整的字节预算）
-    ▼
-浏览器 DOM 解析（DOMPurify 内部）
-    │
-    ▼
-ALLOWED_TAGS / ALLOWED_ATTR / ALLOWED_URI_REGEXP
-    │
-    ▼
-净化后的字符串 clean
-    ├─ <pre>{clean}</pre>     文本，不再解析
-    └─ dangerouslySetInnerHTML 唯一 HTML sink
-```
+默认p/strong保留。输入带onclick的段落，预期正文和strong/em仍显示，事件消失；查看同一clean字符串的pre，而不只看外观。恢复场景回到原样例。输入变化同步重新净化，没有先把dirty临时写进预览。
 
-不要在 `clean` 后面拼接新的 `<a href>` 或 `<style>`。那一段没有再经过 `sanitize`。不要把 `clean` 放进 CSS、脚本模板、URL 参数或 SVG 的另一种解析器里，然后说 DOMPurify 已负责。
+### business：公告结构与链接属性
 
-`sanitize` 在本文件里使用默认返回类型：字符串。`RETURN_DOM` 和 `RETURN_DOM_FRAGMENT` 会改变类型，React 的 `__html` 需要字符串。`RETURN_TRUSTED_TYPE` 只有在页面启用 Trusted Types 时才有意义，本示例没有开。
+样例section/h3/p/em，链接带合法HTTPS/title以及不允许的target/data-track/aria-label。预期结构与href/title保留，后三者被删除。这展示真实的属性合同，不是“源内容可信”的同源证明，也没有图片加载能力。
 
-`DOMPurify.removed` 只能当调试时的旁路观察。它不是安全分数，也不是审计日志。不要用「removed 为空」证明输入无害。
+### advanced：攻击输入与结果边界
 
-`setConfig` 会影响后续调用。本示例每次把 `htmlPolicy` 传进 `sanitize`，不设全局配置，也不注册钩子，避免别的 Demo 改到同一实例的默认行为。
+script、SVG、事件、img、style与危险协议会被当前策略移除。载荷只设置本地无害布尔标记，不弹窗/读取凭据。浏览器提案会检查实际预览DOM，而不只检查字符串含不含关键词；HTML innerHTML中的script即便不执行也仍是失败，不能只靠布尔标记断言安全。
 
-默认配置为了兼容富文本，往往比这份名单宽，并且可能留下 SVG、MathML 或 style。DOMPurify 不负责把 CSS 变成安全的，也不保证阻止远程请求。本名单没有 `img`、`svg`、`style`、`script`、`iframe`、`form`。这是这份公告预览的策略，不是「官方最安全默认值」的通用公式。
+图片/iframe使用独立测试域探针，以观察净化和最终sink期间是否产生不期望请求；当前未运行浏览器，不能从标签表静态推成“网络测试通过”。CSP阻止脚本也不能掩盖预览DOM仍保留危险标签/属性的问题。
 
-URL 和 HTML 是两件事。即使 `javascript:` 被丢掉，留下的 `https://` 链接仍然会导航到外站。本正则不检查路径是否属于你们的站点。产品若只允许自家文档，还要在路由层看主机名。`target=_blank` 需要 `rel=noopener`，本策略的属性名单里没有 `target` 和 `rel`，所以净化结果不应出现它们。
+## 有界输入与失败处理
 
-官方材料：[仓库](https://github.com/cure53/DOMPurify)、[3.4.17](https://www.npmjs.com/package/dompurify)、[安全目标](https://github.com/cure53/DOMPurify/wiki/Security-Goals-&-Threat-Model)。
+textarea限制12,000个JS UTF16单元，helper也在调用净化器前做同一上限，因此程序化超限不会依赖浏览器maxlength。它不是字节/深度/节点/CPU时间限制；生产仍需整体资源预算。
 
-## 3. 版本
+`isSupported !== true`时停用HTML预览，原文仅作为textarea文本保留，绝不把未净化dirty当兜底。sanitize抛错或异常返回非字符串时，也返回空html与可见错误，清空此前成功预览；恢复场景可再次尝试。该控制流已用纯策略测试检查，**不等于真实DOMPurify净化测试**。模块加载/实例创建/外层React错误不是helper捕获范围，需宿主错误边界；不能把所有错误都说成已安全恢复。
 
-3.4.17 是条目锁定的版本。安全库的升级要读发行说明，而不是只看 API 是否还能编译。已知需要记住的维护事实，来自上游说明而不是本 Lab 的利用测试：
+本例使用默认字符串返回，不启用RETURN_DOM/RETURN_DOM_FRAGMENT/RETURN_TRUSTED_TYPE；没有部署站点Trusted Types策略或CSP。DOMPurify.removed仅调试参考，不作安全分数、可信内容证据或业务审计日志。
 
-- 3.4.16 之前的若干 3.4.x 在特定 `IN_PLACE` 与钩子组合下有已修复问题。
-- 3.4.17 继续处理了模板和 Shadow DOM 相关的修复线。
+## 迁移与维护
 
-不要从旧文章复制任意 3.x 版本号。本 Lab 没有做浏览器漏洞复现，所以上面只说明「为什么锁定这一版」，不说明「我们已验证那些载荷在此环境失效」。
+- 选定sink后再定允许标签/属性/URL；JSON、Markdown、HTML/CSS与邮件模板不是同一种解析器。
+- 不用正则删script代替HTML净化，不先插入dirty再净化，不在clean后补img/a属性。
+- private实例隔离配置，不在共享default实例上setConfig/addHook，也不依赖别的Demo未调用它们。
+- Node路径必须另选维护中的DOM实现和匹配版本。本条没有新增jsdom/其他Node DOM依赖，也没有无DOMsanitize SDK通过。
+- 升级复核版本/许可/上游安全说明及同样例的真实浏览器回归；不因API可编译就给安全PASS。
 
-旧浏览器上 `isSupported === false` 时，不能把未净化字符串塞进 sink。本示例没有检查 `isSupported`。若要抄到覆盖面更广的产品，加上判断并在不支持时渲染纯文本。
-
-许可：按 MPL-2.0 或 Apache-2.0 之一满足义务。没有需要购买的「Pro 净化模块」。再分发时的 NOTICE 交给法务，本指南不是法律意见。
-
-## 4. 三层
-
-在 Library Lab 打开 E10 再运行。预览随输入变化，因为 `useMemo` 依赖 `dirty`。这和 E08 的按钮触发不同。
-
-### 基本
-
-输入一段加粗。预览和下面的 `<pre>` 应一致：有 `p` 和 `strong`，没有事件属性。`<pre>` 是转义后的文本，用来阅读净化结果，不要只看彩色预览。
-
-### 业务
-
-样例有指向 `https://github.com/cure53/DOMPurify` 的链接。主机名符合当前正则时，`href` 可以留下。这不等于你们的产品允许任意 https。公告场景没有图片。
-
-### 进阶
-
-样例包含脚本、事件、`javascript:`、svg 和 style。请在元素面板看预览子树，并阅读 `<pre>`：
-
-- 不应出现 `script`、`svg`、`onclick`、`onerror`、`onload`。
-- `javascript:` 不应留在 href。
-- `style` 属性不应留下。
-
-**不要把「我眼睛看了一下」写成 XSS 已测。** 没有 Playwright 或记录在 `docs/library-lab/evidence/runs/` 的浏览器收据时，browser 仍是 NOT_RUN。样例是本地字符串，不是渗透测试。
-
-## 5. 反例（带代码）
-
-### 反例 1：先写入 DOM 再净化
-
-```tsx
-<div dangerouslySetInnerHTML={{ __html: dirty }} />
-const clean = DOMPurify.sanitize(dirty, htmlPolicy)
-```
-
-Lab 的预览只接收 `clean`。调试时也不要临时把 `dirty` 绑上去。
-
-### 反例 2：打开 USE_PROFILES
-
-```js
-DOMPurify.sanitize(dirty, {
-  USE_PROFILES: { html: true },
-  ALLOWED_TAGS: ['p', 'strong'],
-})
-```
-
-profile 与 `ALLOWED_TAGS` 同时出现时，标签名单不一定按你想的那样生效。本文件的注释禁止这种组合。不要为了「功能全」加上 `USE_PROFILES`。
-
-### 反例 3：使用默认 sanitize
-
-```js
-DOMPurify.sanitize(dirty)
-```
-
-默认比 `htmlPolicy` 宽。公告预览必须传入 `htmlPolicy`。
-
-### 反例 4：净化后拼接
-
-```js
-const html = DOMPurify.sanitize(dirty, htmlPolicy) + `<img src="${url}">`
-```
-
-拼接体没有经过允许列表。图片本来就不在 `ALLOWED_TAGS` 里。
-
-### 反例 5：用正则当净化器
-
-```js
-dirty.replace(/<script/gi, '')
-```
-
-解析器差异会漏。正则最多当预算控制，不能当 sink 前的最后一步。
-
-### 反例 6：全局钩子
-
-```js
-DOMPurify.addHook('afterSanitizeAttributes', (node) => {
-  node.setAttribute('href', userValue)
-})
-```
-
-钩子在净化过程中改节点，是历史安全公告里反复出现的高风险面。本示例不注册钩子。若产品必须用，要针对当前 3.4.17 做单独审查，不能复用旧文的 `IN_PLACE` 示例。
-
-### 反例 7：把 removed 当告警系统
-
-```js
-if (DOMPurify.removed.length === 0) trust(dirty)
-```
-
-空列表不证明安全。策略本来就会留下普通段落。
-
-### 反例 8：同一字符串进第二个 sink
-
-邮件模板、PDF、`document.write`、Markdown 的 raw HTML 都是新的解析器。`clean` 只被授权进入这个 React 预览。
-
-## 6. Trusted Types、CSP、性能
-
-Trusted Types 可以让浏览器拒绝字符串形式的 HTML 赋值。`RETURN_TRUSTED_TYPE` 只有在策略已经安装时才返回 TrustedHTML。本示例没有安装策略，也不要在文档里写「已启用 Trusted Types」。CSP 的 `script-src` 仍应拒绝内联脚本。CSP 不能代替净化：它管的是脚本加载，不管你允许的 `href` 把用户带到哪里。
-
-超大 HTML 会占用主线程解析。12_000 字符是文本框限制，不是对嵌套深度的证明。生产还应限制字节、节点数和请求超时。不要用这份 Demo 的手感代替测量。
-
-服务端：官方路径是在维护中的 DOM 实现上 `createDOMPurify`。本示例只在浏览器调用默认导出。不要把 Lab 的通过与否（目前是未运行）写成 Node 净化已安全。jsdom 的主版本和 Node 基线会变，以你们实际锁定的 DOM 实现为准，而不是这篇指南里的某个历史版本号。
-
-## 7. 组合（未挂载）
-
-**E01 / E02 的阅读页。** 编辑器保存 JSON。公开 HTML 若必须生成，在写入 sink 之前用这份策略或更窄的策略。不要把编辑器 schema 当成净化。
-
-**E06。** 优先 React 元素和 `skipHtml`。只有当产品明确允许 Markdown 中的原始 HTML 时，才把那一段送进 DOMPurify，并且名单不能比 E06 更宽而不自知。
-
-**E08。** hast schema 与 `ALLOWED_TAGS` 是两套配置。不要对同一字符串先宽后窄地「净化两次」却在中间拼接。选定一个发布管线。
-
-**E09。** 代码块用文本 token。不要把代码送进 `sanitize` 再 innerHTML。
-
-## 8. 同类怎么选
-
-| 输入 | 工具 |
-| --- | --- |
-| 纯文本 | React 子节点 |
-| Markdown | E06 |
-| HTML AST 流水线 | E08 |
-| 浏览器 HTML 字符串 sink | E10，且必须带 `htmlPolicy` |
-| 只读源码 | E09 |
-
-## 9. 升级核对
-
-- 停留在 3.4.17，直到下一则安全发行说明被读过并有回归样本。
-- 升级 diff 里若出现 `USE_PROFILES`，拒绝合并。
-- 新增标签必须改 `html-policy.mjs` 和负例，包括事件属性和 `javascript:`。
-- 不要开启 `ADD_ATTR` 去放行 `style` 或 `on*`。
-- `ALLOWED_URI_REGEXP` 保持锚点和协议限制。改正则要有灾难性回溯的反例。
-- 许可文件随包升级复核，仍是 MPL-2.0 OR Apache-2.0 才保持当前说明。
-
-## 10. 故障
-
-| 现象 | 先看 |
-| --- | --- |
-| 预览里有脚本 | 是否把 `dirty` 绑到了 sink，或没传 `htmlPolicy` |
-| https 链接也被删 | 主机名是否含本正则不允许的字符、端口或用户信息 |
-| 样式还在 | 是否改用了默认配置或 profile |
-| 预览和 pre 不一致 | pre 应打印 `clean`。若不一致，中间有拼接 |
-| 别的页面的净化变宽 | 是否调用了 `setConfig` 或 `addHook` |
-| 服务端结果不同 | 本示例不是 SSR。DOM 实现不同不能互相代替 |
-
-## 11. 练习（未挂载）
-
-1. 在策略外加主机名允许列表，只留 `github.com`。负例用 `https://example.com` 和 `javascript:`。
-2. 不支持 `isSupported` 时改为纯文本。不要在该分支调用 `dangerouslySetInnerHTML`。
-3. 为 3.4.17 的升级准备一组固定样本：合法段落、事件属性、svg、style、带用户名的 https。样本放在测试里，不把浏览器里的手工观察写成 PASS。
-
-## 12. 验收
-
-下面是清单，**不是**已完成的浏览器测试：
-
-1. 预览的 `__html` 只来自 `sanitize(dirty, htmlPolicy)`。
-2. 源码和配置里都没有 `USE_PROFILES`。
-3. advanced 样例的预览 DOM 与 `<pre>` 文本都不含 `script`、`svg`、事件属性、`javascript:`。
-4. business 的合法 https 链接若被保留，属性只有名单内的 `href` 或 `title`。
-5. 没有任何 Playwright 痕迹时，不声明 XSS 已测。
-
-sdk、build、browser 保持 **NOT_RUN**。没有 `docs/library-lab/evidence/runs/` 的 E10 收据就不能写 PASS。Actions `41779873259` 是仓库级运行，不是本条目的安全通过。
-
-## 13. 资料
-
-- https://github.com/cure53/DOMPurify
-- https://github.com/cure53/DOMPurify/releases/tag/3.4.17
-- https://www.npmjs.com/package/dompurify
-- https://github.com/cure53/DOMPurify/wiki/Security-Goals-&-Threat-Model
-- https://github.com/cure53/DOMPurify#running-dompurify-on-the-server
+官方README使用固定3.4.17原文字节（对应树无官方中文则en）与本中文讲解分开。仓库响应明确deny/frame-ancestors none，官网区域使用直达入口而非可嵌入宣称。实际policy命令、官方取证和六项分层见local-validation.md；真实SDK/DOM/攻击网络验收交主控，正式verification仍NOT_RUN。

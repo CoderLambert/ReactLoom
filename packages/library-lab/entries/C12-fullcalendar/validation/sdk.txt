@@ -1,0 +1,14 @@
+{"label": "sdk", "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab", "argv": ["node", "--test", "entries/C12-fullcalendar/tests/sdk.test.mjs"], "start": "2026-11-10T16:13:19.534505+00:00", "end": "2026-11-10T16:13:19.671633+00:00", "exitCode": 0, "log": "sdk.txt"}
+STDOUT
+✔ actual v7 React shared plugin and locale contracts match the installed SDK (0.466027ms)
+✔ actual FullCalendar formatter distinguishes explicit fold instants in UTC (12.421273ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 112.667482
+
+STDERR

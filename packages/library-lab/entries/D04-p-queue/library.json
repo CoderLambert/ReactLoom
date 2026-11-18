@@ -5,12 +5,7 @@
   "name": "p-queue",
   "group": "D",
   "summary": "并发、滑动窗口限流与任务优先级调度",
-  "tags": [
-    "队列",
-    "限流",
-    "取消",
-    "RSS"
-  ],
+  "tags": ["队列", "限流", "取消", "RSS"],
   "contentState": "recreated",
   "packages": [
     {
@@ -47,13 +42,8 @@
       "level": "basic",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
-      "sourceFiles": [
-        "examples/example.tsx",
-        "examples/demo.tsx"
-      ],
-      "capabilities": [
-        "timer"
-      ],
+      "sourceFiles": ["examples/example.tsx", "examples/demo.tsx"],
+      "capabilities": ["timer"],
       "description": "真正的并发池和批量任务状态"
     },
     {
@@ -62,13 +52,8 @@
       "level": "business",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
-      "sourceFiles": [
-        "examples/example.tsx",
-        "examples/demo.tsx"
-      ],
-      "capabilities": [
-        "timer"
-      ],
+      "sourceFiles": ["examples/example.tsx", "examples/demo.tsx"],
+      "capabilities": ["timer"],
       "description": "RSS 并发和每窗口请求额度"
     },
     {
@@ -77,13 +62,8 @@
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
-      "sourceFiles": [
-        "examples/example.tsx",
-        "examples/demo.tsx"
-      ],
-      "capabilities": [
-        "timer"
-      ],
+      "sourceFiles": ["examples/example.tsx", "examples/demo.tsx"],
+      "capabilities": ["timer"],
       "description": "失败隔离、队列取消与排队任务拒绝"
     }
   ],
@@ -94,5 +74,25 @@
   "license": {
     "spdx": "MIT",
     "note": "仅演示本地确定性 fixture，不请求外部 API"
+  },
+  "official": {
+    "readme": {
+      "repository": "sindresorhus/p-queue",
+      "commit": "7f272ab5ff2254c0dc2537b7977e88ede1cd55e8",
+      "path": "readme.md",
+      "sha256": "da4c31fd3a51c874e450ba734ad91852c54100ec47d41aa9f8efea9d43dbcc24",
+      "sourceUrl": "https://github.com/sindresorhus/p-queue/blob/7f272ab5ff2254c0dc2537b7977e88ede1cd55e8/readme.md",
+      "snapshotPath": "official/readme.md",
+      "language": "en",
+      "version": "10.0.0",
+      "syncedAt": "2026-11-17T16:27:15.705576+00:00"
+    },
+    "homepage": {
+      "url": "https://github.com/sindresorhus/p-queue",
+      "kind": "repository",
+      "status": "blocked",
+      "checkedAt": "2026-11-17T16:27:15.705576+00:00",
+      "reason": "实际GET200，响应头official/homepage-headers.txt含x-frame-options: deny及frame-ancestors 'none'；官方仓库禁止跨源嵌入，保留直达入口。"
+    }
   }
 }

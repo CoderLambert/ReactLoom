@@ -1,0 +1,14 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['node', '--test', 'entries/C09-react-virtuoso/tests/sdk.test.mjs']
+startedAt: 2026-11-10T15:53:19.995078+00:00
+exit: 0
+✔ real Virtuoso SSR initialItemCount renders two actual data rows, not the full array (8.041551ms)
+✔ real Virtuoso SSR offsets logical indices with firstItemIndex while retaining data IDs (1.207942ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 262.970468

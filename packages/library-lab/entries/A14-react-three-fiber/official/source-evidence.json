@@ -1,0 +1,350 @@
+{
+  "repository": "pmndrs/react-three-fiber",
+  "tag": "v9.8.2",
+  "tagRef": {
+    "url": "https://api.github.com/repos/pmndrs/react-three-fiber/git/ref/tags/v9.8.2",
+    "finalUrl": "https://api.github.com/repos/pmndrs/react-three-fiber/git/ref/tags/v9.8.2",
+    "status": 200,
+    "headers": {
+      "Date": "Tue, 10 Nov 2026 11:57:23 GMT",
+      "Content-Type": "application/json; charset=utf-8",
+      "Cache-Control": "public, max-age=60, s-maxage=60",
+      "Vary": "Accept,Accept-Encoding, Accept, X-Requested-With",
+      "ETag": "W/\"28dd40cf60f78675b7817871d48c51f1cbbbe54883d4d75f5e53cce6c96c2697\"",
+      "Last-Modified": "Tue, 10 Nov 2026 11:33:01 GMT",
+      "X-Poll-Interval": "300",
+      "X-GitHub-Media-Type": "github.v3; format=json",
+      "x-github-api-version-selected": "2022-11-28",
+      "Access-Control-Expose-Headers": "ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset, Warning",
+      "Access-Control-Allow-Origin": "*",
+      "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+      "X-Frame-Options": "deny",
+      "X-Content-Type-Options": "nosniff",
+      "X-XSS-Protection": "0",
+      "Referrer-Policy": "origin-when-cross-origin, strict-origin-when-cross-origin",
+      "Content-Security-Policy": "default-src 'none'",
+      "Server": "github.com",
+      "Accept-Ranges": "bytes",
+      "X-RateLimit-Limit": "60",
+      "X-RateLimit-Remaining": "52",
+      "X-RateLimit-Used": "8",
+      "X-RateLimit-Resource": "core",
+      "X-RateLimit-Reset": "1794313773",
+      "Content-Length": "357",
+      "X-GitHub-Request-Id": "D764:790C:F4004A:107CC2D:6AF306A3",
+      "x-github-edge-region": "westus3",
+      "connection": "close"
+    },
+    "bytes": 357,
+    "sha256": "cc55bc786b812b817c5b1ed86e30a2f35011b99a9bd78337e4d901838d47800f"
+  },
+  "tagObjectResponse": null,
+  "commit": "d74622ea8ed717f7212d7e19d65ff3e325508389",
+  "tree": {
+    "response": {
+      "url": "https://api.github.com/repos/pmndrs/react-three-fiber/git/trees/d74622ea8ed717f7212d7e19d65ff3e325508389?recursive=1",
+      "finalUrl": "https://api.github.com/repos/pmndrs/react-three-fiber/git/trees/d74622ea8ed717f7212d7e19d65ff3e325508389?recursive=1",
+      "status": 200,
+      "headers": {
+        "Date": "Tue, 10 Nov 2026 11:57:24 GMT",
+        "Content-Type": "application/json; charset=utf-8",
+        "Cache-Control": "public, max-age=86400, s-maxage=86400",
+        "Vary": "Accept,Accept-Encoding, Accept, X-Requested-With",
+        "ETag": "W/\"355b908585c77d895eb1230130c80ff8596fb9e877cf1a3b9322486af292a2f3\"",
+        "Last-Modified": "Tue, 10 Nov 2026 11:33:01 GMT",
+        "X-GitHub-Media-Type": "github.v3; format=json",
+        "x-github-api-version-selected": "2022-11-28",
+        "Access-Control-Expose-Headers": "ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset, Warning",
+        "Access-Control-Allow-Origin": "*",
+        "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+        "X-Frame-Options": "deny",
+        "X-Content-Type-Options": "nosniff",
+        "X-XSS-Protection": "0",
+        "Referrer-Policy": "origin-when-cross-origin, strict-origin-when-cross-origin",
+        "Content-Security-Policy": "default-src 'none'",
+        "Server": "github.com",
+        "Accept-Ranges": "bytes",
+        "X-RateLimit-Limit": "60",
+        "X-RateLimit-Remaining": "51",
+        "X-RateLimit-Used": "9",
+        "X-RateLimit-Resource": "core",
+        "X-RateLimit-Reset": "1794313773",
+        "Transfer-Encoding": "chunked",
+        "X-GitHub-Request-Id": "D76E:C09D:F8DCFF:10CA662:6AF306A4",
+        "x-github-edge-region": "westus3",
+        "connection": "close"
+      },
+      "bytes": 67876,
+      "sha256": "6476e69a6da930a4fe410d2e628036628c377d98c0ea6bbd335980fcdab1317e"
+    },
+    "truncated": false,
+    "readmeCandidates": [
+      ".changeset/README.md",
+      "packages/eslint-plugin/README.md",
+      "packages/fiber/readme.md",
+      "packages/test-renderer/README.md",
+      "readme.md"
+    ]
+  },
+  "package": {
+    "response": {
+      "url": "https://raw.githubusercontent.com/pmndrs/react-three-fiber/d74622ea8ed717f7212d7e19d65ff3e325508389/packages/fiber/package.json",
+      "finalUrl": "https://raw.githubusercontent.com/pmndrs/react-three-fiber/d74622ea8ed717f7212d7e19d65ff3e325508389/packages/fiber/package.json",
+      "status": 200,
+      "headers": {
+        "Connection": "close",
+        "Content-Length": "2205",
+        "Cache-Control": "max-age=300",
+        "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+        "Content-Type": "text/plain; charset=utf-8",
+        "ETag": "\"96751072da5238620a32fa8e573ffec9d142502bb598fc682801373321bb0360\"",
+        "Strict-Transport-Security": "max-age=31536000",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "deny",
+        "X-XSS-Protection": "1; mode=block",
+        "X-GitHub-Request-Id": "2968:1FDFEB:34CC1F:425348:6AF306A4",
+        "x-github-edge-region": "westus3",
+        "Accept-Ranges": "bytes",
+        "Date": "Tue, 10 Nov 2026 11:57:25 GMT",
+        "Via": "1.1 varnish",
+        "X-Served-By": "cache-pao-kpao1770040-PAO",
+        "X-Cache": "MISS",
+        "X-Cache-Hits": "0",
+        "X-Timer": "S1794311845.256005,VS0,VE164",
+        "Vary": "Authorization,Accept-Encoding",
+        "Access-Control-Allow-Origin": "*",
+        "Cross-Origin-Resource-Policy": "cross-origin",
+        "X-Fastly-Request-ID": "c64efe8e0caa7ffb2f77d2f20715667167d22978",
+        "Expires": "Tue, 10 Nov 2026 12:02:25 GMT",
+        "Source-Age": "0"
+      },
+      "bytes": 2205,
+      "sha256": "08cdd95784a1ecaa7a5c8d895d5da659bc23780301b7d6873916c03236cb198b"
+    },
+    "data": {
+      "name": "@react-three/fiber",
+      "version": "9.8.1",
+      "description": "A React renderer for Threejs",
+      "keywords": ["react", "renderer", "fiber", "three", "threejs"],
+      "author": "Paul Henschel (https://github.com/drcmda)",
+      "license": "MIT",
+      "maintainers": [
+        "Josh Ellis (https://github.com/joshuaellis)",
+        "Cody Bennett (https://github.com/codyjasonbennett)",
+        "Kris Baumgarter (https://github.com/krispya)"
+      ],
+      "bugs": {
+        "url": "https://github.com/pmndrs/react-three-fiber/issues"
+      },
+      "homepage": "https://github.com/pmndrs/react-three-fiber#readme",
+      "repository": {
+        "type": "git",
+        "url": "git+https://github.com/pmndrs/react-three-fiber.git"
+      },
+      "collective": {
+        "type": "opencollective",
+        "url": "https://opencollective.com/react-three-fiber"
+      },
+      "main": "dist/react-three-fiber.cjs.js",
+      "module": "dist/react-three-fiber.esm.js",
+      "types": "dist/react-three-fiber.cjs.d.ts",
+      "react-native": "native/dist/react-three-fiber-native.cjs.js",
+      "sideEffects": false,
+      "preconstruct": {
+        "entrypoints": ["index.tsx", "native.tsx"]
+      },
+      "scripts": {
+        "prebuild": "cp ../../readme.md readme.md"
+      },
+      "devDependencies": {
+        "@types/react-reconciler": "^0.33.0",
+        "react-reconciler": "^0.34.0"
+      },
+      "dependencies": {
+        "@babel/runtime": "^7.17.8",
+        "@types/webxr": "*",
+        "base64-js": "^1.5.1",
+        "buffer": "^6.0.3",
+        "its-fine": "^2.1.1",
+        "react-use-measure": "^2.1.7",
+        "scheduler": "^0.28.0",
+        "suspend-react": "^0.1.3",
+        "use-sync-external-store": "^1.4.0",
+        "zustand": "^5.0.3"
+      },
+      "peerDependencies": {
+        "expo": ">=43.0",
+        "expo-asset": ">=8.4",
+        "expo-file-system": ">=11.0",
+        "expo-gl": ">=11.0",
+        "react": ">=19 <19.4",
+        "react-dom": ">=19 <19.4",
+        "react-native": ">=0.78",
+        "three": ">=0.156"
+      },
+      "peerDependenciesMeta": {
+        "react-dom": {
+          "optional": true
+        },
+        "react-native": {
+          "optional": true
+        },
+        "expo": {
+          "optional": true
+        },
+        "expo-asset": {
+          "optional": true
+        },
+        "expo-file-system": {
+          "optional": true
+        },
+        "expo-gl": {
+          "optional": true
+        }
+      }
+    }
+  },
+  "readme": {
+    "response": {
+      "url": "https://raw.githubusercontent.com/pmndrs/react-three-fiber/d74622ea8ed717f7212d7e19d65ff3e325508389/readme.md",
+      "finalUrl": "https://raw.githubusercontent.com/pmndrs/react-three-fiber/d74622ea8ed717f7212d7e19d65ff3e325508389/readme.md",
+      "status": 200,
+      "headers": {
+        "Connection": "close",
+        "Content-Length": "14301",
+        "Cache-Control": "max-age=300",
+        "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+        "Content-Type": "text/plain; charset=utf-8",
+        "ETag": "\"42c3414d9ede075a59b8c988572b5ce51c2a9e8c1a0a597cd5b8958dc3e1fe05\"",
+        "Strict-Transport-Security": "max-age=31536000",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "deny",
+        "X-XSS-Protection": "1; mode=block",
+        "X-GitHub-Request-Id": "4DA6:1FEAB3:35C865:43521B:6AF306A6",
+        "x-github-edge-region": "westus3",
+        "Accept-Ranges": "bytes",
+        "Date": "Tue, 10 Nov 2026 11:57:27 GMT",
+        "Via": "1.1 varnish",
+        "X-Served-By": "cache-pao-kpao1770069-PAO",
+        "X-Cache": "MISS",
+        "X-Cache-Hits": "0",
+        "X-Timer": "S1794311847.978923,VS0,VE121",
+        "Vary": "Authorization,Accept-Encoding",
+        "Access-Control-Allow-Origin": "*",
+        "Cross-Origin-Resource-Policy": "cross-origin",
+        "X-Fastly-Request-ID": "b650ca5a3b6b18ab60f2a705cd32b5fd19eeade2",
+        "Expires": "Tue, 10 Nov 2026 12:02:27 GMT",
+        "Source-Age": "0"
+      },
+      "bytes": 14301,
+      "sha256": "29c7319a41a30b95319e68d540672efaa31a2c3bd44bad6ef2e48b93d00d4ab6"
+    },
+    "path": "readme.md"
+  },
+  "homepage": {
+    "url": "https://r3f.docs.pmnd.rs/",
+    "finalUrl": "https://r3f.docs.pmnd.rs/",
+    "status": 200,
+    "headers": {
+      "Connection": "close",
+      "Content-Length": "14779",
+      "Server": "GitHub.com",
+      "Content-Type": "text/html; charset=utf-8",
+      "Last-Modified": "Wed, 21 Oct 2026 15:28:13 GMT",
+      "Access-Control-Allow-Origin": "*",
+      "ETag": "\"6ad8da0d-39bb\"",
+      "expires": "Tue, 10 Nov 2026 12:07:29 GMT",
+      "Cache-Control": "max-age=600",
+      "x-proxy-cache": "MISS",
+      "X-GitHub-Request-Id": "72BC:241A21:26D3E1:2A15BD:6AF306A8",
+      "x-github-edge-region": "japaneast",
+      "Accept-Ranges": "bytes",
+      "Age": "0",
+      "Date": "Tue, 10 Nov 2026 11:57:29 GMT",
+      "Via": "1.1 varnish",
+      "X-Served-By": "cache-nrt-rjtf7700103-NRT",
+      "X-Cache": "MISS",
+      "X-Cache-Hits": "0",
+      "X-Timer": "S1794311849.926980,VS0,VE187",
+      "Vary": "Accept-Encoding",
+      "X-Fastly-Request-ID": "37effc6842a95a53d9b0c5ec3ffcc34177739ebd"
+    },
+    "body": "NOT_READ: GET full headers only"
+  },
+  "checkedAt": "2026-11-10T11:57:29.154803+00:00",
+  "npmPublication": {
+    "response": {
+      "url": "https://registry.npmjs.org/@react-three%2Ffiber/9.8.2",
+      "finalUrl": "https://registry.npmjs.org/@react-three%2Ffiber/9.8.2",
+      "status": 200,
+      "headers": {
+        "Date": "Tue, 10 Nov 2026 11:58:12 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "3059",
+        "Connection": "close",
+        "CF-Ray": "a584e251cb19284e-LAX",
+        "CF-Cache-Status": "DYNAMIC",
+        "Access-Control-Allow-Origin": "*",
+        "Server": "cloudflare",
+        "set-cookie": "__cf_bm=.Ihi531RTmtM_5TYINtLagmzkb1.3ZRJofD..mkV2Zk-1794311892.7707822-1.0.1.1-SDjqogsykF9D_2rYaX3XwBPgH.22jKmsUnShkCYkFJ_TV_7p7MVfgjhG77eTuhbARXLlVv.ZhLil1YxDNBGPoxHcS3WrX5xDAfQjgQfZKjb9Sueb7sxG8qKcAwmRCemc; HttpOnly; SameSite=None; Partitioned; Secure; Path=/; Domain=npmjs.org; Expires=Tue, 10 Nov 2026 12:28:12 GMT"
+      },
+      "bytes": 3059,
+      "sha256": "b892709b6706b1e8543c71a6b03dfc92e11c9119f45a5feaf1e06604903ecbe6"
+    },
+    "package": {
+      "name": "@react-three/fiber",
+      "version": "9.8.2",
+      "gitHead": "e6ec3506ebf7879c26bd5ac27986b5d4421f3254",
+      "dist": {
+        "shasum": "c4ca62cec8a2fd51302694d504a6807f82f8e993",
+        "tarball": "https://registry.npmjs.org/@react-three/fiber/-/fiber-9.8.2.tgz",
+        "fileCount": 43,
+        "integrity": "sha512-6s0ejw0bT1myQ/aLLugcil8/zBmNnnHw/AISWF1yfDLOxfX3yYaTS+0IkpJITEnm/SSMLtxje6CJDt0i5Wu1Sw==",
+        "signatures": [
+          {
+            "sig": "MEYCIQDC2BF4C9ICPUgC9QxTaco52yR5dsLd7NlvM/TtFNe+GQIhANArUJArx87b4zN3xBUyn0WV91aoB2pUm/Z9T8J1eHnt",
+            "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+          },
+          {
+            "sig": "MEYCIQDMLkAVxxgNgOjkeJ3pHt3lLA4mUW3PNL3e1iVfUU2NJAIhAPT21MNzeEfFpHCWqj23EPziNLle97YDmeNXM1XFnY8V",
+            "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+          }
+        ],
+        "unpackedSize": 2399634
+      },
+      "peerDependencies": {
+        "expo": ">=43.0",
+        "react": ">=19 <19.4",
+        "three": ">=0.156",
+        "expo-gl": ">=11.0",
+        "react-dom": ">=19 <19.4",
+        "expo-asset": ">=8.4",
+        "react-native": ">=0.78",
+        "expo-file-system": ">=11.0"
+      },
+      "repository": {
+        "url": "git+https://github.com/pmndrs/react-three-fiber.git",
+        "type": "git"
+      }
+    },
+    "checkedAt": "2026-11-10T11:58:12.935158+00:00"
+  },
+  "publicationGitHeadPublicLookup": {
+    "gitHead": "e6ec3506ebf7879c26bd5ac27986b5d4421f3254",
+    "results": [
+      {
+        "path": "packages/fiber/package.json",
+        "error": "HTTP Error 404: Not Found"
+      },
+      {
+        "path": "readme.md",
+        "error": "HTTP Error 404: Not Found"
+      }
+    ],
+    "checkedAt": "2026-11-10T11:58:32.759862+00:00"
+  },
+  "versionDiscrepancy": "Installed and npm publication are 9.8.2. Official v9.8.2 tag points to d74622ea8ed717f7212d7e19d65ff3e325508389, whose fixed packages/fiber/package.json declares 9.8.1. Snapshot is the unmodified README at the official v9.8.2 release tag, not a claim that this manifest is 9.8.2. Runtime APIs are checked against installed 9.8.2. npm gitHead public raw paths returned 404.",
+  "language": "en",
+  "selectionReason": "Complete fixed-ref recursive tree has no official Chinese README candidate. Root readme.md selected; package readme is maintained via prebuild copy.",
+  "browserFromLabOrigin": "NOT_RUN"
+}

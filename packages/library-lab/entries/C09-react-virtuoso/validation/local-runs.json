@@ -1,0 +1,322 @@
+[
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "python3",
+      "entries/C09-react-virtuoso/validation/fetch-official.py"
+    ],
+    "startedAt": "2026-11-10T15:45:28.233740+00:00",
+    "exitCode": 1,
+    "log": "validation/official-fetch.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "python3",
+      "entries/C09-react-virtuoso/validation/fetch-official.py"
+    ],
+    "startedAt": "2026-11-10T15:45:58.236280+00:00",
+    "exitCode": 1,
+    "log": "validation/official-fetch-fixed.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "python3",
+      "entries/C09-react-virtuoso/validation/fetch-homepage.py"
+    ],
+    "startedAt": "2026-11-10T15:48:06.099989+00:00",
+    "exitCode": 0,
+    "log": "validation/homepage-retry.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "node",
+      "--input-type=module",
+      "-e",
+      "import React from \"react\"; import {renderToStaticMarkup} from \"react-dom/server\"; import {Virtuoso} from \"react-virtuoso\"; const data=[{id:\"rss-a\",title:\"first\"},{id:\"rss-b\",title:\"second\"},{id:\"rss-c\",title:\"third\"}]; console.log(renderToStaticMarkup(React.createElement(Virtuoso,{data,initialItemCount:2,firstItemIndex:1000,computeItemKey:(_index,item)=>item.id,itemContent:(index,item)=>React.createElement(\"article\",{\"data-article-id\":item.id},index+\":\"+item.title),style:{height:240}})));"
+    ],
+    "startedAt": "2026-11-10T15:48:28.216424+00:00",
+    "exitCode": 0,
+    "log": "validation/ssr-inspect.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "entries/C09-react-virtuoso/examples",
+      "entries/C09-react-virtuoso/tests",
+      "entries/C09-react-virtuoso/library.json",
+      "entries/C09-react-virtuoso/verification.json",
+      "entries/C09-react-virtuoso/official/source-evidence.json",
+      "entries/C09-react-virtuoso/validation/sdk-source-audit.json",
+      "entries/C09-react-virtuoso/validation/metadata-check.mjs"
+    ],
+    "startedAt": "2026-11-10T15:49:34.047109+00:00",
+    "exitCode": 1,
+    "log": "validation/format.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "entries/C09-react-virtuoso/examples/view-policy.mjs"
+    ],
+    "startedAt": "2026-11-10T15:50:08.546697+00:00",
+    "exitCode": 0,
+    "log": "validation/format-fixed.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "tsc",
+      "--ignoreConfig",
+      "--noEmit",
+      "--target",
+      "es2022",
+      "--module",
+      "esnext",
+      "--moduleResolution",
+      "bundler",
+      "--jsx",
+      "react-jsx",
+      "--strict",
+      "--skipLibCheck",
+      "--esModuleInterop",
+      "--types",
+      "vite/client,node",
+      "entries/C09-react-virtuoso/examples/demo.tsx"
+    ],
+    "startedAt": "2026-11-10T15:50:08.822288+00:00",
+    "exitCode": 0,
+    "log": "validation/typecheck.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "node",
+      "--test",
+      "entries/C09-react-virtuoso/tests/sdk.test.mjs"
+    ],
+    "startedAt": "2026-11-10T15:53:19.995078+00:00",
+    "exitCode": 0,
+    "log": "validation/sdk.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "node",
+      "--test",
+      "entries/C09-react-virtuoso/tests/view-policy.test.mjs"
+    ],
+    "startedAt": "2026-11-10T15:53:20.351422+00:00",
+    "exitCode": 0,
+    "log": "validation/policy.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "node",
+      "entries/C09-react-virtuoso/validation/metadata-check.mjs"
+    ],
+    "startedAt": "2026-11-10T15:53:20.503266+00:00",
+    "exitCode": 0,
+    "log": "validation/metadata.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "entries/C09-react-virtuoso/validation/browser-proposal.check.ts"
+    ],
+    "startedAt": "2026-11-10T15:54:12.390176+00:00",
+    "exitCode": 0,
+    "log": "validation/proposal-format.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "tsc",
+      "--ignoreConfig",
+      "--noEmit",
+      "--target",
+      "es2022",
+      "--module",
+      "esnext",
+      "--moduleResolution",
+      "bundler",
+      "--jsx",
+      "react-jsx",
+      "--strict",
+      "--skipLibCheck",
+      "--esModuleInterop",
+      "--types",
+      "vite/client,node",
+      "entries/C09-react-virtuoso/examples/demo.tsx",
+      "entries/C09-react-virtuoso/validation/browser-proposal.check.ts"
+    ],
+    "startedAt": "2026-11-10T15:54:12.684600+00:00",
+    "exitCode": 0,
+    "log": "validation/proposal-typecheck.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "python3",
+      "-c",
+      "import ast,pathlib; paths=[pathlib.Path('entries/C09-react-virtuoso/validation/fetch-official.py'),pathlib.Path('entries/C09-react-virtuoso/validation/fetch-homepage.py')]; [ast.parse(p.read_text(),filename=str(p)) for p in paths]; print('2 evidence scripts parse; no HTTP re-fetch')"
+    ],
+    "startedAt": "2026-11-10T15:55:56.867326+00:00",
+    "exitCode": 0,
+    "log": "validation/evidence-script-syntax.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "git",
+      "diff",
+      "--check",
+      "--",
+      "entries/C09-react-virtuoso"
+    ],
+    "startedAt": "2026-11-10T15:55:56.973778+00:00",
+    "exitCode": 0,
+    "log": "validation/diff-check.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "playwright",
+      "test",
+      "--config=.local-evidence/quality-playwright.config.ts",
+      "e2e/quality-remediation-virtuoso.spec.ts",
+      "--grep",
+      "@C09 advanced",
+      "--trace=on",
+      "--reporter=line",
+      "--output=entries/C09-react-virtuoso/validation/candidate16-repro-artifacts",
+      "--workers=1"
+    ],
+    "startedAt": "2026-11-10T16:16:27.679491+00:00",
+    "exitCode": 0,
+    "log": "validation/candidate16-repro.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "playwright",
+      "test",
+      "--config=.local-evidence/quality-playwright.config.ts",
+      "e2e/quality-remediation-virtuoso.spec.ts",
+      "--grep",
+      "@C09 advanced",
+      "--trace=on",
+      "--reporter=line",
+      "--output=entries/C09-react-virtuoso/validation/candidate16-repeat-artifacts",
+      "--workers=1",
+      "--repeat-each=5"
+    ],
+    "startedAt": "2026-11-10T16:17:15.728179+00:00",
+    "exitCode": 0,
+    "log": "validation/candidate16-repro-repeat.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "node",
+      "entries/C09-react-virtuoso/validation/anchor-probe.mjs"
+    ],
+    "startedAt": "2026-11-10T16:18:32.430471+00:00",
+    "exitCode": 1,
+    "log": "validation/anchor-probe-original.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "node",
+      "entries/C09-react-virtuoso/validation/anchor-probe.mjs",
+      "--settle"
+    ],
+    "startedAt": "2026-11-10T16:19:01.213341+00:00",
+    "exitCode": 0,
+    "log": "validation/anchor-probe-settled.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "entries/C09-react-virtuoso/validation/browser-proposal.check.ts"
+    ],
+    "startedAt": "2026-11-10T16:20:47.015007+00:00",
+    "exitCode": 0,
+    "log": "validation/anchor-proposal-format.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "tsc",
+      "--ignoreConfig",
+      "--noEmit",
+      "--target",
+      "es2022",
+      "--module",
+      "esnext",
+      "--moduleResolution",
+      "bundler",
+      "--strict",
+      "--skipLibCheck",
+      "--esModuleInterop",
+      "--types",
+      "vite/client,node",
+      "entries/C09-react-virtuoso/validation/browser-proposal.check.ts"
+    ],
+    "startedAt": "2026-11-10T16:20:47.313440+00:00",
+    "exitCode": 0,
+    "log": "validation/anchor-proposal-typecheck.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "entries/C09-react-virtuoso/verification.json"
+    ],
+    "startedAt": "2026-11-10T16:27:29.762411+00:00",
+    "exitCode": 0,
+    "log": "validation/browser-note-format.txt"
+  }
+]

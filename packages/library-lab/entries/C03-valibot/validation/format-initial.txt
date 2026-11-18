@@ -1,0 +1,39 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab", "argv": ["pnpm", "exec", "--", "biome", "check", "--write", "entries/C03-valibot/examples", "entries/C03-valibot/tests"], "start": "2026-11-10T15:03:32.841775+00:00", "end": "2026-11-10T15:03:33.063358+00:00", "exitCode": 1}
+STDOUT
+Checked 8 files in 9ms. Fixed 8 files.
+Found 2 errors.
+
+STDERR
+entries/C03-valibot/examples/boundary-policy.mjs:5:19 lint/suspicious/noControlCharactersInRegex ━━━━━━━━━━
+
+  × Unexpected control character in a regular expression.
+  
+    3 │   if (typeof input !== 'string') return null
+    4 │   const value = input.trim()
+  > 5 │   if (!value || /[\u0000-\u001f\u007f]/u.test(value)) return null
+      │                   ^^^^^^
+    6 │   try {
+    7 │     const url = new URL(value)
+  
+  i Control characters are unusual and potentially incorrect inputs, so they are disallowed.
+  
+
+entries/C03-valibot/examples/boundary-policy.mjs:5:26 lint/suspicious/noControlCharactersInRegex ━━━━━━━━━━
+
+  × Unexpected control character in a regular expression.
+  
+    3 │   if (typeof input !== 'string') return null
+    4 │   const value = input.trim()
+  > 5 │   if (!value || /[\u0000-\u001f\u007f]/u.test(value)) return null
+      │                          ^^^^^^
+    6 │   try {
+    7 │     const url = new URL(value)
+  
+  i Control characters are unusual and potentially incorrect inputs, so they are disallowed.
+  
+
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while applying fixes.
+  
+

@@ -1,0 +1,35 @@
+{
+  "checkedAt": "2026-11-17T16:42:36.862089+00:00",
+  "tag": "v2.13.0",
+  "commit": "370f7eb6403bdfdb1a2ab5b90fbcfd8eaee7d57b",
+  "readmeCandidates": [
+    ".github/README.md",
+    "docs/README.md",
+    "packages/toolkit/README.md",
+    "packages/toolkit/scripts/issue-triage/README-github-issue-to-markdown.md",
+    "packages/toolkit/scripts/issue-triage/README.md"
+  ],
+  "selection": "Official package README; no Chinese package README in pinned tree. RTK Query is included in Toolkit.",
+  "homepage": {
+    "url": "https://redux.js.org/toolkit/rtk-query/overview",
+    "status": 200,
+    "headers": {
+      "Date": "Tue, 17 Nov 2026 16:42:36 GMT",
+      "Content-Type": "text/html; charset=UTF-8",
+      "Transfer-Encoding": "chunked",
+      "Connection": "close",
+      "Nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+      "Age": "0",
+      "Cache-Control": "public,max-age=0,must-revalidate",
+      "Cache-Status": "\"Netlify Edge\"; fwd=miss; fwd-status=200; stored",
+      "Report-To": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=52KJ8G3RMiDuOqY1qFROK7eb2A2ZpRLLwCVRZjlGrneIEWWPRAxkLdiEPhMZdcyjb0C%2BEJRxRXr%2BA9uvJbkuk8oBcZEz4cFzcMDT1o7Y5tX1ygtp7l%2BFBUsO1Gz5pA%3D%3D\"}]}",
+      "Etag": "W/\"84d3b5c7ef7d70c6a980d16e20624ddd-ssl\"",
+      "Server": "cloudflare",
+      "Vary": "Accept-Encoding",
+      "X-Nf-Request-Id": "01M7N674E9GS48W37HGC7DM93E",
+      "cf-cache-status": "DYNAMIC",
+      "CF-RAY": "a5c03088eed6bd6b-FRA"
+    },
+    "bodySha256": "f8c88d3ba21115f2cda5d2147ba5d9a74320c6564eb6a59494fb3f54a1e61eef"
+  }
+}

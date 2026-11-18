@@ -1,0 +1,23 @@
+[
+  {
+    "entryId": "C20",
+    "actualSha256": "2486828dd6157496c9275c0beb61e6d60ca7077b5bd2c805fbc7ab6857fef594",
+    "planningSha256": "2486828dd6157496c9275c0beb61e6d60ca7077b5bd2c805fbc7ab6857fef594",
+    "unchanged": true,
+    "fileCount": 15
+  },
+  {
+    "entryId": "D15",
+    "actualSha256": "3ba4dc38d0f3a5c82b073ec7f5f0ac52cf3c0f5c05036b58ac6c1959d1fa0824",
+    "planningSha256": "3ba4dc38d0f3a5c82b073ec7f5f0ac52cf3c0f5c05036b58ac6c1959d1fa0824",
+    "unchanged": true,
+    "fileCount": 15
+  },
+  {
+    "entryId": "F18",
+    "actualSha256": "e6c85a0e9361157fb2f766ca3bd495a1e9ae7f9e94ec33b8cf27a3d260c13f7b",
+    "planningSha256": "e6c85a0e9361157fb2f766ca3bd495a1e9ae7f9e94ec33b8cf27a3d260c13f7b",
+    "unchanged": true,
+    "fileCount": 21
+  }
+]

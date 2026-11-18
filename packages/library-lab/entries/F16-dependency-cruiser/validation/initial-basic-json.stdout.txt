@@ -1,0 +1,5 @@
+undefined
+/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/F16-dependency-cruiser/examples/workspace:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command "depcruise" not found
+
+Did you mean "pnpm exec depcruise"?

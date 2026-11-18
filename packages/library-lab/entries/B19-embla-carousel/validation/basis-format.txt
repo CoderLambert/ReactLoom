@@ -1,0 +1,5 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+argv=["pnpm", "exec", "biome", "check", "--write", "packages/library-lab/entries/B19-embla-carousel/guide.md", "packages/library-lab/entries/B19-embla-carousel/examples/example.tsx"]
+Checked 1 file in 10ms. Fixed 1 file.
+
+exit=0

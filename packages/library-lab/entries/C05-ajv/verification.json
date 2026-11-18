@@ -1,14 +1,14 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "待安装 ajv@8.20.0 并执行官方SDK Node test"
+    "note": "本地共享合同SDK3/policy3、非作者六项复核及candidate16本条目4浏览器case已闭环，见local-validation.md；没有正式固定记录器收据，status仍NOT_RUN。"
   },
   "build": {
     "status": "NOT_RUN",
-    "note": "待 PLATFORM 合并依赖与真实Vite/TypeScript构建"
+    "note": "入口strict与主控candidate16共享候选编译通过，输入绑定见local-validation.md；共享构建不替代本条目正式build收据，status仍NOT_RUN。"
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "待浏览器验证 CSP 与交互"
+    "note": "candidate16输入e951352e…2b8cd下C05三目标+原文/官网unknown共4PASS，原始browser.txt已链接；本地闭环与正式记证分开，status仍NOT_RUN。"
   }
 }

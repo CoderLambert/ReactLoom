@@ -1,0 +1,6 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv=["pnpm", "exec", "biome", "check", "--write", "entries/A08-mermaid/examples", "entries/A08-mermaid/tests", "entries/A08-mermaid/library.json", "entries/A08-mermaid/verification.json", "entries/A08-mermaid/official/source-evidence.json", "e2e/quality-remediation-mermaid.spec.ts", "e2e/quality-remediation-recharts.spec.ts"]
+start=2026-11-10T11:35:14.367268+00:00
+end=2026-11-10T11:35:14.585936+00:00
+exit=0
+Checked 11 files in 10ms. Fixed 1 file.

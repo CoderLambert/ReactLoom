@@ -1,0 +1,63 @@
+[
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "node",
+      "--test",
+      "packages/library-lab/entries/E13-photoswipe/examples/gallery-policy.test.mjs"
+    ],
+    "exitCode": 0,
+    "at": "2026-11-17T17:39:32.259305+00:00",
+    "log": "validation/policy.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "entries/E13-photoswipe/examples",
+      "entries/E13-photoswipe/validation/browser.spec.ts",
+      "entries/E13-photoswipe/library.json",
+      "entries/E13-photoswipe/verification.json"
+    ],
+    "exitCode": 1,
+    "at": "2026-11-17T17:39:32.529722+00:00",
+    "log": "validation/biome.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "entries/E13-photoswipe/examples",
+      "entries/E13-photoswipe/validation/browser.spec.ts",
+      "entries/E13-photoswipe/library.json",
+      "entries/E13-photoswipe/verification.json"
+    ],
+    "exitCode": 0,
+    "at": "2026-11-17T17:40:30.702642+00:00",
+    "log": "validation/biome-final.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "node",
+      "--input-type=module",
+      "-e",
+      "import fs from 'node:fs';import crypto from 'node:crypto';import assert from 'node:assert/strict';import {validateOfficialSources} from './packages/library-lab/src/lib/official-sources.mjs';const p='packages/library-lab/entries/E13-photoswipe/';const m=JSON.parse(fs.readFileSync(p+'library.json'));assert.deepEqual(validateOfficialSources(m.official),[]);assert.equal(crypto.createHash('sha256').update(fs.readFileSync(p+'official/readme.md')).digest('hex'),m.official.readme.sha256);console.log('official metadata and raw README digest PASS');"
+    ],
+    "exitCode": 0,
+    "at": "2026-11-17T17:40:30.729407+00:00",
+    "log": "validation/official-contract.log"
+  }
+]

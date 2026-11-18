@@ -1,0 +1,207 @@
+[
+  {
+    "log": "validation/diff-check.txt",
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "git",
+      "diff",
+      "--check",
+      "--",
+      "packages/library-lab/entries/C11-react-arborist"
+    ],
+    "utc": "2026-11-10T17:00:11.166785+00:00",
+    "exit": 0
+  },
+  {
+    "log": "validation/final-inspection-initial.txt",
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "python",
+      "packages/library-lab/entries/C11-react-arborist/validation/final-inspection.py"
+    ],
+    "utc": "2026-11-10T17:00:51.355848+00:00",
+    "exit": 1
+  },
+  {
+    "log": "validation/final-inspection.txt",
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "python",
+      "packages/library-lab/entries/C11-react-arborist/validation/final-inspection.py"
+    ],
+    "utc": "2026-11-10T17:01:12.989656+00:00",
+    "exit": 0
+  },
+  {
+    "log": "validation/format-code-fixed.txt",
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "packages/library-lab/entries/C11-react-arborist/examples",
+      "packages/library-lab/entries/C11-react-arborist/tests"
+    ],
+    "utc": "2026-11-10T16:57:22.255604+00:00",
+    "exit": 0
+  },
+  {
+    "log": "validation/format-code.txt",
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "packages/library-lab/entries/C11-react-arborist/examples",
+      "packages/library-lab/entries/C11-react-arborist/tests"
+    ],
+    "utc": "2026-11-10T16:55:14.396086+00:00",
+    "exit": 1
+  },
+  {
+    "log": "validation/format-metadata.txt",
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "packages/library-lab/entries/C11-react-arborist/library.json",
+      "packages/library-lab/entries/C11-react-arborist/verification.json",
+      "packages/library-lab/entries/C11-react-arborist/official/source-evidence.json",
+      "packages/library-lab/entries/C11-react-arborist/validation/sdk-source-audit.json",
+      "packages/library-lab/entries/C11-react-arborist/validation/metadata-check.mjs"
+    ],
+    "utc": "2026-11-10T16:58:35.976685+00:00",
+    "exit": 0
+  },
+  {
+    "log": "validation/metadata.txt",
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "--dir",
+      "packages/library-lab",
+      "exec",
+      "node",
+      "entries/C11-react-arborist/validation/metadata-check.mjs"
+    ],
+    "utc": "2026-11-10T16:58:36.218413+00:00",
+    "exit": 0
+  },
+  {
+    "log": "validation/official-fetch.txt",
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "python",
+      "packages/library-lab/entries/C11-react-arborist/validation/fetch-official.py"
+    ],
+    "utc": "2026-11-10T16:53:29.872042+00:00",
+    "exit": 0
+  },
+  {
+    "log": "validation/policy.txt",
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "--dir",
+      "packages/library-lab",
+      "exec",
+      "node",
+      "--test",
+      "entries/C11-react-arborist/tests/tree-policy.test.mjs"
+    ],
+    "utc": "2026-11-10T16:52:46.300226+00:00",
+    "exit": 0
+  },
+  {
+    "log": "validation/proposal-format.txt",
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "packages/library-lab/entries/C11-react-arborist/validation/browser-proposal.check.ts"
+    ],
+    "utc": "2026-11-10T16:58:15.756317+00:00",
+    "exit": 0
+  },
+  {
+    "log": "validation/proposal-types.txt",
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "--dir",
+      "packages/library-lab",
+      "exec",
+      "tsc",
+      "--ignoreConfig",
+      "--noEmit",
+      "--target",
+      "es2022",
+      "--module",
+      "esnext",
+      "--moduleResolution",
+      "bundler",
+      "--strict",
+      "--skipLibCheck",
+      "--types",
+      "node",
+      "entries/C11-react-arborist/validation/browser-proposal.check.ts"
+    ],
+    "utc": "2026-11-10T16:58:15.997808+00:00",
+    "exit": 0
+  },
+  {
+    "log": "validation/sdk.txt",
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "--dir",
+      "packages/library-lab",
+      "exec",
+      "node",
+      "--test",
+      "entries/C11-react-arborist/tests/sdk.test.mjs"
+    ],
+    "utc": "2026-11-10T16:52:45.987029+00:00",
+    "exit": 0
+  },
+  {
+    "log": "validation/types-initial.txt",
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "--dir",
+      "packages/library-lab",
+      "exec",
+      "tsc",
+      "--ignoreConfig",
+      "--noEmit",
+      "--target",
+      "es2022",
+      "--module",
+      "esnext",
+      "--moduleResolution",
+      "bundler",
+      "--jsx",
+      "react-jsx",
+      "--strict",
+      "--skipLibCheck",
+      "--esModuleInterop",
+      "--allowImportingTsExtensions",
+      "--types",
+      "vite/client,node",
+      "entries/C11-react-arborist/examples/demo.tsx"
+    ],
+    "utc": "2026-11-10T16:52:46.589249+00:00",
+    "exit": 0
+  }
+]

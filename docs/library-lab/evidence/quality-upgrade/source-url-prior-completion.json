@@ -1,0 +1,63 @@
+{
+  "at": "2026-11-10T17:52:58.198734+00:00",
+  "item": {
+    "order": 42,
+    "phase": 42,
+    "entryId": "B15",
+    "slug": "react-grid-layout",
+    "name": "react-grid-layout",
+    "group": "B",
+    "path": "packages/library-lab/entries/B15-react-grid-layout",
+    "priority": "remaining-coverage",
+    "planDetail": "needs-entry-discovery",
+    "objective": "以真实输入、状态变化和结果解释可拖拽、缩放与响应式仪表盘布局（2.3.0 控制式接口）",
+    "objectiveBasis": "catalogue-hypothesis-to-check",
+    "executionKinds": [
+      "react"
+    ],
+    "packagesAtPlanning": [
+      {
+        "name": "react-grid-layout",
+        "version": "2.3.0"
+      },
+      {
+        "name": "react-resizable",
+        "version": "4.0.2"
+      }
+    ],
+    "entryBaseline": {
+      "sha256": "651b131e2c8e1a44e973f5458a96b0ecb57f0dcdb1cabf8f87f8d78dc350c65e",
+      "fileCount": 9
+    },
+    "existingSdkSuites": [],
+    "flags": [],
+    "status": "content_done",
+    "owner": null,
+    "startedAt": "2026-11-10T13:52:07.675371+00:00",
+    "updatedAt": "2026-11-10T15:48:28.734738+00:00",
+    "result": "results/B15.md",
+    "blocker": null,
+    "formalReceiptState": "pending_clean_authorized_commit",
+    "executionBaseline": {
+      "sha256": "651b131e2c8e1a44e973f5458a96b0ecb57f0dcdb1cabf8f87f8d78dc350c65e",
+      "fileCount": 9
+    },
+    "checkpoint": "candidate15-local-runtime-pending",
+    "nextAction": "内容与本地运行完成；未来获提交授权后正式recorder",
+    "lastOwner": "/root",
+    "completedAt": "2026-11-10T15:48:28.734738+00:00",
+    "reviewedBy": "/root/quality_f05",
+    "sixChecks": {
+      "technicalAccuracy": "PASS",
+      "clarity": "PASS",
+      "demoUsefulness": "PASS",
+      "portability": "PASS",
+      "officialSources": "PASS",
+      "reproducibility": "PASS"
+    },
+    "finalEntryDigest": {
+      "sha256": "d7959486bb40e4d189e274f2d1cc849b5af8deb685c1b0e9b9de5ead8c7cea01",
+      "fileCount": 35
+    }
+  }
+}

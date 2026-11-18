@@ -1,0 +1,8 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node entries/A10-tldraw/validation/check-entry.mjs
+exit: 0
+
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node entries/A10-tldraw/validation/check-entry.mjs
+PASS: entry shape, 3 demos, 4 source paths, README bytes 3729 SHA-256 6689bd272a4c368415b8ba88fcbf47b5dfab09f9e88f5a3fed98bacb32478c84
+exit: 0

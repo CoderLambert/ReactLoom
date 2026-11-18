@@ -1,0 +1,5 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+command=node packages/library-lab/entries/C05-ajv/validation/metadata-check.mjs
+C05 three goals / six sources / actual shared schema / fixed original13781B / complete source headers / homepage unknown / formal NOT_RUN PASS
+
+exitCode=0

@@ -1,0 +1,42 @@
+{
+  "capturedAt": "2026-11-10T10:26:33.819431+00:00",
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "observation": "read-only metadata/source and path existence; preparation script and browser conversion not executed",
+  "publicCorePath": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/public/ffmpeg-core",
+  "publicCoreExists": false,
+  "gateScript": {
+    "path": "packages/library-lab/scripts/prepare-ffmpeg-core.mjs",
+    "sha256": "1742f54bf1aa60b5492785fe81dcb157772688a940af1066e34cf5e9a82382dd",
+    "defaultApprovedExpression": "process.env.LIBRARY_LAB_FFMPEG_CORE_LICENSE_REVIEWED === 'true'",
+    "defaultUnapprovedResult": {
+      "status": "BLOCKED",
+      "reason": "GPL core redistribution requires explicit review"
+    }
+  },
+  "installedPackages": {
+    "wrapper": {
+      "name": "@ffmpeg/ffmpeg",
+      "version": "0.12.15",
+      "license": "MIT"
+    },
+    "core": {
+      "name": "@ffmpeg/core",
+      "version": "0.12.10",
+      "license": "GPL-2.0-or-later"
+    }
+  },
+  "installedSourceDigests": {
+    "dist/esm/classes.js": "7a829c898bdbc3a8806652a5502d9101178ce4e988a2c50b3abc1306ce4fc919",
+    "dist/esm/classes.d.ts": "e443acd5ebb476c19e1da0858570a9cbbd0077404b2dff4c078a4ffa448e090e",
+    "dist/esm/types.d.ts": "b6f91d557f8532d654af6a59116bf7f7c22f3039ba71510243f85f99fd9c5371",
+    "dist/esm/worker.js": "feff0ac937ea225e997e1fae997a74f8b8d572423a526da59eb56624b1f3cde7",
+    "dist/esm/empty.mjs": "92f665ead7579ff7cd0f08d63e2eb6b27bce16be06991b2aa93510ba07741dbf"
+  },
+  "actionsNotTaken": [
+    "No environment or credential file read",
+    "No license-review flag set",
+    "No core staging script run",
+    "No gated js/wasm copied or downloaded",
+    "No attempt to replace blocked browser SDK with Node empty.mjs"
+  ]
+}

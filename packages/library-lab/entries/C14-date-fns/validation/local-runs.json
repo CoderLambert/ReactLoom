@@ -1,0 +1,240 @@
+[
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "entries/C14-date-fns/examples",
+      "entries/C14-date-fns/tests",
+      "entries/C14-date-fns/library.json"
+    ],
+    "startedAt": "2026-11-10T16:51:48.010847+00:00",
+    "exitCode": 0,
+    "log": "validation/format-checkpoint.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "tsc",
+      "--ignoreConfig",
+      "--noEmit",
+      "--target",
+      "es2022",
+      "--module",
+      "esnext",
+      "--moduleResolution",
+      "bundler",
+      "--jsx",
+      "react-jsx",
+      "--strict",
+      "--skipLibCheck",
+      "--esModuleInterop",
+      "--types",
+      "vite/client,node",
+      "entries/C14-date-fns/examples/demo.tsx"
+    ],
+    "startedAt": "2026-11-10T16:51:48.306454+00:00",
+    "exitCode": 0,
+    "log": "validation/typecheck-checkpoint.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "node",
+      "--test",
+      "entries/C14-date-fns/tests/sdk.test.mjs"
+    ],
+    "startedAt": "2026-11-10T16:51:48.634208+00:00",
+    "exitCode": 1,
+    "log": "validation/sdk-checkpoint.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "node",
+      "--input-type=module",
+      "-e",
+      "import {TZDate,tzOffset} from \"@date-fns/tz\"; for(const zone of [\"America/New_York\",\"Asia/Shanghai\",\"UTC\"])for(const year of [96,100,1900,2024]){const d=TZDate.tz(zone,0); const read=()=>({fields:[d.getFullYear(),d.getMonth()+1,d.getDate(),d.getHours(),d.getMinutes(),d.getSeconds()],time:+d,offset:tzOffset(zone,d)});d.setFullYear(year,1,29);const afterYear=read();d.setHours(12,0,0,0);console.log(JSON.stringify({zone,year,afterYear,afterHours:read()}));}"
+    ],
+    "startedAt": "2026-11-10T16:59:20.910781+00:00",
+    "exitCode": 0,
+    "log": "validation/low-year-probe.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "node",
+      "--test",
+      "entries/C14-date-fns/tests/sdk.test.mjs"
+    ],
+    "startedAt": "2026-11-10T17:02:07.475891+00:00",
+    "exitCode": 0,
+    "log": "validation/sdk-modern-contract.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "node",
+      "--test",
+      "entries/C14-date-fns/tests/instant-policy.test.mjs"
+    ],
+    "startedAt": "2026-11-10T17:02:09.918742+00:00",
+    "exitCode": 0,
+    "log": "validation/policy.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "python3",
+      "entries/C14-date-fns/validation/fetch-official.py"
+    ],
+    "startedAt": "2026-11-10T17:03:20.105489+00:00",
+    "exitCode": 0,
+    "log": "validation/official-capture.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "node",
+      "--test",
+      "--test-name-pattern",
+      "actual explicit-offset low/high-year",
+      "entries/C14-date-fns/tests/sdk.test.mjs"
+    ],
+    "startedAt": "2026-11-10T17:03:49.278601+00:00",
+    "exitCode": 0,
+    "log": "validation/sdk-instant-boundaries.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "python3",
+      "entries/C14-date-fns/validation/source-tool-transport-fixture.py"
+    ],
+    "startedAt": "2026-11-10T17:08:35.071922+00:00",
+    "exitCode": 0,
+    "log": "validation/source-tool-transport.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "entries/C14-date-fns/examples",
+      "entries/C14-date-fns/tests",
+      "entries/C14-date-fns/library.json",
+      "entries/C14-date-fns/verification.json"
+    ],
+    "startedAt": "2026-11-10T17:09:22.093763+00:00",
+    "exitCode": 0,
+    "log": "validation/format-modern-checkpoint.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "tsc",
+      "--ignoreConfig",
+      "--noEmit",
+      "--target",
+      "es2022",
+      "--module",
+      "esnext",
+      "--moduleResolution",
+      "bundler",
+      "--jsx",
+      "react-jsx",
+      "--strict",
+      "--skipLibCheck",
+      "--esModuleInterop",
+      "--types",
+      "vite/client,node",
+      "entries/C14-date-fns/examples/demo.tsx"
+    ],
+    "startedAt": "2026-11-10T17:09:22.342750+00:00",
+    "exitCode": 0,
+    "log": "validation/type-modern-checkpoint.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "node",
+      "entries/C14-date-fns/validation/metadata-check.mjs"
+    ],
+    "startedAt": "2026-11-10T17:18:35.544295+00:00",
+    "exitCode": 0,
+    "log": "validation/metadata-final.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "entries/C14-date-fns/validation/metadata-check.mjs",
+      "entries/C14-date-fns/verification.json"
+    ],
+    "startedAt": "2026-11-10T17:19:06.745133+00:00",
+    "exitCode": 0,
+    "log": "validation/format-final.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "git",
+      "diff",
+      "--check",
+      "--",
+      "entries/C14-date-fns"
+    ],
+    "startedAt": "2026-11-10T17:19:06.983507+00:00",
+    "exitCode": 0,
+    "log": "validation/diff-final.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "node",
+      "entries/C14-date-fns/validation/metadata-check.mjs"
+    ],
+    "startedAt": "2026-11-10T17:20:36.187523+00:00",
+    "exitCode": 0,
+    "log": "validation/final-bind.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "git",
+      "diff",
+      "--check",
+      "--",
+      "entries/C14-date-fns"
+    ],
+    "startedAt": "2026-11-10T17:20:36.410324+00:00",
+    "exitCode": 0,
+    "log": "validation/diff-after-report.txt"
+  }
+]

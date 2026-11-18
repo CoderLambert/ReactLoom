@@ -14,11 +14,11 @@
 
 ## 迁移
 
-从 [`examples/example.tsx`](examples/example.tsx) 带走 `toggleStory`、乐观 `produceWithPatches`，以及 [`examples/patch-ownership.mjs`](examples/patch-ownership.mjs) 的 `takeUndo`。`demo.tsx` 只重导出。
+复制 example.tsx、feed-model.mjs 及 feed-model.d.mts，前者包含 React UI，后者导出 renameFeed/toggleStory/markAllRead/referenceReport；同时带走 [`examples/patch-ownership.mjs`](examples/patch-ownership.mjs) 及其 patch-ownership.d.mts 的 `takeUndo`。`demo.tsx` 只重导出。在已有 React/TypeScript 应用执行 `pnpm add immer@11.2.9`，保持文件相对路径，直接渲染组件并传 level。需要现代 structuredClone 与 bundler 模块解析；没有环境变量、Provider、额外样式或后端。卸载丢弃组件 state/ref，无外部资源。
 
 初始状态用 `structuredClone`，避免测试或重置改到模块级种子。故事身份是 `id` 字符串。
 
-确认按钮只清本地 inverse。接到真服务器时，成功响应要带版本，失败才应用当时取走的那一份 inverse。
+确认按钮只清本地 inverse。接到真服务器时，成功响应要带版本，失败时还必须检查请求所有权与基础版本；失配时丢弃 inverse 并重新获取/协调，禁止盲目回滚最新缓存。
 
 ## 不可删的清理
 
@@ -51,7 +51,7 @@ recipe 保持同步。不要把 draft 传出 `produce`。
 
 ## 真实限制
 
-没有网络，没有服务器 revision，没有 Map/Set 插件，没有自动冻结开关。锁定是整份 feed，不是按故事。界面上看不见引用共享，必须用断言看 `===`。
+没有网络，没有服务器 revision，没有 Map/Set 插件，没有自动冻结开关。锁定是整份 feed，不是按故事。界面 referenceReport 直接比较更新前后的真实引用；SDK 断言同一模型。
 
 Patch JSON 只用于教学展示。它不是审计日志格式。
 

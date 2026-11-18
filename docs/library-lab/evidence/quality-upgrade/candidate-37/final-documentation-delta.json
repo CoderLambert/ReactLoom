@@ -1,0 +1,33 @@
+{
+  "changed": {
+    "packages/library-lab/entries/F13-playwright/verification.json": {
+      "before": "7578a894cb27deea4feccdf6c60c7cbb89139fde4fc51a028ee412893c9dfe46",
+      "after": "6257bdf2bd21084ae430e6b52efa5304e62a623a213a0945ebf63853c91145e5"
+    },
+    "packages/library-lab/entries/F14-storybook/verification.json": {
+      "before": "89376f8d71a0205c15a28a54720e971d3768c4b1542449a8775c1eaa80591877",
+      "after": "6257bdf2bd21084ae430e6b52efa5304e62a623a213a0945ebf63853c91145e5"
+    },
+    "packages/library-lab/entries/F15-knip/verification.json": {
+      "before": "667b01e4d7d51bcc9b84383355b5a3b328ccb76d85bfe54af1b5e94f337ef899",
+      "after": "6257bdf2bd21084ae430e6b52efa5304e62a623a213a0945ebf63853c91145e5"
+    },
+    "packages/library-lab/entries/F16-dependency-cruiser/verification.json": {
+      "before": "2718219d84a1706630e98dae568df3e4688a9e4ee8cba4aecec5979eab88dfd5",
+      "after": "6257bdf2bd21084ae430e6b52efa5304e62a623a213a0945ebf63853c91145e5"
+    },
+    "packages/library-lab/entries/F17-axe-core/agent.md": {
+      "before": "60c41065a31cced1be9165e9f05ee2f0b1cf7631422fdc7607fc640a06a36b5a",
+      "after": "574e7ddab49bb5f6c4132cfeee9747ce774749cca7a1d47853d03b5618671556"
+    },
+    "packages/library-lab/entries/F17-axe-core/guide.md": {
+      "before": "c80a9ab96353543100a586dcce114cf6bd675bbcc269623d4fbaccd0d69f1f8a",
+      "after": "c86e3ca34920b01dcc152235e75b68ccd79ec62f0cfbe73d92e96f85239eb596"
+    },
+    "packages/library-lab/entries/F17-axe-core/verification.json": {
+      "before": "81f38a3ea13ee4536d6ab9c11534e9e0c1d7b875d11933540e4ceb4910b242be",
+      "after": "6257bdf2bd21084ae430e6b52efa5304e62a623a213a0945ebf63853c91145e5"
+    }
+  },
+  "note": "Final notes after browser validation. Runtime and browser test inputs unchanged."
+}

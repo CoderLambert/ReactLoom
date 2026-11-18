@@ -1,0 +1,52 @@
+{
+  "response": {
+    "url": "https://registry.npmjs.org/@react-three/fiber/-/fiber-9.8.2.tgz",
+    "finalUrl": "https://registry.npmjs.org/@react-three/fiber/-/fiber-9.8.2.tgz",
+    "status": 200,
+    "headers": {
+      "Date": "Tue, 10 Nov 2026 12:05:24 GMT",
+      "Content-Type": "application/octet-stream",
+      "Content-Length": "561970",
+      "Connection": "close",
+      "CF-Ray": "a584ecdb3dfd175f-SJC",
+      "CF-Cache-Status": "HIT",
+      "Accept-Ranges": "bytes",
+      "Access-Control-Allow-Origin": "*",
+      "Age": "2301414",
+      "Cache-Control": "public, must-revalidate, max-age=31557600",
+      "ETag": "\"d6fbbe18a260483beae9239abe59edad\"",
+      "Last-Modified": "Wed, 14 Oct 2026 20:48:29 GMT",
+      "Server": "cloudflare",
+      "set-cookie": "__cf_bm=XkKyLMt_htf3DOcbq5mFdVfW1Ydb5RmNQrDw22FRpS8-1794312324.3614876-1.0.1.1-1AcyvbNZa9l408mSJKwyDm7POfX.b4roKC6pgV1CpT3LBFFQ7DkIB2qCH8EtM2drROlxEiIQuVLwy6xG7ElrhW_CEWDNP8zQLDZKvpNiaVviPfcrTZy9tJS7APrvwQJr; HttpOnly; SameSite=None; Partitioned; Secure; Path=/; Domain=npmjs.org; Expires=Tue, 10 Nov 2026 12:35:24 GMT"
+    },
+    "bytes": 561970,
+    "sha256": "db98d14ff474684e018c6103437b85ba919b83b24c5a1fbf1f0deb58dd96d465",
+    "integrity": "sha512-6s0ejw0bT1myQ/aLLugcil8/zBmNnnHw/AISWF1yfDLOxfX3yYaTS+0IkpJITEnm/SSMLtxje6CJDt0i5Wu1Sw=="
+  },
+  "checks": [
+    {
+      "path": "package.json",
+      "publishedBytes": 2292,
+      "publishedSha256": "ad7c861bea13fa0dc8021afa4f4778c45e74554ac5c8e7e66c860b938b381f2b",
+      "installedSha256": "ad7c861bea13fa0dc8021afa4f4778c45e74554ac5c8e7e66c860b938b381f2b",
+      "matchesInstalled": true
+    },
+    {
+      "path": "dist/react-three-fiber.esm.js",
+      "publishedBytes": 7067,
+      "publishedSha256": "cc26a8452be261edbeb210365f754784fef2b2d5a8caf1f81f18ea2c305b86f2",
+      "installedSha256": "cc26a8452be261edbeb210365f754784fef2b2d5a8caf1f81f18ea2c305b86f2",
+      "matchesInstalled": true
+    },
+    {
+      "path": "dist/events-e51d7528.esm.js",
+      "publishedBytes": 715919,
+      "publishedSha256": "b42a047098f41a5f0c4f4e0756c37429347fa67a8d68bb8ca94eafad7a03071c",
+      "installedSha256": "b42a047098f41a5f0c4f4e0756c37429347fa67a8d68bb8ca94eafad7a03071c",
+      "matchesInstalled": true
+    }
+  ],
+  "installedVersion": "9.8.2",
+  "method": "Anonymous public official npm tarball read in memory only, verified registry sha512; no extraction, install or lock change.",
+  "checkedAt": "2026-11-10T12:05:26.101719+00:00"
+}

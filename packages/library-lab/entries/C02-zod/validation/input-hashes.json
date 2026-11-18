@@ -1,0 +1,14 @@
+{
+  "guide.md": "98ad60ffcbe71d48d747acde924514760c0b09012eb10ae464938c03c9e309e8",
+  "agent.md": "282588b829d83815163cefc180171bb98d0cb033092ccf0cb9ef03bc22b91645",
+  "library.json": "3ebb64bde8c09a809dbfc4667a08e642df081e93c51e6c78c85533029887eded",
+  "official/readme.md": "b5651740a66d68e8c55c4fdea2df8b00448f99a0433008fef99a54f859024039",
+  "official/source-audit.json": "67acf01a6b61447851a79b3d2ac2bc5dcc468ea1530df6361076259b1c96b1e9",
+  "examples/boundary-policy.d.mts": "441150c0da4949681e48030164421badc40e578bc2f2b56623e7a24117f57def",
+  "examples/boundary-policy.mjs": "102a6f59749e64c1e4494cceb4dd1d0bd0d12ae70881c5c9886fbe4c156f3f04",
+  "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+  "examples/example.tsx": "ab0fd7ea4c530e7cd1d9d1e18c1541d596b8083ab047d55fd09ed12a9d8735fd",
+  "examples/schemas.ts": "6e76adc0a9ce3326fbe57a1506cda901e6443a45cb17ab893c385a0d689b0bac",
+  "tests/boundary-policy.test.mjs": "631784652e3499d6155f631a7d173abe20b08011af42cc858da37b3b76d65178",
+  "tests/sdk.test.mjs": "6b09ba78faebba65d71a7ce90c7cc2b87a1c1248faaf0c4c2dc528ba330e3292"
+}

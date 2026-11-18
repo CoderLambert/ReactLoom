@@ -5,14 +5,7 @@
   "name": "Workbox",
   "group": "D",
   "summary": "隔离目录中的真实 Workbox precache 构建、公共 RSS 网络缓存策略与离线回退",
-  "tags": [
-    "Service Worker",
-    "Precache",
-    "离线缓存",
-    "作用域隔离",
-    "缓存更新",
-    "Node 构建"
-  ],
+  "tags": ["Service Worker", "Precache", "离线缓存", "作用域隔离", "缓存更新", "Node 构建"],
   "contentState": "recreated",
   "packages": [
     {
@@ -96,8 +89,8 @@
       "demoId": "advanced",
       "level": "advanced",
       "executionKind": "node-ci",
-      "title": "离线导航回退与私有资源排除",
-      "description": "增加 offline.html 导航回退，排除 private 子目录；演示构建安全边界，不伪装浏览器离线验收。",
+      "title": "导航壳配置与私有文件排除",
+      "description": "实际生成NavigationRoute指向预缓存offline.html；private仅作构建排除，不声称已验证浏览器离线或导航鉴权。",
       "entryPoint": "examples/advanced.mjs",
       "sourceFiles": [
         "examples/workshop.mjs",
@@ -121,5 +114,25 @@
     "originalRecovery": "ORIGINAL_RECOVERED",
     "mode": "recreated",
     "note": "依照 Workbox 7.4.1 官方文档重写；只生成隔离 Service Worker，未执行注册，未继承历史测试结果。"
+  },
+  "official": {
+    "readme": {
+      "repository": "GoogleChrome/workbox",
+      "commit": "62b9d8ba8eb3c1a2ab8aac9d84c90cda7865d6a3",
+      "path": "packages/workbox-build/README.md",
+      "sha256": "fcffa1e6d7fbbe1cff9aefba38a5b99a0ed51851126462a1e0884a2d1708af86",
+      "sourceUrl": "https://github.com/GoogleChrome/workbox/blob/62b9d8ba8eb3c1a2ab8aac9d84c90cda7865d6a3/packages/workbox-build/README.md",
+      "snapshotPath": "official/readme.md",
+      "language": "en",
+      "version": "7.4.1",
+      "syncedAt": "2026-11-17T16:49:47.098070+00:00"
+    },
+    "homepage": {
+      "url": "https://developer.chrome.com/docs/workbox?hl=zh-cn",
+      "kind": "website",
+      "status": "blocked",
+      "checkedAt": "2026-11-17T16:49:47.098070+00:00",
+      "reason": "实际GET200；CSP frame-ancestors只允许self及Google analytics iframe来源，禁止Lab跨源嵌入。完整响应头及最终URL见official/source-evidence.json，保留官方中文入口直达。"
+    }
   }
 }

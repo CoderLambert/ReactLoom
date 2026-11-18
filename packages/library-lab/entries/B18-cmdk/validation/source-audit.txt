@@ -1,0 +1,3 @@
+Actual installed cmdk / Dialog / FocusScope versions and ESM/type hashes + keyboard/portal/close-focus source captured
+
+exitCode=0

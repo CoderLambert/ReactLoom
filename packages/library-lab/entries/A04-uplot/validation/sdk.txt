@@ -1,0 +1,25 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+ARGV: ["pnpm", "test:sdk", "--entry=A04"]
+START: 2026-11-10T10:58:50.210259+00:00
+END: 2026-11-10T10:58:50.535120+00:00
+EXIT: 0
+STDOUT:
+
+> @reactloom/library-lab@0.1.0 test:sdk /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+> node scripts/sdk-runner.mjs --entry=A04
+
+Real SDK suites selected: 1 file(s)
+✔ actual uPlot.join aligns distinct timestamps and preserves explicit gaps (0.849783ms)
+✔ the business Demo uses actual SDK alignment and normalizes gaps without losing measured zero (0.213009ms)
+✔ same Demo alignment stays bounded after many simulated samples (0.205584ms)
+﹣ real Canvas construction, setData, setSize and destroy require the browser (0.057994ms) # NOT_RUN: Node has no real document/Canvas; no pseudo DOM or fake context is installed
+ℹ tests 4
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 1
+ℹ todo 0
+ℹ duration_ms 80.18121
+
+STDERR:

@@ -1,0 +1,25 @@
+cwd=packages/library-lab
+command=node entries/B15-react-grid-layout/validation/metadata-check.mjs
+{
+  "metadata": [],
+  "completeness": [],
+  "demos": 3,
+  "runtimeFiles": 5,
+  "inputFiles": 14,
+  "installed": {
+    "react-grid-layout": {
+      "version": "2.3.0",
+      "packagePath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/react-grid-layout@2.3.0_patch_hash=65db3074ef40503b9bfda2b68c12c7d39c1aa7e93efc1fade47f_beb475caccc483dff0fa87a51128464f/node_modules/react-grid-layout/package.json"
+    },
+    "react-resizable": {
+      "version": "4.0.2",
+      "packagePath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/react-resizable@4.0.2_react-dom@19.3.0_react@19.3.0__react@19.3.0/node_modules/react-resizable/package.json"
+    }
+  },
+  "readmeBytes": 42045,
+  "sha256": "10e8e14f3e5cbcf6f8d8f27381e122d17f8d2312b3208e3a2528c5b62b7c6ca1",
+  "homepage": "unknown: actual GET200/no framing headers, Lab-origin browser NOT_RUN",
+  "formal": "NOT_RUN"
+}
+
+exitCode=0

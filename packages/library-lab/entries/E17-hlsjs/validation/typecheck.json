@@ -1,0 +1,22 @@
+{
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "argv": [
+    "pnpm",
+    "exec",
+    "tsc",
+    "--noEmit",
+    "--strict",
+    "--target",
+    "ES2022",
+    "--module",
+    "ESNext",
+    "--moduleResolution",
+    "Bundler",
+    "--jsx",
+    "react-jsx",
+    "--skipLibCheck",
+    "/tmp/e17-portable-519h8lb0/example.tsx"
+  ],
+  "exitCode": 0,
+  "output": ""
+}

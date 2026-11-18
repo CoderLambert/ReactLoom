@@ -1,0 +1,162 @@
+[
+  {
+    "name": "browser-test-types",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "tsc",
+      "--ignoreConfig",
+      "--noEmit",
+      "--strict",
+      "--target",
+      "ES2022",
+      "--module",
+      "ESNext",
+      "--moduleResolution",
+      "Bundler",
+      "--skipLibCheck",
+      "--types",
+      "node",
+      "e2e/quality-pdf-helpers.ts",
+      "e2e/quality-file-read-probe.ts",
+      "e2e/quality-resume-react-pdf.spec.ts",
+      "e2e/quality-resume-pdf-renderer.spec.ts"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T18:44:21.909614+00:00",
+    "finishedAt": "2026-11-17T18:44:22.161999+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-35/browser-test-types.txt"
+  },
+  {
+    "name": "types",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "typecheck"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T18:49:21.625649+00:00",
+    "finishedAt": "2026-11-17T18:49:23.343397+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-35/types.txt"
+  },
+  {
+    "name": "browser-types",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "tsc",
+      "--ignoreConfig",
+      "--noEmit",
+      "--strict",
+      "--target",
+      "ES2022",
+      "--module",
+      "ESNext",
+      "--moduleResolution",
+      "Bundler",
+      "--skipLibCheck",
+      "--types",
+      "node",
+      "e2e/quality-resume-pdfjs.spec.ts",
+      "e2e/quality-resume-react-pdf.spec.ts",
+      "e2e/quality-resume-pdf-renderer.spec.ts",
+      "e2e/quality-resume-official-f06-f08.spec.ts"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T18:49:28.727028+00:00",
+    "finishedAt": "2026-11-17T18:49:28.995888+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-35/browser-types.txt"
+  },
+  {
+    "name": "build",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "build"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T18:49:39.074937+00:00",
+    "finishedAt": "2026-11-17T18:49:45.900506+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-35/build.txt"
+  },
+  {
+    "name": "catalog",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "catalog:check"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T18:49:45.978197+00:00",
+    "finishedAt": "2026-11-17T18:49:46.371286+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-35/catalog.txt"
+  },
+  {
+    "name": "browser",
+    "command": [
+      "env",
+      "LAB_PREBUILT=1",
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "playwright",
+      "test",
+      "e2e/quality-resume-pdfjs.spec.ts",
+      "e2e/quality-resume-react-pdf.spec.ts",
+      "e2e/quality-resume-pdf-renderer.spec.ts",
+      "e2e/quality-resume-official-f06-f08.spec.ts",
+      "--workers=3"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T18:50:14.382593+00:00",
+    "finishedAt": "2026-11-17T18:50:26.283956+00:00",
+    "exitCode": 1,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-35/browser.txt"
+  },
+  {
+    "name": "reproduction",
+    "command": [
+      "node",
+      "--test",
+      "packages/library-lab/tests/reproduction.test.mjs"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T18:55:36.172029+00:00",
+    "finishedAt": "2026-11-17T18:55:36.245490+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-35/reproduction.txt"
+  },
+  {
+    "name": "browser-f06",
+    "command": [
+      "env",
+      "LAB_PREBUILT=1",
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "playwright",
+      "test",
+      "e2e/quality-resume-pdfjs.spec.ts",
+      "--workers=2"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T18:55:32.657326+00:00",
+    "finishedAt": "2026-11-17T18:55:38.083693+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-35/browser-f06.txt"
+  }
+]

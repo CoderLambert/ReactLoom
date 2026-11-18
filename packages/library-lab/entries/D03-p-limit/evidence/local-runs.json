@@ -1,0 +1,227 @@
+{
+  "runs": [
+    {
+      "label": "format",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "check",
+        "--write",
+        "entries/D03-p-limit/examples",
+        "entries/D03-p-limit/tests",
+        "entries/D03-p-limit/library.json",
+        "entries/D03-p-limit/verification.json"
+      ],
+      "startedAt": "2026-11-10T10:17:17.256472+00:00",
+      "finishedAt": "2026-11-10T10:17:17.481278+00:00",
+      "exitCode": 0,
+      "log": "evidence/format.log",
+      "logSha256": "5aa20857983270a81bb93bbc70c8277ea6774c043d00ec7f272f079b551d4faf"
+    },
+    {
+      "label": "sdk",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "node",
+        "--test",
+        "entries/D03-p-limit/tests/sdk.test.mjs"
+      ],
+      "startedAt": "2026-11-10T10:17:50.773389+00:00",
+      "finishedAt": "2026-11-10T10:17:50.928238+00:00",
+      "exitCode": 0,
+      "log": "evidence/sdk.log",
+      "logSha256": "36bebb3030a55796834fd62015d87fdb691d53f287818fa2dcce3a712b542648"
+    },
+    {
+      "label": "policy",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "node",
+        "--test",
+        "entries/D03-p-limit/tests/job-policy.test.mjs"
+      ],
+      "startedAt": "2026-11-10T10:17:50.773517+00:00",
+      "finishedAt": "2026-11-10T10:17:50.844625+00:00",
+      "exitCode": 0,
+      "log": "evidence/policy.log",
+      "logSha256": "41a4a5e51dacc0d48e22cc2ae9dbe51d20f969454b74d191da680513c8c1075a"
+    },
+    {
+      "label": "types",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--target",
+        "ES2022",
+        "--lib",
+        "ES2022,DOM,DOM.Iterable",
+        "--module",
+        "ESNext",
+        "--moduleResolution",
+        "Bundler",
+        "--jsx",
+        "react-jsx",
+        "--strict",
+        "--skipLibCheck",
+        "--esModuleInterop",
+        "--allowSyntheticDefaultImports",
+        "--allowImportingTsExtensions",
+        "--types",
+        "vite/client,node",
+        "entries/D03-p-limit/examples/demo.tsx"
+      ],
+      "startedAt": "2026-11-10T10:17:50.773711+00:00",
+      "finishedAt": "2026-11-10T10:17:51.027966+00:00",
+      "exitCode": 0,
+      "log": "evidence/types.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "metadata",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "node",
+        "--input-type=module",
+        "-e",
+        "import assert from 'node:assert/strict'; import {readFile,stat} from 'node:fs/promises'; import {createHash} from 'node:crypto'; import {validateEntry} from './src/lib/catalog.mjs'; import {entryCompletenessIssues} from './scripts/entry-gate.mjs'; const root='entries/D03-p-limit/';const e=JSON.parse(await readFile(root+'library.json','utf8'));assert.deepEqual(validateEntry(e),[]);assert.deepEqual(entryCompletenessIssues(e,{guide:true,agent:true,agents:true,verification:true}),[]);assert.deepEqual(e.demos.map(d=>d.level),['basic','advanced']);for(const p of new Set(e.demos.flatMap(d=>d.sourceFiles)))assert.ok((await stat(root+p)).isFile(),p);const raw=await readFile(root+e.official.readme.snapshotPath);assert.equal(createHash('sha256').update(raw).digest('hex'),e.official.readme.sha256);assert.equal(raw.length,5418);assert.equal(e.official.readme.commit,'4d4ec71803d8736567249c3dde06ea82795ae7c7');assert.equal(e.official.homepage.status,'blocked');const v=JSON.parse(await readFile(root+'verification.json','utf8'));assert.ok(Object.values(v).every(x=>x.status==='NOT_RUN'));console.log('D03 metadata, two distinct levels, 7 source files, fixed official README bytes/digest and formal NOT_RUN: PASS');"
+      ],
+      "startedAt": "2026-11-10T10:17:50.774014+00:00",
+      "finishedAt": "2026-11-10T10:17:50.805722+00:00",
+      "exitCode": 0,
+      "log": "evidence/metadata.log",
+      "logSha256": "54fc2b9e87f4ac8ed3df4eab58e4fddab4fa2f9175983def8b72274ae1ff7356"
+    },
+    {
+      "label": "biome",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "check",
+        "entries/D03-p-limit/examples",
+        "entries/D03-p-limit/tests",
+        "entries/D03-p-limit/library.json",
+        "entries/D03-p-limit/verification.json"
+      ],
+      "startedAt": "2026-11-10T10:17:50.774280+00:00",
+      "finishedAt": "2026-11-10T10:17:51.014573+00:00",
+      "exitCode": 0,
+      "log": "evidence/biome.log",
+      "logSha256": "64d23e980f6e9d96912fda4b5cdaf52b3fb2e2af7d9ea321fe15518a95c62283"
+    },
+    {
+      "label": "diff",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "packages/library-lab/entries/D03-p-limit"
+      ],
+      "startedAt": "2026-11-10T10:19:57.644012+00:00",
+      "finishedAt": "2026-11-10T10:19:57.647120+00:00",
+      "exitCode": 0,
+      "log": "evidence/diff.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "inputFiles": {
+    "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+    "examples/example.tsx": "a67279c3b1d655fe1518d9bd7cf8739b7a50d44b01be0da9fdc62260409ec5c0",
+    "examples/job-policy.d.mts": "2e89f5406cf152eb786e881539d3b2384ef5a9e21b4cb7bf826943ed17aa87ef",
+    "examples/job-policy.mjs": "99c4ddecc76f21ee9742c7f73240282739ffe3082b0e7cf10c772227eae94a9d",
+    "examples/workshop.css": "b8064b542a13fa9c31ad6b6f50bce98ca3615a978b16411f105f4c1950c7901b",
+    "tests/job-policy.test.mjs": "31f40191fdd0ab7ef3d7e9db9e1e4cf4c9fca353605ee630fcad37e633b39ea0",
+    "tests/sdk.test.mjs": "9c146e3972a49c1a9e89df92432a0a81446c59009cfa66b2593aa92e756646c5",
+    "library.json": "4292caf1b7278561c9b151571c608447be682bece8ea3a67c18f24f9e5160edf",
+    "verification.json": "a5f6de405f6a9997c12b3c9e500843700da0eeb74b7f02f2ccef6fc0d945bdef",
+    "official/readme.md": "dbe29b10fca55743e35fe2b3d768024cd135d1bac4bd60aee566a5e1f3af294f"
+  },
+  "environment": {
+    "node": "v26.13.0",
+    "pnpm": "10.33.3",
+    "pLimitPackage": {
+      "name": "p-limit",
+      "version": "7.3.3",
+      "description": "Run multiple promise-returning & async functions with limited concurrency",
+      "license": "MIT",
+      "repository": "sindresorhus/p-limit",
+      "funding": "https://github.com/sponsors/sindresorhus",
+      "author": {
+        "name": "Sindre Sorhus",
+        "email": "sindresorhus@gmail.com",
+        "url": "https://sindresorhus.com"
+      },
+      "type": "module",
+      "exports": {
+        "types": "./index.d.ts",
+        "default": "./index.js"
+      },
+      "sideEffects": false,
+      "engines": {
+        "node": ">=20"
+      },
+      "scripts": {
+        "test": "xo && ava && tsd",
+        "benchmark": "node benchmark.js"
+      },
+      "files": [
+        "index.js",
+        "index.d.ts"
+      ],
+      "keywords": [
+        "promise",
+        "limit",
+        "limited",
+        "concurrency",
+        "throttle",
+        "throat",
+        "rate",
+        "batch",
+        "ratelimit",
+        "task",
+        "queue",
+        "async",
+        "await",
+        "promises",
+        "bluebird"
+      ],
+      "dependencies": {
+        "yocto-queue": "^1.2.1"
+      },
+      "devDependencies": {
+        "ava": "^6.4.1",
+        "in-range": "^3.0.0",
+        "random-int": "^3.0.0",
+        "time-span": "^5.1.0",
+        "tsd": "^0.33.0",
+        "xo": "^1.2.1"
+      }
+    },
+    "inspectedInstalledFiles": {
+      "package.json": {
+        "resolvedPath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/p-limit@7.3.3/node_modules/p-limit/package.json",
+        "sha256": "daa6b0d168d7197eccbfef1c678e8f00b79d063129bf48f4ee2db38dc605ca7f"
+      },
+      "index.js": {
+        "resolvedPath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/p-limit@7.3.3/node_modules/p-limit/index.js",
+        "sha256": "edde12a4a4dbdbe8d27161cdd0853db0bab435d5dc6c15f9f4dedc27ee9bca60"
+      },
+      "index.d.ts": {
+        "resolvedPath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/p-limit@7.3.3/node_modules/p-limit/index.d.ts",
+        "sha256": "d367543c32631ba661e044b1d1f44deed2bbf54654dd0eb251061337162514ee"
+      }
+    }
+  }
+}

@@ -1,0 +1,5 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['pnpm', 'exec', '--', 'biome', 'check', '--write', 'entries/C17-i18next/examples', 'entries/C17-i18next/tests', 'entries/C17-i18next/library.json']
+startedAt: 2026-11-10T17:43:23.544018+00:00
+exit: 0
+Checked 10 files in 10ms. Fixed 10 files.

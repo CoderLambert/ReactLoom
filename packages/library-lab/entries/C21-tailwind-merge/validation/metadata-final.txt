@@ -1,0 +1,15 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['pnpm', 'exec', 'node', 'entries/C21-tailwind-merge/validation/metadata-check.mjs']
+startedAt: 2026-11-10T18:18:48.092829+00:00
+exit: 0
+{
+  "goals": 1,
+  "sourceFiles": 5,
+  "installedSourceAndHostHashes": 19,
+  "contentInputs": 14,
+  "rendererLinks": 9,
+  "readmeBytes": 2549,
+  "homepage": "blocked by CSP none; repository homepage",
+  "browser": "NOT_RUN",
+  "formal": "NOT_RUN"
+}

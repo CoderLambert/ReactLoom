@@ -5,15 +5,7 @@
   "name": "Orval",
   "group": "F",
   "summary": "离线 OpenAPI 真实 Orval CLI 双次生成、React Query Hooks、标签分包与产物指纹验收",
-  "tags": [
-    "OpenAPI",
-    "代码生成",
-    "Fetch",
-    "React Query",
-    "Node CLI",
-    "类型安全",
-    "API契约"
-  ],
+  "tags": ["OpenAPI", "代码生成", "Fetch", "React Query", "Node CLI", "类型安全", "API契约"],
   "contentState": "recreated",
   "packages": [
     {
@@ -67,15 +59,10 @@
         "examples/verify.mjs",
         "examples/spec-check.mjs",
         "examples/output-policy.mjs",
-        "examples/output-policy.test.mjs"
+        "examples/generated-tsconfig.json"
       ],
-      "capabilities": [
-        "node-process",
-        "real-cli",
-        "local-contract",
-        "generated-types"
-      ],
-      "description": "以真实Orval CLI读本地OpenAPI，生成客户端；不使用远程服务或伪造代码生成输出。"
+      "capabilities": ["node-process", "real-cli", "local-contract", "generated-types"],
+      "description": "单文件fetch客户端，真实双次CLI生成并比较指纹。"
     },
     {
       "demoId": "business",
@@ -91,15 +78,10 @@
         "examples/verify.mjs",
         "examples/spec-check.mjs",
         "examples/output-policy.mjs",
-        "examples/output-policy.test.mjs"
+        "examples/generated-tsconfig.json"
       ],
-      "capabilities": [
-        "node-process",
-        "real-cli",
-        "local-contract",
-        "generated-types"
-      ],
-      "description": "以真实Orval CLI读本地OpenAPI，生成客户端；不使用远程服务或伪造代码生成输出。"
+      "capabilities": ["node-process", "real-cli", "local-contract", "generated-types"],
+      "description": "React Query hooks及query keys生成；未挂载Provider或发HTTP。"
     },
     {
       "demoId": "advanced",
@@ -115,15 +97,10 @@
         "examples/verify.mjs",
         "examples/spec-check.mjs",
         "examples/output-policy.mjs",
-        "examples/output-policy.test.mjs"
+        "examples/generated-tsconfig.json"
       ],
-      "capabilities": [
-        "node-process",
-        "real-cli",
-        "local-contract",
-        "generated-types"
-      ],
-      "description": "以真实Orval CLI读本地OpenAPI，生成客户端；不使用远程服务或伪造代码生成输出。"
+      "capabilities": ["node-process", "real-cli", "local-contract", "generated-types"],
+      "description": "按Sources标签拆包，独占advanced目录并严格检查产物。"
     }
   ],
   "license": {
@@ -133,5 +110,25 @@
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
     "note": "按Orval 8.44官方资料重写；历史Demo输出不作为当前CLI证据。"
+  },
+  "official": {
+    "readme": {
+      "repository": "orval-labs/orval",
+      "commit": "f7c7afdb0dfc1b928d0f18b19a5d4287bddff9d5",
+      "path": "packages/orval/README.md",
+      "sourceUrl": "https://github.com/orval-labs/orval/blob/f7c7afdb0dfc1b928d0f18b19a5d4287bddff9d5/packages/orval/README.md",
+      "snapshotPath": "official/readme.md",
+      "sha256": "5d58a62fd5938263f97ca94661b1148d639ce61328ed9e25ebb467b7e436ccde",
+      "language": "en",
+      "version": "8.44.0",
+      "syncedAt": "2026-11-17T18:52:57.244149+00:00"
+    },
+    "homepage": {
+      "url": "https://orval.dev",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-17T18:52:57.244149+00:00",
+      "reason": "实际GET403见official/homepage-headers.json；无法验证嵌入，保留直达。"
+    }
   }
 }

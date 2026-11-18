@@ -1,0 +1,7 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=["pnpm", "exec", "--", "biome", "check", "--write", "entries/C17-i18next/verification.json", "entries/C17-i18next/validation/metadata-check.mjs", "entries/C17-i18next/validation/sdk-source-audit.json", "entries/C17-i18next/validation/shared-validation-binding.json"]
+start=2026-11-10T18:18:57.830572+00:00
+Checked 4 files in 7ms. Fixed 1 file.
+
+exitCode=0
+end=2026-11-10T18:18:58.046298+00:00

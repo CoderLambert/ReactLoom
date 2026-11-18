@@ -1,0 +1,25 @@
+{
+  "recordedAt": "2026-11-10T17:28:31.143566+00:00",
+  "scope": "Candidate18 shared compilation covers unchanged seven production sources only; final official/docs presentation and all C15 browser interactions NOT_RUN",
+  "candidateInputSha256": "7a8af9a5cb909275bbbbf4b33bd9008adbb5a2b841c2e46a372a0be8c647f52c",
+  "artifacts": {
+    "docs/library-lab/evidence/quality-upgrade/candidate-18/typecheck.txt": "cce3b55f574708c09db735f7fb78a1335de2bbf43a1f2f7a319185b3c4a1cfe1",
+    "docs/library-lab/evidence/quality-upgrade/candidate-18/build.txt": "b51e82c997bb1cda2959d1c7be37a3c911f07791a0be0c5813ba7b2f21c9511f",
+    "docs/library-lab/evidence/quality-upgrade/candidate-18/catalog.txt": "aac8eecc30bead3a597e67a542bb8ec7ec74dcd7d3f5d7565af4589b6c90a716",
+    "docs/library-lab/evidence/quality-upgrade/candidate-18/input-stability.json": "51fbc7894dd245f3c0f0bba9bd219c7b9019ebcee35406921acde3fd0105d3d0"
+  },
+  "sources": {
+    "examples/example.tsx": "ec7b5490c149e85619f07927e485ee6a05a18435f026b5d826ffdd7fab1ee833",
+    "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+    "examples/date-operations.mjs": "1623c5924d7334ab8f5580f65bbd9d39cc0acb14042f0c70398409556fc42d3d",
+    "examples/date-operations.d.mts": "50bc1ee00aa05d10fad3bdde36e35b5a6ad353491a7249ef606be7fa71436f8e",
+    "examples/offset-instant.mjs": "4dd913f719462cdf29bfd0d7753c4aae2987238525a22d40158f102809095bcf",
+    "examples/offset-instant.d.mts": "c5cce5377df20572dff54e78a0d26ebbacc98df341a280d6285f9cc96e22149d",
+    "examples/styles.css": "5ee5f7d7a3dee6f5a2d68b8776426de5a9e8cb4156238836ecd807c84e3f67a0"
+  },
+  "runtime": {
+    "node": "v26.13.0",
+    "python": "3.15.2"
+  },
+  "formal": "NOT_RUN"
+}

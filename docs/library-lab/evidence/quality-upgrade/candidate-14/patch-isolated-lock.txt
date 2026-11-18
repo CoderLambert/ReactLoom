@@ -1,0 +1,8 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/.local-evidence/rgl-patch-isolated
+command=pnpm install --lockfile-only --offline --ignore-scripts
+ ERR_PNPM_NO_OFFLINE_META  Failed to resolve react@19.3.0 in package mirror /home/lambert/.cache/pnpm/metadata-v1.3/registry.npmjs.org/react.json
+
+This error happened while installing a direct dependency of /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/.local-evidence/rgl-patch-isolated
+Progress: resolved 1, reused 0, downloaded 0, added 0
+
+exitCode=1

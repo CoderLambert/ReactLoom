@@ -1,0 +1,4 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: pnpm exec biome check --write entries/A02-recharts/examples entries/A02-recharts/tests entries/A02-recharts/validation/check-entry.mjs entries/A02-recharts/library.json entries/A02-recharts/verification.json entries/A02-recharts/official/source-audit.json entries/A02-recharts/official/homepage-response.json
+exit: 0
+Checked 10 files in 6ms. Fixed 6 files.

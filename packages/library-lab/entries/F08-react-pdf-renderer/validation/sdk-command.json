@@ -1,0 +1,9 @@
+{
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "argv": [
+    "node",
+    "--test",
+    "packages/library-lab/entries/F08-react-pdf-renderer/tests/sdk.test.mjs"
+  ],
+  "exitCode": 0
+}

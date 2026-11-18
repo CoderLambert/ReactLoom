@@ -5,13 +5,7 @@
   "name": "Jotai",
   "group": "D",
   "summary": "原子和派生状态、写入 atom、Provider Store 多租户隔离",
-  "tags": [
-    "原子状态",
-    "React",
-    "Provider",
-    "多租户",
-    "Jotai v3"
-  ],
+  "tags": ["原子状态", "React", "Provider", "多租户", "Jotai v3"],
   "contentState": "recreated",
   "packages": [
     {
@@ -61,7 +55,9 @@
         "examples/example.tsx",
         "examples/demo.tsx",
         "examples/story-policy.mjs",
-        "examples/story-policy.d.mts"
+        "examples/story-policy.d.mts",
+        "examples/workspace-atoms.mjs",
+        "examples/workspace-atoms.d.mts"
       ],
       "capabilities": []
     },
@@ -76,7 +72,9 @@
         "examples/example.tsx",
         "examples/demo.tsx",
         "examples/story-policy.mjs",
-        "examples/story-policy.d.mts"
+        "examples/story-policy.d.mts",
+        "examples/workspace-atoms.mjs",
+        "examples/workspace-atoms.d.mts"
       ],
       "capabilities": []
     },
@@ -91,7 +89,9 @@
         "examples/example.tsx",
         "examples/demo.tsx",
         "examples/story-policy.mjs",
-        "examples/story-policy.d.mts"
+        "examples/story-policy.d.mts",
+        "examples/workspace-atoms.mjs",
+        "examples/workspace-atoms.d.mts"
       ],
       "capabilities": []
     }
@@ -104,5 +104,25 @@
     "originalRecovery": "ORIGINAL_RECOVERED",
     "mode": "recreated",
     "note": "根据官方 API 独立编写；不沿用旧研究源文件或历史测试 PASS"
+  },
+  "official": {
+    "readme": {
+      "repository": "pmndrs/jotai",
+      "commit": "6abd0ae3365e02ab432fba4b6e8e6f00aafbf508",
+      "path": "README.md",
+      "sourceUrl": "https://github.com/pmndrs/jotai/blob/6abd0ae3365e02ab432fba4b6e8e6f00aafbf508/README.md",
+      "snapshotPath": "official/readme.md",
+      "sha256": "ac1282016db1e46c4186f650e1afcf4f08b84cd6bb0fb9a9bd3512d86540a347",
+      "language": "en",
+      "version": "3.0.1",
+      "syncedAt": "2026-11-17T16:43:12.104755+00:00"
+    },
+    "homepage": {
+      "url": "https://jotai.org",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-17T16:43:12.104755+00:00",
+      "reason": "curl GET200，保存完整响应头official/homepage-headers.txt；未发现限制头，但未从实际Lab origin进行浏览器内容确认，不能记allowed。"
+    }
   }
 }

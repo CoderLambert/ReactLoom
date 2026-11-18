@@ -4,8 +4,8 @@
   "slug": "clsx",
   "name": "clsx",
   "group": "C",
-  "summary": "条件 className 合成",
-  "tags": [],
+  "summary": "用真实输入与返回值理解条件类名，以及 full / lite 的适用边界",
+  "tags": ["className", "条件样式", "clsx/lite", "CSS"],
   "contentState": "recreated",
   "packages": [
     {
@@ -29,47 +29,18 @@
   "demos": [
     {
       "demoId": "basic",
-      "title": "最小使用",
+      "title": "状态卡片与 full / lite 输入实验",
       "level": "basic",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
         "examples/demo.tsx",
+        "examples/class-names.css",
         "examples/class-policy.mjs",
         "examples/class-policy.d.mts",
-        "tests/class-policy.test.mjs",
-        "tests/sdk.test.mjs"
-      ],
-      "capabilities": []
-    },
-    {
-      "demoId": "business",
-      "title": "实际业务状态",
-      "level": "business",
-      "executionKind": "react",
-      "entryPoint": "examples/demo.tsx",
-      "sourceFiles": [
-        "examples/example.tsx",
-        "examples/demo.tsx",
-        "examples/class-policy.mjs",
-        "examples/class-policy.d.mts",
-        "tests/class-policy.test.mjs",
-        "tests/sdk.test.mjs"
-      ],
-      "capabilities": []
-    },
-    {
-      "demoId": "advanced",
-      "title": "类名语义边界",
-      "level": "advanced",
-      "executionKind": "react",
-      "entryPoint": "examples/demo.tsx",
-      "sourceFiles": [
-        "examples/example.tsx",
-        "examples/demo.tsx",
-        "examples/class-policy.mjs",
-        "examples/class-policy.d.mts",
+        "examples/comparison-presets.mjs",
+        "examples/comparison-presets.d.mts",
         "tests/class-policy.test.mjs",
         "tests/sdk.test.mjs"
       ],
@@ -86,5 +57,25 @@
   "license": {
     "spdx": "MIT",
     "assets": "原创文本与本地示例，不含第三方媒体"
+  },
+  "official": {
+    "readme": {
+      "repository": "lukeed/clsx",
+      "commit": "925494cf31bcd97d3337aacd34e659e80cae7fe2",
+      "path": "readme.md",
+      "sha256": "6c0057ca6bc7cc39a2ba857e114929168ce65daaa5ddb2242b40bc4de6dc573a",
+      "sourceUrl": "https://github.com/lukeed/clsx/blob/925494cf31bcd97d3337aacd34e659e80cae7fe2/readme.md",
+      "snapshotPath": "official/readme.md",
+      "language": "en",
+      "version": "2.1.1",
+      "syncedAt": "2026-11-10T08:22:53.696350+00:00"
+    },
+    "homepage": {
+      "url": "https://github.com/lukeed/clsx",
+      "kind": "repository",
+      "status": "blocked",
+      "checkedAt": "2026-11-10T08:22:53.696350+00:00",
+      "reason": "X-Frame-Options: deny; Content-Security-Policy: frame-ancestors 'none'"
+    }
   }
 }

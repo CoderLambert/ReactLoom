@@ -1,0 +1,9 @@
+{
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "argv": [
+    "node",
+    "--test",
+    "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/F16-dependency-cruiser/examples/result-policy.test.mjs"
+  ],
+  "exitCode": 0
+}

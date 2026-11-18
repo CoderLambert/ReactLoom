@@ -1,49 +1,22 @@
-# C22 Moment 迁移 — 工程手册
+# C22 Moment 历史迁移工程手册
 
-## 适用
+适用于把已有 Moment 业务逐步迁成明确的日期模型。先分清日历日期、绝对时间点、地区时区和经过时长，再选目标 API。运行版本为 date-fns 4.4.0、@date-fns/tz 1.5.0、Day.js 1.11.23；Moment 2.30.1 仅作固定历史源码依据，不是运行依赖。
 
-拆掉历史 Moment 调用：可变对象、宽松解析、日历日和 instant 混用、DST 被当成 24 小时。新功能不要新增 `moment` 依赖。
+迁入文件：`examples/migration.mjs`、同名 `.d.mts` 声明、`example.tsx`、命名空间 CSS。日历日期路径用 Day.js `customParseFormat`/`utc` 和附带 `T00:00:00Z` 的 date-fns 解析作稳定校验载体，最后仍返回字符串。UTC 载体不是业务日期的存储约定。输入合同为 1000–9999 年、完整 YYYY-MM-DD。
 
-## 版本
+绝对时间点只接受含秒和 Z/数值偏移的有效 ISO 输入，函数先拒绝无偏移或溢出日期，再用 `parseISO` 规范化。显示时区只能取声明的三个 IANA/UTC 值；`Intl` 负责显示，不重新解释输入。数值偏移不能代替地区的未来 DST 规则。
 
-运行 pin 是 `date-fns@4.4.0`、`@date-fns/tz@1.5.0`、`dayjs@1.11.23`。Moment 不是 Lab 依赖。格式令牌按目标库重写，不能全局替换。
+周期排程用 `TZDate` 和 `in: tz('America/New_York')`。明天中午用 `addDays`；24小时后用 `addHours`。保持函数返回值，不能沿用忽略不可变结果的写法。插件只在模块初始化注册；不更改全局locale/default zone，不加载BadMutable。
 
-## 迁移
+三个独立目标是：严格日历和令牌迁移、时间点/显示地区分离、日历日与实际小时的DST差异。控件数据是fixture，所有解析/加减由真实SDK计算。没有HTTP、保存排程、计时器或订阅；组件离开后只卸载React状态。
 
-带走 `examples/example.tsx` 的 `validCalendarDay`、`getMigrationReport` 和 `TZDate` 段落。日历日继续双库严格校验。显示继续 `Intl` 加显式 `timeZone`。需要用户选择回拨偏移时改用 C16，不要在这里猜。
+验收断言：无效日期被拒绝；两套Next均次日且原值未变；纽约/上海显示变化但ISO不变；回拨两个01:30相差1h；春/秋/普通日的日历小时数为23/25/24而addHours始终24。共享helper在Pacific/Apia进程也需保持日期载体语义。
 
-## 不可删的清理
+历史API核查：Moment2.30.1日期溢出是无效；有效toJSON返回ISO、无效返回null；add修改原对象。不要把旧指南的“2月30日会进位”或“JSON泄露内部字段”复制回来。源码来源及摘要见[来源清单](official/source-evidence.json)。
 
-不要把 `moment` 加回 package。不要把日历日存成 UTC 午夜。`addDays` 必须带 `{ in: tz(zone) }`。非法日期保持 `INVALID`，不要进位。可变 `add` / `startOf` 的调用点改为使用返回值。
+真实限制：本条目不执行Moment、不解析用户输入的任意地区墙上时间、不实现缺口/重叠选择器，不证明SSR hydration、服务端排程、触屏或读屏流程。官方README与官网面板复用宿主，官网仍unknown。具体本地命令和正式收据边界见[local-validation.md](local-validation.md)。
 
-## 反例
 
-```ts
-moment(value).add(1, 'day') // 改了原对象，也不等于加 24h
-moment('2026-02-30')
-JSON.stringify({ at: moment() })
-new Date('2026-11-01T01:30')
-```
+独立集成配方：在现有 React 工程执行 `pnpm add date-fns@4.4.0 @date-fns/tz@1.5.0 dayjs@1.11.23`。四个迁入文件放同目录，保留 CSS import，挂载 `<MomentMigrationExample level="basic" />`（另选 business/advanced）。Vite 工程保留 vite/client 类型与 bundler 模块解析；ESM 默认导入需要 allowSyntheticDefaultImports。Next 客户端边界须加 use client，未在本条目验收 Next 构建。完整路径见 guide 的“把源码迁到项目中”。
 
-- 把 `-05:00` 当成纽约。
-- 把 Moment 的 `YYYY` 令牌贴进 date-fns。
-- `startOf('day')` 不写时区。
-- 回拨日只留一个 instant。
-- 从请求参数调用全局 locale。
-- 只 abort、不看 generation 的保存请求。
-
-## 测试断言
-
-- `2026-02-30` 对 Day.js 严格模式和 `parseISO` 都无效。
-- 合法日历日的下一天是日历次日。
-- 两个带不同偏移的 01:30 得到不同 ISO，相差 1 小时。
-- 报告把日历字段和 instant 字段分开。
-- 测试若没有 import moment，不能写成 Moment SDK PASS。
-
-## 真实限制
-
-示例不执行 Moment。春季小时数以 `TZDate` 运行结果为准。没有发布计划的 HTTP 409。缺口时间的拒绝在 C15 和 C16 的函数里，不在本文件的按钮上。
-
-## 证据
-
-没有收据不要写 PASS。Actions 41779873259 不是本条目。不要改 `verification.json`。
+不可删初始化：migration.mjs 导入 dayjs/plugin/customParseFormat.js、dayjs/plugin/utc.js 并依次 extend；它们随 dayjs 提供，不是额外 npm 包。不需要 Day.js timezone：IANA 计算用 TZDate/tz，显示用 Intl。运行环境需支持所列 IANA 时区。替代库执行不证明 Moment 2.30.1 执行；官方原文固定提交不能因本地讲解修改而改写。

@@ -1,0 +1,10 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ["pnpm", "exec", "--", "biome", "check", "entries/A14-react-three-fiber/examples", "entries/A14-react-three-fiber/tests", "entries/A14-react-three-fiber/library.json", "entries/A14-react-three-fiber/verification.json", "entries/A14-react-three-fiber/validation/metadata-check.mjs", "entries/A14-react-three-fiber/validation/source-audit.mjs", "entries/A14-react-three-fiber/validation/browser-proposal-check.ts"]
+startedAt: 2026-11-10T12:12:47.841712+00:00
+finishedAt: 2026-11-10T12:12:48.111717+00:00
+exitCode: 0
+
+STDOUT
+Checked 13 files in 13ms. No fixes applied.
+
+STDERR

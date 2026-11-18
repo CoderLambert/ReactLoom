@@ -1,0 +1,16 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['node', '--test', 'entries/C09-react-virtuoso/tests/view-policy.test.mjs']
+startedAt: 2026-11-10T15:53:20.351422+00:00
+exit: 0
+✔ repeated submissions of identical queries receive a fresh virtual viewport revision (0.619496ms)
+✔ pagination clamps the final batch and never requests beyond the filtered count (0.100274ms)
+✔ pagination rejects stale or invalid counts rather than silently corrupting the cursor (0.624164ms)
+✔ query normalization limits Unicode code points and strips control characters (0.166693ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 37.820754

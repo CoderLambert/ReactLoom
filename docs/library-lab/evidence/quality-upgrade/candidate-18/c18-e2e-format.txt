@@ -1,0 +1,72 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+command=pnpm exec biome check --write packages/library-lab/e2e/quality-remediation-react-i18next.spec.ts
+packages/library-lab/e2e/quality-remediation-react-i18next.spec.ts:21:19 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    19 │ }
+    20 │ async function open(page: Page, level: 'basic' | 'business' | 'advanced') {
+  > 21 │   await page.goto('/libraries/react-i18next?tab=demo&example=' + level)
+       │                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    22 │   const app = page.getByTestId('c18-workshop')
+    23 │   const run = page.getByRole('button', { name: '运行当前示例', exact: true })
+  
+  i Unsafe fix: Use a template literal.
+  
+     19  19 │   }
+     20  20 │   async function open(page: Page, level: 'basic' | 'business' | 'advanced') {
+     21     │ - ··await·page.goto('/libraries/react-i18next?tab=demo&example='·+·level)
+         21 │ + ··await·page.goto(`/libraries/react-i18next?tab=demo&example=${level}`)
+     22  22 │     const app = page.getByTestId('c18-workshop')
+     23  23 │     const run = page.getByRole('button', { name: '运行当前示例', exact: true })
+  
+
+packages/library-lab/e2e/quality-remediation-react-i18next.spec.ts:67:58 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    65 │   const payload = '<img src=x onerror=alert(1)> & Ada'
+    66 │   await a.getByLabel('工作区 A用户昵称', { exact: true }).fill(payload)
+  > 67 │   await expect(a.getByTestId('c18-greeting')).toHaveText('你好，' + payload)
+       │                                                          ^^^^^^^^^^^^^^^^^^
+    68 │   await expect(a.locator('img,script,iframe,a')).toHaveCount(0)
+    69 │   await a.getByLabel('工作区 A语言', { exact: true }).selectOption('en')
+  
+  i Unsafe fix: Use a template literal.
+  
+     65  65 │     const payload = '<img src=x onerror=alert(1)> & Ada'
+     66  66 │     await a.getByLabel('工作区 A用户昵称', { exact: true }).fill(payload)
+     67     │ - ··await·expect(a.getByTestId('c18-greeting')).toHaveText('你好，'·+·payload)
+         67 │ + ··await·expect(a.getByTestId('c18-greeting')).toHaveText(`你好，${payload}`)
+     68  68 │     await expect(a.locator('img,script,iframe,a')).toHaveCount(0)
+     69  69 │     await a.getByLabel('工作区 A语言', { exact: true }).selectOption('en')
+  
+
+packages/library-lab/e2e/quality-remediation-react-i18next.spec.ts:70:58 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    68 │   await expect(a.locator('img,script,iframe,a')).toHaveCount(0)
+    69 │   await a.getByLabel('工作区 A语言', { exact: true }).selectOption('en')
+  > 70 │   await expect(a.getByTestId('c18-greeting')).toHaveText('Hello, ' + payload)
+       │                                                          ^^^^^^^^^^^^^^^^^^^
+    71 │   await expect(a.getByTestId('c18-legal')).toHaveText('Read the privacy notice.')
+    72 │   await expect(emphasis).toHaveText('privacy notice')
+  
+  i Unsafe fix: Use a template literal.
+  
+     68  68 │     await expect(a.locator('img,script,iframe,a')).toHaveCount(0)
+     69  69 │     await a.getByLabel('工作区 A语言', { exact: true }).selectOption('en')
+     70     │ - ··await·expect(a.getByTestId('c18-greeting')).toHaveText('Hello,·'·+·payload)
+         70 │ + ··await·expect(a.getByTestId('c18-greeting')).toHaveText(`Hello,·${payload}`)
+     71  71 │     await expect(a.getByTestId('c18-legal')).toHaveText('Read the privacy notice.')
+     72  72 │     await expect(emphasis).toHaveText('privacy notice')
+  
+
+Skipped 3 suggested fixes.
+If you wish to apply the suggested (unsafe) fixes, use the command biome check --write --unsafe
+
+Checked 1 file in 9ms. No fixes applied.
+Found 3 infos.
+
+exitCode=0

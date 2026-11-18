@@ -1,0 +1,4 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: pnpm exec biome check --write entries/B08-mantine/library.json entries/B08-mantine/official/source-audit.json
+exit: 0
+Checked 2 files in 3ms. Fixed 1 file.

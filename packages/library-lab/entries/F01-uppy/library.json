@@ -5,15 +5,7 @@
   "name": "Uppy",
   "group": "F",
   "summary": "文件选择、限制、排队与本地预览：真实 Uppy Core，不使用假上传进度",
-  "tags": [
-    "Uppy",
-    "文件队列",
-    "上传",
-    "拖拽",
-    "File API",
-    "权限",
-    "事件与生命周期"
-  ],
+  "tags": ["Uppy", "文件队列", "上传", "拖拽", "File API", "权限", "事件与生命周期"],
   "contentState": "recreated",
   "packages": [
     {
@@ -68,14 +60,10 @@
         "examples/demo.tsx",
         "examples/preview-policy.mjs",
         "examples/preview-policy.d.mts",
-        "tests/policy.test.mjs"
+        "examples/local-queue.mjs",
+        "examples/local-queue.d.mts"
       ],
-      "capabilities": [
-        "local-file-picker",
-        "file-drop",
-        "local-preview",
-        "uppy-core"
-      ],
+      "capabilities": ["local-file-picker", "file-drop", "local-preview", "uppy-core"],
       "description": "真实核心状态和大小/类型/数量限制。"
     },
     {
@@ -89,14 +77,10 @@
         "examples/demo.tsx",
         "examples/preview-policy.mjs",
         "examples/preview-policy.d.mts",
-        "tests/policy.test.mjs"
+        "examples/local-queue.mjs",
+        "examples/local-queue.d.mts"
       ],
-      "capabilities": [
-        "local-file-picker",
-        "file-drop",
-        "local-preview",
-        "uppy-core"
-      ],
+      "capabilities": ["local-file-picker", "file-drop", "local-preview", "uppy-core"],
       "description": "本地文本预览及队列删除，不传输。"
     },
     {
@@ -110,14 +94,10 @@
         "examples/demo.tsx",
         "examples/preview-policy.mjs",
         "examples/preview-policy.d.mts",
-        "tests/policy.test.mjs"
+        "examples/local-queue.mjs",
+        "examples/local-queue.d.mts"
       ],
-      "capabilities": [
-        "local-file-picker",
-        "file-drop",
-        "local-preview",
-        "uppy-core"
-      ],
+      "capabilities": ["local-file-picker", "file-drop", "local-preview", "uppy-core"],
       "description": "主动验证Uppy限制并清理实例。"
     }
   ],
@@ -127,6 +107,26 @@
   },
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
-    "note": "基于Uppy Core官方API重写；本轮只验证接口结构，未安装运行。"
+    "note": "按实装Core6.1.0与固定README核验，同源真实NodeSDK/纯预览策略与浏览器分开；没有上传插件。"
+  },
+  "official": {
+    "readme": {
+      "repository": "transloadit/uppy",
+      "commit": "41edd0f96a450616431cec1e57c2cb70e7c1a9e7",
+      "path": "packages/@uppy/core/README.md",
+      "sourceUrl": "https://github.com/transloadit/uppy/blob/41edd0f96a450616431cec1e57c2cb70e7c1a9e7/packages/%40uppy/core/README.md",
+      "snapshotPath": "official/readme.md",
+      "sha256": "2ce52890c65c3b27618a991c62a90907e692b05d8523c0da81b8b16ee807e01e",
+      "language": "en",
+      "version": "6.1.0",
+      "syncedAt": "2026-11-17T18:19:08.763394+00:00"
+    },
+    "homepage": {
+      "url": "https://uppy.io/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-17T18:19:08.763394+00:00",
+      "reason": "实际响应头见official/homepage-headers.txt；没有Lab-origin浏览器嵌入确认，保持unknown与直达。"
+    }
   }
 }

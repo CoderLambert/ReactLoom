@@ -1,0 +1,20 @@
+{
+  "command": [
+    "pnpm",
+    "exec",
+    "playwright",
+    "test",
+    "--config=.local-evidence/quality-playwright.config.ts",
+    "e2e/quality-remediation-ag-grid.spec.ts",
+    "--grep",
+    "@C08 actual active editor",
+    "--trace=off",
+    "--reporter=json"
+  ],
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+  "startedAt": "2026-11-10T16:24:13.093789+00:00",
+  "finishedAt": "2026-11-10T16:24:15.563177+00:00",
+  "exitCode": 0,
+  "implicitBuild": false,
+  "log": "docs/library-lab/evidence/quality-upgrade/candidate-16/browser-external-update-record.txt"
+}

@@ -5,14 +5,7 @@
   "name": "dependency-cruiser",
   "group": "F",
   "summary": "源码级依赖图与架构边界约束：真实CLI检测跨层引用和循环依赖",
-  "tags": [
-    "依赖关系",
-    "架构规则",
-    "环依赖",
-    "CLI",
-    "AST",
-    "CI"
-  ],
+  "tags": ["依赖关系", "架构规则", "环依赖", "CLI", "AST", "CI"],
   "contentState": "recreated",
   "packages": [
     {
@@ -52,21 +45,18 @@
       "level": "basic",
       "title": "正常三层模块依赖",
       "executionKind": "node-ci",
-      "entryPoint": "examples/workspace/basic/src/main.ts",
+      "entryPoint": "examples/workspace/basic/src/main.js",
       "sourceFiles": [
         "examples/run.mjs",
+        "examples/cli.mjs",
         "examples/workspace/config.cjs",
-        "examples/workspace/basic/src/main.ts",
-        "examples/workspace/basic/src/domain/get-article.ts",
-        "examples/workspace/basic/src/ui/render-title.ts",
+        "examples/workspace/basic/src/main.js",
+        "examples/workspace/basic/src/domain/get-article.js",
+        "examples/workspace/basic/src/ui/render-title.js",
         "examples/result-policy.mjs",
         "examples/result-policy.test.mjs"
       ],
-      "capabilities": [
-        "node-process",
-        "real-cli",
-        "fixture"
-      ],
+      "capabilities": ["node-process", "real-cli", "fixture"],
       "description": "真实depcruise对独立basic源码执行配置规则，预期零违反。"
     },
     {
@@ -74,44 +64,43 @@
       "level": "business",
       "title": "领域模块反向依赖UI",
       "executionKind": "node-ci",
-      "entryPoint": "examples/workspace/business/src/domain/summary.ts",
+      "entryPoint": "examples/workspace/business/src/domain/summary.js",
       "sourceFiles": [
         "examples/run.mjs",
+        "examples/cli.mjs",
         "examples/workspace/config.cjs",
-        "examples/workspace/business/src/main.ts",
-        "examples/workspace/business/src/domain/summary.ts",
-        "examples/workspace/business/src/ui/badge.ts",
+        "examples/workspace/business/src/main.js",
+        "examples/workspace/business/src/domain/summary.js",
+        "examples/workspace/business/src/ui/badge.js",
         "examples/result-policy.mjs",
         "examples/result-policy.test.mjs"
       ],
-      "capabilities": [
-        "node-process",
-        "real-cli",
-        "fixture"
-      ],
-      "description": "故意构造domain→ui违规边，CLI应返回非零和对应规则名称。"
+      "capabilities": ["node-process", "real-cli", "fixture"],
+      "description": "隔离domain→ui边，JSON真实结构报告；verify另用err报告器断言退出1。"
     },
     {
       "demoId": "advanced",
       "level": "advanced",
       "title": "跨模块循环引用",
       "executionKind": "node-ci",
-      "entryPoint": "examples/workspace/advanced/src/first.ts",
+      "entryPoint": "examples/workspace/advanced/src/first.js",
       "sourceFiles": [
         "examples/run.mjs",
-        "examples/workspace/config.cjs",
-        "examples/workspace/advanced/src/first.ts",
-        "examples/workspace/advanced/src/second.ts",
+        "examples/cli.mjs",
         "examples/verify.mjs",
         "examples/result-policy.mjs",
-        "examples/result-policy.test.mjs"
+        "examples/workspace/config.cjs",
+        "examples/workspace/advanced/src/first.js",
+        "examples/workspace/advanced/src/second.js",
+        "examples/workspace/basic/src/domain/get-article.js",
+        "examples/workspace/basic/src/main.js",
+        "examples/workspace/basic/src/ui/render-title.js",
+        "examples/workspace/business/src/domain/summary.js",
+        "examples/workspace/business/src/main.js",
+        "examples/workspace/business/src/ui/badge.js"
       ],
-      "capabilities": [
-        "node-process",
-        "real-cli",
-        "fixture"
-      ],
-      "description": "真实CLI检测a→b→a循环；verify.mjs按预期验证退出码和违反规则。"
+      "capabilities": ["node-process", "real-cli", "fixture"],
+      "description": "静态import形成first→second→first，verify校验JSON命名规则与独立err退出合同。"
     }
   ],
   "license": {
@@ -120,6 +109,26 @@
   },
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
-    "note": "2026-10-27根据官方规则/CLI独立编写fixture；真实depcruise尚未执行。"
+    "note": "真实18.5.0原生ESM隔离fixture；TS7不在该版本支持范围，失败证据保留。"
+  },
+  "official": {
+    "readme": {
+      "repository": "sverweij/dependency-cruiser",
+      "commit": "0c973139131631d0b379f207d83285ddc464a881",
+      "path": "README.md",
+      "sourceUrl": "https://github.com/sverweij/dependency-cruiser/blob/0c973139131631d0b379f207d83285ddc464a881/README.md",
+      "snapshotPath": "official/readme.md",
+      "sha256": "84886df812fd8c6d7e1381922b269351c15b9bdb271bed82cb73136bd7099b53",
+      "language": "en",
+      "version": "18.5.0",
+      "syncedAt": "2026-11-17T19:05:26.065382+00:00"
+    },
+    "homepage": {
+      "url": "https://github.com/sverweij/dependency-cruiser",
+      "kind": "repository",
+      "status": "blocked",
+      "checkedAt": "2026-11-17T19:05:26.065382+00:00",
+      "reason": "实际GitHub响应头见official/source-evidence.json，X-Frame-Options deny及frame-ancestors none禁止宿主嵌入，保留直达。"
+    }
   }
 }

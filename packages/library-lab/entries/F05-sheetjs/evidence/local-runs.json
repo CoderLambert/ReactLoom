@@ -1,0 +1,248 @@
+{
+  "kind": "local execution evidence, not verify:record receipt",
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+  "runs": [
+    {
+      "name": "basic",
+      "command": [
+        "node",
+        "entries/F05-sheetjs/examples/basic.mjs"
+      ],
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "startedAt": "2026-11-10T09:29:28.717138+00:00",
+      "finishedAt": "2026-11-10T09:29:28.776762+00:00",
+      "exitCode": 0,
+      "log": "evidence/basic.log",
+      "logSha256": "9a585528dfd7c32dcbf583b56d3da5ba3fecdc36cf902aa554f39224711a5b19"
+    },
+    {
+      "name": "business",
+      "command": [
+        "node",
+        "entries/F05-sheetjs/examples/business.mjs"
+      ],
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "startedAt": "2026-11-10T09:29:28.776867+00:00",
+      "finishedAt": "2026-11-10T09:29:28.836157+00:00",
+      "exitCode": 0,
+      "log": "evidence/business.log",
+      "logSha256": "dd1fd442fa4e23b773b9d17dac826fdb33f264125354d77d6d35e2151645ab57"
+    },
+    {
+      "name": "advanced",
+      "command": [
+        "node",
+        "entries/F05-sheetjs/examples/advanced.mjs"
+      ],
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "startedAt": "2026-11-10T09:29:28.836236+00:00",
+      "finishedAt": "2026-11-10T09:29:28.914694+00:00",
+      "exitCode": 0,
+      "log": "evidence/advanced.log",
+      "logSha256": "8bcea5fe45da23b6f7f6c3cc439552692333533bc585dea732ebba0d23f0d054"
+    },
+    {
+      "name": "sdk",
+      "command": [
+        "node",
+        "entries/F05-sheetjs/examples/verify.mjs"
+      ],
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "startedAt": "2026-11-10T09:29:28.914768+00:00",
+      "finishedAt": "2026-11-10T09:29:29.051839+00:00",
+      "exitCode": 0,
+      "log": "evidence/sdk.log",
+      "logSha256": "b93da57fc75b1aef718d81ce4f84655f05dd569871061b1fbf385985f0522622"
+    },
+    {
+      "name": "policy",
+      "command": [
+        "node",
+        "--test",
+        "entries/F05-sheetjs/examples/validation.test.mjs",
+        "entries/F05-sheetjs/examples/archive-policy.test.mjs",
+        "entries/F05-sheetjs/examples/zip-entry-policy.test.mjs"
+      ],
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "startedAt": "2026-11-10T09:29:29.051912+00:00",
+      "finishedAt": "2026-11-10T09:29:29.121560+00:00",
+      "exitCode": 0,
+      "log": "evidence/policy.log",
+      "logSha256": "66d05ec16f8e1222d6982b38cc266374e2c11df519fbbe33fa074f84f95c70f8"
+    },
+    {
+      "name": "metadata",
+      "command": [
+        "node",
+        "--input-type=module",
+        "-e",
+        "import assert from 'node:assert/strict'; import {readFile,stat} from 'node:fs/promises'; import {createHash} from 'node:crypto'; import {validateEntry} from './src/lib/catalog.mjs'; import {entryCompletenessIssues} from './scripts/entry-gate.mjs'; const root='entries/F05-sheetjs/'; const entry=JSON.parse(await readFile(root+'library.json','utf8')); assert.deepEqual(validateEntry(entry),[]); assert.deepEqual(entryCompletenessIssues(entry,{guide:true,agent:true,agents:true,verification:true}),[]); for(const file of new Set(entry.demos.flatMap(d=>d.sourceFiles))) assert.ok((await stat(root+file)).isFile(),file); const raw=await readFile(root+entry.official.readme.snapshotPath); assert.equal(createHash('sha256').update(raw).digest('hex'),entry.official.readme.sha256); assert.deepEqual(entry.demos.map(d=>d.level),['basic','business','advanced']); console.log('F05 metadata, 3 distinct levels, declared sources and official README digest: PASS');"
+      ],
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "startedAt": "2026-11-10T09:29:29.121628+00:00",
+      "finishedAt": "2026-11-10T09:29:29.150338+00:00",
+      "exitCode": 0,
+      "log": "evidence/metadata.log",
+      "logSha256": "0d507f6a67218d213d12c79c3976cfefada655088784eaeb46fb902c17a0f9cd"
+    },
+    {
+      "name": "biome",
+      "command": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "check",
+        "entries/F05-sheetjs/examples",
+        "entries/F05-sheetjs/tests",
+        "entries/F05-sheetjs/library.json",
+        "entries/F05-sheetjs/verification.json",
+        "entries/F05-sheetjs/official/source-evidence.json",
+        "entries/F05-sheetjs/official/readme-candidates.json",
+        "entries/F05-sheetjs/official/package-version-evidence.json"
+      ],
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "startedAt": "2026-11-10T09:29:29.150400+00:00",
+      "finishedAt": "2026-11-10T09:29:29.365583+00:00",
+      "exitCode": 0,
+      "log": "evidence/biome.log",
+      "logSha256": "25efa68e241ebb38594ec7fd92fdf87325628380f9b4daad67ba2fad4b7ffd8c"
+    }
+  ],
+  "entryInputs": {
+    "AGENTS.md": "dde4419c0467f87147da35e27570f431f1622f83f8001fb3461adad49020e4d9",
+    "agent.md": "8432bf703ca8fb22f0321d5909db8ce3a51b0489f305f61edf8f36753247a4f7",
+    "examples/advanced.mjs": "4c243b15a4b22ec9f3aaba0f1d793ba4ef88800aa0a04844b78f36ba409a3aa6",
+    "examples/archive-policy.mjs": "458b6fc2b73dfefff55bd8672e1129b64a1cff385609b9b68b3dd37a41a379bb",
+    "examples/archive-policy.test.mjs": "827b5850861f45fc1f818ee3eabf4ed7877cda28beeb1c9c363f2439f18ab8f5",
+    "examples/artifacts.mjs": "495c12027e64b39fd584d7a1a06cf1978f628f9b47e6561e8ef3b1d3d0bf171f",
+    "examples/basic.mjs": "d84294353d4b600f26d69ba9bdc90da9495de228a287d2a2bd93e49106c04489",
+    "examples/business.mjs": "d13e9674d724dd18639b60435cc1171a7514b76b6d8ed806addf884c5aeffa04",
+    "examples/category-report.mjs": "c4124bae8c145c6f2fa73893b3f859fbb30e8b580a8b8d964d7be9d2b84286e8",
+    "examples/core.mjs": "68bd24a01c0f2d577d9f4f36628677229422626ea522f6ad745940c514110a2c",
+    "examples/invalid-workbooks.mjs": "e6ce8c7f6ef37d15a0f75597b3fb0a7dc9545460eb614f4c341cde906cb90b9d",
+    "examples/validation.mjs": "a4d11c44bb03d32010639ffe51868e7ff71746b02f9c1cb6f9ce9e2490b107ae",
+    "examples/validation.test.mjs": "686d2c1faabe5964db7ac1702e6c9b3594beca4716392ee7354a1546e2d1c779",
+    "examples/verify.mjs": "70b44c5e047f8b9fda5de2dce3542d009ff4d5734ead5550e0b2845c533cfed8",
+    "examples/zip-entry-policy.mjs": "f16852cdcd522f8533bd448ddd946cad0f4395484f38ff1cf67629982c231208",
+    "examples/zip-entry-policy.test.mjs": "42d1025d28b031c8b33566a754c7bff4bf60cc9d2c7f7c7715b455443481a3dc",
+    "guide.md": "1538f29f1692bf81de7ef0f9d3317b88a13f27a0ab8802c9cddc8dbed5b7eb78",
+    "library.json": "36417575f0fc258534f90f92ced99c52dc08d4b9e92d8fa532115cc943bcc9b9",
+    "official/readme.md": "97161c0a7368fd50782c9c38ae25641e9880d9799e4095861580ce7b8359d91b",
+    "tests/sdk.test.mjs": "103e5b1a25cbf93901d49421f3af32c1b75f1ec3619d35a0dd69a5275c1cd1f2",
+    "verification.json": "e673c5913605f19b5767136c3a308fbff6409d9cf4550f98ecdcd9be3c9f5e36"
+  },
+  "sharedInputs": {
+    "package.json": "8f54ccb6db6057d29a940ca4d436a3449296b0dbf372f8954b647f88420f2a18",
+    "pnpm-lock.yaml": "1d255c4858effcb7967cead058f46358a8dc31d646804616b133683bef144b1d",
+    "packages/library-lab/package.json": "7ef7d4d2f9f102c062957a3f34b237a14eaae88dac1b43af966eeecbf1465fa7"
+  },
+  "versions": {
+    "node": "v26.13.0",
+    "pnpm": "10.33.3",
+    "xlsx": "0.20.3"
+  },
+  "artifacts": {
+    ".artifacts/advanced.json": {
+      "bytes": 1787,
+      "sha256": "8bcea5fe45da23b6f7f6c3cc439552692333533bc585dea732ebba0d23f0d054"
+    },
+    ".artifacts/advanced.xlsx": {
+      "bytes": 8886,
+      "sha256": "e4bc55966c6b749d16413a6b947f25644404bb2025d1ee6c3880bfd5a40f445a"
+    },
+    ".artifacts/basic.json": {
+      "bytes": 801,
+      "sha256": "9a585528dfd7c32dcbf583b56d3da5ba3fecdc36cf902aa554f39224711a5b19"
+    },
+    ".artifacts/basic.xlsx": {
+      "bytes": 8851,
+      "sha256": "f238dfd5a6bc88402719cb7fe5f4086d4a2e6d56750c100feaf7a0d3de3f50ed"
+    },
+    ".artifacts/business.json": {
+      "bytes": 1331,
+      "sha256": "dd1fd442fa4e23b773b9d17dac826fdb33f264125354d77d6d35e2151645ab57"
+    },
+    ".artifacts/business.xlsx": {
+      "bytes": 11071,
+      "sha256": "276300f5bab6306e6b3cca83d6caa88de31725e3cf9c9249c5c4400f80cbd4b4"
+    }
+  },
+  "reviewFixRuns": [
+    {
+      "name": "review-length-green",
+      "command": [
+        "node",
+        "--test",
+        "--test-name-pattern=120-character|maximum normalized",
+        "entries/F05-sheetjs/examples/validation.test.mjs",
+        "entries/F05-sheetjs/tests/sdk.test.mjs"
+      ],
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "startedAt": "2026-11-10T09:36:04.046070+00:00",
+      "finishedAt": "2026-11-10T09:36:04.175904+00:00",
+      "exitCode": 0,
+      "log": "evidence/review-length-green.log",
+      "logSha256": "b2db920104151d3df264375f4a88156c2ef38131b346616c01192f0bbb833268"
+    },
+    {
+      "name": "review-affected-suites",
+      "command": [
+        "node",
+        "--test",
+        "entries/F05-sheetjs/examples/validation.test.mjs",
+        "entries/F05-sheetjs/tests/sdk.test.mjs"
+      ],
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "startedAt": "2026-11-10T09:36:04.175990+00:00",
+      "finishedAt": "2026-11-10T09:36:04.327297+00:00",
+      "exitCode": 0,
+      "log": "evidence/review-affected-suites.log",
+      "logSha256": "8be0173e6dec49ce5c8a35c17cce84de68eb0ad0f3c2b11ac9cc66edf3274e46"
+    },
+    {
+      "name": "review-length-biome",
+      "command": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "check",
+        "entries/F05-sheetjs/examples/validation.mjs",
+        "entries/F05-sheetjs/examples/validation.test.mjs",
+        "entries/F05-sheetjs/tests/sdk.test.mjs"
+      ],
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "startedAt": "2026-11-10T09:36:04.327358+00:00",
+      "finishedAt": "2026-11-10T09:36:04.534947+00:00",
+      "exitCode": 0,
+      "log": "evidence/review-length-biome.log",
+      "logSha256": "b66fd572b5b42c62f2f5dff77b7e4ae0484966be06b14f9a2f0286eb0ec94123"
+    }
+  ],
+  "reviewFixNote": "120-character maximum is applied after formula-prefix escaping; prior run input digests are superseded only for validation.mjs and its directly affected policy/SDK test files. Original CLI artifact outputs are unchanged for their short fixtures; unaffected ZIP-policy and metadata PASS were not rerun.",
+  "originalEntryInputs": {
+    "AGENTS.md": "dde4419c0467f87147da35e27570f431f1622f83f8001fb3461adad49020e4d9",
+    "agent.md": "8432bf703ca8fb22f0321d5909db8ce3a51b0489f305f61edf8f36753247a4f7",
+    "examples/advanced.mjs": "4c243b15a4b22ec9f3aaba0f1d793ba4ef88800aa0a04844b78f36ba409a3aa6",
+    "examples/archive-policy.mjs": "458b6fc2b73dfefff55bd8672e1129b64a1cff385609b9b68b3dd37a41a379bb",
+    "examples/archive-policy.test.mjs": "827b5850861f45fc1f818ee3eabf4ed7877cda28beeb1c9c363f2439f18ab8f5",
+    "examples/artifacts.mjs": "495c12027e64b39fd584d7a1a06cf1978f628f9b47e6561e8ef3b1d3d0bf171f",
+    "examples/basic.mjs": "d84294353d4b600f26d69ba9bdc90da9495de228a287d2a2bd93e49106c04489",
+    "examples/business.mjs": "d13e9674d724dd18639b60435cc1171a7514b76b6d8ed806addf884c5aeffa04",
+    "examples/category-report.mjs": "c4124bae8c145c6f2fa73893b3f859fbb30e8b580a8b8d964d7be9d2b84286e8",
+    "examples/core.mjs": "68bd24a01c0f2d577d9f4f36628677229422626ea522f6ad745940c514110a2c",
+    "examples/invalid-workbooks.mjs": "e6ce8c7f6ef37d15a0f75597b3fb0a7dc9545460eb614f4c341cde906cb90b9d",
+    "examples/validation.mjs": "ae98b521985e71b046081e5d1b5bde9f2f757cc80a3d9a58d2bc5738c10ff7c9",
+    "examples/validation.test.mjs": "2493a93570d84bd4ced884a8390b65c870f35a4d94559211bbb9265747504380",
+    "examples/verify.mjs": "70b44c5e047f8b9fda5de2dce3542d009ff4d5734ead5550e0b2845c533cfed8",
+    "examples/zip-entry-policy.mjs": "f16852cdcd522f8533bd448ddd946cad0f4395484f38ff1cf67629982c231208",
+    "examples/zip-entry-policy.test.mjs": "42d1025d28b031c8b33566a754c7bff4bf60cc9d2c7f7c7715b455443481a3dc",
+    "guide.md": "c121aa1ece84a386031611ab0b44600324bef4d8ef7018ed38fe1d944cd78848",
+    "library.json": "36417575f0fc258534f90f92ced99c52dc08d4b9e92d8fa532115cc943bcc9b9",
+    "official/readme.md": "97161c0a7368fd50782c9c38ae25641e9880d9799e4095861580ce7b8359d91b",
+    "tests/sdk.test.mjs": "aff5ce4b30d3fb84997a6b3f901c0eb67046a2a6e6d30ea2b268b8baa256eef8",
+    "verification.json": "e673c5913605f19b5767136c3a308fbff6409d9cf4550f98ecdcd9be3c9f5e36"
+  },
+  "inputBindingNote": "runs records originalEntryInputs, reconstructed for the three review-edited files from the saved pre-fix source shape; reviewFixRuns records current entryInputs. guide.md had the documented length clarification after runtime tests; docs do not affect these SDK commands."
+}

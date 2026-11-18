@@ -1,180 +1,49 @@
-# hls.js 1.7.3｜用户点名之后才加载公开测试流
+# hls.js：用户触发清单请求，再观察MSE与清理
 
-`library.json` 钉住 `hls.js@1.7.3`，Apache-2.0。hls.js 在支持 MSE 的浏览器里拉取 HLS 清单和分片，写入 `MediaSource`，交给 `<video>` 解码。它不画皮肤、不签发 DRM、不做转码。
+已有HLS直播/点播，要在支持MediaSource Extensions的浏览器读取清单、选择画质和处理错误，可以用hls.js。它负责HLS分片传输/MSE缓冲，不提供皮肤、转码、DRM授权或片源版权。单个MP4先用原生video；完整播放器UI另选组件，不要把两个引擎绑定同一个video。
 
-## Lab 当前示例
+此例固定hls.js1.7.3，安装包和固定README/LICENSE为Apache-2.0。清单是官方README明确使用的Mux公开测试地址：`https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8`。公开示例不等于生产可用性或视频再分发许可；不下载/存储视频文件，不换付费源，不做代理绕过CORS。
 
-真实组件是 [`examples/example.tsx`](examples/example.tsx)。[`examples/demo.tsx`](examples/demo.tsx) 只再导出。`key={level}` 每个层一个 `HlsSession`。
+## 用户意图与真实请求
 
-**打开 Demo 不会发媒体请求。** 状态文案是「未加载：演示不会自动联网」。只有点击「加载公开 HLS 测试流（外部请求）」才进入 `load()`。
+打开本条Demo没有src/loadSource，不访问Mux；点击“加载公开HLS测试流（外部请求）”才创建引擎并请求。该按钮可能拉取主清单、变体、音频与分片并预缓冲，不能误说只有点击播放才发分片。没有自动play；用户需要原生controls操作才能开始可见播放，加载/解析清单不是解码播放成功。
 
-测试地址写在源码常量里，不是隐藏脚本：
+`Hls.isSupported()`走MSE分支，new Hls({enableWorker:false,maxBufferLength:12})→attachMedia→MEDIA_ATTACHED后loadSource→MANIFEST_PARSED显示真实levels。不支持MSE但canPlayType(m3u8)为真时，同一个URL交给video.src与load，明确显示原生HLS模式；能力提示不保证编码可播放。两者都不支持则零请求并显示未运行。
 
-```ts
-const TEST_HLS = 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8'
-```
+Worker在本例明确关闭；不把它写成销毁过Worker、hls.js不能开Worker或已验Worker CSP。maxBufferLength12是本例前向缓冲目标的一部分，受码率/字节等其它参数影响，不是12秒绝对内存/缓冲硬上限。
 
-这是 opt-in。不点击就没有 `loadSource`，也没有 `video.src`。不要改成 `useEffect` 里自动加载。不要另找一个 CDN 播放列表在文档里让读者默默请求。
+## 三个不同实验
 
-`load()` 的顺序：
+### 1. 真实公开清单
 
-1. `stop()`：generation 递增，`hls.destroy()`，暂停并 `removeAttribute('src')`，再 `load()` 清空元素。
-2. 新的 generation。
-3. `Hls.isSupported()` 为真时 `new Hls({ enableWorker: false, maxBufferLength: 12 })`。
-4. `MEDIA_ATTACHED` 之后才 `loadSource(TEST_HLS)`。
-5. `MANIFEST_PARSED` 把各层的高度和码率放进选择框。不自动调用 `video.play()`。文案要求再点原生播放按钮。
-6. `ERROR` 显示 `type/details`。`fatal` 时作废 generation、`destroy`、清空元素和码率列表。**不会无限自动重试，也不绕过 CORS。**
-7. 不支持 MSE 时，若 `canPlayType('application/vnd.apple.mpegurl')` 为真，把同一 URL 赋给 `video.src`，并说明这是原生 HLS，不是 hls.js 的 MSE。
-8. 两者都不支持则不发请求。
+basic开始是未加载；点击后如网络/CORS允许，状态显示“已读取真实HLS清单（n层）”。否则保留实际type/details或浏览器media错误。不要用本地fixture清单成功代替公网成功，也不要把SDK可导入当MSE/解码证明。
 
-business 和 advanced 才显示质量 `<select>`。`-1` 是自动，对应 `hls.currentLevel = -1`。选项必须来自当前清单，陌生 index 直接返回。
+### 2. 请求画质与实际事件
 
-卸载 effect 同样 destroy 并清空 video。没有挂载：Video.js 皮肤、字幕选择器、CMCD、自动播放、重连循环。
+business清单成功后列出实际index/height/bitrate。-1设置currentLevel=-1自动；固定index必须是当前hls.levels中的整数。当前选择表示请求的画质，不保证立刻显示该层；SDK LEVEL_SWITCHED才更新“已切换层”。播放、带宽与缓冲影响实际结果，不伪造已切换码率或ABR评测。
 
-## 1. 什么时候用
+### 3. 可重试fatal与所有权
 
-| 任务 | 判断 |
-| --- | --- |
-| 已有 HLS，要在 Chrome 等环境看 ABR 和错误事件 | hls.js |
-| 一个 MP4 | 原生 video |
-| 只要 v10 皮肤 | E16。不要和 hls.js 绑同一个元素 |
-| DASH 或 DRM | 别的播放器 |
-| 制作 HLS | 打包器，不是这个库 |
+advanced额外有“本地诊断会话（不拉清单）”：真实new Hls/attachMedia连接本地MSE，但不loadSource、不请求Mux。“注入本地fatal（非网络测试）”调用真实Hls.trigger(ERROR)，仅检验SDK事件总线和本例fatal清理，不是外部网络、解码或真实流失败。状态明确本地注入；fatal后再点诊断或公开加载才创建新实例。
 
-Safari 上可能走原生分支。`canPlayType` 只是提示，不保证这条 Mux 测试流的编码能播。
+真实网络错误另测：浏览器route.abort主清单会使真实SDK走网络错误分支，但这是受控拦截，不代表外部endpoint故障。实装默认manifest errorRetry最多1次、延迟1000ms；timeout最多2次且每次加载上限20000ms。此例没有覆盖默认retry配置，因此“不无限自动重建实例”不等“SDK根本不重试”。playlist/fragment策略更长，不能套主清单15秒测试边界。
 
-官方：[仓库](https://github.com/video-dev/hls.js)、[v1.7.3](https://github.com/video-dev/hls.js/releases/tag/v1.7.3)、[演示](https://hlsjs.video-dev.org/demo/)。
+## 停止、fatal与卸载
 
-## 2. 模型
+每次load先停止旧会话；stop/fatal/unmount递增generation、清hlsRef，再调用真实engine.destroy。回调同时检查generation与引擎身份，旧MANIFEST/ERROR/LEVEL事件不能回写。fatal清层列表和选择，停止原生media.onerror、pause、removeAttribute(src)、load重置元素，不在已destroy实例上startLoad。
 
-```text
-点击加载
-    │
-    ▼
-Hls.isSupported ?
-    ├─ 是 → attachMedia → MEDIA_ATTACHED → loadSource
-    │         ERROR fatal → destroy，停止
-    └─ 否 → 原生 m3u8 或明确失败
-    │
-    ▼
-用户再点 <video> 的播放
-```
+media-policy.mjs是UI唯一清理与质量索引策略；disposePlayback用finally保证destroy抛错时仍尝试清video。组件effect捕获本次video再返回cleanup，避免卸载时ref已置null而漏pause/src/load。Hls自身管理MSE对象URL/缓冲，不由本例全局revoke。真实DESTROYING回调仅向该video转发reactloom-e17-destroying教学DOM事件，供外部观察；不是dispose自己伪造销毁成功，也不成为SDK标准API。
 
-`enableWorker: false` 是本示例的选择，用来减少一条 Worker 线程的变量。不要在文档里写成「1.7.3 不能开 Worker」。生产若打开 Worker，要单独看 CSP 的 `worker-src`。那不是当前文件的行为。
+本例没有Worker、业务连接或自行注册的全局监听。Hls.destroy按实装实现解除内部订阅/停止加载/分离媒体，真实网络收敛/MediaSource关闭仍须浏览器观察，不以组件消失代证。原生分支没有hls实例/质量API，仍显式清video。网络已发出不保证远端停止传输或没有在途响应。
 
-generation 用来丢掉过期回调。fatal 之后必须新建 `Hls`，不能对已 destroy 的实例 `startLoad`。
+## 完整迁入
 
-## 3. 三层
+已有React/TSX浏览器项目执行`pnpm add hls.js@1.7.3`，复制example.tsx和media-policy.mjs/.d.mts，保持相对路径；demo.tsx只Lab适配可省。渲染`<HlsExample level="business" />`，也支持basic/advanced。需要ReactDOM、TS bundler/DOM、MSE及相容codec或原生HLS、HTTPS/CORS/CSP媒体与连接许可。组件已有原生controls与布局，无Provider/env/CSS插件/账号。无caption轨/字幕选择/读屏验收，不用空track伪装字幕支持。
 
-在 Library Lab 打开 E17 再运行。确认网络面板仍然安静，然后才点加载。
+生产必须替换为自己有权提供的片源并明确凭据/CORS/缓存/媒体预算；本例没有自定义业务头、代理、上传、DRM、字幕UI或自动重连策略。保留显式外部按钮与cleanup/key=level，不把公开测试流当生产片源。Worker生产开启需另测worker-src与资源生命周期，不能由当前关闭分支推定。
 
-### 基本
+## 官方来源与验收边界
 
-点击后状态变为等待清单。成功时说明层数，并提醒播放按钮还没代按。失败时是 CORS、网络或解码错误的原文，不是假的「播放成功」。
+v1.7.3 annotated tag解析固定commite5ff3583965e3af16c4a4b4d2b5f7bd1ffb5b7de。原README字节与LICENSE保存；README第392/424行包含同一Mux地址，来源可追溯。固定树无中文README，保留英文en。源仓库root package没有version字段，安装发行包实际1.7.3；没有编造上游缺失字段。官网Demo curl GET200无明确嵌入限制，但未Lab origin内容确认，unknown直达；urllib403也留取证经过。
 
-### 业务
-
-清单解析后可以选择自动或某一层。选择框在没有实例时禁用。切换是否真的换了码率，要看播放中的带宽，本指南不写已测。
-
-### 进阶
-
-fatal 之后再点加载，会走新的 `new Hls`。停止按钮走 `stop()`。不要期待库自己无限恢复。
-
-## 4. 反例（带代码）
-
-### 反例 1：effect 里自动 loadSource
-
-```tsx
-useEffect(() => {
-  const hls = new Hls()
-  hls.loadSource(TEST_HLS)
-  hls.attachMedia(video)
-}, [])
-```
-
-这会在打开 Demo 时访问 Mux。Lab 禁止这种挂载。地址可以出现在源码里，请求必须来自按钮。
-
-### 反例 2：把测试流写进隐藏脚本或标签
-
-```html
-<script src="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"></script>
-```
-
-清单不是脚本。也不要预加载 link。opt-in 就是按钮。
-
-### 反例 3：fatal 后立刻递归 startLoad
-
-```ts
-if (err.fatal) hls.startLoad()
-```
-
-Lab 销毁实例并停住。再次播放由用户点「加载」。
-
-### 反例 4：每个渲染 new Hls
-
-实例放在 ref 里，创建在 `load` 函数里。渲染只读状态。
-
-### 反例 5：两个引擎
-
-```tsx
-<Video src={TEST_HLS} />
-hls.attachMedia(videoElement)
-```
-
-一个元素一个 MSE 所有者。E16 与 E17 分开挂载。
-
-### 反例 6：忽略 generation
-
-慢的 `MANIFEST_PARSED` 在用户已点停止后仍 `setQualities`。回调第一行比较 `run !== generation.current`。
-
-### 反例 7：自动 `video.play()`
-
-没有用户手势时浏览器会拒绝，也会在不该出声时出声。Lab 不调用 `play()`。
-
-### 反例 8：用演示流当生产片源
-
-Mux 的测试流是公开示例，不是你们的内容授权，也可能不可用。失败要显示，不能换成另一段静默视频假装成功。
-
-## 5. 安全与性能
-
-请求离开本站，发往 `test-streams.mux.dev`。不要在适配器里附带 Cookie 或业务头。本文件使用默认加载，没有自定义 `xhrSetup`。
-
-`maxBufferLength: 12` 是演示用的缓冲上限，不是全站推荐值。缓冲、延迟和内存要用真实码率测量，不要抄成 SLA。
-
-CORS 失败是预期中的可见错误之一。不要通过代理去「修」演示而绕过浏览器的跨源规则，除非产品有自己的同源清单。
-
-可访问性依赖原生 `controls`。皮肤不在这里。
-
-## 6. 升级核对
-
-- 锁定 1.7.3。不要用 1.6 的错误对象字段假设 `networkDetails` 的类型。
-- 保持 `enableWorker: false`，除非单独做了 Worker 验收。
-- 保持按钮触发。代码评审时搜索 `loadSource` 和 `TEST_HLS`，确认它们只出现在 `load` 的点击路径上。
-
-## 7. 故障
-
-| 现象 | 先看 |
-| --- | --- |
-| 一打开就有 m3u8 请求 | 是否把 load 放进了 effect |
-| 状态停在等待清单 | 网络、CORS、混合内容 |
-| 有清单但不能播 | 编码与浏览器。先读 error 事件 |
-| 停止后码率还在增加 | generation 没有挡住回调 |
-| fatal 后再点没反应 | 是否对已销毁实例调用方法。应重新 `new Hls` |
-| 说明是原生 HLS | `Hls.isSupported()` 为假且 canPlayType 为真 |
-
-## 8. 验收
-
-1. 进入 Demo、不点击：没有对 `test-streams.mux.dev` 的请求。
-2. 点击后才有清单请求，且播放仍要第二次手势。
-3. 停止后请求不再往这个已销毁的实例上写状态。
-4. fatal 不会自动打满重试。
-5. 以上任何一条没有浏览器记录，就不能写通过。
-
-sdk、build、browser 保持 **NOT_RUN**。没有 `docs/library-lab/evidence/runs/` 的 E17 收据就不能写 PASS。Actions `41779873259` 是仓库级运行，不是本条目通过。公开测试流的一次成功也不等于生产 CDN 已验收。
-
-## 9. 资料
-
-- https://github.com/video-dev/hls.js
-- https://github.com/video-dev/hls.js/releases/tag/v1.7.3
-- https://github.com/video-dev/hls.js/blob/v1.7.3/docs/API.md
-- https://hlsjs.video-dev.org/demo/
+Node3项仅清理double/索引策略，真实hls.js媒体SDK未运行。隔离类型编译不证明MSE/网络。浏览器提案分别标EXTERNAL公网清单、CONTROLLED本地fatal事件、CONTROLLED路由失败，不把三者混算。公开清单成功仍不证明帧解码或实际码率切换；准确命令/日志和六项状态见local-validation.md，formal verification保持NOT_RUN。

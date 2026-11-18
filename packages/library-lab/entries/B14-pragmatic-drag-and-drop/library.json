@@ -4,16 +4,8 @@
   "slug": "pragmatic-drag-and-drop",
   "name": "Pragmatic drag and drop",
   "group": "B",
-  "summary": "原生DOM拖放适配器、drop targets、监视器与严格事件作用域",
-  "tags": [
-    "native",
-    "drag",
-    "DOM",
-    "keyboard",
-    "drop-target",
-    "monitor",
-    "cleanup"
-  ],
+  "summary": "真实原生拖放、固定频道约束与双实例scope隔离，保留键盘回退和会话失效",
+  "tags": ["native", "drag", "DOM", "keyboard", "drop-target", "monitor", "cleanup"],
   "contentState": "recreated",
   "packages": [
     {
@@ -50,62 +42,33 @@
   "demos": [
     {
       "demoId": "basic",
-      "title": "最小原生拖放",
-      "description": "使用真实Pragmatic drag and drop接口：最小原生拖放",
+      "title": "手柄原生拖放与键盘回退",
+      "description": "观察真实源/目标与SDK reorder更新前三项，隐藏尾部保留。",
       "level": "basic",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
-      "sourceFiles": [
-        "examples/example.tsx",
-        "examples/demo.tsx",
-        "examples/pinned-order.ts"
-      ],
-      "capabilities": [
-        "native-drag-drop",
-        "keyboard-fallback",
-        "cleanup",
-        "isolated-drag-handle"
-      ]
+      "sourceFiles": ["examples/example.tsx", "examples/demo.tsx", "examples/pinned-order.ts"],
+      "capabilities": ["native-drag-drop", "keyboard-fallback", "cleanup", "isolated-drag-handle"]
     },
     {
       "demoId": "business",
-      "title": "NewsHub频道排序",
-      "description": "使用真实Pragmatic drag and drop接口：NewsHub频道排序",
+      "title": "固定频道不能移动或被跨越",
+      "description": "指针与上下按钮共享固定区间规则，目标接受与业务许可分开。",
       "level": "business",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
-      "sourceFiles": [
-        "examples/example.tsx",
-        "examples/demo.tsx",
-        "examples/pinned-order.ts"
-      ],
-      "capabilities": [
-        "native-drag-drop",
-        "keyboard-fallback",
-        "cleanup",
-        "isolated-drag-handle"
-      ]
+      "sourceFiles": ["examples/example.tsx", "examples/demo.tsx", "examples/pinned-order.ts"],
+      "capabilities": ["native-drag-drop", "keyboard-fallback", "cleanup", "isolated-drag-handle"]
     },
     {
       "demoId": "advanced",
-      "title": "监视器作用域、撤销与键盘回退",
-      "description": "使用真实Pragmatic drag and drop接口：监视器作用域、撤销与键盘回退",
+      "title": "双实例隔离、撤销与过期会话",
+      "description": "两套真实列表独立scope，跨实例拒绝、各自排序、一次撤销和revision失效。",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
-      "sourceFiles": [
-        "examples/example.tsx",
-        "examples/demo.tsx",
-        "examples/pinned-order.ts",
-        "tests/pinned-order.test.mjs",
-        "tests/drag-session.test.mts"
-      ],
-      "capabilities": [
-        "native-drag-drop",
-        "keyboard-fallback",
-        "cleanup",
-        "isolated-drag-handle"
-      ]
+      "sourceFiles": ["examples/example.tsx", "examples/demo.tsx", "examples/pinned-order.ts"],
+      "capabilities": ["native-drag-drop", "keyboard-fallback", "cleanup", "isolated-drag-handle"]
     }
   ],
   "provenance": {
@@ -115,5 +78,25 @@
   "license": {
     "spdx": "Apache-2.0",
     "assets": "使用原创新媒体/结构化数据，不包含第三方收费资产。"
+  },
+  "official": {
+    "readme": {
+      "repository": "atlassian/pragmatic-drag-and-drop",
+      "commit": "1287861b7c77439f906dc108c21f6236b34c8f53",
+      "path": "packages/core/README.md",
+      "sourceUrl": "https://github.com/atlassian/pragmatic-drag-and-drop/blob/1287861b7c77439f906dc108c21f6236b34c8f53/packages/core/README.md",
+      "snapshotPath": "official/readme.md",
+      "language": "en",
+      "version": "1.8.1",
+      "syncedAt": "2026-11-10T13:49:49.884571+00:00",
+      "sha256": "bd43a66cfa1697781045dae0873d9fa77ac34ef31e6ecb5fba8583eb23a3e4e2"
+    },
+    "homepage": {
+      "url": "https://atlassian.design/components/pragmatic-drag-and-drop/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-10T13:49:49.884571+00:00",
+      "reason": "官方包声明入口实际GET200完整响应头；未从Lab origin确认iframe内容可用，仅记录unknown并提供直达。原始头见official/source-audit.json。"
+    }
   }
 }

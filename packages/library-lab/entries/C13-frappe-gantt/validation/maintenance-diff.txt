@@ -1,0 +1,4 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['git', 'diff', '--check', '--', 'entries/C13-frappe-gantt']
+startedAt: 2026-11-10T16:41:22.781297+00:00
+exit: 0

@@ -1,0 +1,63 @@
+{
+  "capturedAt": "2026-11-10T15:45:28.138340+00:00",
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+  "head": "1218066e706a90ba03fac8dff8c9b843dd2429c4",
+  "status": "",
+  "files": [
+    {
+      "path": "AGENTS.md",
+      "bytes": 657,
+      "sha256": "56567b108987eb0b7c6efc282c0f10d4d1f7675ded8790f56cd6be6616a94ffe"
+    },
+    {
+      "path": "agent.md",
+      "bytes": 1810,
+      "sha256": "f3edb2d9c2f5ad7eb6cd71f350e0624fdcd4bba7f91dd72c0182b31a6307bc2c"
+    },
+    {
+      "path": "examples/demo.tsx",
+      "bytes": 35,
+      "sha256": "254591932548c36c414610bd0d0c7ce7ef1648162f1996fbbe7381b8c1751690"
+    },
+    {
+      "path": "examples/example.tsx",
+      "bytes": 7902,
+      "sha256": "3967a1e250d9a3d10220517b68c62ba24dee8ae1eb98fa29a1e27bcd202ac209"
+    },
+    {
+      "path": "examples/view-policy.d.mts",
+      "bytes": 209,
+      "sha256": "18aebecdee796f2af30b0eafae0b886cd7c744e91975ff705a4e7a1045aee8c1"
+    },
+    {
+      "path": "examples/view-policy.mjs",
+      "bytes": 831,
+      "sha256": "033ebf574a24242b94e7bdf705ffa99b463b0a90056819a6ad2474e7699a8c8a"
+    },
+    {
+      "path": "guide.md",
+      "bytes": 9740,
+      "sha256": "693eb9985f528a433aeeff05d55ec07f1798ca3a7181be22c22f179f4ce86a06"
+    },
+    {
+      "path": "library.json",
+      "bytes": 2854,
+      "sha256": "71e4e69240f01679ef0a0ebec2bf799ff66d105588333748d4a863aca1c5a6ed"
+    },
+    {
+      "path": "tests/sdk.test.mjs",
+      "bytes": 1203,
+      "sha256": "e3333333873e23b2c412f3b188ccb9d1c241d42f6cef5a4b5b725b3ab122ca26"
+    },
+    {
+      "path": "tests/view-policy.test.mjs",
+      "bytes": 1189,
+      "sha256": "0a5c059108313a7af2bf61e4206e43aac4437dec71615e3eeb14c8c1df886acf"
+    },
+    {
+      "path": "verification.json",
+      "bytes": 372,
+      "sha256": "ce8f9e48fda948ae773fbf1345105d1facb6412a9d1f828ef4e6b15d0a5d2944"
+    }
+  ]
+}

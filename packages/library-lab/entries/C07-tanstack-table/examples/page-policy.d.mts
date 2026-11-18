@@ -1,21 +1,21 @@
-export declare function clampPageIndex(pageIndex: number, pageSize: number, total: number): number;
+export declare function clampPageIndex(pageIndex: number, pageSize: number, total: number): number
 export declare function tableQueryIdentity(value: {
-  pageIndex: number;
-  pageSize: number;
-  sorting: ReadonlyArray<{id: string; desc: boolean}>;
-  query: string;
-  fail: boolean;
-  limit: number;
-}): string;
+  pageIndex: number
+  pageSize: number
+  sorting: ReadonlyArray<{ id: string; desc: boolean }>
+  query: string
+  fail: boolean
+  limit: number
+}): string
 export interface PageRequestLease {
-  readonly generation: number;
-  readonly signal: AbortSignal;
-  owns(): boolean;
-  close(): void;
-  cancel(): void;
+  readonly generation: number
+  readonly signal: AbortSignal
+  owns(): boolean
+  close(): void
+  cancel(): void
 }
 export declare function createPageRequestGate(): {
-  invalidate(): void;
-  revision(): number;
-  begin(): PageRequestLease;
-};
+  invalidate(): void
+  revision(): number
+  begin(): PageRequestLease
+}

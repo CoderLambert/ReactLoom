@@ -1,0 +1,4 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['git', 'diff', '--check', '--', 'entries/C14-date-fns']
+startedAt: 2026-11-10T17:20:36.410324+00:00
+exit: 0

@@ -1,0 +1,384 @@
+{
+  "decoderExit": 1,
+  "events": [
+    {
+      "id": 1,
+      "direction": "send",
+      "type": "LOAD"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "LOAD"
+    },
+    {
+      "id": 1,
+      "direction": "send",
+      "type": "DELETE_FILE"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "ERROR"
+    },
+    {
+      "id": 1,
+      "direction": "send",
+      "type": "DELETE_FILE"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "ERROR"
+    },
+    {
+      "id": 1,
+      "direction": "send",
+      "type": "DELETE_FILE"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "ERROR"
+    },
+    {
+      "id": 1,
+      "direction": "send",
+      "type": "WRITE_FILE"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "WRITE_FILE"
+    },
+    {
+      "id": 1,
+      "direction": "send",
+      "type": "EXEC"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "LOG"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "LOG"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "LOG"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "LOG"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "LOG"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "LOG"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "LOG"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "LOG"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "LOG"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "LOG"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "LOG"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "LOG"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "PROGRESS"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "LOG"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "PROGRESS"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "LOG"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "LOG"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "LOG"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "EXEC"
+    },
+    {
+      "id": 1,
+      "direction": "send",
+      "type": "READ_FILE"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "READ_FILE"
+    },
+    {
+      "id": 1,
+      "direction": "send",
+      "type": "DELETE_FILE"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "DELETE_FILE"
+    },
+    {
+      "id": 1,
+      "direction": "send",
+      "type": "DELETE_FILE"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "DELETE_FILE"
+    },
+    {
+      "id": 1,
+      "direction": "send",
+      "type": "WRITE_FILE"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "WRITE_FILE"
+    },
+    {
+      "id": 1,
+      "direction": "send",
+      "type": "EXEC"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "LOG"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "LOG"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "EXEC"
+    },
+    {
+      "id": 1,
+      "direction": "send",
+      "type": "DELETE_FILE"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "DELETE_FILE"
+    },
+    {
+      "id": 1,
+      "direction": "send",
+      "type": "DELETE_FILE"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "ERROR"
+    },
+    {
+      "id": 1,
+      "direction": "send",
+      "type": "WRITE_FILE"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "WRITE_FILE"
+    },
+    {
+      "id": 1,
+      "direction": "send",
+      "type": "EXEC"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "LOG"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "LOG"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "LOG"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "LOG"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "LOG"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "LOG"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "LOG"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "LOG"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "LOG"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "LOG"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "LOG"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "LOG"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "PROGRESS"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "LOG"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "LOG"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "LOG"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "EXEC"
+    },
+    {
+      "id": 1,
+      "direction": "send",
+      "type": "READ_FILE"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "READ_FILE"
+    },
+    {
+      "id": 1,
+      "direction": "send",
+      "type": "DELETE_FILE"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "DELETE_FILE"
+    },
+    {
+      "id": 1,
+      "direction": "send",
+      "type": "DELETE_FILE"
+    },
+    {
+      "id": 1,
+      "direction": "receive",
+      "type": "DELETE_FILE"
+    }
+  ],
+  "reads": [
+    "spoof.wav",
+    "original-stereo-48k.wav",
+    "truncated-riff.wav",
+    "recovery.wav"
+  ],
+  "urls": [
+    "blob:http://127.0.0.1:37421/cb2bf663-e901-4a66-800f-5895d5b2cb33",
+    "blob:http://127.0.0.1:37421/60993621-9cfa-43bd-a578-586888fdeb0b"
+  ],
+  "revoked": [
+    "blob:http://127.0.0.1:37421/cb2bf663-e901-4a66-800f-5895d5b2cb33"
+  ],
+  "execTimeouts": [
+    12000,
+    12000,
+    12000
+  ],
+  "cancelOnLog": false
+}

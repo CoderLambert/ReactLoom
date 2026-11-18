@@ -1,0 +1,426 @@
+{
+  "npmPublishedAt": "2026-04-22T11:07:59.327Z",
+  "lookupUrl": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/commits?path=packages/core/package.json&until=2026-05-06T11:07:59.327000+00:00&per_page=10",
+  "commits": [
+    {
+      "sha": "1287861b7c77439f906dc108c21f6236b34c8f53",
+      "node_id": "C_kwDOLN8UYtoAKDEyODc4NjFiN2M3NzQzOWY5MDZkYzEwOGMyMWY2MjM2YjM0YzhmNTM",
+      "commit": {
+        "author": {
+          "name": "Atlassian",
+          "email": "github@atlassian.com",
+          "date": "2026-04-22T11:41:41Z"
+        },
+        "committer": {
+          "name": "AFP Repo Bot",
+          "email": "afp-repo-bot@atlassian.com",
+          "date": "2026-04-22T11:41:41Z"
+        },
+        "message": "Synchronise latest changes",
+        "tree": {
+          "sha": "fb28627641d26cf2268b3001e628b7291f41a986",
+          "url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/git/trees/fb28627641d26cf2268b3001e628b7291f41a986"
+        },
+        "url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/git/commits/1287861b7c77439f906dc108c21f6236b34c8f53",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/commits/1287861b7c77439f906dc108c21f6236b34c8f53",
+      "html_url": "https://github.com/atlassian/pragmatic-drag-and-drop/commit/1287861b7c77439f906dc108c21f6236b34c8f53",
+      "comments_url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/commits/1287861b7c77439f906dc108c21f6236b34c8f53/comments",
+      "author": null,
+      "committer": null,
+      "parents": [
+        {
+          "sha": "ee486972ad294275d8faaac26050332178e59104",
+          "url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/commits/ee486972ad294275d8faaac26050332178e59104",
+          "html_url": "https://github.com/atlassian/pragmatic-drag-and-drop/commit/ee486972ad294275d8faaac26050332178e59104"
+        }
+      ]
+    },
+    {
+      "sha": "3debba008b8ca6e51df8387318d1c7384f7ccb5e",
+      "node_id": "C_kwDOLN8UYtoAKDNkZWJiYTAwOGI4Y2E2ZTUxZGY4Mzg3MzE4ZDFjNzM4NGY3Y2NiNWU",
+      "commit": {
+        "author": {
+          "name": "Atlassian",
+          "email": "github@atlassian.com",
+          "date": "2026-04-17T11:40:56Z"
+        },
+        "committer": {
+          "name": "AFP Repo Bot",
+          "email": "afp-repo-bot@atlassian.com",
+          "date": "2026-04-17T11:40:56Z"
+        },
+        "message": "Synchronise latest changes",
+        "tree": {
+          "sha": "fe6c562ec265540e7b6e61c29b3035d47e8c3c6f",
+          "url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/git/trees/fe6c562ec265540e7b6e61c29b3035d47e8c3c6f"
+        },
+        "url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/git/commits/3debba008b8ca6e51df8387318d1c7384f7ccb5e",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/commits/3debba008b8ca6e51df8387318d1c7384f7ccb5e",
+      "html_url": "https://github.com/atlassian/pragmatic-drag-and-drop/commit/3debba008b8ca6e51df8387318d1c7384f7ccb5e",
+      "comments_url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/commits/3debba008b8ca6e51df8387318d1c7384f7ccb5e/comments",
+      "author": null,
+      "committer": null,
+      "parents": [
+        {
+          "sha": "bed86d8aafac03c1496752026fe46917a962bd1e",
+          "url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/commits/bed86d8aafac03c1496752026fe46917a962bd1e",
+          "html_url": "https://github.com/atlassian/pragmatic-drag-and-drop/commit/bed86d8aafac03c1496752026fe46917a962bd1e"
+        }
+      ]
+    },
+    {
+      "sha": "d6bcb075344289aae40de772481b4ed8e130c413",
+      "node_id": "C_kwDOLN8UYtoAKGQ2YmNiMDc1MzQ0Mjg5YWFlNDBkZTc3MjQ4MWI0ZWQ4ZTEzMGM0MTM",
+      "commit": {
+        "author": {
+          "name": "Atlassian",
+          "email": "github@atlassian.com",
+          "date": "2026-04-08T11:40:47Z"
+        },
+        "committer": {
+          "name": "AFP Repo Bot",
+          "email": "afp-repo-bot@atlassian.com",
+          "date": "2026-04-08T11:40:47Z"
+        },
+        "message": "Synchronise latest changes",
+        "tree": {
+          "sha": "6036de98df008ce539e75e4b3933e75c646d6341",
+          "url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/git/trees/6036de98df008ce539e75e4b3933e75c646d6341"
+        },
+        "url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/git/commits/d6bcb075344289aae40de772481b4ed8e130c413",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/commits/d6bcb075344289aae40de772481b4ed8e130c413",
+      "html_url": "https://github.com/atlassian/pragmatic-drag-and-drop/commit/d6bcb075344289aae40de772481b4ed8e130c413",
+      "comments_url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/commits/d6bcb075344289aae40de772481b4ed8e130c413/comments",
+      "author": null,
+      "committer": null,
+      "parents": [
+        {
+          "sha": "a32f8f072bc196481155ead82d0dc37f4270aeee",
+          "url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/commits/a32f8f072bc196481155ead82d0dc37f4270aeee",
+          "html_url": "https://github.com/atlassian/pragmatic-drag-and-drop/commit/a32f8f072bc196481155ead82d0dc37f4270aeee"
+        }
+      ]
+    },
+    {
+      "sha": "d9b3e62b7eadd46bdbda7f1822fa2a5b57835bb9",
+      "node_id": "C_kwDOLN8UYtoAKGQ5YjNlNjJiN2VhZGQ0NmJkYmRhN2YxODIyZmEyYTViNTc4MzViYjk",
+      "commit": {
+        "author": {
+          "name": "Atlassian",
+          "email": "github@atlassian.com",
+          "date": "2026-04-01T11:40:13Z"
+        },
+        "committer": {
+          "name": "AFP Repo Bot",
+          "email": "afp-repo-bot@atlassian.com",
+          "date": "2026-04-01T11:40:13Z"
+        },
+        "message": "Synchronise latest changes",
+        "tree": {
+          "sha": "b68d3e9d964ec709a26975184cbddc26e247a779",
+          "url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/git/trees/b68d3e9d964ec709a26975184cbddc26e247a779"
+        },
+        "url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/git/commits/d9b3e62b7eadd46bdbda7f1822fa2a5b57835bb9",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/commits/d9b3e62b7eadd46bdbda7f1822fa2a5b57835bb9",
+      "html_url": "https://github.com/atlassian/pragmatic-drag-and-drop/commit/d9b3e62b7eadd46bdbda7f1822fa2a5b57835bb9",
+      "comments_url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/commits/d9b3e62b7eadd46bdbda7f1822fa2a5b57835bb9/comments",
+      "author": null,
+      "committer": null,
+      "parents": [
+        {
+          "sha": "68eb96551984b3741cda6e7ce672ca54f2fa0ba9",
+          "url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/commits/68eb96551984b3741cda6e7ce672ca54f2fa0ba9",
+          "html_url": "https://github.com/atlassian/pragmatic-drag-and-drop/commit/68eb96551984b3741cda6e7ce672ca54f2fa0ba9"
+        }
+      ]
+    },
+    {
+      "sha": "01df9a109fed280f993c0613d942f2acd5f79fbf",
+      "node_id": "C_kwDOLN8UYtoAKDAxZGY5YTEwOWZlZDI4MGY5OTNjMDYxM2Q5NDJmMmFjZDVmNzlmYmY",
+      "commit": {
+        "author": {
+          "name": "Atlassian",
+          "email": "github@atlassian.com",
+          "date": "2026-03-03T11:40:37Z"
+        },
+        "committer": {
+          "name": "AFP Repo Bot",
+          "email": "afp-repo-bot@atlassian.com",
+          "date": "2026-03-03T11:40:37Z"
+        },
+        "message": "Synchronise latest changes",
+        "tree": {
+          "sha": "e209b173925c0cd2edddcd1853872d192f876985",
+          "url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/git/trees/e209b173925c0cd2edddcd1853872d192f876985"
+        },
+        "url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/git/commits/01df9a109fed280f993c0613d942f2acd5f79fbf",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/commits/01df9a109fed280f993c0613d942f2acd5f79fbf",
+      "html_url": "https://github.com/atlassian/pragmatic-drag-and-drop/commit/01df9a109fed280f993c0613d942f2acd5f79fbf",
+      "comments_url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/commits/01df9a109fed280f993c0613d942f2acd5f79fbf/comments",
+      "author": null,
+      "committer": null,
+      "parents": [
+        {
+          "sha": "23116f95e84b91db626e57e37954c6bfcf1f7f34",
+          "url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/commits/23116f95e84b91db626e57e37954c6bfcf1f7f34",
+          "html_url": "https://github.com/atlassian/pragmatic-drag-and-drop/commit/23116f95e84b91db626e57e37954c6bfcf1f7f34"
+        }
+      ]
+    },
+    {
+      "sha": "23116f95e84b91db626e57e37954c6bfcf1f7f34",
+      "node_id": "C_kwDOLN8UYtoAKDIzMTE2Zjk1ZTg0YjkxZGI2MjZlNTdlMzc5NTRjNmJmY2YxZjdmMzQ",
+      "commit": {
+        "author": {
+          "name": "Atlassian",
+          "email": "github@atlassian.com",
+          "date": "2026-03-02T11:40:58Z"
+        },
+        "committer": {
+          "name": "AFP Repo Bot",
+          "email": "afp-repo-bot@atlassian.com",
+          "date": "2026-03-02T11:40:58Z"
+        },
+        "message": "Synchronise latest changes",
+        "tree": {
+          "sha": "181a43fa57761349ac22be7f13a8689045bae85f",
+          "url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/git/trees/181a43fa57761349ac22be7f13a8689045bae85f"
+        },
+        "url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/git/commits/23116f95e84b91db626e57e37954c6bfcf1f7f34",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/commits/23116f95e84b91db626e57e37954c6bfcf1f7f34",
+      "html_url": "https://github.com/atlassian/pragmatic-drag-and-drop/commit/23116f95e84b91db626e57e37954c6bfcf1f7f34",
+      "comments_url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/commits/23116f95e84b91db626e57e37954c6bfcf1f7f34/comments",
+      "author": null,
+      "committer": null,
+      "parents": [
+        {
+          "sha": "5107e29f27ab8cd1d7d2abbacf282502802422d3",
+          "url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/commits/5107e29f27ab8cd1d7d2abbacf282502802422d3",
+          "html_url": "https://github.com/atlassian/pragmatic-drag-and-drop/commit/5107e29f27ab8cd1d7d2abbacf282502802422d3"
+        }
+      ]
+    },
+    {
+      "sha": "0ebbd9b8fc165169191f9c982c6609daef472ff1",
+      "node_id": "C_kwDOLN8UYtoAKDBlYmJkOWI4ZmMxNjUxNjkxOTFmOWM5ODJjNjYwOWRhZWY0NzJmZjE",
+      "commit": {
+        "author": {
+          "name": "Atlassian",
+          "email": "github@atlassian.com",
+          "date": "2026-02-23T02:41:26Z"
+        },
+        "committer": {
+          "name": "AFP Repo Bot",
+          "email": "afp-repo-bot@atlassian.com",
+          "date": "2026-02-23T02:41:26Z"
+        },
+        "message": "Synchronise latest changes",
+        "tree": {
+          "sha": "5f03c590ef76712f929a9c09678ea2a585e34f8a",
+          "url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/git/trees/5f03c590ef76712f929a9c09678ea2a585e34f8a"
+        },
+        "url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/git/commits/0ebbd9b8fc165169191f9c982c6609daef472ff1",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/commits/0ebbd9b8fc165169191f9c982c6609daef472ff1",
+      "html_url": "https://github.com/atlassian/pragmatic-drag-and-drop/commit/0ebbd9b8fc165169191f9c982c6609daef472ff1",
+      "comments_url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/commits/0ebbd9b8fc165169191f9c982c6609daef472ff1/comments",
+      "author": null,
+      "committer": null,
+      "parents": [
+        {
+          "sha": "26ded573f3b54002e74a32ad943eb3436100c3b4",
+          "url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/commits/26ded573f3b54002e74a32ad943eb3436100c3b4",
+          "html_url": "https://github.com/atlassian/pragmatic-drag-and-drop/commit/26ded573f3b54002e74a32ad943eb3436100c3b4"
+        }
+      ]
+    },
+    {
+      "sha": "1610e1c4d58161d5e607c43b7c474e6ccbe2fd44",
+      "node_id": "C_kwDOLN8UYtoAKDE2MTBlMWM0ZDU4MTYxZDVlNjA3YzQzYjdjNDc0ZTZjY2JlMmZkNDQ",
+      "commit": {
+        "author": {
+          "name": "Atlassian",
+          "email": "github@atlassian.com",
+          "date": "2025-12-17T11:40:50Z"
+        },
+        "committer": {
+          "name": "AFP Repo Bot",
+          "email": "afp-repo-bot@atlassian.com",
+          "date": "2025-12-17T11:40:50Z"
+        },
+        "message": "Synchronise latest changes",
+        "tree": {
+          "sha": "63e929079af3418d0530b84156e7e87be64371e5",
+          "url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/git/trees/63e929079af3418d0530b84156e7e87be64371e5"
+        },
+        "url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/git/commits/1610e1c4d58161d5e607c43b7c474e6ccbe2fd44",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/commits/1610e1c4d58161d5e607c43b7c474e6ccbe2fd44",
+      "html_url": "https://github.com/atlassian/pragmatic-drag-and-drop/commit/1610e1c4d58161d5e607c43b7c474e6ccbe2fd44",
+      "comments_url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/commits/1610e1c4d58161d5e607c43b7c474e6ccbe2fd44/comments",
+      "author": null,
+      "committer": null,
+      "parents": [
+        {
+          "sha": "5af0a9d3801792b903b5146ffcd2fc5c77e98e56",
+          "url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/commits/5af0a9d3801792b903b5146ffcd2fc5c77e98e56",
+          "html_url": "https://github.com/atlassian/pragmatic-drag-and-drop/commit/5af0a9d3801792b903b5146ffcd2fc5c77e98e56"
+        }
+      ]
+    },
+    {
+      "sha": "b0f2353fbad93c9ae2d81d0d6df96ad07dfde718",
+      "node_id": "C_kwDOLN8UYtoAKGIwZjIzNTNmYmFkOTNjOWFlMmQ4MWQwZDZkZjk2YWQwN2RmZGU3MTg",
+      "commit": {
+        "author": {
+          "name": "Atlassian",
+          "email": "github@atlassian.com",
+          "date": "2025-09-09T11:43:14Z"
+        },
+        "committer": {
+          "name": "AFP Repo Bot",
+          "email": "afp-repo-bot@atlassian.com",
+          "date": "2025-09-09T11:43:14Z"
+        },
+        "message": "Synchronise latest changes",
+        "tree": {
+          "sha": "2cb9da99b9fd04665ae6d10201dfc87b81f5cbac",
+          "url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/git/trees/2cb9da99b9fd04665ae6d10201dfc87b81f5cbac"
+        },
+        "url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/git/commits/b0f2353fbad93c9ae2d81d0d6df96ad07dfde718",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/commits/b0f2353fbad93c9ae2d81d0d6df96ad07dfde718",
+      "html_url": "https://github.com/atlassian/pragmatic-drag-and-drop/commit/b0f2353fbad93c9ae2d81d0d6df96ad07dfde718",
+      "comments_url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/commits/b0f2353fbad93c9ae2d81d0d6df96ad07dfde718/comments",
+      "author": null,
+      "committer": null,
+      "parents": [
+        {
+          "sha": "5d8b44d956b01a81d68e82ca1ecc5f55cf83ca50",
+          "url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/commits/5d8b44d956b01a81d68e82ca1ecc5f55cf83ca50",
+          "html_url": "https://github.com/atlassian/pragmatic-drag-and-drop/commit/5d8b44d956b01a81d68e82ca1ecc5f55cf83ca50"
+        }
+      ]
+    },
+    {
+      "sha": "5d8b44d956b01a81d68e82ca1ecc5f55cf83ca50",
+      "node_id": "C_kwDOLN8UYtoAKDVkOGI0NGQ5NTZiMDFhODFkNjhlODJjYTFlY2M1ZjU1Y2Y4M2NhNTA",
+      "commit": {
+        "author": {
+          "name": "Atlassian",
+          "email": "github@atlassian.com",
+          "date": "2025-09-05T11:42:46Z"
+        },
+        "committer": {
+          "name": "AFP Repo Bot",
+          "email": "afp-repo-bot@atlassian.com",
+          "date": "2025-09-05T11:42:46Z"
+        },
+        "message": "Synchronise latest changes",
+        "tree": {
+          "sha": "0f248ba7a3716cae1cc8aa20b75982a617991fde",
+          "url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/git/trees/0f248ba7a3716cae1cc8aa20b75982a617991fde"
+        },
+        "url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/git/commits/5d8b44d956b01a81d68e82ca1ecc5f55cf83ca50",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/commits/5d8b44d956b01a81d68e82ca1ecc5f55cf83ca50",
+      "html_url": "https://github.com/atlassian/pragmatic-drag-and-drop/commit/5d8b44d956b01a81d68e82ca1ecc5f55cf83ca50",
+      "comments_url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/commits/5d8b44d956b01a81d68e82ca1ecc5f55cf83ca50/comments",
+      "author": null,
+      "committer": null,
+      "parents": [
+        {
+          "sha": "870636dd096af4c2d500bdef3ea4da4a548256b8",
+          "url": "https://api.github.com/repos/atlassian/pragmatic-drag-and-drop/commits/870636dd096af4c2d500bdef3ea4da4a548256b8",
+          "html_url": "https://github.com/atlassian/pragmatic-drag-and-drop/commit/870636dd096af4c2d500bdef3ea4da4a548256b8"
+        }
+      ]
+    }
+  ]
+}

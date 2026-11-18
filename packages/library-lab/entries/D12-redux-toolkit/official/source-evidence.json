@@ -1,0 +1,47 @@
+{
+  "repository": "reduxjs/redux-toolkit",
+  "commit": "370f7eb6403bdfdb1a2ab5b90fbcfd8eaee7d57b",
+  "readmePaths": [
+    ".github/README.md",
+    "docs/README.md",
+    "examples/publish-ci/expo/README.md",
+    "examples/publish-ci/next/README.md",
+    "examples/publish-ci/node/README.md",
+    "examples/publish-ci/react-native/README.md",
+    "examples/query/react/infinite-queries/README.md",
+    "packages/rtk-codemods/README.md",
+    "packages/rtk-codemods/transforms/createReducerBuilder/README.md",
+    "packages/rtk-codemods/transforms/createSliceBuilder/README.md",
+    "packages/rtk-codemods/transforms/createSliceReducerBuilder/README.md",
+    "packages/rtk-query-codegen-openapi/README.md",
+    "packages/toolkit/README.md",
+    "packages/toolkit/scripts/issue-triage/README-github-issue-to-markdown.md",
+    "packages/toolkit/scripts/issue-triage/README.md"
+  ],
+  "tag": "v2.13.0",
+  "checkedAt": "2026-11-17T16:43:00.766934+00:00",
+  "readmeSelection": "Package-specific official English README; pinned recursive tree has no Chinese README.",
+  "homepage": {
+    "requestedUrl": "https://redux-toolkit.js.org/",
+    "finalUrl": "https://redux.js.org/toolkit/",
+    "status": 200,
+    "headers": {
+      "Date": "Tue, 17 Nov 2026 16:43:00 GMT",
+      "Content-Type": "text/html; charset=UTF-8",
+      "Transfer-Encoding": "chunked",
+      "Connection": "close",
+      "Nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+      "Age": "4401",
+      "Cache-Control": "public,max-age=0,must-revalidate",
+      "Cache-Status": "\"Netlify Edge\"; hit; ttl=31531600",
+      "Report-To": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=TPxEP0PHuWcTi6K2B3596WSZ6VXUO4sk50E2GraoWdstBRNkQEKr6IRCbIVUjclIz6N%2BcD67SP5YpzDtvccackSH5AkypGInGNtKt5%2FEp3TmTaetbMl9nDRjgKy%2FwA%3D%3D\"}]}",
+      "Etag": "W/\"c78cb4a9a2277b659b0e9078c1ee6771-ssl\"",
+      "Server": "cloudflare",
+      "Vary": "Accept-Encoding",
+      "X-Nf-Request-Id": "01M7N67W5G5BSJ88XETAA6X3KK",
+      "cf-cache-status": "DYNAMIC",
+      "CF-RAY": "a5c03120fc2bc876-FRA"
+    },
+    "bodySha256": "5be07b98c17b4ef890955e41b47d9f2626c5b5e534c9d25bb9796dd077b42d5f"
+  }
+}

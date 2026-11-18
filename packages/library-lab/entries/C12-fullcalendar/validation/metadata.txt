@@ -1,0 +1,14 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['node', 'entries/C12-fullcalendar/validation/metadata-check.mjs']
+startedAt: 2026-11-10T16:46:20.714842+00:00
+exit: 0
+{
+  "metadata": [],
+  "demos": 3,
+  "sourceFiles": 6,
+  "installedFiles": 21,
+  "fixed": "React7.1.3/Temporal1.0.4",
+  "readmeBytes": 2405,
+  "homepage": "blocked",
+  "formal": "NOT_RUN"
+}

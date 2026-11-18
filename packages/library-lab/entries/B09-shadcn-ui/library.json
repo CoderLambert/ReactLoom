@@ -4,15 +4,8 @@
   "slug": "shadcn-ui",
   "name": "shadcn/ui",
   "group": "B",
-  "summary": "从注册表复制源码的设计系统，CVA变体与Radix Slot组合、组件源码所有权和可访问性",
-  "tags": [
-    "设计系统",
-    "源代码分发",
-    "Button",
-    "CVA",
-    "Radix",
-    "asChild"
-  ],
+  "summary": "拥有组件源码：实际 class 生成、可恢复的批量归档与 Slot 链接语义",
+  "tags": ["设计系统", "源代码分发", "Button", "CVA", "Radix", "asChild"],
   "contentState": "recreated",
   "packages": [
     {
@@ -34,16 +27,20 @@
   ],
   "references": [
     {
-      "title": "shadcn/ui Button组件官方指南",
-      "url": "https://ui.shadcn.com/docs/components/radix/button"
+      "title": "shadcn/ui 源码分发理念",
+      "url": "https://ui.shadcn.com/docs"
     },
     {
-      "title": "组件源代码模式与初始化",
-      "url": "https://ui.shadcn.com/docs/installation/vite"
+      "title": "固定版本上游 Radix 风格 Button",
+      "url": "https://github.com/shadcn-ui/ui/blob/8ab27715521cbd4f87ae6886cd989cbb678f6de7/apps/v4/registry/new-york-v4/ui/button.tsx"
     },
     {
-      "title": "2026 Radix组件统一包迁移",
-      "url": "https://ui.shadcn.com/docs/changelog/2026-02-radix-ui"
+      "title": "Radix Slot 官方说明（API同时核对已安装1.5.0）",
+      "url": "https://www.radix-ui.com/primitives/docs/utilities/slot"
+    },
+    {
+      "title": "CVA 官方说明",
+      "url": "https://cva.style/docs"
     }
   ],
   "related": [
@@ -71,8 +68,8 @@
   "demos": [
     {
       "demoId": "basic",
-      "title": "真实Button源码及变体",
-      "description": "本地源码+variant，而非想象中的shadcn runtime",
+      "title": "Button 变体与实际 class 生成",
+      "description": "用同源配置观察尺寸/变体及调用方间距覆盖，操作原生disabled。",
       "level": "basic",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
@@ -80,19 +77,17 @@
         "examples/example.tsx",
         "examples/demo.tsx",
         "examples/ui/button.tsx",
-        "examples/archive-policy.ts"
+        "examples/archive-policy.ts",
+        "examples/workshop.css",
+        "tests/archive-policy.test.mts",
+        "tests/sdk.test.mjs"
       ],
-      "capabilities": [
-        "source-owned",
-        "keyboard",
-        "accessible",
-        "design-system"
-      ]
+      "capabilities": ["source-owned", "keyboard", "accessible", "design-system"]
     },
     {
       "demoId": "business",
-      "title": "业务列表和异步状态",
-      "description": "RSS文章多选、归档与busy反馈",
+      "title": "批量归档的失败、重试与取消",
+      "description": "250ms本地业务fixture，失败保留选择，重试/取消/重置有可见结果。",
       "level": "business",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
@@ -100,19 +95,17 @@
         "examples/example.tsx",
         "examples/demo.tsx",
         "examples/ui/button.tsx",
-        "examples/archive-policy.ts"
+        "examples/archive-policy.ts",
+        "examples/workshop.css",
+        "tests/archive-policy.test.mts",
+        "tests/sdk.test.mjs"
       ],
-      "capabilities": [
-        "source-owned",
-        "keyboard",
-        "accessible",
-        "design-system"
-      ]
+      "capabilities": ["source-owned", "keyboard", "accessible", "design-system"]
     },
     {
       "demoId": "advanced",
-      "title": "Slot/asChild与权限反馈",
-      "description": "复合链接、ARIA、恢复和禁用语义",
+      "title": "Slot 链接与原生禁用语义",
+      "description": "Slot保持单个原生链接，无权限移除导航能力，区分a与button。",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
@@ -120,22 +113,40 @@
         "examples/example.tsx",
         "examples/demo.tsx",
         "examples/ui/button.tsx",
-        "examples/archive-policy.ts"
+        "examples/archive-policy.ts",
+        "examples/workshop.css",
+        "tests/archive-policy.test.mts",
+        "tests/sdk.test.mjs"
       ],
-      "capabilities": [
-        "source-owned",
-        "keyboard",
-        "accessible",
-        "design-system"
-      ]
+      "capabilities": ["source-owned", "keyboard", "accessible", "design-system"]
     }
   ],
   "license": {
     "spdx": "MIT",
-    "note": "shadcn/ui组件源码为开放分发模式；依赖各自另有MIT/Apache许可，实施前再核实。"
+    "note": "shadcn/ui、Radix Slot、clsx、tailwind-merge为MIT；CVA为Apache-2.0。示例文章与业务逻辑原创，未分发第三方图标/字体。"
   },
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
-    "note": "按2026 shadcn官方文档独立创建原创的Radix风格Button，并非通过CLI安装的逐字快照，不能冒充官方自动生成代码。"
+    "note": "保留已恢复研究材料属性；运行Button为原创CVA+Radix Slot教学实现，不是CLI生成原件。2026-11-10依据固定官方资料说明实际源码所有权与上游差异，没有推定Base UI默认或执行CLI。"
+  },
+  "official": {
+    "readme": {
+      "repository": "shadcn-ui/ui",
+      "commit": "8ab27715521cbd4f87ae6886cd989cbb678f6de7",
+      "path": "packages/shadcn/README.md",
+      "sha256": "13d1235d1690dad504c4dd423d4f237a9a74eb8f2e49e7ee39f9c995ba7c0856",
+      "sourceUrl": "https://github.com/shadcn-ui/ui/blob/8ab27715521cbd4f87ae6886cd989cbb678f6de7/packages/shadcn/README.md",
+      "snapshotPath": "official/readme.md",
+      "language": "en",
+      "version": "shadcn CLI 4.23.0 (documentation only)",
+      "syncedAt": "2026-11-10T09:40:38.845457+00:00"
+    },
+    "homepage": {
+      "url": "https://ui.shadcn.com",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-10T09:40:38.845457+00:00",
+      "reason": "GET 200，最终URL相同；完整响应头见official/homepage-response.json，未见X-Frame-Options或CSP frame-ancestors。尚未从Lab origin实际验证iframe，保持unknown。"
+    }
   }
 }

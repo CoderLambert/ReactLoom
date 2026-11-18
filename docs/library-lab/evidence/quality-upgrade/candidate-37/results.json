@@ -1,0 +1,191 @@
+[
+  {
+    "name": "f13-independent",
+    "command": [
+      "bash",
+      "/tmp/reactloom-f13-consumer.sh"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T19:01:24.159125+00:00",
+    "finishedAt": "2026-11-17T19:01:24.649024+00:00",
+    "exitCode": 1,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-37/f13-independent.txt"
+  },
+  {
+    "name": "f13-independent-final",
+    "command": [
+      "bash",
+      "/tmp/reactloom-f13-consumer.sh"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T19:01:31.843555+00:00",
+    "finishedAt": "2026-11-17T19:01:33.241992+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-37/f13-independent-final.txt"
+  },
+  {
+    "name": "f14-independent",
+    "command": [
+      "bash",
+      "/tmp/reactloom-f14-consumer.sh"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T19:02:08.061896+00:00",
+    "finishedAt": "2026-11-17T19:02:08.331899+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-37/f14-independent.txt"
+  },
+  {
+    "name": "f15-independent",
+    "command": [
+      "bash",
+      "/tmp/reactloom-f15-consumer.sh"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T19:03:11.954984+00:00",
+    "finishedAt": "2026-11-17T19:03:12.701558+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-37/f15-independent.txt"
+  },
+  {
+    "name": "reproduction",
+    "command": [
+      "node",
+      "--test",
+      "packages/library-lab/tests/reproduction.test.mjs"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T19:05:01.821041+00:00",
+    "finishedAt": "2026-11-17T19:05:01.889293+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-37/reproduction.txt"
+  },
+  {
+    "name": "types",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "typecheck"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T19:08:38.026553+00:00",
+    "finishedAt": "2026-11-17T19:08:39.779009+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-37/types.txt"
+  },
+  {
+    "name": "build",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "build"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T19:08:39.800853+00:00",
+    "finishedAt": "2026-11-17T19:08:46.772168+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-37/build.txt"
+  },
+  {
+    "name": "catalog",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "catalog:check"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T19:08:46.793612+00:00",
+    "finishedAt": "2026-11-17T19:08:47.177771+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-37/catalog.txt"
+  },
+  {
+    "name": "browser",
+    "command": [
+      "env",
+      "LAB_PREBUILT=1",
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "playwright",
+      "test",
+      "e2e/quality-resume-f13-f17.spec.ts",
+      "e2e/quality-resume-axe.spec.ts",
+      "--workers=3"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T19:08:47.289054+00:00",
+    "finishedAt": "2026-11-17T19:08:54.857075+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-37/browser.txt"
+  },
+  {
+    "name": "queue-audit",
+    "command": [
+      "python",
+      "/tmp/reactloom-final-queue-audit.py"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T19:10:45.312583+00:00",
+    "finishedAt": "2026-11-17T19:10:45.340509+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-37/queue-audit.txt"
+  },
+  {
+    "name": "final-publication-build",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "build"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T19:10:55.568492+00:00",
+    "finishedAt": "2026-11-17T19:11:02.637566+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-37/final-publication-build.txt"
+  },
+  {
+    "name": "final-catalog",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "catalog:check"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T19:11:02.659432+00:00",
+    "finishedAt": "2026-11-17T19:11:03.076235+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-37/final-catalog.txt"
+  },
+  {
+    "name": "final-root-index",
+    "command": [
+      "node",
+      "packages/library-lab/scripts/root-catalog.mjs"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T19:11:03.097469+00:00",
+    "finishedAt": "2026-11-17T19:11:03.132994+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-37/final-root-index.txt"
+  },
+  {
+    "name": "final-readiness",
+    "command": [
+      "node",
+      "packages/library-lab/scripts/readiness.mjs",
+      "--json"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T19:11:03.156479+00:00",
+    "finishedAt": "2026-11-17T19:11:03.287801+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-37/final-readiness.txt"
+  }
+]

@@ -1,0 +1,12 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=pnpm exec playwright test --config=.local-evidence/quality-playwright.config.ts e2e/quality-remediation-uplot.spec.ts --grep @A04 business
+
+Running 1 test using 1 worker
+
+(node:1095539) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 e2e/quality-remediation-uplot.spec.ts:91:1 › @A04 business aligns sparse observations and toggles the real right-axis series (1.6s)
+
+  1 passed (1.9s)
+
+exitCode=0

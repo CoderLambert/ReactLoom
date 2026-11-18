@@ -1,0 +1,1 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["git", "diff", "--check", "--", "packages/library-lab/entries/C16-luxon"], "utc": "2026-11-10T17:38:29.852759+00:00", "exit": 0}

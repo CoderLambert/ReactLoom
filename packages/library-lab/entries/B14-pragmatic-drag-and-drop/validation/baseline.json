@@ -1,0 +1,18 @@
+{
+  "createdAt": "2026-11-10T13:40:40.803822+00:00",
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "sha256": "c39f613c1b6ce507afeb094cee2392027251b39aab93c7a02571381a1fe9f124",
+  "fileCount": 10,
+  "files": [
+    "packages/library-lab/entries/B14-pragmatic-drag-and-drop/AGENTS.md",
+    "packages/library-lab/entries/B14-pragmatic-drag-and-drop/agent.md",
+    "packages/library-lab/entries/B14-pragmatic-drag-and-drop/examples/demo.tsx",
+    "packages/library-lab/entries/B14-pragmatic-drag-and-drop/examples/example.tsx",
+    "packages/library-lab/entries/B14-pragmatic-drag-and-drop/examples/pinned-order.ts",
+    "packages/library-lab/entries/B14-pragmatic-drag-and-drop/guide.md",
+    "packages/library-lab/entries/B14-pragmatic-drag-and-drop/library.json",
+    "packages/library-lab/entries/B14-pragmatic-drag-and-drop/tests/drag-session.test.mts",
+    "packages/library-lab/entries/B14-pragmatic-drag-and-drop/tests/pinned-order.test.mjs",
+    "packages/library-lab/entries/B14-pragmatic-drag-and-drop/verification.json"
+  ]
+}

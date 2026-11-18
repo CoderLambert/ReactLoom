@@ -5,13 +5,7 @@
   "name": "Excalidraw",
   "group": "A",
   "summary": "手绘白板嵌入、业务流程草图、导入导出和协作边界",
-  "tags": [
-    "白板",
-    "手绘",
-    "图示",
-    "导出",
-    "键盘隔离"
-  ],
+  "tags": ["白板", "手绘", "图示", "导出", "键盘隔离"],
   "contentState": "recreated",
   "packages": [
     {
@@ -62,11 +56,8 @@
         "examples/styles.css",
         "examples/scene-policy.ts"
       ],
-      "capabilities": [
-        "canvas",
-        "local-download"
-      ],
-      "description": "真正渲染 Excalidraw 画布，测试选择、文字、绘制和撤销"
+      "capabilities": ["canvas", "local-download"],
+      "description": "真实矩形绘制与撤销，160ms后观察SDK元素身份与数量"
     },
     {
       "demoId": "business",
@@ -80,11 +71,8 @@
         "examples/styles.css",
         "examples/scene-policy.ts"
       ],
-      "capabilities": [
-        "canvas",
-        "local-download"
-      ],
-      "description": "初始场景由官方 convertToExcalidrawElements 构建，再用真实编辑器操作"
+      "capabilities": ["canvas", "local-download"],
+      "description": "官方convertToExcalidrawElements生成三节点/两箭头及绑定文字，编辑、清空与恢复"
     },
     {
       "demoId": "advanced",
@@ -98,12 +86,8 @@
         "examples/styles.css",
         "examples/scene-policy.ts"
       ],
-      "capabilities": [
-        "canvas",
-        "local-download",
-        "file-input"
-      ],
-      "description": "限制文件大小及元素链接，使用 SDK 读写与导出，保护 Lab 全局键盘事件"
+      "capabilities": ["canvas", "local-download", "file-input"],
+      "description": "受限几何/文字导入、失败保留原图、PNG导出和应用只读/在途操作失效"
     }
   ],
   "license": {
@@ -114,5 +98,25 @@
     "originalRecovery": "ORIGINAL_RECOVERED",
     "archive": "ReactLoom_119_Full_Research_2026-10-24.zip",
     "note": "阅读历史 A09 Workshop 并结合 2026-10 官方API重新实现，未沿用历史 PASS。"
+  },
+  "official": {
+    "readme": {
+      "repository": "excalidraw/excalidraw",
+      "commit": "a2ec2889babf7d2295469c6d90ebe77fae57df84",
+      "path": "packages/excalidraw/README.md",
+      "sha256": "d3458f4ffe1617432989dfa40896255e805f0ddbad194873808ba7e8996e1f45",
+      "sourceUrl": "https://github.com/excalidraw/excalidraw/blob/a2ec2889babf7d2295469c6d90ebe77fae57df84/packages/excalidraw/README.md",
+      "language": "en",
+      "version": "0.18.1",
+      "syncedAt": "2026-11-10T11:40:20.268200+00:00",
+      "snapshotPath": "official/readme.md"
+    },
+    "homepage": {
+      "url": "https://docs.excalidraw.com",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-10T11:40:20.268200+00:00",
+      "reason": "官网GET200重定向到https://plus.excalidraw.com/docs/sdk，完整头见official/homepage-response.json；XFO/CSP均null，未从Lab originiframe实测，保持unknown。"
+    }
   }
 }

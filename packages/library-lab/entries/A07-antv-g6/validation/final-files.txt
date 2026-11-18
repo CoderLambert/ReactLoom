@@ -1,0 +1,42 @@
+ENTRY: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/A07-antv-g6
+UTC: 2026-11-10T11:53:59.327234+00:00
+FILES: 39
+AGENTS.md
+agent.md
+examples/async-owner.ts
+examples/demo.tsx
+examples/example.tsx
+examples/graph-data.ts
+examples/graph-options.ts
+examples/graph-sizing.ts
+examples/workshop.css
+guide.md
+library.json
+local-validation.md
+official/readme.md
+official/source-evidence.json
+tests/async-owner.test.mts
+tests/graph-sizing.test.mts
+tests/sdk.test.mjs
+validation/browser-proposal.txt
+validation/checkpoint-diff.txt
+validation/checkpoint-types.txt
+validation/diff-check.txt
+validation/fetch-official.py
+validation/final-files.txt
+validation/format-check.txt
+validation/format-final.txt
+validation/git-head.txt
+validation/implementation-format.txt
+validation/implementation-types.txt
+validation/input-hashes.json
+validation/log-hashes.json
+validation/metadata-check.mjs
+validation/metadata.txt
+validation/policy.txt
+validation/proposal-types.txt
+validation/sdk-initial-failure.txt
+validation/sdk.txt
+validation/source-fetch.txt
+validation/types-final.txt
+verification.json

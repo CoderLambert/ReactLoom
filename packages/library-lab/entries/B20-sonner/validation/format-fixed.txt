@@ -1,0 +1,5 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['pnpm', 'exec', 'biome', 'check', 'entries/B20-sonner/examples/example.tsx']
+startedAt: 2026-11-10T14:22:38.529187+00:00
+exit: 0
+Checked 1 file in 6ms. No fixes applied.

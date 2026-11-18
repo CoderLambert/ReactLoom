@@ -1,0 +1,41 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: pnpm exec biome check --write entries/B03-react-spring/examples entries/B03-react-spring/tests entries/B03-react-spring/validation/check-entry.mjs entries/B03-react-spring/library.json entries/B03-react-spring/verification.json entries/B03-react-spring/official/source-audit.json entries/B03-react-spring/official/homepage-response.json
+exit: 1
+Skipped 1 suggested fixes.
+If you wish to apply the suggested (unsafe) fixes, use the command biome check --write --unsafe
+
+Checked 11 files in 10ms. Fixed 7 files.
+Found 1 error.
+entries/B03-react-spring/examples/example.tsx:47:3 lint/correctness/useExhaustiveDependencies  FIXABLE  ━━━━━━━━━━
+
+  × This hook specifies more dependencies than necessary: articles.
+  
+    46 │   // Wait for the commit that removes the focused action and re-enables Add at capacity.
+  > 47 │   useLayoutEffect(() => {
+       │   ^^^^^^^^^^^^^^^
+    48 │     const destination = focusAfterRemoval.current
+    49 │     if (destination === 'none') return
+  
+  i This dependency can be removed from the list.
+  
+    52 │     const target = requested && !requested.disabled ? requested : resetRef.current
+    53 │     if (target?.isConnected && !target.disabled) target.focus()
+  > 54 │   }, [articles])
+       │       ^^^^^^^^
+    55 │ 
+    56 │   const style = useSpring({
+  
+  i React relies on hook dependencies to determine when to re-compute Effects.
+    Specifying more dependencies than required can lead to unnecessary re-rendering
+    and degraded performance.
+  
+  i Unsafe fix: Remove the extra dependencies from the list.
+  
+    54 │ ··},·[articles])
+       │       --------  
+
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while applying fixes.
+  
+

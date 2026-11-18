@@ -1,0 +1,14 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=pnpm exec node --test tests/source-consumers.test.mjs
+✔ Markdown source links use the inert transport, including HTML (2.779537ms)
+✔ source viewer uses the same transport mapping as the generator (1.521667ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 50.200411
+
+exitCode=0

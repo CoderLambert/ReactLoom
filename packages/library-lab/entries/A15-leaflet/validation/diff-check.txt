@@ -1,0 +1,8 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom
+ARGV: ["git", "diff", "--check", "--", "packages/library-lab/entries/A15-leaflet"]
+START: 2026-11-10T12:21:15.529304+00:00
+END: 2026-11-10T12:21:15.532888+00:00
+EXIT: 0
+STDOUT:
+
+STDERR:

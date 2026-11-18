@@ -1,0 +1,170 @@
+[
+  {
+    "name": "typecheck",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "typecheck"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T17:14:44.037526+00:00",
+    "finishedAt": "2026-11-17T17:14:45.713200+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-28/typecheck.txt"
+  },
+  {
+    "name": "e01-heading-regression-red",
+    "command": [
+      "node",
+      "--test",
+      "--test-name-pattern=implicit",
+      "packages/library-lab/entries/E01-tiptap/tests/sdk.test.mjs"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T17:15:17.424522+00:00",
+    "finishedAt": "2026-11-17T17:15:17.550862+00:00",
+    "exitCode": 1,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-28/e01-heading-regression-red.txt"
+  },
+  {
+    "name": "e01-sdk-policy-after-review",
+    "command": [
+      "node",
+      "--test",
+      "packages/library-lab/entries/E01-tiptap/tests/sdk.test.mjs",
+      "packages/library-lab/entries/E01-tiptap/tests/policy.test.mjs"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T17:15:31.509152+00:00",
+    "finishedAt": "2026-11-17T17:15:31.661861+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-28/e01-sdk-policy-after-review.txt"
+  },
+  {
+    "name": "typecheck-after-review",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "typecheck"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T17:17:06.909651+00:00",
+    "finishedAt": "2026-11-17T17:17:08.579888+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-28/typecheck-after-review.txt"
+  },
+  {
+    "name": "lint",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "biome",
+      "check",
+      "e2e/quality-resume-pagefind.spec.ts",
+      "e2e/quality-resume-tiptap.spec.ts",
+      "e2e/quality-resume-blocknote.spec.ts",
+      "e2e/quality-resume-official-d21-e02.spec.ts",
+      "entries/E01-tiptap/examples/snapshot-policy.mjs",
+      "entries/E01-tiptap/tests/sdk.test.mjs"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T17:17:18.887912+00:00",
+    "finishedAt": "2026-11-17T17:17:19.312515+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-28/lint.txt"
+  },
+  {
+    "name": "build",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "build"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T17:17:17.648972+00:00",
+    "finishedAt": "2026-11-17T17:17:24.769528+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-28/build.txt"
+  },
+  {
+    "name": "catalog",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "catalog:check"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T17:17:31.205772+00:00",
+    "finishedAt": "2026-11-17T17:17:31.599722+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-28/catalog.txt"
+  },
+  {
+    "name": "browser",
+    "command": [
+      "env",
+      "LAB_PREBUILT=1",
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "playwright",
+      "test",
+      "e2e/quality-resume-pagefind.spec.ts",
+      "e2e/quality-resume-tiptap.spec.ts",
+      "e2e/quality-resume-blocknote.spec.ts",
+      "e2e/quality-resume-official-d21-e02.spec.ts",
+      "--workers=2"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T17:17:31.820559+00:00",
+    "finishedAt": "2026-11-17T17:18:03.307660+00:00",
+    "exitCode": 1,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-28/browser.txt"
+  },
+  {
+    "name": "browser-after-locator-fix",
+    "command": [
+      "env",
+      "LAB_PREBUILT=1",
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "playwright",
+      "test",
+      "e2e/quality-resume-tiptap.spec.ts",
+      "e2e/quality-resume-blocknote.spec.ts",
+      "--workers=2"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T17:18:54.845352+00:00",
+    "finishedAt": "2026-11-17T17:19:05.381163+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-28/browser-after-locator-fix.txt"
+  },
+  {
+    "name": "final-test-lint",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "biome",
+      "check",
+      "e2e/quality-resume-tiptap.spec.ts",
+      "e2e/quality-resume-blocknote.spec.ts"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T17:19:50.508356+00:00",
+    "finishedAt": "2026-11-17T17:19:50.732684+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-28/final-test-lint.txt"
+  }
+]

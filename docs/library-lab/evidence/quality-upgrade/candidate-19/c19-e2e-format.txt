@@ -1,0 +1,5 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+command=pnpm exec biome check --write packages/library-lab/e2e/quality-remediation-nuqs.spec.ts
+Checked 1 file in 13ms. No fixes applied.
+
+exitCode=0

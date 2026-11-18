@@ -1,0 +1,8 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+command=pnpm install --frozen-lockfile --lockfile-only --offline --ignore-scripts
+Scope: all 9 workspace projects
+ ERR_PNPM_LOCKFILE_CONFIG_MISMATCH  Cannot proceed with the frozen installation. The current "patchedDependencies" configuration doesn't match the value found in the lockfile
+
+Update your lockfile using "pnpm install --no-frozen-lockfile"
+
+exitCode=1

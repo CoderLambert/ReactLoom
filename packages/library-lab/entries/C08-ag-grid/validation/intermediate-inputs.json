@@ -1,0 +1,24 @@
+{
+  "utc": "2026-11-10T15:34:38.311038+00:00",
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "files": {
+    "AGENTS.md": "84965dff18f160b49fd43464242faecc0a884cc51d4ff0d7d389327b3efe1c89",
+    "agent.md": "d888b72a3fee81a642c15779bef7b2661e0c7f59fa195a4d48389f95b136a1f0",
+    "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+    "examples/edit-policy.d.mts": "a6ca538690d68db9eed211a67f6d7cdf091f66e8d1bbe2a56359deb76f27a387",
+    "examples/edit-policy.mjs": "a3730d5ff2b90fb4692b6f66b80e80b655e55fd4be18e1b7150319d8b056fe09",
+    "examples/edit-session.ts": "fad2807ac9046efd3d7582d4391ba21f8217bae4d8c9f6a553fb9845032a6a50",
+    "examples/example.tsx": "75ba2db72c13d657e7a232e9cd3f9dff53449cc2b02565930ea7839ff4e53df7",
+    "examples/grid-contract.ts": "33cfeab484f17851fca1d0458cff886caa32fa218bf0fee70191d30274d3a97d",
+    "examples/styles.css": "c76fe92d3ec7ad0d1cd9c6e757f59941d94962372c1a523d48059f5ede3c7e9e",
+    "guide.md": "456663b65bf4eb9ea9c979dad4a8da54d545f663a93d42534ffe68129080c4a9",
+    "library.json": "13002d82f03d00b74f6d44ee695abca789725b01e02ef5e4dddf5f2654661199",
+    "local-validation.md": "292c999f560f0f6a50f76d970b09222410b69079b7321c1faae7326d78f83d6f",
+    "tests/edit-policy.test.mjs": "55a4799473f31b87195596b9d1e3509202d98374876bbb3a9fffd1a2f8c7733b",
+    "tests/sdk.test.mjs": "01b91d16e779431f5e5155a2e297a50962a88f8a1ff1c37e55cf9d248aa762c6",
+    "validation/baseline.json": "38df0a2fa69421a90a35d4e5ee83a4feeffafbc85fffe51d3c410a7b6bfc1d51",
+    "validation/intermediate-biome.txt": "78c978132d7825551ba2cd6361c04bd30f79a21f9f048c677c89e1cd0e000fb0",
+    "validation/intermediate-types.txt": "f7bfba0adbe01fa5d6034a15466e5244c96b055af861cd005a5b8f55dca0dbb3",
+    "verification.json": "bed0ec31d7bf864b143c5b750f568439dcf33cf977302093e45d4d6d92d687f9"
+  }
+}

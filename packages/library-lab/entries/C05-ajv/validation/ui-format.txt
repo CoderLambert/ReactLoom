@@ -1,0 +1,5 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+command=pnpm exec biome check --write packages/library-lab/entries/C05-ajv/examples/example.tsx packages/library-lab/entries/B22-react-beautiful-dnd-migration/examples/example.tsx
+Checked 2 files in 7ms. Fixed 1 file.
+
+exitCode=0

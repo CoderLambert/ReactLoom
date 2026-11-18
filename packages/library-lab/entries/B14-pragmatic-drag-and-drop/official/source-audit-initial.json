@@ -1,0 +1,147 @@
+{
+  "npm": {
+    "bugs": {
+      "url": "https://github.com/atlassian/pragmatic-drag-and-drop/issues"
+    },
+    "dist": {
+      "shasum": "fa28f91c8e0f837830eb70565055c7caeb33114f",
+      "tarball": "https://registry.npmjs.org/@atlaskit/pragmatic-drag-and-drop/-/pragmatic-drag-and-drop-1.8.1.tgz",
+      "fileCount": 409,
+      "integrity": "sha512-uXWNPpL8n4OmTVbduH7nq8pk8htqGo/prR5cYEE8sVCPJGAUMWn6lzvWTfI+4VCeQvHiDRODVz4YzH06OVAxhw==",
+      "signatures": [
+        {
+          "sig": "MEUCIQDaLRLButwuUjog2hpUBdRJda3v9WhfWOA6yi5deKJdXgIgS6zAeNGLIkCFQmZCVYu5zSEnOA5uaRgzqlCjFqzujIs=",
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+        }
+      ],
+      "unpackedSize": 499952
+    },
+    "main": "dist/cjs/index.js",
+    "name": "@atlaskit/pragmatic-drag-and-drop",
+    "_from": "file:/tmp/package-1-69e8ac0a-b5c02083839fed5537f9a9cd-1.tgz",
+    "types": "dist/types/index.d.ts",
+    "author": {
+      "name": "Atlassian Pty Ltd"
+    },
+    "module": "dist/esm/index.js",
+    "license": "Apache-2.0",
+    "_npmUser": {
+      "name": "atlassianartifactteam",
+      "email": "eng-development-tooling-artifacts@atlassian.com"
+    },
+    "homepage": "https://atlassian.design/components/pragmatic-drag-and-drop/",
+    "_resolved": "/tmp/package-1-69e8ac0a-b5c02083839fed5537f9a9cd-1.tgz",
+    "atlassian": {
+      "team": "Design System Team",
+      "website": {
+        "name": "Core",
+        "category": "Libraries"
+      },
+      "integrationTests": {
+        "additionalBrowsers": [
+          "desktop-firefox",
+          "desktop-webkit"
+        ]
+      }
+    },
+    "techstack": {
+      "@repo/internal": {
+        "styling": [
+          "emotion",
+          "static"
+        ],
+        "analytics": "analytics-next",
+        "dom-events": "use-bind-event-listener",
+        "deprecation": "no-deprecated-imports",
+        "design-tokens": [
+          "color"
+        ],
+        "ui-components": "lite-mode"
+      },
+      "@atlassian/frontend": {
+        "import-structure": [
+          "atlassian-conventions"
+        ],
+        "circular-dependencies": [
+          "file-and-folder-level"
+        ]
+      }
+    },
+    "_integrity": "sha512-uXWNPpL8n4OmTVbduH7nq8pk8htqGo/prR5cYEE8sVCPJGAUMWn6lzvWTfI+4VCeQvHiDRODVz4YzH06OVAxhw==",
+    "repository": {
+      "url": "git+https://github.com/atlassian/pragmatic-drag-and-drop.git",
+      "type": "git"
+    },
+    "_npmVersion": "10.8.2",
+    "description": "The core package for Pragmatic drag and drop - enabling fast drag and drop for any experience on any tech stack",
+    "directories": {},
+    "maintainers": [
+      {
+        "name": "atlassianartifactteam",
+        "email": "eng-development-tooling-artifacts@atlassian.com"
+      }
+    ],
+    "sideEffects": true,
+    "_nodeVersion": "20.20.0",
+    "atlaskit:src": "src/index.ts",
+    "dependencies": {
+      "raf-schd": "^4.0.3",
+      "@babel/runtime": "^7.0.0",
+      "bind-event-listener": "^3.0.0"
+    },
+    "module:es2019": "dist/es2019/index.js",
+    "publishConfig": {
+      "registry": "https://registry.npmjs.org/"
+    },
+    "typesVersions": {
+      ">=4.5 <4.9": {
+        "*": [
+          "dist/types-ts4.5/*",
+          "dist/types-ts4.5/index.d.ts"
+        ]
+      }
+    },
+    "_hasShrinkwrap": false,
+    "devDependencies": {
+      "react": "^18.2.0",
+      "globby": "^6.1.0",
+      "react-dom": "^18.2.0",
+      "@atlaskit/link": "^3.4.0",
+      "@emotion/react": "^11.7.1",
+      "tiny-invariant": "^1.2.0",
+      "@types/raf-schd": "^4.0.1",
+      "wait-for-expect": "^1.2.0",
+      "@testing-library/dom": "^10.1.0",
+      "@testing-library/react": "^16.3.0",
+      "@af/integration-testing": "workspace:^",
+      "@atlassian/a11y-jest-testing": "^0.11.0",
+      "@atlassian/a11y-playwright-testing": "^0.9.0"
+    },
+    "_npmOperationalInternal": {
+      "tmp": "tmp/pragmatic-drag-and-drop_1.8.1_1776856079171_0.7259384147395644",
+      "host": "s3://npm-registry-packages-npm-production"
+    },
+    "_id": "@atlaskit/pragmatic-drag-and-drop@1.8.1",
+    "version": "1.8.1"
+  },
+  "requests": [
+    {
+      "url": "https://registry.npmjs.org/@atlaskit%2fpragmatic-drag-and-drop/1.8.1",
+      "finalUrl": "https://registry.npmjs.org/@atlaskit%2fpragmatic-drag-and-drop/1.8.1",
+      "status": 200,
+      "headers": {
+        "Date": "Tue, 10 Nov 2026 13:41:20 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "3087",
+        "Connection": "close",
+        "CF-Ray": "a58579608c5bfda5-LAX",
+        "CF-Cache-Status": "DYNAMIC",
+        "Access-Control-Allow-Origin": "*",
+        "Server": "cloudflare",
+        "set-cookie": "__cf_bm=NabEsW3hXTefBD2ThXZZHQZzi7c5g_1n8XUF3QfYWCw-1794318080.0886817-1.0.1.1-ISNcQxcU_hZ4q8rs_5WbUF42ncabPhxlKyqdFI8x3_UnkhRmGjQVYont6sT05wgCTkX2DboP8_reBfnsS2NhXoTlTJxKNYXlj7XwyvDMsNhkGjK1lVslnl_G6t8SZx_f; HttpOnly; SameSite=None; Partitioned; Secure; Path=/; Domain=npmjs.org; Expires=Tue, 10 Nov 2026 14:11:20 GMT"
+      },
+      "bytes": 3087,
+      "sha256": "ee6663bfb6f261e866d51d57808df9db1558c123351ba06fd376a7515919a5d5"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "utc": "2026-11-10T16:44:25.160595+00:00",
+  "operation": "16 current SHA checks, six runtime files unchanged from compiled checkpoint, local links and scoped diff after log-creation order fix",
+  "inputFiles": 16,
+  "runtimeDifferences": [],
+  "localLinks": 29,
+  "exit": 0,
+  "localBrowser": "root candidate17 C10 4PASS; raw log read",
+  "formal": "NOT_RUN"
+}

@@ -1,0 +1,13 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['pnpm', 'exec', 'playwright', 'test', '--config=.local-evidence/quality-playwright.config.ts', 'e2e/quality-remediation-virtuoso.spec.ts', '--grep', '@C09 advanced', '--trace=on', '--reporter=line', '--output=entries/C09-react-virtuoso/validation/candidate16-repro-artifacts', '--workers=1']
+startedAt: 2026-11-10T16:16:27.679491+00:00
+exit: 0
+
+Running 1 test using 1 worker
+
+
+
+[1/1] e2e/quality-remediation-virtuoso.spec.ts:152:1 › @C09 advanced: true prepend anchor, ID expansion measurement and conditional bottom follow
+  1 passed (2.6s)
+(node:1996012) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)

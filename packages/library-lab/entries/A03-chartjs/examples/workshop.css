@@ -1,0 +1,62 @@
+.a03-workshop {
+  min-width: 0;
+}
+.a03-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-block: 1rem;
+}
+.a03-controls label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.a03-chart-container {
+  box-sizing: border-box;
+  height: 310px;
+  position: relative;
+  background: #fbfefb;
+  border: 1px solid #d7e3d6;
+  border-radius: 10px;
+}
+.a03-table-wrap {
+  overflow-x: auto;
+  margin-block: 1rem;
+}
+.a03-workshop table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 13px;
+  text-align: left;
+}
+.a03-workshop caption {
+  text-align: left;
+  margin-block: 6px;
+  font-weight: 600;
+}
+.a03-workshop td,
+.a03-workshop th {
+  padding: 6px;
+}
+.a03-workshop button,
+.a03-workshop select {
+  padding: 7px 9px;
+}
+.a03-workshop button[aria-pressed="true"] {
+  background: #dcefe1;
+  outline: 2px solid #34734b;
+}
+.a03-workshop :focus-visible {
+  outline: 3px solid #276b50;
+  outline-offset: 3px;
+}
+.a03-workshop pre {
+  padding: 12px;
+  background: #edf4ed;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 24rem;
+  overflow: auto;
+}

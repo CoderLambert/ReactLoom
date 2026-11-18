@@ -4,14 +4,8 @@
   "slug": "ajv",
   "name": "Ajv",
   "group": "C",
-  "summary": "JSON Schema 编译验证、严格输入边界与条件规则",
-  "tags": [
-    "JSON Schema",
-    "合同校验",
-    "RSS导入",
-    "strict",
-    "运行时验证"
-  ],
+  "summary": "真实JSON Schema编译：结构与业务分层、整对象唯一与URL身份、条件必填及不修改输入",
+  "tags": ["JSON Schema", "合同校验", "RSS导入", "strict", "运行时验证"],
   "contentState": "recreated",
   "packages": [
     {
@@ -60,8 +54,10 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/schemas.ts",
         "examples/rss-policy.mjs",
         "examples/rss-policy.d.mts",
+        "examples/styles.css",
         "examples/demo.tsx"
       ],
       "capabilities": []
@@ -75,8 +71,10 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/schemas.ts",
         "examples/rss-policy.mjs",
         "examples/rss-policy.d.mts",
+        "examples/styles.css",
         "examples/demo.tsx"
       ],
       "capabilities": []
@@ -90,8 +88,10 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/schemas.ts",
         "examples/rss-policy.mjs",
         "examples/rss-policy.d.mts",
+        "examples/styles.css",
         "examples/demo.tsx"
       ],
       "capabilities": []
@@ -105,5 +105,25 @@
     "originalRecovery": "ORIGINAL_RECOVERED",
     "mode": "recreated",
     "note": "基于 2026-10-27 Ajv 官方 docs/npm 重新编写，不继承历史测试状态。"
+  },
+  "official": {
+    "readme": {
+      "repository": "ajv-validator/ajv",
+      "commit": "0fba0b8e649909613cfce0999b149cd08f4a4987",
+      "path": "README.md",
+      "version": "8.20.0",
+      "language": "en",
+      "syncedAt": "2026-11-10T15:38:43.167216+00:00",
+      "snapshotPath": "official/readme.md",
+      "sha256": "38d924524762b917dd9dd341ac28837df51a474bf198ac4c26ba69d8f59a27c3",
+      "sourceUrl": "https://github.com/ajv-validator/ajv/blob/0fba0b8e649909613cfce0999b149cd08f4a4987/README.md"
+    },
+    "homepage": {
+      "url": "https://ajv.js.org/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-10T15:38:43.167216+00:00",
+      "reason": "实际GET200完整响应头与未读正文事实见official/source-audit.json；尚未从Lab origin证实iframe，保持unknown和官方直达。"
+    }
   }
 }

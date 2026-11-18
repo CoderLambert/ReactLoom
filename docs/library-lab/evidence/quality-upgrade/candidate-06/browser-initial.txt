@@ -1,0 +1,26 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=pnpm exec playwright test --config=.local-evidence/quality-playwright.config.ts quality-remediation-floating.spec.ts quality-remediation-whiteboard.spec.ts quality-remediation-final.spec.ts p0-risk-lifecycle.spec.ts --grep @A10|@B17|@E19
+
+Running 13 tests using 2 workers
+
+(node:953390) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:953386) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   2 e2e/p0-risk-lifecycle.spec.ts:28:1 › @B17 actual floating dialog returns focus and protects the IME composition boundary (1.6s)
+  ✓   1 e2e/quality-remediation-final.spec.ts:8:3 › @A10 official original remains available independently from SDK resource readiness (1.8s)
+  ✓   3 e2e/quality-remediation-final.spec.ts:8:3 › @B17 official original remains available independently from SDK resource readiness (1.7s)
+  ✓   4 e2e/quality-remediation-final.spec.ts:8:3 › @E19 official original remains available independently from SDK resource readiness (1.7s)
+  ✓   5 e2e/quality-remediation-floating.spec.ts:13:1 › @B17 real anchor movement flips and shifts inside the actual element boundary (1.6s)
+  ✓   6 e2e/quality-remediation-floating.spec.ts:58:1 › @B17 keyboard opens, Escape returns focus, nonmodal Tab respects the outside target (1.5s)
+  ✓   7 e2e/quality-remediation-floating.spec.ts:86:1 › @B17 real scroll recomputes position and host unmount removes the portaled dialog (1.6s)
+  ✓   8 e2e/quality-remediation-floating.spec.ts:121:1 › @B17 business actions toggle independent state and survive closing/reopening (1.8s)
+  ✓   9 e2e/quality-remediation-floating.spec.ts:154:1 › @B17 business copy uses real granted and denied Chromium clipboard permissions (1.7s)
+  ✓  10 e2e/quality-remediation-floating.spec.ts:246:1 › @B17 advanced committed filtering changes actual rows and releases non-Enter confirmation (1.6s)
+  ✓  12 e2e/quality-remediation-whiteboard.spec.ts:48:1 › @A10 real document save survives later edits and restores the original SDK identities (2.1s)
+  ✓  13 e2e/quality-remediation-whiteboard.spec.ts:77:1 › @A10 readonly rejects native deletion and writes; stop discards the instance snapshot (2.6s)
+  ✓  11 e2e/quality-remediation-whiteboard.spec.ts:27:1 › @A10 actual toolbar draws and normal localhost SDK remains available past license grace (7.6s)
+
+  13 passed (16.3s)
+
+exitCode=0

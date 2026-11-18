@@ -1,0 +1,27 @@
+{
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+  "head": "1218066e706a90ba03fac8dff8c9b843dd2429c4",
+  "checkedAt": "2026-11-10T14:00:27.845914+00:00",
+  "status": "",
+  "fileCount": 7,
+  "sha256": {
+    "AGENTS.md": "d9617061f0abe5d3e06e05abdf781bbfceddd9f5fefdbc9e34430bc8b755a3e7",
+    "library.json": "0acaed2a5fdabc925199122a510d5105ef4ba83022b53ca68b3a8671bdbcc6af",
+    "agent.md": "5025e4e8552a732da487ee969940af3e79a4e70cc5cef2c5c52c870a9ddbf8ea",
+    "guide.md": "764b83f929f9f8cb48d8e654a84a629cab14a7fabaa71d7d80f7c2a083776ccb",
+    "verification.json": "671720c85a39e89e8280f8d7a948b260e1457f8c423f45e8e362abb98382bbe5",
+    "examples/demo.tsx": "254591932548c36c414610bd0d0c7ce7ef1648162f1996fbbe7381b8c1751690",
+    "examples/example.tsx": "196da6ac91cc159ef0e1b173b9ca8572338c58bb8f970a36034aed6c7b7545c5"
+  },
+  "problems": [
+    "旧挂载/复位文案错误地把初始化回调排除",
+    "源码高密度且内联样式迁移不清",
+    "缺固定官方原文及官网头证据",
+    "缺实际SDK局部检查和真实浏览器提案"
+  ],
+  "goals": [
+    "双栏指针/键盘及16%-60%边界",
+    "三栏稳定身份/两根Separator/F6",
+    "纵向轴与重挂复位、实际布局来源"
+  ]
+}

@@ -1,0 +1,97 @@
+# C01 React Hook Form 本地质量整改与稳定交接
+
+日期：2026-11-10。工作者范围仅C01，未改公共src/tests/e2e/runners、依赖锁、生成索引、队列/results；未提交推送发布。当前记录为局部执行和静态自检，不是独立复核或verify:record收据。
+
+## 对象、前提与阶段细化
+
+开始时HEAD=`1218066e706a90ba03fac8dff8c9b843dd2429c4`，C01无既有diff，14个文件；entry-relative路径+NUL+bytes+NUL摘要=`4388fb578536dd618e9a273e93ee98124773b0404b60d6c80ac214e75dd9428b`，逐文件摘要在evidence/baseline.json。先完整读取AGENTS、library/guide/agent、全部实际examples/tests/verification以及当前@C01 p0，冻结期间只读；收到主控释放后才写入。
+
+本库目标：先让首次接触库的工程师理解register返回值、字段路径、errors和handleSubmit，再进入动态行身份及异步业务错误。现有三场景已经有独立价值，增量完善而非重写；没有创建第四层或另起SDK假实现。
+
+单库任务：保留原field.id、输入快照+generation+AbortSignal、增删前失效、IME Enter和卸载清理；重组中文教学；正常排版并补真实错误描述关联、同份草稿/状态观察；匹配官方中文README固定ref；运行定向SDK/策略/类型/metadata/格式，交主控真实browser。
+
+验收：basic必填/HTTPS错误与input关联、有效嵌套结果；business剩余行id/值/字段错误跟随删除；advanced409/改稿/取消/卸载不应用旧结果，修正后恢复成功。旧@C01 p0的增加来源、预览、reset和唯一output语义保留。真实DOM尚待主控，不从Node通过推断content_done。
+
+交付：本条目guide/agent/metadata、原表单增量与局部CSS、保持的策略及3项真实SDK套件、官方V7中文原文/来源响应、baseline与原始输出/manifest、本记录；主控维护browser、共享检查与results/queue。
+
+## 实际变化与保留
+
+- guide按选型→register/errors/handleSubmit→动态行→业务异步错误组织，源码职责与迁移边界对应；不再以收据和generation为开篇。
+- name/url的aria-describedby指向含真实field.id的错误id；新增fieldset data-field-id，当前行索引与身份分开观察。
+- 同份useWatch草稿与field.id在折叠检查区；真实formState展示dirty/submitting/submitCount；用pre而非新增output，保留旧p0的成功output数量语义。
+- form增加noValidate及onInvalid反馈，使提交错误统一经RHF而不是浏览器type=url弹窗；保留原输入/按钮与可访问名字。
+- 原异步submit流程、controller/代际/指纹、修改/增删失效、取消/重置/卸载、IME策略保持。表单状态检查不发送额外请求。其余压缩源码/声明/原测试按Biome排版；URL控制字符检查改成同义字符码判断以通过现配置。
+- SDK套件保留原SSR hooks注册/field.id断言，新增公开createFormControl验证注册规则→onInvalid/onValid、字段setError/clearErrors/reset；没有使用私有control字段，没有把policy改名冒充SDK。
+
+## 三个学习目标
+
+| 场景 | 操作与可观察结果 | SDK与自建逻辑 |
+| --- | --- | --- |
+| basic | 清空group、非HTTPS失焦/提交，看到字段错误和aria关联；修正后得到group/sources嵌套预览，reset回默认 | RHF注册/校验/提交/状态；URL规则与本地预览由本例实现 |
+| business | 添加/编辑后删第一行，剩余field.id和值保留而索引前移；规范化重复URL错误落到当前行 | RHF useFieldArray；URL身份/重复检查自建 |
+| advanced | URL文本含/duplicate触发450ms本地409；改稿、删行、取消、卸载不回填旧结果，正确重提恢复 | RHF setError展示；fixture、AbortController、代际/指纹/IME策略由本例实现，无真实HTTP |
+
+## 官方依据
+
+本地package.json确认react-hook-form7.89.0/MIT。类型核对：dist/types/form.d.ts的UseFormRegisterReturn、UseFormHandleSubmit、setError；dist/types/fieldArray.d.ts默认keyName=id。安装产物index.esm.mjs:1137保留v7 id，:3018为setError，:3267为handleSubmit有效/无效分支。公开createFormControl由包index导出，本轮真实执行其校验及重置。
+
+官方文档：https://react-hook-form.com/get-started 、/docs/useform/register 、/docs/usefieldarray 。当前字段数组页同时提示v8 beta的key迁移，本例仍以匹配7.89.0类型和源码为准，保持field.id。
+
+官方annotated tag v7.89.0对象`6160405a7eee346b0a19a2b24a89ebc5df09ca00`解引用commit=`4722d22fbbafd52b3186e737e62bd530659f1b24`。完整Git tree API返回200且truncated=false，存在官方V7中文、V6中文、繁体及原语言等候选；选择 **docs/README.V7.zh-CN.md**。`docs/README.zh-CN.md`仍展示V6 ref={register}，故未误选。非自行翻译。
+
+官方中文原文实际HTTP200，14505字节，SHA-256=`f1679b5992e2d473fac51c70d62661becf2c8878cfdf67f31c5a935f367d5518`，同步时间`2026-11-10T09:52:49.384970+00:00`，保存原始字节/署名/链接。官网https://react-hook-form.com/实际GET200、最终URL不变，完整响应头没有X-Frame-Options或CSP frame-ancestors；未从Lab origin浏览器确认，metadata=unknown，保留直达。全部URL/ref/候选理由/响应头/摘要在official/source-evidence.json。
+
+## 实际命令与原始输出
+
+cwd均为`/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab`。完整argv/退出码/捕获说明/日志摘要/当前源摘要见evidence/local-runs.json。
+
+| 命令 | 实际结果 | 日志 |
+| --- | --- | --- |
+| `node --test entries/C01-react-hook-form/tests/sdk.test.mjs entries/C01-react-hook-form/tests/form-policy.test.mjs entries/C01-react-hook-form/tests/url-policy.test.mjs` | exit0，11 PASS /0 FAIL /0 SKIP：3真实SDK+8纯策略 | evidence/sdk-policy.log |
+| `pnpm exec -- tsc --ignoreConfig --noEmit --target ES2022 --lib ES2022,DOM,DOM.Iterable --module ESNext --moduleResolution Bundler --jsx react-jsx --strict --skipLibCheck --esModuleInterop --allowSyntheticDefaultImports --allowImportingTsExtensions --types vite/client,node entries/C01-react-hook-form/examples/demo.tsx` | exit0，无诊断，入口及其直接导入链，无generate | evidence/typecheck.log（原stdout/stderr为空） |
+| `node --input-type=module -e <manifest保存完整程序>` | exit0：validateEntry/结构、全部源文件、三个原level、官方V7中文README摘要 | evidence/metadata.log |
+| `pnpm exec -- biome check entries/C01-react-hook-form/examples entries/C01-react-hook-form/tests entries/C01-react-hook-form/library.json entries/C01-react-hook-form/verification.json entries/C01-react-hook-form/official/source-evidence.json` | exit0，13文件，无更改 | evidence/biome.log |
+
+首次格式化报告原控制字符regex被Biome禁止，改为同义字符码检查后，相关URL策略/真实SDK已通过。源和测试排版后进行上述11项运行；后续只有文档/metadata编辑，不重复测试。SDK/类型的首次成功工具输出当时没有写日志文件，现忠实复制其实际stdout（类型为空）并在manifest标明未独立捕获原run时间；未为补日志伪造时间或重跑。metadata与最终Biome由子进程直接保存时间与原始输出。
+
+## 六项自检
+
+| 维度 | 状态与层级 | 依据/限制 |
+| --- | --- | --- |
+| 技术准确 | PASS — 匹配版本源码类型/真实SDK | v7 field.id、register/errors/handleSubmit/setError契约对应；3真实SDK通过；原代际/IME边界明确 |
+| 解释清楚 | PASS — 静态内容 | 入门先注册/错误/提交，再身份与回包；三场景操作、成功/失败/恢复和迁移文件对应源码 |
+| Demo有用 | NOT_RUN — 新DOM待浏览器 | 三独立目标保留，Node已有相应规则支持；新增aria关联/动态身份/450ms取消/IME未在当前DOM执行 |
+| 源码可迁移 | PASS — 源码/定向类型 | 完整文件/声明/局部CSS，真实SDK无Lab内部依赖；fixture替换与清理规则保留 |
+| 官方来源可靠 | PASS — 固定ref中文原文/HTTP | 正确选择V7简体而非V6中文，原文sha可核，官网unknown未冒称allowed |
+| 结果可复核 | NOT_RUN — 运行证据部分通过 | 当前SDK/策略/类型/metadata/格式日志可核，核心DOM与异步交互仍待主控实际browser日志 |
+
+## 主控browser交接
+
+保留旧e2e/p0-risk-lifecycle.spec.ts的@C01：business新增第二行→second.xml→唯一output→reset一行默认URL且output消失。
+
+新增建议：
+
+1. basic：清空“分组名称”和将“来源1 URL”填http://example.com/rss并失焦/提交；有必填/HTTPS错误，读取URL aria-describedby并定位同id的错误；正确后preview，submitCount包括无效尝试。检查noValidate没有原生弹窗吞掉RHF流程。
+2. business：`data-testid=c01-source-row`两行先记录data-field-id；填独立名称/URL，再删除第0行，剩余id/值不变，检查其路径变为sources.0及错误关联仍指向同id。折叠“查看草稿与动态行身份”中的c01-draft-json与c01-row-identities显示当前真实数据。
+3. business重复URL测试主机/443/fragment归一化但path大小写有区分，错误在重复行；此规则不是SSRf防护。
+4. advanced：先/duplicate提交等真实450msfixture错误，再修正/重新提交恢复；另提交后立即编辑字段、增删行、主动取消或停止卸载，等待超过450ms，旧409/旧preview不可出现。当前输入成功后重提正常，不只检查反馈文字。
+5. IME：用composition/keyCode229脚本验证保护路径可单测，但与真实OS IME验收分开；普通Enter非组合应能提交。
+6. 390px无整页横向溢出；新aria错误与状态文字可读；README显示官方V7中文、官网unknown/直达。所有新增检查用旧dist先观察缺失断言，再运行稳定候选。
+
+新增定位：c01-form-state、c01-draft-json、c01-row-identities、c01-source-row[data-field-id]；name/url错误id为rhf-<field.id>-name-error/url-error。没有新增output或改旧按钮/region名字。
+
+## 剩余项与文件
+
+真实browser/整Lab生成构建/独立复核由主控稳定屏障后统一进行；本工作者未调用全目录generate/build/typecheck。当前内容仍待验收，formal content/sdk/build/browser均NOT_RUN，无提交授权不为收据提交。真实API、服务端schema/鉴权/幂等/跨设备并发未实现。
+
+新增workshop.css、official/readme.md和source-evidence.json、.gitignore、evidence/baseline.json/local-runs.json及日志、本local-validation.md。原guide/agent/library/verification/example与已有helper/声明/test因讲解、可访问观察和正常排版更新；AGENTS未改。没有碰本条目之外的输入。
+
+## candidate-04真实点击失败后的最小修复
+
+主控真实浏览器诊断（docs/library-lab/evidence/quality-upgrade/candidate-04/c01-click-diagnosis.txt）显示：无效输入修正后点击“验证并预览”，pointerdown落BUTTON；onBlur重新校验移除字段错误后按钮上移约26px，pointerup/click落FORM或SECTION，根本没有submit，submitCount仍0；第二次点击才出现预览。这是错误区域条件挂载造成的布局变化，不是RHF或450ms fixture故障。
+
+本次只为group/name/url错误增加始终存在、预留两行的布局槽，错误内容仍按原条件显示且保留原role=alert/id/aria-describedby。group槽固定占整行，字段错误p去掉可变外边距。保留mode:onBlur、正常click→submit与原校验；没有pointerdown提交、强制点击或要求测试提前Tab绕过。原异步、IME与策略/SKD文件不变，11项已通过结果不重复执行。
+
+定向命令cwd仍为packages/library-lab：原入口tsc完整命令（见manifest clickFixRuns）exit0，日志evidence/click-fix-typecheck.log；`pnpm exec -- biome check entries/C01-react-hook-form/examples/example.tsx entries/C01-react-hook-form/examples/workshop.css` exit0，2文件无更改，日志evidence/click-fix-biome.log。guide/agent同步保留稳定错误槽约束。
+
+当前修复后browser仍NOT_RUN，主控保留“invalid→valid后一次真实click出现output”的回归；需要实际验证才能关闭该UX问题。p0原group计数受到details隐式group影响由主控改为精确c01-source-row选择器，本工作者未改共享测试。

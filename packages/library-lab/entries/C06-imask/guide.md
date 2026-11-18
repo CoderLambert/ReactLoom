@@ -1,153 +1,70 @@
-# IMask 7.6.1｜掩码管外观，不管日期和金额语义
+# IMask：输入外观、业务值与语义校验
 
-Lab 锁定 `imask@7.6.1` 和 `react-imask@7.6.1`（MIT）。IMask 在输入过程中维护格式和光标。它不证明手机号真实、不证明公历存在、也不做十进制金额运算。
+订阅配置需要固定八位编号、带分隔符的金额，以及先按日期形状输入的日历日。IMask在逐键编辑时维护格式、选区与光标；应用仍决定保存哪种值、是否完整、业务上是否有效。适合这类受约束的文本外观，自由中文备注用普通input。只有提交时才检查格式的字段，也可以先用普通输入和schema，避免引入逐键掩码成本。
 
-没有收据时 sdk / build / browser 保持 NOT_RUN。Actions 41779873259 不是本条目 PASS。
+固定 **imask/react-imask7.6.1**，两者MIT。核心与React无关，包装器peer声明React>=0.14，不代表每个历史组合都通过本项目验收；当前宿主React19.3。没有远程资产、后端、表单resolver或财务账本。
 
-## Lab 当前示例
+## 先分模型、视图和业务值
 
-[`examples/example.tsx`](examples/example.tsx) 使用真实 `<IMaskInput>`。业务值只从 `onAccept` 进入 React state。`demo.tsx` 只做再导出。没有双终端 mock API，也没有 `localhost:5173` 的 workshop。
-
-- **basic**：`mask="0000-0000"`，`unmask={true}`。界面可以显示连字符，`onAccept` 交给 state 的是数字串。`key={generation}` 只在点击「重置」时增加，避免每次按键拆掉输入法。
-- **business**：`mask={Number}`，`radix="."`，`scale={2}`，`thousandsSeparator=","`，`unmask={true}`。state 里应是不带千分位的数字文本。注释写明后续计算要用 decimal.js，不能用 JS 浮点做财务结算。
-- **advanced**：`mask="0000-00-00"`，`unmask={false}`，所以 state 保留分隔符。[`calendar-policy.mjs`](examples/calendar-policy.mjs) 的 `validCalendarDay` 用 UTC 日历回读拒绝 `2026-02-30`。实现用 `setUTCFullYear`，避开 `Date.UTC` 把 0–99 年折到 1900–1999。旁边的中文备注是普通 `<input>`，只用 `onCompositionStart/End` 显示是否在组合，不套数字掩码。
-
-研究笔记里的 `setUnmaskedValue`、动态 `dispatch`、RHF `Controller` 和 Query 回填都没有挂载。
-
-## 什么时候用
-
-固定位数的编号、需要千分位和小数位的金额外观、以及「先看起来像日期」的输入。自由文本、中文姓名、搜索框不要套 mask。一个字段的合法中间态（用户刚输入 `1`）必须允许，完整业务校验放在提交。
-
-## 数据与模型
-
-Mask 同时有视图字符串和 unmasked 值。React 只能认一份。Lab 在编号和金额上选 unmasked，在日期上选带分隔符的视图，因为公历函数要看到 `YYYY-MM-DD`。
-
-`onChange` 不是业务入口。掩码在内部改值，React 的合成事件可能看到中间形态。`onAccept` 在库接受这次输入之后触发。`onComplete` 只表示格子填满，例如 `2026-02-30` 也能填满。
-
-不要在每次 `onAccept` 时改组件 `key`。key 变化会卸载 DOM，光标和组合态一起丢。Lab 把 key 留在显式重置。
-
-Pattern mask 和 Number mask 不能靠 `updateOptions` 在原地互换类型。要换模型就换 key，而且只在规则真的变了的时候换。
-
-直接写 `input.value = saved` 会绕过 MaskedModel。恢复草稿用库提供的 setter，或让 React 以正确的 unmasked 值重新挂载。本 Demo 的重置是后者：清空 state 并增加 generation。
-
-## 三层示例
-
-### 基本
-
-输入 `12345678`。输出区应接近 `12345678` 而不是 `1234-5678`，因为 `unmask` 为真。`onAccept` 计数增加。粘贴带连字符的文本，计数和值仍来自 accept，而不是你在 `onChange` 里自己 slice。
-
-### 业务
-
-输入 `1234.5`。unmasked 值不应带逗号。`scale: 2` 限制小数外观，不表示二进制浮点已经精确。把这个字符串交给 `Number` 再累加，仍然会遇到 `0.1 + 0.2`。提交前交给 decimal.js 或整数分。
-
-`1.20` 是否被收成 `1.2` 取决于 `padFractionalZeros` / `normalizeZeros`。Lab 没有改这两项。金额存储不要依赖「看起来有两位」。
-
-### 进阶
-
-`2026-02-30` 掩码接受字符，状态行必须写「格式化不等于有效日期」。`2026-02-29` 不是闰年，同样失败。`2024-02-29` 通过。空值显示「尚未填写」，不要把它说成无效日期。
-
-中文备注框在组合时状态变为「正在组合字词」。不要把 `0000-0000` 套到这个框上，否则候选字会被过滤。
-
-## 反例
-
-### 1. 用 onChange 当值
-
-```tsx
-<IMaskInput mask="0000-0000" onChange={event => setRaw(event.target.value)} />
+```text
+实际键盘/粘贴 → InputMask视图层与选区 → Masked模型接受/格式化
+  → react-imask onAccept(value, maskRef, event)
+  → React业务快照 + 真实maskRef观察
 ```
 
-可能存到带连字符的中间态，和 `unmask` 的约定不一致。改为 `onAccept={update}`。
+核心`IMask.createMask`只创建模型，可在Node格式化，不产生DOM/光标。`IMaskInput`在客户端挂载时创建InputMask，连接真实input与模型；卸载时销毁自己的mask。模型测试不能证明React回调、粘贴、光标或输入法。
 
-### 2. 受控 value 和回调各存一种形态
-
-`value={masked}` 但 state 存 unmasked，光标会跳到末尾。选定一种，React state 和 `unmask` 一致。
-
-### 3. 每次按键换 key
+同一实例有三种值：`value`是带分隔符的显示串，`unmaskedValue`是去格式的文本，Number模型的`typedValue`是JS number。`unmask={false}`使onAccept第一参选value，true选unmaskedValue，`'typed'`选typedValue。这个选择不会改变另外两种getter的含义。
 
 ```tsx
-<IMaskInput key={raw} mask="0000-0000" />
+<IMaskInput type="text" inputMode="numeric" mask="0000-0000" unmask={true}
+  onAccept={(value, maskRef) => {
+    // value为业务数字串；另外观察真实实例的显示串。
+    setRaw(value);
+    setSnapshot({value: maskRef.value, unmaskedValue: maskRef.unmaskedValue});
+  }} />
 ```
 
-焦点丢失，IME 被截断。key 只留给重置和 mask 类型切换。
+本例**没有传value属性**：SDK拥有masked输入DOM/光标，React只观察onAccept，事件快照不再反写input.value。中文备注才是普通受控文本。若迁移为value受控模式，值必须与unmask同一种形态；不要一边传显示串、一边把unmasked串当相同合同，也不要在onChange里slice或手工赋DOM值。
 
-### 4. type="number"
+## 目标一：编号的显示、数据与中间编辑
 
-`selectionStart` 在很多浏览器里不可用，前导 0 会丢。用 `type="text"` 加 `inputMode="numeric"`。Lab 的控件没有改 type，迁移时补上。
+basic输入`12345678`：预期input显示`1234-5678`，当前业务值是`12345678`。末次快照从真实回调的maskRef读取value、unmaskedValue、typedValue、masked.isComplete；null代表尚无事件，不是预置成功数据。
 
-### 5. 中文姓名套数字 mask
+把光标移到第三位后删除，再插入数字，观察同一输入DOM继续使用、业务值与格式同步。非数字可能被模型跳过，因此accept计数不是按键次数；完整Pattern触发complete也不表示编号真实或可被业务使用。
 
-组合输入被丢掉。姓名用普通 input。掩码留给编号。
+点击“重置当前控件”才清本轮快照/计数并增加generation重挂input。普通accept绝不换key。场景外层key=level使切换后不会出现新空DOM配旧编号输出；重置和切换会销毁旧SDK实例，不承诺保留焦点或草稿。
 
-### 6. onComplete 就下单
+## 目标二：金额外观与实际数值
 
-填满不等于合法。日期还要 `validCalendarDay`，编号还要服务端校验。
+business使用Number模型、radix='.'、scale=2、thousandsSeparator=','，仍用text输入与decimal键盘提示。输入`1234.50`并离开控件，默认normalizeZeros=true、padFractionalZeros=false：模型提交后显示可为`1,234.5`，unmaskedValue为`1234.5`，typedValue为number1234.5。输入过程中允许小数点、负号等中间态，事件快照与blur提交后的值可能经历变化，以真实input和末次事件为准。
 
-### 7. typedValue 直接相加
+scale限制小数输入外观，不意味着保存一定有两位。开启padFractionalZeros可以补显示零，但unmaskedValue仍可能归一化成`1234.5`；本例没有这个切换。typedValue依然是二进制浮点，财务计算另定十进制字符串或整数分合同，不能因为画面有两位就直接当精确账本。
 
-Number mask 的数值是 JS number。财务用十进制字符串或整数分。
+Number模型的isComplete/complete不适合作“固定格子填满”或付款成功信号；观察三种值即可理解格式与数值边界。模型不会发保存请求。
 
-### 8. validate 拒绝中间态
+## 目标三：填满的日期与真实公历
 
-用户输入 `1` 就被判非法，后面的数字进不去。完整校验放在提交。
+advanced是普通Pattern `0000-00-00`，并非SDK的Date模型；unmask=false使业务快照保留分隔符。输入`2026-02-30`：Pattern可以填满，isComplete可为true，但自建validCalendarDay必须判为不存在；`2024-02-29`则通过。空串显示“尚未填写”，不足10字符允许继续输入，不把每个合法前缀都当最终失败；只有完整但无效日期设置aria-invalid。
 
-### 9. 每次 render 调用 IMask(el)
+calendar-policy.mjs保持UTC日历回读：先拒非四位年/越界月日/0000，再用setUTCFullYear并回读年月日，避免Date.UTC把0–99年映射成1900年代。它只验证日历日，不提供时间、偏移或跨时区语义。
 
-重复监听。React 用 `IMaskInput`。若自己写 effect，cleanup 必须 `destroy()`。
+旁边中文备注不套数字mask。compositionstart/end只显示组合状态，blur清观察状态，没有提交快捷键；本例不会过滤候选文字。浏览器合成CompositionEvent只能验证应用事件协议，不等于操作系统中文候选窗口、移动设备键盘或剪贴板已验收。
 
-### 10. 把电话写进 innerHTML 或分析日志
+## 迁移、重置与清理
 
-掩码不防 XSS，也不该把 PII 放进 URL。React 文本节点即可。
+复制五个sourceFiles：example.tsx、calendar-policy.mjs、calendar-policy.d.mts、styles.css、demo.tsx（仅重导出）。保留声明让TS能导入mjs；样式局部border-box、最大宽度、换行和焦点不依赖Lab全局reset，没有Lab alias或远程资源。
 
-## 组合
+mask字段一律type=text；number/date原生类型的选区接口不适合这条SDK视图路径。inputMode只是键盘提示，不是校验或设备运行证明。inputRef用于真实input，组件ref是包装器/内部mask入口，不能混用。
 
-**React Hook Form。** 用 `Controller`，不要对同一 input 再 `register`。下面是形状，本 Demo 没有装 RHF。
+实际react-imask7.6.1卸载调用destroyMask→InputMask.destroy，解绑自己的八种直接view DOM监听并移除el引用。它没有主动取消已排的10ms光标任务；任务晚到由if(!this.el)return跳过。内部_listeners是对象，length=0也不等于删除accept/complete各键；本例只存值快照，不长期持有maskRef，不承诺卸载立即清空所有内部订阅/任务。应用无自建timer/全局listener，只卸载自己的子树，不全局删事件或伪造输入清理。真实光标/撤销/粘贴、完整资源普查与SSR hydration仍需对应环境验证。
 
-```tsx
-<IMaskInput
-  inputRef={field.ref}
-  value={field.value ?? ''}
-  unmask
-  mask="0000-0000"
-  onAccept={value => field.onChange(String(value ?? ''))}
-  onBlur={field.onBlur}
-/>
-```
+Pattern和Number是不同模型；不要依赖updateOptions在原实例硬换类型。这里通过场景key更换实例，reset才增加输入generation；中间按键保持节点。服务端回填、RHF、async请求取消、持久化都未接入，需要独立定义所有权和冲突规则，不能从这三个演示推断已实现。
 
-`inputRef` 指向真实 input。组件 `ref` 可能是 mask 实例。`field.value` 必须和 `unmask` 同一形态。服务端 422 用 `setError`，不要改 mask 来假装通过。
+## 官方资料与验证边界
 
-**decimal.js 与 Query。** IMask 管外观，decimal 管运算，Query 管服务端副本。服务器回填不要在用户正在输入时覆盖 DOM。只在切换记录或明确重置时写回。
+匹配7.6.1的React包README与核心包README分别保留原始快照；固定repo/commit/path/语言/日期/摘要、中文候选检查及完整官网响应证据见official/source-evidence.json与library.json。中文教学在本页，不翻译覆盖原文；未在真实Lab origin确认的官网只记unknown，若响应明确跨源限制则blocked。
 
-**date-fns。** `validCalendarDay` 只回答公历这一天是否存在。时区和时刻用 C14，不要让日期掩码输出一个无偏移的 `Date`。
+原模型SDK3与新增日期模型对照、calendar纯策略分开记录；它们都不证明真实React输入。完整三个真实浏览器提案由主控匹配候选执行，无SDK mock；正式verification保持NOT_RUN。具体命令、来源与六项状态见local-validation.md。
 
-## 生产清单
-
-- 业务值只来自 `onAccept`。
-- 重置才换 key。
-- 金额不进 JS 浮点账本。
-- 日期掩码之后做公历检查。
-- label 关联 input。错误用 `aria-invalid` 和 `aria-describedby`。状态用 `role="status"`。Lab 的日期语义行已经用了 status。
-- 不要在 render 里读 `window` 创建 mask。SSR 只输出 HTML，客户端再挂上。本 Demo 没有水合证据。
-- 粘贴、中间插入、撤销、自动填充要在目标浏览器里看。v7.3 的 IME 说明不能代替 iOS 中文输入验收。
-
-## 升级
-
-7.6.1 与研究笔记一致。跨 mask 类型仍不要 `updateOptions` 硬切。升级后回归：unmask 形态、小数位、`2026-02-30`、重置是否丢焦点、中文备注是否仍是普通 input。
-
-## 练习
-
-1. 在编号中间插入一位，光标留在插入点附近，而不是跳到末尾。
-2. `2026-02-30` 与 `2024-02-29` 的语义行相反。
-3. 金额 `1.20` 与 `1.2` 的存储字符串写进测试，不依赖视觉上的补零。
-4. 把中文备注错套成数字 mask，确认候选被破坏；然后改回普通 input。
-
-## 官方链接
-
-- https://imask.js.org/guide.html
-- https://imask.js.org/api/modules/react_imask.html
-- https://github.com/uNmAnNeR/imaskjs
-
-## 证据
-
-`calendar-policy` 单测不创建 IMask。sdk 要真实 import `react-imask@7.6.1` 并在 `docs/library-lab/evidence/runs/` 留下收据。光标和 IME 属于 browser，没有收据就保持 NOT_RUN。
-
-GitHub Actions 41779873259 是仓库级安装、typecheck、build、52 个 SDK 文件（153 项测试）和 45 项 Playwright 的结果，不是 C06 的条目 PASS。不要改 `verification.json`。
+窄屏迁移保留容器的overflow-wrap:anywhere：连续API名称也必须可断行，不能用隐藏溢出来截掉说明。

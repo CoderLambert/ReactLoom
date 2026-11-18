@@ -1,18 +1,18 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "真实@rive-app/react-webgl2 useRive调用已写；包/WASM未在本轮安装或执行。"
+    "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B05.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
   },
   "build": {
     "status": "NOT_RUN",
-    "note": "根 pnpm-lock.yaml 已包含 Library Lab importer，声明的包可以被冻结安装解析。Actions run 41779873259 的仓库级 typecheck/build 不是本条目的 evidence/runs 收据，所以这里是 NOT_RUN，不是 PASS。"
+    "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B05.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "需验证官方CDN可访问、play/pause、IntersectionObserver、StrictMode卸载和WebGL上下文。"
+    "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B05.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
   },
   "assets": {
     "status": "BLOCKED",
-    "note": "官方演示 .riv 不打包，需要浏览器可连接 https://cdn.rive.app/animations/vehicles.riv；自有资产授权尚未提供。"
+    "note": "未提供获准的离线/可再分发.riv。当前仅保留官方文档的远程vehicles.riv+bumpy引用，未复制二进制；实际在线加载仍需浏览器验证CDN/WASM网络，不能将离线阻塞伪写为已解决。"
   }
 }

@@ -1,0 +1,22 @@
+{
+  "url": "https://orval.dev",
+  "status": 403,
+  "headers": {
+    "Date": "Tue, 17 Nov 2026 18:52:57 GMT",
+    "Content-Type": "text/plain; charset=UTF-8",
+    "Content-Length": "17",
+    "Connection": "close",
+    "Cache-Control": "private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0",
+    "Expires": "Thu, 01 Jan 1970 00:00:01 GMT",
+    "Referrer-Policy": "same-origin",
+    "Server-Timing": "cfEdge;dur=16,cfOrigin;dur=0",
+    "X-Frame-Options": "SAMEORIGIN",
+    "Speculation-Rules": "\"/cdn-cgi/speculation\"",
+    "Report-To": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=WxBao%2FKSZIkHoX83Rnq%2FGB4XcifYgT3JSgJ%2Fs5VtKBurrnUqXSz3bPS18WO5LJT362VsCVphcrLxCjkKz0DZmcMipvlWnDxoaJu2RnLHBRi6dGUXXmPWFx9AXaY%3D\"}]}",
+    "Nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+    "Server": "cloudflare",
+    "CF-RAY": "a5c0ef7caa237010-CDG",
+    "alt-svc": "h3=\":443\"; ma=86400"
+  },
+  "checkedAt": "2026-11-17T18:52:57.244149+00:00"
+}

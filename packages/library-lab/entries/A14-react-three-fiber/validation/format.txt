@@ -1,0 +1,35 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ["pnpm", "exec", "--", "biome", "check", "--write", "entries/A14-react-three-fiber/examples", "entries/A14-react-three-fiber/tests", "entries/A14-react-three-fiber/library.json", "entries/A14-react-three-fiber/verification.json", "entries/A14-react-three-fiber/official/source-evidence.json", "entries/A14-react-three-fiber/validation/baseline.json"]
+startedAt: 2026-11-10T12:05:23.761163+00:00
+finishedAt: 2026-11-10T12:05:23.975442+00:00
+exitCode: 1
+
+STDOUT
+Checked 12 files in 7ms. Fixed 10 files.
+Found 1 error.
+
+STDERR
+entries/A14-react-three-fiber/examples/scene.tsx:92:5 lint/a11y/noStaticElementInteractions ━━━━━━━━━━
+
+  × Unexpected event handler on static element.
+  
+     90 │   }, [accessRef, generation, get])
+     91 │   return (
+   > 92 │     <mesh
+        │     ^^^^^
+   > 93 │       ref={mesh}
+         ...
+   > 99 │       scale={hover ? 1.1 : 1}
+  > 100 │     >
+        │     ^
+    101 │       {shape === 'box' ? (
+    102 │         <boxGeometry args={[1.7, 1.7, 1.7]} />
+  
+  i Static elements should not be interactive. To add interactivity such as a mouse or key event listener to a static element, give the element an appropriate role value.
+  
+
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while applying fixes.
+  
+

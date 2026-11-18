@@ -1,46 +1,13 @@
-# F02 react-dropzone — 工程手册
+# F02 react-dropzone 工程复用
 
-## 适用
+20.1.4/MIT实装与固定LICENSE核对，React>=18。拖放/选择/accept-size-count UX，非上传/格式安全/病毒扫描。已有ReactTSX `pnpm add react-dropzone@20.1.4`，复制example.tsx、preview.mjs/.d.mts、preview-session.mjs/.d.mts；demo可省。Bundler、Blob.arrayBuffer/TextDecoder，无Provider/env/CSS/网络/账号。
 
-拖放和按钮选择，并在浏览器里按类型、大小、个数拒绝。不负责上传、分片或病毒扫描。CSV 内容交给 F03。
+保留getRootProps/getInputProps完整展开，附加属性走getter。noClick:true仅禁根鼠标，默认根Enter/Space仍打开（noKeyboard:false）；外置open按钮无嵌套冒泡双开。useFsAccessApi:false走input。FileDialogOpen是请求，Cancel传统检测有浏览器启发限制，不是可靠所有平台cancel证据。
 
-## 版本
+basic1×256KiB选择/拒绝codes；business首文件受限预览；advanced2×1KiB与迟到读取。接受列表当前快照id单调唯一，同名同size无key碰撞，不表示持久ID/去重。声明MIME/扩展名非服务端内容安全。
 
-`react-dropzone@20.1.4`，MIT。使用 `useDropzone`。`useFsAccessApi` 固定 false。
+preview先slice8192 bytes再arrayBuffer；UTF8 stream decode不flush丢不完整尾序列，内部坏字节可能替换。显示≤1600UTF16码元，末尾高代理项去掉，不称1600码点。只React文本，不解析CSV/HTML/公式，无file.path/objectURL。
 
-## 迁移
+preview-session新read代次与drop/clear/level/unmount invalidate，晚结果/晚错误不能写；不取消已经开始的arrayBuffer。key=level换会话，Hook清自己的事件处理；无全局资源清理。Nodepolicy不能SDK，真实chooser/drag/keyboard与拒绝需browser。官方原文/header见official，formalNOT_RUN至匹配receipt。
 
-带走 `examples/example.tsx`、`examples/preview.mjs` 和 `.d.mts`。保留 `noClick: true`，对话框只从按钮 `open()`。`accept` 保持 text/plain+.txt 与 text/csv+.csv。basic 与 business 是 1 个文件、256 KiB；advanced 是 2 个、1 KiB。
-
-上传时用应用的 API client，不要在 `onDrop` 里直接 `fetch` 用户文件。
-
-## 不可删的清理
-
-选择、清空、换 level、卸载都要增加 generation。预览 Promise 只有代号仍匹配才能写入。预览必须 `slice(0, 8192)` 再截到 1600 字符。不要改成整文件 `text()`。
-
-## 反例
-
-- 把 `onDrop` 当成上传成功。
-- 不展开 `getRootProps` / `getInputProps`。
-- 根可点击又在内部按钮调用 `open()`。
-- 只信扩展名或 `file.type`。
-- 记录 `file.path`。
-- 后完成的读取覆盖新文件。
-- 打开 File System Access 又不处理权限。
-- 为预览创建 Object URL 却不 revoke。
-
-## 测试断言
-
-- 非法 size 或缺少 `slice` 的输入被 `readLocalTextPreview` 拒绝。
-- 只解码前 8 KiB，可见字符不超过 1600。
-- 拒绝列表展示 `errors[].code`，接受列表不包含被拒文件。
-- 换 level 后列表和预览为空。
-- `preview.test.mjs` 不 import `react-dropzone`。
-
-## 真实限制
-
-页面不发网络请求。256 KiB 和 1 KiB 是教学限额，不是库的上限。同名同大小的 key 会冲突。拖放和键盘要在浏览器里看，策略测试看不见。
-
-## 证据
-
-没有收据不要写 PASS。仓库级 Actions 41779873259 不是 F02 的 sdk 或 browser 收据。
+20.1.4数量限制语义：先做逐文件类型/大小/validator检查，再保留前maxFiles个accepted，其余给too-many-files；advanced输入3个合法文件实际接受前2个并拒绝第3个，不得套用旧版整批拒绝假设。主控真实浏览器与实装dist/index.js627-635已核对。

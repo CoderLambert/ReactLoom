@@ -1,0 +1,55 @@
+Skipped 2 suggested fixes.
+If you wish to apply the suggested (unsafe) fixes, use the command biome check --write --unsafe
+
+Checked 10 files in 11ms. Fixed 9 files.
+Found 2 errors.
+entries/B18-cmdk/examples/example.tsx:255:7 lint/a11y/useAriaPropsSupportedByRole ━━━━━━━━━━━━━━━━━━
+
+  × The ARIA attribute 'aria-label' is not supported by this element.
+  
+    253 │         当前动作：{lastAction}
+    254 │       </p>
+  > 255 │       <div className="rl-cmdk-article" aria-label="本地文章操作结果" data-testid="b18-article">
+        │       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    256 │         <p>新闻文章：前端工程资讯（本地fixture）</p>
+    257 │         <p>
+  
+  i Ensure that ARIA attributes are valid for the role of the element.
+  
+
+entries/B18-cmdk/examples/example.tsx:84:3 lint/correctness/useExhaustiveDependencies  FIXABLE  ━━━━━━━━━━
+
+  × This hook specifies more dependencies than necessary: level.
+  
+    82 │   const visibleActions = ACTIONS.filter((action) => level !== 'basic' || action.group === '阅读')
+    83 │ 
+  > 84 │   useEffect(() => {
+       │   ^^^^^^^^^
+    85 │     setArticle(INITIAL_ARTICLE)
+    86 │     setQuery('')
+  
+  i Outer scope values aren't valid dependencies because mutating them doesn't re-render the component.
+  
+    89 │     ime.current.clear()
+    90 │     returnFocus.current = null
+  > 91 │   }, [level])
+       │       ^^^^^
+    92 │ 
+    93 │   const openPalette = useCallback(() => {
+  
+  i React relies on hook dependencies to determine when to re-compute Effects.
+    Specifying more dependencies than required can lead to unnecessary re-rendering
+    and degraded performance.
+  
+  i Unsafe fix: Remove the extra dependencies from the list.
+  
+    91 │ ··},·[level])
+       │       -----  
+
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while applying fixes.
+  
+
+
+exitCode=1

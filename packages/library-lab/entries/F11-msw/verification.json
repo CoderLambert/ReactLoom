@@ -1,22 +1,22 @@
 {
   "source": {
     "status": "NOT_RUN",
-    "note": "后续改动新增真实browser-worker启动前的受限同源Worker脚本响应预检；隔离Node纯策略测试5 PASS。没导入msw官方SDK，不计SDK/浏览器通过。"
+    "note": "本轮源码/README/metadata定向复核见local-validation；源码存在与纯策略结果不升级正式source或SDK收据。"
   },
   "sdk": {
     "status": "NOT_RUN",
-    "note": "根 pnpm-lock.yaml 已包含 Library Lab importer，声明的包可以被冻结安装解析。Actions run 41779873259 的仓库级 typecheck/build 不是本条目的 evidence/runs 收据，所以这里是 NOT_RUN，不是 PASS。"
+    "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/F11.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
   },
   "build": {
     "status": "NOT_RUN",
-    "note": "根 pnpm-lock.yaml 已包含 Library Lab importer，声明的包可以被冻结安装解析。Actions run 41779873259 的仓库级 typecheck/build 不是本条目的 evidence/runs 收据，所以这里是 NOT_RUN，不是 PASS。"
+    "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/F11.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "隔离 runner 已在 127.0.0.1:4320，按会话 scope 注册。Actions run 41779873259 的 @F11 不是 evidence/runs 收据，所以浏览器状态是 NOT_RUN。"
+    "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/F11.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
   },
   "security": {
     "status": "NOT_RUN",
-    "note": "校验脚本路径、重定向、响应MIME、实际响应大小和SPA fallback的纯策略5 PASS；跨标签scope、脚本授权、CSP、MSW真实SW启动仍NOT_RUN。"
+    "note": "局部注册/预检/会话门策略15项结果见local-validation；不代表真实Worker控制、CSP、双会话或清理ACK已通过浏览器。"
   }
 }

@@ -1,0 +1,3 @@
+Actual replacement18.0.1/Apache2/React18-19 sync beforeStart + deferred start, public exports and absent legacy direct dependency captured
+
+exitCode=0

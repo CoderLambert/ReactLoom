@@ -1,0 +1,546 @@
+{
+  "repository": "colinhacks/zod",
+  "commit": "59bbc03e10c636b9eb3c393dfeb552819774ec21",
+  "path": "packages/zod/README.md",
+  "version": "4.6.5",
+  "language": "en",
+  "syncedAt": "2026-11-10T15:13:48.848769+00:00",
+  "readmeCandidates": [
+    "README.md",
+    "packages/bench/typia-case/README.md",
+    "packages/docs-v3/README_KO.md",
+    "packages/docs-v3/README_ZH.md",
+    "packages/docs/README.md",
+    "packages/mini/README.md",
+    "packages/resolution/README.md",
+    "packages/tsc/README.md",
+    "packages/zod/README.md"
+  ],
+  "treeTruncated": false,
+  "commitBasis": "npm omitted gitHead; git ls-remote refs/tags/v4.6.5 resolved this immutable SHA",
+  "npm": {
+    "bugs": {
+      "url": "https://github.com/colinhacks/zod/issues"
+    },
+    "dist": {
+      "shasum": "e3af3edbdc260239c52f73caad05dbbffe6e82cd",
+      "tarball": "https://registry.npmjs.org/zod/-/zod-4.6.5.tgz",
+      "fileCount": 840,
+      "integrity": "sha512-v5l/aFXZQeai4awLbOpSoHecE9UiMrnfx75tEXLjNonXVARxQ5mOeipTjROUchszUNCqnE+hqAMujRsRHsut2Q==",
+      "signatures": [
+        {
+          "sig": "MEUCIDtkjZOq6lmdtsdqBESzHORjYxE3jnbtCMlc6fp5KcXBAiEAx7qf7EGotCL3tQfTVb+gukRlzOmeGDbJR+8DrkwN+Vs=",
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+        },
+        {
+          "sig": "MEQCIBNNqEXGwMQtbIAF5A2Z8IDOhQQVSkHwQAkmsgywNJSCAiAfbEx/zArqNnn/f4OQedpGwu17tlhIWsBJ1+yBFjssqQ==",
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+        }
+      ],
+      "attestations": {
+        "url": "https://registry.npmjs.org/-/npm/v1/attestations/zod@4.6.5",
+        "provenance": {
+          "predicateType": "https://slsa.dev/provenance/v1"
+        }
+      },
+      "unpackedSize": 6140311
+    },
+    "llms": "https://zod.dev/llms.txt",
+    "main": "./index.cjs",
+    "name": "zod",
+    "type": "module",
+    "zshy": {
+      "exports": {
+        ".": "./src/index.ts",
+        "./v3": "./src/v3/index.ts",
+        "./v4": "./src/v4/index.ts",
+        "./mini": "./src/mini/index.ts",
+        "./compile": "./src/compile.ts",
+        "./locales": "./src/locales/index.ts",
+        "./v4-mini": "./src/v4-mini/index.ts",
+        "./v4/core": "./src/v4/core/index.ts",
+        "./v4/mini": "./src/v4/mini/index.ts",
+        "./v4/locales": "./src/v4/locales/index.ts",
+        "./package.json": "./package.json",
+        "./v4/locales/*": "./src/v4/locales/*"
+      },
+      "conditions": {
+        "@zod/source": "src"
+      },
+      "sealCjsExports": true
+    },
+    "types": "./index.d.cts",
+    "author": "Colin McDonnell <zod@colinhacks.com>",
+    "module": "./index.js",
+    "exports": {
+      ".": {
+        "types": "./index.d.cts",
+        "import": "./index.js",
+        "require": "./index.cjs",
+        "@zod/source": "./src/index.ts"
+      },
+      "./v3": {
+        "types": "./v3/index.d.cts",
+        "import": "./v3/index.js",
+        "require": "./v3/index.cjs",
+        "@zod/source": "./src/v3/index.ts"
+      },
+      "./v4": {
+        "types": "./v4/index.d.cts",
+        "import": "./v4/index.js",
+        "require": "./v4/index.cjs",
+        "@zod/source": "./src/v4/index.ts"
+      },
+      "./mini": {
+        "types": "./mini/index.d.cts",
+        "import": "./mini/index.js",
+        "require": "./mini/index.cjs",
+        "@zod/source": "./src/mini/index.ts"
+      },
+      "./compile": {
+        "types": "./compile.d.cts",
+        "import": "./compile.js",
+        "require": "./compile.cjs",
+        "@zod/source": "./src/compile.ts"
+      },
+      "./locales": {
+        "types": "./locales/index.d.cts",
+        "import": "./locales/index.js",
+        "require": "./locales/index.cjs",
+        "@zod/source": "./src/locales/index.ts"
+      },
+      "./v4-mini": {
+        "types": "./v4-mini/index.d.cts",
+        "import": "./v4-mini/index.js",
+        "require": "./v4-mini/index.cjs",
+        "@zod/source": "./src/v4-mini/index.ts"
+      },
+      "./v4/core": {
+        "types": "./v4/core/index.d.cts",
+        "import": "./v4/core/index.js",
+        "require": "./v4/core/index.cjs",
+        "@zod/source": "./src/v4/core/index.ts"
+      },
+      "./v4/mini": {
+        "types": "./v4/mini/index.d.cts",
+        "import": "./v4/mini/index.js",
+        "require": "./v4/mini/index.cjs",
+        "@zod/source": "./src/v4/mini/index.ts"
+      },
+      "./v4/locales": {
+        "types": "./v4/locales/index.d.cts",
+        "import": "./v4/locales/index.js",
+        "require": "./v4/locales/index.cjs",
+        "@zod/source": "./src/v4/locales/index.ts"
+      },
+      "./package.json": "./package.json",
+      "./v4/locales/*": {
+        "types": "./v4/locales/*",
+        "import": "./v4/locales/*",
+        "require": "./v4/locales/*",
+        "@zod/source": "./src/v4/locales/*"
+      }
+    },
+    "funding": "https://github.com/sponsors/colinhacks",
+    "license": "MIT",
+    "scripts": {
+      "test": "nub exec --node vitest run",
+      "build": "nub exec --node zshy --project tsconfig.build.json",
+      "clean": "git clean -xdf . -e node_modules",
+      "postbuild": "nub ../../scripts/write-stub-package-jsons.ts && nub exec --node biome check --write .",
+      "test:watch": "nub exec --node vitest",
+      "prepublishOnly": "nub ../../scripts/check-versions.ts"
+    },
+    "support": {
+      "backing": {
+        "npm-funding": true
+      }
+    },
+    "_npmUser": {
+      "name": "GitHub Actions",
+      "email": "npm-oidc-no-reply@github.com",
+      "trustedPublisher": {
+        "id": "github",
+        "oidcConfigId": "oidc:27618225-ea3e-490f-a88f-ee02eafa1ade"
+      }
+    },
+    "homepage": "https://zod.dev",
+    "keywords": [
+      "typescript",
+      "schema",
+      "validation",
+      "type",
+      "inference"
+    ],
+    "llmsFull": "https://zod.dev/llms-full.txt",
+    "mcpServer": "https://mcp.inkeep.com/zod/mcp",
+    "repository": {
+      "url": "git+https://github.com/colinhacks/zod.git",
+      "type": "git"
+    },
+    "description": "TypeScript-first schema declaration and validation library with static type inference",
+    "directories": {},
+    "maintainers": [
+      {
+        "name": "colinhacks",
+        "email": "colinmcd94@gmail.com"
+      }
+    ],
+    "sideEffects": [
+      "./compile.js",
+      "./compile.cjs",
+      "./src/compile.ts"
+    ],
+    "_hasShrinkwrap": false,
+    "_npmOperationalInternal": {
+      "tmp": "tmp/zod_4.6.5_1789341914484_0.5990650428548274",
+      "host": "s3://npm-registry-packages-npm-production"
+    },
+    "_id": "zod@4.6.5",
+    "version": "4.6.5"
+  },
+  "package": {
+    "name": "zod",
+    "version": "4.6.5",
+    "type": "module",
+    "license": "MIT",
+    "author": "Colin McDonnell <zod@colinhacks.com>",
+    "description": "TypeScript-first schema declaration and validation library with static type inference",
+    "homepage": "https://zod.dev",
+    "llms": "https://zod.dev/llms.txt",
+    "llmsFull": "https://zod.dev/llms-full.txt",
+    "mcpServer": "https://mcp.inkeep.com/zod/mcp",
+    "funding": "https://github.com/sponsors/colinhacks",
+    "sideEffects": [
+      "./compile.js",
+      "./compile.cjs",
+      "./src/compile.ts"
+    ],
+    "files": [
+      "src",
+      "**/*.js",
+      "**/*.mjs",
+      "**/*.cjs",
+      "**/*.d.ts",
+      "**/*.d.mts",
+      "**/*.d.cts",
+      "**/package.json"
+    ],
+    "keywords": [
+      "typescript",
+      "schema",
+      "validation",
+      "type",
+      "inference"
+    ],
+    "main": "./index.cjs",
+    "types": "./index.d.cts",
+    "module": "./index.js",
+    "zshy": {
+      "exports": {
+        "./package.json": "./package.json",
+        ".": "./src/index.ts",
+        "./mini": "./src/mini/index.ts",
+        "./compile": "./src/compile.ts",
+        "./locales": "./src/locales/index.ts",
+        "./v3": "./src/v3/index.ts",
+        "./v4": "./src/v4/index.ts",
+        "./v4-mini": "./src/v4-mini/index.ts",
+        "./v4/mini": "./src/v4/mini/index.ts",
+        "./v4/core": "./src/v4/core/index.ts",
+        "./v4/locales": "./src/v4/locales/index.ts",
+        "./v4/locales/*": "./src/v4/locales/*"
+      },
+      "conditions": {
+        "@zod/source": "src"
+      },
+      "sealCjsExports": true
+    },
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "@zod/source": "./src/index.ts",
+        "types": "./index.d.cts",
+        "import": "./index.js",
+        "require": "./index.cjs"
+      },
+      "./mini": {
+        "@zod/source": "./src/mini/index.ts",
+        "types": "./mini/index.d.cts",
+        "import": "./mini/index.js",
+        "require": "./mini/index.cjs"
+      },
+      "./compile": {
+        "@zod/source": "./src/compile.ts",
+        "types": "./compile.d.cts",
+        "import": "./compile.js",
+        "require": "./compile.cjs"
+      },
+      "./locales": {
+        "@zod/source": "./src/locales/index.ts",
+        "types": "./locales/index.d.cts",
+        "import": "./locales/index.js",
+        "require": "./locales/index.cjs"
+      },
+      "./v3": {
+        "@zod/source": "./src/v3/index.ts",
+        "types": "./v3/index.d.cts",
+        "import": "./v3/index.js",
+        "require": "./v3/index.cjs"
+      },
+      "./v4": {
+        "@zod/source": "./src/v4/index.ts",
+        "types": "./v4/index.d.cts",
+        "import": "./v4/index.js",
+        "require": "./v4/index.cjs"
+      },
+      "./v4-mini": {
+        "@zod/source": "./src/v4-mini/index.ts",
+        "types": "./v4-mini/index.d.cts",
+        "import": "./v4-mini/index.js",
+        "require": "./v4-mini/index.cjs"
+      },
+      "./v4/mini": {
+        "@zod/source": "./src/v4/mini/index.ts",
+        "types": "./v4/mini/index.d.cts",
+        "import": "./v4/mini/index.js",
+        "require": "./v4/mini/index.cjs"
+      },
+      "./v4/core": {
+        "@zod/source": "./src/v4/core/index.ts",
+        "types": "./v4/core/index.d.cts",
+        "import": "./v4/core/index.js",
+        "require": "./v4/core/index.cjs"
+      },
+      "./v4/locales": {
+        "@zod/source": "./src/v4/locales/index.ts",
+        "types": "./v4/locales/index.d.cts",
+        "import": "./v4/locales/index.js",
+        "require": "./v4/locales/index.cjs"
+      },
+      "./v4/locales/*": {
+        "@zod/source": "./src/v4/locales/*",
+        "types": "./v4/locales/*",
+        "import": "./v4/locales/*",
+        "require": "./v4/locales/*"
+      }
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/colinhacks/zod.git"
+    },
+    "bugs": {
+      "url": "https://github.com/colinhacks/zod/issues"
+    },
+    "support": {
+      "backing": {
+        "npm-funding": true
+      }
+    },
+    "scripts": {
+      "clean": "git clean -xdf . -e node_modules",
+      "build": "nub exec --node zshy --project tsconfig.build.json",
+      "postbuild": "nub ../../scripts/write-stub-package-jsons.ts && nub exec --node biome check --write .",
+      "test:watch": "nub exec --node vitest",
+      "test": "nub exec --node vitest run",
+      "prepublishOnly": "nub ../../scripts/check-versions.ts"
+    }
+  },
+  "requests": [
+    {
+      "url": "https://registry.npmjs.org/zod/4.6.5",
+      "finalUrl": "https://registry.npmjs.org/zod/4.6.5",
+      "status": 200,
+      "headers": {
+        "Date": "Tue, 10 Nov 2026 15:13:39 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "4352",
+        "Connection": "close",
+        "CF-Ray": "a586009cbc6e446c-LAX",
+        "CF-Cache-Status": "DYNAMIC",
+        "Access-Control-Allow-Origin": "*",
+        "Cache-Control": "max-age=300",
+        "Server": "cloudflare",
+        "Vary": "accept-encoding, accept",
+        "set-cookie": "__cf_bm=jKMIkbquBzVxjyeNAqLeMw9XTwRSw8Fpt_lroqwvRGY-1794323619.317394-1.0.1.1-sY1vKoNSaxNiLXc.p5f7Rn3YP8eP95_ceWHDSZdU9pn29dcxjAX4HbiowPD3U61MZcTBU_7.LIj2UDnd_D_t_SMfc4hG.ENDiLFjc2f5NROB_P_FvNSOleRJM4uZRYKV; HttpOnly; SameSite=None; Partitioned; Secure; Path=/; Domain=npmjs.org; Expires=Tue, 10 Nov 2026 15:43:39 GMT"
+      },
+      "bytes": 4352,
+      "sha256": "fe675b61cdd5edc59b65bf2e560d4b3eebd7fb36934329cb323e71f5a0798646"
+    },
+    {
+      "url": "https://api.github.com/repos/colinhacks/zod/git/trees/59bbc03e10c636b9eb3c393dfeb552819774ec21?recursive=1",
+      "finalUrl": "https://api.github.com/repos/colinhacks/zod/git/trees/59bbc03e10c636b9eb3c393dfeb552819774ec21?recursive=1",
+      "status": 200,
+      "headers": {
+        "Date": "Tue, 10 Nov 2026 15:13:41 GMT",
+        "Content-Type": "application/json; charset=utf-8",
+        "Cache-Control": "public, max-age=86400, s-maxage=86400",
+        "Vary": "Accept,Accept-Encoding, Accept, X-Requested-With",
+        "ETag": "W/\"993665f272cf530562f2b24d991ea487a3f482f708cf8c2e0826c025a3c66848\"",
+        "Last-Modified": "Tue, 10 Nov 2026 14:56:55 GMT",
+        "X-GitHub-Media-Type": "github.v3; format=json",
+        "x-github-api-version-selected": "2022-11-28",
+        "Access-Control-Expose-Headers": "ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset, Warning",
+        "Access-Control-Allow-Origin": "*",
+        "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+        "X-Frame-Options": "deny",
+        "X-Content-Type-Options": "nosniff",
+        "X-XSS-Protection": "0",
+        "Referrer-Policy": "origin-when-cross-origin, strict-origin-when-cross-origin",
+        "Content-Security-Policy": "default-src 'none'",
+        "Server": "github.com",
+        "Accept-Ranges": "bytes",
+        "X-RateLimit-Limit": "60",
+        "X-RateLimit-Remaining": "45",
+        "X-RateLimit-Used": "15",
+        "X-RateLimit-Resource": "core",
+        "X-RateLimit-Reset": "1794325090",
+        "Transfer-Encoding": "chunked",
+        "X-GitHub-Request-Id": "D84A:2BD4B6:11CBE16:13327C7:6AF334A4",
+        "x-github-edge-region": "westus3",
+        "connection": "close"
+      },
+      "bytes": 197964,
+      "sha256": "260cb1b5bd752881108b1a11b089cafbde4a7a2497638114b39cc44de63f36a5"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/colinhacks/zod/59bbc03e10c636b9eb3c393dfeb552819774ec21/packages/zod/package.json",
+      "finalUrl": "https://raw.githubusercontent.com/colinhacks/zod/59bbc03e10c636b9eb3c393dfeb552819774ec21/packages/zod/package.json",
+      "status": 200,
+      "headers": {
+        "Connection": "close",
+        "Content-Length": "4142",
+        "Cache-Control": "max-age=300",
+        "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+        "Content-Type": "text/plain; charset=utf-8",
+        "ETag": "\"d03c6cb572002c8879ba7147264b39d941898c0edf55f0362d1bee68e45cc99e\"",
+        "Strict-Transport-Security": "max-age=31536000",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "deny",
+        "X-XSS-Protection": "1; mode=block",
+        "X-GitHub-Request-Id": "7956:2C6F84:3BFD3A:4B578F:6AF334A7",
+        "x-github-edge-region": "westus3",
+        "Accept-Ranges": "bytes",
+        "Date": "Tue, 10 Nov 2026 15:13:44 GMT",
+        "Via": "1.1 varnish",
+        "X-Served-By": "cache-sjc10024-SJC",
+        "X-Cache": "MISS",
+        "X-Cache-Hits": "0",
+        "X-Timer": "S1794323624.140453,VS0,VE193",
+        "Vary": "Authorization,Accept-Encoding",
+        "Access-Control-Allow-Origin": "*",
+        "Cross-Origin-Resource-Policy": "cross-origin",
+        "X-Fastly-Request-ID": "d5980992ccb98dc9f7ad2373f2181b16a5aa91b5",
+        "Expires": "Tue, 10 Nov 2026 15:18:44 GMT",
+        "Source-Age": "0"
+      },
+      "bytes": 4142,
+      "sha256": "a046ed85fa09571dba539fee9ef236152d12dabd1f229b014ec3bd2ebaad9000"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/colinhacks/zod/59bbc03e10c636b9eb3c393dfeb552819774ec21/packages/zod/README.md",
+      "finalUrl": "https://raw.githubusercontent.com/colinhacks/zod/59bbc03e10c636b9eb3c393dfeb552819774ec21/packages/zod/README.md",
+      "status": 200,
+      "headers": {
+        "Connection": "close",
+        "Content-Length": "7304",
+        "Cache-Control": "max-age=300",
+        "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+        "Content-Type": "text/plain; charset=utf-8",
+        "ETag": "\"78bee2d98ca8f34967fc59505f7f15b1304b44a443d6b8df2c070ded30ff941d\"",
+        "Strict-Transport-Security": "max-age=31536000",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "deny",
+        "X-XSS-Protection": "1; mode=block",
+        "X-GitHub-Request-Id": "2776:C507:3CF83A:4C519B:6AF334AA",
+        "x-github-edge-region": "westus3",
+        "Accept-Ranges": "bytes",
+        "Date": "Tue, 10 Nov 2026 15:13:46 GMT",
+        "Via": "1.1 varnish",
+        "X-Served-By": "cache-sjc10060-SJC",
+        "X-Cache": "MISS",
+        "X-Cache-Hits": "0",
+        "X-Timer": "S1794323627.643345,VS0,VE126",
+        "Vary": "Authorization,Accept-Encoding",
+        "Access-Control-Allow-Origin": "*",
+        "Cross-Origin-Resource-Policy": "cross-origin",
+        "X-Fastly-Request-ID": "615206d359cb54fd72426fbba30183a2193b2686",
+        "Expires": "Tue, 10 Nov 2026 15:18:46 GMT",
+        "Source-Age": "0"
+      },
+      "bytes": 7304,
+      "sha256": "b5651740a66d68e8c55c4fdea2df8b00448f99a0433008fef99a54f859024039"
+    },
+    {
+      "url": "https://zod.dev",
+      "finalUrl": "https://zod.dev",
+      "status": 200,
+      "headers": {
+        "Date": "Tue, 10 Nov 2026 15:13:48 GMT",
+        "Content-Type": "text/html; charset=utf-8",
+        "Transfer-Encoding": "chunked",
+        "Connection": "close",
+        "access-control-allow-origin": "*",
+        "Age": "342833",
+        "Cache-Control": "public, max-age=0, must-revalidate",
+        "content-disposition": "inline",
+        "Report-To": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=Cmk1HU%2FD8TTVgQMX8s%2FfW3N50mRMdjLhQsLHvg3RoFGiJ8HR9oZCHCUJf6s4wA1C55ZnxKUNDIgP%2BrIfM%2B8SL%2BiKa4fpUuAF%2FbRExTZxliahGz587YzeA6kF\"}]}",
+        "Nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+        "Server": "cloudflare",
+        "strict-transport-security": "max-age=63072000",
+        "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+        "x-matched-path": "/",
+        "x-nextjs-prerender": "1",
+        "x-nextjs-stale-time": "300",
+        "x-vercel-cache": "HIT",
+        "x-vercel-id": "fra1::b2q9v-1794323628002-832b1380e4a8",
+        "cf-cache-status": "DYNAMIC",
+        "CF-RAY": "a58600d2b8bfd38c-FRA",
+        "alt-svc": "h3=\":443\"; ma=86400"
+      },
+      "bytes": 166314,
+      "sha256": "d74205f5edb15fb57ba6a73e19e5a31508443fa530c427e9d64df61e68b82d7c"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/colinhacks/zod/59bbc03e10c636b9eb3c393dfeb552819774ec21/packages/docs-v3/README_ZH.md",
+      "finalUrl": "https://raw.githubusercontent.com/colinhacks/zod/59bbc03e10c636b9eb3c393dfeb552819774ec21/packages/docs-v3/README_ZH.md",
+      "status": 200,
+      "headers": {
+        "Connection": "close",
+        "Content-Length": "59456",
+        "Cache-Control": "max-age=300",
+        "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+        "Content-Type": "text/plain; charset=utf-8",
+        "ETag": "\"1a021dc543c8122bd2d1fcd4345e8f7d7392d609a6a1bc16d6812d7088ec75f7\"",
+        "Strict-Transport-Security": "max-age=31536000",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "deny",
+        "X-XSS-Protection": "1; mode=block",
+        "X-GitHub-Request-Id": "D1A2:1C58A2:3DABCE:4D1653:6AF33606",
+        "x-github-edge-region": "westus3",
+        "Accept-Ranges": "bytes",
+        "Date": "Tue, 10 Nov 2026 15:19:35 GMT",
+        "Via": "1.1 varnish",
+        "X-Served-By": "cache-pao-kpao1770021-PAO",
+        "X-Cache": "MISS",
+        "X-Cache-Hits": "0",
+        "X-Timer": "S1794323975.251763,VS0,VE530",
+        "Vary": "Authorization,Accept-Encoding",
+        "Access-Control-Allow-Origin": "*",
+        "Cross-Origin-Resource-Policy": "cross-origin",
+        "X-Fastly-Request-ID": "f69813ae7e8551cce871661cc6747d9bdda0d997",
+        "Expires": "Tue, 10 Nov 2026 15:24:35 GMT",
+        "Source-Age": "0"
+      },
+      "bytes": 59456,
+      "sha256": "2239a1314940842794c34c0fec37cc13559516865c6a354dbd6f4e183e3f22c9"
+    }
+  ],
+  "chineseSelection": {
+    "path": "packages/docs-v3/README_ZH.md",
+    "language": "zh-CN",
+    "rejectedForCurrentVersion": true,
+    "reason": "官方中文位于docs-v3，包含Zod 3版本引用和v3文档链接，不能冒充4.6.5 README。当前匹配包目录仅英文。",
+    "sha256": "2239a1314940842794c34c0fec37cc13559516865c6a354dbd6f4e183e3f22c9"
+  }
+}

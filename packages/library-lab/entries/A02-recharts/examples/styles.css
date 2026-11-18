@@ -1,0 +1,58 @@
+.a02-workshop {
+  min-width: 0;
+}
+.a02-workshop .a02-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  min-inline-size: 0;
+  margin-block: 1rem;
+  padding: 0.75rem;
+  border: 1px solid #bdcec0;
+  border-radius: 8px;
+}
+.a02-workshop .a02-controls legend {
+  padding-inline: 0.35rem;
+}
+.a02-workshop .a02-controls label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.a02-workshop .a02-controls input[type="number"] {
+  width: 5rem;
+}
+.a02-workshop .a02-chart {
+  height: 320px;
+  width: 100%;
+  min-width: 0;
+  padding: 10px;
+  background: #f9fcf7;
+  border: 1px solid #dce8df;
+  border-radius: 12px;
+}
+.a02-workshop .a02-table-scroll {
+  overflow-x: auto;
+  margin-top: 1rem;
+}
+.a02-workshop table {
+  width: 100%;
+  font-size: 0.875rem;
+  border-collapse: collapse;
+  text-align: left;
+}
+.a02-workshop caption {
+  text-align: left;
+  padding-block: 0.5rem;
+}
+.a02-workshop th,
+.a02-workshop td {
+  padding: 0.45rem;
+  border-bottom: 1px solid #dce8df;
+  white-space: nowrap;
+}
+.a02-workshop .a02-note {
+  font-size: 0.85rem;
+  color: #536757;
+}

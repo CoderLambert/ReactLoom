@@ -1,11 +1,13 @@
-// For PLATFORM's dedicated scoped iframe only, never the Library Lab SPA.
+// Historical fixed-scope adapter; not imported by the current Lab browser panel.
+// Current unique-session lifecycle is owned by runners/msw/main.mjs.
+// Retained for audit only: the current server intentionally does not serve its fixed script path.
 // stop() disables mocking for THIS client; global unregister would break other tabs.
-import {setupWorker} from 'msw/browser'
-import {createHandlers} from './handlers.mjs'
-import {scenarioEndpoints, BROWSER_RUNNER_SCOPE} from './routes.mjs'
-import {findExactScopeRegistration, assertWorkerRegistration} from './registration-policy.mjs'
-import {createExclusiveSessionGate} from './session-gate.mjs'
-import {preflightScopedWorkerScript} from './worker-script-preflight.mjs'
+import { setupWorker } from 'msw/browser'
+import { createHandlers } from './handlers.mjs'
+import { assertWorkerRegistration, findExactScopeRegistration } from './registration-policy.mjs'
+import { BROWSER_RUNNER_SCOPE, scenarioEndpoints } from './routes.mjs'
+import { createExclusiveSessionGate } from './session-gate.mjs'
+import { preflightScopedWorkerScript } from './worker-script-preflight.mjs'
 
 const sessionGate = createExclusiveSessionGate()
 
@@ -24,14 +26,17 @@ export async function startIsolatedWorker() {
     if (!globalThis.isSecureContext && !['localhost', '127.0.0.1'].includes(location.hostname)) {
       throw new Error('Browser MSW requires HTTPS or local loopback')
     }
-    if (!navigator.serviceWorker?.getRegistrations) throw new Error('Service Worker is not available')
+    if (!navigator.serviceWorker?.getRegistrations)
+      throw new Error('Service Worker is not available')
     if (window.top === window.self || !location.pathname.startsWith(BROWSER_RUNNER_SCOPE)) {
       throw new Error('MSW must start inside the dedicated scoped iframe')
     }
     scopeURL = new URL(BROWSER_RUNNER_SCOPE, location.origin)
     scriptURL = new URL('mockServiceWorker.js', scopeURL)
     const existing = findExactScopeRegistration(
-      await navigator.serviceWorker.getRegistrations(), scopeURL.href)
+      await navigator.serviceWorker.getRegistrations(),
+      scopeURL.href,
+    )
     if (existing) assertWorkerRegistration(existing, scopeURL.href, scriptURL.href)
     // Reject SPA fallbacks, redirected or oversized scripts before asking MSW to register.
     await preflightScopedWorkerScript(scopeURL.href, scriptURL.href)
@@ -49,8 +54,13 @@ export async function startIsolatedWorker() {
     if (!stopTask) {
       stopTask = Promise.resolve()
         .then(() => worker.stop())
-        .then(() => { release() })
-        .catch(error => { stopTask = null; throw error })
+        .then(() => {
+          release()
+        })
+        .catch((error) => {
+          stopTask = null
+          throw error
+        })
     }
     return stopTask
   }
@@ -60,20 +70,25 @@ export async function startIsolatedWorker() {
       onUnhandledFrame: 'error',
       serviceWorker: {
         url: scriptURL.pathname,
-        options: {scope: scopeURL.pathname},
+        options: { scope: scopeURL.pathname },
       },
       quiet: true,
     })
     const registration = findExactScopeRegistration(
-      await navigator.serviceWorker.getRegistrations(), scopeURL.href)
+      await navigator.serviceWorker.getRegistrations(),
+      scopeURL.href,
+    )
     assertWorkerRegistration(registration, scopeURL.href, scriptURL.href)
     if (navigator.serviceWorker.controller?.scriptURL !== scriptURL.href) {
       throw new Error('MSW worker does not control the isolated iframe')
     }
-    const response = await fetch(endpoints.article, {cache: 'no-store'})
+    const response = await fetch(endpoints.article, { cache: 'no-store' })
     const article = await response.json().catch(() => null)
-    if (response.status !== 200 || article?.id !== '42' ||
-        article?.title !== 'ReactLoom engineering note') {
+    if (
+      response.status !== 200 ||
+      article?.id !== '42' ||
+      article?.title !== 'ReactLoom engineering note'
+    ) {
       throw new Error('MSW did not intercept the scoped article request')
     }
     return stop

@@ -4,13 +4,8 @@
   "slug": "react-virtuoso",
   "name": "React Virtuoso",
   "group": "C",
-  "summary": "自动测量变高列表、RSS分段加载与历史消息锚定",
-  "tags": [
-    "虚拟化",
-    "变高行",
-    "RSS",
-    "历史记录"
-  ],
+  "summary": "真实变高虚拟窗口、可取消本地分页与稳定消息锚点",
+  "tags": ["虚拟化", "变高行", "RSS", "历史记录"],
   "contentState": "recreated",
   "packages": [
     {
@@ -20,16 +15,16 @@
   ],
   "references": [
     {
-      "title": "Virtuoso 官方文档",
-      "url": "https://virtuoso.dev/react-virtuoso/"
+      "title": "匹配4.18.19官方原README",
+      "url": "https://github.com/petyosi/react-virtuoso/blob/324f632f2fc745257cc46c28d1cb952eb7c68464/packages/react-virtuoso/README.md"
     },
     {
-      "title": "Virtuoso v4.18.19 发布",
-      "url": "https://github.com/petyosi/react-virtuoso/releases/tag/react-virtuoso%404.18.19"
+      "title": "rangeChanged报告已渲染区间",
+      "url": "https://virtuoso.dev/react-virtuoso/virtuoso/range-change-callback/"
     },
     {
-      "title": "官方许可证",
-      "url": "https://github.com/petyosi/react-virtuoso/blob/main/LICENSE"
+      "title": "官方API",
+      "url": "https://virtuoso.dev/react-virtuoso/api-reference/virtuoso/"
     }
   ],
   "related": [
@@ -47,7 +42,7 @@
   "demos": [
     {
       "demoId": "basic",
-      "title": "一万条虚构文章的可变高度虚拟窗口",
+      "title": "变高列表与已渲染窗口",
       "level": "basic",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
@@ -55,14 +50,15 @@
         "examples/example.tsx",
         "examples/demo.tsx",
         "examples/view-policy.mjs",
-        "examples/view-policy.d.mts"
+        "examples/view-policy.d.mts",
+        "examples/workshop.css"
       ],
       "capabilities": [],
-      "description": "一万条虚构文章的可变高度虚拟窗口"
+      "description": "10,000条同源数据，真实scrollToIndex与rangeChanged；DOM数量由实际浏览器观察"
     },
     {
       "demoId": "business",
-      "title": "RSS 搜索、分段加载与中文输入法",
+      "title": "搜索、分页取消与窗口身份",
       "level": "business",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
@@ -70,14 +66,15 @@
         "examples/example.tsx",
         "examples/demo.tsx",
         "examples/view-policy.mjs",
-        "examples/view-policy.d.mts"
+        "examples/view-policy.d.mts",
+        "examples/workshop.css"
       ],
       "capabilities": [],
-      "description": "RSS 搜索、分段加载与中文输入法"
+      "description": "本地630条筛选、260ms任务门禁、取消/同名搜索重挂窗口和空态恢复"
     },
     {
       "demoId": "advanced",
-      "title": "历史消息前插、展开和底部跟随",
+      "title": "前插锚点、展开重测与底部跟随",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
@@ -85,18 +82,39 @@
         "examples/example.tsx",
         "examples/demo.tsx",
         "examples/view-policy.mjs",
-        "examples/view-policy.d.mts"
+        "examples/view-policy.d.mts",
+        "examples/workshop.css"
       ],
       "capabilities": [],
-      "description": "历史消息前插、展开和底部跟随"
+      "description": "稳定业务ID、firstItemIndex原子前插、真实高度变化、历史位置与主动跳底"
     }
   ],
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
-    "note": "按官方稳定版本与旧研究重新实现；历史测试不算本次运行验收。"
+    "note": "保留原恢复记录和现有三目标真实Virtuoso实现；本轮补可观察取消/窗口身份、变高/锚点说明、正常源码样式和固定官方原文，历史验收不继承。"
   },
   "license": {
     "spdx": "MIT",
     "note": "自有确定性模拟文章数据；无收费资源及外部网络请求"
+  },
+  "official": {
+    "readme": {
+      "repository": "petyosi/react-virtuoso",
+      "commit": "324f632f2fc745257cc46c28d1cb952eb7c68464",
+      "path": "packages/react-virtuoso/README.md",
+      "sourceUrl": "https://github.com/petyosi/react-virtuoso/blob/324f632f2fc745257cc46c28d1cb952eb7c68464/packages/react-virtuoso/README.md",
+      "snapshotPath": "official/readme.md",
+      "version": "4.18.19",
+      "language": "en",
+      "syncedAt": "2026-11-10T15:46:42.048769+00:00",
+      "sha256": "67bcd5ac56f7697428bdeb2bf6ec5eea7ffbb078a16b5979f123411ff6e559df"
+    },
+    "homepage": {
+      "url": "https://virtuoso.dev/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-10T15:48:06.124279+00:00",
+      "reason": "首次TLS握手超时；后续真实GET200完整响应头未提供X-Frame-Options/CSP。没有从Lab origin实际浏览器确认，保持unknown，不将null字段或200推定为允许。"
+    }
   }
 }

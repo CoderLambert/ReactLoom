@@ -1,3 +1,7 @@
-# E11 Streamdown — 目录维护约定
+# E11 维护约定
 
-先读 `library.json`、`guide.md`、`agent.md`、`verification.json` 和上级 `AGENTS.md`。源码直接作为 Demo 和源码面板的唯一来源；不得另行伪造展示代码。修改源码后，旧验证证据应视为过期；未实际运行 SDK 不写 PASS。只修改本库目录，依赖交由 PLATFORM 管理。
+修改前读取上级规则、本条目 library.json、guide.md、agent.md、实际 examples 和 verification.json。运行实现与源码面板共用 examples 原件；新 helper、声明和样式同步列入 sourceFiles。保持 basic/business 两个独立目标：未闭合语法与累计正文、GFM 研究摘要与受控资源。
+
+保留 SUMMARY_ONLY / recreated 的来源事实。同步官方资料时核对 pinned package README，并更新 source-audit.json 与元数据摘要；官网没有浏览器嵌入证据时记 unknown。定向 Node SDK、状态策略、类型、浏览器和正式收据分开记录在 local-validation.md；未生成有效收据时 verification.json 不写 PASS。
+
+计时器按会话清理，默认安全插件链与应用输出策略一并迁移。公共宿主、依赖和生成索引由主控维护，本条目不跨目录写入。

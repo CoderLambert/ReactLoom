@@ -1,0 +1,33 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/node_modules/.f13-consumer.JV3F3u
+Error: Stripping types is currently unsupported for files under node_modules, for "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/node_modules/.f13-consumer.JV3F3u/playwright.config.ts"
+    at stripTypeScriptModuleTypes (node:internal/modules/typescript:155:11)
+    at Object.getFileProtocolModuleFormat [as file:] (node:internal/modules/esm/get_format:206:26)
+    at defaultGetFormat (node:internal/modules/esm/get_format:283:36)
+    at defaultLoadSync (node:internal/modules/esm/load:159:16)
+    at ModuleLoader.#loadAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:809:12)
+    at nextStep (node:internal/modules/customization_hooks:189:26)
+    at load (/home/lambert/.local/share/mise/installs/npm-playwright/1.65.0/node_modules/.mise/playwright@1.65.0/node_modules/playwright/lib/common/index.js:892:12)
+    at nextStep (node:internal/modules/customization_hooks:189:26)
+    at loadWithHooks (node:internal/modules/customization_hooks:374:18)
+    at ModuleLoader.#loadSync (node:internal/modules/esm/loader:832:16)
+    at ModuleLoader.load (node:internal/modules/esm/loader:790:26)
+    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:501:31)
+    at ModuleLoader.#getOrCreateModuleJobAfterResolve (node:internal/modules/esm/loader:567:36)
+    at afterResolve (node:internal/modules/esm/loader:614:52)
+    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:620:12)
+    at node:internal/modules/esm/loader:639:32
+    at TracingChannel.tracePromise (node:diagnostics_channel:582:22)
+    at ModuleLoader.import (node:internal/modules/esm/loader:635:21)
+    at defaultImportModuleDynamicallyForScript (node:internal/modules/esm/utils:229:31)
+    at importModuleDynamicallyCallback (node:internal/modules/esm/utils:275:12)
+    at eval (eval at esmImport (/home/lambert/.local/share/mise/installs/npm-playwright/1.65.0/node_modules/.mise/playwright@1.65.0/node_modules/playwright/lib/common/index.js:1151:29), <anonymous>:1:1)
+    at esmImport (/home/lambert/.local/share/mise/installs/npm-playwright/1.65.0/node_modules/.mise/playwright@1.65.0/node_modules/playwright/lib/common/index.js:1151:29)
+    at requireOrImport (/home/lambert/.local/share/mise/installs/npm-playwright/1.65.0/node_modules/.mise/playwright@1.65.0/node_modules/playwright/lib/common/index.js:1155:18)
+    at loadUserConfig (/home/lambert/.local/share/mise/installs/npm-playwright/1.65.0/node_modules/.mise/playwright@1.65.0/node_modules/playwright/lib/common/index.js:1360:52)
+    at loadConfig (/home/lambert/.local/share/mise/installs/npm-playwright/1.65.0/node_modules/.mise/playwright@1.65.0/node_modules/playwright/lib/common/index.js:1367:28)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at Object.loadConfigFromFile (/home/lambert/.local/share/mise/installs/npm-playwright/1.65.0/node_modules/.mise/playwright@1.65.0/node_modules/playwright/lib/common/index.js:1585:10)
+    at runTests (/home/lambert/.local/share/mise/installs/npm-playwright/1.65.0/node_modules/.mise/playwright@1.65.0/node_modules/playwright/lib/cli/testActions.js:44:18)
+    at _Command.<anonymous> (/home/lambert/.local/share/mise/installs/npm-playwright/1.65.0/node_modules/.mise/playwright@1.65.0/node_modules/playwright/lib/program.js:55:7) {
+  code: 'ERR_UNSUPPORTED_NODE_MODULES_TYPE_STRIPPING'
+}

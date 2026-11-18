@@ -4,14 +4,8 @@
   "slug": "gsap",
   "name": "GSAP",
   "group": "B",
-  "summary": "有时间线、重播、反转与减少动画偏好控制的交互动画",
-  "tags": [
-    "timeline",
-    "动画编排",
-    "reduced-motion",
-    "react",
-    "cleanup"
-  ],
+  "summary": "从Tween缓动映射到Timeline标签/重叠/反向，观察真实样式与减少动态及context局部清理",
+  "tags": ["timeline", "动画编排", "reduced-motion", "react", "cleanup"],
   "contentState": "recreated",
   "packages": [
     {
@@ -48,63 +42,64 @@
   "demos": [
     {
       "demoId": "basic",
-      "title": "基础缓动",
-      "description": "真实 gsap.fromTo 动画两个信息卡片",
+      "title": "Tween的时间比例与缓动映射",
+      "description": "单卡真实fromTo，手动50%比较none与power2.out，区分时间比例与像素位置。",
       "level": "basic",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
-        "examples/example.tsx",
         "examples/demo.tsx",
-        "examples/timeline-policy.ts"
-      ],
-      "capabilities": [
-        "animation",
-        "reduced-motion"
-      ]
-    },
-    {
-      "demoId": "business",
-      "title": "可重播新闻入场",
-      "description": "GSAP timeline 按顺序播放卡片和提示",
-      "level": "business",
-      "executionKind": "react",
-      "entryPoint": "examples/demo.tsx",
-      "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx",
-        "examples/timeline-policy.ts"
+        "examples/motion.ts",
+        "examples/timeline-policy.ts",
+        "examples/workshop.css"
       ],
-      "capabilities": [
-        "animation",
-        "reduced-motion"
-      ]
+      "capabilities": ["animation", "reduced-motion"]
     },
     {
       "demoId": "advanced",
-      "title": "播放控制与降级",
-      "description": "暂停/恢复/反转/重播，respect prefers-reduced-motion并revert",
+      "title": "时间编排、方向与局部所有权",
+      "description": "四卡stagger和detail标签重叠，实际seek/pause/reverse，减少动态/后台门禁与context.revert。",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
-        "examples/example.tsx",
         "examples/demo.tsx",
-        "examples/timeline-policy.ts"
+        "examples/example.tsx",
+        "examples/motion.ts",
+        "examples/timeline-policy.ts",
+        "examples/workshop.css"
       ],
-      "capabilities": [
-        "animation",
-        "reduced-motion"
-      ]
+      "capabilities": ["animation", "reduced-motion"]
     }
   ],
   "license": {
     "name": "GSAP Standard No Charge",
     "url": "https://gsap.com/standard-license",
-    "note": "不是 MIT。使用前须核对软件再分发/嵌入及商业场景的标准授权边界；不包含收费资产。"
+    "note": "安装包声明Standard no charge许可，不是MIT；官方标准许可另有可视化动画搭建产品等限制，具体分发/嵌入使用应按官方条款核对。本例只用核心与包内CSSPlugin，无其他插件或收费资产。"
   },
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
     "note": "基于公开官方API重新编写；未继承历史Demo和测试通过状态。"
+  },
+  "official": {
+    "readme": {
+      "repository": "greensock/GSAP",
+      "commit": "13e2b790546426a1a2e0e9b409f3f8dc6d6611f2",
+      "path": "README.md",
+      "sourceUrl": "https://github.com/greensock/GSAP/blob/13e2b790546426a1a2e0e9b409f3f8dc6d6611f2/README.md",
+      "snapshotPath": "official/readme.md",
+      "language": "en",
+      "version": "3.15.0",
+      "syncedAt": "2026-11-10T12:35:24.683834+00:00",
+      "sha256": "66a79667b0538b19634b5a000a9a3debe588c98d390424e73e5d4de847270828"
+    },
+    "homepage": {
+      "url": "https://gsap.com/",
+      "kind": "website",
+      "status": "blocked",
+      "checkedAt": "2026-11-10T12:35:24.683834+00:00",
+      "reason": "实际GET200完整响应头含X-Frame-Options: sameorigin（另有X-Content-Security-Policy frame-ancestors self），明确限制跨源Lab iframe；未从Lab origin运行，不宣称allowed，保留官方直达。"
+    }
   }
 }

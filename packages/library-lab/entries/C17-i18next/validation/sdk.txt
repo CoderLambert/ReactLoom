@@ -1,0 +1,17 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['node', '--test', 'entries/C17-i18next/tests/sdk.test.mjs']
+startedAt: 2026-11-10T17:43:23.994986+00:00
+exit: 0
+✔ actual shared i18next fixture resolves interpolation, escaping and English plural rules (3.287073ms)
+✔ actual returnDetails identifies the fallback language and explicit default text (0.474712ms)
+✔ actual namespace writes stay within one cloned instance and fixedT pins committed language (0.778926ms)
+✔ actual i18next and the shared serial queue publish only the latest intent (0.689064ms)
+✔ actual owned event unsubscribe removes only its language/store callbacks (1.131865ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 53.564822

@@ -1,0 +1,59 @@
+[WebServer] (node:1734448) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:1734461) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 11 tests using 2 workers
+
+(node:1734519) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1734525) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 e2e/quality-resume-jotai.spec.ts:3:1 › @D11 atom writes update derived values and only the selected story (1.6s)
+  ✓   2 e2e/quality-resume-jotai.spec.ts:16:1 › @D11 keyed session replacement resets A while sibling B keeps its Store values (1.7s)
+  ✓   3 e2e/quality-resume-official-state.spec.ts:8:3 › @D11 pinned official original and honest homepage fallback (1.3s)
+  ✓   4 e2e/quality-resume-official-state.spec.ts:8:3 › @D12 pinned official original and honest homepage fallback (1.8s)
+  ✓   5 e2e/quality-resume-official-state.spec.ts:8:3 › @D13 pinned official original and honest homepage fallback (1.7s)
+  ✓   6 e2e/quality-resume-redux.spec.ts:3:1 › @D12 action updates and independent team stores retain stable-ID read state (3.0s)
+  ✓   7 e2e/quality-resume-redux.spec.ts:25:1 › @D12 latest identity wins and reset clears outstanding timers (4.0s)
+  ✓   8 e2e/quality-resume-redux.spec.ts:41:1 › @D12 switching teams cancels previous team fixture callbacks (2.6s)
+  ✓   9 e2e/quality-resume-rtk-query.spec.ts:3:1 › @D13 shared subscribers reuse the actual query and refetch increments reads (1.6s)
+  ✘  10 e2e/quality-resume-rtk-query.spec.ts:17:1 › @D13 tenant currentData safety and successful invalidation versus 409 (2.3s)
+  ✓  11 e2e/quality-resume-rtk-query.spec.ts:50:1 › @D13 business IME waits for committed search and empty results recover (1.9s)
+
+
+  1) e2e/quality-resume-rtk-query.spec.ts:17:1 › @D13 tenant currentData safety and successful invalidation versus 409 
+
+    Error: locator.selectOption: Error: strict mode violation: getByLabel('租户') resolved to 2 elements:
+        1) <select>…</select> aka getByLabel('学习场景 入门 · 两个订阅共享一次查询业务 · 租户与搜索缓存隔离边界 · 409、取消与定向失效')
+        2) <select>…</select> aka getByLabel('租户 team-ateam-b')
+
+    Call log:
+      - waiting for getByLabel('租户')
+
+
+      23 |   await expect(rows).toContainText('科技日报 — 暂停')
+      24 |   await expect(cache).toContainText('"team-a":2')
+    > 25 |   await page.getByLabel('租户').selectOption('team-b')
+         |                               ^
+      26 |   await expect(rows).not.toContainText('科技日报')
+      27 |   await expect(rows).toContainText('只读受保护频道')
+      28 |   await rows.locator('li').filter({ hasText: '只读受保护频道' }).getByRole('button').click()
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-resume-rtk-query.spec.ts:25:31
+
+    Error Context: test-results/quality-resume-rtk-query---c49c6-ful-invalidation-versus-409/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-resume-rtk-query---c49c6-ful-invalidation-versus-409/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-resume-rtk-query---c49c6-ful-invalidation-versus-409/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    e2e/quality-resume-rtk-query.spec.ts:17:1 › @D13 tenant currentData safety and successful invalidation versus 409 
+  10 passed (12.8s)
+undefined
+/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: playwright test e2e/quality-resume-jotai.spec.ts e2e/quality-resume-redux.spec.ts e2e/quality-resume-rtk-query.spec.ts e2e/quality-resume-official-state.spec.ts --workers=2

@@ -1,0 +1,19 @@
+{
+  "Accept-Ranges": "bytes",
+  "Age": "0",
+  "Cache-Control": "public,max-age=0,must-revalidate",
+  "Cache-Status": "\"Netlify Edge\"; fwd=stale; fwd-status=200; stored",
+  "Content-Length": "36665",
+  "Content-Type": "text/html; charset=UTF-8",
+  "Date": "Tue, 17 Nov 2026 18:51:47 GMT",
+  "Etag": "\"fdc9ebfd9a85736f2fbc38ea9c2d88ad-ssl\"",
+  "Referrer-Policy": "no-referrer",
+  "Server": "Netlify",
+  "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+  "Vary": "Accept-Encoding",
+  "X-Content-Type-Options": "nosniff",
+  "X-Frame-Options": "DENY",
+  "X-Nf-Request-Id": "01M7NDKNDPBK175R1E61SWRQ1F",
+  "X-Xss-Protection": "1; mode=block",
+  "Connection": "close"
+}

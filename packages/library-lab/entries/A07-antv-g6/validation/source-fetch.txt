@@ -1,0 +1,29 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+ARGV: ["python3", "entries/A07-antv-g6/validation/fetch-official.py"]
+START: 2026-11-10T11:41:19.022484+00:00
+END: 2026-11-10T11:41:24.816736+00:00
+EXIT: 0
+STDOUT:
+{
+  "repository": "antvis/G6",
+  "tag": "5.1.1",
+  "commit": "5a5551cea13d021d12c90a87116e3c6092d53210",
+  "browserFromLabOrigin": "NOT_RUN",
+  "readmeCandidates": [
+    "README.md",
+    "README.zh-CN.md"
+  ],
+  "chosenReadme": "README.zh-CN.md",
+  "language": "zh-CN",
+  "reason": "Official simplified Chinese README exists at the matching release commit; preserve the upstream original.",
+  "packageVersion": "5.1.1",
+  "packagePath": "packages/g6/package.json",
+  "homepagePolicyHeaders": {
+    "x-frame-options": null,
+    "content-security-policy": null
+  },
+  "checkedAt": "2026-11-10T11:41:24.810393+00:00"
+}
+README 6017 cf2ef1137aac0a35d0f70f11e2046576e321e0db6996812b9cee58419f5fdb1e
+
+STDERR:

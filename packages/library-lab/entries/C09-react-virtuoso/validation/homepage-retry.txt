@@ -1,0 +1,11 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['python3', 'entries/C09-react-virtuoso/validation/fetch-homepage.py']
+startedAt: 2026-11-10T15:48:06.099989+00:00
+exit: 0
+{
+  "requestIndex": 10,
+  "status": "unknown",
+  "xFrameOptions": null,
+  "contentSecurityPolicy": null,
+  "reason": "已获取完整HTTP头，未实际浏览器确认可嵌入。"
+}

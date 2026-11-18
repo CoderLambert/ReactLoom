@@ -1,0 +1,9 @@
+{
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "utc": "2026-11-10T14:47:52.317695+00:00",
+  "inspection": "Re-read all 13 implementation/test/content/source/proposal files and compare SHA-256; check local Markdown links and scoped git diff",
+  "exitCode": 0,
+  "inputs": 13,
+  "links": 20,
+  "formal": "NOT_RUN"
+}

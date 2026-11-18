@@ -5,14 +5,7 @@
   "name": "Axios",
   "group": "D",
   "summary": "HTTP 实例拦截器、取消、幂等请求重试与 409 失败分支",
-  "tags": [
-    "HTTP",
-    "Axios",
-    "AbortSignal",
-    "拦截器",
-    "取消",
-    "409"
-  ],
+  "tags": ["HTTP", "Axios", "AbortSignal", "拦截器", "取消", "409"],
   "contentState": "recreated",
   "packages": [
     {
@@ -58,11 +51,8 @@
       "level": "basic",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
-      "sourceFiles": [
-        "examples/example.tsx",
-        "examples/demo.tsx"
-      ],
-      "capabilities": [],
+      "sourceFiles": ["examples/example.tsx", "examples/demo.tsx", "examples/fixture-client.ts"],
+      "capabilities": ["timer"],
       "description": "隔离 Axios 实例与拦截器"
     },
     {
@@ -71,11 +61,8 @@
       "level": "business",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
-      "sourceFiles": [
-        "examples/example.tsx",
-        "examples/demo.tsx"
-      ],
-      "capabilities": [],
+      "sourceFiles": ["examples/example.tsx", "examples/demo.tsx", "examples/fixture-client.ts"],
+      "capabilities": ["timer"],
       "description": "租户搜索、IME 与取消旧请求"
     },
     {
@@ -84,11 +71,8 @@
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
-      "sourceFiles": [
-        "examples/example.tsx",
-        "examples/demo.tsx"
-      ],
-      "capabilities": [],
+      "sourceFiles": ["examples/example.tsx", "examples/demo.tsx", "examples/fixture-client.ts"],
+      "capabilities": ["timer"],
       "description": "GET 503 有限重试 / POST 409 冲突"
     }
   ],
@@ -99,5 +83,25 @@
   "license": {
     "spdx": "MIT",
     "note": "示例数据和说明原创，不包含真实生产凭据。"
+  },
+  "official": {
+    "readme": {
+      "repository": "axios/axios",
+      "commit": "84a9f3b9a4f3244b8c8e818f557d64c7b964fb25",
+      "path": "README.md",
+      "sourceUrl": "https://github.com/axios/axios/blob/84a9f3b9a4f3244b8c8e818f557d64c7b964fb25/README.md",
+      "snapshotPath": "official/readme.md",
+      "language": "en",
+      "version": "1.20.0",
+      "syncedAt": "2026-11-17T16:33:04.240244+00:00",
+      "sha256": "97a6e20150ce709291165af55c6fa4eba74f56c63dceb6aa69f1e9b495e52bcf"
+    },
+    "homepage": {
+      "url": "https://axios-http.com/zh/docs/intro",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-17T16:33:04.240244+00:00",
+      "reason": "HTTP 200；未完成Lab origin浏览器嵌入确认，保留unknown与直达入口。 响应依据见official/source-evidence.json。"
+    }
   }
 }

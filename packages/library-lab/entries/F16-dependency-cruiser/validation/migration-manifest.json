@@ -1,0 +1,57 @@
+{
+  "files": [
+    {
+      "path": "examples/result-policy.mjs",
+      "sha256": "42852d99d55b5119f3b72a41744d50da3efe44ff08e98aae347da74452e800ed"
+    },
+    {
+      "path": "examples/run.mjs",
+      "sha256": "deebe4b502f29c09a8f007404e2070fcff67e5a02e0a63054d6ac426cd89ff9b"
+    },
+    {
+      "path": "examples/verify.mjs",
+      "sha256": "d6ff966cac29957ea5b0488e498b08cd407eb020c597259b0db195d6aa37d1ac"
+    },
+    {
+      "path": "examples/cli.mjs",
+      "sha256": "c19a324902563213ef698da2cdc39722dcfb35d11d5d810bf5d890ca54ef1dc0"
+    },
+    {
+      "path": "examples/workspace/config.cjs",
+      "sha256": "4b7b3c924186d1721460de97ff6156696836c12aa638eb9632169b1c83d199e5"
+    },
+    {
+      "path": "examples/workspace/business/src/main.js",
+      "sha256": "214e24ee67a53794cdcb76d2e1625053db16eae1e52697329b17bb3965a83b30"
+    },
+    {
+      "path": "examples/workspace/business/src/domain/summary.js",
+      "sha256": "e93af549e4ebe7600c7aee7f9e8b5142d61a54ff3f2e7f3c8187c73a5ab78e8b"
+    },
+    {
+      "path": "examples/workspace/business/src/ui/badge.js",
+      "sha256": "4d349833f11757320b6b39bafbb18bd3ec91f60604c27971cbc9aa5f4fc66a8e"
+    },
+    {
+      "path": "examples/workspace/basic/src/main.js",
+      "sha256": "8837ac4c5bf0378e23b3b925cecff5d885aaf9398acb26f86133a685de152995"
+    },
+    {
+      "path": "examples/workspace/basic/src/domain/get-article.js",
+      "sha256": "ddf321a5d6c05ca50072c2be2109bc2350098a84eacd07c6afe56f8c857851ed"
+    },
+    {
+      "path": "examples/workspace/basic/src/ui/render-title.js",
+      "sha256": "93523b35689b8f27d630c0d1d932e982a1cc2edad1a084bcaa7e495de8061878"
+    },
+    {
+      "path": "examples/workspace/advanced/src/first.js",
+      "sha256": "40e1e9ab9348a69359de8ae39586e2d1ef1d25f61d3b83110ae1631d097ae111"
+    },
+    {
+      "path": "examples/workspace/advanced/src/second.js",
+      "sha256": "9e7bc261c8b1476cc7ae850f5b67257c4181024f2195c55df343f312964a51d7"
+    }
+  ],
+  "consumer": "import assert from 'node:assert/strict';import {createRequire} from 'node:module';import {executeCruise} from './examples/cli.mjs';const require=createRequire(import.meta.url);const config=require('./examples/workspace/config.cjs');assert.equal(config.forbidden.length,2);assert.throws(()=>executeCruise('outside','json'),/Unsupported/);console.log('13 copied runtime files; installed CLI resolves; own config and fixture whitelist verified; no extra CLI process');\n"
+}

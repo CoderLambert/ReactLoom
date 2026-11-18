@@ -1,0 +1,4 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['pnpm', 'exec', 'tsc', '--ignoreConfig', '--noEmit', '--target', 'es2022', '--module', 'esnext', '--moduleResolution', 'bundler', '--jsx', 'react-jsx', '--strict', '--skipLibCheck', '--esModuleInterop', '--types', 'vite/client,node', 'entries/C13-frappe-gantt/examples/frappe-gantt.d.ts', 'entries/C13-frappe-gantt/examples/demo.tsx']
+startedAt: 2026-11-10T16:14:42.036170+00:00
+exit: 0

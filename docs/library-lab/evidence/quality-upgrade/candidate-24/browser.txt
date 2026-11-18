@@ -1,0 +1,60 @@
+[WebServer] (node:1688098) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:1688119) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 10 tests using 2 workers
+
+(node:1688228) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1688229) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 e2e/quality-resume-axios.spec.ts:3:1 › @D09 unmount clears actual fixture and delayed race timers (1.7s)
+  ✓   3 e2e/quality-resume-axios.spec.ts:91:1 › @D09 custom bounded GET retry and single POST409 (2.0s)
+  ✓   2 e2e/quality-resume-axios.spec.ts:56:1 › @D09 instance headers, tenant boundary, IME, race and cancellation (5.1s)
+  ✓   5 e2e/quality-resume-official-http.spec.ts:8:3 › @D08 pinned official original and honest homepage fallback (1.9s)
+  ✓   6 e2e/quality-resume-official-http.spec.ts:8:3 › @D09 pinned official original and honest homepage fallback (1.9s)
+  ✓   7 e2e/quality-resume-official-http.spec.ts:8:3 › @D10 pinned official original and honest homepage fallback (1.5s)
+  ✓   4 e2e/quality-resume-ky.spec.ts:3:1 › D08 real Ky request, race, IME, cancellation and protocol boundaries @D08 (6.8s)
+  ✘   9 e2e/quality-resume-zustand.spec.ts:23:1 › @D10 controlled v1 migration writes allowlisted version 2 JSON (1.5s)
+  ✓   8 e2e/quality-resume-zustand.spec.ts:3:1 › @D10 actual store tenant and instance isolation, rehydration and unmount (1.9s)
+(node:1689593) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  10 e2e/quality-resume-zustand.spec.ts:34:1 › @D10 basic actions are memory-only across a real page reload (2.8s)
+
+
+  1) e2e/quality-resume-zustand.spec.ts:23:1 › @D10 controlled v1 migration writes allowlisted version 2 JSON 
+
+    Error: locator.click: Error: strict mode violation: getByText('查看实际序列化存储（不含函数和租户身份）') resolved to 2 elements:
+        1) <summary>查看实际序列化存储（不含函数和租户身份）</summary> aka getByText('查看实际序列化存储（不含函数和租户身份）', { exact: true })
+        2) <span>>查看实际序列化存储（不含函数和租户身份）</</span> aka getByText('>查看实际序列化存储（不含函数和租户身份）</')
+
+    Call log:
+      - waiting for getByText('查看实际序列化存储（不含函数和租户身份）')
+
+
+      26 |   await expect(page.getByTestId('zustand-state')).toContainText('"team-a": false')
+      27 |   await expect(page.getByTestId('zustand-state')).toContainText('"view": "grid"')
+    > 28 |   await page.getByText('查看实际序列化存储（不含函数和租户身份）').click()
+         |                                                ^
+      29 |   const storage = page.locator('details pre')
+      30 |   await expect(storage).toContainText('"version":2')
+      31 |   await expect(storage).not.toContainText('"tenant"')
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-resume-zustand.spec.ts:28:48
+
+    Error Context: test-results/quality-resume-zustand--D1-46509--allowlisted-version-2-JSON/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-resume-zustand--D1-46509--allowlisted-version-2-JSON/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-resume-zustand--D1-46509--allowlisted-version-2-JSON/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    e2e/quality-resume-zustand.spec.ts:23:1 › @D10 controlled v1 migration writes allowlisted version 2 JSON 
+  9 passed (16.4s)
+undefined
+/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: playwright test e2e/quality-resume-ky.spec.ts e2e/quality-resume-axios.spec.ts e2e/quality-resume-zustand.spec.ts e2e/quality-resume-official-http.spec.ts --workers=2

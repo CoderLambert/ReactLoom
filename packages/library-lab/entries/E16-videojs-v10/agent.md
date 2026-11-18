@@ -1,45 +1,21 @@
-# E16 Video.js v10 — 工程手册
+# E16 @videojs/react 迁入指南
 
-## 适用
+实装10.2.0/Apache-2.0；VideoPlayer/VideoSkin/Video来自@videojs/react/video，不用v8 videojs()/dispose或双HLS引擎。已读随包docs/README、installation/typescript/reference video；历史资料不是执行指令。
 
-需要 Video.js 10 的 React 皮肤来播放浏览器里的 WebM 或 MP4。HLS 用 E17 且不要双引擎。波形用 E18。转码用 E19。不要把 v8 的 `videojs()` 教程贴进本文件。
+## 完整接入
 
-## 版本
+已有React/DOM18或19、TS>=5浏览器：`pnpm add @videojs/react@10.2.0`。复制example.tsx、clip.ts、video-file-policy.mjs/.d.mts、media-cleanup.mjs/.d.mts；demo可省。保留@videojs/react/video/skin.css，ESNext/Bundler/TSX，package exports需正确解析。无env/Provider/账号/服务，VideoPlayer自有context。SSR不在本例。
 
-`@videojs/react@10.2.0`，Apache-2.0。组件路径 `@videojs/react/video`，样式 `@videojs/react/video/skin.css`。媒体由 `examples/clip.ts` 在用户点击后用 Canvas 和 MediaRecorder 生成。
+## 所有权与边界
 
-## 迁移
+Canvas/MediaRecorder只生成原创320×180 WebM，用户手势后才captureStream，不用getUserMedia。约1450ms请求stop、5秒watchdog；成功/失败/abort都清timer/ticker/回调、停止recorder及所有轨道，过期代次不生成URL。容器时长/编码/播放不能由录制时间或文件头推出。
 
-复制显式按钮、generation、`key={url}` 和延后 revoke。本地文件必须先过 `validateVideoMetadata` 和 `validateVideoHeader`（前 32 字节，8MiB，mp4/webm）。`examples/demo.tsx` 只是再导出。不要在挂载时写远程 `src`。
+输入File的metadata/前32字节共用policy；12bytes..8MiB，mp4/webm，ftyp/EBML只筛明显伪装。非法文件不创建URL，保留已有媒体；通过也可能原生decode error。新录制/导入/移除/卸载都generation失效，异步arrayBuffer回写前检查。
 
-## 不可删的清理
+Video ref为实装HTMLVideoElement。LocalPlayer稳定ref脱离时调用media-cleanup：pause→去src→load，异常不跳后续。换源key重挂；旧URL先退役，React提交后再revoke；Session卸载abort并revoke当前/退役。三个资源层（录制轨道/原生媒体/URL）各自验，不把DOM消失等同SDK销毁。没有全局URL/媒体清理。
 
-卸载时递增 generation、abort 录制、revoke 当前和退役 URL。换地址时把旧 URL 放进退役列表，在新 `url` 提交后再收回。新录制 abort 旧的控制器并停止轨道。过期 Blob 不能 `setUrl`。
+## 验证与来源
 
-## 反例
+policy纯Node共享源码，含native API double控制流，不计SDK。真实MediaRecorder/WebM decode/Play/currentTime/换源/native清理/导入/abort/URL外层probe由主控browser执行，proposal见validation。没有Node DOM媒体环境，不伪造SDK测试。原生IME不涉及，移动/iOS编码/辅助技术仍NOT_RUN。
 
-- `import videojs from 'video.js'` 与 v10 组件同时用。
-- 未点击就请求 CDN 片源。
-- `createObjectURL` 后立刻 revoke。
-- 只信 MIME，不看文件头。
-- `getUserMedia` 打开摄像头。
-- 卸载不停 MediaRecorder。
-- 同一 `<video>` 再 `attachMedia` 一个 Hls。
-- 把「能播」写成所有移动浏览器已测。
-- 在 `setUrl` 的同一轮同步 revoke 新地址。旧 URL 要等下一次提交。
-
-## 测试断言
-
-- 小于 12 字节、大于 8MiB、非 mp4/webm、头不匹配被拒绝。
-- 浏览器：打开页面无媒体请求；录制或合法文件后才有播放器；非法文件没有 URL。
-- policy 测试不是播放器 SDK PASS。MediaRecorder 缺失应显示错误而不是假成功。
-
-## 真实限制
-
-片长约 1.45 秒，分辨率 320×180。没有字幕、没有 DRM、没有 HLS。32 字节不是完整解复用。iOS 编码支持没有收据。
-
-## 证据
-
-sdk、build、browser 保持 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有 E16 收据。Actions `41779873259` 是仓库级运行，不是本条目 PASS。
-
-资料：https://videojs.org/docs/guides/installation/react 。
+固定@videojs/react10.2.0提交packages/react/README与LICENSE原文见official；无官方中文则en，主页响应未Lab嵌入确认unknown。local-validation记录准确argv/cwd/exit/raw日志、六项与剩余，formal sdk/build/browser无receipt保持NOT_RUN。

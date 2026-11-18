@@ -1,0 +1,16 @@
+{
+  "commit": "5017a27db024db6feec85a3e1e19f8d78a485680",
+  "treeTruncated": false,
+  "readmeCandidates": [
+    "packages/remark-cli/readme.md",
+    "packages/remark-parse/readme.md",
+    "packages/remark-stringify/readme.md",
+    "packages/remark/readme.md",
+    "readme.md"
+  ],
+  "selected": "packages/remark/readme.md",
+  "language": "en",
+  "licensePaths": [
+    "license"
+  ]
+}

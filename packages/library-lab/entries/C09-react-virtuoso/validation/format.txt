@@ -1,0 +1,39 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['pnpm', 'exec', 'biome', 'check', '--write', 'entries/C09-react-virtuoso/examples', 'entries/C09-react-virtuoso/tests', 'entries/C09-react-virtuoso/library.json', 'entries/C09-react-virtuoso/verification.json', 'entries/C09-react-virtuoso/official/source-evidence.json', 'entries/C09-react-virtuoso/validation/sdk-source-audit.json', 'entries/C09-react-virtuoso/validation/metadata-check.mjs']
+startedAt: 2026-11-10T15:49:34.047109+00:00
+exit: 1
+Checked 12 files in 14ms. Fixed 8 files.
+Found 2 errors.
+entries/C09-react-virtuoso/examples/view-policy.mjs:7:18 lint/suspicious/noControlCharactersInRegex ━━━━━━━━━━
+
+  × Unexpected control character in a regular expression.
+  
+    5 │     value
+    6 │       .normalize('NFC')
+  > 7 │       .replace(/[\u0000-\u001f\u007f]/gu, '')
+      │                  ^^^^^^
+    8 │       .trim(),
+    9 │   )
+  
+  i Control characters are unusual and potentially incorrect inputs, so they are disallowed.
+  
+
+entries/C09-react-virtuoso/examples/view-policy.mjs:7:25 lint/suspicious/noControlCharactersInRegex ━━━━━━━━━━
+
+  × Unexpected control character in a regular expression.
+  
+    5 │     value
+    6 │       .normalize('NFC')
+  > 7 │       .replace(/[\u0000-\u001f\u007f]/gu, '')
+      │                         ^^^^^^
+    8 │       .trim(),
+    9 │   )
+  
+  i Control characters are unusual and potentially incorrect inputs, so they are disallowed.
+  
+
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while applying fixes.
+  
+

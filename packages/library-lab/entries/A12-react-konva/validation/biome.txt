@@ -1,0 +1,4 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: pnpm exec biome check --write entries/A12-react-konva/examples entries/A12-react-konva/tests entries/A12-react-konva/validation/check-entry.mjs entries/A12-react-konva/library.json entries/A12-react-konva/verification.json entries/A12-react-konva/official/source-audit.json entries/A12-react-konva/official/homepage-response.json
+exit: 0
+Checked 11 files in 9ms. Fixed 8 files.

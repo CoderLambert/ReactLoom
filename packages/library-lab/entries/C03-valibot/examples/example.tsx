@@ -1,70 +1,164 @@
-import {useEffect, useState} from 'react';
-import {canonicalHttpsFeedUrl, isRealCivilDate} from './boundary-policy.mjs';
-import * as v from 'valibot';
+import { useEffect, useId, useState } from 'react'
+import * as v from 'valibot'
+import { BatchSchema, FeedSchema, WindowSchema } from './schemas'
+import './styles.css'
 
-type Props = {level: 'basic' | 'business' | 'advanced'};
-
-// Schema declarations are ordinary application code; the input must remain unknown.
-const FeedSchema = v.object({
-  name: v.pipe(v.string(), v.trim(), v.minLength(2, '名称至少2个字符')),
-  url: v.pipe(v.string(), v.url('无效的URL'), v.check(url => canonicalHttpsFeedUrl(url) !== null, '仅允许无凭据的 HTTPS 完整地址')),
-  category: v.picklist(['tech', 'business']),
-});
-const BatchSchema = v.object({
-  feeds: v.pipe(v.array(FeedSchema), v.minLength(1, '至少选择一个RSS源')),
-  owner: v.pipe(v.string(), v.trim(), v.minLength(2)),
-});
-const WindowSchema = v.pipe(
-  v.object({
-    start: v.pipe(v.string(), v.isoDate('日期须为YYYY-MM-DD'), v.check(value => isRealCivilDate(value), '不存在的公历日期')),
-    end: v.pipe(v.string(), v.isoDate('日期须为YYYY-MM-DD')),
-  }),
-  v.forward(
-    v.partialCheck([['start'], ['end']], input => input.start <= input.end, '结束日期不能早于开始日期'),
-    ['end'],
-  ),
-);
+type Level = 'basic' | 'business' | 'advanced'
+type ReadableIssue = { path: string; message: string }
+type View = {
+  status: 'idle' | 'dirty' | 'json' | 'success' | 'schema'
+  text: string
+  issues: ReadableIssue[]
+}
+const feed = { name: '  前端工程  ', url: 'https://example.com/Feed?q=A#section', category: 'tech' }
+const json = (value: unknown) => JSON.stringify(value, null, 2)
 const samples = {
-  basic: JSON.stringify({name: '前端工程', url: 'https://example.com/feed', category: 'tech'}, null, 2),
-  business: JSON.stringify({owner: '新闻项目', feeds: [
-    {name: '官方更新', url: 'https://example.com/releases.xml', category: 'tech'},
-    {name: '商业新闻', url: 'https://example.org/rss', category: 'business'},
-  ]}, null, 2),
-  advanced: JSON.stringify({start: '2026-11-05', end: '2026-11-02'}, null, 2),
-};
-export default function ValibotExample({level}: Props) {
-  const [payload, setPayload] = useState(samples[level]);
-  const [result, setResult] = useState('点击验证以执行真实 Valibot safeParse');
-  const schema = level === 'basic' ? FeedSchema : level === 'business' ? BatchSchema : WindowSchema;
+  basic: json({ ...feed, extra: '未知字段会被object移除' }),
+  business: json({
+    owner: '  新闻项目  ',
+    feeds: [feed, { name: '商业新闻', url: 'https://example.org/rss', category: 'business' }],
+  }),
+  advanced: json({ start: '2026-11-05', end: '2026-11-02' }),
+}
+const presets: Record<Level, { label: string; payload: string }[]> = {
+  basic: [
+    {
+      label: '载入字段错误',
+      payload: json({ name: ' a ', url: 'https://user:pass@example.com/rss', category: 'news' }),
+    },
+  ],
+  business: [
+    {
+      label: '载入批量错误',
+      payload: json({
+        owner: ' ',
+        feeds: [feed, { name: '另一频道', url: 'http://example.org/rss', category: 'business' }],
+      }),
+    },
+    {
+      label: '载入超量批次',
+      payload: json({
+        owner: '新闻项目',
+        feeds: Array.from({ length: 4 }, (_, index) => ({ ...feed, name: `频道${index + 1}` })),
+      }),
+    },
+  ],
+  advanced: [
+    { label: '载入非法结束日', payload: json({ start: '2026-02-28', end: '2026-02-30' }) },
+    { label: '载入联合错误', payload: json({ start: '2026-11-05', end: '2026-11-02', note: 42 }) },
+    {
+      label: '载入合法区间',
+      payload: json({ start: '2024-02-29', end: '2024-03-01', note: '闰日发布' }),
+    },
+  ],
+}
+const emptyView = (text: string, status: View['status'] = 'idle'): View => ({
+  status,
+  text,
+  issues: [],
+})
+export default function ValibotExample({ level }: { level: Level }) {
+  const inputId = useId()
+  const [payload, setPayload] = useState(samples[level])
+  const [view, setView] = useState<View>(() => emptyView('点击验证以执行真实 Valibot safeParse'))
+  const schema = level === 'basic' ? FeedSchema : level === 'business' ? BatchSchema : WindowSchema
   useEffect(() => {
-    setPayload(samples[level]);
-    setResult('场景已切换，需要重新验证');
-  }, [level]);
-  const validate = () => {
+    setPayload(samples[level])
+    setView(emptyView('场景已切换，需要重新验证'))
+  }, [level])
+  function load(value: string) {
+    setPayload(value)
+    setView(emptyView('已载入示例，需要点击验证'))
+  }
+  function validate() {
+    let input: unknown
     try {
-      const parsed: unknown = JSON.parse(payload);
-      const outcome = v.safeParse(schema, parsed, {abortEarly: false});
-      setResult(outcome.success
-        ? 'PASS: ' + JSON.stringify(outcome.output, null, 2)
-        : 'FAIL: ' + outcome.issues.map(issue => {
-          const field = (issue.path ?? []).map(part => String(part.key)).join('.');
-          return (field || '(根对象)') + '：' + issue.message;
-        }).join('\n'));
-    } catch (error) {
-      setResult('FAIL: 输入不是有效 JSON：' + String(error));
+      input = JSON.parse(payload)
+    } catch {
+      setView(emptyView('FAIL: 输入不是有效 JSON，尚未运行 safeParse', 'json'))
+      return
     }
-  };
-  return <section aria-label="Valibot真实SDK实验">
-    <h2>{level === 'basic' ? 'Schema校验与未知输入' : level === 'business' ? 'RSS批量导入合同' : '跨字段日期约束与错误位置'}</h2>
-    <p>{level === 'advanced' ? '默认样例故意使结束早于开始。日期格式和前后顺序是两项不同约束。' : '所有输入先作为unknown解析；不会用TypeScript类型断言代替运行时校验。'}</p>
-    <label htmlFor="c03-json">输入 JSON</label>
-    <textarea id="c03-json" style={{display:'block',width:'100%',minHeight:185,fontFamily:'monospace'}} value={payload} onChange={e => {
-      setPayload(e.target.value); setResult('输入已改变，需要重新验证');
-    }} />
-    <div className="demo-controls">
-      <button type="button" onClick={validate}>运行 safeParse</button>
-      <button type="button" onClick={() => {setPayload(samples[level]);setResult('已恢复原始样例');}}>恢复示例</button>
-    </div>
-    <output className="demo-output" data-testid="valibot-output" aria-live="polite">{result}</output>
-  </section>;
+    const outcome = v.safeParse(schema, input, { abortEarly: false })
+    if (outcome.success)
+      setView({
+        status: 'success',
+        text: `PASS: ${JSON.stringify(outcome.output, null, 2)}`,
+        issues: [],
+      })
+    else
+      setView({
+        status: 'schema',
+        text: `FAIL: ${outcome.issues.length} 项校验问题`,
+        issues: outcome.issues.map((issue) => ({
+          path: v.getDotPath(issue) ?? '(根对象)',
+          message: issue.message,
+        })),
+      })
+  }
+  return (
+    <section
+      aria-label="Valibot真实SDK实验"
+      className="c03-workshop"
+      data-testid="c03-workshop"
+      data-level={level}
+    >
+      <h2>
+        {level === 'basic'
+          ? '输入、输出与字段错误'
+          : level === 'business'
+            ? '批量导入与嵌套路径'
+            : '真实日期与跨字段错误'}
+      </h2>
+      <p>真实Valibot1.4.2同步校验；数据为本地RSS配置，不抓取URL、不提交网络，也不持久记录输入。</p>
+      <label htmlFor={inputId}>输入 JSON</label>
+      <textarea
+        id={inputId}
+        spellCheck={false}
+        value={payload}
+        onChange={(event) => {
+          setPayload(event.target.value)
+          setView(emptyView('输入已改变，需要重新验证', 'dirty'))
+        }}
+      />
+      <div className="c03-controls">
+        <button type="button" onClick={validate}>
+          运行 safeParse
+        </button>
+        <button type="button" onClick={() => load(samples[level])}>
+          恢复示例
+        </button>
+        {presets[level].map((preset) => (
+          <button type="button" key={preset.label} onClick={() => load(preset.payload)}>
+            {preset.label}
+          </button>
+        ))}
+      </div>
+      <div data-testid="c03-result" data-status={view.status}>
+        <output data-testid="valibot-output" aria-live="polite">
+          {view.text}
+        </output>
+        {view.issues.length > 0 && (
+          <table data-testid="c03-issues" aria-label="实际校验问题">
+            <thead>
+              <tr>
+                <th scope="col">字段路径</th>
+                <th scope="col">校验消息</th>
+              </tr>
+            </thead>
+            <tbody>
+              {view.issues.map((issue) => (
+                <tr key={`${issue.path}:${issue.message}`}>
+                  <th scope="row">{issue.path}</th>
+                  <td>{issue.message}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+      <p>
+        编辑输入只清旧结果，不自动解析或改写草稿。路径从真实issue提取，仅显示字段和消息，不输出含原始input的issue整包。
+      </p>
+    </section>
+  )
 }

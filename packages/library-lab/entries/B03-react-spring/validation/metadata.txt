@@ -1,0 +1,7 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node entries/B03-react-spring/validation/check-entry.mjs
+exit: 0
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node entries/B03-react-spring/validation/check-entry.mjs
+PASS: entry shape, 3 demos, 4 source paths, README bytes 41 SHA-256 dc737deb8253d700b89188be01dc70b5859b3b85422360bb30ce5b70223473f1
+exit: 0

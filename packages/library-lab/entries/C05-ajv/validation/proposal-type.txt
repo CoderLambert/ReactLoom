@@ -1,0 +1,4 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+command=pnpm --dir packages/library-lab exec tsc --ignoreConfig --noEmit --target es2022 --module esnext --moduleResolution bundler --strict --skipLibCheck --esModuleInterop --types node e2e/quality-remediation-ajv.spec.ts
+
+exitCode=0

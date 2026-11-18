@@ -1,0 +1,5 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+command=pnpm exec biome check packages/library-lab/e2e/quality-remediation-tanstack-virtual.spec.ts packages/library-lab/e2e/quality-remediation-primitives-sources.spec.ts packages/library-lab/e2e/c13-preview-boundary.spec.ts
+Checked 3 files in 9ms. No fixes applied.
+
+exitCode=0

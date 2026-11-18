@@ -1,0 +1,22 @@
+✔ composition remains protected across unrelated keys while active (0.602423ms)
+✔ trailing commit expires after 80ms even if no Enter keyup was delivered (0.125367ms)
+✔ Enter release ends the pending commit guard (0.095516ms)
+✔ Space release also ends a completed candidate selection (0.074682ms)
+✔ ordinary typing and blur do not leave a latched guard (0.106236ms)
+✔ a shortcut already handled by another owner is left alone (0.105499ms)
+✔ Ctrl+K or Meta+K opens outside inputs (0.577585ms)
+✔ never steals shortcut from unrelated editors when closed (0.11716ms)
+✔ same shortcut closes own modal even when input is focused (0.070399ms)
+✔ modified and IME processing shortcuts are rejected (0.106394ms)
+✔ composition, trailing Enter and keycode 229 never run a command (0.105766ms)
+✔ normal Enter works after commit keyup; non-Enter keys are unaffected (0.073253ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 70.275342
+
+exitCode=0

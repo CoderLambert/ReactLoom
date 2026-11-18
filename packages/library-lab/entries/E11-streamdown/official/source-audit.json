@@ -1,0 +1,31 @@
+{
+  "checkedAt": "2026-11-10T09:18:15.803374+00:00",
+  "repository": "vercel/streamdown",
+  "tag": "streamdown@2.6.0",
+  "commit": "8a2ac221a878a0fc5839f2035c1e16575cfa3440",
+  "packagePath": "packages/streamdown/package.json",
+  "packageVersion": "2.6.0",
+  "readmeCandidates": [
+    ".changeset/README.md",
+    "README.md",
+    "apps/website/README.md",
+    "packages/remend/README.md",
+    "packages/streamdown/README.md"
+  ],
+  "chosenReadme": "packages/streamdown/README.md",
+  "language": "en",
+  "reason": "Pinned package README; no Chinese README in this tagged repository tree.",
+  "sha256": "e64c6eb295a58af2a0f3a2eaf6d8edefab5b2b39ea320250072596bd5b0943f8",
+  "homepage": {
+    "requestedUrl": "https://streamdown.ai",
+    "finalUrl": "https://streamdown.ai",
+    "httpStatus": 200,
+    "headers": {
+      "Content-Type": "text/html; charset=utf-8",
+      "X-Frame-Options": null,
+      "Content-Security-Policy": null
+    },
+    "browserChecked": false,
+    "headerEvidence": "Selected response headers from the recorded GET; null means the header was absent. Full response headers were not retained."
+  }
+}

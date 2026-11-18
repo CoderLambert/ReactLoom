@@ -1,0 +1,3 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: pnpm exec biome format --stdin-file-path=entries/B03-react-spring/validation/browser-proposal.ts < entries/B03-react-spring/validation/browser-proposal.txt
+exit: 0

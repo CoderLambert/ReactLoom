@@ -1,0 +1,5 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ["pnpm", "exec", "--", "biome", "check", "--write", "entries/A03-chartjs/examples", "entries/A03-chartjs/tests", "entries/A03-chartjs/library.json", "entries/A03-chartjs/verification.json", "entries/A03-chartjs/official/source-evidence.json", "entries/A03-chartjs/validation/baseline.json"]
+exit: 0
+
+Checked 11 files in 9ms. No fixes applied.

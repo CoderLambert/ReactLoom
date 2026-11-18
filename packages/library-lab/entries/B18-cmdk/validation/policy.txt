@@ -1,0 +1,26 @@
+✔ save toggles without mutating the original article (0.504542ms)
+✔ mark read is idempotent and keeps saved state (0.114502ms)
+✔ citation is generated locally and does not require clipboard permissions (0.128692ms)
+✔ refresh is a bounded local demonstration counter by command choice, not network IO (0.069032ms)
+✔ composition remains protected across unrelated keys while active (0.572202ms)
+✔ trailing commit expires after 80ms even if no Enter keyup was delivered (0.12458ms)
+✔ Enter release ends the pending commit guard (0.089517ms)
+✔ Space release also ends a completed candidate selection (0.074619ms)
+✔ ordinary typing and blur do not leave a latched guard (0.102618ms)
+✔ a shortcut already handled by another owner is left alone (0.119699ms)
+✔ Ctrl+K or Meta+K opens outside inputs (0.559348ms)
+✔ never steals shortcut from unrelated editors when closed (0.09916ms)
+✔ same shortcut closes own modal even when input is focused (0.074598ms)
+✔ modified and IME processing shortcuts are rejected (0.125252ms)
+✔ composition, trailing Enter and keycode 229 never run a command (0.11203ms)
+✔ normal Enter works after commit keyup; non-Enter keys are unaffected (0.070991ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 16
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 83.13066
+
+exitCode=0

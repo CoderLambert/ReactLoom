@@ -1,0 +1,1 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["git", "diff", "--check", "--", "packages/library-lab/entries/C19-nuqs"], "utc": "2026-11-11T05:44:58.983822+00:00", "exit": 0}

@@ -1,0 +1,16 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['node', '--test', 'entries/B21-react-motion-migration/tests/task-history.test.mts']
+startedAt: 2026-11-10T14:49:07.875698+00:00
+exit: 0
+✔ rapid adds use monotonic IDs and one-step undo is atomic (0.813317ms)
+✔ selection and undo restore a deleted selected item (0.146286ms)
+✔ unknown IDs are inert and do not overwrite undo (0.07938ms)
+✔ capacity is bounded and reset does not reuse IDs after undo (0.113303ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 67.690637

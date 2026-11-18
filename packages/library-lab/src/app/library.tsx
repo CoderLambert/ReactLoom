@@ -8,6 +8,8 @@ import { useCatalogDetail } from '../lib/catalog-detail'
 
 const Document = lazy(() => import('../components/document'))
 const DemoHost = lazy(() => import('../components/demo-host'))
+const OfficialReadme = lazy(() => import('../components/official-readme'))
+const OfficialHomepage = lazy(() => import('../components/official-homepage'))
 export default function Library() {
   const entries = useCatalog()
   const { slug } = useParams({ from: '/libraries/$slug' })
@@ -71,8 +73,10 @@ export default function Library() {
       >
         <Tabs.List aria-label={`${entry.name} 内容`} className="tabs">
           {[
-            ['demo', '实战 Demo'],
             ['docs', '详细文档'],
+            ['demo', '实战 Demo'],
+            ['readme', '官方 README'],
+            ['website', '官网预览'],
             ['agent', 'Agent 指南'],
             ['related', '相关资料'],
           ].map(([id, label]) => (
@@ -99,12 +103,32 @@ export default function Library() {
         </Tabs.Content>
         <Tabs.Content value="docs">
           <Suspense fallback={<p role="status">正在加载文档阅读器…</p>}>
-            <Document entryId={entry.entryId} kind="guide" available={entry.guideAvailable} />
+            <Document
+              entryId={entry.entryId}
+              kind="guide"
+              available={entry.guideAvailable}
+              readme={entry.official?.readme}
+            />
           </Suspense>
         </Tabs.Content>
         <Tabs.Content value="agent">
           <Suspense fallback={<p role="status">正在加载 Agent 指南…</p>}>
-            <Document entryId={entry.entryId} kind="agent" available={entry.agentAvailable} />
+            <Document
+              entryId={entry.entryId}
+              kind="agent"
+              available={entry.agentAvailable}
+              readme={entry.official?.readme}
+            />
+          </Suspense>
+        </Tabs.Content>
+        <Tabs.Content value="readme">
+          <Suspense fallback={<p role="status">正在读取官方 README…</p>}>
+            <OfficialReadme entry={entry} />
+          </Suspense>
+        </Tabs.Content>
+        <Tabs.Content value="website">
+          <Suspense fallback={<p role="status">正在加载官网面板…</p>}>
+            <OfficialHomepage entry={entry} />
           </Suspense>
         </Tabs.Content>
         <Tabs.Content value="related">

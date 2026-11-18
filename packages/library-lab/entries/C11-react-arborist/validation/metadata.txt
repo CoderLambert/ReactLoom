@@ -1,0 +1,11 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["pnpm", "--dir", "packages/library-lab", "exec", "node", "entries/C11-react-arborist/validation/metadata-check.mjs"], "utc": "2026-11-10T16:58:36.218413+00:00", "exit": 0}
+{
+  "levels": 3,
+  "runtimeFiles": 7,
+  "inputFiles": 17,
+  "sdk": "3.16.0",
+  "readmeBytes": 24954,
+  "readmeSHA": "0c3ba42abd227ddce29578749b9765b5513797d446cb2d3d2b96281a429fa80a",
+  "homepage": "unknown; no Lab-origin iframe confirmation",
+  "formal": "NOT_RUN"
+}

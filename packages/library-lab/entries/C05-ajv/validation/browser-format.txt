@@ -1,0 +1,5 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+command=pnpm exec biome check --write packages/library-lab/e2e/quality-remediation-ajv.spec.ts
+Checked 1 file in 8ms. Fixed 1 file.
+
+exitCode=0

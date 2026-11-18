@@ -1,0 +1,208 @@
+[
+  {
+    "name": "format-targets",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "entries/C22-moment-migration/examples",
+      "e2e/quality-resume-migration.spec.ts",
+      "e2e/quality-resume-lodash.spec.ts"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T16:22:37.502175+00:00",
+    "finishedAt": "2026-11-17T16:22:37.745593+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-22/format-targets.txt"
+  },
+  {
+    "name": "new-e2e-format",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "e2e/quality-resume-toolkit.spec.ts"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T16:23:12.362940+00:00",
+    "finishedAt": "2026-11-17T16:23:12.596267+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-22/new-e2e-format.txt"
+  },
+  {
+    "name": "committed-index",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "catalog:index"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T16:23:12.667852+00:00",
+    "finishedAt": "2026-11-17T16:23:12.910081+00:00",
+    "exitCode": 1,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-22/committed-index.txt"
+  },
+  {
+    "name": "typecheck",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "typecheck"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T16:23:17.869741+00:00",
+    "finishedAt": "2026-11-17T16:23:19.994791+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-22/typecheck.txt"
+  },
+  {
+    "name": "build",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "build"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T16:23:31.019199+00:00",
+    "finishedAt": "2026-11-17T16:23:39.251744+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-22/build.txt"
+  },
+  {
+    "name": "catalog",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "catalog:check"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T16:23:54.155894+00:00",
+    "finishedAt": "2026-11-17T16:23:54.667132+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-22/catalog.txt"
+  },
+  {
+    "name": "browser",
+    "command": [
+      "env",
+      "LAB_PREBUILT=1",
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "playwright",
+      "test",
+      "e2e/quality-resume-migration.spec.ts",
+      "e2e/quality-resume-lodash.spec.ts",
+      "e2e/quality-resume-toolkit.spec.ts",
+      "--workers=2"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T16:23:54.908909+00:00",
+    "finishedAt": "2026-11-17T16:24:36.449235+00:00",
+    "exitCode": 1,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-22/browser.txt"
+  },
+  {
+    "name": "browser-targeted",
+    "command": [
+      "env",
+      "LAB_PREBUILT=1",
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "playwright",
+      "test",
+      "e2e/quality-resume-migration.spec.ts",
+      "e2e/quality-resume-lodash.spec.ts",
+      "--grep",
+      "explicit instants|calendar days|natural trailing",
+      "--workers=2"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T16:26:03.510430+00:00",
+    "finishedAt": "2026-11-17T16:26:07.833380+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-22/browser-targeted.txt"
+  },
+  {
+    "name": "final-target-lint",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "biome",
+      "check",
+      "e2e/quality-resume-migration.spec.ts",
+      "e2e/quality-resume-lodash.spec.ts",
+      "e2e/quality-resume-toolkit.spec.ts",
+      "entries/C22-moment-migration/examples",
+      "entries/D01-es-toolkit/examples",
+      "entries/D01-es-toolkit/tests",
+      "entries/D02-lodash/examples",
+      "entries/D02-lodash/tests"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T16:26:43.767758+00:00",
+    "finishedAt": "2026-11-17T16:26:44.315416+00:00",
+    "exitCode": 1,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-22/final-target-lint.txt"
+  },
+  {
+    "name": "final-format-fix",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "e2e/quality-resume-lodash.spec.ts",
+      "entries/D02-lodash/tests/sdk.test.mjs"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T16:26:58.025555+00:00",
+    "finishedAt": "2026-11-17T16:26:58.265599+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-22/final-format-fix.txt"
+  },
+  {
+    "name": "final-target-lint-green",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "biome",
+      "check",
+      "e2e/quality-resume-migration.spec.ts",
+      "e2e/quality-resume-lodash.spec.ts",
+      "e2e/quality-resume-toolkit.spec.ts",
+      "entries/C22-moment-migration/examples",
+      "entries/D01-es-toolkit/examples",
+      "entries/D01-es-toolkit/tests",
+      "entries/D02-lodash/examples",
+      "entries/D02-lodash/tests"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T16:26:58.348449+00:00",
+    "finishedAt": "2026-11-17T16:26:58.601634+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-22/final-target-lint-green.txt"
+  }
+]

@@ -1,0 +1,6 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom
+ARGV: ["git", "diff", "--check", "--", "packages/library-lab/entries/C07-tanstack-table"]
+EXIT: 0
+STDOUT:
+
+STDERR:

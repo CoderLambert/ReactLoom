@@ -5,15 +5,7 @@
   "name": "Papa Parse",
   "group": "F",
   "summary": "真实 CSV 解析/导出：引号换行、表头与URL验证、本地文件及公式注入防护",
-  "tags": [
-    "CSV",
-    "数据导入",
-    "本地文件",
-    "EscapeFormulae",
-    "编码",
-    "类型安全",
-    "批量"
-  ],
+  "tags": ["CSV", "数据导入", "本地文件", "EscapeFormulae", "编码", "类型安全", "批量"],
   "contentState": "recreated",
   "packages": [
     {
@@ -67,9 +59,7 @@
         "examples/policy.d.mts",
         "examples/demo.tsx"
       ],
-      "capabilities": [
-        "csv-parse"
-      ],
+      "capabilities": ["csv-parse"],
       "description": "真正调用 Papa.parse 并展示字段与错误。"
     },
     {
@@ -86,11 +76,7 @@
         "examples/policy.d.mts",
         "examples/demo.tsx"
       ],
-      "capabilities": [
-        "local-file",
-        "url-validation",
-        "csv-parse"
-      ],
+      "capabilities": ["local-file", "url-validation", "csv-parse"],
       "description": "从本地输入或受限文件选择读取 CSV，校验协议与重复项。"
     },
     {
@@ -105,15 +91,10 @@
         "examples/report.d.mts",
         "examples/policy.mjs",
         "examples/policy.d.mts",
-        "examples/demo.tsx",
-        "tests/node-scenarios.test.mjs",
-        "tests/policy.test.mjs"
+        "examples/demo.tsx"
       ],
-      "capabilities": [
-        "escape-formulae",
-        "parser-errors"
-      ],
-      "description": "用真实 Papa.unparse({escapeFormulae:true}) 输出安全 CSV，并对不可信表格行报错。"
+      "capabilities": ["escape-formulae", "parser-errors"],
+      "description": "真实Papa.unparse自定义escapeFormulae前缀正则保护跨行单元格，解析错误独立展示。"
     }
   ],
   "license": {
@@ -123,5 +104,25 @@
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
     "note": "按官方 Papa Parse 5 API 重写并记录原研究已恢复，不继承历史领域单测作为SDK验收。"
+  },
+  "official": {
+    "readme": {
+      "repository": "mholt/PapaParse",
+      "commit": "555c1c1b6175e7a043adf8694983776a1e6fdeeb",
+      "path": "README.md",
+      "sourceUrl": "https://github.com/mholt/PapaParse/blob/555c1c1b6175e7a043adf8694983776a1e6fdeeb/README.md",
+      "snapshotPath": "official/readme.md",
+      "sha256": "6dd80e525001b8530fa986a648d5c9b5ad8b970553d96ac74074bfa760cd2c31",
+      "language": "en",
+      "version": "5.7.0",
+      "syncedAt": "2026-11-17T18:27:24.899159+00:00"
+    },
+    "homepage": {
+      "url": "https://www.papaparse.com/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-17T18:27:24.899159+00:00",
+      "reason": "实际GET响应见official/source-evidence.json；没有Lab-origin嵌入确认，保留unknown直达。"
+    }
   }
 }

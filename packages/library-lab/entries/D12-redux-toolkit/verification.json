@@ -1,14 +1,14 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "待官方RTK 2.13.0安装并执行SDK Node测试"
+    "note": "本地sdk证据见local-validation.md及candidate-25；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
   },
   "build": {
     "status": "NOT_RUN",
-    "note": "TypeScript和Vite生产构建待平台环境"
+    "note": "本地build证据见local-validation.md及candidate-25；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "双工作区store订阅和timer卸载待Chromium验证"
+    "note": "本地browser证据见local-validation.md及candidate-25；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
   }
 }

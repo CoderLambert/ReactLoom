@@ -1,0 +1,35 @@
+{
+  "tag": "v1.20.0",
+  "commit": "84a9f3b9a4f3244b8c8e818f557d64c7b964fb25",
+  "treeReadmePaths": [
+    "README.md",
+    "examples/README.md",
+    "lib/adapters/README.md",
+    "lib/core/README.md",
+    "lib/env/README.md",
+    "lib/helpers/README.md",
+    "tests/README.md"
+  ],
+  "languageNote": "Pinned tag tree has no Chinese README; preserved original English README bytes.",
+  "readmeUrl": "https://raw.githubusercontent.com/axios/axios/84a9f3b9a4f3244b8c8e818f557d64c7b964fb25/README.md",
+  "homepage": {
+    "requested": "https://axios-http.com/zh/docs/intro",
+    "finalUrl": "https://axios.rest/zh/pages/getting-started/first-steps",
+    "status": 200,
+    "headers": {
+      "Accept-Ranges": "bytes",
+      "Age": "2",
+      "Cache-Control": "public,max-age=0,must-revalidate",
+      "Cache-Status": "\"Netlify Edge\"; fwd=miss; fwd-status=200; stored",
+      "Content-Length": "65465",
+      "Content-Type": "text/html; charset=UTF-8",
+      "Date": "Tue, 17 Nov 2026 16:33:08 GMT",
+      "Etag": "\"7045ec3a30e97d5268ea0fa66b30d135-ssl\"",
+      "Server": "Netlify",
+      "Strict-Transport-Security": "max-age=31536000",
+      "Vary": "Accept-Encoding",
+      "X-Nf-Request-Id": "01M7N5NS5SMNZ83RS55YNG39E1",
+      "Connection": "close"
+    }
+  }
+}

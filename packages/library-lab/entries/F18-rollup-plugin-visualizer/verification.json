@@ -1,14 +1,14 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "根 pnpm-lock.yaml 已包含 Library Lab importer，声明的包可以被冻结安装解析。Actions run 41779873259 的仓库级 typecheck/build 不是本条目的 evidence/runs 收据，所以这里是 NOT_RUN，不是 PASS。"
+    "note": "verify.mjs 已在本地真实导入 visualizer 并执行两次独立 Vite 构建（见 local-validation.md）；这是本地运行记录，未通过 verify:record 生成匹配输入的正式 SDK 收据。report-policy.test.mjs 只证明自建策略。"
   },
   "build": {
     "status": "NOT_RUN",
-    "note": "根 pnpm-lock.yaml 已包含 Library Lab importer，声明的包可以被冻结安装解析。Actions run 41779873259 的仓库级 typecheck/build 不是本条目的 evidence/runs 收据，所以这里是 NOT_RUN，不是 PASS。"
+    "note": "隔离 static/lazy fixture 的本地构建、产物摘要与预算正反检查见 local-validation.md；尚无 docs/library-lab/evidence/runs 下的正式 build 收据，Lab 应用 build 不能代替本例构建。"
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "node-ci类型不需要站内在线终端；报告打开浏览器检查尚未执行"
+    "note": "fixture 已有可见输入、结果、加载与错误状态；真实浏览器的计算、请求时机与加载失败恢复尚未验收。构建分包及模块图不证明请求发生时刻。"
   }
 }

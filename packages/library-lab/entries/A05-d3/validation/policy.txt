@@ -1,0 +1,20 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ["node", "--test", "entries/A05-d3/tests/chart-policy.test.mts"]
+startedAt: 2026-11-10T11:47:45.992490+00:00
+finishedAt: 2026-11-10T11:47:46.102813+00:00
+exitCode: 0
+
+STDOUT
+✔ window and threshold filter chart and selection consistently (1.211962ms)
+✔ empty viewport and empty result do not invent a data point (0.155348ms)
+✔ invalid measurements are ignored; finite widths are bounded (0.16231ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 85.091083
+
+STDERR

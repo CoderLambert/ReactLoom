@@ -1,0 +1,195 @@
+[
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "entries/C21-tailwind-merge/examples",
+      "entries/C21-tailwind-merge/library.json"
+    ],
+    "startedAt": "2026-11-10T18:07:03.821674+00:00",
+    "exitCode": 0,
+    "log": "validation/format-checkpoint.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "tsc",
+      "--ignoreConfig",
+      "--noEmit",
+      "--target",
+      "es2022",
+      "--module",
+      "esnext",
+      "--moduleResolution",
+      "bundler",
+      "--jsx",
+      "react-jsx",
+      "--strict",
+      "--skipLibCheck",
+      "--esModuleInterop",
+      "--types",
+      "vite/client,node",
+      "entries/C21-tailwind-merge/examples/demo.tsx"
+    ],
+    "startedAt": "2026-11-10T18:07:04.046863+00:00",
+    "exitCode": 0,
+    "log": "validation/type-checkpoint.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "node",
+      "--test",
+      "entries/C21-tailwind-merge/tests/sdk.test.mjs"
+    ],
+    "startedAt": "2026-11-10T18:09:14.715341+00:00",
+    "exitCode": 0,
+    "log": "validation/sdk.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "python3",
+      "entries/C21-tailwind-merge/validation/fetch-official.py"
+    ],
+    "startedAt": "2026-11-10T18:10:47.605010+00:00",
+    "exitCode": 0,
+    "log": "validation/official-fetch.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "python3",
+      "entries/C21-tailwind-merge/validation/check-proposal.py"
+    ],
+    "startedAt": "2026-11-10T18:12:44.459097+00:00",
+    "exitCode": 0,
+    "log": "validation/proposal-check.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "python3",
+      "entries/C21-tailwind-merge/validation/source-tool-transport-fixture.py"
+    ],
+    "startedAt": "2026-11-10T18:14:16.237692+00:00",
+    "exitCode": 0,
+    "log": "validation/source-tool-transport.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "node",
+      "entries/C21-tailwind-merge/validation/metadata-check.mjs"
+    ],
+    "startedAt": "2026-11-10T18:17:45.415319+00:00",
+    "exitCode": 0,
+    "log": "validation/metadata.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "entries/C21-tailwind-merge/examples",
+      "entries/C21-tailwind-merge/tests",
+      "entries/C21-tailwind-merge/library.json",
+      "entries/C21-tailwind-merge/validation/metadata-check.mjs"
+    ],
+    "startedAt": "2026-11-10T18:17:45.632178+00:00",
+    "exitCode": 0,
+    "log": "validation/format-final.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "tsc",
+      "--ignoreConfig",
+      "--noEmit",
+      "--target",
+      "es2022",
+      "--module",
+      "esnext",
+      "--moduleResolution",
+      "bundler",
+      "--jsx",
+      "react-jsx",
+      "--strict",
+      "--skipLibCheck",
+      "--esModuleInterop",
+      "--types",
+      "vite/client,node",
+      "entries/C21-tailwind-merge/examples/demo.tsx"
+    ],
+    "startedAt": "2026-11-10T18:17:45.864111+00:00",
+    "exitCode": 0,
+    "log": "validation/type-final.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "node",
+      "entries/C21-tailwind-merge/validation/metadata-check.mjs"
+    ],
+    "startedAt": "2026-11-10T18:18:48.092829+00:00",
+    "exitCode": 0,
+    "log": "validation/metadata-final.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "entries/C21-tailwind-merge/library.json",
+      "entries/C21-tailwind-merge/verification.json"
+    ],
+    "startedAt": "2026-11-10T18:18:48.312752+00:00",
+    "exitCode": 0,
+    "log": "validation/format-metadata.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "git",
+      "diff",
+      "--check",
+      "--",
+      "entries/C21-tailwind-merge"
+    ],
+    "startedAt": "2026-11-10T18:18:48.544623+00:00",
+    "exitCode": 0,
+    "log": "validation/diff-final.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "git",
+      "diff",
+      "--check",
+      "--",
+      "entries/C21-tailwind-merge"
+    ],
+    "startedAt": "2026-11-10T18:20:55.980550+00:00",
+    "exitCode": 0,
+    "log": "validation/diff-after-report.txt"
+  }
+]

@@ -1,0 +1,14 @@
+{
+  "validation/checkpoint-metadata.txt": "e649a61ded0c79f538793667c3b2d53e56cb76a1dd9461aae89b685311d14de4",
+  "validation/diff-check.txt": "5077de656973e3b01106c60f23148fddecd681b60fa81cac98c63751e948535b",
+  "validation/final-inspection.txt": "89243193e3c29909fe2de036442c91e6c2b5d8ee5a918335b2715a87e9bbe16e",
+  "validation/format-code.txt": "9979bbd2db4ef7b17e672384b24f6e9fdc67c77d010d9e11ffcdacdb669a05a7",
+  "validation/format-metadata.txt": "ff1368453fd49a5d57c5b98de4a2160442574e18e5ce5a1005dd9457cc01297e",
+  "validation/metadata.txt": "a033be1ff28633bfe56eedd217a05c0465f01a940033d97ffaea583103ff9ba3",
+  "validation/official-fetch.txt": "f62bc53ff0f8d63094631fc98eb11bef8aec64c1551afa103d5320df502aa42b",
+  "validation/policy.txt": "95dd0d5cd670d15b24372aa8f32f460172d2e596ec46412ec70a20f2d96257a7",
+  "validation/proposal-format.txt": "23d225678aeee7bc7ed452729381e5a69198831e3f47e666c11b8353b49771d3",
+  "validation/proposal-types.txt": "5b1f5185b42f7e599b805da6740f6edb1044d9ac667c0352964027fc317f2443",
+  "validation/sdk.txt": "627c30223e05d0a85dc16d24204a298637cdf1d6bcde16bb53069769bd379f64",
+  "validation/types.txt": "0e2e0f393503e2c0e2f0978f329de1ad6125e1dbb525afb427e9fab99b1dac0c"
+}

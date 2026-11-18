@@ -1,0 +1,7 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node entries/A02-recharts/validation/check-entry.mjs
+exit: 0
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node entries/A02-recharts/validation/check-entry.mjs
+PASS: entry shape, 3 demos, 4 source paths, README bytes 4046 SHA-256 b7261f5d2719719a297a001d673f01d49363542660b408a6b8de627143adb04e
+exit: 0

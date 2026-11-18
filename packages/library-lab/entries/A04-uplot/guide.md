@@ -1,185 +1,90 @@
-# A04 uPlot 1.6.32：列式时序、窗口所有权与 React 生命周期
+# uPlot：用有界列式数据更新一张真实时序图
 
-uPlot 是 Canvas 2D 的时序图，不是仪表盘全家桶。它吃列对齐的 `AlignedData`，不吃 `{t, y}` 行对象。Library Lab 钉 `uplot@1.6.32`。调用以这个 tag 的 `dist/uPlot.d.ts` 为准，不要从 master 抄尚未发布的 API。
+延迟指标每分钟来一次，错误计数每三分钟来一次。页面要显示趋势，也要在持续采样时丢掉旧点、缩窄面板后重新布局、暂停后停止工作。这里要分别决定：哪些数据保留、怎样对齐、何时更新，以及谁销毁图表。
 
-## Lab 当前示例
+`uplot@1.6.32`（MIT）是Canvas 2D时序图。适合形态相对简单、可对齐到共同X的数值曲线；复杂图种可比较ECharts，常见图表生态可比较Chart.js。它没有采样服务、数据校验/聚合、动画系统或完整仪表盘。大量数据是否流畅仍要在目标设备测，原文的机器基准不是本例结果。
 
-`examples/demo.tsx` 再导出 `examples/example.tsx`。采样开关在 `examples/stream-policy.ts`。组件 `UplotExample` 持有点数、平移 shift 和是否推流；`TelemetryChart` 持有 uPlot 实例。
+本例没有HTTP遥测；数据是原创、确定性的本地公式。应用保留每列最多100点，650ms的定时器只模拟推进一个“分钟采样”。**点数上限不等于整个页面的内存上限**：Canvas尺寸、DPR、临时数组和SDK缓存也占内存。
 
-已挂载：
+## 从时间到Canvas
 
-- `import uPlot from 'uplot'`，并引入 `uplot/dist/uPlot.min.css`。
-- X 是 Unix **秒**：`START + i * 60`。`scales.x.time` 为 `true`，所以库按时间轴解释秒，不是毫秒。
-- basic 只有延迟列；business / advanced 增加错误数列，并给它单独的 `errors` scale 和右侧轴。
-- 缺失用 `null`：advanced 里 `i % 17 === 0` 的延迟是 `null`，表格显示「缺失」，不是 0。
-- 实例只在 `[level]` 变化时重建。数据变化走 `plot.setData(data)`。第二个参数省略，1.6.32 默认重置 scale。注释写明：窗口在往前滑，若不重置，新点会落在视窗外。
-- `ResizeObserver` 合并到 `requestAnimationFrame`，宽度变了才 `setSize({width, height: 250})`。cleanup：`disconnect`、`cancelAnimationFrame`、`destroy()`，并在 ref 仍指向该实例时清空。
-- 滚动窗口 `WINDOW = 100`。可选采样数 28 / 60 / 100。advanced 每 650ms `shift + 1`。
-- `shouldRunStream` 要求 advanced、用户已请求、页签可见，并且没有减少动态，或用户勾了「明确允许」。暂停时保留请求意图，回到前台可恢复。
-- 最近五个点的 HTML 表是 Canvas 的文字替代。容器 `role="img"`。
+| 层 | 本例输入/输出 | 关键调用与责任 |
+| --- | --- | --- |
+| 时间与数值 | X是Unix秒、严格递增；延迟是ms，错误是次数 | 应用生成数据；Date展示时乘1000 |
+| 对齐列 | `[x[], latency[], errors[]]`，各列等长，缺测为null | business用真实`uPlot.join`合并时间轴，应用将对齐产生的undefined转为null |
+| series/scales/axes | 第0项对应X；后续series对应Y列；错误数单独scale和右轴 | `createPlotOptions`，不是把次数与ms共用一个单位 |
+| 图表实例 | DOM存在后创建Canvas，观察SDK当前data与宽高 | `new uPlot(options, data, host)` |
+| 数据、大小、可见性变化 | 更新同一实例 | `setData`、`setSize`、`setSeries` |
+| 销毁 | 解绑应用资源并销毁SDK | disconnect、cancelAnimationFrame、clearInterval、destroy |
 
-没有挂上、仍要会的生产内容：本机 HTTP `/api/telemetry`、`AbortController` 加请求序号、`setSeries` 隐藏曲线、`setScale` 的 follow / preserve、`batch`、`valToPos` / `posToVal`、框选缩放、`toBlob` PNG、5 万点分桶抽样、ring buffer。下面按 1.6.32 写这些，不要说成当前页面已经做了。
-
-## 何时用、何时不用
-
-适合 APM、资源监控、前端耗时这类**已经对齐**的时间轴：同屏几条线、要平移和放大、希望依赖小。产品价值是把渲染和业务处理分开。官方范围见 [1.6.32 README](https://github.com/leeoniya/uPlot/tree/1.6.32#readme)。
-
-不要用它做地图、桑基、关系图或营销动画。官方没有动画系统。多条序列的 X 几乎完全错开时，不要为了塞进 uPlot 去造巨大的 null 矩阵；列对齐在这种数据上会很贵。[格式说明](https://github.com/leeoniya/uPlot/blob/1.6.32/docs/README.md)。十万可见点、十几条线同时刷新，先在目标设备上测。Canvas 2D 主线程、DPR 和数据变换都可能是瓶颈。上游 README 的单机数字不是这个仓库的基准。
-
-| 候选 | 选它 | 不选它 |
-|---|---|---|
-| uPlot | 对齐时序、点数上来、形态简单 | X 无法对齐、标注很重 |
-| ECharts | 图种多、联动多 | 只有一条高频线时成本可能偏高 |
-| Chart.js | 常见 bar/line/pie | 极端时序要和 uPlot 比过再定 |
-| Recharts | 中小 SVG 仪表盘 | 高频流式 |
-| D3 | 非标准几何 | 标准折线不必从零搭 |
-
-## 版本
-
-| 项目 | Lab |
-|---|---|
-| 包 | `uplot@1.6.32`，MIT，类型在 `dist/uPlot.d.ts`，不要装 `@types/uplot` |
-| 导入 | 默认导出 `uPlot`，CSS 走 `uplot/dist/uPlot.min.css` |
-| React | 无 peer。用 effect 适配，不是 `uPlot-react` |
-| 渲染 | Canvas 2D，不是 WebGL |
-
-1.6.32 发布于 2025-03-14。master 文档可能描述未发布 API，例如后来的 `setPxRatio()` 或精简 DOM。固定版本上不要调用类型里不存在的方法。商业集成要保留 MIT 声明。数据、瓦片、图标、第三方插件的许可证另算。
-
-## 列式数据
+完整接线见[example.tsx](examples/example.tsx)，配置见[chart-options.ts](examples/chart-options.ts)，数据见[series-data.ts](examples/series-data.ts)。`series[0]`与`data[0]`是X；后面的列不能错位。缺测null不是测得0，TypedArray只存数值，不能直接表达这里的null。
 
 ```ts
-const rows = [
-  { t: 1_789_000_000, latency: 48, errors: 0 },
-  { t: 1_789_000_060, latency: null, errors: 1 },
-];
 const data: uPlot.AlignedData = [
-  [1_789_000_000, 1_789_000_060],
-  [48, null],
-  [0, 1],
-];
+  [1792972800, 1792972860], // Unix秒，相差60秒
+  [75, null],             // 延迟：第二个点缺测
+  [0, 3],                 // 错误：第一个点测得0
+]
 ```
 
-`series[0]` 是 X，后面每一列是一条 Y。各列等长。`null` 是缺测，不能改成 0。TypedArray 表达不了 `null`，缺测就用普通数组，或另设缺失标记。
+`scales.x.time: true`使用默认时间轴秒单位。`Date.now()`是毫秒，不能原样塞进本例；展示UTC文本用`new Date(x * 1000)`。SDK默认时间轴标签按浏览器本地时区格式化，本例HTML表明确展示UTC，两种显示不改变同一个时间值。没有实现时区切换。
 
-X 必须唯一且严格递增。重复时间戳先在领域层合并。`Date.now()` 是毫秒；默认时间轴吃秒。差 1000 倍时轴会错位。Lab 用秒并打开 `time: true`。研究稿为了坐标自测把 `time: false`，那是另一条教学路径，不是当前画布。时区、DST、毫秒精度要在进入 uPlot 之前定好，不要指望轴标签替你做业务时区。
+## 实验一：列式输入与同一个实例
 
-当前 `createSeries` 在客户端生成正弦延迟和周期性错误数，并截取最后 100 个点。这是 fixture，不是遥测接口。
+工程问题：改变采样数量之后，更新的是原来的图，还是偷偷重建了一张？
 
-## 实例 API（1.6.32）
+1. basic默认28点、两列（X和延迟）。展开“查看真实SDK数据与生命周期观察”，确认`a04-series-json`是实际`plot.data`副本，`a04-plot-stats`记录28点、实际宽高和instance编号。
+2. “采样数量”从28改60。图和末五行表格改变，SDK数据变为两列各60项，setData钩子次数增加；instance编号与Canvas节点保持不变。
+3. 勾“使用窄面板”，面板目标宽度320px、最多父容器宽度。真实ResizeObserver经rAF合并后调用setSize；实际SDK宽度减少，instance与数据点数不变。小于280px的可用空间由图表自身滚动承接。
+4. 取消窄面板后恢复；停止或切换页面将destroy。不是只清空一段提示文字。
 
-| API | 含义 |
-|---|---|
-| `new uPlot(opts, data, element)` | DOM 已经存在才能构造。禁止放在 render |
-| `setData(next, resetScales?)` | 整批列替换并重绘。省略第二参时重置 scale。`false` 保留用户窗口，新点可能在窗外 |
-| `setSize({width,height})` | 容器变了再调用。Lab 用 rAF 合并 |
-| `setSeries(idx, {show:false})` | 隐藏一条 Y，不必销毁 plot。Lab 没做切换，生产应走这里而不是改 `series` 配置重建 |
-| `setScale('x', {min,max})` | 显式视窗。跟随最新与保留缩放是两种产品状态 |
-| `batch(fn)` | 把 `setData` 和 `setScale` 合成一次提交 |
-| `valToPos` / `posToVal` | 相对**绘图区**的 CSS 像素。`canvasPixels: true` 是另一套单位 |
-| `posToIdx` / `valToIdx` | 最近的列下标，不一定精确命中，还要处理 null |
-| `destroy()` | 卸 DOM 和内部监听。effect cleanup 必调 |
+`setData(data)`替换整批列，没有“append一点”API。第二参默认true，会重新自动计算scale；本例选择跟随新窗口。保留用户缩放要明确使用`setData(data, false)`并管理跟随状态，否则新点可能在视窗外。本例未实现跟随/缩放模式切换。
 
-Lab 的流式路径选择重置 scale，因为 X 窗口整体前移。生产里用户一旦框选，就要把策略改成 `setData(data, false)` 并停止自动 `setScale`，否则会抢走缩放。不要在已 `destroy` 的实例上 `setData`。
+尺寸观察使用SDK`setSize`钩子的实际宽高，不把Canvas backing-store像素与CSS宽度混为一谈。图的250px配置高度包含绘图区/轴，不包含可能变化的HTML图例高度。
 
-光标钩子 `hooks.setCursor` 会很高频。React 侧要限频，不能每帧 `setState` 整棵树。Lab 没有接光标，表格只展示末五个点。
+## 实验二：不同采样频率与两个单位
 
-## 生命周期
+工程问题：两项指标时间不完全重合时，空位怎样表示，右侧轴对应哪条数据？
 
-```text
-React: samples / shift / level
-  -> createSeries() 得到 [x, latency, errors?]
-  -> level 变化：destroy 旧 plot，new uPlot
-  -> 仅数据变化：setData（重置 scale）
-  -> ResizeObserver + rAF：setSize
-  -> 卸载：disconnect、cancelAnimationFrame、destroy
+1. business的延迟每分钟一个点，错误数每三分钟一个点。真实SDK `uPlot.join([[x1, y1], [x2, y2]])`合并X，应用把未对齐槽位的undefined转成null，得到等长三列。
+2. 初始第一点错误数3；第二分钟未采样，所以是null；第四个时间点实际采样为0，必须保留0。检查实际SDK数据和最近五行“缺失”，不能把所有缺失补成0。
+3. 橙色错误测点用`errors` scale与右侧“错误数”轴，绿色延迟用默认y/ms轴。稀疏错误列显式显示测点、`spanGaps:false`，没有用连线假装中间时刻也被测量。
+4. 取消“显示错误数”，真实`setSeries(2, {show:false})`改变曲线可见性，SDK观察中errorsVisible变false/seriesEvents增加。数据仍是三列，表格仍保留这些数值；再次勾选可恢复，没有重建实例。
+
+join不是输入验证或无限量聚合。调用前要保证原始X数字、唯一、递增，领域层决定重复和缺失语义。本例错误时间轴是延迟时间轴子集，因此合并后仍最多100点；任意几条独立时间轴的并集可能比每条都大，要对合并后的数据重新设预算。
+
+## 实验三：推进、保留100点、暂停和销毁
+
+工程问题：实时更新时，保留多少旧数据？用户要求暂停、页面隐藏或离开时，还有什么在运行？
+
+1. advanced选择100点，记下首末Unix秒、实际SDK instance与setData次数。点击“追加10个采样”，SDK仍100点，每列等长，首末都前移600秒，旧的10点已不在当前快照里，Canvas和instance不变。
+2. “追加1个采样”只前移60秒。应用重新生成有界快照后交给setData；不是SDK自动采样、自动淘汰或ring buffer。延迟每17个公式索引有一个null，表示缺测断线。
+3. 点击“开始模拟采样”，每650ms推进一步；运行中手动追加按钮disabled。点击“暂停模拟采样”后，数据停止变化。清空增量并重置会先暂停并令shift=0，采样数量保持当前选择。
+4. 页面隐藏时即使勾了覆盖也暂停；减少动态偏好下默认暂停，明确勾选覆盖后才可运行。暂停保留用户请求意图，恢复可见且策略允许时重新启动interval。这个策略来自本例，不是uPlot内置功能。
+5. 切换Lab tab或停止并卸载后，interval/visibility/media监听、ResizeObserver、待执行rAF和图表实例都清理。SDK真实destroy钩子在旧宿主留下data-uplot-destroyed=true，未来浏览器可持有那个ElementHandle核对；它是本例观察，不是uPlot公开属性。
+
+[stream-policy.ts](examples/stream-policy.ts)只计算允许启动interval的条件。清理采用原有成对路径：observer.disconnect → cancelAnimationFrame → instance.destroy；ref仍指向该实例时才清空。series/axes结构随level改变才重建，数据只setData；旧resize回调核对实例，不能操作已销毁对象。
+
+## 迁到自己的项目
+
+```sh
+pnpm add uplot@1.6.32
 ```
 
-`opts` 随 level 改变轴和 series 数量，所以依赖写的是 `[level]` 而不是 data。把 `onCursor` 放进 options 对象又放进依赖，会造成无意义重建；要用 ref 保持回调身份。StrictMode 会多跑一次 setup/cleanup，销毁不能省。
+uPlot没有React peer，由effect适配。复制example.tsx、series-data.ts、chart-options.ts、stream-policy.ts、workshop.css，保留相对路径；demo.tsx只是Lab出口。还要保留包内`uplot/dist/uPlot.min.css`导入，否则图例/坐标层布局不完整。
 
-PNG：`plot.ctx.canvas.toBlob` 只包含 Canvas 像素，不含 HTML 图例、tooltip 和工具栏。`createObjectURL` 用完要 `revokeObjectURL`，并处理 `toBlob` 回调为 null。相对绘图区的坐标还要加上 `.u-over` 的 `getBoundingClientRect()`，不能把 `clientX` 直接交给 `posToVal`。高 DPR 下不要自己再乘 `devicePixelRatio`，除非明确用 canvas 像素。Lab 没有导出按钮。
+真实数据接入时，应用API client负责signal/错误/预算，领域层先对齐和校验，再传入AlignedData。列等长至少2点、缺测语义、时间单位、合并后点数和业务统计都由应用决定；显示抽样列不能代替原始告警/计费数据。图表实例不充当服务端状态缓存。
 
-## 性能，不要神化
+这里只限制保留数据，未测FPS、堆内存、Canvas字节或十万点性能；高频场景应评估定长缓冲、按帧批量快照、抽样及目标设备。没有HTTP、PNG/CSV导出、Worker数据处理或插件。表格提供近期可读数值，Canvas不是完整无障碍结果。
 
-Canvas backing store 随宽度、DPR 和同屏图表数量涨。`Array.splice(0,1)` 在长数组上会搬移；Lab 每次重建最多 100 列的新数组，650ms 一次，便于阅读。生产高频接入要用定长 ring buffer，按 UI 节拍快照再 `setData`。
+## 官方原文与验证边界
 
-显示层抽样（每桶留 min/max）会丢形态。统计、告警、账单必须用原始序列，不能用抽样结果。本条目没有本地渲染基准，不写 FPS 或内存字节。
+固定tag1.6.32解析到官方提交`e995b061e9fc5476a6d862cd2fb2ebc7452ca012`；本地package.json和官方该ref的package.json均1.6.32。实际核对dist/uPlot.d.ts与esm中的join、setData默认reset、setSize、setSeries、destroy及hooks，不从master猜API。
 
-## 反例
+官方根目录仅README.md英文候选，没有中文根README，保存原文10889字节，SHA256 `8fd11454911e4e8db65d53fe9791daec932dd4208d51f07a68c3f3721ad5947b`。版本、固定来源、语言、日期和全部响应头见library.json及official/source-evidence.json。包声明官方仓库兼作主页；GET200但XFO deny和CSP frame-ancestors none明确禁止iframe，状态blocked并保留直达。
 
-把行对象直接交给构造函数：
+- [固定官方原文](https://github.com/leeoniya/uPlot/blob/e995b061e9fc5476a6d862cd2fb2ebc7452ca012/README.md)
+- [同版本数据格式/模型](https://github.com/leeoniya/uPlot/blob/e995b061e9fc5476a6d862cd2fb2ebc7452ca012/docs/README.md)
+- [同版本类型/API](https://github.com/leeoniya/uPlot/blob/e995b061e9fc5476a6d862cd2fb2ebc7452ca012/dist/uPlot.d.ts)
 
-```ts
-// 错：uPlot 要的是列，不是对象行
-new uPlot(opts, rows as unknown as uPlot.AlignedData, host);
-
-// 对：先对齐
-const data: uPlot.AlignedData = [
-  rows.map((row) => row.t),
-  rows.map((row) => row.latency),
-];
-```
-
-| 错误 | 后果 | 正确 |
-|---|---|---|
-| `Date.now()` 当秒放进默认时间轴 | 轴差 1000 倍 | 除以 1000，或显式 `ms: 1` / `time: false`，全链路同一单位 |
-| 缺测写成 0 | 假低点 | `null` 断线，并在表里写「缺失」。Lab advanced 已这样做 |
-| render 里 `new uPlot` | 多 canvas、监听泄漏、缩放被重置 | mount 一次；数据走 `setData` |
-| 只听 `window.resize` | 侧栏拖动时图不跟 | `ResizeObserver` + rAF + `setSize`，cleanup 断开 |
-| 流式 `setData(data, false)` 却希望自动跟随 | 新点在窗外 | 跟随模式用 `setScale`；用户缩放后暂停跟随。Lab 选择默认重置 |
-| `posToVal(event.clientX, 'x')` | 把窗口坐标当成绘图区 | 先减去 `.u-over` 的 left |
-| 用抽样列做审计 | 极值丢失 | 全量数据做统计，Canvas 只拿显示预算 |
-| tooltip 用 `innerHTML` 拼网络字符串 | XSS；跨域图污染 canvas | React 文本或 `textContent` |
-| 卸载只清 interval | plot、observer、rAF 仍在 | 三者加上 `destroy` 一起收 |
-
-## 安全与无障碍
-
-生产接口要校验来源、身份、体积、CORS 和速率。`null`、NaN、Infinity、非安全整数时间戳在边界拒绝。HTTP 503 不是空数组，上一张图留着。`AbortController` 不保证服务端计算停止，还要请求序号。Lab 没有这些请求。
-
-Canvas 不能替代 `<table>`。不要用 `aria-live="assertive"` 播报每次 hover。颜色不能是唯一编码，表里要有数字。触控缩放未在本 demo 验收。
-
-## 组合
-
-**uPlot + TanStack Query + Zod。** Query 管缓存和 `signal`，Zod 收 JSON，领域层去重、对齐、补 `null`，uPlot 只收数值列。缓存键带上主机、分辨率和时间范围。不要在 Query cache 和 plot 实例里各存一份可写权威数据。Lab 用本地公式代替这一层。
-
-**uPlot + 可调布局 + ExcelJS。** 布局变化触发 `setSize`。工作簿从完整原始行生成，不从抽样或 PNG 反推。字符串单元格防公式注入。
-
-**uPlot + Worker。** 分桶和异常检测放 Worker，主线程按批 `setData`。`Float64Array` 可以 transfer，转移后主线程不能再读那块 buffer。不要每个 socket 消息都 `setData`。
-
-## 生产清单
-
-1. X 单位全链路一致，唯一且递增。
-2. 缺测是 `null`，列等长。
-3. 构造在 effect，销毁成对。
-4. 数据更新与结构更新分开：`setData` 对 `setSeries` / 重建。
-5. 容器尺寸走 ResizeObserver，隐藏宽度不 `setSize`。
-6. 跟随视窗和用户缩放是显式状态。
-7. 推流可暂停：后台、减少动态、卸载。
-8. 统计不读抽样列。
-9. 表格或摘要提供同等数字。
-10. PNG 与原始导出分开，Blob URL 释放。
-
-## 升级与练习
-
-1. 数据始终存 UTC 秒，界面切换 UTC 与 `Asia/Shanghai`，DST 当天不把秒再乘 1000。
-2. 60 秒延迟和 300 秒错误数对齐成等长列，空洞率过高时提示不适合对齐模式。
-3. 用 ring buffer 和 250ms 批刷新替换 Lab 的 650ms 全量 `setData`；暂停和卸载后不得再调用实例。
-4. 同时导出 CSV 和 PNG，并核对 PNG 不含 DOM 图例。
-5. 放进可拖拽面板，确认 `setSize` 不增加 plot 实例数；StrictMode 下无泄漏。
-
-从 master 迁回 1.6.32 时，删掉类型文件里没有的方法，再对一次 `dist/uPlot.d.ts`。
-
-## 故障排查
-
-空白：CSS 是否引入、宿主是否有宽度、data 是否等长。时间错位：秒和毫秒。隐藏曲线却整图重建：应 `setSeries`。新点看不见：`setData` 的第二参是否为 `false` 且没有 `setScale`。卸载后报错：cleanup 是否仍持有实例。导出只有线没有图例：这是 Canvas 范围，不是失败。
-
-## 官方链接
-
-- [release 1.6.32](https://github.com/leeoniya/uPlot/releases/tag/1.6.32)
-- [npm](https://www.npmjs.com/package/uplot)
-- [数据格式](https://github.com/leeoniya/uPlot/blob/1.6.32/docs/README.md)
-- [1.6.32 类型](https://github.com/leeoniya/uPlot/blob/1.6.32/dist/uPlot.d.ts)
-- [LICENSE](https://github.com/leeoniya/uPlot/blob/1.6.32/LICENSE)
-
-## 证据
-
-sdk、build、browser 在 `docs/library-lab/evidence/runs/` 有本条目收据之前为 **NOT_RUN**。`shouldRunStream` 的测试只证明暂停策略，不证明 Canvas、`setData` 或时间轴。Actions run `41779873259` 是仓库级 install、typecheck、build、52 个 SDK 文件（153 个测试）和 45 个 Playwright，不是 A04 的 PASS，不要写入 `verification.json`。研究稿里的领域测试通过同样不是本仓库的 SDK 验收。
+Node能运行真实join对齐工具，但没有真实document/Canvas。本地SDK3项只证明对齐工具与同源fixture，绘图生命周期不在Node SDK套件中，明确NOT_RUN，没有伪DOM或假context；纯暂停策略4项另外记账。真实图、更新、resize、销毁和移动布局的浏览器覆盖范围见本地证据。局部命令和六项状态见local-validation.md，正式verification三项保持NOT_RUN。

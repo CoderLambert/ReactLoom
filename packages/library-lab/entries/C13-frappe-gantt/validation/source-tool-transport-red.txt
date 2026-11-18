@@ -1,0 +1,36 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['python3', 'entries/C13-frappe-gantt/validation/source-tool-transport-fixture.py']
+startedAt: 2026-11-10T16:40:24.656369+00:00
+exit: 1
+test_complete_success_replaces_both_after_all_transfers (__main__.SourceRefreshProtection.test_complete_success_replaces_both_after_all_transfers) ... ok
+test_first_request_failure_preserves_success_pair (__main__.SourceRefreshProtection.test_first_request_failure_preserves_success_pair) ... FAIL
+test_homepage_failure_after_readme_preserves_success_pair (__main__.SourceRefreshProtection.test_homepage_failure_after_readme_preserves_success_pair) ... FAIL
+
+======================================================================
+FAIL: test_first_request_failure_preserves_success_pair (__main__.SourceRefreshProtection.test_first_request_failure_preserves_success_pair)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C13-frappe-gantt/validation/source-tool-transport-fixture.py", line 110, in test_first_request_failure_preserves_success_pair
+    self.assert_failure_preserves_previous(1)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C13-frappe-gantt/validation/source-tool-transport-fixture.py", line 100, in assert_failure_preserves_previous
+    self.assertEqual((official / 'source-evidence.json').read_bytes(), ORIGINAL_EVIDENCE)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: b'{\n[66 chars]s": [],\n  "syncedAt": "2026-11-10T16:40:24.712530+00:00"\n}\n' != b'{\n[66 chars]s": [\n    {\n      "url": "https://registry.n[17996 chars]n}\n'
+
+======================================================================
+FAIL: test_homepage_failure_after_readme_preserves_success_pair (__main__.SourceRefreshProtection.test_homepage_failure_after_readme_preserves_success_pair)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C13-frappe-gantt/validation/source-tool-transport-fixture.py", line 113, in test_homepage_failure_after_readme_preserves_success_pair
+    self.assert_failure_preserves_previous(5)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C13-frappe-gantt/validation/source-tool-transport-fixture.py", line 100, in assert_failure_preserves_previous
+    self.assertEqual((official / 'source-evidence.json').read_bytes(), ORIGINAL_EVIDENCE)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: b'{\n[262 chars]0T16:40:24.713954+00:00",\n      "headers": {\[3736 chars]n}\n' != b'{\n[262 chars]0T16:13:38.088165+00:00",\n      "headers": {\[17800 chars]n}\n'
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.012s
+
+FAILED (failures=2)

@@ -1,0 +1,226 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom
+argv: ['node', '/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C12-fullcalendar/validation/candidate17-ui-probe.mjs']
+startedAt: 2026-11-10T16:52:50.968178+00:00
+exit: 1
+{
+  "corrected": false,
+  "baseURL": "http://127.0.0.1:4319",
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  },
+  "basic": {
+    "nodes": [
+      {
+        "tag": "BUTTON",
+        "role": null,
+        "text": "读取日历API事件",
+        "label": null
+      },
+      {
+        "tag": "BUTTON",
+        "role": null,
+        "text": "跳到 DST 回拨日",
+        "label": null
+      },
+      {
+        "tag": "BUTTON",
+        "role": null,
+        "text": "重置本地日历",
+        "label": null
+      },
+      {
+        "tag": "BUTTON",
+        "role": null,
+        "text": "",
+        "label": "上月"
+      },
+      {
+        "tag": "BUTTON",
+        "role": null,
+        "text": "",
+        "label": "下月"
+      },
+      {
+        "tag": "BUTTON",
+        "role": null,
+        "text": "今天",
+        "label": "今天"
+      },
+      {
+        "tag": "BUTTON",
+        "role": "tab",
+        "text": "月",
+        "label": "月"
+      },
+      {
+        "tag": "BUTTON",
+        "role": "tab",
+        "text": "周",
+        "label": "周"
+      },
+      {
+        "tag": "BUTTON",
+        "role": "tab",
+        "text": "日程",
+        "label": "日程"
+      }
+    ],
+    "originalButtonMatches": 0,
+    "actualWeekTabMatches": 1
+  },
+  "business": {
+    "before": [
+      {
+        "id": "rss-plan",
+        "title": "发布订阅目录",
+        "start": "2026-11-01",
+        "end": "",
+        "allDay": true
+      },
+      {
+        "id": "review",
+        "title": "工程复盘",
+        "start": "2026-11-03T09:00:00-05:00",
+        "end": "2026-11-03T10:00:00-05:00",
+        "allDay": false
+      },
+      {
+        "id": "two-days",
+        "title": "两天校对",
+        "start": "2026-11-03",
+        "end": "2026-11-05",
+        "allDay": true
+      },
+      {
+        "id": "local-1",
+        "title": "真实创建 <草稿>",
+        "start": "2026-11-04",
+        "end": "",
+        "allDay": true
+      }
+    ],
+    "countersBefore": {
+      "dates": 1,
+      "drops": 1,
+      "resizes": 0,
+      "reverts": 0
+    },
+    "geometry": {
+      "handle": {
+        "x": 613.984375,
+        "y": 715.453125,
+        "width": 109.3125,
+        "height": 8,
+        "class": "fc-classic-1EY fc-classic-pps fc-classic-vs6 fc-classic-MaV fc-classic-uuA fc-classic-fJL fc-NW fc-J0 fc-IR fc-8h",
+        "cursor": "s-resize"
+      },
+      "event": {
+        "x": 612.984375,
+        "y": 671.484375,
+        "width": 111.3125,
+        "height": 48.96875,
+        "display": "flex",
+        "flexDirection": "column"
+      },
+      "centerHit": {
+        "tag": "DIV",
+        "class": "fc-classic-1EY fc-classic-pps fc-classic-vs6 fc-classic-MaV fc-classic-uuA fc-classic-fJL fc-NW fc-J0 fc-IR fc-8h",
+        "isHandle": true
+      }
+    },
+    "drag": {
+      "from": {
+        "x": 668.640625,
+        "y": 719.453125
+      },
+      "to": {
+        "x": 668.640625,
+        "y": 794.453125
+      },
+      "horizontal": false
+    },
+    "countersAfter": {
+      "dates": 1,
+      "drops": 1,
+      "resizes": 0,
+      "reverts": 0
+    },
+    "receipt": {
+      "kind": "drop",
+      "id": "review",
+      "from": "2026-11-02T09:00:00-05:00",
+      "start": "2026-11-03T09:00:00-05:00",
+      "end": "2026-11-03T10:00:00-05:00",
+      "allDay": false,
+      "decision": "accepted"
+    },
+    "nativeEvents": [
+      {
+        "type": "mousedown",
+        "trusted": true,
+        "x": 668,
+        "y": 719,
+        "tag": "DIV",
+        "class": "fc-classic-1EY fc-classic-pps fc-classic-vs6 fc-classic-MaV fc-classic-uuA fc-classic-fJL fc-NW fc-J0 fc-IR fc-8h",
+        "event": "fc-classic-uqo fc-classic-zIi c12-event c12-event-review fc-classic-bCs fc-classic-eYX fc-classic-d0j fc-classic-DO7 fc-classic-YjJ fc-classic-vwH fc-classic-3Xj fc-classic-1Wx fc-classic-A3h fc-classic-yKG fc-classic-ku3 fc-classic-Z7Q fc-classic-Ika fc-classic-zi1 fc-classic-2qh fc-OV fc-mU fc-Zu fc-Ad fc-Yb fc-4p"
+      },
+      {
+        "type": "mouseup",
+        "trusted": true,
+        "x": 668,
+        "y": 794,
+        "tag": "HTML",
+        "class": ""
+      }
+    ],
+    "after": [
+      {
+        "id": "rss-plan",
+        "title": "发布订阅目录",
+        "start": "2026-11-01",
+        "end": "",
+        "allDay": true
+      },
+      {
+        "id": "review",
+        "title": "工程复盘",
+        "start": "2026-11-03T09:00:00-05:00",
+        "end": "2026-11-03T10:00:00-05:00",
+        "allDay": false
+      },
+      {
+        "id": "two-days",
+        "title": "两天校对",
+        "start": "2026-11-03",
+        "end": "2026-11-05",
+        "allDay": true
+      },
+      {
+        "id": "local-1",
+        "title": "真实创建 <草稿>",
+        "start": "2026-11-04",
+        "end": "",
+        "allDay": true
+      }
+    ]
+  }
+}
+node:internal/modules/run_main:111
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: View selector must target actual accessible role
+
+0 !== 1
+
+    at file:///home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C12-fullcalendar/validation/candidate17-ui-probe.mjs:99:10 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 0,
+  expected: 1,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v26.13.0

@@ -1,0 +1,18 @@
+{
+  "command": [
+    "pnpm",
+    "exec",
+    "playwright",
+    "test",
+    "--config=.local-evidence/quality-playwright.config.ts",
+    "e2e/quality-remediation-recharts.spec.ts",
+    "--grep",
+    "@A02 business"
+  ],
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+  "startedAt": "2026-11-10T11:38:18.326144+00:00",
+  "finishedAt": "2026-11-10T11:38:20.728423+00:00",
+  "exitCode": 0,
+  "implicitBuild": false,
+  "log": "docs/library-lab/evidence/quality-upgrade/candidate-07/browser-recharts-retry.txt"
+}

@@ -1,0 +1,178 @@
+[
+  {
+    "name": "format",
+    "argv": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "entries/A13-threejs/examples",
+      "entries/A13-threejs/tests"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "start": "2026-11-10T12:08:23.159132+00:00",
+    "end": "2026-11-10T12:08:23.379231+00:00",
+    "exitCode": 1,
+    "log": "validation/format.txt",
+    "sha256": "36a171a7ff3a3280c13bd307c4637c3f2aca8d4616383ce037eeb1df1ace2fbf"
+  },
+  {
+    "name": "sdk",
+    "argv": [
+      "node",
+      "--test",
+      "entries/A13-threejs/tests/sdk.test.mjs"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "start": "2026-11-10T12:08:23.379494+00:00",
+    "end": "2026-11-10T12:08:23.482578+00:00",
+    "exitCode": 0,
+    "log": "validation/sdk.txt",
+    "sha256": "117a621de5b12e440c39f3f151bb09f50568ba372fc9764e2fb40b48b61f25dd"
+  },
+  {
+    "name": "policy",
+    "argv": [
+      "node",
+      "--test",
+      "entries/A13-threejs/tests/animation-policy.test.mts"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "start": "2026-11-10T12:08:23.482768+00:00",
+    "end": "2026-11-10T12:08:23.570400+00:00",
+    "exitCode": 0,
+    "log": "validation/policy.txt",
+    "sha256": "8d049b7a808f70e5e2755263cf91f400303886c06cc64bbe210f39ba8981aa43"
+  },
+  {
+    "name": "types",
+    "argv": [
+      "pnpm",
+      "exec",
+      "tsc",
+      "--ignoreConfig",
+      "--noEmit",
+      "--target",
+      "ES2022",
+      "--lib",
+      "ES2022,DOM,DOM.Iterable",
+      "--module",
+      "ESNext",
+      "--moduleResolution",
+      "Bundler",
+      "--jsx",
+      "react-jsx",
+      "--strict",
+      "--skipLibCheck",
+      "--esModuleInterop",
+      "--allowImportingTsExtensions",
+      "--types",
+      "vite/client,node",
+      "entries/A13-threejs/examples/demo.tsx"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "start": "2026-11-10T12:08:23.570601+00:00",
+    "end": "2026-11-10T12:08:23.831424+00:00",
+    "exitCode": 0,
+    "log": "validation/types.txt",
+    "sha256": "a13bc1076b6ad80a1377a13e28e85582a5c894a0aff21c89db19abc867141ced"
+  },
+  {
+    "name": "final-format",
+    "argv": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "entries/A13-threejs/examples",
+      "entries/A13-threejs/tests",
+      "entries/A13-threejs/library.json",
+      "entries/A13-threejs/verification.json",
+      "entries/A13-threejs/official/source-evidence.json",
+      "e2e/quality-remediation-threejs.spec.ts"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "start": "2026-11-10T12:18:55.547430+00:00",
+    "end": "2026-11-10T12:18:55.769970+00:00",
+    "exitCode": 0,
+    "log": "validation/final-format.txt",
+    "sha256": "89d6c6fa90ad28a20b4a4104897b623cd8c8fe7419bd09ea43f90da7476d838e"
+  },
+  {
+    "name": "metadata",
+    "argv": [
+      "python",
+      "entries/A13-threejs/validation/check-metadata.py"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "start": "2026-11-10T12:18:55.770205+00:00",
+    "end": "2026-11-10T12:18:55.786637+00:00",
+    "exitCode": 0,
+    "log": "validation/metadata.txt",
+    "sha256": "ea7e197723a9fc7fe001e72c47e40723c84c3f39b051615a0fdedd1497fc53cc"
+  },
+  {
+    "name": "proposal-types",
+    "argv": [
+      "pnpm",
+      "exec",
+      "tsc",
+      "--ignoreConfig",
+      "--noEmit",
+      "--target",
+      "ES2022",
+      "--lib",
+      "ES2022,DOM,DOM.Iterable",
+      "--module",
+      "ESNext",
+      "--moduleResolution",
+      "Bundler",
+      "--strict",
+      "--skipLibCheck",
+      "--types",
+      "node",
+      "e2e/quality-remediation-threejs.spec.ts"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "start": "2026-11-10T12:18:55.786798+00:00",
+    "end": "2026-11-10T12:18:56.027035+00:00",
+    "exitCode": 0,
+    "log": "validation/proposal-types.txt",
+    "sha256": "b762aa3d654a780bc09c727562eaf40753d14abbae4fe94088a63ecac7366d1e"
+  },
+  {
+    "name": "types-final",
+    "argv": [
+      "pnpm",
+      "exec",
+      "tsc",
+      "--ignoreConfig",
+      "--noEmit",
+      "--target",
+      "ES2022",
+      "--lib",
+      "ES2022,DOM,DOM.Iterable",
+      "--module",
+      "ESNext",
+      "--moduleResolution",
+      "Bundler",
+      "--jsx",
+      "react-jsx",
+      "--strict",
+      "--skipLibCheck",
+      "--esModuleInterop",
+      "--allowImportingTsExtensions",
+      "--types",
+      "vite/client,node",
+      "entries/A13-threejs/examples/demo.tsx"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "start": "2026-11-10T12:20:04.344541+00:00",
+    "end": "2026-11-10T12:20:04.642855+00:00",
+    "exitCode": 0,
+    "log": "validation/types-final.txt",
+    "sha256": "2cb1e4c95905bcc73b44a59f0dd50e6b622ac00470cf51eb70e904cd68ba9db9"
+  }
+]

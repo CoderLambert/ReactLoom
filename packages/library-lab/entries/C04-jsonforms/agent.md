@@ -1,47 +1,17 @@
-# C04 JSON Forms — 工程手册
+# C04 JSON Forms 3.8.0
 
-## 适用
+Schema驱动配置页用本库；固定字段精细UX可用RHF，只校验对象用Ajv。core/react/vanilla-renderers均3.8.0，Ajv8.20，MIT、React19.3，React包peer16.12/17/18/19。仅Vanilla，未接Material/i18n/HTTP/用户存储。
 
-字段随类型变化、需要和 JSON Schema 一起维护的配置表单。固定少量字段用 React Hook Form。只校验 payload、不画控件时不要引入渲染器。
+三个目标：basic真实Schema控件与onChange/校验草稿；business HIDE与payload白名单；advanced additionalErrors模拟422/409、提交快照/取消/重置/卸载。源码五文件含mjs声明和forms.css，无Lab alias；demo只是出口。
 
-## 版本
+实装React实现将onChange以10ms debounce发core.data/core.errors，初始也通知。data是最近已通知草稿，errors不含additionalErrors；页面计数不是请求数。保存前复验并生成新payload快照，回包不再读取新草稿。只有真实数据变化清服务错误；错误-only通知不得清它。
 
-`@jsonforms/core@3.8.0`、`@jsonforms/react@3.8.0`、`@jsonforms/vanilla-renderers@3.8.0`，以及 `ajv@8.20.0`。三个 JSON Forms 包一起升级。本条目没有 Material 渲染器。
+Vanilla HIDE是hidden wrapper，input/data可以仍存在；toSubscriptionPayload在manual时完全省url，rss分支才保留trim地址。前缀/长度不等于URL合法性；https://长度8、https://a长度9，不能说必被minLength8拦住。二层URL解析拒绝凭据/片段，仍不做DNS/重定向授权，绝不抓取输入地址。
 
-## 迁移
+应用owns controller/本地timer、generation、alive、provider epoch；编辑通知/取消/重置/卸载作废旧任务。abortableDelay自己clearTimeout，finally也检查代际。重置key重建本表单，epoch拒绝旧provider晚通知并清旧composition；level创建新Session。SDK owns控件/内部状态；不全局清SDK/放宽CSP。
 
-带走 `examples/example.tsx` 和 `examples/submission-policy.mjs`。用项目的 API client 替换 `abortableDelay` 和本地 `duplicate`。保留 `toSubscriptionPayload`：UI 的 HIDE 不能决定 POST 体。`additionalErrors` 继续用状态保存，而不是写在 JSX 字面量里。
+组合期间提交不增加计数，不改变现有请求资格；协议测试不是真OSIME。服务错误只允许name/url的instancePath，本地fixture不是HTTP或后端补偿。
 
-## 不可删的清理
+精确操作：c04-workshop/data-level/data-saving；基本名称“工作区名称”、启用“启用”；业务“订阅名称”“订阅类型”“RSS 地址”“启用订阅”（required会带*，按label前缀）；按钮“保存内存草稿”“取消进行中的操作”“重置”；展开“查看最终 payload”。c04-schema-errors是SDK计数，server-errors/status/request-count分别是服务错误/本地状态/累计模拟提交；c04-payload当前预览、c04-submitted本次快照，c04-notifications包含初始化与校验通知。完整browser提案在validation，root统一运行。
 
-数据变化、取消、重置、卸载都要增加 generation 并 abort。回包写入前比较 generation。服务端错误只在数据真正变化时清除。`toServerError` 只接受 `name` 和 `url`。组合输入期间不要提交。
-
-## 反例
-
-```tsx
-onChange={() => save(data)}
-<JsonForms additionalErrors={[{ instancePath: '/name', message }]} />
-```
-
-- 认为 `effect: 'HIDE'` 会删除 `url`。
-- 只在 UI 写必填，Schema 没有 `if/then`。
-- `pattern: '^https://'` 当作拒绝了用户名密码。
-- 自定义控件不调用 `handleChange(path, value)`。
-- 编译租户提交的任意 Schema。
-- abort 之后向用户声称服务器没有保存。
-
-## 测试断言
-
-- manual 的 payload 没有 `url`；rss 保留 trim 后的地址。
-- `https://user:pass@host` 和带 fragment 的地址被 `validateSubmission` 拒绝。
-- 未知字段不能变成 `instancePath`。
-- 旧 generation 的 409 不能写回。
-- 策略测试不是浏览器里点过 Vanilla 控件的证据。
-
-## 真实限制
-
-保存是内存延迟，不是 HTTP。没有自定义 renderer，没有 i18n adapter，没有 SSR。中文输入法只在提交门闩上处理，没有真机记录。Ajv 的 CSP 行为未在本条目单独验收。
-
-## 证据
-
-没有收据不要写 PASS。Actions 41779873259 不是本条目。不要改 `verification.json`。
+SDK3只真实初始SSR/Ajv，不证明动态表单；pure4只业务规则。正式三项NOT_RUN，日志/六项见local-validation。主原文固定v3.8.0 tag6075bcee…/packages/react/README4592B/hash618f7fb0…，npm gitHead缺失事实保留，官方中文候选/完整头在official。官网XFO SAMEORIGIN+CSP frame-ancestors self→blocked；正文NOT_READ，不冒称iframe运行。

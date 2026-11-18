@@ -1,0 +1,78 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+ARGV: ["node", "--input-type=module"]
+START: 2026-11-10T10:19:02.596932+00:00
+END: 2026-11-10T10:19:02.623696+00:00
+STDIN:
+import assert from 'node:assert/strict'
+import {readFileSync, existsSync, realpathSync} from 'node:fs'
+import {resolve,dirname} from 'node:path'
+import {createHash} from 'node:crypto'
+import {validateEntry} from './src/lib/catalog.mjs'
+import {entryCompletenessIssues} from './scripts/entry-gate.mjs'
+const root=resolve('entries/C07-tanstack-table')
+const json=(name)=>JSON.parse(readFileSync(resolve(root,name),'utf8'))
+const entry=json('library.json')
+assert.deepEqual(validateEntry(entry),[])
+assert.deepEqual(entryCompletenessIssues(entry,{guide:existsSync(resolve(root,'guide.md')),agent:existsSync(resolve(root,'agent.md')),agents:existsSync(resolve(root,'AGENTS.md')),verification:existsSync(resolve(root,'verification.json'))}),[])
+const files=[...new Set(entry.demos.flatMap(d=>d.sourceFiles))]
+for(const file of files){
+ assert(existsSync(resolve(root,file)),file)
+ const source=readFileSync(resolve(root,file),'utf8')
+ for(const m of source.matchAll(/(?:from\s+|import\s*)['"](\.[^'"]+)['"]/gu)){
+  const base=resolve(dirname(resolve(root,file)),m[1])
+  const candidates=[base,...['.ts','.tsx','.mjs','.d.mts','.css'].map(ext=>base+ext)]
+  const target=candidates.find(f=>existsSync(f))
+  assert(target,'unresolved '+file+':'+m[1])
+  assert(files.some(f=>resolve(root,f)===target),'unpublished dependency '+file+':'+m[1])
+ }
+}
+for(const doc of ['guide.md','agent.md','local-validation.md']){
+ const body=readFileSync(resolve(root,doc),'utf8')
+ for(const m of body.matchAll(/\]\(([^)]+)\)/gu)){
+  const link=m[1]
+  if(!link.startsWith('https:')&&!link.startsWith('#')) assert(existsSync(resolve(root,link)),doc+':'+link)
+ }
+}
+const bytes=readFileSync(resolve(root,entry.official.readme.snapshotPath))
+const sha=createHash('sha256').update(bytes).digest('hex')
+assert.equal(sha,entry.official.readme.sha256)
+assert.equal(bytes.length,7231)
+const evidence=json('official/source-evidence.json')
+assert.equal(sha,evidence.requests[1].sha256)
+assert.equal(evidence.packageVersion,'9.2.4')
+assert.equal(evidence.homepagePolicyHeaders['x-frame-options'],'DENY')
+assert.equal(evidence.homepagePolicyHeaders['content-security-policy'],null)
+assert.equal(entry.official.homepage.status,'blocked')
+assert.equal(evidence.browserFromLabOrigin,'NOT_RUN')
+for(const request of evidence.requests)assert.equal(request.status,200,request.url)
+const packagePath=resolve('node_modules/@tanstack/react-table/package.json')
+const installed=JSON.parse(readFileSync(packagePath,'utf8'))
+assert.equal(installed.version,'9.2.4')
+assert.equal(installed.dependencies['@tanstack/table-core'],'9.2.4')
+for(const result of Object.values(json('verification.json')))assert.equal(result.status,'NOT_RUN')
+console.log(JSON.stringify({entryId:entry.entryId,demos:entry.demos.length,runtimeFiles:files.length,installed:installed.version,packagePath:realpathSync(packagePath),readmeBytes:bytes.length,sha256:sha,homepage:entry.official.homepage.status,formalVerification:'NOT_RUN'},null,2))
+
+EXIT: 1
+STDOUT:
+
+STDERR:
+node:internal/modules/run_main:111
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: local-validation.md:validation/entry-metadata.txt
+    at file:///home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/[eval1]:28:57
+    at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async node:internal/modules/esm/loader:226:26
+    at async ModuleLoader.executeModuleJob (node:internal/modules/esm/loader:223:20)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v26.13.0

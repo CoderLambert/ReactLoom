@@ -4,14 +4,8 @@
   "slug": "sonner",
   "name": "Sonner",
   "group": "B",
-  "summary": "即时通知和操作反馈",
-  "tags": [
-    "Toast",
-    "React",
-    "撤销",
-    "反馈",
-    "异步状态"
-  ],
+  "summary": "真实Toast、最新保存的一次撤销、同id异步更新与局部取消",
+  "tags": ["Toast", "React", "撤销", "反馈", "异步状态", "所有权"],
   "contentState": "recreated",
   "packages": [
     {
@@ -21,12 +15,16 @@
   ],
   "references": [
     {
-      "title": "Sonner 官方交互文档",
+      "title": "官方2.0.8固定README",
+      "url": "https://github.com/emilkowalski/sonner/blob/6739aca5f668a33a4fd1d2fd9f758dff95c57466/README.md"
+    },
+    {
+      "title": "官方交互文档",
       "url": "https://sonner.emilkowal.ski/"
     },
     {
-      "title": "Sonner 官方仓库",
-      "url": "https://github.com/emilkowalski/sonner"
+      "title": "官方2.0.8源码",
+      "url": "https://github.com/emilkowalski/sonner/tree/6739aca5f668a33a4fd1d2fd9f758dff95c57466/src"
     }
   ],
   "related": [
@@ -44,65 +42,76 @@
   "demos": [
     {
       "demoId": "basic",
-      "title": "基础成功通知",
+      "title": "通知与业务反馈分开",
       "level": "basic",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx",
-        "examples/latest-run.ts"
+        "examples/latest-run.ts",
+        "examples/sonner-demo.css",
+        "examples/demo.tsx"
       ],
-      "capabilities": [
-        "portal",
-        "timer",
-        "aria-live"
-      ],
-      "description": "显示一条独立Toast并阅读业务状态"
+      "capabilities": ["timer", "aria-live", "keyboard"],
+      "description": "真实通知自动关闭，持续业务结果与通知生命周期分离"
     },
     {
       "demoId": "business",
-      "title": "带撤销的业务操作",
+      "title": "最新保存的一次撤销",
       "level": "business",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx",
-        "examples/latest-run.ts"
+        "examples/latest-run.ts",
+        "examples/sonner-demo.css",
+        "examples/demo.tsx"
       ],
-      "capabilities": [
-        "portal",
-        "timer",
-        "aria-live"
-      ],
-      "description": "保存新闻后通过通知操作撤销本地状态"
+      "capabilities": ["timer", "aria-live", "keyboard"],
+      "description": "保存后最新一次action可以撤销，关闭通知不改保存状态"
     },
     {
       "demoId": "advanced",
-      "title": "异步加载、失败和资源清理",
+      "title": "同 id 更新、失败与取消",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx",
         "examples/latest-run.ts",
-        "tests/undo-ownership.test.mts"
+        "examples/sonner-demo.css",
+        "examples/demo.tsx"
       ],
-      "capabilities": [
-        "portal",
-        "timer",
-        "aria-live"
-      ],
-      "description": "使用同一toast id由加载态进入成功或失败，可停止并清理"
+      "capabilities": ["timer", "aria-live", "keyboard"],
+      "description": "本地900ms任务冻结输入，同id终态恢复有限时长，取消/离开清理自有资源"
     }
   ],
   "license": {
-    "spdx": "MIT"
+    "spdx": "MIT",
+    "assets": "本地原创新闻状态fixture与布局CSS；Sonner官方样式由实际SDK导入注入，无外部资产。"
   },
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
-    "note": "独立编写，不继承研究包测试。"
+    "note": "保留独立编写的三目标与代际/撤销所有权；本轮修正终态Infinity继承和实例Toaster归属，未继承历史运行PASS。"
+  },
+  "official": {
+    "readme": {
+      "repository": "emilkowalski/sonner",
+      "commit": "6739aca5f668a33a4fd1d2fd9f758dff95c57466",
+      "path": "README.md",
+      "sourceUrl": "https://github.com/emilkowalski/sonner/blob/6739aca5f668a33a4fd1d2fd9f758dff95c57466/README.md",
+      "snapshotPath": "official/readme.md",
+      "language": "en",
+      "version": "2.0.8",
+      "syncedAt": "2026-11-10T14:19:23.547366+00:00",
+      "sha256": "0809d104ce28f9c14b3b1e73257d93096f96134d2a5f2f225e5abf38b1aa4549"
+    },
+    "homepage": {
+      "url": "https://sonner.emilkowal.ski/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-10T14:19:22.421372+00:00",
+      "reason": "GET200；完整响应头未见X-Frame-Options/CSP，未从Lab origin实际确认iframe，保持unknown。"
+    }
   }
 }

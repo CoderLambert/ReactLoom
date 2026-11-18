@@ -1,0 +1,11 @@
+{
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "argv": [
+    "node",
+    "--test",
+    "packages/library-lab/entries/E16-videojs-v10/examples/video-file-policy.test.mjs",
+    "packages/library-lab/entries/E16-videojs-v10/examples/media-cleanup.test.mjs"
+  ],
+  "exitCode": 0,
+  "at": "2026-11-17T18:04:33.655568+00:00"
+}

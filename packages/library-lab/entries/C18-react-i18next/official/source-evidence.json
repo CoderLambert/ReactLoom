@@ -1,0 +1,1289 @@
+{
+  "requests": [
+    {
+      "url": "https://registry.npmjs.org/react-i18next/17.0.16",
+      "finalUrl": "https://registry.npmjs.org/react-i18next/17.0.16",
+      "status": 200,
+      "checkedAt": "2026-11-10T17:42:54.404674+00:00",
+      "headers": {
+        "Date": "Tue, 10 Nov 2026 17:42:55 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "6195",
+        "Connection": "close",
+        "CF-Ray": "a586db41b9ac4633-LAX",
+        "CF-Cache-Status": "DYNAMIC",
+        "Access-Control-Allow-Origin": "*",
+        "Cache-Control": "max-age=300",
+        "Server": "cloudflare",
+        "Vary": "accept-encoding, accept",
+        "set-cookie": "<REDACTED_PUBLIC_COOKIE_SHA256:83a2a48e4b546a7edf47ae82d897a990e84ce88d489b66b0e1ade9c67e431682>; HttpOnly; SameSite=None; Partitioned; Secure; Path=/; Domain=npmjs.org; Expires=Tue, 10 Nov 2026 18:12:55 GMT"
+      },
+      "rawHeaders": [
+        [
+          "Date",
+          "Tue, 10 Nov 2026 17:42:55 GMT"
+        ],
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "Content-Length",
+          "6195"
+        ],
+        [
+          "Connection",
+          "close"
+        ],
+        [
+          "CF-Ray",
+          "a586db41b9ac4633-LAX"
+        ],
+        [
+          "CF-Cache-Status",
+          "DYNAMIC"
+        ],
+        [
+          "Access-Control-Allow-Origin",
+          "*"
+        ],
+        [
+          "Cache-Control",
+          "max-age=300"
+        ],
+        [
+          "Server",
+          "cloudflare"
+        ],
+        [
+          "Vary",
+          "accept-encoding, accept"
+        ],
+        [
+          "set-cookie",
+          "<REDACTED_PUBLIC_COOKIE_SHA256:83a2a48e4b546a7edf47ae82d897a990e84ce88d489b66b0e1ade9c67e431682>; HttpOnly; SameSite=None; Partitioned; Secure; Path=/; Domain=npmjs.org; Expires=Tue, 10 Nov 2026 18:12:55 GMT"
+        ]
+      ],
+      "bytes": 6195,
+      "sha256": "ff807f22dca44109fcfff4865b0861ce63f872983c5cd420e0efeddb486b7f2c",
+      "bodyStatus": "READ"
+    },
+    {
+      "url": "https://registry.npmjs.org/i18next/26.4.3",
+      "finalUrl": "https://registry.npmjs.org/i18next/26.4.3",
+      "status": 200,
+      "checkedAt": "2026-11-10T17:42:55.196500+00:00",
+      "headers": {
+        "Date": "Tue, 10 Nov 2026 17:42:55 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "4259",
+        "Connection": "close",
+        "CF-Ray": "a586db46ab402599-SJC",
+        "CF-Cache-Status": "DYNAMIC",
+        "Access-Control-Allow-Origin": "*",
+        "Cache-Control": "max-age=300",
+        "Server": "cloudflare",
+        "Vary": "accept-encoding, accept",
+        "set-cookie": "<REDACTED_PUBLIC_COOKIE_SHA256:b2c0e110d1a58ddd8f0e7efa5644c5058c0d0a4aae0ec7941ce248b3a6554ba7>; HttpOnly; SameSite=None; Partitioned; Secure; Path=/; Domain=npmjs.org; Expires=Tue, 10 Nov 2026 18:12:55 GMT"
+      },
+      "rawHeaders": [
+        [
+          "Date",
+          "Tue, 10 Nov 2026 17:42:55 GMT"
+        ],
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "Content-Length",
+          "4259"
+        ],
+        [
+          "Connection",
+          "close"
+        ],
+        [
+          "CF-Ray",
+          "a586db46ab402599-SJC"
+        ],
+        [
+          "CF-Cache-Status",
+          "DYNAMIC"
+        ],
+        [
+          "Access-Control-Allow-Origin",
+          "*"
+        ],
+        [
+          "Cache-Control",
+          "max-age=300"
+        ],
+        [
+          "Server",
+          "cloudflare"
+        ],
+        [
+          "Vary",
+          "accept-encoding, accept"
+        ],
+        [
+          "set-cookie",
+          "<REDACTED_PUBLIC_COOKIE_SHA256:b2c0e110d1a58ddd8f0e7efa5644c5058c0d0a4aae0ec7941ce248b3a6554ba7>; HttpOnly; SameSite=None; Partitioned; Secure; Path=/; Domain=npmjs.org; Expires=Tue, 10 Nov 2026 18:12:55 GMT"
+        ]
+      ],
+      "bytes": 4259,
+      "sha256": "93a00d3c1b44f1a94a8d10af90b1722df9c71bb6f187003cd62127e7223f77ee",
+      "bodyStatus": "READ"
+    },
+    {
+      "url": "https://api.github.com/repos/i18next/react-i18next/git/trees/606b6a55f231bbf73823863fbb94e6b8eb8272fd?recursive=1",
+      "finalUrl": "https://api.github.com/repos/i18next/react-i18next/git/trees/606b6a55f231bbf73823863fbb94e6b8eb8272fd?recursive=1",
+      "status": 200,
+      "checkedAt": "2026-11-10T17:42:55.930672+00:00",
+      "headers": {
+        "Date": "Tue, 10 Nov 2026 17:42:56 GMT",
+        "Content-Type": "application/json; charset=utf-8",
+        "Cache-Control": "public, max-age=86400, s-maxage=86400",
+        "Vary": "Accept,Accept-Encoding, Accept, X-Requested-With",
+        "ETag": "W/\"8872a17a9a2f497c90a211b486d472b39705d41cb0548dbdf7e54ec830209370\"",
+        "Last-Modified": "Tue, 10 Nov 2026 10:49:12 GMT",
+        "X-GitHub-Media-Type": "github.v3; format=json",
+        "x-github-api-version-selected": "2022-11-28",
+        "Access-Control-Expose-Headers": "ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset, Warning",
+        "Access-Control-Allow-Origin": "*",
+        "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+        "X-Frame-Options": "deny",
+        "X-Content-Type-Options": "nosniff",
+        "X-XSS-Protection": "0",
+        "Referrer-Policy": "origin-when-cross-origin, strict-origin-when-cross-origin",
+        "Content-Security-Policy": "default-src 'none'",
+        "Server": "github.com",
+        "Accept-Ranges": "bytes",
+        "X-RateLimit-Limit": "60",
+        "X-RateLimit-Remaining": "48",
+        "X-RateLimit-Used": "12",
+        "X-RateLimit-Resource": "core",
+        "X-RateLimit-Reset": "1794333211",
+        "Transfer-Encoding": "chunked",
+        "X-GitHub-Request-Id": "8986:2DA55A:121AB3:1370D4:6AF357A0",
+        "x-github-edge-region": "westus3",
+        "connection": "close"
+      },
+      "rawHeaders": [
+        [
+          "Date",
+          "Tue, 10 Nov 2026 17:42:56 GMT"
+        ],
+        [
+          "Content-Type",
+          "application/json; charset=utf-8"
+        ],
+        [
+          "Cache-Control",
+          "public, max-age=86400, s-maxage=86400"
+        ],
+        [
+          "Vary",
+          "Accept,Accept-Encoding, Accept, X-Requested-With"
+        ],
+        [
+          "ETag",
+          "W/\"8872a17a9a2f497c90a211b486d472b39705d41cb0548dbdf7e54ec830209370\""
+        ],
+        [
+          "Last-Modified",
+          "Tue, 10 Nov 2026 10:49:12 GMT"
+        ],
+        [
+          "X-GitHub-Media-Type",
+          "github.v3; format=json"
+        ],
+        [
+          "x-github-api-version-selected",
+          "2022-11-28"
+        ],
+        [
+          "Access-Control-Expose-Headers",
+          "ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset, Warning"
+        ],
+        [
+          "Access-Control-Allow-Origin",
+          "*"
+        ],
+        [
+          "Strict-Transport-Security",
+          "max-age=31536000; includeSubdomains; preload"
+        ],
+        [
+          "X-Frame-Options",
+          "deny"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "X-XSS-Protection",
+          "0"
+        ],
+        [
+          "Referrer-Policy",
+          "origin-when-cross-origin, strict-origin-when-cross-origin"
+        ],
+        [
+          "Content-Security-Policy",
+          "default-src 'none'"
+        ],
+        [
+          "Server",
+          "github.com"
+        ],
+        [
+          "Accept-Ranges",
+          "bytes"
+        ],
+        [
+          "X-RateLimit-Limit",
+          "60"
+        ],
+        [
+          "X-RateLimit-Remaining",
+          "48"
+        ],
+        [
+          "X-RateLimit-Used",
+          "12"
+        ],
+        [
+          "X-RateLimit-Resource",
+          "core"
+        ],
+        [
+          "X-RateLimit-Reset",
+          "1794333211"
+        ],
+        [
+          "Transfer-Encoding",
+          "chunked"
+        ],
+        [
+          "X-GitHub-Request-Id",
+          "8986:2DA55A:121AB3:1370D4:6AF357A0"
+        ],
+        [
+          "x-github-edge-region",
+          "westus3"
+        ],
+        [
+          "connection",
+          "close"
+        ]
+      ],
+      "bytes": 165154,
+      "sha256": "8872a17a9a2f497c90a211b486d472b39705d41cb0548dbdf7e54ec830209370",
+      "bodyStatus": "READ"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/i18next/react-i18next/606b6a55f231bbf73823863fbb94e6b8eb8272fd/package.json",
+      "finalUrl": "https://raw.githubusercontent.com/i18next/react-i18next/606b6a55f231bbf73823863fbb94e6b8eb8272fd/package.json",
+      "status": 200,
+      "checkedAt": "2026-11-10T17:42:57.559968+00:00",
+      "headers": {
+        "Connection": "close",
+        "Content-Length": "6037",
+        "Cache-Control": "max-age=300",
+        "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+        "Content-Type": "text/plain; charset=utf-8",
+        "ETag": "\"23abc56336714ef21ba9f0e1e8890e61ee4973b8d4ef1817f60f8bb44367cbb1\"",
+        "Strict-Transport-Security": "max-age=31536000",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "deny",
+        "X-XSS-Protection": "1; mode=block",
+        "X-GitHub-Request-Id": "0FD0:39A38A:3FE31:4E989:6AF357A2",
+        "x-github-edge-region": "westus3",
+        "Accept-Ranges": "bytes",
+        "Date": "Tue, 10 Nov 2026 17:42:58 GMT",
+        "Via": "1.1 varnish",
+        "X-Served-By": "cache-pao-kpao1770042-PAO",
+        "X-Cache": "MISS",
+        "X-Cache-Hits": "0",
+        "X-Timer": "S1794332578.380742,VS0,VE168",
+        "Vary": "Authorization,Accept-Encoding",
+        "Access-Control-Allow-Origin": "*",
+        "Cross-Origin-Resource-Policy": "cross-origin",
+        "X-Fastly-Request-ID": "51c4dd640a2570b0dce8a71a6df7fd16f87bd5fc",
+        "Expires": "Tue, 10 Nov 2026 17:47:58 GMT",
+        "Source-Age": "0"
+      },
+      "rawHeaders": [
+        [
+          "Connection",
+          "close"
+        ],
+        [
+          "Content-Length",
+          "6037"
+        ],
+        [
+          "Cache-Control",
+          "max-age=300"
+        ],
+        [
+          "Content-Security-Policy",
+          "default-src 'none'; style-src 'unsafe-inline'; sandbox"
+        ],
+        [
+          "Content-Type",
+          "text/plain; charset=utf-8"
+        ],
+        [
+          "ETag",
+          "\"23abc56336714ef21ba9f0e1e8890e61ee4973b8d4ef1817f60f8bb44367cbb1\""
+        ],
+        [
+          "Strict-Transport-Security",
+          "max-age=31536000"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "X-Frame-Options",
+          "deny"
+        ],
+        [
+          "X-XSS-Protection",
+          "1; mode=block"
+        ],
+        [
+          "X-GitHub-Request-Id",
+          "0FD0:39A38A:3FE31:4E989:6AF357A2"
+        ],
+        [
+          "x-github-edge-region",
+          "westus3"
+        ],
+        [
+          "Accept-Ranges",
+          "bytes"
+        ],
+        [
+          "Date",
+          "Tue, 10 Nov 2026 17:42:58 GMT"
+        ],
+        [
+          "Via",
+          "1.1 varnish"
+        ],
+        [
+          "X-Served-By",
+          "cache-pao-kpao1770042-PAO"
+        ],
+        [
+          "X-Cache",
+          "MISS"
+        ],
+        [
+          "X-Cache-Hits",
+          "0"
+        ],
+        [
+          "X-Timer",
+          "S1794332578.380742,VS0,VE168"
+        ],
+        [
+          "Vary",
+          "Authorization,Accept-Encoding"
+        ],
+        [
+          "Access-Control-Allow-Origin",
+          "*"
+        ],
+        [
+          "Cross-Origin-Resource-Policy",
+          "cross-origin"
+        ],
+        [
+          "X-Fastly-Request-ID",
+          "51c4dd640a2570b0dce8a71a6df7fd16f87bd5fc"
+        ],
+        [
+          "Expires",
+          "Tue, 10 Nov 2026 17:47:58 GMT"
+        ],
+        [
+          "Source-Age",
+          "0"
+        ]
+      ],
+      "bytes": 6037,
+      "sha256": "3dcf3ea277da256212cebdf94d56825145e0cf28d11b8ba7b6383dae36ac0e9c",
+      "bodyStatus": "READ"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/i18next/react-i18next/606b6a55f231bbf73823863fbb94e6b8eb8272fd/README.md",
+      "finalUrl": "https://raw.githubusercontent.com/i18next/react-i18next/606b6a55f231bbf73823863fbb94e6b8eb8272fd/README.md",
+      "status": 200,
+      "checkedAt": "2026-11-10T17:42:58.635220+00:00",
+      "headers": {
+        "Connection": "close",
+        "Content-Length": "12793",
+        "Cache-Control": "max-age=300",
+        "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+        "Content-Type": "text/plain; charset=utf-8",
+        "ETag": "\"7b158a4ed482e9d6058fba263f7309b9f69ca9436da2b6788ce7cddde31e21da\"",
+        "Strict-Transport-Security": "max-age=31536000",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "deny",
+        "X-XSS-Protection": "1; mode=block",
+        "X-GitHub-Request-Id": "34C4:350D8E:426B9:51224:6AF357A3",
+        "x-github-edge-region": "westus3",
+        "Accept-Ranges": "bytes",
+        "Date": "Tue, 10 Nov 2026 17:42:59 GMT",
+        "Via": "1.1 varnish",
+        "X-Served-By": "cache-sjc1000106-SJC",
+        "X-Cache": "MISS",
+        "X-Cache-Hits": "0",
+        "X-Timer": "S1794332579.453562,VS0,VE235",
+        "Vary": "Authorization,Accept-Encoding",
+        "Access-Control-Allow-Origin": "*",
+        "Cross-Origin-Resource-Policy": "cross-origin",
+        "X-Fastly-Request-ID": "82a5a6f374b455b22c8f799c779f1b9f0bf9350a",
+        "Expires": "Tue, 10 Nov 2026 17:47:59 GMT",
+        "Source-Age": "0"
+      },
+      "rawHeaders": [
+        [
+          "Connection",
+          "close"
+        ],
+        [
+          "Content-Length",
+          "12793"
+        ],
+        [
+          "Cache-Control",
+          "max-age=300"
+        ],
+        [
+          "Content-Security-Policy",
+          "default-src 'none'; style-src 'unsafe-inline'; sandbox"
+        ],
+        [
+          "Content-Type",
+          "text/plain; charset=utf-8"
+        ],
+        [
+          "ETag",
+          "\"7b158a4ed482e9d6058fba263f7309b9f69ca9436da2b6788ce7cddde31e21da\""
+        ],
+        [
+          "Strict-Transport-Security",
+          "max-age=31536000"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "X-Frame-Options",
+          "deny"
+        ],
+        [
+          "X-XSS-Protection",
+          "1; mode=block"
+        ],
+        [
+          "X-GitHub-Request-Id",
+          "34C4:350D8E:426B9:51224:6AF357A3"
+        ],
+        [
+          "x-github-edge-region",
+          "westus3"
+        ],
+        [
+          "Accept-Ranges",
+          "bytes"
+        ],
+        [
+          "Date",
+          "Tue, 10 Nov 2026 17:42:59 GMT"
+        ],
+        [
+          "Via",
+          "1.1 varnish"
+        ],
+        [
+          "X-Served-By",
+          "cache-sjc1000106-SJC"
+        ],
+        [
+          "X-Cache",
+          "MISS"
+        ],
+        [
+          "X-Cache-Hits",
+          "0"
+        ],
+        [
+          "X-Timer",
+          "S1794332579.453562,VS0,VE235"
+        ],
+        [
+          "Vary",
+          "Authorization,Accept-Encoding"
+        ],
+        [
+          "Access-Control-Allow-Origin",
+          "*"
+        ],
+        [
+          "Cross-Origin-Resource-Policy",
+          "cross-origin"
+        ],
+        [
+          "X-Fastly-Request-ID",
+          "82a5a6f374b455b22c8f799c779f1b9f0bf9350a"
+        ],
+        [
+          "Expires",
+          "Tue, 10 Nov 2026 17:47:59 GMT"
+        ],
+        [
+          "Source-Age",
+          "0"
+        ]
+      ],
+      "bytes": 12793,
+      "sha256": "bcd692905cb53f1b7ca8e4c8c4b89b7fb0510669e41e9c3749e7830d3ada1c9b",
+      "bodyStatus": "READ"
+    },
+    {
+      "url": "https://react.i18next.com/",
+      "finalUrl": "https://react.i18next.com/",
+      "status": 200,
+      "checkedAt": "2026-11-10T17:42:59.803331+00:00",
+      "headers": {
+        "Date": "Tue, 10 Nov 2026 17:43:00 GMT",
+        "Content-Type": "text/html; charset=utf-8",
+        "Transfer-Encoding": "chunked",
+        "Connection": "close",
+        "CF-Ray": "a586db643ca3c8d1-SIN",
+        "CF-Cache-Status": "DYNAMIC",
+        "Age": "28131",
+        "Cache-Control": "public, max-age=0, must-revalidate",
+        "x-vercel-id": "sin1::cle1::w4czg-1794332580527-ac3171587818",
+        "ETag": "W/\"zjrhfvyoijc29o\"",
+        "Server": "cloudflare",
+        "Strict-Transport-Security": "max-age=31536000",
+        "Vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, accept-encoding",
+        "content-security-policy": "default-src 'self' *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; style-src 'self' 'unsafe-inline' blob: *; img-src * 'self' blob: data:; connect-src *; font-src *; frame-src *; object-src 'none'; base-uri 'self' https://static-2v.gitbook.com; form-action 'self' https://static-2v.gitbook.com *; frame-ancestors https: ionic: capacitor: ;",
+        "referrer-policy": "no-referrer-when-downgrade",
+        "x-content-type-options": "nosniff",
+        "x-gitbook-route-site": "react.i18next.com/",
+        "x-gitbook-route-type": "static",
+        "x-gitbook-target": "2v",
+        "x-matched-path": "/sites/static/[mode]/[siteURL]/[siteData]/[pagePath]",
+        "x-nextjs-prerender": "1",
+        "x-nextjs-stale-time": "300",
+        "x-vercel-cache": "HIT",
+        "alt-svc": "h3=\":443\"; ma=86400"
+      },
+      "rawHeaders": [
+        [
+          "Date",
+          "Tue, 10 Nov 2026 17:43:00 GMT"
+        ],
+        [
+          "Content-Type",
+          "text/html; charset=utf-8"
+        ],
+        [
+          "Transfer-Encoding",
+          "chunked"
+        ],
+        [
+          "Connection",
+          "close"
+        ],
+        [
+          "CF-Ray",
+          "a586db643ca3c8d1-SIN"
+        ],
+        [
+          "CF-Cache-Status",
+          "DYNAMIC"
+        ],
+        [
+          "Age",
+          "28131"
+        ],
+        [
+          "Cache-Control",
+          "public, max-age=0, must-revalidate"
+        ],
+        [
+          "x-vercel-id",
+          "sin1::cle1::w4czg-1794332580527-ac3171587818"
+        ],
+        [
+          "ETag",
+          "W/\"zjrhfvyoijc29o\""
+        ],
+        [
+          "Server",
+          "cloudflare"
+        ],
+        [
+          "Strict-Transport-Security",
+          "max-age=31536000"
+        ],
+        [
+          "Vary",
+          "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, accept-encoding"
+        ],
+        [
+          "content-security-policy",
+          "default-src 'self' *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; style-src 'self' 'unsafe-inline' blob: *; img-src * 'self' blob: data:; connect-src *; font-src *; frame-src *; object-src 'none'; base-uri 'self' https://static-2v.gitbook.com; form-action 'self' https://static-2v.gitbook.com *; frame-ancestors https: ionic: capacitor: ;"
+        ],
+        [
+          "referrer-policy",
+          "no-referrer-when-downgrade"
+        ],
+        [
+          "x-content-type-options",
+          "nosniff"
+        ],
+        [
+          "x-gitbook-route-site",
+          "react.i18next.com/"
+        ],
+        [
+          "x-gitbook-route-type",
+          "static"
+        ],
+        [
+          "x-gitbook-target",
+          "2v"
+        ],
+        [
+          "x-matched-path",
+          "/sites/static/[mode]/[siteURL]/[siteData]/[pagePath]"
+        ],
+        [
+          "x-nextjs-prerender",
+          "1"
+        ],
+        [
+          "x-nextjs-stale-time",
+          "300"
+        ],
+        [
+          "x-vercel-cache",
+          "HIT"
+        ],
+        [
+          "alt-svc",
+          "h3=\":443\"; ma=86400"
+        ]
+      ],
+      "bytes": null,
+      "sha256": null,
+      "bodyStatus": "NOT_READ"
+    }
+  ],
+  "repository": "i18next/react-i18next",
+  "commit": "606b6a55f231bbf73823863fbb94e6b8eb8272fd",
+  "path": "README.md",
+  "version": "17.0.16",
+  "language": "en",
+  "registry": {
+    "bugs": {
+      "url": "https://github.com/i18next/react-i18next/issues"
+    },
+    "dist": {
+      "shasum": "72d3cd2f5a484aaf75bd76422dbc23a43bf693f5",
+      "tarball": "https://registry.npmjs.org/react-i18next/-/react-i18next-17.0.16.tgz",
+      "fileCount": 87,
+      "integrity": "sha512-7uImVD9hG5yUOaP5KHVied1x0A004Di/KU031ULR35Ma+9e9H5GdnNZHgQEIByyAz+IAXBkRDTedNVzjPUH8ZA==",
+      "signatures": [
+        {
+          "sig": "MEQCICiyaydayoOWdE2/JEdHYPTWT8IH9MtH28AIRSQnssAtAiAQUH8zyn3iw69VOdTzLLdnAklxs+kGZOLbXhKJbxG9cw==",
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+        },
+        {
+          "sig": "MEQCIGMzPkQb1q+CYBdUe0ofxnexaZwNDG4vaV4l/odAnoz4AiAqq3bqaYFKmFzpIgLDhVzFKQHugaUostSvK3DZwd8L5Q==",
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+        }
+      ],
+      "unpackedSize": 957407
+    },
+    "lock": false,
+    "main": "dist/commonjs/index.js",
+    "name": "react-i18next",
+    "types": "./index.d.mts",
+    "author": {
+      "url": "https://github.com/jamuhl",
+      "name": "Jan Mühlemann",
+      "email": "jan.muehlemann@gmail.com"
+    },
+    "module": "dist/es/index.js",
+    "exports": {
+      ".": {
+        "types": {
+          "import": "./index.d.mts",
+          "require": "./index.d.ts"
+        },
+        "import": "./dist/es/index.js",
+        "module": "./dist/es/index.js",
+        "default": "./dist/es/index.js",
+        "require": "./dist/commonjs/index.js"
+      },
+      "./icu.macro": {
+        "types": {
+          "import": "./icu.macro.d.mts",
+          "require": "./icu.macro.d.ts"
+        },
+        "import": "./icu.macro.js",
+        "module": "./icu.macro.js",
+        "default": "./icu.macro.js",
+        "require": "./icu.macro.js"
+      },
+      "./package.json": "./package.json",
+      "./initReactI18next": {
+        "types": {
+          "import": "./initReactI18next.d.mts",
+          "require": "./initReactI18next.d.ts"
+        },
+        "import": "./dist/es/initReactI18next.js",
+        "module": "./dist/es/initReactI18next.js",
+        "default": "./dist/es/initReactI18next.js",
+        "require": "./dist/commonjs/initReactI18next.js"
+      },
+      "./TransWithoutContext": {
+        "types": {
+          "import": "./TransWithoutContext.d.mts",
+          "require": "./TransWithoutContext.d.ts"
+        },
+        "import": "./dist/es/TransWithoutContext.js",
+        "module": "./dist/es/TransWithoutContext.js",
+        "default": "./dist/es/TransWithoutContext.js",
+        "require": "./dist/commonjs/TransWithoutContext.js"
+      }
+    },
+    "gitHead": "606b6a55f231bbf73823863fbb94e6b8eb8272fd",
+    "license": "MIT",
+    "scripts": {
+      "copy": "cpy ./dist/umd/react-i18next.min.js ./dist/umd/react-i18next.js . --flat && echo '{\"type\":\"module\"}' > dist/es/package.json",
+      "lint": "eslint --cache .",
+      "test": "vitest",
+      "build": "npm run clean && npm run build:cjs && npm run build:es && npm run build:umd && npm run build:amd && npm run copy",
+      "clean": "rimraf dist && mkdirp dist",
+      "format": "prettier . --check",
+      "prepare": "husky",
+      "build:es": "cross-env BABEL_ENV=ESNext babel src --out-dir dist/es",
+      "lint:fix": "eslint --cache --fix .",
+      "build:amd": "rollup -c rollup.config.mjs --format amd && rollup -c rollup.config.mjs --format amd --uglify",
+      "build:cjs": "babel src --out-dir dist/commonjs",
+      "build:umd": "rollup -c rollup.config.mjs --format umd && rollup -c rollup.config.mjs --format umd --uglify",
+      "build:iife": "rollup -c rollup.config.mjs --format iife && rollup -c rollup.config.mjs --format iife --uglify",
+      "format:fix": "prettier . --write --list-different",
+      "preversion": "npm run build && git push",
+      "postversion": "npm run fix_dist_package && git push && git push --tags",
+      "test:coverage": "npm run test -- --coverage --run",
+      "test:typescript": "npm run test:typescript:issue-1899 && vitest --config vitest.workspace.typescript.mts",
+      "contributors:add": "npx all-contributors-cli add",
+      "fix_dist_package": "node -e 'console.log(`{\"type\":\"module\",\"version\":\"${process.env.npm_package_version}\"}`)' > dist/es/package.json",
+      "contributors:generate": "npx all-contributors-cli generate",
+      "test:typescript:issue-1899": "bash test/typescript/issue-1899/check-types.sh"
+    },
+    "_npmUser": {
+      "name": "adrai",
+      "email": "adriano@raiano.ch"
+    },
+    "homepage": "https://github.com/i18next/react-i18next",
+    "keywords": [
+      "i18next",
+      "internationalization",
+      "i18n",
+      "translation",
+      "localization",
+      "l10n",
+      "globalization",
+      "react",
+      "reactjs"
+    ],
+    "repository": {
+      "url": "git+https://github.com/i18next/react-i18next.git",
+      "type": "git"
+    },
+    "_npmVersion": "11.9.0",
+    "description": "Internationalization for react done right. Using the i18next i18n ecosystem.",
+    "directories": {},
+    "jsnext:main": "dist/es/index.js",
+    "maintainers": [
+      {
+        "name": "adrai",
+        "email": "adriano@raiano.ch"
+      },
+      {
+        "name": "jamuhl",
+        "email": "jan.muehlemann@gmail.com"
+      }
+    ],
+    "sideEffects": false,
+    "_nodeVersion": "24.14.0",
+    "dependencies": {
+      "@babel/runtime": "^7.29.7",
+      "html-parse-stringify": "^4.0.1",
+      "use-sync-external-store": "^1.6.0"
+    },
+    "_hasShrinkwrap": false,
+    "devDependencies": {
+      "husky": "^9.1.7",
+      "react": "^19.2.8",
+      "yargs": "^18.1.0",
+      "eslint": "^8.57.1",
+      "mkdirp": "^3.0.1",
+      "rimraf": "^6.1.3",
+      "rollup": "^4.62.4",
+      "vitest": "^4.1.11",
+      "cpy-cli": "^7.0.0",
+      "i18next": "^26.4.0",
+      "prettier": "^3.9.6",
+      "cross-env": "^10.1.0",
+      "happy-dom": "^20.11.6",
+      "react-dom": "^19.2.8",
+      "@babel/cli": "^7.29.7",
+      "babel-core": "^7.0.0-bridge.0",
+      "typescript": "~6.0.3",
+      "@babel/core": "^7.29.7",
+      "@types/jest": "^30.0.0",
+      "lint-staged": "^16.4.0",
+      "@types/react": "^19.2.18",
+      "@babel/polyfill": "^7.12.1",
+      "@babel/register": "^7.29.7",
+      "@babel/preset-env": "^7.29.7",
+      "@babel/preset-react": "^7.29.7",
+      "@vitest/coverage-v8": "^4.1.11",
+      "babel-plugin-macros": "^3.1.0",
+      "babel-plugin-tester": "^11.0.4",
+      "eslint-plugin-react": "^7.37.5",
+      "react-test-renderer": "^19.2.8",
+      "@babel/eslint-parser": "^7.29.7",
+      "@rollup/plugin-babel": "^7.1.0",
+      "@testing-library/dom": "^10.4.1",
+      "eslint-config-airbnb": "19.0.4",
+      "eslint-plugin-import": "^2.32.0",
+      "@rollup/plugin-terser": "1.0.0",
+      "@rollup/plugin-replace": "^6.0.3",
+      "@testing-library/react": "^16.3.2",
+      "eslint-config-prettier": "^9.1.2",
+      "eslint-plugin-jest-dom": "^5.10.1",
+      "eslint-plugin-jsx-a11y": "^6.10.2",
+      "@rollup/plugin-commonjs": "^29.0.3",
+      "@testing-library/jest-dom": "^6.9.1",
+      "@rollup/plugin-node-resolve": "^16.0.3",
+      "eslint-plugin-testing-library": "^6.5.0",
+      "@babel/plugin-transform-runtime": "^7.29.7",
+      "@babel/plugin-transform-modules-commonjs": "^7.29.7",
+      "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
+      "@babel/plugin-proposal-async-generator-functions": "^7.20.7"
+    },
+    "peerDependencies": {
+      "react": ">= 16.8.0",
+      "i18next": ">= 26.2.0",
+      "typescript": "^5 || ^6 || ^7"
+    },
+    "peerDependenciesMeta": {
+      "react-dom": {
+        "optional": true
+      },
+      "typescript": {
+        "optional": true
+      },
+      "react-native": {
+        "optional": true
+      }
+    },
+    "_npmOperationalInternal": {
+      "tmp": "tmp/react-i18next_17.0.16_1791289182177_0.6061821262686988",
+      "host": "s3://npm-registry-packages-npm-production"
+    },
+    "_id": "react-i18next@17.0.16",
+    "version": "17.0.16"
+  },
+  "coreRegistry": {
+    "bugs": {
+      "url": "https://github.com/i18next/i18next/issues"
+    },
+    "dist": {
+      "shasum": "bb607107a1f5f9fdf6b9ef16dc9ad10bbed6cd7b",
+      "tarball": "https://registry.npmjs.org/i18next/-/i18next-26.4.3.tgz",
+      "fileCount": 16,
+      "integrity": "sha512-QIIueUYS2giFVIY3hu/X5Dz7/qTzwcXE06H29m1DKVhUGVPCyT0wnsh14wEn/cTy9nZ/B6VhbDItdXotOKSO8A==",
+      "signatures": [
+        {
+          "sig": "MEYCIQC1pP5esXoZ0zeLTnfXI3r8G5TChSHKIAJGKCYkH5dkrgIhAIcoEgzXzevif2jKEtuaLSF1f2ZQ9gh+cWzFNzTDAcQu",
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+        },
+        {
+          "sig": "MEYCIQCVTweZ/Z1gKLLEQrfan/pxqKQE40TK6y3ehDpY7lnE3AIhANd0+zWfuNBRyvOXiC3Gd7/svk8/J2LbueAfJj/Cot3h",
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+        }
+      ],
+      "unpackedSize": 523555
+    },
+    "main": "./dist/cjs/i18next.js",
+    "name": "i18next",
+    "types": "./index.d.ts",
+    "author": {
+      "url": "https://github.com/jamuhl",
+      "name": "Jan Mühlemann",
+      "email": "jan.muehlemann@gmail.com"
+    },
+    "module": "./dist/esm/i18next.js",
+    "exports": {
+      ".": {
+        "import": {
+          "types": "./index.d.mts",
+          "default": "./dist/esm/i18next.js"
+        },
+        "require": {
+          "types": "./index.d.ts",
+          "default": "./dist/cjs/i18next.js"
+        }
+      },
+      "./package.json": "./package.json"
+    },
+    "funding": [
+      {
+        "url": "https://www.locize.com/i18next",
+        "type": "individual"
+      },
+      {
+        "url": "https://www.i18next.com/how-to/faq#i18next-is-awesome.-how-can-i-support-the-project",
+        "type": "individual"
+      },
+      {
+        "url": "https://www.locize.com",
+        "type": "individual"
+      }
+    ],
+    "gitHead": "0d2845a2360dcc236fe9681f849781f5dfdd35c4",
+    "license": "MIT",
+    "scripts": {
+      "lint": "eslint src typescript test \"./*.{ts,mts,mjs}\"",
+      "test": "vitest --run",
+      "build": "rimraf dist && rollup -c && echo '{\"type\":\"module\"}' > dist/esm/package.json && cpy \"./dist/umd/*.js\" ./",
+      "format": "prettier \"{,**/}*.{ts,tsx,mts,js,mjs,json,md}\" --check",
+      "prepare": "husky",
+      "release": "gh-release",
+      "format:fix": "prettier \"{,**/}*.{ts,tsx,mts,js,mjs,json,md}\" --write",
+      "preversion": "npm run test && npm run build && git push",
+      "test:local": "vitest --config vitest.workspace.local.mts",
+      "postversion": "npm run fix_dist_package && git push && git push --tags && npm run release",
+      "test:runtime": "vitest --project runtime",
+      "test:coverage": "vitest --coverage --run",
+      "test:typescript": "vitest --config vitest.workspace.typescript.mts",
+      "fix_dist_package": "node -e 'console.log(`{\"type\":\"module\",\"version\":\"${process.env.npm_package_version}\"}`)' > dist/esm/package.json",
+      "test:compatibility": "vitest --project compatibility"
+    },
+    "_npmUser": {
+      "name": "adrai",
+      "email": "adriano@raiano.ch"
+    },
+    "homepage": "https://www.i18next.com",
+    "keywords": [
+      "i18next",
+      "internationalization",
+      "i18n",
+      "translation",
+      "localization",
+      "l10n",
+      "globalization",
+      "gettext"
+    ],
+    "repository": {
+      "url": "git+https://github.com/i18next/i18next.git",
+      "type": "git"
+    },
+    "_npmVersion": "11.9.0",
+    "description": "i18next internationalization framework",
+    "directories": {},
+    "lint-staged": {
+      "*": "prettier --write --ignore-unknown"
+    },
+    "maintainers": [
+      {
+        "name": "adrai",
+        "email": "adriano@raiano.ch"
+      },
+      {
+        "name": "jamuhl",
+        "email": "jan.muehlemann@gmail.com"
+      }
+    ],
+    "_nodeVersion": "24.14.0",
+    "_hasShrinkwrap": false,
+    "devDependencies": {
+      "nise": "6.1.5",
+      "husky": "^9.1.7",
+      "eslint": "9.39.4",
+      "rimraf": "^6.1.3",
+      "rollup": "^4.62.4",
+      "vitest": "4.1.11",
+      "cpy-cli": "^7.0.0",
+      "babelify": "^10.0.0",
+      "prettier": "^3.9.6",
+      "gh-release": "^8.1.0",
+      "typescript": "^6.0.3",
+      "@babel/core": "^7.29.0",
+      "@types/node": "^26.2.0",
+      "lint-staged": "^17.3.0",
+      "neostandard": "^0.13.0",
+      "@arktype/attest": "^0.56.3",
+      "@babel/register": "^7.29.0",
+      "@babel/preset-env": "^7.29.0",
+      "typescript-eslint": "^8.67.0",
+      "i18next-fs-backend": "^2.6.7",
+      "@babel/preset-react": "^7.29.0",
+      "@vitest/coverage-v8": "4.1.11",
+      "@rollup/plugin-babel": "^7.1.0",
+      "i18next-http-backend": "^4.0.1",
+      "@rollup/plugin-terser": "^1.0.0",
+      "@rollup/plugin-commonjs": "^29.0.3",
+      "@typescript-eslint/parser": "^8.67.0",
+      "i18next-localstorage-cache": "^1.1.1",
+      "@rollup/plugin-node-resolve": "^16.0.3",
+      "i18next-sprintf-postprocessor": "^0.2.2",
+      "@typescript-eslint/eslint-plugin": "^8.67.0",
+      "i18next-browser-languagedetector": "^8.2.1",
+      "@babel/plugin-transform-modules-commonjs": "^7.29.0",
+      "@babel/plugin-transform-async-generator-functions": "^7.29.0"
+    },
+    "peerDependencies": {
+      "typescript": "^5 || ^6 || ^7"
+    },
+    "peerDependenciesMeta": {
+      "typescript": {
+        "optional": true
+      }
+    },
+    "_npmOperationalInternal": {
+      "tmp": "tmp/i18next_26.4.3_1791613162065_0.6467542595429976",
+      "host": "s3://npm-registry-packages-npm-production"
+    },
+    "_id": "i18next@26.4.3",
+    "version": "26.4.3"
+  },
+  "manifest": {
+    "name": "react-i18next",
+    "version": "17.0.16",
+    "description": "Internationalization for react done right. Using the i18next i18n ecosystem.",
+    "main": "dist/commonjs/index.js",
+    "types": "./index.d.mts",
+    "jsnext:main": "dist/es/index.js",
+    "module": "dist/es/index.js",
+    "keywords": [
+      "i18next",
+      "internationalization",
+      "i18n",
+      "translation",
+      "localization",
+      "l10n",
+      "globalization",
+      "react",
+      "reactjs"
+    ],
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "types": {
+          "require": "./index.d.ts",
+          "import": "./index.d.mts"
+        },
+        "module": "./dist/es/index.js",
+        "import": "./dist/es/index.js",
+        "require": "./dist/commonjs/index.js",
+        "default": "./dist/es/index.js"
+      },
+      "./TransWithoutContext": {
+        "types": {
+          "require": "./TransWithoutContext.d.ts",
+          "import": "./TransWithoutContext.d.mts"
+        },
+        "module": "./dist/es/TransWithoutContext.js",
+        "import": "./dist/es/TransWithoutContext.js",
+        "require": "./dist/commonjs/TransWithoutContext.js",
+        "default": "./dist/es/TransWithoutContext.js"
+      },
+      "./initReactI18next": {
+        "types": {
+          "require": "./initReactI18next.d.ts",
+          "import": "./initReactI18next.d.mts"
+        },
+        "module": "./dist/es/initReactI18next.js",
+        "import": "./dist/es/initReactI18next.js",
+        "require": "./dist/commonjs/initReactI18next.js",
+        "default": "./dist/es/initReactI18next.js"
+      },
+      "./icu.macro": {
+        "types": {
+          "require": "./icu.macro.d.ts",
+          "import": "./icu.macro.d.mts"
+        },
+        "module": "./icu.macro.js",
+        "import": "./icu.macro.js",
+        "require": "./icu.macro.js",
+        "default": "./icu.macro.js"
+      }
+    },
+    "homepage": "https://github.com/i18next/react-i18next",
+    "bugs": "https://github.com/i18next/react-i18next/issues",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/i18next/react-i18next.git"
+    },
+    "dependencies": {
+      "@babel/runtime": "^7.29.7",
+      "html-parse-stringify": "^4.0.1",
+      "use-sync-external-store": "^1.6.0"
+    },
+    "peerDependencies": {
+      "i18next": ">= 26.2.0",
+      "react": ">= 16.8.0",
+      "typescript": "^5 || ^6 || ^7"
+    },
+    "peerDependenciesMeta": {
+      "react-dom": {
+        "optional": true
+      },
+      "react-native": {
+        "optional": true
+      },
+      "typescript": {
+        "optional": true
+      }
+    },
+    "devDependencies": {
+      "@babel/cli": "^7.29.7",
+      "@babel/core": "^7.29.7",
+      "@babel/eslint-parser": "^7.29.7",
+      "@babel/plugin-proposal-async-generator-functions": "^7.20.7",
+      "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
+      "@babel/plugin-transform-modules-commonjs": "^7.29.7",
+      "@babel/plugin-transform-runtime": "^7.29.7",
+      "@babel/polyfill": "^7.12.1",
+      "@babel/preset-env": "^7.29.7",
+      "@babel/preset-react": "^7.29.7",
+      "@babel/register": "^7.29.7",
+      "@rollup/plugin-babel": "^7.1.0",
+      "@rollup/plugin-commonjs": "^29.0.3",
+      "@rollup/plugin-node-resolve": "^16.0.3",
+      "@rollup/plugin-replace": "^6.0.3",
+      "@rollup/plugin-terser": "1.0.0",
+      "@testing-library/dom": "^10.4.1",
+      "@testing-library/jest-dom": "^6.9.1",
+      "@testing-library/react": "^16.3.2",
+      "@types/jest": "^30.0.0",
+      "@types/react": "^19.2.18",
+      "@vitest/coverage-v8": "^4.1.11",
+      "babel-core": "^7.0.0-bridge.0",
+      "babel-plugin-macros": "^3.1.0",
+      "babel-plugin-tester": "^11.0.4",
+      "cpy-cli": "^7.0.0",
+      "cross-env": "^10.1.0",
+      "eslint": "^8.57.1",
+      "eslint-config-airbnb": "19.0.4",
+      "eslint-config-prettier": "^9.1.2",
+      "eslint-plugin-import": "^2.32.0",
+      "eslint-plugin-jest-dom": "^5.10.1",
+      "eslint-plugin-jsx-a11y": "^6.10.2",
+      "eslint-plugin-react": "^7.37.5",
+      "eslint-plugin-testing-library": "^6.5.0",
+      "happy-dom": "^20.11.6",
+      "husky": "^9.1.7",
+      "i18next": "^26.4.0",
+      "lint-staged": "^16.4.0",
+      "mkdirp": "^3.0.1",
+      "prettier": "^3.9.6",
+      "react": "^19.2.8",
+      "react-dom": "^19.2.8",
+      "react-test-renderer": "^19.2.8",
+      "rimraf": "^6.1.3",
+      "rollup": "^4.62.4",
+      "typescript": "~6.0.3",
+      "vitest": "^4.1.11",
+      "yargs": "^18.1.0"
+    },
+    "scripts": {
+      "clean": "rimraf dist && mkdirp dist",
+      "lint": "eslint --cache .",
+      "lint:fix": "eslint --cache --fix .",
+      "format": "prettier . --check",
+      "format:fix": "prettier . --write --list-different",
+      "copy": "cpy ./dist/umd/react-i18next.min.js ./dist/umd/react-i18next.js . --flat && echo '{\"type\":\"module\"}' > dist/es/package.json",
+      "build:es": "cross-env BABEL_ENV=ESNext babel src --out-dir dist/es",
+      "build:cjs": "babel src --out-dir dist/commonjs",
+      "build:umd": "rollup -c rollup.config.mjs --format umd && rollup -c rollup.config.mjs --format umd --uglify",
+      "build:amd": "rollup -c rollup.config.mjs --format amd && rollup -c rollup.config.mjs --format amd --uglify",
+      "build:iife": "rollup -c rollup.config.mjs --format iife && rollup -c rollup.config.mjs --format iife --uglify",
+      "build": "npm run clean && npm run build:cjs && npm run build:es && npm run build:umd && npm run build:amd && npm run copy",
+      "fix_dist_package": "node -e 'console.log(`{\"type\":\"module\",\"version\":\"${process.env.npm_package_version}\"}`)' > dist/es/package.json",
+      "preversion": "npm run build && git push",
+      "postversion": "npm run fix_dist_package && git push && git push --tags",
+      "test": "vitest",
+      "test:coverage": "npm run test -- --coverage --run",
+      "test:typescript": "npm run test:typescript:issue-1899 && vitest --config vitest.workspace.typescript.mts",
+      "test:typescript:issue-1899": "bash test/typescript/issue-1899/check-types.sh",
+      "contributors:add": "npx all-contributors-cli add",
+      "contributors:generate": "npx all-contributors-cli generate",
+      "prepare": "husky"
+    },
+    "author": "Jan Mühlemann <jan.muehlemann@gmail.com> (https://github.com/jamuhl)",
+    "license": "MIT",
+    "lock": false,
+    "sideEffects": false
+  },
+  "treeTruncated": false,
+  "readmeCandidates": [
+    "README.md",
+    "example/ReactNativeLocizeProject/README.md",
+    "example/ReactNativeProject/README.md",
+    "example/devserver-save-missing/README.md",
+    "example/locize/README.md",
+    "example/razzle-ssr/README.md",
+    "example/react-component-lib/README.md",
+    "example/react-icu/README.md",
+    "example/react-localstorage/README.md",
+    "example/react-typescript/simple-multi-namespaces/README.md",
+    "example/react-typescript/simple/README.md",
+    "example/react/README.md",
+    "example/storybook/README.md",
+    "example/test-jest/README.md"
+  ],
+  "preferredReadmeCandidates": [
+    "README.md"
+  ],
+  "selectionReason": "Target npm package is the repository root; no matching official Chinese README was found, retain root original.",
+  "snapshot": {
+    "path": "official/readme.md",
+    "bytes": 12793,
+    "sha256": "bcd692905cb53f1b7ca8e4c8c4b89b7fb0510669e41e9c3749e7830d3ada1c9b"
+  },
+  "homepage": {
+    "requestIndex": 5,
+    "status": "blocked",
+    "frameAncestors": "https: ionic: capacitor:",
+    "xFrameOptions": null,
+    "contentSecurityPolicy": "default-src 'self' *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; style-src 'self' 'unsafe-inline' blob: *; img-src * 'self' blob: data:; connect-src *; font-src *; frame-src *; object-src 'none'; base-uri 'self' https://static-2v.gitbook.com; form-action 'self' https://static-2v.gitbook.com *; frame-ancestors https: ionic: capacitor: ;",
+    "browserFromLabOrigin": "NOT_RUN",
+    "reason": "实际CSP frame-ancestors仅https:/ionic:/capacitor:，排除当前http://127.0.0.1:4319 Lab祖先。离线根据已捕获原始头校准，不代表已做浏览器嵌入或新HTTP；HTTPS部署需另核。",
+    "labOrigin": "http://127.0.0.1:4319",
+    "policyReviewedAt": "2026-11-10T17:46:11.031081+00:00"
+  },
+  "syncedAt": "2026-11-10T17:43:00.934743+00:00"
+}

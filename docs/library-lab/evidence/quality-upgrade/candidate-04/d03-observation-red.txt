@@ -1,0 +1,47 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=pnpm exec playwright test --config=.local-evidence/quality-playwright.config.ts quality-remediation-order.spec.ts --grep observed concurrency
+
+Running 1 test using 1 worker
+
+(node:831585) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 e2e/quality-remediation-order.spec.ts:3:1 › @D03 observed concurrency follows the selected limit and actual jobs finish (5.1s)
+
+
+  1) e2e/quality-remediation-order.spec.ts:3:1 › @D03 observed concurrency follows the selected limit and actual jobs finish 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('region', { name: 'p-limit 真实并发调度', exact: true }).getByTestId('d03-metrics')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('region', { name: 'p-limit 真实并发调度', exact: true }).getByTestId('d03-metrics') with timeout 5000ms
+      - waiting for getByRole('region', { name: 'p-limit 真实并发调度', exact: true }).getByTestId('d03-metrics')
+
+
+       6 |   await page.goto('/libraries/p-limit?tab=demo&example=basic')
+       7 |   const app = page.getByRole('region', { name: 'p-limit 真实并发调度', exact: true })
+    >  8 |   await expect(app.getByTestId('d03-metrics')).toBeVisible()
+         |                                                ^
+       9 |   for (const limit of ['1', '4']) {
+      10 |     await app.getByRole('combobox', { name: '并发数', exact: true }).selectOption(limit)
+      11 |     await app.getByRole('button', { name: '运行批处理', exact: true }).click()
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-order.spec.ts:8:48
+
+    Error Context: test-results/quality-remediation-order--8ebbf-imit-and-actual-jobs-finish/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-remediation-order--8ebbf-imit-and-actual-jobs-finish/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-remediation-order--8ebbf-imit-and-actual-jobs-finish/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    e2e/quality-remediation-order.spec.ts:3:1 › @D03 observed concurrency follows the selected limit and actual jobs finish 
+
+exitCode=1

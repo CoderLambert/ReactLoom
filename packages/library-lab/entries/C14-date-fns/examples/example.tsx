@@ -1,83 +1,167 @@
+import { useId, useState } from 'react'
+import {
+  calculateDateResult,
+  DEFAULT_INPUT,
+  isZone,
+  type Level,
+  ZONES,
+  type Zone,
+} from './date-contract'
+import './styles.css'
 
-import {useState} from 'react';
-import {addDays, differenceInCalendarDays, differenceInHours, format, isValid, parseISO} from 'date-fns';
-import {TZDate, tz} from '@date-fns/tz';
-import {assertExplicitInstant} from './instant-policy.mjs';
+export { parseCivilDate, parseInstant, planCivilDays } from './date-contract'
+export type Props = { level: Level }
 
-type Zone = 'America/New_York' | 'Asia/Shanghai' | 'UTC';
-type Level = 'basic' | 'business' | 'advanced';
-export type Props = {level: Level};
+export default function DateFnsExample({ level }: Props) {
+  return <DateSession key={level} level={level} />
+}
 
-export function parseCivilDate(raw: string, zone: Zone): TZDate {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(raw)) throw new Error('只接受 YYYY-MM-DD');
-  const [year, month, day] = raw.split('-').map(Number);
-  const date = new TZDate(year, month - 1, day, 12, 0, 0, zone);
-  if (!isValid(date) || date.getFullYear() !== year ||
-      date.getMonth() !== month - 1 || date.getDate() !== day) {
-    throw new Error('非法日历日期：禁止自动进位（如2月30日）');
+function DateSession({ level }: Props) {
+  const civilId = useId()
+  const zoneId = useId()
+  const countId = useId()
+  const instantId = useId()
+  const [civil, setCivil] = useState(DEFAULT_INPUT.civil)
+  const [zone, setZone] = useState<Zone>(DEFAULT_INPUT.zone)
+  const [count, setCount] = useState(DEFAULT_INPUT.count)
+  const [instant, setInstant] = useState(DEFAULT_INPUT.instant)
+  const [result, setResult] = useState<ReturnType<typeof calculateDateResult> | null>(null)
+  const [error, setError] = useState('')
+
+  function clearOutput() {
+    setResult(null)
+    setError('')
   }
-  return date;
-}
-
-export function parseInstant(value: string): Date {
-  const date = parseISO(assertExplicitInstant(value));
-  if (!isValid(date)) throw new Error('事件时间不是合法 ISO 8601');
-  return date;
-}
-
-export function planCivilDays(civil: string, zone: Zone, count: number) {
-  if (!Number.isSafeInteger(count) || count < 1 || count > 14) throw new RangeError('天数范围1–14');
-  const start = parseCivilDate(civil, zone);
-  const end = addDays(start, count, {in: tz(zone)});
-  return {
-    zone,
-    start: format(start, 'yyyy-MM-dd HH:mm XXX', {in: tz(zone)}),
-    end: format(end, 'yyyy-MM-dd HH:mm XXX', {in: tz(zone)}),
-    calendarDays: differenceInCalendarDays(end, start, {in: tz(zone)}),
-    elapsedHours: differenceInHours(end, start),
-  };
-}
-
-export default function DateFnsExample({level}: Props) {
-  const [civil, setCivil] = useState('2026-03-07');
-  const [zone, setZone] = useState<Zone>('America/New_York');
-  const [count, setCount] = useState(1);
-  const [instant, setInstant] = useState('2026-11-01T01:30:00-04:00');
-  const [result, setResult] = useState('');
-  const [error, setError] = useState('');
   function calculate() {
     try {
-      const schedule = planCivilDays(civil, zone, count);
-      const payload = level === 'basic'
-        ? {calendarDate: format(parseCivilDate(civil, zone), 'yyyy-MM-dd', {in: tz(zone)}), next: schedule.end}
-        : level === 'business'
-          ? {schedule, note:'这里只演示日期计算，不在浏览器中实现可靠生产Cron'}
-          : {spring: planCivilDays('2026-03-07','America/New_York',1),
-             fall: planCivilDays('2026-10-31','America/New_York',1),
-             instantUTC: parseInstant(instant).toISOString(),
-             ambiguousLocalTime: ['2026-11-01T01:30:00-04:00','2026-11-01T01:30:00-05:00']
-               .map(value => parseInstant(value).toISOString())};
-      setResult(JSON.stringify(payload,null,2)); setError('');
-    } catch (e) {setError(e instanceof Error ? e.message : String(e)); setResult('');}
+      setResult(calculateDateResult(level, { civil, zone, count, instant }))
+      setError('')
+    } catch (failure) {
+      setError(failure instanceof Error ? failure.message : String(failure))
+      setResult(null)
+    }
   }
-  return <section aria-label="date-fns 真实时区演示">
-    <h2>{level==='basic'?'严格日历日期':level==='business'?'RSS 摘要日历排程':'DST 与重叠时刻'}</h2>
-    <p>区别日历日、绝对时间和经过小时数。演示数据不依赖设备默认时区。</p>
-    <div className="demo-controls">
-      <label>日历日期 <input aria-label="日历日期" value={civil} onChange={e=>setCivil(e.target.value)}/></label>
-      <label>IANA 时区 <select aria-label="IANA 时区" value={zone} onChange={e=>setZone(e.target.value as Zone)}>
-        {(['America/New_York','Asia/Shanghai','UTC'] as const).map(x=><option key={x}>{x}</option>)}
-      </select></label>
-      <label>增加天数 <select value={count} onChange={e=>setCount(Number(e.target.value))}>
-        {[1,2,3,7,14].map(n=><option key={n} value={n}>{n}</option>)}
-      </select></label>
-    </div>
-    {level==='advanced'&&<><label>绝对事件时间
-      <input aria-label="绝对事件时间" style={{width:'100%'}} value={instant} onChange={e=>setInstant(e.target.value)}/>
-    </label><p>删除末尾 -04:00 再运行，必须拒绝歧义本地时间。</p></>}
-    <button type="button" onClick={calculate}>运行日期计算</button>
-    {error&&<p role="alert">{error}</p>}
-    {result&&<pre data-testid="date-result">{result}</pre>}
-    {level==='advanced'&&<p>纽约 DST 的相邻日历日可能相隔23或25小时；不能把“明天”写成 +86400000 毫秒。</p>}
-  </section>;
+  function reset() {
+    setCivil(DEFAULT_INPUT.civil)
+    setZone(DEFAULT_INPUT.zone)
+    setCount(DEFAULT_INPUT.count)
+    setInstant(DEFAULT_INPUT.instant)
+    clearOutput()
+  }
+
+  return (
+    <section
+      className="c14-workshop"
+      aria-label="date-fns 真实时区演示"
+      data-testid="c14-workshop"
+      data-level={level}
+    >
+      <h2>
+        {level === 'basic'
+          ? '严格日历日与目标时区中午'
+          : level === 'business'
+            ? '日历排程与经过小时'
+            : 'DST 对照与明确事件瞬间'}
+      </h2>
+      <p>
+        真实 date-fns 4.4.0 + @date-fns/tz 1.5.0；日历日、IANA 时区与 instant
+        各有合同，输出不取设备默认时区。
+      </p>
+      {level !== 'advanced' && (
+        <div className="c14-controls">
+          <p>本例日历范围 1901–9999 年；历史秒级偏移另需专门验证。</p>
+          <label htmlFor={civilId}>日历日期</label>
+          <input
+            id={civilId}
+            value={civil}
+            maxLength={10}
+            placeholder="YYYY-MM-DD"
+            onChange={(event) => {
+              setCivil(event.currentTarget.value)
+              clearOutput()
+            }}
+          />
+          <label htmlFor={zoneId}>IANA 时区</label>
+          <select
+            id={zoneId}
+            value={zone}
+            onChange={(event) => {
+              const next = event.currentTarget.value
+              if (isZone(next)) {
+                setZone(next)
+                clearOutput()
+              }
+            }}
+          >
+            {ZONES.map((value) => (
+              <option key={value}>{value}</option>
+            ))}
+          </select>
+          {level === 'business' && (
+            <>
+              <label htmlFor={countId}>增加天数</label>
+              <select
+                id={countId}
+                value={count}
+                onChange={(event) => {
+                  setCount(Number(event.currentTarget.value))
+                  clearOutput()
+                }}
+              >
+                {[1, 2, 3, 7, 14].map((value) => (
+                  <option key={value} value={value}>
+                    {value}
+                  </option>
+                ))}
+              </select>
+            </>
+          )}
+        </div>
+      )}
+      {level === 'advanced' && (
+        <>
+          <p>
+            DST 对照固定为纽约的中午到次日中午；下面的事件输入只决定
+            instantUTC，不受其他场景的草稿影响。
+          </p>
+          <label htmlFor={instantId}>绝对事件时间</label>
+          <input
+            id={instantId}
+            className="c14-instant"
+            value={instant}
+            maxLength={35}
+            onChange={(event) => {
+              setInstant(event.currentTarget.value)
+              clearOutput()
+            }}
+          />
+          <p>删除末尾 -04:00 必须拒绝；改成 -05:00 会选择另一个 01:30，二者相隔一小时。</p>
+        </>
+      )}
+      <div className="c14-controls">
+        <button type="button" onClick={calculate}>
+          运行日期计算
+        </button>
+        <button type="button" onClick={reset}>
+          重置当前计算
+        </button>
+      </div>
+      <p role="status" data-testid="c14-status">
+        {error
+          ? '计算失败，请修正输入'
+          : result
+            ? '计算成功：以下为当前输入的真实 SDK 返回值'
+            : '等待计算；输入变化后需重新运行'}
+      </p>
+      {error && (
+        <p role="alert" data-testid="c14-error">
+          {error}
+        </p>
+      )}
+      {result && <pre data-testid="date-result">{JSON.stringify(result, null, 2)}</pre>}
+      <p>
+        纯同步计算，没有定时器、任务调度、后端或网络请求；重置/切场景清本轮结果。程序输入不等于真实操作系统输入法验收。
+      </p>
+    </section>
+  )
 }

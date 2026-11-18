@@ -1,0 +1,16 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node --test entries/B09-shadcn-ui/tests/archive-policy.test.mts
+exit: 0
+
+✔ only unarchived known ids become immutable operation snapshot (0.747522ms)
+✔ archive updates selected rows only and preserves order (0.150665ms)
+✔ repeated archived operations are idempotent (0.08395ms)
+✔ reset, unmount and level change invalidate scheduled callbacks (0.072078ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 60.571089

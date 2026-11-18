@@ -1,0 +1,8 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node entries/B13-dnd-kit/validation/check-entry.mjs
+exit: 0
+
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node entries/B13-dnd-kit/validation/check-entry.mjs
+PASS: entry shape, 3 demos, 8 source paths, README bytes 1017 SHA-256 f154b4be7cce8d6dc435c7b42d81f7ca4cd9c88ff77b85237dbbbc341c7b2c38
+exit: 0

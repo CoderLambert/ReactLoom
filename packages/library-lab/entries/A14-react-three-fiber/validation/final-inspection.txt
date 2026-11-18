@@ -1,0 +1,10 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ["node", "--input-type=module", "-e", "import assert from 'node:assert/strict';import {readFile,stat} from 'node:fs/promises';import {createHash} from 'node:crypto';const root='entries/A14-react-three-fiber/';const hash=b=>createHash('sha256').update(b).digest('hex');for(const name of ['guide.md','agent.md','local-validation.md']){const text=await readFile(root+name,'utf8');for(const match of text.matchAll(/\\]\\(([^)]+)\\)/g)){const target=match[1];if(!/^[a-z]+:|^#/.test(target))assert.ok((await stat(root+target.split('#')[0])).isFile(),`${name}: ${target}`)}}const manifest=JSON.parse(await readFile(root+'validation/local-runs.json','utf8'));for(const run of manifest.runs)assert.equal(hash(await readFile(root+run.log)),run.logSha256,run.label);assert.equal((await readFile(root+'validation/browser-proposal.txt','utf8')).match(/test\\('@A14/g)?.length,4);for(const name of ['@react-three/fiber','three']){const p=JSON.parse(await readFile('node_modules/'+name+'/package.json','utf8'));assert.equal(p.license,'MIT')}console.log('Current guide/agent/local-validation links and all prior raw-log SHA match; four real browser proposals; both package licenses MIT. No browser or broad suite executed.');"]
+startedAt: 2026-11-10T12:17:09.262626+00:00
+finishedAt: 2026-11-10T12:17:09.287828+00:00
+exitCode: 0
+
+STDOUT
+Current guide/agent/local-validation links and all prior raw-log SHA match; four real browser proposals; both package licenses MIT. No browser or broad suite executed.
+
+STDERR

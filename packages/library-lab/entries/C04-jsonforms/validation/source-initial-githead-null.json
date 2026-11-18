@@ -1,0 +1,95 @@
+{
+  "repository": "eclipsesource/jsonforms",
+  "version": "3.8.0",
+  "requests": [
+    {
+      "url": "https://registry.npmjs.org/@jsonforms%2Fcore/3.8.0",
+      "finalUrl": "https://registry.npmjs.org/@jsonforms%2Fcore/3.8.0",
+      "status": 200,
+      "checkedAt": "2026-11-10T15:16:55.990068+00:00",
+      "headers": {
+        "Date": "Tue, 10 Nov 2026 15:16:57 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "3648",
+        "Connection": "close",
+        "CF-Ray": "a5860572d8043478-LAX",
+        "CF-Cache-Status": "DYNAMIC",
+        "Access-Control-Allow-Origin": "*",
+        "Server": "cloudflare",
+        "set-cookie": "__cf_bm=KtLP6NQHNXL9tAH9PNzyZxdq3cJnJ9k_cJKkXpeNb0M-1794323817.418634-1.0.1.1-v8zBsV0ODRdRC3NOKOvH.Xt_ZaPnPbKWIV8kM8w9XOcXkd5s_AxyTIbJpnkOUx2Bg0PPe4pVe29g5IPSJ1AJRcyPvpTWx0PW2SrirplAuQuYCDVsXYaA6DyYXc3vXwAF; HttpOnly; SameSite=None; Partitioned; Secure; Path=/; Domain=npmjs.org; Expires=Tue, 10 Nov 2026 15:46:57 GMT"
+      },
+      "bytes": 3648,
+      "sha256": "2ab73ed59ca30728fe6c4e8f03541d7ae1ad961fab5fd970319ccde3d81f2cd9"
+    },
+    {
+      "url": "https://registry.npmjs.org/@jsonforms%2Freact/3.8.0",
+      "finalUrl": "https://registry.npmjs.org/@jsonforms%2Freact/3.8.0",
+      "status": 200,
+      "checkedAt": "2026-11-10T15:16:57.604827+00:00",
+      "headers": {
+        "Date": "Tue, 10 Nov 2026 15:16:58 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "4191",
+        "Connection": "close",
+        "CF-Ray": "a58605777e4b7f94-LAX",
+        "CF-Cache-Status": "DYNAMIC",
+        "Access-Control-Allow-Origin": "*",
+        "Server": "cloudflare",
+        "set-cookie": "__cf_bm=kA_AltnTrfrYXI4KscubbhH3uRtL_b00GW6XrYy_SQ0-1794323818.1548133-1.0.1.1-wqsJdHbZIpQfd3XXDd02WP5yZXY4UUjbFmyNxBgsouK_uoxlsfMNEsspQiCKrdVDL_rzH0nyMD715jB8enFJiU8BioI.Fi453_OBztY2_2R6iM.CggePT9BceT38DKBe; HttpOnly; SameSite=None; Partitioned; Secure; Path=/; Domain=npmjs.org; Expires=Tue, 10 Nov 2026 15:46:58 GMT"
+      },
+      "bytes": 4191,
+      "sha256": "6d928993f8b38455474d5bf011a081167a274b72b0b0afdd4124cb95cf798cbe"
+    },
+    {
+      "url": "https://registry.npmjs.org/@jsonforms%2Fvanilla-renderers/3.8.0",
+      "finalUrl": "https://registry.npmjs.org/@jsonforms%2Fvanilla-renderers/3.8.0",
+      "status": 200,
+      "checkedAt": "2026-11-10T15:16:59.092789+00:00",
+      "headers": {
+        "Date": "Tue, 10 Nov 2026 15:17:00 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "4656",
+        "Connection": "close",
+        "CF-Ray": "a5860581bd071fdb-SJC",
+        "CF-Cache-Status": "DYNAMIC",
+        "Access-Control-Allow-Origin": "*",
+        "Server": "cloudflare",
+        "set-cookie": "__cf_bm=ZQNPByK5lCo07TJXsgAMJu82DDMH.pyUIXrzXBQW4k8-1794323819.8018234-1.0.1.1-q7QaeboZJAdWRSy46glw11BHfolbHQdI8ydtHgZtP9S1_6bWMbvknCmraIE2mpsbrcFwbzwKclwDN8hdrdm3F9ILBqNOpkKpZCCgAWPTPm_yeJyeYyiPwk2wYHRRmY2o; HttpOnly; SameSite=None; Partitioned; Secure; Path=/; Domain=npmjs.org; Expires=Tue, 10 Nov 2026 15:47:00 GMT"
+      },
+      "bytes": 4656,
+      "sha256": "fb298d70b5f13ae938b15084138115c8f2236cb202a8e7b145b86d4b9c00683c"
+    }
+  ],
+  "commit": null,
+  "packages": {
+    "core": {
+      "name": "@jsonforms/core",
+      "version": "3.8.0",
+      "gitHead": null,
+      "license": "MIT",
+      "peerDependencies": null
+    },
+    "react": {
+      "name": "@jsonforms/react",
+      "version": "3.8.0",
+      "gitHead": null,
+      "license": "MIT",
+      "peerDependencies": {
+        "react": "^16.12.0 || ^17.0.0 || ^18.0.0 || ^19.0.0",
+        "@jsonforms/core": "3.8.0"
+      }
+    },
+    "vanilla-renderers": {
+      "name": "@jsonforms/vanilla-renderers",
+      "version": "3.8.0",
+      "gitHead": null,
+      "license": "MIT",
+      "peerDependencies": {
+        "react": "^16.12.0 || ^17.0.0 || ^18.0.0 || ^19.0.0",
+        "@jsonforms/core": "3.8.0",
+        "@jsonforms/react": "3.8.0"
+      }
+    }
+  },
+  "syncedAt": "2026-11-10T15:17:01.272991+00:00"
+}

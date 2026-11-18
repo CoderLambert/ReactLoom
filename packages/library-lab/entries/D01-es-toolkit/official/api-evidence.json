@@ -1,0 +1,22 @@
+[
+  {
+    "url": "https://raw.githubusercontent.com/toss/es-toolkit/32f4c8fb33828ad6512064ba84b0fdd8fda966a3/src/array/orderBy.ts",
+    "path": "official/orderBy.ts.txt",
+    "sha256": "0144cb736fa91ee086d5c6049af51e585c948b028e9e4051c1fdfa6a3902460d"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/toss/es-toolkit/32f4c8fb33828ad6512064ba84b0fdd8fda966a3/src/array/uniqBy.ts",
+    "path": "official/uniqBy.ts.txt",
+    "sha256": "9143ecc04d57b9537e2c92756827b9bdb44a1878085adff6d105dc403eb091eb"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/toss/es-toolkit/32f4c8fb33828ad6512064ba84b0fdd8fda966a3/src/array/groupBy.ts",
+    "path": "official/groupBy.ts.txt",
+    "sha256": "e60e26fad5b92601bc56df2332e702dfc46ad4711b51d5c264512aba1b72e9ae"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/toss/es-toolkit/32f4c8fb33828ad6512064ba84b0fdd8fda966a3/src/array/chunk.ts",
+    "path": "official/chunk.ts.txt",
+    "sha256": "e30092d18a1bffa101f140168990b876b16d0e00c18a0dfd641166541350abbf"
+  }
+]

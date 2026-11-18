@@ -1,0 +1,34 @@
+{
+  "installed": {
+    "@mui/material": {
+      "version": "9.5.0",
+      "packagePath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@mui+material@9.5.0_@emotion+react@11.14.0_@types+react@19.3.0_react@19.3.0__@emotion+s_700aa9eebc76968ccc7d05d63c1911b8/node_modules/@mui/material/package.json"
+    },
+    "@emotion/react": {
+      "version": "11.14.0",
+      "packagePath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@emotion+react@11.14.0_@types+react@19.3.0_react@19.3.0/node_modules/@emotion/react/package.json"
+    },
+    "@emotion/styled": {
+      "version": "11.14.1",
+      "packagePath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@emotion+styled@11.14.1_@emotion+react@11.14.0_@types+react@19.3.0_react@19.3.0__@types+react@19.3.0_react@19.3.0/node_modules/@emotion/styled/package.json"
+    }
+  },
+  "files": {
+    "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+    "examples/example.tsx": "65f4d3ba757c3b1a5a480fb4f0dfb3f889275c744913546a14af1880afc4efc4",
+    "examples/theme.ts": "ea318cdd579ea55df8a0b74610d5a5a720858f7a563c69c8ce30ecdfc7f69478",
+    "examples/feed-history.ts": "519c51475c4c609a76b276470595e4b493ea53c18904104d502fa0e586d4b750",
+    "examples/draft-policy.ts": "6f4f62c954c84fa06d8c63522e0796d0b684ca0354f9e5ff7d0021b14df41214",
+    "examples/styles.css": "748ab0dc3ff9de363b54093da62e2a5aace315e0052f61f84db4fbff6d3d3cf8",
+    "tests/sdk.test.mjs": "790763c6a234738fa19f07e6c757457b26f5245b63c477c26e5a53f13eef7b49",
+    "tests/feed-history.test.mts": "75082add2488ed4c7d8bc890ba22bb56d470f64e1db6cde71f47bc200d42b7b2",
+    "tests/draft-policy.test.mts": "72780c31ef27e73df1890971a29706750da4665fb22cc5ffafae0a29ab33b782",
+    "library.json": "05472ad0992afe1d13c3b48e25723a47601ff13a912059b37f0b53d9a5b8d3e7",
+    "guide.md": "ff832decff74fe066feedc367c9361c8d181ec35196f99987c9369235edcee9a",
+    "agent.md": "c3127b08fa6bdfc12900feae1ebb027fa3daf8186817ab05c04b59b437f6b36a",
+    "verification.json": "ef7afa757b0069fb9245449e8adee0d7b1b87ff4aaded0bf9615468846833ca1",
+    "official/readme.md": "7101439d2715daf9687af1c610051cfc01f393b1a83d52b6d8c0d10e8a6e1227",
+    "official/source-evidence.json": "0e7f63967814a070382863ff94285c0c6fb8520bc07031fff58ba034f36204ba",
+    "validation/browser-proposal.txt": "c36ffb0676dc70331cdcdead721a0519046cd418f20cbdb92f6342a2edf90551"
+  }
+}

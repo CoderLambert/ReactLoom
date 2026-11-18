@@ -1,0 +1,15 @@
+{
+  "examples/example.tsx": "b5dfc066a9421f0310c9c1e3d09c8c37450ce1d37bf65d1a8f75f60f57bdac87",
+  "examples/query-contract.mjs": "99cef6f85e3370d1a0260abe4bd23080c4be02ce3366f14907f8aab620c8a6f1",
+  "examples/query-contract.d.mts": "8cecc886538593b51793eef6beb71fe6f88e3c6de92b526bc9890fc545a2d2c9",
+  "examples/url-policy.mjs": "72efc511cd6da0a96a0357f4c1b4501efcb006081e2c44f3f5c5d890939082dd",
+  "examples/url-policy.d.mts": "65839ab91072fe9da71524fc575c54ab2848322161d227018542c779ba6bcb85",
+  "examples/styles.css": "4390f2c796fdc7a3255b86de478e9fce6aa15d30cdaa35a8be28d1c829b42aa6",
+  "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+  "library.json": "db756d32a958426f99a51da8f981115a490b3daf4a333a027433883c22167b76",
+  "tests/sdk.test.mjs": "499d07e0bf56c7597360663057e3193075bf27c908dee816f1a42f9d823841e4",
+  "tests/url-policy.test.mjs": "e04baa51950dcf84f850b7b7ad17e928204909f044961d69ce150923d8dc038d",
+  "official/readme.md": "de5eb7cbf51d0a8c0eecd79146a7e61e6dadfbd0132f3f26a73f91fa569d66eb",
+  "official/source-evidence.json": "ff4b83c78617741bbd92418f36e60b28788493990eade5d363dadab1ecade51c",
+  "validation/browser-proposal.txt": "4385a54f97fe59f6aed1b25296a2bdca17139ab4f0fc0d4d5d0a53f1e9cb7611"
+}

@@ -1,0 +1,27 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['pnpm', 'exec', 'biome', 'check', '--write', 'entries/C04-jsonforms/examples', 'entries/C04-jsonforms/tests', 'entries/C04-jsonforms/library.json', 'entries/C04-jsonforms/verification.json', 'entries/C04-jsonforms/official/source-evidence.json']
+startedAt: 2026-11-10T15:23:02.464617+00:00
+exit: 1
+Checked 10 files in 9ms. Fixed 8 files.
+Found 1 error.
+entries/C04-jsonforms/examples/submission-policy.mjs:13:3 lint/suspicious/noThenProperty ━━━━━━━━━━━
+
+  × This object defines a then property.
+  
+    11 │   },
+    12 │   if: { properties: { feedType: { const: 'rss' } }, required: ['feedType'] },
+  > 13 │   then: {
+       │   ^^^^
+    14 │     required: ['url'],
+    15 │     properties: { url: { type: 'string', minLength: 8, maxLength: 200, pattern: '^https://' } },
+  
+  i Values with a then property can be treated like promises by await and dynamic imports, which can cause unexpected behavior.
+  
+  i Rename this property to something other than then unless you intentionally need a thenable object.
+  
+
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while applying fixes.
+  
+

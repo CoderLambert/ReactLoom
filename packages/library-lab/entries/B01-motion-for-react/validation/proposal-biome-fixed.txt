@@ -1,0 +1,10 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ["pnpm", "exec", "--", "biome", "check", "entries/B01-motion-for-react/validation/browser-proposal-check.ts"]
+startedAt: 2026-11-10T12:39:59.261286+00:00
+finishedAt: 2026-11-10T12:39:59.535099+00:00
+exitCode: 0
+
+STDOUT
+Checked 1 file in 13ms. No fixes applied.
+
+STDERR

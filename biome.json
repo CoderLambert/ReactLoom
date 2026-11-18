@@ -19,7 +19,11 @@
       "!**/pnpm-lock.yaml",
       "!**/mockServiceWorker.js",
       "!**/storybook-static",
-      "!**/next-env.d.ts"
+      "!**/next-env.d.ts",
+      "!packages/library-lab/entries/**/official",
+      "!packages/library-lab/entries/**/validation/**/*.json",
+      "!packages/library-lab/entries/**/evidence/**/*.json",
+      "!docs/library-lab/evidence/**/*.json"
     ]
   },
   "formatter": {

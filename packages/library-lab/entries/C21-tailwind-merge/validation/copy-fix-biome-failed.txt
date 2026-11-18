@@ -1,0 +1,4 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+command=pnpm exec biome check packages/library-lab/entries/C21-tailwind-merge/verification.json
+exitCode=254
+[warn] Linter process terminated abnormally (possibly out of memory)

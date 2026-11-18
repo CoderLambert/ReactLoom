@@ -1,0 +1,167 @@
+// Real Playwright proposal; NOT_RUN by the entry author. Root integrates and executes.
+// No SDK mock, route interception, hidden Editor API or screenshot replacement.
+import { expect, test, type Locator, type Page } from '@playwright/test'
+
+type SceneItem = { id: string; type: string; x: number; y: number; text?: string }
+async function mountA09(page: Page, level: 'basic' | 'business' | 'advanced') {
+  await page.goto(`/libraries/excalidraw?tab=demo&example=${level}`)
+  const app = page.getByTestId('a09-workshop')
+  await expect(app.locator('canvas.interactive')).toBeVisible({ timeout: 20_000 })
+  await app.getByText('查看当前元素身份、位置与文字', { exact: true }).click()
+  return app
+}
+async function scene(app: Locator): Promise<SceneItem[]> {
+  return JSON.parse((await app.getByTestId('a09-scene').textContent()) ?? '[]')
+}
+async function drawRectangle(page: Page, app: Locator) {
+  // 0.18.1 ToolButton renders the real radio input within its clickable label.
+  await app.getByTestId('toolbar-rectangle').locator('..').click()
+  const canvas = app.locator('canvas.interactive')
+  await canvas.scrollIntoViewIfNeeded()
+  const box = await canvas.boundingBox()
+  if (!box) throw new Error('SDK canvas未布局')
+  await page.mouse.move(box.x + box.width * 0.4, box.y + box.height * 0.5)
+  await page.mouse.down()
+  await page.mouse.move(box.x + box.width * 0.65, box.y + box.height * 0.75, { steps: 12 })
+  await page.mouse.up()
+}
+function importedScene(link: string | null = null, type = 'rectangle') {
+  return JSON.stringify({
+    type: 'excalidraw',
+    version: 2,
+    source: 'ReactLoom A09 browser input fixture',
+    appState: {},
+    files: {},
+    elements: [
+      {
+        id: 'a09-import-one',
+        type,
+        x: 40,
+        y: 50,
+        width: 120,
+        height: 80,
+        angle: 0,
+        strokeColor: '#1e1e1e',
+        backgroundColor: '#e7f5ef',
+        fillStyle: 'solid',
+        strokeWidth: 1,
+        strokeStyle: 'solid',
+        roughness: 1,
+        opacity: 100,
+        seed: 1,
+        version: 1,
+        versionNonce: 1,
+        isDeleted: false,
+        groupIds: [],
+        frameId: null,
+        boundElements: null,
+        updated: 1,
+        link,
+        locked: false,
+        roundness: null,
+        index: 'a0',
+      },
+    ],
+  })
+}
+
+test('@A09 actual rectangle drawing and native undo change the SDK scene', async ({ page }) => {
+  const app = await mountA09(page, 'basic')
+  await expect(app.getByTestId('a09-count')).toHaveText('0')
+  await drawRectangle(page, app)
+  await expect(app.getByTestId('a09-count')).toHaveText('1')
+  expect((await scene(app))[0].type).toBe('rectangle')
+  await page.keyboard.press('ControlOrMeta+z')
+  await expect(app.getByTestId('a09-count')).toHaveText('0')
+})
+
+test('@A09 real skeleton conversion, edit, reset and restore remain local', async ({ page }) => {
+  const app = await mountA09(page, 'business')
+  await expect(app.getByTestId('a09-count')).toHaveText('8')
+  const initial = await scene(app)
+  expect(initial.filter((item) => item.type === 'rectangle')).toHaveLength(3)
+  expect(initial.filter((item) => item.type === 'arrow')).toHaveLength(2)
+  expect(
+    initial
+      .filter((item) => item.type === 'text')
+      .map((item) => item.text)
+      .sort(),
+  ).toEqual(['RSS 获取', '人工审核', '清洗 / 分类'].sort())
+  await drawRectangle(page, app)
+  await expect(app.getByTestId('a09-count')).toHaveText('9')
+  await app.getByRole('button', { name: '重置当前画布', exact: true }).click()
+  await expect(app.getByTestId('a09-count')).toHaveText('0')
+  await app.getByRole('button', { name: '恢复流程草图', exact: true }).click()
+  await expect(app.getByTestId('a09-count')).toHaveText('8')
+})
+
+test('@A09 real import rejection/recovery, PNG bytes, readonly and unmount', async ({ page }) => {
+  const app = await mountA09(page, 'advanced')
+  await expect(app.getByTestId('a09-count')).toHaveText('8')
+  const input = app.getByLabel('导入 .excalidraw 文件', { exact: true })
+  const payload = (text: string) => ({
+    name: 'scene.excalidraw',
+    mimeType: 'application/json',
+    buffer: Buffer.from(text),
+  })
+  const initialIds = (await scene(app)).map((item) => item.id)
+  await input.setInputFiles(payload(importedScene('http://insecure.example')))
+  await expect(app.getByTestId('a09-status')).toContainText('导入已拒绝')
+  expect((await scene(app)).map((item) => item.id)).toEqual(initialIds)
+  await input.setInputFiles(payload(importedScene()))
+  await expect(app.getByTestId('a09-status')).toContainText('导入 1 个元素')
+  await expect(app.getByTestId('a09-count')).toHaveText('1')
+  expect((await scene(app))[0].id).toBe('a09-import-one')
+  const downloaded = page.waitForEvent('download')
+  await app.getByRole('button', { name: '下载 PNG', exact: true }).click()
+  const download = await downloaded
+  expect(download.suggestedFilename()).toBe('reactloom-workflow.png')
+  const stream = await download.createReadStream()
+  if (!stream) throw new Error('PNG download stream unavailable')
+  const chunks: Buffer[] = []
+  for await (const chunk of stream) chunks.push(Buffer.from(chunk))
+  const png = Buffer.concat(chunks)
+  expect([...png.subarray(0, 8)]).toEqual([137, 80, 78, 71, 13, 10, 26, 10])
+  expect(png.readUInt32BE(16)).toBeGreaterThan(0)
+  expect(png.readUInt32BE(20)).toBeGreaterThan(0)
+  expect(Math.max(png.readUInt32BE(16), png.readUInt32BE(20))).toBeLessThanOrEqual(2048)
+  await app.getByRole('checkbox', { name: '只读演示', exact: true }).check()
+  await expect(input).toBeDisabled()
+  for (const name of ['重置当前画布', '恢复流程草图']) {
+    await expect(app.getByRole('button', { name, exact: true })).toBeDisabled()
+  }
+  await expect(app.getByRole('button', { name: '下载 PNG', exact: true })).toBeEnabled()
+  await app.getByRole('checkbox', { name: '只读演示', exact: true }).uncheck()
+  // Real input-file and checkbox DOM events in one task make the pending SDK FileReader race reproducible.
+  // Only native DOM input is supplied; loadFromBlob and every SDK API remain untouched.
+  const beforeRace = await scene(app)
+  await app.evaluate(
+    (node, json) => {
+      const fileInput = node.querySelector<HTMLInputElement>('input[type="file"]')
+      const readOnly = node.querySelector<HTMLInputElement>('input[type="checkbox"]')
+      if (!fileInput || !readOnly) throw new Error('native inputs missing')
+      const transfer = new DataTransfer()
+      transfer.items.add(new File([json], 'late.excalidraw', { type: 'application/json' }))
+      fileInput.files = transfer.files
+      fileInput.dispatchEvent(new Event('change', { bubbles: true }))
+      readOnly.click()
+    },
+    importedScene().replace('a09-import-one', 'late-result'),
+  )
+  await expect(app).toHaveAttribute('data-readonly', 'true')
+  await expect(app.getByTestId('a09-status')).toContainText('在途操作结果已作废')
+  // Small local FileReader completion; no fake timer or delay inside the SDK.
+  await page.waitForTimeout(400)
+  expect(await scene(app)).toEqual(beforeRace)
+  await page.getByRole('button', { name: '停止并卸载', exact: true }).click()
+  await expect(app).toHaveCount(0)
+  await expect(page.locator('canvas.interactive')).toHaveCount(0)
+  await page.getByRole('button', { name: '运行当前示例', exact: true }).click()
+  await expect(app.getByTestId('a09-count')).toHaveText('8')
+  await expect(app).toHaveAttribute('data-readonly', 'false')
+  await page.getByRole('tab', { name: 'Agent 指南', exact: true }).click()
+  await expect(page.locator('canvas.interactive')).toHaveCount(0)
+})
+
+// Fonts/Chinese glyph correctness needs visual review in the actual browser; a download is not font proof.
+// IME, touch, complete screen-reader acceptance, offline assets and collaboration remain NOT_RUN.

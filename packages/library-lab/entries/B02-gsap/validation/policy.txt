@@ -1,0 +1,27 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+ARGV: ["pnpm", "test:policy", "--entry=B02"]
+START: 2026-11-10T12:41:21.552473+00:00
+END: 2026-11-10T12:41:21.882559+00:00
+EXIT: 0
+STDOUT:
+
+> @reactloom/library-lab@0.1.0 test:policy /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+> node scripts/policy-runner.mjs --entry=B02
+
+Pure entry policy suites selected: 1 (not SDK evidence)
+✔ visible and unpaused timeline may run (0.537403ms)
+✔ user pause survives hidden and visible transitions (0.107536ms)
+✔ visibility and motion preference are both hard stops (0.074726ms)
+✔ progress reports percentage bounded to valid range (0.414224ms)
+✔ bounded progress updates skip small jitter but publish both endpoints (0.115793ms)
+✔ reverse progress reports meaningful steps in both directions and rejects invalid samples (0.069494ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 73.645984
+
+STDERR:

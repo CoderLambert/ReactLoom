@@ -4,13 +4,14 @@
   "slug": "monaco-editor",
   "name": "Monaco Editor",
   "group": "E",
-  "summary": "IDE 级代码编辑与 Worker",
+  "summary": "用真实模型编辑、异步 JSON 诊断与显式本地草稿理解浏览器代码编辑器",
   "tags": [
-    "code-editor",
+    "代码编辑",
+    "model与editor",
     "Web Worker",
     "TypeScript",
-    "JSON",
-    "CSP",
+    "JSON诊断",
+    "sessionStorage",
     "dispose"
   ],
   "contentState": "recreated",
@@ -22,16 +23,20 @@
   ],
   "references": [
     {
-      "title": "Monaco Editor 官方集成文档（含 Vite）",
-      "url": "https://github.com/microsoft/monaco-editor/blob/main/docs/integrate-esm.md"
+      "title": "Monaco 0.57.0 固定源码与官方 README",
+      "url": "https://github.com/microsoft/monaco-editor/tree/d61824269f1377111d34306e4a47172327777083"
     },
     {
-      "title": "Monaco 发行版 0.57.0",
-      "url": "https://www.npmjs.com/package/monaco-editor"
+      "title": "该提交官方 ESM 集成说明（Worker 路径以实际 exports 为准）",
+      "url": "https://github.com/microsoft/monaco-editor/blob/d61824269f1377111d34306e4a47172327777083/docs/integrate-esm.md"
     },
     {
-      "title": "Monaco API 文档",
+      "title": "官方 API 文档",
       "url": "https://microsoft.github.io/monaco-editor/typedoc/"
+    },
+    {
+      "title": "该提交 JSON 异步诊断实现",
+      "url": "https://github.com/microsoft/monaco-editor/blob/d61824269f1377111d34306e4a47172327777083/src/languages/features/common/lspLanguageFeatures.ts"
     }
   ],
   "related": [
@@ -49,68 +54,66 @@
   "demos": [
     {
       "demoId": "basic",
-      "title": "编辑器基础生命周期",
+      "title": "文本模型与编辑操作",
       "level": "basic",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/demo.tsx",
         "examples/example.tsx",
+        "examples/workshop.css",
         "examples/workers.ts",
         "examples/worker-lease.mjs",
         "examples/worker-lease.d.mts",
         "examples/resource-cleanup.mjs",
-        "examples/resource-cleanup.d.mts"
+        "examples/resource-cleanup.d.mts",
+        "examples/draft-store.mjs",
+        "examples/draft-store.d.mts"
       ],
-      "capabilities": [
-        "web-worker",
-        "resize-observer"
-      ],
-      "description": "TS 编辑器创建/更改/布局/销毁；实际编辑由 Monaco 完成。"
+      "capabilities": ["web-worker", "resize-observer"],
+      "description": "编辑 TypeScript 并通过 executeEdits / undo 对照模型文本；文本不会执行。"
     },
     {
       "demoId": "business",
-      "title": "业务草稿编辑与保存",
+      "title": "显式保存与恢复函数草稿",
       "level": "business",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/demo.tsx",
         "examples/example.tsx",
+        "examples/workshop.css",
         "examples/workers.ts",
         "examples/worker-lease.mjs",
         "examples/worker-lease.d.mts",
         "examples/resource-cleanup.mjs",
-        "examples/resource-cleanup.d.mts"
+        "examples/resource-cleanup.d.mts",
+        "examples/draft-store.mjs",
+        "examples/draft-store.d.mts"
       ],
-      "capabilities": [
-        "web-worker",
-        "resize-observer"
-      ],
-      "description": "修改 TypeScript 内容并显式保存草稿快照；无服务端持久化。"
+      "capabilities": ["web-worker", "resize-observer", "local-session-storage"],
+      "description": "显式保存到当前标签页 sessionStorage，继续修改并手动恢复；刷新后保留，不上传。"
     },
     {
       "demoId": "advanced",
-      "title": "JSON 语法诊断",
+      "title": "JSON 语言服务诊断与修复",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/demo.tsx",
         "examples/example.tsx",
+        "examples/workshop.css",
         "examples/workers.ts",
         "examples/worker-lease.mjs",
         "examples/worker-lease.d.mts",
-        "examples/worker-lease.test.mjs",
         "examples/resource-cleanup.mjs",
         "examples/resource-cleanup.d.mts",
-        "examples/resource-cleanup.test.mjs"
+        "examples/draft-store.mjs",
+        "examples/draft-store.d.mts"
       ],
-      "capabilities": [
-        "web-worker",
-        "resize-observer"
-      ],
-      "description": "实际使用 Monaco JSON 语言服务 Worker；观察错误标记与资源释放。"
+      "capabilities": ["web-worker", "resize-observer"],
+      "description": "真实 JSON Worker 报告尾逗号的行列与消息，修复后标记归零；诊断与文本异步更新。"
     }
   ],
   "license": {
@@ -119,6 +122,26 @@
   },
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
-    "note": "本条目以官方 Vite ESM 接口新写；尚未恢复或声明原始 ZIP 的测试结果。"
+    "note": "参照 Monaco 0.57.0 官方发行提交与已安装导出重写三场景；保留既有 Worker 租约及失败清理。草稿为本例自建业务逻辑，Node 策略与浏览器证据分别记录。"
+  },
+  "official": {
+    "readme": {
+      "repository": "microsoft/monaco-editor",
+      "commit": "d61824269f1377111d34306e4a47172327777083",
+      "path": "README.md",
+      "sha256": "333e7215227199c4ba97ec927bb09cfcf69b297ba3be108e866aed735a312822",
+      "sourceUrl": "https://github.com/microsoft/monaco-editor/blob/d61824269f1377111d34306e4a47172327777083/README.md",
+      "snapshotPath": "official/readme.md",
+      "language": "en",
+      "version": "0.57.0",
+      "syncedAt": "2026-11-10T09:18:54.337376+00:00"
+    },
+    "homepage": {
+      "url": "https://microsoft.github.io/monaco-editor/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-10T09:18:54.337376+00:00",
+      "reason": "GET 200，最终 URL 与请求相同，未见 X-Frame-Options 或 CSP frame-ancestors 限制；响应头保存在 official/homepage-response.json，尚未从 Lab origin 实测 iframe，不能标为 allowed。"
+    }
   }
 }

@@ -1,0 +1,154 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: pnpm exec biome check --write entries/F11-msw/examples entries/F11-msw/tests
+exit: 0
+
+entries/F11-msw/examples/registration-policy.test.mjs:6:16 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    5 │ const scoped = 'https://lab.example/lab-runners/msw/'
+  > 6 │ const script = scoped + 'mockServiceWorker.js'
+      │                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    7 │ test('global root worker is never mistaken for scoped MSW registration', () => {
+    8 │   assert.equal(findExactScopeRegistration([{ scope: 'https://lab.example/' }], scoped), null)
+  
+  i Unsafe fix: Use a template literal.
+  
+     4  4 │   
+     5  5 │   const scoped = 'https://lab.example/lab-runners/msw/'
+     6    │ - const·script·=·scoped·+·'mockServiceWorker.js'
+        6 │ + const·script·=·`${scoped}mockServiceWorker.js`
+     7  7 │   test('global root worker is never mistaken for scoped MSW registration', () => {
+     8  8 │     assert.equal(findExactScopeRegistration([{ scope: 'https://lab.example/' }], scoped), null)
+  
+
+entries/F11-msw/examples/registration-policy.test.mjs:26:48 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    24 │     () =>
+    25 │       assertWorkerRegistration(
+  > 26 │         { scope: scoped, waiting: { scriptURL: scoped + 'other.js' } },
+       │                                                ^^^^^^^^^^^^^^^^^^^
+    27 │         scoped,
+    28 │         script,
+  
+  i Unsafe fix: Use a template literal.
+  
+    24 24 │       () =>
+    25 25 │         assertWorkerRegistration(
+    26    │ - ········{·scope:·scoped,·waiting:·{·scriptURL:·scoped·+·'other.js'·}·},
+       26 │ + ········{·scope:·scoped,·waiting:·{·scriptURL:·`${scoped}other.js`·}·},
+    27 27 │           scoped,
+    28 28 │           script,
+  
+
+entries/F11-msw/examples/registration-policy.test.mjs:47:33 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    45 │           scope: scoped,
+    46 │           active: { scriptURL: script },
+  > 47 │           waiting: { scriptURL: scoped + 'foreign.js' },
+       │                                 ^^^^^^^^^^^^^^^^^^^^^
+    48 │         },
+    49 │         scoped,
+  
+  i Unsafe fix: Use a template literal.
+  
+    45 45 │             scope: scoped,
+    46 46 │             active: { scriptURL: script },
+    47    │ - ··········waiting:·{·scriptURL:·scoped·+·'foreign.js'·},
+       47 │ + ··········waiting:·{·scriptURL:·`${scoped}foreign.js`·},
+    48 48 │           },
+    49 49 │           scoped,
+  
+
+entries/F11-msw/examples/routes.mjs:17:38 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    15 │     throw new Error('Scenario base must be an absolute HTTP(S) directory URL')
+    16 │   }
+  > 17 │   const endpoint = (name) => new URL('api/' + name, url).href
+       │                                      ^^^^^^^^^^^^^
+    18 │   return Object.freeze({
+    19 │     article: endpoint('articles/42'),
+  
+  i Unsafe fix: Use a template literal.
+  
+    15 15 │       throw new Error('Scenario base must be an absolute HTTP(S) directory URL')
+    16 16 │     }
+    17    │ - ··const·endpoint·=·(name)·=>·new·URL('api/'·+·name,·url).href
+       17 │ + ··const·endpoint·=·(name)·=>·new·URL(`api/${name}`,·url).href
+    18 18 │     return Object.freeze({
+    19 19 │       article: endpoint('articles/42'),
+  
+
+entries/F11-msw/examples/worker-script-preflight.test.mjs:10:16 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+     9 │ const scope = 'https://lab.example/lab-runners/msw/'
+  > 10 │ const script = scope + 'mockServiceWorker.js'
+       │                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    11 │ function fakeResponse(
+    12 │   source = '/* actual script must still be verified by browser MSW */',
+  
+  i Unsafe fix: Use a template literal.
+  
+     8  8 │   
+     9  9 │   const scope = 'https://lab.example/lab-runners/msw/'
+    10    │ - const·script·=·scope·+·'mockServiceWorker.js'
+       10 │ + const·script·=·`${scope}mockServiceWorker.js`
+    11 11 │   function fakeResponse(
+    12 12 │     source = '/* actual script must still be verified by browser MSW */',
+  
+
+entries/F11-msw/examples/worker-script-preflight.test.mjs:46:13 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    44 │     [scope, 'https://evil.example/mockServiceWorker.js'],
+    45 │     [scope, 'https://lab.example/mockServiceWorker.js'],
+  > 46 │     [scope, script + '?cache=1'],
+       │             ^^^^^^^^^^^^^^^^^^^
+    47 │     ['https://lab.example/', 'https://lab.example/mockServiceWorker.js'],
+    48 │   ]) {
+  
+  i Unsafe fix: Use a template literal.
+  
+    44 44 │       [scope, 'https://evil.example/mockServiceWorker.js'],
+    45 45 │       [scope, 'https://lab.example/mockServiceWorker.js'],
+    46    │ - ····[scope,·script·+·'?cache=1'],
+       46 │ + ····[scope,·`${script}?cache=1`],
+    47 47 │       ['https://lab.example/', 'https://lab.example/mockServiceWorker.js'],
+    48 48 │     ]) {
+  
+
+entries/F11-msw/tests/routes.test.mjs:11:34 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+     9 │ })
+    10 │ test('browser fixtures resolve within the same-origin runner scope', () => {
+  > 11 │   const urls = scenarioEndpoints('http://127.0.0.1:4319' + BROWSER_RUNNER_SCOPE)
+       │                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    12 │   for (const value of Object.values(urls)) {
+    13 │     assert.equal(new URL(value).origin, 'http://127.0.0.1:4319')
+  
+  i Unsafe fix: Use a template literal.
+  
+     9  9 │   })
+    10 10 │   test('browser fixtures resolve within the same-origin runner scope', () => {
+    11    │ - ··const·urls·=·scenarioEndpoints('http://127.0.0.1:4319'·+·BROWSER_RUNNER_SCOPE)
+       11 │ + ··const·urls·=·scenarioEndpoints(`http://127.0.0.1:4319${BROWSER_RUNNER_SCOPE}`)
+    12 12 │     for (const value of Object.values(urls)) {
+    13 13 │       assert.equal(new URL(value).origin, 'http://127.0.0.1:4319')
+  
+
+Skipped 13 suggested fixes.
+If you wish to apply the suggested (unsafe) fixes, use the command biome check --write --unsafe
+
+Checked 12 files in 7ms. Fixed 12 files.
+Found 7 infos.

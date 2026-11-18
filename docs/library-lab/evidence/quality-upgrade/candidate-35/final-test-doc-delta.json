@@ -1,0 +1,6 @@
+{
+  "path": "packages/library-lab/e2e/quality-resume-pdfjs.spec.ts",
+  "before": "69ffc87608827ffbc7bbde1468c20fa1b55e595d68415a447b911d880d7542a2",
+  "after": "d475e4b2444a9f7758a9adc6046ee898a210546e478c0e0ab09986b7d32411d0",
+  "reason": "Locator p[role=status] disambiguates output implicit status; test only. Other post-freeze edits are excluded."
+}

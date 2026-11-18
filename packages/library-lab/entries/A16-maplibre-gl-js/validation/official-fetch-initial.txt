@@ -1,0 +1,5 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: inline Python urllib request for pinned MapLibre tree/README/homepage
+exit: 1
+urllib.error.URLError: <urlopen error _ssl.c:1129: The handshake operation timed out>
+Initial source acquisition failed before library official fields completed. Biome then saw missing homepage file; metadata initial exit1 recorded separately. SDK/policy/type checks were independent and passed. Original fixed source was already inspected during read-only research; recovered byte-identical installed README after SHA comparison.

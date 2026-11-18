@@ -1,0 +1,6 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+command=python packages/library-lab/.local-evidence/c05-fetch.py
+['README.md', 'docs/README.md', 'docs/news/README.md', 'docs/packages/README.md', 'spec/_json/README.md']
+official 13781 38d924524762b917dd9dd341ac28837df51a474bf198ac4c26ba69d8f59a27c3
+
+exitCode=0

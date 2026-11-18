@@ -1,0 +1,29 @@
+{
+  "checkedAt": "2026-11-17T16:18:53.173282+00:00",
+  "results": [
+    {
+      "path": "official/readme.md",
+      "sha256": "87237646806588ea43e8a7d4c13880d09b42b14ab0a4b0bbb944855f25b82232",
+      "matches": true,
+      "bytesMatch": true
+    },
+    {
+      "path": "official/tz-readme.md",
+      "sha256": "dc3a4466b53f9a5d2f06e0e3a5d38ce2858f565481471ec3747aee5f0718b264",
+      "matches": true,
+      "bytesMatch": true
+    },
+    {
+      "path": "official/dayjs-readme.md",
+      "sha256": "3f4c6e9edd42554b8c6a1e111daafb568b4eba3e8b9da31a9296abebb8aae2c5",
+      "matches": true,
+      "bytesMatch": true
+    },
+    {
+      "path": "official/moment-readme.md",
+      "sha256": "436d7bffc56485e7a295675f541ddee1e433e43ee65ef10588a1cd5a38900356",
+      "matches": true,
+      "bytesMatch": true
+    }
+  ]
+}

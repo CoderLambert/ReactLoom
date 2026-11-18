@@ -1,0 +1,50 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ["pnpm", "exec", "--", "biome", "check", "--write", "entries/E19-ffmpeg-wasm/examples", "entries/E19-ffmpeg-wasm/library.json", "entries/E19-ffmpeg-wasm/verification.json", "entries/E19-ffmpeg-wasm/official/source-evidence.json", "entries/E19-ffmpeg-wasm/validation/baseline.json", "entries/E19-ffmpeg-wasm/validation/resource-prerequisites.json"]
+exit: 1
+
+Skipped 2 suggested fixes.
+If you wish to apply the suggested (unsafe) fixes, use the command biome check --write --unsafe
+
+Checked 15 files in 13ms. Fixed 6 files.
+Found 1 error.
+Found 1 info.
+entries/E19-ffmpeg-wasm/examples/example.tsx:138:28 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    136 │         if (engine.current === ffmpeg) setLog(message.slice(0, 500))
+    137 │       })
+  > 138 │       const base = new URL(import.meta.env.BASE_URL + 'ffmpeg-core/', window.location.origin)
+        │                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    139 │       await ffmpeg.load({
+    140 │         coreURL: new URL('ffmpeg-core.js', base).href,
+  
+  i Unsafe fix: Use a template literal.
+  
+    136 136 │           if (engine.current === ffmpeg) setLog(message.slice(0, 500))
+    137 137 │         })
+    138     │ - ······const·base·=·new·URL(import.meta.env.BASE_URL·+·'ffmpeg-core/',·window.location.origin)
+        138 │ + ······const·base·=·new·URL(`${import.meta.env.BASE_URL}ffmpeg-core/`,·window.location.origin)
+    139 139 │         await ffmpeg.load({
+    140 140 │           coreURL: new URL('ffmpeg-core.js', base).href,
+  
+
+entries/E19-ffmpeg-wasm/examples/example.tsx:343:11 lint/a11y/useMediaCaption ━━━━━━━━━━━━━━━━━━━━━━
+
+  × Provide a track for captions when using audio or video elements.
+  
+    341 │       {result && (
+    342 │         <>
+  > 343 │           <audio src={result} controls aria-label="真实转换产生的WAV" data-testid="e19-audio" />
+        │           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    344 │           <a href={result} download="output.wav">
+    345 │             下载本次WAV
+  
+  i Captions support users with hearing-impairments. They should be a transcription or translation of the dialogue, sound effects, musical cues, and other relevant audio information.
+  
+
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while applying fixes.
+  
+

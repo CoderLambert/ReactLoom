@@ -1,0 +1,21 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ["node", "--test", "entries/E19-ffmpeg-wasm/examples/input-policy.test.mjs", "entries/E19-ffmpeg-wasm/examples/wav-output-policy.test.mjs"]
+exit: 0
+
+✔ WAV signature accepted but MIME spoof rejected (0.727989ms)
+✔ size limits run before reading oversized media into WASM (4.090866ms)
+✔ supports known MP3/WebM/MP4 signatures, rejects mismatches (0.177739ms)
+✔ valid PCM16 mono 16k WAV has bounded duration (0.908326ms)
+✔ the advanced half-second cap accepts its boundary and rejects the next PCM frame (0.901647ms)
+✔ malformed RIFF length, inflated chunks and truncated data fail (0.169011ms)
+✔ rejects codec, channel, sample-rate and byte-rate mismatches (0.19566ms)
+✔ rejects empty data, extra length and durations beyond two seconds (0.197977ms)
+✔ accepts valid ancillary chunks and validates padding (0.11052ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 48.012876

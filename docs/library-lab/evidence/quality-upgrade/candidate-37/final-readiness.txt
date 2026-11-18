@@ -1,0 +1,2505 @@
+{
+  "counts": {
+    "total": 119,
+    "sourceComplete": 119,
+    "sourceIncomplete": 0,
+    "missing": 0,
+    "scenarioDeclarations": 345,
+    "react": 106,
+    "worker": 0,
+    "nodeCi": 12,
+    "browserFrame": 1
+  },
+  "verification": {
+    "sdk": {
+      "PASS": 0,
+      "FAIL": 0,
+      "BLOCKED": 1,
+      "NOT_RUN": 118
+    },
+    "build": {
+      "PASS": 0,
+      "FAIL": 0,
+      "BLOCKED": 0,
+      "NOT_RUN": 119
+    },
+    "browser": {
+      "PASS": 0,
+      "FAIL": 0,
+      "BLOCKED": 0,
+      "NOT_RUN": 119
+    }
+  },
+  "entries": [
+    {
+      "id": "A01",
+      "name": "Apache ECharts",
+      "state": "source-complete",
+      "fingerprint": "583b777ef7dbe86db7bd3ecd7a572b7a8ca78c905c51dd84144d63e0bbabd427",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改/独立复核和实际运行已完成，证据见local-validation.md及路线图results/A01.md。当前dirty运行输入未授权提交，没有干净提交的verify:record正式sdk收据；状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改/独立复核和实际运行已完成，证据见local-validation.md及路线图results/A01.md。当前dirty运行输入未授权提交，没有干净提交的verify:record正式build收据；状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改/独立复核和实际运行已完成，证据见local-validation.md及路线图results/A01.md。当前dirty运行输入未授权提交，没有干净提交的verify:record正式browser收据；状态保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "A02",
+      "name": "Recharts",
+      "state": "source-complete",
+      "fingerprint": "bcaf4e2e944a99220b49e85c28f5de3117c11290bb40c4235bcc519cb9859149",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/A02.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/A02.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/A02.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "A03",
+      "name": "Chart.js",
+      "state": "source-complete",
+      "fingerprint": "61ab92443db4ebad61977096b7cba599d8a72099ae7fe670e98867a08f590908",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/A03.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/A03.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/A03.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "A04",
+      "name": "uPlot",
+      "state": "source-complete",
+      "fingerprint": "833063e89740064913036119e396b2c30e16ae0ea0d902ebccd379e1165bed72",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/A04.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/A04.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/A04.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "A05",
+      "name": "D3",
+      "state": "source-complete",
+      "fingerprint": "56b0b169ab5b0268a48bd38fae4e65dc9ab1fed55a7a6582d7b7bafc8a18307b",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/A05.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/A05.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/A05.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "A06",
+      "name": "React Flow",
+      "state": "source-complete",
+      "fingerprint": "3b2eda2c9bd58215775a5953f8cc70e3cbe786fcc8ccd7c2c43d88b48b3bcaf1",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改/独立复核和实际运行已完成，证据见local-validation.md及路线图results/A06.md。当前dirty运行输入未授权提交，没有干净提交的verify:record正式sdk收据；状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改/独立复核和实际运行已完成，证据见local-validation.md及路线图results/A06.md。当前dirty运行输入未授权提交，没有干净提交的verify:record正式build收据；状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改/独立复核和实际运行已完成，证据见local-validation.md及路线图results/A06.md。当前dirty运行输入未授权提交，没有干净提交的verify:record正式browser收据；状态保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "A07",
+      "name": "AntV G6",
+      "state": "source-complete",
+      "fingerprint": "2c7a6bf26aa2a2a0487c90512246d6dd228ae061cba30e2253d4b69b5964edfc",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/A07.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/A07.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/A07.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "A08",
+      "name": "Mermaid",
+      "state": "source-complete",
+      "fingerprint": "6e6e5bf6a6cc96ca5d422d645044f08f303f6100b78cb01f357299ec8ce7de3b",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/A08.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/A08.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/A08.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "A09",
+      "name": "Excalidraw",
+      "state": "source-complete",
+      "fingerprint": "21fd60485978156214ce69ea4b4bf4c9eaba10649a602a063b6933b11c91b563",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/A09.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/A09.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/A09.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
+        },
+        "assets": {
+          "status": "NOT_RUN",
+          "note": "未自托管字体，SDK按官方包README默认CDN取字体；未实测字体网络/中文渲染/PNG，不能由旧BLOCKED推断当前运行被阻塞。"
+        }
+      }
+    },
+    {
+      "id": "A10",
+      "name": "tldraw",
+      "state": "source-complete",
+      "fingerprint": "ec4995dd7d80f67c125b350d09a3f71f871a1420f80648baba6d502c4c970b03",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/A10.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/A10.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/A10.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
+        },
+        "license": {
+          "status": "NOT_RUN",
+          "note": "固定5.5.2许可证与官方说明已核对；未读取/使用用户key，无生产许可验收，本机开发预览仍待真实浏览器。"
+        }
+      }
+    },
+    {
+      "id": "A11",
+      "name": "Konva",
+      "state": "source-complete",
+      "fingerprint": "cb81437728d38f9b1c6a606ff5f9a678b147cac6adbba95f3a8d85ac9412cf62",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/A11.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/A11.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/A11.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "A12",
+      "name": "react-konva",
+      "state": "source-complete",
+      "fingerprint": "f426910a7711061e7cc90b678515f48173903b4d677a7b8282584c76402e9420",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/A12.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/A12.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/A12.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "A13",
+      "name": "Three.js",
+      "state": "source-complete",
+      "fingerprint": "df8cccb47dc089488faf7a6d7077db53d9cd23b80eaa879fdce3c88b22be9be1",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/A13.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/A13.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/A13.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "A14",
+      "name": "React Three Fiber",
+      "state": "source-complete",
+      "fingerprint": "816d5563b65320f89a0a2f1621af457f847881d3e83070b912a2ea260831a46f",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/A14.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/A14.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/A14.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "A15",
+      "name": "Leaflet",
+      "state": "source-complete",
+      "fingerprint": "4a7db267e994ffbd81059945e606cd8b9f60a7d7ac1c121060a3e20126f3527f",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/A15.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/A15.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/A15.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "A16",
+      "name": "MapLibre GL JS",
+      "state": "source-complete",
+      "fingerprint": "c30b374132c35d56e7793d93d163251f0f98c4a8d493833e698b74042aa161a0",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/A16.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/A16.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/A16.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "A17",
+      "name": "deck.gl",
+      "state": "source-complete",
+      "fingerprint": "39c93bdabc726ef45a467750e2cb4b2f6a23c0b20fb53e53908c1e002c96f6cb",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/A17.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/A17.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/A17.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "B01",
+      "name": "Motion for React",
+      "state": "source-complete",
+      "fingerprint": "43ad5b000c6c6522b0122d54c40d35dfa43b09ba1b2969e00a174cf6f65c4f5e",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B01.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B01.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B01.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "B02",
+      "name": "GSAP",
+      "state": "source-complete",
+      "fingerprint": "0152bb191dfef5ed919bd800e751db6858e7d12d70fbf6ef3974e894fcd3647f",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B02.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B02.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B02.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "B03",
+      "name": "react-spring",
+      "state": "source-complete",
+      "fingerprint": "2d8f401362498363d4eaab801725675600f0c2c5d8f0ef01853ce97ea71a76b1",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B03.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B03.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B03.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "B04",
+      "name": "dotLottie 播放器",
+      "state": "source-complete",
+      "fingerprint": "96f0b0ca2e10bd40c5650536289a35d4416ce660f260f18ee1f0a5b156732cd8",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B04.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B04.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B04.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "B05",
+      "name": "Rive React Runtime",
+      "state": "source-complete",
+      "fingerprint": "0284cdb7a9aaeff1a73a010984e8d718e0ed16ed0532e11f497338111ca3bbcc",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B05.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B05.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B05.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
+        },
+        "assets": {
+          "status": "BLOCKED",
+          "note": "未提供获准的离线/可再分发.riv。当前仅保留官方文档的远程vehicles.riv+bumpy引用，未复制二进制；实际在线加载仍需浏览器验证CDN/WASM网络，不能将离线阻塞伪写为已解决。"
+        }
+      }
+    },
+    {
+      "id": "B06",
+      "name": "Ant Design",
+      "state": "source-complete",
+      "fingerprint": "3a7b94a883aaadd8ef3b327302e5ff27afae73af112b042742ff96077f60112d",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B06.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B06.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B06.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "B07",
+      "name": "MUI",
+      "state": "source-complete",
+      "fingerprint": "90f22a4d64145dd88a5bc7522a9ba0ffee1a203bb94ce1fa4df6f60d93041c63",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B07.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B07.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B07.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "B08",
+      "name": "Mantine",
+      "state": "source-complete",
+      "fingerprint": "a7e7d765d2afcf0f9bc6a1454d36ac60c78701a74ad8c32850ffefd4dce19248",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B08.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B08.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B08.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "B09",
+      "name": "shadcn/ui",
+      "state": "source-complete",
+      "fingerprint": "ab219521100e2e57f16b270e67d88e1df52750fa4481f78895689940a9ad1c11",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改/独立复核和实际运行已完成，证据见local-validation.md及路线图results/B09.md。当前dirty运行输入未授权提交，没有干净提交的verify:record正式sdk收据；状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改/独立复核和实际运行已完成，证据见local-validation.md及路线图results/B09.md。当前dirty运行输入未授权提交，没有干净提交的verify:record正式build收据；状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改/独立复核和实际运行已完成，证据见local-validation.md及路线图results/B09.md。当前dirty运行输入未授权提交，没有干净提交的verify:record正式browser收据；状态保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "B10",
+      "name": "Base UI",
+      "state": "source-complete",
+      "fingerprint": "035d881604a26f6aa65f5254aed07f255875ea4315c25fed941c4adafaa79e89",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B10.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B10.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B10.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "B11",
+      "name": "Radix Primitives",
+      "state": "source-complete",
+      "fingerprint": "d1aa8a21609f2c9d225d04d1590dd20b1020eb46d6c75475c3bae6942d371004",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B11.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B11.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B11.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "B12",
+      "name": "React Aria",
+      "state": "source-complete",
+      "fingerprint": "2ca1f72c59917f7bab10a227ec2404acd0b28aefe6bced46f3672fde318f1032",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B12.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B12.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B12.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "B13",
+      "name": "dnd-kit",
+      "state": "source-complete",
+      "fingerprint": "26fa684d1e7fbf688474cf8e93c1d046b9b20659cab0ee9e275238df415596e3",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B13.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B13.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B13.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "B14",
+      "name": "Pragmatic drag and drop",
+      "state": "source-complete",
+      "fingerprint": "69794839e12395ca0970da04c62951fce5410ae7f2c345c630a49b66b471f6d1",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B14.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B14.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B14.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "B15",
+      "name": "react-grid-layout",
+      "state": "source-complete",
+      "fingerprint": "460dce5a8fb82e4279af8e01a74637ec55b7ee20993c1c6075025f9bfc5bfdb7",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B15.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B15.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B15.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "B16",
+      "name": "react-resizable-panels",
+      "state": "source-complete",
+      "fingerprint": "0865287cfa179e70fc57b3047a191fbe12b62f3104d423809148bb15373949c4",
+      "verification": {
+        "content": {
+          "status": "NOT_RUN",
+          "note": "本轮中文/源码/来源与本地检查见local-validation；完整内容与运行验收等待独立复核及正式收据。"
+        },
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B16.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B16.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B16.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "B17",
+      "name": "Floating UI",
+      "state": "source-complete",
+      "fingerprint": "fd834cc0ab15aec17d0f43a3252126800bc61005176380e9aaaa91829033f06a",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B17.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B17.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B17.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "B18",
+      "name": "cmdk",
+      "state": "source-complete",
+      "fingerprint": "39e05e8201a80e13a4cd20a883eb1b6fe48107f8b282ea433d7d865f17c2586f",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B18.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B18.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B18.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "B19",
+      "name": "Embla Carousel",
+      "state": "source-complete",
+      "fingerprint": "d418f3abcb2109ec9397d6ec7eb75db75616772ba633d001b16283e4a9c1ae4a",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B19.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B19.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B19.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "B20",
+      "name": "Sonner",
+      "state": "source-complete",
+      "fingerprint": "f696c61fe3c5a0667190d6646b884af2aefddaa63f83ef0649f7d63ed47cf0d5",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B20.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B20.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B20.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "B21",
+      "name": "react-motion（历史迁移）",
+      "state": "source-complete",
+      "fingerprint": "80b1f1def0975128fb691f7f78708caf17d470b632b1b600374255f7a52e3575",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B21.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B21.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B21.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "B22",
+      "name": "react-beautiful-dnd（历史迁移）",
+      "state": "source-complete",
+      "fingerprint": "23e011c6df48d73729d3f4dcaa6fd2d726d16da9b984e3220a1b479082e8227a",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "正式NOT_RUN；实际替代@hello-pangea/dnd18.0.1本地SSR2/policy17与主控真实传感器结果另记。原react-beautiful-dnd SDK未导入执行，不能把迁移成功记旧SDK PASS。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "正式NOT_RUN；主控匹配候选16共享type/build/catalog通过属于本地范围，未取得本条目授权干净提交/固定记录器正式收据。原SDK未运行。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "正式NOT_RUN；本地3目标及官方展示已由主控闭环：candidate16 basic/advanced PASS，fixed slot真实SDK键盘Space+4ArrowDown+Space的定向重试PASS且dest4/拒绝断言未放宽；官网既有PASS复用。实际替代库18.0.1，旧原库未运行。"
+        }
+      }
+    },
+    {
+      "id": "C01",
+      "name": "React Hook Form",
+      "state": "source-complete",
+      "fingerprint": "1cfd54ceeda6b628bb3716c03fd7aca5b1af65c3b2879a9a2ec525270ed7aaab",
+      "verification": {
+        "content": {
+          "status": "NOT_RUN",
+          "note": "本轮完成增量讲解/源码/官方资料及静态自检，独立复核和新增DOM交互待主控，见local-validation.md。"
+        },
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/C01.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/C01.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/C01.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "C02",
+      "name": "Zod",
+      "state": "source-complete",
+      "fingerprint": "35f6738b6202d8805eea94f4bf3d24fd12a29b02a8a0c8caedd4770b076e23a7",
+      "verification": {
+        "content": {
+          "status": "NOT_RUN",
+          "note": "新实现需独立审阅"
+        },
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/C02.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/C02.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/C02.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "C03",
+      "name": "Valibot",
+      "state": "source-complete",
+      "fingerprint": "5354a4149c35c795404281c12a94defbe5f45225dcc0be20ca8967540960b653",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/C03.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/C03.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/C03.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "C04",
+      "name": "JSON Forms",
+      "state": "source-complete",
+      "fingerprint": "3c97b851d75e2c3e8ee9f74fe111fbb9565340af94358e8209392bf75624a789",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/C04.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/C04.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/C04.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "C05",
+      "name": "Ajv",
+      "state": "source-complete",
+      "fingerprint": "506c8f2d0d96a2410a06a2517c56a8a26eb37e30225f795267c8144179ee2112",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地共享合同SDK3/policy3、非作者六项复核及candidate16本条目4浏览器case已闭环，见local-validation.md；没有正式固定记录器收据，status仍NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "入口strict与主控candidate16共享候选编译通过，输入绑定见local-validation.md；共享构建不替代本条目正式build收据，status仍NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "candidate16输入e951352e…2b8cd下C05三目标+原文/官网unknown共4PASS，原始browser.txt已链接；本地闭环与正式记证分开，status仍NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "C06",
+      "name": "IMask",
+      "state": "source-complete",
+      "fingerprint": "bd4e2513d6c75f13fed02ebe002ba9e1c610b12b1f5606c33c039a6da34d2ad3",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "正式NOT_RUN；本地模型SDK4与calendar纯策略3分开，不证明React onAccept/光标/生命周期。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "正式NOT_RUN；局部入口/提案严格类型与主控共享candidate另记，不作独立收据。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "正式NOT_RUN；本地candidate16 basic/business/官网PASS，candidate17受影响advanced新构建PASS，三目标闭环；SDK4/policy3复用。八所属DOM事件清理不外推全部订阅/timer，composition非OS IME。见local-validation与validation/browser-binding.json。"
+        }
+      }
+    },
+    {
+      "id": "C07",
+      "name": "TanStack Table",
+      "state": "source-complete",
+      "fingerprint": "ae2e7b4798385ada029a4950fd144ccf2cfd7a4d7cd0e78c1148cbb56d47935d",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/C07.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/C07.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/C07.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "C08",
+      "name": "AG Grid",
+      "state": "source-complete",
+      "fingerprint": "63120b88a5e19f05ce944190ebc0ade44b548d2d561e794df2eaa2aa00b9ba7f",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地真实SDK2/policy6、独立复核与维护工具P2已闭环；candidate16实际四交互+原文/官网5case另有日志，不能替代正式SDK收据，仍NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "条目strict/fixture增量与主控共享候选编译范围见local-validation.md，当前输入已重绑；无本条目正式build收据，仍NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "candidate16中四交互最终PASS（含真实编辑保留/过期请求冲突JSON分支）及原文/官网原PASS共5case；精确初败/重试日志见local-validation，正式记录器收据仍NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "C09",
+      "name": "React Virtuoso",
+      "state": "source-complete",
+      "fingerprint": "ffa7629484035beb11f57727957325e0eb2e2f82c0122b0c5e0b48f418e3a346",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "需要实际安装并运行所声明的 SDK；不能用领域 fixture 冒充"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "当前提交未执行真实 TypeScript/Vite 构建"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "正式NOT_RUN；root candidate16三个真实目标及官方展示共4PASS，advanced仅修正滚动完成采样门禁，原8px/缺ID/底部跟随未放宽；匹配正式收据另计。"
+        }
+      }
+    },
+    {
+      "id": "C10",
+      "name": "TanStack Virtual",
+      "state": "source-complete",
+      "fingerprint": "993b577da289fa7b895310b6f573000b2384ee3328c88b7e1ba9acdd7fe81021",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地实际SDK3（React SSR/公开core无DOM模型）与policy6已通过，candidate17三目标+官网4browser case另记local-validation；没有正式SDK收据，仍NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "入口strict与root candidate17共享编译通过，六运行源未改；共享构建不等于本条目正式build收据，仍NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "root candidate17输入13e1e74d…f4d0下C10三目标+固定原文/blocked官网4PASS，原始browser.txt与提案绑定见local-validation；OS/SSR等未测，正式收据仍NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "C11",
+      "name": "react-arborist",
+      "state": "source-complete",
+      "fingerprint": "2fb000af466c3c16cc3cd8a633d63d361a3308a9f1d0a6b975181ad1d1665779",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地真实SDK5（页面共享moveTree与adjustMoveIndex）exit0，仅模型/算法；不是正式收据或DOM拖放PASS，详见local-validation。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "入口strict0与root candidate18公共type/build/catalog0另记，七运行源匹配该构建；无逐库正式build收据，status仍NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "root固定candidate18原始browser.txt确认C11三目标+原文/unknown展示4/4PASS，七运行源未变；合成IME协议不是系统IME，iframe仍unknown。作者复用不重跑，正式收据NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "C12",
+      "name": "FullCalendar",
+      "state": "source-complete",
+      "fingerprint": "e4e1daeb0e558c4d327eb7cbeff142593855f527faeac338f3b373cd680fc7ae",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "正式NOT_RUN；本地SDK2为真实v7共享插件/locale及FullCalendar formatDate，policy4另记；不证明Calendar DOM/drop/resize/revert。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "正式NOT_RUN；局部入口与完整提案strict通过，主控candidate17共享type/build/catalog0另记，不当独立正式收据。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "正式NOT_RUN；本地candidate17 basic/business受影响完整retry各1PASS，advanced原PASS和官网PASS复用=3目标+官方4PASS；非作者六项复核无遗留P1/P2。原两FAIL/诊断scope保留，六源未改。见local-validation和browser-completion-binding。"
+        }
+      }
+    },
+    {
+      "id": "C13",
+      "name": "Frappe Gantt",
+      "state": "source-complete",
+      "fingerprint": "fa384f2cfec53545ab2942822a13a682550f688b1a14a34eca6c0e8bac38cb2d",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "正式NOT_RUN；本地SDK4实际原型/日期配方与policy有效13分开，不证明DOM构造/画图/监听。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "待平台执行 TypeScript 和生产构建"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "正式NOT_RUN；root candidate17既有五条真实隔离/SVG/键盘/CDP生命周期case与官网blocked共6PASS；抓取工具维护未改运行源。精确附加未测项见local-validation，正式收据另计。"
+        }
+      }
+    },
+    {
+      "id": "C14",
+      "name": "date-fns",
+      "state": "source-complete",
+      "fingerprint": "87e98b6de645b67b086403c8e6cfe78b263e23e0cf18570c7a4e52329b4b3b9e",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地分段真实SDK4项+低高年独立instant1项有效，初次低年FAIL保留；详见local-validation。未执行正式收据runner，status仍NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "主控candidate18全Lab type/build/catalog exit0、输入stability=[]；六运行源与构建输入逐字节相同，本地只读复核见validation/shared-evidence.json。未执行正式收据runner，status仍NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "主控candidate18实际固定dist18浏览器：C14三目标+原文/官网unknown四项PASS，原始browser.json/browser.txt已读并绑定六运行源/公共提案SHA。作者未重复浏览器，未知iframe可嵌入性未改allowed；正式status仍NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "C15",
+      "name": "Day.js",
+      "state": "source-complete",
+      "fingerprint": "be3c42f6d6ba75f7632662517dfe802c8f1a8dcd083d549a29e5ea357c020602",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "正式NOT_RUN；本地6项实际共享Day.js计算/混合应用guard与真实zone往返PASS，不证明React或OS IME，见local-validation。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "正式NOT_RUN；入口strict与candidate18共享构建通过仅另记，非正式条目收据；本次后续仅文档/来源/提案。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "正式NOT_RUN；本地candidate18三个真实目标3PASS+candidate19官方中文原文/unknown展示1PASS=4PASS，独立P2-1 CLOSED。19整轮11PASS1FAIL/exit1，不能冒称全轮PASS；C15单项PASS。iframe仍unknown，其他未测边界保留。"
+        }
+      }
+    },
+    {
+      "id": "C16",
+      "name": "Luxon",
+      "state": "source-complete",
+      "fingerprint": "b5f6b5ef095aec525fbbef83f9351726e6ccf53532e362e7bd04a29fa78f7c85",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地真实SDK8与纯policy2分别exit0，直接共享页面日期/墙上时间合同；宿主版本在sdk.txt。没有正式收据，status仍NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "入口定向strict0，candidate18公共type/build/catalog0可复用且运行源未改；不是本库独立正式build收据。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地固定candidate18三目标3PASS，candidate19原始browser.txt中C16原文/unknown展示单项PASS；19整批11PASS1FAIL/exit1不记全命令PASS。九源不变/e11两P2 delta已关闭；iframe仍unknown，非正式收据，status NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "C17",
+      "name": "i18next",
+      "state": "source-complete",
+      "fingerprint": "1e0d31208a8f3da07af3ddbe6b6218a9106479a35ad3e7749bd0f169a2edf590",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "正式NOT_RUN；本地真实共享SDK5/纯队列policy4各exit0，SDK/fixture/应用队列边界分开；既有有效结果复用，不作为正式收据。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "正式NOT_RUN；单入口strict0及固定20共享lint/type/build/catalog均0，7运行源与19/20一致；不是单库正式build收据。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "正式NOT_RUN；固定19真实三目标3PASS，固定20官方原文/HTTP Lab blocked展示1PASS，合计本条4PASS；20混合命令2PASS3FAIL/exit1不得标整套PASS。无OS IME/HTTP backend取消/SSR租户隔离/全局监听普查。"
+        }
+      }
+    },
+    {
+      "id": "C18",
+      "name": "react-i18next",
+      "state": "source-complete",
+      "fingerprint": "7aea868d87c8172d9b47b94f0ed8dfca537524888b0802ccc9144fe74c4f7ca7",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "作者本地真实SDK5/5（实际Provider/Trans SSR及共享原实例session）与纯policy4/4 exit0，SSR不是客户端订阅/hydration通过；正式收据未运行，status仍NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "定向入口strict/完整三case提案strict exit0；root固定candidate19全Lab type/build/catalog0，9运行源逐字节匹配。正式收据未生成，status仍NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "已实际读root candidate19浏览器原始日志，C18三目标+原README/官网blocked共4PASS；整体批次11PASS/1FAIL/exit1为B15公共URL，未当全绿。9源/提案候选同SHA，正式status仍NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "C19",
+      "name": "nuqs",
+      "state": "source-complete",
+      "fingerprint": "76c9a41692a5773a6969873a9aa069acdd9d41a7e811b5a842a1a6b61380c0bc",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "正式NOT_RUN；本地共享真实nuqs parser/loader/serializer6PASS与纯policy6分开，非Router/DOM。未为兼容桥重复已绿6+6，详见local-validation。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "正式NOT_RUN；本地candidate21匹配8运行源的公共typecheck/build/catalog均exit0，输入changed=[]。这是共享Lab编译，非本条正式recorder收据；详见local-validation。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "正式NOT_RUN；本地candidate21真实Chromium三交互目标与官方原文/unknown展示共4PASS，混合命令6PASS/exit0。原三业务断言保留，逻辑host数组/hash另验；旧candidate20三FAIL原样保留。官网iframe本身仍unknown；详见local-validation。"
+        }
+      }
+    },
+    {
+      "id": "C20",
+      "name": "clsx",
+      "state": "source-complete",
+      "fingerprint": "55801cf68165aa8efa7f4700c233e24155328946097ab1af08a4a699f6effd57",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "根 pnpm-lock.yaml 已包含 Library Lab importer，声明的包可以被冻结安装解析。Actions run 41779873259 的仓库级 typecheck/build 不是本条目的 evidence/runs 收据，所以这里是 NOT_RUN，不是 PASS。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "根 pnpm-lock.yaml 已包含 Library Lab importer，声明的包可以被冻结安装解析。Actions run 41779873259 的仓库级 typecheck/build 不是本条目的 evidence/runs 收据，所以这里是 NOT_RUN，不是 PASS。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "后续改动交互改动未在 Chromium 验收"
+        }
+      }
+    },
+    {
+      "id": "C21",
+      "name": "tailwind-merge",
+      "state": "source-complete",
+      "fingerprint": "56a79e5aef43c479a642603811c118b9590258207a590fcdd6815c712e13e6ab",
+      "verification": {
+        "content": {
+          "status": "NOT_RUN",
+          "note": "作者单完整实验/中文/迁移与来源已收尾，待非作者独立复核；静态内容不冒充正式SDK/browser收据。"
+        },
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "作者本地共享模型直接import真实tailwind-merge3.7.0/clsx2.1.1，5项exit0；无正式收据，status保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本条目入口strict/格式/metadata与完整浏览器提案strict已exit0；candidate21匹配Lab typecheck/build/catalog均exit0，详见local-validation.md。此为本地宿主构建，正式build收据尚未运行，status保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "candidate21真实浏览器整批6case exit0，其中C21完整实验与官方原文/禁止嵌入展示2case PASS；实际class、Tailwind4.3.3 computed style、hover、断点、自定义规则、重置卸载已验，详见local-validation.md。无正式browser收据，status保持NOT_RUN；触屏/读屏/跨浏览器等未测范围继续保留。"
+        }
+      }
+    },
+    {
+      "id": "C22",
+      "name": "Moment（历史迁移）",
+      "state": "source-complete",
+      "fingerprint": "738b1f9da12ec89d0617f9a95700157a40394f7073a87ec6c67a14ce4d5110ea",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "根 pnpm-lock.yaml 已包含 Library Lab importer，声明的包可以被冻结安装解析。Actions run 41779873259 的仓库级 typecheck/build 不是本条目的 evidence/runs 收据，所以这里是 NOT_RUN，不是 PASS。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "PLATFORM 尚未完成当前候选版本的完整 TypeScript/Vite 构建"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "真实时区、日期输入和销毁行为尚待 Chromium 验证"
+        }
+      }
+    },
+    {
+      "id": "D01",
+      "name": "es-toolkit",
+      "state": "source-complete",
+      "fingerprint": "2ab557a9c240830983b17f42df71adcdf747cd9a7b7af5a470d07bf91a068589",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "未执行本提交真实 es-toolkit SDK 测试"
+        },
+        "build": {
+          "status": "NOT_RUN"
+        },
+        "browser": {
+          "status": "NOT_RUN"
+        }
+      }
+    },
+    {
+      "id": "D02",
+      "name": "Lodash/lodash-es",
+      "state": "source-complete",
+      "fingerprint": "d221947ecd4bd602953374143af1b00565bc9e6272f78ec3d76dbc704e5db0b5",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "需实际安装 lodash-es@4.18.1 运行 SDK tests"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "待 PLATFORM 的真实 typecheck/build"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "待中文IME/卸载浏览器验证"
+        }
+      }
+    },
+    {
+      "id": "D03",
+      "name": "p-limit",
+      "state": "source-complete",
+      "fingerprint": "800628fd23d8a91c8586329a5dd3186895ddf822fba8c590ec5ce8bb7f62bc66",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/D03.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/D03.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/D03.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "D04",
+      "name": "p-queue",
+      "state": "source-complete",
+      "fingerprint": "53f464252a0a70fdfe1aebc5370546b77c1331352aeb65cfd4c81828634ce411",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地真实SDK 5 项通过；见local-validation.md；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "candidate-23本地build通过；见local-validation.md；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "candidate-23本地browser通过；见local-validation.md；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "D05",
+      "name": "decimal.js",
+      "state": "source-complete",
+      "fingerprint": "5fb5c3a5b55ff1d0907730d81992aeb5d43dc8a644d270729ac327b7c53ec6da",
+      "verification": {
+        "content": {
+          "status": "NOT_RUN",
+          "note": "质量整改与本地证据见 local-validation.md；等待主控独立复核"
+        },
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地真实SDK 6（另3项策略） 项通过；见local-validation.md；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "candidate-23本地build通过；见local-validation.md；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "candidate-23本地browser通过；见local-validation.md；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "D06",
+      "name": "Immer",
+      "state": "source-complete",
+      "fingerprint": "7671f3197017b759539f91b89986a7f03594271aad1d2162fd6cd84a294c3d87",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地真实SDK 6（另2项策略） 项通过；见local-validation.md；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "candidate-23本地build通过；见local-validation.md；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "candidate-23本地browser通过；见local-validation.md；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "D07",
+      "name": "TanStack Query",
+      "state": "source-complete",
+      "fingerprint": "0f8712657e461414781fe770bfbc00cdf39cba54e88d7a6a199edf7372eae3f7",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/D07.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/D07.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/D07.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "D08",
+      "name": "Ky",
+      "state": "source-complete",
+      "fingerprint": "974191f91408b05221b2fa357b3d9950bca231b1c293f22e9a0b546ff97ff801",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地sdk证据见local-validation.md及candidate-24；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地build证据见local-validation.md及candidate-24；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地browser证据见local-validation.md及candidate-24；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "D09",
+      "name": "Axios",
+      "state": "source-complete",
+      "fingerprint": "c09f692ce395aa77d53376c13093c31725178c68c707aa1500a1e836cedcda9e",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地sdk证据见local-validation.md及candidate-24；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地build证据见local-validation.md及candidate-24；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地browser证据见local-validation.md及candidate-24；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "D10",
+      "name": "Zustand",
+      "state": "source-complete",
+      "fingerprint": "06fb9c60af0c800d160a66031ada2af89100d763ce3a5e3afaaab8b8d721b3f5",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地sdk证据见local-validation.md及candidate-24；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地build证据见local-validation.md及candidate-24；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地browser证据见local-validation.md及candidate-24；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "D11",
+      "name": "Jotai",
+      "state": "source-complete",
+      "fingerprint": "ae32de8f0d91f15fc96f6c3a4ee4504f271d69de605259bada812df4aab7dc7b",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地sdk证据见local-validation.md及candidate-25；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地build证据见local-validation.md及candidate-25；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地browser证据见local-validation.md及candidate-25；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "D12",
+      "name": "Redux Toolkit",
+      "state": "source-complete",
+      "fingerprint": "359d9a628fb1cc0cf5c6b06939d10e029029e483efcf2a0bba3ce7de4dfeea6a",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地sdk证据见local-validation.md及candidate-25；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地build证据见local-validation.md及candidate-25；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地browser证据见local-validation.md及candidate-25；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "D13",
+      "name": "RTK Query",
+      "state": "source-complete",
+      "fingerprint": "fb7958b9d6db38aa33142042e3c75ee6f377b955f9296697816a813d81b633ab",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地sdk证据见local-validation.md及candidate-25；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地build证据见local-validation.md及candidate-25；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地browser证据见local-validation.md及candidate-25；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "D14",
+      "name": "XState",
+      "state": "source-complete",
+      "fingerprint": "ad36474d33cef27fff5d37a0de3f86b17ad56f3e11101f15abc34c887708750d",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地sdk证据见local-validation.md及candidate-26；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地build证据见local-validation.md及candidate-26；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地browser证据见local-validation.md及candidate-26；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "D15",
+      "name": "Dexie",
+      "state": "source-complete",
+      "fingerprint": "cc7380ba4560cc5e87fd6e8ebee7a65103b3c8e5bdfad787b73dcab4f0033cb0",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "已本地定向执行真实 Dexie 4.4.7 + fake-indexeddb 6.2.6；缺少绑定当前输入的 recorder 收据，正式状态仍为 NOT_RUN"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "需绑定当前输入的真实构建收据；定向类型检查不等于 build 验收"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "需 Chromium IDB migration/事务/清理"
+        }
+      }
+    },
+    {
+      "id": "D16",
+      "name": "Workbox",
+      "state": "source-complete",
+      "fingerprint": "167df1d2249fc35bc98c26bde9f16084f079854445d5b238b8ffb42c756a2184",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地sdk证据见local-validation.md及candidate-26；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地build证据见local-validation.md及candidate-26；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地browser证据见local-validation.md及candidate-26；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "D17",
+      "name": "Yjs",
+      "state": "source-complete",
+      "fingerprint": "a03efc0308522dd50c9a405b73dbea50335d2b53c1da7822fb3ffe4f65c03ade",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地sdk证据见local-validation.md及candidate-26；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地build证据见local-validation.md及candidate-26；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地browser证据见local-validation.md及candidate-26；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "D18",
+      "name": "Comlink",
+      "state": "source-complete",
+      "fingerprint": "aa76f800b493116b7b0905e6c7c68f66d2512dcfdac7f54c84fa3fccc911d9ad",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地sdk证据见local-validation.md及candidate-27；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地build证据见local-validation.md及candidate-27；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地browser证据见local-validation.md及candidate-27；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "D19",
+      "name": "Fuse.js",
+      "state": "source-complete",
+      "fingerprint": "de45fb37f5c49f60bbe646b861bb8652cff208246a51a5aaaad01505dabb8bde",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地sdk证据见local-validation.md及candidate-27；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地build证据见local-validation.md及candidate-27；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地browser证据见local-validation.md及candidate-27；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "D20",
+      "name": "MiniSearch",
+      "state": "source-complete",
+      "fingerprint": "1a26f6497e7be3e085321a1281a50673ee3e3cb39b70f2b1150a79689f098fd1",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地sdk证据见local-validation.md及candidate-27；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地build证据见local-validation.md及candidate-27；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地browser证据见local-validation.md及candidate-27；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "D21",
+      "name": "Pagefind",
+      "state": "source-complete",
+      "fingerprint": "0e20e5e713425cf90e28519bb28064dbb7a6f28f30900146cbcc03dc909ac3f5",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地sdk证据见local-validation.md及candidate-28；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地build证据见local-validation.md及candidate-28；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地browser证据见local-validation.md及candidate-28；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "E01",
+      "name": "Tiptap",
+      "state": "source-complete",
+      "fingerprint": "92fa9dea80b62cfbe2a2d99a97fb3e6808c9299c26bce5bf2f38c2870effa4c4",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地sdk证据见local-validation.md及candidate-28；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地build证据见local-validation.md及candidate-28；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地browser证据见local-validation.md及candidate-28；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "E02",
+      "name": "BlockNote",
+      "state": "source-complete",
+      "fingerprint": "d492c336f87817020abd9b45e9699bf4ed57eb48c0d2f2049e3b2e2da1b08c3d",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地sdk证据见local-validation.md及candidate-28；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地build证据见local-validation.md及candidate-28；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地browser证据见local-validation.md及candidate-28；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "E03",
+      "name": "Lexical",
+      "state": "source-complete",
+      "fingerprint": "be5bb1522e1d47da8c4cb7599502fb1e733fa8a32a943a6c4236bcefa025f3ca",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地sdk证据见local-validation.md及candidate-29；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地build证据见local-validation.md及candidate-29；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地browser证据见local-validation.md及candidate-29；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "E04",
+      "name": "CodeMirror 6",
+      "state": "source-complete",
+      "fingerprint": "d62eb6f154c8d25009d3e6a041f737e8bb97dfc3c57e9196d4c5fd2405000d2a",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地sdk证据见local-validation.md及candidate-29；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地build证据见local-validation.md及candidate-29；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地browser证据见local-validation.md及candidate-29；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "security": {
+          "status": "NOT_RUN",
+          "note": "HTML/token 安全、资源清理等需真实运行校验。"
+        }
+      }
+    },
+    {
+      "id": "E05",
+      "name": "Monaco Editor",
+      "state": "source-complete",
+      "fingerprint": "799d65da6735ec03cab5d743794dc350d242aea4c472044203a2e410b04a3e89",
+      "verification": {
+        "source": {
+          "status": "NOT_RUN",
+          "note": "中文讲解、三场景源码、官方原文及独立复核已完成，入口见local-validation.md及路线图results/E05.md；此字段没有正式收据，不以本地检查改写状态。"
+        },
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地真实Monaco浏览器已执行模型编辑、session草稿、JSON诊断与修复；正式SDK收据尚无，状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "根 pnpm-lock.yaml 已包含 Library Lab importer，声明的包可以被冻结安装解析。Actions run 41779873259 的仓库级 typecheck/build 不是本条目的 evidence/runs 收据，所以这里是 NOT_RUN，不是 PASS。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地真实Chromium六项PASS（含Worker租约卸载及390px布局），见路线图results/E05.md。未在干净已提交输入执行verify:record，正式浏览器状态仍NOT_RUN。"
+        },
+        "isolation": {
+          "status": "NOT_RUN",
+          "note": "示例清理器会继续释放后续资源。Monaco Worker 线程、生产 CSP 和重挂没有本条目收据，所以是 NOT_RUN。monaco-editor 已在锁文件中。"
+        }
+      }
+    },
+    {
+      "id": "E06",
+      "name": "react-markdown",
+      "state": "source-complete",
+      "fingerprint": "13d01832581a6773df6a3636a77dca7c9fbb9f81e068771da8194a24439f9509",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地sdk证据见local-validation.md及candidate-29；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地build证据见local-validation.md及candidate-29；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地browser证据见local-validation.md及candidate-29；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "security": {
+          "status": "NOT_RUN",
+          "note": "需真实DOM与外链请求检查"
+        }
+      }
+    },
+    {
+      "id": "E07",
+      "name": "remark",
+      "state": "source-complete",
+      "fingerprint": "f703e9a662865727c68ddaee73362464a63e0d8ed318fde77481dee7f7caa31b",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地sdk证据见local-validation.md及candidate-30；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地build证据见local-validation.md及candidate-30；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地browser证据见local-validation.md及candidate-30；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "security": {
+          "status": "NOT_RUN",
+          "note": "不可信内容策略需真实浏览器与攻击测试确认。"
+        }
+      }
+    },
+    {
+      "id": "E08",
+      "name": "rehype",
+      "state": "source-complete",
+      "fingerprint": "ea2b3f10d37ce0d40d95edc228e06d5b3c407d3acebecbb21b42c4ecce9cb46c",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地sdk证据见local-validation.md及candidate-30；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地build证据见local-validation.md及candidate-30；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地browser证据见local-validation.md及candidate-30；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "security": {
+          "status": "NOT_RUN",
+          "note": "不可信内容策略需真实浏览器与攻击测试确认。"
+        }
+      }
+    },
+    {
+      "id": "E09",
+      "name": "Shiki",
+      "state": "source-complete",
+      "fingerprint": "747a6e82626e60a68e8e39be0fcdd780642a7383b3a4b90d21d2cea2b4c984ff",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地sdk证据见local-validation.md及candidate-30；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地build证据见local-validation.md及candidate-30；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地browser证据见local-validation.md及candidate-30；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "security": {
+          "status": "NOT_RUN",
+          "note": "HTML/token 安全、资源清理等需真实运行校验。"
+        }
+      }
+    },
+    {
+      "id": "E10",
+      "name": "DOMPurify",
+      "state": "source-complete",
+      "fingerprint": "41ebfdffea82903b9b36903f130c4e98f6fbed1bf4afb75fad420fbaefeb7407",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地sdk证据见local-validation.md及candidate-31；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地build证据见local-validation.md及candidate-31；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地browser证据见local-validation.md及candidate-31；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "security": {
+          "status": "NOT_RUN",
+          "note": "窄策略/失败控制流纯policy单独验证；真实危险DOM/执行标记/网络浏览器提案未运行"
+        }
+      }
+    },
+    {
+      "id": "E11",
+      "name": "Streamdown",
+      "state": "source-complete",
+      "fingerprint": "8fd23b6199beed8052bca8b9bb198b468f1044863be9de3aae0c2174a08bf252",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改/独立复核和实际运行已完成，证据见local-validation.md及路线图results/E11.md。当前dirty运行输入未授权提交，没有干净提交的verify:record正式sdk收据；状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改/独立复核和实际运行已完成，证据见local-validation.md及路线图results/E11.md。当前dirty运行输入未授权提交，没有干净提交的verify:record正式build收据；状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改/独立复核和实际运行已完成，证据见local-validation.md及路线图results/E11.md。当前dirty运行输入未授权提交，没有干净提交的verify:record正式browser收据；状态保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "E12",
+      "name": "assistant-ui",
+      "state": "source-complete",
+      "fingerprint": "56609870f7f8881cf09b439dd58bf312ac9437adeef74f9c92df4fc67139e6c0",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地sdk证据见local-validation.md及candidate-31；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地build证据见local-validation.md及candidate-31；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地browser证据见local-validation.md及candidate-31；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "E13",
+      "name": "PhotoSwipe",
+      "state": "source-complete",
+      "fingerprint": "b27f014296db2c71bb708da173ec38ef72be45f0fb6657101d0b4095220d56d8",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地sdk证据见local-validation.md及candidate-31；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地build证据见local-validation.md及candidate-31；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地browser证据见local-validation.md及candidate-31；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "policy": {
+          "status": "NOT_RUN",
+          "note": "本地policy4/4原日志见validation/policy.log；非formal receipt或SDK"
+        }
+      }
+    },
+    {
+      "id": "E14",
+      "name": "react-easy-crop",
+      "state": "source-complete",
+      "fingerprint": "a0495dbbcb0601c75aa44381fd71862fee702ee08869bec8ec65d86ea1f599b9",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地sdk证据见local-validation.md及candidate-32；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地build证据见local-validation.md及candidate-32；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地browser证据见local-validation.md及candidate-32；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "E15",
+      "name": "pica",
+      "state": "source-complete",
+      "fingerprint": "a670a0973aa0838e71ad25353215a92199d37c2ee3737860f395d3e4f856886e",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地sdk证据见local-validation.md及candidate-32；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地build证据见local-validation.md及candidate-32；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地browser证据见local-validation.md及candidate-32；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "E16",
+      "name": "Video.js",
+      "state": "source-complete",
+      "fingerprint": "c522f825ff7e1a99031075f0153f2d6cb11438a67fced399d3d3978ea8136fa9",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地sdk证据见local-validation.md及candidate-32；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地build证据见local-validation.md及candidate-32；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地browser证据见local-validation.md及candidate-32；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "E17",
+      "name": "hls.js",
+      "state": "source-complete",
+      "fingerprint": "102704aaf59c9bf770256970ef720987d0f7fbb9bbf656087f0d3d4b77029a5b",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地sdk证据见local-validation.md及candidate-33；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地build证据见local-validation.md及candidate-33；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地browser证据见local-validation.md及candidate-33；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "E18",
+      "name": "wavesurfer.js",
+      "state": "source-complete",
+      "fingerprint": "01eabc069bb0891071c81421ea67d75587d7d01b7c205974d0d936eef2753889",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地sdk证据见local-validation.md及candidate-33；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地build证据见local-validation.md及candidate-33；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地browser证据见local-validation.md及candidate-33；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "E19",
+      "name": "ffmpeg.wasm",
+      "state": "source-complete",
+      "fingerprint": "cb16fe3646a36b66a97b9c8936fe7106e952cd502bbeeadcf29b6dd5f07846c9",
+      "verification": {
+        "sdk": {
+          "status": "BLOCKED",
+          "note": "已安装wrapper0.12.15/core0.12.10，但未获核心GPL再分发复核授权且public/ffmpeg-core不存在。未设置许可已审变量、未暂存/下载门禁核心、未运行真实WASM转换。精确前提和合法局部检查见local-validation.md。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "仅定向类型/格式/元数据检查，不执行会调用prepare-ffmpeg-core的共享build；没有本条目正式构建收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "真实load/writeFile/exec/readFile、输出与terminate/重载待许可授权及同源资产满足后由主控对匹配候选验收；未运行的提案不作为通过证据。"
+        }
+      }
+    },
+    {
+      "id": "F01",
+      "name": "Uppy",
+      "state": "source-complete",
+      "fingerprint": "18161c29b7268451a3cc58d0f5a9957ca0834a5f92d4bd77d5c65bdce99df174",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地sdk证据见local-validation.md及candidate-33；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地build证据见local-validation.md及candidate-33；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地browser证据见local-validation.md及candidate-33；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "F02",
+      "name": "react-dropzone",
+      "state": "source-complete",
+      "fingerprint": "6ca8840ba6a092681da59bfef1d8c77dfc1b67577c879953bf7df0ec5345d17c",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地sdk证据见local-validation.md及candidate-34；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地build证据见local-validation.md及candidate-34；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地browser证据见local-validation.md及candidate-34；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "security": {
+          "status": "NOT_RUN",
+          "note": "文件内容仅本地读取行为需通过网络观测核验"
+        }
+      }
+    },
+    {
+      "id": "F03",
+      "name": "Papa Parse",
+      "state": "source-complete",
+      "fingerprint": "c5650a237ccde06f175da41ec3042a6736c52f35251b6ea8f9fcd84304719846",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地sdk证据见local-validation.md及candidate-34；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地build证据见local-validation.md及candidate-34；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地browser证据见local-validation.md及candidate-34；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "security": {
+          "status": "NOT_RUN",
+          "note": "有限公式前缀/协议/预算策略见独立SDK与policy日志；不是完整电子表格安全认证，formalNOT_RUN"
+        }
+      }
+    },
+    {
+      "id": "F04",
+      "name": "ExcelJS",
+      "state": "source-complete",
+      "fingerprint": "c194acd229b1f901c06c5ef5418e794f41cf70f533e211e905ed12df1d1cf6d3",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地sdk证据见local-validation.md及candidate-34；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地build证据见local-validation.md及candidate-34；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地browser证据见local-validation.md及candidate-34；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "F05",
+      "name": "SheetJS",
+      "state": "source-complete",
+      "fingerprint": "1de970b3c8ee242352142e267999751d01c7ee0ee1c04f5100ce32d26cd6d943",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本轮直接执行真实SheetJS 0.20.3三场景及tests/sdk.test.mjs，结果见local-validation.md与evidence/；当前dirty共享工作区、未授权提交，尚无verify:record正式逐库收据，所以这里保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "主控在稳定candidate-02完成Lab typecheck/build/catalog，本地结果见路线图results/F05.md；Lab build不是独立SheetJS fixture build或正式逐库收据。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本条目Node配方已真实执行，官方README页签通过本地Chromium；未运行Excel/LibreOffice GUI或正式browser recorder。官网仅HTTP依据保持unknown。"
+        }
+      }
+    },
+    {
+      "id": "F06",
+      "name": "PDF.js",
+      "state": "source-complete",
+      "fingerprint": "715f0b8579dafcdcaaf4a5973de527891b8873ac55b9d7d80e4a0b3fca5b1b20",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地sdk证据见local-validation.md及candidate-35；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地build证据见local-validation.md及candidate-35；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地browser证据见local-validation.md及candidate-35；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "F07",
+      "name": "react-pdf",
+      "state": "source-complete",
+      "fingerprint": "4aa09e8449c066390d570528f76a39742b4b8431a0adb3282c2c02534bca9661",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地sdk证据见local-validation.md及candidate-36；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地build证据见local-validation.md及candidate-36；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地browser证据见local-validation.md及candidate-36；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "F08",
+      "name": "@react-pdf/renderer",
+      "state": "source-complete",
+      "fingerprint": "dfd4f5414f45cffeab8b8221fbaf3420690f4bd80ad4d25b47c0083d60f0ca2d",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地sdk证据见local-validation.md及candidate-35；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地build证据见local-validation.md及candidate-35；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地browser证据见local-validation.md及candidate-35；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "F09",
+      "name": "pdf-lib",
+      "state": "source-complete",
+      "fingerprint": "baafc94c3b7e655f49f3392bed79bdc862e72354122b17b148caafcfa97d4486",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地sdk证据见local-validation.md及candidate-36；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地build证据见local-validation.md及candidate-36；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地browser证据见local-validation.md及candidate-36；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "source": {
+          "status": "NOT_RUN",
+          "note": "实际六运行文件迁入与定向检查见local-validation；不将纯policy当SDK/browser"
+        }
+      }
+    },
+    {
+      "id": "F10",
+      "name": "Orval",
+      "state": "source-complete",
+      "fingerprint": "ab3b60b391f1dcb84a97e789e2faca1d789131b7c63fae53eeee42446426c7a2",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地sdk证据见local-validation.md及candidate-36；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地build证据见local-validation.md及candidate-36；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地browser证据见local-validation.md及candidate-36；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "F11",
+      "name": "MSW",
+      "state": "source-complete",
+      "fingerprint": "d3c0b868ca376fcc43ac79e6b98ba9d5dc2645cb66fb789d5f5e631e4408130b",
+      "verification": {
+        "source": {
+          "status": "NOT_RUN",
+          "note": "本轮源码/README/metadata定向复核见local-validation；源码存在与纯策略结果不升级正式source或SDK收据。"
+        },
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/F11.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/F11.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/F11.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
+        },
+        "security": {
+          "status": "NOT_RUN",
+          "note": "局部注册/预检/会话门策略15项结果见local-validation；不代表真实Worker控制、CSP、双会话或清理ACK已通过浏览器。"
+        }
+      }
+    },
+    {
+      "id": "F12",
+      "name": "Vitest",
+      "state": "source-complete",
+      "fingerprint": "541fb091334921a18e983d00ce2fc81f35c13e18d93b135fef6d9d01060ca11d",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地sdk证据见local-validation.md及candidate-36；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地build证据见local-validation.md及candidate-36；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地browser证据见local-validation.md及candidate-36；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "security": {
+          "status": "NOT_RUN",
+          "note": "输入/取消教学断言由真实CLI执行，但不代表生产安全或SSRF防护；无正式安全receipt仍NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "F13",
+      "name": "Playwright",
+      "state": "source-complete",
+      "fingerprint": "7639b14f1d90c247db9886a86c09f805127e32a1afcc1b57d4d803f3196c5401",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地sdk证据见local-validation.md及candidate-37；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地build证据见local-validation.md及candidate-37；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地browser证据见local-validation.md及candidate-37；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "F14",
+      "name": "Storybook",
+      "state": "source-complete",
+      "fingerprint": "28d36a46142c30397f4f87f8b41a74ec6c6a51acf924ef2d691a156fc29559ce",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地sdk证据见local-validation.md及candidate-37；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地build证据见local-validation.md及candidate-37；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地browser证据见local-validation.md及candidate-37；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "F15",
+      "name": "Knip",
+      "state": "source-complete",
+      "fingerprint": "43584fb5c96269fd6125f71b73000f9a1dcac8f79a902cb6689ebc0f226c3c24",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地sdk证据见local-validation.md及candidate-37；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地build证据见local-validation.md及candidate-37；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地browser证据见local-validation.md及candidate-37；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "F16",
+      "name": "dependency-cruiser",
+      "state": "source-complete",
+      "fingerprint": "b0eae9e5f5d9a8b76a9cb69b0352a0372d9f6d441563f9f005a3e66f91c175b7",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地sdk证据见local-validation.md及candidate-37；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地build证据见local-validation.md及candidate-37；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地browser证据见local-validation.md及candidate-37；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "F17",
+      "name": "axe-core",
+      "state": "source-complete",
+      "fingerprint": "0a1b60c41849994af27208a0f33917400b5475d6644813d5d4b396f79714151c",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "本地sdk证据见local-validation.md及candidate-37；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "本地build证据见local-validation.md及candidate-37；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "本地browser证据见local-validation.md及candidate-37；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
+        }
+      }
+    },
+    {
+      "id": "F18",
+      "name": "rollup-plugin-visualizer",
+      "state": "source-complete",
+      "fingerprint": "ec1890fb04ed772025e1a781a7cb515cfe415dd05bc3b2d1fa60bb9625c97088",
+      "verification": {
+        "sdk": {
+          "status": "NOT_RUN",
+          "note": "verify.mjs 已在本地真实导入 visualizer 并执行两次独立 Vite 构建（见 local-validation.md）；这是本地运行记录，未通过 verify:record 生成匹配输入的正式 SDK 收据。report-policy.test.mjs 只证明自建策略。"
+        },
+        "build": {
+          "status": "NOT_RUN",
+          "note": "隔离 static/lazy fixture 的本地构建、产物摘要与预算正反检查见 local-validation.md；尚无 docs/library-lab/evidence/runs 下的正式 build 收据，Lab 应用 build 不能代替本例构建。"
+        },
+        "browser": {
+          "status": "NOT_RUN",
+          "note": "fixture 已有可见输入、结果、加载与错误状态；真实浏览器的计算、请求时机与加载失败恢复尚未验收。构建分包及模块图不证明请求发生时刻。"
+        }
+      }
+    }
+  ]
+}

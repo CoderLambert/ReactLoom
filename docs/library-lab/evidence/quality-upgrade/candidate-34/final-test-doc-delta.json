@@ -1,0 +1,17 @@
+[
+  {
+    "path": "packages/library-lab/e2e/quality-resume-dropzone.spec.ts",
+    "before": "156ed9a750ac08fa9f9a46092c0c70f78b549f784ffcda13c452e26ec187ddfe",
+    "after": "0d64346ea17ec7e9d52ef6b5944e0fff8ebf51e955ccbe2808a2d202f00d6b2d"
+  },
+  {
+    "path": "packages/library-lab/entries/F02-react-dropzone/guide.md",
+    "before": "1577a26c8fbf79d3bd8272696cfd75c0ba8959d5ba949fb494304cee91a34e33",
+    "after": "f29d5178e27c3e9ab2fd9510bd2aeee5be0a80adf4c192cc8f0ff6760435cc11"
+  },
+  {
+    "path": "packages/library-lab/entries/F02-react-dropzone/agent.md",
+    "before": "943b4efa24063b30c16cd8b3ececbe9cf1faade4be136557a3f228f1cb0cb2e5",
+    "after": "235c58c1a8de7f8c8584e6354d5dbee56e5116146176e77b0ffdaf4314d8c493"
+  }
+]

@@ -1,0 +1,1119 @@
+{
+  "requests": [
+    {
+      "url": "https://registry.npmjs.org/nuqs/2.10.1",
+      "finalUrl": "https://registry.npmjs.org/nuqs/2.10.1",
+      "status": 200,
+      "checkedAt": "2026-11-10T17:58:51.947038+00:00",
+      "headers": {
+        "Date": "Tue, 10 Nov 2026 17:58:52 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "6098",
+        "Connection": "close",
+        "CF-Ray": "a586f2a20ab58ad4-LAX",
+        "CF-Cache-Status": "DYNAMIC",
+        "Access-Control-Allow-Origin": "*",
+        "Cache-Control": "max-age=300",
+        "Server": "cloudflare",
+        "Vary": "accept-encoding, accept",
+        "set-cookie": "<REDACTED_PUBLIC_COOKIE_SHA256:66fecb51464d3bce17e2c8db01a9e17954333d72465f0255fc1d9f9755380c4e>; HttpOnly; SameSite=None; Partitioned; Secure; Path=/; Domain=npmjs.org; Expires=Tue, 10 Nov 2026 18:28:52 GMT"
+      },
+      "rawHeaders": [
+        [
+          "Date",
+          "Tue, 10 Nov 2026 17:58:52 GMT"
+        ],
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "Content-Length",
+          "6098"
+        ],
+        [
+          "Connection",
+          "close"
+        ],
+        [
+          "CF-Ray",
+          "a586f2a20ab58ad4-LAX"
+        ],
+        [
+          "CF-Cache-Status",
+          "DYNAMIC"
+        ],
+        [
+          "Access-Control-Allow-Origin",
+          "*"
+        ],
+        [
+          "Cache-Control",
+          "max-age=300"
+        ],
+        [
+          "Server",
+          "cloudflare"
+        ],
+        [
+          "Vary",
+          "accept-encoding, accept"
+        ],
+        [
+          "set-cookie",
+          "<REDACTED_PUBLIC_COOKIE_SHA256:66fecb51464d3bce17e2c8db01a9e17954333d72465f0255fc1d9f9755380c4e>; HttpOnly; SameSite=None; Partitioned; Secure; Path=/; Domain=npmjs.org; Expires=Tue, 10 Nov 2026 18:28:52 GMT"
+        ]
+      ],
+      "bytes": 6098,
+      "sha256": "9dc4b68f9f2496d3ba24d9ec15134d8bb2d1dbb7360c5228701413c5ca99d171",
+      "bodyStatus": "READ"
+    },
+    {
+      "url": "https://api.github.com/repos/47ng/nuqs/git/trees/691a473226bba0ddb93bc3a1010c8fa4e777c45f?recursive=1",
+      "finalUrl": "https://api.github.com/repos/47ng/nuqs/git/trees/691a473226bba0ddb93bc3a1010c8fa4e777c45f?recursive=1",
+      "status": 200,
+      "checkedAt": "2026-11-10T17:58:52.687357+00:00",
+      "headers": {
+        "Date": "Tue, 10 Nov 2026 17:58:53 GMT",
+        "Content-Type": "application/json; charset=utf-8",
+        "Cache-Control": "public, max-age=86400, s-maxage=86400",
+        "Vary": "Accept,Accept-Encoding, Accept, X-Requested-With",
+        "ETag": "W/\"69bb2a9942d177d37024dc69e2847eb299f79a4a18a72b1c98da066269319e8e\"",
+        "Last-Modified": "Tue, 10 Nov 2026 17:41:12 GMT",
+        "X-GitHub-Media-Type": "github.v3; format=json",
+        "x-github-api-version-selected": "2022-11-28",
+        "Access-Control-Expose-Headers": "ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset, Warning",
+        "Access-Control-Allow-Origin": "*",
+        "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+        "X-Frame-Options": "deny",
+        "X-Content-Type-Options": "nosniff",
+        "X-XSS-Protection": "0",
+        "Referrer-Policy": "origin-when-cross-origin, strict-origin-when-cross-origin",
+        "Content-Security-Policy": "default-src 'none'",
+        "Server": "github.com",
+        "Accept-Ranges": "bytes",
+        "X-RateLimit-Limit": "60",
+        "X-RateLimit-Remaining": "59",
+        "X-RateLimit-Used": "1",
+        "X-RateLimit-Resource": "core",
+        "X-RateLimit-Reset": "1794337133",
+        "Transfer-Encoding": "chunked",
+        "X-GitHub-Request-Id": "A516:F92A6:14A8F3:1636EE:6AF35B5D",
+        "x-github-edge-region": "westus3",
+        "connection": "close"
+      },
+      "rawHeaders": [
+        [
+          "Date",
+          "Tue, 10 Nov 2026 17:58:53 GMT"
+        ],
+        [
+          "Content-Type",
+          "application/json; charset=utf-8"
+        ],
+        [
+          "Cache-Control",
+          "public, max-age=86400, s-maxage=86400"
+        ],
+        [
+          "Vary",
+          "Accept,Accept-Encoding, Accept, X-Requested-With"
+        ],
+        [
+          "ETag",
+          "W/\"69bb2a9942d177d37024dc69e2847eb299f79a4a18a72b1c98da066269319e8e\""
+        ],
+        [
+          "Last-Modified",
+          "Tue, 10 Nov 2026 17:41:12 GMT"
+        ],
+        [
+          "X-GitHub-Media-Type",
+          "github.v3; format=json"
+        ],
+        [
+          "x-github-api-version-selected",
+          "2022-11-28"
+        ],
+        [
+          "Access-Control-Expose-Headers",
+          "ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset, Warning"
+        ],
+        [
+          "Access-Control-Allow-Origin",
+          "*"
+        ],
+        [
+          "Strict-Transport-Security",
+          "max-age=31536000; includeSubdomains; preload"
+        ],
+        [
+          "X-Frame-Options",
+          "deny"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "X-XSS-Protection",
+          "0"
+        ],
+        [
+          "Referrer-Policy",
+          "origin-when-cross-origin, strict-origin-when-cross-origin"
+        ],
+        [
+          "Content-Security-Policy",
+          "default-src 'none'"
+        ],
+        [
+          "Server",
+          "github.com"
+        ],
+        [
+          "Accept-Ranges",
+          "bytes"
+        ],
+        [
+          "X-RateLimit-Limit",
+          "60"
+        ],
+        [
+          "X-RateLimit-Remaining",
+          "59"
+        ],
+        [
+          "X-RateLimit-Used",
+          "1"
+        ],
+        [
+          "X-RateLimit-Resource",
+          "core"
+        ],
+        [
+          "X-RateLimit-Reset",
+          "1794337133"
+        ],
+        [
+          "Transfer-Encoding",
+          "chunked"
+        ],
+        [
+          "X-GitHub-Request-Id",
+          "A516:F92A6:14A8F3:1636EE:6AF35B5D"
+        ],
+        [
+          "x-github-edge-region",
+          "westus3"
+        ],
+        [
+          "connection",
+          "close"
+        ]
+      ],
+      "bytes": 474892,
+      "sha256": "69bb2a9942d177d37024dc69e2847eb299f79a4a18a72b1c98da066269319e8e",
+      "bodyStatus": "READ"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/47ng/nuqs/691a473226bba0ddb93bc3a1010c8fa4e777c45f/packages/nuqs/package.json",
+      "finalUrl": "https://raw.githubusercontent.com/47ng/nuqs/691a473226bba0ddb93bc3a1010c8fa4e777c45f/packages/nuqs/package.json",
+      "status": 200,
+      "checkedAt": "2026-11-10T17:58:54.494657+00:00",
+      "headers": {
+        "Connection": "close",
+        "Content-Length": "6584",
+        "Cache-Control": "max-age=300",
+        "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+        "Content-Type": "text/plain; charset=utf-8",
+        "ETag": "\"7aedb73dd229c20b9f497a497939418fb87ab083e4ab3974801a4e46393d69c2\"",
+        "Strict-Transport-Security": "max-age=31536000",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "deny",
+        "X-XSS-Protection": "1; mode=block",
+        "X-GitHub-Request-Id": "9248:2D94B3:517D8:628C5:6AF35B5F",
+        "x-github-edge-region": "westus3",
+        "Accept-Ranges": "bytes",
+        "Date": "Tue, 10 Nov 2026 17:58:55 GMT",
+        "Via": "1.1 varnish",
+        "X-Served-By": "cache-sjc10069-SJC",
+        "X-Cache": "MISS",
+        "X-Cache-Hits": "0",
+        "X-Timer": "S1794333535.313823,VS0,VE135",
+        "Vary": "Authorization,Accept-Encoding",
+        "Access-Control-Allow-Origin": "*",
+        "Cross-Origin-Resource-Policy": "cross-origin",
+        "X-Fastly-Request-ID": "fa953b029a9616e1dcd4f0de2b05acfc46eae98a",
+        "Expires": "Tue, 10 Nov 2026 18:03:55 GMT",
+        "Source-Age": "0"
+      },
+      "rawHeaders": [
+        [
+          "Connection",
+          "close"
+        ],
+        [
+          "Content-Length",
+          "6584"
+        ],
+        [
+          "Cache-Control",
+          "max-age=300"
+        ],
+        [
+          "Content-Security-Policy",
+          "default-src 'none'; style-src 'unsafe-inline'; sandbox"
+        ],
+        [
+          "Content-Type",
+          "text/plain; charset=utf-8"
+        ],
+        [
+          "ETag",
+          "\"7aedb73dd229c20b9f497a497939418fb87ab083e4ab3974801a4e46393d69c2\""
+        ],
+        [
+          "Strict-Transport-Security",
+          "max-age=31536000"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "X-Frame-Options",
+          "deny"
+        ],
+        [
+          "X-XSS-Protection",
+          "1; mode=block"
+        ],
+        [
+          "X-GitHub-Request-Id",
+          "9248:2D94B3:517D8:628C5:6AF35B5F"
+        ],
+        [
+          "x-github-edge-region",
+          "westus3"
+        ],
+        [
+          "Accept-Ranges",
+          "bytes"
+        ],
+        [
+          "Date",
+          "Tue, 10 Nov 2026 17:58:55 GMT"
+        ],
+        [
+          "Via",
+          "1.1 varnish"
+        ],
+        [
+          "X-Served-By",
+          "cache-sjc10069-SJC"
+        ],
+        [
+          "X-Cache",
+          "MISS"
+        ],
+        [
+          "X-Cache-Hits",
+          "0"
+        ],
+        [
+          "X-Timer",
+          "S1794333535.313823,VS0,VE135"
+        ],
+        [
+          "Vary",
+          "Authorization,Accept-Encoding"
+        ],
+        [
+          "Access-Control-Allow-Origin",
+          "*"
+        ],
+        [
+          "Cross-Origin-Resource-Policy",
+          "cross-origin"
+        ],
+        [
+          "X-Fastly-Request-ID",
+          "fa953b029a9616e1dcd4f0de2b05acfc46eae98a"
+        ],
+        [
+          "Expires",
+          "Tue, 10 Nov 2026 18:03:55 GMT"
+        ],
+        [
+          "Source-Age",
+          "0"
+        ]
+      ],
+      "bytes": 6584,
+      "sha256": "bfea04606f621e93f0f72807ae88cd3e34e48e7260bb56ad8093eb5f44bf23a1",
+      "bodyStatus": "READ"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/47ng/nuqs/691a473226bba0ddb93bc3a1010c8fa4e777c45f/README.md",
+      "finalUrl": "https://raw.githubusercontent.com/47ng/nuqs/691a473226bba0ddb93bc3a1010c8fa4e777c45f/README.md",
+      "status": 200,
+      "checkedAt": "2026-11-10T17:58:55.553570+00:00",
+      "headers": {
+        "Connection": "close",
+        "Content-Length": "31845",
+        "Cache-Control": "max-age=300",
+        "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+        "Content-Type": "text/plain; charset=utf-8",
+        "ETag": "\"68df3e99c422d7006d4b9bb8d415a42e15e612a73eff7506428c0d5ac8355795\"",
+        "Strict-Transport-Security": "max-age=31536000",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "deny",
+        "X-XSS-Protection": "1; mode=block",
+        "X-GitHub-Request-Id": "2CBE:39784A:4B553:5C5DE:6AF35B5F",
+        "x-github-edge-region": "westus3",
+        "Accept-Ranges": "bytes",
+        "Date": "Tue, 10 Nov 2026 17:58:56 GMT",
+        "Via": "1.1 varnish",
+        "X-Served-By": "cache-pao-kpao1770065-PAO",
+        "X-Cache": "MISS",
+        "X-Cache-Hits": "0",
+        "X-Timer": "S1794333536.361111,VS0,VE128",
+        "Vary": "Authorization,Accept-Encoding",
+        "Access-Control-Allow-Origin": "*",
+        "Cross-Origin-Resource-Policy": "cross-origin",
+        "X-Fastly-Request-ID": "f298e5b4f9166cef0a47d8363de7d98babfc7d27",
+        "Expires": "Tue, 10 Nov 2026 18:03:56 GMT",
+        "Source-Age": "0"
+      },
+      "rawHeaders": [
+        [
+          "Connection",
+          "close"
+        ],
+        [
+          "Content-Length",
+          "31845"
+        ],
+        [
+          "Cache-Control",
+          "max-age=300"
+        ],
+        [
+          "Content-Security-Policy",
+          "default-src 'none'; style-src 'unsafe-inline'; sandbox"
+        ],
+        [
+          "Content-Type",
+          "text/plain; charset=utf-8"
+        ],
+        [
+          "ETag",
+          "\"68df3e99c422d7006d4b9bb8d415a42e15e612a73eff7506428c0d5ac8355795\""
+        ],
+        [
+          "Strict-Transport-Security",
+          "max-age=31536000"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "X-Frame-Options",
+          "deny"
+        ],
+        [
+          "X-XSS-Protection",
+          "1; mode=block"
+        ],
+        [
+          "X-GitHub-Request-Id",
+          "2CBE:39784A:4B553:5C5DE:6AF35B5F"
+        ],
+        [
+          "x-github-edge-region",
+          "westus3"
+        ],
+        [
+          "Accept-Ranges",
+          "bytes"
+        ],
+        [
+          "Date",
+          "Tue, 10 Nov 2026 17:58:56 GMT"
+        ],
+        [
+          "Via",
+          "1.1 varnish"
+        ],
+        [
+          "X-Served-By",
+          "cache-pao-kpao1770065-PAO"
+        ],
+        [
+          "X-Cache",
+          "MISS"
+        ],
+        [
+          "X-Cache-Hits",
+          "0"
+        ],
+        [
+          "X-Timer",
+          "S1794333536.361111,VS0,VE128"
+        ],
+        [
+          "Vary",
+          "Authorization,Accept-Encoding"
+        ],
+        [
+          "Access-Control-Allow-Origin",
+          "*"
+        ],
+        [
+          "Cross-Origin-Resource-Policy",
+          "cross-origin"
+        ],
+        [
+          "X-Fastly-Request-ID",
+          "f298e5b4f9166cef0a47d8363de7d98babfc7d27"
+        ],
+        [
+          "Expires",
+          "Tue, 10 Nov 2026 18:03:56 GMT"
+        ],
+        [
+          "Source-Age",
+          "0"
+        ]
+      ],
+      "bytes": 31845,
+      "sha256": "de5eb7cbf51d0a8c0eecd79146a7e61e6dadfbd0132f3f26a73f91fa569d66eb",
+      "bodyStatus": "READ"
+    },
+    {
+      "url": "https://nuqs.dev",
+      "finalUrl": "https://nuqs.dev",
+      "status": 200,
+      "checkedAt": "2026-11-10T17:58:56.749661+00:00",
+      "headers": {
+        "Age": "34117",
+        "Cache-Control": "public, max-age=0, must-revalidate",
+        "Content-Length": "569094",
+        "Content-Type": "text/html; charset=utf-8",
+        "Date": "Tue, 10 Nov 2026 08:30:19 GMT",
+        "Etag": "\"12apltnq2ssc71i\"",
+        "Server": "Vercel",
+        "Strict-Transport-Security": "max-age=63072000",
+        "Vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+        "X-Matched-Path": "/",
+        "X-Nextjs-Prerender": "1",
+        "X-Nextjs-Stale-Time": "300",
+        "X-Powered-By": "Next.js",
+        "X-Vercel-Cache": "HIT",
+        "X-Vercel-Id": "sin1::iad1::wdznf-1794333537499-0e0849b065ac",
+        "Connection": "close"
+      },
+      "rawHeaders": [
+        [
+          "Age",
+          "34117"
+        ],
+        [
+          "Cache-Control",
+          "public, max-age=0, must-revalidate"
+        ],
+        [
+          "Content-Length",
+          "569094"
+        ],
+        [
+          "Content-Type",
+          "text/html; charset=utf-8"
+        ],
+        [
+          "Date",
+          "Tue, 10 Nov 2026 08:30:19 GMT"
+        ],
+        [
+          "Etag",
+          "\"12apltnq2ssc71i\""
+        ],
+        [
+          "Server",
+          "Vercel"
+        ],
+        [
+          "Strict-Transport-Security",
+          "max-age=63072000"
+        ],
+        [
+          "Vary",
+          "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch"
+        ],
+        [
+          "X-Matched-Path",
+          "/"
+        ],
+        [
+          "X-Nextjs-Prerender",
+          "1"
+        ],
+        [
+          "X-Nextjs-Stale-Time",
+          "300"
+        ],
+        [
+          "X-Powered-By",
+          "Next.js"
+        ],
+        [
+          "X-Vercel-Cache",
+          "HIT"
+        ],
+        [
+          "X-Vercel-Id",
+          "sin1::iad1::wdznf-1794333537499-0e0849b065ac"
+        ],
+        [
+          "Connection",
+          "close"
+        ]
+      ],
+      "bytes": null,
+      "sha256": null,
+      "bodyStatus": "NOT_READ"
+    }
+  ],
+  "repository": "47ng/nuqs",
+  "commit": "691a473226bba0ddb93bc3a1010c8fa4e777c45f",
+  "path": "README.md",
+  "version": "2.10.1",
+  "language": "en",
+  "registry": {
+    "bugs": {
+      "url": "https://github.com/47ng/nuqs/issues"
+    },
+    "dist": {
+      "shasum": "5f21f3509a36e9432c5261770e6b45fd5086b0c1",
+      "tarball": "https://registry.npmjs.org/nuqs/-/nuqs-2.10.1.tgz",
+      "fileCount": 101,
+      "integrity": "sha512-7lPZrPJVOsD0VvfQSKtodYBBPGPLsLzkFU8ueYIap9yMMJvSw6UC12p8luA5NW7aKe7AbPHKxcxb3OluH6iAJA==",
+      "signatures": [
+        {
+          "sig": "MEQCIG5R5SORGSaacYoUhAHP/sR57HXfCTbA745eS7TJhl3eAiAgZwL/5TEaUpFi9XYCzEU2bmj+OLIjurKr3jY9/DvJ1w==",
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+        }
+      ],
+      "attestations": {
+        "url": "https://registry.npmjs.org/-/npm/v1/attestations/nuqs@2.10.1",
+        "provenance": {
+          "predicateType": "https://slsa.dev/provenance/v1"
+        }
+      },
+      "unpackedSize": 472544
+    },
+    "name": "nuqs",
+    "type": "module",
+    "types": "dist/index.d.ts",
+    "author": {
+      "url": "https://francoisbest.com",
+      "name": "François Best",
+      "email": "contact@francoisbest.com"
+    },
+    "module": "dist/index.js",
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js",
+        "default": "./dist/index.js"
+      },
+      "./debug": {
+        "types": "./dist/debug.d.ts",
+        "import": "./dist/debug.js",
+        "default": "./dist/debug.js"
+      },
+      "./server": {
+        "types": "./dist/server.d.ts",
+        "import": "./dist/server.js",
+        "default": "./dist/server.js"
+      },
+      "./testing": {
+        "types": "./dist/testing.d.ts",
+        "import": "./dist/testing.js",
+        "default": "./dist/testing.js"
+      },
+      "./package.json": "./package.json",
+      "./adapters/next": {
+        "types": "./dist/adapters/next.d.ts",
+        "import": "./dist/adapters/next.js",
+        "default": "./dist/adapters/next.js"
+      },
+      "./adapters/react": {
+        "types": "./dist/adapters/react.d.ts",
+        "import": "./dist/adapters/react.js",
+        "default": "./dist/adapters/react.js"
+      },
+      "./adapters/remix": {
+        "types": "./dist/adapters/remix.d.ts",
+        "import": "./dist/adapters/remix.js",
+        "default": "./dist/adapters/remix.js"
+      },
+      "./adapters/custom": {
+        "types": "./dist/adapters/custom.d.ts",
+        "import": "./dist/adapters/custom.js",
+        "default": "./dist/adapters/custom.js"
+      },
+      "./adapters/testing": {
+        "types": "./dist/adapters/testing.d.ts",
+        "import": "./dist/adapters/testing.js",
+        "default": "./dist/adapters/testing.js"
+      },
+      "./adapters/next/app": {
+        "types": "./dist/adapters/next/app.d.ts",
+        "import": "./dist/adapters/next/app.js",
+        "default": "./dist/adapters/next/app.js"
+      },
+      "./adapters/next/pages": {
+        "types": "./dist/adapters/next/pages.d.ts",
+        "import": "./dist/adapters/next/pages.js",
+        "default": "./dist/adapters/next/pages.js"
+      },
+      "./adapters/react-router": {
+        "types": "./dist/adapters/react-router.d.ts",
+        "import": "./dist/adapters/react-router.js",
+        "default": "./dist/adapters/react-router.js"
+      },
+      "./adapters/react-router/v6": {
+        "types": "./dist/adapters/react-router/v6.d.ts",
+        "import": "./dist/adapters/react-router/v6.js",
+        "default": "./dist/adapters/react-router/v6.js"
+      },
+      "./adapters/react-router/v7": {
+        "types": "./dist/adapters/react-router/v7.d.ts",
+        "import": "./dist/adapters/react-router/v7.js",
+        "default": "./dist/adapters/react-router/v7.js"
+      },
+      "./adapters/react-router/v8": {
+        "types": "./dist/adapters/react-router/v8.d.ts",
+        "import": "./dist/adapters/react-router/v8.js",
+        "default": "./dist/adapters/react-router/v8.js"
+      },
+      "./adapters/tanstack-router": {
+        "types": "./dist/adapters/tanstack-router.d.ts",
+        "import": "./dist/adapters/tanstack-router.js",
+        "default": "./dist/adapters/tanstack-router.js"
+      }
+    },
+    "funding": "https://github.com/sponsors/franky47",
+    "gitHead": "691a473226bba0ddb93bc3a1010c8fa4e777c45f",
+    "license": "MIT",
+    "scripts": {
+      "dev": "tsdown --watch",
+      "knip": "knip",
+      "test": "pnpm run --stream '/^test:/'",
+      "build": "tsdown",
+      "prepack": "./scripts/prepack.sh",
+      "test:size": "size-limit",
+      "test:unit": "vitest run --project unit",
+      "test:types": "vitest run --project types",
+      "test:browser": "vitest run --project browser --browser.headless",
+      "build:size-json": "size-limit --json > size.json"
+    },
+    "_npmUser": {
+      "name": "GitHub Actions",
+      "email": "npm-oidc-no-reply@github.com",
+      "approver": {
+        "name": "franky47",
+        "email": "npm@francoisbest.com"
+      },
+      "trustedPublisher": {
+        "id": "github",
+        "oidcConfigId": "oidc:08c62805-17b1-413b-a1f3-355dca32338e"
+      }
+    },
+    "homepage": "https://nuqs.dev",
+    "keywords": [
+      "url state",
+      "url",
+      "querystring",
+      "query string",
+      "search params",
+      "next-usequerystate",
+      "useQueryState",
+      "useQueryStates",
+      "nextjs",
+      "react",
+      "remix",
+      "react-router",
+      "tanstack-router"
+    ],
+    "repository": {
+      "url": "git+https://github.com/47ng/nuqs.git",
+      "type": "git",
+      "directory": "packages/nuqs"
+    },
+    "size-limit": [
+      {
+        "name": "Client",
+        "path": "dist/index.js",
+        "limit": "6 kB"
+      },
+      {
+        "name": "Client (minimal tree-shaken)",
+        "path": "dist/index.js",
+        "limit": "4.5 kB",
+        "import": "{ useQueryStates, parseAsInteger }"
+      },
+      {
+        "name": "Server",
+        "path": "dist/server.js",
+        "limit": "3.8 kB"
+      }
+    ],
+    "_npmVersion": "11.16.0",
+    "description": "Type-safe search params state manager for React - Like useState, but stored in the URL query string",
+    "directories": {},
+    "maintainers": [
+      {
+        "name": "franky47",
+        "email": "npm@francoisbest.com"
+      }
+    ],
+    "sideEffects": [
+      "./dist/debug.js"
+    ],
+    "_nodeVersion": "24.11.0",
+    "dependencies": {
+      "@standard-schema/spec": "1.1.0"
+    },
+    "publishConfig": {
+      "access": "public",
+      "provenance": true
+    },
+    "_hasShrinkwrap": false,
+    "devDependencies": {
+      "zod": "^4.4.3",
+      "knip": "catalog:knip",
+      "next": "catalog:next",
+      "vite": "catalog:vite",
+      "react": "catalog:react19",
+      "tsdown": "^0.22.9",
+      "tsnapi": "^1.0.0",
+      "vitest": "catalog:vitest",
+      "arktype": "^2.2.3",
+      "valibot": "^1.4.2",
+      "react-dom": "catalog:react19",
+      "fast-check": "^4.9.0",
+      "playwright": "catalog:e2e",
+      "size-limit": "^12.1.0",
+      "typescript": "catalog:typescript",
+      "@types/node": "^24.13.3",
+      "@types/react": "catalog:react19",
+      "@remix-run/react": "^2.17.5",
+      "@types/react-dom": "catalog:react19",
+      "react-router-dom": "6.30.3",
+      "@vitest/coverage-v8": "catalog:vitest",
+      "@vitejs/plugin-react": "^6.0.3",
+      "vitest-browser-react": "2.2.0",
+      "@tanstack/react-router": "catalog:tanstack-router",
+      "@vitest/browser-playwright": "catalog:vitest",
+      "@size-limit/preset-small-lib": "^12.1.0"
+    },
+    "peerDependencies": {
+      "next": ">=14.2.0",
+      "react": ">=18.2.0 || ^19.0.0-0",
+      "react-router": "^5 || ^6 || ^7 || ^8",
+      "@remix-run/react": ">=2",
+      "react-router-dom": "^5 || ^6 || ^7",
+      "@tanstack/react-router": "^1"
+    },
+    "peerDependenciesMeta": {
+      "next": {
+        "optional": true
+      },
+      "react-router": {
+        "optional": true
+      },
+      "@remix-run/react": {
+        "optional": true
+      },
+      "react-router-dom": {
+        "optional": true
+      },
+      "@tanstack/react-router": {
+        "optional": true
+      }
+    },
+    "_npmOperationalInternal": {
+      "tmp": "tmp/nuqs_2.10.1_1787655598311_0.6803347351321136",
+      "host": "s3://npm-registry-packages-npm-production"
+    },
+    "_id": "nuqs@2.10.1",
+    "version": "2.10.1"
+  },
+  "manifest": {
+    "name": "nuqs",
+    "version": "0.0.0-semantically-released",
+    "description": "Type-safe search params state manager for React - Like useState, but stored in the URL query string",
+    "license": "MIT",
+    "author": {
+      "name": "François Best",
+      "email": "contact@francoisbest.com",
+      "url": "https://francoisbest.com"
+    },
+    "funding": "https://github.com/sponsors/franky47",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/47ng/nuqs.git",
+      "directory": "packages/nuqs"
+    },
+    "homepage": "https://nuqs.dev",
+    "keywords": [
+      "url state",
+      "url",
+      "querystring",
+      "query string",
+      "search params",
+      "next-usequerystate",
+      "useQueryState",
+      "useQueryStates",
+      "nextjs",
+      "react",
+      "remix",
+      "react-router",
+      "tanstack-router"
+    ],
+    "publishConfig": {
+      "access": "public",
+      "provenance": true
+    },
+    "files": [
+      "dist/",
+      "server.d.ts",
+      "testing.d.ts",
+      "adapters/react.d.ts",
+      "adapters/next.d.ts",
+      "adapters/next/app.d.ts",
+      "adapters/next/pages.d.ts",
+      "adapters/remix.d.ts",
+      "adapters/react-router.d.ts",
+      "adapters/react-router/v6.d.ts",
+      "adapters/react-router/v7.d.ts",
+      "adapters/react-router/v8.d.ts",
+      "adapters/tanstack-router.d.ts",
+      "adapters/custom.d.ts",
+      "adapters/testing.d.ts"
+    ],
+    "type": "module",
+    "sideEffects": [
+      "./dist/debug.js"
+    ],
+    "module": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js",
+        "default": "./dist/index.js"
+      },
+      "./debug": {
+        "types": "./dist/debug.d.ts",
+        "import": "./dist/debug.js",
+        "default": "./dist/debug.js"
+      },
+      "./server": {
+        "types": "./dist/server.d.ts",
+        "import": "./dist/server.js",
+        "default": "./dist/server.js"
+      },
+      "./testing": {
+        "types": "./dist/testing.d.ts",
+        "import": "./dist/testing.js",
+        "default": "./dist/testing.js"
+      },
+      "./adapters/react": {
+        "types": "./dist/adapters/react.d.ts",
+        "import": "./dist/adapters/react.js",
+        "default": "./dist/adapters/react.js"
+      },
+      "./adapters/next": {
+        "types": "./dist/adapters/next.d.ts",
+        "import": "./dist/adapters/next.js",
+        "default": "./dist/adapters/next.js"
+      },
+      "./adapters/next/app": {
+        "types": "./dist/adapters/next/app.d.ts",
+        "import": "./dist/adapters/next/app.js",
+        "default": "./dist/adapters/next/app.js"
+      },
+      "./adapters/next/pages": {
+        "types": "./dist/adapters/next/pages.d.ts",
+        "import": "./dist/adapters/next/pages.js",
+        "default": "./dist/adapters/next/pages.js"
+      },
+      "./adapters/remix": {
+        "types": "./dist/adapters/remix.d.ts",
+        "import": "./dist/adapters/remix.js",
+        "default": "./dist/adapters/remix.js"
+      },
+      "./adapters/react-router": {
+        "types": "./dist/adapters/react-router.d.ts",
+        "import": "./dist/adapters/react-router.js",
+        "default": "./dist/adapters/react-router.js"
+      },
+      "./adapters/react-router/v6": {
+        "types": "./dist/adapters/react-router/v6.d.ts",
+        "import": "./dist/adapters/react-router/v6.js",
+        "default": "./dist/adapters/react-router/v6.js"
+      },
+      "./adapters/react-router/v7": {
+        "types": "./dist/adapters/react-router/v7.d.ts",
+        "import": "./dist/adapters/react-router/v7.js",
+        "default": "./dist/adapters/react-router/v7.js"
+      },
+      "./adapters/react-router/v8": {
+        "types": "./dist/adapters/react-router/v8.d.ts",
+        "import": "./dist/adapters/react-router/v8.js",
+        "default": "./dist/adapters/react-router/v8.js"
+      },
+      "./adapters/tanstack-router": {
+        "types": "./dist/adapters/tanstack-router.d.ts",
+        "import": "./dist/adapters/tanstack-router.js",
+        "default": "./dist/adapters/tanstack-router.js"
+      },
+      "./adapters/custom": {
+        "types": "./dist/adapters/custom.d.ts",
+        "import": "./dist/adapters/custom.js",
+        "default": "./dist/adapters/custom.js"
+      },
+      "./adapters/testing": {
+        "types": "./dist/adapters/testing.d.ts",
+        "import": "./dist/adapters/testing.js",
+        "default": "./dist/adapters/testing.js"
+      }
+    },
+    "scripts": {
+      "dev": "tsdown --watch",
+      "build": "tsdown",
+      "build:size-json": "size-limit --json > size.json",
+      "test": "pnpm run --stream '/^test:/'",
+      "test:unit": "vitest run --project unit",
+      "test:browser": "vitest run --project browser --browser.headless",
+      "test:types": "vitest run --project types",
+      "test:size": "size-limit",
+      "prepack": "./scripts/prepack.sh",
+      "knip": "knip"
+    },
+    "dependencies": {
+      "@standard-schema/spec": "1.1.0"
+    },
+    "peerDependencies": {
+      "@remix-run/react": ">=2",
+      "@tanstack/react-router": "^1",
+      "next": ">=14.2.0",
+      "react": ">=18.2.0 || ^19.0.0-0",
+      "react-router": "^5 || ^6 || ^7 || ^8",
+      "react-router-dom": "^5 || ^6 || ^7"
+    },
+    "peerDependenciesMeta": {
+      "@remix-run/react": {
+        "optional": true
+      },
+      "@tanstack/react-router": {
+        "optional": true
+      },
+      "next": {
+        "optional": true
+      },
+      "react-router": {
+        "optional": true
+      },
+      "react-router-dom": {
+        "optional": true
+      }
+    },
+    "devDependencies": {
+      "@remix-run/react": "^2.17.5",
+      "@size-limit/preset-small-lib": "^12.1.0",
+      "@tanstack/react-router": "catalog:tanstack-router",
+      "@types/node": "^24.13.3",
+      "@types/react": "catalog:react19",
+      "@types/react-dom": "catalog:react19",
+      "@vitejs/plugin-react": "^6.0.3",
+      "@vitest/browser-playwright": "catalog:vitest",
+      "@vitest/coverage-v8": "catalog:vitest",
+      "arktype": "^2.2.3",
+      "fast-check": "^4.9.0",
+      "knip": "catalog:knip",
+      "next": "catalog:next",
+      "playwright": "catalog:e2e",
+      "react": "catalog:react19",
+      "react-dom": "catalog:react19",
+      "react-router-dom": "6.30.3",
+      "size-limit": "^12.1.0",
+      "tsdown": "^0.22.9",
+      "tsnapi": "^1.0.0",
+      "typescript": "catalog:typescript",
+      "valibot": "^1.4.2",
+      "vite": "catalog:vite",
+      "vitest": "catalog:vitest",
+      "vitest-browser-react": "2.2.0",
+      "zod": "^4.4.3"
+    },
+    "size-limit": [
+      {
+        "name": "Client",
+        "path": "dist/index.js",
+        "limit": "6 kB"
+      },
+      {
+        "name": "Client (minimal tree-shaken)",
+        "path": "dist/index.js",
+        "limit": "4.5 kB",
+        "import": "{ useQueryStates, parseAsInteger }"
+      },
+      {
+        "name": "Server",
+        "path": "dist/server.js",
+        "limit": "3.8 kB"
+      }
+    ]
+  },
+  "treeTruncated": false,
+  "readmeCandidates": [
+    "README.md",
+    "packages/docs/README.md",
+    "packages/e2e/react-router/v5/README.md",
+    "packages/e2e/react-router/v6/README.md",
+    "packages/e2e/react-router/v7/README.md",
+    "packages/e2e/react-router/v8/README.md",
+    "packages/e2e/react/README.md",
+    "packages/e2e/remix/README.md",
+    "packages/e2e/tanstack-router/README.md",
+    "packages/examples/next-app/README.md",
+    "packages/examples/trpc/README.md",
+    "packages/res/README.md"
+  ],
+  "preferredReadmeCandidates": [
+    "README.md"
+  ],
+  "selectionReason": "Matching repository tree determines package README first, then root fallback; Chinese official candidate preferred within that scope. Source manifest version is retained literally; npm gitHead binds release 2.10.1.",
+  "snapshot": {
+    "path": "official/readme.md",
+    "bytes": 31845,
+    "sha256": "de5eb7cbf51d0a8c0eecd79146a7e61e6dadfbd0132f3f26a73f91fa569d66eb"
+  },
+  "homepage": {
+    "requestIndex": 4,
+    "status": "unknown",
+    "frameAncestors": null,
+    "xFrameOptions": null,
+    "contentSecurityPolicy": null,
+    "browserFromLabOrigin": "NOT_RUN",
+    "reason": "Captured final header list alone does not establish successful embedding; actual Lab-origin browser is NOT_RUN."
+  },
+  "syncedAt": "2026-11-10T17:58:57.733168+00:00"
+}

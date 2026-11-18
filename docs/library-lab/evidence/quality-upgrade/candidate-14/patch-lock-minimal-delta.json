@@ -1,0 +1,12 @@
+{
+  "basis": "pnpm10.33.3 isolated official lockfile computed hash and exact same preexisting RGL dependency snapshot",
+  "hash": "65db3074ef40503b9bfda2b68c12c7d39c1aa7e93efc1fade47fcd6298552940",
+  "oldVersion": "2.3.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)",
+  "newVersion": "2.3.0(patch_hash=65db3074ef40503b9bfda2b68c12c7d39c1aa7e93efc1fade47fcd6298552940)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)",
+  "onlyChanges": [
+    "patchedDependencies mapping",
+    "Lab RGL importer version",
+    "RGL snapshot key"
+  ],
+  "otherDependencyValuesUnchanged": true
+}

@@ -1,0 +1,4 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['git', 'diff', '--check', '--', 'entries/B21-react-motion-migration']
+startedAt: 2026-11-10T14:55:04.859239+00:00
+exit: 0

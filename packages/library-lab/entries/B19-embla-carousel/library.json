@@ -4,16 +4,9 @@
   "slug": "embla-carousel",
   "name": "Embla Carousel",
   "group": "B",
-  "summary": "可访问的触控轮播、滑动吸附和动态卡片",
+  "summary": "用真实DOM测量理解snap与卡片、受控reInit、动态ID和循环回退",
   "contentState": "recreated",
-  "tags": [
-    "轮播",
-    "touch",
-    "滑动吸附",
-    "键盘",
-    "动态列表",
-    "cleanup"
-  ],
+  "tags": ["轮播", "touch", "滑动吸附", "键盘", "动态列表", "cleanup"],
   "packages": [
     {
       "name": "embla-carousel-react",
@@ -57,57 +50,43 @@
   "demos": [
     {
       "demoId": "basic",
-      "title": "触控轮播与上一页/下一页",
-      "description": "真实 useEmblaCarousel v8，横向触摸与按钮导航，监听器自动释放",
+      "title": "测量、吸附与手动导航",
+      "description": "实际DOM、snap与卡片索引、真实拖动和键盘导航、减少动态即时跳转。",
       "level": "basic",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
-      "sourceFiles": [
-        "examples/example.tsx",
-        "examples/slide-policy.ts",
-        "examples/demo.tsx"
-      ],
-      "capabilities": [
-        "touch",
-        "pointer",
-        "resize-observer"
-      ]
-    },
-    {
-      "demoId": "business",
-      "title": "新闻推荐专题轮播",
-      "description": "列表卡片和动态页码、双向按钮禁用状态",
-      "level": "business",
-      "executionKind": "react",
-      "entryPoint": "examples/demo.tsx",
-      "sourceFiles": [
-        "examples/example.tsx",
-        "examples/slide-policy.ts",
-        "examples/demo.tsx"
-      ],
-      "capabilities": [
-        "touch",
-        "pointer",
-        "resize-observer"
-      ]
+      "sourceFiles": ["examples/example.tsx", "examples/slide-policy.ts", "examples/demo.tsx"],
+      "capabilities": ["touch", "pointer", "resize-observer"]
     },
     {
       "demoId": "advanced",
-      "title": "循环模式及动态增删",
-      "description": "loop、reInit、动态增加和删除卡片、恢复初始顺序",
+      "title": "动态卡片、循环条件与重新测量",
+      "description": "循环请求与真实可滚动性、单卡回退、受控reInit、稳定ID与恢复。",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
-      "sourceFiles": [
-        "examples/example.tsx",
-        "examples/slide-policy.ts",
-        "examples/demo.tsx"
-      ],
-      "capabilities": [
-        "touch",
-        "pointer",
-        "resize-observer"
-      ]
+      "sourceFiles": ["examples/example.tsx", "examples/slide-policy.ts", "examples/demo.tsx"],
+      "capabilities": ["touch", "pointer", "resize-observer"]
     }
-  ]
+  ],
+  "official": {
+    "readme": {
+      "repository": "davidjerleke/embla-carousel",
+      "commit": "0fe65834136f1aa35e4c1a4a477e5ccb4bb5ee54",
+      "path": "packages/embla-carousel-react/README.md",
+      "sourceUrl": "https://github.com/davidjerleke/embla-carousel/blob/0fe65834136f1aa35e4c1a4a477e5ccb4bb5ee54/packages/embla-carousel-react/README.md",
+      "snapshotPath": "official/readme.md",
+      "version": "8.6.0",
+      "language": "en",
+      "syncedAt": "2026-11-10T14:08:57.663988+00:00",
+      "sha256": "d7b2b1227204396e7900e4f951df7a59c2266b565040927de74d86184f9998d0"
+    },
+    "homepage": {
+      "url": "https://www.embla-carousel.com",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-10T14:08:57.663988+00:00",
+      "reason": "包声明的官方主页实际GET200完整响应头，无XFO/CSP；尚未从Lab origin验证iframe内容可用，只记unknown，保留官方直达。见official/source-audit.json。"
+    }
+  }
 }

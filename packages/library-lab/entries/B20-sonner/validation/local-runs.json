@@ -1,0 +1,156 @@
+[
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "python3",
+      "entries/B20-sonner/validation/fetch-official.py"
+    ],
+    "startedAt": "2026-11-10T14:19:06.333104+00:00",
+    "exitCode": 0,
+    "log": "validation/official-fetch.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "entries/B20-sonner/examples",
+      "entries/B20-sonner/tests",
+      "entries/B20-sonner/library.json",
+      "entries/B20-sonner/verification.json",
+      "entries/B20-sonner/official/source-evidence.json",
+      "entries/B20-sonner/validation/metadata-check.mjs",
+      "entries/B20-sonner/validation/sdk-source-audit.json"
+    ],
+    "startedAt": "2026-11-10T14:22:20.426073+00:00",
+    "exitCode": 1,
+    "log": "validation/biome.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "entries/B20-sonner/examples/example.tsx"
+    ],
+    "startedAt": "2026-11-10T14:22:38.529187+00:00",
+    "exitCode": 0,
+    "log": "validation/format-fixed.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "node",
+      "--test",
+      "entries/B20-sonner/tests/sdk.test.mjs"
+    ],
+    "startedAt": "2026-11-10T14:22:38.887452+00:00",
+    "exitCode": 0,
+    "log": "validation/sdk.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "node",
+      "--test",
+      "entries/B20-sonner/tests/latest-run.test.mts",
+      "entries/B20-sonner/tests/undo-ownership.test.mts"
+    ],
+    "startedAt": "2026-11-10T14:22:39.130889+00:00",
+    "exitCode": 0,
+    "log": "validation/policy.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "tsc",
+      "--ignoreConfig",
+      "--noEmit",
+      "--target",
+      "es2022",
+      "--module",
+      "esnext",
+      "--moduleResolution",
+      "bundler",
+      "--jsx",
+      "react-jsx",
+      "--strict",
+      "--skipLibCheck",
+      "--esModuleInterop",
+      "--types",
+      "vite/client,node",
+      "entries/B20-sonner/examples/demo.tsx"
+    ],
+    "startedAt": "2026-11-10T14:22:39.332522+00:00",
+    "exitCode": 0,
+    "log": "validation/typecheck.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "node",
+      "entries/B20-sonner/validation/metadata-check.mjs"
+    ],
+    "startedAt": "2026-11-10T14:22:39.676705+00:00",
+    "exitCode": 0,
+    "log": "validation/metadata.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "entries/B20-sonner/validation/browser-proposal.check.ts"
+    ],
+    "startedAt": "2026-11-10T14:26:37.714670+00:00",
+    "exitCode": 0,
+    "log": "validation/proposal-format.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "tsc",
+      "--ignoreConfig",
+      "--noEmit",
+      "--target",
+      "es2022",
+      "--module",
+      "esnext",
+      "--moduleResolution",
+      "bundler",
+      "--strict",
+      "--skipLibCheck",
+      "--types",
+      "node",
+      "entries/B20-sonner/validation/browser-proposal.check.ts"
+    ],
+    "startedAt": "2026-11-10T14:26:37.992084+00:00",
+    "exitCode": 0,
+    "log": "validation/proposal-typecheck.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "git",
+      "diff",
+      "--check",
+      "--",
+      "entries/B20-sonner"
+    ],
+    "startedAt": "2026-11-10T14:28:53.493557+00:00",
+    "exitCode": 0,
+    "log": "validation/diff-check.txt"
+  }
+]

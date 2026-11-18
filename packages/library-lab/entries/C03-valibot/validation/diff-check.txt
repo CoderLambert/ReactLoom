@@ -1,0 +1,4 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["git", "diff", "--check", "--", "packages/library-lab/entries/C03-valibot"], "utc": "2026-11-10T15:13:53.205986+00:00", "exitCode": 0}
+STDOUT
+
+STDERR

@@ -1,47 +1,11 @@
-# B14 Pragmatic drag and drop
+# B14 Pragmatic drag and drop 复用入口
 
-## 适用
+适合在现有DOM上接原生拖放，核心1.8.1 / Apache-2.0，框架无关。先读library/guide、实际3个sourceFiles和local-validation；公开导入/element/adapter、/combine、/reorder按安装类型核对，不把新主分支文档直接套回旧版本。
 
-要用浏览器原生拖放、自己拥有样式，并且可以另行提供键盘路径时使用 1.8.1 适配器。它不附带键盘拖拽、权限或服务端合并。需要现成列表键盘模型时评估 B13 或 B22，不要两套同时绑同一节点。
+三个独立目标：基础三行手柄/真实DOM与键盘按钮回退；业务五行固定位置不被跨越；高级两个真实独立scope实例+一次撤销/会话revision。按钮是自建键盘回退，不声称SDK自动键盘拖动或真人读屏已通过。fixture只是内存数组，无网络或外部资源。
 
-## 版本
+源/目标各带scope/type/id，canDrop与canMonitor都过滤；monitor取最内层dropTargets[0]，确认当前会话activeId/revision/level再走业务锁定规则和真实SDK reorder。浅绿目标不是业务权限承诺。basic拼回隐藏尾部，稳定key保行身份；reset/undo必须使旧drop失效，无变化不制造撤销点。
 
-`@atlaskit/pragmatic-drag-and-drop@1.8.1`，React 19.3.0。许可证 **Apache-2.0**。导入保持 `/element/adapter` 和 `/combine`。不要按 4.x 的 `adapter/element-adapter` 修改这份示例。
+行effect combine清理源与目标，列表effect detach monitor并清会话；scope来自useId，每个实例独立。长期回调用ref读取最新数组/重排，commit同步React和ref。不要模块顶层注册、混绑另一套DND，或把scope当授权边界。触摸设备/虚拟滚动/服务端并发不在本例覆盖。
 
-## 迁移
-
-从 1.8.1 升到 4.x 必须同时改锁文件和全部导入。从 beautiful-dnd 迁来时重做占位、预览和键盘，Pragmatic 没有 `provided.placeholder`。
-
-## 不可删的清理
-
-effect 返回 combine 的清理函数；monitor effect 调用 `detach` 并清空会话。scope 来自 `useId`。锁定行不注册。revision 在提交、撤销、重置时增加。drop 必须类型为 target 且会话仍匹配。上下按钮与拖放共用 `canReorderAroundPinned`。
-
-## 反例
-
-模块顶层注册 monitor。把 4.x 路径写进 1.8.1 源码。不看 scope 导致串列表。把 source id 当成落点。锁定行仍 draggable。忽略 revision。把手柄的 `touch-action: none` 放到整页。写成 MIT。
-
-复用时保留这些不变的约定：
-
-- 许可证是 Apache-2.0。
-- 导入保持 `/element/adapter` 与 `/combine`，不改成 4.x 路径。
-- monitor 与 draggable 都在 effect 里注册并清理。
-- scope 用 `useId`；锁定行不注册。
-- 键盘路径是上下按钮，库不提供键盘拖拽。
-
-## 测试断言
-
-`drag-session.test.mts` 与 `pinned-order.test.mjs` 断言会话的 id、revision、level，以及锁定区间不能reorder。不证明元素适配器已在浏览器里 attach。
-
-## 真实限制
-
-已挂载：单列、手柄、scope 隔离、锁定、撤销、basic 前三项。未挂载：多列、外部文件、HTTP 修订号、虚拟滚动、4.x 导出。
-
-复用检查：
-
-- 版本以该条目 `library.json` 为准，不跟研究稿里的 Vite 脚本或 workshop 目录。
-- 未挂载的生产模式留在 `guide.md`，不补进 `examples/`。
-- 不修改 `verification.json`。没有匹配 receipt 时 sdk、build、browser 保持 NOT_RUN。
-
-## 证据
-
-sdk、build、browser 为 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有匹配 receipt。Actions run `41779873259` 是仓库级检查，不是本条目 PASS。文档：https://atlassian.design/components/pragmatic-drag-and-drop/core-package
+官方README原文和固定commit/path/版本/语言/时间/hash在official与library.json。Node2只真实reorder/combine，policy12只锁定和会话；原生拖放/隔离/卸载需匹配浏览器候选，不以policy或SDK工具函数代替DOM运行。正式sdk/build/browser无匹配recorder仍NOT_RUN。

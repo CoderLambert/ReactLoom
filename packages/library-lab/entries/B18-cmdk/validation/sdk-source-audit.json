@@ -1,0 +1,113 @@
+{
+  "records": [
+    {
+      "package": {
+        "name": "cmdk",
+        "version": "1.1.1",
+        "peerDependencies": {
+          "react": "^18 || ^19 || ^19.0.0-rc",
+          "react-dom": "^18 || ^19 || ^19.0.0-rc"
+        }
+      },
+      "files": [
+        {
+          "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/cmdk@1.1.1_@types+react-dom@19.3.0_@types+react@19.3.0__@types+react@19.3.0_react-dom@19.3.0_react@19.3.0__react@19.3.0/node_modules/cmdk/dist/index.mjs",
+          "sha256": "9e11be720996de8ce85d7c31f91d87a92ddc903880b7b2e2d4f21859b4cbd09d",
+          "excerpts": [
+            {
+              "key": "isComposing",
+              "offset": 5240,
+              "source": "x:-1,...O,\"cmdk-root\":\"\",onKeyDown:e=>{var s;(s=O.onKeyDown)==null||s.call(O,e);let a=e.nativeEvent.isComposing||e.keyCode===229;if(!(e.defaultPrevented||a))switch(e.key){case\"n\":case\"j\":{j&&e.ctrlKey&&ie(e);break}case\"ArrowDown\":{ie(e);break}case\"p\":case\"k\":{j&&e.ctrlKey&&se(e);break}case\"ArrowUp\":{se(e);break}case\"Home\":{e.preventDefault(),X(0);break}case\"End\":{e.preventDefault(),oe();break}case\"Enter\":{e.preventDefault();let i=M();if(i){let l=new Event(Z);i.dispatchEvent(l)}}}}},t.createElement(\"label\",{\"cmdk-label\":\"\",htmlFor:U.inputId,id:U.labelId,style:Te},b),B(r,e=>t.createElement(de.Provider,{value:E},t.createElement(ue.Provider,{value:U},e))))}),he=t.forwardRef((r,o)=>{var _,I;let n=H(),u=t.useRef(null),c=t.useContext(fe),d=K(),f=p"
+            },
+            {
+              "key": "contentClassName",
+              "offset": 8879,
+              "source": "),\"cmdk-list-sizer\":\"\"},m)))}),xe=t.forwardRef((r,o)=>{let{open:n,onOpenChange:u,overlayClassName:c,contentClassName:d,container:f,...p}=r;return t.createElement(w.Root,{open:n,onOpenChange:u},t.createElement(w.Portal,{container:f},t.createElement(w.Overlay,{\"cmdk-overlay\":\"\",className:c}),t.createElement(w.Content,{\"aria-label\":r.label,\"cmdk-dialog\":\"\",className:d},t.createElement(me,{ref:o,...p}))))}),Ie=t.forwardRef((r,o)=>P(u=>u.filtered.count===0)?t.createElement(D.div,{ref:o,...r,\"cmdk-empty\":\"\",role:\"presentation\"}):null),Pe=t.forwardRef((r,o)=>{let{progress:n,children:u,label:c=\"Loading...\",...d}=r;return t.createElement(D.div,{ref:o,...d,\"cmdk-loading\":\"\",role:\"progressbar\",\"aria-valuenow\":n,\"aria-valuemin\":0,\"aria-valuemax\":100,\"a"
+            }
+          ]
+        },
+        {
+          "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/cmdk@1.1.1_@types+react-dom@19.3.0_@types+react@19.3.0__@types+react@19.3.0_react-dom@19.3.0_react@19.3.0__react@19.3.0/node_modules/cmdk/dist/index.d.ts",
+          "sha256": "bb703864a1bc9ca5ac3589ffd83785f6dc86f7f6c485c97d7ffd53438777cb9e",
+          "excerpts": [
+            {
+              "key": "contentClassName",
+              "offset": 8426,
+              "source": "verlay. */\n    overlayClassName?: string;\n    /** Provide a className to the Dialog content. */\n    contentClassName?: string;\n    /** Provide a custom element the Dialog should portal into. */\n    container?: HTMLElement;\n} & React.RefAttributes<HTMLDivElement>>;\n/**\n * Automatically renders when there are no results for the search query.\n */\ndeclare const Empty: React.ForwardRefExoticComponent<Children & Pick<Pick<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, \"key\" | keyof React.HTMLAttributes<HTMLDivElement>> & {\n    ref?: React.Ref<HTMLDivElement>;\n} & {\n    asChild?: boolean;\n}, \"key\" | keyof React.HTMLAttributes<HTMLDivElement> | \"asChild\"> & React.RefAttributes<HTMLDivElement>>;\n/**\n * You should cond"
+            },
+            {
+              "key": "CommandFilter",
+              "offset": 162,
+              "source": "* as React from 'react';\n\ndeclare type Children = {\n    children?: React.ReactNode;\n};\ndeclare type CommandFilter = (value: string, search: string, keywords?: string[]) => number;\ndeclare type State = {\n    search: string;\n    value: string;\n    selectedItemId?: string;\n    filtered: {\n        count: number;\n        items: Map<string, number>;\n        groups: Set<string>;\n    };\n};\ndeclare const defaultFilter: CommandFilter;\ndeclare const Command: React.ForwardRefExoticComponent<Children & Pick<Pick<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, \"key\" | keyof React.HTMLAttributes<HTMLDivElement>> & {\n    ref?: React.Ref<HTMLDivElement>;\n} & {\n    asChild?: boolean;\n}, \"key\" | keyof React.HTMLAttributes<HTMLDi"
+            },
+            {
+              "key": "useCmdk",
+              "offset": 18444,
+              "source": "RefAttributes<HTMLDivElement>>;\n};\n\n/** Run a selector against the store state. */\ndeclare function useCmdk<T = any>(selector: (state: State) => T): T;\n\nexport { pkg as Command, Dialog as CommandDialog, Empty as CommandEmpty, Group as CommandGroup, Input as CommandInput, Item as CommandItem, List as CommandList, Loading as CommandLoading, Command as CommandRoot, Separator as CommandSeparator, defaultFilter, useCmdk as useCommandState };\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "package": {
+        "name": "@radix-ui/react-dialog",
+        "version": "1.2.0",
+        "peerDependencies": {
+          "@types/react": "*",
+          "@types/react-dom": "*",
+          "react": "^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc",
+          "react-dom": "^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc"
+        }
+      },
+      "files": [
+        {
+          "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@radix-ui+react-dialog@1.2.0_@types+react-dom@19.3.0_@types+react@19.3.0__@types+react@_c1edb718822a6de77ff35d62c5110ee0/node_modules/@radix-ui/react-dialog/dist/index.mjs",
+          "sha256": "e32c21a189358f22749c171f666bddea31ae2ebe5e8c4d6c5c8aedd3916a04d7",
+          "excerpts": [
+            {
+              "key": "onCloseAutoFocus:",
+              "offset": 7549,
+              "source": "edRefs,\n        trapFocus: context.open,\n        disableOutsidePointerEvents: context.open,\n        onCloseAutoFocus: composeEventHandlers(props.onCloseAutoFocus, (event) => {\n          event.preventDefault();\n          context.triggerRef.current?.focus();\n        }),\n        onPointerDownOutside: composeEventHandlers(props.onPointerDownOutside, (event) => {\n          const originalEvent = event.detail.originalEvent;\n          const ctrlLeftClick = originalEvent.button === 0 && originalEvent.ctrlKey === true;\n          const isRightClick = originalEvent.button === 2 || ctrlLeftClick;\n          if (isRightClick) event.preventDefault();\n        }),\n        onFocusOutside: composeEventHandlers(\n          props.onFocusOutside,\n          (event)"
+            },
+            {
+              "key": "context.triggerRef.current?.focus()",
+              "offset": 7669,
+              "source": "mposeEventHandlers(props.onCloseAutoFocus, (event) => {\n          event.preventDefault();\n          context.triggerRef.current?.focus();\n        }),\n        onPointerDownOutside: composeEventHandlers(props.onPointerDownOutside, (event) => {\n          const originalEvent = event.detail.originalEvent;\n          const ctrlLeftClick = originalEvent.button === 0 && originalEvent.ctrlKey === true;\n          const isRightClick = originalEvent.button === 2 || ctrlLeftClick;\n          if (isRightClick) event.preventDefault();\n        }),\n        onFocusOutside: composeEventHandlers(\n          props.onFocusOutside,\n          (event) => event.preventDefault()\n        )\n      }\n    );\n  }, \"DialogContentModal\")\n);\nvar DialogContentNonModal = /* @__PURE"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "package": {
+        "name": "@radix-ui/react-focus-scope",
+        "version": "1.2.0",
+        "peerDependencies": {
+          "@types/react": "*",
+          "@types/react-dom": "*",
+          "react": "^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc",
+          "react-dom": "^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc"
+        }
+      },
+      "files": [
+        {
+          "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@radix-ui+react-focus-scope@1.2.0_@types+react-dom@19.3.0_@types+react@19.3.0__@types+r_17bb03d71df6075c07bd134f364dcf6d/node_modules/@radix-ui/react-focus-scope/dist/index.mjs",
+          "sha256": "be4160427815e0f67f85fc46d941700de32863416ea62127f6012a51550ce410",
+          "excerpts": [
+            {
+              "key": "setTimeout(() =>",
+              "offset": 4553,
+              "source": "rn () => {\n          container.removeEventListener(AUTOFOCUS_ON_MOUNT, onMountAutoFocus);\n          setTimeout(() => {\n            const unmountEvent = new CustomEvent(AUTOFOCUS_ON_UNMOUNT, EVENT_OPTIONS);\n            container.addEventListener(AUTOFOCUS_ON_UNMOUNT, onUnmountAutoFocus);\n            container.dispatchEvent(unmountEvent);\n            if (!unmountEvent.defaultPrevented) {\n              focus(previouslyFocusedElement ?? document.body, { select: true });\n            }\n            container.removeEventListener(AUTOFOCUS_ON_UNMOUNT, onUnmountAutoFocus);\n            focusScopesStack.remove(focusScope);\n          }, 0);\n        };\n      }\n    }, [container, onMountAutoFocus, onUnmountAutoFocus, focusScope]);\n    const handleKeyDown "
+            },
+            {
+              "key": "previouslyFocusedElement ?? document.body",
+              "offset": 4862,
+              "source": ".dispatchEvent(unmountEvent);\n            if (!unmountEvent.defaultPrevented) {\n              focus(previouslyFocusedElement ?? document.body, { select: true });\n            }\n            container.removeEventListener(AUTOFOCUS_ON_UNMOUNT, onUnmountAutoFocus);\n            focusScopesStack.remove(focusScope);\n          }, 0);\n        };\n      }\n    }, [container, onMountAutoFocus, onUnmountAutoFocus, focusScope]);\n    const handleKeyDown = React.useCallback(\n      (event) => {\n        if (!loop && !trapped) return;\n        if (focusScope.paused) return;\n        const isTabKey = event.key === \"Tab\" && !event.altKey && !event.ctrlKey && !event.metaKey;\n        const focusedElement = document.activeElement;\n        if (isTabKey && focusedElemen"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -199,8 +199,8 @@ test('@C13 advanced refusals preserve the chart and reset/scenario/tab changes d
       element.getAttribute('x'),
       element.getAttribute('width'),
     ])
-    await frame.getByLabel('前端开发开始日期', { exact: true }).fill('0100-01-01')
-    await frame.getByLabel('前端开发结束日期', { exact: true }).fill('0100-01-02')
+    await frame.getByLabel('前端开发开始日期', { exact: true }).fill('0101-01-01')
+    await frame.getByLabel('前端开发结束日期', { exact: true }).fill('0101-01-02')
     await frame
       .getByRole('row')
       .filter({ hasText: '前端开发' })
@@ -213,6 +213,27 @@ test('@C13 advanced refusals preserve the chart and reset/scenario/tab changes d
         element.getAttribute('width'),
       ]),
     ).toEqual(bounds)
+    for (const [start, end, boundary] of [
+      ['0100-01-01', '0100-01-02', '0101-01-01'],
+      ['9999-01-01', '9999-01-02', '9998-12-31'],
+    ]) {
+      await frame.getByLabel('前端开发开始日期', { exact: true }).fill(start)
+      await frame.getByLabel('前端开发结束日期', { exact: true }).fill(end)
+      await frame
+        .getByRole('row')
+        .filter({ hasText: '前端开发' })
+        .getByRole('button', { name: '保存' })
+        .click()
+      await expect(frame.getByRole('status')).toContainText(boundary)
+      // Rejected drafts remain visible; the authoritative chart keeps its original geometry.
+      await expect(frame.getByLabel('前端开发开始日期', { exact: true })).toHaveValue(start)
+      expect(
+        await frontendBar.evaluate((element) => [
+          element.getAttribute('x'),
+          element.getAttribute('width'),
+        ]),
+      ).toEqual(bounds)
+    }
     await frame.getByLabel('前端开发开始日期', { exact: true }).fill('2026-10-30')
     await frame.getByLabel('前端开发结束日期', { exact: true }).fill('2026-11-04')
     await frame.getByRole('spinbutton', { name: '联调回归进度' }).fill('80')

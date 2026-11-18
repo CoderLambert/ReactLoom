@@ -1,0 +1,57 @@
+{
+  "runs": [
+    {
+      "label": "draw-fix-biome",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "check",
+        "--write",
+        "entries/B05-rive-react/examples/player.tsx",
+        "entries/B05-rive-react/examples/example.tsx",
+        "entries/B05-rive-react/examples/runtime-policy.ts",
+        "entries/B05-rive-react/validation/browser-proposal.check.ts",
+        "entries/B05-rive-react/validation/draw-probe.mjs",
+        "entries/B05-rive-react/validation/draw-event-source-audit.json"
+      ],
+      "startedAt": "2026-11-10T13:36:00.311573+00:00",
+      "finishedAt": "2026-11-10T13:36:00.558815+00:00",
+      "exitCode": 0,
+      "log": "draw-fix-biome.txt"
+    },
+    {
+      "label": "draw-fix-typecheck",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--target",
+        "es2022",
+        "--module",
+        "esnext",
+        "--moduleResolution",
+        "bundler",
+        "--jsx",
+        "react-jsx",
+        "--strict",
+        "--skipLibCheck",
+        "--esModuleInterop",
+        "--types",
+        "vite/client,node",
+        "entries/B05-rive-react/examples/demo.tsx",
+        "entries/B05-rive-react/validation/browser-proposal.check.ts"
+      ],
+      "startedAt": "2026-11-10T13:36:00.559189+00:00",
+      "finishedAt": "2026-11-10T13:36:00.845975+00:00",
+      "exitCode": 0,
+      "log": "draw-fix-typecheck.txt"
+    }
+  ]
+}

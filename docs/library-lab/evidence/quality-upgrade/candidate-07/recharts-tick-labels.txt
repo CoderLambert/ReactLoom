@@ -1,0 +1,90 @@
+cwd=packages/library-lab
+argv=["node", "--input-type=module", "-e", "import {chromium} from '@playwright/test'; const browser=await chromium.launch();try {const page=await browser.newPage();await page.emulateMedia({reducedMotion:'reduce'});await page.goto('http://localhost:4319/libraries/recharts?tab=demo&example=business');await page.locator('.a02-rate .recharts-line-curve').waitFor();console.log(JSON.stringify(await page.locator('.recharts-wrapper svg text').evaluateAll(nodes=>nodes.map(el=>({text:el.textContent,html:el.outerHTML,parent:el.parentElement?.outerHTML.slice(0,600)}))),null,2));}finally{await browser.close();}"]
+exit=0
+[
+  {
+    "text": "周一",
+    "html": "<text height=\"30\" orientation=\"bottom\" width=\"708\" stroke=\"none\" x=\"115.57142857142857\" y=\"244.609375\" class=\"recharts-text recharts-cartesian-axis-tick-value\" text-anchor=\"middle\" fill=\"#666\"><tspan x=\"115.57142857142857\" dy=\"0.71em\">周一</tspan></text>",
+    "parent": "<g class=\"recharts-layer recharts-cartesian-axis-tick-label\"><text height=\"30\" orientation=\"bottom\" width=\"708\" stroke=\"none\" x=\"115.57142857142857\" y=\"244.609375\" class=\"recharts-text recharts-cartesian-axis-tick-value\" text-anchor=\"middle\" fill=\"#666\"><tspan x=\"115.57142857142857\" dy=\"0.71em\">周一</tspan></text></g>"
+  },
+  {
+    "text": "周二",
+    "html": "<text height=\"30\" orientation=\"bottom\" width=\"708\" stroke=\"none\" x=\"216.71428571428572\" y=\"244.609375\" class=\"recharts-text recharts-cartesian-axis-tick-value\" text-anchor=\"middle\" fill=\"#666\"><tspan x=\"216.71428571428572\" dy=\"0.71em\">周二</tspan></text>",
+    "parent": "<g class=\"recharts-layer recharts-cartesian-axis-tick-label\"><text height=\"30\" orientation=\"bottom\" width=\"708\" stroke=\"none\" x=\"216.71428571428572\" y=\"244.609375\" class=\"recharts-text recharts-cartesian-axis-tick-value\" text-anchor=\"middle\" fill=\"#666\"><tspan x=\"216.71428571428572\" dy=\"0.71em\">周二</tspan></text></g>"
+  },
+  {
+    "text": "周三",
+    "html": "<text height=\"30\" orientation=\"bottom\" width=\"708\" stroke=\"none\" x=\"317.85714285714283\" y=\"244.609375\" class=\"recharts-text recharts-cartesian-axis-tick-value\" text-anchor=\"middle\" fill=\"#666\"><tspan x=\"317.85714285714283\" dy=\"0.71em\">周三</tspan></text>",
+    "parent": "<g class=\"recharts-layer recharts-cartesian-axis-tick-label\"><text height=\"30\" orientation=\"bottom\" width=\"708\" stroke=\"none\" x=\"317.85714285714283\" y=\"244.609375\" class=\"recharts-text recharts-cartesian-axis-tick-value\" text-anchor=\"middle\" fill=\"#666\"><tspan x=\"317.85714285714283\" dy=\"0.71em\">周三</tspan></text></g>"
+  },
+  {
+    "text": "周四",
+    "html": "<text height=\"30\" orientation=\"bottom\" width=\"708\" stroke=\"none\" x=\"419\" y=\"244.609375\" class=\"recharts-text recharts-cartesian-axis-tick-value\" text-anchor=\"middle\" fill=\"#666\"><tspan x=\"419\" dy=\"0.71em\">周四</tspan></text>",
+    "parent": "<g class=\"recharts-layer recharts-cartesian-axis-tick-label\"><text height=\"30\" orientation=\"bottom\" width=\"708\" stroke=\"none\" x=\"419\" y=\"244.609375\" class=\"recharts-text recharts-cartesian-axis-tick-value\" text-anchor=\"middle\" fill=\"#666\"><tspan x=\"419\" dy=\"0.71em\">周四</tspan></text></g>"
+  },
+  {
+    "text": "周五",
+    "html": "<text height=\"30\" orientation=\"bottom\" width=\"708\" stroke=\"none\" x=\"520.1428571428571\" y=\"244.609375\" class=\"recharts-text recharts-cartesian-axis-tick-value\" text-anchor=\"middle\" fill=\"#666\"><tspan x=\"520.1428571428571\" dy=\"0.71em\">周五</tspan></text>",
+    "parent": "<g class=\"recharts-layer recharts-cartesian-axis-tick-label\"><text height=\"30\" orientation=\"bottom\" width=\"708\" stroke=\"none\" x=\"520.1428571428571\" y=\"244.609375\" class=\"recharts-text recharts-cartesian-axis-tick-value\" text-anchor=\"middle\" fill=\"#666\"><tspan x=\"520.1428571428571\" dy=\"0.71em\">周五</tspan></text></g>"
+  },
+  {
+    "text": "周六",
+    "html": "<text height=\"30\" orientation=\"bottom\" width=\"708\" stroke=\"none\" x=\"621.2857142857142\" y=\"244.609375\" class=\"recharts-text recharts-cartesian-axis-tick-value\" text-anchor=\"middle\" fill=\"#666\"><tspan x=\"621.2857142857142\" dy=\"0.71em\">周六</tspan></text>",
+    "parent": "<g class=\"recharts-layer recharts-cartesian-axis-tick-label\"><text height=\"30\" orientation=\"bottom\" width=\"708\" stroke=\"none\" x=\"621.2857142857142\" y=\"244.609375\" class=\"recharts-text recharts-cartesian-axis-tick-value\" text-anchor=\"middle\" fill=\"#666\"><tspan x=\"621.2857142857142\" dy=\"0.71em\">周六</tspan></text></g>"
+  },
+  {
+    "text": "周日",
+    "html": "<text height=\"30\" orientation=\"bottom\" width=\"708\" stroke=\"none\" x=\"722.4285714285714\" y=\"244.609375\" class=\"recharts-text recharts-cartesian-axis-tick-value\" text-anchor=\"middle\" fill=\"#666\"><tspan x=\"722.4285714285714\" dy=\"0.71em\">周日</tspan></text>",
+    "parent": "<g class=\"recharts-layer recharts-cartesian-axis-tick-label\"><text height=\"30\" orientation=\"bottom\" width=\"708\" stroke=\"none\" x=\"722.4285714285714\" y=\"244.609375\" class=\"recharts-text recharts-cartesian-axis-tick-value\" text-anchor=\"middle\" fill=\"#666\"><tspan x=\"722.4285714285714\" dy=\"0.71em\">周日</tspan></text></g>"
+  },
+  {
+    "text": "0",
+    "html": "<text orientation=\"left\" width=\"60\" height=\"231.609375\" stroke=\"none\" x=\"57\" y=\"236.609375\" class=\"recharts-text recharts-cartesian-axis-tick-value\" text-anchor=\"end\" fill=\"#666\"><tspan x=\"57\" dy=\"0.355em\">0</tspan></text>",
+    "parent": "<g class=\"recharts-layer recharts-cartesian-axis-tick-label\"><text orientation=\"left\" width=\"60\" height=\"231.609375\" stroke=\"none\" x=\"57\" y=\"236.609375\" class=\"recharts-text recharts-cartesian-axis-tick-value\" text-anchor=\"end\" fill=\"#666\"><tspan x=\"57\" dy=\"0.355em\">0</tspan></text></g>"
+  },
+  {
+    "text": "80",
+    "html": "<text orientation=\"left\" width=\"60\" height=\"231.609375\" stroke=\"none\" x=\"57\" y=\"178.70703125\" class=\"recharts-text recharts-cartesian-axis-tick-value\" text-anchor=\"end\" fill=\"#666\"><tspan x=\"57\" dy=\"0.355em\">80</tspan></text>",
+    "parent": "<g class=\"recharts-layer recharts-cartesian-axis-tick-label\"><text orientation=\"left\" width=\"60\" height=\"231.609375\" stroke=\"none\" x=\"57\" y=\"178.70703125\" class=\"recharts-text recharts-cartesian-axis-tick-value\" text-anchor=\"end\" fill=\"#666\"><tspan x=\"57\" dy=\"0.355em\">80</tspan></text></g>"
+  },
+  {
+    "text": "160",
+    "html": "<text orientation=\"left\" width=\"60\" height=\"231.609375\" stroke=\"none\" x=\"57\" y=\"120.8046875\" class=\"recharts-text recharts-cartesian-axis-tick-value\" text-anchor=\"end\" fill=\"#666\"><tspan x=\"57\" dy=\"0.355em\">160</tspan></text>",
+    "parent": "<g class=\"recharts-layer recharts-cartesian-axis-tick-label\"><text orientation=\"left\" width=\"60\" height=\"231.609375\" stroke=\"none\" x=\"57\" y=\"120.8046875\" class=\"recharts-text recharts-cartesian-axis-tick-value\" text-anchor=\"end\" fill=\"#666\"><tspan x=\"57\" dy=\"0.355em\">160</tspan></text></g>"
+  },
+  {
+    "text": "240",
+    "html": "<text orientation=\"left\" width=\"60\" height=\"231.609375\" stroke=\"none\" x=\"57\" y=\"62.90234375\" class=\"recharts-text recharts-cartesian-axis-tick-value\" text-anchor=\"end\" fill=\"#666\"><tspan x=\"57\" dy=\"0.355em\">240</tspan></text>",
+    "parent": "<g class=\"recharts-layer recharts-cartesian-axis-tick-label\"><text orientation=\"left\" width=\"60\" height=\"231.609375\" stroke=\"none\" x=\"57\" y=\"62.90234375\" class=\"recharts-text recharts-cartesian-axis-tick-value\" text-anchor=\"end\" fill=\"#666\"><tspan x=\"57\" dy=\"0.355em\">240</tspan></text></g>"
+  },
+  {
+    "text": "320",
+    "html": "<text orientation=\"left\" width=\"60\" height=\"231.609375\" stroke=\"none\" x=\"57\" y=\"13.1953125\" class=\"recharts-text recharts-cartesian-axis-tick-value\" text-anchor=\"end\" fill=\"#666\"><tspan x=\"57\" dy=\"0.355em\">320</tspan></text>",
+    "parent": "<g class=\"recharts-layer recharts-cartesian-axis-tick-label\"><text orientation=\"left\" width=\"60\" height=\"231.609375\" stroke=\"none\" x=\"57\" y=\"13.1953125\" class=\"recharts-text recharts-cartesian-axis-tick-value\" text-anchor=\"end\" fill=\"#666\"><tspan x=\"57\" dy=\"0.355em\">320</tspan></text></g>"
+  },
+  {
+    "text": "0%",
+    "html": "<text orientation=\"right\" width=\"60\" height=\"231.609375\" stroke=\"none\" x=\"781\" y=\"236.609375\" class=\"recharts-text recharts-cartesian-axis-tick-value\" text-anchor=\"start\" fill=\"#666\"><tspan x=\"781\" dy=\"0.355em\">0%</tspan></text>",
+    "parent": "<g class=\"recharts-layer recharts-cartesian-axis-tick-label\"><text orientation=\"right\" width=\"60\" height=\"231.609375\" stroke=\"none\" x=\"781\" y=\"236.609375\" class=\"recharts-text recharts-cartesian-axis-tick-value\" text-anchor=\"start\" fill=\"#666\"><tspan x=\"781\" dy=\"0.355em\">0%</tspan></text></g>"
+  },
+  {
+    "text": "25%",
+    "html": "<text orientation=\"right\" width=\"60\" height=\"231.609375\" stroke=\"none\" x=\"781\" y=\"178.70703125\" class=\"recharts-text recharts-cartesian-axis-tick-value\" text-anchor=\"start\" fill=\"#666\"><tspan x=\"781\" dy=\"0.355em\">25%</tspan></text>",
+    "parent": "<g class=\"recharts-layer recharts-cartesian-axis-tick-label\"><text orientation=\"right\" width=\"60\" height=\"231.609375\" stroke=\"none\" x=\"781\" y=\"178.70703125\" class=\"recharts-text recharts-cartesian-axis-tick-value\" text-anchor=\"start\" fill=\"#666\"><tspan x=\"781\" dy=\"0.355em\">25%</tspan></text></g>"
+  },
+  {
+    "text": "50%",
+    "html": "<text orientation=\"right\" width=\"60\" height=\"231.609375\" stroke=\"none\" x=\"781\" y=\"120.8046875\" class=\"recharts-text recharts-cartesian-axis-tick-value\" text-anchor=\"start\" fill=\"#666\"><tspan x=\"781\" dy=\"0.355em\">50%</tspan></text>",
+    "parent": "<g class=\"recharts-layer recharts-cartesian-axis-tick-label\"><text orientation=\"right\" width=\"60\" height=\"231.609375\" stroke=\"none\" x=\"781\" y=\"120.8046875\" class=\"recharts-text recharts-cartesian-axis-tick-value\" text-anchor=\"start\" fill=\"#666\"><tspan x=\"781\" dy=\"0.355em\">50%</tspan></text></g>"
+  },
+  {
+    "text": "75%",
+    "html": "<text orientation=\"right\" width=\"60\" height=\"231.609375\" stroke=\"none\" x=\"781\" y=\"62.90234375\" class=\"recharts-text recharts-cartesian-axis-tick-value\" text-anchor=\"start\" fill=\"#666\"><tspan x=\"781\" dy=\"0.355em\">75%</tspan></text>",
+    "parent": "<g class=\"recharts-layer recharts-cartesian-axis-tick-label\"><text orientation=\"right\" width=\"60\" height=\"231.609375\" stroke=\"none\" x=\"781\" y=\"62.90234375\" class=\"recharts-text recharts-cartesian-axis-tick-value\" text-anchor=\"start\" fill=\"#666\"><tspan x=\"781\" dy=\"0.355em\">75%</tspan></text></g>"
+  },
+  {
+    "text": "100%",
+    "html": "<text orientation=\"right\" width=\"60\" height=\"231.609375\" stroke=\"none\" x=\"781\" y=\"13.1953125\" class=\"recharts-text recharts-cartesian-axis-tick-value\" text-anchor=\"start\" fill=\"#666\"><tspan x=\"781\" dy=\"0.355em\">100%</tspan></text>",
+    "parent": "<g class=\"recharts-layer recharts-cartesian-axis-tick-label\"><text orientation=\"right\" width=\"60\" height=\"231.609375\" stroke=\"none\" x=\"781\" y=\"13.1953125\" class=\"recharts-text recharts-cartesian-axis-tick-value\" text-anchor=\"start\" fill=\"#666\"><tspan x=\"781\" dy=\"0.355em\">100%</tspan></text></g>"
+  }
+]

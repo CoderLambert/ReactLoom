@@ -1,0 +1,68 @@
+{
+  "repository": "vitest-dev/vitest",
+  "tag": "v5.0.5",
+  "commit": "7a825db43e2beca0b219d2eadaec334cb81af0c7",
+  "readmeCandidates": ["README.md"],
+  "treeTruncated": false,
+  "files": [
+    {
+      "path": "README.md",
+      "url": "https://raw.githubusercontent.com/vitest-dev/vitest/7a825db43e2beca0b219d2eadaec334cb81af0c7/README.md",
+      "sha256": "e8ebb122af88ef7d54982ada599ffbc3321db6d57f3902b800031d7745b7bdde",
+      "bytes": 4179
+    },
+    {
+      "path": "LICENSE",
+      "url": "https://raw.githubusercontent.com/vitest-dev/vitest/7a825db43e2beca0b219d2eadaec334cb81af0c7/LICENSE",
+      "sha256": "04575fc5bfae19a9b63100f8691f901a2e15a399011ac02db435a9ef27295551",
+      "bytes": 1102
+    }
+  ],
+  "packagePath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/vitest@5.0.5_@opentelemetry+api@1.9.1_@types+node@22.20.5_jsdom@30.1.2_@noble+hashes@1._c9356902fefcd8e4470093ccb82a2fe4/node_modules/vitest/package.json",
+  "installedPackage": {
+    "name": "vitest",
+    "version": "5.0.5",
+    "license": "MIT",
+    "engines": {
+      "node": "^22.12.0 || ^24.0.0 || >=26.0.0"
+    },
+    "peerDependencies": {
+      "@edge-runtime/vm": "*",
+      "@opentelemetry/api": "^1.9.0",
+      "@types/node": "^22.0.0 || >=24.0.0",
+      "@vitest/browser-playwright": "5.0.5",
+      "@vitest/browser-preview": "5.0.5",
+      "@vitest/browser-webdriverio": "^5.0.0-beta.5 || >=5.0.0",
+      "@vitest/coverage-istanbul": "5.0.5",
+      "@vitest/coverage-v8": "5.0.5",
+      "@vitest/ui": "5.0.5",
+      "happy-dom": "*",
+      "jsdom": "*",
+      "vite": "^6.4.0 || ^7.0.0 || ^8.0.0"
+    }
+  },
+  "homepage": {
+    "status": 200,
+    "finalUrl": "https://vitest.dev/",
+    "headers": {
+      "Accept-Ranges": "bytes",
+      "Age": "0",
+      "Cache-Control": "public,max-age=0,must-revalidate",
+      "Cache-Status": "\"Netlify Edge\"; fwd=stale; fwd-status=200; stored",
+      "Content-Length": "36665",
+      "Content-Type": "text/html; charset=UTF-8",
+      "Date": "Tue, 17 Nov 2026 18:51:47 GMT",
+      "Etag": "\"fdc9ebfd9a85736f2fbc38ea9c2d88ad-ssl\"",
+      "Referrer-Policy": "no-referrer",
+      "Server": "Netlify",
+      "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+      "Vary": "Accept-Encoding",
+      "X-Content-Type-Options": "nosniff",
+      "X-Frame-Options": "DENY",
+      "X-Nf-Request-Id": "01M7NDKNDPBK175R1E61SWRQ1F",
+      "X-Xss-Protection": "1; mode=block",
+      "Connection": "close"
+    },
+    "bodySha256": "166aa918fc1784a2ee950c4afa70212aca380e55d2a9eac6c48f6a42604ae764"
+  }
+}

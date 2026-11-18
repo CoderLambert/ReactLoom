@@ -1,0 +1,16 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node --test entries/B03-react-spring/tests/article-policy.test.mts
+exit: 0
+✔ append preserves unique business identities (0.861457ms)
+✔ bounded list rejects 13th article without mutating current items (0.148728ms)
+✔ removing a button that did not own focus must not steal focus (0.078415ms)
+✔ deleting from a full list enables Add after commit instead of focusing disabled Add (0.065878ms)
+✔ unfocused removals never move focus, even near capacity (0.065359ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 72.325606

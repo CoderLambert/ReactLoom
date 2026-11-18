@@ -1,0 +1,42 @@
+{
+  "recordedAt": "2026-11-10T16:55:45.718543+00:00",
+  "scope": "Actual fixed candidate17 diagnosis; no build, no SDK/DOM replacement, no production source mutation",
+  "baseURL": "http://127.0.0.1:4319",
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  },
+  "originalFullSuite": {
+    "path": "docs/library-lab/evidence/quality-upgrade/candidate-17/browser-fullcalendar.txt",
+    "sha256": "9594283a05cbeb2f0961769accb285ffd176afac0e3b0bfec140b2204e299d7a",
+    "exitCode": 1,
+    "passed": [
+      "advanced"
+    ],
+    "failed": [
+      "basic selector",
+      "business resize geometry"
+    ]
+  },
+  "probes": {
+    "candidate17-ui-probe-red.txt": {
+      "sha256": "d521d3e322481cd92ba56a9a033a15302de4026dc53baf19db51d7d13294a706",
+      "exitCode": 1
+    },
+    "candidate17-ui-probe-green.txt": {
+      "sha256": "98ca23e6d779abf2eb7b62f597f31fa10f401439653fba757ec520dda617bb5a",
+      "exitCode": 0
+    }
+  },
+  "greenScope": "Actual three view navigation and real business create/drop/resize/SDK API end increase only; not the complete two original cases",
+  "harnessAfterObservation": "Biome formatting and removal of a disproved horizontal-cursor branch; tested vertical geometry/gesture/assertions unchanged",
+  "productionSources": {
+    "examples/calendar-contract.ts": "691107fb09915159e4ac6202f2b61efa27eaf7a48ef60e9e179423d8af2a7d59",
+    "examples/calendar-policy.d.mts": "c08ee6a5b212393de5eb1ace42165517cdd41bb725e38a84bf336d653a80e603",
+    "examples/calendar-policy.mjs": "afec0b2fc664750ca15cf54bd340dd51a1f36f3dfafe92bc40ccc98075a314da",
+    "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+    "examples/example.tsx": "af776b7a050a284e720347915bd40d770ea43878531565174dda60e00faa8ed5",
+    "examples/styles.css": "d466b064353f371da9bd6ffb2c9b2f666388b3fd43257aa3aeca5919bf40b2bb"
+  },
+  "remaining": "Root repeats only affected basic/business complete cases; advanced/SDK2/policy4/homepage retained; formal NOT_RUN"
+}

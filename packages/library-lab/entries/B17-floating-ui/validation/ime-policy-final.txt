@@ -1,0 +1,24 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+ARGV: ["node", "--test", "entries/B17-floating-ui/tests/ime-guard.test.mts"]
+START: 2026-11-10T10:47:19.121702+00:00
+END: 2026-11-10T10:47:19.220154+00:00
+EXIT: 0
+STDOUT:
+✔ plain Enter commits (0.510324ms)
+✔ candidate selection during composition never commits (0.101509ms)
+✔ compositionend before trailing Enter keydown is guarded (0.077715ms)
+✔ other keyboard keys do not submit (0.070017ms)
+✔ real Enter confirmation keeps trailing keydown guarded and releases on keyup (0.142801ms)
+✔ Space confirmation needs no Enter keyup before a subsequent ordinary Enter (0.075334ms)
+✔ mouse confirmation cannot suppress an ordinary Enter beyond the finite window (0.062512ms)
+✔ new non-composing character after candidate confirmation clears stale suppression (0.074964ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 73.25269
+
+STDERR:

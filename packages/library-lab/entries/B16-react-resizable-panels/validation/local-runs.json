@@ -1,0 +1,131 @@
+[
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "python3",
+      "entries/B16-react-resizable-panels/validation/fetch-official.py"
+    ],
+    "startedAt": "2026-11-10T14:03:11.614542+00:00",
+    "exitCode": 0,
+    "log": "validation/official-fetch.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "entries/B16-react-resizable-panels/examples",
+      "entries/B16-react-resizable-panels/tests",
+      "entries/B16-react-resizable-panels/library.json",
+      "entries/B16-react-resizable-panels/verification.json",
+      "entries/B16-react-resizable-panels/official/source-evidence.json",
+      "entries/B16-react-resizable-panels/validation/metadata-check.mjs",
+      "entries/B16-react-resizable-panels/validation/sdk-source-audit.json"
+    ],
+    "startedAt": "2026-11-10T14:08:28.875964+00:00",
+    "exitCode": 0,
+    "log": "validation/biome.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "node",
+      "--test",
+      "entries/B16-react-resizable-panels/tests/sdk.test.mjs"
+    ],
+    "startedAt": "2026-11-10T14:08:36.479074+00:00",
+    "exitCode": 0,
+    "log": "validation/sdk.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "tsc",
+      "--ignoreConfig",
+      "--noEmit",
+      "--target",
+      "es2022",
+      "--module",
+      "esnext",
+      "--moduleResolution",
+      "bundler",
+      "--jsx",
+      "react-jsx",
+      "--strict",
+      "--skipLibCheck",
+      "--esModuleInterop",
+      "--types",
+      "vite/client,node",
+      "entries/B16-react-resizable-panels/examples/demo.tsx"
+    ],
+    "startedAt": "2026-11-10T14:08:36.675259+00:00",
+    "exitCode": 0,
+    "log": "validation/typecheck.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "node",
+      "entries/B16-react-resizable-panels/validation/metadata-check.mjs"
+    ],
+    "startedAt": "2026-11-10T14:08:37.017385+00:00",
+    "exitCode": 0,
+    "log": "validation/metadata.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "entries/B16-react-resizable-panels/validation/browser-proposal.check.ts"
+    ],
+    "startedAt": "2026-11-10T14:09:02.576267+00:00",
+    "exitCode": 0,
+    "log": "validation/proposal-format.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "tsc",
+      "--ignoreConfig",
+      "--noEmit",
+      "--target",
+      "es2022",
+      "--module",
+      "esnext",
+      "--moduleResolution",
+      "bundler",
+      "--strict",
+      "--skipLibCheck",
+      "--types",
+      "node",
+      "entries/B16-react-resizable-panels/validation/browser-proposal.check.ts"
+    ],
+    "startedAt": "2026-11-10T14:09:02.843894+00:00",
+    "exitCode": 0,
+    "log": "validation/proposal-typecheck.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "git",
+      "diff",
+      "--check",
+      "--",
+      "entries/B16-react-resizable-panels"
+    ],
+    "startedAt": "2026-11-10T14:10:58.303882+00:00",
+    "exitCode": 0,
+    "log": "validation/diff-check.txt"
+  }
+]

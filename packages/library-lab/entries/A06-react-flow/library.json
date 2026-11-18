@@ -4,14 +4,8 @@
   "slug": "react-flow",
   "name": "React Flow",
   "group": "A",
-  "summary": "React 节点工作流编辑器：受控节点和边、连接校验与画布交互",
-  "tags": [
-    "nodes",
-    "edges",
-    "workflow",
-    "canvas",
-    "keyboard"
-  ],
+  "summary": "从受控节点和端口连线，到表单审批、条件分支和发布快照的真实React Flow工作台",
+  "tags": ["nodes", "edges", "low-code", "approval", "forms", "workflow", "keyboard"],
   "contentState": "recreated",
   "packages": [
     {
@@ -21,16 +15,28 @@
   ],
   "references": [
     {
-      "title": "React Flow 官方快速入门",
+      "title": "React Flow官方快速入门",
       "url": "https://reactflow.dev/learn"
     },
     {
-      "title": "React Flow addEdge API",
+      "title": "受控节点状态useNodesState",
+      "url": "https://reactflow.dev/api-reference/hooks/use-nodes-state"
+    },
+    {
+      "title": "Handle与命名端口",
+      "url": "https://reactflow.dev/learn/customization/handles"
+    },
+    {
+      "title": "节点和视口坐标",
+      "url": "https://reactflow.dev/learn/concepts/the-viewport"
+    },
+    {
+      "title": "addEdge API",
       "url": "https://reactflow.dev/api-reference/utils/add-edge"
     },
     {
-      "title": "官方npm包",
-      "url": "https://www.npmjs.com/package/@xyflow/react"
+      "title": "@xyflow/react固定12.12.0源码",
+      "url": "https://github.com/xyflow/xyflow/tree/3d35b57317576b0916c0bfeaaedd573aaacc2839/packages/react"
     }
   ],
   "related": [
@@ -48,63 +54,69 @@
   "demos": [
     {
       "demoId": "basic",
-      "title": "两节点连线",
-      "description": "ReactFlow受控节点和边，Controls与Background画布",
+      "title": "两节点图入门与线性审批",
+      "description": "先操作独立两节点图，观察坐标、nodes/edges与真实Handle连线，再保留原线性表单审批入口。",
       "level": "basic",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
+        "examples/flow-primer.tsx",
+        "examples/flow-primer.css",
+        "examples/demo.tsx",
         "examples/example.tsx",
-        "examples/graph-rules.ts",
-        "examples/workflow-preset.ts",
-        "examples/demo.tsx"
+        "examples/approval-workbench.tsx",
+        "examples/approval-designer.tsx",
+        "examples/approval-model.ts",
+        "examples/approval-runtime.ts",
+        "examples/approval-storage.ts",
+        "examples/approval-workbench.css",
+        "examples/graph-rules.ts"
       ],
-      "capabilities": [
-        "svg",
-        "canvas",
-        "pointer",
-        "keyboard"
-      ]
+      "capabilities": ["svg", "pointer", "keyboard", "local-session-storage"]
     },
     {
       "demoId": "business",
-      "title": "新闻加工管线",
-      "description": "输入->清洗->摘要->发布，用户拖动节点并尝试连接",
+      "title": "费用报销与条件分支",
+      "description": "金额达到阈值时进入财务复核，支持实际通过、驳回与历史记录",
       "level": "business",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
+        "examples/flow-primer.tsx",
+        "examples/flow-primer.css",
+        "examples/demo.tsx",
         "examples/example.tsx",
-        "examples/graph-rules.ts",
-        "examples/workflow-preset.ts",
-        "examples/demo.tsx"
+        "examples/approval-workbench.tsx",
+        "examples/approval-designer.tsx",
+        "examples/approval-model.ts",
+        "examples/approval-runtime.ts",
+        "examples/approval-storage.ts",
+        "examples/approval-workbench.css",
+        "examples/graph-rules.ts"
       ],
-      "capabilities": [
-        "svg",
-        "canvas",
-        "pointer",
-        "keyboard"
-      ]
+      "capabilities": ["svg", "pointer", "keyboard", "local-session-storage"]
     },
     {
       "demoId": "advanced",
-      "title": "新增节点与连接保护",
-      "description": "连接拒绝缺失/重复/自环/成环，节点删除清理关联边并可重置",
+      "title": "配置迁移与发布边界",
+      "description": "完整审批工作台：JSON 导入导出、发布校验、独立版本快照、本地持久化",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
+        "examples/flow-primer.tsx",
+        "examples/flow-primer.css",
+        "examples/demo.tsx",
         "examples/example.tsx",
-        "examples/graph-rules.ts",
-        "examples/workflow-preset.ts",
-        "examples/demo.tsx"
+        "examples/approval-workbench.tsx",
+        "examples/approval-designer.tsx",
+        "examples/approval-model.ts",
+        "examples/approval-runtime.ts",
+        "examples/approval-storage.ts",
+        "examples/approval-workbench.css",
+        "examples/graph-rules.ts"
       ],
-      "capabilities": [
-        "svg",
-        "canvas",
-        "pointer",
-        "keyboard"
-      ]
+      "capabilities": ["svg", "pointer", "keyboard", "local-session-storage"]
     }
   ],
   "license": {
@@ -114,5 +126,25 @@
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
     "note": "本轮按官方接口独立编写新代码、文档与Agent指南；原研究的PASS未继承。"
+  },
+  "official": {
+    "readme": {
+      "repository": "xyflow/xyflow",
+      "commit": "3d35b57317576b0916c0bfeaaedd573aaacc2839",
+      "path": "packages/react/README.md",
+      "sha256": "d61d3061725de60ee80ec9864ba1356a71a5a10bb40aeedacd8e7e7d8c3e078c",
+      "sourceUrl": "https://github.com/xyflow/xyflow/blob/3d35b57317576b0916c0bfeaaedd573aaacc2839/packages/react/README.md",
+      "snapshotPath": "official/readme.md",
+      "language": "en",
+      "version": "12.12.0",
+      "syncedAt": "2026-11-10T09:34:51.771877+00:00"
+    },
+    "homepage": {
+      "url": "https://reactflow.dev/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-10T09:34:59.421342+00:00",
+      "reason": "HTTP GET 200，最终URL保持https://reactflow.dev/；未发现X-Frame-Options或CSP frame-ancestors，尚未从实际Lab origin浏览器确认嵌入，保持unknown。见official/source-evidence.json。"
+    }
   }
 }

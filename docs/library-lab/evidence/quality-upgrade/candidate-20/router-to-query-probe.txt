@@ -1,0 +1,7 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=pnpm exec node --input-type=module -e <router-to-query-probe.mjs content>
+nuqs2.10.1-to-string {"publicHref":"/libraries/nuqs?tab=demo&example=business&host_probe=kept&ll_c19_page=2","href":"/libraries/nuqs?tab=demo&example=business&host_probe=kept&ll_c19_page=2","pathname":"/libraries/nuqs?tab=demo&example=business&host_probe=kept&ll_c19_page=2","search":{},"searchStr":"","state":{},"hash":"","external":false}
+structured-search {"publicHref":"/libraries/nuqs?tab=demo&example=business&host_probe=kept&ll_c19_page=%222%22","href":"/libraries/nuqs?tab=demo&example=business&host_probe=kept&ll_c19_page=%222%22","pathname":"/libraries/nuqs","search":{"tab":"demo","example":"business","host_probe":"kept","ll_c19_page":"2"},"searchStr":"?tab=demo&example=business&host_probe=kept&ll_c19_page=%222%22","state":{},"hash":"","external":false}
+href-navigation-build {"publicHref":"/libraries/nuqs?tab=demo&example=business&host_probe=kept&ll_c19_page=2","href":"/libraries/nuqs?tab=demo&example=business&host_probe=kept&ll_c19_page=2","pathname":"/libraries/nuqs","search":{"tab":"demo","example":"business","host_probe":"kept","ll_c19_page":2},"searchStr":"?tab=demo&example=business&host_probe=kept&ll_c19_page=2","state":{},"hash":"","external":false}
+
+exitCode=0

@@ -1,135 +1,91 @@
-# date-fns 4.4.0｜日历日、instant 和经过的小时不要混
+# date-fns：把日历日期、时区和事件瞬间分开
 
-Lab 锁定 `date-fns@4.4.0` 和 `@date-fns/tz@1.5.0`（MIT）。函数不改入参。时区用 `TZDate` 和 `tz()`，不要读设备默认时区来决定 RSS 排程。
+本例使用真实 **date-fns 4.4.0 + @date-fns/tz 1.5.0**，两包 MIT。适合已有 JavaScript Date、希望按函数组合完成日期加减和格式化的应用。日期选择器负责录入，date-fns 负责计算；这里没有后台定时任务、数据库或浏览器 cron。
 
-没有收据时 sdk / build / browser 保持 NOT_RUN。Actions 41779873259 不是本条目 PASS。
+三个目标共用 [date-contract.ts](examples/date-contract.ts)。页面 JSON 来自真实函数返回值，示例日期是本地固定输入，不是服务端响应。
 
-## Lab 当前示例
+| 目标 | 输入 | 处理 | 可观察结果 |
+| --- | --- | --- | --- |
+| 严格日历日 | YYYY-MM-DD + 三个白名单时区之一 | TZDate 目标区中午构造，完整回读字段 | 保留日历日、当地中午/偏移、对应 UTC instant |
+| 日历排程 | 日历日 + 时区 + 1–14 天 | addDays 的 in 上下文；计算两种差值 | calendarDays 与整数 elapsedHours |
+| DST 与事件瞬间 | 带明确偏移的事件字符串 | 严格输入合同后 parseISO；另算固定纽约春秋 | 23/25 小时、秋季两个 01:30 的不同 UTC |
 
-[`examples/example.tsx`](examples/example.tsx) 调用真实的 `parseISO`、`isValid`、`format`、`addDays`、`differenceInCalendarDays`、`differenceInHours`，以及 `TZDate`。`demo.tsx` 只做再导出。没有 cron，也没有 5173 的独立站。
+## 先操作，再读计算链
 
-- **basic**：`parseCivilDate` 只接受 `YYYY-MM-DD`。它在指定 IANA 时区的中午构造 `TZDate`，再回读年月日。对不上就拒绝，所以 `2026-02-30` 不会进位。按钮输出当天和下一日的格式化结果。
-- **business**：`planCivilDays` 用 `addDays(start, count, { in: tz(zone) })`。返回里同时有日历日差和 `differenceInHours`。说明文字写明这不是浏览器里的生产 cron。
-- **advanced**：固定计算纽约 `2026-03-07` 加一天，以及 `2026-10-31` 加一天。绝对时间先过 [`instant-policy.mjs`](examples/instant-policy.mjs) 的 `assertExplicitInstant`，再 `parseISO`。两条 `2026-11-01T01:30:00-04:00` 和 `-05:00` 会变成两个 UTC instant。删掉偏移必须抛错。
+### 1. 严格日历日与目标时区
 
-`assertExplicitInstant` 要求日期时间、秒，以及 `Z` 或 `±HH:mm`。拒绝 `-00:00`、超出 `±14:00` 的偏移、非法月日和超过 35 个字符的串。闰年按公历，不靠 `Date` 的自动进位。
+1. 基本场景保留 2026-03-07、纽约，点击“运行日期计算”。
+2. 输出 calendarDate 为 2026-03-07，localNoon 为 12:00 -05:00，instantUTC 为 2026-03-07T17:00:00.000Z。
+3. 改成上海后旧结果立即消失；重新运行得到中午 +08:00，UTC 为 04:00。UTC 区则为 12:00 Z。
+4. 输入 2026-02-30，运行出现 alert，结果不保留；改为 2024-02-29 可恢复。重置恢复默认草稿，清错误和结果。
 
-## 什么时候用
+本例日历业务范围为 **1901–9999 年**，且只接受纽约、上海、UTC。格式严格要求补零，不自动接受 2 月 30 日进位。代码还回读小时、分、秒、毫秒，要求准确中午。这是本例三个区的现代排程合同，不代表 date-fns 全球年份上限或一般时区能力。
 
-日历加减、格式化和明确时区的日界。已经有 Day.js 链式插件且行为核对过时不必改写。需要 `Interval` 和 `getPossibleOffsets` 时用 Luxon。历史 Moment 代码不要原样换成 `new Date()`，看 C22。
+范围来自实际诊断：当前 Node/Intl 与 tz 1.5.0 下，公共 setter 设置历史日期中午，上海 0096/1900 年回读 11:59:17，纽约回读 12:00:02。原低年正例失败与读数保留在本地验证记录。本例不添加私有时区逆算，也不把拒绝低年的 guard 当成低年 SDK 支持。实际正例仍覆盖三个区的 1901 下界、2024 闰日和 9999 上界。其他历史时区应另设需求与测试。
 
-`addDays` 是日历日。它不是 86400000 毫秒。纽约春季那一天附近，相邻日历日可以是 23 小时；秋季可以是 25 小时。
+### 2. 日历排程与经过小时
 
-## 数据与模型
+1. 业务场景用纽约 2026-03-07 加 1 天，运行。
+2. start 为 2026-03-07 12:00 -05:00，end 为 2026-03-08 12:00 -04:00；calendarDays 为 1，elapsedHours 为 23。
+3. 日期改 2026-10-31，同样加一天：日历差仍 1，小时差为 25。
+4. 同一天换上海或 UTC，小时差为 24。选 3 天时，纽约春季是 3 个日历日、71 个小时。
+5. 9999-12-31 加一天超出本例结果范围，必须拒绝，不能把五位年当普通四位日期显示。
 
-四种值：
+[planCivilDays](examples/date-contract.ts) 先验证整数天数，再调用：
 
-| 值 | 例子 | 不能拿来做的事 |
-| --- | --- | --- |
-| 日历日 | `2026-03-07` | 不能当成某一瞬间 |
-| 带偏移的 instant | `2026-11-01T01:30:00-04:00` | 不能当成纽约永远的偏移 |
-| IANA 时区 | `America/New_York` | 不能用 `+08:00` 代替 |
-| 经过的小时 | `differenceInHours` | 不能用来回答「是不是明天」 |
+~~~ts
+const start = parseCivilDate(civil, zone)
+const end = addDays(start, count, { in: tz(zone) })
+const calendarDays = differenceInCalendarDays(end, start, { in: tz(zone) })
+const elapsedHours = differenceInHours(end, start)
+~~~
 
-`parseCivilDate` 把中午放在目标时区，避免本地午夜正好落在 DST 缺口里。回读失败就抛错。`format(..., { in: tz(zone) })` 让格式化也发生在该时区，而不是操作系统时区。
+addDays 在目标区按日历字段加天，返回新的日期实例；不会把 start 改成 end。differenceInHours 基于毫秒差，默认截断到整数小时，并非一般情况下的精确小数持续时间。精确计费或毫秒超时应保存 epoch 差值；“当地明天中午”不能用固定 86400000 毫秒代替日历加一天。
 
-`parseISO` 很宽。Lab 不把没有偏移的字符串交给它。先 `assertExplicitInstant`。
+### 3. DST 与明确事件瞬间
 
-`startOfWeek`、`addBusinessDays`、`formatDistance` 没有出现在示例里。要用时显式传入 weekStartsOn 和 locale，不要假设周一或中文相对时间已经就绪。
+1. 进阶场景只显示“绝对事件时间”。固定春秋 DST 对照不依赖其他场景的日历草稿。
+2. 默认 2026-11-01T01:30:00-04:00 得到 UTC 05:30。
+3. 改为 -05:00，重新运行得到 UTC 06:30。ambiguousLocalTime 同时保留两个结果；相同钟面并不是同一瞬间。
+4. 删除偏移，或改成 -00:00，必须失败；恢复合法偏移后可继续计算。
+5. 明确 instant 路径独立支持输入年份 0001–9999；真实 SDK 测试覆盖 0001、0096 闰日与 9999，不经过现代日历年份 guard。
 
-## 三层示例
+[instant-policy.mjs](examples/instant-policy.mjs) 是应用合同，**不是 date-fns API**：要求大写 T、完整时分秒、最多 3 位小数、Z 或 ±HH:mm，拒绝非法公历日期、24 点、闰秒、-00:00 和超过 ±14:00 的偏移。通过后才交给真实 parseISO。SDK 本身接受更宽 ISO 输入，不能把宽松性直接当作业务约定。
 
-### 基本
+输入年份四位不等于 UTC 输出必定四位：极值日期加偏移可能跨到 0000 或 10000 年，生产持久化需另定 UTC 范围。历史 IANA 区还可能有秒级偏移，HH:mm XXX 这种分钟精度显示并非无损保存格式。这里保留 epoch/UTC instant，不把本地钟面反解析还原它。
 
-输入 `2026-02-30` 再运行，`role="alert"` 出现禁止进位。`2026-03-07` 在纽约中午格式化成功。换上海或 UTC，日历日字符串仍是 3 月 7 日，偏移不同。
+## 哪些状态属于谁
 
-### 业务
+React 持有输入草稿、当前结果、错误。编辑清结果，避免旧 JSON 冒充新草稿结果；运行同步调用真实 SDK；失败清旧结果；重置恢复默认。场景用 level key 新建 session，切换和离开自然清本轮 React 状态。
 
-天数限制在 1–14 的安全整数。输出里的 `calendarDays` 应等于选择的天数。`elapsedHours` 在普通日期上多为 24 的倍数。把这个结果说成「固定每 24 小时触发」是错的，跨 DST 时小时数会变。页面上的 note 就是这个边界。
+这里没有 effect、timer、事件总线、请求或待取消异步任务；不需要伪造加载时钟和清理计数。没有自动保存、提交发布或账号服务。程序化输入和普通 DOM 键盘验证不能宣称真实操作系统输入法验收。
 
-### 进阶
+## 迁移到自己的 React 应用
 
-春季样例和秋季样例并排。秋季相邻日历日的小时数不应被写成 24 而不看结果。两条 01:30 的 `toISOString()` 相差一小时。删掉 `-04:00` 后按钮必须失败，不能默默用浏览器时区补上。
+携带 [demo.tsx](examples/demo.tsx)、[example.tsx](examples/example.tsx)、[date-contract.ts](examples/date-contract.ts)、[instant-policy.mjs](examples/instant-policy.mjs)、[类型声明](examples/instant-policy.d.mts) 和 [styles.css](examples/styles.css)。依赖为 date-fns@4.4.0、@date-fns/tz@1.5.0、React；没有 Lab 别名、宿主上下文或隐式全局 CSS。
 
-## 反例
+在自己的 pnpm 应用安装匹配版本：
 
-### 1. 明天等于加 86400000
+~~~sh
+pnpm add date-fns@4.4.0 @date-fns/tz@1.5.0
+~~~
 
-```ts
-new Date(start.getTime() + 86400000)
-```
+可只迁移合同模块，把输入接表单、结果接数据层；不要复制 Lab 目录/runner。扩大时区白名单、年份、输入格式或天数时，同步改合同、说明和实际 SDK 边界测试。
 
-DST 日会偏一小时。用 `addDays(date, 1, { in: tz(zone) })`。
+## 三个容易踩到的边界
 
-### 2. 用日历日差表示经过的小时
+- **format 未传 in 并不总是设备时区。** TZDate 通过 constructDateFrom 保留自身时区；普通 Date 未给上下文才使用环境时区。本例显式传 in: tz(zone)，避免调用方换成普通 Date 后含义变化。
+- **偏移不等于时区规则。** -04:00 标识一个瞬间的偏移，不能替代纽约全年规则。日历排程保存 IANA 区与领域日期，事件保存明确 instant。
+- **中午只是本配方的选择。** 避开本例春秋凌晨切换，不证明任意时区、任意历史日期都没有中午跳变或整日跳过。规则由运行时 Intl/TZDB 提供，库不向网络请求最新政策。
 
-`differenceInCalendarDays` 回答日期格子。重试 24 小时用 `differenceInHours` 或毫秒。Lab 两个都返回，调用方要选对字段。
+需要日期视图可结合 C12 FullCalendar；需要 DateTime/Interval 和歧义时间查询可评估 C16 Luxon。不要同时让多个库充当同一领域的时间权威。
 
-### 3. parseISO 接受没有偏移的时间
+## 官方原文与证据
 
-```ts
-parseISO('2026-11-01T01:30:00')
-```
+匹配 v4.4.0 的固定提交为 cd53d2538cfa318404eff7ade6449b49bf34562e。该 monorepo 的 pkgs/core/package.json 是 4.4.0，pkgs/tz/package.json 是 1.5.0；旧独立 tz 仓库不是本轮 1.5.0 的版本依据。两包 npm 元数据均没有 gitHead，使用实际 tag 与固定 manifest 交叉确认。
 
-这不是纽约的某一个 01:30。先走 `assertExplicitInstant`。
+检查完整 tree 后，根、core、tz 没有匹配官方中文 README。主快照采用根 [官方原README](https://github.com/date-fns/date-fns/blob/cd53d2538cfa318404eff7ade6449b49bf34562e/README.md)（英文 1814 字节）；时区包另存 [原文](https://github.com/date-fns/date-fns/blob/cd53d2538cfa318404eff7ade6449b49bf34562e/pkgs/tz/README.md)（英文 9377 字节）。保留上游内容与署名，没有自行翻译成“官方中文”。主快照在“官方”页签可读；精确路径、版本、同步 UTC、SHA-256 与原始响应头保存在本地维护记录。
 
-### 4. 非法日期靠 Date 进位
+官网实际 GET 200，最终响应 XFO/CSP 字段均 null；未从 Lab origin 验证 iframe，状态 **unknown**，不是 allowed。未读取官网正文。原文中的 npm 命令属于快照，本项目使用 pnpm。
 
-`2026-02-30` 在某些解析器里变成 3 月 2 日。回读年月日，不一致就抛错。
-
-### 5. format 不带 in
-
-不带 `tz(zone)` 时，格式化跟随运行环境。服务端在 UTC、浏览器在上海，同一 instant 会显示成不同的钟面。排程显示要传入 zone。
-
-### 6. 把 -04:00 存成纽约的长期规则
-
-那只是该瞬间的偏移。明年的 DST 规则以 IANA 名为准，并保存 instant。
-
-### 7. -00:00 当成 UTC
-
-策略函数拒绝它，因为它表示偏移未知。
-
-### 8. 在渲染期间读本地时区决定业务日
-
-示例的 zone 来自下拉框，默认纽约。不要 `new Date().getTimezoneOffset()` 来决定用户的发布日。
-
-## 组合
-
-**FullCalendar。** 日历负责条，date-fns 负责「加一个日历日」和 instant 检查。全天事件不要先变成 UTC 午夜再加 24 小时。
-
-**Day.js / Luxon。** 同一产品里选一个时区库做权威运算。Lab 把它们分成条目，是为了对照，不是建议三套一起算同一天。
-
-**Zod。** `z.iso.datetime` 只看格式。2 月 30 日和缺偏移仍要日期库。不要在 schema 通过后直接 `new Date(value)`。
-
-## 生产清单
-
-- 日历日用 `TZDate` 中午加回读。
-- instant 必须带明确偏移，拒绝 `-00:00`。
-- `addDays` 传入 `{ in: tz(zone) }`。
-- 同时展示日历差和小时差时，UI 写清各自的含义。
-- 天数有上限。Lab 是 14。
-- 格式化指定 zone。
-- 不在浏览器里注册真正的定时任务。
-
-## 升级
-
-4.4 的选项对象里用 `in`。从 3.x 迁过来时，每个 `addDays` / `format` 都要看时区参数是否还在。`@date-fns/tz@1.5.0` 和 date-fns 4.4.0 一起升，不要只升其中一个。
-
-## 练习
-
-1. `2026-02-30` 失败，`2024-02-29` 成功。
-2. 纽约 `2026-03-07` 加 1 个日历日，看 `elapsedHours` 是不是 24。再看 `2026-10-31`。
-3. 去掉 instant 的偏移，确认抛错。
-4. 两条 01:30 的 ISO 字符串不相同。
-
-## 官方链接
-
-- https://date-fns.org/docs/Getting-Started
-- https://github.com/date-fns/date-fns
-- https://github.com/date-fns/tz
-
-## 证据
-
-`instant-policy` 单测不调用 `TZDate`。sdk 要同时覆盖 `date-fns@4.4.0` 和 `@date-fns/tz@1.5.0` 的真实 import，并在 `docs/library-lab/evidence/runs/` 留下收据。
-
-GitHub Actions 41779873259 是仓库级安装、typecheck、build、52 个 SDK 文件（153 项测试）和 45 项 Playwright 的结果，不是 C14 的条目 PASS。不要改 `verification.json`。
+本地真实 SDK 共 5 项按影响分两次验证，纯输入 policy 3 项；初始低年 FAIL、收窄后的真实 1901 边界与独立低年 instant PASS 分开保留。本地验证记录另列命令、退出码、范围与未测项。主控 candidate18 已执行三目标真实交互与官方来源共 4 项通过；源码与固定构建输入一致。正式 verification 三状态仍保持 NOT_RUN，详细收据在本地记录；不能由这四项推断任意部署环境、真实 OS 输入法或所有浏览器 TZDB 验收。

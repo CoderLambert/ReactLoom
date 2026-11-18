@@ -1,46 +1,17 @@
-# A17 deck.gl — 工程手册
+# A17 deck.gl 工程入口
 
-## 适用
+目标@deck.gl/core/layers9.4.0，MIT，真实standalone Deck+ScatterplotLayer，无底图/网络/付费服务。React产品官方推荐DeckGL包装器；本例为已声明core/layers的effect生命周期练习，不引入未安装@deck.gl/react或双重所有者。recreated/历史来源保留。
 
-`@deck.gl/core@9.4.0` 与 `@deck.gl/layers@9.4.0` 用命令式 Deck 画像素半径的散点。底图和街道不在本示例里。不要同时引入 `<DeckGL>` 再 `new Deck`。与 MapLibre 叠加时相机只能有一个所有者，且该路径当前没有挂载。
+三目标：basic真实GPU点/Tooltip/拾取和DOM选择；business同Deck同layer id过滤与半径trigger更新；advanced1204样本/903健康点、全量12行分页/重置/响应式/finalize。数据为本地确定性fixture，不是性能测量。选择只显示在DOM，没做GPU选中色。
 
-## 版本
+迁移example.tsx、deck-data.ts、deck-layer.ts、deck-size.ts、styles.css；demo仅适配。经纬度顺序[lng,lat]，radiusUnits=pixels，shader最终半径4..28；CPU accessor max(5,sqrt(volume)*radius)。图层id固定library-sites，半径updateTriggers.getRadius，数据不可变。表格分页不改变图层数组，过滤和重置回首页、缩小时页码夹取；隐藏选择清空。
 
-钉 core 与 layers 9.4.0。图层 id 为 `library-sites`。`getPosition` 使用 `[longitude, latitude]`。`radiusUnits: 'pixels'`。生产保持 WebGL2；WebGPU 另做试验。未依赖 `@deck.gl/react` 或 `@deck.gl/maplibre`。
+ready只由真实onLoad设置，构造返回不当GPU就绪；WebGL设备由SDK实际创建，不另建探测上下文。onError原样显示，不使用假GPU。onAfterRender读取当前匹配Layer getNumInstances/isLoaded/instanceRadius实际属性和Viewport.project；签名不变不setState。不在render回调调用pickObject引发递归拾取绘制。
 
-## 迁移
+RO+rAF尺寸1..4096、非正跳过、相同尺寸不写。cleanup disposed/observer/frame/finalize/ref由当前组件拥有，SDK释放自己的资源，不清全局Device。构造/初始化迟到回调都查disposed。与MapLibre组合并未实现，camera/controller须单一所有者。
 
-从 React 包装迁到独立 Deck 时，卸载改为 `finalize`。从米制半径迁到像素半径后重新检查缩放。随机 id 改成稳定 id。选中色若进入 accessor，补 `updateTriggers`。接 MapLibre 时去掉 Deck 的 `controller`，只在 `load` 之后添加一次 overlay。
+观察a17-workshop data-ready/count/picked；a17-canvas真实Canvas、a17-radius/status/error/sdk-state（展开“查看真实图层、属性和投影”），a17-table tr data-site-id，a17-page。snapshot含initialized/layerId/instances/layerLoaded/width/height/radiusValues/points。instances不是视口可见点数或显存，project是SDK投影。分页上一页/下一页、原半径/健康/1200开关、重置数据保留；表格按钮“选择”加名称。
 
-## 不可删的清理
+Node SDK2仅真实Layer描述符和Viewport，无GPU；政策6仅尺寸/fixture/分页。validation/browser-proposal.txt供主控接真实e2e，不mock GPU或用截图代替拾取。formal sdk/build/browser保持NOT_RUN，触控/读屏/大规模性能未测。
 
-探测用的 WebGL2 上下文在创建 Deck 前 `loseContext`。cleanup 断开 ResizeObserver、取消 rAF、`deck.finalize()`。非正尺寸不 `setProps`，边长不超过 4096。tooltip 返回纯字符串或 null。
-
-## 反例
-
-```tsx
-return () => { node.hidden = true; }; // 错：上下文还在
-deck.finalize(); // 对
-```
-
-`[latitude, longitude]`、原地修改同一 data 引用、高密度却只提供 12 行还声称全量可访问，都不要做。
-
-## 测试断言
-
-`measuredDeckSize` 拒绝 0 和非有限值，并封顶 4096。`needsDeckResize` 在任一边变化时为真。SDK 收据还要看到真实 `Deck`、`ScatterplotLayer`、`setProps` 和 `finalize`。没有 runs 收据则为 NOT_RUN。
-
-## 真实限制
-
-没有底图、overlay、分页和网络取消。表格固定前 12 行，1200 点时其余点只在 GPU 层。picking 在高密度下仍然开启。极地投影没有样本。没有显存或 FPS 数字。`controller: true` 只适用于这块独立画布。
-
-## 断言边界
-
-`tests/deck-size.test.mts` 只夹尺寸。SDK 用例要 `import { Deck } from '@deck.gl/core'` 和 `ScatterplotLayer`，断言 layer id 稳定、`setProps` 不新增 Deck、卸载调用 `finalize`。探测上下文应先 lose。缺收据时保持 NOT_RUN。卸载调用 `finalize`。表格只有前 12 行，不能把它写成全量分页。半径单位是像素，不是米。
-
-## 证据
-
-Actions `41779873259` 的仓库级 install、typecheck、build、52 SDK 文件（153 测试）和 45 Playwright 不是 A17 PASS。不要把尺寸测试或历史研究 PASS 写入 `verification.json`。
-
-对照 `library.json` 的版本编写 import，不要升到条目未钉死的版本。
-`tests/` 中的策略用例不能改写成 sdk 字段的 PASS。
-浏览器与构建未留下收据时，对应字段维持 NOT_RUN。
+官方9.4.0固定提交5eded84b438eef83387dc6579c51670389053602，primary是core包109字节英文README指引，另存layers/项目原文；完整候选无中文，精确hash/path/time在source-audit.json。官网200无XFO/CSP、未iframe确认，unknown。完整六项/cwd/command/exit见local-validation。

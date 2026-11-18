@@ -1,0 +1,68 @@
+.b15-workshop {
+  min-width: 0;
+}
+.b15-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+.b15-controls label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.b15-container {
+  min-height: 270px;
+  min-width: 0;
+  background: #f2f7f1;
+  border-radius: 8px;
+  padding: 0;
+}
+.b15-card {
+  box-sizing: border-box;
+  border-radius: 9px;
+  background: #fff;
+  border: 1px solid #c4d8c7;
+  padding: 12px;
+  overflow: auto;
+}
+.b15-workshop .lab-grid-handle {
+  cursor: default;
+  font-weight: 650;
+  border-bottom: 1px solid #e5eae4;
+  padding-bottom: 7px;
+}
+.b15-workshop .lab-grid-handle[data-movable="true"] {
+  cursor: grab;
+}
+.b15-cell-info {
+  font-size: 12px;
+  margin: 8px 0;
+}
+.b15-cell-controls {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.b15-cell-controls button {
+  font-size: 12px;
+  padding: 3px 5px;
+}
+.b15-workshop button:focus-visible,
+.b15-workshop select:focus-visible {
+  outline: 3px solid #326dcc;
+  outline-offset: 2px;
+}
+.b15-workshop pre {
+  max-height: 22rem;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+@media (prefers-reduced-motion: reduce) {
+  .b15-workshop .react-grid-item {
+    transition: none;
+  }
+}

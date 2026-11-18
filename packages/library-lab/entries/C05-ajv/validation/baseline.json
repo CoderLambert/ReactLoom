@@ -1,0 +1,16 @@
+{
+  "files": {
+    "AGENTS.md": "0b78412e6f6a637239aef6879ca73437df496b2f4e7b26fd5fba94a9e42a5bda",
+    "library.json": "39a8cdd7f363c63396f188e1c99e2883c9854ce2f7f814f6d3f0703b72730f3c",
+    "verification.json": "51232d2567fa0e58faa159f8eeb82ab0fb4c53e4511cf26d98cac633179da2b7",
+    "agent.md": "badc59afe4bc2c3cdd548cb3d5ad575892fdf75c8631a00a4a854535518f4dbb",
+    "guide.md": "72c85f3190df3589d3d25d6562aef803d8f5703ea63cbf426570487da90f5935",
+    "examples/demo.tsx": "254591932548c36c414610bd0d0c7ce7ef1648162f1996fbbe7381b8c1751690",
+    "examples/example.tsx": "c0390e6d1dc71356a65ba0ffcfe02008f3a5631c052b8cac47993f885d9e37bf",
+    "examples/rss-policy.d.mts": "bcbc013cb502a3b55192039f388070261e7cc65143862902836ebd27783f42fb",
+    "examples/rss-policy.mjs": "0f2c791da89e07e6379a468e79be972322c832e3d2835d168e8a0aa946a9b383",
+    "tests/rss-policy.test.mjs": "0f68dd5120a1f92bb47a31ddfa60fdb5328537ab2c627d66a510d690547d0d4b",
+    "tests/sdk.test.mjs": "46043eabde7b90752a2fc93b6ad4baf2cbe84f03bea1924893511bedfb58ee27"
+  },
+  "preserve": "Existing HTTPS schema/canonical URL boundary and strict conditional contract; only actual shared implementation used for SDK tests."
+}

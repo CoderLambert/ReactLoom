@@ -1,0 +1,33 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['pnpm', 'exec', 'playwright', 'test', '--config=.local-evidence/quality-playwright.config.ts', 'e2e/quality-remediation-virtuoso.spec.ts', '--grep', '@C09 advanced', '--trace=on', '--reporter=line', '--output=entries/C09-react-virtuoso/validation/candidate16-repeat-artifacts', '--workers=1', '--repeat-each=5']
+startedAt: 2026-11-10T16:17:15.728179+00:00
+exit: 0
+
+Running 5 tests using 1 worker
+
+
+
+[1/5] e2e/quality-remediation-virtuoso.spec.ts:152:1 › @C09 advanced: true prepend anchor, ID expansion measurement and conditional bottom follow
+
+
+[2/5] e2e/quality-remediation-virtuoso.spec.ts:152:1 › @C09 advanced: true prepend anchor, ID expansion measurement and conditional bottom follow
+
+
+[3/5] e2e/quality-remediation-virtuoso.spec.ts:152:1 › @C09 advanced: true prepend anchor, ID expansion measurement and conditional bottom follow
+
+
+[4/5] e2e/quality-remediation-virtuoso.spec.ts:152:1 › @C09 advanced: true prepend anchor, ID expansion measurement and conditional bottom follow
+
+
+[5/5] e2e/quality-remediation-virtuoso.spec.ts:152:1 › @C09 advanced: true prepend anchor, ID expansion measurement and conditional bottom follow
+  5 passed (12.8s)
+(node:1998354) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1998546) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1998837) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1999008) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1999213) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)

@@ -1,0 +1,23 @@
+[WebServer] (node:2333435) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:2333447) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 10 tests using 2 workers
+
+(node:2333533) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2333534) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 e2e/quality-resume-hls.spec.ts:120:1 › @E17 explicitly injected fatal uses actual SDK event and destroys owned engine (1.8s)
+  ✓   3 e2e/quality-resume-hls.spec.ts:153:1 › @E17 blocked network creates actual loader fatal, then a fresh session recovers (1.7s)
+  ✓   4 e2e/quality-resume-official-e17-f01.spec.ts:8:3 › @E17 pinned official original and honest homepage fallback (1.9s)
+  ✓   5 e2e/quality-resume-official-e17-f01.spec.ts:8:3 › @E18 pinned official original and honest homepage fallback (1.8s)
+  ✓   6 e2e/quality-resume-official-e17-f01.spec.ts:8:3 › @F01 pinned official original and honest homepage fallback (1.7s)
+  ✓   2 e2e/quality-resume-hls.spec.ts:26:1 › @E17 opt-in actual public HLS decoding, requested quality and stop (10.6s)
+  ✓   7 e2e/quality-resume-uppy.spec.ts:9:1 › @F01 real Uppy add/remove/restrictions and DataTransfer drop stay local (2.1s)
+  ✓   8 e2e/quality-resume-uppy.spec.ts:79:1 › @F01 bounded preview rejects bytes/UTF8/control input and ignores late reads (2.4s)
+  ✓   9 e2e/quality-resume-wavesurfer.spec.ts:71:1 › @E18 actual decode/play/seek/rate/visible zoom and native cleanup (2.5s)
+  ✓  10 e2e/quality-resume-wavesurfer.spec.ts:147:1 › @E18 controlled held blob loader observes actual SDK abort and URL cleanup (2.0s)
+
+  10 passed (15.9s)

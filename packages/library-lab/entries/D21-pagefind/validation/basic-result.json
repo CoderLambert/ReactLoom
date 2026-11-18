@@ -1,0 +1,127 @@
+{
+  "level": "basic",
+  "indexer": "pagefind Node API",
+  "submittedRecords": 2,
+  "fileCount": 16,
+  "bundleBytes": 645963,
+  "assets": [
+    {
+      "path": "fragment/en_334c8fa.pf_fragment",
+      "bytes": 166,
+      "sha256": "1a347902c7c08f45fc8d8ded3bc37f1b218a2cf33fc01385f9a0a06901f968c3"
+    },
+    {
+      "path": "fragment/en_bf16eab.pf_fragment",
+      "bytes": 168,
+      "sha256": "5a58c92f2816edd933d31f50d99414b4e5cebfc7d7a90f85008b8688f936fb9e"
+    },
+    {
+      "path": "index/en_e3d95fc.pf_index",
+      "bytes": 215,
+      "sha256": "4f2c5a18246f74164f448f249aab0f91f122cd772695c8475ced7182e6361be5"
+    },
+    {
+      "path": "pagefind-component-ui.css",
+      "bytes": 41830,
+      "sha256": "de389c7e5d87d6e2b10d65fb1e36e8989a12a2ad8dd6239b7e070d81fb5d8b0d"
+    },
+    {
+      "path": "pagefind-component-ui.js",
+      "bytes": 175488,
+      "sha256": "958620129dd14bd851805daeb12ce708bd63b9287325d1d5ae6f73a04d1723f8"
+    },
+    {
+      "path": "pagefind-entry.json",
+      "bytes": 171,
+      "sha256": "fcd01c60463cbaa721cc801c929636dead1ada3b1727ea5a5bcd96695aaf5c7c"
+    },
+    {
+      "path": "pagefind-highlight.js",
+      "bytes": 44352,
+      "sha256": "04741266a86911636cefc41c8b407e380dda99b7d208724f700f94cdf57e37b5"
+    },
+    {
+      "path": "pagefind-modular-ui.css",
+      "bytes": 7336,
+      "sha256": "653ab29e4de5629f6ddf5f6fcdf5d2b3eb539a8c07fff8a56b8ce2156a570788"
+    },
+    {
+      "path": "pagefind-modular-ui.js",
+      "bytes": 14634,
+      "sha256": "f3efa0f74b305ccab0bc9edc7c09ab69867180b4c43093d84bb9b508ac4ec32c"
+    },
+    {
+      "path": "pagefind-ui.css",
+      "bytes": 14482,
+      "sha256": "e113b816110ed07b017613e901addfe635350f2a5b84990aa76c91a74b158084"
+    },
+    {
+      "path": "pagefind-ui.js",
+      "bytes": 119987,
+      "sha256": "2efa93f2e80a199ca742a69bd4cfffabc5c591ebe7763f64f7c655fd00d2209f"
+    },
+    {
+      "path": "pagefind-worker.js",
+      "bytes": 41255,
+      "sha256": "4ca50d25bcab9e1c3afbc00ab5f7761114e83c8fc1b83d38655af1558b650c2a"
+    },
+    {
+      "path": "pagefind.en_f7215c4464.pf_meta",
+      "bytes": 91,
+      "sha256": "6b46bf5b814ecb85c247a809f8658c9e06097c1b9187e2ae7e2eafd20e9fce98"
+    },
+    {
+      "path": "pagefind.js",
+      "bytes": 45555,
+      "sha256": "252d272bd34d483d19a752060f6a065114d15ab12c42d8f905ca565e2768a009"
+    },
+    {
+      "path": "wasm.en.pagefind",
+      "bytes": 72209,
+      "sha256": "bb16c9e6d3d214d4d05cccca51df7b487b86b3657318da767f6ca9e0a2e7259d"
+    },
+    {
+      "path": "wasm.unknown.pagefind",
+      "bytes": 68024,
+      "sha256": "3a74cefceacd066e8d3bc8c52e7bc1c869544ca3d9031b44a9b7136356d5d7f4"
+    }
+  ],
+  "indexedDocuments": [
+    {
+      "url": "/articles/react-suspense/",
+      "meta": {
+        "title": "React Suspense"
+      }
+    },
+    {
+      "url": "/articles/cache-design/",
+      "meta": {
+        "title": "Cache ownership"
+      }
+    }
+  ],
+  "directoryPages": 0,
+  "memoryFileCount": 16,
+  "memoryBundleBytes": 645963,
+  "paths": [
+    "fragment/en_334c8fa.pf_fragment",
+    "fragment/en_bf16eab.pf_fragment",
+    "index/en_e3d95fc.pf_index",
+    "pagefind-component-ui.css",
+    "pagefind-component-ui.js",
+    "pagefind-entry.json",
+    "pagefind-highlight.js",
+    "pagefind-modular-ui.css",
+    "pagefind-modular-ui.js",
+    "pagefind-ui.css",
+    "pagefind-ui.js",
+    "pagefind-worker.js",
+    "pagefind.en_f7215c4464.pf_meta",
+    "pagefind.js",
+    "wasm.en.pagefind",
+    "wasm.unknown.pagefind"
+  ],
+  "wroteActualBundle": true,
+  "outputDirectory": "/tmp/reactloom-pagefind-Q2wN7l/out/pagefind",
+  "visitorSearchExecuted": false
+}

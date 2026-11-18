@@ -1,0 +1,24 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+ARGV: ["pnpm", "test:sdk", "--entry=B02"]
+START: 2026-11-10T12:41:21.552275+00:00
+END: 2026-11-10T12:41:21.988253+00:00
+EXIT: 0
+STDOUT:
+
+> @reactloom/library-lab@0.1.0 test:sdk /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+> node scripts/sdk-runner.mjs --entry=B02
+
+Real SDK suites selected: 1 file(s)
+✔ real paused fromTo maps linear time and context.revert restores original object properties (1.687132ms)
+✔ real power2.out maps 50 percent time to 52.5 of the 60px distance (0.415033ms)
+✔ real timeline has shared labels, overlapping children, reversible direction and scoped cleanup (1.7169ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 192.200625
+
+STDERR:

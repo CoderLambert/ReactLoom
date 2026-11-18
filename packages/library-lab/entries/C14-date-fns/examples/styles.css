@@ -1,0 +1,32 @@
+.c14-workshop {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.c14-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-block: 0.75rem;
+}
+.c14-workshop input,
+.c14-workshop select {
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: 100%;
+  padding: 0.4rem;
+}
+.c14-instant {
+  display: block;
+  width: 100%;
+}
+.c14-workshop pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  overflow: auto;
+  max-height: 30rem;
+}
+.c14-workshop :is(input, select, button):focus-visible {
+  outline: 3px solid #326dcc;
+  outline-offset: 2px;
+}

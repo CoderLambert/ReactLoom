@@ -1,0 +1,19 @@
+{
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "argv": [
+    "pnpm",
+    "--filter",
+    "@reactloom/library-lab",
+    "exec",
+    "biome",
+    "check",
+    "--write",
+    "entries/E07-remark/examples",
+    "entries/E07-remark/tests",
+    "entries/E07-remark/library.json",
+    "entries/E07-remark/verification.json",
+    "entries/E07-remark/validation/browser.spec.ts"
+  ],
+  "exitCode": 1,
+  "at": "2026-11-17T17:33:29.174084+00:00"
+}

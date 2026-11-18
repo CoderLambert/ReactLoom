@@ -1,0 +1,23 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab", "argv": ["pnpm", "test:policy", "--entry=B15"], "start": "2026-11-10T14:02:47.678834+00:00", "end": "2026-11-10T14:02:48.009626+00:00", "exitCode": 0}
+STDOUT
+
+> @reactloom/library-lab@0.1.0 test:policy /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+> node scripts/policy-runner.mjs --entry=B15
+
+Pure entry policy suites selected: 1 (not SDK evidence)
+✔ uses independent stacked narrow geometry without modifying wide (0.860598ms)
+✔ projects oversized saved geometry into columns safely (0.186494ms)
+✔ ignores runtime static flags when comparing persisted geometry (0.128004ms)
+✔ wide keyboard cannot exceed bounds or move locked item (0.136678ms)
+✔ narrow keyboard rearranges only adjacent unlocked tiles (0.127757ms)
+✔ resizing observes maxW, minW and lock (0.122099ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 79.26863
+
+STDERR

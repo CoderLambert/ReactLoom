@@ -1,0 +1,20 @@
+{
+  "examples/example.tsx": "a1cf26eb432bfcc82f8a585d4a02f47785c2ff51aed3d78a33e4f25a7431ccd2",
+  "examples/tanstack-adapter.tsx": "b20023030d12b8ef72d6bb845d068eebf86f49a33f8dffae3c67db11fd91dc85",
+  "examples/query-contract.mjs": "99cef6f85e3370d1a0260abe4bd23080c4be02ce3366f14907f8aab620c8a6f1",
+  "examples/query-contract.d.mts": "8cecc886538593b51793eef6beb71fe6f88e3c6de92b526bc9890fc545a2d2c9",
+  "examples/url-policy.mjs": "72efc511cd6da0a96a0357f4c1b4501efcb006081e2c44f3f5c5d890939082dd",
+  "examples/url-policy.d.mts": "65839ab91072fe9da71524fc575c54ab2848322161d227018542c779ba6bcb85",
+  "examples/styles.css": "4390f2c796fdc7a3255b86de478e9fce6aa15d30cdaa35a8be28d1c829b42aa6",
+  "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+  "AGENTS.md": "2ac3622bf78d7199f4cf84095ee0fef44bebc7d68a1d0bab8760fa2bec29dce0",
+  "guide.md": "f00336b41cdf328cc44bde201b54d2f1a05a3114cda97a6189c845117d9fdcff",
+  "agent.md": "0452fa6a93b56f0ec06325afd33badf1f9f6f0a107436bcc74d1381093959060",
+  "library.json": "cc3cce54db58cd40dd4da45125d16cecca9f788ec51301ca1d587e6f65617856",
+  "verification.json": "611bca5188adec75363392545a428dbfc8380ba5e1ac961b07e2e6360c099f6d",
+  "tests/sdk.test.mjs": "499d07e0bf56c7597360663057e3193075bf27c908dee816f1a42f9d823841e4",
+  "tests/url-policy.test.mjs": "e04baa51950dcf84f850b7b7ad17e928204909f044961d69ce150923d8dc038d",
+  "official/readme.md": "de5eb7cbf51d0a8c0eecd79146a7e61e6dadfbd0132f3f26a73f91fa569d66eb",
+  "official/source-evidence.json": "ff4b83c78617741bbd92418f36e60b28788493990eade5d363dadab1ecade51c",
+  "validation/browser-proposal.txt": "fd637a0295a996fe308490ea47abceea48a8e8922497aef7c6b205dc1ba66bb9"
+}

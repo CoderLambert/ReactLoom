@@ -1,0 +1,344 @@
+{
+  "modules": [
+    {
+      "source": "advanced/src/first.js",
+      "dependencies": [
+        {
+          "module": "./second.js",
+          "moduleSystem": "es6",
+          "dynamic": false,
+          "exoticallyRequired": false,
+          "dependencyTypes": [
+            "local",
+            "import"
+          ],
+          "resolved": "advanced/src/second.js",
+          "coreModule": false,
+          "followable": true,
+          "couldNotResolve": false,
+          "matchesDoNotFollow": false,
+          "circular": true,
+          "cycle": [
+            {
+              "name": "advanced/src/second.js",
+              "dependencyTypes": [
+                "local",
+                "import"
+              ]
+            },
+            {
+              "name": "advanced/src/first.js",
+              "dependencyTypes": [
+                "local",
+                "import"
+              ]
+            }
+          ],
+          "valid": false,
+          "rules": [
+            {
+              "severity": "error",
+              "name": "no-circular-dependencies"
+            }
+          ]
+        }
+      ],
+      "dependents": [
+        "advanced/src/second.js"
+      ],
+      "orphan": false,
+      "valid": true
+    },
+    {
+      "source": "advanced/src/second.js",
+      "dependencies": [
+        {
+          "module": "./first.js",
+          "moduleSystem": "es6",
+          "dynamic": false,
+          "exoticallyRequired": false,
+          "dependencyTypes": [
+            "local",
+            "import"
+          ],
+          "resolved": "advanced/src/first.js",
+          "coreModule": false,
+          "followable": true,
+          "couldNotResolve": false,
+          "matchesDoNotFollow": false,
+          "circular": true,
+          "cycle": [
+            {
+              "name": "advanced/src/first.js",
+              "dependencyTypes": [
+                "local",
+                "import"
+              ]
+            },
+            {
+              "name": "advanced/src/second.js",
+              "dependencyTypes": [
+                "local",
+                "import"
+              ]
+            }
+          ],
+          "valid": false,
+          "rules": [
+            {
+              "severity": "error",
+              "name": "no-circular-dependencies"
+            }
+          ]
+        }
+      ],
+      "dependents": [
+        "advanced/src/first.js"
+      ],
+      "orphan": false,
+      "valid": true
+    }
+  ],
+  "summary": {
+    "violations": [
+      {
+        "type": "cycle",
+        "from": "advanced/src/first.js",
+        "to": "advanced/src/second.js",
+        "unresolvedTo": "./second.js",
+        "dependencyTypes": [
+          "local",
+          "import"
+        ],
+        "rule": {
+          "severity": "error",
+          "name": "no-circular-dependencies"
+        },
+        "cycle": [
+          {
+            "name": "advanced/src/second.js",
+            "dependencyTypes": [
+              "local",
+              "import"
+            ]
+          },
+          {
+            "name": "advanced/src/first.js",
+            "dependencyTypes": [
+              "local",
+              "import"
+            ]
+          }
+        ]
+      }
+    ],
+    "error": 1,
+    "warn": 0,
+    "info": 0,
+    "ignore": 0,
+    "advisedExitCode": 1,
+    "totalCruised": 2,
+    "totalDependenciesCruised": 2,
+    "optionsUsed": {
+      "baseDir": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/F16-dependency-cruiser/examples/workspace",
+      "combinedDependencies": false,
+      "detectImportsInAmbientModules": false,
+      "detectJSDocImports": false,
+      "detectProcessBuiltinModuleCalls": false,
+      "doNotFollow": {
+        "path": "node_modules"
+      },
+      "exclude": {
+        "path": "node_modules"
+      },
+      "exoticRequireStrings": [],
+      "externalModuleResolutionStrategy": "node_modules",
+      "metrics": false,
+      "moduleSystems": [
+        "es6",
+        "cjs",
+        "tsd",
+        "amd"
+      ],
+      "outputTo": "-",
+      "outputType": "json",
+      "preserveSymlinks": false,
+      "rulesFile": "config.cjs",
+      "skipAnalysisNotInRules": false,
+      "tsPreCompilationDeps": false,
+      "args": "advanced/src"
+    },
+    "ruleSetUsed": {
+      "forbidden": [
+        {
+          "name": "domain-must-not-import-ui",
+          "comment": "领域层不应反向引用表示层",
+          "severity": "error",
+          "from": {
+            "path": "(^|/)domain/"
+          },
+          "to": {
+            "path": "(^|/)ui/"
+          },
+          "scope": "module"
+        },
+        {
+          "name": "no-circular-dependencies",
+          "comment": "循环依赖会使模块初始化难以推理",
+          "severity": "error",
+          "from": {},
+          "to": {
+            "circular": true
+          },
+          "scope": "module"
+        }
+      ]
+    },
+    "environment": {
+      "version": "18.5.0",
+      "nodeVersionSupported": "^22||^24||>=26",
+      "nodeVersionFound": "v26.13.1",
+      "osVersionFound": "x64 linux@7.2.5-3-omarchy",
+      "transpilersFound": [
+        {
+          "name": "javascript",
+          "version": "*",
+          "available": true,
+          "currentVersion": "acorn@8.18.0"
+        },
+        {
+          "name": "babel",
+          "version": ">=7.0.0 <8.0.0",
+          "available": true,
+          "currentVersion": "@babel/core@7.29.7"
+        },
+        {
+          "name": "coffee-script",
+          "version": ">=1.0.0 <2.0.0",
+          "available": false,
+          "currentVersion": "-"
+        },
+        {
+          "name": "coffeescript",
+          "version": ">=1.0.0 <3.0.0",
+          "available": false,
+          "currentVersion": "-"
+        },
+        {
+          "name": "livescript",
+          "version": ">=1.0.0 <2.0.0",
+          "available": false,
+          "currentVersion": "-"
+        },
+        {
+          "name": "svelte",
+          "version": ">=3.0.0 <6.0.0",
+          "available": false,
+          "currentVersion": "-"
+        },
+        {
+          "name": "swc",
+          "version": ">=1.0.0 <2.0.0",
+          "available": false,
+          "currentVersion": "-"
+        },
+        {
+          "name": "typescript",
+          "version": ">=2.0.0 <7.0.0",
+          "available": false,
+          "currentVersion": "-"
+        },
+        {
+          "name": "vue-template-compiler",
+          "version": ">=2.0.0 <3.0.0",
+          "available": false,
+          "currentVersion": "-"
+        },
+        {
+          "name": "@vue/compiler-sfc",
+          "version": ">=3.0.0 <4.0.0",
+          "available": false,
+          "currentVersion": "-"
+        }
+      ],
+      "extensionsFound": [
+        {
+          "extension": ".js",
+          "available": true
+        },
+        {
+          "extension": ".cjs",
+          "available": true
+        },
+        {
+          "extension": ".mjs",
+          "available": true
+        },
+        {
+          "extension": ".jsx",
+          "available": true
+        },
+        {
+          "extension": ".ts",
+          "available": false
+        },
+        {
+          "extension": ".tsx",
+          "available": false
+        },
+        {
+          "extension": ".d.ts",
+          "available": false
+        },
+        {
+          "extension": ".cts",
+          "available": false
+        },
+        {
+          "extension": ".d.cts",
+          "available": false
+        },
+        {
+          "extension": ".mts",
+          "available": false
+        },
+        {
+          "extension": ".d.mts",
+          "available": false
+        },
+        {
+          "extension": ".vue",
+          "available": false
+        },
+        {
+          "extension": ".svelte",
+          "available": false
+        },
+        {
+          "extension": ".ls",
+          "available": false
+        },
+        {
+          "extension": ".coffee",
+          "available": false
+        },
+        {
+          "extension": ".litcoffee",
+          "available": false
+        },
+        {
+          "extension": ".coffee.md",
+          "available": false
+        },
+        {
+          "extension": ".csx",
+          "available": false
+        },
+        {
+          "extension": ".cjsx",
+          "available": false
+        }
+      ]
+    }
+  }
+}

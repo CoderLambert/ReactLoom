@@ -1,0 +1,6 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+argv=python packages/library-lab/entries/C02-zod/validation/fetch-official.py
+stdout=gitHead None
+error=AssertionError: Need fixed matching tag
+exit=1
+Resolved next by actual git ls-remote --tags https://github.com/colinhacks/zod.git *4.6.5* => 59bbc03e10c636b9eb3c393dfeb552819774ec21 refs/tags/v4.6.5, exit0

@@ -1,15 +1,15 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "已提交真实 SDK imports，但依赖/锁文件与运行环境由 PLATFORM 集成后验证。"
+    "note": "本地sdk证据见local-validation.md及candidate-30；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
   },
   "build": {
     "status": "NOT_RUN",
-    "note": "根 pnpm-lock.yaml 已包含 Library Lab importer，声明的包可以被冻结安装解析。Actions run 41779873259 的仓库级 typecheck/build 不是本条目的 evidence/runs 收据，所以这里是 NOT_RUN，不是 PASS。"
+    "note": "本地build证据见local-validation.md及candidate-30；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "需要真实 Chromium 验证动态加载、卸载及键盘/IME/语法显示。"
+    "note": "本地browser证据见local-validation.md及candidate-30；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
   },
   "security": {
     "status": "NOT_RUN",

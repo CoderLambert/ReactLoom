@@ -1,14 +1,14 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "真实目标SDK源码已编写，未执行runtime验收"
+    "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B14.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
   },
   "build": {
     "status": "NOT_RUN",
-    "note": "缺本通道完整pnpm依赖解析与tsc/build报告"
+    "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B14.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "未运行浏览器交互与资源清理E2E"
+    "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B14.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
   }
 }

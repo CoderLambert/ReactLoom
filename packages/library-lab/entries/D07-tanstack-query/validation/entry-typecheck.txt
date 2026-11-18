@@ -1,0 +1,6 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: ["pnpm", "exec", "tsc", "--ignoreConfig", "--noEmit", "--module", "ESNext", "--moduleResolution", "Bundler", "--target", "ES2022", "--jsx", "react-jsx", "--strict", "--skipLibCheck", "--esModuleInterop", "--allowImportingTsExtensions", "--types", "vite/client,node", "entries/D07-tanstack-query/examples/demo.tsx"]
+startedAt: 2026-11-10T09:59:40.145147+00:00
+
+exitCode: 0
+finishedAt: 2026-11-10T09:59:40.399584+00:00

@@ -1,47 +1,25 @@
-# C13 Frappe Gantt — 工程手册
+# C13 Frappe Gantt 工程入口
 
-## 适用
+实际 frappe-gantt1.2.2/MIT；少量任务/依赖时间线，语义表格编辑。不是React原生组件、日历、关键路径或项目后端。先读guide、实际examples和verification；contentState=recreated与原恢复事实保留，不继承历史PASS。
 
-少量任务的只读时间线图，外加一张真正可编辑的表。不要把它当成日历、关键路径引擎或可在主 React 树里随便挂卸的组件。
+三个目标：basic隔离真实SVG/箭头与D/W/M；business表格草稿保存→权威快照/revision→真实refresh，过滤仅表格；advanced非法输入/依赖环/本地409不写权威数据，重置/离开销毁会话文档。
 
-## 版本
+不可移除的边界：
 
-`frappe-gantt@1.2.2`，MIT。CSS 不走未声明的 dist 子路径。弹层关闭，条只读。
+- 1.2.2没有destroy/dispose，document mouseup闭包不能靠replaceChildren释放。既有4321独立文档一个new Gantt，后续refresh/change_view_mode；父级移除整份frame。alive防动态import晚到，不能改成主文档普通react挂卸或重放构造。
+- origin/source/session/协议/UUID/sandbox和服务端allowlist属Lab自建runner，不是SDK。保留browser-frame、demoId/level和空capabilities；不跨界改公共runner。
+- SDK修改descriptor；toChartTasks复制并只转义图表name的尖括号/与号/引号。popup:false不净化bar标签，SDK标签仍走innerHTML；权威name保持纯文本。示例“需求评审 <草稿> & 确认”应图/表一致，无新增SVG子元素。
+- ID限制ASCII字母数字开头、共1–64位字母/数字/_/-，排除Object.prototype保留名，避免SDK空格归一化碰撞/普通对象prototype键。
+- 日期0101-01-01…9998-12-31、全计划UTC日跨度<=730。关闭infinite_padding，只开放D/W/M；旧0100输入padding可到0099、后续add映射1999，真实SDK配方已复现；新两端本地年100–101/9998–9999。不是UTC渲染或SDK全视图保证。
+- validatePlan整份计划先于state/refresh，保留Kahn环检测/有限进度/空值NaN/未知依赖。图永远拿完整计划，表格过滤不破坏依赖。
+- 表格是uncontrolled未保存草稿；拒绝/409后草稿保留，权威tasks/快照/图不变，不能说表自动回原值。接受才revision++。本地409无HTTP或服务器revision，不自动重试。
 
-## 迁移
+迁移六sourceFiles及同版本SDK基础CSS。gantt.css是局部覆盖，基础CSS另需自有文档入口import与Vite alias（guide提供实际解析配置）。frappe-gantt.d.ts为有限自建类型，不是官方声明；不import未公开dist CSS子路径。生产必须自有隔离文档/生命周期与可信父子消息，六文件不等于完整宿主工程。不要照README片段写tasks.append/tasks.refresh，1.2.2实际用chart.refresh(tasks)。
 
-带走 `examples/example.tsx`、`examples/plan-policy.mjs` 和 runner 对 4321 文档的约束。业务项目若没有专用 iframe，就要自己保证一份 document 只构造一次，并在离开时丢掉整份 document。不要只调用 `replaceChildren`。用 API client 替换模拟 409。过滤继续只作用于表。
+精确控件保留：时间尺度、过滤表格任务、各任务名+开始日期/结束日期/进度、行内“保存”、“模拟依赖闭环（不保存）”；父页启停/重置归平台。新增c13-workshop data-level/revision、c13-status、c13-plan权威JSON。真实图仍svg.gantt/.bar-wrapper[data-id]/.bar-progress，不手改SVG模拟保存。
 
-## 不可删的清理
+断言：尺度切换不加document mouseup、父页无图；进度60→真实条宽比.6且权威快照一致；过滤表一行/图三条；拒绝/409输入草稿保留、快照/条不变；旧frame与CDPcontext销毁而非只少一个SVG。现有公共5case可复用，新增标签与快照断言见validation/browser-proposal.txt。Enter有isComposing guard，真实OS输入法未验证。
 
-构造函数只在挂载 effect 里跑一次。任务变化用 `refresh`，视图变化用 `change_view_mode`。传入副本。`validatePlan` 失败时不 `setState` 也不 `refresh`。卸载标志 `alive` 必须阻止动态 import 返回后的构造。停止会话时销毁 iframe。
+固定官方README15874B，commit4c82fccce9bf4237ded41680869529cea4385a90，SHA6f8ef7a60672fbcdb9aafc9920cf64789e118d8f56d5ab1855a7d9553253fc46；真实树仅英文README.md，npm gitHead/manifest1.2.2一致。官网完整GET XFO SAMEORIGIN→blocked，未读正文。
 
-## 反例
-
-```tsx
-new Gantt(el, tasks) // 每次 tasks 变化都新实例
-<GanttCanvas tasks={shown} /> // 过滤子集破坏依赖
-```
-
-- `popup` 渲染不可信名称。
-- 直接修改 React state 里的任务对象再交给库。
-- 空进度变成 0。
-- 年份 0000–0099 交给 SDK 的 Date 构造。
-- 依赖成环仍保存。
-- 把主应用卸载当成 `mouseup` 已释放。
-
-## 测试断言
-
-- 结束早于开始、非有限进度、重复 id、自依赖、未知依赖、环，都返回错误字符串。
-- 跨度超过 730 个 UTC 日失败。
-- 年份小于 `0100-01-01` 失败。
-- 合法的三项种子计划返回 null。
-- 策略单测没有打开 4321，也没有构造 Gantt。
-
-## 真实限制
-
-409 是本地分支，不是 HTTP。没有时区时刻，只有日历日。没有公开 destroy。监听器是否在真实 Chromium 里不增长，要看 browser 收据。演示跨度上限不是产品合同。
-
-## 证据
-
-没有收据不要写 PASS。Actions 41779873259 不是本条目。不要改 `verification.json`。
+Node真实SDK4仅任务/日期配方，无DOM构造/画图/监听通过；policy有效13与SDK分开。formal三项NOT_RUN，真实5case由root对匹配候选执行。实际命令、一次731天测试fixture失败及单case修正、六项/剩余见local-validation.md。

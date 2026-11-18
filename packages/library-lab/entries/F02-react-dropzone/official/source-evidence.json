@@ -1,0 +1,37 @@
+{
+  "repository": "react-dropzone/react-dropzone",
+  "tag": "v20.1.4",
+  "commit": "b9a3e10cee6b15b6850e240caac94be80f5c7e0d",
+  "readmeCandidates": [
+    "README.md"
+  ],
+  "selection": "Pinned root official English, no Chinese README in fixed tree.",
+  "license": {
+    "version": "20.1.4",
+    "license": "MIT"
+  },
+  "homepage": {
+    "url": "https://react-dropzone.js.org/",
+    "status": 200,
+    "headers": {
+      "accept-ranges": "bytes",
+      "age": "7537",
+      "cache-control": "public,max-age=0,must-revalidate",
+      "cache-status": "\"Netlify Edge\"; hit; ttl=31528464",
+      "cf-cache-status": "DYNAMIC",
+      "cf-ray": "a5c0cb0afce7a08f-SIN",
+      "content-encoding": "br",
+      "content-length": "5111",
+      "content-type": "text/html; charset=UTF-8",
+      "date": "Tue, 17 Nov 2026 18:28:05 GMT",
+      "etag": "W/\"96c96880c885f2b813ec7acb4d1f47e0-ssl\"",
+      "nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+      "report-to": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=aDfIe1tcI5fU9ftOdrTfybJX8ZsODzUqztwVqOxu7OQcHj6T45r7%2ByKSaVjy3a%2BxO491yZAoBQIiZj3Drr%2F7OpBNROS5B8TEPIMx%2FIGD14phOUuZbrzgJLjIIsEsgEBWU3BaZK1ZWg%3D%3D\"}]}",
+      "server": "cloudflare",
+      "vary": "Accept-Encoding",
+      "x-nf-request-id": "01M7NC88RCEK1E1WNH5FM00RS5"
+    },
+    "bodySha256": "33efa6b49ef96f47085fa75af752134fbeae3ab1c865bd9bf4d40105614b438f"
+  },
+  "checkedAt": "2026-11-17T18:28:05.382Z"
+}

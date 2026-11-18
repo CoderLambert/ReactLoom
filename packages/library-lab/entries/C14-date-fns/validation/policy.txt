@@ -1,0 +1,15 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['pnpm', 'exec', 'node', '--test', 'entries/C14-date-fns/tests/instant-policy.test.mjs']
+startedAt: 2026-11-10T17:02:09.918742+00:00
+exit: 0
+✔ two fall-back offsets are accepted as distinct explicit instants (0.624125ms)
+✔ leap calendar dates and maximum UTC offset (0.098077ms)
+✔ rejects missing offsets, unknown offset, overflow and missing clock (3.638162ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 42.953532

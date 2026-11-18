@@ -1,0 +1,23 @@
+{
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "argv": [
+    "pnpm",
+    "--filter",
+    "@reactloom/library-lab",
+    "exec",
+    "tsc",
+    "-p",
+    "/tmp/f06-copy-t5zoex00/tsconfig.json"
+  ],
+  "exitCode": 0,
+  "copiedFiles": [
+    "example.tsx",
+    "fixture.ts",
+    "render-gate.mjs",
+    "render-gate.d.mts",
+    "render-budget.mjs",
+    "render-budget.d.mts"
+  ],
+  "temporaryProject": "/tmp/f06-copy-t5zoex00",
+  "output": "strict-copy.log"
+}

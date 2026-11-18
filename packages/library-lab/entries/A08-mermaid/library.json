@@ -5,13 +5,7 @@
   "name": "Mermaid",
   "group": "A",
   "summary": "将受控 Mermaid DSL 编译成流程图、时序图和状态图",
-  "tags": [
-    "Mermaid",
-    "diagram",
-    "flowchart",
-    "sequence",
-    "安全边界"
-  ],
+  "tags": ["Mermaid", "diagram", "flowchart", "sequence", "安全边界"],
   "contentState": "recreated",
   "packages": [
     {
@@ -48,57 +42,51 @@
   "demos": [
     {
       "demoId": "basic",
-      "title": "数据处理流程",
-      "description": "预设的 flowchart DSL 经 Mermaid.parse/render 得到图形。",
+      "title": "从流程描述到可视分支",
+      "description": "切换去重开关，观察同一可信业务模型生成的DSL与真实SVG同时变化。",
       "level": "basic",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
         "examples/render-queue.ts",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/diagram-source.ts",
+        "examples/workshop.css"
       ],
-      "capabilities": [
-        "svg",
-        "iframe-sandbox",
-        "diagram"
-      ]
+      "capabilities": ["svg", "iframe-sandbox", "diagram"]
     },
     {
       "demoId": "business",
-      "title": "系统时序",
-      "description": "切换到前端→API→Worker 的预定义 sequenceDiagram。",
+      "title": "请求时序与缓存路径",
+      "description": "比较API→Worker往返与缓存命中的真实sequenceDiagram，区分消息语义与业务执行。",
       "level": "business",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
         "examples/render-queue.ts",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/diagram-source.ts",
+        "examples/workshop.css"
       ],
-      "capabilities": [
-        "svg",
-        "iframe-sandbox",
-        "diagram"
-      ]
+      "capabilities": ["svg", "iframe-sandbox", "diagram"]
     },
     {
       "demoId": "advanced",
-      "title": "状态与错误回退",
-      "description": "stateDiagram-v2 与刻意的非法 DSL 切换，展示解析失败及恢复。",
+      "title": "失败、恢复与渲染所有权",
+      "description": "真实解析失败移除旧图，恢复后重新生成，观察串行队列与卸载边界。",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
         "examples/render-queue.ts",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/diagram-source.ts",
+        "examples/workshop.css"
       ],
-      "capabilities": [
-        "svg",
-        "iframe-sandbox",
-        "diagram"
-      ]
+      "capabilities": ["svg", "iframe-sandbox", "diagram"]
     }
   ],
   "provenance": {
@@ -108,5 +96,25 @@
   "license": {
     "spdx": "MIT",
     "assets": "本地生成的确定性数据；不打包第三方商业媒体。"
+  },
+  "official": {
+    "readme": {
+      "repository": "mermaid-js/mermaid",
+      "commit": "1fb7869866dd619168d840291c9c54b4f129758b",
+      "path": "README.zh-CN.md",
+      "sourceUrl": "https://github.com/mermaid-js/mermaid/blob/1fb7869866dd619168d840291c9c54b4f129758b/README.zh-CN.md",
+      "snapshotPath": "official/readme.md",
+      "language": "zh-CN",
+      "version": "12.2.0",
+      "sha256": "2713af51940f7d1df7de75fa0ad30ac5a46620913f1185f26b0408bfb4a81040",
+      "syncedAt": "2026-11-10T11:30:51.109547+00:00"
+    },
+    "homepage": {
+      "url": "https://mermaid.ai/open-source/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-10T11:30:52.750204+00:00",
+      "reason": "已实际GET官方文档入口，完整最终URL与响应头见official/source-evidence.json；未从Lab origin确认iframe内容，保持未知和直达，不依据load或超时推断成功。"
+    }
   }
 }

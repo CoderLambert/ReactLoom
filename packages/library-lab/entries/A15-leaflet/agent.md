@@ -1,46 +1,27 @@
-# A15 Leaflet — 工程手册
+# A15 Leaflet 1.9.4 工程入口
 
-## 适用
+用于少量经纬度点、HTML弹窗与DOM/SVG覆盖物；矢量瓦片看A16，GPU点层看A17。实际包leaflet1.9.4（BSD-2-Clause）、类型@types/leaflet1.9.22；不要套官网默认2.0预览API。固定1.9.4文档/源码来源在library.json。
 
-`leaflet@1.9.4` 做少量 `[latitude, longitude]` 点和 circleMarker。不要加载未授权瓦片。矢量样式用 A16，GPU 点层用 A17。示意经纬线不是行政底图。
+## 实际模型
 
-## 版本
+React拥有地点/过滤/选中及表格；map-controller独占Map容器。七个sourceFiles含必要数据、纯策略、CSS和真实控制器。引入leaflet/dist/leaflet.css，正常打包器处理包内图片路径；不复制瓦片，不与react-leaflet同时占有同一容器。Leaflet顶层导入需要window，SSR改客户端动态加载。
 
-钉 1.9.4，并引入 `leaflet/dist/leaflet.css`。`attributionControl: false` 只因为没有第三方图层。`scrollWheelZoom` 关闭，避免抢走页面滚动。坐标进 Leaflet 前从 GeoJSON 的 `[lng, lat]` 转换。
+- basic：3点，真实getLatLng/toGeoJSON/latLngToContainerPoint对照。Leaflet[lat,lng]，GeoJSON[lng,lat]；CircleMarker.radius为像素，Circle的地理半径为米。真实点点击和表格定位均选中并开安全DOM弹窗。
+- business：过滤3→2，可见id映射复用CircleMarker；选择只setRadius/setStyle，移动setLatLng，不清整组。退出点off/unbindPopup/removeLayer；重新显示时新建，未承诺退出后身份不变。selectedVisibleId原回落策略保留；不因过滤fitBounds。
+- advanced：坐标+.25并夹到±85/±180；拒绝非有限输入。site-N最多40个额外点，删除恢复容量，新序号不复用。空态；实际窄容器invalidateSize、显式重建及remove。
 
-## 迁移
+网格是原创示意，没有底图/行政边界、瓦片/GPS/地理编码服务或HTTP业务查询。online/paused是fixture状态，不是在线检测。0个TileLayer getter不替代浏览器网络验收。默认Chromium的Path使用SVG，本例未启用preferCanvas或WebGL。
 
-DOM id 初始化改成 ref + effect + `map.remove`。默认 Marker 图标改成 circleMarker，或显式 `L.icon`。弹窗从 HTML 字符串改成 `textContent`。视域查询把跨日期变更线当成 `west > east` 的并集，而不是非法框。声明式 `react-leaflet` 与手写 Map 二选一。
+## 所有权
 
-## 不可删的清理
+单实例创建Map、静态网格Group、业务Group和id→marker Map；同一专属mount只归一个所有者。监听moveend/zoomend/resize/popupopen/close用于读取真实getter；ResizeObserver+rAF调用invalidateSize。过滤/选择不重置相机，初始与显式定位全部才fitBounds。
 
-`ResizeObserver` 断开，rAF 取消，`group.clearLayers()`，`map.remove()`。尺寸变化调用 `invalidateSize({ pan: false })`。筛选改变选中时用 `selectedVisibleId` 回落到仍可见的点。额外站点不超过 40 个。纬度夹在 ±85，经度夹在 ±180。
+dispose先断开观察器/rAF、off本例Map事件、清每点click/Popup、Group，再map.remove，最后detach mount；实际unload计数与remove后自建marker仅供观察，不能当全量原生资源验收。清理幂等，异常不伪造成功。关闭惯性/zoom动画，程序定位非动画；原生键盘pan仍可能短暂过渡。
 
-## 反例
+getBounds经度可超±180；1.9.4的LatLngBounds按min/max扩展，不要声称地图跨线必然west>east。服务查询需另行归一化/拆分；本例未实现。
 
-```tsx
-if (ref.current) L.map(ref.current); // 错：render 中重复初始化
-marker.bindPopup('<b>' + name + '</b>'); // 错：HTML 注入
-```
+## 验收与来源
 
-把 `[lng,lat]` 直接交给 `L.circleMarker`、筛选时 `fitBounds`、只 `abort` 不挡旧响应，都不要做。
+控件/testid/真实getter字段和三目标见guide及validation/browser-proposal.txt。重点实际点点击弹窗保留、稳定layerId/退出、选中回落且相机不乱跳、真实setLatLng、容量边界、RO尺寸与旧Map unload/remove/DOM清空。没有SDK mock、伪DOM或SKIP占位。
 
-## 测试断言
-
-`shiftLocation` 拒绝非有限增量并夹取世界范围。`canAddLocalLocation` 只数 `site-N`。`makeLocalLocation` 拒绝非正整数序号。SDK 收据还要看到真实 `L.map`、无网络瓦片、卸载后容器可再次初始化。没有 runs 收据则为 NOT_RUN。
-
-## 真实限制
-
-没有瓦片、moveend、HTTP 或输入法。图层在数据变化时整组重建。定位动画关闭。40 与城市 fixture 不是测量结果。`preferCanvas` 未开启，也不应被写成性能开关。
-
-## 断言边界
-
-`tests/location-policy.test.mts` 与 `tests/station-factory.test.mts` 不创建地图。SDK 用例要 `import * as L from 'leaflet'`，确认没有 `tileLayer` 请求，`map.remove()` 之后同一节点可以再初始化。弹窗内容来自 `textContent`。缺收据时保持 NOT_RUN。弹窗使用 DOM `textContent`。没有瓦片图层，因此不要发明 OSM 署名，也不要发起瓦片请求。
-
-## 证据
-
-Actions `41779873259` 的仓库级 install、typecheck、build、52 SDK 文件（153 测试）和 45 Playwright 不是 A15 PASS。不要把坐标测试或历史研究 PASS 写入 `verification.json`。
-
-对照 `library.json` 的版本编写 import，不要升到条目未钉死的版本。
-`tests/` 中的策略用例不能改写成 sdk 字段的 PASS。
-浏览器与构建未留下收据时，对应字段维持 NOT_RUN。
+Node真实import因window undefined退出1；policy7PASS只证明本地策略，不记SDK地图PASS。局部类型/格式/metadata和所有实际日志见local-validation；真实浏览器及正式verification仍NOT_RUN。原README英文3952B，固定commitd15112c9e8ac339f0f74f563959d0423d291308d、版本1.9.4，完整tree无中文候选。官网urllib/curl TLS失败，没有HTTP头，不得写“无XFO/CSP所以允许”；状态unknown，保留直达和真实失败证据。

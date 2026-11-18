@@ -1,0 +1,23 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: pnpm exec biome check entries/B09-shadcn-ui/tests/sdk.test.mjs
+exit: 1
+
+entries/B09-shadcn-ui/tests/sdk.test.mjs format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Formatter would have printed the following content:
+  
+    14 14 │     fileURLToPath(buttonUrl),
+    15 15 │     {
+    16    │ - ··jsx:·{·runtime:·'automatic'·},
+       16 │ + ····jsx:·{·runtime:·'automatic'·},
+    17 17 │     },
+    18 18 │   )
+  
+
+Checked 1 file in 4ms. No fixes applied.
+Found 1 error.
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while running checks.
+  
+

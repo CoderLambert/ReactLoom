@@ -1,0 +1,15 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv=["node", "--test", "entries/A13-threejs/tests/sdk.test.mjs"]
+start=2026-11-10T12:08:23.379494+00:00
+end=2026-11-10T12:08:23.482578+00:00
+exit=0
+✔ real geometry attributes change from box to sphere, disposal is an actual SDK event (2.160688ms)
+✔ real camera projection and shared material stay independent of geometry replacement (1.2388ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 80.560525

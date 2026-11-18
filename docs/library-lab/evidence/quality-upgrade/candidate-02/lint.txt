@@ -1,0 +1,433 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+command=pnpm --filter @reactloom/library-lab lint
+
+> @reactloom/library-lab@0.1.0 lint /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+> biome check src scripts tests e2e runners package.json tsconfig.json vite.config.ts playwright.config.ts
+
+e2e/repair.spec.ts:49:28 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    47 │     const inspector = await context.newPage()
+    48 │     try {
+  > 49 │       await inspector.goto(RUNNER + '/lab-runners/msw/')
+       │                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    50 │       await expect
+    51 │         .poll(() =>
+  
+  i Unsafe fix: Use a template literal.
+  
+     47  47 │       const inspector = await context.newPage()
+     48  48 │       try {
+     49     │ - ······await·inspector.goto(RUNNER·+·'/lab-runners/msw/')
+         49 │ + ······await·inspector.goto(`${RUNNER}/lab-runners/msw/`)
+     50  50 │         await expect
+     51  51 │           .poll(() =>
+  
+
+e2e/repair.spec.ts:88:26 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    86 │       secondScope = await openScenario(second, 'business')
+    87 │     expect(firstScope).not.toBe(secondScope)
+  > 88 │     await inspector.goto(RUNNER + '/lab-runners/msw/')
+       │                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    89 │     await page.getByRole('tab', { name: '详细文档' }).click()
+    90 │     await expect
+  
+  i Unsafe fix: Use a template literal.
+  
+     86  86 │         secondScope = await openScenario(second, 'business')
+     87  87 │       expect(firstScope).not.toBe(secondScope)
+     88     │ - ····await·inspector.goto(RUNNER·+·'/lab-runners/msw/')
+         88 │ + ····await·inspector.goto(`${RUNNER}/lab-runners/msw/`)
+     89  89 │       await page.getByRole('tab', { name: '详细文档' }).click()
+     90  90 │       await expect
+  
+
+scripts/ci-scope.mjs:44:19 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    42 │       ].includes(file)
+    43 │     )
+  > 44 │       return full('Shared execution input changed: ' + file)
+       │                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    45 │   }
+    46 │   return {
+  
+  i Unsafe fix: Use a template literal.
+  
+    42 42 │         ].includes(file)
+    43 43 │       )
+    44    │ - ······return·full('Shared·execution·input·changed:·'·+·file)
+       44 │ + ······return·full(`Shared·execution·input·changed:·${file}`)
+    45 45 │     }
+    46 46 │     return {
+  
+
+scripts/ci-scope.mjs:78:34 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    76 │     )
+    77 │   } catch {}
+  > 78 │   writeFileSync('ci-scope.json', JSON.stringify(plan, null, 2) + '\n')
+       │                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    79 │   if (process.env.GITHUB_OUTPUT)
+    80 │     appendFileSync(
+  
+  i Unsafe fix: Use a template literal.
+  
+    76 76 │       )
+    77 77 │     } catch {}
+    78    │ - ··writeFileSync('ci-scope.json',·JSON.stringify(plan,·null,·2)·+·'\n')
+       78 │ + ··writeFileSync('ci-scope.json',·`${JSON.stringify(plan,·null,·2)}\n`)
+    79 79 │     if (process.env.GITHUB_OUTPUT)
+    80 80 │       appendFileSync(
+  
+
+scripts/policy-runner.mjs:38:21 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    36 │         )
+    37 │         .sort((a, b) => a.name.localeCompare(b.name))) {
+  > 38 │         result.push('entries/' + dir.name + '/' + sub + '/' + file.name)
+       │                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    39 │       }
+    40 │     }
+  
+  i Unsafe fix: Use a template literal.
+  
+     36  36 │           )
+     37  37 │           .sort((a, b) => a.name.localeCompare(b.name))) {
+     38     │ - ········result.push('entries/'·+·dir.name·+·'/'·+·sub·+·'/'·+·file.name)
+         38 │ + ········result.push(`entries/${dir.name}/${sub}/${file.name}`)
+     39  39 │         }
+     40  40 │       }
+  
+
+scripts/policy-runner.mjs:63:41 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    61 │     const found = new Set(selected.map((file) => entryPath.exec(file)[1]))
+    62 │     const missing = entries.filter((id) => !found.has(id))
+  > 63 │     if (missing.length) throw new Error('No policy suite for: ' + missing.join(', '))
+       │                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    64 │   }
+    65 │   if (!selected.length) throw new Error('No matching policy suites (this is not SDK verification).')
+  
+  i Unsafe fix: Use a template literal.
+  
+     61  61 │       const found = new Set(selected.map((file) => entryPath.exec(file)[1]))
+     62  62 │       const missing = entries.filter((id) => !found.has(id))
+     63     │ - ····if·(missing.length)·throw·new·Error('No·policy·suite·for:·'·+·missing.join(',·'))
+         63 │ + ····if·(missing.length)·throw·new·Error(`No·policy·suite·for:·${missing.join(',·')}`)
+     64  64 │     }
+     65  65 │     if (!selected.length) throw new Error('No matching policy suites (this is not SDK verification).')
+  
+
+scripts/policy-runner.mjs:143:15 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    141 │     list = selector.list
+    142 │   }
+  > 143 │   console.log('Pure entry policy suites selected: ' + files.length + ' (not SDK evidence)')
+        │               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    144 │   if (list) console.log(files.join('\n'))
+    145 │   else if (files.length) {
+  
+  i Unsafe fix: Use a template literal.
+  
+    141 141 │       list = selector.list
+    142 142 │     }
+    143     │ - ··console.log('Pure·entry·policy·suites·selected:·'·+·files.length·+·'·(not·SDK·evidence)')
+        143 │ + ··console.log(`Pure·entry·policy·suites·selected:·${files.length}·(not·SDK·evidence)`)
+    144 144 │     if (list) console.log(files.join('\n'))
+    145 145 │     else if (files.length) {
+  
+
+scripts/prepare-ffmpeg-core.mjs:58:23 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    56 │     const stat = await lstat(full)
+    57 │     if (!stat.isFile() || stat.isSymbolicLink() || stat.size > 100_000_000 || stat.size === 0)
+  > 58 │       throw new Error('Missing or unsafe FFmpeg core asset: ' + filename)
+       │                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    59 │     const data = await readFile(full)
+    60 │     contents.push({ filename, data, sha256: createHash('sha256').update(data).digest('hex') })
+  
+  i Unsafe fix: Use a template literal.
+  
+    56 56 │       const stat = await lstat(full)
+    57 57 │       if (!stat.isFile() || stat.isSymbolicLink() || stat.size > 100_000_000 || stat.size === 0)
+    58    │ - ······throw·new·Error('Missing·or·unsafe·FFmpeg·core·asset:·'·+·filename)
+       58 │ + ······throw·new·Error(`Missing·or·unsafe·FFmpeg·core·asset:·${filename}`)
+    59 59 │       const data = await readFile(full)
+    60 60 │       contents.push({ filename, data, sha256: createHash('sha256').update(data).digest('hex') })
+  
+
+scripts/prepare-ffmpeg-core.mjs:76:46 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    74 │       })),
+    75 │     }
+  > 76 │     await writeFile(path.join(temp, MARKER), JSON.stringify(stageManifest, null, 2) + '\n')
+       │                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    77 │     await removeGenerated(destination)
+    78 │     await rename(temp, destination)
+  
+  i Unsafe fix: Use a template literal.
+  
+    74 74 │         })),
+    75 75 │       }
+    76    │ - ····await·writeFile(path.join(temp,·MARKER),·JSON.stringify(stageManifest,·null,·2)·+·'\n')
+       76 │ + ····await·writeFile(path.join(temp,·MARKER),·`${JSON.stringify(stageManifest,·null,·2)}\n`)
+    77 77 │       await removeGenerated(destination)
+    78 78 │       await rename(temp, destination)
+  
+
+scripts/record-verification.mjs:69:19 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    67 │     throw new Error('Execution inputs changed during verification; receipt refused')
+    68 │   const prefix = `docs/library-lab/evidence/runs/${startedAt.replace(/[:.]/gu, '-')}-${options.entryId}-${options.kind}`
+  > 69 │   const logPath = prefix + '.log',
+       │                   ^^^^^^^^^^^^^^^
+    70 │     evidence = prefix + '.json'
+    71 │   const log = Buffer.from(
+  
+  i Unsafe fix: Use a template literal.
+  
+     67  67 │       throw new Error('Execution inputs changed during verification; receipt refused')
+     68  68 │     const prefix = `docs/library-lab/evidence/runs/${startedAt.replace(/[:.]/gu, '-')}-${options.entryId}-${options.kind}`
+     69     │ - ··const·logPath·=·prefix·+·'.log',
+         69 │ + ··const·logPath·=·`${prefix}.log`,
+     70  70 │       evidence = prefix + '.json'
+     71  71 │     const log = Buffer.from(
+  
+
+scripts/record-verification.mjs:70:16 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    68 │   const prefix = `docs/library-lab/evidence/runs/${startedAt.replace(/[:.]/gu, '-')}-${options.entryId}-${options.kind}`
+    69 │   const logPath = prefix + '.log',
+  > 70 │     evidence = prefix + '.json'
+       │                ^^^^^^^^^^^^^^^^
+    71 │   const log = Buffer.from(
+    72 │     `$ ${command.join(' ')}\n${response.stdout ?? ''}\n${response.stderr ?? ''}`,
+  
+  i Unsafe fix: Use a template literal.
+  
+     68  68 │     const prefix = `docs/library-lab/evidence/runs/${startedAt.replace(/[:.]/gu, '-')}-${options.entryId}-${options.kind}`
+     69  69 │     const logPath = prefix + '.log',
+     70     │ - ····evidence·=·prefix·+·'.json'
+         70 │ + ····evidence·=·`${prefix}.json`
+     71  71 │     const log = Buffer.from(
+     72  72 │       `$ ${command.join(' ')}\n${response.stdout ?? ''}\n${response.stderr ?? ''}`,
+  
+
+scripts/record-verification.mjs:93:17 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    91 │     log: { path: logPath, sha256: hash(log), bytes: log.length },
+    92 │   }
+  > 93 │   const bytes = JSON.stringify(receipt, null, 2) + '\n'
+       │                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    94 │   await writeFile(path.join(repo, evidence), bytes)
+    95 │   if (response.status !== 0) process.exitCode = response.status
+  
+  i Unsafe fix: Use a template literal.
+  
+     91  91 │       log: { path: logPath, sha256: hash(log), bytes: log.length },
+     92  92 │     }
+     93     │ - ··const·bytes·=·JSON.stringify(receipt,·null,·2)·+·'\n'
+         93 │ + ··const·bytes·=·`${JSON.stringify(receipt,·null,·2)}\n`
+     94  94 │     await writeFile(path.join(repo, evidence), bytes)
+     95  95 │     if (response.status !== 0) process.exitCode = response.status
+  
+
+scripts/root-catalog.mjs:16:11 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    14 │     group,
+    15 │     summary,
+  > 16 │     path: 'packages/library-lab/entries/' + directory,
+       │           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    17 │     contentState,
+    18 │   }))
+  
+  i Unsafe fix: Use a template literal.
+  
+     14  14 │       group,
+     15  15 │       summary,
+     16     │ - ····path:·'packages/library-lab/entries/'·+·directory,
+         16 │ + ····path:·`packages/library-lab/entries/${directory}`,
+     17  17 │       contentState,
+     18  18 │     }))
+  
+
+scripts/root-catalog.mjs:52:24 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    50 │     const found = byId.get(entry.entryId)
+    51 │     if (!found) {
+  > 52 │       differences.push('missing ' + entry.entryId)
+       │                        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    53 │       continue
+    54 │     }
+  
+  i Unsafe fix: Use a template literal.
+  
+     50  50 │       const found = byId.get(entry.entryId)
+     51  51 │       if (!found) {
+     52     │ - ······differences.push('missing·'·+·entry.entryId)
+         52 │ + ······differences.push(`missing·${entry.entryId}`)
+     53  53 │         continue
+     54  54 │       }
+  
+
+scripts/root-catalog.mjs:57:26 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    55 │     for (const key of Object.keys(entry))
+    56 │       if (found[key] !== entry[key]) {
+  > 57 │         differences.push(entry.entryId + ' ' + key + ' is out of date')
+       │                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    58 │         break
+    59 │       }
+  
+  i Unsafe fix: Use a template literal.
+  
+     55  55 │       for (const key of Object.keys(entry))
+     56  56 │         if (found[key] !== entry[key]) {
+     57     │ - ········differences.push(entry.entryId·+·'·'·+·key·+·'·is·out·of·date')
+         57 │ + ········differences.push(`${entry.entryId}·${key}·is·out·of·date`)
+     58  58 │           break
+     59  59 │         }
+  
+
+scripts/root-catalog.mjs:63:7 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    61 │   if (actualJson.length !== expected.length)
+    62 │     differences.push(
+  > 63 │       'expected ' + expected.length + ' catalogue entries; found ' + actualJson.length,
+       │       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    64 │     )
+    65 │   if (actualMarkdown !== rootCatalogMarkdown(entries))
+  
+  i Unsafe fix: Use a template literal.
+  
+     61  61 │     if (actualJson.length !== expected.length)
+     62  62 │       differences.push(
+     63     │ - ······'expected·'·+·expected.length·+·'·catalogue·entries;·found·'·+·actualJson.length,
+         63 │ + ······`expected·${expected.length}·catalogue·entries;·found·${actualJson.length}`,
+     64  64 │       )
+     65  65 │     if (actualMarkdown !== rootCatalogMarkdown(entries))
+  
+
+scripts/root-catalog.mjs:92:22 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    90 │     differences.push(
+    91 │       ...diffRootCatalog(entries, JSON.parse(committedJson), committedMarkdown).map(
+  > 92 │         (message) => 'HEAD: ' + message,
+       │                      ^^^^^^^^^^^^^^^^^^
+    93 │       ),
+    94 │     )
+  
+  i Unsafe fix: Use a template literal.
+  
+     90  90 │       differences.push(
+     91  91 │         ...diffRootCatalog(entries, JSON.parse(committedJson), committedMarkdown).map(
+     92     │ - ········(message)·=>·'HEAD:·'·+·message,
+         92 │ + ········(message)·=>·`HEAD:·${message}`,
+     93  93 │         ),
+     94  94 │       )
+  
+
+scripts/root-catalog.mjs:115:7 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    113 │   } else
+    114 │     console.log(
+  > 115 │       'Agent index matches ' + result.entries + ' entry manifests (SDK runtime NOT verified).',
+        │       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    116 │     )
+    117 │ }
+  
+  i Unsafe fix: Use a template literal.
+  
+    113 113 │     } else
+    114 114 │       console.log(
+    115     │ - ······'Agent·index·matches·'·+·result.entries·+·'·entry·manifests·(SDK·runtime·NOT·verified).',
+        115 │ + ······`Agent·index·matches·${result.entries}·entry·manifests·(SDK·runtime·NOT·verified).`,
+    116 116 │       )
+    117 117 │   }
+  
+
+scripts/verification-inputs.mjs:17:21 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    15 │   }
+    16 │   if (stat.isSymbolicLink())
+  > 17 │     throw new Error('Verification input must not be a symlink: ' + relative)
+       │                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    18 │   if (stat.isDirectory()) {
+    19 │     for (const name of (await readdir(full)).sort()) {
+  
+  i Unsafe fix: Use a template literal.
+  
+    15 15 │     }
+    16 16 │     if (stat.isSymbolicLink())
+    17    │ - ····throw·new·Error('Verification·input·must·not·be·a·symlink:·'·+·relative)
+       17 │ + ····throw·new·Error(`Verification·input·must·not·be·a·symlink:·${relative}`)
+    18 18 │     if (stat.isDirectory()) {
+    19 19 │       for (const name of (await readdir(full)).sort()) {
+  
+
+tests/worker-observation.test.mjs:41:70 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    39 │   let report = begin()
+    40 │   for (let i = 0; i < 42; i++)
+  > 41 │     report = observeWorkerReply(report, { type: 'progress', message: 'progress-' + i }, 1001 + i)
+       │                                                                      ^^^^^^^^^^^^^^^
+    42 │   assert.equal(report.log.length, 40)
+    43 │   const terminal = parseWorkerReply(
+  
+  i Unsafe fix: Use a template literal.
+  
+    39 39 │     let report = begin()
+    40 40 │     for (let i = 0; i < 42; i++)
+    41    │ - ····report·=·observeWorkerReply(report,·{·type:·'progress',·message:·'progress-'·+·i·},·1001·+·i)
+       41 │ + ····report·=·observeWorkerReply(report,·{·type:·'progress',·message:·`progress-${i}`·},·1001·+·i)
+    42 42 │     assert.equal(report.log.length, 40)
+    43 43 │     const terminal = parseWorkerReply(
+  
+
+The number of diagnostics exceeds the limit allowed. Use --max-diagnostics to increase it.
+Diagnostics not shown: 68.
+Checked 135 files in 28ms. No fixes applied.
+Found 11 warnings.
+Found 77 infos.
+
+exitCode=0

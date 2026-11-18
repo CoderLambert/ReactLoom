@@ -1,49 +1,64 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
-import {MessageChannel} from 'node:worker_threads';
-import * as Comlink from 'comlink';
-import nodeEndpoint from 'comlink/dist/esm/node-adapter.mjs';
-test('real Comlink proxies calls over actual MessagePorts',async()=>{
- const {port1,port2}=new MessageChannel();
- const endpoint1=nodeEndpoint(port1);
- const endpoint2=nodeEndpoint(port2);
- Comlink.expose({sum(a,b){return a+b;}},endpoint1);
- const remote=Comlink.wrap(endpoint2);
- try{
-  assert.equal(await remote.sum(4,9),13);
- }finally{
-  await remote[Comlink.releaseProxy]();
-  port1.close();port2.close();
- }
-});
-test('transfer helper registers real transferable for RPC',()=>{
- const array=new Uint8Array([1,2,3]);
- assert.equal(Comlink.transfer(array,[array.buffer]),array);
- assert.equal(typeof Comlink.releaseProxy,'symbol');
-});
+import assert from 'node:assert/strict'
+import test from 'node:test'
+import { Worker } from 'node:worker_threads'
+import * as Comlink from 'comlink'
+import nodeEndpoint from 'comlink/dist/esm/node-adapter.mjs'
 
-test('real Comlink transfers ownership and invokes proxied progress callback',async()=>{
- const {port1,port2}=new MessageChannel();
- Comlink.expose({
-  async aggregate(values,report){
-   const total=values.reduce((sum,value)=>sum+value,0);
-   await report(total);
-   return total;
+async function session(run) {
+  const worker = new Worker(new URL('./node-worker.mjs', import.meta.url))
+  const remote = Comlink.wrap(nodeEndpoint(worker))
+  try {
+    await run(remote)
+  } finally {
+    remote[Comlink.releaseProxy]()
+    const exit = await worker.terminate()
+    assert.equal(typeof exit, 'number')
   }
- },nodeEndpoint(port1));
- const remote=Comlink.wrap(nodeEndpoint(port2));
- const bytes=new Uint8Array([2,3,5]);
- const progress=[];
- try{
-  const answer=await remote.aggregate(
-   Comlink.transfer(bytes,[bytes.buffer]),
-   Comlink.proxy(value=>{progress.push(value);})
-  );
-  assert.equal(answer,10);
-  assert.equal(bytes.byteLength,0,'transfer must detach the original ArrayBuffer');
-  assert.deepEqual(progress,[10]);
- }finally{
-  await remote[Comlink.releaseProxy]();
-  port1.close();port2.close();
- }
-});
+}
+test(
+  'actual shared API runs in real Node Worker; special keys remain data',
+  { timeout: 5000 },
+  () =>
+    session(async (remote) => {
+      const result = await remote.summarize(['__proto__', 'constructor', '__proto__'])
+      assert.deepEqual(result, {
+        count: 3,
+        frequency: [
+          { value: '__proto__', count: 2 },
+          { value: 'constructor', count: 1 },
+        ],
+      })
+    }),
+)
+test('actual remote validation rejects, then the same endpoint recovers', { timeout: 5000 }, () =>
+  session(async (remote) => {
+    await assert.rejects(remote.summarize(['rss', 42]), /Expected at most/)
+    assert.equal((await remote.summarize(['rss'])).count, 1)
+    await assert.rejects(remote.sumBytes([1, 2]), /Expected Uint8Array/)
+  }),
+)
+test('actual Worker owns transferred buffer and calls real proxy in order', { timeout: 5000 }, () =>
+  session(async (remote) => {
+    const bytes = new Uint8Array([5, 10, 15, 20, 25])
+    assert.equal(await remote.sumBytes(Comlink.transfer(bytes, [bytes.buffer])), 75)
+    assert.equal(bytes.byteLength, 0)
+    const steps = []
+    assert.equal(
+      await remote.progress(
+        3,
+        Comlink.proxy(async (step) => {
+          steps.push(step)
+        }),
+      ),
+      3,
+    )
+    assert.deepEqual(steps, [1, 2, 3])
+    await assert.rejects(
+      remote.progress(
+        21,
+        Comlink.proxy(async () => {}),
+      ),
+      /1..20/,
+    )
+  }),
+)

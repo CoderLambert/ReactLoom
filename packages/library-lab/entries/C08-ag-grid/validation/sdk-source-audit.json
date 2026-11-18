@@ -1,0 +1,69 @@
+{
+  "packages": [
+    {
+      "name": "ag-grid-react",
+      "installedPath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/ag-grid-react@36.2.0_react-dom@19.3.0_react@19.3.0__react@19.3.0/node_modules/ag-grid-react",
+      "version": "36.2.0",
+      "license": "MIT",
+      "peerDependencies": {
+        "react": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0",
+        "react-dom": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0"
+      }
+    },
+    {
+      "name": "ag-grid-community",
+      "installedPath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/ag-grid-community@36.2.0/node_modules/ag-grid-community",
+      "version": "36.2.0",
+      "license": "MIT",
+      "peerDependencies": null
+    }
+  ],
+  "files": [
+    {
+      "package": "ag-grid-react",
+      "path": "package.json",
+      "bytes": 1969,
+      "sha256": "bf9ac5ae5c09696f94791fa17d56541051bd151a4aac69b8674f15850cc30ed7"
+    },
+    {
+      "package": "ag-grid-react",
+      "path": "dist/types/src/reactUi/agGridProvider.d.ts",
+      "bytes": 1382,
+      "sha256": "cdfe8495cf66e6ea9ae04c2f5d7e0aa5a3ff81a28933ed08efb0da80f784bf99"
+    },
+    {
+      "package": "ag-grid-community",
+      "path": "package.json",
+      "bytes": 5235,
+      "sha256": "b7c79601af0d6b00cb875fab7c6f0a2da8226447f755184857f6af99498e5c2e"
+    },
+    {
+      "package": "ag-grid-community",
+      "path": "dist/package/main.esm.mjs",
+      "bytes": 2431351,
+      "sha256": "28a3e6fbc4e8261e93679c7134f1593af49e625da21ff03143681fcb416772fe"
+    },
+    {
+      "package": "ag-grid-community",
+      "path": "dist/types/src/events.d.ts",
+      "bytes": 65548,
+      "sha256": "15593b8babc7c7d530ae16788124686ce268efecd72d049652b4b50a2a02f7b8"
+    },
+    {
+      "package": "ag-grid-community",
+      "path": "dist/types/src/api/gridApi.d.ts",
+      "bytes": 82445,
+      "sha256": "5c4eb885ad32b276cf01ce2612f9e5cc6435aa083882d92dd26e511c123d7dfd"
+    }
+  ],
+  "observations": {
+    "readOnlyEdit": "RowNode.setDataValue dispatches cellEditRequest with this.data (current submission data), never an edit-start revision snapshot.",
+    "order": "handleStopOrCancel invokes processEdits before strategy.stopCommitted/cleanup editors; app cellEditingStopped clears only after request. Browser event integration NOT_RUN.",
+    "nodeBoundary": "Only actual configuration/module/theme/adapter imports; no createGrid/DOM or fake browser."
+  },
+  "snippets": {
+    "request current data": "if (gos.get(\"readOnlyEdit\")) {\n      const {\n        beans: { eventSvc },\n        data,\n        rowIndex,\n        rowPinned\n      } = this;\n      eventSvc.dispatchEvent({\n        type: \"cellEditRequest\",\n        event: null,\n        rowIndex,\n        rowPinned,\n        column,\n        colDef: column.colDef,\n        data,\n        node: this,\n        oldValue,\n        newValue,\n        value: newValue,\n        source: eventSource\n      });\n      return false;\n    }\n    if (eventSource !== \"data\" && editSvc && !editSvc.committing) {\n      const result = editSvc.setDataValue({ rowNode: this, column }, newValue, eventSource);\n      if (result != null) {\n        return result;\n      }\n    }\n    const valueChanged = valueSvc.setValue(this, column, newValue, eventSource);\n    this.dispatchCellChangedEvent(column, newValue, oldValue);\n    if (valueChanged) {\n      this.pinnedSibling?.dispatchCellChangedEvent(column, newValue, oldValue);\n    }\n    return valueChanged;\n  }\n  getDataValue(colKey, ",
+    "stop order": "handleStopOrCancel(context, preflightValidationCache) {\n    const { model } = this;\n    const { cancel, commit, edits, event, forceCancel, source, willCancel, willStop } = context;\n    const { blockRejected, skipAllCommits, validationCache } = this.resolveStopValidation(\n      context,\n      preflightValidationCache\n    );\n    const persist = (!this.batch || !willCancel) && !blockRejected;\n    _syncFromEditors(\n      this.beans,\n      { persist, isCancelling: willCancel || cancel, isStopping: willStop },\n      validationCache\n    );\n    const freshEdits = model.getEditMapCopy();\n    const shouldCommit = !willCancel && (!this.batch || commit);\n    const editsToDelete = shouldCommit ? this.processEdits(freshEdits, source, skipAllCommits) : [];\n    if (cancel) {\n      this.strategy?.stopCancelled(forceCancel, validationCache);\n    } else if (!blockRejected) {\n      this.strategy?.stopCommitted(event, commit, validationCache);\n    }\n    this.cleanupAfterStop(edits, freshEdits, editsToDelete);\n    return { res: willStop && !blockRejected, edits: freshEdits };\n  }\n  resolveStopValidation(context, preflightValidationCache) {\n    const { beans, model } = this;\n    const { cancel, willCancel } = context;\n    const isApplyingEdits = !willCancel && !cancel;\n    let validationCache = preflightValidationCache;\n    if (isApplyingEdits) {\n      _flushEditors(beans);\n      validationCache ?? (validationCache = _populateModelValidationErrors(beans));\n    }\n    const decision = this.applyInvalidEditPolicy(context, isApplyingEdits, model.hasValidationErrors());\n    return { ...decision, validationCache };\n  }\n  applyInvalidEditPolicy(context, isApplyingEdits, hasValidationErrors) {\n    const { beans } = this;\n    const { commit, position, willStop } = context;\n    const blockInvalidCommit",
+    "editor picker": "var SelectCellEditor = class extends AgAbstractCellEditor {\n  constructor() {\n    super(SelectCellElement, [AgSelectSelector]);\n    this.eEditor = RefPlaceholder25;\n    this.startedByEnter = false;\n    /** Read off the widget, which falls back to `values[0]` when the stored value is not an option,\n     * so an untouched commit would write that option over it. */\n    this.seededValue = this;\n    /** Picking the fallback option leaves the widget on its seed, so equality alone cannot tell a\n     * deliberate choice from an untouched editor. */\n    this.picked = false;\n  }\n  wireBeans(beans) {\n    this.valueSvc = beans.valueSvc;\n  }\n  initialiseEditor(params) {\n    this.focusAfterAttached = params.cellStartedEdit;\n    const { eEditor, valueSvc, gos } = this;\n    const { values, value, eventKey } = params;\n    if (_missing9(values)) {\n      this.beans.log.warn(58);\n      return;\n    }\n    this.startedByEnter = eventKey != null ? eventKey === KeyCode20.ENTER : false;\n    let hasValue = false;\n    values.forEach((currentValue) => {\n      const option = { value: currentValue };\n      const valueFormatted = valueSvc.formatValue(params.column, null, currentValue);\n      const valueFormattedExits = valueFormatted !== null && valueFormatted !== void 0;\n      option.text = valueFormattedExits ? valueFormatted : currentValue;\n      eEditor.addOption(option);\n      hasValue = hasValue || value === currentValue;\n    });\n    if (hasValue) {\n      eEditor.setValue(params.value ?? void 0, true);\n    } else if (params.values.length) {\n      eEditor.setValue(params.values[0], true);\n    }\n    this.seededValue = eEditor.getValue();\n    const { valueListGap, valueListMaxWidth, valueListMaxHeight } = params;\n    if (valueListGap != null) {\n      eEditor.setPickerGap(valueListGap);\n    }\n    if (valueListMaxHeight != null) {\n      eEditor.setPickerMaxHeight(valueListMaxHeight);\n    }\n    if (valueListMaxWidth != null) {\n      eEditor.setPickerMaxWidth(valueListMaxWidth);\n    }\n    const stopsOnSelect = gos.get(\"editType\") !== \"fullRow\";\n    this.addManagedListeners(this.eEditor, {\n      selectedItem: (e) => {\n        this.picked = true;\n        if (stopsOnSelect) {\n          params.stopEditing(e.keyboardEvent == null, e.keyboardEvent);\n        }\n      }\n    });\n  }\n  afterGuiAttached() {\n    if (this.focusAfterAttached) {\n      this.eEditor.getFocusableElement().focus();\n    }\n    if (this.startedByEnter) {\n      setTimeout(() => {\n        if (this.isAlive()) {\n          this.eEditor.showPicker();\n        }\n      });\n    }\n  }\n  focusIn() {\n    this.eEditor.getFocusableElement().focus();\n  }\n  agSetEditValue(value) {\n    this.params.value = value;\n    this.eEditor.setValue(value ?? void 0, true);\n    this.seededValue = this.eEditor.getValue();\n    this.picked = false;\n  }\n  getValue() {\n    const value = this.eEditor.getValue();\n    return !this.picked && value === this.seededValue ? this.params.value : value;\n  }\n  isPopup() {\n    return false;\n  }\n  getValidationElement() {\n    return this.eEditor.getAriaElement();\n  }\n  getValidationErrors() {\n    const { params } = this;\n    const { values, getValidationErrors } = params;\n    const value = this.getValue();\n    let internalErrors = [];\n    if (values && value != null && !values.includes(value)) {\n      const translate = this.getLocaleTextFunc();\n      internalErrors.push(translate(\"invalidSelectionValidation\", \"Invalid selection.\"));\n    } else {\n      internalErrors = null;\n    }\n    if (getValidationErrors) {\n      return getValidationErrors({\n        value,\n        internalErrors,\n        cellEditorParams: params\n      });\n    }\n    return internalErrors;\n  }\n};\n\n// packages/ag-grid-community/src/edit/cellEditors/textCellEditor.ts\nimport { _exists as _exists20, _isBrowserSafari as _isBrowserSafari6, _isStringLargerThan as _isStringLargerThan2 } from \"ag-stack\";\nvar TextCellEditorElement = {\n  tag:"
+  }
+}

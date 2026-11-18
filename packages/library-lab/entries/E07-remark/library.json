@@ -5,14 +5,7 @@
   "name": "remark",
   "group": "E",
   "summary": "Markdown 结构化处理：真实 mdast 解析、GFM 规范化和危险链接审计",
-  "tags": [
-    "Markdown",
-    "AST",
-    "mdast",
-    "GFM",
-    "内容处理",
-    "静态分析"
-  ],
+  "tags": ["Markdown", "AST", "mdast", "GFM", "内容处理", "静态分析"],
   "contentState": "recreated",
   "packages": [
     {
@@ -63,15 +56,14 @@
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
-        "examples/audit-policy.mjs",
-        "examples/audit-policy.d.mts",
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/workshop.mjs",
+        "examples/workshop.d.mts",
+        "examples/audit-policy.mjs",
+        "examples/audit-policy.d.mts"
       ],
-      "capabilities": [
-        "text-transform",
-        "safe-preview"
-      ],
+      "capabilities": ["text-transform", "safe-preview"],
       "description": "结构解析与标题提取"
     },
     {
@@ -81,15 +73,14 @@
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
-        "examples/audit-policy.mjs",
-        "examples/audit-policy.d.mts",
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/workshop.mjs",
+        "examples/workshop.d.mts",
+        "examples/audit-policy.mjs",
+        "examples/audit-policy.d.mts"
       ],
-      "capabilities": [
-        "text-transform",
-        "safe-preview"
-      ],
+      "capabilities": ["text-transform", "safe-preview"],
       "description": "GFM 工程报告规范化"
     },
     {
@@ -99,17 +90,14 @@
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
-        "examples/audit-policy.mjs",
-        "examples/audit-policy.d.mts",
         "examples/example.tsx",
         "examples/demo.tsx",
-        "tests/node-scenarios.test.mjs",
-        "examples/audit-policy.test.mjs"
+        "examples/workshop.mjs",
+        "examples/workshop.d.mts",
+        "examples/audit-policy.mjs",
+        "examples/audit-policy.d.mts"
       ],
-      "capabilities": [
-        "text-transform",
-        "safe-preview"
-      ],
+      "capabilities": ["text-transform", "safe-preview"],
       "description": "不可信链接及 HTML 审计"
     }
   ],
@@ -120,5 +108,25 @@
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
     "note": "根据官方 remark API 重新编写；旧研究用于边界参考，运行结论重新验证。"
+  },
+  "official": {
+    "readme": {
+      "repository": "remarkjs/remark",
+      "commit": "5017a27db024db6feec85a3e1e19f8d78a485680",
+      "path": "packages/remark/readme.md",
+      "sourceUrl": "https://github.com/remarkjs/remark/blob/5017a27db024db6feec85a3e1e19f8d78a485680/packages/remark/readme.md",
+      "snapshotPath": "official/readme.md",
+      "sha256": "402ad63008fc82193d2409a2755c0c36eb5e15abd2032547dc0abb76247a0416",
+      "language": "en",
+      "version": "15.0.1",
+      "syncedAt": "2026-11-17T17:30:46.770510+00:00"
+    },
+    "homepage": {
+      "url": "https://remark.js.org/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-17T17:30:46.770510+00:00",
+      "reason": "实际响应头见official/homepage-headers.txt；没有Lab-origin浏览器内容确认，未标allowed。"
+    }
   }
 }

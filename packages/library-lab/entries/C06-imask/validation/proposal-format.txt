@@ -1,0 +1,5 @@
+{"label": "proposal-format", "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab", "argv": ["pnpm", "exec", "--", "biome", "check", "--write", "entries/C06-imask/validation/browser-proposal.check.ts"], "start": "2026-11-10T15:54:12.524705+00:00", "end": "2026-11-10T15:54:12.747004+00:00", "exitCode": 0, "log": "proposal-format.txt"}
+STDOUT
+Checked 1 file in 10ms. No fixes applied.
+
+STDERR

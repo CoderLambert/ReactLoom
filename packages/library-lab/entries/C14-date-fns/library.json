@@ -4,13 +4,8 @@
   "slug": "date-fns",
   "name": "date-fns",
   "group": "C",
-  "summary": "函数式日期、日历天与 DST 时区运算",
-  "tags": [
-    "日期",
-    "DST",
-    "IANA时区",
-    "排程"
-  ],
+  "summary": "同源日期合同：严格日历日、日历排程与明确偏移事件",
+  "tags": ["日期", "DST", "IANA时区", "排程"],
   "contentState": "recreated",
   "packages": [
     {
@@ -24,16 +19,16 @@
   ],
   "references": [
     {
-      "title": "date-fns 官方源码",
-      "url": "https://github.com/date-fns/date-fns"
+      "title": "date-fns 4.4.0官方原README（固定commit）",
+      "url": "https://github.com/date-fns/date-fns/blob/cd53d2538cfa318404eff7ade6449b49bf34562e/README.md"
     },
     {
-      "title": "时区扩展官方源码",
-      "url": "https://github.com/date-fns/tz"
+      "title": "@date-fns/tz 1.5.0官方原README（固定commit）",
+      "url": "https://github.com/date-fns/date-fns/blob/cd53d2538cfa318404eff7ade6449b49bf34562e/pkgs/tz/README.md"
     },
     {
-      "title": "v4 时区发布说明",
-      "url": "https://blog.date-fns.org/v40-with-time-zone-support/"
+      "title": "官方日期文档",
+      "url": "https://date-fns.org/"
     }
   ],
   "related": [
@@ -51,48 +46,54 @@
   "demos": [
     {
       "demoId": "basic",
-      "title": "严格校验日历日期",
+      "title": "严格日历日与目标时区",
       "level": "basic",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx",
+        "examples/date-contract.ts",
         "examples/instant-policy.mjs",
-        "examples/instant-policy.d.mts"
+        "examples/instant-policy.d.mts",
+        "examples/styles.css",
+        "examples/demo.tsx"
       ],
       "capabilities": [],
-      "description": "严格校验日历日期"
+      "description": "白名单时区中午构造/完整回读，严格拒绝进位和本例1901–9999范围外日期"
     },
     {
       "demoId": "business",
-      "title": "RSS排程（IANA时区）",
+      "title": "日历排程与经过小时",
       "level": "business",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx",
+        "examples/date-contract.ts",
         "examples/instant-policy.mjs",
-        "examples/instant-policy.d.mts"
+        "examples/instant-policy.d.mts",
+        "examples/styles.css",
+        "examples/demo.tsx"
       ],
       "capabilities": [],
-      "description": "RSS排程（IANA时区）"
+      "description": "真实addDays/in上下文并展示calendarDays与elapsedHours，范围1–14天"
     },
     {
       "demoId": "advanced",
-      "title": "DST 23/25 小时与回拨时间歧义",
+      "title": "DST与明确事件瞬间",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx",
+        "examples/date-contract.ts",
         "examples/instant-policy.mjs",
-        "examples/instant-policy.d.mts"
+        "examples/instant-policy.d.mts",
+        "examples/styles.css",
+        "examples/demo.tsx"
       ],
       "capabilities": [],
-      "description": "DST 23/25 小时与回拨时间歧义"
+      "description": "固定纽约春秋DST与有偏移instant对照，拒绝缺偏移/未知偏移"
     }
   ],
   "license": {
@@ -101,6 +102,26 @@
   },
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
-    "note": "基于官方API与研究包重新编写；历史测试状态不继承"
+    "note": "保留原恢复记录：基于官方API与研究包重建。保留三目标有效SDK逻辑，抽取UI/测试同源合同、独立instant输入、现代排程范围与重置；不继承历史PASS。"
+  },
+  "official": {
+    "readme": {
+      "repository": "date-fns/date-fns",
+      "commit": "cd53d2538cfa318404eff7ade6449b49bf34562e",
+      "path": "README.md",
+      "sourceUrl": "https://github.com/date-fns/date-fns/blob/cd53d2538cfa318404eff7ade6449b49bf34562e/README.md",
+      "snapshotPath": "official/readme.md",
+      "version": "4.4.0",
+      "language": "en",
+      "syncedAt": "2026-11-10T17:03:33.235450+00:00",
+      "sha256": "87237646806588ea43e8a7d4c13880d09b42b14ab0a4b0bbb944855f25b82232"
+    },
+    "homepage": {
+      "url": "https://date-fns.org/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-10T17:03:33.235193+00:00",
+      "reason": "实际GET最终响应200，完整响应头未含X-Frame-Options或Content-Security-Policy（字段null）；未从实际Lab origin浏览器确认嵌入，故unknown。官网正文NOT_READ，200不等于iframe允许。"
+    }
   }
 }

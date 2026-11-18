@@ -1,0 +1,5 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['pnpm', 'exec', '--', 'biome', 'check', '--write', 'entries/C15-dayjs/validation/platform-binding.json']
+startedAt: 2026-11-10T17:29:02.400631+00:00
+exit: 0
+Checked 1 file in 2ms. No fixes applied.

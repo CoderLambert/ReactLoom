@@ -1,0 +1,15 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["pnpm", "--dir", "packages/library-lab", "exec", "node", "--test", "entries/C19-nuqs/tests/sdk.test.mjs"], "utc": "2026-11-10T17:58:08.787502+00:00", "exit": 0}
+✔ nuqs real integer parser accepts and rejects URL input (0.449755ms)
+✔ nuqs real parsers preserve URL string semantics (0.085545ms)
+✔ nuqs real integer serialization is stable (0.069137ms)
+✔ real nuqs server parser feeds safely clamped URL view (0.184168ms)
+✔ page-shared actual nuqs loader applies defaults while preserving parser leniency for the business layer (11.955883ms)
+✔ page-shared actual nuqs serializer/loader roundtrip mapped keys and preserve host parameters/hash (0.534643ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 56.544506

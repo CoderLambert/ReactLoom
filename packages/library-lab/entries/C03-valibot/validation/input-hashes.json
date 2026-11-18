@@ -1,0 +1,23 @@
+{
+  "installed": {
+    "version": "1.4.2",
+    "packagePath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/valibot@1.4.2_typescript@7.0.2/node_modules/valibot/package.json"
+  },
+  "files": {
+    "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+    "examples/example.tsx": "af096f641967952e120ca7f9117b2b3074b040dc4c9af975facf162d2d723843",
+    "examples/schemas.ts": "061246da782ce92fce59bdb50c29f5787d052b35be6d8ba106c7d67d9ac78a21",
+    "examples/boundary-policy.mjs": "ded86200c8a71cd00ae3e891aa74e03bfba7e29a4b5057cd8af53c6f6619fd4a",
+    "examples/boundary-policy.d.mts": "8d9bbe7c141bdc2a6021c8b276e899060b2cf152e54ca5ecfbc106b13487ee7d",
+    "examples/styles.css": "df8fe33723d13ca930e5617006c9dd770b4594bd68297f4f019881540b246a56",
+    "tests/sdk.test.mjs": "bef57b20e307628031591c28c481511f8183b83663611600d9870a3c732e0659",
+    "tests/boundary-policy.test.mjs": "f6e5113d0683e4e5966e3c62be2e6a4eda0bb91b5eadd937d5338e8858342620",
+    "library.json": "b2ad7293a4841a08532da938bd4faff4f19fac2e051deacbff8cf9b4a3e5ed87",
+    "guide.md": "fd33575695ac63d09ed3295b5fe1ed69be83e84e915027d619f179f076ff5960",
+    "agent.md": "f0246ddc7323f6bb911fdd333088aba2771fd7776b312401e50730119569da85",
+    "verification.json": "d240551b4f6540600d9830fe4faa85bb43f2eb29060d4a2a4bbef9ed4e8c05c6",
+    "official/readme.md": "7046bda07a0b96c0c3cbdca00818eb0922eb9e18b5f27bddfe871b88f38f0dcb",
+    "official/source-evidence.json": "cb0669a570f64a614e6d33eea84af27971f651906b55ce6db1cfe40afa54aab2",
+    "validation/browser-proposal.txt": "ebdb8465ce7b91a87e3d2ab43aecdebc6e55f66dac321641a258484a525e73ed"
+  }
+}

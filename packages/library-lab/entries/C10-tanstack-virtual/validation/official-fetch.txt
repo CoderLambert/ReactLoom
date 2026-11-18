@@ -1,0 +1,2 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["python3", "packages/library-lab/entries/C10-tanstack-virtual/validation/fetch-official.py"], "utc": "2026-11-10T16:23:31.749928+00:00", "exit": 0}
+C10 README.md {'path': 'official/readme.md', 'bytes': 5226, 'sha256': '24bd3ff93da253313681dbe66adab7b012caca06f03edc516dfd875a1274ff00'} HTTP requests 7 homepage blocked

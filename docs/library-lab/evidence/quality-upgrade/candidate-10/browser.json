@@ -1,0 +1,23 @@
+{
+  "command": [
+    "pnpm",
+    "exec",
+    "playwright",
+    "test",
+    "--config=.local-evidence/quality-playwright.config.ts",
+    "e2e/quality-remediation-motion-for-react.spec.ts",
+    "e2e/quality-remediation-gsap.spec.ts",
+    "e2e/quality-remediation-react-spring.spec.ts",
+    "e2e/quality-remediation-dotlottie.spec.ts",
+    "e2e/quality-remediation-rive.spec.ts",
+    "e2e/quality-remediation-ant-design.spec.ts",
+    "e2e/quality-remediation-mantine.spec.ts",
+    "e2e/quality-remediation-ui-sources.spec.ts"
+  ],
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+  "startedAt": "2026-11-10T13:29:02.988989+00:00",
+  "finishedAt": "2026-11-10T13:30:18.923110+00:00",
+  "exitCode": 1,
+  "implicitBuild": false,
+  "log": "docs/library-lab/evidence/quality-upgrade/candidate-10/browser.txt"
+}

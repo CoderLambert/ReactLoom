@@ -1,0 +1,33 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom
+argv: ['python3', '/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C17-i18next/validation/fetch-official.py']
+startedAt: 2026-11-10T17:50:40.870124+00:00
+exit: 0
+{
+  "commit": "0d2845a2360dcc236fe9681f849781f5dfdd35c4",
+  "versionBasis": {
+    "installedVersion": "26.4.3",
+    "sourceManifestVersion": "26.4.3",
+    "reason": "Official tag and registry gitHead bind this fixed source; source manifest declaration is retained truthfully."
+  },
+  "readme": {
+    "path": "README.md",
+    "snapshotPath": "official/readme.md",
+    "language": "en",
+    "bytes": 5593,
+    "sha256": "3964fe947138fb6369c58bbc7779eacc8877cf220d41db7647c9e4bd7c466966"
+  },
+  "homepage": {
+    "url": "https://www.i18next.com",
+    "status": "unknown",
+    "checkedAt": "2026-11-10T17:50:48.338401+00:00",
+    "enforcedCSP": [
+      "default-src 'self' *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; style-src 'self' 'unsafe-inline' blob: *; img-src * 'self' blob: data:; connect-src *; font-src *; frame-src *; object-src 'none'; base-uri 'self' https://static-2v.gitbook.com; form-action 'self' https://static-2v.gitbook.com *; frame-ancestors https: ionic: capacitor: ;"
+    ],
+    "xFrameOptions": [],
+    "frameAncestors": [
+      "https: ionic: capacitor:"
+    ],
+    "browserFromLabOrigin": "NOT_RUN",
+    "reason": "Actual complete response headers alone do not establish usable Lab-origin iframe content."
+  }
+}

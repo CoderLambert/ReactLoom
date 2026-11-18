@@ -1,0 +1,54 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=["pnpm", "exec", "--", "biome", "check", "entries/C17-i18next/verification.json", "entries/C17-i18next/validation/metadata-check.mjs", "entries/C17-i18next/validation/sdk-source-audit.json", "entries/C17-i18next/validation/shared-validation-binding.json"]
+start=2026-11-10T18:18:41.552419+00:00
+entries/C17-i18next/validation/shared-validation-binding.json format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Formatter would have printed the following content:
+  
+     69 69 │           "name": "typecheck",
+     70 70 │           "exitCode": 0,
+     71    │ - ········"command":·[
+     72    │ - ··········"pnpm",
+     73    │ - ··········"--filter",
+     74    │ - ··········"@reactloom/library-lab",
+     75    │ - ··········"typecheck"
+     76    │ - ········],
+        71 │ + ········"command":·["pnpm",·"--filter",·"@reactloom/library-lab",·"typecheck"],
+     77 72 │           "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+     78 73 │           "log": "docs/library-lab/evidence/quality-upgrade/candidate-20/typecheck.txt"
+    ······ │ 
+     81 76 │           "name": "build",
+     82 77 │           "exitCode": 0,
+     83    │ - ········"command":·[
+     84    │ - ··········"pnpm",
+     85    │ - ··········"--filter",
+     86    │ - ··········"@reactloom/library-lab",
+     87    │ - ··········"build"
+     88    │ - ········],
+        78 │ + ········"command":·["pnpm",·"--filter",·"@reactloom/library-lab",·"build"],
+     89 79 │           "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+     90 80 │           "log": "docs/library-lab/evidence/quality-upgrade/candidate-20/build.txt"
+    ······ │ 
+     93 83 │           "name": "catalog",
+     94 84 │           "exitCode": 0,
+     95    │ - ········"command":·[
+     96    │ - ··········"pnpm",
+     97    │ - ··········"--filter",
+     98    │ - ··········"@reactloom/library-lab",
+     99    │ - ··········"catalog:check"
+    100    │ - ········],
+        85 │ + ········"command":·["pnpm",·"--filter",·"@reactloom/library-lab",·"catalog:check"],
+    101 86 │           "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    102 87 │           "log": "docs/library-lab/evidence/quality-upgrade/candidate-20/catalog.txt"
+  
+
+Checked 4 files in 6ms. No fixes applied.
+Found 1 error.
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while running checks.
+  
+
+
+exitCode=1
+end=2026-11-10T18:18:41.761904+00:00

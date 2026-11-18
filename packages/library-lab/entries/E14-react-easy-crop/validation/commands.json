@@ -1,0 +1,164 @@
+[
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "node",
+      "--test",
+      "packages/library-lab/entries/E14-react-easy-crop/examples/crop-policy.test.mjs",
+      "packages/library-lab/entries/E14-react-easy-crop/examples/file-check.test.mjs"
+    ],
+    "exitCode": 0,
+    "at": "2026-11-17T17:58:20.515922+00:00",
+    "log": "validation/policy.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "entries/E14-react-easy-crop/examples",
+      "entries/E14-react-easy-crop/validation/browser.spec.ts",
+      "entries/E14-react-easy-crop/library.json",
+      "entries/E14-react-easy-crop/verification.json"
+    ],
+    "exitCode": 1,
+    "at": "2026-11-17T17:58:20.775192+00:00",
+    "log": "validation/biome.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "entries/E14-react-easy-crop/examples",
+      "entries/E14-react-easy-crop/validation/browser.spec.ts",
+      "entries/E14-react-easy-crop/library.json",
+      "entries/E14-react-easy-crop/verification.json"
+    ],
+    "exitCode": 0,
+    "at": "2026-11-17T17:58:43.742588+00:00",
+    "log": "validation/biome-final.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "tsc",
+      "-p",
+      "/tmp/e14-portable-_ijyg_1n/tsconfig.json"
+    ],
+    "exitCode": 0,
+    "at": "2026-11-17T17:58:44.010040+00:00",
+    "log": "validation/portable-types.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "entries/E14-react-easy-crop/examples",
+      "entries/E14-react-easy-crop/validation/browser.spec.ts",
+      "entries/E14-react-easy-crop/library.json",
+      "entries/E14-react-easy-crop/verification.json"
+    ],
+    "exitCode": 0,
+    "at": "2026-11-17T18:00:07.724066+00:00",
+    "log": "validation/biome-final2.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "tsc",
+      "-p",
+      "/tmp/e14-portable-vropxnsm/tsconfig.json"
+    ],
+    "exitCode": 0,
+    "at": "2026-11-17T18:00:08.008878+00:00",
+    "log": "validation/portable-types-final.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "node",
+      "--input-type=module",
+      "-e",
+      "import fs from 'node:fs';import crypto from 'node:crypto';import assert from 'node:assert/strict';import {validateOfficialSources} from './packages/library-lab/src/lib/official-sources.mjs';const p='packages/library-lab/entries/E14-react-easy-crop/';const m=JSON.parse(fs.readFileSync(p+'library.json'));assert.deepEqual(validateOfficialSources(m.official),[]);assert.equal(crypto.createHash('sha256').update(fs.readFileSync(p+'official/readme.md')).digest('hex'),m.official.readme.sha256);console.log('official metadata and raw README SHA PASS');"
+    ],
+    "exitCode": 0,
+    "at": "2026-11-17T18:00:08.036204+00:00",
+    "log": "validation/official-contract.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "entries/E14-react-easy-crop/examples",
+      "entries/E14-react-easy-crop/validation/browser.spec.ts",
+      "entries/E14-react-easy-crop/library.json",
+      "entries/E14-react-easy-crop/verification.json"
+    ],
+    "exitCode": 0,
+    "at": "2026-11-17T18:01:06.833556+00:00",
+    "log": "validation/biome-final3.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "entries/E14-react-easy-crop/examples/example.tsx",
+      "entries/E14-react-easy-crop/validation/browser.spec.ts"
+    ],
+    "exitCode": 0,
+    "at": "2026-11-17T18:02:24.677572+00:00",
+    "log": "validation/reset-delta-biome.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "biome",
+      "check",
+      "entries/E14-react-easy-crop/examples/example.tsx"
+    ],
+    "exitCode": 0,
+    "at": "2026-11-17T18:06:01.067969+00:00",
+    "log": "validation/area-change-delta-biome.log"
+  }
+]

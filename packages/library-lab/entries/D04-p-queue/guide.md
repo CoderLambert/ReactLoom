@@ -1,6 +1,6 @@
 # p-queue 10.0.0｜并发槽、滑动窗口和可结算的取消
 
-Lab 锁定 `p-queue@10.0.0`（MIT，ESM，Node 声明 `>=22`，运行时依赖 0）。它是当前进程内存里的任务队列：能限制同时运行的数量，也能限制一段时间里新启动的次数，并支持优先级、暂停和事件。进程退出，队列消失。它不持久化、不去重、不缓存 HTTP、不代替 BullMQ。
+Lab 锁定 `p-queue@10.0.0`（MIT，ESM，Node 声明 `>=22`，运行时依赖以锁文件为准）。它是当前进程内存里的任务队列：能限制同时运行的数量，也能限制一段时间里新启动的次数，并支持优先级、暂停和事件。进程退出，队列消失。它不持久化、不去重、不缓存 HTTP、不代替 BullMQ。
 
 没有匹配收据时 sdk / build / browser 保持 NOT_RUN。Actions 41779873259 是仓库级结果，不是本条目 PASS。
 
@@ -10,7 +10,7 @@ Lab 锁定 `p-queue@10.0.0`（MIT，ESM，Node 声明 `>=22`，运行时依赖 0
 
 - basic：只设 `concurrency`（1、2 或 3），提交 7 个任务。界面显示运行数、等待数和峰值。
 - business：同一并发，再加 `interval: 600`、`intervalCap: 3`、`strict: true`。第 8 个任务（下标 7）`priority: 5`，只影响还在等待的顺序。12 个任务。暂停调用 `queue.pause()`，恢复调用 `queue.start()`。暂停不中止已经在跑的 sleep。
-- advanced：第 4 个任务抛出固定业务错误，其余继续 `Promise.allSettled`。取消走共享 `AbortController`，并先 `pause()`。源码注释写明不要用 `clear()`：在这条实现路径上，`clear()` 会让仍在排队的 `add()` Promise 停在未结算状态，`allSettled` 因此结束不了。
+- advanced：第 4 个任务抛出固定业务错误，其余继续 `Promise.allSettled`。取消走共享 `AbortController`，并先 `pause()`。v10 的 `clear()` 会以 `AbortError` 拒绝等待中的 Promise，但不会停止已运行任务。共享 signal 才能同时通知两组任务。
 
 离开层级或卸载时，effect 增加 generation、暂停队列并 abort。代际不一致的 `setState` 直接返回。连点启动在 `current.current` 已存在时被挡住。
 
@@ -47,7 +47,7 @@ v10 用 `EventTarget`：`addEventListener('completed', event => event.detail)`�
 
 `timeout` 从任务真正开始算。信号 abort 之后，任务代码若不读 `signal`，槽位可以释放，I/O 仍会继续。Lab 的 `sleep` 在 abort 时清掉计时器并 reject。
 
-`.pause()` 不再启动新任务。`.clear()` 在本示例里不作为取消手段。取消必须让每个已提交的 `add()` Promise 结算，所以示例把同一个 `signal` 传进 `queue.add` 的选项，并让 sleep 遵守它。
+`.pause()` 不再启动新任务。`.clear()` 在本示例里不作为取消手段。v10 clear 会拒绝等待项，但不停止已运行工作。取消必须让每个已提交的 `add()` Promise 结算，所以示例把同一个 `signal` 传进 `queue.add` 的选项，并让 sleep 遵守它。
 
 ## 三层示例
 
@@ -57,7 +57,7 @@ v10 用 `EventTarget`：`addEventListener('completed', event => event.detail)`�
 
 ### 业务
 
-十二个 RSS 格子。除了并发帽，还有严格的 600ms 启动窗。可以暂停新任务，再恢复。优先级只改变还没开始的那一个何时拿到槽位。
+十二个 RSS 格子。除了并发帽，还有严格的 600ms 启动窗。可以暂停新任务，再恢复。RSS-8 标为 priority 5。卡片显示实际启动序号和相对毫秒：默认并发2时它通常在 RSS-1/2 之后先拿到下一槽位；每隔三个启动看时间差，应至少约600ms。后台定时器可延迟，不把绝对时间当性能承诺。
 
 ### 进阶
 
@@ -112,14 +112,14 @@ queue.addEventListener('error', event => { void event.detail })
 
 第二次 HTTP 不再经过限速器。每次尝试重新入队，并设总次数和等待上限。
 
-### 反例 6：用 clear() 等 allSettled
+### 反例 6：以为 clear() 会停止运行任务
 
 ```ts
 queue.clear()
 await Promise.allSettled(tasks)
 ```
 
-Lab 的注释说明这条路径会留下未结算的排队 Promise。
+v10 中等待任务会拒绝，但运行任务继续。若需要整批取消，应暂停并 abort 共享 signal。
 
 ```ts
 queue.pause()
@@ -163,7 +163,7 @@ controller.abort()
 
 - `queue.on` / `queue.off` 改成 `addEventListener` / `removeEventListener`，载荷在 `event.detail`。
 - 自定义 `queueClass` 要实现 `remove`。
-- 不要假设 `clear()` 会让等待中的 Promise 维持挂起或一定变成某种错误。Lab 的可运行示例避开 `clear()`，用 abort 让 `allSettled` 结束。官方 v10 readme 仍要对照你要依赖的那一种行为，并写成测试。
+- v10 的 `clear()` 会用 `AbortError` 拒绝等待中的 Promise，不取消运行任务；与旧教程中的挂起语义不同。Lab 用共享 abort 取消整批，并有真实 SDK 回归。
 - `ERR_REQUIRE_ESM` 时改成 `import`，包是 `"type": "module"`。
 - `engines` 要求 Node `>=22`。浏览器能否打包取决于 `EventTarget`、`AbortSignal` 等，本 Lab 还没有浏览器收据。
 
@@ -186,3 +186,15 @@ controller.abort()
 - https://github.com/sindresorhus/p-queue/blob/v10.0.0/package.json
 - https://github.com/sindresorhus/p-queue/blob/v10.0.0/source/index.ts
 - https://github.com/sindresorhus/p-queue/blob/v10.0.0/license
+
+## 最小接入与迁入
+
+在 React 19 + TypeScript 的浏览器项目安装 `pnpm add p-queue@10.0.0`，复制 `examples/example.tsx`，渲染 `<QueueWorkshop level="business" />`。不依赖 Lab 内部模块；demo.tsx 只是宿主适配。最小调度是：
+
+```ts
+import PQueue from 'p-queue';
+const queue = new PQueue({concurrency: 2, interval: 600, intervalCap: 3, strict: true});
+const results = await Promise.allSettled(ids.map(id => queue.add(() => loadItem(id))));
+```
+
+`loadItem` 是业务函数，必须延迟到回调中才启动。生产替换本地 sleep 时，把 `queue.add` 收到的 signal 传给 I/O，保留 generation 与卸载清理。SDK pending 的释放发生在回调结束后，界面的“当前运行”用业务回调计数避免在 finally 中读取尚未释放的 SDK 槽位。需要观察事件时按 v10 EventTarget API 注册并移除监听。

@@ -1,0 +1,67 @@
+{
+  "checkedAt": "2026-11-17T17:19:32.204957+00:00",
+  "repository": "remarkjs/react-markdown",
+  "tag": "10.1.0",
+  "commit": "44d2e4a44b37461ab7778d6870c1a9eb36393ad2",
+  "readmeCandidates": ["readme.md"],
+  "selection": "No official Chinese README in fixed tree; preserve English readme.md.",
+  "packageFields": {
+    "version": "10.1.0",
+    "license": "MIT"
+  },
+  "homepage": {
+    "url": "https://remarkjs.github.io/react-markdown/",
+    "status": 200,
+    "headers": {
+      "Connection": "close",
+      "Content-Length": "1885",
+      "Server": "GitHub.com",
+      "Content-Type": "text/html; charset=utf-8",
+      "Last-Modified": "Thu, 20 Feb 2025 13:06:04 GMT",
+      "Access-Control-Allow-Origin": "*",
+      "ETag": "\"67b728bc-75d\"",
+      "expires": "Tue, 17 Nov 2026 17:29:32 GMT",
+      "Cache-Control": "max-age=600",
+      "x-proxy-cache": "MISS",
+      "X-GitHub-Request-Id": "FB28:4B52F:2CE11:31DA2:6AFC8CA3",
+      "x-github-edge-region": "westus3",
+      "Accept-Ranges": "bytes",
+      "Age": "0",
+      "Date": "Tue, 17 Nov 2026 17:19:32 GMT",
+      "Via": "1.1 varnish",
+      "X-Served-By": "cache-sjc1000091-SJC",
+      "X-Cache": "MISS",
+      "X-Cache-Hits": "0",
+      "X-Timer": "S1794935972.993679,VS0,VE89",
+      "Vary": "Accept-Encoding",
+      "X-Fastly-Request-ID": "6d22433ea1904d0696de18bc6352c57e2be9d9df"
+    },
+    "bodySha256": "5256157602d4586a1f468f534dfee73a0864952b905d2dafbfd4629db5247df9"
+  },
+  "licenseEvidence": [
+    {
+      "package": "react-markdown",
+      "installedVersion": "10.1.0",
+      "installedLicense": "MIT",
+      "upstreamVersion": "10.1.0",
+      "upstreamLicense": "MIT",
+      "sourceUrl": "https://raw.githubusercontent.com/remarkjs/react-markdown/10.1.0/package.json"
+    },
+    {
+      "package": "remark-gfm",
+      "installedVersion": "4.0.1",
+      "installedLicense": "MIT",
+      "upstreamVersion": "4.0.1",
+      "upstreamLicense": "MIT",
+      "sourceUrl": "https://raw.githubusercontent.com/remarkjs/remark-gfm/4.0.1/package.json"
+    },
+    {
+      "package": "rehype-sanitize",
+      "installedVersion": "6.0.0",
+      "installedLicense": "MIT",
+      "upstreamVersion": "6.0.0",
+      "upstreamLicense": "MIT",
+      "sourceUrl": "https://raw.githubusercontent.com/rehypejs/rehype-sanitize/6.0.0/package.json"
+    }
+  ]
+}

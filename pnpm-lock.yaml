@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  react-grid-layout@2.3.0:
+    hash: 65db3074ef40503b9bfda2b68c12c7d39c1aa7e93efc1fade47fcd6298552940
+    path: packages/library-lab/entries/B15-react-grid-layout/examples/react-grid-layout@2.3.0.patch
+
 importers:
 
   .:
@@ -437,7 +442,7 @@ importers:
         version: 6.1.6(@types/react@19.3.0)(react@19.3.0)
       react-grid-layout:
         specifier: 2.3.0
-        version: 2.3.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+        version: 2.3.0(patch_hash=65db3074ef40503b9bfda2b68c12c7d39c1aa7e93efc1fade47fcd6298552940)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       react-hook-form:
         specifier: 7.89.0
         version: 7.89.0(@types/react@19.3.0)(react@19.3.0)
@@ -32381,7 +32386,7 @@ snapshots:
     optionalDependencies:
       react: 19.3.0
 
-  react-grid-layout@2.3.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0):
+  react-grid-layout@2.3.0(patch_hash=65db3074ef40503b9bfda2b68c12c7d39c1aa7e93efc1fade47fcd6298552940)(react-dom@19.3.0(react@19.3.0))(react@19.3.0):
     dependencies:
       clsx: 2.1.1
       fast-equals: 4.0.3

@@ -1,0 +1,37 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ["pnpm", "exec", "--", "biome", "check", "entries/B01-motion-for-react/validation/browser-proposal-check.ts"]
+startedAt: 2026-11-10T12:33:03.754102+00:00
+finishedAt: 2026-11-10T12:33:04.056209+00:00
+exitCode: 1
+
+STDOUT
+Checked 1 file in 15ms. No fixes applied.
+Found 1 error.
+
+STDERR
+entries/B01-motion-for-react/validation/browser-proposal-check.ts:3:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+
+  × Sort the imported names.
+  
+    1 │ // NOT_RUN proposal. Real Motion DOM, computed CSS, native RAF/media and keyboard events only.
+    2 │ // Observers below read the actual DOM; they do not replace RAF, timers, SDK or animation targets.
+  > 3 │ import { expect, type ElementHandle, type Page, test } from '@playwright/test'
+      │ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    4 │ 
+    5 │ async function watch(element: ElementHandle<HTMLElement | SVGElement>, milliseconds = 700) {
+  
+  i Safe fix: Organize imports and exports (Biome)
+  
+      1   1 │   // NOT_RUN proposal. Real Motion DOM, computed CSS, native RAF/media and keyboard events only.
+      2   2 │   // Observers below read the actual DOM; they do not replace RAF, timers, SDK or animation targets.
+      3     │ - import·{·expect,·type·ElementHandle,·type·Page,·test·}·from·'@playwright/test'
+          3 │ + import·{·type·ElementHandle,·expect,·type·Page,·test·}·from·'@playwright/test'
+      4   4 │   
+      5   5 │   async function watch(element: ElementHandle<HTMLElement | SVGElement>, milliseconds = 700) {
+  
+
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while running checks.
+  
+

@@ -1,0 +1,20 @@
+{
+  "command": [
+    "pnpm",
+    "exec",
+    "playwright",
+    "test",
+    "--config=.local-evidence/quality-playwright.config.ts",
+    "e2e/quality-remediation-ag-grid.spec.ts",
+    "e2e/quality-remediation-beautiful-dnd-migration.spec.ts",
+    "--grep",
+    "@C08|@B22 fixed",
+    "--trace=off"
+  ],
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+  "startedAt": "2026-11-10T16:17:28.236914+00:00",
+  "finishedAt": "2026-11-10T16:17:36.333251+00:00",
+  "exitCode": 1,
+  "implicitBuild": false,
+  "log": "docs/library-lab/evidence/quality-upgrade/candidate-16/browser-observation-retry.txt"
+}

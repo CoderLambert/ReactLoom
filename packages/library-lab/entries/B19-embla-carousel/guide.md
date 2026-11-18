@@ -1,189 +1,64 @@
-# B19 Embla Carousel：吸附点、键盘与动态卡片
+# 用 Embla 管理专题横滑，而不是手写位移
 
-Embla 是没有默认皮肤的轮播引擎：测量 DOM，计算 snap，处理拖动和循环。React 入口是 `useEmblaCarousel`，返回 `[viewportRef, api]`。样式、按钮、ARIA 和数据由应用负责。卸载时 hook 销毁引擎。业务自己的监听还要 `off`。
+首页有一组可拖动的专题卡片，需要按钮与键盘导航，数据增删后还要重新计算边界。`embla-carousel-react` 把真实 DOM 交给轮播引擎测量和移动，应用负责内容、样式、导航按钮、可访问语义与数据状态。它适合小规模横向内容；只要原生吸附时可先用 CSS scroll-snap，拖拽排序、超长虚拟列表和画布则属于其它模型。
 
-Library Lab 固定 `embla-carousel-react@8.6.0`，宿主 React 19.3.0。许可证 MIT。**只锁了 React 包装包。** 不要在本示例里加入未声明的 `embla-carousel-autoplay`，也不要照抄 v9 RC 的 `goToNext` / `goToPrev` / `goTo` / `snapList` / `reinit`。v8 的方法是 `scrollNext`、`scrollPrev`、`scrollTo`、`scrollSnapList`、`reInit`。官方文档站若默认打开 v9，读 v8 专页。
+本例固定 React 包 **8.6.0**，它精确依赖的核心和 reactive-utils 也为 **8.6.0**，运行时 MIT，React peer覆盖16.8/17/18/19。Lab使用React19.3.0，四张文字卡片原创、无远程素材。代码只从已声明的React包导入hook，不深导入pnpm传递依赖，不加载自动播放插件。
 
-## Lab 当前示例
-
-`examples/demo.tsx` 再导出 `examples/example.tsx`。索引和键盘规则在 `examples/slide-policy.ts`。没有 Mock RSS API，没有自动播放插件，没有圆点组件。
-
-已挂载：
-
-- 选项 `align: 'start'`、`containScroll: 'trimSnaps'`。只有 `advanced` 设 `loop: true`。
-- ref 在 viewport 上，viewport `overflow: hidden`。轨道 `display: flex`，`touchAction: 'pan-y pinch-zoom'`，让纵向滚页面、横向交给轮播。
-- 卡片 `flex: '0 0 82%'`，`minWidth: 0`，稳定 `key={item.id}`。
-- `role="region"`，`aria-roledescription="轮播"`，viewport 可 Tab。每张 `role="group"` 并带「第 n 张，共 m 张」。
-- `select` 与 `reInit` 同步：当前 snap、能否前后、snap 数量。effect cleanup `off` 同一个函数引用。
-- 卡片 id 签名变化或复位代数变化时 `reInit()`。复位会 `scrollTo(0, true)` 立刻跳到开始。注释写明要等 React 提交新 slide 再量。
-- 按钮调用 `scrollPrev` / `scrollNext`。减少动画时第二个参数为 `true`（jump）。`matchMedia` 的监听会移除。
-- 键盘只在 viewport 自己持焦时处理左右箭头，并且还要 `canScrollPrev` / `canScrollNext`。焦点在按钮上时不重复处理。
-- advanced：添加上限 24，`allocateSlideId` 永不复用已出现过的正 id。移除最后一张，至少留一张。恢复默认四张并增加 reset 代数。
-
-`boundedSnap` 把选中下标夹进 `[0, snapCount - 1]`。**snap 数可以小于卡片数**，因为 `trimSnaps` 和一屏可见宽度会合并吸附点。status 同时报吸附位置和卡片张数，避免把 snap 序号说成记录下标。
-
-未挂载：Autoplay、`slidesInView` 圆点、`watchDrag` 自定义、断点选项、HTTP 分页、插件的 `playOnInit`。自动播放若以后加上，默认应停止，并服从减少动画；当前不要写一个自己的 `setInterval` 去调 `scrollNext`。
-
-## 什么时候使用
-
-适合一小组可横滑的新闻或商品卡片，需要拖动和按钮并存。不适合万行虚拟表、无限画布、手写板、或一张静态图（CSS scroll-snap 就够）。Embla 不加载数据、不鉴权、不提供全套图库 UI。
-
-## 模型
+## 先分清卡片、轨道和吸附点
 
 ```text
-slides[]（稳定 id）
-  → viewport ref
-  → 引擎按 CSS 尺寸算出 scrollSnapList
-  → selectedScrollSnap 是吸附序号，不是 stories 下标
-  → 按钮和键盘调用 scrollPrev/scrollNext
+slides数组（稳定ID） → React提交卡片DOM
+viewport ref → Embla测量CSS尺寸 → scrollSnapList
+按钮/本例局部方向键 → scrollPrev/scrollNext → select事件 → 导航状态
+卡片ID列表改变 → 本例reInit → reInit事件 → 重新读取边界
 ```
 
-`watchResize` / `watchSlides` 默认会在尺寸和子节点变化后重新测量。手动 `reInit` 不会自动摘掉你额外加的监听。Lab 只注册了 `select` 和 `reInit`。原生 `destroy()` 由 hook 负责，不要再销毁一次。
+结构是“可视窗口→flex轨道→卡片”三层。ref放在overflow:hidden的窗口，不能放到轨道上；82%的flex-basis、边距和边框会直接影响实际测量。卡片显式border-box和minWidth:0，复制到没有Lab全局reset的项目仍保留这个尺寸模型。
 
-## 三层渐进
+`selectedScrollSnap()` 是吸附位置，`slidesInView()` 是可见卡片索引，二者不能当作同一个业务ID。一屏多张、trimSnaps或循环时，卡片数和snap数可能不同。下方导航文字和“读取真实引擎”分别展示自动同步状态及点击当次的SDK getter快照，没有另造一份计时进度。
 
-### Demo ① 滑动（已挂载）
-
-四张固定卡片。拖动或按钮。到头时对应按钮禁用（非 loop）。viewport 聚焦后左方向键向前。输出「第 n 个吸附位置，共 m 个」。
-
-### Demo ② 推荐卡（已挂载）
-
-与 basic 同一引擎，文案不同。循环仍关闭。没有第二套插件。业务上若要过滤卡片，过滤结果仍用稳定 id，并在提交后 `reInit`。Lab 的 business 层没有过滤控件，不要说有。
-
-### Demo ③ 循环与增删（已挂载）
-
-`loop: true` 时按钮的 can 状态由引擎决定，可能两端都可点。添加后 id 单调增加，即使删掉最后一张再添加也不会复用旧 id。恢复默认会跳回第一吸附点且不播放动画（`scrollTo(0, true)`）。减少动画时普通下一张也跳转。
-
-未挂载的生产教学：服务端分页不要把「下一页 HTTP」和 `scrollNext` 绑成同一个按钮，除非产品就是这个意思。图片加载会改变宽度，需要允许引擎重测。圆点必须按 `scrollSnapList().length` 生成，不能 `slides.map` 每张一个点。
-
-## 反例
+## 最小接入
 
 ```tsx
-// 错：v9 方法用在 v8 实例上
-emblaApi.goToNext();
+import useEmblaCarousel from 'embla-carousel-react';
+const [viewportRef, api] = useEmblaCarousel({ align: 'start', containScroll: 'trimSnaps' });
 
-// 对
-emblaApi.scrollNext(reducedMotion);
-```
-
-```tsx
-// 错：ref 挂在 flex 轨道上
-<div ref={emblaRef} style={{display: 'flex'}} />
-
-// 对：ref 在 overflow hidden 的 viewport，轨道在里面
-```
-
-```tsx
-// 错：把 selectedScrollSnap 当卡片 id
-const card = slides[emblaApi.selectedScrollSnap()];
-
-// 对：snap 与卡片分开计数。需要卡片身份时用可见 slide 的 id，不要假设一一对应
-```
-
-```tsx
-// 错：点导航按每张卡片生成
-{slides.map((_, index) => <button onClick={() => emblaApi.scrollTo(index)} />)}
-
-// 对：按 scrollSnapList() 的长度生成。Lab 没有点，status 用的是 snapCount
-```
-
-```tsx
-// 错：监听不 off，或 off 了另一个函数
-useEffect(() => {
-  emblaApi.on('select', () => setSelected(emblaApi.selectedScrollSnap()));
-}, [emblaApi]);
-
-// 对：具名 sync，cleanup 里 off('select', sync)
-```
-
-```tsx
-// 错：删卡片后复用 id
-id: slides.length + 1
-
-// 对：allocateSlideId(last, presentIds)
-```
-
-```tsx
-// 错：方向键处理写在 window 上，按钮也被吃掉
-window.addEventListener('keydown', ...)
-
-// 对：carouselArrow 要求 target === currentTarget，即 viewport 持焦
-```
-
-```tsx
-// 错：自动播放 setInterval 不管减少动画和隐藏页
-// 对：本示例没有自动播放。若加官方 v8 插件，playOnInit: false，并在 reduce 时停
-```
-
-`containScroll: 'trimSnaps'` 会改变 snap 数量。改 CSS 百分比后要重新看 status，不要把旧的「四张四个点」写进验收。
-
-## 组合
-
-**Embla + Motion**：Motion 可以动卡片内部的文字。不要再给轨道加一个 translateX。Embla 拥有滑动 transform。
-
-**Embla + Query**：数据数组换了就让 React 提交，然后 `reInit`。不要在拖动监听里发请求。
-
-**Embla + 虚拟化**：窗口化的 slide 会让测量和索引更难。本示例最多 24 张真实 DOM，不是虚拟列表方案。
-
-## 生产清单
-
-- viewport 与轨道结构符合 v8 要求。
-- key 稳定且不复用。
-- 监听成对 off。
-- 按钮和键盘遵守 canScroll。
-- 减少动画用 jump。
-- 纵向触摸滚动保留。
-- 文案区分 snap 与卡片数。
-- 循环只在明确的层级打开。
-- 不混用 v9 方法名。
-- 不把 Node 里的索引函数当成引擎已初始化。
-
-## 升级
-
-留在 8.6.0 直到准备好改所有方法名和选项。v9 RC 不是稳定替代。若包装包的传递依赖把 `embla-carousel` 核心带进来，类型导入仍要以实际导出为准，不要假设 pnpm 隔离下可以随意深导入未声明的路径。本应用代码只从 `embla-carousel-react` 导入 hook。
-
-## 结构、插件和测量
-
-v8 要求的 DOM 是三层，不是两层：
-
-```tsx
-<div ref={emblaRef} style={{overflow: 'hidden'}}>
-  <div style={{display: 'flex', touchAction: 'pan-y pinch-zoom'}}>
-    <article style={{flex: '0 0 82%', minWidth: 0}} />
+<div ref={viewportRef} style={{ overflow: 'hidden' }}>
+  <div style={{ display: 'flex', touchAction: 'pan-y pinch-zoom' }}>
+    {cards.map(card => <article key={card.id} style={{ flex: '0 0 82%', minWidth: 0 }} />)}
   </div>
 </div>
 ```
 
-把 ref 挂到 flex 轨道上，引擎读到的可视宽度是错误的，snap 会挤在一起或完全不能滑。`minWidth: 0` 防止文章标题把卡片撑出百分比。改 `flex-basis` 之后必须 `reInit`，否则按钮仍按旧的 snap 列表禁用。
+这是结构片段；完整布局、语义、监听与动态内容在实际sourceFiles中。复制demo.tsx、example.tsx、slide-policy.ts，保留组件内必要样式即可。v8使用scrollNext/scrollPrev/scrollTo/reInit这些方法，升级时先核目标版本导出，不把当前官网默认新版API直接套到8.6.0。
 
-`selectedScrollSnap()` 与 `slides[index]` 只有在「一屏一张且没有 trim」时才碰巧相等。Lab 开了 `containScroll: 'trimSnaps'`，并且卡片只占 82% 宽，所以 status 同时打印吸附个数和卡片张数。点导航若要加，长度来自 `scrollSnapList()`，点击调用 `scrollTo(snapIndex, reducedMotion)`。不要 `slides.map`。
+## 实验一：真实测量、拖动与导航
 
-`slidesInView()` 返回的是滑块下标数组，适合懒加载图片，不适合当作业务 id。图片到来改变高度时，默认的 `watchResize` 会重测；若你关掉它，就要自己在 `onload` 里 `reInit`。
+1. 基础实验默认非循环。先读引擎，观察四个DOM slideIds、snapPositions和selectedSnap。第一吸附位置的“上一张”不可用。把“卡片宽度”选成48%让同屏出现多张，再读引擎：卡片还是四张，但trimSnaps可合并吸附点。这个重新测量来自SDK真实ResizeObserver，不是手工设置snap数。
+2. 用鼠标拖动卡片再松手，观察真实轨道移动并吸附；点“下一张”或将焦点放到“专题滑动区域”后按右箭头，结果走同一个引擎。到末端“下一张”禁用。
+3. 再读引擎，比较selectedSnap与visibleSlideIndices；不要把前者直接索引为唯一“当前文章”。改变窗口宽度后，SDK的默认watchResize会重新测量。
+4. 系统减少动态开启时，按钮和本例局部箭头导航使用jump即时跳转。手动拖动仍由SDK物理模型处理；本例没有自动播放，不承诺所有拖动回弹都变为零时长。
 
-自动播放不在 `library.json`。官方 v8 插件的形状是 `Autoplay({playOnInit: false, delay: 4000})`，和 v9 选项不同。加上之前要在减少动画和 `document.hidden` 时停止，并在指针悬停时按产品决定暂停。用 `setInterval` 调 `scrollNext` 会和拖动手势抢滚动位置。
+方向键只在窗口本身持焦时处理，焦点在其它控件上不劫持键盘。上一张/下一张是原生按钮，操作后保留焦点；窗口方向键是本例增强，不是Embla自动提供的完整可访问组件。外层轮播region同时包含卡片与控件，每张使用带名称的group语义，参照[W3C轮播模式](https://www.w3.org/WAI/ARIA/apg/patterns/carousel/)。真实读屏、触摸设备和完整WCAG验收另计。
 
-循环打开后，`canScrollNext` 可能在两端都为真。验收不要写死「最后一张时下一张禁用」。basic 和 business 没有 `loop`，那条禁用仍然成立。
+## 实验二：动态卡片和循环的条件
 
-监听泄漏的形式是每次 effect 新建箭头函数却不 `off`。Lab 把 `sync` 放在 effect 内部并在 cleanup 里摘掉同一引用。不要再调用 `destroy()`，hook 会销毁自己的引擎；业务 fetch 仍要自己 abort。
+高级实验请求loop:true，先向前/向后跨过边界，读取实际selectedSnap与可滚动状态。逐步移除到一张时，内容不足以循环，SDK会回退；实际按钮/读数可能同时不可滚动，不能把配置请求当成运行结果。
 
-## 验收
+“添加卡片”最多24张，ID由lastAllocated和当前最大ID共同递增；删除或恢复默认后再添加也不复用曾经分配的ID。“恢复默认卡片”重新放入原始四项，并在提交后scrollTo(0,true)回到首个吸附位置。
 
-basic：下一张改变 status；末尾下一张禁用；viewport 上的方向键有效，焦点在按钮上时方向键不劫持。business：四张 id 不变。advanced：添加到 24 停止；删除不把列表删空；新 id 大于曾经出现过的 id；恢复后回到第一吸附点；减少动画时切换不插值。loop 打开后端点是否可点以引擎 `canScrollNext` 为准。
+这里的卡片完全由React控制，明确watchSlides:false，由一个effect在ID签名或reset代数变化后调用reInit，避免再让SDK的默认MutationObserver处理同一批数据变化。SDK仍负责真实容器resize；reInit事件与select事件都通过同一个sync读取API，不手写另一套边界计算。恢复的代数保证“数组已经是默认值”时仍能明确回首位。
 
-sdk、build、browser 为 NOT_RUN。没有匹配 receipt 就不能写成 Embla PASS。Actions run `41779873259` 是仓库级 install、typecheck、build、52 个 SDK 文件 / 153 项测试、45 个 Playwright，不是 B19 的 PASS。
+不要把“下一张”绑定成“请求下一页”：这两个状态只有产品明确设计时才应该关联。真实异步数据应先提交新DOM再测量，图片等资源改变尺寸还需核对SDK resize观察及布局；本例没有HTTP或图片加载。
 
-```bash
-node --experimental-strip-types --test packages/library-lab/entries/B19-embla-carousel/tests/slide-policy.test.mts
-```
+## 监听与销毁归属
 
-断言 snap 夹取、键盘只在 viewport、id 不复用。不证明拖动物理或 reInit 时机。
+应用用同一sync函数订阅/解除select与reInit，减少动态的媒体监听单独清理。React hook创建并销毁核心实例，应用不重复调用destroy。额外destroy观察器只在真实SDK事件发生时把旧窗口data-embla-destroyed设为true，便于卸载验收；它不触发销毁，应用cleanup同样off。
 
-## 官方资料
+源码不在模块顶层读window；媒体偏好在effect同步。hook可输出静态结构，但完整SSR/hydration、触摸/读屏和性能没有由这次浏览器或规则测试自动证明。组件最多24个真实DOM卡片，不是虚拟化方案。
 
-- https://www.embla-carousel.com/docs/v8/get-started/react
-- https://www.embla-carousel.com/docs/v8/api/methods
-- https://www.embla-carousel.com/docs/v8/api/options
-- https://www.embla-carousel.com/docs/v8/guides/required-setup
-- https://www.embla-carousel.com/docs/v8/plugins/autoplay
-- https://github.com/davidjerleke/embla-carousel
-- https://www.npmjs.com/package/embla-carousel-react
+## 官方原文与运行证据
+
+固定npm gitHead `0fe65834136f1aa35e4c1a4a477e5ccb4bb5ee54`，对应packages/embla-carousel-react/package.json为8.6.0；完整14个README候选无官方中文，保存该包README.md英文原文13872B。原文未翻译改写，仓库/commit/path/语言/版本/时间/SHA在library.json和official/source-audit.json。
+
+官网按完整HTTP响应与Lab实际嵌入证据区分允许/禁止/未知，面板保留直达。规则测试只证明索引、键盘门禁和ID分配；真正引擎测量、原生拖动、循环回退、动态DOM和destroy需匹配构建的真实浏览器。实际命令与六项结论见local-validation.md，正式sdk/build/browser收据另记。

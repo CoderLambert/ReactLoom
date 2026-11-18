@@ -1,47 +1,28 @@
-# B13 dnd-kit
+# B13 dnd-kit 工程指南
 
-## 适用
+本例固定@dnd-kit/core6.3.1 + sortable10.0.0，使用经典DndContext/SortableContext/useSortable。适合React单列表自定义排序；新@dnd-kit/react接口、操作系统文件和服务端保存不在本例。先读library、guide、example/pinned-order、verification。
 
-维护 React 列表排序，并且要指针距离约束、键盘传感器和自定义锁定时，使用本条目的遗留 `@dnd-kit/core` + `@dnd-kit/sortable`。操作系统文件、树和无框架 DOM 拖放另选。新包 `@dnd-kit/react` 不要写进这个示例。
+## 迁移与模型
 
-## 版本
+复制examples/example.tsx、pinned-order.ts和workshop.css，保持相对导入，安装两个声明依赖。items是完整业务数组；basic显示前三项并保留隐藏后缀。业务ID永久唯一，SortableContext.items与可见DOM顺序一致；React key与useSortable id都用同一个ID。完整数组的重复ID应拒绝，不能只检查可见前缀。
 
-`@dnd-kit/core@6.3.1`，`@dnd-kit/sortable@10.0.0`，React 19.3.0。许可证 MIT。API 是 `DndContext`、`SortableContext`、`useSortable`。不是 `DragDropProvider`。
+PointerSensor距离约束6px；KeyboardSensor用sortableKeyboardCoordinates。setNodeRef在行，setActivatorNodeRef/listeners/attributes在唯一手柄按钮；touch-action:none只在手柄。保留原生上下按钮作为额外输入，而非用它冒充键盘Sensor。transform/transition来自SDK，只是预览。
 
-## 迁移
+## 约束与撤销
 
-从手写 HTML5 拖放迁入时保留业务 id。若将来改 `@dnd-kit/react`，单独开模块并重写传感器注册，不能半文件混用。B22 的 `Draggable` 形状也不是这个包。
+basic教真实排序与数组/DOM同步；business教news固定第4位且不能跨越；advanced教单层撤销与迟到drop。锁定不能只靠disabled：canReorderAroundPinned检查整段源到目标，拖放和按钮共用reorderVisible，不原地修改原数组。
 
-## 不可删的清理
+拖动开始记录activeId/revision/level；数据提交、撤销或恢复使旧revision失效，结束必须通过isCurrentDragSession。取消、模式变化和卸载清会话引用；应用不清全局监听。SDK拥有传感器监听，内部有延迟文档监听回收，真实卸载/重进需browser验证。恢复默认可撤销；只存一层历史。
 
-手柄独占 listeners。`touch-action: none` 不放到整行。`DragSession` 绑定 revision 和 level。撤销、重置、键盘移动和切换 level 都作废进行中的 drop。锁定用 `canReorderAroundPinned`，拖放和按钮共用。`reorderVisible` 保留不可见后缀。
+## 断言
 
-## 反例
+- basic初始tech/ai/oss，指针或Space→ArrowDown→Space提交后DOM与b13-visible-order一致，b13-all-order仍带news/read/later；Escape不改顺序。
+- business锁定news手柄disabled、移动不能跨过它，上下两侧内部合法排序仍成功；预览动画不代表业务已提交。
+- advanced合法移动→撤销恢复且按钮失效；恢复默认/其他提交后的旧drop被忽略，revision递增；停止/卸载不再写排序。
+- SSR suite真实core/sortable hooks与closestCenter只证明SDK API/给定几何；三个policy suite证明数组/锁/会话，不证明实际传感器或DOM测量。
 
-index 当 id。整行展开 listeners。忽略会话把旧 drop 写回。原地 splice。只禁用手柄却让上移跨过锁。导入 `@dnd-kit/react`。用本库读取桌面文件。和 Motion 共写一个 transform。
+观察点：b13-workshop[data-level]、b13-item-<id>[data-item-id/data-locked]、b13-visible-order、b13-all-order、b13-status、b13-revision、b13-drag-state。按钮名字继续为拖动/上移/下移+频道名，advanced撤销/恢复默认。
 
-复用时保留这些不变的约定：
+## 来源
 
-- 只使用 `@dnd-kit/core` 6.3.1 与 `@dnd-kit/sortable` 10。
-- 不导入 `@dnd-kit/react` 的 DragDropProvider。
-- listeners 只在手柄；锁定规则拖放和按钮共用。
-- drop 必须通过 revision 与 level 组成的会话检查。
-- 操作系统文件拖入不是这个示例的能力。
-
-## 测试断言
-
-`reorder-policy.test.mts`、`drag-session.test.mts`、`pinned-order.test.mjs` 断言锁定区间、唯一 id、可见前缀、会话的 id/revision/level。不证明碰撞检测或键盘传感器。
-
-## 真实限制
-
-已挂载：单列、6px 指针约束、键盘坐标传感器、锁定、撤销、basic 只显示前三项。未挂载：多列、空列、HTTP 409、虚拟列表、新 React 适配层。
-
-复用检查：
-
-- 版本以该条目 `library.json` 为准，不跟研究稿里的 Vite 脚本或 workshop 目录。
-- 未挂载的生产模式留在 `guide.md`，不补进 `examples/`。
-- 不修改 `verification.json`。没有匹配 receipt 时 sdk、build、browser 保持 NOT_RUN。
-
-## 证据
-
-sdk、build、browser 为 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有匹配 receipt。Actions run `41779873259` 是仓库级检查，不是本条目 PASS。文档：https://docs.dndkit.com/
+官方core tag6.3.1固定commit e9215e820798459ae036896fce7fd9a6fe855772，同commit声明sortable10.0.0。官方Sortable包README英语原文、无中文候选，元数据固定sha/时间；官网有完整头但无Lab iframe实测，unknown。本轮不沿用旧CI或研究PASS，正式状态仍依verification与收据。

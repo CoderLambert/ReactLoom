@@ -1,0 +1,48 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node entries/F11-msw/examples/node-runner.mjs business
+exit: 0
+
+{
+  "level": "business",
+  "accepted": 200,
+  "rejected": 422,
+  "error": {
+    "error": {
+      "code": "INVALID_CODE",
+      "message": "验证码不正确"
+    }
+  },
+  "requests": [
+    {
+      "method": "POST",
+      "url": "https://library-lab.invalid/api/verify",
+      "status": 422,
+      "body": {
+        "error": {
+          "code": "INVALID_CODE",
+          "message": "验证码不正确"
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "url": "https://library-lab.invalid/api/verify",
+      "status": 200,
+      "body": {
+        "verified": true
+      }
+    }
+  ],
+  "matches": [
+    {
+      "requestId": "83988be36c1568",
+      "method": "POST",
+      "url": "https://library-lab.invalid/api/verify"
+    },
+    {
+      "requestId": "18c0728a83bea8",
+      "method": "POST",
+      "url": "https://library-lab.invalid/api/verify"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "examples/example.tsx": "5149d888ebca8e255484b92a2987bf1b86580d5ebbc334aeb5d1e854b3ecea61",
+  "examples/grid-contract.ts": "33cfeab484f17851fca1d0458cff886caa32fa218bf0fee70191d30274d3a97d",
+  "examples/edit-session.ts": "fad2807ac9046efd3d7582d4391ba21f8217bae4d8c9f6a553fb9845032a6a50",
+  "examples/edit-policy.mjs": "a3730d5ff2b90fb4692b6f66b80e80b655e55fd4be18e1b7150319d8b056fe09",
+  "examples/edit-policy.d.mts": "a6ca538690d68db9eed211a67f6d7cdf091f66e8d1bbe2a56359deb76f27a387",
+  "examples/styles.css": "c76fe92d3ec7ad0d1cd9c6e757f59941d94962372c1a523d48059f5ede3c7e9e",
+  "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+  "AGENTS.md": "84965dff18f160b49fd43464242faecc0a884cc51d4ff0d7d389327b3efe1c89",
+  "guide.md": "7590ab8582648b487cd65b0bfcba1a950d056647a2d9749d79e0871f55b122a3",
+  "agent.md": "12c3108eed29597e090f85e89502bf9754068c532f893289fca400d522c9d441",
+  "library.json": "8a937adc30be578d589d939db0e90769ff866d7f235525043d97928bee0d9cd0",
+  "verification.json": "21db0b6a6a8e10075259795795c43e85b7c6946ae7fa4f8165c24f5c76739649",
+  "tests/sdk.test.mjs": "a23ed7704c46d0d41a94ab1fc61501330eccc991f9fbc5d9ef0d16229c15c087",
+  "tests/edit-policy.test.mjs": "9f2d35329095a1a6093d13aef297a194a47f266b0b0ac45c76a1d5be959b45b8",
+  "tests/edit-session.test.mts": "a2cfdd1182873da090c0cee065d3dfe84d41945821393d372b06266dfc9608a9",
+  "official/readme.md": "7070a8bcf54603483e9b617fce91e7bcaec8e30f77b75ca02809ad0512ca340c",
+  "official/source-evidence.json": "fc4f44a6855576f1dafa0b9616dc3b10779e30fa283462acd968bb50543012da",
+  "validation/browser-proposal.txt": "32e7e376bbcc366e4d8ff2bd5309cdb4739bb0bd46cf707aa01fdc99ac378344"
+}

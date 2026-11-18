@@ -1,0 +1,159 @@
+// Use a candidate built from these entry inputs. No route, SDK, Canvas or DOM mocks.
+import { expect, type Page, test } from '@playwright/test'
+
+type PlotStats = {
+  instance: number
+  dataEvents: number
+  sizeEvents: number
+  seriesEvents: number
+  width: number
+  height: number
+  points: number
+  firstX: number
+  lastX: number
+  errorsVisible: boolean | null
+  seriesScales: string[]
+  axisScales: string[]
+  axisSides: number[]
+}
+async function start(page: Page, level: 'basic' | 'business' | 'advanced') {
+  await page.goto(`/libraries/uplot?tab=demo&example=${level}`)
+  const run = page.getByRole('button', { name: '运行当前示例', exact: true })
+  if (await run.isVisible()) await run.click()
+  const region = page.getByRole('region', { name: 'uPlot 实时数据示例', exact: true })
+  await expect(region).toBeVisible()
+  await expect(region.getByTestId('a04-plot').locator('canvas')).toHaveCount(1)
+  await expect.poll(async () => (await stats(page))?.points).toBe(28)
+  return region
+}
+async function stats(page: Page): Promise<PlotStats | null> {
+  return JSON.parse((await page.getByTestId('a04-plot-stats').textContent()) || 'null')
+}
+type Columns = [number[], ...Array<Array<number | null>>]
+async function data(page: Page): Promise<Columns | null> {
+  return JSON.parse((await page.getByTestId('a04-series-json').textContent()) || 'null')
+}
+async function currentStats(page: Page): Promise<PlotStats> {
+  const value = await stats(page)
+  if (!value) throw new Error('Real SDK observation not available')
+  return value
+}
+async function currentData(page: Page): Promise<Columns> {
+  const value = await data(page)
+  if (!value) throw new Error('Real SDK data not available')
+  return value
+}
+
+test('@A04 basic real columns use seconds, update the same Canvas and resize the same instance', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1280, height: 900 })
+  const region = await start(page, 'basic')
+  const chart = region.getByTestId('a04-plot')
+  const canvas = chart.locator('canvas')
+  const originalCanvas = await canvas.elementHandle()
+  if (!originalCanvas) throw new Error('Real Canvas not mounted')
+  const original = await currentStats(page)
+  const columns = await currentData(page)
+  expect(columns?.length).toBe(2)
+  expect(columns?.map((column) => column.length)).toEqual([28, 28])
+  expect(columns[0][1] - columns[0][0]).toBe(60)
+  expect(new Date(columns[0][0] * 1000).toISOString()).toBe('2026-10-26T00:00:00.000Z')
+  // Read actual painted pixels; never provide a fake 2D context.
+  await expect
+    .poll(async () =>
+      canvas.evaluate((element) => {
+        if (!(element instanceof HTMLCanvasElement)) throw new Error('Not an actual Canvas')
+        const context = element.getContext('2d')
+        if (!context) return false
+        const pixels = context.getImageData(0, 0, element.width, element.height).data
+        return pixels.some((alpha, index) => index % 4 === 3 && alpha > 0)
+      }),
+    )
+    .toBe(true)
+  await region.getByRole('combobox', { name: '采样数量' }).selectOption('60')
+  await expect.poll(async () => (await stats(page))?.points).toBe(60)
+  expect((await stats(page))?.instance).toBe(original?.instance)
+  expect((await currentStats(page)).dataEvents).toBeGreaterThan(original.dataEvents)
+  expect(await originalCanvas.evaluate((element) => element.isConnected)).toBe(true)
+  await expect(canvas).toHaveCount(1)
+  const beforeResize = await currentStats(page)
+  expect(beforeResize.width).toBeGreaterThan(320)
+  await region.getByRole('checkbox', { name: '使用窄面板', exact: true }).check()
+  await expect.poll(async () => (await stats(page))?.width).toBe(320)
+  expect((await currentStats(page)).sizeEvents).toBeGreaterThan(beforeResize.sizeEvents)
+  expect((await stats(page))?.instance).toBe(original?.instance)
+  expect((await stats(page))?.points).toBe(60)
+  await region.getByRole('checkbox', { name: '使用窄面板', exact: true }).uncheck()
+  await expect.poll(async () => (await stats(page))?.width).toBe(beforeResize.width)
+})
+
+test('@A04 business aligns sparse observations and toggles the real right-axis series', async ({
+  page,
+}) => {
+  const region = await start(page, 'business')
+  const initial = await currentStats(page)
+  const columns = await currentData(page)
+  expect(columns?.map((column) => column.length)).toEqual([28, 28, 28])
+  expect(columns[2][0]).toBe(3)
+  expect(columns[2][1]).toBeNull()
+  expect(columns[2][3]).toBe(0)
+  expect(initial?.seriesScales).toEqual(['x', 'y', 'errors'])
+  expect(initial?.axisScales).toEqual(['x', 'y', 'errors'])
+  expect(initial?.axisSides.at(-1)).toBe(1)
+  await expect(
+    region.getByRole('table', { name: '最近五个采样（UTC；Canvas的文字替代）', exact: true }),
+  ).toContainText('缺失')
+  await region.getByRole('checkbox', { name: '显示错误数', exact: true }).uncheck()
+  await expect.poll(async () => (await stats(page))?.errorsVisible).toBe(false)
+  expect((await currentStats(page)).seriesEvents).toBeGreaterThan(initial.seriesEvents)
+  expect((await stats(page))?.instance).toBe(initial?.instance)
+  expect((await data(page))?.map((column) => column.length)).toEqual([28, 28, 28])
+  await region.getByRole('checkbox', { name: '显示错误数', exact: true }).check()
+  await expect.poll(async () => (await stats(page))?.errorsVisible).toBe(true)
+})
+
+test('@A04 advanced bounds actual updates, pauses for reduced motion and destroys the real SDK', async ({
+  page,
+}) => {
+  const errors: string[] = []
+  page.on('pageerror', (error) => errors.push(error.message))
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  const region = await start(page, 'advanced')
+  const host = await region.getByTestId('a04-plot').elementHandle()
+  if (!host) throw new Error('Real plot host not mounted')
+  await region.getByRole('combobox', { name: '采样数量' }).selectOption('100')
+  await expect.poll(async () => (await stats(page))?.points).toBe(100)
+  const before = await currentStats(page)
+  await region.getByRole('button', { name: '追加10个采样', exact: true }).click()
+  await expect.poll(async () => (await stats(page))?.lastX).toBe(before.lastX + 600)
+  expect((await stats(page))?.firstX).toBe(before.firstX + 600)
+  expect((await stats(page))?.points).toBe(100)
+  expect((await stats(page))?.instance).toBe(before?.instance)
+  expect((await data(page))?.map((column) => column.length)).toEqual([100, 100, 100])
+  expect((await currentData(page))[1].some((value) => value === null)).toBe(true)
+  await region.getByRole('button', { name: '开始模拟采样', exact: true }).click()
+  await expect(region).toContainText('遵循系统减少动态偏好')
+  const pausedForMotion = (await currentStats(page)).lastX
+  await page.waitForTimeout(800)
+  expect((await stats(page))?.lastX).toBe(pausedForMotion)
+  await region.getByRole('checkbox', { name: '明确允许在减少动态偏好下采样', exact: true }).check()
+  await expect.poll(async () => (await stats(page))?.lastX).toBeGreaterThan(pausedForMotion)
+  await region.getByRole('button', { name: '暂停模拟采样', exact: true }).click()
+  const manuallyPaused = (await currentStats(page)).lastX
+  await page.waitForTimeout(800)
+  expect((await stats(page))?.lastX).toBe(manuallyPaused)
+  await region.getByRole('button', { name: '清空增量并重置', exact: true }).click()
+  await expect.poll(async () => (await stats(page))?.firstX).toBe(before.firstX)
+  await expect(region.getByRole('button', { name: '开始模拟采样', exact: true })).toBeVisible()
+  await page.getByRole('tab', { name: 'Agent 指南', exact: true }).click()
+  await expect(region).toHaveCount(0)
+  expect(await host.evaluate((element) => element.dataset.uplotDestroyed)).toBe('true')
+  expect(await host.evaluate((element) => element.isConnected)).toBe(false)
+  await page.evaluate(() => window.dispatchEvent(new Event('resize')))
+  expect(errors).toEqual([])
+})
+
+// Further NOT_RUN: actual document.visibilityState transitions across real tabs,
+// per-native-listener/observer detach accounting, mobile layout and heap measurements.
+// Pure pause-policy success does not substitute for those browser observations.

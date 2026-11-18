@@ -1,0 +1,23 @@
+{
+  "scope": "Raw command logs only; browser proposal is source text, not a run log.",
+  "files": {
+    "checkpoint-format.txt": "1c272c0ba047c0f9dadfc43d73a5a6271778634928779474a4eb8dd579af5084",
+    "checkpoint-types.txt": "6a0973c215dfd6f7ddcf7684f33ca922acd22b152d1367268cc25925f11a435a",
+    "final-format-green.txt": "e0fd41d1f9bb3113e857fe8492d5e6e30f9b13bc6ac2e9430fd55a9009d4e780",
+    "final-format.txt": "ba2a3415db627fd2ca574a371a624800da99f1e9e0ccc450f46a65a37ba8562e",
+    "final-metadata-green.txt": "91ef2fcc0afa71599fa8d1d5d229fc0a700aff3b482c1a5fd4fd2e0d5729fc0c",
+    "final-metadata.txt": "d6fd6a75522af7187988c0a168d53d0a1bb0b7953ca5da9655b9d83df87b9467",
+    "final-record-check.txt": "78de1d8ef10e1be5fa863171650ee059b262cb9f2adb4896422fbc4b177ce2fb",
+    "maintenance-format.txt": "e0369d3da714c0f1afad4b0d393bb054666d339a8e5b46f56c6261d756102e2b",
+    "official-fetch.txt": "9a8f0e15317e5a168ac12a5ac4ebdc3865e562c8e8630c48d236a679d3b3616b",
+    "official-metadata-format.txt": "5577eae037588a5e8804b045d625213c0d8e265eca750e0044f0b2c4d1792114",
+    "official-metadata-schema.txt": "0c918827e18dc6f0ed12cf445ab07cc63fa78b08204ac622da4ce3e8ef461de1",
+    "policy.txt": "a11792541c460ce311c1fcf5d8aed07f837be338df433081dd3098fc7f65fc46",
+    "proposal-format.txt": "98065a314b3271462dd0efe99df16a791e71868533a54a1440d76d9721bad27d",
+    "proposal-types.txt": "b47e0e744b2fdc87a75ccb230d02288a20acb977c10afb6e9ee3d6f5154e641d",
+    "scoped-diff-check.txt": "c621c3a178f3d80d12c408f45ab069e541160f6b44a195be82ec3b88b04e6a14",
+    "sdk.txt": "292a8f304dad7c77cc63679ff85bac8856a44320e31f7c586e939981749c3451",
+    "source-tool-ast.txt": "935c2976656c672123b21f613051174998078663afedcbf29cc9d6c5bf6f7364",
+    "source-tool-transport.txt": "3511e82511dd4a827fd8d3d0a9afcf5d86d4986252a8c372b447569ec3b4527e"
+  }
+}

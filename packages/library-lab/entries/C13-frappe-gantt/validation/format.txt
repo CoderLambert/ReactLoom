@@ -1,0 +1,387 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['pnpm', 'exec', 'biome', 'check', '--write', 'entries/C13-frappe-gantt/examples', 'entries/C13-frappe-gantt/tests', 'entries/C13-frappe-gantt/validation/sdk-source-audit.json']
+startedAt: 2026-11-10T16:14:41.734090+00:00
+exit: 0
+Skipped 28 suggested fixes.
+If you wish to apply the suggested (unsafe) fixes, use the command biome check --write --unsafe
+
+Checked 9 files in 11ms. Fixed 8 files.
+Found 18 infos.
+entries/C13-frappe-gantt/examples/example.tsx:139:17 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    137 │     const error = validatePlan(candidate)
+    138 │     if (error) {
+  > 139 │       setStatus('已拒绝保存，视图保持不变：' + error)
+        │                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    140 │       return
+    141 │     }
+  
+  i Unsafe fix: Use a template literal.
+  
+    137 137 │       const error = validatePlan(candidate)
+    138 138 │       if (error) {
+    139     │ - ······setStatus('已拒绝保存，视图保持不变：'·+·error)
+        139 │ + ······setStatus(`已拒绝保存，视图保持不变：${error}`)
+    140 140 │         return
+    141 141 │       }
+  
+
+entries/C13-frappe-gantt/examples/example.tsx:148:15 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    146 │     setTasks(candidate)
+    147 │     setRevision((value) => value + 1)
+  > 148 │     setStatus('已更新当前内存计划：' + task.id)
+        │               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    149 │   }
+    150 │   function previewCycle() {
+  
+  i Unsafe fix: Use a template literal.
+  
+    146 146 │       setTasks(candidate)
+    147 147 │       setRevision((value) => value + 1)
+    148     │ - ····setStatus('已更新当前内存计划：'·+·task.id)
+        148 │ + ····setStatus(`已更新当前内存计划：${task.id}`)
+    149 149 │     }
+    150 150 │     function previewCycle() {
+  
+
+entries/C13-frappe-gantt/examples/example.tsx:155:23 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    153 │     )
+    154 │     const error = validatePlan(candidate)
+  > 155 │     setStatus(error ? '演示依赖环被拒绝：' + error : '当前计划未形成闭环')
+        │                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    156 │   }
+    157 │   return (
+  
+  i Unsafe fix: Use a template literal.
+  
+    153 153 │       )
+    154 154 │       const error = validatePlan(candidate)
+    155     │ - ····setStatus(error·?·'演示依赖环被拒绝：'·+·error·:·'当前计划未形成闭环')
+        155 │ + ····setStatus(error·?·`演示依赖环被拒绝：${error}`·:·'当前计划未形成闭环')
+    156 156 │     }
+    157 157 │     return (
+  
+
+entries/C13-frappe-gantt/examples/example.tsx:216:21 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    214 │                 <td>
+    215 │                   {level === 'basic' ? (
+  > 216 │                     task.start + ' → ' + task.end
+        │                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    217 │                   ) : (
+    218 │                     <form
+  
+  i Unsafe fix: Use a template literal.
+  
+    214 214 │                   <td>
+    215 215 │                     {level === 'basic' ? (
+    216     │ - ····················task.start·+·'·→·'·+·task.end
+        216 │ + ····················`${task.start}·→·${task.end}`
+    217 217 │                     ) : (
+    218 218 │                       <form
+  
+
+entries/C13-frappe-gantt/examples/example.tsx:240:39 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    238 │                         开始{' '}
+    239 │                         <input
+  > 240 │                           aria-label={task.name + '开始日期'}
+        │                                       ^^^^^^^^^^^^^^^^^^^^^^
+    241 │                           type="date"
+    242 │                           name="start"
+  
+  i Unsafe fix: Use a template literal.
+  
+    238 238 │                           开始{' '}
+    239 239 │                           <input
+    240     │ - ··························aria-label={task.name·+·'开始日期'}
+        240 │ + ··························aria-label={`${task.name}开始日期`}
+    241 241 │                             type="date"
+    242 242 │                             name="start"
+  
+
+entries/C13-frappe-gantt/examples/example.tsx:252:39 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    250 │                         结束{' '}
+    251 │                         <input
+  > 252 │                           aria-label={task.name + '结束日期'}
+        │                                       ^^^^^^^^^^^^^^^^^^^^^^
+    253 │                           type="date"
+    254 │                           name="end"
+  
+  i Unsafe fix: Use a template literal.
+  
+    250 250 │                           结束{' '}
+    251 251 │                           <input
+    252     │ - ··························aria-label={task.name·+·'结束日期'}
+        252 │ + ··························aria-label={`${task.name}结束日期`}
+    253 253 │                             type="date"
+    254 254 │                             name="end"
+  
+
+entries/C13-frappe-gantt/examples/example.tsx:264:39 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    262 │                         进度{' '}
+    263 │                         <input
+  > 264 │                           aria-label={task.name + '进度'}
+        │                                       ^^^^^^^^^^^^^^^^^^
+    265 │                           type="number"
+    266 │                           name="progress"
+  
+  i Unsafe fix: Use a template literal.
+  
+    262 262 │                           进度{' '}
+    263 263 │                           <input
+    264     │ - ··························aria-label={task.name·+·'进度'}
+        264 │ + ··························aria-label={`${task.name}进度`}
+    265 265 │                             type="number"
+    266 266 │                             name="progress"
+  
+
+entries/C13-frappe-gantt/examples/plan-policy.mjs:26:27 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    24 │ export function validCivilDate(value) {
+    25 │   if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false
+  > 26 │   const parsed = new Date(value + 'T00:00:00Z')
+       │                           ^^^^^^^^^^^^^^^^^^^^
+    27 │   return Number.isFinite(parsed.getTime()) && parsed.toISOString().slice(0, 10) === value
+    28 │ }
+  
+  i Unsafe fix: Use a template literal.
+  
+    24 24 │   export function validCivilDate(value) {
+    25 25 │     if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false
+    26    │ - ··const·parsed·=·new·Date(value·+·'T00:00:00Z')
+       26 │ + ··const·parsed·=·new·Date(`${value}T00:00:00Z`)
+    27 27 │     return Number.isFinite(parsed.getTime()) && parsed.toISOString().slice(0, 10) === value
+    28 28 │   }
+  
+
+entries/C13-frappe-gantt/examples/plan-policy.mjs:45:14 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    43 │   for (const task of tasks) {
+    44 │     if (!validCivilDate(task.start) || !validCivilDate(task.end) || task.start > task.end)
+  > 45 │       return task.id + ' 的日期区间无效'
+       │              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    46 │     // Reserve padding room for the Day/Week/Month views. Subsequent arithmetic must also avoid 0..99 aliases.
+    47 │     if (task.start < MIN_PLAN_DATE || task.end > MAX_PLAN_DATE)
+  
+  i Unsafe fix: Use a template literal.
+  
+    43 43 │     for (const task of tasks) {
+    44 44 │       if (!validCivilDate(task.start) || !validCivilDate(task.end) || task.start > task.end)
+    45    │ - ······return·task.id·+·'·的日期区间无效'
+       45 │ + ······return·`${task.id}·的日期区间无效`
+    46 46 │       // Reserve padding room for the Day/Week/Month views. Subsequent arithmetic must also avoid 0..99 aliases.
+    47 47 │       if (task.start < MIN_PLAN_DATE || task.end > MAX_PLAN_DATE)
+  
+
+entries/C13-frappe-gantt/examples/plan-policy.mjs:57:56 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    55 │       )
+    56 │     // Use already validated UTC calendar dates; numeric Date constructors normalize years 0–99.
+  > 57 │     earliestStart = Math.min(earliestStart, Date.parse(task.start + 'T00:00:00Z'))
+       │                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^
+    58 │     latestEnd = Math.max(latestEnd, Date.parse(task.end + 'T00:00:00Z'))
+    59 │     if (!Number.isFinite(task.progress) || task.progress < 0 || task.progress > 100)
+  
+  i Unsafe fix: Use a template literal.
+  
+    55 55 │         )
+    56 56 │       // Use already validated UTC calendar dates; numeric Date constructors normalize years 0–99.
+    57    │ - ····earliestStart·=·Math.min(earliestStart,·Date.parse(task.start·+·'T00:00:00Z'))
+       57 │ + ····earliestStart·=·Math.min(earliestStart,·Date.parse(`${task.start}T00:00:00Z`))
+    58 58 │       latestEnd = Math.max(latestEnd, Date.parse(task.end + 'T00:00:00Z'))
+    59 59 │       if (!Number.isFinite(task.progress) || task.progress < 0 || task.progress > 100)
+  
+
+entries/C13-frappe-gantt/examples/plan-policy.mjs:58:48 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    56 │     // Use already validated UTC calendar dates; numeric Date constructors normalize years 0–99.
+    57 │     earliestStart = Math.min(earliestStart, Date.parse(task.start + 'T00:00:00Z'))
+  > 58 │     latestEnd = Math.max(latestEnd, Date.parse(task.end + 'T00:00:00Z'))
+       │                                                ^^^^^^^^^^^^^^^^^^^^^^^
+    59 │     if (!Number.isFinite(task.progress) || task.progress < 0 || task.progress > 100)
+    60 │       return task.id + ' 的进度必须是有限的 0–100 数字'
+  
+  i Unsafe fix: Use a template literal.
+  
+    56 56 │       // Use already validated UTC calendar dates; numeric Date constructors normalize years 0–99.
+    57 57 │       earliestStart = Math.min(earliestStart, Date.parse(task.start + 'T00:00:00Z'))
+    58    │ - ····latestEnd·=·Math.max(latestEnd,·Date.parse(task.end·+·'T00:00:00Z'))
+       58 │ + ····latestEnd·=·Math.max(latestEnd,·Date.parse(`${task.end}T00:00:00Z`))
+    59 59 │       if (!Number.isFinite(task.progress) || task.progress < 0 || task.progress > 100)
+    60 60 │         return task.id + ' 的进度必须是有限的 0–100 数字'
+  
+
+entries/C13-frappe-gantt/examples/plan-policy.mjs:60:14 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    58 │     latestEnd = Math.max(latestEnd, Date.parse(task.end + 'T00:00:00Z'))
+    59 │     if (!Number.isFinite(task.progress) || task.progress < 0 || task.progress > 100)
+  > 60 │       return task.id + ' 的进度必须是有限的 0–100 数字'
+       │              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    61 │     if (typeof task.dependencies !== 'string') return task.id + ' 的依赖格式无效'
+    62 │     const deps = task.dependencies
+  
+  i Unsafe fix: Use a template literal.
+  
+    58 58 │       latestEnd = Math.max(latestEnd, Date.parse(task.end + 'T00:00:00Z'))
+    59 59 │       if (!Number.isFinite(task.progress) || task.progress < 0 || task.progress > 100)
+    60    │ - ······return·task.id·+·'·的进度必须是有限的·0–100·数字'
+       60 │ + ······return·`${task.id}·的进度必须是有限的·0–100·数字`
+    61 61 │       if (typeof task.dependencies !== 'string') return task.id + ' 的依赖格式无效'
+    62 62 │       const deps = task.dependencies
+  
+
+entries/C13-frappe-gantt/examples/plan-policy.mjs:61:55 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    59 │     if (!Number.isFinite(task.progress) || task.progress < 0 || task.progress > 100)
+    60 │       return task.id + ' 的进度必须是有限的 0–100 数字'
+  > 61 │     if (typeof task.dependencies !== 'string') return task.id + ' 的依赖格式无效'
+       │                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    62 │     const deps = task.dependencies
+    63 │       .split(',')
+  
+  i Unsafe fix: Use a template literal.
+  
+    59 59 │       if (!Number.isFinite(task.progress) || task.progress < 0 || task.progress > 100)
+    60 60 │         return task.id + ' 的进度必须是有限的 0–100 数字'
+    61    │ - ····if·(typeof·task.dependencies·!==·'string')·return·task.id·+·'·的依赖格式无效'
+       61 │ + ····if·(typeof·task.dependencies·!==·'string')·return·`${task.id}·的依赖格式无效`
+    62 62 │       const deps = task.dependencies
+    63 63 │         .split(',')
+  
+
+entries/C13-frappe-gantt/examples/plan-policy.mjs:66:52 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    64 │       .map((id) => id.trim())
+    65 │       .filter(Boolean)
+  > 66 │     if (new Set(deps).size !== deps.length) return task.id + ' 的依赖存在重复 ID'
+       │                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    67 │     for (const id of deps) {
+    68 │       if (!byId.has(id) || id === task.id) return task.id + ' 存在非法任务依赖'
+  
+  i Unsafe fix: Use a template literal.
+  
+    64 64 │         .map((id) => id.trim())
+    65 65 │         .filter(Boolean)
+    66    │ - ····if·(new·Set(deps).size·!==·deps.length)·return·task.id·+·'·的依赖存在重复·ID'
+       66 │ + ····if·(new·Set(deps).size·!==·deps.length)·return·`${task.id}·的依赖存在重复·ID`
+    67 67 │       for (const id of deps) {
+    68 68 │         if (!byId.has(id) || id === task.id) return task.id + ' 存在非法任务依赖'
+  
+
+entries/C13-frappe-gantt/examples/plan-policy.mjs:68:51 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    66 │     if (new Set(deps).size !== deps.length) return task.id + ' 的依赖存在重复 ID'
+    67 │     for (const id of deps) {
+  > 68 │       if (!byId.has(id) || id === task.id) return task.id + ' 存在非法任务依赖'
+       │                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    69 │       downstream.get(id).push(task.id)
+    70 │     }
+  
+  i Unsafe fix: Use a template literal.
+  
+    66 66 │       if (new Set(deps).size !== deps.length) return task.id + ' 的依赖存在重复 ID'
+    67 67 │       for (const id of deps) {
+    68    │ - ······if·(!byId.has(id)·||·id·===·task.id)·return·task.id·+·'·存在非法任务依赖'
+       68 │ + ······if·(!byId.has(id)·||·id·===·task.id)·return·`${task.id}·存在非法任务依赖`
+    69 69 │         downstream.get(id).push(task.id)
+    70 70 │       }
+  
+
+entries/C13-frappe-gantt/examples/plan-policy.mjs:74:12 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    72 │   }
+    73 │   if (latestEnd - earliestStart > MAX_PLAN_SPAN_DAYS * 86400000)
+  > 74 │     return '演示计划跨度不能超过 ' + MAX_PLAN_SPAN_DAYS + ' 个 UTC 日'
+       │            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    75 │   const queue = [...pending].filter(([, degree]) => degree === 0).map(([id]) => id)
+    76 │   let processed = 0
+  
+  i Unsafe fix: Use a template literal.
+  
+    72 72 │     }
+    73 73 │     if (latestEnd - earliestStart > MAX_PLAN_SPAN_DAYS * 86400000)
+    74    │ - ····return·'演示计划跨度不能超过·'·+·MAX_PLAN_SPAN_DAYS·+·'·个·UTC·日'
+       74 │ + ····return·`演示计划跨度不能超过·${MAX_PLAN_SPAN_DAYS}·个·UTC·日`
+    75 75 │     const queue = [...pending].filter(([, degree]) => degree === 0).map(([id]) => id)
+    76 76 │     let processed = 0
+  
+
+entries/C13-frappe-gantt/tests/plan-policy.test.mjs:66:21 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    64 │   for (const year of ['0101', '9998']) {
+    65 │     const plan = fixture()
+  > 66 │     plan[1].start = year + '-01-01'
+       │                     ^^^^^^^^^^^^^^^
+    67 │     plan[1].end = year + '-01-02'
+    68 │     const before = structuredClone(plan)
+  
+  i Unsafe fix: Use a template literal.
+  
+     64  64 │     for (const year of ['0101', '9998']) {
+     65  65 │       const plan = fixture()
+     66     │ - ····plan[1].start·=·year·+·'-01-01'
+         66 │ + ····plan[1].start·=·`${year}-01-01`
+     67  67 │       plan[1].end = year + '-01-02'
+     68  68 │       const before = structuredClone(plan)
+  
+
+entries/C13-frappe-gantt/tests/plan-policy.test.mjs:67:19 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    65 │     const plan = fixture()
+    66 │     plan[1].start = year + '-01-01'
+  > 67 │     plan[1].end = year + '-01-02'
+       │                   ^^^^^^^^^^^^^^^
+    68 │     const before = structuredClone(plan)
+    69 │     assert.match(validatePlan(plan), /730.*UTC/, year)
+  
+  i Unsafe fix: Use a template literal.
+  
+     65  65 │       const plan = fixture()
+     66  66 │       plan[1].start = year + '-01-01'
+     67     │ - ····plan[1].end·=·year·+·'-01-02'
+         67 │ + ····plan[1].end·=·`${year}-01-02`
+     68  68 │       const before = structuredClone(plan)
+     69  69 │       assert.match(validatePlan(plan), /730.*UTC/, year)
+  
+

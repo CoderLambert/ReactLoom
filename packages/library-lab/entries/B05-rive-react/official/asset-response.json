@@ -1,0 +1,22 @@
+{
+  "url": "https://cdn.rive.app/animations/vehicles.riv",
+  "finalUrl": "https://cdn.rive.app/animations/vehicles.riv",
+  "status": 200,
+  "headers": {
+    "Content-Type": "application/octet-stream",
+    "Content-Length": "58792",
+    "Connection": "close",
+    "Accept-Ranges": "bytes",
+    "Date": "Tue, 10 Nov 2026 08:06:42 GMT",
+    "Server": "AmazonS3",
+    "Last-Modified": "Wed, 16 Jun 2021 19:37:48 GMT",
+    "ETag": "\"1a1871ed122ad22ccea3ef67f7bcc943\"",
+    "X-Cache": "Hit from cloudfront",
+    "Via": "1.1 eaee3b8a8ed6d0d333734526057aefba.cloudfront.net (CloudFront)",
+    "X-Amz-Cf-Pop": "NRT12-P6",
+    "X-Amz-Cf-Id": "Q59npee5Q_RngEc9TPAjJAG8x_IMai2sFDAOSZI9xJybiNOFIIwHtw==",
+    "Age": "17302"
+  },
+  "body": "NOT_READ: no .riv bytes stored or parsed; remote reference only",
+  "checkedAt": "2026-11-10T12:55:04.179428+00:00"
+}

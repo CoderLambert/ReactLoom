@@ -1,0 +1,16 @@
+✔ StarterKit paragraph/format JSON stays usable (0.702316ms)
+✔ rejects malformed/oversized/empty documents without recovery (0.205103ms)
+✔ rejects dangerous attributes, unknown nodes and unbounded depth (0.548017ms)
+✔ allows safe HTTPS links while rejecting embedded credentials (0.305524ms)
+✔ storage empty, quota and denied access are visible failures without other keys (1.304446ms)
+✔ actual configured StarterKit schema roundtrips valid document and bold marks (4.360793ms)
+✔ actual schema rejects structurally invalid allowed nodes before any editor mutation (1.246244ms)
+✔ policy rejects implicit level-one headings accepted by actual schema defaults (1.926519ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 127.867432

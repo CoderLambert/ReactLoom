@@ -1,14 +1,14 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "存在针对目标 SDK 的定向测试，但依赖/运行环境尚未执行"
+    "note": "本地真实SDK 5 项通过；见local-validation.md；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
   },
   "build": {
     "status": "NOT_RUN",
-    "note": "需 PLATFORM 更新真实 pnpm lock 并执行完整构建"
+    "note": "candidate-23本地build通过；见local-validation.md；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "交互与取消需要浏览器验证"
+    "note": "candidate-23本地browser通过；见local-validation.md；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
   }
 }

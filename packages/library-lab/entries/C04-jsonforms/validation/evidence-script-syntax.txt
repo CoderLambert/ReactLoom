@@ -1,0 +1,5 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['python3', '-c', "import ast,pathlib; paths=[pathlib.Path('entries/C04-jsonforms/validation/fetch-official.py'),pathlib.Path('entries/C04-jsonforms/validation/fetch-homepage.py')]; [ast.parse(p.read_text(), filename=str(p)) for p in paths]; print('2 evidence scripts parse; no HTTP or SDK execution')"]
+startedAt: 2026-11-10T15:41:05.637708+00:00
+exit: 0
+2 evidence scripts parse; no HTTP or SDK execution

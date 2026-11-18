@@ -1,0 +1,24 @@
+{
+  "checkedAt": "2026-11-10T10:07:37.612386+00:00",
+  "requestedUrl": "https://dndkit.com",
+  "finalUrl": "https://dndkit.com",
+  "method": "GET",
+  "status": 200,
+  "headers": {
+    "Date": "Tue, 10 Nov 2026 10:07:38 GMT",
+    "Content-Type": "text/html",
+    "Transfer-Encoding": "chunked",
+    "Connection": "close",
+    "CF-Cache-Status": "HIT",
+    "Cache-Control": "public, max-age=0, must-revalidate",
+    "Nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+    "Server-Timing": "cfCacheStatus;desc=\"HIT\"",
+    "Report-To": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=9Mtnaonoz%2B1hzvCQNsh3jh6VjxggVh7NODz0GHCASqK2OK3F6bWeDR2zJ4lsShVqwUC60r3%2BCsMvhDYGvUk0V9ghlmuiaOQIq0yKOkW5eoiVDdr9wDIx3qhuWf6S\"}]}",
+    "Server": "cloudflare",
+    "CF-RAY": "a5844058eb0d6640-AMS",
+    "alt-svc": "h3=\":443\"; ma=86400"
+  },
+  "xFrameOptions": null,
+  "contentSecurityPolicy": null,
+  "browserFromLabOrigin": "NOT_RUN"
+}

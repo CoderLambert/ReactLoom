@@ -1,0 +1,15 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["pnpm", "--dir", "packages/library-lab", "exec", "node", "entries/C19-nuqs/validation/metadata-check.mjs"], "utc": "2026-11-10T18:26:12.423460+00:00", "exit": 0}
+{
+  "levels": 3,
+  "sourceFiles": 8,
+  "inputs": 18,
+  "publisherLinks": 9,
+  "installedNuqsFiles": 12,
+  "coreFiles": 2,
+  "unchangedSdkPolicyAndHistoricalSources": 10,
+  "runtimeMatchesCandidate21": true,
+  "readmeBytes": 31845,
+  "homepage": "unknown",
+  "newBrowser": "NOT_RUN",
+  "formal": "NOT_RUN"
+}

@@ -1,0 +1,35 @@
+{
+  "checkedAt": "2026-11-10T09:17:53.180910+00:00",
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "head": "1218066e706a90ba03fac8dff8c9b843dd2429c4",
+  "identityCheck": {
+    "actual": 119,
+    "queued": 116,
+    "references": 3,
+    "missing": [],
+    "duplicate": []
+  },
+  "commands": [
+    {
+      "command": [
+        "pnpm",
+        "--filter",
+        "@reactloom/library-lab",
+        "catalog:index"
+      ],
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "exitCode": 1,
+      "log": "docs/library-lab/evidence/quality-upgrade/initial-committed-index.log"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "exitCode": 0,
+      "log": "docs/library-lab/evidence/quality-upgrade/initial-diff-check.log"
+    }
+  ]
+}

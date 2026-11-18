@@ -1,0 +1,15 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv=["node", "--test", "entries/A11-konva/tests/stage-policy.test.mts"]
+start=2026-11-10T11:42:39.377303+00:00
+end=2026-11-10T11:42:39.464403+00:00
+exit=0
+✔ narrow Stage honors actual host rather than forcing 320px overflow (0.432197ms)
+✔ sample cap and duplicate ids keep canvas node count bounded (0.166596ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 63.226165

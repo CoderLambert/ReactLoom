@@ -1,0 +1,5 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['node', 'entries/C09-react-virtuoso/validation/metadata-check.mjs']
+startedAt: 2026-11-10T15:53:20.503266+00:00
+exit: 0
+C09 3 goals / 5 sources / installed4.18.19 / annotated-tag+matching manifest / original9703B+SHA / homepage unknown with complete GET headers / formal NOT_RUN

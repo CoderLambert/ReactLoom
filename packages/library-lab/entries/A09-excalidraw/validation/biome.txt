@@ -1,0 +1,4 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: pnpm exec biome check --write entries/A09-excalidraw/examples entries/A09-excalidraw/tests entries/A09-excalidraw/validation/check-entry.mjs entries/A09-excalidraw/library.json entries/A09-excalidraw/verification.json entries/A09-excalidraw/official/source-audit.json entries/A09-excalidraw/official/homepage-response.json
+exit: 0
+Checked 10 files in 10ms. No fixes applied.

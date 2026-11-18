@@ -1,0 +1,55 @@
+{
+  "installedPath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/valibot@1.4.2_typescript@7.0.2/node_modules/valibot",
+  "package": {
+    "name": "valibot",
+    "version": "1.4.2",
+    "license": "MIT",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/open-circle/valibot"
+    },
+    "peerDependencies": {
+      "typescript": ">=5"
+    }
+  },
+  "files": [
+    {
+      "file": "package.json",
+      "sha256": "f8c0413b3a5b951c5e3522e0ec0a3b1c4bce6d4d98d87b02bbaff05a2cb4abcb"
+    },
+    {
+      "file": "dist/index.mjs",
+      "sha256": "df5a9ac0c6b7183af2571ab48e22719e4ab5fe331bc7afe04301472607b80a60"
+    },
+    {
+      "file": "dist/index.d.mts",
+      "sha256": "f711dbb430ead45328c122ed13be0d9a500c811c16ba0492fefcee97f4e56747"
+    }
+  ],
+  "excerpts": {
+    "function safeParse(": {
+      "offset": 200734,
+      "source": "function safeParse(schema, input, config$1) {\n\tconst dataset = schema[\"~run\"]({ value: input }, /* @__PURE__ */ getGlobalConfig(config$1));\n\treturn {\n\t\ttyped: dataset.typed,\n\t\tsuccess: !dataset.issues,\n\t\toutput: dataset.value,\n\t\tissues: dataset.issues\n\t};\n}\n\n//#endregion\n//#region src/methods/safeParse/safeParseAsync.ts\n/**\n* Parses an unknown input based on a schema.\n*\n* @param schema The schema to be used.\n* @param input The input to be parsed.\n* @param config The parse configuration.\n*\n* @returns The parse result.\n*/\n/* @__NO_SIDE_EFFECTS__ */\nasync function safeParseAsync(schema, input, config$1) {\n\tconst dataset = await schema[\"~run\"]({ value: input }, /* @__PURE__ */ getGlobalConfig(config$1));\n\treturn {\n\t\ttyped: dataset.typed,\n\t\tsuccess: !dataset.issues,\n\t\toutput: dataset.value,\n\t\tissues: dataset.issues\n\t};\n}\n\n//#endregion\n//#region src/methods/safeParser/safeParser.ts\n/* @__NO_SIDE_EFFECTS__ */\nfunction safeParser(schema, config"
+    },
+    "function object(": {
+      "offset": 144836,
+      "source": "function object(entries$1, message$1) {\n\treturn {\n\t\tkind: \"schema\",\n\t\ttype: \"object\",\n\t\treference: object,\n\t\texpects: \"Object\",\n\t\tasync: false,\n\t\tentries: entries$1,\n\t\tmessage: message$1,\n\t\tget \"~standard\"() {\n\t\t\treturn /* @__PURE__ */ _getStandardProps(this);\n\t\t},\n\t\t\"~run\"(dataset, config$1) {\n\t\t\tconst input = dataset.value;\n\t\t\tif (input && typeof input === \"object\") {\n\t\t\t\tdataset.typed = true;\n\t\t\t\tdataset.value = {};\n\t\t\t\tfor (const key in this.entries) {\n\t\t\t\t\tconst valueSchema = this.entries[key];\n\t\t\t\t\tif (key in input || (valueSchema.type === \"exact_optional\" || valueSchema.type === \"optional\" || valueSchema.type === \"nullish\") && valueSchema.default !== void 0) {\n\t\t\t\t\t\tconst value$1 = key in input ? input[key] : /* @__PURE__ */ getDefault(valueSchema);\n\t\t\t\t\t\tconst valueDataset = valueSchema[\"~run\"]({ value: value$1 }, config$1);\n\t\t\t\t\t\tif (valueDataset.issues) {\n\t\t\t\t\t\t\tconst pathItem = {\n\t\t\t\t\t\t\t\ttype: \"object\",\n\t\t\t\t\t\t\t\torigin: \"value"
+    },
+    "function partialCheck(": {
+      "offset": 70421,
+      "source": "function partialCheck(paths, requirement, message$1) {\n\treturn {\n\t\tkind: \"validation\",\n\t\ttype: \"partial_check\",\n\t\treference: partialCheck,\n\t\tasync: false,\n\t\texpects: null,\n\t\tpaths,\n\t\trequirement,\n\t\tmessage: message$1,\n\t\t\"~run\"(dataset, config$1) {\n\t\t\tif ((dataset.typed || /* @__PURE__ */ _isPartiallyTyped(dataset, paths)) && !this.requirement(dataset.value)) _addIssue(this, \"input\", dataset, config$1);\n\t\t\treturn dataset;\n\t\t}\n\t};\n}\n\n//#endregion\n//#region src/actions/partialCheck/partialCheckAsync.ts\n/* @__NO_SIDE_EFFECTS__ */\nfunction partialCheckAsync(paths, requirement, message$1) {\n\treturn {\n\t\tkind: \"validation\",\n\t\ttype: \"partial_check\",\n\t\treference: partialCheckAsync,\n\t\tasync: true,\n\t\texpects: null,\n\t\tpaths,\n\t\trequirement,\n\t\tmessage: message$1,\n\t\tasync \"~run\"(dataset, config$1) {\n\t\t\tif ((dataset.typed || /* @__PURE__ */ _isPartiallyTyped(dataset, paths)) && !await this.requirement(dataset.value)) _addIssue(this, \"input\", dataset, co"
+    },
+    "function forward(": {
+      "offset": 100428,
+      "source": "function forward(action, path) {\n\treturn {\n\t\t...action,\n\t\t\"~run\"(dataset, config$1) {\n\t\t\tconst prevIssues = dataset.issues && [...dataset.issues];\n\t\t\tdataset = action[\"~run\"](dataset, config$1);\n\t\t\tif (dataset.issues) {\n\t\t\t\tfor (const issue of dataset.issues) if (!prevIssues?.includes(issue)) {\n\t\t\t\t\tlet pathInput = dataset.value;\n\t\t\t\t\tfor (const key of path) {\n\t\t\t\t\t\tconst pathValue = pathInput[key];\n\t\t\t\t\t\tconst pathItem = {\n\t\t\t\t\t\t\ttype: \"unknown\",\n\t\t\t\t\t\t\torigin: \"value\",\n\t\t\t\t\t\t\tinput: pathInput,\n\t\t\t\t\t\t\tkey,\n\t\t\t\t\t\t\tvalue: pathValue\n\t\t\t\t\t\t};\n\t\t\t\t\t\tif (issue.path) issue.path.push(pathItem);\n\t\t\t\t\t\telse issue.path = [pathItem];\n\t\t\t\t\t\tif (!pathValue) break;\n\t\t\t\t\t\tpathInput = pathValue;\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t\treturn dataset;\n\t\t}\n\t};\n}\n\n//#endregion\n//#region src/methods/forward/forwardAsync.ts\n/**\n* Forwards the issues of the passed validation action.\n*\n* @param action The validation action.\n* @param path The path to forward the issues to.\n*\n* @"
+    },
+    "function getDotPath(": {
+      "offset": 13942,
+      "source": "function getDotPath(issue) {\n\tif (issue.path) {\n\t\tlet key = \"\";\n\t\tfor (const item of issue.path) if (typeof item.key === \"string\" || typeof item.key === \"number\") if (key) key += `.${item.key}`;\n\t\telse key += item.key;\n\t\telse return null;\n\t\treturn key;\n\t}\n\treturn null;\n}\n\n//#endregion\n//#region src/utils/isOfKind/isOfKind.ts\n/**\n* A generic type guard to check the kind of an object.\n*\n* @param kind The kind to check for.\n* @param object The object to check.\n*\n* @returns Whether it matches.\n*/\n/* @__NO_SIDE_EFFECTS__ */\nfunction isOfKind(kind, object$1) {\n\treturn object$1.kind === kind;\n}\n\n//#endregion\n//#region src/utils/isOfType/isOfType.ts\n/**\n* A generic type guard to check the type of an object.\n*\n* @param type The type to check for.\n* @param object The object to check.\n*\n* @returns Whether it matches.\n*/\n/* @__NO_SIDE_EFFECTS__ */\nfunction isOfType(type, object$1) {\n\treturn object$1.type === type;\n}\n\n//#endregion\n//#region src/util"
+    },
+    "function isoDate(": {
+      "offset": 45930,
+      "source": "function isoDate(message$1) {\n\treturn {\n\t\tkind: \"validation\",\n\t\ttype: \"iso_date\",\n\t\treference: isoDate,\n\t\tasync: false,\n\t\texpects: null,\n\t\trequirement: ISO_DATE_REGEX,\n\t\tmessage: message$1,\n\t\t\"~run\"(dataset, config$1) {\n\t\t\tif (dataset.typed && !this.requirement.test(dataset.value)) _addIssue(this, \"date\", dataset, config$1);\n\t\t\treturn dataset;\n\t\t}\n\t};\n}\n\n//#endregion\n//#region src/actions/isoDateTime/isoDateTime.ts\n/* @__NO_SIDE_EFFECTS__ */\nfunction isoDateTime(message$1) {\n\treturn {\n\t\tkind: \"validation\",\n\t\ttype: \"iso_date_time\",\n\t\treference: isoDateTime,\n\t\tasync: false,\n\t\texpects: null,\n\t\trequirement: ISO_DATE_TIME_REGEX,\n\t\tmessage: message$1,\n\t\t\"~run\"(dataset, config$1) {\n\t\t\tif (dataset.typed && !this.requirement.test(dataset.value)) _addIssue(this, \"date-time\", dataset, config$1);\n\t\t\treturn dataset;\n\t\t}\n\t};\n}\n\n//#endregion\n//#region src/actions/isoDateTimeSecond/isoDateTimeSecond.ts\n/* @__NO_SIDE_EFFECTS__ */\nfunction isoDateTimeSec"
+    }
+  }
+}

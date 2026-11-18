@@ -1,0 +1,15 @@
+# C18 安装版本与所有权审计
+
+实际源码/类型只读审计，15份文件realPath/bytes/SHA在sdk-source-audit.json；metadata-final再次逐份读安装文件验证摘要，不把静态审计当新SDK调用。实装react-i18next17.0.16、i18next26.4.3，MIT，声明peer允许React≥16.8/core≥26.2/TS5–7。
+
+- I18nextProvider.js仅useMemo上下文值，不创建/初始化/销毁instance。Trans.js与useTranslation.js优先props/Context，再模块default；本例通过Provider传稳定原instance，不调用会setI18n默认单例的initReactI18next插件。
+- useTranslation.js约60–75行用useSyncExternalStore subscribe包装callback，按同一wrappedCallback on/off；getSnapshot返回语言/ready/t。约143–221行维护i18nWrapper，language/resolvedLanguage/languages变动时身份变。旧应用useMemo依赖hook wrapper会在语言事件后换队列；新队列在workspace稳定原instance session，hook只消费t/ready。
+- 默认bindI18n为languageChanged，bindI18nStore空；本例资源初始化完整、不演示动态store更新。ready依赖真实isInitialized和namespace可用；useSuspense:false仍需要调用方处理未就绪，不能等同所有异步失败解决方案。
+- defaults.js的transSupportBasicHtmlNodes=true和keep-list存在，TransWithoutContext解析known names/keep names，还会把词条node.attrs并入映射组件props。组件映射不是安全净化器。本例显式关闭basic keep-list，SafeEmphasis忽略所有词条属性只取children；源码内资源可信，用户昵称只进React文本t输出。
+- 真实SDK5包含ReactDOMServer的Provider/useTranslation/Trans，不是mock binding；静态markup证明生成结果，不测订阅effect或hydration。真实浏览器由root固定19验证四项，另有自有observer供可视诊断，因此这是实际绑定整体而非隔离SDK内部订阅算法的单元证明。
+- i18next init使用resources副本、fallback en/supported zh,en/两个namespace/initAsync:false。structuredClone隔离资源引用，不只隔离语言字段；SDK测试A addResource不会改变B资源。
+- language-switch.mjs串行，等待只保最新意图。原SDK已开始调用仍可能发中间事件，最新commit不等于语言原子事务；真实手动gate配方覆盖第一次languageChanged后队列仍存在且第二意图可放行。
+- observer是session自己的onLanguageChanged，dispose只off同一handler。useTranslation负责自己的off，不用off(event)清掉其订阅。session.dispose先停queue再拒绝held Promise、阻止后续call/publish；不宣称abort已经进入SDK的changeLanguage。
+- 手动gate是明确本地Promise fixture，无timer/网络/后端/Worker。拒绝为fixture错误，重试真实按钮避免同一select原生change不触发；解除manual会放行当前held请求。初始化与gate分开，不冒充语言包网络失败。
+
+当前9运行源及完整提案与candidate19精确绑定见shared-evidence.json。Node真实SDK5/纯policy4有效日志复用，浏览器C18四项通过；候选19整轮11PASS/1FAIL（B15公共URL）保留，不能把整轮写成exit0。

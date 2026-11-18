@@ -1,0 +1,30 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom
+argv: ['python3', '/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C15-dayjs/validation/fetch-official.py']
+startedAt: 2026-11-10T17:19:17.144777+00:00
+exit: 0
+{
+  "commit": "4549b8d03307891143e8a50d39fcdab1f16f77cf",
+  "readme": {
+    "path": "docs/zh-cn/README.zh-CN.md",
+    "snapshotPath": "official/readme.md",
+    "language": "zh-CN",
+    "bytes": 3882,
+    "sha256": "3f4c6e9edd42554b8c6a1e111daafb568b4eba3e8b9da31a9296abebb8aae2c5"
+  },
+  "packageReadme": {
+    "path": "README.md",
+    "snapshotPath": "official/package-readme.md",
+    "language": "en",
+    "bytes": 8229,
+    "sha256": "900c80d1b626c1a777f977111322badede124381407b3f6de23e314c05239b27"
+  },
+  "homepage": {
+    "url": "https://day.js.org/zh-CN/",
+    "declaredHomepage": "https://day.js.org",
+    "selectionReason": "Official Chinese documentation URL actually linked by the matching original README.",
+    "status": "unknown",
+    "checkedAt": "2026-11-10T17:19:24.050895+00:00",
+    "browserFromLabOrigin": "NOT_RUN",
+    "reason": "Full response headers alone do not prove a usable Lab-origin iframe."
+  }
+}

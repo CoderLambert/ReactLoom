@@ -1,0 +1,18 @@
+{
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "argv": [
+    "pnpm",
+    "--filter",
+    "@reactloom/library-lab",
+    "exec",
+    "biome",
+    "check",
+    "--write",
+    "entries/D18-comlink/examples",
+    "entries/D18-comlink/tests",
+    "entries/D18-comlink/library.json",
+    "entries/D18-comlink/validation/browser.spec.ts"
+  ],
+  "exitCode": 0,
+  "at": "2026-11-17T17:04:36.470618+00:00"
+}

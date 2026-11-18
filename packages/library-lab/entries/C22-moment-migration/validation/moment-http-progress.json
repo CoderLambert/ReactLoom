@@ -1,0 +1,156 @@
+[
+  {
+    "url": "https://api.github.com/repos/moment/moment/git/ref/tags/2.30.1",
+    "finalUrl": "https://api.github.com/repos/moment/moment/git/ref/tags/2.30.1",
+    "checkedAt": "2026-11-11T05:57:42.541917+00:00",
+    "status": 200,
+    "rawHeaders": [
+      [
+        "Date",
+        "Wed, 11 Nov 2026 05:57:42 GMT"
+      ],
+      [
+        "Content-Type",
+        "application/json; charset=utf-8"
+      ],
+      [
+        "Cache-Control",
+        "public, max-age=60, s-maxage=60"
+      ],
+      [
+        "Vary",
+        "Accept,Accept-Encoding, Accept, X-Requested-With"
+      ],
+      [
+        "ETag",
+        "W/\"3330071a34cd99cd9abfa3160bd9ab8e9cba6afdc9066690ee288c95682d6cd1\""
+      ],
+      [
+        "Last-Modified",
+        "Tue, 10 Nov 2026 16:25:47 GMT"
+      ],
+      [
+        "X-Poll-Interval",
+        "300"
+      ],
+      [
+        "X-GitHub-Media-Type",
+        "github.v3; format=json"
+      ],
+      [
+        "x-github-api-version-selected",
+        "2022-11-28"
+      ],
+      [
+        "Access-Control-Expose-Headers",
+        "ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset, Warning"
+      ],
+      [
+        "Access-Control-Allow-Origin",
+        "*"
+      ],
+      [
+        "Strict-Transport-Security",
+        "max-age=31536000; includeSubdomains; preload"
+      ],
+      [
+        "X-Frame-Options",
+        "deny"
+      ],
+      [
+        "X-Content-Type-Options",
+        "nosniff"
+      ],
+      [
+        "X-XSS-Protection",
+        "0"
+      ],
+      [
+        "Referrer-Policy",
+        "origin-when-cross-origin, strict-origin-when-cross-origin"
+      ],
+      [
+        "Content-Security-Policy",
+        "default-src 'none'"
+      ],
+      [
+        "Server",
+        "github.com"
+      ],
+      [
+        "Accept-Ranges",
+        "bytes"
+      ],
+      [
+        "X-RateLimit-Limit",
+        "60"
+      ],
+      [
+        "X-RateLimit-Remaining",
+        "31"
+      ],
+      [
+        "X-RateLimit-Used",
+        "29"
+      ],
+      [
+        "X-RateLimit-Resource",
+        "core"
+      ],
+      [
+        "X-RateLimit-Reset",
+        "1794378479"
+      ],
+      [
+        "Content-Length",
+        "325"
+      ],
+      [
+        "X-GitHub-Request-Id",
+        "E6D8:2CCBD4:18A670F:4D849BF:6AF403D6"
+      ],
+      [
+        "x-github-edge-region",
+        "iad"
+      ],
+      [
+        "connection",
+        "close"
+      ]
+    ],
+    "headers": {
+      "Date": "Wed, 11 Nov 2026 05:57:42 GMT",
+      "Content-Type": "application/json; charset=utf-8",
+      "Cache-Control": "public, max-age=60, s-maxage=60",
+      "Vary": "Accept,Accept-Encoding, Accept, X-Requested-With",
+      "ETag": "W/\"3330071a34cd99cd9abfa3160bd9ab8e9cba6afdc9066690ee288c95682d6cd1\"",
+      "Last-Modified": "Tue, 10 Nov 2026 16:25:47 GMT",
+      "X-Poll-Interval": "300",
+      "X-GitHub-Media-Type": "github.v3; format=json",
+      "x-github-api-version-selected": "2022-11-28",
+      "Access-Control-Expose-Headers": "ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset, Warning",
+      "Access-Control-Allow-Origin": "*",
+      "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+      "X-Frame-Options": "deny",
+      "X-Content-Type-Options": "nosniff",
+      "X-XSS-Protection": "0",
+      "Referrer-Policy": "origin-when-cross-origin, strict-origin-when-cross-origin",
+      "Content-Security-Policy": "default-src 'none'",
+      "Server": "github.com",
+      "Accept-Ranges": "bytes",
+      "X-RateLimit-Limit": "60",
+      "X-RateLimit-Remaining": "31",
+      "X-RateLimit-Used": "29",
+      "X-RateLimit-Resource": "core",
+      "X-RateLimit-Reset": "1794378479",
+      "Content-Length": "325",
+      "X-GitHub-Request-Id": "E6D8:2CCBD4:18A670F:4D849BF:6AF403D6",
+      "x-github-edge-region": "iad",
+      "connection": "close"
+    },
+    "bodyStatus": "READ",
+    "bytes": 325,
+    "sha256": "75d22e4ad44d4f975d81859c2057413a4cd31b6de54cf0728ca6e6f1b8318638",
+    "redactions": []
+  }
+]

@@ -18,7 +18,7 @@ Lab 示例从包的默认导出构造 `PQueue`。不要用 v7–v9 教程里的�
 
 basic 只传 `concurrency`。business / advanced 额外使用 `interval: 600`、`intervalCap: 3`、`strict: true`。优先级写在仍会等待的任务上。
 
-取消保持现在的写法：`pause()` 加上共享 `AbortController`。不要改成 `clear()` 之后还 `await Promise.allSettled`。
+取消保持现在的写法：`pause()` 加上共享 `AbortController`。v10 `clear()` 会拒绝等待任务但不停止运行任务，不能代替整批 signal 取消。
 
 ## 不可删的清理
 
@@ -35,7 +35,7 @@ basic 只传 `concurrency`。business / advanced 额外使用 `interval: 600`、
 - v10 调用 `queue.on`。
 - 把固定窗 `intervalCap` 当成滑动窗口，却不设 `strict: true`。
 - 重试循环包在同一次 `add` 里。
-- `clear()` 之后指望 `allSettled` 结束。
+- 以为 `clear()` 会中止运行中的 I/O。
 - `onEmpty()` 时释放仍被运行中任务使用的资源。
 - 一次提交十万个闭包。
 - 用优先级抢占已经运行的任务。
@@ -58,3 +58,5 @@ basic 只传 `concurrency`。business / advanced 额外使用 `interval: 600`、
 ## 证据
 
 sdk、build、browser 保持 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有匹配收据。Actions 41779873259 不是本条目 PASS。不要改 `verification.json`。
+
+迁入前提：`pnpm add p-queue@10.0.0`；React + TypeScript 浏览器宿主，复制 example.tsx，传 level。计时与 RSS 都是本地 fixture，不配置账号、网络或持久存储。卡片的启动序号/相对毫秒用于观察 strict 窗口和 priority；不是基准数据。

@@ -1,0 +1,10 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ["node", "entries/B05-rive-react/validation/metadata-check.mjs"]
+startedAt: 2026-11-10T13:14:34.194415+00:00
+finishedAt: 2026-11-10T13:14:34.227458+00:00
+exitCode: 0
+
+STDOUT
+B05 metadata/3 goals/6 sources/fixed4.37.0 README4388B+hash/no Chinese/blocked homepage/formal NOT_RUN/offline asset BLOCKED PASS
+
+STDERR

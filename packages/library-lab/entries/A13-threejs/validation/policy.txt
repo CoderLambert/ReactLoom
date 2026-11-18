@@ -1,0 +1,26 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv=["node", "--test", "entries/A13-threejs/tests/animation-policy.test.mts"]
+start=2026-11-10T12:08:23.482768+00:00
+end=2026-11-10T12:08:23.570400+00:00
+exit=0
+✔ normal playback (0.533671ms)
+✔ manual pause (0.083242ms)
+✔ background tab (0.053619ms)
+✔ reduced motion (0.04789ms)
+✔ explicit override (0.054469ms)
+✔ background always wins (0.051298ms)
+✔ manual pause always wins (0.600844ms)
+✔ positive speed (0.101328ms)
+✔ zero speed (0.071336ms)
+✔ negative (0.088328ms)
+✔ not finite (0.048103ms)
+✔ NaN (0.037545ms)
+✔ background and reduced-motion stop GPU regardless of speed (0.059376ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 63.464493

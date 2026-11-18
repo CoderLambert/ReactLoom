@@ -112,16 +112,18 @@ test('source viewer never exposes stale or digest-mismatched bytes as verified c
 test('documentation headings expose stable shareable fragments', async ({ page }) => {
   await page.goto('/libraries/clsx?tab=docs')
   const toc = page.getByRole('navigation', { name: '当前文档目录' })
-  await toc.getByRole('link', { name: '什么时候用' }).click()
-  await expect.poll(() => decodeURIComponent(new URL(page.url()).hash)).toBe('#什么时候用')
-  await expect(page.locator('h2#什么时候用')).toBeVisible()
+  await toc.getByRole('link', { name: '最小接入' }).click()
+  await expect.poll(() => decodeURIComponent(new URL(page.url()).hash)).toBe('#最小接入')
+  await expect(page.locator('h2#最小接入')).toBeVisible()
 })
 test('@F12 Node-CI Vitest recipe shows reproducible command instead of fake shell', async ({
   page,
 }) => {
   await page.goto('/libraries/vitest?tab=demo&example=basic')
   await expect(
-    page.getByText('pnpm exec vitest run entries/F12-vitest/examples/basic.test.ts'),
+    page.getByText(
+      'pnpm exec vitest run --config entries/F12-vitest/vitest.config.ts examples/basic.test.ts',
+    ),
   ).toBeVisible()
   await expect(page.getByRole('button', { name: '运行当前示例' })).toHaveCount(0)
 })
@@ -165,14 +167,16 @@ test('manual tab activation preserves keyboard focus without loading other tabs'
 }) => {
   await page.goto('/libraries/clsx?tab=docs')
   const docs = page.getByRole('tab', { name: '详细文档' }),
-    agent = page.getByRole('tab', { name: 'Agent 指南' })
+    readme = page.getByRole('tab', { name: '官方 README', exact: true })
   await docs.focus()
   await page.keyboard.press('ArrowRight')
-  await expect(agent).toBeFocused()
-  await expect(agent).toHaveAttribute('aria-selected', 'false')
+  await expect(page.getByRole('tab', { name: '实战 Demo', exact: true })).toBeFocused()
+  await page.keyboard.press('ArrowRight')
+  await expect(readme).toBeFocused()
+  await expect(readme).toHaveAttribute('aria-selected', 'false')
   await page.keyboard.press('Enter')
-  await expect(agent).toHaveAttribute('aria-selected', 'true')
-  await expect(page).toHaveURL(/tab=agent/u)
+  await expect(readme).toHaveAttribute('aria-selected', 'true')
+  await expect(page).toHaveURL(/tab=readme/u)
   await expect(page.getByRole('button', { name: '运行当前示例' })).toHaveCount(0)
 })
 test('reading Monaco docs does not fetch its interactive editor runtime', async ({ page }) => {

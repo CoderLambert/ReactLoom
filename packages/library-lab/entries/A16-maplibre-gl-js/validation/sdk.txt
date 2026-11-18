@@ -1,0 +1,13 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node --test entries/A16-maplibre-gl-js/tests/sdk.test.mjs
+exit: 0
+✔ real SDK longitude/latitude and Mercator conversions retain the station coordinates (0.990636ms)
+✔ real SDK Evented removes only the registered listener (0.214505ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 61.891531

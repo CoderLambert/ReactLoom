@@ -1,0 +1,32 @@
+{
+  "installedVersions": {
+    "cmdk": "1.1.1",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "files": {
+    "AGENTS.md": "933305f850112e52c351fe8bdb5dd1a017be4da7e51d60f0c52ebcdfc73138ee",
+    "library.json": "313fd95a993aadcf6306d4a85426d540c0949f2eea487068d81434403a47af15",
+    "guide.md": "262726fcf7a2a3ac5ec3a97b5e6b57ac69896bfa7e9cf3642eac95f5460e2e00",
+    "agent.md": "5be667a3a262b73cc44226e6572931d01b1efc6e1cbaf11282cd91e2192d9624",
+    "local-validation.md": "618cb148f00c9d2942224488ec73f5be64d224f75810185c43f225213c60863a",
+    "verification.json": "b3421b14f22329f49bf7a0c968141e021cd9e98c0d562d38ba21a0f9e9bce142",
+    "official/readme.md": "3c91f31f521a1f6dc077c0faaa0ecd42aa0bf89ed6e2e76267b4f21fc6198cb4",
+    "official/source-evidence.json": "8b1ae6e18e905363eded50bc6b940aa9962f2eb0da47935d6f4a79cebb1a8ec1",
+    "validation/browser-proposal.txt": "a90655802b747e96aa85c15e02a66f8ef446d3feceead4c1b0b9f950c1ed89de",
+    "validation/source-audit.mjs": "90821cca13191eca3480bad82d1edd4494ed1dac1995b486c423f9fb82159eee",
+    "validation/metadata-check.mjs": "c2acee1909b4621682d5b787e0f240c91cd54bc1c92fb0ba2ff1ed0e99245823",
+    "validation/fetch-official.py": "62ecdea4087e966226d4f18837cbc73d6b1c118132e96930751baf471851663f",
+    "validation/sdk-source-audit.json": "c331288b5ae15a050ee64e01482744673a6d72ec6f219f791f79550a4d5e171d",
+    "validation/final-check.py": "639ed1f59e34d4e2eb3345c69efb1be7fee28237a8711a746f550a82e358ea89",
+    "examples/command-state.ts": "dfd88c8ddda2aa19d24a6b511830cef050737ccf6d8e2236d60004e44bb4b367",
+    "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+    "examples/example.tsx": "bb2db747818a88526ec8103b0e1cc0c9e502123f483dc2c24bbb09afbf06bd6b",
+    "examples/keyboard-policy.ts": "513cb0227392dbcddd0254aaecb56ef365221168a7aa95d2f1eed50d2951587b",
+    "examples/styles.css": "091bf469b3a84318614e01a962ad67aee3fd6fc3e64575dfd9a7bb4a7d89e126",
+    "tests/command-state.test.mts": "26709495a2390570047394745f6b75c4a2f3d7d0d92594e5b0b4b4b909cefb42",
+    "tests/ime-window.test.mts": "b7e996de4051823924a12cd3268eb6b7bcd0a43ef376823bcf6bb180047d407b",
+    "tests/keyboard-policy.test.mts": "8e4a90ee963b0b7073bf1cc93ed1a4661069ee226217b1c52ee883baaaaafe60",
+    "tests/sdk.test.mjs": "b36cc3a796e35cbc0c115a0e72836329168fef99e97abcbc58b2fbbc9366934a"
+  }
+}

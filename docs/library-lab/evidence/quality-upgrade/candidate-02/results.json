@@ -1,0 +1,72 @@
+[
+  {
+    "name": "typecheck",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "typecheck"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-10T09:37:37.367718+00:00",
+    "finishedAt": "2026-11-10T09:37:39.062623+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-02/typecheck.txt"
+  },
+  {
+    "name": "platform-tests",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "test"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-10T09:37:39.062887+00:00",
+    "finishedAt": "2026-11-10T09:37:39.528145+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-02/platform-tests.txt"
+  },
+  {
+    "name": "lint",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "lint"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-10T09:37:39.528623+00:00",
+    "finishedAt": "2026-11-10T09:37:39.799739+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-02/lint.txt"
+  },
+  {
+    "name": "build",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "build"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-10T09:37:39.800013+00:00",
+    "finishedAt": "2026-11-10T09:37:46.746922+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-02/build.txt"
+  },
+  {
+    "name": "catalog",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "catalog:check"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-10T09:37:46.747353+00:00",
+    "finishedAt": "2026-11-10T09:37:47.145698+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-02/catalog.txt"
+  }
+]

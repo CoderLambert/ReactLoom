@@ -5,15 +5,7 @@
   "name": "Lexical",
   "group": "E",
   "summary": "结构化富文本编辑：真实 EditorState、React Composer、草稿 JSON 和格式命令",
-  "tags": [
-    "编辑器",
-    "Lexical",
-    "EditorState",
-    "内容模型",
-    "输入法",
-    "持久化",
-    "React"
-  ],
+  "tags": ["编辑器", "Lexical", "EditorState", "内容模型", "输入法", "持久化", "React"],
   "contentState": "recreated",
   "packages": [
     {
@@ -76,13 +68,11 @@
         "examples/example.tsx",
         "examples/demo.tsx",
         "examples/snapshot-policy.mjs",
-        "examples/snapshot-policy.d.mts"
+        "examples/snapshot-policy.d.mts",
+        "examples/state-operations.ts",
+        "examples/styles.css"
       ],
-      "capabilities": [
-        "rich-text",
-        "dom-editor",
-        "session-storage"
-      ],
+      "capabilities": ["rich-text", "dom-editor", "session-storage"],
       "description": "真实输入和文档状态读写。"
     },
     {
@@ -95,13 +85,11 @@
         "examples/example.tsx",
         "examples/demo.tsx",
         "examples/snapshot-policy.mjs",
-        "examples/snapshot-policy.d.mts"
+        "examples/snapshot-policy.d.mts",
+        "examples/state-operations.ts",
+        "examples/styles.css"
       ],
-      "capabilities": [
-        "rich-text",
-        "dom-editor",
-        "session-storage"
-      ],
+      "capabilities": ["rich-text", "dom-editor", "session-storage"],
       "description": "会话级 JSON 保存/恢复与错误回退。"
     },
     {
@@ -115,13 +103,10 @@
         "examples/demo.tsx",
         "examples/snapshot-policy.mjs",
         "examples/snapshot-policy.d.mts",
-        "tests/policy.test.mjs"
+        "examples/state-operations.ts",
+        "examples/styles.css"
       ],
-      "capabilities": [
-        "rich-text",
-        "dom-editor",
-        "session-storage"
-      ],
+      "capabilities": ["rich-text", "dom-editor", "session-storage"],
       "description": "文字选区/粗体与中文输入法和撤销边界。"
     }
   ],
@@ -132,5 +117,25 @@
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
     "note": "根据 0.52.0 官方API独立重写。历史资料仅参考，未继承旧PASS。"
+  },
+  "official": {
+    "readme": {
+      "repository": "facebook/lexical",
+      "commit": "b2af316af8ab328a86ff27885f2ce94f18dce571",
+      "path": "README.md",
+      "sourceUrl": "https://github.com/facebook/lexical/blob/b2af316af8ab328a86ff27885f2ce94f18dce571/README.md",
+      "snapshotPath": "official/readme.md",
+      "sha256": "c9c358b87dfb3b0bdda8735cfdadba1ea5c086ada74f2288e8e762e3a8f7778b",
+      "language": "en",
+      "version": "0.52.0",
+      "syncedAt": "2026-11-17T17:22:01.791709+00:00"
+    },
+    "homepage": {
+      "url": "https://lexical.dev/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-17T17:22:01.791709+00:00",
+      "reason": "实际响应头见official/homepage-headers.txt；未从Lab origin浏览器确认嵌入内容，未标allowed。"
+    }
   }
 }

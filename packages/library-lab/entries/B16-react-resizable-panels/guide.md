@@ -1,185 +1,86 @@
-# B16 react-resizable-panels：v4 分组与百分比字符串
+# react-resizable-panels：可操作的双栏和三栏工作台
 
-`react-resizable-panels` 让用户拖动相邻窗格的边界，并求解最小/最大尺寸。它不做数据请求、虚拟列表、二维卡片拖放、停靠窗口或鉴权。固定的两列 CSS、自由画布和 B15 的网格都不是同一件事。
+这个库把相邻窗格变成可调整的布局：用户拖动分割条或使用键盘，SDK 在最小/最大尺寸约束内重新分配空间。适合文件树、编辑器、检查器这样的线性工作区。固定列宽用 CSS；自由二维仪表盘考虑 B15，内容排序考虑 B13。本库不负责文章数据、窗口停靠或服务端保存。
 
-Library Lab 固定 `react-resizable-panels@4.14.1`，宿主 React 19.3.0。许可证 MIT。**API 是 v4：`Group`、`Panel`、`Separator`。** 不要复制 v1–v3 的 `PanelGroup`、`PanelResizeHandle`、`direction` 或 `autoSaveId`。
+本条目固定 **react-resizable-panels 4.14.1**，MIT，实际安装 React 19.3.0。该版本 React/React DOM peer 为 `^18.0.0 || ^19.0.0`。组件使用 v4 的 `Group`、`Panel`、`Separator` 和 `orientation`；不能把旧版 `PanelGroup`、`PanelResizeHandle`、`direction`、`autoSaveId` 原样迁入。
 
-原研究稿讨论的是 4.14.8 的 pointermove 修复。**本锁是 4.14.1。** 指南不把 4.14.8 的修复说成当前包已经包含，也不把未升级的包写成有那次修复。升级必须改 `library.json` 和锁文件后再谈那条 changelog。
+## 从输入到结果
 
-v4 里数字尺寸是像素。百分比必须是字符串，例如 `"25%"`。旧博客里的 `defaultSize={30}` 会变成 30px 侧栏。
-
-## Lab 当前示例
-
-`examples/demo.tsx` 再导出 `examples/example.tsx`。没有 `usePanelRef`、没有折叠、没有 `useDefaultLayout`、没有服务器 PUT。
-
-已挂载：
-
-- `useId()` 生成 Group、Panel、Separator 的 id，避免页面上另一份示例串布局。
-- basic：两块，默认 `"35%"` 与 `"65%"`。资源栏 `minSize="16%"` `maxSize="60%"`，主区 `minSize="22%"`。
-- business / advanced：第三块检查器 `"30%"`，`minSize="15%"` `maxSize="55%"`，两根分割条。
-- `Separator` 有 `aria-label`。水平时宽 12、`col-resize`；垂直时高 12、`row-resize`。`touch-action: none` 在分割条上。
-- advanced：复选框把 `orientation` 改成 `vertical`。复位增加 `generation` 并清空 status。`key` 含 level、方向和 generation，使 Group 按默认尺寸重新挂载。
-- `onLayoutChanged` 把库给出的布局 `JSON.stringify` 到 `role="status"`。这是提交后的结构展示，不是网络保存。拖动过程中的高频 `onLayoutChange`（少一个 d）没有绑定，避免在文档里鼓励每个中间像素都 setState 以外的副作用。示例只在结束提交时写字符串。
-
-外层高度 300，`minWidth: 0`，`overflow: hidden`。窗格内容 `overflow: auto`。没有高度时分割条无法拖。
-
-未挂载：`collapse` / `expand` / `resize('30%')`、`useGroupRef` 的 `setLayout`、嵌套 Group、`resizePreviewMode="separator"`、`If-Match` 保存、`meta.isUserInteraction` 分支。这些是生产教学。
-
-## 什么时候使用
-
-适合 IDE 式的两到四块相邻区域：文件树和编辑器、列表和预览。不适合：用户并不调整大小（CSS Grid 即可）、浮动停靠、二维仪表盘（B15）、单个 textarea 的原生 `resize`。
-
-## 模型
+`Group` 定义一个水平或垂直轴，`Panel` 提供默认值和约束，真实 `Separator` 提供指针、焦点、键盘和 ARIA。应用只持有 SDK 提交的布局快照及方向/复位状态，没有自行实现拖拽求解器。
 
 ```text
-Group orientation
-  Panel defaultSize/min/max（百分比字符串或明确像素）
-  Separator（指针与键盘）
-  Panel
-onLayoutChanged(layout) → 本地状态文案
+指针或分割条键盘输入
+  → SDK 查找相邻面板、求解约束、更新实际尺寸
+  → onLayoutChanged(layout, meta)
+  → 应用复制 layout，显示同源尺寸表与原始映射
 ```
 
-约束求解在库内。面板 id 是身份，不要用数组下标当长期主键。嵌套时内外 Group 的 id 必须不同，轴也可以不同。Lab 只有一个 Group。
+百分比按**扣除分割条后的可用轴空间**计算。横向量宽度，纵向量高度；不能把面板宽度除以包括分割条的容器宽度当作精确百分比。
 
-拖动中的回调会很密。持久化应放在结束提交，并且先标脏，再由按钮 PUT。409 时重新 GET，不要用本地拖动结果覆盖服务器。abort 不等于服务器没写上。Lab 不发请求，status 只证明回调收到了布局对象。
+两个容易混淆的数值契约：
 
-`resizePreviewMode="panel"` 会在拖动中实时改内容布局；`"separator"` 先移动预览条，松手再生效。重内容（编辑器、图表）更适合后者。示例用默认行为，没有切换这个模式。
+- `Panel` 的 `defaultSize/minSize/maxSize` 数字是**像素**，`"25%"` 才是明确百分比。字符串无单位也按百分比解释，本例一律写 `%`，减少误读。
+- `Layout` 是 `{ [panelId]: number }`，这些数字反而是 **0–100 的百分比**。`Group.defaultLayout`、`getLayout/setLayout` 与回调都使用此映射；不要把映射数字改为百分比字符串，也不要再把它当像素。
 
-## 三层渐进
+初次挂载、容器重新求解、程序操作同样可能触发 `onLayoutChanged`。`meta.isUserInteraction` 对指针/键盘输入为 true，初始化/命令式等其他来源为 false。页面显示“初始化或程序变更”或“用户输入（指针或键盘）”，不把初始化冒称用户已拖动。`meta.requestedLayout` 表示约束前的请求值，持久化时应按业务选择保存它还是当前有效布局；本例只显示有效布局，没有实现持久化。
 
-### Demo ① 双栏（已挂载）
+## 目标一：双栏拖动、键盘和边界
 
-拖中间分割条。资源栏不能小于 16% 或大于 60%。Tab 到分割条后用方向键调整——这是 Separator 的键盘语义，需要浏览器确认。纯函数测试不存在，因为本目录没有单独的 policy 文件。
+选择“双栏：拖动与键盘约束”并运行。资源栏默认 35%，详情默认 65%；资源栏范围 16%–60%，主区至少 22%。
 
-### Demo ② 三栏（已挂载）
+1. 展开“查看 SDK 原始布局映射”，确认初始映射含两个实例唯一 id，尺寸表约为 35/65，来源是初始化。
+2. 拖动绿色分割条并松手。实际窗格和尺寸表一起变化，来源变成用户输入。`onLayoutChanged` 对指针等待释放；本例没有订阅拖动中的高频 `onLayoutChange`。
+3. Tab 聚焦名为“调整项目资源和主编辑区域”的分割条，按左右键，每次请求约 5 个百分点；到约束时 SDK 会截断，不能永远加减 5。Home 到资源栏最小 16%，End 到最大 60%。
 
-项目资源、代码工作区、属性检查器。两根分割条的 aria-label 不同。主区只有 `minSize`，没有 max，避免三栏互相把 max 设死到无解。若约束无解，库会按实现分配；不要在未测量的情况下写死像素和百分比的矛盾组合。
+水平 Group 中分割条本身是竖线，SDK 的 `aria-orientation="vertical"` 正确；它不等于 Group 的 `orientation`。焦点轮廓是本例 CSS，键盘行为由 SDK 实现。无需自己给 div 写 `onMouseDown` 或 `onKeyDown`。
 
-### Demo ③ 方向与复位（已挂载）
+## 目标二：三栏身份与两个独立边界
 
-纵向排列后分割条变成行方向，方向键的轴跟着变。复位通过改 `key` 丢弃内部尺寸，而不是调用未挂载的 `setLayout`。status 清空，直到下一次提交。
+选择“三栏：独立边界与稳定身份”。默认资源/主区/检查器为 25/45/30；检查器范围 15%–55%。两根分割条名称不同，各自调整邻接边界，必要时 SDK 会协调其他面板，以满足整组约束。
 
-未挂载：`collapsible` 与 `collapsedSize="0%"`、命令式 `usePanelRef()`。ref 应在组件生命周期内稳定，不要每次渲染新建一套命令对象。若从服务器恢复布局，要校验 id 集合和单位，再 `setLayout`。未知 id 不能直接灌进去。
+1. 聚焦第一根分割条按右键，观察资源栏增长，检查器仍保持约 30%，主区吸收变化。
+2. 按 F6 聚焦第二根，再按右键，观察主区增长、检查器减少；Shift+F6 回到第一根。F6 是 4.14.1 的实际 SDK 行为，不是页面的全局快捷键。
+3. 展开映射，将每个键与对应面板 DOM id 对照。拖动只改百分比，不改身份或 DOM 顺序。主区至少 22%，资源至少 16%，检查器至少 15%，总和约 100%。
 
-## 反例
+面板 id 来自稳定 `useId` 前缀和业务后缀。真实业务可以使用稳定数据 id，不能在同组重复；SDK 的测试 id 也来自该 id，不要假设传入另一个 data-testid 会覆盖它。
 
-```tsx
-// 错：v3 名字和 direction
-<PanelGroup direction="horizontal">
-  <PanelResizeHandle />
-</PanelGroup>
+## 目标三：纵向切换与默认布局复位
 
-// 对
-<Group orientation="horizontal">
-  <Panel defaultSize="25%" minSize="16%" />
-  <Separator />
-  <Panel defaultSize="75%" minSize="22%" />
-</Group>
+选择“方向切换与默认布局复位”。勾选“纵向排列”，Group 的轴改为高度，分割条变横线，`aria-orientation="horizontal"`，使用上下键。固定 320px 高的外框确保纵向有可分配空间；各窗格内容自行滚动。
+
+1. 横向调整后勾选“纵向排列”。应用主动重新挂载 Group，以 25/45/30 默认比例开始，不把旧横向像素带入纵向。
+2. 聚焦第一根分割条，按下键增加资源栏、上键减少；左右键不应调整纵向布局。
+3. 点击“复位布局”。`generation` 改变 key，旧 Group 卸载，新 Group 重新报告默认布局，来源回到初始化/程序变更。**不是一直清空到下一次拖动**，挂载回调会立即填入真实尺寸。
+4. 停止并卸载，面板和分割条离开 DOM；重新运行从默认状态开始。本例不写 localStorage/sessionStorage，不承诺刷新后恢复。
+
+## 可迁移的文件和所有权
+
+复制 `examples/example.tsx` 与必要的 `examples/panels.css` 到业务目录；`demo.tsx` 只是 Lab 出口，普通 React 页面直接渲染 `ResizableExample level="business"`。安装同一版本：
+
+```sh
+pnpm add react-resizable-panels@4.14.1
 ```
 
-```tsx
-// 错：30 被当成 30px
-<Panel defaultSize={30} minSize={16} />
+本例不使用 Lab alias、私有运行器、网络 fixture 或外部资产。CSS 以 `.b16-workshop` 限定；`className` 在 Panel 内层内容容器，不能靠它覆盖外层 SDK 的 flex 计算。Group/Panel/Separator 的结构和 flex 样式由 SDK 管理；应用设置外框高度、内容 padding/overflow 和可见分割条样式。`touch-action` 由 SDK 按轴设置，避免自己全局禁止页面触控。
 
-// 对：Lab 的字符串
-<Panel defaultSize="25%" minSize="16%" maxSize="60%" />
-```
+复位/方向切换用 key **明确丢弃内部状态**，这是应用的产品选择，不是持久化 API。需要保留用户布局时可改用 `useGroupRef` 的 getLayout/setLayout 或官方 `useDefaultLayout`，但它们没有在本例接入。恢复前应校验精确 panel id 集合与有限百分比；网络写入还需要处理请求取消、修订冲突和服务端权限，不能用本地 status 代替保存成功。
 
-```tsx
-// 错：装饰 div 当分割条，没有键盘和名字
-<div className="gutter" onMouseDown={drag} />
+应用没有自建 timer、全局监听、ResizeObserver 或存储。4.14.1 SDK 为挂载的轴注册观察器、键盘和文档指针监听；每个 Group 清理自己的轴/订阅，最后一个同 document 的 Group 卸载才移除共享文档监听。不要全局删监听、清 SDK 状态或销毁其他工作区。源码核对不等于已经完成动态卸载的浏览器验收。
 
-// 对：Separator 带 aria-label
-```
+SSR 可以输出结构，但容器测量和效果只在客户端发生，百分比初次 hydration 可能调整。Node SSR 通过仅证明组件/属性/静态结构匹配，不能证明拖动、焦点或约束计算。
 
-```tsx
-// 错：onLayoutChange 里 PUT
-onLayoutChange={layout => save(layout)}
+## 常见错误
 
-// 对：结束时 onLayoutChanged；网络保存还要防抖或显式按钮。Lab 只 setSizes
-```
+- 从 v3 示例复制旧组件名，或把 `defaultSize={35}` 当作 35%。
+- 用装饰 div 替代 Separator，丢掉键盘、ARIA 与真实 SDK 事件链。
+- 在 `onLayoutChange` 每次移动时写服务器，或把 `onLayoutChanged` 的每次调用都当用户修改。
+- 将 `Layout` 数字和 Panel 尺寸 prop 混用；所有状态都写进“布局 JSON”导致正文和尺寸互相覆盖。
+- 为了测试清空 SDK 全局状态，影响其他 Group；或把初始化表格出现当作真实拖拽 PASS。
 
-```tsx
-// 错：两个演示共用固定 id "main"
-<Group id="main">
+## 官方原文与验证边界
 
-// 对：useId 前缀，示例之间隔离
-```
+[官方 README 原文](official/readme.md) 固定仓库 `bvaughn/react-resizable-panels`、tag `4.14.1` 对应 commit `0cd376c57a19900d22f33aa8eb46f417a7437c12`，根 README 为英文。完整未截断 tree 检查只有根和三个集成 README，无官方中文候选；没有把本地讲解塞回原文。
 
-```tsx
-// 错：面板里的编辑器 min-width 为 auto，把 Group 撑出屏幕
-// 对：容器 minWidth: 0，内容 overflow auto
-```
+原文 27652 字节，SHA-256 `d27812bc8cf8a5e07f0a58bcf68a8f48cc3cac4d22f917777e62662ab61c231c`；npm gitHead、tag 和包 manifest 4.14.1 互相匹配。同步时间、完整响应头见 [source-evidence.json](official/source-evidence.json)。官网 GET200，未见 XFO/CSP，但未从 Lab origin 真实确认 iframe 内容，因此保留 **unknown**，直达官网仍可用。
 
-```tsx
-// 错：把文章正文和布局 JSON 存在同一个对象里当权威
-// 对：布局是尺寸映射；正文属于数据层
-```
-
-v4.14.8 修过「pointermove 时目标已卸载」和「ResizeObserver 之前用了旧像素」。1 这个补丁不在 4.14.1 的说明里就不要写成已修复。动态卸载面板仍是浏览器回归项。
-
-## 组合
-
-**面板 + Query**：文章列表用 Query。拖动不 refetch。保存布局用另一条 mutation，带预期修订号。
-
-**面板 + 编辑器**：预览模式考虑 `separator`，避免拖动时编辑器连续布局。Lab 的主区只有一段 `<pre>`。
-
-**面板 + 网格**：外层用面板分出「库和画布」，画布里再用 B15。不要用网格模拟分割条的键盘语义，也不要用分割条模拟二维拖卡片。
-
-**持久化**：`useDefaultLayout` 与服务器布局只能有一个主人。两套同时写会来回覆盖。示例两者都没用，刷新即丢失尺寸，这是故意的。
-
-## 生产清单
-
-- 百分比写字符串，像素才用数字。
-- 每个 Separator 有名字。
-- id 稳定且实例唯一。
-- 容器有高度，子级能收缩。
-- 高频回调不打网络。
-- 方向切换时明确重置或转换已有尺寸。Lab 用 key 重挂默认值，不尝试把横向百分比解释成纵向。
-- 触控 `touch-action: none` 只在分割条。
-- 折叠到 0 时要保证有键盘办法展开。示例没有折叠，不要在文档里声称有。
-- SSR：布局像素依赖容器，服务端不要输出一套和客户端测量矛盾的内联宽度。
-
-## 升级
-
-从 v3 重命名组件和 `direction` → `orientation`，检查每一个数字尺寸。从 4.14.1 到更新的 4.14.x 时阅读对应 release，再改锁。不要只改指南版本号。`resetServerContext` 一类其他库的 SSR API 与这个包无关。
-
-## 命令式 API（未挂载）
-
-生产里折叠和恢复常用稳定的 panel ref，而不是每次渲染新建回调：
-
-```tsx
-import {Group, Panel, Separator, usePanelRef} from 'react-resizable-panels';
-
-function Collapsible() {
-  const left = usePanelRef();
-  return <Group orientation="horizontal">
-    <Panel panelRef={left} collapsible collapsedSize="0%" defaultSize="30%" minSize="160px" />
-    <Separator />
-    <Panel defaultSize="70%" minSize="200px" />
-    <button type="button" onClick={() => left.current?.resize('30%')}>恢复 30%</button>
-  </Group>;
-}
-```
-
-`30%` 必须是字符串。`resize(30)` 会按像素理解。Lab 没有 `usePanelRef`，复位靠改变 `key` 让默认百分比重新生效。折叠到 0 之后必须仍有键盘办法展开，不能只留一条 1px 的热区。
-
-`useDefaultLayout` 和服务器 `setLayout` 只能有一个写主人。两边都在 `onLayoutChanged` 里保存，会来回覆盖。远程快照要先核对 panel id 集合，再灌进去。未知 id 会让约束求解偏离用户看见的窗格。
-
-拖动重内容时把 `resizePreviewMode` 设为 `"separator"`：先移动预览条，松手再改面板。默认的面板实时预览会让编辑器或图表连续回流。Lab 的主区只有一段短文本，所以留着默认模式。
-
-`onLayoutChange`（拖动中）和 `onLayoutChanged`（提交）差一个字母。网络 PUT 放在后者，并且只在 `meta.isUserInteraction` 时标记脏。宽度被父级改掉时也会提交，那不是用户拖动，不应立刻打服务器。Lab 只把提交结果显示在 status 里。
-
-4.14.1 没有把 4.14.8 的「事件目标已卸载仍收到 pointermove」写进本锁。动态卸掉面板、同时拖动分割条，仍是浏览器回归，不是纯函数能代替的。嵌套 Group 要使用不同 id，外层水平、内层垂直时两套约束互不换算。Lab 只有一个 Group。
-
-## 验收
-
-basic：拖动改变 status 里的布局 JSON；资源栏停在最小/最大附近不再无限缩小。business：三栏都有内容，两根分割条都能聚焦。advanced：切换纵向后轴改变；复位后 status 清空且比例回到默认，直到再次拖动。键盘在分割条上可用，按钮和复选框不充当分割条。
-
-sdk、build、browser 为 NOT_RUN。没有匹配 receipt 就不能写成面板库 PASS。Actions run `41779873259` 是仓库级 install、typecheck、build、52 个 SDK 文件 / 153 项测试、45 个 Playwright，不是 B16 的 PASS。本目录没有独立 policy 测试；不要把 status 字符串当成已记录的 SDK 证据。
-
-## 官方资料
-
-- https://github.com/bvaughn/react-resizable-panels
-- https://github.com/bvaughn/react-resizable-panels/blob/main/LICENSE
-- https://www.npmjs.com/package/react-resizable-panels
+本轮 Node SDK 静态 SSR、条目严格类型、metadata 检查和提案检查的真实命令/退出码见 [local-validation.md](local-validation.md)。三项目标的完整 Playwright 提案在 [browser-proposal.txt](validation/browser-proposal.txt)，实际指针、键盘、几何约束、窄屏和卸载由主控统一执行。正式 verification 的 sdk/build/browser 仍为 NOT_RUN；本地静态检查不构成运行收据。

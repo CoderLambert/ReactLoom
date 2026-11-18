@@ -14,7 +14,7 @@
 
 ## 迁移
 
-从 [`examples/example.tsx`](examples/example.tsx) 带走 `createDemoRuntime`、`currentData`、epoch 和 IME 判断。生产可以换 `fetchBaseQuery`，但保留 signal、标签 id 和 409 不失效。
+复制 examples/runtime.ts 与 examples/example.tsx，前者 createDemoRuntime，后者保留 currentData、epoch 和 IME 判断。已有 React/TypeScript 工程安装 @reduxjs/toolkit@2.13.0、react-redux@9.3.0，传入 level=basic/business/advanced。demo.tsx 为可省略适配出口，无样式/环境变量/后端配置。生产可以换 `fetchBaseQuery`，但保留 signal、标签 id 和 409 不失效。
 
 `Provider` 包住使用 hooks 的面板。`createApi` 只创建一次。
 
@@ -22,7 +22,7 @@
 
 ## 不可删的清理
 
-面板卸载时递增 `requestEpoch` 并 `abort()` 进行中的 mutation。示例卸载时 `resetApiState()`。
+面板卸载时递增 `requestEpoch` 并 `abort()` 进行中的 mutation。示例卸载时 runtime.dispose()，先 abort 所有 running queries/mutations，再 resetApiState；wait 两条结束路径移除 listener，取消时清 timer。useSyncExternalStore 自动释放 store 订阅。生产共享 runtime 不能随单页卸载整体 dispose。
 
 新的切换先 abort 上一次触发器。`unwrap` 前后都看 epoch，`finally` 只有当前 epoch 才清空 in-flight 引用。
 
@@ -52,10 +52,14 @@
 
 ## 真实限制
 
-baseQuery 是内存 fixture。延迟 700ms 不是网络。409 正文是字符串 `stale-revision`，没有 ETag。没有轮询和乐观补丁。
+baseQuery 是内存 fixture。默认延迟200ms，点击慢传输后当前runtime后续请求使用700ms；它不是网络，重新挂载恢复默认值。409 正文是字符串 `stale-revision`，没有 ETag。没有轮询和乐观补丁。
 
 IME 的 229 判断要在真实输入法下再看一次。fixture 允许任意租户参数，服务端必须拒绝。
 
 ## 证据
 
 sdk、build、browser 保持 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有匹配收据。Actions 41779873259 不是本条目 PASS。不要改 `verification.json`。
+
+## 观察和验证
+
+诊断 reads/mutations/active 是真实 baseQuery 计数，queries 来自实际 store。basic 第二订阅不增加 reads；主动 refetch 增加。成功写入只重取本 tenant 活跃查询；409/404 不失效。tests/sdk.test.mjs 直接导入 runtime.ts，Node >=22.18 的类型剥离支持运行该源码。无额外策略测试冒充 SDK 数。clear 不重置 fixture，dispose 后重建 runtime 才恢复种子；取消本地等待不能证明真实服务器未提交。

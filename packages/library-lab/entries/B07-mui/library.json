@@ -4,15 +4,8 @@
   "slug": "mui",
   "name": "MUI",
   "group": "B",
-  "summary": "Material UI 主题、表格、可访问弹窗与业务错误回填",
-  "tags": [
-    "Material Design",
-    "design system",
-    "table",
-    "dialog",
-    "a11y",
-    "React"
-  ],
+  "summary": "从局部主题与slot输入到过滤表/一步撤销，再走Dialog校验、模拟冲突恢复与Portal焦点",
+  "tags": ["Material Design", "design system", "table", "dialog", "a11y", "React"],
   "contentState": "recreated",
   "packages": [
     {
@@ -30,16 +23,16 @@
   ],
   "references": [
     {
-      "title": "MUI 官方安装",
-      "url": "https://mui.com/material-ui/getting-started/installation/"
+      "title": "v9.5.0目标包原文",
+      "url": "https://github.com/mui/material-ui/blob/1c3f8b4903f21cfad12c102edb3db4ceba2e8c8c/packages/mui-material/README.md"
     },
     {
-      "title": "Snackbar 文档",
-      "url": "https://mui.com/material-ui/react-snackbar/"
+      "title": "匹配版本Dialog实现",
+      "url": "https://github.com/mui/material-ui/blob/1c3f8b4903f21cfad12c102edb3db4ceba2e8c8c/packages/mui-material/src/Dialog/Dialog.js"
     },
     {
-      "title": "npm",
-      "url": "https://www.npmjs.com/package/@mui/material"
+      "title": "当前官方表单对话框",
+      "url": "https://mui.com/material-ui/react-dialog/"
     }
   ],
   "related": [
@@ -62,57 +55,54 @@
   "demos": [
     {
       "demoId": "basic",
-      "title": "主题与输入组件",
+      "title": "局部主题与受控输入",
       "level": "basic",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
+        "examples/demo.tsx",
         "examples/example.tsx",
+        "examples/theme.ts",
         "examples/feed-history.ts",
-        "examples/demo.tsx"
+        "examples/draft-policy.ts",
+        "examples/styles.css"
       ],
-      "capabilities": [
-        "portal",
-        "keyboard",
-        "focus",
-        "a11y"
-      ]
+      "capabilities": ["portal", "keyboard", "focus", "a11y"],
+      "description": "读取实际useTheme，切换本例浅深色表面；TextField受控值、slotProps和Chip反馈。"
     },
     {
       "demoId": "business",
-      "title": "RSS Table 与状态过滤",
+      "title": "订阅筛选、开关与一步撤销",
       "level": "business",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
+        "examples/demo.tsx",
         "examples/example.tsx",
+        "examples/theme.ts",
         "examples/feed-history.ts",
-        "examples/demo.tsx"
+        "examples/draft-policy.ts",
+        "examples/styles.css"
       ],
-      "capabilities": [
-        "portal",
-        "keyboard",
-        "focus",
-        "a11y"
-      ]
+      "capabilities": ["portal", "keyboard", "focus", "a11y"],
+      "description": "真实MUI Table/Switch显示本地权威数组，筛选/空态与撤销分离，通知关闭不改数据。"
     },
     {
       "demoId": "advanced",
-      "title": "Dialog 校验、模拟409与撤销",
+      "title": "Dialog草稿、错误与恢复",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
+        "examples/demo.tsx",
         "examples/example.tsx",
+        "examples/theme.ts",
         "examples/feed-history.ts",
-        "examples/demo.tsx"
+        "examples/draft-policy.ts",
+        "examples/styles.css"
       ],
-      "capabilities": [
-        "portal",
-        "keyboard",
-        "focus",
-        "a11y"
-      ]
+      "capabilities": ["portal", "keyboard", "focus", "a11y"],
+      "description": "真实Portal/表单/焦点，本地字段错误与单次409留框恢复，成功提交、Snackbar与撤销。"
     }
   ],
   "license": {
@@ -121,6 +111,26 @@
   },
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
-    "note": "基于官方MUI使用方式重新实现；旧研究不作为运行验收。"
+    "note": "保留有效本地history唯一id/一步撤销；新增局部浅深主题真实观察、字段校验/表单语义与Portal恢复，通知与权威数据分离。真实主题/SSR标记SDK不代替浏览器焦点/DOM。"
+  },
+  "official": {
+    "readme": {
+      "repository": "mui/material-ui",
+      "commit": "1c3f8b4903f21cfad12c102edb3db4ceba2e8c8c",
+      "path": "packages/mui-material/README.md",
+      "sourceUrl": "https://github.com/mui/material-ui/blob/1c3f8b4903f21cfad12c102edb3db4ceba2e8c8c/packages/mui-material/README.md",
+      "snapshotPath": "official/readme.md",
+      "language": "en",
+      "version": "9.5.0",
+      "syncedAt": "2026-11-10T13:08:19.801218+00:00",
+      "sha256": "7101439d2715daf9687af1c610051cfc01f393b1a83d52b6d8c0d10e8a6e1227"
+    },
+    "homepage": {
+      "url": "https://mui.com/material-ui/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-10T13:08:19.801218+00:00",
+      "reason": "实际GET200同响应同时含XFO SAMEORIGIN与enforced CSP frame-ancestors *；现代浏览器优先CSP，不能只据XFO判blocked。未从真实Lab origin确认，保持unknown及直达，完整头与优先级依据见本条目证据。"
+    }
   }
 }

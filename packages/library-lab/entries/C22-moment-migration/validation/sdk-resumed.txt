@@ -1,0 +1,25 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=pnpm test:sdk --entry=C22
+startedAt=2026-11-17T16:18:16.446356+00:00
+finishedAt=2026-11-17T16:18:17.878714+00:00
+exitCode=0
+
+
+> @reactloom/library-lab@0.1.0 test:sdk /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+> node scripts/sdk-runner.mjs --entry=C22
+
+Real SDK suites selected: 1 file(s)
+✔ shared real Day.js/date-fns path strictly validates calendar days and leap years (18.926912ms)
+✔ shared real SDK path maps tokens and uses immutable add return values (0.315451ms)
+✔ shared date-fns ISO path rejects missing offsets, overflow dates and 24:00 recipe inputs (0.717827ms)
+✔ real offset parsing preserves the two fall-back instants while Intl changes only display (0.4719ms)
+✔ real TZDate/addDays/addHours distinguishes 23/25/24-hour NY civil days (0.86124ms)
+✔ SDK helpers keep their declared semantics in a process whose OS timezone skips a civil date (560.400128ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1188.550986

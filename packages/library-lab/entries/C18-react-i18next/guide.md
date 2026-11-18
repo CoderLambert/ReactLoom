@@ -1,158 +1,88 @@
-# react-i18next 17.0.16｜Provider 拥有实例，Trans 不是 HTML 注入
+# react-i18next：语言变了，哪棵 React 树应该更新
 
-Lab 锁定 `react-i18next@17.0.16` 和 `i18next@26.4.3`（MIT）。绑定负责订阅和 `Trans`。资源、回退和 `t` 的规则在 i18next。不要把本条目写成 26.5 或另一版 react-i18next。
+两个工作区同时打开订阅偏好：A 看中文、B 看英文。用户改语言后，问候、未读复数和法律说明要一起更新；A 的选择不能改变 B。react-i18next 负责把 i18next 实例接到 React Context、订阅和组件渲染，资源查找、复数、回退属于 i18next core。
 
-没有收据时 sdk / build / browser 保持 NOT_RUN。Actions 41779873259 不是本条目 PASS。
+本例锁定 react-i18next **17.0.16**、i18next **26.4.3**，两包 MIT；实装 peer 支持 React≥16.8、core≥26.2、TypeScript 5/6/7，当前 Lab 是 React19/TS7。翻译文本是源码内本地资源，不是翻译服务。手动放行和拒绝是明确的本地 Promise fixture，没有网络后端或计时时钟。
 
-## Lab 当前示例
+## 三个可操作目标
 
-[`examples/example.tsx`](examples/example.tsx) 使用真实的 `I18nextProvider`、`useTranslation` 和 `Trans`。每个工作区在 effect 里 `createInstance()`。`demo.tsx` 只做再导出。没有 Suspense 数据源，没有 SSR。
+| 目标 | 输入与操作 | 应观察的结果 |
+| --- | --- | --- |
+| basic：组件绑定与复数 | 切 A 语言，未读数量1/2 | 实际 SDK 语言事件后标题/句子变化；英文 story/stories，中文other |
+| business：namespace 与 Trans | 改昵称、切语言 | 用户文本原样显示，法律句只有源码控制的 strong，英文可以重排句子 |
+| advanced：双 Provider 与在途请求 | A手动放行，连续en→zh；放行、拒绝、重试、重置 | 原请求按序执行，最新意图仍在队列；B状态不变；错误可恢复，旧session卸载 |
 
-```tsx
-const { t, i18n } = useTranslation(['common', 'feed'], { useSuspense: false })
-```
+### 1. useTranslation 与实例
 
-- **basic**：一个 Provider，初始语言 `zh`。问候、未读数量和语言下拉框。`useSuspense: false`，所以资源未就绪时由外层显示「加载独立语言资源…」，而不是抛给 Suspense。
-- **business**：增加昵称输入。`Trans` 的键是 `common:legal`，映射只允许 `strong: <strong />`。英文句子里虽有 `<strong>` 字样，渲染的是 React 元素，不是 `innerHTML`。
-- **advanced**：工作区 A 从中文开始，工作区 B 从英文开始。两边各有自己的实例和 [`language-switch.mjs`](examples/language-switch.mjs) 队列。切换 A 不得改变 B。缺键 `feed:absent` 使用 `defaultValue`。
+基本场景初始为“工作区 A · 订阅偏好”，未读2条。把“工作区 A语言”选 English，标题变 Subscription preferences；数量1为 1 unread story，2为 2 unread stories。再切中文，中文未读句仍更新。重置恢复中文与数量2。
 
-init 选项：`fallbackLng: 'en'`，命名空间 `common` 和 `feed`，`escapeValue: true`，`initAsync: false`。卸载时 `local.off('languageChanged')`，面板的 effect 调用 `switcher.dispose()`。
+[example.tsx](examples/example.tsx) 的 useTranslation 读取最近的 I18nextProvider：
 
-研究笔记里的按路由懒加载 namespace、SSR `I18nextProvider` 每请求隔离，以及和 RHF 共用的表单，都没有挂载。
+~~~tsx
+const { t, ready } = useTranslation(['common', 'feed'], { useSuspense: false })
+~~~
 
-## 什么时候用
+common/feed 是两组资源名，不是两份实例；显式 common:greeting、feed:unread 选择键。hook 在本版本用 useSyncExternalStore 订阅 languageChanged，卸载时按同一回调身份 off；Provider 只提供 Context，不替你创建或销毁实例。本例还有一个自有 observer 展示实际语言事件和状态，属于诊断 UI，不是另一份翻译引擎。
 
-React 组件要在 `changeLanguage` 之后重渲染。脚本和无界面的服务用 C17 的实例即可。一句静态中文不需要 hook。
+资源在 init 中完整内嵌，initAsync:false；外层等待实际 init 完成，hook 再检查 ready。没有异步 backend。useSuspense:false 只表示不抛给 Suspense，换成HTTP加载后仍需实际的 ready、错误、取消和重试设计；这里没有证明默认 Suspense 能处理所有失败。
 
-`useTranslation` 订阅的是它所在 Provider 的实例。没有 Provider 时会落到默认单例。本示例始终包住 Provider，避免 demo 改到别人的语言。
+### 2. namespace、文本与 Trans
 
-## 数据与模型
+业务场景改“用户昵称”为 Ada，问候更新；把昵称改为包含 <img src=x> 或 & 的文字，页面仍应显示这些字符，不创建图片。React 文本节点负责转义，所以本例使用 escapeValue:false，避免先转义后又由React转义导致用户看到实体文本。这个设置不能直接搬去拼接 HTML 或 innerHTML。
 
-所有权：
+法律说明来自源码内 common:legal；中文“请阅读隐私说明。”、英文“Read the privacy notice.”。实际强调部分是 React strong，不是把整句注入 HTML。
 
-| 层 | 职责 |
-| --- | --- |
-| `createInstance` | 资源、语言、回退 |
-| `I18nextProvider` | 把该实例注入子树 |
-| `useTranslation` | 订阅 `languageChanged` 并给出 `t` |
-| switcher | 串行 `changeLanguage`，只提交最后一次 |
-| `Trans` | 按白名单把占位符换成元素 |
+~~~tsx
+<Trans
+  i18nKey="legal"
+  ns="common"
+  components={{ strong: <SafeEmphasis /> }}
+/>
+~~~
 
-`useSuspense: false` 时，hook 不会等异步后端。本资源是同步放进 init 的。若以后改成 HTTP 加载，未完成时 `t` 可能先返回键或回退，要有自己的就绪状态。不要假设打开 Suspense 就能处理每一种加载失败。
+[SafeEmphasis](examples/safe-emphasis.mjs) 只取 children，创建带固定 testid 的 strong，词条属性不会向 DOM 透传。17.0.16 实际支持词条属性覆盖映射组件 props；默认还保留一组 basic HTML tags，所以“有 components 就是通用净化器”不准确。本例显式关闭 basic HTML keep-list，只渲染源码中已知结构，资源也是可信源码。未知标签在本版本作为文字保留；这不构成任意 CMS、插件或第三方词条的全面安全保证。若要映射链接或按钮，应在自己组件中约束 href、事件和允许属性。
 
-`Trans` 解析翻译字符串里的标签名，只渲染 `components` 里给出的类型。不要把用户写的 HTML 放进词条再打开 `dangerouslySetInnerHTML`。`strong` 是源码里的组件。若词条来自不可信的 CMS，这份映射也不够，需要单独的净化策略。
+Trans 本身不是语言变化的完整订阅方案。它在这个面板里随 useTranslation 与实例事件重新渲染；不能把一段独立 Trans 当作所有动态语言场景都自动接好。
 
-两个 Provider 即使 `resources` 对象相同，也是两份实例状态。A 调 `changeLanguage` 只影响 A 的 `i18n`。
+### 3. 稳定原实例、串行队列与恢复
 
-switcher 用 `useMemo` 依赖 `i18n`。实例换了就新建队列，旧队列在 effect 清理时 `dispose`。只在 React 里忽略 setState 而不串行化 `changeLanguage`，底层仍可能后完成的请求覆盖语言。
+进阶场景 A初始中文，B初始英文；每棵树自己的资源副本、实例、队列、observer、gate。缺键行用 defaultValue 显示“（等待本地化）”，不是远程回填。
 
-## 三层示例
+1. 勾选 A“手动放行切换”，选en，再选zh。JSON显示 actual=zh、requested=zh、activeTarget=en，等待放行。
+2. 点 A“放行在途切换”。SDK真正完成第一条en，标题可短暂为英文；最新zh仍排队且进入自己的等待放行。
+3. 再点放行，实际与请求都为zh、status=ready。B语言/事件数不变。
+4. A再请求en，点“拒绝在途切换”。显示本地fixture错误，实际语言仍zh；这不是网络或翻译服务失败。
+5. 点“重试最新选择”，再取消手动放行，会放行当前等待并恢复为en。真实重试按钮避免原生select同一选项不触发change的问题。
+6. 再让A有在途请求，点“重置当前演示”：旧Provider/session卸载，新A中文、新B英文，gate与错误清空。宿主“停止并卸载”后重开同样重新初始化。
 
-### 基本
+状态 JSON 中 requested 是最后意图，actual 是真实实例当前语言，committed 是队列最后一次完成提交；本地等待也有 activeTarget/awaitingRelease。串行化不等于原子语言事务：已开始的请求完成时，SDK仍可能发中间 languageChanged，页面可以显示中间语言。队列合并等待中的意图，只让最新完成提交/错误更新本轮状态；它不撤销已经发出的 SDK 事件。
 
-下拉框改成 English，标题和未读句子跟着变。count 为 1 时英文是单数 story，中文走 `unread_other`。数量夹在 0–99。输出节点是 `data-testid="react-i18next-工作区 A"`。
+## 为什么队列不能依赖 hook 的 i18n 身份
 
-### 业务
+本版本 useTranslation 返回的 i18n 是语言快照 wrapper，language/resolvedLanguage/languages 改变时身份会变。旧写法用这个对象作 useMemo 的依赖，语言事件可能触发旧队列 cleanup/dispose，使后续意图丢失。
 
-昵称改动只影响问候插值。法律句中间是真正的 `<strong>`。检查 DOM 时不应出现把整句设为 `innerHTML` 的属性。切语言后，strong 仍在，文案切换。
+本例把队列放在 [workspace.mjs](examples/workspace.mjs) 的稳定原实例 session 中；I18nextProvider拿该原实例，hook只消费 t/ready。每次 effect setup 创建完整 session，每次 cleanup dispose；不用在render里调用changeLanguage，也不用已在effect重放中被dispose的memo队列。双Provider不调用 initReactI18next 注册模块默认单例，避免多树互相覆盖默认实例。
 
-### 进阶
+## 所有权与迁移
 
-把 A 改成英文，B 保持初始英文或再改回中文。两边的 `<select>` 各看各的 `i18n.language`。A 的失败提示出现时，B 没有同一句 alert。缺省行显示「（等待本地化）」。
+携带九份实际源码：example.tsx、demo.tsx、workspace.mjs及声明、language-switch.mjs及声明、safe-emphasis.mjs及声明、styles.css。各目标 sourceFiles 同源读取这些文件；没有 C17 跨条目运行依赖、Lab别名、外部图片或宿主全局样式前提。
 
-## 反例
+在自己的 React 应用安装：
 
-### 1. 有 Provider 又改全局单例
+~~~sh
+pnpm add react-i18next@17.0.16 i18next@26.4.3
+~~~
 
-```ts
-import i18next from 'i18next'
-i18next.changeLanguage('en')
-```
+需要现代浏览器的 structuredClone；本例给每个实例复制纯对象资源，避免后续编辑资源时共享引用。源实例、observer和queue归session，hook订阅归SDK；dispose只解绑自己的onLanguageChanged，清待排队/本地gate，不用off(event)清掉全部订阅。
 
-子树看的是 Provider 的实例，全局单例是另一份。语言看起来没切换，或切换了不该动的树。
+本地gate在dispose时拒绝等待中的Promise且禁止晚UI发布；已经进入i18next.changeLanguage的调用没有本例可用的公共abort，可能在被丢弃的私有实例上完成。不能把alive或dispose解释成取消了所有底层SDK工作。没有timer、Worker、网络、存储或第三方服务要全局清理。
 
-### 2. 默认 useSuspense 配没有边界的懒加载
+SSR测试只证明服务端生成结果，未验hydration、请求隔离或真实OS输入法；本例也没有语言检测、URL路由、动态namespace backend、持久化、任务队列或不可信CMS。生产SSR要每请求实例并传相同初始资源，另测浏览器hydration。
 
-后端一慢，整棵树挂起。本示例显式 `useSuspense: false`。真要挂起，就在路由级放好边界和错误态，并处理请求失败。
+## 官方来源与验证范围
 
-### 3. Trans 当 innerHTML
+[固定官方README](https://github.com/i18next/react-i18next/blob/606b6a55f231bbf73823863fbb94e6b8eb8272fd/README.md) 匹配 npm17.0.16 gitHead与同提交manifest；检查完整tree，没有根官方中文候选。保留英文原文12793B，SHA256 bcd692905cb53f1b7ca8e4c8c4b89b7fb0510669e41e9c3749e7830d3ada1c9b，UTC2026-11-10T17:43:00.934743+00:00。原文内容与本地教学分开，第三方文档中的代理提示不构成本项目指令或服务接入授权。
 
-```tsx
-<div dangerouslySetInnerHTML={{ __html: t('legal') }} />
-```
+[官方文档站](https://react.i18next.com/) 实际CSP frame-ancestors仅含 https: ionic: capacitor:，排除当前HTTP Lab祖先，所以官网预览标 blocked。XFO缺失不覆盖CSP；若改成HTTPS部署仍需另核，不宣称当前iframe允许。原文/版本/原始重复头与离线分类修正保存在本地维护记录，未为分类校准重抓上游。
 
-词条里的标签会被当成 HTML。用 `Trans` 和固定的 `components`。
-
-### 4. 并发 changeLanguage
-
-两个点击各发一个 Promise。用 `createLatestLanguageSwitcher`。dispose 前不要再 commit。
-
-### 5. 模块级 t('title')
-
-语言变了常量不变。在组件渲染里调用 `t`。
-
-### 6. 用 keyPrefix 拼用户输入
-
-`keyPrefix` 只适合源码里的固定分组。用户字符串拼进键会读到任意词条。
-
-### 7. SSR 共用一个实例
-
-请求 A 的语言会漏到请求 B。每个请求 `createInstance`，或使用官方请求级克隆。本 Demo 没有服务器渲染，不能把客户端双 Provider 说成 hydration 已通过。
-
-### 8. 翻译组件覆盖了按钮的语义
-
-`components` 里塞一个会抢焦点的控件，句子的阅读顺序会乱。Lab 只用 `strong`。
-
-## 组合
-
-**i18next。** 资源结构和回退以 C17 为准。本文件只增加 Provider 和 `Trans`。
-
-**RHF。** 错误文案用 `t('form.email')` 这类字面量键。不要把服务器返回的英文句子直接当翻译结果。本 Demo 没有表单。
-
-**路由。** 按路由加载 namespace 时，key 要包含语言和 ns。未加载时显示就绪状态，而不是闪键名。当前两个 ns 都在 init 里。
-
-## 生产清单
-
-- 每个隔离区域一个实例加一个 Provider。
-- `useSuspense` 与真实加载方式一致。
-- `Trans` 的组件表是白名单。
-- 语言切换串行，卸载 dispose 并 off。
-- 插值保持 `escapeValue: true`。
-- 不从语言推断时区或权限。
-
-## 升级
-
-react-i18next 17 配 i18next 26.4.3。升级任一包都要重测 Provider 隔离、`Trans` 的 strong、复数和快速切换。不要只改其中一个的版本号。
-
-## 练习
-
-1. 英文 count 1 与 2 的未读句子不同。
-2. 法律句在 DOM 里是 `strong` 元素，不是一整段 HTML 字符串。
-3. advanced 只改工作区 A，B 的语言不变。
-4. 快速连点语言，最终与最后一次选择一致，且卸载无警告。
-
-## 故障排查
-
-| 现象 | 先看 |
-| --- | --- |
-| 切换语言整页不动 | 调用的是全局单例，而组件读的是 Provider 里的另一份实例 |
-| 工作区 B 跟着 A 变 | 两个面板共用了同一个 `i18n` |
-| 快速点击后停在中间语言 | `changeLanguage` 并发，没有队列 |
-| 法律句变成一串带标签的文本 | 用了 `innerHTML`，而不是 `Trans` |
-| 卸载后警告 setState | init 或队列没有看 `alive` / `dispose` |
-| 键名闪一下 | 异步资源却没有就绪态。本 Demo 用内嵌资源和 `useSuspense: false` |
-
-SSR 若共用实例，请求之间会串语言。本文件没有服务器渲染，不能用两个浏览器工作区代替那一项验收。
-
-## 官方链接
-
-- https://react.i18next.com/latest/usetranslation-hook
-- https://react.i18next.com/latest/i18nextprovider
-- https://react.i18next.com/latest/trans-component
-- https://github.com/i18next/react-i18next
-
-## 证据
-
-语言队列单测不渲染 Provider。sdk 要真实 import `react-i18next@17.0.16` 与 `i18next@26.4.3`，并在 `docs/library-lab/evidence/runs/` 留下收据。SSR 和 hydration 不在此列。
-
-GitHub Actions 41779873259 是仓库级安装、typecheck、build、52 个 SDK 文件（153 项测试）和 45 项 Playwright 的结果，不是 C18 的条目 PASS。不要改 `verification.json`。
+本地真实SDK5项（含Provider/Trans静态渲染及实际core队列）与纯policy4项分别通过；主控固定candidate19三目标和官方blocked共4项真实浏览器通过，九运行源保持一致。正式verification三状态仍NOT_RUN，本地收据层级另记；不由这些样本推断全浏览器、SSR hydration、OS IME或任意资源安全已通过。

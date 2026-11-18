@@ -1,0 +1,5 @@
+{"label": "format-intermediate", "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab", "argv": ["pnpm", "exec", "--", "biome", "check", "--write", "entries/C06-imask/examples", "entries/C06-imask/library.json"], "start": "2026-11-10T15:33:54.380364+00:00", "end": "2026-11-10T15:33:54.598160+00:00", "exitCode": 0, "log": "format-intermediate.txt"}
+STDOUT
+Checked 6 files in 6ms. Fixed 6 files.
+
+STDERR

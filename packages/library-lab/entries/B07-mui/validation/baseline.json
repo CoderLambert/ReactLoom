@@ -1,0 +1,15 @@
+{
+  "gitHead": "1218066e706a90ba03fac8dff8c9b843dd2429c4",
+  "files": 9,
+  "hashes": {
+    "AGENTS.md": "626ea469bbad4a77755fd230c22f8dff4462852f5a7e6181da81d71fc758a4c4",
+    "agent.md": "535decb32a2715a0c1c31756ee46a3f4e27496e15469cb6b96b96524d1330cda",
+    "examples/demo.tsx": "254591932548c36c414610bd0d0c7ce7ef1648162f1996fbbe7381b8c1751690",
+    "examples/example.tsx": "ae9d9de055d4b41f0aa195a39217da7465126b8f11d06aa96adfc4ac6ac39c93",
+    "examples/feed-history.ts": "f0404377207b577e64b5f4c676e087414615af8795cb3cb5fab21e2d9f93f429",
+    "guide.md": "7a388d8d0a436f08364ad77708140b52b675540d6881af1d78a671ee7dfb9d43",
+    "library.json": "d723ac52d2099f3366a0bb9b9aeffdea785c634ee38174a9b652088e2fa8d1c1",
+    "tests/feed-history.test.mts": "dda9f4f66a791b2566db0720716bde55dbf83ed6518c4eb3306166cbb43309e9",
+    "verification.json": "4a1c40f682a53662ef021b2d1c8eab21bd952ba1c1a335bde51ffe47e0b89fa8"
+  }
+}

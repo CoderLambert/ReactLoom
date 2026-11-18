@@ -1,0 +1,110 @@
+[
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "entries/D12-redux-toolkit/examples",
+      "entries/D12-redux-toolkit/tests",
+      "entries/D12-redux-toolkit/validation/browser.spec.ts",
+      "entries/D12-redux-toolkit/library.json",
+      "entries/D12-redux-toolkit/verification.json"
+    ],
+    "exitCode": 0,
+    "at": "2026-11-17T16:44:37.884639+00:00",
+    "log": "validation/biome.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "entries/D12-redux-toolkit/examples",
+      "entries/D12-redux-toolkit/tests",
+      "entries/D12-redux-toolkit/validation/browser.spec.ts",
+      "entries/D12-redux-toolkit/library.json",
+      "entries/D12-redux-toolkit/verification.json"
+    ],
+    "exitCode": 0,
+    "at": "2026-11-17T16:44:54.025376+00:00",
+    "log": "validation/biome-final.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "command": [
+      "node",
+      "--test",
+      "packages/library-lab/entries/D12-redux-toolkit/tests/sdk.test.mjs"
+    ],
+    "exitCode": 0,
+    "at": "2026-11-17T16:44:54.102033+00:00",
+    "log": "validation/sdk.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "tsc",
+      "--ignoreConfig",
+      "--noEmit",
+      "--strict",
+      "--skipLibCheck",
+      "--jsx",
+      "react-jsx",
+      "--module",
+      "esnext",
+      "--moduleResolution",
+      "bundler",
+      "--target",
+      "ES2022",
+      "--lib",
+      "ES2022,DOM",
+      "--allowJs",
+      "entries/D12-redux-toolkit/examples/example.tsx"
+    ],
+    "exitCode": 0,
+    "at": "2026-11-17T16:44:54.352633+00:00",
+    "log": "validation/types.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "command": [
+      "node",
+      "--input-type=module",
+      "-e",
+      "import fs from 'node:fs';import crypto from 'node:crypto';import assert from 'node:assert/strict';import {validateOfficialSources} from './packages/library-lab/src/lib/official-sources.mjs';const p='packages/library-lab/entries/D12-redux-toolkit/';const m=JSON.parse(fs.readFileSync(p+'library.json'));assert.deepEqual(validateOfficialSources(m.official),[]);assert.equal(crypto.createHash('sha256').update(fs.readFileSync(p+'official/readme.md')).digest('hex'),m.official.readme.sha256);console.log('official contract and original README digest PASS');"
+    ],
+    "exitCode": 0,
+    "at": "2026-11-17T16:44:54.376569+00:00",
+    "log": "validation/official-contract.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "entries/D12-redux-toolkit/validation/browser.spec.ts"
+    ],
+    "exitCode": 0,
+    "at": "2026-11-17T16:46:04.178742+00:00",
+    "log": "validation/browser-format.log"
+  }
+]

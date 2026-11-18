@@ -1,45 +1,13 @@
-# F15 Knip — 工程手册
+# F15 Knip 隔离复用
 
-## 适用
+固定6.41.0/ISC，Node ^20.19 || >=22.12（本机26.13.1）。适合解释静态unused；不是覆盖率/安全删代码证明。只--directory原创fixture，禁--fix/真实仓库根扫描。
 
-在隔离夹具里看未使用文件、导出和依赖。不删除代码，不扫描产品仓库。
+完整迁入workspace package+三knip配置+src三文件+script+test（9份），verify.mjs/report-policy.mjs两helper；sourceFiles全列，policy.test可省。clsx2.1.1故意不import。独立项目安装准确Knip并满足fixture依赖；verify的Lab相对深度/fixture路径迁出需适配，直接CLI则使用自己--directory。无需React/服务/env。
 
-## 版本
+Lab cwd `pnpm exec knip --directory entries/F15-knip/examples/workspace --config knip.basic.json --reporter json`，替business；advanced另--production。实际三exit1为预期发现3/3/5，不是失败无效也不是exit0。避免pnpm --filter捕获JSON，预期exit1时会附加文本；初次证据保留。wrapper verify实际启动三Knip进程，再用自建policy验证，符合才退出0。
 
-`knip@6.41.0`，ISC。入口配置用 `entry` / `project`。advanced 打开 `includeEntryExports` 并加 `--production`。
+basic unused.ts+clsx+unreachableHelper；business加script entry和tests project，但tests非entry仍报告孤立，只ignoreIssues压unused.ts的files，不删除/不改图/非ACL；advanced src!生产、未标脚本/测试不纳入，加includeEntryExports报告report/unusedPublic。公开入口可能外部使用，不盲删。
 
-## 迁移
+policy JSON结构/exit/2MB上限与fixture类别预期是自建逻辑；synthetic5测试不算SDK。真实CLI3次raw JSON另记；新policy对保存raw重放，不无关重跑CLI。检查函数不是任意项目通用结果断言。动态import/框架插件/公开API需人工/测试复核。
 
-带走 `examples/workspace` 下的源码和三份 `knip.*.json`，以及 `verify.mjs` 与 `report-policy.mjs`。`--directory` 必须留在夹具内。页面命令没有 JSON reporter；脚本里的验证才有。
-
-## 不可删的清理
-
-不要删 `unused.ts` 来让 basic 变安静。`ignoreIssues` 只覆盖该文件的 `files`，注释里的理由要留着。`clsx` 保持未被 import，用来代表未使用依赖。不运行 `--fix`。
-
-## 反例
-
-- 在 monorepo 根目录裸跑 knip。
-- 按报告直接删教学文件。
-- 用大范围 ignore 换退出码 0。
-- 把 `report-policy.test.mjs` 当成 CLI。
-- 让测试文件在 production 模式里充当引用。
-- 忽略非常量动态 import 造成的漏报。
-- 公开含本机绝对路径的 JSON。
-
-## 测试断言
-
-- basic 退出码 1 且报告含 `src/unused.ts`。
-- business 不再把该文件当孤立文件。
-- 退出码与发现条数一致；其它 status 失败。
-- 非 JSON 或超限 stdout 被拒绝。
-- 策略函数不启动 Knip。
-
-## 真实限制
-
-网页不执行命令。漏报可能来自动态路径。`unusedPublic` 是否出现取决于本次生产分析，不要用旧笔记顶替。夹具不是 ReactLoom 的依赖图。页面命令没有 `--reporter json`。
-
-## 证据
-
-只有 `verify.mjs` 或等价的真实 Knip 进程可以成为 sdk 收据，并且要落在 `docs/library-lab/evidence/runs/`。Actions 41779873259 不是 F15 PASS。browser 保持 NOT_RUN。
-
-`report-policy.test.mjs` 使用合成 JSON，不能补上这一条收据。
+官方固定13d7f21…包README和LICENSE原字节en，无中文候选；包字段SHA见official。官网urllib403后curl200无阻止头仍unknown未iframe验。local-validation六维/命令/退出码/raw齐，正式NOT_RUN；browser仅命令/源码/来源展示。

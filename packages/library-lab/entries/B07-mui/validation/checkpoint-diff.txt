@@ -1,0 +1,8 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom
+ARGV: ["git", "diff", "--check", "--", "packages/library-lab/entries/B07-mui"]
+START: 2026-11-10T13:15:42.759720+00:00
+END: 2026-11-10T13:15:42.762714+00:00
+EXIT: 0
+STDOUT:
+
+STDERR:

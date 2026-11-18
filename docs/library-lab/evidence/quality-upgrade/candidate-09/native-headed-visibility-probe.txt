@@ -1,0 +1,6 @@
+cwd=packages/library-lab
+argv=["node", "--input-type=module", "-e", "import {chromium} from '@playwright/test';const browser=await chromium.launch({headless:false,args:['--window-position=9000,9000','--window-size=800,600']});try{const context=await browser.newContext();const page=await context.newPage();await page.goto('http://127.0.0.1:4319/libraries/gsap?tab=demo&example=advanced');const state=async label=>console.log(label,await page.evaluate(()=>({hidden:document.hidden,state:document.visibilityState})));await page.waitForTimeout(100);await state('first');const other=await context.newPage();await other.goto('about:blank');await other.bringToFront();await page.waitForTimeout(150);await state('other-tab-active');await page.bringToFront();await page.waitForTimeout(100);await state('original-tab-active');}finally{await browser.close()}"]
+exit=0
+first { hidden: false, state: 'visible' }
+other-tab-active { hidden: false, state: 'visible' }
+original-tab-active { hidden: false, state: 'visible' }

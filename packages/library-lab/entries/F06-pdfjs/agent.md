@@ -1,46 +1,18 @@
-# F06 PDF.js — 工程手册
+# F06 PDF.js 工程检索
 
-## 适用
+适用：浏览器 Canvas 预览已有本地 PDF；文字层抽取不是 OCR，生成看 F08、修改看 F09、React 包装看 F07。固定 pdfjs-dist6.3.289 / Apache-2.0，F07 必须同步底层版本。
 
-在 Canvas 上阅读已有 PDF。生成用 F08，修改字节用 F09，React 组件用 F07。不要拉远程 URL。
+迁入 `example.tsx`、`fixture.ts`、`render-gate.mjs/.d.mts`、`render-budget.mjs/.d.mts` 六份，React Vite 工程启用 DOM、react-jsx、Bundler、vite/client。挂载 default Viewer 的 level basic/business/advanced。`demo.tsx` 只服务 Lab。不要复制测试充当运行依赖。完整 sources 在 library.json；strict-copy 只检查复制源码和使用方，不是全仓 typecheck。
 
-## 版本
+同模块 `GlobalWorkerOptions.workerSrc = workerSrc`，workerSrc 是同版 `pdfjs-dist/build/pdf.worker.min.mjs?url`；不换 CDN。每次 data.slice 保留调用方源。实际 CSP worker-src 和 Worker 构造/terminate 属于浏览器验收，字符串测试不证明。
 
-`pdfjs-dist@6.3.289`，Apache-2.0。Worker 入口是 `pdfjs-dist/build/pdf.worker.min.mjs?url`，与 F07 同一声明。没有浏览器收据就不要说 Worker 已加载。
+关键不变量：
+- keyed level 拥有完整会话；卸载增 fileGeneration，cancel render，destroy accepted/candidate/probe。
+- 每个 File 选择在校验前增代次并销毁旧候选和探测；空/超3 MiB/非pdf后缀也作废旧读取。arrayBuffer 不是真正可取消，只忽略过期结果。
+- 候选成功后才替换 accepted；坏文件/坏字节探测保留当前文档。WeakMap 缓存 destroy promise，重复清理不重复调用；捕获销毁异常不保证资源已释放。
+- render cancel 异步，必须通过 render-gate 等前次 settled 再复用 Canvas。active 防页面/文本迟到；失败排队清画布和去旧文字。
+- 输入3 MiB不是画布安全保证。分配前 viewport/DPR有限正数、CSS/背板每边≤4096、DPR≤2、乘积≤8,000,000；超限不保旧画面。
 
-## 迁移
+基本只画第一页；业务分页并 getTextContent；进阶缩放/本地候选/独立损坏探测。没有远程PDF、OCR、编辑、CMap、标准字体、WASM、口令或完整表单支持。Canvas图片标签不等于完整无障碍阅读器，文字顺序也不保证。生产不可信文件需独立安全隔离。
 
-带走 `examples/example.tsx`、`examples/fixture.ts`、`examples/render-gate.mjs`、`examples/render-budget.mjs` 和对应的 `.d.mts`。`getDocument` 只接收 `data` 的副本。绘制必须进 `withCanvas`。分配像素前调用 `boundedCanvasSize`。
-
-## 不可删的清理
-
-换 `bytes` 时 `destroy()` 加载任务。换页或缩放时 `cancel()` 渲染任务。`active` 阻止过期 `setState`。探测任务单独 destroy，finally 只清理仍属于自己的那次。卸载增加 `fileGeneration`。DPR 不超过 2，CSS 和背板边长不超过 4096，像素不超过 800 万。
-
-## 反例
-
-- CDN 上的另一版 Worker。
-- 只升 F06 不升 F07。
-- `cancel()` 后立刻再 `render` 同一 Canvas。
-- 用 3 MiB 输入上限代替页面尺寸预算。
-- 把 `getTextContent` 当成 OCR。
-- `getDocument({ url })` 打开用户粘贴的地址。
-- 只改 CSS 尺寸导致高分屏模糊。
-- 一次画出全部页面的高分辨率位图。
-
-## 测试断言
-
-- 队列在拒绝后仍接受下一次操作，过期操作不再写结果。
-- 非有限尺寸、超长边、超 800 万像素被拒绝。
-- F06 与 F07 的声明版本都是 6.3.289。
-- 损坏字节的探测不替换当前 `bytes`。
-- 上述 Node 测试不 import `pdfjs-dist`。
-
-## 真实限制
-
-默认夹具只有两页。没有 CMap、加密或表单验收。文本层不是阅读顺序保证。Worker 脚本是否被浏览器取得，要看网络面板和收据，源码赋值不够。探测用的五字节不能写进当前文档的 state。
-
-## 证据
-
-sdk 与 browser 在缺少 `docs/library-lab/evidence/runs/` 收据时保持 NOT_RUN。版本字符串测试不是 Worker 收据。Actions 41779873259 不是 F06 PASS。
-
-`render-budget` 与 `render-gate` 的 Node 测试同样不加载 pdfjs-dist。
+Node legacy SDK2与policy9分计，Node真实解析/文字但不是浏览器Worker/Canvas。browser proposal主控执行，正式verification无recorder保持NOT_RUN。官方README/LICENSE固定原字节与版本包字段见 official/source-evidence.json，英文README无中文候选；官网GET200无阻止头仍unknown（未真实嵌入）。阅读local-validation保留warning和证据边界。

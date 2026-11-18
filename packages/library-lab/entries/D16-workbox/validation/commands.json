@@ -1,0 +1,263 @@
+[
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "node",
+      "packages/library-lab/entries/D16-workbox/examples/basic.mjs"
+    ],
+    "exitCode": 0,
+    "at": "2026-11-17T16:49:20.382590+00:00",
+    "log": "validation/basic.log",
+    "artifacts": [
+      {
+        "path": "validation/artifacts/basic/workbox-9407a438.js.txt",
+        "original": "workbox-9407a438.js",
+        "bytes": 14747,
+        "sha256": "bce67c9ed72ba94513f0dbf9984c617f0623c65514a8dcf2c9df82ac3d15fe68"
+      },
+      {
+        "path": "validation/artifacts/basic/sw.js.txt",
+        "original": "sw.js",
+        "bytes": 1032,
+        "sha256": "0a4527cf9160b5230ea9a51666bdfe9a5efa4039e8f60ed5de5451014c94c2ad"
+      },
+      {
+        "path": "validation/artifacts/basic/offline.html.txt",
+        "original": "offline.html",
+        "bytes": 111,
+        "sha256": "edda2eff46dcbda37847eb5ac2ba630df3715da8f6a444662d5f5dd7387a7401"
+      },
+      {
+        "path": "validation/artifacts/basic/app.js.txt",
+        "original": "app.js",
+        "bytes": 54,
+        "sha256": "dd3b91c2611e219da6c765ee0d8812f2a3b916273e43797fc0a3b22856374b62"
+      },
+      {
+        "path": "validation/artifacts/basic/index.html.txt",
+        "original": "index.html",
+        "bytes": 145,
+        "sha256": "2822898dbd95434448a2f8095321416bdeb525bed1b0ddedc6e3c1fb17398197"
+      },
+      {
+        "path": "validation/artifacts/basic/private/tokens.js.txt",
+        "original": "private/tokens.js",
+        "bytes": 51,
+        "sha256": "f9c87930b66dee900baaf89f291d872aae211a3b170c2e8ad35e85645bbf7ba7"
+      }
+    ],
+    "output": {
+      "level": "basic",
+      "scope": "/__library_lab_workbox__/",
+      "registrationExecuted": false,
+      "precacheUrls": [
+        "offline.html",
+        "index.html",
+        "app.js"
+      ],
+      "precacheCount": 3,
+      "precacheBytes": 310,
+      "swBytes": 1032,
+      "runtimeStrategy": "precache-only",
+      "fallback": null,
+      "generatedFiles": [
+        "sw.js",
+        "workbox-9407a438.js"
+      ],
+      "outputDirectory": "/tmp/reactloom-workbox-6wSYx4/__library_lab_workbox__/"
+    },
+    "cleanup": "Removed only this command owned temporary directory after retaining artifact bytes."
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "node",
+      "packages/library-lab/entries/D16-workbox/examples/business.mjs"
+    ],
+    "exitCode": 0,
+    "at": "2026-11-17T16:49:21.291957+00:00",
+    "log": "validation/business.log",
+    "artifacts": [
+      {
+        "path": "validation/artifacts/business/workbox-e89f0d7a.js.txt",
+        "original": "workbox-e89f0d7a.js",
+        "bytes": 22231,
+        "sha256": "667dda67f5d66b4dc0b8305d78f6460b32ec0b3bd556130bb508394e5aedaa2f"
+      },
+      {
+        "path": "validation/artifacts/business/sw.js.txt",
+        "original": "sw.js",
+        "bytes": 1616,
+        "sha256": "8b3e77fc8202816f222387adb8dabfa841f254baed80fc38b1b026207c94ba48"
+      },
+      {
+        "path": "validation/artifacts/business/offline.html.txt",
+        "original": "offline.html",
+        "bytes": 111,
+        "sha256": "edda2eff46dcbda37847eb5ac2ba630df3715da8f6a444662d5f5dd7387a7401"
+      },
+      {
+        "path": "validation/artifacts/business/app.js.txt",
+        "original": "app.js",
+        "bytes": 54,
+        "sha256": "dd3b91c2611e219da6c765ee0d8812f2a3b916273e43797fc0a3b22856374b62"
+      },
+      {
+        "path": "validation/artifacts/business/index.html.txt",
+        "original": "index.html",
+        "bytes": 145,
+        "sha256": "2822898dbd95434448a2f8095321416bdeb525bed1b0ddedc6e3c1fb17398197"
+      },
+      {
+        "path": "validation/artifacts/business/private/tokens.js.txt",
+        "original": "private/tokens.js",
+        "bytes": 51,
+        "sha256": "f9c87930b66dee900baaf89f291d872aae211a3b170c2e8ad35e85645bbf7ba7"
+      }
+    ],
+    "output": {
+      "level": "business",
+      "scope": "/__library_lab_workbox__/",
+      "registrationExecuted": false,
+      "precacheUrls": [
+        "offline.html",
+        "index.html",
+        "app.js"
+      ],
+      "precacheCount": 3,
+      "precacheBytes": 310,
+      "swBytes": 1616,
+      "runtimeStrategy": "NetworkFirst-public-GET-only",
+      "fallback": null,
+      "generatedFiles": [
+        "sw.js",
+        "workbox-e89f0d7a.js"
+      ],
+      "outputDirectory": "/tmp/reactloom-workbox-OfRzUb/__library_lab_workbox__/"
+    },
+    "cleanup": "Removed only this command owned temporary directory after retaining artifact bytes."
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "node",
+      "packages/library-lab/entries/D16-workbox/examples/advanced.mjs"
+    ],
+    "exitCode": 0,
+    "at": "2026-11-17T16:49:22.200954+00:00",
+    "log": "validation/advanced.log",
+    "artifacts": [
+      {
+        "path": "validation/artifacts/advanced/workbox-407cd0d3.js.txt",
+        "original": "workbox-407cd0d3.js",
+        "bytes": 22605,
+        "sha256": "246cf365a05e04a346bae7573fed76d898b5f4ddc40903765d86bc6e31b70ee7"
+      },
+      {
+        "path": "validation/artifacts/advanced/sw.js.txt",
+        "original": "sw.js",
+        "bytes": 1698,
+        "sha256": "735c303c1e238d873c9bd95266f543710e2797f4d24409b4fc4a4124957e3481"
+      },
+      {
+        "path": "validation/artifacts/advanced/offline.html.txt",
+        "original": "offline.html",
+        "bytes": 111,
+        "sha256": "edda2eff46dcbda37847eb5ac2ba630df3715da8f6a444662d5f5dd7387a7401"
+      },
+      {
+        "path": "validation/artifacts/advanced/app.js.txt",
+        "original": "app.js",
+        "bytes": 54,
+        "sha256": "dd3b91c2611e219da6c765ee0d8812f2a3b916273e43797fc0a3b22856374b62"
+      },
+      {
+        "path": "validation/artifacts/advanced/index.html.txt",
+        "original": "index.html",
+        "bytes": 145,
+        "sha256": "2822898dbd95434448a2f8095321416bdeb525bed1b0ddedc6e3c1fb17398197"
+      },
+      {
+        "path": "validation/artifacts/advanced/private/tokens.js.txt",
+        "original": "private/tokens.js",
+        "bytes": 51,
+        "sha256": "f9c87930b66dee900baaf89f291d872aae211a3b170c2e8ad35e85645bbf7ba7"
+      }
+    ],
+    "output": {
+      "level": "advanced",
+      "scope": "/__library_lab_workbox__/",
+      "registrationExecuted": false,
+      "precacheUrls": [
+        "offline.html",
+        "index.html",
+        "app.js"
+      ],
+      "precacheCount": 3,
+      "precacheBytes": 310,
+      "swBytes": 1698,
+      "runtimeStrategy": "NetworkFirst-public-GET-only",
+      "fallback": "offline.html",
+      "generatedFiles": [
+        "sw.js",
+        "workbox-407cd0d3.js"
+      ],
+      "outputDirectory": "/tmp/reactloom-workbox-E1EK9l/__library_lab_workbox__/"
+    },
+    "cleanup": "Removed only this command owned temporary directory after retaining artifact bytes."
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "entries/D16-workbox/examples",
+      "entries/D16-workbox/tests",
+      "entries/D16-workbox/validation/browser.spec.ts",
+      "entries/D16-workbox/library.json",
+      "entries/D16-workbox/verification.json"
+    ],
+    "exitCode": 0,
+    "at": "2026-11-17T16:52:29.425128+00:00",
+    "log": "validation/biome-final.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "node",
+      "--test",
+      "packages/library-lab/entries/D16-workbox/tests/sdk.test.mjs"
+    ],
+    "exitCode": 0,
+    "at": "2026-11-17T16:52:31.153190+00:00",
+    "log": "validation/sdk.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "node",
+      "--test",
+      "packages/library-lab/entries/D16-workbox/tests/cache-policy.test.mjs"
+    ],
+    "exitCode": 0,
+    "at": "2026-11-17T16:52:31.233217+00:00",
+    "log": "validation/policy.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "node",
+      "--input-type=module",
+      "-e",
+      "import fs from 'node:fs';import crypto from 'node:crypto';import assert from 'node:assert/strict';import {validateOfficialSources} from './packages/library-lab/src/lib/official-sources.mjs';const p='packages/library-lab/entries/D16-workbox/';const m=JSON.parse(fs.readFileSync(p+'library.json'));assert.deepEqual(validateOfficialSources(m.official),[]);assert.equal(crypto.createHash('sha256').update(fs.readFileSync(p+'official/readme.md')).digest('hex'),m.official.readme.sha256);console.log('official contract and raw README digest PASS');"
+    ],
+    "exitCode": 0,
+    "at": "2026-11-17T16:52:31.261394+00:00",
+    "log": "validation/official-contract.log"
+  }
+]

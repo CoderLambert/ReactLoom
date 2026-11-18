@@ -1,0 +1,9 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+ARGV: ["pnpm", "exec", "--", "biome", "check", "--write", "entries/A07-antv-g6/examples", "entries/A07-antv-g6/library.json"]
+START: 2026-11-10T11:40:39.741339+00:00
+END: 2026-11-10T11:40:39.956328+00:00
+EXIT: 0
+STDOUT:
+Checked 8 files in 11ms. Fixed 8 files.
+
+STDERR:

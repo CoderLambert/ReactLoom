@@ -1,0 +1,221 @@
+{
+  "checkedAt": "2026-11-10T17:21:12.619605+00:00",
+  "installedPath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/dayjs@1.11.23/node_modules/dayjs",
+  "package": {
+    "name": "dayjs",
+    "version": "1.11.23",
+    "license": "MIT",
+    "main": "dayjs.min.js",
+    "types": "index.d.ts"
+  },
+  "files": [
+    {
+      "path": "package.json",
+      "bytes": 2974,
+      "sha256": "680d74784223a074188617adc534fa5460171176d9904501241bbea087c3963b",
+      "excerpts": []
+    },
+    {
+      "path": "dayjs.min.js",
+      "bytes": 7161,
+      "sha256": "0198dd0b1f760cded169c7e7ff7eaf56bc36c4c22c7c9b7c683e59437ed8700e",
+      "excerpts": []
+    },
+    {
+      "path": "index.d.ts",
+      "bytes": 13872,
+      "sha256": "3c5bb5207df7095882400323d692957e90ec17323ccff5fd5f29a1ecf3b165d0",
+      "excerpts": []
+    },
+    {
+      "path": "README.md",
+      "bytes": 8229,
+      "sha256": "900c80d1b626c1a777f977111322badede124381407b3f6de23e314c05239b27",
+      "excerpts": []
+    },
+    {
+      "path": "plugin/utc.js",
+      "bytes": 2261,
+      "sha256": "7e01072e6f1f2e646506a083ccc500ed19c5a657a5a6645b3fafeccdf3ce9c0a",
+      "excerpts": []
+    },
+    {
+      "path": "plugin/utc.d.ts",
+      "bytes": 398,
+      "sha256": "c868f50837eedd81fa9f61bd42de6665f74e7eb7a459135c6a14ac33ddc86798",
+      "excerpts": []
+    },
+    {
+      "path": "plugin/timezone.js",
+      "bytes": 2216,
+      "sha256": "3847eee9b494500ac874aea0e08fbeb759b5ec92fbe8d6cde967cd3818fc1bfb",
+      "excerpts": []
+    },
+    {
+      "path": "plugin/timezone.d.ts",
+      "bytes": 502,
+      "sha256": "56b2090352084289a1d572dfbddeed948906c0a0317a547ceb0ae6436ae44037",
+      "excerpts": []
+    },
+    {
+      "path": "plugin/customParseFormat.js",
+      "bytes": 3879,
+      "sha256": "b199a58d0fbbdc519a072eb9b140a2ca3d4775ea1b054a0c0e5aeed86603c941",
+      "excerpts": []
+    },
+    {
+      "path": "plugin/customParseFormat.d.ts",
+      "bytes": 192,
+      "sha256": "f9800ee41019d4c7612364fd1eb3862dd535166959e139c8e54c61c421fdb799",
+      "excerpts": []
+    },
+    {
+      "path": "locale/zh-cn.js",
+      "bytes": 1463,
+      "sha256": "d93b074de4a1f0b5b7de810b1b4a7d180c6af6011b1f31a4455ca34e3411947b",
+      "excerpts": []
+    },
+    {
+      "path": "esm/index.js",
+      "bytes": 13603,
+      "sha256": "3bdb239683d55d3840653af69ab382dbe5797be8170e26545a79d42a9d5e8170",
+      "excerpts": [
+        {
+          "term": "var parseLocale",
+          "matches": [
+            {
+              "line": 15,
+              "text": "\nvar parseLocale = function parseLocale(preset, object, isLocal) {\n  var l;\n  if (!preset) return L;"
+            }
+          ]
+        },
+        {
+          "term": "_proto.add =",
+          "matches": [
+            {
+              "line": 255,
+              "text": "\n  _proto.add = function add(number, units) {\n    var _this2 = this,\n        _C$MIN$C$H$C$S$unit;"
+            }
+          ]
+        },
+        {
+          "term": "_proto.locale =",
+          "matches": [
+            {
+              "line": 479,
+              "text": "\n  _proto.locale = function locale(preset, object) {\n    if (!preset) return this.$L;\n    var that = this.clone();"
+            }
+          ]
+        },
+        {
+          "term": "_proto.clone =",
+          "matches": [
+            {
+              "line": 487,
+              "text": "\n  _proto.clone = function clone() {\n    return Utils.w(this.$d, this);\n  };"
+            }
+          ]
+        },
+        {
+          "term": "dayjs.extend =",
+          "matches": [
+            {
+              "line": 521,
+              "text": "\ndayjs.extend = function (plugin, option) {\n  if (!plugin.$i) {\n    // install plugin only once"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "esm/plugin/timezone/index.js",
+      "bytes": 5650,
+      "sha256": "ed3c19b4d53ea7ef9c11369ce301bc5747f02e03d8203f4b1f25fd4df2ea83d1",
+      "excerpts": [
+        {
+          "term": "new Intl.DateTimeFormat",
+          "matches": [
+            {
+              "line": 24,
+              "text": "  if (!dtf) {\n    dtf = new Intl.DateTimeFormat('en-US', {\n      hour12: false,\n      timeZone: timezone,"
+            }
+          ]
+        },
+        {
+          "term": "proto.tz",
+          "matches": [
+            {
+              "line": 112,
+              "text": "\n  proto.tz = function (timezone, keepLocalTime) {\n    if (timezone === void 0) {\n      timezone = defaultTimezone;"
+            }
+          ]
+        },
+        {
+          "term": "d.tz =",
+          "matches": [
+            {
+              "line": 170,
+              "text": "\n  d.tz = function (input, arg1, arg2) {\n    var parseFormat = arg2 && arg1;\n    var timezone = arg2 || arg1 || defaultTimezone;"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "esm/plugin/customParseFormat/index.js",
+      "bytes": 8319,
+      "sha256": "d72a1f0fba478a872e4efa27e4f48639437e2f9369d38c6fb48c51b3fd4f79de",
+      "excerpts": [
+        {
+          "term": "new Date(Date.UTC",
+          "matches": [
+            {
+              "line": 248,
+              "text": "    if (zone) {\n      return new Date(Date.UTC(y, M, d, h, m, s, ms + zone.offset * 60 * 1000));\n    }\n"
+            },
+            {
+              "line": 252,
+              "text": "    if (utc) {\n      return new Date(Date.UTC(y, M, d, h, m, s, ms));\n    }\n"
+            }
+          ]
+        },
+        {
+          "term": "var isStrict",
+          "matches": [
+            {
+              "line": 286,
+              "text": "    if (typeof format === 'string') {\n      var isStrictWithoutLocale = args[2] === true;\n      var isStrictWithLocale = args[3] === true;\n      var isStrict = isStrictWithoutLocale || isStrictWithLocale;"
+            },
+            {
+              "line": 287,
+              "text": "      var isStrictWithoutLocale = args[2] === true;\n      var isStrictWithLocale = args[3] === true;\n      var isStrict = isStrictWithoutLocale || isStrictWithLocale;\n      var pl = args[2];"
+            }
+          ]
+        },
+        {
+          "term": "if (isStrict",
+          "matches": [
+            {
+              "line": 291,
+              "text": "\n      if (isStrictWithLocale) {\n        pl = args[2];\n      }"
+            },
+            {
+              "line": 307,
+              "text": "\n      if (isStrict && date != this.format(format)) {\n        this.$d = new Date('');\n      } // reset global locale to make parallel unit test"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "scope": "Read-only actual main/types plus packaged readable ESM source; no additional SDK/DOM execution",
+  "conclusions": [
+    "Actual runtime resolves dayjs.min.js1.11.23; readable ESM source is packaged same-version code, not substituted runtime",
+    "customParseFormat strict compares input to formatted output and uses Date constructors; UTC civil labels avoid device-local midnight arithmetic",
+    "add returns a new wrapper under the default immutable API; no badMutable plugin used, instance locale clones instead of changing global default",
+    "timezone uses cached Intl.DateTimeFormat/formatToParts from host TZDB; it does not ship an independent timezone database",
+    "Existing instant .tz(zone) conversion differs from constructing a wall time with dayjs.tz(text,format,zone); explicit-offset input is roundtripped through actual zone at seconds precision",
+    "Plugin registration extends the shared module singleton and has no scoped unregister; no global locale or tz.setDefault mutation, no app timers/network/storage",
+    "Source gitHead/release tag4549b8d corresponds to npm1.11.23 while the actual repo manifest remains0.0.0-development; never falsified as1.11.23"
+  ]
+}

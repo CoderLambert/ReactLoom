@@ -1,0 +1,20 @@
+{
+  "command": [
+    "pnpm",
+    "exec",
+    "playwright",
+    "test",
+    "--config=.local-evidence/quality-playwright.config.ts",
+    "e2e/quality-remediation-rive.spec.ts",
+    "e2e/quality-remediation-mantine.spec.ts",
+    "e2e/quality-remediation-mui.spec.ts",
+    "--grep",
+    "@B05|@B08|@B07 real Dialog"
+  ],
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+  "startedAt": "2026-11-10T13:38:49.554801+00:00",
+  "finishedAt": "2026-11-10T13:39:11.671825+00:00",
+  "exitCode": 1,
+  "implicitBuild": false,
+  "log": "docs/library-lab/evidence/quality-upgrade/candidate-11/browser-fixes.txt"
+}

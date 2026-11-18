@@ -1,0 +1,14 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["pnpm", "--dir", "packages/library-lab", "exec", "node", "--test", "entries/C11-react-arborist/tests/tree-policy.test.mjs"], "utc": "2026-11-10T16:52:46.300226+00:00", "exit": 0}
+✔ fixture reset is independent and preserves the selected level capacity (2.013303ms)
+✔ business rename keeps identity and deleting a group removes its subtree (0.234875ms)
+✔ IME confirming Enter is held until keyup but the next ordinary Enter submits (0.129746ms)
+✔ Space or mouse composition confirmation does not consume an unrelated Enter (0.085879ms)
+✔ native composing/229 protects Enter even before React composition state catches up (0.086387ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 70.721305

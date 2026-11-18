@@ -1,0 +1,11 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["node", "packages/library-lab/entries/C08-ag-grid/validation/metadata-check.mjs"], "utc": "2026-11-10T15:52:14.086813+00:00", "exit": 0}
+{
+  "levels": 3,
+  "runtimeFiles": 7,
+  "inputFiles": 18,
+  "installed": "36.2.0",
+  "readmeBytes": 45598,
+  "readmeSHA": "7070a8bcf54603483e9b617fce91e7bcaec8e30f77b75ca02809ad0512ca340c",
+  "homepage": "blocked by actual frame-ancestors; browser NOT_RUN",
+  "formal": "NOT_RUN"
+}

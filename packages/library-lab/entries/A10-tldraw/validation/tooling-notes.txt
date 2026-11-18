@@ -1,0 +1,5 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+Setup attempt: shell redirected to packages/library-lab/entries/A10-tldraw while already in library-lab; exit 2, no files created. Corrected paths to entries/A10-tldraw.
+Subsequent root-cwd runner invocation used relative entries/ path and exited 1 before saving Biome output. Final runner resolves its own path and executes every check in library-lab; all retained check logs contain actual cwd/command/exit.
+Official acquisition: inline Python urllib.request retrieved recursive fixed GitHub tree, raw package README/LICENSE/package.json successfully; reading the full homepage GET body timed out (exit 1, TimeoutError: The read operation timed out). A separate GET captured complete response headers without reading body, exit 0; homepage remains unknown. See official/source-audit.json and homepage-response.json.
+A follow-up kill of the expired source-fetch PID returned exit 1/no such process; the fetch had already timed out. No service or unrelated process was stopped.

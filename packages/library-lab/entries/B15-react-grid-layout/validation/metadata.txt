@@ -1,0 +1,25 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab", "argv": ["node", "entries/B15-react-grid-layout/validation/metadata-check.mjs"], "utc": "2026-11-10T14:45:40.007527+00:00", "exitCode": 0}
+STDOUT
+{
+  "metadata": [],
+  "completeness": [],
+  "demos": 3,
+  "runtimeFiles": 4,
+  "inputFiles": 13,
+  "installed": {
+    "react-grid-layout": {
+      "version": "2.3.0",
+      "packagePath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/react-grid-layout@2.3.0_react-dom@19.3.0_react@19.3.0__react@19.3.0/node_modules/react-grid-layout/package.json"
+    },
+    "react-resizable": {
+      "version": "4.0.2",
+      "packagePath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/react-resizable@4.0.2_react-dom@19.3.0_react@19.3.0__react@19.3.0/node_modules/react-resizable/package.json"
+    }
+  },
+  "readmeBytes": 42045,
+  "sha256": "10e8e14f3e5cbcf6f8d8f27381e122d17f8d2312b3208e3a2528c5b62b7c6ca1",
+  "homepage": "unknown: actual GET200/no framing headers, Lab-origin browser NOT_RUN",
+  "formal": "NOT_RUN"
+}
+
+STDERR

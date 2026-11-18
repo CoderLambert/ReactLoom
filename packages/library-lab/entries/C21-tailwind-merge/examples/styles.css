@@ -1,0 +1,53 @@
+.c21-workshop {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.c21-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: center;
+  margin-block: 0.8rem;
+}
+.c21-fields {
+  display: grid;
+  gap: 0.6rem;
+}
+.c21-fields label {
+  display: flex;
+  flex-direction: column;
+}
+.c21-workshop :is(input, select) {
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: 100%;
+}
+.c21-fields input {
+  width: 100%;
+}
+.c21-results dd {
+  margin: 0 0 0.6rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.c21-preview-boundary {
+  contain: layout paint;
+  isolation: isolate;
+  overflow: hidden;
+  position: relative;
+  min-height: 10rem;
+  border: 1px dashed #81968a;
+  margin-block: 1rem;
+}
+.c21-workshop :is(input, select, button):focus-visible {
+  outline: 3px solid #287450;
+  outline-offset: 2px;
+}
+@layer utilities {
+  .c21-pad-compact {
+    padding-inline: 0.5rem;
+  }
+  .c21-pad-roomy {
+    padding-inline: 1.5rem;
+  }
+}

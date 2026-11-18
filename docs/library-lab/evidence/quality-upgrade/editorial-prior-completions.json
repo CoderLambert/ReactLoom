@@ -1,0 +1,125 @@
+{
+  "at": "2026-11-10T18:24:12.580094+00:00",
+  "items": {
+    "E11": {
+      "order": 2,
+      "phase": 2,
+      "entryId": "E11",
+      "slug": "streamdown",
+      "name": "Streamdown",
+      "group": "E",
+      "path": "packages/library-lab/entries/E11-streamdown",
+      "priority": "known-risk",
+      "planDetail": "completed-six-checks-with-local-evidence",
+      "objective": "用累计 Markdown、分段输入和可见结果讲清流式渲染及结束/暂停边界",
+      "objectiveBasis": "matching-installed-source-and-reviewed-entry",
+      "executionKinds": [
+        "react"
+      ],
+      "packagesAtPlanning": [
+        {
+          "name": "streamdown",
+          "version": "2.6.0"
+        }
+      ],
+      "entryBaseline": {
+        "sha256": "aaec72d2f1661b2c974d63982d58babf5d5b987d4bbe0a16f42462b000d7f7c6",
+        "fileCount": 7
+      },
+      "existingSdkSuites": [],
+      "flags": [
+        "preserve-summary-only-provenance"
+      ],
+      "status": "content_done",
+      "owner": null,
+      "startedAt": "2026-11-10T09:16:01.800668+00:00",
+      "updatedAt": "2026-11-10T17:52:58.198734+00:00",
+      "result": "results/E11.md",
+      "blocker": null,
+      "formalReceiptState": "pending_clean_authorized_commit",
+      "executionBaseline": {
+        "sha256": "aaec72d2f1661b2c974d63982d58babf5d5b987d4bbe0a16f42462b000d7f7c6",
+        "fileCount": 7
+      },
+      "nextAction": "内容与本地运行完成；未来获提交授权后正式recorder",
+      "checkpoint": "stable-renderer-key-fix",
+      "lastOwner": "/root/quality_e11",
+      "completedAt": "2026-11-10T09:52:52.737040+00:00",
+      "reviewedBy": "/root/quality_e05 + /root/quality_f05",
+      "sixChecks": {
+        "technicalAccuracy": "PASS",
+        "clarity": "PASS",
+        "demoUsefulness": "PASS",
+        "portability": "PASS",
+        "officialSources": "PASS",
+        "reproducibility": "PASS"
+      },
+      "finalEntryDigest": {
+        "sha256": "1d0711795d34f7e89479d4e6c781b2e1ea25644dede5baca31c97890ff22b083",
+        "fileCount": 32
+      },
+      "publicFollowupResolvedAt": "2026-11-10T17:52:58.198734+00:00",
+      "publicReview": "docs/library-lab/evidence/quality-upgrade/document-empty-link-independent-review.md"
+    },
+    "B21": {
+      "order": 47,
+      "phase": 47,
+      "entryId": "B21",
+      "slug": "react-motion-migration",
+      "name": "react-motion（历史迁移）",
+      "group": "B",
+      "path": "packages/library-lab/entries/B21-react-motion-migration",
+      "priority": "remaining-coverage",
+      "planDetail": "completed-six-checks-with-local-evidence",
+      "objective": "以真实输入、状态变化和结果解释从停滞的react-motion Motion/spring模式迁移至现代motion/react的状态驱动动画",
+      "objectiveBasis": "matching-installed-source-and-reviewed-entry",
+      "executionKinds": [
+        "react"
+      ],
+      "packagesAtPlanning": [
+        {
+          "name": "motion",
+          "version": "14.6.0"
+        }
+      ],
+      "entryBaseline": {
+        "sha256": "4bdf963980df103091178918722b75d4ec449c8ab9375882a5dd0f5f50ed0090",
+        "fileCount": 9
+      },
+      "existingSdkSuites": [],
+      "flags": [
+        "historical-migration"
+      ],
+      "status": "content_done",
+      "owner": null,
+      "startedAt": "2026-11-10T14:37:43.398871+00:00",
+      "updatedAt": "2026-11-10T17:52:58.198734+00:00",
+      "result": "results/B21.md",
+      "blocker": null,
+      "formalReceiptState": "pending_clean_authorized_commit",
+      "executionBaseline": {
+        "sha256": "4bdf963980df103091178918722b75d4ec449c8ab9375882a5dd0f5f50ed0090",
+        "fileCount": 9
+      },
+      "checkpoint": "candidate15-local-runtime-pending",
+      "nextAction": "内容与本地运行完成；未来获提交授权后正式recorder",
+      "lastOwner": "/root",
+      "completedAt": "2026-11-10T15:48:28.734738+00:00",
+      "reviewedBy": "/root/quality_e05",
+      "sixChecks": {
+        "technicalAccuracy": "PASS",
+        "clarity": "PASS",
+        "demoUsefulness": "PASS",
+        "portability": "PASS",
+        "officialSources": "PASS",
+        "reproducibility": "PASS"
+      },
+      "finalEntryDigest": {
+        "sha256": "a5c73222cd3950556535a48bfd78018cbfff42611f49c6b85d0c6f09679b5c82",
+        "fileCount": 42
+      },
+      "publicFollowupResolvedAt": "2026-11-10T17:52:58.198734+00:00",
+      "publicReview": "docs/library-lab/evidence/quality-upgrade/document-empty-link-independent-review.md"
+    }
+  }
+}

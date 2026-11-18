@@ -1,0 +1,197 @@
+[
+  {
+    "log": "validation/checkpoint-metadata.txt",
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "--dir",
+      "packages/library-lab",
+      "exec",
+      "node",
+      "--input-type=module",
+      "-e",
+      "import fs from \"node:fs\";import assert from \"node:assert/strict\";import {validateEntry} from \"./src/lib/catalog.mjs\";import {entryCompletenessIssues} from \"./scripts/entry-gate.mjs\";const p=\"entries/C16-luxon/\";const e=JSON.parse(fs.readFileSync(p+\"library.json\"));assert.deepEqual(validateEntry(e),[]);assert.deepEqual(entryCompletenessIssues(e,{guide:true,agent:true,agents:true,verification:true}),[]);assert.equal(new Set(e.demos.flatMap(d=>d.sourceFiles)).size,9);for(const f of e.demos[0].sourceFiles)assert.ok(fs.existsSync(p+f));console.log(\"C16 checkpoint metadata: 3 levels, 9 sources, formal NOT_RUN\");"
+    ],
+    "utc": "2026-11-10T17:09:26.909222+00:00",
+    "exit": 0
+  },
+  {
+    "log": "validation/diff-check.txt",
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "git",
+      "diff",
+      "--check",
+      "--",
+      "packages/library-lab/entries/C16-luxon"
+    ],
+    "utc": "2026-11-10T17:21:42.194751+00:00",
+    "exit": 0
+  },
+  {
+    "log": "validation/final-inspection.txt",
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "python",
+      "packages/library-lab/entries/C16-luxon/validation/final-inspection.py"
+    ],
+    "utc": "2026-11-10T17:21:42.216883+00:00",
+    "exit": 0
+  },
+  {
+    "log": "validation/format-code.txt",
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "packages/library-lab/entries/C16-luxon/examples",
+      "packages/library-lab/entries/C16-luxon/tests"
+    ],
+    "utc": "2026-11-10T17:08:05.468979+00:00",
+    "exit": 0
+  },
+  {
+    "log": "validation/format-metadata.txt",
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "packages/library-lab/entries/C16-luxon/library.json",
+      "packages/library-lab/entries/C16-luxon/verification.json",
+      "packages/library-lab/entries/C16-luxon/official/source-evidence.json",
+      "packages/library-lab/entries/C16-luxon/validation/sdk-source-audit.json",
+      "packages/library-lab/entries/C16-luxon/validation/metadata-check.mjs"
+    ],
+    "utc": "2026-11-10T17:20:09.210441+00:00",
+    "exit": 0
+  },
+  {
+    "log": "validation/metadata.txt",
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "--dir",
+      "packages/library-lab",
+      "exec",
+      "node",
+      "entries/C16-luxon/validation/metadata-check.mjs"
+    ],
+    "utc": "2026-11-10T17:20:09.450900+00:00",
+    "exit": 0
+  },
+  {
+    "log": "validation/official-fetch.txt",
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "python",
+      "packages/library-lab/entries/C16-luxon/validation/fetch-official.py"
+    ],
+    "utc": "2026-11-10T17:08:05.712552+00:00",
+    "exit": 0
+  },
+  {
+    "log": "validation/policy.txt",
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "--dir",
+      "packages/library-lab",
+      "exec",
+      "node",
+      "--test",
+      "entries/C16-luxon/tests/wall-time-policy.test.mjs"
+    ],
+    "utc": "2026-11-10T17:08:05.215279+00:00",
+    "exit": 0
+  },
+  {
+    "log": "validation/proposal-format.txt",
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "packages/library-lab/entries/C16-luxon/validation/browser-proposal.check.ts"
+    ],
+    "utc": "2026-11-10T17:16:56.871730+00:00",
+    "exit": 0
+  },
+  {
+    "log": "validation/proposal-types.txt",
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "--dir",
+      "packages/library-lab",
+      "exec",
+      "tsc",
+      "--ignoreConfig",
+      "--noEmit",
+      "--target",
+      "es2022",
+      "--module",
+      "esnext",
+      "--moduleResolution",
+      "bundler",
+      "--strict",
+      "--skipLibCheck",
+      "--types",
+      "node",
+      "entries/C16-luxon/validation/browser-proposal.check.ts"
+    ],
+    "utc": "2026-11-10T17:16:57.119592+00:00",
+    "exit": 0
+  },
+  {
+    "log": "validation/sdk.txt",
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "--dir",
+      "packages/library-lab",
+      "exec",
+      "node",
+      "--test",
+      "entries/C16-luxon/tests/sdk.test.mjs"
+    ],
+    "utc": "2026-11-10T17:08:04.939901+00:00",
+    "exit": 0
+  },
+  {
+    "log": "validation/types.txt",
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "--dir",
+      "packages/library-lab",
+      "exec",
+      "tsc",
+      "--ignoreConfig",
+      "--noEmit",
+      "--target",
+      "es2022",
+      "--module",
+      "esnext",
+      "--moduleResolution",
+      "bundler",
+      "--jsx",
+      "react-jsx",
+      "--strict",
+      "--skipLibCheck",
+      "--esModuleInterop",
+      "--types",
+      "vite/client,node",
+      "entries/C16-luxon/examples/demo.tsx"
+    ],
+    "utc": "2026-11-10T17:06:46.535407+00:00",
+    "exit": 0
+  }
+]

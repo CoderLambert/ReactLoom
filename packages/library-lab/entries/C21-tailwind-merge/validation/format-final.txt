@@ -1,0 +1,72 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['pnpm', 'exec', 'biome', 'check', '--write', 'entries/C21-tailwind-merge/examples', 'entries/C21-tailwind-merge/tests', 'entries/C21-tailwind-merge/library.json', 'entries/C21-tailwind-merge/validation/metadata-check.mjs']
+startedAt: 2026-11-10T18:17:45.632178+00:00
+exit: 0
+Skipped 6 suggested fixes.
+If you wish to apply the suggested (unsafe) fixes, use the command biome check --write --unsafe
+
+Checked 8 files in 7ms. Fixed 5 files.
+Found 3 infos.
+entries/C21-tailwind-merge/validation/metadata-check.mjs:29:21 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    27 │ for (const file of audit.files) assert.equal(sha(await readFile(file.path)), file.sha256)
+    28 │ for (const [name, version] of Object.entries(audit.versions)) {
+  > 29 │   const p = new URL('../../../node_modules/' + name + '/package.json', import.meta.url)
+       │                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    30 │   assert.equal(JSON.parse(await readFile(p, 'utf8')).version, version)
+    31 │ }
+  
+  i Unsafe fix: Use a template literal.
+  
+     27  27 │   for (const file of audit.files) assert.equal(sha(await readFile(file.path)), file.sha256)
+     28  28 │   for (const [name, version] of Object.entries(audit.versions)) {
+     29     │ - ··const·p·=·new·URL('../../../node_modules/'·+·name·+·'/package.json',·import.meta.url)
+         29 │ + ··const·p·=·new·URL(`../../../node_modules/${name}/package.json`,·import.meta.url)
+     30  30 │     assert.equal(JSON.parse(await readFile(p, 'utf8')).version, version)
+     31  31 │   }
+  
+
+entries/C21-tailwind-merge/validation/metadata-check.mjs:66:7 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    64 │     assert.ok(
+    65 │       resolveDocumentUrl(href, 'C21', '/', entry.official.readme.snapshotPath),
+  > 66 │       name + ': ' + href,
+       │       ^^^^^^^^^^^^^^^^^^
+    67 │     )
+    68 │     if (!href.startsWith('https:')) assert.ok((await stat(new URL(href, base))).isFile())
+  
+  i Unsafe fix: Use a template literal.
+  
+     64  64 │       assert.ok(
+     65  65 │         resolveDocumentUrl(href, 'C21', '/', entry.official.readme.snapshotPath),
+     66     │ - ······name·+·':·'·+·href,
+         66 │ + ······`${name}:·${href}`,
+     67  67 │       )
+     68  68 │       if (!href.startsWith('https:')) assert.ok((await stat(new URL(href, base))).isFile())
+  
+
+entries/C21-tailwind-merge/validation/metadata-check.mjs:93:3 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    91 │ await writeFile(
+    92 │   new URL('validation/content-input-hashes.json', base),
+  > 93 │   JSON.stringify(inputs, null, 2) + '\n',
+       │   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    94 │ )
+    95 │ console.log(
+  
+  i Unsafe fix: Use a template literal.
+  
+     91  91 │   await writeFile(
+     92  92 │     new URL('validation/content-input-hashes.json', base),
+     93     │ - ··JSON.stringify(inputs,·null,·2)·+·'\n',
+         93 │ + ··`${JSON.stringify(inputs,·null,·2)}\n`,
+     94  94 │   )
+     95  95 │   console.log(
+  
+

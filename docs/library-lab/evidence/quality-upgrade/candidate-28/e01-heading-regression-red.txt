@@ -1,0 +1,27 @@
+✖ policy rejects implicit level-one headings accepted by actual schema defaults (4.284185ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 101.46072
+
+✖ failing tests:
+
+test at packages/library-lab/entries/E01-tiptap/tests/sdk.test.mjs:32:1
+✖ policy rejects implicit level-one headings accepted by actual schema defaults (4.284185ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/E01-tiptap/tests/sdk.test.mjs:39:12)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /二三级标题/,
+    operator: 'throws',
+    diff: 'simple'
+  }

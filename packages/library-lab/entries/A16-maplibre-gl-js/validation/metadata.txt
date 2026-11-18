@@ -1,0 +1,7 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node entries/A16-maplibre-gl-js/validation/check-entry.mjs
+exit: 0
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node entries/A16-maplibre-gl-js/validation/check-entry.mjs
+PASS: entry shape, 3 demos, 5 source paths, README bytes 13392 SHA-256 f293e4b84fcabba75a923fe54ff861b6bd4e7f2cddaf09082bcee97f57c0847b
+exit: 0

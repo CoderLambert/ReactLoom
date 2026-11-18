@@ -5,13 +5,7 @@
   "name": "DOMPurify",
   "group": "E",
   "summary": "HTML 净化和输出安全",
-  "tags": [
-    "XSS",
-    "sanitize",
-    "HTML",
-    "DOM",
-    "security"
-  ],
+  "tags": ["XSS", "sanitize", "HTML", "DOM", "security"],
   "contentState": "recreated",
   "packages": [
     {
@@ -50,14 +44,13 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/demo.tsx",
         "examples/html-policy.mjs",
         "examples/html-policy.d.mts",
-        "examples/html-policy.test.mjs",
-        "examples/demo.tsx"
+        "examples/sanitize-preview.mjs",
+        "examples/sanitize-preview.d.mts"
       ],
-      "capabilities": [
-        "dom-sanitization"
-      ],
+      "capabilities": ["dom-sanitization"],
       "description": "真实 DOMPurify 允许简单格式并移除事件属性。"
     },
     {
@@ -68,15 +61,14 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/demo.tsx",
         "examples/html-policy.mjs",
         "examples/html-policy.d.mts",
-        "examples/html-policy.test.mjs",
-        "examples/demo.tsx"
+        "examples/sanitize-preview.mjs",
+        "examples/sanitize-preview.d.mts"
       ],
-      "capabilities": [
-        "dom-sanitization"
-      ],
-      "description": "同源富文本内容净化并保持普通文本与标记。"
+      "capabilities": ["dom-sanitization"],
+      "description": "受限公告结构与HTTPS链接；显式窄属性合同。"
     },
     {
       "demoId": "advanced",
@@ -86,14 +78,13 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/demo.tsx",
         "examples/html-policy.mjs",
         "examples/html-policy.d.mts",
-        "examples/html-policy.test.mjs",
-        "examples/demo.tsx"
+        "examples/sanitize-preview.mjs",
+        "examples/sanitize-preview.d.mts"
       ],
-      "capabilities": [
-        "dom-sanitization"
-      ],
+      "capabilities": ["dom-sanitization"],
       "description": "script、SVG、javascript: 等输入必须不能产生可执行代码。"
     }
   ],
@@ -104,5 +95,25 @@
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
     "note": "基于官方 DOMPurify 3.4.17 API 重新编写；安全状态必须经真实DOM验收。"
+  },
+  "official": {
+    "readme": {
+      "repository": "cure53/DOMPurify",
+      "commit": "a77a3e78b59f72fa4d1c83f22e121ad9cc7d3575",
+      "path": "README.md",
+      "sourceUrl": "https://github.com/cure53/DOMPurify/blob/a77a3e78b59f72fa4d1c83f22e121ad9cc7d3575/README.md",
+      "snapshotPath": "official/readme.md",
+      "sha256": "565e6a29192b5dbb94b172ef5e4b90759994eb34874da22bb8e9be5c3e894969",
+      "language": "en",
+      "version": "3.4.17",
+      "syncedAt": "2026-11-17T17:39:39.589624+00:00"
+    },
+    "homepage": {
+      "url": "https://github.com/cure53/DOMPurify",
+      "kind": "repository",
+      "status": "blocked",
+      "checkedAt": "2026-11-17T17:39:39.589624+00:00",
+      "reason": "官方仓库实际响应头保存在official/homepage-headers.txt，含X-Frame-Options deny与frame-ancestors none，保留仓库直达。"
+    }
   }
 }

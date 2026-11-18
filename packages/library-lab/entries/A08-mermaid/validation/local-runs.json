@@ -1,0 +1,70 @@
+[
+  {
+    "name": "format",
+    "argv": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "entries/A08-mermaid/examples",
+      "entries/A08-mermaid/tests",
+      "entries/A08-mermaid/library.json",
+      "entries/A08-mermaid/official/source-evidence.json",
+      "e2e/quality-remediation-mermaid.spec.ts"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "start": "2026-11-10T11:33:26.268326+00:00",
+    "end": "2026-11-10T11:33:26.480802+00:00",
+    "exitCode": 0,
+    "log": "validation/format.txt",
+    "sha256": "47e958e4b57ba4e071e581886c0b55ed5e20702d743b5aab86d00dcec1d3c2f1"
+  },
+  {
+    "name": "policy",
+    "argv": [
+      "node",
+      "--test",
+      "entries/A08-mermaid/tests/render-queue.test.mts"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "start": "2026-11-10T11:33:26.481030+00:00",
+    "end": "2026-11-10T11:33:26.571908+00:00",
+    "exitCode": 0,
+    "log": "validation/policy.txt",
+    "sha256": "53ac0f15689a7c837f218a1781efe486bc9eb6d8387d2edc385b35002d818a97"
+  },
+  {
+    "name": "types",
+    "argv": [
+      "pnpm",
+      "exec",
+      "tsc",
+      "--ignoreConfig",
+      "--noEmit",
+      "--target",
+      "ES2022",
+      "--lib",
+      "ES2022,DOM,DOM.Iterable",
+      "--module",
+      "ESNext",
+      "--moduleResolution",
+      "Bundler",
+      "--jsx",
+      "react-jsx",
+      "--strict",
+      "--skipLibCheck",
+      "--esModuleInterop",
+      "--allowImportingTsExtensions",
+      "--types",
+      "vite/client,node",
+      "entries/A08-mermaid/examples/demo.tsx"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "start": "2026-11-10T11:33:26.572108+00:00",
+    "end": "2026-11-10T11:33:26.809200+00:00",
+    "exitCode": 0,
+    "log": "validation/types.txt",
+    "sha256": "25ea13c52c653b3b30c90c2f7deedaf9cc8646ca8080e1a3849ae1d6dc346a88"
+  }
+]

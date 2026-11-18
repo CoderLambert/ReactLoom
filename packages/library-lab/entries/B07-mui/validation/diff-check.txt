@@ -1,0 +1,4 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["git", "diff", "--check", "--", "packages/library-lab/entries/B07-mui"], "utc": "2026-11-10T13:32:36.374081+00:00", "exitCode": 0}
+STDOUT
+
+STDERR

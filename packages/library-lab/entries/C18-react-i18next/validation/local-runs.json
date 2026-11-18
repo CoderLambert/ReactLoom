@@ -1,0 +1,238 @@
+[
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "entries/C18-react-i18next/examples",
+      "entries/C18-react-i18next/library.json"
+    ],
+    "startedAt": "2026-11-10T17:39:57.018697+00:00",
+    "exitCode": 0,
+    "log": "validation/format-checkpoint.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "tsc",
+      "--ignoreConfig",
+      "--noEmit",
+      "--target",
+      "es2022",
+      "--module",
+      "esnext",
+      "--moduleResolution",
+      "bundler",
+      "--jsx",
+      "react-jsx",
+      "--strict",
+      "--skipLibCheck",
+      "--esModuleInterop",
+      "--types",
+      "vite/client,node",
+      "entries/C18-react-i18next/examples/demo.tsx"
+    ],
+    "startedAt": "2026-11-10T17:39:57.258135+00:00",
+    "exitCode": 0,
+    "log": "validation/type-checkpoint.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "node",
+      "--test",
+      "entries/C18-react-i18next/tests/sdk.test.mjs"
+    ],
+    "startedAt": "2026-11-10T17:41:38.456366+00:00",
+    "exitCode": 0,
+    "log": "validation/sdk.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "node",
+      "--test",
+      "entries/C18-react-i18next/tests/language-switch.test.mjs"
+    ],
+    "startedAt": "2026-11-10T17:41:38.735169+00:00",
+    "exitCode": 0,
+    "log": "validation/policy.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "python3",
+      "entries/C18-react-i18next/validation/fetch-official.py"
+    ],
+    "startedAt": "2026-11-10T17:42:54.379934+00:00",
+    "exitCode": 0,
+    "log": "validation/official-fetch.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "entries/C18-react-i18next/examples",
+      "entries/C18-react-i18next/tests",
+      "entries/C18-react-i18next/library.json"
+    ],
+    "startedAt": "2026-11-10T17:44:30.245111+00:00",
+    "exitCode": 0,
+    "log": "validation/format-source-final.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "tsc",
+      "--ignoreConfig",
+      "--noEmit",
+      "--target",
+      "es2022",
+      "--module",
+      "esnext",
+      "--moduleResolution",
+      "bundler",
+      "--jsx",
+      "react-jsx",
+      "--strict",
+      "--skipLibCheck",
+      "--esModuleInterop",
+      "--types",
+      "vite/client,node",
+      "entries/C18-react-i18next/examples/demo.tsx"
+    ],
+    "startedAt": "2026-11-10T17:44:30.479626+00:00",
+    "exitCode": 0,
+    "log": "validation/type-source-final.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "python3",
+      "entries/C18-react-i18next/validation/check-proposal.py"
+    ],
+    "startedAt": "2026-11-10T17:46:11.049983+00:00",
+    "exitCode": 0,
+    "log": "validation/proposal-check.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "entries/C18-react-i18next/examples",
+      "entries/C18-react-i18next/library.json"
+    ],
+    "startedAt": "2026-11-10T17:46:54.922654+00:00",
+    "exitCode": 0,
+    "log": "validation/format-freeze.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "tsc",
+      "--ignoreConfig",
+      "--noEmit",
+      "--target",
+      "es2022",
+      "--module",
+      "esnext",
+      "--moduleResolution",
+      "bundler",
+      "--jsx",
+      "react-jsx",
+      "--strict",
+      "--skipLibCheck",
+      "--esModuleInterop",
+      "--types",
+      "vite/client,node",
+      "entries/C18-react-i18next/examples/demo.tsx"
+    ],
+    "startedAt": "2026-11-10T17:46:55.155708+00:00",
+    "exitCode": 0,
+    "log": "validation/type-freeze.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "python3",
+      "entries/C18-react-i18next/validation/source-tool-transport-fixture.py"
+    ],
+    "startedAt": "2026-11-10T17:53:17.846470+00:00",
+    "exitCode": 0,
+    "log": "validation/source-tool-transport.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "node",
+      "entries/C18-react-i18next/validation/metadata-check.mjs"
+    ],
+    "startedAt": "2026-11-10T17:56:25.878285+00:00",
+    "exitCode": 0,
+    "log": "validation/metadata-final.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "entries/C18-react-i18next/validation/metadata-check.mjs",
+      "entries/C18-react-i18next/verification.json"
+    ],
+    "startedAt": "2026-11-10T17:57:31.187749+00:00",
+    "exitCode": 0,
+    "log": "validation/format-final.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "git",
+      "diff",
+      "--check",
+      "--",
+      "entries/C18-react-i18next"
+    ],
+    "startedAt": "2026-11-10T17:57:31.416941+00:00",
+    "exitCode": 0,
+    "log": "validation/diff-final.txt"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "git",
+      "diff",
+      "--check",
+      "--",
+      "entries/C18-react-i18next"
+    ],
+    "startedAt": "2026-11-10T17:59:07.768540+00:00",
+    "exitCode": 0,
+    "log": "validation/diff-after-report.txt"
+  }
+]

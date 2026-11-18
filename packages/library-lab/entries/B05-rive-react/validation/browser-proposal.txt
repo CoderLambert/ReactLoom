@@ -1,0 +1,223 @@
+// NOT_RUN. Requires actual CDN/WASM/WebGL2. Failure must remain FAIL/BLOCKED, never SDK mocks.
+// Browser loads the existing remote sample; no .riv response body is saved or redistributed.
+import { expect, type Locator, type Page, test } from '@playwright/test'
+
+type Snapshot = {
+  instance: string
+  objectIdentity: number
+  artboard: string
+  stateMachines: string[]
+  contractMatches: boolean
+  isPlaying: boolean
+  isPaused: boolean
+  playingMachines: string[]
+  fit: string
+  bounds: { minX: number; minY: number; maxX: number; maxY: number } | null
+  canvas: { width: number; height: number; cssWidth: number; cssHeight: number } | null
+  observedAdvanceEvents: number
+  observedPlayEvents: number
+  observedPauseEvents: number
+  wasmUrl: string
+  wasmFallbackUrl: string | null
+}
+async function stored(app: Locator): Promise<Snapshot | null> {
+  return JSON.parse((await app.getByTestId('b05-sdk-state').textContent()) || 'null')
+}
+async function sample(app: Locator) {
+  await app.getByRole('button', { name: '读取真实播放器', exact: true }).click()
+  return stored(app)
+}
+async function read(app: Locator) {
+  const value = await sample(app)
+  if (!value) throw new Error('No actual loaded Rive instance')
+  return value
+}
+async function ready(app: Locator) {
+  await expect
+    .poll(async () => (await sample(app))?.contractMatches ?? false, { timeout: 30000 })
+    .toBe(true)
+  await expect(app.getByTestId('b05-runtime-error')).toHaveCount(0)
+}
+async function open(page: Page, level: 'basic' | 'business' | 'advanced') {
+  await page.setViewportSize({ width: 1200, height: 1400 })
+  await page.goto(`/libraries/rive-react?tab=demo&example=${level}`)
+  const run = page.getByRole('button', { name: '运行当前示例', exact: true })
+  if (await run.isVisible()) await run.click()
+  const app = page.getByRole('region', { name: 'Rive 动画与状态机制实验', exact: true })
+  await app.getByText('查看真实Rive对象与推进事件', { exact: true }).click()
+  await ready(app)
+  return app
+}
+
+test('@B05 real Rive file, WASM, Advance and Canvas frames agree with playback and same-object Layout updates', async ({
+  page,
+}, info) => {
+  const resources: { url: string; status: number }[] = []
+  page.on('response', (response) => {
+    if (/\.wasm(?:[?#]|$)|\/vehicles\.riv(?:[?#]|$)/.test(response.url()))
+      resources.push({ url: response.url(), status: response.status() })
+  })
+  await page.emulateMedia({ reducedMotion: 'no-preference' })
+  const app = await open(page, 'basic')
+  const first = await read(app)
+  expect(first.stateMachines).toContain('bumpy')
+  expect(first.artboard.length).toBeGreaterThan(0)
+  expect(first.objectIdentity).toBeGreaterThan(0)
+  expect(first.canvas?.width ?? 0).toBeGreaterThan(0)
+  expect(first.canvas?.height ?? 0).toBeGreaterThan(0)
+  expect(first.bounds).not.toBeNull()
+  expect((first.bounds?.maxX ?? 0) - (first.bounds?.minX ?? 0)).toBeGreaterThan(0)
+  expect((first.bounds?.maxY ?? 0) - (first.bounds?.minY ?? 0)).toBeGreaterThan(0)
+  expect(first.wasmUrl).toContain('@rive-app/webgl2@2.45.0/')
+  expect(resources.some((item) => item.url.includes('vehicles.riv') && item.status === 200)).toBe(
+    true,
+  )
+  expect(resources.some((item) => item.url.includes('.wasm') && item.status === 200)).toBe(true)
+  await expect.poll(async () => (await sample(app))?.isPlaying).toBe(true)
+  await expect
+    .poll(async () => (await sample(app))?.observedAdvanceEvents ?? 0)
+    .toBeGreaterThan(first.observedAdvanceEvents)
+  const canvas = app.getByTestId('b05-canvas')
+  const originalCanvas = await canvas.elementHandle()
+  if (!originalCanvas) throw new Error('No actual Rive Canvas')
+  // Advance proves advancement only. Actual composited Canvas pixels prove drawing.
+  const playingFrame = await canvas.screenshot()
+  await expect.poll(async () => !(await canvas.screenshot()).equals(playingFrame)).toBe(true)
+  await info.attach('b05-real-playing.png', {
+    body: playingFrame,
+    contentType: 'image/png',
+  })
+  await app.getByRole('button', { name: '手动暂停动画', exact: true }).click()
+  await expect.poll(async () => (await sample(app))?.isPlaying).toBe(false)
+  await page.waitForTimeout(100)
+  const paused = await read(app)
+  const pausedFrame = await canvas.screenshot()
+  await page.waitForTimeout(180)
+  expect(
+    (await read(app)).observedAdvanceEvents - paused.observedAdvanceEvents,
+  ).toBeLessThanOrEqual(2)
+  expect((await canvas.screenshot()).equals(pausedFrame)).toBe(true)
+  await app.getByRole('combobox', { name: '画面适配', exact: true }).selectOption('cover')
+  await expect.poll(async () => (await sample(app))?.fit).toBe('cover')
+  const covered = await read(app)
+  expect(covered.instance).toBe(first.instance)
+  expect(covered.objectIdentity).toBe(first.objectIdentity)
+  expect(await originalCanvas.evaluate((node) => node.isConnected)).toBe(true)
+  await info.attach('b05-real-cover.png', {
+    body: await canvas.screenshot(),
+    contentType: 'image/png',
+  })
+  await app.getByRole('button', { name: '恢复自动播放', exact: true }).click()
+  await expect.poll(async () => (await sample(app))?.isPlaying).toBe(true)
+  await info.attach('b05-resource-status.json', {
+    body: JSON.stringify(resources),
+    contentType: 'application/json',
+  })
+})
+
+test('@B05 local review cancellation and input snapshots request actual Rive playback without faking file states', async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' })
+  const app = await open(page, 'business')
+  const initial = await read(app)
+  expect(initial.isPlaying).toBe(false)
+  const start = app.getByRole('button', { name: '启动 / 重试审核', exact: true })
+  const cancel = app.getByRole('button', { name: '取消任务', exact: true })
+  const failure = app.getByRole('checkbox', { name: '下次模拟 503', exact: true })
+  await start.click()
+  await expect(app).toHaveAttribute('data-phase', 'pending')
+  await cancel.click()
+  await expect(app).toHaveAttribute('data-phase', 'idle')
+  await expect(cancel).toBeDisabled()
+  await page.waitForTimeout(550)
+  await expect(app).toHaveAttribute('data-phase', 'idle')
+  await expect(app.getByTestId('b05-status')).toContainText('先前任务不得回写')
+  await failure.check()
+  await start.click()
+  await failure.uncheck() // This task captured true at start; changing the next choice cannot rewrite it.
+  await expect(app).toHaveAttribute('data-phase', 'error')
+  await expect(app.getByTestId('b05-status')).toContainText('503')
+  const failed = await read(app)
+  expect(failed.isPlaying).toBe(false)
+  expect(failed.observedPlayEvents).toBeGreaterThan(initial.observedPlayEvents)
+  expect(failed.observedAdvanceEvents).toBeGreaterThan(initial.observedAdvanceEvents)
+  expect(failed.instance).toBe(initial.instance)
+  expect(failed.objectIdentity).toBe(initial.objectIdentity)
+  await start.click()
+  await expect(app).toHaveAttribute('data-phase', 'success')
+  await expect(app.getByTestId('b05-status')).toContainText('HTML')
+  expect((await read(app)).isPlaying).toBe(false)
+  await expect(app.getByTestId('b05-runtime-error')).toHaveCount(0)
+})
+
+test('@B05 native reduced motion, real intersection and wrapper Canvas teardown preserve ownership', async ({
+  page,
+}, info) => {
+  const errors: string[] = []
+  const cleanupWarnings: string[] = []
+  page.on('pageerror', (error) => errors.push(error.message))
+  page.on('console', (message) => {
+    if (/\[Rive\].*(?:cleaning up|cleanup)/i.test(message.text()))
+      cleanupWarnings.push(message.text())
+  })
+  await page.emulateMedia({ reducedMotion: 'no-preference' })
+  const app = await open(page, 'advanced')
+  const initial = await read(app)
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await expect(app).toHaveAttribute('data-reduced', 'true')
+  await expect(app).toHaveAttribute('data-requested-play', 'false')
+  await expect.poll(async () => (await sample(app))?.isPlaying).toBe(false)
+  const original = await app.getByTestId('b05-canvas').elementHandle()
+  if (!original) throw new Error('Missing old actual Rive Canvas')
+  await page.setViewportSize({ width: 1000, height: 420 })
+  await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight))
+  const stage = app.getByTestId('b05-viewport')
+  const out = await stage.boundingBox()
+  if (!out) throw new Error('No viewport layout')
+  expect(out.y + out.height).toBeLessThanOrEqual(0)
+  await expect(app).toHaveAttribute('data-runtime-mount', 'false')
+  await expect(app.getByTestId('b05-player')).toHaveCount(0)
+  await expect
+    .poll(() =>
+      original.evaluate((node) => {
+        if (!(node instanceof HTMLCanvasElement)) throw new Error('Not a Canvas')
+        return { connected: node.isConnected, width: node.width, height: node.height }
+      }),
+    )
+    .toEqual({ connected: false, width: 0, height: 0 })
+  expect(await stored(app)).toBeNull() // Do not click the reader and scroll the player back into view.
+  await page.setViewportSize({ width: 1200, height: 1400 })
+  await stage.scrollIntoViewIfNeeded()
+  await expect(app).toHaveAttribute('data-runtime-mount', 'true')
+  await ready(app)
+  const replacement = await read(app)
+  expect(replacement.instance).not.toBe(initial.instance)
+  expect(replacement.isPlaying).toBe(false) // Native OS preference still applies to the replacement.
+  await page.emulateMedia({ reducedMotion: 'no-preference' })
+  await expect.poll(async () => (await sample(app))?.isPlaying).toBe(true)
+  const current = await app.getByTestId('b05-canvas').elementHandle()
+  if (!current) throw new Error('No current actual Canvas')
+  await page.getByRole('button', { name: '停止并卸载', exact: true }).click()
+  await expect(app).toHaveCount(0)
+  await expect
+    .poll(() =>
+      current.evaluate((node) => {
+        if (!(node instanceof HTMLCanvasElement)) throw new Error('Not a Canvas')
+        return !node.isConnected && node.width === 0 && node.height === 0
+      }),
+    )
+    .toBe(true)
+  expect(errors).toEqual([])
+  expect(cleanupWarnings).toEqual([])
+  await info.attach('b05-ownership-boundary.json', {
+    body: JSON.stringify({
+      cleanupWarnings,
+      note: 'Canvas detach/zeroing is observed. Shared offscreen WebGL context and global WASM are intentionally not asserted destroyed.',
+    }),
+    contentType: 'application/json',
+  })
+})
+
+// NOT_RUN: native document-hidden lifecycle, WebGL context-loss recovery, full shared-renderer/GPU
+// resource census, touch/screen readers, offline licensed content, View Models or large-instance performance.

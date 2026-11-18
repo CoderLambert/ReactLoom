@@ -1,0 +1,169 @@
+{
+  "checkedAt": "2026-11-10T15:49:33.948924+00:00",
+  "manifest": {
+    "name": "react-virtuoso",
+    "version": "4.18.19",
+    "license": "MIT",
+    "peerDependencies": {
+      "react": ">=16 || >=17 || >= 18 || >= 19",
+      "react-dom": ">=16 || >=17 || >= 18 || >=19"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/petyosi/react-virtuoso.git",
+      "directory": "packages/react-virtuoso"
+    }
+  },
+  "installedFiles": [
+    {
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/react-virtuoso@4.18.19_react-dom@19.3.0_react@19.3.0__react@19.3.0/node_modules/react-virtuoso/package.json",
+      "bytes": 2266,
+      "sha256": "6b5f6ead59081866753da544ae18742312b7cbf1f90c7d7844b73c3daa059e19"
+    },
+    {
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/react-virtuoso@4.18.19_react-dom@19.3.0_react@19.3.0__react@19.3.0/node_modules/react-virtuoso/dist/index.d.ts",
+      "bytes": 72873,
+      "sha256": "79993f78bd8fc765eb423cdcaf0bbeb5fe95515a6c8a0eefa70b28df934125e7"
+    },
+    {
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/react-virtuoso@4.18.19_react-dom@19.3.0_react@19.3.0__react@19.3.0/node_modules/react-virtuoso/dist/index.mjs",
+      "bytes": 98745,
+      "sha256": "644315580d3ac3c3ccb1cacdf4c64a027158ae50e62819a09ca6db8f630d559a"
+    }
+  ],
+  "types": [
+    {
+      "term": "defaultItemHeight?:",
+      "matches": [
+        {
+          "line": 1179,
+          "text": "     * as multiple passes of rendering should happen for the list to fill the viewport.\n     *\n     * Setting `defaultItemHeight` causes the component to skip the \"probe\" rendering and use the property\n     * value as default height instead.\n     */\n    defaultItemHeight?: number;\n    /**"
+        },
+        {
+          "line": 1729,
+          "text": "     * as multiple passes of rendering should happen for the list to fill the viewport.\n     *\n     * Setting `defaultItemHeight` causes the component to skip the \"probe\" rendering and use the property\n     * value as default height instead.\n     */\n    defaultItemHeight?: number;\n    /**"
+        }
+      ]
+    },
+    {
+      "term": "firstItemIndex?:",
+      "matches": [
+        {
+          "line": 482,
+          "text": "     * You can also prepend more items to the first group, for example:\n     * `{ groupCounts: [20, 30], firstItemIndex: 1000 }` can become `{ groupCounts: [10, 30, 30], firstItemIndex: 980 }`\n     *\n     * Warning: the firstItemIndex should **be a positive number**, based on the total amount of items to be displayed.\n     */\n    firstItemIndex?: number;\n    /**"
+        },
+        {
+          "line": 590,
+          "text": "     * You can also prepend more items to the first group, for example:\n     * `{ groupCounts: [20, 30], firstItemIndex: 1000 }` can become `{ groupCounts: [10, 30, 30], firstItemIndex: 980 }`\n     *\n     * Warning: the firstItemIndex should **be a positive number**, based on the total amount of items to be displayed.\n     */\n    firstItemIndex?: number;\n    /**"
+        },
+        {
+          "line": 1191,
+          "text": "     * Use when implementing inverse infinite scrolling - decrease the value this property\n     * in combination with  `data` or `totalCount` to prepend items to the top of the list.\n     *\n     * Warning: the firstItemIndex should **be a positive number**, based on the total amount of items to be displayed.\n     */\n    firstItemIndex?: number;\n    /**"
+        },
+        {
+          "line": 1760,
+          "text": "     * Use when implementing inverse infinite scrolling - decrease the value this property\n     * in combination with  `data` or `totalCount` to prepend items to the top of the list.\n     *\n     * Warning: the firstItemIndex should **be a positive number**, based on the total amount of items to be displayed.\n     */\n    firstItemIndex?: number;\n    /**"
+        }
+      ]
+    },
+    {
+      "term": "followOutput?:",
+      "matches": [
+        {
+          "line": 1223,
+          "text": "     *      return false\n     *    }\n     *  }} />\n     * ```\n     */\n    followOutput?: FollowOutput;\n    /**"
+        },
+        {
+          "line": 1790,
+          "text": "     *      return false\n     *    }\n     *  }} />\n     * ```\n     */\n    followOutput?: FollowOutput;\n    /**"
+        }
+      ]
+    },
+    {
+      "term": "initialItemCount?:",
+      "matches": [
+        {
+          "line": 1247,
+          "text": "    };\n    /**\n     * Use for server-side rendering - if set, the list will render the specified amount of items\n     * regardless of the container / item size.\n     */\n    initialItemCount?: number;\n    /**"
+        },
+        {
+          "line": 1514,
+          "text": "    };\n    /**\n     * Use for server-side rendering - if set, the list will render the specified amount of items\n     * regardless of the container / item size.\n     */\n    initialItemCount?: number;\n    /**"
+        },
+        {
+          "line": 1836,
+          "text": "    };\n    /**\n     * Use for server-side rendering - if set, the list will render the specified amount of items\n     * regardless of the container / item size.\n     */\n    initialItemCount?: number;\n    /**"
+        }
+      ]
+    },
+    {
+      "term": "rangeChanged?:",
+      "matches": [
+        {
+          "line": 1290,
+          "text": "        reverse: number;\n    };\n    /**\n     * Called with the new set of items each time the list items are rendered due to scrolling.\n     */\n    rangeChanged?: (range: ListRange) => void;\n    /**"
+        },
+        {
+          "line": 1555,
+          "text": "        reverse: number;\n    };\n    /**\n     * Called with the new set of items each time the list items are rendered due to scrolling.\n     */\n    rangeChanged?: (range: ListRange) => void;\n    /**"
+        },
+        {
+          "line": 1888,
+          "text": "        reverse: number;\n    };\n    /**\n     * Called with the new set of items each time the list items are rendered due to scrolling.\n     */\n    rangeChanged?: (range: ListRange) => void;\n    /**"
+        }
+      ]
+    },
+    {
+      "term": "scrollerRef?:",
+      "matches": [
+        {
+          "line": 1300,
+          "text": "     */\n    restoreStateFrom?: StateSnapshot;\n    /**\n     * Provides access to the root DOM element\n     */\n    scrollerRef?: (ref: HTMLElement | null | Window) => any;\n    /**"
+        },
+        {
+          "line": 1568,
+          "text": "     */\n    restoreStateFrom?: GridStateSnapshot | null | undefined;\n    /**\n     * Provides access to the root DOM element\n     */\n    scrollerRef?: (ref: HTMLElement | null) => any;\n    /**"
+        },
+        {
+          "line": 1898,
+          "text": "     */\n    restoreStateFrom?: StateSnapshot;\n    /**\n     * Provides access to the root DOM element\n     */\n    scrollerRef?: (ref: HTMLElement | null | Window) => any;\n    /**"
+        }
+      ]
+    },
+    {
+      "term": "scrollToIndex(location:",
+      "matches": [
+        {
+          "line": 455,
+          "text": "    scrollIntoView(location: ScrollIntoViewLocationOptions): void;\n    /**\n     * Scrolls the component to the specified item index.\n     * @param location - The item index or location with alignment options\n     */\n    scrollToIndex(location: IndexLocationWithAlign | number): void;\n}"
+        },
+        {
+          "line": 563,
+          "text": "    scrollTo(location: ScrollToOptions): void;\n    /**\n     * Scrolls the component to the specified item index.\n     * @param location - The item index or location with alignment options\n     */\n    scrollToIndex(location: IndexLocationWithAlign | number): void;\n}"
+        },
+        {
+          "line": 1117,
+          "text": "    scrollIntoView(location: FlatScrollIntoViewLocation | number): void;\n    /**\n     * Scrolls the component to the specified item index.\n     * @param location - The item index or location with alignment options\n     */\n    scrollToIndex(location: FlatIndexLocationWithAlign | number): void;\n}"
+        },
+        {
+          "line": 1413,
+          "text": "    scrollTo(location: ScrollToOptions): void;\n    /**\n     * Scrolls the component to the specified item index.\n     * @param location - The item index or location with alignment options\n     */\n    scrollToIndex(location: GridIndexLocation): void;\n}"
+        },
+        {
+          "line": 1630,
+          "text": "    scrollTo(location: ScrollToOptions): void;\n    /**\n     * Scrolls the component to the specified item index. See {@link IndexLocationWithAlign} for more options.\n     * @param location - The item index or location with alignment options\n     */\n    scrollToIndex(location: FlatIndexLocationWithAlign | number): void;\n}"
+        }
+      ]
+    }
+  ],
+  "upstreamCommit": "324f632f2fc745257cc46c28d1cb952eb7c68464",
+  "sourceEvidence": "upstream-source-audit.json",
+  "conclusions": [
+    "rangeChanged is rendered range, not exact intersection or a performance measurement",
+    "firstItemIndex offsets logical item indices and decreases with prepended count while stable data IDs stay unchanged",
+    "defaultItemHeight is an estimate, fixedItemHeight would skip measurement and is not used",
+    "SDK useSize callback ref unobserves its element; useScrollTop effect removes its scroll listener; no application global observer cleanup",
+    "SDK may queue measurement requestAnimationFrame; application does not claim zero global RAF, detached element offsetParent guard prevents measuring detached nodes",
+    "local fixture timer belongs to Business, cleared and generation-invalidated on cancel/search/unmount; no RSS HTTP request"
+  ]
+}

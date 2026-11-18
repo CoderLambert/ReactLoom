@@ -1,14 +1,14 @@
 {
   "sdk": {
-    "status": "BLOCKED",
-    "note": "@ffmpeg/core 已在锁文件中，但 prepare-ffmpeg-core 默认不复制 GPL-2.0-or-later 的 wasm/js，除非 LIBRARY_LAB_FFMPEG_CORE_LICENSE_REVIEWED=true。没有转码收据，不能记 PASS。"
+    "status": "NOT_RUN",
+    "note": "实际核心 0.12.10 已在获准的本机 Chromium 完成转换、退出与恢复，详见 local-validation.md；没有干净提交上的正式 SDK 收据。"
   },
   "build": {
     "status": "NOT_RUN",
-    "note": "依赖包已在根锁文件中。仓库级生产构建不是本条目收据。GPL 核心默认不复制，因此 sdk 仍是 BLOCKED；build 本身没有收据，保持 NOT_RUN。"
+    "note": "本地类型、生产构建与目录检查通过；正式构建收据仍待干净提交。"
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "真实FFmpeg转码PCM、WASM资产许可/来源/CSP/Worker卸载仍须Chromium验证"
+    "note": "本机隔离 Chromium 真实验证转码、取消、WAV 回读和资源清理；正式浏览器收据仍待匹配输入。"
   }
 }

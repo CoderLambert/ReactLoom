@@ -1,0 +1,41 @@
+{
+  "reusedAt": "2026-11-11T05:58:39.995303+00:00",
+  "reason": "Matching exact installed package versions and immutable upstream commits. Existing HTTP/tree evidence retained byte-for-byte; no new HTTP claim.",
+  "files": [
+    {
+      "status": "REUSED",
+      "sourcePath": "packages/library-lab/entries/C14-date-fns/official/readme.md",
+      "snapshotPath": "official/readme.md",
+      "bytes": 1814,
+      "sha256": "87237646806588ea43e8a7d4c13880d09b42b14ab0a4b0bbb944855f25b82232"
+    },
+    {
+      "status": "REUSED",
+      "sourcePath": "packages/library-lab/entries/C14-date-fns/official/tz-readme.md",
+      "snapshotPath": "official/tz-readme.md",
+      "bytes": 9377,
+      "sha256": "dc3a4466b53f9a5d2f06e0e3a5d38ce2858f565481471ec3747aee5f0718b264"
+    },
+    {
+      "status": "REUSED",
+      "sourcePath": "packages/library-lab/entries/C14-date-fns/official/source-evidence.json",
+      "snapshotPath": "official/date-fns-source-evidence.json",
+      "bytes": 34016,
+      "sha256": "34b6269236ae520e7e28b1e4e28830cf0091854a99a79c17cee3dc972d4635c5"
+    },
+    {
+      "status": "REUSED",
+      "sourcePath": "packages/library-lab/entries/C15-dayjs/official/readme.md",
+      "snapshotPath": "official/dayjs-readme.md",
+      "bytes": 3882,
+      "sha256": "3f4c6e9edd42554b8c6a1e111daafb568b4eba3e8b9da31a9296abebb8aae2c5"
+    },
+    {
+      "status": "REUSED",
+      "sourcePath": "packages/library-lab/entries/C15-dayjs/official/source-evidence.json",
+      "snapshotPath": "official/dayjs-source-evidence.json",
+      "bytes": 24427,
+      "sha256": "c34d6cfa0ec3303f9ea175260f39f042af3a52175a01952038e3d4ec89ab9dc8"
+    }
+  ]
+}

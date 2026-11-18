@@ -1,0 +1,9 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ["pnpm", "exec", "--", "tsc", "--ignoreConfig", "--noEmit", "--target", "ES2022", "--lib", "ES2022,DOM,DOM.Iterable", "--module", "ESNext", "--moduleResolution", "Bundler", "--jsx", "react-jsx", "--strict", "--skipLibCheck", "--esModuleInterop", "--allowSyntheticDefaultImports", "--allowImportingTsExtensions", "--types", "vite/client,node", "entries/B01-motion-for-react/examples/demo.tsx"]
+startedAt: 2026-11-10T12:33:03.753517+00:00
+finishedAt: 2026-11-10T12:33:04.080308+00:00
+exitCode: 0
+
+STDOUT
+
+STDERR

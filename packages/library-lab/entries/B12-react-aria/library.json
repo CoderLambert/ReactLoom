@@ -4,16 +4,8 @@
   "slug": "react-aria",
   "name": "React Aria",
   "group": "B",
-  "summary": "React Aria Components ComboBox 的键盘、IME、ARIA 与异步建议实战",
-  "tags": [
-    "accessibility",
-    "ComboBox",
-    "IME",
-    "keyboard",
-    "ListBox",
-    "async suggestions",
-    "React"
-  ],
+  "summary": "受控文本与频道身份分离，观察键盘/禁用选择、真实FormData和竞态安全本地异步建议",
+  "tags": ["accessibility", "ComboBox", "IME", "keyboard", "ListBox", "async suggestions", "React"],
   "contentState": "recreated",
   "packages": [
     {
@@ -23,16 +15,16 @@
   ],
   "references": [
     {
-      "title": "React Aria ComboBox 官方 API",
+      "title": "1.21.0精确发布源README",
+      "url": "https://github.com/adobe/react-spectrum/blob/0a2a7e68e4d896b3ac46c3647fe48fac9ea3ae2e/packages/react-aria-components/README.md"
+    },
+    {
+      "title": "匹配版本ComboBox源码",
+      "url": "https://github.com/adobe/react-spectrum/blob/0a2a7e68e4d896b3ac46c3647fe48fac9ea3ae2e/packages/react-aria-components/src/ComboBox.tsx"
+    },
+    {
+      "title": "当前官方ComboBox文档",
       "url": "https://react-aria.adobe.com/ComboBox"
-    },
-    {
-      "title": "React Spectrum 源码",
-      "url": "https://github.com/adobe/react-spectrum"
-    },
-    {
-      "title": "npm",
-      "url": "https://www.npmjs.com/package/react-aria-components"
     }
   ],
   "related": [
@@ -55,7 +47,7 @@
   "demos": [
     {
       "demoId": "basic",
-      "title": "固定候选与键盘选择",
+      "title": "键盘选择与频道身份",
       "level": "basic",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
@@ -65,17 +57,12 @@
         "examples/combobox.css",
         "examples/demo.tsx"
       ],
-      "capabilities": [
-        "keyboard",
-        "IME",
-        "portal",
-        "a11y",
-        "local-async-fixture"
-      ]
+      "capabilities": ["keyboard", "IME", "portal", "a11y", "local-async-fixture"],
+      "description": "四项固定候选，真实ComboBox键盘选择和FormData key，编辑文字清除过期选择。"
     },
     {
       "demoId": "business",
-      "title": "RSS 频道发现和禁用项",
+      "title": "分类过滤、禁用与表单确认",
       "level": "business",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
@@ -85,17 +72,12 @@
         "examples/combobox.css",
         "examples/demo.tsx"
       ],
-      "capabilities": [
-        "keyboard",
-        "IME",
-        "portal",
-        "a11y",
-        "local-async-fixture"
-      ]
+      "capabilities": ["keyboard", "IME", "portal", "a11y", "local-async-fixture"],
+      "description": "应用按名称/分类过滤，禁用项可见不可确认，清空与空态可恢复。"
     },
     {
       "demoId": "advanced",
-      "title": "竞态安全异步建议和真实表单",
+      "title": "异步建议、空态与输入法",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
@@ -105,13 +87,8 @@
         "examples/combobox.css",
         "examples/demo.tsx"
       ],
-      "capabilities": [
-        "keyboard",
-        "IME",
-        "portal",
-        "a11y",
-        "local-async-fixture"
-      ]
+      "capabilities": ["keyboard", "IME", "portal", "a11y", "local-async-fixture"],
+      "description": "240ms本地延迟、generation/abort清理，旧结果隐藏、真实空态与组合期提交守卫。"
     }
   ],
   "license": {
@@ -120,6 +97,26 @@
   },
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
-    "note": "独立按2026年官方 React Aria API 重写，不继承历史研究的运行验证。"
+    "note": "保留有效受控身份/文本、FormData、IME守卫和generation/abort清理；核对1.21.0兼容属性并修正空态可见性与实例描述id，不继承历史运行PASS。"
+  },
+  "official": {
+    "readme": {
+      "repository": "adobe/react-spectrum",
+      "commit": "0a2a7e68e4d896b3ac46c3647fe48fac9ea3ae2e",
+      "path": "packages/react-aria-components/README.md",
+      "sourceUrl": "https://github.com/adobe/react-spectrum/blob/0a2a7e68e4d896b3ac46c3647fe48fac9ea3ae2e/packages/react-aria-components/README.md",
+      "snapshotPath": "official/readme.md",
+      "language": "en",
+      "version": "1.21.0",
+      "syncedAt": "2026-11-10T13:40:27.470745+00:00",
+      "sha256": "654cbc0c1d8939a0bd808883ebf1a1cca965e86b9ff657dfdf4378592fcb2960"
+    },
+    "homepage": {
+      "url": "https://react-aria.adobe.com/",
+      "kind": "website",
+      "status": "blocked",
+      "checkedAt": "2026-11-10T13:40:27.470053+00:00",
+      "reason": "实际GET200的enforced CSP为frame-ancestors 'self'，明确禁止跨源Lab嵌入；完整响应头已保存，保留官网直达。没有伪称实际浏览器已运行。"
+    }
   }
 }

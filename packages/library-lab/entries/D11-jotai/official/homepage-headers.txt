@@ -1,0 +1,11 @@
+HTTP/1.1 200 OK
+server: nginx/1.28.3 (Ubuntu)
+date: Tue, 17 Nov 2026 16:41:40 GMT
+content-type: text/html
+content-length: 4730
+last-modified: Thu, 30 Jul 2026 16:08:50 GMT
+connection: close
+vary: Accept-Encoding
+etag: "6a6b7712-127a"
+accept-ranges: bytes
+

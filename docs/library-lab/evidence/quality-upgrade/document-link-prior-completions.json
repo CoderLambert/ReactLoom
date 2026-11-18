@@ -1,0 +1,1383 @@
+{
+  "at": "2026-11-10T17:46:13.123415+00:00",
+  "items": {
+    "E11": {
+      "order": 2,
+      "phase": 2,
+      "entryId": "E11",
+      "slug": "streamdown",
+      "name": "Streamdown",
+      "group": "E",
+      "path": "packages/library-lab/entries/E11-streamdown",
+      "priority": "known-risk",
+      "planDetail": "ready",
+      "objective": "用累计 Markdown、分段输入和可见结果讲清流式渲染及结束/暂停边界",
+      "objectiveBasis": "sample-audit-and-current-source",
+      "executionKinds": [
+        "react"
+      ],
+      "packagesAtPlanning": [
+        {
+          "name": "streamdown",
+          "version": "2.6.0"
+        }
+      ],
+      "entryBaseline": {
+        "sha256": "aaec72d2f1661b2c974d63982d58babf5d5b987d4bbe0a16f42462b000d7f7c6",
+        "fileCount": 7
+      },
+      "existingSdkSuites": [],
+      "flags": [
+        "preserve-summary-only-provenance"
+      ],
+      "status": "content_done",
+      "owner": null,
+      "startedAt": "2026-11-10T09:16:01.800668+00:00",
+      "updatedAt": "2026-11-10T09:52:52.737040+00:00",
+      "result": "results/E11.md",
+      "blocker": null,
+      "formalReceiptState": "pending_clean_authorized_commit",
+      "executionBaseline": {
+        "sha256": "aaec72d2f1661b2c974d63982d58babf5d5b987d4bbe0a16f42462b000d7f7c6",
+        "fileCount": 7
+      },
+      "nextAction": "内容与本地运行完成；未来获提交授权后正式recorder",
+      "checkpoint": "stable-renderer-key-fix",
+      "lastOwner": "/root/quality_e11",
+      "completedAt": "2026-11-10T09:52:52.737040+00:00",
+      "reviewedBy": "/root/quality_e05 + /root/quality_f05",
+      "sixChecks": {
+        "technicalAccuracy": "PASS",
+        "clarity": "PASS",
+        "demoUsefulness": "PASS",
+        "portability": "PASS",
+        "officialSources": "PASS",
+        "reproducibility": "PASS"
+      },
+      "finalEntryDigest": {
+        "sha256": "1d0711795d34f7e89479d4e6c781b2e1ea25644dede5baca31c97890ff22b083",
+        "fileCount": 32
+      }
+    },
+    "F05": {
+      "order": 3,
+      "phase": 3,
+      "entryId": "F05",
+      "slug": "sheetjs",
+      "name": "SheetJS",
+      "group": "F",
+      "path": "packages/library-lab/entries/F05-sheetjs",
+      "priority": "known-risk",
+      "planDetail": "needs-entry-discovery",
+      "objective": "以行数据、sheet、workbook、字节与回读结果串联真实工作簿往返",
+      "objectiveBasis": "sample-audit-or-existing-risk-list",
+      "executionKinds": [
+        "node-ci"
+      ],
+      "packagesAtPlanning": [
+        {
+          "name": "xlsx",
+          "version": "0.20.3"
+        }
+      ],
+      "entryBaseline": {
+        "sha256": "252d00d24804e05e755faed451817cd6e27dd59df9622bee8e634502a90c05a8",
+        "fileCount": 16
+      },
+      "existingSdkSuites": [],
+      "flags": [
+        "preserve-summary-only-provenance"
+      ],
+      "status": "content_done",
+      "owner": null,
+      "startedAt": "2026-11-10T09:16:01.800668+00:00",
+      "updatedAt": "2026-11-10T09:42:13.207262+00:00",
+      "result": "results/F05.md",
+      "blocker": null,
+      "formalReceiptState": "pending_clean_authorized_commit",
+      "executionBaseline": {
+        "sha256": "252d00d24804e05e755faed451817cd6e27dd59df9622bee8e634502a90c05a8",
+        "fileCount": 16
+      },
+      "nextAction": "内容与本地运行完成；未来获提交授权后执行正式recorder",
+      "checkpoint": "review-fix-P2",
+      "lastOwner": "/root/quality_f05",
+      "completedAt": "2026-11-10T09:42:13.207262+00:00",
+      "reviewedBy": "/root/quality_e05",
+      "finalEntryDigest": {
+        "sha256": "c3ba5d800cb89de3833c48826e9b077dfeec05090ec41ae10c93a169423508b1",
+        "fileCount": 42
+      },
+      "sixChecks": {
+        "technicalAccuracy": "PASS",
+        "clarity": "PASS",
+        "demoUsefulness": "PASS",
+        "portability": "PASS",
+        "officialSources": "PASS",
+        "reproducibility": "PASS"
+      }
+    },
+    "A06": {
+      "order": 5,
+      "phase": 5,
+      "entryId": "A06",
+      "slug": "react-flow",
+      "name": "React Flow",
+      "group": "A",
+      "path": "packages/library-lab/entries/A06-react-flow",
+      "priority": "known-risk",
+      "planDetail": "needs-entry-discovery",
+      "objective": "保留审批工作台闭环，补最小图编辑路径并划清 React Flow 与自建执行器职责",
+      "objectiveBasis": "sample-audit-or-existing-risk-list",
+      "executionKinds": [
+        "react"
+      ],
+      "packagesAtPlanning": [
+        {
+          "name": "@xyflow/react",
+          "version": "12.12.0"
+        }
+      ],
+      "entryBaseline": {
+        "sha256": "44381686a39a385d71731fb696014f21ba77a3a237d7b20e42b750d57961b790",
+        "fileCount": 18
+      },
+      "existingSdkSuites": [],
+      "flags": [
+        "preserve-existing-approval-workbench"
+      ],
+      "status": "content_done",
+      "owner": null,
+      "startedAt": "2026-11-10T09:32:08.791158+00:00",
+      "updatedAt": "2026-11-10T09:52:52.737040+00:00",
+      "result": "results/A06.md",
+      "blocker": null,
+      "formalReceiptState": "pending_clean_authorized_commit",
+      "executionBaseline": {
+        "sha256": "44381686a39a385d71731fb696014f21ba77a3a237d7b20e42b750d57961b790",
+        "fileCount": 18
+      },
+      "nextAction": "内容与本地运行完成；未来获提交授权后正式recorder",
+      "checkpoint": "stable",
+      "lastOwner": "/root/quality_f05",
+      "completedAt": "2026-11-10T09:52:52.737040+00:00",
+      "reviewedBy": "/root/quality_e05",
+      "sixChecks": {
+        "technicalAccuracy": "PASS",
+        "clarity": "PASS",
+        "demoUsefulness": "PASS",
+        "portability": "PASS",
+        "officialSources": "PASS",
+        "reproducibility": "PASS"
+      },
+      "finalEntryDigest": {
+        "sha256": "9082260087206f841e4b7b6ac76d4b18c02aafb5cb138b6f0dd4836f4d72c6aa",
+        "fileCount": 29
+      }
+    },
+    "C01": {
+      "order": 7,
+      "phase": 7,
+      "entryId": "C01",
+      "slug": "react-hook-form",
+      "name": "React Hook Form",
+      "group": "C",
+      "path": "packages/library-lab/entries/C01-react-hook-form",
+      "priority": "known-risk",
+      "planDetail": "needs-entry-discovery",
+      "objective": "先讲注册、错误与提交，再递进动态字段和业务异步错误",
+      "objectiveBasis": "sample-audit-or-existing-risk-list",
+      "executionKinds": [
+        "react"
+      ],
+      "packagesAtPlanning": [
+        {
+          "name": "react-hook-form",
+          "version": "7.89.0"
+        }
+      ],
+      "entryBaseline": {
+        "sha256": "75caf5a60a0aef7596a32b746071e65e7ca41e6f35ef0f1c91cebdeeec1a567f",
+        "fileCount": 14
+      },
+      "existingSdkSuites": [
+        "packages/library-lab/entries/C01-react-hook-form/tests/sdk.test.mjs"
+      ],
+      "flags": [],
+      "status": "content_done",
+      "owner": null,
+      "startedAt": "2026-11-10T09:45:45.853443+00:00",
+      "updatedAt": "2026-11-10T10:25:28.738552+00:00",
+      "result": "results/C01.md",
+      "blocker": null,
+      "formalReceiptState": "pending_clean_authorized_commit",
+      "executionBaseline": {
+        "sha256": "75caf5a60a0aef7596a32b746071e65e7ca41e6f35ef0f1c91cebdeeec1a567f",
+        "fileCount": 14
+      },
+      "nextAction": "内容与本地运行完成；未来获提交授权后正式recorder",
+      "checkpoint": "stable-click-layout-fix",
+      "lastOwner": "/root/quality_f05",
+      "completedAt": "2026-11-10T10:25:28.738552+00:00",
+      "reviewedBy": "/root/quality_e11",
+      "sixChecks": {
+        "technicalAccuracy": "PASS",
+        "clarity": "PASS",
+        "demoUsefulness": "PASS",
+        "portability": "PASS",
+        "officialSources": "PASS",
+        "reproducibility": "PASS"
+      },
+      "finalEntryDigest": {
+        "sha256": "d8aa963e55c3ffe4da284e2abc8ce7425c4b0111e62dc4ee21eeb45ab278a3b5",
+        "fileCount": 28
+      }
+    },
+    "D03": {
+      "order": 10,
+      "phase": 10,
+      "entryId": "D03",
+      "slug": "p-limit",
+      "name": "p-limit",
+      "group": "D",
+      "path": "packages/library-lab/entries/D03-p-limit",
+      "priority": "known-risk",
+      "planDetail": "needs-entry-discovery",
+      "objective": "以运行/排队/完成与实测峰值解释并发上限，随后解释取消边界",
+      "objectiveBasis": "sample-audit-or-existing-risk-list",
+      "executionKinds": [
+        "react"
+      ],
+      "packagesAtPlanning": [
+        {
+          "name": "p-limit",
+          "version": "7.3.3"
+        }
+      ],
+      "entryBaseline": {
+        "sha256": "0d9f6583fb4e3eef3228f2420d9d82bc89c4b9272871dfff6dc6b2a99fdd78a1",
+        "fileCount": 11
+      },
+      "existingSdkSuites": [
+        "packages/library-lab/entries/D03-p-limit/tests/sdk.test.mjs"
+      ],
+      "flags": [],
+      "status": "content_done",
+      "owner": null,
+      "startedAt": "2026-11-10T09:59:40.415131+00:00",
+      "updatedAt": "2026-11-10T10:25:28.738552+00:00",
+      "result": "results/D03.md",
+      "blocker": null,
+      "formalReceiptState": "pending_clean_authorized_commit",
+      "executionBaseline": {
+        "sha256": "0d9f6583fb4e3eef3228f2420d9d82bc89c4b9272871dfff6dc6b2a99fdd78a1",
+        "fileCount": 11
+      },
+      "nextAction": "内容与本地运行完成；未来获提交授权后正式recorder",
+      "checkpoint": "stable",
+      "lastOwner": "/root/quality_f05",
+      "completedAt": "2026-11-10T10:25:28.738552+00:00",
+      "reviewedBy": "/root/quality_e05",
+      "sixChecks": {
+        "technicalAccuracy": "PASS",
+        "clarity": "PASS",
+        "demoUsefulness": "PASS",
+        "portability": "PASS",
+        "officialSources": "PASS",
+        "reproducibility": "PASS"
+      },
+      "finalEntryDigest": {
+        "sha256": "abbfc87508ef3614d5c5090503423ac61a1048db97228ec35a314a149893013e",
+        "fileCount": 25
+      }
+    },
+    "A03": {
+      "order": 17,
+      "phase": 17,
+      "entryId": "A03",
+      "slug": "chartjs",
+      "name": "Chart.js",
+      "group": "A",
+      "path": "packages/library-lab/entries/A03-chartjs",
+      "priority": "remaining-coverage",
+      "planDetail": "needs-entry-discovery",
+      "objective": "以真实输入、状态变化和结果解释模块化 Canvas 图表与 React 生命周期边界",
+      "objectiveBasis": "catalogue-hypothesis-to-check",
+      "executionKinds": [
+        "react"
+      ],
+      "packagesAtPlanning": [
+        {
+          "name": "chart.js",
+          "version": "4.6.1"
+        }
+      ],
+      "entryBaseline": {
+        "sha256": "cdb4259a5890be6c11db643951fba822d7a27a6a54cfbc687213579517c43bc1",
+        "fileCount": 9
+      },
+      "existingSdkSuites": [],
+      "flags": [],
+      "status": "content_done",
+      "owner": null,
+      "startedAt": "2026-11-10T10:45:27.657803+00:00",
+      "updatedAt": "2026-11-10T11:39:41.044516+00:00",
+      "result": "results/A03.md",
+      "blocker": null,
+      "formalReceiptState": "pending_clean_authorized_commit",
+      "executionBaseline": {
+        "sha256": "cdb4259a5890be6c11db643951fba822d7a27a6a54cfbc687213579517c43bc1",
+        "fileCount": 9
+      },
+      "nextAction": "内容与本地运行完成；未来获提交授权后正式recorder",
+      "checkpoint": "stable",
+      "lastOwner": "/root/quality_f05",
+      "completedAt": "2026-11-10T11:39:41.044516+00:00",
+      "reviewedBy": "/root/quality_e05",
+      "sixChecks": {
+        "technicalAccuracy": "PASS",
+        "clarity": "PASS",
+        "demoUsefulness": "PASS",
+        "portability": "PASS",
+        "officialSources": "PASS",
+        "reproducibility": "PASS"
+      },
+      "finalEntryDigest": {
+        "sha256": "396177318ad00f9bedf7b8695e0fe488c1b7abf4e24020fa334b52c69d3a5b67",
+        "fileCount": 33
+      }
+    },
+    "A05": {
+      "order": 19,
+      "phase": 19,
+      "entryId": "A05",
+      "slug": "d3",
+      "name": "D3",
+      "group": "A",
+      "path": "packages/library-lab/entries/A05-d3",
+      "priority": "remaining-coverage",
+      "planDetail": "needs-entry-discovery",
+      "objective": "以真实输入、状态变化和结果解释可定制SVG可视化：比例尺、坐标轴、数据联结与动态重绘",
+      "objectiveBasis": "catalogue-hypothesis-to-check",
+      "executionKinds": [
+        "react"
+      ],
+      "packagesAtPlanning": [
+        {
+          "name": "d3",
+          "version": "7.9.0"
+        }
+      ],
+      "entryBaseline": {
+        "sha256": "130d27299c2115a62a610a7d3a62f3345ed5b35af996351436d43098fb2cd4db",
+        "fileCount": 9
+      },
+      "existingSdkSuites": [],
+      "flags": [],
+      "status": "content_done",
+      "owner": null,
+      "startedAt": "2026-11-10T11:08:48.144838+00:00",
+      "updatedAt": "2026-11-10T12:05:40.119311+00:00",
+      "result": "results/A05.md",
+      "blocker": null,
+      "formalReceiptState": "pending_clean_authorized_commit",
+      "executionBaseline": {
+        "sha256": "130d27299c2115a62a610a7d3a62f3345ed5b35af996351436d43098fb2cd4db",
+        "fileCount": 9
+      },
+      "nextAction": "内容与本地运行完成；未来获提交授权后正式recorder",
+      "checkpoint": "stable-frozen",
+      "lastOwner": "/root/quality_f05",
+      "completedAt": "2026-11-10T12:05:40.119311+00:00",
+      "reviewedBy": "/root/quality_e05",
+      "sixChecks": {
+        "technicalAccuracy": "PASS",
+        "clarity": "PASS",
+        "demoUsefulness": "PASS",
+        "portability": "PASS",
+        "officialSources": "PASS",
+        "reproducibility": "PASS"
+      },
+      "finalEntryDigest": {
+        "sha256": "78f8b651ea43c205c968fc3fee3ea63b78dfad8a10ea884bbb96e932b53cf9a2",
+        "fileCount": 35
+      }
+    },
+    "A14": {
+      "order": 26,
+      "phase": 26,
+      "entryId": "A14",
+      "slug": "react-three-fiber",
+      "name": "React Three Fiber",
+      "group": "A",
+      "path": "packages/library-lab/entries/A14-react-three-fiber",
+      "priority": "remaining-coverage",
+      "planDetail": "needs-entry-discovery",
+      "objective": "以真实输入、状态变化和结果解释React19声明式三维场景、useFrame与可见性节能的实践",
+      "objectiveBasis": "catalogue-hypothesis-to-check",
+      "executionKinds": [
+        "react"
+      ],
+      "packagesAtPlanning": [
+        {
+          "name": "@react-three/fiber",
+          "version": "9.8.2"
+        },
+        {
+          "name": "three",
+          "version": "0.186.0"
+        }
+      ],
+      "entryBaseline": {
+        "sha256": "d02db0e7577847b86391d971b4b95de0a6204d33a8229d5fdba72681c9b9ffc5",
+        "fileCount": 9
+      },
+      "existingSdkSuites": [],
+      "flags": [],
+      "status": "content_done",
+      "owner": null,
+      "startedAt": "2026-11-10T11:54:13.307644+00:00",
+      "updatedAt": "2026-11-10T12:53:33.726020+00:00",
+      "result": "results/A14.md",
+      "blocker": null,
+      "formalReceiptState": "pending_clean_authorized_commit",
+      "executionBaseline": {
+        "sha256": "d02db0e7577847b86391d971b4b95de0a6204d33a8229d5fdba72681c9b9ffc5",
+        "fileCount": 9
+      },
+      "checkpoint": "stable",
+      "nextAction": "内容与本地运行完成；未来获提交授权后正式recorder",
+      "lastOwner": "/root/quality_f05",
+      "completedAt": "2026-11-10T12:53:33.726020+00:00",
+      "reviewedBy": "/root",
+      "sixChecks": {
+        "technicalAccuracy": "PASS",
+        "clarity": "PASS",
+        "demoUsefulness": "PASS",
+        "portability": "PASS",
+        "officialSources": "PASS",
+        "reproducibility": "PASS"
+      },
+      "finalEntryDigest": {
+        "sha256": "047e25e7b7ed65239e076650f1e8622dfe32d55f5a84a897b5ea465594beee4e",
+        "fileCount": 38
+      }
+    },
+    "B01": {
+      "order": 30,
+      "phase": 30,
+      "entryId": "B01",
+      "slug": "motion-for-react",
+      "name": "Motion for React",
+      "group": "B",
+      "path": "packages/library-lab/entries/B01-motion-for-react",
+      "priority": "remaining-coverage",
+      "planDetail": "needs-entry-discovery",
+      "objective": "以真实输入、状态变化和结果解释React 入场/离场、列表布局过渡与减少动画偏好",
+      "objectiveBasis": "catalogue-hypothesis-to-check",
+      "executionKinds": [
+        "react"
+      ],
+      "packagesAtPlanning": [
+        {
+          "name": "motion",
+          "version": "14.6.0"
+        }
+      ],
+      "entryBaseline": {
+        "sha256": "df38f4b3676dd5cb4956b4c8b94fc5bbd22a74c6102a8abab5a11f400375a90a",
+        "fileCount": 9
+      },
+      "existingSdkSuites": [],
+      "flags": [],
+      "status": "content_done",
+      "owner": null,
+      "startedAt": "2026-11-10T12:18:05.357972+00:00",
+      "updatedAt": "2026-11-10T13:32:34.425578+00:00",
+      "result": "results/B01.md",
+      "blocker": null,
+      "formalReceiptState": "pending_clean_authorized_commit",
+      "executionBaseline": {
+        "sha256": "df38f4b3676dd5cb4956b4c8b94fc5bbd22a74c6102a8abab5a11f400375a90a",
+        "fileCount": 9
+      },
+      "checkpoint": "stable",
+      "nextAction": "内容与本地运行完成；未来获提交授权后正式recorder",
+      "lastOwner": "/root/quality_f05",
+      "completedAt": "2026-11-10T13:32:34.425578+00:00",
+      "reviewedBy": "/root/quality_e11",
+      "sixChecks": {
+        "technicalAccuracy": "PASS",
+        "clarity": "PASS",
+        "demoUsefulness": "PASS",
+        "portability": "PASS",
+        "officialSources": "PASS",
+        "reproducibility": "PASS"
+      },
+      "finalEntryDigest": {
+        "sha256": "c2274d143dc65430f381c550c682c324f5fd14e3093f30012265dc7982d2ca8a",
+        "fileCount": 36
+      }
+    },
+    "B05": {
+      "order": 34,
+      "phase": 34,
+      "entryId": "B05",
+      "slug": "rive-react",
+      "name": "Rive React Runtime",
+      "group": "B",
+      "path": "packages/library-lab/entries/B05-rive-react",
+      "priority": "remaining-coverage",
+      "planDetail": "needs-entry-discovery",
+      "objective": "以真实输入、状态变化和结果解释Rive WebGL2 动画播放、可访问状态反馈和运行时生命周期",
+      "objectiveBasis": "catalogue-hypothesis-to-check",
+      "executionKinds": [
+        "react"
+      ],
+      "packagesAtPlanning": [
+        {
+          "name": "@rive-app/react-webgl2",
+          "version": "4.37.0"
+        }
+      ],
+      "entryBaseline": {
+        "sha256": "0af5c48d78a1cf356431b4ab946a5ff7bdc201cb755c9ba280683db083db0a95",
+        "fileCount": 11
+      },
+      "existingSdkSuites": [],
+      "flags": [],
+      "status": "content_done",
+      "owner": null,
+      "startedAt": "2026-11-10T12:44:53.483334+00:00",
+      "updatedAt": "2026-11-10T13:43:06.952124+00:00",
+      "result": "results/B05.md",
+      "blocker": null,
+      "formalReceiptState": "pending_clean_authorized_commit",
+      "executionBaseline": {
+        "sha256": "0af5c48d78a1cf356431b4ab946a5ff7bdc201cb755c9ba280683db083db0a95",
+        "fileCount": 11
+      },
+      "checkpoint": "candidate10-stable-runtime-running",
+      "nextAction": "内容与本地运行完成；未来获提交授权后正式recorder",
+      "lastOwner": "/root/quality_f05",
+      "completedAt": "2026-11-10T13:43:06.952124+00:00",
+      "reviewedBy": "/root/quality_e11 + /root 增量",
+      "sixChecks": {
+        "technicalAccuracy": "PASS",
+        "clarity": "PASS",
+        "demoUsefulness": "PASS",
+        "portability": "PASS",
+        "officialSources": "PASS",
+        "reproducibility": "PASS"
+      },
+      "finalEntryDigest": {
+        "sha256": "9e2411b007220962a830c340c42aecf8020cec57ca0ba7d415276f77b3d4bc91",
+        "fileCount": 47
+      }
+    },
+    "B10": {
+      "order": 38,
+      "phase": 38,
+      "entryId": "B10",
+      "slug": "base-ui",
+      "name": "Base UI",
+      "group": "B",
+      "path": "packages/library-lab/entries/B10-base-ui",
+      "priority": "remaining-coverage",
+      "planDetail": "needs-entry-discovery",
+      "objective": "以真实输入、状态变化和结果解释无样式 Checkbox 的语义、混合态、授权禁用与真实 FormData",
+      "objectiveBasis": "catalogue-hypothesis-to-check",
+      "executionKinds": [
+        "react"
+      ],
+      "packagesAtPlanning": [
+        {
+          "name": "@base-ui/react",
+          "version": "1.9.0"
+        }
+      ],
+      "entryBaseline": {
+        "sha256": "6f7d1bc967f6f438b7b7bf7784ee08f2ed02b7ad31f6a648800d07bbf8a4da3c",
+        "fileCount": 10
+      },
+      "existingSdkSuites": [],
+      "flags": [],
+      "status": "content_done",
+      "owner": null,
+      "startedAt": "2026-11-10T13:30:14.240057+00:00",
+      "updatedAt": "2026-11-10T14:11:17.540585+00:00",
+      "result": "results/B10.md",
+      "blocker": null,
+      "formalReceiptState": "pending_clean_authorized_commit",
+      "executionBaseline": {
+        "sha256": "194a9d38df0f01523a44b3deb1408fcf5e2b3907e12c54fc1380c11ede4ad272",
+        "fileCount": 11
+      },
+      "checkpoint": "candidate12-built-runtime-running",
+      "nextAction": "内容与本地运行完成；未来获提交授权后正式recorder",
+      "lastOwner": "/root/quality_f05",
+      "completedAt": "2026-11-10T14:11:17.540585+00:00",
+      "reviewedBy": "/root/quality_e11",
+      "sixChecks": {
+        "technicalAccuracy": "PASS",
+        "clarity": "PASS",
+        "demoUsefulness": "PASS",
+        "portability": "PASS",
+        "officialSources": "PASS",
+        "reproducibility": "PASS"
+      },
+      "finalEntryDigest": {
+        "sha256": "5de91f525708d17d630c39aa83f4de555147895f4637c8906ddeca35ac9bcac7",
+        "fileCount": 34
+      }
+    },
+    "B16": {
+      "order": 43,
+      "phase": 43,
+      "entryId": "B16",
+      "slug": "react-resizable-panels",
+      "name": "react-resizable-panels",
+      "group": "B",
+      "path": "packages/library-lab/entries/B16-react-resizable-panels",
+      "priority": "remaining-coverage",
+      "planDetail": "needs-entry-discovery",
+      "objective": "以真实输入、状态变化和结果解释可调整尺寸的面板布局",
+      "objectiveBasis": "catalogue-hypothesis-to-check",
+      "executionKinds": [
+        "react"
+      ],
+      "packagesAtPlanning": [
+        {
+          "name": "react-resizable-panels",
+          "version": "4.14.1"
+        }
+      ],
+      "entryBaseline": {
+        "sha256": "7b10c36824e433c8cce51f4312f8bca08a5fbdce3c3b7fc84343e2b67a9c9fe2",
+        "fileCount": 7
+      },
+      "existingSdkSuites": [],
+      "flags": [],
+      "status": "content_done",
+      "owner": null,
+      "startedAt": "2026-11-10T13:52:07.675371+00:00",
+      "updatedAt": "2026-11-10T14:21:50.408217+00:00",
+      "result": "results/B16.md",
+      "blocker": null,
+      "formalReceiptState": "pending_clean_authorized_commit",
+      "executionBaseline": {
+        "sha256": "7b10c36824e433c8cce51f4312f8bca08a5fbdce3c3b7fc84343e2b67a9c9fe2",
+        "fileCount": 7
+      },
+      "checkpoint": "candidate13-built-review-browser-pending",
+      "nextAction": "内容与本地运行完成；未来获提交授权后正式recorder",
+      "lastOwner": "/root/quality_e11",
+      "completedAt": "2026-11-10T14:21:50.408217+00:00",
+      "reviewedBy": "/root/quality_e05",
+      "sixChecks": {
+        "technicalAccuracy": "PASS",
+        "clarity": "PASS",
+        "demoUsefulness": "PASS",
+        "portability": "PASS",
+        "officialSources": "PASS",
+        "reproducibility": "PASS"
+      },
+      "finalEntryDigest": {
+        "sha256": "057d2110d76c69bce561f3eac75dcaeadf948fc1c4c2179e02f229e032728047",
+        "fileCount": 29
+      }
+    },
+    "B18": {
+      "order": 44,
+      "phase": 44,
+      "entryId": "B18",
+      "slug": "cmdk",
+      "name": "cmdk",
+      "group": "B",
+      "path": "packages/library-lab/entries/B18-cmdk",
+      "priority": "remaining-coverage",
+      "planDetail": "needs-entry-discovery",
+      "objective": "以真实输入、状态变化和结果解释可访问命令菜单、搜索分组与中文输入法快捷键",
+      "objectiveBasis": "catalogue-hypothesis-to-check",
+      "executionKinds": [
+        "react"
+      ],
+      "packagesAtPlanning": [
+        {
+          "name": "cmdk",
+          "version": "1.1.1"
+        }
+      ],
+      "entryBaseline": {
+        "sha256": "84c5fa402afbfb3f84fdb41623ff09798db76ae342cac1efccb13ff1b8300f7d",
+        "fileCount": 11
+      },
+      "existingSdkSuites": [],
+      "flags": [],
+      "status": "content_done",
+      "owner": null,
+      "startedAt": "2026-11-10T13:55:00.860288+00:00",
+      "updatedAt": "2026-11-10T15:48:28.734738+00:00",
+      "result": "results/B18.md",
+      "blocker": null,
+      "formalReceiptState": "pending_clean_authorized_commit",
+      "executionBaseline": {
+        "sha256": "84c5fa402afbfb3f84fdb41623ff09798db76ae342cac1efccb13ff1b8300f7d",
+        "fileCount": 11
+      },
+      "checkpoint": "candidate15-local-runtime-pending",
+      "nextAction": "内容与本地运行完成；未来获提交授权后正式recorder",
+      "lastOwner": "/root",
+      "completedAt": "2026-11-10T15:48:28.734738+00:00",
+      "reviewedBy": "/root/quality_e11",
+      "sixChecks": {
+        "technicalAccuracy": "PASS",
+        "clarity": "PASS",
+        "demoUsefulness": "PASS",
+        "portability": "PASS",
+        "officialSources": "PASS",
+        "reproducibility": "PASS"
+      },
+      "finalEntryDigest": {
+        "sha256": "92956ee296f37f04b48241ab20cf4d8d174ceba947675606f30b34f02d80a48a",
+        "fileCount": 45
+      }
+    },
+    "B20": {
+      "order": 46,
+      "phase": 46,
+      "entryId": "B20",
+      "slug": "sonner",
+      "name": "Sonner",
+      "group": "B",
+      "path": "packages/library-lab/entries/B20-sonner",
+      "priority": "remaining-coverage",
+      "planDetail": "needs-entry-discovery",
+      "objective": "以真实输入、状态变化和结果解释即时通知和操作反馈",
+      "objectiveBasis": "catalogue-hypothesis-to-check",
+      "executionKinds": [
+        "react"
+      ],
+      "packagesAtPlanning": [
+        {
+          "name": "sonner",
+          "version": "2.0.8"
+        }
+      ],
+      "entryBaseline": {
+        "sha256": "eaec383457f304aa38d2be9206ad736c4f8cb3929dca8f31e64eda723d4d1b51",
+        "fileCount": 10
+      },
+      "existingSdkSuites": [],
+      "flags": [],
+      "status": "content_done",
+      "owner": null,
+      "startedAt": "2026-11-10T14:13:43.716308+00:00",
+      "updatedAt": "2026-11-10T15:16:01.012127+00:00",
+      "result": "results/B20.md",
+      "blocker": null,
+      "formalReceiptState": "pending_clean_authorized_commit",
+      "executionBaseline": {
+        "sha256": "eaec383457f304aa38d2be9206ad736c4f8cb3929dca8f31e64eda723d4d1b51",
+        "fileCount": 10
+      },
+      "checkpoint": "candidate14-stable-await-runtime-review",
+      "nextAction": "内容与本地运行完成；未来获提交授权后正式recorder",
+      "lastOwner": "/root/quality_e11",
+      "completedAt": "2026-11-10T15:16:01.012127+00:00",
+      "reviewedBy": "/root/quality_e05",
+      "sixChecks": {
+        "technicalAccuracy": "PASS",
+        "clarity": "PASS",
+        "demoUsefulness": "PASS",
+        "portability": "PASS",
+        "officialSources": "PASS",
+        "reproducibility": "PASS"
+      },
+      "finalEntryDigest": {
+        "sha256": "78e5ea794e9cc498ee207becca99c4a901cd2ef2932ecf1bf0cf1f2dcfc00fff",
+        "fileCount": 36
+      }
+    },
+    "B21": {
+      "order": 47,
+      "phase": 47,
+      "entryId": "B21",
+      "slug": "react-motion-migration",
+      "name": "react-motion（历史迁移）",
+      "group": "B",
+      "path": "packages/library-lab/entries/B21-react-motion-migration",
+      "priority": "remaining-coverage",
+      "planDetail": "needs-entry-discovery",
+      "objective": "以真实输入、状态变化和结果解释从停滞的react-motion Motion/spring模式迁移至现代motion/react的状态驱动动画",
+      "objectiveBasis": "catalogue-hypothesis-to-check",
+      "executionKinds": [
+        "react"
+      ],
+      "packagesAtPlanning": [
+        {
+          "name": "motion",
+          "version": "14.6.0"
+        }
+      ],
+      "entryBaseline": {
+        "sha256": "4bdf963980df103091178918722b75d4ec449c8ab9375882a5dd0f5f50ed0090",
+        "fileCount": 9
+      },
+      "existingSdkSuites": [],
+      "flags": [
+        "historical-migration"
+      ],
+      "status": "content_done",
+      "owner": null,
+      "startedAt": "2026-11-10T14:37:43.398871+00:00",
+      "updatedAt": "2026-11-10T15:48:28.734738+00:00",
+      "result": "results/B21.md",
+      "blocker": null,
+      "formalReceiptState": "pending_clean_authorized_commit",
+      "executionBaseline": {
+        "sha256": "4bdf963980df103091178918722b75d4ec449c8ab9375882a5dd0f5f50ed0090",
+        "fileCount": 9
+      },
+      "checkpoint": "candidate15-local-runtime-pending",
+      "nextAction": "内容与本地运行完成；未来获提交授权后正式recorder",
+      "lastOwner": "/root",
+      "completedAt": "2026-11-10T15:48:28.734738+00:00",
+      "reviewedBy": "/root/quality_e05",
+      "sixChecks": {
+        "technicalAccuracy": "PASS",
+        "clarity": "PASS",
+        "demoUsefulness": "PASS",
+        "portability": "PASS",
+        "officialSources": "PASS",
+        "reproducibility": "PASS"
+      },
+      "finalEntryDigest": {
+        "sha256": "a5c73222cd3950556535a48bfd78018cbfff42611f49c6b85d0c6f09679b5c82",
+        "fileCount": 42
+      }
+    },
+    "B22": {
+      "order": 48,
+      "phase": 48,
+      "entryId": "B22",
+      "slug": "react-beautiful-dnd-migration",
+      "name": "react-beautiful-dnd（历史迁移）",
+      "group": "B",
+      "path": "packages/library-lab/entries/B22-react-beautiful-dnd-migration",
+      "priority": "remaining-coverage",
+      "planDetail": "needs-entry-discovery",
+      "objective": "以真实输入、状态变化和结果解释把废弃react-beautiful-dnd的Droppable/Draggable列表低风险迁移为React19兼容替代库",
+      "objectiveBasis": "catalogue-hypothesis-to-check",
+      "executionKinds": [
+        "react"
+      ],
+      "packagesAtPlanning": [
+        {
+          "name": "@hello-pangea/dnd",
+          "version": "18.0.1"
+        }
+      ],
+      "entryBaseline": {
+        "sha256": "8fe567476a8b0184fd4936585d326ea8338c87addea13413e5b8885bfecc4c7f",
+        "fileCount": 10
+      },
+      "existingSdkSuites": [],
+      "flags": [
+        "historical-migration"
+      ],
+      "status": "content_done",
+      "owner": null,
+      "startedAt": "2026-11-10T14:37:43.398871+00:00",
+      "updatedAt": "2026-11-10T16:29:56.188866+00:00",
+      "result": "results/B22.md",
+      "blocker": null,
+      "formalReceiptState": "pending_clean_authorized_commit",
+      "executionBaseline": {
+        "sha256": "8fe567476a8b0184fd4936585d326ea8338c87addea13413e5b8885bfecc4c7f",
+        "fileCount": 10
+      },
+      "checkpoint": "candidate15-local-runtime-pending",
+      "nextAction": "内容与本地运行完成；未来获提交授权后正式recorder",
+      "lastOwner": "/root",
+      "completedAt": "2026-11-10T16:29:56.188866+00:00",
+      "reviewedBy": "/root 初次非作者复核 + /root/quality_e11 配置增量复核",
+      "sixChecks": {
+        "technicalAccuracy": "PASS",
+        "clarity": "PASS",
+        "demoUsefulness": "PASS",
+        "portability": "PASS",
+        "officialSources": "PASS",
+        "reproducibility": "PASS"
+      },
+      "finalEntryDigest": {
+        "sha256": "793cb915081e6a4b0a8ee480fe5e947f51f0ba830fd24cec888c81949eb822de",
+        "fileCount": 40
+      }
+    },
+    "C02": {
+      "order": 49,
+      "phase": 49,
+      "entryId": "C02",
+      "slug": "zod",
+      "name": "Zod",
+      "group": "C",
+      "path": "packages/library-lab/entries/C02-zod",
+      "priority": "remaining-coverage",
+      "planDetail": "needs-entry-discovery",
+      "objective": "以真实输入、状态变化和结果解释不可信 RSS / OPML JSON 校验、规范化与跨字段错误",
+      "objectiveBasis": "catalogue-hypothesis-to-check",
+      "executionKinds": [
+        "react"
+      ],
+      "packagesAtPlanning": [
+        {
+          "name": "zod",
+          "version": "4.6.5"
+        }
+      ],
+      "entryBaseline": {
+        "sha256": "3505a147341576933e508408d44db62fda4f8b0d9be6ff4a0d3168657bfc252b",
+        "fileCount": 11
+      },
+      "existingSdkSuites": [
+        "packages/library-lab/entries/C02-zod/tests/sdk.test.mjs"
+      ],
+      "flags": [],
+      "status": "content_done",
+      "owner": null,
+      "startedAt": "2026-11-10T14:41:43.744631+00:00",
+      "updatedAt": "2026-11-10T15:48:28.734738+00:00",
+      "result": "results/C02.md",
+      "blocker": null,
+      "formalReceiptState": "pending_clean_authorized_commit",
+      "executionBaseline": {
+        "sha256": "3505a147341576933e508408d44db62fda4f8b0d9be6ff4a0d3168657bfc252b",
+        "fileCount": 11
+      },
+      "checkpoint": "candidate15-local-runtime-pending",
+      "nextAction": "内容与本地运行完成；未来获提交授权后正式recorder",
+      "lastOwner": "/root",
+      "completedAt": "2026-11-10T15:48:28.734738+00:00",
+      "reviewedBy": "/root/quality_e05",
+      "sixChecks": {
+        "technicalAccuracy": "PASS",
+        "clarity": "PASS",
+        "demoUsefulness": "PASS",
+        "portability": "PASS",
+        "officialSources": "PASS",
+        "reproducibility": "PASS"
+      },
+      "finalEntryDigest": {
+        "sha256": "7e6f4c686ee795b7cdb7f02c54a35265e179aab1f5f64c8930dc2512f2365a34",
+        "fileCount": 29
+      }
+    },
+    "C04": {
+      "order": 51,
+      "phase": 51,
+      "entryId": "C04",
+      "slug": "jsonforms",
+      "name": "JSON Forms",
+      "group": "C",
+      "path": "packages/library-lab/entries/C04-jsonforms",
+      "priority": "remaining-coverage",
+      "planDetail": "needs-entry-discovery",
+      "objective": "以真实输入、状态变化和结果解释通过 JSON Schema 与 UI Schema 构建可校验的业务表单",
+      "objectiveBasis": "catalogue-hypothesis-to-check",
+      "executionKinds": [
+        "react"
+      ],
+      "packagesAtPlanning": [
+        {
+          "name": "@jsonforms/core",
+          "version": "3.8.0"
+        },
+        {
+          "name": "@jsonforms/react",
+          "version": "3.8.0"
+        },
+        {
+          "name": "@jsonforms/vanilla-renderers",
+          "version": "3.8.0"
+        },
+        {
+          "name": "ajv",
+          "version": "8.20.0"
+        }
+      ],
+      "entryBaseline": {
+        "sha256": "2a24f56123ce61646250c49c528a1cc9fb41da127a472938f24c839459937a3a",
+        "fileCount": 11
+      },
+      "existingSdkSuites": [
+        "packages/library-lab/entries/C04-jsonforms/tests/sdk.test.mjs"
+      ],
+      "flags": [],
+      "status": "content_done",
+      "owner": null,
+      "startedAt": "2026-11-10T15:06:03.117598+00:00",
+      "updatedAt": "2026-11-10T15:54:09.514873+00:00",
+      "result": "results/C04.md",
+      "blocker": null,
+      "formalReceiptState": "pending_clean_authorized_commit",
+      "executionBaseline": {
+        "sha256": "2a24f56123ce61646250c49c528a1cc9fb41da127a472938f24c839459937a3a",
+        "fileCount": 11
+      },
+      "checkpoint": "candidate15-author-final-review-browser-pending",
+      "nextAction": "内容与本地运行完成；未来获提交授权后正式recorder",
+      "lastOwner": "/root",
+      "completedAt": "2026-11-10T15:54:09.514873+00:00",
+      "reviewedBy": "/root/quality_f05",
+      "sixChecks": {
+        "technicalAccuracy": "PASS",
+        "clarity": "PASS",
+        "demoUsefulness": "PASS",
+        "portability": "PASS",
+        "officialSources": "PASS",
+        "reproducibility": "PASS"
+      },
+      "finalEntryDigest": {
+        "sha256": "9e9e3a2cc55bacab9b0a582cb65c144a2b73b96f17c52dfa62c96ff9006f41b1",
+        "fileCount": 50
+      }
+    },
+    "C05": {
+      "order": 52,
+      "phase": 52,
+      "entryId": "C05",
+      "slug": "ajv",
+      "name": "Ajv",
+      "group": "C",
+      "path": "packages/library-lab/entries/C05-ajv",
+      "priority": "remaining-coverage",
+      "planDetail": "needs-entry-discovery",
+      "objective": "以真实输入、状态变化和结果解释JSON Schema 编译验证、严格输入边界与条件规则",
+      "objectiveBasis": "catalogue-hypothesis-to-check",
+      "executionKinds": [
+        "react"
+      ],
+      "packagesAtPlanning": [
+        {
+          "name": "ajv",
+          "version": "8.20.0"
+        }
+      ],
+      "entryBaseline": {
+        "sha256": "0b50f77e9b4f44c26ba9b2e5aacb0fa570c124b021e389424e8436e7733fdc79",
+        "fileCount": 11
+      },
+      "existingSdkSuites": [
+        "packages/library-lab/entries/C05-ajv/tests/sdk.test.mjs"
+      ],
+      "flags": [],
+      "status": "content_done",
+      "owner": null,
+      "startedAt": null,
+      "updatedAt": "2026-11-10T16:16:20.506070+00:00",
+      "result": "results/C05.md",
+      "blocker": null,
+      "formalReceiptState": "pending_clean_authorized_commit",
+      "checkpoint": "author-stable-review-browser-pending",
+      "lastOwner": "/root",
+      "completedAt": "2026-11-10T16:16:20.506070+00:00",
+      "reviewedBy": "/root/quality_e05",
+      "sixChecks": {
+        "technicalAccuracy": "PASS",
+        "clarity": "PASS",
+        "demoUsefulness": "PASS",
+        "portability": "PASS",
+        "officialSources": "PASS",
+        "reproducibility": "PASS"
+      },
+      "finalEntryDigest": {
+        "sha256": "31c2791aa35e0a638562a3d94b881a8098a95fbd39ad7fe097dd2971abcb3d8b",
+        "fileCount": 39
+      },
+      "nextAction": "内容与本地运行完成；未来获提交授权后正式recorder"
+    },
+    "C08": {
+      "order": 54,
+      "phase": 54,
+      "entryId": "C08",
+      "slug": "ag-grid",
+      "name": "AG Grid",
+      "group": "C",
+      "path": "packages/library-lab/entries/C08-ag-grid",
+      "priority": "remaining-coverage",
+      "planDetail": "needs-entry-discovery",
+      "objective": "以真实输入、状态变化和结果解释企业级数据网格、稳定行身份与可控编辑",
+      "objectiveBasis": "catalogue-hypothesis-to-check",
+      "executionKinds": [
+        "react"
+      ],
+      "packagesAtPlanning": [
+        {
+          "name": "ag-grid-community",
+          "version": "36.2.0"
+        },
+        {
+          "name": "ag-grid-react",
+          "version": "36.2.0"
+        }
+      ],
+      "entryBaseline": {
+        "sha256": "40e3d6e850a8396d8dd46a2d1ce8f6bbe914c967f2688e64c977e4b5925dd33e",
+        "fileCount": 11
+      },
+      "existingSdkSuites": [
+        "packages/library-lab/entries/C08-ag-grid/tests/sdk.test.mjs"
+      ],
+      "flags": [
+        "check-feature-license-boundary"
+      ],
+      "status": "content_done",
+      "owner": null,
+      "startedAt": null,
+      "updatedAt": "2026-11-10T16:29:56.188866+00:00",
+      "result": "results/C08.md",
+      "blocker": null,
+      "formalReceiptState": "pending_clean_authorized_commit",
+      "checkpoint": "author-final-independent-review-browser-pending",
+      "lastOwner": "/root",
+      "completedAt": "2026-11-10T16:29:56.188866+00:00",
+      "reviewedBy": "/root/quality_f05",
+      "sixChecks": {
+        "technicalAccuracy": "PASS",
+        "clarity": "PASS",
+        "demoUsefulness": "PASS",
+        "portability": "PASS",
+        "officialSources": "PASS",
+        "reproducibility": "PASS"
+      },
+      "finalEntryDigest": {
+        "sha256": "a1eb7c217ff5266e3debec5f0e5498200b7cc10ec61c0e49f7c00ac2b8da05ff",
+        "fileCount": 56
+      },
+      "nextAction": "内容与本地运行完成；未来获提交授权后正式recorder"
+    },
+    "C09": {
+      "order": 55,
+      "phase": 55,
+      "entryId": "C09",
+      "slug": "react-virtuoso",
+      "name": "React Virtuoso",
+      "group": "C",
+      "path": "packages/library-lab/entries/C09-react-virtuoso",
+      "priority": "remaining-coverage",
+      "planDetail": "needs-entry-discovery",
+      "objective": "以真实输入、状态变化和结果解释自动测量变高列表、RSS分段加载与历史消息锚定",
+      "objectiveBasis": "catalogue-hypothesis-to-check",
+      "executionKinds": [
+        "react"
+      ],
+      "packagesAtPlanning": [
+        {
+          "name": "react-virtuoso",
+          "version": "4.18.19"
+        }
+      ],
+      "entryBaseline": {
+        "sha256": "dc3e1c35ee3222fb9257a4893dae4bc94ac9401f109f5d3f9d838afdddcd17dd",
+        "fileCount": 11
+      },
+      "existingSdkSuites": [
+        "packages/library-lab/entries/C09-react-virtuoso/tests/sdk.test.mjs"
+      ],
+      "flags": [],
+      "status": "content_done",
+      "owner": null,
+      "startedAt": null,
+      "updatedAt": "2026-11-10T16:28:19.244420+00:00",
+      "result": "results/C09.md",
+      "blocker": null,
+      "formalReceiptState": "pending_clean_authorized_commit",
+      "checkpoint": "candidate16-history-anchor-diagnosis-after-c13-checkpoint",
+      "lastOwner": "/root/quality_e11",
+      "completedAt": "2026-11-10T16:28:19.244420+00:00",
+      "reviewedBy": "/root（调度纠正前已完成的有效非作者复核）",
+      "sixChecks": {
+        "technicalAccuracy": "PASS",
+        "clarity": "PASS",
+        "demoUsefulness": "PASS",
+        "portability": "PASS",
+        "officialSources": "PASS",
+        "reproducibility": "PASS"
+      },
+      "finalEntryDigest": {
+        "sha256": "8a98a1e3b6e1984b1ad326171f9297ac2bca17261168d1de48490977dac24279",
+        "fileCount": 59
+      },
+      "nextAction": "内容与本地运行完成；未来获提交授权后正式recorder"
+    },
+    "C10": {
+      "order": 56,
+      "phase": 56,
+      "entryId": "C10",
+      "slug": "tanstack-virtual",
+      "name": "TanStack Virtual",
+      "group": "C",
+      "path": "packages/library-lab/entries/C10-tanstack-virtual",
+      "priority": "remaining-coverage",
+      "planDetail": "needs-entry-discovery",
+      "objective": "以真实输入、状态变化和结果解释Headless 列表虚拟化、变高测量与稳定业务键",
+      "objectiveBasis": "catalogue-hypothesis-to-check",
+      "executionKinds": [
+        "react"
+      ],
+      "packagesAtPlanning": [
+        {
+          "name": "@tanstack/react-virtual",
+          "version": "3.14.21"
+        }
+      ],
+      "entryBaseline": {
+        "sha256": "bd208a4faef98384113514fd526cd4d82c7f127985dd4d04a3396672bd09903f",
+        "fileCount": 11
+      },
+      "existingSdkSuites": [
+        "packages/library-lab/entries/C10-tanstack-virtual/tests/sdk.test.mjs"
+      ],
+      "flags": [],
+      "status": "content_done",
+      "owner": null,
+      "startedAt": null,
+      "updatedAt": "2026-11-10T16:49:42.411819+00:00",
+      "result": "results/C10.md",
+      "blocker": null,
+      "formalReceiptState": "pending_clean_authorized_commit",
+      "checkpoint": "author-final-browser4pass-independent-review-pending",
+      "lastOwner": "/root/quality_e11",
+      "completedAt": "2026-11-10T16:49:42.411819+00:00",
+      "reviewedBy": "/root/quality_e11",
+      "sixChecks": {
+        "technicalAccuracy": "PASS",
+        "clarity": "PASS",
+        "demoUsefulness": "PASS",
+        "portability": "PASS",
+        "officialSources": "PASS",
+        "reproducibility": "PASS"
+      },
+      "finalEntryDigest": {
+        "sha256": "5aca696090e7cc07a8b8de85e3e63b44572cd69870cf4710a332eb1b33696848",
+        "fileCount": 45
+      },
+      "nextAction": "内容与本地运行完成；未来获提交授权后正式recorder"
+    },
+    "C12": {
+      "order": 58,
+      "phase": 58,
+      "entryId": "C12",
+      "slug": "fullcalendar",
+      "name": "FullCalendar",
+      "group": "C",
+      "path": "packages/library-lab/entries/C12-fullcalendar",
+      "priority": "remaining-coverage",
+      "planDetail": "needs-entry-discovery",
+      "objective": "以真实输入、状态变化和结果解释基于 React 的事件排程、日历视图与时区边界",
+      "objectiveBasis": "catalogue-hypothesis-to-check",
+      "executionKinds": [
+        "react"
+      ],
+      "packagesAtPlanning": [
+        {
+          "name": "@fullcalendar/react",
+          "version": "7.1.3"
+        },
+        {
+          "name": "temporal-polyfill",
+          "version": "1.0.4"
+        }
+      ],
+      "entryBaseline": {
+        "sha256": "dd05fb58e75806996b5e286bbc7ef9d1ca161672118487b8fe68fed3114ccc5f",
+        "fileCount": 11
+      },
+      "existingSdkSuites": [
+        "packages/library-lab/entries/C12-fullcalendar/tests/sdk.test.mjs"
+      ],
+      "flags": [],
+      "status": "content_done",
+      "owner": null,
+      "startedAt": null,
+      "updatedAt": "2026-11-10T17:00:53.945994+00:00",
+      "result": "results/C12.md",
+      "blocker": null,
+      "formalReceiptState": "pending_clean_authorized_commit",
+      "checkpoint": "independent-review4browserpass-final-record-handoff",
+      "nextAction": "内容与本地运行完成；未来获提交授权后正式recorder",
+      "lastOwner": "/root/quality_f05",
+      "completedAt": "2026-11-10T17:00:53.945994+00:00",
+      "reviewedBy": "/root/quality_e11",
+      "sixChecks": {
+        "technicalAccuracy": "PASS",
+        "clarity": "PASS",
+        "demoUsefulness": "PASS",
+        "portability": "PASS",
+        "officialSources": "PASS",
+        "reproducibility": "PASS"
+      },
+      "finalEntryDigest": {
+        "sha256": "d08a0d301a8c4b5cb25322cdc5f3849dea8983f8d9b0c6fd467bab2647933cad",
+        "fileCount": 53
+      }
+    },
+    "C13": {
+      "order": 59,
+      "phase": 59,
+      "entryId": "C13",
+      "slug": "frappe-gantt",
+      "name": "Frappe Gantt",
+      "group": "C",
+      "path": "packages/library-lab/entries/C13-frappe-gantt",
+      "priority": "remaining-coverage",
+      "planDetail": "needs-entry-discovery",
+      "objective": "以真实输入、状态变化和结果解释交互式任务时间线、依赖关系和日期修改",
+      "objectiveBasis": "catalogue-hypothesis-to-check",
+      "executionKinds": [
+        "browser-frame"
+      ],
+      "packagesAtPlanning": [
+        {
+          "name": "frappe-gantt",
+          "version": "1.2.2"
+        }
+      ],
+      "entryBaseline": {
+        "sha256": "16203309e7b79c3a51234018ee8690c54df22b6402a20adcc815389eb710ed06",
+        "fileCount": 13
+      },
+      "existingSdkSuites": [
+        "packages/library-lab/entries/C13-frappe-gantt/tests/sdk.test.mjs"
+      ],
+      "flags": [
+        "dedicated-gantt-runner"
+      ],
+      "status": "content_done",
+      "owner": null,
+      "startedAt": null,
+      "updatedAt": "2026-11-10T16:47:24.068322+00:00",
+      "result": "results/C13.md",
+      "blocker": null,
+      "formalReceiptState": "pending_clean_authorized_commit",
+      "checkpoint": "independent-report-stable-author-only-source-tool-repair",
+      "nextAction": "内容与本地运行完成；未来获提交授权后正式recorder",
+      "lastOwner": "/root/quality_e11",
+      "completedAt": "2026-11-10T16:47:24.068322+00:00",
+      "reviewedBy": "/root/quality_f05",
+      "sixChecks": {
+        "technicalAccuracy": "PASS",
+        "clarity": "PASS",
+        "demoUsefulness": "PASS",
+        "portability": "PASS",
+        "officialSources": "PASS",
+        "reproducibility": "PASS"
+      },
+      "finalEntryDigest": {
+        "sha256": "84e93b7294ffb2c2a097ddc7897322cadbedb968f5b18d90ac243e932e565f78",
+        "fileCount": 46
+      }
+    }
+  }
+}

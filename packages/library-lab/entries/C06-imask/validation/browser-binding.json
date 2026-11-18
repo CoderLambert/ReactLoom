@@ -1,0 +1,46 @@
+{
+  "recordedAt": "2026-11-10T16:43:53.991630+00:00",
+  "kind": "ROOT_REPORTED_AND_RAW_LOG_REVIEWED_LOCAL_BROWSER",
+  "formalStatus": "NOT_RUN",
+  "candidate": "candidate-17",
+  "browser": {
+    "command": [
+      "pnpm",
+      "exec",
+      "playwright",
+      "test",
+      "--config=.local-evidence/quality-playwright.config.ts",
+      "e2e/quality-remediation-imask.spec.ts",
+      "e2e/quality-remediation-tanstack-virtual.spec.ts",
+      "e2e/c13-preview-boundary.spec.ts",
+      "e2e/quality-remediation-primitives-sources.spec.ts",
+      "--grep",
+      "@C06 actual date|@C10|@C13|@C12 original",
+      "--trace=off"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "startedAt": "2026-11-10T16:39:19.138953+00:00",
+    "finishedAt": "2026-11-10T16:39:30.816229+00:00",
+    "exitCode": 0,
+    "implicitBuild": false,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-17/browser.txt"
+  },
+  "relevantCase": "@C06 actual date Pattern completion differs from calendar validity, free Chinese text and owned teardown",
+  "result": "PASS",
+  "scope": "advanced only; candidate16 basic/business/homepage PASS reused",
+  "baseURL": "http://127.0.0.1:4319",
+  "implicitBuild": false,
+  "publicArtifacts": {
+    "docs/library-lab/evidence/quality-upgrade/candidate-17/browser.txt": "4fa72949d8d5c1ebe84c76de681f1251e4b28cd5221ab9c35028ef68285eae24",
+    "docs/library-lab/evidence/quality-upgrade/candidate-17/browser.json": "f0eab13224e382b18ca2f8b0c9c5d3c3e2769a5dbd573cefade4af46c7094a1b",
+    "docs/library-lab/evidence/quality-upgrade/candidate-17/browser-binding.json": "818524a0171210a3feac9ef21d9fe58038121f095eaefabbc3f220bb24a7fb2c",
+    "docs/library-lab/evidence/quality-upgrade/candidate-17/input-stability.json": "f4ea7cad4a888e9700bd6d35d37ea4abffc74324db5fb28f74ee3d15febf7b5d"
+  },
+  "entryProductionSources": {
+    "examples/calendar-policy.d.mts": "8c854201ed8a821443b973f4fdb0f13596086a67863a78747d75f90bbb016bde",
+    "examples/calendar-policy.mjs": "d9a6b9f89204b3c733a267e5aa1e9d43318502a31a50407c586d1b1fb9300682",
+    "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+    "examples/example.tsx": "6b822ac4e253e8490cd549035ea6fc2585f94a856fbc73e236456dfa9b5262a1",
+    "examples/styles.css": "f1abed0bfc34a5125c9dac08b2eafaa11f95432fcae24118207fe0dd77767498"
+  }
+}

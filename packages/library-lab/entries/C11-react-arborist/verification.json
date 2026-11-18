@@ -1,14 +1,14 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "公开 react-arborist adjustMoveIndex helper Node测试未执行"
+    "note": "本地真实SDK5（页面共享moveTree与adjustMoveIndex）exit0，仅模型/算法；不是正式收据或DOM拖放PASS，详见local-validation。"
   },
   "build": {
     "status": "NOT_RUN",
-    "note": "PLATFORM 统一检查 React19/peer/打包"
+    "note": "入口strict0与root candidate18公共type/build/catalog0另记，七运行源匹配该构建；无逐库正式build收据，status仍NOT_RUN。"
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "需真实拖拽/IME/焦点/虚拟滚动 E2E"
+    "note": "root固定candidate18原始browser.txt确认C11三目标+原文/unknown展示4/4PASS，七运行源未变；合成IME协议不是系统IME，iframe仍unknown。作者复用不重跑，正式收据NOT_RUN。"
   }
 }

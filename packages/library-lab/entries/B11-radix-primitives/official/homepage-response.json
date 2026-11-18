@@ -1,0 +1,28 @@
+{
+  "requestedUrl": "https://www.radix-ui.com/primitives/docs/components/dropdown-menu",
+  "method": "GET",
+  "checkedAt": "2026-11-10T13:38:02.796937+00:00",
+  "browserFromLabOrigin": "NOT_RUN",
+  "bodyRead": false,
+  "finalUrl": "https://www.radix-ui.com/primitives/docs/components/dropdown-menu",
+  "status": 200,
+  "headersReceived": true,
+  "headers": {
+    "Date": "Tue, 10 Nov 2026 13:38:04 GMT",
+    "Content-Type": "text/html",
+    "Transfer-Encoding": "chunked",
+    "Connection": "close",
+    "CF-Cache-Status": "HIT",
+    "Cache-Control": "public, max-age=0, must-revalidate",
+    "Nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+    "Strict-Transport-Security": "max-age=63072000",
+    "set-cookie": "__cf_bm=WJaZzC1mSmLpuf9EPJ05ZAbaaxobzhU_iveiiXxv7T0-1794317884.6232343-1.0.1.1-O5tH86wDVju2nRVNBWyqbiP0LQpwJhKk7hDMs7BOIYcW8L.Vq33wdBvJs43.JiZ4_bORFIjIdOxmEUy.1BPE3AZ.V_X_LaYZeWo3kz5PVB4zp6owUhlIjEkJIbqcAs93; HttpOnly; SameSite=None; Partitioned; Secure; Path=/; Domain=radix-ui.com; Expires=Tue, 10 Nov 2026 14:08:04 GMT",
+    "Server-Timing": "cfCacheStatus;desc=\"HIT\"",
+    "Report-To": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=V8j9piOLyzU%2BfVMtRFxx%2BvO4QXZ376Z4pEX%2B7ZBN4YTWgd3c%2Bj7w1Z7FZTSjoTISlf6gmCddUydjO78vp%2F2NhkW4uB7p26KEvx3mc8SlUxlxFsICKdir%2F3jQfKLUryweyvWj\"}]}",
+    "Server": "cloudflare",
+    "CF-RAY": "a585749aeca1149b-LHR",
+    "alt-svc": "h3=\":443\"; ma=86400"
+  },
+  "xFrameOptions": null,
+  "contentSecurityPolicy": null
+}

@@ -1,10 +1,11 @@
-import { sourceTextPath } from './source-integrity.mjs'
+import { safeRelativePath } from './catalog.mjs'
+import { encodePublishedPath, sourceTextPath } from './source-integrity.mjs'
 
 /**
  * One small URL policy for untrusted research notes. Runtime assets are copied to
  * /raw/<ID>/assets by the catalogue generator, never served from repository paths.
  */
-export function resolveDocumentUrl(value, entryId, basePath = '/') {
+export function resolveDocumentUrl(value, entryId, basePath = '/', readmeSnapshotPath = '') {
   if (
     typeof value !== 'string' ||
     Array.from(value).some((character) => character.charCodeAt(0) <= 32) ||
@@ -22,7 +23,7 @@ export function resolveDocumentUrl(value, entryId, basePath = '/') {
   const [relative, hash] = value.split('#')
   if (!relative || value.split('#').length > 2) return ''
   if (
-    !/^(?:\.\/)?(?:assets\/)?[\p{L}\p{N}_./-]+$/u.test(relative) ||
+    !/^(?:\.\/)?(?:assets\/)?[\p{L}\p{N}_@./-]+$/u.test(relative) ||
     relative.startsWith('/') ||
     relative.startsWith('//')
   )
@@ -49,19 +50,25 @@ export function resolveDocumentUrl(value, entryId, basePath = '/') {
   // declared example/test sources. Avoid links that silently serve SPA HTML.
   const normalized = parts.join('/')
   let published
-  if (normalized === 'guide.md' || normalized === 'agent.md') published = normalized
+  if (
+    safeRelativePath(readmeSnapshotPath) &&
+    /\.md$/iu.test(readmeSnapshotPath) &&
+    (normalized === readmeSnapshotPath || normalized === 'readme.md')
+  )
+    published = 'readme.md'
+  else if (normalized === 'guide.md' || normalized === 'agent.md') published = normalized
   else if (
     /^assets\/(?:[\p{L}\p{N}_-]+\/)*[\p{L}\p{N}_-]+\.(?:png|jpe?g|webp|gif)$/iu.test(normalized)
   )
     published = normalized
   else if (
-    /^(?:examples|tests)\/(?:[\p{L}\p{N}_.-]+\/)*[\p{L}\p{N}_.-]+\.(?:[cm]?[jt]sx?|json|css|md|txt|ya?ml|html?|svg)$/iu.test(
+    /^(?:examples|tests)\/(?:[\p{L}\p{N}_.-]+\/)*[\p{L}\p{N}_@.-]+\.(?:[cm]?[jt]sx?|json|css|md|txt|ya?ml|html?|svg|patch)$/iu.test(
       normalized,
     )
   )
     published = 'sources/' + sourceTextPath(normalized)
   else return ''
-  const encodedPath = published.split('/').map(encodeURIComponent).join('/')
+  const encodedPath = encodePublishedPath(published)
   const fragment = hash && /^[\p{L}\p{N}_-]+$/u.test(hash) ? `#${encodeURIComponent(hash)}` : ''
   return `${prefix}raw/${entryId}/${encodedPath}${fragment}`
 }
@@ -116,7 +123,7 @@ export function extractDocumentHeadings(markdown) {
       previous = null
       return
     }
-    const atx = line.match(/^ {0,3}(#{1,3})(?:\s+|$)(.*)$/u)
+    const atx = line.match(/^ {0,3}(#{1,6})(?:\s+|$)(.*)$/u)
     if (atx) {
       const title = atx[2].replace(/\s+#+\s*$/u, '').trim()
       if (title) pushHeading(title, atx[1].length, index + 1)

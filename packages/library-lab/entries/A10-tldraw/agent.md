@@ -1,47 +1,35 @@
-# A10 tldraw — 工程手册
+# A10 tldraw 工程入口
 
-## 适用
+用于需要可编程形状、白板编辑及文档快照的 React 页面。当前目标版本 `tldraw@5.5.2`，状态 `recreated`，历史档案来源保留在 library.json；先读实际 `examples/example.tsx` 和 verification.json，不把目录收录或本地策略测试当浏览器 PASS。
 
-`tldraw@5.5.2` 做无限画布和形状模型。手绘嵌入且希望 MIT 包时看 A09；端口 DAG 看 A06。非本机没有合法 `VITE_TLDRAW_LICENSE_KEY` 就不要挂载，也不要伪造 key 或去掉水印。
+## 真实接线与三个目标
 
-## 版本
+- basic：真实 `<Tldraw>` 工具栏绘制，数量/ID来自 SDK 当前页。SDK测试标识 `tools.draw`、`canvas` 来自5.5.2实际源码；真实指针轨迹由浏览器验收。
+- business：初始化4个RSS geo节点。保存内存document副本→追加到8或清空到0→恢复4，恢复后原ID/文字/位置保留。下载是当前文档而非内存副本。
+- advanced：每次最多36、当前页程序化总数80；切只读后创建/清空/恢复禁用，SDK画布只读；保存/下载仍可用。停止或离开销毁当前内存副本。
 
-钉 `tldraw@5.5.2`。导入 `Tldraw`、`createShapeId`、`getSnapshot`、`toRichText` 和 `tldraw/tldraw.css`。许可证不是 MIT。`setCamera` 拒绝非有限数。不要使用已废弃的包入口 `@tldraw/tldraw` 作为新代码的默认导入。
+必要文件：example.tsx、snapshot-policy.ts、styles.css、demo.tsx；保留官方CSS和父容器高度。用 `Tldraw/createShapeId/toRichText/getSnapshot/loadSnapshot`，不导入旧包、不改依赖版本。业务节点是教学fixture，不是已执行的RSS管道或模型结果。
 
-## 迁移
+## 所有权与数据
 
-外部创建形状改为 `editor.run` + `createShape`，文本用 `toRichText`。持久化从 `JSON.stringify(editor)` 改为 `getSnapshot` 的 document。若启用 `persistenceKey`，按文档隔离；Lab 故意不加，避免 IndexedDB 串数据。只读用 `updateInstanceState`，并在服务端再鉴权。
+SDK Store是文档事实；React只保存当前页ID派生值、只读、状态及显式保存副本。监听scope为all，以处理当前页的session切换；比较ID签名后才更新宿主，拖动/相机不镜像完整形状。onMount返回函数退订自有listener并丢弃active Editor引用，Editor和内部资源由Tldraw释放。按钮校验实例仍active，WeakSet避免同实例重复种骨架。
 
-## 不可删的清理
+保存：`getSnapshot(store).document`→`serializeSnapshot`检查3MB UTF-8→structuredClone。失败保留旧副本。恢复：`loadSnapshot(store,{document: structuredClone(saved.document)})`，只接受自身同版本内存副本；不是外部导入器。SDK协调当前session，不恢复保存时相机/选择，不承诺无效选区不变。恢复不是撤销；`Editor.run`是批处理，不承诺一次按钮一个独立撤销步。
 
-`onMount` 返回的函数必须退订 `store.listen`。卸载时撤销 Blob URL 并清除定时器。程序化按钮在超过 80 个形状前返回。快照超过 3 MB 时在 `createObjectURL` 之前抛错。已卸载的 Editor 不再调用。
+没有persistenceKey、网络保存、@tldraw/sync、媒体离线打包。document包含所有页及资源记录/URL，3MB不是画布性能上限。Blob URL在1500ms后撤销；卸载清自己全部URL和timer，不清全站存储。80只限制程序化当前页新增，原生工具不受限。
 
-## 反例
+只读即时调用 `updateInstanceState({isReadonly})`；写入口检查 `getIsReadonly()`。服务端API仍需独立鉴权，不从按钮disabled推导安全授权。
 
-```tsx
-editor.createShape({ type: 'geo', x: 0, y: 0 }); // 错：放在组件 render
-localStorage.setItem('doc', JSON.stringify(editor)); // 错
-// 对：在按钮中 editor.run(() => editor.createShape({ id: createShapeId(), ... }))
-```
+## 许可与来源
 
-高度为 0、拖动时 setState 全量形状、只读当成授权，都不要做。
+自定义tldraw License。固定版本默认Development Purposes覆盖内部开发/测试/预发，不覆盖终端用户生产用途；需相应正式许可。本例本机回环进入正常开发路径；远端无key不挂载，配置值存在仅是准入，不是许可校验成功。SDK负责真实有效性判定。禁止读/借用户.env、填假key、改NODE_ENV/SDK生产判断、去水印或忽略许可错误。
 
-## 测试断言
+official/readme.md是固定commit `be4d5b30cbf896c92436d634e59843a920705cef` 的包README原文，5.5.2/en；271个实际候选无中文，精确path/time/hash在source-audit.json。official/LICENSE.md也保留原文。官网GET200无XFO/CSP，但未测Lab iframe，unknown；完整头见homepage-response.json。
 
-`serializeSnapshot` 拒绝无法序列化的值和超过 3 MB 的 UTF-8。SDK 收据还要看到真实 `Tldraw` 只在许可条件下挂载、`createShape`、`getSnapshot` 不含 session、卸载退订。没有 runs 收据则为 NOT_RUN。
+## 验证与精确观察点
 
-## 真实限制
+`a10-workshop`：data-level、data-ready、data-readonly。`a10-shape-count`、`a10-shape-ids`：当前页SDK身份；`a10-saved-document`、`a10-saved-shape-ids`：显式保存副本；`a10-status`：操作结果。展开“查看当前页与保存时的形状身份”后读取output。画布容器a10-canvas。非本机无配置显示a10-license-gate。
 
-没有 `toImage`、`loadSnapshot`、协作同步或 HTTP 409。80 的上限不管手绘。`zoomToFit` 不读取减少动态偏好。level 变化不重挂载时，onMount 里的骨架不会自动重建。没有帧率数字。
+按钮名：追加4个流程节点、有界批量创建形状、保存文档到内存、恢复已保存文档、切换只读/退出只读、清空当前形状、下载文档 JSON、缩放适合画布。readOnly下恢复禁用；下载当前document无session。
 
-## 断言边界
-
-`tests/snapshot-policy.test.mts` 只量 JSON 字节。SDK 用例要 `import { Tldraw, getSnapshot, createShapeId } from 'tldraw'`。非本机且没有 key 时不挂载。下载体只有 document。`onMount` 退订后不再 `setCount`。缺收据时保持 NOT_RUN。文本用 `toRichText`。不要把 session 快照写进下载文件。没有合法 key 的非本机页面只显示说明。
-
-## 证据
-
-Actions `41779873259` 的仓库级 install、typecheck、build、52 SDK 文件（153 测试）和 45 Playwright 不是 A10 PASS。不要把快照字节测试或历史研究 PASS 写入 `verification.json`。
-
-对照 `library.json` 的版本编写 import，不要升到条目未钉死的版本。
-`tests/` 中的策略用例不能改写成 sdk 字段的 PASS。
-浏览器与构建未留下收据时，对应字段维持 NOT_RUN。
+本地SDK两项通过只验证真实Store/schema/文档恢复及document/session分离，没有挂载Editor。Node SDK导入留下进程资源，当前SDK检查将真实断言放入自建Worker，主测试普通node --test接收结果并在finally终止自己的Worker；不能当浏览器Editor卸载验收。旧force-exit执行方式仅保留在local-validation历史日志。三项纯策略仅JSON/字节。入口类型/格式/metadata结果见local-validation.md；正式验收仍NOT_RUN。validation/browser-proposal.txt是准备好的真实Playwright提案，由主控接公共测试并运行，未在此entry直接执行。保持生产许可、真实输入法/焦点/读屏等未测边界。

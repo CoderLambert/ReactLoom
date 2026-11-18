@@ -1,0 +1,21 @@
+{
+  "recordedAt": "2026-11-10T15:58:35.700741+00:00",
+  "files": {
+    "AGENTS.md": "0b78412e6f6a637239aef6879ca73437df496b2f4e7b26fd5fba94a9e42a5bda",
+    "agent.md": "d72ed32291a58e71ad599f3a72481218af99149bf65d971252249531ec9557b2",
+    "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+    "examples/example.tsx": "e574c235646ea652481180ad2c3aa0ab56f264e30e0feb2af68064196e412d8c",
+    "examples/rss-policy.d.mts": "e30c31e152a050f913f2f1b8bce57c7d94a5a0cdc33a823aee95a13b3686c4e7",
+    "examples/rss-policy.mjs": "7d551fa3eff8a1d7197c704fafe276b628672e617e429c608e69bc640164e8c4",
+    "examples/schemas.ts": "5e6e1cfb11fc90cf574cccf5639aed9a6b9ca8bc035fc702713de2ad26a07910",
+    "examples/styles.css": "a61c10284a7fa93d7dec21ba60895495b865fb76dc6ec776ba2ec62e2095a530",
+    "guide.md": "e1a79da808ece444f640e027b531be3e751829ad63ec306a9919f256f1ea4be3",
+    "library.json": "dc7e8aa9c1a2eef508c85052ecd671884b83387387c5f240e3a8ae1ce3db5f4d",
+    "local-validation.md": "88ff8e04173c1f2f89afc3a8479bc4f46ed844c08cdf43170ffbf07112caf6cc",
+    "official/readme.md": "38d924524762b917dd9dd341ac28837df51a474bf198ac4c26ba69d8f59a27c3",
+    "official/source-audit.json": "a364739dd6b11a1e021745c26cece442c1907b69b905649ec76ac299b7eccbfd",
+    "tests/rss-policy.test.mjs": "543e645e0666e22cfaf285b053e51ab8f9a271d1fbbe1f5fa93d41ec0b9e882d",
+    "tests/sdk.test.mjs": "1e7b21701da6a20a70f467af6456da2e8d012f21a3a1da070522341757aa12b8",
+    "verification.json": "6a135573564b81cabf8dcc2adcd980768a98c884e7b0679f30d17d87b4c31729"
+  }
+}

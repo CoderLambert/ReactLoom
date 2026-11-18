@@ -1,0 +1,14 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node --test entries/E11-streamdown/tests/stream-session.test.mjs
+exit: 0
+
+✔ manual deltas preserve the prefix and finish exactly at the final chunk (0.478959ms)
+✔ paused and ended sessions ignore late ticks; resume appends once (0.122369ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 39.709283

@@ -1,47 +1,123 @@
-import {useEffect, useMemo, useRef, useState} from 'react';
-import {debounce, groupBy, orderBy, uniqBy, chunk} from 'lodash-es';
+import { chunk, debounce, groupBy, orderBy, uniqBy } from 'lodash-es'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
-type Level = 'basic' | 'business' | 'advanced';
-type Props = {level: Level};
-type Feed = {id: string; category: 'tech'|'business'|'news'; title: string; score: number};
-export const feeds: Feed[] = [
-  {id:'ai',category:'tech',title:'模型推理实践',score:81},
-  {id:'web',category:'tech',title:'React 工程演进',score:92},
-  {id:'ai',category:'tech',title:'旧版重复记录',score:17},
-  {id:'market',category:'business',title:'产品与市场',score:84},
-  {id:'world',category:'news',title:'国际要闻',score:74},
-  {id:'startup',category:'business',title:'创业观察',score:88},
-  {id:'open',category:'tech',title:'开源项目研究',score:95},
-];
-export function buildDigest(source: Feed[]) {
-  const unique = uniqBy(source, 'id');
-  const grouped = groupBy(unique, 'category');
-  const groups = Object.entries(grouped).map(([category,items])=>({
-    category, count: items.length, items: orderBy(items, ['score','id'], ['desc','asc']),
-  }));
-  return {unique, groups: orderBy(groups, ['count','category'], ['desc','asc']), batches:chunk(unique,3)};
+type Feed = { id: string; category: string; title: string; score: number }
+const feeds: Feed[] = [
+  { id: 'ai', category: 'tech', title: '模型推理实践', score: 81 },
+  { id: 'web', category: 'tech', title: 'React 工程演进', score: 92 },
+  { id: 'ai', category: 'tech', title: '重复但高分', score: 99 },
+  { id: 'market', category: 'business', title: '产品与市场', score: 84 },
+  { id: 'world', category: 'news', title: '国际要闻', score: 74 },
+]
+export function buildDigest(source: Feed[], highestFirst: boolean) {
+  const candidates = highestFirst ? orderBy(source, ['score', 'id'], ['desc', 'asc']) : source
+  const unique = uniqBy(candidates, 'id')
+  const groups = Object.entries(groupBy(unique, 'category')).map(([category, items]) => ({
+    category,
+    items: orderBy(items, ['score', 'id'], ['desc', 'asc']),
+  }))
+  return { unique, groups, batches: chunk(unique, 3) }
 }
-export default function LodashExample({level}: Props) {
-  const [query,setQuery]=useState('');
-  const [debounced,setDebounced]=useState('');
-  const [updates,setUpdates]=useState(0);
-  const composing=useRef(false);
-  const digest=useMemo(()=>buildDigest(feeds),[]);
-  const schedule=useMemo(()=>debounce((value:string)=>{setDebounced(value);setUpdates(n=>n+1);},250),[]);
-  useEffect(()=>()=>schedule.cancel(),[schedule]);
-  const filtered=useMemo(()=>digest.unique.filter(item=>item.title.toLocaleLowerCase().includes(debounced.toLocaleLowerCase())),[digest,debounced]);
-  return <section aria-label="lodash-es 实际工具函数实验">
-    <h2>{level==='basic'?'基于ID去重':level==='business'?'RSS频道分组与稳定排序':'Debounce 输入与卸载清理'}</h2>
-    {level==='basic'&&<><p>同一来源ID重复时保留第一条，不是保留最高分；演示 uniqBy 的明确语义。</p>
-      <output className="demo-output" data-testid="lodash-output">{JSON.stringify({original:feeds.length,unique:digest.unique.length,ids:digest.unique.map(f=>f.id),batches:digest.batches.map(x=>x.length)},null,2)}</output></>}
-    {level==='business'&&<><p>先对业务主键去重，再按分类分组；组内按热度降序、ID 升序稳定决胜。</p>
-      <output className="demo-output" data-testid="lodash-output">{JSON.stringify(digest.groups,null,2)}</output></>}
-    {level==='advanced'&&<><label htmlFor="d02-query">搜索已去重的 RSS 标题</label><input id="d02-query" value={query} onChange={event=>{setQuery(event.target.value);if(!composing.current)schedule(event.target.value);}}
-      onCompositionStart={()=>{composing.current=true;schedule.cancel();}}
-      onCompositionEnd={event=>{composing.current=false;schedule.cancel();setDebounced(event.currentTarget.value);}} aria-describedby="d02-info" />
-      <div className="demo-controls"><button type="button" onClick={()=>schedule.flush()}>立即应用</button><button type="button" onClick={()=>{schedule.cancel();setQuery('');setDebounced('');}}>清空</button></div>
-      <p id="d02-info">输入防抖 250ms，组件卸载调用 cancel；取消不会自动处理业务请求的 AbortSignal。</p>
-      <p>待输入：{query} / 已应用：{debounced} / 合并提交次数：{updates}</p>
-      <output className="demo-output" data-testid="lodash-output">{JSON.stringify(filtered.map(item=>item.title),null,2)}</output></>}
-  </section>;
+function CollectionExperiment() {
+  const [highest, setHighest] = useState(false)
+  const digest = buildDigest(feeds, highest)
+  return (
+    <section aria-label="集合处理实验">
+      <h2>先排序还是先去重</h2>
+      <p>本地五条 fixture；重复 ai 的分数为 81 和 99。切换顺序，观察留下哪条。</p>
+      <label>
+        <input type="checkbox" checked={highest} onChange={(e) => setHighest(e.target.checked)} />
+        先按分数排序再去重
+      </label>
+      <output data-testid="d02-collection">{JSON.stringify(digest, null, 2)}</output>
+    </section>
+  )
+}
+type Observer = (value: string) => void
+function SearchInput({ onApply }: { onApply: Observer }) {
+  const [query, setQuery] = useState('')
+  const composing = useRef(false)
+  const schedule = useMemo(() => debounce(onApply, 400), [onApply])
+  useEffect(() => () => schedule.cancel(), [schedule])
+  return (
+    <div>
+      <label htmlFor="d02-query">待提交查询</label>
+      <input
+        id="d02-query"
+        value={query}
+        onChange={(e) => {
+          setQuery(e.target.value)
+          if (!composing.current) schedule(e.target.value)
+        }}
+        onCompositionStart={() => {
+          composing.current = true
+          schedule.cancel()
+        }}
+        onCompositionEnd={(e) => {
+          composing.current = false
+          schedule.cancel()
+          schedule(e.currentTarget.value)
+        }}
+      />
+      <button type="button" onClick={() => schedule.flush()}>
+        flush 立即提交
+      </button>
+      <button type="button" onClick={() => schedule.cancel()}>
+        cancel 待执行调用
+      </button>
+    </div>
+  )
+}
+function DebounceExperiment() {
+  const [mounted, setMounted] = useState(true)
+  const [events, setEvents] = useState<string[]>([])
+  const [observation, setObservation] = useState('尚未检查')
+  const eventsRef = useRef(events)
+  eventsRef.current = events
+  const observerTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const apply = useCallback((value: string) => setEvents((previous) => [...previous, value]), [])
+  useEffect(
+    () => () => {
+      if (observerTimer.current) clearTimeout(observerTimer.current)
+    },
+    [],
+  )
+  function unmountAndObserve() {
+    const before = eventsRef.current.length
+    setMounted(false)
+    setObservation('等待 650ms，外层观察器仍挂载')
+    if (observerTimer.current) clearTimeout(observerTimer.current)
+    observerTimer.current = setTimeout(() => {
+      setObservation(
+        eventsRef.current.length === before ? '观察完成：卸载后新增 0 次' : '失败：卸载后仍有提交',
+      )
+    }, 650)
+  }
+  return (
+    <section aria-label="防抖生命周期实验">
+      <h2>400ms 防抖与独立观察器</h2>
+      <p>
+        输入多个字符后等待、flush 或 cancel。IME
+        组合期间不调度，结束后才开始等待。先输入新词，再立即卸载；外层事件记录和观察结果会保留。
+      </p>
+      {mounted ? <SearchInput onApply={apply} /> : <p>输入组件已卸载</p>}
+      <button type="button" disabled={!mounted} onClick={unmountAndObserve}>
+        卸载输入并观察
+      </button>
+      <button type="button" disabled={mounted} onClick={() => setMounted(true)}>
+        重新挂载输入
+      </button>
+      <p data-testid="d02-observation" role="status">
+        {observation}
+      </p>
+      <output data-testid="d02-events">{JSON.stringify(events)}</output>
+      <p>
+        事件记录由外层拥有；debounce 是真实 SDK，观察器和本地数据由本例自建。没有 HTTP；cancel
+        不会取消已经发出的请求。
+      </p>
+    </section>
+  )
+}
+export default function LodashExample({ level }: { level: 'basic' | 'business' | 'advanced' }) {
+  return level === 'basic' ? <CollectionExperiment /> : <DebounceExperiment />
 }

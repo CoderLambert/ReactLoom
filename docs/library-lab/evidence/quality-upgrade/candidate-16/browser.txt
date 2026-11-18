@@ -1,0 +1,206 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=pnpm exec playwright test --config=.local-evidence/quality-playwright.config.ts e2e/quality-remediation-beautiful-dnd-migration.spec.ts e2e/quality-remediation-ajv.spec.ts e2e/quality-remediation-imask.spec.ts e2e/quality-remediation-ag-grid.spec.ts e2e/quality-remediation-virtuoso.spec.ts e2e/quality-remediation-primitives-sources.spec.ts --grep @B22 (actual|fixed|real)|@C05|@C06|@C08|@C09 --trace=off
+
+Running 20 tests using 2 workers
+
+(node:1974632) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1974633) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   1 e2e/quality-remediation-ag-grid.spec.ts:46:1 › @C08 actual Community rows sort without rewriting stable business IDs (6.7s)
+(node:1975161) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   2 e2e/quality-remediation-ag-grid.spec.ts:64:1 › @C08 actual client pagination/filter and readOnlyEdit use the captured start revision (30.1s)
+(node:1976537) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   3 e2e/quality-remediation-ag-grid.spec.ts:102:1 › @C08 real grid edit survives stale fixture snapshots; abort/generation and unmount preserve ownership (30.1s)
+(node:1976894) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   5 e2e/quality-remediation-ajv.spec.ts:19:1 › @C05 actual shared Ajv contract separates JSON syntax, structural errors and credential policy (1.8s)
+  ✓   6 e2e/quality-remediation-ajv.spec.ts:67:1 › @C05 actual uniqueItems compares whole objects while business policy compares canonical identity (1.6s)
+  ✓   7 e2e/quality-remediation-ajv.spec.ts:88:1 › @C05 actual inherited strict conditional contract aggregates issues without modifying the draft (1.7s)
+  ✓   8 e2e/quality-remediation-beautiful-dnd-migration.spec.ts:66:1 › @B22 actual replacement React19 keyboard and mouse sensors preserve bindings IDs and hidden suffix (2.9s)
+  ✘   9 e2e/quality-remediation-beautiful-dnd-migration.spec.ts:108:1 › @B22 fixed slot rejection is shared by actual sensor results and keyboard fallback (2.6s)
+(node:1977899) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  10 e2e/quality-remediation-beautiful-dnd-migration.spec.ts:129:1 › @B22 real cancellation undo stale business reset and SDK-owned style cleanup remain distinct (4.0s)
+  ✓  11 e2e/quality-remediation-imask.spec.ts:104:1 › @C06 actual Pattern values, completion, middle edits and explicit reset preserve ownership (1.5s)
+  ✓  12 e2e/quality-remediation-imask.spec.ts:153:1 › @C06 actual Number mask normalizes display and keeps textual versus numeric values distinct (1.5s)
+  ✘  13 e2e/quality-remediation-imask.spec.ts:180:1 › @C06 actual date Pattern completion differs from calendar validity, free Chinese text and owned teardown (1.5s)
+(node:1978421) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  14 e2e/quality-remediation-primitives-sources.spec.ts:23:3 › @C05 original fixed README and evidenced homepage unknown (1.7s)
+  ✘   4 e2e/quality-remediation-ag-grid.spec.ts:144:1 › @C08 actual active editor sees a real authoritative external revision update without a forged SDK request (30.1s)
+  ✓  15 e2e/quality-remediation-primitives-sources.spec.ts:23:3 › @C06 original fixed README and evidenced homepage unknown (1.7s)
+(node:1978699) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  16 e2e/quality-remediation-primitives-sources.spec.ts:23:3 › @C09 original fixed README and evidenced homepage unknown (1.8s)
+  ✓  17 e2e/quality-remediation-primitives-sources.spec.ts:23:3 › @C08 original fixed README and evidenced homepage blocked (1.8s)
+  ✓  18 e2e/quality-remediation-virtuoso.spec.ts:42:1 › @C09 basic: actual 10,000-item virtual window, imperative jump and resize (1.7s)
+  ✓  19 e2e/quality-remediation-virtuoso.spec.ts:76:1 › @C09 business: real SDK viewport identity, local pagination cancellation, empty recovery and leave (3.9s)
+  ✘  20 e2e/quality-remediation-virtuoso.spec.ts:152:1 › @C09 advanced: true prepend anchor, ID expansion measurement and conditional bottom follow (6.7s)
+
+
+  1) e2e/quality-remediation-ag-grid.spec.ts:46:1 › @C08 actual Community rows sort without rewriting stable business IDs 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: getByTestId('c08-workshop').locator('.ag-center-cols-container [row-id="feed-0012"] [col-id="id"]')
+    Expected: "feed-0012"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveText" getByTestId('c08-workshop').locator('.ag-center-cols-container [row-id="feed-0012"] [col-id="id"]') with timeout 5000ms
+      - waiting for getByTestId('c08-workshop').locator('.ag-center-cols-container [row-id="feed-0012"] [col-id="id"]')
+
+
+      56 |     .poll(async () => (await model(app)).firstIds)
+      57 |     .toEqual(['feed-0012', 'feed-0011', 'feed-0010'])
+    > 58 |   await expect(cell(app, 'feed-0012', 'id')).toHaveText('feed-0012')
+         |                                              ^
+      59 |   await app.getByText('查看当前业务数据', { exact: true }).click()
+      60 |   expect((await data(app))[0].id).toBe('feed-0001') // model sort does not reorder React's source array.
+      61 |   expect((await model(app)).modelRows).toBe(12)
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-ag-grid.spec.ts:58:46
+
+    Error Context: test-results/quality-remediation-ag-gri-3ddd3-writing-stable-business-IDs/error-context.md
+
+  2) e2e/quality-remediation-ag-grid.spec.ts:64:1 › @C08 actual client pagination/filter and readOnlyEdit use the captured start revision 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.scrollIntoViewIfNeeded: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByTestId('c08-workshop').locator('.ag-center-cols-container [row-id="feed-0001"] [col-id="status"]')
+
+
+      34 | async function chooseStatus(page: Page, app: Locator, id: string, value: string) {
+      35 |   const target = cell(app, id, 'status')
+    > 36 |   await target.scrollIntoViewIfNeeded()
+         |                ^
+      37 |   await target.dblclick()
+      38 |   await expect(app.getByTestId('c08-edit-session')).toContainText(`${id}；开始版本`)
+      39 |   const editor = app.locator('.ag-cell-inline-editing [role="combobox"]')
+        at chooseStatus (/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-ag-grid.spec.ts:36:16)
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-ag-grid.spec.ts:82:9
+
+    Error Context: test-results/quality-remediation-ag-gri-adfc0-the-captured-start-revision/error-context.md
+
+  3) e2e/quality-remediation-ag-grid.spec.ts:102:1 › @C08 real grid edit survives stale fixture snapshots; abort/generation and unmount preserve ownership 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.scrollIntoViewIfNeeded: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByTestId('c08-workshop').locator('.ag-center-cols-container [row-id="feed-0001"] [col-id="status"]')
+
+
+      34 | async function chooseStatus(page: Page, app: Locator, id: string, value: string) {
+      35 |   const target = cell(app, id, 'status')
+    > 36 |   await target.scrollIntoViewIfNeeded()
+         |                ^
+      37 |   await target.dblclick()
+      38 |   await expect(app.getByTestId('c08-edit-session')).toContainText(`${id}；开始版本`)
+      39 |   const editor = app.locator('.ag-cell-inline-editing [role="combobox"]')
+        at chooseStatus (/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-ag-grid.spec.ts:36:16)
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-ag-grid.spec.ts:108:9
+
+    Error Context: test-results/quality-remediation-ag-gri-e727d--unmount-preserve-ownership/error-context.md
+
+  4) e2e/quality-remediation-ag-grid.spec.ts:144:1 › @C08 actual active editor sees a real authoritative external revision update without a forged SDK request 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.dblclick: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByTestId('c08-workshop').locator('.ag-center-cols-container [row-id="feed-0001"] [col-id="status"]')
+
+
+      147 |   const app = await open(page, 'advanced')
+      148 |   await app.getByText('查看当前业务数据', { exact: true }).click()
+    > 149 |   await cell(app, 'feed-0001', 'status').dblclick()
+          |                                          ^
+      150 |   const editor = app.locator('.ag-cell-inline-editing [role="combobox"]')
+      151 |   await expect(editor).toBeVisible()
+      152 |   await expect(app.getByTestId('c08-edit-session')).toContainText('开始版本 1')
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-ag-grid.spec.ts:149:42
+
+    Error Context: test-results/quality-remediation-ag-gri-1c232-ithout-a-forged-SDK-request/error-context.md
+
+  5) e2e/quality-remediation-beautiful-dnd-migration.spec.ts:108:1 › @B22 fixed slot rejection is shared by actual sensor results and keyboard fallback 
+
+    Error: expect(received).toMatchObject(expected)
+
+    - Expected  - 3
+    + Received  + 1
+
+      Object {
+    -   "destination": Object {
+    -     "index": 4,
+    -   },
+    +   "destination": null,
+        "reason": "DROP",
+      }
+
+      116 |   ).toBeDisabled()
+      117 |   await mouseDrag(page, app, 'ai', 'notes')
+    > 118 |   expect(await receipt(app)).toMatchObject({ reason: 'DROP', destination: { index: 4 } })
+          |                              ^
+      119 |   await expect(app.getByTestId('b22-order')).toHaveText(initial)
+      120 |   await expect(app).toHaveAttribute('data-revision', '0')
+      121 |   await expect(app.getByTestId('b22-status')).toContainText('不能被跨越')
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-beautiful-dnd-migration.spec.ts:118:30
+
+    Error Context: test-results/quality-remediation-beauti-daeab-sults-and-keyboard-fallback/error-context.md
+
+  6) e2e/quality-remediation-imask.spec.ts:180:1 › @C06 actual date Pattern completion differs from calendar validity, free Chinese text and owned teardown 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      206 |   await expect(app.getByTestId('c06-ime')).toContainText('可以正常输入')
+      207 |   await page.setViewportSize({ width: 390, height: 980 })
+    > 208 |   expect(await app.evaluate((node) => node.scrollWidth <= node.clientWidth + 1)).toBe(true)
+          |                                                                                  ^
+      209 |   const held = await input.elementHandle()
+      210 |   if (!held) throw new Error('Missing actual SDK input before unmount')
+      211 |   await expect.poll(() => listeners(input)).toBeGreaterThanOrEqual(8)
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-imask.spec.ts:208:82
+
+    Error Context: test-results/quality-remediation-imask--222eb-ese-text-and-owned-teardown/error-context.md
+
+  7) e2e/quality-remediation-virtuoso.spec.ts:152:1 › @C09 advanced: true prepend anchor, ID expansion measurement and conditional bottom follow 
+
+    Error: expect(received).toBeLessThan(expected)
+
+    Expected: < 8
+    Received:   1000000000
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      199 |       return after === null ? 1e9 : Math.abs(after - anchor.offset)
+      200 |     })
+    > 201 |     .toBeLessThan(8)
+          |      ^
+      202 |   await app.getByRole('button', { name: '跳至最新消息', exact: true }).click()
+      203 |   await expect(app).toHaveAttribute('data-at-bottom', 'true')
+      204 |   await app.getByRole('button', { name: '添加最新消息', exact: true }).click()
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-virtuoso.spec.ts:201:6
+
+    Error Context: test-results/quality-remediation-virtuo-027d7-d-conditional-bottom-follow/error-context.md
+
+  7 failed
+    e2e/quality-remediation-ag-grid.spec.ts:46:1 › @C08 actual Community rows sort without rewriting stable business IDs 
+    e2e/quality-remediation-ag-grid.spec.ts:64:1 › @C08 actual client pagination/filter and readOnlyEdit use the captured start revision 
+    e2e/quality-remediation-ag-grid.spec.ts:102:1 › @C08 real grid edit survives stale fixture snapshots; abort/generation and unmount preserve ownership 
+    e2e/quality-remediation-ag-grid.spec.ts:144:1 › @C08 actual active editor sees a real authoritative external revision update without a forged SDK request 
+    e2e/quality-remediation-beautiful-dnd-migration.spec.ts:108:1 › @B22 fixed slot rejection is shared by actual sensor results and keyboard fallback 
+    e2e/quality-remediation-imask.spec.ts:180:1 › @C06 actual date Pattern completion differs from calendar validity, free Chinese text and owned teardown 
+    e2e/quality-remediation-virtuoso.spec.ts:152:1 › @C09 advanced: true prepend anchor, ID expansion measurement and conditional bottom follow 
+  13 passed (1.2m)
+
+exitCode=1

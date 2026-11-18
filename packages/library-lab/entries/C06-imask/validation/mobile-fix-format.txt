@@ -1,0 +1,5 @@
+{"label": "mobile-fix-format", "cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["pnpm", "exec", "--", "biome", "check", "--write", "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C06-imask/examples/styles.css", "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C06-imask/validation/mobile-overflow-probe.mjs"], "start": "2026-11-10T16:18:28.613224+00:00", "end": "2026-11-10T16:18:28.836872+00:00", "exitCode": 0, "log": "mobile-fix-format.txt"}
+STDOUT
+Checked 2 files in 6ms. Fixed 1 file.
+
+STDERR

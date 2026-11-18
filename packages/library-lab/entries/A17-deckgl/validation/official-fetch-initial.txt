@@ -1,0 +1,6 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: inline Python urllib fetch pinned tree, three raw README files and homepage
+exit: 1
+Pinned full tree and three README original byte snapshots saved successfully. Homepage TLS failed before receiving HTTP headers.
+urllib.error.URLError: <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1147)>
+No failed request overwrote upstream original Markdown.

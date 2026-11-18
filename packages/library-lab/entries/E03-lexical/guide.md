@@ -1,199 +1,71 @@
-# Lexical 0.52.0｜EditorState、Composer 和有界 JSON
+# Lexical 0.52：EditorState、草稿协议与选区命令
 
-`lexical` 与 `@lexical/react` 在 `library.json` 里都是 **0.52.0**，MIT。Lexical 把文档放在 `EditorState` 里，DOM 只是视图。适合要自己拆命令、节点和 React 插件的编辑器。它不提供现成的 Notion 工具栏（看 E02），也不替代代码编辑器（E04 / E05）。
+阅读器需要编辑文章摘要，产品又要自己控制输入UI、文档节点和格式命令。Lexical把内容放在不可变EditorState中，DOM只是投影；可以按插件组成自己的编辑器。成本是节点协议、历史、选区、样式和浏览器验收都要自己设计。要现成块菜单用BlockNote；代码用CodeMirror，纯阅读页不用编辑器。
 
-## Lab 当前示例
+本例真实使用 `lexical@0.52.0` 与 `@lexical/react@0.52.0`（MIT），没有网络、上传、协作或服务端保存。**该版本的LexicalComposer已标deprecated**：本例保留匹配现有插件的legacy路径，不把它说成新项目的首选。官方建议新项目评估LexicalExtensionComposer及extension模型，两套接线不可无审查混用。
 
-真实组件是 [`examples/example.tsx`](examples/example.tsx)。[`examples/demo.tsx`](examples/demo.tsx) 只再导出。JSON 边界在 [`examples/snapshot-policy.mjs`](examples/snapshot-policy.mjs)。用户点开 Demo 后才挂载。`LexicalComposer` 的 `key={level}` 让三层各有一份编辑器。
+## 完整最小接入
 
-挂载的内容：
+已有React/ReactDOM>=18与TypeScript>=5.2的浏览器打包项目执行：
 
-- `initialConfig` 用 `useMemo` 固定：`namespace: 'reactloom-library-lab-E03'`，`onError` 直接抛出，主题只给加粗和段落一个 class。配置对象不随按键重建。
-- `RichTextPlugin` + `ContentEditable` + `LexicalErrorBoundary` + `HistoryPlugin`。
-- `OnChangePlugin` 设了 `ignoreSelectionChange`，在 `state.read` 里取 `$getRoot().getTextContent()` 的长度。
-- business / advanced：保存 `editor.getEditorState().toJSON()` 到 `reactloom:library-lab:E03:article:v1`。上限 `MAX_SNAPSHOT` 100_000。恢复先 `assertLexicalSnapshot`，再 `parseEditorState`；空文档拒绝；异常时不覆盖当前正文。
-- advanced：加粗按钮在 `onMouseDown` 里 `preventDefault`，再 `dispatchCommand(FORMAT_TEXT_COMMAND, 'bold')`。空选区可能只改下一次输入的格式。
-- 重置在 `editor.update` 里 `clear` 根节点并写入一段纯文本。不清其他页面的存储。
-
-策略只允许 `root`、`paragraph`、`text`、`linebreak`、`tab`。深度 8，访问节点不超过 400。拒绝 `href`、`src`、`url`、`on*`。`style` 若存在，长度不超过 256，并且不能出现 `url(` 或 `expression(`。这是段落文本演示的边界，不是通用 Lexical schema。
-
-没有挂载：多篇文章互不污染的存储键、粘贴净化插件、自定义节点、Markdown 往返、协作、服务端保存。那些留在后面的生产教学里。
-
-## 1. 什么时候用
-
-已经确认的环境是 React 客户端。`library.json` 没有把 Lexical 写成已在本 Lab 跑过 SDK。
-
-| 任务 | 判断 |
-| --- | --- |
-| 产品要控制命令、选区和节点协议 | 适合 Lexical |
-| 要 ProseMirror 扩展生态 | E01 |
-| 要开箱块 UI | E02 |
-| 代码高亮和多光标语言 | E04 / E05 |
-| 只读文章 | 不要挂 Composer |
-
-## 2. EditorState 不是 DOM
-
-```text
-键盘 / 输入法 / 粘贴
-        │
-        ▼
-ContentEditable（视图）
-        │
-        ▼
-editor.update → EditorState（权威）
-        ├─ HistoryPlugin 记录撤销
-        ├─ OnChangePlugin 读纯文本长度（本示例）
-        └─ toJSON() 只在按钮按下时写出
+```sh
+pnpm add lexical@0.52.0 @lexical/react@0.52.0
 ```
 
-1. 不要把 `innerHTML` 当文档。保存的是 JSON。
-2. 读节点用 `editor.read` / `state.read` 或 `editor.update`。在 React 渲染函数里直接调 `$getRoot()` 是非法的。
-3. `setEditorState` 会换掉当前状态。只在用户确认恢复时调用。每个字符把 JSON parse 回去会打断输入法。
-4. Composer 拥有 editor。不要在外面再 `createEditor` 一份来抢销毁。
-
-命令表（本示例只用了其中一部分）：
-
-| API | Lab |
-| --- | --- |
-| `LexicalComposer` | 已挂载，配置 memo |
-| `RichTextPlugin` / `ContentEditable` | 已挂载 |
-| `HistoryPlugin` | 已挂载 |
-| `OnChangePlugin` | 已挂载，忽略纯选区变化 |
-| `FORMAT_TEXT_COMMAND` | 仅 advanced |
-| `getEditorState().toJSON()` | 保存按钮 |
-| `parseEditorState` + `setEditorState` | 恢复按钮 |
-| `editor.registerUpdateListener` | 未使用；若使用必须返回的 unregister |
-| 自定义 Node / Paste 插件 | 未挂载 |
-
-官方模型：[React 入门](https://lexical.dev/docs/getting-started/react)、[序列化](https://lexical.dev/docs/concepts/serialization)。
-
-## 3. 三层
-
-在 Library Lab 打开 E03 再运行。没有 `src/App.tsx`，也没有单独的 Vite 端口。
-
-### 基本
-
-在带边框的编辑区输入。占位「输入新闻摘要…」是绝对定位的段落，`pointerEvents: none`，不是第二个编辑器。长度输出跟着纯文本变。撤销由 `HistoryPlugin` 提供，示例没有单独的撤销按钮。
-
-### 业务
-
-保存和恢复都是按钮。超限、存储被禁用、JSON 损坏或节点不在白名单时，状态文案说明未覆盖。键是固定的一份草稿，不是三篇知识库文章。生产若要多文档，每篇独立键，并用 `key={documentId}` 重建 Composer。
-
-### 进阶
-
-选中文字再点加粗。按钮阻止 `mousedown` 的默认行为，是为了点击时不丢掉选区。再用中文输入法、撤销和粘贴看选区。示例没有实现粘贴净化；不可信 HTML 不能靠这段 JSON 白名单在粘贴瞬间滤掉。导出若要 HTML，另走 E10。
-
-## 4. 反例（带代码）
-
-### 反例 1：按键重建 initialConfig
+复制examples下的 `example.tsx`、`snapshot-policy.mjs` / `.d.mts`、`state-operations.ts`、`styles.css`，保持相对路径；demo.tsx只是Lab转发可省。渲染 `<LexicalExample level="business" />`。打包器需要ES模块、TSX与CSS导入（如Vite的Bundler解析/react-jsx）。styles.css提供真实粗体，不能只复制主题class却依赖Lab的Tailwind。无需env、Provider、账号或远程字体；Composer已在组件内。
 
 ```tsx
-<LexicalComposer initialConfig={{ namespace: 'x', editorState: json, onError }} />
-```
-
-`initialConfig` 在每次渲染新建时，编辑器可能被重置。Lab 用 `useMemo` 配空依赖，初始文档交给用户输入和重置按钮，而不是把 JSON 放进会变的 config。
-
-### 反例 2：用 HTML 字符串恢复
-
-```tsx
-editor.setEditorState(editor.parseEditorState(htmlString))
-```
-
-`parseEditorState` 要的是 EditorState JSON。把 HTML 塞进去会失败或产生意外节点。Lab 只在 `assertLexicalSnapshot` 通过后解析。
-
-### 反例 3：OnChange 里 setEditorState
-
-```tsx
-<OnChangePlugin onChange={(state) => {
-  editor.setEditorState(editor.parseEditorState(JSON.stringify(state.toJSON())))
-}} />
-```
-
-这会在每次更新时重入。监听只读文本长度。
-
-### 反例 4：加粗按钮吃掉选区
-
-```tsx
-<button onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'bold')}>加粗</button>
-```
-
-点击按钮会让 ContentEditable 失焦，选区消失，命令作用在空选区。Lab 在 `onMouseDown` 里 `preventDefault`。
-
-### 反例 5：恢复失败后清空
-
-```tsx
-try { editor.setEditorState(next) } catch { editor.update(() => $getRoot().clear()) }
-```
-
-损坏草稿应留下正在编辑的内容。Lab 的 catch 只改文案。
-
-### 反例 6：把 toJSON() 当已净化 HTML
-
-JSON 里仍可能有你们以后加上的链接和样式。当前白名单拒绝 `href`，是因为这份演示没有链接节点。加上 LinkNode 却不改策略，等于把检查废掉。
-
-### 反例 7：监听不注销
-
-```ts
-editor.registerUpdateListener(() => setState(...))
-```
-
-返回值必须在卸载时调用。离开 Demo 后不能再 `setState`。本示例的长度订阅走 `OnChangePlugin`，随 Composer 一起卸下。
-
-### 反例 8：在渲染期间调用 $ 函数
-
-```tsx
-function View() {
-  const text = $getRoot().getTextContent()
+const config = {
+  namespace: 'my-editor',
+  theme: {text: {bold: 'my-bold'}},
+  onError(error) { throw error },
 }
+<LexicalComposer initialConfig={config}>
+  <RichTextPlugin contentEditable={<ContentEditable aria-label="文章" />}
+    placeholder={<span>输入…</span>} ErrorBoundary={LexicalErrorBoundary} />
+  <HistoryPlugin />
+</LexicalComposer>
 ```
 
-`$` 函数只能在 read 或 update 里调用。否则会在开发环境直接抛错。
+legacy Composer创建时读initialConfig，后续改变忽略；**仅仅每render新建一个对象不会自动重建编辑器**。本例useMemo表达稳定配置，真正换文档靠 `key={level}`，产品应使用documentId。不要把每次服务器返回的JSON塞进initialConfig当受控value。
 
-## 5. 输入法、粘贴、SSR
+## 先区分read、update与序列化
 
-组合输入期间不要 `setEditorState`，不要在 `onChange` 里根据半成品拼音改文档。验收要用真实中文输入法。本示例没有这项收据。
+`editor.update`中才能修改节点；`state.read`只读已提交快照。`$getRoot()`等$函数必须在read/update上下文内。EditorState.toJSON是数据，不是净化HTML。
 
-粘贴的生产做法是独立插件：按节点类型接收，拒绝脚本和未知元素，而不是正则替换 HTML。Lab 没有这个插件。
+基础场景：输入后OnChangePlugin在state.read里读取纯文本，展示UTF16长度。忽略纯选区变化，不在onChange中setEditorState；更新文本不会每键重建文档。重置按钮通过共享state-operations.ts在editor.update中清空并追加新段落，使用discrete:true保证本次同步提交。不能在read中写节点。
 
-Lexical 的 Composer 需要 DOM。服务端渲染阅读页应输出你们自己的安全 HTML 或纯文本，不要在服务器 `createEditor` 去模拟选区。
+## 业务变化：有限JSON草稿与失败不替换
 
-## 6. 组合（未挂载）
+保存、恢复都使用同一个snapshot-policy。先校验再写sessionStorage；失败不覆盖此前草稿。恢复先读取、校验、parseEditorState，确认非空才setEditorState。损坏/超限/未知节点/非法字段在应用前拒绝，保留正在编辑的内容。只使用 `reactloom:library-lab:E03:article:v1`，没有自动保存或清全局Storage；读写被禁用/配额失败会显示错误。
 
-**TanStack Query。** Query 拥有已发布文章。Composer 拥有未保存的 EditorState。加载完成后只在文档 id 变化时 `setEditorState`。409 显示对照。
+本合同只允许版本1的 `root → paragraph → text/linebreak/tab` 树：最多100000个JS UTF16单元、总400节点、单text40000单元、最多8级段落缩进。树形协议本身最多两层子边，不接受任意嵌套段落。白名单逐类限制字段：对齐/方向/整数format/detail/mode均检查类型；Tab文本必须为制表符；内联style和段落textStyle只接受空字符串。bold等format位允许0..2047，detail0..3。这是匹配0.52的有限产品契约，不是Lexical的完整序列化schema。
 
-**Zod。** 在 `assertLexicalSnapshot` 之外再做产品 schema。节点种类变了就要同时改策略和 schema。
+默认RichText行为可以产生不属于这个持久化合同的粘贴样式，保存会明确拒绝。没有注册Heading/Link/列表/自定义节点，不宣称任意富文档JSON往返。新节点必须同时注册、升级schema和负例；不能在catch里放宽所有字段。旧版本/compact JSON、自定义node state不在本合同。
 
-**E10。** 若阅读页要 HTML，在 sink 之前净化。不要把 `toJSON()` 当成净化结果。
+**onError是恢复保证的一部分。** 0.52 parseEditorState内部捕获节点错误并调用editor.onError；若只console.log并返回，可能得到部分状态。这里onError重新抛出，恢复按钮try/catch捕获同步解析错误，绝不把部分解析结果set回正文。真实SDK测试另外绕过策略直接触发未知节点，核实抛错且当前状态不变。未来更改onError不能破坏这条约束。
 
-**E01 / E02。** 三者的 JSON 不能互相 `JSON.parse` 后直接设回去。迁移要有映射表。
+不能由此承诺任意setEditorState/DOM重建内部错误都会事务回滚。提示让用户保留内容、检查草稿；LexicalErrorBoundary负责其覆盖的React编辑渲染边界，不是所有异步程序错误的全局保险。
 
-## 7. 升级核对
+## 进阶：选区、格式与History
 
-锁定 0.52.0 的两个包一起升，不要只升 `lexical`。看 [v0.52.0](https://github.com/facebook/lexical/releases/tag/v0.52.0)。自定义节点的序列化字段变了，旧草稿会被 `assertLexicalSnapshot` 拒绝，这是预期，不要在 catch 里放宽白名单。
+选中文字后点击加粗，真实dispatchCommand(FORMAT_TEXT_COMMAND,'bold')改变选区文本；空选区可能只改变接下来输入的格式。按钮阻止mousedown默认行为以保留选区。提供撤销/重做命令，实际由HistoryPlugin维护历史；历史为空时命令不保证改变内容。页面显示粗体class的真实CSS，而不是写死一份“已加粗”结果。
 
-从 DOM `contentEditable` 迁过来时，先把旧 HTML 转成已知节点再 `editor.update` 插入，并保留原文备份。
+IME期间不保存、恢复、重置或派发格式/历史命令。本例用registerRootListener在真实根元素挂compositionstart/end监听，并结合editor.isComposing判断；root替换或插件卸载时返回的清理移除监听。不要在组合输入中整篇setEditorState或把半成品拼音当最终内容。合成composition事件只能验证按钮守卫，系统中文输入法、候选框和撤销组合仍需人工实测。
 
-## 8. 故障清单
+## 生命周期与可复现范围
 
-- 一输入就光标跳：config 是否每次渲染新建，或 onChange 里是否 `setEditorState`。
-- 加粗无效：是否有选区；空选区只影响后续输入。
-- 恢复总失败：节点是否超出段落 / 文本，或超过 100_000 字符。
-- 长度不更新：是否只改了选区。插件忽略了纯选区变化，这是故意的。
-- 卸载后控制台警告：监听里还有 `setState`。
+OnChangePlugin实装effect返回registerUpdateListener的注销函数；本例callback用useCallback稳定引用。HistoryPlugin也有自己的注册清理。Actions自有root监听通过API返回清理，组件不自行调用不存在的editor.destroy。ContentEditable卸载会setRootElement(null)，真实DOM事件与选区接线由Lexical解绑；这不表示保留在外部变量里的EditorState已经不可读。
 
-## 9. 验收
+浏览器提案会从实际根元素的__lexicalEditor取匹配源码的实例（测试时fail closed，不作为业务API），用公开registerRootListener/getRootElement观察根变null，解绑测试自己的observer，再重挂载检查空文档。它不把组件消失直接当destroy，也不清其他编辑器/存储。
 
-1. basic：输入改变长度，撤销可用。
-2. business：保存、刷新标签页内恢复；坏 JSON 留下原文；超限不写入。
-3. advanced：有选区时加粗；按钮按下不丢掉选区。
-4. 换层后旧 Composer 不再更新长度。
-5. 中文输入法与粘贴仍是待浏览器验收的项。
+本地SDK用真实createEditor且没有DOM，复用state-operations.ts执行read/update/parse/set与注销；证明的是无DOM状态语义，**不证明ContentEditable、命令选区、HistoryPlugin或IME**。浏览器提案另行覆盖输入/JSON/失败、选区加粗/撤销重做、根detach和Storage失败。主控未执行前仍NOT_RUN，正式收据也独立。
 
-`tests/policy.test.mjs` 不导入 `lexical`。sdk、build、browser 保持 **NOT_RUN**。没有 `docs/library-lab/evidence/runs/` 的 E03 收据就不能写 PASS。Actions `41779873259` 是仓库级运行，不是本条目通过。
+## 迁移与生产取舍
 
-## 10. 资料
+- 服务器数据放Query，Composer拥有未保存草稿；切documentId才换实例，处理版本冲突，不能每次刷新都覆盖本地输入。
+- 需要HTML导出/粘贴净化时另外设计节点导入与HTML输出净化。本例JSON策略不在粘贴时过滤HTML，也不是授权层。
+- SSR阅读页用安全HTML/纯文本，React编辑Composer是DOM客户端边界。无DOMcreateEditor可用于受限数据处理，不等同于服务器模拟用户选区。
+- 升级同步核对lexical和@lexical/react及节点字段。评估新版extension迁移时替换整套对应插件接线，不只换组件名。
 
-- https://lexical.dev/docs/getting-started/react
-- https://lexical.dev/docs/concepts/serialization
-- https://github.com/facebook/lexical
-- https://github.com/facebook/lexical/releases/tag/v0.52.0
+官方README固定v0.52.0提交，原文与本讲解分开；许可由安装包和固定LICENSE双核MIT。官网响应头已保存，没有实际Lab-origin内容确认就保持unknown，HTTP200不能变成嵌入PASS。实际命令与分层六项证据见local-validation.md。

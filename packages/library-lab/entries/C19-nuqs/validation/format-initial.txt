@@ -1,0 +1,36 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["pnpm", "exec", "biome", "check", "--write", "packages/library-lab/entries/C19-nuqs/examples", "packages/library-lab/entries/C19-nuqs/tests", "packages/library-lab/entries/C19-nuqs/library.json"], "utc": "2026-11-10T17:58:09.307510+00:00", "exit": 1}
+packages/library-lab/entries/C19-nuqs/examples/url-policy.mjs:8:37 lint/suspicious/noControlCharactersInRegex ━━━━━━━━━━
+
+  × Unexpected control character in a regular expression.
+  
+     6 │ export function sanitizeQuery(input) {
+     7 │   if (typeof input !== 'string') return ''
+   > 8 │   return Array.from(input.replace(/[\u0000-\u001f\u007f]/gu, '').trim())
+       │                                     ^^^^^^
+     9 │     .slice(0, MAX_QUERY_LENGTH)
+    10 │     .join('')
+  
+  i Control characters are unusual and potentially incorrect inputs, so they are disallowed.
+  
+
+packages/library-lab/entries/C19-nuqs/examples/url-policy.mjs:8:44 lint/suspicious/noControlCharactersInRegex ━━━━━━━━━━
+
+  × Unexpected control character in a regular expression.
+  
+     6 │ export function sanitizeQuery(input) {
+     7 │   if (typeof input !== 'string') return ''
+   > 8 │   return Array.from(input.replace(/[\u0000-\u001f\u007f]/gu, '').trim())
+       │                                            ^^^^^^
+     9 │     .slice(0, MAX_QUERY_LENGTH)
+    10 │     .join('')
+  
+  i Control characters are unusual and potentially incorrect inputs, so they are disallowed.
+  
+
+Checked 10 files in 9ms. Fixed 9 files.
+Found 2 errors.
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while applying fixes.
+  
+

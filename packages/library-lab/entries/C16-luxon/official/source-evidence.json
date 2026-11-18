@@ -1,0 +1,389 @@
+{
+  "requests": [
+    {
+      "url": "https://registry.npmjs.org/luxon/3.7.2",
+      "finalUrl": "https://registry.npmjs.org/luxon/3.7.2",
+      "status": 200,
+      "checkedAt": "2026-11-10T17:08:05.737878+00:00",
+      "headers": {
+        "Date": "Tue, 10 Nov 2026 17:08:06 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "3183",
+        "Connection": "close",
+        "CF-Ray": "a586a8439d2bebe7-SJC",
+        "CF-Cache-Status": "DYNAMIC",
+        "Access-Control-Allow-Origin": "*",
+        "Cache-Control": "max-age=300",
+        "Server": "cloudflare",
+        "Vary": "accept-encoding, accept",
+        "set-cookie": "__cf_bm=z4q9ZLWa738KC2M6JMgZ9YTEK_Xwn9zQRTiIA3gEX3s-1794330486.3351364-1.0.1.1-pNF7tAHywGYPMPItJZ5mGoGshoG9MocfPkKd0kdtkaRQM6WDnN1Z_Dn0UzlU9kaGQPnYQ9.xN9.Sjs8MraRoA4jYh6QFQkTvSFGJtjyl49p9NjPcvjHmj2uWS8CQZMWd; HttpOnly; SameSite=None; Partitioned; Secure; Path=/; Domain=npmjs.org; Expires=Tue, 10 Nov 2026 17:38:06 GMT"
+      },
+      "bytes": 3183,
+      "sha256": "9a366ce6edd93f5d61a66d455b1b9f6aa9102adf034c5b46800690ee423105c0",
+      "bodyStatus": "READ"
+    },
+    {
+      "url": "https://api.github.com/repos/moment/luxon/git/trees/4262a38ded7762e22608a9feb9f117b40d338ced?recursive=1",
+      "finalUrl": "https://api.github.com/repos/moment/luxon/git/trees/4262a38ded7762e22608a9feb9f117b40d338ced?recursive=1",
+      "status": 200,
+      "checkedAt": "2026-11-10T17:08:06.865395+00:00",
+      "headers": {
+        "Date": "Tue, 10 Nov 2026 17:08:08 GMT",
+        "Content-Type": "application/json; charset=utf-8",
+        "Cache-Control": "public, max-age=86400, s-maxage=86400",
+        "Vary": "Accept,Accept-Encoding, Accept, X-Requested-With",
+        "ETag": "W/\"80204f9142edadd6fb8caa483352972ce1d2cea15ab422bd3687e08992bb8791\"",
+        "Last-Modified": "Tue, 10 Nov 2026 17:07:27 GMT",
+        "X-GitHub-Media-Type": "github.v3; format=json",
+        "x-github-api-version-selected": "2022-11-28",
+        "Access-Control-Expose-Headers": "ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset, Warning",
+        "Access-Control-Allow-Origin": "*",
+        "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+        "X-Frame-Options": "deny",
+        "X-Content-Type-Options": "nosniff",
+        "X-XSS-Protection": "0",
+        "Referrer-Policy": "origin-when-cross-origin, strict-origin-when-cross-origin",
+        "Content-Security-Policy": "default-src 'none'",
+        "Server": "github.com",
+        "Accept-Ranges": "bytes",
+        "X-RateLimit-Limit": "60",
+        "X-RateLimit-Remaining": "59",
+        "X-RateLimit-Used": "1",
+        "X-RateLimit-Resource": "core",
+        "X-RateLimit-Reset": "1794334087",
+        "Transfer-Encoding": "chunked",
+        "X-GitHub-Request-Id": "EB64:5BE1C:31D910:468B2C:6AF34F77",
+        "x-github-edge-region": "sea",
+        "connection": "close"
+      },
+      "bytes": 39951,
+      "sha256": "80204f9142edadd6fb8caa483352972ce1d2cea15ab422bd3687e08992bb8791",
+      "bodyStatus": "READ"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/moment/luxon/4262a38ded7762e22608a9feb9f117b40d338ced/package.json",
+      "finalUrl": "https://raw.githubusercontent.com/moment/luxon/4262a38ded7762e22608a9feb9f117b40d338ced/package.json",
+      "status": 200,
+      "checkedAt": "2026-11-10T17:08:08.439357+00:00",
+      "headers": {
+        "Connection": "close",
+        "Content-Length": "2872",
+        "Cache-Control": "max-age=300",
+        "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+        "Content-Type": "text/plain; charset=utf-8",
+        "ETag": "\"48f80a947684695183d4c06e0fa340d0f71993d7663a8e2586b352e92d2d62e5\"",
+        "Strict-Transport-Security": "max-age=31536000",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "deny",
+        "X-XSS-Protection": "1; mode=block",
+        "X-GitHub-Request-Id": "E3C8:12E5BF:29A83:333A5:6AF34F79",
+        "x-github-edge-region": "westus3",
+        "Accept-Ranges": "bytes",
+        "Date": "Tue, 10 Nov 2026 17:08:10 GMT",
+        "Via": "1.1 varnish",
+        "X-Served-By": "cache-pao-kpao1770083-PAO",
+        "X-Cache": "MISS",
+        "X-Cache-Hits": "0",
+        "X-Timer": "S1794330490.891033,VS0,VE369",
+        "Vary": "Authorization,Accept-Encoding",
+        "Access-Control-Allow-Origin": "*",
+        "Cross-Origin-Resource-Policy": "cross-origin",
+        "X-Fastly-Request-ID": "6208768cb5d3b62d17363c849e0c2a417219da3a",
+        "Expires": "Tue, 10 Nov 2026 17:13:10 GMT",
+        "Source-Age": "0"
+      },
+      "bytes": 2872,
+      "sha256": "bf8c55f4072d01467c1c0c49807722f79577680ac1ff7fa7c030a83716d3db4f",
+      "bodyStatus": "READ"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/moment/luxon/4262a38ded7762e22608a9feb9f117b40d338ced/README.md",
+      "finalUrl": "https://raw.githubusercontent.com/moment/luxon/4262a38ded7762e22608a9feb9f117b40d338ced/README.md",
+      "status": 200,
+      "checkedAt": "2026-11-10T17:08:10.316519+00:00",
+      "headers": {
+        "Connection": "close",
+        "Content-Length": "2052",
+        "Cache-Control": "max-age=300",
+        "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+        "Content-Type": "text/plain; charset=utf-8",
+        "ETag": "\"72d4982fa5d1b4a8ae0360247ad632a3691e2f36302d29c5f73797711e953c71\"",
+        "Strict-Transport-Security": "max-age=31536000",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "deny",
+        "X-XSS-Protection": "1; mode=block",
+        "X-GitHub-Request-Id": "E66E:2D777D:28FD8:3288E:6AF34F7B",
+        "x-github-edge-region": "westus3",
+        "Accept-Ranges": "bytes",
+        "Date": "Tue, 10 Nov 2026 17:08:11 GMT",
+        "Via": "1.1 varnish",
+        "X-Served-By": "cache-pao-kpao1770072-PAO",
+        "X-Cache": "MISS",
+        "X-Cache-Hits": "0",
+        "X-Timer": "S1794330491.160826,VS0,VE400",
+        "Vary": "Authorization,Accept-Encoding",
+        "Access-Control-Allow-Origin": "*",
+        "Cross-Origin-Resource-Policy": "cross-origin",
+        "X-Fastly-Request-ID": "fc651ea312922855ca96848e439665b4dc0193eb",
+        "Expires": "Tue, 10 Nov 2026 17:13:11 GMT",
+        "Source-Age": "0"
+      },
+      "bytes": 2052,
+      "sha256": "5e57e6afc44eed949d850075c7e1a9206a757c058afa6b93aab83264f07cf622",
+      "bodyStatus": "READ"
+    },
+    {
+      "url": "https://moment.github.io/luxon/",
+      "finalUrl": "https://moment.github.io/luxon/",
+      "status": 200,
+      "checkedAt": "2026-11-10T17:08:11.616081+00:00",
+      "headers": {
+        "Connection": "close",
+        "Content-Length": "1484",
+        "Server": "GitHub.com",
+        "Content-Type": "text/html; charset=utf-8",
+        "x-origin-cache": "HIT",
+        "Last-Modified": "Fri, 05 Sep 2025 10:15:21 GMT",
+        "Access-Control-Allow-Origin": "*",
+        "ETag": "\"68bab839-5cc\"",
+        "expires": "Tue, 10 Nov 2026 14:27:45 GMT",
+        "Cache-Control": "max-age=600",
+        "x-proxy-cache": "HIT",
+        "X-GitHub-Request-Id": "A112:29597B:17F14D:1BC815:6AF32894",
+        "x-github-edge-region": "westus3",
+        "Accept-Ranges": "bytes",
+        "Age": "0",
+        "Date": "Tue, 10 Nov 2026 17:08:12 GMT",
+        "Via": "1.1 varnish",
+        "X-Served-By": "cache-sjc10062-SJC",
+        "X-Cache": "HIT",
+        "X-Cache-Hits": "0",
+        "X-Timer": "S1794330493.649659,VS0,VE83",
+        "Vary": "Accept-Encoding",
+        "X-Fastly-Request-ID": "bbf738c005e3ae5e9142adabd8965cba17ef6198"
+      },
+      "bytes": null,
+      "sha256": null,
+      "bodyStatus": "NOT_READ"
+    }
+  ],
+  "repository": "moment/luxon",
+  "commit": "4262a38ded7762e22608a9feb9f117b40d338ced",
+  "path": "README.md",
+  "version": "3.7.2",
+  "language": "en",
+  "registry": {
+    "bugs": {
+      "url": "https://github.com/moment/luxon/issues"
+    },
+    "dist": {
+      "shasum": "d697e48f478553cca187a0f8436aff468e3ba0ba",
+      "tarball": "https://registry.npmjs.org/luxon/-/luxon-3.7.2.tgz",
+      "fileCount": 40,
+      "integrity": "sha512-vtEhXh/gNjI9Yg1u4jX/0YVPMvxzHuGgCm6tC5kZyb08yjGWGnqAjGJvcXbqQR2P3MyMEFnRbpcdFS6PBcLqew==",
+      "signatures": [
+        {
+          "sig": "MEUCIQDKi/ktmUDy0YPcSYzOnoBpOQETRiQlAPw7kBsbAKZhbAIgSc+30Ia5yL7l9sdC2yVhPpZBQBzeaH1zZC+6FBV7W/A=",
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+        }
+      ],
+      "unpackedSize": 4592735
+    },
+    "main": "build/node/luxon.js",
+    "name": "luxon",
+    "unpkg": "build/global/luxon.min.js",
+    "author": {
+      "name": "Isaac Cambron"
+    },
+    "module": "src/luxon.js",
+    "browser": "build/cjs-browser/luxon.js",
+    "engines": {
+      "node": ">=12"
+    },
+    "exports": {
+      ".": {
+        "import": "./build/es6/luxon.mjs",
+        "require": "./build/node/luxon.js"
+      },
+      "./package.json": "./package.json"
+    },
+    "gitHead": "4262a38ded7762e22608a9feb9f117b40d338ced",
+    "license": "MIT",
+    "scripts": {
+      "jest": "jest",
+      "site": "npm run api-docs && npm run copy-site",
+      "test": "jest --coverage",
+      "build": "babel-node tasks/buildAll.js",
+      "format": "prettier --write 'src/**/*.js' 'test/**/*.js' 'benchmarks/*.js'",
+      "codecov": "codecov",
+      "prepack": "babel-node tasks/buildAll.js",
+      "prepare": "husky install",
+      "api-docs": "mkdir -p build && documentation build src/luxon.js -f html -o build/api-docs && sed -i.bak 's/<\\/body>/<script src=\"\\..\\/global\\/luxon.js\"><\\/script><script>console.log(\"You can try Luxon right here using the `luxon` global, like `luxon.DateTime.now()`\");<\\/script><\\/body>/g' build/api-docs/index.html && rm build/api-docs/index.html.bak",
+      "benchmark": "node benchmarks/index.js",
+      "copy-site": "mkdir -p build && rsync -a docs/ build/docs && rsync -a site/ build",
+      "show-site": "http-server build",
+      "build-node": "babel-node tasks/buildNode.js",
+      "build-global": "babel-node tasks/buildGlobal.js",
+      "format-check": "prettier --check 'src/**/*.js' 'test/**/*.js' 'benchmarks/*.js'"
+    },
+    "_npmUser": {
+      "name": "diesieben07",
+      "email": "diesieben07@gmail.com"
+    },
+    "homepage": "https://github.com/moment/luxon#readme",
+    "jsdelivr": "build/global/luxon.min.js",
+    "keywords": ["date", "immutable"],
+    "repository": {
+      "url": "git+https://github.com/moment/luxon.git",
+      "type": "git"
+    },
+    "_npmVersion": "10.8.2",
+    "description": "Immutable date wrapper",
+    "directories": {},
+    "lint-staged": {
+      "*.{js,json}": ["prettier --write"]
+    },
+    "maintainers": [
+      {
+        "name": "icambron",
+        "email": "icambron@gmail.com"
+      },
+      {
+        "name": "diesieben07",
+        "email": "diesieben07@gmail.com"
+      }
+    ],
+    "sideEffects": false,
+    "_nodeVersion": "20.18.3",
+    "_hasShrinkwrap": false,
+    "devDependencies": {
+      "jest": "^29.4.3",
+      "husky": "^7.0.0",
+      "rollup": "^2.52.7",
+      "codecov": "latest",
+      "fs-extra": "^6.0.1",
+      "prettier": "latest",
+      "benchmark": "latest",
+      "uglify-js": "^3.13.10",
+      "babel-jest": "^28.1.2",
+      "@babel/core": "^7.18.6",
+      "@babel/node": "^7.18.6",
+      "http-server": "^14.1.1",
+      "lint-staged": "^13.2.1",
+      "documentation": "latest",
+      "@babel/preset-env": "^7.18.6",
+      "@rollup/plugin-babel": "^5.3.0",
+      "rollup-plugin-terser": "^7.0.2",
+      "@rollup/plugin-commonjs": "^19.0.0",
+      "@rollup/plugin-node-resolve": "^13.0.0",
+      "@babel/plugin-external-helpers": "^7.18.6"
+    },
+    "_npmOperationalInternal": {
+      "tmp": "tmp/luxon_3.7.2_1757067295526_0.6362264180518977",
+      "host": "s3://npm-registry-packages-npm-production"
+    },
+    "_id": "luxon@3.7.2",
+    "version": "3.7.2"
+  },
+  "manifest": {
+    "name": "luxon",
+    "version": "3.7.2",
+    "description": "Immutable date wrapper",
+    "author": "Isaac Cambron",
+    "keywords": ["date", "immutable"],
+    "repository": "https://github.com/moment/luxon",
+    "exports": {
+      ".": {
+        "import": "./build/es6/luxon.mjs",
+        "require": "./build/node/luxon.js"
+      },
+      "./package.json": "./package.json"
+    },
+    "scripts": {
+      "build": "babel-node tasks/buildAll.js",
+      "build-node": "babel-node tasks/buildNode.js",
+      "build-global": "babel-node tasks/buildGlobal.js",
+      "jest": "jest",
+      "test": "jest --coverage",
+      "api-docs": "mkdir -p build && documentation build src/luxon.js -f html -o build/api-docs && sed -i.bak 's/<\\/body>/<script src=\"\\..\\/global\\/luxon.js\"><\\/script><script>console.log(\"You can try Luxon right here using the `luxon` global, like `luxon.DateTime.now()`\");<\\/script><\\/body>/g' build/api-docs/index.html && rm build/api-docs/index.html.bak",
+      "copy-site": "mkdir -p build && rsync -a docs/ build/docs && rsync -a site/ build",
+      "site": "npm run api-docs && npm run copy-site",
+      "format": "prettier --write 'src/**/*.js' 'test/**/*.js' 'benchmarks/*.js'",
+      "format-check": "prettier --check 'src/**/*.js' 'test/**/*.js' 'benchmarks/*.js'",
+      "benchmark": "node benchmarks/index.js",
+      "codecov": "codecov",
+      "prepack": "babel-node tasks/buildAll.js",
+      "prepare": "husky install",
+      "show-site": "http-server build"
+    },
+    "lint-staged": {
+      "*.{js,json}": ["prettier --write"]
+    },
+    "devDependencies": {
+      "@babel/core": "^7.18.6",
+      "@babel/node": "^7.18.6",
+      "@babel/plugin-external-helpers": "^7.18.6",
+      "@babel/preset-env": "^7.18.6",
+      "@rollup/plugin-babel": "^5.3.0",
+      "@rollup/plugin-commonjs": "^19.0.0",
+      "@rollup/plugin-node-resolve": "^13.0.0",
+      "babel-jest": "^28.1.2",
+      "benchmark": "latest",
+      "codecov": "latest",
+      "documentation": "latest",
+      "fs-extra": "^6.0.1",
+      "http-server": "^14.1.1",
+      "husky": "^7.0.0",
+      "jest": "^29.4.3",
+      "lint-staged": "^13.2.1",
+      "prettier": "latest",
+      "rollup": "^2.52.7",
+      "rollup-plugin-terser": "^7.0.2",
+      "uglify-js": "^3.13.10"
+    },
+    "main": "build/node/luxon.js",
+    "module": "src/luxon.js",
+    "browser": "build/cjs-browser/luxon.js",
+    "jsdelivr": "build/global/luxon.min.js",
+    "unpkg": "build/global/luxon.min.js",
+    "engines": {
+      "node": ">=12"
+    },
+    "files": [
+      "build/node/luxon.js",
+      "build/node/luxon.js.map",
+      "build/cjs-browser/luxon.js",
+      "build/cjs-browser/luxon.js.map",
+      "build/amd/luxon.js",
+      "build/amd/luxon.js.map",
+      "build/global/luxon.js",
+      "build/global/luxon.js.map",
+      "build/global/luxon.min.js",
+      "build/global/luxon.min.js.map",
+      "build/es6/luxon.mjs",
+      "build/es6/luxon.mjs.map",
+      "src"
+    ],
+    "license": "MIT",
+    "sideEffects": false
+  },
+  "treeTruncated": false,
+  "readmeCandidates": ["README.md", "docker/readme.md", "scripts/readme.md"],
+  "preferredReadmeCandidates": ["README.md"],
+  "selectionReason": "Target npm package is the repository root; no matching official Chinese README was found, retain root original.",
+  "snapshot": {
+    "path": "official/readme.md",
+    "bytes": 2052,
+    "sha256": "5e57e6afc44eed949d850075c7e1a9206a757c058afa6b93aab83264f07cf622"
+  },
+  "homepage": {
+    "requestIndex": 4,
+    "status": "unknown",
+    "frameAncestors": null,
+    "xFrameOptions": null,
+    "contentSecurityPolicy": null,
+    "browserFromLabOrigin": "NOT_RUN",
+    "reason": "Full final response headers do not establish successful embedding; actual Lab-origin browser is NOT_RUN."
+  },
+  "syncedAt": "2026-11-10T17:08:12.781404+00:00"
+}

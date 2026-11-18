@@ -1,0 +1,227 @@
+// NOT_RUN: root may adopt after a matching build. Requires real WebGL2 (software rendering is valid
+// WebGL evidence, not a physical-GPU benchmark). No renderer/GL/IO mocks or injected scene mutation.
+import { expect, type Locator, type Page, test } from '@playwright/test'
+
+type Snapshot = {
+  generation: number
+  meshUuid: string
+  geometryUuid: string
+  geometryType: string
+  materialUuid: string
+  color: string
+  scale: number[]
+  rotation: number[]
+  vertices: number
+  frameloop: string
+  dpr: number
+  size: { width: number; height: number }
+  frameCallbacks: number
+  renderFrame: number
+  renderCalls: number
+  contextLost: boolean
+}
+async function stored(app: Locator): Promise<Snapshot | null> {
+  return JSON.parse((await app.getByTestId('a14-sdk-state').textContent()) || 'null')
+}
+async function sample(app: Locator) {
+  await app.getByRole('button', { name: '读取真实场景', exact: true }).click()
+  return stored(app)
+}
+async function read(app: Locator) {
+  const value = await sample(app)
+  if (!value) throw new Error('Current real Canvas scene has not committed')
+  return value
+}
+async function open(page: Page, level: 'basic' | 'business' | 'advanced') {
+  // Keep controls, 300px Canvas and reader visible; sampling must not accidentally trigger offscreen.
+  await page.setViewportSize({ width: 1280, height: 1400 })
+  await page.goto(`/libraries/react-three-fiber?tab=demo&example=${level}`)
+  const run = page.getByRole('button', { name: '运行当前示例', exact: true })
+  if (await run.isVisible()) await run.click()
+  const app = page.getByRole('region', { name: 'React Three Fiber 实战', exact: true })
+  await app.getByText('查看真实Three对象和帧状态', { exact: true }).click()
+  await expect(app.getByTestId('a14-render-error')).toHaveCount(0)
+  await expect.poll(async () => (await sample(app))?.renderCalls ?? 0).toBeGreaterThan(0)
+  return app
+}
+
+test('@A14 basic actual WebGL2 and declarative objects have readable native results', async ({
+  page,
+}, info) => {
+  const app = await open(page, 'basic')
+  const value = await read(app)
+  expect(value.geometryType).toBe('BoxGeometry')
+  expect(value.vertices).toBe(24)
+  expect(value.color).toBe('267c6b')
+  expect(value.frameloop).toBe('demand')
+  expect(value.dpr).toBeGreaterThanOrEqual(1)
+  expect(value.dpr).toBeLessThanOrEqual(1.5)
+  expect(value.size.width).toBeGreaterThan(0)
+  expect(value.size.height).toBe(300)
+  expect(value.contextLost).toBe(false)
+  const canvas = app.getByTestId('a14-canvas-host').locator('canvas')
+  await expect(canvas).toHaveCount(1)
+  expect(
+    await canvas.evaluate((node) => {
+      if (!(node instanceof HTMLCanvasElement)) throw new Error('Not a real Canvas')
+      const gl = node.getContext('webgl2')
+      return !!gl && !gl.isContextLost() && gl.drawingBufferWidth > 0 && gl.drawingBufferHeight > 0
+    }),
+  ).toBe(true)
+  await canvas.screenshot({ path: info.outputPath('a14-real-basic.png') })
+  await info.attach('a14-real-basic.png', {
+    path: info.outputPath('a14-real-basic.png'),
+    contentType: 'image/png',
+  })
+})
+
+test('@A14 business native raycast hover/click and HTML Enter update one real Mesh/Material', async ({
+  page,
+}) => {
+  const app = await open(page, 'business')
+  const initial = await read(app)
+  const canvas = app.getByTestId('a14-canvas-host').locator('canvas')
+  const reader = app.getByRole('button', { name: '读取真实场景', exact: true })
+  // Read with keyboard while the pointer stays on the object, otherwise clicking reader causes pointerout.
+  await reader.focus()
+  await canvas.scrollIntoViewIfNeeded()
+  const box = await canvas.boundingBox()
+  if (!box) throw new Error('No actual WebGL Canvas layout')
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2)
+  await expect
+    .poll(async () => {
+      await page.keyboard.press('Enter')
+      return (await stored(app))?.scale
+    })
+    .toEqual([1.1, 1.1, 1.1])
+  await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2)
+  await expect(app.getByTestId('a14-status')).toContainText('处理状态：已处理')
+  await expect.poll(async () => (await sample(app))?.color).toBe('c47b37')
+  const selected = await read(app)
+  expect(selected.meshUuid).toBe(initial.meshUuid)
+  expect(selected.materialUuid).toBe(initial.materialUuid)
+  const reset = app.getByRole('button', { name: '设为未处理', exact: true })
+  await reset.focus()
+  await page.keyboard.press('Enter')
+  await expect(app.getByTestId('a14-status')).toContainText('处理状态：未处理')
+  await expect.poll(async () => (await sample(app))?.color).toBe('267c6b')
+  expect((await read(app)).meshUuid).toBe(initial.meshUuid)
+})
+
+test('@A14 advanced actual frame gate, geometry replacement and old WebGL context release', async ({
+  page,
+}, info) => {
+  const errors: string[] = []
+  page.on('pageerror', (error) => errors.push(error.message))
+  await page.emulateMedia({ reducedMotion: 'no-preference' })
+  const app = await open(page, 'advanced')
+  const initial = await read(app)
+  expect(initial.frameloop).toBe('always')
+  await expect.poll(async () => (await sample(app))?.rotation[1]).not.toBe(initial.rotation[1])
+  await app.getByRole('button', { name: '暂停', exact: true }).click()
+  await expect.poll(async () => (await sample(app))?.frameloop).toBe('demand')
+  // Allow the last necessary update frame to settle; then measure a real quiet interval.
+  await page.waitForTimeout(100)
+  const paused = await read(app)
+  await page.waitForTimeout(180)
+  const still = await read(app)
+  expect(still.rotation).toEqual(paused.rotation)
+  expect(still.frameCallbacks - paused.frameCallbacks).toBeLessThanOrEqual(1)
+  await app.getByRole('combobox', { name: '几何体', exact: true }).selectOption('sphere')
+  await expect.poll(async () => (await sample(app))?.geometryType).toBe('SphereGeometry')
+  const sphere = await read(app)
+  expect(sphere.meshUuid).toBe(paused.meshUuid)
+  expect(sphere.materialUuid).toBe(paused.materialUuid)
+  expect(sphere.geometryUuid).not.toBe(paused.geometryUuid)
+  await app.getByRole('button', { name: '继续', exact: true }).click()
+  await expect.poll(async () => (await sample(app))?.frameloop).toBe('always')
+  const speed = app.getByRole('slider', { name: '角速度', exact: true })
+  await speed.focus()
+  await speed.press('Home')
+  await expect(speed).toHaveValue('0')
+  await expect.poll(async () => (await sample(app))?.frameloop).toBe('demand')
+  const canvas = app.getByTestId('a14-canvas-host').locator('canvas')
+  const oldCanvas = await canvas.elementHandle()
+  if (!oldCanvas) throw new Error('Missing real old Canvas')
+  expect(
+    await oldCanvas.evaluate((node) => {
+      if (!(node instanceof HTMLCanvasElement)) throw new Error('Not a Canvas')
+      return !!node.getContext('webgl2')?.getExtension('WEBGL_lose_context')
+    }),
+    'Context-release assertion requires native WEBGL_lose_context support',
+  ).toBe(true)
+  await app.getByRole('button', { name: '重新挂载场景', exact: true }).click()
+  await expect.poll(async () => (await sample(app))?.generation).toBe(initial.generation + 1)
+  const replacement = await read(app)
+  expect(replacement.meshUuid).not.toBe(sphere.meshUuid)
+  expect(replacement.geometryType).toBe('SphereGeometry')
+  expect(replacement.frameloop).toBe('demand') // speed=0 is intentionally retained
+  expect(replacement.color).toBe('267c6b')
+  expect(await oldCanvas.evaluate((node) => node.isConnected)).toBe(false)
+  await expect
+    .poll(() =>
+      oldCanvas.evaluate((node) => {
+        if (!(node instanceof HTMLCanvasElement)) throw new Error('Not a Canvas')
+        return node.getContext('webgl2')?.isContextLost()
+      }),
+    )
+    .toBe(true)
+  await expect(canvas).toHaveCount(1)
+  await canvas.screenshot({ path: info.outputPath('a14-real-sphere.png') })
+  await info.attach('a14-real-sphere.png', {
+    path: info.outputPath('a14-real-sphere.png'),
+    contentType: 'image/png',
+  })
+  const current = await canvas.elementHandle()
+  if (!current) throw new Error('Missing current Canvas')
+  await page.getByRole('button', { name: '停止并卸载', exact: true }).click()
+  await expect(app).toHaveCount(0)
+  await expect
+    .poll(() =>
+      current.evaluate((node) => {
+        if (!(node instanceof HTMLCanvasElement)) throw new Error('Not a Canvas')
+        return !node.isConnected && node.getContext('webgl2')?.isContextLost()
+      }),
+    )
+    .toBe(true)
+  await page.getByRole('button', { name: '运行当前示例', exact: true }).click()
+  await app.getByText('查看真实Three对象和帧状态', { exact: true }).click()
+  await expect.poll(async () => (await sample(app))?.geometryType).toBe('BoxGeometry')
+  await expect(speed).toHaveValue('0.9')
+  expect(errors).toEqual([])
+})
+
+test('@A14 native reduced-motion and actual scroll intersection gate continuous frames', async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  const app = await open(page, 'advanced')
+  expect((await read(app)).frameloop).toBe('demand')
+  await app.getByRole('button', { name: '暂停', exact: true }).click()
+  await app.getByRole('button', { name: '继续', exact: true }).click()
+  expect((await read(app)).frameloop).toBe('demand') // user resume cannot override OS preference
+  await page.setViewportSize({ width: 1000, height: 420 })
+  await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight))
+  const stage = app.getByTestId('a14-stage')
+  const offscreen = await stage.boundingBox()
+  if (!offscreen) throw new Error('Missing actual stage')
+  expect(offscreen.y + offscreen.height).toBeLessThanOrEqual(0)
+  await expect(app.getByTestId('a14-status')).toContainText('画布在视口内：否')
+  await page.emulateMedia({ reducedMotion: 'no-preference' })
+  await expect(app.getByTestId('a14-status')).toContainText('动画：暂停')
+  const reader = app.getByRole('button', { name: '读取真实场景', exact: true })
+  await reader.focus()
+  await stage.scrollIntoViewIfNeeded()
+  await expect(app.getByTestId('a14-status')).toContainText('画布在视口内：是')
+  // Focus was established before scrolling the Canvas back; Enter does not move the pointer or scroll.
+  await expect
+    .poll(async () => {
+      await page.keyboard.press('Enter')
+      return (await stored(app))?.frameloop
+    })
+    .toBe('always')
+})
+
+// Document-hidden lifecycle is NOT_RUN here: no visibilityState property override or synthetic
+// visibilitychange event. Also not covered: physical GPU/energy, screen readers, remote assets,
+// context-loss recovery, high-volume scenes, or exact geometry/material disposal timing census.

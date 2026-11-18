@@ -1,0 +1,23 @@
+[WebServer] (node:1619710) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:1619722) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 10 tests using 2 workers
+
+(node:1619779) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1619780) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 e2e/quality-resume-decimal.spec.ts:3:1 › @D05 editable decimal addition and validation recover without stale output (1.6s)
+  ✓   2 e2e/quality-resume-decimal.spec.ts:19:1 › @D05 invoice editing invalidates computed result and bad quantity recovers (1.8s)
+  ✓   3 e2e/quality-resume-decimal.spec.ts:44:1 › @D05 independent rounding boundary view uses two isolated modes (1.5s)
+  ✓   5 e2e/quality-resume-official-next.spec.ts:8:3 › @D04 pinned official original and honest homepage fallback (1.5s)
+  ✓   6 e2e/quality-resume-official-next.spec.ts:8:3 › @D05 pinned official original and honest homepage fallback (1.8s)
+  ✓   4 e2e/quality-resume-immer.spec.ts:3:1 › D06 observes sharing, ID edits, batch no-op and isolated inverse rollback @D06 (4.6s)
+  ✓   7 e2e/quality-resume-official-next.spec.ts:8:3 › @D06 pinned official original and honest homepage fallback (1.7s)
+  ✓   8 e2e/quality-resume-p-queue.spec.ts:3:1 › @D04 concurrency and actual start timestamps expose strict rate and priority (3.8s)
+  ✓  10 e2e/quality-resume-p-queue.spec.ts:52:1 › @D04 basic concurrency runs seven jobs with the selected three slots (2.3s)
+  ✓   9 e2e/quality-resume-p-queue.spec.ts:26:1 › @D04 pause prevents starts, resume settles and cancellation cleans both groups (4.8s)
+
+  10 passed (13.6s)

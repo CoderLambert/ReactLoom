@@ -1,0 +1,45 @@
+{
+  "browser": {
+    "command": [
+      "pnpm",
+      "exec",
+      "playwright",
+      "test",
+      "--config=.local-evidence/quality-playwright.config.ts",
+      "e2e/quality-remediation-arborist.spec.ts",
+      "e2e/quality-remediation-date-fns.spec.ts",
+      "e2e/quality-remediation-primitives-sources.spec.ts",
+      "--grep",
+      "@C11|@C14",
+      "--trace=off"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "startedAt": "2026-11-10T17:16:01.123522+00:00",
+    "finishedAt": "2026-11-10T17:16:10.504722+00:00",
+    "exitCode": 0,
+    "implicitBuild": false,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-18/browser.txt"
+  },
+  "browserLogSHA": "a6cd178feba5115a6decc51021beed7e6a721d5ddabcc58cac425db613311fde",
+  "cases": [
+    "  ✓  2 e2e/quality-remediation-arborist.spec.ts:37:1 › @C11 default SDK rows retain ARIA, keyboard focus and real selection is cleared on restore (1.7s)",
+    "  ✓  1 e2e/quality-remediation-arborist.spec.ts:63:1 › @C11 real HTML5 drop and separate keyboard fallback share the move contract; rename IME and delete preserve IDs (2.0s)",
+    "  ✓  3 e2e/quality-remediation-arborist.spec.ts:130:1 › @C11 1807-node model uses a small real DOM, name search/IME, native deep scroll, resize and unmount (2.2s)",
+    "  ✓  7 e2e/quality-remediation-primitives-sources.spec.ts:28:3 › @C11 original fixed README and evidenced homepage unknown (1.5s)"
+  ],
+  "runtime": {
+    "examples/example.tsx": "ab7d9b4bec8cf439d22a2427ee258f6c9519b996c1c9bc80c1d6d61229aa84cc",
+    "examples/tree-model.ts": "a3e0a91e71cd0d756f1381229577488b7f3dde814083e99b34d7b6692121c87b",
+    "examples/move-tree.ts": "a57bff7d5ee5c01e7d8eaa6464df75fda39e8697378a0052b6a7b65049b0606d",
+    "examples/tree-node.tsx": "ecfd1ede69fcbae8b8c7ba7daa06102a744fdfae24efd969e5492096edec234b",
+    "examples/ime-guard.ts": "e05e4b124343afe4029eaf307fcc30678ad772f10640ce6bce7e2455c3449248",
+    "examples/styles.css": "e30d5bdcebf8f202eab6dec2f073f205058afbad712ec224a8c4f682ed18ce24",
+    "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038"
+  },
+  "proposalSHA": "64fd6fc93f5788f9e564b2db3d955d0150d3de95e7c01e7428cec2830b5d8baa",
+  "independentReviewSHA": "2f9f3fca1fa28523083acb03e8c070e5f7848ea5baae756d1433cc2ee1626233",
+  "candidateInputSHA": "7a8af9a5cb909275bbbbf4b33bd9008adbb5a2b841c2e46a372a0be8c647f52c",
+  "reusedNotRerun": true,
+  "formal": "NOT_RUN",
+  "iframe": "unknown"
+}

@@ -1,0 +1,4 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: pnpm exec biome check --write entries/A17-deckgl/examples entries/A17-deckgl/tests entries/A17-deckgl/validation/check-entry.mjs entries/A17-deckgl/library.json entries/A17-deckgl/verification.json entries/A17-deckgl/official/source-audit.json entries/A17-deckgl/official/homepage-response.json
+exit: 0
+Checked 14 files in 14ms. Fixed 10 files.

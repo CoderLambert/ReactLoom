@@ -1,0 +1,19 @@
+cwd=packages/library-lab
+argv=["node", "--input-type=module", "-e", "import { chromium } from '@playwright/test';\nconst browser=await chromium.launch({headless:false,args:['--window-position=9000,9000'],ignoreDefaultArgs:['--disable-backgrounding-occluded-windows']});\ntry {const context=await browser.newContext();const page=await context.newPage();await page.goto('http://127.0.0.1:4319/libraries/gsap?tab=demo&example=advanced');const root=await browser.newBrowserCDPSession();const s=await context.newCDPSession(page);const target=(await s.send('Target.getTargetInfo')).targetInfo;console.log('target',target.targetId,target.browserContextId,await root.send('Browser.getWindowForTarget',{targetId:target.targetId}));await page.evaluate(()=>{window.nativeVisibilityEvents=[];document.addEventListener('visibilitychange',()=>window.nativeVisibilityEvents.push(document.visibilityState))});const created=await root.send('Target.createTarget',{url:'about:blank',browserContextId:target.browserContextId,newWindow:false});await root.send('Target.activateTarget',{targetId:created.targetId});await page.waitForTimeout(300);console.log('otherwindow',await root.send('Browser.getWindowForTarget',{targetId:created.targetId}));console.log('hidden',await page.evaluate(()=>({hidden:document.hidden,events:window.nativeVisibilityEvents})));await root.send('Target.closeTarget',{targetId:created.targetId});await page.waitForTimeout(100);console.log('restored',await page.evaluate(()=>({hidden:document.hidden,events:window.nativeVisibilityEvents})));}finally{await browser.close();}\n"]
+exit=0
+target 58192EFFED9C8B9098A8E5462EE7C53A 0EAF6FBAE55968F15751F81A827DBF92 {
+  windowId: 427080586,
+  bounds: { left: 0, top: 0, width: 1288, height: 805, windowState: 'normal' }
+}
+otherwindow {
+  windowId: 427080586,
+  bounds: {
+    left: 0,
+    top: 0,
+    width: 1128,
+    height: 1100,
+    windowState: 'maximized'
+  }
+}
+hidden { hidden: false, events: [] }
+restored { hidden: false, events: [] }

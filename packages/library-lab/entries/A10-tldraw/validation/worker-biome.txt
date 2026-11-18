@@ -1,0 +1,4 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: pnpm exec biome check --write entries/A10-tldraw/tests/sdk.test.mjs entries/A10-tldraw/tests/fixtures/store-worker.mjs
+exit: 0
+Checked 2 files in 5ms. Fixed 2 files.

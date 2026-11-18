@@ -1,0 +1,16 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab", "argv": ["node", "entries/C03-valibot/validation/metadata-check.mjs"], "utc": "2026-11-10T15:09:58.468886+00:00", "exitCode": 0}
+STDOUT
+{
+  "metadata": [],
+  "completeness": [],
+  "demos": 3,
+  "runtimeFiles": 6,
+  "inputFiles": 15,
+  "installed": "1.4.2",
+  "readmeBytes": 5343,
+  "sha256": "7046bda07a0b96c0c3cbdca00818eb0922eb9e18b5f27bddfe871b88f38f0dcb",
+  "homepage": "unknown: actual GET200 no framing headers, Lab-origin browser NOT_RUN",
+  "formal": "NOT_RUN"
+}
+
+STDERR

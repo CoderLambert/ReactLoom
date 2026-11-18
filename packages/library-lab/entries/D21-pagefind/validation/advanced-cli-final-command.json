@@ -1,0 +1,12 @@
+{
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+  "argv": [
+    "node",
+    "entries/D21-pagefind/examples/advanced.mjs",
+    "advanced"
+  ],
+  "exitCode": 0,
+  "at": "2026-11-17T17:12:03.564238+00:00",
+  "ownedScratchRemoved": "/tmp/reactloom-pagefind-htMK3j",
+  "scratchExistsAfterCleanup": false
+}

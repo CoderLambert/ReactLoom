@@ -1,0 +1,32 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: pnpm exec biome check --write entries/B09-shadcn-ui/examples entries/B09-shadcn-ui/tests entries/B09-shadcn-ui/validation/check-entry.mjs entries/B09-shadcn-ui/library.json entries/B09-shadcn-ui/verification.json entries/B09-shadcn-ui/official/source-audit.json entries/B09-shadcn-ui/official/homepage-response.json
+exit: 1
+
+entries/B09-shadcn-ui/examples/example.tsx:237:13 lint/a11y/useValidAnchor ━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Use a button element instead of an a element.
+  
+    235 │         {allowed ? (
+    236 │           <Button asChild variant="outline">
+  > 237 │             <a
+        │             ^^
+  > 238 │               data-testid="b09-slot-link"
+  > 239 │               href="#b09-slot-target"
+  > 240 │               onClick={() => setCount((value) => value + 1)}
+  > 241 │             >
+        │             ^
+    242 │               打开示例详情
+    243 │             </a>
+  
+  i Anchor elements should only be used for default sections or page navigation
+  
+  i Check this thorough explanation to better understand the context.
+  
+
+Checked 12 files in 9ms. Fixed 9 files.
+Found 1 error.
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while applying fixes.
+  
+

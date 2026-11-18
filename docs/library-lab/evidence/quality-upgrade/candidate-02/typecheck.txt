@@ -1,0 +1,9 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+command=pnpm --filter @reactloom/library-lab typecheck
+
+> @reactloom/library-lab@0.1.0 typecheck /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+> node scripts/generate.mjs && tsc --noEmit
+
+{"entries":119,"loaders":315}
+
+exitCode=0

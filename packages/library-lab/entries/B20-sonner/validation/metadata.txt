@@ -1,0 +1,5 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['node', 'entries/B20-sonner/validation/metadata-check.mjs']
+startedAt: 2026-11-10T14:22:39.676705+00:00
+exit: 0
+B20 three goals / four production sources / actual2.0.8 / original README867B+SHA / explicit tag-vs-npm-head evidence / English candidates / homepage unknown / formal NOT_RUN PASS

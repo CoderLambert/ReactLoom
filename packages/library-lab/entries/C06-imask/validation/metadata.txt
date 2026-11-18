@@ -1,0 +1,13 @@
+{"label": "metadata", "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab", "argv": ["node", "entries/C06-imask/validation/metadata-check.mjs"], "start": "2026-11-10T15:52:00.988878+00:00", "end": "2026-11-10T15:52:01.019787+00:00", "exitCode": 0, "log": "metadata.txt"}
+STDOUT
+{
+  "metadata": [],
+  "demos": 3,
+  "runtimeFiles": 5,
+  "installed": "7.6.1",
+  "readmes": 2,
+  "homepage": "unknown; actualLabOrigin NOT_RUN",
+  "formal": "NOT_RUN"
+}
+
+STDERR

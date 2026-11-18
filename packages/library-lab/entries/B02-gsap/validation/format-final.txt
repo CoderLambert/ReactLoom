@@ -1,0 +1,9 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+ARGV: ["pnpm", "exec", "--", "biome", "check", "--write", "entries/B02-gsap/examples", "entries/B02-gsap/tests", "entries/B02-gsap/library.json", "entries/B02-gsap/verification.json", "entries/B02-gsap/validation/metadata-check.mjs", "entries/B02-gsap/validation/browser-proposal.ts"]
+START: 2026-11-10T12:49:10.707874+00:00
+END: 2026-11-10T12:49:10.956800+00:00
+EXIT: 0
+STDOUT:
+Checked 11 files in 12ms. Fixed 3 files.
+
+STDERR:

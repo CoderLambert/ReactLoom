@@ -1,0 +1,7 @@
+
+  error no-circular-dependencies: advanced/src/first.js → 
+      advanced/src/second.js →
+      advanced/src/first.js
+
+x 1 dependency violations (1 errors, 0 warnings). 2 modules, 2 dependencies cruised.
+

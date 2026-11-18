@@ -1,0 +1,92 @@
+[
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": "node packages/library-lab/entries/F10-orval/examples/basic.mjs",
+    "exit": 1,
+    "log": "validation/basic-cli.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": "node packages/library-lab/entries/F10-orval/examples/business.mjs",
+    "exit": 1,
+    "log": "validation/business-cli.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": "node packages/library-lab/entries/F10-orval/examples/advanced.mjs",
+    "exit": 1,
+    "log": "validation/advanced-cli.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": "node packages/library-lab/entries/F10-orval/examples/basic.mjs",
+    "exit": 0,
+    "log": "validation/basic-cli-fixed.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": "node packages/library-lab/entries/F10-orval/examples/business.mjs",
+    "exit": 0,
+    "log": "validation/business-cli-fixed.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": "node packages/library-lab/entries/F10-orval/examples/advanced.mjs",
+    "exit": 1,
+    "log": "validation/advanced-cli-fixed.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": "node packages/library-lab/entries/F10-orval/examples/advanced.mjs",
+    "exit": 0,
+    "log": "validation/advanced-cli-final.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": "pnpm --filter @reactloom/library-lab exec tsc -p entries/F10-orval/examples/generated-tsconfig.json",
+    "exit": 1,
+    "log": "validation/generated-types.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": "pnpm --filter @reactloom/library-lab exec tsc -p entries/F10-orval/examples/generated-tsconfig.json",
+    "exit": 0,
+    "log": "validation/generated-types-final.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": "node --test packages/library-lab/entries/F10-orval/examples/output-policy.test.mjs",
+    "exit": 0,
+    "log": "validation/policy.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": "node packages/library-lab/entries/F10-orval/examples/spec-check.mjs",
+    "exit": 0,
+    "log": "validation/spec.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": "node packages/library-lab/entries/F10-orval/validation/official-check.mjs",
+    "exit": 0,
+    "log": "validation/official.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": "pnpm exec biome check --write packages/library-lab/entries/F10-orval/examples/*.mjs packages/library-lab/entries/F10-orval/examples/orval.config.ts packages/library-lab/entries/F10-orval/examples/generated-tsconfig.json packages/library-lab/entries/F10-orval/validation/official-check.mjs",
+    "exit": 0,
+    "log": "validation/biome.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": "pnpm --filter @reactloom/library-lab exec tsc -p entries/F10-orval/examples/generated-tsconfig.json",
+    "exit": 0,
+    "log": "validation/config-and-generated-types.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": "pnpm exec biome check --write packages/library-lab/entries/F10-orval/examples/generated-tsconfig.json packages/library-lab/entries/F10-orval/library.json packages/library-lab/entries/F10-orval/verification.json",
+    "exit": 0,
+    "log": "validation/biome-final.log"
+  }
+]

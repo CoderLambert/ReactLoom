@@ -1,0 +1,32 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=pnpm exec node --test tests/document-utils.test.mjs tests/source-integrity.test.mjs
+✔ only safe HTTPS, fragments and same-entry relative files are accepted (3.439531ms)
+✔ headings ignore fenced blocks and correctly preserve source line anchor (2.151544ms)
+✔ Chinese anchors, inline code and duplicate headings exclude fenced content (0.188561ms)
+✔ local example and test links map to real generated source files, not missing SPA fallbacks (1.141526ms)
+✔ Markdown byte ceiling preserves split multibyte UTF-8 without trusting response length (16.196876ms)
+✔ Markdown byte ceiling rejects oversized decoded body and cancels the reader (0.612472ms)
+✔ Markdown rejects fallback HTML, non-2xx, invalid UTF-8 and absent response bodies (1.88874ms)
+✔ Setext headings use source start lines and duplicate slugs match rendered anchors (1.367155ms)
+✔ Fence-looking code text cannot expose hidden headings; indented/quoted code stays out of TOC (0.342225ms)
+✔ Document-relative links reject scheme-relative or malformed Vite base paths (0.456819ms)
+✔ declared official README links use the already published snapshot and keep private evidence inaccessible (0.425308ms)
+✔ versioned patch source links remain inert source text without enabling credentials or traversal (0.286092ms)
+✔ published source URLs round-trip through the actual static-server decoding policy (0.888326ms)
+✔ source index selects declared paths in order without trusting unrelated source entries (0.526806ms)
+✔ source index rejects absent, duplicated, tampered, oversized or traversal metadata (0.248335ms)
+✔ source stream preserves multibyte text across chunk boundaries (13.912348ms)
+✔ source stream rejects forged smaller or larger declared byte lengths (1.155264ms)
+✔ source stream rejects fallback HTML, non-200 replies and invalid UTF-8 (0.876017ms)
+✔ source stream accepts empty files and rejects impossible byte expectations (0.476328ms)
+✔ source metadata is cryptographically bound to the selected detail before downloading bytes (7.21109ms)
+ℹ tests 20
+ℹ suites 0
+ℹ pass 20
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 81.628669
+
+exitCode=0

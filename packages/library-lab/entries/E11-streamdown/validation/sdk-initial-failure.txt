@@ -1,0 +1,36 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node --test entries/E11-streamdown/tests/sdk.test.mjs
+exit: 1
+
+✖ real Streamdown repairs an incomplete emphasis without modifying source (27.544309ms)
+✔ real Streamdown renders an incomplete fenced code block as code (17.108247ms)
+✔ real Streamdown renders GFM table and task list with the shared application policy (21.022328ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 2
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 195.168909
+
+✖ failing tests:
+
+test at entries/E11-streamdown/tests/sdk.test.mjs:13:1
+✖ real Streamdown repairs an incomplete emphasis without modifying source (27.544309ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /<strong[^>]*>流式<\/strong>/. Input:
+  
+  '<div class="space-y-4 whitespace-normal [&amp;&gt;*:first-child]:mt-0 [&amp;&gt;*:last-child]:mb-0"><h1 class="mt-6 mb-2 font-semibold text-3xl" data-streamdown="heading-1">研究摘要</h1><p>正在汇总 <span class="font-semibold" data-streamdown="strong">流式</span></p></div>'
+  
+      at TestContext.<anonymous> (file:///home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/E11-streamdown/tests/sdk.test.mjs:15:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '<div class="space-y-4 whitespace-normal [&amp;&gt;*:first-child]:mt-0 [&amp;&gt;*:last-child]:mb-0"><h1 class="mt-6 mb-2 font-semibold text-3xl" data-streamdown="heading-1">研究摘要</h1><p>正在汇总 <span class="font-semibold" data-streamdown="strong">流式</span></p></div>',
+    expected: /<strong[^>]*>流式<\/strong>/,
+    operator: 'match',
+    diff: 'simple'
+  }

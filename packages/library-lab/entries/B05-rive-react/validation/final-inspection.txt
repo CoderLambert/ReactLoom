@@ -1,0 +1,10 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ["node", "--input-type=module", "-e", "import assert from 'node:assert/strict';import{readFile,readdir,stat}from'node:fs/promises';import{createHash}from'node:crypto';const root='entries/B05-rive-react/';const sha=b=>createHash('sha256').update(b).digest('hex');for(const name of ['guide.md','agent.md','local-validation.md']){const text=await readFile(root+name,'utf8');for(const match of text.matchAll(/\\]\\(([^)]+)\\)/g)){const target=match[1];if(!/^[a-z]+:|^#/.test(target))assert.ok((await stat(root+target.split('#')[0])).isFile(),`${name}: ${target}`)}}for(const run of JSON.parse(await readFile(root+'validation/local-runs.json')).runs)assert.equal(sha(await readFile(root+run.log)),run.logSha256,run.label);async function inspect(path){for(const item of await readdir(path,{withFileTypes:true})){if(item.isDirectory())await inspect(path+item.name+'/');else assert.doesNotMatch(item.name,/\\.(?:riv|wasm|tgz|zip)$/i,'No copied binary assets')}}await inspect(root);assert.equal((await readFile(root+'validation/browser-proposal.txt','utf8')).match(/test\\('@B05/g)?.length,3);const v=JSON.parse(await readFile(root+'verification.json'));for(const k of ['sdk','build','browser'])assert.equal(v[k].status,'NOT_RUN');assert.equal(v.assets.status,'BLOCKED');console.log('Final local links, all prior raw-log SHA, three actual browser proposals, no copied .riv/.wasm/archive, formal NOT_RUN and offline-assets BLOCKED verified. No SDK/policy suites repeated.');"]
+startedAt: 2026-11-10T13:20:32.922845+00:00
+finishedAt: 2026-11-10T13:20:32.956316+00:00
+exitCode: 0
+
+STDOUT
+Final local links, all prior raw-log SHA, three actual browser proposals, no copied .riv/.wasm/archive, formal NOT_RUN and offline-assets BLOCKED verified. No SDK/policy suites repeated.
+
+STDERR

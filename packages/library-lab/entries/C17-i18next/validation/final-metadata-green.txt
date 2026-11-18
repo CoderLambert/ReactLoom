@@ -1,0 +1,95 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=["node", "entries/C17-i18next/validation/metadata-check.mjs"]
+start=2026-11-10T18:16:05.006544+00:00
+{
+  "result": "PASS",
+  "scope": "Single-entry schema/published links/installed source hashes/official bytes and recorded raw headers. No SDK/HTTP/browser execution.",
+  "sourcesUnchangedFromCandidate19": 7,
+  "installedFiles": 9,
+  "publishedLinks": [
+    {
+      "filename": "guide.md",
+      "target": "examples/i18n-client.mjs"
+    },
+    {
+      "filename": "guide.md",
+      "target": "examples/example.tsx"
+    },
+    {
+      "filename": "guide.md",
+      "target": "examples/language-switch.mjs"
+    },
+    {
+      "filename": "guide.md",
+      "target": "examples/demo.tsx"
+    },
+    {
+      "filename": "guide.md",
+      "target": "examples/example.tsx"
+    },
+    {
+      "filename": "guide.md",
+      "target": "examples/i18n-client.mjs"
+    },
+    {
+      "filename": "guide.md",
+      "target": "examples/i18n-client.d.mts"
+    },
+    {
+      "filename": "guide.md",
+      "target": "examples/language-switch.mjs"
+    },
+    {
+      "filename": "guide.md",
+      "target": "examples/language-switch.d.mts"
+    },
+    {
+      "filename": "guide.md",
+      "target": "examples/styles.css"
+    },
+    {
+      "filename": "guide.md",
+      "target": "official/readme.md"
+    },
+    {
+      "filename": "guide.md",
+      "target": "https://www.i18next.com/overview/api"
+    },
+    {
+      "filename": "guide.md",
+      "target": "https://www.i18next.com/overview/configuration-options"
+    },
+    {
+      "filename": "guide.md",
+      "target": "https://www.i18next.com"
+    },
+    {
+      "filename": "agent.md",
+      "target": "official/readme.md"
+    },
+    {
+      "filename": "agent.md",
+      "target": "guide.md"
+    },
+    {
+      "filename": "agent.md",
+      "target": "examples/i18n-client.mjs"
+    },
+    {
+      "filename": "agent.md",
+      "target": "examples/example.tsx"
+    },
+    {
+      "filename": "agent.md",
+      "target": "examples/language-switch.mjs"
+    }
+  ],
+  "formalStatuses": {
+    "sdk": "NOT_RUN",
+    "build": "NOT_RUN",
+    "browser": "NOT_RUN"
+  }
+}
+
+exitCode=0
+end=2026-11-10T18:16:05.047705+00:00

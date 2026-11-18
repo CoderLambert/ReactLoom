@@ -1,0 +1,4 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: pnpm exec biome format --stdin-file-path=entries/A12-react-konva/validation/browser-proposal.ts < entries/A12-react-konva/validation/browser-proposal.txt
+exit: 0
+Formatted source saved into proposal.

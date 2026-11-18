@@ -1,0 +1,21 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ["node", "--test", "entries/B01-motion-for-react/tests/card-policy.test.mts"]
+startedAt: 2026-11-10T12:26:57.732465+00:00
+finishedAt: 2026-11-10T12:26:57.841172+00:00
+exitCode: 0
+
+STDOUT
+✔ appends unique business keys without mutating input (0.824485ms)
+✔ bounds cards independently from animation timing (0.122256ms)
+✔ archives only requested key and never reindexes others (0.123686ms)
+✔ reorders without losing identity; empty list is supported (0.095836ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 79.973189
+
+STDERR

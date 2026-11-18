@@ -1,0 +1,49 @@
+{
+  "repository": "pmndrs/react-spring",
+  "targetPackage": "@react-spring/web",
+  "version": "10.1.2",
+  "tag": "v10.1.2",
+  "annotatedTag": "1207be8870bde6d6ab63e6aa27cfa80a00c75ad8",
+  "commit": "59b1e5306402d3039120e2da464b66e10b1a1aa1",
+  "path": "targets/web/README.md",
+  "language": "en",
+  "syncedAt": "2026-11-10T12:41:56.270062+00:00",
+  "sourceUrl": "https://github.com/pmndrs/react-spring/blob/59b1e5306402d3039120e2da464b66e10b1a1aa1/targets/web/README.md",
+  "readmeCandidates": [
+    ".github/publish-ci/cra5/README.md",
+    ".github/publish-ci/next/README.md",
+    ".specify/extensions/git/README.md",
+    "README.md",
+    "docs/README.md",
+    "packages/animated/README.md",
+    "packages/core/README.md",
+    "packages/parallax/README.md",
+    "packages/parallax/test/README.md",
+    "packages/rafz/README.md",
+    "packages/react-spring/README.md",
+    "packages/shared/README.md",
+    "targets/konva/README.md",
+    "targets/native/README.md",
+    "targets/three/README.md",
+    "targets/web/README.md",
+    "targets/zdog/README.md"
+  ],
+  "treeTruncated": false,
+  "treeUrl": "https://api.github.com/repos/pmndrs/react-spring/git/trees/59b1e5306402d3039120e2da464b66e10b1a1aa1?recursive=1",
+  "selectionReason": "Full pinned tree inspected; no upstream Chinese README. The primary target-package README is preserved verbatim, with the complete project README in a separate original snapshot.",
+  "bytes": 41,
+  "sha256": "dc737deb8253d700b89188be01dc70b5859b3b85422360bb30ce5b70223473f1",
+  "additionalReadmes": [
+    {
+      "path": "README.md",
+      "snapshotPath": "official/project-readme.md",
+      "bytes": 3525,
+      "sha256": "789a7c5a49d221c0e3a0326b2584f6659eb318ccaca35732cf80826cf0e8e737"
+    }
+  ],
+  "packageJsonSourceUrl": "https://github.com/pmndrs/react-spring/blob/59b1e5306402d3039120e2da464b66e10b1a1aa1/targets/web/package.json",
+  "reactPeers": {
+    "react": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0",
+    "react-dom": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0"
+  }
+}

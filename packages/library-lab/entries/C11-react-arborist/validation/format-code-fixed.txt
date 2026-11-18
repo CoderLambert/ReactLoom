@@ -1,0 +1,2 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["pnpm", "exec", "biome", "check", "--write", "packages/library-lab/entries/C11-react-arborist/examples", "packages/library-lab/entries/C11-react-arborist/tests"], "utc": "2026-11-10T16:57:22.255604+00:00", "exit": 0}
+Checked 9 files in 9ms. No fixes applied.

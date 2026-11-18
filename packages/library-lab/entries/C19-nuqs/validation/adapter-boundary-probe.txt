@@ -1,0 +1,3 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["pnpm", "--dir", "packages/library-lab", "exec", "node", "entries/C19-nuqs/validation/adapter-boundary-probe.mjs"], "utc": "2026-11-10T18:14:50.094330+00:00", "exit": 0}
+{"name":"to-string","pathname":"/libraries/nuqs?tab=demo&example=advanced&host=a&host=b&ll_c19_page=2#anchor","href":"/libraries/nuqs?tab=demo&example=advanced&host=a&host=b&ll_c19_page=2#anchor","search":{},"rawHostValues":["a","b"],"hash":""}
+{"name":"href","pathname":"/libraries/nuqs","href":"/libraries/nuqs?tab=demo&example=advanced&host=%5B%22a%22%2C%22b%22%5D&ll_c19_page=2#anchor","search":{"tab":"demo","example":"advanced","host":["a","b"],"ll_c19_page":2},"rawHostValues":["[\"a\",\"b\"]"],"hash":"anchor"}

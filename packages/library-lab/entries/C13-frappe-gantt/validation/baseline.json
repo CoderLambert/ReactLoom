@@ -1,0 +1,60 @@
+{
+  "capturedAt": "2026-11-10T16:10:42.210158+00:00",
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+  "head": "1218066e706a90ba03fac8dff8c9b843dd2429c4",
+  "status": "",
+  "files": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "f4ea74f693e89a7940d87359824f3f13bc7e0b1c5e26c911653eb51d4144a6a7"
+    },
+    {
+      "path": "agent.md",
+      "sha256": "6895038d7c25b3efad716d27682af01420483623fce8cb41b0e61b329b6416aa"
+    },
+    {
+      "path": "examples/demo.tsx",
+      "sha256": "254591932548c36c414610bd0d0c7ce7ef1648162f1996fbbe7381b8c1751690"
+    },
+    {
+      "path": "examples/example.tsx",
+      "sha256": "7bf5feb62131c4b41d73888b62c4ed821e4996cb555ab402a068ecd62dce7d5e"
+    },
+    {
+      "path": "examples/frappe-gantt.d.ts",
+      "sha256": "f5f7fabfa49a3a33f11b1a8a8c7cd998e10ba28e7b358a79e6c4dcf73ab2dd1f"
+    },
+    {
+      "path": "examples/gantt.css",
+      "sha256": "c7812edc42b5e5433a802c88c113f222e2aa34f7f2ddaf83ba9752dfd8370197"
+    },
+    {
+      "path": "examples/plan-policy.d.mts",
+      "sha256": "abf805fcaf4103e323ef324773d49bda0da8592033a18a589866fc1cb0cb38ee"
+    },
+    {
+      "path": "examples/plan-policy.mjs",
+      "sha256": "78bbe41db1e5ca1646e5ba86f2bc597dd941f268705907ff0353a63df074474c"
+    },
+    {
+      "path": "guide.md",
+      "sha256": "1b36474b293475c5def6ff830a911558dbe74a79c49ba8171cef6a75cc4681c1"
+    },
+    {
+      "path": "library.json",
+      "sha256": "8852f8ef8729e4fb3dfe635ef74011f0fcd592110b5385d439a4b06e5fb4d70f"
+    },
+    {
+      "path": "tests/plan-policy.test.mjs",
+      "sha256": "57587593e5ec45bc24981b9a565ff055b054e9fba651745f19ef011500961a1c"
+    },
+    {
+      "path": "tests/sdk.test.mjs",
+      "sha256": "604469098f224f400ef2f59d96d6a707e2834ef25a6bf0676982e772c73f4d23"
+    },
+    {
+      "path": "verification.json",
+      "sha256": "2594ef5823f1f435cb73a9875d198ae8395f1dcffdd3e0381c050a968f933ce0"
+    }
+  ]
+}

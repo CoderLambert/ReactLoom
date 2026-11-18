@@ -1,0 +1,78 @@
+# D03 p-limit 本地质量整改与验证
+
+## 对象、前提和边界
+
+- 工作区 `/home/lambert/githubRepos/lambert/ReactLoom`；Git HEAD `1218066e706a90ba03fac8dff8c9b843dd2429c4`。原条目11个可见输入的 entry-relative SHA-256 为 `7440994d0f09f549b9b737a55545c59fe3bfc254960a0d627d8f92cc1ebc085f`，逐文件原始摘要见 [baseline.json](evidence/baseline.json)。这是条目摘要，不是Git提交。
+- 主控完成 candidate-04 冻结检查后释放本条目写入；中途按授权暂停并修复C01提交点击布局，C01再次稳定后恢复D03。本记录只说明D03，不把其他条目的检查当作本条目证据。
+- 仅写 `packages/library-lab/entries/D03-p-limit/**`。保留原有所有权、取消和终态策略；helper、声明、旧测试只正常排版，未重做有效取消架构。未写公共src/scripts/tests/e2e、依赖锁、目录索引、queue/results；未提交/推送/发布，未共享generate/build/typecheck。
+- 当前真实环境为 Node `v26.13.0`、pnpm `10.33.3`、已安装 `p-limit@7.3.3`；包是ESM，声明Node>=20。版本、实际解析路径、已读 `index.js/index.d.ts/package.json` 摘要均在 [local-runs.json](evidence/local-runs.json)。浏览器宿主必须使用本轮输入构建的候选，不能拿旧dist验收新增指标。
+
+## 目标、单库任务和产物
+
+目标是首次使用该库的React工程师先理解“函数还没启动 → 排队/占用名额 → 完成释放 → 结果结算”，再理解失败和取消的所有权。声明从原basic/business/advanced三个重复调度入口收敛为两个独立目标；保留旧business prop兼容，不宣称第三目标。
+
+| 目标 | 操作与验收预期 | 实际实现 |
+| --- | --- | --- |
+| basic：并发上限与实测峰值 | 同6任务分别选1、4；完成6、峰值1/4、结束SDKactive/pending均0 | 真实limit回调进入计activeWork、finally归还，峰值Math.max；卡片指标从同jobs派生 |
+| advanced：失败隔离与取消 | 未取消10任务为9done+1error；立即取消后无queued/running；可重跑与停止重开 | 原4号错误、allSettled、AbortController、rejectOnClear、generation、终态保护保留 |
+
+必要产物为中文guide/agent、正常排版可迁移React源码与CSS、两目标metadata、固定版本官方README原文与完整响应证据、真实SDK/策略的独立日志，以及本记录。Node的峰值是8个本地回调的真实测量，不冒充浏览器6张卡片结果。
+
+## 六项逐项状态
+
+| 维度 | 状态及证据层级 | 依据与边界 |
+| --- | --- | --- |
+| 技术准确 | PASS：静态+真实SDK | 安装包7.3.3源码/类型核对number/options构造、默认rejectOnClear=false、clearQueue仅未开始队列、失败释放名额；SDK6项实测通过 |
+| 解释清楚 | PASS：静态内容自检 | guide先用途/机制/最小接入，再两目标操作与结果；区分SDK名额快照、自建卡片/峰值、fixture、运行工作配合signal；收据维护移至本记录 |
+| Demo有用 | NOT_RUN：静态设计完成，真实浏览器待验 | basic检验上限/峰值，advanced新增失败/取消；控件及预期已对上源码，但本worker未在匹配浏览器候选操作 |
+| 源码可迁移 | PASS：定向类型/格式+源码自检 | example + job-policy + 声明 + CSS齐全，demo只适配导出；无存储/资源/网络依赖；保留卸载/level/generation清理，所有sourceFiles存在 |
+| 官方来源可靠 | PASS：公开HTTP取回+摘要核对 | 匹配7.3.3不可变commit英文原文、中文候选检查、5418B与SHA一致；官网完整GET头明确blocked，不宣称allowed |
+| 结果可复核 | NOT_RUN：本地SDK/策略证据齐全，浏览器/正式收据待验 | 命令/实际cwd/时间/退出码/原始日志/输入hash已保存；Node6+策略4不能证明真实按钮、layout、停止重开 |
+
+这些是本轮内容/执行自检，独立复核与浏览器由主控安排；未据此将queue标content_done，也未手改正式PASS。
+
+## 官方依据与完整响应
+
+- 官方repo `sindresorhus/p-limit`；`v7.3.3` annotated tag object `4740323a1eba455aaef666a8faab519663fb0cb9` 指向 commit `4d4ec71803d8736567249c3dde06ea82795ae7c7`。实际固定ref目录候选为根 `readme.md`（英文），未发现中文README候选，故选官方英文原文。
+- canonical [sourceUrl](https://github.com/sindresorhus/p-limit/blob/4d4ec71803d8736567249c3dde06ea82795ae7c7/readme.md)；实际成功raw URL `https://raw.githubusercontent.com/sindresorhus/p-limit/4d4ec71803d8736567249c3dde06ea82795ae7c7/readme.md`；HTTP200，原文5418字节，SHA-256 `dbe29b10fca55743e35fe2b3d768024cd135d1bac4bd60aee566a5e1f3af294f`。同步时间 `2026-11-10T10:12:31.077749+00:00`，元数据和原文相互绑定，没有翻译或改写快照。
+- [固定版本index.js](https://github.com/sindresorhus/p-limit/blob/4d4ec71803d8736567249c3dde06ea82795ae7c7/index.js) 与本地安装源码核对：构造处理options/rejectOnClear默认值；run保留原始拒绝，await成功或失败后next；clearQueue拒绝队列项且不触碰已运行回调。[index.d.ts](https://github.com/sindresorhus/p-limit/blob/4d4ec71803d8736567249c3dde06ea82795ae7c7/index.d.ts) 明确clearQueue/同limiter嵌套死锁边界。
+- 官方包无独立homepage字段，repository作为主页 `https://github.com/sindresorhus/p-limit`。实际GET200，最终URL相同，`X-Frame-Options: deny`、CSP `frame-ancestors 'none'`。标blocked并提供直达；未实际浏览器嵌入，未把iframe load或无网络错误当allowed。
+- [source-evidence.json](official/source-evidence.json) 保存两次实际GET的完整响应头、状态、最终URL、字节数/摘要，以及ref/候选依据；[official/readme.md](official/readme.md) 只保存真实原文。
+
+## 实际执行
+
+以下命令cwd均为 `/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab`，时间为UTC。每次均真实启动子进程，stdout+stderr原样写日志，结束后保存退出码；没有为补日志再次执行。全部argv（含metadata内联断言）、时间和日志SHA在 [local-runs.json](evidence/local-runs.json)。
+
+| 命令 | 退出码和实际结果 | 日志/产物 |
+| --- | --- | --- |
+| `pnpm exec -- biome check --write entries/D03-p-limit/examples entries/D03-p-limit/tests entries/D03-p-limit/library.json entries/D03-p-limit/verification.json` | 0；9文件，修复2文件格式 | [format.log](evidence/format.log)；格式化源码 |
+| `node --test entries/D03-p-limit/tests/sdk.test.mjs` | 0；6 PASS，0 FAIL | [sdk.log](evidence/sdk.log)；真实p-limit峰值1/2/4、输入结果顺序、拒绝后继续、排队AbortError/未启动、运行signal |
+| `node --test entries/D03-p-limit/tests/job-policy.test.mjs` | 0；4 PASS，0 FAIL | [policy.log](evidence/policy.log)；纯自建终态策略，单独记账 |
+| `pnpm exec -- tsc --ignoreConfig --noEmit --target ES2022 --lib ES2022,DOM,DOM.Iterable --module ESNext --moduleResolution Bundler --jsx react-jsx --strict --skipLibCheck --esModuleInterop --allowSyntheticDefaultImports --allowImportingTsExtensions --types vite/client,node entries/D03-p-limit/examples/demo.tsx` | 0；无诊断输出 | [types.log](evidence/types.log)（真实空stdout/stderr），退出码见manifest |
+| `node --input-type=module -e <manifest中的metadata内联断言>` | 0；validateEntry、entryCompletenessIssues、两个level、7个sourceFiles、官方原文bytes/hash、正式NOT_RUN全部通过 | [metadata.log](evidence/metadata.log)；完整可复制argv保存在manifest |
+| `pnpm exec -- biome check entries/D03-p-limit/examples entries/D03-p-limit/tests entries/D03-p-limit/library.json entries/D03-p-limit/verification.json` | 0；9文件，无修复 | [biome.log](evidence/biome.log) |
+
+SDK/策略/类型/元数据/最终Biome在完成源码后独立并行执行；未重跑其他已有效条目的套件。格式化前的旧文件6文件格式整理没有冒充最终检查，最终9文件检查以以上日志为准。运行输入共10个文件的SHA保存在manifest；文档和本地证据补充不影响上述SDK/类型输入。
+
+额外仓库根cwd的 `git diff --check -- packages/library-lab/entries/D03-p-limit` 只检查本条目空白，退出码与日志见同一manifest的 `diff` 记录。
+
+## 文件清单与迁移前提
+
+- 原有 `AGENTS.md` 保持不变；`guide.md`、`agent.md`、`library.json`、`verification.json` 同步教学、两个声明目标及准确验证边界。
+- `examples/example.tsx`：真实调度、原有失败/取消/清理，新增实测峰值与同卡片统计；`examples/demo.tsx` 仅格式化适配导出。
+- `examples/job-policy.mjs`、`examples/job-policy.d.mts`、`tests/job-policy.test.mjs` 仅正常排版，原终态逻辑和4断言保留；新 `examples/workshop.css` 独立限定在 `.d03-workshop`，正常可迁移。
+- `tests/sdk.test.mjs` 将原并发2扩为1/2/4，并增加真实失败释放槽/剩余完成；保留原两项有效取消SDK断言，不将策略测试改名制造SDK PASS。
+- 新增 `official/readme.md`、`official/source-evidence.json`、`.gitignore`（允许追踪本条目evidence日志）、`evidence/baseline.json`、`evidence/local-runs.json`、6份检查日志及 `evidence/diff.log`、本 `local-validation.md`。
+
+## 主控浏览器交接与剩余项
+
+保留旧 `@D03 p0` region“p-limit 真实并发调度”、按钮“运行批处理/取消任务”、运行中文状态“正在执行真实 p-limit 批次”、停止重开初态“尚未运行”。新增 `data-testid=d03-metrics/d03-peak/d03-sdk-counts`，每张卡片保留 `.demo-job[data-state]`，不用新增policy测试代替浏览器。
+
+主控使用本轮输入构建候选后验收：
+
+1. basic并发1与4各真实运行一次；峰值1/4、6done、其余状态0、SDK末值0/0。确认运行中卡片数量不超过上限；峰值是回调测量而非配置回显。
+2. advanced等待自然结束：9done+1error，队列继续，结束0/0；再次开始后立即取消，没有queued/running，既有done/error不被覆盖为cancelled，继续等待不复活。
+3. 运行中切换场景/停止，旧回调不得写回；重开显示尚未运行。保留既有p0基本交互断言。
+4. 共享平台typecheck/build/catalog、真实浏览器和独立六项复核由主控执行。本worker不运行共享构建；正式sdk/build/browser需授权干净提交及匹配verify:record配方，现均NOT_RUN。
+
+当前没有公共实现缺口或依赖安装阻塞。官网blocked是明确上游策略，不是SDK执行失败；剩余项是真实浏览器与独立复核/正式收据，不能提前标完成。

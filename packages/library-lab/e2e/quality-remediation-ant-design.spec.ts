@@ -1,0 +1,180 @@
+// Ready root integration proposal. NOT_RUN by entry author.
+// Real antd Form/Table/Modal/message and native keyboard; no SDK mock, page.route or fake request.
+import { expect, type Locator, type Page, test } from '@playwright/test'
+
+async function open(page: Page, level: 'basic' | 'business' | 'advanced', viaTab = false) {
+  await page.setViewportSize({ width: 1200, height: 1000 })
+  await page.goto(`/libraries/ant-design?tab=${viaTab ? 'agent' : 'demo'}&example=${level}`)
+  if (viaTab) await page.getByRole('tab', { name: '实战 Demo', exact: true }).click()
+  const app = page.getByTestId('b06-workshop')
+  const run = page.getByRole('button', { name: '运行当前示例', exact: true })
+  await expect(app.or(run).first()).toBeVisible({ timeout: 20_000 })
+  if (await run.isVisible()) await run.click()
+  await expect(app).toBeVisible()
+  return app
+}
+function row(app: Locator, id: string) {
+  return app.getByTestId('b06-table').locator(`tr[data-row-key="${id}"]`)
+}
+async function fill(app: Locator, title: string, url: string) {
+  await app.getByLabel('订阅名称', { exact: true }).fill(title)
+  await app.getByLabel('RSS HTTPS 地址', { exact: true }).fill(url)
+}
+async function submit(app: Locator) {
+  await app.getByRole('button', { name: '新增本地订阅', exact: true }).click()
+}
+
+test('@B06 actual local token and controlled confirmation preserve native disabled semantics', async ({
+  page,
+}) => {
+  const app = await open(page, 'basic')
+  const input = app.getByRole('textbox', { name: '项目名称', exact: true })
+  const confirm = app.getByRole('button', { name: '确认项目', exact: true })
+  // Read actual browser CSS; Node token/SSR checks are not this assertion.
+  await input.focus()
+  await expect(confirm).toHaveCSS('background-color', 'rgb(33, 101, 79)')
+  await input.fill('   ')
+  await expect(confirm).toBeDisabled()
+  await input.fill('  课程台  ')
+  await confirm.focus()
+  await page.keyboard.press('Enter')
+  await expect(app.getByRole('alert')).toContainText('已确认：课程台')
+  await input.fill('已修改项目')
+  await expect(app.getByRole('alert')).toHaveCount(0)
+})
+
+test('@B06 real Form rules feed stable Table rows, composition-safe search and Modal focus', async ({
+  page,
+}) => {
+  const app = await open(page, 'business')
+  await submit(app)
+  await expect(app.getByText('请输入非空白名称', { exact: true })).toBeVisible()
+  await expect(app.getByText('请输入地址', { exact: true })).toBeVisible()
+  await expect(app).toHaveAttribute('data-count', '2')
+  await fill(app, '浏览器工程', 'http://example.com/browser.xml')
+  await submit(app)
+  await expect(app.getByText('请输入不含账号密码的 HTTPS 地址', { exact: true })).toBeVisible()
+  await expect(app.getByLabel('RSS HTTPS 地址', { exact: true })).toHaveAttribute(
+    'aria-invalid',
+    'true',
+  )
+  await fill(app, '浏览器工程', ' HTTPS://EXAMPLE.COM:443/browser.xml#reader ')
+  const category = app.getByRole('combobox', { name: '分类', exact: true })
+  await category.focus()
+  await category.press('ArrowDown')
+  await category.press('ArrowDown')
+  await category.press('Enter')
+  await submit(app)
+  await expect(app).toHaveAttribute('data-count', '3')
+  await expect(row(app, 'feed-3')).toContainText('浏览器工程')
+  await expect(row(app, 'feed-3')).toContainText('https://example.com/browser.xml')
+  await expect(row(app, 'feed-3')).toContainText('资讯')
+  await expect(app.getByLabel('订阅名称', { exact: true })).toHaveValue('')
+  await fill(app, '重复工程', 'https://example.com/browser.xml#another')
+  await submit(app)
+  await expect(app.getByText('该 RSS 地址已经存在', { exact: true })).toBeVisible()
+  await expect(app).toHaveAttribute('data-count', '3')
+
+  const search = app.getByRole('searchbox', { name: '查找RSS', exact: true })
+  await search.fill('工程')
+  await expect(app).toHaveAttribute('data-query', '')
+  await expect(app.getByTestId('b06-records')).toContainText('当前匹配 3')
+  // Synthetic composition protocol exercises actual SDK + forwarded application handlers.
+  // It is not a claim of real OS IME acceptance.
+  await search.dispatchEvent('compositionstart')
+  await search.press('Enter')
+  await expect(app).toHaveAttribute('data-query', '')
+  await search.dispatchEvent('compositionend')
+  await search.press('Enter')
+  await expect(app).toHaveAttribute('data-query', '工程')
+  await expect(app.getByTestId('b06-records')).toContainText('当前匹配 2')
+  await search.fill('')
+  await app.getByRole('button', { name: /^搜\s*索$/u }).click()
+  await expect(app.getByTestId('b06-records')).toContainText('当前匹配 3')
+
+  const enabled = row(app, 'feed-1').getByRole('switch', { name: '工程实践 启用', exact: true })
+  await expect(enabled).toBeChecked()
+  await enabled.focus()
+  await page.keyboard.press('Space')
+  await expect(enabled).not.toBeChecked()
+  await app.getByRole('button', { name: '撤销修改', exact: true }).click()
+  await expect(enabled).toBeChecked()
+  const details = row(app, 'feed-3').getByRole('button', { name: '查看 浏览器工程', exact: true })
+  await details.click()
+  const dialog = page.getByRole('dialog', { name: '订阅详情', exact: true })
+  await expect(dialog).toContainText('https://example.com/browser.xml')
+  await page.keyboard.press('Escape')
+  await expect(dialog).toBeHidden()
+  await expect(details).toBeFocused()
+
+  await app.getByRole('columnheader', { name: /订阅标题/u }).click()
+  await expect(app.getByRole('columnheader', { name: /订阅标题/u })).toHaveAttribute(
+    'aria-sort',
+    'ascending',
+  )
+  await expect(
+    app.getByTestId('b06-table').locator('tbody tr[data-row-key] td:first-child'),
+  ).toHaveText(['工程实践', '浏览器工程', '每日新闻'])
+  for (const number of [4, 5]) {
+    await fill(app, `分页内容${number}`, `https://example.com/page-${number}.xml`)
+    await submit(app)
+  }
+  await expect(app).toHaveAttribute('data-count', '5')
+  await expect(app.getByTestId('b06-table').locator('tbody tr[data-row-key]')).toHaveCount(4)
+  await app.getByTitle('下一页', { exact: true }).click()
+  await expect(app.getByTestId('b06-table').locator('tbody tr[data-row-key]')).toHaveCount(1)
+})
+
+test('@B06 one valid-submit fixture conflict recovers, undo is atomic and unmount removes owned portals', async ({
+  page,
+}) => {
+  const errors: string[] = []
+  page.on('pageerror', (error) => errors.push(error.message))
+  const app = await open(page, 'advanced', true)
+  const undo = app.getByRole('button', { name: '撤销修改', exact: true })
+  await expect(undo).toBeDisabled()
+  await app.getByRole('button', { name: '下一次有效提交注入409', exact: true }).click()
+  await expect(app).toHaveAttribute('data-conflict-armed', 'true')
+  await submit(app)
+  await expect(app.getByText('请输入非空白名称', { exact: true })).toBeVisible()
+  await expect(app).toHaveAttribute('data-conflict-armed', 'true')
+  await fill(app, '恢复案例', 'https://example.com/recover.xml')
+  await submit(app)
+  await expect(
+    app.getByText('本地409 fixture：地址已被其他成员占用，请重试', { exact: true }),
+  ).toBeVisible()
+  await expect(app.getByLabel('RSS HTTPS 地址', { exact: true })).toHaveAttribute(
+    'aria-invalid',
+    'true',
+  )
+  await expect(app).toHaveAttribute('data-conflict-armed', 'false')
+  await expect(app).toHaveAttribute('data-count', '2')
+  await expect(undo).toBeDisabled()
+  // Same untouched draft retries; Form re-validates rather than permanently retaining setFields errors.
+  await submit(app)
+  await expect(app).toHaveAttribute('data-count', '3')
+  await expect(row(app, 'feed-3')).toContainText('恢复案例')
+  await expect(undo).toBeEnabled()
+  await undo.click()
+  await expect(app).toHaveAttribute('data-count', '2')
+  await expect(row(app, 'feed-3')).toHaveCount(0)
+  await expect(undo).toBeDisabled()
+  await row(app, 'feed-1').getByRole('button', { name: '查看 工程实践', exact: true }).click()
+  await expect(page.getByRole('dialog', { name: '订阅详情', exact: true })).toBeVisible()
+  // Real browser Back returns to the previous Agent tab via SPA history while the Portal is open.
+  // The route stays in the same document and React unmounts the Demo; no mask click-through or reload.
+  await page.goBack()
+  await expect(page).toHaveURL(/tab=agent/u)
+  await expect(page.getByTestId('b06-workshop')).toHaveCount(0)
+  await expect(page.getByRole('dialog', { name: '订阅详情', exact: true })).toHaveCount(0)
+  await expect(page.getByText('撤销上一项列表修改', { exact: true })).toHaveCount(0)
+  const again = await open(page, 'advanced')
+  await expect(again).toHaveAttribute('data-count', '2')
+  await expect(again).toHaveAttribute('data-conflict-armed', 'false')
+  await expect(again.getByRole('button', { name: '撤销修改', exact: true })).toBeDisabled()
+  await page.getByRole('button', { name: '停止并卸载', exact: true }).click()
+  await expect(again).toHaveCount(0)
+  expect(errors).toEqual([])
+})
+// CSS/Portal/keyboard/validation assertions require a real browser; SSR2 and policy7 do not establish them.
+// Real OS IME, touch/screen readers, theme contrast/zoom, SSR hydration and server APIs remain NOT_RUN.

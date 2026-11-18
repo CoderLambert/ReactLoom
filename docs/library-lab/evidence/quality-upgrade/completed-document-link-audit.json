@@ -1,0 +1,550 @@
+{
+  "at": "2026-11-10T17:43:41.415Z",
+  "scope": "Completed and review-pending guide/agent Markdown links outside fences; candidates require human review, not execution proof",
+  "items": [
+    {
+      "entryId": "E11",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/E11-streamdown/guide.md",
+      "line": 5,
+      "href": "../E06-react-markdown/guide.md",
+      "content": "本例使用已安装的 **streamdown 2.6.0**。它适合 AI 回答、研究摘要等持续追加的正文；静态文章可以考虑 [E06 react-markdown](../E06-react-markdown/guide.md)。Streamdown 不负责模型连接、消息存储、重试或请求取消，这些仍属于应用。代码高亮、数学公式、Mermaid 和 CJK 特化是可选插件，本例没有安装这些插件，也不把普通代码块声称为语法高亮。"
+    },
+    {
+      "entryId": "E11",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/E11-streamdown/guide.md",
+      "line": 83,
+      "href": "official/source-audit.json",
+      "content": "“官方 README”页展示 [vercel/streamdown 的 package README](https://github.com/vercel/streamdown/blob/8a2ac221a878a0fc5839f2035c1e16575cfa3440/packages/streamdown/README.md) 原文快照；tag 是 `streamdown@2.6.0`，语言为英语。已检查该提交的 README 文件列表，没有官方中文 README。来源、日期、SHA-256 见 [source-audit.json](official/source-audit.json)。官网 `https://streamdown.ai` 在本次响应中没有发现 X-Frame-Options / frame-ancestors 限制，但没有从 Lab origin 完成浏览器嵌入确认，因此状态为 unknown，保留官网直达入口。"
+    },
+    {
+      "entryId": "E11",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/E11-streamdown/guide.md",
+      "line": 87,
+      "href": "local-validation.md",
+      "content": "[local-validation.md](local-validation.md) 区分了真实 SDK 的 Node 静态渲染、应用状态测试、类型检查与尚待主控完成的浏览器交互。SSR 输出不证明浏览器计时器、焦点、布局和网络行为；`verification.json` 的正式 SDK/build/browser 状态仍遵守收据协议。"
+    },
+    {
+      "entryId": "F05",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/F05-sheetjs/guide.md",
+      "line": 3,
+      "href": "../F03-papaparse/guide.md",
+      "content": "后台有一组 `{ channel, views, kind }` 订阅记录，运营希望拿到 Excel 文件；稍后还要把按约定填写的单表导回系统。SheetJS CE 负责把 JavaScript 数据与表格文件互相转换。它适合处理多种表格格式、读取单元格和生成数据报表；只处理 CSV 时可先考虑 [Papa Parse](../F03-papaparse/guide.md)，需要细致的 XLSX 样式对象模型时再比较 [ExcelJS](../F04-exceljs/guide.md)。"
+    },
+    {
+      "entryId": "F05",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/F05-sheetjs/guide.md",
+      "line": 3,
+      "href": "../F04-exceljs/guide.md",
+      "content": "后台有一组 `{ channel, views, kind }` 订阅记录，运营希望拿到 Excel 文件；稍后还要把按约定填写的单表导回系统。SheetJS CE 负责把 JavaScript 数据与表格文件互相转换。它适合处理多种表格格式、读取单元格和生成数据报表；只处理 CSV 时可先考虑 [Papa Parse](../F03-papaparse/guide.md)，需要细致的 XLSX 样式对象模型时再比较 [ExcelJS](../F04-exceljs/guide.md)。"
+    },
+    {
+      "entryId": "F05",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/F05-sheetjs/guide.md",
+      "line": 131,
+      "href": "local-validation.md",
+      "content": "本轮三条 CLI、真实 SDK 套件及纯策略测试的命令、退出码、原始日志和产物见 [local-validation.md](local-validation.md)。这些是本地执行证据；`verification.json` 的正式 sdk/build/browser 保持 NOT_RUN，不能用 dirty 工作区日志替代绑定提交和指纹的正式收据。"
+    },
+    {
+      "entryId": "A06",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/A06-react-flow/guide.md",
+      "line": 185,
+      "href": "local-validation.md",
+      "content": "[官网](https://reactflow.dev/)本轮GET200，未见X-Frame-Options/CSP frame-ancestors限制；尚未从实际Lab origin用浏览器核实嵌入，所以状态保持unknown，保留直达入口。新入门交互的当轮验收状态见 [local-validation.md](local-validation.md)；2026-11-09原工作台的20策略/5浏览器历史本地证据仍保留，不能直接替代新增小图的浏览器验证。正式verification仍分别NOT_RUN。"
+    },
+    {
+      "entryId": "C01",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/C01-react-hook-form/guide.md",
+      "line": 92,
+      "href": "local-validation.md",
+      "content": "本轮命令/退出码/原始输出/六项和未测项见 [local-validation.md](local-validation.md)。正式verification的sdk/build/browser仍NOT_RUN；本地SDK执行与干净提交收据分开，不继承旧Actions结论。"
+    },
+    {
+      "entryId": "D03",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/D03-p-limit/guide.md",
+      "line": 45,
+      "href": "local-validation.md",
+      "content": "关键位置：[run / activeWork / setPeak](examples/example.tsx)、[指标和卡片样式](examples/workshop.css)。每项延时为 220、330 或 440 ms，模拟等待，不把总耗时作为本机性能基准。这里列的是浏览器验收预期；当前真实执行证据见 [local-validation.md](local-validation.md)。"
+    },
+    {
+      "entryId": "D03",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/D03-p-limit/guide.md",
+      "line": 84,
+      "href": "official/source-evidence.json",
+      "content": "包声明的官方仓库兼作主页：[sindresorhus/p-limit](https://github.com/sindresorhus/p-limit)。2026-11-10 实际 GET 200 响应同时有 `X-Frame-Options: deny` 和 `frame-ancestors 'none'`，因此官网预览为 **blocked**，保留直达，不宣称已在浏览器成功嵌入。完整最终 URL、全部响应头、版本/tag/commit 与摘要见 [source-evidence.json](official/source-evidence.json)。"
+    },
+    {
+      "entryId": "D03",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/D03-p-limit/guide.md",
+      "line": 86,
+      "href": "local-validation.md",
+      "content": "真实 SDK 测试与纯状态策略测试分开记录；Node 结果不能代替浏览器按钮和卸载验收。当前命令、退出码及待验项统一保留在 [local-validation.md](local-validation.md)，正式 verification 收据保持 NOT_RUN。"
+    },
+    {
+      "entryId": "D03",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/D03-p-limit/agent.md",
+      "line": 3,
+      "href": "verification.json",
+      "content": "需要限制一批 Promise 同时运行数量时使用 `p-limit@7.3.3`（MIT，ESM；Node >=20）。它不负责 QPS、重试、缓存、去重或把 CPU 工作送进线程。先读 [guide](guide.md)、实际 [example.tsx](examples/example.tsx) 和 [verification.json](verification.json)。"
+    },
+    {
+      "entryId": "D03",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/D03-p-limit/agent.md",
+      "line": 21,
+      "href": "local-validation.md",
+      "content": "在 `packages/library-lab` 下运行 `node --test entries/D03-p-limit/tests/sdk.test.mjs`，真实 SDK 覆盖并发1/2/4的峰值与输入顺序、失败后继续、clearQueue拒绝和运行任务自己的signal。`tests/job-policy.test.mjs` 只覆盖自建策略，不计SDK通过。当前退出码/日志见 [local-validation](local-validation.md)。"
+    },
+    {
+      "entryId": "D03",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/D03-p-limit/agent.md",
+      "line": 27,
+      "href": "official/source-evidence.json",
+      "content": "匹配 v7.3.3 的 annotated tag `4740323a1eba455aaef666a8faab519663fb0cb9` 指向 commit `4d4ec71803d8736567249c3dde06ea82795ae7c7`。固定ref根目录仅官方英文 `readme.md`，原文快照 [official/readme.md](official/readme.md)，SHA/日期/完整响应在 [source-evidence](official/source-evidence.json)；没有另造译文充当官方原文。官方仓库主页 GET200 但 X-Frame-Options deny、CSP frame-ancestors none，展示blocked并提供直达。"
+    },
+    {
+      "entryId": "A03",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/A03-chartjs/guide.md",
+      "line": 89,
+      "href": "official/source-evidence.json",
+      "content": "`v4.6.1` 是直接指向commit `76d8cf895a7485dc838c90ef37e2bc9d9e388fcb` 的官方tag，该处package.json声明4.6.1。完整tree仅根README.md，无官方中文候选；保留英语 [原文快照](official/readme.md) 与 [固定出处](https://github.com/chartjs/Chart.js/blob/76d8cf895a7485dc838c90ef37e2bc9d9e388fcb/README.md)。原文2605字节，SHA-256 `30418232ad2cc5a51fa0938e12dc97e31cfd1fb3b0bc352132f281c0c10da348`，日期和完整来源见 [source-evidence](official/source-evidence.json)。"
+    },
+    {
+      "entryId": "A03",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/A03-chartjs/guide.md",
+      "line": 93,
+      "href": "local-validation.md",
+      "content": "本轮Node SDK使用已锁定、已安装的原生Canvas生成了初始柱图、更新柱图和重建折线PNG，真实验证update/active/hit/resize/destroy；Node没有DOM事件或CSS响应式。原生fixture没有中文字体fallback，图中文字方框不证明浏览器文字可用。策略测试只核对fixture和采样门闩。真实浏览器每目标提案、命令/退出码/日志/实际PNG摘要和六项状态见 [local-validation](local-validation.md)，formal verification保持NOT_RUN。"
+    },
+    {
+      "entryId": "A05",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/A05-d3/guide.md",
+      "line": 84,
+      "href": "official/source-evidence.json",
+      "content": "[官方React接入](https://d3js.org/getting-started)、[data/join](https://d3js.org/d3-selection/joining)、[事件命名空间](https://d3js.org/d3-selection/events)、[Monotone曲线](https://d3js.org/d3-shape/curve#curveMonotoneX)结合本地实际子模块源码核对。在线站点显示更新版本，不冒称它是7.9.0快照；固定原文、语言、日期、版本与完整官网响应在 [source-evidence](official/source-evidence.json)。官网GET200无XFO/CSP，未从Lab origin浏览器实测，保持unknown及直达。"
+    },
+    {
+      "entryId": "A05",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/A05-d3/guide.md",
+      "line": 86,
+      "href": "local-validation.md",
+      "content": "Node SDK仅执行真实尺度/shape算法，纯窗口/阈值/宽度策略另记；没有伪造document或SVG来宣布绘图通过。轴、keyed节点身份、指针、键盘、resize和卸载仍由主控运行三目标真实浏览器提案。完整命令/退出码/日志/六项见 [local-validation](local-validation.md)，formal verification保持NOT_RUN。"
+    },
+    {
+      "entryId": "A14",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/A14-react-three-fiber/guide.md",
+      "line": 79,
+      "href": "official/source-evidence.json",
+      "content": "为核实运行依据，匿名读取官方npm9.8.2 tarball，在内存验证registry sha512，并逐字节核对package.json和两个实际运行bundle均与安装包一致；没有安装新包或提取共享资源。原始版本/完整响应/摘要见 [source-evidence](official/source-evidence.json)、[npm完整性](official/npm-integrity.json)。运行API以匹配安装9.8.2源码/类型为准，在线 [Canvas](https://r3f.docs.pmnd.rs/api/canvas)、[hooks](https://r3f.docs.pmnd.rs/api/hooks)、[objects](https://r3f.docs.pmnd.rs/api/objects) 作为补充，不把当前站点当固定快照。"
+    },
+    {
+      "entryId": "A14",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/A14-react-three-fiber/guide.md",
+      "line": 79,
+      "href": "official/npm-integrity.json",
+      "content": "为核实运行依据，匿名读取官方npm9.8.2 tarball，在内存验证registry sha512，并逐字节核对package.json和两个实际运行bundle均与安装包一致；没有安装新包或提取共享资源。原始版本/完整响应/摘要见 [source-evidence](official/source-evidence.json)、[npm完整性](official/npm-integrity.json)。运行API以匹配安装9.8.2源码/类型为准，在线 [Canvas](https://r3f.docs.pmnd.rs/api/canvas)、[hooks](https://r3f.docs.pmnd.rs/api/hooks)、[objects](https://r3f.docs.pmnd.rs/api/objects) 作为补充，不把当前站点当固定快照。"
+    },
+    {
+      "entryId": "A14",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/A14-react-three-fiber/guide.md",
+      "line": 81,
+      "href": "local-validation.md",
+      "content": "官网GET200、完整响应头没有XFO/CSP，未真实Lab iframe，所以保持unknown与直达。真实对象helper Node执行和纯帧策略分开；二者都不证明Canvas协调、useFrame实际调度、WebGL绘制、射线或卸载。三目标浏览器提案在validation/browser-proposal.txt，实际命令、结果与六项见 [local-validation](local-validation.md)；formal verification保持NOT_RUN。"
+    },
+    {
+      "entryId": "B01",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/B01-motion-for-react/guide.md",
+      "line": 72,
+      "href": "official/source-evidence.json",
+      "content": "v14.6.0固定commit `3397236ea600094f09513fbb2bfb084dc95f5982`，packages/motion/package.json为14.6.0。完整递归tree无官方中文README，选择根 [英文原文](official/readme.md)，7475B，SHA-256 `08915bb5254a4bc1fd47e8d7ea8fff0dcb470461f6fd6b59fb6d2f0bef0400df`，[固定出处](https://github.com/motiondivision/motion/blob/3397236ea600094f09513fbb2bfb084dc95f5982/README.md)。版本/语言/日期/全部HTTP响应头见 [source-evidence](official/source-evidence.json)，没有改写为中文教程。"
+    },
+    {
+      "entryId": "B01",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/B01-motion-for-react/guide.md",
+      "line": 76,
+      "href": "local-validation.md",
+      "content": "Node真实React SSR检查只证明Motion组件/上下文与initial=false静态目标；原4项策略只证明数组规则。两者都不证明退出动画、布局、偏好切换或键盘焦点。实际命令/日志与六项见 [local-validation](local-validation.md)，真实浏览器提案在validation/browser-proposal.txt；formal verification三项仍NOT_RUN。"
+    },
+    {
+      "entryId": "B05",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/B05-rive-react/guide.md",
+      "line": 80,
+      "href": "official/source-evidence.json",
+      "content": "官方v4.37.0固定commit `ed0614c0050923db382df43196de80ecb38f9abd`，根package版本4.37.0。完整递归tree四个README候选无中文，选择 [根英文原文](official/readme.md)，4388B，SHA-256 `d3db576862ff069a0889157166a11e3f3136ec74a4736cb6acbac172ab835262`，[固定出处](https://github.com/rive-app/rive-react/blob/ed0614c0050923db382df43196de80ecb38f9abd/README.md)。精确版本/语言/日期/响应头在 [source-evidence](official/source-evidence.json)，原文不替代本地教学。"
+    },
+    {
+      "entryId": "B05",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/B05-rive-react/guide.md",
+      "line": 82,
+      "href": "official/asset-response.json",
+      "content": "官网文档实际GET200，但X-Frame-Options为DENY，CSP frame-ancestors仅自身/Mintlify，Lab origin不允许嵌入，因此blocked并保留直达，不尝试绕过。[远程样本响应](official/asset-response.json) 只读完整GET头，200/宣称长度58792；未读正文、未算`.riv`哈希，也不能从该请求推断浏览器CORS或渲染成功。"
+    },
+    {
+      "entryId": "B05",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/B05-rive-react/guide.md",
+      "line": 86,
+      "href": "local-validation.md",
+      "content": "真实WASM两项、原策略五项、类型/格式/metadata与浏览器提案边界详见 [local-validation](local-validation.md)。在线渲染由主控匹配候选执行提案；离线授权文件仍未提供，assets保留相应BLOCKED，formal sdk/build/browser保持NOT_RUN。"
+    },
+    {
+      "entryId": "B10",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/B10-base-ui/guide.md",
+      "line": 87,
+      "href": "local-validation.md",
+      "content": "局部真实SSR测试验证SDK渲染的role/mixed/原生input属性；原六项policy验证权限计算。它们不证明label点击、Space/Tab、DOM indeterminate或实际FormData。三条真实浏览器提案与命令、日志见[local-validation.md](local-validation.md)；正式sdk/build/browser没有匹配收据仍NOT_RUN。"
+    },
+    {
+      "entryId": "B16",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/B16-react-resizable-panels/guide.md",
+      "line": 84,
+      "href": "official/source-evidence.json",
+      "content": "原文 27652 字节，SHA-256 `d27812bc8cf8a5e07f0a58bcf68a8f48cc3cac4d22f917777e62662ab61c231c`；npm gitHead、tag 和包 manifest 4.14.1 互相匹配。同步时间、完整响应头见 [source-evidence.json](official/source-evidence.json)。官网 GET200，未见 XFO/CSP，但未从 Lab origin 真实确认 iframe 内容，因此保留 **unknown**，直达官网仍可用。"
+    },
+    {
+      "entryId": "B16",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/B16-react-resizable-panels/guide.md",
+      "line": 86,
+      "href": "local-validation.md",
+      "content": "本轮 Node SDK 静态 SSR、条目严格类型、metadata 检查和提案检查的真实命令/退出码见 [local-validation.md](local-validation.md)。三项目标的完整 Playwright 提案在 [browser-proposal.txt](validation/browser-proposal.txt)，实际指针、键盘、几何约束、窄屏和卸载由主控统一执行。正式 verification 的 sdk/build/browser 仍为 NOT_RUN；本地静态检查不构成运行收据。"
+    },
+    {
+      "entryId": "B16",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/B16-react-resizable-panels/guide.md",
+      "line": 86,
+      "href": "validation/browser-proposal.txt",
+      "content": "本轮 Node SDK 静态 SSR、条目严格类型、metadata 检查和提案检查的真实命令/退出码见 [local-validation.md](local-validation.md)。三项目标的完整 Playwright 提案在 [browser-proposal.txt](validation/browser-proposal.txt)，实际指针、键盘、几何约束、窄屏和卸载由主控统一执行。正式 verification 的 sdk/build/browser 仍为 NOT_RUN；本地静态检查不构成运行收据。"
+    },
+    {
+      "entryId": "B18",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/B18-cmdk/guide.md",
+      "line": 86,
+      "href": "validation/browser-proposal.txt",
+      "content": "真实SDK局部检查运行默认filter与React SSR；policy只检查业务和键盘规则。实际过滤/高亮、Dialog焦点/门户、原生快捷键、IME事件协议与卸载由主控按[完整提案](validation/browser-proposal.txt)验收，尚未运行时保留NOT_RUN。实际命令与六项见[local-validation.md](local-validation.md)，正式sdk/build/browser不从局部或共享CI推导PASS。"
+    },
+    {
+      "entryId": "B18",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/B18-cmdk/guide.md",
+      "line": 86,
+      "href": "local-validation.md",
+      "content": "真实SDK局部检查运行默认filter与React SSR；policy只检查业务和键盘规则。实际过滤/高亮、Dialog焦点/门户、原生快捷键、IME事件协议与卸载由主控按[完整提案](validation/browser-proposal.txt)验收，尚未运行时保留NOT_RUN。实际命令与六项见[local-validation.md](local-validation.md)，正式sdk/build/browser不从局部或共享CI推导PASS。"
+    },
+    {
+      "entryId": "B20",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/B20-sonner/guide.md",
+      "line": 79,
+      "href": "official/source-evidence.json",
+      "content": "发布元数据有差异：npm 2.0.8 的 gitHead 是 `ecce1841c55e4a72dfe139a8992b56498660125e`，那个 commit 的 manifest 仍为2.0.7；官方 tag 的 manifest 为2.0.8。两 commit 的 README 和 src/state.ts 原文字节相同。本文保留这项事实，原文展示固定匹配版本 tag，不伪称两个 commit 一致。完整10请求、package/源码比对、同步时间和原始完整headers见 [source-evidence.json](official/source-evidence.json)。"
+    },
+    {
+      "entryId": "B20",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/B20-sonner/guide.md",
+      "line": 83,
+      "href": "local-validation.md",
+      "content": "局部 SDK、纯规则、类型/格式/metadata 的实际命令与边界在 [local-validation.md](local-validation.md)。完整三个真实 Playwright 案例在 [browser-proposal.txt](validation/browser-proposal.txt)，实际通知皮肤、焦点/action、有限时长、取消和卸载由主控统一执行。正式 sdk/build/browser 仍 NOT_RUN，不用 Node store 或旧仓库 CI 代替浏览器收据。"
+    },
+    {
+      "entryId": "B20",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/B20-sonner/guide.md",
+      "line": 83,
+      "href": "validation/browser-proposal.txt",
+      "content": "局部 SDK、纯规则、类型/格式/metadata 的实际命令与边界在 [local-validation.md](local-validation.md)。完整三个真实 Playwright 案例在 [browser-proposal.txt](validation/browser-proposal.txt)，实际通知皮肤、焦点/action、有限时长、取消和卸载由主控统一执行。正式 sdk/build/browser 仍 NOT_RUN，不用 Node store 或旧仓库 CI 代替浏览器收据。"
+    },
+    {
+      "entryId": "B21",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/B21-react-motion-migration/guide.md",
+      "line": 80,
+      "href": "official/legacy-readme.md",
+      "content": "[历史原README](official/legacy-readme.md)固定 `chenglou/react-motion@8bd4f7223a8d79535586220f7173f078d4604e07/README.md`，npm0.5.2的gitHead，英文15446B，SHA-256 `affc2475f70368ce3f2c1bf02bd788f6967f1e73c1a7162806e3d04824b38b30`。旧manifest实际版本0.5.2，无中文候选；仅供API迁移对照，旧SDK运行明确NOT_RUN。完整请求/manifest/候选/同步日期在[source-evidence.json](official/source-evidence.json)。"
+    },
+    {
+      "entryId": "B21",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/B21-react-motion-migration/guide.md",
+      "line": 80,
+      "href": "official/source-evidence.json",
+      "content": "[历史原README](official/legacy-readme.md)固定 `chenglou/react-motion@8bd4f7223a8d79535586220f7173f078d4604e07/README.md`，npm0.5.2的gitHead，英文15446B，SHA-256 `affc2475f70368ce3f2c1bf02bd788f6967f1e73c1a7162806e3d04824b38b30`。旧manifest实际版本0.5.2，无中文候选；仅供API迁移对照，旧SDK运行明确NOT_RUN。完整请求/manifest/候选/同步日期在[source-evidence.json](official/source-evidence.json)。"
+    },
+    {
+      "entryId": "B21",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/B21-react-motion-migration/guide.md",
+      "line": 84,
+      "href": "local-validation.md",
+      "content": "本地严格类型、现代SDK局部SSR、pure reducer、格式/metadata与提案的真实命令/退出码在[local-validation.md](local-validation.md)。[完整三项目标Playwright提案](validation/browser-proposal.txt)交root统一执行；真实退出/打断、按钮/焦点、布局、实时减动和卸载仍NOT_RUN。旧runtime、跟随弹簧、HTTP、读屏/触摸、SSR hydration和大列表性能均未验收。正式sdk/build/browser不升级。"
+    },
+    {
+      "entryId": "B21",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/B21-react-motion-migration/guide.md",
+      "line": 84,
+      "href": "validation/browser-proposal.txt",
+      "content": "本地严格类型、现代SDK局部SSR、pure reducer、格式/metadata与提案的真实命令/退出码在[local-validation.md](local-validation.md)。[完整三项目标Playwright提案](validation/browser-proposal.txt)交root统一执行；真实退出/打断、按钮/焦点、布局、实时减动和卸载仍NOT_RUN。旧runtime、跟随弹簧、HTTP、读屏/触摸、SSR hydration和大列表性能均未验收。正式sdk/build/browser不升级。"
+    },
+    {
+      "entryId": "B22",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/B22-react-beautiful-dnd-migration/guide.md",
+      "line": 85,
+      "href": "validation/browser-proposal.txt",
+      "content": "真实SDK局部检查只运行替代库的React19 SSR绑定与双context身份；17项policy验证本地规则。真实传感器/位移/占位/取消/焦点/清理需主控按[完整浏览器提案](validation/browser-proposal.txt)运行。六项、实际cwd/命令/exit/日志见[local-validation.md](local-validation.md)；正式三项NOT_RUN，更不能由替代库局部通过推导原库PASS。"
+    },
+    {
+      "entryId": "B22",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/B22-react-beautiful-dnd-migration/guide.md",
+      "line": 85,
+      "href": "local-validation.md",
+      "content": "真实SDK局部检查只运行替代库的React19 SSR绑定与双context身份；17项policy验证本地规则。真实传感器/位移/占位/取消/焦点/清理需主控按[完整浏览器提案](validation/browser-proposal.txt)运行。六项、实际cwd/命令/exit/日志见[local-validation.md](local-validation.md)；正式三项NOT_RUN，更不能由替代库局部通过推导原库PASS。"
+    },
+    {
+      "entryId": "C02",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/C02-zod/guide.md",
+      "line": 64,
+      "href": "official/source-audit.json",
+      "content": "- 「官方 README」保存匹配 4.6.5 包目录的原文；官方中文候选在 `docs-v3`，不适合作为当前 v4 包快照。固定提交、候选审查和响应头在 [`source-audit.json`](official/source-audit.json)。"
+    },
+    {
+      "entryId": "C02",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/C02-zod/guide.md",
+      "line": 66,
+      "href": "local-validation.md",
+      "content": "- 本地真实 SDK、业务 helper、浏览器与独立复核分别在 [`local-validation.md`](local-validation.md) 记录。正式 sdk/build/browser 收据仍由 `verification.json` 独立管理。"
+    },
+    {
+      "entryId": "C02",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/C02-zod/agent.md",
+      "line": 20,
+      "href": "local-validation.md",
+      "content": "`tests/sdk.test.mjs` 使用实际 Schema；`tests/boundary-policy.test.mjs` 只证明自建 helper。先检查 [`local-validation.md`](local-validation.md) 的命令、输入摘要及范围，再检查独立 review / browser 记录。正式 verification 与本地运行分开，未满足正式记证条件保持 NOT_RUN。官方英文原文、docs-v3 中文候选审查、固定版本与首页响应头见 official/source-audit.json。"
+    },
+    {
+      "entryId": "C04",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/C04-jsonforms/guide.md",
+      "line": 73,
+      "href": "official/source-evidence.json",
+      "content": "[官方React README原文](official/readme.md)固定eclipsesource/jsonforms的v3.8.0真tag，commit `6075bcee93205c8fbe1f88eec19ed9058ad0f965`，path packages/react/README.md；英文4592B，SHA-256 `618f7fb0bccfab2827effb645a0759a38a0d27b545194ae9a73cb8ab9e32aa0b`。三个npm3.8.0均省略gitHead，不能伪造该字段；同commit manifest确认目标版本。完整tree及中文候选检查见[source-evidence.json](official/source-evidence.json)，未翻译改写原文。"
+    },
+    {
+      "entryId": "C04",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/C04-jsonforms/guide.md",
+      "line": 77,
+      "href": "local-validation.md",
+      "content": "局部真实SDK3是Vanilla初始SSR标签/HIDE、同Schema Ajv和NoValidation下additionalErrors显示；原pure4只验证payload与字段映射，均不能证明动态onChange/焦点/IME或取消。实际命令/六项见[local-validation.md](local-validation.md)，完整三条[browser提案](validation/browser-proposal.txt)交主控统一运行。触屏/读屏、真实OS输入法、SSR hydration、远程schema/HTTP授权与资源普查未验收；正式sdk/build/browser仍NOT_RUN。"
+    },
+    {
+      "entryId": "C04",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/C04-jsonforms/guide.md",
+      "line": 77,
+      "href": "validation/browser-proposal.txt",
+      "content": "局部真实SDK3是Vanilla初始SSR标签/HIDE、同Schema Ajv和NoValidation下additionalErrors显示；原pure4只验证payload与字段映射，均不能证明动态onChange/焦点/IME或取消。实际命令/六项见[local-validation.md](local-validation.md)，完整三条[browser提案](validation/browser-proposal.txt)交主控统一运行。触屏/读屏、真实OS输入法、SSR hydration、远程schema/HTTP授权与资源普查未验收；正式sdk/build/browser仍NOT_RUN。"
+    },
+    {
+      "entryId": "C05",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/C05-ajv/guide.md",
+      "line": 63,
+      "href": "official/source-audit.json",
+      "content": "- 「官方 README」保存 ajv-validator/ajv 固定 npm gitHead `0fba0b8e649909613cfce0999b149cd08f4a4987` 的完整原文。完整 tree 五个 README 候选没有中文，未把自译冒充官方中文；版本、原文摘要和实际 GET 头见 [`source-audit.json`](official/source-audit.json)。"
+    },
+    {
+      "entryId": "C05",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/C05-ajv/guide.md",
+      "line": 65,
+      "href": "local-validation.md",
+      "content": "- 实际共享合同 SDK、纯业务策略、类型、真实浏览器和独立复核分别记录于 [`local-validation.md`](local-validation.md)，正式三项收据仍独立保持 NOT_RUN。"
+    },
+    {
+      "entryId": "C08",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/C08-ag-grid/guide.md",
+      "line": 67,
+      "href": "official/source-evidence.json",
+      "content": "[官方React包README](official/readme.md)来自ag-grid/ag-grid固定npm gitHead `0fee5b7b1e839ae23fe860e404042448f3c1375d` 的 `packages/ag-grid-react/README.md`，36.2.0、英文45598B、SHA-256 `7070a8bcf54603483e9b617fce91e7bcaec8e30f77b75ca02809ad0512ca340c`，与实际安装原文逐字节一致。未截断tree未发现中文README。原文保留，与本地中文讲解分开；日期和7次真实请求完整头在[source-evidence.json](official/source-evidence.json)。"
+    },
+    {
+      "entryId": "C08",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/C08-ag-grid/guide.md",
+      "line": 71,
+      "href": "local-validation.md",
+      "content": "[local-validation.md](local-validation.md)区分真实SDK配置调用、纯策略、类型和真实浏览器；[完整三目标Playwright提案](validation/browser-proposal.txt)由主控统一接入。Node未造DOM，配置/theme调用不等于网格行模型/编辑/分页已运行。键盘、焦点、实际滚动、DOM清理、OS读屏/触摸和SSR hydration仍NOT_RUN，正式verification不升级。"
+    },
+    {
+      "entryId": "C08",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/C08-ag-grid/guide.md",
+      "line": 71,
+      "href": "validation/browser-proposal.txt",
+      "content": "[local-validation.md](local-validation.md)区分真实SDK配置调用、纯策略、类型和真实浏览器；[完整三目标Playwright提案](validation/browser-proposal.txt)由主控统一接入。Node未造DOM，配置/theme调用不等于网格行模型/编辑/分页已运行。键盘、焦点、实际滚动、DOM清理、OS读屏/触摸和SSR hydration仍NOT_RUN，正式verification不升级。"
+    },
+    {
+      "entryId": "C09",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/C09-react-virtuoso/guide.md",
+      "line": 90,
+      "href": "official/source-evidence.json",
+      "content": "[官方原 README](official/readme.md) 从 `petyosi/react-virtuoso` 的 annotated tag `react-virtuoso@4.18.19` 解引用到精确提交 `324f632f2fc745257cc46c28d1cb952eb7c68464`，路径 `packages/react-virtuoso/README.md`。固定提交的真实文件树未发现对应包/根 README 的中文版本，使用英文原文；当前教学是本地中文说明。npm 4.18.19 省略 gitHead，未伪造与 tag 相同的 npm SHA；同提交 package manifest 版本已核实。原文 9703 bytes，SHA-256 `67bcd5ac56f7697428bdeb2bf6ec5eea7ffbb078a16b5979f123411ff6e559df`，同步时间、完整响应头与候选路径见 [来源证据](official/source-evidence.json)。"
+    },
+    {
+      "entryId": "C09",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/C09-react-virtuoso/guide.md",
+      "line": 94,
+      "href": "validation/browser-proposal.txt",
+      "content": "真实 SDK Node 测试只检查 SSR 的 initialItemCount、真实两条内容和 firstItemIndex 逻辑下标；不把空 div、相同 HTML 或 policy 测试当成滚动/重挂成功。策略测试单独检查查询、分页与版本边界。[完整浏览器提案](validation/browser-proposal.txt) 交由 root 在统一候选运行，覆盖三个真实目标、ResizeObserver 重测、前插/跟随与卸载。作者未执行浏览器，formal verification 保持 NOT_RUN，实际命令/退出码见 [本地验收](local-validation.md)。"
+    },
+    {
+      "entryId": "C09",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/C09-react-virtuoso/guide.md",
+      "line": 94,
+      "href": "local-validation.md",
+      "content": "真实 SDK Node 测试只检查 SSR 的 initialItemCount、真实两条内容和 firstItemIndex 逻辑下标；不把空 div、相同 HTML 或 policy 测试当成滚动/重挂成功。策略测试单独检查查询、分页与版本边界。[完整浏览器提案](validation/browser-proposal.txt) 交由 root 在统一候选运行，覆盖三个真实目标、ResizeObserver 重测、前插/跟随与卸载。作者未执行浏览器，formal verification 保持 NOT_RUN，实际命令/退出码见 [本地验收](local-validation.md)。"
+    },
+    {
+      "entryId": "C09",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/C09-react-virtuoso/agent.md",
+      "line": 5,
+      "href": "verification.json",
+      "content": "先读 [guide](guide.md)、[真实入口](examples/example.tsx)、[verification](verification.json)。三个目标：basic 真实一万条窗口/scrollToIndex；business 630条本地筛选、可取消260ms任务、同名搜索新窗口；advanced 同次前插 data/firstItemIndex、业务ID展开与按SDK位置跟随。"
+    },
+    {
+      "entryId": "C09",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/C09-react-virtuoso/agent.md",
+      "line": 15,
+      "href": "validation/browser-proposal.txt",
+      "content": "断言：basic目标article-9001进窗口且DOM远小于10000；business取消不增条数、同名搜索旧scroller脱离并回30、React为30/210、无匹配为0/0、离开后新会话revision0；advanced前插30→40/100000→99990且旧行相对位置/展开保持、长文实际高度与SDK已知高度更新、历史追加不跳/贴底追加跟随。完整真实Playwright代码在 [提案](validation/browser-proposal.txt)，不把程序composition事件当OS输入法通过。"
+    },
+    {
+      "entryId": "C10",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/C10-tanstack-virtual/guide.md",
+      "line": 80,
+      "href": "official/source-evidence.json",
+      "content": "[完整来源证据](official/source-evidence.json)保存实际7GET完整头、固定版本/候选/日期/摘要及真实tag解析stdout。官网https://tanstack.com/virtual最终GET200有X-Frame-Options:DENY且无CSP frame-ancestors覆盖，标blocked、保留直达；没有Lab-origin允许证据，不能标allowed。"
+    },
+    {
+      "entryId": "C10",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/C10-tanstack-virtual/guide.md",
+      "line": 82,
+      "href": "local-validation.md",
+      "content": "[local-validation.md](local-validation.md)区分SDK3、policy6、入口类型、静态内容和真实浏览器；[完整三目标提案](validation/browser-proposal.txt)由主控接入。DOM数量、原生滚动、真实变高/resize、重复查询清测量/卸载、OS输入法/读屏和SSR hydration未运行前都保持NOT_RUN，正式verification不升级。"
+    },
+    {
+      "entryId": "C10",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/C10-tanstack-virtual/guide.md",
+      "line": 82,
+      "href": "validation/browser-proposal.txt",
+      "content": "[local-validation.md](local-validation.md)区分SDK3、policy6、入口类型、静态内容和真实浏览器；[完整三目标提案](validation/browser-proposal.txt)由主控接入。DOM数量、原生滚动、真实变高/resize、重复查询清测量/卸载、OS输入法/读屏和SSR hydration未运行前都保持NOT_RUN，正式verification不升级。"
+    },
+    {
+      "entryId": "C11",
+      "status": "review_pending",
+      "file": "packages/library-lab/entries/C11-react-arborist/guide.md",
+      "line": 41,
+      "href": "local-validation.md",
+      "content": "这些是操作预期，作者尚未运行真实浏览器。定向 Node 的 SDK/策略结果和浏览器提案在[本地验证](local-validation.md)，不能把模型测试当作拖拽、焦点或滚动通过。"
+    },
+    {
+      "entryId": "C11",
+      "status": "review_pending",
+      "file": "packages/library-lab/entries/C11-react-arborist/guide.md",
+      "line": 71,
+      "href": "official/source-evidence.json",
+      "content": "目标包目录没有 README，匹配提交的递归文件列表没有中文候选，故保存[官方根 README 原文](official/readme.md)，没有自行翻译。来源 jameskerr/react-arborist，npm3.16.0 的 gitHead `d74c4ec696ba98c1a4e981075f6d60cdff3e290b`，路径 README.md，en，24954B，同步 UTC2026-11-10T16:53:37.522420+00:00，SHA256 `0c3ba42abd227ddce29578749b9765b5513797d446cb2d3d2b96281a429fa80a`。固定 manifest 与版本一致，候选/5次真实GET/完整头在[source-evidence.json](official/source-evidence.json)。"
+    },
+    {
+      "entryId": "C12",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/C12-fullcalendar/guide.md",
+      "line": 86,
+      "href": "validation/browser-proposal.txt",
+      "content": "三条完整提案在[validation/browser-proposal.txt](validation/browser-proposal.txt)：basic实际导航/SDK模型与只读/reset，business实际创建/跨日拖动/末端缩放，advanced实际DST模型与拖动拒绝/revert/停止重跑。固定版本导出的protected-styles仅用于定位真实mirror/resizer，升级须重新核对；不造隐藏日历、直调回调或伪造SDK输出。节点断开只证明本节点替换，不是所有SDK资源普查。"
+    },
+    {
+      "entryId": "C13",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/C13-frappe-gantt/guide.md",
+      "line": 100,
+      "href": "validation/browser-proposal.txt",
+      "content": "真实 SDK Node 配方仅运行导出的类/实际原型中的任务预处理与日期计算，没有假 DOM、替换方法或伪造构造结果；策略测试单独检查业务合同。真实 SVG、键盘保存、frame 协议/销毁与监听由 root 的既有五个浏览器 case 和[完整提案](validation/browser-proposal.txt)验收。正式 verification 三项保持 NOT_RUN；实际失败/修正和六项见[本地记录](local-validation.md)。"
+    },
+    {
+      "entryId": "C13",
+      "status": "content_done",
+      "file": "packages/library-lab/entries/C13-frappe-gantt/guide.md",
+      "line": 100,
+      "href": "local-validation.md",
+      "content": "真实 SDK Node 配方仅运行导出的类/实际原型中的任务预处理与日期计算，没有假 DOM、替换方法或伪造构造结果；策略测试单独检查业务合同。真实 SVG、键盘保存、frame 协议/销毁与监听由 root 的既有五个浏览器 case 和[完整提案](validation/browser-proposal.txt)验收。正式 verification 三项保持 NOT_RUN；实际失败/修正和六项见[本地记录](local-validation.md)。"
+    },
+    {
+      "entryId": "C15",
+      "status": "review_pending",
+      "file": "packages/library-lab/entries/C15-dayjs/guide.md",
+      "line": 82,
+      "href": "official/package-readme.md",
+      "content": "主[官方中文README原文](official/readme.md)来自iamkun/dayjs固定commit **4549b8d03307891143e8a50d39fcdab1f16f77cf**，实际递归树发现docs/zh-cn/README.zh-CN.md，3882B/zh-CN，SHA256 **3f4c6e9edd42554b8c6a1e111daafb568b4eba3e8b9da31a9296abebb8aae2c5**；未改写/翻译。附[固定根英文原文](official/package-readme.md)8229B，和安装README逐字节相同。"
+    },
+    {
+      "entryId": "C15",
+      "status": "review_pending",
+      "file": "packages/library-lab/entries/C15-dayjs/guide.md",
+      "line": 86,
+      "href": "official/source-evidence.json",
+      "content": "匹配中文原文直接链接[中文官网](https://day.js.org/zh-CN/)，实际GET200完整rawHeaders没有XFO/强制CSP；尚未从Lab origin确认iframe内容可用，故unknown，不推allowed。日期/最终URL/7次成功请求/重复头和匿名cookie脱敏在[来源证据](official/source-evidence.json)。首次过强manifest断言失败保留，没有覆盖成功对。抓取仅全流程成功后暂存/replace，异常另存failed；受控传输维护检查不算新的官方HTTP。"
+    },
+    {
+      "entryId": "C15",
+      "status": "review_pending",
+      "file": "packages/library-lab/entries/C15-dayjs/guide.md",
+      "line": 88,
+      "href": "local-validation.md",
+      "content": "[官方时区说明](https://day.js.org/docs/en/plugin/timezone)与[严格格式说明](https://day.js.org/docs/en/parse/string-format)用于解释API；固定安装源码审计/六项/实际命令见[本地验证](local-validation.md)。SDK6含实际共享计算和一组混合guard+SDK往返，不证明React按钮/390px/卸载。完整三case提案交root，formal sdk/build/browser保持NOT_RUN；OS IME、读屏、touch、SSR、独立迁入与设备时区矩阵仍未验。"
+    }
+  ]
+}

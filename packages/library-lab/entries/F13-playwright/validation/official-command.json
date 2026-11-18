@@ -1,0 +1,8 @@
+{
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "argv": [
+    "node",
+    "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/F13-playwright/validation/check-official.mjs"
+  ],
+  "exitCode": 0
+}

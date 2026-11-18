@@ -1,0 +1,14 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['node', '--test', 'entries/B21-react-motion-migration/tests/sdk.test.mjs']
+startedAt: 2026-11-10T14:49:07.617953+00:00
+exit: 0
+✔ actual modern Motion SSR respects AnimatePresence initial=false and numeric animate targets (6.334349ms)
+✔ actual modern popLayout supports a forwarded-ref child and public presence hook in SSR (1.051872ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 148.235303

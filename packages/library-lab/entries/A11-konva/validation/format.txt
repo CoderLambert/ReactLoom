@@ -1,0 +1,108 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv=["pnpm", "exec", "biome", "check", "--write", "entries/A11-konva/examples", "entries/A11-konva/tests"]
+start=2026-11-10T11:42:39.050609+00:00
+end=2026-11-10T11:42:39.280690+00:00
+exit=1
+entries/A11-konva/examples/example.tsx:269:28 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    267 │               disabled={!canAddCard(cards.length)}
+    268 │               onClick={() => {
+  > 269 │                 const id = 'node-' + ++nextCardId.current
+        │                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    270 │                 setCards((old) =>
+    271 │                   appendCard(old, {
+  
+  i Unsafe fix: Use a template literal.
+  
+    267 267 │                 disabled={!canAddCard(cards.length)}
+    268 268 │                 onClick={() => {
+    269     │ - ················const·id·=·'node-'·+·++nextCardId.current
+        269 │ + ················const·id·=·`node-${++nextCardId.current}`
+    270 270 │                   setCards((old) =>
+    271 271 │                     appendCard(old, {
+  
+
+entries/A11-konva/examples/example.tsx:273:28 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    271 │                   appendCard(old, {
+    272 │                     id,
+  > 273 │                     title: '步骤 ' + (old.length + 1),
+        │                            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    274 │                     x: 40 + old.length * 35,
+    275 │                     y: 75 + old.length * 15,
+  
+  i Unsafe fix: Use a template literal.
+  
+    271 271 │                     appendCard(old, {
+    272 272 │                       id,
+    273     │ - ····················title:·'步骤·'·+·(old.length·+·1),
+        273 │ + ····················title:·`步骤·${old.length·+·1}`,
+    274 274 │                       x: 40 + old.length * 35,
+    275 275 │                       y: 75 + old.length * 15,
+  
+
+entries/A11-konva/tests/stage-policy.test.mts:15:82 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    13 │   let cards = [{ id: 'first' }]
+    14 │   assert.equal(appendCard(cards, { id: 'first' }), cards)
+  > 15 │   for (let i = 0; i < MAX_SAMPLE_CARDS + 4; i++) cards = appendCard(cards, { id: 'new-' + i })
+       │                                                                                  ^^^^^^^^^^
+    16 │   assert.equal(cards.length, MAX_SAMPLE_CARDS)
+    17 │   assert.equal(canAddCard(cards.length), false)
+  
+  i Unsafe fix: Use a template literal.
+  
+    13 13 │     let cards = [{ id: 'first' }]
+    14 14 │     assert.equal(appendCard(cards, { id: 'first' }), cards)
+    15    │ - ··for·(let·i·=·0;·i·<·MAX_SAMPLE_CARDS·+·4;·i++)·cards·=·appendCard(cards,·{·id:·'new-'·+·i·})
+       15 │ + ··for·(let·i·=·0;·i·<·MAX_SAMPLE_CARDS·+·4;·i++)·cards·=·appendCard(cards,·{·id:·`new-${i}`·})
+    16 16 │     assert.equal(cards.length, MAX_SAMPLE_CARDS)
+    17 17 │     assert.equal(canAddCard(cards.length), false)
+  
+
+entries/A11-konva/examples/example.tsx:81:3 lint/correctness/useExhaustiveDependencies  FIXABLE  ━━━━━━━━━━
+
+  × This hook specifies more dependencies than necessary: level.
+  
+    79 │     [],
+    80 │   )
+  > 81 │   useEffect(() => {
+       │   ^^^^^^^^^
+    82 │     setCards(initial)
+    83 │     setSelected('rss')
+  
+  i Outer scope values aren't valid dependencies because mutating them doesn't re-render the component.
+  
+    83 │     setSelected('rss')
+    84 │     setZoom(1)
+  > 85 │   }, [level])
+       │       ^^^^^
+    86 │   useEffect(() => {
+    87 │     const el = host.current
+  
+  i React relies on hook dependencies to determine when to re-compute Effects.
+    Specifying more dependencies than required can lead to unnecessary re-rendering
+    and degraded performance.
+  
+  i Unsafe fix: Remove the extra dependencies from the list.
+  
+    85 │ ··},·[level])
+       │       -----  
+
+Skipped 8 suggested fixes.
+If you wish to apply the suggested (unsafe) fixes, use the command biome check --write --unsafe
+
+Checked 5 files in 15ms. Fixed 4 files.
+Found 1 error.
+Found 3 infos.
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while applying fixes.
+  
+

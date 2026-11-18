@@ -1,17 +1,8 @@
 {
-  "$schema": "https://unpkg.com/knip@6/schema.json",
-  "entry": [
-    "src/index.ts",
-    "scripts/generate.ts"
-  ],
-  "project": [
-    "src/**/*.ts",
-    "scripts/**/*.ts",
-    "tests/**/*.ts"
-  ],
+  "$schema": "https://unpkg.com/knip@6.41.0/schema.json",
+  "entry": ["src/index.ts", "scripts/generate.ts"],
+  "project": ["src/**/*.ts", "scripts/**/*.ts", "tests/**/*.ts"],
   "ignoreIssues": {
-    "src/unused.ts": [
-      "files"
-    ]
+    "src/unused.ts": ["files"]
   }
 }

@@ -1,0 +1,46 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+ARGV: ["pnpm", "exec", "--", "biome", "check", "--write", "entries/A07-antv-g6/examples", "entries/A07-antv-g6/tests", "entries/A07-antv-g6/library.json", "entries/A07-antv-g6/verification.json", "entries/A07-antv-g6/validation/metadata-check.mjs", "entries/A07-antv-g6/validation/browser-proposal.ts"]
+START: 2026-11-10T11:51:25.534724+00:00
+END: 2026-11-10T11:51:25.753941+00:00
+EXIT: 0
+STDOUT:
+Skipped 3 suggested fixes.
+If you wish to apply the suggested (unsafe) fixes, use the command biome check --write --unsafe
+
+Checked 14 files in 10ms. Fixed 4 files.
+Found 1 info.
+
+STDERR:
+entries/A07-antv-g6/validation/metadata-check.mjs:68:3 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    66 │ writeFileSync(
+    67 │   join(entryPath, 'validation/input-hashes.json'),
+  > 68 │   JSON.stringify(
+       │   ^^^^^^^^^^^^^^^
+  > 69 │     {
+        ...
+  > 74 │     2,
+  > 75 │   ) + '\n',
+       │   ^^^^^^^^
+    76 │ )
+    77 │ console.log(
+  
+  i Unsafe fix: Use a template literal.
+  
+    66 66 │   writeFileSync(
+    67 67 │     join(entryPath, 'validation/input-hashes.json'),
+    68    │ - ··JSON.stringify(
+       68 │ + ··`${JSON.stringify(
+    69 69 │       {
+    70 70 │         installedPackage: { name: pkg.name, version: pkg.version, path: packagePath, sourcePath },
+    ····· │ 
+    73 73 │       null,
+    74 74 │       2,
+    75    │ - ··)·+·'\n',
+       75 │ + ··)}\n`,
+    76 76 │   )
+    77 77 │   console.log(
+  
+

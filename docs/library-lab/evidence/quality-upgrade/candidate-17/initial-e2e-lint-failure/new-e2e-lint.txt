@@ -1,0 +1,110 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+command=pnpm exec biome check packages/library-lab/e2e/quality-remediation-tanstack-virtual.spec.ts packages/library-lab/e2e/quality-remediation-primitives-sources.spec.ts packages/library-lab/e2e/c13-preview-boundary.spec.ts
+packages/library-lab/e2e/quality-remediation-tanstack-virtual.spec.ts:4:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+
+  × This statement must be preceded by a blank line. Add a newline before this statement.
+  
+     2 │ // No SDK/observer/scroll/clock mocks. Composition dispatch below tests only the app guard, never OS IME.
+     3 │ import { expect, type Locator, type Page, test } from '@playwright/test'
+   > 4 │ async function open(page: Page, level: 'basic' | 'business' | 'advanced') {
+       │ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   > 5 │   await page.setViewportSize({ width: 1280, height: 1200 })
+        ...
+  > 13 │   return app
+  > 14 │ }
+       │ ^
+    15 │ async function model(app: Locator) {
+    16 │   return JSON.parse((await app.getByTestId('c10-model').textContent()) ?? '{}')
+  
+  i Safe fix: Organize imports and exports (Biome)
+  
+      2   2 │   // No SDK/observer/scroll/clock mocks. Composition dispatch below tests only the app guard, never OS IME.
+      3   3 │   import { expect, type Locator, type Page, test } from '@playwright/test'
+          4 │ + 
+      4   5 │   async function open(page: Page, level: 'basic' | 'business' | 'advanced') {
+      5   6 │     await page.setViewportSize({ width: 1280, height: 1200 })
+  
+
+packages/library-lab/e2e/quality-remediation-tanstack-virtual.spec.ts format ━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Formatter would have printed the following content:
+  
+     26  26 │   }
+     27  27 │   async function actualFrames(page: Page) {
+     28     │ - ··await·page.evaluate(()·=>·new·Promise<void>((resolve)·=>·requestAnimationFrame(()·=>·requestAnimationFrame(()·=>·resolve()))))
+         28 │ + ··await·page.evaluate(
+         29 │ + ····()·=>
+         30 │ + ······new·Promise<void>((resolve)·=>
+         31 │ + ········requestAnimationFrame(()·=>·requestAnimationFrame(()·=>·resolve())),
+         32 │ + ······),
+         33 │ + ··)
+     29  34 │   }
+     30  35 │   
+     31     │ - test('@C10·actual·8000-row·data·renders·a·bounded·DOM·window·and·responds·to·native·scroll·and·real·deep·jumps',·async·({·page·})·=>·{
+         36 │ + test('@C10·actual·8000-row·data·renders·a·bounded·DOM·window·and·responds·to·native·scroll·and·real·deep·jumps',·async·({
+         37 │ + ··page,
+         38 │ + })·=>·{
+     32  39 │     const app = await open(page, 'basic')
+     33  40 │     expect((await model(app)).count).toBe(8000)
+    ······· │ 
+     54  61 │   })
+     55  62 │   
+     56     │ - test('@C10·committed·category/query·identity·rebuilds·real·views,·handles·empty·results·and·preserves·the·composition·submit·boundary',·async·({·page·})·=>·{
+         63 │ + test('@C10·committed·category/query·identity·rebuilds·real·views,·handles·empty·results·and·preserves·the·composition·submit·boundary',·async·({
+         64 │ + ··page,
+         65 │ + })·=>·{
+     57  66 │     const app = await open(page, 'business')
+     58  67 │     const input = app.getByRole('textbox', { name: '搜索文章', exact: true })
+    ······· │ 
+    106 115 │   })
+    107 116 │   
+    108     │ - test('@C10·actual·measureElement·changes·geometry/total·for·expanded·rows,·works·at·depth,·and·rebuild/unmount·clear·owned·views',·async·({·page·})·=>·{
+        117 │ + test('@C10·actual·measureElement·changes·geometry/total·for·expanded·rows,·works·at·depth,·and·rebuild/unmount·clear·owned·views',·async·({
+        118 │ + ··page,
+        119 │ + })·=>·{
+    109 120 │     const errors: string[] = []
+    110 121 │     page.on('pageerror', (error) => errors.push(error.message))
+    111     │ - ··page.on('console',·(message)·=>·{·if·(message.type()·===·'error')·errors.push(message.text())·})
+        122 │ + ··page.on('console',·(message)·=>·{
+        123 │ + ····if·(message.type()·===·'error')·errors.push(message.text())
+        124 │ + ··})
+    112 125 │     const app = await open(page, 'advanced')
+    113 126 │     const first = row(app, 'rss-1')
+    ······· │ 
+    118 131 │     await first.getByRole('button', { name: '展开长文', exact: true }).click()
+    119 132 │     await expect(first.getByRole('button')).toHaveAttribute('aria-expanded', 'true')
+    120     │ - ··await·expect.poll(async·()·=>·(await·first.boundingBox())?.height·??·0).toBeGreaterThan(before.height·+·80)
+        133 │ + ··await·expect
+        134 │ + ····.poll(async·()·=>·(await·first.boundingBox())?.height·??·0)
+        135 │ + ····.toBeGreaterThan(before.height·+·80)
+    121 136 │     await expect.poll(async () => (await model(app)).totalSize).toBeGreaterThan(totalBefore)
+    122     │ - ··await·expect.poll(async·()·=>·{
+    123     │ - ····const·current·=·await·first.boundingBox()
+    124     │ - ····const·next·=·await·row(app,·'rss-2').boundingBox()
+    125     │ - ····return·current·&&·next·?·next.y·-·current.y·-·current.height·:·-1000
+    126     │ - ··}).toBeGreaterThanOrEqual(-1)
+        137 │ + ··await·expect
+        138 │ + ····.poll(async·()·=>·{
+        139 │ + ······const·current·=·await·first.boundingBox()
+        140 │ + ······const·next·=·await·row(app,·'rss-2').boundingBox()
+        141 │ + ······return·current·&&·next·?·next.y·-·current.y·-·current.height·:·-1000
+        142 │ + ····})
+        143 │ + ····.toBeGreaterThanOrEqual(-1)
+    127 144 │     await first.getByRole('button', { name: '收起长文', exact: true }).click()
+    128     │ - ··await·expect.poll(async·()·=>·(await·first.boundingBox())?.height·??·10000).toBeLessThanOrEqual(before.height·+·1)
+        145 │ + ··await·expect
+        146 │ + ····.poll(async·()·=>·(await·first.boundingBox())?.height·??·10000)
+        147 │ + ····.toBeLessThanOrEqual(before.height·+·1)
+    129 148 │     await app.getByRole('button', { name: '跳转靠近末尾', exact: true }).click()
+    130 149 │     const deep = row(app, 'rss-3381')
+  
+
+Checked 3 files in 9ms. No fixes applied.
+Found 2 errors.
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while running checks.
+  
+
+
+exitCode=1

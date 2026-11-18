@@ -1,14 +1,14 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "motion 14.6.0 未在本环境安装并运行"
+    "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B01.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
   },
   "build": {
     "status": "NOT_RUN",
-    "note": "PLATFORM 需统一添加依赖锁文件后执行"
+    "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B01.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "入场/离场/重排/减少动画/键盘焦点仍需实际浏览器"
+    "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B01.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
   }
 }

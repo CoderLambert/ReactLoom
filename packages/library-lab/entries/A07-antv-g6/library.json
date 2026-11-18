@@ -4,14 +4,8 @@
   "slug": "antv-g6",
   "name": "AntV G6",
   "group": "A",
-  "summary": "关系网络的节点、边、拓扑与交互画布（基于 G6 5.1.1）",
-  "tags": [
-    "图可视化",
-    "关系网络",
-    "Graph",
-    "Canvas",
-    "生命周期"
-  ],
+  "summary": "从稳定节点与有向边到真实Canvas；观察同实例拓扑更新、选择、窄屏适配与异步销毁",
+  "tags": ["图可视化", "关系网络", "Graph", "Canvas", "生命周期"],
   "contentState": "recreated",
   "packages": [
     {
@@ -21,16 +15,16 @@
   ],
   "references": [
     {
-      "title": "G6 React integration",
-      "url": "https://g6.antv.antgroup.com/en/manual/getting-started/integration/react"
+      "title": "5.1.1官方中文原文",
+      "url": "https://github.com/antvis/G6/blob/5a5551cea13d021d12c90a87116e3c6092d53210/README.zh-CN.md"
     },
     {
-      "title": "G6 Graph API",
-      "url": "https://g6.antv.antgroup.com/en/api/graph"
+      "title": "匹配版本Graph源码/API",
+      "url": "https://github.com/antvis/G6/blob/5a5551cea13d021d12c90a87116e3c6092d53210/packages/g6/src/runtime/graph.ts"
     },
     {
-      "title": "官方仓库",
-      "url": "https://github.com/antvis/G6"
+      "title": "匹配版本Canvas后端",
+      "url": "https://github.com/antvis/G6/blob/5a5551cea13d021d12c90a87116e3c6092d53210/packages/g6/src/runtime/canvas.ts"
     }
   ],
   "related": [
@@ -48,68 +42,85 @@
   "demos": [
     {
       "demoId": "basic",
-      "title": "最小拓扑",
-      "description": "G6 Graph 绘制来源→转换→索引的三节点有向关系，并提供等价文本表。",
+      "title": "节点、边与有向关系",
+      "description": "固定3节点2边，真实Graph绘制及节点选择；用SDK拓扑、状态和坐标对照文本。",
       "level": "basic",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
+        "examples/demo.tsx",
         "examples/example.tsx",
+        "examples/graph-data.ts",
+        "examples/graph-options.ts",
+        "examples/async-owner.ts",
         "examples/graph-sizing.ts",
-        "examples/demo.tsx"
+        "examples/workshop.css"
       ],
-      "capabilities": [
-        "canvas",
-        "resize-observer",
-        "pointer",
-        "graph"
-      ]
+      "capabilities": ["canvas", "resize-observer", "pointer", "graph"]
     },
     {
       "demoId": "business",
-      "title": "新闻处理依赖图",
-      "description": "通过可操作按钮增删审校步骤，观察边和节点随数据重建。",
+      "title": "同实例更新新闻处理拓扑",
+      "description": "切换审校步骤4/3↔3/2，setData/render更新同一Graph并移除旧边，理解自动适配取舍。",
       "level": "business",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
+        "examples/demo.tsx",
         "examples/example.tsx",
+        "examples/graph-data.ts",
+        "examples/graph-options.ts",
+        "examples/async-owner.ts",
         "examples/graph-sizing.ts",
-        "examples/demo.tsx"
+        "examples/workshop.css"
       ],
-      "capabilities": [
-        "canvas",
-        "resize-observer",
-        "pointer",
-        "graph"
-      ]
+      "capabilities": ["canvas", "resize-observer", "pointer", "graph"]
     },
     {
       "demoId": "advanced",
-      "title": "更新与销毁边界",
-      "description": "切换紧凑/扩展模式、观察宽度与实例清理；验证不遗留旧 Canvas。",
+      "title": "选择、视口与异步所有权",
+      "description": "真实Canvas命中、窄容器setSize/fitView、显式重建及串行任务结算后的实例销毁。",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
+        "examples/demo.tsx",
         "examples/example.tsx",
+        "examples/graph-data.ts",
+        "examples/graph-options.ts",
+        "examples/async-owner.ts",
         "examples/graph-sizing.ts",
-        "examples/demo.tsx"
+        "examples/workshop.css"
       ],
-      "capabilities": [
-        "canvas",
-        "resize-observer",
-        "pointer",
-        "graph"
-      ]
+      "capabilities": ["canvas", "resize-observer", "pointer", "graph"]
     }
   ],
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
-    "note": "新实现：官方文档和当前库 API 独立核对；没有继承历史测试 PASS。"
+    "note": "保留稳定业务id、固定坐标与宽度夹取/ResizeObserver+rAF清理；数据改为同实例setData/render，新增真实选择/fitView和每实例异步串行所有权。真实Node模型与纯策略分开，Canvas仅由真实浏览器验收。"
   },
   "license": {
     "spdx": "MIT",
     "assets": "本地生成的确定性数据；不打包第三方商业媒体。"
+  },
+  "official": {
+    "readme": {
+      "repository": "antvis/G6",
+      "commit": "5a5551cea13d021d12c90a87116e3c6092d53210",
+      "path": "README.zh-CN.md",
+      "sourceUrl": "https://github.com/antvis/G6/blob/5a5551cea13d021d12c90a87116e3c6092d53210/README.zh-CN.md",
+      "snapshotPath": "official/readme.md",
+      "language": "zh-CN",
+      "version": "5.1.1",
+      "syncedAt": "2026-11-10T11:41:24.810393+00:00",
+      "sha256": "cf2ef1137aac0a35d0f70f11e2046576e321e0db6996812b9cee58419f5fdb1e"
+    },
+    "homepage": {
+      "url": "https://g6.antv.antgroup.com/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-10T11:41:24.810393+00:00",
+      "reason": "实际GET200且最终URL不变；完整响应头未发现X-Frame-Options或Content-Security-Policy。尚未从真实Lab origin验证可用，不据缺少限制头宣称allowed。"
+    }
   }
 }

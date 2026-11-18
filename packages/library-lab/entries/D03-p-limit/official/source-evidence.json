@@ -1,0 +1,81 @@
+{
+  "checkedAt": "2026-11-10T10:12:31.077749+00:00",
+  "repository": "sindresorhus/p-limit",
+  "tag": "v7.3.3",
+  "tagObject": "4740323a1eba455aaef666a8faab519663fb0cb9",
+  "commit": "4d4ec71803d8736567249c3dde06ea82795ae7c7",
+  "packageVersion": "7.3.3",
+  "readmeCandidateCheck": {
+    "url": "https://api.github.com/repos/sindresorhus/p-limit/contents/?ref=4d4ec71803d8736567249c3dde06ea82795ae7c7",
+    "status": 200,
+    "readmeCandidates": [
+      "readme.md"
+    ],
+    "selected": "readme.md",
+    "language": "en",
+    "note": "Actual fixed-ref root listing contains only the English package readme; no Chinese README candidate. Package repository is used as official homepage."
+  },
+  "requests": [
+    {
+      "url": "https://raw.githubusercontent.com/sindresorhus/p-limit/4d4ec71803d8736567249c3dde06ea82795ae7c7/readme.md",
+      "finalUrl": "https://raw.githubusercontent.com/sindresorhus/p-limit/4d4ec71803d8736567249c3dde06ea82795ae7c7/readme.md",
+      "status": 200,
+      "headers": {
+        "Connection": "close",
+        "Content-Length": "5418",
+        "Cache-Control": "max-age=300",
+        "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+        "Content-Type": "text/plain; charset=utf-8",
+        "ETag": "\"1cc919c32fe442401abba74040c4a326d7c2f5ad679921a986edbe91fb7e6478\"",
+        "Strict-Transport-Security": "max-age=31536000",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "deny",
+        "X-XSS-Protection": "1; mode=block",
+        "X-GitHub-Request-Id": "DFE0:1CED57:2FEB7D:3C7916:6AF2EE0E",
+        "x-github-edge-region": "westus3",
+        "Accept-Ranges": "bytes",
+        "Date": "Tue, 10 Nov 2026 10:12:32 GMT",
+        "Via": "1.1 varnish",
+        "X-Served-By": "cache-pao-kpao1770046-PAO",
+        "X-Cache": "MISS",
+        "X-Cache-Hits": "0",
+        "X-Timer": "S1794305552.930165,VS0,VE158",
+        "Vary": "Authorization,Accept-Encoding",
+        "Access-Control-Allow-Origin": "*",
+        "Cross-Origin-Resource-Policy": "cross-origin",
+        "X-Fastly-Request-ID": "52ba695de39e83c72ab226eccd864981e67633be",
+        "Expires": "Tue, 10 Nov 2026 10:17:32 GMT",
+        "Source-Age": "0"
+      },
+      "bytes": 5418,
+      "sha256": "dbe29b10fca55743e35fe2b3d768024cd135d1bac4bd60aee566a5e1f3af294f"
+    },
+    {
+      "url": "https://github.com/sindresorhus/p-limit",
+      "finalUrl": "https://github.com/sindresorhus/p-limit",
+      "status": 200,
+      "headers": {
+        "Date": "Tue, 10 Nov 2026 10:12:38 GMT",
+        "Content-Type": "text/html; charset=utf-8",
+        "Vary": "X-PJAX, X-PJAX-Container, Turbo-Visit, Turbo-Frame, X-Requested-With, X-GitHub-Client-Version, Sec-Fetch-Site,Accept-Encoding, Accept, X-Requested-With",
+        "ETag": "W/\"132135170061f9128562d4fda5c33352\"",
+        "Cache-Control": "max-age=0, private, must-revalidate",
+        "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+        "X-Frame-Options": "deny",
+        "X-Content-Type-Options": "nosniff",
+        "X-XSS-Protection": "0",
+        "Referrer-Policy": "no-referrer-when-downgrade",
+        "Content-Security-Policy": "default-src 'none'; base-uri 'self'; child-src github.githubassets.com github.com/assets-cdn/worker/ github.com/assets/ gist.github.com/assets-cdn/worker/; connect-src 'self' uploads.github.com www.githubstatus.com collector.github.com raw.githubusercontent.com api.github.com github-cloud.s3.amazonaws.com github-production-repository-file-5c1aeb.s3.amazonaws.com github-production-upload-manifest-file-7fdce7.s3.amazonaws.com github-production-user-asset-6210df.s3.amazonaws.com *.rel.tunnels.api.visualstudio.com wss://*.rel.tunnels.api.visualstudio.com github.githubassets.com objects-origin.githubusercontent.com copilot-proxy.githubusercontent.com proxy.individual.githubcopilot.com proxy.business.githubcopilot.com proxy.enterprise.githubcopilot.com *.actions.githubusercontent.com wss://*.actions.githubusercontent.com productionresultssa0.blob.core.windows.net productionresultssa1.blob.core.windows.net productionresultssa2.blob.core.windows.net productionresultssa3.blob.core.windows.net productionresultssa4.blob.core.windows.net productionresultssa5.blob.core.windows.net productionresultssa6.blob.core.windows.net productionresultssa7.blob.core.windows.net productionresultssa8.blob.core.windows.net productionresultssa9.blob.core.windows.net productionresultssa10.blob.core.windows.net productionresultssa11.blob.core.windows.net productionresultssa12.blob.core.windows.net productionresultssa13.blob.core.windows.net productionresultssa14.blob.core.windows.net productionresultssa15.blob.core.windows.net productionresultssa16.blob.core.windows.net productionresultssa17.blob.core.windows.net productionresultssa18.blob.core.windows.net productionresultssa19.blob.core.windows.net productionresultssa30.blob.core.windows.net productionresultssa31.blob.core.windows.net productionresultssa32.blob.core.windows.net github-production-repository-image-32fea6.s3.amazonaws.com github-production-release-asset-2e65be.s3.amazonaws.com insights.github.com wss://alive.github.com wss://alive-staging.github.com api.githubcopilot.com api.individual.githubcopilot.com api.business.githubcopilot.com api.enterprise.githubcopilot.com wss://production-copilot-host.webpubsub.azure.com wss://production-copilot-host-centralus.webpubsub.azure.com wss://production-copilot-host-centralus-02.webpubsub.azure.com wss://production-copilot-host-westus.webpubsub.azure.com wss://production-copilot-host-westus3.webpubsub.azure.com wss://production-copilot-host-eastasia.webpubsub.azure.com wss://production-copilot-host-austriaeast.webpubsub.azure.com api.github.com/cmc_internal/api/; font-src github.githubassets.com; form-action 'self' github.com gist.github.com copilot-workspace.githubnext.com objects-origin.githubusercontent.com; frame-ancestors 'none'; frame-src viewscreen.githubusercontent.com notebooks.githubusercontent.com; img-src 'self' data: blob: github.githubassets.com media.githubusercontent.com camo.githubusercontent.com identicons.github.com avatars.githubusercontent.com private-avatars.githubusercontent.com github-cloud.s3.amazonaws.com objects.githubusercontent.com release-assets.githubusercontent.com secured-user-images.githubusercontent.com user-images.githubusercontent.com private-user-images.githubusercontent.com opengraph.githubassets.com repository-images.githubusercontent.com marketplace-screenshots.githubusercontent.com copilotprodattachments.blob.core.windows.net/github-production-copilot-attachments/ github-production-user-asset-6210df.s3.amazonaws.com customer-stories-feed.github.com spotlights-feed.github.com explore-feed.github.com *.googleusercontent.com objects-origin.githubusercontent.com *.githubusercontent.com; manifest-src 'self'; media-src github.com user-images.githubusercontent.com secured-user-images.githubusercontent.com private-user-images.githubusercontent.com github-production-user-asset-6210df.s3.amazonaws.com gist.github.com github.githubassets.com; script-src github.githubassets.com 'sha256-6AKuI+cDd1MoUL1u4eqrA9PXmnPAkOB4h7421hPUUm0='; style-src 'unsafe-inline' github.githubassets.com; upgrade-insecure-requests; worker-src github.githubassets.com github.com/assets-cdn/worker/ github.com/assets/ gist.github.com/assets-cdn/worker/",
+        "Server": "github.com",
+        "Accept-Ranges": "bytes",
+        "Set-Cookie": "_gh_sess=kqThoCyQQK4c9l%2FqjWRNZsNbmrkc6er6NCjeaDQzXLlD%2B%2BTsUiYwyYoHToDYLD7qOeMZGyEUpoQI2D%2Bio52Zd7LNgfoWXaUIQC6plHetfqcZzQZJa6JGjg3Zb8hiEHXSQ6JELjroR1gfwKsWpLmdJBcegDfVHI5thAZ%2FTiT6YheFCONkaxBexLL6S6hD5ZQGJGvlJe%2F2z%2FROrvlOrAW0QhetZibeN9AwEapuzPgBJrww1RaIwwLqjGaO3O186kAwxNmQBf2cUeVkX2XsbPlDWw%3D%3D--TYVVZbwVNKmiO%2FUI--wg%2FfkGWBaVZs%2F9Aal%2Bmk9Q%3D%3D; path=/; HttpOnly; secure; SameSite=Lax",
+        "X-GitHub-Request-Id": "94CC:1DFBFD:B578C2:1B359D3:6AF2EE11",
+        "x-github-edge-region": "westus3",
+        "connection": "close",
+        "Transfer-Encoding": "chunked"
+      },
+      "bytes": 313472,
+      "sha256": "a5f8e87d70591b6f42a1eca92f7b76a6d8122c224b9ebb70e5f440f04da89aea"
+    }
+  ]
+}

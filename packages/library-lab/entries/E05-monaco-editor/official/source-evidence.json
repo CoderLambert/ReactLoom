@@ -1,0 +1,16 @@
+{
+  "repository": "microsoft/monaco-editor",
+  "commit": "d61824269f1377111d34306e4a47172327777083",
+  "releaseCommitMessage": "Merge pull request #5487 from microsoft/hediet/b/release-0.57.0",
+  "treeApi": "https://api.github.com/repos/microsoft/monaco-editor/contents?ref=d61824269f1377111d34306e4a47172327777083",
+  "readmeSelection": "Root directory listing contained README.md and no translated README; preserve upstream English bytes.",
+  "matchingInstalledPackage": {
+    "version": "0.57.0",
+    "monacoCommitId": "d61824269f1377111d34306e4a47172327777083",
+    "license": "MIT"
+  },
+  "verifiedAt": "2026-11-10T09:28:17.741698+00:00",
+  "upstreamPackageJsonUrl": "https://raw.githubusercontent.com/microsoft/monaco-editor/d61824269f1377111d34306e4a47172327777083/package.json",
+  "upstreamReadmeUrl": "https://raw.githubusercontent.com/microsoft/monaco-editor/d61824269f1377111d34306e4a47172327777083/README.md",
+  "versionCaveat": "Pinned integrate-esm.md still shows older ESM language paths. Installed 0.57.0 exports and filesystem verified the languages/features subpaths used in examples/workers.ts."
+}

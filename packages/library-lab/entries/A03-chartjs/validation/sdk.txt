@@ -1,0 +1,16 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ["node", "--test", "entries/A03-chartjs/tests/sdk.test.mjs"]
+exit: 0
+
+native Canvas PNGs: bar-initial.png/bar-updated.png; real instance 0 hit index 2
+✔ real Chart draws native pixels, updates the same instance and exposes actual hit/active elements (54.556775ms)
+native Canvas PNG: line-resized.png; dimensions 820 350 old/new ids 1 2
+✔ real destroy releases a native canvas for line reconstruction and explicit resize (14.808751ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 851.954945

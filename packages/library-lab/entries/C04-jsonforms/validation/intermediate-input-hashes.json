@@ -1,0 +1,81 @@
+{
+  "checkedAt": "2026-11-10T15:25:35.044534+00:00",
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+  "files": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "db93de70798ed6f85711c089613f1d04171e00e70cbb774aa00772912be6f710",
+      "bytes": 521
+    },
+    {
+      "path": "library.json",
+      "sha256": "93defa2f563209424598f7bd1a500ca8610ef5b3032ce84d464126525183b043",
+      "bytes": 4437
+    },
+    {
+      "path": "guide.md",
+      "sha256": "291513b9f12010c8ef14b2e5850887f19256bc95dfe5b7643366a98fa9c184a2",
+      "bytes": 12160
+    },
+    {
+      "path": "agent.md",
+      "sha256": "fb617c2e37c0df22eca6ed5fde27e1725d877243cf2af3a94e19ceaa3a1bb97b",
+      "bytes": 2086
+    },
+    {
+      "path": "verification.json",
+      "sha256": "8c5f2b7950f784cb739df1972df178c1a9d039e9ef74a793ec4cf8db67fec29b",
+      "bytes": 486
+    },
+    {
+      "path": "examples/example.tsx",
+      "sha256": "5a5f4bfab22aef30c98756cc1fa8b64b1fd4afc96346b5d4e1263910cde989e8",
+      "bytes": 9470
+    },
+    {
+      "path": "examples/demo.tsx",
+      "sha256": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+      "bytes": 36
+    },
+    {
+      "path": "examples/forms.css",
+      "sha256": "b89f6da5b50fd51ed321beb6e17b39bbfab0d884c0353f30fa4d7382d00a26e0",
+      "bytes": 526
+    },
+    {
+      "path": "examples/submission-policy.mjs",
+      "sha256": "32fb0e54c6b8c6794a7dc22846d6cf02d9f4eab1c18ed28ce55b5efdb205e1f1",
+      "bytes": 3207
+    },
+    {
+      "path": "examples/submission-policy.d.mts",
+      "sha256": "132dfdfc732899e088555e965776562066a4dae2d311153bbece9c3fbaa447be",
+      "bytes": 1060
+    },
+    {
+      "path": "tests/sdk.test.mjs",
+      "sha256": "5fe92848ff68dee6b99559ca63b4506c6e9eb95a896bf947b64793d412c1f51c",
+      "bytes": 2819
+    },
+    {
+      "path": "tests/submission-policy.test.mjs",
+      "sha256": "2a8afb8428585a1a9ba08f4274c731916bd4105911bb81a050049cc1d4d81340",
+      "bytes": 1925
+    },
+    {
+      "path": "official/readme.md",
+      "sha256": "618f7fb0bccfab2827effb645a0759a38a0d27b545194ae9a73cb8ab9e32aa0b",
+      "bytes": 4592
+    },
+    {
+      "path": "official/source-evidence.json",
+      "sha256": "e295a2d2a5144d5a1c217f95ff12a971d73bea940c262daf5bbf0e633fad3675",
+      "bytes": 15261
+    },
+    {
+      "path": "local-validation.md",
+      "sha256": "894f3325ff102c69e2c506607fbe4681f8ea7abbb39dfff4c0b840cc91b1643a",
+      "bytes": 5671
+    }
+  ]
+}

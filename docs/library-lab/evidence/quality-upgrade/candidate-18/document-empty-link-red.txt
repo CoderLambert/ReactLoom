@@ -1,0 +1,41 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=pnpm exec playwright test --config=.local-evidence/quality-playwright.config.ts e2e/quality-document-links.spec.ts --grep blocked reference labels --trace=off
+
+Running 1 test using 1 worker
+
+(node:2282825) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 e2e/quality-document-links.spec.ts:4:1 › @platform-document blocked reference labels remain readable without a misleading navigation target (5.9s)
+
+
+  1) e2e/quality-document-links.spec.ts:4:1 › @platform-document blocked reference labels remain readable without a misleading navigation target 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  locator('.prose').getByRole('link', { name: 'local-validation.md', exact: true })
+    Expected: 0
+    Received: 1
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" locator('.prose').getByRole('link', { name: 'local-validation.md', exact: true }) with timeout 5000ms
+      - waiting for locator('.prose').getByRole('link', { name: 'local-validation.md', exact: true })
+        14 × locator resolved to 1 element
+           - unexpected value "1"
+
+
+       8 |   const body = page.locator('.prose')
+       9 |   await expect(body.getByText('local-validation.md', { exact: true })).toBeVisible()
+    > 10 |   await expect(body.getByRole('link', { name: 'local-validation.md', exact: true })).toHaveCount(0)
+         |                                                                                      ^
+      11 |   await expect(body.locator('a:not([href]),a[href=""]')).toHaveCount(0)
+      12 | })
+      13 |
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-document-links.spec.ts:10:86
+
+    Error Context: test-results/quality-document-links--pl-f8982-isleading-navigation-target/error-context.md
+
+  1 failed
+    e2e/quality-document-links.spec.ts:4:1 › @platform-document blocked reference labels remain readable without a misleading navigation target 
+
+exitCode=1

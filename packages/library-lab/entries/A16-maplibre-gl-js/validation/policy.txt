@@ -1,0 +1,17 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node --test entries/A16-maplibre-gl-js/tests/selection-policy.test.mts entries/A16-maplibre-gl-js/tests/station-factory.test.mts
+exit: 0
+✔ keeps the current station when it remains visible (0.457438ms)
+✔ filtering a selected offline station moves selection to visible station (0.088736ms)
+✔ empty filters clear selection rather than advertise a hidden station (0.067014ms)
+✔ resizing requires positive, finite container and a live map (0.095718ms)
+✔ rapid MapLibre additions preserve each captured coordinate (1.497114ms)
+✔ invalid or excess MapLibre ids rejected (0.444959ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 69.7315

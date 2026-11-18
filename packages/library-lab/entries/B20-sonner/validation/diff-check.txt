@@ -1,0 +1,4 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['git', 'diff', '--check', '--', 'entries/B20-sonner']
+startedAt: 2026-11-10T14:28:53.493557+00:00
+exit: 0

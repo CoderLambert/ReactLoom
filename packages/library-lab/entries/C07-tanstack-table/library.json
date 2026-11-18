@@ -4,14 +4,8 @@
   "slug": "tanstack-table",
   "name": "TanStack Table",
   "group": "C",
-  "summary": "Headless 表格的稳定业务 ID、排序和分页数据所有权",
-  "tags": [
-    "TanStack Table",
-    "表格",
-    "排序",
-    "分页",
-    "行选择"
-  ],
+  "summary": "从原始数据、行模型到真实DOM，辨清客户端与服务端排序分页及稳定选择ID",
+  "tags": ["TanStack Table", "v9行模型", "Headless表格", "排序", "分页", "行选择"],
   "contentState": "recreated",
   "packages": [
     {
@@ -21,16 +15,20 @@
   ],
   "references": [
     {
-      "title": "TanStack Table v9 官方文档",
-      "url": "https://tanstack.com/table/latest"
+      "title": "v9官方行模型",
+      "url": "https://tanstack.com/table/latest/docs/guide/row-models"
     },
     {
-      "title": "官方源码",
-      "url": "https://github.com/TanStack/table"
+      "title": "v9官方分页",
+      "url": "https://tanstack.com/table/latest/docs/guide/pagination"
     },
     {
-      "title": "v8 对比说明",
-      "url": "https://tanstack.com/table/v8/docs/guide/sorting"
+      "title": "v9官方迁移",
+      "url": "https://tanstack.com/table/latest/docs/framework/react/guide/migrating"
+    },
+    {
+      "title": "9.2.4固定官方源码",
+      "url": "https://github.com/TanStack/table/tree/d01c01bedbab0ff6c2641f18b2fc9a11545d9bf6/packages/react-table"
     }
   ],
   "related": [
@@ -48,54 +46,57 @@
   "demos": [
     {
       "demoId": "basic",
-      "title": "本地列排序与稳定行ID",
+      "title": "原始数据、行模型与稳定选择ID",
       "level": "basic",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
+        "examples/demo.tsx",
         "examples/example.tsx",
+        "examples/table-data.ts",
+        "examples/fixture-page.ts",
         "examples/page-policy.mjs",
         "examples/page-policy.d.mts",
-        "examples/demo.tsx"
+        "examples/workshop.css"
       ],
-      "capabilities": [
-        "timer"
-      ],
-      "description": "本地列排序与稳定行ID"
+      "capabilities": ["timer"],
+      "description": "18条同源fixture展示core、sorted与实际DOM顺序，排序改变位置但选择跟随业务ID。"
     },
     {
       "demoId": "business",
-      "title": "RSS前端过滤与分页",
+      "title": "客户端筛选、排序后分页",
       "level": "business",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
+        "examples/demo.tsx",
         "examples/example.tsx",
+        "examples/table-data.ts",
+        "examples/fixture-page.ts",
         "examples/page-policy.mjs",
         "examples/page-policy.d.mts",
-        "examples/demo.tsx"
+        "examples/workshop.css"
       ],
-      "capabilities": [
-        "timer"
-      ],
-      "description": "RSS前端过滤与分页"
+      "capabilities": ["timer"],
+      "description": "应用先筛选完整数据，Table排序后每页5行；观察6条技术数据分成5+1与跨页选择。"
     },
     {
       "demoId": "advanced",
-      "title": "服务端分页/排序、取消与跨页选中",
+      "title": "服务端一页、总数与请求所有权",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
+        "examples/demo.tsx",
         "examples/example.tsx",
+        "examples/table-data.ts",
+        "examples/fixture-page.ts",
         "examples/page-policy.mjs",
         "examples/page-policy.d.mts",
-        "examples/demo.tsx"
+        "examples/workshop.css"
       ],
-      "capabilities": [
-        "timer"
-      ],
-      "description": "服务端分页/排序、取消与跨页选中"
+      "capabilities": ["timer"],
+      "description": "360ms可取消本地来源返回当前页与total，manual跳过重复处理；保留503、缩页与epoch竞态保护。"
     }
   ],
   "license": {
@@ -103,6 +104,26 @@
   },
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
-    "note": "针对恢复的 9.2.4 原研究按最新平台约定独立精简和改写；原旧测试不继承"
+    "note": "保留原9.2.4实际行模型、稳定业务ID、受控选择分页、IME和identity/epoch请求门；提取同源features与本地来源，新增真实模型到DOM观察。历史收据不继承。"
+  },
+  "official": {
+    "readme": {
+      "repository": "TanStack/table",
+      "commit": "d01c01bedbab0ff6c2641f18b2fc9a11545d9bf6",
+      "path": "packages/react-table/README.md",
+      "sourceUrl": "https://github.com/TanStack/table/blob/d01c01bedbab0ff6c2641f18b2fc9a11545d9bf6/packages/react-table/README.md",
+      "snapshotPath": "official/readme.md",
+      "language": "en",
+      "version": "9.2.4",
+      "syncedAt": "2026-11-10T10:10:16.794464+00:00",
+      "sha256": "913bdc81d1d575246a519cd84ef3c31b12298fa768dcfb98e9bd254085119daa"
+    },
+    "homepage": {
+      "url": "https://tanstack.com/table/latest",
+      "kind": "website",
+      "status": "blocked",
+      "checkedAt": "2026-11-10T10:10:16.794464+00:00",
+      "reason": "GET200最终URL不变，X-Frame-Options: DENY明确禁止iframe；完整响应头见official/source-evidence.json，提供官网直达。Lab-origin浏览器NOT_RUN。"
+    }
   }
 }

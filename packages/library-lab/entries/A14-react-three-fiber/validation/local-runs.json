@@ -1,0 +1,286 @@
+{
+  "runs": [
+    {
+      "label": "format",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "check",
+        "--write",
+        "entries/A14-react-three-fiber/examples",
+        "entries/A14-react-three-fiber/tests",
+        "entries/A14-react-three-fiber/library.json",
+        "entries/A14-react-three-fiber/verification.json",
+        "entries/A14-react-three-fiber/official/source-evidence.json",
+        "entries/A14-react-three-fiber/validation/baseline.json"
+      ],
+      "startedAt": "2026-11-10T12:05:23.761163+00:00",
+      "finishedAt": "2026-11-10T12:05:23.975442+00:00",
+      "exitCode": 1,
+      "log": "validation/format.txt",
+      "logSha256": "10817fbfd2b5aede20f8615bfe0910df0f083f9f06d951420316669e320b1a46"
+    },
+    {
+      "label": "sdk",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "node",
+        "--test",
+        "entries/A14-react-three-fiber/tests/sdk.test.mjs"
+      ],
+      "startedAt": "2026-11-10T12:05:51.481644+00:00",
+      "finishedAt": "2026-11-10T12:05:51.598332+00:00",
+      "exitCode": 0,
+      "log": "validation/sdk.txt",
+      "logSha256": "e12608e490b12916c336eb31c6450d4cdc37d2d748d5f91a28bdf710b13fcf2b"
+    },
+    {
+      "label": "policy",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "node",
+        "--test",
+        "entries/A14-react-three-fiber/tests/frame-policy.test.mts"
+      ],
+      "startedAt": "2026-11-10T12:05:51.481766+00:00",
+      "finishedAt": "2026-11-10T12:05:51.577370+00:00",
+      "exitCode": 0,
+      "log": "validation/policy.txt",
+      "logSha256": "c8ac016f266629a4f0229e233d341105d8cd139aec72a5d7652a4eb42dceccd5"
+    },
+    {
+      "label": "types",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--target",
+        "ES2022",
+        "--lib",
+        "ES2022,DOM,DOM.Iterable",
+        "--module",
+        "ESNext",
+        "--moduleResolution",
+        "Bundler",
+        "--jsx",
+        "react-jsx",
+        "--strict",
+        "--skipLibCheck",
+        "--esModuleInterop",
+        "--allowSyntheticDefaultImports",
+        "--allowImportingTsExtensions",
+        "--types",
+        "vite/client,node",
+        "entries/A14-react-three-fiber/examples/demo.tsx"
+      ],
+      "startedAt": "2026-11-10T12:05:51.481973+00:00",
+      "finishedAt": "2026-11-10T12:05:51.768162+00:00",
+      "exitCode": 0,
+      "log": "validation/types.txt",
+      "logSha256": "6d3a1831f0da30219b2896d654a899dc101ceb0bfa69d63e0dea658fd2669e71"
+    },
+    {
+      "label": "format-fixed",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "check",
+        "--write",
+        "entries/A14-react-three-fiber/examples",
+        "entries/A14-react-three-fiber/tests",
+        "entries/A14-react-three-fiber/library.json",
+        "entries/A14-react-three-fiber/verification.json",
+        "entries/A14-react-three-fiber/official/source-evidence.json",
+        "entries/A14-react-three-fiber/official/npm-integrity.json"
+      ],
+      "startedAt": "2026-11-10T12:05:51.482284+00:00",
+      "finishedAt": "2026-11-10T12:05:51.731868+00:00",
+      "exitCode": 0,
+      "log": "validation/format-fixed.txt",
+      "logSha256": "b30ca28f9a3a2461da5b27db8e0461307d75a9323b9538717909fbdb0490943e"
+    },
+    {
+      "label": "format-final",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "check",
+        "--write",
+        "entries/A14-react-three-fiber/examples",
+        "entries/A14-react-three-fiber/tests",
+        "entries/A14-react-three-fiber/library.json",
+        "entries/A14-react-three-fiber/verification.json",
+        "entries/A14-react-three-fiber/validation/metadata-check.mjs",
+        "entries/A14-react-three-fiber/validation/source-audit.mjs"
+      ],
+      "startedAt": "2026-11-10T12:12:17.193757+00:00",
+      "finishedAt": "2026-11-10T12:12:17.409290+00:00",
+      "exitCode": 1,
+      "log": "validation/format-final.txt",
+      "logSha256": "2a3980b05c3b2821fe29304ae2f9df98497f6335bc24115b40ce3449ade0c572"
+    },
+    {
+      "label": "types-final",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--target",
+        "ES2022",
+        "--lib",
+        "ES2022,DOM,DOM.Iterable",
+        "--module",
+        "ESNext",
+        "--moduleResolution",
+        "Bundler",
+        "--jsx",
+        "react-jsx",
+        "--strict",
+        "--skipLibCheck",
+        "--esModuleInterop",
+        "--allowSyntheticDefaultImports",
+        "--allowImportingTsExtensions",
+        "--types",
+        "vite/client,node",
+        "entries/A14-react-three-fiber/examples/demo.tsx"
+      ],
+      "startedAt": "2026-11-10T12:12:47.841387+00:00",
+      "finishedAt": "2026-11-10T12:12:48.148092+00:00",
+      "exitCode": 0,
+      "log": "validation/types-final.txt",
+      "logSha256": "3de6406559d6b2d3f6a738cf7447e17d2956669f74d310fc1cfe478cbea8b2c5"
+    },
+    {
+      "label": "proposal-types",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--target",
+        "ES2022",
+        "--lib",
+        "ES2022,DOM,DOM.Iterable",
+        "--module",
+        "ESNext",
+        "--moduleResolution",
+        "Bundler",
+        "--jsx",
+        "react-jsx",
+        "--strict",
+        "--skipLibCheck",
+        "--esModuleInterop",
+        "--allowSyntheticDefaultImports",
+        "--allowImportingTsExtensions",
+        "--types",
+        "vite/client,node",
+        "entries/A14-react-three-fiber/validation/browser-proposal-check.ts"
+      ],
+      "startedAt": "2026-11-10T12:12:47.841505+00:00",
+      "finishedAt": "2026-11-10T12:12:48.127714+00:00",
+      "exitCode": 0,
+      "log": "validation/proposal-types.txt",
+      "logSha256": "9fc93fd098cc502f1e7c24d7bf603a918d465b6dd593a858bae4028c39234507"
+    },
+    {
+      "label": "format-final-fixed",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "check",
+        "entries/A14-react-three-fiber/examples",
+        "entries/A14-react-three-fiber/tests",
+        "entries/A14-react-three-fiber/library.json",
+        "entries/A14-react-three-fiber/verification.json",
+        "entries/A14-react-three-fiber/validation/metadata-check.mjs",
+        "entries/A14-react-three-fiber/validation/source-audit.mjs",
+        "entries/A14-react-three-fiber/validation/browser-proposal-check.ts"
+      ],
+      "startedAt": "2026-11-10T12:12:47.841712+00:00",
+      "finishedAt": "2026-11-10T12:12:48.111717+00:00",
+      "exitCode": 0,
+      "log": "validation/format-final-fixed.txt",
+      "logSha256": "d2ac98a788cbe45551b27c1cab37dd46a8d41e0a8ad4aa6e1f40e9f636df45cd"
+    },
+    {
+      "label": "metadata",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "node",
+        "entries/A14-react-three-fiber/validation/metadata-check.mjs"
+      ],
+      "startedAt": "2026-11-10T12:12:47.842061+00:00",
+      "finishedAt": "2026-11-10T12:12:47.873089+00:00",
+      "exitCode": 0,
+      "log": "validation/metadata.txt",
+      "logSha256": "c82c10f97967bc6511e315ee9d716042371de29501f61e77b00151529ed11e91"
+    },
+    {
+      "label": "source-audit",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "node",
+        "entries/A14-react-three-fiber/validation/source-audit.mjs"
+      ],
+      "startedAt": "2026-11-10T12:12:47.842494+00:00",
+      "finishedAt": "2026-11-10T12:12:47.874623+00:00",
+      "exitCode": 0,
+      "log": "validation/source-audit.txt",
+      "logSha256": "a7329cb086886e360d9371b7ea322748d0ad96402204927aa093f833d9c5e8e7"
+    },
+    {
+      "label": "final-inspection",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "node",
+        "--input-type=module",
+        "-e",
+        "import assert from 'node:assert/strict';import {readFile,stat} from 'node:fs/promises';import {createHash} from 'node:crypto';const root='entries/A14-react-three-fiber/';const hash=b=>createHash('sha256').update(b).digest('hex');for(const name of ['guide.md','agent.md','local-validation.md']){const text=await readFile(root+name,'utf8');for(const match of text.matchAll(/\\]\\(([^)]+)\\)/g)){const target=match[1];if(!/^[a-z]+:|^#/.test(target))assert.ok((await stat(root+target.split('#')[0])).isFile(),`${name}: ${target}`)}}const manifest=JSON.parse(await readFile(root+'validation/local-runs.json','utf8'));for(const run of manifest.runs)assert.equal(hash(await readFile(root+run.log)),run.logSha256,run.label);assert.equal((await readFile(root+'validation/browser-proposal.txt','utf8')).match(/test\\('@A14/g)?.length,4);for(const name of ['@react-three/fiber','three']){const p=JSON.parse(await readFile('node_modules/'+name+'/package.json','utf8'));assert.equal(p.license,'MIT')}console.log('Current guide/agent/local-validation links and all prior raw-log SHA match; four real browser proposals; both package licenses MIT. No browser or broad suite executed.');"
+      ],
+      "startedAt": "2026-11-10T12:17:09.262626+00:00",
+      "finishedAt": "2026-11-10T12:17:09.287828+00:00",
+      "exitCode": 0,
+      "log": "validation/final-inspection.txt",
+      "logSha256": "f1924b08b07d71a8e38d13e40de158d78f739849d7acfb4d18ba27c5da988cb1"
+    },
+    {
+      "label": "diff-check",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "packages/library-lab/entries/A14-react-three-fiber"
+      ],
+      "startedAt": "2026-11-10T12:17:09.288012+00:00",
+      "finishedAt": "2026-11-10T12:17:09.290802+00:00",
+      "exitCode": 0,
+      "log": "validation/diff-check.txt",
+      "logSha256": "8d9b2e3ce2bcafe66118fd516e218a3b63ed96d6bd19e1c890a71b420916010c"
+    }
+  ]
+}

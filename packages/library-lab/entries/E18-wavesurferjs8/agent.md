@@ -1,45 +1,11 @@
-# E18 wavesurfer.js — 工程手册
+# E18 wavesurfer8 工程复用
 
-## 适用
+8.0.3/BSD-3-Clause实装与固定LICENSE核对。波形播放/定位/速率缩放，非视频/HLS/转码/录音。已有React TSX DOM运行`pnpm add wavesurfer.js@8.0.3`；复制example.tsx、wav.ts、wave-cleanup.mjs/.d.mts；demo可省。Bundler，HTMLMediaElement/WebAudio decode/BlobURL/fetch，默认Shadow DOM样式，无Provider/env/CSS/账号/远程媒体。
 
-播放本地或已授权音频并显示波形、定位和倍速。视频用 E16。HLS 用 E17。转码用 E19。不需要波形时用原生 audio。
+完整原创WAV1.6s/8000Hz/mono16bit/12800帧，Node头检查不是浏览器decode。UI总时长必须来自ready参数，位置timeupdate，不能写死常量当运行结果。显式MediaElement backend内部native audio播放，波形WebAudio解码上下文finally.close，区别WebAudio播放backend的getMediaElement=null。
 
-## 版本
+ready前禁按钮，playPause catch比对当前ref。业务setTime不超过getDuration；进阶setPlaybackRate与zoom(max(1200,容器宽×2/真实时长))（不是120，短音频否则无视觉变化），zoom0恢复。不是裁剪或新音频输出。
 
-`wavesurfer.js@8.0.3`，BSD-3-Clause。`WaveSurfer.create` 后 `load` 一个由 `makeLabWave` 生成的 1.6 秒 8 kHz WAV。`normalize` 为 false。
+所有on返回off保留；cleanup alive=false/ref清空，再releaseWave逐个off/destroy/finallyrevoke自有URL。构造失败也revoke。v8 destroy终态，内部scope abort fetch、默认自有media pause去src/load，不能保证在途decodeAudioData物理取消。没有自有timer/Worker/storage或全局清理。
 
-## 迁移
-
-复制 effect 里的 create、事件退订、`destroy` 和 `revokeObjectURL`。`examples/demo.tsx` 只是再导出。`playPause` 必须 catch，并确认 ref 仍是该实例。产品换音频时新建实例，不要在已销毁对象上 `load`。时长标签要和真实 PCM 一致。
-
-## 不可删的清理
-
-`on` 返回的函数在清理时全部调用。然后 `destroy()`，再 revoke 本次 URL。`alive` 防止 ready 回调在卸载后 setState。`key={level}` 保证倍速和缩放不留在下一层。AbortError 只忽略中止，不忽略解码失败。
-
-## 反例
-
-- 创建后不 destroy。
-- destroy 之后继续 play 或 load。
-- 渲染路径里 create。
-- 不处理 play 的拒绝。
-- 空 catch 掉所有 load 错误。
-- 默认加载远程 mp3。
-- 用 innerHTML 写曲目标题。
-- 打开 normalize 后把振幅当成响度测量。
-
-## 测试断言
-
-- 生成的 Blob 类型是 `audio/wav`，时长逻辑对应 1.6 秒、8000 Hz。
-- 浏览器：无远程音频请求；播放与暂停一致；离开后无声且 URL 已 revoke。
-- 跳转不超过 `getDuration()`。
-- 没有收据就不要写解码器兼容性 PASS。
-
-## 真实限制
-
-样本是合成音，不是语音识别夹具。没有 peaks 预计算，没有麦克风，没有区域插件。zoom 和倍速没有跨浏览器收据。v8 destroy 不可逆。
-
-## 证据
-
-sdk、build、browser 保持 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有 E18 收据。Actions `41779873259` 是仓库级运行，不是本条目 PASS。
-
-资料：https://github.com/katspaugh/wavesurfer.js 。
+policy单列，不伪造Node音频SDK。browser需真实canvas/ready时长/Play位置/seek/rate/zoom和外部native/URL/AudioContext生命周期，不以DOM消失代destroy。官网unknown，固定原文/许可/header见official，formalNOT_RUN到匹配receipt。

@@ -1,0 +1,165 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: pnpm exec biome check --write entries/A09-excalidraw/examples entries/A09-excalidraw/tests entries/A09-excalidraw/validation/check-entry.mjs entries/A09-excalidraw/library.json entries/A09-excalidraw/verification.json entries/A09-excalidraw/official/source-audit.json entries/A09-excalidraw/official/homepage-response.json
+exit: 0
+Skipped 8 suggested fixes.
+If you wish to apply the suggested (unsafe) fixes, use the command biome check --write --unsafe
+
+Checked 10 files in 14ms. Fixed 6 files.
+Found 6 warnings.
+Found 4 infos.
+entries/A09-excalidraw/examples/example.tsx:171:18 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    169 │       if (!blob) throw new Error('未生成 PNG')
+    170 │       saveBlob(blob, 'reactloom-workflow.png', urlsRef.current, downloadTimers.current)
+  > 171 │       setMessage('已生成本地 PNG (' + blob.size + ' 字节)，未上传任何服务器。')
+        │                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    172 │     } catch (error) {
+    173 │       if (token === operationId.current && mounted.current)
+  
+  i Unsafe fix: Use a template literal.
+  
+    169 169 │         if (!blob) throw new Error('未生成 PNG')
+    170 170 │         saveBlob(blob, 'reactloom-workflow.png', urlsRef.current, downloadTimers.current)
+    171     │ - ······setMessage('已生成本地·PNG·('·+·blob.size·+·'·字节)，未上传任何服务器。')
+        171 │ + ······setMessage(`已生成本地·PNG·(${blob.size}·字节)，未上传任何服务器。`)
+    172 172 │       } catch (error) {
+    173 173 │         if (token === operationId.current && mounted.current)
+  
+
+entries/A09-excalidraw/examples/example.tsx:174:20 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    172 │     } catch (error) {
+    173 │       if (token === operationId.current && mounted.current)
+  > 174 │         setMessage('PNG 导出失败：' + String(error))
+        │                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    175 │     } finally {
+    176 │       if (token === operationId.current && mounted.current) setWorking(false)
+  
+  i Unsafe fix: Use a template literal.
+  
+    172 172 │       } catch (error) {
+    173 173 │         if (token === operationId.current && mounted.current)
+    174     │ - ········setMessage('PNG·导出失败：'·+·String(error))
+        174 │ + ········setMessage(`PNG·导出失败：${String(error)}`)
+    175 175 │       } finally {
+    176 176 │         if (token === operationId.current && mounted.current) setWorking(false)
+  
+
+entries/A09-excalidraw/examples/example.tsx:222:18 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    220 │         captureUpdate: CaptureUpdateAction.IMMEDIATELY,
+    221 │       })
+  > 222 │       setMessage('已通过 Excalidraw SDK 导入 ' + elements.length + ' 个元素；仅影响当前页面。')
+        │                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    223 │     } catch (error) {
+    224 │       if (token === operationId.current && mounted.current)
+  
+  i Unsafe fix: Use a template literal.
+  
+    220 220 │           captureUpdate: CaptureUpdateAction.IMMEDIATELY,
+    221 221 │         })
+    222     │ - ······setMessage('已通过·Excalidraw·SDK·导入·'·+·elements.length·+·'·个元素；仅影响当前页面。')
+        222 │ + ······setMessage(`已通过·Excalidraw·SDK·导入·${elements.length}·个元素；仅影响当前页面。`)
+    223 223 │       } catch (error) {
+    224 224 │         if (token === operationId.current && mounted.current)
+  
+
+entries/A09-excalidraw/examples/example.tsx:225:20 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    223 │     } catch (error) {
+    224 │       if (token === operationId.current && mounted.current)
+  > 225 │         setMessage('导入已拒绝：' + String(error))
+        │                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    226 │     } finally {
+    227 │       if (token === operationId.current && mounted.current) setWorking(false)
+  
+  i Unsafe fix: Use a template literal.
+  
+    223 223 │       } catch (error) {
+    224 224 │         if (token === operationId.current && mounted.current)
+    225     │ - ········setMessage('导入已拒绝：'·+·String(error))
+        225 │ + ········setMessage(`导入已拒绝：${String(error)}`)
+    226 226 │       } finally {
+    227 227 │         if (token === operationId.current && mounted.current) setWorking(false)
+  
+
+entries/A09-excalidraw/tests/scene-policy.test.mts:30:18 lint/style/noNonNullAssertion ━━━━━━━━━━━━━
+
+  ! Forbidden non-null assertion.
+  
+    28 │ test('empty, oversized or malformed file rejected', () => {
+    29 │   for (const bytes of [0, 1_500_001, -1, NaN, 1.1])
+  > 30 │     assert.match(sceneImportError({ ...valid, bytes })!, /1.5 MB/)
+       │                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    31 │   assert.match(sceneImportError({ ...valid, name: 'payload.svg' })!, /仅接受/)
+    32 │ })
+  
+
+entries/A09-excalidraw/tests/scene-policy.test.mts:31:16 lint/style/noNonNullAssertion ━━━━━━━━━━━━━
+
+  ! Forbidden non-null assertion.
+  
+    29 │   for (const bytes of [0, 1_500_001, -1, NaN, 1.1])
+    30 │     assert.match(sceneImportError({ ...valid, bytes })!, /1.5 MB/)
+  > 31 │   assert.match(sceneImportError({ ...valid, name: 'payload.svg' })!, /仅接受/)
+       │                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    32 │ })
+    33 │ test('invalid elements, dangerous links, binary attachments rejected', () => {
+  
+
+entries/A09-excalidraw/tests/scene-policy.test.mts:35:18 lint/style/noNonNullAssertion ━━━━━━━━━━━━━
+
+  ! Forbidden non-null assertion.
+  
+    33 │ test('invalid elements, dangerous links, binary attachments rejected', () => {
+    34 │   for (const elementCount of [-1, 201, 0.3])
+  > 35 │     assert.match(sceneImportError({ ...valid, elementCount })!, /200/)
+       │                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    36 │   assert.match(sceneImportError({ ...valid, links: ['http://insecure.example'] })!, /HTTPS/)
+    37 │   assert.match(sceneImportError({ ...valid, attachedFiles: 1 })!, /二进制/)
+  
+
+entries/A09-excalidraw/tests/scene-policy.test.mts:36:16 lint/style/noNonNullAssertion ━━━━━━━━━━━━━
+
+  ! Forbidden non-null assertion.
+  
+    34 │   for (const elementCount of [-1, 201, 0.3])
+    35 │     assert.match(sceneImportError({ ...valid, elementCount })!, /200/)
+  > 36 │   assert.match(sceneImportError({ ...valid, links: ['http://insecure.example'] })!, /HTTPS/)
+       │                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    37 │   assert.match(sceneImportError({ ...valid, attachedFiles: 1 })!, /二进制/)
+    38 │ })
+  
+
+entries/A09-excalidraw/tests/scene-policy.test.mts:37:16 lint/style/noNonNullAssertion ━━━━━━━━━━━━━
+
+  ! Forbidden non-null assertion.
+  
+    35 │     assert.match(sceneImportError({ ...valid, elementCount })!, /200/)
+    36 │   assert.match(sceneImportError({ ...valid, links: ['http://insecure.example'] })!, /HTTPS/)
+  > 37 │   assert.match(sceneImportError({ ...valid, attachedFiles: 1 })!, /二进制/)
+       │                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    38 │ })
+    39 │ 
+  
+
+entries/A09-excalidraw/tests/scene-policy.test.mts:46:18 lint/style/noNonNullAssertion ━━━━━━━━━━━━━
+
+  ! Forbidden non-null assertion.
+  
+    44 │   )
+    45 │   for (const type of ['image', 'embeddable', 'iframe', 'frame', 'unknown']) {
+  > 46 │     assert.match(sceneImportError({ ...valid, elementTypes: [type] })!, /不接受图片或嵌入/)
+       │                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    47 │   }
+    48 │ })
+  
+

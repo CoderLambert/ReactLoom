@@ -5,14 +5,7 @@
   "name": "XState",
   "group": "D",
   "summary": "Actor 有限状态机：审稿流程、守卫和重试预算",
-  "tags": [
-    "statechart",
-    "actor",
-    "状态机",
-    "guard",
-    "retry",
-    "审核"
-  ],
+  "tags": ["statechart", "actor", "状态机", "guard", "retry", "审核"],
   "contentState": "recreated",
   "packages": [
     {
@@ -63,7 +56,8 @@
         "examples/example.tsx",
         "examples/demo.tsx",
         "examples/review-policy.mjs",
-        "examples/review-policy.d.mts"
+        "examples/review-policy.d.mts",
+        "examples/review-machine.ts"
       ],
       "capabilities": []
     },
@@ -78,7 +72,8 @@
         "examples/example.tsx",
         "examples/demo.tsx",
         "examples/review-policy.mjs",
-        "examples/review-policy.d.mts"
+        "examples/review-policy.d.mts",
+        "examples/review-machine.ts"
       ],
       "capabilities": []
     },
@@ -93,7 +88,8 @@
         "examples/example.tsx",
         "examples/demo.tsx",
         "examples/review-policy.mjs",
-        "examples/review-policy.d.mts"
+        "examples/review-policy.d.mts",
+        "examples/review-machine.ts"
       ],
       "capabilities": []
     }
@@ -105,6 +101,26 @@
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
     "mode": "recreated",
-    "note": "XState 5 API 与 npm@5.33.3 于2026-10-27重新校对，SDK未运行。"
+    "note": "XState 5.33.3 固定 API 与真实 Actor 已复核；本地 SDK 4 项及策略 2 项通过，正式收据另记。"
+  },
+  "official": {
+    "readme": {
+      "repository": "statelyai/xstate",
+      "commit": "6a85c4057dc7c0906381664249e0b1bac300cd92",
+      "path": "README.md",
+      "sourceUrl": "https://github.com/statelyai/xstate/blob/6a85c4057dc7c0906381664249e0b1bac300cd92/README.md",
+      "snapshotPath": "official/readme.md",
+      "sha256": "1419a7c9b667dc08b9207681fd304436045403f49c112a6406f4650515f3598c",
+      "language": "en",
+      "version": "5.33.3",
+      "syncedAt": "2026-11-17T16:49:46.497865+00:00"
+    },
+    "homepage": {
+      "url": "https://stately.ai/docs/xstate",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-17T16:49:46.497865+00:00",
+      "reason": "实际curl GET响应头保存在official/homepage-headers.txt；没有从实际Lab origin确认嵌入内容，不冒称allowed，保留官方文档直达。"
+    }
   }
 }

@@ -1,0 +1,25 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+ARGV: ["pnpm", "test:policy", "--entry=A04"]
+START: 2026-11-10T10:58:50.210463+00:00
+END: 2026-11-10T10:58:50.524567+00:00
+EXIT: 0
+STDOUT:
+
+> @reactloom/library-lab@0.1.0 test:policy /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+> node scripts/policy-runner.mjs --entry=A04
+
+Pure entry policy suites selected: 1 (not SDK evidence)
+✔ only an explicit advanced playback request starts the sampling timer (0.501945ms)
+✔ hidden tab always pauses and cannot be overridden (0.096547ms)
+✔ reduced motion pauses unless explicitly overridden (0.069599ms)
+✔ override does not start an unrequested stream (0.059763ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 64.802796
+
+STDERR:

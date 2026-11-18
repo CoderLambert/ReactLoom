@@ -1,0 +1,14 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=["python3", "entries/C17-i18next/validation/source-tool-transport-fixture.py"]
+start=2026-11-10T18:15:40.545240+00:00
+test_complete_capture_commits_both_and_keeps_raw_duplicates (__main__.SourceToolTransport.test_complete_capture_commits_both_and_keeps_raw_duplicates) ... ok
+test_first_failure_keeps_previous_success_pair (__main__.SourceToolTransport.test_first_failure_keeps_previous_success_pair) ... ok
+test_homepage_failure_after_readme_keeps_previous_success_pair (__main__.SourceToolTransport.test_homepage_failure_after_readme_keeps_previous_success_pair) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.011s
+
+OK
+
+exitCode=0
+end=2026-11-10T18:15:40.611530+00:00

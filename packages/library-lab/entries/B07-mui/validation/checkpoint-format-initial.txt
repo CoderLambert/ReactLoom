@@ -1,0 +1,70 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+ARGV: ["pnpm", "exec", "--", "biome", "check", "entries/B07-mui/examples", "entries/B07-mui/tests", "entries/B07-mui/library.json", "entries/B07-mui/verification.json"]
+START: 2026-11-10T13:15:42.759538+00:00
+END: 2026-11-10T13:15:43.034008+00:00
+EXIT: 1
+STDOUT:
+Checked 11 files in 9ms. No fixes applied.
+Found 1 error.
+
+STDERR:
+entries/B07-mui/library.json format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Formatter would have printed the following content:
+  
+      6   6 │     "group": "B",
+      7   7 │     "summary": "从局部主题与slot输入到过滤表/一步撤销，再走Dialog校验、模拟冲突恢复与Portal焦点",
+      8     │ - ··"tags":·[
+      9     │ - ····"Material·Design",
+     10     │ - ····"design·system",
+     11     │ - ····"table",
+     12     │ - ····"dialog",
+     13     │ - ····"a11y",
+     14     │ - ····"React"
+     15     │ - ··],
+          8 │ + ··"tags":·["Material·Design",·"design·system",·"table",·"dialog",·"a11y",·"React"],
+     16   9 │     "contentState": "recreated",
+     17  10 │     "packages": [
+    ······· │ 
+     75  68 │           "examples/styles.css"
+     76  69 │         ],
+     77     │ - ······"capabilities":·[
+     78     │ - ········"portal",
+     79     │ - ········"keyboard",
+     80     │ - ········"focus",
+     81     │ - ········"a11y"
+     82     │ - ······],
+         70 │ + ······"capabilities":·["portal",·"keyboard",·"focus",·"a11y"],
+     83  71 │         "description": "读取实际useTheme，切换本例浅深色表面；TextField受控值、slotProps和Chip反馈。"
+     84  72 │       },
+    ······· │ 
+     97  85 │           "examples/styles.css"
+     98  86 │         ],
+     99     │ - ······"capabilities":·[
+    100     │ - ········"portal",
+    101     │ - ········"keyboard",
+    102     │ - ········"focus",
+    103     │ - ········"a11y"
+    104     │ - ······],
+         87 │ + ······"capabilities":·["portal",·"keyboard",·"focus",·"a11y"],
+    105  88 │         "description": "真实MUI Table/Switch显示本地权威数组，筛选/空态与撤销分离，通知关闭不改数据。"
+    106  89 │       },
+    ······· │ 
+    119 102 │           "examples/styles.css"
+    120 103 │         ],
+    121     │ - ······"capabilities":·[
+    122     │ - ········"portal",
+    123     │ - ········"keyboard",
+    124     │ - ········"focus",
+    125     │ - ········"a11y"
+    126     │ - ······],
+        104 │ + ······"capabilities":·["portal",·"keyboard",·"focus",·"a11y"],
+    127 105 │         "description": "真实Portal/表单/焦点，本地字段错误与单次409留框恢复，成功提交、Snackbar与撤销。"
+    128 106 │       }
+  
+
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while running checks.
+  
+

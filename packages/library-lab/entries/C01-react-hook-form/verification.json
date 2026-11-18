@@ -1,18 +1,18 @@
 {
   "content": {
     "status": "NOT_RUN",
-    "note": "本轮代码和知识手册已创建，仍待独立校对"
+    "note": "本轮完成增量讲解/源码/官方资料及静态自检，独立复核和新增DOM交互待主控，见local-validation.md。"
   },
   "sdk": {
     "status": "NOT_RUN",
-    "note": "尚未在本轮环境安装并运行 react-hook-form 7.89.0；后续改动新增/更新真实 SDK 测试源码，但仍未执行目标库 SDK"
+    "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/C01.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
   },
   "build": {
     "status": "NOT_RUN",
-    "note": "需平台集中更新锁文件后运行类型与构建"
+    "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/C01.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "需实测 useFieldArray、IME、409 和取消；后续改动交互改动未在 Chromium 验收"
+    "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/C01.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
   }
 }

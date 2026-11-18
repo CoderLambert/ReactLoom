@@ -1,0 +1,66 @@
+ at e2e/quality-resume-lodash.spec.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Formatter would have printed the following content:
+  
+     1  1 │   import { expect, test } from '@playwright/test'
+     2  2 │   
+     3    │ - test('@D02·natural·trailing·coalesces·consecutive·input·into·the·latest·value',·async·({·page·})·=>·{
+        3 │ + test('@D02·natural·trailing·coalesces·consecutive·input·into·the·latest·value',·async·({
+        4 │ + ··page,
+        5 │ + })·=>·{
+     4  6 │     await page.goto('/libraries/lodash?tab=demo&example=advanced')
+     5  7 │     const input = page.getByLabel('待提交查询')
+  
+
+ at entries/D02-lodash/tests/sdk.test.mjs:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━━━━━
+
+  × Some imports or exports are not organized.
+  
+  > 1 │ import test from 'node:test'
+      │ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  > 2 │ import assert from 'node:assert/strict'
+  > 3 │ import { uniqBy, groupBy, orderBy, chunk, debounce } from 'lodash-es'
+      │ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    4 │ 
+    5 │ test('real lodash-es dedup retains first keyed row', () => {
+  
+  i Sort the imported names.
+  
+    1 │ import test from 'node:test'
+    2 │ import assert from 'node:assert/strict'
+  > 3 │ import { uniqBy, groupBy, orderBy, chunk, debounce } from 'lodash-es'
+      │ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    4 │ 
+    5 │ test('real lodash-es dedup retains first keyed row', () => {
+  
+  i Sort these imports.
+  
+  > 1 │ import test from 'node:test'
+      │ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  > 2 │ import assert from 'node:assert/strict'
+      │ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    3 │ import { uniqBy, groupBy, orderBy, chunk, debounce } from 'lodash-es'
+    4 │ 
+  
+  i Safe fix: Organize imports and exports (Biome)
+  
+     1    │ - import·test·from·'node:test'
+     2    │ - import·assert·from·'node:assert/strict'
+     3    │ - import·{·uniqBy,·groupBy,·orderBy,·chunk,·debounce·}·from·'lodash-es'
+        1 │ + import·assert·from·'node:assert/strict'
+        2 │ + import·test·from·'node:test'
+        3 │ + import·{·chunk,·debounce,·groupBy,·orderBy,·uniqBy·}·from·'lodash-es'
+     4  4 │   
+     5  5 │   test('real lodash-es dedup retains first keyed row', () => {
+  
+
+Checked 16 files in 107ms. No fixes applied.
+Found 2 errors.
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while running checks.
+  
+
+undefined
+/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: biome check e2e/quality-resume-migration.spec.ts e2e/quality-resume-lodash.spec.ts e2e/quality-resume-toolkit.spec.ts entries/C22-moment-migration/examples entries/D01-es-toolkit/examples entries/D01-es-toolkit/tests entries/D02-lodash/examples entries/D02-lodash/tests

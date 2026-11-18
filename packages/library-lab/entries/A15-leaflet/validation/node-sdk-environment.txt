@@ -1,0 +1,25 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+ARGV: ["pnpm", "exec", "--", "node", "--input-type=module", "-e", "await import('leaflet')"]
+START: 2026-11-10T12:07:14.070139+00:00
+END: 2026-11-10T12:07:14.262550+00:00
+EXIT: 1
+STDOUT:
+
+STDERR:
+/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/leaflet@1.9.4/node_modules/leaflet/dist/leaflet-src.js:230
+  var requestFn = window.requestAnimationFrame || getPrefixed('RequestAnimationFrame') || timeoutDefer;
+                  ^
+
+ReferenceError: window is not defined
+    at /home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/leaflet@1.9.4/node_modules/leaflet/dist/leaflet-src.js:230:19
+    at /home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/leaflet@1.9.4/node_modules/leaflet/dist/leaflet-src.js:7:66
+    at Object.<anonymous> (/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/leaflet@1.9.4/node_modules/leaflet/dist/leaflet-src.js:10:3)
+    at Module._compile (node:internal/modules/cjs/loader:1968:14)
+    at Object..js (node:internal/modules/cjs/loader:2108:10)
+    at Module.load (node:internal/modules/cjs/loader:1690:32)
+    at Module._load (node:internal/modules/cjs/loader:1480:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+    at loadCJSModuleWithModuleLoad (node:internal/modules/esm/translators:377:15)
+    at ModuleWrap.<anonymous> (node:internal/modules/esm/translators:249:9)
+
+Node.js v26.13.0

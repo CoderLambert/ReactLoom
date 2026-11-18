@@ -1,0 +1,4 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom
+argv: ['git', 'diff', '--check', '--', 'packages/library-lab/entries/C12-fullcalendar']
+startedAt: 2026-11-10T16:49:29.449324+00:00
+exit: 0

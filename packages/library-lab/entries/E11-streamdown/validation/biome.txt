@@ -1,0 +1,5 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: pnpm exec biome check --write entries/E11-streamdown/examples entries/E11-streamdown/tests entries/E11-streamdown/library.json entries/E11-streamdown/verification.json entries/E11-streamdown/official/source-audit.json
+exit: 0
+
+Checked 14 files in 8ms. Fixed 8 files.

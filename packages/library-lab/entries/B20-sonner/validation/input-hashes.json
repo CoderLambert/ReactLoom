@@ -1,0 +1,107 @@
+{
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+  "checkedAt": "2026-11-10T14:29:43.620935+00:00",
+  "head": "1218066e706a90ba03fac8dff8c9b843dd2429c4",
+  "files": [
+    {
+      "path": "AGENTS.md",
+      "bytes": 464,
+      "sha256": "59bc1d29e5d381ba7d866883c2f907f54e70f549a64c3807003698ad12a33f86"
+    },
+    {
+      "path": "library.json",
+      "bytes": 3985,
+      "sha256": "3c534a0372091e562408b1e98cf97089d10376e036074206c9e2e37566aefda0"
+    },
+    {
+      "path": "guide.md",
+      "bytes": 9068,
+      "sha256": "b63e434cb934fa33a2073fa56414cc81d5086a209651e7837fcb0c9981a52e23"
+    },
+    {
+      "path": "agent.md",
+      "bytes": 3735,
+      "sha256": "a4f9226ee99d477a21900387d599a62c04e3e260f5cccf5a95357d80fbd70a9d"
+    },
+    {
+      "path": "verification.json",
+      "bytes": 502,
+      "sha256": "94b4dc3effb9281d304cc3912d739dbaef5309e49a8ddfe2b13f01025d0d4950"
+    },
+    {
+      "path": "examples/example.tsx",
+      "bytes": 7139,
+      "sha256": "e3f364fd59c25fdd01b49c10b16effcb069a50ca35c7f9eef3935af913eab912"
+    },
+    {
+      "path": "examples/demo.tsx",
+      "bytes": 36,
+      "sha256": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038"
+    },
+    {
+      "path": "examples/latest-run.ts",
+      "bytes": 322,
+      "sha256": "1500a2442c9b918473d5516013117f3876e34de7fd30e1b1fd9c67d087732e0d"
+    },
+    {
+      "path": "examples/sonner-demo.css",
+      "bytes": 331,
+      "sha256": "bec0fb29d7826217e41b498e60608adee44195959ec91f3c89b458186b07ab36"
+    },
+    {
+      "path": "tests/sdk.test.mjs",
+      "bytes": 2637,
+      "sha256": "6541e1f64791918e167e655a399c232124fa3a7fe04d2cd5b1edd00257463637"
+    },
+    {
+      "path": "tests/latest-run.test.mts",
+      "bytes": 890,
+      "sha256": "749d1e489d83692f61ebbc7b57ddf3fd9f45d0d8532b1a44cf9a4c5705ac9d38"
+    },
+    {
+      "path": "tests/undo-ownership.test.mts",
+      "bytes": 991,
+      "sha256": "64bf3470f98359aade98af4e3448a44cec8ed84defd5336bc4b93e2c27bc7085"
+    },
+    {
+      "path": "official/readme.md",
+      "bytes": 867,
+      "sha256": "0809d104ce28f9c14b3b1e73257d93096f96134d2a5f2f225e5abf38b1aa4549"
+    },
+    {
+      "path": "official/source-evidence.json",
+      "bytes": 18152,
+      "sha256": "a973d5b99e36014c4fb39cad64ffb64344aaaad0cd42e6a11786a89d4cd716e5"
+    },
+    {
+      "path": "validation/sdk-source-audit.json",
+      "bytes": 17789,
+      "sha256": "a50638b6fa30ce69a215c880269ff974799be7fd448d662e05def3532b58e8a7"
+    },
+    {
+      "path": "validation/metadata-check.mjs",
+      "bytes": 2367,
+      "sha256": "7f027ffc341fc9643932264ea181b2c6445ee176d4a8758b7945894131c77646"
+    },
+    {
+      "path": "validation/browser-proposal.txt",
+      "bytes": 9594,
+      "sha256": "0b7e8f6880f6a8a2ac5e9cd16aff71e10a41a8d696e0359bf21dc19ae379e469"
+    },
+    {
+      "path": "validation/fetch-official.py",
+      "bytes": 3977,
+      "sha256": "33aa746bdacbf9a06482d4b1213b72290ca5b60cee7d954e696db1e040da0a9e"
+    },
+    {
+      "path": "validation/run-local.py",
+      "bytes": 1038,
+      "sha256": "cab7358dc09dea75dd59df5c3c04fb5c1e9c7bb2ed8bb6ede2a4350fbaf17608"
+    },
+    {
+      "path": "local-validation.md",
+      "bytes": 11057,
+      "sha256": "6d1e0470cf20b5e4e0e21bb4885c9a7263b1a58eb7fc5ba4ad227f618af349c3"
+    }
+  ]
+}

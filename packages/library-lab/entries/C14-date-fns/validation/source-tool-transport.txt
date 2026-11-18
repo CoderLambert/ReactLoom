@@ -1,0 +1,12 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['python3', 'entries/C14-date-fns/validation/source-tool-transport-fixture.py']
+startedAt: 2026-11-10T17:08:35.071922+00:00
+exit: 0
+test_complete_success (__main__.CaptureTests.test_complete_success) ... ok
+test_first_request_failure_preserves_three_old_artifacts (__main__.CaptureTests.test_first_request_failure_preserves_three_old_artifacts) ... ok
+test_homepage_failure_after_both_readmes_preserves_three_old_artifacts (__main__.CaptureTests.test_homepage_failure_after_both_readmes_preserves_three_old_artifacts) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.009s
+
+OK

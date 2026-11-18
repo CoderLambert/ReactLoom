@@ -1,4 +1,4 @@
-import {defineConfig} from '@playwright/test'
+import { defineConfig } from '@playwright/test'
 
 // Independent CLI workshop. Does not start or modify the Library Lab app.
 export default defineConfig({
@@ -7,7 +7,7 @@ export default defineConfig({
   fullyParallel: false,
   retries: 0,
   workers: 1,
-  use: {browserName: 'chromium', headless: true, trace: 'retain-on-failure'},
+  use: { browserName: 'chromium', headless: true, trace: 'retain-on-failure' },
   reporter: [['list']],
   outputDir: './.playwright-artifacts',
 })

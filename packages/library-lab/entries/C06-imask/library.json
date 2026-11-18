@@ -4,15 +4,8 @@
   "slug": "imask",
   "name": "IMask",
   "group": "C",
-  "summary": "数字编号、金额和日期输入掩码；保留光标与中文 IME 边界",
-  "tags": [
-    "输入掩码",
-    "IMask",
-    "onAccept",
-    "IME",
-    "日期",
-    "表单"
-  ],
+  "summary": "真实编号/金额/日期输入，区分模型与视图、SDK值/完成与业务语义，验证自己的输入生命周期",
+  "tags": ["输入掩码", "IMask", "onAccept", "IME", "日期", "表单"],
   "contentState": "recreated",
   "packages": [
     {
@@ -26,16 +19,16 @@
   ],
   "references": [
     {
-      "title": "React IMask 官方 API",
-      "url": "https://imask.js.org/api/modules/react_imask.html"
+      "title": "7.6.1 React包原README",
+      "url": "https://github.com/uNmAnNeR/imaskjs/blob/a02a14b642f70b335e24789e8a187857473a21a5/packages/react-imask/README.md"
     },
     {
       "title": "核心 IMask 文档",
       "url": "https://imask.js.org/guide.html"
     },
     {
-      "title": "官方源码和许可",
-      "url": "https://github.com/uNmAnNeR/imaskjs"
+      "title": "同提交核心包原README",
+      "url": "https://github.com/uNmAnNeR/imaskjs/blob/a02a14b642f70b335e24789e8a187857473a21a5/packages/imask/README.md"
     }
   ],
   "related": [
@@ -58,57 +51,80 @@
   "demos": [
     {
       "demoId": "basic",
-      "title": "8位编号与 unmaskedValue",
-      "description": "输入 8 位数字并观察实际掩码产物",
+      "title": "编号：显示值与业务值",
+      "description": "真实accept/complete与maskRef四值，中间编辑保持同一输入，显式reset才重挂。",
       "level": "basic",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
+        "examples/demo.tsx",
         "examples/example.tsx",
         "examples/calendar-policy.mjs",
         "examples/calendar-policy.d.mts",
-        "examples/demo.tsx"
+        "examples/styles.css"
       ],
       "capabilities": []
     },
     {
       "demoId": "business",
-      "title": "金额输入、格式化与精度边界",
-      "description": "Number mask 的 radix/scale/千位分隔符",
+      "title": "金额：格式与数值边界",
+      "description": "真实Number模型的分隔符、scale和三种值；不把外观补零当财务精度。",
       "level": "business",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
+        "examples/demo.tsx",
         "examples/example.tsx",
         "examples/calendar-policy.mjs",
         "examples/calendar-policy.d.mts",
-        "examples/demo.tsx"
+        "examples/styles.css"
       ],
       "capabilities": []
     },
     {
       "demoId": "advanced",
-      "title": "日期语义与中文 IME",
-      "description": "掩码不能替代日历校验；中文备注保持普通输入",
+      "title": "日期：完成与真实公历",
+      "description": "Pattern填满与真实日期分开；自由中文备注不套数字mask，场景/重置清本轮状态。",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
+        "examples/demo.tsx",
         "examples/example.tsx",
         "examples/calendar-policy.mjs",
         "examples/calendar-policy.d.mts",
-        "examples/demo.tsx"
+        "examples/styles.css"
       ],
       "capabilities": []
     }
   ],
   "license": {
     "spdx": "MIT",
-    "note": "仅链接上游，示例无第三方可再分发素材"
+    "assets": "原创编号/金额/日期fixture与CSS，无外部资源；上游React/核心README分别保存原文，不再分发远程示例资产。"
   },
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
     "mode": "recreated",
-    "note": "按官方 7.6.1 React API 独立实现；不继承历史运行结论"
+    "note": "保留真实Pattern/Number模型、onAccept和UTC公历规则；明确SDK拥有DOM、React事件观察、场景/reset所有权，不继承历史运行结论。"
+  },
+  "official": {
+    "readme": {
+      "repository": "uNmAnNeR/imaskjs",
+      "commit": "a02a14b642f70b335e24789e8a187857473a21a5",
+      "path": "packages/react-imask/README.md",
+      "sourceUrl": "https://github.com/uNmAnNeR/imaskjs/blob/a02a14b642f70b335e24789e8a187857473a21a5/packages/react-imask/README.md",
+      "snapshotPath": "official/readme.md",
+      "language": "en",
+      "version": "7.6.1",
+      "syncedAt": "2026-11-10T15:46:53.774760+00:00",
+      "sha256": "6d2a1d25943c4b0f0831d55a7cb566604db9d188a76767aba5efda5c9ba5460c"
+    },
+    "homepage": {
+      "url": "https://imask.js.org/",
+      "status": "unknown",
+      "reason": "No enforced framing restriction observed in complete GET headers; actual Lab-origin browser NOT_RUN.",
+      "checkedAt": "2026-11-10T15:46:52.657381+00:00",
+      "kind": "website"
+    }
   }
 }

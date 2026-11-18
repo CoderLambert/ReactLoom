@@ -1,0 +1,10 @@
+{
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "argv": [
+    "node",
+    "--test",
+    "packages/library-lab/entries/E07-remark/examples/audit-policy.test.mjs"
+  ],
+  "exitCode": 0,
+  "at": "2026-11-17T17:33:50.255181+00:00"
+}

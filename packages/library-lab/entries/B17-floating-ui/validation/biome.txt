@@ -1,0 +1,9 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+ARGV: ["pnpm", "exec", "--", "biome", "check", "entries/B17-floating-ui/examples", "entries/B17-floating-ui/tests", "entries/B17-floating-ui/library.json", "entries/B17-floating-ui/verification.json", "entries/B17-floating-ui/official/source-evidence.json"]
+START: 2026-11-10T10:36:36.136048+00:00
+END: 2026-11-10T10:36:36.364121+00:00
+EXIT: 0
+STDOUT:
+Checked 12 files in 10ms. No fixes applied.
+
+STDERR:

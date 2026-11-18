@@ -1,0 +1,175 @@
+// NOT_RUN: root integrates against a matching shared candidate. Real SDK/DOM/form/clock.
+// Synthetic CompositionEvents below cover only the authored submit guard, never OS IME acceptance.
+import { expect, type Locator, type Page, test } from '@playwright/test'
+
+type State = {
+  selectedKey: string | null
+  inputValue: string
+  visibleIds: string[]
+  query: null | { busy: boolean; resolvedQuery: string; generation: number }
+}
+async function state(app: Locator): Promise<State> {
+  return JSON.parse((await app.getByTestId('b12-state').textContent()) ?? '{}')
+}
+async function open(page: Page, level: 'basic' | 'business' | 'advanced') {
+  await page.setViewportSize({ width: 1280, height: 1600 })
+  await page.goto('/libraries/react-aria?tab=demo&example=basic')
+  const run = page.getByRole('button', { name: '运行当前示例', exact: true })
+  if (await run.isVisible()) await run.click()
+  if (level !== 'basic')
+    await page.getByRole('combobox', { name: '学习场景', exact: true }).selectOption(level)
+  const app = page.getByTestId('b12-workshop') // state remains observable if an overlay marks background aria-hidden
+  await expect(app).toBeVisible()
+  return app
+}
+const input = (app: Locator) => app.getByRole('combobox', { name: '选择 RSS 频道', exact: true })
+
+test('@B12 real keyboard selection submits key and edited text cannot reuse the old identity', async ({
+  page,
+}) => {
+  const app = await open(page, 'basic')
+  const combo = input(app)
+  await expect(combo).toHaveAccessibleDescription('使用方向键导航、Enter 选择、Escape 关闭。')
+  const descriptions = (await combo.getAttribute('aria-describedby'))?.split(/\s+/) ?? []
+  expect(descriptions.length).toBeGreaterThan(0)
+  for (const id of descriptions)
+    expect(await page.evaluate((id) => Boolean(document.getElementById(id)), id)).toBe(true)
+  await combo.focus()
+  await combo.press('ArrowDown')
+  await expect(page.getByRole('listbox')).toBeVisible()
+  await expect(page.getByRole('option')).toHaveCount(4)
+  const popover = page.locator('.rl-aria-popover')
+  expect(
+    await popover.evaluate(
+      (node) =>
+        document.body.contains(node) &&
+        !document.querySelector('[data-testid="b12-workshop"]')?.contains(node),
+    ),
+  ).toBe(true)
+  await combo.press('Enter')
+  await expect(combo).toHaveValue('React 组件工程')
+  await expect.poll(async () => (await state(app)).selectedKey).toBe('react')
+  await app.getByRole('button', { name: '提交真实表单', exact: true }).click()
+  await expect(app.getByTestId('b12-submit-status')).toHaveText('真实表单选中频道 ID：react')
+  await combo.fill('React')
+  await expect(combo).toHaveValue('React')
+  await expect.poll(async () => (await state(app)).selectedKey).toBeNull()
+  await combo.press('Escape')
+  await app.getByRole('button', { name: '提交真实表单', exact: true }).click()
+  await expect(app.getByTestId('b12-submit-status')).toHaveText('请先从候选项确认一个有效频道')
+  await app.getByRole('button', { name: '清空选择', exact: true }).click()
+  await expect(combo).toHaveValue('')
+  await expect(app.getByTestId('b12-submit-status')).toHaveText('已清空')
+})
+
+test('@B12 category filtering exposes disabled options, skips them on keyboard and has a real empty list', async ({
+  page,
+}) => {
+  const app = await open(page, 'business')
+  const combo = input(app)
+  await combo.fill('技术')
+  await expect(page.getByRole('option')).toHaveCount(4)
+  const disabled = page.getByRole('option', { name: /安全紧急通告/ })
+  await expect(disabled).toHaveAttribute('aria-disabled', 'true')
+  await disabled.scrollIntoViewIfNeeded()
+  const box = await disabled.boundingBox()
+  if (!box) throw new Error('Missing visible real disabled option')
+  // Actual pointer coordinates, not force-clicking a disabled locator or invoking an SDK callback.
+  await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2)
+  expect((await state(app)).selectedKey).toBeNull()
+  await combo.fill('技术')
+  await expect(page.getByRole('option')).toHaveCount(4)
+  await combo.focus()
+  await combo.press('ArrowDown')
+  await combo.press('End')
+  await combo.press('Enter')
+  await expect(combo).toHaveValue('开源趋势')
+  await app.getByRole('button', { name: '提交真实表单', exact: true }).click()
+  await expect(app.getByTestId('b12-submit-status')).toHaveText('真实表单选中频道 ID：opensource')
+  await combo.fill('ZZ_NO_MATCH')
+  await expect(page.getByRole('listbox')).toBeVisible()
+  expect((await state(app)).visibleIds).toEqual([])
+  // The real SDK may expose its empty-state placeholder as one role=option, not a business item.
+  await expect(page.getByText('暂无匹配频道', { exact: true })).toBeVisible()
+  await combo.press('Escape')
+  await expect(page.getByRole('listbox')).toHaveCount(0)
+  await expect(combo).toBeFocused()
+  await app.getByRole('button', { name: '清空选择', exact: true }).click()
+  expect((await state(app)).visibleIds).toHaveLength(7)
+  expect((await state(app)).selectedKey).toBeNull()
+})
+
+test('@B12 real delayed suggestions align with latest query, form guard and open-Popover unmount', async ({
+  page,
+}) => {
+  const errors: string[] = []
+  page.on('pageerror', (error) => errors.push(error.message))
+  const app = await open(page, 'advanced')
+  const combo = input(app)
+  await combo.fill('React')
+  expect((await state(app)).visibleIds).toEqual([])
+  await combo.fill('开源')
+  await expect(app.getByTestId('b12-query-status')).toContainText('正在查询本地数据')
+  await expect
+    .poll(async () => (await state(app)).query)
+    .toMatchObject({ busy: false, resolvedQuery: '开源' })
+  expect((await state(app)).visibleIds).toEqual(['opensource'])
+  await expect(page.getByRole('option')).toHaveCount(1)
+  await page.waitForTimeout(300) // only an absence observation beyond the older local delay, not a timing benchmark
+  expect((await state(app)).query?.resolvedQuery).toBe('开源')
+  await combo.press('ArrowDown')
+  await combo.press('Enter')
+  await expect(combo).toHaveValue('开源趋势')
+  // Changing to the selected full title schedules its own real query. Wait for that alignment.
+  await expect
+    .poll(async () => (await state(app)).query)
+    .toMatchObject({ busy: false, resolvedQuery: '开源趋势' })
+  const selectedMessage = await app.getByTestId('b12-submit-status').textContent()
+  // Transparent guard-only synthesis: no claim about native candidate windows or the SDK's OS composition path.
+  await combo.evaluate((node) =>
+    node.dispatchEvent(new CompositionEvent('compositionstart', { bubbles: true, data: '拼' })),
+  )
+  await app.getByRole('button', { name: '提交真实表单', exact: true }).click()
+  await expect(app.getByTestId('b12-submit-status')).toHaveText(selectedMessage ?? '')
+  await combo.evaluate((node) =>
+    node.dispatchEvent(new CompositionEvent('compositionend', { bubbles: true, data: '拼' })),
+  )
+  await app.getByRole('button', { name: '提交真实表单', exact: true }).click()
+  await expect(app.getByTestId('b12-submit-status')).toHaveText('真实表单选中频道 ID：opensource')
+  await page.setViewportSize({ width: 390, height: 844 })
+  await combo.fill('React')
+  await expect(combo).toHaveValue('React')
+  await expect
+    .poll(async () => (await state(app)).query)
+    .toMatchObject({ busy: false, resolvedQuery: 'React' })
+  await expect(combo).toHaveValue('React')
+  expect((await state(app)).inputValue).toBe('React')
+  await combo.scrollIntoViewIfNeeded()
+  const pop = page.locator('.rl-aria-popover')
+  await expect(pop).toBeVisible()
+  const box = await pop.boundingBox()
+  if (!box) throw new Error('Missing real narrow-viewport Popover')
+  expect(box.x).toBeGreaterThanOrEqual(0)
+  expect(box.x + box.width).toBeLessThanOrEqual(391)
+  const old = await app.elementHandle()
+  const body = await page.locator('body').elementHandle()
+  if (!old || !body) throw new Error('Missing actual DOM handles')
+  await combo.fill('待取消查询')
+  await expect(app.getByTestId('b12-query-status')).toContainText('正在查询本地数据')
+  // The existing SPA history has basic -> advanced. Back unmounts the real open Popover and owned delay.
+  await page.goBack()
+  await expect(app.getByRole('heading', { name: 'ComboBox 键盘选择', exact: true })).toBeVisible()
+  await expect(page.locator('.rl-aria-popover')).toHaveCount(0)
+  expect(await old.evaluate((node) => node.isConnected)).toBe(false)
+  expect(await body.evaluate((node) => node.isConnected)).toBe(true)
+  await page.waitForTimeout(300)
+  expect(await state(app)).toMatchObject({
+    selectedKey: null,
+    inputValue: '',
+    visibleIds: ['react', 'backend', 'opensource', 'global'],
+    query: null,
+  })
+  expect(errors).toEqual([])
+})
+// Remaining NOT_RUN: actual OS Chinese IME candidate confirmation (Enter/Space/mouse), touch,
+// screen-reader announcements, SSR hydration and full resource listener/timer census.

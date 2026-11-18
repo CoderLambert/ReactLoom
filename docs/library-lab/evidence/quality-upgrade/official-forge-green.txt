@@ -1,0 +1,27 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+command=pnpm exec node --test packages/library-lab/tests/official-sources.test.mjs packages/library-lab/tests/document-utils.test.mjs
+✔ only safe HTTPS, fragments and same-entry relative files are accepted (2.582396ms)
+✔ headings ignore fenced blocks and correctly preserve source line anchor (2.019776ms)
+✔ Chinese anchors, inline code and duplicate headings exclude fenced content (0.201329ms)
+✔ local example and test links map to real generated source files, not missing SPA fallbacks (1.135634ms)
+✔ Markdown byte ceiling preserves split multibyte UTF-8 without trusting response length (17.697771ms)
+✔ Markdown byte ceiling rejects oversized decoded body and cancels the reader (0.571151ms)
+✔ Markdown rejects fallback HTML, non-2xx, invalid UTF-8 and absent response bodies (1.044933ms)
+✔ Setext headings use source start lines and duplicate slugs match rendered anchors (1.09757ms)
+✔ Fence-looking code text cannot expose hidden headings; indented/quoted code stays out of TOC (0.243958ms)
+✔ Document-relative links reject scheme-relative or malformed Vite base paths (0.225849ms)
+✔ official sources bind a snapshot to an immutable upstream file (1.098822ms)
+✔ homepage checks distinguish unknown from blocked and validate safe addresses (0.202829ms)
+✔ SheetJS canonical forge binds its actual README to the exact repository and commit (0.581667ms)
+✔ README links resolve against the pinned upstream folder and local anchors remain local (0.161644ms)
+✔ actual clsx README anchors target rendered headings including h4 (3.765134ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 15
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 71.319311
+
+exitCode=0

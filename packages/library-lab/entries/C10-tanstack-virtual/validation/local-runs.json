@@ -1,0 +1,174 @@
+[
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "packages/library-lab/entries/C10-tanstack-virtual/examples",
+      "packages/library-lab/entries/C10-tanstack-virtual/tests"
+    ],
+    "utc": "2026-11-10T16:21:24.645576+00:00",
+    "exit": 1
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "--dir",
+      "packages/library-lab",
+      "exec",
+      "tsc",
+      "--ignoreConfig",
+      "--noEmit",
+      "--target",
+      "es2022",
+      "--module",
+      "esnext",
+      "--moduleResolution",
+      "bundler",
+      "--jsx",
+      "react-jsx",
+      "--strict",
+      "--skipLibCheck",
+      "--esModuleInterop",
+      "--types",
+      "vite/client,node",
+      "entries/C10-tanstack-virtual/examples/demo.tsx"
+    ],
+    "utc": "2026-11-10T16:21:24.892232+00:00",
+    "exit": 0
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "--dir",
+      "packages/library-lab",
+      "test:sdk",
+      "--entry=C10"
+    ],
+    "utc": "2026-11-10T16:21:25.210438+00:00",
+    "exit": 0
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "--dir",
+      "packages/library-lab",
+      "test:policy",
+      "--entry=C10"
+    ],
+    "utc": "2026-11-10T16:21:25.508871+00:00",
+    "exit": 0
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "packages/library-lab/entries/C10-tanstack-virtual/examples/example.tsx",
+      "packages/library-lab/entries/C10-tanstack-virtual/examples/filter-policy.mjs"
+    ],
+    "utc": "2026-11-10T16:22:13.521458+00:00",
+    "exit": 0
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "--dir",
+      "packages/library-lab",
+      "exec",
+      "tsc",
+      "--ignoreConfig",
+      "--noEmit",
+      "--target",
+      "es2022",
+      "--module",
+      "esnext",
+      "--moduleResolution",
+      "bundler",
+      "--jsx",
+      "react-jsx",
+      "--strict",
+      "--skipLibCheck",
+      "--esModuleInterop",
+      "--types",
+      "vite/client,node",
+      "entries/C10-tanstack-virtual/examples/demo.tsx"
+    ],
+    "utc": "2026-11-10T16:22:13.773458+00:00",
+    "exit": 0
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "packages/library-lab/entries/C10-tanstack-virtual/library.json",
+      "packages/library-lab/entries/C10-tanstack-virtual/verification.json",
+      "packages/library-lab/entries/C10-tanstack-virtual/official/source-evidence.json",
+      "packages/library-lab/entries/C10-tanstack-virtual/validation/sdk-source-audit.json",
+      "packages/library-lab/entries/C10-tanstack-virtual/validation/metadata-check.mjs"
+    ],
+    "utc": "2026-11-10T16:40:09.530321+00:00",
+    "exit": 0
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "packages/library-lab/entries/C10-tanstack-virtual/validation/browser-proposal.check.ts"
+    ],
+    "utc": "2026-11-10T16:40:09.749703+00:00",
+    "exit": 0
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "--dir",
+      "packages/library-lab",
+      "exec",
+      "tsc",
+      "--ignoreConfig",
+      "--noEmit",
+      "--target",
+      "es2022",
+      "--module",
+      "esnext",
+      "--moduleResolution",
+      "bundler",
+      "--strict",
+      "--skipLibCheck",
+      "--types",
+      "node",
+      "entries/C10-tanstack-virtual/validation/browser-proposal.check.ts"
+    ],
+    "utc": "2026-11-10T16:40:09.985407+00:00",
+    "exit": 0
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "node",
+      "packages/library-lab/entries/C10-tanstack-virtual/validation/metadata-check.mjs"
+    ],
+    "utc": "2026-11-10T16:40:10.016734+00:00",
+    "exit": 0
+  }
+]

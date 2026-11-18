@@ -1,0 +1,22 @@
+[WebServer] (node:2233375) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:2233387) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 9 tests using 2 workers
+
+(node:2233444) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2233445) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 e2e/quality-resume-easy-crop.spec.ts:54:1 › @E14 held real file decode recovers controls, rejects invalid file, closes after unmount (1.9s)
+  ✓  2 e2e/quality-resume-easy-crop.spec.ts:11:1 › @E14 real crop coordinates, PNG dimensions, zoom and aspect switch (2.1s)
+  ✓  3 e2e/quality-resume-official-e14-e16.spec.ts:8:3 › @E14 pinned official original and honest homepage fallback (1.9s)
+  ✓  4 e2e/quality-resume-official-e14-e16.spec.ts:8:3 › @E15 pinned official original and honest homepage fallback (1.8s)
+  ✓  5 e2e/quality-resume-official-e14-e16.spec.ts:8:3 › @E16 pinned official original and honest homepage fallback (1.7s)
+  ✓  6 e2e/quality-resume-pica.spec.ts:11:1 › @E15 actual pica PNG, local source, native comparison and owned URL cleanup (3.5s)
+  ✓  7 e2e/quality-resume-pica.spec.ts:70:1 › @E15 cancellation and unmount ignore already-started real PNG encoding (1.9s)
+  ✓  9 e2e/quality-resume-videojs.spec.ts:153:1 › @E16 removal and host unmount stop actual active recording tracks (1.6s)
+  ✓  8 e2e/quality-resume-videojs.spec.ts:70:1 › @E16 original WebM decoding, real playback, replacement and local import (8.9s)
+
+  9 passed (17.1s)

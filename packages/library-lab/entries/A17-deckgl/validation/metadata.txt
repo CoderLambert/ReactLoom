@@ -1,0 +1,7 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node entries/A17-deckgl/validation/check-entry.mjs
+exit: 0
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node entries/A17-deckgl/validation/check-entry.mjs
+PASS: entry shape, 3 demos, 6 source paths, README bytes 109 SHA-256 df90ebef147aced59f88c5c87aa9dee9c9e53a5b189b93d255ecc147b62782ba
+exit: 0

@@ -1,0 +1,28 @@
+{
+  "installed": {
+    "react-grid-layout": {
+      "version": "2.3.0",
+      "packagePath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/react-grid-layout@2.3.0_patch_hash=65db3074ef40503b9bfda2b68c12c7d39c1aa7e93efc1fade47f_beb475caccc483dff0fa87a51128464f/node_modules/react-grid-layout/package.json"
+    },
+    "react-resizable": {
+      "version": "4.0.2",
+      "packagePath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/react-resizable@4.0.2_react-dom@19.3.0_react@19.3.0__react@19.3.0/node_modules/react-resizable/package.json"
+    }
+  },
+  "files": {
+    "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+    "examples/example.tsx": "8b21ea167cf42a9c5f62a282768d2117287d391261d957207f0954c93ebe9d16",
+    "examples/layout-policy.ts": "93d2978ee09bb0cf1a3d7d801fa4ec40efc236e056d0ab578eaf1cdc675fa363",
+    "examples/styles.css": "42033698dccee5a98d85fb6c405ee82d63333a05bb3d34e14a216a36e11105cd",
+    "examples/react-grid-layout@2.3.0.patch": "65db3074ef40503b9bfda2b68c12c7d39c1aa7e93efc1fade47fcd6298552940",
+    "tests/sdk.test.mjs": "fcf77f0aa3d7c3000b74652e6fb4271731c963fd90ab616ee1572584368052c2",
+    "tests/layout-policy.test.mts": "63e065038ef038560b0d3b17abf381100a1b0966e594f5ab7db374ac5826b2f2",
+    "library.json": "f6e7eab81593e40f48cc3991f8ddf7a8cc7b0788ab31495b143ad76765a22da1",
+    "guide.md": "5fd68f01c74550f936ccc27093cc9f8cef2778df02e0657ee9068840d0837e5b",
+    "agent.md": "89cdb3b1089733dfbaf0be63bd1246e97c4d8a5c9d6a8112d1769a852e76caca",
+    "verification.json": "93e16df1f4b99c98510a8c27721eb6e90d895164a63b90da7dabfc083d78769c",
+    "official/readme.md": "10e8e14f3e5cbcf6f8d8f27381e122d17f8d2312b3208e3a2528c5b62b7c6ca1",
+    "official/source-evidence.json": "a3d394e3e96fec15eb32f1e254288043031e915e4d907a4c872e8b93d2eba524",
+    "validation/browser-proposal.txt": "1e745efb84bcda17e0ac5a1abf0e3b329855779e962c1b90e103ba515b6c28b2"
+  }
+}

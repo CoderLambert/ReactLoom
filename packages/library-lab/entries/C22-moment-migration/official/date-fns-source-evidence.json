@@ -1,0 +1,1192 @@
+{
+  "repository": "date-fns/date-fns",
+  "requests": [
+    {
+      "url": "https://registry.npmjs.org/date-fns/4.4.0",
+      "finalUrl": "https://registry.npmjs.org/date-fns/4.4.0",
+      "status": 200,
+      "checkedAt": "2026-11-10T17:03:20.929199+00:00",
+      "headers": {
+        "Date": "Tue, 10 Nov 2026 17:03:20 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "139799",
+        "Connection": "close",
+        "CF-Ray": "a586a14add5cc132-SJC",
+        "CF-Cache-Status": "DYNAMIC",
+        "Access-Control-Allow-Origin": "*",
+        "Cache-Control": "max-age=300",
+        "Server": "cloudflare",
+        "Vary": "accept-encoding, accept",
+        "set-cookie": "<REDACTED_PUBLIC_COOKIE_SHA256:dbe9dd8465a93110849a3f064605891b95c4242b2799c124cb1e4bcd9c9ff6cd>; HttpOnly; SameSite=None; Partitioned; Secure; Path=/; Domain=npmjs.org; Expires=Tue, 10 Nov 2026 17:33:20 GMT"
+      },
+      "rawHeaders": [
+        [
+          "Date",
+          "Tue, 10 Nov 2026 17:03:20 GMT"
+        ],
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "Content-Length",
+          "139799"
+        ],
+        [
+          "Connection",
+          "close"
+        ],
+        [
+          "CF-Ray",
+          "a586a14add5cc132-SJC"
+        ],
+        [
+          "CF-Cache-Status",
+          "DYNAMIC"
+        ],
+        [
+          "Access-Control-Allow-Origin",
+          "*"
+        ],
+        [
+          "Cache-Control",
+          "max-age=300"
+        ],
+        [
+          "Server",
+          "cloudflare"
+        ],
+        [
+          "Vary",
+          "accept-encoding, accept"
+        ],
+        [
+          "set-cookie",
+          "<REDACTED_PUBLIC_COOKIE_SHA256:dbe9dd8465a93110849a3f064605891b95c4242b2799c124cb1e4bcd9c9ff6cd>; HttpOnly; SameSite=None; Partitioned; Secure; Path=/; Domain=npmjs.org; Expires=Tue, 10 Nov 2026 17:33:20 GMT"
+        ]
+      ],
+      "bodyStatus": "READ",
+      "bytes": 139799,
+      "sha256": "1c978cbe2a71dabfb5290843911f55192e14234bd7b7ec30351e39ec9b29cbc2"
+    },
+    {
+      "url": "https://registry.npmjs.org/@date-fns%2Ftz/1.5.0",
+      "finalUrl": "https://registry.npmjs.org/@date-fns%2Ftz/1.5.0",
+      "status": 200,
+      "checkedAt": "2026-11-10T17:03:22.085289+00:00",
+      "headers": {
+        "Date": "Tue, 10 Nov 2026 17:03:22 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "2520",
+        "Connection": "close",
+        "CF-Ray": "a586a1521e302668-LAX",
+        "CF-Cache-Status": "DYNAMIC",
+        "Access-Control-Allow-Origin": "*",
+        "Server": "cloudflare",
+        "set-cookie": "<REDACTED_PUBLIC_COOKIE_SHA256:77dea0513fb9278709f3c4db32fd3a623179917d59e8b6ef372f81fcecb4544d>; HttpOnly; SameSite=None; Partitioned; Secure; Path=/; Domain=npmjs.org; Expires=Tue, 10 Nov 2026 17:33:22 GMT"
+      },
+      "rawHeaders": [
+        [
+          "Date",
+          "Tue, 10 Nov 2026 17:03:22 GMT"
+        ],
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "Content-Length",
+          "2520"
+        ],
+        [
+          "Connection",
+          "close"
+        ],
+        [
+          "CF-Ray",
+          "a586a1521e302668-LAX"
+        ],
+        [
+          "CF-Cache-Status",
+          "DYNAMIC"
+        ],
+        [
+          "Access-Control-Allow-Origin",
+          "*"
+        ],
+        [
+          "Server",
+          "cloudflare"
+        ],
+        [
+          "set-cookie",
+          "<REDACTED_PUBLIC_COOKIE_SHA256:77dea0513fb9278709f3c4db32fd3a623179917d59e8b6ef372f81fcecb4544d>; HttpOnly; SameSite=None; Partitioned; Secure; Path=/; Domain=npmjs.org; Expires=Tue, 10 Nov 2026 17:33:22 GMT"
+        ]
+      ],
+      "bodyStatus": "READ",
+      "bytes": 2520,
+      "sha256": "c0e8b4250ce8efb09398e7aa5065aa32897ca75a1895ef9ef545bc724326f01e"
+    },
+    {
+      "url": "https://api.github.com/repos/date-fns/date-fns/git/ref/tags/v4.4.0",
+      "finalUrl": "https://api.github.com/repos/date-fns/date-fns/git/ref/tags/v4.4.0",
+      "status": 200,
+      "checkedAt": "2026-11-10T17:03:23.357969+00:00",
+      "headers": {
+        "Date": "Tue, 10 Nov 2026 17:03:23 GMT",
+        "Cache-Control": "public, max-age=60, s-maxage=60",
+        "Vary": "Accept,Accept-Encoding, Accept, X-Requested-With",
+        "Last-Modified": "Tue, 10 Nov 2026 16:43:04 GMT",
+        "x-github-api-version-selected": "2022-11-28",
+        "Access-Control-Expose-Headers": "ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset, Warning",
+        "Access-Control-Allow-Origin": "*",
+        "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+        "X-Frame-Options": "deny",
+        "X-Content-Type-Options": "nosniff",
+        "X-XSS-Protection": "0",
+        "Referrer-Policy": "origin-when-cross-origin, strict-origin-when-cross-origin",
+        "Content-Security-Policy": "default-src 'none'",
+        "Server": "github.com",
+        "Content-Type": "application/json; charset=utf-8",
+        "X-Poll-Interval": "300",
+        "X-GitHub-Media-Type": "github.v3; format=json",
+        "ETag": "W/\"a2574a5638ddc3432c8a8301a5d3758085c134b10b4dd1857cc643dfa3b7a7ab\"",
+        "Accept-Ranges": "bytes",
+        "X-RateLimit-Limit": "60",
+        "X-RateLimit-Remaining": "53",
+        "X-RateLimit-Used": "7",
+        "X-RateLimit-Resource": "core",
+        "X-RateLimit-Reset": "1794333211",
+        "Content-Length": "343",
+        "X-GitHub-Request-Id": "88F6:355819:AE380:BB1B7:6AF34E5A",
+        "x-github-edge-region": "westus3",
+        "connection": "close"
+      },
+      "rawHeaders": [
+        [
+          "Date",
+          "Tue, 10 Nov 2026 17:03:23 GMT"
+        ],
+        [
+          "Cache-Control",
+          "public, max-age=60, s-maxage=60"
+        ],
+        [
+          "Vary",
+          "Accept,Accept-Encoding, Accept, X-Requested-With"
+        ],
+        [
+          "Last-Modified",
+          "Tue, 10 Nov 2026 16:43:04 GMT"
+        ],
+        [
+          "x-github-api-version-selected",
+          "2022-11-28"
+        ],
+        [
+          "Access-Control-Expose-Headers",
+          "ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset, Warning"
+        ],
+        [
+          "Access-Control-Allow-Origin",
+          "*"
+        ],
+        [
+          "Strict-Transport-Security",
+          "max-age=31536000; includeSubdomains; preload"
+        ],
+        [
+          "X-Frame-Options",
+          "deny"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "X-XSS-Protection",
+          "0"
+        ],
+        [
+          "Referrer-Policy",
+          "origin-when-cross-origin, strict-origin-when-cross-origin"
+        ],
+        [
+          "Content-Security-Policy",
+          "default-src 'none'"
+        ],
+        [
+          "Server",
+          "github.com"
+        ],
+        [
+          "Content-Type",
+          "application/json; charset=utf-8"
+        ],
+        [
+          "X-Poll-Interval",
+          "300"
+        ],
+        [
+          "X-GitHub-Media-Type",
+          "github.v3; format=json"
+        ],
+        [
+          "ETag",
+          "W/\"a2574a5638ddc3432c8a8301a5d3758085c134b10b4dd1857cc643dfa3b7a7ab\""
+        ],
+        [
+          "Accept-Ranges",
+          "bytes"
+        ],
+        [
+          "X-RateLimit-Limit",
+          "60"
+        ],
+        [
+          "X-RateLimit-Remaining",
+          "53"
+        ],
+        [
+          "X-RateLimit-Used",
+          "7"
+        ],
+        [
+          "X-RateLimit-Resource",
+          "core"
+        ],
+        [
+          "X-RateLimit-Reset",
+          "1794333211"
+        ],
+        [
+          "Content-Length",
+          "343"
+        ],
+        [
+          "X-GitHub-Request-Id",
+          "88F6:355819:AE380:BB1B7:6AF34E5A"
+        ],
+        [
+          "x-github-edge-region",
+          "westus3"
+        ],
+        [
+          "connection",
+          "close"
+        ]
+      ],
+      "bodyStatus": "READ",
+      "bytes": 343,
+      "sha256": "a2574a5638ddc3432c8a8301a5d3758085c134b10b4dd1857cc643dfa3b7a7ab"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/date-fns/date-fns/cd53d2538cfa318404eff7ade6449b49bf34562e/pkgs/core/package.json",
+      "finalUrl": "https://raw.githubusercontent.com/date-fns/date-fns/cd53d2538cfa318404eff7ade6449b49bf34562e/pkgs/core/package.json",
+      "status": 200,
+      "checkedAt": "2026-11-10T17:03:24.580791+00:00",
+      "headers": {
+        "Connection": "close",
+        "Content-Length": "261575",
+        "Cache-Control": "max-age=300",
+        "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+        "Content-Type": "text/plain; charset=utf-8",
+        "ETag": "\"8a205702294754632538f2ef6fa880cbc50f7f78f1f017939dacc8b12b4afe8f\"",
+        "Strict-Transport-Security": "max-age=31536000",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "deny",
+        "X-XSS-Protection": "1; mode=block",
+        "X-GitHub-Request-Id": "0844:3AFA86:464AB:50D98:6AF34E5C",
+        "x-github-edge-region": "sea",
+        "Accept-Ranges": "bytes",
+        "Date": "Tue, 10 Nov 2026 17:03:24 GMT",
+        "Via": "1.1 varnish",
+        "X-Served-By": "cache-pao-kpao1770079-PAO",
+        "X-Cache": "MISS",
+        "X-Cache-Hits": "0",
+        "X-Timer": "S1794330204.209087,VS0,VE322",
+        "Vary": "Authorization,Accept-Encoding",
+        "Access-Control-Allow-Origin": "*",
+        "Cross-Origin-Resource-Policy": "cross-origin",
+        "X-Fastly-Request-ID": "6f6cbdb04605bcc18c13c597247cb21c64ec880e",
+        "Expires": "Tue, 10 Nov 2026 17:08:24 GMT",
+        "Source-Age": "0"
+      },
+      "rawHeaders": [
+        [
+          "Connection",
+          "close"
+        ],
+        [
+          "Content-Length",
+          "261575"
+        ],
+        [
+          "Cache-Control",
+          "max-age=300"
+        ],
+        [
+          "Content-Security-Policy",
+          "default-src 'none'; style-src 'unsafe-inline'; sandbox"
+        ],
+        [
+          "Content-Type",
+          "text/plain; charset=utf-8"
+        ],
+        [
+          "ETag",
+          "\"8a205702294754632538f2ef6fa880cbc50f7f78f1f017939dacc8b12b4afe8f\""
+        ],
+        [
+          "Strict-Transport-Security",
+          "max-age=31536000"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "X-Frame-Options",
+          "deny"
+        ],
+        [
+          "X-XSS-Protection",
+          "1; mode=block"
+        ],
+        [
+          "X-GitHub-Request-Id",
+          "0844:3AFA86:464AB:50D98:6AF34E5C"
+        ],
+        [
+          "x-github-edge-region",
+          "sea"
+        ],
+        [
+          "Accept-Ranges",
+          "bytes"
+        ],
+        [
+          "Date",
+          "Tue, 10 Nov 2026 17:03:24 GMT"
+        ],
+        [
+          "Via",
+          "1.1 varnish"
+        ],
+        [
+          "X-Served-By",
+          "cache-pao-kpao1770079-PAO"
+        ],
+        [
+          "X-Cache",
+          "MISS"
+        ],
+        [
+          "X-Cache-Hits",
+          "0"
+        ],
+        [
+          "X-Timer",
+          "S1794330204.209087,VS0,VE322"
+        ],
+        [
+          "Vary",
+          "Authorization,Accept-Encoding"
+        ],
+        [
+          "Access-Control-Allow-Origin",
+          "*"
+        ],
+        [
+          "Cross-Origin-Resource-Policy",
+          "cross-origin"
+        ],
+        [
+          "X-Fastly-Request-ID",
+          "6f6cbdb04605bcc18c13c597247cb21c64ec880e"
+        ],
+        [
+          "Expires",
+          "Tue, 10 Nov 2026 17:08:24 GMT"
+        ],
+        [
+          "Source-Age",
+          "0"
+        ]
+      ],
+      "bodyStatus": "READ",
+      "bytes": 261575,
+      "sha256": "babd29dafdc837d71305bb39962ee74654a659dc0e96094efd74e3fa8c4165c0"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/date-fns/date-fns/cd53d2538cfa318404eff7ade6449b49bf34562e/pkgs/tz/package.json",
+      "finalUrl": "https://raw.githubusercontent.com/date-fns/date-fns/cd53d2538cfa318404eff7ade6449b49bf34562e/pkgs/tz/package.json",
+      "status": 200,
+      "checkedAt": "2026-11-10T17:03:26.646320+00:00",
+      "headers": {
+        "Connection": "close",
+        "Content-Length": "3778",
+        "Cache-Control": "max-age=300",
+        "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+        "Content-Type": "text/plain; charset=utf-8",
+        "ETag": "\"b03f21523bd20129a141abdfa2389dedbf9cae7d5b2b4a0910b3c92827451e62\"",
+        "Strict-Transport-Security": "max-age=31536000",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "deny",
+        "X-XSS-Protection": "1; mode=block",
+        "X-GitHub-Request-Id": "75D6:105D7C:290EB:31E91:6AF34E5D",
+        "x-github-edge-region": "westus3",
+        "Accept-Ranges": "bytes",
+        "Date": "Tue, 10 Nov 2026 17:03:26 GMT",
+        "Via": "1.1 varnish",
+        "X-Served-By": "cache-sjc10077-SJC",
+        "X-Cache": "MISS",
+        "X-Cache-Hits": "0",
+        "X-Timer": "S1794330206.258131,VS0,VE338",
+        "Vary": "Authorization,Accept-Encoding",
+        "Access-Control-Allow-Origin": "*",
+        "Cross-Origin-Resource-Policy": "cross-origin",
+        "X-Fastly-Request-ID": "25180590c91f64a0c16a8dab4368a4fee883f163",
+        "Expires": "Tue, 10 Nov 2026 17:08:26 GMT",
+        "Source-Age": "0"
+      },
+      "rawHeaders": [
+        [
+          "Connection",
+          "close"
+        ],
+        [
+          "Content-Length",
+          "3778"
+        ],
+        [
+          "Cache-Control",
+          "max-age=300"
+        ],
+        [
+          "Content-Security-Policy",
+          "default-src 'none'; style-src 'unsafe-inline'; sandbox"
+        ],
+        [
+          "Content-Type",
+          "text/plain; charset=utf-8"
+        ],
+        [
+          "ETag",
+          "\"b03f21523bd20129a141abdfa2389dedbf9cae7d5b2b4a0910b3c92827451e62\""
+        ],
+        [
+          "Strict-Transport-Security",
+          "max-age=31536000"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "X-Frame-Options",
+          "deny"
+        ],
+        [
+          "X-XSS-Protection",
+          "1; mode=block"
+        ],
+        [
+          "X-GitHub-Request-Id",
+          "75D6:105D7C:290EB:31E91:6AF34E5D"
+        ],
+        [
+          "x-github-edge-region",
+          "westus3"
+        ],
+        [
+          "Accept-Ranges",
+          "bytes"
+        ],
+        [
+          "Date",
+          "Tue, 10 Nov 2026 17:03:26 GMT"
+        ],
+        [
+          "Via",
+          "1.1 varnish"
+        ],
+        [
+          "X-Served-By",
+          "cache-sjc10077-SJC"
+        ],
+        [
+          "X-Cache",
+          "MISS"
+        ],
+        [
+          "X-Cache-Hits",
+          "0"
+        ],
+        [
+          "X-Timer",
+          "S1794330206.258131,VS0,VE338"
+        ],
+        [
+          "Vary",
+          "Authorization,Accept-Encoding"
+        ],
+        [
+          "Access-Control-Allow-Origin",
+          "*"
+        ],
+        [
+          "Cross-Origin-Resource-Policy",
+          "cross-origin"
+        ],
+        [
+          "X-Fastly-Request-ID",
+          "25180590c91f64a0c16a8dab4368a4fee883f163"
+        ],
+        [
+          "Expires",
+          "Tue, 10 Nov 2026 17:08:26 GMT"
+        ],
+        [
+          "Source-Age",
+          "0"
+        ]
+      ],
+      "bodyStatus": "READ",
+      "bytes": 3778,
+      "sha256": "2a7b24b8b7c9d97a05d247775ca5753c4293b629d5841eb377186352dff6fd0b"
+    },
+    {
+      "url": "https://api.github.com/repos/date-fns/date-fns/git/trees/cd53d2538cfa318404eff7ade6449b49bf34562e?recursive=1",
+      "finalUrl": "https://api.github.com/repos/date-fns/date-fns/git/trees/cd53d2538cfa318404eff7ade6449b49bf34562e?recursive=1",
+      "status": 200,
+      "checkedAt": "2026-11-10T17:03:27.897957+00:00",
+      "headers": {
+        "Date": "Tue, 10 Nov 2026 17:03:27 GMT",
+        "Cache-Control": "public, max-age=86400, s-maxage=86400",
+        "Vary": "Accept,Accept-Encoding, Accept, X-Requested-With",
+        "Last-Modified": "Tue, 10 Nov 2026 16:43:04 GMT",
+        "x-github-api-version-selected": "2022-11-28",
+        "Access-Control-Expose-Headers": "ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset, Warning",
+        "Access-Control-Allow-Origin": "*",
+        "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+        "X-Frame-Options": "deny",
+        "X-Content-Type-Options": "nosniff",
+        "X-XSS-Protection": "0",
+        "Referrer-Policy": "origin-when-cross-origin, strict-origin-when-cross-origin",
+        "Content-Security-Policy": "default-src 'none'",
+        "Server": "github.com",
+        "Content-Type": "application/json; charset=utf-8",
+        "X-GitHub-Media-Type": "github.v3; format=json",
+        "ETag": "W/\"9d4997eea80736a98291ea3bb8044fad477adc3ed19b144a7c0069b6d115f689\"",
+        "Accept-Ranges": "bytes",
+        "X-RateLimit-Limit": "60",
+        "X-RateLimit-Remaining": "52",
+        "X-RateLimit-Used": "8",
+        "X-RateLimit-Resource": "core",
+        "X-RateLimit-Reset": "1794333211",
+        "Content-Length": "780708",
+        "X-GitHub-Request-Id": "8904:107CB3:A467B:B149E:6AF34E5F",
+        "x-github-edge-region": "westus3",
+        "connection": "close"
+      },
+      "rawHeaders": [
+        [
+          "Date",
+          "Tue, 10 Nov 2026 17:03:27 GMT"
+        ],
+        [
+          "Cache-Control",
+          "public, max-age=86400, s-maxage=86400"
+        ],
+        [
+          "Vary",
+          "Accept,Accept-Encoding, Accept, X-Requested-With"
+        ],
+        [
+          "Last-Modified",
+          "Tue, 10 Nov 2026 16:43:04 GMT"
+        ],
+        [
+          "x-github-api-version-selected",
+          "2022-11-28"
+        ],
+        [
+          "Access-Control-Expose-Headers",
+          "ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset, Warning"
+        ],
+        [
+          "Access-Control-Allow-Origin",
+          "*"
+        ],
+        [
+          "Strict-Transport-Security",
+          "max-age=31536000; includeSubdomains; preload"
+        ],
+        [
+          "X-Frame-Options",
+          "deny"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "X-XSS-Protection",
+          "0"
+        ],
+        [
+          "Referrer-Policy",
+          "origin-when-cross-origin, strict-origin-when-cross-origin"
+        ],
+        [
+          "Content-Security-Policy",
+          "default-src 'none'"
+        ],
+        [
+          "Server",
+          "github.com"
+        ],
+        [
+          "Content-Type",
+          "application/json; charset=utf-8"
+        ],
+        [
+          "X-GitHub-Media-Type",
+          "github.v3; format=json"
+        ],
+        [
+          "ETag",
+          "W/\"9d4997eea80736a98291ea3bb8044fad477adc3ed19b144a7c0069b6d115f689\""
+        ],
+        [
+          "Accept-Ranges",
+          "bytes"
+        ],
+        [
+          "X-RateLimit-Limit",
+          "60"
+        ],
+        [
+          "X-RateLimit-Remaining",
+          "52"
+        ],
+        [
+          "X-RateLimit-Used",
+          "8"
+        ],
+        [
+          "X-RateLimit-Resource",
+          "core"
+        ],
+        [
+          "X-RateLimit-Reset",
+          "1794333211"
+        ],
+        [
+          "Content-Length",
+          "780708"
+        ],
+        [
+          "X-GitHub-Request-Id",
+          "8904:107CB3:A467B:B149E:6AF34E5F"
+        ],
+        [
+          "x-github-edge-region",
+          "westus3"
+        ],
+        [
+          "connection",
+          "close"
+        ]
+      ],
+      "bodyStatus": "READ",
+      "bytes": 780708,
+      "sha256": "9d4997eea80736a98291ea3bb8044fad477adc3ed19b144a7c0069b6d115f689"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/date-fns/date-fns/cd53d2538cfa318404eff7ade6449b49bf34562e/README.md",
+      "finalUrl": "https://raw.githubusercontent.com/date-fns/date-fns/cd53d2538cfa318404eff7ade6449b49bf34562e/README.md",
+      "status": 200,
+      "checkedAt": "2026-11-10T17:03:30.224416+00:00",
+      "headers": {
+        "Connection": "close",
+        "Content-Length": "1814",
+        "Cache-Control": "max-age=300",
+        "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+        "Content-Type": "text/plain; charset=utf-8",
+        "ETag": "\"2e22e6cc6cbd62f1fd9b71bf2f2cbbb27e9af8b851ef3a8047ab36b1fa211364\"",
+        "Strict-Transport-Security": "max-age=31536000",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "deny",
+        "X-XSS-Protection": "1; mode=block",
+        "X-GitHub-Request-Id": "5432:C4F63:44E6F:4F858:6AF34E61",
+        "x-github-edge-region": "sea",
+        "Accept-Ranges": "bytes",
+        "Date": "Tue, 10 Nov 2026 17:03:30 GMT",
+        "Via": "1.1 varnish",
+        "X-Served-By": "cache-pao-kpao1770030-PAO",
+        "X-Cache": "MISS",
+        "X-Cache-Hits": "0",
+        "X-Timer": "S1794330210.882849,VS0,VE291",
+        "Vary": "Authorization,Accept-Encoding",
+        "Access-Control-Allow-Origin": "*",
+        "Cross-Origin-Resource-Policy": "cross-origin",
+        "X-Fastly-Request-ID": "a2c2501eb1a63bb99c8dd22f57ce100656e53c60",
+        "Expires": "Tue, 10 Nov 2026 17:08:30 GMT",
+        "Source-Age": "0"
+      },
+      "rawHeaders": [
+        [
+          "Connection",
+          "close"
+        ],
+        [
+          "Content-Length",
+          "1814"
+        ],
+        [
+          "Cache-Control",
+          "max-age=300"
+        ],
+        [
+          "Content-Security-Policy",
+          "default-src 'none'; style-src 'unsafe-inline'; sandbox"
+        ],
+        [
+          "Content-Type",
+          "text/plain; charset=utf-8"
+        ],
+        [
+          "ETag",
+          "\"2e22e6cc6cbd62f1fd9b71bf2f2cbbb27e9af8b851ef3a8047ab36b1fa211364\""
+        ],
+        [
+          "Strict-Transport-Security",
+          "max-age=31536000"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "X-Frame-Options",
+          "deny"
+        ],
+        [
+          "X-XSS-Protection",
+          "1; mode=block"
+        ],
+        [
+          "X-GitHub-Request-Id",
+          "5432:C4F63:44E6F:4F858:6AF34E61"
+        ],
+        [
+          "x-github-edge-region",
+          "sea"
+        ],
+        [
+          "Accept-Ranges",
+          "bytes"
+        ],
+        [
+          "Date",
+          "Tue, 10 Nov 2026 17:03:30 GMT"
+        ],
+        [
+          "Via",
+          "1.1 varnish"
+        ],
+        [
+          "X-Served-By",
+          "cache-pao-kpao1770030-PAO"
+        ],
+        [
+          "X-Cache",
+          "MISS"
+        ],
+        [
+          "X-Cache-Hits",
+          "0"
+        ],
+        [
+          "X-Timer",
+          "S1794330210.882849,VS0,VE291"
+        ],
+        [
+          "Vary",
+          "Authorization,Accept-Encoding"
+        ],
+        [
+          "Access-Control-Allow-Origin",
+          "*"
+        ],
+        [
+          "Cross-Origin-Resource-Policy",
+          "cross-origin"
+        ],
+        [
+          "X-Fastly-Request-ID",
+          "a2c2501eb1a63bb99c8dd22f57ce100656e53c60"
+        ],
+        [
+          "Expires",
+          "Tue, 10 Nov 2026 17:08:30 GMT"
+        ],
+        [
+          "Source-Age",
+          "0"
+        ]
+      ],
+      "bodyStatus": "READ",
+      "bytes": 1814,
+      "sha256": "87237646806588ea43e8a7d4c13880d09b42b14ab0a4b0bbb944855f25b82232"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/date-fns/date-fns/cd53d2538cfa318404eff7ade6449b49bf34562e/pkgs/tz/README.md",
+      "finalUrl": "https://raw.githubusercontent.com/date-fns/date-fns/cd53d2538cfa318404eff7ade6449b49bf34562e/pkgs/tz/README.md",
+      "status": 200,
+      "checkedAt": "2026-11-10T17:03:31.411321+00:00",
+      "headers": {
+        "Connection": "close",
+        "Content-Length": "9377",
+        "Cache-Control": "max-age=300",
+        "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+        "Content-Type": "text/plain; charset=utf-8",
+        "ETag": "\"4ddc1a3f61b442fac544162b465bcd4c7b80edcfa4d8a36bd8826a7a6c907709\"",
+        "Strict-Transport-Security": "max-age=31536000",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "deny",
+        "X-XSS-Protection": "1; mode=block",
+        "X-GitHub-Request-Id": "523E:23EDA7:479C2:523FE:6AF34E61",
+        "x-github-edge-region": "sea",
+        "Accept-Ranges": "bytes",
+        "Date": "Tue, 10 Nov 2026 17:03:31 GMT",
+        "Via": "1.1 varnish",
+        "X-Served-By": "cache-pao-kpao1770034-PAO",
+        "X-Cache": "MISS",
+        "X-Cache-Hits": "0",
+        "X-Timer": "S1794330211.075408,VS0,VE286",
+        "Vary": "Authorization,Accept-Encoding",
+        "Access-Control-Allow-Origin": "*",
+        "Cross-Origin-Resource-Policy": "cross-origin",
+        "X-Fastly-Request-ID": "f410ccf10c1bdde4523753b6da1bbc59bd04e80d",
+        "Expires": "Tue, 10 Nov 2026 17:08:31 GMT",
+        "Source-Age": "0"
+      },
+      "rawHeaders": [
+        [
+          "Connection",
+          "close"
+        ],
+        [
+          "Content-Length",
+          "9377"
+        ],
+        [
+          "Cache-Control",
+          "max-age=300"
+        ],
+        [
+          "Content-Security-Policy",
+          "default-src 'none'; style-src 'unsafe-inline'; sandbox"
+        ],
+        [
+          "Content-Type",
+          "text/plain; charset=utf-8"
+        ],
+        [
+          "ETag",
+          "\"4ddc1a3f61b442fac544162b465bcd4c7b80edcfa4d8a36bd8826a7a6c907709\""
+        ],
+        [
+          "Strict-Transport-Security",
+          "max-age=31536000"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "X-Frame-Options",
+          "deny"
+        ],
+        [
+          "X-XSS-Protection",
+          "1; mode=block"
+        ],
+        [
+          "X-GitHub-Request-Id",
+          "523E:23EDA7:479C2:523FE:6AF34E61"
+        ],
+        [
+          "x-github-edge-region",
+          "sea"
+        ],
+        [
+          "Accept-Ranges",
+          "bytes"
+        ],
+        [
+          "Date",
+          "Tue, 10 Nov 2026 17:03:31 GMT"
+        ],
+        [
+          "Via",
+          "1.1 varnish"
+        ],
+        [
+          "X-Served-By",
+          "cache-pao-kpao1770034-PAO"
+        ],
+        [
+          "X-Cache",
+          "MISS"
+        ],
+        [
+          "X-Cache-Hits",
+          "0"
+        ],
+        [
+          "X-Timer",
+          "S1794330211.075408,VS0,VE286"
+        ],
+        [
+          "Vary",
+          "Authorization,Accept-Encoding"
+        ],
+        [
+          "Access-Control-Allow-Origin",
+          "*"
+        ],
+        [
+          "Cross-Origin-Resource-Policy",
+          "cross-origin"
+        ],
+        [
+          "X-Fastly-Request-ID",
+          "f410ccf10c1bdde4523753b6da1bbc59bd04e80d"
+        ],
+        [
+          "Expires",
+          "Tue, 10 Nov 2026 17:08:31 GMT"
+        ],
+        [
+          "Source-Age",
+          "0"
+        ]
+      ],
+      "bodyStatus": "READ",
+      "bytes": 9377,
+      "sha256": "dc3a4466b53f9a5d2f06e0e3a5d38ce2858f565481471ec3747aee5f0718b264"
+    },
+    {
+      "url": "https://date-fns.org/",
+      "finalUrl": "https://date-fns.org/",
+      "status": 200,
+      "checkedAt": "2026-11-10T17:03:33.235193+00:00",
+      "headers": {
+        "Connection": "close",
+        "Content-Length": "4797",
+        "Cache-Control": "private",
+        "Content-Type": "text/html; charset=utf-8",
+        "Etag": "W/\"12bd-uyBaJmgVcV/JQMCq0M3M6nDsJ6s\"",
+        "Function-Execution-Id": "d333m5njy4gu",
+        "Server": "Google Frontend",
+        "Strict-Transport-Security": "max-age=31556926",
+        "X-Cloud-Trace-Context": "09c4093fc1dabf82b0049618d139a9e5",
+        "X-Country-Code": "CN",
+        "X-Powered-By": "Express",
+        "Accept-Ranges": "bytes",
+        "Date": "Tue, 10 Nov 2026 17:03:33 GMT",
+        "X-Served-By": "cache-nrt-rjaa8190050-NRT",
+        "X-Cache": "MISS",
+        "X-Cache-Hits": "0",
+        "X-Timer": "S1794330213.887653,VS0,VE235",
+        "Vary": "cookie,need-authorization, x-fh-requested-host, accept-encoding",
+        "alt-svc": "h3=\":443\";ma=86400,h3-29=\":443\";ma=86400,h3-27=\":443\";ma=86400"
+      },
+      "rawHeaders": [
+        [
+          "Connection",
+          "close"
+        ],
+        [
+          "Content-Length",
+          "4797"
+        ],
+        [
+          "Cache-Control",
+          "private"
+        ],
+        [
+          "Content-Type",
+          "text/html; charset=utf-8"
+        ],
+        [
+          "Etag",
+          "W/\"12bd-uyBaJmgVcV/JQMCq0M3M6nDsJ6s\""
+        ],
+        [
+          "Function-Execution-Id",
+          "d333m5njy4gu"
+        ],
+        [
+          "Server",
+          "Google Frontend"
+        ],
+        [
+          "Strict-Transport-Security",
+          "max-age=31556926"
+        ],
+        [
+          "X-Cloud-Trace-Context",
+          "09c4093fc1dabf82b0049618d139a9e5"
+        ],
+        [
+          "X-Country-Code",
+          "CN"
+        ],
+        [
+          "X-Powered-By",
+          "Express"
+        ],
+        [
+          "Accept-Ranges",
+          "bytes"
+        ],
+        [
+          "Date",
+          "Tue, 10 Nov 2026 17:03:33 GMT"
+        ],
+        [
+          "X-Served-By",
+          "cache-nrt-rjaa8190050-NRT"
+        ],
+        [
+          "X-Cache",
+          "MISS"
+        ],
+        [
+          "X-Cache-Hits",
+          "0"
+        ],
+        [
+          "X-Timer",
+          "S1794330213.887653,VS0,VE235"
+        ],
+        [
+          "Vary",
+          "cookie,need-authorization, x-fh-requested-host, accept-encoding"
+        ],
+        [
+          "alt-svc",
+          "h3=\":443\";ma=86400,h3-29=\":443\";ma=86400,h3-27=\":443\";ma=86400"
+        ]
+      ],
+      "bodyStatus": "NOT_READ",
+      "bytes": null,
+      "sha256": null
+    }
+  ],
+  "registry": {
+    "date-fns": {
+      "name": "date-fns",
+      "version": "4.4.0",
+      "gitHead": null,
+      "license": "MIT",
+      "repository": "https://github.com/date-fns/date-fns",
+      "homepage": null
+    },
+    "@date-fns/tz": {
+      "name": "@date-fns/tz",
+      "version": "1.5.0",
+      "gitHead": null,
+      "license": "MIT",
+      "repository": {
+        "url": "git+https://github.com/date-fns/date-fns.git",
+        "type": "git"
+      },
+      "homepage": "https://github.com/date-fns/date-fns#readme"
+    }
+  },
+  "tag": {
+    "name": "v4.4.0",
+    "object": {
+      "sha": "cd53d2538cfa318404eff7ade6449b49bf34562e",
+      "type": "commit",
+      "url": "https://api.github.com/repos/date-fns/date-fns/git/commits/cd53d2538cfa318404eff7ade6449b49bf34562e"
+    }
+  },
+  "commit": "cd53d2538cfa318404eff7ade6449b49bf34562e",
+  "manifests": {
+    "date-fns": {
+      "path": "pkgs/core/package.json",
+      "name": "date-fns",
+      "version": "4.4.0",
+      "license": "MIT",
+      "repository": "https://github.com/date-fns/date-fns"
+    },
+    "@date-fns/tz": {
+      "path": "pkgs/tz/package.json",
+      "name": "@date-fns/tz",
+      "version": "1.5.0",
+      "license": "MIT",
+      "repository": {
+        "type": "git",
+        "url": "git+https://github.com/date-fns/date-fns.git"
+      }
+    }
+  },
+  "treeTruncated": false,
+  "readmeCandidates": [
+    "README.md",
+    "pkgs/core/examples/cdn/README.md",
+    "pkgs/core/examples/lodash-fp/README.md",
+    "pkgs/core/examples/node-esm/README.md",
+    "pkgs/core/examples/rollup/README.md",
+    "pkgs/core/examples/typescript/README.md",
+    "pkgs/core/examples/vite/README.md",
+    "pkgs/core/examples/webpack/README.md",
+    "pkgs/docs/README.md",
+    "pkgs/tz/README.md",
+    "pkgs/utc/README.md"
+  ],
+  "preferredReadmeCandidates": [
+    "README.md",
+    "pkgs/core/examples/cdn/README.md",
+    "pkgs/core/examples/lodash-fp/README.md",
+    "pkgs/core/examples/node-esm/README.md",
+    "pkgs/core/examples/rollup/README.md",
+    "pkgs/core/examples/typescript/README.md",
+    "pkgs/core/examples/vite/README.md",
+    "pkgs/core/examples/webpack/README.md",
+    "pkgs/tz/README.md"
+  ],
+  "readmes": {
+    "date-fns": {
+      "path": "README.md",
+      "snapshotPath": "official/readme.md",
+      "language": "en",
+      "bytes": 1814,
+      "sha256": "87237646806588ea43e8a7d4c13880d09b42b14ab0a4b0bbb944855f25b82232"
+    },
+    "@date-fns/tz": {
+      "path": "pkgs/tz/README.md",
+      "snapshotPath": "official/tz-readme.md",
+      "language": "en",
+      "bytes": 9377,
+      "sha256": "dc3a4466b53f9a5d2f06e0e3a5d38ce2858f565481471ec3747aee5f0718b264"
+    }
+  },
+  "homepage": {
+    "url": "https://date-fns.org/",
+    "requestIndex": 8,
+    "status": "unknown",
+    "xFrameOptions": null,
+    "contentSecurityPolicy": null,
+    "browserFromLabOrigin": "NOT_RUN",
+    "reason": "依据最终完整原始响应头；官网正文未读取，未从Lab origin浏览器确认可嵌入。"
+  },
+  "syncedAt": "2026-11-10T17:03:33.235450+00:00"
+}

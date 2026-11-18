@@ -8,7 +8,7 @@ Lab 锁定 `jotai@3.0.1`（MIT）。v3 是 ESM，文档要求 React 18 以上、
 
 ## Lab 当前示例
 
-[`examples/demo.tsx`](examples/demo.tsx) 重导出 [`examples/example.tsx`](examples/example.tsx)。原子定义在模块作用域：`counterAtom`、`doubleAtom`、`storiesAtom`、`unreadAtom`、只写的 `toggleReadAtom`。不要在渲染函数里 `atom()`，否则每次都是新配置，订阅会断。
+[`examples/demo.tsx`](examples/demo.tsx) 重导出 [`examples/example.tsx`](examples/example.tsx)。原子定义在 [`examples/workspace-atoms.mjs`](examples/workspace-atoms.mjs) 的模块作用域：`counterAtom`、`doubleAtom`、`storiesAtom`、`unreadAtom`、只写的 `toggleReadAtom`。不要在渲染函数里 `atom()`，否则每次都是新配置，订阅会断。
 
 `TenantWorkspace` 用 `useMemo(() => createStore(), [])` 创建 store，包在 `<Provider store={store}>` 里。没有 Provider 时会落到默认共享 store，团队数据会串。advanced 用 `key={'team-A-session-' + teamASession}`。点击「退出并新建团队 A 会话」会卸载旧 Provider。团队 B 是另一个 key，换 A 的会话不会重置 B。离开 advanced 时 B 的组件卸载，store 一起走。
 
@@ -16,7 +16,7 @@ Lab 锁定 `jotai@3.0.1`（MIT）。v3 是 ESM，文档要求 React 18 以上、
 
 basic 只显示计数和双倍。business 增加未读数和勾选。advanced 并排两个 store。
 
-没有挂载：`atomWithStorage`、async atom、Suspense、`onMount`、本地 HTTP。下面仍写这些，因为迁出去之后它们最容易和 Store 生命周期缠在一起。
+没有挂载：`atomWithStorage`、async atom、Suspense、`onMount`、本地 HTTP。本指南围绕这三个同步状态实验；异步与持久化按官方指南另行设计。
 
 ## 什么时候用
 
@@ -36,7 +36,7 @@ const doubleAtom = atom(get => get(counterAtom) * 2)
 
 不要再用 `useEffect` 把 double 抄进另一份 state。
 
-async 读原子可以拿到 `signal`。依赖变了，下一次计算前会 abort。把 signal 交给 `fetch`。Suspense 边界要在 Provider 里面，并配 Error Boundary。abort 不是事务回滚。`onMount` 在第一次被订阅时运行，Strict Mode 会多一次卸载和挂载，setup 和 cleanup 要成对。只调用 `useSetAtom` 不会因为没人读值就触发 `onMount`。
+async 读原子可以拿到 `signal`。依赖变了，下一次计算前会 abort。把 signal 交给 `fetch`。读取异步值的组件应被 Suspense 和 Error Boundary 覆盖。abort 不是事务回滚。`onMount` 在第一次被订阅时运行，Strict Mode 会多一次卸载和挂载，setup 和 cleanup 要成对。只调用 `useSetAtom` 不会因为没人读值就触发 `onMount`。
 
 Provider 省略时的默认 store 是进程内共享的。租户、草稿和未读都不能放进去。
 
@@ -44,7 +44,7 @@ Provider 省略时的默认 store 是进程内共享的。租户、草稿和未�
 
 ### 基本
 
-团队 A 一个 store。计数加一，派生值跟着翻倍。归零只影响这个 store。此时故事原子还在定义里，界面不订阅它们。
+团队 A 一个 store。计数加一，派生值跟着翻倍。归零只影响这个 store。当前实现也读取故事原子，但 basic 不显示它们；它们不会触发网络或存储。
 
 ### 业务
 
@@ -65,7 +65,7 @@ function Panel() {
 }
 ```
 
-原子提到模块或 `useMemo` 无法拯救“每次 render 都调用 atom()”的写法。配置必须稳定。
+原子提到模块；确实依赖 props 的配置可用 `useMemo` 稳定引用，不能每次 render 无条件创建新 atom。
 
 ### 反例 2：默认 store 放租户数据
 
@@ -101,11 +101,11 @@ useEffect(() => setCopy(doubled), [doubled])
 
 ### 反例 6：async 原子不传 signal
 
-依赖变化后旧请求仍 `set` 到已过期的计算。把 `signal` 交给 fetch，并在卸载时让订阅结束。
+依赖变化后旧 I/O 仍可能继续消耗资源。把 `signal` 交给实际 I/O；这不等于业务副作用自动回滚。
 
-### 反例 7：Suspense 放在 Provider 外面
+### 反例 7：读取异步原子却没有 Suspense 边界
 
-读未完成的 Promise 需要 Provider 内的 Suspense 和 Error Boundary。Lab 没有 async 原子，所以界面上没有这个边界。
+读取未完成 Promise 的组件需要 Suspense 和错误边界。Suspense 的位置应覆盖读取者；并非 Jotai 强制必须位于 Provider 内。Lab 没有 async 原子，所以界面上没有这个边界。
 
 ### 反例 8：atomWithStorage 存令牌
 
@@ -131,7 +131,7 @@ useEffect(() => setCopy(doubled), [doubled])
 4. 只写按钮用 `useSetAtom`，避免无意义订阅。
 5. 派生值不复制到 `useState`。
 6. 默认 store 没有租户数据。
-7. 若引入 async atom，signal 传到 fetch，Suspense 在 Provider 内。
+7. 若引入 async atom，signal 传到 fetch，边界覆盖异步读取者。
 8. 持久化有 schema、长度上限和登出删除；不存秘密。
 
 ## 升级
@@ -163,3 +163,24 @@ Store 的 `get/set/sub` 是不经过 hook 的测试入口。升级后用两个 s
 - https://jotai.org/docs/guides/async
 - https://jotai.org/docs/utilities/storage
 - https://github.com/pmndrs/jotai/releases/tag/v3.0.1
+
+## 最小接入与完整迁移
+
+在已有 React 18+、TypeScript 5.5+ 的 ESM 项目运行 `pnpm add jotai@3.0.1`。复制 examples 下的 `example.tsx`、`workspace-atoms.mjs` / `.d.mts`、`story-policy.mjs` / `.d.mts`；后两对声明用于 TypeScript 识别同目录 JavaScript。Lab 的 demo.tsx 只是入口转发，独立项目可直接渲染 `<JotaiWorkshop level="advanced" />`，无需 Lab 配置、账号或 CSS 才能操作。
+
+```tsx
+import { Provider, atom, useAtom, useAtomValue } from 'jotai'
+const count = atom(0)
+const doubled = atom(get => get(count) * 2)
+function Counter() {
+  const [value, set] = useAtom(count)
+  const double = useAtomValue(doubled)
+  return <button onClick={() => set(value + 1)}>{value} / {double}</button>
+}
+// 每个 Provider 拥有自己的 Store；复用 atom 配置不共享值。
+const App = () => <Provider><Counter /></Provider>
+```
+
+业务增加已读标记时，不再单独 set 未读总数：写 atom 按稳定 id 产出新数组，unreadAtom 在同一 Store 内从列表派生。advanced 保留同一组配置，在 A/B Provider 里验证隔离。先把 B 加1并勾选一篇，再修改 A；新建 A 会话后 A 应回到 count0/未读2，B 的 count1/未读1 保留。实际授权和远程缓存隔离须由业务实现。
+
+`story-policy` 是本例自建业务校验，不是 Jotai 内置 schema。重复 id、空 id、非布尔 read 抛 TypeError，写入前失败，不生成部分修改。fixture 是两篇本地文章，无请求、持久化或付费服务。离开页签或 keyed 重挂时由 React 释放订阅；若迁入 store.sub，必须调用其返回的 unsubscribe。

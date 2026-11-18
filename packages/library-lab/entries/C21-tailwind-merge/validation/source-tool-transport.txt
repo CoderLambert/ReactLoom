@@ -1,0 +1,12 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['python3', 'entries/C21-tailwind-merge/validation/source-tool-transport-fixture.py']
+startedAt: 2026-11-10T18:14:16.237692+00:00
+exit: 0
+test_first_failure_keeps_previous_pair (__main__.Capture.test_first_failure_keeps_previous_pair) ... ok
+test_homepage_after_readme_failure_keeps_previous_pair (__main__.Capture.test_homepage_after_readme_failure_keeps_previous_pair) ... ok
+test_success (__main__.Capture.test_success) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.008s
+
+OK

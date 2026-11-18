@@ -1,0 +1,73 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv=["pnpm", "exec", "biome", "check", "--write", "entries/A11-konva/examples", "entries/A11-konva/tests", "entries/A11-konva/library.json", "entries/A11-konva/verification.json", "entries/A11-konva/official/source-evidence.json", "e2e/quality-remediation-konva.spec.ts"]
+start=2026-11-10T11:46:17.778055+00:00
+end=2026-11-10T11:46:18.000132+00:00
+exit=0
+entries/A11-konva/examples/example.tsx:270:28 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    268 │               disabled={!canAddCard(cards.length)}
+    269 │               onClick={() => {
+  > 270 │                 const id = 'node-' + ++nextCardId.current
+        │                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    271 │                 setCards((old) =>
+    272 │                   appendCard(old, {
+  
+  i Unsafe fix: Use a template literal.
+  
+    268 268 │                 disabled={!canAddCard(cards.length)}
+    269 269 │                 onClick={() => {
+    270     │ - ················const·id·=·'node-'·+·++nextCardId.current
+        270 │ + ················const·id·=·`node-${++nextCardId.current}`
+    271 271 │                   setCards((old) =>
+    272 272 │                     appendCard(old, {
+  
+
+entries/A11-konva/examples/example.tsx:274:28 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    272 │                   appendCard(old, {
+    273 │                     id,
+  > 274 │                     title: '步骤 ' + (old.length + 1),
+        │                            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    275 │                     x: 40 + old.length * 35,
+    276 │                     y: 75 + old.length * 15,
+  
+  i Unsafe fix: Use a template literal.
+  
+    272 272 │                     appendCard(old, {
+    273 273 │                       id,
+    274     │ - ····················title:·'步骤·'·+·(old.length·+·1),
+        274 │ + ····················title:·`步骤·${old.length·+·1}`,
+    275 275 │                       x: 40 + old.length * 35,
+    276 276 │                       y: 75 + old.length * 15,
+  
+
+entries/A11-konva/tests/stage-policy.test.mts:15:82 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    13 │   let cards = [{ id: 'first' }]
+    14 │   assert.equal(appendCard(cards, { id: 'first' }), cards)
+  > 15 │   for (let i = 0; i < MAX_SAMPLE_CARDS + 4; i++) cards = appendCard(cards, { id: 'new-' + i })
+       │                                                                                  ^^^^^^^^^^
+    16 │   assert.equal(cards.length, MAX_SAMPLE_CARDS)
+    17 │   assert.equal(canAddCard(cards.length), false)
+  
+  i Unsafe fix: Use a template literal.
+  
+    13 13 │     let cards = [{ id: 'first' }]
+    14 14 │     assert.equal(appendCard(cards, { id: 'first' }), cards)
+    15    │ - ··for·(let·i·=·0;·i·<·MAX_SAMPLE_CARDS·+·4;·i++)·cards·=·appendCard(cards,·{·id:·'new-'·+·i·})
+       15 │ + ··for·(let·i·=·0;·i·<·MAX_SAMPLE_CARDS·+·4;·i++)·cards·=·appendCard(cards,·{·id:·`new-${i}`·})
+    16 16 │     assert.equal(cards.length, MAX_SAMPLE_CARDS)
+    17 17 │     assert.equal(canAddCard(cards.length), false)
+  
+
+Skipped 3 suggested fixes.
+If you wish to apply the suggested (unsafe) fixes, use the command biome check --write --unsafe
+
+Checked 9 files in 13ms. Fixed 2 files.
+Found 3 infos.

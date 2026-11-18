@@ -1,0 +1,5 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['python3', 'entries/C04-jsonforms/validation/fetch-homepage.py']
+startedAt: 2026-11-10T15:21:48.406625+00:00
+exit: 0
+C04 homepage GET headers captured; body NOT_READ, original snapshots unchanged: {'requestIndex': 7, 'xFrameOptions': 'SAMEORIGIN', 'contentSecurityPolicy': "default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-O8zYuOjyuzUZDv3fub7DKfAs5TEd1dG+fz+hCSCFmQA=' 'sha256-nlA5Eh6znySQnjHmn8Yf6Vfz2I3XgXggeuOKoXBiBC0=' 'sha256-pBkmluod9Ko4GzDfbWgKM/wxzujFXUdGVOePkwOQT+c=' 'sha256-bI2b8zL8P3uzmgy+aB+Lh2ZEf8GRlptjS0Gs3QKMRSM=' static.cloudflareinsights.com cloudflareinsights.com/cdn-cgi/rum; connect-src 'self' cloudflareinsights.com/cdn-cgi/rum; style-src 'self' 'unsafe-inline'; img-src 'self' data:; object-src 'none'; frame-ancestors 'self';"}

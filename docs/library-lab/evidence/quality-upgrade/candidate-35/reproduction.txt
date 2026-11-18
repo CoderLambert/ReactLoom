@@ -1,0 +1,17 @@
+✔ Vitest recipes use Vitest not node (0.806895ms)
+✔ Node recipes distinguish executable and test files (0.271146ms)
+✔ rejects unsafe paths and unsupported modes (0.188304ms)
+✔ Playwright workshops use their checked-in standalone config, not the app test runner (0.128923ms)
+✔ Storybook recipe uses an actual checked-in config and refuses missing prerequisites (0.121809ms)
+✔ Knip recipes are restricted to the local sample fixture without destructive flags (0.172507ms)
+✔ dependency-cruiser uses the checked-in Node harness rather than trying to run a TypeScript fixture (0.176348ms)
+✔ visualizer executes standalone Vite config only when its declared package and sources exist (0.094386ms)
+✔ copyable commands reject non-enumerated scenario levels and shell-like strings (0.111469ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 48.483766

@@ -1,0 +1,19 @@
+{
+  "capturedAt": "2026-11-10T17:38:58.725188+00:00",
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+  "head": "1218066e706a90ba03fac8dff8c9b843dd2429c4",
+  "status": "",
+  "files": {
+    "AGENTS.md": "e2c61868c31787cd018b75231bc02356f0a592feeab4aa8ef5fc6945670e9949",
+    "agent.md": "cbed7a792f62bb5238f10955615d286a8aa92f31411af55eee5353a60cabfd54",
+    "examples/demo.tsx": "254591932548c36c414610bd0d0c7ce7ef1648162f1996fbbe7381b8c1751690",
+    "examples/example.tsx": "a308889a9c9a6579fc0b69d59c3409b3256d3b3fcc789320f9ea1c0ef34a4094",
+    "examples/language-switch.d.mts": "f5da9d95b4147409ca62d6cd0af59a440c1b0474ed947e2bcbe1eca6af67b236",
+    "examples/language-switch.mjs": "3787d7bfbdc46533712d1505bb6a11314e961a381953e34086b629974d1c20ac",
+    "guide.md": "97313e0694affaae902ce784891b8268cf5a6276bc13c158a0f3fc23b0962247",
+    "library.json": "75fccf4c4d285e227a3c8fbe2bb874c35e8989fac87873316207ef729479baa4",
+    "tests/language-switch.test.mjs": "82ac4b76c8fd4457f51669a188b3f0f7fd9031b63ed80c7be5928191c5ee4d87",
+    "tests/sdk.test.mjs": "a4bcf9cc894f7e81c8d3c0df2fe1c0d7910a731dc60e2f0759ce5a028eab641f",
+    "verification.json": "1cce7c60db29347c18ec3608183ec8fefb1f7fd2334150bb81e1a2184da83e08"
+  }
+}

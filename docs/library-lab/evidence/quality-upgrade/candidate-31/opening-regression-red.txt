@@ -1,0 +1,46 @@
+[WebServer] (node:2120962) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:2121070) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:2121290) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 e2e/quality-resume-photoswipe.spec.ts:90:1 › @E13 unmount during actual opening animation eventually destroys core (3.4s)
+
+
+  1) e2e/quality-resume-photoswipe.spec.ts:90:1 › @E13 unmount during actual opening animation eventually destroys core 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 1
+    Received: 0
+
+    Call Log:
+    - Timeout 2000ms exceeded while waiting on the predicate
+
+      119 |       { timeout: 2000 },
+      120 |     )
+    > 121 |     .toBe(1)
+          |      ^
+      122 |   await expect(page.locator('.pswp')).toHaveCount(0)
+      123 | })
+      124 |
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-resume-photoswipe.spec.ts:121:6
+
+    Error Context: test-results/quality-resume-photoswipe--1faec-on-eventually-destroys-core/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-resume-photoswipe--1faec-on-eventually-destroys-core/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-resume-photoswipe--1faec-on-eventually-destroys-core/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    e2e/quality-resume-photoswipe.spec.ts:90:1 › @E13 unmount during actual opening animation eventually destroys core 
+undefined
+/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: playwright test e2e/quality-resume-photoswipe.spec.ts --grep during actual opening --workers=1

@@ -1,0 +1,3 @@
+B10 local links, original AGENTS, 4 portable sources/format, README bytes, 3 browser proposals and no temporary/binary copies PASS
+
+exitCode=0

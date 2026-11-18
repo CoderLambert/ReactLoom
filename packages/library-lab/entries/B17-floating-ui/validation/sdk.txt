@@ -1,0 +1,24 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+ARGV: ["pnpm", "test:sdk", "--entry=B17"]
+START: 2026-11-10T10:29:44.208849+00:00
+END: 2026-11-10T10:29:44.564643+00:00
+EXIT: 0
+STDOUT:
+
+> @reactloom/library-lab@0.1.0 test:sdk /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+> node scripts/sdk-runner.mjs --entry=B17
+
+Real SDK suites selected: 1 file(s)
+✔ B17 real Floating UI React hooks compose semantic reference and dialog props (6.211555ms)
+✔ actual SDK preserves requested placement with a 10px gap when geometry fits (0.773262ms)
+✔ actual SDK flips the overflowing side and shifts horizontally inside 12px padding (0.346131ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 105.481223
+
+STDERR:

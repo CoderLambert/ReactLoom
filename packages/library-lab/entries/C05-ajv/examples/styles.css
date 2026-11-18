@@ -1,0 +1,34 @@
+.c05-workshop {
+  min-width: 0;
+}
+.c05-workshop textarea {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  min-height: 230px;
+  padding: 12px;
+  border: 1px solid #688976;
+  border-radius: 8px;
+  font: 14px / 1.6 monospace;
+}
+.c05-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-block: 12px;
+}
+.c05-controls button {
+  padding: 8px 12px;
+}
+.c05-workshop :is(button, textarea):focus-visible {
+  outline: 3px solid #287151;
+  outline-offset: 3px;
+}
+.c05-output {
+  display: block;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  background: #f0f7ed;
+  padding: 12px;
+  border-radius: 8px;
+}

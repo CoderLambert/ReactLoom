@@ -1,144 +1,73 @@
-# react-arborist 3.16.0｜受控树的 ID 不跟着拖拽变
+# react-arborist：让订阅目录的交互和业务数据各有归属
 
-Lab 锁定 `react-arborist@3.16.0`（MIT）。研究笔记讨论的是 4.0.1 的 peer、ESM 和深导入。那些是升级到 4 时要单独核对的事项。当前挂载的是 3.16.0 的 `Tree` 和 `adjustMoveIndex`，不要按 4.x 的安装说明去改本仓库依赖。
+订阅管理页要展开分组、用键盘选中、改名和拖动源，难点不仅是把嵌套数组画成列表：选中、焦点、拖放位置和窗口化行还要保持一致。react-arborist 提供这些树控件机制，应用继续拥有订阅数据。需要完整目录交互时值得使用；只有一个可折叠列表时，普通 HTML 往往更轻。
 
-没有收据时 sdk / build / browser 保持 NOT_RUN。Actions 41779873259 不是本条目 PASS。
+本例使用实装 `react-arborist@3.16.0`（MIT），所有订阅是组件内的本地 fixture，没有真实 RSS 请求、后端或持久化。`Tree`、`NodeApi`、`TreeApi`、`adjustMoveIndex` 都来自实际 SDK；摘取/插入数组、空名称规则和移动按钮是应用代码。
 
-## Lab 当前示例
+## 从业务树到可见行
 
-[`examples/example.tsx`](examples/example.tsx) 渲染真实 `<Tree>`。`demo.tsx` 只做再导出。数据是组件 state，没有 Query，也没有 127.0.0.1 的树接口。
+节点的 `id` 是全树唯一的业务身份，`name` 可以改，位置也可以改。`children: []` 表示分组，缺少 children 的节点是叶子；尚未加载的分组需要另外设计 loaded 状态，不能只省略 children。
 
-- **basic**：三个分组和若干 RSS 源。`data` 受控。`onMove`、`onRename`、`onDelete`、`onSelect` 都写回新数组。行高 34，高度 340，`overscanCount={3}`。
-- **business**：搜索框在非组合时把草稿写进 `searchTerm`。`searchMatch` 只比较 `node.data.name`，不用默认的整对象字符串化。拖拽说明写在页脚：`onMove` 的 `index` 是删除前的槽位，`moveTree` 先 `adjustMoveIndex`。
-- **advanced**：在技术分组下再放 1,800 个 `bulk-*` 节点，用来看虚拟行，不表示性能数字。搜索在 `compositionEnd` 才写入。恢复按钮回到不含这 1,800 条的 starter。
+`data` 是应用拥有的受控树，`onMove/onRename/onDelete` 只发出请求，必须回写新的数组。SDK 的展开、选择和焦点是另一份状态。本例没有传 `selection`，`onSelect` 只把实际选中 ID 镜像到页面，不能靠 `setSelected([])` 清 SDK 选择；恢复和删除要调用公开的 `tree.current?.deselectAll()`。
 
-`moveTree` 先按父 id 找到兄弟列表，修正 index，再从整棵树摘下被拖节点，最后插入。插不进去就保持原树。摘取是按 id 整棵子树搬走，所以父节点被拖走时子节点不会再单独复制一份。拖进自己当前子树时，节点已经从 remaining 里消失，插入失败，树不变。
+```tsx
+const tree = useRef<TreeApi<Item> | undefined>(undefined)
+const [nodes, setNodes] = useState(() => initialTree(false))
 
-`renameTree` 只换 `name`，不换 `id`。空名称变成「未命名」。
-
-## 什么时候用
-
-目录、订阅分组、需要键盘和拖拽的中等树。几千个节点可以虚拟化行，但整棵数据仍在内存里建索引。百万级或要按需展开未加载文件夹时，先设计「未加载」状态，而不是把 `children: undefined` 当成文件夹。库用 children 是否为数组判断叶子。
-
-拖拽不是授权。服务端仍要检查归属、环和 revision。
-
-## 数据与模型
-
-`initialData` 是非受控。刷新后回到初值，内部快照和你的数组会分叉。要持久化就用 `data` 加上三个回调，每次返回新树。就地 `node.name = 'x'` 不会让 React 可靠重绘。
-
-| 回调 | 你必须做的事 |
-| --- | --- |
-| `onMove({ dragIds, parentId, index })` | 用 `adjustMoveIndex` 后再插入 |
-| `onRename({ id, name })` | 按 id 改名，保持 id |
-| `onDelete({ ids })` | 按 id 剪枝 |
-| `onSelect` | 保存 id 列表，不保存下标 |
-
-`searchTerm` 会留下匹配节点的祖先。默认匹配可能命中别的字段。Lab 只看名称，并用 `toLocaleLowerCase`。
-
-虚拟化需要非零的 `height` 和 `width`。容器被折成 0 高度时一行都看不见。`rowHeight` 在本示例是常数 34。动态行高不是这个 Demo 的行为。
-
-自定义 `renderRow` 没有使用。若以后换掉行，必须留下 `attrs`、`innerRef` 和 `role="treeitem"`。
-
-## 三层示例
-
-### 基本
-
-展开分组，点选节点。状态行出现 `grp-tech` 或 `feed-react` 这种 id。拖到另一组，id 不变，只是父级变了。删除用库的默认操作时，节点从 state 消失。
-
-### 业务
-
-搜索「官方」。技术下的 React、Vite 应仍能通过祖先看见。搜索框在组合中：business 层 `onChange` 在 `composing` 为真时不更新 `searchTerm`。不要用默认 stringify，否则 id 里的字母也会命中。
-
-同级向下拖一项。若不做 `adjustMoveIndex`，index 仍按删除前计算，结果会偏一格。本文件已经调用了官方修正。
-
-### 进阶
-
-1,800 个技术源只为虚拟窗口。滚动时 DOM 行数应远小于节点总数。中文搜索在组合结束时写入。恢复示例会丢掉 bulk 节点和当前选择。不要把 1,800 写成滚动帧率。
-
-v4 的多树 `DndProvider`、触屏 backend 和 `dist/main` 深导入移除都没有在这个 level 里。升级前另开迁移，不要改当前 pin 的传递依赖来「提前对齐 4」。
-
-## 反例
-
-### 1. 用数组下标当 id
-
-重排之后选中和展开落到别的源上。id 用稳定的 `feed-*` / `grp-*`。
-
-### 2. initialData 加 onMove 却不改 data
-
-界面松手弹回，或和内部快照不一致。受控模式每次 setState 新数组。
-
-### 3. 把 index 当删除后的 splice 下标
-
-```ts
-siblings.splice(index, 0, node)
+<Tree<Item>
+  ref={tree}
+  data={nodes}
+  width="100%"
+  height={340}
+  rowHeight={34}
+  onMove={({ dragIds, parentId, index }) => {
+    setNodes((previous) => moveTree(previous, dragIds, parentId, index))
+  }}
+>
+  {TreeNode}
+</Tree>
 ```
 
-同级下移偏一。先 `adjustMoveIndex({ index, dragIds, siblingIds })`。
+这是关键接入片段；完整回调、观察和 CSS 见[运行源码](examples/example.tsx)。固定 340px 窗口、34px 行高、overscan 3 是本例配置，库的类型也允许行高 accessor，本例没有实现变高行。`TreeApi.visibleNodes` 是展开/搜索后整份模型；它的长度和当前挂载的 `role=treeitem` DOM 数量不同。
 
-### 4. 只判断 dragId !== parentId
+## 三个可操作目标
 
-拖进后代仍会成环。Lab 在摘走之后再插入；插不进就保持原树。服务端还要再查一次环。
+| 目标 | 操作 | 应观察的变化 | 关键源码 |
+| --- | --- | --- | --- |
+| basic：树的导航与选择 | 点 React 源，用方向键换焦点、Space 选中，折叠技术分组，再恢复 | 默认 SDK Row 的 ARIA/焦点改变；模型从 7 到 5 再到 7；恢复后实际 aria-selected 和镜像都清空 | [TreeNode](examples/tree-node.tsx)、[示例](examples/example.tsx) |
+| business：业务更新 | 将 React 源拖入商业；恢复后用“同组下移一位”或“移到商业分组”；改名、Escape 取消、删除 | 父级/顺序改变，ID 和总数在移动时不变；last-move 明确 sdk 或 button；改名保留 ID，删除同时清 SDK 选择 | [moveTree](examples/move-tree.ts)、[共享模型](examples/tree-model.ts)、[输入法守卫](examples/ime-guard.ts) |
+| advanced：模型与虚拟 DOM | 原生滚动或“定位最后技术源”；搜索“官方”和“bulk-1799”；恢复并缩窄窗口 | 初始总数 1807，但 DOM 只挂一小段；官方匹配两源并保留祖先，ID 字符串不命中名称；恢复仍为 1807 | [示例](examples/example.tsx)、[局部样式](examples/styles.css) |
 
-### 5. 父和子同时拖拽并各复制一份
+这些目标已由主控在固定candidate18真实浏览器通过，原文与保守unknown展示另1项通过；Node模型/策略和客户端结果仍分别记录。真实系统输入法与全局泄漏普查没有验收，合成composition只证明本例事件守卫。
 
-会得到重复 id。按 id 整棵摘走，子树只存在于被摘下的节点里。
+## 移动的输入与输出
 
-### 6. children: undefined 表示未加载
+`onMove({ dragIds, parentId, index })` 中的 index 是**删除前目标兄弟列表里的槽位**。技术组原来 `[React, Vite]`，把 React 放到 Vite 后面时输入 index=2。先删除 React，最终插入下标必须变成 1；页面共用的 `moveTree` 调用官方 `adjustMoveIndex` 来完成这一步。
 
-会被当成叶子。未加载文件夹用 `children: []` 加自己的 `loaded` 标志。本 Demo 的分组都有数组。
+随后应用按 ID 摘下整棵子树，再原子插回目标父级。如果同时选中父子，只摘一次父子树；目标父级随被拖子树一起摘走时，插入失败返回原树。SDK 正常拖放还会拒绝把父拖进后代。这是本地更新策略，不是服务端 ACL、任意恶意输入的验证器或并发控制。
 
-### 7. 默认搜索匹配整个对象
+拖放通过真实 react-dnd HTML5 backend 触发，记录 `source: sdk`。两个移动按钮给键盘用户一条应用路径，调用同一业务函数并记录 `source: button`，不冒充 SDK 键盘拖拽。SDK 筛选状态的 `canDrop()` 拒绝拖放；应用也在非空搜索时禁用移动，避免把筛选后的槽位套进完整树。
 
-id 和别的键会误命中。`searchMatch` 只比较名称。
+## 名称搜索和中文编辑
 
-### 8. 编辑框每个 Enter 都提交
+搜索框把草稿与已提交的 searchTerm 分开。组合期间只更新草稿，compositionend 提交最终名称；非组合输入即时提交。`searchMatch` 只检查 `node.data.name`，所以“bulk-1799”不能因为 ID 相同而命中。匹配子节点时 SDK 会保留祖先并展开相关分组，filteredMatches 只数真正命中的节点。
 
-中文候选确认会截断。库的内建编辑不在我们自己的 input 里。自定义编辑要看 `isComposing`，Escape 取消。Lab 的搜索框已经把组合和 `searchTerm` 分开。
+3.16.0 默认编辑框收到 Enter 就调用 submit。本例只定制 Node 内容中的编辑器：保留 `style` 和 `dragHandle`，默认 Row 继续拥有 `attrs/innerRef/treeitem`。编辑器在组合标志、原生 isComposing 或 keyCode 229 时不提交，也不 preventDefault 候选确认；真正用于确认的 Enter 保持到其 keyup。compositionend 本身不会无条件吞下后续普通 Enter，因此 Space/鼠标确认后仍能正常提交。Escape 调 `node.reset()`，普通 Enter 调 `node.submit(value)`，回焦由 SDK 处理。
 
-### 9. 多个 HTML5 backend
+重命名是本地策略：trim 后空名称变成“未命名”，ID 不变。编辑器自己的输入状态不会写入订阅对象，提交后才更新 data。合成 composition 测试只验证应用事件协议，真实系统输入法、触屏和读屏需要单独验收。
 
-v4 把 `react-dnd@16` 做成 peer，多棵树要共享一个 manager。3.16.0 的这棵树没有第二个 Provider。不要为了笔记里的 v4 段落在本条目再装一套 backend。
+## 迁移与成本
 
-### 10. 前端 disableDrag 当成拒绝越权
+复制每个场景 sourceFiles 中的全部 **7 个文件**：example.tsx、demo.tsx、tree-model.ts、move-tree.ts、tree-node.tsx、ime-guard.ts、styles.css。实际入口是 demo.tsx；业务中可直接导入 Workshop。安装精确版本 `pnpm add react-arborist@3.16.0`，保留 CSS 导入；`.ts` 扩展导入需要与本例相同的 TypeScript `allowImportingTsExtensions`/noEmit 配置或按目标构建方式改写。
 
-用户仍可直接改请求。后端校验 ACL 和 revision，冲突返回 409，而不是让旧树覆盖新树。
+实装声明 React/ReactDOM peer >=16.14；实际传递依赖是 react-dnd14.0.5、HTML5 backend14.1.0、react-window1.8.11（其实际 peer 包含 React19）。不要把当前仓库 main 的 4.x 安装说明套进这个 pin。这里是一个客户端树，不额外创建第二个 DndProvider、不依赖 Lab alias、远程资产或其他条目。
 
-## 组合
+窗口化减少 DOM，整棵树和搜索索引仍在内存里；1807 是确定性数据规模，不是帧率或吞吐测量。更新算法会遍历/拷贝祖先路径；更大数据要评估按需加载和服务端校验。本例没有持久化/revision/乐观回滚，接真实服务时必须另加并发与权限规则。
 
-**Query + Zod。** Query key 带 workspace 和 revision。树只接收已经校验过的节点。拖拽进行中不要用后台 invalidate 覆盖手中的草稿。乐观更新要能回滚。本 Demo 没有这两份库。
+应用没有网络、timer、全局监听或存储租约；节点编辑器只在挂载后 focus/select。离开 Demo 卸载整棵 Tree，SDK 自己管理虚拟列表/DnD 订阅。内部临时键盘任务由 SDK 所有，源码审查不等于内存泄漏普查，卸载和再挂载仍列真实浏览器提案。
 
-**nuqs。** URL 可以放选中 id 和搜索词。打开旧链接时先确认 id 还在，再选中。不要把私密文档 id 或 token 放进 query。
+## 官方资料
 
-## 生产清单
+目标包目录没有 README，匹配提交的递归文件列表没有中文候选，故保存[官方根 README 原文](https://github.com/jameskerr/react-arborist/blob/d74c4ec696ba98c1a4e981075f6d60cdff3e290b/README.md)，没有自行翻译。来源 jameskerr/react-arborist，npm3.16.0 的 gitHead `d74c4ec696ba98c1a4e981075f6d60cdff3e290b`，路径 README.md，en，24954B，同步 UTC2026-11-10T16:53:37.522420+00:00，SHA256 `0c3ba42abd227ddce29578749b9765b5513797d446cb2d3d2b96281a429fa80a`。固定manifest与版本一致；候选和5次真实GET证据保留在条目维护记录。历史headers仅字典捕获，不保同名重复头列表，不能称完整原始头，未事后补造。
 
-- 受控 `data`，纯函数更新。
-- id 全树唯一且稳定。
-- `onMove` 使用 `adjustMoveIndex`。
-- 搜索只匹配明确字段，组合期间不提交。
-- 容器高度非零。
-- 拖拽之外提供键盘可完成的移动，不能假设鼠标已经可访问。
-- 文本用 React 子节点。RSS URL 不能在客户端校验通过后就由服务器去抓。
-- 1,800 节点的全树拷贝是 O(n)。不要据此承诺百万节点。
-
-## 升级
-
-留在 3.16.0，直到有单独的升级说明：Node 引擎、ESM、`react-dnd` 与 `react-dnd-html5-backend` 的 peer、深导入是否还存在、多树是否必须共享 Provider。验收包括同级下移、拖进后代、多选父子、键盘和卸载。当前示例没有这些 v4 步骤。
-
-## 练习
-
-1. 同级向下拖一项，顺序只移动一格，id 不变。
-2. 把分组拖进自己的子节点，树保持原样。
-3. 搜索组合过程中，匹配结果不随每个拼音字母跳动（business 的 `composing` 分支）。
-4. 重命名不改变 id。空名称成为「未命名」。
-
-## 官方链接
-
-- https://github.com/brimdata/react-arborist
-
-升级到 4 之前再读该版本的安装说明和 peer。不要把 4.0.1 的要求写成 3.16.0 已经满足。
-
-## 证据
-
-本条目没有把拖拽或虚拟滚动写成已通过。sdk 要真实 import `react-arborist@3.16.0` 并在 `docs/library-lab/evidence/runs/` 留下收据。browser 看拖拽、键盘和 IME。
-
-GitHub Actions 41779873259 是仓库级安装、typecheck、build、52 个 SDK 文件（153 项测试）和 45 项 Playwright 的结果，不是 C11 的条目 PASS。不要改 `verification.json`。
+[官方演示首页](https://react-arborist.netlify.app)由同提交 README 指向；历史GET200的headers字典未捕获X-Frame-Options或CSP。没有从 Lab origin 验证 iframe 可用，所以官网状态 **unknown**，保留直达/重试，不标 allowed。原文快照和本地教学独立；官网可否嵌入也不代表 SDK 示例是否运行成功。

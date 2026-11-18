@@ -1,0 +1,6 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom
+command: pnpm exec biome check --write packages/library-lab/entries/A01-echarts/examples packages/library-lab/entries/A01-echarts/tests packages/library-lab/entries/A01-echarts/library.json packages/library-lab/entries/A01-echarts/official/source-evidence.json
+Captured tool output:
+[warn] Linter process terminated abnormally (possibly out of memory)
+exitCode: 254
+Note: exact cause not verified; subsequent final read-only Biome check exited 0.

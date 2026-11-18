@@ -1,0 +1,111 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: pnpm exec biome check --write entries/A10-tldraw/examples entries/A10-tldraw/tests
+exit: 1
+
+entries/A10-tldraw/examples/example.tsx:144:34 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    142 │             h: 65,
+    143 │             color: 'light-blue',
+  > 144 │             richText: toRichText('任务 ' + (n + 1)),
+        │                                  ^^^^^^^^^^^^^^^^^
+    145 │           },
+    146 │         })
+  
+  i Unsafe fix: Use a template literal.
+  
+    142 142 │               h: 65,
+    143 143 │               color: 'light-blue',
+    144     │ - ············richText:·toRichText('任务·'·+·(n·+·1)),
+        144 │ + ············richText:·toRichText(`任务·${n·+·1}`),
+    145 145 │             },
+    146 146 │           })
+  
+
+entries/A10-tldraw/examples/example.tsx:150:15 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    148 │     })
+    149 │     editor.zoomToFit()
+  > 150 │     setStatus('批量新增 ' + amount + ' 个形状（程序化按钮受80总量限制）；未做性能基准测试。')
+        │               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    151 │   }
+    152 │ 
+  
+  i Unsafe fix: Use a template literal.
+  
+    148 148 │       })
+    149 149 │       editor.zoomToFit()
+    150     │ - ····setStatus('批量新增·'·+·amount·+·'·个形状（程序化按钮受80总量限制）；未做性能基准测试。')
+        150 │ + ····setStatus(`批量新增·${amount}·个形状（程序化按钮受80总量限制）；未做性能基准测试。`)
+    151 151 │     }
+    152 152 │   
+  
+
+entries/A10-tldraw/examples/example.tsx:176:17 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    174 │       setStatus('已下载真实 tldraw store 文档快照；不包括相机/选择等会话状态。')
+    175 │     } catch (error) {
+  > 176 │       setStatus('下载失败：' + String(error))
+        │                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    177 │     }
+    178 │   }
+  
+  i Unsafe fix: Use a template literal.
+  
+    174 174 │         setStatus('已下载真实 tldraw store 文档快照；不包括相机/选择等会话状态。')
+    175 175 │       } catch (error) {
+    176     │ - ······setStatus('下载失败：'·+·String(error))
+        176 │ + ······setStatus(`下载失败：${String(error)}`)
+    177 177 │       }
+    178 178 │     }
+  
+
+entries/A10-tldraw/examples/example.tsx:209:43 lint/a11y/useSemanticElements ━━━━━━━━━━━━━━━━━━━━━━━
+
+  × The elements with this role can be changed to the following elements:
+    <fieldset>
+  
+    207 │         persistenceKey，避免跨条目或跨标签页遗留 IndexedDB。
+    208 │       </p>
+  > 209 │       <div className="ab-tldraw-controls" role="group" aria-label="画板操作">
+        │                                           ^^^^^^^^^^^^
+    210 │         {level !== 'basic' && (
+    211 │           <button type="button" disabled={!editor || readonly} onClick={addProcess}>
+  
+  i For examples and more information, see WAI-ARIA Roles
+  
+  i Replace with one of these elements:
+  
+  - <fieldset>
+  
+
+entries/A10-tldraw/examples/example.tsx:239:7 lint/a11y/useAriaPropsSupportedByRole ━━━━━━━━━━━━━━━━
+
+  × The ARIA attribute 'aria-label' is not supported by this element.
+  
+    237 │         {status}
+    238 │       </p>
+  > 239 │       <div className="ab-tldraw-canvas" aria-label="tldraw 真实可编辑画布">
+        │       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    240 │         <Tldraw autoFocus={false} licenseKey={licenseKey} onMount={onMount} />
+    241 │       </div>
+  
+  i Ensure that ARIA attributes are valid for the role of the element.
+  
+
+Skipped 6 suggested fixes.
+If you wish to apply the suggested (unsafe) fixes, use the command biome check --write --unsafe
+
+Checked 5 files in 12ms. Fixed 5 files.
+Found 2 errors.
+Found 3 infos.
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while applying fixes.
+  
+

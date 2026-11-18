@@ -1,0 +1,13 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['node', '--test', '--test-name-pattern', '^span calculation', 'entries/C13-frappe-gantt/tests/plan-policy.test.mjs']
+startedAt: 2026-11-10T16:13:37.651951+00:00
+exit: 0
+✔ span calculation uses validated UTC dates within supported SDK years (0.985456ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 43.840332

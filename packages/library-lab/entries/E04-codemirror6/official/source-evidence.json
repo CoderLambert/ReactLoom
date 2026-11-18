@@ -1,0 +1,47 @@
+{
+  "repository": "codemirror/basic-setup",
+  "tag": "6.0.2",
+  "commit": "76462c05acb10fe77e0f04edd7fcddfeb9987abd",
+  "readmeCandidates": [
+    "LICENSE",
+    "README.md",
+    "src/README.md"
+  ],
+  "selection": "Official README for installed codemirror umbrella6.0.2, not a shared release version for state/language packages; no Chinese README in pinned tree.",
+  "packageMapping": [
+    {
+      "package": "codemirror",
+      "version": "6.0.2",
+      "repository": "codemirror/basic-setup",
+      "license": "MIT"
+    },
+    {
+      "package": "@codemirror/state",
+      "version": "6.7.6",
+      "repository": "https://code.haverbeke.berlin/codemirror/state",
+      "license": "MIT"
+    },
+    {
+      "package": "@codemirror/lang-javascript",
+      "version": "6.2.5",
+      "repository": "codemirror/lang-javascript",
+      "license": "MIT"
+    }
+  ],
+  "homepage": {
+    "url": "https://codemirror.net/",
+    "status": 200,
+    "headers": {
+      "connection": "keep-alive",
+      "content-encoding": "gzip",
+      "content-type": "text/html; charset=utf-8",
+      "date": "Tue, 17 Nov 2026 17:19:37 GMT",
+      "etag": "W/\"6afaaa6d-3172\"",
+      "last-modified": "Mon, 16 Nov 2026 07:02:05 GMT",
+      "server": "nginx/1.26.3",
+      "transfer-encoding": "chunked"
+    },
+    "bodySha256": "32c629b4884a2026c6e71bcb72efb82f9b024b5fa1cfec1bf943618b1b8f558d"
+  },
+  "checkedAt": "2026-11-17T17:19:38.015Z"
+}

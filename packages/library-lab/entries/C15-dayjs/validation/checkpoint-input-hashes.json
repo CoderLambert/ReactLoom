@@ -1,0 +1,25 @@
+{
+  "capturedAt": "2026-11-10T17:09:59.615593+00:00",
+  "stage": "INTERMEDIATE_CANDIDATE18_FREEZE",
+  "files": {
+    "AGENTS.md": "8468d2a86d6f6371dee06ac824d0d1b149a949ffd853115eee6249718aeb5d60",
+    "agent.md": "b0df641b90c2262e1dd7ba7db768d89bb5d94d63b11ef8ea63e247e5cd9842a6",
+    "examples/date-operations.d.mts": "50bc1ee00aa05d10fad3bdde36e35b5a6ad353491a7249ef606be7fa71436f8e",
+    "examples/date-operations.mjs": "1623c5924d7334ab8f5580f65bbd9d39cc0acb14042f0c70398409556fc42d3d",
+    "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+    "examples/example.tsx": "ec7b5490c149e85619f07927e485ee6a05a18435f026b5d826ffdd7fab1ee833",
+    "examples/offset-instant.d.mts": "c5cce5377df20572dff54e78a0d26ebbacc98df341a280d6285f9cc96e22149d",
+    "examples/offset-instant.mjs": "4dd913f719462cdf29bfd0d7753c4aae2987238525a22d40158f102809095bcf",
+    "examples/styles.css": "5ee5f7d7a3dee6f5a2d68b8776426de5a9e8cb4156238836ecd807c84e3f67a0",
+    "guide.md": "e36d57033ac52dd0e40300980fe194fdd00ef20c8920b74f5cec89ac000f2c97",
+    "library.json": "85ac8d2776a149cb04a34aad4fbe6db969b36ebaf46bacb4bd1157d30c194b56",
+    "local-validation.md": "5f6fbfe3fe6477a6b228804945869454229ebec5569e1677b4da3d29dacd54fd",
+    "tests/sdk.test.mjs": "4d1eaa27dcb880fc87a3f46b558c56a973259e108696be3fc66bc58f7ce945d7",
+    "validation/baseline.json": "50d17cbee3012fea575720a8f0e4c48d26d40bfc444f4913d16d7d8194587bcc",
+    "validation/checkpoint-format.txt": "f439f04edc3a7ed80c264ae4fc86921e2a331a8e2636e00d023c4009a455424c",
+    "validation/checkpoint-types.txt": "194862ac8dca27cf3d865368f537796200d546e87acf01cb97cb622fa14d391a",
+    "validation/local-runs.json": "c5f603107a9f4255e25292da72bbae5b42159c6c5861175b4056a89ef4f79771",
+    "validation/sdk.txt": "315732109acc117b43617ff885b9f812761a216af59f3ec7c6e6fb43f6cfbbc9",
+    "verification.json": "d9a35940bb79c2f434f70232b195d11388f298c60f3eb64e8c2b97d573feb975"
+  }
+}

@@ -1,0 +1,4 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv=["python", "entries/A11-konva/validation/check-metadata.py"]
+exit=0
+3 demos, 3 necessary runtime files, fixed original/version/hash/official candidates, formal NOT_RUN: PASS

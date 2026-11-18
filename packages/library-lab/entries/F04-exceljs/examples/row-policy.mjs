@@ -1,40 +1,43 @@
-/** Pure input policy for the ExcelJS sample. Actual workbook IO stays in core.mjs. */
-/** Excel has only 15 significant decimal digits, even though JS safe integers can be larger. */
-export const MAX_EXCEL_INTEGER = 999_999_999_999_999;
+/** Conservative application integer budget, not Excel's maximum numeric magnitude. */
+export const MAX_EXCEL_INTEGER = 999_999_999_999_999
 export function safeSpreadsheetText(value) {
-  if (typeof value !== 'string') throw new Error('spreadsheet text must be a string');
-  const valueText = value.trim();
-  if (!valueText || valueText.length > 160 || /[\u0000-\u001F\u007F]/u.test(valueText)) {
-    throw new Error('invalid spreadsheet text');
-  }
-  return /^[=+\-@]/u.test(valueText) ? "'" + valueText : valueText;
+  if (typeof value !== 'string') throw new Error('spreadsheet text must be a string')
+  const text = value.trim()
+  if (
+    !text ||
+    text.length > 160 ||
+    Array.from(text).some((char) => {
+      const point = char.codePointAt(0)
+      return point < 32 || point === 127
+    })
+  )
+    throw new Error('invalid spreadsheet text')
+  return /^[=+\-@]/u.test(text) ? `'${text}` : text
 }
-
+export function normalizeRowId(value) {
+  if (typeof value !== 'string') throw new Error('invalid row id')
+  const id = value.normalize('NFC').trim()
+  // Identity must not collide after formula-text prefixing or contain arbitrary control syntax.
+  if (!/^[\p{L}\p{N}][\p{L}\p{N}_.:-]{0,63}$/u.test(id)) throw new Error('invalid row id')
+  return id
+}
 export function checkRows(rows) {
-  if (!Array.isArray(rows) || rows.length < 1 || rows.length > 500) {
-    throw new Error('expected 1–500 rows');
-  }
-  const ids = new Set();
-  const totals = {reads: 0, stars: 0};
+  if (!Array.isArray(rows) || rows.length < 1 || rows.length > 500)
+    throw new Error('expected 1–500 rows')
+  const ids = new Set(),
+    totals = { reads: 0, stars: 0 }
   for (const row of rows) {
-    if (!row || typeof row !== 'object' || Array.isArray(row) ||
-        typeof row.id !== 'string' || !row.id.trim() || row.id.length > 64) {
-      throw new Error('invalid row id');
-    }
-    const normalizedId = row.id.trim().toLocaleLowerCase('en-US');
-    if (ids.has(normalizedId)) throw new Error('duplicate row id');
-    ids.add(normalizedId);
-    safeSpreadsheetText(row.id);
-    safeSpreadsheetText(row.source);
-    for (const field of ['reads','stars']) {
-      if (!Number.isSafeInteger(row[field]) || row[field] < 0) {
-        throw new Error('invalid ' + field);
-      }
-      totals[field] += row[field];
-      if (!Number.isSafeInteger(totals[field]) || totals[field] > MAX_EXCEL_INTEGER) {
-        throw new Error('unsafe aggregate ' + field);
-      }
+    if (!row || typeof row !== 'object' || Array.isArray(row)) throw new Error('invalid row id')
+    const id = normalizeRowId(row.id).toLocaleLowerCase('en-US')
+    if (ids.has(id)) throw new Error('duplicate row id')
+    ids.add(id)
+    safeSpreadsheetText(row.source)
+    for (const field of ['reads', 'stars']) {
+      if (!Number.isSafeInteger(row[field]) || row[field] < 0) throw new Error(`invalid ${field}`)
+      totals[field] += row[field]
+      if (!Number.isSafeInteger(totals[field]) || totals[field] > MAX_EXCEL_INTEGER)
+        throw new Error(`unsafe aggregate ${field}`)
     }
   }
-  return totals;
+  return totals
 }

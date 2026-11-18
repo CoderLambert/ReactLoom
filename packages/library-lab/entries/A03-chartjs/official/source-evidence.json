@@ -1,0 +1,286 @@
+{
+  "tree": {
+    "response": {
+      "url": "https://api.github.com/repos/chartjs/Chart.js/git/trees/76d8cf895a7485dc838c90ef37e2bc9d9e388fcb?recursive=1",
+      "finalUrl": "https://api.github.com/repos/chartjs/Chart.js/git/trees/76d8cf895a7485dc838c90ef37e2bc9d9e388fcb?recursive=1",
+      "status": 200,
+      "headers": {
+        "Date": "Tue, 10 Nov 2026 10:49:41 GMT",
+        "Content-Type": "application/json; charset=utf-8",
+        "Cache-Control": "public, max-age=86400, s-maxage=86400",
+        "Vary": "Accept,Accept-Encoding, Accept, X-Requested-With",
+        "ETag": "W/\"41ce0466fc81a36bba6db34d58032e0146c45b4d3bf0bf70424223ad512f66d4\"",
+        "Last-Modified": "Tue, 10 Nov 2026 02:18:49 GMT",
+        "X-GitHub-Media-Type": "github.v3; format=json",
+        "x-github-api-version-selected": "2022-11-28",
+        "Access-Control-Expose-Headers": "ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset, Warning",
+        "Access-Control-Allow-Origin": "*",
+        "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+        "X-Frame-Options": "deny",
+        "X-Content-Type-Options": "nosniff",
+        "X-XSS-Protection": "0",
+        "Referrer-Policy": "origin-when-cross-origin, strict-origin-when-cross-origin",
+        "Content-Security-Policy": "default-src 'none'",
+        "Server": "github.com",
+        "Accept-Ranges": "bytes",
+        "X-RateLimit-Limit": "60",
+        "X-RateLimit-Remaining": "49",
+        "X-RateLimit-Used": "11",
+        "X-RateLimit-Resource": "core",
+        "X-RateLimit-Reset": "1794309509",
+        "Transfer-Encoding": "chunked",
+        "X-GitHub-Request-Id": "A86A:3B2582:10118E0:113FA7B:6AF2F6C4",
+        "x-github-edge-region": "westus3",
+        "connection": "close"
+      },
+      "bytes": 495875,
+      "sha256": "41ce0466fc81a36bba6db34d58032e0146c45b4d3bf0bf70424223ad512f66d4"
+    },
+    "data": {
+      "truncated": false,
+      "readmeCandidates": ["README.md"]
+    }
+  },
+  "package": {
+    "response": {
+      "url": "https://raw.githubusercontent.com/chartjs/Chart.js/76d8cf895a7485dc838c90ef37e2bc9d9e388fcb/package.json",
+      "finalUrl": "https://raw.githubusercontent.com/chartjs/Chart.js/76d8cf895a7485dc838c90ef37e2bc9d9e388fcb/package.json",
+      "status": 200,
+      "headers": {
+        "Connection": "close",
+        "Content-Length": "4899",
+        "Cache-Control": "max-age=300",
+        "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+        "Content-Type": "text/plain; charset=utf-8",
+        "ETag": "\"0e9f14a03aa53722e5efdd941045bd505deb6df0a8647f48b0cc308e889f4d5f\"",
+        "Strict-Transport-Security": "max-age=31536000",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "deny",
+        "X-XSS-Protection": "1; mode=block",
+        "X-GitHub-Request-Id": "11D2:2AA661:322149:3F0A04:6AF2F6C4",
+        "x-github-edge-region": "westus3",
+        "Accept-Ranges": "bytes",
+        "Date": "Tue, 10 Nov 2026 10:49:41 GMT",
+        "Via": "1.1 varnish",
+        "X-Served-By": "cache-pao-kpao1770071-PAO",
+        "X-Cache": "MISS",
+        "X-Cache-Hits": "0",
+        "X-Timer": "S1794307781.060001,VS0,VE122",
+        "Vary": "Authorization,Accept-Encoding",
+        "Access-Control-Allow-Origin": "*",
+        "Cross-Origin-Resource-Policy": "cross-origin",
+        "X-Fastly-Request-ID": "52d99b3b8c3dcdcb96c694d3e718d9cde98ac8a7",
+        "Expires": "Tue, 10 Nov 2026 10:54:41 GMT",
+        "Source-Age": "0"
+      },
+      "bytes": 4899,
+      "sha256": "7c2ba274b47a8606a6db7730df328a7875bfbd92744f31fb425509c2e8d8191e"
+    },
+    "data": {
+      "name": "chart.js",
+      "homepage": "https://www.chartjs.org",
+      "description": "Simple HTML5 charts using the canvas element.",
+      "version": "4.6.1",
+      "license": "MIT",
+      "type": "module",
+      "sideEffects": [
+        "./auto/auto.js",
+        "./auto/auto.cjs",
+        "./dist/chart.umd.min.js",
+        "./dist/chart.umd.js"
+      ],
+      "jsdelivr": "./dist/chart.umd.min.js",
+      "unpkg": "./dist/chart.umd.min.js",
+      "main": "./dist/chart.cjs",
+      "module": "./dist/chart.js",
+      "exports": {
+        ".": {
+          "types": "./dist/types.d.ts",
+          "import": "./dist/chart.js",
+          "require": "./dist/chart.cjs"
+        },
+        "./auto": {
+          "types": "./auto/auto.d.ts",
+          "import": "./auto/auto.js",
+          "require": "./auto/auto.cjs"
+        },
+        "./helpers": {
+          "types": "./helpers/helpers.d.ts",
+          "import": "./helpers/helpers.js",
+          "require": "./helpers/helpers.cjs"
+        }
+      },
+      "types": "./dist/types.d.ts",
+      "keywords": ["canvas", "charts", "data", "graphs", "html5", "responsive"],
+      "repository": {
+        "type": "git",
+        "url": "https://github.com/chartjs/Chart.js.git"
+      },
+      "bugs": {
+        "url": "https://github.com/chartjs/Chart.js/issues"
+      },
+      "files": ["auto/**", "dist/**", "!dist/docs/**", "helpers/**"],
+      "scripts": {
+        "autobuild": "rollup -c -w",
+        "copyDeclarations": "node -e \"fs.cpSync('./src/types/', './dist/types/', {recursive:true})\"",
+        "emitDeclarations": "tsc --emitDeclarationOnly && pnpm copyDeclarations",
+        "build": "rollup -c && pnpm emitDeclarations",
+        "dev": "karma start ./karma.conf.cjs --auto-watch --no-single-run --browsers chrome --grep",
+        "dev:ff": "karma start ./karma.conf.cjs --auto-watch --no-single-run --browsers firefox --grep",
+        "docs": "pnpm run build && cross-env NODE_OPTIONS=--openssl-legacy-provider pnpm --filter \"./docs/**\" build",
+        "docs:dev": "pnpm run build && cross-env NODE_OPTIONS=--openssl-legacy-provider pnpm --filter \"./docs/**\" dev",
+        "lint-js": "eslint \"src/**/*.{js,ts}\" \"test/**/*.js\" \"docs/**/*.js\" --cache",
+        "lint-md": "eslint \"**/*.md\" --cache",
+        "lint-types": "pnpm build && node test/types/autogen.js && tsc -p test/types",
+        "lint": "concurrently \"pnpm:lint-*\"",
+        "test": "pnpm lint && pnpm test-ci",
+        "test-ci": "concurrently \"pnpm:test-ci-*\"",
+        "test-ci-karma": "cross-env NODE_ENV=test karma start ./karma.conf.cjs --auto-watch --single-run --coverage --grep",
+        "test-ci-integration": "pnpm --filter \"./test/integration/**\" test"
+      },
+      "dependencies": {
+        "@kurkle/color": "^0.3.0"
+      },
+      "devDependencies": {
+        "@rollup/plugin-commonjs": "^23.0.2",
+        "@rollup/plugin-inject": "^5.0.2",
+        "@rollup/plugin-json": "^5.0.1",
+        "@rollup/plugin-node-resolve": "^15.0.1",
+        "@swc/core": "^1.3.18",
+        "@types/estree": "^1.0.0",
+        "@types/offscreencanvas": "^2019.7.0",
+        "@typescript-eslint/eslint-plugin": "^5.32.0",
+        "@typescript-eslint/parser": "^5.32.0",
+        "chartjs-adapter-luxon": "^1.2.0",
+        "chartjs-adapter-moment": "^1.0.0",
+        "chartjs-test-utils": "^0.4.0",
+        "concurrently": "^7.3.0",
+        "coveralls": "^3.1.1",
+        "cross-env": "^7.0.3",
+        "eslint": "^8.21.0",
+        "eslint-config-chartjs": "^0.3.0",
+        "eslint-plugin-es": "^4.1.0",
+        "eslint-plugin-html": "^7.1.0",
+        "eslint-plugin-markdown": "^3.0.0",
+        "esm": "^3.2.25",
+        "glob": "^8.0.3",
+        "jasmine": "^3.7.0",
+        "jasmine-core": "^3.7.1",
+        "karma": "^6.3.2",
+        "karma-chrome-launcher": "^3.1.0",
+        "karma-coverage": "^2.0.3",
+        "karma-edge-launcher": "^0.4.2",
+        "karma-firefox-launcher": "^2.1.0",
+        "karma-jasmine": "^4.0.1",
+        "karma-jasmine-html-reporter": "^1.5.4",
+        "karma-rollup-preprocessor": "7.0.7",
+        "karma-safari-private-launcher": "^1.0.0",
+        "karma-spec-reporter": "0.0.32",
+        "luxon": "^3.0.1",
+        "moment": "^2.29.4",
+        "moment-timezone": "^0.5.34",
+        "pixelmatch": "^5.3.0",
+        "rollup": "^3.3.0",
+        "rollup-plugin-cleanup": "^3.2.1",
+        "rollup-plugin-istanbul": "^4.0.0",
+        "rollup-plugin-swc3": "^0.7.0",
+        "rollup-plugin-terser": "^7.0.2",
+        "typescript": "^4.7.4",
+        "yargs": "^17.5.1"
+      },
+      "engines": {
+        "pnpm": ">=8"
+      },
+      "packageManager": "pnpm@8.13.0",
+      "pnpm": {
+        "overrides": {
+          "html-entities": "1.4.0"
+        },
+        "peerDependencyRules": {
+          "ignoreMissing": ["chart.js"]
+        }
+      }
+    }
+  },
+  "homepage": {
+    "response": {
+      "url": "https://www.chartjs.org/",
+      "finalUrl": "https://www.chartjs.org/",
+      "status": 200,
+      "headers": {
+        "Date": "Tue, 10 Nov 2026 10:49:40 GMT",
+        "Content-Type": "text/html; charset=utf-8",
+        "Transfer-Encoding": "chunked",
+        "Connection": "close",
+        "Nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.1,\"max_age\":604800}",
+        "Server": "cloudflare",
+        "Last-Modified": "Fri, 23 Oct 2026 17:44:58 GMT",
+        "Access-Control-Allow-Origin": "*",
+        "Report-To": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=KUgKqbDWTBNJxGIFyRzBcQtSJb6Hg2FBagODgNty1CUjffZTOXls5v9RkV%2Fm8tikFlvBz0BC0qINBGOjpq%2BmkNi5QZbMsgSSFMCpeFgk646inE83oXxZGa2%2FNervr2SReA%3D%3D\"}]}",
+        "expires": "Tue, 10 Nov 2026 14:49:40 GMT",
+        "Cache-Control": "public, max-age=14400",
+        "x-proxy-cache": "MISS",
+        "X-GitHub-Request-Id": "C744:45CA5:DB4B2F:112A87E:6AF2DDB5",
+        "x-github-edge-region": "iad",
+        "Accept-Ranges": "bytes",
+        "X-Fastly-Request-ID": "9d8f73aaad0e75a04746a293db8688a9d6331df5",
+        "Via": "1.1 varnish",
+        "X-Served-By": "cache-dfw-kdfw8210092-DFW",
+        "X-Cache": "MISS",
+        "X-Cache-Hits": "0",
+        "X-Timer": "S1794301366.595838,VS0,VE53",
+        "Vary": "Accept-Encoding",
+        "Age": "6415",
+        "cf-cache-status": "HIT",
+        "set-cookie": "__cf_bm=zvjtKzyxtwZeL0IwwYeusrlvveAYA7M99EduiSmgs7A-1794307780.7284272-1.0.1.1-LgjDxK_sBRILeV7.pPvgxS8SPLX6q0fClsgrNddG5P4pwZowVIA1g4P6WhxRb.CNH4AT_MFPoo98Ab2pB421ojjMPhOGXsyXrFnnhawsXT_Rex5OFOuUT_PWdTjLYduL; HttpOnly; SameSite=None; Partitioned; Secure; Path=/; Domain=chartjs.org; Expires=Tue, 10 Nov 2026 11:19:40 GMT",
+        "Server-Timing": "cfEdge;dur=10,cfOrigin;dur=0",
+        "CF-RAY": "a5847ded8e0fcb9e-LAX",
+        "alt-svc": "h3=\":443\"; ma=86400"
+      },
+      "body": "NOT_READ: framing headers only"
+    },
+    "data": null
+  },
+  "checkedAt": "2026-11-10T10:49:42.664628+00:00",
+  "repository": "chartjs/Chart.js",
+  "tag": "v4.6.1",
+  "commit": "76d8cf895a7485dc838c90ef37e2bc9d9e388fcb",
+  "readme": {
+    "url": "https://raw.githubusercontent.com/chartjs/Chart.js/76d8cf895a7485dc838c90ef37e2bc9d9e388fcb/README.md",
+    "finalUrl": "https://raw.githubusercontent.com/chartjs/Chart.js/76d8cf895a7485dc838c90ef37e2bc9d9e388fcb/README.md",
+    "status": 200,
+    "headers": {
+      "Connection": "close",
+      "Content-Length": "2605",
+      "Cache-Control": "max-age=300",
+      "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+      "Content-Type": "text/plain; charset=utf-8",
+      "ETag": "\"2cc48d4f8f6444cedf687cb8ce2ba7b7ef696589efefa3ff00323b054974d4d5\"",
+      "Strict-Transport-Security": "max-age=31536000",
+      "X-Content-Type-Options": "nosniff",
+      "X-Frame-Options": "deny",
+      "X-XSS-Protection": "1; mode=block",
+      "X-GitHub-Request-Id": "260A:21071:30C840:3DB14E:6AF2F6D3",
+      "x-github-edge-region": "westus3",
+      "Accept-Ranges": "bytes",
+      "Date": "Tue, 10 Nov 2026 10:49:57 GMT",
+      "Via": "1.1 varnish",
+      "X-Served-By": "cache-pao-kpao1770082-PAO",
+      "X-Cache": "MISS",
+      "X-Cache-Hits": "0",
+      "X-Timer": "S1794307797.491365,VS0,VE146",
+      "Vary": "Authorization,Accept-Encoding",
+      "Access-Control-Allow-Origin": "*",
+      "Cross-Origin-Resource-Policy": "cross-origin",
+      "X-Fastly-Request-ID": "00a73812f09e1f0bcae61b86d8d8aff40f593ccb",
+      "Expires": "Tue, 10 Nov 2026 10:54:57 GMT",
+      "Source-Age": "0"
+    },
+    "bytes": 2605,
+    "sha256": "30418232ad2cc5a51fa0938e12dc97e31cfd1fb3b0bc352132f281c0c10da348"
+  },
+  "readmeSyncedAt": "2026-11-10T10:49:57.727675+00:00",
+  "browserFromLabOrigin": "NOT_RUN",
+  "selectionReason": "Complete fixed-ref tree contains only root README.md, no official Chinese README candidate.",
+  "language": "en"
+}

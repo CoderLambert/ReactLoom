@@ -1,0 +1,4 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['pnpm', 'exec', '--', 'tsc', '--ignoreConfig', '--noEmit', '--target', 'es2022', '--module', 'esnext', '--moduleResolution', 'bundler', '--strict', '--skipLibCheck', '--esModuleInterop', '--types', 'vite/client,node', '/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C17-i18next/validation/.proposal-types-6we3k_43/browser-proposal.spec.ts']
+startedAt: 2026-11-10T17:57:43.527957+00:00
+exit: 0

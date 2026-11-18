@@ -4,13 +4,8 @@
   "slug": "react-motion-migration",
   "name": "react-motion（历史迁移）",
   "group": "B",
-  "summary": "从停滞的react-motion Motion/spring模式迁移至现代motion/react的状态驱动动画",
-  "tags": [
-    "migration",
-    "spring",
-    "AnimatePresence",
-    "reduced-motion"
-  ],
+  "summary": "从旧react-motion描述与render-prop迁向现代Motion：真实presence、列表事务与实时减动",
+  "tags": ["migration", "spring", "AnimatePresence", "reduced-motion"],
   "contentState": "recreated",
   "packages": [
     {
@@ -20,20 +15,16 @@
   ],
   "references": [
     {
-      "title": "Motion React文档",
-      "url": "https://motion.dev/docs/react-animation"
+      "title": "现代Motion14.6.0固定原文",
+      "url": "https://github.com/motiondivision/motion/blob/c624ce8e907d5668280b8c832f2ab93ba3462ab5/README.md"
     },
     {
       "title": "AnimatePresence",
       "url": "https://motion.dev/docs/react-animate-presence"
     },
     {
-      "title": "reduced motion",
-      "url": "https://motion.dev/docs/react-use-reduced-motion"
-    },
-    {
-      "title": "react-motion历史库",
-      "url": "https://github.com/chenglou/react-motion"
+      "title": "历史react-motion0.5.2固定资料（未运行）",
+      "url": "https://github.com/chenglou/react-motion/blob/8bd4f7223a8d79535586220f7173f078d4604e07/README.md"
     }
   ],
   "related": [
@@ -51,66 +42,82 @@
   "demos": [
     {
       "demoId": "basic",
-      "title": "Motion.spring状态迁移",
-      "description": "使用真实react-motion（历史迁移）接口：Motion.spring状态迁移",
+      "title": "Motion + spring 到状态目标",
+      "description": "运行现代motion/react14.6，布尔状态先改变，真实presence决定退出DOM生命周期",
       "level": "basic",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx",
-        "examples/task-history.ts"
+        "examples/presence-items.tsx",
+        "examples/reduced-motion.ts",
+        "examples/task-history.ts",
+        "examples/migration.css",
+        "examples/demo.tsx"
       ],
-      "capabilities": [
-        "animation",
-        "reduced-motion",
-        "migration"
-      ]
+      "capabilities": ["animation", "reduced-motion", "migration", "keyboard"]
     },
     {
       "demoId": "business",
-      "title": "列表enter/leave与稳定key",
-      "description": "使用真实react-motion（历史迁移）接口：列表enter/leave与稳定key",
+      "title": "TransitionMotion 到稳定身份列表",
+      "description": "现代SDK列表进出与popLayout，业务立即删除、退出期不可交互和必要回焦",
       "level": "business",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx",
-        "examples/task-history.ts"
+        "examples/presence-items.tsx",
+        "examples/reduced-motion.ts",
+        "examples/task-history.ts",
+        "examples/migration.css",
+        "examples/demo.tsx"
       ],
-      "capabilities": [
-        "animation",
-        "reduced-motion",
-        "migration"
-      ]
+      "capabilities": ["animation", "reduced-motion", "migration", "keyboard"]
     },
     {
       "demoId": "advanced",
-      "title": "减少动画、撤销及取消",
-      "description": "使用真实react-motion（历史迁移）接口：减少动画、撤销及取消",
+      "title": "原子撤销、焦点与实时减动",
+      "description": "一步事务恢复选择/数组、ID不复用，真实系统偏好运行中改变目标/时长/layout",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx",
+        "examples/presence-items.tsx",
+        "examples/reduced-motion.ts",
         "examples/task-history.ts",
-        "tests/task-history.test.mts"
+        "examples/migration.css",
+        "examples/demo.tsx"
       ],
-      "capabilities": [
-        "animation",
-        "reduced-motion",
-        "migration"
-      ]
+      "capabilities": ["animation", "reduced-motion", "migration", "keyboard"]
     }
   ],
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
-    "note": "基于历史研究背景，按当前官方资料独立重写代码与中文指南，未沿用旧PASS。"
+    "note": "保留历史迁移背景、reducer与一次撤销；仅实际运行现代motion/react14.6.0，旧react-motion0.5.2只读取固定官方资料，未安装/运行，不继承旧PASS。"
   },
   "license": {
     "spdx": "MIT",
-    "assets": "使用原创新媒体/结构化数据，不包含第三方收费资产。"
+    "assets": "原创任务文字和局部CSS；现代Motion与历史react-motion均MIT，未使用Motion+资产。"
+  },
+  "official": {
+    "readme": {
+      "repository": "motiondivision/motion",
+      "commit": "c624ce8e907d5668280b8c832f2ab93ba3462ab5",
+      "path": "packages/motion/README.md",
+      "version": "14.6.0",
+      "language": "en",
+      "snapshotPath": "official/readme.md",
+      "sha256": "3d53967ddaef8a5c37b6623ee07376aac9f9f1d2c52c894af3e521ba864fca3f",
+      "sourceUrl": "https://github.com/motiondivision/motion/blob/c624ce8e907d5668280b8c832f2ab93ba3462ab5/packages/motion/README.md",
+      "syncedAt": "2026-11-10T15:21:52.763289+00:00"
+    },
+    "homepage": {
+      "url": "https://motion.dev/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-10T14:45:16.468520+00:00",
+      "reason": "实际GET200完整头未见XFO/CSP，尚未从Lab origin确认iframe可用，保持unknown。"
+    }
   }
 }

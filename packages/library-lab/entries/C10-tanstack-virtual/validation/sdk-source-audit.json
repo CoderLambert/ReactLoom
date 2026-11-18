@@ -1,0 +1,63 @@
+{
+  "packages": [
+    {
+      "name": "@tanstack/react-virtual",
+      "version": "3.14.21",
+      "installedPath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@tanstack+react-virtual@3.14.21_react-dom@19.3.0_react@19.3.0__react@19.3.0/node_modules/@tanstack/react-virtual",
+      "license": "MIT",
+      "dependencies": {
+        "@tanstack/virtual-core": "3.19.6"
+      },
+      "peerDependencies": {
+        "react": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0",
+        "react-dom": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0"
+      }
+    },
+    {
+      "name": "@tanstack/virtual-core",
+      "version": "3.19.6",
+      "installedPath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@tanstack+virtual-core@3.19.6/node_modules/@tanstack/virtual-core",
+      "license": "MIT",
+      "dependencies": null,
+      "peerDependencies": null
+    }
+  ],
+  "files": [
+    {
+      "package": "react",
+      "path": "package.json",
+      "bytes": 1884,
+      "sha256": "f7c5f3263797b1cea35eb80a57a7e826fedd7cf6164d33ddd054963891143126"
+    },
+    {
+      "package": "react",
+      "path": "src/index.tsx",
+      "bytes": 12004,
+      "sha256": "c08d1cf7be0d7b390927be5a2331e2ee19f5fff2f2677ef4208cb4eed19ff7e8"
+    },
+    {
+      "package": "core",
+      "path": "package.json",
+      "bytes": 1337,
+      "sha256": "49a5c28fc5a1f54d7089889203c838684db17733662bbbee36b78a3329749793"
+    },
+    {
+      "package": "core",
+      "path": "src/index.ts",
+      "bytes": 100922,
+      "sha256": "0609190b9ed481705f0458364b4ae9ad5ef63802b360e79baea7729eda6ec0ab"
+    }
+  ],
+  "snippets": {
+    "adapter flush guard": "if (useFlushSync && sync && !measuringFromRef.current) {\n          flushSync(rerender)\n        } else {\n          rerender()\n        }\n      }\n\n      options.onChange?.(instance, sync)\n    },\n  }\n\n  const [instance] = React.useState(() => {\n    const v = new Virtualizer<TScrollElement, TItemElement>(resolvedOptions)\n    const measureElement = v.measureElement\n    v.measureElement = (node: TItemElement | null) => {\n      measur",
+    "adapter cleanup": "return instance._didMount()\n  }, [])\n\n  useIsomorphicLayoutEffect(() => {\n    // Grow the size container to the new total BEFORE _willUpdate syncs the\n    // scroll position. On an",
+    "core cleanup": "private cleanup = () => {\n    this.unsubs.filter(Boolean).forEach((d) => d!())\n    this.unsubs = []\n    this.observer.disconnect()\n    if (this.rafId != null && this.targetWindow) {\n      this.targetWindow.cancelAnimationFrame(this.rafId)\n      this.rafId = null\n    }\n    this.scrollState = null\n    // The element is let go of: give it back its overflow now. A stop the\n    // next element needs starts afresh.\n    this._momentumStop?.restore()\n    this._momentumStop = null\n    // The debounce cancelled above is the only thing that writes `isScrolling`\n    // back to false, so a cleanup inside the reset window would strand it, and\n    // the direction derived from it, as true. That matters because `cleanup`\n    // also runs when the scroll element changes or `enabled` goes false, where\n    // the instance lives on.\n    this.isScrolling = false\n    this.scrollDirection = null\n    // The iOS gesture/deferral state is scoped to the current scroll\n    // element: the touch listeners that maintain it were just removed, and\n    // an in-flight touch keeps targeting the old element (implicit touch\n    // capture), so the new element never reports it. Carrying the state\n    // over would rep",
+    "core resizeItem": "resizeItem = (index: number, size: number) => {\n    if (!this.isIndexInRange(index)) return\n\n    // An earlier entry in this ResizeObserver batch moved `scrollOffset`.\n    // Outside a batch its sync notify would have re-rendered and rebuilt the\n    // caches read below; rebuild them here so the anchoring check compares\n    // this item's current start, not a stale one, against the adjusted\n    // offset (#1218). Without a scroll move, the caches are exactly as stale\n    // as they were before batching, so skip the rebuild.\n    if (this._resizeBatch?.sync) this.getMeasurements()\n\n    // Fast field reads. For lanes===1 we read raw start/size from the flat\n    // typed array, avoiding a Proxy.get + VirtualItem allocation per call.\n    // For lanes>1 we fall back to the cached VirtualItem array.\n    let cachedSize: number\n    let itemStart: number\n    let key: Key\n    const flat = this._singleLaneMeasurements?.flat\n    if (this.options.lanes === 1 && flat != null) {\n      key = this.options.getItemKey(index)\n      itemStart = flat[index * 2]!\n      cachedSize = flat[index * 2 + 1]!\n    } else {\n      const item = this.measurementsCache[index]\n      if (!item) return\n      key = item.k",
+    "core measure": "measure = () => {\n    // Reset pendingMin so the next getMeasurements rebuilds from index 0.\n    // Without this, a prior resizeItem() that left pendingMin > 0 would\n    // cause the rebuild to preserve stale items before that index.\n    this.pendingMin = null\n    this.itemSizeCache.clear()\n    this.laneAssignments.clear() // Clear lane cache for full re-layout\n    this.itemSizeCacheVersion++\n    this.notify(false)\n  }\n}\n\nconst findNearestBinarySearch = (\n  low: number,\n  high: number,\n  getCurrentValue: (i: number) => number,\n  value: number,\n) => {\n  while (low <= high) {\n    const middle = ((low + high) / 2) | 0\n    const currentValue = getCurrentValue(middle)\n\n    if (currentValue < value) {\n      low = middle + 1\n    } else if (currentValue > value) {\n      high = middle - 1\n    } els"
+  },
+  "boundaries": [
+    "React SSR has no mounted viewport; initialRect core is an explicitly supplied estimated model input.",
+    "resizeItem and measure are used only in the no-DOM core SDK test; the UI uses measureElement exclusively.",
+    "useFlushSync false is a retained application choice; the installed adapter already guards measuring-from-ref flushSync."
+  ]
+}

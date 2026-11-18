@@ -1,45 +1,13 @@
-# E14 react-easy-crop — 工程手册
+# E14 react-easy-crop 迁入指南
 
-## 适用
+6.2.4/MIT实装与固定LICENSE双核。只负责crop/zoom/aspect与onCropAreaChange第二参数像素区域；PNG由浏览器Image/Canvas代码完成。无旋转/EXIF/远程图床/上传。
 
-浏览器内选择矩形并导出 PNG。只浏览用 E13。整图缩小用 E15。本库不上传、不保留 EXIF、不包含旋转导出。
+已有React/TSX DOM运行`pnpm add react-easy-crop@6.2.4`。复制example、crop-policy及声明、sample-image及声明、image-runtime及声明、file-check及声明。demo可省。Bundler解析，Image.decode/Canvas.toBlob/createImageBitmap/Blob/URL，默认样式注入与相对定位330px容器不可删。关闭自动样式才需自行import styles.css；无env/Provider/服务。
 
-## 版本
+basic仅方形几何；business16:9真实PNG；advanced本地文件预算/失效/清理。默认1200×800原创SVG不是生产照片，样例尺寸显式。文件≤4MiB声明MIME png/jpeg/webp；1600万像素在createImageBitmap解码后检查，不能称解码前内存保护。bitmap每次finally.close。输出矩形整数/范围/≤400万像素在Canvas分配前检查。
 
-`react-easy-crop@6.2.4`，MIT。像素区域取 `onCropComplete` 的第二个参数。策略在 `examples/crop-policy.mjs`：文件 4MiB，源像素 1600 万，输出 400 万，MIME 仅 png、jpeg、webp。
+file-check epoch独立于export generation，防检查期间几何变化卡checkingFile。选图失败保留当前area，检查时屏蔽指针/缩放/onCropAreaChange；新检查/卸载作废旧finally，恢复默认同样。源/结果各自effect createObjectURL并revoke，只清自己资源。导出ref闸门同步防双击，变化作废旧结果；旧finally不能释放新闸门。Canvas/image finally释放本次引用，不声称取消已开始decode/toBlob。
 
-## 迁移
+key=level重建，Cropper官方unmount清监听；没有destroy API。Node policy不是SDK，真实Cropper+Canvas/URL必须browser。sourceFiles必须包含全部迁入文件，官方README/license/header见official；formalNOT_RUN至匹配receipt。
 
-复制受控 `crop` / `zoom`、比例、`cropToPng` 和 generation。`examples/demo.tsx` 只是再导出。object URL 放在 effect 里创建并在清理时 revoke。bitmap 用完 `close()`。产品上传发生在拿到 Blob 之后，不在 Cropper 内部。
-
-## 不可删的清理
-
-`source`、`aspect`、`zoom` 变化要作废旧导出。`activeExport` 用同步 ref，旧任务的 finally 不能释放新任务的闸门。卸载时递增 generation。换文件清空结果。不要在未改几何的情况下打开 `rotation`。
-
-## 反例
-
-- 用百分比调用 `drawImage`。
-- 不限制解码像素。
-- 泄漏 object URL 或不 `close` bitmap。
-- 异步结果不看 generation。
-- 只靠 `disabled` 防双击。
-- 把本地 Blob 说成已上传。
-- 远程图片不处理 Canvas 污染。
-- CSS 缩放冒充已裁剪文件。
-- 检查文件期间仍把 `onCropComplete` 写进 `area`。源码在 `checkingFile` 时会丢掉这次回调。
-
-## 测试断言
-
-- 非法 MIME、空文件、超 4MiB、超像素、越界裁剪、超输出像素都被策略拒绝。
-- 浏览器：导出非空 PNG；换图后旧结果不回写；离开后 URL revoke。
-- policy 测试不挂载 Cropper，不是 SDK PASS。
-
-## 真实限制
-
-默认源是 SVG。没有旋转、没有 EXIF、没有上传、没有键盘手柄收据。字节数不是画质。
-
-## 证据
-
-sdk、build、browser 保持 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有 E14 收据。Actions `41779873259` 是仓库级运行，不是本条目 PASS。
-
-资料：https://github.com/ValentinH/react-easy-crop 。
+6.2.4纯crop.x/y受控变化只发onCropAreaChange，不发onCropComplete；必须用前者同步真实pixels，避免非零位置重置后area永久空。完成路径也包含area-change，禁止自行反算矩形。

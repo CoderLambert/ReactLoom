@@ -1,0 +1,93 @@
+[
+  {
+    "name": "sdk",
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "test:sdk",
+      "--entry=C22"
+    ],
+    "startedAt": "2026-11-11T06:02:24.894248+00:00",
+    "finishedAt": "2026-11-11T06:02:26.344134+00:00",
+    "exitCode": 1,
+    "log": "validation/sdk.txt"
+  },
+  {
+    "name": "typecheck",
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "tsc",
+      "--ignoreConfig",
+      "--noEmit",
+      "--jsx",
+      "react-jsx",
+      "--target",
+      "es2022",
+      "--module",
+      "esnext",
+      "--moduleResolution",
+      "bundler",
+      "--strict",
+      "--skipLibCheck",
+      "--allowSyntheticDefaultImports",
+      "--esModuleInterop",
+      "--types",
+      "react,node",
+      "entries/C22-moment-migration/examples/example.tsx",
+      "entries/C22-moment-migration/examples/demo.tsx"
+    ],
+    "startedAt": "2026-11-11T06:02:26.344379+00:00",
+    "finishedAt": "2026-11-11T06:02:26.630547+00:00",
+    "exitCode": 1,
+    "log": "validation/typecheck.txt"
+  },
+  {
+    "name": "sdk-affected",
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "node",
+      "--test",
+      "--test-name-pattern=shared real Day.js|shared real SDK|SDK helpers",
+      "entries/C22-moment-migration/tests/sdk.test.mjs"
+    ],
+    "startedAt": "2026-11-11T06:05:05.629858+00:00",
+    "finishedAt": "2026-11-11T06:05:06.886186+00:00",
+    "exitCode": 0,
+    "log": "validation/sdk-affected.txt"
+  },
+  {
+    "name": "typecheck-fixed",
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "tsc",
+      "--ignoreConfig",
+      "--noEmit",
+      "--jsx",
+      "react-jsx",
+      "--target",
+      "es2022",
+      "--module",
+      "esnext",
+      "--moduleResolution",
+      "bundler",
+      "--strict",
+      "--skipLibCheck",
+      "--allowSyntheticDefaultImports",
+      "--esModuleInterop",
+      "--types",
+      "react,node,vite/client",
+      "entries/C22-moment-migration/examples/example.tsx",
+      "entries/C22-moment-migration/examples/demo.tsx"
+    ],
+    "startedAt": "2026-11-11T06:05:06.886466+00:00",
+    "finishedAt": "2026-11-11T06:05:07.131492+00:00",
+    "exitCode": 0,
+    "log": "validation/typecheck-fixed.txt"
+  }
+]

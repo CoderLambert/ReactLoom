@@ -1,0 +1,42 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom
+UTC: 2026-11-10T13:32:36.374659+00:00
+Files: 39
+AGENTS.md
+agent.md
+examples/demo.tsx
+examples/draft-policy.ts
+examples/example.tsx
+examples/feed-history.ts
+examples/styles.css
+examples/theme.ts
+guide.md
+library.json
+local-validation.md
+official/readme.md
+official/source-evidence.json
+tests/draft-policy.test.mts
+tests/feed-history.test.mts
+tests/sdk.test.mjs
+validation/baseline.json
+validation/browser-proposal.txt
+validation/checkpoint-diff.txt
+validation/checkpoint-format-initial.txt
+validation/checkpoint-format.txt
+validation/checkpoint-types.txt
+validation/diff-check.txt
+validation/fetch-official.py
+validation/final-files.txt
+validation/final-inspection.txt
+validation/format-initial.txt
+validation/format-tests.txt
+validation/input-hashes.json
+validation/log-hashes.json
+validation/metadata-check.mjs
+validation/metadata.txt
+validation/policy.txt
+validation/proposal-format.txt
+validation/proposal-types.txt
+validation/sdk.txt
+validation/source-fetch.txt
+validation/types.txt
+verification.json

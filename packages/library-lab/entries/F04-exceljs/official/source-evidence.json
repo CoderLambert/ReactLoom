@@ -1,0 +1,22 @@
+{
+  "checkedAt": "2026-11-17T18:30:33.166002+00:00",
+  "tag": "v4.4.0",
+  "annotatedTag": "d911329c2c3ca7a4d5e979f2539a3cd868fc09d4",
+  "commit": "ac96f9a61e9799c7776bd940f05c4a51d7200209",
+  "readmeCandidates": ["README.md", "README_zh.md", "spec/out/README.md"],
+  "selection": "Prefer upstream-maintained Chinese README_zh.md at pinned version; preserve original bytes.",
+  "packageFields": {
+    "version": "4.4.0",
+    "license": "MIT"
+  },
+  "homepage": {
+    "url": "https://github.com/exceljs/exceljs",
+    "status": 200,
+    "headersFile": "official/homepage-headers.txt",
+    "restriction": "X-Frame-Options deny; CSP frame-ancestors none"
+  },
+  "installedPackage": {
+    "version": "4.4.0",
+    "license": "MIT"
+  }
+}

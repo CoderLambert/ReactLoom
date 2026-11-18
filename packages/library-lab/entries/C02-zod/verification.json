@@ -5,14 +5,14 @@
   },
   "sdk": {
     "status": "NOT_RUN",
-    "note": "目标 zod 4.6.5 尚未在本轮环境安装并运行"
+    "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/C02.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
   },
   "build": {
     "status": "NOT_RUN",
-    "note": "等待平台锁文件后执行真实 TS+Vite"
+    "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/C02.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "等待浏览器 E2E 和错误路径验证"
+    "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/C02.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
   }
 }

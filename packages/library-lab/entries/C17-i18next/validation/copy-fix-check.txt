@@ -1,0 +1,115 @@
+C17 limited editorial correction: static checks only
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+utc=2026-11-11T05:44:39.063227+00:00
+command=["node", "packages/library-lab/entries/C17-i18next/validation/metadata-check.mjs"]
+exitCode=0
+{
+  "result": "PASS",
+  "scope": "Single-entry schema/published links/installed source hashes/official bytes and recorded raw headers. No SDK/HTTP/browser execution.",
+  "sourcesUnchangedFromCandidate19": 7,
+  "installedFiles": 9,
+  "publishedLinks": [
+    {
+      "filename": "guide.md",
+      "target": "examples/i18n-client.mjs"
+    },
+    {
+      "filename": "guide.md",
+      "target": "examples/example.tsx"
+    },
+    {
+      "filename": "guide.md",
+      "target": "examples/language-switch.mjs"
+    },
+    {
+      "filename": "guide.md",
+      "target": "examples/demo.tsx"
+    },
+    {
+      "filename": "guide.md",
+      "target": "examples/example.tsx"
+    },
+    {
+      "filename": "guide.md",
+      "target": "examples/i18n-client.mjs"
+    },
+    {
+      "filename": "guide.md",
+      "target": "examples/i18n-client.d.mts"
+    },
+    {
+      "filename": "guide.md",
+      "target": "examples/language-switch.mjs"
+    },
+    {
+      "filename": "guide.md",
+      "target": "examples/language-switch.d.mts"
+    },
+    {
+      "filename": "guide.md",
+      "target": "examples/styles.css"
+    },
+    {
+      "filename": "guide.md",
+      "target": "official/readme.md"
+    },
+    {
+      "filename": "guide.md",
+      "target": "https://www.i18next.com/overview/api"
+    },
+    {
+      "filename": "guide.md",
+      "target": "https://www.i18next.com/overview/configuration-options"
+    },
+    {
+      "filename": "guide.md",
+      "target": "https://www.i18next.com"
+    },
+    {
+      "filename": "agent.md",
+      "target": "official/readme.md"
+    },
+    {
+      "filename": "agent.md",
+      "target": "guide.md"
+    },
+    {
+      "filename": "agent.md",
+      "target": "examples/i18n-client.mjs"
+    },
+    {
+      "filename": "agent.md",
+      "target": "examples/example.tsx"
+    },
+    {
+      "filename": "agent.md",
+      "target": "examples/language-switch.mjs"
+    }
+  ],
+  "formalStatuses": {
+    "sdk": "NOT_RUN",
+    "build": "NOT_RUN",
+    "browser": "NOT_RUN"
+  }
+}
+
+
+command=["git", "diff", "--check", "--", "packages/library-lab/entries/C17-i18next/guide.md", "packages/library-lab/entries/C17-i18next/local-validation.md"]
+exitCode=0
+
+
+command=Python SHA-256 before/after comparison
+exitCode=0
+{
+  "beforeFileCount": 49,
+  "changed": [
+    "guide.md",
+    "local-validation.md"
+  ],
+  "addedBeforeThisLog": [],
+  "protectedExistingFilesUnchanged": 47,
+  "afterDocumentHashes": {
+    "guide.md": "83f89e007168ba4efe141d86d52f889e99d5768f97ad2e2272cff7200df73b87",
+    "local-validation.md": "b8b3686847d9d08690000c194f2b4b7e7da063d7e26445c7b86a1122280fa92f"
+  }
+}

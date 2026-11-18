@@ -1,0 +1,55 @@
+{
+  "checkedAt": "2026-11-10T10:48:38.006961+00:00",
+  "inputFiles": {
+    "examples/business-policy.ts": "704b9e5b1e88899dcd77e99d33526021dbbf4f6fdac83c8f50da4b7add31a1a0",
+    "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+    "examples/example.tsx": "129333303fea1f2fd65e8dd6a2e5f11460321fc2e152bab0cc9d8873fafe4af6",
+    "examples/ime-guard.ts": "6148abc24575c04f05a552a41da4e2a7416353e0a18a36c5d1adb08a9fd7ec69",
+    "examples/positioning.ts": "4948603701e16db3d27c878135992bd05a5adffe8fa8b1a060176d0e2f62ba11",
+    "examples/workshop.css": "412b1d83c809601ba426c52fce4b2ceb33695cf2f500767e4c14ce2828bbae6f",
+    "library.json": "21cc34c5fcb2a9bed98526b9bc2b2cc5f323dac2315558e28ca5e237d2123be4",
+    "official/readme.md": "b352baf175998877bad6168b0e55cf887690ede7a85acdfea344de996744d123",
+    "official/source-evidence.json": "cd6218ae0982752b5bbe615844d0483337427f99b93493dba057ae8d035bfcca",
+    "tests/business-policy.test.mts": "479956353e8632f8bede07a4ce5c28524ba097936c2dd48eee166454393ba80d",
+    "tests/ime-guard.test.mts": "111bad3d9f8abd29aba0758f3de26bca51e8072e98a0a32fe8539791c115b4d5",
+    "tests/sdk.test.mjs": "d93148f4d64e896411c9d52c58d1f9af866ff2c74b21f5f917f40805f468f495",
+    "verification.json": "a3c4af56152f49a41b451e00377475cc22a5e94a78e6477ac02e1049fc8f54b2"
+  },
+  "logs": {
+    "validation/biome-ime.txt": "be38611150559f2703feb3ebf01c475d972d5d21988142f9c5b2a9c5f5aded9c",
+    "validation/biome.txt": "349df08640cc2d22ab585c12a4c6ba5c286915fe1fa686e496adf49e03f2e9ad",
+    "validation/diff-check.txt": "d4697042e500490b1a07742453d843ad99f6b329d4e38bf180338d38cd566ff6",
+    "validation/entry-metadata.txt": "ed9ae748d180257aed5a58a97b89cdd6dff0406b91e2cffa25682c246734aebb",
+    "validation/entry-typecheck-final.txt": "a3fcfe9f0ed713bb2de81de197866e2dacb476155499c50d1941cf7f22236904",
+    "validation/entry-typecheck-ime.txt": "2eff8cede470478b7ad36b78aad5fce2f9b3c3e0b00db24219067e287aaa4862",
+    "validation/entry-typecheck.txt": "3491468a46ea767d9c26538a7ba3fa46283c463f3ec0c2c994ded5f6888b23fb",
+    "validation/format-final.txt": "1b495ad56e11f7dbe6577b85a734840b8b716757a6420abfda823b731c664e9d",
+    "validation/format.txt": "b24b6255a85644cfeb659fa46d2807b69f402cce56e2a4039b760b4441a165c0",
+    "validation/ime-format.txt": "af1e80435ecae9fd83793e80d78bbb365df374ef223cbb124cee0ba51c096f58",
+    "validation/ime-policy-final.txt": "37132b139bc9464544ee43f48eaf0025c45532deab1ba03c7465eea7cb491eb0",
+    "validation/policy.txt": "687b4707e28a65f95733c12c78641e1e961429f10f9fc28b1acb0b7bf9b4820d",
+    "validation/proposal-format.txt": "d70f6134f199d4eb88dde26f0e072112776fe45e00b000c9dbf4d556224162f3",
+    "validation/proposal-typecheck.txt": "74645c7fbeb77709822454e21ad9e049d8507b3619d88c32fba3db1e3c307edc",
+    "validation/sdk.txt": "7471341dbe0c15117b2a97b39361d8c5f31084e1f0cec3ca499ce94905416df0",
+    "validation/source-fetch.txt": "b953453b5de2f56a15e9add609046532334fbb2aa4306593c170d8db62f0de23"
+  },
+  "incrementalVerification": {
+    "changedInputs": [
+      "examples/example.tsx",
+      "examples/ime-guard.ts",
+      "tests/ime-guard.test.mts"
+    ],
+    "imePolicy": "8 PASS; validation/ime-policy-final.txt",
+    "types": "exit0; validation/entry-typecheck-ime.txt",
+    "biome": "exit0; validation/biome-ime.txt",
+    "proposalStatic": "6 proposed browser cases; typecheck/Biome exit0, browser NOT_RUN",
+    "sdkReused": "3 PASS unchanged SDK test, shared positioning middleware and installed SDK inputs",
+    "businessPolicyReused": "5 PASS unchanged business source/test inputs"
+  },
+  "reviewArtifacts": {
+    "guide.md": "ae04b710cdba57f9e8eaa677e9dd7dfa383c54c22a8668e4703e0c6bfa96c4d2",
+    "agent.md": "c73b873e10ff75d328b999ce7c2f1f8f57a9561516daa560b3edf970645a3ca2",
+    "local-validation.md": "8b34d57afbdd686daa3227c89709a16624343273968aa0c80edd0c8c20990b0b",
+    "validation/browser-proposal.txt": "d1eb7d3f713853596b5a2a6149246b2029a23c68a08393b358b6d21f4b3652c7"
+  }
+}

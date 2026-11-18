@@ -1,0 +1,2 @@
+import Example from "./example"; export const consumer = <Example level="business"/>;
+{"compilerOptions": {"target": "ES2022", "module": "ESNext", "moduleResolution": "Bundler", "jsx": "react-jsx", "strict": true, "noEmit": true, "skipLibCheck": true, "types": ["react", "react-dom"]}, "include": ["*.tsx", "*.mts"]}

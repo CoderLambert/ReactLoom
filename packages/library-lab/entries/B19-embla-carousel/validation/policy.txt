@@ -1,0 +1,17 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+argv=["node", "--test", "packages/library-lab/entries/B19-embla-carousel/tests/slide-policy.test.mts"]
+✔ clamp outdated snap after removal or viewport resize (0.521727ms)
+✔ no snap positions or invalid input is safe (0.132706ms)
+✔ IDs increase across delete, append, restore without collisions (0.118125ms)
+✔ invalid unsafe IDs are rejected rather than silently duplicated (0.254198ms)
+✔ keyboard arrows never hijack nested controls or disabled boundaries (0.09553ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 71.415211
+
+exit=0

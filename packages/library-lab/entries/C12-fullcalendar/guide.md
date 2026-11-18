@@ -1,166 +1,88 @@
-# FullCalendar 7.1.3｜视图吃事件，时区不靠墙上的 01:30
+# FullCalendar：日历视图、事件数据与改期提议
 
-Lab 锁定 `@fullcalendar/react@7.1.3` 和 `temporal-polyfill@1.0.4`（MIT）。v7 的日视图、时间网格、交互、列表、中文和经典主题都从 `@fullcalendar/react/...` 子路径引入，不要再装 v6 的 `@fullcalendar/daygrid` 这类独立包。`temporal-polyfill` 被 pin 住，是因为 v7 的命名时区依赖 Temporal；挂载示例自己没有调用 Temporal API。没有 Premium，也没有试用 license。
+RSS排程需要月、周和列表视图，还要创建全天任务、拖动复盘时段，并在业务拒绝改期时恢复。FullCalendar负责日历布局、导航和交互；React持有本例的权威事件数组，实际系统仍由服务端最终确认。只有日期计算或普通日期输入时无需加载完整日历，资源泳道/资源时间轴等Premium能力也不在本例范围。
 
-没有收据时 sdk / build / browser 保持 NOT_RUN。Actions 41779873259 不是本条目 PASS。
+固定 **@fullcalendar/react7.1.3 / temporal-polyfill1.0.4**，两者MIT；React包peer为React/DOM17–19与polyfill^1.0.1，当前宿主React19.3。v7是真实React组件，daygrid/timegrid/interaction/list、主题与locale都来自react包子路径，不补装v6的core/daygrid独立包。此刻官网文档示例已7.1.4，关键API以本地7.1.3类型/源码和固定原文为准。
 
-## Lab 当前示例
+## 先区分三份信息
 
-[`examples/example.tsx`](examples/example.tsx) 渲染真实 `<FullCalendar>`。`demo.tsx` 只做再导出。没有 `events` 函数，也没有回环上的日历 API。事件数组在 React state 里，并用 `useMemo` 保持引用。
-
-插件：`classicTheme`、`dayGridPlugin`、`timeGridPlugin`、`interactionPlugin`、`listPlugin`。样式是 skeleton、classic theme 和 palette。`locale` 来自 `@fullcalendar/react/locales/zh-cn`。`timeZone="America/New_York"`，`initialDate="2026-11-01"`。
-
-- **basic**：月视图，不可拖。两条种子事件：全天 `2026-11-01` 的发布，以及带 `Z` 的复盘时段。
-- **business**：周视图，可拖可缩放。表单用 `<input type="date">` 加标题创建全天事件。id 由 [`calendar-policy.mjs`](examples/calendar-policy.mjs) 的 `allocateEventId` 分配，避开已占用的 `local-N`。
-- **advanced**：额外两条纽约回拨日事件，`2026-11-01T01:30:00-04:00` 和 `-05:00`。拖动 `fold-early` 调用 `revert()`，模拟 409。没有明确偏移的定时值也会 `revert()`。
-
-`isCivilDate` 只接受 `YYYY-MM-DD`，并且用 UTC 午夜回读，拒绝 2 月 30 日。`getUtcInstant` 要求时间带 `Z` 或数值偏移，拒绝 `-00:00` 和超出 ±14:00 的偏移。没有偏移的 `2026-11-01T01:30:00` 不能通过。
-
-研究笔记里的 `events(fetchInfo)`、按可见范围 GET、revision PATCH 和 Luxon 插件没有挂载。v7 已去掉旧的 Luxon 连接器。
-
-## 什么时候用
-
-月、周、日和列表要一起出现，拖拽只是「提议改期」的时候用它。简单的日期加减用 date-fns 或 Luxon，不必加载日历。资源泳道和纵向资源调度属于 Premium，本 pin 不包含。
-
-全天日期和时刻是两种值。全天保存 `YYYY-MM-DD`。时刻保存带偏移的 instant，并另存 IANA 时区名。纽约的 `01:30` 在 2026-11-01 出现两次。
-
-## 数据与模型
-
-日历是视图。权威在 React state，生产里应在服务端。不要再用 `eventsSet` 把视图写回同一份 state，容易打成环。
-
-拖拽回调给出改后的 `event` 和 `revert()`。Lab 在写入前检查 id 仍在数组里，全天值能过 `isCivilDate`，定时值能过 `getUtcInstant`。失败就 revert。`fold-early` 无条件 revert，用来演示冲突，并不是日历算出了 409。
-
-全天区间按官方是半开的 `[start, end)`。`2026-10-23` 到 `2026-10-25` 覆盖 23 和 24 日，不是三天。本示例的种子没有跨日全天结束，迁移时不要把结束日当成包含。
-
-`eventDidMount` 不会在数据变化时重跑。标题要跟着数据走，用 `eventContent`，不要在 mount 钩子里改 DOM。不要返回 `{ html: event.title }`。JSX 文本会转义。
-
-一次塞进全年几十万条事件没有意义。生产按可见范围取数。本 Demo 只有几条，所以用静态 `events`。
-
-v7 命名时区不要用浏览器本地 `Date` 去猜纽约的年月日。polyfill 在依赖里，是为了日历内部。业务 instant 仍由 `getUtcInstant` 检查。春季不存在的 `2026-03-08T02:30:00-05:00` 可能被 `Date.parse` 接受成某个时间戳，但它不是纽约当天的 02:30。Lab 的校验还不是完整的 TZDB 往返。那一步在 C14 和 C16。
-
-## 三层示例
-
-### 基本
-
-打开月视图，应看到 2026 年 11 月和中文按钮。工具栏可以切到周和列表。点事件，状态行出现 id。不能拖。
-
-### 业务
-
-填写标题和日期再创建。非法日期或空标题被拒绝，不会进位成下一天。跳到 11 月 1 日。拖动「工程复盘」，状态行说明已经写回 React。生产还要带上 revision，服务器拒绝时 revert 并重新拉取。当前没有这趟请求。
-
-### 进阶
-
-页上的 `<pre>` 列出两个 01:30 的不同 UTC instant：`-04:00` 是 `05:30Z`，`-05:00` 是 `06:30Z`。拖 `fold-early`，条块回到原位，状态是模拟 409。把拖拽结果里的定时值弄成没有偏移的字符串时，同样 revert。下面的 `<ul>` 是键盘可以读到的事件清单，不依赖日历内部的网格。
-
-## 反例
-
-### 1. v6 的包路径
-
-```ts
-import dayGridPlugin from '@fullcalendar/daygrid'
+```text
+React事件数组 → FullCalendar解析/时区/当前视图 → 真实事件DOM
+导航 → datesSet：当前可见日期范围
+getApi().getEvents()：SDK事件模型的当前序列化观察
+拖动/缩放 → SDK先提出新日期 → 应用接受并回写React，或调用revert
 ```
 
-v7 改为 `@fullcalendar/react/daygrid`，并安装 `temporal-polyfill@1.0.4`。
+数组、API模型、DOM不是三个可随意修改的权威。本例只向events属性传稳定state数组；没有eventsSet回写环，也不直接用API新增/修改事件再同时维护另一份React数组。API按钮只导航或读取，不替应用保存。
 
-### 2. 只引入组件不引入 skeleton.css
+全天值是YYYY-MM-DD，定时值是带Z或明确offset的instant。allDay=true时end不包含：种子“两天校对”[2026-11-03,2026-11-05)覆盖3、4日。界面语言与时区独立；中文locale默认周一，本例显式firstDay=0，以便同一周同时观察11月1日DST与11月2日复盘。
 
-布局和现在的主题会缺一块。入口同时引入 skeleton、theme 和 palette。
-
-### 3. plugins 为空还指定 dayGridMonth
-
-视图插件和主题插件都要注册。Lab 的 `PLUGINS` 数组就是这份清单。
-
-### 4. 继续装 @fullcalendar/luxon3
-
-v7 移除了该连接。时区运算用 Luxon 或 Temporal 自己的 API，再把结果交给日历。
-
-### 5. 每次渲染新建 events 数组
+## 最小接入与插件
 
 ```tsx
-events={[...records]}
+import FullCalendar from '@fullcalendar/react';
+import dayGridPlugin from '@fullcalendar/react/daygrid';
+import classicTheme from '@fullcalendar/react/themes/classic';
+import '@fullcalendar/react/skeleton.css';
+import '@fullcalendar/react/themes/classic/theme.css';
+import '@fullcalendar/react/themes/classic/palette.css';
+
+<FullCalendar plugins={[dayGridPlugin, classicTheme]}
+  initialView="dayGridMonth" events={events} />;
 ```
 
-引用抖动会让日历反复吃同一份数据。用 `useMemo` 或稳定的取数函数。
+完整示例的calendar-contract.ts共享五个真实插件、中文locale、纽约时区与自制种子。theme也是插件，CSS三份与主题配套。polyfill是v7命名时区的运行peer，即使本例业务代码不直接调用Temporal，也不能漏掉。
 
-### 6. 全天结束日当成包含
+## 目标一：视图、范围与事件模型
 
-业务库和日历都用半开区间，不要在查询里偷偷减 1 毫秒。
+basic初始月视图，事件不可拖。点击事件，状态显示实际SDK事件ID；点工具栏“周”“日程”“月”切视图，展开“查看真实SDK范围、API事件和末次改期”，观察datesSet的view/start/end/timeZone。visible range可能包含月前后补齐日期，不等于业务查询只应取当月，也不是一条自动保存通知。
 
-### 7. 只存「纽约 01:30」
+点“读取日历API事件”，看到真实getEvents的id/title/startStr/endStr/allDay映射。未点或业务事件已改变时显示null，需要重新读取；不是把React数组复制后冒充API结果。再与下方React数据和可读事件清单比较。种子两日跨度的end仍为5日，不能读作覆盖5日。
 
-没有偏移就不是唯一时刻。存 UTC instant、IANA zone 和全天标志。`-04:00` 不是纽约的永久偏移。
+导航/切视图由SDK管理；本例没有范围HTTP取数。生产使用可见范围查询时，另定租户、zone、缓存key、AbortSignal与晚回包规则，不能从datesSet回调次数推请求成功。
 
-### 8. eventDrop 不 revert
+## 目标二：创建全天事件与真实改期
 
-409 和校验失败都会把条块留在新位置。Lab 对 `fold-early` 和非法值调用 `revert()`。
+business初始周视图，复盘在纽约11月2日09:00–10:00。填标题/日期点“创建本地事件”，严格日期和非空标题通过后分配local-N；原分配器跳过已占ID，安全整数耗尽抛错。标题仅创建时trim，不在每次onChange破坏选词。浏览器原生date可能拒绝不存在日期，策略测试另外验证2月30日；清空标题或日期再创建则不增加事件。
 
-### 9. 用 eventDidMount 更新标题
+真实拖动“工程复盘”到另一天，或拖其结束缩放柄改变时长。eventDrop/eventResize里复制SDK的id、oldEvent.startStr、新startStr/endStr/allDay；只有通过当前ID/日期检查才生成新React数组。末次receipt的日期来自SDK，kind/decision与计数是应用观察，不是服务器响应。修改后API快照清为null，点按钮重新看真实模型。
 
-数据变了钩子不重跑。用 `eventContent`。
+```ts
+if (businessRejects) {
+  info.revert(); // SDK撤回刚提出的改期
+  return;
+}
+// 接受后只更新React权威事件，SDK从events属性接收。
+```
 
-### 10. eventContent 返回 html 字符串
+本例检查全天日期、定时值显式offset和ID归属，不实现revision、HTTP PATCH、异步事务或取消远程写入。其他事件的SDK默认时长/布局由库处理，事件数据变化不靠eventDidMount改DOM。eventContent返回JSX文本，标题不会当HTML执行。
 
-标题被当成 HTML。用 JSX 文本。
+## 目标三：纽约重复时刻与同步冲突回滚
 
-### 11. 把收费资源视图当成 MIT
+advanced有fold-early和fold-late，两者都是2026-11-01的01:30，但-04:00对应05:30Z、-05:00对应06:30Z，相差一小时。上方日历是纽约显示，下方FOLD列表是自建严格解析对照，API按钮能另外观察真实SDK模型；不要把静态列表当SDK计算结果。
 
-Scheduler 不在本 pin。不要写试用 key 当生产许可。
+真实拖动或缩放fold-early，应用**同步模拟409拒绝**并调用真实revert，React原事件不变；receipt保存SDK提出的新日期与reverted决定，revert计数来自这条真实回调路径。它不是日历算出冲突、不是HTTP409、也不是异步请求示范。其他合法事件仍可接受修改。
 
-### 12. 日历、state 和缓存三份都是真值
+calendar-policy的getUtcInstant只接受显式Z/数值offset、合法公历和时分秒，拒未知-00:00、超过±14:00的offset、无offset和进位日期。它不是完整TZDB墙上时间往返：固定-05:00不保证某纽约春季02:30存在；业务IANA zone一致性另设规则，不让Date宽松解析替代合同。
 
-拖拽写回一份权威数据。缓存保存服务端快照。不要三处各自修改。
+## 迁移和所有权
 
-## 组合
+复制六个sourceFiles：example.tsx、calendar-contract.ts、calendar-policy.mjs及.d.mts、styles.css、demo.tsx（仅重导出）；依赖只有上述两个固定包，保留三份官方CSS和局部断行/宽度/焦点样式，不需要外部资产或Lab alias。
 
-**RHF + Zod + Query。** 日历负责可见范围和拖拽。表单负责标题。Zod 或 `calendar-policy` 负责日期形状。Query key 包含租户、start、end 和 zone。409 时 revert 并 invalidate。本 Demo 没有这三份库。
+level切换创建独立Session，显式“重置本地日历”才增加本日历epoch并重挂SDK；清事件/序号/输入与本轮观察。普通标题输入不换日历key。alive/epoch只拒旧子树回调，不能称已实现远程请求取消。CalendarRef.getApi为真实SDK ref；应用不调用全局destroy或手动删除其他日历监听。
 
-**i18next。** 界面文案和日历 `locale` 可以一起切。界面语言不是时区。中文用户仍可能在纽约。不要用固定 `+08:00` 代替 IANA 名称。
+实装7.1.3 React组件effect在卸载时调用calendarDataManager.destroy；交互子树的监听/滚动由SDK自己的生命周期管理。该静态路径不等于完整活跃拖动/RAF/监听泄漏验收，必须真实浏览器。没有自建后台任务、存储、Worker或临时URL。
 
-## 生产清单
+事件清单可在日历外阅读，原生标题/日期/按钮有标签，状态可见；不据此宣称已完成读屏排程、键盘改期或系统IME。SSR、移动触摸与真实焦点/滚动仍各自验收。
 
-- 插件、locale、三份 CSS 和 `temporal-polyfill` 一起装。
-- 全天和时刻分开放，时刻必须带偏移。
-- 拖拽失败调用 `revert()`。
-- 事件 id 稳定且不复用。Lab 的分配器会跳过已占用序号。
-- 卸载时取消尚未返回的范围请求。当前没有请求，但 generation 思想仍适用。
-- 提供日历之外的事件列表。Lab 的 `<ul>` 就是这个出口。
-- IME：创建标题时不要在每个 `onChange` 里重建日历。本示例的标题 state 不会换日历的 key。
+## 官方来源与验证边界
 
-## 升级
+官方v7.1.3 annotated tag解引用commit6b890e803c66d1e6db2fb21c449936155b7e81fc；npm发布metadata未提供gitHead，固定同commit React manifest7.1.3核对版本，不伪造npm一致。对应packages/react/README.md英文原文2405B保存在official/readme.md，中文候选、SHA、完整8请求及时间/最终URL/头见official/source-evidence.json。
 
-从 v6 上来要换子路径、删除旧插件包、补 polyfill、去掉 Luxon 连接器，并重测命名时区和全天结束日。不要只改版本号。
+官网真实GET200，但XFO DENY与强制CSP frame-ancestors none限制跨源嵌入，标blocked并保留直达，不以HTTP成功或未实际浏览器推allowed。正文未读、不虚构网页正文hash。
 
-- https://fullcalendar.io/docs/react
-- https://fullcalendar.io/docs/upgrading-from-v6
-- https://fullcalendar.io/docs/timeZone
-- https://fullcalendar.io/docs/eventDrop
-- https://fullcalendar.io/docs/event-parsing
+Node SDK2为真实共享插件/locale与公开FullCalendar formatter（05:30/06:30）；原纯Date差值不再算SDK。策略4只验证时间/ID，均不证明Calendar DOM、拖/缩放/revert。完整三目标浏览器提案交主控匹配构建运行；正式verification三项NOT_RUN，命令/六项和实际剩余见local-validation.md。
 
-## 故障排查
+三条完整提案在[validation/browser-proposal.txt](validation/browser-proposal.txt)：basic实际导航/SDK模型与只读/reset，business实际创建/跨日拖动/末端缩放，advanced实际DST模型与拖动拒绝/revert/停止重跑。固定版本导出的protected-styles仅用于定位真实mirror/resizer，升级须重新核对；不造隐藏日历、直调回调或伪造SDK输出。节点断开只证明本节点替换，不是所有SDK资源普查。
 
-| 现象 | 先看 |
-| --- | --- |
-| 月视图空白 | `plugins` 是否包含 dayGrid 和主题，CSS 三份是否都引入 |
-| 构建找不到 `@fullcalendar/daygrid` | v7 的路径是 `@fullcalendar/react/daygrid` |
-| 命名时区异常 | `temporal-polyfill@1.0.4` 是否还在依赖里 |
-| 拖完条块停在新日期但数据是旧的 | 没有把 `startStr` 写回 state，或写回前没有 revert 失败路径 |
-| 全天跨度多了一天 | 结束日被当成包含。官方区间是半开的 |
-| 两条 01:30 显示成同一件事 | 存的时候丢掉了偏移 |
-| 标题里的字符被当成标签 | `eventContent` 返回了 `html` 字符串 |
-
-`eventDidMount` 不随标题更新。取数回调若每次渲染都是新函数，可见范围会反复请求。本 Demo 用静态数组和 `useMemo`，没有这条请求。
-
-## 练习
-
-1. 创建 `2026-02-30`，事件数量不变。
-2. 比较两条 01:30 的 `getUtcInstant`，它们相差一小时。
-3. 拖动 `fold-early`，位置恢复。
-4. 去掉定时值的偏移再走 `move` 的校验，确认 revert。
-
-拖拽回调里的 `allDay` 决定走 `isCivilDate` 还是 `getUtcInstant`。全天值若带了时间部分，应视为无效并 revert，而不是截断前 10 个字符。
-
-## 证据
-
-`calendar-policy` 单测不渲染日历。sdk 要真实 import `@fullcalendar/react@7.1.3` 并在 `docs/library-lab/evidence/runs/` 留下收据。拖拽、中文 locale 和时区显示属于 browser。
-
-GitHub Actions 41779873259 是仓库级安装、typecheck、build、52 个 SDK 文件（153 项测试）和 45 项 Playwright 的结果，不是 C12 的条目 PASS。不要改 `verification.json`。
+取证工具已采用完整获取/校验后双暂存再replace，失败另存且不覆盖旧成功对；三个受控传输场景验证该维护行为与重复头/匿名cookie处理，不是新的官方HTTP或SDK证据。原8次真实响应保留原字段映射；后续捕获另保留rawHeaders以保全重复同名字段，不倒推补造旧响应的重复数量。

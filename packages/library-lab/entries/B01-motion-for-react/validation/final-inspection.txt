@@ -1,0 +1,10 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ["node", "--input-type=module", "-e", "import assert from 'node:assert/strict';import{readFile,stat}from'node:fs/promises';import{createHash}from'node:crypto';const root='entries/B01-motion-for-react/';const sha=b=>createHash('sha256').update(b).digest('hex');for(const name of ['guide.md','agent.md','local-validation.md']){const text=await readFile(root+name,'utf8');for(const match of text.matchAll(/\\]\\(([^)]+)\\)/g)){const target=match[1];if(!/^[a-z]+:|^#/.test(target))assert.ok((await stat(root+target.split('#')[0])).isFile(),`${name}: ${target}`)}}const runs=JSON.parse(await readFile(root+'validation/local-runs.json'));for(const run of runs.runs)assert.equal(sha(await readFile(root+run.log)),run.logSha256,run.label);const e=JSON.parse(await readFile(root+'library.json'));const source=new Set(e.demos.flatMap(d=>d.sourceFiles));assert.equal(source.size,6);for(const p of source)assert.ok((await stat(root+p)).isFile());assert.equal(sha(await readFile(root+e.official.readme.snapshotPath)),e.official.readme.sha256);assert.equal((await readFile(root+'validation/browser-proposal.txt','utf8')).match(/test\\('@B01/g)?.length,3);const v=JSON.parse(await readFile(root+'verification.json'));assert.ok(Object.values(v).every(x=>x.status==='NOT_RUN'));console.log('Final local links, all prior raw-log SHA, six runtime sources, fixed README hash, three browser goals and formal NOT_RUN match. No SDK/policy/type suite repeated.');"]
+startedAt: 2026-11-10T12:42:51.624716+00:00
+finishedAt: 2026-11-10T12:42:51.656435+00:00
+exitCode: 0
+
+STDOUT
+Final local links, all prior raw-log SHA, six runtime sources, fixed README hash, three browser goals and formal NOT_RUN match. No SDK/policy/type suite repeated.
+
+STDERR

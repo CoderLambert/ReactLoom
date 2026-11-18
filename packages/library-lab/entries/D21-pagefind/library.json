@@ -5,14 +5,7 @@
   "name": "Pagefind",
   "group": "D",
   "summary": "真实 Pagefind Node API 为静态文章、RSS 笔记及 HTML 生成离线可部署索引",
-  "tags": [
-    "静态全文索引",
-    "WASM 搜索",
-    "离线构建",
-    "内容发现",
-    "构建产物",
-    "RSS"
-  ],
+  "tags": ["静态全文索引", "WASM 搜索", "离线构建", "内容发现", "构建产物", "RSS"],
   "contentState": "recreated",
   "packages": [
     {
@@ -69,12 +62,7 @@
         "examples/basic.mjs",
         "tests/sdk.test.mjs"
       ],
-      "capabilities": [
-        "node-process",
-        "real-cli",
-        "native-indexer",
-        "isolated-build"
-      ]
+      "capabilities": ["node-process", "real-cli", "native-indexer", "isolated-build"]
     },
     {
       "demoId": "business",
@@ -89,12 +77,7 @@
         "examples/business.mjs",
         "tests/sdk.test.mjs"
       ],
-      "capabilities": [
-        "node-process",
-        "real-cli",
-        "native-indexer",
-        "isolated-build"
-      ]
+      "capabilities": ["node-process", "real-cli", "native-indexer", "isolated-build"]
     },
     {
       "demoId": "advanced",
@@ -109,12 +92,7 @@
         "examples/advanced.mjs",
         "tests/sdk.test.mjs"
       ],
-      "capabilities": [
-        "node-process",
-        "real-cli",
-        "native-indexer",
-        "isolated-build"
-      ]
+      "capabilities": ["node-process", "real-cli", "native-indexer", "isolated-build"]
     }
   ],
   "license": {
@@ -125,5 +103,25 @@
     "originalRecovery": "ORIGINAL_RECOVERED",
     "mode": "recreated",
     "note": "基于 pagefind.app v1.5.2 Node API 独立重写；并未恢复旧运行日志或执行浏览器搜索。"
+  },
+  "official": {
+    "readme": {
+      "repository": "Pagefind/pagefind",
+      "commit": "bf17396721be637cc67c8ed7ead1dc7b8ac43d96",
+      "path": "README.md",
+      "sourceUrl": "https://github.com/Pagefind/pagefind/blob/bf17396721be637cc67c8ed7ead1dc7b8ac43d96/README.md",
+      "snapshotPath": "official/readme.md",
+      "sha256": "e363a3eede2deb4622808e246bcf1490483e8a5d3326483a2deda49a7b0735ac",
+      "language": "en",
+      "version": "1.5.2",
+      "syncedAt": "2026-11-17T17:08:45.493235+00:00"
+    },
+    "homepage": {
+      "url": "https://pagefind.app/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-17T17:08:45.493235+00:00",
+      "reason": "实际GET响应头保留official/homepage-headers.txt；未从Lab origin浏览器确认嵌入内容，不能标allowed。"
+    }
   }
 }

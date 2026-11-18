@@ -1,0 +1,120 @@
+[
+  {
+    "name": "browser-test-types",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "tsc",
+      "--ignoreConfig",
+      "--noEmit",
+      "--strict",
+      "--target",
+      "ES2022",
+      "--module",
+      "ESNext",
+      "--moduleResolution",
+      "Bundler",
+      "--skipLibCheck",
+      "--types",
+      "node",
+      "e2e/quality-file-read-probe.ts",
+      "e2e/quality-resume-papa.spec.ts",
+      "e2e/quality-resume-dropzone.spec.ts",
+      "e2e/quality-resume-exceljs.spec.ts"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T18:29:38.816180+00:00",
+    "finishedAt": "2026-11-17T18:29:39.079204+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-34/browser-test-types.txt"
+  },
+  {
+    "name": "typecheck",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "typecheck"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T18:35:13.352626+00:00",
+    "finishedAt": "2026-11-17T18:35:15.095173+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-34/typecheck.txt"
+  },
+  {
+    "name": "build",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "build"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T18:35:26.343394+00:00",
+    "finishedAt": "2026-11-17T18:35:34.137469+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-34/build.txt"
+  },
+  {
+    "name": "catalog",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "catalog:check"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T18:35:45.187440+00:00",
+    "finishedAt": "2026-11-17T18:35:45.614667+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-34/catalog.txt"
+  },
+  {
+    "name": "browser",
+    "command": [
+      "env",
+      "LAB_PREBUILT=1",
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "playwright",
+      "test",
+      "e2e/quality-resume-dropzone.spec.ts",
+      "e2e/quality-resume-papa.spec.ts",
+      "e2e/quality-resume-exceljs.spec.ts",
+      "e2e/quality-resume-official-f02-f04.spec.ts",
+      "--workers=2"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T18:35:45.719074+00:00",
+    "finishedAt": "2026-11-17T18:35:59.398752+00:00",
+    "exitCode": 1,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-34/browser.txt"
+  },
+  {
+    "name": "browser-f02-final",
+    "command": [
+      "env",
+      "LAB_PREBUILT=1",
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "playwright",
+      "test",
+      "e2e/quality-resume-dropzone.spec.ts",
+      "--grep",
+      "actual file dialog",
+      "--workers=1"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T18:37:35.305259+00:00",
+    "finishedAt": "2026-11-17T18:37:39.361634+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-34/browser-f02-final.txt"
+  }
+]

@@ -1,0 +1,7 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: ["pnpm", "exec", "tsc", "--noEmit", "--module", "ESNext", "--moduleResolution", "Bundler", "--target", "ES2022", "--jsx", "react-jsx", "--strict", "--skipLibCheck", "--esModuleInterop", "--types", "vite/client,node", "entries/E05-monaco-editor/examples/demo.tsx"]
+startedAt: 2026-11-10T09:25:28.287698+00:00
+error TS5112: tsconfig.json is present but will not be loaded if files are specified on commandline. Use '--ignoreConfig' to skip this error.
+
+exitCode: 1
+finishedAt: 2026-11-10T09:25:28.476725+00:00

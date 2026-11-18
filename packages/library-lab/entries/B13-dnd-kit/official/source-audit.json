@@ -1,0 +1,28 @@
+{
+  "repository": "clauderic/dnd-kit",
+  "coreTag": "@dnd-kit/core@6.3.1",
+  "commit": "e9215e820798459ae036896fce7fd9a6fe855772",
+  "sortableTagCommit": "2d862922975e5fa73e1a11845f8c781296f21d4b",
+  "packageVersionsAtPinnedCommit": {
+    "packages/core/package.json": "6.3.1",
+    "packages/sortable/package.json": "10.0.0"
+  },
+  "path": "packages/sortable/README.md",
+  "readmeCandidates": [
+    ".changeset/README.md",
+    "README.md",
+    "packages/accessibility/README.md",
+    "packages/core/README.md",
+    "packages/modifiers/README.md",
+    "packages/sortable/README.md",
+    "packages/utilities/README.md"
+  ],
+  "selectionReason": "Full pinned tree was inspected during read-only discovery; no Chinese README. Sortable package README matches the sorting preset; the pinned core tag commit also declares sortable10.0.0.",
+  "treeUrl": "https://api.github.com/repos/clauderic/dnd-kit/git/trees/e9215e820798459ae036896fce7fd9a6fe855772?recursive=1",
+  "language": "en",
+  "version": "@dnd-kit/core 6.3.1 + @dnd-kit/sortable 10.0.0",
+  "sha256": "f154b4be7cce8d6dc435c7b42d81f7ca4cd9c88ff77b85237dbbbc341c7b2c38",
+  "bytes": 1017,
+  "syncedAt": "2026-11-10T10:07:37.612386+00:00",
+  "sourceUrl": "https://github.com/clauderic/dnd-kit/blob/e9215e820798459ae036896fce7fd9a6fe855772/packages/sortable/README.md"
+}

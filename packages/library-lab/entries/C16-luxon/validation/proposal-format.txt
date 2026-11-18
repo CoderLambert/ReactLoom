@@ -1,0 +1,2 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["pnpm", "exec", "biome", "check", "--write", "packages/library-lab/entries/C16-luxon/validation/browser-proposal.check.ts"], "utc": "2026-11-10T17:16:56.871730+00:00", "exit": 0}
+Checked 1 file in 13ms. Fixed 1 file.

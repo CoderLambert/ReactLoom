@@ -1,0 +1,6 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv=["python", "entries/A13-threejs/validation/check-metadata.py"]
+start=2026-11-10T12:18:55.770205+00:00
+end=2026-11-10T12:18:55.786637+00:00
+exit=0
+2 distinct demos/5 runtime files/exact npm gitHead original SHA/version/formal NOT_RUN: PASS

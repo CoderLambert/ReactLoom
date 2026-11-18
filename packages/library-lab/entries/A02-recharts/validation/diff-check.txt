@@ -1,0 +1,3 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: git diff --check -- entries/A02-recharts
+exit: 0

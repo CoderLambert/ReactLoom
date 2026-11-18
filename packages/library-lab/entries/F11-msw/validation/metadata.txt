@@ -1,0 +1,4 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node entries/F11-msw/validation/check-entry.mjs
+PASS: entry shape, 3 demos, 12 source paths, README bytes 12256 SHA-256 061d5c796e8b611faa32381b37038670c5e007e2ad1dc8bcbb5c66c7a608a646
+exit: 0

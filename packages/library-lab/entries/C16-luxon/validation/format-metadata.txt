@@ -1,0 +1,2 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["pnpm", "exec", "biome", "check", "--write", "packages/library-lab/entries/C16-luxon/library.json", "packages/library-lab/entries/C16-luxon/verification.json", "packages/library-lab/entries/C16-luxon/official/source-evidence.json", "packages/library-lab/entries/C16-luxon/validation/sdk-source-audit.json", "packages/library-lab/entries/C16-luxon/validation/metadata-check.mjs"], "utc": "2026-11-10T17:20:09.210441+00:00", "exit": 0}
+Checked 5 files in 7ms. Fixed 4 files.

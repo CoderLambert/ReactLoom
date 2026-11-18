@@ -1,0 +1,15 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node --test entries/A02-recharts/tests/chart-policy.test.mts
+exit: 0
+✔ window is bounded and invalid values use default (0.752739ms)
+✔ revision is bounded, finite and monotonic before cap (0.105796ms)
+✔ 14-day series uses unique stable labels (0.176696ms)
+✔ counts and rates remain finite nonnegative and coherent (0.111684ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 62.614607

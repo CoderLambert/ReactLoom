@@ -1,0 +1,4 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom
+argv: ["git", "diff", "--check", "--", "packages/library-lab/entries/E19-ffmpeg-wasm"]
+exit: 0
+

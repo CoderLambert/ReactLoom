@@ -1,0 +1,21 @@
+{
+  "validation/browser-record-diff.txt": "08dcf7fe151a5a8b8788f2096da1f6b03fb72c4d92f183c0f3379b8de7f04244",
+  "validation/browser-record-final-inspection.txt": "526eed451e71d8f8c09378d77cca89a12122e1aaa42d2d5a72f881732dfb831d",
+  "validation/browser-record-format.txt": "e1bd651c21c748c2bef8a1aa9d6a9a3c0bd5128e71919131c332403cd6d1e2c2",
+  "validation/browser-record-metadata-final.txt": "18e3b040c4e3cd08e7406a2a6d79cdff56306fa90e162e12d6d05e85a89f4b99",
+  "validation/browser-record-metadata.txt": "7e75f722ace81ba3bf6bea86ac3734e23bcf657d59b8593d6d3dff6bba0b6ece",
+  "validation/browser-record-protection.txt": "ef1b79d7db32d0520089654aead6747ab54a7290c4cd505555daa8536f322882",
+  "validation/diff-check.txt": "833d32804ed92b5788c744b82a2854b01f6b075c2c63c41d8f53d294dd37057a",
+  "validation/final-inspection-initial.txt": "22b5f6c802756daa87d15ee4cc15e7d903b0c1048fb88e220f58342c6f29fb1d",
+  "validation/final-inspection.txt": "221b989c5f2e524dd7a7794e5988c186964ad7973424e4eeaa54d4cd7d8324aa",
+  "validation/format-code-fixed.txt": "ed6037ee2feb38eaa7db963cfc22f843680afbfc527e42539848b88e02da7bd8",
+  "validation/format-code.txt": "f18a1f94157786acda53cb1867d0b9d054d243c803477f5e283ae2e9e20c972f",
+  "validation/format-metadata.txt": "0089908bacf04d0976dfc7d02ea72178b18b37be90ddc1ec471bcba6ac446a5c",
+  "validation/metadata.txt": "f88c0939d056c16c544d8e20b9f11734b42a6592aaaf2be1528a93edae2a220c",
+  "validation/official-fetch.txt": "80fc927d17d6d9815e1044330e5528ff0efba264aa82b3e5fc9dbd1b1a66f90a",
+  "validation/policy.txt": "89e21225c2a60c69e8903999276e18f88b82542164435624020eab2666bc4d54",
+  "validation/proposal-format.txt": "0eb62321001363204a1003aa59e77064540557f25b34d35994a77bbb26cd86ee",
+  "validation/proposal-types.txt": "1f285f401827a8fa241b43be7bbb33eaa09eedb68ac5c970212f8f04722a9ede",
+  "validation/sdk.txt": "351df7052020f9aabcf54325b52d8fe91a06c46a113e99bdf10f17a75fa4db07",
+  "validation/types-initial.txt": "574471704482e2b179dd100c5a3cedeb0cb3c203052f46eace5d9faffabd8730"
+}

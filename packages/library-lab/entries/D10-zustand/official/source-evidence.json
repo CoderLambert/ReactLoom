@@ -1,0 +1,12 @@
+{
+  "commit": "382d29c485e67018c06e75ec7235130d0968522c",
+  "version": "5.0.16",
+  "readmeCandidates": [
+    "README.md",
+    "examples/starter/README.md"
+  ],
+  "homepage": "https://zustand.docs.pmnd.rs/",
+  "sha256": "3a53f23dae9f33f7b951cfc6eac1dbdb7def9c722d8f32a70d85190f47d11d5b",
+  "checkedAt": "2026-11-17T16:32:50.309888+00:00",
+  "homepageAuthority": "Fixed official README.md line 21"
+}

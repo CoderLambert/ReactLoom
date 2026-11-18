@@ -1,0 +1,32 @@
+[
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": "node --test packages/library-lab/entries/F17-axe-core/examples/audit-queue.test.mjs",
+    "exit": 0,
+    "log": "validation/policy.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": "pnpm --filter @reactloom/library-lab exec tsc -p /tmp/f17-portable-2xe99axx/tsconfig.json",
+    "exit": 0,
+    "log": "validation/portable-types.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": "node packages/library-lab/entries/F17-axe-core/validation/official-check.mjs",
+    "exit": 0,
+    "log": "validation/official.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": "pnpm exec biome check --write packages/library-lab/entries/F17-axe-core/examples packages/library-lab/entries/F17-axe-core/validation/official-check.mjs packages/library-lab/entries/F17-axe-core/library.json",
+    "exit": 1,
+    "log": "validation/biome.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": "pnpm exec biome check --write packages/library-lab/entries/F17-axe-core/examples packages/library-lab/entries/F17-axe-core/validation/official-check.mjs packages/library-lab/entries/F17-axe-core/library.json packages/library-lab/entries/F17-axe-core/verification.json",
+    "exit": 0,
+    "log": "validation/biome-final.log"
+  }
+]

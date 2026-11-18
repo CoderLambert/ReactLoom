@@ -1,150 +1,57 @@
-# react-dropzone 20.1.4｜把文件放进组件，不负责上传
+# react-dropzone：接收本地文件，保留选择与读取边界
 
-Lab 锁定 `react-dropzone@20.1.4`（MIT，peer 为 React 18 及以上）。它提供拖放、`open()` 和按 MIME/大小过滤。它不上传、不续传、不扫描。
+页面需要拖入txt/csv、显示拒绝原因，并预览一小段文本。react-dropzone20.1.4（实装与固定LICENSE均MIT，peer React>=18）提供Hook/getter/文件提取与UX校验；不上传、不续传、不检查病毒。一个普通file input就够时无需引入；真正上传交Uppy或业务API，CSV结构交Papa Parse。
 
-包已在锁文件中。没有 `docs/library-lab/evidence/runs/` 收据时 sdk、build、browser 保持 NOT_RUN。Actions 41779873259 是仓库级安装、类型检查、构建、52 个 SDK 文件 / 153 项测试和 45 项 Playwright，不是本条目 PASS。
+本例不访问服务、持久化用户内容、显示file.path或创建Blob URL。文件MIME/扩展名/大小/数量均是前端体验限制，不能替代服务端内容验证/授权，文件名和MIME可以伪造。
 
-## Lab 当前示例
+## 完整最小迁入
 
-执行种类是 `react`。显式启动后挂载 [`examples/demo.tsx`](examples/demo.tsx)，实现在 [`examples/example.tsx`](examples/example.tsx)。离开时卸载，effect 增加 generation，避免旧的 `slice().text()` 回写。
+已有React/TSX浏览器项目运行`pnpm add react-dropzone@20.1.4`。复制example.tsx、preview.mjs/.d.mts、preview-session.mjs/.d.mts，保持目录；demo只Lab转发可省。渲染`<FileInputExample level="business" />`。ESM/TSX、TS Bundler，原生File/Blob.arrayBuffer/TextDecoder；无Provider/env/CSS插件/账号/网络服务。样式仅示例内联布局。
 
-| 文件 | 作用 |
-| --- | --- |
-| `examples/example.tsx` | `useDropzone`：`noClick`、accept、maxSize、maxFiles、拒绝码 |
-| `examples/preview.mjs` | `slice(0, 8192).text()`，再截到 1600 字符 |
-| `examples/preview.test.mjs` | 纯 Blob 边界，不 import dropzone |
-
-`accept` 是 `{ 'text/plain': ['.txt'], 'text/csv': ['.csv'] }`。`useFsAccessApi: false`，走传统 input。basic / business 最多 1 个文件、256 KiB；advanced 最多 2 个、每个 1 KiB，并 `multiple: true`。
-
-旧研究里的「手动上传队列」和「对象 URL」没有挂到这个页面。那是生产教学，不要在 Lab 里上传用户文件或创建不回收的 `blob:` URL。
-
-## 1. 什么时候用
-
-需要一块可拖入区域，加上按钮打开系统对话框，并在选择当下按类型和大小拒掉一批文件。上传协议、分片、授权用 F01 或你们自己的 API client。CSV 结构用 F03，不要 `split(',')`。
-
-原生 `<input type="file">` 够用时不必加这个依赖。
-
-## 2. 模型
-
-`useDropzone` 返回 `getRootProps`、`getInputProps`、`isDragActive`、`isDragReject`、`open`。根节点必须展开 `getRootProps`，内部必须留 `<input {...getInputProps()} />`。少一个，拖放或对话框就会断。
-
-本页 `noClick: true`。打开对话框只走按钮的 `onClick={open}`，避免根节点和按钮各开一次。
-
-`onDrop(accepted, rejections)` 里，拒绝项带 `file` 和 `errors[].code`（例如 `file-too-large`、`file-invalid-type`、`too-many-files`）。接受列表只保留 `{ name, size, type }`。列表的 React key 用 `name + ':' + size`，同名同大小会撞 key，生产要换稳定 id。
-
-预览只在非 basic、且有接受文件时读取 `files[0]`。generation 在选择、清空、换 level、卸载时增加。Promise 回来时代号不对就丢弃。
-
-`file.path` 在多数浏览器里不是真实磁盘路径，不要上传或记录它。
-
-## 3. 三层
-
-### 基本
-
-拖入或按钮选择一个 txt/csv。状态写「已接受 n 个文件；本示例不进行网络上传」，或把每个拒绝文件的 `errors` code 拼进 `role="status"`。列表给出字节和 MIME。没有预览。
-
-### 业务
-
-同样的限制。第一个被接受的文件走 `readLocalTextPreview`：先确认有 `slice` 且 `size` 是非负安全整数，再只解码前 8 KiB，显示 1600 字符。预览区 `whiteSpace: pre-wrap`。
-
-### 进阶
-
-限制收紧到 2 × 1 KiB。快速换文件时，只有最后一次的 generation 能写预览。清空会作废进行中的读取。标题写的是拒绝与竞态，不是上传失败。
-
-## 4. 反例
-
-### 反例 1：选择成功等于已上传
+必须展开getRootProps/getInputProps，不自己覆盖库回调。附加属性传给getter以便合并；hidden input保留在根内，外置按钮调用open，避免嵌套按钮冒泡双开。
 
 ```tsx
-onDrop={(files) => fetch('/api/upload', { body: files[0] }) }
-```
-
-本页禁止这条路径。产品里上传进度、服务端 413 和病毒扫描是另一套状态。不要把用户文件发到统计或第三方。
-
-### 反例 2：只信扩展名
-
-```ts
-accept: { 'application/octet-stream': ['.csv'] }
-```
-
-攻击者可以改扩展名和 `file.type`。dropzone 的过滤是体验。服务端仍要看内容。
-
-### 反例 3：不展开 getter
-
-```tsx
-<div onDrop={onDrop}>
-  <input type="file" />
+const {getRootProps,getInputProps,open} = useDropzone({
+  noClick:true, useFsAccessApi:false,
+  accept:{'text/plain':['.txt'],'text/csv':['.csv']},
+  onDrop,
+})
+<div {...getRootProps({role:'button','aria-label':'文件拖放区域'})}>
+  <input {...getInputProps()} />
 </div>
+<button onClick={open}>选择本地文件</button>
 ```
 
-库收不到自己的事件，也不会带上它设置的 `accept`。用 `getRootProps()` 和 `getInputProps()`，额外属性从 getter 的参数合并。
+noClick只禁根鼠标点击，不禁默认noKeyboard:false的根Enter/Space。根可聚焦，键盘仍可打开；按钮Enter/Space也能open。不要写“对话框只能由按钮打开”。useFsAccessApi:false使用传统input，不走File System Access权限API。onFileDialogOpen仅说明请求对话框；传统对话框取消检测有浏览器焦点/事件启发限制，onFileDialogCancel不是每台设备可靠的取消收据。
 
-### 反例 4：根点击和按钮都 `open()`
+## 三个独立目标
 
-根默认可点击时，按钮在内部会冒泡，对话框开两次。本页用 `noClick: true`，只保留按钮。
+### 基础：真实选择/拖放与拒绝信息
 
-### 反例 5：后到的读取覆盖先选的文件
+一个文件、每个≤256KiB，接受txt/csv。系统对话框、根键盘与拖放都走真实useDropzone，接受列表显示名字/bytes/声明MIME；拒绝显示errors[].code，例如file-invalid-type、file-too-large、too-many-files。drag-over时浏览器可能不给完整文件类型，红边只是提示，最终拒绝以drop后回调为准。
 
-```tsx
-const text = await file.text()
-setPreview(text)
-```
+根鼠标点击不打开，外置按钮只请求一次；文本信息不上传。接受列表只含当前批次acceptedFiles，不把rejections也显示为成功。同名同size现在按每次接收分配单调唯一id，当前选择快照内稳定，不用name:size撞React key；它不是内容哈希/去重或服务器持久ID。
 
-用户先选 A 再选 B，A 可能更晚结束。要 generation 或 Abort。卸载时也要加代号。8 KiB 截断不能代替大文件的流式读取。
+### 业务：受限文本预览
 
-### 反例 6：打开 File System Access 却不处理权限
+第一个接受文件才读取，使用slice(0,8192).arrayBuffer，最多读前8KiB，再TextDecoder UTF8解码。stream:true且不flush会丢弃字节边界处未完成的UTF8尾序列，非法内部字节仍可能变成U+FFFD；这是有损预览，不是UTF8完整性验证。
 
-`useFsAccessApi: true` 在部分浏览器走另一套权限。本页显式关掉，保持 `<input>` 行为。不要把未授权的目录句柄留在状态里。
+显示最多1600个UTF16码元（旧导出名PREVIEW_CHARACTERS保留，但不是1600码点），若末尾落在高代理项则去掉，避免截断emoji。中文/emoji的字节/码元数不同。只把预览作为pre文本，不执行HTML/CSV公式，不解析CSV引号结构，也不读取整文件后才截断。
 
-## 5. 组合
+### 进阶：数量边界与迟到读取
 
-**Uppy（F01）**：dropzone 交出 `File[]`，Uppy `addFiles` 接管队列。不要两套限制各写各的，用户会看到两次互相矛盾的拒绝。
+最多2文件、每个≤1KiB，支持同时展示两个同名同size文件而不撞key；只预览第一个。固定20.1.4会按顺序保留前2个通过类型/大小检查的文件，后续文件得到too-many-files；3个合法文件不是整批拒绝。超限/坏类型仍可换合法文件恢复。多文件接受不意味着并发上传。
 
-**Papa Parse（F03）**：把 `File` 交给解析器，处理引号和换行。本页的 1600 字符预览不是解析结果。
+preview-session是UI真实共用代次：新drop、清空、换level、卸载invalidate；Promise只在自己的generation仍当前时写结果或错误。旧A即使晚于新B完成，也不能覆盖B。已经开始的Blob.arrayBuffer没有本例AbortSignal，代次不物理取消I/O；清空只撤掉展示和后续写入，不假装底层读操作已停止。
 
-**API client**：上传走应用的客户端，带上取消信号。本 Demo 不调用它。
+## 生命周期与生产限制
 
-## 6. 清单
+key=level换独立会话，useDropzone实装负责根/input/窗口事件与内部文件提取处理；自己的session cleanup只作废预览。没有额外timer/objectURL/Worker或存储资源。原生文件对话框/拖放/键盘/触屏与辅助技术必须浏览器/设备验，纯Node Blob测试看不见SDK Hook。
 
-- 根和 input 都展开官方 props。
-- 拒绝信息是文本，不只改边框颜色。`isDragReject` 用红色只是辅助。
-- 预览先 `slice` 再 `text`，并在回调里核对 generation。
-- 换 level 清空列表、预览和文案。
-- 不创建 Object URL。若产品要图片预览，离开时 `URL.revokeObjectURL`。
-- 不读取、不展示、不提交 `file.path`。
-- 键盘：按钮可聚焦，Enter/Space 能 `open()`。拖放本身还要在真实浏览器里看。
+onError处理文件提取/库处理异常；preview失败可见且不将文件上传成功。清空后可再选，同文件重复选择依赖库input重置。生产上传前应对实际内容/编码/大小/权限再次校验，不信客户端accept；不要采集真实磁盘路径。
 
-## 7. 升级
+## 来源和证据
 
-20.x 的 hook 形态和旧 class `Dropzone` 组件不同。升级时核对 `accept` 是 MIME 到扩展名数组，而不是单一字符串。`useFsAccessApi` 的默认值以当前版本文档为准，本仓库显式设为 false，不要靠默认。
+固定v20.1.4→commitb9a3e10cee6b15b6850e240caac94be80f5c7e0d的README/LICENSE原字节保存。无官方中文README回退英文en，本页独立教学。官网GET200未Lab嵌入确认unknown，响应证据见official/source-evidence.json。
 
-React 19 是 Lab 运行时。不要为了演示升到下一个 major。
-
-## 8. 验收
-
-```bash
-node --test packages/library-lab/entries/F02-react-dropzone/examples/preview.test.mjs
-```
-
-这只覆盖 Blob 切片，不是 dropzone SDK。浏览器还要看：对话框、拖入合法与非法文件、1 KiB 拒绝后仍能再选、A 然后立刻 B 只显示 B、换场景不留旧预览。没有收据就保持 NOT_RUN。
-
-## 9. 故障对照
-
-| 现象 | 先看 |
-| --- | --- |
-| 拖入没反应 | `getRootProps` 是否展开；Demo 是否已启动 |
-| 点区域不开对话框 | 这是 `noClick: true`。用下面的按钮 |
-| 对话框开两次 | 根节点又变成可点击，并且按钮也调用了 `open()` |
-| 合法 csv 被拒绝 | `accept` 同时看 MIME 和扩展名。空 type 的文件可能被拒，服务端仍要自己判断 |
-| 预览是上一份 | generation 没有在第二次选择时增加 |
-| 换场景还留着字 | level 的 effect 应清空 items、preview 和 message |
-| 想看到上传进度 | 本页没有。接到 F01 或 API client 之后才有传输状态 |
-
-键盘验收：按钮可聚焦，Enter 或 Space 触发 `open()`。拖放本身要在真实指针设备上看。触屏通常没有拖放，按钮是必要路径。高对比不靠边框颜色单独传达拒绝。
-
-和原生 input 的差别只在拖放状态和拒绝对象。一个文件的表单可以不引入这个包。和 Uppy 的差别是：这里没有队列事件，也没有以后的协议插件。
-
-## 10. 资料
-
-- https://react-dropzone.js.org/
-- https://github.com/react-dropzone/react-dropzone
-- https://www.npmjs.com/package/react-dropzone
+Node只测preview/代次应用策略，不调用useDropzone，不标SDK PASS。主控browser proposal验证真实filechooser、Drop与根键盘、限制拒绝/同名列表、迟到读取/清空/换层/卸载边界。未执行不写真实DOM/网络验收PASS；准确命令/日志与六项分层见local-validation.md，formal verification保持NOT_RUN。

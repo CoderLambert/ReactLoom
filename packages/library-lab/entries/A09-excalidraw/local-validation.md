@@ -1,0 +1,80 @@
+# A09 Excalidraw 本地整改与稳定交接
+
+日期2026-11-10，owner `/root/quality_e11`。实际仓库cwd `/home/lambert/githubRepos/lambert/ReactLoom`，HEAD `1218066e706a90ba03fac8dff8c9b843dd2429c4`。进入10文件、本条目无初始dirty；排序相对路径NUL+bytesNUL摘要 `fc70641733f1c653faee05c2de494d5346b608b7df546777fcf54bef42876b40`。已读根/本包/条目AGENTS、协调/实施/整改、质量路线图及quality Skill三references。候选07冻结期间只读；主控确认1772输入稳定并释放后才写。
+
+只改A09，保留其他工作者修改。没有公共src/scripts/tests/e2e/runners、依赖/锁、索引、队列/results修改；没有全目录生成/类型/构建/浏览器、提交或推送。正式verification sdk/build/browser/assets保持NOT_RUN，不标content_done。
+
+## 保留、修复和三个目标
+
+保留真实SDK嵌入、官方骨架转换、160ms派生观察、受限导入和PNG、token/mounted/API身份核对以及局部timer/URL清理。三个目标仍为：basic真实绘制和撤销；business结构骨架编辑/清空/恢复；advanced拒绝导入可恢复、PNG、只读与异步失效。
+
+确认并修正只读契约：旧viewModeEnabled只约束SDK，应用重置/恢复/导入仍能写，且切只读不使在途导入失效。现同步readOnlyRef拦截写入口，禁用原生控件，切换任一方向递增代数/working=false，完成前再查readonly；读取PNG仍可用。忽略仍是丢结果，不伪称取消底层SDK工作。
+
+受限导入补elementTypes白名单（几何/箭头/文字/自由绘制），拒绝image/embeddable/frame等，SDK validateEmbeddable=false。原文件1.5MB/200元素/HTTPS无凭据/无附件政策保留，新增纯政策断言。白名单是应用教学范围，不宣称通用安全schema。
+
+按实际SDK0.18.1源码确认API在构造函数交付；原effect清apiRef后StrictMode重放不保证再交付。现私有candidate仅供effectsetup恢复，inactive active引用为空，所有异步由mounted/API身份/代数保护；真卸载组件引用可回收。onChange未挂载不排报告，回调也查mounted。初始化effect读取真实当前元素，避免初始回调在effect前被忽略而无观察。
+
+观察来自同一真实SDK元素，只提取id/type/坐标/文字，防抖后更新，不复制完整图形缓存或回写initialData。正常格式化必要源文件/CSS，业务3带label矩形实际生成3文字，加2箭头为8元素；讲解不再误认为仅5。恢复创建新骨架ID，不冒充快照恢复。
+
+## 六项状态
+
+| 维度 | 状态 | 证据层级和限制 |
+| --- | --- | --- |
+| 技术准确 | PASS | 静态核对0.18.1实际类型/源码/官方资料；入口tsc0、5项政策通过；API交付/只读/异步结果/文档初始值等边界明确。Node实际导入阻塞另记，不冒充SDK通过。 |
+| 解释清楚 | PASS | 三个操作目标与当前控件/元素观察对应，保留fixture、SDK和未实现服务边界，精简重复未实施教程。 |
+| Demo有用 | NOT_RUN | 真实SDK调用和观测齐全；画布/字体/PNG/导入/StrictMode实际交互待主控browser，不从类型推出可用。 |
+| 源码可迁移 | PASS | 4必要文件/官方CSS/尺寸齐全，正常排版；active资源和token清理、候选引用生命周期明确，入口类型通过，动态生命周期仍待browser。 |
+| 官方来源可靠 | PASS | 匹配固定0.18.1包README原文、7实际候选无中文、version/path/lang/time/hash与完整官网最终响应依据。 |
+| 结果可复核 | NOT_RUN | 定向政策/类型/格式/metadata/提案和真实Node失败可复核；核心SDK浏览器未运行，不晋级正式PASS。 |
+
+## 版本、官方与资源
+
+实际安装0.18.1，MIT；package.json未导出，最初require子路径错误后直接读安装文件核实。已读SDK types/index/types/store、dev源码API构造位置29421–29454、实际toolbar radio和canvas.interactive结构；CaptureUpdateAction.IMMEDIATELY存在且类型通过。官方安全公告确认0.18.0特定Mermaid序列标签漏洞在0.18.1修复，不泛化成所有输入安全。
+
+官方轻量tag v0.18.1指向 `a2ec2889babf7d2295469c6d90ebe77fae57df84`。完整tree实际truncated=false，7个README候选无中文；选择目标SDK的packages/excalidraw/README.md，locales/README只是翻译贡献说明。
+
+原文1631字节/en，SHA-256 `d3458f4ffe1617432989dfa40896255e805f0ddbad194873808ba7e8996e1f45`，同步 `2026-11-10T11:40:20.268200+00:00`；official/source-audit.json和library.json保留不可变出处与候选。官网GET200，requested `https://docs.excalidraw.com`，final `https://plus.excalidraw.com/docs/sdk`；完整最终响应头在homepage-response.json，XFO/CSP显式null。未Lab originiframe实测，unknown，不从200推定allowed。
+
+字体默认CDN是官方包README明确行为，本例未复制字体/改全局路径或承诺离线。当前没有真实字体/中文/PNG失败证据，因此旧assets BLOCKED改为NOT_RUN，既不推断运行被阻塞，也不宣称字体就绪。字体字形与PNG质量须由主控真实浏览器观察，具体失败再记录解除条件。
+
+## 实际命令和日志
+
+实际cwd均 `/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab`。日志为validation/*.txt，包含command/cwd/exit/输出。
+
+| 命令 | exit | 结果/日志 |
+| --- | --- | --- |
+| `pnpm exec tsc --ignoreConfig --noEmit --target es2022 --module esnext --moduleResolution bundler --jsx react-jsx --strict --skipLibCheck --esModuleInterop --types vite/client,node entries/A09-excalidraw/examples/demo.tsx` | 0 | 实际入口/直接依赖；validation/typecheck.txt。 |
+| `node --test entries/A09-excalidraw/tests/scene-policy.test.mts` | 0 | 5/5纯政策，含新类型白名单；validation/policy.txt。 |
+| `pnpm exec biome check --write entries/A09-excalidraw/examples entries/A09-excalidraw/tests entries/A09-excalidraw/validation/check-entry.mjs entries/A09-excalidraw/library.json entries/A09-excalidraw/verification.json entries/A09-excalidraw/official/source-audit.json entries/A09-excalidraw/official/homepage-response.json` | 0 | 最终10文件、无诊断；validation/biome.txt。 |
+| `node entries/A09-excalidraw/validation/check-entry.mjs` | 0 | validateEntry/completeness、3目标4源文件、版本、原文hash；validation/metadata.txt。 |
+| `pnpm exec biome format --stdin-file-path=entries/A09-excalidraw/validation/browser-proposal.ts < entries/A09-excalidraw/validation/browser-proposal.txt` | 0 | 提案正常格式；validation/proposal-format.txt。 |
+| `pnpm exec tsc --ignoreConfig --noEmit --target es2022 --module esnext --moduleResolution bundler --strict --skipLibCheck --types node entries/A09-excalidraw/validation/.browser-proposal-check.ts` | 0 | 同字节临时.ts提案类型，通过后删除；validation/proposal-typecheck.txt。 |
+
+初次Biome exit0但有旧字符串/非空断言诊断，保留biome-initial.txt；改为模板字符串与nullable失败断言，针对受影响政策重跑5/5，最终格式无诊断。入口类型在所有逻辑改动后通过，后续仅文案/格式，未重复运行。
+
+真实普通Node命令 `node --input-type=module -e "import { convertToExcalidrawElements } from '@excalidraw/excalidraw'; console.log(convertToExcalidrawElements([{type:'rectangle',x:0,y:0,width:100,height:60}]).length)"` exit1，ERR_IMPORT_ATTRIBUTE_MISSING，open-color.json缺JSON import attribute，发生于转换之前；validation/sdk-boundary.txt。这是plain Node26导入环境阻塞，不证明浏览器失败；没有改依赖/loader、用DOM shim或SDK mock，也未新增注定失败的sdk.test.mjs污染公共runner。Node SDK执行与真实browser继续区分。
+
+## 浏览器提案与剩余
+
+validation/browser-proposal.txt完整3项准备好的真实Playwright代码，未由本工作者执行、未改公共e2e。
+
+- basic：真实toolbar-rectangle标签/Canvas指针轨迹，count0→1、真实元素type=rectangle，原生Ctrl/Cmd+Z回0。
+- business：真实转换8元素/3绑定文字/2箭头，绘制到9，重置0再恢复8。
+- advanced：不安全HTTP链接导入拒绝且原ID保留→合法文件恢复1；真实PNG下载签名/IHDR尺寸不超过2048；只读禁写但可下载。额外同一DOM任务发真实File/原生change并切只读，使实际SDK FileReader在途结果失效；不改SDK/loader/计时器。随后停止重进8、只读false，离开无interactive canvas。
+
+PNG下载字节不证明中文字体正确，提案末明确人工视觉字体/中文仍需检查。DOM事件竞态只提供输入，不替换SDK；400ms等待小本地FileReader回调后核对场景未被late-result改写。完整外部资源/大输入性能不由此推出。
+
+根a09-workshop含data-level/read-only对应data-readonly/data-working；a09-count/status/scene/canvas。scene是实际元素摘要JSON，展开“查看当前元素身份、位置与文字”读取。原控件名保留。无新增公共能力需求。
+
+剩余主控独立review、共享构建、真实画布/导入/PNG/字体/StrictMode/卸载，触控、IME、完整读屏、离线资产和协作均未测。
+
+## 文件和稳定交接
+
+修改example/scene-policy/styles、policy tests、guide/agent/library/verification，demo正常格式化；新增official原文/来源/完整头、validation提案/检查日志和本记录。AGENTS规则与历史来源保留，未跨越entry所有权。完成STABLE后所有源码/日志/文档停止写入，正式收据维持NOT_RUN。
+
+
+## 主控本地运行闭环
+
+candidate-08稳定1870输入，类型/build/catalog及新e2e lint exit0；非作者独立复核无未处置P1/P2，真实Chromium本库全部选定目标通过。额外真实8元素中文骨架PNG已经下载并由主控view_image视觉查看，RSS获取/清洗分类/人工审核清楚，产物保存在candidate-08/browser-initial-artifacts。未把PNG字节检查等同于字体网络/离线资产清单；正式assets仍NOT_RUN，当前默认资源实际画面可用。
+
+最终状态content_done，实际命令/候选摘要/首轮FAIL与必要重跑/独立评论和范围见[逐库结果](../../../../openspec/roadmaps/upgrade-library-quality/results/A09.md)。正式sdk/build/browser仍NOT_RUN；dev StrictMode重放、完整读屏/触控/跨浏览器/大规模性能未由生产预览通过推定。

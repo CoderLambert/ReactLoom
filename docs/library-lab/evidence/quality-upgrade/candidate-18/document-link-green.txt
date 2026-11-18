@@ -1,0 +1,27 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+command=node --test packages/library-lab/tests/document-utils.test.mjs packages/library-lab/tests/source-publication.test.mjs
+✔ only safe HTTPS, fragments and same-entry relative files are accepted (2.690895ms)
+✔ headings ignore fenced blocks and correctly preserve source line anchor (1.974467ms)
+✔ Chinese anchors, inline code and duplicate headings exclude fenced content (0.191433ms)
+✔ local example and test links map to real generated source files, not missing SPA fallbacks (1.154054ms)
+✔ Markdown byte ceiling preserves split multibyte UTF-8 without trusting response length (15.305187ms)
+✔ Markdown byte ceiling rejects oversized decoded body and cancels the reader (0.581275ms)
+✔ Markdown rejects fallback HTML, non-2xx, invalid UTF-8 and absent response bodies (1.006507ms)
+✔ Setext headings use source start lines and duplicate slugs match rendered anchors (0.510862ms)
+✔ Fence-looking code text cannot expose hidden headings; indented/quoted code stays out of TOC (0.204201ms)
+✔ Document-relative links reject scheme-relative or malformed Vite base paths (0.286214ms)
+✔ declared official README links use the already published snapshot and keep private evidence inaccessible (0.333563ms)
+✔ versioned patch source links remain inert source text without enabling credentials or traversal (0.309183ms)
+✔ generator publishes original HTML bytes as inert .txt and never as executable HTML (21.245938ms)
+✔ source index retains original filenames and hashes while the transport path is inert (5.913011ms)
+✔ an HTML fallback at an inert source URL is still rejected (0.506264ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 15
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 74.631886
+
+exitCode=0

@@ -1,0 +1,23 @@
+{
+  "validation/diff-check.txt": "0818f5ef3de00110ec5084e93de5042a974da83dbe081c9ee8c3a8f6413057e7",
+  "validation/escape-diff.txt": "4eda07e0e5fd6537af4fd1363a290d0bef788c0e0bfa247c1e88101fc8c71eff",
+  "validation/escape-format.txt": "80ee0d78b1f261a626d19b781bff158a12470f581bb9dfcb45c49ce27a617eb7",
+  "validation/escape-metadata.txt": "0db66455c4ce990852c920bf1d422e4d6d82fdc1208f9517244a35d20bb6129a",
+  "validation/escape-old-dist.txt": "918920c0348a68efb0b1579b977ace4b806dca4a4bbf43002fb4bb6d08b9b42b",
+  "validation/escape-types.txt": "95e013253a50c731cc9f1ae95d0d93716d09b3ae88a7ff1bd5e8c1becbcb6250",
+  "validation/final-inspection.txt": "ff452ab2a7e4fbf31ee9780b12b5793989e66141b9a9cc489ee6346ad804f4f3",
+  "validation/format-code.txt": "ee83b4894b64fcfa1fee75ce19b287ef792edacb885b5f51f05328ba1bcf3e1a",
+  "validation/format-initial.txt": "c3c51cf26c93451fde9951222960de1e64a7907d9f7c78ae5cf8ac147eaebf43",
+  "validation/format-metadata-proposal.txt": "66ffeb5fa330a01146438984688e9971e0092cf8896a5f39245c1bccab48c595",
+  "validation/input-loss-diff.txt": "20f4804b4ef7ac0e6fe6548b21850369d1eb7d47d035dd8f4813b309bf57f644",
+  "validation/input-loss-format.txt": "b7acaba42b22cdb34899b676ffb6d1877f944c9f5ca2b5eba5729e5896a3bd5b",
+  "validation/input-loss-metadata.txt": "1d469b5599c669c7545ded8ee10acfd54af5104cba1af9747e8a0f1f8a5a8bf0",
+  "validation/input-loss-old-dist.txt": "15c26d6c62ac8b0c0c046270340333d907f6f2005c7a8695e1cab1670e2a9519",
+  "validation/input-loss-types.txt": "65ed81c8a7a00a2ddc2e92a0919639f014b3482b099c8a4a44189a8bc5622302",
+  "validation/metadata.txt": "808806a26201cbd96b521d5cc8f255e83a9a61bc9ee4dc4c8ee9f7c177062f8c",
+  "validation/policy.txt": "91785941f3d8b2785f0d7df4ff42df1f3a801f18c45c1294e79844281e766d20",
+  "validation/proposal-types.txt": "d5de662ac4e5c51375b10ce43263ec041f74010a1fe94f58ef783d75aa46269a",
+  "validation/sdk.txt": "be6affb1ded37becdcc807b8702c53ca0c455d93a33c55411846050468411c9b",
+  "validation/source-fetch.txt": "713cda46dbd4eed7d165b2d93fad7008a626d714fada2222b9090c3d322cf012",
+  "validation/types.txt": "12be7702dd7f5f550c06e4e1a62f04df0c1b0566128f17722e9946efba7cd6e2"
+}

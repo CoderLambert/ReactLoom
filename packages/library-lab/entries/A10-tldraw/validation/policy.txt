@@ -1,0 +1,15 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node --test entries/A10-tldraw/tests/snapshot-policy.test.mts
+exit: 0
+
+✔ serializes a real serializable document without changing values (0.798044ms)
+✔ rejects missing document and circular references (0.290658ms)
+✔ counts UTF-8 bytes, not JS string code units, for maximum size (3.675306ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 65.770997

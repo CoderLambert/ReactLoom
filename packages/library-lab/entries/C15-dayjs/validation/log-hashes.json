@@ -1,0 +1,16 @@
+{
+  "validation/binding-format.txt": "0808a699f2e3eb75eefd89be03583bba56d5dc88d976dc62253b96037b31d976",
+  "validation/checkpoint-format.txt": "f439f04edc3a7ed80c264ae4fc86921e2a331a8e2636e00d023c4009a455424c",
+  "validation/checkpoint-types.txt": "194862ac8dca27cf3d865368f537796200d546e87acf01cb97cb622fa14d391a",
+  "validation/diff-check.txt": "7940f9b824a9b94411c12416b4f1484e3ba1b87118a3786e1c2c816402598885",
+  "validation/final-check.txt": "d5c9f67d5226b668be575943edb3dca7d487512b0a651bdcb24fe5dea25be0ab",
+  "validation/final-format.txt": "94af3a27f5d30626d16277d4cf22f49be9bbd691f5e83e1ad80903fdeef4a6d5",
+  "validation/metadata.txt": "d9e3c3741dd6fb4a6a0f11608b84d9429dc9baf23008a0a92451408220072e8f",
+  "validation/official-fetch-initial.txt": "f79c6819e923bbd3f1b4e0fca9bcb4549565243b42a1efa430543ad7777f325a",
+  "validation/official-fetch.txt": "3676fc503203a143b2e2f62a06284aa506be546d6d0041ee6332c99f08438012",
+  "validation/proposal-types.txt": "18ed602a211f35e63beb6d9f7cbf3a4e80e0f610a1551bbc98aa85ed518de450",
+  "validation/publisher-fix-format.txt": "51519246d1f098fbbdd4d54b6634a8bf90a71a1835d4468e56237a7b3d17e813",
+  "validation/publisher-links.txt": "7a5f1a975af0127c5618f8df6008b6f50f061de8c186793b8d7389b599dc66da",
+  "validation/sdk.txt": "315732109acc117b43617ff885b9f812761a216af59f3ec7c6e6fb43f6cfbbc9",
+  "validation/source-tool-transport-fixture.txt": "9d2916f1af1e1c4c5284357bc5fea6f687b21a409dc0a5c845db66668a205d3e"
+}

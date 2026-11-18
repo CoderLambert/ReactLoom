@@ -1,11 +1,11 @@
 {
   "source": {
     "status": "NOT_RUN",
-    "note": "后续改动新增与真实示例同源的幂等分阶段清理器；隔离Node纯策略测试3 PASS。未运行Monaco SDK/完整React，不能计作source/sdk/build/browser的实际运行PASS。"
+    "note": "中文讲解、三场景源码、官方原文及独立复核已完成，入口见local-validation.md及路线图results/E05.md；此字段没有正式收据，不以本地检查改写状态。"
   },
   "sdk": {
     "status": "NOT_RUN",
-    "note": "Monaco真实导入和诊断尚未执行"
+    "note": "本地真实Monaco浏览器已执行模型编辑、session草稿、JSON诊断与修复；正式SDK收据尚无，状态保持NOT_RUN。"
   },
   "build": {
     "status": "NOT_RUN",
@@ -13,7 +13,7 @@
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "Worker/CSP/resize/model dispose 需实浏览器E2E"
+    "note": "本地真实Chromium六项PASS（含Worker租约卸载及390px布局），见路线图results/E05.md。未在干净已提交输入执行verify:record，正式浏览器状态仍NOT_RUN。"
   },
   "isolation": {
     "status": "NOT_RUN",

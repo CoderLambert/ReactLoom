@@ -1,0 +1,36 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=pnpm exec node --test --test-name-pattern=versioned patch tests/document-utils.test.mjs
+✖ versioned patch source links remain inert source text without enabling credentials or traversal (3.048146ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 46.391644
+
+✖ failing tests:
+
+test at tests/document-utils.test.mjs:216:1
+✖ versioned patch source links remain inert source text without enabling credentials or traversal (3.048146ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + '/raw/B15/sources/examples/react-grid-layout%402.3.0.patch.txt'
+  - '/raw/B15/sources/examples/react-grid-layout@2.3.0.patch.txt'
+  
+      at TestContext.<anonymous> (file:///home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/tests/document-utils.test.mjs:217:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '/raw/B15/sources/examples/react-grid-layout%402.3.0.patch.txt',
+    expected: '/raw/B15/sources/examples/react-grid-layout@2.3.0.patch.txt',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+exitCode=1

@@ -1,222 +1,93 @@
-# B22 从 react-beautiful-dnd 迁到 @hello-pangea/dnd
+# 保留列表形状，把历史 RBD 迁到 React19 替代库
 
-`react-beautiful-dnd` 是 Atlassian 的列表拖拽：`DragDropContext`、`Droppable`、`Draggable`，外加键盘和占位高度。它面向列表，不是自由画布、地图或操作系统文件。项目已弃用，GitHub 仓库随后归档为只读。最后的 npm 版本 `13.1.1` 的 peer 是 React 16.8、17 或 18，**没有 React 19**。原库与 fork 都是 **Apache-2.0，不是 MIT**。
+已有频道设置页用了DragDropContext、Droppable、Draggable，现在宿主要升React19。直接保留旧依赖不能解决peer和生命周期问题：历史react-beautiful-dnd13.1.1已被npm标记deprecated，官方仓库当前archived=true；其React/DOM peer是^16.8.5 || ^17 || ^18。这里的可运行目标只有 **@hello-pangea/dnd18.0.1**，peer支持React18/19，Lab使用19.3.0。两者运行时均Apache-2.0，不是MIT。
 
-不要在 React 19 上用 `--force` 或 `--legacy-peer-deps` 长期锁住 13.1.1。那只绕过安装检查，不会补上并发、Strict Mode 和类型。本条目的可运行依赖是 `@hello-pangea/dnd@18.0.1`，宿主 React 19.3.0。fork 的 v18 发行说明包含 React 19 peer。示例**不导入** `react-beautiful-dnd`。
+本例不加载原库，也没有原库PASS。它展示保留RBD列表形状的迁移路径，不把fork的API运行结果冒充归档SDK验证。需要自由坐标/网格或跨类型DOM目标时，应比较dnd-kit或Pragmatic并接受更大的改造；这里保留单列列表、手柄和业务顺序。
 
-三条路，Lab 只走第一条：
+## 最小模型：库移动画面，应用写顺序
 
-| 路径 | 包 | 何时 | 代价 |
-| --- | --- | --- | --- |
-| A 少改组件树 | `@hello-pangea/dnd@18.0.1` | 已有 Droppable/Draggable，要先升上 React 19 | fork 的维护速度要自己跟踪；仍需键盘和触控回归 |
-| B 逐步拆掉 RBD 形状 | `@atlaskit/pragmatic-drag-and-drop`（Lab 的 B14 是 1.8.1） | 多类型拖放、框架无关 | 键盘不会自动出现 |
-| C 另一套状态 | `@dnd-kit/react` 或 B13 的遗留 core | 愿意重写传感器 | 不能只改包名 |
+```text
+DragDropContext：收集/分发传感器与响应器
+  Droppable：真实列表DOM + innerRef + droppableProps + placeholder
+    Draggable：稳定id + 当前位置index + 真实行DOM/位移style
+      手柄：独立dragHandleProps
+onBeforeDragStart → 应用快照 {ids,revision,level}
+onDragStart / onDragEnd → 真实SDK回调读数
+onDragEnd → reducer再次校验 → 业务顺序
+```
 
-## Lab 当前示例
+这是库自己的鼠标/触摸/键盘传感器，不是HTML5原生DragEvent。不能拿HTML dragTo或伪造DataTransfer当迁移验收。mode为FLUID连续移动或SNAP步进，本例默认传感器分别用鼠标和键盘演示；它不是通用设备检测器。
 
-`examples/demo.tsx` 再导出 `examples/example.tsx`。顺序事务在 `examples/pinned-order.ts`。没有三列看板、没有 `server/app.mjs`、没有 `If-Match`、没有新建卡片的输入框。
-
-已挂载：
-
-- `DragDropContext` 的 `key={level}`，切换层级时卸掉传感器。`useLayoutEffect` 在绘制前把 `activeDrag` 设为 null，cleanup 再清一次。
-- 单个 `Droppable droppableId="reactloom-channels" direction="vertical"`。`ref={provided.innerRef}` 且展开 `droppableProps`。末尾渲染 `provided.placeholder`，否则拖动时容器高度会塌。
-- 每个 `Draggable` 的 `key` 和 `draggableId` 都是 `item.id`，`index` 只是当前位置。`isDragDisabled` 当 `item.fixed`。
-- `draggableProps` 必须留在 `<li>` 上，**包含 style**。丢掉 style，库的位移就没了。手柄是单独的 `<button>`，只展开 `dragHandleProps`。`touch-action: none` 在手柄。
-- `onDragStart` 记下当时可见 id 列表、`state.revision` 和 level。
-- `onDragEnd`：没有 destination，或 droppableId 变了，直接返回。`isFreshDrop` 要求快照的 level、revision、id 序列和 `source.index` 上的 id 都还匹配。否则只 dispatch `notice`，不改顺序。键盘上移也会先清掉快照，避免随后的 drop 覆盖按钮结果。
-- `reduceOrder` 的 `move` 先走 `canReorderAroundPinned`。固定项以及路径上的固定项拒绝移动，消息说明顺序未改变。成功时 `previous` 记下旧数组，`revision + 1`。
-- basic 只把前三项交给 Droppable，移动的 `visibleCount` 是 3，隐藏项留在数组后面。
-- advanced：撤销和重置同样清掉进行中的拖动。重置换上初始频道并增加 revision。
-
-初始数据里「国际时事」`fixed: true`。output 用箭头连接 id。
-
-未挂载：跨列、IME 新建卡片、PUT 全板、409/503、`resetServerContext`。fork 18 的说明里旧的 `resetServerContext` 文档已被拿掉，不要从原库 SSR 经验推断 React 19 水合。本示例是客户端。
-
-## 旧形状与第一步替换
-
-历史代码（不要安装旧包）：
+key与draggableId是稳定item.id，index只是当前可见位置。Droppable/Draggable的innerRef必须落在真实DOM；行保留全部draggableProps与style，手柄单独接dragHandleProps，其他上下按钮不在手柄内。placeholder代码始终保留，实际DOM占位在拖动期间出现，防止拖出行后容器塌高。CSS不覆盖SDK的transform/position。
 
 ```tsx
-import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
+import {DragDropContext, Draggable, Droppable} from '@hello-pangea/dnd';
 
-<DragDropContext onDragEnd={onDragEnd}>
-  <Droppable droppableId="inbox">{provided => (
-    <ul ref={provided.innerRef} {...provided.droppableProps}>
+<DragDropContext onDragEnd={handleEnd}>
+  <Droppable droppableId="channels">{provided => (
+    <ol ref={provided.innerRef} {...provided.droppableProps}>
       {items.map((item, index) => (
-        <Draggable draggableId={item.id} key={item.id} index={index}>
-          {drag => (
-            <li ref={drag.innerRef} {...drag.draggableProps}>
-              <button type="button" {...drag.dragHandleProps}>{item.title}</button>
-            </li>
-          )}
+        <Draggable key={item.id} draggableId={item.id} index={index} disableInteractiveElementBlocking>
+          {drag => <li ref={drag.innerRef} {...drag.draggableProps}
+            style={drag.draggableProps.style}>
+            <button type="button" {...drag.dragHandleProps}>{item.label}</button>
+          </li>}
         </Draggable>
       ))}
       {provided.placeholder}
-    </ul>
+    </ol>
   )}</Droppable>
 </DragDropContext>
 ```
 
-迁到 fork 时，把导入改成 `@hello-pangea/dnd` 只是第一步。还要核对：context 不嵌套、placeholder 还在、style 还在、id 不是 index、Strict Mode 下拖动快照不会在数据已经变了之后写入。Lab 用 `isFreshDrop` 做最后这条。
+这段展示迁移后的绑定骨架；真正的取消、状态写入和业务约束在[实际组件](examples/example.tsx)与[顺序模型](examples/pinned-order.ts)。只换import是开始，不能删掉占位、ref、style或把id改成index。
 
-`DropResult` 含 `draggableId`、`source`、`destination`（取消时为 null）、`reason`。库不更新你的数组。不 `setState`，松手会跳回旧位置。取消和没有落点时不要写服务器，也不要写本地顺序。
+## 实验一：替代SDK的键盘与鼠标路径
 
-## 模型
+基础层显示AI、前端、RSS三项。聚焦“拖动 AI 模型研究”，Space提起、ArrowDown移动、Space放下；顺序应成为frontend → ai → rss，SDK回调显示SNAP、source.index=0、destination.index=1、reason=DROP。
 
-```text
-onDragStart → 快照 {ids, revision, level}
-onDragEnd
-  → destination 为空则忽略
-  → isFreshDrop 失败则只提示
-  → reduceOrder：不可变搬移，revision+1
-键盘按钮 → 先丢掉快照，再走同一个 reduceOrder
-```
+再从手柄用真实鼠标拖动，观察行的SDK位移、拖动中的placeholder和FLUID回调。只点上下按钮也能改序，但那是应用回退，不会伪造SDK响应。下方JSON的id/mode/source/destination/reason来自实际响应器；phase和snapshotRevision是本例标注，不能当SDK内建属性。
 
-`isFreshDrop` 把可见 id 逐个比较。拖动过程中若撤销或重置，revision 或 id 序列对不上，drop 被拒绝。这防止「用开始时的 index 覆盖已经变过的数组」。
+基础层只重排前三项，再拼回隐藏global/notes；data-all-order是实际完整数组。不要拿可见三项覆盖整个数据集。指针与键盘真实传感器仍需浏览器验证，SSR标签或纯规则不证明它们工作。
 
-生产上的保存还应是：乐观更新之后单飞 PUT，带预期修订号；200 用响应校正；409/503 重新 GET；abort 只表示客户端不再等待。Lab 没有这条网络。不要把本地 `revision` 说成 HTTP `ETag`。全量提交大数组在真实项目里应改成按 id 和锚点的增量操作。
+## 实验二：固定槽位与手柄分工
 
-## 三层渐进
+业务层显示五项，国际时事固定在第四位。它的isDragDisabled让SDK不启动该行，手柄/上下按钮也禁用。AI拖到前端可以成功；拖到深度阅读会跨越固定槽，SDK可以提出该落点，但reducer拒绝写入，顺序保持原样。
 
-### Demo ① 换入口（已挂载）
+所以“画面可拖到那里”不是业务许可。canReorderAroundPinned同时检查源、目标和闭区间内的fixed/locked项，鼠标、SDK键盘和上下按钮最终复用同一写入边界；没有仅靠灰色样式阻止操作。当前只有一列，无服务器持久化、跨列或权限接口。
 
-三张卡：AI、前端、RSS。拖动手柄或上下按钮。output 改变。后两张（国际时事、深度阅读）不在这层的 Droppable 里，basic 的重排不得弄丢它们。
+## 实验三：取消、撤销和旧drop
 
-### Demo ② 整列与手柄（已挂载）
+高级层先拖动一次，再“撤销上次排序”，恢复上一份数组；撤销只保留一步。Escape取消一次真实SDK拖动时，回调reason=CANCEL，顺序和revision均不变；同位放下也不制造新顺序或撤销点。
 
-五张都在。固定项不能拖。手柄和上下按钮分开，避免以后若有链接或开关时整卡拖拽把点击吃掉。当前行内没有输入框。
+“恢复原序”是本地事务，会增加revision并使在途快照过期。已是原序时只失效会话，保留已有撤销点，不凭空开启撤销。若确实重置了顺序，可以撤销这次顺序变更。
 
-未挂载的业务看板：三列「收件箱 / 阅读中 / 已完成」、选择目标列的下拉框、乐观 PUT。那些按钮必须在不拖拽时也能改列。Lab 只有一列顺序。
+18.0.1的 **onBeforeDragStart同步调用，而onDragStart延后调度**。因此快照在前者捕获，后者只记录真实响应，不允许晚到的start重新建立已经作废的会话。手工上移、撤销、重置会立刻清空活动快照，场景变化在layout effect清空并以key重挂SDK context。
 
-### Demo ③ 过期 drop（已挂载）
+即使组件在回调处做过判断，reducer还要在真正写入时检查当前state：取消/无落点不写；快照的level、revision、可见id序列、source.index上的draggableId都必须匹配；最后再检查固定区间。这能拒绝“先检查通过，后被其它更新改了数组，再排队写旧index”的动作。本地revision不是HTTP ETag。
 
-撤销回到 `previous`。重置回到初始标签。拖动开始后若先按撤销，松手应出现「拖动期间列表或层级已变更」而不是把旧 index 写回去。切换 level 会重挂 context。
+真实鼠标拖动中途的重置，浏览器提案用明确标注的程序化UI刷新fixture触发真实恢复按钮；鼠标与SDK回调仍真实，不伪造DropResult。它验证异步业务更新接线，不冒充手指同时点击两个按钮。规则测试单独覆盖最终reducer的旧动作拒绝。
 
-未挂载：中文输入法。原研究里的新建卡片要在 `compositionstart/end` 和 `isComposing` 期间忽略 Enter。这里没有该输入，不要声称已经验过搜狗或 Gboard。
+## 迁移、所有权与边界
 
-## 反例
+复制四必要源：[demo.tsx](examples/demo.tsx)、[example.tsx](examples/example.tsx)、[pinned-order.ts](examples/pinned-order.ts)、[styles.css](examples/styles.css)，安装匹配替代包与React/DOM。没有Lab alias、外部资产或新共享依赖。旧的resetServerContext不在18.0.1公开导出中，不能把原库SSR经验直接搬来；真实SSR结构测试也不证明完整hydration。
 
-```tsx
-// 错
-import {DragDropContext} from 'react-beautiful-dnd';
+SDK拥有传感器、内部注册、公告、拖动样式与焦点恢复，React context卸载时由SDK清理。应用只清自己的快照，不手工删全站监听或style。四必要源必须一起迁移，CSS只负责行/控件外观，SDK位移style留给库。用法说明已中文化，默认事件公告及真人读屏没有完整本地化验收；触摸/滚动/真实设备也未覆盖。
 
-// 对
-import {DragDropContext, Draggable, Droppable} from '@hello-pangea/dnd';
-```
+祖先transform/缩放或CSS覆盖fixed位移会改变坐标，复杂portal/虚拟列表需要按匹配版本另行设计。服务器保存还需要权威版本、失败恢复与取消边界，本例没有HTTP，不堆一个未实现的看板。
 
-```tsx
-// 错：身份跟着下标变，跨位置后 React 复用错节点
-<Draggable key={index} draggableId={String(index)} index={index} />
+## 官方原文与可复核结果
 
-// 对：draggableId={item.id} key={item.id}
-```
+主快照是实际运行替代库18.0.1：hello-pangea/dnd固定commit `410173402853654f64436d116d68e3f89359d496`的README.md，10875B；完整tree只有英文README候选。历史原库13.1.1另存official/legacy-readme.md，绑定npm gitHead `1a380855d0d008c5d6ef8e34c7c8ffb96c66a881`，只做迁移背景，不展示成当前运行API手册。npm弃用、React peer与当前归档标记分开记录。
 
-```tsx
-// 错：原地 splice
-items.splice(source, 1);
+官方声明站点https://dnd.hellopangea.com实际GET200，未发现强制跨源frame限制，但没有从Lab origin确认iframe内容，所以unknown，保留直达/重试。完整最终响应头、原始/最终URL、候选、版本、时间和SHA在official/source-evidence.json；服务器匿名会话cookie值脱敏并保留属性/hash，未使用或发送凭据。
 
-// 对：reduceOrder 复制可见段再插入，并接上不可见后缀
-```
+真实SDK局部检查只运行替代库的React19 SSR绑定与双context身份；17项policy验证本地规则。真实传感器/位移/占位/取消/焦点/清理需主控按[完整浏览器提案](validation/browser-proposal.txt)运行。六项、实际cwd/命令/exit/日志见[local-validation.md](local-validation.md)；正式三项NOT_RUN，更不能由替代库局部通过推导原库PASS。
 
-```tsx
-// 错：Esc 取消也保存
-onDragEnd={result => save(result.source.index, result.destination.index)}
+- [匹配替代库原文](https://github.com/hello-pangea/dnd/blob/410173402853654f64436d116d68e3f89359d496/README.md)
+- [匹配响应器时机说明](https://github.com/hello-pangea/dnd/blob/410173402853654f64436d116d68e3f89359d496/docs/guides/responders.md)
+- [原库弃用说明](https://github.com/atlassian/react-beautiful-dnd/issues/2672)
 
-// 对：没有 destination 就返回
-```
+- [历史13.1.1固定原文（未运行）](https://github.com/atlassian/react-beautiful-dnd/blob/1a380855d0d008c5d6ef8e34c7c8ffb96c66a881/README.md)
 
-```tsx
-// 错：拖动开始时的 index 在撤销之后仍然生效
-dispatch({type: 'move', from: source.index, to: destination.index});
-
-// 对：isFreshDrop(snapshot, state, level, source.index, draggableId, visible.length)
-```
-
-```tsx
-// 错：整张 li 都是 dragHandleProps，里面的按钮无法点击
-<li {...drag.dragHandleProps} />
-
-// 对：手柄按钮单独接收 dragHandleProps
-```
-
-```tsx
-// 错：不渲染 placeholder
-<ul ref={provided.innerRef}>{children}</ul>
-
-// 对：子节点之后 {provided.placeholder}
-```
-
-```tsx
-// 错：丢掉 draggableProps.style，或再用 transform 盖住它
-<li style={{transform: 'none'}} {...drag.draggableProps} />
-
-// 对：style={{...drag.draggableProps.style, display: 'flex', ...}}
-```
-
-```tsx
-// 错：Abort 之后假设服务器没有写入
-// 对：不确定时重新 GET 并禁止继续改，直到权威顺序回来。Lab 无请求，不要假装测过
-```
-
-```tsx
-// 错：过滤之后仍把视觉 index 提交给后端
-// 对：拖动期间冻结过滤，或按 id 重新定位。basic 用 visibleCount 把隐藏项留在后面，而不是把它们的 index 当成另一列
-```
-
-固定定位和祖先 `transform` 会改变拖动坐标。Portal 重父节点要按 fork 文档做，不要随手 `appendChild`。本示例没有 portal 克隆。
-
-## 组合
-
-**fork + Query**：拖动中的草稿可以在本地，权威 cache 在 mutation 结束或 409 之后更新。refetch 不要在拖动中途替换数组，除非先使快照失效（增加 revision）。Lab 的 revision 就是这个失效开关，只是没有 Query。
-
-**fork + 虚拟列表**：窗口滚动会使 `source.index` 失去意义。要按官方虚拟列表示例测「滚动中拖动」。本列表最多五项可见，不是该模式。
-
-**若键盘模型不够**：保留上下按钮。空格提起再按箭头是库自带传感器的行为，仍要在浏览器里看公告是否够。不要只写「可拖拽」三个字。
-
-路径 B 的 Pragmatic 迁移包版本要单独查，不要假设 B14 的 1.8.1 等于研究稿里的 4.x。路径 C 不要和 `Draggable` 同时绑在一个节点上。
-
-## 生产清单
-
-- 导入只有 `@hello-pangea/dnd`。
-- id 稳定，Apache-2.0 声明保持在依赖记录里。
-- placeholder 和 style 都在。
-- 手柄与其他控件分离。
-- 取消不写顺序。
-- 固定项在 reducer 里拒绝，不只靠 `isDragDisabled`。
-- 快照对不上就不写。
-- 键盘按钮与拖放同一 reducer。
-- 不嵌套 DragDropContext。
-- 大列表不要一次 PUT 整个 JSON 还说这是性能方案。
-- 触控、读屏、Esc 取消需要浏览器，policy 测试看不到。
-
-## 升级
-
-1. 停用旧包，改导入，跑现有键盘和指针回归。
-2. 去掉对 `resetServerContext` 的依赖，按 fork 18 文档处理 SSR。本 Lab 不跑 SSR。
-3. 把 index 写入改成 id 校验（Lab 已做 `isFreshDrop`）。
-4. 若产品超出单列，评估 B14 或 B13，而不是在 fork 上堆自由坐标。
-
-练习：把快照在拖动中按撤销，确认松手不改变撤销结果。再在 basic 重排后检查隐藏两项的相对顺序仍在数组末尾。
-
-## 验收
-
-basic：前三项顺序变，后两项 id 仍在后面。business：国际时事不能拖，也不能被上下按钮跨越。advanced：撤销恢复上一份；拖动中重置或撤销后，过期 drop 只改 status 文案。placeholder 节点存在。依赖列表里没有 `react-beautiful-dnd`。
-
-sdk、build、browser 为 NOT_RUN。没有匹配 receipt 就不能写成 fork 的拖拽 PASS，更不能写成原库 PASS。Actions run `41779873259` 是仓库级 install、typecheck、build、52 个 SDK 文件 / 153 项测试、45 个 Playwright，不是 B22 的 PASS。
-
-```bash
-node --experimental-strip-types --test packages/library-lab/entries/B22-react-beautiful-dnd-migration/tests/order-history.test.mts packages/library-lab/entries/B22-react-beautiful-dnd-migration/tests/pinned-order.test.mjs
-```
-
-断言固定槽、revision 和过期 drop。不证明传感器或占位高度。
-
-## 官方资料
-
-- https://github.com/atlassian/react-beautiful-dnd
-- https://github.com/atlassian/react-beautiful-dnd/blob/master/LICENSE
-- https://github.com/hello-pangea/dnd
-- https://github.com/hello-pangea/dnd/releases/tag/v18.0.1
-- https://github.com/hello-pangea/dnd/blob/main/LICENSE
-- https://github.com/hello-pangea/dnd/blob/main/docs/api/drag-drop-context.md
-- https://www.npmjs.com/package/@hello-pangea/dnd
-- https://dndkit.com/react/guides/migration/
+手柄使用真实 button 时，要给 Draggable 设置 `disableInteractiveElementBlocking`：18.0.1 默认拒绝从交互元素启动，缺此选项会令鼠标与 Space 都不提起。它只解除 SDK 的交互元素过滤，dragHandleProps 仍只放在专用手柄；旁边上下按钮不具有该属性，不成为拖动目标。候选15三条实际传感器失败已保留，补齐后沿用相同验收断言复验。

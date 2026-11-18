@@ -1,0 +1,17 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["pnpm", "--dir", "packages/library-lab", "test:sdk", "--entry=C10"], "utc": "2026-11-10T16:21:25.210438+00:00", "exit": 0}
+
+> @reactloom/library-lab@0.1.0 test:sdk /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+> node scripts/sdk-runner.mjs --entry=C10
+
+Real SDK suites selected: 1 file(s)
+✔ actual React adapter SSR initializes shared options without a browser viewport (5.548183ms)
+✔ actual public core model computes estimated range and total from initialRect and shared keys (0.768264ms)
+✔ actual resizeItem cache follows business keys on reorder and public measure clears it (0.666552ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 89.728572

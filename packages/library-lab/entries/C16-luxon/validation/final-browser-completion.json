@@ -1,0 +1,48 @@
+{
+  "candidate18ClientEvidence": "validation/shared-browser-evidence.json",
+  "clientCaseStatus": "3 actual PASS",
+  "candidate19": "96454723c7f9a50081fab71d073f84d7962329c60c5b34dc784c58bc8f1e0c95",
+  "candidate19Batch": {
+    "command": [
+      "pnpm",
+      "exec",
+      "playwright",
+      "test",
+      "--config=.local-evidence/quality-playwright.config.ts",
+      "e2e/quality-document-links.spec.ts",
+      "e2e/quality-document-security.spec.ts",
+      "e2e/quality-remediation-react-i18next.spec.ts",
+      "e2e/quality-remediation-primitives-sources.spec.ts",
+      "--grep",
+      "@platform-document|@C15|@C16|@C18",
+      "--trace=off"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "startedAt": "2026-11-10T17:49:40.684796+00:00",
+    "finishedAt": "2026-11-10T17:50:03.680897+00:00",
+    "exitCode": 1,
+    "implicitBuild": false,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-19/browser.txt"
+  },
+  "batchResult": "11 PASS, 1 FAIL; full command exit1",
+  "c16OfficialCase": {
+    "status": "PASS",
+    "rawLine": "  ✓   8 e2e/quality-remediation-primitives-sources.spec.ts:31:3 › @C16 original fixed README and evidenced homepage unknown (1.7s)"
+  },
+  "browser19LogSHA": "2ac374c02a400a494e97bd7473c230a4a9edf4834d6ec46cdde310dc231cfc22",
+  "runtimeFilesUnchanged": {
+    "examples/example.tsx": "71de36fc422d0db93d89536eb4e271ce3ee5fedd2c2c1a279d6fbd43f5f87ace",
+    "examples/calendar.mjs": "96c1438a03cdbf3dc4cc4633125573765271058c6a5c97df857ea45493954f9b",
+    "examples/calendar.d.mts": "655fdeb3df2545f51decc9079c54b91c794c2a213276555c56d472ef2a32eaa8",
+    "examples/wall-time.mjs": "c93a9851bbdb8af793f54eb7318e76d86d52a0d73d3490ea059152c198e5229f",
+    "examples/wall-time.d.mts": "3fc8691742e29a6d3f15f79a1fa68cb25c75893eabd8263b1065624ec3c64536",
+    "examples/wall-time-policy.mjs": "94421dd4ed6e7322e6d6bfd5f9934af9d2e6ae285fa5b98650d99cc3802a9a27",
+    "examples/wall-time-policy.d.mts": "37622b9dc7e36a34e1c03d1eda55e51625ffe58d16bc9103a4e0fb0962881976",
+    "examples/styles.css": "e67ab07d2c86e7e7028de1c3cd179fa604724d260303e374539357ad4b25d9ff",
+    "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038"
+  },
+  "independentClosedReviewSHA": "fd64ca6cd300b1762e750875d0d54a11a0f9d357e098d8af8267c844526c451c",
+  "iframe": "unknown",
+  "formal": "NOT_RUN",
+  "reusedNotRerun": true
+}

@@ -1,0 +1,4 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv=["pnpm", "exec", "biome", "check", "--write", "e2e/quality-remediation-konva.spec.ts"]
+exit=0
+Checked 1 file in 10ms. No fixes applied.

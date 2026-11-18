@@ -1,0 +1,9 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+ARGV: ["pnpm", "exec", "biome", "check", "entries/C07-tanstack-table/examples", "entries/C07-tanstack-table/tests", "entries/C07-tanstack-table/library.json", "entries/C07-tanstack-table/verification.json", "entries/C07-tanstack-table/official/source-evidence.json"]
+START: 2026-11-10T10:17:21.525224+00:00
+END: 2026-11-10T10:17:21.753167+00:00
+EXIT: 0
+STDOUT:
+Checked 12 files in 10ms. No fixes applied.
+
+STDERR:

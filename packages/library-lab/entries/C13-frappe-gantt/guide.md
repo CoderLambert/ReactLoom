@@ -1,161 +1,100 @@
-# Frappe Gantt 1.2.2｜图在独立文档里，计划在策略函数里
+# Frappe Gantt：从表格草稿到可信的任务时间线
 
-Lab 锁定 `frappe-gantt@1.2.2`（MIT）。甘特图只画条。日期是否存在、依赖有没有环、进度是不是有限数字，由 [`plan-policy.mjs`](examples/plan-policy.mjs) 决定。保存按钮在语义表格上，不在条块上。
+一个小项目有三项任务、日期和前后依赖，需要用图解释排程，也要让用户用键盘改日期和进度。Frappe Gantt 把任务数组画成 SVG 条块与箭头；本例把编辑保留在语义表格，校验通过后再更新真实图。它没有项目后端、关键路径计算、资源调度或权限系统。
 
-没有收据时 sdk / build / browser 保持 NOT_RUN。Actions 41779873259 不是本条目 PASS。
+实际运行 **frappe-gantt 1.2.2，MIT**，数据与覆盖样式为本地原创。少量任务、简单依赖和时间尺度切换适合本库；会议事件用 FullCalendar，复杂调度需另找业务引擎。库本身不是 React 组件，本例用 effect 适配它。
 
-## Lab 当前示例
+## 谁拥有哪一份数据
 
-这不是主应用里的普通 React 挂载。主 Lab 在 `4319`。C13 的规范入口由专用 loopback 文档提供，地址是 `http://127.0.0.1:4321`（测试里也会出现 `localhost:4321`）。父页面只放 iframe。用户明确启动后，runner 才在那份文档里加载 [`examples/example.tsx`](examples/example.tsx)。离开、停止或重置会销毁整个 frame。
+~~~text
+表格 input：当前行未保存的草稿
+     ↓ 保存 / 非合成期间 Enter
+validatePlan(整份候选计划)
+     ├─ 日期/进度/依赖不合法：拒绝，草稿仍留在输入框
+     ├─ advanced 的 qa：模拟409，权威计划不变
+     └─ 本地接受：更新 tasks + revision
+                            ↓
+          React语义表格 + 权威计划JSON快照
+                            ↓ toChartTasks
+          副本 + 图标签转义 → SDK refresh / change_view_mode
+~~~
 
-已检查的 1.2.2 发布包会注册捕获实例的 `document` `mouseup` 监听，没有公开的 `destroy` 或 `dispose`。`replaceChildren` 卸掉 SVG 并不能证明监听器已经释放。因此一个专用文档里只 `new Gantt` 一次，之后用 `refresh` 和 `change_view_mode`。runner 不用 StrictMode 把构造跑两遍。不要把这个示例改回主文档里的普通 `react` 挂载，再把卸载当成清理完成。
+tasks 是当前会话已接受的内存计划，表格不是每次输入都回写。保存成功才更新 revision、快照与图；拒绝或模拟冲突时，输入框保留未保存草稿，方便修正，**不是自动恢复成旧输入值**。图和“当前权威计划”仍显示上一次接受的数据。重置/停止会话才丢弃全部内存状态。
 
-构造时复制任务对象。库会改它拿到的 descriptor。`readonly: true`，`popup: false`，避免条上的 HTML 弹层。
+任务形状是 id/name/start/end/progress/dependencies，依赖是逗号分隔的前驱 ID 字符串。传给库前复制每个 descriptor，因为 SDK 会加入 _start/_end/_index、把 dependencies 转成数组，并归一化 ID。不能把 React state 原对象直接传进去。
 
-- **basic**：三项任务，依赖是 `research → frontend → qa`。表格只读。视图可在 Day / Week / Month 之间切换。
-- **business**：表格可改开始、结束和进度。过滤只作用于表格。交给图表的仍是完整 `tasks`，否则缺依赖的子集会把拓扑弄断。
-- **advanced**：结束早于开始会被 `validatePlan` 拒绝，state 不变。保存「联调回归」返回模拟 409，客户端权威数据不动。按钮「模拟依赖闭环」把 research 的依赖改成 qa，只预览错误，不写入。
+## 为什么图运行在独立文档
 
-`validatePlan` 拒绝重复 id、非法区间、进度不是 0–100 的有限数、自己依赖自己、未知依赖、重复依赖和环。计划跨度超过 `MAX_PLAN_SPAN_DAYS`（730 个 UTC 日）也拒绝。年份小于 `0100-01-01` 拒绝，因为上游用 `new Date(year, …)` 时会把 0000–0099 当成 1900–1999。
+1.2.2 构造时绑定捕获实例的 document.mouseup，没有公开 destroy/dispose。删 SVG 或卸载 React 并不能解除该闭包。因此 Lab 在 4319 主页面之外，用既有 4321 loopback runner 的独立文档执行 C13；一个会话文档只构造一次。任务变化走 refresh(tasks)，尺度变化走 change_view_mode(view)，停止/重置/离开销毁整份 iframe 文档。
 
-包的 `exports` 只公开主入口。不要在业务代码里 `import 'frappe-gantt/dist/frappe-gantt.css'`。专用 runner 用构建配置去找这份固定版本的 CSS，再叠 `examples/gantt.css`。
+端口、UUID session、reactloom-gantt-v1、origin/source/session/方向校验、sandbox 和父级启停都属于 **Lab 自建隔离接线**，不是 Frappe Gantt API。父文档不 import 图表。共享 runner 不使用 StrictMode 重放这个缺乏 disposer 的构造路径，不能据此宣称 SDK 适合在任意 React 主树随挂随卸。
 
-## 什么时候用
+条目 effect 的 alive 标记阻止动态 import 晚到后再构造，清空自己 host 的 DOM/ref；最终资源边界是父级销毁 frame realm，不能把 replaceChildren 当完整清理。没有全局删事件、放宽宿主 CSP 或绕过会话校验。
 
-少量任务、依赖字符串和三种视图就够用的排程说明图。要拖拽资源、关键路径服务端计算或企业权限时，不要把这张图当成项目系统。日历视图用 C12。日期运算用 C14–C16。
+## 目标一：隔离图、依赖与时间尺度
 
-图的筛选和表的筛选不是一回事。表可以只显示一行，图必须看到它的前驱。
+打开 basic，观察三条真实任务与 research → frontend → qa 箭头，以及下方三行语义表格。需求名称特意包含字面字符“需求评审 <草稿> & 确认”；图标签和表格应显示相同文本，不能变成 SVG 元素。切换时间尺度 Day / Week / Month，观察轴刻度变化；父页仍没有第二份 Gantt，同一子文档保持同一实例/一个 document mouseup 监听。
 
-## 数据与模型
+readonly:true 关闭图上编辑；popup:false 关闭弹层。但这两个选项**不会净化任务名**：SDK 的 bar label 独立使用 innerHTML。本例的 toChartTasks 只在图表副本中转义 &、尖括号及引号，把标签作为文本；权威计划与 React 表格仍保留原文。它不是 HTML 净化器，也不支持“保留一部分富文本”。
 
-任务是 `{ id, name, start, end, progress, dependencies }`。`dependencies` 是逗号分隔的 id 字符串，不是对象图。空字符串表示没有前驱。
+infinite_padding:false 关闭默认无限轴扩展，避免用户滚动把图轴越扩越大。数据跨度上限与轴留白是两回事；本例仅开放 Day/Week/Month，保留各视图有限 padding。
 
-所有权：
+## 目标二：键盘保存与同源图表
 
-```text
-表格提交 → validatePlan(整份计划)
-              ├─ 有错误：不 setState
-              ├─ advanced 且 id 为 qa：假装 409，不 setState
-              └─ 否则 setState
-图表 effect 再 validatePlan
-              ├─ 有错误：不构造、不 refresh
-              └─ 否则 refresh / change_view_mode
-```
+打开 business，把“前端开发进度”改为 60，按 Enter 或点击该行“保存”。状态应显示已更新，权威计划 frontend.progress 变为 60、revision 增加，真实 SVG 进度条宽度占比变为约 0.6。这里是同源数组驱动真实 SDK，不是直接改 SVG 或预置成功结果。
 
-`GanttCanvas` 的第一次 effect 只构造。后续 effect 看 `applied` 引用：任务数组变了才 `refresh`，视图变了才 `change_view_mode`。校验失败时图表停在上一份合法计划，状态行说明拒绝原因。
+把“过滤表格任务”填成“前端”，表格只剩一行，图仍有三条与全部依赖。过滤是应用表格的展示选择，不改变权威计划，也不会把缺少前驱的子集交给 SDK。
 
-环检测是 Kahn 拓扑。处理完的节点数小于任务数就拒绝。这是客户端门闩。服务端要有自己的图约束。
+表单使用 noValidate，统一以 validatePlan 返回可解释的拒绝结果；min/max/required 是输入提示，不能代替领域校验。空进度明确转成 NaN，不是 Number('') 得到的 0。Enter 路径检查真实事件 isComposing；没有宣称已经验收所有操作系统输入法/移动键盘。
 
-IME：表格里按 Enter 时，若目标是 input 且 `isComposing`，不保存。组合结束后的短窗口没有另做 80ms。迁到中文环境要再看一次。
+## 目标三：拒绝、冲突与会话销毁
 
-## 三层示例
+advanced 把前端结束日改到开始前再保存：状态说明拒绝，输入草稿留着，权威快照与真实条宽/位置不变。空进度、101、超出日期范围也拒绝；改回合法值可以继续保存。
 
-在主应用打开 frappe-gantt 的 demo，启动后再看 4321 子文档里的条和下面的表。不要在父文档的 DOM 里找 SVG 当作库已经在主树挂载。
+把“联调回归进度”改为 80 再保存，触发**本地模拟 HTTP 409 分支**。没有 HTTP 请求或服务端 revision，权威 qa.progress 仍为 10，图保持原状，输入草稿 80 留着供用户处理；本例没有自动重试/覆盖冲突。随后可编辑前端行验证其他合法保存仍可用。
 
-### 基本
+点“模拟依赖闭环（不保存）”，只在候选副本中把 research 依赖改为 qa，Kahn 拓扑检测返回错误；权威依赖没有改变。停止、重置和切换场景会销毁旧文档并创建新 UUID 会话；重新运行恢复种子计划和 revision0。需要真实 frame/context 销毁证据，不能只数 SVG 为零。
 
-三条条块和箭头。切换 Week 和 Month，构造次数不增加（同一文档、同一实例）。表格没有输入框。
+## 有意受限的输入合同
 
-### 业务
+plan-policy.mjs 是 UI 与 Node 策略唯一共享来源，拒绝重复 ID、自依赖、未知/重复依赖、环、非法日期区间及非有限/越界进度。
 
-把前端开发的结束日改到开始日之前再保存。状态行以「已拒绝保存」开头，图不跳。过滤「联调」，表只剩一行，图上三条都还在。
+- ID 采用 1–64 位 ASCII 字母/数字/下划线/短横线，以字母或数字开头，排除 Object.prototype 保留名称。SDK 会把空格改成下划线且内部 dependency_map 是普通对象；外部 ID 不能归一化后撞名或进入 constructor 等原型键。演示不编辑 ID，迁入 API 时保持同一合同或先建立独立安全映射。
+- 日期是四位 YYYY-MM-DD 日历日。本例取 **0101-01-01 至 9998-12-31**，整份计划最早开始到最晚结束相差不超过 **730 个 UTC 日**，包括任务间空档。SDK 的最终条显示按本地日历构造，不代表 UTC 时刻或跨时区排程。
+- 比单纯拒绝 0000–0099 更严格，是因为 0100 年初的图轴 padding 会落入 0099；SDK 后续 numeric Date 加日又把 99 解释成 1999。真实 1.2.2 日期配方已复现。两端为 D/W/M 留白预留余量，实际 Node 配方分别得到本地年 100–101、9998–9999，不跨 0–99 或五位年。Node 配方不证明古代日期的真实浏览器渲染/时区体验。
 
-### 进阶
+这些是演示的保守输入合同，不是 SDK 对所有视图、语言或日期范围的官方保证。当前固定三任务不提供任意计划导入、资源调度或时区转换。
 
-保存联调回归，得到模拟 409。点闭环预览，状态是拒绝文案，research 的依赖仍是空字符串。把进度改成空或 101，同样拒绝。把开始年改成 `0099`，被年份下限拒绝，避免 SDK 把它画到 1999。
+## 迁入业务的必要接线
 
-## 反例
+携带六个 sourceFiles：example.tsx、demo.tsx（仅再导出）、plan-policy.mjs/.d.mts、frappe-gantt.d.ts 和 gantt.css。SDK 没有随包类型，.d.ts 是核对 1.2.2 源码后的有限本地声明；不能当官方全量类型。
 
-### 1. 在主 React 树里随挂随卸
+还必须加载同版本 SDK 基础 CSS。包通过主入口的 style condition 暴露 CSS，未公开 dist 子路径；Lab 的专用 runner 用 Vite alias 定位实际发布文件：
 
-```tsx
-useEffect(() => {
-  const chart = new Gantt(el, tasks)
-  return () => el.replaceChildren()
-}, [tasks])
-```
+~~~ts
+// 自有文档的 vite.config.ts；该文档入口还要 import 'frappe-gantt-runner.css'
+import { fileURLToPath } from 'node:url'
+import { defineConfig } from 'vite'
 
-每次 tasks 变化都多一个 `mouseup` 监听。改为一个文档一次构造，用 `refresh`。离开时销毁 iframe，而不是只卸 React。
+export default defineConfig({
+  resolve: {
+    alias: {
+      'frappe-gantt-runner.css': fileURLToPath(
+        new URL('./frappe-gantt.css', import.meta.resolve('frappe-gantt')),
+      ),
+    },
+  },
+})
+~~~
 
-### 2. 把 React 任务对象直接交进去
+这只是 CSS 解析配置，仍需要自有文档入口。条目六文件不包含 Lab 的父页/服务端 runner；迁移方需要明确的 frame 创建/销毁所有权和可信消息协议，不能把图直接塞进主文档后假装卸载已释放监听。现有接线是 runners/gantt/main.tsx、其 vite.config.ts 与平台 gantt-frame-session；它们由平台维护，条目不复制一套新宿主。
 
-库会改 descriptor。`tasks.map(t => ({ ...t }))` 再传入。
+new Gantt 只发生在专用文档挂载 effect；后续更新先验证，再复制/转义。匹配 README 中的 tasks.append()/tasks.refresh() 片段不符合 1.2.2 实际数组与方法形状，原文照存，本例依据同版本源码调用实例 chart.refresh(tasks)。SDK 渲染失败显示 alert；领域校验通过不等同引擎必然绘制成功，必要时重启本会话。
 
-### 3. 打开 popup 渲染任务名
+## 官方与验证边界
 
-`popup: false`。名称里的字符不应变成弹层 HTML。表格用文本节点。
+[官方 README 原文](official/readme.md) 固定仓库 frappe/gantt、npm1.2.2 gitHead/同提交manifest **4c82fccce9bf4237ded41680869529cea4385a90**，路径 README.md；未截断树只有这一份 README，没有中文候选。英文原文 **15874B**，SHA-256 **6f8ef7a60672fbcdb9aafc9920cf64789e118d8f56d5ab1855a7d9553253fc46**，版本/语言/日期/请求完整头见 official/source-evidence.json 与 library.json。没有翻译覆盖上游文档。
 
-### 4. 把过滤后的行交给 Gantt
+官网 https://frappe.io/gantt 的实际最终 GET 响应含 X-Frame-Options SAMEORIGIN，无强制 frame-ancestors 覆盖，故 **blocked**；正文未读取，HTTP200不是 iframe 允许证明。官网直达入口保留。
 
-缺了 `research` 的子集会让 `frontend` 的依赖悬空。过滤只影响 `<table>`。
-
-### 5. 图表内部改日期当保存
-
-本示例 `readonly`。日期从带 label 的输入进入 `validatePlan`。只看条块动画不能证明数据变了。
-
-### 6. 结束早于开始仍 refresh
-
-策略函数先返回错误字符串。`setTasks` 不调用，图表 effect 看到错误也不 `refresh`。
-
-### 7. 进度用 NaN
-
-空输入变成 `Number('')` 之前，代码把空串收成 `NaN`，`Number.isFinite` 失败。不要把空进度当成 0。
-
-### 8. 依赖写成环还保存
-
-预览按钮故意不 `setTasks`。保存路径必须同样调用 `validatePlan`。
-
-### 9. 年份 0099 交给 SDK 碰运气
-
-策略层直接拒绝小于 0100 的年份。不要依赖库的 Date 构造「碰巧能画」。
-
-### 10. import 未导出的 CSS 路径
-
-构建会失败或跟发布包结构绑死。CSS 由 runner 配置定位。
-
-### 11. 把 409 写进图表颜色
-
-冲突时权威 state 不变。颜色不能代替「未修改」。
-
-### 12. 跨度不设上限
-
-730 个 UTC 日是演示上限。更长的计划会让 SVG 和日期循环变重。产品上限另定，但要有上限。
-
-## 组合
-
-**date-fns 或 Luxon。** `validatePlan` 只比较 `YYYY-MM-DD` 字符串和 UTC 日跨度。它不做纽约夏令时。若任务要带时刻，先在 C14/C16 变成明确的 instant，再决定甘特图上画哪一个日历日。
-
-**Query。** 服务端计划是权威。409 保留用户表格里的未保存草稿，但不要把它画成已接受。本 Demo 的 409 直接丢弃这次编辑。
-
-## 生产清单
-
-- 专用文档，一次构造，`refresh` / `change_view_mode`。
-- 复制任务再交给库。
-- `readonly` 与 `popup: false`，除非另有净化过的弹层。
-- 任何写入前 `validatePlan` 整份计划。
-- 过滤不作用于图表数据。
-- 表格有关联 label。图用 `role="img"` 加说明，不把它当成唯一可编辑界面。
-- 离开页面时销毁 frame，并在浏览器里确认子文档的 `mouseup` 监听不再增长。
-- 不把演示跨度上限当成业务合同。
-
-## 升级
-
-1.2.2 的监听器行为若在后续版本提供 `destroy`，仍要在 4321 文档里数监听器，再决定能不能回到普通卸载。升级时重测：环、`0099` 年、730 日跨度、过滤不进图、409 不改 state。
-
-## 练习
-
-1. 启动 demo，确认图表文档在 4321，父页面本身没有第二份 Gantt。
-2. 结束日早于开始日，表和条都保持原值。
-3. 过滤表格后，图上的依赖仍然完整。
-4. 预览闭环不写入；保存 qa 得到 409 且进度不变。
-5. 连续切换视图，不新增构造。
-
-## 官方链接
-
-- https://github.com/frappe/gantt
-
-## 证据
-
-`plan-policy` 单测不加载甘特图，也不打开 4321。sdk 要真实 import `frappe-gantt@1.2.2` 并在 `docs/library-lab/evidence/runs/` 留下收据。browser 要包括子文档监听器数量、旧 frame 销毁，以及表格拒绝非法区间。
-
-GitHub Actions 41779873259 是仓库级安装、typecheck、build、52 个 SDK 文件（153 项测试）和 45 项 Playwright 的结果，不是 C13 的条目 PASS。不要改 `verification.json`。
+真实 SDK Node 配方仅运行导出的类/实际原型中的任务预处理与日期计算，没有假 DOM、替换方法或伪造构造结果；策略测试单独检查业务合同。真实 SVG、键盘保存、frame 协议/销毁与监听由 root 的既有五个浏览器 case 和[完整提案](validation/browser-proposal.txt)验收。正式 verification 三项保持 NOT_RUN；实际失败/修正和六项见[本地记录](local-validation.md)。

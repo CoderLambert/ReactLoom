@@ -1,0 +1,14 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['node', '--test', 'entries/B20-sonner/tests/sdk.test.mjs']
+startedAt: 2026-11-10T14:22:38.887452+00:00
+exit: 0
+✔ actual Sonner same-id updates retain loading Infinity when omitted (18.606204ms)
+✔ actual Sonner same-id finite terminal update preserves identity and other-container data (14.726556ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 81.405742

@@ -89,6 +89,14 @@ export async function generate(root = packageRoot, { check = false, expectedCoun
       agent = await optionalText(folder, 'agent.md')
     const agentRules = await optionalText(folder, 'AGENTS.md')
     const verificationText = await optionalText(folder, 'verification.json')
+    const readme = entry.official
+      ? await safeRead(folder, entry.official.readme.snapshotPath)
+      : null
+    if (
+      readme !== null &&
+      createHash('sha256').update(readme).digest('hex') !== entry.official.readme.sha256
+    )
+      throw new Error(`${entry.entryId}: official README digest mismatch`)
     if (expectedCount === 119) {
       const problems = entryCompletenessIssues(entry, {
         guide: guide !== null,
@@ -147,16 +155,34 @@ export async function generate(root = packageRoot, { check = false, expectedCoun
       repoRoot: path.resolve(root, '../..'),
       entryId: entry.entryId,
     })
+    let buildSummary = null
+    if (root === packageRoot && entry.entryId === 'F18') {
+      const { readCurrentSummary } = await import(
+        '../entries/F18-rollup-plugin-visualizer/examples/summary-reader.mjs'
+      )
+      const result = await readCurrentSummary()
+      if (result.status === 'ready') buildSummary = result.summary
+    }
     entries.push({
       ...entry,
       directory: dir.name,
       guideAvailable: guide !== null,
       agentAvailable: agent !== null,
+      buildSummaryAvailable: buildSummary !== null,
       sourceFingerprint,
       sourceIndexSha256,
       verification,
     })
-    payloads.push({ id: entry.entryId, guide, agent, sources, sourceIndex, assets })
+    payloads.push({
+      id: entry.entryId,
+      guide,
+      agent,
+      readme,
+      buildSummary,
+      sources,
+      sourceIndex,
+      assets,
+    })
   }
   if (entries.length !== expectedCount)
     throw new Error(`expected ${expectedCount} entries; found ${entries.length}`)
@@ -183,6 +209,9 @@ export async function generate(root = packageRoot, { check = false, expectedCoun
     await writeFile(path.join(dest, 'detail.json'), JSON.stringify(entryById.get(p.id)))
     if (p.guide !== null) await writeFile(path.join(dest, 'guide.md'), p.guide)
     if (p.agent !== null) await writeFile(path.join(dest, 'agent.md'), p.agent)
+    if (p.readme !== null) await writeFile(path.join(dest, 'readme.md'), p.readme)
+    if (p.buildSummary !== null)
+      await writeFile(path.join(dest, 'build-summary.json'), JSON.stringify(p.buildSummary))
     await writeFile(path.join(dest, 'source-index.json'), JSON.stringify(p.sourceIndex))
     for (const source of p.sources) {
       const destination = path.join(dest, 'sources', sourceTextPath(source.path))

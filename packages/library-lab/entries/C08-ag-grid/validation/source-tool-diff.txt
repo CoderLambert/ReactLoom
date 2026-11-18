@@ -1,0 +1,1 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["git", "diff", "--check", "--", "packages/library-lab/entries/C08-ag-grid"], "utc": "2026-11-10T16:03:37.613529+00:00", "exit": 0}

@@ -1,0 +1,9 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+command=pnpm install --offline --ignore-scripts --lockfile-only --filter @reactloom/library-lab
+Progress: resolved 1, reused 0, downloaded 0, added 0
+/home/lambert/githubRepos/lambert/ReactLoom/templates/ssr:
+ ERR_PNPM_NO_OFFLINE_META  Failed to resolve next@16.4.0 in package mirror /home/lambert/.cache/pnpm/metadata-v1.3/registry.npmjs.org/next.json
+
+This error happened while installing a direct dependency of /home/lambert/githubRepos/lambert/ReactLoom/templates/ssr
+
+exitCode=1

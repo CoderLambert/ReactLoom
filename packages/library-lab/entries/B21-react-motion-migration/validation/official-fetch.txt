@@ -1,0 +1,5 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['python3', 'entries/B21-react-motion-migration/validation/fetch-official.py']
+startedAt: 2026-11-10T14:44:55.189974+00:00
+exit: 0
+B21 modern14.6.0 original README 7475B; historical0.5.2 reference 15446B, old SDK NOT_RUN; 9 full headers

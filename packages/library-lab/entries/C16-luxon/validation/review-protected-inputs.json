@@ -1,0 +1,15 @@
+{
+  "examples/example.tsx": "71de36fc422d0db93d89536eb4e271ce3ee5fedd2c2c1a279d6fbd43f5f87ace",
+  "examples/calendar.mjs": "96c1438a03cdbf3dc4cc4633125573765271058c6a5c97df857ea45493954f9b",
+  "examples/calendar.d.mts": "655fdeb3df2545f51decc9079c54b91c794c2a213276555c56d472ef2a32eaa8",
+  "examples/wall-time.mjs": "c93a9851bbdb8af793f54eb7318e76d86d52a0d73d3490ea059152c198e5229f",
+  "examples/wall-time.d.mts": "3fc8691742e29a6d3f15f79a1fa68cb25c75893eabd8263b1065624ec3c64536",
+  "examples/wall-time-policy.mjs": "94421dd4ed6e7322e6d6bfd5f9934af9d2e6ae285fa5b98650d99cc3802a9a27",
+  "examples/wall-time-policy.d.mts": "37622b9dc7e36a34e1c03d1eda55e51625ffe58d16bc9103a4e0fb0962881976",
+  "examples/styles.css": "e67ab07d2c86e7e7028de1c3cd179fa604724d260303e374539357ad4b25d9ff",
+  "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+  "tests/sdk.test.mjs": "50f585d70733d2ad793cd14cdb268c0cc9e13d5fbc313dec01c3379fbcd56090",
+  "tests/wall-time-policy.test.mjs": "24c9375e9eb72d76d2e0826926f0889b32dc1c20d77df76b02b701be6401d684",
+  "official/readme.md": "5e57e6afc44eed949d850075c7e1a9206a757c058afa6b93aab83264f07cf622",
+  "official/source-evidence.json": "42f2d0d7010ed6e692fda9c3686afefc51162bfe53142de4af12d50ec7248581"
+}

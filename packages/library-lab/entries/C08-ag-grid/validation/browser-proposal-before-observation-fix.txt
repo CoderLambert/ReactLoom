@@ -1,0 +1,185 @@
+// Root integration proposal. Real AG Grid DOM/keyboard only; NOT_RUN by author.
+// No SDK mock, fake RowNode, page.route or clock/RAF substitution.
+// The last test explicitly clicks a business-refresh fixture without moving the actual editor focus.
+import { expect, type Locator, type Page, test } from '@playwright/test'
+
+async function open(page: Page, level: 'basic' | 'business' | 'advanced') {
+  await page.setViewportSize({ width: 1280, height: 1200 })
+  await page.goto(`/libraries/ag-grid?tab=demo&example=${level}`)
+  const app = page.getByTestId('c08-workshop')
+  const run = page.getByRole('button', { name: '运行当前示例', exact: true })
+  await expect(app.or(run).first()).toBeVisible({ timeout: 20_000 })
+  if (await run.isVisible()) await run.click()
+  await expect(app).toHaveAttribute('data-level', level)
+  await expect(app.getByRole('grid')).toBeVisible()
+  await expect
+    .poll(async () => (await model(app)).modelRows)
+    .toBe(level === 'basic' ? 12 : level === 'business' ? 150 : 1500)
+  return app
+}
+async function model(app: Locator) {
+  return JSON.parse((await app.getByTestId('c08-model').textContent()) ?? '{}')
+}
+async function data(app: Locator) {
+  return JSON.parse((await app.getByTestId('c08-data').textContent()) ?? '[]')
+}
+function cell(app: Locator, id: string, column: string) {
+  return app.locator(`.ag-center-cols-container [row-id="${id}"] [col-id="${column}"]`)
+}
+async function firstPage(app: Locator) {
+  const button = app.getByRole('button', { name: 'First Page', exact: true })
+  if (await button.isEnabled()) await button.click()
+  await expect.poll(async () => (await model(app)).page).toBe(0)
+}
+async function chooseStatus(page: Page, app: Locator, id: string, value: string) {
+  const target = cell(app, id, 'status')
+  await target.scrollIntoViewIfNeeded()
+  await target.dblclick()
+  await expect(app.getByTestId('c08-edit-session')).toContainText(`${id}；开始版本`)
+  const editor = app.locator('.ag-cell-inline-editing [role="combobox"]')
+  await expect(editor).toBeVisible()
+  await editor.click()
+  await page.getByRole('option', { name: value, exact: true }).click()
+  await expect(app.locator('.ag-cell-inline-editing')).toHaveCount(0)
+}
+
+test('@C08 actual Community rows sort without rewriting stable business IDs', async ({ page }) => {
+  const app = await open(page, 'basic')
+  await expect(app.getByTestId('c08-total')).toHaveText('12')
+  expect((await model(app)).firstIds).toEqual(['feed-0001', 'feed-0002', 'feed-0003'])
+  const header = app.locator('.ag-header-cell[col-id="id"]')
+  await header.getByText('来源 ID', { exact: true }).click()
+  await expect(header).toHaveAttribute('aria-sort', 'ascending')
+  await header.getByText('来源 ID', { exact: true }).click()
+  await expect(header).toHaveAttribute('aria-sort', 'descending')
+  await expect
+    .poll(async () => (await model(app)).firstIds)
+    .toEqual(['feed-0012', 'feed-0011', 'feed-0010'])
+  await expect(cell(app, 'feed-0012', 'id')).toHaveText('feed-0012')
+  await app.getByText('查看当前业务数据', { exact: true }).click()
+  expect((await data(app))[0].id).toBe('feed-0001') // model sort does not reorder React's source array.
+  expect((await model(app)).modelRows).toBe(12)
+})
+
+test('@C08 actual client pagination/filter and readOnlyEdit use the captured start revision', async ({
+  page,
+}) => {
+  const app = await open(page, 'business')
+  expect((await model(app)).pageSize).toBe(25)
+  expect((await model(app)).pages).toBe(6)
+  await app.getByRole('button', { name: 'Next Page', exact: true }).click()
+  await expect.poll(async () => (await model(app)).page).toBe(1)
+  expect((await model(app)).firstIds[0]).toBe('feed-0026')
+  const filter = app.getByRole('textbox', { name: '过滤频道名称', exact: true })
+  await filter.fill('Frontend')
+  await expect(app.getByTestId('c08-input-count')).toHaveText('50')
+  await expect.poll(async () => (await model(app)).modelRows).toBe(50)
+  expect((await model(app)).pages).toBe(2)
+  await filter.fill('')
+  await expect.poll(async () => (await model(app)).modelRows).toBe(150)
+  await firstPage(app)
+  await expect.poll(async () => (await model(app)).page).toBe(0)
+  await chooseStatus(page, app, 'feed-0001', 'paused')
+  await expect(app.getByTestId('c08-status')).toContainText('期望版本 1；新版本 2')
+  await expect(cell(app, 'feed-0001', 'status')).toHaveText('paused')
+  await expect(cell(app, 'feed-0001', 'revision')).toHaveText('2')
+  // Enter the editor without opening its picker; native Escape cancels, no extra application key handler.
+  await cell(app, 'feed-0001', 'status').dblclick()
+  await expect(app.locator('.ag-cell-inline-editing')).toHaveCount(1)
+  await page.keyboard.press('Escape')
+  await expect(app.locator('.ag-cell-inline-editing')).toHaveCount(0)
+  await expect(cell(app, 'feed-0001', 'revision')).toHaveText('2')
+  await chooseStatus(page, app, 'feed-0001', 'error')
+  await expect(app.getByTestId('c08-status')).toContainText('期望版本 2；新版本 3')
+  await filter.fill('AI Engineering')
+  await expect.poll(async () => (await model(app)).modelRows).toBe(50)
+  await filter.fill('')
+  await firstPage(app)
+  await expect(cell(app, 'feed-0001', 'status')).toHaveText('error')
+  await expect(cell(app, 'feed-0001', 'revision')).toHaveText('3')
+})
+
+test('@C08 real grid edit survives stale fixture snapshots; abort/generation and unmount preserve ownership', async ({
+  page,
+}) => {
+  const errors: string[] = []
+  page.on('pageerror', (error) => errors.push(error.message))
+  const app = await open(page, 'advanced')
+  await chooseStatus(page, app, 'feed-0001', 'paused')
+  await expect(cell(app, 'feed-0001', 'revision')).toHaveText('2')
+  await app.getByRole('button', { name: '启动慢数据加载', exact: true }).click()
+  await app.getByRole('button', { name: '启动快数据加载', exact: true }).click()
+  await expect(app.getByTestId('c08-status')).toContainText('已接收最新快照（100ms）')
+  await page.waitForTimeout(800) // Observe beyond the real superseded 700ms timer, without replacing the browser clock.
+  await expect(app.getByTestId('c08-status')).toContainText('已接收最新快照（100ms）')
+  await expect(cell(app, 'feed-0001', 'status')).toHaveText('paused')
+  await expect(cell(app, 'feed-0001', 'revision')).toHaveText('2')
+  await app.getByRole('button', { name: '模拟旧版本编辑', exact: true }).click()
+  await expect(app.getByTestId('c08-status')).toContainText('conflict')
+  await expect(cell(app, 'feed-0001', 'revision')).toHaveText('2')
+  await app.getByRole('button', { name: '启动慢数据加载', exact: true }).click()
+  await app.getByRole('button', { name: '取消加载', exact: true }).click()
+  await page.waitForTimeout(800)
+  await expect(app.getByTestId('c08-status')).toContainText('已取消')
+  await expect(cell(app, 'feed-0001', 'status')).toHaveText('paused')
+  await page.setViewportSize({ width: 390, height: 1000 })
+  const box = await app.getByTestId('c08-grid').boundingBox()
+  if (!box) throw new Error('Missing actual grid layout')
+  expect(box.x).toBeGreaterThanOrEqual(0)
+  expect(box.x + box.width).toBeLessThanOrEqual(391)
+  const grid = await app.getByRole('grid').elementHandle()
+  if (!grid) throw new Error('Missing owned actual grid DOM')
+  await app.getByRole('button', { name: '启动慢数据加载', exact: true }).click()
+  await page.getByRole('button', { name: '停止并卸载', exact: true }).click()
+  await expect(app).toHaveCount(0)
+  expect(await grid.evaluate((node) => node.isConnected)).toBe(false)
+  await page.waitForTimeout(800)
+  await page.getByRole('button', { name: '运行当前示例', exact: true }).click()
+  await expect(app).toHaveAttribute('data-level', 'advanced')
+  await expect.poll(async () => (await model(app)).modelRows).toBe(1500)
+  await expect(app.getByTestId('c08-status')).toContainText('本地数据就绪')
+  expect(errors).toEqual([])
+})
+
+test('@C08 actual active editor sees a real authoritative external revision update without a forged SDK request', async ({
+  page,
+}) => {
+  const app = await open(page, 'advanced')
+  await app.getByText('查看当前业务数据', { exact: true }).click()
+  await cell(app, 'feed-0001', 'status').dblclick()
+  const editor = app.locator('.ag-cell-inline-editing [role="combobox"]')
+  await expect(editor).toBeVisible()
+  await expect(app.getByTestId('c08-edit-session')).toContainText('开始版本 1')
+  const oldEditor = await editor.elementHandle()
+  if (!oldEditor) throw new Error('Missing actual SDK editor')
+  // Explicit application-refresh fixture; preserves focus and does not invoke/fake an SDK callback.
+  await app.getByTestId('c08-external-update').evaluate((node) => {
+    if (!(node instanceof HTMLButtonElement)) throw new Error('Missing business fixture button')
+    node.click()
+  })
+  await expect.poll(async () => (await data(app))[0].revision).toBe(2)
+  await expect(cell(app, 'feed-0001', 'revision')).toHaveText('2')
+  expect((await data(app))[0].status).toBe('error')
+  const retained =
+    (await editor.count()) > 0 && (await oldEditor.evaluate((node) => node.isConnected))
+  if (retained) {
+    await editor.click()
+    await page.getByRole('option', { name: 'paused', exact: true }).click()
+    await expect(app.getByTestId('c08-status')).toContainText('409')
+    expect((await data(app))[0]).toMatchObject({ status: 'error', revision: 2 })
+  } else {
+    await expect(app.locator('.ag-cell-inline-editing')).toHaveCount(0)
+    expect(await oldEditor.evaluate((node) => node.isConnected)).toBe(false)
+    expect((await data(app))[0]).toMatchObject({ status: 'error', revision: 2 })
+    await chooseStatus(page, app, 'feed-0001', 'paused')
+    await expect(app.getByTestId('c08-status')).toContainText('期望版本 2；新版本 3')
+  }
+  await test.info().attach('real-external-update-outcome', {
+    body: JSON.stringify({
+      sdkRetainedEditor: retained,
+      staleRequestConflictExercised: retained,
+      authoritativeRow: (await data(app))[0],
+    }),
+    contentType: 'application/json',
+  })
+})

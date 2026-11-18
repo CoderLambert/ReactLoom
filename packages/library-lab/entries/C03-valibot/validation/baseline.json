@@ -1,0 +1,17 @@
+{
+  "gitHead": "1218066e706a90ba03fac8dff8c9b843dd2429c4",
+  "files": 11,
+  "hashes": {
+    "AGENTS.md": "c39d73dad253119711b2903e305c6dfa248259274b01482994a6696a4b33a66b",
+    "agent.md": "de1a9f979f4c48b605685bc4a9327a3820b564fd3a126d74bf433421a71fd640",
+    "examples/boundary-policy.d.mts": "8748935899f913e85d0dbf127d4726cf9d980aa4430e6c6274005042a7a23d5a",
+    "examples/boundary-policy.mjs": "ecb51cbfa73d81eac9ed21ed809fa187b750d0ad7f45cec6e59dc17209375aa0",
+    "examples/demo.tsx": "254591932548c36c414610bd0d0c7ce7ef1648162f1996fbbe7381b8c1751690",
+    "examples/example.tsx": "492b837639a805902e5d3fd4e1e81bdf115aa7092dba785e61f9ecf9c7394015",
+    "guide.md": "c78a561c2ea05edd12a8fd7befc2fe367703c3f307e57e67b30d8d466865f8fc",
+    "library.json": "617b67ade94d17f154b7f04b8240020df2aacbccbc9da680191df502f3acce46",
+    "tests/boundary-policy.test.mjs": "5a8dda885bb8524680dfab0852856403e551a7c62e84515b386d2914a86e5260",
+    "tests/sdk.test.mjs": "950d93ce7d4411998d2de5899e7cf528be88cde74ddce382f9a4c2eb6b6e0cf0",
+    "verification.json": "0acedffcf4c5b87e7ad4a7a2edd30a1acff5bb05273ec800ec5b439fedbab408"
+  }
+}

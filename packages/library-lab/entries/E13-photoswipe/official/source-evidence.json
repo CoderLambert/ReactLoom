@@ -1,0 +1,36 @@
+{
+  "repository": "dimsemenov/PhotoSwipe",
+  "tag": "v5.4.4",
+  "commit": "fd85184b450f451bc4aa2697f6d0a79304d13473",
+  "readmeCandidates": [
+    "README.md",
+    "dist/umd/README.md"
+  ],
+  "languageSelection": "No official Chinese README in fixed tree; root English original.",
+  "license": {
+    "version": "5.4.4",
+    "license": "MIT",
+    "path": "LICENSE"
+  },
+  "homepage": {
+    "url": "https://photoswipe.com/",
+    "status": 200,
+    "headers": {
+      "alt-svc": "h3=\":443\"; ma=86400",
+      "cache-control": "no-cache, no-store, no-cache, must-revalidate, proxy-revalidate",
+      "cf-cache-status": "DYNAMIC",
+      "cf-ray": "a5c083159b620a6b-AMS",
+      "content-encoding": "zstd",
+      "content-type": "text/html; charset=utf-8",
+      "date": "Tue, 17 Nov 2026 17:38:57 GMT",
+      "expires": "Tue, 17 Nov 2026 17:38:56 GMT",
+      "last-modified": "Thu, 04 Dec 2025 07:36:06 GMT",
+      "nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+      "report-to": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=y0aMS%2BN8vEjPQDjl2Fi4%2B2wlbJOF8Dukm%2B0SI0fM%2Bg7YNE1NU3hdSFNcSTJUdoc96%2BvG8EtQxDCNwqxWeBqMkMSAoBU81kvOCe9iMNSDe7AB6wjXLX%2FegIiPKk0GkurmptaXXm1p%2BPu385KMnw%3D%3D\"}]}",
+      "server": "cloudflare",
+      "vary": "Accept-Encoding"
+    },
+    "bodySha256": "4f45c9ed07b059afc8283e1ff8c877172365d48bab40b31c78efb325b770f7ff"
+  },
+  "checkedAt": "2026-11-17T17:38:57.781Z"
+}

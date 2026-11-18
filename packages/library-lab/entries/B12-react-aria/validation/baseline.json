@@ -1,0 +1,17 @@
+{
+  "gitHead": "1218066e706a90ba03fac8dff8c9b843dd2429c4",
+  "queueEntryInputSha256": "ac71c945034fa2afafcc5b642a024916822f5b6c923948e5847c65c76991cb5d",
+  "files": 10,
+  "hashes": {
+    "AGENTS.md": "c56cdab537e19a35cec45bef2907283c6208cf7ad25ef84c0d9b86689be5d00a",
+    "agent.md": "91fc35182edf835ff947480d652b80e835f754dfeebe2901b1ca9f047c3ed0c4",
+    "examples/channel-policy.ts": "ad38835570f8c45f295cb98cfcc57f6c9fd01ab9632657d44f2e4503c9c66750",
+    "examples/combobox.css": "90f7a02ccfed740da2b6e28908866d4b2ad03da557f67bbe2cfdda6f4f06dd6c",
+    "examples/demo.tsx": "254591932548c36c414610bd0d0c7ce7ef1648162f1996fbbe7381b8c1751690",
+    "examples/example.tsx": "98f065dc5428eda8dcb7078ef50c86c75b6acf648ac477636e155bd7f6bf5eab",
+    "guide.md": "31ee2940d3158e90532b2f6bdb42953d0d375ec8f6c1d1a65a066d589764d676",
+    "library.json": "e9308e0f47310a93a8e06b1ab629a2d6d633591f9873198b9ad0da3a7293bc0b",
+    "tests/channel-policy.test.mts": "c5d481490dec10ff51a78d8fffbf310506d6b57f31ce264d3c5cdd407b57c66e",
+    "verification.json": "d9dc40e23b30936752f46b2d67656c5d06d2fcb174e2fe56bb06ea830c0fcd10"
+  }
+}

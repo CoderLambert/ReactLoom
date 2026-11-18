@@ -1,14 +1,14 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "待 yjs@13.6.33 真实SDK Node test"
+    "note": "本地sdk证据见local-validation.md及candidate-26；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
   },
   "build": {
     "status": "NOT_RUN",
-    "note": "待真实 TypeScript/Vite 构建"
+    "note": "本地build证据见local-validation.md及candidate-26；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "双副本 UI/StrictMode 卸载待实测"
+    "note": "本地browser证据见local-validation.md及candidate-26；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
   }
 }

@@ -1,0 +1,12 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["node", "packages/library-lab/entries/C10-tanstack-virtual/validation/metadata-check.mjs"], "utc": "2026-11-10T16:43:47.777204+00:00", "exit": 0}
+{
+  "levels": 3,
+  "runtimeFiles": 6,
+  "inputFiles": 16,
+  "react": "3.14.21",
+  "core": "3.19.6",
+  "readmeBytes": 5226,
+  "readmeSHA": "24bd3ff93da253313681dbe66adab7b012caca06f03edc516dfd875a1274ff00",
+  "homepage": "blocked by XFO DENY; browser NOT_RUN",
+  "formal": "NOT_RUN"
+}

@@ -1,0 +1,8 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['python3', 'entries/C12-fullcalendar/validation/source-tool-transport-fixture.py']
+startedAt: 2026-11-10T16:46:20.181175+00:00
+exit: 0
+CONTROLLED SUCCESS: 8 transfers, version/tag/tree/README path executed; staged success pair; duplicate cookie attributes retained and values redacted; homepage NOT_READ.
+CONTROLLED FAILURE 1: separate failure record; previous successful README/evidence pair byte-identical.
+CONTROLLED FAILURE 8: separate failure record; previous successful README/evidence pair byte-identical.
+3 source-tool scenarios PASS; entry official files unchanged. No external HTTP, SDK, UI, or browser receipt.

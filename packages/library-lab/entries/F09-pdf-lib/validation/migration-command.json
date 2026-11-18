@@ -1,0 +1,11 @@
+{
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "argv": [
+    "pnpm",
+    "exec",
+    "tsc",
+    "-p",
+    "/tmp/f09-portable-o0oskn8h/tsconfig.json"
+  ],
+  "exitCode": 0
+}

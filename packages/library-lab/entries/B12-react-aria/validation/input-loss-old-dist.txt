@@ -1,0 +1,9 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab", "argv": ["node", "entries/B12-react-aria/validation/reproduce-input-loss.mjs"], "utc": "2026-11-10T14:06:21.843418+00:00", "exitCode": 0, "target": "Existing prebuilt candidate12 on 4319; diagnostic only, not patched-source PASS"}
+STDOUT
+SELECTED {"selectedKey":"opensource","inputValue":"开源趋势","visibleIds":["opensource"],"query":{"busy":false,"resolvedQuery":"开源趋势","generation":5}}
+FORM 真实表单选中频道 ID：opensource
+AFTER_FILL {"selectedKey":null,"inputValue":"React","visibleIds":[],"query":{"busy":true,"resolvedQuery":"开源趋势","generation":7}}
+AFTER_QUERY {"selectedKey":null,"inputValue":"","visibleIds":["react","backend","opensource","global","startup","security","reading"],"query":{"busy":false,"resolvedQuery":"","generation":9}} MESSAGE 选择已清空 PAGE_ERRORS []
+REPRODUCED_OLD_DIST_DEFECT: new typed query erased by null selection callback
+
+STDERR

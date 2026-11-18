@@ -1,0 +1,62 @@
+{
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "gitHead": "1218066e706a90ba03fac8dff8c9b843dd2429c4",
+  "utc": "2026-11-10T16:19:14.762770+00:00",
+  "files": [
+    {
+      "path": "AGENTS.md",
+      "bytes": 677,
+      "sha256": "1b5e9cda1bbe7606ca4d6bd392528e11aa17ab0513d4d691868b20cdc7b0754f"
+    },
+    {
+      "path": "agent.md",
+      "bytes": 1976,
+      "sha256": "45bd488997c2c335612450c8103776ed8914b5ac6b97402fd9956799502b1f5b"
+    },
+    {
+      "path": "examples/demo.tsx",
+      "bytes": 35,
+      "sha256": "254591932548c36c414610bd0d0c7ce7ef1648162f1996fbbe7381b8c1751690"
+    },
+    {
+      "path": "examples/example.tsx",
+      "bytes": 6346,
+      "sha256": "6271823f3c5f0de6e7f025253cd806cb1e811341365d93b7ba799cc2a71c035c"
+    },
+    {
+      "path": "examples/filter-policy.d.mts",
+      "bytes": 236,
+      "sha256": "a4dd9143d8e866deae161f84c0c6098fa8660a3dc02617d0ea24975b0bb5258f"
+    },
+    {
+      "path": "examples/filter-policy.mjs",
+      "bytes": 1026,
+      "sha256": "38c11d773a2c4659f10396a49bd8c5ac0d02013f3d6f1e344a055ca3b8787731"
+    },
+    {
+      "path": "guide.md",
+      "bytes": 12308,
+      "sha256": "edd5e951dd570109f202ad697ab351d11473364a23947b463230c1987c5441aa"
+    },
+    {
+      "path": "library.json",
+      "bytes": 2914,
+      "sha256": "4c04e766d5a01bda12ccf25580bdc3a5e2efc2812bf2569688b787bba5f8c645"
+    },
+    {
+      "path": "tests/filter-policy.test.mjs",
+      "bytes": 1193,
+      "sha256": "1effa3c551d9da4763c946c3096f7303455f6afa96c4c4bce1e2e8a4f2f33dd0"
+    },
+    {
+      "path": "tests/sdk.test.mjs",
+      "bytes": 1179,
+      "sha256": "fd8acb5afb36e068f7f2bf266455426652628d1e0dbb5d817a3b374e0367fe4d"
+    },
+    {
+      "path": "verification.json",
+      "bytes": 372,
+      "sha256": "ce8f9e48fda948ae773fbf1345105d1facb6412a9d1f828ef4e6b15d0a5d2944"
+    }
+  ]
+}

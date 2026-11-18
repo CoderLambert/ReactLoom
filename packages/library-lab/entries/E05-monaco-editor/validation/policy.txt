@@ -1,0 +1,29 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: ["pnpm", "test:policy", "--entry=E05"]
+startedAt: 2026-11-10T09:25:28.024014+00:00
+
+> @reactloom/library-lab@0.1.0 test:policy /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+> node scripts/policy-runner.mjs --entry=E05
+
+Pure entry policy suites selected: 3 (not SDK evidence)
+✔ explicit draft round-trip preserves empty text and clears only the owned key (0.824524ms)
+✔ rejects malformed, incompatible and oversized data without overwriting it (0.477886ms)
+✔ storage denial propagates so the UI can report failure instead of claiming a save (3.503654ms)
+✔ releases every resource in order even when earlier disposers throw (0.847711ms)
+✔ handles partially constructed editor and ignores a throwing reporter (0.147738ms)
+✔ rejects invalid slots and reports a malformed disposer while still releasing lease (3.509234ms)
+✔ multiple editors share one mapping and last release clears only their mapping (0.501574ms)
+✔ does not silently steal another application worker configuration (0.240176ms)
+✔ releases own lease without deleting an externally replaced mapping (3.630232ms)
+✔ invalid environment factories fail without claiming the global (0.11673ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 43.781831
+
+exitCode: 0
+finishedAt: 2026-11-10T09:25:28.287574+00:00

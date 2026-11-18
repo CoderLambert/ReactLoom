@@ -5,14 +5,7 @@
   "name": "Tiptap",
   "group": "E",
   "summary": "ProseMirror 驱动的 Headless 富文本编辑器：工具栏、JSON 草稿与安全导入",
-  "tags": [
-    "富文本",
-    "React",
-    "ProseMirror",
-    "JSON",
-    "IME",
-    "EditorContent"
-  ],
+  "tags": ["富文本", "React", "ProseMirror", "JSON", "IME", "EditorContent"],
   "contentState": "recreated",
   "packages": [
     {
@@ -70,14 +63,12 @@
         "examples/example.tsx",
         "examples/demo.tsx",
         "examples/snapshot-policy.mjs",
-        "examples/snapshot-policy.d.mts"
+        "examples/snapshot-policy.d.mts",
+        "examples/editor-config.ts",
+        "examples/snapshot-storage.mjs",
+        "examples/snapshot-storage.d.mts"
       ],
-      "capabilities": [
-        "contenteditable",
-        "session-storage",
-        "editor-disposal",
-        "ime"
-      ],
+      "capabilities": ["contenteditable", "session-storage", "editor-disposal", "ime"],
       "description": "实际 useEditor + StarterKit；加粗、斜体和段落编辑。"
     },
     {
@@ -90,14 +81,12 @@
         "examples/example.tsx",
         "examples/demo.tsx",
         "examples/snapshot-policy.mjs",
-        "examples/snapshot-policy.d.mts"
+        "examples/snapshot-policy.d.mts",
+        "examples/editor-config.ts",
+        "examples/snapshot-storage.mjs",
+        "examples/snapshot-storage.d.mts"
       ],
-      "capabilities": [
-        "contenteditable",
-        "session-storage",
-        "editor-disposal",
-        "ime"
-      ],
+      "capabilities": ["contenteditable", "session-storage", "editor-disposal", "ime"],
       "description": "真实 editor.getJSON 与 setContent，局部 sessionStorage 与恢复错误处理。"
     },
     {
@@ -111,14 +100,11 @@
         "examples/demo.tsx",
         "examples/snapshot-policy.mjs",
         "examples/snapshot-policy.d.mts",
-        "tests/policy.test.mjs"
+        "examples/editor-config.ts",
+        "examples/snapshot-storage.mjs",
+        "examples/snapshot-storage.d.mts"
       ],
-      "capabilities": [
-        "contenteditable",
-        "session-storage",
-        "editor-disposal",
-        "ime"
-      ],
+      "capabilities": ["contenteditable", "session-storage", "editor-disposal", "ime"],
       "description": "验证内容大小与损坏草稿回退；不把 HTML 输入当作可信数据。"
     }
   ],
@@ -129,5 +115,25 @@
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
     "note": "按2026-10-27官方文档重新编写；旧归档的测试结果不作为本次真实SDK验证证据。"
+  },
+  "official": {
+    "readme": {
+      "repository": "ueberdosis/tiptap",
+      "commit": "388e722df0b36f5ac7d63cbd8b2354d43794360d",
+      "path": "packages/react/README.md",
+      "sha256": "cc6e56529352492fc0a03db3b33b26e9e5de0dc2502f39af6f7b5939dc5f6793",
+      "sourceUrl": "https://github.com/ueberdosis/tiptap/blob/388e722df0b36f5ac7d63cbd8b2354d43794360d/packages/react/README.md",
+      "snapshotPath": "official/readme.md",
+      "language": "en",
+      "version": "3.32.0",
+      "syncedAt": "2026-11-17T17:10:13.322658+00:00"
+    },
+    "homepage": {
+      "url": "https://tiptap.dev/docs/editor/getting-started/overview",
+      "kind": "website",
+      "status": "blocked",
+      "checkedAt": "2026-11-17T17:10:13.322658+00:00",
+      "reason": "实际GET的X-Frame-Options SAMEORIGIN禁止当前跨源Lab嵌入；原始头见official/source-evidence.json，保留官网直达。"
+    }
   }
 }

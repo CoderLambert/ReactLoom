@@ -1,0 +1,32 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+command=pnpm --filter @reactloom/library-lab typecheck
+
+> @reactloom/library-lab@0.1.0 typecheck /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+> node scripts/generate.mjs && tsc --noEmit
+
+{"entries":119,"loaders":311}
+src/generated/loaders.ts(108,22): error TS2322: Type 'Promise<typeof import("/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/B19-embla-carousel/examples/demo")>' is not assignable to type 'Promise<{ default: ComponentType<DemoProps>; }>'.
+  Type 'typeof import("/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/B19-embla-carousel/examples/demo")' is not assignable to type '{ default: ComponentType<DemoProps>; }'.
+    Types of property 'default' are incompatible.
+      Type '({ level }: { level: Level; }) => Element' is not assignable to type 'ComponentType<DemoProps>'.
+        Type '({ level }: { level: Level; }) => Element' is not assignable to type 'FunctionComponent<DemoProps>'.
+          Types of parameters '__0' and 'props' are incompatible.
+            Type 'DemoProps' is not assignable to type '{ level: Level; }'.
+              Types of property 'level' are incompatible.
+                Type 'import("/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/src/lib/types").Level' is not assignable to type 'Level'.
+                  Type '"business"' is not assignable to type 'Level'.
+src/generated/loaders.ts(109,25): error TS2322: Type 'Promise<typeof import("/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/B19-embla-carousel/examples/demo")>' is not assignable to type 'Promise<{ default: ComponentType<DemoProps>; }>'.
+  Type 'typeof import("/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/B19-embla-carousel/examples/demo")' is not assignable to type '{ default: ComponentType<DemoProps>; }'.
+    Types of property 'default' are incompatible.
+      Type '({ level }: { level: Level; }) => Element' is not assignable to type 'ComponentType<DemoProps>'.
+        Type '({ level }: { level: Level; }) => Element' is not assignable to type 'FunctionComponent<DemoProps>'.
+          Types of parameters '__0' and 'props' are incompatible.
+            Type 'DemoProps' is not assignable to type '{ level: Level; }'.
+              Types of property 'level' are incompatible.
+                Type 'import("/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/src/lib/types").Level' is not assignable to type 'Level'.
+                  Type '"business"' is not assignable to type 'Level'.
+/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @reactloom/library-lab@0.1.0 typecheck: `node scripts/generate.mjs && tsc --noEmit`
+Exit status 1
+
+exitCode=1

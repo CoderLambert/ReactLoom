@@ -4,15 +4,8 @@
   "slug": "moment-migration",
   "name": "Moment（历史迁移）",
   "group": "C",
-  "summary": "将历史 Moment 日期代码迁移到 date-fns、Day.js 与明确的时区模型",
-  "tags": [
-    "历史迁移",
-    "Moment",
-    "日期",
-    "时区",
-    "DST",
-    "替代库"
-  ],
+  "summary": "把旧Moment发布计划拆成日历日、明确时间点与地区排程，真实对照两套不可变API和DST语义",
+  "tags": ["历史迁移", "Moment", "日期", "时区", "DST", "替代库"],
   "contentState": "recreated",
   "packages": [
     {
@@ -30,20 +23,24 @@
   ],
   "references": [
     {
-      "title": "Moment 项目维护状态与迁移建议",
-      "url": "https://momentjs.com/docs/#/-project-status/"
+      "title": "Moment2.30.1官方项目定位（历史源码）",
+      "url": "https://github.com/moment/moment/blob/485d9a7d709bd5f3869a7ad24630cf0746d072dc/README.md"
     },
     {
-      "title": "date-fns 官方文档",
-      "url": "https://date-fns.org/docs/Getting-Started"
+      "title": "date-fns4.4.0官方README",
+      "url": "https://github.com/date-fns/date-fns/blob/cd53d2538cfa318404eff7ade6449b49bf34562e/README.md"
     },
     {
-      "title": "Day.js 官方文档",
-      "url": "https://day.js.org/docs/en/parse/parse"
+      "title": "@date-fns/tz1.5.0官方README",
+      "url": "https://github.com/date-fns/date-fns/blob/cd53d2538cfa318404eff7ade6449b49bf34562e/pkgs/tz/README.md"
     },
     {
-      "title": "date-fns TZDate 时区处理",
-      "url": "https://github.com/date-fns/tz"
+      "title": "Day.js1.11.23官方中文README",
+      "url": "https://github.com/iamkun/dayjs/blob/4549b8d03307891143e8a50d39fcdab1f16f77cf/docs/zh-cn/README.zh-CN.md"
+    },
+    {
+      "title": "Day.js严格格式解析",
+      "url": "https://day.js.org/docs/en/parse/string-format"
     }
   ],
   "related": [
@@ -66,40 +63,49 @@
   "demos": [
     {
       "demoId": "basic",
-      "title": "从 Moment 格式化迁移",
-      "description": "严格解析与等效格式化，识别无效日期",
+      "title": "从日期字段迁移",
+      "description": "严格解析、格式令牌与不可变加一天",
       "level": "basic",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/migration.mjs",
+        "examples/migration.d.mts",
+        "examples/styles.css"
       ],
       "capabilities": []
     },
     {
       "demoId": "business",
-      "title": "RSS 排程的明确时区",
-      "description": "日期显示与实际 UTC instant 分离",
+      "title": "从发布时间迁移",
+      "description": "显式偏移输入、显示地区与回拨的两个时间点",
       "level": "business",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/migration.mjs",
+        "examples/migration.d.mts",
+        "examples/styles.css"
       ],
       "capabilities": []
     },
     {
       "demoId": "advanced",
-      "title": "DST 与可变对象语义",
-      "description": "23小时自然日及秋季重复时刻",
+      "title": "从周期排程迁移",
+      "description": "纽约春秋/普通日：次日中午与24小时后的真实差异",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/migration.mjs",
+        "examples/migration.d.mts",
+        "examples/styles.css"
       ],
       "capabilities": []
     }
@@ -112,5 +118,25 @@
     "originalRecovery": "ORIGINAL_RECOVERED",
     "mode": "recreated",
     "note": "旧 Moment 研究 ZIP 用于识别迁移场景；本实现只运行替代库，不恢复也不执行旧 Moment。"
+  },
+  "official": {
+    "readme": {
+      "repository": "date-fns/date-fns",
+      "commit": "cd53d2538cfa318404eff7ade6449b49bf34562e",
+      "path": "README.md",
+      "sourceUrl": "https://github.com/date-fns/date-fns/blob/cd53d2538cfa318404eff7ade6449b49bf34562e/README.md",
+      "snapshotPath": "official/readme.md",
+      "version": "4.4.0",
+      "language": "en",
+      "syncedAt": "2026-11-10T17:03:33.235450+00:00",
+      "sha256": "87237646806588ea43e8a7d4c13880d09b42b14ab0a4b0bbb944855f25b82232"
+    },
+    "homepage": {
+      "url": "https://date-fns.org/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-10T17:03:33.235193+00:00",
+      "reason": "REUSED 2026-11-10实际GET200的完整响应头：未含X-Frame-Options/CSP，未做Lab-origin内容确认，保持unknown。C22独立来源清单保存原HTTP/树审计与复用摘要；不把当前iframe load当允许。"
+    }
   }
 }

@@ -1,161 +1,102 @@
-# B15 react-grid-layout：控制式网格与键盘替代
+# react-grid-layout：把仪表盘状态投影到格子
 
-`react-grid-layout` 把仪表盘放在离散格子上：拖动、缩放、碰撞和压缩。它不拉取数据、不合并版本、不画图表，也不提供完整的键盘拖放规范。普通 CSS Grid 排版、自由画布和相邻分栏（B16）都不是它的工作。
+新闻总览、订阅趋势和待审列表需要可调整的位置与大小；窗口变窄时又希望保留另一份布局。react-grid-layout负责格子坐标、指针拖动/缩放、碰撞与压缩；应用保存布局文档和业务身份。适合二维仪表盘，固定排版用CSS Grid，相邻分栏用B16，普通列表排序看B13。本库不获取新闻、不画图表，也不提供完整键盘拖放公告模型。
 
-Library Lab 固定 `react-grid-layout@2.3.0` 与 `react-resizable@4.0.2`，宿主 React 19.3.0。许可证 MIT。类型随包提供，不要再装 `@types/react-grid-layout`。样式：
+固定 **react-grid-layout2.3.0 / react-resizable4.0.2**，两者MIT，React19.3.0。实际peer分别为React/DOM>=16.3.0与>=16.3，不表示所有旧版本已验收。v2自带类型；新入口使用width/layout/gridConfig/dragConfig/resizeConfig，旧WidthProvider/data-grid等平铺接口只在legacy迁移入口，不把v1教程直接混进当前代码。
+
+## 核心模型
+
+```text
+真实容器像素宽度 → wide12列 / narrow6列
+  → 该断点保存的格子布局 → projectCells边界投影
+  → GridLayout实际绝对定位/transform
+  → SDK碰撞与verticalCompactor压缩 → onLayoutChange回写同一断点
+```
+
+每项的 `i` 与React子节点key相同，长期不随标题变化。x/y/w/h的单位是格子；DOM的left/top/width/height才是像素。行高78px，margin10px，默认containerPadding沿用margin。四格宽不等于四倍单列宽，还包括格子之间的间距。
+
+`projectCells`是本例边界规则，不是SDK碰撞求解器；它把w限制在minW/maxW/列数之间，再限制x。`verticalCompactor`才处理同列范围的重叠和向上收紧。因此按钮改变一个坐标后，SDK可能连带移动其他卡片；以回调后的实际JSON和画面为准。
+
+## 目标一：实测宽度与只读网格
+
+打开“容器测量与只读网格”。默认三张卡在12列中各占4×2，关闭拖动与缩放。把“容器宽度”选成“窄容器（最多580px）”，真正改变父容器CSS，SDK的ResizeObserver测量后切到6列独立堆叠；恢复“跟随可用空间”回到宽布局。窄视口自身也会使容器变窄，不是单看window.innerWidth决定断点。
+
+```tsx
+const {width, containerRef, mounted} = useContainerWidth({measureBeforeMount: true});
+<div ref={containerRef}>
+  {mounted && width > 0 && <GridLayout width={width} layout={layout}
+    gridConfig={{cols, rowHeight: 78, margin: [10, 10]}}
+    dragConfig={{enabled: false}} resizeConfig={{enabled: false}} />}
+</div>
+```
+
+匹配2.3.0源码的默认measureBeforeMount=false、initialWidth=1280、mounted初值true，所以**只检查mounted不等于已实测**。本例显式true，未测量时显示等待，不把1280初值宣称成容器读数。被观察容器不再额外加padding，网格内边距由gridConfig负责，避免首测与content-box宽度口径不同。
+
+展开“查看断点模型与实际SDK回调”，width/mounted/cols来自真实Hook，wide/narrow是两份内存文档。下方当前布局JSON与卡片位置使用同一visibleLayout。只读拖不动、键盘按钮禁用；纯测量若未改几何不会累计changes。
+
+## 目标二：句柄拖动、缩放和回写
+
+business在标题句柄拖动卡片，或拖右下se缩放手柄。dragConfig只允许`.lab-grid-handle`，按钮是同级内容，不会因点按钮开始拖动；bounded限制指针在当前容器内，尺寸还受minW/maxW与列边界约束。
+
+```tsx
+<GridLayout width={width} layout={visibleLayout}
+  gridConfig={{cols, rowHeight: 78, margin: [10, 10]}}
+  dragConfig={{enabled: true, handle: '.lab-grid-handle', bounded: true}}
+  resizeConfig={{enabled: true, handles: ['se']}}
+  compactor={verticalCompactor} onLayoutChange={onChange} />
+```
+
+onLayoutChange按只读参数映射出新对象，写回当前breakpoint；相同几何不重复setState/增加changes。这个回调也可因挂载、布局prop或列数变化触发，不等于“用户保存一次”，更不能每次自动发POST。
+
+观察真实onDragStop/onResizeStop计数与末次item快照：只有SDK实际结束这些指针交互才递增，按钮是自建键盘替代，不会伪造该计数。changes是接受的几何更新次数，两者不承诺一一对应。点击/键盘激活“缩窄订阅趋势”等原生按钮也可改变布局；碰撞后的位置仍交SDK规范化，不能把按钮叫作SDK原生键盘拖放。
+
+## 目标三：宽窄两份草稿、锁定与恢复
+
+advanced先在宽屏改宽，再切窄容器调整上下次序，恢复宽容器应保留原宽屏草稿。初始窄布局单独创建：x=0、w=6、y按高度累积，不从宽屏x硬截。GridLayout key随断点变化，内部拖动状态不跨档；应用两份文档不被覆盖。
+
+勾选“锁定新闻总览”，该项向SDK声明static，回调还用上一份坐标/尺寸覆盖锁定项位移。键盘规则拒绝直接修改frozen项；窄屏与相邻项交换y时也拒绝锁定邻居。其他卡片仍可编辑，SDK处理与静态项的碰撞；不承诺横向按钮实现业务换位协议。
+
+宽屏方向按钮左右改x，窄屏上下按钮交换相邻y，加减宽度受minW/maxW/剩余列数限制。原生button可Tab/Enter操作并带方向和频道名；这仍不是拿起/放下及读屏公告的完整拖放方案。
+
+“重置宽窄布局”同时恢复两份初始文档、解除锁定并清本轮SDK回调记录，几何changes计数继续累计；容器宽度设置不变。没有localStorage、下载导出、后端保存、revision或撤销栈；JSON只是可序列化观察，不把它写成已持久化。
+
+## 迁移和清理
+
+复制五个sourceFiles（含下文必需的清理补丁）：example.tsx、layout-policy.ts、styles.css和demo.tsx（仅重导出）。保留两个官方样式入口：
 
 ```ts
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 ```
 
-原研究稿的基线是 2.2.4。**本条目以 2.3.0 为准。** v1 的 `WidthProvider`、`data-grid`、顶层 `isDraggable` 不要写进新代码。官方曾警告 2.2.0 有布局缺陷，不要退回那一版。2.3.0 仍是 v2 控制式接口：必须传入测得的 `width`。
+必要CSS包含卡片/手柄/控件/状态排版、焦点以及prefers-reduced-motion时关闭网格transition；少量动态样式只设置实际容器maxWidth。没有Lab alias、远程资产或网络。卡片内容可以滚动，避免窄卡把替代按钮裁掉；不要让手柄包住输入/操作区。
 
-## Lab 当前示例
+应用拥有两份model、锁定/容器选择及观察状态，没有自建timer/全局监听。SDK Hook拥有RO、RAF与可选debounce timer，安装源码cleanup会cancel/clear/disconnect；指针资源由SDK子树卸载（其中2.3.0 edge-scroll需要下面的本地补丁）。离开只卸载自己的网格，不全局destroy或删除样式。真实卸载行为仍须浏览器，Node几何断言不能证明它。
 
-`examples/demo.tsx` 再导出 `examples/example.tsx`。几何规则在 `examples/layout-policy.ts`。没有 `<Responsive>`、没有 `layouts.lg/md/...` 的服务端文档、没有 `If-Match`。
+SSR可先输出测量占位；完整hydration/设备拖动/读屏未测，不能从measureBeforeMount选项推断已验收。接真实后端时另定保存时机/约束/取消与冲突；本例内存模型不是服务器事务。
 
-已挂载：
+## 官方原文与验收边界
 
-- `useContainerWidth()` 得到 `width`、`containerRef`、`mounted`。宽度未准备好时显示「正在测量」，不把 0 当成真实断点。
-- 容器宽度 `< 640` 为 narrow（6 列），否则 wide（12 列）。**宽和窄各存一份布局**，`onLayoutChange` 只写当前断点。重置同时回到两份初始值。
-- `GridLayout` 的 `key={breakpoint}`，避免列数变化时内部状态串档。`gridConfig={{cols, rowHeight: 78, margin: [10, 10]}}`。
-- `basic`：`dragConfig.enabled` 与 `resizeConfig.enabled` 为 false，只展示投影后的格子。
-- business / advanced：拖动手柄是 `.lab-grid-handle`，`bounded: true`。缩放只开 `se`。按钮带 `lab-grid-control`，不在手柄选择器里，因此点按钮不会开始拖。
-- `verticalCompactor`。`onLayoutChange` 先与上一份几何比较，相同则不增加 `changes`。
-- advanced：锁定「新闻总览」时该项 `static: true`，回调里再用上一帧坐标盖住库可能给出的位移。键盘函数同样拒绝 `frozen`。
-- 宽屏键盘左右改 `x`，窄屏与相邻项交换 `y`。加减宽度受 `minW` / `maxW` 和剩余列数限制。
-- 下方 `<pre>` 只序列化 `i,x,y,w,h,static`。没有 localStorage。
+官方2.3.0 annotated tag解引用到 [`9b01a614`](https://github.com/react-grid-layout/react-grid-layout/blob/9b01a614bcdd13e7e921cf3f4b1c7e77942421c1/README.md)，与npm gitHead、固定manifest一致。完整未截断tree只有README.md，无官方中文；保存英文完整42045B原文，未格式化或拼接，repo/ref/path/version/lang/date/sha和8个实际请求完整头在official与library.json。
 
-`projectCells` 把 `w` 夹进 min/max，并把 `x` 夹到 `cols - w`。`initialNarrowCells` 让窄布局每一块 `x: 0`、宽度等于列数、纵向堆叠，不从宽布局的 x 硬截。
+官方GitHub Pages GET200，响应无XFO/CSP；没有从真实Lab origin确认iframe，所以unknown并保留直达，不从200推断allowed。
 
-未挂载：`Responsive` 的五个断点、拖动结束才 PUT、409 保留草稿、413/422、图表 `resize`、`fastVerticalCompactor`。`onLayoutChange` 在 Lab 里只改内存。生产上不要在这个回调里自动 POST，宽度变化也会触发它。
+本地真实SDK3仅验证core格子/像素换算、压缩/静态碰撞与Hook SSR初值；pure policy6是应用规则。它们不证明DOM排版、拖动、缩放、RO或资源清理。完整三case真实Playwright提案见validation/browser-proposal.txt，主控匹配构建运行；正式verification全NOT_RUN，实际命令、六项和剩余见local-validation.md。
 
-## 什么时候使用
+迁移时保留 `.b15-card` 的局部 `box-sizing: border-box`，让 SDK 给出的宽高包含卡片 padding 和 border，避免依赖宿主全局 reset 而改变网格碰撞尺寸。
 
-适合几十个以内的可拖仪表盘、RSS 工作台、运营看板。不适合单列文章、上千卡片、需要旋转的无限画布、或只要左右分栏。键盘方面：库的指针拖动不是完整无障碍拖放；Lab 用按钮补左右/上下和宽度。这仍不是「拿起-移动-放下」的拖放公告模型。
 
-## 模型
+## 2.3.0 的卸载清理补丁
 
-```text
-容器像素宽度 → cols 与 breakpoint
-  → projectCells 得到合法 x/w
-  → GridLayout 绝对定位
-  → onLayoutChange 写回该断点的内存副本
-  → 键盘按钮调用 keyboardMove / keyboardResize
+真实浏览器中，给网格一个可滚动祖先，按住鼠标拖动后直接卸载：上游2.3.0的edge-scroll仍每帧继续调度，之后松开鼠标也不会停止。正常拖动结束才调用stop不足以覆盖卸载。这里运行的是 **上游2.3.0 + 本地清理补丁**，不是声称上游版本已修复。
+
+迁移五个源文件时，必须带走 [`react-grid-layout@2.3.0.patch`](examples/react-grid-layout@2.3.0.patch)。它只为发行包的ESM/CJS GridItem同时增加卸载effect：停止该实例的edge-scroll并清空自己的ref；不伪造mouseup、不取消全站RAF。
+
+将补丁复制到新项目 `patches/react-grid-layout@2.3.0.patch`，在该项目的 `pnpm-workspace.yaml` 保留精确映射，再运行 `pnpm install`：
+
+```yaml
+patchedDependencies:
+  react-grid-layout@2.3.0: patches/react-grid-layout@2.3.0.patch
 ```
 
-`i` 与子节点 `key` 相同，且不随标题变化。坐标是格子不是像素。`x + w` 不能超过列数。`static` 是交给库的锁；持久化时 Lab 的 pre 会带上它，但重置会清掉锁定勾选。
-
-## 三层渐进
-
-### Demo ① 只读（已挂载）
-
-三块：新闻总览、订阅趋势、待审列表。拖动和缩放关闭。改变窗口或面板宽度时，列数跨越 640px 会换一份布局。changes 计数不应因为纯测量来回跳——若相同几何被写回，`sameGeometry` 会挡住。
-
-### Demo ② 可编辑（已挂载）
-
-拖标题栏，右下角缩放。按钮在宽屏上左右移动，在窄屏上与邻居交换纵向顺序。输出 JSON 是当前断点的投影，不是两份布局的合并。
-
-### Demo ③ 锁定（已挂载）
-
-勾选锁定后，总览块不能拖、不能改大小，键盘按钮禁用。其他块的移动若纯函数判定会跨过锁，也要停。Lab 的横向移动只改自己的 `x`，不自动交换邻居；窄屏路径会拒绝锁定邻居。
-
-未挂载的保存协议：用户点保存才 PUT；`If-Match` 失败则 409，客户端留着草稿并显示服务器修订。无效坐标 422。拖动过程只标记 dirty。
-
-## 反例
-
-```tsx
-// 错：v1
-<WidthProvider><GridLayout isDraggable /></WidthProvider>
-<div key="a" data-grid={{x: 0, y: 0, w: 2, h: 2}} />
-
-// 对：v2 控制式，与示例一致
-<GridLayout width={width} layout={layout} gridConfig={{cols, rowHeight: 78}}
-  dragConfig={{enabled: true, handle: '.lab-grid-handle'}} />
-```
-
-```tsx
-// 错：只保存当前 layout，窄屏把宽屏坐标覆盖掉
-save(layout);
-
-// 对：wide 与 narrow 分开。Lab 的 model 就是两份
-```
-
-```tsx
-// 错：mounted 之前用 width 0 渲染网格
-<GridLayout width={width} />
-
-// 对：mounted && width > 0 才渲染
-```
-
-```tsx
-// 错：key={index} 或把标题当 i
-// 对：i: 'headline'，key={item.i}
-```
-
-```tsx
-// 错：onLayoutChange 里每次 fetch
-onLayoutChange={next => { void fetch('/api', {method: 'PUT', body: JSON.stringify(next)}); }}
-
-// 对：内存更新；相等几何不 setState。保存按钮另做（本示例没有这个按钮）
-```
-
-```tsx
-// 错：直接改库回调里的对象
-next[0].x = 0;
-
-// 对：映射出新对象。锁定项用上一份坐标写回
-```
-
-```tsx
-// 错：输入框在拖动手柄里，拼音和选字被拖走
-// 对：手柄只放标题；按钮使用另一个 class
-```
-
-`compactor` 不懂业务「这两块不能相邻」。需要这种规则时在写入前拒绝，而不是让压缩结果偷偷换位后再当用户意图。
-
-## 组合
-
-**网格 + Query**：布局文档和新闻数据分两个 key。拖动不失效新闻查询。保存布局用自己的 mutation。
-
-**网格 + 图表**：图表在块内听自己的尺寸。不要在 `onLayoutChange` 里同步调用每个图表的 resize 到掉帧。拖完再量。
-
-**网格 + antd**：筛选条放在网格外。Card 的点击不要包住手柄。
-
-**不要**用本库做 B16 那种相邻百分比分栏，也不要用它做文件排序列表。
-
-## 生产清单
-
-- 子节点 key 与 `i` 一致。
-- 宽度来自容器而不是 `window.innerWidth` 单独决定业务断点。Lab 用容器宽度切 6/12 列。
-- 断点布局分开存。
-- 拖动回调不打网络。
-- 锁定同时体现在 `static` 和纯函数。
-- 提供不依赖指针的移动和改宽。
-- 缺少 CSS 时缩放手柄会不可见，所以必须引入两份样式。
-- SSR：等客户端测量后再画出绝对定位，避免水合宽度不一致。
-- 几十块以上再考虑 `/core` 或更快的 compactor，并用真实长任务验证，不写虚构 fps。
-
-## 升级
-
-从 v1 迁出时删除 `WidthProvider` 和 `data-grid`，改为 `width` + `layout` + `gridConfig` + `dragConfig` / `resizeConfig`。过渡期官方有 `react-grid-layout/legacy`，新代码不要依赖它。从 2.2.4 笔记迁到 2.3.0 时回归测量、整数宽度和 `onLayoutChange` 的触发次数。回调参数按只读使用。
-
-## 验收
-
-basic：三块可见，拖不动，JSON 与画面一致。business：拖标题后 changes 增加；点按钮不开始拖；窄宽两份互不覆盖（拉宽窗口仍能看到宽屏坐标）。advanced：锁定总览后指针和键盘都动不了它；重置清空锁定并回到初始几何。
-
-sdk、build、browser 为 NOT_RUN。没有匹配 receipt 就不能写成网格 PASS。Actions run `41779873259` 是仓库级 install、typecheck、build、52 个 SDK 文件 / 153 项测试、45 个 Playwright，不是 B15 的 PASS。
-
-```bash
-node --experimental-strip-types --test packages/library-lab/entries/B15-react-grid-layout/tests/layout-policy.test.mts
-```
-
-断言投影、窄布局堆叠、相同几何、锁定时键盘移动/改宽被拒绝。不证明指针拖动或压缩算法的像素结果。
-
-## 官方资料
-
-- https://github.com/react-grid-layout/react-grid-layout
-- https://github.com/react-grid-layout/react-grid-layout/blob/master/README.md
-- https://www.npmjs.com/package/react-grid-layout
-- https://www.npmjs.com/package/react-resizable
+Lab 的映射指向本条目的同一源文件，锁文件记录patch hash。升级SDK时应重新确认上游是否修复，再决定移除补丁；不要把2.3.0的分发文件名套到其它版本。原官方README仍是未经改写的上游原文。本地红probe、独立补丁审查、修后真实回归分别记录在local-validation.md。

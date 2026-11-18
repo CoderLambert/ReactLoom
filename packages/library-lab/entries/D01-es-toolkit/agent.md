@@ -1,61 +1,23 @@
-# D01 es-toolkit — 工程手册
+# D01 es-toolkit 工程指南
 
-## 适用
+适用于需要组合数组排序、按键去重、分组和切块的 React 业务。固定 `es-toolkit@1.52.0` / MIT，示例只调用 `es-toolkit/array` 的 `orderBy`、`uniqBy`、`groupBy`、`chunk`。原生数组能清楚完成的简单转换无需引库；Lodash 存量调用需逐项审查 compat 语义。
 
-RSS、搜索文档和列表预处理里的纯函数：排序、按键去重、受控分组、分页切块。新 TypeScript 代码优先子路径导入。一个 `filter` 能写清的转换不必引入库。
+## 当前唯一实验
 
-不要把它当成 Zod、HTTP 客户端、金额库或任务队列。`chunk` 不限制并发。`debounce` 不取消已经发出的请求。
+入口 `examples/demo.tsx` 重导出 `example.tsx`。UI 编辑 JSON、页大小、坏行注入和恢复；实现实际来自 `pipeline.mjs`，公共类型在 `pipeline.d.mts`。SDK 测试也调用这一实现，不能另写副本冒充 UI 的执行证据。
 
-## 版本
+`normalizeArticle` / `canonicalUrl` 是业务规则，不是 SDK 校验：对象、非空标题、可解析日期、HTTP/HTTPS、去 hash、移除已知追踪参数、保留业务 query，来源收为 official/community/other。随后先 `orderBy` 日期降序和 URL 升序，再 `uniqBy` 规范化 URL，保留最新；同 URL 同日期保留输入先到者。`groupBy` 后补空组，`chunk` 仅切数组。输出包含每一步结果便于观察。
 
-`es-toolkit@1.52.0`，MIT。Lab 示例只从 `es-toolkit/array` 导入 `chunk`、`groupBy`、`orderBy`、`uniqBy`。
+## 迁移与边界
 
-`es-toolkit/compat` 是另一套 Lodash 语义，和主入口的 `edges` 选项不能混用。升级小版本后仍要回归去重顺序和空值。
+复制 `example.tsx`、`pipeline.mjs`、`pipeline.d.mts`，安装 `pnpm add es-toolkit@1.52.0`，在已有 React/ESM/JSX 项目渲染默认组件。demo.tsx 只为 Lab 适配；没有必需 CSS、环境变量、插件或额外资产。fixture 由生产接口数据替换；接口仍用项目 HTTP 层。纯函数没有监听或异步资源，无额外清理。
 
-## 迁移
+保留逐行隔离、错误下标、协议白名单、追踪参数白名单、1–100 安全整数页大小检查。日期解析不是严格 ISO schema，生产应按接口约定扩展。URL 不处理重定向、内容身份、跨租户隔离。内存排序和切块不等于服务端分页，不提供缓存、调度或并发限制。
 
-从 [`examples/example.tsx`](examples/example.tsx) 带走 `canonicalUrl`、`normalizeArticle`、`makeDigest`。`demo.tsx` 只是重导出，不要复制 UI。
+反例：去重后才排序会保留旧稿；清空 query 会合并不同 id；用标题去重会误合并同名文章；chunk 不是请求池；SDK 工具函数不代替校验或鉴权。不要从未演示的 debounce/limitAsync 推导本例能力。
 
-保持未知入参逐条隔离、协议白名单、追踪参数白名单、先排序再 `uniqBy`、`pageSize` 1–100。来源只用 `official | community | other`。
+## 断言与证据
 
-生产若要防抖或 `limitAsync`，单独加模块。当前示例没有这些调用，不要假装按钮已经覆盖它们。
+根目录 `pnpm --filter @reactloom/library-lab test:sdk --entry=D01`：五行规范化、四行唯一、official/community 各二、页长 2/2；改页大小 3 得 3/1；拒绝 javascript/缺标题/坏日期/非对象但保留正常行；非法页大小抛错；空数组为空页。浏览器另查编辑、错误清空、恢复和控件行为，方案在 `validation/browser-proposal.md`。
 
-## 不可删的清理
-
-`makeDigest` 必须先按发布时间降序、URL 升序，再按规范化 URL 去重。颠倒这两步会留下旧稿。
-
-`canonicalUrl` 只删除 `utm_*`、`fbclid`、`gclid`，并丢掉 hash。业务查询参数保持原样，参数排序只为了得到稳定字符串。
-
-坏行写入 `rejected` 的 index 和短原因，不把原始 payload 拼进错误文本。分组结果显式落到三个受控键，避免缺键变成 `undefined`。
-
-若以后接上防抖搜索：卸载时 `cancel()`，进行中的 fetch 使用 `AbortSignal`，回写前比对代际。只做其中一件不够。
-
-## 反例
-
-- `uniqBy` 之后再排序，指望留下最新一篇。
-- 用标题或整段小写 URL 当去重键。
-- `url.search = ''` 清掉 `id`。
-- 任意 `source` 字符串直接当对象键或配置名。
-- `chunk` 当成 p-limit。
-- `debounce` 当成请求取消。
-- `pick` 或 `cloneDeep` 当成授权和校验。
-- 把 `es-toolkit/compat` 的选项写进主入口 `debounce`。
-
-## 测试断言
-
-- 同一 URL 在降序之后，`uniqBy` 留下日期较新的那条。
-- `groupBy` 的 `official` 计数与输入一致；`chunk(..., 2)` 得到预期批次，最后一批可以短。
-- `javascript:`、缺标题、坏日期、非对象进入 `rejected`，其他行仍在。
-- `?id=42` 与只差 utm 的 URL 合并；`?id=43` 保留。
-- 非 1–100 的 `pageSize` 抛 `RangeError`。
-- `tests/sdk.test.mjs` 导入的是真实 `es-toolkit/array`。文件在仓库里不等于这次运行已经 PASS。
-
-## 真实限制
-
-示例数据是本地种子。没有网络、没有 Zod、没有 Worker、没有并发池。页大小选择框只是 UI，真正的范围检查在 `makeDigest`。
-
-官网给出的体积和速度比较不能抄成这个页面的预算。目标浏览器要按官方矩阵再测。
-
-## 证据
-
-sdk、build、browser 保持 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有匹配收据。仓库级 Actions 41779873259 不能抄到本条目。不要改 `verification.json` 来填 PASS。
+官方中文版 README 为 v1.52.0 tag 对应固定提交原字节；library.json 记录 provenance，official/api-evidence.json 固定四个实际 API 的源码摘要。官网 iframe 尚未从 Lab origin 确认，保持 unknown 和直达入口。本地 SDK 结果见 validation/local-validation.md，不提升为正式收据；verification.json 的 sdk/build/browser 仍 NOT_RUN。

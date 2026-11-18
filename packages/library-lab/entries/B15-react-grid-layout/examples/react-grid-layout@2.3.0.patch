@@ -1,0 +1,30 @@
+diff --git a/dist/chunk-CUP5Y2ZG.js b/dist/chunk-CUP5Y2ZG.js
+index 23399caefebeefb2038279331382aa20e5932bc1..5374e39372245e12579941f63a227c378749f4de 100644
+--- a/dist/chunk-CUP5Y2ZG.js
++++ b/dist/chunk-CUP5Y2ZG.js
+@@ -144,6 +144,10 @@ function GridItemInner(props) {
+   const initialDragClientRef = React2.useRef({ x: 0, y: 0 });
+   const thresholdExceededRef = React2.useRef(false);
+   const edgeScrollRef = React2.useRef(null);
++  React2.useEffect(() => () => {
++    edgeScrollRef.current?.stop();
++    edgeScrollRef.current = null;
++  }, []);
+   const positionParams = React2.useMemo(
+     () => ({
+       cols,
+diff --git a/dist/chunk-Z6CWRR74.mjs b/dist/chunk-Z6CWRR74.mjs
+index 5d3ee00ad7b14cfe15445fcf7bfdbee04408236e..a96fe4b410cfea84863e9397a60826ddfd2d8f88 100644
+--- a/dist/chunk-Z6CWRR74.mjs
++++ b/dist/chunk-Z6CWRR74.mjs
+@@ -137,6 +137,10 @@ function GridItemInner(props) {
+   const initialDragClientRef = useRef({ x: 0, y: 0 });
+   const thresholdExceededRef = useRef(false);
+   const edgeScrollRef = useRef(null);
++  useEffect(() => () => {
++    edgeScrollRef.current?.stop();
++    edgeScrollRef.current = null;
++  }, []);
+   const positionParams = useMemo(
+     () => ({
+       cols,

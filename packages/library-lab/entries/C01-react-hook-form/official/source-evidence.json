@@ -1,0 +1,78 @@
+{
+  "checkedAt": "2026-11-10T09:52:49.384970+00:00",
+  "repository": "react-hook-form/react-hook-form",
+  "tag": "v7.89.0",
+  "tagObject": "6160405a7eee346b0a19a2b24a89ebc5df09ca00",
+  "commit": "4722d22fbbafd52b3186e737e62bd530659f1b24",
+  "readmeCandidateCheck": {
+    "url": "https://api.github.com/repos/react-hook-form/react-hook-form/git/trees/4722d22fbbafd52b3186e737e62bd530659f1b24?recursive=1",
+    "status": 200,
+    "truncated": false,
+    "candidates": [
+      "README.md",
+      "docs/README.V7.zh-CN.md",
+      "docs/README.zh-CN.md",
+      "docs/README.zh-TW.md"
+    ],
+    "selected": "docs/README.V7.zh-CN.md",
+    "reason": "Official Simplified Chinese V7 README matches installed 7.89.0. Older README.zh-CN.md has V6 ref={register} examples and is not selected."
+  },
+  "requests": [
+    {
+      "url": "https://raw.githubusercontent.com/react-hook-form/react-hook-form/4722d22fbbafd52b3186e737e62bd530659f1b24/docs/README.V7.zh-CN.md",
+      "finalUrl": "https://raw.githubusercontent.com/react-hook-form/react-hook-form/4722d22fbbafd52b3186e737e62bd530659f1b24/docs/README.V7.zh-CN.md",
+      "status": 200,
+      "headers": {
+        "Connection": "close",
+        "Content-Length": "14505",
+        "Cache-Control": "max-age=300",
+        "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+        "Content-Type": "text/plain; charset=utf-8",
+        "ETag": "\"795db48a57798baaa5be92b316530a22b35999e576cd6b47fff4aba0f0b21635\"",
+        "Strict-Transport-Security": "max-age=31536000",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "deny",
+        "X-XSS-Protection": "1; mode=block",
+        "X-GitHub-Request-Id": "DF20:2BB1CB:30015F:3C6375:6AF2E96C",
+        "x-github-edge-region": "westus3",
+        "Accept-Ranges": "bytes",
+        "Date": "Tue, 10 Nov 2026 09:52:50 GMT",
+        "Via": "1.1 varnish",
+        "X-Served-By": "cache-sjc10057-SJC",
+        "X-Cache": "MISS",
+        "X-Cache-Hits": "0",
+        "X-Timer": "S1794304371.704814,VS0,VE128",
+        "Vary": "Authorization,Accept-Encoding",
+        "Access-Control-Allow-Origin": "*",
+        "Cross-Origin-Resource-Policy": "cross-origin",
+        "X-Fastly-Request-ID": "a8467a8268d87f77b23156924e491068e4065b37",
+        "Expires": "Tue, 10 Nov 2026 09:57:50 GMT",
+        "Source-Age": "0"
+      },
+      "bytes": 14505,
+      "sha256": "f1679b5992e2d473fac51c70d62661becf2c8878cfdf67f31c5a935f367d5518"
+    },
+    {
+      "url": "https://react-hook-form.com/",
+      "finalUrl": "https://react-hook-form.com/",
+      "status": 200,
+      "headers": {
+        "Age": "37933",
+        "Cache-Control": "public, max-age=0, must-revalidate",
+        "Content-Length": "76764",
+        "Content-Type": "text/html; charset=utf-8",
+        "Date": "Mon, 09 Nov 2026 23:20:38 GMT",
+        "Etag": "\"nrqkpmpp3j1n7l\"",
+        "Server": "Vercel",
+        "Strict-Transport-Security": "max-age=63072000",
+        "X-Matched-Path": "/",
+        "X-Powered-By": "Next.js",
+        "X-Vercel-Cache": "HIT",
+        "X-Vercel-Id": "sin1::sfo1::9thlh-1794304371704-c56102200811",
+        "Connection": "close"
+      },
+      "bytes": 76764,
+      "sha256": "b0343fad80489924211b3e59059a9cea4bb0c57ba3b08b40135e61f309997456"
+    }
+  ]
+}

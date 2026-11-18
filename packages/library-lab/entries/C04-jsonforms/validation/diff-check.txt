@@ -1,0 +1,4 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['git', 'diff', '--check', '--', 'entries/C04-jsonforms']
+startedAt: 2026-11-10T15:24:27.335482+00:00
+exit: 0

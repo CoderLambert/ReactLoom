@@ -1,0 +1,16 @@
+{"label": "sdk", "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab", "argv": ["node", "--test", "entries/C06-imask/tests/sdk.test.mjs"], "start": "2026-11-10T15:52:00.605924+00:00", "end": "2026-11-10T15:52:00.685985+00:00", "exitCode": 0, "log": "sdk.txt"}
+STDOUT
+✔ IMask SDK formats a fixed 8-digit code (1.736245ms)
+✔ IMask SDK enforces the requested shape (0.357252ms)
+✔ IMask separates normalized numeric data from optional fixed-scale display (0.902727ms)
+✔ actual date Pattern may be complete while the civil day is impossible (0.674247ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 57.071084
+
+STDERR

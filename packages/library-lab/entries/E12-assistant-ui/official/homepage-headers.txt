@@ -1,0 +1,26 @@
+HTTP/2 200 
+date: Tue, 17 Nov 2026 17:40:52 GMT
+content-type: text/html; charset=utf-8
+access-control-allow-origin: *
+age: 9751
+cache-control: public, max-age=0, must-revalidate
+content-disposition: inline
+nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+content-security-policy: default-src 'self';    connect-src *;    frame-src * blob:;    script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://static.cloudflareinsights.com;    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;    img-src * blob: data:;    font-src 'self' https://fonts.gstatic.com data:;    object-src 'none';    base-uri 'self';    form-action 'self' https://accounts.assistant-ui.com;    frame-ancestors 'self';    upgrade-insecure-requests;
+report-to: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=AD0I07luPildo3OFBbzoZc%2FPcMq31lMxb7XTBheyKRsA6MW1D2JCDCxx3XsJU1UlO8wnWNK2jjMFicPzOwDDcu473z8WQhpJMjkqNI8V1u51pD%2FxPB%2FPABfR0GayUR%2BAYuhrVfdrFA%3D%3D"}]}
+link: <https://www.assistant-ui.com/.well-known/api-catalog>; rel="api-catalog"; type="application/linkset+json"; profile="https://www.rfc-editor.org/info/rfc9727"
+link: </_next/static/immutable/media/53897e768d329f66-s.p.269kn9uafm0ti.woff2>; rel=preload; as="font"; crossorigin=""; type="font/woff2", </_next/static/immutable/media/9d473eb2c81ea1b1-s.p.3tasb8qs95n_v.woff2>; rel=preload; as="font"; crossorigin=""; type="font/woff2"
+server: cloudflare
+strict-transport-security: max-age=2592000; includeSubDomains
+vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch
+vary: accept-encoding
+x-matched-path: /docs/runtimes/custom/local-runtime
+x-nextjs-prerender: 1
+x-nextjs-stale-time: 300
+x-vercel-cache: HIT
+x-vercel-id: cdg1::7xbrg-1794937252468-da105c7cb396
+cf-cache-status: DYNAMIC
+x-content-type-options: nosniff
+cf-ray: a5c085e3adb56f87-CDG
+alt-svc: h3=":443"; ma=86400
+

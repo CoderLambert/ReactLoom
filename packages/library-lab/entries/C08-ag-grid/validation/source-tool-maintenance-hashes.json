@@ -1,0 +1,19 @@
+{
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "argv": [
+    "python3",
+    "packages/library-lab/entries/C08-ag-grid/validation/source-tool-transport-fixture.py"
+  ],
+  "utc": "2026-11-10T16:03:37.609819+00:00",
+  "exit": 0,
+  "evidenceBoundary": "controlled source-tool fixture only; no external HTTP or SDK",
+  "protectedInputs": 18,
+  "protectedInputDifferences": [],
+  "maintenanceFiles": {
+    "validation/fetch-official.py": "ac1106a9b02780734aa62a02a9de72a66a32f5c89406a6df14aad12e4135de43",
+    "validation/source-tool-transport-fixture.py": "18b4a52d5c3a8ad7872ed157292cccf2ff9a32dbc1bc01cb8073b68d3eff25b0",
+    "local-validation.md": "5d4b112c5772604ed0fa44b5916be9a9a57d017bdd7d6205b2cd9b38cd761487"
+  },
+  "pythonAST": "ast.parse succeeded for fetch-official.py and source-tool-transport-fixture.py",
+  "finalStableAt": "2026-11-10T16:04:32.148303+00:00"
+}

@@ -1,0 +1,25 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: ["pnpm", "test:policy", "--entry=D07"]
+startedAt: 2026-11-10T09:59:39.882720+00:00
+
+> @reactloom/library-lab@0.1.0 test:policy /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+> node scripts/policy-runner.mjs --entry=D07
+
+Pure entry policy suites selected: 1 (not SDK evidence)
+✔ optimistic patch changes one stable ID without mutating the cache snapshot (0.526103ms)
+✔ rollback restores only the owned row, preserving other successful edits (3.914701ms)
+✔ late error cannot revert a newer operation draft (0.189316ms)
+✔ commit uses authoritative server rev, drops temporary token (0.099396ms)
+✔ stale revision and already owned drafts are not overwritten (0.080768ms)
+✔ missing pages/rows remain unchanged and no cross-page materialization (0.074251ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 43.60631
+
+exitCode: 0
+finishedAt: 2026-11-10T09:59:40.145023+00:00

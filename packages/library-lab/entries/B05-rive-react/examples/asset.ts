@@ -4,5 +4,5 @@
  * Requires access to cdn.rive.app; offline testing must use a separately authorized
  * versioned .riv asset with the same state machine contract.
  */
-export const RIVE_SAMPLE_URL = 'https://cdn.rive.app/animations/vehicles.riv';
-export const RIVE_SAMPLE_STATE_MACHINE = 'bumpy';
+export const RIVE_SAMPLE_URL = 'https://cdn.rive.app/animations/vehicles.riv'
+export const RIVE_SAMPLE_STATE_MACHINE = 'bumpy'

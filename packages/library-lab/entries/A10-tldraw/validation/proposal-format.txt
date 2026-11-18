@@ -1,0 +1,5 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: pnpm exec biome format --stdin-file-path=entries/A10-tldraw/validation/browser-proposal.ts < entries/A10-tldraw/validation/browser-proposal.txt
+exit: 0
+
+Formatted proposal only; stdout replaced the proposal text.

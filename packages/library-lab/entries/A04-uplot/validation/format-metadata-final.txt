@@ -1,0 +1,9 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+ARGV: ["pnpm", "exec", "--", "biome", "check", "--write", "entries/A04-uplot/library.json", "entries/A04-uplot/verification.json", "entries/A04-uplot/tests/sdk.test.mjs"]
+START: 2026-11-10T11:07:01.002532+00:00
+END: 2026-11-10T11:07:01.216871+00:00
+EXIT: 0
+STDOUT:
+Checked 3 files in 4ms. Fixed 1 file.
+
+STDERR:

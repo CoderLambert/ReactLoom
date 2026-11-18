@@ -1,0 +1,107 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab", "argv": ["pnpm", "exec", "--", "biome", "check", "--write", "entries/B12-react-aria/examples", "entries/B12-react-aria/tests"], "start": "2026-11-10T13:41:03.314719+00:00", "end": "2026-11-10T13:41:03.562876+00:00", "exitCode": 1}
+STDOUT
+Skipped 7 suggested fixes.
+If you wish to apply the suggested (unsafe) fixes, use the command biome check --write --unsafe
+
+Checked 6 files in 10ms. Fixed 6 files.
+Found 1 error.
+Found 3 infos.
+
+STDERR
+entries/B12-react-aria/examples/channel-policy.ts:6:6 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    4 │   const needle = query.trim().toLocaleLowerCase('zh-CN')
+    5 │   return rows.filter((row) =>
+  > 6 │     (row.name + ' ' + row.category).toLocaleLowerCase('zh-CN').includes(needle),
+      │      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    7 │   )
+    8 │ }
+  
+  i Unsafe fix: Use a template literal.
+  
+     4  4 │     const needle = query.trim().toLocaleLowerCase('zh-CN')
+     5  5 │     return rows.filter((row) =>
+     6    │ - ····(row.name·+·'·'·+·row.category).toLocaleLowerCase('zh-CN').includes(needle),
+        6 │ + ····(`${row.name}·${row.category}`).toLocaleLowerCase('zh-CN').includes(needle),
+     7  7 │     )
+     8  8 │   }
+  
+
+entries/B12-react-aria/examples/example.tsx:79:11 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    77 │     setMessage(
+    78 │       selected && value === selected.id
+  > 79 │         ? '真实表单选中频道 ID：' + selected.id
+       │           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    80 │         : '请先从候选项确认一个有效频道',
+    81 │     )
+  
+  i Unsafe fix: Use a template literal.
+  
+     77  77 │       setMessage(
+     78  78 │         selected && value === selected.id
+     79     │ - ········?·'真实表单选中频道·ID：'·+·selected.id
+         79 │ + ········?·`真实表单选中频道·ID：${selected.id}`
+     80  80 │           : '请先从候选项确认一个有效频道',
+     81  81 │       )
+  
+
+entries/B12-react-aria/examples/example.tsx:111:35 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    109 │             setSelectedKey(selected?.id ?? null)
+    110 │             setInputValue(selected?.name ?? '')
+  > 111 │             setMessage(selected ? '已选择：' + selected.name : '选择已清空')
+        │                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    112 │           }}
+    113 │           inputValue={inputValue}
+  
+  i Unsafe fix: Use a template literal.
+  
+    109 109 │               setSelectedKey(selected?.id ?? null)
+    110 110 │               setInputValue(selected?.name ?? '')
+    111     │ - ············setMessage(selected·?·'已选择：'·+·selected.name·:·'选择已清空')
+        111 │ + ············setMessage(selected·?·`已选择：${selected.name}`·:·'选择已清空')
+    112 112 │             }}
+    113 113 │             inputValue={inputValue}
+  
+
+entries/B12-react-aria/examples/example.tsx:66:3 lint/correctness/useExhaustiveDependencies  FIXABLE  ━━━━━━━━━━
+
+  × This hook specifies more dependencies than necessary: level.
+  
+    64 │   }, [inputValue, level])
+    65 │ 
+  > 66 │   useEffect(() => {
+       │   ^^^^^^^^^
+    67 │     setSelectedKey(null)
+    68 │     setInputValue('')
+  
+  i Outer scope values aren't valid dependencies because mutating them doesn't re-render the component.
+  
+    68 │     setInputValue('')
+    69 │     setMessage('尚未选择频道')
+  > 70 │   }, [level])
+       │       ^^^^^
+    71 │ 
+    72 │   function submit(event: FormEvent<HTMLFormElement>) {
+  
+  i React relies on hook dependencies to determine when to re-compute Effects.
+    Specifying more dependencies than required can lead to unnecessary re-rendering
+    and degraded performance.
+  
+  i Unsafe fix: Remove the extra dependencies from the list.
+  
+    70 │ ··},·[level])
+       │       -----  
+
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while applying fixes.
+  
+

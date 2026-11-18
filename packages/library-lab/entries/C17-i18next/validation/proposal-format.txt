@@ -1,0 +1,5 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['pnpm', 'exec', '--', 'biome', 'check', '--write', '/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C17-i18next/validation/.proposal-types-6we3k_43/browser-proposal.spec.ts']
+startedAt: 2026-11-10T17:57:43.318543+00:00
+exit: 0
+Checked 1 file in 11ms. Fixed 1 file.

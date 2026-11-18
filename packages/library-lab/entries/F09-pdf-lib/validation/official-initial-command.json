@@ -1,0 +1,8 @@
+{
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "argv": [
+    "node",
+    "packages/library-lab/entries/F09-pdf-lib/validation/check-official.mjs"
+  ],
+  "exitCode": 1
+}

@@ -1,0 +1,10 @@
+{
+  "recordedAt": "2026-11-10T17:54:02.441322+00:00",
+  "from": "unknown",
+  "to": "blocked",
+  "reason": "Original classifier only recognized self/none; actual captured scheme-source list excludes HTTP Lab. No HTTP or raw-header mutation.",
+  "rawHeadersSha256Before": "f97b2973561ca9e40356d21ea95a45ee91f9a522b3e521eb9adee6c4a447f67b",
+  "rawHeadersSha256After": "f97b2973561ca9e40356d21ea95a45ee91f9a522b3e521eb9adee6c4a447f67b",
+  "browser": "NOT_RUN",
+  "reference": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Security-Policy/frame-ancestors"
+}

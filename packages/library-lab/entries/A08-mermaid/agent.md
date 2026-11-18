@@ -1,47 +1,25 @@
-# A08 Mermaid — 工程手册
+# Mermaid 12.2.0 工程复用
 
-## 适用
+适用：可版本控制的流程、时序和状态说明；DSL是维护源，SVG是生成结果。交互节点编辑用React Flow，大关系探索用G6。
 
-`mermaid@12.2.0` 把受信任的 DSL 编成 SVG。可拖节点用 A06，关系探索用 A07。不要把用户文章里的原始字符串直接 `initialize`，也不要把 SVG 灌进页面 HTML。
+## 接入路径
 
-## 版本
+先读 `examples/diagram-source.ts` 的受控业务投影，再读 `example.tsx` 和 `render-queue.ts`。复制上述三文件及 `workshop.css`；`demo.tsx`只作Lab适配。真实依赖为 `mermaid@12.2.0`、React浏览器环境，render依赖DOM，不在SSR直接调用。
 
-钉 `mermaid@12.2.0`，MIT，ESM。`startOnLoad: false`，`securityLevel: 'strict'`，`theme: 'neutral'`。v12 默认布局可能是 ELK；本示例没有钉 `layout` / `look`。Node 门槛 22.12 来自上游，不是浏览器验收。
+本查看器一次initialize：关闭扫描、strict、neutral、suppressErrorRendering；之后parse检查语法，唯一id的render返回SVG。模块配置由应用统一拥有，多个集成要协调，不能合并远程配置。当前12.2.0实际默认layout为elk，Node引擎>=22.12。
 
-## 迁移
+## 三个目标
 
-弃用 `mermaid.init` 扫全文档。受控路径是一次 `initialize`、`parse`、唯一 id 的 `render`。业务 id 映射成 `n0` 这类内部 id。从 v11 升上来要显式写出布局和主题再比截图。不要为了点击改成 `loose`。
+- basic：去重开关生成分支DSL，真实流程图与文本替代同步。固定节点id和fixture标签来自程序。
+- business：缓存开关改变sequence消息，Worker保留参与者身份但缓存路径不发送消息。没有真实API/缓存。
+- advanced：真实非法DSL清空旧iframe，恢复重新绘制。状态图是描述，不是可执行状态机。
 
-## 不可删的清理
+## 生命周期与边界
 
-`queueMermaidRender` 在调用解析前和提交前都看 `isCurrent()`。effect 清理把代数作废。失败和换图时清空上一张 SVG。iframe `sandbox` 保持空字符串。不要调用 `bindFunctions`。
+队列串行parse+render；调用前和提交前检查当前effect。卸载使任务过期，但不取消正在运行的布局；后续任务仍可执行。每次render递增id，不复用marker/clipPath标识。iframe空sandbox、no-referrer，保留父页文本替代与DSL中的accTitle/accDescr。不调用bindFunctions。
 
-## 反例
+父页不能通过常规DOM访问opaque iframe；Playwright等浏览器工具仍能观察其内容。strict和iframe不是任意DSL/远程配置的通行证，迁入Markdown需另加图类型/长度/规模预算。
 
-```ts
-mermaid.initialize({ ...remoteConfig, securityLevel: 'loose' }); // 错
-element.innerHTML = userDiagram; // 错：DSL 不是 HTML
-// 对：常量配置 initialize 一次；只把 render 返回的 svg 放进 sandbox iframe
-```
+## 验证重点
 
-固定 render id、每键布局、用 `parse` 代替领域校验，都不要做。
-
-## 测试断言
-
-队列测试断言：过期任务不调用 render、不提交结果；失败只报告给仍当前的主人。SDK 收据还要看到真实 `parse`/`render`、非法 DSL 不保留旧图、iframe 无脚本权限。没有 runs 收据则为 NOT_RUN。
-
-## 真实限制
-
-DSL 是源码常量，没有编辑器、防抖、HTTP 修订或 `accTitle`。时序图和状态图不会生成可执行流程。iframe 隔离也意味着父页面不能再查询内部 SVG。没有布局耗时数字。
-
-## 断言边界
-
-`tests/render-queue.test.mts` 用替身函数证明过期任务不提交。SDK 用例要 `import mermaid from 'mermaid'`，对合法 flowchart `parse` 再 `render`，对非法片段得到失败且不保留上一张 SVG。iframe 的 sandbox 属性应为空。缺收据时保持 NOT_RUN。`initialize` 只调用一次，配置对象不要展开远程 JSON。
-
-## 证据
-
-Actions `41779873259` 的仓库级 install、typecheck、build、52 SDK 文件（153 测试）和 45 Playwright 不是 A08 PASS。不要把队列测试或历史研究 PASS 写入 `verification.json`。
-
-对照 `library.json` 的版本编写 import，不要升到条目未钉死的版本。
-`tests/` 中的策略用例不能改写成 sdk 字段的 PASS。
-浏览器与构建未留下收据时，对应字段维持 NOT_RUN。
+实际SVG必须有节点/消息文字和有效尺寸；去重和缓存开关同时改变源文与SVG；非法后旧图消失、恢复成功；快速切换/离开Demo不得回写过期状态或遗留SDK临时节点。`render-queue.test.mts`只证明自建队列，不证明SDK绘图。正式sdk/build/browser状态以匹配recorder收据为准，本地运行记录独立见local-validation.md。

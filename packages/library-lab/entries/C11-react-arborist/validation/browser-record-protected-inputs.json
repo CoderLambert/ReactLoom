@@ -1,0 +1,13 @@
+{
+  "examples/example.tsx": "ab7d9b4bec8cf439d22a2427ee258f6c9519b996c1c9bc80c1d6d61229aa84cc",
+  "examples/tree-model.ts": "a3e0a91e71cd0d756f1381229577488b7f3dde814083e99b34d7b6692121c87b",
+  "examples/move-tree.ts": "a57bff7d5ee5c01e7d8eaa6464df75fda39e8697378a0052b6a7b65049b0606d",
+  "examples/tree-node.tsx": "ecfd1ede69fcbae8b8c7ba7daa06102a744fdfae24efd969e5492096edec234b",
+  "examples/ime-guard.ts": "e05e4b124343afe4029eaf307fcc30678ad772f10640ce6bce7e2455c3449248",
+  "examples/styles.css": "e30d5bdcebf8f202eab6dec2f073f205058afbad712ec224a8c4f682ed18ce24",
+  "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+  "tests/sdk.test.mjs": "0f75773e2e74c44c6ede3fca400b43a4cb59e43bb9f9fb51c53bbcbf73ebfa69",
+  "tests/tree-policy.test.mjs": "ec7cb0fb7addd9c90337fae1779cd675f3c22fef9d95bbc2ccab4f2dfe85e195",
+  "official/readme.md": "0c3ba42abd227ddce29578749b9765b5513797d446cb2d3d2b96281a429fa80a",
+  "official/source-evidence.json": "2de41ecf3069044e9cd928487ce8b590dc344d799aa0ec51bb7641c690eaa74d"
+}

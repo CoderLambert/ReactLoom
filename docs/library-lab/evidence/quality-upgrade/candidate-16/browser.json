@@ -1,0 +1,24 @@
+{
+  "command": [
+    "pnpm",
+    "exec",
+    "playwright",
+    "test",
+    "--config=.local-evidence/quality-playwright.config.ts",
+    "e2e/quality-remediation-beautiful-dnd-migration.spec.ts",
+    "e2e/quality-remediation-ajv.spec.ts",
+    "e2e/quality-remediation-imask.spec.ts",
+    "e2e/quality-remediation-ag-grid.spec.ts",
+    "e2e/quality-remediation-virtuoso.spec.ts",
+    "e2e/quality-remediation-primitives-sources.spec.ts",
+    "--grep",
+    "@B22 (actual|fixed|real)|@C05|@C06|@C08|@C09",
+    "--trace=off"
+  ],
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+  "startedAt": "2026-11-10T16:09:37.217193+00:00",
+  "finishedAt": "2026-11-10T16:10:48.846318+00:00",
+  "exitCode": 1,
+  "implicitBuild": false,
+  "log": "docs/library-lab/evidence/quality-upgrade/candidate-16/browser.txt"
+}

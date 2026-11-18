@@ -1,0 +1,4 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+command=python inline metadata assertions (local source, snapshots, formal states)
+exit=0
+3 demos, 5 source files each, upstream Chinese snapshot 16991 bytes SHA256 2713af51940f7d1df7de75fa0ad30ac5a46620913f1185f26b0408bfb4a81040

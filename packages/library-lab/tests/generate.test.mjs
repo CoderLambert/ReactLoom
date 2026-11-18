@@ -208,3 +208,35 @@ test('source index bytes are pinned by the generated detail digest', async (t) =
   assert.equal(detail.sourceIndexSha256, createHash('sha256').update(index).digest('hex'))
   assert.match(detail.sourceIndexSha256, /^[a-f0-9]{64}$/u)
 })
+
+test('official README snapshots are published byte-for-byte and mismatched digests fail', async (t) => {
+  const { root, dir } = await setup(t)
+  const text = '# Official upstream\n\n[License](LICENSE)\n<script>never execute</script>\n'
+  const official = {
+    readme: {
+      repository: 'lukeed/clsx',
+      commit: '1'.repeat(40),
+      path: 'readme.md',
+      sourceUrl: `https://github.com/lukeed/clsx/blob/${'1'.repeat(40)}/readme.md`,
+      snapshotPath: 'official/readme.md',
+      language: 'en',
+      version: '2.1.1',
+      syncedAt: '2026-11-10T08:00:00Z',
+      sha256: createHash('sha256').update(text).digest('hex'),
+    },
+    homepage: {
+      url: 'https://github.com/lukeed/clsx',
+      kind: 'repository',
+      status: 'blocked',
+      checkedAt: '2026-11-10T08:00:00Z',
+      reason: 'X-Frame-Options: deny',
+    },
+  }
+  await mkdir(path.join(dir, 'official'))
+  await writeFile(path.join(dir, 'official/readme.md'), text)
+  await writeFile(path.join(dir, 'library.json'), JSON.stringify({ ...fixture, official }))
+  await generate(root, { expectedCount: 1 })
+  assert.equal(await readFile(path.join(root, 'public/raw/D03/readme.md'), 'utf8'), text)
+  await writeFile(path.join(dir, 'official/readme.md'), text + 'changed')
+  await assert.rejects(generate(root, { expectedCount: 1 }), /README.*digest/)
+})

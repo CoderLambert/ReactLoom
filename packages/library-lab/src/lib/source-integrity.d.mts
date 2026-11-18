@@ -13,6 +13,7 @@ export declare function readBoundedSourceResponse(
   expectedBytes: number,
 ): Promise<string>
 export declare function sourceTextPath(relative: string): string
+export declare function encodePublishedPath(relative: string): string
 export declare function verifySourceIndexDigest(
   value: unknown,
   expectedSha256: string,

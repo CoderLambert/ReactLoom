@@ -1,0 +1,17 @@
+{
+  "head": "1218066e706a90ba03fac8dff8c9b843dd2429c4",
+  "checkedAt": "2026-11-10T12:24:17.737786+00:00",
+  "fileCount": 9,
+  "entryRelativeSha256": "7d8cf584a6b3cef45aa1e52215fca0f91ffe914fe48552cf165c056c82c3773d",
+  "files": {
+    "AGENTS.md": "ac5d084abde66532389889e683435ba2a3e8f7553a41e423ec0afeffb10b8fcc",
+    "agent.md": "96cb527a332f8c19fb8a46ef2d5d9257380391d4d031042d3e4a6d5017bf8205",
+    "examples/card-policy.ts": "7310043cb4c38b6b8b87969695a7ad0c24133758d4a6ada9fa725754882a69d6",
+    "examples/demo.tsx": "254591932548c36c414610bd0d0c7ce7ef1648162f1996fbbe7381b8c1751690",
+    "examples/example.tsx": "41092c009065e94fd0b6724f0d8fc4cafe7b977a31cfc138ade23eb94bdf01f2",
+    "guide.md": "2266df8e944f4f496d7e1ac3f490711c80fe011d9b3883f332708a99c5751091",
+    "library.json": "d0e543a96bc9427ce6b1fd45acbe922f4e5877eef690165dd257093050c4ecbf",
+    "tests/card-policy.test.mts": "6b77b0ac4b1de37e45355c55bd6871cda21670774684527965f18b6b4e780aea",
+    "verification.json": "74256c8b20e17560c6543579d752f0fabe63f6e4b2245334a912b860bec5395a"
+  }
+}

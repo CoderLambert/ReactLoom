@@ -5,13 +5,7 @@
   "name": "Video.js",
   "group": "E",
   "summary": "Video.js v10 React 真正播放器：原创WebM、本地切换、生命周期与跨版本迁移",
-  "tags": [
-    "Video",
-    "React",
-    "MediaRecorder",
-    "Playback",
-    "CSP"
-  ],
+  "tags": ["Video", "React", "MediaRecorder", "Playback", "CSP"],
   "contentState": "recreated",
   "packages": [
     {
@@ -22,7 +16,7 @@
   "references": [
     {
       "title": "v10 React官方安装",
-      "url": "https://videojs.org/docs/guides/installation/react"
+      "url": "https://videojs.org/docs/framework/react"
     },
     {
       "title": "v10 GA发行记录",
@@ -58,19 +52,15 @@
       "title": "通过本地原创Canvas录制生成真正WebM并播放",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
         "examples/clip.ts",
         "examples/video-file-policy.mjs",
         "examples/video-file-policy.d.mts",
-        "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/media-cleanup.mjs",
+        "examples/media-cleanup.d.mts"
       ],
-      "capabilities": [
-        "user-gesture",
-        "MediaRecorder",
-        "local-blob",
-        "no-camera",
-        "no-microphone"
-      ],
+      "capabilities": ["user-gesture", "MediaRecorder", "local-blob", "no-camera", "no-microphone"],
       "description": "通过本地原创Canvas录制生成真正WebM并播放。真实 SDK 接入，媒体能力需浏览器环境验证；不预报运行成功。"
     },
     {
@@ -80,19 +70,15 @@
       "title": "两种片头源切换及新播放器挂载",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
         "examples/clip.ts",
         "examples/video-file-policy.mjs",
         "examples/video-file-policy.d.mts",
-        "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/media-cleanup.mjs",
+        "examples/media-cleanup.d.mts"
       ],
-      "capabilities": [
-        "user-gesture",
-        "MediaRecorder",
-        "local-blob",
-        "no-camera",
-        "no-microphone"
-      ],
+      "capabilities": ["user-gesture", "MediaRecorder", "local-blob", "no-camera", "no-microphone"],
       "description": "两种片头源切换及新播放器挂载。真实 SDK 接入，媒体能力需浏览器环境验证；不预报运行成功。"
     },
     {
@@ -102,29 +88,44 @@
       "title": "导入本地MP4/WebM并释放资源",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
+        "examples/example.tsx",
+        "examples/demo.tsx",
         "examples/clip.ts",
         "examples/video-file-policy.mjs",
         "examples/video-file-policy.d.mts",
-        "examples/example.tsx",
-        "examples/demo.tsx",
-        "examples/video-file-policy.test.mjs"
+        "examples/media-cleanup.mjs",
+        "examples/media-cleanup.d.mts"
       ],
-      "capabilities": [
-        "user-gesture",
-        "MediaRecorder",
-        "local-blob",
-        "no-camera",
-        "no-microphone"
-      ],
+      "capabilities": ["user-gesture", "MediaRecorder", "local-blob", "no-camera", "no-microphone"],
       "description": "导入本地MP4/WebM并释放资源。真实 SDK 接入，媒体能力需浏览器环境验证；不预报运行成功。"
     }
   ],
   "license": {
     "spdx": "Apache-2.0",
-    "assets": "生成的纯本地Canvas素材；外部公共HLS测试流必须用户显式选择，不下载付费资源"
+    "assets": "原创Canvas/MediaRecorder片段与用户显式选择的本地文件；无远程HLS/照片/商业素材。"
   },
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
-    "note": "Video.js v10已于2026-10-01稳定发布；官方10.2.0 React安装示例；真实浏览器未执行。"
+    "note": "按实装@videojs/react10.2.0随包文档与固定原文核验；真实媒体浏览器验收另行执行，不继承旧PASS。"
+  },
+  "official": {
+    "readme": {
+      "repository": "videojs/video.js",
+      "commit": "1042afd430d4d661606a71abf98a3ca87c2fb6be",
+      "path": "packages/react/README.md",
+      "sourceUrl": "https://github.com/videojs/video.js/blob/1042afd430d4d661606a71abf98a3ca87c2fb6be/packages/react/README.md",
+      "snapshotPath": "official/readme.md",
+      "sha256": "e2d3d53a2e3549976969d84c33b9437e3c873f249c296aafd83952a796af4663",
+      "language": "en",
+      "version": "10.2.0",
+      "syncedAt": "2026-11-17T18:00:30.026527+00:00"
+    },
+    "homepage": {
+      "url": "https://videojs.org/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-17T18:00:30.026527+00:00",
+      "reason": "实际响应头保存official/homepage-headers.txt；未从Lab-origin确认嵌入内容，保留unknown与直达。"
+    }
   }
 }

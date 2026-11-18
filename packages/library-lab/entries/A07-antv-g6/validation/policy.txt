@@ -1,0 +1,28 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+ARGV: ["pnpm", "test:policy", "--entry=A07"]
+START: 2026-11-10T11:41:59.606599+00:00
+END: 2026-11-10T11:41:59.915878+00:00
+EXIT: 0
+STDOUT:
+
+> @reactloom/library-lab@0.1.0 test:policy /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+> node scripts/policy-runner.mjs --entry=A07
+
+Pure entry policy suites selected: 2 (not SDK evidence)
+✔ tasks serialize while an older running task loses commit ownership (0.90534ms)
+✔ only latest queued intent executes before work begins (0.163ms)
+✔ dispose invalidates pending UI immediately but cleans up after active work settles exactly once (0.147424ms)
+✔ failure is reported to its caller and cannot poison later serialized work or cleanup (0.366026ms)
+✔ use host width rather than a 360px overflow floor (0.468937ms)
+✔ do not allocate a graph in hidden or invalid geometry (0.101613ms)
+✔ bound extraordinary canvas dimensions (0.089876ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 71.351585
+
+STDERR:

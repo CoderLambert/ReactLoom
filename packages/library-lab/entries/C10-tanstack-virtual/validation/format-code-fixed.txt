@@ -1,0 +1,2 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["pnpm", "exec", "biome", "check", "--write", "packages/library-lab/entries/C10-tanstack-virtual/examples/example.tsx", "packages/library-lab/entries/C10-tanstack-virtual/examples/filter-policy.mjs"], "utc": "2026-11-10T16:22:13.521458+00:00", "exit": 0}
+Checked 2 files in 8ms. No fixes applied.

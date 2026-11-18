@@ -1,126 +1,88 @@
-# Day.js 1.11.23｜插件要显式打开，回拨日不要让它猜
+# Day.js：分清日历标签、经过时间和时区中的瞬间
 
-Lab 锁定 `dayjs@1.11.23`（MIT）。核心包没有时区和严格格式。示例打开 `utc`、`timezone`、`customParseFormat`，并引入 `dayjs/locale/zh-cn`。不读取设备时区来决定服务端任务。
+RSS后台要显示中文日期、生成“每天中午”的窗口，并处理纽约回拨日出现两次的01:30。Day.js提供链式日期对象与可选插件；应用仍要决定输入合同、业务时区和歧义处理。仅格式化普通日期时可以先用原生Intl；喜欢函数式操作可对照date-fns，需要现成区间/偏移候选API时可对照Luxon。
 
-没有收据时 sdk / build / browser 保持 NOT_RUN。Actions 41779873259 不是本条目 PASS。
+本例实际 **dayjs1.11.23/MIT**，自制数据，无远程资产、cron、后端、存储或请求。源码、类型和真实Node运算已核对；客户端交互覆盖另见 local-validation.md。
 
-## Lab 当前示例
+## 先看四种不同的值
 
-[`examples/example.tsx`](examples/example.tsx) 在模块顶层 `dayjs.extend`。`demo.tsx` 只做再导出。没有定时器注册，也没有独立 workshop 端口。
+| 值 | 本例 | 应如何处理 |
+| --- | --- | --- |
+| 日历标签 | 2026-03-07 | 没有时刻/时区；严格解析，UTC对象仅作稳定日历算术载体。 |
+| 墙上时间+zone | 纽约3月7日12:00 | 用明确zone构造；次日中午重新构造，不能写死加24小时。 |
+| instant | 2026-11-01T05:30:00Z | 一条绝对时间轴上的点；转换显示时保持同一instant。 |
+| 展示文本 | 2026年3月7日/星期六 | 实例locale格式化；不能当排序键、数据库ID或无损往返载体。 |
 
-- **basic**：`strictDate` 用正则加 `dayjs(value, 'YYYY-MM-DD', true)`。第三个参数 `true` 才是严格模式。输出用 `locale('zh-cn')` 格式化年月日。非法日期直接抛错，不进位。
-- **business**：`civilWindow` 取当天和次日的 `YYYY-MM-DD`，再在目标时区构造中午。`elapsedHours` 是 `end.diff(start, 'hour', true)`，`elapsedMs` 是两个 `valueOf()` 的差。时区下拉框只有纽约、上海和 UTC。
-- **advanced**：并排春季 `2026-03-07` 和秋季 `2026-10-31` 的窗口。`twoFallbackInstants` 把 `05:30Z` 和 `06:30Z` 格式化到纽约，用来显示两个不同的 instant 可以落在回拨日的 01:30，但偏移一个是 `-04:00`、一个是 `-05:00`。[`offset-instant.mjs`](examples/offset-instant.mjs) 的 `resolveExplicitZonedInstant` 要求输入自带秒和偏移，再让 `dayjs(input).tz(zone)` 的墙上时间和偏移与输入一致。不一致就抛错，包括春季不存在的 `2026-03-08T02:30:00-05:00`。不要把无偏移的 `01:30` 交给 `dayjs.tz` 让它挑一个。
+Day.js默认不可变：add返回新对象，原对象不跟着改。本例显示调用前后和新值，并比较对象引用；不是手写一个“不可变成功”标志。badMutable插件会改变这项语义，本例不加载它。
 
-按钮可以填入 `-05:00` 或那段不存在的 02:30。
+## 插件和数据流
 
-## 什么时候用
-
-已经习惯链式调用、愿意自己登记插件的格式化和时区转换。新代码若要函数式和 `TZDate`，用 date-fns。需要 `Interval` 和官方的 `getPossibleOffsets` 列表时用 Luxon。Day.js 默认不可变，这和 Moment 不同；从 Moment 迁来时要删掉依赖对象被改写的代码。
-
-插件是全局的。`extend` 一次即可，不要在渲染函数里反复 extend。SSR 多实例时确认 locale 没有串到别的请求。本 Demo 是浏览器组件。
-
-## 数据与模型
-
-严格解析：`dayjs('2026-02-30', 'YYYY-MM-DD', true).isValid()` 必须为假。缺了 `true`，宽松模式可能接受多余字符或进位。Lab 还要求整串匹配正则，避免带时间的字符串混进来。
-
-时区构造用 `dayjs.tz(text, format, zone)`。先加一天的**日历字符串**，再在该时区取中午，这样「明天」不是加 24 小时。
-
-`diff` 的第三个参数 `true` 保留小数。不要把它和日历日数混在一个字段里。
-
-`resolveExplicitZonedInstant` 把 `Z` 看成 `+00:00` 再和 `format('Z')` 比较。墙上的 `YYYY-MM-DDTHH:mm` 也必须一致。这样春季缺口不会被静默挪到 03:30 还返回成功。以 `0000-` 开头的年份直接拒绝，避开两位数年份的历史别名。
-
-locale 只影响 `format` 的展示。不要用中文「2026年3月7日」当数据库键或排序键。
-
-## 三层示例
-
-### 基本
-
-`2026-02-30` 出现 alert。合法日期出现「2026年3月7日」这种中文格式（月份和日不补零，因为格式是 `YYYY年M月D日`）。切换 level 不会卸载插件。
-
-### 业务
-
-选纽约，看 `elapsedMs`。跨 DST 的窗口不应被写成恒等于 86400000 而不看结果。选 UTC 时，中午到次日中午应是整 24 小时。页面 note 写明没有注册生产定时任务。
-
-### 进阶
-
-先跑默认 `-04:00`。再点「选择回拨后的 -05:00」，instant 应差一小时，墙上时钟都是 01:30。点「春季不存在的 02:30」，必须 alert，不能返回一个被顺延的时间。`fallback` 数组里的两条 local 字符串要能看出偏移不同。
-
-## 反例
-
-### 1. 忘记 strict
-
-```ts
-dayjs('2026-02-31', 'YYYY-MM-DD').isValid()
+```text
+输入草稿 → 点击计算 → 共用date-operations/offset-instant
+  ├─ 形状/strict/zone往返拒绝 → alert，旧结果清空
+  └─ 真实Day.js操作 → 当前输入对应的JSON结果
+输入、zone或预设变化 → 旧结果/错误立即清空，等待重新计算
 ```
 
-不加 `true` 不能当本示例的合法性。Lab 的 `strictDate` 两者都要。
+核心没有严格格式和IANA时区能力。offset-instant在模块顶层登记utc，再登记依赖它的timezone；date-operations登记customParseFormat并加载zh-cn词典。插件扩展同一个Day.js模块实例，不能随组件卸载“取消登记”；不要在render中反复extend，也不要在每个请求里改全局locale/tz默认值。
 
-### 2. 用 add(1, 'day') 表示 24 小时后重试
+```js
+// 两个共享模块一起被实际UI与SDK测试导入。
+dayjs.extend(utc)
+dayjs.extend(timezone)
+dayjs.extend(customParseFormat)
+const date = dayjs.utc(input, 'YYYY-MM-DD', true)
+const label = date.locale('zh-cn').format('dddd')
+```
 
-日历日和经过时间在 DST 日不同。重试用 `add(24, 'hour')` 或毫秒。窗口函数用的是日历字符串加一天。
+最后的true开启严格匹配；另有整串正则限制。UTC用于日历字符串的下一日计算，不代表用户“当天凌晨”必是UTC瞬间。语言使用实例locale，不调用全局dayjs.locale('zh-cn')。
 
-### 3. dayjs.tz('2026-11-01 01:30', zone) 让库猜
+## 目标一：严格日期、不可变与中文显示
 
-回拨日有两个 instant。必须自带偏移，并用 `resolveExplicitZonedInstant` 核对。
+basic输入2026-02-30再点“使用 Day.js 运行计算”，应alert且没有旧结果；改为2028-02-29，旧错误消失，再计算应得到中文2028年2月29日、星期二。immutable.before与after都是2月29日，next为3月1日，sameReference=false。
 
-### 4. 固定 -05:00 表示纽约
+`strictDate`实际调用dayjs.utc(value, 'YYYY-MM-DD', true)，不是仅靠正则/Date宽松解析；`basicReport`调用真实add及实例locale。输入onChange不trim或格式化，避免打断编辑。计算按钮可用Tab/Enter原生激活；没有在输入框里伪造隐式提交或声称系统IME矩阵已通过。
 
-那只是标准时的一个偏移。夏季是 `-04:00`。保存 IANA 名和 instant。
+注意四位输入合同不等于全历史历法保证：插件仍使用JS Date构造，低年别名与极限年另有边界。保留原0000事件拒绝；本例面向现代RSS排程，不承诺所有古代年份/历法。business的下一日也须保持严格四位标签，越出合同会拒绝。
 
-### 5. 把 format 结果存进 JSON
+## 目标二：IANA中午窗口与经过时间
 
-本地化字符串不能再解析回同一瞬间。接口传 ISO instant 加 zone。
+business默认2026-03-07/纽约，窗口从7日12:00 -05:00到8日12:00 -04:00，真实elapsedHours=23；选UTC或上海为24。改成2026-10-31/纽约，窗口到11月1日12:00 -05:00，经过25小时。startInstant/endInstant是真实toISOString结果，elapsedMs由两个valueOf相减。
 
-### 6. 在组件内 extend
+`civilWindow`先对UTC日历标签add一日得到nextCivil，再分别用dayjs.tz(label+' 12:00', format, zone)构造两天中午。不直接在纽约对象上add(1,'day')后假设offset已重新解析，也不把经过时间固定为86400000。中午是此纽约/上海/UTC案例的业务锚点，不是所有IANA历史规则都永远不存在歧义的通用承诺。
 
-每次渲染都 extend 没有必要，也可能在测试之间污染共享的 dayjs。放在模块顶层，测试要知道插件一旦打开就留在进程里。
+这是一次纯计算，无cron/系统调度。真正每天执行任务还需服务端调度、幂等、停机补偿、权限与实际TZDB版本策略；elapsedHours不叫“日历日数”。
 
-### 7. locale 全局泄漏
+## 目标三：回拨同名时间和春季缺口
 
-`dayjs.locale('zh-cn')` 会改默认语言。Lab 用 `dayjs(value).locale('zh-cn')` 只影响这次调用。不要在请求之间改全局 locale。
+advanced展示两条真实UTC→NY转换：05:30Z对应01:30 -04:00，06:30Z对应01:30 -05:00。点“选择回拨后的 -05:00”再运行，selectedEvent.instant应晚一小时，但wall相同。点“尝试春季不存在的 02:30”，再次运行应拒绝，不能把输入静默移到03:30后仍显示成功。
 
-### 8. 春季缺口被当成合法
+现有`resolveExplicitZonedInstant`保留IANA墙上时间与offset往返：
 
-若只看 `dayjs(input).isValid()`，某些偏移字符串仍是有效的绝对时间，但不是该时区的墙上 02:30。必须比较 `tz(zone)` 之后的钟面和偏移。
+```js
+const candidate = dayjs(input)       // 输入必须已有秒与Z/数值offset
+const local = candidate.tz(zone)     // 转换已有instant，不重新猜墙上时间
+// 同时比较完整YYYY-MM-DDTHH:mm:ss和format('Z')；Z按+00:00比较。
+```
 
-## 组合
+正则/应用guard先限制时分秒、offset不超过±14:00、拒未知-00:00和0000年；再调用真实库，按秒比较墙上时间和偏移。合法instant不代表它属于纽约的那段墙上时间：春季02:30 -05:00可表示一个绝对点，但转换回纽约是03:30，必须拒绝。helper可接其他合法IANA名；此UI固定纽约，business下拉仅允许三zone。无效zone可能由宿主Intl抛RangeError。
 
-**date-fns。** 不要对同一个发布日用两套库各算一次再取平均。选定权威库。C22 展示迁移对照，不是运行时双写。
+不要把无offset的01:30交给dayjs.tz猜earlier/later；也不要把带offset的instant再当无offset墙上字符串静态构造。`.tz(zone)`保留instant，`.tz(zone,true)`保留墙上读数而改变instant，本例不用后者。`tz.setDefault`不改变普通dayjs(value)的本地解析规则，本例始终显式传zone。
 
-**Luxon。** 若产品需要用户从 `getPossibleOffsets()` 里点选，用 C16 的 API，而不是在 Day.js 里手写一份不完整的列表。
+## 迁入业务与清理
 
-**i18next。** 月名和按钮属于文案。`locale('zh-cn')` 只负责这次日期格式。语言切换不要改写已经存下的 instant。
+携带三个场景同列的 **7个sourceFiles**：example.tsx、demo.tsx（重导出）、date-operations.mjs/.d.mts、offset-instant.mjs/.d.mts、styles.css。原example导出的strictDate/civilWindow/twoFallbackInstants仍可用；核心操作已与UI拆开供Node/服务端复用。`.d.mts`是本地函数合同，不冒充Day.js官方类型；实际插件API由包内声明核对。Node/Vite兼容的插件导入保留.js后缀。
 
-## 生产清单
+level切换使用独立Session；“重置当前目标”恢复日期/zone/offset种子，清旧结果/error。advanced不读取隐藏civil输入，basic无效草稿不会污染advanced。普通编辑不卸载组件，仅使旧结果失效。样式仅c15范围，长offset/JSON断行，原生控件焦点可见。
 
-- `customParseFormat` 打开后，解析带第三参 `true`。
-- 时区用 `dayjs.tz`，并列出允许的 IANA 名。
-- 回拨日的输入带偏移，且与该 zone 的墙上时间一致。
-- 展示和存储分开。
-- 不把 `diff` 小时数叫做日历日。
-- 插件 extend 放在模块顶层，locale 用实例方法。
+Day.js对象没有组件式destroy；应用无timer、网络、Worker、监听注册或临时URL，卸载只销毁自己的React树和state，不删除全局插件/locale。timezone内部缓存Intl.DateTimeFormat，时区规则来自宿主Intl/TZDB，不由插件带一套独立数据；服务器和浏览器版本差异仍需验证，升级Day.js不等于升级TZDB。
 
-## 升级
+## 官方与验证边界
 
-1.11.23 的插件路径是 `dayjs/plugin/timezone` 等。升级后重测严格模式、纽约春秋窗口和 `0000` 年。timezone 数据来自插件和宿主，换 Day.js 小版本不等于换了整套 TZDB。
+主[官方中文README原文](official/readme.md)来自iamkun/dayjs固定commit **4549b8d03307891143e8a50d39fcdab1f16f77cf**，实际递归树发现docs/zh-cn/README.zh-CN.md，3882B/zh-CN，SHA256 **3f4c6e9edd42554b8c6a1e111daafb568b4eba3e8b9da31a9296abebb8aae2c5**；未改写/翻译。附[固定根英文原文](https://github.com/iamkun/dayjs/blob/4549b8d03307891143e8a50d39fcdab1f16f77cf/README.md)8229B，和安装README逐字节相同。
 
-## 练习
+**npm1.11.23 gitHead与官方v1.11.23 tag都指向该commit；源码manifest写0.0.0-development，安装包写1.11.23。** 三者事实均保留，不把源码版本伪写成发布版本。API以安装1.11.23类型/源码和真实检查为准，在线文档另有更新节奏。
 
-1. `2026-02-30` 失败，`2026-03-07` 以中文格式出现。
-2. `-04:00` 和 `-05:00` 的 01:30 得到不同 `toISOString()`。
-3. `2026-03-08T02:30:00-05:00` 在纽约被拒绝。
-4. 去掉偏移后 `resolveExplicitZonedInstant` 抛错。
+匹配中文原文直接链接[中文官网](https://day.js.org/zh-CN/)，实际GET200完整rawHeaders没有XFO/强制CSP；尚未从Lab origin确认iframe内容可用，故unknown，不推allowed。日期/最终URL/7次成功请求/重复头和匿名cookie脱敏在维护文件official/source-evidence.json。首次过强manifest断言失败保留，没有覆盖成功对。抓取仅全流程成功后暂存/replace，异常另存failed；受控传输维护检查不算新的官方HTTP。
 
-## 官方链接
-
-- https://day.js.org/docs/en/parse/parse
-- https://day.js.org/docs/en/plugin/timezone
-- https://day.js.org/docs/en/plugin/custom-parse-format
-- https://github.com/iamkun/dayjs
-
-## 证据
-
-`offset-instant` 若在测试里 import 了插件，仍要有 sdk 收据才算 Day.js PASS。build 与 browser 分开。收据目录是 `docs/library-lab/evidence/runs/`。
-
-GitHub Actions 41779873259 是仓库级安装、typecheck、build、52 个 SDK 文件（153 项测试）和 45 项 Playwright 的结果，不是 C15 的条目 PASS。不要改 `verification.json`。
+[官方时区说明](https://day.js.org/docs/en/plugin/timezone)与[严格格式说明](https://day.js.org/docs/en/parse/string-format)用于解释API；固定安装源码审计/六项/实际命令见维护记录local-validation.md。SDK6含实际共享计算和一组混合guard+SDK往返，不证明React按钮/390px/卸载。完整三case提案交root，formal sdk/build/browser保持NOT_RUN；OS IME、读屏、touch、SSR、独立迁入与设备时区矩阵仍未验。

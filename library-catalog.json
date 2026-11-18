@@ -3,7 +3,7 @@
     "entryId": "A01",
     "name": "Apache ECharts",
     "group": "A",
-    "summary": "业务仪表盘和多类型交互图表",
+    "summary": "用同一组七日指标理解option、坐标轴、系列更新、容器尺寸与播放门禁",
     "path": "packages/library-lab/entries/A01-echarts",
     "contentState": "recreated"
   },
@@ -19,7 +19,7 @@
     "entryId": "A03",
     "name": "Chart.js",
     "group": "A",
-    "summary": "模块化 Canvas 图表与 React 生命周期边界",
+    "summary": "模块化Canvas图表：选择同步、复用实例更新，以及类型/尺寸变化时的React所有权",
     "path": "packages/library-lab/entries/A03-chartjs",
     "contentState": "recreated"
   },
@@ -27,7 +27,7 @@
     "entryId": "A04",
     "name": "uPlot",
     "group": "A",
-    "summary": "有界内存的时间序列趋势图与实时遥测",
+    "summary": "对齐秒级时间序列、真实更新与尺寸变化，再观察100点保留窗口、暂停和销毁",
     "path": "packages/library-lab/entries/A04-uplot",
     "contentState": "recreated"
   },
@@ -35,7 +35,7 @@
     "entryId": "A05",
     "name": "D3",
     "group": "A",
-    "summary": "可定制SVG可视化：比例尺、坐标轴、数据联结与动态重绘",
+    "summary": "比例尺映射、真实坐标轴和keyed数据联结：React控件与D3 SVG子树各自拥有DOM",
     "path": "packages/library-lab/entries/A05-d3",
     "contentState": "recreated"
   },
@@ -43,7 +43,7 @@
     "entryId": "A06",
     "name": "React Flow",
     "group": "A",
-    "summary": "React 节点工作流编辑器：受控节点和边、连接校验与画布交互",
+    "summary": "从受控节点和端口连线，到表单审批、条件分支和发布快照的真实React Flow工作台",
     "path": "packages/library-lab/entries/A06-react-flow",
     "contentState": "recreated"
   },
@@ -51,7 +51,7 @@
     "entryId": "A07",
     "name": "AntV G6",
     "group": "A",
-    "summary": "关系网络的节点、边、拓扑与交互画布（基于 G6 5.1.1）",
+    "summary": "从稳定节点与有向边到真实Canvas；观察同实例拓扑更新、选择、窄屏适配与异步销毁",
     "path": "packages/library-lab/entries/A07-antv-g6",
     "contentState": "recreated"
   },
@@ -75,7 +75,7 @@
     "entryId": "A10",
     "name": "tldraw",
     "group": "A",
-    "summary": "可编程无限画布与业务白板，明确生产许可证限制",
+    "summary": "从真实画布编辑到文档快照保存恢复，区分会话、只读与生产许可",
     "path": "packages/library-lab/entries/A10-tldraw",
     "contentState": "recreated"
   },
@@ -107,7 +107,7 @@
     "entryId": "A14",
     "name": "React Three Fiber",
     "group": "A",
-    "summary": "React19声明式三维场景、useFrame与可见性节能的实践",
+    "summary": "声明式Mesh与真实Three对象、射线交互和按需帧：划清React业务状态与useFrame所有权",
     "path": "packages/library-lab/entries/A14-react-three-fiber",
     "contentState": "recreated"
   },
@@ -115,7 +115,7 @@
     "entryId": "A15",
     "name": "Leaflet",
     "group": "A",
-    "summary": "无需远程底图的地点数据浏览、图层与地图交互",
+    "summary": "无瓦片的真实地图：经纬度与GeoJSON、稳定点图层筛选、局部更新和视口/卸载所有权",
     "path": "packages/library-lab/entries/A15-leaflet",
     "contentState": "recreated"
   },
@@ -123,7 +123,7 @@
     "entryId": "A16",
     "name": "MapLibre GL JS",
     "group": "A",
-    "summary": "无需瓦片服务的 WebGL GeoJSON 点层、过滤及生命周期实践",
+    "summary": "本地GeoJSON到真实WebGL点层，区分源数据、渲染结果与Worker生命周期",
     "path": "packages/library-lab/entries/A16-maplibre-gl-js",
     "contentState": "recreated"
   },
@@ -139,7 +139,7 @@
     "entryId": "B01",
     "name": "Motion for React",
     "group": "B",
-    "summary": "React 入场/离场、列表布局过渡与减少动画偏好",
+    "summary": "真实presence退出、稳定身份列表与布局重排；业务提交、动画和焦点各自有所有者",
     "path": "packages/library-lab/entries/B01-motion-for-react",
     "contentState": "recreated"
   },
@@ -147,7 +147,7 @@
     "entryId": "B02",
     "name": "GSAP",
     "group": "B",
-    "summary": "有时间线、重播、反转与减少动画偏好控制的交互动画",
+    "summary": "从Tween缓动映射到Timeline标签/重叠/反向，观察真实样式与减少动态及context局部清理",
     "path": "packages/library-lab/entries/B02-gsap",
     "contentState": "recreated"
   },
@@ -155,7 +155,7 @@
     "entryId": "B03",
     "name": "react-spring",
     "group": "B",
-    "summary": "基于 spring 物理的 React 动画与列表进出场；局部减少动画兼容",
+    "summary": "React 状态驱动弹簧、带稳定身份的安全离场与本例减少动画",
     "path": "packages/library-lab/entries/B03-react-spring",
     "contentState": "recreated"
   },
@@ -163,7 +163,7 @@
     "entryId": "B04",
     "name": "dotLottie 播放器",
     "group": "B",
-    "summary": "本地矢量动画、播放控制与减少动态效果",
+    "summary": "用本地原创JSON观察真实WASM播放、业务结果分离与减少动态/错误恢复",
     "path": "packages/library-lab/entries/B04-dotlottie",
     "contentState": "recreated"
   },
@@ -171,7 +171,7 @@
     "entryId": "B05",
     "name": "Rive React Runtime",
     "group": "B",
-    "summary": "Rive WebGL2 动画播放、可访问状态反馈和运行时生命周期",
+    "summary": "远程Rive文件、真实播放/Layout与React业务分离，观察SDK契约和共享渲染器所有权",
     "path": "packages/library-lab/entries/B05-rive-react",
     "contentState": "recreated"
   },
@@ -179,7 +179,7 @@
     "entryId": "B06",
     "name": "Ant Design",
     "group": "B",
-    "summary": "企业组件、受控表单、表格与反馈",
+    "summary": "局部Token与上下文反馈、Form校验到Table、一次冲突回填与撤销恢复",
     "path": "packages/library-lab/entries/B06-ant-design",
     "contentState": "recreated"
   },
@@ -187,7 +187,7 @@
     "entryId": "B07",
     "name": "MUI",
     "group": "B",
-    "summary": "Material UI 主题、表格、可访问弹窗与业务错误回填",
+    "summary": "从局部主题与slot输入到过滤表/一步撤销，再走Dialog校验、模拟冲突恢复与Portal焦点",
     "path": "packages/library-lab/entries/B07-mui",
     "contentState": "recreated"
   },
@@ -195,7 +195,7 @@
     "entryId": "B08",
     "name": "Mantine",
     "group": "B",
-    "summary": "主题控件、业务表格、模态编辑及 NumberInput 中间值校验",
+    "summary": "局部Mantine主题、防抖同源表格、保留数字草稿的配额编辑与撤销",
     "path": "packages/library-lab/entries/B08-mantine",
     "contentState": "recreated"
   },
@@ -203,7 +203,7 @@
     "entryId": "B09",
     "name": "shadcn/ui",
     "group": "B",
-    "summary": "从注册表复制源码的设计系统，CVA变体与Radix Slot组合、组件源码所有权和可访问性",
+    "summary": "拥有组件源码：实际 class 生成、可恢复的批量归档与 Slot 链接语义",
     "path": "packages/library-lab/entries/B09-shadcn-ui",
     "contentState": "recreated"
   },
@@ -219,7 +219,7 @@
     "entryId": "B11",
     "name": "Radix Primitives",
     "group": "B",
-    "summary": "DropdownMenu 原语的键盘、焦点、复选、单选与嵌套菜单实战",
+    "summary": "真实DropdownMenu键盘与Portal、受控复选排序、过滤后的稳定身份与禁用守卫",
     "path": "packages/library-lab/entries/B11-radix-primitives",
     "contentState": "recreated"
   },
@@ -227,7 +227,7 @@
     "entryId": "B12",
     "name": "React Aria",
     "group": "B",
-    "summary": "React Aria Components ComboBox 的键盘、IME、ARIA 与异步建议实战",
+    "summary": "受控文本与频道身份分离，观察键盘/禁用选择、真实FormData和竞态安全本地异步建议",
     "path": "packages/library-lab/entries/B12-react-aria",
     "contentState": "recreated"
   },
@@ -235,7 +235,7 @@
     "entryId": "B13",
     "name": "dnd-kit",
     "group": "B",
-    "summary": "真实鼠标/触控/键盘排序与稳定身份、受限拖拽的工程示例",
+    "summary": "从真实拖动到受限排序和单层撤销，观察业务ID、完整数组与DOM同步",
     "path": "packages/library-lab/entries/B13-dnd-kit",
     "contentState": "recreated"
   },
@@ -243,7 +243,7 @@
     "entryId": "B14",
     "name": "Pragmatic drag and drop",
     "group": "B",
-    "summary": "原生DOM拖放适配器、drop targets、监视器与严格事件作用域",
+    "summary": "真实原生拖放、固定频道约束与双实例scope隔离，保留键盘回退和会话失效",
     "path": "packages/library-lab/entries/B14-pragmatic-drag-and-drop",
     "contentState": "recreated"
   },
@@ -251,7 +251,7 @@
     "entryId": "B15",
     "name": "react-grid-layout",
     "group": "B",
-    "summary": "可拖拽、缩放与响应式仪表盘布局（2.3.0 控制式接口）",
+    "summary": "容器实测到格子/像素布局，再用真实拖拽缩放与锁定/键盘替代维护宽窄两份仪表盘",
     "path": "packages/library-lab/entries/B15-react-grid-layout",
     "contentState": "recreated"
   },
@@ -259,7 +259,7 @@
     "entryId": "B16",
     "name": "react-resizable-panels",
     "group": "B",
-    "summary": "可调整尺寸的面板布局",
+    "summary": "真实分割条驱动的双栏/三栏约束布局、键盘轴与默认复位",
     "path": "packages/library-lab/entries/B16-react-resizable-panels",
     "contentState": "recreated"
   },
@@ -267,7 +267,7 @@
     "entryId": "B17",
     "name": "Floating UI",
     "group": "B",
-    "summary": "浮层定位、碰撞和焦点管理",
+    "summary": "从锚点和首选方向到真实flip/shift，组合非模态焦点、滚动跟随与IME安全过滤",
     "path": "packages/library-lab/entries/B17-floating-ui",
     "contentState": "recreated"
   },
@@ -283,7 +283,7 @@
     "entryId": "B19",
     "name": "Embla Carousel",
     "group": "B",
-    "summary": "可访问的触控轮播、滑动吸附和动态卡片",
+    "summary": "用真实DOM测量理解snap与卡片、受控reInit、动态ID和循环回退",
     "path": "packages/library-lab/entries/B19-embla-carousel",
     "contentState": "recreated"
   },
@@ -291,7 +291,7 @@
     "entryId": "B20",
     "name": "Sonner",
     "group": "B",
-    "summary": "即时通知和操作反馈",
+    "summary": "真实Toast、最新保存的一次撤销、同id异步更新与局部取消",
     "path": "packages/library-lab/entries/B20-sonner",
     "contentState": "recreated"
   },
@@ -299,7 +299,7 @@
     "entryId": "B21",
     "name": "react-motion（历史迁移）",
     "group": "B",
-    "summary": "从停滞的react-motion Motion/spring模式迁移至现代motion/react的状态驱动动画",
+    "summary": "从旧react-motion描述与render-prop迁向现代Motion：真实presence、列表事务与实时减动",
     "path": "packages/library-lab/entries/B21-react-motion-migration",
     "contentState": "recreated"
   },
@@ -307,7 +307,7 @@
     "entryId": "B22",
     "name": "react-beautiful-dnd（历史迁移）",
     "group": "B",
-    "summary": "把废弃react-beautiful-dnd的Droppable/Draggable列表低风险迁移为React19兼容替代库",
+    "summary": "在React19运行@hello-pangea/dnd18.0.1，保留历史RBD列表形状并核对真实传感器与最终写入守卫",
     "path": "packages/library-lab/entries/B22-react-beautiful-dnd-migration",
     "contentState": "recreated"
   },
@@ -315,7 +315,7 @@
     "entryId": "C01",
     "name": "React Hook Form",
     "group": "C",
-    "summary": "真实 RSS 订阅表单：动态字段、服务端错误映射与请求取消",
+    "summary": "从register、字段错误和提交，到动态RSS行与可取消的业务错误回填",
     "path": "packages/library-lab/entries/C01-react-hook-form",
     "contentState": "recreated"
   },
@@ -323,7 +323,7 @@
     "entryId": "C02",
     "name": "Zod",
     "group": "C",
-    "summary": "不可信 RSS / OPML JSON 校验、规范化与跨字段错误",
+    "summary": "从unknown到订阅DTO：严格字段、判别联合、TTL转换与精确重复路径",
     "path": "packages/library-lab/entries/C02-zod",
     "contentState": "recreated"
   },
@@ -331,7 +331,7 @@
     "entryId": "C03",
     "name": "Valibot",
     "group": "C",
-    "summary": "模块化 Schema 验证、RSS 数据收窄与跨字段错误定位",
+    "summary": "用同源Schema把未知RSS输入收窄成输出，观察批量错误路径与两端真实日期/跨字段约束",
     "path": "packages/library-lab/entries/C03-valibot",
     "contentState": "recreated"
   },
@@ -339,7 +339,7 @@
     "entryId": "C04",
     "name": "JSON Forms",
     "group": "C",
-    "summary": "通过 JSON Schema 与 UI Schema 构建可校验的业务表单",
+    "summary": "真实Schema表单、HIDE与payload分离、字段回填及可取消的本地提交快照",
     "path": "packages/library-lab/entries/C04-jsonforms",
     "contentState": "recreated"
   },
@@ -347,7 +347,7 @@
     "entryId": "C05",
     "name": "Ajv",
     "group": "C",
-    "summary": "JSON Schema 编译验证、严格输入边界与条件规则",
+    "summary": "真实JSON Schema编译：结构与业务分层、整对象唯一与URL身份、条件必填及不修改输入",
     "path": "packages/library-lab/entries/C05-ajv",
     "contentState": "recreated"
   },
@@ -355,7 +355,7 @@
     "entryId": "C06",
     "name": "IMask",
     "group": "C",
-    "summary": "数字编号、金额和日期输入掩码；保留光标与中文 IME 边界",
+    "summary": "真实编号/金额/日期输入，区分模型与视图、SDK值/完成与业务语义，验证自己的输入生命周期",
     "path": "packages/library-lab/entries/C06-imask",
     "contentState": "recreated"
   },
@@ -363,7 +363,7 @@
     "entryId": "C07",
     "name": "TanStack Table",
     "group": "C",
-    "summary": "Headless 表格的稳定业务 ID、排序和分页数据所有权",
+    "summary": "从原始数据、行模型到真实DOM，辨清客户端与服务端排序分页及稳定选择ID",
     "path": "packages/library-lab/entries/C07-tanstack-table",
     "contentState": "recreated"
   },
@@ -379,7 +379,7 @@
     "entryId": "C09",
     "name": "React Virtuoso",
     "group": "C",
-    "summary": "自动测量变高列表、RSS分段加载与历史消息锚定",
+    "summary": "真实变高虚拟窗口、可取消本地分页与稳定消息锚点",
     "path": "packages/library-lab/entries/C09-react-virtuoso",
     "contentState": "recreated"
   },
@@ -387,7 +387,7 @@
     "entryId": "C10",
     "name": "TanStack Virtual",
     "group": "C",
-    "summary": "Headless 列表虚拟化、变高测量与稳定业务键",
+    "summary": "从范围模型到真实DOM：稳定业务键、统一筛选、变高测量与可重建视图",
     "path": "packages/library-lab/entries/C10-tanstack-virtual",
     "contentState": "recreated"
   },
@@ -395,7 +395,7 @@
     "entryId": "C11",
     "name": "react-arborist",
     "group": "C",
-    "summary": "虚拟化树形 RSS 目录、稳定节点 ID、跨分组拖拽和中文搜索",
+    "summary": "受控订阅树：稳定ID、SDK选择与焦点、真实拖放及1807节点虚拟窗口",
     "path": "packages/library-lab/entries/C11-react-arborist",
     "contentState": "recreated"
   },
@@ -403,7 +403,7 @@
     "entryId": "C12",
     "name": "FullCalendar",
     "group": "C",
-    "summary": "基于 React 的事件排程、日历视图与时区边界",
+    "summary": "真实React v7视图与事件模型、全天创建和改期提议，区分DST重复时刻与同步revert",
     "path": "packages/library-lab/entries/C12-fullcalendar",
     "contentState": "recreated"
   },
@@ -411,7 +411,7 @@
     "entryId": "C13",
     "name": "Frappe Gantt",
     "group": "C",
-    "summary": "交互式任务时间线、依赖关系和日期修改",
+    "summary": "隔离文档中的真实任务时间线、语义表格保存与权威计划边界",
     "path": "packages/library-lab/entries/C13-frappe-gantt",
     "contentState": "recreated"
   },
@@ -419,7 +419,7 @@
     "entryId": "C14",
     "name": "date-fns",
     "group": "C",
-    "summary": "函数式日期、日历天与 DST 时区运算",
+    "summary": "同源日期合同：严格日历日、日历排程与明确偏移事件",
     "path": "packages/library-lab/entries/C14-date-fns",
     "contentState": "recreated"
   },
@@ -427,7 +427,7 @@
     "entryId": "C15",
     "name": "Day.js",
     "group": "C",
-    "summary": "不可变日期、严格校验与时区插件的 RSS 排程实践",
+    "summary": "真实Day.js严格日期与不可变操作、IANA中午窗口和显式偏移DST往返",
     "path": "packages/library-lab/entries/C15-dayjs",
     "contentState": "recreated"
   },
@@ -435,7 +435,7 @@
     "entryId": "C16",
     "name": "Luxon",
     "group": "C",
-    "summary": "DateTime、Interval 与明确 IANA 时区的日历窗口",
+    "summary": "显式时区与同一瞬间、23/25小时日历窗口、DST缺口拒绝与回拨偏移选择",
     "path": "packages/library-lab/entries/C16-luxon",
     "contentState": "recreated"
   },
@@ -443,7 +443,7 @@
     "entryId": "C17",
     "name": "i18next",
     "group": "C",
-    "summary": "独立语言实例、命名空间、复数、插值和 fallback 的核心 i18n 工作坊",
+    "summary": "核心独立实例的真实t/复数、本地namespace写入与最新意图队列；词典fixture不作机器翻译",
     "path": "packages/library-lab/entries/C17-i18next",
     "contentState": "recreated"
   },
@@ -459,7 +459,7 @@
     "entryId": "C19",
     "name": "nuqs",
     "group": "C",
-    "summary": "URL 搜索参数的类型安全状态、路由适配、push/replace 和 IME 约束",
+    "summary": "共享URL筛选、关联参数与真实历史：明确区分草稿/SDK状态/地址栏及当前Router兼容桥",
     "path": "packages/library-lab/entries/C19-nuqs",
     "contentState": "recreated"
   },
@@ -467,7 +467,7 @@
     "entryId": "C20",
     "name": "clsx",
     "group": "C",
-    "summary": "条件 className 合成",
+    "summary": "用真实输入与返回值理解条件类名，以及 full / lite 的适用边界",
     "path": "packages/library-lab/entries/C20-clsx",
     "contentState": "recreated"
   },
@@ -475,7 +475,7 @@
     "entryId": "C21",
     "name": "tailwind-merge",
     "group": "C",
-    "summary": "Tailwind v4 工具类冲突合并与可覆盖组件实践",
+    "summary": "一次完整合并实验：组件基础类、条件变体与调用者覆盖到真实 className",
     "path": "packages/library-lab/entries/C21-tailwind-merge",
     "contentState": "recreated"
   },
@@ -483,7 +483,7 @@
     "entryId": "C22",
     "name": "Moment（历史迁移）",
     "group": "C",
-    "summary": "将历史 Moment 日期代码迁移到 date-fns、Day.js 与明确的时区模型",
+    "summary": "把旧Moment发布计划拆成日历日、明确时间点与地区排程，真实对照两套不可变API和DST语义",
     "path": "packages/library-lab/entries/C22-moment-migration",
     "contentState": "recreated"
   },
@@ -507,7 +507,7 @@
     "entryId": "D03",
     "name": "p-limit",
     "group": "D",
-    "summary": "Promise 并发上限控制",
+    "summary": "真实观察 Promise 并发、运行/排队/完成与实测峰值，再区分失败隔离和取消边界",
     "path": "packages/library-lab/entries/D03-p-limit",
     "contentState": "recreated"
   },
@@ -539,7 +539,7 @@
     "entryId": "D07",
     "name": "TanStack Query",
     "group": "D",
-    "summary": "远程状态的查询键、缓存、取消与乐观更新生命周期",
+    "summary": "从同键共享与fresh/stale，到后台刷新、身份分页、可取消查询和按行乐观回滚",
     "path": "packages/library-lab/entries/D07-tanstack-query",
     "contentState": "recreated"
   },
@@ -603,7 +603,7 @@
     "entryId": "D15",
     "name": "Dexie",
     "group": "D",
-    "summary": "IndexedDB 事务、复合索引和版本升级，不污染其他站点存储",
+    "summary": "离线 RSS 的索引筛选、数组排序、原子回滚与真实版本升级",
     "path": "packages/library-lab/entries/D15-dexie",
     "contentState": "recreated"
   },
@@ -691,7 +691,7 @@
     "entryId": "E05",
     "name": "Monaco Editor",
     "group": "E",
-    "summary": "IDE 级代码编辑与 Worker",
+    "summary": "用真实模型编辑、异步 JSON 诊断与显式本地草稿理解浏览器代码编辑器",
     "path": "packages/library-lab/entries/E05-monaco-editor",
     "contentState": "recreated"
   },
@@ -739,7 +739,7 @@
     "entryId": "E11",
     "name": "Streamdown",
     "group": "E",
-    "summary": "面向流式 Markdown 的真实增量显示、未闭合语法与安全输出",
+    "summary": "从分段输入到累计正文：未闭合语法、研究摘要与受控外链的真实 Streamdown 渲染",
     "path": "packages/library-lab/entries/E11-streamdown",
     "contentState": "recreated"
   },
@@ -803,7 +803,7 @@
     "entryId": "E19",
     "name": "ffmpeg.wasm",
     "group": "E",
-    "summary": "FFmpeg.wasm 真实 Worker 转换、WASM显式加载、取消与内存边界",
+    "summary": "以真实 Worker 把本地小文件转为 16 kHz 单声道 PCM16 WAV，观察参数、输出、取消与重载",
     "path": "packages/library-lab/entries/E19-ffmpeg-wasm",
     "contentState": "recreated"
   },
@@ -843,7 +843,7 @@
     "entryId": "F05",
     "name": "SheetJS",
     "group": "F",
-    "summary": "SheetJS CE 0.20.3 的真实工作簿往返与危险表格输入边界",
+    "summary": "从行数据到工作簿字节：单表往返、分类多表报告与受限导入",
     "path": "packages/library-lab/entries/F05-sheetjs",
     "contentState": "recreated"
   },
@@ -891,7 +891,7 @@
     "entryId": "F11",
     "name": "MSW",
     "group": "F",
-    "summary": "网络层请求 Mock 与场景",
+    "summary": "真实请求进入共享handler：GET参数、422恢复、一次503覆盖与隔离会话清理",
     "path": "packages/library-lab/entries/F11-msw",
     "contentState": "recreated"
   },
@@ -947,7 +947,7 @@
     "entryId": "F18",
     "name": "rollup-plugin-visualizer",
     "group": "F",
-    "summary": "真实Vite8构建报告：Treemap、Markdown体积清单与Raw-data JSON",
+    "summary": "从模块归因到真实改动：比较静态与点击加载入口，测量首屏依赖闭包并设置构建预算",
     "path": "packages/library-lab/entries/F18-rollup-plugin-visualizer",
     "contentState": "recreated"
   }

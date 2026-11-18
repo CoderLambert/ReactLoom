@@ -1,182 +1,83 @@
-# B03 react-spring：弹簧物理与列表进出
+# react-spring：把状态目标变成连续运动
 
-`@react-spring/web` 用弹簧把多个视觉目标连成连续运动。定长 CSS transition 在目标不断改写时容易拼接生硬；`animated` 把 `SpringValue` 写到 DOM，动画帧不必每次 `setState`。Library Lab 固定 `@react-spring/web@10.1.2`，宿主 React 19.3.0。许可证 MIT。官方 v10 面向 React 19；React 18 项目应留在 v9。11.0.0-beta 不是本条目的稳定基线。不要把 `@react-spring/three` 当成 DOM 入口。
+通知卡从强调到淡化、新闻从列表中退出时，业务状态先发生变化，视觉才追上目标。`@react-spring/web` 提供 `useSpring`、`useTransition` 与 `animated`：前两者计算 SpringValue，后者把活动值写入真实 DOM 样式，不需要应用每帧 setState。弹簧可在运动途中接收新目标，默认物理模型没有固定毫秒时长。
 
-## Lab 当前示例
+本例固定 **@react-spring/web 10.1.2 / React 19.3.0，MIT**。匹配版本安装包与固定提交的 peerDependencies 均支持 React / ReactDOM `^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0`；不能把“v10 仅支持 React19”套在10.1.2上。本文不把 peer 声明当成所有 React 版本已回归。新闻是本地确定性 fixture，没有请求、订阅服务或模型调用。
 
-挂载文件是 `examples/example.tsx`（`examples/demo.tsx` 只再导出）。三层共用一个组件，没有原研究稿的 `workshop/src/App.tsx`、`BasicSpring.tsx`、`NoticeCenter.tsx`、`PointerCard.tsx` 或 Vite `localhost:5173`。
+适合目标频繁改写的局部视觉变化与列表进出场。静态 hover 可用 CSS；布局/手势组合可比较 B01 Motion；跨元素时间线可比较 B02 GSAP；拖拽排序由 B13 等库负责。动画库不管理焦点、业务容量或 HTML 安全。
 
-已挂载：
+## 三个可操作目标
 
-- 所有层都有 `useSpring`：`expanded` 映射到 `opacity` 与 `translateY`，`config` 为 `{tension: 240, friction: 28}`。`immediate: reduced` 让系统减少动画时跳到终值。
-- 减少动画来自组件内的 `matchMedia('(prefers-reduced-motion: reduce)')`，订阅 `change` 并在 cleanup 移除。**没有**调用 `Globals.assign` 或官方 `useReducedMotion`（后者会改全局 `skipAnimation`）。
-- `business` / `advanced` 使用 **`@react-spring/web` 的 `useTransition`**，`keys: item => item.id`。from / enter / leave 是透明度加 `translateX`。离场节点由 transition 保留到动画结束。
-- 列表上限 `MAX_SPRING_ARTICLES = 12`。`appendUniqueArticle` 拒绝重复 id 和超限。id 在点击里自增。
-- 焦点：`focusDestinationAfterRemoval` 只在被删按钮持焦时返回目标。未满员时焦点到「添加」；删除后仍处于容量上限则改到始终可用的「恢复默认」。`useLayoutEffect` 等提交后再 `focus()`，并跳过已断开或仍 disabled 的按钮。
+### ① 状态目标与单元素弹簧
 
-未挂载、仍要教的生产模式：指针捕获跟手（`api.start({immediate: true})`）、松手回弹、`AbortController` + epoch 的通知回填、离场节点 `aria-hidden` 并撤掉操作按钮、把通知正文当 HTML 插入。Lab 的移除按钮在 transition 回调里仍然渲染；生产离场项不应继续可点。
-
-## 什么时候使用
-
-适合卡片在多个目标之间连续变化、通知进出、位置/比例/颜色的可中断插值。不适合：静态 hover（CSS）、整页时间线（GSAP）、声明式 layout/手势优先的界面（B01 Motion）、几千行列表（先虚拟化）、排序拖放（B13/B14）。react-spring 不是拖拽系统。
-
-## 概念模型
-
-### 声明式 useSpring
+打开 basic，用键盘或鼠标点击“收起视觉强调”。目标文字立即变成“淡化”，卡片真实 `opacity` 收敛至0.45，`translateY` 至18px；再“展开视觉强调”回到1与0px。可以在运动中反复切换，不需要等待一次动画结束。卡片收起只是淡化，内容仍可读，按钮的 aria-pressed 表达当前目标。
 
 ```tsx
-import {animated, useSpring} from '@react-spring/web';
-
-function Example({open}: {open: boolean}) {
-  const styles = useSpring({
-    opacity: open ? 1 : 0.45,
-    transform: open ? 'translateY(0px)' : 'translateY(18px)',
-    immediate: false,
-    config: {tension: 240, friction: 28},
-  });
-  return <animated.div style={styles}>状态由 React 提供</animated.div>;
-}
+const style = useSpring({
+  opacity: expanded ? 1 : 0.45,
+  transform: expanded ? 'translateY(0px)' : 'translateY(18px)',
+  immediate: reduced,
+  config: { tension: 240, friction: 28 },
+})
+return <animated.div style={style}>今日开发精选</animated.div>
 ```
 
-`opacity` 和 `transform` 是活动的 `SpringValue`，不要 `JSON.stringify` 当业务数据，也不要声明成普通 `CSSProperties` 后丢掉类型。Lab 把 `transform` 写成字符串，而不是简写 `y`，避免和别的库抢同一套 style 字段时看不清主人。
+布尔值是输入目标，SpringValue 是当前视觉值；`animated.div` 是目标 DOM 的写入端。config 控制物理感受，不承诺恰好多少毫秒。不把样式转成 JSON 冒充动画结果，也不用每帧 onChange 回写业务 state。
 
-### 命令式 api
+### ② 权威数组、稳定身份与安全离场
 
-函数形式 `useSpring(() => ({x: 0}), [])` 返回 `[styles, api]`。`api.start` 改目标，`api.set` 立刻跳，`api.stop` 停止。拿到 api 却从不 `start`，弹簧会停在旧目标。跟手时按住用 `immediate: true`，松开再物理回弹。Lab **没有**这条命令式路径。
-
-### useTransition 不是 React 的 useTransition
+business 初始两篇新闻。添加产生单调自增的 `rss-3` 等 ID，上限12条，添加按钮在满员时原生 disabled。移除后“当前业务 ID”和逻辑数量立即变化，useTransition 可能继续保留离场的视觉节点，动画结束才移除 DOM。
 
 ```tsx
-import {animated, useTransition} from '@react-spring/web';
-
-const transitions = useTransition(rows, {
-  keys: row => row.id,
-  from: {opacity: 0, transform: 'translateX(22px)'},
-  enter: {opacity: 1, transform: 'translateX(0px)'},
-  leave: {opacity: 0, transform: 'translateX(-22px)'},
-});
+const transitions = useTransition(articles, {
+  keys: item => item.id,
+  from: { opacity: 0, transform: 'translateX(22px)' },
+  enter: { opacity: 1, transform: 'translateX(0px)' },
+  leave: { opacity: 0, transform: 'translateX(-22px)' },
+  immediate: reduced,
+  config: { tension: 240, friction: 28 },
+})
 ```
 
-`keys` 必须是稳定业务 id。离场对象暂时还在画面上，但已经不属于权威数组。官方还列出 `exitBeforeEnter`、`expires`、`trail`、`sort`。Lab 没有打开 `exitBeforeEnter`。
+这里是 `@react-spring/web` 的 useTransition，和 React 并发 hook 同名但职责不同。回调第三参的 `transition.phase` 来自真实 SDK，写入行的 data-phase；它不是业务存在性的依据。
 
-`config.mass` / `tension` / `friction` 没有固定毫秒。`config.gentle` 等是预设。`clamp: true` 可抑制过冲。`onChange` 是每帧回调，不能拿去写库或当保存成功。`onRest` 表示停下，仍要区分取消。10.1.2 的 `onChange` `AnimationResult` 形状有修复，迁移旧代码时看发行说明。
+应用在同一次提交中按权威 `articles` 的 ID 判断 active：离场行立即 `aria-hidden`、`inert`，且不再渲染移除按钮。这样视觉离场不会继续承载可点击、可 Tab 或读屏的旧操作。CSS pointer-events 是补充，不代替 inert 或拆除按钮。恢复默认把数组回到两条种子，但不会把新增ID计数器重置；同一稳定ID在离场中回来由SDK接续，不用 index 当 key。
 
-## 三层渐进
+删除前若按钮实际持焦，layout effect 等 React 提交后再聚焦“添加”；删除后已从12降至11，添加已重新启用。未持焦的程序路径不抢焦点；策略保留“仍满员则去恢复默认”的兜底。焦点移动不等待动画结束。数组、容量和焦点属于本例业务逻辑，SDK负责插值与视觉节点生命周期。
 
-### Demo ① 弹簧卡片（已挂载）
+### ③ 本例减少动画、系统同步与边界焦点
 
-按钮切换 `expanded`，`aria-pressed` 暴露开关。数据流：布尔 → `useSpring` → `animated.div`。减少动画时 `immediate` 跳到终值。状态文案写在旁边的 `<strong>` 里，不靠动画是否播完。
+advanced 的“仅本例减少动画”让同页其它演示不受影响。本例有效策略为 `systemReduced || localReduced`，传给 spring 和 transition 的 immediate。打开本地开关后再切换卡片，直接抵达目标；取消本地开关恢复物理过渡。系统偏好为 reduce 时，即使本地开关未选也保持 immediate，不能用本地选择关闭系统偏好。
 
-### Demo ② 阅读列表（已挂载的进出；异步通知中心未挂载）
+系统偏好通过本地 matchMedia 读取与 change 监听动态同步，卸载移除这一条监听。没有调用 Globals.assign。官方 useReducedMotion 会设置全局 skipAnimation；需要应用级统一策略时可在根使用，独立 Lab 示例选择局部 immediate 避免影响其它实例。
 
-添加、移除、恢复默认。权威数组在 React state。`useTransition` 只消费这份数组。status 报「逻辑上还存在 N 条；离场动画元素随后卸载」，把视觉残留和数据分开。
+用键盘添加到12条，然后聚焦某篇“移除”并按Enter；逻辑数变11、旧操作立即撤下，焦点回到已启用的添加按钮。打开减少动画后快速添加、移除、恢复默认，仍然依靠业务数组和稳定ID，不能把“动画未结束”当作数据未删除。
 
-未挂载的生产教学：新请求先 `abort` 旧的 `AbortController`，再用序号丢掉不尊重 abort 的迟到结果；卸载时清理。通知正文只作为 React 文本子节点。`<img onerror>` 一类字符串不得进 `innerHTML`。离场项 `aria-hidden`，并且不再渲染可操作按钮；移除前把焦点移到稳定控件。Lab 只实现了焦点策略的纯函数和 layout effect，没有隐藏离场按钮。
+## 迁入业务项目
 
-### Demo ③ 偏好与快速操作（部分挂载）
+1. 安装匹配 React peer 的 `@react-spring/web`，只使用 DOM target。本例已经真实导入，不依赖 `@react-spring/three` 或额外手势库。
+2. 复制 `examples/example.tsx`、`article-policy.ts`、`styles.css`；`demo.tsx` 只是Lab默认重导出，可在项目路由中直接导入 SpringExample 并传 level，或抽取其中目标。保留 CSS import，布局不依赖宿主的 demo-controls。
+3. 把本地 seed 替换为已有数据层的权威数组；不要在动画 onRest 再删除第二次。服务端数据可放 Query，动画只消费它，业务 id 要稳定且唯一。
+4. 保留离场时的 aria-hidden/inert/按钮拆除与提交后焦点迁移。服务端渲染若复用 matchMedia 初始值，需要业务自行约定 hydration 策略；当前Lab只在浏览器挂载，不声称已验SSR。
+5. effect 拥有 matchMedia 监听并对称移除。useSpring/useTransition hook 在卸载时停止各自 Controller，匹配10.1.2源码中 useSprings/useTransition 的 cleanup 已核对；不手工修改全局 skipAnimation 或停止其它实例。若未来加入自己创建的命令式 Controller，应自行 stop。
 
-`advanced` 说明焦点规则，并在容量边界使用「恢复」而不是禁用的「添加」。减少动画对 spring 和 transition 都是 `immediate`。
+本例没有指针跟手、异步通知中心、请求取消或拖拽排序。不要复制不存在的 workshop 文件，也不要用 setTimeout 模拟网络后声称测试了请求竞态。
 
-未挂载：`setPointerCapture`、单一 `pointerId`、`pointercancel` / `lostpointercapture` 幂等回位、方向键每次 20px、Escape 复位、`touch-action: none` 只放在手柄。那是位移回弹，不是有排序语义的拖放。卸载时若使用了命令式 api，要 `api.stop()`。
+## 两个常见误用
 
-## 反例
+| 误用 | 对应做法 |
+| --- | --- |
+| 离场仍留可点按钮，等 onRest 才移除权限/操作 | 业务数组先更新；离场立即撤操作和交互语义，视觉由SDK完成 |
+| 用全局 skipAnimation 控制一个组件，或把系统偏好被本地关闭 | 局部 immediate；effective=系统偏好或本地 opt-in |
 
-```tsx
-// 错：不传 keys，或用 index。重排后 A 的内容播 B 的动画
-useTransition(items, {from: {opacity: 0}, enter: {opacity: 1}});
+`mass/tension/friction` 影响收敛，`clamp` 可抑制过冲；`duration` 是另一种模式，本例没有启用。大量 Controller 仍有成本，长列表应先虚拟化。没有 FPS/性能跑分、触摸、读屏或 SSR 验收结果。
 
-// 对
-useTransition(items, {keys: item => item.id, /* ... */});
-```
+## 官方原文与可复核边界
 
-```tsx
-// 错：这是 React 18+ 的并发 hook，返回 pending 与 startTransition
-import {useTransition} from 'react';
+匹配 `v10.1.2` 的不可变提交为 `59b1e5306402d3039120e2da464b66e10b1a1aa1`。完整 Git tree 的 README 候选已检查，未发现上游中文 README。主目标 `targets/web/README.md` 本身只有41字节的 DOM target 说明，原样保存到 official/readme.md；完整项目 README 3525字节另存 official/project-readme.md，不拼接冒充目标包原文。repo/path/version/lang/time/SHA-256 和候选见 library.json 与 official/source-audit.json。
 
-// 对
-import {useTransition} from '@react-spring/web';
-```
+官网实际 GET200 的完整响应头在 official/homepage-response.json，该次 XFO/CSP 均未出现；未从Lab origin实测iframe，所以unknown并保留直达，不能由200推定allowed。
 
-```tsx
-// 错：函数形式拿到 api 后只改配置
-const [, api] = useSpring(() => ({x: 0}), []);
+Node真实SDK测试2项直接操作SpringValue并使用公开 advance 驱动真实物理积分，覆盖收敛、immediate和取消。它不挂载hook或animated DOM；5项策略只覆盖容量/身份/焦点目的地。真实 DOM 插值、离场隔离、键盘焦点、系统偏好更新与卸载由主控按 validation/browser-proposal.txt 在稳定候选验证。正式sdk/build/browser均NOT_RUN，实际命令、日志和六项结论在local-validation.md。
 
-// 对：命令式场景必须 start；声明式场景用对象配置（Lab 的卡片就是这种）
-void api.start({x: 100});
-```
-
-```tsx
-// 错：onChange 每帧 setState
-onChange: ({value}) => setX(value.x),
-
-// 对：跟手走 SpringRef；业务状态只在松手或按键确认时变
-```
-
-```tsx
-// 错：通知正文 innerHTML
-node.innerHTML = notice.body;
-
-// 对：React 文本子节点。富文本走独立白名单，动画库不提供净化
-```
-
-```tsx
-// 错：每个子组件各自 Globals.assign({skipAnimation: true}) 且不恢复
-// 对：顶层读 matchMedia，把 immediate 传下去。Lab 的 useLocalReducedMotion 就是这个所有权
-```
-
-```tsx
-// 错：React 18 硬装 @react-spring/web@10
-// 对：React 18 用 v9，或先把应用升到 React 19 再上 10.1.2
-```
-
-离开数组之后 DOM 不会立刻消失。离场阶段的焦点、点击和读屏都要单独处理。多指拖动不过滤 `pointerId`、不听 `pointercancel`，卡片会卡在拖动态。Lab 没有实现拖动，不要在指南里假装有。
-
-## 组合
-
-**TanStack Query**：`queryKey` 拥有服务端数组、重试和取消。spring 只画列表。`isFetching` 不能由 `onRest` 改写。不要在 `useState` 和 Query cache 各存一份权威列表。
-
-**dnd-kit**：碰撞和落点归 dnd-kit。spring 只装饰 `DragOverlay` 或结束后的局部弹性。两套库都写 `transform` 时，外层与内层 `animated` 必须分开，或只留一个动画主人。Lab 的键盘替代若要做排序，应是按钮改数组，而不是弹簧自己算索引。
-
-**React Aria**：焦点陷阱、Esc、Portal、角色归无头层。spring 只做进出视觉。焦点归还不能等动画结束才发生。
-
-## 生产清单
-
-- `animated` 减少的是 React 渲染，不是「几千个 Controller 免费」。长列表先虚拟化。本文不编造 FPS。
-- 优先 transform / opacity。动画 width/height 会触发布局。
-- 请求 abort、命令式 `api.stop()`、pointer capture、定时器都要对称释放。StrictMode 下 effect 会重复 setup/cleanup。
-- 不要动画正在组合的 `<input>`，不要在 composition 期间重置 key。
-- 动画不是授权，也不是 XSS 过滤器。
-- 官方支持 SSR，但本示例只在浏览器里挂载。服务端不要用 `matchMedia` 渲染出和客户端不同的结构。
-- 触摸设备上的 Pointer Capture 与 `touch-action` 必须真机看，鼠标通过不等于触摸通过。
-
-## 升级
-
-1. React 18 + v9 → React 19 + web 10.1.2：核对 `useTransition` 的 import、`SpringContext` 改名 `SpringContextProvider`、`onChange` 参数。只有应用整体在 React 19 上才升 v10。
-2. CSS / Motion 列表改 spring：稳定 id、enter/leave、退场前迁移焦点。表单和 RSS 数据留在原数据层。
-3. 两个请求反序返回时，epoch 必须丢掉旧结果。Lab 没有这条请求，练习时不要把 `setTimeout` 写成已测的网络取消。
-
-## 验收
-
-打开 basic：按钮切换强调，减少动画时卡片立刻到终值。business：添加不超过 12 条，重复 id 不加，移除后 status 数字立刻变，视觉行可以稍晚消失。advanced：焦点只在被删按钮持焦时移动；满员删除后焦点不落在 disabled 的添加按钮上。
-
-`verification.json` 的 sdk、build、browser 为 NOT_RUN。`docs/library-lab/evidence/runs/` 没有匹配 receipt 时，不能把历史领域计数写成 SDK PASS。Actions run `41779873259` 是仓库级 install、typecheck、build、52 个 SDK 文件 / 153 项测试、45 个 Playwright，不是 B03 的 PASS。
-
-```bash
-node --experimental-strip-types --test packages/library-lab/entries/B03-react-spring/tests/article-policy.test.mts
-```
-
-断言唯一 id、第 13 条被拒绝且不改原数组、未持焦不抢焦点、满员持焦改去恢复按钮。不证明弹簧帧、离场 DOM 或读屏。
-
-## 官方资料
-
-- https://github.com/pmndrs/react-spring
-- https://github.com/pmndrs/react-spring/releases/tag/v10.1.2
-- https://www.npmjs.com/package/@react-spring/web
-- https://www.react-spring.dev/docs/getting-started
-- https://www.react-spring.dev/docs/components/use-spring
-- https://www.react-spring.dev/docs/components/use-transition
-- https://www.react-spring.dev/docs/concepts/imperative-api
-- https://www.react-spring.dev/docs/concepts/animated-elements
-- https://www.react-spring.dev/docs/advanced/config
-- https://www.react-spring.dev/docs/utilities/use-reduced-motion
-- https://www.react-spring.dev/docs/advanced/events
+官方入口：[useSpring](https://www.react-spring.dev/docs/components/use-spring)、[useTransition](https://www.react-spring.dev/docs/components/use-transition)、[useReducedMotion](https://www.react-spring.dev/docs/utilities/use-reduced-motion)、[匹配包peer](https://github.com/pmndrs/react-spring/blob/59b1e5306402d3039120e2da464b66e10b1a1aa1/targets/web/package.json)。

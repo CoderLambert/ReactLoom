@@ -4,14 +4,8 @@
   "slug": "streamdown",
   "name": "Streamdown",
   "group": "E",
-  "summary": "面向流式 Markdown 的真实增量显示、未闭合语法与安全输出",
-  "tags": [
-    "Streaming",
-    "Markdown",
-    "AI",
-    "Incremental",
-    "Security"
-  ],
+  "summary": "从分段输入到累计正文：未闭合语法、研究摘要与受控外链的真实 Streamdown 渲染",
+  "tags": ["流式Markdown", "累计正文", "GFM", "生命周期", "输出策略"],
   "contentState": "recreated",
   "packages": [
     {
@@ -21,16 +15,20 @@
   ],
   "references": [
     {
+      "title": "Streamdown 2.6.0 源码",
+      "url": "https://github.com/vercel/streamdown/blob/8a2ac221a878a0fc5839f2035c1e16575cfa3440/packages/streamdown/index.tsx"
+    },
+    {
+      "title": "官方配置说明",
+      "url": "https://streamdown.ai/docs/configuration"
+    },
+    {
+      "title": "官方安全边界",
+      "url": "https://streamdown.ai/docs/security"
+    },
+    {
       "title": "官方仓库",
       "url": "https://github.com/vercel/streamdown"
-    },
-    {
-      "title": "官方文档",
-      "url": "https://streamdown.ai"
-    },
-    {
-      "title": "npm 发行说明",
-      "url": "https://www.npmjs.com/package/streamdown"
     }
   ],
   "related": [
@@ -55,52 +53,45 @@
       "demoId": "basic",
       "level": "basic",
       "executionKind": "react",
-      "title": "半截标题/加粗标记继续呈现",
+      "title": "累计正文与未闭合语法",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/fixtures.mjs",
+        "examples/fixtures.d.mts",
+        "examples/stream-session.mjs",
+        "examples/stream-session.d.mts",
+        "examples/markdown-policy.mjs",
+        "examples/markdown-policy.d.mts",
+        "examples/workshop.css",
+        "tests/sdk.test.mjs",
+        "tests/stream-session.test.mjs"
       ],
-      "capabilities": [
-        "local-text",
-        "timer",
-        "no-remote-model"
-      ],
-      "description": "入门：半截标题/加粗标记继续呈现。结果必须由真实SDK执行，未验收不得显示PASS。"
+      "capabilities": ["local-text", "timer", "no-remote-model"],
+      "description": "逐段或自动追加，比较输入 delta、累计源文和修复开关下的实际渲染；操作暂停、结束与重置。"
     },
     {
       "demoId": "business",
       "level": "business",
       "executionKind": "react",
-      "title": "业务表格与 checklist 渐进渲染",
+      "title": "研究摘要与受控外链",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/fixtures.mjs",
+        "examples/fixtures.d.mts",
+        "examples/stream-session.mjs",
+        "examples/stream-session.d.mts",
+        "examples/markdown-policy.mjs",
+        "examples/markdown-policy.d.mts",
+        "examples/workshop.css",
+        "tests/sdk.test.mjs",
+        "tests/stream-session.test.mjs"
       ],
-      "capabilities": [
-        "local-text",
-        "timer",
-        "no-remote-model"
-      ],
-      "description": "业务：业务表格与 checklist 渐进渲染。结果必须由真实SDK执行，未验收不得显示PASS。"
-    },
-    {
-      "demoId": "advanced",
-      "level": "advanced",
-      "executionKind": "react",
-      "title": "未闭合代码围栏与恶意URL边界",
-      "entryPoint": "examples/demo.tsx",
-      "sourceFiles": [
-        "examples/example.tsx",
-        "examples/demo.tsx"
-      ],
-      "capabilities": [
-        "local-text",
-        "timer",
-        "no-remote-model"
-      ],
-      "description": "边界：未闭合代码围栏与恶意URL边界。结果必须由真实SDK执行，未验收不得显示PASS。"
+      "capabilities": ["local-text", "timer", "no-remote-model"],
+      "description": "真实 GFM 表格/任务列表逐段形成，应用白名单限制外链、图片和原始 HTML。"
     }
   ],
   "license": {
@@ -109,6 +100,26 @@
   },
   "provenance": {
     "originalRecovery": "SUMMARY_ONLY",
-    "note": "2026-10-27按官方重写；研究ZIP中原 GUIDE/SOURCE/DEMO 不可访问，不能冒充恢复。"
+    "note": "2026-11-10 依据 Streamdown 2.6.0 官方源码、已安装类型与 README 独立重建。原研究只有摘要，未冒称 GUIDE/SOURCE/DEMO 原件恢复；本地运行与正式收据分开。"
+  },
+  "official": {
+    "readme": {
+      "repository": "vercel/streamdown",
+      "commit": "8a2ac221a878a0fc5839f2035c1e16575cfa3440",
+      "path": "packages/streamdown/README.md",
+      "sha256": "e64c6eb295a58af2a0f3a2eaf6d8edefab5b2b39ea320250072596bd5b0943f8",
+      "sourceUrl": "https://github.com/vercel/streamdown/blob/8a2ac221a878a0fc5839f2035c1e16575cfa3440/packages/streamdown/README.md",
+      "snapshotPath": "official/readme.md",
+      "language": "en",
+      "version": "2.6.0",
+      "syncedAt": "2026-11-10T09:18:15.803374+00:00"
+    },
+    "homepage": {
+      "url": "https://streamdown.ai",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-10T09:18:15.803374+00:00",
+      "reason": "GET 最终 URL https://streamdown.ai 返回 200；未见 X-Frame-Options 或 CSP frame-ancestors 限制。尚未从 Lab origin 进行浏览器嵌入确认，详情见 official/source-audit.json。"
+    }
   }
 }

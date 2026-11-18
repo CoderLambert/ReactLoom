@@ -1,162 +1,125 @@
-# Dexie 4.4.7｜临时库、事务回滚和保留 v1 的升级
+# Dexie：为离线 RSS 建立可查询、可回滚、可升级的本地表
 
-Lab 锁定 `dexie@4.4.7`（MIT）。它是 IndexedDB 的封装：版本化 schema、索引和事务。它不是同步协议，也不是“清空本站全部数据”的工具。Query 的内存缓存、Workbox 的 CacheStorage、Yjs 的 CRDT 各自有所有权。
+RSS 阅读器要在断网时保留订阅与已读状态，还要支持“技术分组按更新时间排列”。把列表塞进 localStorage 很快会遇到整份读写、字段查询与批量更新一致性的问题。Dexie 为 IndexedDB 提供 Promise API、索引查询、事务和版本迁移，适合这些结构化本地数据。
 
-没有匹配收据时 sdk / build / browser 保持 NOT_RUN。Actions 41779873259 是仓库级结果，不是本条目 PASS。`fake-indexeddb` 只模拟 API，不能充当浏览器收据。
+本条目使用 `dexie@4.4.7`，核心包为 [Apache-2.0](https://github.com/dexie/Dexie.js/blob/v4.4.7/LICENSE)。演示直接调用 Dexie 与浏览器 IndexedDB；RSS 数据是固定 fixture，没有服务端、同步协议或 Dexie Cloud 服务。
 
-## Lab 当前示例
+## 先操作三个场景
 
-[`examples/demo.tsx`](examples/demo.tsx) 重导出 [`examples/example.tsx`](examples/example.tsx)。每次执行用 `crypto.randomUUID()` 生成库名 `reactloom-lab-d15-...`。没有 `indexedDB` 时直接说明，不伪造结果。
+| 场景 | 工程问题与操作 | 应观察的结果 |
+| --- | --- | --- |
+| 分组与排序 | 选择技术或商业，点击“查询分组” | 技术只有 rss-b、rss-a，时间为 100、200；商业只有 rss-c。表格显示已读值，原始数据可展开。 |
+| 事务回滚 | 点击“触发重复键并检查回滚” | 捕获 ConstraintError；记录数 3 → 3；rss-d 没留下；前后所有业务字段相同。 |
+| 版本迁移 | 点击“创建 v1，再升级到 v2” | 同一个库先存 v1 数据，再以 v2 打开。rss-legacy 的 read 从缺失变为 false，已有 rss-b.read=true 保留；复合索引返回 100、200、250 三行。 |
 
-v1 schema 是 `feeds: &id, group, updatedAt`。advanced 在关闭旧连接后用同一库名打开 v2：`&id, group, updatedAt, [group+updatedAt]`，并在 `upgrade` 里把缺少的 `read` 写成 `false`。旧的 `version(1)` 声明必须留在代码里，否则已有库无法从 1 走到 2。
+这些是验收预期，运行面板显示本次实际结果。每次按钮执行创建一个随机临时库，结束后只删除本次库。刷新不会保留演示业务数据。时间数字是演示刻度，用于让排序与边界一眼可见；生产可统一为毫秒时间戳。
 
-- basic：写入三行种子，按 `group === 技术` 查询并 `sortBy('updatedAt')`。
-- business：事务里先 `put` 新行，再 `add` 一个重复主键 `rss-a`。失败后用 [`examples/rollback-policy.mjs`](examples/rollback-policy.mjs) 的 `sameFeedSnapshot` 比较事务前后的全部业务字段。行数相同不够，`read` 或 `updatedAt` 变了就不算回滚成功。
-- advanced：先在 v1 写入没有 `read` 的 `rss-legacy`，关闭，再按 v2 打开，用复合索引 `[group+updatedAt]` 取出技术分组。
+## 数据如何经过 Dexie
 
-`epoch` 在卸载和切换层级时增加。过期执行不能 `setOutput`。打开的库放在 ref 里，清理时 `close()`。`finally` 只 `Dexie.delete(name)` 删除这一次的库名，不枚举、不删除其他数据库。失败的删除把名字留在集合里，交给卸载重试。
-
-没有挂载：`liveQuery`、跨标签同步、导出用户库、Service Worker。不要把这个按钮理解成离线同步已经完成。
-
-## 什么时候用
-
-浏览器里需要按字段查询的结构化本地数据：离线草稿、已读标记、可回滚的一批写入。表要有主键和版本计划。
-
-只缓存 HTTP 响应时用 Workbox 的 CacheStorage（且不要注册到 Lab 主源）。协作合并用 Yjs。远程列表的新鲜度用 Query。把 Query 缓存整份序列化进 Dexie 之前，先定义谁是权威、冲突怎么处理。
-
-## 模型
-
-`new Dexie(name)` 之后声明 `version(n).stores({ table: schema })`。`&id` 是主键。`[group+updatedAt]` 是复合索引，查询必须使用声明过的形式。
-
-升级函数在该版本第一次打开时运行。已经升到 2 的库不会重跑 v2 的 upgrade。所以回填逻辑要幂等。删除中间版本会导致旧客户端无法迁移。Lab 同时保留 version 1 和 2 的声明。
-
-`transaction('rw', table, async () => { ... })` 里任何拒绝都会回滚该事务的写入。`add` 对已存在主键失败，前面的 `put` 也不留下。比较快照时按 id 排序后逐字段看，不要只比 `length`。
-
-`bulkPut` 是批量写入，不是事务魔法。basic 在事务之外调用它。失败策略要自己定。
-
-连接不用时 `close()`。删除用明确的库名。`Dexie.getDatabaseNames()` 一类枚举不要用在清理里，以免碰到用户或别的演示留下的库。
-
-IndexedDB 按源隔离。这不能代替应用内的租户字段。同一源的两个用户若共用一个库名，会读到彼此的行。Lab 用随机库名避开残留，生产要用账户相关的库名，并在登出时只删那个名字。
-
-## 三层示例
-
-### 基本
-
-点执行后输出技术分组的两行，按 `updatedAt` 100 然后 200。商业行不在结果里。状态句说明完成后会删库。
-
-### 业务
-
-输出里 `before` 和 `after` 行数相同，`rollback` 是错误名，`unchanged` 为真。若事务意外提交，`unchanged` 会是假，因为 `rss-d` 会留下或 `rss-a` 会被改写。
-
-### 进阶
-
-`dbVersion` 为 2。`rss-legacy` 的 `read` 被升级函数写成 false。复合索引查询能看到种子和遗留行。文案要求旧 schema 声明仍然留在 `configure` 里。
-
-切换下拉层级会关掉连接并作废 epoch，旧的 `setOutput` 不再执行。
-
-## 反例
-
-### 反例 1：只比行数
+一个 Dexie 实例代表一个数据库连接，`table('feeds')` 对应 IndexedDB object store。`stores()` 声明主键与索引，不是每行数据的完整字段校验。read 不在 schema 字符串中，仍然会被存储。
 
 ```ts
-const unchanged = before.length === after.length
+const db = new Dexie('rss-reader');
+db.version(1).stores({ feeds: '&id,group,updatedAt' });
+await db.open();
 ```
 
-重复主键失败前的 `put` 若被错误地提交，行数可能碰巧相同。
+首项 id 是唯一主键；示例的 `&id` 写法保留了唯一性标记，主键本身就要求唯一。group 与 updatedAt 是独立索引。新增的 `[group+updatedAt]` 是按“分组、时间”依次比较的复合索引。
+
+| 数据/状态 | 由谁管理 |
+| --- | --- |
+| 持久行、索引、事务提交 | IndexedDB；Dexie 提供调用与迁移接口 |
+| 表格结果、按钮 busy、错误提示 | 示例 React 组件的一次运行状态 |
+| 分组选择、已读默认值、快照比较 | 本例业务逻辑 |
+| 网络重试、服务端权威、冲突合并 | 本例未实现，需要业务另行设计 |
+
+## 场景一：筛选走索引，sortBy 排数组
+
+实际实现位于 [feed-database.mjs](examples/feed-database.mjs)：
 
 ```ts
-const unchanged = sameFeedSnapshot(before, after)
+return table.where('group').equals(group).sortBy('updatedAt');
 ```
 
-### 反例 2：升级时删掉 version(1)
+`where('group')` 使用 group 索引缩小候选范围；`sortBy('updatedAt')` 读取命中的记录，对得到的 JavaScript 数组排序。即使 updatedAt 没有索引，sortBy 仍然能工作。它不会自动组合 group 与 updatedAt 两个独立索引。[官方 sortBy 文档](https://dexie.org/docs/Collection/Collection.sortBy()) 明确区分它与按索引顺序读取的 orderBy。
+
+种子的主键顺序是 rss-a、rss-b，时间分别为 200、100，所以结果必须变成 rss-b、rss-a。这能发现“只查到了分组，却根本没有排序”的实现。sdk 测试还移除了 updatedAt 索引，验证 sortBy 的实际边界。
+
+小分组的内存排序很方便。命中数据很多时，要把所有候选放进数组再排序会增加内存与 CPU 成本。若需求固定为“某分组内按时间取一个范围”，考虑场景三的复合索引，并另外设计分页。
+
+## 场景二：让失败离开事务，验证整批回滚
 
 ```ts
-db.version(2).stores({ feeds: newSchema })
+return db.transaction('rw', table, async () => {
+  await table.put({ id: 'rss-d', group: '技术', updatedAt: 400, read: false });
+  await table.add({ id: 'rss-a', group: '技术', updatedAt: 500, read: true });
+});
 ```
 
-已有 v1 数据的浏览器无法按 Dexie 的版本链升级。两个 `version` 调用都要留下。
+`put` 可以插入或替换；`add` 在主键已存在时拒绝。本例先成功请求写入 rss-d，再故意重复添加 rss-a。`writeDuplicateBatch()` 把整个事务的 Promise 返回给组件，组件在事务外 catch：重复键失败会中止事务，前面的 rss-d 也不能留下。
 
-### 反例 3：upgrade 里假设字段已存在
+页面同时显示两份表、错误名和完整快照比较。仅比较行数无法发现“原行被改了、总数没变”。[rollback-policy.mjs](examples/rollback-policy.mjs) 按稳定 id 对齐后比较 id、group、updatedAt、read；这是本例自己的验收逻辑。
 
-遗留行没有 `read`。用 `=== undefined` 再补默认值，不要把已有的 `true` 覆盖成 `false`。
+两种常见错误会改变这个结论：
 
-### 反例 4：清理时枚举全部数据库
+- 在事务内 catch 后只打印日志或返回成功，会把拒绝处理掉，事务可能提交之前的写入。确实需要整批撤销时，继续抛出错误或让它自然传播；SDK 测试包含“吞掉重复键错误后 rss-d 留下”的对照。
+- 在事务里等待网络、setTimeout 等外部异步任务，期间没有 IndexedDB 请求，事务可能自动提交；之后再写会遇到失活/提前提交错误。`async` 回调不保证跨任意 await 存活。先完成外部工作，再开短事务。Dexie.waitFor 适用于经过评估的短异步操作，不应成为等待网络的默认做法。
+
+这些行为见 [事务生命周期](https://dexie.org/docs/Dexie/Dexie.transaction()) 与 [错误捕获最佳实践](https://dexie.org/docs/Tutorial/Best-Practices)。
+
+## 场景三：真的从 v1 打开到 v2
+
+演示先用 v1 创建数据库，存入三条 fixture 和一条没有 read 的 rss-legacy，关闭旧连接，再对**同一个库名**声明 v2 并打开：
 
 ```ts
-const names = await Dexie.getDatabaseNames()
-await Promise.all(names.map(name => Dexie.delete(name)))
+db.version(2)
+  .stores({ feeds: '&id,group,updatedAt,[group+updatedAt]' })
+  .upgrade((tx) =>
+    tx.table('feeds').toCollection().modify((feed) => {
+      if (feed.read === undefined) feed.read = false;
+    }),
+  );
 ```
+
+upgrade 在现有旧库升级时回填缺失字段，条件检查保留已有 true。若浏览器原来没有这个数据库，Dexie 直接建立最新 schema，**不会调用 upgrade**。因此新写入记录的默认值仍要由写入路径或校验负责；不要把迁移函数当成每次写入的字段校验器。
+
+在 Dexie **3 及以上版本**，会读取已经安装的 schema。没有 upgrader 的旧 v1 声明可以省略，本例 v2 工厂就只声明 version(2)。需要保留的是旧客户端升级路径仍会经过的 **upgrader 所属版本**：未来增加 v3 时，只要还支持从 v1 跳升，就要保留 v2 的这段数据回填。不要删掉必要 upgrader，也不要修改已发布的迁移语义。规则与新库行为见 [官方版本设计](https://dexie.org/docs/Tutorial/Design)。
+
+v2 的实际查询是：
 
 ```ts
-await Dexie.delete(name)
+return table
+  .where('[group+updatedAt]')
+  .between(['技术', 100], ['技术', 250], true, true)
+  .toArray();
 ```
 
-只删本次 `randomUUID` 那一个。
+复合键先比较 group，再比较 updatedAt。这里用同一分组的上下界，且显式包含两端，所以结果为 rss-b(100)、rss-a(200)、rss-legacy(250)，商业分组被排除，读取顺序已经是时间升序，无需再 sortBy。参考 [复合索引文档](https://dexie.org/docs/CompoundIndex)。
 
-### 反例 5：把 IndexedDB 当多用户隔离
+升级不是重新创建空库。测试同时核对记录数、遗留字段、已有 true、复合范围边界，以及已升级的库重新打开时不会再次运行 upgrader。升级失败也应作为打开失败处理，不能显示部分迁移成功。
 
-同一源下库名固定为 `feeds` 时，登出不删就会留给下一个人。随机名只适合演示。生产库名绑定账户，登出删除该名。
+## 迁入实际 React 项目
 
-### 反例 6：在事务里发请求
+1. 安装与此示例一致的 `dexie@4.4.7`。带走 [feed-database.mjs](examples/feed-database.mjs) 及其 [类型声明](examples/feed-database.d.mts)，按业务修改主键、索引与升级路径。
+2. 若迁移这个操作面板，再复制 [example.tsx](examples/example.tsx)、[workshop.css](examples/workshop.css) 与 [快照函数](examples/rollback-policy.mjs) / [声明](examples/rollback-policy.d.mts)。[demo.tsx](examples/demo.tsx) 只是 Lab 的重导出适配器，业务无需保留。
+3. 为生产的持久库设计稳定的账户/租户命名和访问隔离。随机库名与执行后删除是 Lab 的临时资源策略，不能照搬为离线阅读器的持久化策略。同源隔离也不等于业务账户隔离。
+4. 新记录在写入边界补齐 read 等默认值；支持旧客户端的数据版本保留相关 upgrader。`stores()` 不代替 Zod 等业务输入验证。
+5. 把读取接入产品自己的状态/订阅边界；若使用 liveQuery，在卸载时取消订阅。这里采用显式点击与快照表格，没有接入 liveQuery、多标签同步或冲突恢复。
 
-事务存活期间不要 `await fetch`。锁会拖得很长，请求失败时回滚范围也不清楚。先请求，再开短事务写入。
+## 生命周期与失败恢复
 
-### 反例 7：用 Query 缓存代替主键约束
+随机库名生成、配置、打开、查询均在 try 内。环境缺少 IndexedDB、randomUUID 或 UUID 调用抛错时，finally 仍释放 busy，页面可重试；不会退回一个共用的固定库名。
 
-内存数组的 `find` 不能阻止两个标签页同时 `add`。唯一性靠主键错误和事务。
+运行令牌 epoch 在切换场景与卸载时变化，过期任务不能回写新界面。连接 close 后，运行自身的 finally 删除它的数据库。删除失败时保留已拥有的名字，卸载再尽力重试；浏览器进程突然退出不保证清理完成。
 
-## 组合
+所有删除都来自本次生成并记录的库名集合。代码不枚举同源数据库，不清空其他演示或用户数据。清理失败会在状态句显示；生产恢复动作也应限定到当前账户拥有的资源。
 
-**Query**：服务器列表仍由 Query 失效。Dexie 只保存用户明确要留下的离线副本，并记录版本。不要在每次 `queryFn` 成功时无条件 `bulkPut` 整页而不处理删除。
+## 如何验证与判断选型
 
-**Workbox**：CacheStorage 放公开静态响应。结构化查询放 Dexie。不要在 Library Lab 主源注册 Service Worker 来“顺便”同步数据库。
+- 需要结构化查询、主键约束、跨多次本地写入的一致性：Dexie 适合。
+- 只是 HTTP 响应与静态资源离线缓存：看 Workbox；远程数据新鲜度与请求状态：看 TanStack Query；并发协作合并：看 Yjs。这些方案可以组合，仍须明确每份数据的权威来源与冲突策略。
+- 配额不足、隐私模式、浏览器兼容、多标签版本阻塞与大规模迁移成本：需要用目标浏览器和真实数据额外验收，本例没有覆盖。
 
-**Yjs**：CRDT 更新是二进制增量。可以把更新体存进 Dexie，但合并仍要 `Y.applyUpdate`。用普通 JSON 覆盖行不是合并。
+在仓库根执行 `pnpm --filter @reactloom/library-lab test:sdk --entry=D15`，会运行真实 Dexie 与 fake-indexeddb 的定向套件。它证明 Node 中该 IndexedDB 模拟实现下的 SDK 行为，**不能代表 Chromium 或其他浏览器 PASS**。`tests/rollback-policy.test.mjs` 仅验证本例的快照比较策略。
 
-## 生产核对清单
-
-1. 每次演示或每个账户有明确库名；清理只删那个名字。
-2. 切换路由和卸载会 `close` 并作废在途 Promise。
-3. schema 版本链完整，复合索引和查询字符串一致。
-4. 事务失败用全字段快照断言，而不是行数。
-5. upgrade 幂等，不覆盖已有业务值。
-6. 事务内没有网络和超大循环。
-7. 主键冲突的错误名被记录，而不是吞掉后显示成功。
-8. 不调用会扫到其他库的删除 API。
-
-配额用尽时 `bulkPut` 会拒绝。示例把错误写进状态句，不把半截结果当成成功。生产要在写入前估计条数，并给用户一个不删除其他站点数据的清理动作。
-
-`sortBy` 使用索引字段 `updatedAt`。对未索引的字段全表排序会在数据变大后卡住主线程。新增排序键时同时改 schema 版本。
-
-## 升级
-
-钉 `dexie@4.4.7`。从 3.x 升到 4.x 时重测 `version().upgrade` 和复合索引。应用 schema 从 v1 到 v2 时保留旧声明，并准备一条没有新字段的遗留行。
-
-不要为了类型方便改主键。改主键等于新表加复制，而不是一次 `stores()` 字符串替换。
-
-## 验收
-
-- 技术分组按 `updatedAt` 排序，商业行不在 basic 结果里。
-- 重复 `add` 使整个事务回滚，快照在 id、group、updatedAt、read 上相同。
-- v2 打开后 `verno` 为 2，遗留行 `read === false`，复合索引能查到它。
-- 卸载或换层级后旧调用不再写界面，并且只删除自己的库名。
-- `tests/sdk.test.mjs` 打开真实 Dexie。无收据则 NOT_RUN。
-
-练习：再加一个 v3，把 `group` 收成枚举，旧的自由字符串进入 `other`。断言已在 v2 的库只跑一次 v3 upgrade。
-
-`liveQuery` 会在表变化时推送结果。Lab 不用它，因为演示在一次点击里打开并删除数据库，订阅会在 `close` 之后仍触发。若产品使用 `liveQuery`，组件卸载时取消订阅，并忽略 epoch 已变的回调。
-
-多标签同时写同一主键时，后一个 `add` 会失败。这是期望的冲突，不是 Dexie 丢数据。用事务把“读当前版本、写新版本”放在一起，避免先在事务外读到旧值再写入。
-
-`crypto.randomUUID` 在安全上下文里可用。若环境没有它，不要退回固定库名。示例会在打开前就失败于库名生成，而不是去删一个共用名字。
-
-复合索引的下界是 `['技术', 0]`，上界用 `Number.MAX_SAFE_INTEGER`。超出安全整数的时间戳不在种子里。生产的时间应用毫秒数并在升级文档里写明单位。
-
-## 资料
-
-- https://dexie.org/docs/
-- https://dexie.org/docs/Version/Version
-- https://dexie.org/docs/Tutorial/Design
-- https://dexie.org/docs/Tutorial/Best-Practices
-- https://dexie.org/docs/CompoundIndex
-- https://github.com/dexie/Dexie.js
+页面验收应分别运行三个场景，核对表格、失败提示、重试和切换时清理。正式 sdk/build/browser 状态遵守 `verification.json` 与项目收据协议；没有匹配收据时仍为 NOT_RUN。官方 README 与官网预览使用条目的独立官方资料入口，教学与上游原文分别维护。

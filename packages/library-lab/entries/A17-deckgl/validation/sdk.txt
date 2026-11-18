@@ -1,0 +1,13 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node --test entries/A17-deckgl/tests/sdk.test.mjs
+exit: 0
+✔ real production ScatterplotLayer descriptor keeps stable id, accessors and radius trigger (1.747904ms)
+✔ real WebMercatorViewport projects known coordinates and round-trips without a GPU (1.168751ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 268.721967

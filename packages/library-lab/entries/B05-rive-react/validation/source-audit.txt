@@ -1,0 +1,104 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ["node", "entries/B05-rive-react/validation/source-audit.mjs"]
+startedAt: 2026-11-10T13:14:34.194730+00:00
+finishedAt: 2026-11-10T13:14:34.244533+00:00
+exitCode: 0
+
+STDOUT
+{
+  "checkedAt": "2026-11-10T13:14:34.237Z",
+  "node": "v26.13.0",
+  "react": {
+    "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@rive-app+react-webgl2@4.37.0_react@19.3.0/node_modules/@rive-app/react-webgl2",
+    "version": "4.37.0",
+    "peerDependencies": {
+      "react": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0"
+    }
+  },
+  "runtime": {
+    "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@rive-app+webgl2@2.45.0/node_modules/@rive-app/webgl2",
+    "version": "2.45.0",
+    "license": "MIT"
+  },
+  "sources": [
+    {
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@rive-app+react-webgl2@4.37.0_react@19.3.0/node_modules/@rive-app/react-webgl2/dist/index.js",
+      "bytes": 22400,
+      "sha256": "71e99d983a61cde81a32ab2e0f3fd4a58d5873e7e15e4e0a9d680bedb1545395",
+      "excerpts": [
+        {
+          "marker": "function useRive(",
+          "offset": 5803,
+          "text": "\"canvas\",_extends$2({ref:n,style:{verticalAlign:\"top\",width:0,height:0}},o),i))}function useRive(e,t){void 0===t&&(t={});var n,a,r=React.useState(null),u=r[0],i=r[1],o=React.useRef(null),s=React.useRef(null),c=React.useRef(null),l=React.useState(null),f=l[0],d=l[1],v=!!e,p=getOptions(t),b=null!=(n=null==e?void 0:e.useOffscreenRenderer)?n:t.useOffscreenRenderer,h=!!(null==e?void 0:e.enableGPUCanvas)||!!(null==e||null==(a=e.riveFile)?void 0:a.deferredRequested),R=!!(null==e?void 0:e.enableInkbleed),g=null!=b?b:!h&&!R&&defaultOptions.useOffscreenRenderer;React.useEffect(function(){h&&g&&console.warn(\"[Rive] GPU Canvas and `useOffscreenRenderer` cannot both be on. A GPU Canva"
+        },
+        {
+          "marker": "new canvas.Rive",
+          "offset": 7771,
+          "text": "){var a=e.onRiveReady,r=_object_without_properties_loose$1(e,[\"onRiveReady\"]);t=new canvas.Rive(_extends$2({},r,{useOffscreenRenderer:g,canvas:u})),null!=c.current&&safeCleanup(\"replacing a previous instance\",function(){return c.current.cleanup()}),c.current=t,t.on(canvas.EventType.Load,function(){n=!0,a&&a(t),u?d(t):safeCleanup(\"unmounted before load\",function(){return t.cleanup()})})}return function(){n||safeCleanup(\"teardown before load\",function(){return null==t?void 0:t.cleanup()})}}},[u,v,f]);var I=React.useCallback(function(e){o.current=e},[]),V=useIntersectionObserver(),C=V.observe,O=V.unobserve;React.useEffect(function(){var e,t=!1,n=function(){if(u&&t){var e=u.g"
+        },
+        {
+          "marker": "onRiveReady",
+          "offset": 7701,
+          "text": "e)},[]);React.useEffect(function(){if(u&&e){var t,n=null!=f;if(null==f){var a=e.onRiveReady,r=_object_without_properties_loose$1(e,[\"onRiveReady\"]);t=new canvas.Rive(_extends$2({},r,{useOffscreenRenderer:g,canvas:u})),null!=c.current&&safeCleanup(\"replacing a previous instance\",function(){return c.current.cleanup()}),c.current=t,t.on(canvas.EventType.Load,function(){n=!0,a&&a(t),u?d(t):safeCleanup(\"unmounted before load\",function(){return t.cleanup()})})}return function(){n||safeCleanup(\"teardown before load\",function(){return null==t?void 0:t.cleanup()})}}},[u,v,f]);var I=React.useCallback(function(e){o.current=e},[]),V=useIntersectionObserver(),C=V.observe,O=V.unobserve"
+        },
+        {
+          "marker": "queueMicrotask",
+          "offset": 7553,
+          "text": "});var m=React.useCallback(function(e){var t=s.current;s.current=e,null===e&&t&&queueMicrotask(function(){s.current!==t&&(t.height=0,t.width=0)}),i(e)},[]);React.useEffect(function(){if(u&&e){var t,n=null!=f;if(null==f){var a=e.onRiveReady,r=_object_without_properties_loose$1(e,[\"onRiveReady\"]);t=new canvas.Rive(_extends$2({},r,{useOffscreenRenderer:g,canvas:u})),null!=c.current&&safeCleanup(\"replacing a previous instance\",function(){return c.current.cleanup()}),c.current=t,t.on(canvas.EventType.Load,function(){n=!0,a&&a(t),u?d(t):safeCleanup(\"unmounted before load\",function(){return t.cleanup()})})}return function(){n||safeCleanup(\"teardown before load\",function(){return"
+        },
+        {
+          "marker": "safeCleanup(\"unmount\"",
+          "offset": 8972,
+          "text": "houldUseIntersectionObserver]),React.useEffect(function(){return function(){f&&(safeCleanup(\"unmount\",function(){return f.cleanup()}),d(null))}},[f,u]),React.useEffect(function(){return function(){null!=c.current&&safeCleanup(\"final unmount\",function(){return c.current.cleanup()})}},[]);var M=null==e?void 0:e.animations;React.useEffect(function(){f&&M&&(f.isPlaying?(f.stop(f.animationNames),f.play(M)):f.isPaused&&(f.stop(f.animationNames),f.pause(M)))},[M,f]);var x=React.useCallback(function(e){return /*#__PURE__*/React__default.default.createElement(RiveComponent,_extends$2({setContainerRef:I,setCanvasRef:m},e))},[m,I]);return{canvas:u,container:o.current,setCanvasRef:m,"
+        },
+        {
+          "marker": "safeCleanup(\"final unmount\"",
+          "offset": 9106,
+          "text": "d(null))}},[f,u]),React.useEffect(function(){return function(){null!=c.current&&safeCleanup(\"final unmount\",function(){return c.current.cleanup()})}},[]);var M=null==e?void 0:e.animations;React.useEffect(function(){f&&M&&(f.isPlaying?(f.stop(f.animationNames),f.play(M)):f.isPaused&&(f.stop(f.animationNames),f.pause(M)))},[M,f]);var x=React.useCallback(function(e){return /*#__PURE__*/React__default.default.createElement(RiveComponent,_extends$2({setContainerRef:I,setCanvasRef:m},e))},[m,I]);return{canvas:u,container:o.current,setCanvasRef:m,setContainerRef:I,rive:f,RiveComponent:x}}function _extends$1(){return(_extends$1=Object.assign||function(e){for(var t=1;t<arguments.l"
+        }
+      ]
+    },
+    {
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@rive-app+webgl2@2.45.0/node_modules/@rive-app/webgl2/rive.js",
+      "bytes": 564735,
+      "sha256": "19f2eb229b64349bbc6b5f6a8b1cb31de630dc810dbeda2ede868ffc898781e8",
+      "excerpts": [
+        {
+          "marker": "RuntimeLoader.wasmURL =",
+          "offset": 12200,
+          "text": "ually sets the wasm url\n    RuntimeLoader.setWasmUrl = function (url) {\n        RuntimeLoader.wasmURL = url;\n    };\n    // Gets the current wasm url\n    RuntimeLoader.getWasmUrl = function () {\n        return RuntimeLoader.wasmURL;\n    };\n    /**\n     * Sets the URL used as a fallback when the primary WASM URL fails to load.\n     * Pass `null` to disable the fallback entirely.\n     *\n     * Defaults to pulling from the jsdelivr CDN.\n     */\n    RuntimeLoader.setWasmFallbackUrl = function (url) {\n        RuntimeLoader.wasmFallbackURL = url;\n    };\n    // Gets the current fallback wasm url (null means fallback is disabled)\n    RuntimeLoader.getWasmFallbackUrl = function () "
+        },
+        {
+          "marker": "RuntimeLoader.wasmFallbackURL =",
+          "offset": 12629,
+          "text": "vr CDN.\n     */\n    RuntimeLoader.setWasmFallbackUrl = function (url) {\n        RuntimeLoader.wasmFallbackURL = url;\n    };\n    // Gets the current fallback wasm url (null means fallback is disabled)\n    RuntimeLoader.getWasmFallbackUrl = function () {\n        return RuntimeLoader.wasmFallbackURL;\n    };\n    // Manually sets the wasm binary or clears it with null\n    RuntimeLoader.setWasmBinary = function (value) {\n        if ((value instanceof ArrayBuffer) || value === null) {\n            RuntimeLoader.wasmBinary = value;\n            return;\n        }\n        console.error(\"setWasmBinary expects an ArrayBuffer or null\");\n    };\n    // Gets the current wasm build as Array"
+        },
+        {
+          "marker": "RuntimeLoader.setWasmBinary",
+          "offset": 12919,
+          "text": "backURL;\n    };\n    // Manually sets the wasm binary or clears it with null\n    RuntimeLoader.setWasmBinary = function (value) {\n        if ((value instanceof ArrayBuffer) || value === null) {\n            RuntimeLoader.wasmBinary = value;\n            return;\n        }\n        console.error(\"setWasmBinary expects an ArrayBuffer or null\");\n    };\n    // Gets the current wasm build as ArrayBuffer or null\n    RuntimeLoader.getWasmBinary = function () {\n        return RuntimeLoader.wasmBinary;\n    };\n    // Flag to indicate that loading has started/completed\n    RuntimeLoader.isLoading = false;\n    // List of callbacks for the runtime that come in while loading\n    RuntimeLoad"
+        },
+        {
+          "marker": "Rive.prototype.cleanup =",
+          "offset": 468463,
+          "text": "you will need to initialise a new instance of the\n     * Rive class\n     */\n    Rive.prototype.cleanup = function () {\n        var _a, _b, _c, _d, _e;\n        this.destroyed = true;\n        // Stop the renderer if it hasn't already been stopped.\n        this.stopRendering();\n        // Make the GL context backing this renderer current before any WASM teardown\n        // that frees GPU resources. Binding here covers the artboard/file deletes;\n        // deleteRiveRenderer() re-binds for the renderer's own delete. No-op on the\n        // canvas2d build\n        (_b = (_a = this.renderer) === null || _a === void 0 ? void 0 : _a.bindContext) === null || _b === void 0 ? void 0 "
+        }
+      ]
+    }
+  ],
+  "wasm": [
+    {
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@rive-app+webgl2@2.45.0/node_modules/@rive-app/webgl2/rive.wasm",
+      "bytes": 2232739,
+      "sha256": "4cbbe770f3317b2ba826177e840c9eeefa37e5694f290b5c0ec479b57e371891"
+    },
+    {
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@rive-app+webgl2@2.45.0/node_modules/@rive-app/webgl2/rive_fallback.wasm",
+      "bytes": 2258693,
+      "sha256": "85d702d686603059e66995cd5a8939db105743833bfe980138654bdffea2dd58"
+    }
+  ],
+  "boundary": "MIT runtime/WASM only; no .riv copied or parsed. Wrapper owns cleanup; shared offscreen context/WASM singleton need not vanish with one component."
+}
+
+STDERR

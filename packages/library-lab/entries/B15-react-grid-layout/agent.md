@@ -1,47 +1,21 @@
-# B15 react-grid-layout
+# B15 react-grid-layout 2.3.0
 
-## 适用
+二维离散格子仪表盘用RGL；固定CSS布局、线性分栏B16、列表排序不是本例。RGL2.3.0/react-resizable4.0.2均MIT，React19.3；实际peer分别>=16.3.0/>=16.3，声明不等于跨版本已测。v2入口width/layout+grid/drag/resizeConfig，自带类型，旧WidthProvider/data-grid仅legacy。
 
-离散格子上的拖动和缩放仪表盘用 v2 `GridLayout`。单列文章、自由画布、左右分栏不要用它。库不负责键盘拖放规范，所以要另有按钮。
+三目标：basic真实容器测量与只读12/6列；business真实标题拖动/se缩放/回调与受控几何回写；advanced宽窄独立草稿、static/键盘锁与重置。只本地新闻卡片fixture，无数据请求/存储/下载导出。
 
-## 版本
+必须保留：
 
-`react-grid-layout@2.3.0`，`react-resizable@4.0.2`，React 19.3.0。许可证 MIT。不要写 v1 的 `WidthProvider` 或 `data-grid`。研究笔记里的 2.2.4 不是本锁。不要使用有缺陷记录的 2.2.0。
+- useContainerWidth({measureBeforeMount:true})；默认false时mounted初值true/width1280，不能据默认mounted说已实测。测量容器不额外padding，网格内边距默认沿margin10。
+- i=React key稳定业务id；x/y/w/h是格子，rowHeight78/margin10。projectCells只投影边界，verticalCompactor负责碰撞/压缩；回调只读映射写当前断点。
+- wide12和narrow6分开存，<640按真实容器切；GridLayout key=breakpoint。相同几何不加changes。原生容器select改变CSS maxWidth580，RO实测，不伪造width。
+- drag handle只标题.lab-grid-handle，按钮.lab-grid-control在外；bounded true、resize se。SDK stop计数只真实指针回调，按钮自建键盘替代不冒充SDK键盘拖放。
+- advanced locked headline写static，onLayoutChange再用上一帧坐标防御，纯键盘拒frozen；窄屏交换不跨锁邻居。reset恢复两份布局/解除锁/清本轮SDK计数，但不改容器宽度，changes仍累计。
 
-## 迁移
+迁移demo/example/layout-policy/styles和清理patch五文件，另保留RGL与react-resizable两官方CSS。无Lab alias/远程资源；焦点、内容滚动和reduce-motion CSS必要。Hook自己取消RAF/debounce timer/disconnect RO，网格清自己的指针资源；应用无全局listener/timer。SSR hydration/实际清理仍需验收。
 
-v1 改为 `width`、`layout`、`gridConfig`、`dragConfig`、`resizeConfig`。保存时按断点分份，不要只存当前 `layout`。回调对象按只读处理。
+观察region“React Grid Layout 实际看板”，b15-workshop data-mounted/breakpoint/cols，b15-container、b15-card-headline/feed/queue；b15-layout当前几何，b15-state真实width/两份model/changes/sdk stop计数及最后item。控件容器宽度auto/narrow、重置宽窄布局、锁定新闻总览，方向/缩窄/加宽+卡片中文名。完整真实提案见validation。
 
-## 不可删的清理
+真实SDK3 core数值/Hook SSR与policy6分开，不当DOM/拖动/RO PASS。局部日志/六项见local-validation，formal全NOT_RUN。官方2.3.0 tag99f88f...→commit9b01a614bcdd13e7e921cf3f4b1c7e77942421c1，与npm/manifest匹配；唯一README英文42045B/hash等在official，GitHub Pages200全头无XFO/CSP未实测iframe→unknown。
 
-`useContainerWidth` 在 `mounted && width > 0` 之后才渲染。宽窄布局分开。`key` 用断点。相等几何不增加变更计数。手柄与按钮 class 分离。锁定项同时 `static` 并用上一份坐标盖回。键盘规则在 `layout-policy.ts`。不写 localStorage。
-
-## 反例
-
-`onLayoutChange` 里 PUT。用 0 宽度渲染。`i` 用数组下标。把像素存进 `x`。输入框放进拖动手柄。只保存当前断点覆盖另一份。直接修改回调里的 layout 对象。
-
-复用时保留这些不变的约定：
-
-- 包版本是 2.3.0，不是研究笔记里的 2.2.4。
-- v2 必须传入测得的 `width`，不要用 WidthProvider。
-- 宽窄两份布局分开存；`onLayoutChange` 不发请求。
-- 手柄 class 与按钮 class 分离。
-- 锁定同时写 `static` 并在纯函数里拒绝。
-
-## 测试断言
-
-`tests/layout-policy.test.mts` 断言列投影、窄布局独立堆叠、几何比较、锁定拒绝键盘移动和改宽。不证明 compactor 或指针。
-
-## 真实限制
-
-已挂载：12/6 列、手柄拖动、右下缩放、锁定、键盘、JSON 投影。未挂载：`Responsive` 五断点、HTTP 修订、图表 resize、持久化。
-
-复用检查：
-
-- 版本以该条目 `library.json` 为准，不跟研究稿里的 Vite 脚本或 workshop 目录。
-- 未挂载的生产模式留在 `guide.md`，不补进 `examples/`。
-- 不修改 `verification.json`。没有匹配 receipt 时 sdk、build、browser 保持 NOT_RUN。
-
-## 证据
-
-sdk、build、browser 为 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有匹配 receipt。Actions run `41779873259` 是仓库级检查，不是本条目 PASS。文档：https://github.com/react-grid-layout/react-grid-layout
+本例依赖上游2.3.0+本地edge-scroll cleanup patch；五个sourceFiles含react-grid-layout@2.3.0.patch，必须配置pnpm patchedDependencies并install，不能只复制四源而丢补丁。具体配置见guide末节；不把上游原文改成自建补丁说明。

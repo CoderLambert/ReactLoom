@@ -188,7 +188,7 @@ export default function Home() {
                 <Link
                   to="/libraries/$slug"
                   params={{ slug: entry.slug }}
-                  search={{ tab: 'demo', example: undefined }}
+                  search={{ tab: 'docs', example: undefined }}
                 >
                   <span className="entry-id">{entry.entryId}</span>
                   <span>{entry.name}</span>
@@ -211,7 +211,7 @@ export default function Home() {
                 key={entry.entryId}
                 to="/libraries/$slug"
                 params={{ slug: entry.slug }}
-                search={{ tab: 'demo', example: undefined }}
+                search={{ tab: 'docs', example: undefined }}
               >
                 <div className="card-heading">
                   <span className="entry-id">{entry.entryId}</span>

@@ -1,0 +1,27 @@
+{
+  "installedVersions": {
+    "@base-ui/react": "1.9.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "files": {
+    "library.json": "39f1a033296c43e1aeadbae3f27637cba99f745c5e840405080b7b604cf5e15e",
+    "guide.md": "ecf58d53ad2c0a21eb246d4b4a45b5b048c873020cdb861b29ad36df3e70a7e5",
+    "agent.md": "2bbeeb541a4671623dce3901814ad9c46632d41fbbcb55d372a78bc90e7d1dba",
+    "local-validation.md": "9663e07007698867f4d951e4a059866c02a844c96c43be70cef23230b736756c",
+    "verification.json": "f6d200c35febd938e83c8715a71e5d0fe04f7a20421211e40b5a985f2cd74fe1",
+    "official/readme.md": "b5444513c6b8cd0d19777a7c7f0031c8f7d287e5ce04093b5ca68e50cab791c6",
+    "official/source-evidence.json": "7af6b5dd6a335ebf5e8aad37bb4af1773fe21b5a3d5075bdc18a6b515d259726",
+    "validation/browser-proposal.txt": "67e7ba0618a8431024af9e306b6a5d984b78d1cbda38419a8414c5a0423f8050",
+    "validation/metadata-check.mjs": "f04df52f100bc06af79822dfcdea051b80de34b0ae6e2b0d70acf6973c37c6dd",
+    "validation/fetch-official.py": "b5d7b710b0268d271179b33ca64d8d66897840ea3ed4dfc94fd99e2e846665e1",
+    "validation/sdk-source-audit.json": "5059464bee440bd90f539e69b9dce44ca2ce661f1f3fbbfc52330b46abb40ddd",
+    "validation/final-check.py": "abf0eb62645c6e4729fca6a152990483e1f271b6b122fab67f7f25dbda281f66",
+    "examples/checkbox.css": "a1bbc7bbdb570b7156c65aa52c7f34efd70617d9b18556fd494e62dd7c0a3485",
+    "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+    "examples/example.tsx": "f3a3b5ed0100448d61036368c401f9c058e221c771dc28e15f1ac7e0fe5c39e9",
+    "examples/permission-policy.ts": "ca5bd955457e510bb5047f956ac1977b94dcdbeef37c1007d6bf9270e44162f6",
+    "tests/permission-policy.test.mts": "a16344bf65256f2452da12ba5772a20e237c63147112d0dac33da57e4f7f6b15",
+    "tests/sdk.test.mjs": "725e941f029d02a54aac88b8645347298b4f9dbb7c8d999a027d42f82f7430f5"
+  }
+}

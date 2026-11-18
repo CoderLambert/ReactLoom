@@ -1,0 +1,18 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["pnpm", "--dir", "packages/library-lab", "exec", "node", "--test", "entries/C16-luxon/tests/sdk.test.mjs"], "utc": "2026-11-10T17:08:04.939901+00:00", "exit": 0}
+Actual host: {"node":"v26.13.0","icu":"78.3","tz":"2026e","intl":{"locale":"en-US","calendar":"gregory","numberingSystem":"latn","timeZone":"Asia/Shanghai","year":"numeric","month":"numeric","day":"numeric"}}
+✔ real Luxon reports invalid civil input and page calendar contract rejects it (2.084641ms)
+✔ shared calendar-day window differs from elapsed 24 hours across DST and is half-open (3.591673ms)
+✔ real Luxon exposes both possible offsets for repeated local time (0.589594ms)
+✔ actual Luxon rejects nonexistent spring-forward wall clock and implicit fallback (1.031583ms)
+✔ actual Luxon resolves both fallback offsets to two exact instants (0.537821ms)
+✔ page candidate inspection exposes choices without silently resolving the overlap (0.317212ms)
+✔ page display-zone conversion changes clock/date but preserves the exact instant and global settings (0.975023ms)
+✔ shared calendar contract also rejects unsupported zones and skipped civil dates by roundtrip (0.354661ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 68.315491

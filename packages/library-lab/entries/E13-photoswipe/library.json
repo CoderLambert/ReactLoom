@@ -5,13 +5,7 @@
   "name": "PhotoSwipe",
   "group": "E",
   "summary": "响应式图库灯箱：PhotoSwipe Lightbox、触控缩放、键盘关闭与实例销毁",
-  "tags": [
-    "图库",
-    "Lightbox",
-    "图片预览",
-    "触控缩放",
-    "生命周期"
-  ],
+  "tags": ["图库", "Lightbox", "图片预览", "触控缩放", "生命周期"],
   "contentState": "recreated",
   "packages": [
     {
@@ -52,13 +46,11 @@
         "examples/gallery-policy.d.mts",
         "examples/gallery-policy.test.mjs",
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/artwork.mjs",
+        "examples/artwork.d.mts"
       ],
-      "capabilities": [
-        "lazy-media",
-        "keyboard",
-        "gallery-lifecycle"
-      ],
+      "capabilities": ["lazy-media", "keyboard", "gallery-lifecycle"],
       "description": "真实PhotoSwipeLightbox + PhotoSwipe按首次点击加载，使用原创本地SVG。"
     },
     {
@@ -72,13 +64,11 @@
         "examples/gallery-policy.d.mts",
         "examples/gallery-policy.test.mjs",
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/artwork.mjs",
+        "examples/artwork.d.mts"
       ],
-      "capabilities": [
-        "lazy-media",
-        "keyboard",
-        "gallery-lifecycle"
-      ],
+      "capabilities": ["lazy-media", "keyboard", "gallery-lifecycle"],
       "description": "多项带显式width/height元数据的响应式画廊，Esc与焦点回归需浏览器验收。"
     },
     {
@@ -92,22 +82,40 @@
         "examples/gallery-policy.d.mts",
         "examples/gallery-policy.test.mjs",
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/artwork.mjs",
+        "examples/artwork.d.mts"
       ],
-      "capabilities": [
-        "lazy-media",
-        "keyboard",
-        "gallery-lifecycle"
-      ],
+      "capabilities": ["lazy-media", "keyboard", "gallery-lifecycle"],
       "description": "React状态变更后动态追加图片，检查事件委托并销毁lightbox实例。"
     }
   ],
   "license": {
     "spdx": "MIT",
-    "assets": "原创本地SVG/Canvas演示数据，未上传外部图片，未包含付费或第三方媒体资源。"
+    "assets": "原创data SVG抽象图，无Canvas/远程图库/实拍素材。"
   },
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
     "note": "2026-10-27独立重建示例；参考官方API。未执行真实SDK/浏览器验收，不继承历史PASS。"
+  },
+  "official": {
+    "readme": {
+      "repository": "dimsemenov/PhotoSwipe",
+      "commit": "fd85184b450f451bc4aa2697f6d0a79304d13473",
+      "path": "README.md",
+      "sourceUrl": "https://github.com/dimsemenov/PhotoSwipe/blob/fd85184b450f451bc4aa2697f6d0a79304d13473/README.md",
+      "snapshotPath": "official/readme.md",
+      "sha256": "eacde22ddd2b4a866df9f5daa72583b19610e8959d4b683f0ab85f1e07865294",
+      "language": "en",
+      "version": "5.4.4",
+      "syncedAt": "2026-11-17T17:38:57.781Z"
+    },
+    "homepage": {
+      "url": "https://photoswipe.com/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-17T17:38:57.781Z",
+      "reason": "实际GET/响应头见official/source-evidence.json；未Lab origin确认嵌入，保持unknown及直达。"
+    }
   }
 }

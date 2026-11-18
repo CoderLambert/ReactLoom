@@ -1,0 +1,14 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['node', '--test', 'entries/B16-react-resizable-panels/tests/sdk.test.mjs']
+startedAt: 2026-11-10T14:08:36.479074+00:00
+exit: 0
+✔ actual v4 Group/Panel/Separator SSR preserves percentage defaults and accessible splitters (5.800424ms)
+✔ actual v4 vertical three-panel SSR uses horizontal separators and numeric props as pixels (0.990373ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 67.269112

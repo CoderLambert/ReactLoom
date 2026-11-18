@@ -1,0 +1,143 @@
+{
+  "at": "2026-11-10T18:14:16.320117+00:00",
+  "kind": "read-only installed API/types and actual Tailwind host setup, not another SDK/browser run",
+  "files": [
+    {
+      "package": "tailwind-merge",
+      "relative": "package.json",
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/tailwind-merge@3.7.0/node_modules/tailwind-merge/package.json",
+      "bytes": 3204,
+      "sha256": "048ace99e7a0c877d540e21fd3991795bfca07efe409aacd54465dfc51845939"
+    },
+    {
+      "package": "tailwind-merge",
+      "relative": "dist/types.d.ts",
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/tailwind-merge@3.7.0/node_modules/tailwind-merge/dist/types.d.ts",
+      "bytes": 135821,
+      "sha256": "863ebea2d55981fa7f6aa0486bfde68d72d46783c09e265d343b6a4a12de9c9b"
+    },
+    {
+      "package": "tailwind-merge",
+      "relative": "src/index.ts",
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/tailwind-merge@3.7.0/node_modules/tailwind-merge/src/index.ts",
+      "bytes": 691,
+      "sha256": "8aa362a0e165aa1ed397730c4bdc18630b36bdda1a70c07fbe77f7a32288f0f9"
+    },
+    {
+      "package": "tailwind-merge",
+      "relative": "src/lib/merge-classlist.ts",
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/tailwind-merge@3.7.0/node_modules/tailwind-merge/src/lib/merge-classlist.ts",
+      "bytes": 3716,
+      "sha256": "e05c0c74cc6bb96b521adcc7cc1ef8e35e185940bd0b90c7156fbffffbbe5da5"
+    },
+    {
+      "package": "tailwind-merge",
+      "relative": "src/lib/parse-class-name.ts",
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/tailwind-merge@3.7.0/node_modules/tailwind-merge/src/lib/parse-class-name.ts",
+      "bytes": 4067,
+      "sha256": "0e4808a1e64ce9b9521bcc6d4be120e8947a221ba986167128ccd0f4ec8ef5c2"
+    },
+    {
+      "package": "tailwind-merge",
+      "relative": "src/lib/default-config.ts",
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/tailwind-merge@3.7.0/node_modules/tailwind-merge/src/lib/default-config.ts",
+      "bytes": 97095,
+      "sha256": "34acf9404b7669514ec562b8f3418696ce2b1dcfcae7ed2bf125d0500d94064b"
+    },
+    {
+      "package": "tailwind-merge",
+      "relative": "src/lib/class-group-utils.ts",
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/tailwind-merge@3.7.0/node_modules/tailwind-merge/src/lib/class-group-utils.ts",
+      "bytes": 8828,
+      "sha256": "80e4357a6333b9af7327576e95c1b88ce94163e8dddcf0638e62c29da978e3f6"
+    },
+    {
+      "package": "tailwind-merge",
+      "relative": "src/lib/create-tailwind-merge.ts",
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/tailwind-merge@3.7.0/node_modules/tailwind-merge/src/lib/create-tailwind-merge.ts",
+      "bytes": 1630,
+      "sha256": "39a0ae0d5ff022cdb1cf62e6166c92bed65ec76cf83a4f6edd7b79d746e5661a"
+    },
+    {
+      "package": "tailwind-merge",
+      "relative": "src/lib/extend-tailwind-merge.ts",
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/tailwind-merge@3.7.0/node_modules/tailwind-merge/src/lib/extend-tailwind-merge.ts",
+      "bytes": 1004,
+      "sha256": "3fb99312a2adde448eef1c5f6cda152c2c44f9bc17edb6e1067a706c98dc326b"
+    },
+    {
+      "package": "tailwind-merge",
+      "relative": "src/lib/merge-configs.ts",
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/tailwind-merge@3.7.0/node_modules/tailwind-merge/src/lib/merge-configs.ts",
+      "bytes": 3115,
+      "sha256": "17d9b0dd29ae0a6ff559077e1a4d3f13d52108774b4370775c9fa40fe5f06cd1"
+    },
+    {
+      "package": "tailwind-merge",
+      "relative": "src/lib/sort-modifiers.ts",
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/tailwind-merge@3.7.0/node_modules/tailwind-merge/src/lib/sort-modifiers.ts",
+      "bytes": 1896,
+      "sha256": "1c164d9e18dde01f25bf957b364986e9cb369e0f472c42cebf076b27f0fdd86f"
+    },
+    {
+      "package": "tailwind-merge",
+      "relative": "src/lib/tw-join.ts",
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/tailwind-merge@3.7.0/node_modules/tailwind-merge/src/lib/tw-join.ts",
+      "bytes": 1484,
+      "sha256": "580c216632d230c7c37dbd1af49df329ce295761169ccf10f641f98a2ae440a3"
+    },
+    {
+      "package": "tailwind-merge",
+      "relative": "src/lib/lru-cache.ts",
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/tailwind-merge@3.7.0/node_modules/tailwind-merge/src/lib/lru-cache.ts",
+      "bytes": 1609,
+      "sha256": "910ae84eddf31efa071cc9e490f56db843707c0aff44c6f03c12e874b7d22850"
+    },
+    {
+      "package": "clsx",
+      "relative": "package.json",
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/clsx@2.1.1/node_modules/clsx/package.json",
+      "bytes": 1192,
+      "sha256": "a5e616b9883177fb47c1fca22b6a4ab42be1c3ed6ffae8595a5c7d88630eeec2"
+    },
+    {
+      "package": "clsx",
+      "relative": "dist/clsx.mjs",
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/clsx@2.1.1/node_modules/clsx/dist/clsx.mjs",
+      "bytes": 388,
+      "sha256": "d949e5cdbfebc76a6642b1901095e900fc3f2262d8dc0373aa44850a9bc75522"
+    },
+    {
+      "package": "tailwindcss",
+      "relative": "package.json",
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/tailwindcss@4.3.3/node_modules/tailwindcss/package.json",
+      "bytes": 2493,
+      "sha256": "3dc86b46c511947ca00838aa3f1776243abe923ac347c092e60a0cbc7ae68559"
+    },
+    {
+      "package": "@tailwindcss/vite",
+      "relative": "package.json",
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@tailwindcss+vite@4.3.3_vite@8.3.4_@types+node@22.20.5_esbuild@0.28.2_jiti@2.7.0_terser@5.51.2_yaml@2.9.1_/node_modules/@tailwindcss/vite/package.json",
+      "bytes": 992,
+      "sha256": "cba2bb8613106ca608bbd757998b2cf56a464584e3848310338fe3fe3b4761aa"
+    },
+    {
+      "hostInput": true,
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/src/styles.css",
+      "bytes": 17510,
+      "sha256": "3b3f216edf63defa5f5a92aca1b5e85f1984af213728ea809ba8c1f67500e188"
+    },
+    {
+      "hostInput": true,
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/vite.config.ts",
+      "bytes": 364,
+      "sha256": "2dd89c7a2abfd4f8d1a35761ec83ea8a2a411c12679a7a534c39b37098b631e0"
+    }
+  ],
+  "versions": {
+    "tailwind-merge": "3.7.0",
+    "clsx": "2.1.1",
+    "tailwindcss": "4.3.3",
+    "@tailwindcss/vite": "4.3.3"
+  }
+}

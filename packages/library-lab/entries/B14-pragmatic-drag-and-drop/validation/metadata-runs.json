@@ -1,0 +1,27 @@
+[
+  {
+    "label": "metadata",
+    "argv": [
+      "node",
+      "packages/library-lab/entries/B14-pragmatic-drag-and-drop/validation/check-metadata.mjs"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "exit": 0
+  },
+  {
+    "label": "format-metadata",
+    "argv": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "packages/library-lab/entries/B14-pragmatic-drag-and-drop/examples",
+      "packages/library-lab/entries/B14-pragmatic-drag-and-drop/validation/check-metadata.mjs",
+      "packages/library-lab/entries/B14-pragmatic-drag-and-drop/library.json",
+      "packages/library-lab/e2e/quality-remediation-pragmatic.spec.ts"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "exit": 0
+  }
+]

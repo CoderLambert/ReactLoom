@@ -1,0 +1,15 @@
+{
+  "version": "10.0.0",
+  "tagObject": "a9c0034c8181069d7d5f099871a0ef044461ba8e",
+  "commit": "7f272ab5ff2254c0dc2537b7977e88ede1cd55e8",
+  "checkedAt": "2026-11-17T16:27:15.705576+00:00",
+  "readmeSelection": "官方提交根树 official/tree.json 只有 readme.md，无官方中文 README；保留英文原文",
+  "homepage": "https://github.com/sindresorhus/p-queue",
+  "status": 200,
+  "evidence": "homepage-headers.txt",
+  "commands": [
+    "git ls-remote https://github.com/sindresorhus/p-queue.git refs/tags/v10.0.0*",
+    "curl -fsSL https://raw.githubusercontent.com/sindresorhus/p-queue/7f272ab5ff2254c0dc2537b7977e88ede1cd55e8/readme.md",
+    "curl -fsSL -D official/homepage-headers.txt https://github.com/sindresorhus/p-queue"
+  ]
+}

@@ -1,0 +1,16 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=pnpm exec playwright test --config=.local-evidence/quality-playwright.config.ts e2e/quality-remediation-i18next.spec.ts --trace=off
+
+Running 3 tests using 2 workers
+
+(node:2328134) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2328133) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 e2e/quality-remediation-i18next.spec.ts:61:1 › @C17 actual resource bundle API publishes a local namespace and reset owns fresh dictionaries (1.6s)
+  ✓  2 e2e/quality-remediation-i18next.spec.ts:33:1 › @C17 actual instance t resolves interpolation/plurals and escaped strings remain React text (1.6s)
+  ✓  3 e2e/quality-remediation-i18next.spec.ts:95:1 › @C17 actual fallback details and serial latest intent survive level/reset/unmount boundaries (2.0s)
+
+  3 passed (3.9s)
+
+exitCode=0

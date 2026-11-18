@@ -1,0 +1,7 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node entries/B06-ant-design/validation/check-entry.mjs
+exit: 0
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node entries/B06-ant-design/validation/check-entry.mjs
+PASS: entry shape, 3 demos, 5 source paths, README bytes 12801 SHA-256 9459513f975ed488f297ea22a0d724000fa039b6c0c5991e991f59587d00de06
+exit: 0

@@ -1,0 +1,16 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node --test entries/A12-react-konva/tests/stage-policy.test.mts
+exit: 0
+✔ narrow measured widths are not artificially inflated (0.457494ms)
+✔ a large host preserves world scale and bounds width (0.09382ms)
+✔ drag positions remain in stage logical coordinates (0.384692ms)
+✔ only bounded integer node counts permit adding nodes (0.087523ms)
+✔ new node layout never exceeds scene bounds (0.158912ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 66.049562

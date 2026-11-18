@@ -1,0 +1,8 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+ARGV: ["pnpm", "exec", "--", "tsc", "--ignoreConfig", "--noEmit", "--target", "ES2022", "--lib", "ES2022,DOM,DOM.Iterable", "--module", "ESNext", "--moduleResolution", "Bundler", "--jsx", "react-jsx", "--strict", "--skipLibCheck", "--esModuleInterop", "--allowImportingTsExtensions", "--types", "vite/client,node", "entries/A04-uplot/examples/demo.tsx"]
+START: 2026-11-10T10:58:50.210714+00:00
+END: 2026-11-10T10:58:50.482939+00:00
+EXIT: 0
+STDOUT:
+
+STDERR:

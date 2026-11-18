@@ -1,0 +1,11 @@
+{
+  "commit": "ca2330bcb862dc27aa39849c74657ccf28c4e13f",
+  "readmeCandidates": [
+    "packages/react-pdf/README.md"
+  ],
+  "rootReadmeSymlinkTarget": "packages/react-pdf/README.md",
+  "version": "11.0.0",
+  "license": "MIT",
+  "licensePath": "LICENSE",
+  "licenseSha256": "c205058a880f412b34d1c660ea2889d86876b3a2a3c77cedf5996e674b2e24f7"
+}

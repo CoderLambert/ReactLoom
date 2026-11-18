@@ -1,0 +1,32 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: pnpm exec biome check --write entries/B13-dnd-kit/examples entries/B13-dnd-kit/tests
+exit: 1
+
+entries/B13-dnd-kit/tests/sdk.test.mjs:27:7 lint/a11y/useButtonType ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Provide a valid type prop for the button element.
+  
+    25 │     createElement(
+    26 │       'button',
+  > 27 │       {
+       │       ^
+  > 28 │         ...attributes,
+        ...
+  > 32 │         'aria-label': `拖动 ${id}`,
+  > 33 │       },
+       │       ^
+    34 │       id,
+    35 │     ),
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+Checked 8 files in 10ms. Fixed 4 files.
+Found 1 error.
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while applying fixes.
+  
+

@@ -1,0 +1,14 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node --test --test-force-exit entries/A10-tldraw/tests/sdk.test.mjs
+exit: 0
+
+✔ real SDK document-only restore removes later shapes and retains saved record identity/text (13.634223ms)
+✔ getSnapshot separates session from document-scoped Store records (1.699216ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 338.460053

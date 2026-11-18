@@ -1,0 +1,10 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['pnpm', 'exec', 'tsc', '--ignoreConfig', '--noEmit', '--target', 'es2022', '--module', 'esnext', '--moduleResolution', 'bundler', '--strict', '--skipLibCheck', '--types', 'node', 'entries/B21-react-motion-migration/validation/browser-proposal.check.ts']
+startedAt: 2026-11-10T14:52:23.461988+00:00
+exit: 1
+entries/B21-react-motion-migration/validation/browser-proposal.check.ts(50,17): error TS2339: Property 'inert' does not exist on type 'HTMLElement | SVGElement'.
+  Property 'inert' does not exist on type 'SVGElement'.
+entries/B21-react-motion-migration/validation/browser-proposal.check.ts(66,70): error TS2339: Property 'inert' does not exist on type 'HTMLElement | SVGElement'.
+  Property 'inert' does not exist on type 'SVGElement'.
+entries/B21-react-motion-migration/validation/browser-proposal.check.ts(93,17): error TS2339: Property 'inert' does not exist on type 'HTMLElement | SVGElement'.
+  Property 'inert' does not exist on type 'SVGElement'.

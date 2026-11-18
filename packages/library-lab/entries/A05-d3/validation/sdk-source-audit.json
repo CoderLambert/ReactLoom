@@ -1,0 +1,148 @@
+{
+  "checkedAt": "2026-11-10T11:49:54.262Z",
+  "node": "v26.13.0",
+  "modules": [
+    {
+      "name": "d3",
+      "version": "7.9.0",
+      "source": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/d3@7.9.0/node_modules/d3/src/index.js",
+      "sourceSha256": "0e14c593df847034f8312f2ece3e5adbf403e077b6db93a3947c7d3bd0b6f83b",
+      "packagePath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/d3@7.9.0/node_modules/d3/package.json",
+      "packageSha256": "7b8169c299e9b62e31dd518dfff1f5cc456856f0fd6a1afcfcd5f260317beb88",
+      "evidence": [
+        {
+          "line": 24,
+          "text": "export * from \"d3-selection\";"
+        },
+        {
+          "line": 29,
+          "text": "export * from \"d3-transition\";"
+        }
+      ]
+    },
+    {
+      "name": "d3-selection",
+      "version": "3.0.1",
+      "source": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/d3-selection@3.0.1/node_modules/d3-selection/dist/d3-selection.mjs",
+      "sourceSha256": "45f0cfa0c4ffc5653f7cc3ef4aa158ac9cc9235865b451b1dedb7a7dff0158bf",
+      "packagePath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/d3-selection@3.0.1/node_modules/d3-selection/package.json",
+      "packageSha256": "0d74390b2fc84f928166317239811a27ad0afe5f54146b34952618a4f2ece730",
+      "evidence": [
+        {
+          "line": 222,
+          "text": "function bindKey(parent, group, enter, update, exit, data, key) {"
+        },
+        {
+          "line": 325,
+          "text": "function selection_join(onenter, onupdate, onexit) {"
+        },
+        {
+          "line": 805,
+          "text": "function selection_on(typename, value, options) {"
+        }
+      ]
+    },
+    {
+      "name": "d3-scale",
+      "version": "4.0.3",
+      "source": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/d3-scale@4.0.3/node_modules/d3-scale/dist/d3-scale.mjs",
+      "sourceSha256": "1f2f8b07da49299cd8783a7073239e939c5eb96c6e88abf062425c9173c585b8",
+      "packagePath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/d3-scale@4.0.3/node_modules/d3-scale/package.json",
+      "packageSha256": "1711188394e4911cd2e9b204cd222991467aae2e66f133bb662f47da0fa5ea86",
+      "evidence": [
+        {
+          "line": 79,
+          "text": "function band() {"
+        },
+        {
+          "line": 335,
+          "text": "function linearish(scale) {"
+        },
+        {
+          "line": 389,
+          "text": "function linear() {"
+        }
+      ]
+    },
+    {
+      "name": "d3-axis",
+      "version": "3.0.1",
+      "source": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/d3-axis@3.0.1/node_modules/d3-axis/dist/d3-axis.mjs",
+      "sourceSha256": "4ff250e2186d4742978eee2e6b93ea625c8547288deae43ca931a43a92a00b56",
+      "packagePath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/d3-axis@3.0.1/node_modules/d3-axis/package.json",
+      "packageSha256": "49eb93373a6a66ce1ca33bccf86e88ecb3c88e8fcfcfd6a370f2c851749f1b94",
+      "evidence": [
+        {
+          "line": 34,
+          "text": "function axis(orient, scale) {"
+        },
+        {
+          "line": 46,
+          "text": "  function axis(context) {"
+        },
+        {
+          "line": 132,
+          "text": "  axis.tickValues = function(_) {"
+        },
+        {
+          "line": 171,
+          "text": "function axisBottom(scale) {"
+        }
+      ]
+    },
+    {
+      "name": "d3-shape",
+      "version": "3.2.1",
+      "source": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/d3-shape@3.2.1/node_modules/d3-shape/dist/d3-shape.mjs",
+      "sourceSha256": "07286654e9aad70c7645ae6f901900d15c5730d3fc74a80b4aae91d28b3ff0fa",
+      "packagePath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/d3-shape@3.2.1/node_modules/d3-shape/package.json",
+      "packageSha256": "5e31292d998e085e323870a34397e6a2915dd7a862996cbc216d5148a64cdbfa",
+      "evidence": [
+        {
+          "line": 362,
+          "text": "function line(x$1, y$1) {"
+        },
+        {
+          "line": 372,
+          "text": "  function line(data) {"
+        },
+        {
+          "line": 400,
+          "text": "  line.defined = function(_) {"
+        },
+        {
+          "line": 1675,
+          "text": "function slope3(that, x2, y2) {"
+        },
+        {
+          "line": 1702,
+          "text": "function MonotoneX(context) {"
+        }
+      ]
+    },
+    {
+      "name": "d3-transition",
+      "version": "3.0.2",
+      "source": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/d3-transition@3.0.2_d3-selection@3.0.1/node_modules/d3-transition/dist/d3-transition.mjs",
+      "sourceSha256": "eb5043da18692ff5da3ce5a49dcaf44ce412c2acde17673acb1e65ca97edf825",
+      "packagePath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/d3-transition@3.0.2_d3-selection@3.0.1/node_modules/d3-transition/package.json",
+      "packageSha256": "d4861b6e223e10ac5dc6aad664cca8416ab2603d1b46696805e6eab5043a1940",
+      "evidence": [
+        {
+          "line": 183,
+          "text": "function selection_interrupt(name) {"
+        },
+        {
+          "line": 873,
+          "text": "selection.prototype.interrupt = selection_interrupt;"
+        }
+      ]
+    }
+  ],
+  "types": {
+    "packagePath": "node_modules/@types/d3/package.json",
+    "name": "@types/d3",
+    "version": "7.4.3",
+    "indexSha256": "e6f10f9a770dedf552ca0946eef3a3386b9bfb41509233a30fc8ca47c49db71c"
+  }
+}

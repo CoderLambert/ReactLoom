@@ -1,0 +1,22 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: ["pnpm", "test:sdk", "--entry=A01"]
+startedAt: 2026-11-10T09:43:42.206988+00:00
+
+> @reactloom/library-lab@0.1.0 test:sdk /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+> node scripts/sdk-runner.mjs --entry=A01
+
+Real SDK suites selected: 1 file(s)
+✔ A01 real 6.1.0 renders the shared axes and bar data, then updates the same instance (27.558487ms)
+✔ A01 business removes and restores the previous series with the Demo full replacement strategy (15.376415ms)
+✔ A01 advanced uses real line updates and resize; reduced motion disables animation (6.53359ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 340.205171
+
+exitCode: 0
+finishedAt: 2026-11-10T09:43:42.767350+00:00

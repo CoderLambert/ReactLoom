@@ -1,0 +1,7 @@
+cwd=packages/library-lab
+command=node .local-evidence/b15-active-unmount-probe.mjs
+during { active: 1, ticks: 35 } dragging 1
+after-unmount-before-up {"first":{"active":1,"ticks":56},"second":{"active":1,"ticks":80}}
+after-real-up { active: 1, ticks: 89 }
+
+exitCode=1

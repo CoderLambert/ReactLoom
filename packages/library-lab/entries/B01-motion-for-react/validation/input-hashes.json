@@ -1,0 +1,27 @@
+{
+  "installedVersions": {
+    "motion": "14.6.0",
+    "framer-motion": "14.6.0",
+    "motion-dom": "14.6.0"
+  },
+  "files": {
+    "library.json": "2add9ea9c3f56540acbc6b1099d4cbe54536b7f8e5e3716ca677e28acf99949d",
+    "guide.md": "0f9dcd1b23417485ef9ee7c8edf28506990eb9417e8a12d45b6fbfd4b93de70f",
+    "agent.md": "21e98edd6f9f8a6ea769a6186ee053d303b33285fc34056c1944d1a710fa52ee",
+    "local-validation.md": "fdac4c834a48c4ed7c598f7086ce62c24c9ccd1dd914c4ed8e2c49c84d8d8f95",
+    "verification.json": "95a62741ba97a2480d7cea7639d8d9d43002d39203265cd1a5efd87ea7a9eea9",
+    "official/readme.md": "08915bb5254a4bc1fd47e8d7ea8fff0dcb470461f6fd6b59fb6d2f0bef0400df",
+    "official/source-evidence.json": "d5769486d002b6c3e82a55a9d5e429bf4f83ce7082d54801f0e23aca03643ebd",
+    "validation/browser-proposal.txt": "235349c0942428f0a037735b516bbf68be3f75103232a1cb4cb18c7d83f61dda",
+    "validation/source-audit.mjs": "566ee81aaf5f49a6b2b1fe3661cf32f2ae0fbdf760dd8efc8de8bf184fb5e509",
+    "validation/sdk-source-audit.json": "1ebb83ab678c754233a601f8d14ca74cba910ad1b9784c76314d148f8d327589",
+    "examples/card-policy.ts": "4e256b246b8f884a532107307e4c13f2157806d5360f0a0119a14ee5cf58877a",
+    "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+    "examples/example.tsx": "ca4943bdd6a4dc73485c6bbe4e0b398f3c2a2f4a6b46ed2d69b8ea124f5d99bb",
+    "examples/presence-items.tsx": "ea5bdfd07666f1386198fa7ce2aaccb16d6f25d8628031b1c87e915126a2ebf8",
+    "examples/reduced-motion.ts": "b94fd7432cdeb5c919972f41050196affde2002bf329c2083dd2456f26d18fa8",
+    "examples/workshop.css": "dd31f7f663c676494cb4c3c3e26cee52c3784368db0df47d2b16522e55e88b4a",
+    "tests/card-policy.test.mts": "3eb06465d7b3a1cf16891d81458b3ad2196efffff7d7b74c0436160696fbc674",
+    "tests/sdk.test.mjs": "74764b040b6020b6a475b977045742dd96f5da19098ecf16edec6d08c137d21f"
+  }
+}

@@ -1,0 +1,7 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=["python3", "-c", "import ast;from pathlib import Path;files=[Path('entries/C17-i18next/validation/fetch-official.py'),Path('entries/C17-i18next/validation/source-tool-transport-fixture.py')];[ast.parse(p.read_text(),filename=str(p))for p in files];print('2 maintenance Python AST PASS; no execution/HTTP/SDK.')"]
+start=2026-11-10T18:18:58.046636+00:00
+2 maintenance Python AST PASS; no execution/HTTP/SDK.
+
+exitCode=0
+end=2026-11-10T18:18:58.060618+00:00

@@ -1,130 +1,78 @@
-# A11 Konva 10.9.0：场景图、Transformer 和舞台销毁
+# Konva：把审核步骤卡片变成可操作的二维画布
 
-Konva 是 Canvas 2D 场景图：Stage、Layer、Group、Shape、命中和拖拽。它不是 WebGL 引擎，也不是现成白板。要声明式 React 节点用 A12 的 react-konva，并且不要两个所有者同时管同一个 Stage。完整手绘产品评估 Excalidraw；无限画布评估 tldraw 的许可证；流程端口用 React Flow。
+需要让编辑人员拖动“RSS收集、内容审核”两张卡片、调整大小并保存坐标时，直接操作Canvas上下文还要自己实现命中检测和拖拽。Konva提供场景图：Stage管理画布容器，Layer负责绘制，Group把卡片背景和文字组合起来，Rect/Text是图元。你改节点属性，库处理绘制、命中和拖拽。
 
-Library Lab 钉 `konva@10.9.0`，MIT。用户图片、字体和地图不因此变成 MIT。
+本例使用MIT的 `konva@10.9.0`，适合自定义二维编排、小型设计器和图元操作。它不自带完整白板文档、协作或审批执行器；需要白板产品先评估Excalidraw/tldraw，需要节点端口和连线评估React Flow。React项目也可以用react-konva声明式描述同一类图元；那时由包装器持有Stage，不要再手动创建第二个。
 
-## Lab 当前示例
+## 数据所有权与最小接入
 
-`examples/demo.tsx` 导出 `examples/example.tsx`。上限和宽度在 `examples/stage-policy.ts`。
-
-已挂载：
-
-- effect 创建 `Konva.Stage`，宽度来自 `stageWidth(clientWidth)`（1..4096），高度 280。一个 Layer，上面放 `Transformer`：禁止旋转和翻转，宽小于 85 或高小于 48 的 `boundBoxFunc` 退回旧盒子。`boundBoxFunc` 用的是绝对坐标。
-- 业务卡片在 React state：`id`、标题、x、y、宽、高、颜色。两张初始卡片「RSS 收集」「内容审核」。换 level 会把 state 恢复成这两张，并重置缩放。
-- 第二个 effect 按 id 增量同步：消失的 Group `destroy`，新的 Group 加 Rect 和 Text。basic 不可拖。`dragend` 把坐标写回 state。`transformend` 把 `rect.width * group.scaleX` 收成宽高，再把 scale 设回 1。拖拽过程中不把位置从 state 盖回去（`isDragging`）。
-- advanced 才把选中 Group 交给 Transformer。滚轮以指针为锚缩放 0.6..2：先把指针反算到世界坐标，再改 stage scale 和 position。按钮「向右/向下 10px」不经过鼠标。
-- 新增卡片最多 `MAX_SAMPLE_CARDS`（24），id 用递增的 `node-N`，重复 id 会被 `appendCard` 拒绝。
-- `ResizeObserver` 加 rAF 改 `stage.width`。cleanup：断开观察者、取消 rAF、`stage.off('wheel')`、`stage.destroy()`，清空 layer、transformer 和节点 Map。`stage.remove()` 只摘 DOM，不等于销毁场景图，所以这里调用的是 `destroy`。
-- 列表用按钮选择。画布 `role="img"`，精确操作在 DOM。
-
-没有挂上：中文输入框、`stage.toBlob`、JSON schema、HTTP ETag、视口裁剪 1200 个矩形、`listening: false` 的背景层。Konva 8+ 会自己安排绘制；示例在同步后仍调用了一次 `batchDraw`。不要在每个 `x()` 后面再 `draw()`。`beginUpdateBatch` 是给 Transformer 同步用的，不是通用的逐帧 flush。[Batch Draw](https://konvajs.org/docs/performance/Batch_Draw.html)。
-
-## 所有权
-
-业务真相是卡片数组。Stage 是投影，在 effect 里创建一次。拖拽结束才写回不可变对象。世界坐标（Group x/y）和视口（Stage position/scale）分开。把 `getPointerPosition()` 直接存成卡片坐标，在缩放后会漂。Lab 的滚轮路径先除以缩放再写 stage position，卡片坐标仍来自 dragend 或按钮。[相对缩放](https://konvajs.org/docs/sandbox/Zooming_Relative_To_Pointer.html)。
-
-Transformer 改的是 scale，不是 width/height。不把 scale 乘回去，下次从 state 画出的矩形会回到旧尺寸。[Transformer](https://konvajs.org/api/Konva.Transformer.html)。
-
-## 三层
-
-### 01 选择
-
-两张卡片，不可拖。下拉和列表按钮写入 `selected`。点击 Group 同样 `setSelected`。没有 Transformer。
-
-### 02 拖拽
-
-business 打开 `draggable`。松手后列表里的 x/y 更新。拖动中 state 不跟每一帧走，避免和 Konva 的临时位置打架。
-
-### 03 变换、缩放、新增
-
-拉伸后宽高归一、scale 归 1。滚轮缩放显示在状态行。还原按钮把 scale 设为 1、position 设为 0。删除只改 React 数组，同步 effect 会 `destroy` 对应 Group。24 是示例帽，不是库的上限，也不是 FPS 结论。
-
-生产里的双击编辑应把焦点交给 HTML `<input>`，用 `compositionstart/end` 和 `isComposing` 挡住拼音确认时的 Enter。不要在 `Konva.Text` 里自做输入法。触控要听 `tap`，并避免拖拽结束又触发一次选择。Lab 同时听了 `click tap`。
-
-## 导出与序列化
-
-`stage.toBlob({ pixelRatio })` 导出的是当前视口光栅。倍率翻倍，像素面积约四倍。先做像素预算，用 Blob 而不是巨型 data URL，并 `revokeObjectURL`。导出前拿开 Transformer，否则选框进图。跨域图片没有 CORS 会 taint。JSON 才是可编辑源。
-
-`Konva.Node.create(JSON.parse(file))` 能还原节点，但不恢复事件和图片，也不是可信业务协议。不可信文件要版本、白名单、唯一 id 和大小上限，服务端再验一次。[overview](https://konvajs.org/docs/overview.html)。Lab 没有导入。
-
-## 反例
+本例React state保存 `Card[]`，包含id、标题、世界坐标、宽高和颜色。Konva场景是它的显示投影。业务数组不保存SDK实例，也不把Stage序列化结果当业务协议。
 
 ```ts
-// 错：render 中创建舞台，文档一变就再来一个
-if (host.current) new Konva.Stage({ container: host.current, width: 600, height: 280 });
-
-// 错：只存节点当前 width，忽略 Transformer 的 scale
-apply(id, { width: rect.width(), height: rect.height() });
-
-// 对：effect 创建一次；transformend 乘回 scale 并重置
-const width = Math.max(85, Math.round(rect.width() * group.scaleX()));
-group.scale({ x: 1, y: 1 });
-apply(id, { width, height, x: Math.round(group.x()), y: Math.round(group.y()) });
+const scene = new Konva.Stage({ container: host, width: host.clientWidth, height: 280 })
+const layer = new Konva.Layer()
+const group = new Konva.Group({ id: 'rss', x: 25, y: 35, draggable: true })
+const rect = new Konva.Rect({ width: 150, height: 68, fill: '#e4eee5' })
+const label = new Konva.Text({ text: 'RSS 收集', x: 10, y: 21, fontSize: 16 })
+group.add(rect, label)
+layer.add(group)
+scene.add(layer)
 ```
 
-| 错误 | 正确 |
-|---|---|
-| 每次数据变化销毁 Stage | 增量 Map 同步。Lab 的节点 effect 与舞台 effect 分开 |
-| 每个 setter 后 `layer.draw()` | 交给自动批处理；外部像素变化才手动 |
-| 只听 click 不听 tap | 触控用 tap；副作用不要在 dragend 后再触发 |
-| 指针坐标当世界坐标 | 先除掉 stage scale。Lab 滚轮已做锚点 |
-| 不可信 JSON 直接 Node.create | schema 与预算 |
-| 一千个离屏节点仍 listening | 裁剪；静态层 `listening(false)` |
-| `toDataURL({ pixelRatio: 4 })` 无上限 | `toBlob`、预算、捕获 SecurityError |
-| 把 Canvas 当按钮和输入框 | HTML 列表。Lab 有选择按钮，没有文本框 |
-| 用 `getElementById` 找 Shape | Shape 不在 DOM 里 |
-| 只 `stage.remove()` | `destroy()`，并断开 ResizeObserver |
+输入是容器、坐标和图元属性；Stage/Layer建立绘制边界，Group让背景和标题一起移动。创建放在浏览器effect，清理调用 `scene.destroy()`。完整源码还包含Transformer、容器观察与按id更新，复制时以“真实源码”的三份文件为准：`example.tsx`、`stage-policy.ts`、`demo.tsx`；没有额外图片、字体或CSS资源。
 
-## 组合
+第二个effect按id同步数组：新卡片创建Group，已有卡片修改位置/尺寸/文字，被删除的卡片销毁Group。更新业务数据不会重新创建Stage。拖拽中SDK先移动临时位置，应用不逐帧覆盖；`dragend`才把实际Group坐标写回React。Konva 10默认安排批量绘制，同步末尾的一次 `batchDraw()` 也会合并，而不是每次属性设置后立即重画。
 
-**Konva + TanStack Query。** Query 管文档和 ETag，本地 state 管草稿，Konva 只投影。412/409 不要自动覆盖。Lab 没有请求。
+## 实验一：真实Canvas命中与键盘替代
 
-**Konva + D3。** D3 算坐标和颜色，Konva 绘制和命中。不要让 D3 selection 去改 Canvas 节点。真地图不要在 Konva 里造瓦片引擎。
+打开“Canvas节点与选择”。画面包含两张卡片；点击“内容审核”，下拉框变为对应id。用下拉或列表按钮也可选择卡片，再用键盘激活“向右10px”或“向下10px”，图与下方坐标一起变化。本层未开放鼠标拖拽，也没有变换手柄。
 
-**Konva + pdf-lib。** PNG 进页面，JSON 留下一轮编辑。PDF 里的图不是可编辑图层。
+点击命中来自Konva的Canvas事件，选择状态和按钮移动是示例自建的React逻辑。Canvas中的Shape不是DOM元素，不能用HTML的 `getElementById` 查图元。为键盘和文本阅读提供原生控件及等价卡片列表，比只给画布加一个可聚焦属性更完整。
 
-## 生产清单
+展开“查看真实场景节点与变换”可观察实际Stage宽度、Group位置、Rect尺寸、选中Transformer节点和锚点位置。这些是示例读取SDK对象形成的诊断快照，不是Konva自带的性能面板。
 
-1. Stage 只在 effect 创建，cleanup `destroy`。
-2. 宽度无效不改 stage。
-3. id 稳定，增量创建和销毁 Group。
-4. dragend / transformend 才写 state，拖拽中不回写位置。
-5. scale 乘进宽高后归 1。
-6. 视口变换和形状坐标分开。
-7. 卡片数有预算。
-8. 键盘路径在 DOM。
-9. 中文编辑在 input，不在 Text。
-10. 导出 PNG 与 JSON 分开，URL 释放。
+## 实验二：把拖拽结果提交到业务坐标
 
-## 升级与练习
+打开“新闻卡片拖拽编排”。拖动RSS卡片，松手后列表显示新的x/y。事件代码读取 `group.x()`、`group.y()`，四舍五入后更新卡片数组；随后同步effect把一致的数据重新投影进场景。
 
-从手写 `ctx.fillRect` 迁到 Layer/Rect/`draggable`/`dragend`。验收：刷新后坐标还在，`destroy` 后没有残留 canvas，StrictMode 双调用不叠舞台。
+点击“缩窄画布容器”，ResizeObserver读取实际容器宽度，下一帧修改Stage宽度；恢复后画布回到原宽。卡片坐标不因此改变。这个实验调整视口，不把文档整体缩放到容器，也不保证所有离屏卡片自动移回可见区域。
 
-从 `stage.toJSON()` 迁到 `{ schema, revision, items }`。未知版本、重复 id、过大文件要拒绝。两标签用旧 ETag 保存应得到 412 而不是覆盖。
+`stageWidth`拒绝0或非有限宽度，并将有效宽度夹在1至4096。4096是教学保护边界，不是Canvas或Konva性能上限。Observer的rAF会在卸载时取消，并确认仍是本组件当前Stage后再写入。
 
-把这份命令式同步和 A12 的声明式 Stage 对照，不要预设哪一个更快。
+## 实验三：尺寸归一、指针缩放与销毁
 
-## 故障排查
+打开“Transformer、缩放、键盘替代与销毁”。选中RSS卡片，拖动右下手柄。Transformer改变Group的 `scaleX/scaleY`，不会替你改Rect宽高；`transformend`将比例乘进卡片宽高，然后把Group scale重置为1。
 
-空白：宿主宽度、高度 280、是否在隐藏容器里创建。坐标漂移：又把 DPR 乘了一次，或把 stage 坐标当成 Group 坐标。Transformer 越拉越歪：scale 没重置，或 `boundBoxFunc` 用错了坐标系。导出黑屏：图层不可见或 canvas 被污染。路由切换后滚轮双倍：旧 stage 没 destroy。
+```ts
+const width = Math.max(85, Math.round(rect.width() * group.scaleX()))
+const height = Math.max(48, Math.round(rect.height() * group.scaleY()))
+group.scale({ x: 1, y: 1 })
+apply(id, { width, height, x: Math.round(group.x()), y: Math.round(group.y()) })
+```
 
-## 官方链接
+否则下一次从React同步时会回到旧尺寸，或者反复乘比例。`boundBoxFunc`收到绝对坐标中的盒子，本例先除以Stage缩放再检查最小85×48世界单位；禁止翻转和旋转，缩放后仍按同一业务最小尺寸约束。
 
-- [文档](https://konvajs.org/docs/index.html)
-- [拖拽](https://konvajs.org/docs/drag_and_drop/Drag_and_Drop.html)
-- [Transformer](https://konvajs.org/api/Konva.Transformer.html)
-- [相对指针缩放](https://konvajs.org/docs/sandbox/Zooming_Relative_To_Pointer.html)
-- [导出](https://konvajs.org/docs/posts/canvas-export-image.html)
-- [Batch draw](https://konvajs.org/docs/performance/Batch_Draw.html)
-- [仓库](https://github.com/konvajs/konva)
+将指针放在画布内滚轮缩放。Stage保存视口的位置和0.6至2之间的比例，卡片的世界坐标不变。缩放前指针下的世界点是 `(pointer - stagePosition) / oldScale`，新位置为 `pointer - world * newScale`，让同一世界点仍留在指针下。“还原缩放”只重置视口。
 
-## 缩放锚点
+新增卡片通过递增id加入业务数组，最多24张；选择新增卡片再删除，场景中的Group也随之销毁。24是示例预算，不代表测过24张时的性能。滚轮与手柄是直接操作，没有自动播放动画；此例不模拟触控缩放或滚动惯性。
 
-滚轮事件里先读 `stage.getPointerPosition()`。旧缩放是 `scaleX()`，新缩放夹在 0.6 到 2。指针下的世界点是 `(pointer - stagePosition) / oldScale`。新的 stage 位置要让这个世界点仍落在同一指针下：`pointer - world * newScale`。卡片的 x/y 不变。若把指针坐标写进 `apply()`，放大后再拖一次就会漂。
+点击宿主“停止并卸载”，Stage连同图层和图元销毁，DOM Canvas移除；再运行应只出现一份Canvas。清理还包括断开ResizeObserver、取消rAF、移除本Stage的命名空间事件、清空自己持有的Map和ref。诊断标记记录销毁后的实际注册表归属、孩子数量与残留Canvas，不由“组件看不见了”推断已清理。
 
-`boundBoxFunc` 收到的是绝对盒子。宽或高的绝对值小于 85 或 48 时退回 `oldBox`，阻止翻转后的负尺寸。`transformend` 仍要用 `rect.width() * group.scaleX()` 得到业务宽，然后 `group.scale({x:1,y:1})`。两步都要，缺一则下次从 React state 绘制会跳回旧尺寸。
+## 迁入项目与重要取舍
 
-## 证据
+依赖是React浏览器环境和 `konva@10.9.0`。复制 `example.tsx`、`stage-policy.ts`，使用自己的入口时可省略仅重导出的 `demo.tsx`。容器需要有效尺寸；Stage创建在客户端effect，SSR不创建Canvas。组件内的状态、Map、Observer、Stage由同一组件拥有。
 
-sdk、build、browser 在 `docs/library-lab/evidence/runs/` 有本条目收据之前为 **NOT_RUN**。`stage-policy` 只证明宽度夹取、24 张上限和重复 id。Actions run `41779873259` 是仓库级 install、typecheck、build、52 个 SDK 文件（153 个测试）和 45 个 Playwright，不是 A11 的 PASS，不要写入 `verification.json`。
+保存可编辑文档时保存带版本的卡片数组，加载时验证唯一id、数值范围和类型，再重建投影。Konva的 `toJSON` 不会替你保存业务权限、图片加载和事件逻辑。本例数据只存在内存，刷新会还原，不包含HTTP、持久化、PNG导出或文字输入。
+
+实际文本编辑应交给HTML输入框，尤其中文IME；Canvas文字本身不是编辑器。PNG导出还要考虑视口/选框、像素预算、图片CORS和下载URL清理，这些不是本实验已实现的功能。大量节点、触控、读屏和高DPR预算需要在目标设备实测，不能从两张卡片推出。
+
+## 官方资料
+
+“官方README原文”保存10.9.0固定提交中的上游英语原文；该提交根目录没有官方中文README。“官网预览”复用公共面板，官网响应明确包含 `X-Frame-Options: SAMEORIGIN`，禁止从Lab跨源嵌入，因此展示限制原因与直达入口。
+
+- [场景图概览](https://konvajs.org/docs/overview.html)
+- [Transformer与尺寸比例](https://konvajs.org/docs/select_and_transform/Basic_demo.html)
+- [以指针为中心缩放](https://konvajs.org/docs/sandbox/Zooming_Relative_To_Pointer.html)
+- [销毁与资源](https://konvajs.org/docs/performance/Avoid_Memory_Leaks.html)
+
+讲解的关键API按本地10.9.0源码/类型核对。真实Node场景图测试与真实浏览器Canvas执行的范围分别记录在 `local-validation.md`。

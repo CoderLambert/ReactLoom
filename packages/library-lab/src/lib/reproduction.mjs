@@ -20,6 +20,14 @@ export function reproductionCommand(entry, demo) {
     return null
   const relative = `entries/${entry.directory}/${demo.entryPoint}`
   if (/\.test\.[cm]?js$/u.test(demo.entryPoint)) return `node --test ${relative}`
+  if (entry.directory === 'F12-vitest' && hasPackage(entry, 'vitest')) {
+    if (
+      demo.entryPoint !== `examples/${demo.level}.test.ts` ||
+      !demo.sourceFiles.includes('vitest.config.ts')
+    )
+      return null
+    return `pnpm exec vitest run --config entries/F12-vitest/vitest.config.ts ${demo.entryPoint}`
+  }
   if (/\.(?:test|spec)\.tsx?$/u.test(demo.entryPoint) && hasPackage(entry, 'vitest'))
     return `pnpm exec vitest run ${relative}`
   if (
@@ -36,23 +44,27 @@ export function reproductionCommand(entry, demo) {
   )
     return `pnpm exec storybook dev --no-open -p 6029 --config-dir entries/${entry.directory}/examples/.storybook`
   // Config and fixture paths are not executable source. Only allow audited, fixed runners.
-  if (
-    entry.directory === 'F16-dependency-cruiser' &&
-    hasPackage(entry, 'dependency-cruiser') &&
-    demo.entryPoint ===
-      `examples/workspace/${demo.level}/src/${demo.level === 'business' ? 'domain/summary' : demo.level === 'advanced' ? 'first' : 'main'}.ts` &&
-    demo.sourceFiles.includes('examples/run.mjs') &&
-    demo.sourceFiles.includes('examples/workspace/config.cjs')
-  )
+  if (entry.directory === 'F16-dependency-cruiser') {
+    const fixture = { basic: 'main', business: 'domain/summary', advanced: 'first' }[demo.level]
+    if (
+      !hasPackage(entry, 'dependency-cruiser') ||
+      demo.entryPoint !== `examples/workspace/${demo.level}/src/${fixture}.js` ||
+      !demo.sourceFiles.includes('examples/run.mjs') ||
+      !demo.sourceFiles.includes('examples/cli.mjs') ||
+      !demo.sourceFiles.includes('examples/workspace/config.cjs')
+    )
+      return null
     return `node entries/F16-dependency-cruiser/examples/run.mjs ${demo.level}`
+  }
   if (
     entry.directory === 'F18-rollup-plugin-visualizer' &&
     hasPackage(entry, 'rollup-plugin-visualizer') &&
     hasPackage(entry, 'vite') &&
     demo.entryPoint === 'examples/vite.config.ts' &&
-    demo.sourceFiles.includes('examples/vite.config.ts')
+    demo.sourceFiles.includes('examples/vite.config.ts') &&
+    demo.sourceFiles.includes('examples/verify.mjs')
   )
-    return `pnpm exec vite build --config entries/F18-rollup-plugin-visualizer/examples/vite.config.ts --mode ${demo.level}`
+    return `node entries/F18-rollup-plugin-visualizer/examples/verify.mjs --scenario=${demo.level}`
   const knip = demo.entryPoint.match(
     /^examples\/workspace\/knip\.(basic|business|advanced)\.json$/u,
   )

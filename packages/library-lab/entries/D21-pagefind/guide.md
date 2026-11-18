@@ -16,7 +16,7 @@ Lab 锁定 `pagefind@1.5.2`（MIT）。三条示例是 Node 脚本：[`examples/
 - business：第三篇 HTML，再 `addCustomRecord` 一条 `/files/rss-playbook.txt`，带 `filters.category = guide` 和标签。记录数 4。没有 HTTP API。
 - advanced：把一份静态 HTML 写进临时站点目录并 `addDirectory`。记录数 5。目录扫描只看见这个临时文件夹。
 
-`getFiles` 必须返回非空且每个文件都有 path 和字节。`writeFiles` 写到临时 `out/pagefind`。`keepOutput: false` 时 `finally` 先 `deleteIndex` 再删掉整个 scratch。三个入口为了把 JSON 打出来传入 `keepOutput: true`，目录留在系统 tmp，搜索 UI 仍不运行。
+`getFiles` 必须返回非空且每个文件都有 path 和字节；它给出一次内存生成。`writeFiles`另外生成磁盘输出，API未承诺两次带hash文件名完全一致，不能逐文件硬配对。结果中memoryFileCount/memoryBundleBytes对应内存，fileCount/bundleBytes/assets对应实际写盘读取与SHA256，互不冒充。`writeFiles` 写到临时 `out/pagefind`。`keepOutput: false` 时 `finally` 先 `deleteIndex` 再删掉整个 scratch；失败或deleteIndex失败时即便keepOutput为true也清理本次临时目录。三个入口为了把 JSON 打出来传入 `keepOutput: true`，目录留在系统 tmp，搜索 UI 仍不运行。
 
 错误数组非空会抛错，不返回半成品成功。
 
@@ -129,3 +129,38 @@ await index.addHTMLFile({ url: doc.url, content: documentHTML(doc.title, doc.con
 - https://pagefind.app/docs/api/
 - https://pagefind.app/docs/running-pagefind/
 - https://github.com/Pagefind/pagefind
+
+## 完整迁入与运行位置
+
+安装 `pnpm add pagefind@1.5.2`，保留发行包对应平台的optional native依赖；缺失或不支持当前平台时应修复安装，不用空文件伪造索引。运行需要Node原生模块、可执行native binary和临时目录读写权限。完整复制examples/workshop.mjs、publication-policy.mjs与所需basic.mjs/business.mjs/advanced.mjs，保留同目录ESM相对导入。不需要React、CSS、浏览器账号、服务器或Lab宿主。
+
+在仓库根运行：
+
+```sh
+node packages/library-lab/entries/D21-pagefind/examples/basic.mjs
+node packages/library-lab/entries/D21-pagefind/examples/business.mjs
+node packages/library-lab/entries/D21-pagefind/examples/advanced.mjs
+```
+
+页面命令面板以packages/library-lab为cwd，所以它显示 `node entries/D21-pagefind/examples/basic.mjs` 等相对命令，两者指向同一文件。三个入口默认keepOutput=true，打印outputDirectory后保留该批临时产物供检查；检查完只删除本次打印路径所属的reactloom-pagefind-*临时根，不清空全局tmp。调用runWorkshop默认keepOutput=false，返回后文件已删除，outputDirectory为null。
+
+close停止整个Pagefind服务，deleteIndex删除本索引；workshop只管理自己的index和临时目录，三个独立CLI在finally关闭进程级服务。生产并行构建若共享服务，需要由服务所有者在所有索引完成后close，不能让一个任务提前关闭兄弟索引。
+
+本次实际native输出：basic提交2记录、16文件、645963字节；business4记录、20文件、646622字节；advanced5记录、21文件、646847字节，目录扫描page_count为1。数字是本机本次构建，内容/平台/版本变化会影响它，不是固定容量断言。原始日志与磁盘manifest见local-validation.md；文件大小不等于访客网络传输量。
+
+## 部署后才执行访客查询
+
+生产先在专用公开站点输出目录生成HTML和搜索资源，再将writeFiles的整份目录部署到站点 `/pagefind/`。HTML文章URL必须能在同一站点访问；customRecord的/files/rss-playbook.txt只是索引URL，本例没有生成对应RSS文本下载文件，生产须自己发布该内容或改为真实目标URL。部署遗漏分片/WASM会使页面入口存在但查询失败。
+
+下面是**生产接线示意，Lab没有运行**，在站点通过HTTP提供资源后执行：
+
+```js
+const pagefind = await import('/pagefind/pagefind.js')
+const response = await pagefind.search('RSS', { filters: { category: 'guide' } })
+const details = await Promise.all(response.results.map(result => result.data()))
+console.log(details.map(result => ({ url: result.url, title: result.meta.title })))
+```
+
+category/tags由本例addCustomRecord声明，仅用于搜索筛选；meta用于结果展示。它们随可下载索引公开，不承担权限。若改为生产语言/语料，必须单独验证查询、筛选、内容片段与结果URL；本轮生成/写盘没有执行search，不证明相关性、中文分词、可访问链接或浏览器WASM加载通过。
+
+官网实测GET200未发现嵌入限制头，但没有Lab-origin浏览器内容确认，因此unknown；官方README使用固定1.5.2提交原文。许可按安装包字段与同提交LICENSE核实为MIT，不混淆网站内容或fixture许可。

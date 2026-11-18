@@ -5,14 +5,7 @@
   "name": "Base UI",
   "group": "B",
   "summary": "无样式 Checkbox 的语义、混合态、授权禁用与真实 FormData",
-  "tags": [
-    "headless UI",
-    "checkbox",
-    "indeterminate",
-    "forms",
-    "a11y",
-    "permissions"
-  ],
+  "tags": ["headless UI", "checkbox", "indeterminate", "forms", "a11y", "permissions"],
   "contentState": "recreated",
   "packages": [
     {
@@ -22,16 +15,16 @@
   ],
   "references": [
     {
-      "title": "Base UI 官方 Checkbox",
+      "title": "官方Checkbox与表单语义",
       "url": "https://base-ui.com/react/components/checkbox"
     },
     {
-      "title": "Base UI Menu",
-      "url": "https://base-ui.com/react/components/menu"
+      "title": "匹配1.9.0官方源码",
+      "url": "https://github.com/mui/base-ui/tree/ad7ecda5296b0295b41a51ecb01fce6204acd099/packages/react"
     },
     {
-      "title": "npm",
-      "url": "https://www.npmjs.com/package/@base-ui/react"
+      "title": "npm 1.9.0",
+      "url": "https://www.npmjs.com/package/@base-ui/react/v/1.9.0"
     }
   ],
   "related": [
@@ -64,11 +57,7 @@
         "examples/checkbox.css",
         "examples/demo.tsx"
       ],
-      "capabilities": [
-        "a11y",
-        "keyboard",
-        "native-form"
-      ]
+      "capabilities": ["a11y", "keyboard"]
     },
     {
       "demoId": "business",
@@ -82,11 +71,7 @@
         "examples/checkbox.css",
         "examples/demo.tsx"
       ],
-      "capabilities": [
-        "a11y",
-        "keyboard",
-        "native-form"
-      ]
+      "capabilities": ["a11y", "keyboard", "native-form"]
     },
     {
       "demoId": "advanced",
@@ -100,11 +85,7 @@
         "examples/checkbox.css",
         "examples/demo.tsx"
       ],
-      "capabilities": [
-        "a11y",
-        "keyboard",
-        "native-form"
-      ]
+      "capabilities": ["a11y", "keyboard", "native-form"]
     }
   ],
   "license": {
@@ -114,5 +95,25 @@
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
     "note": "以官方 Base UI 1.9 Checkbox API 重新实现，未继承历史运行结论。"
+  },
+  "official": {
+    "readme": {
+      "repository": "mui/base-ui",
+      "commit": "ad7ecda5296b0295b41a51ecb01fce6204acd099",
+      "path": "packages/react/README.md",
+      "sourceUrl": "https://github.com/mui/base-ui/blob/ad7ecda5296b0295b41a51ecb01fce6204acd099/packages/react/README.md",
+      "snapshotPath": "official/readme.md",
+      "language": "en",
+      "version": "1.9.0",
+      "syncedAt": "2026-11-10T13:41:20.527064+00:00",
+      "sha256": "b5444513c6b8cd0d19777a7c7f0031c8f7d287e5ce04093b5ca68e50cab791c6"
+    },
+    "homepage": {
+      "url": "https://base-ui.com",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-10T13:41:14.802013+00:00",
+      "reason": "GET200；实际响应含CSP frame-ancestors *和XFO SAMEORIGIN，现代浏览器以CSP为准；未从Lab origin实际确认iframe内容，不能据头部记allowed。"
+    }
   }
 }

@@ -1,0 +1,103 @@
+[
+  {
+    "name": "typecheck",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "typecheck"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T17:27:06.346785+00:00",
+    "finishedAt": "2026-11-17T17:27:08.087472+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-29/typecheck.txt"
+  },
+  {
+    "name": "build",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "build"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T17:27:30.612673+00:00",
+    "finishedAt": "2026-11-17T17:27:37.788896+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-29/build.txt"
+  },
+  {
+    "name": "lint",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "biome",
+      "check",
+      "e2e/quality-resume-lexical.spec.ts",
+      "e2e/quality-resume-codemirror6.spec.ts",
+      "e2e/quality-resume-react-markdown.spec.ts",
+      "e2e/quality-resume-official-e03-e06.spec.ts"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T17:27:41.616677+00:00",
+    "finishedAt": "2026-11-17T17:27:41.878483+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-29/lint.txt"
+  },
+  {
+    "name": "final-types",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "tsc",
+      "--noEmit"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T17:27:41.616677+00:00",
+    "finishedAt": "2026-11-17T17:27:43.122401+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-29/final-types.txt"
+  },
+  {
+    "name": "catalog",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "catalog:check"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T17:27:58.835879+00:00",
+    "finishedAt": "2026-11-17T17:27:59.225531+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-29/catalog.txt"
+  },
+  {
+    "name": "browser",
+    "command": [
+      "env",
+      "LAB_PREBUILT=1",
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "playwright",
+      "test",
+      "e2e/quality-resume-lexical.spec.ts",
+      "e2e/quality-resume-codemirror6.spec.ts",
+      "e2e/quality-resume-react-markdown.spec.ts",
+      "e2e/quality-resume-official-e03-e06.spec.ts",
+      "--workers=2"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T17:27:59.449161+00:00",
+    "finishedAt": "2026-11-17T17:28:13.399364+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-29/browser.txt"
+  }
+]

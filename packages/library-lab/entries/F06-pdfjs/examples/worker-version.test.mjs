@@ -1,8 +1,8 @@
-import test from 'node:test'
 import assert from 'node:assert/strict'
-import {readFile} from 'node:fs/promises'
+import { readFile } from 'node:fs/promises'
+import test from 'node:test'
 
-const load = async url => JSON.parse(await readFile(url, 'utf8'))
+const load = async (url) => JSON.parse(await readFile(url, 'utf8'))
 
 test('F06, F07 and the app agree on the React-PDF 11 PDF.js version', async () => {
   const [manifest, native, react] = await Promise.all([
@@ -10,8 +10,8 @@ test('F06, F07 and the app agree on the React-PDF 11 PDF.js version', async () =
     load(new URL('../library.json', import.meta.url)),
     load(new URL('../../F07-react-pdf/library.json', import.meta.url)),
   ])
-  const nativeVersion = native.packages.find(p => p.name === 'pdfjs-dist').version
-  const reactVersion = react.packages.find(p => p.name === 'pdfjs-dist').version
+  const nativeVersion = native.packages.find((p) => p.name === 'pdfjs-dist').version
+  const reactVersion = react.packages.find((p) => p.name === 'pdfjs-dist').version
   const expected = '6.3.289' // react-pdf@11.0.0 exact upstream PDF.js baseline
   assert.equal(manifest.dependencies['react-pdf'], '11.0.0')
   assert.equal(nativeVersion, expected)

@@ -1,0 +1,3 @@
+B22 replacement-only18.0.1 / 3 goals 4 sources / fixed original README10875B / legacy archived13.1.1 unexecuted+separate hash / homepage unknown / formal NOT_RUN PASS
+
+exitCode=0

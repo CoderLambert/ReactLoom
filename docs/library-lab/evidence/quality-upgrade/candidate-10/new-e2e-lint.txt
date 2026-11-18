@@ -1,0 +1,5 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+command=pnpm exec biome check packages/library-lab/e2e/quality-remediation-motion-for-react.spec.ts packages/library-lab/e2e/quality-remediation-gsap.spec.ts packages/library-lab/e2e/quality-remediation-react-spring.spec.ts packages/library-lab/e2e/quality-remediation-dotlottie.spec.ts packages/library-lab/e2e/quality-remediation-rive.spec.ts packages/library-lab/e2e/quality-remediation-ant-design.spec.ts packages/library-lab/e2e/quality-remediation-mantine.spec.ts packages/library-lab/e2e/quality-remediation-ui-sources.spec.ts packages/library-lab/e2e/native-visibility-browser.ts packages/library-lab/src/lib/official-sources.mjs packages/library-lab/tests/official-sources.test.mjs
+Checked 11 files in 11ms. No fixes applied.
+
+exitCode=0

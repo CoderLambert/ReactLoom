@@ -1,18 +1,18 @@
 {
   "content": {
     "status": "NOT_RUN",
-    "note": "新文档待校对"
+    "note": "作者单完整实验/中文/迁移与来源已收尾，待非作者独立复核；静态内容不冒充正式SDK/browser收据。"
   },
   "sdk": {
     "status": "NOT_RUN",
-    "note": "尚未以实际 tailwind-merge@3.7.0 执行"
+    "note": "作者本地共享模型直接import真实tailwind-merge3.7.0/clsx2.1.1，5项exit0；无正式收据，status保持NOT_RUN。"
   },
   "build": {
     "status": "NOT_RUN",
-    "note": "需平台安装/锁文件后真实构建"
+    "note": "本条目入口strict/格式/metadata与完整浏览器提案strict已exit0；candidate21匹配Lab typecheck/build/catalog均exit0，详见local-validation.md。此为本地宿主构建，正式build收据尚未运行，status保持NOT_RUN。"
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "组件状态交互和 computed style 待验收"
+    "note": "candidate21真实浏览器整批6case exit0，其中C21完整实验与官方原文/禁止嵌入展示2case PASS；实际class、Tailwind4.3.3 computed style、hover、断点、自定义规则、重置卸载已验，详见local-validation.md。无正式browser收据，status保持NOT_RUN；触屏/读屏/跨浏览器等未测范围继续保留。"
   }
 }

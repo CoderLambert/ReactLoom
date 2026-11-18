@@ -1,0 +1,38 @@
+{
+  "checkedAt": "2026-11-17T16:49:55.674323+00:00",
+  "tag": "v13.6.33",
+  "commit": "9ea3a4fb57b814292ce18dfd13c4f422e44e6c5c",
+  "readmeCandidates": ["README.md"],
+  "languageSelection": "No Chinese README in fixed official repository tree; preserve English original.",
+  "homepage": {
+    "url": "https://docs.yjs.dev/",
+    "status": 200,
+    "headers": {
+      "Date": "Tue, 17 Nov 2026 16:49:55 GMT",
+      "Content-Type": "text/html; charset=utf-8",
+      "Transfer-Encoding": "chunked",
+      "Connection": "close",
+      "CF-Ray": "a5c03b409a9a68b7-SIN",
+      "CF-Cache-Status": "DYNAMIC",
+      "Age": "11182",
+      "Cache-Control": "public, max-age=0, must-revalidate",
+      "x-vercel-id": "sin1::cle1::xfxvl-1794934195311-ac86c3201632",
+      "ETag": "W/\"ywelr7q4z8aj7i\"",
+      "Server": "cloudflare",
+      "Strict-Transport-Security": "max-age=31536000",
+      "Vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, accept-encoding",
+      "content-security-policy": "default-src 'self' *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; style-src 'self' 'unsafe-inline' blob: *; img-src * 'self' blob: data:; connect-src *; font-src *; frame-src *; object-src 'none'; base-uri 'self' https://static-2v.gitbook.com; form-action 'self' https://static-2v.gitbook.com *; frame-ancestors https: ionic: capacitor: ;",
+      "referrer-policy": "strict-origin-when-cross-origin",
+      "x-content-type-options": "nosniff",
+      "x-gitbook-route-site": "docs.yjs.dev/",
+      "x-gitbook-route-type": "static",
+      "x-gitbook-target": "2v",
+      "x-matched-path": "/sites/static/[mode]/[siteURL]/[siteData]/[pagePath]",
+      "x-nextjs-prerender": "1",
+      "x-nextjs-stale-time": "300",
+      "x-vercel-cache": "HIT",
+      "alt-svc": "h3=\":443\"; ma=86400"
+    },
+    "bodySha256": "df08ad4cd8854a1fbf62471e5b0624106d94d9c3b182a379197adf57f22d89aa"
+  }
+}

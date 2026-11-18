@@ -1,0 +1,16 @@
+{
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "argv": [
+    "pnpm",
+    "exec",
+    "biome",
+    "check",
+    "packages/library-lab/entries/F09-pdf-lib/examples",
+    "packages/library-lab/entries/F09-pdf-lib/tests",
+    "packages/library-lab/entries/F09-pdf-lib/library.json",
+    "packages/library-lab/entries/F09-pdf-lib/verification.json",
+    "packages/library-lab/entries/F09-pdf-lib/validation/browser.spec.ts",
+    "packages/library-lab/entries/F09-pdf-lib/validation/check-official.mjs"
+  ],
+  "exitCode": 1
+}

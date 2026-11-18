@@ -1,0 +1,18 @@
+--- public-before
++++ author-corrected
+@@ -76,10 +76,15 @@
+   await source.hover()
+   const handle = source.locator(`.${classNames.internalEventResizerEnd}`).last()
+   await expect(handle).toBeVisible()
++  // A visible event can sit at the viewport bottom; keep the entire gesture in view.
++  await handle.evaluate((element) => element.scrollIntoView({ block: 'center', inline: 'nearest' }))
+   const rect = await handle.boundingBox()
+   if (!rect) throw new Error('Missing real SDK end-resize handle')
+   const x = rect.x + rect.width / 2
+   const y = rect.y + rect.height / 2
++  const viewport = page.viewportSize()
++  if (!viewport || y + 75 >= viewport.height)
++    throw new Error('Resize target must remain in the real viewport')
+   await page.mouse.move(x, y)
+   await page.mouse.down()
+   try {

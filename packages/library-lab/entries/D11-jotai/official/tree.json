@@ -1,0 +1,3152 @@
+{
+  "sha": "6abd0ae3365e02ab432fba4b6e8e6f00aafbf508",
+  "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/6abd0ae3365e02ab432fba4b6e8e6f00aafbf508",
+  "tree": [
+    {
+      "path": ".github",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "102cb6283563880de9f1c76a664e1fb751a308c5",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/102cb6283563880de9f1c76a664e1fb751a308c5"
+    },
+    {
+      "path": ".github/DISCUSSION_TEMPLATE",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "065bfe60b814bea85025d93acbcd3717d92b0c90",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/065bfe60b814bea85025d93acbcd3717d92b0c90"
+    },
+    {
+      "path": ".github/DISCUSSION_TEMPLATE/bug-report.yml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9e1fe7b4042ada89d4af3e1c3442ba9e40aa48d1",
+      "size": 588,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/9e1fe7b4042ada89d4af3e1c3442ba9e40aa48d1"
+    },
+    {
+      "path": ".github/FUNDING.yml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "23f3fa5c86e9ead0f42999186b4141332493a6c0",
+      "size": 772,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/23f3fa5c86e9ead0f42999186b4141332493a6c0"
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "fbc5ca1d12884104d7756beb1329eaa8c5d47fea",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/fbc5ca1d12884104d7756beb1329eaa8c5d47fea"
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/bug_report.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "00e23d7387abc865fc4127843679b9735e798fe7",
+      "size": 171,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/00e23d7387abc865fc4127843679b9735e798fe7"
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/config.yml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6da9f825cdefb3757a8219808009c0d4905716f2",
+      "size": 463,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/6da9f825cdefb3757a8219808009c0d4905716f2"
+    },
+    {
+      "path": ".github/pull_request_template.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0e904f6a7484eb0be613a767e6ed314adb0e546f",
+      "size": 137,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/0e904f6a7484eb0be613a767e6ed314adb0e546f"
+    },
+    {
+      "path": ".github/workflows",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "be6bab7773cc80d73d2b181a195e278472be92ed",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/be6bab7773cc80d73d2b181a195e278472be92ed"
+    },
+    {
+      "path": ".github/workflows/compressed-size.yml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5957e64abe1e16c2e87dd1bce4e58af8f1cda67b",
+      "size": 755,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/5957e64abe1e16c2e87dd1bce4e58af8f1cda67b"
+    },
+    {
+      "path": ".github/workflows/ecosystem-ci.yml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1227f4f4f98a2ef3fd97541a8ca96d07dd43fa59",
+      "size": 2216,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/1227f4f4f98a2ef3fd97541a8ca96d07dd43fa59"
+    },
+    {
+      "path": ".github/workflows/preview-release.yml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "152281702171c81bfe5910e9052ec6afaf71ca9e",
+      "size": 763,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/152281702171c81bfe5910e9052ec6afaf71ca9e"
+    },
+    {
+      "path": ".github/workflows/publish.yml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "aaa5d5c6b4f75bdf9775e138ed1e8d25e3fb8ad5",
+      "size": 731,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/aaa5d5c6b4f75bdf9775e138ed1e8d25e3fb8ad5"
+    },
+    {
+      "path": ".github/workflows/test-multiple-builds.yml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e2ebdbb1b1a837a014b64e7835869039be4e02dc",
+      "size": 1798,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/e2ebdbb1b1a837a014b64e7835869039be4e02dc"
+    },
+    {
+      "path": ".github/workflows/test-multiple-versions.yml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6671aa26400d0259f468aeecd88f12e22fd857d0",
+      "size": 1115,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/6671aa26400d0259f468aeecd88f12e22fd857d0"
+    },
+    {
+      "path": ".github/workflows/test-old-typescript.yml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "68add7b3b7ed6eeb2628b6e3e74807ca309c7752",
+      "size": 1036,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/68add7b3b7ed6eeb2628b6e3e74807ca309c7752"
+    },
+    {
+      "path": ".github/workflows/test.yml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "922da935a4174e9e2a5afc02ff4ece78382210e6",
+      "size": 971,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/922da935a4174e9e2a5afc02ff4ece78382210e6"
+    },
+    {
+      "path": ".gitignore",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a19e06aaceeec7383f84ee5242435a41c6138b24",
+      "size": 452,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/a19e06aaceeec7383f84ee5242435a41c6138b24"
+    },
+    {
+      "path": ".livecodes",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "41178411e982841c958858be63ae082e8d6b452a",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/41178411e982841c958858be63ae082e8d6b452a"
+    },
+    {
+      "path": ".livecodes/react.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ecc97722958572639e51409e6d2a03040462aeb6",
+      "size": 1570,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/ecc97722958572639e51409e6d2a03040462aeb6"
+    },
+    {
+      "path": ".prettierignore",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "dee70d2f54933a64c55dc2fe3c72cfd7c350cb85",
+      "size": 20,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/dee70d2f54933a64c55dc2fe3c72cfd7c350cb85"
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5da42026965261b0a0e5a11987a707e68300dcbd",
+      "size": 4354,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/5da42026965261b0a0e5a11987a707e68300dcbd"
+    },
+    {
+      "path": "LICENSE",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "38ab200c3ed6a47a682b873e924e480921c93a56",
+      "size": 1067,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/38ab200c3ed6a47a682b873e924e480921c93a56"
+    },
+    {
+      "path": "README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d8682fbbb72a38e40c807102349cdd3d457f7268",
+      "size": 5543,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/d8682fbbb72a38e40c807102349cdd3d457f7268"
+    },
+    {
+      "path": "benchmarks",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "3c7a7323b733cc1aee82bd56e441fc393146b127",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/3c7a7323b733cc1aee82bd56e441fc393146b127"
+    },
+    {
+      "path": "benchmarks/.gitignore",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "55ab931e8b0b1a417fe19b03a8122d72873dd293",
+      "size": 16,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/55ab931e8b0b1a417fe19b03a8122d72873dd293"
+    },
+    {
+      "path": "benchmarks/atom-creation.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "feac0a963d073e4b179b172abd7a13b9befb5fe7",
+      "size": 951,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/feac0a963d073e4b179b172abd7a13b9befb5fe7"
+    },
+    {
+      "path": "benchmarks/computed-read.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e42bf4377a27b8bbc0036003e8ee27f1defea31e",
+      "size": 1246,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/e42bf4377a27b8bbc0036003e8ee27f1defea31e"
+    },
+    {
+      "path": "benchmarks/derived-chain.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "57ce33ebe935007cabcf1156efff5fffdb676852",
+      "size": 1191,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/57ce33ebe935007cabcf1156efff5fffdb676852"
+    },
+    {
+      "path": "benchmarks/diamond.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "77b326a99de9136b7d9781b3aad5b5902ffb9462",
+      "size": 1292,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/77b326a99de9136b7d9781b3aad5b5902ffb9462"
+    },
+    {
+      "path": "benchmarks/read-write.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "51cb49bbac11ce584f9ad2993871ca5c8b9f8e73",
+      "size": 2356,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/51cb49bbac11ce584f9ad2993871ca5c8b9f8e73"
+    },
+    {
+      "path": "benchmarks/run-all.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "615e7bc54ac240dfcc3e5a00816e93072804bb67",
+      "size": 1206,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/615e7bc54ac240dfcc3e5a00816e93072804bb67"
+    },
+    {
+      "path": "benchmarks/select-atom.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a3bb9a24620b87b547ddee2dedeb5c34fccf93c0",
+      "size": 1770,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/a3bb9a24620b87b547ddee2dedeb5c34fccf93c0"
+    },
+    {
+      "path": "benchmarks/subscription.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f636eb1bdf423955b5450a88696fcd6adca4f2ae",
+      "size": 1951,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/f636eb1bdf423955b5450a88696fcd6adca4f2ae"
+    },
+    {
+      "path": "benchmarks/wide-fan-out.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "287c81f6bc245cedac298ed4f205ba41677d0a06",
+      "size": 1122,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/287c81f6bc245cedac298ed4f205ba41677d0a06"
+    },
+    {
+      "path": "docs",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "f392b3776f10bc532fd6bd05fd949d7e4e3dd9e2",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/f392b3776f10bc532fd6bd05fd949d7e4e3dd9e2"
+    },
+    {
+      "path": "docs/basics",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "6f9e31af9739951bd032a2c21883099c9d461bba",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/6f9e31af9739951bd032a2c21883099c9d461bba"
+    },
+    {
+      "path": "docs/basics/comparison.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0cad21f20d113a06ad50ade950ded4249be299aa",
+      "size": 5767,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/0cad21f20d113a06ad50ade950ded4249be299aa"
+    },
+    {
+      "path": "docs/basics/concepts.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "023d70d72aafa4b08c01c89afe6c5fb7e52e4523",
+      "size": 1634,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/023d70d72aafa4b08c01c89afe6c5fb7e52e4523"
+    },
+    {
+      "path": "docs/basics/functional-programming-and-jotai.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "179b25f963f8f7c4b1fa20e2dd14ee0ef61ac4fb",
+      "size": 4481,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/179b25f963f8f7c4b1fa20e2dd14ee0ef61ac4fb"
+    },
+    {
+      "path": "docs/basics/showcase.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9c92e4472195c23f46cab3ef696c01d45deea3b7",
+      "size": 2159,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/9c92e4472195c23f46cab3ef696c01d45deea3b7"
+    },
+    {
+      "path": "docs/core",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "eb1f17da9c5e9559f72084135240f34004a32139",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/eb1f17da9c5e9559f72084135240f34004a32139"
+    },
+    {
+      "path": "docs/core/atom.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "35d4b17f57b5016ed71236f5703ce81ee3f6a23a",
+      "size": 8450,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/35d4b17f57b5016ed71236f5703ce81ee3f6a23a"
+    },
+    {
+      "path": "docs/core/provider.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "001f6a47e6a2e12ac11372efd5353fa376e0979b",
+      "size": 1664,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/001f6a47e6a2e12ac11372efd5353fa376e0979b"
+    },
+    {
+      "path": "docs/core/store.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b77562747a8eab59edce259b37fb9e5c1654f56c",
+      "size": 848,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/b77562747a8eab59edce259b37fb9e5c1654f56c"
+    },
+    {
+      "path": "docs/core/use-atom.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "91c7db126175744ee750d4b95fb7defeabbcb08e",
+      "size": 8018,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/91c7db126175744ee750d4b95fb7defeabbcb08e"
+    },
+    {
+      "path": "docs/extensions",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "3ba21100e1faab1b3283e46eaa730d7a0ebf5cde",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/3ba21100e1faab1b3283e46eaa730d7a0ebf5cde"
+    },
+    {
+      "path": "docs/extensions/cache.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7f2c8b2806e3bc8d484daca7fbef79a6705ad22d",
+      "size": 2633,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/7f2c8b2806e3bc8d484daca7fbef79a6705ad22d"
+    },
+    {
+      "path": "docs/extensions/effect.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "80a1c940b507c94b89d1733c870108ced2f3771d",
+      "size": 8446,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/80a1c940b507c94b89d1733c870108ced2f3771d"
+    },
+    {
+      "path": "docs/extensions/immer.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "794d6aa2871972552152c94b84d14d9fe7b0695f",
+      "size": 3025,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/794d6aa2871972552152c94b84d14d9fe7b0695f"
+    },
+    {
+      "path": "docs/extensions/location.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "39677aa5dec2794663d453759ead5d90974cd97f",
+      "size": 4543,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/39677aa5dec2794663d453759ead5d90974cd97f"
+    },
+    {
+      "path": "docs/extensions/optics.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4409fc6179511b5f362f0ca2b9c6e4dec4b7bd45",
+      "size": 2017,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/4409fc6179511b5f362f0ca2b9c6e4dec4b7bd45"
+    },
+    {
+      "path": "docs/extensions/query.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "14112b97ad0dd9aed5899e47e6e509c7c717d980",
+      "size": 14928,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/14112b97ad0dd9aed5899e47e6e509c7c717d980"
+    },
+    {
+      "path": "docs/extensions/redux.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4b4999f9aba44288b4412265166ac0856f631650",
+      "size": 1260,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/4b4999f9aba44288b4412265166ac0856f631650"
+    },
+    {
+      "path": "docs/extensions/relay.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d06b9d49555022bca365b2c7fafdd18bf34a0b7e",
+      "size": 2365,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/d06b9d49555022bca365b2c7fafdd18bf34a0b7e"
+    },
+    {
+      "path": "docs/extensions/scope.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "78948bf6381bdc40c8fd3e3bf42e1c6b438017fd",
+      "size": 3952,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/78948bf6381bdc40c8fd3e3bf42e1c6b438017fd"
+    },
+    {
+      "path": "docs/extensions/trpc.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "603732bff54c8fce492b49142b1dcf1627dcd4e8",
+      "size": 2137,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/603732bff54c8fce492b49142b1dcf1627dcd4e8"
+    },
+    {
+      "path": "docs/extensions/urql.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3666e46b892cad63ac8b3a2b14c2237facf40ba5",
+      "size": 8050,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/3666e46b892cad63ac8b3a2b14c2237facf40ba5"
+    },
+    {
+      "path": "docs/extensions/valtio.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8f6284efd6197e35bc7b156e183d0184f6e68cad",
+      "size": 2973,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/8f6284efd6197e35bc7b156e183d0184f6e68cad"
+    },
+    {
+      "path": "docs/extensions/xstate.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fdd8d180bbe7f4df4700c7caa8c6a2d6a6aec028",
+      "size": 3540,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/fdd8d180bbe7f4df4700c7caa8c6a2d6a6aec028"
+    },
+    {
+      "path": "docs/extensions/zustand.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c4635a1678916469612b2205144cea0d9e9d1e5d",
+      "size": 1190,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/c4635a1678916469612b2205144cea0d9e9d1e5d"
+    },
+    {
+      "path": "docs/guides",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "00615c5abdbd4d4d7ab4a5987b9e01ce35ac8333",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/00615c5abdbd4d4d7ab4a5987b9e01ce35ac8333"
+    },
+    {
+      "path": "docs/guides/async.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9923b05121effcee1e6b805326071b1c302fb6ef",
+      "size": 4058,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/9923b05121effcee1e6b805326071b1c302fb6ef"
+    },
+    {
+      "path": "docs/guides/atoms-in-atom.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "dc7bdaf8524b7242138e056228a4f8262def4259",
+      "size": 3878,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/dc7bdaf8524b7242138e056228a4f8262def4259"
+    },
+    {
+      "path": "docs/guides/composing-atoms.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a52dd9bb6cc54554c40e3293648dda14a5ddeb40",
+      "size": 6881,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/a52dd9bb6cc54554c40e3293648dda14a5ddeb40"
+    },
+    {
+      "path": "docs/guides/core-internals.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f38c1d04700ae3224852fcb9ab2035893ebb100b",
+      "size": 6566,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/f38c1d04700ae3224852fcb9ab2035893ebb100b"
+    },
+    {
+      "path": "docs/guides/debugging.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2e33cab61033e62174eb578c5689929deabead49",
+      "size": 6857,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/2e33cab61033e62174eb578c5689929deabead49"
+    },
+    {
+      "path": "docs/guides/initialize-atom-on-render.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ac889cfda88a6f328d201e80912da19ce0ae8eb3",
+      "size": 3888,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/ac889cfda88a6f328d201e80912da19ce0ae8eb3"
+    },
+    {
+      "path": "docs/guides/migrating-to-v2-api.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "646d2de5577478a9dad3d5900aaaa12d2b079873",
+      "size": 6225,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/646d2de5577478a9dad3d5900aaaa12d2b079873"
+    },
+    {
+      "path": "docs/guides/migrating-to-v3.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "533dfe62aa0494006a310c4c7e6dfc8d656ca95b",
+      "size": 4631,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/533dfe62aa0494006a310c4c7e6dfc8d656ca95b"
+    },
+    {
+      "path": "docs/guides/nextjs.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9bf317eb7c524f6ffd2957970ba45cfb26af10a9",
+      "size": 4850,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/9bf317eb7c524f6ffd2957970ba45cfb26af10a9"
+    },
+    {
+      "path": "docs/guides/performance.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b66d6e22710ed38733e30d6d421804a9770aeaf2",
+      "size": 6243,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/b66d6e22710ed38733e30d6d421804a9770aeaf2"
+    },
+    {
+      "path": "docs/guides/persistence.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ce67ef3d546108db793d80f7037fada4d0651555",
+      "size": 5300,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/ce67ef3d546108db793d80f7037fada4d0651555"
+    },
+    {
+      "path": "docs/guides/react-native.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2892672513e2768c5e4e13e7c4bf187a5e04c11a",
+      "size": 1152,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/2892672513e2768c5e4e13e7c4bf187a5e04c11a"
+    },
+    {
+      "path": "docs/guides/remix.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "926417695208aaaa38f471bc7c342ba85ae0f6c9",
+      "size": 256,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/926417695208aaaa38f471bc7c342ba85ae0f6c9"
+    },
+    {
+      "path": "docs/guides/resettable.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8cee4240db84171fae3c86f6184318310f0c952a",
+      "size": 2004,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/8cee4240db84171fae3c86f6184318310f0c952a"
+    },
+    {
+      "path": "docs/guides/testing.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "90641820f379d48df56d2a5fce1e768ee423b320",
+      "size": 4166,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/90641820f379d48df56d2a5fce1e768ee423b320"
+    },
+    {
+      "path": "docs/guides/typescript.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "389b8c343cb91d2d216e71527c40c0309f5acfb4",
+      "size": 3663,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/389b8c343cb91d2d216e71527c40c0309f5acfb4"
+    },
+    {
+      "path": "docs/guides/using-store-outside-react.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0f680bcb9e5401055f69972a06366baf91c9ef86",
+      "size": 1049,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/0f680bcb9e5401055f69972a06366baf91c9ef86"
+    },
+    {
+      "path": "docs/guides/vite.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3473ded05946417b21257a1cd06ef2bb4e84012d",
+      "size": 856,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/3473ded05946417b21257a1cd06ef2bb4e84012d"
+    },
+    {
+      "path": "docs/guides/waku.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4c52a97ac53949f74465e28c0d199ed2ba677303",
+      "size": 249,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/4c52a97ac53949f74465e28c0d199ed2ba677303"
+    },
+    {
+      "path": "docs/index.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8d51cfb2ec9a91ce9a24b419f5566e330a019acb",
+      "size": 1723,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/8d51cfb2ec9a91ce9a24b419f5566e330a019acb"
+    },
+    {
+      "path": "docs/recipes",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "66a2fd154b3d775b9c7b0b3dad2609c388702223",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/66a2fd154b3d775b9c7b0b3dad2609c388702223"
+    },
+    {
+      "path": "docs/recipes/atom-with-broadcast.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6cecd7f1e151bd598548788bd06ff946d7d6429f",
+      "size": 2157,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/6cecd7f1e151bd598548788bd06ff946d7d6429f"
+    },
+    {
+      "path": "docs/recipes/atom-with-compare.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2f88c7beda4bdb777e317e2d8765671cbac54348",
+      "size": 1685,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/2f88c7beda4bdb777e317e2d8765671cbac54348"
+    },
+    {
+      "path": "docs/recipes/atom-with-debounce.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c3dfd0a4aaceec502854d8625d4b227f029451f4",
+      "size": 2974,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/c3dfd0a4aaceec502854d8625d4b227f029451f4"
+    },
+    {
+      "path": "docs/recipes/atom-with-listeners.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4ac35a3158036a41bc344032f87237b9bfc74fb3",
+      "size": 2230,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/4ac35a3158036a41bc344032f87237b9bfc74fb3"
+    },
+    {
+      "path": "docs/recipes/atom-with-refresh-and-default.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d46533c969748661de3952a1d15d2dfb9dc7cf2c",
+      "size": 2323,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/d46533c969748661de3952a1d15d2dfb9dc7cf2c"
+    },
+    {
+      "path": "docs/recipes/atom-with-refresh.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5207716f2730edb01a5e57df6a11e0e19892e85b",
+      "size": 199,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/5207716f2730edb01a5e57df6a11e0e19892e85b"
+    },
+    {
+      "path": "docs/recipes/atom-with-toggle-and-storage.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8e64585212fe1e9fa06680b760ad5fe2c1deb918",
+      "size": 1125,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/8e64585212fe1e9fa06680b760ad5fe2c1deb918"
+    },
+    {
+      "path": "docs/recipes/atom-with-toggle.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2b1198f1bd30545813bc828188565ce9480d911b",
+      "size": 1370,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/2b1198f1bd30545813bc828188565ce9480d911b"
+    },
+    {
+      "path": "docs/recipes/custom-useatom-hooks.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d5a8177baf4a4843a56be2b1aed386b2f77328a9",
+      "size": 1896,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/d5a8177baf4a4843a56be2b1aed386b2f77328a9"
+    },
+    {
+      "path": "docs/recipes/large-objects.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7e70e63ea8b991991b4a3d5db1dc6d0770a4c7a4",
+      "size": 3646,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/7e70e63ea8b991991b4a3d5db1dc6d0770a4c7a4"
+    },
+    {
+      "path": "docs/recipes/use-atom-effect.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2f9e8910fc6d93c49c342329213518d1d2793fc5",
+      "size": 2193,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/2f9e8910fc6d93c49c342329213518d1d2793fc5"
+    },
+    {
+      "path": "docs/recipes/use-reducer-atom.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "090d68ae3c5a8ef77092ba4602add9ac100a07fa",
+      "size": 1362,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/090d68ae3c5a8ef77092ba4602add9ac100a07fa"
+    },
+    {
+      "path": "docs/third-party",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "d869fe19788541c57b141adaae640cd7bc780881",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/d869fe19788541c57b141adaae640cd7bc780881"
+    },
+    {
+      "path": "docs/third-party/bunja.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "700b4feddd3a454ef4adf93cec6bf0a33946bc6b",
+      "size": 6897,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/700b4feddd3a454ef4adf93cec6bf0a33946bc6b"
+    },
+    {
+      "path": "docs/third-party/eager.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ae5449dede203275cad81020816a45b68e83871e",
+      "size": 7123,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/ae5449dede203275cad81020816a45b68e83871e"
+    },
+    {
+      "path": "docs/third-party/history.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "504d15a0519cd7189fa092a9d9a7b8bb464fbcac",
+      "size": 2012,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/504d15a0519cd7189fa092a9d9a7b8bb464fbcac"
+    },
+    {
+      "path": "docs/tools",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "8b86d19a3458659b1af81f934193eb9cf4b3b4f8",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/8b86d19a3458659b1af81f934193eb9cf4b3b4f8"
+    },
+    {
+      "path": "docs/tools/babel.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e07bbcb3eaf61aeeb336a80ef6b3537b65edf318",
+      "size": 2978,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/e07bbcb3eaf61aeeb336a80ef6b3537b65edf318"
+    },
+    {
+      "path": "docs/tools/devtools.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e7b75ba48bc368bb794ddce38151a2cb460ed2a4",
+      "size": 10699,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/e7b75ba48bc368bb794ddce38151a2cb460ed2a4"
+    },
+    {
+      "path": "docs/tools/rolldown.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "74f84d2b4987efe67f669e9ae51bda0398598c4b",
+      "size": 2087,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/74f84d2b4987efe67f669e9ae51bda0398598c4b"
+    },
+    {
+      "path": "docs/tools/skill.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9c260d1c02929fa74378dba10a771534cc6a162e",
+      "size": 1078,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/9c260d1c02929fa74378dba10a771534cc6a162e"
+    },
+    {
+      "path": "docs/tools/swc.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "21277e8f7f9a1531f514749ceb0017d44d614f74",
+      "size": 2782,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/21277e8f7f9a1531f514749ceb0017d44d614f74"
+    },
+    {
+      "path": "docs/utilities",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "8e49307ebad7f3686445e465914cd2f6fdbe6f77",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/8e49307ebad7f3686445e465914cd2f6fdbe6f77"
+    },
+    {
+      "path": "docs/utilities/async.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "345ef4d54aec6f1d3eb5146634e52ed0d6655c8b",
+      "size": 4401,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/345ef4d54aec6f1d3eb5146634e52ed0d6655c8b"
+    },
+    {
+      "path": "docs/utilities/callback.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "02d1a48766ffb174bccf9ec11081494cffd56029",
+      "size": 1495,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/02d1a48766ffb174bccf9ec11081494cffd56029"
+    },
+    {
+      "path": "docs/utilities/family.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d4e94c3742c4ff8028a520825ffe0597dec6085b",
+      "size": 5579,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/d4e94c3742c4ff8028a520825ffe0597dec6085b"
+    },
+    {
+      "path": "docs/utilities/lazy.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8ff33440d95de277b8e175df97f78b4967574dd1",
+      "size": 2372,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/8ff33440d95de277b8e175df97f78b4967574dd1"
+    },
+    {
+      "path": "docs/utilities/reducer.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "75efd1dc7d157b77e51cd2935723b6af75cf6aab",
+      "size": 602,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/75efd1dc7d157b77e51cd2935723b6af75cf6aab"
+    },
+    {
+      "path": "docs/utilities/resettable.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "16b5edf16dcffab7154853372750c385d48229e0",
+      "size": 5245,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/16b5edf16dcffab7154853372750c385d48229e0"
+    },
+    {
+      "path": "docs/utilities/select.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9b969592679448008df790d69886ff6774f38c48",
+      "size": 2783,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/9b969592679448008df790d69886ff6774f38c48"
+    },
+    {
+      "path": "docs/utilities/split.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4ccad15545a6bcc820da3c319db29718610706ce",
+      "size": 3419,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/4ccad15545a6bcc820da3c319db29718610706ce"
+    },
+    {
+      "path": "docs/utilities/ssr.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cb76f49be2974d618253e07244a99b82da2376d8",
+      "size": 2689,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/cb76f49be2974d618253e07244a99b82da2376d8"
+    },
+    {
+      "path": "docs/utilities/storage.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c261dce9510709577a8e8bf953eda32e5d08102e",
+      "size": 9453,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/c261dce9510709577a8e8bf953eda32e5d08102e"
+    },
+    {
+      "path": "eslint.config.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d83535b159307e37ae98368c4e1374a3b6e21025",
+      "size": 2807,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/d83535b159307e37ae98368c4e1374a3b6e21025"
+    },
+    {
+      "path": "examples",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "68f8dd5fede0bea2b42755e878aae9794fb777e0",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/68f8dd5fede0bea2b42755e878aae9794fb777e0"
+    },
+    {
+      "path": "examples/hacker_news",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "78a8aef2bc79ceb8fafd613fe299df2fa1dff435",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/78a8aef2bc79ceb8fafd613fe299df2fa1dff435"
+    },
+    {
+      "path": "examples/hacker_news/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9d83531884a254567f07596c40a52fc1f2cf2013",
+      "size": 689,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/9d83531884a254567f07596c40a52fc1f2cf2013"
+    },
+    {
+      "path": "examples/hacker_news/index.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0459672d1ae08e3e1db8c09d3b0fa0ac0f668479",
+      "size": 366,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/0459672d1ae08e3e1db8c09d3b0fa0ac0f668479"
+    },
+    {
+      "path": "examples/hacker_news/package.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "855f981245d2dd82e7dd66fdc4a961dc6f876de8",
+      "size": 578,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/855f981245d2dd82e7dd66fdc4a961dc6f876de8"
+    },
+    {
+      "path": "examples/hacker_news/public",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "33733896905142ef1df7cd55bc7ab9fc3f680e9e",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/33733896905142ef1df7cd55bc7ab9fc3f680e9e"
+    },
+    {
+      "path": "examples/hacker_news/public/index.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "15d12c004a2703f9c2186547cd5f2ef9202c206f",
+      "size": 1626,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/15d12c004a2703f9c2186547cd5f2ef9202c206f"
+    },
+    {
+      "path": "examples/hacker_news/src",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "b4b4324cdc35baf0af10cf6fdf028c1e292f17ff",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/b4b4324cdc35baf0af10cf6fdf028c1e292f17ff"
+    },
+    {
+      "path": "examples/hacker_news/src/App.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "11bf15c4b2ee07212c70f8bba5d325965af741e5",
+      "size": 1601,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/11bf15c4b2ee07212c70f8bba5d325965af741e5"
+    },
+    {
+      "path": "examples/hacker_news/src/index.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "72fb1f5cb4e52219e787b1bf008b66abee46f313",
+      "size": 259,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/72fb1f5cb4e52219e787b1bf008b66abee46f313"
+    },
+    {
+      "path": "examples/hacker_news/src/styles.css",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "74c5eba633fe29f1ad673d201b71f9cfc4aad355",
+      "size": 1195,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/74c5eba633fe29f1ad673d201b71f9cfc4aad355"
+    },
+    {
+      "path": "examples/hacker_news/src/vite-env.d.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "11f02fe2a0061d6e6e1f271b21da95423b448b32",
+      "size": 38,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/11f02fe2a0061d6e6e1f271b21da95423b448b32"
+    },
+    {
+      "path": "examples/hacker_news/tsconfig.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "54f6eda13d538dc49ecc8cd1779fbd83f6558675",
+      "size": 544,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/54f6eda13d538dc49ecc8cd1779fbd83f6558675"
+    },
+    {
+      "path": "examples/hacker_news/vite.config.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9ffcc675746194c4a34eb43404d15db40b810265",
+      "size": 133,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/9ffcc675746194c4a34eb43404d15db40b810265"
+    },
+    {
+      "path": "examples/hello",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "18247836c05de9e8ac6aa5ef8ec8a61e29215f63",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/18247836c05de9e8ac6aa5ef8ec8a61e29215f63"
+    },
+    {
+      "path": "examples/hello/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "44c07b4ed64c391fceb5d5e9e708e4dfea005321",
+      "size": 565,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/44c07b4ed64c391fceb5d5e9e708e4dfea005321"
+    },
+    {
+      "path": "examples/hello/index.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d50bd8ff8cb60946c46714359779f198f76d776f",
+      "size": 521,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/d50bd8ff8cb60946c46714359779f198f76d776f"
+    },
+    {
+      "path": "examples/hello/package.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2781df3287b1a587a5ea3285b11ae8e13b6b8c44",
+      "size": 519,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/2781df3287b1a587a5ea3285b11ae8e13b6b8c44"
+    },
+    {
+      "path": "examples/hello/public",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "47d62f2328faae01790881aee194fa415878a0d9",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/47d62f2328faae01790881aee194fa415878a0d9"
+    },
+    {
+      "path": "examples/hello/public/index.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0a05a5e2b3deaafbf1e50ddcb810eeb35c69d406",
+      "size": 597,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/0a05a5e2b3deaafbf1e50ddcb810eeb35c69d406"
+    },
+    {
+      "path": "examples/hello/src",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "48b961d093c88d5e8aeb66811ddb17cb67ab1714",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/48b961d093c88d5e8aeb66811ddb17cb67ab1714"
+    },
+    {
+      "path": "examples/hello/src/App.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5450a9da99fd21667bef8eccc26757cc2e40efc2",
+      "size": 1728,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/5450a9da99fd21667bef8eccc26757cc2e40efc2"
+    },
+    {
+      "path": "examples/hello/src/index.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b3a2ffa356c9dcb92047517b9fd2bb81d2f665fb",
+      "size": 725,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/b3a2ffa356c9dcb92047517b9fd2bb81d2f665fb"
+    },
+    {
+      "path": "examples/hello/src/prism.css",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9235d3187a0e0e3995a3faa7dfaf95b190488320",
+      "size": 3102,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/9235d3187a0e0e3995a3faa7dfaf95b190488320"
+    },
+    {
+      "path": "examples/hello/src/style.css",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f475a4e1acd15227523b742b4fc3d4f25489bc8e",
+      "size": 1038,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/f475a4e1acd15227523b742b4fc3d4f25489bc8e"
+    },
+    {
+      "path": "examples/hello/src/vite-env.d.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "11f02fe2a0061d6e6e1f271b21da95423b448b32",
+      "size": 38,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/11f02fe2a0061d6e6e1f271b21da95423b448b32"
+    },
+    {
+      "path": "examples/hello/tsconfig.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "54f6eda13d538dc49ecc8cd1779fbd83f6558675",
+      "size": 544,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/54f6eda13d538dc49ecc8cd1779fbd83f6558675"
+    },
+    {
+      "path": "examples/hello/vite.config.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9ffcc675746194c4a34eb43404d15db40b810265",
+      "size": 133,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/9ffcc675746194c4a34eb43404d15db40b810265"
+    },
+    {
+      "path": "examples/mega-form",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "60c09ad9b3e71804bc8d52a724155b6f4bebf36c",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/60c09ad9b3e71804bc8d52a724155b6f4bebf36c"
+    },
+    {
+      "path": "examples/mega-form/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b8a88bde7d994cdb0eb881978d2a2cc7254d4f3d",
+      "size": 581,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/b8a88bde7d994cdb0eb881978d2a2cc7254d4f3d"
+    },
+    {
+      "path": "examples/mega-form/index.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b1eeb4ad6b84fa02c5513560553a23c1b39eb87a",
+      "size": 374,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/b1eeb4ad6b84fa02c5513560553a23c1b39eb87a"
+    },
+    {
+      "path": "examples/mega-form/package.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "04240bfa054f2a35988fbf4da02d701883d4c695",
+      "size": 554,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/04240bfa054f2a35988fbf4da02d701883d4c695"
+    },
+    {
+      "path": "examples/mega-form/public",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "53574fafe76a44af8caf75eef42d94bfb9f350b8",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/53574fafe76a44af8caf75eef42d94bfb9f350b8"
+    },
+    {
+      "path": "examples/mega-form/public/index.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "68eada8c0a1b14f06f88ff02af388c9996c1e832",
+      "size": 362,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/68eada8c0a1b14f06f88ff02af388c9996c1e832"
+    },
+    {
+      "path": "examples/mega-form/src",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "f1c479253b547e45a7dbfa1bd89634f1db4b864c",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/f1c479253b547e45a7dbfa1bd89634f1db4b864c"
+    },
+    {
+      "path": "examples/mega-form/src/App.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f851f843e648b790ed59fa7ddeeb6e02da835762",
+      "size": 3869,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/f851f843e648b790ed59fa7ddeeb6e02da835762"
+    },
+    {
+      "path": "examples/mega-form/src/index.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1e4c41c72431cbd0628b5822032a0efe9b4a6cd3",
+      "size": 185,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/1e4c41c72431cbd0628b5822032a0efe9b4a6cd3"
+    },
+    {
+      "path": "examples/mega-form/src/initialValue.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3a8fe44e2d5e835d7b0303583522f43f089a18b8",
+      "size": 1814,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/3a8fe44e2d5e835d7b0303583522f43f089a18b8"
+    },
+    {
+      "path": "examples/mega-form/src/style.css",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "28f2a46a1467ec32b20279d56f07b597744f3812",
+      "size": 930,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/28f2a46a1467ec32b20279d56f07b597744f3812"
+    },
+    {
+      "path": "examples/mega-form/src/useAtomSlice.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "765fb4369bc4dfcd070f3fe95ea5a850c7e98106",
+      "size": 558,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/765fb4369bc4dfcd070f3fe95ea5a850c7e98106"
+    },
+    {
+      "path": "examples/mega-form/src/vite-env.d.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "11f02fe2a0061d6e6e1f271b21da95423b448b32",
+      "size": 38,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/11f02fe2a0061d6e6e1f271b21da95423b448b32"
+    },
+    {
+      "path": "examples/mega-form/tsconfig.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "54f6eda13d538dc49ecc8cd1779fbd83f6558675",
+      "size": 544,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/54f6eda13d538dc49ecc8cd1779fbd83f6558675"
+    },
+    {
+      "path": "examples/mega-form/vite.config.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9ffcc675746194c4a34eb43404d15db40b810265",
+      "size": 133,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/9ffcc675746194c4a34eb43404d15db40b810265"
+    },
+    {
+      "path": "examples/starter",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "d0d92cd7f379683da6cff3beb145cc4b0edda411",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/d0d92cd7f379683da6cff3beb145cc4b0edda411"
+    },
+    {
+      "path": "examples/starter/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cd8180093ddf5d7bd02370596226db3747a8ca2c",
+      "size": 573,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/cd8180093ddf5d7bd02370596226db3747a8ca2c"
+    },
+    {
+      "path": "examples/starter/index.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4ed36ff58ed56dde2d327e87ea64f096757d6837",
+      "size": 469,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/4ed36ff58ed56dde2d327e87ea64f096757d6837"
+    },
+    {
+      "path": "examples/starter/package.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f80d70b4b5e311c82c95d3b4e32b2a6c388cfc34",
+      "size": 469,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/f80d70b4b5e311c82c95d3b4e32b2a6c388cfc34"
+    },
+    {
+      "path": "examples/starter/src",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "4e9c4e66142e81b785d101f5bda171ccca4b356a",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/4e9c4e66142e81b785d101f5bda171ccca4b356a"
+    },
+    {
+      "path": "examples/starter/src/assets",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "56b85a7e1b4ffd60a4b16a408e7cb010478cfd62",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/56b85a7e1b4ffd60a4b16a408e7cb010478cfd62"
+    },
+    {
+      "path": "examples/starter/src/assets/jotai-mascot.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "86c3dd48a15a0bbf8e48e25107652c72b9c75143",
+      "size": 36713,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/86c3dd48a15a0bbf8e48e25107652c72b9c75143"
+    },
+    {
+      "path": "examples/starter/src/index.css",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "edb5a71faffb3b8ca1713585973d3df5b05e44de",
+      "size": 168,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/edb5a71faffb3b8ca1713585973d3df5b05e44de"
+    },
+    {
+      "path": "examples/starter/src/index.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5ff3a92430db6ae97eccb856a1dbad0d4991d5a1",
+      "size": 1096,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/5ff3a92430db6ae97eccb856a1dbad0d4991d5a1"
+    },
+    {
+      "path": "examples/starter/src/vite-env.d.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "11f02fe2a0061d6e6e1f271b21da95423b448b32",
+      "size": 38,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/11f02fe2a0061d6e6e1f271b21da95423b448b32"
+    },
+    {
+      "path": "examples/starter/tsconfig.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e7841da9bc56cb12816e4e1e9bc8e8e8261bdfe9",
+      "size": 562,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/e7841da9bc56cb12816e4e1e9bc8e8e8261bdfe9"
+    },
+    {
+      "path": "examples/starter/vite.config.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "36f7f4e1bc39706247b9afec8a26a2caa578924e",
+      "size": 163,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/36f7f4e1bc39706247b9afec8a26a2caa578924e"
+    },
+    {
+      "path": "examples/text_length",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "70aa6a55b6ddedfa148185f5d52d83a956c2767c",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/70aa6a55b6ddedfa148185f5d52d83a956c2767c"
+    },
+    {
+      "path": "examples/text_length/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5d6a6b6a817659517026929340c5e6e5c8612901",
+      "size": 659,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/5d6a6b6a817659517026929340c5e6e5c8612901"
+    },
+    {
+      "path": "examples/text_length/index.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ef8736ae39bc7d104be8e2cf9b0c5fca79286a4e",
+      "size": 1068,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/ef8736ae39bc7d104be8e2cf9b0c5fca79286a4e"
+    },
+    {
+      "path": "examples/text_length/package.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6ac5050668eed0c75be40e0e5f52a878e6826c60",
+      "size": 524,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/6ac5050668eed0c75be40e0e5f52a878e6826c60"
+    },
+    {
+      "path": "examples/text_length/public",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "84ea8dd19f03724b731bc014a4437783625bfcfb",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/84ea8dd19f03724b731bc014a4437783625bfcfb"
+    },
+    {
+      "path": "examples/text_length/public/castle.jpg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "131a379df330dda658f6f97b74a8e5dc6e7f6113",
+      "size": 140098,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/131a379df330dda658f6f97b74a8e5dc6e7f6113"
+    },
+    {
+      "path": "examples/text_length/public/cover.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1f7813805edd95da7d79ad4c4eb997e57298625b",
+      "size": 67890,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/1f7813805edd95da7d79ad4c4eb997e57298625b"
+    },
+    {
+      "path": "examples/text_length/public/index.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "85974f261cfe4672e5dc2d60b14a5fe884d12be9",
+      "size": 4096,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/85974f261cfe4672e5dc2d60b14a5fe884d12be9"
+    },
+    {
+      "path": "examples/text_length/public/snippet.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "71d77e5134046b7fffb88d97be7b388d47a87caf",
+      "size": 190331,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/71d77e5134046b7fffb88d97be7b388d47a87caf"
+    },
+    {
+      "path": "examples/text_length/src",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "813852fb80d58e1460e1c137200cc7a4e80acb7f",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/813852fb80d58e1460e1c137200cc7a4e80acb7f"
+    },
+    {
+      "path": "examples/text_length/src/App.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "00fdc4e0d283d0bff21adacb252d19f92d52d264",
+      "size": 681,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/00fdc4e0d283d0bff21adacb252d19f92d52d264"
+    },
+    {
+      "path": "examples/text_length/src/index.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0da11fc47d2c03430a39f0a4bda7c19513851ba6",
+      "size": 237,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/0da11fc47d2c03430a39f0a4bda7c19513851ba6"
+    },
+    {
+      "path": "examples/text_length/src/react-app-env.d.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6431bc5fc6b2c932dfe5d0418fc667b86c18b9fc",
+      "size": 40,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/6431bc5fc6b2c932dfe5d0418fc667b86c18b9fc"
+    },
+    {
+      "path": "examples/text_length/tsconfig.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "54f6eda13d538dc49ecc8cd1779fbd83f6558675",
+      "size": 544,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/54f6eda13d538dc49ecc8cd1779fbd83f6558675"
+    },
+    {
+      "path": "examples/text_length/vite.config.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9ffcc675746194c4a34eb43404d15db40b810265",
+      "size": 133,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/9ffcc675746194c4a34eb43404d15db40b810265"
+    },
+    {
+      "path": "examples/todos",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "bb687f208e73d30e444058098e997e6d29d81975",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/bb687f208e73d30e444058098e997e6d29d81975"
+    },
+    {
+      "path": "examples/todos/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7349e7343768e945fd25d2a8151f5f20399e4ff0",
+      "size": 692,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/7349e7343768e945fd25d2a8151f5f20399e4ff0"
+    },
+    {
+      "path": "examples/todos/index.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ecd0daf1036c2b57d7c2bef762ddf1d1e9695e6f",
+      "size": 360,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/ecd0daf1036c2b57d7c2bef762ddf1d1e9695e6f"
+    },
+    {
+      "path": "examples/todos/package.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f0d4f7c731940a925fe142cacb30a567cecba3b9",
+      "size": 600,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/f0d4f7c731940a925fe142cacb30a567cecba3b9"
+    },
+    {
+      "path": "examples/todos/public",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "d80d31f6a50134c7450a91b7b16cb97096d75e5c",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/d80d31f6a50134c7450a91b7b16cb97096d75e5c"
+    },
+    {
+      "path": "examples/todos/public/index.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b7cd56e7a4e3bc825bc548b45d7d5aeb8f62adde",
+      "size": 1620,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/b7cd56e7a4e3bc825bc548b45d7d5aeb8f62adde"
+    },
+    {
+      "path": "examples/todos/src",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "2fd0811f1dbeaca3102e9ad77e88888b3532cc4b",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/2fd0811f1dbeaca3102e9ad77e88888b3532cc4b"
+    },
+    {
+      "path": "examples/todos/src/App.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8d53286d363d47fcfbde49574616f9267e82095b",
+      "size": 2926,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/8d53286d363d47fcfbde49574616f9267e82095b"
+    },
+    {
+      "path": "examples/todos/src/index.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "03cacdc62959d6b30aa158b8f7dfbc6a1c4f223e",
+      "size": 214,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/03cacdc62959d6b30aa158b8f7dfbc6a1c4f223e"
+    },
+    {
+      "path": "examples/todos/src/styles.css",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ec6a939123ece057ca90d6b394c4c44718c3c5ae",
+      "size": 1188,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/ec6a939123ece057ca90d6b394c4c44718c3c5ae"
+    },
+    {
+      "path": "examples/todos/src/vite-env.d.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "11f02fe2a0061d6e6e1f271b21da95423b448b32",
+      "size": 38,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/11f02fe2a0061d6e6e1f271b21da95423b448b32"
+    },
+    {
+      "path": "examples/todos/tsconfig.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e7d71ec5895264d1efdc67c0a494446d2b8d0010",
+      "size": 307,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/e7d71ec5895264d1efdc67c0a494446d2b8d0010"
+    },
+    {
+      "path": "examples/todos/vite.config.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9ffcc675746194c4a34eb43404d15db40b810265",
+      "size": 133,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/9ffcc675746194c4a34eb43404d15db40b810265"
+    },
+    {
+      "path": "examples/todos_with_atomFamily",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "eaed90df5b9083f8f4a58526b11b02ab30171213",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/eaed90df5b9083f8f4a58526b11b02ab30171213"
+    },
+    {
+      "path": "examples/todos_with_atomFamily/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3f5ae6729a5b468e8c7fbaa65393931d78d0371c",
+      "size": 1024,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/3f5ae6729a5b468e8c7fbaa65393931d78d0371c"
+    },
+    {
+      "path": "examples/todos_with_atomFamily/index.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c452744c41930af38211274171d076a34528f15e",
+      "size": 376,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/c452744c41930af38211274171d076a34528f15e"
+    },
+    {
+      "path": "examples/todos_with_atomFamily/package.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "79e93a5edac6ecc7eb1e188163304f307a806edb",
+      "size": 656,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/79e93a5edac6ecc7eb1e188163304f307a806edb"
+    },
+    {
+      "path": "examples/todos_with_atomFamily/public",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "c3c220099138b1b4ee18e27c22db871e50cc0529",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/c3c220099138b1b4ee18e27c22db871e50cc0529"
+    },
+    {
+      "path": "examples/todos_with_atomFamily/public/index.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "72d406306bda2da09472fe718033da616f901580",
+      "size": 1636,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/72d406306bda2da09472fe718033da616f901580"
+    },
+    {
+      "path": "examples/todos_with_atomFamily/src",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "619cf96cc834ff4fc714062f5284019ae97461ca",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/619cf96cc834ff4fc714062f5284019ae97461ca"
+    },
+    {
+      "path": "examples/todos_with_atomFamily/src/App.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d012c78039267cce5daecbd9eb541d6e742ad9ff",
+      "size": 4511,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/d012c78039267cce5daecbd9eb541d6e742ad9ff"
+    },
+    {
+      "path": "examples/todos_with_atomFamily/src/index.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "03cacdc62959d6b30aa158b8f7dfbc6a1c4f223e",
+      "size": 214,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/03cacdc62959d6b30aa158b8f7dfbc6a1c4f223e"
+    },
+    {
+      "path": "examples/todos_with_atomFamily/src/styles.css",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ec6a939123ece057ca90d6b394c4c44718c3c5ae",
+      "size": 1188,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/ec6a939123ece057ca90d6b394c4c44718c3c5ae"
+    },
+    {
+      "path": "examples/todos_with_atomFamily/src/vite-env.d.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "11f02fe2a0061d6e6e1f271b21da95423b448b32",
+      "size": 38,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/11f02fe2a0061d6e6e1f271b21da95423b448b32"
+    },
+    {
+      "path": "examples/todos_with_atomFamily/tsconfig.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "54f6eda13d538dc49ecc8cd1779fbd83f6558675",
+      "size": 544,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/54f6eda13d538dc49ecc8cd1779fbd83f6558675"
+    },
+    {
+      "path": "examples/todos_with_atomFamily/vite.config.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9ffcc675746194c4a34eb43404d15db40b810265",
+      "size": 133,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/9ffcc675746194c4a34eb43404d15db40b810265"
+    },
+    {
+      "path": "img",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "85b3e53bdd314fdcf0138d68119a27299303190d",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/85b3e53bdd314fdcf0138d68119a27299303190d"
+    },
+    {
+      "path": "img/jotai-course-banner.jpg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ecc18ec6adf5be28f7b4c3cdec481810a02c1a17",
+      "size": 65561,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/ecc18ec6adf5be28f7b4c3cdec481810a02c1a17"
+    },
+    {
+      "path": "img/jotai-header-dark.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5cc4188bc8beb01baaa75e784b1d4388a899a361",
+      "size": 54821,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/5cc4188bc8beb01baaa75e784b1d4388a899a361"
+    },
+    {
+      "path": "img/jotai-header-light.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2a0c73766dd993af0448217c074478581e55c660",
+      "size": 54821,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/2a0c73766dd993af0448217c074478581e55c660"
+    },
+    {
+      "path": "img/jotai-mascot.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "86c3dd48a15a0bbf8e48e25107652c72b9c75143",
+      "size": 36713,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/86c3dd48a15a0bbf8e48e25107652c72b9c75143"
+    },
+    {
+      "path": "img/jotai-opengraph.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8266fd296c60e3f7685a55374a64c635dc4cad26",
+      "size": 59144,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/8266fd296c60e3f7685a55374a64c635dc4cad26"
+    },
+    {
+      "path": "img/title.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "91270239dba3a3787ae6c190df41d89c16721480",
+      "size": 5317,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/91270239dba3a3787ae6c190df41d89c16721480"
+    },
+    {
+      "path": "package.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3aacf7ec02ea83db71c12706c83d41484b0fd108",
+      "size": 4426,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/3aacf7ec02ea83db71c12706c83d41484b0fd108"
+    },
+    {
+      "path": "pnpm-lock.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d70a2474910b3b69626e607c8651eb5235fcf793",
+      "size": 617057,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/d70a2474910b3b69626e607c8651eb5235fcf793"
+    },
+    {
+      "path": "pnpm-workspace.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0fc03e3c3c447a3964f7fb24f73367e9df7adcea",
+      "size": 382,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/0fc03e3c3c447a3964f7fb24f73367e9df7adcea"
+    },
+    {
+      "path": "src",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "7031582864f73ddad305c462c6bb61270632f95c",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/7031582864f73ddad305c462c6bb61270632f95c"
+    },
+    {
+      "path": "src/index.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "df20325364280a73ecac7a8cd83ee59a7c27b0ce",
+      "size": 56,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/df20325364280a73ecac7a8cd83ee59a7c27b0ce"
+    },
+    {
+      "path": "src/react.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a7d80526e71c0164f3537c77bc46149e52449141",
+      "size": 352,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/a7d80526e71c0164f3537c77bc46149e52449141"
+    },
+    {
+      "path": "src/react",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "cc35b79fd21ba87d5127ea635be9c66dc2155856",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/cc35b79fd21ba87d5127ea635be9c66dc2155856"
+    },
+    {
+      "path": "src/react/Provider.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "25d69a994ec5a121623bc6e857ec70706225136b",
+      "size": 1315,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/25d69a994ec5a121623bc6e857ec70706225136b"
+    },
+    {
+      "path": "src/react/continuablePromise.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6189514cf898ba18a3a3122faf9d110edeaa9463",
+      "size": 1912,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/6189514cf898ba18a3a3122faf9d110edeaa9463"
+    },
+    {
+      "path": "src/react/useAtom.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "064e5c5efd8fe0be4ae33d28f72754d4effc86b4",
+      "size": 1534,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/064e5c5efd8fe0be4ae33d28f72754d4effc86b4"
+    },
+    {
+      "path": "src/react/useAtomValue.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5ce6cc322521034cb67a6e5e4883e99b56dbb010",
+      "size": 1834,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/5ce6cc322521034cb67a6e5e4883e99b56dbb010"
+    },
+    {
+      "path": "src/react/useAtomValueRaw.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "07a6acd03f4cb869845f8a7c42d466391876e186",
+      "size": 2058,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/07a6acd03f4cb869845f8a7c42d466391876e186"
+    },
+    {
+      "path": "src/react/useAtomValueRawSync.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8892cddb2edff3b476f7ee7fb242f400bd427569",
+      "size": 1097,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/8892cddb2edff3b476f7ee7fb242f400bd427569"
+    },
+    {
+      "path": "src/react/useSetAtom.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "53d5c98530b49b3639507b9247c5619a94796d83",
+      "size": 1207,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/53d5c98530b49b3639507b9247c5619a94796d83"
+    },
+    {
+      "path": "src/react/utils.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bb0c7905336004dda3127cbfe8b6eae3d87bea52",
+      "size": 250,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/bb0c7905336004dda3127cbfe8b6eae3d87bea52"
+    },
+    {
+      "path": "src/react/utils",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "673ae13f898cc060c24ebf6f752bd7a6d49c7735",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/673ae13f898cc060c24ebf6f752bd7a6d49c7735"
+    },
+    {
+      "path": "src/react/utils/useAtomCallback.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a3b340fd2a2a7c0ba34fc6f834d77632eb9fc92d",
+      "size": 581,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/a3b340fd2a2a7c0ba34fc6f834d77632eb9fc92d"
+    },
+    {
+      "path": "src/react/utils/useHydrateAtoms.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "167f438fc870438d669b66a5b34027c942798d4d",
+      "size": 1831,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/167f438fc870438d669b66a5b34027c942798d4d"
+    },
+    {
+      "path": "src/react/utils/useReducerAtom.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c342d23d37ca2601f3be9f0abf5c7aa34eeb6273",
+      "size": 1371,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/c342d23d37ca2601f3be9f0abf5c7aa34eeb6273"
+    },
+    {
+      "path": "src/react/utils/useResetAtom.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8430cdd926b97db63ef29b83d20e1702ef15d4da",
+      "size": 495,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/8430cdd926b97db63ef29b83d20e1702ef15d4da"
+    },
+    {
+      "path": "src/utils.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "dedb876517fe2cba0143f3bee43ab60bcbba0016",
+      "size": 68,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/dedb876517fe2cba0143f3bee43ab60bcbba0016"
+    },
+    {
+      "path": "src/vanilla.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e45691f9b22199f5508ef9e19a0d459c7b06462b",
+      "size": 414,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/e45691f9b22199f5508ef9e19a0d459c7b06462b"
+    },
+    {
+      "path": "src/vanilla",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "9da227a277690c7cdf87f2ed57e8a2f26a5cdb46",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/9da227a277690c7cdf87f2ed57e8a2f26a5cdb46"
+    },
+    {
+      "path": "src/vanilla/atom.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b155c90d753d53fa48054d6104bc11a2163e9aaa",
+      "size": 3360,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/b155c90d753d53fa48054d6104bc11a2163e9aaa"
+    },
+    {
+      "path": "src/vanilla/internals.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "47c31dd25a54f23990439595de25fc0f1ffd6f4c",
+      "size": 41896,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/47c31dd25a54f23990439595de25fc0f1ffd6f4c"
+    },
+    {
+      "path": "src/vanilla/store.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "81ff318b4f503de2bf921fbf62e3a0b36bc95fc0",
+      "size": 1246,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/81ff318b4f503de2bf921fbf62e3a0b36bc95fc0"
+    },
+    {
+      "path": "src/vanilla/typeUtils.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bb0c001e88c02ae52f222d96acbcb1986e46a61a",
+      "size": 658,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/bb0c001e88c02ae52f222d96acbcb1986e46a61a"
+    },
+    {
+      "path": "src/vanilla/utils.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "93a2bbd65da31ea09938aa1526695187c0d60535",
+      "size": 762,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/93a2bbd65da31ea09938aa1526695187c0d60535"
+    },
+    {
+      "path": "src/vanilla/utils",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "f5d54da223fdd511760b3d3a7048ab001586af21",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/f5d54da223fdd511760b3d3a7048ab001586af21"
+    },
+    {
+      "path": "src/vanilla/utils/atomWithDefault.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c9a998382e006b1f43a6761b94b19106e614d4fe",
+      "size": 1247,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/c9a998382e006b1f43a6761b94b19106e614d4fe"
+    },
+    {
+      "path": "src/vanilla/utils/atomWithLazy.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "75dfec9c2b8ee8264d44f30ac72d81d9db7e9177",
+      "size": 373,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/75dfec9c2b8ee8264d44f30ac72d81d9db7e9177"
+    },
+    {
+      "path": "src/vanilla/utils/atomWithObservable.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "49ae9dce308ee42f8f685f0d71b46e79b85b5760",
+      "size": 5473,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/49ae9dce308ee42f8f685f0d71b46e79b85b5760"
+    },
+    {
+      "path": "src/vanilla/utils/atomWithReducer.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3df6a44b6a413a335da88af1805b9e593f1c565d",
+      "size": 677,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/3df6a44b6a413a335da88af1805b9e593f1c565d"
+    },
+    {
+      "path": "src/vanilla/utils/atomWithRefresh.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d419e23d4591d1e6c6152ddeab4d845bcee7263f",
+      "size": 1292,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/d419e23d4591d1e6c6152ddeab4d845bcee7263f"
+    },
+    {
+      "path": "src/vanilla/utils/atomWithReset.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "94a33a4f0d65ca2a86975d8d9a83696b58686ff3",
+      "size": 1008,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/94a33a4f0d65ca2a86975d8d9a83696b58686ff3"
+    },
+    {
+      "path": "src/vanilla/utils/atomWithStorage.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "46d07244db8c7a8849a0e3c134e58a52cb45b000",
+      "size": 7385,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/46d07244db8c7a8849a0e3c134e58a52cb45b000"
+    },
+    {
+      "path": "src/vanilla/utils/constants.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7e8c204d344139538e5663282f255f165247feb9",
+      "size": 102,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/7e8c204d344139538e5663282f255f165247feb9"
+    },
+    {
+      "path": "src/vanilla/utils/freezeAtom.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c15deb2e6cab84f5926ca7322f9ab1c5e31e173d",
+      "size": 1638,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/c15deb2e6cab84f5926ca7322f9ab1c5e31e173d"
+    },
+    {
+      "path": "src/vanilla/utils/selectAtom.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "01840241a347ec7649c46f6554e9457a94d035fa",
+      "size": 1711,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/01840241a347ec7649c46f6554e9457a94d035fa"
+    },
+    {
+      "path": "src/vanilla/utils/splitAtom.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2d93f762a624922a12559a81c8adebd1d874e984",
+      "size": 7584,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/2d93f762a624922a12559a81c8adebd1d874e984"
+    },
+    {
+      "path": "src/vanilla/utils/unwrap.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "50b4d164dd2903bf6db090acd1179f05f5b4121c",
+      "size": 4692,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/50b4d164dd2903bf6db090acd1179f05f5b4121c"
+    },
+    {
+      "path": "tests",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "7767d6093f455373eade57061514bf10b0fd3628",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/7767d6093f455373eade57061514bf10b0fd3628"
+    },
+    {
+      "path": "tests/react",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "b3b3080c7a85a22378bd1ef6c88785cc8c2b12e7",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/b3b3080c7a85a22378bd1ef6c88785cc8c2b12e7"
+    },
+    {
+      "path": "tests/react/abortable.test.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7501ad295e942fda02fee16c7460a080c451227f",
+      "size": 7070,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/7501ad295e942fda02fee16c7460a080c451227f"
+    },
+    {
+      "path": "tests/react/async.test.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "170327b234dbf6e465c2add3e868c7b3dedfc355",
+      "size": 30324,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/170327b234dbf6e465c2add3e868c7b3dedfc355"
+    },
+    {
+      "path": "tests/react/async2.test.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2d04941796ac4be908d4e233ed43cd6c53a54cf2",
+      "size": 9318,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/2d04941796ac4be908d4e233ed43cd6c53a54cf2"
+    },
+    {
+      "path": "tests/react/basic.test.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "40c439e7cfa0a870f840379e334b1d4b1be22f88",
+      "size": 25036,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/40c439e7cfa0a870f840379e334b1d4b1be22f88"
+    },
+    {
+      "path": "tests/react/dependency.test.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "53db4cbc2154e68dc3edb2ad3e0627279fe8c803",
+      "size": 27234,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/53db4cbc2154e68dc3edb2ad3e0627279fe8c803"
+    },
+    {
+      "path": "tests/react/error.test.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5637d0450448afb8972da605905c71a0f02e1bf2",
+      "size": 13098,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/5637d0450448afb8972da605905c71a0f02e1bf2"
+    },
+    {
+      "path": "tests/react/items.test.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "822ef377b1c49bad82553eebb41714ab5e97a806",
+      "size": 5261,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/822ef377b1c49bad82553eebb41714ab5e97a806"
+    },
+    {
+      "path": "tests/react/onmount.test.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8c286bb17eaae2cdddb2b96069702dfacdbf0ddd",
+      "size": 13321,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/8c286bb17eaae2cdddb2b96069702dfacdbf0ddd"
+    },
+    {
+      "path": "tests/react/optimization.test.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "792aaaff23428c89c1502c24e2889d3cfa294f43",
+      "size": 7064,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/792aaaff23428c89c1502c24e2889d3cfa294f43"
+    },
+    {
+      "path": "tests/react/provider.test.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9bf0fc3e0db88ddbaf6c8a256e669bff0b24c52c",
+      "size": 1674,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/9bf0fc3e0db88ddbaf6c8a256e669bff0b24c52c"
+    },
+    {
+      "path": "tests/react/transition.test.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "76f3e1e3afb9fefaab0e6c039fdee8884ce13b31",
+      "size": 3416,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/76f3e1e3afb9fefaab0e6c039fdee8884ce13b31"
+    },
+    {
+      "path": "tests/react/types.test.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7413e9ce73aa6199a5d2d63864a8e8fff0eec055",
+      "size": 5168,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/7413e9ce73aa6199a5d2d63864a8e8fff0eec055"
+    },
+    {
+      "path": "tests/react/useAtomValue.test.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4472023679a7d625db12f132f177c57af733a3cc",
+      "size": 2705,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/4472023679a7d625db12f132f177c57af733a3cc"
+    },
+    {
+      "path": "tests/react/useAtomValueRaw.test.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8013ac017d68ae328d37c83ef3901a7165a70945",
+      "size": 5519,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/8013ac017d68ae328d37c83ef3901a7165a70945"
+    },
+    {
+      "path": "tests/react/useAtomValueRawSync.test.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b60575af8db0822f5363d0cb51d89f81841a4849",
+      "size": 3684,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/b60575af8db0822f5363d0cb51d89f81841a4849"
+    },
+    {
+      "path": "tests/react/useSetAtom.test.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "964993b8c028efd8737d02dcb13a1d19e9a08cce",
+      "size": 3235,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/964993b8c028efd8737d02dcb13a1d19e9a08cce"
+    },
+    {
+      "path": "tests/react/utils",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "2d5a5abf46adb4b6ada789cd1f16e9ca7ce89e65",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/2d5a5abf46adb4b6ada789cd1f16e9ca7ce89e65"
+    },
+    {
+      "path": "tests/react/utils/types.test.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2f5bc3de4e9d10dd1b1d05a12f9dc928aedc6642",
+      "size": 1716,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/2f5bc3de4e9d10dd1b1d05a12f9dc928aedc6642"
+    },
+    {
+      "path": "tests/react/utils/useAtomCallback.test.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2a4d42d6c695d31f3e9196eb5589365b21053fa9",
+      "size": 4410,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/2a4d42d6c695d31f3e9196eb5589365b21053fa9"
+    },
+    {
+      "path": "tests/react/utils/useHydrateAtoms.test.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f513850792d35607bfc6d8367c75c5aeb3a51e6f",
+      "size": 12481,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/f513850792d35607bfc6d8367c75c5aeb3a51e6f"
+    },
+    {
+      "path": "tests/react/utils/useReducerAtom.test.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "56d82b97f831667195f4212931ee87487cfd0ce9",
+      "size": 3327,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/56d82b97f831667195f4212931ee87487cfd0ce9"
+    },
+    {
+      "path": "tests/react/utils/useResetAtom.test.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7f73f58ed4a79cba601ffa2aacf0f0f2489e55f5",
+      "size": 5111,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/7f73f58ed4a79cba601ffa2aacf0f0f2489e55f5"
+    },
+    {
+      "path": "tests/react/vanilla-utils",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "6a4692a6d198c2e7afd80046a6effcd95a7f54fe",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/6a4692a6d198c2e7afd80046a6effcd95a7f54fe"
+    },
+    {
+      "path": "tests/react/vanilla-utils/atomWithDefault.test.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ba2b6c86d34267e1b7c4aec83a541dd6549d57bc",
+      "size": 7214,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/ba2b6c86d34267e1b7c4aec83a541dd6549d57bc"
+    },
+    {
+      "path": "tests/react/vanilla-utils/atomWithObservable.test.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d85f230b105b740f3be6c34d6ae140f8ff81b0b5",
+      "size": 25412,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/d85f230b105b740f3be6c34d6ae140f8ff81b0b5"
+    },
+    {
+      "path": "tests/react/vanilla-utils/atomWithReducer.test.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b7254d1a33ad9494bb34ff65cedfc3b463e32bbc",
+      "size": 2429,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/b7254d1a33ad9494bb34ff65cedfc3b463e32bbc"
+    },
+    {
+      "path": "tests/react/vanilla-utils/atomWithRefresh.test.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e24773e4d597e8e04116ec9e34e3cfc54937bda4",
+      "size": 3281,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/e24773e4d597e8e04116ec9e34e3cfc54937bda4"
+    },
+    {
+      "path": "tests/react/vanilla-utils/atomWithStorage.test.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9b0b5e5f22b74d4e883124327b2f7d7fef3dc28b",
+      "size": 28518,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/9b0b5e5f22b74d4e883124327b2f7d7fef3dc28b"
+    },
+    {
+      "path": "tests/react/vanilla-utils/freezeAtom.test.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e582e58325aea9215fa0828e7840233bab5feb80",
+      "size": 3082,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/e582e58325aea9215fa0828e7840233bab5feb80"
+    },
+    {
+      "path": "tests/react/vanilla-utils/selectAtom.test.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "99730d97cdcaff40954ae88ba0be943190bc671a",
+      "size": 4119,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/99730d97cdcaff40954ae88ba0be943190bc671a"
+    },
+    {
+      "path": "tests/react/vanilla-utils/splitAtom.test.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ecd91fa18319070c0bb79459adb41ecc8475707a",
+      "size": 14635,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/ecd91fa18319070c0bb79459adb41ecc8475707a"
+    },
+    {
+      "path": "tests/setup.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a9d0dd31aa6eae87f8689e99b802b92a020b30d9",
+      "size": 42,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/a9d0dd31aa6eae87f8689e99b802b92a020b30d9"
+    },
+    {
+      "path": "tests/test-utils.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3fb71a817e2de47f50dcb3bab082e206e4985116",
+      "size": 372,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/3fb71a817e2de47f50dcb3bab082e206e4985116"
+    },
+    {
+      "path": "tests/vanilla",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "a67409770e6178ac89a35dff8aab180646976f37",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/a67409770e6178ac89a35dff8aab180646976f37"
+    },
+    {
+      "path": "tests/vanilla/basic.test.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2dee6c2af871656a06dd63d421150af18e179a00",
+      "size": 1820,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/2dee6c2af871656a06dd63d421150af18e179a00"
+    },
+    {
+      "path": "tests/vanilla/dependency.test.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f65a8d06f1fa1338ea401d816fb58fa64e9aed1f",
+      "size": 10958,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/f65a8d06f1fa1338ea401d816fb58fa64e9aed1f"
+    },
+    {
+      "path": "tests/vanilla/derive.test.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4a62f4cce37e4e0510117377616218754b44e7ee",
+      "size": 6965,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/4a62f4cce37e4e0510117377616218754b44e7ee"
+    },
+    {
+      "path": "tests/vanilla/effect.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5492d5319dd1fc0d6aeedcbc20692d686b73aaeb",
+      "size": 7985,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/5492d5319dd1fc0d6aeedcbc20692d686b73aaeb"
+    },
+    {
+      "path": "tests/vanilla/internals.test.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "23cfe63e6b6b1106396c13a85c29b7d2872dcafc",
+      "size": 16274,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/23cfe63e6b6b1106396c13a85c29b7d2872dcafc"
+    },
+    {
+      "path": "tests/vanilla/memoryleaks.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "59ff29b92f02f4b4ecdbffdb0b291056eff8873f",
+      "size": 5047,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/59ff29b92f02f4b4ecdbffdb0b291056eff8873f"
+    },
+    {
+      "path": "tests/vanilla/store.test.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0280da49a5379e9edb59fa8061264556e3bbb11f",
+      "size": 45308,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/0280da49a5379e9edb59fa8061264556e3bbb11f"
+    },
+    {
+      "path": "tests/vanilla/storedev.test.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c4b529c98091f34355a31fb94e27c519feb1e765",
+      "size": 5293,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/c4b529c98091f34355a31fb94e27c519feb1e765"
+    },
+    {
+      "path": "tests/vanilla/types.test.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "89b0993018ecd498ab6a9016acf351de1b7d9b47",
+      "size": 3825,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/89b0993018ecd498ab6a9016acf351de1b7d9b47"
+    },
+    {
+      "path": "tests/vanilla/utils",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "fc78714fac90c2dd43db54be8710f38011962207",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/fc78714fac90c2dd43db54be8710f38011962207"
+    },
+    {
+      "path": "tests/vanilla/utils/atomWithDefault.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "50be424cf524918f987a2e00f0576d2f9b2a695b",
+      "size": 2632,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/50be424cf524918f987a2e00f0576d2f9b2a695b"
+    },
+    {
+      "path": "tests/vanilla/utils/atomWithLazy.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e290e7bc6ee143509eea0e67f21b75b94a8cdc0c",
+      "size": 1103,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/e290e7bc6ee143509eea0e67f21b75b94a8cdc0c"
+    },
+    {
+      "path": "tests/vanilla/utils/atomWithRefresh.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9c3efa578962eb47c0831e3fee3b9aae309c9256",
+      "size": 441,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/9c3efa578962eb47c0831e3fee3b9aae309c9256"
+    },
+    {
+      "path": "tests/vanilla/utils/atomWithReset.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bf7e955b67936b6076e785f1d5ffe5f55fc4ebf6",
+      "size": 1039,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/bf7e955b67936b6076e785f1d5ffe5f55fc4ebf6"
+    },
+    {
+      "path": "tests/vanilla/utils/types.test.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ab89437d14bc676746a89c998ecaf83ea3861941",
+      "size": 1612,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/ab89437d14bc676746a89c998ecaf83ea3861941"
+    },
+    {
+      "path": "tests/vanilla/utils/unwrap.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "833afe5317327a4a52423c33848bda8a7c382fca",
+      "size": 9187,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/833afe5317327a4a52423c33848bda8a7c382fca"
+    },
+    {
+      "path": "tsconfig.build.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bb82f6fee8cf2484de87e37a1e7b6278d69df749",
+      "size": 216,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/bb82f6fee8cf2484de87e37a1e7b6278d69df749"
+    },
+    {
+      "path": "tsconfig.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "22b8807070cb55b1d3df343404c77df035b9000a",
+      "size": 691,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/22b8807070cb55b1d3df343404c77df035b9000a"
+    },
+    {
+      "path": "vitest.config.mts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b600a933ac12512aec2d6547dbd0593ab273fd12",
+      "size": 962,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/b600a933ac12512aec2d6547dbd0593ab273fd12"
+    },
+    {
+      "path": "website",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "b3fd00123ad74f7efbad94ebc02df8ab0ced9db2",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/b3fd00123ad74f7efbad94ebc02df8ab0ced9db2"
+    },
+    {
+      "path": "website/.babelrc",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b1388b9e6413b1085e24c6d67fca29cbd44bb36d",
+      "size": 369,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/b1388b9e6413b1085e24c6d67fca29cbd44bb36d"
+    },
+    {
+      "path": "website/.gitignore",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f81327511eeb4a898632e11c08410fbc393dd5a1",
+      "size": 974,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/f81327511eeb4a898632e11c08410fbc393dd5a1"
+    },
+    {
+      "path": "website/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "96cbd605a2867974288d436c09b5b2afdb59d43a",
+      "size": 287,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/96cbd605a2867974288d436c09b5b2afdb59d43a"
+    },
+    {
+      "path": "website/api",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "e5a828e5bcbac09286427bb042506f71864301a0",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/e5a828e5bcbac09286427bb042506f71864301a0"
+    },
+    {
+      "path": "website/api/contact.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a370e83d8c13602596312795d90b5585c013e370",
+      "size": 826,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/a370e83d8c13602596312795d90b5585c013e370"
+    },
+    {
+      "path": "website/gatsby-browser.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8af86164081ab2d06e9f43c0afbea159882f96e5",
+      "size": 103,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/8af86164081ab2d06e9f43c0afbea159882f96e5"
+    },
+    {
+      "path": "website/gatsby-config.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "15888778fd0a02e06c779ee30324712a9f568986",
+      "size": 3696,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/15888778fd0a02e06c779ee30324712a9f568986"
+    },
+    {
+      "path": "website/gatsby-node.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "31c3fcb70953697ee6c28b8af0d26153eb85a6c2",
+      "size": 5652,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/31c3fcb70953697ee6c28b8af0d26153eb85a6c2"
+    },
+    {
+      "path": "website/gatsby-shared.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2f6b1dff5e5f93ad00abb24f86b676af57ef634d",
+      "size": 1170,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/2f6b1dff5e5f93ad00abb24f86b676af57ef634d"
+    },
+    {
+      "path": "website/gatsby-ssr.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "93a02d859ba68514ef4c354d40547f8113ec8c7c",
+      "size": 1124,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/93a02d859ba68514ef4c354d40547f8113ec8c7c"
+    },
+    {
+      "path": "website/jsconfig.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f5d9066dc6488217e6b81b451fb9aa697a511639",
+      "size": 179,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/f5d9066dc6488217e6b81b451fb9aa697a511639"
+    },
+    {
+      "path": "website/package.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ec71f13122364be03e92f2bdb410bc85d0596ac7",
+      "size": 1918,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/ec71f13122364be03e92f2bdb410bc85d0596ac7"
+    },
+    {
+      "path": "website/postcss.config.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e90552645cf7dc4b382b88e6f6a4a0b5fa502041",
+      "size": 160,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/e90552645cf7dc4b382b88e6f6a4a0b5fa502041"
+    },
+    {
+      "path": "website/public",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "64134a8bf4139b7839df54bbd4d21e07204738d1",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/64134a8bf4139b7839df54bbd4d21e07204738d1"
+    },
+    {
+      "path": "website/public/robots.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "dfa54e67e26b9c73a8383b7b7f1e030178b33ebf",
+      "size": 76,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/dfa54e67e26b9c73a8383b7b7f1e030178b33ebf"
+    },
+    {
+      "path": "website/reach-router.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "077f70fdc51af2c2948972097923bff5ed8dfc10",
+      "size": 178,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/077f70fdc51af2c2948972097923bff5ed8dfc10"
+    },
+    {
+      "path": "website/src",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "ba0f32835f38188dccfa0eeeb3fbb67fe418f31f",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/ba0f32835f38188dccfa0eeeb3fbb67fe418f31f"
+    },
+    {
+      "path": "website/src/api",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "e5a828e5bcbac09286427bb042506f71864301a0",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/e5a828e5bcbac09286427bb042506f71864301a0"
+    },
+    {
+      "path": "website/src/api/contact.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a370e83d8c13602596312795d90b5585c013e370",
+      "size": 826,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/a370e83d8c13602596312795d90b5585c013e370"
+    },
+    {
+      "path": "website/src/atoms",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "362478c3ab9e4aa583d6d2a3d7c35772c3049008",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/362478c3ab9e4aa583d6d2a3d7c35772c3049008"
+    },
+    {
+      "path": "website/src/atoms/index.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6a52e23d532f632a1107cda82e5fb6d02f10b6b9",
+      "size": 484,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/6a52e23d532f632a1107cda82e5fb6d02f10b6b9"
+    },
+    {
+      "path": "website/src/components",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "17bf312f1732baa872747abee108d93a9618a2aa",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/17bf312f1732baa872747abee108d93a9618a2aa"
+    },
+    {
+      "path": "website/src/components/button.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "27f24305e478c7f2b925bbc76d8c5438cbf04947",
+      "size": 2614,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/27f24305e478c7f2b925bbc76d8c5438cbf04947"
+    },
+    {
+      "path": "website/src/components/client-only.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9d90d3b7006dd5204b9ed76fec84ad579f947a80",
+      "size": 262,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/9d90d3b7006dd5204b9ed76fec84ad579f947a80"
+    },
+    {
+      "path": "website/src/components/code-sandbox.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "17c8de9b56dac798e8672c8e61f644c0752b498b",
+      "size": 768,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/17c8de9b56dac798e8672c8e61f644c0752b498b"
+    },
+    {
+      "path": "website/src/components/code.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c093c0bcf9c23ad06c7200e1e2143f7408832216",
+      "size": 708,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/c093c0bcf9c23ad06c7200e1e2143f7408832216"
+    },
+    {
+      "path": "website/src/components/core-demo.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fe5dfc994a675b44219eb55582540cb1602673b2",
+      "size": 1648,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/fe5dfc994a675b44219eb55582540cb1602673b2"
+    },
+    {
+      "path": "website/src/components/credits.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "393fa81fa408b5f4e7dbe8a783a70ec72cd818c4",
+      "size": 1455,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/393fa81fa408b5f4e7dbe8a783a70ec72cd818c4"
+    },
+    {
+      "path": "website/src/components/docs.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "54a5489050d57323709c561dec2218b698174f0d",
+      "size": 3423,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/54a5489050d57323709c561dec2218b698174f0d"
+    },
+    {
+      "path": "website/src/components/extensions-demo.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a37b7460e11a86a80e802e5f0055f1a07bba822c",
+      "size": 1218,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/a37b7460e11a86a80e802e5f0055f1a07bba822c"
+    },
+    {
+      "path": "website/src/components/external-link.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8d024788d08d83545c80268d638be8c8779d3540",
+      "size": 165,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/8d024788d08d83545c80268d638be8c8779d3540"
+    },
+    {
+      "path": "website/src/components/footer.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b5061ef3c6e49f67436e77744d629ec25acc47da",
+      "size": 248,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/b5061ef3c6e49f67436e77744d629ec25acc47da"
+    },
+    {
+      "path": "website/src/components/headline.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c71e256506d3d6b038868c9ac365d6e037875d33",
+      "size": 301,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/c71e256506d3d6b038868c9ac365d6e037875d33"
+    },
+    {
+      "path": "website/src/components/icon.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a27cf8dcc798e3ca2ac97d20611c2f208f1de210",
+      "size": 15762,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/a27cf8dcc798e3ca2ac97d20611c2f208f1de210"
+    },
+    {
+      "path": "website/src/components/inline-code.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "43935fee8c52ac6037540af7841e847bea95d7f1",
+      "size": 411,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/43935fee8c52ac6037540af7841e847bea95d7f1"
+    },
+    {
+      "path": "website/src/components/intro.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "06bd2444e1d1f4bb870ca3dba636e66fbf7d0a3f",
+      "size": 1753,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/06bd2444e1d1f4bb870ca3dba636e66fbf7d0a3f"
+    },
+    {
+      "path": "website/src/components/jotai.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "53dbb86fbf76d78c1df1f604c329fa3aa3e54478",
+      "size": 1674,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/53dbb86fbf76d78c1df1f604c329fa3aa3e54478"
+    },
+    {
+      "path": "website/src/components/layout.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8d9266e1fd38ab610e3b31bd0acfa666bac972e4",
+      "size": 915,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/8d9266e1fd38ab610e3b31bd0acfa666bac972e4"
+    },
+    {
+      "path": "website/src/components/logo-cloud.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d31cc04bf517b1e668a2a4f02ee81dcd17a79226",
+      "size": 3916,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/d31cc04bf517b1e668a2a4f02ee81dcd17a79226"
+    },
+    {
+      "path": "website/src/components/logo.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c5d9ab9597eed3064cdd073cd6a9af85f409b3f7",
+      "size": 2475,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/c5d9ab9597eed3064cdd073cd6a9af85f409b3f7"
+    },
+    {
+      "path": "website/src/components/main.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1af2ed74839c810364bd2ce9b7968b50c6bf82a1",
+      "size": 205,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/1af2ed74839c810364bd2ce9b7968b50c6bf82a1"
+    },
+    {
+      "path": "website/src/components/mdx.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9efe989c728d772cc46f18caa078330dc4997658",
+      "size": 1127,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/9efe989c728d772cc46f18caa078330dc4997658"
+    },
+    {
+      "path": "website/src/components/menu.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e8e85eeb573852e9c6ed424760e845c18b62f4c4",
+      "size": 2263,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/e8e85eeb573852e9c6ed424760e845c18b62f4c4"
+    },
+    {
+      "path": "website/src/components/meta.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "63cf4ae5f19a94597adbd08ea2d3062c6a0a57c4",
+      "size": 2227,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/63cf4ae5f19a94597adbd08ea2d3062c6a0a57c4"
+    },
+    {
+      "path": "website/src/components/modal.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f7eaea8ec9dedaed39832435b3117d440b30df96",
+      "size": 737,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/f7eaea8ec9dedaed39832435b3117d440b30df96"
+    },
+    {
+      "path": "website/src/components/search-button.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "35dca46a9beafc2aec9e8e5d7afca743e4efffe6",
+      "size": 351,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/35dca46a9beafc2aec9e8e5d7afca743e4efffe6"
+    },
+    {
+      "path": "website/src/components/search-modal.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9172037ac6b8ad8a062f251da1bfc4e2029b58e4",
+      "size": 4697,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/9172037ac6b8ad8a062f251da1bfc4e2029b58e4"
+    },
+    {
+      "path": "website/src/components/shelf.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0f0d9f3b85f923686c648b12fddf0ccafb311241",
+      "size": 1168,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/0f0d9f3b85f923686c648b12fddf0ccafb311241"
+    },
+    {
+      "path": "website/src/components/sidebar.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "753b60975f981430e265da5af0f28ff160a23bd7",
+      "size": 2490,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/753b60975f981430e265da5af0f28ff160a23bd7"
+    },
+    {
+      "path": "website/src/components/stackblitz.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4f0052ed022e14c7e5cec361c78591318d8039ec",
+      "size": 679,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/4f0052ed022e14c7e5cec361c78591318d8039ec"
+    },
+    {
+      "path": "website/src/components/support-modal.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7adca377c00f4faabc018cb559bf0f645e00c09d",
+      "size": 674,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/7adca377c00f4faabc018cb559bf0f645e00c09d"
+    },
+    {
+      "path": "website/src/components/support.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d2494636018b2a33d71faed9dc075d1e18acc004",
+      "size": 6884,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/d2494636018b2a33d71faed9dc075d1e18acc004"
+    },
+    {
+      "path": "website/src/components/tabs.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "92dedd45d7279e378e51305680637ea0c484a7de",
+      "size": 303,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/92dedd45d7279e378e51305680637ea0c484a7de"
+    },
+    {
+      "path": "website/src/components/toc.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ce92b8e9673a57d79e71831404ce2d4ee5c424b4",
+      "size": 2376,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/ce92b8e9673a57d79e71831404ce2d4ee5c424b4"
+    },
+    {
+      "path": "website/src/components/toggle.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "465c06b917437d733a1f4ea25e1a4b3fa2a66e31",
+      "size": 1683,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/465c06b917437d733a1f4ea25e1a4b3fa2a66e31"
+    },
+    {
+      "path": "website/src/components/utilities-demo.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "eb8377c59d32a6de056f4335e15db6f789ee43d9",
+      "size": 2326,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/eb8377c59d32a6de056f4335e15db6f789ee43d9"
+    },
+    {
+      "path": "website/src/components/wrapper.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5cede9ad804121d846a06b49c484c1f330f320b7",
+      "size": 254,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/5cede9ad804121d846a06b49c484c1f330f320b7"
+    },
+    {
+      "path": "website/src/hooks",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "b5a5ed753bdac67438bea24f6e9ee088792da5e9",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/b5a5ed753bdac67438bea24f6e9ee088792da5e9"
+    },
+    {
+      "path": "website/src/hooks/index.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "18a9b04b58952bf5059fc9bae7277dfa0d7e6966",
+      "size": 428,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/18a9b04b58952bf5059fc9bae7277dfa0d7e6966"
+    },
+    {
+      "path": "website/src/pages",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "a3731f0b4d3ca22aed677d13dfcfb76ab79f9bc5",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/a3731f0b4d3ca22aed677d13dfcfb76ab79f9bc5"
+    },
+    {
+      "path": "website/src/pages/404.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bd6ce2cfa7e81319100395bdb4bc00c5ef0e4af4",
+      "size": 174,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/bd6ce2cfa7e81319100395bdb4bc00c5ef0e4af4"
+    },
+    {
+      "path": "website/src/pages/docs",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "1157f4d2ff247f4580356e7c9f23eb7c4183070a",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/1157f4d2ff247f4580356e7c9f23eb7c4183070a"
+    },
+    {
+      "path": "website/src/pages/docs/{Mdx.slug}.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c6a559fe5356257eaadf6d2882c5242e152e8314",
+      "size": 970,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/c6a559fe5356257eaadf6d2882c5242e152e8314"
+    },
+    {
+      "path": "website/src/pages/index.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2a246bdcf10596e1f67c35724065a7c42790db07",
+      "size": 10046,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/2a246bdcf10596e1f67c35724065a7c42790db07"
+    },
+    {
+      "path": "website/src/styles",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "66ba5e90ee366746584c647a29276e82caca751e",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/66ba5e90ee366746584c647a29276e82caca751e"
+    },
+    {
+      "path": "website/src/styles/base.css",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2f02db53f6e3a2b20e7c29a0e64f983de6a3bfff",
+      "size": 16,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/2f02db53f6e3a2b20e7c29a0e64f983de6a3bfff"
+    },
+    {
+      "path": "website/src/styles/components.css",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8333b44ad232cc2c54ea856d3250c9515cc48c09",
+      "size": 2305,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/8333b44ad232cc2c54ea856d3250c9515cc48c09"
+    },
+    {
+      "path": "website/src/styles/fonts.css",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "190adf198385fb01bd7254b815335f337fcc1b03",
+      "size": 172,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/190adf198385fb01bd7254b815335f337fcc1b03"
+    },
+    {
+      "path": "website/src/styles/index.css",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9b11189b30e445f965a1ef90162f880c8abcdcc7",
+      "size": 148,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/9b11189b30e445f965a1ef90162f880c8abcdcc7"
+    },
+    {
+      "path": "website/src/styles/layout.css",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "db1e2a6aea6374111ecbcbc77663fd2bf0477a2b",
+      "size": 1871,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/db1e2a6aea6374111ecbcbc77663fd2bf0477a2b"
+    },
+    {
+      "path": "website/src/styles/pmndrs.css",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f0724b0010a7b21d8800bd0a8c0c7ef893249261",
+      "size": 1815,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/f0724b0010a7b21d8800bd0a8c0c7ef893249261"
+    },
+    {
+      "path": "website/src/styles/utilities.css",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "65dd5f63a7dff212950f378bf32188d9d6291439",
+      "size": 21,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/65dd5f63a7dff212950f378bf32188d9d6291439"
+    },
+    {
+      "path": "website/src/utils",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "82aec3afb6d1a25f708b2f34ab47e3da93891ecc",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/82aec3afb6d1a25f708b2f34ab47e3da93891ecc"
+    },
+    {
+      "path": "website/src/utils/index.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "446f1e42f2e501ca630dd82f93daaa15634a7586",
+      "size": 513,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/446f1e42f2e501ca630dd82f93daaa15634a7586"
+    },
+    {
+      "path": "website/static",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "95d946dbbd5b26bab75b29ba9e7ee1b842326f87",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/95d946dbbd5b26bab75b29ba9e7ee1b842326f87"
+    },
+    {
+      "path": "website/static/favicon.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4abb10fce839292b81371cfcc4ebf586164fdc50",
+      "size": 114,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/4abb10fce839292b81371cfcc4ebf586164fdc50"
+    },
+    {
+      "path": "website/static/fonts",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "ff128667e3f213eb083ead52ae78a9f3fb61f16b",
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/trees/ff128667e3f213eb083ead52ae78a9f3fb61f16b"
+    },
+    {
+      "path": "website/static/fonts/inter-italic-var.woff2",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "03875311af6d9a8c7caf547c78363d131f01abdb",
+      "size": 244760,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/03875311af6d9a8c7caf547c78363d131f01abdb"
+    },
+    {
+      "path": "website/static/fonts/inter-var.woff2",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b40083cbbe3b2740d70b34b1397c3bdf8df67a76",
+      "size": 324904,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/b40083cbbe3b2740d70b34b1397c3bdf8df67a76"
+    },
+    {
+      "path": "website/static/fonts/meslo.woff2",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e3b0361c606748dd21cd9ccd97f31f6ccd852693",
+      "size": 159780,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/e3b0361c606748dd21cd9ccd97f31f6ccd852693"
+    },
+    {
+      "path": "website/static/robots.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "dfa54e67e26b9c73a8383b7b7f1e030178b33ebf",
+      "size": 76,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/dfa54e67e26b9c73a8383b7b7f1e030178b33ebf"
+    },
+    {
+      "path": "website/static/search-by-algolia.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e444491bae9e758becaa7f8d49b6fa73c46b5e3c",
+      "size": 20535,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/e444491bae9e758becaa7f8d49b6fa73c46b5e3c"
+    },
+    {
+      "path": "website/tailwind.config.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7261991bc336ac5306f7e5b0af61a75895f5cc8f",
+      "size": 1289,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/7261991bc336ac5306f7e5b0af61a75895f5cc8f"
+    },
+    {
+      "path": "website/vercel.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cffc75b8c9d5701375a74d3bd42ae4445c373471",
+      "size": 3698,
+      "url": "https://api.github.com/repos/pmndrs/jotai/git/blobs/cffc75b8c9d5701375a74d3bd42ae4445c373471"
+    }
+  ],
+  "truncated": false
+}

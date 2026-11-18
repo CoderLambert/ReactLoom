@@ -1,0 +1,10 @@
+{
+  "argv": [
+    "node",
+    "--input-type=module",
+    "-e",
+    "import fs from 'node:fs';import crypto from 'node:crypto';import {validateOfficialSources} from './packages/library-lab/src/lib/official-sources.mjs';const p='packages/library-lab/entries/F03-papaparse/';const d=JSON.parse(fs.readFileSync(p+'library.json'));const hash=crypto.createHash('sha256').update(fs.readFileSync(p+'official/readme.md')).digest('hex');const errors=validateOfficialSources(d.official);if(hash!==d.official.readme.sha256)errors.push('hash mismatch');const pkg=JSON.parse(fs.readFileSync('packages/library-lab/node_modules/papaparse/package.json'));console.log(JSON.stringify({errors,hash,version:pkg.version,license:pkg.license}));if(errors.length)process.exit(1)"
+  ],
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "exitCode": 0
+}

@@ -1,0 +1,42 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=pnpm exec node --input-type=module (source below)
+import {chromium} from '@playwright/test';
+const browser=await chromium.launch();const page=await browser.newPage();
+await page.addInitScript(()=>{window.__events=[];for(const type of ['pointerdown','pointerup','click','submit'])document.addEventListener(type,e=>window.__events.push({type,target:e.target.tagName,text:e.target.textContent?.slice(0,40)}),true)});
+await page.goto('http://127.0.0.1:4319/libraries/react-hook-form?tab=demo&example=basic');
+const app=page.getByRole('region',{name:'React Hook Form 实际 SDK 示例'}),group=app.getByRole('textbox',{name:'分组名称',exact:true}),url=app.getByRole('textbox',{name:'来源 1 URL',exact:true}),submit=app.getByRole('button',{name:'验证并预览',exact:true});
+await group.fill('');await url.fill('http://example.com/feed');console.log('before invalid click',await submit.boundingBox());await submit.click();await page.waitForTimeout(70);console.log('after invalid',await submit.boundingBox(),await app.getByTestId('c01-form-state').textContent());
+await group.fill('工程');await url.fill('https://example.com/feed');console.log('before valid click',await submit.boundingBox());await submit.click();await page.waitForTimeout(70);console.log('after valid',await submit.boundingBox(),await app.getByTestId('c01-form-state').textContent());console.log('events',await page.evaluate(()=>window.__events));
+await submit.click();await page.waitForTimeout(70);console.log('second click',await app.getByTestId('c01-form-state').textContent(),'outputs',await app.locator('output').count());await browser.close();
+
+before invalid click { x: 337, y: 771.421875, width: 109.1875, height: 44.390625 }
+after invalid { x: 337, y: 363.8125, width: 109.1875, height: 44.390625 } 草稿状态已修改提交状态空闲提交次数0
+before valid click { x: 337, y: 363.8125, width: 109.1875, height: 44.390625 }
+after valid { x: 337, y: 337.421875, width: 109.1875, height: 44.390625 } 草稿状态已修改提交状态空闲提交次数0
+events [
+  { type: 'pointerdown', target: 'BUTTON', text: '验证并预览' },
+  {
+    type: 'pointerup',
+    target: 'FORM',
+    text: '分组名称 请输入分组名来源 1标题 RSS URL 请输入不包含用户名或密码的 '
+  },
+  {
+    type: 'click',
+    target: 'FORM',
+    text: '分组名称 请输入分组名来源 1标题 RSS URL 请输入不包含用户名或密码的 '
+  },
+  { type: 'pointerdown', target: 'BUTTON', text: '验证并预览' },
+  {
+    type: 'pointerup',
+    target: 'SECTION',
+    text: 'RSS 订阅表单RHF 管理真实输入与字段数组；提交端是明确标注的本地业务 fi'
+  },
+  {
+    type: 'click',
+    target: 'SECTION',
+    text: 'RSS 订阅表单RHF 管理真实输入与字段数组；提交端是明确标注的本地业务 fi'
+  }
+]
+second click 草稿状态已修改提交状态空闲提交次数1 outputs 1
+
+exitCode=0

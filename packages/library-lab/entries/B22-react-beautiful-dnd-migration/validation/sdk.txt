@@ -1,0 +1,13 @@
+Actual replacement SSR context identities: [ '_R_1_', '_R_2_' ]
+✔ replacement18.0.1 actually renders the stable IDs and separate drag handles in React19 SSR (8.653708ms)
+✔ replacement React19 context identities isolate equal item IDs within the same SSR tree (2.117017ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 72.639764
+
+exitCode=0

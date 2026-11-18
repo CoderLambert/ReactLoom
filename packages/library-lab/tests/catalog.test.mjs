@@ -68,9 +68,13 @@ test('external source links reject credential-bearing authorities and invalid fr
     }).length,
   )
 })
-test('only four tabs are accepted', () => {
+test('six tabs are accepted and unspecified routes open the guide', () => {
   assert.equal(normalizeTab('agent'), 'agent')
-  assert.equal(normalizeTab('../../x'), 'demo')
+  assert.equal(normalizeTab('readme'), 'readme')
+  assert.equal(normalizeTab('website'), 'website')
+  assert.equal(normalizeTab('demo'), 'demo')
+  assert.equal(normalizeTab(undefined), 'docs')
+  assert.equal(normalizeTab('../../x'), 'docs')
 })
 test('references must be safe https URLs', () =>
   assert.ok(validateEntry({ ...sample, references: [{ title: 'x', url: 'javascript:1' }] }).length))

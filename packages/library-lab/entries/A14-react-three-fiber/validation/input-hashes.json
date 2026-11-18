@@ -1,0 +1,28 @@
+{
+  "installedVersions": {
+    "@react-three/fiber": "9.8.2",
+    "three": "0.186.0"
+  },
+  "files": {
+    "library.json": "6419f274f6b47f18583eec8ed6a336308a1b758521b3d83a6641bec2eb316c6b",
+    "guide.md": "a464a7e4b1ca1875b660c5ecec899fd55d6e267e58a74375938f81c99b08806b",
+    "agent.md": "8b865afd1e5e14e0050eec40e57e506d40378a42144719f6a4f07c3180803110",
+    "local-validation.md": "5539e929fbd07e4c7d6ace1cc7d305de35dc16db275e564565d2b78ea2208247",
+    "verification.json": "f76d2a982fa1b533abb1fdf33d56c5f69e105e6e2719d0b134a7a255b73f4172",
+    "official/readme.md": "29c7319a41a30b95319e68d540672efaa31a2c3bd44bad6ef2e48b93d00d4ab6",
+    "official/source-evidence.json": "b221c14b01968492071a57dfc32dd69e00dc5b8403dbfc0d1f7adfe7aeb4b7c9",
+    "official/npm-integrity.json": "0c2cd0eb97a3c2814b2905498b1e04c856d655d7de9326bb853caf2ebff76d3f",
+    "validation/browser-proposal.txt": "a4d216f5f02e487ec4fcea542b37dc18f5a392df06acb6934e498c4f08199a55",
+    "validation/metadata-check.mjs": "49a8846ce772156d5e3fb7835075856208d95f8b713d0a2e587f460583f65c33",
+    "validation/source-audit.mjs": "819e6462636e5af5f052019cba78e0491d518f7efcad22700c7f873b3c9f17a8",
+    "validation/sdk-source-audit.json": "6f656fa098883fbcdde5c23204266ccbc7471facae8231f22964106707e653e2",
+    "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+    "examples/example.tsx": "a238ae08cfb8d74d9199cd21068dbb2270613901ef9824898b815f4abee9c1b7",
+    "examples/frame-policy.ts": "3c5142fdb75d6d32711d2f80664995272865317f4e2707b4b9ed77c99a3dc4e5",
+    "examples/scene.tsx": "83ee784b1c8124831f1f3bce1970a4c6772e7b827e9eb7c722f3415bfe172b3e",
+    "examples/visibility.ts": "9974a52e1a333e8c291eae17645bb2e34b4a01dd8341403d6eec0c92ff4df3d3",
+    "examples/workshop.css": "8d5fdb1b5f8a22f447b6175b9bd252a7b94b3df7858152d65f72bc1e2566cdd0",
+    "tests/frame-policy.test.mts": "63845568687577e47eb950a50c7d45b3d0b2241fe33654309e11e1672020ab4d",
+    "tests/sdk.test.mjs": "7af61ef3a832f049b099c6b7ee46a30d5ac19ca9fda390103365cf5295b271b4"
+  }
+}

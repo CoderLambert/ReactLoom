@@ -4,14 +4,8 @@
   "slug": "react-spring",
   "name": "react-spring",
   "group": "B",
-  "summary": "基于 spring 物理的 React 动画与列表进出场；局部减少动画兼容",
-  "tags": [
-    "spring",
-    "useSpring",
-    "useTransition",
-    "a11y",
-    "reduced-motion"
-  ],
+  "summary": "React 状态驱动弹簧、带稳定身份的安全离场与本例减少动画",
+  "tags": ["spring", "useSpring", "useTransition", "a11y", "reduced-motion"],
   "contentState": "recreated",
   "packages": [
     {
@@ -48,57 +42,48 @@
   "demos": [
     {
       "demoId": "basic",
-      "title": "单元素弹簧",
-      "description": "按钮切换通知卡展开/淡化，useSpring 以状态为目标。",
+      "title": "状态目标与弹簧卡片",
+      "description": "布尔目标变化经 useSpring 和 animated 写入真实 DOM 样式，可中断切换。",
       "level": "basic",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
         "examples/demo.tsx",
-        "examples/article-policy.ts"
+        "examples/article-policy.ts",
+        "examples/styles.css"
       ],
-      "capabilities": [
-        "animation",
-        "match-media",
-        "keyboard"
-      ]
+      "capabilities": ["animation", "match-media", "keyboard"]
     },
     {
       "demoId": "business",
-      "title": "列表入场与退出",
-      "description": "对新闻卡添加与删除，useTransition保留退出期间的节点与稳定key。",
+      "title": "逻辑删除与安全离场",
+      "description": "权威数组删除立即撤掉操作和读屏语义，useTransition 继续保留视觉离场；12条容量与稳定ID。",
       "level": "business",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
         "examples/demo.tsx",
-        "examples/article-policy.ts"
+        "examples/article-policy.ts",
+        "examples/styles.css"
       ],
-      "capabilities": [
-        "animation",
-        "match-media",
-        "keyboard"
-      ]
+      "capabilities": ["animation", "match-media", "keyboard"]
     },
     {
       "demoId": "advanced",
-      "title": "减少动画与焦点",
-      "description": "系统偏好变化时immediate跳到终态、快速添加/删除并恢复键盘焦点。",
+      "title": "局部偏好与容量边界焦点",
+      "description": "本地 opt-in 和系统偏好同步到 immediate，满员删除后焦点返回已可用添加按钮，不修改全局。",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
         "examples/demo.tsx",
-        "examples/article-policy.ts"
+        "examples/article-policy.ts",
+        "examples/styles.css"
       ],
-      "capabilities": [
-        "animation",
-        "match-media",
-        "keyboard"
-      ]
+      "capabilities": ["animation", "match-media", "keyboard"]
     }
   ],
   "provenance": {
@@ -108,5 +93,25 @@
   "license": {
     "spdx": "MIT",
     "assets": "本地确定性数据与原创示例；不打包外部素材。"
+  },
+  "official": {
+    "readme": {
+      "repository": "pmndrs/react-spring",
+      "commit": "59b1e5306402d3039120e2da464b66e10b1a1aa1",
+      "path": "targets/web/README.md",
+      "sourceUrl": "https://github.com/pmndrs/react-spring/blob/59b1e5306402d3039120e2da464b66e10b1a1aa1/targets/web/README.md",
+      "language": "en",
+      "version": "10.1.2",
+      "syncedAt": "2026-11-10T12:41:56.270062+00:00",
+      "sha256": "dc737deb8253d700b89188be01dc70b5859b3b85422360bb30ce5b70223473f1",
+      "snapshotPath": "official/readme.md"
+    },
+    "homepage": {
+      "url": "https://www.react-spring.dev/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-10T12:42:03.126976+00:00",
+      "reason": "HTTP 200；该次响应未见X-Frame-Options/CSP，未从Lab origin验证iframe，保持unknown。"
+    }
   }
 }

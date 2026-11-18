@@ -1,0 +1,28 @@
+GET https://zustand.docs.pmnd.rs/
+Status: 200
+Final URL: https://zustand.docs.pmnd.rs/
+Connection: close
+Content-Length: 33351
+Server: GitHub.com
+Content-Type: text/html; charset=utf-8
+Last-Modified: Wed, 26 Aug 2026 13:41:53 GMT
+Access-Control-Allow-Origin: *
+Strict-Transport-Security: max-age=31556952
+ETag: "6a8eed21-8247"
+expires: Tue, 17 Nov 2026 16:45:29 GMT
+Cache-Control: max-age=600
+x-proxy-cache: MISS
+X-GitHub-Request-Id: C020:26D11B:33C8F:37048:6AFC8250
+x-github-edge-region: japaneast
+Accept-Ranges: bytes
+Age: 0
+Date: Tue, 17 Nov 2026 16:35:29 GMT
+Via: 1.1 varnish
+X-Served-By: cache-nrt-rjaa8190076-NRT
+X-Cache: MISS
+X-Cache-Hits: 0
+X-Timer: S1794933329.977776,VS0,VE185
+Vary: Accept-Encoding
+X-Fastly-Request-ID: 6b522a2d9c7b465a4dbdd5b05e8e4c2def89f470
+
+Set-Cookie response headers omitted.

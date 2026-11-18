@@ -1,0 +1,47 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=pnpm exec playwright test --config=.local-evidence/quality-playwright.config.ts quality-remediation-next.spec.ts --grep minimal controlled graph
+
+Running 1 test using 1 worker
+
+(node:721362) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 e2e/quality-remediation-next.spec.ts:3:1 › @A06 the minimal controlled graph moves, reconnects real Handles, and resets (5.1s)
+
+
+  1) e2e/quality-remediation-next.spec.ts:3:1 › @A06 the minimal controlled graph moves, reconnects real Handles, and resets 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('region', { name: 'React Flow 图编辑入门', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('region', { name: 'React Flow 图编辑入门', exact: true }) with timeout 5000ms
+      - waiting for getByRole('region', { name: 'React Flow 图编辑入门', exact: true })
+
+
+       6 |   await page.goto('/libraries/react-flow?tab=demo&example=basic')
+       7 |   const primer = page.getByRole('region', { name: 'React Flow 图编辑入门', exact: true })
+    >  8 |   await expect(primer).toBeVisible()
+         |                        ^
+       9 |   const state = primer.getByTestId('primer-state-json')
+      10 |   const initial = await state.textContent()
+      11 |   const source = primer.locator('.react-flow__node[data-id="source"]')
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-next.spec.ts:8:24
+
+    Error Context: test-results/quality-remediation-next---ee886-cts-real-Handles-and-resets/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-remediation-next---ee886-cts-real-Handles-and-resets/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-remediation-next---ee886-cts-real-Handles-and-resets/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    e2e/quality-remediation-next.spec.ts:3:1 › @A06 the minimal controlled graph moves, reconnects real Handles, and resets 
+
+exitCode=1

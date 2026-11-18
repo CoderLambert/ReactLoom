@@ -1,0 +1,81 @@
+[
+  {
+    "name": "platform-tests",
+    "status": "REUSED",
+    "from": "candidate-02/platform-tests.txt",
+    "reason": "Common README path validator changed: targeted official-sources + document-utils 16 PASS in scoped-readme-green.txt; other platform 200 baseline checks reused."
+  },
+  {
+    "name": "platform-lint",
+    "status": "REUSED",
+    "from": "candidate-02/lint.txt",
+    "reason": "Entry lint directed by owners; changed public e2e checked below."
+  },
+  {
+    "name": "new-e2e-lint",
+    "command": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "packages/library-lab/e2e/quality-remediation-motion-for-react.spec.ts",
+      "packages/library-lab/e2e/quality-remediation-gsap.spec.ts",
+      "packages/library-lab/e2e/quality-remediation-react-spring.spec.ts",
+      "packages/library-lab/e2e/quality-remediation-dotlottie.spec.ts",
+      "packages/library-lab/e2e/quality-remediation-rive.spec.ts",
+      "packages/library-lab/e2e/quality-remediation-ant-design.spec.ts",
+      "packages/library-lab/e2e/quality-remediation-mantine.spec.ts",
+      "packages/library-lab/e2e/quality-remediation-ui-sources.spec.ts",
+      "packages/library-lab/e2e/native-visibility-browser.ts",
+      "packages/library-lab/src/lib/official-sources.mjs",
+      "packages/library-lab/tests/official-sources.test.mjs"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-10T13:28:01.647216+00:00",
+    "finishedAt": "2026-11-10T13:28:01.900638+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-10/new-e2e-lint.txt"
+  },
+  {
+    "name": "typecheck",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "typecheck"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-10T13:28:01.901113+00:00",
+    "finishedAt": "2026-11-10T13:28:03.820966+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-10/typecheck.txt"
+  },
+  {
+    "name": "build",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "build"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-10T13:28:03.821488+00:00",
+    "finishedAt": "2026-11-10T13:28:11.664760+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-10/build.txt"
+  },
+  {
+    "name": "catalog",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "catalog:check"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-10T13:28:11.665355+00:00",
+    "finishedAt": "2026-11-10T13:28:12.099081+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-10/catalog.txt"
+  }
+]

@@ -5,14 +5,7 @@
   "name": "Comlink",
   "group": "D",
   "summary": "Web Worker RPC、Transferable 数据传递、回调代理与资源释放",
-  "tags": [
-    "Worker",
-    "RPC",
-    "异步",
-    "性能",
-    "Transferable",
-    "生命周期"
-  ],
+  "tags": ["Worker", "RPC", "异步", "性能", "Transferable", "生命周期"],
   "contentState": "recreated",
   "packages": [
     {
@@ -54,51 +47,54 @@
   "demos": [
     {
       "demoId": "basic",
-      "title": "模块 Worker 跨线程 RPC",
-      "description": "分析数组频数，结果通过 Comlink Remote 返回",
+      "title": "真实 RPC 与用户输入",
+      "description": "安全统计字符串频数，保留特殊对象键为数据",
       "level": "basic",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
         "examples/demo.tsx",
-        "examples/worker.ts"
+        "examples/worker.ts",
+        "examples/worker-api.ts",
+        "examples/session-policy.mjs",
+        "examples/session-policy.d.mts"
       ],
-      "capabilities": [
-        "worker"
-      ]
+      "capabilities": ["worker"]
     },
     {
       "demoId": "business",
-      "title": "4000 条数据分析任务",
-      "description": "把计算移动到 Worker，不阻塞主线程UI",
+      "title": "远端输入校验与失败恢复",
+      "description": "非法数组触发真实远端TypeError，修正输入后重跑",
       "level": "business",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
         "examples/demo.tsx",
-        "examples/worker.ts"
+        "examples/worker.ts",
+        "examples/worker-api.ts",
+        "examples/session-policy.mjs",
+        "examples/session-policy.d.mts"
       ],
-      "capabilities": [
-        "worker"
-      ]
+      "capabilities": ["worker"]
     },
     {
       "demoId": "advanced",
-      "title": "Transferable、进度回调及终止",
-      "description": "发送 Uint8Array 所有权、Comlink.proxy回调、释放proxy",
+      "title": "转移所有权、回调与终止",
+      "description": "发送方buffer分离、真实代理回调、释放请求和物理终止",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
         "examples/demo.tsx",
-        "examples/worker.ts"
+        "examples/worker.ts",
+        "examples/worker-api.ts",
+        "examples/session-policy.mjs",
+        "examples/session-policy.d.mts"
       ],
-      "capabilities": [
-        "worker"
-      ]
+      "capabilities": ["worker"]
     }
   ],
   "license": {
@@ -108,6 +104,26 @@
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
     "mode": "recreated",
-    "note": "按 Comlink 4.4.2 官方 expose/wrap/transfer/releaseProxy 重写；仍待运行"
+    "note": "按固定4.4.2官方源码整改，真实Node Worker与浏览器验收分开；正式收据另记。"
+  },
+  "official": {
+    "readme": {
+      "repository": "GoogleChromeLabs/comlink",
+      "commit": "fd4b52666b1ec62784f8b45cb1108c7e40bc481d",
+      "path": "README.md",
+      "sourceUrl": "https://github.com/GoogleChromeLabs/comlink/blob/fd4b52666b1ec62784f8b45cb1108c7e40bc481d/README.md",
+      "snapshotPath": "official/readme.md",
+      "sha256": "cfd4281d28ea8268122ce3a885688c725f436fe12f4eb4f308242f130487af56",
+      "language": "en",
+      "version": "4.4.2",
+      "syncedAt": "2026-11-17T17:00:30.291542+00:00"
+    },
+    "homepage": {
+      "url": "https://github.com/GoogleChromeLabs/comlink",
+      "kind": "repository",
+      "status": "blocked",
+      "checkedAt": "2026-11-17T17:00:30.291542+00:00",
+      "reason": "官方仓库实际GET响应头含X-Frame-Options deny与frame-ancestors none；保留直达入口，原始头见official/homepage-headers.txt。"
+    }
   }
 }

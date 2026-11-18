@@ -1,14 +1,14 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "真实 SDK 定向测试待依赖安装与执行，测试文件存在不等于通过"
+    "note": "本地真实SDK8与纯policy2分别exit0，直接共享页面日期/墙上时间合同；宿主版本在sdk.txt。没有正式收据，status仍NOT_RUN。"
   },
   "build": {
     "status": "NOT_RUN",
-    "note": "本条目新增后应用构建尚未执行"
+    "note": "入口定向strict0，candidate18公共type/build/catalog0可复用且运行源未改；不是本库独立正式build收据。"
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "真实浏览器交互和时区环境矩阵尚未执行"
+    "note": "本地固定candidate18三目标3PASS，candidate19原始browser.txt中C16原文/unknown展示单项PASS；19整批11PASS1FAIL/exit1不记全命令PASS。九源不变/e11两P2 delta已关闭；iframe仍unknown，非正式收据，status NOT_RUN。"
   }
 }

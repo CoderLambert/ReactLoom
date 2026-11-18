@@ -1,0 +1,231 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=pnpm exec playwright test --config=.local-evidence/quality-playwright.config.ts e2e/quality-remediation-base-ui.spec.ts e2e/quality-remediation-radix-primitives.spec.ts e2e/quality-remediation-react-aria.spec.ts e2e/quality-remediation-pragmatic.spec.ts e2e/quality-remediation-primitives-sources.spec.ts
+
+Running 16 tests using 2 workers
+
+(node:1553393) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1553394) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 e2e/quality-remediation-base-ui.spec.ts:43:1 › @B10 label clicks and real Space update the SDK control and native input without a duplicate Tab stop (1.9s)
+  ✓   2 e2e/quality-remediation-base-ui.spec.ts:66:1 › @B10 mixed parent and three real input values produce native FormData and Enter submits without toggling (2.1s)
+  ✓   4 e2e/quality-remediation-pragmatic.spec.ts:46:1 › @B14 native trusted handle drag uses actual adapters and stable row DOM, with keyboard fallback (1.9s)
+  ✓   5 e2e/quality-remediation-pragmatic.spec.ts:69:1 › @B14 pinned slots reject source destination and crossing for actual pointer and keyboard (2.0s)
+  ✓   6 e2e/quality-remediation-pragmatic.spec.ts:88:1 › @B14 two actual scopes isolate foreign drops and cleanup old registered rows on stop (2.9s)
+  ✓   7 e2e/quality-remediation-primitives-sources.spec.ts:9:3 › @B10 original fixed README and evidenced homepage unknown (1.8s)
+  ✓   8 e2e/quality-remediation-primitives-sources.spec.ts:9:3 › @B11 original fixed README and evidenced homepage unknown (1.8s)
+  ✓   9 e2e/quality-remediation-primitives-sources.spec.ts:9:3 › @B12 original fixed README and evidenced homepage blocked (1.8s)
+  ✓  10 e2e/quality-remediation-primitives-sources.spec.ts:9:3 › @B14 original fixed README and evidenced homepage unknown (1.8s)
+  ✘  11 e2e/quality-remediation-radix-primitives.spec.ts:29:1 › @B11 actual asChild Trigger, native keyboard typeahead, local action and close focus (6.6s)
+(node:1555030) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  12 e2e/quality-remediation-radix-primitives.spec.ts:63:1 › @B11 controlled checkbox and radio update actual row order while preserving the real menu (6.7s)
+(node:1555463) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   3 e2e/quality-remediation-base-ui.spec.ts:98:1 › @B10 lock removes stale authority, disables the actual input and leaves a complete eligible subset (30.1s)
+(node:1555657) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  14 e2e/quality-remediation-react-aria.spec.ts:27:1 › @B12 real keyboard selection submits key and edited text cannot reuse the old identity (1.9s)
+  ✘  13 e2e/quality-remediation-radix-primitives.spec.ts:95:1 › @B11 real nested portals, disabled skip, filtered deletion fallback and SPA teardown (7.0s)
+(node:1555956) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  15 e2e/quality-remediation-react-aria.spec.ts:64:1 › @B12 category filtering exposes disabled options, skips them on keyboard and has a real empty list (6.8s)
+  ✘  16 e2e/quality-remediation-react-aria.spec.ts:100:1 › @B12 real delayed suggestions align with latest query, form guard and open-Popover unmount (7.9s)
+
+
+  1) e2e/quality-remediation-base-ui.spec.ts:98:1 › @B10 lock removes stale authority, disables the actual input and leaves a complete eligible subset 
+
+    Test timeout of 30000ms exceeded.
+
+    Error Context: test-results/quality-remediation-base-u-71d2e--a-complete-eligible-subset/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-remediation-base-u-71d2e--a-complete-eligible-subset/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-remediation-base-u-71d2e--a-complete-eligible-subset/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) e2e/quality-remediation-radix-primitives.spec.ts:29:1 › @B11 actual asChild Trigger, native keyboard typeahead, local action and close focus 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('menu', { name: '更多操作', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('menu', { name: '更多操作', exact: true }) with timeout 5000ms
+      - waiting for getByRole('menu', { name: '更多操作', exact: true })
+
+
+      23 |   await app.getByTestId('b11-trigger').focus()
+      24 |   await page.keyboard.press('ArrowDown')
+    > 25 |   await expect(menu(page)).toBeVisible()
+         |                            ^
+      26 |   return menu(page)
+      27 | }
+      28 |
+        at show (/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-radix-primitives.spec.ts:25:28)
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-radix-primitives.spec.ts:38:19
+
+    Error Context: test-results/quality-remediation-radix--c72f7-ocal-action-and-close-focus/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-remediation-radix--c72f7-ocal-action-and-close-focus/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-remediation-radix--c72f7-ocal-action-and-close-focus/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) e2e/quality-remediation-radix-primitives.spec.ts:63:1 › @B11 controlled checkbox and radio update actual row order while preserving the real menu 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('menu', { name: '更多操作', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('menu', { name: '更多操作', exact: true }) with timeout 5000ms
+      - waiting for getByRole('menu', { name: '更多操作', exact: true })
+
+
+      23 |   await app.getByTestId('b11-trigger').focus()
+      24 |   await page.keyboard.press('ArrowDown')
+    > 25 |   await expect(menu(page)).toBeVisible()
+         |                            ^
+      26 |   return menu(page)
+      27 | }
+      28 |
+        at show (/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-radix-primitives.spec.ts:25:28)
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-radix-primitives.spec.ts:70:19
+
+    Error Context: test-results/quality-remediation-radix--cf6a2-le-preserving-the-real-menu/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-remediation-radix--cf6a2-le-preserving-the-real-menu/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-remediation-radix--cf6a2-le-preserving-the-real-menu/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) e2e/quality-remediation-radix-primitives.spec.ts:95:1 › @B11 real nested portals, disabled skip, filtered deletion fallback and SPA teardown 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('menu', { name: '更多操作', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('menu', { name: '更多操作', exact: true }) with timeout 5000ms
+      - waiting for getByRole('menu', { name: '更多操作', exact: true })
+
+
+      23 |   await app.getByTestId('b11-trigger').focus()
+      24 |   await page.keyboard.press('ArrowDown')
+    > 25 |   await expect(menu(page)).toBeVisible()
+         |                            ^
+      26 |   return menu(page)
+      27 | }
+      28 |
+        at show (/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-radix-primitives.spec.ts:25:28)
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-radix-primitives.spec.ts:104:17
+
+    Error Context: test-results/quality-remediation-radix--608d0-n-fallback-and-SPA-teardown/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-remediation-radix--608d0-n-fallback-and-SPA-teardown/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-remediation-radix--608d0-n-fallback-and-SPA-teardown/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) e2e/quality-remediation-react-aria.spec.ts:64:1 › @B12 category filtering exposes disabled options, skips them on keyboard and has a real empty list 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByRole('option')
+    Expected: 0
+    Received: 1
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByRole('option') with timeout 5000ms
+      - waiting for getByRole('option')
+        14 × locator resolved to 1 element
+           - unexpected value "1"
+
+
+      88 |   await combo.fill('ZZ_NO_MATCH')
+      89 |   await expect(page.getByRole('listbox')).toBeVisible()
+    > 90 |   await expect(page.getByRole('option')).toHaveCount(0)
+         |                                          ^
+      91 |   await expect(page.getByText('暂无匹配频道', { exact: true })).toBeVisible()
+      92 |   await combo.press('Escape')
+      93 |   await expect(page.getByRole('listbox')).toHaveCount(0)
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-react-aria.spec.ts:90:42
+
+    Error Context: test-results/quality-remediation-react--b3b88-d-and-has-a-real-empty-list/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-remediation-react--b3b88-d-and-has-a-real-empty-list/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-remediation-react--b3b88-d-and-has-a-real-empty-list/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) e2e/quality-remediation-react-aria.spec.ts:100:1 › @B12 real delayed suggestions align with latest query, form guard and open-Popover unmount 
+
+    Error: expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "busy": false,
+    -   "resolvedQuery": "React",
+    +   "resolvedQuery": "",
+      }
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      139 |   await expect
+      140 |     .poll(async () => (await state(app)).query)
+    > 141 |     .toMatchObject({ busy: false, resolvedQuery: 'React' })
+          |      ^
+      142 |   await combo.scrollIntoViewIfNeeded()
+      143 |   const pop = page.locator('.rl-aria-popover')
+      144 |   await expect(pop).toBeVisible()
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-react-aria.spec.ts:141:6
+
+    Error Context: test-results/quality-remediation-react--c90c1-rd-and-open-Popover-unmount/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-remediation-react--c90c1-rd-and-open-Popover-unmount/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-remediation-react--c90c1-rd-and-open-Popover-unmount/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6 failed
+    e2e/quality-remediation-base-ui.spec.ts:98:1 › @B10 lock removes stale authority, disables the actual input and leaves a complete eligible subset 
+    e2e/quality-remediation-radix-primitives.spec.ts:29:1 › @B11 actual asChild Trigger, native keyboard typeahead, local action and close focus 
+    e2e/quality-remediation-radix-primitives.spec.ts:63:1 › @B11 controlled checkbox and radio update actual row order while preserving the real menu 
+    e2e/quality-remediation-radix-primitives.spec.ts:95:1 › @B11 real nested portals, disabled skip, filtered deletion fallback and SPA teardown 
+    e2e/quality-remediation-react-aria.spec.ts:64:1 › @B12 category filtering exposes disabled options, skips them on keyboard and has a real empty list 
+    e2e/quality-remediation-react-aria.spec.ts:100:1 › @B12 real delayed suggestions align with latest query, form guard and open-Popover unmount 
+  10 passed (45.8s)
+
+exitCode=1

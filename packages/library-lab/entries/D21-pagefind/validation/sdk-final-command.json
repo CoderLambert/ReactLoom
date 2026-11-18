@@ -1,0 +1,10 @@
+{
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "argv": [
+    "node",
+    "--test",
+    "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/D21-pagefind/tests/sdk.test.mjs"
+  ],
+  "exitCode": 0,
+  "at": "2026-11-17T17:12:03.719318+00:00"
+}

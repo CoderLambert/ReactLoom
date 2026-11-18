@@ -1,0 +1,7 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: git ls-remote --tags https://github.com/konvajs/react-konva.git *19.3.2*
+exit: 0
+d4404cdd652cc204e26208d41fa22315b782a1dd refs/tags/v19.3.2
+c89132f5c9ac5a47db1c7c6b6fd1012452df2e01 refs/tags/v19.3.2^{}
+
+Python urllib fetched full pinned tree truncated=false, two README candidates; fixed package.json version19.3.2. Raw README 5846 bytes and SHA d68e0efcca393b46e93a75b673d3a91e880b17f9de8760ba29fb65be93fbae7b; installed README bytes independently equal. Homepage GET headers only exit0, status200, XFO SAMEORIGIN. Complete headers saved separately.

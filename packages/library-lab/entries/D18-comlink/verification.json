@@ -1,14 +1,14 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "等待 comlink 4.4.2 Node MessagePort 实测"
+    "note": "本地sdk证据见local-validation.md及candidate-27；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
   },
   "build": {
     "status": "NOT_RUN",
-    "note": "待 Vite module worker 产物和 tsc"
+    "note": "本地build证据见local-validation.md及candidate-27；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "待 Chromium RPC/transfer/terminate/CSP"
+    "note": "本地browser证据见local-validation.md及candidate-27；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
   }
 }

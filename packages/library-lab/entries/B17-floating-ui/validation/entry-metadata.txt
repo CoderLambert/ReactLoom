@@ -1,0 +1,53 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+ARGV: ["node", "--input-type=module"]
+START: 2026-11-10T10:37:07.810577+00:00
+END: 2026-11-10T10:37:07.836315+00:00
+STDIN:
+import assert from 'node:assert/strict'
+import {readFileSync,existsSync,realpathSync} from 'node:fs'
+import {resolve,dirname} from 'node:path'
+import {createHash} from 'node:crypto'
+import {validateEntry} from './src/lib/catalog.mjs'
+import {entryCompletenessIssues} from './scripts/entry-gate.mjs'
+const root=resolve('entries/B17-floating-ui')
+const read=(name)=>JSON.parse(readFileSync(resolve(root,name),'utf8'))
+const entry=read('library.json'),evidence=read('official/source-evidence.json')
+assert.deepEqual(validateEntry(entry),[])
+assert.deepEqual(entryCompletenessIssues(entry,{guide:existsSync(resolve(root,'guide.md')),agent:existsSync(resolve(root,'agent.md')),agents:existsSync(resolve(root,'AGENTS.md')),verification:existsSync(resolve(root,'verification.json'))}),[])
+assert.deepEqual(entry.demos.map(d=>d.level),['basic','business','advanced'])
+const files=[...new Set(entry.demos.flatMap(d=>d.sourceFiles))]
+for(const file of files){
+ assert(existsSync(resolve(root,file)),file)
+ for(const match of readFileSync(resolve(root,file),'utf8').matchAll(/(?:from\s+|import\s*)['"](\.[^'"]+)['"]/gu)){
+  const base=resolve(dirname(resolve(root,file)),match[1]);const target=[base,...['.ts','.tsx','.css'].map(ext=>base+ext)].find(f=>existsSync(f))
+  assert(target,file+':'+match[1]);assert(files.some(f=>resolve(root,f)===target),'unpublished '+match[1])
+ }
+}
+const raw=readFileSync(resolve(root,entry.official.readme.snapshotPath))
+const sha=createHash('sha256').update(raw).digest('hex')
+assert.equal(sha,entry.official.readme.sha256);assert.equal(raw.length,4922)
+assert.equal(evidence.packageVersion,'0.27.20');assert.equal(entry.official.readme.commit,'12d94738472e922e1b3fa31b02b2b61b9ed77e6a')
+assert.equal(evidence.homepagePolicyHeaders['x-frame-options'],null);assert.equal(evidence.homepagePolicyHeaders['content-security-policy'],null)
+assert.equal(entry.official.homepage.status,'unknown');assert.equal(evidence.browserFromLabOrigin,'NOT_RUN')
+for(const r of evidence.requests)assert.equal(r.status,200,r.url)
+for(const v of Object.values(read('verification.json')))assert.equal(v.status,'NOT_RUN')
+const installed=JSON.parse(readFileSync('node_modules/@floating-ui/react/package.json','utf8'))
+assert.equal(installed.version,'0.27.20')
+assert(existsSync(resolve(root,'validation/browser-proposal.txt')))
+console.log(JSON.stringify({entryId:entry.entryId,demos:entry.demos.length,runtimeFiles:files.length,installed:installed.version,packagePath:realpathSync('node_modules/@floating-ui/react/package.json'),readmeBytes:raw.length,sha256:sha,homepage:'unknown',formalVerification:'NOT_RUN'},null,2))
+
+EXIT: 0
+STDOUT:
+{
+  "entryId": "B17",
+  "demos": 3,
+  "runtimeFiles": 6,
+  "installed": "0.27.20",
+  "packagePath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@floating-ui+react@0.27.20_react-dom@19.3.0_react@19.3.0__react@19.3.0/node_modules/@floating-ui/react/package.json",
+  "readmeBytes": 4922,
+  "sha256": "b352baf175998877bad6168b0e55cf887690ede7a85acdfea344de996744d123",
+  "homepage": "unknown",
+  "formalVerification": "NOT_RUN"
+}
+
+STDERR:

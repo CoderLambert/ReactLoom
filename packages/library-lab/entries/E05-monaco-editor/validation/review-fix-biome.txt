@@ -1,0 +1,6 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom
+command: ["pnpm", "exec", "biome", "check", "packages/library-lab/entries/E05-monaco-editor/examples/example.tsx"]
+checkedAt: 2026-11-10T09:33:29.468701+00:00
+Checked 1 file in 8ms. No fixes applied.
+
+exitCode: 0

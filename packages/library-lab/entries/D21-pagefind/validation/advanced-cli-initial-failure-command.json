@@ -1,0 +1,9 @@
+{
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "argv": [
+    "node",
+    "packages/library-lab/entries/D21-pagefind/examples/advanced.mjs"
+  ],
+  "exitCode": 1,
+  "at": "2026-11-17T17:09:02.501183+00:00"
+}

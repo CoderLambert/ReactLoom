@@ -1,0 +1,9 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["python", "packages/library-lab/entries/C19-nuqs/validation/source-tool-transport-fixture.py"], "utc": "2026-11-10T18:02:09.422371+00:00", "exit": 0}
+test_first_failure_preserves_previous_success_pair (__main__.TransferTests.test_first_failure_preserves_previous_success_pair) ... ok
+test_homepage_failure_after_readme_preserves_previous_success_pair (__main__.TransferTests.test_homepage_failure_after_readme_preserves_previous_success_pair) ... ok
+test_success_preserves_repeated_headers (__main__.TransferTests.test_success_preserves_repeated_headers) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.007s
+
+OK

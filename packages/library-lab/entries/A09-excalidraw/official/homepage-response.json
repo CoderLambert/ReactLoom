@@ -1,0 +1,28 @@
+{
+  "checkedAt": "2026-11-10T11:40:20.268200+00:00",
+  "requestedUrl": "https://docs.excalidraw.com",
+  "finalUrl": "https://plus.excalidraw.com/docs/sdk",
+  "method": "GET",
+  "status": 200,
+  "headers": {
+    "Accept-Ranges": "bytes",
+    "Access-Control-Allow-Origin": "*",
+    "Age": "29256",
+    "Cache-Control": "public, max-age=0, must-revalidate",
+    "Content-Disposition": "inline; filename=\"sdk\"",
+    "Content-Length": "99217",
+    "Content-Type": "text/html; charset=utf-8",
+    "Date": "Tue, 10 Nov 2026 11:40:25 GMT",
+    "Etag": "\"8b566fcf3d67130358b7a483697a30a7\"",
+    "Last-Modified": "Tue, 10 Nov 2026 03:32:49 GMT",
+    "Server": "Vercel",
+    "Strict-Transport-Security": "max-age=63072000",
+    "X-Vercel-Cache": "HIT",
+    "X-Vercel-Id": "sin1::gclzm-1794310825582-bc7424447b85",
+    "Connection": "close"
+  },
+  "xFrameOptions": null,
+  "contentSecurityPolicy": null,
+  "browserFromLabOrigin": "NOT_RUN",
+  "bodyRead": false
+}

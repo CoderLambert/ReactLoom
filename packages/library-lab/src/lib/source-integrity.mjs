@@ -11,6 +11,13 @@ export function sourceTextPath(relative) {
   return `${relative}.txt`
 }
 
+/** Encode a validated public pathname. Keep legal path characters such as @:
+ * Vite's static server uses decodeURI, which preserves their percent escapes. */
+export function encodePublishedPath(relative) {
+  if (!safeRelativePath(relative)) throw new Error('Unsafe published path')
+  return encodeURI(relative)
+}
+
 /** Fail closed on stale/incomplete source indexes rather than displaying a
  * different version or silently omitting declared source files. */
 export function validateSourceIndex(value, requestedPaths) {

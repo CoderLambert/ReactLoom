@@ -1,0 +1,77 @@
+# A17 deck.gl 本地质量整改记录
+
+当前检查点：**STABLE，停止条目写入，交主控独立复核与真实浏览器验收**。正式 `verification.json` 三项仍为 `NOT_RUN`。本记录不代替公共 verification 收据。
+
+## 范围与基线
+
+- 实际仓库：`/home/lambert/githubRepos/lambert/ReactLoom`；检查 cwd：`/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab`。
+- 基线 HEAD：`1218066e706a90ba03fac8dff8c9b843dd2429c4`；开始时本条目没有已有 diff，原 9 文件按相对路径排序、路径 NUL / 原文 NUL 的 SHA-256：`9d7b4e4c292f9c71b17495ad3edbfc0a03252e94b7a513d9de5ec8f169d6d90f`。
+- 独占 `entries/A17-deckgl/**`；保留其它工作者成果，没有修改共享源码、公共测试、依赖、锁、索引、队列或 results，没有提交/推送。没有运行全目录 generate/typecheck/build，也没有启动或重建浏览器候选。
+- 依照 root/package/entry AGENTS、COORDINATION/IMPLEMENTATION/REPAIR、质量 roadmap 与 library-lab-quality skill 三份 references 执行。保留原三个 level、原来源与 recreated/summary-only 事实。
+
+## 六项结论
+
+| 项目 | 状态 | 已有证据与边界 |
+| --- | --- | --- |
+| 技术正确 | PASS（源码、类型、局部真实 Node SDK） | 使用实际 core/layers 9.4.0 的 Deck / ScatterplotLayer；稳定 layer id 与 getRadius updateTriggers；真实 SDK 描述符及投影 2 项。GPU 初始化、绘制和拾取尚待 browser。 |
+| 讲解清楚 | PASS（静态） | 中文 guide/agent 按输入、操作、真实 API、观察结果、迁移文件、限制说明三个目标；实例数不等于可见点数/FPS。 |
+| Demo 可运行 | NOT_RUN（真实图形） | 入口定向类型通过；真实 onLoad 才置 ready，onAfterRender 读取当前 SDK layer/attribute/viewport。未把构造成功或 Node 测试当 GPU PASS。 |
+| 源码可迁移 | PASS（静态、类型） | 每个 demo 列出 6 个实际文件：example、demo 适配、数据、图层、尺寸策略和 CSS；业务组件没有 Lab 导入。 |
+| 官方资料完整 | PASS（原文/来源核对） | 固定 v9.4.0 commit，主包 README 109 字节原文、layers 与项目 README 分别保存；完整候选清单、完整官网响应头；主页 unknown 符合未测 iframe 的事实。 |
+| 结果可复核 | NOT_RUN（浏览器结果） | 有原始命令、退出码及日志，SDK 与 policy 分开；3 个完整浏览器提案未执行，不用模拟图或截图替代结果。 |
+
+## 三个目标和实现
+
+1. basic：2 个站点由真实 ScatterplotLayer 绘制；实际 viewport 投影辅助定位真实 GPU tooltip / click，DOM 表格键盘选择独立可用。
+2. business：4 点过滤为 3 个健康点；半径 0.5–3 经 getRadius/updateTriggers 更新真实 attribute，过滤掉的选择清除；复用同一 Deck canvas。
+3. advanced：额外 1200 个确定性 fixture 加 4 个站点为 1204；健康过滤为 903。GPU 接收全量数据，DOM 每页 12 行可访问全部数据，分别 101 / 76 页；重置、尺寸变化、停止卸载、重新运行可观察。
+
+保留无底图架构，不请求瓦片、地理编码或模型服务。选中状态只展示在 DOM，没有假称 GPU 选中色。删除额外 WebGL 探测 context，实际 Deck 创建 WebGL device；onError 真实显示，表格可继续操作。effect 拥有 Deck / ResizeObserver / rAF，卸载仅 finalize 当前实例。`data-a17-cleanup` 读取 finalize 后真实 isInitialized/getCanvas/宿主 canvas 数；不声称它能证明 GPU 内存已归还。JSON 诊断取自当前 SDK layer、attribute 与 viewport，未用期望对象替代渲染结果；不在 onAfterRender 内发起 picking，避免拾取渲染递归。
+
+## 官方来源
+
+实际安装 `@deck.gl/core` / `@deck.gl/layers` 均为 **9.4.0，MIT**。当前实现使用 imperative Deck，未声明或依赖 `@deck.gl/react`；它未安装是预期事实，未为本条目增加依赖。API 同时核对安装的源码/类型与固定官方 tag，包括 Deck onLoad/onAfterRender/finalize、Layer getCurrentLayer/getNumInstances/getAttributeManager、ScatterplotLayer getRadius 及 WebMercatorViewport project/unproject。
+
+仓库 `visgl/deck.gl`，annotated tag `v9.4.0` 指向 `52b292f5663481352927c16434f37c8bf77c44d2`，解引用 commit **`5eded84b438eef83387dc6579c51670389053602`**。完整 Git tree `truncated=false`，README 候选实际检查且未发现上游中文 README；英文原文没有翻译覆盖。同步时间 `2026-11-10T12:20:16.855358+00:00`，详细候选/path/version/lang/time/hash 在 `official/source-audit.json`。
+
+| 保存文件 | 固定上游路径 | 字节 / SHA-256 |
+| --- | --- | --- |
+| official/readme.md | modules/core/README.md | 109 / df90ebef147aced59f88c5c87aa9dee9c9e53a5b189b93d255ecc147b62782ba |
+| official/layers-readme.md | modules/layers/README.md | 113 / d33f52f0f2047b6788547c0625a0740298b86f207d52f9be9c15e97cfb8dfad5 |
+| official/project-readme.md | README.md | 4958 / 4d392d6787f920f1181751dba014f520f021e4da40b0eb325d8f00a4c78524df |
+
+主包 README 原本就是短指针，额外两份分别保存完整原文，没有拼接冒充主包原文。第一轮来源获取已成功下载原文，随后官网 TLS EOF；原始失败留在 `validation/official-fetch-initial.txt`。官网重试于 `2026-11-10T12:26:07.723979+00:00` 收到 `https://deck.gl/` HTTP 200，完整响应头见 `official/homepage-response.json`，X-Frame-Options / CSP 字段均为 null（该次响应没有该头）。未从 Lab origin 真实打开 iframe，状态仍 **unknown**，不能据缺少头声称 allowed。该次只读取 headers，没有抓官网 body 冒充 README。
+
+## 实际检查
+
+下列 cwd 均为 `/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab`。日志包含精确命令、退出码和原始结果。格式修正未改变测试语义，因此复用已通过的 SDK/policy/type 结果，没有重复有效套件。
+
+| 命令 | exit / 结果 | 日志 |
+| --- | --- | --- |
+| `node --test entries/A17-deckgl/tests/sdk.test.mjs` | 0，2/2 | validation/sdk.txt |
+| `node --test entries/A17-deckgl/tests/deck-size.test.mts entries/A17-deckgl/tests/deck-data.test.mts` | 0，6/6 policy | validation/policy.txt |
+| `pnpm exec tsc --ignoreConfig --noEmit --target es2022 --module esnext --moduleResolution bundler --jsx react-jsx --strict --skipLibCheck --esModuleInterop --types vite/client,node entries/A17-deckgl/examples/demo.tsx` | 0 | validation/typecheck.txt |
+| `pnpm exec biome check --write entries/A17-deckgl/examples entries/A17-deckgl/tests entries/A17-deckgl/validation/check-entry.mjs entries/A17-deckgl/library.json entries/A17-deckgl/verification.json entries/A17-deckgl/official/source-audit.json entries/A17-deckgl/official/homepage-response.json` | 0，14 文件 | validation/biome.txt |
+| `git diff --check -- entries/A17-deckgl` | 0 | validation/diff-check.txt |
+| `node entries/A17-deckgl/validation/check-entry.mjs` | 0，metadata、3 demo、6 source path、原文 hash | validation/metadata.txt |
+| `pnpm exec biome format --stdin-file-path=entries/A17-deckgl/validation/browser-proposal.ts < entries/A17-deckgl/validation/browser-proposal.txt` | 0 | validation/proposal-format.txt |
+| `pnpm exec tsc --ignoreConfig --noEmit --target es2022 --module esnext --moduleResolution bundler --strict --skipLibCheck --types node entries/A17-deckgl/validation/.browser-proposal-check.ts` | 0；临时同内容 .ts 已删除 | validation/proposal-typecheck.txt |
+
+真实 Node SDK 仅构造生产 ScatterplotLayer 描述符并调用访问器，以及 WebMercatorViewport 投影/逆投影；特意确认未初始化 layer 的 isLoaded=false。没有 new Deck、WebGL、GPU buffer、拾取或 browser PASS。6 个纯策略检查覆盖尺寸边界、样本唯一身份/有限坐标/903 数量、完整分页与收缩，不当地图验收。
+
+## 浏览器交接与未测
+
+`validation/browser-proposal.txt` 为可接入的完整 Playwright 源码，已独立类型检查，包含三个目标，没有 SDK mock、page.route 伪响应或截图替代结果。根路由 `/libraries/deckgl?tab=demo&example=basic|business|advanced`。控件：`查看真实图层、属性和投影`、`仅看健康站点`、`半径倍数`、`添加1200个本地数据点`、`重置数据`、`上一页/下一页`；table 选择按钮 `选择北京/选择天津`。testid：`a17-workshop`、`a17-canvas`、`a17-sdk-state`、`a17-table`、`a17-page`、`a17-radius`、`a17-error`。实际 SDK tooltip 类 `.deck-tooltip` 已对照安装源码。
+
+尚未执行：真实 Deck 初始化/绘制、GPU picking 与 tooltip、真实 buffer 更新、重渲染/尺寸与 finalize 浏览器行为、屏幕阅读器/触摸、GPU 内存与 FPS、官网 iframe。交主控冻结候选后统一执行；硬件错误应按真实错误报告，不静默跳过或模拟 GPU。未运行全目录 build 或公共 e2e，正式 verification 维持 NOT_RUN。
+
+## 变动文件
+
+修改 guide.md、agent.md、library.json、verification.json；examples/example.tsx 与原 demo/deck-size 格式；tests/deck-size.test.mts 格式。新增 examples/deck-data.ts、deck-layer.ts、styles.css，tests/sdk.test.mjs、deck-data.test.mts，official/ 三份原文与来源/官网头证据，validation/ 定向脚本、原始 txt 日志、浏览器提案，本 local-validation.md。
+
+
+## 主控本地运行闭环
+
+candidate-09的2028输入稳定，new-e2e lint/typecheck/build/catalog exit0，独立review处置后全部本库真实browser场景通过。
+
+逐库最终结果、完整命令/候选/首次失败与定向重跑/独立报告见[结果](../../../../openspec/roadmaps/upgrade-library-quality/results/A17.md)。本地content_done不替代正式sdk/build/browser，三项仍NOT_RUN；SSR/dev重放/触控读屏/跨浏览器/性能等未由本次结果推定。

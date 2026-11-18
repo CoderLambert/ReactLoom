@@ -1,0 +1,8 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['python3', 'entries/C15-dayjs/validation/source-tool-transport-fixture.py']
+startedAt: 2026-11-10T17:25:17.935242+00:00
+exit: 0
+CONTROLLED SUCCESS: 7 transfers, discovered Chinese source, exact tag/gitHead, truthful development manifest, staged three successful artifacts, duplicate cookie attributes/redaction, homepage NOT_READ.
+CONTROLLED FAILURE 1: previous successful Chinese/English/evidence artifacts byte-identical; only separate failed attempt written.
+CONTROLLED FAILURE 7: previous successful Chinese/English/evidence artifacts byte-identical; only separate failed attempt written.
+3 controlled source-tool scenarios PASS; live successful artifacts unchanged. No external HTTP/SDK/UI/browser receipt.

@@ -1,0 +1,14 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab", "argv": ["pnpm", "exec", "--", "tsc", "--ignoreConfig", "--noEmit", "--target", "ES2022", "--lib", "ES2022,DOM,DOM.Iterable", "--module", "ESNext", "--moduleResolution", "Bundler", "--jsx", "react-jsx", "--strict", "--skipLibCheck", "--esModuleInterop", "--allowImportingTsExtensions", "--types", "vite/client,node", "entries/C03-valibot/examples/demo.tsx"], "start": "2026-11-10T15:03:50.363330+00:00", "end": "2026-11-10T15:03:50.615927+00:00", "exitCode": 1}
+STDOUT
+entries/C03-valibot/examples/schemas.ts(31,7): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type 'CheckAction<unknown, "不存在的公历日期">' is not assignable to parameter of type 'PipeItem<string, string, BaseIssue<unknown>>'.
+      Type 'CheckAction<unknown, "不存在的公历日期">' is not assignable to type 'BaseValidation<string, string, BaseIssue<unknown>>'.
+        The types returned by '["~run"](...)' are incompatible between these types.
+          Type 'OutputDataset<unknown, BaseIssue<unknown> | CheckIssue<unknown>>' is not assignable to type 'OutputDataset<string, BaseIssue<unknown>>'.
+            Type 'PartialDataset<unknown, BaseIssue<unknown> | CheckIssue<unknown>>' is not assignable to type 'OutputDataset<string, BaseIssue<unknown>>'.
+              Type 'PartialDataset<unknown, BaseIssue<unknown> | CheckIssue<unknown>>' is not assignable to type 'PartialDataset<string, BaseIssue<unknown>>'.
+                Type 'unknown' is not assignable to type 'string'.
+entries/C03-valibot/examples/schemas.ts(39,88): error TS18046: 'input.end' is of type 'unknown'.
+
+STDERR

@@ -1,0 +1,168 @@
+{
+  "runs": [
+    {
+      "label": "format",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "format",
+        "--write",
+        "entries/E19-ffmpeg-wasm/examples"
+      ],
+      "exitCode": 0,
+      "log": "validation/format.txt",
+      "logSha256": "170d95716c4dfe5c907adc873da9c5e7f9209aa0d931540d6be647a895d63c08",
+      "timingNote": "Original formatting command/cwd/exit/stdout/stderr recorded; UTC start/end not captured, not inferred from later time and not rerun for a timestamp."
+    },
+    {
+      "label": "biome-initial",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "check",
+        "--write",
+        "entries/E19-ffmpeg-wasm/examples",
+        "entries/E19-ffmpeg-wasm/library.json",
+        "entries/E19-ffmpeg-wasm/verification.json",
+        "entries/E19-ffmpeg-wasm/official/source-evidence.json",
+        "entries/E19-ffmpeg-wasm/validation/baseline.json",
+        "entries/E19-ffmpeg-wasm/validation/resource-prerequisites.json"
+      ],
+      "startedAt": "2026-11-10T10:35:15.271303+00:00",
+      "finishedAt": "2026-11-10T10:35:15.491441+00:00",
+      "exitCode": 1,
+      "log": "validation/biome-initial.txt",
+      "logSha256": "2d29b4274ca37e9c5bd94079aa4a8ba1b5f147eca77529923bb84dcf558cff28"
+    },
+    {
+      "label": "policy",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "node",
+        "--test",
+        "entries/E19-ffmpeg-wasm/examples/input-policy.test.mjs",
+        "entries/E19-ffmpeg-wasm/examples/wav-output-policy.test.mjs"
+      ],
+      "startedAt": "2026-11-10T10:35:54.332990+00:00",
+      "finishedAt": "2026-11-10T10:35:54.405390+00:00",
+      "exitCode": 0,
+      "log": "validation/policy.txt",
+      "logSha256": "d280cbcf6fa9e4949793d14dff97b42f24b12cbeb602918412d3a74b6a437a6b"
+    },
+    {
+      "label": "types",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--target",
+        "ES2022",
+        "--lib",
+        "ES2022,DOM,DOM.Iterable",
+        "--module",
+        "ESNext",
+        "--moduleResolution",
+        "Bundler",
+        "--jsx",
+        "react-jsx",
+        "--strict",
+        "--skipLibCheck",
+        "--esModuleInterop",
+        "--allowSyntheticDefaultImports",
+        "--allowImportingTsExtensions",
+        "--types",
+        "vite/client,node",
+        "entries/E19-ffmpeg-wasm/examples/demo.tsx"
+      ],
+      "startedAt": "2026-11-10T10:35:54.333178+00:00",
+      "finishedAt": "2026-11-10T10:35:54.584406+00:00",
+      "exitCode": 0,
+      "log": "validation/types.txt",
+      "logSha256": "b162f8e29b33d32b6fee1fc905eae137529904bc844a71a6eb0ef23362504db3"
+    },
+    {
+      "label": "metadata",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "node",
+        "--input-type=module",
+        "-e",
+        "import assert from 'node:assert/strict';import {readFile,stat} from 'node:fs/promises';import {createHash} from 'node:crypto';import {validateEntry} from './src/lib/catalog.mjs';import {entryCompletenessIssues} from './scripts/entry-gate.mjs';const root='entries/E19-ffmpeg-wasm/';const e=JSON.parse(await readFile(root+'library.json','utf8'));assert.deepEqual(validateEntry(e),[]);assert.deepEqual(entryCompletenessIssues(e,{guide:true,agent:true,agents:true,verification:true}),[]);for(const f of new Set(e.demos.flatMap(d=>d.sourceFiles)))assert.ok((await stat(root+f)).isFile(),f);const raw=await readFile(root+e.official.readme.snapshotPath);assert.equal(createHash('sha256').update(raw).digest('hex'),e.official.readme.sha256);assert.equal(raw.length,2161);const ev=JSON.parse(await readFile(root+'official/source-evidence.json','utf8'));assert.equal(ev.versionMatch.wrapperAtCommit,'0.12.15');assert.equal(ev.versionMatch.coreAtCommit,'0.12.10');assert.equal(e.official.homepage.status,'unknown');const v=JSON.parse(await readFile(root+'verification.json','utf8'));assert.equal(v.sdk.status,'BLOCKED');assert.equal(v.build.status,'NOT_RUN');assert.equal(v.browser.status,'NOT_RUN');console.log('E19 metadata, three goals, source paths, fixed matching README bytes/hash and blocked formal SDK: PASS (static only)');"
+      ],
+      "startedAt": "2026-11-10T10:35:54.333469+00:00",
+      "finishedAt": "2026-11-10T10:35:54.361997+00:00",
+      "exitCode": 0,
+      "log": "validation/metadata.txt",
+      "logSha256": "5d24cf9f43e60c13125df0dfb1de15333e6fe2fb0c12dd5999483af360841b14"
+    },
+    {
+      "label": "biome",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "check",
+        "entries/E19-ffmpeg-wasm/examples",
+        "entries/E19-ffmpeg-wasm/library.json",
+        "entries/E19-ffmpeg-wasm/verification.json",
+        "entries/E19-ffmpeg-wasm/official/source-evidence.json",
+        "entries/E19-ffmpeg-wasm/validation/baseline.json",
+        "entries/E19-ffmpeg-wasm/validation/resource-prerequisites.json"
+      ],
+      "startedAt": "2026-11-10T10:35:54.333601+00:00",
+      "finishedAt": "2026-11-10T10:35:54.573107+00:00",
+      "exitCode": 0,
+      "log": "validation/biome.txt",
+      "logSha256": "160ba5983a87d8ddf9c598ead7a328d5d866f46519488b2f7d3206814c816040"
+    },
+    {
+      "label": "diff",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "packages/library-lab/entries/E19-ffmpeg-wasm"
+      ],
+      "startedAt": "2026-11-10T10:38:15.732252+00:00",
+      "finishedAt": "2026-11-10T10:38:15.734853+00:00",
+      "exitCode": 0,
+      "log": "validation/diff.txt",
+      "logSha256": "fa39e1b49e4a41ed45143e55fbf4a77047465b921c597bad3a4591dce939e294"
+    }
+  ],
+  "inputFiles": {
+    "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+    "examples/example.tsx": "0d0516e3d2c4128ae36f911c1fa707b433f8c4750dc9f1420d7c88e22c1f65ce",
+    "examples/input-policy.d.mts": "38b228f54342f9284455a19501291503fb355c0823283f31240965bc2a4339ad",
+    "examples/input-policy.mjs": "d0e90133b5ac8575811aab77895d04a1cb6b0281d0befbb1f00c21bf2bf3fe83",
+    "examples/input-policy.test.mjs": "a7336fbb5e1dca43642062c2a12272ccb2e225a671ad3d4e4bb388038470eb9a",
+    "examples/wav-output-policy.d.mts": "119c473c629d99e1a090cd325cb2759256e76c0885cf2e6fe3319ae3e522ab15",
+    "examples/wav-output-policy.mjs": "9bd7c9a8b3246c2d5ef4a0a09a5f8ebb949d06492b3f42fb32dc003256bdbf88",
+    "examples/wav-output-policy.test.mjs": "084e1fa947bde3f2c430a550b4e472dc46425fa9458a677dc2ecd97b56bbec51",
+    "examples/wav.ts": "0f19df8bc776edd969b2f38cd16fe0399f160f49839174c2439e9d66dd0671fb",
+    "examples/workshop.css": "376277fc09474a6464529962cc58428649a33436fa2ba6a5e7082a142dac8e12",
+    "library.json": "43d931d9c746aa9c7c4bf4c85dfd6ce1b5d6e9f6683b5b40f5976a2d1ab912cf",
+    "verification.json": "a5fb1c6b3e0f01b3a94e75a27551d0eaa5b069148c0d34994376e9b6fb3592bd",
+    "official/readme.md": "c658a2af2da82d7b290f7ecb4ff38480594ade43eaed824094fad75bf385b68d"
+  },
+  "environment": {
+    "node": "v26.13.0",
+    "pnpm": "10.33.3"
+  },
+  "readonlyResourceObservation": "validation/resource-prerequisites.json",
+  "actualConversion": "BLOCKED; no SDK conversion command executed"
+}

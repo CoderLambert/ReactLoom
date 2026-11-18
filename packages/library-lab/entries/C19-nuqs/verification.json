@@ -1,14 +1,14 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "待真实 nuqs/server parser测试"
+    "note": "正式NOT_RUN；本地共享真实nuqs parser/loader/serializer6PASS与纯policy6分开，非Router/DOM。未为兼容桥重复已绿6+6，详见local-validation。"
   },
   "build": {
     "status": "NOT_RUN",
-    "note": "PLATFORM 安装目标版本并类型检查"
+    "note": "正式NOT_RUN；本地candidate21匹配8运行源的公共typecheck/build/catalog均exit0，输入changed=[]。这是共享Lab编译，非本条正式recorder收据；详见local-validation。"
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "待 TanStack Router adapter深链接/IME/Back测试"
+    "note": "正式NOT_RUN；本地candidate21真实Chromium三交互目标与官方原文/unknown展示共4PASS，混合命令6PASS/exit0。原三业务断言保留，逻辑host数组/hash另验；旧candidate20三FAIL原样保留。官网iframe本身仍unknown；详见local-validation。"
   }
 }

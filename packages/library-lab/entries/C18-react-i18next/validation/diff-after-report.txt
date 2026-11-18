@@ -1,0 +1,4 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['git', 'diff', '--check', '--', 'entries/C18-react-i18next']
+startedAt: 2026-11-10T17:59:07.768540+00:00
+exit: 0

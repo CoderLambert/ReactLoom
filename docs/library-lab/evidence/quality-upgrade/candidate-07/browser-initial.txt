@@ -1,0 +1,104 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=pnpm exec playwright test --config=.local-evidence/quality-playwright.config.ts e2e/quality-remediation-charts.spec.ts e2e/quality-remediation-chartjs.spec.ts e2e/quality-remediation-uplot.spec.ts e2e/quality-remediation-recharts.spec.ts e2e/quality-remediation-mermaid.spec.ts --grep @A02|@A03|@A04|@A08
+
+Running 16 tests using 2 workers
+
+(node:1091757) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1091756) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 e2e/quality-remediation-chartjs.spec.ts:72:1 › @A03 data updates repaint the same Chart instance and match the actual table (1.7s)
+  ✓   2 e2e/quality-remediation-chartjs.spec.ts:27:1 › @A03 actual Canvas hit and keyboard table selection share real active elements (1.8s)
+  ✓   4 e2e/quality-remediation-charts.spec.ts:8:3 › @A02 official original has pinned provenance and checked homepage (1.7s)
+  ✓   5 e2e/quality-remediation-charts.spec.ts:8:3 › @A03 official original has pinned provenance and checked homepage (1.7s)
+  ✓   3 e2e/quality-remediation-chartjs.spec.ts:91:1 › @A03 type replacement, actual container resize, reduced-motion gating and host teardown (4.0s)
+  ✓   6 e2e/quality-remediation-charts.spec.ts:8:3 › @A04 official original has pinned provenance and checked homepage (1.7s)
+  ✓   7 e2e/quality-remediation-mermaid.spec.ts:12:1 › @A08 flowchart renders actual SVG and deduplication changes source and topology (1.8s)
+  ✓   8 e2e/quality-remediation-mermaid.spec.ts:46:1 › @A08 sequence cache path changes real messages while retaining participants (1.6s)
+  ✓   9 e2e/quality-remediation-mermaid.spec.ts:63:1 › @A08 real parse failure removes prior SVG, rapid recovery and host teardown stay current (2.1s)
+  ✓  10 e2e/quality-remediation-mermaid.spec.ts:94:1 › @A08 original Chinese README has immutable provenance and explicit homepage status (1.7s)
+  ✓  11 e2e/quality-remediation-recharts.spec.ts:26:1 › @A02 basic updates real SVG bars, tooltip and the same-source accessible table (1.7s)
+  ✓  13 e2e/quality-remediation-recharts.spec.ts:78:1 › @A02 advanced range, series toggle, responsive layout and unmount use the actual chart (2.1s)
+  ✓  14 e2e/quality-remediation-uplot.spec.ts:47:1 › @A04 basic real columns use seconds, update the same Canvas and resize the same instance (1.7s)
+  ✘  15 e2e/quality-remediation-uplot.spec.ts:91:1 › @A04 business aligns sparse observations and toggles the real right-axis series (1.5s)
+(node:1093064) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  12 e2e/quality-remediation-recharts.spec.ts:58:1 › @A02 business has two actual bar series and a percent line on the independent axis (6.5s)
+  ✓  16 e2e/quality-remediation-uplot.spec.ts:114:1 › @A04 advanced bounds actual updates, pauses for reduced motion and destroys the real SDK (4.4s)
+
+
+  1) e2e/quality-remediation-recharts.spec.ts:58:1 › @A02 business has two actual bar series and a percent line on the independent axis 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByTestId('a02-workshop').locator('.a02-percentage-axis')
+    Expected substring: "0%"
+    Received string:    ""
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByTestId('a02-workshop').locator('.a02-percentage-axis') with timeout 5000ms
+      - waiting for getByTestId('a02-workshop').locator('.a02-percentage-axis')
+        14 × locator resolved to <g class="recharts-layer recharts-cartesian-axis recharts-yAxis yAxis a02-percentage-axis">…</g>
+           - unexpected value ""
+
+
+      62 |   await expect(app.locator('.a02-saved .recharts-bar-rectangle')).toHaveCount(7)
+      63 |   await expect(app.locator('.a02-rate .recharts-line-curve')).toHaveCount(1)
+    > 64 |   await expect(app.locator('.a02-percentage-axis')).toContainText('0%')
+         |                                                     ^
+      65 |   await expect(app.locator('.a02-percentage-axis')).toContainText('100%')
+      66 |   const first = app.getByTestId('a02-table').locator('tbody tr').first()
+      67 |   await expect(first.locator('td')).toHaveText(['140', '22', '16%'])
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-recharts.spec.ts:64:53
+
+    Error Context: test-results/quality-remediation-rechar-4526f-ine-on-the-independent-axis/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-remediation-rechar-4526f-ine-on-the-independent-axis/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-remediation-rechar-4526f-ine-on-the-independent-axis/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) e2e/quality-remediation-uplot.spec.ts:91:1 › @A04 business aligns sparse observations and toggles the real right-axis series 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('region', { name: 'uPlot 实时数据示例', exact: true }).getByRole('table')
+    Expected substring: "缺失"
+    Error: strict mode violation: getByRole('region', { name: 'uPlot 实时数据示例', exact: true }).getByRole('table') resolved to 2 elements:
+        1) <table class="u-legend u-inline u-live">…</table> aka getByTestId('a04-plot').getByRole('table')
+        2) <table>…</table> aka getByRole('table', { name: '最近五个采样（UTC；Canvas的文字替代）' })
+
+    Call log:
+      - Expect "toContainText" getByRole('region', { name: 'uPlot 实时数据示例', exact: true }).getByRole('table') with timeout 5000ms
+      - waiting for getByRole('region', { name: 'uPlot 实时数据示例', exact: true }).getByRole('table')
+
+
+      102 |   expect(initial?.axisScales).toEqual(['x', 'y', 'errors'])
+      103 |   expect(initial?.axisSides.at(-1)).toBe(1)
+    > 104 |   await expect(region.getByRole('table')).toContainText('缺失')
+          |                                           ^
+      105 |   await region.getByRole('checkbox', { name: '显示错误数', exact: true }).uncheck()
+      106 |   await expect.poll(async () => (await stats(page))?.errorsVisible).toBe(false)
+      107 |   expect((await currentStats(page)).seriesEvents).toBeGreaterThan(initial.seriesEvents)
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-uplot.spec.ts:104:43
+
+    Error Context: test-results/quality-remediation-uplot--9fc79--the-real-right-axis-series/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-remediation-uplot--9fc79--the-real-right-axis-series/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-remediation-uplot--9fc79--the-real-right-axis-series/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    e2e/quality-remediation-recharts.spec.ts:58:1 › @A02 business has two actual bar series and a percent line on the independent axis 
+    e2e/quality-remediation-uplot.spec.ts:91:1 › @A04 business aligns sparse observations and toggles the real right-axis series 
+  14 passed (21.7s)
+
+exitCode=1

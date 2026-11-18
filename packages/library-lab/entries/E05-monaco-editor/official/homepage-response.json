@@ -1,0 +1,33 @@
+{
+  "checkedAt": "2026-11-10T09:18:54.337376+00:00",
+  "requestedUrl": "https://microsoft.github.io/monaco-editor/",
+  "finalUrl": "https://microsoft.github.io/monaco-editor/",
+  "method": "GET",
+  "status": 200,
+  "headers": {
+    "Connection": "close",
+    "Content-Length": "291",
+    "Server": "GitHub.com",
+    "Content-Type": "text/html; charset=utf-8",
+    "Last-Modified": "Sun, 08 Nov 2026 23:12:27 GMT",
+    "Access-Control-Allow-Origin": "*",
+    "Strict-Transport-Security": "max-age=31556952",
+    "ETag": "\"6af101db-123\"",
+    "expires": "Tue, 10 Nov 2026 09:28:54 GMT",
+    "Cache-Control": "max-age=600",
+    "x-proxy-cache": "MISS",
+    "X-GitHub-Request-Id": "52A0:14B7:240E14:2780A9:6AF2E17D",
+    "x-github-edge-region": "sea",
+    "Accept-Ranges": "bytes",
+    "Age": "0",
+    "Date": "Tue, 10 Nov 2026 09:18:54 GMT",
+    "Via": "1.1 varnish",
+    "X-Served-By": "cache-sjc1000122-SJC",
+    "X-Cache": "MISS",
+    "X-Cache-Hits": "0",
+    "X-Timer": "S1794302334.185776,VS0,VE98",
+    "Vary": "Accept-Encoding",
+    "X-Fastly-Request-ID": "325de2222c8cf0d1b7ecc1e1177c634b8f391841"
+  },
+  "browserFromLabOrigin": "NOT_RUN"
+}

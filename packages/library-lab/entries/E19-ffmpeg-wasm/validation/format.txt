@@ -1,0 +1,5 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ["pnpm", "exec", "--", "biome", "format", "--write", "entries/E19-ffmpeg-wasm/examples"]
+exit: 0
+
+Formatted 9 files in 4ms. Fixed 9 files.

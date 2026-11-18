@@ -1,79 +1,190 @@
-import {useEffect, useMemo, useState} from 'react';
-import {validateFeedBoundaries} from './rss-policy.mjs';
-import Ajv from 'ajv';
+import { useEffect, useId, useState } from 'react'
+import { validateFeedBoundaries } from './rss-policy.mjs'
+import { createValidators } from './schemas'
+import './styles.css'
 
-type Level = 'basic' | 'business' | 'advanced';
-type Props = {level: Level};
+export { batchSchema, feedSchema, windowSchema } from './schemas'
 
-// Schemas are trusted application code. Never compile an arbitrary remotely supplied schema.
-export const feedSchema = {
-  type: 'object', additionalProperties: false, required: ['id', 'title', 'url'],
-  properties: {
-    id: {type: 'string', minLength: 1, maxLength: 40, pattern: '^[a-z0-9-]+$'},
-    title: {type: 'string', minLength: 2, maxLength: 80},
-    url: {type: 'string', minLength: 9, pattern: '^[Hh][Tt][Tt][Pp][Ss]://'},
+type Level = 'basic' | 'business' | 'advanced'
+type Stage = 'idle' | 'dirty' | 'json' | 'schema' | 'domain' | 'success'
+const validators = createValidators()
+const validSamples = {
+  basic: { id: 'frontend', title: '前端工程', url: 'https://example.org/rss' },
+  business: {
+    team: 'news',
+    feeds: [
+      { id: 'official', title: '官方动态', url: 'https://example.org/releases' },
+      { id: 'dev', title: '开发实战', url: 'https://example.net/feed' },
+    ],
   },
-} as const;
-export const batchSchema = {
-  type: 'object', additionalProperties: false, required: ['team', 'feeds'],
-  properties: {
-    team: {type: 'string', minLength: 1},
-    feeds: {type: 'array', minItems: 1, maxItems: 5, uniqueItems: true, items: feedSchema},
+  advanced: { enabled: true, maxConcurrent: 3 },
+}
+const invalidSamples = {
+  basic: { id: 'BAD ID', title: 'a', url: 'http://example.org/rss', extra: true },
+  business: { team: '', feeds: [] },
+  advanced: { enabled: true, maxConcurrent: 0, unreviewed: true },
+}
+const domainSamples = {
+  basic: { id: 'frontend', title: '前端工程', url: 'https://reader:secret@example.org/rss' },
+  business: {
+    team: 'news',
+    feeds: [
+      { id: 'one', title: '一号订阅', url: 'https://EXAMPLE.COM:443/Feed?q=A' },
+      { id: 'two', title: '二号订阅', url: 'https://example.com/Feed?q=A#section' },
+    ],
   },
-} as const;
-const maxConcurrentSchema = {type: 'integer', minimum: 1, maximum: 8} as const;
-export const windowSchema = {
-  type: 'object', additionalProperties: false, required: ['enabled'],
-  properties: {enabled: {type: 'boolean'}, maxConcurrent: maxConcurrentSchema},
-  if: {properties: {enabled: {const: true}}, required: ['enabled']},
-  then: {properties: {maxConcurrent: maxConcurrentSchema}, required: ['maxConcurrent']},
-} as const;
-const schemas = {basic: feedSchema, business: batchSchema, advanced: windowSchema};
-const samples = {
-  basic: {id: 'frontend', title: '前端工程', url: 'https://example.org/rss'},
-  business: {team: 'news', feeds: [
-    {id: 'official', title: '官方动态', url: 'https://example.org/releases'},
-    {id: 'dev', title: '开发实战', url: 'https://example.net/feed'},
-  ]},
-  advanced: {enabled: true, maxConcurrent: 0, unreviewed: true},
-};
-const validator = new Ajv({strict: true, allErrors: true, coerceTypes: false, useDefaults: false, removeAdditional: false});
-export default function AjvExample({level}: Props) {
-  const [input, setInput] = useState(() => JSON.stringify(samples[level], null, 2));
-  const [output, setOutput] = useState('点击验证，执行真实 Ajv 编译后的校验器');
+}
+const initial = (level: Level) =>
+  level === 'advanced' ? invalidSamples.advanced : validSamples[level]
+
+export default function AjvExample({ level }: { level: Level }) {
+  const inputId = useId()
+  const errorsId = useId()
+  const [input, setInput] = useState(() => JSON.stringify(initial(level), null, 2))
+  const [stage, setStage] = useState<Stage>('idle')
+  const [message, setMessage] = useState('等待明确校验当前输入')
+  const [errors, setErrors] = useState<{ key: string; text: string }[]>([])
+  const [output, setOutput] = useState('')
   useEffect(() => {
-    setInput(JSON.stringify(samples[level], null, 2));
-    setOutput('场景已切换，请重新校验');
-  }, [level]);
-  const validate = useMemo(() => validator.compile(schemas[level]), [level]);
-  function run() {
-    let value: unknown;
-    try { value = JSON.parse(input) as unknown; }
-    catch (error) { setOutput('JSON 解析失败：' + String(error)); return; }
-    if (validate(value)) {
-      // uniqueItems checks full JSON objects, NOT canonical URL identity.
-      const domainIssues = validateFeedBoundaries(level, value);
-      setOutput(domainIssues.length
-        ? 'FAIL（RSS 业务规则）：' + domainIssues.map(issue => issue.path + ' · ' + issue.message).join('\n')
-        : 'PASS：' + JSON.stringify(value, null, 2));
-      return;
-    }
-    setOutput('FAIL：' + (validate.errors ?? []).map(item =>
-      (item.instancePath || '/') + ' · ' + item.keyword + ' · ' + (item.message || '不符合 Schema'),
-    ).join('\n'));
+    setInput(JSON.stringify(initial(level), null, 2))
+    setStage('idle')
+    setMessage('已切换场景，请重新校验')
+    setErrors([])
+    setOutput('')
+  }, [level])
+  function replace(value: unknown, notice: string) {
+    setInput(JSON.stringify(value, null, 2))
+    setStage('idle')
+    setMessage(notice)
+    setErrors([])
+    setOutput('')
   }
-  return <section aria-label="Ajv 真实 JSON Schema 验证">
-    <h2>{level === 'basic' ? '运行时 schema 验证' : level === 'business' ? '团队 RSS 批量导入' : '条件规则与多条错误'}</h2>
-    <p>{level === 'advanced' ? '故意提供超出范围的并发值和未知字段，演示 allErrors 与条件校验。' : '模式是项目审查过的静态 JSON Schema；不会使用网络提供的可执行 schema。'}</p>
-    <label htmlFor="c05-input">输入 JSON</label>
-    <textarea id="c05-input" value={input} onChange={event => {
-        setInput(event.target.value);
-        setOutput('输入已修改，请重新运行校验');
-      }}
-      style={{width: '100%', minHeight: 170, display: 'block', fontFamily: 'monospace'}} />
-    <div className="demo-controls"><button type="button" onClick={run}>调用 Ajv.validate</button>
-      <button type="button" onClick={() => {setInput(JSON.stringify(samples[level], null, 2)); setOutput('已重置');}}>恢复样例</button></div>
-    <output className="demo-output" aria-live="polite" data-testid="ajv-result">{output}</output>
-    <p>Ajv 先执行静态 JSON Schema，再做无凭据 HTTPS 与规范化 URL 去重。客户端仍不负责网络访问授权、DNS/重定向 SSRF 防护。</p>
-  </section>;
+  function run() {
+    let value: unknown
+    setOutput('')
+    try {
+      value = JSON.parse(input)
+    } catch (error) {
+      setStage('json')
+      setMessage('JSON 语法解析失败，尚未调用 Ajv')
+      setErrors([{ key: 'json', text: String(error) }])
+      return
+    }
+    const validate = validators[level]
+    if (!validate(value)) {
+      // Ajv replaces validator.errors on the next invocation; store display values now.
+      setErrors(
+        (validate.errors ?? []).map((issue) => {
+          const detail =
+            issue.keyword === 'required'
+              ? issue.params.missingProperty
+              : issue.keyword === 'additionalProperties'
+                ? issue.params.additionalProperty
+                : ''
+          return {
+            key: `${issue.instancePath}|${issue.schemaPath}|${issue.keyword}|${JSON.stringify(issue.params)}`,
+            text: `${issue.instancePath || '/'} · ${issue.keyword} · ${issue.message ?? '不符合 Schema'}${detail ? ` (${detail})` : ''}`,
+          }
+        }),
+      )
+      setStage('schema')
+      setMessage('JSON Schema 不通过；未执行业务规则')
+      return
+    }
+    const issues = validateFeedBoundaries(level, value)
+    if (issues.length) {
+      setErrors(
+        issues.map((issue) => ({ key: issue.path, text: `${issue.path} · ${issue.message}` })),
+      )
+      setStage('domain')
+      setMessage('JSON Schema 已通过，RSS 业务规则不通过')
+      return
+    }
+    setErrors([])
+    setStage('success')
+    setMessage('校验通过；输入数据未经隐式修改')
+    setOutput(JSON.stringify(value, null, 2))
+  }
+  return (
+    <section
+      className="c05-workshop"
+      aria-label="Ajv 真实 JSON Schema 验证"
+      data-testid="c05-workshop"
+      data-level={level}
+      data-stage={stage}
+    >
+      <h2>
+        {level === 'basic'
+          ? '结构与业务边界'
+          : level === 'business'
+            ? '整对象唯一与订阅身份'
+            : '条件必填与错误聚合'}
+      </h2>
+      <p>
+        真实 Ajv 8.20.0 编译可信静态 Schema；本地 JSON fixture，不抓取订阅或编译用户提供的 Schema。
+      </p>
+      <label htmlFor={inputId}>输入 JSON</label>
+      <textarea
+        id={inputId}
+        value={input}
+        spellCheck={false}
+        aria-invalid={errors.length > 0}
+        aria-describedby={errors.length ? errorsId : undefined}
+        onChange={(event) => {
+          setInput(event.target.value)
+          setStage('dirty')
+          setMessage('输入已修改，旧结果已失效')
+          setErrors([])
+          setOutput('')
+        }}
+      />
+      <div className="c05-controls">
+        <button type="button" onClick={run}>
+          调用 Ajv.validate
+        </button>
+        <button
+          type="button"
+          onClick={() => replace(invalidSamples[level], '已载入字段反例，请校验')}
+        >
+          载入字段反例
+        </button>
+        <button
+          type="button"
+          onClick={() => replace(validSamples[level], '已载入合法输入，请校验')}
+        >
+          载入合法输入
+        </button>
+        {level !== 'advanced' && (
+          <button
+            type="button"
+            onClick={() => replace(domainSamples[level], '已载入分层反例，请校验')}
+          >
+            载入结构通过但业务失败
+          </button>
+        )}
+        <button type="button" onClick={() => replace(initial(level), '已恢复初始示例')}>
+          恢复样例
+        </button>
+      </div>
+      <p role="status" data-testid="c05-status">
+        {message}
+      </p>
+      {errors.length > 0 && (
+        <ul id={errorsId} role="alert" data-testid="c05-errors">
+          {errors.map((error) => (
+            <li key={error.key}>{error.text}</li>
+          ))}
+        </ul>
+      )}
+      {output && (
+        <output className="c05-output" data-testid="ajv-result">
+          {output}
+        </output>
+      )}
+      <p>
+        Schema 不自动 trim、补默认值、转数字或删除字段。第二阶段的
+        HTTPS/凭据/身份去重是本例策略，不检查 DNS、重定向或网络权限。
+      </p>
+    </section>
+  )
 }

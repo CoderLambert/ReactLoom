@@ -1,18 +1,18 @@
 {
   "content": {
     "status": "NOT_RUN",
-    "note": "既有内容PASS没有当前源码指纹/执行命令/证据；后续改动修订后等待生成器和真实SDK验证。"
+    "note": "本轮中文/源码/来源与本地检查见local-validation；完整内容与运行验收等待独立复核及正式收据。"
   },
   "sdk": {
     "status": "NOT_RUN",
-    "note": "待统一安装 react-resizable-panels@4.14.1"
+    "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B16.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
   },
   "build": {
     "status": "NOT_RUN",
-    "note": "无本提交TS/build证据"
+    "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B16.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "真实拖动、键盘、窄屏未执行"
+    "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B16.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
   }
 }

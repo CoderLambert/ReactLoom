@@ -1,47 +1,27 @@
-# B21 react-motion 迁移
+# B21 旧react-motion → 现代motion/react迁移
 
-## 适用
+只运行motion14.6.0 / React19.3 / MIT，现代peer18/19；旧react-motion0.5.2 peer0.14/15/16，仅读固定官方资料、未安装/导入/运行。禁止绕peer安装旧库或把现代SDK通过冒充旧库通过。
 
-审计旧的 `Motion`、`TransitionMotion`、`StaggeredMotion` 和 `spring()`，并把新界面写到 `motion/react`。不要为了对照把 `react-motion@0.5.2` 装进 React 19。简单 CSS 不必上动画库。
+## 三目标与API
 
-## 版本
+basic旧Motion+独立spring描述迁为数字animate+transition及真实presence折叠；business旧TransitionMotion按稳定id迁为reducer即时提交+AnimatePresence popLayout；advanced单步undo恢复数组/选择、单调id/24容量、必要提交后回焦和实时系统减动。StaggeredMotion跟随不等于时间stagger；参数同名不保证轨迹等价。无HTTP/旧SDK对照运行/取消请求/持久化。
 
-目标包 `motion@14.6.0`，React 19.3.0。两份许可证都是 MIT，但 Motion+ 另计。旧 peer 只有 React 16 及更早。入口是 `motion/react`。
+## 必须保留
 
-## 迁移
+open/数组先变，SDK退出DOM暂留时useIsPresent=false→inert/aria-hidden/buttons disabled，不能把aria-expanded=false解释为DOM必须立即不存在。Row额外guard与父级committedItems拒绝冻结旧回调；只有被删按钮当前持焦才在useLayoutEffect回存活邻居/添加，不等动画、不抢无关焦点。key永久业务id，恢复不会回退nextId。
 
-`spring(n)` 改成数字目标加 `transition.type = 'spring'`。`willLeave` 改成先更新 reducer 再写 `exit`。列表 key 用永久 id。`StaggeredMotion` 的跟随不是 `staggerChildren`。`onRest` 不承担保存。参数相同不保证轨迹相同。
+TaskRow forwardRef到实际motion.li，popLayout依赖真实ref，ul position:relative。initial=false只压第一次入场；onExitComplete计数是视觉观测，不写业务事务。短时间undo可使同key重新进入，数据恢复不等动画完成。
 
-## 不可删的清理
+实装14.6 useReducedMotion只有挂载快照。自有matchMedia change监听+cleanup，React ReducedMotionContext让退出子树也得到实时值。MotionConfig never关SDK静态策略，所有y/scale/layout/duration完整显式尊重实时OS；不能只抄never丢门闩。应用只清自己的media/ref/焦点意图，SDK拥有动画/测量，绝不全局stop。
 
-不添加 `react-motion` 依赖。`AnimatePresence initial={false}`。列表用 `popLayout`，不要 `mode="wait"`。减少动画去掉位移和 scale。删除持焦按钮后在 `useLayoutEffect` 里把焦点交给邻居或添加按钮。撤销只恢复一份快照。id 单调增加，上限 24。
+## 迁移和精确操作
 
-## 反例
+pnpm add motion@14.6.0；复制example/presence-items/reduced-motion/task-history/migration.css，demo.tsx仅出口。无宿主alias/运行资产。region“react-motion 现代迁移示例”，b21-workshop/data-level/data-reduced/data-order；basic“折叠卡片/展开卡片”、b21-open/details；列表按钮“添加任务（最多24）”、任务选择名/“删除 {任务名}”、advanced“撤销上一步”。data-task-id及data-present对应真实业务身份/SDK presence。b21-tasks-status、b21-state是真reducer读数，b21-exits是真现代SDK视觉回调计数。
 
-`--legacy-peer-deps` 安装旧包。`animate={{x: spring(10)}}`。`setTimeout` 之后才删除。`key={index}`。动画回调里发请求。把完成回调当成事务成功。列表套 `mode="wait"`。宣称 stagger 已经复刻跟随链。
+## 验证边界
 
-复用时保留这些不变的约定：
+旧SDK始终NOT_RUN；现代SDK局部SSR2项只证明接口/标记，pure4项只证明业务事务。本地Chromium已完成三个目标及官方展示共4项：折叠退出/打断、列表身份/退出交互与必要回焦、原子undo/ID/实时减动/窄屏/卸载重挂载；完整断言见validation/browser-proposal.txt。真实OS读屏/触摸、SSR hydration、全局监听/RAF内存、多实例、旧runtime/跟随弹簧及HTTP/持久化/大列表性能仍未验收。formal sdk/build/browser三项NOT_RUN，实际命令与混合批次退出码见local-validation。
 
-- 不把 `react-motion` 写进依赖或 import。
-- `spring()` 描述对象不能放进 `animate`。
-- 先 dispatch 再播 exit，不用 setTimeout 延迟删除。
-- 列表 `popLayout`，单卡不要套到多子节点的 `mode="wait"`。
-- `StaggeredMotion` 的跟随链未挂载，不要用 staggerChildren 宣称等价。
+## 官方
 
-## 测试断言
-
-`tests/task-history.test.mts` 断言添加上限、新 id、撤销、非法选择不变。不证明 `motion` 运行时或减少动画的视觉。
-
-## 真实限制
-
-已挂载：折叠卡片、列表进出、layout、一步撤销、焦点恢复。未挂载：旧包源码对照、跟随弹簧、HTTP、大列表虚拟化、IME 搜索。
-
-复用检查：
-
-- 版本以该条目 `library.json` 为准，不跟研究稿里的 Vite 脚本或 workshop 目录。
-- 未挂载的生产模式留在 `guide.md`，不补进 `examples/`。
-- 不修改 `verification.json`。没有匹配 receipt 时 sdk、build、browser 保持 NOT_RUN。
-
-## 证据
-
-sdk、build、browser 为 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有匹配 receipt。Actions run `41779873259` 是仓库级检查，不是本条目 PASS。文档：https://motion.dev/docs/react-installation
+现代主README固定npm gitHeadc624ce8e907d5668280b8c832f2ab93ba3462ab5，manifest14.6.0，英文8259B/hash3d53967ddaef8a5c37b6623ee07376aac9f9f1d2c52c894af3e521ba864fca3f。历史只读README固定8bd4f7223a8d79535586220f7173f078d4604e07，英文15446B/hashaffc2475f70368ce3f2c1bf02bd788f6967f1e73c1a7162806e3d04824b38b30，不把旧npm peer推断成已运行失败或成功。两tree实际无中文；完整日期/headers/来源在official/source-evidence.json。目标官网GET200无XFO/CSP未验Lab iframe→unknown。

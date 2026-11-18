@@ -1,0 +1,8 @@
+{
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "argv": [
+    "node",
+    "packages/library-lab/entries/F16-dependency-cruiser/examples/verify.mjs"
+  ],
+  "exitCode": 0
+}

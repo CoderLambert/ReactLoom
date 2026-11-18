@@ -1,0 +1,5 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['python3', 'entries/B20-sonner/validation/fetch-official.py']
+startedAt: 2026-11-10T14:19:06.333104+00:00
+exit: 0
+B20 v2.0.8 fixed README 867B; 10 complete headers; npm gitHead difference preserved; homepage unknown

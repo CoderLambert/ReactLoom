@@ -1,0 +1,5 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['node', 'entries/C13-frappe-gantt/validation/metadata-check.mjs']
+startedAt: 2026-11-10T16:28:23.800381+00:00
+exit: 0
+C13 3 goals / 6 sources / browser-frame contract / SDK1.2.2 installed hashes / original15874B+SHA / blocked headers / 5 actual-browser proposals / formal NOT_RUN

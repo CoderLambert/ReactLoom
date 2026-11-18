@@ -5,15 +5,7 @@
   "name": "Vitest",
   "group": "F",
   "summary": "真实 Vitest 测试配方：数据校验、可注入HTTP状态与取消竞态",
-  "tags": [
-    "Vitest",
-    "Node",
-    "测试",
-    "Scenario Matrix",
-    "Fake Timers",
-    "AbortSignal",
-    "CLI"
-  ],
+  "tags": ["Vitest", "Node", "测试", "Scenario Matrix", "Fake Timers", "AbortSignal", "CLI"],
   "contentState": "recreated",
   "packages": [
     {
@@ -63,14 +55,8 @@
       "level": "basic",
       "executionKind": "node-ci",
       "entryPoint": "examples/basic.test.ts",
-      "sourceFiles": [
-        "examples/domain.ts",
-        "examples/basic.test.ts"
-      ],
-      "capabilities": [
-        "node-process",
-        "vitest-runner"
-      ],
+      "sourceFiles": ["examples/domain.ts", "examples/basic.test.ts", "vitest.config.ts"],
+      "capabilities": ["node-process", "vitest-runner"],
       "description": "运行真实 Vitest，断言 feed URL 解析、输入拒绝与异常。"
     },
     {
@@ -79,14 +65,8 @@
       "level": "business",
       "executionKind": "node-ci",
       "entryPoint": "examples/business.test.ts",
-      "sourceFiles": [
-        "examples/domain.ts",
-        "examples/business.test.ts"
-      ],
-      "capabilities": [
-        "node-process",
-        "dependency-injection"
-      ],
+      "sourceFiles": ["examples/domain.ts", "examples/business.test.ts", "vitest.config.ts"],
+      "capabilities": ["node-process", "dependency-injection"],
       "description": "用注入式业务 HTTP 响应模拟 200/422/503；Vitest本身是真实测试引擎。"
     },
     {
@@ -95,15 +75,8 @@
       "level": "advanced",
       "executionKind": "node-ci",
       "entryPoint": "examples/advanced.test.ts",
-      "sourceFiles": [
-        "examples/domain.ts",
-        "examples/advanced.test.ts"
-      ],
-      "capabilities": [
-        "node-process",
-        "fake-timers",
-        "abort-signal"
-      ],
+      "sourceFiles": ["examples/domain.ts", "examples/advanced.test.ts", "vitest.config.ts"],
+      "capabilities": ["node-process", "fake-timers", "abort-signal"],
       "description": "使用 vi.useFakeTimers + AbortSignal 验证新请求不能被旧结果覆盖。"
     }
   ],
@@ -113,6 +86,26 @@
   },
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
-    "note": "Vitest 5 官方 API 新写 CLI 研究配方；真实 Vitest runner 与报告尚需执行。"
+    "note": "真实Vitest5.0.5 CLI按entry隔离配置运行三个场景，6/9/4断言通过；注入Response/fake timers不证明真实HTTP或浏览器；无正式receipt不填PASS。"
+  },
+  "official": {
+    "readme": {
+      "repository": "vitest-dev/vitest",
+      "commit": "7a825db43e2beca0b219d2eadaec334cb81af0c7",
+      "path": "README.md",
+      "sourceUrl": "https://github.com/vitest-dev/vitest/blob/7a825db43e2beca0b219d2eadaec334cb81af0c7/README.md",
+      "snapshotPath": "official/readme.md",
+      "sha256": "e8ebb122af88ef7d54982ada599ffbc3321db6d57f3902b800031d7745b7bdde",
+      "language": "en",
+      "version": "5.0.5",
+      "syncedAt": "2026-11-17T18:51:47.755326+00:00"
+    },
+    "homepage": {
+      "url": "https://vitest.dev/",
+      "kind": "website",
+      "status": "blocked",
+      "checkedAt": "2026-11-17T18:51:47.755326+00:00",
+      "reason": "实际GET最终HTTP200，但X-Frame-Options: DENY禁止Lab iframe嵌入，原始响应头见official/homepage-headers.json；保留外部直达。"
+    }
   }
 }

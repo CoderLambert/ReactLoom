@@ -1,0 +1,44 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: pnpm exec biome check --write entries/B11-radix-primitives/examples entries/B11-radix-primitives/tests entries/B11-radix-primitives/validation/check-entry.mjs entries/B11-radix-primitives/library.json entries/B11-radix-primitives/verification.json entries/B11-radix-primitives/official/source-audit.json entries/B11-radix-primitives/official/homepage-response.json
+exit: 0
+Skipped 2 suggested fixes.
+If you wish to apply the suggested (unsafe) fixes, use the command biome check --write --unsafe
+
+Checked 11 files in 10ms. Fixed 7 files.
+Found 2 warnings.
+entries/B11-radix-primitives/examples/dropdown.css:89:21 lint/complexity/noImportantStyles  FIXABLE  ━━━━━━━━━━
+
+  ! Avoid the use of the !important style.
+  
+    87 │ @media (prefers-reduced-motion: reduce) {
+    88 │   .rl-radix-menu {
+  > 89 │     animation: none !important;
+       │                     ^^^^^^^^^^
+    90 │     transition: none !important;
+    91 │   }
+  
+  i This style reverses the cascade logic, and precedence is reversed. This could lead to having styles with higher specificity being overridden by styles with lower specificity.
+  
+  i Unsafe fix: Remove the style.
+  
+    89 │ ····animation:·none·!important;
+       │                    ----------- 
+
+entries/B11-radix-primitives/examples/dropdown.css:90:22 lint/complexity/noImportantStyles  FIXABLE  ━━━━━━━━━━
+
+  ! Avoid the use of the !important style.
+  
+    88 │   .rl-radix-menu {
+    89 │     animation: none !important;
+  > 90 │     transition: none !important;
+       │                      ^^^^^^^^^^
+    91 │   }
+    92 │ }
+  
+  i This style reverses the cascade logic, and precedence is reversed. This could lead to having styles with higher specificity being overridden by styles with lower specificity.
+  
+  i Unsafe fix: Remove the style.
+  
+    90 │ ····transition:·none·!important;
+       │                     ----------- 
+

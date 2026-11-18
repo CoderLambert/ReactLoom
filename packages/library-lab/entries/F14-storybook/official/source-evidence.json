@@ -1,0 +1,32 @@
+{
+  "commit": "a17b725f4069e0bda9dc87e3002063c726de8fbc",
+  "tag": "v10.6.1",
+  "files": {
+    "README.md": {
+      "sha256": "0e03c7906e9d2c72cbc8ecbec24059c691e7a2c7ac9d20fe402d375ee22dad12",
+      "bytes": 21923
+    },
+    "LICENSE": {
+      "sha256": "bc90586179d44dcb313a9a289d687a2f26226303b2066bd21dbefd2378e894e5",
+      "bytes": 1077
+    },
+    "code/core/package.json": {
+      "sha256": "09707b83e0800e3435bed22931920f36d4d933dc74aef73a61a8dd82135d239c",
+      "bytes": 15277
+    },
+    "code/frameworks/react-vite/package.json": {
+      "sha256": "2653f61124b99ceebd1510258a6d814083e7a30acacd2d019447541eb48a693d",
+      "bytes": 2229
+    },
+    "code/addons/a11y/package.json": {
+      "sha256": "512b18fab80b3095f911cb9f27ae5cf3c2046cfe7306e1279fe3591da2bb4c98",
+      "bytes": 2181
+    },
+    "code/core/README.md": {
+      "bytes": 1606,
+      "sha256": "3493510b1be23f8e7e8164f0af3444cf73cd644b2f6a0970e338b87181bb109f"
+    }
+  },
+  "selectedReadme": "code/core/README.md",
+  "reason": "Package storybook maps to code/core. Fixed tree has package English README, no package Chinese candidate."
+}

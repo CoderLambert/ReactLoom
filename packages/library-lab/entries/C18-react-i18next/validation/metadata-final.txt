@@ -1,0 +1,18 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['pnpm', 'exec', 'node', 'entries/C18-react-i18next/validation/metadata-check.mjs']
+startedAt: 2026-11-10T17:56:25.878285+00:00
+exit: 0
+{
+  "levels": 3,
+  "runtimeFiles": 9,
+  "installedSourceHashes": 15,
+  "readmeBytes": 12793,
+  "renderedLinks": 5,
+  "rawHeaderRequests": 6,
+  "homepage": "blocked for HTTP Lab CSP ancestor",
+  "runtimeMatchesCandidate19": true,
+  "publicProposalExact": true,
+  "realBrowserC18Cases": 4,
+  "wholeBrowserExit": 1,
+  "formal": "NOT_RUN"
+}

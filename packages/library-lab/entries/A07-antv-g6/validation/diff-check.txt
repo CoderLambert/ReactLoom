@@ -1,0 +1,8 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom
+ARGV: ["git", "diff", "--check", "--", "packages/library-lab/entries/A07-antv-g6"]
+START: 2026-11-10T11:53:59.327298+00:00
+END: 2026-11-10T11:53:59.330187+00:00
+EXIT: 0
+STDOUT:
+
+STDERR:

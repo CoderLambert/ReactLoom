@@ -1,0 +1,45 @@
+{"label": "official-fetch", "cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["python3", "packages/library-lab/entries/C06-imask/validation/fetch-official.py"], "start": "2026-11-10T15:46:36.832277+00:00", "end": "2026-11-10T15:46:53.781492+00:00", "exitCode": 0, "log": "official-fetch.txt"}
+STDOUT
+{
+  "commit": "a02a14b642f70b335e24789e8a187857473a21a5",
+  "readmes": {
+    "react-imask": {
+      "path": "packages/react-imask/README.md",
+      "snapshotPath": "official/readme.md",
+      "language": "en",
+      "manifest": {
+        "name": "react-imask",
+        "version": "7.6.1",
+        "license": "MIT",
+        "peerDependencies": {
+          "react": ">=0.14.0"
+        }
+      },
+      "bytes": 2371,
+      "sha256": "6d2a1d25943c4b0f0831d55a7cb566604db9d188a76767aba5efda5c9ba5460c"
+    },
+    "imask": {
+      "path": "packages/imask/README.md",
+      "snapshotPath": "official/core-readme.md",
+      "language": "en",
+      "manifest": {
+        "name": "imask",
+        "version": "7.6.1",
+        "license": "MIT",
+        "peerDependencies": null
+      },
+      "bytes": 901,
+      "sha256": "c3bd23f1220ce2d6ea8c82c8e16748d0afc2d3a7f4b2c34218ffc49022d931ae"
+    }
+  },
+  "homepage": {
+    "url": "https://imask.js.org/",
+    "status": "unknown",
+    "reason": "No enforced framing restriction observed in complete GET headers; actual Lab-origin browser NOT_RUN.",
+    "checkedAt": "2026-11-10T15:46:52.657381+00:00",
+    "browserFromLabOrigin": "NOT_RUN"
+  },
+  "requests": 10
+}
+
+STDERR

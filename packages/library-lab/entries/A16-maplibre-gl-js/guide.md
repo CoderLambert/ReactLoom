@@ -1,147 +1,90 @@
-# A16 MapLibre GL JS 6.15.0：空样式、GeoJSON source 与 setData
+# MapLibre GL JS：从本地点位到真实 WebGL 图层
 
-MapLibre 用 WebGL2 画样式和图层。Source 决定画什么，Layer 决定怎么画。当前示例没有瓦片、sprite 或 glyph，因此没有街道和地名，这是设计，不是故障。少量 DOM 点用 A15。极大的 GPU 叠加再考虑 A17，并单独处理相机同步。
+一组新闻来源有经纬度和健康状态，既要在地图上查看，也要用表格过滤、定位和修改。本例用`maplibre-gl@6.15.0`的真实Map、GeoJSONSource和circle图层，内联空样式不请求外部瓦片、sprite或glyph。没有街道和地名是预期；它是点层实验，不是已配置完整底图的产品。
 
-Library Lab 钉 `maplibre-gl@6.15.0`，BSD-3-Clause。库许可证不覆盖第三方矢量瓦片、字体和影像。生产底图必须能展示对方要求的署名。本示例 `attributionControl: false`，因为样式是本地空文档。
+数据来自本地教学fixture，不连接资讯服务、地理编码、模型或付费API。当前条目为recreated，原研究来源保留，旧PASS不继承。少量DOM标记可对照A15 Leaflet；大量GPU数据叠加可评估A17并另验相机同步。
 
-## Lab 当前示例
+## 先完成三个实验
 
-`examples/demo.tsx` 导出 `examples/example.tsx`。选中回落在 `examples/selection-policy.ts`，加站在 `examples/station-factory.ts`。CSS 为 `maplibre-gl/dist/maplibre-gl.css`。
+### 1. 真实引擎、Worker与两站点
 
-已挂载：
+打开basic。表格只有北京和天津；源首次建立也只放这两站，不再先放三个再改两个。等待“源与图层已建立”，展开“查看真实源、渲染要素与投影”，对照SDK的points、sourceLoaded和renderedIds。加载状态不能只看一行“成功”：数据表是业务状态，getData是SDK源数据，queryRenderedFeatures才是当前视口查询到的图层要素。
 
-- 命名空间导入 `import * as maplibregl from 'maplibre-gl'`。v6 是 ESM，默认导入不可用。不要写成 `import maplibregl from 'maplibre-gl'`。
-- `new maplibregl.Map` 使用内联 style：`version: 8`，`sources` 和 `layers` 都是空的。中心 `[116.1, 39.1]`，缩放 6。`cooperativeGestures: true` 让滚轮不独占页面。`trackResize: false`，改由 `ResizeObserver` 在宽高都大于 0 时 `map.resize()`。
-- 构造失败写入 `role="alert"`。`error`、`webglcontextlost`、`webglcontextrestored` 都有处理。丢失上下文时 `ready` 变假，提示改用表格。恢复且仍是当前 map、样式已加载时再标就绪。
-- 在 map 的 `load` 回调里 `addSource('stations')` 和 `addLayer` 圆层。颜色表达式按 `healthy` 分支。然后才 `map.on('click', 'stations', ...)`。cleanup 只在加层成功后 `off` 这个点击。
-- 初始 source 数据是三个基站点。随后 effect 用 `GeoJSONSource.setData` 换成当前可见集合。basic 只取前两个；其它层级可「只看在线」。选中 id 若不在可见集，`resolveVisibleStation` 落到第一个。
-- 坐标是 `[longitude, latitude]`。北京约 116.4, 39.9。表格列顺序也是经度、纬度。定位用 `easeTo({ center, duration: 0 })`，没有飞行动画。
-- advanced 最多再加 40 个 `local-N`，经度从 115 递增，纬度 38.4，并可以切换健康布尔值。恢复按钮把序号和列表打回基线。
-- 卸载：作废标志、断开观察者、取消 rAF、摘掉 load/error/context 监听、摘掉图层点击、`map.remove()`。
+点表格的“定位”，相机通过`easeTo({duration:0})`移到对应经纬度。点击地图真实圆点，当前选择应切到该站。SDK观察的投影x/y来自map.project，可用来核对真实指针位置，不是自行模拟的地理投影。
 
-没有挂上：`setWorkerUrl`、矢量瓦片、`style.load` 与 `load` 的分别等待、`setStyle` 后重建 source、`feature-state`、`updateData` 增量、Popup。Vite 生产构建常常要 `?worker&url` 再 `setWorkerUrl`，否则 Worker 404 或被 CSP 拦住。Lab 源码没调用它；若运行时灰屏，先查控制台，不要在文档里假装已经配置好。
+### 2. 同一个源上的健康过滤
 
-官方建议在样式可用后加层。示例用的是 `load`，并在 try 里捕获失败。`load`、`style.load` 和 `idle` 不是同义词。`idle` 表示暂时没有待绘制任务，适合截图前等待，不适合拿去批量下载公共瓦片。[GeoJSONSource](https://maplibre.org/maplibre-gl-js/docs/API/classes/GeoJSONSource/)。
+business初始三站，其中石家庄为暂停。勾“只看在线来源”，表和source数据变为北京、天津；选中项若被滤掉，选择回落到仍可见的第一站。取消过滤后三站恢复，不重建Map或Layer。
 
-## 五层
+颜色由真实circle-color表达式读取healthy：在线绿色，暂停橙色；表同时给出“在线/暂停”文字，不只靠颜色传递含义。SDK观察同时显示源points和渲染查询的renderedHealth，便于识别数据已更新但渲染仍在等待的阶段。
 
-1. **要素。** `FeatureCollection`，Point 的 coordinates 是 `[lng, lat]`，属性里放 id、标签和健康布尔。标题永远当文本，不进 HTML。
-2. **Style。** 空的 version 8 文档。真实底图是另一份许可。
-3. **Source。** `type: 'geojson'`。更新走 `setData`，不要为每个点 `new Map`。v6 的 `setData` 返回 Promise。`updateData` 要求要素 id 稳定，Lab 没有用增量 API。
-4. **Layer。** `type: 'circle'` 引用 source id。小的颜色变化可用 `setPaintProperty`，不要为此 `setStyle`。`setStyle` 会丢掉运行时加的 source 和 layer，必须在下一次样式就绪时重装。
-5. **Map。** 相机、WebGL 和事件。卸载 `map.remove()`。
+### 3. 新数据、可恢复状态与生命周期
 
-## 三层
+advanced点“新增本地站点（最多40条）”，表格和现有source增加local-1，选择也切到新站。对该行点“切换健康状态”，同一站id保持，布尔改变后表达式重算。若正在只看在线，改为暂停会从可见集移除并使选择回落。
 
-### 01 两点
+“恢复初始状态”恢复三站、清过滤、选择北京，并把新增序号归零。最多额外40站是应用预算，不是性能结论；表中的站点可能处于当前视口之外，不能要求renderedIds永远等于全部source id。
 
-北京和天津。石家庄在数据里但是 basic 的 `slice(0, 2)` 不会放进后续 `setData`。第一次 `addSource` 仍先放了三座，紧接着的 effect 会改成两座。若 `ready` 尚未变真，短暂不一致可能存在，以 effect 为准。
+变窄视口触发ResizeObserver调用当前map.resize，点的经纬度不变。停止或离开会卸载当前Map；重进回到初始数据。WebGL2或Worker初始化失败时显示真实错误，表格仍可操作，不能用一张静态图或假Map填补失败。
 
-### 02 健康过滤
+## 四个对象与异步边界
 
-布尔驱动 `circle-color`。取消在线过滤会把暂停点加回同一 source，而不是新建地图。
-
-### 03 动态 GeoJSON
-
-加站、切换健康、恢复，都是 `setData`。40 的上限由序号和按钮禁用共同表达；`makeLocalStation` 拒绝越界序号。这不是 1 万点基准。大数据应聚合、分片或改矢量瓦片，并避免每帧复制巨大的 React state。[large data](https://maplibre.org/maplibre-gl-js/docs/guides/large-data/)。
-
-## 反例
-
-```tsx
-useEffect(() => {
-  const map = new maplibregl.Map({ container: node, style: EMPTY_STYLE });
-  map.addLayer({ id: 'stations', type: 'circle', source: 'stations' }); // 错：样式未就绪，source 也不存在
-}, [stations]); // 错：数据一变就再造 Map
-
-// 对：挂载时 new Map 一次；load 之后 addSource/addLayer；stations 变化只 setData
+```text
+stations / onlyHealthy → visible → 同源表格
+                            ↓
+                    GeoJSONSource.setData
+                            ↓ Worker解析/分块
+                    circle Layer / WebGL
+                            ↓
+                  queryRenderedFeatures
 ```
 
-| 错误 | 正确 |
-|---|---|
-| v5 默认导入 | 命名或命名空间导入。Lab 用命名空间 |
-| 不等加载就 addLayer | `load` 或 `style.load` 之后，并捕获错误 |
-| `[lat, lng]` | `[lng, lat]` 加范围检查 |
-| 每个点一个 DOM Marker | circle/symbol 层 |
-| 鼠标移动就 setData 全量 | `feature-state` 或节流。Lab 只在可见列表变化时 setData |
-| `updateData` 却没有稳定 id | 先保证 id。Lab 未调用 updateData |
-| `popup.setHTML(title)` | `setText` 或 textContent |
-| 热更新不 remove | StrictMode 下必须 `map.remove` |
-| 小改颜色就 setStyle | `setPaintProperty`；换主题才 setStyle 并重装层 |
-| 未等绘制就 `toDataURL` | 授权资源、idle、评估 `preserveDrawingBuffer` 的成本 |
-| 无 WebGL2 只留灰屏 | 表格仍可操作。Lab 有 alert 和表 |
-| 公共 OSM 瓦片预抓整城 | 空样式或自建/付费且合规的服务 |
+| 对象 | 本例职责 |
+| --- | --- |
+| FeatureCollection | Point的[longitude, latitude]，稳定feature.id和properties.id |
+| Style | version8、无外部资源，只有本例新增源与circle层 |
+| Source | 存几何和属性；更新复用setData，不为每行创建Map |
+| Layer / Map | 样式表达式、视口、命中与WebGL资源 |
 
-## 并发与安全
+6.15.0的setData返回`Promise<void>`，实际是UpdateQueue.flush等待队列清空；SDK会合并待发送数据，失败经error事件传出，**Promise完成不等于更新成功或已绘制**。本例保留map.error可见信息，不用then改写“渲染成功”；then只安排一次真实SDK观察。idle/moveend也更新观察，getData结果与render查询分别展示。最新错误保留，不用后续普通观察悄悄清掉。
 
-过滤或搜索若走网络，Abort 不够：用户改了条件却还没发出下一次请求时，旧响应仍可能写回。要用序号使旧请求失效。Lab 没有 fetch。
+源存在时getData可能已经反映最新输入，而Worker/渲染还在处理；sourceLoaded与实际renderedIds/health一起判断。queryRenderedFeatures只覆盖当前视口，也可能因瓦片边界重复，面板按站id去重。诊断是本例调用SDK API构造的观察面板，不是SDK自带性能工具。
 
-Style URL 和 `transformRequest` 是网络边界。不要把用户输入拼进瓦片地址，服务端代理要防 SSRF。密钥不进前端包。
+## Worker接线是必要文件的一部分
 
-Canvas 不是点列表。表格可 Tab，定位按钮和健康切换在 DOM。`cooperativeGestures` 减轻滚动冲突，触控仍要真机看。中文搜索要等 `compositionend`。减少动态时不要 `flyTo`；Lab 的 `easeTo` 时长为 0。
+```ts
+import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?url'
+maplibregl.setWorkerUrl(workerUrl)
+const map = new maplibregl.Map({ container, style: EMPTY_STYLE })
+```
 
-截图含第三方底图时，版权和署名仍然有效。空样式截图也不能冒充官方地图。
+已核实6.15.0默认URL根据import.meta.url找相邻worker文件；Vite打包入口后不能凭路径猜它仍在相邻目录。这里让Vite把匹配版本的standalone worker发成同源资产，在构造Map前设置URL。这个文件本身独立，不依赖相邻shared模块；没有新增宿主、插件或共享依赖。
 
-## 组合
+这是SDK全局Worker URL配置，作用于该页面使用同版本SDK的地图；本例不在卸载时重置配置，也不清全局Worker池。Map.remove由SDK释放此地图拥有的资源；应用只清自己的回调、observer和rAF。其他构建器需采用其对应资产URL机制，不能把Vite的?url原样当跨框架协议。
 
-**MapLibre + TanStack Query。** Query 持有要素缓存，Map 只持有 GPU 图层。选择器里去重 id。Lab 的 `stations` state 就是唯一列表。
+6.15.0还有SDK全局RTL dispatcher所有权：Style构造调用`rtlMainThreadPluginFactory()`，其单例取得`getGlobalDispatcher()`，以`global-dispatcher`身份引用同一WorkerPool。`Map.remove()`只释放该地图的dispatcher引用；全局owner仍在时Worker不会关闭。主控candidate09原生`page.workers()`/CDP观察确认停止后同1个DedicatedWorker仍存活，重进复用且没有新增Worker。不能把“停止单地图后全页Worker为0”作为这里的清理契约，也不能调用全局dispatcher.remove或清预热池迎合测试；应用只负责当前Map及自己的监听/RO/rAF。原提案的Worker close=0断言过强，保留为历史，更新验收看真实remove/Canvas0及重进Worker集合不增长；记录见local-validation。
 
-**MapLibre + deck.gl。** 底图和相机归 MapLibre，大数据层归 deck。两个 canvas 叠在一起不等于共享上下文。交错模式要核对 WebGL2 与当前 MapLibre 6 / deck 9 的组合。本示例没有 overlay。
+## 迁移与清理
 
-## 生产清单
+复制example.tsx、selection-policy.ts、station-factory.ts、styles.css；demo.tsx仅Lab重导出。保留官方CSS、非零容器高度、命名空间导入和Worker接线。当前依赖BSD-3-Clause；底图、影像、字体和署名属于各自服务条款，不能由库许可推定。这里没有第三方地理资源。
 
-1. ESM 导入，CSS 引入，容器高度 300。
-2. 空样式不发瓦片请求。
-3. Map 只构造一次，`remove` 成对。
-4. 加层发生在加载回调里，失败可见。
-5. 更新用 `setData`，保持 layer id。
-6. 坐标经度在前，并与表格一致。
-7. 宽度或高度为 0 不 `resize`。
-8. 上下文丢失有文案，表格仍在。
-9. 点击监听与加层成功与否一致地摘除。
-10. Worker URL 在真实 Vite 构建里单独核对，不把源码里的省略说成已配置。
+Map只在挂载创建。load后加source/layer，初始数据取最新visible ref；数据变动只setData。disposed、当前Map身份与观察序号阻止迟到getData写入旧组件；更新effect清理也失效旧then回调。上下文丢失时清就绪与观察、显示表格回退；恢复后源/层仍存在才能继续更新，是否绘制由SDK观察确认。
 
-## 升级与练习
+卸载先标disposed、断开RO、取消rAF、移除本例load/error/context/idle/moveend及图层点击，再map.remove。清理标记记录真实remove事件和残留Canvas数量，不把“组件看不见”当完整资源证明。不调用clearPrewarmedResources清其他实例资源。
 
-从 `mapbox-gl` 1.x 迁到 MapLibre 6：ESM、WebGL2、Worker、样式图片缺失事件、嵌套属性，逐项在浏览器里看。专有资源的令牌和样式不要原样拷贝。
+| 容易误解的做法 | 本例对应选择 |
+| --- | --- |
+| 经纬度按Leaflet顺序输入 | GeoJSON使用经度在前 |
+| 每次过滤重建Map | 复用source.setData |
+| setData完成就显示渲染PASS | 分开源数据、sourceLoaded与真实渲染查询 |
+| 从map load推断所有数据已绘完 | 实际idle/queryRenderedFeatures再核对 |
+| 灰屏时改成截图或放宽CSP | 保留真实错误和表格，核对Worker/WebGL条件 |
 
-从 Leaflet Marker 迁来时改坐标顺序，并接受 DOM 键盘焦点换成表格。练习把 `setData` 换成带唯一 id 的 `updateData`，用 1k 与 10k 记录差异，不要只改函数名。
+没有Popup、setStyle、updateData、实时流、网络竞态或上下文强制丢失按钮。cooperativeGestures保留页面滚动协作，duration0不产生飞行动画；触控、读屏和设备GPU仍需实测。
 
-## 故障排查
+## 官方原文与证据
 
-灰屏且 GPU 初始化失败：驱动或浏览器关了 WebGL2，用表。Worker 404：补 `setWorkerUrl` 和 CSP。有底色无点：加载回调、source 名、坐标顺序、尺寸。改主题后点消失：setStyle 清掉了运行时层。旧数据闪回：请求序号。点太多：不要每帧 setData。
+official/readme.md为6.15.0提交`638b3f9ecab4b743fd4d086d3bfd19bce7b7b032`根README原文，英文13392字节，SHA-256 `f293e4b84fcabba75a923fe54ff861b6bd4e7f2cddaf09082bcee97f57c0847b`。完整tree实际20个README候选无中文，精确路径/版本/日期和候选保存在official/source-audit.json及library.json。
 
-## 官方链接
+官网SDK文档GET200，完整最终响应头在official/homepage-response.json，XFO/CSP均null；未从Lab origin做iframe实测，因此unknown并保留直达，不从200推定allowed。
 
-- [文档](https://maplibre.org/maplibre-gl-js/docs/)
-- [GeoJSON 示例](https://maplibre.org/maplibre-gl-js/docs/examples/geojson-line/)
-- [GeoJSONSource](https://maplibre.org/maplibre-gl-js/docs/API/classes/GeoJSONSource/)
-- [大数据](https://maplibre.org/maplibre-gl-js/docs/guides/large-data/)
-- [npm maplibre-gl](https://www.npmjs.com/package/maplibre-gl)
-
-## setData 与尺寸
-
-`asGeoJson` 把站点收成 `FeatureCollection`。属性只放 id、label、healthy，几何是 Point，坐标数组字面量是 `[longitude, latitude]`。`setData` 在 `ready` 之后从 `map.getSource('stations')` 取出 `GeoJSONSource`。地图还没完成 `load` 时 effect 返回，避免对空 source 写入。
-
-basic 的可见集是 `stations.slice(0, 2)`，过滤条件不参与。business 和 advanced 才看 `onlyHealthy`。选中项被滤掉时 `resolveVisibleStation` 改到仍可见的第一项，并有 effect 写回 state，表格和后续定位用的是纠正后的 id。
-
-`canResizeMap` 要求实例仍是当前 map，且宽高都是正有限数。隐藏页签或尚未布局时 `clientWidth` 为 0，此时调用 `resize` 会把 WebGL 画布收成空缓冲。观察者回调里先看 `disposed`。`trackResize: false` 是为了把这条判断留在应用侧，而不是让库在 0 尺寸上自己 resize。
-
-点击读取 `event.features[0].properties.id`，类型不是字符串就忽略。健康切换只改 React 数组里的布尔值，下一次 `setData` 让 `circle-color` 的 case 表达式重算，不调用 `setPaintProperty`，也不 `setStyle`。
-
-Worker：库在创建 Map 时可能再开一个 Worker 做 GeoJSON 索引。Vite 若把 worker 文件拆出去，需要在 `new Map` 之前 `maplibregl.setWorkerUrl`。本文件没有这条调用。灰屏时先看网络面板里 worker 脚本是否 404，再看 WebGL2。不要为了绕过 CSP 去放宽 `worker-src *`。
-
-`cooperativeGestures` 要求用户配合页面滚动，不能代替移动端验收。`easeTo` 的 `duration: 0` 是为了不在减少动态时飞过去。若改成动画，要先读 `prefers-reduced-motion`。点击只认字符串 id。属性里不要放 HTML。恢复初始状态时把 `nextId` 归零，否则序号耗尽后按钮会一直禁用，即使列表已经回到三座城市。
-
-`addSource` 的第一份数据是三座基站点。basic 的 effect 随后 `setData` 成两座。测试若在 `load` 回调里立刻读 source，可能仍看到三座，要以 `ready` 之后的 effect 为准。过滤「只看在线」时不要 `map.remove()` 再重建，否则相机和 WebGL 上下文都会丢。
-
-空样式没有 `glyphs` 和 `sprite`。圆层不需要字体。若以后加 `symbol` 层显示中文，必须自备允许再分发的字形文件，并写进 style，不要临时指向公共演示字体。上下文丢失时表格仍是操作入口，恢复事件里只有 `isStyleLoaded()` 为真才把 `ready` 设回真。
-
-`circle-radius` 当前是常数 11，不随缩放改变米制大小。这和 deck.gl 的像素半径是两种库的各自单位，不要混用同一套魔法数字。健康色用表达式读取布尔属性，色盲用户仍依赖表格里的「在线 / 暂停」文字。不要只靠绿色和橙色传达状态。
-
-更新数据时调用 `GeoJSONSource.setData`。
-卸载时调用 `map.remove()`。
-零尺寸容器不调用 `resize`。
-
-## 证据
-
-sdk、build、browser 在 `docs/library-lab/evidence/runs/` 有本条目收据之前为 **NOT_RUN**。`resolveVisibleStation` 和 `canResizeMap` 不证明 WebGL 或 Worker。Actions run `41779873259` 是仓库级 install、typecheck、build、52 个 SDK 文件（153 个测试）和 45 个 Playwright，不是 A16 的 PASS，不要写入 `verification.json`。
+Node两项真实SDK检查只覆盖LngLat/Mercator和Evented监听所有权；六项政策不创建Map。真实Map/Worker/WebGL只能主控在浏览器运行validation/browser-proposal.txt验证；不以Node输出或静态检查冒充图形结果。正式verification保持NOT_RUN，六项状态与实际命令见local-validation.md。

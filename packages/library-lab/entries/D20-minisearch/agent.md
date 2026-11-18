@@ -14,11 +14,9 @@ advanced 可以把 `fuzzy` 设为 `false`。建议最多 3 条，搜索结果最
 
 ## 迁移
 
-从 [`examples/example.tsx`](examples/example.tsx) 带走 `buildMiniIndex` 和提交型查询。裁剪来自 [`examples/scope-policy.mjs`](examples/scope-policy.mjs)。
+在已有React/TypeScript工程执行 `pnpm add minisearch@7.2.0`。复制example.tsx、runtime.mjs/runtime.d.mts、scope-policy.mjs/scope-policy.d.mts，保持相对路径；demo.tsx仅适配。runtime导出initialDocs/buildMiniIndex/updateFirstDocument，UI和SDK测试共用。TS使用bundler解析；无需Provider、环境、CSS插件或后台服务。卸载释放局部索引/state，没有外部资源；重挂载恢复种子。
 
-重建索引依赖文档数组的引用变化。替换一篇时返回新数组。
-
-展示用 id 回查当前文档，不信任索引里可能过期的存储字段去显示摘要。
+updateFirstDocument返回新数组并替换id1的Suspense为Streaming，旧词消失、新词出现。scope helper对全部浅复制数组，不深克隆对象；禁止原地修改种子。搜索与autoSuggest均使用同一scopedDocs索引。组合态/isComposing/keyCode229时不提交。
 
 ## 不可删的清理
 
@@ -49,7 +47,7 @@ advanced 可以把 `fuzzy` 设为 `false`。建议最多 3 条，搜索结果最
 
 ## 真实限制
 
-六篇种子，没有持久化索引，没有自定义 tokenizer。模糊 0.2 是演示。建议列表不是完整词典。
+六篇种子，没有持久化索引，没有自定义 tokenizer。连续中文默认不按语义拆词，完整token命中不证明内部词召回。模糊 0.2 是演示。建议列表不是完整词典。
 
 分类名是 fixture。真实 ACL 必须在数据进入组件之前完成。
 

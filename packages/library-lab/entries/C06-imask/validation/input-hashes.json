@@ -1,0 +1,31 @@
+{
+  "installedVersions": {
+    "imask": "7.6.1",
+    "react-imask": "7.6.1",
+    "react": "19.3.0"
+  },
+  "files": {
+    "AGENTS.md": "40dad78b12cdb2a00f29068793d4c1a1f67acc91d714d5a5d2b65fa47ca25f40",
+    "library.json": "b11fcfd79cb78c44ff67ca0938304e30fba361f25aa5d6cd0f28ca4781168577",
+    "guide.md": "89a0fbe1c2052e6feac4ad6c815505484ffb352f112f209d903022268b291e0e",
+    "agent.md": "e1df8a7ffe11287ed8fcb4b5158fb6b6b607185c5a8e1f0c4f871201bd4707f4",
+    "local-validation.md": "2242dea52278db2923f567eb594cba01043eefb87076db038523318f56c8dede",
+    "verification.json": "a29e9f460f06093b9e3dde95002e41ccc4a5561071befe1f9d311c75465e3dc9",
+    "official/readme.md": "6d2a1d25943c4b0f0831d55a7cb566604db9d188a76767aba5efda5c9ba5460c",
+    "official/core-readme.md": "c3bd23f1220ce2d6ea8c82c8e16748d0afc2d3a7f4b2c34218ffc49022d931ae",
+    "official/source-evidence.json": "5cc3fc71ec91f67b8a8016325e7f215def80d87c344f4b8b4421cab73cf1f782",
+    "validation/browser-proposal.txt": "87d62ab1a0c94b22cd12deb0f01186ab65a1afb6728963440ef9345cdfc568cf",
+    "validation/metadata-check.mjs": "41155729664728a577838d0666ed93209f5a08344246ecbb1c0e373459612ffb",
+    "validation/fetch-official.py": "dc1b318eb644ac670700374bcb948c38a28e9adbd526572cc14eb127cf705545",
+    "validation/sdk-source-audit.json": "9b2a01d3e25d4e2e09e1a7e9581bb4ccae8c41f86cdc67963fe057fd26ac8e87",
+    "validation/final-check.py": "281741cc7ba97489999727df76d82b01fec004319c6fb49580eec6bddc9a0aea",
+    "examples/calendar-policy.d.mts": "8c854201ed8a821443b973f4fdb0f13596086a67863a78747d75f90bbb016bde",
+    "examples/calendar-policy.mjs": "d9a6b9f89204b3c733a267e5aa1e9d43318502a31a50407c586d1b1fb9300682",
+    "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+    "examples/example.tsx": "6b822ac4e253e8490cd549035ea6fc2585f94a856fbc73e236456dfa9b5262a1",
+    "examples/styles.css": "f1abed0bfc34a5125c9dac08b2eafaa11f95432fcae24118207fe0dd77767498",
+    "tests/calendar-policy.test.mjs": "2f28563a1ebbd43cda41d91a12579c72edb67bcc6417455b97a33d521c972ad5",
+    "tests/sdk.test.mjs": "50edd32debfad44ec0a7ce675c9ef5facf13e0e83a7394d6ec8d59177b3e4d44",
+    "validation/mobile-overflow-probe.mjs": "b4b85a71e7ea29a8149906b5d1c02c1e74838b5e56c774f940dc96c09a4cbe6b"
+  }
+}

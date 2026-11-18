@@ -1,0 +1,15 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node --test entries/B11-radix-primitives/tests/sdk.test.mjs
+exit: 0
+Real closed Trigger SSR: <button type="button" id="radix-_R_0_" aria-haspopup="menu" aria-expanded="false" data-state="closed">更多操作</button>
+Real inline menu SSR bytes: 1673
+✔ real asChild closed Trigger renders one native button with menu ARIA (6.501784ms)
+✔ real inline forceMount Content exposes static checkbox/radio/disabled semantics (5.530883ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 93.804885

@@ -1,0 +1,26 @@
+{
+  "repository": "recharts/recharts",
+  "tag": "v3.10.1",
+  "annotatedTag": "e148939042fe4beb4b1c93572a020420a48f0d38",
+  "commit": "ffb918798051ef040bb7f9922d3850c9c189f39f",
+  "path": "README.md",
+  "readmeCandidates": [
+    "README.md",
+    "omnidoc/README.md",
+    "prompts/README.md",
+    "storybook/README.md",
+    "test-vr/README.md",
+    "test-vr/playwright/README.md",
+    "test/README.md",
+    "www/README.md"
+  ],
+  "treeTruncated": false,
+  "treeUrl": "https://api.github.com/repos/recharts/recharts/git/trees/ffb918798051ef040bb7f9922d3850c9c189f39f?recursive=1",
+  "selectionReason": "Read-only discovery inspected the full pinned tree: eight README candidates, no upstream Chinese README. The root README describes the published recharts package; the official website has a Chinese entry but is not a README.",
+  "language": "en",
+  "version": "3.10.1",
+  "sha256": "b7261f5d2719719a297a001d673f01d49363542660b408a6b8de627143adb04e",
+  "bytes": 4046,
+  "syncedAt": "2026-11-10T11:29:14.615016+00:00",
+  "sourceUrl": "https://github.com/recharts/recharts/blob/ffb918798051ef040bb7f9922d3850c9c189f39f/README.md"
+}

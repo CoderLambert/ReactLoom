@@ -1,0 +1,123 @@
+{
+  "checkedAt": "2026-11-10T17:53:17.931662+00:00",
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+  "scope": "Installed source/types only; not another SDK/browser run",
+  "files": [
+    {
+      "package": "react-i18next",
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/react-i18next@17.0.16_i18next@26.4.3_typescript@7.0.2__react-dom@19.3.0_react@19.3.0__r_08b7ce3cf06233ed5bb41aee2567fb7d/node_modules/react-i18next/package.json",
+      "relative": "package.json",
+      "bytes": 6037,
+      "sha256": "3dcf3ea277da256212cebdf94d56825145e0cf28d11b8ba7b6383dae36ac0e9c"
+    },
+    {
+      "package": "react-i18next",
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/react-i18next@17.0.16_i18next@26.4.3_typescript@7.0.2__react-dom@19.3.0_react@19.3.0__r_08b7ce3cf06233ed5bb41aee2567fb7d/node_modules/react-i18next/index.d.ts",
+      "relative": "index.d.ts",
+      "bytes": 10343,
+      "sha256": "cd8be81264240b21b30c2299f6460590c3044beeeb8aff7fc024a19757edc0c6"
+    },
+    {
+      "package": "react-i18next",
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/react-i18next@17.0.16_i18next@26.4.3_typescript@7.0.2__react-dom@19.3.0_react@19.3.0__r_08b7ce3cf06233ed5bb41aee2567fb7d/node_modules/react-i18next/TransWithoutContext.d.ts",
+      "relative": "TransWithoutContext.d.ts",
+      "bytes": 4926,
+      "sha256": "cf77c9e32be45c9f291d74027f50aafb4d9d81b85eb58bca93f8a3d1bb363046"
+    },
+    {
+      "package": "react-i18next",
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/react-i18next@17.0.16_i18next@26.4.3_typescript@7.0.2__react-dom@19.3.0_react@19.3.0__r_08b7ce3cf06233ed5bb41aee2567fb7d/node_modules/react-i18next/src/useTranslation.js",
+      "relative": "src/useTranslation.js",
+      "bytes": 9031,
+      "sha256": "44cc94836394d15b19fe28bc8d4d1fcdcef3057240159d2d7423bf3502cf225f"
+    },
+    {
+      "package": "react-i18next",
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/react-i18next@17.0.16_i18next@26.4.3_typescript@7.0.2__react-dom@19.3.0_react@19.3.0__r_08b7ce3cf06233ed5bb41aee2567fb7d/node_modules/react-i18next/src/I18nextProvider.js",
+      "relative": "src/I18nextProvider.js",
+      "bytes": 300,
+      "sha256": "ea5a1a19e56863465d43a3f5220315e1b49725d16f11fa3ee5c7ce06718cd86a"
+    },
+    {
+      "package": "react-i18next",
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/react-i18next@17.0.16_i18next@26.4.3_typescript@7.0.2__react-dom@19.3.0_react@19.3.0__r_08b7ce3cf06233ed5bb41aee2567fb7d/node_modules/react-i18next/src/Trans.js",
+      "relative": "src/Trans.js",
+      "bytes": 1039,
+      "sha256": "2735d5d09eb75cbd774be0973ca358d880f5dcc273ba062a8b9f72f7dacbf340"
+    },
+    {
+      "package": "react-i18next",
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/react-i18next@17.0.16_i18next@26.4.3_typescript@7.0.2__react-dom@19.3.0_react@19.3.0__r_08b7ce3cf06233ed5bb41aee2567fb7d/node_modules/react-i18next/src/TransWithoutContext.js",
+      "relative": "src/TransWithoutContext.js",
+      "bytes": 21696,
+      "sha256": "ec8372007e3ac23ad2eb812f7998c07343b228b5e0f99432dd3b67c8274899d9"
+    },
+    {
+      "package": "react-i18next",
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/react-i18next@17.0.16_i18next@26.4.3_typescript@7.0.2__react-dom@19.3.0_react@19.3.0__r_08b7ce3cf06233ed5bb41aee2567fb7d/node_modules/react-i18next/src/defaults.js",
+      "relative": "src/defaults.js",
+      "bytes": 752,
+      "sha256": "cbf776aff8600bad897153cf183bf2ea62758ae41f3d05897990f9a3504186c7"
+    },
+    {
+      "package": "react-i18next",
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/react-i18next@17.0.16_i18next@26.4.3_typescript@7.0.2__react-dom@19.3.0_react@19.3.0__r_08b7ce3cf06233ed5bb41aee2567fb7d/node_modules/react-i18next/src/initReactI18next.js",
+      "relative": "src/initReactI18next.js",
+      "bytes": 237,
+      "sha256": "9da9c5428101158d5549baef32434f9b1b0968a2423e7a76db8bcfab201e6af9"
+    },
+    {
+      "package": "react-i18next",
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/react-i18next@17.0.16_i18next@26.4.3_typescript@7.0.2__react-dom@19.3.0_react@19.3.0__r_08b7ce3cf06233ed5bb41aee2567fb7d/node_modules/react-i18next/src/i18nInstance.js",
+      "relative": "src/i18nInstance.js",
+      "bytes": 132,
+      "sha256": "7b859cb5a63cb8681f185ea8b5b3c5c9a63ccc6fd270ede38e20d4440350fbe7"
+    },
+    {
+      "package": "react-i18next",
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/react-i18next@17.0.16_i18next@26.4.3_typescript@7.0.2__react-dom@19.3.0_react@19.3.0__r_08b7ce3cf06233ed5bb41aee2567fb7d/node_modules/react-i18next/src/utils.js",
+      "relative": "src/utils.js",
+      "bytes": 3009,
+      "sha256": "0515b2faaac595d7b44bc237dbec741f4262e2c147d27a4e9ce6648b785d1167"
+    },
+    {
+      "package": "i18next",
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/i18next@26.4.3_typescript@7.0.2/node_modules/i18next/package.json",
+      "relative": "package.json",
+      "bytes": 3771,
+      "sha256": "ae3cb0d0bdb0e4136f392bcb26b96dee777e0c1183ed7f2600fb590d59d66f18"
+    },
+    {
+      "package": "i18next",
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/i18next@26.4.3_typescript@7.0.2/node_modules/i18next/index.d.ts",
+      "relative": "index.d.ts",
+      "bytes": 19129,
+      "sha256": "9afbb72f8f6c5ec64d76f9e35dff53c34bd837ca0a495233d1a5567189066afb"
+    },
+    {
+      "package": "i18next",
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/i18next@26.4.3_typescript@7.0.2/node_modules/i18next/typescript/options.d.ts",
+      "relative": "typescript/options.d.ts",
+      "bytes": 27064,
+      "sha256": "aa393b18fa89dcbac215904a8397f28332de13feaffcc2ee75a55101716302dd"
+    },
+    {
+      "package": "i18next",
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/i18next@26.4.3_typescript@7.0.2/node_modules/i18next/dist/esm/i18next.js",
+      "relative": "dist/esm/i18next.js",
+      "bytes": 83433,
+      "sha256": "4fb2e0c4dfd13dda4f6cb292ae0f9c5260a13b28bab05ee723915351bdaf00a1"
+    }
+  ],
+  "versions": {
+    "react-i18next": "17.0.16",
+    "i18next": "26.4.3"
+  },
+  "coreConclusions": {
+    "provider": "Context memo, not instance init/dispose",
+    "hook": "useSyncExternalStore exact subscribe/unsubscribe; returns identity-changing language wrapper",
+    "Trans": "named component props can be overridden; default basic tags; app SafeEmphasis only forwards children",
+    "singleton": "initReactI18next sets module singleton; app does not register it",
+    "cleanup": "app original onLanguageChanged off with same identity; queued gate rejected; already-started changeLanguage not aborted"
+  }
+}

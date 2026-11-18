@@ -1,0 +1,5 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['pnpm', 'exec', 'biome', 'check', '--write', 'entries/C04-jsonforms/examples/example.tsx', 'entries/C04-jsonforms/validation/sdk-source-audit.json', 'entries/C04-jsonforms/validation/browser-proposal.check.ts']
+startedAt: 2026-11-10T15:37:44.678519+00:00
+exit: 0
+Checked 3 files in 13ms. Fixed 1 file.

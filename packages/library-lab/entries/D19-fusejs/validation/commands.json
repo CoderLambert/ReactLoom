@@ -1,0 +1,120 @@
+[
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "node",
+      "--test",
+      "packages/library-lab/entries/D19-fusejs/tests/sdk.test.mjs"
+    ],
+    "exitCode": 0,
+    "at": "2026-11-17T17:00:38.913019+00:00",
+    "log": "validation/sdk.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "node",
+      "--test",
+      "packages/library-lab/entries/D19-fusejs/tests/search-scope.test.mjs",
+      "packages/library-lab/entries/D19-fusejs/tests/index-lifecycle.test.mjs"
+    ],
+    "exitCode": 0,
+    "at": "2026-11-17T17:00:38.981947+00:00",
+    "log": "validation/policy.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "entries/D19-fusejs/examples",
+      "entries/D19-fusejs/tests",
+      "entries/D19-fusejs/validation/browser.spec.ts",
+      "entries/D19-fusejs/library.json",
+      "entries/D19-fusejs/verification.json"
+    ],
+    "exitCode": 1,
+    "at": "2026-11-17T17:00:39.239198+00:00",
+    "log": "validation/biome.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "entries/D19-fusejs/examples",
+      "entries/D19-fusejs/tests",
+      "entries/D19-fusejs/validation/browser.spec.ts",
+      "entries/D19-fusejs/library.json",
+      "entries/D19-fusejs/verification.json"
+    ],
+    "exitCode": 0,
+    "at": "2026-11-17T17:01:08.612079+00:00",
+    "log": "validation/biome-final.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "node",
+      "--test",
+      "packages/library-lab/entries/D19-fusejs/tests/sdk.test.mjs"
+    ],
+    "exitCode": 0,
+    "at": "2026-11-17T17:01:08.689660+00:00",
+    "log": "validation/sdk-final.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "node",
+      "--test",
+      "packages/library-lab/entries/D19-fusejs/tests/search-scope.test.mjs",
+      "packages/library-lab/entries/D19-fusejs/tests/index-lifecycle.test.mjs"
+    ],
+    "exitCode": 0,
+    "at": "2026-11-17T17:01:08.752939+00:00",
+    "log": "validation/policy-final.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "entries/D19-fusejs/examples",
+      "entries/D19-fusejs/tests",
+      "entries/D19-fusejs/validation/browser.spec.ts",
+      "entries/D19-fusejs/library.json",
+      "entries/D19-fusejs/verification.json"
+    ],
+    "exitCode": 0,
+    "at": "2026-11-17T17:01:41.388719+00:00",
+    "log": "validation/biome-final.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "node",
+      "--input-type=module",
+      "-e",
+      "import fs from 'node:fs';import crypto from 'node:crypto';import assert from 'node:assert/strict';import {validateOfficialSources} from './packages/library-lab/src/lib/official-sources.mjs';const p='packages/library-lab/entries/D19-fusejs/';const m=JSON.parse(fs.readFileSync(p+'library.json'));assert.deepEqual(validateOfficialSources(m.official),[]);assert.equal(crypto.createHash('sha256').update(fs.readFileSync(p+'official/readme.md')).digest('hex'),m.official.readme.sha256);console.log('official metadata and original README digest PASS');"
+    ],
+    "exitCode": 0,
+    "at": "2026-11-17T17:01:52.433322+00:00",
+    "log": "validation/official-contract.log"
+  }
+]

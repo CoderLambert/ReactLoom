@@ -1,0 +1,184 @@
+{
+  "runs": [
+    {
+      "label": "format-source",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "check",
+        "--write",
+        "entries/B10-base-ui/examples",
+        "entries/B10-base-ui/tests"
+      ],
+      "startedAt": "2026-11-10T13:39:53.654111+00:00",
+      "finishedAt": "2026-11-10T13:39:53.900319+00:00",
+      "exitCode": 1,
+      "log": "format-source.txt"
+    },
+    {
+      "label": "typecheck-source",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--target",
+        "es2022",
+        "--module",
+        "esnext",
+        "--moduleResolution",
+        "bundler",
+        "--jsx",
+        "react-jsx",
+        "--strict",
+        "--skipLibCheck",
+        "--esModuleInterop",
+        "--types",
+        "vite/client,node",
+        "entries/B10-base-ui/examples/demo.tsx"
+      ],
+      "startedAt": "2026-11-10T13:39:53.900362+00:00",
+      "finishedAt": "2026-11-10T13:39:54.188855+00:00",
+      "exitCode": 0,
+      "log": "typecheck-source.txt"
+    },
+    {
+      "label": "official-fetch",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "python3",
+        "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/B10-base-ui/validation/fetch-official.py"
+      ],
+      "startedAt": "2026-11-10T13:41:06.330727+00:00",
+      "finishedAt": "2026-11-10T13:41:20.534382+00:00",
+      "exitCode": 0,
+      "log": "official-fetch.txt"
+    },
+    {
+      "label": "format-fixed",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "check",
+        "--write",
+        "entries/B10-base-ui/examples",
+        "entries/B10-base-ui/tests",
+        "entries/B10-base-ui/library.json",
+        "entries/B10-base-ui/verification.json",
+        "entries/B10-base-ui/official/source-evidence.json",
+        "entries/B10-base-ui/validation/metadata-check.mjs",
+        "entries/B10-base-ui/validation/browser-proposal.check.ts",
+        "entries/B10-base-ui/validation/sdk-source-audit.json"
+      ],
+      "startedAt": "2026-11-10T13:45:59.606426+00:00",
+      "finishedAt": "2026-11-10T13:45:59.851423+00:00",
+      "exitCode": 0,
+      "log": "format-fixed.txt"
+    },
+    {
+      "label": "sdk",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "node",
+        "--test",
+        "entries/B10-base-ui/tests/sdk.test.mjs"
+      ],
+      "startedAt": "2026-11-10T13:45:59.851813+00:00",
+      "finishedAt": "2026-11-10T13:45:59.969237+00:00",
+      "exitCode": 0,
+      "log": "sdk.txt"
+    },
+    {
+      "label": "policy",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "node",
+        "--test",
+        "entries/B10-base-ui/tests/permission-policy.test.mts"
+      ],
+      "startedAt": "2026-11-10T13:45:59.969381+00:00",
+      "finishedAt": "2026-11-10T13:46:00.074098+00:00",
+      "exitCode": 0,
+      "log": "policy.txt"
+    },
+    {
+      "label": "typecheck-final",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--target",
+        "es2022",
+        "--module",
+        "esnext",
+        "--moduleResolution",
+        "bundler",
+        "--jsx",
+        "react-jsx",
+        "--strict",
+        "--skipLibCheck",
+        "--esModuleInterop",
+        "--types",
+        "vite/client,node",
+        "entries/B10-base-ui/examples/demo.tsx",
+        "entries/B10-base-ui/validation/browser-proposal.check.ts"
+      ],
+      "startedAt": "2026-11-10T13:46:00.074288+00:00",
+      "finishedAt": "2026-11-10T13:46:00.368491+00:00",
+      "exitCode": 0,
+      "log": "typecheck-final.txt"
+    },
+    {
+      "label": "metadata",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "node",
+        "entries/B10-base-ui/validation/metadata-check.mjs"
+      ],
+      "startedAt": "2026-11-10T13:46:00.368821+00:00",
+      "finishedAt": "2026-11-10T13:46:00.401796+00:00",
+      "exitCode": 0,
+      "log": "metadata.txt"
+    },
+    {
+      "label": "final-check",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "python3",
+        "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/B10-base-ui/validation/final-check.py"
+      ],
+      "startedAt": "2026-11-10T13:50:52.630085+00:00",
+      "finishedAt": "2026-11-10T13:50:52.650623+00:00",
+      "exitCode": 0,
+      "log": "final-check.txt"
+    },
+    {
+      "label": "diff-check",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "packages/library-lab/entries/B10-base-ui"
+      ],
+      "startedAt": "2026-11-10T13:50:52.650654+00:00",
+      "finishedAt": "2026-11-10T13:50:52.654470+00:00",
+      "exitCode": 0,
+      "log": "diff-check.txt"
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "commit": "555c1c1b6175e7a043adf8694983776a1e6fdeeb",
+  "tag": "5.7.0",
+  "treeTruncated": false,
+  "readmeCandidates": [
+    "README.md"
+  ],
+  "selected": "README.md",
+  "license": "LICENSE",
+  "homepage": {
+    "status": 200,
+    "headers": {
+      "Connection": "close",
+      "Content-Length": "18369",
+      "Server": "GitHub.com",
+      "Content-Type": "text/html; charset=utf-8",
+      "Last-Modified": "Thu, 12 Nov 2026 17:27:10 GMT",
+      "Access-Control-Allow-Origin": "*",
+      "ETag": "\"6af5f6ee-47c1\"",
+      "expires": "Tue, 17 Nov 2026 18:37:25 GMT",
+      "Cache-Control": "max-age=600",
+      "x-proxy-cache": "MISS",
+      "X-GitHub-Request-Id": "FD7A:1FAEA9:7F41E:867CB:6AFC9C8D",
+      "x-github-edge-region": "japaneast",
+      "Accept-Ranges": "bytes",
+      "Age": "0",
+      "Date": "Tue, 17 Nov 2026 18:27:25 GMT",
+      "Via": "1.1 varnish",
+      "X-Served-By": "cache-nrt-rjtf7700100-NRT",
+      "X-Cache": "MISS",
+      "X-Cache-Hits": "0",
+      "X-Timer": "S1794940045.372124,VS0,VE223",
+      "Vary": "Accept-Encoding",
+      "X-Fastly-Request-ID": "4e48105d27d9ebc662ae9e96c0a8201e35729aa0"
+    },
+    "bodySha256": "98ffde697b68b13cbed8c043196335514ad48c67fa20f3eaa77d97f4ea2c8a5c"
+  },
+  "checkedAt": "2026-11-17T18:27:24.899159+00:00"
+}

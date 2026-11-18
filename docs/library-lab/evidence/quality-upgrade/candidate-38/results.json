@@ -1,0 +1,245 @@
+[
+  {
+    "name": "mime-regression-red",
+    "command": [
+      "node",
+      "--test",
+      "--test-name-pattern=inherited object key",
+      "packages/library-lab/entries/E19-ffmpeg-wasm/examples/input-policy.test.mjs"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T19:14:53.189691+00:00",
+    "finishedAt": "2026-11-17T19:14:53.254021+00:00",
+    "exitCode": 1,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-38/mime-regression-red.txt"
+  },
+  {
+    "name": "policy",
+    "command": [
+      "node",
+      "--test",
+      "packages/library-lab/entries/E19-ffmpeg-wasm/examples/input-policy.test.mjs",
+      "packages/library-lab/entries/E19-ffmpeg-wasm/examples/wav-output-policy.test.mjs"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T19:14:58.754107+00:00",
+    "finishedAt": "2026-11-17T19:14:58.828361+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-38/policy.txt"
+  },
+  {
+    "name": "browser-types",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "tsc",
+      "--ignoreConfig",
+      "--noEmit",
+      "--strict",
+      "--target",
+      "ES2022",
+      "--module",
+      "ESNext",
+      "--moduleResolution",
+      "Bundler",
+      "--skipLibCheck",
+      "--types",
+      "node",
+      "entries/E19-ffmpeg-wasm/validation/browser-local.spec.ts",
+      "entries/E19-ffmpeg-wasm/validation/playwright.local.config.ts"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T19:17:38.587173+00:00",
+    "finishedAt": "2026-11-17T19:17:38.843016+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-38/browser-types.txt"
+  },
+  {
+    "name": "types",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "typecheck"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T19:17:38.958371+00:00",
+    "finishedAt": "2026-11-17T19:17:40.668893+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-38/types.txt"
+  },
+  {
+    "name": "build",
+    "command": [
+      "env",
+      "-u",
+      "LIBRARY_LAB_FFMPEG_CORE_LICENSE_REVIEWED",
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "build"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T19:17:40.692031+00:00",
+    "finishedAt": "2026-11-17T19:17:47.297057+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-38/build.txt"
+  },
+  {
+    "name": "catalog",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "catalog:check"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T19:17:47.318964+00:00",
+    "finishedAt": "2026-11-17T19:17:47.699192+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-38/catalog.txt"
+  },
+  {
+    "name": "real-browser",
+    "command": [
+      "env",
+      "LIBRARY_LAB_FFMPEG_CORE_LICENSE_REVIEWED=true",
+      "node",
+      "packages/library-lab/entries/E19-ffmpeg-wasm/validation/run-local.mjs",
+      "docs/library-lab/evidence/quality-upgrade/candidate-38/browser-artifacts"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T19:17:47.811348+00:00",
+    "finishedAt": "2026-11-17T19:17:56.720438+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-38/real-browser.txt"
+  },
+  {
+    "name": "browser-decoder-recovery",
+    "command": [
+      "env",
+      "LIBRARY_LAB_FFMPEG_CORE_LICENSE_REVIEWED=true",
+      "node",
+      "packages/library-lab/entries/E19-ffmpeg-wasm/validation/run-local.mjs",
+      "docs/library-lab/evidence/quality-upgrade/candidate-38/browser-decoder-recovery",
+      "-g",
+      "normalize a real"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T19:18:39.206792+00:00",
+    "finishedAt": "2026-11-17T19:18:42.810935+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-38/browser-decoder-recovery.txt"
+  },
+  {
+    "name": "lint",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "biome",
+      "check",
+      "entries/E19-ffmpeg-wasm/examples",
+      "entries/E19-ffmpeg-wasm/library.json",
+      "entries/E19-ffmpeg-wasm/verification.json",
+      "entries/E19-ffmpeg-wasm/validation/browser-local.spec.ts",
+      "entries/E19-ffmpeg-wasm/validation/playwright.local.config.ts",
+      "entries/E19-ffmpeg-wasm/validation/run-local.mjs"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T19:20:12.700480+00:00",
+    "finishedAt": "2026-11-17T19:20:12.934401+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-38/lint.txt"
+  },
+  {
+    "name": "final-browser-types",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "tsc",
+      "--ignoreConfig",
+      "--noEmit",
+      "--strict",
+      "--target",
+      "ES2022",
+      "--module",
+      "ESNext",
+      "--moduleResolution",
+      "Bundler",
+      "--skipLibCheck",
+      "--types",
+      "node",
+      "entries/E19-ffmpeg-wasm/validation/browser-local.spec.ts",
+      "entries/E19-ffmpeg-wasm/validation/playwright.local.config.ts"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T19:20:12.955479+00:00",
+    "finishedAt": "2026-11-17T19:20:13.209323+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-38/final-browser-types.txt"
+  },
+  {
+    "name": "final-build",
+    "command": [
+      "env",
+      "-u",
+      "LIBRARY_LAB_FFMPEG_CORE_LICENSE_REVIEWED",
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "build"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T19:20:13.325938+00:00",
+    "finishedAt": "2026-11-17T19:20:20.053655+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-38/final-build.txt"
+  },
+  {
+    "name": "final-catalog",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "catalog:check"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T19:20:20.074550+00:00",
+    "finishedAt": "2026-11-17T19:20:20.459156+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-38/final-catalog.txt"
+  },
+  {
+    "name": "final-root-index",
+    "command": [
+      "node",
+      "packages/library-lab/scripts/root-catalog.mjs"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T19:20:20.483132+00:00",
+    "finishedAt": "2026-11-17T19:20:20.520133+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-38/final-root-index.txt"
+  },
+  {
+    "name": "final-browser",
+    "command": [
+      "env",
+      "LIBRARY_LAB_FFMPEG_CORE_LICENSE_REVIEWED=true",
+      "node",
+      "packages/library-lab/entries/E19-ffmpeg-wasm/validation/run-local.mjs",
+      "docs/library-lab/evidence/quality-upgrade/candidate-38/final-browser-artifacts"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-17T19:20:20.542114+00:00",
+    "finishedAt": "2026-11-17T19:20:29.754185+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-38/final-browser.txt"
+  }
+]

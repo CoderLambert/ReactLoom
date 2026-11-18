@@ -1,0 +1,41 @@
+{
+  "repository": "krisk/Fuse",
+  "tag": "v7.5.0",
+  "annotatedTag": "2c34c70dbd2553dfdc241db16126d5d4ca9d6c51",
+  "commit": "45bac9fe2e71fe8c680c861a35a8b226c4ae6d5a",
+  "readmePaths": [
+    "README.md"
+  ],
+  "readmeSelection": "Pinned recursive tree has only README.md; no official Chinese README. Preserve English original.",
+  "checkedAt": "2026-11-17T16:59:16.330Z",
+  "homepage": {
+    "requestedUrl": "https://www.fusejs.io/",
+    "finalUrl": "https://www.fusejs.io/",
+    "status": 200,
+    "headers": {
+      "accept-ranges": "bytes",
+      "access-control-allow-origin": "*",
+      "age": "348",
+      "cache-control": "max-age=600",
+      "content-encoding": "gzip",
+      "content-length": "6210",
+      "content-type": "text/html; charset=utf-8",
+      "date": "Tue, 17 Nov 2026 16:59:16 GMT",
+      "etag": "W/\"6a780472-7456\"",
+      "expires": "Tue, 17 Nov 2026 00:28:27 GMT",
+      "last-modified": "Sun, 09 Aug 2026 04:39:14 GMT",
+      "server": "GitHub.com",
+      "vary": "Accept-Encoding",
+      "via": "1.1 varnish",
+      "x-cache": "HIT",
+      "x-cache-hits": "0",
+      "x-fastly-request-id": "df1b4149e84ceb1a03a03ca0fb294dda387a9eb5",
+      "x-github-edge-region": "japaneast",
+      "x-github-request-id": "A82A:26A05E:15DD21:17050D:6AFB9D52",
+      "x-proxy-cache": "MISS",
+      "x-served-by": "cache-nrt-rjtf7700066-NRT",
+      "x-timer": "S1794934756.030634,VS0,VE1"
+    },
+    "bodySha256": "160af95a14375bdcebd5701d6de9e73106926d1dfd41476114c5fb2d9e038d59"
+  }
+}

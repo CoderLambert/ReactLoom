@@ -1,0 +1,4 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['pnpm', 'exec', 'tsc', '--ignoreConfig', '--noEmit', '--target', 'es2022', '--module', 'esnext', '--moduleResolution', 'bundler', '--strict', '--skipLibCheck', '--esModuleInterop', '--types', 'vite/client,node', 'entries/C13-frappe-gantt/validation/browser-proposal.check.ts']
+startedAt: 2026-11-10T16:28:23.486897+00:00
+exit: 0

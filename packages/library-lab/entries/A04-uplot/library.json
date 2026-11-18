@@ -4,14 +4,8 @@
   "slug": "uplot",
   "name": "uPlot",
   "group": "A",
-  "summary": "有界内存的时间序列趋势图与实时遥测",
-  "tags": [
-    "timeseries",
-    "Canvas",
-    "streaming",
-    "性能",
-    "resize"
-  ],
+  "summary": "对齐秒级时间序列、真实更新与尺寸变化，再观察100点保留窗口、暂停和销毁",
+  "tags": ["timeseries", "Canvas", "streaming", "性能", "resize"],
   "contentState": "recreated",
   "packages": [
     {
@@ -21,16 +15,16 @@
   ],
   "references": [
     {
-      "title": "uPlot 官方项目",
-      "url": "https://github.com/leeoniya/uPlot"
+      "title": "1.6.32官方原文",
+      "url": "https://github.com/leeoniya/uPlot/blob/e995b061e9fc5476a6d862cd2fb2ebc7452ca012/README.md"
     },
     {
-      "title": "API / 设计说明",
-      "url": "https://github.com/leeoniya/uPlot/blob/master/docs/README.md"
+      "title": "同版本数据格式与模型",
+      "url": "https://github.com/leeoniya/uPlot/blob/e995b061e9fc5476a6d862cd2fb2ebc7452ca012/docs/README.md"
     },
     {
-      "title": "npm 1.6.32",
-      "url": "https://www.npmjs.com/package/uplot"
+      "title": "同版本类型/API",
+      "url": "https://github.com/leeoniya/uPlot/blob/e995b061e9fc5476a6d862cd2fb2ebc7452ca012/dist/uPlot.d.ts"
     }
   ],
   "related": [
@@ -48,53 +42,82 @@
   "demos": [
     {
       "demoId": "basic",
-      "title": "最小时间序列",
+      "title": "列式数据、Unix秒与同一实例",
       "level": "basic",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
+        "examples/demo.tsx",
         "examples/example.tsx",
+        "examples/series-data.ts",
+        "examples/chart-options.ts",
         "examples/stream-policy.ts",
-        "examples/demo.tsx"
+        "examples/workshop.css"
       ],
-      "capabilities": []
+      "capabilities": [],
+      "description": "28→60点走真实setData，窄面板走setSize；观察SDK数据和尺寸，不重建Canvas。"
     },
     {
       "demoId": "business",
-      "title": "双指标请求监测",
+      "title": "稀疏对齐、两单位与曲线可见性",
       "level": "business",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
+        "examples/demo.tsx",
         "examples/example.tsx",
+        "examples/series-data.ts",
+        "examples/chart-options.ts",
         "examples/stream-policy.ts",
-        "examples/demo.tsx"
+        "examples/workshop.css"
       ],
-      "capabilities": []
+      "capabilities": [],
+      "description": "真实uPlot.join对齐不同频率采样，区分null和0；独立右轴和setSeries切换。"
     },
     {
       "demoId": "advanced",
-      "title": "滚动窗口、缺失点、重置与清理",
+      "title": "有界增量窗口、暂停与销毁",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
+        "examples/demo.tsx",
         "examples/example.tsx",
+        "examples/series-data.ts",
+        "examples/chart-options.ts",
         "examples/stream-policy.ts",
-        "examples/demo.tsx"
+        "examples/workshop.css"
       ],
-      "capabilities": [
-        "ResizeObserver",
-        "cleanup"
-      ]
+      "capabilities": ["timer"],
+      "description": "手动追加立即检验100点上限与旧点淘汰，再验证650ms采样/减少动态/暂停与完整清理。"
     }
   ],
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
-    "note": "参考历史研究，重新编写和整理本应用示例；旧验证不继承。"
+    "note": "保留原有100点有界生成、秒单位、setData/ResizeObserver+rAF/destroy及暂停清理；新增同源实际SDK对齐、曲线切换、更新/尺寸/销毁观察。Node静态工具不冒充Canvas证据。"
   },
   "license": {
     "spdx": "MIT",
     "assets": "本地演示数据为原创；无第三方媒体。"
+  },
+  "official": {
+    "readme": {
+      "repository": "leeoniya/uPlot",
+      "commit": "e995b061e9fc5476a6d862cd2fb2ebc7452ca012",
+      "path": "README.md",
+      "sourceUrl": "https://github.com/leeoniya/uPlot/blob/e995b061e9fc5476a6d862cd2fb2ebc7452ca012/README.md",
+      "snapshotPath": "official/readme.md",
+      "language": "en",
+      "version": "1.6.32",
+      "syncedAt": "2026-11-10T10:55:52.694814+00:00",
+      "sha256": "8fd11454911e4e8db65d53fe9791daec932dd4208d51f07a68c3f3721ad5947b"
+    },
+    "homepage": {
+      "url": "https://github.com/leeoniya/uPlot",
+      "kind": "repository",
+      "status": "blocked",
+      "checkedAt": "2026-11-10T10:55:52.694814+00:00",
+      "reason": "官方包主页为仓库；实际GET200最终URL不变，完整头X-Frame-Options deny、CSP frame-ancestors none明确禁止iframe，保留直达。Lab-origin浏览器NOT_RUN。"
+    }
   }
 }

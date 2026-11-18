@@ -1,0 +1,47 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+ARGV: ["pnpm", "exec", "--", "biome", "check", "--write", "entries/A04-uplot/examples", "entries/A04-uplot/tests"]
+START: 2026-11-10T10:58:23.712743+00:00
+END: 2026-11-10T10:58:23.924548+00:00
+EXIT: 1
+STDOUT:
+Skipped 1 suggested fixes.
+If you wish to apply the suggested (unsafe) fixes, use the command biome check --write --unsafe
+
+Checked 8 files in 11ms. Fixed 8 files.
+Found 1 error.
+
+STDERR:
+entries/A04-uplot/examples/example.tsx:173:3 lint/correctness/useExhaustiveDependencies  FIXABLE  ━━━━━━━━━━
+
+  × This hook specifies more dependencies than necessary: level.
+  
+    171 │     overrideReducedMotion,
+    172 │   })
+  > 173 │   useEffect(() => {
+        │   ^^^^^^^^^
+    174 │     setSamples(28)
+    175 │     setShift(0)
+  
+  i Outer scope values aren't valid dependencies because mutating them doesn't re-render the component.
+  
+    176 │     setStream(false)
+    177 │     setShowErrors(true)
+  > 178 │   }, [level])
+        │       ^^^^^
+    179 │   useEffect(() => {
+    180 │     if (!canStream) return
+  
+  i React relies on hook dependencies to determine when to re-compute Effects.
+    Specifying more dependencies than required can lead to unnecessary re-rendering
+    and degraded performance.
+  
+  i Unsafe fix: Remove the extra dependencies from the list.
+  
+    178 │ ··},·[level])
+        │       -----  
+
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while applying fixes.
+  
+

@@ -1,0 +1,4 @@
+{"label": "types-intermediate", "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab", "argv": ["pnpm", "exec", "--", "tsc", "--ignoreConfig", "--noEmit", "--target", "es2022", "--module", "esnext", "--moduleResolution", "bundler", "--jsx", "react-jsx", "--strict", "--skipLibCheck", "--esModuleInterop", "--types", "vite/client,node", "entries/C06-imask/examples/demo.tsx"], "start": "2026-11-10T15:33:54.598325+00:00", "end": "2026-11-10T15:33:54.875949+00:00", "exitCode": 0, "log": "types-intermediate.txt"}
+STDOUT
+
+STDERR

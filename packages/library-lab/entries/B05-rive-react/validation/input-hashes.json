@@ -1,0 +1,30 @@
+{
+  "installedVersions": {
+    "@rive-app/react-webgl2": "4.37.0",
+    "@rive-app/webgl2": "2.45.0"
+  },
+  "files": {
+    "library.json": "e303d3e88ffca706e90360098e8a4816c27d096f3b9980ef46ee7aa4af690338",
+    "guide.md": "a1deb95d1195f65a0ad76bd3bb087911d4c40a1a34d7dc62d27cdf0f99b3ee80",
+    "agent.md": "96d87e231e42bb064d5594c53e192f6ce0be9ac4dc81aebe81a0bab832c4639b",
+    "local-validation.md": "ecf82e497b16613cd074a7ba6a4dc4a62298b7c1d5685b13310d96ba0b600244",
+    "verification.json": "e370c6d0dd52b8632ec6e36c9452deb56485391193b37b809cb4ca9e14b5823a",
+    "official/readme.md": "d3db576862ff069a0889157166a11e3f3136ec74a4736cb6acbac172ab835262",
+    "official/source-evidence.json": "046ebfa21942b7a84a38e596f7311e5b3f3da297c43d655cd93ce07903e9049a",
+    "official/asset-response.json": "72a7c65079c5f0b074b583df1c020705ba66d49a042ed56e4410d44ee25c154a",
+    "validation/browser-proposal.txt": "3ea0bbf50529ea6153446a4d8d853580c8a84bd6c3ae74c35c6c0dab756b0e1d",
+    "validation/metadata-check.mjs": "4180227b0c611c5cd66f70feb572c54b8e6675e2971ca97c36e246953d220588",
+    "validation/source-audit.mjs": "80e0f9a0ddd8618d35125a6a09fc80f422f3a9d7885da8c58436efe3c2089b2c",
+    "validation/sdk-source-audit.json": "d45e84d62817da4cca161c81b25024f488f4cac1dbd6852b4d681da06bce55ff",
+    "examples/asset.ts": "c5809fc612502c7f02a0836fb1a7b59b71434b3ad06411c2fc8a03b9500f38a7",
+    "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+    "examples/example.tsx": "a6cf16f674e03c77ce08cc93f9af10ce659d591008ba85ccac8cc7b938e66dfa",
+    "examples/player.tsx": "66d2e19b252630236164b37a2373ff27bb9835dd204f299a1574af109513d2f0",
+    "examples/runtime-policy.ts": "dd57e2cb07af6acf7a0f90c1bc9b75ec94062d93395158f7cffcb045e32b7994",
+    "examples/styles.css": "9951286aa8145be03c4728e9d6e8384052a810ca81260ab7bb0d1fae42cb83e6",
+    "tests/runtime-policy.test.mts": "fda468499b40630da225bc677d7065724b9c9222f21520d9169892335319e2c3",
+    "tests/sdk.test.mjs": "6ba8cec82865ae49ac976a702d4412e73462ae8f8e7b884df384efc74971b1cb",
+    "validation/draw-probe.mjs": "fc532c8e9fe567bd2730dff3e86bf0d55976bafee56ecf580037d6c4c762d5ff",
+    "validation/draw-event-source-audit.json": "3216bca665ffe0859a55f05dec9b1161bfcd3fbc4e8fc090861e1be31fb4bc7a"
+  }
+}

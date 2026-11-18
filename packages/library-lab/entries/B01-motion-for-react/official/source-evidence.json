@@ -1,0 +1,349 @@
+{
+  "repository": "motiondivision/motion",
+  "tag": "v14.6.0",
+  "tagRef": {
+    "url": "https://api.github.com/repos/motiondivision/motion/git/ref/tags/v14.6.0",
+    "finalUrl": "https://api.github.com/repos/motiondivision/motion/git/ref/tags/v14.6.0",
+    "status": 200,
+    "headers": {
+      "Date": "Tue, 10 Nov 2026 12:21:24 GMT",
+      "Content-Type": "application/json; charset=utf-8",
+      "Cache-Control": "public, max-age=60, s-maxage=60",
+      "Vary": "Accept,Accept-Encoding, Accept, X-Requested-With",
+      "ETag": "W/\"1b5f0859fb1f379342e3e42a0fc248c1a3bc0d643d29e7e0774251b44a567b11\"",
+      "Last-Modified": "Tue, 10 Nov 2026 11:02:49 GMT",
+      "X-Poll-Interval": "300",
+      "X-GitHub-Media-Type": "github.v3; format=json",
+      "x-github-api-version-selected": "2022-11-28",
+      "Access-Control-Expose-Headers": "ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset, Warning",
+      "Access-Control-Allow-Origin": "*",
+      "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+      "X-Frame-Options": "deny",
+      "X-Content-Type-Options": "nosniff",
+      "X-XSS-Protection": "0",
+      "Referrer-Policy": "origin-when-cross-origin, strict-origin-when-cross-origin",
+      "Content-Security-Policy": "default-src 'none'",
+      "Server": "github.com",
+      "Accept-Ranges": "bytes",
+      "X-RateLimit-Limit": "60",
+      "X-RateLimit-Remaining": "40",
+      "X-RateLimit-Used": "20",
+      "X-RateLimit-Resource": "core",
+      "X-RateLimit-Reset": "1794313773",
+      "Content-Length": "347",
+      "X-GitHub-Request-Id": "8258:2A976:F19A9B:105B15A:6AF30C44",
+      "x-github-edge-region": "westus3",
+      "connection": "close"
+    },
+    "bytes": 347,
+    "sha256": "1b5f0859fb1f379342e3e42a0fc248c1a3bc0d643d29e7e0774251b44a567b11"
+  },
+  "tagObject": {
+    "url": "https://api.github.com/repos/motiondivision/motion/git/tags/0dab766cbde4f8e6346c74cb55d07e89b3f721da",
+    "finalUrl": "https://api.github.com/repos/motiondivision/motion/git/tags/0dab766cbde4f8e6346c74cb55d07e89b3f721da",
+    "status": 200,
+    "headers": {
+      "Date": "Tue, 10 Nov 2026 12:21:25 GMT",
+      "Content-Type": "application/json; charset=utf-8",
+      "Cache-Control": "public, max-age=60, s-maxage=60",
+      "Vary": "Accept,Accept-Encoding, Accept, X-Requested-With",
+      "ETag": "W/\"c373cec9b97226dc8ac1778182acadda2442883405c8ed9b9580f82b7b35afe2\"",
+      "Last-Modified": "Tue, 10 Nov 2026 11:02:49 GMT",
+      "X-GitHub-Media-Type": "github.v3; format=json",
+      "x-github-api-version-selected": "2022-11-28",
+      "Access-Control-Expose-Headers": "ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset, Warning",
+      "Access-Control-Allow-Origin": "*",
+      "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+      "X-Frame-Options": "deny",
+      "X-Content-Type-Options": "nosniff",
+      "X-XSS-Protection": "0",
+      "Referrer-Policy": "origin-when-cross-origin, strict-origin-when-cross-origin",
+      "Content-Security-Policy": "default-src 'none'",
+      "Server": "github.com",
+      "Accept-Ranges": "bytes",
+      "X-RateLimit-Limit": "60",
+      "X-RateLimit-Remaining": "39",
+      "X-RateLimit-Used": "21",
+      "X-RateLimit-Resource": "core",
+      "X-RateLimit-Reset": "1794313773",
+      "Content-Length": "665",
+      "X-GitHub-Request-Id": "825C:201A5:F25ECC:1067C9F:6AF30C45",
+      "x-github-edge-region": "westus3",
+      "connection": "close"
+    },
+    "bytes": 665,
+    "sha256": "c373cec9b97226dc8ac1778182acadda2442883405c8ed9b9580f82b7b35afe2"
+  },
+  "commit": "3397236ea600094f09513fbb2bfb084dc95f5982",
+  "tree": {
+    "response": {
+      "url": "https://api.github.com/repos/motiondivision/motion/git/trees/3397236ea600094f09513fbb2bfb084dc95f5982?recursive=1",
+      "finalUrl": "https://api.github.com/repos/motiondivision/motion/git/trees/3397236ea600094f09513fbb2bfb084dc95f5982?recursive=1",
+      "status": 200,
+      "headers": {
+        "Date": "Tue, 10 Nov 2026 12:21:27 GMT",
+        "Content-Type": "application/json; charset=utf-8",
+        "Cache-Control": "public, max-age=86400, s-maxage=86400",
+        "Vary": "Accept,Accept-Encoding, Accept, X-Requested-With",
+        "ETag": "W/\"7a185d518390cb7b432037019cc990fcea24796502ff44a11ba5c023ef32d6e3\"",
+        "Last-Modified": "Tue, 10 Nov 2026 11:02:49 GMT",
+        "X-GitHub-Media-Type": "github.v3; format=json",
+        "x-github-api-version-selected": "2022-11-28",
+        "Access-Control-Expose-Headers": "ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset, Warning",
+        "Access-Control-Allow-Origin": "*",
+        "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+        "X-Frame-Options": "deny",
+        "X-Content-Type-Options": "nosniff",
+        "X-XSS-Protection": "0",
+        "Referrer-Policy": "origin-when-cross-origin, strict-origin-when-cross-origin",
+        "Content-Security-Policy": "default-src 'none'",
+        "Server": "github.com",
+        "Accept-Ranges": "bytes",
+        "X-RateLimit-Limit": "60",
+        "X-RateLimit-Remaining": "38",
+        "X-RateLimit-Used": "22",
+        "X-RateLimit-Resource": "core",
+        "X-RateLimit-Reset": "1794313773",
+        "Transfer-Encoding": "chunked",
+        "X-GitHub-Request-Id": "8268:2C7C07:FC5634:11071ED:6AF30C47",
+        "x-github-edge-region": "westus3",
+        "connection": "close"
+      },
+      "bytes": 991685,
+      "sha256": "7a185d518390cb7b432037019cc990fcea24796502ff44a11ba5c023ef32d6e3"
+    },
+    "truncated": false,
+    "readmeCandidates": [
+      "README.md",
+      "dev/html/README.md",
+      "dev/react-19/README.md",
+      "dev/react/README.md",
+      "packages/framer-motion/README.md",
+      "packages/framer-motion/client/README.md",
+      "packages/framer-motion/debug/README.md",
+      "packages/framer-motion/dom/README.md",
+      "packages/motion/README.md",
+      "plans/README.md",
+      "plans/issues/README.md"
+    ]
+  },
+  "readme": {
+    "response": {
+      "url": "https://raw.githubusercontent.com/motiondivision/motion/3397236ea600094f09513fbb2bfb084dc95f5982/README.md",
+      "finalUrl": "https://raw.githubusercontent.com/motiondivision/motion/3397236ea600094f09513fbb2bfb084dc95f5982/README.md",
+      "status": 200,
+      "headers": {
+        "Connection": "close",
+        "Content-Length": "7475",
+        "Cache-Control": "max-age=300",
+        "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+        "Content-Type": "text/plain; charset=utf-8",
+        "ETag": "\"36bdcb80136fccb06728e951a753fb5c6e354b27b11b988b31fd2c7a4d0f556d\"",
+        "Strict-Transport-Security": "max-age=31536000",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "deny",
+        "X-XSS-Protection": "1; mode=block",
+        "X-GitHub-Request-Id": "FD40:2BB4CD:353A11:42FC25:6AF30C4C",
+        "x-github-edge-region": "westus3",
+        "Accept-Ranges": "bytes",
+        "Date": "Tue, 10 Nov 2026 12:21:33 GMT",
+        "Via": "1.1 varnish",
+        "X-Served-By": "cache-sjc10043-SJC",
+        "X-Cache": "MISS",
+        "X-Cache-Hits": "0",
+        "X-Timer": "S1794313293.987650,VS0,VE332",
+        "Vary": "Authorization,Accept-Encoding",
+        "Access-Control-Allow-Origin": "*",
+        "Cross-Origin-Resource-Policy": "cross-origin",
+        "X-Fastly-Request-ID": "b56cfc58adbbfe90d107f4f471206cb367800acb",
+        "Expires": "Tue, 10 Nov 2026 12:26:33 GMT",
+        "Source-Age": "0"
+      },
+      "bytes": 7475,
+      "sha256": "08915bb5254a4bc1fd47e8d7ea8fff0dcb470461f6fd6b59fb6d2f0bef0400df"
+    },
+    "path": "README.md"
+  },
+  "package": {
+    "response": {
+      "url": "https://raw.githubusercontent.com/motiondivision/motion/3397236ea600094f09513fbb2bfb084dc95f5982/packages/motion/package.json",
+      "finalUrl": "https://raw.githubusercontent.com/motiondivision/motion/3397236ea600094f09513fbb2bfb084dc95f5982/packages/motion/package.json",
+      "status": 200,
+      "headers": {
+        "Connection": "close",
+        "Content-Length": "3904",
+        "Cache-Control": "max-age=300",
+        "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+        "Content-Type": "text/plain; charset=utf-8",
+        "ETag": "\"899d8089b0220bdc0d767f43a114ba0f524243295e240360d4456bc88a6c61d4\"",
+        "Strict-Transport-Security": "max-age=31536000",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "deny",
+        "X-XSS-Protection": "1; mode=block",
+        "X-GitHub-Request-Id": "A818:2BCC03:3554E6:431952:6AF30C4C",
+        "x-github-edge-region": "westus3",
+        "Accept-Ranges": "bytes",
+        "Date": "Tue, 10 Nov 2026 12:21:33 GMT",
+        "Via": "1.1 varnish",
+        "X-Served-By": "cache-pao-kpao1770069-PAO",
+        "X-Cache": "MISS",
+        "X-Cache-Hits": "0",
+        "X-Timer": "S1794313293.453514,VS0,VE138",
+        "Vary": "Authorization,Accept-Encoding",
+        "Access-Control-Allow-Origin": "*",
+        "Cross-Origin-Resource-Policy": "cross-origin",
+        "X-Fastly-Request-ID": "c91a314097053712b5d2ee6f5fbaca2b3aaa7f0b",
+        "Expires": "Tue, 10 Nov 2026 12:26:33 GMT",
+        "Source-Age": "0"
+      },
+      "bytes": 3904,
+      "sha256": "28479a8efa57d00118de8b1a6efdf43920bce28af858124b8a19e909ea438ece"
+    },
+    "data": {
+      "name": "motion",
+      "version": "14.6.0",
+      "description": "An animation library for JavaScript and React.",
+      "main": "dist/cjs/index.js",
+      "module": "dist/es/index.mjs",
+      "exports": {
+        ".": {
+          "types": "./dist/index.d.ts",
+          "require": "./dist/cjs/index.js",
+          "import": "./dist/es/index.mjs",
+          "default": "./dist/cjs/index.js"
+        },
+        "./debug": {
+          "types": "./dist/debug.d.ts",
+          "require": "./dist/cjs/debug.js",
+          "import": "./dist/es/debug.mjs",
+          "default": "./dist/cjs/debug.js"
+        },
+        "./mini": {
+          "types": "./dist/mini.d.ts",
+          "require": "./dist/cjs/mini.js",
+          "import": "./dist/es/mini.mjs",
+          "default": "./dist/cjs/mini.js"
+        },
+        "./three": {
+          "types": "./dist/three.d.ts",
+          "require": "./dist/cjs/three.js",
+          "import": "./dist/es/three.mjs",
+          "default": "./dist/cjs/three.js"
+        },
+        "./vgpu": {
+          "types": "./dist/vgpu.d.ts",
+          "require": "./dist/cjs/vgpu.js",
+          "import": "./dist/es/vgpu.mjs",
+          "default": "./dist/cjs/vgpu.js"
+        },
+        "./react": {
+          "types": "./dist/react.d.ts",
+          "require": "./dist/cjs/react.js",
+          "import": "./dist/es/react.mjs",
+          "default": "./dist/cjs/react.js"
+        },
+        "./react-client": {
+          "types": "./dist/react-client.d.ts",
+          "require": "./dist/cjs/react-client.js",
+          "import": "./dist/es/react-client.mjs",
+          "default": "./dist/cjs/react-client.js"
+        },
+        "./react-m": {
+          "types": "./dist/react-m.d.ts",
+          "require": "./dist/cjs/react-m.js",
+          "import": "./dist/es/react-m.mjs",
+          "default": "./dist/cjs/react-m.js"
+        },
+        "./react-mini": {
+          "types": "./dist/react-mini.d.ts",
+          "require": "./dist/cjs/react-mini.js",
+          "import": "./dist/es/react-mini.mjs",
+          "default": "./dist/cjs/react-mini.js"
+        },
+        "./react-animate-view": {
+          "types": "./dist/react-animate-view.d.ts",
+          "require": "./dist/cjs/react-animate-view.js",
+          "import": "./dist/es/react-animate-view.mjs",
+          "default": "./dist/cjs/react-animate-view.js"
+        },
+        "./package.json": "./package.json"
+      },
+      "types": "dist/index.d.ts",
+      "author": "Matt Perry",
+      "license": "MIT",
+      "repository": "https://github.com/motiondivision/motion",
+      "sideEffects": false,
+      "keywords": [
+        "javascript animation",
+        "react animation",
+        "react",
+        "three",
+        "3d",
+        "animation",
+        "gestures",
+        "drag",
+        "spring",
+        "popmotion",
+        "framer",
+        "waapi"
+      ],
+      "scripts": {
+        "build": "yarn clean && tsc -p . && rollup -c",
+        "dev": "concurrently -c blue,red -n tsc,rollup --kill-others \"tsc --watch -p . --preserveWatchOutput\" \"rollup --config --watch --no-watch.clearScreen\"",
+        "clean": "rm -rf types dist lib",
+        "test": "jest --config jest.config.json --max-workers=2",
+        "prepack": "yarn build",
+        "postpublish": "git push --tags"
+      },
+      "dependencies": {
+        "framer-motion": "14.6.0",
+        "tslib": "^2.4.0"
+      },
+      "peerDependencies": {
+        "react": "^18.0.0 || ^19.0.0",
+        "react-dom": "^18.0.0 || ^19.0.0"
+      },
+      "peerDependenciesMeta": {
+        "react": {
+          "optional": true
+        },
+        "react-dom": {
+          "optional": true
+        }
+      },
+      "gitHead": "cddcc66430c5c96b2f560bb6a61160231f512c53",
+      "devDependencies": {
+        "concurrently": "^7.3.0",
+        "jest": "^29.7.0",
+        "rollup": "4.59.0",
+        "typescript": "5.4.3"
+      }
+    }
+  },
+  "homepage": {
+    "url": "https://motion.dev/",
+    "finalUrl": "https://motion.dev/",
+    "status": 200,
+    "headers": {
+      "Date": "Tue, 10 Nov 2026 12:21:34 GMT",
+      "Content-Type": "text/html",
+      "Transfer-Encoding": "chunked",
+      "Connection": "close",
+      "CF-Ray": "a585048a786d9f58-FRA",
+      "CF-Cache-Status": "HIT",
+      "Age": "204",
+      "Cache-Control": "public, max-age=14400, s-maxage=600, stale-while-revalidate=3600",
+      "Last-Modified": "Tue, 10 Nov 2026 12:18:10 GMT",
+      "Server": "cloudflare",
+      "CDN-Cache-Control": "public, s-maxage=600, stale-while-revalidate=3600",
+      "Server-Timing": "cfEdge;dur=57,cfOrigin;dur=0,cfWorker;dur=35",
+      "Report-To": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=WzPtBjyONICS5ot6o0aPE5lhEQ7Mvivk1%2BM5nQctjAIeogBa2V6Qqe2Q7m7GwhNSyY%2FwYFM1tS%2FI4gfgGzWBpGI02feOzMYnP2dQXcyWk5aNkuMsMpu0vp4MzzM%3D\"}]}",
+      "Nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}"
+    },
+    "body": "NOT_READ: headers only"
+  },
+  "checkedAt": "2026-11-10T12:21:34.666678+00:00",
+  "language": "en",
+  "selectionReason": "Full fixed recursive tree has no Chinese README; root README.md is selected as the original official overview.",
+  "browserFromLabOrigin": "NOT_RUN"
+}

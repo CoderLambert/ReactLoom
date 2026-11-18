@@ -1,0 +1,22 @@
+{"label": "mobile-overflow-red", "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab", "argv": ["node", "entries/C06-imask/validation/mobile-overflow-probe.mjs"], "start": "2026-11-10T16:16:56.131296+00:00", "end": "2026-11-10T16:16:56.149318+00:00", "exitCode": 1, "log": "mobile-overflow-red.txt", "scope": "fixed candidate16 dist; real browser; no build"}
+STDOUT
+
+STDERR
+node:internal/modules/cjs/loader:1607
+  throw err;
+  ^
+
+Error: Cannot find module '/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C06-imask/validation/mobile-overflow-probe.mjs'
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1603:15)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1145:27)
+    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1169:10)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1196:12)
+    at Module._load (node:internal/modules/cjs/loader:1370:5)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)
+    at node:internal/main/run_main_module:33:47 {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: []
+}
+
+Node.js v26.13.0

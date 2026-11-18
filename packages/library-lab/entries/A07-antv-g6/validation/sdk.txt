@@ -1,0 +1,24 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+ARGV: ["pnpm", "test:sdk", "--entry=A07"]
+START: 2026-11-10T11:48:19.577637+00:00
+END: 2026-11-10T11:48:20.006805+00:00
+EXIT: 0
+STDOUT:
+
+> @reactloom/library-lab@0.1.0 test:sdk /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+> node scripts/sdk-runner.mjs --entry=A07
+
+Real SDK suites selected: 1 file(s)
+✔ real 5.1.1 Graph exposes stable nodes and directed edges from the Demo fixture (2.261958ms)
+✔ real setData replaces the topology on the same model and removes obsolete edges (1.043769ms)
+✔ real Graph model preserves all endpoint IDs and remains unrendered without a graphics backend (0.319774ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 218.266599
+
+STDERR:

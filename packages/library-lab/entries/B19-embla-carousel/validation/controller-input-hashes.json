@@ -1,0 +1,17 @@
+{
+  "checkedAt": "2026-11-10T15:48:28.643429+00:00",
+  "candidate": "candidate-15",
+  "scope": "Final product/content/official input after controller fixes; validation logs and changing status notes excluded, full final Git-visible digest in roadmap results/queue.",
+  "files": {
+    "AGENTS.md": "f5363714c837737813b5abbf50ffbeef8c066c7a776c749b3f8916a3df5ed61d",
+    "agent.md": "5b4bab49761ef1886082b020d3b70693b52f01ea6370c5def633ac9ca30a3352",
+    "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+    "examples/example.tsx": "40852d3049c8be18e0f5608200e1326ef7ccb7d2ffe0eb87fdeb575ddb4addb4",
+    "examples/slide-policy.ts": "f55a791c697439bd9db260ae97664903bc00cd01523a4a3605298ea6483e8f21",
+    "guide.md": "16dc668ed3718f7e4dcd23bc39afc5127107e50a5d5647c26586bd6eb6094881",
+    "library.json": "1fcd4d981bd2862f6d9868d55b65a31adf5fd35472c47e521764a0c78bb6447e",
+    "official/readme.md": "d7b2b1227204396e7900e4f951df7a59c2266b565040927de74d86184f9998d0",
+    "official/source-audit.json": "43faa06169314ad728bc872af7815e4fe124dc357ef1e7d43d7f8bece97099d8",
+    "tests/slide-policy.test.mts": "190c0c7add4489123e940eb4f43c8880a8bb72374760ef2a74a61f2e01ca9b95"
+  }
+}

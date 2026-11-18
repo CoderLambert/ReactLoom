@@ -1,0 +1,20 @@
+✔ matching drag session permits a single unmodified drop (0.496546ms)
+✔ keyboard reorder and reset invalidate late pointer drop (0.115886ms)
+✔ level switch and different drag ID invalidate stale drop (0.078617ms)
+✔ cancelled drag cannot commit (0.0636ms)
+✔ locked: pinned source and destination cannot move (0.613779ms)
+✔ locked: cannot cross pinned slots in either direction (0.128007ms)
+✔ locked: can move inside each unlocked segment (0.094949ms)
+✔ locked: rejects invalid or no-op moves (0.095465ms)
+✔ fixed: pinned source and destination cannot move (0.069668ms)
+✔ fixed: cannot cross pinned slots in either direction (0.058377ms)
+✔ fixed: can move inside each unlocked segment (0.049215ms)
+✔ fixed: rejects invalid or no-op moves (0.052547ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 76.096229

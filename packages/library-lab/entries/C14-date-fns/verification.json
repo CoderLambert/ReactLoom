@@ -1,12 +1,14 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "尚未执行本提交的真实 date-fns/@date-fns/tz SDK"
+    "note": "本地分段真实SDK4项+低高年独立instant1项有效，初次低年FAIL保留；详见local-validation。未执行正式收据runner，status仍NOT_RUN。"
   },
   "build": {
-    "status": "NOT_RUN"
+    "status": "NOT_RUN",
+    "note": "主控candidate18全Lab type/build/catalog exit0、输入stability=[]；六运行源与构建输入逐字节相同，本地只读复核见validation/shared-evidence.json。未执行正式收据runner，status仍NOT_RUN。"
   },
   "browser": {
-    "status": "NOT_RUN"
+    "status": "NOT_RUN",
+    "note": "主控candidate18实际固定dist18浏览器：C14三目标+原文/官网unknown四项PASS，原始browser.json/browser.txt已读并绑定六运行源/公共提案SHA。作者未重复浏览器，未知iframe可嵌入性未改allowed；正式status仍NOT_RUN。"
   }
 }

@@ -1,0 +1,21 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab", "argv": ["pnpm", "test:policy", "--entry=B12"], "start": "2026-11-10T13:41:31.144231+00:00", "end": "2026-11-10T13:41:31.466437+00:00", "exitCode": 0}
+STDOUT
+
+> @reactloom/library-lab@0.1.0 test:policy /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+> node scripts/policy-runner.mjs --entry=B12
+
+Pure entry policy suites selected: 1 (not SDK evidence)
+✔ category query matches even without keyword in option name (0.784706ms)
+✔ normalizes whitespace and latin casing (0.12404ms)
+✔ pending asynchronous results are hidden (0.116652ms)
+✔ only enabled explicitly selected matching title is committed (0.125589ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 72.941901
+
+STDERR

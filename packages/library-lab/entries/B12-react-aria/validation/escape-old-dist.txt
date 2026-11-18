@@ -1,0 +1,13 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab", "argv": ["node", "entries/B12-react-aria/validation/reproduce-escape-reopen.mjs"], "utc": "2026-11-10T14:21:10.185979+00:00", "exitCode": 0, "target": "Existing candidate13 fixed dist, passive diagnostic; not fixed-source PASS"}
+STDOUT
+basic [{"kind":"before-Escape","expanded":"true","input":"React","state":{"selectedKey":null,"inputValue":"React","visibleIds":["react"],"query":null}},{"kind":"native-keydown-capture","expanded":"true","input":"React","state":{"selectedKey":null,"inputValue":"React","visibleIds":["react"],"query":null}},{"kind":"after-keydown","expanded":"true","input":"React","state":{"selectedKey":null,"inputValue":"React","visibleIds":["react"],"query":null},"prevented":false},{"kind":"mutation","expanded":"true","input":"React","state":{"selectedKey":null,"inputValue":"React","visibleIds":["react"],"query":null},"attribute":"aria-expanded","oldValue":"true"},{"kind":"mutation","expanded":"true","input":"React","state":{"selectedKey":null,"inputValue":"React","visibleIds":["react"],"query":null},"attribute":"aria-expanded","oldValue":"false"}]
+FINAL { level: 'basic', input: 'React', expanded: 'true', listboxes: 1 }
+business [{"kind":"before-Escape","expanded":"true","input":"ZZ_NO_MATCH","state":{"selectedKey":null,"inputValue":"ZZ_NO_MATCH","visibleIds":[],"query":null}},{"kind":"native-keydown-capture","expanded":"true","input":"ZZ_NO_MATCH","state":{"selectedKey":null,"inputValue":"ZZ_NO_MATCH","visibleIds":[],"query":null}},{"kind":"after-keydown","expanded":"true","input":"ZZ_NO_MATCH","state":{"selectedKey":null,"inputValue":"ZZ_NO_MATCH","visibleIds":[],"query":null},"prevented":false},{"kind":"mutation","expanded":"true","input":"ZZ_NO_MATCH","state":{"selectedKey":null,"inputValue":"ZZ_NO_MATCH","visibleIds":[],"query":null},"attribute":"aria-expanded","oldValue":"true"},{"kind":"mutation","expanded":"true","input":"ZZ_NO_MATCH","state":{"selectedKey":null,"inputValue":"ZZ_NO_MATCH","visibleIds":[],"query":null},"attribute":"aria-expanded","oldValue":"false"}]
+FINAL {
+  level: 'business',
+  input: 'ZZ_NO_MATCH',
+  expanded: 'true',
+  listboxes: 1
+}
+
+STDERR

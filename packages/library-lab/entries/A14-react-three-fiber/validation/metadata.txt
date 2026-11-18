@@ -1,0 +1,10 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ["node", "entries/A14-react-three-fiber/validation/metadata-check.mjs"]
+startedAt: 2026-11-10T12:12:47.842061+00:00
+finishedAt: 2026-11-10T12:12:47.873089+00:00
+exitCode: 0
+
+STDOUT
+A14 metadata/three goals/six runtime sources/README14301B+hash/release manifest discrepancy/npm integrity/unknown homepage/formal NOT_RUN PASS
+
+STDERR

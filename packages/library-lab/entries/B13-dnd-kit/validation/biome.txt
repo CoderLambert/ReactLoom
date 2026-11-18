@@ -1,0 +1,5 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: pnpm exec biome check --write entries/B13-dnd-kit/examples entries/B13-dnd-kit/tests entries/B13-dnd-kit/validation/check-entry.mjs entries/B13-dnd-kit/library.json entries/B13-dnd-kit/verification.json entries/B13-dnd-kit/official/source-audit.json entries/B13-dnd-kit/official/homepage-response.json
+exit: 0
+
+Checked 13 files in 11ms. Fixed 1 file.

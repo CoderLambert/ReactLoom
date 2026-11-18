@@ -36,7 +36,9 @@ main 上有三层已经合并的工作，它们不是同一棵 Lab 树：
 
 ## 条目协议 v1（已落地）
 
-目录 `entries/<entryId>-<slug>/library.json`。字段参照 `src/lib/types.ts` 与 `src/lib/catalog.mjs`。`demoId` 固定 basic/business/advanced，`level` 同值；React 入口 export default 接受 `{level}`，可共同指向一个真实实现，由 level 展示3种层次。`sourceFiles` 包含所有必要源文件且必须包含 entryPoint。
+目录 `entries/<entryId>-<slug>/library.json`。字段参照 `src/lib/types.ts` 与 `src/lib/catalog.mjs`。2026-11-10 用户确认的质量整改将完整条目改为 1–3 个独立场景：保留 basic，business/advanced 按复杂度提供，demoId/level 不重复。React 入口 export default 接受 `{level}`，可共同指向一个真实实现。`sourceFiles` 包含所有必要源文件且必须包含 entryPoint。
+
+可选 `official` 元数据记录固定提交、官方 README 原文快照及官网检查状态；具体字段以类型与校验器为准。README 摘要不匹配则生成失败。页面提供独立 readme/website 页签，旧条目缺来源时明确显示尚未整理，不推定所有 119 条目已迁移。官网禁止嵌入时给直达按钮；未知状态不冒称已通过浏览器确认。
 
 示例放 examples/example.tsx，可迁移且不依赖主站内部实现；examples/demo.tsx 为适配出口。命名空间与资源清理必需。references/related 在 library.json 中维护，三种关系 alternative/complements/migration-to 必须有理由。
 
@@ -58,6 +60,8 @@ Starter资料ID `file_0000000076f48230883fd95111b3bd2b`，内含119目录和117�
 根锁文件已经包含 Lab importer。frozen install 在 Actions run 41779873259 成功，对象是 #8 合并时的 Lab 树，不是 #97/#98 之后的手册树。不要手造 integrity，也不要把这次仓库级通过写成 119 条 PASS。逐库证据仍走 `verify:record`。
 
 ## 队列与停止
+
+2026-11-10 用户要求按 `library-lab-quality` 整改其余全部库，并先整理新会话计划。该质量整改使用独立的[路线图与队列](../../openspec/roadmaps/upgrade-library-quality/roadmap.md)，新会话从[启动说明](../../openspec/roadmaps/upgrade-library-quality/start-here.md)进入。C20/D15/F18 是未提交的本地样板；A06 现有审批工作台须保留。新计划的工作所有权和逐库质量状态见其 design/queue，不向2026-10历史轮次续号，不从历史“手册已恢复”推定质量整改完成。以下首批和24次记录保留原历史含义。
 
 首批风险条目：A01 ECharts、B17 Floating UI、C01 RHF、D03 p-limit、E05 Monaco、F11 MSW。它们的手册已在 #97（A/B，以及 C01、D03、E05、F11）和 #98（其余 C–F）中恢复。缺的是逐库收据，不是再写一遍指南。C20 clsx 为已有宿主样例，不替代首批目标。每轮优先推进有条件的多个条目，不只审计一个小问题。
 

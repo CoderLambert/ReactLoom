@@ -1,0 +1,60 @@
+.d07-workshop {
+  min-width: 0;
+  color: #1f3c30;
+}
+.d07-workshop .d07-controls,
+.d07-workshop .demo-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.7rem;
+  margin-block: 1rem;
+}
+.d07-workshop label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+.d07-workshop button {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #8ca695;
+  border-radius: 0.4rem;
+  background: #fff;
+  color: #1f3c30;
+  cursor: pointer;
+}
+.d07-workshop button:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+.d07-workshop button:focus-visible,
+.d07-workshop input:focus-visible,
+.d07-workshop select:focus-visible {
+  outline: 3px solid #247f61;
+  outline-offset: 2px;
+}
+.d07-workshop pre {
+  max-width: 100%;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  padding: 0.8rem;
+  background: #f0f6f2;
+}
+.d07-workshop .d07-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+  gap: 0.8rem;
+}
+.d07-workshop .d07-card {
+  min-width: 0;
+  padding: 1rem;
+  border: 1px solid #b9cdbf;
+  border-radius: 0.5rem;
+}
+.d07-workshop li {
+  overflow-wrap: anywhere;
+}
+.d07-workshop [role="alert"] {
+  color: #a32c2c;
+}

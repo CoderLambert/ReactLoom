@@ -1,0 +1,10 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ["node", "--input-type=module", "-e", "import assert from 'node:assert/strict';import {readFile,stat} from 'node:fs/promises';const root='entries/A05-d3/';for(const name of ['guide.md','agent.md','local-validation.md']){const text=await readFile(root+name,'utf8');for(const match of text.matchAll(/\\]\\(([^)]+)\\)/g)){const target=match[1];if(!/^[a-z]+:|^#/.test(target))assert.ok((await stat(root+target.split('#')[0])).isFile(),`${name}: ${target}`)}}console.log('Final guide/agent/local-validation local links exist; no runtime suites repeated.');"]
+startedAt: 2026-11-10T11:53:28.400884+00:00
+finishedAt: 2026-11-10T11:53:28.423092+00:00
+exitCode: 0
+
+STDOUT
+Final guide/agent/local-validation local links exist; no runtime suites repeated.
+
+STDERR

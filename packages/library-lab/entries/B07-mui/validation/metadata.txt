@@ -1,0 +1,29 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab", "argv": ["node", "entries/B07-mui/validation/metadata-check.mjs"], "utc": "2026-11-10T13:30:47.963201+00:00", "exitCode": 0}
+STDOUT
+{
+  "metadata": [],
+  "completeness": [],
+  "demos": 3,
+  "runtimeFiles": 6,
+  "installed": {
+    "@mui/material": {
+      "version": "9.5.0",
+      "packagePath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@mui+material@9.5.0_@emotion+react@11.14.0_@types+react@19.3.0_react@19.3.0__@emotion+s_700aa9eebc76968ccc7d05d63c1911b8/node_modules/@mui/material/package.json"
+    },
+    "@emotion/react": {
+      "version": "11.14.0",
+      "packagePath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@emotion+react@11.14.0_@types+react@19.3.0_react@19.3.0/node_modules/@emotion/react/package.json"
+    },
+    "@emotion/styled": {
+      "version": "11.14.1",
+      "packagePath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@emotion+styled@11.14.1_@emotion+react@11.14.0_@types+react@19.3.0_react@19.3.0__@types+react@19.3.0_react@19.3.0/node_modules/@emotion/styled/package.json"
+    }
+  },
+  "readmeBytes": 2284,
+  "readmeSha256": "7101439d2715daf9687af1c610051cfc01f393b1a83d52b6d8c0d10e8a6e1227",
+  "homepage": "unknown: enforced frame-ancestors takes precedence; actual Lab-origin browser NOT_RUN",
+  "formal": "NOT_RUN",
+  "inputFiles": 16
+}
+
+STDERR

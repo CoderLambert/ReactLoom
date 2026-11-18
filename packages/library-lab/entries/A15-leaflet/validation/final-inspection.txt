@@ -1,0 +1,5 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom
+CHECK: Python scoped inspection of guide/agent/local-validation links, 16 input hashes, 3 real-browser proposals, no temporary .ts, and scoped diff exit0
+UTC: 2026-11-10T12:21:15.533520+00:00
+EXIT: 0
+RESULT: 7 runtime files and necessary CSS/source exist; 16 inputs match; 3 proposals; temporary .ts removed; no shared checks or browser run.

@@ -1,0 +1,11 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=python entries/B21-react-motion-migration/validation/copy-fix-check.py
+PASS: exactly guide.md, agent.md, local-validation.md changed; 39 existing files unchanged
+PASS: candidate15 13 protected inputs and actual motion browser suite unchanged
+REUSED: SDK2, policy4, B21 browser4 PASS; mixed batch exit1/26PASS/3 B22 FAIL retained
+PASS: package README8259B/current hash, archived root README7475B/old hash
+PASS: local links={'guide.md': 5, 'agent.md': 0, 'local-validation.md': 20}
+PASS: formal SDK/build/browser NOT_RUN unchanged; homepage unknown unchanged
+PASS: Markdown whitespace/fences and scoped git diff --check exit0
+NOT_RUN: SDK/policy/browser/HTTP/full workspace/formal recorder re-execution
+exitCode=0

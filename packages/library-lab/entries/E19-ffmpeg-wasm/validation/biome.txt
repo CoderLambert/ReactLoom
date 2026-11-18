@@ -1,0 +1,5 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ["pnpm", "exec", "--", "biome", "check", "entries/E19-ffmpeg-wasm/examples", "entries/E19-ffmpeg-wasm/library.json", "entries/E19-ffmpeg-wasm/verification.json", "entries/E19-ffmpeg-wasm/official/source-evidence.json", "entries/E19-ffmpeg-wasm/validation/baseline.json", "entries/E19-ffmpeg-wasm/validation/resource-prerequisites.json"]
+exit: 0
+
+Checked 15 files in 11ms. No fixes applied.

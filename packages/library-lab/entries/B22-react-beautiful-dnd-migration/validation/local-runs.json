@@ -1,0 +1,247 @@
+{
+  "runs": [
+    {
+      "label": "format-source",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "check",
+        "--write",
+        "entries/B22-react-beautiful-dnd-migration/examples",
+        "entries/B22-react-beautiful-dnd-migration/tests",
+        "entries/B22-react-beautiful-dnd-migration/library.json",
+        "entries/B22-react-beautiful-dnd-migration/verification.json"
+      ],
+      "startedAt": "2026-11-10T14:54:07.865069+00:00",
+      "finishedAt": "2026-11-10T14:54:08.088625+00:00",
+      "exitCode": 0,
+      "log": "format-source.txt"
+    },
+    {
+      "label": "typecheck-source",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--target",
+        "es2022",
+        "--module",
+        "esnext",
+        "--moduleResolution",
+        "bundler",
+        "--jsx",
+        "react-jsx",
+        "--strict",
+        "--skipLibCheck",
+        "--esModuleInterop",
+        "--types",
+        "vite/client,node",
+        "entries/B22-react-beautiful-dnd-migration/examples/demo.tsx"
+      ],
+      "startedAt": "2026-11-10T14:54:08.088652+00:00",
+      "finishedAt": "2026-11-10T14:54:08.327843+00:00",
+      "exitCode": 0,
+      "log": "typecheck-source.txt"
+    },
+    {
+      "label": "sdk",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "node",
+        "--test",
+        "entries/B22-react-beautiful-dnd-migration/tests/sdk.test.mjs"
+      ],
+      "startedAt": "2026-11-10T14:54:08.327863+00:00",
+      "finishedAt": "2026-11-10T14:54:08.423411+00:00",
+      "exitCode": 0,
+      "log": "sdk.txt"
+    },
+    {
+      "label": "policy",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "node",
+        "--test",
+        "entries/B22-react-beautiful-dnd-migration/tests/order-history.test.mts",
+        "entries/B22-react-beautiful-dnd-migration/tests/pinned-order.test.mjs"
+      ],
+      "startedAt": "2026-11-10T14:54:08.423430+00:00",
+      "finishedAt": "2026-11-10T14:54:08.516358+00:00",
+      "exitCode": 0,
+      "log": "policy.txt"
+    },
+    {
+      "label": "official-fetch",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "python3",
+        "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/B22-react-beautiful-dnd-migration/validation/fetch-official.py"
+      ],
+      "startedAt": "2026-11-10T14:56:19.395052+00:00",
+      "finishedAt": "2026-11-10T14:56:39.730647+00:00",
+      "exitCode": 0,
+      "log": "official-fetch.txt"
+    },
+    {
+      "label": "source-audit",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "node",
+        "entries/B22-react-beautiful-dnd-migration/validation/source-audit.mjs"
+      ],
+      "startedAt": "2026-11-10T15:07:41.693476+00:00",
+      "finishedAt": "2026-11-10T15:07:41.733610+00:00",
+      "exitCode": 0,
+      "log": "source-audit.txt"
+    },
+    {
+      "label": "format-final",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "check",
+        "--write",
+        "entries/B22-react-beautiful-dnd-migration/examples",
+        "entries/B22-react-beautiful-dnd-migration/tests",
+        "entries/B22-react-beautiful-dnd-migration/library.json",
+        "entries/B22-react-beautiful-dnd-migration/verification.json",
+        "entries/B22-react-beautiful-dnd-migration/official/source-evidence.json",
+        "entries/B22-react-beautiful-dnd-migration/validation/source-audit.mjs",
+        "entries/B22-react-beautiful-dnd-migration/validation/metadata-check.mjs",
+        "entries/B22-react-beautiful-dnd-migration/validation/sdk-source-audit.json",
+        "entries/B22-react-beautiful-dnd-migration/validation/browser-proposal.check.ts"
+      ],
+      "startedAt": "2026-11-10T15:07:41.733637+00:00",
+      "finishedAt": "2026-11-10T15:07:41.956887+00:00",
+      "exitCode": 0,
+      "log": "format-final.txt"
+    },
+    {
+      "label": "typecheck-final",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--target",
+        "es2022",
+        "--module",
+        "esnext",
+        "--moduleResolution",
+        "bundler",
+        "--jsx",
+        "react-jsx",
+        "--strict",
+        "--skipLibCheck",
+        "--esModuleInterop",
+        "--types",
+        "vite/client,node",
+        "entries/B22-react-beautiful-dnd-migration/examples/demo.tsx",
+        "entries/B22-react-beautiful-dnd-migration/validation/browser-proposal.check.ts"
+      ],
+      "startedAt": "2026-11-10T15:07:41.956916+00:00",
+      "finishedAt": "2026-11-10T15:07:42.218533+00:00",
+      "exitCode": 0,
+      "log": "typecheck-final.txt"
+    },
+    {
+      "label": "metadata",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "node",
+        "entries/B22-react-beautiful-dnd-migration/validation/metadata-check.mjs"
+      ],
+      "startedAt": "2026-11-10T15:07:42.218558+00:00",
+      "finishedAt": "2026-11-10T15:07:42.248344+00:00",
+      "exitCode": 0,
+      "log": "metadata.txt"
+    },
+    {
+      "label": "proposal-format",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "check",
+        "--write",
+        "entries/B22-react-beautiful-dnd-migration/validation/browser-proposal.check.ts"
+      ],
+      "startedAt": "2026-11-10T15:10:44.714695+00:00",
+      "finishedAt": "2026-11-10T15:10:44.945848+00:00",
+      "exitCode": 0,
+      "log": "proposal-format.txt"
+    },
+    {
+      "label": "proposal-typecheck",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--target",
+        "es2022",
+        "--module",
+        "esnext",
+        "--moduleResolution",
+        "bundler",
+        "--jsx",
+        "react-jsx",
+        "--strict",
+        "--skipLibCheck",
+        "--esModuleInterop",
+        "--types",
+        "vite/client,node",
+        "entries/B22-react-beautiful-dnd-migration/validation/browser-proposal.check.ts"
+      ],
+      "startedAt": "2026-11-10T15:10:44.945879+00:00",
+      "finishedAt": "2026-11-10T15:10:45.206883+00:00",
+      "exitCode": 0,
+      "log": "proposal-typecheck.txt"
+    },
+    {
+      "label": "final-check",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "python3",
+        "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/B22-react-beautiful-dnd-migration/validation/final-check.py"
+      ],
+      "startedAt": "2026-11-10T15:15:27.940336+00:00",
+      "finishedAt": "2026-11-10T15:15:27.957640+00:00",
+      "exitCode": 0,
+      "log": "final-check.txt"
+    },
+    {
+      "label": "diff-check",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "packages/library-lab/entries/B22-react-beautiful-dnd-migration"
+      ],
+      "startedAt": "2026-11-10T15:15:27.957663+00:00",
+      "finishedAt": "2026-11-10T15:15:27.960404+00:00",
+      "exitCode": 0,
+      "log": "diff-check.txt"
+    }
+  ]
+}

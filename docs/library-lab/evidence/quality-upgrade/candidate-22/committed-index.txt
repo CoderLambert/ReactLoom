@@ -1,0 +1,71 @@
+
+> @reactloom/library-lab@0.1.0 catalog:index /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+> node scripts/root-catalog.mjs --committed
+
+C22 summary is out of date
+LIBRARY_CATALOG.md differs from the canonical entry manifests
+HEAD: A01 summary is out of date
+HEAD: A03 summary is out of date
+HEAD: A04 summary is out of date
+HEAD: A05 summary is out of date
+HEAD: A06 summary is out of date
+HEAD: A07 summary is out of date
+HEAD: A10 summary is out of date
+HEAD: A14 summary is out of date
+HEAD: A15 summary is out of date
+HEAD: A16 summary is out of date
+HEAD: B01 summary is out of date
+HEAD: B02 summary is out of date
+HEAD: B03 summary is out of date
+HEAD: B04 summary is out of date
+HEAD: B05 summary is out of date
+HEAD: B06 summary is out of date
+HEAD: B07 summary is out of date
+HEAD: B08 summary is out of date
+HEAD: B09 summary is out of date
+HEAD: B11 summary is out of date
+HEAD: B12 summary is out of date
+HEAD: B13 summary is out of date
+HEAD: B14 summary is out of date
+HEAD: B15 summary is out of date
+HEAD: B16 summary is out of date
+HEAD: B17 summary is out of date
+HEAD: B19 summary is out of date
+HEAD: B20 summary is out of date
+HEAD: B21 summary is out of date
+HEAD: B22 summary is out of date
+HEAD: C01 summary is out of date
+HEAD: C02 summary is out of date
+HEAD: C03 summary is out of date
+HEAD: C04 summary is out of date
+HEAD: C05 summary is out of date
+HEAD: C06 summary is out of date
+HEAD: C07 summary is out of date
+HEAD: C09 summary is out of date
+HEAD: C10 summary is out of date
+HEAD: C11 summary is out of date
+HEAD: C12 summary is out of date
+HEAD: C13 summary is out of date
+HEAD: C14 summary is out of date
+HEAD: C15 summary is out of date
+HEAD: C16 summary is out of date
+HEAD: C17 summary is out of date
+HEAD: C19 summary is out of date
+HEAD: C20 summary is out of date
+HEAD: C21 summary is out of date
+HEAD: C22 summary is out of date
+HEAD: D03 summary is out of date
+HEAD: D07 summary is out of date
+HEAD: D15 summary is out of date
+HEAD: E05 summary is out of date
+HEAD: E11 summary is out of date
+HEAD: E19 summary is out of date
+HEAD: F05 summary is out of date
+HEAD: F11 summary is out of date
+HEAD: F18 summary is out of date
+HEAD: LIBRARY_CATALOG.md differs from the canonical entry manifests
+Tracked Agent indexes differ from HEAD; regenerate and commit them explicitly.
+Refresh tracked indexes with: pnpm --filter @reactloom/library-lab catalog:generate
+/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @reactloom/library-lab@0.1.0 catalog:index: `node scripts/root-catalog.mjs --committed`
+Exit status 1

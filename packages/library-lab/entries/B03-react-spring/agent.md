@@ -1,47 +1,22 @@
-# B03 react-spring
+# B03 react-spring 工程入口
 
-## 适用
+用 @react-spring/web10.1.2（MIT）把React状态目标变成可中断的局部运动、让稳定ID列表进出场。Lab React19.3.0；匹配安装包和tag的peer支持16.8/17/18/19，不能照旧文写v10只支持19。peer兼容声明不是跨React版本已测。CSS静态hover、Motion布局、GSAP时间线、dnd-kit排序各按问题选。
 
-目标会连续改写、需要可中断弹簧时用 `@react-spring/web`。静态 hover 用 CSS，layout/手势优先看 B01，排序拖放看 B13/B14。不要把本库当成拖拽或弹窗焦点系统。
+三个目标：basic布尔目标→useSpring→animated DOM；business权威数组与安全视觉离场；advanced局部减少动画/系统同步与容量键盘焦点。新闻是本地fixture，无远端服务。迁移example.tsx、article-policy.ts、styles.css，demo.tsx仅Lab适配；保持真实web入口和CSS，不依赖宿主类名。
 
-## 版本
+不可删约定：
 
-Lab 固定 `@react-spring/web@10.1.2`，React 19.3.0。v10 面向 React 19；React 18 留在 v9。不使用 11 beta，不使用 `@react-spring/three`。许可证 MIT。
+- useTransition从@react-spring/web导入，keys使用item.id。第三参transition.phase仅表示SDK阶段，逻辑存在性取当前articles。
+- 离场节点可由SDK保留，但本例同提交移除按钮、aria-hidden和inert；不能等onRest才撤操作。
+- MAX_SPRING_ARTICLES=12，唯一ID追加，reset不回退nextId；权威数组只一份。
+- 删除持焦按钮才迁移焦点，layout effect等待提交重新启用添加；兜底到可用reset。未持焦不抢焦点。
+- effective=systemReduced||localReduced；本地开关只opt-in，不能关闭系统偏好。matchMedia change移除自己监听，不调用Globals.assign；官方useReducedMotion会写全局skipAnimation。
+- useSpring/useTransition hook拥有并在卸载停止Controller；未来自建命令式Controller自行stop，不干预其它实例。
 
-## 迁移
+控件：收起/展开视觉强调（b03-toggle）；添加一条新闻（上限12）、恢复默认数据、移除+新闻标题；advanced仅本例减少动画。b03-workshop暴露data-reduced/system-reduced/count；b03-card为真实动画DOM，b03-list-status和b03-authority来自业务state；行data-article-id/active/phase由数组与SDK分别提供。离场仍可暂留DOM，断言操作不可用和随后卸载，不用数组计数冒充动画完成。
 
-从 v9 上来要核对 `useTransition` 的 import 来源、`SpringContext` 改名和 `onChange` 的 `AnimationResult`。把 CSS transition 换成弹簧时，稳定 id 和退场焦点留在业务层。`spring()` 旧描述对象（react-motion）不能塞进本库。
+反例：从React导入useTransition；index key；每帧setState/网络保存；离场按钮继续Tab；局部Globals修改；业务删除依赖onRest；把peer支持写成已测。未实现指针跟手、异步通知中心、拖拽、SSR和触摸/读屏验收，不扩写不存在的路径。
 
-## 不可删的清理
+真实Node SDK2通过SpringValue公开advance手动驱动真实积分，覆盖物理收敛/immediate/cancel，不是hook/DOM或浏览器帧验收。policy5仅容量/唯一ID/焦点目的地，不能证明真实focus。完整真实browser提案在validation/browser-proposal.txt，主控运行；正式verification三项保持NOT_RUN。
 
-减少动画用本地 `matchMedia` 订阅，cleanup 移除监听，把 `immediate` 传给 `useSpring` 和 `useTransition`。不要 `Globals.assign` 后忘记恢复。id 在点击里自增。焦点在 `useLayoutEffect` 里移动，满员时避开 disabled 的添加按钮。命令式 `api` 若以后加上，卸载时 `stop()`。
-
-## 反例
-
-从 `react` 导入 `useTransition` 来做列表动画。不传 `keys` 或用 index。`onChange` 每帧 `setState`。函数式 `useSpring` 拿到 api 却不 `start`。离场行仍可点击却没有 `aria-hidden`。`innerHTML` 写通知正文。React 18 硬装 v10。
-
-复用时保留这些不变的约定：
-
-- `useTransition` 的 import 来自 `@react-spring/web`。
-- `keys` 使用 `item.id`，离场节点不等于仍在权威数组里。
-- `immediate` 只从本地 matchMedia 传入，不调用 `Globals.assign`。
-- 焦点目的地在纯函数里决定，满员时避开 disabled 按钮。
-- 指针捕获和 Abort 通知中心是未挂载教学，不要写进当前 JSX。
-
-## 测试断言
-
-`tests/article-policy.test.mts` 断言追加唯一 id、满 12 条拒绝且不改原数组、未持焦返回 `none`、持焦且未满员返回 `add`、持焦且剩余仍达上限返回 `reset`。不证明 `animated` 宿主更新或浏览器焦点。
-
-## 真实限制
-
-已挂载：声明式 `useSpring`、带稳定 key 的 `useTransition`、本地减少动画、容量和焦点目的地。未挂载：指针捕获、AbortController 通知中心、离场按钮拆除、命令式 `api.start`。不要把未挂载路径写成示例已实现。
-
-复用检查：
-
-- 版本以该条目 `library.json` 为准，不跟研究稿里的 Vite 脚本或 workshop 目录。
-- 未挂载的生产模式留在 `guide.md`，不补进 `examples/`。
-- 不修改 `verification.json`。没有匹配 receipt 时 sdk、build、browser 保持 NOT_RUN。
-
-## 证据
-
-sdk、build、browser 在 `verification.json` 中为 NOT_RUN。没有 `docs/library-lab/evidence/runs/` 的匹配 receipt 就不能写成 SDK PASS。Actions run `41779873259` 是仓库级检查，不是本条目 PASS。文档：https://www.react-spring.dev/docs/getting-started
+官方原文：v10.1.2 commit59b1e5306402d3039120e2da464b66e10b1a1aa1，主targets/web/README.md原文41B，root README3525B另存；完整候选未发现中文。hash/path/version/lang/time在official/source-audit.json。官网200完整头未见XFO/CSP但iframe未测，unknown；不写allowed。详见guide与local-validation。

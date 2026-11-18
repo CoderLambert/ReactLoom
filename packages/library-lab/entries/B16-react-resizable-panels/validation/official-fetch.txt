@@ -1,0 +1,5 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: ['python3', 'entries/B16-react-resizable-panels/validation/fetch-official.py']
+startedAt: 2026-11-10T14:03:11.614542+00:00
+exit: 0
+B16 fixed 4.14.1 0cd376c57a19900d22f33aa8eb46f417a7437c12: original README 27652B; 7 complete response headers; homepage unknown

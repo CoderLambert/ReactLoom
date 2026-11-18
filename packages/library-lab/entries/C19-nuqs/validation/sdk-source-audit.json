@@ -1,0 +1,1970 @@
+{
+  "checkedAt": "2026-11-10T18:25:07.752330+00:00",
+  "packagePath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/nuqs@2.10.1_@tanstack+react-router@1.170.42_react-dom@19.3.0_react@19.3.0__react@19.3.0_fa5fae778486628c098e80fee8f05604/node_modules/nuqs",
+  "package": {
+    "name": "nuqs",
+    "version": "2.10.1",
+    "description": "Type-safe search params state manager for React - Like useState, but stored in the URL query string",
+    "license": "MIT",
+    "author": {
+      "name": "François Best",
+      "email": "contact@francoisbest.com",
+      "url": "https://francoisbest.com"
+    },
+    "funding": "https://github.com/sponsors/franky47",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/47ng/nuqs.git",
+      "directory": "packages/nuqs"
+    },
+    "homepage": "https://nuqs.dev",
+    "keywords": [
+      "url state",
+      "url",
+      "querystring",
+      "query string",
+      "search params",
+      "next-usequerystate",
+      "useQueryState",
+      "useQueryStates",
+      "nextjs",
+      "react",
+      "remix",
+      "react-router",
+      "tanstack-router"
+    ],
+    "publishConfig": {
+      "access": "public",
+      "provenance": true
+    },
+    "files": [
+      "dist/",
+      "server.d.ts",
+      "testing.d.ts",
+      "adapters/react.d.ts",
+      "adapters/next.d.ts",
+      "adapters/next/app.d.ts",
+      "adapters/next/pages.d.ts",
+      "adapters/remix.d.ts",
+      "adapters/react-router.d.ts",
+      "adapters/react-router/v6.d.ts",
+      "adapters/react-router/v7.d.ts",
+      "adapters/react-router/v8.d.ts",
+      "adapters/tanstack-router.d.ts",
+      "adapters/custom.d.ts",
+      "adapters/testing.d.ts"
+    ],
+    "type": "module",
+    "sideEffects": [
+      "./dist/debug.js"
+    ],
+    "module": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js",
+        "default": "./dist/index.js"
+      },
+      "./debug": {
+        "types": "./dist/debug.d.ts",
+        "import": "./dist/debug.js",
+        "default": "./dist/debug.js"
+      },
+      "./server": {
+        "types": "./dist/server.d.ts",
+        "import": "./dist/server.js",
+        "default": "./dist/server.js"
+      },
+      "./testing": {
+        "types": "./dist/testing.d.ts",
+        "import": "./dist/testing.js",
+        "default": "./dist/testing.js"
+      },
+      "./adapters/react": {
+        "types": "./dist/adapters/react.d.ts",
+        "import": "./dist/adapters/react.js",
+        "default": "./dist/adapters/react.js"
+      },
+      "./adapters/next": {
+        "types": "./dist/adapters/next.d.ts",
+        "import": "./dist/adapters/next.js",
+        "default": "./dist/adapters/next.js"
+      },
+      "./adapters/next/app": {
+        "types": "./dist/adapters/next/app.d.ts",
+        "import": "./dist/adapters/next/app.js",
+        "default": "./dist/adapters/next/app.js"
+      },
+      "./adapters/next/pages": {
+        "types": "./dist/adapters/next/pages.d.ts",
+        "import": "./dist/adapters/next/pages.js",
+        "default": "./dist/adapters/next/pages.js"
+      },
+      "./adapters/remix": {
+        "types": "./dist/adapters/remix.d.ts",
+        "import": "./dist/adapters/remix.js",
+        "default": "./dist/adapters/remix.js"
+      },
+      "./adapters/react-router": {
+        "types": "./dist/adapters/react-router.d.ts",
+        "import": "./dist/adapters/react-router.js",
+        "default": "./dist/adapters/react-router.js"
+      },
+      "./adapters/react-router/v6": {
+        "types": "./dist/adapters/react-router/v6.d.ts",
+        "import": "./dist/adapters/react-router/v6.js",
+        "default": "./dist/adapters/react-router/v6.js"
+      },
+      "./adapters/react-router/v7": {
+        "types": "./dist/adapters/react-router/v7.d.ts",
+        "import": "./dist/adapters/react-router/v7.js",
+        "default": "./dist/adapters/react-router/v7.js"
+      },
+      "./adapters/react-router/v8": {
+        "types": "./dist/adapters/react-router/v8.d.ts",
+        "import": "./dist/adapters/react-router/v8.js",
+        "default": "./dist/adapters/react-router/v8.js"
+      },
+      "./adapters/tanstack-router": {
+        "types": "./dist/adapters/tanstack-router.d.ts",
+        "import": "./dist/adapters/tanstack-router.js",
+        "default": "./dist/adapters/tanstack-router.js"
+      },
+      "./adapters/custom": {
+        "types": "./dist/adapters/custom.d.ts",
+        "import": "./dist/adapters/custom.js",
+        "default": "./dist/adapters/custom.js"
+      },
+      "./adapters/testing": {
+        "types": "./dist/adapters/testing.d.ts",
+        "import": "./dist/adapters/testing.js",
+        "default": "./dist/adapters/testing.js"
+      }
+    },
+    "scripts": {
+      "dev": "tsdown --watch",
+      "build": "tsdown",
+      "build:size-json": "size-limit --json > size.json",
+      "test": "pnpm run --stream '/^test:/'",
+      "test:unit": "vitest run --project unit",
+      "test:browser": "vitest run --project browser --browser.headless",
+      "test:types": "vitest run --project types",
+      "test:size": "size-limit",
+      "prepack": "./scripts/prepack.sh",
+      "knip": "knip"
+    },
+    "dependencies": {
+      "@standard-schema/spec": "1.1.0"
+    },
+    "peerDependencies": {
+      "@remix-run/react": ">=2",
+      "@tanstack/react-router": "^1",
+      "next": ">=14.2.0",
+      "react": ">=18.2.0 || ^19.0.0-0",
+      "react-router": "^5 || ^6 || ^7 || ^8",
+      "react-router-dom": "^5 || ^6 || ^7"
+    },
+    "peerDependenciesMeta": {
+      "@remix-run/react": {
+        "optional": true
+      },
+      "@tanstack/react-router": {
+        "optional": true
+      },
+      "next": {
+        "optional": true
+      },
+      "react-router": {
+        "optional": true
+      },
+      "react-router-dom": {
+        "optional": true
+      }
+    },
+    "devDependencies": {
+      "@remix-run/react": "^2.17.5",
+      "@size-limit/preset-small-lib": "^12.1.0",
+      "@tanstack/react-router": "catalog:tanstack-router",
+      "@types/node": "^24.13.3",
+      "@types/react": "catalog:react19",
+      "@types/react-dom": "catalog:react19",
+      "@vitejs/plugin-react": "^6.0.3",
+      "@vitest/browser-playwright": "catalog:vitest",
+      "@vitest/coverage-v8": "catalog:vitest",
+      "arktype": "^2.2.3",
+      "fast-check": "^4.9.0",
+      "knip": "catalog:knip",
+      "next": "catalog:next",
+      "playwright": "catalog:e2e",
+      "react": "catalog:react19",
+      "react-dom": "catalog:react19",
+      "react-router-dom": "6.30.3",
+      "size-limit": "^12.1.0",
+      "tsdown": "^0.22.9",
+      "tsnapi": "^1.0.0",
+      "typescript": "catalog:typescript",
+      "valibot": "^1.4.2",
+      "vite": "catalog:vite",
+      "vitest": "catalog:vitest",
+      "vitest-browser-react": "2.2.0",
+      "zod": "^4.4.3"
+    },
+    "size-limit": [
+      {
+        "name": "Client",
+        "path": "dist/index.js",
+        "limit": "6 kB"
+      },
+      {
+        "name": "Client (minimal tree-shaken)",
+        "path": "dist/index.js",
+        "limit": "4.5 kB",
+        "import": "{ useQueryStates, parseAsInteger }"
+      },
+      {
+        "name": "Server",
+        "path": "dist/server.js",
+        "limit": "3.8 kB"
+      }
+    ]
+  },
+  "files": {
+    "package.json": {
+      "sha256": "90429d1141db29023c14e5abfac2ae5dc891c636bb09b146d9a7bf7ccc0b526c",
+      "lines": []
+    },
+    "dist/server.js": {
+      "sha256": "883b4d1169823fc257836df0dfc7aceb3408f6415391c52b00007b22cb98a394",
+      "lines": [
+        {
+          "line": 121,
+          "text": "//#endregion"
+        },
+        {
+          "line": 122,
+          "text": "//#region src/loader.ts"
+        },
+        {
+          "line": 123,
+          "text": "function createLoader(parsers, { urlKeys = {} } = {}) {"
+        },
+        {
+          "line": 124,
+          "text": "\tfunction loadSearchParams(input, { strict = false } = {}) {"
+        },
+        {
+          "line": 125,
+          "text": "\t\tif (input instanceof Promise) return input.then((i) => loadSearchParams(i, { strict }));"
+        },
+        {
+          "line": 126,
+          "text": "\t\tconst searchParams = extractSearchParams(input);"
+        },
+        {
+          "line": 127,
+          "text": "\t\tconst result = {};"
+        },
+        {
+          "line": 128,
+          "text": "\t\tfor (const [key, parser] of Object.entries(parsers)) {"
+        },
+        {
+          "line": 129,
+          "text": "\t\t\tconst urlKey = getUrlKey(urlKeys, key);"
+        },
+        {
+          "line": 130,
+          "text": "\t\t\tconst query = parser.type === \"multi\" ? searchParams.getAll(urlKey) : searchParams.get(urlKey);"
+        },
+        {
+          "line": 264,
+          "text": "\t\t...parser,"
+        },
+        {
+          "line": 265,
+          "text": "\t\tparseServerSide: parseServerSideNullable,"
+        },
+        {
+          "line": 266,
+          "text": "\t\twithDefault(defaultValue) {"
+        },
+        {
+          "line": 267,
+          "text": "\t\t\treturn {"
+        },
+        {
+          "line": 268,
+          "text": "\t\t\t\t...this,"
+        },
+        {
+          "line": 269,
+          "text": "\t\t\t\tdefaultValue,"
+        },
+        {
+          "line": 270,
+          "text": "\t\t\t\tparseServerSide(value) {"
+        },
+        {
+          "line": 271,
+          "text": "\t\t\t\t\treturn parseServerSideNullable(value) ?? defaultValue;"
+        },
+        {
+          "line": 272,
+          "text": "\t\t\t\t}"
+        },
+        {
+          "line": 273,
+          "text": "\t\t\t};"
+        },
+        {
+          "line": 291,
+          "text": "\t\t...parser,"
+        },
+        {
+          "line": 292,
+          "text": "\t\tparseServerSide: parseServerSideNullable,"
+        },
+        {
+          "line": 293,
+          "text": "\t\twithDefault(defaultValue) {"
+        },
+        {
+          "line": 294,
+          "text": "\t\t\treturn {"
+        },
+        {
+          "line": 295,
+          "text": "\t\t\t\t...this,"
+        },
+        {
+          "line": 296,
+          "text": "\t\t\t\tdefaultValue,"
+        },
+        {
+          "line": 297,
+          "text": "\t\t\t\tparseServerSide(value) {"
+        },
+        {
+          "line": 298,
+          "text": "\t\t\t\t\treturn parseServerSideNullable(value) ?? defaultValue;"
+        },
+        {
+          "line": 299,
+          "text": "\t\t\t\t}"
+        },
+        {
+          "line": 300,
+          "text": "\t\t\t};"
+        },
+        {
+          "line": 312,
+          "text": "\tserialize: String"
+        },
+        {
+          "line": 313,
+          "text": "});"
+        },
+        {
+          "line": 314,
+          "text": "const parseAsInteger = createParser({"
+        },
+        {
+          "line": 315,
+          "text": "\tparse: (v) => {"
+        },
+        {
+          "line": 316,
+          "text": "\t\tconst int = parseInt(v);"
+        },
+        {
+          "line": 317,
+          "text": "\t\treturn int == int ? int : null;"
+        },
+        {
+          "line": 318,
+          "text": "\t},"
+        },
+        {
+          "line": 319,
+          "text": "\tserialize: (v) => \"\" + Math.round(v)"
+        },
+        {
+          "line": 320,
+          "text": "});"
+        },
+        {
+          "line": 321,
+          "text": "const parseAsIndex = createParser({"
+        },
+        {
+          "line": 416,
+          "text": "*   'direction',"
+        },
+        {
+          "line": 417,
+          "text": "*    parseAsStringEnum<Direction>(Object.values(Direction)) // pass a list of allowed values"
+        },
+        {
+          "line": 418,
+          "text": "*      .withDefault(Direction.up)"
+        },
+        {
+          "line": 419,
+          "text": "* )"
+        },
+        {
+          "line": 420,
+          "text": "* ```"
+        },
+        {
+          "line": 421,
+          "text": "*"
+        },
+        {
+          "line": 422,
+          "text": "* Note: the query string value will be the value of the enum, not its name"
+        },
+        {
+          "line": 423,
+          "text": "* (example above: `direction=UP`)."
+        },
+        {
+          "line": 424,
+          "text": "*"
+        },
+        {
+          "line": 425,
+          "text": "* @param validValues The values you want to accept"
+        },
+        {
+          "line": 441,
+          "text": "*   'color',"
+        },
+        {
+          "line": 442,
+          "text": "*    parseAsStringLiteral(colors) // pass a readonly list of allowed values"
+        },
+        {
+          "line": 443,
+          "text": "*      .withDefault(\"red\")"
+        },
+        {
+          "line": 444,
+          "text": "* )"
+        },
+        {
+          "line": 445,
+          "text": "* ```"
+        },
+        {
+          "line": 446,
+          "text": "*"
+        },
+        {
+          "line": 447,
+          "text": "* @param validValues The values you want to accept"
+        },
+        {
+          "line": 448,
+          "text": "*/"
+        },
+        {
+          "line": 449,
+          "text": "function parseAsStringLiteral(validValues) {"
+        },
+        {
+          "line": 450,
+          "text": "\treturn createParser({"
+        },
+        {
+          "line": 469,
+          "text": "*   'side',"
+        },
+        {
+          "line": 470,
+          "text": "*    parseAsNumberLiteral(diceSides) // pass a readonly list of allowed values"
+        },
+        {
+          "line": 471,
+          "text": "*      .withDefault(4)"
+        },
+        {
+          "line": 472,
+          "text": "* )"
+        },
+        {
+          "line": 473,
+          "text": "* ```"
+        },
+        {
+          "line": 474,
+          "text": "*"
+        },
+        {
+          "line": 475,
+          "text": "* @param validValues The values you want to accept"
+        },
+        {
+          "line": 476,
+          "text": "*/"
+        },
+        {
+          "line": 477,
+          "text": "function parseAsNumberLiteral(validValues) {"
+        },
+        {
+          "line": 478,
+          "text": "\treturn createParser({"
+        },
+        {
+          "line": 549,
+          "text": "\t\t},"
+        },
+        {
+          "line": 550,
+          "text": "\t\teq: (a, b) => compareArrays(a, b, itemEq)"
+        },
+        {
+          "line": 551,
+          "text": "\t}).withDefault([]);"
+        },
+        {
+          "line": 552,
+          "text": "}"
+        },
+        {
+          "line": 553,
+          "text": "//#endregion"
+        },
+        {
+          "line": 554,
+          "text": "//#region src/lib/url-encoding.ts"
+        },
+        {
+          "line": 555,
+          "text": "function renderQueryString(search) {"
+        },
+        {
+          "line": 556,
+          "text": "\tif (search.size === 0) return \"\";"
+        },
+        {
+          "line": 557,
+          "text": "\tconst query = [];"
+        },
+        {
+          "line": 558,
+          "text": "\tfor (const [key, value] of search.entries()) {"
+        },
+        {
+          "line": 577,
+          "text": "//#endregion"
+        },
+        {
+          "line": 578,
+          "text": "//#region src/serializer.ts"
+        },
+        {
+          "line": 579,
+          "text": "function createSerializer(parsers, { clearOnDefault = true, urlKeys = {}, processUrlSearchParams } = {}) {"
+        },
+        {
+          "line": 580,
+          "text": "\tfunction serialize(arg1BaseOrValues, arg2values = {}) {"
+        },
+        {
+          "line": 581,
+          "text": "\t\tlet [base, search, hash] = isBase(arg1BaseOrValues) ? splitBase(arg1BaseOrValues) : ["
+        },
+        {
+          "line": 582,
+          "text": "\t\t\t\"\","
+        },
+        {
+          "line": 583,
+          "text": "\t\t\tnew URLSearchParams(),"
+        },
+        {
+          "line": 584,
+          "text": "\t\t\t\"\""
+        },
+        {
+          "line": 585,
+          "text": "\t\t];"
+        },
+        {
+          "line": 586,
+          "text": "\t\tconst values = isBase(arg1BaseOrValues) ? arg2values : arg1BaseOrValues;"
+        }
+      ]
+    },
+    "dist/index.js": {
+      "sha256": "1b5d22d1e044032d9e964215b686b4ba5038f4b486da46b53dbcf22913f29e32",
+      "lines": [
+        {
+          "line": 4,
+          "text": "import { i as warn, t as debug } from \"./debug-CH5E3t0A.js\";"
+        },
+        {
+          "line": 5,
+          "text": "import { a as useAdapterProcessUrlSearchParams, c as renderQueryString, i as useAdapterDefaultOptions, o as globalSingleton, r as useAdapter } from \"./context-Mu913OAK.js\";"
+        },
+        {
+          "line": 6,
+          "text": "import { useCallback, useEffect, useId, useMemo, useRef, useState } from \"react\";"
+        },
+        {
+          "line": 7,
+          "text": "//#region src/lib/url-keys.ts"
+        },
+        {
+          "line": 8,
+          "text": "function getOwn(object, key) {"
+        },
+        {
+          "line": 9,
+          "text": "\treturn Object.hasOwn(object, key) ? object[key] : void 0;"
+        },
+        {
+          "line": 10,
+          "text": "}"
+        },
+        {
+          "line": 11,
+          "text": "function getUrlKey(urlKeys, key) {"
+        },
+        {
+          "line": 12,
+          "text": "\treturn getOwn(urlKeys, key) ?? key;"
+        },
+        {
+          "line": 13,
+          "text": "}"
+        },
+        {
+          "line": 534,
+          "text": "\t\t}"
+        },
+        {
+          "line": 535,
+          "text": "\t}"
+        },
+        {
+          "line": 536,
+          "text": "\tuseEffect(() => {"
+        },
+        {
+          "line": 537,
+          "text": "\t\tcommittedPathnameRef.current = adapter.pathname ?? location.pathname;"
+        },
+        {
+          "line": 538,
+          "text": "\t\treconcile();"
+        },
+        {
+          "line": 539,
+          "text": "\t}, [searchParamsSyncKey, adapter.pathname]);"
+        },
+        {
+          "line": 540,
+          "text": "\tuseEffect(() => {"
+        },
+        {
+          "line": 541,
+          "text": "\t\tconst subscriptions = [];"
+        },
+        {
+          "line": 542,
+          "text": "\t\tfor (const [stateKey, urlKey] of Object.entries(resolvedUrlKeys)) {"
+        },
+        {
+          "line": 543,
+          "text": "\t\t\tconst handler = ({ state, query }) => {"
+        },
+        {
+          "line": 544,
+          "text": "\t\t\t\tsetInternalState((currentState) => {"
+        },
+        {
+          "line": 545,
+          "text": "\t\t\t\t\tif (Object.is(currentState[stateKey] ?? null, state)) {"
+        },
+        {
+          "line": 546,
+          "text": "\t\t\t\t\t\tdebug(2, hookId, stateKeys, urlKey, state, keyMap[stateKey]?.defaultValue, stateRef.current);"
+        },
+        {
+          "line": 547,
+          "text": "\t\t\t\t\t\treturn currentState;"
+        },
+        {
+          "line": 557,
+          "text": "\t\t\t};"
+        },
+        {
+          "line": 558,
+          "text": "\t\t\tdebug(4, hookId, urlKey, stateKeys);"
+        },
+        {
+          "line": 559,
+          "text": "\t\t\temitter.on(urlKey, handler);"
+        },
+        {
+          "line": 560,
+          "text": "\t\t\tsubscriptions.push([urlKey, handler]);"
+        },
+        {
+          "line": 561,
+          "text": "\t\t}"
+        },
+        {
+          "line": 562,
+          "text": "\t\treturn () => {"
+        },
+        {
+          "line": 563,
+          "text": "\t\t\tfor (const [urlKey, handler] of subscriptions) {"
+        },
+        {
+          "line": 564,
+          "text": "\t\t\t\tdebug(5, hookId, urlKey, stateKeys);"
+        },
+        {
+          "line": 565,
+          "text": "\t\t\t\temitter.off(urlKey, handler);"
+        },
+        {
+          "line": 566,
+          "text": "\t\t\t}"
+        },
+        {
+          "line": 567,
+          "text": "\t\t};"
+        },
+        {
+          "line": 568,
+          "text": "\t}, [stateKeys, resolvedUrlKeys]);"
+        },
+        {
+          "line": 569,
+          "text": "\tconst update = useCallback((stateUpdater, callOptions = {}) => {"
+        },
+        {
+          "line": 570,
+          "text": "\t\tconst newState = (typeof stateUpdater === \"function\" ? stateUpdater(applyDefaultValues(stateRef.current, stableKeyMap)) : stateUpdater) ?? Object.fromEntries(Object.keys(stableKeyMap).map((key) => [key, null]));"
+        },
+        {
+          "line": 571,
+          "text": "\t\tdebug(6, hookId, stateKeys, newState);"
+        },
+        {
+          "line": 572,
+          "text": "\t\tlet returnedPromise = void 0;"
+        },
+        {
+          "line": 573,
+          "text": "\t\tlet maxDebounceTime = 0;"
+        },
+        {
+          "line": 574,
+          "text": "\t\tconst debounceAborts = [];"
+        },
+        {
+          "line": 575,
+          "text": "\t\tfor (let [stateKey, value] of Object.entries(newState)) {"
+        },
+        {
+          "line": 576,
+          "text": "\t\t\tconst parser = getOwn(stableKeyMap, stateKey);"
+        },
+        {
+          "line": 587,
+          "text": "\t\t\t\tquery,"
+        },
+        {
+          "line": 588,
+          "text": "\t\t\t\toptions: {"
+        },
+        {
+          "line": 589,
+          "text": "\t\t\t\t\thistory: callOptions.history ?? parser.history ?? history,"
+        },
+        {
+          "line": 590,
+          "text": "\t\t\t\t\tshallow: callOptions.shallow ?? parser.shallow ?? shallow,"
+        },
+        {
+          "line": 591,
+          "text": "\t\t\t\t\tscroll: callOptions.scroll ?? parser.scroll ?? scroll,"
+        },
+        {
+          "line": 592,
+          "text": "\t\t\t\t\tstartTransition: callOptions.startTransition ?? parser.startTransition ?? startTransition"
+        },
+        {
+          "line": 593,
+          "text": "\t\t\t\t}"
+        },
+        {
+          "line": 594,
+          "text": "\t\t\t};"
+        },
+        {
+          "line": 595,
+          "text": "\t\t\tconst resolvedLimitUrlUpdates = callOptions.limitUrlUpdates ?? parser.limitUrlUpdates ?? limitUrlUpdates;"
+        },
+        {
+          "line": 596,
+          "text": "\t\t\tif (resolvedLimitUrlUpdates?.method === \"debounce\") {"
+        },
+        {
+          "line": 609,
+          "text": "\t\tlet globalPromise = debounceAborts.length ? globalThrottleQueue.flush(adapter, processUrlSearchParams) : globalThrottleQueue.getPendingPromise(adapter);"
+        },
+        {
+          "line": 610,
+          "text": "\t\tfor (const abort of debounceAborts) globalPromise = abort(globalPromise);"
+        },
+        {
+          "line": 611,
+          "text": "\t\treturn returnedPromise ?? globalPromise;"
+        },
+        {
+          "line": 612,
+          "text": "\t}, ["
+        },
+        {
+          "line": 613,
+          "text": "\t\tstateKeys,"
+        },
+        {
+          "line": 614,
+          "text": "\t\thistory,"
+        },
+        {
+          "line": 615,
+          "text": "\t\tshallow,"
+        },
+        {
+          "line": 616,
+          "text": "\t\tscroll,"
+        },
+        {
+          "line": 617,
+          "text": "\t\tthrottleMs,"
+        },
+        {
+          "line": 618,
+          "text": "\t\tlimitUrlUpdates?.method,"
+        }
+      ]
+    },
+    "dist/index.d.ts": {
+      "sha256": "1780a42af19af2170ecc6d91f96f355e1906a1a42d88358757f156e5c7225f2e",
+      "lines": [
+        {
+          "line": 411,
+          "text": " * @param options - Parser (defines the state data type), default value and optional history mode."
+        },
+        {
+          "line": 412,
+          "text": " */"
+        },
+        {
+          "line": 413,
+          "text": "declare function useQueryState<T>(key: string, options: UseQueryStateOptions<T> & {"
+        },
+        {
+          "line": 414,
+          "text": "  defaultValue: T;"
+        },
+        {
+          "line": 415,
+          "text": "}): UseQueryStateReturn<NonNullable<ReturnType<typeof options.parse>>, typeof options.defaultValue>;"
+        },
+        {
+          "line": 416,
+          "text": "/**"
+        },
+        {
+          "line": 417,
+          "text": " * React state hook synchronized with a URL query string in Next.js"
+        },
+        {
+          "line": 418,
+          "text": " *"
+        },
+        {
+          "line": 419,
+          "text": " * If the query is missing in the URL, the state will be `null`."
+        },
+        {
+          "line": 420,
+          "text": " *"
+        },
+        {
+          "line": 429,
+          "text": " * @param options - Parser (defines the state data type), and optional history mode."
+        },
+        {
+          "line": 430,
+          "text": " */"
+        },
+        {
+          "line": 431,
+          "text": "declare function useQueryState<T>(key: string, options: UseQueryStateOptions<T>): UseQueryStateReturn<NonNullable<ReturnType<typeof options.parse>>, undefined>;"
+        },
+        {
+          "line": 432,
+          "text": "/**"
+        },
+        {
+          "line": 433,
+          "text": " * Default type string, limited options & default value"
+        },
+        {
+          "line": 434,
+          "text": " */"
+        },
+        {
+          "line": 435,
+          "text": "declare function useQueryState(key: string, options: Options & {"
+        },
+        {
+          "line": 436,
+          "text": "  defaultValue: string;"
+        },
+        {
+          "line": 437,
+          "text": "} & { [K in keyof GenericParser<unknown>]?: never; }): UseQueryStateReturn<string, typeof options.defaultValue>;"
+        },
+        {
+          "line": 438,
+          "text": "/**"
+        },
+        {
+          "line": 439,
+          "text": " * React state hook synchronized with a URL query string in Next.js"
+        },
+        {
+          "line": 440,
+          "text": " *"
+        },
+        {
+          "line": 441,
+          "text": " * If the query is missing in the URL, the state will be `null`."
+        },
+        {
+          "line": 442,
+          "text": " *"
+        },
+        {
+          "line": 457,
+          "text": " * @param options - Parser (defines the state data type), and optional history mode."
+        },
+        {
+          "line": 458,
+          "text": " */"
+        },
+        {
+          "line": 459,
+          "text": "declare function useQueryState(key: string, options: Pick<UseQueryStateOptions<string>, keyof Options>): UseQueryStateReturn<string, undefined>;"
+        },
+        {
+          "line": 460,
+          "text": "/**"
+        },
+        {
+          "line": 461,
+          "text": " * React state hook synchronized with a URL query string in Next.js"
+        },
+        {
+          "line": 462,
+          "text": " *"
+        },
+        {
+          "line": 463,
+          "text": " * If the query is missing in the URL, the state will be `null`."
+        },
+        {
+          "line": 464,
+          "text": " *"
+        },
+        {
+          "line": 465,
+          "text": " * Note: by default the state type is a `string`. To use different types,"
+        },
+        {
+          "line": 466,
+          "text": " * check out the `parseAsXYZ` helpers:"
+        },
+        {
+          "line": 478,
+          "text": " * @param key The URL query string key to bind to"
+        },
+        {
+          "line": 479,
+          "text": " */"
+        },
+        {
+          "line": 480,
+          "text": "declare function useQueryState(key: string): UseQueryStateReturn<string, undefined>;"
+        },
+        {
+          "line": 481,
+          "text": "//#endregion"
+        },
+        {
+          "line": 482,
+          "text": "//#region src/useQueryStates.d.ts"
+        },
+        {
+          "line": 483,
+          "text": "type KeyMapValue<Type> = GenericParser<Type> & Options & {"
+        },
+        {
+          "line": 484,
+          "text": "  defaultValue?: Type;"
+        },
+        {
+          "line": 485,
+          "text": "};"
+        },
+        {
+          "line": 486,
+          "text": "type UseQueryStatesKeysMap<Map = any> = { [Key in keyof Map]: KeyMapValue<Map[Key]>; } & {};"
+        },
+        {
+          "line": 487,
+          "text": "type UseQueryStatesOptions<KeyMap extends UseQueryStatesKeysMap> = Options & {"
+        },
+        {
+          "line": 491,
+          "text": "type UpdaterFn<T extends UseQueryStatesKeysMap> = (old: Values<T>) => Partial<Nullable<Values<T>>> | null;"
+        },
+        {
+          "line": 492,
+          "text": "type SetValues<T extends UseQueryStatesKeysMap> = (values: Partial<Nullable<Values<T>>> | UpdaterFn<T> | null, options?: Options) => Promise<URLSearchParams>;"
+        },
+        {
+          "line": 493,
+          "text": "type UseQueryStatesReturn<T extends UseQueryStatesKeysMap> = [Values<T>, SetValues<T>];"
+        },
+        {
+          "line": 494,
+          "text": "/**"
+        },
+        {
+          "line": 495,
+          "text": " * Synchronise multiple query string arguments to React state in Next.js"
+        },
+        {
+          "line": 496,
+          "text": " *"
+        },
+        {
+          "line": 497,
+          "text": " * @param keys - An object describing the keys to synchronise and how to"
+        },
+        {
+          "line": 498,
+          "text": " *               serialise and parse them."
+        },
+        {
+          "line": 499,
+          "text": " *               Use `parseAs(String|Integer|Float|...)` for quick shorthands."
+        },
+        {
+          "line": 500,
+          "text": " * @param options - Optional history mode, shallow routing and scroll restoration options."
+        },
+        {
+          "line": 501,
+          "text": " */"
+        },
+        {
+          "line": 502,
+          "text": "declare function useQueryStates<KeyMap extends UseQueryStatesKeysMap>(keyMap: KeyMap, options?: Partial<UseQueryStatesOptions<KeyMap>>): UseQueryStatesReturn<KeyMap>;"
+        },
+        {
+          "line": 503,
+          "text": "//#endregion"
+        },
+        {
+          "line": 504,
+          "text": "export { type CreateLoaderOptions, type CreateSerializerOptions, type CreateStandardSchemaV1Options, GenericParser, GenericParserBuilder, type HistoryOptions, type LoaderFunction, type LoaderInput, type LoaderOptions, MultiParser, MultiParserBuilder, type Nullable, type Options, Parser, ParserBuilder, ParserMap, ParserWithOptionalDefault, type SearchParams, SetValues, SingleParser, SingleParserBuilder, type UrlKeys, UseQueryStateOptions, UseQueryStateReturn, UseQueryStatesKeysMap, UseQueryStatesOptions, UseQueryStatesReturn, Values, createLoader, createMultiParser, createParser, createSerializer, createStandardSchemaV1, debounce, defaultRateLimit, inferParserType, parseAsArrayOf, parseAsBoolean, parseAsFloat, parseAsHex, parseAsIndex, parseAsInteger, parseAsIsoDate, parseAsIsoDateTime, parseAsJson, parseAsNativeArrayOf, parseAsNumberLiteral, parseAsString, parseAsStringEnum, parseAsStringLiteral, parseAsTimestamp, throttle, useQueryState, useQueryStates };"
+        },
+        {
+          "line": 505,
+          "text": "//# sourceMappingURL=index.d.ts.map"
+        }
+      ]
+    },
+    "dist/server.d.ts": {
+      "sha256": "6729743b8a865961336637bbedc5e4604d98a87c4334d4698a94f721fe78a535",
+      "lines": [
+        {
+          "line": 56,
+          "text": "  (input: Promise<LoaderInput>, options?: LoaderFunctionOptions): Promise<inferParserType<Parsers>>;"
+        },
+        {
+          "line": 57,
+          "text": "};"
+        },
+        {
+          "line": 58,
+          "text": "declare function createLoader<Parsers extends ParserMap>(parsers: Parsers, { urlKeys }?: CreateLoaderOptions<Parsers>): LoaderFunction<Parsers>;"
+        },
+        {
+          "line": 59,
+          "text": "//#endregion"
+        },
+        {
+          "line": 60,
+          "text": "//#region src/cache.d.ts"
+        },
+        {
+          "line": 61,
+          "text": "type CacheInterface<Parsers extends ParserMap> = {"
+        },
+        {
+          "line": 62,
+          "text": "  parse: {"
+        },
+        {
+          "line": 63,
+          "text": "    /**"
+        },
+        {
+          "line": 64,
+          "text": "     * Parse the incoming `searchParams` page prop using the parsers provided,"
+        },
+        {
+          "line": 65,
+          "text": "     * and make it available to the RSC tree."
+        },
+        {
+          "line": 125,
+          "text": "  (base: BaseType, values: Partial<Nullable<inferParserType<Parsers>>> | null): Return;"
+        },
+        {
+          "line": 126,
+          "text": "};"
+        },
+        {
+          "line": 127,
+          "text": "declare function createSerializer<Parsers extends ParserMap, BaseType extends Base = Base, Return = string>(parsers: Parsers, { clearOnDefault, urlKeys, processUrlSearchParams }?: CreateSerializerOptions<Parsers>): SerializeFunction<Parsers, BaseType, Return>;"
+        },
+        {
+          "line": 128,
+          "text": "//#endregion"
+        },
+        {
+          "line": 129,
+          "text": "//#region src/standard-schema.d.ts"
+        },
+        {
+          "line": 130,
+          "text": "type CreateStandardSchemaV1Options<Parsers extends ParserMap, PartialOutput extends boolean = false> = CreateLoaderOptions<Parsers> & {"
+        },
+        {
+          "line": 131,
+          "text": "  /**"
+        },
+        {
+          "line": 132,
+          "text": "   * Marks the output type as Partial, and removes any keys"
+        },
+        {
+          "line": 133,
+          "text": "   * from the output that are not present in the input."
+        },
+        {
+          "line": 134,
+          "text": "   *"
+        }
+      ]
+    },
+    "dist/adapters/tanstack-router.js": {
+      "sha256": "6cd07cd5576c533ddaca4689e74f69cfa4512f66e3f8e44308678a28576371e9",
+      "lines": [
+        {
+          "line": 5,
+          "text": "import { useLocation, useRouter, useRouterState } from \"@tanstack/react-router\";"
+        },
+        {
+          "line": 6,
+          "text": "//#region src/adapters/tanstack-router.ts"
+        },
+        {
+          "line": 7,
+          "text": "function useNuqsTanstackRouterAdapter(watchKeys) {"
+        },
+        {
+          "line": 8,
+          "text": "\tconst pathname = useLocation({ select: (state) => state.pathname });"
+        },
+        {
+          "line": 9,
+          "text": "\tconst search = useRouterState({"
+        },
+        {
+          "line": 10,
+          "text": "\t\tselect: (state) => Object.fromEntries(Object.entries(state.location.search).filter(([key]) => watchKeys.includes(key))),"
+        },
+        {
+          "line": 11,
+          "text": "\t\tstructuralSharing: true"
+        },
+        {
+          "line": 12,
+          "text": "\t});"
+        },
+        {
+          "line": 13,
+          "text": "\tconst resolvedPathname = useRouterState({ select: (state) => state.resolvedLocation?.pathname ?? state.location.pathname });"
+        },
+        {
+          "line": 14,
+          "text": "\tconst { navigate } = useRouter();"
+        },
+        {
+          "line": 22,
+          "text": "\tconst activeSearch = !isPathStable && ownedPathnameRef.current !== pathname ? cachedSearchRef.current : search;"
+        },
+        {
+          "line": 23,
+          "text": "\treturn {"
+        },
+        {
+          "line": 24,
+          "text": "\t\tsearchParams: useMemo(() => new URLSearchParams(Object.entries(activeSearch).flatMap(([key, value]) => {"
+        },
+        {
+          "line": 25,
+          "text": "\t\t\tif (Array.isArray(value)) return value.map((v) => [key, v]);"
+        },
+        {
+          "line": 26,
+          "text": "\t\t\telse if (typeof value === \"object\" && value !== null) return [[key, JSON.stringify(value)]];"
+        },
+        {
+          "line": 27,
+          "text": "\t\t\telse return [[key, value]];"
+        },
+        {
+          "line": 28,
+          "text": "\t\t})), [activeSearch, watchKeys.join(\",\")]),"
+        },
+        {
+          "line": 29,
+          "text": "\t\tupdateUrl: useCallback((search, options) => {"
+        },
+        {
+          "line": 30,
+          "text": "\t\t\tstartTransition(() => {"
+        },
+        {
+          "line": 31,
+          "text": "\t\t\t\tnavigate({"
+        },
+        {
+          "line": 32,
+          "text": "\t\t\t\t\tfrom: \"/\","
+        },
+        {
+          "line": 33,
+          "text": "\t\t\t\t\tto: pathname + renderQueryString(search),"
+        },
+        {
+          "line": 34,
+          "text": "\t\t\t\t\treplace: options.history === \"replace\","
+        },
+        {
+          "line": 35,
+          "text": "\t\t\t\t\tresetScroll: options.scroll,"
+        },
+        {
+          "line": 36,
+          "text": "\t\t\t\t\thash: (prevHash) => prevHash ?? \"\","
+        },
+        {
+          "line": 42,
+          "text": "\t};"
+        },
+        {
+          "line": 43,
+          "text": "}"
+        },
+        {
+          "line": 44,
+          "text": "const Provider = createAdapterProvider(useNuqsTanstackRouterAdapter);"
+        },
+        {
+          "line": 45,
+          "text": "function HistorySpy() {"
+        },
+        {
+          "line": 46,
+          "text": "\tconst router = useRouter();"
+        },
+        {
+          "line": 47,
+          "text": "\tuseEffect(() => {"
+        },
+        {
+          "line": 48,
+          "text": "\t\treturn router.history.subscribe(({ action }) => {"
+        },
+        {
+          "line": 49,
+          "text": "\t\t\tif (action.type === \"BACK\" || action.type === \"FORWARD\" || action.type === \"GO\") resetQueues();"
+        },
+        {
+          "line": 50,
+          "text": "\t\t});"
+        },
+        {
+          "line": 51,
+          "text": "\t}, [router.history]);"
+        },
+        {
+          "line": 52,
+          "text": "\treturn null;"
+        },
+        {
+          "line": 53,
+          "text": "}"
+        },
+        {
+          "line": 54,
+          "text": "const NuqsAdapter = ({ children, ...adapterProps }) => createElement(Provider, {"
+        },
+        {
+          "line": 55,
+          "text": "\t...adapterProps,"
+        }
+      ]
+    },
+    "dist/adapters/tanstack-router.d.ts": {
+      "sha256": "60460c0c12b0218c86cdf77fbcfe31d5592af859db546a9f589c025edca9a76b",
+      "lines": [
+        {
+          "line": 1,
+          "text": "import { r as AdapterProvider } from \"../context-3xaSk51n.js\";"
+        },
+        {
+          "line": 2,
+          "text": "//#region src/adapters/tanstack-router.d.ts"
+        },
+        {
+          "line": 3,
+          "text": "declare const NuqsAdapter: AdapterProvider;"
+        },
+        {
+          "line": 4,
+          "text": "//#endregion"
+        },
+        {
+          "line": 5,
+          "text": "export { NuqsAdapter };"
+        },
+        {
+          "line": 6,
+          "text": "//# sourceMappingURL=tanstack-router.d.ts.map"
+        }
+      ]
+    },
+    "dist/debounce-Ynq26WfO.js": {
+      "sha256": "4310db236dfe287bca0f8c68a3d2c6748406ba52a692c86eccf425890afc4032",
+      "lines": [
+        {
+          "line": 116,
+          "text": "//#endregion"
+        },
+        {
+          "line": 117,
+          "text": "//#region src/lib/queues/throttle.ts"
+        },
+        {
+          "line": 118,
+          "text": "function getSearchParamsSnapshotFromLocation() {"
+        },
+        {
+          "line": 119,
+          "text": "\treturn new URLSearchParams(location.search);"
+        },
+        {
+          "line": 120,
+          "text": "}"
+        },
+        {
+          "line": 121,
+          "text": "var ThrottledQueue = class {"
+        },
+        {
+          "line": 122,
+          "text": "\tupdateMap = /* @__PURE__ */ new Map();"
+        },
+        {
+          "line": 123,
+          "text": "\toptions = {"
+        },
+        {
+          "line": 124,
+          "text": "\t\thistory: \"replace\","
+        },
+        {
+          "line": 125,
+          "text": "\t\tscroll: false,"
+        },
+        {
+          "line": 134,
+          "text": "\tpush({ key, query, options }, timeMs = defaultRateLimit.timeMs) {"
+        },
+        {
+          "line": 135,
+          "text": "\t\tif (this.resetQueueOnNextPush) {"
+        },
+        {
+          "line": 136,
+          "text": "\t\t\tthis.reset();"
+        },
+        {
+          "line": 137,
+          "text": "\t\t\tthis.resetQueueOnNextPush = false;"
+        },
+        {
+          "line": 138,
+          "text": "\t\t}"
+        },
+        {
+          "line": 139,
+          "text": "\t\tdebug(7, key, query, options);"
+        },
+        {
+          "line": 140,
+          "text": "\t\tthis.updateMap.set(key, query);"
+        },
+        {
+          "line": 141,
+          "text": "\t\tif (options.history === \"push\") this.options.history = \"push\";"
+        },
+        {
+          "line": 142,
+          "text": "\t\tif (options.scroll) this.options.scroll = true;"
+        },
+        {
+          "line": 143,
+          "text": "\t\tif (options.shallow === false) this.options.shallow = false;"
+        },
+        {
+          "line": 144,
+          "text": "\t\tif (options.startTransition) this.transitions.add(options.startTransition);"
+        },
+        {
+          "line": 145,
+          "text": "\t\tif (!Number.isFinite(this.timeMs) || timeMs > this.timeMs) this.timeMs = timeMs;"
+        },
+        {
+          "line": 146,
+          "text": "\t}"
+        },
+        {
+          "line": 147,
+          "text": "\tgetQueuedQuery(key) {"
+        },
+        {
+          "line": 148,
+          "text": "\t\treturn this.updateMap.get(key);"
+        },
+        {
+          "line": 149,
+          "text": "\t}"
+        },
+        {
+          "line": 150,
+          "text": "\tgetPendingPromise({ getSearchParamsSnapshot = getSearchParamsSnapshotFromLocation }) {"
+        },
+        {
+          "line": 151,
+          "text": "\t\treturn this.resolvers?.promise ?? Promise.resolve(getSearchParamsSnapshot());"
+        },
+        {
+          "line": 152,
+          "text": "\t}"
+        },
+        {
+          "line": 153,
+          "text": "\tflush({ getSearchParamsSnapshot = getSearchParamsSnapshotFromLocation, rateLimitFactor = 1, ...adapter }, processUrlSearchParams) {"
+        },
+        {
+          "line": 154,
+          "text": "\t\tthis.controller ??= new AbortController();"
+        },
+        {
+          "line": 155,
+          "text": "\t\tif (!Number.isFinite(this.timeMs)) {"
+        },
+        {
+          "line": 156,
+          "text": "\t\t\tdebug(8);"
+        },
+        {
+          "line": 157,
+          "text": "\t\t\treturn Promise.resolve(getSearchParamsSnapshot());"
+        },
+        {
+          "line": 188,
+          "text": "\t\tthis.resolvers?.resolve(new URLSearchParams());"
+        },
+        {
+          "line": 189,
+          "text": "\t\tthis.resolvers = null;"
+        },
+        {
+          "line": 190,
+          "text": "\t\treturn this.reset();"
+        },
+        {
+          "line": 191,
+          "text": "\t}"
+        },
+        {
+          "line": 192,
+          "text": "\treset() {"
+        },
+        {
+          "line": 193,
+          "text": "\t\tconst queuedKeys = Array.from(this.updateMap.keys());"
+        },
+        {
+          "line": 194,
+          "text": "\t\tdebug(10, JSON.stringify(Object.fromEntries(this.updateMap)));"
+        },
+        {
+          "line": 195,
+          "text": "\t\tthis.updateMap.clear();"
+        },
+        {
+          "line": 196,
+          "text": "\t\tthis.transitions.clear();"
+        },
+        {
+          "line": 197,
+          "text": "\t\tthis.options = {"
+        },
+        {
+          "line": 198,
+          "text": "\t\t\thistory: \"replace\","
+        },
+        {
+          "line": 199,
+          "text": "\t\t\tscroll: false,"
+        },
+        {
+          "line": 203,
+          "text": "\t\treturn queuedKeys;"
+        },
+        {
+          "line": 204,
+          "text": "\t}"
+        },
+        {
+          "line": 205,
+          "text": "\tapplyPendingUpdates(adapter, processUrlSearchParams) {"
+        },
+        {
+          "line": 206,
+          "text": "\t\tconst { updateUrl, getSearchParamsSnapshot } = adapter;"
+        },
+        {
+          "line": 207,
+          "text": "\t\tlet search = getSearchParamsSnapshot();"
+        },
+        {
+          "line": 208,
+          "text": "\t\tdebug(11, this.updateMap.size, search.toString());"
+        },
+        {
+          "line": 209,
+          "text": "\t\tif (this.updateMap.size === 0) return [search, null];"
+        },
+        {
+          "line": 210,
+          "text": "\t\tconst items = Array.from(this.updateMap.entries());"
+        },
+        {
+          "line": 211,
+          "text": "\t\tconst options = { ...this.options };"
+        },
+        {
+          "line": 212,
+          "text": "\t\tconst transitions = Array.from(this.transitions);"
+        },
+        {
+          "line": 213,
+          "text": "\t\tif (adapter.autoResetQueueOnUpdate) this.reset();"
+        },
+        {
+          "line": 214,
+          "text": "\t\tdebug(12, items, options);"
+        },
+        {
+          "line": 215,
+          "text": "\t\tfor (const [key, value] of items) if (value === null) search.delete(key);"
+        },
+        {
+          "line": 216,
+          "text": "\t\telse search = write(search, key, value);"
+        },
+        {
+          "line": 217,
+          "text": "\t\tif (processUrlSearchParams) try {"
+        },
+        {
+          "line": 218,
+          "text": "\t\t\tsearch = processUrlSearchParams(search);"
+        },
+        {
+          "line": 219,
+          "text": "\t\t} catch (err) {"
+        },
+        {
+          "line": 220,
+          "text": "\t\t\tconsole.error(error(502), items.map(([key]) => key).join(), err);"
+        }
+      ]
+    },
+    "dist/reset-Cwe7SWyj.js": {
+      "sha256": "751c9a20bf13357f095582f718754d1925f39c42720369e7c1960fae565af231",
+      "lines": [
+        {
+          "line": 12,
+          "text": "\tonReset();"
+        },
+        {
+          "line": 13,
+          "text": "}"
+        },
+        {
+          "line": 14,
+          "text": "function resetQueues() {"
+        },
+        {
+          "line": 15,
+          "text": "\tdebug(19);"
+        },
+        {
+          "line": 16,
+          "text": "\tdebounceController.abortAll();"
+        },
+        {
+          "line": 17,
+          "text": "\tglobalThrottleQueue.abort().forEach((key) => debounceController.queuedQuerySync.emit(key));"
+        },
+        {
+          "line": 18,
+          "text": "}"
+        },
+        {
+          "line": 19,
+          "text": "//#endregion"
+        },
+        {
+          "line": 20,
+          "text": "export { setQueueResetMutex as n, spinQueueResetMutex as r, resetQueues as t };"
+        },
+        {
+          "line": 21,
+          "text": ""
+        }
+      ]
+    },
+    "dist/adapters/custom.js": {
+      "sha256": "afca16381a0f0e7528edceeef05b386b9dc024ea2c79a5381840229189568245",
+      "lines": [
+        {
+          "line": 1,
+          "text": "\"use client\";"
+        },
+        {
+          "line": 2,
+          "text": "import { c as renderQueryString, n as createAdapterProvider } from \"../context-Mu913OAK.js\";"
+        },
+        {
+          "line": 3,
+          "text": "export { renderQueryString, createAdapterProvider as unstable_createAdapterProvider };"
+        }
+      ]
+    },
+    "dist/adapters/custom.d.ts": {
+      "sha256": "0b6f5765fc36a5f33cdef6244e9cebeba3b1b5e046d37cc2a15c95e5738466a1",
+      "lines": [
+        {
+          "line": 1,
+          "text": "import { a as AdapterInterface, c as UseAdapterHook, i as createAdapterProvider, o as AdapterOptions, s as UpdateUrlFunction, t as AdapterContext } from \"../context-3xaSk51n.js\";"
+        },
+        {
+          "line": 2,
+          "text": "//#region src/lib/url-encoding.d.ts"
+        },
+        {
+          "line": 3,
+          "text": "declare function renderQueryString(search: URLSearchParams): string;"
+        },
+        {
+          "line": 4,
+          "text": "//#endregion"
+        },
+        {
+          "line": 5,
+          "text": "export { renderQueryString, type AdapterContext as unstable_AdapterContext, type AdapterInterface as unstable_AdapterInterface, type AdapterOptions as unstable_AdapterOptions, type UpdateUrlFunction as unstable_UpdateUrlFunction, type UseAdapterHook as unstable_UseAdapterHook, createAdapterProvider as unstable_createAdapterProvider };"
+        },
+        {
+          "line": 6,
+          "text": "//# sourceMappingURL=custom.d.ts.map"
+        }
+      ]
+    },
+    "dist/context-3xaSk51n.d.ts": {
+      "sha256": "f224f0510f0e8b50c0a6bd1299a476be53442c01d5241b52c29fc1445d7dd448",
+      "lines": [
+        {
+          "line": 1,
+          "text": "import { i as Options } from \"./defs-BUTBdnWx.js\";"
+        },
+        {
+          "line": 2,
+          "text": "import { Context, ProviderProps, ReactElement, ReactNode } from \"react\";"
+        },
+        {
+          "line": 3,
+          "text": "//#region src/adapters/lib/defs.d.ts"
+        },
+        {
+          "line": 4,
+          "text": "type AdapterOptions = Pick<Options, \"history\" | \"scroll\" | \"shallow\">;"
+        },
+        {
+          "line": 5,
+          "text": "/**"
+        },
+        {
+          "line": 6,
+          "text": " * Optionally return a Promise that resolves when the router has fully applied"
+        },
+        {
+          "line": 7,
+          "text": " * the update (eg: after navigation and route loaders settle). It is passed to"
+        },
+        {
+          "line": 8,
+          "text": " * the user's startTransition, keeping its isPending flag true until settlement"
+        },
+        {
+          "line": 9,
+          "text": " * on React 19. The Promise should not reject: rejections bypass nuqs and"
+        },
+        {
+          "line": 10,
+          "text": " * surface through React's transition error handling."
+        },
+        {
+          "line": 11,
+          "text": " */"
+        },
+        {
+          "line": 12,
+          "text": "type UpdateUrlFunction = (search: URLSearchParams, options: Required<AdapterOptions>) => void | Promise<void>;"
+        },
+        {
+          "line": 13,
+          "text": "type UseAdapterHook = (watchKeys: string[]) => AdapterInterface;"
+        },
+        {
+          "line": 14,
+          "text": "type AdapterInterface = {"
+        },
+        {
+          "line": 15,
+          "text": "  searchParams: URLSearchParams;"
+        },
+        {
+          "line": 16,
+          "text": "  pathname?: string;"
+        },
+        {
+          "line": 17,
+          "text": "  updateUrl: UpdateUrlFunction;"
+        },
+        {
+          "line": 18,
+          "text": "  getSearchParamsSnapshot?: () => URLSearchParams;"
+        },
+        {
+          "line": 19,
+          "text": "  rateLimitFactor?: number;"
+        },
+        {
+          "line": 20,
+          "text": "  autoResetQueueOnUpdate?: boolean;"
+        },
+        {
+          "line": 21,
+          "text": "};"
+        },
+        {
+          "line": 22,
+          "text": "//#endregion"
+        },
+        {
+          "line": 23,
+          "text": "//#region src/adapters/lib/context.d.ts"
+        },
+        {
+          "line": 24,
+          "text": "type AdapterProps = {"
+        },
+        {
+          "line": 25,
+          "text": "  defaultOptions?: Partial<Pick<Options, \"history\" | \"shallow\" | \"clearOnDefault\" | \"scroll\" | \"limitUrlUpdates\">>;"
+        },
+        {
+          "line": 26,
+          "text": "  processUrlSearchParams?: (search: URLSearchParams) => URLSearchParams;"
+        },
+        {
+          "line": 27,
+          "text": "};"
+        },
+        {
+          "line": 28,
+          "text": "type AdapterContext = AdapterProps & {"
+        },
+        {
+          "line": 29,
+          "text": "  useAdapter: UseAdapterHook;"
+        },
+        {
+          "line": 30,
+          "text": "};"
+        },
+        {
+          "line": 31,
+          "text": "declare const context: Context<AdapterContext>;"
+        },
+        {
+          "line": 32,
+          "text": "declare global {"
+        },
+        {
+          "line": 33,
+          "text": "  interface Window {"
+        },
+        {
+          "line": 34,
+          "text": "    __NuqsAdapterContext?: typeof context;"
+        },
+        {
+          "line": 35,
+          "text": "  }"
+        },
+        {
+          "line": 36,
+          "text": "}"
+        },
+        {
+          "line": 37,
+          "text": "type AdapterProvider = (props: AdapterProps & {"
+        },
+        {
+          "line": 38,
+          "text": "  children: ReactNode;"
+        },
+        {
+          "line": 39,
+          "text": "}) => ReactElement<ProviderProps<AdapterContext>>;"
+        },
+        {
+          "line": 40,
+          "text": "/**"
+        },
+        {
+          "line": 41,
+          "text": " * Create a custom adapter (context provider) for nuqs to work with your framework / router."
+        },
+        {
+          "line": 42,
+          "text": " *"
+        },
+        {
+          "line": 43,
+          "text": " * Adapters are based on React Context,"
+        },
+        {
+          "line": 44,
+          "text": " *"
+        },
+        {
+          "line": 45,
+          "text": " * @param useAdapter"
+        },
+        {
+          "line": 46,
+          "text": " * @returns"
+        },
+        {
+          "line": 47,
+          "text": " */"
+        },
+        {
+          "line": 48,
+          "text": "declare function createAdapterProvider(useAdapter: UseAdapterHook): AdapterProvider;"
+        },
+        {
+          "line": 49,
+          "text": "//#endregion"
+        },
+        {
+          "line": 50,
+          "text": "export { AdapterInterface as a, UseAdapterHook as c, createAdapterProvider as i, AdapterProps as n, AdapterOptions as o, AdapterProvider as r, UpdateUrlFunction as s, AdapterContext as t };"
+        },
+        {
+          "line": 51,
+          "text": "//# sourceMappingURL=context-3xaSk51n.d.ts.map"
+        }
+      ]
+    }
+  },
+  "scope": "Installed source/type only, not adapter/browser execution; actual server parser/loader/serializer suite separately.",
+  "router": {
+    "reactRouter": "1.170.42",
+    "routerCore": "1.171.35",
+    "reactRouterPackagePath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@tanstack+react-router@1.170.42_react-dom@19.3.0_react@19.3.0__react@19.3.0/node_modules/@tanstack/react-router",
+    "routerCorePackagePath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@tanstack+router-core@1.171.35/node_modules/@tanstack/router-core",
+    "files": {
+      "src/router.ts": {
+        "sha256": "7618692a2c8830c0b7f90b5022f4f5ec549b6dbfcd992e37211f4f6ac30cb3a8",
+        "bytes": 98749
+      },
+      "src/searchParams.ts": {
+        "sha256": "ca7692fd1768faead946d61ff7d15d6d658ecf7d27cbb9f0ec0ac08b48ca32c2",
+        "bytes": 3396
+      }
+    }
+  },
+  "adapterIntegration": {
+    "source": "examples/tanstack-adapter.tsx",
+    "runtime": "real nuqs custom provider and built-in HistorySpy, real Router hooks/navigation",
+    "publicOnly": true,
+    "contextExport": "unstable_AdapterContext is a type only; not read as runtime Context",
+    "navigation": "href parses URL via Router; to is pathname; direct Object.fromEntries numeric strings are JSON-quoted",
+    "repeatedValues": "Router logical arrays preserved and expanded when read by nuqs; raw query encoding may canonicalize",
+    "outerProvider": "real SDK HistorySpy retains Back/Forward/GO reset and cleanup",
+    "options": "defaultOptions/processUrlSearchParams passed to both; write state/hash/history/scroll preserved",
+    "limits": "Node boundary probe is real Router model, not browser acceptance; old SDK6/policy6 do not prove this adapter"
+  }
+}

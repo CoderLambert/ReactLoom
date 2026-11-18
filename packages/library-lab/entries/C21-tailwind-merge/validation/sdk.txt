@@ -1,0 +1,17 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['pnpm', 'exec', 'node', '--test', 'entries/C21-tailwind-merge/tests/sdk.test.mjs']
+startedAt: 2026-11-10T18:09:14.715341+00:00
+exit: 0
+✔ actual shared component composition gives caller classes the last merge position (2.901015ms)
+✔ actual group configuration and asymmetric padding conflicts agree in both directions (0.649186ms)
+✔ actual modifier contexts and important flags keep separate conflict channels (0.183666ms)
+✔ actual custom px extension recognizes source-owned horizontal utilities without inventing CSS (1.022662ms)
+✔ default SDK preserves unknown classes but can recognize non-default theme names by validators (0.108861ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 47.184024

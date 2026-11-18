@@ -1,43 +1,61 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
-import {createStore} from 'zustand/vanilla';
-import {persist,createJSONStorage} from 'zustand/middleware';
+import assert from 'node:assert/strict'
+import test from 'node:test'
+import { createChannelStore, KEY, makeMemoryStorage } from '../examples/store.mjs'
 
-test('real Zustand vanilla store independently isolates two tenant instances',()=>{
- const factory=()=>createStore()(set=>({tenant:'a',enabled:{a:true,b:false},toggle:()=>set(s=>({enabled:{...s.enabled,[s.tenant]:!s.enabled[s.tenant]}}))}));
- const first=factory(),second=factory();
- first.getState().toggle();
- assert.equal(first.getState().enabled.a,false);
- assert.equal(second.getState().enabled.a,true);
-});
-test('real Zustand persist serializes only whitelisted data and rehydrates',async()=>{
- const map=new Map();
- const storage={getItem:k=>map.get(k)??null,setItem:(k,v)=>{map.set(k,v)},removeItem:k=>map.delete(k)};
- const factory=()=>createStore()(persist((set)=>({view:'list',token:'never-persist',setView:view=>set({view})}),
-  {name:'zustand-fixture',version:2,storage:createJSONStorage(()=>storage),skipHydration:true,
-   partialize:s=>({view:s.view})}));
- const a=factory();a.getState().setView('grid');
- assert.equal(map.get('zustand-fixture').includes('never-persist'),false);
- const b=factory();await b.persist.rehydrate();assert.equal(b.getState().view,'grid');
- assert.equal(b.getState().token,'never-persist');
-});
-test('real middleware invokes versioned migrate',async()=>{
- const map=new Map([['migration',JSON.stringify({state:{oldValue:42},version:1})]]);
- const storage={getItem:k=>map.get(k)??null,setItem:(k,v)=>{map.set(k,v)},removeItem:k=>map.delete(k)};
- const store=createStore()(persist(()=>({value:0}),
-  {name:'migration',version:2,storage:createJSONStorage(()=>storage),skipHydration:true,
-   migrate:(old,v)=>({value:v===1?old.oldValue:0})}));
- await store.persist.rehydrate();assert.equal(store.getState().value,42);
-});
-
-test('real Zustand persist v1 migration rejects malformed legacy booleans',async()=>{
- const {migrateChannelPreferences}=await import('../examples/migration-policy.mjs');
- const map=new Map([['untrusted-legacy',JSON.stringify({state:{enabled:'false',view:'grid',token:'do-not-persist'},version:1})]]);
- const storage={getItem:k=>map.get(k)??null,setItem:(k,v)=>{map.set(k,v)},removeItem:k=>map.delete(k)};
- const store=createStore()(persist(()=>({view:'list',enabledByTenant:{'team-a':true,'team-b':false}}),
-   {name:'untrusted-legacy',version:2,storage:createJSONStorage(()=>storage),skipHydration:true,
-    migrate:migrateChannelPreferences}));
- await store.persist.rehydrate();
- assert.deepEqual(store.getState(),{view:'grid',enabledByTenant:{'team-a':true,'team-b':false}});
- assert.equal(map.get('untrusted-legacy').includes('do-not-persist'),false);
-});
+test('actual example factories isolate stores, tenant keys and private storage', async () => {
+  const a = makeMemoryStorage(),
+    b = makeMemoryStorage()
+  const first = createChannelStore(a.storage),
+    second = createChannelStore(b.storage)
+  first.getState().toggle()
+  first.getState().setTenant('team-b')
+  first.getState().toggle()
+  first.getState().setView('grid')
+  assert.deepEqual(first.getState().enabledByTenant, { 'team-a': false, 'team-b': true })
+  assert.deepEqual(second.getState().enabledByTenant, { 'team-a': true, 'team-b': false })
+  assert.equal(b.inspect(), '未写入')
+  const saved = JSON.parse(a.inspect())
+  assert.deepEqual(Object.keys(saved.state).sort(), ['enabledByTenant', 'view'])
+  const restored = createChannelStore(a.storage)
+  await restored.persist.rehydrate()
+  assert.equal(restored.getState().tenant, 'team-a')
+  assert.equal(restored.getState().view, 'grid')
+  a.dispose()
+  assert.equal(a.storage.getItem(KEY), null)
+  const clean = createChannelStore(a.storage)
+  await clean.persist.rehydrate()
+  assert.equal(clean.getState().view, 'list')
+})
+test('actual store subscription stops after disposal of consumer', () => {
+  const store = createChannelStore(makeMemoryStorage().storage)
+  let calls = 0
+  const unsubscribe = store.subscribe(() => calls++)
+  store.getState().toggle()
+  assert.equal(calls, 1)
+  unsubscribe()
+  store.getState().toggle()
+  assert.equal(calls, 1)
+})
+test('actual example persist invokes controlled v1 migration and writes version 2', async () => {
+  const memory = makeMemoryStorage()
+  memory.seed(
+    JSON.stringify({ state: { enabled: false, view: 'grid', token: 'secret' }, version: 1 }),
+  )
+  const store = createChannelStore(memory.storage)
+  await store.persist.rehydrate()
+  assert.deepEqual(store.getState().enabledByTenant, { 'team-a': false, 'team-b': false })
+  assert.equal(store.getState().view, 'grid')
+  assert.equal(JSON.parse(memory.inspect()).version, 2)
+  assert.equal(memory.inspect().includes('secret'), false)
+})
+test('invalid JSON reports hydration error and retains defaults rather than invoking migrate', async () => {
+  const memory = makeMemoryStorage()
+  memory.seed('{broken')
+  const store = createChannelStore(memory.storage)
+  await store.persist.rehydrate()
+  assert.equal(store.persist.hasHydrated(), false)
+  assert.equal(store.getState().view, 'list')
+  memory.dispose()
+  await store.persist.rehydrate()
+  assert.equal(store.persist.hasHydrated(), true)
+})

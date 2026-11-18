@@ -1,0 +1,17 @@
+[WebServer] (node:1965492) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:1965516) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 2 workers
+
+(node:1965593) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1965591) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 e2e/quality-resume-blocknote.spec.ts:5:1 › @E02 actual BlockNote typing, slash menu and onChange (2.2s)
+  ✓  1 e2e/quality-resume-blocknote.spec.ts:49:1 › @E02 real insert/save/restore generates new IDs and rejects bad drafts unchanged (2.2s)
+  ✓  3 e2e/quality-resume-blocknote.spec.ts:97:1 › @E02 Storage access failures are visible without replacing editor content (1.6s)
+  ✓  4 e2e/quality-resume-tiptap.spec.ts:9:1 › E01 real editor commands, structured drafts, rejected restore and hook disposal @E01 (7.1s)
+
+  4 passed (10.0s)

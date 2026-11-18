@@ -1,0 +1,53 @@
+[
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "vitest",
+      "run",
+      "--config",
+      "entries/F12-vitest/vitest.config.ts",
+      "examples/basic.test.ts",
+      "--reporter=verbose"
+    ],
+    "exitCode": 0,
+    "output": "basic.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "vitest",
+      "run",
+      "--config",
+      "entries/F12-vitest/vitest.config.ts",
+      "examples/business.test.ts",
+      "--reporter=verbose"
+    ],
+    "exitCode": 0,
+    "output": "business.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "vitest",
+      "run",
+      "--config",
+      "entries/F12-vitest/vitest.config.ts",
+      "examples/advanced.test.ts",
+      "--reporter=verbose"
+    ],
+    "exitCode": 0,
+    "output": "advanced.log"
+  }
+]

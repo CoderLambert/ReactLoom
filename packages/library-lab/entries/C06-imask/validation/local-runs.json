@@ -1,0 +1,315 @@
+{
+  "runs": [
+    {
+      "label": "format-intermediate",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "check",
+        "--write",
+        "entries/C06-imask/examples",
+        "entries/C06-imask/library.json"
+      ],
+      "start": "2026-11-10T15:33:54.380364+00:00",
+      "end": "2026-11-10T15:33:54.598160+00:00",
+      "exitCode": 0,
+      "log": "format-intermediate.txt"
+    },
+    {
+      "label": "types-intermediate",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--target",
+        "es2022",
+        "--module",
+        "esnext",
+        "--moduleResolution",
+        "bundler",
+        "--jsx",
+        "react-jsx",
+        "--strict",
+        "--skipLibCheck",
+        "--esModuleInterop",
+        "--types",
+        "vite/client,node",
+        "entries/C06-imask/examples/demo.tsx"
+      ],
+      "start": "2026-11-10T15:33:54.598325+00:00",
+      "end": "2026-11-10T15:33:54.875949+00:00",
+      "exitCode": 0,
+      "log": "types-intermediate.txt"
+    },
+    {
+      "label": "official-fetch",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "python3",
+        "packages/library-lab/entries/C06-imask/validation/fetch-official.py"
+      ],
+      "start": "2026-11-10T15:46:36.832277+00:00",
+      "end": "2026-11-10T15:46:53.781492+00:00",
+      "exitCode": 0,
+      "log": "official-fetch.txt"
+    },
+    {
+      "label": "format-final",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "check",
+        "--write",
+        "entries/C06-imask/examples",
+        "entries/C06-imask/tests",
+        "entries/C06-imask/library.json",
+        "entries/C06-imask/verification.json",
+        "entries/C06-imask/official/source-evidence.json",
+        "entries/C06-imask/validation/sdk-source-audit.json",
+        "entries/C06-imask/validation/metadata-check.mjs",
+        "entries/C06-imask/validation/browser-proposal.check.ts"
+      ],
+      "start": "2026-11-10T15:52:00.391744+00:00",
+      "end": "2026-11-10T15:52:00.605798+00:00",
+      "exitCode": 0,
+      "log": "format-final.txt"
+    },
+    {
+      "label": "sdk",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "node",
+        "--test",
+        "entries/C06-imask/tests/sdk.test.mjs"
+      ],
+      "start": "2026-11-10T15:52:00.605924+00:00",
+      "end": "2026-11-10T15:52:00.685985+00:00",
+      "exitCode": 0,
+      "log": "sdk.txt"
+    },
+    {
+      "label": "policy",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "node",
+        "--test",
+        "entries/C06-imask/tests/calendar-policy.test.mjs"
+      ],
+      "start": "2026-11-10T15:52:00.686143+00:00",
+      "end": "2026-11-10T15:52:00.754393+00:00",
+      "exitCode": 0,
+      "log": "policy.txt"
+    },
+    {
+      "label": "proposal-typecheck",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--target",
+        "es2022",
+        "--module",
+        "esnext",
+        "--moduleResolution",
+        "bundler",
+        "--strict",
+        "--skipLibCheck",
+        "--esModuleInterop",
+        "--types",
+        "vite/client,node",
+        "entries/C06-imask/validation/browser-proposal.check.ts"
+      ],
+      "start": "2026-11-10T15:52:00.754539+00:00",
+      "end": "2026-11-10T15:52:00.988729+00:00",
+      "exitCode": 0,
+      "log": "proposal-typecheck.txt"
+    },
+    {
+      "label": "metadata",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "node",
+        "entries/C06-imask/validation/metadata-check.mjs"
+      ],
+      "start": "2026-11-10T15:52:00.988878+00:00",
+      "end": "2026-11-10T15:52:01.019787+00:00",
+      "exitCode": 0,
+      "log": "metadata.txt"
+    },
+    {
+      "label": "proposal-format",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "check",
+        "--write",
+        "entries/C06-imask/validation/browser-proposal.check.ts"
+      ],
+      "start": "2026-11-10T15:54:12.524705+00:00",
+      "end": "2026-11-10T15:54:12.747004+00:00",
+      "exitCode": 0,
+      "log": "proposal-format.txt"
+    },
+    {
+      "label": "proposal-typecheck-final",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--target",
+        "es2022",
+        "--module",
+        "esnext",
+        "--moduleResolution",
+        "bundler",
+        "--strict",
+        "--skipLibCheck",
+        "--esModuleInterop",
+        "--types",
+        "vite/client,node",
+        "entries/C06-imask/validation/browser-proposal.check.ts"
+      ],
+      "start": "2026-11-10T15:54:12.747157+00:00",
+      "end": "2026-11-10T15:54:13.004198+00:00",
+      "exitCode": 0,
+      "log": "proposal-typecheck-final.txt"
+    },
+    {
+      "label": "final-check",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "python3",
+        "packages/library-lab/entries/C06-imask/validation/final-check.py"
+      ],
+      "start": "2026-11-10T15:56:25.662707+00:00",
+      "end": "2026-11-10T15:56:25.680925+00:00",
+      "exitCode": 0,
+      "log": "final-check.txt"
+    },
+    {
+      "label": "diff-check",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "packages/library-lab/entries/C06-imask"
+      ],
+      "start": "2026-11-10T15:56:25.681024+00:00",
+      "end": "2026-11-10T15:56:25.683752+00:00",
+      "exitCode": 0,
+      "log": "diff-check.txt"
+    },
+    {
+      "label": "mobile-probe-cwd-failure",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "node",
+        "entries/C06-imask/validation/mobile-overflow-probe.mjs"
+      ],
+      "start": "2026-11-10T16:16:56.131296+00:00",
+      "end": "2026-11-10T16:16:56.149318+00:00",
+      "exitCode": 1,
+      "log": "mobile-probe-cwd-failure.txt",
+      "scope": "probe preparation wrong cwd; MODULE_NOT_FOUND before any browser, not a regression red"
+    },
+    {
+      "label": "mobile-overflow-red",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "node",
+        "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C06-imask/validation/mobile-overflow-probe.mjs"
+      ],
+      "start": "2026-11-10T16:17:29.285603+00:00",
+      "end": "2026-11-10T16:17:31.056036+00:00",
+      "exitCode": 1,
+      "log": "mobile-overflow-red.txt",
+      "scope": "fixed candidate16 dist; real browser; no build"
+    },
+    {
+      "label": "mobile-overflow-css-green",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "node",
+        "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C06-imask/validation/mobile-overflow-probe.mjs",
+        "--candidate-css"
+      ],
+      "start": "2026-11-10T16:18:01.760314+00:00",
+      "end": "2026-11-10T16:18:03.518021+00:00",
+      "exitCode": 0,
+      "log": "mobile-overflow-css-green.txt",
+      "scope": "candidate16 fixed dist + actual new entry CSS overlay; diagnosis only, root new-build regression pending"
+    },
+    {
+      "label": "mobile-fix-format",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "check",
+        "--write",
+        "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C06-imask/examples/styles.css",
+        "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C06-imask/validation/mobile-overflow-probe.mjs"
+      ],
+      "start": "2026-11-10T16:18:28.613224+00:00",
+      "end": "2026-11-10T16:18:28.836872+00:00",
+      "exitCode": 0,
+      "log": "mobile-fix-format.txt"
+    },
+    {
+      "label": "mobile-fix-types",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "pnpm",
+        "--dir",
+        "packages/library-lab",
+        "exec",
+        "tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--target",
+        "es2022",
+        "--module",
+        "esnext",
+        "--moduleResolution",
+        "bundler",
+        "--jsx",
+        "react-jsx",
+        "--strict",
+        "--skipLibCheck",
+        "--esModuleInterop",
+        "--types",
+        "vite/client,node",
+        "entries/C06-imask/examples/demo.tsx"
+      ],
+      "start": "2026-11-10T16:18:28.837022+00:00",
+      "end": "2026-11-10T16:18:29.118033+00:00",
+      "exitCode": 0,
+      "log": "mobile-fix-types.txt"
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "repository": "shikijs/shiki",
+  "tag": "v4.5.0",
+  "commit": "f7d0167873fd676fe4e190bc9b53832fba9ee01d",
+  "readmeCandidates": [
+    "README.md",
+    "packages/cli/README.md",
+    "packages/codegen/README.md",
+    "packages/colorized-brackets/README.md",
+    "packages/core/README.md",
+    "packages/engine-javascript/README.md",
+    "packages/engine-oniguruma/README.md",
+    "packages/langs-precompiled/README.md",
+    "packages/langs/README.md",
+    "packages/magic-move/README.md",
+    "packages/markdown-exit/README.md",
+    "packages/markdown-it/README.md",
+    "packages/monaco/README.md",
+    "packages/rehype/README.md",
+    "packages/shiki/README.md",
+    "packages/stream/README.md",
+    "packages/themes/README.md",
+    "packages/transformers/README.md",
+    "packages/twoslash/README.md",
+    "packages/types/README.md",
+    "packages/vitepress-twoslash/README.md"
+  ],
+  "selection": "Actual shiki package README; no official Chinese README in pinned tree.",
+  "license": "Installed shiki4.5.0 MIT; pinned root LICENSE saved.",
+  "homepage": {
+    "url": "https://shiki.style/",
+    "status": 200,
+    "headers": {
+      "accept-ranges": "bytes",
+      "age": "74851",
+      "cache-control": "public,max-age=0,must-revalidate",
+      "cache-status": "\"Netlify Edge\"; hit; ttl=31461149",
+      "content-encoding": "br",
+      "content-length": "4530",
+      "content-type": "text/html; charset=UTF-8",
+      "date": "Tue, 17 Nov 2026 17:31:34 GMT",
+      "etag": "W/\"a4e0bd893ad8d5448d33bb36b181833a-ssl\"",
+      "server": "Netlify",
+      "strict-transport-security": "max-age=31536000",
+      "vary": "Accept-Encoding",
+      "x-nf-request-id": "01M7N90SF14H12740ZPG4CGN2R"
+    },
+    "bodySha256": "bcf01261b9d16ee5394ec7274e44eaace9c811cf1c71c80b8346bdd7cae49b57"
+  },
+  "checkedAt": "2026-11-17T17:31:36.165Z"
+}

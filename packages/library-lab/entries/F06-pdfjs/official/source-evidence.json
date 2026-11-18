@@ -1,0 +1,44 @@
+{
+  "repository": "mozilla/pdf.js",
+  "tag": "v6.3.289",
+  "commit": "1c8020a7d4e43668ac287a3ecf9a8dbea17e4c56",
+  "readmeCandidates": ["README.md"],
+  "language": "en",
+  "files": [
+    {
+      "path": "README.md",
+      "url": "https://raw.githubusercontent.com/mozilla/pdf.js/1c8020a7d4e43668ac287a3ecf9a8dbea17e4c56/README.md",
+      "sha256": "4e6c916c503937ee7fc46242691d61836e0ebb4f1a5e9e5e1207006d3737b705",
+      "bytes": 9219
+    },
+    {
+      "path": "LICENSE",
+      "url": "https://raw.githubusercontent.com/mozilla/pdf.js/1c8020a7d4e43668ac287a3ecf9a8dbea17e4c56/LICENSE",
+      "sha256": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594",
+      "bytes": 10174
+    }
+  ],
+  "installedPackage": {
+    "name": "pdfjs-dist",
+    "version": "6.3.289",
+    "license": "Apache-2.0",
+    "engines": {
+      "node": ">=22.13.0 || >=24"
+    },
+    "homepage": "https://mozilla.github.io/pdf.js/",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/mozilla/pdf.js.git"
+    }
+  },
+  "homepage": {
+    "url": "https://mozilla.github.io/pdf.js/",
+    "finalUrl": "https://mozilla.github.io/pdf.js/",
+    "status": 200,
+    "headers": "official/homepage.headers",
+    "bodySha256": "1c30bad4466db3a08d87a4fe749772bddbbeb077129003df3668001b4bb95ff0",
+    "checkedAt": "2026-11-17T18:42:44.692180+00:00",
+    "xFrameOptions": null,
+    "cspFrameAncestors": null
+  }
+}

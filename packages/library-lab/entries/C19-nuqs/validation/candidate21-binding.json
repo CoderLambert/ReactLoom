@@ -1,0 +1,20 @@
+{
+  "candidateInputSHA": "11b1313558ef9191b68ceb7e749b4a7fca8733d3883262871ce1d0e5a1f3368a",
+  "runtime": {
+    "examples/example.tsx": "a1cf26eb432bfcc82f8a585d4a02f47785c2ff51aed3d78a33e4f25a7431ccd2",
+    "examples/tanstack-adapter.tsx": "b20023030d12b8ef72d6bb845d068eebf86f49a33f8dffae3c67db11fd91dc85",
+    "examples/query-contract.mjs": "99cef6f85e3370d1a0260abe4bd23080c4be02ce3366f14907f8aab620c8a6f1",
+    "examples/query-contract.d.mts": "8cecc886538593b51793eef6beb71fe6f88e3c6de92b526bc9890fc545a2d2c9",
+    "examples/url-policy.mjs": "72efc511cd6da0a96a0357f4c1b4501efcb006081e2c44f3f5c5d890939082dd",
+    "examples/url-policy.d.mts": "65839ab91072fe9da71524fc575c54ab2848322161d227018542c779ba6bcb85",
+    "examples/styles.css": "4390f2c796fdc7a3255b86de478e9fce6aa15d30cdaa35a8be28d1c829b42aa6",
+    "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038"
+  },
+  "entryProposalSHA": "fd637a0295a996fe308490ea47abceea48a8e8922497aef7c6b205dc1ba66bb9",
+  "publicProposalSHA": "fd637a0295a996fe308490ea47abceea48a8e8922497aef7c6b205dc1ba66bb9",
+  "sharedCompilation": "root candidate21 lint/type/build/catalog0, input changed=[]",
+  "newBrowser": "NOT_RUN at author final; root is running fixed dist21",
+  "formal": "NOT_RUN",
+  "candidate20FailureLog": "docs/library-lab/evidence/quality-upgrade/candidate-20/browser.txt",
+  "candidate20FailureLogSHA": "03e40d05ba39afc1a759fde1e1776efd27338ad8ce175121aa8456650d51687c"
+}

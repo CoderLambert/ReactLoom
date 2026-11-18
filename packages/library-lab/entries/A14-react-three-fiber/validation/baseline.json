@@ -1,0 +1,17 @@
+{
+  "head": "1218066e706a90ba03fac8dff8c9b843dd2429c4",
+  "checkedAt": "2026-11-10T12:01:18.573372+00:00",
+  "fileCount": 9,
+  "entryRelativeSha256": "dae70ecf5b71b144adc3ee142763e417dd8a61ce4f190366187ed09c170316ba",
+  "files": {
+    "AGENTS.md": "87e54cdfbfd0b38d02749e49ba39f7c62e3482e531025af4313b7c60db0d6259",
+    "agent.md": "92457256062485eb8a4e0ed27531bb55651b00439a3e9da7fb094df6a3efffee",
+    "examples/demo.tsx": "254591932548c36c414610bd0d0c7ce7ef1648162f1996fbbe7381b8c1751690",
+    "examples/example.tsx": "a6c1f43d0070e5815801eec7a20b345f3934384c1aa909e93c8edff111f1ea87",
+    "examples/frame-policy.ts": "bfe028f941a2683b1cfe96e9fa809de08ec388727390d8ff602545579357575e",
+    "guide.md": "bb4233b3f4d1ce082b30802b23a040711a640e1966d4fd5c1952b9cce022e050",
+    "library.json": "49ca8966ec01b5589096e4ed941b13891ae9824b53f17eac6e2143120d41df7c",
+    "tests/frame-policy.test.mts": "fdacc9098e57042d5cc9e2cc95ab98531af78c0aa84ce830fa13ace2dfd45c8c",
+    "verification.json": "ad4ee6de2797184a0798781b299e77fd86671d47055ecdcb73cdde1bbd02e54d"
+  }
+}

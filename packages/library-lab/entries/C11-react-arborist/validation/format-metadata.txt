@@ -1,0 +1,2 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["pnpm", "exec", "biome", "check", "--write", "packages/library-lab/entries/C11-react-arborist/library.json", "packages/library-lab/entries/C11-react-arborist/verification.json", "packages/library-lab/entries/C11-react-arborist/official/source-evidence.json", "packages/library-lab/entries/C11-react-arborist/validation/sdk-source-audit.json", "packages/library-lab/entries/C11-react-arborist/validation/metadata-check.mjs"], "utc": "2026-11-10T16:58:35.976685+00:00", "exit": 0}
+Checked 5 files in 7ms. Fixed 4 files.

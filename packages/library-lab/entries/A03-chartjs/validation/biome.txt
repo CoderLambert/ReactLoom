@@ -1,0 +1,33 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ["pnpm", "exec", "--", "biome", "check", "entries/A03-chartjs/examples", "entries/A03-chartjs/tests", "entries/A03-chartjs/library.json", "entries/A03-chartjs/verification.json", "entries/A03-chartjs/official/source-evidence.json", "entries/A03-chartjs/validation/baseline.json"]
+exit: 1
+
+Checked 11 files in 7ms. No fixes applied.
+Found 1 error.
+entries/A03-chartjs/examples/example.tsx format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Formatter would have printed the following content:
+  
+     75  75 │         data: [...chart.data.datasets[0].data],
+     76  76 │         active: chart.getActiveElements().map((item) => item.index),
+     77     │ - ······centers:·chart.getDatasetMeta(0).data.flatMap((element,·index)·=>
+     78     │ - ········element·instanceof·BarElement·||·element·instanceof·PointElement
+     79     │ - ··········?·[{·index,·...element.getCenterPoint()·}]
+     80     │ - ··········:·[],
+     81     │ - ······),
+         77 │ + ······centers:·chart
+         78 │ + ········.getDatasetMeta(0)
+         79 │ + ········.data.flatMap((element,·index)·=>
+         80 │ + ··········element·instanceof·BarElement·||·element·instanceof·PointElement
+         81 │ + ············?·[{·index,·...element.getCenterPoint()·}]
+         82 │ + ············:·[],
+         83 │ + ········),
+     82  84 │         ...lifecycle.current,
+     83  85 │       })
+  
+
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while running checks.
+  
+

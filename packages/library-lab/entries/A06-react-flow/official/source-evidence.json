@@ -1,0 +1,74 @@
+{
+  "readme": {
+    "url": "https://raw.githubusercontent.com/xyflow/xyflow/3d35b57317576b0916c0bfeaaedd573aaacc2839/packages/react/README.md",
+    "status": 200,
+    "finalUrl": "https://raw.githubusercontent.com/xyflow/xyflow/3d35b57317576b0916c0bfeaaedd573aaacc2839/packages/react/README.md",
+    "headers": {
+      "Connection": "close",
+      "Content-Length": "6610",
+      "Cache-Control": "max-age=300",
+      "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+      "Content-Type": "text/plain; charset=utf-8",
+      "ETag": "\"3b84a62ae019d364fd6f029bb6a077c6d81c9a89438ceb05a8ef35e8542020e6\"",
+      "Strict-Transport-Security": "max-age=31536000",
+      "X-Content-Type-Options": "nosniff",
+      "X-Frame-Options": "deny",
+      "X-XSS-Protection": "1; mode=block",
+      "X-GitHub-Request-Id": "E106:338C8E:2FCB8B:3C0078:6AF2E53B",
+      "x-github-edge-region": "westus3",
+      "Accept-Ranges": "bytes",
+      "Date": "Tue, 10 Nov 2026 09:34:51 GMT",
+      "Via": "1.1 varnish",
+      "X-Served-By": "cache-pao-kpao1770078-PAO",
+      "X-Cache": "MISS",
+      "X-Cache-Hits": "0",
+      "X-Timer": "S1794303291.354217,VS0,VE161",
+      "Vary": "Authorization,Accept-Encoding",
+      "Access-Control-Allow-Origin": "*",
+      "Cross-Origin-Resource-Policy": "cross-origin",
+      "X-Fastly-Request-ID": "7c94dd678592068b752722f3dfe9953b92981f41",
+      "Expires": "Tue, 10 Nov 2026 09:39:51 GMT",
+      "Source-Age": "0"
+    },
+    "bytes": 6610,
+    "sha256": "d61d3061725de60ee80ec9864ba1356a71a5a10bb40aeedacd8e7e7d8c3e078c",
+    "checkedAt": "2026-11-10T09:34:51.771877+00:00"
+  },
+  "homepage": {
+    "url": "https://reactflow.dev/",
+    "finalUrl": "https://reactflow.dev/",
+    "status": 200,
+    "checkedAt": "2026-11-10T09:34:59.421342+00:00",
+    "headers": {
+      "Content-Type": "text/html; charset=utf-8",
+      "Server": "Vercel",
+      "Date": "Tue, 10 Nov 2026 05:15:38 GMT",
+      "X-Vercel-Cache": "HIT"
+    },
+    "framePolicyHeaders": {
+      "xFrameOptions": null,
+      "contentSecurityPolicy": null
+    },
+    "note": "HTTP GET returned these selected response headers; no browser confirmation from Lab origin."
+  },
+  "versionRef": {
+    "repository": "xyflow/xyflow",
+    "tag": "@xyflow/react@12.12.0",
+    "tagObject": "69b435b132916cc664d6e7762051f3044289cc03",
+    "commit": "3d35b57317576b0916c0bfeaaedd573aaacc2839",
+    "tagUrl": "https://api.github.com/repos/xyflow/xyflow/git/ref/tags/%40xyflow%2Freact%4012.12.0",
+    "tagObjectUrl": "https://api.github.com/repos/xyflow/xyflow/git/tags/69b435b132916cc664d6e7762051f3044289cc03"
+  },
+  "readmeCandidateCheck": {
+    "ref": "3d35b57317576b0916c0bfeaaedd573aaacc2839",
+    "directories": [
+      "https://api.github.com/repos/xyflow/xyflow/contents/?ref=3d35b57317576b0916c0bfeaaedd573aaacc2839",
+      "https://api.github.com/repos/xyflow/xyflow/contents/packages/react?ref=3d35b57317576b0916c0bfeaaedd573aaacc2839"
+    ],
+    "status": 200,
+    "readmeFiles": ["README.md", "packages/react/README.md"],
+    "selected": "packages/react/README.md",
+    "language": "en",
+    "note": "Actual root and package directory listings showed no Chinese README candidate; package README matches the target @xyflow/react package."
+  }
+}

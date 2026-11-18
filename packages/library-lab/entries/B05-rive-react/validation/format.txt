@@ -1,0 +1,200 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ["pnpm", "exec", "--", "biome", "check", "--write", "entries/B05-rive-react/examples", "entries/B05-rive-react/tests", "entries/B05-rive-react/library.json", "entries/B05-rive-react/verification.json", "entries/B05-rive-react/official", "entries/B05-rive-react/validation/baseline.json"]
+startedAt: 2026-11-10T13:01:14.375725+00:00
+finishedAt: 2026-11-10T13:01:14.628025+00:00
+exitCode: 1
+
+STDOUT
+Skipped 14 suggested fixes.
+If you wish to apply the suggested (unsafe) fixes, use the command biome check --write --unsafe
+
+Checked 13 files in 13ms. Fixed 10 files.
+Found 2 errors.
+Found 3 warnings.
+Found 3 infos.
+
+STDERR
+entries/B05-rive-react/examples/example.tsx:80:23 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    78 │       setSnapshot(probeRef.current?.read() ?? null)
+    79 │     } catch (error) {
+  > 80 │       setRuntimeError('Rive实际对象读取失败：' + String(error))
+       │                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    81 │     }
+    82 │   }
+  
+  i Unsafe fix: Use a template literal.
+  
+     78  78 │         setSnapshot(probeRef.current?.read() ?? null)
+     79  79 │       } catch (error) {
+     80     │ - ······setRuntimeError('Rive实际对象读取失败：'·+·String(error))
+         80 │ + ······setRuntimeError(`Rive实际对象读取失败：${String(error)}`)
+     81  81 │       }
+     82  82 │     }
+  
+
+entries/B05-rive-react/examples/example.tsx:140:18 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    138 │       if (generation.current !== id || controller.signal.aborted) return
+    139 │       setPhase('error')
+  > 140 │       setMessage('审核失败：' + String(error))
+        │                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    141 │     } finally {
+    142 │       if (generation.current === id) pendingRef.current = null
+  
+  i Unsafe fix: Use a template literal.
+  
+    138 138 │         if (generation.current !== id || controller.signal.aborted) return
+    139 139 │         setPhase('error')
+    140     │ - ······setMessage('审核失败：'·+·String(error))
+        140 │ + ······setMessage(`审核失败：${String(error)}`)
+    141 141 │       } finally {
+    142 142 │         if (generation.current === id) pendingRef.current = null
+  
+
+entries/B05-rive-react/examples/example.tsx:218:33 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    216 │       </div>
+    217 │       <p role="status" aria-live="polite" data-testid="b05-status">
+  > 218 │         {level === 'business' ? '业务状态：' + phase + ' · ' : ''}
+        │                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    219 │         {message}
+    220 │       </p>
+  
+  i Unsafe fix: Use a template literal.
+  
+    216 216 │         </div>
+    217 217 │         <p role="status" aria-live="polite" data-testid="b05-status">
+    218     │ - ········{level·===·'business'·?·'业务状态：'·+·phase·+·'···'·:·''}
+        218 │ + ········{level·===·'business'·?·`业务状态：${phase}···`·:·''}
+    219 219 │           {message}
+    220 220 │         </p>
+  
+
+entries/B05-rive-react/examples/example.tsx:65:10 lint/correctness/noUnusedVariables  FIXABLE  ━━━━━━━━━━
+
+  ! This variable runtimeError is unused.
+  
+    63 │   const [phase, setPhase] = useState<Review>('idle')
+    64 │   const [message, setMessage] = useState('动画资源采用官方公开文档的 CDN 地址，当前运行需要网络。')
+  > 65 │   const [runtimeError, setRuntimeError] = useState('')
+       │          ^^^^^^^^^^^^
+    66 │   const [snapshot, setSnapshot] = useState<PlayerSnapshot | null>(null)
+    67 │   const [fit, setFit] = useState(Fit.Contain)
+  
+  i Unused variables are often the result of typos, incomplete refactors, or other sources of bugs.
+  
+  i Unsafe fix: If this is intentional, prepend runtimeError with an underscore.
+  
+     63  63 │     const [phase, setPhase] = useState<Review>('idle')
+     64  64 │     const [message, setMessage] = useState('动画资源采用官方公开文档的 CDN 地址，当前运行需要网络。')
+     65     │ - ··const·[runtimeError,·setRuntimeError]·=·useState('')
+         65 │ + ··const·[_runtimeError,·setRuntimeError]·=·useState('')
+     66  66 │     const [snapshot, setSnapshot] = useState<PlayerSnapshot | null>(null)
+     67  67 │     const [fit, setFit] = useState(Fit.Contain)
+  
+
+entries/B05-rive-react/examples/example.tsx:66:10 lint/correctness/noUnusedVariables  FIXABLE  ━━━━━━━━━━
+
+  ! This variable snapshot is unused.
+  
+    64 │   const [message, setMessage] = useState('动画资源采用官方公开文档的 CDN 地址，当前运行需要网络。')
+    65 │   const [runtimeError, setRuntimeError] = useState('')
+  > 66 │   const [snapshot, setSnapshot] = useState<PlayerSnapshot | null>(null)
+       │          ^^^^^^^^
+    67 │   const [fit, setFit] = useState(Fit.Contain)
+    68 │   const probeRef = useRef<PlayerProbe | null>(null)
+  
+  i Unused variables are often the result of typos, incomplete refactors, or other sources of bugs.
+  
+  i Unsafe fix: If this is intentional, prepend snapshot with an underscore.
+  
+     64  64 │     const [message, setMessage] = useState('动画资源采用官方公开文档的 CDN 地址，当前运行需要网络。')
+     65  65 │     const [runtimeError, setRuntimeError] = useState('')
+     66     │ - ··const·[snapshot,·setSnapshot]·=·useState<PlayerSnapshot·|·null>(null)
+         66 │ + ··const·[_snapshot,·setSnapshot]·=·useState<PlayerSnapshot·|·null>(null)
+     67  67 │     const [fit, setFit] = useState(Fit.Contain)
+     68  68 │     const probeRef = useRef<PlayerProbe | null>(null)
+  
+
+entries/B05-rive-react/examples/example.tsx:76:12 lint/correctness/noUnusedVariables  FIXABLE  ━━━━━━━━━━
+
+  ! This function inspect is unused.
+  
+    74 │     setSnapshot((previous) => (previous?.instance === instance ? null : previous))
+    75 │   }, [])
+  > 76 │   function inspect() {
+       │            ^^^^^^^
+    77 │     try {
+    78 │       setSnapshot(probeRef.current?.read() ?? null)
+  
+  i Unused variables are often the result of typos, incomplete refactors, or other sources of bugs.
+  
+  i Unsafe fix: If this is intentional, prepend inspect with an underscore.
+  
+     74  74 │       setSnapshot((previous) => (previous?.instance === instance ? null : previous))
+     75  75 │     }, [])
+     76     │ - ··function·inspect()·{
+         76 │ + ··function·_inspect()·{
+     77  77 │       try {
+     78  78 │         setSnapshot(probeRef.current?.read() ?? null)
+  
+
+entries/B05-rive-react/examples/example.tsx:179:40 lint/a11y/useSemanticElements ━━━━━━━━━━━━━━━━━━━
+
+  × The elements with this role can be changed to the following elements:
+    <fieldset>
+  
+    177 │         官方文档引用的远程样本，资源本身不包含在此仓库。
+    178 │       </p>
+  > 179 │       <div className="ab-rive-actions" role="group" aria-label="动画操作">
+        │                                        ^^^^^^^^^^^^
+    180 │         {level === 'business' && (
+    181 │           <>
+  
+  i For examples and more information, see WAI-ARIA Roles
+  
+  i Replace with one of these elements:
+  
+  - <fieldset>
+  
+
+entries/B05-rive-react/examples/example.tsx:107:3 lint/correctness/useExhaustiveDependencies  FIXABLE  ━━━━━━━━━━
+
+  × This hook specifies more dependencies than necessary: level.
+  
+    106 │   // Closing one scenario cancels its outstanding local review before another can display it.
+  > 107 │   useEffect(() => {
+        │   ^^^^^^^^^
+    108 │     setPhase('idle')
+    109 │     return () => {
+  
+  i Outer scope values aren't valid dependencies because mutating them doesn't re-render the component.
+  
+    112 │       pendingRef.current = null
+    113 │     }
+  > 114 │   }, [level])
+        │       ^^^^^
+    115 │ 
+    116 │   const cancelReview = useCallback(() => {
+  
+  i React relies on hook dependencies to determine when to re-compute Effects.
+    Specifying more dependencies than required can lead to unnecessary re-rendering
+    and degraded performance.
+  
+  i Unsafe fix: Remove the extra dependencies from the list.
+  
+    114 │ ··},·[level])
+        │       -----  
+
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while applying fixes.
+  
+

@@ -1,0 +1,91 @@
+Skipped 8 suggested fixes.
+If you wish to apply the suggested (unsafe) fixes, use the command biome check --write --unsafe
+
+Checked 9 files in 10ms. Fixed 8 files.
+Found 4 infos.
+entries/B22-react-beautiful-dnd-migration/tests/pinned-order.test.mjs:17:8 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    15 │   ['fixed', fixed],
+    16 │ ]) {
+  > 17 │   test(name + ': pinned source and destination cannot move', () => {
+       │        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    18 │     assert.equal(canReorderAroundPinned(items, 2, 1), false)
+    19 │     assert.equal(canReorderAroundPinned(items, 1, 2), false)
+  
+  i Unsafe fix: Use a template literal.
+  
+    15 15 │     ['fixed', fixed],
+    16 16 │   ]) {
+    17    │ - ··test(name·+·':·pinned·source·and·destination·cannot·move',·()·=>·{
+       17 │ + ··test(`${name}:·pinned·source·and·destination·cannot·move`,·()·=>·{
+    18 18 │       assert.equal(canReorderAroundPinned(items, 2, 1), false)
+    19 19 │       assert.equal(canReorderAroundPinned(items, 1, 2), false)
+  
+
+entries/B22-react-beautiful-dnd-migration/tests/pinned-order.test.mjs:21:8 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    19 │     assert.equal(canReorderAroundPinned(items, 1, 2), false)
+    20 │   })
+  > 21 │   test(name + ': cannot cross pinned slots in either direction', () => {
+       │        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    22 │     for (const [from, to] of [
+    23 │       [0, 4],
+  
+  i Unsafe fix: Use a template literal.
+  
+    19 19 │       assert.equal(canReorderAroundPinned(items, 1, 2), false)
+    20 20 │     })
+    21    │ - ··test(name·+·':·cannot·cross·pinned·slots·in·either·direction',·()·=>·{
+       21 │ + ··test(`${name}:·cannot·cross·pinned·slots·in·either·direction`,·()·=>·{
+    22 22 │       for (const [from, to] of [
+    23 23 │         [0, 4],
+  
+
+entries/B22-react-beautiful-dnd-migration/tests/pinned-order.test.mjs:30:8 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    28 │       assert.equal(canReorderAroundPinned(items, from, to), false)
+    29 │   })
+  > 30 │   test(name + ': can move inside each unlocked segment', () => {
+       │        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    31 │     assert.equal(canReorderAroundPinned(items, 0, 1), true)
+    32 │     assert.equal(canReorderAroundPinned(items, 4, 3), true)
+  
+  i Unsafe fix: Use a template literal.
+  
+    28 28 │         assert.equal(canReorderAroundPinned(items, from, to), false)
+    29 29 │     })
+    30    │ - ··test(name·+·':·can·move·inside·each·unlocked·segment',·()·=>·{
+       30 │ + ··test(`${name}:·can·move·inside·each·unlocked·segment`,·()·=>·{
+    31 31 │       assert.equal(canReorderAroundPinned(items, 0, 1), true)
+    32 32 │       assert.equal(canReorderAroundPinned(items, 4, 3), true)
+  
+
+entries/B22-react-beautiful-dnd-migration/tests/pinned-order.test.mjs:34:8 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    32 │     assert.equal(canReorderAroundPinned(items, 4, 3), true)
+    33 │   })
+  > 34 │   test(name + ': rejects invalid or no-op moves', () => {
+       │        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    35 │     for (const [from, to] of [
+    36 │       [-1, 0],
+  
+  i Unsafe fix: Use a template literal.
+  
+    32 32 │       assert.equal(canReorderAroundPinned(items, 4, 3), true)
+    33 33 │     })
+    34    │ - ··test(name·+·':·rejects·invalid·or·no-op·moves',·()·=>·{
+       34 │ + ··test(`${name}:·rejects·invalid·or·no-op·moves`,·()·=>·{
+    35 35 │       for (const [from, to] of [
+    36 36 │         [-1, 0],
+  
+
+
+exitCode=0

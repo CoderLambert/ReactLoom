@@ -1,0 +1,20 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab", "argv": ["pnpm", "test:sdk", "--entry=B15"], "start": "2026-11-10T14:02:47.359808+00:00", "end": "2026-11-10T14:02:47.678688+00:00", "exitCode": 0}
+STDOUT
+
+> @reactloom/library-lab@0.1.0 test:sdk /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+> node scripts/sdk-runner.mjs --entry=B15
+
+Real SDK suites selected: 1 file(s)
+✔ real grid calculations map cell coordinates to pixels and back with margin and padding (0.940243ms)
+✔ real vertical compactor resolves collisions around a static item without mutating input (0.403737ms)
+✔ real hook defers initial render only when measureBeforeMount is explicitly enabled (3.920532ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 76.301886
+
+STDERR

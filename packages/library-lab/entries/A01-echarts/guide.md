@@ -1,176 +1,115 @@
-# Apache ECharts 6.1.0｜React 实战、生命周期、动态数据与工程选型
+# Apache ECharts：让同一组指标驱动配置、图表和数据表
 
-Lab 锁定 `echarts@6.1.0`（Apache-2.0）。这是命令式图表实例，不是 React 组件库。地图瓦片、第三方地理数据和字体要单独核对许可。
+运营需要看近七天的文章阅读量，还想与上周对照，并在新数据到来时更新看板。ECharts 把数据与图形的关系写在 `option` 中：日期交给类目轴，数量交给数值轴，一组指标交给一个 series。React 保存业务数字，图表实例负责绘制、提示和交互；更新数字时调用 `setOption`，不用重新创建 Canvas。
 
-没有 `docs/library-lab/evidence/runs/` 里对得上当前指纹的收据时，`verification.json` 的 sdk / build / browser 保持 NOT_RUN。仓库级 Actions [41779873259](https://github.com/CoderLambert/ReactLoom/actions/runs/41779873259) 通过了安装、typecheck、生产构建、52 个 SDK 文件（153 项）和 45 项 Playwright，那不是本条目的逐库 PASS。
+本例使用 **echarts 6.1.0**，Apache-2.0。适合多系列报表、混合柱线、图例和命令式交互。偏爱 React 组件式 SVG 的简单图表可比较 Recharts；密集时序应以真实数据量对比 uPlot。ECharts 的成本是模块注册、容器尺寸、实例生命周期和配置复杂度；七个点的演示不能证明大型看板的性能。
 
-## Lab 当前示例
+这里是本地原创 fixture，没有 NewsHub 接口或随机在线数据：本周 `[12, 20, 15, 28, 22, 34, 27]`，上周 `[9, 13, 18, 23, 19, 25, 22]`，顺序均为周一至周日。图、表、合计和展开的配置使用同一数据来源。
 
-可迁移实现是 [`examples/example.tsx`](examples/example.tsx)，[`examples/demo.tsx`](examples/demo.tsx) 只重导出。播放门禁在 [`examples/stream-policy.ts`](examples/stream-policy.ts)。
+## 数据怎样成为图形
 
-示例实际做了这些事：
-
-- 模块顶层一次 `use()`，只注册 `BarChart`、`LineChart`、`GridComponent`、`TooltipComponent`、`LegendComponent`、`TitleComponent` 和 `CanvasRenderer`。
-- `init` 放在 effect 里，拿到真实 DOM。清理时 `ResizeObserver.disconnect()`、取消尚未执行的 `requestAnimationFrame`、`chart.off('click', onClick)`、`dispose()`。
-- 数据更新走 `setOption(..., {notMerge: true, lazyUpdate: true})`，不在每次 tick 上重新 `init`。
-- basic 是七日柱状图；business 是「本周」柱 + 「上周」折线，表格有两行。
-- advanced 用 1200ms interval 轮流给某一天 +3。`shouldAdvanceReadingStream` 要求 level 是 advanced、用户点过开始、页面可见且容器在视口内、未到 120 次上限，并且在减少动态时没有被显式允许。隐藏标签页或滚出视口会停表，回到可见且意图还在时恢复。
-- 表格按钮调用真实 `dispatchAction({type:'showTip', seriesIndex, dataIndex})`，和 Canvas 点击共用选择文案。
-
-当前示例**没有**挂载 `dataset` / `encode`、`replaceMerge`、服务端 SVG（`ssr: true`）或 Query 请求。下面仍把这些写成生产教学，迁移时要自己接到业务数据上，不要以为 Demo 已经做完。
-
-## 0. 先看结论：什么任务用、什么任务不用
-
-| 真实需求 | ECharts 的价值 | 先比较别的 |
+| 概念 | 本例输入 | ECharts 的职责 |
 | --- | --- | --- |
-| 后台报表：折线、柱、图例、轴上 tooltip | option 把多系列放进同一坐标系 | 只有一条 sparkline 时，原生 SVG 可能更小 |
-| 运营看板：缩放、图例开关、点选 | 同一实例上 `setOption` 更新 | 非标准几何下探 D3（A05） |
-| 阅读量 / 收藏量随时间变化 | 业务 state 映射成 series，表格给同等数字 | 数十万点的时序先用 uPlot（A04）做基准，不要从 7 个点推断 |
-| 要和 React 组件、双轴百分比混排 | 可以，但声明式 SVG 更自然的是 Recharts（A02） | 标准统计图也可比 Chart.js（A03） |
-| 服务端要一张静态图 | 官方有固定宽高的 SVG `ssr: true` | tooltip、点击、resize 仍是客户端的事 |
+| `option` | 一份含标题、坐标轴、系列和交互设置的对象 | 描述当前要呈现的图表 |
+| `xAxis` | `type: 'category'`，七个日期标签 | 为同一索引的数据点提供横轴位置 |
+| `yAxis` | `type: 'value'`、`min: 0` | 把阅读量映射到纵向数值尺度 |
+| `series` | 本周柱、可选上周折线，或实时折线；`data[i]` 对应第 i 天 | 同一坐标系内绘制不同图形，提供事件和提示 |
+| 图表实例 | `init` 得到，保存在 ref 中 | `setOption` 更新、`resize` 改尺寸、`dispose` 释放 |
+| 应用状态 | `values`、显示对照、播放意图和当前选择 | 决定数据和操作；不是 SDK 内置接口或数据缓存 |
 
-默认先核对图表种类、包体积和真实数据量。没有具体阻碍时，不要为了已有的柱线再自研一套 Canvas 引擎。
+主线是：**按钮或本地 tick 改 `values` → `buildReadingOption` 生成当前配置 → effect 调 `setOption` → 同一实例重绘**。表格和合计直接读取同一 `values`，不从 Canvas 像素或 `getOption()` 反推业务记录。
 
-## 1. 核心模型与工作机制
+[`reading-option.ts`](examples/reading-option.ts) 是图表与 SDK 检查共用的真实配置函数。展开“查看传入 setOption 的核心配置”，看到的是当前 `option` 的轴和系列原对象序列化，不是另一份手写示意结果。
 
-- `echarts.use([...])` 必须在 `init` 之前，并且只注册用到的图表、组件和一个 renderer。
-- `init(dom, theme, opts)` 只能对着已经提交、宽高非 0 的 DOM。不能在 render 函数里创建。
-- `setOption` 更新的是当前 option，不是新的图表实例。ECharts 默认按组件 id 合并；删系列时合并会留下旧系列。本示例每次整份替换，所以用了 `notMerge: true`。若只想替换 series、保留其它组件状态，生产代码应显式 `replaceMerge: ['series']`，并在浏览器里看图例和动画是否符合预期。不要每次数据变化都 `dispose` 再 `init`。
-- `resize()` 看的是容器，不是 window。侧栏拖动不会触发 `window.resize`。
-- `on` / `off` 必须成对，并且 handler 引用稳定。effect 依赖变化时先卸旧的再挂新的。
-- `dispose()` 在卸载、换 DOM 节点、StrictMode 的「挂上—卸下—再挂上」里都要走到。实例放 ref，业务数字放 React state。图表不是第二份业务缓存。
-- `CanvasRenderer` 与 `SVGRenderer` 二选一打进包。本示例是 Canvas，所以图表本身不是读屏能逐点理解的视图，必须有表格。
+## 实验一：从七日数据到柱状图
 
-## 2. 三个层次怎么读
+工程问题：输入的一行数字怎样对应到柱形，更新时会不会重新创建图表？
 
-### Demo 1：柱状图
+1. 进入“从七日数据到柱状图”，初始周一为 12，七日合计 158。
+2. 点击“周一阅读量 +5”。周一变为 17，合计变为 163，柱高、数据表和展开配置的 `series[0].data[0]` 一同变化。
+3. 点击数据表中的 17：调用真实 `dispatchAction({ type: 'showTip', seriesIndex: 0, dataIndex: 0 })`，图中显示该点提示，“最近点击”显示“阅读量 / 周一：17”。Canvas 点选也会更新这段文字。
+4. 点击“复位业务数据”恢复原数组。整个过程复用已有实例；容器上的实例身份在更新前后保持一致。
 
-`level === 'basic'` 时 series 只有「阅读量」柱，`xAxis.data` 是周一到周日。点选显示系列名、日期和值。数字以表格按钮为准，Canvas 只是同一数组的另一种画法。
+最小配置映射与实际函数一致：
 
-动手：把 `type: 'bar'` 改成 `line` 之前，确认 `LineChart` 已经在顶层 `use()` 里。没注册的类型不会出现，也不会给出友好的 React 错误边界。
-
-### Demo 2：本周柱 + 上周线
-
-business 用两个 series 共享类目轴。图例打开。表格增加「上周」行，避免对照数据只存在于颜色里。
-
-这还不是 `dataset.dimensions` + `encode`。生产报表更适合把接口记录放进 `dataset.source`，用 `encode` 声明 x/y，而不是在十个分支里手拆数组。缓存归 TanStack Query，图表只消费已经校验的行。
-
-删掉「上周」时不要只 `setOption({series:[本周]})` 还指望默认合并。本示例靠 `notMerge: true` 整份换上；若你改成合并更新，必须补 `replaceMerge` 并用浏览器确认旧折线消失。
-
-### Demo 3：增量、离屏和销毁
-
-advanced 的定时器由 `playbackActive` 决定，不由单独的 `setInterval` 依赖去抖。
-
-- 用户意图（`live`）和实际是否走表是两件事。隐藏、离屏、减少动态都会停，但不清掉「用户想播」；回到可见且仍未到上限时恢复。
-- `allowMotion` 只能覆盖减少动态，不能覆盖隐藏标签页。
-- 上限 `MAX_READING_UPDATES = 120`。到顶后不再挂 interval，必须按复位把 tick ref、计数 ref 和 state 一起清零。只清 state 会让下一次从旧 tick 继续。
-- `ResizeObserver` 把爆发的尺寸变化收成一帧。宽度或高度为 0 时不调用 `resize()`。清理时取消那一帧，避免 dispose 之后旧帧打到已销毁实例。
-- 容器没有 250px 的最小宽度。窄布局应缩小，而不是把页面撑出横向滚动。
-
-原始研究稿里的「每 1500ms 保留最近 12 点」不是本文件的行为。Lab 是原位 +3，窗口长度固定为 7。若业务要滑动窗口，在纯函数里实现并单测，不要改 effect 里直接 `push`。
-
-## 3. 反例
-
-### 反例 A：render 里 init
-
-```tsx
-function Chart() {
-  const chart = init(document.getElementById('main')!)
-  chart.setOption(option)
-  return <div id="main" />
+```ts
+{
+  xAxis: { type: 'category', data: [...labels] },
+  yAxis: { type: 'value', min: 0 },
+  series: [{ id: 'current-reads', type: 'bar', data: [...values] }],
 }
 ```
 
-DOM 可能还没提交，而且每次 render 都新建实例。正确做法是 ref + effect，清理里 `dispose()`。
+`xAxis.data` 与 `series.data` 的索引必须对应。SDK 不知道“缺失”是否应当变成 0；接接口时先验证有限数值、单位、日期排序和缺失语义，再构造配置。不要用 `Number(input) || 0` 隐藏错误数据。
 
-### 反例 B：只听 window.resize
+## 实验二：上周对照与删除系列
 
-```ts
-window.addEventListener('resize', () => chart.resize())
-```
+工程问题：业务临时移除对照线时，怎样避免上一份配置的 series 残留？
 
-侧栏和网格变宽都不会走这里，监听器也容易漏卸。监听图表 DOM 的 `ResizeObserver`，宽度和高度都大于 0 再 `resize()`。
+1. 切到“对照系列与整份配置替换”。本周柱与上周折线共享同一组日期和数值轴，合计分别为 158、129，文本表格有两行。
+2. 取消“显示上周对照”：配置只剩 `current-reads`，旧折线、上周图例和表格行一起移除。
+3. 再勾选：`previous-reads` 重新加入。可通过图例隐藏/显示系列，但下一次整份替换会重建图例状态。
 
-### 反例 C：on 了不 off
-
-```ts
-useEffect(() => {
-  chart.on('click', onClick)
-}, [onClick])
-```
-
-回调身份一变就叠一层。保存同一个函数引用，清理时 `chart.off('click', handler)`。
-
-### 反例 D：删系列仍走默认合并
+本例每次提供完整配置，因此真实调用是：
 
 ```ts
-chart.setOption({ series: [{ id: 'reads', type: 'bar', data }] })
+chart.setOption(option, { notMerge: true, lazyUpdate: true })
 ```
 
-旧的 `saves` 系列可能还在。移除系列用 `replaceMerge: ['series']`。只有确认要扔掉缩放、图例选中等运行时状态时才用 `notMerge: true`。本示例选择了整份替换，因为它的 option 每次都是完整的。
+`notMerge: true` 会丢弃旧配置再应用新配置，所以删除 series 不会留下旧折线；代价是图例选择、缩放等 SDK 内部状态不在此例保留。`lazyUpdate: true` 将绘制更新安排到后续帧，它不等于减少网络请求，也不保证每个业务 setState 都被合并。
 
-### 反例 E：把 NaN 送进 series
+ECharts 默认会合并组件，稳定的 `id` 能帮助匹配。生产中若要替换 series 且保留其他组件状态，可以研究 `replaceMerge: ['series']`，并用自己的图例/缩放操作验收；本 Demo 没有把它混进当前整份替换策略，也没有启用 dataset、encode 或 dataZoom。
+
+## 实验三：周期数据、播放门禁与容器尺寸
+
+工程问题：周期更新和卡片缩放怎样复用实例，同时避免后台无意义工作？
+
+1. 进入“播放门禁、容器缩放与回收”，点击“启动增量更新”。每 1200ms 轮流给一天加 3，段数不增加，仍是固定七天；图、表、合计和配置同步变化。
+2. 点击“暂停增量更新”，数值应停止。页面隐藏或图表滚出视口也会暂停；用户播放意图仍在时，重新可见可继续。
+3. 操作系统启用减少动态时，点击启动仍显示“已暂停（页面隐藏、离屏或减少动态）”，更新次数不增加。只有主动勾选“允许动态演示”才覆盖该偏好，不能覆盖隐藏页或离屏限制。
+4. 点击“缩小容器，观察 resize”：容器宽度变为原来的 65%，图表逻辑宽度随之改变，高度仍为 300px。点击“恢复宽图”返回；实例身份不变。页面显示的尺寸来自真实 `chart.getWidth()/getHeight()`。
+5. 最多更新 120 次，然后停止；点击“复位业务数据”同时清 tick ref、更新次数 ref、数据和播放意图。离开 Demo 后释放实例，重新进入从初始状态开始。
+
+[`stream-policy.ts`](examples/stream-policy.ts) 是自建播放门禁与数据变化规则：advanced + 用户请求 + 页面/容器可见 + 未到上限 + 动态偏好允许，才启动 interval。ECharts 不会替应用暂停数据源；如果接入网络订阅，请按同样所有权另外取消请求或订阅，不能把 `dispose()` 当作请求取消。
+
+## 最小接入与资源所有权
+
+在已有 React TypeScript 工程安装 `pnpm add echarts@6.1.0`。复制 `example.tsx`、`reading-option.ts`、`stream-policy.ts`、`workshop.css`，保留相对导入；渲染 `<EchartsExample level="basic" />`。`demo.tsx` 只用于 Lab 的重导出。CSS 提供局部布局与焦点样式，图容器在源码中为 300px 高，宽度由父容器决定。SSR 应用只在客户端挂载本组件。
+
+模块顶层一次 `use()` 注册 BarChart、LineChart、Grid、Tooltip、Legend、Title 和 CanvasRenderer；从 `echarts/core` 按需导入必须显式注册 renderer。应用入口可动态导入这个组件，避免阅读讲解时加载交互图表；按需注册不等于已测量包体积。
 
 ```ts
-const value = Number(userInput) // NaN 会进 data
+use([BarChart, GridComponent, CanvasRenderer])
+// DOM 已提交且有尺寸后：
+const chart = init(container, undefined, { renderer: 'canvas' })
+chart.setOption(option)
+// 容器尺寸改变时：chart.resize()
+// 卸载时：chart.dispose()
 ```
 
-在进图表之前区分 0 和缺失。缺失不要画成 0。Infinity 同样先挡掉。总计和表格使用同一套校验后的数。
+完整实现还有以下不可省略的处理：
 
-### 反例 F：Canvas 是唯一呈现
+- React ref 保存实例，effect 初始化；更新数据不重新 `init`。
+- `ResizeObserver` 监听实际图容器，而不是只听 `window.resize`。它把一次爆发收敛到一个 requestAnimationFrame，宽高为 0 时不 resize。
+- 清理时断开 ResizeObserver、取消未执行的帧、以原 handler `off('click')`、dispose 当前实例并清 ref。IntersectionObserver、media change 和 visibilitychange 也各自成对清理。
+- interval 的 effect 只依赖实际播放是否允许；每次 tick 不重建 interval，卸载/暂停/达到上限时清除它。StrictMode 的挂载—清理—重挂也要成对。
+- Canvas 不是逐点可读的数据结构。相同数字的可访问表格提供键盘操作；`role="img"` 和短说明不能独自完成整张图的无障碍要求。生产仍需检查颜色对比、趋势文字和真实读屏。
 
-给容器一个短的 `aria-label`，并放等价 `<table>`。`role="img"` 不会把每个点读出来。颜色不能单独区分「本周 / 上周」。正式产品还要查对比度、键盘和趋势的文字摘要。
+## 取舍与验证边界
 
-### 反例 G：tooltip 里拼不可信 HTML
+本地七个点不支持高频大数据性能结论。真实看板应先规定刷新频率和保留窗口，按需要聚合/采样，再决定动画与渲染器；不要在组件 effect 中直接修改原数组。数据请求、缓存、loading 和错误恢复由数据层管理，图表只消费明确版本的数据。
 
-内置 tooltip 的 `trigger: 'axis'` 加 `confine: true` 足够演示。若改成 HTML formatter，不可信字段必须转义，URL 单独允许列表。不要把接口字符串拼进 HTML。
+本例保留内置 `trigger: 'axis'`、`confine: true` 的 tooltip，没有拼接不可信 HTML formatter。若自定义 HTML，需要单独处理文本转义与 URL 策略。地图、字体、瓦片和第三方素材的许可独立于 ECharts 的 Apache-2.0。
 
-## 4. 更新、性能和故障
+SDK 套件使用真实 ECharts SVG SSR，并共享同一配置函数，能证明轴、系列、更新/移除、逻辑 resize 和 dispose 的 SDK 行为；它不能证明浏览器 Canvas、Observer、提示框、离屏暂停或读屏。以上浏览器操作由独立验收确认，正式收据状态继续读取 verification.json。本轮实际命令、日志、六项复核和未测项记录在 local-validation.md。
 
-1. 先定更新频率。经营报表一天几次，和每秒数百点不是同一条 `setOption` 策略。
-2. 按需注册后再做包体积分析。不要引用没跑过的打包数字。
-3. 大数据先采样或聚合，再考虑关动画。7 个点的演示不能证明十万点能撑住。
-4. 系列用稳定 `id`。条件分支删系列时看合并策略，而不是看 React 是否重渲染。
-5. 高度为 0 是「图是空白」的常见原因。本示例容器 `height: 300`。
-6. 请求失败归数据层。不要把上一份 option 悄悄当成最新成功结果，除非 UI 写明「显示的是上次成功的数据」。
-7. 服务端渲染不能在服务端碰 `window`。官方 SVG SSR 要固定宽高；交互仍在客户端补。
+## 官方资料
 
-## 5. 和其它库怎么接
+固定版本为 [6.1.0 的提交](https://github.com/apache/echarts/tree/c5a48f5f97d23e5379720870b8444cd05b50ffb4)。核对完整 tree 的 README 候选后，没有该版本官方中文主 README，因此保存英文原文字节；中文官网和手册仍是首选教学资料。快照摘要、来源、同步日期和完整响应头在 library.json / official/source-evidence.json。
 
-**TanStack Query**：Query 拥有请求、取消、staleTime 和缓存键。映射函数把结果变成 option 或 dataset。不要把 Query 数据再写进 Zustand，也不要写进图表实例。
+- [官方中文按需引入](https://echarts.apache.org/handbook/zh/basics/import/)
+- [官方容器尺寸与销毁](https://echarts.apache.org/handbook/zh/concepts/chart-size/)
+- [官方动态数据](https://echarts.apache.org/handbook/zh/how-to/data/dynamic-data/)
+- [官方中文 API](https://echarts.apache.org/zh/api.html)
 
-**react-grid-layout**：卡片尺寸变化靠每张图自己的 `ResizeObserver`。拖动过程中不要 `init`。松手后再做昂贵的聚合。
-
-**ExcelJS / 导出**：导出同一份校验后的行。不要从 Canvas 像素反推表。公式注入和数字格式另查。
-
-## 6. 替代方案
-
-| 方案 | 更合适的时候 | 不要直接换掉 ECharts 的原因 |
-| --- | --- | --- |
-| Recharts（A02） | 图表就是 React 组件，要和表单、双轴百分比混在一棵树上 | 复杂联动和 Canvas 大屏需要另测 |
-| Chart.js（A03） | 常见统计图，Canvas 插件模型 | 多坐标系配置密度不同 |
-| uPlot（A04） | 密集时序 | 非时序的图例、地图、富交互要更多自研 |
-| D3（A05） | 比例尺和自定义几何 | tooltip、轴、图例都要自己负责 |
-
-## 7. 练习
-
-1. 增加 `shares` 系列。隐藏后再显示，图上不能留残影；表格和合计一起变。用浏览器看，不要只看类型检查。
-2. 把本地数组换成可取消的请求。快速切换日期时，旧响应不能覆盖新筛选。失败要有错误文案，不能把旧图说成新数据。
-3. 连续卸载挂载 20 次。DevTools 里 Canvas 节点和 click 监听不应按次数累积。把观察记下来；静态代码读过不算这项通过。
-
-## 8. 证据
-
-本目录可以跑的纯规则是 `stream-policy`，它不 import echarts。SDK 套件在 `tests/sdk.test.mjs`，只有真实执行并留下收据之后，sdk 才能是 PASS。Playwright 里有 `@A01`，同样不能把整次 Actions 绿标抄进 `verification.json`。
-
-## 9. 官方来源
-
-1. 包与 Apache-2.0：https://www.npmjs.com/package/echarts
-2. 按需引入：https://echarts.apache.org/handbook/en/basics/import/
-3. 尺寸、resize、dispose：https://echarts.apache.org/handbook/en/concepts/chart-size/
-4. API 与 setOption：https://echarts.apache.org/en/api.html
-5. dataset 与 encode：https://echarts.apache.org/handbook/en/concepts/dataset/
-6. 动态数据：https://echarts.apache.org/handbook/en/how-to/data/dynamic-data/
-7. 服务端 SVG：https://echarts.apache.org/handbook/en/how-to/cross-platform/server/
-8. v6 升级：https://echarts.apache.org/handbook/en/basics/release-note/v6-upgrade-guide/
-
-官方页面证明的是 API 和许可，不证明本 Demo 已在浏览器里验收。
+中文官网本次 GET 200，但同时返回 `X-Frame-Options: sameorigin` 和 CSP `frame-ancestors 'self'`，明确禁止从 Lab 跨源嵌入；官网页签应显示限制与直达入口。这个 blocked 判断来自响应头，不是 SDK 运行失败，也没有把“未在浏览器确认”冒称 allowed。

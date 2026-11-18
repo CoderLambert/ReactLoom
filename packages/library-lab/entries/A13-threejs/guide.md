@@ -1,147 +1,67 @@
-# A13 Three.js r186：WebGL 循环、几何替换与 dispose
+# Three.js：做一个能解释资源所有权的产品预览
 
-Three.js 管 Scene、相机、网格和 GPU 资源。统计图用 ECharts 或 uPlot，二维标注用 Konva，流程用 React Flow，地理点云用 deck.gl。需要大量声明式组件时看 A14，但不要让手写 `WebGLRenderer` 和 React Three Fiber 同时拥有一块 canvas。
+产品页需要展示一件可换颜色、可旋转的三维物体。Three.js提供场景、相机、几何和材质，再由Renderer把它们绘制到Canvas。它适合需要直接控制三维对象和渲染循环的预览；普通统计比较用二维图表更容易读，React场景组件较多时可以用React Three Fiber管理同一引擎。两种方式都应让一个所有者管理一块Canvas。
 
-Library Lab 钉 `three@0.186.0`（MIT）。研究笔记里 npm 上出现过的 0.186.1 不是本条目的 pin。代码按 0.186 的 `outputColorSpace`、`BufferGeometry` 和 `setAnimationLoop` 写，不使用已移除的 `Geometry` 或 `outputEncoding`。
+本例使用MIT的 `three@0.186.0`，只用本地盒体和球体，没有模型、贴图、远程服务或加载密钥。当前WebGLRenderer需要WebGL2。软件WebGL2可以验证功能，不能代表目标设备的帧率或功耗；不能把一个网格的结果推广到复杂场景。
 
-## Lab 当前示例
+## 最小模型：Scene、Camera、Geometry、Material、Mesh
 
-`examples/demo.tsx` 导出 `examples/example.tsx`。循环开关在 `examples/animation-policy.ts`。
-
-已挂载：
-
-- effect 里 `new THREE.Scene()`、`PerspectiveCamera(50, 1, 0.1, 100)` 放在 z=5、`WebGLRenderer({ antialias: true, powerPreference: 'low-power' })`。构造失败就把错误写进 `role="alert"`，不再往下建循环。
-- `setPixelRatio(min(devicePixelRatio, 2))`，`outputColorSpace = SRGBColorSpace`。`setSize(width, height, false)` 把 CSS 留给样式表。`ResizeObserver` 更新 `camera.aspect` 和投影矩阵。
-- 一个 `MeshStandardMaterial` 的网格，半球光加方向光。没有贴图、没有 glTF、没有 OrbitControls、没有 Raycaster。
-- `shouldRunFrameLoop` 要求播放中、页签可见、速度大于 0，且没有减少动态或用户在 advanced 勾了覆盖。为真时 `setAnimationLoop(draw)`，否则 `setAnimationLoop(null)` 并画一帧静图。delta 封顶 0.1 秒，避免后台恢复后转一大圈。
-- 转速和颜色不重建上下文。颜色 `material.color.set`。几何从盒体换成球体时替换 `mesh.geometry` 并 `dispose` 旧几何。basic / business 固定盒体。
-- cleanup：停循环、断开观察者、摘掉 `visibilitychange`、`scene.remove`、几何和材质 `dispose`、`renderer.dispose()`、`forceContextLoss()`、移除 canvas。`scene.remove` 不等于释放 GPU 缓冲。
-
-没有挂上：文章 HTTP、InstancedMesh、实例拾取、GLB 校验、像素预算 200 万、`renderer.info` 面板。那些仍是生产教学。`renderer.info.memory` 只是内部计数，不是系统显存字节。
-
-## 所有权
-
-```text
-React：形状、颜色、转速、播放、减少动态
-effect：Scene / Camera / Renderer / Mesh
-draw：只改 rotation，再 render
-cleanup：停循环并 dispose 独占资源
-```
-
-不要 `setState(scene)`，也不要在 render 里 `new WebGLRenderer`。共享材质若来自外部缓存，这个视图不能擅自 `dispose`。Lab 的材质和几何是本 effect 独占的，所以卸载时释放。
-
-`Object3D.dispose()` 存在，但仍要逐个释放几何、材质和贴图。只 dispose 材质会留下纹理。Lab 没有纹理。
-
-## 三层
-
-### 01 旋转网格
-
-绿色盒体。转速滑杆 0..3。速度为 0 时循环停止，留下当前帧。状态段落写出网格、颜色和是否在跑，供不看 canvas 的用户阅读。
-
-### 02 颜色
-
-三种颜色立即改材质。不重新创建 Renderer。这不是 RSS 柱状图；研究稿里的六篇文章和 `instanceId` 映射没有迁入。生产若做柱状对比，用一个 InstancedMesh 共用几何和材质，`setMatrixAt` 后 `needsUpdate`，点击用 Raycaster 的 NDC（由 canvas 的 bounding rect 归一化到 -1..1），再映射回业务 id。拖拽轨道结束不要当成点击。
-
-### 03 暂停和替换
-
-advanced 可换球体、暂停、或显式覆盖减少动态。换几何会丢掉旧 `BufferGeometry`。离开页签停循环。覆盖复选框只在 advanced 出现，避免 basic 无视系统偏好。
-
-GLB 生产路径：检查头部、长度和外部 URI，只用 `blob:` / `data:`，用代数丢掉卸载后才解析完的模型，并 dispose 那份结果。`parseAsync` 没有通用 AbortSignal。20 字节到 15 MB 这类阈值是应用策略。Lab 不读取模型文件。
-
-## API
-
-| API | Lab |
-|---|---|
-| `WebGLRenderer` | effect 中一次，失败可见 |
-| `setAnimationLoop` | 按策略开关；卸载先 null |
-| `setSize(w,h,false)` | 配合 aspect |
-| `setPixelRatio` | 上限 2 |
-| `MeshStandardMaterial.color.set` | 不重建网格 |
-| `geometry.dispose` / `material.dispose` / `renderer.dispose` | cleanup 与替换路径 |
-| `forceContextLoss` | 卸载时调用，促使上下文释放 |
-| `OrbitControls` | 未用。若加上，每帧 `update`，卸载 `dispose` |
-| `InstancedMesh` | 未用 |
-| `Raycaster.setFromCamera` | 未用 |
-
-## 反例
+Scene是对象集合；Camera定义从哪里看、视野和近远裁剪面；Geometry提供顶点等几何属性；Material定义表面怎样着色；Mesh把几何和材质组合成场景对象。Renderer使用相机把场景绘制到自己的Canvas。
 
 ```ts
-// 错：渲染期间创建上下文
-function Bad() {
-  const renderer = new THREE.WebGLRenderer();
-  return <div ref={(node) => node?.appendChild(renderer.domElement)} />;
-}
-
-// 错：拿走网格就当 GPU 已释放
-scene.remove(mesh);
-
-// 对：停循环，释放独占几何、材质和渲染器
-renderer.setAnimationLoop(null);
-mesh.geometry.dispose();
-material.dispose();
-renderer.dispose();
+const scene = new THREE.Scene()
+const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 100)
+camera.position.z = 5
+const geometry = new THREE.BoxGeometry(1.65, 1.65, 1.65)
+const material = new THREE.MeshStandardMaterial({ color: '#227b68' })
+const mesh = new THREE.Mesh(geometry, material)
+scene.add(mesh)
+// StandardMaterial需要光照；本例还加入半球光和方向光。
+renderer.render(scene, camera)
 ```
 
-| 错误 | 正确 |
-|---|---|
-| 每个柱一个 Mesh 和材质 | InstancedMesh。Lab 只有一个网格 |
-| 只听 `window.resize` | 容器 ResizeObserver。Lab 已做 |
-| `devicePixelRatio` 不封顶 | 按预算封顶。Lab 封顶 2 |
-| React state 保存 Scene | 只存业务字段 |
-| `clientX` 直接当 NDC | bounding rect 归一化 |
-| 旧的 glTF Promise 写回新场景 | 代数；迟到结果也 dispose |
-| 只 dispose 材质 | 纹理和 ImageBitmap 单独处理 |
-| 用截图像导出数据 | 数据走原始行；跨域 canvas 会失败 |
-| 只有 3D 柱子表达数量 | HTML 列表。Lab 用状态段落 |
-| SSR 顶层构造 Renderer | 只在 effect |
-| 把 `outputEncoding` 抄进 r186 | `outputColorSpace` |
+输入是尺寸、相机参数、几何和材质；渲染输出是像素。FOV的50是角度，aspect是宽高比，0.1/100是裁剪距离。容器变宽只改Canvas而不更新aspect会把物体拉扁，所以ResizeObserver同时更新投影矩阵与渲染尺寸。
 
-## 兼容与安全
+完整实现用React state保存形状、颜色和播放偏好，effect独占Scene/Camera/Renderer/Mesh。SDK对象留在ref，不放进业务state；React只在控件变化时同步必要属性，不逐帧重建渲染器。
 
-WebGL 不可用时保留文字。Canvas 的 `role="img"` 不是完整的无障碍数据表。中文不要画进贴图当输入法。
+## 实验一：网格、相机与材质
 
-CSP 一般不需要 `unsafe-eval`；自定义着色器或 WASM 解码器要单独试。不要把密钥放进模型 URL。导入模型要限制三角形数量、外链和版权。Lab 没有这些资产。
+打开“网格、相机与材质”。画面是真实WebGL2盒体。改变“材质颜色”，绿色、橙色、蓝色立即反映在表面；改变转速可以观察旋转，滑到0只保留静止画面。系统开启减少动态效果时默认停止自动旋转，本层尊重该偏好。
 
-性能记录应包含 GPU、DPR、浏览器和采样方法。本文件不提供 FPS。关注 context lost：生产要能重建资源。Lab 在初始化失败时停住，没有 `webglcontextrestored` 自动重建。
+展开“查看真实渲染器与资源”，点击“读取当前渲染状态”。它读取当前Mesh/Geometry/Material的真实uuid、顶点属性数量、材质颜色、相机aspect、CSS渲染尺寸、实际绘图缓冲尺寸和renderer.info。本例快照是显式读取，不会每帧setState。`loopActive`来自应用安排循环的开关，帧数和资源计数来自真实renderer.info。
 
-## 组合
+换颜色后再次读取：material和mesh的uuid应保持，color变化。示例调用 `material.color.set(color)`，不重新创建场景。点击“缩窄渲染容器”，宽度变为65%，相机aspect随实际尺寸变化；恢复后回到原宽。`setSize(w,h,false)`更新绘图缓冲而不覆盖CSS宽度，`setPixelRatio`上限为2；绘图缓冲像素量与DPR平方有关。
 
-**TanStack Query + Three + ECharts。** Query 管 HTTP 和取消，ECharts 做精确二维比较，Three 只做空间分布。两边都从同一份 id 列表派生，不要从 canvas 反解析数字。
+颜色和转速只是本地交互参数，没有产品接口或库存含义。
 
-**不要和 R3F 共管 canvas。** 声明式场景用 A14 的 `<Canvas>`。手写渲染器适合需要直接控制循环和 dispose 的时候。同一块画布不能有两个所有者。
+## 实验二：循环、几何替换与资源所有权
 
-MSW 可以模拟加载失败；Playwright 需要可用的 WebGL 或软件渲染才谈得上黑屏测试。Lab 没有这些测试。
+高级层增加形状、播放和明确覆盖减少动态效果。先在暂停状态读两次渲染快照，`render.frame`应保持；选择允许覆盖再播放，帧数和rotation才随时间变化。点击“暂停动画”停止循环并保留一帧。
 
-## 生产清单
+`renderer.setAnimationLoop(draw)`安排绘制。draw按时间差累加旋转，delta封顶0.1秒，避免长时间停顿后突然转很大角度。播放、页面可见、减少动态偏好及速度共同决定是否安装循环；不满足时调用 `setAnimationLoop(null)`。几何或颜色改变会主动补一帧，因此暂停仍能看见用户刚改的内容。
 
-1. Renderer 在 effect 创建，失败有文案。
-2. 循环用 `setAnimationLoop`，后台和零速度停掉。
-3. delta 有上限。
-4. DPR 有上限，`setSize` 第三参为 false，并更新 aspect。
-5. 换几何必 dispose 旧的。
-6. 卸载 dispose 材质、几何、渲染器，并丢掉上下文。
-7. 减少动态默认停，覆盖是显式的。
-8. 颜色和转速不新建上下文。
-9. 业务数字不放进 Scene 对象。
-10. 不报告未测量的显存。
+在暂停时依次换“球体 → 盒体 → 球体”，每次创建新的BufferGeometry，替换 `mesh.geometry`，然后dispose上一份。Mesh和Material保持同一实例。再次读取可看见真实geometry uuid/type/顶点数量改变，几何dispose事件计数增加，而渲染器保留的当前几何计数不会随切换无限增长。
 
-## 升级与练习
+`renderer.info.memory`是渲染器内部资源数量，不是系统显存字节；dispose事件表明SDK释放调用已发生，也不是硬件显存测量。不要给这份示例补出没有测过的FPS或内存数字。
 
-旧教程的 `THREE.Geometry`、`examples/js` 全局脚本和 `outputEncoding` 迁到 BufferGeometry、`three` 的 ESM 附加模块和 `outputColorSpace`。对照 pin 0.186.0，而不是笔记里的 0.186.1。
+点击宿主“停止并卸载”：先停止动画，断开ResizeObserver和visibility监听，再移出Mesh、dispose对象及其独占几何/材质、dispose Renderer、请求丢失上下文并移除Canvas。重进应只有一个Canvas。r186的Object3D也有dispose，但它不能替你释放可能共享的Geometry/Material/Texture；本例资源全由该effect创建，才可在这里逐一释放。
 
-练习：盒体和球体往返十次后几何体数量不增长；隐藏页签再回来不会跳一大段旋转；StrictMode 下上下文不累积。加上两张纹理时，卸载后纹理也 dispose。这些需要浏览器收据。
+## 迁入React项目
 
-## 故障排查
+复制 `example.tsx`、`geometry.ts`、`animation-policy.ts`、`workshop.css`；`demo.tsx`仅重导出适配，可换成自己的入口。安装匹配的three，保留客户端effect与有效容器尺寸。没有额外字体、图片或模型资源。
 
-黑屏：WebGL、容器高度 280、控制台着色器错误。模型不在画面里：near/far 和坐标单位。换页后内存涨：dispose 漏了纹理或循环还在。导出空白：要在 `render()` 之后读像素。构建失败不要被说成运行时通过。
+当前实现初始化会读取浏览器减动偏好，不能直接参与SSR首屏。SSR应用需要让此查看器只在客户端挂载，并禁用该子树的服务端渲染；仅声明客户端组件仍可能预渲染，不能保证首次HTML一致。Renderer只在浏览器effect创建，构造WebGL失败时保留可读错误及参数；本例没有上下文自动恢复。迁到R3F时交回Renderer/循环所有权，不能同时手写第二个Renderer。
 
-## 官方链接
+生产模型若共享材质或纹理，清理必须按引用所有权设计，不能照抄本例的独占dispose。加入模型加载、纹理或控制器后，还要分别处理异步迟到结果、贴图/控制器释放和资源许可；本例没有这些加载路径。
 
-- [创建场景](https://threejs.org/manual/pages/creating-a-scene.html)
+可访问性依靠原生控件、状态文字和快照。Canvas的img语义不是完整的模型说明；触控、读屏和复杂模型需要目标环境验收。后台、减少动态、0速等开关有策略和真实循环的分别证据，不从策略函数推导GPU运行通过。
+
+## 官方资料与版本选择
+
+官方README原文使用npm `three@0.186.0`公开metadata的gitHead固定提交，文件原字节保存，版本、时间与摘要在原文页签。`r186`标签的实际manifest为0.186.1，与本例pin不同，因此没有把那份标签资料冒充0.186.0；过程和原始失败留在维护记录。
+
+- [官方创建场景](https://threejs.org/manual/pages/creating-a-scene.html)
 - [WebGLRenderer](https://threejs.org/docs/pages/WebGLRenderer.html)
-- [releases](https://github.com/mrdoob/three.js/releases)
-- [npm three](https://www.npmjs.com/package/three)
+- [资源清理](https://threejs.org/manual/pages/cleanup.html)
 
-## 证据
-
-sdk、build、browser 在 `docs/library-lab/evidence/runs/` 有本条目收据之前为 **NOT_RUN**。`shouldRunFrameLoop` 只证明播放、可见性、减少动态和速度。Actions run `41779873259` 是仓库级 install、typecheck、build、52 个 SDK 文件（153 个测试）和 45 个 Playwright，不是 A13 的 PASS，不要写入 `verification.json`。
+在线手册可能变化，关键API同时核对本地0.186.0源码/类型。官网面板保留实际响应依据和直达；未知嵌入状态不能由load或超时升级成允许。实际命令、原生SDK与真实浏览器的边界见 `local-validation.md`。

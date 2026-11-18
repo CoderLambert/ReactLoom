@@ -1,14 +1,14 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "真实 SDK 定向测试待依赖安装与执行，测试文件存在不等于通过"
+    "note": "正式NOT_RUN；本地6项实际共享Day.js计算/混合应用guard与真实zone往返PASS，不证明React或OS IME，见local-validation。"
   },
   "build": {
     "status": "NOT_RUN",
-    "note": "本条目新增后应用构建尚未执行"
+    "note": "正式NOT_RUN；入口strict与candidate18共享构建通过仅另记，非正式条目收据；本次后续仅文档/来源/提案。"
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "真实浏览器交互和时区环境矩阵尚未执行"
+    "note": "正式NOT_RUN；本地candidate18三个真实目标3PASS+candidate19官方中文原文/unknown展示1PASS=4PASS，独立P2-1 CLOSED。19整轮11PASS1FAIL/exit1，不能冒称全轮PASS；C15单项PASS。iframe仍unknown，其他未测边界保留。"
   }
 }

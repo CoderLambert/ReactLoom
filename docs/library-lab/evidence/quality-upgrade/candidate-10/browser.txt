@@ -1,0 +1,237 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=pnpm exec playwright test --config=.local-evidence/quality-playwright.config.ts e2e/quality-remediation-motion-for-react.spec.ts e2e/quality-remediation-gsap.spec.ts e2e/quality-remediation-react-spring.spec.ts e2e/quality-remediation-dotlottie.spec.ts e2e/quality-remediation-rive.spec.ts e2e/quality-remediation-ant-design.spec.ts e2e/quality-remediation-mantine.spec.ts e2e/quality-remediation-ui-sources.spec.ts
+
+Running 30 tests using 2 workers
+
+(node:1447512) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1447513) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 e2e/quality-remediation-ant-design.spec.ts:27:1 › @B06 actual local token and controlled confirmation preserve native disabled semantics (1.8s)
+  ✓   3 e2e/quality-remediation-ant-design.spec.ts:128:1 › @B06 one valid-submit fixture conflict recovers, undo is atomic and unmount removes owned portals (4.5s)
+  ✓   4 e2e/quality-remediation-dotlottie.spec.ts:29:1 › @B04 real WASM decodes original JSON and owns play pause stop getters and Canvas (6.3s)
+  ✓   5 e2e/quality-remediation-dotlottie.spec.ts:77:1 › @B04 local business result survives reduced motion and scene teardown cancels pending work (6.7s)
+  ✘   6 e2e/quality-remediation-dotlottie.spec.ts:101:1 › @B04 actual frame seek speed media changes and decoder failure recover without stale Canvas (4.8s)
+(node:1448893) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   7 e2e/quality-remediation-dotlottie.spec.ts:134:1 › @B04 trusted native hidden tab pauses actual playback and preserves manual intent (5.0s)
+(node:1449315) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   2 e2e/quality-remediation-ant-design.spec.ts:46:1 › @B06 real Form rules feed stable Table rows, composition-safe search and Modal focus (30.1s)
+(node:1449411) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   8 e2e/quality-remediation-gsap.spec.ts:45:1 › @B02 Tween actual CSS maps equal time through distinct eases and keeps selectors local (2.8s)
+  ✓   9 e2e/quality-remediation-gsap.spec.ts:97:1 › @B02 Timeline real labels, reverse clock, pause, media gate and context revert (3.5s)
+  ✓  10 e2e/quality-remediation-gsap.spec.ts:162:1 › @B02 native page visibility keeps a real manual pause (2.7s)
+  ✓  12 e2e/quality-remediation-mantine.spec.ts:58:1 › @B08 real debounced filtering preserves stable rows and one-step Switch undo (2.6s)
+  ✘  11 e2e/quality-remediation-mantine.spec.ts:20:1 › @B08 actual scoped theme and controlled confirmation do not mutate the document color-scheme attribute (6.4s)
+(node:1450436) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  14 e2e/quality-remediation-motion-for-react.spec.ts:67:1 › @B01 true presence retains exiting DOM while the business value already changed (2.6s)
+  ✓  13 e2e/quality-remediation-mantine.spec.ts:96:1 › @B08 real NumberInput preserves invalid drafts, commits valid quota and cleans an open Portal on SPA Back (5.8s)
+  ✓  15 e2e/quality-remediation-motion-for-react.spec.ts:102:1 › @B01 actual list identities, exit isolation and keyboard focus follow committed data (3.5s)
+  ✓  16 e2e/quality-remediation-motion-for-react.spec.ts:154:1 › @B01 real layout transforms preserve nodes and native media changes remove then restore motion (3.5s)
+  ✓  18 e2e/quality-remediation-react-spring.spec.ts:52:1 › @B03 authoritative removal disables retained leaving DOM and preserves stable survivors (3.4s)
+  ✓  17 e2e/quality-remediation-react-spring.spec.ts:28:1 › @B03 actual animated card reaches both spring targets and accepts interrupted goals (4.1s)
+  ✓  20 e2e/quality-remediation-ui-sources.spec.ts:13:3 › @B01 original fixed README and evidenced homepage unknown (1.8s)
+  ✓  19 e2e/quality-remediation-react-spring.spec.ts:91:1 › @B03 local immediate respects system preference and capacity removal restores keyboard focus (2.7s)
+  ✓  21 e2e/quality-remediation-ui-sources.spec.ts:13:3 › @B02 original fixed README and evidenced homepage blocked (1.8s)
+  ✓  22 e2e/quality-remediation-ui-sources.spec.ts:13:3 › @B03 original fixed README and evidenced homepage unknown (1.8s)
+  ✓  23 e2e/quality-remediation-ui-sources.spec.ts:13:3 › @B04 original fixed README and evidenced homepage blocked (1.4s)
+  ✓  24 e2e/quality-remediation-ui-sources.spec.ts:13:3 › @B05 original fixed README and evidenced homepage blocked (1.3s)
+  ✓  25 e2e/quality-remediation-ui-sources.spec.ts:13:3 › @B06 original fixed README and evidenced homepage unknown (1.3s)
+  ✓  26 e2e/quality-remediation-ui-sources.spec.ts:13:3 › @B07 original fixed README and evidenced homepage unknown (1.8s)
+(node:1451829) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  27 e2e/quality-remediation-ui-sources.spec.ts:13:3 › @B08 original fixed README and evidenced homepage unknown (1.8s)
+(node:1451958) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  29 e2e/quality-remediation-rive.spec.ts:118:1 › @B05 local review cancellation and input snapshots request actual Rive playback without faking file states (8.3s)
+(node:1452349) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  28 e2e/quality-remediation-rive.spec.ts:55:1 › @B05 real Rive file, WASM and Draw agree with playback and same-object Layout updates (10.7s)
+  ✓  30 e2e/quality-remediation-rive.spec.ts:154:1 › @B05 native reduced motion, real intersection and wrapper Canvas teardown preserve ownership (5.8s)
+
+
+  1) e2e/quality-remediation-ant-design.spec.ts:46:1 › @B06 real Form rules feed stable Table rows, composition-safe search and Modal focus 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.fill: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByTestId('b06-workshop').getByRole('textbox', { name: '查找RSS', exact: true })
+
+
+      77 |
+      78 |   const search = app.getByRole('textbox', { name: '查找RSS', exact: true })
+    > 79 |   await search.fill('工程')
+         |                ^
+      80 |   await expect(app).toHaveAttribute('data-query', '')
+      81 |   await expect(app.getByTestId('b06-records')).toContainText('当前匹配 3')
+      82 |   // Synthetic composition protocol exercises actual SDK + forwarded application handlers.
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-ant-design.spec.ts:79:16
+
+    Error Context: test-results/quality-remediation-ant-de-4828b-safe-search-and-Modal-focus/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-remediation-ant-de-4828b-safe-search-and-Modal-focus/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-remediation-ant-de-4828b-safe-search-and-Modal-focus/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) e2e/quality-remediation-dotlottie.spec.ts:101:1 › @B04 actual frame seek speed media changes and decoder failure recover without stale Canvas 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByTestId('b04-workshop').getByRole('status')
+    Expected substring: "按系统偏好暂停"
+    Error: strict mode violation: getByTestId('b04-workshop').getByRole('status') resolved to 2 elements:
+        1) <output>30</output> aka getByText('30', { exact: true })
+        2) <p role="status">…</p> aka getByText('业务：尚未提交；播放策略：按系统偏好暂停；页面：可见；减少动态：开启。')
+
+    Call log:
+      - Expect "toContainText" getByTestId('b04-workshop').getByRole('status') with timeout 5000ms
+      - waiting for getByTestId('b04-workshop').getByRole('status')
+
+
+      112 |   expect((await read(app)).speed).toBe(1.5)
+      113 |   await page.emulateMedia({ reducedMotion: 'reduce' })
+    > 114 |   await expect(app.getByRole('status')).toContainText('按系统偏好暂停')
+          |                                         ^
+      115 |   expect((await read(app)).frame).toBe(0)
+      116 |   await app.getByRole('checkbox', { name: '明确允许在减少动态下播放', exact: true }).check()
+      117 |   await app.getByRole('button', { name: '播放', exact: true }).click()
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-dotlottie.spec.ts:114:41
+
+    Error Context: test-results/quality-remediation-dotlot-3e161-ecover-without-stale-Canvas/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-remediation-dotlot-3e161-ecover-without-stale-Canvas/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-remediation-dotlot-3e161-ecover-without-stale-Canvas/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) e2e/quality-remediation-dotlottie.spec.ts:134:1 › @B04 trusted native hidden tab pauses actual playback and preserves manual intent 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByTestId('b04-workshop').getByRole('status')
+    Expected substring: "后台暂停"
+    Error: strict mode violation: getByTestId('b04-workshop').getByRole('status') resolved to 2 elements:
+        1) <output>0</output> aka getByTestId('b04-workshop').getByText('0', { exact: true })
+        2) <p role="status">…</p> aka getByText('业务：尚未提交；播放策略：后台暂停；页面：隐藏；减少动态：关闭。')
+
+    Call log:
+      - Expect "toContainText" getByTestId('b04-workshop').getByRole('status') with timeout 5000ms
+      - waiting for getByTestId('b04-workshop').getByRole('status')
+
+
+      155 |       await other.bringToFront()
+      156 |       await expect.poll(() => page.evaluate(() => document.hidden)).toBe(true)
+    > 157 |       await expect(app.getByRole('status')).toContainText('后台暂停')
+          |                                             ^
+      158 |       await expect.poll(async () => (await sampleHidden()).playing).toBe(false)
+      159 |       const paused = await sampleHidden()
+      160 |       await page.waitForTimeout(180)
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-dotlottie.spec.ts:157:45
+        at withNativeVisibilityBrowser (/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/native-visibility-browser.ts:38:5)
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-dotlottie.spec.ts:135:3
+
+    Error Context: test-results/quality-remediation-dotlot-e07a7-and-preserves-manual-intent/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-remediation-dotlot-e07a7-and-preserves-manual-intent/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-remediation-dotlot-e07a7-and-preserves-manual-intent/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) e2e/quality-remediation-mantine.spec.ts:20:1 › @B08 actual scoped theme and controlled confirmation do not mutate the document color-scheme attribute 
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator:  getByTestId('b08-workshop').getByRole('button', { name: '确认工作区', exact: true })
+    Expected: "rgb(18, 184, 134)"
+    Received: "rgb(255, 254, 251)"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCSS" getByTestId('b08-workshop').getByRole('button', { name: '确认工作区', exact: true }) with timeout 5000ms
+      - waiting for getByTestId('b08-workshop').getByRole('button', { name: '确认工作区', exact: true })
+        14 × locator resolved to <button type="button" class="mantine-focus-auto mantine-active m_77c9d27d mantine-Button-root m_87cf2631 mantine-UnstyledButton-root">…</button>
+           - unexpected value "rgb(255, 254, 251)"
+
+
+      40 |   const confirm = app.getByRole('button', { name: '确认工作区', exact: true })
+      41 |   await input.focus()
+    > 42 |   await expect(confirm).toHaveCSS('background-color', 'rgb(18, 184, 134)')
+         |                         ^
+      43 |   await input.fill('   ')
+      44 |   await expect(confirm).toBeDisabled()
+      45 |   await input.fill('  学习空间  ')
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-mantine.spec.ts:42:25
+
+    Error Context: test-results/quality-remediation-mantin-0dea5-ment-color-scheme-attribute/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-remediation-mantin-0dea5-ment-color-scheme-attribute/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-remediation-mantin-0dea5-ment-color-scheme-attribute/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) e2e/quality-remediation-rive.spec.ts:55:1 › @B05 real Rive file, WASM and Draw agree with playback and same-object Layout updates 
+
+    Error: expect(received).toBeGreaterThan(expected)
+
+    Expected: > 0
+    Received:   0
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      80 |   await expect
+      81 |     .poll(async () => (await sample(app))?.observedDrawEvents ?? 0)
+    > 82 |     .toBeGreaterThan(first.observedDrawEvents)
+         |      ^
+      83 |   const canvas = app.getByTestId('b05-canvas')
+      84 |   const originalCanvas = await canvas.elementHandle()
+      85 |   if (!originalCanvas) throw new Error('No actual Rive Canvas')
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-rive.spec.ts:82:6
+
+    Error Context: test-results/quality-remediation-rive---e4ea8--same-object-Layout-updates/error-context.md
+
+  6) e2e/quality-remediation-rive.spec.ts:118:1 › @B05 local review cancellation and input snapshots request actual Rive playback without faking file states 
+
+    Error: expect(received).toBeGreaterThan(expected)
+
+    Expected: > 0
+    Received:   0
+
+      142 |   expect(failed.isPlaying).toBe(false)
+      143 |   expect(failed.observedPlayEvents).toBeGreaterThan(initial.observedPlayEvents)
+    > 144 |   expect(failed.observedDrawEvents).toBeGreaterThan(initial.observedDrawEvents)
+          |                                     ^
+      145 |   expect(failed.instance).toBe(initial.instance)
+      146 |   expect(failed.objectIdentity).toBe(initial.objectIdentity)
+      147 |   await start.click()
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-rive.spec.ts:144:37
+
+    Error Context: test-results/quality-remediation-rive---37376--without-faking-file-states/error-context.md
+
+  6 failed
+    e2e/quality-remediation-ant-design.spec.ts:46:1 › @B06 real Form rules feed stable Table rows, composition-safe search and Modal focus 
+    e2e/quality-remediation-dotlottie.spec.ts:101:1 › @B04 actual frame seek speed media changes and decoder failure recover without stale Canvas 
+    e2e/quality-remediation-dotlottie.spec.ts:134:1 › @B04 trusted native hidden tab pauses actual playback and preserves manual intent 
+    e2e/quality-remediation-mantine.spec.ts:20:1 › @B08 actual scoped theme and controlled confirmation do not mutate the document color-scheme attribute 
+    e2e/quality-remediation-rive.spec.ts:55:1 › @B05 real Rive file, WASM and Draw agree with playback and same-object Layout updates 
+    e2e/quality-remediation-rive.spec.ts:118:1 › @B05 local review cancellation and input snapshots request actual Rive playback without faking file states 
+  24 passed (1.2m)
+
+exitCode=1

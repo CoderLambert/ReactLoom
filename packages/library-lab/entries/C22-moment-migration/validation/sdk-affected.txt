@@ -1,0 +1,17 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=pnpm exec node --test '--test-name-pattern=shared real Day.js|shared real SDK|SDK helpers' entries/C22-moment-migration/tests/sdk.test.mjs
+startedAt=2026-11-11T06:05:05.629858+00:00
+finishedAt=2026-11-11T06:05:06.886186+00:00
+exitCode=0
+
+✔ shared real Day.js/date-fns path strictly validates calendar days and leap years (11.521269ms)
+✔ shared real SDK path maps tokens and uses immutable add return values (0.275983ms)
+✔ SDK helpers keep their declared semantics in a process whose OS timezone skips a civil date (528.600684ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1076.135444

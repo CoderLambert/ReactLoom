@@ -1,0 +1,9 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+ARGV: ["pnpm", "exec", "--", "biome", "check", "--write", "entries/A15-leaflet/validation/browser-proposal.ts"]
+START: 2026-11-10T12:19:10.835395+00:00
+END: 2026-11-10T12:19:11.051927+00:00
+EXIT: 0
+STDOUT:
+Checked 1 file in 12ms. Fixed 1 file.
+
+STDERR:

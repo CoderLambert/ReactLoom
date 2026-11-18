@@ -1,0 +1,4 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+command=python inline metadata/source/official SHA inspection
+3 goals; 5 sources each; actual Zod 4.6.5; README snapshot bound; 14 file SHA inputs.
+exitCode=0

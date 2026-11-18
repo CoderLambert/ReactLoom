@@ -1,0 +1,136 @@
+{
+  "records": [
+    {
+      "package": {
+        "name": "@jsonforms/core",
+        "version": "3.8.0",
+        "license": "MIT",
+        "peerDependencies": null
+      },
+      "installedPath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@jsonforms+core@3.8.0/node_modules/@jsonforms/core",
+      "files": [
+        {
+          "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@jsonforms+core@3.8.0/node_modules/@jsonforms/core/package.json",
+          "sha256": "f98201fdf402078f4350f14363c1861668fd81ff75e8b57f4f67df8b51ccfb2a"
+        },
+        {
+          "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@jsonforms+core@3.8.0/node_modules/@jsonforms/core/lib/jsonforms-core.esm.js",
+          "sha256": "6f63dd806988e99850d1137aa3ccea0a43d3dcc91e98826cbe07f0e4ada1ae91",
+          "excerpts": [
+            {
+              "key": "additionalErrors",
+              "offset": 40307,
+              "source": "rrors: [],\n    validator: undefined,\n    ajv: undefined,\n    validationMode: 'ValidateAndShow',\n    additionalErrors: [],\n};\nconst getValidationMode = (state, action) => {\n    if (action && hasValidationModeOption(action.options)) {\n        return action.options.validationMode;\n    }\n    return state.validationMode;\n};\nconst hasValidationModeOption = (option) => {\n    if (option) {\n        return option.validationMode !== undefined;\n    }\n    return false;\n};\nconst hasAdditionalErrorsOption = (option) => {\n    if (option) {\n        return option.additionalErrors !== undefined;\n    }\n    return false;\n};\nconst getAdditionalErrors = (state, action) => {\n    if (action && hasAdditionalErrorsOption(action.options)) {\n        return action.options.additionalErrors;\n    }\n    return state.additionalErrors;\n};\nconst getOrCreateAjv = (state, action) => {\n    if (action) {\n        if (hasAjvOption(action.options)) {\n            return action.options.ajv;\n        }\n        else if (action.options !== undefined) {\n            if (isFunction(action.options.compile)) {\n                return action.options;\n            }\n        }\n    }\n    return state.ajv ? state.ajv : createAjv();\n};\nconst hasAjvOption = (option) => {\n    if (option) {\n        return option.ajv !== undefined;\n    }\n    return false;\n};\nconst coreReducer = (state = initState, action) => {\n    switch (action.type) {\n        case INIT: {\n            const thisAjv = getOrCreateAjv(state, action);\n            const validationMode = getValidationMode(state, action);\n            const v = validationMode === 'NoValidation'\n                ? undefined\n                : thisAjv.compile(action.schema);\n            const e = validate(v, action.data);\n            const additionalErrors = getAdditionalErrors(state, action);\n            return {\n                ...state,\n                data: action.data,\n                sche"
+            },
+            {
+              "key": "createAjv",
+              "offset": 27503,
+              "source": ", ajv, config) {\n        return isVisible(uischema, data, undefined, ajv, config);\n    },\n};\n\nconst createAjv = (options) => {\n    const ajv = new Ajv({\n        allErrors: true,\n        verbose: true,\n        strict: false,\n        addUsedSchema: false,\n        ...options,\n    });\n    addFormats(ajv);\n    return ajv;\n};\nconst validate = (validator, data) => {\n    if (validator === undefined) {\n        return [];\n    }\n    const valid = validator(data);\n    if (valid) {\n        return [];\n    }\n    return validator.errors;\n};\n\nconst defaultDateFormat = 'YYYY-MM-DD';\nconst defaultTimeFormat = 'HH:mm:ss';\nconst defaultDateTimeFormat = 'YYYY-MM-DDTHH:mm:ss.sssZ';\n\nconst getInvalidProperty = (error) => {\n    switch (error.keyword) {\n        case 'required':\n        case 'dependencies':\n            return error.params.missingProperty;\n        case 'additionalProperties':\n            return error.params.additionalProperty;\n        default:\n            return undefined;\n    }\n};\nconst getControlPath = (error) => {\n    let controlPath = error.dataPath || error.instancePath || '';\n    controlPath = controlPath.replace(/\\//g, '.');\n    const invalidProperty = getInvalidProperty(error);\n    if (invalidProperty !== undefined) {\n        controlPath = `${controlPath}.${invalidProperty}`;\n    }\n    controlPath = controlPath.replace(/^\\./, '');\n    controlPath = decode(controlPath);\n    return controlPath;\n};\nconst errorsAt = (instancePath, schema, matchPath) => (errors) => {\n    const combinatorPaths = filter(errors, (error) => error.keyword === 'oneOf' || error.keyword === 'anyOf').map((error) => getControlPath(error));\n    return filter(errors, (error) => {\n        if (filteredErrorKeywords.indexOf(error.keyword) !== -1 &&\n            !isOneOfEnumSchema(error.parentSchema)) {\n            return false;\n        }\n        const controlPath = getControlPath(error);\n        let result ="
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "package": {
+        "name": "@jsonforms/react",
+        "version": "3.8.0",
+        "license": "MIT",
+        "peerDependencies": {
+          "@jsonforms/core": "3.8.0",
+          "react": "^16.12.0 || ^17.0.0 || ^18.0.0 || ^19.0.0"
+        }
+      },
+      "installedPath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@jsonforms+react@3.8.0_@jsonforms+core@3.8.0_react@19.3.0/node_modules/@jsonforms/react",
+      "files": [
+        {
+          "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@jsonforms+react@3.8.0_@jsonforms+core@3.8.0_react@19.3.0/node_modules/@jsonforms/react/package.json",
+          "sha256": "af190a9e1ffd122832188a0899898046b6b948a372e016d96dea7a494442d1f8"
+        },
+        {
+          "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@jsonforms+react@3.8.0_@jsonforms+core@3.8.0_react@19.3.0/node_modules/@jsonforms/react/lib/jsonforms-react.esm.js",
+          "sha256": "ca2af0df3ec99d4f436b35865fd6919b5e3eebc1affc8a0edfab15947459593b",
+          "excerpts": [
+            {
+              "key": "const debouncedEmit",
+              "offset": 4755,
+              "source": "ef(onChange);\n    useEffect(() => {\n        onChangeRef.current = onChange;\n    }, [onChange]);\n    const debouncedEmit = useCallback(debounce((...args) => onChangeRef.current?.(...args), 10), []);\n    useEffect(() => {\n        debouncedEmit({ data: core.data, errors: core.errors });\n    }, [core.data, core.errors]);\n    return (React.createElement(JsonFormsContext.Provider, { value: contextValue }, children));\n};\nconst useJsonForms = () => useContext(JsonFormsContext);\nconst ctxToArrayLayoutProps = (ctx, props) => mapStateToArrayLayoutProps({ jsonforms: { ...ctx } }, props);\nconst ctxToArrayControlProps = (ctx, props) => mapStateToArrayControlProps({ jsonforms: { ...ctx } }, props);\nconst ctxToLayoutProps = (ctx, props) => mapStateToLayoutProps({ jsonforms: { ...ctx } }, props);\nconst ctxToControlProps = (ctx, props) => mapStateToControlProps({ jsonforms: { ...ctx } }, props);\nconst ctxToEnumControlProps = (ctx, props) => {\n    const enumProps = mapStateToEnumControlProps({ jsonforms: { ...ctx } }, props);\n    const options = useMemo(() => enumProps.options, [props.options, enumProps.schema, ctx.i18n?.translate]);\n    return { ...enumProps, options };\n};\nconst ctxToOneOfEnumControlProps = (ctx, props) => {\n    const enumProps = mapStateToOneOfEnumControlProps({ jsonforms: { ...ctx } }, props);\n    const options = useMemo(() => enumProps.options, [props.options, enumProps.schema, ctx.i18n?.translate]);\n    return { ...enumProps, options };\n};\nconst ctxToMultiEnumControlProps = (ctx, props) => {\n    const enumProps = mapStateToMultiEnumControlProps({ jsonforms: { ...ctx } }, props);\n    const options = useMemo(() => enumProps.options, [enumProps.schema, ctx.i18n?.translate]);\n    return { ...enumProps, options };\n};\nconst ctxToControlWithDetailProps = (ctx, props) => mapStateToControlWithDetailProps({ jsonforms: { ...ctx } }, props);\nconst ctxToAllOfProps = (ctx, ownPr"
+            },
+            {
+              "key": "debouncedEmit({ data: core.data",
+              "offset": 4883,
+              "source": "lback(debounce((...args) => onChangeRef.current?.(...args), 10), []);\n    useEffect(() => {\n        debouncedEmit({ data: core.data, errors: core.errors });\n    }, [core.data, core.errors]);\n    return (React.createElement(JsonFormsContext.Provider, { value: contextValue }, children));\n};\nconst useJsonForms = () => useContext(JsonFormsContext);\nconst ctxToArrayLayoutProps = (ctx, props) => mapStateToArrayLayoutProps({ jsonforms: { ...ctx } }, props);\nconst ctxToArrayControlProps = (ctx, props) => mapStateToArrayControlProps({ jsonforms: { ...ctx } }, props);\nconst ctxToLayoutProps = (ctx, props) => mapStateToLayoutProps({ jsonforms: { ...ctx } }, props);\nconst ctxToControlProps = (ctx, props) => mapStateToControlProps({ jsonforms: { ...ctx } }, props);\nconst ctxToEnumControlProps = (ctx, props) => {\n    const enumProps = mapStateToEnumControlProps({ jsonforms: { ...ctx } }, props);\n    const options = useMemo(() => enumProps.options, [props.options, enumProps.schema, ctx.i18n?.translate]);\n    return { ...enumProps, options };\n};\nconst ctxToOneOfEnumControlProps = (ctx, props) => {\n    const enumProps = mapStateToOneOfEnumControlProps({ jsonforms: { ...ctx } }, props);\n    const options = useMemo(() => enumProps.options, [props.options, enumProps.schema, ctx.i18n?.translate]);\n    return { ...enumProps, options };\n};\nconst ctxToMultiEnumControlProps = (ctx, props) => {\n    const enumProps = mapStateToMultiEnumControlProps({ jsonforms: { ...ctx } }, props);\n    const options = useMemo(() => enumProps.options, [enumProps.schema, ctx.i18n?.translate]);\n    return { ...enumProps, options };\n};\nconst ctxToControlWithDetailProps = (ctx, props) => mapStateToControlWithDetailProps({ jsonforms: { ...ctx } }, props);\nconst ctxToAllOfProps = (ctx, ownProps) => {\n    const props = mapStateToAllOfProps({ jsonforms: { ...ctx } }, ownProps);\n    return {\n        ...props,\n    };\n};\n"
+            },
+            {
+              "key": "onChangeRef.current",
+              "offset": 4699,
+              "source": "only,\n        i18n,\n    ]);\n    const onChangeRef = useRef(onChange);\n    useEffect(() => {\n        onChangeRef.current = onChange;\n    }, [onChange]);\n    const debouncedEmit = useCallback(debounce((...args) => onChangeRef.current?.(...args), 10), []);\n    useEffect(() => {\n        debouncedEmit({ data: core.data, errors: core.errors });\n    }, [core.data, core.errors]);\n    return (React.createElement(JsonFormsContext.Provider, { value: contextValue }, children));\n};\nconst useJsonForms = () => useContext(JsonFormsContext);\nconst ctxToArrayLayoutProps = (ctx, props) => mapStateToArrayLayoutProps({ jsonforms: { ...ctx } }, props);\nconst ctxToArrayControlProps = (ctx, props) => mapStateToArrayControlProps({ jsonforms: { ...ctx } }, props);\nconst ctxToLayoutProps = (ctx, props) => mapStateToLayoutProps({ jsonforms: { ...ctx } }, props);\nconst ctxToControlProps = (ctx, props) => mapStateToControlProps({ jsonforms: { ...ctx } }, props);\nconst ctxToEnumControlProps = (ctx, props) => {\n    const enumProps = mapStateToEnumControlProps({ jsonforms: { ...ctx } }, props);\n    const options = useMemo(() => enumProps.options, [props.options, enumProps.schema, ctx.i18n?.translate]);\n    return { ...enumProps, options };\n};\nconst ctxToOneOfEnumControlProps = (ctx, props) => {\n    const enumProps = mapStateToOneOfEnumControlProps({ jsonforms: { ...ctx } }, props);\n    const options = useMemo(() => enumProps.options, [props.options, enumProps.schema, ctx.i18n?.translate]);\n    return { ...enumProps, options };\n};\nconst ctxToMultiEnumControlProps = (ctx, props) => {\n    const enumProps = mapStateToMultiEnumControlProps({ jsonforms: { ...ctx } }, props);\n    const options = useMemo(() => enumProps.options, [enumProps.schema, ctx.i18n?.translate]);\n    return { ...enumProps, options };\n};\nconst ctxToControlWithDetailProps = (ctx, props) => mapStateToControlWithDetailProps({ jsonforms: {"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "package": {
+        "name": "@jsonforms/vanilla-renderers",
+        "version": "3.8.0",
+        "license": "MIT",
+        "peerDependencies": {
+          "@jsonforms/core": "3.8.0",
+          "@jsonforms/react": "3.8.0",
+          "react": "^16.12.0 || ^17.0.0 || ^18.0.0 || ^19.0.0"
+        }
+      },
+      "installedPath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@jsonforms+vanilla-renderers@3.8.0_@jsonforms+core@3.8.0_@jsonforms+react@3.8.0_@jsonfo_92f1f7824bb068705f593f3eaa68fcda/node_modules/@jsonforms/vanilla-renderers",
+      "files": [
+        {
+          "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@jsonforms+vanilla-renderers@3.8.0_@jsonforms+core@3.8.0_@jsonforms+react@3.8.0_@jsonfo_92f1f7824bb068705f593f3eaa68fcda/node_modules/@jsonforms/vanilla-renderers/package.json",
+          "sha256": "3f87eb03beae02c9f8f7603a6ba8235eacd0f21b559f101a16e020360c456f5e"
+        },
+        {
+          "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@jsonforms+vanilla-renderers@3.8.0_@jsonforms+core@3.8.0_@jsonforms+react@3.8.0_@jsonfo_92f1f7824bb068705f593f3eaa68fcda/node_modules/@jsonforms/vanilla-renderers/lib/jsonforms-react-vanilla.esm.js",
+          "sha256": "e02565b473ecfa972ae956d8c087c50c270328bf62612411b1464adb601712f5",
+          "excerpts": [
+            {
+              "key": "class InputControl",
+              "offset": 11997,
+              "source": "rol.select');\nconst withVanillaBooleanCellProps = withVanillaCellPropsForType('control.checkbox');\n\nclass InputControl extends Control {\n    render() {\n        const { classNames, description, id, errors, label, uischema, schema, rootSchema, visible, enabled, required, path, cells, config, } = this.props;\n        const isValid = errors.length === 0;\n        const divClassNames = [classNames.validation]\n            .concat(isValid ? classNames.description : classNames.validationError)\n            .join(' ');\n        const appliedUiSchemaOptions = merge({}, config, uischema.options);\n        const showDescription = !isDescriptionHidden(visible, description, this.state.isFocused, appliedUiSchemaOptions.showUnfocusedDescription);\n        const testerContext = {\n            rootSchema: rootSchema,\n            config: config,\n        };\n        const cell = maxBy(cells, (r) => r.tester(uischema, schema, testerContext));\n        if (cell === undefined ||\n            cell.tester(uischema, schema, testerContext) === NOT_APPLICABLE) {\n            console.warn('No applicable cell found.', uischema, schema);\n            return null;\n        }\n        else {\n            return (React.createElement(\"div\", { className: classNames.wrapper, hidden: !visible, onFocus: this.onFocus, onBlur: this.onBlur, id: id },\n                React.createElement(\"label\", { htmlFor: id + '-input', className: classNames.label }, computeLabel(label, required, appliedUiSchemaOptions.hideRequiredAsterisk)),\n                React.createElement(DispatchCell, { uischema: uischema, schema: schema, path: path, id: id + '-input', enabled: enabled }),\n                React.createElement(\"div\", { className: divClassNames }, !isValid ? errors : showDescription ? description : null)));\n        }\n    }\n}\nconst inputControlTester = rankWith$1(1, isControl);\nvar InputControl$1 = withVanillaControlProps(withJsonFormsCo"
+            },
+            {
+              "key": "hidden: !visible",
+              "offset": 13141,
+              "source": "   }\n        else {\n            return (React.createElement(\"div\", { className: classNames.wrapper, hidden: !visible, onFocus: this.onFocus, onBlur: this.onBlur, id: id },\n                React.createElement(\"label\", { htmlFor: id + '-input', className: classNames.label }, computeLabel(label, required, appliedUiSchemaOptions.hideRequiredAsterisk)),\n                React.createElement(DispatchCell, { uischema: uischema, schema: schema, path: path, id: id + '-input', enabled: enabled }),\n                React.createElement(\"div\", { className: divClassNames }, !isValid ? errors : showDescription ? description : null)));\n        }\n    }\n}\nconst inputControlTester = rankWith$1(1, isControl);\nvar InputControl$1 = withVanillaControlProps(withJsonFormsControlProps(InputControl));\n\nconst RadioGroup = ({ classNames, id, label, options, required, description, errors, data, uischema, visible, config, enabled, path, handleChange, }) => {\n    const contextStyles = useStyles();\n    const [isFocused, setFocus] = useState(false);\n    const radioControl = useMemo(() => findStyleAsClassName(contextStyles)('control.radio'), [contextStyles]);\n    const radioOption = useMemo(() => findStyleAsClassName(contextStyles)('control.radio.option'), [contextStyles]);\n    const radioInput = useMemo(() => findStyleAsClassName(contextStyles)('control.radio.input'), [contextStyles]);\n    const radioLabel = useMemo(() => findStyleAsClassName(contextStyles)('control.radio.label'), [contextStyles]);\n    const isValid = errors.length === 0;\n    const divClassNames = [classNames.validation]\n        .concat(isValid ? classNames.description : classNames.validationError)\n        .join(' ');\n    const appliedUiSchemaOptions = merge({}, config, uischema.options);\n    const showDescription = !isDescriptionHidden(visible, description, isFocused, appliedUiSchemaOptions.showUnfocusedDescription);\n    const hasRadioC"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "package": {
+        "name": "ajv",
+        "version": "8.20.0",
+        "license": "MIT",
+        "peerDependencies": null
+      },
+      "installedPath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/ajv@8.20.0/node_modules/ajv",
+      "files": [
+        {
+          "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/ajv@8.20.0/node_modules/ajv/package.json",
+          "sha256": "1f9033ee5a6515e7d76938b7072941862d1ed228a6879cc7fe10cdeb75107989"
+        },
+        {
+          "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/ajv@8.20.0/node_modules/ajv/dist/ajv.js",
+          "sha256": "edaed56fc546f5551b0d6dc2ff2a9cc25c2d6c83318a086eaa8c3ad0b2479297",
+          "excerpts": [
+            {
+              "key": "class Ajv",
+              "offset": 593,
+              "source": "TA_SUPPORT_DATA = [\"/properties\"];\nconst META_SCHEMA_ID = \"http://json-schema.org/draft-07/schema\";\nclass Ajv extends core_1.default {\n    _addVocabularies() {\n        super._addVocabularies();\n        draft7_1.default.forEach((v) => this.addVocabulary(v));\n        if (this.opts.discriminator)\n            this.addKeyword(discriminator_1.default);\n    }\n    _addDefaultMetaSchema() {\n        super._addDefaultMetaSchema();\n        if (!this.opts.meta)\n            return;\n        const metaSchema = this.opts.$data\n            ? this.$dataMetaSchema(draft7MetaSchema, META_SUPPORT_DATA)\n            : draft7MetaSchema;\n        this.addMetaSchema(metaSchema, META_SCHEMA_ID, false);\n        this.refs[\"http://json-schema.org/schema\"] = META_SCHEMA_ID;\n    }\n    defaultMeta() {\n        return (this.opts.defaultMeta =\n            super.defaultMeta() || (this.getSchema(META_SCHEMA_ID) ? META_SCHEMA_ID : undefined));\n    }\n}\nexports.Ajv = Ajv;\nmodule.exports = exports = Ajv;\nmodule.exports.Ajv = Ajv;\nObject.defineProperty(exports, \"__esModule\", { value: true });\nexports.default = Ajv;\nvar validate_1 = require(\"./compile/validate\");\nObject.defineProperty(exports, \"KeywordCxt\", { enumerable: true, get: function () { return validate_1.KeywordCxt; } });\nvar codegen_1 = require(\"./compile/codegen\");\nObject.defineProperty(exports, \"_\", { enumerable: true, get: function () { return codegen_1._; } });\nObject.defineProperty(exports, \"str\", { enumerable: true, get: function () { return codegen_1.str; } });\nObject.defineProperty(exports, \"stringify\", { enumerable: true, get: function () { return codegen_1.stringify; } });\nObject.defineProperty(exports, \"nil\", { enumerable: true, get: function () { return codegen_1.nil; } });\nObject.defineProperty(exports, \"Name\", { enumerable: true, get: function () { return codegen_1.Name; } });\nObject.defineProperty(exports, \"CodeGen\", { enumerable: true, g"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "conclusion": "3.8 onChange经10ms debounce只发core.data/core.errors；additionalErrors是独立字段；Vanilla HIDE为hidden wrapper，实际input/data仍存在。应用只取消自有服务timer，拒绝已卸载/旧provider通知。"
+}

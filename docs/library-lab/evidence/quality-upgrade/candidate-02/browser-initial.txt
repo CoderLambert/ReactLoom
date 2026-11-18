@@ -1,0 +1,401 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=pnpm exec playwright test --config=.local-evidence/quality-playwright.config.ts quality-remediation.spec.ts p0-risk-lifecycle.spec.ts --grep @E05|@E11|@F05
+
+Running 13 tests using 2 workers
+
+(node:704119) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:704121) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   2 e2e/p0-risk-lifecycle.spec.ts:94:1 › @E05 real Monaco editor creates a language worker and releases its environment lease (78ms)
+  ✘   1 e2e/quality-remediation.spec.ts:4:1 › @E05 editing and undo operate on the real Monaco model (88ms)
+(node:704397) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:704396) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   4 e2e/quality-remediation.spec.ts:15:1 › @E05 explicitly saved session draft survives reload and can be cleared (76ms)
+  ✘   3 e2e/quality-remediation.spec.ts:37:1 › @E05 JSON worker reports real markers, clears them after repair and releases its lease (82ms)
+(node:704592) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:704598) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   5 e2e/quality-remediation.spec.ts:67:1 › @E11 cumulative deltas render incomplete syntax and finish with real Markdown (80ms)
+  ✘   6 e2e/quality-remediation.spec.ts:93:1 › @E11 automatic input pauses, ends, and remounts without its old timer (86ms)
+(node:704808) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:704818) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   7 e2e/quality-remediation.spec.ts:120:1 › @E11 business output uses GFM and blocks fixture scripts and unknown resources (82ms)
+  ✘   8 e2e/quality-remediation.spec.ts:138:1 › @E11 leaving a playing demo clears the actual owned interval (82ms)
+(node:705012) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:705018) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   9 e2e/quality-remediation.spec.ts:173:3 › @E05 the actual demo fits a narrow viewport (76ms)
+  ✘  10 e2e/quality-remediation.spec.ts:173:3 › @E11 the actual demo fits a narrow viewport (80ms)
+(node:705222) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:705229) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  11 e2e/quality-remediation.spec.ts:189:3 › @E05 official original loads with a pinned upstream exit (79ms)
+  ✘  12 e2e/quality-remediation.spec.ts:189:3 › @E11 official original loads with a pinned upstream exit (83ms)
+(node:705453) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  13 e2e/quality-remediation.spec.ts:189:3 › @F05 official original loads with a pinned upstream exit (67ms)
+
+
+  1) e2e/p0-risk-lifecycle.spec.ts:94:1 › @E05 real Monaco editor creates a language worker and releases its environment lease 
+
+    Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4319/libraries/monaco-editor?tab=demo&example=advanced
+    Call log:
+      - navigating to "http://127.0.0.1:4319/libraries/monaco-editor?tab=demo&example=advanced", waiting until "load"
+
+
+      4 | // No page.route mocks, SDK stubs or forced verification.json PASS values.
+      5 | async function start(page: Page, slug: string, level: 'basic' | 'business' | 'advanced') {
+    > 6 |   await page.goto(`/libraries/${slug}?tab=demo&example=${level}`)
+        |              ^
+      7 | }
+      8 |
+      9 | test('@A01 real chart pauses for reduced motion and unmounts its DOM', async ({ page }) => {
+        at start (/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/p0-risk-lifecycle.spec.ts:6:14)
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/p0-risk-lifecycle.spec.ts:99:9
+
+    Error Context: test-results/p0-risk-lifecycle--E05-rea-cefb5-eases-its-environment-lease/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/p0-risk-lifecycle--E05-rea-cefb5-eases-its-environment-lease/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/p0-risk-lifecycle--E05-rea-cefb5-eases-its-environment-lease/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) e2e/quality-remediation.spec.ts:4:1 › @E05 editing and undo operate on the real Monaco model ──
+
+    Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4319/libraries/monaco-editor?tab=demo&example=basic
+    Call log:
+      - navigating to "http://127.0.0.1:4319/libraries/monaco-editor?tab=demo&example=basic", waiting until "load"
+
+
+      3 | // Real SDK interactions through the current production Lab; no renderer mocks.
+      4 | test('@E05 editing and undo operate on the real Monaco model', async ({ page }) => {
+    > 5 |   await page.goto('/libraries/monaco-editor?tab=demo&example=basic')
+        |              ^
+      6 |   await expect(page.getByTestId('monaco-editor-root').locator('.monaco-editor')).toBeVisible()
+      7 |   const text = page.getByTestId('monaco-model-text')
+      8 |   const initial = await text.textContent()
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation.spec.ts:5:14
+
+    Error Context: test-results/quality-remediation--E05-e-d9551-te-on-the-real-Monaco-model/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-remediation--E05-e-d9551-te-on-the-real-Monaco-model/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-remediation--E05-e-d9551-te-on-the-real-Monaco-model/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) e2e/quality-remediation.spec.ts:15:1 › @E05 explicitly saved session draft survives reload and can be cleared 
+
+    Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4319/libraries/monaco-editor?tab=demo&example=business
+    Call log:
+      - navigating to "http://127.0.0.1:4319/libraries/monaco-editor?tab=demo&example=business", waiting until "load"
+
+
+      14 |
+      15 | test('@E05 explicitly saved session draft survives reload and can be cleared', async ({ page }) => {
+    > 16 |   await page.goto('/libraries/monaco-editor?tab=demo&example=business')
+         |              ^
+      17 |   const root = page.getByTestId('monaco-editor-root')
+      18 |   await expect(root.locator('.monaco-editor')).toBeVisible()
+      19 |   const editor = page.getByRole('textbox', { name: 'Monaco TypeScript 编辑区域', exact: true })
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation.spec.ts:16:14
+
+    Error Context: test-results/quality-remediation--E05-e-5f0fa-s-reload-and-can-be-cleared/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-remediation--E05-e-5f0fa-s-reload-and-can-be-cleared/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-remediation--E05-e-5f0fa-s-reload-and-can-be-cleared/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) e2e/quality-remediation.spec.ts:37:1 › @E05 JSON worker reports real markers, clears them after repair and releases its lease 
+
+    Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4319/libraries/monaco-editor?tab=demo&example=advanced
+    Call log:
+      - navigating to "http://127.0.0.1:4319/libraries/monaco-editor?tab=demo&example=advanced", waiting until "load"
+
+
+      40 |   const errors: string[] = []
+      41 |   page.on('pageerror', (error) => errors.push(error.message))
+    > 42 |   await page.goto('/libraries/monaco-editor?tab=demo&example=advanced')
+         |              ^
+      43 |   const root = page.getByTestId('monaco-editor-root')
+      44 |   await expect(root.locator('.monaco-editor')).toBeVisible()
+      45 |   await expect.poll(() => page.workers().length).toBeGreaterThan(0)
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation.spec.ts:42:14
+
+    Error Context: test-results/quality-remediation--E05-J-5f300-pair-and-releases-its-lease/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-remediation--E05-J-5f300-pair-and-releases-its-lease/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-remediation--E05-J-5f300-pair-and-releases-its-lease/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) e2e/quality-remediation.spec.ts:67:1 › @E11 cumulative deltas render incomplete syntax and finish with real Markdown 
+
+    Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4319/libraries/streamdown?tab=demo&example=basic
+    Call log:
+      - navigating to "http://127.0.0.1:4319/libraries/streamdown?tab=demo&example=basic", waiting until "load"
+
+
+      68 |   page,
+      69 | }) => {
+    > 70 |   await page.goto('/libraries/streamdown?tab=demo&example=basic')
+         |              ^
+      71 |   const workshop = page.getByTestId('e11-workshop')
+      72 |   await expect(workshop).toHaveAttribute('data-state', 'ready')
+      73 |   const step = page.getByRole('button', { name: '追加下一段', exact: true })
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation.spec.ts:70:14
+
+    Error Context: test-results/quality-remediation--E11-c-9d117-d-finish-with-real-Markdown/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-remediation--E11-c-9d117-d-finish-with-real-Markdown/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-remediation--E11-c-9d117-d-finish-with-real-Markdown/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) e2e/quality-remediation.spec.ts:93:1 › @E11 automatic input pauses, ends, and remounts without its old timer 
+
+    Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4319/libraries/streamdown?tab=demo&example=basic
+    Call log:
+      - navigating to "http://127.0.0.1:4319/libraries/streamdown?tab=demo&example=basic", waiting until "load"
+
+
+      93 | test('@E11 automatic input pauses, ends, and remounts without its old timer', async ({ page }) => {
+      94 |   await page.clock.install()
+    > 95 |   await page.goto('/libraries/streamdown?tab=demo&example=basic')
+         |              ^
+      96 |   const workshop = page.getByTestId('e11-workshop')
+      97 |   await expect(workshop).toHaveAttribute('data-state', 'ready')
+      98 |   await page.getByRole('button', { name: '开始自动追加', exact: true }).click()
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation.spec.ts:95:14
+
+    Error Context: test-results/quality-remediation--E11-a-0674f-ounts-without-its-old-timer/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-remediation--E11-a-0674f-ounts-without-its-old-timer/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-remediation--E11-a-0674f-ounts-without-its-old-timer/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  7) e2e/quality-remediation.spec.ts:120:1 › @E11 business output uses GFM and blocks fixture scripts and unknown resources 
+
+    Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4319/libraries/streamdown?tab=demo&example=business
+    Call log:
+      - navigating to "http://127.0.0.1:4319/libraries/streamdown?tab=demo&example=business", waiting until "load"
+
+
+      123 |   const errors: string[] = []
+      124 |   page.on('pageerror', (error) => errors.push(error.message))
+    > 125 |   await page.goto('/libraries/streamdown?tab=demo&example=business')
+          |              ^
+      126 |   const step = page.getByRole('button', { name: '追加下一段', exact: true })
+      127 |   await expect(step).toBeEnabled()
+      128 |   for (let n = 0; n < 40 && !(await step.isDisabled()); n++) await step.click()
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation.spec.ts:125:14
+
+    Error Context: test-results/quality-remediation--E11-b-d9fc6-ripts-and-unknown-resources/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-remediation--E11-b-d9fc6-ripts-and-unknown-resources/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-remediation--E11-b-d9fc6-ripts-and-unknown-resources/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  8) e2e/quality-remediation.spec.ts:138:1 › @E11 leaving a playing demo clears the actual owned interval 
+
+    Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4319/libraries/streamdown?tab=demo&example=basic
+    Call log:
+      - navigating to "http://127.0.0.1:4319/libraries/streamdown?tab=demo&example=basic", waiting until "load"
+
+
+      156 |     Object.defineProperty(window, '__e11ActiveIntervals', { get: () => active.size })
+      157 |   })
+    > 158 |   await page.goto('/libraries/streamdown?tab=demo&example=basic')
+          |              ^
+      159 |   await page.getByRole('button', { name: '开始自动追加', exact: true }).click()
+      160 |   const count = () => page.evaluate(() => Reflect.get(window, '__e11ActiveIntervals'))
+      161 |   await expect.poll(count).toBe(1)
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation.spec.ts:158:14
+
+    Error Context: test-results/quality-remediation--E11-l-17162-s-the-actual-owned-interval/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-remediation--E11-l-17162-s-the-actual-owned-interval/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-remediation--E11-l-17162-s-the-actual-owned-interval/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  9) e2e/quality-remediation.spec.ts:173:3 › @E05 the actual demo fits a narrow viewport ───────────
+
+    Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4319/libraries/monaco-editor?tab=demo
+    Call log:
+      - navigating to "http://127.0.0.1:4319/libraries/monaco-editor?tab=demo", waiting until "load"
+
+
+      173 |   test(`@${entryId} the actual demo fits a narrow viewport`, async ({ page }, info) => {
+      174 |     await page.setViewportSize({ width: 390, height: 844 })
+    > 175 |     await page.goto(`/libraries/${slug}?tab=demo`)
+          |                ^
+      176 |     await expect(page.getByTestId(root)).toBeVisible()
+      177 |     await expect
+      178 |       .poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1))
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation.spec.ts:175:16
+
+    Error Context: test-results/quality-remediation--E05-t-468d7-demo-fits-a-narrow-viewport/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-remediation--E05-t-468d7-demo-fits-a-narrow-viewport/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-remediation--E05-t-468d7-demo-fits-a-narrow-viewport/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  10) e2e/quality-remediation.spec.ts:173:3 › @E11 the actual demo fits a narrow viewport ──────────
+
+    Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4319/libraries/streamdown?tab=demo
+    Call log:
+      - navigating to "http://127.0.0.1:4319/libraries/streamdown?tab=demo", waiting until "load"
+
+
+      173 |   test(`@${entryId} the actual demo fits a narrow viewport`, async ({ page }, info) => {
+      174 |     await page.setViewportSize({ width: 390, height: 844 })
+    > 175 |     await page.goto(`/libraries/${slug}?tab=demo`)
+          |                ^
+      176 |     await expect(page.getByTestId(root)).toBeVisible()
+      177 |     await expect
+      178 |       .poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1))
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation.spec.ts:175:16
+
+    Error Context: test-results/quality-remediation--E11-t-71426-demo-fits-a-narrow-viewport/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-remediation--E11-t-71426-demo-fits-a-narrow-viewport/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-remediation--E11-t-71426-demo-fits-a-narrow-viewport/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  11) e2e/quality-remediation.spec.ts:189:3 › @E05 official original loads with a pinned upstream exit 
+
+    Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4319/libraries/monaco-editor?tab=readme
+    Call log:
+      - navigating to "http://127.0.0.1:4319/libraries/monaco-editor?tab=readme", waiting until "load"
+
+
+      188 | ]) {
+      189 |   test(`@${entryId} official original loads with a pinned upstream exit`, async ({ page }) => {
+    > 190 |     await page.goto(`/libraries/${slug}?tab=readme`)
+          |                ^
+      191 |     await expect(page.getByRole('heading', { name: '官方 README 原文', exact: true })).toBeVisible()
+      192 |     await expect(page.locator('.prose')).not.toBeEmpty()
+      193 |     await expect(page.getByRole('link', { name: '打开上游原文' })).toHaveAttribute(
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation.spec.ts:190:16
+
+    Error Context: test-results/quality-remediation--E05-o-4a20f-with-a-pinned-upstream-exit/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-remediation--E05-o-4a20f-with-a-pinned-upstream-exit/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-remediation--E05-o-4a20f-with-a-pinned-upstream-exit/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  12) e2e/quality-remediation.spec.ts:189:3 › @E11 official original loads with a pinned upstream exit 
+
+    Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4319/libraries/streamdown?tab=readme
+    Call log:
+      - navigating to "http://127.0.0.1:4319/libraries/streamdown?tab=readme", waiting until "load"
+
+
+      188 | ]) {
+      189 |   test(`@${entryId} official original loads with a pinned upstream exit`, async ({ page }) => {
+    > 190 |     await page.goto(`/libraries/${slug}?tab=readme`)
+          |                ^
+      191 |     await expect(page.getByRole('heading', { name: '官方 README 原文', exact: true })).toBeVisible()
+      192 |     await expect(page.locator('.prose')).not.toBeEmpty()
+      193 |     await expect(page.getByRole('link', { name: '打开上游原文' })).toHaveAttribute(
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation.spec.ts:190:16
+
+    Error Context: test-results/quality-remediation--E11-o-e823b-with-a-pinned-upstream-exit/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-remediation--E11-o-e823b-with-a-pinned-upstream-exit/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-remediation--E11-o-e823b-with-a-pinned-upstream-exit/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  13) e2e/quality-remediation.spec.ts:189:3 › @F05 official original loads with a pinned upstream exit 
+
+    Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4319/libraries/sheetjs?tab=readme
+    Call log:
+      - navigating to "http://127.0.0.1:4319/libraries/sheetjs?tab=readme", waiting until "load"
+
+
+      188 | ]) {
+      189 |   test(`@${entryId} official original loads with a pinned upstream exit`, async ({ page }) => {
+    > 190 |     await page.goto(`/libraries/${slug}?tab=readme`)
+          |                ^
+      191 |     await expect(page.getByRole('heading', { name: '官方 README 原文', exact: true })).toBeVisible()
+      192 |     await expect(page.locator('.prose')).not.toBeEmpty()
+      193 |     await expect(page.getByRole('link', { name: '打开上游原文' })).toHaveAttribute(
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation.spec.ts:190:16
+
+    Error Context: test-results/quality-remediation--F05-o-4dfa3-with-a-pinned-upstream-exit/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-remediation--F05-o-4dfa3-with-a-pinned-upstream-exit/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-remediation--F05-o-4dfa3-with-a-pinned-upstream-exit/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  13 failed
+    e2e/p0-risk-lifecycle.spec.ts:94:1 › @E05 real Monaco editor creates a language worker and releases its environment lease 
+    e2e/quality-remediation.spec.ts:4:1 › @E05 editing and undo operate on the real Monaco model ───
+    e2e/quality-remediation.spec.ts:15:1 › @E05 explicitly saved session draft survives reload and can be cleared 
+    e2e/quality-remediation.spec.ts:37:1 › @E05 JSON worker reports real markers, clears them after repair and releases its lease 
+    e2e/quality-remediation.spec.ts:67:1 › @E11 cumulative deltas render incomplete syntax and finish with real Markdown 
+    e2e/quality-remediation.spec.ts:93:1 › @E11 automatic input pauses, ends, and remounts without its old timer 
+    e2e/quality-remediation.spec.ts:120:1 › @E11 business output uses GFM and blocks fixture scripts and unknown resources 
+    e2e/quality-remediation.spec.ts:138:1 › @E11 leaving a playing demo clears the actual owned interval 
+    e2e/quality-remediation.spec.ts:173:3 › @E05 the actual demo fits a narrow viewport ────────────
+    e2e/quality-remediation.spec.ts:173:3 › @E11 the actual demo fits a narrow viewport ────────────
+    e2e/quality-remediation.spec.ts:189:3 › @E05 official original loads with a pinned upstream exit 
+    e2e/quality-remediation.spec.ts:189:3 › @E11 official original loads with a pinned upstream exit 
+    e2e/quality-remediation.spec.ts:189:3 › @F05 official original loads with a pinned upstream exit 
+
+exitCode=1

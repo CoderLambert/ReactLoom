@@ -1,0 +1,4 @@
+{"label": "types", "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab", "argv": ["pnpm", "exec", "--", "tsc", "--ignoreConfig", "--noEmit", "--target", "es2022", "--module", "esnext", "--moduleResolution", "bundler", "--jsx", "react-jsx", "--strict", "--skipLibCheck", "--esModuleInterop", "--types", "vite/client,node", "entries/C12-fullcalendar/examples/demo.tsx"], "start": "2026-11-10T16:13:19.293675+00:00", "end": "2026-11-10T16:13:19.534358+00:00", "exitCode": 0, "log": "types.txt"}
+STDOUT
+
+STDERR

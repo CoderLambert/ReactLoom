@@ -1,0 +1,4 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom
+argv: ["git", "diff", "--check", "--", "packages/library-lab/entries/A03-chartjs"]
+exit: 0
+

@@ -1,0 +1,20 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["pnpm", "--dir", "packages/library-lab", "test:policy", "--entry=C10"], "utc": "2026-11-10T16:21:25.508871+00:00", "exit": 0}
+
+> @reactloom/library-lab@0.1.0 test:policy /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+> node scripts/policy-runner.mjs --entry=C10
+
+Pure entry policy suites selected: 1 (not SDK evidence)
+✔ identical terms with a new search revision cannot reuse stale virtual measurements (0.535854ms)
+✔ view identities remain unambiguous when query contains separators (0.095124ms)
+✔ a reordered list uses business ids rather than previous array indexes (0.284433ms)
+✔ filter text rejects controls and caps multi-byte input by code points (0.171436ms)
+✔ shared filter contract preserves row identities and does not mutate the fixture (3.364404ms)
+✔ identity and row-key boundaries reject invalid revisions and unresolved rows (0.147927ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 70.5701

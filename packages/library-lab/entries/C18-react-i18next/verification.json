@@ -1,14 +1,14 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "本轮未在可安装依赖环境执行真实 SDK Node 测试；不可继承研究包历史结果"
+    "note": "作者本地真实SDK5/5（实际Provider/Trans SSR及共享原实例session）与纯policy4/4 exit0，SSR不是客户端订阅/hydration通过；正式收据未运行，status仍NOT_RUN。"
   },
   "build": {
     "status": "NOT_RUN",
-    "note": "依赖及锁文件由 PLATFORM 统一解析后运行 tsc/Vite"
+    "note": "定向入口strict/完整三case提案strict exit0；root固定candidate19全Lab type/build/catalog0，9运行源逐字节匹配。正式收据未生成，status仍NOT_RUN。"
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "浏览器真实交互和生命周期尚待 Playwright"
+    "note": "已实际读root candidate19浏览器原始日志，C18三目标+原README/官网blocked共4PASS；整体批次11PASS/1FAIL/exit1为B15公共URL，未当全绿。9源/提案候选同SHA，正式status仍NOT_RUN。"
   }
 }

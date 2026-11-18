@@ -1,46 +1,13 @@
-# E13 PhotoSwipe — 工程手册
+# E13 PhotoSwipe 工程复用
 
-## 适用
+5.4.4/MIT实装与固定LICENSE双核。图片浏览/键盘缩放，不是裁剪/托管/上传。已有React/TSX浏览器`pnpm add photoswipe@5.4.4`；复制example.tsx、gallery-policy.mjs/.d.mts、artwork.mjs/.d.mts，demo可省。必须CSS photoswipe/style.css；ESM动态import/CSS/TS Bundler，无Provider/env/服务。
 
-本地或已授权图片的灯箱预览、缩放和关闭。裁剪用 E14。像素缩小用 E15。不要把灯箱数据当内容数据库。
+Lightbox静态模块，pswpModule动态import核心；第一次打开加载，后续模块缓存，打包懒加载需browser观察。容器ref限定children:a，不扫描全页。原创dataSVG显式width1200/height800+viewBox，元数据匹配固有尺寸；不是照片/栅格像素或生产解码性能。policy只检查字段，不验证SVG安全；生产替换素材需可信URL/权限/尺寸。
 
-## 版本
+basic单图与首次core；business三图+figcaption开关和方向键/Esc/焦点；advanced3/4集合变更销毁旧Lightbox。开灯箱时底层按钮被遮罩，程序触发已有按钮是外部数据变化模拟，不宣称穿透可点击。close请求后effect disposeLightbox是真正所有权清理，卸载同样；core动态加载未完成也由destroy的shouldOpen=false防迟到打开，不中止下载。
 
-`photoswipe@5.4.4`，MIT。初始化用 `PhotoSwipeLightbox`，核心通过 `pswpModule: () => import('photoswipe')` 按第一次打开加载。不要抄 v4 的 jQuery 写法。
+说明为React文本，无captionHTML。trapFocus/returnFocus SDK默认，触摸/键盘/图片decode/实际destroy由browser验，不把DOM消失当destroy。测试可取官方window.pswp并公开on('destroy')外部观测，升级核对；不向产品新增全局实例。无Storage/Worker或全局清理。
 
-## 迁移
+纯policy不计SDK；无DOM平台依赖不伪造NodeSDK PASS。browser proposal交主控；formal sdk/build/browser无receipt保持NOT_RUN。官方固定readme/license和真实响应头在official，主页unknown。
 
-复制 `examples/example.tsx` 的容器 ref、`data-pswp-width` / `height`、effect 里的 init/destroy。张数走 `visibleArtwork`。`examples/demo.tsx` 只是再导出。说明保持 React 文本。远程 URL 不要直接替换 data URL，除非另有主机名单和尺寸。
-
-## 不可删的清理
-
-effect 的清理函数必须 `lightbox.destroy()`，并只销毁本次实例。切换张数前若灯箱还开着，先 `pswp.close()`。gallery 选择器限于 ref，不能用会命中外壳的全局选择器。React key 用图片 id。
-
-## 反例
-
-- render 期间 `new PhotoSwipeLightbox`。
-- 链接不写原始像素。
-- 路由入口同步导入核心却声称按需。
-- caption `innerHTML`。
-- 把 items 数组当持久化数据库。
-- 用 `preload` 冒充整库下载。
-- `href="#"` 且没有真实图片地址。
-- 任意用户 URL。
-- 用数组下标做 key。
-
-## 测试断言
-
-- `visibleArtwork` 按层返回 1、3 或 3/4 张，并拒绝坏 id、空 alt、非正尺寸。
-- 浏览器：第一次打开才加载核心；离开后 destroy；外壳链接不进图库。
-- 键盘和焦点没有收据就不要写成通过。
-- policy 测试不是 PhotoSwipe SDK PASS。
-
-## 真实限制
-
-素材是 SVG data URL，不是照片解码测试。策略不检查 SVG 安全。动画固定 fade，没有读取减少动态。Esc 和焦点返回未做浏览器记录。
-
-## 证据
-
-sdk、build、browser 保持 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有 E13 收据。Actions `41779873259` 是仓库级运行，不是本条目 PASS。
-
-资料：https://photoswipe.com/getting-started/ 与 https://photoswipe.com/options/ 。
+点击路径的真实数据源是由visible渲染的gallery DOM，不是options.dataSource数组。5.4.4打开动画中destroy可能直接return：完整example.tsx中的disposeLightbox先注册实际core的openingAnimationEnd再销毁Lightbox，必要时动画完成后重试core.destroy；destroy事件移除兜底监听。必须整体迁入此函数，不能简化回单次destroy。主控浏览器覆盖打开期间立即卸载的回归。

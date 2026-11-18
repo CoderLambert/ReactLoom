@@ -1,0 +1,1 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["git", "diff", "--check", "--", "packages/library-lab/entries/C10-tanstack-virtual"], "utc": "2026-11-10T16:44:25.160595+00:00", "exit": 0}

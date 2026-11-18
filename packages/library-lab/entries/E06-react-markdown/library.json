@@ -5,13 +5,7 @@
   "name": "react-markdown",
   "group": "E",
   "summary": "安全的 React Markdown 展示",
-  "tags": [
-    "Markdown",
-    "GFM",
-    "XSS",
-    "rehype",
-    "remark"
-  ],
+  "tags": ["Markdown", "GFM", "XSS", "rehype", "remark"],
   "contentState": "recreated",
   "packages": [
     {
@@ -74,13 +68,9 @@
         "examples/example.tsx",
         "examples/render-policy.mjs",
         "examples/render-policy.d.mts",
-        "tests/sdk.test.mjs",
         "examples/demo.tsx"
       ],
-      "capabilities": [
-        "markdown",
-        "safe-render"
-      ],
+      "capabilities": ["markdown", "safe-render"],
       "description": "文本、标题、链接和代码片段的 React 元素展示。"
     },
     {
@@ -93,13 +83,9 @@
         "examples/example.tsx",
         "examples/render-policy.mjs",
         "examples/render-policy.d.mts",
-        "tests/sdk.test.mjs",
         "examples/demo.tsx"
       ],
-      "capabilities": [
-        "markdown",
-        "safe-render"
-      ],
+      "capabilities": ["markdown", "safe-render"],
       "description": "真实 GFM 表格、任务清单和文档结构，编辑原文即时更新。"
     },
     {
@@ -112,13 +98,9 @@
         "examples/example.tsx",
         "examples/render-policy.mjs",
         "examples/render-policy.d.mts",
-        "tests/sdk.test.mjs",
         "examples/demo.tsx"
       ],
-      "capabilities": [
-        "markdown",
-        "safe-render"
-      ],
+      "capabilities": ["markdown", "safe-render"],
       "description": "通过恶意 URL 与内联 HTML 检查禁用脚本、清理路径和自定义元素。"
     }
   ],
@@ -129,5 +111,25 @@
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
     "note": "依据官方API新写示例；不继承历史测试结果。"
+  },
+  "official": {
+    "readme": {
+      "repository": "remarkjs/react-markdown",
+      "commit": "44d2e4a44b37461ab7778d6870c1a9eb36393ad2",
+      "path": "readme.md",
+      "sourceUrl": "https://github.com/remarkjs/react-markdown/blob/44d2e4a44b37461ab7778d6870c1a9eb36393ad2/readme.md",
+      "snapshotPath": "official/readme.md",
+      "sha256": "b57882cd2b30ef3df905644e947c799709d82b10d4cb178346ce8b85d140c3b7",
+      "language": "en",
+      "version": "10.1.0",
+      "syncedAt": "2026-11-17T17:19:32.204957+00:00"
+    },
+    "homepage": {
+      "url": "https://remarkjs.github.io/react-markdown/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-17T17:19:32.204957+00:00",
+      "reason": "官方README链接的真实Demo主页GET与响应头见official/source-evidence.json；无明确限制头但未从Lab origin确认嵌入，因此unknown并保留直达。"
+    }
   }
 }

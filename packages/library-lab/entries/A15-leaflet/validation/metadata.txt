@@ -1,0 +1,20 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+ARGV: ["node", "entries/A15-leaflet/validation/metadata-check.mjs"]
+START: 2026-11-10T12:19:11.288088+00:00
+END: 2026-11-10T12:19:11.317788+00:00
+EXIT: 0
+STDOUT:
+{
+  "metadata": [],
+  "completeness": [],
+  "runtimeFiles": 7,
+  "leaflet": "1.9.4",
+  "types": "1.9.22",
+  "readmeBytes": 3952,
+  "readmeSha256": "85c5270e168a1f0021605f7bceaf2ef8fd5a6d195392a242c1f25b833fe91b5f",
+  "homepage": "unknown: TLS failed before headers",
+  "formal": "NOT_RUN",
+  "inputFiles": 16
+}
+
+STDERR:

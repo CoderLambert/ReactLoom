@@ -1,61 +1,173 @@
-import {useId,useState} from 'react';
-import {Group, Panel, Separator} from 'react-resizable-panels';
+import { useId, useState } from 'react'
+import {
+  Group,
+  type Layout,
+  type LayoutChangedMeta,
+  Panel,
+  Separator,
+} from 'react-resizable-panels'
+import './panels.css'
 
-type Level = 'basic' | 'business' | 'advanced';
-const border = '1px solid #d7dfd5';
+type Level = 'basic' | 'business' | 'advanced'
+type LayoutSnapshot = { layout: Layout; isUserInteraction: boolean }
 
-export default function ResizableExample({level}: {level: Level}) {
-  const instanceId = useId();
-  const [vertical, setVertical] = useState(false);
-  const [generation, setGeneration] = useState(0);
-  const [sizes, setSizes] = useState('');
-  const orientation = level === 'advanced' && vertical ? 'vertical' : 'horizontal';
-  const handleStyle = orientation === 'horizontal'
-    ? {width: 12, background: '#d5e5d8', cursor: 'col-resize' as const, touchAction:'none' as const}
-    : {height: 12, background: '#d5e5d8', cursor: 'row-resize' as const, touchAction:'none' as const};
+export default function ResizableExample({ level }: { level: Level }) {
+  const instanceId = useId()
+  const [vertical, setVertical] = useState(false)
+  const [generation, setGeneration] = useState(0)
+  const [snapshot, setSnapshot] = useState<LayoutSnapshot | null>(null)
+  const orientation = level === 'advanced' && vertical ? 'vertical' : 'horizontal'
+  const panels = [
+    { key: 'explorer', label: '项目资源' },
+    { key: 'main', label: level === 'basic' ? '详情预览' : '代码工作区' },
+    ...(level === 'basic' ? [] : [{ key: 'inspector', label: '属性检查器' }]),
+  ]
 
-  return <section aria-label="可调整尺寸的工作面板">
-    <h2>{level === 'basic' ? '双栏基础布局' : level === 'business' ? '开发工具三栏工作台' : '方向、约束与键盘调整'}</h2>
-    <p>使用真正的 Group / Panel / Separator。拖动绿色分割条，或聚焦分割条后用方向键调整。</p>
-    {level === 'advanced' && <div style={{display: 'flex', gap: 14, flexWrap: 'wrap', marginBottom: 12}}>
-      <label><input type="checkbox" checked={vertical} onChange={event => setVertical(event.target.checked)}/>纵向排列</label>
-      <button type="button" onClick={() => {setGeneration(value => value + 1); setSizes('');}}>复位布局</button>
-    </div>}
-    <div style={{height: 300, width: '100%', minWidth: 0, border, borderRadius: 10, overflow: 'hidden'}}>
-      <Group
-        id={`${instanceId}-group`}
-        key={`${level}:${orientation}:${generation}`}
-        orientation={orientation}
-        style={{height: '100%', width: '100%'}}
-        onLayoutChanged={layout => setSizes(JSON.stringify(layout))}
-      >
-        <Panel id={`${instanceId}-explorer`} defaultSize={level === 'basic' ? '35%' : '25%'} minSize="16%" maxSize="60%">
-          <div style={{padding: 16, height: '100%', background: '#eef3eb', overflow: 'auto'}}>
+  function receiveLayout(layout: Layout, meta: LayoutChangedMeta) {
+    // Initial mount and constraint changes are also reported by the SDK.
+    setSnapshot({ layout: { ...layout }, isUserInteraction: meta.isUserInteraction })
+  }
+
+  return (
+    <section
+      aria-label="可调整尺寸的工作面板"
+      className="b16-workshop"
+      data-testid="b16-workshop"
+      data-orientation={orientation}
+      data-level={level}
+    >
+      <h2>
+        {level === 'basic'
+          ? '双栏：拖动与键盘约束'
+          : level === 'business'
+            ? '三栏：独立边界与稳定身份'
+            : '方向切换与默认布局复位'}
+      </h2>
+      <p>
+        拖动绿色分割条，或 Tab 聚焦后用方向键、Home、End 调整。尺寸由真实 Group / Panel / Separator
+        管理，下方显示库回调的实际百分比；本例不保存到服务器或浏览器存储。
+      </p>
+      {level === 'advanced' && (
+        <div className="b16-controls">
+          <label>
+            <input
+              type="checkbox"
+              checked={vertical}
+              onChange={(event) => {
+                setVertical(event.currentTarget.checked)
+                setSnapshot(null)
+              }}
+            />
+            纵向排列
+          </label>
+          <button
+            type="button"
+            onClick={() => {
+              setGeneration((value) => value + 1)
+              setSnapshot(null)
+            }}
+          >
+            复位布局
+          </button>
+        </div>
+      )}
+      <div className="b16-frame">
+        <Group
+          id={`${instanceId}-group`}
+          key={`${level}:${orientation}:${generation}`}
+          orientation={orientation}
+          onLayoutChanged={receiveLayout}
+        >
+          <Panel
+            id={`${instanceId}-explorer`}
+            data-b16-panel="explorer"
+            defaultSize={level === 'basic' ? '35%' : '25%'}
+            minSize="16%"
+            maxSize="60%"
+            className="b16-content b16-explorer"
+          >
             <strong>项目资源</strong>
             <p>src / components / routes</p>
-            <p>支持最小宽度或高度约束，避免被拖成无法操作的区域。</p>
-          </div>
-        </Panel>
-        <Separator id={`${instanceId}-separator-one`} aria-label="调整项目资源和主编辑区域" style={handleStyle}/>
-        <Panel id={`${instanceId}-main`} defaultSize={level === 'basic' ? '65%' : '45%'} minSize="22%">
-          <div style={{padding: 16, height: '100%', overflow: 'auto', background: '#fffef9'}}>
-            <strong>{level === 'basic' ? '详情预览' : '代码工作区'}</strong>
-            <p>真实的弹性面板内容。调整尺寸不需要给每个子组件写 window resize 监听。</p>
-            <pre style={{fontSize: 12, whiteSpace: 'pre-wrap'}}>const example = 'ReactLoom';</pre>
-          </div>
-        </Panel>
-        {level !== 'basic' && <>
-          <Separator id={`${instanceId}-separator-two`} aria-label="调整编辑区域和检查面板" style={handleStyle}/>
-          <Panel id={`${instanceId}-inspector`} defaultSize="30%" minSize="15%" maxSize="55%">
-            <div style={{padding: 16, height: '100%', overflow: 'auto', background: '#f7f6ed'}}>
-              <strong>属性检查器</strong>
-              <p>查看所选节点、约束和状态。</p>
-            </div>
+            <p>范围 16%–60%。面板内容可以滚动，不会把分割条挤出容器。</p>
           </Panel>
-        </>}
-      </Group>
-    </div>
-    <p role="status" style={{fontSize: 13, marginTop: 12}}>最近提交的布局（库返回的结构）：{sizes || '尚未调整'}</p>
-    {level === 'advanced' && <p>注意 v4 的数字尺寸按像素解释，百分比使用明确的字符串（例如 25%）。</p>}
-  </section>;
+          <Separator
+            id={`${instanceId}-separator-one`}
+            aria-label="调整项目资源和主编辑区域"
+            className="b16-separator"
+          >
+            <span aria-hidden="true">⋮</span>
+          </Separator>
+          <Panel
+            id={`${instanceId}-main`}
+            data-b16-panel="main"
+            defaultSize={level === 'basic' ? '65%' : '45%'}
+            minSize="22%"
+            className="b16-content b16-main"
+          >
+            <strong>{level === 'basic' ? '详情预览' : '代码工作区'}</strong>
+            <p>至少 22%。相邻面板共享可用空间，尺寸计算由 SDK 负责。</p>
+            <pre>const example = 'ReactLoom';</pre>
+          </Panel>
+          {level !== 'basic' && (
+            <>
+              <Separator
+                id={`${instanceId}-separator-two`}
+                aria-label="调整编辑区域和检查面板"
+                className="b16-separator"
+              >
+                <span aria-hidden="true">⋮</span>
+              </Separator>
+              <Panel
+                id={`${instanceId}-inspector`}
+                data-b16-panel="inspector"
+                defaultSize="30%"
+                minSize="15%"
+                maxSize="55%"
+                className="b16-content b16-inspector"
+              >
+                <strong>属性检查器</strong>
+                <p>范围 15%–55%。F6 在本组分割条间循环，Shift+F6 反向。</p>
+              </Panel>
+            </>
+          )}
+        </Group>
+      </div>
+      <p role="status" data-testid="b16-layout-source">
+        布局来源：
+        {snapshot
+          ? snapshot.isUserInteraction
+            ? '用户输入（指针或键盘）'
+            : '初始化或程序变更'
+          : '等待 SDK 测量'}
+      </p>
+      <table className="b16-sizes" aria-label="SDK 提交的面板尺寸">
+        <thead>
+          <tr>
+            <th scope="col">面板</th>
+            <th scope="col">可用轴空间占比</th>
+          </tr>
+        </thead>
+        <tbody>
+          {panels.map((panel) => (
+            <tr key={panel.key}>
+              <th scope="row">{panel.label}</th>
+              <td>
+                {snapshot ? `${snapshot.layout[`${instanceId}-${panel.key}`]?.toFixed(1)}%` : '—'}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <details>
+        <summary>查看 SDK 原始布局映射</summary>
+        <pre data-testid="b16-layout">
+          {snapshot ? JSON.stringify(snapshot.layout, null, 2) : 'null'}
+        </pre>
+      </details>
+      <p className="b16-note">
+        占比基于扣除分割条后的可用轴空间；横向是宽度，纵向是高度。初始化、切换方向和复位也会触发
+        onLayoutChanged，不能都当成用户拖动。复位会重新挂载 Group，原有尺寸被丢弃。
+      </p>
+    </section>
+  )
 }

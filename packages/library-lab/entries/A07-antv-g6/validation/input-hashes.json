@@ -1,0 +1,27 @@
+{
+  "installedPackage": {
+    "name": "@antv/g6",
+    "version": "5.1.1",
+    "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@antv+g6@5.1.1/node_modules/@antv/g6/package.json",
+    "sourcePath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@antv+g6@5.1.1/node_modules/@antv/g6/src/runtime/graph.ts"
+  },
+  "files": {
+    "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+    "examples/example.tsx": "c2e0833ef08a85e3b0e46230a02042a524deede55d7976c2cd9d3dc353003cc2",
+    "examples/graph-data.ts": "a15fc3511c73d322ca2f17237d9be1a1eaf7224c7e5887e208e6f1e13eed66d3",
+    "examples/graph-options.ts": "10178c25ea945cbaf9c7ab22d734c1877f5cfa8303b7b30b3be6e2249100c35f",
+    "examples/async-owner.ts": "9d01077173e5c3b238bf0b7e2c0e63a1fac0a7a4f65a38a607d6655678ef969b",
+    "examples/graph-sizing.ts": "958c56508c4bd843f420266098e736c68c96c767f5addb1345f6e14d52b03095",
+    "examples/workshop.css": "18e7e4e8ae4a165dd06861a1f74ba595172004bcbab9490110fe90bc5d26e006",
+    "tests/sdk.test.mjs": "e393decb88a9b2a4b9302a7c0b5efe34dbee1fee99cea15642113504bf8b0097",
+    "tests/async-owner.test.mts": "33c28e703dde0179221307c3e3e0738896f46ec7005c290f70748ddc5d758cb6",
+    "tests/graph-sizing.test.mts": "81b86ce0e4a57ae58f877aee52171571207ebe6a98425612d7bb046dcc5f209d",
+    "library.json": "9ec0f964ad8063a5a0a0562dfe508de71db1ce20ee3fb56549b775cb572b25be",
+    "guide.md": "dd8a31bf869c1478a68a9d4bd0f5927d17d136d1a99e2490bcdd5e9bc81e1264",
+    "agent.md": "997b32ce56d5b39252b325491fe68dc0b406400e8fce6b2eb293bac651ab9e66",
+    "verification.json": "28c2d35fb328a7ae9d131e0740f088e9f5a82b3a66696e9bb9aa4aa8fe24397d",
+    "official/readme.md": "cf2ef1137aac0a35d0f70f11e2046576e321e0db6996812b9cee58419f5fdb1e",
+    "official/source-evidence.json": "a9f6cccf6a2c3b96a6df597cbdcbbcef310a7dbeb7b43a898e739452b1f700a7",
+    "validation/browser-proposal.txt": "0ad84b80709b8f47e5092d115a390de15e49b6bbc9d5601ff527299bc91db77c"
+  }
+}

@@ -5,14 +5,7 @@
   "name": "Storybook",
   "group": "F",
   "summary": "组件隔离开发、CSF Stories、Play交互断言与可访问性反馈",
-  "tags": [
-    "Storybook",
-    "CSF3",
-    "React",
-    "Vite",
-    "play",
-    "a11y"
-  ],
+  "tags": ["Storybook", "CSF3", "React", "Vite", "play", "a11y"],
   "contentState": "recreated",
   "packages": [
     {
@@ -72,11 +65,7 @@
         "examples/stories/StatusCard.stories.tsx",
         "examples/components/StatusCard.tsx"
       ],
-      "capabilities": [
-        "node-process",
-        "real-cli",
-        "isolated-fixture"
-      ],
+      "capabilities": ["node-process", "real-cli", "isolated-fixture"],
       "description": "真实Storybook发现CSF3元数据、参数并渲染可访问的React组件。"
     },
     {
@@ -91,11 +80,7 @@
         "examples/stories/StatusCard.stories.tsx",
         "examples/components/StatusCard.tsx"
       ],
-      "capabilities": [
-        "node-process",
-        "real-cli",
-        "isolated-fixture"
-      ],
+      "capabilities": ["node-process", "real-cli", "isolated-fixture"],
       "description": "使用Storybook内建 play/canvas/userEvent 执行真实交互、断言反馈。"
     },
     {
@@ -110,11 +95,7 @@
         "examples/stories/StatusCard.stories.tsx",
         "examples/components/StatusCard.tsx"
       ],
-      "capabilities": [
-        "node-process",
-        "real-cli",
-        "isolated-fixture"
-      ],
+      "capabilities": ["node-process", "real-cli", "isolated-fixture"],
       "description": "实际Storybook同时覆盖禁用态与首次异步回调失败后重试；需要执行Story play方可验证。"
     }
   ],
@@ -124,6 +105,26 @@
   },
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
-    "note": "2026-10-27复核当前官方文档后新增独立示例。实际CLI、SDK、浏览器和依赖构建仍待执行。"
+    "note": "真实10.6.1独立build及静态站四story play和addon a11y报告通过；无正式receipt仍NOT_RUN。"
+  },
+  "official": {
+    "readme": {
+      "repository": "storybookjs/storybook",
+      "commit": "a17b725f4069e0bda9dc87e3002063c726de8fbc",
+      "path": "code/core/README.md",
+      "sourceUrl": "https://github.com/storybookjs/storybook/blob/a17b725f4069e0bda9dc87e3002063c726de8fbc/code/core/README.md",
+      "snapshotPath": "official/readme.md",
+      "sha256": "3493510b1be23f8e7e8164f0af3444cf73cd644b2f6a0970e338b87181bb109f",
+      "language": "en",
+      "version": "10.6.1",
+      "syncedAt": "2026-11-17T18:59:46.455556+00:00"
+    },
+    "homepage": {
+      "url": "https://storybook.js.org/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-17T18:59:46.455556+00:00",
+      "reason": "真实GET响应见official/homepage-headers.json；未据HTTP成功宣称可嵌入。"
+    }
   }
 }

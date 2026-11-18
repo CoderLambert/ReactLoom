@@ -1,14 +1,14 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "本轮未在可安装依赖环境执行真实 SDK Node 测试；不可继承研究包历史结果"
+    "note": "正式NOT_RUN；本地真实共享SDK5/纯队列policy4各exit0，SDK/fixture/应用队列边界分开；既有有效结果复用，不作为正式收据。"
   },
   "build": {
     "status": "NOT_RUN",
-    "note": "依赖及锁文件由 PLATFORM 统一解析后运行 tsc/Vite"
+    "note": "正式NOT_RUN；单入口strict0及固定20共享lint/type/build/catalog均0，7运行源与19/20一致；不是单库正式build收据。"
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "浏览器真实交互和生命周期尚待 Playwright"
+    "note": "正式NOT_RUN；固定19真实三目标3PASS，固定20官方原文/HTTP Lab blocked展示1PASS，合计本条4PASS；20混合命令2PASS3FAIL/exit1不得标整套PASS。无OS IME/HTTP backend取消/SSR租户隔离/全局监听普查。"
   }
 }

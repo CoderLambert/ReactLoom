@@ -1,0 +1,4 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab", "argv": ["pnpm", "exec", "--", "tsc", "--ignoreConfig", "--noEmit", "--target", "ES2022", "--lib", "ES2022,DOM,DOM.Iterable", "--module", "ESNext", "--moduleResolution", "Bundler", "--jsx", "react-jsx", "--strict", "--skipLibCheck", "--esModuleInterop", "--allowImportingTsExtensions", "--types", "vite/client,node", "entries/B12-react-aria/examples/demo.tsx"], "start": "2026-11-10T13:41:30.327818+00:00", "end": "2026-11-10T13:41:30.612730+00:00", "exitCode": 0}
+STDOUT
+
+STDERR

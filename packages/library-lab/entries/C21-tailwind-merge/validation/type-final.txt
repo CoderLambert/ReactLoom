@@ -1,0 +1,4 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['pnpm', 'exec', 'tsc', '--ignoreConfig', '--noEmit', '--target', 'es2022', '--module', 'esnext', '--moduleResolution', 'bundler', '--jsx', 'react-jsx', '--strict', '--skipLibCheck', '--esModuleInterop', '--types', 'vite/client,node', 'entries/C21-tailwind-merge/examples/demo.tsx']
+startedAt: 2026-11-10T18:17:45.864111+00:00
+exit: 0

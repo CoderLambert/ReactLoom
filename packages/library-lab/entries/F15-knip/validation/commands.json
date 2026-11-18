@@ -1,0 +1,73 @@
+[
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "knip",
+      "--directory",
+      "entries/F15-knip/examples/workspace",
+      "--config",
+      "knip.basic.json",
+      "--reporter",
+      "json"
+    ],
+    "exitCode": 1,
+    "stdout": "basic.stdout.json",
+    "stderr": "basic.stderr.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "knip",
+      "--directory",
+      "entries/F15-knip/examples/workspace",
+      "--config",
+      "knip.basic.json",
+      "--reporter",
+      "json"
+    ],
+    "exitCode": 1,
+    "stdout": "basic.raw.json",
+    "stderr": "basic.raw.stderr"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "knip",
+      "--directory",
+      "entries/F15-knip/examples/workspace",
+      "--config",
+      "knip.business.json",
+      "--reporter",
+      "json"
+    ],
+    "exitCode": 1,
+    "stdout": "business.raw.json",
+    "stderr": "business.raw.stderr"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "argv": [
+      "pnpm",
+      "exec",
+      "knip",
+      "--directory",
+      "entries/F15-knip/examples/workspace",
+      "--config",
+      "knip.advanced.json",
+      "--reporter",
+      "json",
+      "--production"
+    ],
+    "exitCode": 1,
+    "stdout": "advanced.raw.json",
+    "stderr": "advanced.raw.stderr"
+  }
+]

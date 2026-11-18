@@ -1,53 +1,85 @@
 // Run from packages/library-lab: node entries/F11-msw/examples/node-runner.mjs business
-// Requires the actual msw@3 package. No external traffic should leave this process.
+// Real MSW intercepts real fetch. The fixture origin must never reach the network.
 import assert from 'node:assert/strict'
-import {fileURLToPath} from 'node:url'
-import {resolve} from 'node:path'
-import {http, HttpResponse} from 'msw/http'
-import {setupServer} from 'msw/node'
-import {handlers, endpoints} from './handlers.mjs'
+import { resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
+import { HttpResponse, http } from 'msw/http'
+import { setupServer } from 'msw/node'
+import { endpoints, handlers } from './handlers.mjs'
 
 export async function runScenario(level = 'basic') {
   if (!['basic', 'business', 'advanced'].includes(level)) throw new Error('Unknown MSW scenario')
   const server = setupServer(...handlers)
-  server.listen({onUnhandledFrame: 'error'})
+  const requests = []
+  const matches = []
+  server.events.on('request:match', ({ requestId, request }) => {
+    matches.push({ requestId, method: request.method, url: request.url })
+  })
+
+  async function request(url, options) {
+    const response = await fetch(url, options)
+    const body = await response.json()
+    const item = { method: options?.method ?? 'GET', url, status: response.status, body }
+    requests.push(item)
+    return item
+  }
+
+  function observed(result) {
+    assert.deepEqual(
+      matches.map(({ method, url }) => ({ method, url })),
+      requests.map(({ method, url }) => ({ method, url })),
+    )
+    return { ...result, requests, matches }
+  }
+
   try {
+    server.listen({ onUnhandledFrame: 'error' })
     if (level === 'basic') {
-      const response = await fetch(endpoints.article)
+      const response = await request(endpoints.article)
       assert.equal(response.status, 200)
-      const body = await response.json()
-      assert.deepEqual(body, {id: '42', title: 'ReactLoom engineering note'})
-      return {level, status: response.status, body}
+      assert.deepEqual(response.body, { id: '42', title: 'ReactLoom engineering note' })
+      return observed({ level, status: response.status, body: response.body })
     }
     if (level === 'business') {
-      const send = (code) => fetch(endpoints.verify, {
-        method: 'POST', headers: {'content-type': 'application/json'},
-        body: JSON.stringify({code}),
-      })
-      const accepted = await send('123456')
-      assert.equal(accepted.status, 200)
-      assert.deepEqual(await accepted.json(), {verified: true})
+      const send = (code) =>
+        request(endpoints.verify, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ code }),
+        })
       const rejected = await send('000000')
       assert.equal(rejected.status, 422)
-      const error = await rejected.json()
-      assert.equal(error.error.code, 'INVALID_CODE')
-      return {level, accepted: 200, rejected: 422, error}
+      assert.equal(rejected.body.error.code, 'INVALID_CODE')
+      const accepted = await send('123456')
+      assert.equal(accepted.status, 200)
+      assert.deepEqual(accepted.body, { verified: true })
+      return observed({
+        level,
+        accepted: accepted.status,
+        rejected: rejected.status,
+        error: rejected.body,
+      })
     }
-    let attempts = 0
-    server.use(http.get(endpoints.retry, () => {
-      attempts++
-      if (attempts === 1) return HttpResponse.json({error: 'temporary outage'}, {status: 503})
-      return HttpResponse.json({ok: true}, {status: 200})
-    }))
-    const first = await fetch(endpoints.retry)
-    const second = await fetch(endpoints.retry)
+    server.use(
+      http.get(
+        endpoints.retry,
+        () => HttpResponse.json({ error: 'temporary outage' }, { status: 503 }),
+        { once: true },
+      ),
+    )
+    const first = await request(endpoints.retry)
+    const second = await request(endpoints.retry)
     assert.equal(first.status, 503)
     assert.equal(second.status, 200)
-    assert.deepEqual(await second.json(), {ok: true})
-    assert.equal(attempts, 2)
-    server.resetHandlers()
-    return {level, first: 503, second: 200, attempts}
+    assert.deepEqual(second.body, { ok: true })
+    return observed({
+      level,
+      first: first.status,
+      second: second.status,
+      attempts: requests.length,
+    })
   } finally {
+    server.resetHandlers()
     server.close()
   }
 }

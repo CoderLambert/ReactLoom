@@ -1,0 +1,5 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["pnpm", "--dir", "packages/library-lab", "exec", "tsc", "--ignoreConfig", "--noEmit", "--target", "es2022", "--module", "esnext", "--moduleResolution", "bundler", "--jsx", "react-jsx", "--strict", "--skipLibCheck", "--esModuleInterop", "--types", "vite/client,node", "entries/C19-nuqs/examples/demo.tsx"], "utc": "2026-11-10T18:16:53.881919+00:00", "exit": 1}
+entries/C19-nuqs/examples/tanstack-adapter.tsx(14,35): error TS2322: Type '(state: RouterState<any, RouteMatch<any, any, any, any, any, any, any>>) => any' is not assignable to type '(state: RouterState<any, RouteMatch<any, any, any, any, any, any, any>>) => never'.
+  Type 'any' is not assignable to type 'never'.
+entries/C19-nuqs/examples/tanstack-adapter.tsx(24,80): error TS2551: Property 'searchStr' does not exist on type '{ pathname: string; search: RouterState<any, RouteMatch<any, any, any, any, any, any, any>>; }'. Did you mean 'search'?
+entries/C19-nuqs/examples/tanstack-adapter.tsx(24,92): error TS2552: Cannot find name 'searchStr'. Did you mean 'search'?

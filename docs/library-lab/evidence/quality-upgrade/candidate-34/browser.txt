@@ -1,0 +1,66 @@
+[WebServer] (node:2388314) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:2388327) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 10 tests using 2 workers
+
+(node:2388393) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2388392) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 e2e/quality-resume-dropzone.spec.ts:84:1 › @F02 preview stays bounded and late text cannot overwrite clear, level or unmount (2.1s)
+  ✓   3 e2e/quality-resume-exceljs.spec.ts:4:3 › @F04 basic displays the declared local recipe without a browser execution button (919ms)
+  ✓   4 e2e/quality-resume-exceljs.spec.ts:4:3 › @F04 business displays the declared local recipe without a browser execution button (920ms)
+  ✓   5 e2e/quality-resume-exceljs.spec.ts:4:3 › @F04 advanced displays the declared local recipe without a browser execution button (924ms)
+  ✓   6 e2e/quality-resume-official-f02-f04.spec.ts:8:3 › @F02 pinned official original and honest homepage fallback (1.5s)
+  ✘   2 e2e/quality-resume-dropzone.spec.ts:15:1 › @F02 actual file dialog, root keyboard, drop and SDK rejection groups (7.9s)
+  ✓   7 e2e/quality-resume-official-f02-f04.spec.ts:8:3 › @F03 pinned official original and honest homepage fallback (1.8s)
+(node:2389713) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   9 e2e/quality-resume-official-f02-f04.spec.ts:8:3 › @F04 pinned official original and honest homepage fallback (1.9s)
+  ✓   8 e2e/quality-resume-papa.spec.ts:16:1 › @F03 actual CSV quotes, business rejection, structural failure and multiline formula export (2.5s)
+  ✓  10 e2e/quality-resume-papa.spec.ts:58:1 › @F03 bounded fatal UTF8 file reading and level/manual/unmount discard late reads (2.1s)
+
+
+  1) e2e/quality-resume-dropzone.spec.ts:15:1 › @F02 actual file dialog, root keyboard, drop and SDK rejection groups 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByRole('region', { name: 'react-dropzone 文件选择实验', exact: true }).getByRole('listitem')
+    Expected: 0
+    Received: 2
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByRole('region', { name: 'react-dropzone 文件选择实验', exact: true }).getByRole('listitem') with timeout 5000ms
+      - waiting for getByRole('region', { name: 'react-dropzone 文件选择实验', exact: true }).getByRole('listitem')
+        14 × locator resolved to 2 elements
+           - unexpected value "2"
+
+
+      61 |   await expect(app.getByTestId('dropzone-status')).toContainText('file-too-large')
+      62 |   await input.setInputFiles([file('a.txt', 'a'), file('b.txt', 'b'), file('c.txt', 'c')])
+    > 63 |   await expect(app.getByRole('listitem')).toHaveCount(0)
+         |                                           ^
+      64 |   await expect(app.getByTestId('dropzone-status')).toContainText('too-many-files')
+      65 |   await input.setInputFiles({
+      66 |     name: 'denied.exe',
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-resume-dropzone.spec.ts:63:43
+
+    Error Context: test-results/quality-resume-dropzone--F-00c52-op-and-SDK-rejection-groups/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-resume-dropzone--F-00c52-op-and-SDK-rejection-groups/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-resume-dropzone--F-00c52-op-and-SDK-rejection-groups/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    e2e/quality-resume-dropzone.spec.ts:15:1 › @F02 actual file dialog, root keyboard, drop and SDK rejection groups 
+  9 passed (13.1s)
+undefined
+/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: playwright test e2e/quality-resume-dropzone.spec.ts e2e/quality-resume-papa.spec.ts e2e/quality-resume-exceljs.spec.ts e2e/quality-resume-official-f02-f04.spec.ts --workers=2

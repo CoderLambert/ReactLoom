@@ -1,0 +1,7 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node entries/A09-excalidraw/validation/check-entry.mjs
+exit: 0
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node entries/A09-excalidraw/validation/check-entry.mjs
+PASS: entry shape, 3 demos, 4 source paths, README bytes 1631 SHA-256 d3458f4ffe1617432989dfa40896255e805f0ddbad194873808ba7e8996e1f45
+exit: 0

@@ -1,0 +1,30 @@
+.b08-root {
+  min-width: 0;
+  max-width: 60rem;
+  color: var(--mantine-color-text);
+  font-family: var(--mantine-font-family);
+}
+.b08-table-scroll {
+  overflow-x: auto;
+}
+.b08-root output {
+  overflow-wrap: anywhere;
+}
+/* Lab has unlayered element defaults. Revert only the properties it overrides,
+   restoring the official mantine layer through public component classes. */
+.b08-root .mantine-UnstyledButton-root {
+  font: revert-layer;
+  background: revert-layer;
+  border: revert-layer;
+  border-radius: revert-layer;
+  padding: revert-layer;
+  cursor: revert-layer;
+  opacity: revert-layer;
+}
+.b08-root .mantine-Input-input {
+  font: revert-layer;
+}
+.b08-root :focus-visible {
+  outline: 3px solid #326dcc;
+  outline-offset: 3px;
+}

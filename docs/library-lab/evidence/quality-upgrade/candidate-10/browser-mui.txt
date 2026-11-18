@@ -1,0 +1,48 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=pnpm exec playwright test --config=.local-evidence/quality-playwright.config.ts e2e/quality-remediation-mui.spec.ts
+
+Running 3 tests using 2 workers
+
+(node:1479751) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1479755) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 e2e/quality-remediation-mui.spec.ts:26:1 › @B07 local theme uses actual context and DOM while controlled input retains its value (1.8s)
+  ✓  2 e2e/quality-remediation-mui.spec.ts:71:1 › @B07 native table switches, one-step history, notice independence and filter empty state (1.9s)
+  ✘  3 e2e/quality-remediation-mui.spec.ts:113:1 › @B07 real Dialog portal, form recovery, one-shot conflict, mobile and open-modal unmount (30.1s)
+
+
+  1) e2e/quality-remediation-mui.spec.ts:113:1 › @B07 real Dialog portal, form recovery, one-shot conflict, mobile and open-modal unmount 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.textContent: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('region', { name: 'Material UI SDK 实战', exact: true }).getByTestId('b07-history')
+
+
+       8 | }
+       9 | async function history(app: Locator): Promise<History> {
+    > 10 |   return JSON.parse((await app.getByTestId('b07-history').textContent()) ?? '{}')
+         |                                                           ^
+      11 | }
+      12 | async function open(page: Page, level: 'basic' | 'business' | 'advanced') {
+      13 |   await page.setViewportSize({ width: 1280, height: 1600 })
+        at history (/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-mui.spec.ts:10:59)
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-mui.spec.ts:159:17
+
+    Error Context: test-results/quality-remediation-mui--B-77d4b-bile-and-open-modal-unmount/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-remediation-mui--B-77d4b-bile-and-open-modal-unmount/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-remediation-mui--B-77d4b-bile-and-open-modal-unmount/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    e2e/quality-remediation-mui.spec.ts:113:1 › @B07 real Dialog portal, form recovery, one-shot conflict, mobile and open-modal unmount 
+  2 passed (32.4s)
+
+exitCode=1

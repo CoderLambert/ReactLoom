@@ -1,0 +1,23 @@
+cwd=packages/library-lab
+command=node .local-evidence/candidate16-dom-probes.mjs
+C08 actual rows [{"attributes":{"class":"ag-header-row ag-header-row-column ag-focus-managed","role":"row","tabindex":"0","aria-rowindex":"1","style":"top: 0px; height: 48px; width: 1190px;"},"parent":"ag-header ag-pivot-off ag-header-allow-overflow","children":[{"attributes":{"class":"ag-grid-pinned-left-cells","role":"presentation","style":"width: 0px; display: none;"},"text":""},{"attributes":{"class":"ag-grid-scrolling-cells","role":"presentation","style":"width: 1190px;"},"text":"    来源 ID                频道                分类                文章数                状态                版本            "},{"attributes":{"class":"ag-grid-pinned-right-cells","role":"presentation","style":"width: 0px; display: none;"},"text":""}]},{"attributes":{"role":"row","row-index":"0","row-id":"feed-0001","tabindex":"0","class":"ag-row-even ag-row-no-focus ag-row ag-row-level-0 ag-row-position-absolute ag-row-first ag-row-not-inline-editing","aria-rowindex":"2","style":"transform: translateY(0px); height: 42px;"},"parent":"ag-grid-scrolling-container ag-row-animation","children":[{"attributes":{"class":"ag-grid-scrolling-cells","role":"presentation","style":"width: 1190px;"},"text":"feed-0001Frontend Weekly 1前端0active1"}]},{"attributes":{"role":"row","row-index":"1","row-id":"feed-0002","tabindex":"0","class":"ag-row-odd ag-row-no-focus ag-row ag-row-level-0 ag-row-position-absolute ag-row-not-inline-editing","aria-rowindex":"3","style":"transform: translateY(42px); height: 42px;"},"parent":"ag-grid-scrolling-container ag-row-animation","children":[{"attributes":{"class":"ag-grid-scrolling-cells","role":"presentation","style":"width: 1190px;"},"text":"feed-0002Open Source Radar 2开源7paused1"}]},{"attributes":{"role":"row","row-index":"2","row-id":"feed-0003","tabindex":"0","class":"ag-row-even ag-row-no-focus ag-row ag-row-level-0 ag-row-position-absolute ag-row-not-inline-editing","aria-rowindex":"4","style":"transform: translateY(84px); height: 42px;"},"parent":"ag-grid-scrolling-container ag-row-animation","children":[{"attributes":{"class":"ag-grid-scrolling-cells","role":"presentation","style":"width: 1190px;"},"text":"feed-0003AI Engineering 3AI14error1"}]}]
+B22 before geometry {"from":{"x":348,"y":891,"width":40,"height":44.390625},"to":{"x":337,"y":1177.5625,"width":720,"height":66.390625},"list":{"x":337,"y":880,"width":720,"height":363.953125},"viewport":{"width":1280,"height":1200},"scroll":{"x":0,"y":0}}
+B22 dragging true
+B22 before drop {"target":{"x":337,"y":1065.171875,"width":720,"height":66.390625},"list":{"x":337,"y":842,"width":720,"height":363.953125},"over":"true","scroll":{"x":0,"y":38}}
+B22 actual receipt {
+  "phase": "end",
+  "draggableId": "ai",
+  "mode": "FLUID",
+  "source": {
+    "index": 0,
+    "droppableId": "reactloom-channels"
+  },
+  "destination": {
+    "droppableId": "reactloom-channels",
+    "index": 4
+  },
+  "reason": "DROP",
+  "snapshotRevision": 0
+} 固定频道不可移动，也不能被跨越；顺序未改变
+
+exitCode=0

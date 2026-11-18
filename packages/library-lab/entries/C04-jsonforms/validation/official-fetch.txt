@@ -1,0 +1,31 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['python3', 'entries/C04-jsonforms/validation/fetch-official.py']
+startedAt: 2026-11-10T15:16:55.962139+00:00
+exit: 1
+Traceback (most recent call last):
+  File "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C04-jsonforms/validation/fetch-official.py", line 37, in <module>
+    manifest = json.loads(get(raw + '/packages/react/package.json'))
+                          ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C04-jsonforms/validation/fetch-official.py", line 16, in get
+    with urllib.request.urlopen(urllib.request.Request(url, headers={
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        'User-Agent': 'ReactLoom-Library-Lab-source-audit',
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    }), timeout=30) as response:
+    ^^^^^^^^^^^^^^^
+  File "/home/lambert/.local/share/mise/installs/python/3.15.2/lib/python3.15/urllib/request.py", line 187, in urlopen
+    return opener.open(url, data, timeout)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/home/lambert/.local/share/mise/installs/python/3.15.2/lib/python3.15/urllib/request.py", line 495, in open
+    response = meth(req, response)
+  File "/home/lambert/.local/share/mise/installs/python/3.15.2/lib/python3.15/urllib/request.py", line 604, in http_response
+    response = self.parent.error(
+        'http', request, response, code, msg, hdrs)
+  File "/home/lambert/.local/share/mise/installs/python/3.15.2/lib/python3.15/urllib/request.py", line 533, in error
+    return self._call_chain(*args)
+           ~~~~~~~~~~~~~~~~^^^^^^^
+  File "/home/lambert/.local/share/mise/installs/python/3.15.2/lib/python3.15/urllib/request.py", line 466, in _call_chain
+    result = func(*args)
+  File "/home/lambert/.local/share/mise/installs/python/3.15.2/lib/python3.15/urllib/request.py", line 613, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 404: Not Found

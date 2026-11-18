@@ -1,0 +1,226 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: pnpm exec biome check --write entries/B13-dnd-kit/examples entries/B13-dnd-kit/tests
+exit: 1
+
+entries/B13-dnd-kit/examples/example.tsx:91:21 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    89 │         {...attributes}
+    90 │         {...listeners}
+  > 91 │         aria-label={'拖动 ' + item.title}
+       │                     ^^^^^^^^^^^^^^^^^^^^
+    92 │         style={{ cursor: item.locked ? 'not-allowed' : 'grab', touchAction: 'none' }}
+    93 │       >
+  
+  i Unsafe fix: Use a template literal.
+  
+     89  89 │           {...attributes}
+     90  90 │           {...listeners}
+     91     │ - ········aria-label={'拖动·'·+·item.title}
+         91 │ + ········aria-label={`拖动·${item.title}`}
+     92  92 │           style={{ cursor: item.locked ? 'not-allowed' : 'grab', touchAction: 'none' }}
+     93  93 │         >
+  
+
+entries/B13-dnd-kit/examples/example.tsx:100:21 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+     98 │       <button
+     99 │         type="button"
+  > 100 │         aria-label={'上移 ' + item.title}
+        │                     ^^^^^^^^^^^^^^^^^^^^
+    101 │         disabled={!canMoveUp}
+    102 │         onClick={() => move(item.id, -1)}
+  
+  i Unsafe fix: Use a template literal.
+  
+     98  98 │         <button
+     99  99 │           type="button"
+    100     │ - ········aria-label={'上移·'·+·item.title}
+        100 │ + ········aria-label={`上移·${item.title}`}
+    101 101 │           disabled={!canMoveUp}
+    102 102 │           onClick={() => move(item.id, -1)}
+  
+
+entries/B13-dnd-kit/examples/example.tsx:108:21 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    106 │       <button
+    107 │         type="button"
+  > 108 │         aria-label={'下移 ' + item.title}
+        │                     ^^^^^^^^^^^^^^^^^^^^
+    109 │         disabled={!canMoveDown}
+    110 │         onClick={() => move(item.id, 1)}
+  
+  i Unsafe fix: Use a template literal.
+  
+    106 106 │         <button
+    107 107 │           type="button"
+    108     │ - ········aria-label={'下移·'·+·item.title}
+        108 │ + ········aria-label={`下移·${item.title}`}
+    109 109 │           disabled={!canMoveDown}
+    110 110 │           onClick={() => move(item.id, 1)}
+  
+
+entries/B13-dnd-kit/examples/example.tsx:149:7 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    147 │     commit(
+    148 │       moved,
+  > 149 │       '已调整 ' + (current.find((item) => item.id === activeId)?.title ?? activeId) + ' 的优先级',
+        │       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    150 │     )
+    151 │   }
+  
+  i Unsafe fix: Use a template literal.
+  
+    147 147 │       commit(
+    148 148 │         moved,
+    149     │ - ······'已调整·'·+·(current.find((item)·=>·item.id·===·activeId)?.title·??·activeId)·+·'·的优先级',
+        149 │ + ······`已调整·${current.find((item)·=>·item.id·===·activeId)?.title·??·activeId}·的优先级`,
+    150 150 │       )
+    151 151 │     }
+  
+
+entries/B13-dnd-kit/tests/pinned-order.test.mjs:17:8 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    15 │   ['fixed', fixed],
+    16 │ ]) {
+  > 17 │   test(name + ': pinned source and destination cannot move', () => {
+       │        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    18 │     assert.equal(canReorderAroundPinned(items, 2, 1), false)
+    19 │     assert.equal(canReorderAroundPinned(items, 1, 2), false)
+  
+  i Unsafe fix: Use a template literal.
+  
+    15 15 │     ['fixed', fixed],
+    16 16 │   ]) {
+    17    │ - ··test(name·+·':·pinned·source·and·destination·cannot·move',·()·=>·{
+       17 │ + ··test(`${name}:·pinned·source·and·destination·cannot·move`,·()·=>·{
+    18 18 │       assert.equal(canReorderAroundPinned(items, 2, 1), false)
+    19 19 │       assert.equal(canReorderAroundPinned(items, 1, 2), false)
+  
+
+entries/B13-dnd-kit/tests/pinned-order.test.mjs:21:8 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    19 │     assert.equal(canReorderAroundPinned(items, 1, 2), false)
+    20 │   })
+  > 21 │   test(name + ': cannot cross pinned slots in either direction', () => {
+       │        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    22 │     for (const [from, to] of [
+    23 │       [0, 4],
+  
+  i Unsafe fix: Use a template literal.
+  
+    19 19 │       assert.equal(canReorderAroundPinned(items, 1, 2), false)
+    20 20 │     })
+    21    │ - ··test(name·+·':·cannot·cross·pinned·slots·in·either·direction',·()·=>·{
+       21 │ + ··test(`${name}:·cannot·cross·pinned·slots·in·either·direction`,·()·=>·{
+    22 22 │       for (const [from, to] of [
+    23 23 │         [0, 4],
+  
+
+entries/B13-dnd-kit/tests/pinned-order.test.mjs:30:8 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    28 │       assert.equal(canReorderAroundPinned(items, from, to), false)
+    29 │   })
+  > 30 │   test(name + ': can move inside each unlocked segment', () => {
+       │        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    31 │     assert.equal(canReorderAroundPinned(items, 0, 1), true)
+    32 │     assert.equal(canReorderAroundPinned(items, 4, 3), true)
+  
+  i Unsafe fix: Use a template literal.
+  
+    28 28 │         assert.equal(canReorderAroundPinned(items, from, to), false)
+    29 29 │     })
+    30    │ - ··test(name·+·':·can·move·inside·each·unlocked·segment',·()·=>·{
+       30 │ + ··test(`${name}:·can·move·inside·each·unlocked·segment`,·()·=>·{
+    31 31 │       assert.equal(canReorderAroundPinned(items, 0, 1), true)
+    32 32 │       assert.equal(canReorderAroundPinned(items, 4, 3), true)
+  
+
+entries/B13-dnd-kit/tests/pinned-order.test.mjs:34:8 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    32 │     assert.equal(canReorderAroundPinned(items, 4, 3), true)
+    33 │   })
+  > 34 │   test(name + ': rejects invalid or no-op moves', () => {
+       │        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    35 │     for (const [from, to] of [
+    36 │       [-1, 0],
+  
+  i Unsafe fix: Use a template literal.
+  
+    32 32 │       assert.equal(canReorderAroundPinned(items, 4, 3), true)
+    33 33 │     })
+    34    │ - ··test(name·+·':·rejects·invalid·or·no-op·moves',·()·=>·{
+       34 │ + ··test(`${name}:·rejects·invalid·or·no-op·moves`,·()·=>·{
+    35 35 │       for (const [from, to] of [
+    36 36 │         [-1, 0],
+  
+
+entries/B13-dnd-kit/examples/example.tsx:97:23 lint/a11y/useAriaPropsSupportedByRole ━━━━━━━━━━━━━━━
+
+  × The ARIA attribute 'aria-label' is not supported by this element.
+  
+    95 │       </button>
+    96 │       <span style={{ flex: 1 }}>{item.title}</span>
+  > 97 │       {item.locked && <span aria-label="锁定">🔒</span>}
+       │                       ^^^^^^^^^^^^^^^^^^^^^^^^
+    98 │       <button
+    99 │         type="button"
+  
+  i Ensure that ARIA attributes are valid for the role of the element.
+  
+
+entries/B13-dnd-kit/examples/example.tsx:125:3 lint/correctness/useExhaustiveDependencies  FIXABLE  ━━━━━━━━━━
+
+  × This hook specifies more dependencies than necessary: level.
+  
+    123 │   const dataRevision = useRef(0)
+    124 │   const dragSession = useRef<DragSession | null>(null)
+  > 125 │   useEffect(() => {
+        │   ^^^^^^^^^
+    126 │     dragSession.current = null
+    127 │   }, [level])
+  
+  i Outer scope values aren't valid dependencies because mutating them doesn't re-render the component.
+  
+    125 │   useEffect(() => {
+    126 │     dragSession.current = null
+  > 127 │   }, [level])
+        │       ^^^^^
+    128 │   const visible = level === 'basic' ? items.slice(0, 3) : items
+    129 │   const sensors = useSensors(
+  
+  i React relies on hook dependencies to determine when to re-compute Effects.
+    Specifying more dependencies than required can lead to unnecessary re-rendering
+    and degraded performance.
+  
+  i Unsafe fix: Remove the extra dependencies from the list.
+  
+    127 │ ··},·[level])
+        │       -----  
+
+Skipped 20 suggested fixes.
+If you wish to apply the suggested (unsafe) fixes, use the command biome check --write --unsafe
+
+Checked 6 files in 10ms. Fixed 6 files.
+Found 2 errors.
+Found 8 infos.
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while applying fixes.
+  
+

@@ -1,0 +1,90 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=pnpm exec playwright test --config=.local-evidence/quality-playwright.config.ts e2e/quality-remediation-react-aria.spec.ts e2e/quality-remediation-react-resizable-panels.spec.ts e2e/quality-remediation-primitives-sources.spec.ts --grep @B12|@B16
+
+Running 8 tests using 2 workers
+
+(node:1607754) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1607753) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 e2e/quality-remediation-primitives-sources.spec.ts:10:3 › @B12 original fixed README and evidenced homepage blocked (1.4s)
+  ✓  1 e2e/quality-remediation-primitives-sources.spec.ts:10:3 › @B16 original fixed README and evidenced homepage unknown (1.9s)
+  ✘  4 e2e/quality-remediation-react-aria.spec.ts:65:1 › @B12 category filtering exposes disabled options, skips them on keyboard and has a real empty list (6.9s)
+(node:1608458) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  5 e2e/quality-remediation-react-aria.spec.ts:102:1 › @B12 real delayed suggestions align with latest query, form guard and open-Popover unmount (4.1s)
+  ✓  6 e2e/quality-remediation-react-resizable-panels.spec.ts:75:1 › @B16 actual dual panels: pointer commit, SDK keyboard constraints and physical layout (2.1s)
+  ✓  7 e2e/quality-remediation-react-resizable-panels.spec.ts:118:1 › @B16 actual three-panel boundaries, F6 focus and stable panel identity (1.9s)
+  ✓  8 e2e/quality-remediation-react-resizable-panels.spec.ts:147:1 › @B16 vertical axis, remount reset, narrow geometry and owned subtree unmount (2.3s)
+  ✘  3 e2e/quality-remediation-react-aria.spec.ts:27:1 › @B12 real keyboard selection submits key and edited text cannot reuse the old identity (30.1s)
+
+
+  1) e2e/quality-remediation-react-aria.spec.ts:27:1 › @B12 real keyboard selection submits key and edited text cannot reuse the old identity 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByTestId('b12-workshop').getByRole('button', { name: '提交真实表单', exact: true })
+
+
+      56 |   await expect.poll(async () => (await state(app)).selectedKey).toBeNull()
+      57 |   await combo.press('Escape')
+    > 58 |   await app.getByRole('button', { name: '提交真实表单', exact: true }).click()
+         |                                                                  ^
+      59 |   await expect(app.getByTestId('b12-submit-status')).toHaveText('请先从候选项确认一个有效频道')
+      60 |   await app.getByRole('button', { name: '清空选择', exact: true }).click()
+      61 |   await expect(combo).toHaveValue('')
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-react-aria.spec.ts:58:66
+
+    Error Context: test-results/quality-remediation-react--9a94c-nnot-reuse-the-old-identity/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-remediation-react--9a94c-nnot-reuse-the-old-identity/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-remediation-react--9a94c-nnot-reuse-the-old-identity/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) e2e/quality-remediation-react-aria.spec.ts:65:1 › @B12 category filtering exposes disabled options, skips them on keyboard and has a real empty list 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByRole('listbox')
+    Expected: 0
+    Received: 1
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByRole('listbox') with timeout 5000ms
+      - waiting for getByRole('listbox')
+        14 × locator resolved to 1 element
+           - unexpected value "1"
+
+
+      93 |   await expect(page.getByText('暂无匹配频道', { exact: true })).toBeVisible()
+      94 |   await combo.press('Escape')
+    > 95 |   await expect(page.getByRole('listbox')).toHaveCount(0)
+         |                                           ^
+      96 |   await expect(combo).toBeFocused()
+      97 |   await app.getByRole('button', { name: '清空选择', exact: true }).click()
+      98 |   expect((await state(app)).visibleIds).toHaveLength(7)
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-react-aria.spec.ts:95:43
+
+    Error Context: test-results/quality-remediation-react--b3b88-d-and-has-a-real-empty-list/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-remediation-react--b3b88-d-and-has-a-real-empty-list/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-remediation-react--b3b88-d-and-has-a-real-empty-list/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    e2e/quality-remediation-react-aria.spec.ts:27:1 › @B12 real keyboard selection submits key and edited text cannot reuse the old identity 
+    e2e/quality-remediation-react-aria.spec.ts:65:1 › @B12 category filtering exposes disabled options, skips them on keyboard and has a real empty list 
+  6 passed (32.0s)
+
+exitCode=1

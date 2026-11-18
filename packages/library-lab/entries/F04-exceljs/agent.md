@@ -1,45 +1,11 @@
-# F04 ExcelJS — 工程手册
+# F04 ExcelJS工程复用
 
-## 适用
+Node ESM，exceljs4.4.0 MIT。选择样式/冻结/公式对象XLSX输出；不是公式求值器或任意外部xlsx安全导入。安装后复制core.mjs、row-policy.mjs与所需入口，完整三场景+verify共六份；无React/env/Provider/CSS/服务。
 
-要样式、冻结表头和一份内存 xlsx。CSV 用 F03。不要把它当公式计算器。
+checkRows必须先于newWorkbook：1–500行，id NFC/trim、字母数字起始+字母数字_.:-、≤64码点，en-US小写去重；source非空trim≤160UTF16、C0/DEL拒绝，公式样前缀加字面撇号。ExcelJS普通字符串不会自动变formula；前缀是额外保守合同且改变值，不称所有下游CSV安全。仅受控SUM由显式formula/result对象生成。
 
-## 版本
+reads/stars非负安全整数，单项/合计≤999999999999999，保守15位预算非Excel数值最大值。先policy后Workbook；自产writeBuffer→新Workbook.load，不load外部用户ZIP/XLSX。外部导入/ZIPbomb/宏/流式/浏览器下载/桌面重算不支持。
 
-`exceljs@4.4.0`，MIT。API 是 `Workbook`、`addWorksheet`、`xlsx.writeBuffer`、`xlsx.load`。
+basic样式冻结无TOTAL summarynull；business SUM(C2:C4) cache115/17；advanced CLI追加第四条公式样source，TOTAL范围C2:C5且String撇号保留。缓存是JS预加总，不是ExcelJS算式执行。元数据固定不等ZIP字节必定相同。脚本可省最后参数，若给必须匹配入口场景；Lab cwd packages/library-lab，根命令加packages/library-lab前缀。
 
-## 迁移
-
-带走 `examples/core.mjs` 和 `examples/row-policy.mjs`。三个场景脚本只选 level。`checkRows` 必须在 `new ExcelJS.Workbook()` 之前。不要把流式 writer 或浏览器大文件路径一起抄走，除非产品单独验证。
-
-页面命令形如 `node entries/F04-exceljs/examples/basic.mjs basic`。脚本忽略多余参数。
-
-## 不可删的清理
-
-文本必须以字符串进入 `safeSpreadsheetText`，`= + - @` 加撇号。id 按 trim + en-US 小写去重。reads/stars 单项和合计都是非负整数，合计不超过 `999_999_999_999_999`。只 load 刚写出的字节。不写用户磁盘。
-
-## 反例
-
-- 省略 `result` 或把 `result` 说成已求值。
-- 用户字符串直接 `addRow`。
-- 无上限 `xlsx.load` 外部文件。
-- 在浏览器 Demo 里调用 Node streaming writer。
-- 用 `Number.isSafeInteger` 代替 15 位有效数字上限。
-- 绕过 `checkRows` 写行。
-- 把策略单测写成 SDK PASS。
-
-## 测试断言
-
-- 三层都冻结，B2 为 `React Updates`。
-- business/advanced 的 C 列公式是 `SUM(C2:C4)`，缓存 115。
-- HYPERLINK 文本读回为带撇号的字符串。
-- NaN、Infinity、非字符串、重复 id、过大合计在创建工作簿前拒绝。
-- `row-policy.test.mjs` 不 import exceljs。
-
-## 真实限制
-
-网页不启动 Node。公式不会在库内重算。夹具只有三行加一条恶意文本。没有中文字体或打印版式验收。
-
-## 证据
-
-sdk 收据只能来自真实执行 ExcelJS 的命令，并且写进 `docs/library-lab/evidence/runs/`。Actions 41779873259 不是 F04 PASS。browser 保持 NOT_RUN。
+SDK4/policy6与3CLI真实输出分记，网页只展示命令/源码/来源，browser主控不执行Node。无需文件/连接清理，仅本次内存引用。固定README_zh.md上游中文原字节，GitHub官网blocked；formal无匹配receipt保持NOT_RUN，详细命令/raw与剩余边界见local-validation。

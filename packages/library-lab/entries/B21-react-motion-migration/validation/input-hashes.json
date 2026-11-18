@@ -1,0 +1,117 @@
+{
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+  "checkedAt": "2026-11-10T14:55:39.500791+00:00",
+  "head": "1218066e706a90ba03fac8dff8c9b843dd2429c4",
+  "files": [
+    {
+      "path": "AGENTS.md",
+      "bytes": 486,
+      "sha256": "127bda59cc2fa11d77cd161681a418380b7e96dc401878ff7812abf07605acca"
+    },
+    {
+      "path": "library.json",
+      "bytes": 4499,
+      "sha256": "d8e08a53d088a5dc3e5cf2b0e9b29bad4baeff223323306d555eaa24b7b064fa"
+    },
+    {
+      "path": "guide.md",
+      "bytes": 9123,
+      "sha256": "1210c92d9352e7d8ec21182e5cc609969d030c1397bc3a43bbebfaf449cb7ec4"
+    },
+    {
+      "path": "agent.md",
+      "bytes": 3261,
+      "sha256": "abc2ff0db50af90477392ad996c9f565e18bd04716fb4b81f581951726587ca7"
+    },
+    {
+      "path": "verification.json",
+      "bytes": 516,
+      "sha256": "0c8cfa28a6f7c22f26382760b879985a721a212964147be3a058ab9fbb344971"
+    },
+    {
+      "path": "examples/example.tsx",
+      "bytes": 6464,
+      "sha256": "9d0fa25010172795d894de04a931798f204f4325962c5d563f68fff977d4f674"
+    },
+    {
+      "path": "examples/demo.tsx",
+      "bytes": 36,
+      "sha256": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038"
+    },
+    {
+      "path": "examples/presence-items.tsx",
+      "bytes": 2415,
+      "sha256": "4d6d3fb75a7f47e4fbd6774584ad4f091df6397bec82b53fb65fac0f4cf681b2"
+    },
+    {
+      "path": "examples/reduced-motion.ts",
+      "bytes": 656,
+      "sha256": "e98dbb4c4bbf92df472800de332d384af1dd86b53750c12e675dc61befe9f0f7"
+    },
+    {
+      "path": "examples/task-history.ts",
+      "bytes": 1684,
+      "sha256": "9e30f41a66d27a1fce3ed2d6ea79573c10b5d61085a09a73a65767d36d18da6b"
+    },
+    {
+      "path": "examples/migration.css",
+      "bytes": 737,
+      "sha256": "5303bed93d7d618364174939d4ace89151ac810f1d166347f81f27cd8666f025"
+    },
+    {
+      "path": "tests/sdk.test.mjs",
+      "bytes": 2003,
+      "sha256": "cefc0ba8d221a273d6c831f93df2fa261ebe7a44a6707ab2182a5d828d9e0a2a"
+    },
+    {
+      "path": "tests/task-history.test.mts",
+      "bytes": 1699,
+      "sha256": "a04bb11015be39e812ebde5538e9a2caedaae4f467c5121d01c1d4f23b5956fa"
+    },
+    {
+      "path": "official/readme.md",
+      "bytes": 7475,
+      "sha256": "08915bb5254a4bc1fd47e8d7ea8fff0dcb470461f6fd6b59fb6d2f0bef0400df"
+    },
+    {
+      "path": "official/legacy-readme.md",
+      "bytes": 15446,
+      "sha256": "affc2475f70368ce3f2c1bf02bd788f6967f1e73c1a7162806e3d04824b38b30"
+    },
+    {
+      "path": "official/source-evidence.json",
+      "bytes": 17100,
+      "sha256": "2be572ff61008203628687d944548abe474db0db4cfd6bca87e4d64687cb5e7e"
+    },
+    {
+      "path": "validation/sdk-source-audit.json",
+      "bytes": 8991,
+      "sha256": "4a15d94af923733a15dbdc5252666663e0b68080bec2f9d08d4edb58b5b2c3ed"
+    },
+    {
+      "path": "validation/metadata-check.mjs",
+      "bytes": 2380,
+      "sha256": "951f9bfb5948e651c11f579e1d3a8d6786779db9affdbf6d37b17504c4291b8b"
+    },
+    {
+      "path": "validation/browser-proposal.txt",
+      "bytes": 9398,
+      "sha256": "330f98495d9b6e64cf10c14f20a8ea4d6759d2ca4a6ca7cba59c4880efd6aeab"
+    },
+    {
+      "path": "validation/fetch-official.py",
+      "bytes": 3785,
+      "sha256": "f13ec58533f4ccd5b845667d86004c3f0343c7e96400a981e8bd156c15bfe6da"
+    },
+    {
+      "path": "validation/run-local.py",
+      "bytes": 1038,
+      "sha256": "cab7358dc09dea75dd59df5c3c04fb5c1e9c7bb2ed8bb6ede2a4350fbaf17608"
+    },
+    {
+      "path": "local-validation.md",
+      "bytes": 11947,
+      "sha256": "c8c11ae4553f08b62b92dc327c3ebbec00ed2d5601ff538951f0153cc0c22a92"
+    }
+  ]
+}

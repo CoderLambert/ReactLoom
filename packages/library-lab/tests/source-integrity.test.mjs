@@ -2,8 +2,10 @@ import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
 import test from 'node:test'
 import {
+  encodePublishedPath,
   MAX_SOURCE_BYTES,
   readBoundedSourceResponse,
+  sourceTextPath,
   validateSourceIndex,
   verifySourceIndexDigest,
 } from '../src/lib/source-integrity.mjs'
@@ -11,6 +13,23 @@ import {
 const sha = 'a'.repeat(64)
 const one = { path: 'examples/example.tsx', sha256: sha, bytes: 15 }
 const two = { path: 'examples/demo.tsx', sha256: 'b'.repeat(64), bytes: 10 }
+
+test('published source URLs round-trip through the actual static-server decoding policy', () => {
+  for (const source of [
+    'examples/react-grid-layout@2.3.0.patch',
+    'examples/中文 file.ts',
+    'examples/percent%2f.txt',
+  ]) {
+    const transport = sourceTextPath(source)
+    assert.equal(decodeURI(encodePublishedPath(transport)), transport)
+  }
+  assert.equal(
+    encodePublishedPath(sourceTextPath('examples/react-grid-layout@2.3.0.patch')),
+    'examples/react-grid-layout@2.3.0.patch.txt',
+  )
+  for (const path of ['//evil.test/a', '../secret', 'x?query=1', 'x#fragment', 'a\\b', 'https://x'])
+    assert.throws(() => encodePublishedPath(path), /Unsafe/)
+})
 
 test('source index selects declared paths in order without trusting unrelated source entries', () => {
   assert.deepEqual(validateSourceIndex([two, one], [one.path, two.path]), [one, two])

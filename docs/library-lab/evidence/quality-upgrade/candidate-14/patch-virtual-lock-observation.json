@@ -1,0 +1,7 @@
+{
+  "dependencyValuesOutsideAllowedPatchUnchanged": true,
+  "virtualLockExtraPaths": [
+    "/snapshots/react-grid-layout@2.3.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)"
+  ],
+  "reason": "pnpm virtual store retains old cached RGL snapshot as well as the new patched used snapshot"
+}

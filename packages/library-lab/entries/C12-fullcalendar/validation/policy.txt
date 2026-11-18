@@ -1,0 +1,16 @@
+{"label": "policy", "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab", "argv": ["node", "--test", "entries/C12-fullcalendar/tests/calendar-policy.test.mjs"], "start": "2026-11-10T16:13:19.671820+00:00", "end": "2026-11-10T16:13:19.737671+00:00", "exitCode": 0, "log": "policy.txt"}
+STDOUT
+✔ all day dates reject normalization and accept leap years (0.680571ms)
+✔ DST duplicated local wall time maps to different explicit-offset instants (0.266839ms)
+✔ never silently interpret zone-free, overflow, or unknown-offset timestamps (3.824366ms)
+✔ monotonic event identities survive repeated creation in same millisecond and collisions (0.4175ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 41.379906
+
+STDERR

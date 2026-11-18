@@ -1,0 +1,17 @@
+{
+  "validation/checkpoint-diff.txt": "043939cedb848dea3e7f9e18ff0644cd1d73a46d303186b85189782a7fdda1f9",
+  "validation/checkpoint-format-initial.txt": "404bf4077dea81827b4696cc2c4ff01f289df2889d80a4ff2293c6fede16e85b",
+  "validation/checkpoint-format.txt": "83ad10881312001b8c43071e69a1cf5cc52688c28f5b05fb2575d99682740c22",
+  "validation/checkpoint-types.txt": "63062d4f012ff6b6ca90ee7352de44e8e8b8a1bf2f06a883fdb1cfee981e236c",
+  "validation/diff-check.txt": "f0e5b70d36c34bdffc0d68b07147caff09c0b2184735a40bef4371b43579bc38",
+  "validation/final-inspection.txt": "13c65cd542bebcb7682082859721b07e191fccc3bcf5d4df6fbf322b7233d2be",
+  "validation/format-initial.txt": "8f42cee5e4346d8b0eb60e8f604b2f73f93826020b1c2dbb66ad6123cba5df11",
+  "validation/format-tests.txt": "4e5fc8af3edf557bbea2ed5127b5aa187f3340052b304adadd382701ae341e7a",
+  "validation/metadata.txt": "1c9a12b5e5196baa25eb8b20b2650eaff013e414bb7f0a774076945c7a502cde",
+  "validation/policy.txt": "123d407643cd0d7ebfadd1fe6b4553dfd2c53966c9ead90d5882558b745c2ad6",
+  "validation/proposal-format.txt": "8f5785c6eb99a4d8a62d5c8a79e1172a463e4f08715164b1ac35a65ff9380018",
+  "validation/proposal-types.txt": "49332c6ad4c0624e34dd7cd8ea9a73398610549b6cdbaf66430ca761ad5faa2a",
+  "validation/sdk.txt": "65dd3f9244fdfba27c7b968a1b63b2df33eb2b18639f4c3d3533b4f7f207863d",
+  "validation/source-fetch.txt": "d910d01875fcba0a3a606726c6bdac711dedf8c1457715ad08d10b4cb5ace370",
+  "validation/types.txt": "9209f9639219fceaa240abf32ad9d3b66fd94ed3e6ff9ecd482a14ef2339fbc7"
+}

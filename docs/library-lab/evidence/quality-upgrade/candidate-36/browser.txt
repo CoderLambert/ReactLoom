@@ -1,0 +1,58 @@
+[WebServer] (node:2516668) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:2516680) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 9 tests using 3 workers
+
+(node:2516732) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2516739) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2516733) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  3 e2e/quality-resume-f09-f12.spec.ts:8:3 › @F09 fixed official original and homepage fallback (1.6s)
+  ✓  2 e2e/quality-resume-f09-f12.spec.ts:8:3 › @F12 fixed official original and homepage fallback (1.8s)
+  ✓  1 e2e/quality-resume-f09-f12.spec.ts:8:3 › @F10 fixed official original and homepage fallback (1.8s)
+  ✓  4 e2e/quality-resume-f09-f12.spec.ts:34:3 › @F10 all three CLI scenarios display the checked-in command (977ms)
+  ✓  5 e2e/quality-resume-f09-f12.spec.ts:34:3 › @F12 all three CLI scenarios display the checked-in command (1.0s)
+  ✓  7 e2e/quality-resume-pdf-lib.spec.ts:57:1 › @F09 real URL replacement single flight and late local read unmount cleanup (1.6s)
+  ✓  6 e2e/quality-resume-pdf-lib.spec.ts:5:1 › @F09 actual create merge and local stamp downloads with error recovery (3.0s)
+  ✓  9 e2e/quality-resume-react-pdf.spec.ts:82:1 › @F07 invalid newest selection, level reset and unmount discard held file buffers (3.2s)
+  ✘  8 e2e/quality-resume-react-pdf.spec.ts:11:1 › @F07 real worker/canvas, text layer, paging, bounded geometry and corrupt recovery (30.0s)
+
+
+  1) e2e/quality-resume-react-pdf.spec.ts:11:1 › @F07 real worker/canvas, text layer, paging, bounded geometry and corrupt recovery 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.selectOption: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('region', { name: 'react-pdf 文档预览', exact: true }).getByLabel('缩放', { exact: true })
+
+
+      42 |   await page.getByRole('combobox', { name: '学习场景' }).selectOption('advanced')
+      43 |   await expect(app.locator('.react-pdf__Page__textContent')).toContainText('Page One: demo')
+    > 44 |   await app.getByLabel('缩放', { exact: true }).selectOption('1.5')
+         |                                               ^
+      45 |   await expect(app.locator('output')).toContainText('DPR 1')
+      46 |   await expect.poll(() => canvas.evaluate((node) => (node as HTMLCanvasElement).width)).toBe(1080)
+      47 |   await app.locator('input[type=file]').setInputFiles(originalPdf('Owned huge page', 5000, 3000))
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-resume-react-pdf.spec.ts:44:47
+
+    Error Context: test-results/quality-resume-react-pdf---b13ac-ometry-and-corrupt-recovery/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-resume-react-pdf---b13ac-ometry-and-corrupt-recovery/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-resume-react-pdf---b13ac-ometry-and-corrupt-recovery/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    e2e/quality-resume-react-pdf.spec.ts:11:1 › @F07 real worker/canvas, text layer, paging, bounded geometry and corrupt recovery 
+  8 passed (33.7s)
+undefined
+/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: playwright test e2e/quality-resume-react-pdf.spec.ts e2e/quality-resume-pdf-lib.spec.ts e2e/quality-resume-f09-f12.spec.ts --workers=3

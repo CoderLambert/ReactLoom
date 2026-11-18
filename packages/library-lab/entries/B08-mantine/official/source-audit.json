@@ -1,0 +1,88 @@
+{
+  "repository": "mantinedev/mantine",
+  "tag": "9.7.3",
+  "commit": "2d0a040f42011e791caf0bc56b9fbdd36ce55cef",
+  "targetPackage": "@mantine/core",
+  "path": "packages/@mantine/core/README.md",
+  "language": "en",
+  "version": "9.7.3",
+  "syncedAt": "2026-11-10T13:15:19.335704+00:00",
+  "sourceUrl": "https://github.com/mantinedev/mantine/blob/2d0a040f42011e791caf0bc56b9fbdd36ce55cef/packages/%40mantine/core/README.md",
+  "bytes": 343,
+  "sha256": "ffeb75cfc038afa93c1620b9b87fdb478c0e9239213459d2c37970ef1155cac5",
+  "treeUrl": "https://api.github.com/repos/mantinedev/mantine/git/trees/2d0a040f42011e791caf0bc56b9fbdd36ce55cef?recursive=1",
+  "treeTruncated": false,
+  "readmeCandidates": [
+    ".demo/README.md",
+    ".demo/images/README.md",
+    "README.md",
+    "apps/help.mantine.dev/README.md",
+    "apps/mantine.dev/README.md",
+    "packages/@docs/demos/README.md",
+    "packages/@docs/styles-api/README.md",
+    "packages/@mantine-tests/core/README.md",
+    "packages/@mantine-tests/dates/README.md",
+    "packages/@mantine/carousel/README.md",
+    "packages/@mantine/charts/README.md",
+    "packages/@mantine/code-highlight/README.md",
+    "packages/@mantine/colors-generator/README.md",
+    "packages/@mantine/core/README.md",
+    "packages/@mantine/dates/README.md",
+    "packages/@mantine/dropzone/README.md",
+    "packages/@mantine/emotion/README.md",
+    "packages/@mantine/form/README.md",
+    "packages/@mantine/hooks/README.md",
+    "packages/@mantine/lightbox/README.md",
+    "packages/@mantine/mcp-server/README.md",
+    "packages/@mantine/modals/README.md",
+    "packages/@mantine/notifications/README.md",
+    "packages/@mantine/nprogress/README.md",
+    "packages/@mantine/schedule/README.md",
+    "packages/@mantine/spotlight/README.md",
+    "packages/@mantine/store/README.md",
+    "packages/@mantine/tiptap/README.md",
+    "packages/@mantine/vanilla-extract/README.md",
+    "packages/@mantinex/colors-generator/README.md",
+    "packages/@mantinex/demo/README.md",
+    "packages/@mantinex/dev-icons/README.md",
+    "packages/@mantinex/mantine-header/README.md",
+    "packages/@mantinex/mantine-logo/README.md",
+    "packages/@mantinex/mantine-meta/README.md",
+    "scripts/plop/templates/README.md"
+  ],
+  "selectionReason": "Full pinned tree inspected; no official Chinese README candidate. Core package original selected; hooks and complete project originals preserved separately.",
+  "additionalReadmes": [
+    {
+      "path": "packages/@mantine/hooks/README.md",
+      "snapshotPath": "official/hooks-readme.md",
+      "bytes": 334,
+      "sha256": "2d84a962bf521e3080ff3662c8c8cd99749373a5391335cd65fef9b734da9c22"
+    },
+    {
+      "path": "README.md",
+      "snapshotPath": "official/project-readme.md",
+      "bytes": 3799,
+      "sha256": "ed3f723d83c74199aca418eb2a277f2e5ad3d34442a69fb2e9690cce3572f15e"
+    }
+  ],
+  "packages": [
+    {
+      "path": "packages/@mantine/core/package.json",
+      "name": "@mantine/core",
+      "version": "9.7.3",
+      "peerDependencies": {
+        "@mantine/hooks": "9.7.3",
+        "react": "^19.2.0",
+        "react-dom": "^19.2.0"
+      }
+    },
+    {
+      "path": "packages/@mantine/hooks/package.json",
+      "name": "@mantine/hooks",
+      "version": "9.7.3",
+      "peerDependencies": {
+        "react": "^19.2.0"
+      }
+    }
+  ]
+}

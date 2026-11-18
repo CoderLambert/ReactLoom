@@ -4,14 +4,8 @@
   "slug": "leaflet",
   "name": "Leaflet",
   "group": "A",
-  "summary": "无需远程底图的地点数据浏览、图层与地图交互",
-  "tags": [
-    "map",
-    "geo",
-    "tile policy",
-    "offline",
-    "accessibility"
-  ],
+  "summary": "无瓦片的真实地图：经纬度与GeoJSON、稳定点图层筛选、局部更新和视口/卸载所有权",
+  "tags": ["地图", "经纬度", "SVG", "本地数据", "生命周期"],
   "contentState": "recreated",
   "packages": [
     {
@@ -21,16 +15,16 @@
   ],
   "references": [
     {
-      "title": "Leaflet 官方 API",
-      "url": "https://leafletjs.com/reference.html"
+      "title": "匹配1.9.4官方API",
+      "url": "https://leafletjs.com/reference-1.9.4.html"
     },
     {
-      "title": "Leaflet 快速开始",
-      "url": "https://leafletjs.com/examples/quick-start/"
+      "title": "1.9.4官方README原文",
+      "url": "https://github.com/Leaflet/Leaflet/blob/d15112c9e8ac339f0f74f563959d0423d291308d/README.md"
     },
     {
-      "title": "npm 1.9.4",
-      "url": "https://www.npmjs.com/package/leaflet"
+      "title": "匹配版本Map与生命周期源码",
+      "url": "https://github.com/Leaflet/Leaflet/blob/d15112c9e8ac339f0f74f563959d0423d291308d/src/map/Map.js"
     }
   ],
   "related": [
@@ -48,66 +42,85 @@
   "demos": [
     {
       "demoId": "basic",
-      "title": "坐标点与地图交互",
+      "title": "经纬度、覆盖物与真实视口",
       "level": "basic",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
-        "examples/example.tsx",
         "examples/demo.tsx",
+        "examples/example.tsx",
+        "examples/location-data.ts",
+        "examples/map-controller.ts",
+        "examples/location-policy.ts",
         "examples/station-factory.ts",
-        "examples/location-policy.ts"
+        "examples/workshop.css"
       ],
-      "capabilities": [
-        "ResizeObserver",
-        "cleanup",
-        "offline"
-      ]
+      "capabilities": ["svg", "resize-observer", "pointer", "keyboard", "local-data"],
+      "description": "3个本地点以真实circleMarker投影，观察[lat,lng]与GeoJSON[lng,lat]、弹窗、键盘与视口。"
     },
     {
       "demoId": "business",
-      "title": "新闻来源覆盖与过滤",
+      "title": "过滤、稳定图层与安全弹窗",
       "level": "business",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
-        "examples/example.tsx",
         "examples/demo.tsx",
+        "examples/example.tsx",
+        "examples/location-data.ts",
+        "examples/map-controller.ts",
+        "examples/location-policy.ts",
         "examples/station-factory.ts",
-        "examples/location-policy.ts"
+        "examples/workshop.css"
       ],
-      "capabilities": [
-        "ResizeObserver",
-        "cleanup",
-        "offline"
-      ]
+      "capabilities": ["svg", "resize-observer", "pointer", "keyboard", "local-data"],
+      "description": "筛选3→2点并回落选择；仍可见图层保持身份，选中只改样式、不销毁弹窗或重置相机。"
     },
     {
       "demoId": "advanced",
-      "title": "实时点位更新、离线与清理",
+      "title": "有界更新、尺寸与地图所有权",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
-        "examples/example.tsx",
         "examples/demo.tsx",
-        "examples/station-factory.ts",
+        "examples/example.tsx",
+        "examples/location-data.ts",
+        "examples/map-controller.ts",
         "examples/location-policy.ts",
-        "tests/location-policy.test.mts"
+        "examples/station-factory.ts",
+        "examples/workshop.css"
       ],
-      "capabilities": [
-        "ResizeObserver",
-        "cleanup",
-        "offline"
-      ]
+      "capabilities": ["svg", "resize-observer", "pointer", "keyboard", "local-data"],
+      "description": "真实setLatLng、40个额外点/删除后恢复容量、空态、invalidateSize、显式重建及remove清理。"
     }
   ],
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
-    "note": "本次基于官方Leaflet 1.9 API独立实现本地演示；旧验收不继承。"
+    "note": "保留无远程瓦片、原创网格、安全DOM弹窗、选中回落和40个额外点上限；以稳定id复用CircleMarker并局部setLatLng/样式更新，观察真实getter/视口和完整Map清理。纯策略与浏览器地图执行分开。"
   },
   "license": {
     "spdx": "BSD-2-Clause",
     "assets": "不包含任何远程瓦片、第三方图片或地图素材。"
+  },
+  "official": {
+    "readme": {
+      "repository": "Leaflet/Leaflet",
+      "commit": "d15112c9e8ac339f0f74f563959d0423d291308d",
+      "path": "README.md",
+      "sourceUrl": "https://github.com/Leaflet/Leaflet/blob/d15112c9e8ac339f0f74f563959d0423d291308d/README.md",
+      "snapshotPath": "official/readme.md",
+      "language": "en",
+      "version": "1.9.4",
+      "syncedAt": "2026-11-10T12:09:25.882163+00:00",
+      "sha256": "85c5270e168a1f0021605f7bceaf2ef8fd5a6d195392a242c1f25b833fe91b5f"
+    },
+    "homepage": {
+      "url": "https://leafletjs.com/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-10T12:09:25.882163+00:00",
+      "reason": "官网GET在urllib与curl均因TLS unexpected EOF失败（curl退出35），没有收到HTTP响应头，无法判定XFO/CSP；保留两次真实错误及直达，Lab-origin浏览器未运行，不宣称allowed或blocked。"
+    }
   }
 }

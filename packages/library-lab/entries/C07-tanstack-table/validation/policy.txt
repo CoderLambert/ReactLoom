@@ -1,0 +1,31 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+ARGV: ["pnpm", "test:policy", "--entry=C07"]
+START: 2026-11-10T10:16:08.040628+00:00
+END: 2026-11-10T10:16:08.332456+00:00
+EXIT: 0
+STDOUT:
+
+> @reactloom/library-lab@0.1.0 test:policy /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+> node scripts/policy-runner.mjs --entry=C07
+
+Pure entry policy suites selected: 1 (not SDK evidence)
+✔ keeps valid page (0.946407ms)
+✔ clamps stale server pages when count shrinks (0.093686ms)
+✔ empty count has no out-of-range page (0.06632ms)
+✔ invalid indexes and non-positive sizes fall back to page zero (0.083347ms)
+✔ fractional indices are floored and negative totals bounded (0.076526ms)
+✔ request key includes every server-owned query dimension (0.191904ms)
+✔ request key refuses ambiguous or unsupported parameters (0.308317ms)
+✔ new request aborts the old owner and stale cleanup cannot cancel the new owner (0.175413ms)
+✔ A→B→A rejects late original A even when the request identity repeats (0.13739ms)
+✔ settled page stays visible only until the next invalidation revision (0.144892ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 43.428062
+
+STDERR:

@@ -1,0 +1,21 @@
+{
+  "command": [
+    "pnpm",
+    "exec",
+    "playwright",
+    "test",
+    "--config=.local-evidence/quality-playwright.config.ts",
+    "quality-remediation-next.spec.ts",
+    "a06-approval.spec.ts",
+    "p0-risk-lifecycle.spec.ts",
+    "quality-remediation.spec.ts",
+    "--grep",
+    "@A01|@A06|@B09|cumulative deltas"
+  ],
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+  "startedAt": "2026-11-10T09:51:10.439562+00:00",
+  "finishedAt": "2026-11-10T09:51:31.936473+00:00",
+  "exitCode": 0,
+  "implicitBuild": false,
+  "log": "docs/library-lab/evidence/quality-upgrade/candidate-03/browser-initial.txt"
+}

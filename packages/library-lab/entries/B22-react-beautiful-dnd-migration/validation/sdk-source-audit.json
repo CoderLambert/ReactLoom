@@ -1,0 +1,76 @@
+{
+  "package": {
+    "name": "@hello-pangea/dnd",
+    "version": "18.0.1",
+    "license": "Apache-2.0",
+    "peerDependencies": {
+      "react": "^18.0.0 || ^19.0.0",
+      "react-dom": "^18.0.0 || ^19.0.0"
+    }
+  },
+  "legacyDirectDependency": false,
+  "legacyExecuted": false,
+  "publicExports": [
+    "DragDropContext",
+    "Draggable",
+    "Droppable",
+    "useKeyboardSensor",
+    "useMouseSensor",
+    "useTouchSensor"
+  ],
+  "resetServerContextExported": false,
+  "files": [
+    {
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@hello-pangea+dnd@18.0.1_@types+react@19.3.0_react-dom@19.3.0_react@19.3.0__react@19.3.0/node_modules/@hello-pangea/dnd/dist/dnd.esm.js",
+      "sha256": "2ac97ad6b7dc8aeb1d94fcc53f030c84b253b5a7eb638bf22451163a2b109c52",
+      "excerpts": [
+        {
+          "key": "const beforeStart =",
+          "offset": 87428,
+          "source": "\n          mode\n        };\n        fn(before);\n      }\n    });\n  };\n  const beforeStart = (critical, mode) => {\n    !!dragging ? process.env.NODE_ENV !== \"production\" ? invariant(false, 'Cannot fire onBeforeDragStart as a drag start has already been published') : invariant() : void 0;\n    withTimings('onBeforeDragStart', () => {\n      const fn = getResponders().onBeforeDragStart;\n      if (fn) {\n        fn(getDragStart(critical, mode));\n      }\n    });\n  };\n  const start = (critical, mode) => {\n    !!dragging ? process.env.NODE_ENV !== \"production\" ? invariant(false, 'Cannot fire onBeforeDragStart as a drag start has already been published') : invariant() : void 0;\n    const data = getDragStart(critical, mode);\n    dragging = {\n      mode,\n      lastCritical: critical,\n      lastLocation: data.source,\n      l"
+        },
+        {
+          "key": "asyncMarshal.add(() =>",
+          "offset": 88206,
+          "source": ",\n      lastLocation: data.source,\n      lastCombine: null\n    };\n    asyncMarshal.add(() => {\n      withTimings('onDragStart', () => execute(getResponders().onDragStart, data, announce, preset.onDragStart));\n    });\n  };\n  const update = (critical, impact) => {\n    const location = tryGetDestination(impact);\n    const combine = tryGetCombine(impact);\n    !dragging ? process.env.NODE_ENV !== \"production\" ? invariant(false, 'Cannot fire onDragMove when onDragStart has not been called') : invariant() : void 0;\n    const hasCriticalChanged = !isCriticalEqual(critical, dragging.lastCritical);\n    if (hasCriticalChanged) {\n      dragging.lastCritical = critical;\n    }\n    const hasLocationChanged = !areLocationsEqual(dragging.lastLocation, location);\n    if (hasLocationChanged) {\n      dragging.lastLocation = loca"
+        },
+        {
+          "key": "function DragDropContext(",
+          "offset": 169126,
+          "source": "dren));\n}\n\nfunction useUniqueContextId() {\n  return React.useId();\n}\n\nfunction DragDropContext(props) {\n  const contextId = useUniqueContextId();\n  const dragHandleUsageInstructions = props.dragHandleUsageInstructions || preset.dragHandleUsageInstructions;\n  return React.createElement(ErrorBoundary, null, setCallbacks => React.createElement(App, {\n    nonce: props.nonce,\n    contextId: contextId,\n    setCallbacks: setCallbacks,\n    dragHandleUsageInstructions: dragHandleUsageInstructions,\n    enableDefaultSensors: props.enableDefaultSensors,\n    sensors: props.sensors,\n    onBeforeCapture: props.onBeforeCapture,\n    onBeforeDragStart: props.onBeforeDragStart,\n    onDragStart: props.onDragStart,\n    onDragUpdate: props.onDragUpdate,\n    onDragEnd: props.onDragEnd,\n    autoScrollerOptions: props.autoScrollerOpt"
+        },
+        {
+          "key": "function useStyleMarshal(",
+          "offset": 121783,
+          "source": "ttribute('nonce', nonce);\n  }\n  el.type = 'text/css';\n  return el;\n};\nfunction useStyleMarshal(contextId, nonce) {\n  const styles = useMemo(() => getStyles$1(contextId), [contextId]);\n  const alwaysRef = useRef(null);\n  const dynamicRef = useRef(null);\n  const setDynamicStyle = useCallback(memoizeOne(proposed => {\n    const el = dynamicRef.current;\n    !el ? process.env.NODE_ENV !== \"production\" ? invariant(false, 'Cannot set dynamic style element if it is not set') : invariant() : void 0;\n    el.textContent = proposed;\n  }), []);\n  const setAlwaysStyle = useCallback(proposed => {\n    const el = alwaysRef.current;\n    !el ? process.env.NODE_ENV !== \"production\" ? invariant(false, 'Cannot set dynamic style element if it is not set') : invariant() : void 0;\n    el.textContent = proposed;\n  }, []);\n  useIsomorph"
+        },
+        {
+          "key": "remove(alwaysRef)",
+          "offset": 123436,
+          "source": "ad().removeChild(current);\n        ref.current = null;\n      };\n      remove(alwaysRef);\n      remove(dynamicRef);\n    };\n  }, [nonce, setAlwaysStyle, setDynamicStyle, styles.always, styles.resting, contextId]);\n  const dragging = useCallback(() => setDynamicStyle(styles.dragging), [setDynamicStyle, styles.dragging]);\n  const dropping = useCallback(reason => {\n    if (reason === 'DROP') {\n      setDynamicStyle(styles.dropAnimating);\n      return;\n    }\n    setDynamicStyle(styles.userCancel);\n  }, [setDynamicStyle, styles.dropAnimating, styles.userCancel]);\n  const resting = useCallback(() => {\n    if (!dynamicRef.current) {\n      return;\n    }\n    setDynamicStyle(styles.resting);\n  }, [setDynamicStyle, styles.resting]);\n  const marshal = useMemo(() => ({\n    dragging,\n    dropping,\n    resting\n  }), [dragging"
+        }
+      ]
+    },
+    {
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@hello-pangea+dnd@18.0.1_@types+react@19.3.0_react-dom@19.3.0_react@19.3.0__react@19.3.0/node_modules/@hello-pangea/dnd/dist/dnd.d.ts",
+      "sha256": "39cec3d65003f318688e3a4d0afe09727ca2d588d4c157a6dcbfeee57a63f5b0",
+      "excerpts": [
+        {
+          "key": "function DragDropContext(",
+          "offset": 5765,
+          "source": "   */\n    autoScrollerOptions?: PartialAutoScrollerOptions;\n}\ndeclare function DragDropContext(props: DragDropContextProps): React.JSX.Element;\n\ninterface DraggingStyle {\n    position: 'fixed';\n    top: number;\n    left: number;\n    boxSizing: 'border-box';\n    width: number;\n    height: number;\n    transition: string;\n    transform?: string;\n    zIndex: number;\n    opacity?: number;\n    pointerEvents: 'none';\n}\ninterface NotDraggingStyle {\n    transform?: string;\n    transition?: 'none';\n}\ntype DraggableStyle = DraggingStyle | NotDraggingStyle;\ninterface DraggableProvidedDraggableProps {\n    style?: DraggableStyle;\n    'data-rfd-draggable-context-id': ContextId;\n    'data-rfd-draggable-id': DraggableId;\n    onTransitionEnd?: TransitionEventHandler;\n}\ninterface DraggableProvidedDragHandleProps {\n    'data-rfd"
+        },
+        {
+          "key": "interface DropResult",
+          "offset": 1534,
+          "source": " combine: Combine<TId> | null;\n}\ntype DropReason = 'DROP' | 'CANCEL';\ninterface DropResult<TId extends string = string> extends DragUpdate<TId> {\n    reason: DropReason;\n}\ntype Announce = (message: string) => void;\ninterface ResponderProvided {\n    announce: Announce;\n}\ntype OnBeforeCaptureResponder<TId extends string = string> = (before: BeforeCapture<TId>) => void;\ntype OnBeforeDragStartResponder<TId extends string = string> = (start: DragStart<TId>) => void;\ntype OnDragStartResponder<TId extends string = string> = (start: DragStart<TId>, provided: ResponderProvided) => void;\ntype OnDragUpdateResponder<TId extends string = string> = (update: DragUpdate<TId>, provided: ResponderProvided) => void;\ntype OnDragEndResponder<TId extends string = string> = (result: DropResult<TId>, provided: ResponderProvided) => "
+        },
+        {
+          "key": "onBeforeDragStart?:",
+          "offset": 2399,
+          "source": " = string> {\n    onBeforeCapture?: OnBeforeCaptureResponder<TId>;\n    onBeforeDragStart?: OnBeforeDragStartResponder<TId>;\n    onDragStart?: OnDragStartResponder<TId>;\n    onDragUpdate?: OnDragUpdateResponder<TId>;\n    onDragEnd: OnDragEndResponder<TId>;\n}\ninterface StopDragOptions {\n    shouldBlockNextClick: boolean;\n}\ninterface DragActions {\n    drop: (args?: StopDragOptions) => void;\n    cancel: (args?: StopDragOptions) => void;\n    isActive: () => boolean;\n    shouldRespectForcePress: () => boolean;\n}\ninterface FluidDragActions extends DragActions {\n    move: (clientSelection: Position) => void;\n}\ninterface SnapDragActions extends DragActions {\n    moveUp: () => void;\n    moveDown: () => void;\n    moveRight: () => void;\n    moveLeft: () => void;\n}\ninterface PreDragActions {\n    isActive: () => boolean;\n  "
+        }
+      ]
+    }
+  ]
+}

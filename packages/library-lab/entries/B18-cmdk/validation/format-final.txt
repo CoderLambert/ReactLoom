@@ -1,0 +1,3 @@
+Checked 16 files in 11ms. Fixed 6 files.
+
+exitCode=0

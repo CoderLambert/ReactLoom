@@ -1,0 +1,16 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['pnpm', 'exec', 'node', '--test', 'entries/C14-date-fns/tests/sdk.test.mjs']
+startedAt: 2026-11-10T17:02:07.475891+00:00
+exit: 0
+✔ actual shared TZDate calendar parser enforces its modern range and rejects overflow (11.803151ms)
+✔ actual shared scheduling distinguishes calendar days, elapsed hours and bounded results (0.96326ms)
+✔ actual advanced contract consumes only its explicit instant and resolves distinct fallback offsets (1.13969ms)
+✔ actual shared contract produces the same schedule under three host TZ settings (1649.793874ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2241.248377

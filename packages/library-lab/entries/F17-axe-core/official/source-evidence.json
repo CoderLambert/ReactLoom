@@ -1,0 +1,20 @@
+{
+  "commit": "e797173108eadfa4355fe06af331791734e1757f",
+  "files": {
+    "README.md": {
+      "bytes": 10519,
+      "sha256": "b994303ff0df0a44d9bd2fb0faf2ff49670844379f3796047f48e8cb8b9edfaf"
+    },
+    "LICENSE": {
+      "bytes": 15921,
+      "sha256": "af175b9d96ee93c21a036152e1b905b0b95304d4ae8c2c921c7609100ba8df7e"
+    },
+    "package.json": {
+      "bytes": 7062,
+      "sha256": "62f446da9db76957850cffefc6b119f4ef5d67e610b2452e7de5758576ab82dd"
+    }
+  },
+  "readmeCandidates": [
+    "README.md"
+  ]
+}

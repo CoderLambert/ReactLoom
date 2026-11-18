@@ -1,0 +1,1 @@
+After browser validation, corrected E18 guide maintenance pointer official/local-validation.md to local-validation.md. Documentation-only; no executable source changed. Subsequent catalogue generation will include the correction, no SDK or browser rerun is needed.

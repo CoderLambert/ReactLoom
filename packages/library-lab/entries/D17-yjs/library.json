@@ -5,14 +5,7 @@
   "name": "Yjs",
   "group": "D",
   "summary": "Y.Doc 双副本离线编辑、状态向量和 CRDT 增量合并",
-  "tags": [
-    "CRDT",
-    "Yjs",
-    "离线协作",
-    "update",
-    "state-vector",
-    "冲突合并"
-  ],
+  "tags": ["CRDT", "Yjs", "离线协作", "update", "state-vector", "冲突合并"],
   "contentState": "recreated",
   "packages": [
     {
@@ -67,7 +60,8 @@
         "examples/example.tsx",
         "examples/update-transport.mjs",
         "examples/update-transport.d.mts",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/runtime.ts"
       ],
       "capabilities": []
     },
@@ -82,7 +76,8 @@
         "examples/example.tsx",
         "examples/update-transport.mjs",
         "examples/update-transport.d.mts",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/runtime.ts"
       ],
       "capabilities": []
     },
@@ -97,7 +92,8 @@
         "examples/example.tsx",
         "examples/update-transport.mjs",
         "examples/update-transport.d.mts",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/runtime.ts"
       ],
       "capabilities": []
     }
@@ -110,5 +106,25 @@
     "originalRecovery": "ORIGINAL_RECOVERED",
     "mode": "recreated",
     "note": "2026-10-27依据Yjs 13.6.33官方文档重新实现，未继承历史SDK通过记录。"
+  },
+  "official": {
+    "readme": {
+      "repository": "yjs/yjs",
+      "commit": "9ea3a4fb57b814292ce18dfd13c4f422e44e6c5c",
+      "path": "README.md",
+      "sha256": "9837b068bb474af12fc3fa9c0b1759eb7dc1aa3ec8ba89b77eb30d36385b92a9",
+      "sourceUrl": "https://github.com/yjs/yjs/blob/9ea3a4fb57b814292ce18dfd13c4f422e44e6c5c/README.md",
+      "snapshotPath": "official/readme.md",
+      "language": "en",
+      "version": "13.6.33",
+      "syncedAt": "2026-11-17T16:49:55.674323+00:00"
+    },
+    "homepage": {
+      "url": "https://docs.yjs.dev/",
+      "kind": "website",
+      "status": "blocked",
+      "checkedAt": "2026-11-17T16:49:55.674323+00:00",
+      "reason": "实际 GET 响应 CSP frame-ancestors https: ionic: capacitor: 明确排除当前 http://127.0.0.1:4319 与 http://localhost:4319 Lab origin；原始响应头见 official/source-evidence.json，保留官网直达。"
+    }
   }
 }

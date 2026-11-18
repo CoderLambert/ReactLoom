@@ -1,0 +1,13 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node --test entries/A12-react-konva/tests/sdk.test.mjs
+exit: 0
+✔ real react-konva reconciliation preserves stable nodes and updates actual Konva props (7.305219ms)
+✔ real renderer replaces event props and removes its owned handlers on unmount (1.071169ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 92.623045

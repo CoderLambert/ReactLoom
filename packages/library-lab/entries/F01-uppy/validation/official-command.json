@@ -1,0 +1,10 @@
+{
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "argv": [
+    "node",
+    "--input-type=module",
+    "-e",
+    "import fs from 'node:fs';import crypto from 'node:crypto';import {validateOfficialSources} from './packages/library-lab/src/lib/official-sources.mjs';const p='packages/library-lab/entries/F01-uppy/';const d=JSON.parse(fs.readFileSync(p+'library.json'));const e=validateOfficialSources(d.official);const hash=crypto.createHash('sha256').update(fs.readFileSync(p+'official/readme.md')).digest('hex');if(hash!==d.official.readme.sha256)e.push('hash mismatch');console.log(JSON.stringify({errors:e,hash,package:JSON.parse(fs.readFileSync('packages/library-lab/node_modules/@uppy/core/package.json')).version,license:JSON.parse(fs.readFileSync('packages/library-lab/node_modules/@uppy/core/package.json')).license}));if(e.length)process.exit(1)"
+  ],
+  "exitCode": 0
+}

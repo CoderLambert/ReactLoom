@@ -1,0 +1,10 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ["node", "--input-type=module", "-e", "import assert from 'node:assert/strict';import{readFile,stat}from'node:fs/promises';import{createHash}from'node:crypto';import{validateEntry}from'./src/lib/catalog.mjs';import{entryCompletenessIssues}from'./scripts/entry-gate.mjs';const r='entries/B01-motion-for-react/';const e=JSON.parse(await readFile(r+'library.json'));assert.deepEqual(validateEntry(e),[]);assert.deepEqual(entryCompletenessIssues(e,{guide:true,agent:true,agents:true,verification:true}),[]);const paths=new Set(e.demos.flatMap(d=>d.sourceFiles));assert.equal(paths.size,6);for(const p of paths)assert.ok((await stat(r+p)).isFile());const b=await readFile(r+'official/readme.md');assert.equal(b.length,7475);assert.equal(createHash('sha256').update(b).digest('hex'),e.official.readme.sha256);const ev=JSON.parse(await readFile(r+'official/source-evidence.json'));assert.equal(ev.package.data.version,'14.6.0');assert.equal(ev.tree.truncated,false);assert.equal(e.official.homepage.status,'unknown');assert.ok(Object.values(JSON.parse(await readFile(r+'verification.json'))).every(x=>x.status==='NOT_RUN'));console.log('B01 intermediate metadata/3 goals/6 source files/README7475B/hash/fixed14.6.0/unknown/formalNOT_RUN PASS; docs/browser incomplete')"]
+startedAt: 2026-11-10T12:26:57.733055+00:00
+finishedAt: 2026-11-10T12:26:57.767089+00:00
+exitCode: 0
+
+STDOUT
+B01 intermediate metadata/3 goals/6 source files/README7475B/hash/fixed14.6.0/unknown/formalNOT_RUN PASS; docs/browser incomplete
+
+STDERR

@@ -5,13 +5,7 @@
   "name": "react-konva",
   "group": "A",
   "summary": "React 19.3 声明式二维画布与编辑状态",
-  "tags": [
-    "React",
-    "Canvas",
-    "Konva",
-    "drag",
-    "accessibility"
-  ],
+  "tags": ["React", "Canvas", "Konva", "drag", "accessibility"],
   "contentState": "recreated",
   "packages": [
     {
@@ -59,9 +53,11 @@
       "sourceFiles": [
         "examples/example.tsx",
         "examples/demo.tsx",
-        "examples/stage-policy.ts"
+        "examples/stage-policy.ts",
+        "examples/styles.css"
       ],
-      "capabilities": []
+      "capabilities": [],
+      "description": "React状态驱动真实Canvas与同源数据表，DOM移动按钮和原生键盘提供等价操作"
     },
     {
       "demoId": "business",
@@ -72,9 +68,11 @@
       "sourceFiles": [
         "examples/example.tsx",
         "examples/demo.tsx",
-        "examples/stage-policy.ts"
+        "examples/stage-policy.ts",
+        "examples/styles.css"
       ],
-      "capabilities": []
+      "capabilities": [],
+      "description": "真实拖拽预览后提交受限世界坐标，保持稳定id与声明式Stage"
     },
     {
       "demoId": "advanced",
@@ -85,12 +83,11 @@
       "sourceFiles": [
         "examples/example.tsx",
         "examples/demo.tsx",
-        "examples/stage-policy.ts"
+        "examples/stage-policy.ts",
+        "examples/styles.css"
       ],
-      "capabilities": [
-        "cleanup",
-        "interaction"
-      ]
+      "capabilities": ["cleanup", "interaction"],
+      "description": "24节点上限、增删、仅锁拖拽，容器响应式缩放不改变世界坐标，卸载释放"
     }
   ],
   "provenance": {
@@ -100,5 +97,25 @@
   "license": {
     "spdx": "MIT",
     "assets": "全部用本地原创演示数据；无商用图片或收费资源。"
+  },
+  "official": {
+    "readme": {
+      "repository": "konvajs/react-konva",
+      "commit": "c89132f5c9ac5a47db1c7c6b6fd1012452df2e01",
+      "path": "README.md",
+      "sha256": "d68e0efcca393b46e93a75b673d3a91e880b17f9de8760ba29fb65be93fbae7b",
+      "sourceUrl": "https://github.com/konvajs/react-konva/blob/c89132f5c9ac5a47db1c7c6b6fd1012452df2e01/README.md",
+      "language": "en",
+      "version": "19.3.2",
+      "syncedAt": "2026-11-10T11:50:53.166158+00:00",
+      "snapshotPath": "official/readme.md"
+    },
+    "homepage": {
+      "url": "https://konvajs.org/docs/react/index.html",
+      "kind": "website",
+      "status": "blocked",
+      "checkedAt": "2026-11-10T11:50:53.166158+00:00",
+      "reason": "官方React入口GET200；响应头X-Frame-Options: SAMEORIGIN禁止Lab跨源嵌入，展示原因及直达。完整最终响应见official/homepage-response.json。"
+    }
   }
 }

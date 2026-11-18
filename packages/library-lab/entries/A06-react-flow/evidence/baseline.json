@@ -1,0 +1,26 @@
+{
+  "capturedAt": "2026-11-10T09:40:09.591658+00:00",
+  "head": "1218066e706a90ba03fac8dff8c9b843dd2429c4",
+  "fileCount": 18,
+  "entrySha256": "8f8ada8455a09fedcc7308f315e20906403bd16853dece9ecadaa7a11d450473",
+  "files": {
+    "AGENTS.md": "8b129d64406a634bd3bce99712b060360ec76473340573ea645e9886e97f0cd5",
+    "agent.md": "795ffba3b0b76621d9eed2d53be45754465a8012de20d3e0d92ebd20a636aaa8",
+    "examples/approval-designer.tsx": "7353d94f711f0c9fd7fea57a2feb9e086623f80116723044e0af3bd17506c44a",
+    "examples/approval-model.ts": "e1a275844e78eef963cb24c8bb014cc11d3a7ecd7d4580e21e39248d38c6a987",
+    "examples/approval-runtime.ts": "0708817f0d2078f7fb02220824f3c1aed2fdb72da25838f5d484bf1411f25e4b",
+    "examples/approval-storage.ts": "c71713227b303e6106f4d699dc3fe817dbfed06c733deef8070feaa23a693b17",
+    "examples/approval-workbench.css": "9499b343ddc48fc47d17d6d0447e3bf7d2c031e631486624dff50948bc8a0f9a",
+    "examples/approval-workbench.tsx": "b87515938f99872a73e870cdb69aa54662b990048a2b5af4f50fbbfc425cc190",
+    "examples/demo.tsx": "254591932548c36c414610bd0d0c7ce7ef1648162f1996fbbe7381b8c1751690",
+    "examples/example.tsx": "bc5afcdf41c8de2f2b762aa32dd55fc859a6f8b1f584972900ae415a14e4a72b",
+    "examples/graph-rules.ts": "8c013fada9d42c5711bbc28e8173858c7fd4ff031106923f8cce2f98f295ffac",
+    "examples/workflow-preset.ts": "d97271b11c3a8bdc6eec727eb380752dd16353ec9030dca11fbdde9a415ef2c5",
+    "guide.md": "d4dce8e6d2840c940e10d845d9fb7f675fb53829eb08a2b72921573d90da05e8",
+    "library.json": "27b7a8744317a901e3647ede80f88ebee3cbc9d6793190f70d7b96fc3be592d5",
+    "tests/approval.test.mts": "7069a621c73320008c9d64e5faf759d7193d29e2f3bec187b22daab44e1753d2",
+    "tests/graph-rules.test.mts": "de5e5105b5a3300e14742c527f98b6b775c036966bb87b78ec35bf683b42abc4",
+    "tests/workflow-preset.test.mts": "1d2d87052001e5221dd0d57657d34fc80c52a55191b3c3038b2cf60877bc50f6",
+    "verification.json": "93161d35966301900d8c236f7ce42a177c0f64243e5fe5cecb78430e7a7f283b"
+  }
+}

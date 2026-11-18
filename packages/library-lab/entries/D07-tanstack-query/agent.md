@@ -1,65 +1,29 @@
-# D07 TanStack Query — 工程手册
+# D07 TanStack Query 复用指南
 
-## 适用
+版本@tanstack/react-query5.104.1（MIT），React peer18/19。适合共享异步服务端快照；HTTP、鉴权、表单草稿和数据库一致性不是Query职责。
 
-共享的服务端快照：按键去重、失效、取消、分页和带版本的写入。HTTP 细节留在 Ky、Axios 或 API client。表单草稿和主题留在组件或 Zustand。
+## 核心入口与迁移
 
-不要把 Query 当成数据库或鉴权。已有 Redux 中心时先比较 RTK Query，避免两套缓存。
+先读library/guide、实际example/cache-primer、shared-query/query-keys、fixture-backend、optimistic-policy和verification。最小共享实验从CachePrimer+sharedStatsOptions理解同键observer；业务保留原列表/搜索/分页与按行mutation。完整源码和CSS均在sourceFiles，相对导入，无Lab内部依赖。shared-query使用.ts导入便于同源Node验证，独立TS项目需要allowImportingTsExtensions或调整该导入写法。
 
-## 版本
+useState创建本例独立QueryClient与backend；卸载client.clear只清自己。Provider另负责mount/unmount。真实产品在稳定应用边界持有client，SSR每请求独立。fixture不走HTTP；新增来源、延迟、请求序号和409是业务模拟，不是SDK能力。
 
-`@tanstack/react-query@5.104.1`，MIT。对象 API。`gcTime`、`isPending` 与 `isFetching` 按 v5 理解。
+## 三个目标
 
-Lab 的 client 默认 `retry: false`。这是示例选择，不是官方默认（查询失败通常会重试）。不要把 5.104.5 写进依赖。
+- basic：两个真实useQuery调用同一keys.stats与sharedStatsOptions，同client共享在途和fresh数据；600ms请求，3秒stale窗口。A初始9/5/request1，B不增加一次请求；stale不自动轮询。修改fixture不直接改cache，invalidate后旧值保留后台刷新到10/6/request2。为控制实验关闭focus/reconnect自动刷新，不冒称SDK默认。
+- business：keys包含tenant/search/page；提交搜索、换页、A/B identity独立。列表3秒、统计10秒。无placeholderData；迁移如引入需明确身份与旧数据展示约定。
+- advanced：cancelQueries只取消本租户列表，signal到pause；pending+idle显示已停止并能refetch。一次409开关消费后复原，错误按行回滚；成功采用权威rev。真实mutation不可因为取消等待就声称服务端回滚。
 
-## 迁移
+## 不可删的所有权
 
-从 [`examples/example.tsx`](examples/example.tsx) 带走键工厂、独立 `QueryClient`、fixture 的 signal，以及 [`examples/optimistic-policy.mjs`](examples/optimistic-policy.mjs)。`demo.tsx` 只重导出。
+cancelQueries→只快照目标行→optimisticRow(id/rev/token)→rollbackRow或commitRow。不要恢复整页旧数据，晚回调不能覆盖更新token。tenantEpoch切团队/卸载递增，A→B→A旧提示不复活。onSettled只在同租户最后一个mutation时invalidate，inFlightRows只做UI同ID防连点，scope不是数据库事务。
 
-每个演示实例在卸载时 `clear()` 自己。不要去清宿主的全局 client。
+queryFn必须转发signal。读取延迟timer在abort清理；toggle的240ms写入没有AbortSignal，卸载client.clear不停止已开始mutation，但旧epoch不写UI。不要清宿主client或全局存储。
 
-搜索使用提交后的字符串。不要在 `onChange` 里直接改 queryKey，除非产品确定每个按键都是一次新查询。
+## 验证
 
-## 不可删的清理
+控件：basic挂载/卸载第二组件、修改本地源、后台刷新；d07-observer-a/b的data-stale/data-fetch-status和d07-stat-value-a/b，d07-shared-key。业务/进阶d07-query-key、d07-query-state、d07-fetching、d07-row-a-1等与d07-message。
 
-`queryFn` 必须使用入参 `signal`。列表取消按钮取消 `keys.feeds(tenant)`。
+断言同键请求序号一致且fresh挂载不重取；3秒后stale仍idle；刷新保留旧数据；不同tenant不串。取消初始无数据不永久加载，重新获取恢复。409保留其他行/其他团队，token与revision匹配，重试成功rev增加。卸载不污染宿主缓存与旧提示。
 
-乐观路径：`cancelQueries` → 只快照目标行 → `optimisticRow` 写入 token → 失败 `rollbackRow` → 成功 `commitRow`。token 或 `rev` 对不上就保持原页。
-
-`tenantEpoch` 在切换和卸载时增加。写提示前比较 epoch 和租户。`onSettled` 在仍有其他同键 mutation 时不要失效。
-
-`inFlightRows` 只防连点。服务端仍用 `rev` 做比较并交换。
-
-## 反例
-
-- queryKey 只有 `['feeds']`。
-- 键里放 `Date.now()`。
-- 丢掉 `signal`，或另造一个用不上的 AbortController。
-- `response.ok` 为假仍返回 JSON。
-- 渲染函数里 `new QueryClient()`。
-- 原地 `push` 改缓存。
-- 失败时恢复整页旧快照。
-- 无条件占位数据跨租户显示。
-- 切团队后仍提交上一轮的成功文案。
-- 把 `placeholderData` 加回去却不检查键。
-
-## 测试断言
-
-- 两个租户的缓存条目不互相覆盖。
-- `cancelQueries` 会 abort 传给 queryFn 的 signal。
-- 乐观补丁只改匹配 id 且 `rev` 相符、尚未持有 token 的行。
-- 回滚只恢复仍属于该 token 的行，保留同页其他编辑。
-- 迟到的错误不能撤销更新的 token。
-- 提交使用服务端 `rev`，并去掉临时 token。
-- 缺页、缺行时原样返回，不制造空页。
-- `tests/sdk.test.mjs` 构造真实 QueryClient。无收据则 NOT_RUN。
-
-## 真实限制
-
-fixture 不走网络。延迟和 409 是本地开关。没有 SSR 脱水，没有持久化，没有 `placeholderData`。UI 串行 scope 不等于数据库事务。
-
-`staleTime` 10 秒和 3 秒是演示。生产按数据变化速度另定，并记住默认值是 0。
-
-## 证据
-
-sdk、build、browser 保持 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有匹配收据。Actions 41779873259 不是本条目 PASS。不要改 `verification.json`。
+tests/sdk.test.mjs实际执行QueryClient并复用本例键/options/backend；optimistic-policy是纯策略。Node与浏览器/正式收据分别报告，未跑不标PASS。固定官方README commit29859ae60c8dca0a5cdbf8abccc775b655cf43e2，英文目标包原文；官网XFO DENY而blocked。来源与本地结果见local-validation.md。

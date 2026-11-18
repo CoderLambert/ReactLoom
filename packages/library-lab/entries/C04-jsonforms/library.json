@@ -4,13 +4,8 @@
   "slug": "jsonforms",
   "name": "JSON Forms",
   "group": "C",
-  "summary": "通过 JSON Schema 与 UI Schema 构建可校验的业务表单",
-  "tags": [
-    "Schema-driven",
-    "表单",
-    "校验",
-    "RSS"
-  ],
+  "summary": "真实Schema表单、HIDE与payload分离、字段回填及可取消的本地提交快照",
+  "tags": ["Schema-driven", "表单", "校验", "RSS"],
   "contentState": "recreated",
   "packages": [
     {
@@ -32,12 +27,16 @@
   ],
   "references": [
     {
-      "title": "React 官方集成",
+      "title": "匹配3.8.0官方React原文",
+      "url": "https://github.com/eclipsesource/jsonforms/blob/6075bcee93205c8fbe1f88eec19ed9058ad0f965/packages/react/README.md"
+    },
+    {
+      "title": "React官方集成",
       "url": "https://jsonforms.io/docs/integrations/react/"
     },
     {
-      "title": "JSON Forms 源码",
-      "url": "https://github.com/eclipsesource/jsonforms"
+      "title": "校验与additionalErrors",
+      "url": "https://jsonforms.io/docs/validation/"
     }
   ],
   "related": [
@@ -55,54 +54,80 @@
   "demos": [
     {
       "demoId": "basic",
-      "title": "最小入门",
+      "title": "Schema 驱动控件与校验",
       "level": "basic",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx",
         "examples/submission-policy.mjs",
-        "examples/submission-policy.d.mts"
+        "examples/submission-policy.d.mts",
+        "examples/forms.css",
+        "examples/demo.tsx"
       ],
-      "description": "真实 SDK 入门交互"
+      "description": "真实Vanilla控件与SDK onChange，初始校验通知和草稿同源",
+      "capabilities": ["forms", "schema-validation", "conditional-fields"]
     },
     {
       "demoId": "business",
-      "title": "业务实战",
+      "title": "HIDE 与提交白名单",
       "level": "business",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx",
         "examples/submission-policy.mjs",
-        "examples/submission-policy.d.mts"
+        "examples/submission-policy.d.mts",
+        "examples/forms.css",
+        "examples/demo.tsx"
       ],
-      "description": "订阅中心业务场景"
+      "description": "manual隐藏RSS控件但保留data，明确payload删url并提交已通知草稿快照",
+      "capabilities": ["forms", "schema-validation", "conditional-fields"]
     },
     {
       "demoId": "advanced",
-      "title": "错误与边界",
+      "title": "字段错误、提交快照与取消",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx",
         "examples/submission-policy.mjs",
-        "examples/submission-policy.d.mts"
+        "examples/submission-policy.d.mts",
+        "examples/forms.css",
+        "examples/demo.tsx"
       ],
-      "description": "竞态、错误与边界条件"
+      "description": "模拟422/409通过additionalErrors回填，编辑/取消/重置/卸载失效旧任务",
+      "capabilities": ["forms", "schema-validation", "conditional-fields"]
     }
   ],
   "provenance": {
     "collection": "RFL-20261023",
     "originalRecovery": "ORIGINAL_RECOVERED",
-    "note": "旧研究归档仅供审查，本页面内容与示例重新编写，未继承旧环境测试的PASS"
+    "note": "保留已恢复的真实JSONForms/Vanilla及payload规则；本轮增加冻结快照和回调所有权、正常排版与官方原文，不继承旧PASS。"
   },
   "license": {
     "spdx": "MIT",
     "assets": "仅使用自制 fixture，不包含第三方媒体或企业授权资源"
+  },
+  "official": {
+    "readme": {
+      "repository": "eclipsesource/jsonforms",
+      "commit": "6075bcee93205c8fbe1f88eec19ed9058ad0f965",
+      "path": "packages/react/README.md",
+      "sourceUrl": "https://github.com/eclipsesource/jsonforms/blob/6075bcee93205c8fbe1f88eec19ed9058ad0f965/packages/react/README.md",
+      "snapshotPath": "official/readme.md",
+      "version": "3.8.0",
+      "language": "en",
+      "syncedAt": "2026-11-10T15:21:53.091029+00:00",
+      "sha256": "618f7fb0bccfab2827effb645a0759a38a0d27b545194ae9a73cb8ab9e32aa0b"
+    },
+    "homepage": {
+      "url": "https://jsonforms.io/",
+      "kind": "website",
+      "status": "blocked",
+      "checkedAt": "2026-11-10T15:21:48.431541+00:00",
+      "reason": "官网GET200完整响应含X-Frame-Options SAMEORIGIN及强制CSP frame-ancestors 'self'，限制跨源Lab；正文NOT_READ，不将HTTP200冒充iframe允许。"
+    }
   }
 }

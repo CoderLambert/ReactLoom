@@ -4,15 +4,8 @@
   "slug": "nuqs",
   "name": "nuqs",
   "group": "C",
-  "summary": "URL 搜索参数的类型安全状态、路由适配、push/replace 和 IME 约束",
-  "tags": [
-    "URL状态",
-    "TanStack Router",
-    "参数解析",
-    "历史记录",
-    "IME",
-    "搜索"
-  ],
+  "summary": "共享URL筛选、关联参数与真实历史：明确区分草稿/SDK状态/地址栏及当前Router兼容桥",
+  "tags": ["URL状态", "TanStack Router", "参数解析", "历史记录", "IME", "搜索"],
   "contentState": "recreated",
   "packages": [
     {
@@ -54,54 +47,60 @@
   "demos": [
     {
       "demoId": "basic",
-      "title": "查询词作为URL状态",
-      "description": "字符串 parser 与查询词分享",
+      "title": "查询分享与输入草稿",
+      "description": "显式应用、刷新恢复、null清除和组合输入草稿",
       "level": "basic",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx",
+        "examples/tanstack-adapter.tsx",
+        "examples/query-contract.mjs",
+        "examples/query-contract.d.mts",
         "examples/url-policy.mjs",
-        "examples/url-policy.d.mts"
+        "examples/url-policy.d.mts",
+        "examples/styles.css",
+        "examples/demo.tsx"
       ],
-      "capabilities": [
-        "history"
-      ]
+      "capabilities": ["history"]
     },
     {
       "demoId": "business",
-      "title": "RSS 搜索筛选与分页",
-      "description": "分组、查询、分页联合回写URL",
+      "title": "联合筛选与分页",
+      "description": "单次query/group/page更新与默认replace，空态恢复",
       "level": "business",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx",
+        "examples/tanstack-adapter.tsx",
+        "examples/query-contract.mjs",
+        "examples/query-contract.d.mts",
         "examples/url-policy.mjs",
-        "examples/url-policy.d.mts"
+        "examples/url-policy.d.mts",
+        "examples/styles.css",
+        "examples/demo.tsx"
       ],
-      "capabilities": [
-        "history"
-      ]
+      "capabilities": ["history"]
     },
     {
       "demoId": "advanced",
-      "title": "浏览器返回与非法参数",
-      "description": "push/replace历史策略和越界归一",
+      "title": "历史、深链接与解析边界",
+      "description": "真实push/replace/BackForward，非法原值与业务夹取、逻辑数组/hash",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx",
+        "examples/tanstack-adapter.tsx",
+        "examples/query-contract.mjs",
+        "examples/query-contract.d.mts",
         "examples/url-policy.mjs",
-        "examples/url-policy.d.mts"
+        "examples/url-policy.d.mts",
+        "examples/styles.css",
+        "examples/demo.tsx"
       ],
-      "capabilities": [
-        "history"
-      ]
+      "capabilities": ["history"]
     }
   ],
   "license": {
@@ -111,6 +110,26 @@
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
     "mode": "recreated",
-    "note": "参考 nuqs v2.10.1 官方 API 与 TanStack Router adapter，尚未实测"
+    "note": "保留前缀键、原清洗/页夹取与basic忽略隐藏group；共享真实SDK合同、显式草稿和联合history策略，当前版本用公开custom adapter桥修复to/query边界。真实旧失败和未测分层，不继承历史PASS。"
+  },
+  "official": {
+    "readme": {
+      "repository": "47ng/nuqs",
+      "commit": "691a473226bba0ddb93bc3a1010c8fa4e777c45f",
+      "path": "README.md",
+      "sourceUrl": "https://github.com/47ng/nuqs/blob/691a473226bba0ddb93bc3a1010c8fa4e777c45f/README.md",
+      "snapshotPath": "official/readme.md",
+      "version": "2.10.1（npm gitHead；源码manifest0.0.0-semantically-released）",
+      "language": "en",
+      "syncedAt": "2026-11-10T17:58:57.733168+00:00",
+      "sha256": "de5eb7cbf51d0a8c0eecd79146a7e61e6dadfbd0132f3f26a73f91fa569d66eb"
+    },
+    "homepage": {
+      "url": "https://nuqs.dev",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-10T17:58:56.749661+00:00",
+      "reason": "实际GET200的rawHeaders未见XFO/CSP限制，但未从Lab origin确认iframe内容可用，保守unknown，完整请求证据在本地维护记录。"
+    }
   }
 }

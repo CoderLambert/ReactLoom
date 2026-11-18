@@ -1,14 +1,14 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "SDK test 源码存在但尚未执行，不得宣称通过"
+    "note": "本地sdk证据见local-validation.md及candidate-24；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
   },
   "build": {
     "status": "NOT_RUN",
-    "note": "目标依赖未在本执行环境实际完成构建"
+    "note": "本地build证据见local-validation.md及candidate-24；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "Playwright与真实浏览器尚未执行"
+    "note": "本地browser证据见local-validation.md及candidate-24；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
   }
 }

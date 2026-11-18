@@ -1,0 +1,27 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["pnpm", "exec", "biome", "check", "--write", "packages/library-lab/entries/C16-luxon/library.json", "packages/library-lab/entries/C16-luxon/verification.json", "packages/library-lab/entries/C16-luxon/validation/metadata-check.mjs"], "utc": "2026-11-10T17:37:40.397575+00:00", "exit": 0}
+packages/library-lab/entries/C16-luxon/validation/metadata-check.mjs:85:7 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    83 │     assert.ok(
+    84 │       resolveDocumentUrl(target, 'C16', '/', entry.official.readme.snapshotPath),
+  > 85 │       name + ': rejected link ' + target,
+       │       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    86 │     )
+    87 │     documentLinks.push(target)
+  
+  i Unsafe fix: Use a template literal.
+  
+     83  83 │       assert.ok(
+     84  84 │         resolveDocumentUrl(target, 'C16', '/', entry.official.readme.snapshotPath),
+     85     │ - ······name·+·':·rejected·link·'·+·target,
+         85 │ + ······`${name}:·rejected·link·${target}`,
+     86  86 │       )
+     87  87 │       documentLinks.push(target)
+  
+
+Skipped 1 suggested fixes.
+If you wish to apply the suggested (unsafe) fixes, use the command biome check --write --unsafe
+
+Checked 3 files in 7ms. Fixed 2 files.
+Found 1 info.

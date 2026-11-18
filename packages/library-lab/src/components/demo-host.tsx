@@ -3,6 +3,7 @@ import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
 const WorkerHost = lazy(() => import('./worker-host'))
 const IsolatedMswPanel = lazy(() => import('./isolated-msw-panel'))
 const IsolatedGanttPanel = lazy(() => import('./isolated-gantt-panel'))
+const BuildReport = lazy(() => import('./build-report'))
 
 import { ErrorBoundary } from 'react-error-boundary'
 import { demoLoaders } from '../generated/loaders'
@@ -14,6 +15,7 @@ import { packageInstallCommand } from '../lib/package-source.mjs'
 import { reproductionCommand } from '../lib/reproduction.mjs'
 import { requestGeneratedResource } from '../lib/resource-fetch.mjs'
 import {
+  encodePublishedPath,
   readBoundedSourceResponse,
   sourceTextPath,
   validateSourceIndex,
@@ -81,7 +83,7 @@ function SourceViewer({
     setLoadedKey('')
     setVerified(false)
     setCopyState('')
-    const encoded = sourceTextPath(current.path).split('/').map(encodeURIComponent).join('/')
+    const encoded = encodePublishedPath(sourceTextPath(current.path))
     requestGeneratedResource(
       import.meta.env.BASE_URL + 'raw/' + entryId + '/sources/' + encoded,
       async (response) => {
@@ -341,6 +343,11 @@ export default function DemoHost({
         </Suspense>
       )}
       <SourceViewer entryId={entry.entryId} demo={demo} indexDigest={entry.sourceIndexSha256} />
+      {entry.entryId === 'F18' && (
+        <Suspense fallback={<p role="status">正在读取构建摘要…</p>}>
+          <BuildReport available={entry.buildSummaryAvailable ?? false} />
+        </Suspense>
+      )}
     </>
   )
 }

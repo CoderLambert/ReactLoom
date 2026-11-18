@@ -1,0 +1,15 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node --test entries/B06-ant-design/tests/sdk.test.mjs
+exit: 0
+Real antd SSR basic bytes: 697
+Real antd SSR Form/Table bytes: 1693
+✔ real antd theme token generation and basic components render with React SSR (41.508791ms)
+✔ real Form field bindings and stable Table rowKey render from the same fixture (35.985997ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 748.654601

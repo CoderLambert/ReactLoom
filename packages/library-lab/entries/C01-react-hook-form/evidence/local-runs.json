@@ -1,0 +1,208 @@
+{
+  "kind": "local validation, not verify:record receipt",
+  "runs": [
+    {
+      "name": "metadata",
+      "command": [
+        "node",
+        "--input-type=module",
+        "-e",
+        "import assert from 'node:assert/strict'; import {readFile,stat} from 'node:fs/promises'; import {createHash} from 'node:crypto';import {validateEntry} from './src/lib/catalog.mjs';import {entryCompletenessIssues} from './scripts/entry-gate.mjs';const root='entries/C01-react-hook-form/';const e=JSON.parse(await readFile(root+'library.json','utf8'));assert.deepEqual(validateEntry(e),[]);assert.deepEqual(entryCompletenessIssues(e,{guide:true,agent:true,agents:true,verification:true}),[]);for(const p of new Set(e.demos.flatMap(d=>d.sourceFiles)))assert.ok((await stat(root+p)).isFile(),p);const raw=await readFile(root+e.official.readme.snapshotPath);assert.equal(createHash('sha256').update(raw).digest('hex'),e.official.readme.sha256);assert.equal(e.official.readme.language,'zh-CN');assert.deepEqual(e.demos.map(d=>d.level),['basic','business','advanced']);console.log('C01 metadata, 3 original levels, source files and official V7 Chinese README digest: PASS');"
+      ],
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "startedAt": "2026-11-10T09:56:25.772288+00:00",
+      "finishedAt": "2026-11-10T09:56:25.797145+00:00",
+      "exitCode": 0,
+      "log": "evidence/metadata.log",
+      "logSha256": "57c0a672624b448265cc05f3115db92f50e4b1f4d85b9b078770ce117e43b174"
+    },
+    {
+      "name": "biome-metadata",
+      "command": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "check",
+        "--write",
+        "entries/C01-react-hook-form/library.json",
+        "entries/C01-react-hook-form/verification.json",
+        "entries/C01-react-hook-form/official/source-evidence.json"
+      ],
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "startedAt": "2026-11-10T09:56:25.797247+00:00",
+      "finishedAt": "2026-11-10T09:56:26.004133+00:00",
+      "exitCode": 0,
+      "log": "evidence/biome-metadata.log",
+      "logSha256": "ae30e48c2c0c98ea1af7f54906e827bb2fdcfc1ea52c839be634c6d296f3a014"
+    },
+    {
+      "name": "biome-final",
+      "command": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "check",
+        "entries/C01-react-hook-form/examples",
+        "entries/C01-react-hook-form/tests",
+        "entries/C01-react-hook-form/library.json",
+        "entries/C01-react-hook-form/verification.json",
+        "entries/C01-react-hook-form/official/source-evidence.json"
+      ],
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "startedAt": "2026-11-10T09:57:12.558489+00:00",
+      "finishedAt": "2026-11-10T09:57:12.777254+00:00",
+      "exitCode": 0,
+      "log": "evidence/biome.log",
+      "logSha256": "dedc1ebd649d40f813de3584da15b32b552ef39e7990bd298c5ece860de7852c"
+    }
+  ],
+  "reusedToolRuns": [
+    {
+      "name": "sdk-policy",
+      "command": [
+        "node",
+        "--test",
+        "entries/C01-react-hook-form/tests/sdk.test.mjs",
+        "entries/C01-react-hook-form/tests/form-policy.test.mjs",
+        "entries/C01-react-hook-form/tests/url-policy.test.mjs"
+      ],
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "exitCode": 0,
+      "result": "3 real SDK and 8 pure policy tests passed; no failures/skips",
+      "log": "evidence/sdk-policy.log",
+      "capture": "Actual full stdout copied from tool result; original run timestamp was not separately captured. No rerun solely for logging."
+    },
+    {
+      "name": "entry-typecheck",
+      "command": [
+        "pnpm",
+        "exec",
+        "--",
+        "tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--target",
+        "ES2022",
+        "--lib",
+        "ES2022,DOM,DOM.Iterable",
+        "--module",
+        "ESNext",
+        "--moduleResolution",
+        "Bundler",
+        "--jsx",
+        "react-jsx",
+        "--strict",
+        "--skipLibCheck",
+        "--esModuleInterop",
+        "--allowSyntheticDefaultImports",
+        "--allowImportingTsExtensions",
+        "--types",
+        "vite/client,node",
+        "entries/C01-react-hook-form/examples/demo.tsx"
+      ],
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "exitCode": 0,
+      "log": "evidence/typecheck.log",
+      "capture": "Actual tool result had empty stdout/stderr and exit0; no rerun. Source files unchanged since execution."
+    }
+  ],
+  "entryInputs": {
+    ".gitignore": "e94e66ba76eb63521b7889cdc3841f1d224c0205870a63767cbf7621de034cae",
+    "AGENTS.md": "ef15a5849c82f7447961696b1d8919083821367af3e8b3fe4985de75f8189862",
+    "agent.md": "2a4d56ca49320f50d55fded7561569355d2f332298503bb631a78240b4a52cc3",
+    "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+    "examples/example.tsx": "1adf49c1643317e024cbe46f78f86f81bc78e8af8e1c32e5e538c88624d7517f",
+    "examples/feed-url-policy.d.mts": "33cf1ecab9a77dc05d8a3b775a0854373a40c7bdd7255b6045f95ab85cb2932e",
+    "examples/feed-url-policy.mjs": "f8d38ebbe66d487a587454669672059d076acf904635d59ae4c3a0d3f04c3f9e",
+    "examples/form-policy.d.mts": "61f035ab9cd8e11a43ac7cf39de8b73ecce70922f3bd0ee979973deec36f14c9",
+    "examples/form-policy.mjs": "5c319f80a6bd7285721eb418d185f9dd28db37950f20c38fe666d5b986fa148d",
+    "examples/workshop.css": "3024ff0e5d00e71135114d86715cc667b5355da7b66b4aae05a3114141dc04d2",
+    "guide.md": "bf3c7a2c05e5d6768c69811d22888ab3954ccf709d51e65978029ce53c493f38",
+    "library.json": "5e532e2a4a28e19dce3146e92c319a3650cd9c168ee3b02cbf654f46f2602b40",
+    "official/readme.md": "f1679b5992e2d473fac51c70d62661becf2c8878cfdf67f31c5a935f367d5518",
+    "official/source-evidence.json": "7dcaf8a2edb41ac6c7300d82d873b09314b94381102872bd65e88881f0045218",
+    "tests/form-policy.test.mjs": "0cb01e3d8500617d5b2b55138ff5e1dd3703b99dbb0314406043a7c0e859a964",
+    "tests/sdk.test.mjs": "bb0737bebc4c022ab9a8c705ab0949849a20d810ba314503c1506d0aa9058652",
+    "tests/url-policy.test.mjs": "53e53048e78dbc18b2f9436ee8279fa2eeb3522a05a5afc6982e3b7236ae9480",
+    "verification.json": "cb4c3f3f91de69961c8ef62989acda71dba90d1db0998fbb623d38d97b6929b7"
+  },
+  "runtimeStatus": "Current DOM/browser NOT_RUN, planned @C01 coverage owned by main agent.",
+  "beforeClickFixEntryInputs": {
+    ".gitignore": "e94e66ba76eb63521b7889cdc3841f1d224c0205870a63767cbf7621de034cae",
+    "AGENTS.md": "ef15a5849c82f7447961696b1d8919083821367af3e8b3fe4985de75f8189862",
+    "agent.md": "069bd883e38e2950e433fa19e570263194e250c128f70bfef162a52c1957fb79",
+    "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+    "examples/example.tsx": "6897bb24637682bd20e88df4192b6baba0b8de0be896d8a3e9a17dbcb3488dad",
+    "examples/feed-url-policy.d.mts": "33cf1ecab9a77dc05d8a3b775a0854373a40c7bdd7255b6045f95ab85cb2932e",
+    "examples/feed-url-policy.mjs": "f8d38ebbe66d487a587454669672059d076acf904635d59ae4c3a0d3f04c3f9e",
+    "examples/form-policy.d.mts": "61f035ab9cd8e11a43ac7cf39de8b73ecce70922f3bd0ee979973deec36f14c9",
+    "examples/form-policy.mjs": "5c319f80a6bd7285721eb418d185f9dd28db37950f20c38fe666d5b986fa148d",
+    "examples/workshop.css": "6bfd7d71d8557a7e32cf4aefb4584ad3db5c406a2760aa39d7f8b2b20fa76ad4",
+    "guide.md": "39398224f0aed08430fe6e6e93623fc31b1a6dcd9ddb97f6f5c612ad5254c156",
+    "library.json": "5e532e2a4a28e19dce3146e92c319a3650cd9c168ee3b02cbf654f46f2602b40",
+    "official/readme.md": "f1679b5992e2d473fac51c70d62661becf2c8878cfdf67f31c5a935f367d5518",
+    "official/source-evidence.json": "7dcaf8a2edb41ac6c7300d82d873b09314b94381102872bd65e88881f0045218",
+    "tests/form-policy.test.mjs": "0cb01e3d8500617d5b2b55138ff5e1dd3703b99dbb0314406043a7c0e859a964",
+    "tests/sdk.test.mjs": "bb0737bebc4c022ab9a8c705ab0949849a20d810ba314503c1506d0aa9058652",
+    "tests/url-policy.test.mjs": "53e53048e78dbc18b2f9436ee8279fa2eeb3522a05a5afc6982e3b7236ae9480",
+    "verification.json": "cb4c3f3f91de69961c8ef62989acda71dba90d1db0998fbb623d38d97b6929b7"
+  },
+  "clickFixRuns": [
+    {
+      "name": "click-fix-typecheck",
+      "command": [
+        "pnpm",
+        "exec",
+        "--",
+        "tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--target",
+        "ES2022",
+        "--lib",
+        "ES2022,DOM,DOM.Iterable",
+        "--module",
+        "ESNext",
+        "--moduleResolution",
+        "Bundler",
+        "--jsx",
+        "react-jsx",
+        "--strict",
+        "--skipLibCheck",
+        "--esModuleInterop",
+        "--allowSyntheticDefaultImports",
+        "--allowImportingTsExtensions",
+        "--types",
+        "vite/client,node",
+        "entries/C01-react-hook-form/examples/demo.tsx"
+      ],
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "startedAt": "2026-11-10T10:08:51.774454+00:00",
+      "finishedAt": "2026-11-10T10:08:52.045025+00:00",
+      "exitCode": 0,
+      "log": "evidence/click-fix-typecheck.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "click-fix-biome",
+      "command": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "check",
+        "entries/C01-react-hook-form/examples/example.tsx",
+        "entries/C01-react-hook-form/examples/workshop.css"
+      ],
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "startedAt": "2026-11-10T10:08:52.045152+00:00",
+      "finishedAt": "2026-11-10T10:08:52.265405+00:00",
+      "exitCode": 0,
+      "log": "evidence/click-fix-biome.log",
+      "logSha256": "cfc44eee29bc0c3e74191c4443141ef74fcc5cdf5d6335942c98d2d05ab84aa1"
+    }
+  ],
+  "clickFixNote": "UI-only stable error layout; preserve onBlur, register, error ARIA and normal click/submit. SDK/policy sources and previously passed 11 tests unchanged, not rerun. Current browser regression remains NOT_RUN."
+}

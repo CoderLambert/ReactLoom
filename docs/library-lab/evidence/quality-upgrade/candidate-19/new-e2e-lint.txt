@@ -1,0 +1,216 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+command=pnpm exec biome check packages/library-lab/src/lib/document-utils.mjs packages/library-lab/src/lib/document-utils.d.mts packages/library-lab/src/components/document.tsx packages/library-lab/src/app/library.tsx packages/library-lab/tests/document-utils.test.mjs packages/library-lab/e2e/quality-document-links.spec.ts packages/library-lab/e2e/quality-remediation-primitives-sources.spec.ts packages/library-lab/e2e/quality-remediation-react-i18next.spec.ts
+packages/library-lab/e2e/quality-remediation-react-i18next.spec.ts:21:19 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    19 │ }
+    20 │ async function open(page: Page, level: 'basic' | 'business' | 'advanced') {
+  > 21 │   await page.goto('/libraries/react-i18next?tab=demo&example=' + level)
+       │                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    22 │   const app = page.getByTestId('c18-workshop')
+    23 │   const run = page.getByRole('button', { name: '运行当前示例', exact: true })
+  
+  i Unsafe fix: Use a template literal.
+  
+     19  19 │   }
+     20  20 │   async function open(page: Page, level: 'basic' | 'business' | 'advanced') {
+     21     │ - ··await·page.goto('/libraries/react-i18next?tab=demo&example='·+·level)
+         21 │ + ··await·page.goto(`/libraries/react-i18next?tab=demo&example=${level}`)
+     22  22 │     const app = page.getByTestId('c18-workshop')
+     23  23 │     const run = page.getByRole('button', { name: '运行当前示例', exact: true })
+  
+
+packages/library-lab/e2e/quality-remediation-react-i18next.spec.ts:67:58 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    65 │   const payload = '<img src=x onerror=alert(1)> & Ada'
+    66 │   await a.getByLabel('工作区 A用户昵称', { exact: true }).fill(payload)
+  > 67 │   await expect(a.getByTestId('c18-greeting')).toHaveText('你好，' + payload)
+       │                                                          ^^^^^^^^^^^^^^^^^^
+    68 │   await expect(a.locator('img,script,iframe,a')).toHaveCount(0)
+    69 │   await a.getByLabel('工作区 A语言', { exact: true }).selectOption('en')
+  
+  i Unsafe fix: Use a template literal.
+  
+     65  65 │     const payload = '<img src=x onerror=alert(1)> & Ada'
+     66  66 │     await a.getByLabel('工作区 A用户昵称', { exact: true }).fill(payload)
+     67     │ - ··await·expect(a.getByTestId('c18-greeting')).toHaveText('你好，'·+·payload)
+         67 │ + ··await·expect(a.getByTestId('c18-greeting')).toHaveText(`你好，${payload}`)
+     68  68 │     await expect(a.locator('img,script,iframe,a')).toHaveCount(0)
+     69  69 │     await a.getByLabel('工作区 A语言', { exact: true }).selectOption('en')
+  
+
+packages/library-lab/e2e/quality-remediation-react-i18next.spec.ts:70:58 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    68 │   await expect(a.locator('img,script,iframe,a')).toHaveCount(0)
+    69 │   await a.getByLabel('工作区 A语言', { exact: true }).selectOption('en')
+  > 70 │   await expect(a.getByTestId('c18-greeting')).toHaveText('Hello, ' + payload)
+       │                                                          ^^^^^^^^^^^^^^^^^^^
+    71 │   await expect(a.getByTestId('c18-legal')).toHaveText('Read the privacy notice.')
+    72 │   await expect(emphasis).toHaveText('privacy notice')
+  
+  i Unsafe fix: Use a template literal.
+  
+     68  68 │     await expect(a.locator('img,script,iframe,a')).toHaveCount(0)
+     69  69 │     await a.getByLabel('工作区 A语言', { exact: true }).selectOption('en')
+     70     │ - ··await·expect(a.getByTestId('c18-greeting')).toHaveText('Hello,·'·+·payload)
+         70 │ + ··await·expect(a.getByTestId('c18-greeting')).toHaveText(`Hello,·${payload}`)
+     71  71 │     await expect(a.getByTestId('c18-legal')).toHaveText('Read the privacy notice.')
+     72  72 │     await expect(emphasis).toHaveText('privacy notice')
+  
+
+packages/library-lab/src/lib/document-utils.mjs:48:18 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    46 │       ? basePath
+    47 │       : '/'
+  > 48 │   const prefix = safeBase.replace(/\/$/u, '') + '/'
+       │                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    49 │   // The generator publishes only reviewed local markdown, raster assets, and
+    50 │   // declared example/test sources. Avoid links that silently serve SPA HTML.
+  
+  i Unsafe fix: Use a template literal.
+  
+     46  46 │         ? basePath
+     47  47 │         : '/'
+     48     │ - ··const·prefix·=·safeBase.replace(/\/$/u,·'')·+·'/'
+         48 │ + ··const·prefix·=·`${safeBase.replace(/\/$/u,·'')}/`
+     49  49 │     // The generator publishes only reviewed local markdown, raster assets, and
+     50  50 │     // declared example/test sources. Avoid links that silently serve SPA HTML.
+  
+
+packages/library-lab/src/lib/document-utils.mjs:69:17 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    67 │     )
+    68 │   )
+  > 69 │     published = 'sources/' + sourceTextPath(normalized)
+       │                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    70 │   else return ''
+    71 │   const encodedPath = published.split('/').map(encodeURIComponent).join('/')
+  
+  i Unsafe fix: Use a template literal.
+  
+     67  67 │       )
+     68  68 │     )
+     69     │ - ····published·=·'sources/'·+·sourceTextPath(normalized)
+         69 │ + ····published·=·`sources/${sourceTextPath(normalized)}`
+     70  70 │     else return ''
+     71  71 │     const encodedPath = published.split('/').map(encodeURIComponent).join('/')
+  
+
+packages/library-lab/src/lib/document-utils.mjs:98:40 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+     96 │   let previous = null
+     97 │   const pushHeading = (title, depth, line) => {
+   > 98 │     const stem = slugHeading(title) || 'section-' + line
+        │                                        ^^^^^^^^^^^^^^^^^
+     99 │     const count = seen.get(stem) ?? 0
+    100 │     seen.set(stem, count + 1)
+  
+  i Unsafe fix: Use a template literal.
+  
+     96  96 │     let previous = null
+     97  97 │     const pushHeading = (title, depth, line) => {
+     98     │ - ····const·stem·=·slugHeading(title)·||·'section-'·+·line
+         98 │ + ····const·stem·=·slugHeading(title)·||·`section-${line}`
+     99  99 │       const count = seen.get(stem) ?? 0
+    100 100 │       seen.set(stem, count + 1)
+  
+
+packages/library-lab/src/lib/document-utils.mjs:101:53 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+     99 │     const count = seen.get(stem) ?? 0
+    100 │     seen.set(stem, count + 1)
+  > 101 │     headings.push({ depth, title, line, id: count ? stem + '-' + count : stem })
+        │                                                     ^^^^^^^^^^^^^^^^^^
+    102 │   }
+    103 │   markdown.split(/\r?\n/u).forEach((line, index) => {
+  
+  i Unsafe fix: Use a template literal.
+  
+     99  99 │       const count = seen.get(stem) ?? 0
+    100 100 │       seen.set(stem, count + 1)
+    101     │ - ····headings.push({·depth,·title,·line,·id:·count·?·stem·+·'-'·+·count·:·stem·})
+        101 │ + ····headings.push({·depth,·title,·line,·id:·count·?·`${stem}-${count}`·:·stem·})
+    102 102 │     }
+    103 103 │     markdown.split(/\r?\n/u).forEach((line, index) => {
+  
+
+packages/library-lab/tests/document-utils.test.mjs:84:56 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    82 │     'examples/%2e%2e/secret.ts',
+    83 │   ]) {
+  > 84 │     assert.equal(resolveDocumentUrl(value, 'A01'), '', 'Unexpected local public path: ' + value)
+       │                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    85 │   }
+    86 │ })
+  
+  i Unsafe fix: Use a template literal.
+  
+     82  82 │       'examples/%2e%2e/secret.ts',
+     83  83 │     ]) {
+     84     │ - ····assert.equal(resolveDocumentUrl(value,·'A01'),·'',·'Unexpected·local·public·path:·'·+·value)
+         84 │ + ····assert.equal(resolveDocumentUrl(value,·'A01'),·'',·`Unexpected·local·public·path:·${value}`)
+     85  85 │     }
+     86  86 │   })
+  
+
+packages/library-lab/tests/document-utils.test.mjs:162:5 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    160 │   const ticks = '\x60'.repeat(3)
+    161 │   const doc = [
+  > 162 │     ticks + 'md',
+        │     ^^^^^^^^^^^^
+    163 │     ticks + ' not a closing fence',
+    164 │     '## hidden',
+  
+  i Unsafe fix: Use a template literal.
+  
+    160 160 │     const ticks = '\x60'.repeat(3)
+    161 161 │     const doc = [
+    162     │ - ····ticks·+·'md',
+        162 │ + ····`${ticks}md`,
+    163 163 │       ticks + ' not a closing fence',
+    164 164 │       '## hidden',
+  
+
+packages/library-lab/tests/document-utils.test.mjs:163:5 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    161 │   const doc = [
+    162 │     ticks + 'md',
+  > 163 │     ticks + ' not a closing fence',
+        │     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    164 │     '## hidden',
+    165 │     ticks,
+  
+  i Unsafe fix: Use a template literal.
+  
+    161 161 │     const doc = [
+    162 162 │       ticks + 'md',
+    163     │ - ····ticks·+·'·not·a·closing·fence',
+        163 │ + ····`${ticks}·not·a·closing·fence`,
+    164 164 │       '## hidden',
+    165 165 │       ticks,
+  
+
+Checked 8 files in 7ms. No fixes applied.
+Found 10 infos.
+
+exitCode=0

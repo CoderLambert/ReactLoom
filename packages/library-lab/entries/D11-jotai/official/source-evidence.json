@@ -1,0 +1,12 @@
+{
+  "commit": "6abd0ae3365e02ab432fba4b6e8e6f00aafbf508",
+  "checkedAt": "2026-11-17T16:43:12.104755+00:00",
+  "readmeSelection": "固定版本官方树中仅英文根README，未发现中文README；tree.json保留原始目录",
+  "homepageStatus": "unknown",
+  "homepageObservation": "GET200，未发现限制头；未浏览器确认",
+  "commands": [
+    "git ls-remote https://github.com/pmndrs/jotai.git refs/tags/v3.0.1*",
+    "curl -fsSL https://raw.githubusercontent.com/pmndrs/jotai/6abd0ae3365e02ab432fba4b6e8e6f00aafbf508/README.md",
+    "curl -fsSL -D official/homepage-headers.txt https://jotai.org"
+  ]
+}

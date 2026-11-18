@@ -1,0 +1,5 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['pnpm', 'exec', 'biome', 'check', '--write', 'entries/B21-react-motion-migration/examples', 'entries/B21-react-motion-migration/tests', 'entries/B21-react-motion-migration/library.json', 'entries/B21-react-motion-migration/verification.json', 'entries/B21-react-motion-migration/official/source-evidence.json', 'entries/B21-react-motion-migration/validation/metadata-check.mjs', 'entries/B21-react-motion-migration/validation/sdk-source-audit.json']
+startedAt: 2026-11-10T14:49:07.297869+00:00
+exit: 0
+Checked 13 files in 7ms. Fixed 10 files.

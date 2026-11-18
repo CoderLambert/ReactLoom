@@ -1,0 +1,5 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+command=pnpm exec biome check packages/library-lab/e2e/quality-remediation-d3.spec.ts packages/library-lab/e2e/quality-remediation-g6.spec.ts packages/library-lab/e2e/quality-remediation-graphics.spec.ts packages/library-lab/e2e/quality-remediation-excalidraw.spec.ts packages/library-lab/e2e/quality-remediation-konva.spec.ts packages/library-lab/e2e/quality-remediation-react-konva.spec.ts
+Checked 6 files in 9ms. No fixes applied.
+
+exitCode=0

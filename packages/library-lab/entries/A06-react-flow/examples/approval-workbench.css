@@ -1,0 +1,443 @@
+.lc-app {
+  --lc-accent: #087f70;
+  color: #183330;
+  background: #f4f7f6;
+  border: 1px solid #d0dfda;
+  border-radius: 16px;
+  overflow: hidden;
+  font-size: 14px;
+}
+.lc-app *,
+.lc-app *::before,
+.lc-app *::after {
+  box-sizing: border-box;
+}
+.lc-app .lc-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 28px;
+  background: #163d37;
+  color: #f4fffa;
+}
+.lc-app .lc-header h2 {
+  margin: 6px 0 12px;
+  color: inherit;
+  font-size: clamp(20px, 2vw, 28px);
+}
+.lc-app .lc-header p {
+  margin: 0;
+  color: #c8e4db;
+}
+.lc-app .lc-kicker {
+  font-size: 10px;
+  letter-spacing: 2px;
+}
+.lc-app .lc-version {
+  display: grid;
+  align-content: center;
+  flex-shrink: 0;
+  gap: 6px;
+  font-size: 12px;
+}
+.lc-app .lc-version strong {
+  font-size: 17px;
+}
+.lc-app button {
+  min-height: 34px;
+  padding: 7px 12px;
+  border: 1px solid #bccfc7;
+  border-radius: 7px;
+  background: white;
+  color: #23433b;
+  cursor: pointer;
+  font-size: 12px;
+}
+.lc-app button:hover:not(:disabled) {
+  background: #e9f5ef;
+}
+.lc-app button[aria-pressed="true"] {
+  border-color: var(--lc-accent);
+  background: #e1f2eb;
+  color: #005a4d;
+}
+.lc-app button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.lc-app :focus-visible {
+  outline: 3px solid #258bce;
+  outline-offset: 3px;
+}
+.lc-app .lc-primary {
+  background: var(--lc-accent);
+  color: white;
+  border-color: var(--lc-accent);
+}
+.lc-app .lc-primary:hover:not(:disabled) {
+  background: #056254;
+}
+.lc-app .lc-danger {
+  color: #a83232;
+}
+.lc-app label {
+  display: grid;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  margin: 12px 0;
+  min-width: 0;
+}
+.lc-app input:not([type="checkbox"]),
+.lc-app select,
+.lc-app textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid #b7c9c1;
+  border-radius: 6px;
+  padding: 8px;
+  color: #203c34;
+  background: white;
+  font: inherit;
+}
+.lc-app textarea {
+  resize: vertical;
+}
+.lc-app .lc-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.lc-app .lc-check input {
+  width: 16px;
+  height: 16px;
+}
+.lc-app h3 {
+  margin: 0 0 16px;
+  font-size: 15px;
+}
+.lc-app .lc-local-note {
+  margin: 0;
+  padding: 9px 20px;
+  font-size: 11px;
+  background: #eef1e4;
+  color: #4b593a;
+}
+.lc-app .lc-topbar,
+.lc-app .lc-publish-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  border-bottom: 1px solid #d7e3de;
+}
+.lc-app nav {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.lc-app .lc-publish-bar {
+  background: white;
+}
+.lc-app .lc-message {
+  margin: 0;
+  padding: 10px 20px;
+  font-size: 12px;
+  background: #e5f2ec;
+}
+.lc-app .lc-error {
+  margin: 10px 20px;
+  padding: 12px;
+  border: 1px solid #da9990;
+  color: #8b2424;
+  background: #fff0ee;
+  overflow-wrap: anywhere;
+}
+.lc-app .lc-validation {
+  padding: 12px 20px;
+  background: #fff6e1;
+  color: #73551b;
+}
+.lc-app .lc-designer {
+  display: grid;
+  grid-template-columns: 210px minmax(280px, 1fr) 210px;
+  gap: 12px;
+  padding: 16px;
+  align-items: start;
+}
+.lc-app .lc-panel {
+  padding: 16px;
+  background: white;
+  border: 1px solid #d3e0da;
+  border-radius: 10px;
+  min-width: 0;
+}
+.lc-app .lc-field-card {
+  border: 1px solid #d9e4df;
+  border-radius: 7px;
+  padding: 10px;
+  margin: 16px 0;
+  min-width: 0;
+}
+.lc-app .lc-field-card legend {
+  font-size: 11px;
+  color: #60766d;
+}
+.lc-app .lc-muted {
+  font-size: 11px;
+  color: #5e7169;
+  line-height: 1.6;
+}
+.lc-app .lc-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.lc-app .lc-row h3 {
+  flex: 1;
+  margin: 0;
+}
+.lc-app .lc-row label {
+  flex: 1;
+  min-width: 90px;
+}
+.lc-app .lc-canvas {
+  height: 460px;
+  border: 1px solid #b8cfc4;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #f0f7f3;
+  margin: 16px 0;
+}
+.lc-app .lc-stage {
+  position: relative;
+  width: 174px;
+  padding: 14px;
+  border: 1px solid #a9c2b6;
+  border-radius: 10px;
+  background: white;
+  box-shadow: 0 3px 12px #143d3210;
+  display: grid;
+  gap: 6px;
+  color: #1d4034;
+}
+.lc-app .lc-stage small {
+  font-size: 9px;
+  color: #60796b;
+  letter-spacing: 1px;
+}
+.lc-app .lc-stage strong {
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+.lc-app .lc-stage span {
+  font-size: 10px;
+  overflow-wrap: anywhere;
+}
+.lc-app .lc-stage-condition {
+  background: #fff7df;
+  border-color: #c5aa58;
+  padding-right: 34px;
+}
+.lc-app .lc-stage-start,
+.lc-app .lc-stage-end {
+  background: #e1f4eb;
+  border-color: #589e80;
+}
+.lc-app .react-flow__node.selected .lc-stage {
+  outline: 2px solid #13866d;
+  outline-offset: 3px;
+}
+.lc-app .react-flow__handle {
+  width: 10px;
+  height: 10px;
+  background: #087f70;
+  border: 2px solid white;
+}
+.lc-app .lc-port-yes,
+.lc-app .lc-port-no {
+  position: absolute;
+  right: 9px;
+  font: normal 8px sans-serif;
+}
+.lc-app .lc-port-yes {
+  top: 24%;
+}
+.lc-app .lc-port-no {
+  top: 68%;
+}
+.lc-app .lc-node-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+}
+.lc-app .lc-edge-list {
+  list-style: none;
+  padding: 0;
+  font-size: 11px;
+}
+.lc-app .lc-edge-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid #e3ece7;
+  padding: 8px 0;
+}
+.lc-app .lc-edge-list button {
+  flex-shrink: 0;
+  font-size: 10px;
+}
+.lc-app summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+.lc-app > details.lc-panel {
+  margin: 0 16px 16px;
+}
+.lc-app .lc-form-page {
+  max-width: 680px;
+  padding: 28px;
+  margin: auto;
+}
+.lc-app .lc-form-page h3 {
+  margin: 16px 0;
+  font-size: 23px;
+}
+.lc-app .lc-form-page p {
+  font-size: 12px;
+  color: #526c5f;
+}
+.lc-app .lc-request-form {
+  margin-top: 24px;
+  padding: 24px;
+}
+.lc-app .lc-request-form label {
+  margin: 0 0 20px;
+}
+.lc-app .lc-inbox {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  gap: 16px;
+  padding: 20px;
+  align-items: start;
+}
+.lc-app .lc-ticket {
+  width: 100%;
+  display: grid;
+  gap: 6px;
+  text-align: left;
+  margin-bottom: 10px;
+}
+.lc-app .lc-ticket small {
+  color: #687e72;
+  font-size: 10px;
+}
+.lc-app .lc-ticket-detail h3 {
+  font-size: 22px;
+  margin-top: 18px;
+}
+.lc-app .lc-request-status {
+  font-weight: 700;
+  color: #896019;
+}
+.lc-app .lc-status-approved {
+  color: #087354;
+}
+.lc-app .lc-status-rejected {
+  color: #a53232;
+}
+.lc-app .lc-pill {
+  display: inline-block;
+  border: 1px solid #bdcfc6;
+  padding: 5px 9px;
+  border-radius: 20px;
+  font-size: 10px;
+  background: #f0f6f2;
+}
+.lc-app .lc-values {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding: 18px 0;
+  border-block: 1px solid #e1e9e4;
+}
+.lc-app .lc-values dt {
+  font-size: 11px;
+  color: #688074;
+}
+.lc-app .lc-values dd {
+  margin: 4px 0 0;
+  overflow-wrap: anywhere;
+}
+.lc-app .lc-review {
+  margin-top: 24px;
+  border: 1px solid #d4e0d9;
+  border-radius: 10px;
+  padding: 18px;
+}
+.lc-app .lc-history {
+  padding-left: 20px;
+}
+.lc-app .lc-history li {
+  padding: 8px 0;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.lc-app .lc-history time {
+  display: block;
+  font-size: 10px;
+  color: #72867a;
+  margin-top: 5px;
+}
+.lc-app .lc-empty {
+  padding: 36px;
+}
+.lc-app .lc-footer {
+  padding: 16px;
+  text-align: center;
+  font-size: 10px;
+  color: #678174;
+  border-top: 1px solid #d6e2db;
+}
+@media (max-width: 1100px) {
+  .lc-app .lc-designer {
+    grid-template-columns: 190px minmax(0, 1fr);
+  }
+  .lc-app .lc-designer > section:last-child {
+    grid-column: 1 / -1;
+  }
+}
+@media (max-width: 680px) {
+  .lc-app .lc-designer,
+  .lc-app .lc-inbox {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .lc-app .lc-designer > section:first-child {
+    max-height: 330px;
+    overflow-y: auto;
+  }
+  .lc-app .lc-header {
+    padding: 18px;
+    flex-direction: column;
+  }
+  .lc-app .lc-topbar {
+    align-items: start;
+    flex-direction: column;
+  }
+  .lc-app .lc-canvas {
+    height: 380px;
+  }
+  .lc-app .lc-form-page {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 680px) {
+  .lc-app .react-flow__minimap {
+    display: none;
+  }
+}

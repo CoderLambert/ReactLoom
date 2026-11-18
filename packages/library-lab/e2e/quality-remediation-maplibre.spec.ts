@@ -1,0 +1,167 @@
+// Ready Playwright proposal, NOT_RUN by entry author. Root integrates after a stable candidate build.
+// Real Map/Worker/WebGL only; no page.route, fake Map, hidden SDK injection or screenshot-only assertion.
+import { expect, type Locator, type Page, test } from '@playwright/test'
+
+type Snapshot = {
+  width: number
+  height: number
+  sourceLoaded: boolean
+  renderedIds: string[]
+  renderedHealth: Record<string, boolean>
+  points: { id: string; healthy: boolean; x: number; y: number }[]
+  center: [number, number]
+  workerUrl: string
+}
+async function snapshot(app: Locator): Promise<Snapshot | null> {
+  return JSON.parse((await app.getByTestId('a16-sdk-state').textContent()) ?? 'null')
+}
+async function mountA16(page: Page, level: 'basic' | 'business' | 'advanced') {
+  await page.setViewportSize({ width: 1100, height: 900 })
+  await page.goto(`/libraries/maplibre-gl-js?tab=demo&example=${level}`)
+  const app = page.getByTestId('a16-workshop')
+  await app.getByText('查看真实源、渲染要素与投影', { exact: true }).click()
+  await expect(app).toHaveAttribute('data-ready', 'true', { timeout: 20_000 })
+  await expect(app.getByTestId('a16-error')).toHaveCount(0)
+  await expect
+    .poll(async () => (await snapshot(app))?.sourceLoaded ?? false, { timeout: 20_000 })
+    .toBe(true)
+  return app
+}
+function row(app: Locator, id: string) {
+  return app.getByTestId('a16-table').locator(`tr[data-station-id="${id}"]`)
+}
+async function rendered(app: Locator, ids: string[]) {
+  await expect
+    .poll(async () => (await snapshot(app))?.renderedIds ?? [], { timeout: 20_000 })
+    .toEqual([...ids].sort())
+}
+
+test('@A16 actual standalone Worker and WebGL points match the two-source table and real hit testing', async ({
+  page,
+}) => {
+  const workers: string[] = []
+  const external: string[] = []
+  page.on('worker', (worker) => workers.push(worker.url()))
+  const baseURL = test.info().project.use.baseURL
+  if (typeof baseURL !== 'string') throw new Error('Playwright baseURL is required')
+  const expectedOrigin = new URL(baseURL).origin
+  page.on('request', (request) => {
+    const url = new URL(request.url())
+    if (['http:', 'https:'].includes(url.protocol) && url.origin !== expectedOrigin)
+      external.push(url.href)
+  })
+  const app = await mountA16(page, 'basic')
+  await rendered(app, ['beijing', 'tianjin'])
+  await expect(app.getByTestId('a16-table').locator('tbody tr')).toHaveCount(2)
+  const state = await snapshot(app)
+  if (!state) throw new Error('actual SDK snapshot missing')
+  expect(state.points.map((point) => point.id).sort()).toEqual(['beijing', 'tianjin'])
+  expect(state.width).toBeGreaterThan(0)
+  expect(state.height).toBeGreaterThan(0)
+  expect(workers.some((url) => url.includes('maplibre-gl-worker'))).toBe(true)
+  const worker = await page.request.get(state.workerUrl)
+  expect(worker.ok()).toBe(true)
+  expect(worker.headers()['content-type']).toMatch(/javascript|ecmascript/u)
+  const point = state.points.find((point) => point.id === 'tianjin')
+  const canvas = app.getByTestId('a16-map').locator('canvas.maplibregl-canvas')
+  await canvas.scrollIntoViewIfNeeded()
+  const box = await canvas.boundingBox()
+  if (!box || !point) throw new Error('real projected station/canvas unavailable')
+  await page.mouse.click(box.x + point.x, box.y + point.y)
+  await expect(app).toHaveAttribute('data-selected', 'tianjin')
+  await expect(row(app, 'tianjin')).toHaveAttribute('data-selected', 'true')
+  await row(app, 'beijing').getByRole('button', { name: '定位', exact: true }).click()
+  await expect.poll(async () => (await snapshot(app))?.center[0] ?? 0).toBeCloseTo(116.4, 6)
+  await expect.poll(async () => (await snapshot(app))?.center[1] ?? 0).toBeCloseTo(39.9, 6)
+  expect(external).toEqual([])
+})
+
+test('@A16 actual source/render filtering keeps the same Map Canvas and selection falls back', async ({
+  page,
+}) => {
+  const app = await mountA16(page, 'business')
+  await rendered(app, ['beijing', 'tianjin', 'shijiazhuang'])
+  await app.getByTestId('a16-map').locator('canvas.maplibregl-canvas').scrollIntoViewIfNeeded()
+  const canvas = await app
+    .getByTestId('a16-map')
+    .locator('canvas.maplibregl-canvas')
+    .elementHandle()
+  if (!canvas) throw new Error('actual canvas missing')
+  const selectedPoint = (await snapshot(app))?.points.find((point) => point.id === 'shijiazhuang')
+  const box = await canvas.boundingBox()
+  if (!selectedPoint || !box) throw new Error('actual projected station missing')
+  await page.mouse.click(box.x + selectedPoint.x, box.y + selectedPoint.y)
+  await expect(app).toHaveAttribute('data-selected', 'shijiazhuang')
+  await app.getByRole('checkbox', { name: '只看在线来源', exact: true }).check()
+  await expect(row(app, 'shijiazhuang')).toHaveCount(0)
+  await expect(app).toHaveAttribute('data-selected', 'beijing')
+  await rendered(app, ['beijing', 'tianjin'])
+  expect((await snapshot(app))?.points.map((point) => point.id).sort()).toEqual([
+    'beijing',
+    'tianjin',
+  ])
+  expect(await canvas.evaluate((node) => node.isConnected)).toBe(true)
+  await app.getByRole('checkbox', { name: '只看在线来源', exact: true }).uncheck()
+  await rendered(app, ['beijing', 'tianjin', 'shijiazhuang'])
+  expect(await canvas.evaluate((node) => node.isConnected)).toBe(true)
+  await expect(app.getByTestId('a16-error')).toHaveCount(0)
+})
+
+test('@A16 dynamic GeoJSON and health reach the real renderer; resize and removal clean this instance', async ({
+  page,
+}) => {
+  const liveWorkers = () =>
+    page.workers().filter((worker) => worker.url().includes('maplibre-gl-worker'))
+  const app = await mountA16(page, 'advanced')
+  await rendered(app, ['beijing', 'tianjin', 'shijiazhuang'])
+  await app.getByRole('button', { name: '新增本地站点（最多40条）', exact: true }).click()
+  await expect(row(app, 'local-1')).toHaveCount(1)
+  await expect(app).toHaveAttribute('data-selected', 'local-1')
+  await rendered(app, ['beijing', 'tianjin', 'shijiazhuang', 'local-1'])
+  await row(app, 'local-1').getByRole('button', { name: '切换健康状态', exact: true }).click()
+  await expect(row(app, 'local-1')).toContainText('暂停')
+  await expect.poll(async () => (await snapshot(app))?.renderedHealth['local-1']).toBe(false)
+  await app.getByRole('checkbox', { name: '只看在线来源', exact: true }).check()
+  await rendered(app, ['beijing', 'tianjin'])
+  await expect(app).toHaveAttribute('data-selected', 'beijing')
+  await app.getByRole('button', { name: '恢复初始状态', exact: true }).click()
+  await rendered(app, ['beijing', 'tianjin', 'shijiazhuang'])
+  await expect(row(app, 'local-1')).toHaveCount(0)
+  const before = await snapshot(app)
+  if (!before) throw new Error('SDK snapshot missing')
+  await page.setViewportSize({ width: 640, height: 900 })
+  await expect.poll(async () => (await snapshot(app))?.width ?? 0).toBeLessThan(before.width)
+  await expect.poll(async () => (await snapshot(app))?.sourceLoaded ?? false).toBe(true)
+  expect((await snapshot(app))?.points.map((point) => point.id).sort()).toEqual([
+    'beijing',
+    'shijiazhuang',
+    'tianjin',
+  ])
+  const host = await app.getByTestId('a16-map').elementHandle()
+  if (!host) throw new Error('host missing')
+  const workersBefore = liveWorkers()
+  expect(workersBefore.length).toBeGreaterThan(0)
+  await page.getByRole('button', { name: '停止并卸载', exact: true }).click()
+  await expect(app).toHaveCount(0)
+  expect(
+    await host.evaluate((node) => JSON.parse(node.getAttribute('data-a16-cleanup') ?? 'null')),
+  ).toEqual({ removed: true, canvases: 0 })
+  // SDK RTL singleton owns a global dispatcher; Map.remove releases only this Map.
+  expect(liveWorkers().length).toBeLessThanOrEqual(workersBefore.length)
+  expect(liveWorkers().every((worker) => workersBefore.includes(worker))).toBe(true)
+  await page.getByRole('button', { name: '运行当前示例', exact: true }).click()
+  await expect(app).toHaveAttribute('data-ready', 'true', { timeout: 20_000 })
+  await expect(app.getByTestId('a16-table').locator('tbody tr')).toHaveCount(3)
+  await rendered(app, ['beijing', 'tianjin', 'shijiazhuang'])
+  expect(liveWorkers().length).toBe(workersBefore.length)
+  expect(liveWorkers().every((worker) => workersBefore.includes(worker))).toBe(true)
+  await expect(app.getByTestId('a16-map').locator('canvas.maplibregl-canvas')).toHaveCount(1)
+  await page.getByRole('tab', { name: 'Agent 指南', exact: true }).click()
+  await expect(page.locator('canvas.maplibregl-canvas')).toHaveCount(0)
+  // SDK RTL singleton owns a global dispatcher; Map.remove releases only this Map.
+  expect(liveWorkers().length).toBeLessThanOrEqual(workersBefore.length)
+  expect(liveWorkers().every((worker) => workersBefore.includes(worker))).toBe(true)
+})
+
+// No explicit WebGL context loss, touch/reader acceptance, offline asset caching or large-data benchmark here.
+// Real initialization/Worker/GL failures must remain visible failures, not be skipped or replaced with fake rendering.

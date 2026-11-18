@@ -1,0 +1,62 @@
+.d03-workshop {
+  min-width: 0;
+}
+.d03-workshop .demo-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 16px 0;
+  align-items: center;
+}
+.d03-workshop .d03-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+  gap: 10px;
+  padding: 14px;
+  border-radius: 8px;
+  background: #edf6f0;
+}
+.d03-workshop dt {
+  font-size: 12px;
+  color: #466756;
+}
+.d03-workshop dd {
+  margin: 5px 0 0;
+  font-size: 19px;
+  font-weight: 600;
+}
+.d03-workshop .demo-jobs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(105px, 1fr));
+  gap: 10px;
+}
+.d03-workshop .demo-job {
+  display: grid;
+  gap: 6px;
+  padding: 12px;
+  border: 1px solid #becfc4;
+  border-radius: 7px;
+  background: white;
+}
+.d03-workshop .demo-job[data-state="running"] {
+  border-color: #2d7854;
+  background: #e2f2e9;
+}
+.d03-workshop .demo-job[data-state="done"] {
+  background: #eaf5f0;
+}
+.d03-workshop .demo-job[data-state="error"] {
+  border-color: #ae5d55;
+  background: #fff0ed;
+}
+.d03-workshop .demo-job[data-state="cancelled"] {
+  background: #efefef;
+}
+.d03-workshop button,
+.d03-workshop select {
+  padding: 7px 11px;
+}
+.d03-workshop :focus-visible {
+  outline: 3px solid #287d59;
+  outline-offset: 3px;
+}

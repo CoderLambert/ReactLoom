@@ -1,0 +1,31 @@
+{
+  "checkedAt": "2026-11-10T10:33:30.903576+00:00",
+  "requestedUrl": "https://tldraw.dev",
+  "finalUrl": "https://tldraw.dev",
+  "method": "GET",
+  "status": 200,
+  "headers": {
+    "Age": "38",
+    "Cache-Control": "public, max-age=0, must-revalidate",
+    "Content-Length": "274792",
+    "Content-Type": "text/html; charset=utf-8",
+    "Date": "Tue, 10 Nov 2026 10:32:51 GMT",
+    "Etag": "\"cy72mblg285w0q\"",
+    "Link": "</.well-known/api-catalog>; rel=\"api-catalog\", </.well-known/ai-catalog.json>; rel=\"ai-catalog\"; type=\"application/ai-catalog+json\", </llms.txt>; rel=\"alternate\"; type=\"text/plain\"; title=\"llms.txt\", </quick-start>; rel=\"service-doc\"; type=\"text/html\"",
+    "Server": "Vercel",
+    "Strict-Transport-Security": "max-age=63072000",
+    "Vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+    "X-Matched-Path": "/",
+    "X-Nextjs-Prerender": "1",
+    "X-Nextjs-Stale-Time": "300",
+    "X-Powered-By": "Next.js",
+    "X-Vercel-Cache": "HIT",
+    "X-Vercel-Id": "sin1::iad1::d8pnh-1794306810661-410a71e1fa0c",
+    "Connection": "close"
+  },
+  "xFrameOptions": null,
+  "contentSecurityPolicy": null,
+  "browserFromLabOrigin": "NOT_RUN",
+  "bodyRead": false,
+  "note": "GET response headers captured; homepage body not needed for frame policy evidence."
+}

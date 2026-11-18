@@ -1,49 +1,20 @@
-# C02 Zod — 工程手册
+# C02 Zod 接入指南
 
-## 适用
+使用已安装的 `zod@4.6.5`（MIT），边界输入为 `unknown`，消费 `safeParse` 成功后的 `data`。场景是订阅导入 JSON 描述，不解析 RSS/OPML XML，不发请求。
 
-不可信 JSON、表单提交和导入配置的运行时边界。单个布尔不必用。不要把 Zod 当成 HTTP 客户端、表单状态或 SSRF 防护。
+## 迁移文件与模型
 
-## 版本
+源码面板的 `examples/demo.tsx`、`example.tsx`、`schemas.ts`、`boundary-policy.mjs`、`boundary-policy.d.mts` 都需保留。UI 与 SDK 测试导入同一组 Schema；`example.tsx` 保持 React 实验的唯一实现并再导出 Schema/type，避免复制规则。
 
-`zod@4.6.5`，MIT。研究笔记中的 4.6.7 不是本仓库的 pin。v4 用 `z.strictObject`、`z.discriminatedUnion`、`z.input` / `z.output`。空串必须先挡住再 `z.coerce.number<string>()`。
+- `FeedSchema`：strictObject 拒绝未知键；title/url trim；HTTPS、无凭据等是 helper 的自建业务约束。
+- `ImportEventSchema`：按 kind 选择 RSS URL 或 OPML 文件名/分组；文件名只是元数据验证。
+- `BatchPolicySchema`：TTL 先拒绝空串/非标准正整数再转换到 1–60，input:string、output:number；superRefine 给每个后续重复项添加 sources.index.url。
+- `canonicalHttpsFeedUrl` 产生去重身份键，主机/default443/fragment 会影响比较，path/query 大小写保留。Schema 仅 trim 输出 URL，不将身份键替换到字段中。该 helper 不是 SSRF 控制或 HTML 净化器。
 
-## 迁移
+## 页面行为
 
-带走 `examples/example.tsx` 的三个 schema 和 `examples/boundary-policy.mjs`（含 `.d.mts`）。`demo.tsx` 只是再导出。用项目的 API client 替换本地 JSON 文本框。异步查重另加 `safeParseAsync`、AbortSignal 和 generation，不要把按钮上的同步 `safeParse` 说成已经防了竞态。
+编辑、切场景、载入反例、重置均失效旧输出。JSON.parse 错误与 issues 分开；textarea 有 label、aria-invalid/describedby，错误用 role=alert。Schema 在模块顶层，无网络/定时器/订阅清理。异步规则需另接 safeParseAsync 和调用方取消/代次控制，不要声称当前已覆盖异步竞态。
 
-## 不可删的清理
+## 验证
 
-schema 放在模块顶层。未知导入用 `strictObject`。URL 必须经过 `canonicalHttpsFeedUrl`，非法 URL 不能当去重键。TTL 的 pipe 保持「先正则、再数值范围」。卸载或草稿被替换时，尚未返回的 async parse 不得写回。
-
-## 反例
-
-```ts
-const data = (await res.json()) as Feed
-z.coerce.number() // '' → 0
-schema.safeParse(input) // schema 含 async refine 时不会等待
-z.compile(schema) // 未经 CSP 和热点证据不要默认开
-```
-
-- 用 `z.url()` 放行抓取。
-- 用 `z.object` 导入可能带 `isAdmin` 的配置。
-- composition 期间把 parse 结果写回受控输入。
-- 日志打印 `issues` 或原始 token。
-- 把 `z.toJSONSchema` 当成 `superRefine` 的双向合同。
-
-## 测试断言
-
-- `javascript:`、带用户信息的 URL、控制字符失败；`https` 主机大小写与 fragment 被规范化。
-- path 大小写保留，不能因此被当成重复。
-- OPML 文件名不能含 `/` 或 `\`。
-- TTL `''` 不是 0；`'15'` 的 output 是 number。
-- 重复 URL 的 path 是 `sources` 下标加 `url`。
-- 策略单测不是浏览器里跑过 `safeParse` 的证据。
-
-## 真实限制
-
-示例不发网络，没有 RHF resolver，没有 `z.compile()`。中文 IME 只在「不要在输入过程中回写」这条原则上被遵守，没有在真实输入法里验收。`canonicalHttpsFeedUrl` 不解析 DNS。
-
-## 证据
-
-没有 `docs/library-lab/evidence/runs/` 收据就不要写 PASS。仓库级 Actions 41779873259 不能抄到本条目。不要改 `verification.json`。
+`tests/sdk.test.mjs` 使用实际 Schema；`tests/boundary-policy.test.mjs` 只证明自建 helper。先检查 [`local-validation.md`](local-validation.md) 的命令、输入摘要及范围，再检查独立 review / browser 记录。正式 verification 与本地运行分开，未满足正式记证条件保持 NOT_RUN。官方英文原文、docs-v3 中文候选审查、固定版本与首页响应头见 official/source-audit.json。

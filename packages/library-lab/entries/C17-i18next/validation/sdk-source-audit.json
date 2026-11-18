@@ -1,0 +1,93 @@
+{
+  "checkedAt": "2026-11-10T18:14:46.404497+00:00",
+  "package": "i18next",
+  "installedVersion": "26.4.3",
+  "resolvedDirectory": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/i18next@26.4.3_typescript@7.0.2/node_modules/i18next",
+  "files": {
+    "package.json": {
+      "bytes": 3771,
+      "sha256": "ae3cb0d0bdb0e4136f392bcb26b96dee777e0c1183ed7f2600fb590d59d66f18"
+    },
+    "README.md": {
+      "bytes": 5593,
+      "sha256": "3964fe947138fb6369c58bbc7779eacc8877cf220d41db7647c9e4bd7c466966"
+    },
+    "LICENSE": {
+      "bytes": 1082,
+      "sha256": "1cd0a2b02a6cc40ef8ee16310d13eeffdd7b5de4a562fd3ee7c921d8eb54f60a"
+    },
+    "dist/esm/i18next.js": {
+      "bytes": 83433,
+      "sha256": "4fb2e0c4dfd13dda4f6cb292ae0f9c5260a13b28bab05ee723915351bdaf00a1"
+    },
+    "dist/cjs/i18next.js": {
+      "bytes": 82705,
+      "sha256": "2f52270ef02166dfef366406a544760e437d2be6e1cf91ea5789dad95c19af71"
+    },
+    "index.d.ts": {
+      "bytes": 19129,
+      "sha256": "9afbb72f8f6c5ec64d76f9e35dff53c34bd837ca0a495233d1a5567189066afb"
+    },
+    "index.d.mts": {
+      "bytes": 2765,
+      "sha256": "8463925b5047ebf784acd4664608e44b5d2dca1c66ec19994bf21763e7696162"
+    },
+    "typescript/options.d.ts": {
+      "bytes": 27064,
+      "sha256": "aa393b18fa89dcbac215904a8397f28332de13feaffcc2ee75a55101716302dd"
+    },
+    "typescript/t.d.ts": {
+      "bytes": 33042,
+      "sha256": "6ceedb8bcfc320422991ef1a40c60c91757dea0129b35d8888fe593871b2c4d0"
+    }
+  },
+  "findings": [
+    {
+      "path": "package.json",
+      "lines": "6-18",
+      "fact": "import export targets dist/esm/i18next.js; CommonJS distribution recorded separately; installed version26.4.3/MIT."
+    },
+    {
+      "path": "dist/esm/i18next.js",
+      "lines": "252-270",
+      "fact": "EventEmitter tracks callback identity; off(event) deletes all event listeners, off(event, callback) removes that callback. App wrappers give distinct owner identity."
+    },
+    {
+      "path": "dist/esm/i18next.js",
+      "lines": "379-403",
+      "fact": "addResourceBundle copies by default, deep-merges when requested and emits actual added(lng, ns, resources) unless silent."
+    },
+    {
+      "path": "dist/esm/i18next.js",
+      "lines": "1902-1921",
+      "fact": "init calls load immediately for inline resources or initAsync false, but returns deferred Promise."
+    },
+    {
+      "path": "dist/esm/i18next.js",
+      "lines": "2015-2038",
+      "fact": "changeLanguage sets current language and emits actual languageChanged before resolving its deferred. Application latest queue controls UI publication, not an SDK cancellation API."
+    },
+    {
+      "path": "dist/esm/i18next.js",
+      "lines": "2068-2083",
+      "fact": "getFixedT attaches fixed language to call options unless explicitly overridden; committed-language rendering can remain distinct from observed SDK state."
+    },
+    {
+      "path": "index.d.ts",
+      "lines": "45-58,315-337,475,524-532",
+      "fact": "ResourceStore added/removed on/off, getFixedT, languageChanged and addResourceBundle signatures match app calls."
+    },
+    {
+      "path": "typescript/options.d.ts",
+      "lines": "329,704,741",
+      "fact": "escapeValue, returnDetails and initAsync are actual options; escaping is interpolation, not arbitrary HTML sanitization."
+    },
+    {
+      "path": "typescript/t.d.ts",
+      "lines": "380-388",
+      "fact": "returnDetails true maps to detailed result type."
+    }
+  ],
+  "scope": "Read-only installed types/source audit. No fresh SDK/browser run. Cleanup claim limited to application owned callbacks and UI queue publication; no SDK destroy/abort/global census.",
+  "readmeMatchesOfficial": true
+}

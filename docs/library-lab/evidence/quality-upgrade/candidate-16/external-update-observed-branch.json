@@ -1,0 +1,15 @@
+{
+  "source": "Real passing Playwright JSON reporter attachment; not a formal verification receipt",
+  "observation": {
+    "sdkRetainedEditor": true,
+    "staleRequestConflictExercised": true,
+    "authoritativeRow": {
+      "id": "feed-0001",
+      "name": "Frontend Weekly 1",
+      "category": "前端",
+      "articles": 0,
+      "status": "error",
+      "revision": 2
+    }
+  }
+}

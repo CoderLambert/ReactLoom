@@ -1,0 +1,275 @@
+// NOT_RUN. Root integrates for a matching shared build. Actual RGL/native mouse/DOM/RO.
+// The imported SDK calculation predicts physical geometry, never substitutes for a DOM observation.
+import { expect, type Locator, type Page, test } from '@playwright/test'
+import { calcGridItemPosition } from 'react-grid-layout/core'
+
+type Cell = { i: string; x: number; y: number; w: number; h: number; static?: boolean }
+type State = {
+  mounted: boolean
+  width: number
+  breakpoint: 'wide' | 'narrow'
+  cols: number
+  locked: boolean
+  changes: number
+  wide: Cell[]
+  narrow: Cell[]
+  sdk: { dragStops: number; resizeStops: number; last: null | (Cell & { kind: string }) }
+}
+async function state(app: Locator): Promise<State> {
+  return JSON.parse((await app.getByTestId('b15-state').textContent()) ?? '{}')
+}
+async function layout(app: Locator): Promise<Cell[]> {
+  return JSON.parse((await app.getByTestId('b15-layout').textContent()) ?? '[]')
+}
+const shape = (cells: Cell[]) => cells.map(({ i, x, y, w, h }) => ({ i, x, y, w, h }))
+function cell(cells: Cell[], id: string) {
+  const value = cells.find((item) => item.i === id)
+  if (!value) throw new Error(`Missing actual cell ${id}`)
+  return value
+}
+const card = (app: Locator, id: string) => app.getByTestId(`b15-card-${id}`)
+async function open(page: Page, level: 'basic' | 'business' | 'advanced') {
+  await page.setViewportSize({ width: 1600, height: 1800 })
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.goto(`/libraries/react-grid-layout?tab=demo&example=${level}`)
+  const run = page.getByRole('button', { name: '运行当前示例', exact: true })
+  if (await run.isVisible()) await run.click()
+  const app = page.getByTestId('b15-workshop')
+  await expect(app).toHaveAttribute('data-mounted', 'true')
+  await expect(app).toHaveAttribute('data-cols', '12')
+  await expect(app.locator('.react-grid-item')).toHaveCount(3)
+  return app
+}
+async function geometry(app: Locator) {
+  await expect
+    .poll(async () => {
+      const current = await state(app)
+      const box = await app.locator('.react-grid-layout').boundingBox()
+      if (!box) return Infinity
+      const hostWidth = await app
+        .getByTestId('b15-container')
+        .evaluate((node) => node.getBoundingClientRect().width)
+      let difference = Math.abs(hostWidth - current.width)
+      for (const item of await layout(app)) {
+        const expected = calcGridItemPosition(
+          {
+            containerWidth: current.width,
+            cols: current.cols,
+            rowHeight: 78,
+            margin: [10, 10],
+            containerPadding: [10, 10],
+            maxRows: Infinity,
+          },
+          item.x,
+          item.y,
+          item.w,
+          item.h,
+        )
+        const actual = await card(app, item.i).boundingBox()
+        if (!actual) return Infinity
+        difference = Math.max(
+          difference,
+          Math.abs(actual.x - box.x - expected.left),
+          Math.abs(actual.y - box.y - expected.top),
+          Math.abs(actual.width - expected.width),
+          Math.abs(actual.height - expected.height),
+        )
+      }
+      return difference
+    })
+    .toBeLessThan(1.1) // Wait for real RO/React layout settling, not a fixed synthetic delay.
+}
+async function drag(page: Page, handle: Locator, dx: number, dy: number) {
+  await handle.scrollIntoViewIfNeeded()
+  const box = await handle.boundingBox()
+  if (!box) throw new Error('Missing actual pointer handle')
+  const x = box.x + box.width / 2,
+    y = box.y + box.height / 2
+  await page.mouse.move(x, y)
+  await page.mouse.down()
+  await page.mouse.move(x + dx, y + dy, { steps: 12 })
+  await page.mouse.up()
+}
+
+test('@B15 measured read-only grid projects real DOM and switches container width without losing wide geometry', async ({
+  page,
+}) => {
+  const app = await open(page, 'basic')
+  // Reproduce a portable host's default box model; the entry owns its card geometry.
+  await page.addStyleTag({
+    content: ':where(.b15-workshop,.b15-workshop *){box-sizing:content-box}',
+  })
+  const initial = shape(await layout(app))
+  expect(initial).toEqual([
+    { i: 'headline', x: 0, y: 0, w: 4, h: 2 },
+    { i: 'feed', x: 4, y: 0, w: 4, h: 2 },
+    { i: 'queue', x: 8, y: 0, w: 4, h: 2 },
+  ])
+  await geometry(app)
+  for (const button of await app.locator('.lab-grid-control').all())
+    await expect(button).toBeDisabled()
+  await drag(page, card(app, 'headline').locator('.lab-grid-handle'), 100, 0)
+  expect(shape(await layout(app))).toEqual(initial)
+  expect((await state(app)).sdk.dragStops).toBe(0)
+  await app.getByRole('combobox', { name: '容器宽度', exact: true }).selectOption('narrow')
+  await expect(app).toHaveAttribute('data-cols', '6')
+  expect((await state(app)).width).toBeLessThanOrEqual(580)
+  expect(shape(await layout(app))).toEqual([
+    { i: 'headline', x: 0, y: 0, w: 6, h: 2 },
+    { i: 'feed', x: 0, y: 2, w: 6, h: 2 },
+    { i: 'queue', x: 0, y: 4, w: 6, h: 2 },
+  ])
+  await geometry(app)
+  await app.getByRole('combobox', { name: '容器宽度', exact: true }).selectOption('auto')
+  await expect(app).toHaveAttribute('data-cols', '12')
+  expect(shape(await layout(app))).toEqual(initial)
+  expect((await state(app)).changes).toBe(0) // initial geometries are already compact; measuring alone is not a business change
+  await geometry(app)
+})
+
+test('@B15 real title drag and se resize update physical layout, while native control buttons do not drag', async ({
+  page,
+}) => {
+  const app = await open(page, 'business')
+  const held = await card(app, 'headline').elementHandle()
+  if (!held) throw new Error('Missing stable actual card')
+  const before = shape(await layout(app))
+  const step = ((await state(app)).width - 10) / 12
+  await drag(page, card(app, 'headline').locator('.lab-grid-handle'), step + 5, 0)
+  await expect.poll(async () => (await state(app)).sdk.dragStops).toBeGreaterThan(0)
+  expect((await state(app)).sdk.last).toMatchObject({ kind: 'drag', i: 'headline' })
+  expect(shape(await layout(app))).not.toEqual(before)
+  await geometry(app)
+  const dragCount = (await state(app)).sdk.dragStops
+  const oldFeedWidth = cell(await layout(app), 'feed').w
+  const narrower = app.getByRole('button', { name: '缩窄订阅趋势', exact: true })
+  await narrower.focus()
+  await page.keyboard.press('Enter')
+  await expect.poll(async () => cell(await layout(app), 'feed').w).toBe(oldFeedWidth - 1)
+  expect((await state(app)).sdk.dragStops).toBe(dragCount)
+  const oldWidth = cell(await layout(app), 'headline').w
+  await drag(page, card(app, 'headline').locator('.react-resizable-handle-se'), step + 5, 0)
+  await expect.poll(async () => (await state(app)).sdk.resizeStops).toBeGreaterThan(0)
+  await expect.poll(async () => cell(await layout(app), 'headline').w).toBeGreaterThan(oldWidth)
+  expect((await state(app)).sdk.last).toMatchObject({ kind: 'resize', i: 'headline' })
+  expect(await held.evaluate((node) => node.isConnected)).toBe(true)
+  expect((await state(app)).changes).toBeGreaterThan(0)
+  await geometry(app)
+})
+
+test('@B15 independent breakpoint drafts, frozen item, keyboard swaps, reset and real owned subtree teardown', async ({
+  page,
+}) => {
+  const errors: string[] = []
+  page.on('pageerror', (error) => errors.push(error.message))
+  const app = await open(page, 'advanced')
+  await app.getByRole('button', { name: '缩窄新闻总览', exact: true }).click()
+  await expect.poll(async () => cell(await layout(app), 'headline').w).toBe(3)
+  const wideDraft = shape((await state(app)).wide)
+  await app.getByRole('combobox', { name: '容器宽度', exact: true }).selectOption('narrow')
+  await expect(app).toHaveAttribute('data-cols', '6')
+  await app.getByRole('checkbox', { name: '锁定新闻总览', exact: true }).check()
+  const frozen = cell(await layout(app), 'headline')
+  expect(frozen.static).toBe(true)
+  for (const button of await card(app, 'headline').getByRole('button').all())
+    await expect(button).toBeDisabled()
+  await expect(app.getByRole('button', { name: '向上移动订阅趋势', exact: true })).toBeDisabled()
+  const dragCount = (await state(app)).sdk.dragStops
+  await drag(page, card(app, 'headline').locator('.lab-grid-handle'), 0, 88)
+  expect(cell(await layout(app), 'headline')).toEqual(frozen)
+  expect((await state(app)).sdk.dragStops).toBe(dragCount)
+  const down = app.getByRole('button', { name: '向下移动订阅趋势', exact: true })
+  await down.focus()
+  await page.keyboard.press('Enter')
+  await expect.poll(async () => cell(await layout(app), 'feed').y).toBe(4)
+  expect(cell(await layout(app), 'queue').y).toBe(2)
+  expect(cell(await layout(app), 'headline')).toEqual(frozen)
+  expect(shape((await state(app)).wide)).toEqual(wideDraft)
+  await geometry(app)
+  await app.getByRole('combobox', { name: '容器宽度', exact: true }).selectOption('auto')
+  await expect(app).toHaveAttribute('data-cols', '12')
+  expect(shape(await layout(app))).toEqual(wideDraft)
+  expect(cell((await state(app)).narrow, 'feed').y).toBe(4)
+  await app.getByRole('button', { name: '重置宽窄布局', exact: true }).click()
+  await expect(app.getByRole('checkbox', { name: '锁定新闻总览', exact: true })).not.toBeChecked()
+  await expect.poll(async () => cell(await layout(app), 'headline').w).toBe(4)
+  expect((await state(app)).sdk).toEqual({ dragStops: 0, resizeStops: 0, last: null })
+  await page.setViewportSize({ width: 390, height: 980 })
+  await expect(app).toHaveAttribute('data-cols', '6')
+  await geometry(app)
+  const box = await app.getByTestId('b15-container').boundingBox()
+  if (!box) throw new Error('Missing real narrow container')
+  expect(box.x).toBeGreaterThanOrEqual(0)
+  expect(box.x + box.width).toBeLessThanOrEqual(391)
+  const oldGrid = await app.locator('.react-grid-layout').elementHandle()
+  if (!oldGrid) throw new Error('Missing real SDK grid before unmount')
+  await page.getByRole('button', { name: '停止并卸载', exact: true }).click()
+  await expect(app).toHaveCount(0)
+  expect(await oldGrid.evaluate((node) => node.isConnected)).toBe(false)
+  await page.setViewportSize({ width: 1600, height: 1800 })
+  await page.mouse.move(40, 40)
+  await page.mouse.up()
+  await page.getByRole('button', { name: '运行当前示例', exact: true }).click()
+  await expect(app).toHaveAttribute('data-mounted', 'true')
+  await expect(app).toHaveAttribute('data-cols', '12')
+  expect((await state(app)).sdk).toEqual({ dragStops: 0, resizeStops: 0, last: null })
+  expect(cell(await layout(app), 'headline').w).toBe(4)
+  expect(errors).toEqual([])
+})
+// Remaining NOT_RUN: complete SDK listener/RO census, touch/OS input, screen-reader drag announcements,
+// SSR hydration, large-grid performance and backend persistence/authorization. No pointer/RO mock.
+
+test('@B15 actual active drag unmount releases its patched SDK edge-scroll RAF in a scrollable host', async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    const request = window.requestAnimationFrame.bind(window)
+    const cancel = window.cancelAnimationFrame.bind(window)
+    const active = new Set<number>()
+    Object.defineProperty(window, '__b15PendingRaf', { value: () => active.size })
+    window.requestAnimationFrame = (callback) => {
+      const id = request((time) => {
+        active.delete(id)
+        callback(time)
+      })
+      active.add(id)
+      return id
+    }
+    window.cancelAnimationFrame = (id) => {
+      active.delete(id)
+      cancel(id)
+    }
+  })
+  const app = await open(page, 'business')
+  await app.evaluate((node) => {
+    node.style.height = '600px'
+    node.style.overflowY = 'auto'
+  })
+  const handle = card(app, 'headline').locator('.lab-grid-handle')
+  await handle.scrollIntoViewIfNeeded()
+  const box = await handle.boundingBox()
+  if (!box) throw new Error('Missing real handle')
+  await page.mouse.move(box.x + 25, box.y + 10)
+  await page.mouse.down()
+  await page.mouse.move(box.x + 160, box.y + 25, { steps: 10 })
+  await expect(app.locator('.react-draggable-dragging')).toHaveCount(1)
+  // Application stop fixture while the actual mouse remains held; no fake SDK event.
+  await page.getByRole('button', { name: '停止并卸载', exact: true }).evaluate((node) => {
+    if (!(node instanceof HTMLButtonElement)) throw new Error('Missing actual stop button')
+    node.click()
+  })
+  await expect(app).toHaveCount(0)
+  await expect
+    .poll(() =>
+      page.evaluate(() => {
+        const probe: unknown = Reflect.get(window, '__b15PendingRaf')
+        if (typeof probe !== 'function') throw new Error('Missing RAF observation')
+        return probe()
+      }),
+    )
+    .toBe(0)
+  await page.mouse.up()
+  await page.getByRole('button', { name: '运行当前示例', exact: true }).click()
+  await expect(app).toHaveAttribute('data-mounted', 'true')
+  expect((await state(app)).sdk.dragStops).toBe(0)
+})

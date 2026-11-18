@@ -1,14 +1,14 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "已编写真实SDK调用，但本批未执行npm/浏览器运行"
+    "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B04.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
   },
   "build": {
     "status": "NOT_RUN",
-    "note": "尚未完成依赖完整的TS/Vite构建"
+    "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B04.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "未进行Chromium、无障碍与资源清理实测"
+    "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B04.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
   }
 }

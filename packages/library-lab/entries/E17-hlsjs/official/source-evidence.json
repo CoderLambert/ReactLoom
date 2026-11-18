@@ -1,0 +1,49 @@
+{
+  "checkedAt": "2026-11-17T18:13:47.988203+00:00",
+  "repository": "video-dev/hls.js",
+  "tag": "v1.7.3",
+  "annotatedTag": "be6a62d80e3775a60475b60568965b3243e64024",
+  "commit": "e5ff3583965e3af16c4a4b4d2b5f7bd1ffb5b7de",
+  "readmeCandidates": ["README.md"],
+  "selection": "Official README; no Chinese README in fixed tree.",
+  "packageFields": {
+    "installedVersion": "1.7.3",
+    "installedLicense": "Apache-2.0",
+    "upstreamVersion": null,
+    "upstreamLicense": "Apache-2.0",
+    "note": "Pinned source root package omits version; installed release package declares1.7.3, tag pins source."
+  },
+  "publicTestSource": {
+    "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+    "fixedReadmeLines": [
+      {
+        "line": 392,
+        "text": "  var videoSrc = 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8';"
+      },
+      {
+        "line": 424,
+        "text": "  var videoSrc = 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8';"
+      }
+    ],
+    "scope": "Official README example, not production or footage redistribution rights. This author did not download/store segments."
+  },
+  "homepage": {
+    "url": "https://hlsjs.video-dev.org/demo/",
+    "status": 200,
+    "headers": {
+      "date": "Tue, 17 Nov 2026 18:12:47 GMT",
+      "content-type": "text/html; charset=utf-8",
+      "nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+      "access-control-allow-origin": "*",
+      "cache-control": "public, max-age=0, must-revalidate",
+      "report-to": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=AAx8BG2mhzMu%2B%2FHi0Ihp8IxwJR%2B6C3IshKMmGQtGiP5P5CN8m%2Fajsr3ZKYKD45yZJsugEPw6zVW%2Fc%2BZYbJr5kenLxereMvp6r%2F5XaMAqrXtbtmFxawNAYxdPEauz6zIqZqixoJYq1pOPT%2B6tc%2Fe6afMI\"}]}",
+      "referrer-policy": "strict-origin-when-cross-origin",
+      "x-content-type-options": "nosniff",
+      "server": "cloudflare",
+      "cf-ray": "a5c0b4a5c8e4d278-FRA",
+      "alt-svc": "h3=\":443\"; ma=86400"
+    },
+    "bodySha256": "9283e087b76222293c6be18e7d1b5422fb79796ed110a4da93a7714c0b75d0f3",
+    "observation": "urllib initial403; curl GET200 raw headers saved."
+  }
+}

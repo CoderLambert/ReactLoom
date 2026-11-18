@@ -1,0 +1,17 @@
+{
+  "validation/calendar-red.txt": "1b9a064ad82705018c3facde3996a2a8a1fe3ae123f890400bcb9f968621486d",
+  "validation/diff-check.txt": "ab5e7ee2ab3ec79eae25ba47a97da94d58eea278c75d051a9b5d497ee625bda9",
+  "validation/final-inspection.txt": "58a85598f9a617b05ede1bf5b970ebd286bd27bee7eb6b77f0bc2df256c7843b",
+  "validation/format-code.txt": "541f10bae3bf4dd9b774c2777d8cfef3f9401a40341fdbc19ac835b9f4be2f57",
+  "validation/format-final.txt": "c66653b41a321233edcac6cd94a7d7312406ea691f073127a8fe61ce68bad1da",
+  "validation/format-initial.txt": "f3bf3a8f9087b241f9287519cf77878f2d853da386d586aba32187c3cc312f1f",
+  "validation/format-schema.txt": "91b68be6daa57cb41bd5cd66b1fc71bd2aae0cdb3603ad3bcf6f378abcff44c4",
+  "validation/metadata-final.txt": "817f4c01d21e4e724069b09e3160af45ff889428cf3eb04fa77fc7766fc0a607",
+  "validation/metadata.txt": "5420f618bad9a07f4289c5fec281e2633e9cadd41b7cabe96c918dc5171d4b4e",
+  "validation/policy.txt": "7ee705d538521d6d124ec0cfd168d427ef450662f4f8816e50a96d6905c68c2b",
+  "validation/proposal-types.txt": "1dbdb0f36ea04731340bd699d0c24eece82e5b48e6e4d57faf9f974e9436fe9f",
+  "validation/sdk.txt": "2c85fed854b12b2a328fb384d63fa4d924942f0c169a97fe30910c986c864466",
+  "validation/source-fetch.txt": "619b80cbe02861a71478f4488c990fb4409d6c2bc44effc1174a8f62be0e7e31",
+  "validation/types-initial.txt": "5b9139f784b58a5974664553a01d9481ed6945e00af9a6e3ba6c96a64aead245",
+  "validation/types.txt": "b3526ed3f78a285add6a4f6b9053c11733742c6c6c7c954b1285759f91e84259"
+}

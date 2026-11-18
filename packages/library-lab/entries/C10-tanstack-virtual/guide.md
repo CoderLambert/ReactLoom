@@ -1,204 +1,82 @@
-# TanStack Virtual 3.14.21｜滚动窗口要自己画
+# TanStack Virtual：数据留在内存，DOM只保留一个窗口
 
-Lab 锁定 `@tanstack/react-virtual@3.14.21`（MIT）。`useVirtualizer` 只计算哪些下标该出现、它们的起点和总高度。滚动容器、绝对定位、业务键、测量和可访问性都由组件负责。它不缓存请求，也不知道 RSS 是否该被净化。
+文章列表有数千条，逐条.map会创建大量DOM；又希望自己决定文章标记、展开内容和滚动容器。TanStack Virtual计算窗口、偏移和尺寸，React按这些结果画行。本例使用`@tanstack/react-virtual@3.14.21`，实际依赖`@tanstack/virtual-core@3.19.6`，均MIT，宿主React19.3；数据全部是确定性的本地fixture，没有分页请求。
 
-没有收据时 sdk / build / browser 保持 NOT_RUN。Actions 41779873259 不是本条目 PASS。
+适合需要控制DOM/容器的列表；希望更少地处理动态列表样板可比较C09 Virtuoso，完整表格先由C07拥有行模型。虚拟化减少已挂载DOM，不减少当前数组数据，也不提供请求缓存、游标或服务端权限。8000/3400是对象数，不是容量、帧率或内存测量。
 
-## Lab 当前示例
+## 核心模型：估计、测量、身份
 
-[`examples/example.tsx`](examples/example.tsx) 调用真实的 `useVirtualizer`。`demo.tsx` 只做再导出。没有二维网格，没有 `localhost` 上的无限接口。
+`items → count/getItemKey/estimateSize → Virtualizer范围与totalSize → 自己定位/测量DOM`。
+
+| 输入或结果 | 本例含义 |
+| --- | --- |
+| count | 当前已提交筛选后的数组长度 |
+| estimateSize | 94px，仅对尚未量过的行估计，不是CSS固定高度 |
+| getItemKey | `stableRowId(items,index)`返回rss-*业务ID，React也用row.key |
+| getVirtualItems | 包含overscan=5的实际渲染窗口，含index/key/start/size |
+| getTotalSize | 整个列表的模型总高度，用来撑起滚动条 |
+| measureElement | 测量外层行，实际高度更新尺寸模型 |
+
+[`virtual-contract.ts`](examples/virtual-contract.ts)共享fixture、筛选和窗口选项；[`example.tsx`](examples/example.tsx)是唯一React实现。最小接入的关键不是某个CSS类，而是三处连接：
 
 ```tsx
 const virtualizer = useVirtualizer({
-  count: items.length,
+  ...createVirtualOptions(items),
   getScrollElement: () => viewport.current,
-  getItemKey,
-  estimateSize: () => 94,
-  overscan: 5,
   useFlushSync: false,
 })
+// 有确定高度和overflow的viewport里：
+<div style={{height: virtualizer.getTotalSize(), position: 'relative'}}>
+  {virtualizer.getVirtualItems().map(row => (
+    <div key={row.key} data-index={row.index}
+      ref={virtualizer.measureElement}
+      style={{position: 'absolute', top: 0, transform: `translateY(${row.start}px)`}}>
+      {/* 按row.index取真实文章；完整结构/宽度/样式见源码 */}
+    </div>
+  ))}
+</div>
 ```
 
-- **basic**：8,000 条。滚动区高度 365，`overflowY: 'auto'`，`tabIndex={0}`。内层高度是 `getTotalSize()`。每一行 `position: absolute`，`transform: translateY(row.start)`，`ref={virtualizer.measureElement}`，`data-index={row.index}`，React key 是 `row.key`。
-- **business**：3,400 条上再按分类和关键词过滤。提交时 [`filter-policy.mjs`](examples/filter-policy.mjs) 的 `normalizeFilterQuery` 做 NFC、去控制字符、最多 80 个码点。`viewIdentity(category, query, revision)` 用 `JSON.stringify` 而不是字符串拼接，避免边界碰撞。这个字符串作为 `VirtualList` 的 `key`。相同关键词再提交也会 `revision + 1`，从而丢掉旧测量。
-- **advanced**：同一套过滤，加上按业务 ID 展开的长文本。展开按钮有 `aria-expanded`。`onChange` 只在 `isScrolling === false` 时把测量范围写进状态，避免滚动每一帧 `setState`。
+完整组件保持getItemKey引用稳定且依赖当前items；源数据缺id/越界会明确抛错，不合成missing-index。外来数据还需由生产者确保ID全局唯一。测量ref和data-index在同一外层，内容自然撑高，不把row.size再写成固定height。
 
-`stableRowId` 在下标越界或 id 为空时抛错。不允许合成 `missing-index` 这种假键。
+## 目标一：8000数据与小型DOM窗口
 
-研究笔记里的横向 `horizontal: true` 列虚拟化、20 万格和语义分页表没有挂上。那是生产里要另做的可访问性出口，不是当前 DOM。
+运行“基础窗口与键盘滚动”。数据8000条，但DOM窗口只是视口加overscan附近的行。滚动区365px高，可聚焦后用PageDown/方向键，也可直接滚轮；“跳转靠近末尾”调用真实scrollToIndex(count-20,{align:'center'})，“回到顶部”定位index0，没有smooth干扰动态尺寸校正。
 
-## 什么时候用
+`c10-model`展示真实SDK的窗口数量、首尾index/key、totalSize与scrollOffset。“停滚后范围”是未加overscan的视口范围；DOM窗口来自getVirtualItems，可能比它更大。不能把DOM窗口数量等同于可见文章数或固定14行。
 
-你要控制标记和滚动容器，行数已经让 `.map` 的 DOM 过重。行高变化频繁、希望库多管测量和锚点时，C09 的 Virtuoso 更省样板。完整表格用 C07，再决定要不要行虚拟化。几百行不必引入。
+自建停滚文字只在onChange且isScrolling=false时写state；SDK/React适配器仍按自身机制更新渲染，不能说整个滚动过程没有React更新。本例保留useFlushSync:false作为显式批处理策略；**实装适配器已有测量ref期间的flushSync保护**，不是宣称默认true必然在React19报错。快速滚动与变高效果仍由浏览器验收。
 
-逻辑上的 8,000 条不是帧率，也不是内存上限。DOM 行数应接近视口加上 `overscan: 5`。
+## 目标二：统一提交筛选与视图身份
 
-## 数据与模型
+运行“统一筛选与视图身份”，3400条基础数据。分类和关键词都先是草稿：仅改变分类时结果仍3400；按“筛选”才一起提交。选“工程实践”再提交，确定性结果是850条，ID仍为rss-1、rss-5等，不变成结果下标。
 
-四个数要分开：
+关键词由[`normalizeFilterQuery`](examples/filter-policy.mjs)做NFC、删除ASCII控制字符、trim和最多80码点截断，这是应用策略，不是Virtualizer搜索能力。`c10-filter-state`显示已提交category/query/revision/count；文本框保留草稿，不把用户输入每一帧当查询。
 
-| 概念 | Lab 里是什么 |
-| --- | --- |
-| count | 当前过滤后的数组长度 |
-| estimate | 94px，只用于还没量过的行 |
-| measurement | `measureElement` 读到的真实高度 |
-| key | `items[index].id`，不是 index |
+筛选提交后 `viewIdentity(category,query,revision)`用JSON编码成为VirtualList的React key；分类/词变化和**同词再次提交**都让revision增加，重新挂载一个没有旧滚动/尺寸的视图。先跳到深处，再重复提交相同条件，新视图应从顶部开始。这是本例选择的测量失效策略，不是SDK自动理解查询。
 
-`getScrollElement` 必须指向那个 `overflow: auto` 且有确定高度的节点。父级只有 `height: 100%` 而祖先高度未定，滚动不会发生，`getVirtualItems()` 会一直像第一屏。
+输入不存在的关键词并提交，显示明确空态，两个跳转按钮禁用；“重置筛选”恢复全部3400条并重建视图。组合输入期间不提交，Enter候选确认用isComposing/229和当前确认按键状态保护；Space/鼠标结束组合不会无条件吞掉下一次正常Enter。合成事件只能验证应用守卫，真实OS输入法仍另验。
 
-内层占位若不设 `height: getTotalSize()`，滚动条长度是错的。行若不绝对定位到 `translateY(start)`，它们会叠在左上角。
+## 目标三：变高行与测量重建
 
-`getItemKey` 用 `useCallback` 固定，并依赖当前 `items`。过滤之后数组变了，key 函数必须看新数组。用 index 当 key，展开集合会跟错行。
+运行“变高行测量与视图重建”。展开首条长文，真实DOM高度增加，measureElement/ResizeObserver更新模型，下一行的start向下移动而不是覆盖；收起后重新测量恢复。`c10-model.totalSize`是模型结果，不是手工给出的展开高度。
 
-`useFlushSync: false` 是为了避开 React 19 在滚动测量里对 `flushSync` 的警告。关掉之后要在浏览器里看快速输入和滚动是否仍正确，不能只改这个布尔就当验收。
+用稳定业务ID保存展开Set，普通滚动不会把状态带给另一个下标；但当前Set在VirtualList内部，重复筛选导致重挂时会清空。若产品要保留展开，应把Set移到视图key外，并清除已不存在的ID。本例用更明确的重建换掉旧测量，代价是丢掉该视图的展开/滚动状态。
 
-官方允许 `resizeItem` 或 `measureElement`。不要对同一行两套一起写，尺寸会打架。`directDomUpdates` 也没有打开。打开之后就不要再手写 transform 和内层高度。
+同一DOM行只由measureElement决定尺寸，不再同时resizeItem；directDomUpdates未打开，所以应用继续拥有transform和总高度样式。实际展开、深跳与窗口resize均需浏览器测量，不能用Node里传入一个数来冒充DOM高度。
 
-动态高度下，`scrollToIndex` 使用对齐选项即可。大幅改高度后再要求 `smooth`，滚动距离会一边滚一边被纠正。Lab 的「跳转靠近末尾」没有开 smooth。
+## 接入、清理与可复核模型
 
-SSR 没有滚动容器。`initialRect` 只能做预估。本 Demo 没有服务端渲染，不能把 Vite 客户端当成水合已经对齐。
+复制源码面板六个文件：example/demo、virtual-contract、filter-policy及声明、styles.css，安装`@tanstack/react-virtual@3.14.21`。不需单独加core依赖，本例通过React入口公开再导出的Virtualizer做Node模型核对；实际core版本3.19.6另记。样式提供滚动区高度、定位、内容宽度/换行和焦点，不依赖Lab全局reset或远程资产。
 
-## 三层示例
+应用拥有文章/草稿/已提交筛选/展开状态；SDK拥有滚动监听、ResizeObserver和尺寸缓存。useVirtualizer挂载effect返回SDK清理，离开/重挂卸载自己子树即可，不调用全局stop。组件没有网络、业务定时器或Observer替代物。未挂载文章不在无障碍树中，不能宣称8000条都可被读屏器线性访问；分页的语义出口需另设计。
 
-### 基本
+Node局部证据分两种：React SSR只有无视口初始化（0窗口行）；公开core模型显式给initialRect=640×200、20条94px估计，实际得到total1880/8个含overscan项。模型传resizeItem(0,152)后得到1938，重排按业务key保留，measure()清缓存回1880。**这些是实际SDK模型执行和人工尺寸输入，未运行浏览器测量或滚动。**
 
-状态行应出现「数据 8000 条」和远小于 8000 的「DOM窗口」。滚轮移动后，范围数字变化。点「跳转靠近末尾」再「回到顶部」，窗口跟着走。若范围一直是初始化中，先查 ref 是否在第一次提交之后才可用，以及容器是否真的能滚动。
+## 官方原文与验收边界
 
-### 业务
+[官方原README](official/readme.md)固定TanStack/virtual@`28ff2cab7a970f4e0908229d65a0da8803903900`的README.md，英文5226B、SHA-256 `24bd3ff93da253313681dbe66adab7b012caca06f03edc516dfd875a1274ff00`。匹配React包目录没有README（安装包也未附带），因此回退同提交根原文；未截断tree没有匹配中文候选。npm省略gitHead，实际annotated React版本tag经ls-remote解析并peel后，再核React/core两个manifest，未把tag对象当commit。
 
-选「工程实践」再输入关键词并提交。列表 key 变化，滚动回到新结果的顶部附近。组合期间 `composing` 为真，提交函数直接返回，URL 或查询状态都不变（本组件没有 URL）。把分类改掉但不按「筛选」，列表仍用上一次提交的 query；分类的 `<select>` 是立即 `setCategory` 的，所以分类会马上过滤。这是当前代码的行为：分类即时，关键词要提交。迁到产品里时应写成同一种提交策略，避免一半即时、一半延迟。
+[完整来源证据](official/source-evidence.json)保存实际7GET完整头、固定版本/候选/日期/摘要及真实tag解析stdout。官网https://tanstack.com/virtual最终GET200有X-Frame-Options:DENY且无CSP frame-ancestors覆盖，标blocked、保留直达；没有Lab-origin允许证据，不能标allowed。
 
-### 进阶
-
-展开一行，长文本出现，下一行被推下去而不是重叠。收起后高度回来。快速跳到末尾再展开，测量应跟着 `data-index` 而不是跟着上一份筛选的下标。重复提交同一关键词，revision 增加，旧的展开 Set 在 `VirtualList` 内，key 一变组件重挂，展开状态会清空。这是示例用 key 换测量的代价。若产品要保留展开，把 `Set` 抬到 key 外面，并在 id 消失时删掉。
-
-## 反例
-
-### 1. key 用虚拟下标
-
-```tsx
-<div key={virtualRow.index} />
-```
-
-插入、排序、过滤之后测量缓存和展开状态错位。`getItemKey` 返回业务 id，React key 用 `row.key`。
-
-### 2. 滚动区没有高度
-
-```tsx
-<div ref={viewport} style={{ height: '100%' }} />
-```
-
-祖先没有确定高度时，`scrollTop` 不动。Lab 写了 365px 和 `overflowY: 'auto'`。
-
-### 3. 忘记总高度
-
-行平移了，滚动条却只有一屏。内层 `height: virtualizer.getTotalSize()`。
-
-### 4. 动态行没有 data-index 或 measureElement
-
-展开后的高度不会写回这一行。两者都绑在行的根节点上。
-
-### 5. estimateSize 过小
-
-估 20px、真实 300px，跳转后位置会漂。先给偏大的估计，再让测量纠正。不要改成写死的像素来「消掉」跳动。
-
-### 6. overscan 设成几百
-
-为了不闪而把 DOM 几乎全部挂上。从 4 到 8 开始，用真实节点数调整。Lab 是 5。
-
-### 7. 用 virtualItem.index 当 cursor
-
-请求层保存服务端游标。虚拟器只有当前数组的下标。
-
-### 8. 只 abort 不换 view identity
-
-旧测量和旧滚动会留在新关键词上。`viewIdentity` 带 revision。
-
-### 9. resizeItem 和 measureElement 一起用
-
-同一行两个主人。Lab 只用测量 ref。
-
-### 10. directDomUpdates 再手写 transform
-
-布局所有权重叠。选定一种。
-
-### 11. 数据卸载就以为读屏器也能访问全部行
-
-滚动容器虽然能聚焦，未挂载的文章仍然不在无障碍树上。长列表要另给分页的原生内容，或明确只保证窗口内可读。
-
-### 12. 缺 id 时编一个 missing-index
-
-`stableRowId` 选择抛错。静默键会把两行合成一个，测量更难查。
-
-## 组合
-
-**Query。** 无限查询拥有页、错误和 `signal`。Virtual 接收 flatten 后的只读数组。触底调用 `fetchNextPage`。queryKey 包含分类、规范化关键词和排序。本 Demo 的 3,400 条是一次性 `useMemo`，没有这一层。
-
-**Table + RHF。** 表负责列和 `getRowId`。虚拟器负责行窗口。被卸载的输入不能是草稿的唯一副本。服务端分页和客户端虚拟化不要对同一批数据各排一次序。官方有表格示例，本文件没有接入。
-
-**DOMPurify。** 标题和摘要是文本。若要渲染 RSS HTML，净化在进入虚拟行之前完成。
-
-## 生产清单
-
-- 滚动容器有高度、`overflow` 和 `overscrollBehavior: 'contain'`。
-- 行有 `data-index`、测量 ref、业务 key、`translateY`。
-- 过滤和重复提交都会换 `viewIdentity`。
-- 滚动过程中不要每个像素 `setState`。Lab 只在停下时更新范围。
-- 展开控件有 `aria-expanded`。区域有名字。
-- 不要把 8,000 写成性能指标。用目标设备的 DOM 数量和长任务来判断。
-- 裁剪已加载数组之前，先定滚动锚点。否则 index 和测量一起错。
-
-## 升级
-
-3.14 的 React 适配器使用 `useVirtualizer` 和 `getItemKey`。不要从 Virtuoso 复制 `computeItemKey`。升级后看 `useFlushSync` 的默认值是否还需要关掉，并在浏览器里滚一次变高列表。
-
-分类 `<select>` 会立刻 `setCategory`，关键词要按「筛选」才 `setQuery`。两次操作都会换 `viewIdentity`，因为 key 含分类、查询和 revision。只改分类时 revision 不变，但分类字符串变了，列表仍会重挂。不要再额外用 index 当 React key。
-
-`getItemKey` 在渲染虚拟行时由库调用。它必须看当前 `items`。把 id 列表提前 map 成闭包而忘了依赖数组，过滤后会读到上一份 id。`stableRowId` 越界就抛，方便在开发里看见，而不是画一个空白行。
-
-## 练习
-
-1. 数一下首屏 DOM 行，确认接近窗口而不是 8,000。
-2. 展开一行再过滤，展开状态不得出现在另一个 id 上。
-3. 连续两次提交同一关键词，测量范围回到新列表的开头，而不是停在旧偏移。
-4. 把 `getTotalSize` 拿掉，确认滚动条变短；再加回来。
-5. 给缺 id 的行调用 `stableRowId`，确认抛错而不是生成假键。
-
-## 故障排查
-
-| 现象 | 先看 |
-| --- | --- |
-| 滚动无效，范围一直停在开头 | ref 是否指向有高度且 `overflow: auto` 的节点 |
-| 行叠在左上角 | 是否 `position: absolute` 且 `translateY(row.start)` |
-| 滚动条只有一屏 | 内层是否设置了 `height: getTotalSize()` |
-| 展开后盖住下一行 | 根节点是否同时有 `data-index` 和 `measureElement` |
-| 跳到末尾后位置差一截 | `estimateSize` 是否过小。先给 94 这类偏大估计 |
-| 第二次相同搜索仍停在旧偏移 | `viewIdentity` 是否包含 revision |
-| 滚动时输入卡顿 | `onChange` 是否在 `isScrolling` 时 `setState` |
-| React 19 的 flushSync 警告 | 本示例把 `useFlushSync` 设为 false，仍要在浏览器里滚一次 |
-
-横向虚拟化要第二个 `useVirtualizer({ horizontal: true })`，总宽度和 `translateX` 分开算。当前组件没有这条轴。不要把 `row.index` 当服务端 cursor。裁剪数组之前先定锚点，否则测量下标会集体错位。
-
-`overscan: 5` 是起点。设到几百会把 DOM 几乎全部挂上，虚拟化就没有意义。8,000 只说明数组长度。
-
-## 官方链接
-
-- https://tanstack.com/virtual/latest
-- https://tanstack.com/virtual/latest/docs/framework/react/examples/table
-- https://github.com/TanStack/virtual
-
-`onChange` 在滚动中不写范围文字，避免每个像素一次渲染。停下来才更新「当前测量范围」。若范围一直是「初始化中」，先滚动一下或等首次测量。跳转按钮在 `items.length` 为 0 时禁用，避免 `scrollToIndex` 收到负数。
-
-`overscrollBehavior: 'contain'` 让滚动停在窗口里，不把外层 Lab 页面一起带走。去掉它不影响测量正确性，但会让跳转看起来像页面在动。查滚动问题时先确认滚的是 `viewport` 这个 ref。`estimateSize` 返回常数 94。展开后的高度只来自测量。把展开高度写进 `estimateSize` 又保留 `measureElement`，两套尺寸会抢同一行。
-
-`viewIdentity` 用 `JSON.stringify([group, query, revision])`。不要改成 `group + query`。`a` + `bc` 和 `ab` + `c` 会变成同一个 key，两套测量就会串。
-
-空 id 在 `stableRowId` 抛 `TypeError`。捕获后不要渲染一个占位行再继续滚，先修数据。
-
-测量 ref 绑在绝对定位的外层 div 上，而不是内层 article。绑错节点会把 margin 算丢，下一行重叠。改样式时保持 `data-index` 和 ref 在同一个元素上。
-
-## 证据
-
-`filter-policy` 单测不创建 virtualizer，也不能证明滚动。sdk 要真实 import `@tanstack/react-virtual@3.14.21` 并在 `docs/library-lab/evidence/runs/` 留下收据。browser 看测量和跳转。
-
-GitHub Actions 41779873259 是仓库级安装、typecheck、build、52 个 SDK 文件（153 项测试）和 45 项 Playwright 的结果，不是 C10 的条目 PASS。不要改 `verification.json`。
+[local-validation.md](local-validation.md)区分SDK3、policy6、入口类型、静态内容和真实浏览器；[完整三目标提案](validation/browser-proposal.txt)由主控接入。DOM数量、原生滚动、真实变高/resize、重复查询清测量/卸载、OS输入法/读屏和SSR hydration未运行前都保持NOT_RUN，正式verification不升级。

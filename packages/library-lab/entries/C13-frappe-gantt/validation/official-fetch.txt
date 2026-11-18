@@ -1,0 +1,23 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['python3', 'entries/C13-frappe-gantt/validation/fetch-official.py']
+startedAt: 2026-11-10T16:13:38.060134+00:00
+exit: 0
+{
+  "commit": "4c82fccce9bf4237ded41680869529cea4385a90",
+  "readme": {
+    "path": "README.md",
+    "language": "en",
+    "bytes": 15874,
+    "sha256": "6f8ef7a60672fbcdb9aafc9920cf64789e118d8f56d5ab1855a7d9553253fc46"
+  },
+  "readmeCandidates": [
+    "README.md"
+  ],
+  "homepage": {
+    "requestIndex": 4,
+    "status": "blocked",
+    "xFrameOptions": "SAMEORIGIN",
+    "contentSecurityPolicy": null,
+    "reason": "只按实际最终完整响应头核对，未从Lab origin实际浏览器确认可嵌入；官网正文NOT_READ。"
+  }
+}

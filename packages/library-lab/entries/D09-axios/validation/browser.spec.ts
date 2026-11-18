@@ -1,0 +1,45 @@
+import { expect, test } from '@playwright/test'
+
+test('@D09 instance headers, tenant boundary, IME, race and cancellation', async ({ page }) => {
+  await page.goto('/libraries/axios?tab=demo&example=basic')
+  await page.getByRole('button', { name: 'GET 列表', exact: true }).click()
+  await expect(page.getByTestId('axios-result')).toContainText('a1')
+  await expect(page.getByRole('list').filter({ hasText: 'X-Lab-Request' })).toContainText(
+    'X-Lab-Request=isolated',
+  )
+  await page.goto('/libraries/axios?tab=demo&example=business')
+  const input = page.getByLabel('RSS标题')
+  const result = page.getByTestId('axios-result')
+  await input.dispatchEvent('compositionstart')
+  await input.fill('React')
+  await page.getByRole('button', { name: 'GET 列表', exact: true }).click()
+  await expect(result).toHaveText('等待操作')
+  await input.dispatchEvent('compositionend')
+  await page.getByRole('button', { name: 'GET 列表', exact: true }).click()
+  await expect(result).toContainText('a1')
+  await page.getByRole('button', { name: '先慢后快竞态' }).click()
+  await expect(result).toContainText('a1')
+  await expect(result).not.toContainText('a2')
+  await page.getByRole('button', { name: '先慢后快竞态' }).click()
+  await page.getByLabel('租户', { exact: true }).selectOption('b')
+  await expect(result).toContainText('b1')
+  await expect(result).not.toContainText('a1')
+  await page.getByRole('button', { name: '先慢后快竞态' }).click()
+  await page.getByRole('button', { name: '取消请求' }).click()
+  await expect(result).toHaveText('请求已取消')
+  await page.getByRole('tab', { name: 'Agent 指南' }).click()
+  await expect(result).toHaveCount(0)
+})
+test('@D09 custom bounded GET retry and single POST409', async ({ page }) => {
+  await page.goto('/libraries/axios?tab=demo&example=advanced')
+  for (let i = 0; i < 2; i++) {
+    await page.getByRole('button', { name: 'GET 503 限定重试' }).click()
+    await expect(page.getByTestId('axios-result')).toContainText('status 200')
+  }
+  await expect(page.locator('li').filter({ hasText: 'GET /transient → 503' })).toHaveCount(2)
+  await page.getByRole('button', { name: 'POST 409 不重试' }).click()
+  await expect(page.getByTestId('axios-result')).toContainText('HTTP 409')
+  await expect(page.locator('li').filter({ hasText: 'POST /conflict → 409' })).toHaveCount(1)
+  await page.getByRole('button', { name: '停止并卸载' }).click()
+  await expect(page.getByTestId('axios-result')).toHaveCount(0)
+})

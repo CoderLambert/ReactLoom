@@ -1,0 +1,17 @@
+{
+  "repository": "konvajs/react-konva",
+  "tag": "v19.3.2",
+  "annotatedTag": "d4404cdd652cc204e26208d41fa22315b782a1dd",
+  "commit": "c89132f5c9ac5a47db1c7c6b6fd1012452df2e01",
+  "path": "README.md",
+  "readmeCandidates": ["README.md", "benchmarks/README.md"],
+  "treeTruncated": false,
+  "treeUrl": "https://api.github.com/repos/konvajs/react-konva/git/trees/c89132f5c9ac5a47db1c7c6b6fd1012452df2e01?recursive=1",
+  "selectionReason": "Full pinned tree inspected; no upstream Chinese README; root README documents the target react-konva package.",
+  "language": "en",
+  "version": "19.3.2",
+  "sha256": "d68e0efcca393b46e93a75b673d3a91e880b17f9de8760ba29fb65be93fbae7b",
+  "bytes": 5846,
+  "syncedAt": "2026-11-10T11:50:53.166158+00:00",
+  "sourceUrl": "https://github.com/konvajs/react-konva/blob/c89132f5c9ac5a47db1c7c6b6fd1012452df2e01/README.md"
+}

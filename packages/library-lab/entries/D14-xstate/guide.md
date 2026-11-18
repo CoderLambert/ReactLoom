@@ -6,7 +6,7 @@ Lab 锁定 `xstate@5.33.3`（MIT）。示例只用核心包：`setup`、`createM
 
 ## Lab 当前示例
 
-[`examples/demo.tsx`](examples/demo.tsx) 重导出 [`examples/example.tsx`](examples/example.tsx)。机器 id 是 `rss-review`。状态只有 `draft`、`reviewing`、`rejected`、`published`。上下文是 `{ retries, reason }`。
+[`examples/demo.tsx`](examples/demo.tsx) 重导出 [`examples/example.tsx`](examples/example.tsx)。机器源码为 [`examples/review-machine.ts`](examples/review-machine.ts)，机器 id 是 `rss-review`。状态只有 `draft`、`reviewing`、`rejected`、`published`。上下文是 `{ retries, reason }`。
 
 `SUBMIT` 只在 `draft`。`APPROVE` 只在 `reviewing`。`REJECT` 还要过守卫 `hasRejectionReason`，通过后 `saveReason` 写入去掉首尾空白的原因。`RETRY` 只在 `rejected`，且 `retries < 2`，动作里把次数加一并清掉原因。第三次重试不会进入 `reviewing`。`RESET` 从 `rejected` 或 `published` 回到 `draft` 并清上下文。
 
@@ -96,7 +96,7 @@ guards: { ok: async () => fetch('/policy').then(r => r.ok) }
 
 ### 反例 6：订阅整个快照却不清理
 
-Lab 的 effect 返回函数里 `unsubscribe` 和 `stop`。漏掉任一个都会在切换路由后继续 `setState`。
+Lab 的 effect 返回函数里 `unsubscribe` 和 `stop`。取消订阅防止旧组件接收快照；stop 结束这个实例拥有的 Actor 生命周期，两者职责不同。
 
 ### 反例 7：模块级 actor
 
@@ -155,3 +155,26 @@ SSR 和测试会串状态。在 effect 或每请求工厂里创建。
 - https://stately.ai/docs/migration
 - https://stately.ai/docs/xstate-react
 - https://www.npmjs.com/package/xstate
+
+## 最小接入与迁入
+
+在 React + TypeScript 项目运行 `pnpm add xstate@5.33.3`（本例不需要 @xstate/react）。复制 `example.tsx`、`review-machine.ts`、`review-policy.mjs` 与 `review-policy.d.mts`，再渲染 `<XStateExample level="business" />`。demo.tsx 仅为 Lab 转发。无样式、账号、服务地址或额外配置才能执行的隐含前提。Node SDK 套件直接导入同一个 TypeScript 机器，需 Node >=22.18 的原生类型擦除支持。
+
+```ts
+import { createActor } from 'xstate'
+import { reviewMachine } from './review-machine'
+const actor = createActor(reviewMachine)
+const subscription = actor.subscribe(snapshot => console.log(snapshot.value, snapshot.context))
+actor.start()
+actor.send({ type: 'SUBMIT' })
+actor.send({ type: 'REJECT', reason: '  来源字段缺失  ' })
+// rejected；context.reason 为“来源字段缺失”
+subscription.unsubscribe()
+actor.stop()
+```
+
+Actor 接收事件，先按当前状态找迁移，再检查 guard，允许时才执行 assign 并通知订阅者。界面只是快照投影，按钮 disabled 不构成业务合法性的唯一防线。`review-policy` 是本例自建规则：REJECT 非空且去空白后最多200码点；UI 与机器引用同一函数。输入不设 HTML maxLength，因为 HTML 按 UTF-16 单元计数，与200 Unicode码点不同。空白或201个emoji都禁止驳回，200个emoji合法。
+
+业务变化是加上驳回原因与两次重试预算；retries 表示已经使用的重试次数，不包括首次提交。第三次 RETRY 事件仍留在 rejected，必须显式 RESET 才归零。没有真实审稿后端、异步计时器、重试请求或外部服务；所有转换由真实 XState Actor 同步执行。
+
+运行 basic：提交→批准→重新开始；business：空白原因看禁用，再填合法原因驳回，查看trim后的原因；advanced：驳回→重试两轮→再次驳回，确认重试禁用，RESET后次数清零。卸载再挂载应回到draft，不继承旧Actor。

@@ -1,0 +1,23 @@
+[WebServer] (node:1874416) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:1874447) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 10 tests using 2 workers
+
+(node:1874513) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1874512) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   2 e2e/quality-resume-comlink.spec.ts:3:1 › @D18 real module Worker RPC, remote validation recovery and successful close (3.1s)
+  ✓   1 e2e/quality-resume-comlink.spec.ts:35:1 › @D18 transfer/proxy result, cancel and tab exit physically close Workers (4.0s)
+  ✓   3 e2e/quality-resume-fusejs.spec.ts:3:1 › @D19 weighted search, scoped category and composition submission (1.7s)
+  ✓   4 e2e/quality-resume-fusejs.spec.ts:24:1 › @D19 actual index replacement and deletion remove old searchable content (1.7s)
+  ✓   5 e2e/quality-resume-fusejs.spec.ts:44:1 › @D19 basic displays scores and advanced threshold changes typo matching (2.9s)
+  ✓   6 e2e/quality-resume-minisearch.spec.ts:3:1 › D20 scoped search and suggestions, fuzzy, rebuild and IME @D20 (2.0s)
+  ✓   8 e2e/quality-resume-official-d18-d20.spec.ts:8:3 › @D18 pinned official original and honest homepage fallback (1.8s)
+  ✓   7 e2e/quality-resume-minisearch.spec.ts:50:1 › @D20 basic shows real scores and business filters the indexed documents (2.9s)
+  ✓   9 e2e/quality-resume-official-d18-d20.spec.ts:8:3 › @D19 pinned official original and honest homepage fallback (1.8s)
+  ✓  10 e2e/quality-resume-official-d18-d20.spec.ts:8:3 › @D20 pinned official original and honest homepage fallback (1.3s)
+
+  10 passed (12.7s)

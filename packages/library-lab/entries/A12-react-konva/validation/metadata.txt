@@ -1,0 +1,7 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node entries/A12-react-konva/validation/check-entry.mjs
+exit: 0
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node entries/A12-react-konva/validation/check-entry.mjs
+PASS: entry shape, 3 demos, 4 source paths, README bytes 5846 SHA-256 d68e0efcca393b46e93a75b673d3a91e880b17f9de8760ba29fb65be93fbae7b
+exit: 0

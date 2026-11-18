@@ -1,0 +1,4 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["git", "diff", "--check", "--", "packages/library-lab/entries/B12-react-aria"], "utc": "2026-11-10T14:24:50.220775+00:00", "exitCode": 0}
+STDOUT
+
+STDERR

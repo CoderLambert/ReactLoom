@@ -1,0 +1,89 @@
+[WebServer] (node:1567626) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:1567639) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 9 tests using 2 workers
+
+(node:1567692) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1567691) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 e2e/quality-resume-lodash.spec.ts:3:1 › @D02 collection order changes retained duplicate (1.7s)
+  ✓  3 e2e/quality-resume-migration.spec.ts:3:1 › @C22 calendar migration rejects overflow and preserves immutable inputs (2.0s)
+  ✓  1 e2e/quality-resume-lodash.spec.ts:13:1 › @D02 flush cancel composition and persistent unmount observer (5.8s)
+  ✘  4 e2e/quality-resume-migration.spec.ts:29:1 › @C22 explicit instants survive display-zone changes and distinguish DST overlap (30.0s)
+(node:1570497) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  5 e2e/quality-resume-migration.spec.ts:53:1 › @C22 calendar days and elapsed hours diverge across both DST transitions (30.0s)
+(node:1570701) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  6 e2e/quality-resume-toolkit.spec.ts:3:1 › @D01 one pipeline exposes ordering, grouping and pagination with recovery (2.3s)
+  ✓  7 e2e/quality-resume-toolkit.spec.ts:69:3 › @C22 pinned official original and honest homepage fallback (1.8s)
+  ✓  8 e2e/quality-resume-toolkit.spec.ts:69:3 › @D01 pinned official original and honest homepage fallback (1.7s)
+  ✓  9 e2e/quality-resume-toolkit.spec.ts:69:3 › @D02 pinned official original and honest homepage fallback (1.7s)
+
+
+  1) e2e/quality-resume-migration.spec.ts:29:1 › @C22 explicit instants survive display-zone changes and distinguish DST overlap 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.selectOption: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByLabel('显示时区', { exact: true })
+
+
+      33 |   const report = page.getByTestId('instant-report')
+      34 |   const zone = page.getByLabel('显示时区', { exact: true })
+    > 35 |   await zone.selectOption('Asia/Shanghai')
+         |              ^
+      36 |   await expect(report).toContainText('2026-11-01T05:30:00.000Z')
+      37 |   await expect(report).toContainText('13:30:00')
+      38 |   await zone.selectOption('America/New_York')
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-resume-migration.spec.ts:35:14
+
+    Error Context: test-results/quality-resume-migration---87078-and-distinguish-DST-overlap/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-resume-migration---87078-and-distinguish-DST-overlap/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-resume-migration---87078-and-distinguish-DST-overlap/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) e2e/quality-resume-migration.spec.ts:53:1 › @C22 calendar days and elapsed hours diverge across both DST transitions 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.selectOption: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByLabel('纽约排程样例', { exact: true })
+
+
+      60 |     ['ordinary', 24, '12:00'],
+      61 |   ] as const) {
+    > 62 |     await page.getByLabel('纽约排程样例', { exact: true }).selectOption(fixture)
+         |                                                      ^
+      63 |     const report = page.getByTestId('dst-report')
+      64 |     await expect(report).toContainText(`"fixture": "${fixture}"`)
+      65 |     const data = JSON.parse((await report.textContent()) ?? '{}')
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-resume-migration.spec.ts:62:54
+
+    Error Context: test-results/quality-resume-migration---a85a2-across-both-DST-transitions/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-resume-migration---a85a2-across-both-DST-transitions/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-resume-migration---a85a2-across-both-DST-transitions/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    e2e/quality-resume-migration.spec.ts:29:1 › @C22 explicit instants survive display-zone changes and distinguish DST overlap 
+    e2e/quality-resume-migration.spec.ts:53:1 › @C22 calendar days and elapsed hours diverge across both DST transitions 
+  7 passed (41.0s)
+undefined
+/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: playwright test e2e/quality-resume-migration.spec.ts e2e/quality-resume-lodash.spec.ts e2e/quality-resume-toolkit.spec.ts --workers=2

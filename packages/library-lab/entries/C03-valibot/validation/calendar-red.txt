@@ -1,0 +1,27 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab", "argv": ["node", "--input-type=module", "-e", "import assert from 'node:assert/strict'; import * as v from 'valibot'; import { WindowSchema } from './entries/C03-valibot/examples/schemas.ts'; const result=v.safeParse(WindowSchema,{start:'2026-02-28',end:'2026-02-30'}); console.log('actual WindowSchema accepts nonexistent end date:',result.success); assert.equal(result.success,false);"], "utc": "2026-11-10T15:00:48.663049+00:00", "exitCode": 1}
+STDOUT
+actual WindowSchema accepts nonexistent end date: true
+
+STDERR
+node:internal/modules/run_main:111
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+true !== false
+
+    at file:///home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/[eval1]:1:312
+    at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+    at async node:internal/modules/esm/loader:226:26
+    at async ModuleLoader.executeModuleJob (node:internal/modules/esm/loader:223:20)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5) {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: true,
+  expected: false,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v26.13.0

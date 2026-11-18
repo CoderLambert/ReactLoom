@@ -1,0 +1,20 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ["node", "--test", "entries/B01-motion-for-react/tests/sdk.test.mjs"]
+startedAt: 2026-11-10T12:26:57.732250+00:00
+finishedAt: 2026-11-10T12:26:57.908710+00:00
+exitCode: 0
+
+STDOUT
+Actual Motion SSR: <ul><li data-card-id="1" data-present="true" data-reduced="false" style="opacity:1;transform:none">card 1</li><li data-card-id="2" data-present="true" data-reduced="false" style="opacity:1;transform:none">card 2</li></ul>
+✔ actual Motion SSR presence contexts keep initial=false at the visible target (7.069452ms)
+✔ actual presence custom reaches children for the explicit reduced visual policy (0.823451ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 147.339872
+
+STDERR

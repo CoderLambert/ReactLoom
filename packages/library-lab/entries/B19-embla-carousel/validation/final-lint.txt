@@ -1,0 +1,5 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+argv=["pnpm", "exec", "biome", "check", "--write", "packages/library-lab/entries/B19-embla-carousel/examples", "packages/library-lab/entries/B19-embla-carousel/validation/check-metadata.mjs", "packages/library-lab/entries/B19-embla-carousel/library.json", "packages/library-lab/entries/B19-embla-carousel/verification.json", "packages/library-lab/e2e/quality-remediation-embla.spec.ts"]
+Checked 7 files in 10ms. Fixed 2 files.
+
+exit=0

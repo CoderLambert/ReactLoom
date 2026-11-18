@@ -1,0 +1,74 @@
+{
+  "scenario": "business",
+  "sdkVersion": "0.20.3",
+  "sheetNames": [
+    "Summary",
+    "Category-1",
+    "Category-2",
+    "Category-3"
+  ],
+  "summary": [
+    {
+      "kind": "RSS",
+      "sheet": "Category-1",
+      "count": 2,
+      "totalViews": 160
+    },
+    {
+      "kind": "推荐",
+      "sheet": "Category-2",
+      "count": 1,
+      "totalViews": 63
+    },
+    {
+      "kind": "专题",
+      "sheet": "Category-3",
+      "count": 1,
+      "totalViews": 27
+    }
+  ],
+  "totalViews": 250,
+  "categories": [
+    {
+      "sheet": "Category-1",
+      "rows": [
+        {
+          "channel": "Frontend",
+          "views": 128,
+          "kind": "RSS"
+        },
+        {
+          "channel": "DevOps",
+          "views": 32,
+          "kind": "RSS"
+        }
+      ]
+    },
+    {
+      "sheet": "Category-2",
+      "rows": [
+        {
+          "channel": "AI",
+          "views": 63,
+          "kind": "推荐"
+        }
+      ]
+    },
+    {
+      "sheet": "Category-3",
+      "rows": [
+        {
+          "channel": "Design",
+          "views": 27,
+          "kind": "专题"
+        }
+      ]
+    }
+  ],
+  "artifact": {
+    "workbook": ".artifacts/business.xlsx",
+    "result": ".artifacts/business.json",
+    "bytes": 11071,
+    "sha256": "276300f5bab6306e6b3cca83d6caa88de31725e3cf9c9249c5c4400f80cbd4b4"
+  }
+}

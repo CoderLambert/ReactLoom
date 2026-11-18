@@ -1,0 +1,19 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+ARGV: ["pnpm", "exec", "--", "node", "--test", "entries/A15-leaflet/tests/location-policy.test.mts"]
+START: 2026-11-10T12:21:15.010726+00:00
+END: 2026-11-10T12:21:15.287619+00:00
+EXIT: 0
+STDOUT:
+✔ selection stays tied to visible markers with offline filter (0.592098ms)
+✔ coordinate shift clamps to Leaflet world limits without mutation (0.454266ms)
+✔ invalid delta and missing locations never add invalid markers (0.118811ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 67.219575
+
+STDERR:

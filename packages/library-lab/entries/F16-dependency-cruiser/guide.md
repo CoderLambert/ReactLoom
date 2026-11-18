@@ -1,150 +1,49 @@
-# dependency-cruiser 18.5.0｜只扫三份隔离 src
+# dependency-cruiser 18.5.0：从实际依赖边验证方向和环
 
-Lab 锁定 `dependency-cruiser@18.5.0`（MIT）。它读源码里的 import，对照规则。它不看打包体积，也不删依赖。
+需要按源码import关系约束架构时选择dependency-cruiser；未使用文件/依赖看Knip，bundle体积看构建分析。它产生模块依赖图数据和规则违反，不等于执行应用、测功能或测包体积。本条只扫描原创workspace三个隔离src，绝不指向ReactLoom产品树。
 
-执行种类是 `node-ci`。页面展示命令，不启动进程。`result-policy.test.mjs` 只解析 JSON，不是 CLI PASS。
+## 规则方向与三个目标
 
-没有 `docs/library-lab/evidence/runs/` 收据时 sdk、build、browser 保持 NOT_RUN。Actions 41779873259 是仓库级安装、类型检查、构建、52 个 SDK 文件 / 153 项测试和 45 项 Playwright，不是 F16 的 PASS。
+config.cjs的forbidden有两条severity:error。domain-must-not-import-ui：from path匹配domain目录是依赖发起方，to path匹配ui是被引用方；domain→ui禁止，不是反过来。no-circular-dependencies：from:{}覆盖所有模块，to.circular:true检测形成环的依赖。doNotFollow/exclude node_modules使扫描不展开第三方树，不等于项目所有别名/外部模块都已配置。
 
-## Lab 当前示例
+basic：main→domain/get-article、main→ui/render-title，三模块两边，零违反。business：domain/summary→ui/badge，三模块两边，确切domain-must-not-import-ui错误1。advanced：first↔second，两模块两边，循环规则错误1；不调用这两个函数，静态import足以形成图，不需要真实递归栈溢出。
 
-规则在 `examples/workspace/config.cjs`。禁止两条：`domain/` 不能指向 `ui/`（`domain-must-not-import-ui`），以及任何环（`no-circular-dependencies`）。`doNotFollow` 和 `exclude` 都是 `node_modules`。不要把配置指到 ReactLoom 的 `templates/` 或 `packages/`。
+真实报告结果见validation，网页不在线画假图或执行CLI。当前JSON是图的模块/依赖数据，不是已经生成SVG/Mermaid；要图形需另选择工具官方图报告器及Graphviz等环境，本例未实现。
 
-| 夹具 | 源码 | 预期 |
-| --- | --- | --- |
-| basic | `main.ts` 调用 domain 和 ui，domain 不引用 ui | 退出码 0，无 error |
-| business | `domain/summary.ts` import `../ui/badge` | 规则 `domain-must-not-import-ui` |
-| advanced | `first.ts` 与 `second.ts` 互相 import | 规则 `no-circular-dependencies` |
-
-`second.ts` 不在运行时调用自己，避免真的栈溢出。环是 AST 上的 import。注释写明这一点。
-
-页面命令：
+## 实际运行与双报告器
 
 ```bash
-node entries/F16-dependency-cruiser/examples/run.mjs basic
+pnpm add -D dependency-cruiser@18.5.0
+node examples/run.mjs basic
+node examples/run.mjs business
+node examples/run.mjs advanced
+node examples/verify.mjs
 ```
 
-business / advanced 换最后的参数。`run.mjs` 用 `pnpm exec depcruise --config config.cjs --output-type json`，工作目录是 `examples/workspace`，只把 `<level>/src` 交给工具。stdout 是 JSON。stderr 里有退出码说明。basic 预期 0，另两层预期非 0。网页不执行这行。
+上述为复制entry结构后目录；Lab命令面板cwd packages/library-lab，前缀entries/F16-dependency-cruiser/；仓库根再前加packages/library-lab。run只接受三个固定level，子进程cwd始终workspace，配置和扫描src都相对该目录；不会解析任意外部shell输入。
 
-`verify.mjs` 对每一层跑两次：`json` 和 `err`。JSON 模式不一定遵守 err 的非零约定，所以退出码合同只加在 `err` 报告器上。两套都要有，不能只留一种。
+run输出实际JSON，透传实际工具退出码。**18.5.0本次JSON报告器三个场景均退出0，即使summary.error为1**；所以run business退出0不能当架构健康。verify每场景独立跑一次json和一次err：json用实际modules、summary.error与命名规则核验；err单独验证basic0/business1/advanced1。外层verify在这两个合同均满足时退出0，业务/环的err1是预期反例通过，不是工具失败或把错误吞掉。
 
-## 1. 什么时候用
+verify stdout包含六条结构化进程记录（真实command/cwd/status/signal/stdout/stderr）和三条摘要，验证函数不编造工具输出。错误启动/信号/超时/坏JSON/空模块/错误命名或不一致计数会失败。每进程60秒/8,000,000bytes缓冲预算；输出预算不是源码解析CPU/内存沙箱。完成后同步子进程已退出，没有常驻server/Worker/临时用户源文件要清理。
 
-模块方向已经约定：界面可以依赖领域，领域不能反过来；环让初始化顺序难讲清楚。未使用文件用 F15。chunk 大小用 F18。
+## CLI解析与TypeScript兼容缺口
 
-不要用它代替类型检查。能 import 的类型错误，cruiser 仍可能画出那条边。
+深层fixture cwd里的pnpm exec在此仓库找不到depcruise bin，初始exit254保留。cli.mjs现在从import.meta.resolve('dependency-cruiser')定位实际18.5包main，读取其真实manifest/bin，以当前process.execPath启动该CLI；不把18.5 JS API当CLI，也不依赖PATH或外部全局安装。包版本不匹配即拒绝。
 
-## 2. 模型
+18.5实际supportedTranspilers.typescript为>=2 <7，本仓库TypeScript7.0.2不支持；第一次真实JSON零modules、进程0，但verify拒绝，所以未假绿。当前fixture改等价原生ESM.js，保持同样规则/图，不改依赖锁。这个成功**不证明TypeScript7/类型导入分析**。迁入TS工程需在自己的独立环境安装受支持TS版本并验证其解析与别名/tsconfig，不能借仓库别处的TS5路径当可移植方案。
 
-工具收集模块列表和 violations。`checkCruiseReport` 要求 `modules` 非空、`summary.violations` 是数组、`summary.error` 是非负整数，并且 severity 为 error 的条数等于 `summary.error`。
+## 完整迁入
 
-basic 的 error 数必须是 0。business 的 error 里要有 `domain-must-not-import-ui`。advanced 要有 `no-circular-dependencies`。stdout 超过 8 000 000 字节直接拒绝。
+保持examples结构：run.mjs、cli.mjs、workspace/config.cjs和所选level/src所有JS文件；要verify还需verify.mjs、result-policy.mjs以及basic/business/advanced三个src全部，共13个运行原件。result-policy.test.mjs仅可选纯策略验证，不是工具SDK；advanced sourceFiles列出verify的全部输入，不遗漏其它两场景。
 
-`checkCruiseExit`：进程必须真的启动（没有 error、没有 signal、status 是整数）。basic 的 status 是 0。另两层必须大于 0。JSON 那次不调用这个函数。
+Node须匹配实装engines ^22||^24||>=26（本次v26.13.1），ESM .mjs及config.cjs；无React/Provider/CSS/env/账号/服务/浏览器。只把Node脚本复制到generated app不会自动给业务树加规则，应按具体工程配置路径/入口/TS/别名后独立验证，Lab本身不复制进模板。
 
-`run.mjs` 未知参数退出 2。启动失败也退出 2。
+## 失败、输出和安全边界
 
-## 3. 三层
+规则path按正则匹配工具记录的模块路径，移动目录要同步from/to和fixture。JSON count由工具输出，不从CLI进程码猜；err文本即便含rule名也不能替代JSON结构和计数核验。pure policy只校验JSON/退出合同，绝不算真实CLI执行。
 
-### 基本
+原始JSON optionsUsed含本机baseDir/environment，validation是本地运行证据；公开报告前审查绝对路径/业务名称，不把内部完整图上传外部服务。当前fixture原创无秘密。没有扫描全仓库/生产图、性能基准、打包体积或图像生成声明。
 
-`get-article.ts` 与 `render-title.ts` 分属 domain 和 ui。`main.ts` 两边都用，方向是允许的。成功不是「没有输出」，而是 JSON 里 error 为 0，且 err 报告器退出 0。
+## 官方与证据
 
-### 业务
-
-`summarize` 为了教学去调用 `badge`。这是故意的违规边。修复方式是把文案留在 domain，让 ui 去调用 domain，而不是把规则删掉。本页不提供修复后的第二份业务夹具。
-
-### 进阶
-
-`first` import `second`，`second` import `first`。函数体若真的互相调用会递归爆栈，所以实现留在「导入即构成环」。不要为了让进程能跑起来而改成类型-only 导入，除非你同时改了断言：类型导入是否算边，以 18.5 的实际 JSON 为准，改之前先看这次输出。
-
-## 4. 反例
-
-### 反例 1：扫描产品源码
-
-```bash
-pnpm exec depcruise --config examples/workspace/config.cjs packages
-```
-
-规则里的 `domain/` 会误伤别的目录，也可能把私有路径打进报告。只传 `basic/src`、`business/src` 或 `advanced/src`。
-
-### 反例 2：违规就放宽 from/to
-
-```js
-from: { path: 'domain/' }, to: { path: 'ui/', pathNot: 'badge' }
-```
-
-这是在把反例收成合法。教学夹具要让规则失败。产品里若要例外，写新规则名和注释，不要改这条的名字却放宽匹配。
-
-### 反例 3：只看 JSON 退出码
-
-有的报告器在有违规时仍返回 0，把违规留在 JSON 里。`verify.mjs` 因此再跑 `--output-type err`。只保存 JSON 不能证明 CI 会失败。
-
-### 反例 4：只看 err 的退出码
-
-退出码 1 没有规则名。`checkCruiseReport` 要见到 `domain-must-not-import-ui` 或 `no-circular-dependencies`。两条都要。
-
-### 反例 5：策略单测当 CLI
-
-构造一段 JSON 调用 `checkCruiseReport` 不需要二进制。sdk 收据必须是 `depcruise` 进程。
-
-### 反例 6：在网页里画依赖图
-
-Lab 不运行 Graphviz，也不把 JSON 画成示意图。要图时用工具自己的报告器，并确认没有绝对路径再分享。本页没有这个步骤。
-
-### 反例 7：用 bundle 大小判断有没有环
-
-F18 的 chunk 可以没有环却仍然很大。环也可以出现在被 tree-shake 掉的文件里。两份报告不要互相填写。
-
-## 5. 组合
-
-**F15**：Knip 说文件没人引用。cruiser 说引用方向错了。一个文件可以既被用到又违规。
-
-**F18**：打包前先让 err 报告器失败退出。体积图不能代替 `summary.error`。
-
-**F10 / F11**：生成代码和 handler 也会形成 import。若把它们放进扫描，要单独的配置。本夹具没有生成代码。
-
-## 6. 清单
-
-- 配置只跟这三份 src。
-- 两条规则的名字保持不变。
-- JSON 与 err 都跑。
-- basic 双双为 0；另两层 JSON 含规则名，err 退出码 > 0。
-- 不跟随 node_modules。
-- 不把报告里的本机路径公开。
-- 页面命令不执行；`run.mjs` 的 stderr 说明不是断言。
-
-## 7. 升级
-
-18.5 的 `forbidden`、`circular: true` 和 `--output-type err|json` 是合同。升级后重跑 `verify.mjs`。规则对象若改名，`RULES` 常量要一起改，不能只改配置。
-
-不要用另一工具的「循环依赖」计数填进这页。边的定义以 dependency-cruiser 的 JSON 为准。
-
-## 8. 验收
-
-页面三条命令对应 `run.mjs`。完整合同是：
-
-```bash
-node packages/library-lab/entries/F16-dependency-cruiser/examples/verify.mjs
-```
-
-日志应含每层的 modules、errorRules 和 strictExit。策略测试不是替代。没有收据就保持 NOT_RUN。browser 无画布，保持 NOT_RUN。
-
-## 9. 故障对照
-
-| 现象 | 先看 |
-| --- | --- |
-| basic 非 0 | 夹具被改成 domain import ui，或 config 扫到了别的目录 |
-| business 是 0 | 规则被放宽，或 `summary.ts` 不再 import badge |
-| 有违规但进程是 0 | 看的是 json 报告器。err 那次才要求非 0 |
-| 退出码是 1 但不知道哪条规则 | 没有解析 JSON。名字在 `rule.name` |
-| 报告巨大 | 跟随了 node_modules。配置应排除 |
-| 页面没有输出 | 页面本来就不执行。命令在终端里跑 |
-
-`run.mjs` 的 stderr 只是说明文字。断言以 `verify.mjs` 的两次报告器为准。不要把 stderr 里的「预期非 0」当成已经观察到的退出码。
-
-## 10. 资料
-
-- https://github.com/sverweij/dependency-cruiser
-- https://github.com/sverweij/dependency-cruiser/blob/main/doc/rules-reference.md
-- https://www.npmjs.com/package/dependency-cruiser
+固定v18.5.0上游README/LICENSE原文字节和tag/commit/hash见official，完整tree无主库中文README时en回退；GitHub官网实际deny/frame-ancestors none，blocked直达。实际verify六CLI、纯policy4、scopeBiome与迁入执行证据见local-validation。主控浏览器仅验配方/源码/官方展示，不代替CLI；formal sdk/build/browser无收据仍NOT_RUN。

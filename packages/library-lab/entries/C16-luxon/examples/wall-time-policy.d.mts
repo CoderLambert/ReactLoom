@@ -1,1 +1,1 @@
-export declare function assertWallTimeSyntax(value: unknown): string;
+export declare function assertWallTimeSyntax(value: unknown): string

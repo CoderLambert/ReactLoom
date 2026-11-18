@@ -1,0 +1,5 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+command=pnpm exec biome check --write packages/library-lab/entries/C05-ajv/validation/metadata-check.mjs
+Checked 1 file in 6ms. Fixed 1 file.
+
+exitCode=0

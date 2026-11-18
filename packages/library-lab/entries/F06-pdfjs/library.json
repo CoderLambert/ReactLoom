@@ -5,15 +5,7 @@
   "name": "PDF.js",
   "group": "F",
   "summary": "真正的 pdfjs-dist Worker、PDF 解析、Canvas 分页渲染和取消清理",
-  "tags": [
-    "PDF.js",
-    "Canvas",
-    "Worker",
-    "文件解析",
-    "文本提取",
-    "HiDPI",
-    "错误恢复"
-  ],
+  "tags": ["PDF.js", "Canvas", "Worker", "文件解析", "文本提取", "HiDPI", "错误恢复"],
   "contentState": "recreated",
   "packages": [
     {
@@ -72,12 +64,7 @@
         "examples/render-budget.mjs",
         "examples/render-budget.d.mts"
       ],
-      "capabilities": [
-        "pdf-worker",
-        "canvas-2d",
-        "local-file",
-        "cancel-render"
-      ],
+      "capabilities": ["pdf-worker", "canvas-2d", "local-file", "cancel-render"],
       "description": "本地生成的有效PDF通过真实pdfjs-dist渲染。"
     },
     {
@@ -95,12 +82,7 @@
         "examples/render-budget.mjs",
         "examples/render-budget.d.mts"
       ],
-      "capabilities": [
-        "pdf-worker",
-        "canvas-2d",
-        "local-file",
-        "cancel-render"
-      ],
+      "capabilities": ["pdf-worker", "canvas-2d", "local-file", "cancel-render"],
       "description": "两页导航并用getTextContent抽取当前页。"
     },
     {
@@ -115,18 +97,10 @@
         "examples/render-gate.mjs",
         "examples/render-gate.d.mts",
         "examples/demo.tsx",
-        "examples/render-gate.test.mjs",
-        "examples/worker-version.test.mjs",
         "examples/render-budget.mjs",
-        "examples/render-budget.d.mts",
-        "examples/render-budget.test.mjs"
+        "examples/render-budget.d.mts"
       ],
-      "capabilities": [
-        "pdf-worker",
-        "canvas-2d",
-        "local-file",
-        "cancel-render"
-      ],
+      "capabilities": ["pdf-worker", "canvas-2d", "local-file", "cancel-render"],
       "description": "高DPI、频繁改scale取消、损坏PDF的独立失败处理。"
     }
   ],
@@ -136,6 +110,26 @@
   },
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
-    "note": "使用官方pdfjs-dist构建与同版ViteWorker重新实现，未继承历史报告PASS。 EF wave9 pin 6.3.289 for React-PDF v11 compatibility; verified locally at metadata level, real SDK/Worker pending."
+    "note": "按实装 pdfjs-dist 6.3.289 与同版本地 Worker 实现。Node legacy 解析与纯策略证据单列；浏览器 Worker/Canvas 由主控验收，不继承历史 PASS。"
+  },
+  "official": {
+    "readme": {
+      "repository": "mozilla/pdf.js",
+      "commit": "1c8020a7d4e43668ac287a3ecf9a8dbea17e4c56",
+      "path": "README.md",
+      "sourceUrl": "https://github.com/mozilla/pdf.js/blob/1c8020a7d4e43668ac287a3ecf9a8dbea17e4c56/README.md",
+      "snapshotPath": "official/readme.md",
+      "sha256": "4e6c916c503937ee7fc46242691d61836e0ebb4f1a5e9e5e1207006d3737b705",
+      "language": "en",
+      "version": "6.3.289",
+      "syncedAt": "2026-11-17T18:42:44.692180+00:00"
+    },
+    "homepage": {
+      "url": "https://mozilla.github.io/pdf.js/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-17T18:42:44.692180+00:00",
+      "reason": "实际 GET 最终 HTTP 200，保存 official/homepage.headers；未见 X-Frame-Options 或 CSP frame-ancestors，但无真实嵌入验收，不能据此宣称 allowed。"
+    }
   }
 }

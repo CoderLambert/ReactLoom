@@ -1,0 +1,21 @@
+{
+  "repository": "mswjs/msw",
+  "tag": "v3.0.3",
+  "commit": "3560a94e00ae2054ce0ea3aaad9fc6fb3892b6bf",
+  "path": "README.md",
+  "version": "3.0.3",
+  "language": "en",
+  "readmeCandidates": ["README.md", "test/README.md"],
+  "candidateEvidence": "Read-only discovery queried the full pinned commit tree before writes; no maintained Chinese README existed.",
+  "treeUrl": "https://api.github.com/repos/mswjs/msw/git/trees/3560a94e00ae2054ce0ea3aaad9fc6fb3892b6bf?recursive=1",
+  "sha256": "061d5c796e8b611faa32381b37038670c5e007e2ad1dc8bcbb5c66c7a608a646",
+  "bytes": 12256,
+  "syncedAt": "2026-11-10T09:53:55.833749+00:00",
+  "sourceUrl": "https://github.com/mswjs/msw/blob/3560a94e00ae2054ce0ea3aaad9fc6fb3892b6bf/README.md",
+  "installedApiEvidence": [
+    "lib/node/index.d.ts: setupServer/listen/resetHandlers/close/events",
+    "lib/browser/index.d.ts: setupWorker/start; stop is Promise<void> | void",
+    "lib/_chunks/interceptor-source.d.ts: request:match requestId and Request",
+    "lib/_chunks/shared-options.d.ts: onUnhandledFrame"
+  ]
+}

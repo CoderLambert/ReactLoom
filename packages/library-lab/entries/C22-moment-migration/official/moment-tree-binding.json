@@ -1,0 +1,11 @@
+{
+  "commit": "485d9a7d709bd5f3869a7ad24630cf0746d072dc",
+  "treeTruncated": false,
+  "gitBlobSHA1": {
+    "README.md": "38e61bb812d6f09069b6ea07eb5bf6fd820ef3ca",
+    "package.json": "77a48e6ef80740f16c252ffe60cba2278a8f9956",
+    "src/lib/moment/to-type.js": "1eef5c8c0ffeb8c08aff15c733928d3788f35a93",
+    "src/lib/moment/add-subtract.js": "6e7cf22e1a080063fbba215445b0a5fcfdb40a87",
+    "src/lib/create/check-overflow.js": "ee0881253796fcdcf3f71ef435661e3f658ce839"
+  }
+}

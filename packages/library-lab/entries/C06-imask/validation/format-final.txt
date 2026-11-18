@@ -1,0 +1,5 @@
+{"label": "format-final", "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab", "argv": ["pnpm", "exec", "--", "biome", "check", "--write", "entries/C06-imask/examples", "entries/C06-imask/tests", "entries/C06-imask/library.json", "entries/C06-imask/verification.json", "entries/C06-imask/official/source-evidence.json", "entries/C06-imask/validation/sdk-source-audit.json", "entries/C06-imask/validation/metadata-check.mjs", "entries/C06-imask/validation/browser-proposal.check.ts"], "start": "2026-11-10T15:52:00.391744+00:00", "end": "2026-11-10T15:52:00.605798+00:00", "exitCode": 0, "log": "format-final.txt"}
+STDOUT
+Checked 13 files in 11ms. Fixed 5 files.
+
+STDERR

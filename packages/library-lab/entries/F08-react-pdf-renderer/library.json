@@ -5,14 +5,7 @@
   "name": "@react-pdf/renderer",
   "group": "F",
   "summary": "React组件声明式生成原生PDF：报告布局、分页文本、受控下载与链接生命周期",
-  "tags": [
-    "PDF",
-    "React",
-    "Flexbox",
-    "生成下载",
-    "分页",
-    "Blob"
-  ],
+  "tags": ["PDF", "React", "Flexbox", "生成下载", "分页", "Blob"],
   "contentState": "recreated",
   "packages": [
     {
@@ -54,19 +47,14 @@
       "title": "单页报告创建",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
-        "examples/report.tsx",
         "examples/example.tsx",
-        "examples/demo.tsx",
+        "examples/report.tsx",
         "examples/report-policy.mjs",
         "examples/report-policy.d.mts",
-        "tests/policy.test.mjs"
+        "examples/demo.tsx"
       ],
-      "capabilities": [
-        "pdf-renderer",
-        "pdf-blob",
-        "object-url"
-      ],
-      "description": "用户点击按钮后才真正调用@react-pdf/renderer的pdf().toBlob()；不上传资料。"
+      "capabilities": ["pdf-renderer", "pdf-blob", "object-url"],
+      "description": "一行原创ASCII数据，真实pdf(element).toBlob生成原生PDF。"
     },
     {
       "demoId": "business",
@@ -75,19 +63,14 @@
       "title": "多来源清单与自动换页",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
-        "examples/report.tsx",
         "examples/example.tsx",
-        "examples/demo.tsx",
+        "examples/report.tsx",
         "examples/report-policy.mjs",
         "examples/report-policy.d.mts",
-        "tests/policy.test.mjs"
+        "examples/demo.tsx"
       ],
-      "capabilities": [
-        "pdf-renderer",
-        "pdf-blob",
-        "object-url"
-      ],
-      "description": "用户点击按钮后才真正调用@react-pdf/renderer的pdf().toBlob()；不上传资料。"
+      "capabilities": ["pdf-renderer", "pdf-blob", "object-url"],
+      "description": "三行摘要报告，标准Helvetica，无远程字体/图片。"
     },
     {
       "demoId": "advanced",
@@ -96,19 +79,14 @@
       "title": "长文档、输入上限和错误回退",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
-        "examples/report.tsx",
         "examples/example.tsx",
-        "examples/demo.tsx",
+        "examples/report.tsx",
         "examples/report-policy.mjs",
         "examples/report-policy.d.mts",
-        "tests/policy.test.mjs"
+        "examples/demo.tsx"
       ],
-      "capabilities": [
-        "pdf-renderer",
-        "pdf-blob",
-        "object-url"
-      ],
-      "description": "用户点击按钮后才真正调用@react-pdf/renderer的pdf().toBlob()；不上传资料。"
+      "capabilities": ["pdf-renderer", "pdf-blob", "object-url"],
+      "description": "100行分页与141行前置拒绝，单飞及替换/卸载URL所有权。"
     }
   ],
   "license": {
@@ -118,5 +96,25 @@
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
     "note": "按react-pdf v4.9官方文档新写，历史Node/浏览器结果不等于当前验收。"
+  },
+  "official": {
+    "readme": {
+      "repository": "diegomura/react-pdf",
+      "commit": "2c0b6d4a5d9db397d8cf5de4215e43b08ad5a7ca",
+      "path": "packages/renderer/README.md",
+      "sourceUrl": "https://github.com/diegomura/react-pdf/blob/2c0b6d4a5d9db397d8cf5de4215e43b08ad5a7ca/packages/renderer/README.md",
+      "snapshotPath": "official/readme.md",
+      "sha256": "aecadb67037f5405f666c4d4f52456404a87a279f098c37fd6f8c79bed5f59d0",
+      "language": "en",
+      "version": "4.9.0",
+      "syncedAt": "2026-11-17T18:39:01.204343+00:00"
+    },
+    "homepage": {
+      "url": "https://react-pdf.org/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-17T18:39:01.204343+00:00",
+      "reason": "实际GET响应见official/source-evidence.json，未Lab-origin嵌入确认保留unknown直达。"
+    }
   }
 }

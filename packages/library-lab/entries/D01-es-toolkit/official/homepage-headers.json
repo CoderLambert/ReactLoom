@@ -1,0 +1,22 @@
+{
+  "url": "https://es-toolkit.dev/zh_hans/",
+  "checkedAt": "2026-11-17T16:18:36.149564+00:00",
+  "status": 200,
+  "headers": {
+    "Accept-Ranges": "bytes",
+    "Access-Control-Allow-Origin": "*",
+    "Age": "315089",
+    "Cache-Control": "public, max-age=0, must-revalidate",
+    "Content-Disposition": "inline; filename=\"zh_hans\"",
+    "Content-Length": "17126",
+    "Content-Type": "text/html; charset=utf-8",
+    "Date": "Tue, 17 Nov 2026 16:18:37 GMT",
+    "Etag": "\"3d57401e74a204107fe0dc353d713b16\"",
+    "Last-Modified": "Sat, 14 Nov 2026 00:47:07 GMT",
+    "Server": "Vercel",
+    "Strict-Transport-Security": "max-age=63072000",
+    "X-Vercel-Cache": "HIT",
+    "X-Vercel-Id": "sin1::k59sv-1794932317109-a516d78be05b",
+    "Connection": "close"
+  }
+}

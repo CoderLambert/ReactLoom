@@ -1,0 +1,5 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: pnpm exec biome format --write entries/A12-react-konva/examples entries/A12-react-konva/tests
+exit: 1
+npm error could not determine executable to run
+No source formatted by this failed invocation. A following patch failed its expected-context check before editing. Corrected using normal source formatting and the retained final Biome check --write command, exit0. No install or dependency changes.

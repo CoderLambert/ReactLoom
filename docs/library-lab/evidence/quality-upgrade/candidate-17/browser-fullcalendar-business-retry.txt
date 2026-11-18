@@ -1,0 +1,12 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=pnpm exec playwright test --config=.local-evidence/quality-playwright.config.ts e2e/quality-remediation-fullcalendar.spec.ts --grep @C12 business --trace=off
+
+Running 1 test using 1 worker
+
+(node:2121825) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 e2e/quality-remediation-fullcalendar.spec.ts:130:1 › @C12 business creates a unique all-day event and accepts real drop plus resize (2.9s)
+
+  1 passed (3.3s)
+
+exitCode=0

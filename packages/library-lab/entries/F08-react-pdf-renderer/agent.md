@@ -1,46 +1,13 @@
-# F08 @react-pdf/renderer — 工程手册
+# F08 @react-pdf/renderer：工程迁入
 
-## 适用
+需求：React原语生成新PDF；浏览已有PDF用F07，改已有字节用F09。固定renderer4.9.0/MIT，只原创ASCII+Helvetica，不远程字体/图片/上传。先读guide/verification/全部实际源码。
 
-用 React 原语生成新的 PDF。阅读已有文件用 F07。修改已有字节用 F09。
+完整迁入四份example.tsx、report.tsx、report-policy.mjs/.d.mts。ReactDOM/TSX ESM Bundler/DOM目标pnpm add @react-pdf/renderer@4.9.0，挂default组件level="advanced"，无需Provider/CSS/env/服务。demo可省。不要把Lab入口写进模板。
 
-## 版本
+真实pdf(element).toBlob仅用户点击，非renderToBuffer/DOM截图。validatedRows先于SDK：1–140，ASCII ID长度48且大小写不敏感去重/name1–70printableASCII/articles0–1000000整数，拣掉额外字段。title固定可信ASCII；用户title需自加策略。可打印<>只是Text字面值，不当HTML sanitizer。
 
-`@react-pdf/renderer@4.9.0`，MIT。调用 `pdf(element).toBlob()`。字体只用 Helvetica。
+A4 Page wrap、行wrap=false、fixed动态页脚、flex列；不保证任意长内容无溢出。basic1行/business3行/advanced100行+141行拒绝。真实PDF要下载并pdftoppm视觉检查，不靠Promise成功/行数/MIME/100bytes宣称分页已验。
 
-## 迁移
+保留running ref await前单飞、epoch成功/错误检查；过期Blob不createURL，无AbortSignal不物理取消。替换新URL后撤旧，失败清旧URL/链接/bytes，卸载revoke自己的URL，keyed level重建。无renderer destroy API宣称，不清全局字体缓存。141测试同路径先拒绝，不计SDK异常。
 
-带走 `examples/report.tsx`、`examples/example.tsx`、`examples/report-policy.mjs` 和 `.d.mts`。生成必须发生在点击之后。行数据先过 `validatedRows`。不要嵌入网络字体或图片。
-
-## 不可删的清理
-
-`running` 在 await 之前置位。`epoch` 在卸载时增加，过期 Blob 不创建 URL。替换和失败都 `revokeObjectURL`。卸载 effect 再收一次。行数 1–140，名称仅可打印 ASCII。
-
-## 反例
-
-- 挂载时 `toBlob`。
-- 只靠 `disabled` 防连点。
-- 泄漏 object URL。
-- 把中文直接交给 Helvetica。
-- 使用 `div` / HTML CSS。
-- 去掉 140 行上限。
-- `<Image src="https://...">`。
-- 过期 Promise 仍 `setUrl`。
-
-## 测试断言
-
-- 非 ASCII、重复 id、空行、141 行、非法文章数被拒绝。
-- Blob 不是 `application/pdf` 或小于 100 字节时失败并回收 URL。
-- 连点第二次被 ref 挡住。
-- 100 行夹具仍能通过校验。
-- `policy.test.mjs` 不 import renderer。
-
-## 真实限制
-
-没有中文字体，没有服务端 `renderToBuffer`，没有内嵌阅读器。100 字节只是空文件门槛。分页外观要打开真实 PDF 才算看过。100 行夹具不是压力上限，上限仍是 140 行。
-
-## 证据
-
-没有 `docs/library-lab/evidence/runs/` 收据就不要写 sdk 或 browser PASS。Actions 41779873259 不是 F08 的单项验收。
-
-`tests/policy.test.mjs` 不调用 `pdf().toBlob()`。
+Node默认包main与浏览器browser映射不同，实际Node同源report compile+toBlob2项与纯policy6分计，不能替代真实浏览器。browser提案含保存实际PDF和外层原生Blob/URL探针，未执行不填formalPASS。fixed README/license/header见official，主页unknown无宿主嵌入确认；详细原始证据local-validation。

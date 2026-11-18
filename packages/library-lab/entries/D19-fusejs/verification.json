@@ -1,12 +1,14 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "尚未运行实际 fuse.js 包 SDK 测试"
+    "note": "本地sdk证据见local-validation.md及candidate-27；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
   },
   "build": {
-    "status": "NOT_RUN"
+    "status": "NOT_RUN",
+    "note": "本地build证据见local-validation.md及candidate-27；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
   },
   "browser": {
-    "status": "NOT_RUN"
+    "status": "NOT_RUN",
+    "note": "本地browser证据见local-validation.md及candidate-27；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
   }
 }

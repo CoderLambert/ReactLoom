@@ -5,13 +5,7 @@
   "name": "assistant-ui",
   "group": "E",
   "summary": "真实 LocalRuntime 聊天原语、离线 Adapter、流式输出与取消",
-  "tags": [
-    "Chat",
-    "Runtime",
-    "Composer",
-    "AbortSignal",
-    "React"
-  ],
+  "tags": ["Chat", "Runtime", "Composer", "AbortSignal", "React"],
   "contentState": "recreated",
   "packages": [
     {
@@ -61,13 +55,11 @@
         "examples/example.tsx",
         "examples/reply-policy.mjs",
         "examples/reply-policy.d.mts",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/local-adapter.mjs",
+        "examples/local-adapter.d.mts"
       ],
-      "capabilities": [
-        "offline-adapter",
-        "abort",
-        "no-paid-model"
-      ],
+      "capabilities": ["offline-adapter", "abort", "no-paid-model"],
       "description": "入门：真实 runtime 管理聊天消息。结果必须由真实SDK执行，未验收不得显示PASS。"
     },
     {
@@ -80,13 +72,11 @@
         "examples/example.tsx",
         "examples/reply-policy.mjs",
         "examples/reply-policy.d.mts",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/local-adapter.mjs",
+        "examples/local-adapter.d.mts"
       ],
-      "capabilities": [
-        "offline-adapter",
-        "abort",
-        "no-paid-model"
-      ],
+      "capabilities": ["offline-adapter", "abort", "no-paid-model"],
       "description": "业务：本地确定性流式研究回答。结果必须由真实SDK执行，未验收不得显示PASS。"
     },
     {
@@ -100,13 +90,10 @@
         "examples/reply-policy.mjs",
         "examples/reply-policy.d.mts",
         "examples/demo.tsx",
-        "examples/reply-policy.test.mjs"
+        "examples/local-adapter.mjs",
+        "examples/local-adapter.d.mts"
       ],
-      "capabilities": [
-        "offline-adapter",
-        "abort",
-        "no-paid-model"
-      ],
+      "capabilities": ["offline-adapter", "abort", "no-paid-model"],
       "description": "边界：AbortSignal 和停止响应。结果必须由真实SDK执行，未验收不得显示PASS。"
     }
   ],
@@ -117,5 +104,25 @@
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
     "note": "2026-10-27根据当前 LocalRuntime/Primitives 官方文档重新实现；0.15.x仍须真实类型/浏览器验收。"
+  },
+  "official": {
+    "readme": {
+      "repository": "assistant-ui/assistant-ui",
+      "commit": "f6bcca7cd0c901ae5a0a58a9ad3ce75fcf07bb09",
+      "path": "README.md",
+      "sourceUrl": "https://github.com/assistant-ui/assistant-ui/blob/f6bcca7cd0c901ae5a0a58a9ad3ce75fcf07bb09/README.md",
+      "snapshotPath": "official/readme.md",
+      "sha256": "bb02f7924fda9763c6bf57f562bcd3b6cd1ef90d3c9764033a42a05a0e276b64",
+      "language": "en",
+      "version": "0.15.21",
+      "syncedAt": "2026-11-17T17:41:22.378430+00:00"
+    },
+    "homepage": {
+      "url": "https://www.assistant-ui.com/docs/runtimes/custom/local-runtime",
+      "kind": "website",
+      "status": "blocked",
+      "checkedAt": "2026-11-17T17:41:22.378430+00:00",
+      "reason": "实际curl GET200的CSP frame-ancestors self仅允许本站，禁止当前跨源Lab嵌入；完整响应头见official/homepage-headers.txt，保留直达。"
+    }
   }
 }

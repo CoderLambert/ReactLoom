@@ -1,0 +1,16 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['pnpm', 'exec', 'node', '--input-type=module', '-e', 'import {TZDate,tzOffset} from "@date-fns/tz"; for(const zone of ["America/New_York","Asia/Shanghai","UTC"])for(const year of [96,100,1900,2024]){const d=TZDate.tz(zone,0); const read=()=>({fields:[d.getFullYear(),d.getMonth()+1,d.getDate(),d.getHours(),d.getMinutes(),d.getSeconds()],time:+d,offset:tzOffset(zone,d)});d.setFullYear(year,1,29);const afterYear=read();d.setHours(12,0,0,0);console.log(JSON.stringify({zone,year,afterYear,afterHours:read()}));}']
+startedAt: 2026-11-10T16:59:20.910781+00:00
+exit: 0
+{"zone":"America/New_York","year":96,"afterYear":{"fields":[96,2,29,19,0,2],"time":-59132505836000,"offset":-296.03333333333336},"afterHours":{"fields":[96,2,29,12,0,2],"time":-59132531036000,"offset":-296.03333333333336}}
+{"zone":"America/New_York","year":100,"afterYear":{"fields":[100,3,1,19,0,2],"time":-59006275436000,"offset":-296.03333333333336},"afterHours":{"fields":[100,3,1,12,0,2],"time":-59006300636000,"offset":-296.03333333333336}}
+{"zone":"America/New_York","year":1900,"afterYear":{"fields":[1900,3,1,19,0,0],"time":-2203804800000,"offset":-300},"afterHours":{"fields":[1900,3,1,12,0,0],"time":-2203830000000,"offset":-300}}
+{"zone":"America/New_York","year":2024,"afterYear":{"fields":[2024,2,29,19,0,0],"time":1709251200000,"offset":-300},"afterHours":{"fields":[2024,2,29,12,0,0],"time":1709226000000,"offset":-300}}
+{"zone":"Asia/Shanghai","year":96,"afterYear":{"fields":[96,2,29,7,59,17],"time":-59132592386000,"offset":485.71666666666664},"afterHours":{"fields":[96,2,29,11,59,17],"time":-59132577986000,"offset":485.71666666666664}}
+{"zone":"Asia/Shanghai","year":100,"afterYear":{"fields":[100,3,1,7,59,17],"time":-59006361986000,"offset":485.71666666666664},"afterHours":{"fields":[100,3,1,11,59,17],"time":-59006347586000,"offset":485.71666666666664}}
+{"zone":"Asia/Shanghai","year":1900,"afterYear":{"fields":[1900,3,1,7,59,17],"time":-2203891586000,"offset":485.71666666666664},"afterHours":{"fields":[1900,3,1,11,59,17],"time":-2203877186000,"offset":485.71666666666664}}
+{"zone":"Asia/Shanghai","year":2024,"afterYear":{"fields":[2024,2,29,8,0,0],"time":1709164800000,"offset":480},"afterHours":{"fields":[2024,2,29,12,0,0],"time":1709179200000,"offset":480}}
+{"zone":"UTC","year":96,"afterYear":{"fields":[96,2,29,0,0,0],"time":-59132592000000,"offset":0},"afterHours":{"fields":[96,2,29,12,0,0],"time":-59132548800000,"offset":0}}
+{"zone":"UTC","year":100,"afterYear":{"fields":[100,3,1,0,0,0],"time":-59006361600000,"offset":0},"afterHours":{"fields":[100,3,1,12,0,0],"time":-59006318400000,"offset":0}}
+{"zone":"UTC","year":1900,"afterYear":{"fields":[1900,3,1,0,0,0],"time":-2203891200000,"offset":0},"afterHours":{"fields":[1900,3,1,12,0,0],"time":-2203848000000,"offset":0}}
+{"zone":"UTC","year":2024,"afterYear":{"fields":[2024,2,29,0,0,0],"time":1709164800000,"offset":0},"afterHours":{"fields":[2024,2,29,12,0,0],"time":1709208000000,"offset":0}}

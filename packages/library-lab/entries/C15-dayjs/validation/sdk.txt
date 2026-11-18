@@ -1,0 +1,18 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['node', '--test', 'entries/C15-dayjs/tests/sdk.test.mjs']
+startedAt: 2026-11-10T17:09:22.839526+00:00
+exit: 0
+✔ actual shared strict Day.js parsing rejects overflow and keeps valid leap days (1.553334ms)
+✔ actual add is immutable and instance Chinese locale leaves the global default unchanged (0.844842ms)
+✔ shared real timezone windows observe NY23/25h and Shanghai/UTC24h (11.022666ms)
+✔ actual UTC-to-zone conversion retains distinct offsets at the same wall clock (0.429641ms)
+✔ actual shared roundtrip accepts both disambiguated fall-back instants (0.537836ms)
+✔ application shape guards and real timezone roundtrip reject invalid inputs (0.421998ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 63.820698

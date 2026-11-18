@@ -1,0 +1,12 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node --input-type=module -e "import { convertToExcalidrawElements } from '@excalidraw/excalidraw'; console.log(convertToExcalidrawElements([{type:'rectangle',x:0,y:0,width:100,height:60}]).length)"
+exit: 1
+Actual direct-import probe output captured before implementation; conversion was not reached.
+
+TypeError [ERR_IMPORT_ATTRIBUTE_MISSING]: Module file:///home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/open-color@1.9.1/node_modules/open-color/open-color.json needs an import attribute of type: json
+    at validateAttributes (node:internal/modules/esm/assert:110:15)
+    at defaultLoadSync (node:internal/modules/esm/load:161:3)
+code: ERR_IMPORT_ATTRIBUTE_MISSING
+Node.js v26.13.0
+
+BLOCKED for this plain-Node conversion probe only. No loader, DOM shim, dependency change or SDK mock introduced. Browser bundling/SDK scene remains NOT_RUN; do not infer Vite failure from this Node error.

@@ -1,0 +1,30 @@
+✔ preserves validated structured input (0.901213ms)
+✔ escapes dangerous formula prefixes exactly once across repeated normalization (0.239885ms)
+✔ enforces the final 120-character label limit after escaping both text fields (0.553295ms)
+✔ trims and rejects invalid headers/extra fields (0.141734ms)
+✔ rejects whitespace-only and control-containing labels (0.116928ms)
+✔ rejects number edge cases and prototype-like records (0.141952ms)
+✔ rejects duplicate channel regardless of capitalization and leading whitespace (0.079523ms)
+✔ enforces 200 row cap before export (0.748772ms)
+✔ 0.20.3 writes real XLSX bytes and restores typed cells and exact row values (11.300365ms)
+✔ category report restores summary values and every detail worksheet (4.490695ms)
+✔ category totals reject integer overflow before serializing a false number (0.128611ms)
+✔ formula-like labels stay string cells after an actual byte round trip (1.866839ms)
+✔ maximum normalized labels round trip; escaping overflow is rejected before workbook creation (19.879465ms)
+✔ real XLSX input rejects missing-column (0.539507ms)
+✔ real XLSX input rejects extra-column (0.491141ms)
+✔ real XLSX input rejects wrong-header (0.499707ms)
+✔ real XLSX input rejects duplicate-channel (0.553356ms)
+✔ real XLSX input rejects negative-count (0.576938ms)
+✔ real XLSX input rejects blank-row (0.519334ms)
+✔ real XLSX input rejects too-many-rows (2.377516ms)
+✔ real XLSX input rejects formula-cell (0.57094ms)
+✔ real XLSX input rejects multiple-sheets (0.505302ms)
+ℹ tests 22
+ℹ suites 0
+ℹ pass 22
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 127.553329

@@ -1,0 +1,18 @@
+{
+  "AGENTS.md": "ebe232a4e19df4d19edc43e75bdb3b2e76a943688a6be4df6f116c56fb24f135",
+  "agent.md": "3dce520303ac62b10e4c759ed425058f152c63725d5904ded4d3cf0ae99f23ce",
+  "examples/artwork.d.mts": "a752e428823ea94e510186f7f6412e9b3d9084e0fc86c15d1fccfd3f53ccb066",
+  "examples/artwork.mjs": "f5c093253d55880b50e1b19519d453da330b7a8088dad1bde6aa17976bbbf786",
+  "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+  "examples/example.tsx": "7152ebb52e9b0c7c221aae0734e9cde2596422de658c0a23b800f65badbfc7f9",
+  "examples/gallery-policy.d.mts": "c8c1aa600487a7be41d390a61445bcf5a7a52402d511d1cfe21f81a9a6f63416",
+  "examples/gallery-policy.mjs": "2856b0ac11b172cdd047830429cbffa13150890324d9d37ca7fb0a5349aa31ba",
+  "examples/gallery-policy.test.mjs": "336c6f866f4d98bcf9fa94aa4e274d9d57f5bf66715079a0551ed85cb6eebac0",
+  "guide.md": "473091eac12ca0fe4f4f9aee4aa41efaffacd0ea3e21970352e2ae3b7a8c7a17",
+  "library.json": "ff62ef1b8395463db8ab7cf8076081e4455b76d5e1b2da51e0bab2b838008995",
+  "local-validation.md": "ab1c3d972276018beacd975e9dfb9af63e5a7c00a0fb5d9855ee5d580d0622fc",
+  "official/license.txt": "cde09603222c99259f63c7d082fe20ecf855e86b5a4c5bd7ebff1fa93c653bc1",
+  "official/readme.md": "eacde22ddd2b4a866df9f5daa72583b19610e8959d4b683f0ab85f1e07865294",
+  "official/source-evidence.json": "9f18fd4929132c74a9040b7b060aa0709ee440ac38b2970faf162df8956e835b",
+  "verification.json": "8d52abab1fd225f23fcc0777ef33f68d4b517f389f7c64068e5726685216b8fa"
+}

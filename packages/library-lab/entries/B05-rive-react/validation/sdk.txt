@@ -1,0 +1,20 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ["node", "--test", "entries/B05-rive-react/tests/sdk.test.mjs"]
+startedAt: 2026-11-10T13:01:14.710827+00:00
+finishedAt: 2026-11-10T13:01:14.822172+00:00
+exitCode: 0
+
+STDOUT
+Actual WASM: {"bytes":2232739,"sha256":"4cbbe770f3317b2ba826177e840c9eeefa37e5694f290b5c0ec479b57e371891","contain":[2,2,0,50]}
+✔ actual Rive WASM contain alignment centers a known artboard without cropping (12.336666ms)
+✔ actual Rive WASM cover alignment crops horizontally while Layout.copyWith preserves the original (0.426044ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 84.984814
+
+STDERR

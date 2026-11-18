@@ -1,9 +1,9 @@
-import type {Preview} from '@storybook/react-vite'
+import type { Preview } from '@storybook/react-vite'
 
-const preview:Preview = {
-  parameters:{
-    controls:{expanded:true},
-    a11y:{test:'error'}, // CI须接入addon-vitest或test-runner方能真正执行；不代表全部WCAG合规
+const preview: Preview = {
+  parameters: {
+    controls: { expanded: true },
+    a11y: { test: 'error' }, // Ordinary story afterEach reports axe; CI must assert reports or use a test runner.
   },
 }
 export default preview

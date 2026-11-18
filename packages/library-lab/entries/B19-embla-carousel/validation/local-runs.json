@@ -1,0 +1,167 @@
+[
+  {
+    "label": "policy",
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "node",
+      "--test",
+      "packages/library-lab/entries/B19-embla-carousel/tests/slide-policy.test.mts"
+    ],
+    "exit": 0
+  },
+  {
+    "label": "typecheck",
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "--dir",
+      "packages/library-lab",
+      "exec",
+      "tsc",
+      "--ignoreConfig",
+      "--noEmit",
+      "--target",
+      "es2022",
+      "--module",
+      "esnext",
+      "--moduleResolution",
+      "bundler",
+      "--jsx",
+      "react-jsx",
+      "--strict",
+      "--skipLibCheck",
+      "--esModuleInterop",
+      "--types",
+      "vite/client,node",
+      "entries/B19-embla-carousel/examples/demo.tsx"
+    ],
+    "exit": 0
+  },
+  {
+    "label": "biome",
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "packages/library-lab/entries/B19-embla-carousel/examples",
+      "packages/library-lab/entries/B19-embla-carousel/tests",
+      "packages/library-lab/entries/B19-embla-carousel/library.json"
+    ],
+    "exit": 1
+  },
+  {
+    "label": "typecheck-final",
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "--dir",
+      "packages/library-lab",
+      "exec",
+      "tsc",
+      "--ignoreConfig",
+      "--noEmit",
+      "--target",
+      "es2022",
+      "--module",
+      "esnext",
+      "--moduleResolution",
+      "bundler",
+      "--jsx",
+      "react-jsx",
+      "--strict",
+      "--skipLibCheck",
+      "--esModuleInterop",
+      "--types",
+      "vite/client,node",
+      "entries/B19-embla-carousel/examples/demo.tsx"
+    ],
+    "exit": 0
+  },
+  {
+    "label": "format-final",
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "packages/library-lab/entries/B19-embla-carousel/examples",
+      "packages/library-lab/entries/B19-embla-carousel/library.json",
+      "packages/library-lab/entries/B19-embla-carousel/verification.json",
+      "packages/library-lab/entries/B19-embla-carousel/official/source-audit.json"
+    ],
+    "exit": 0
+  },
+  {
+    "label": "basis-type",
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "--dir",
+      "packages/library-lab",
+      "exec",
+      "tsc",
+      "--ignoreConfig",
+      "--noEmit",
+      "--target",
+      "es2022",
+      "--module",
+      "esnext",
+      "--moduleResolution",
+      "bundler",
+      "--jsx",
+      "react-jsx",
+      "--strict",
+      "--skipLibCheck",
+      "--esModuleInterop",
+      "--types",
+      "vite/client,node",
+      "entries/B19-embla-carousel/examples/demo.tsx"
+    ],
+    "exit": 0
+  },
+  {
+    "label": "basis-format",
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "packages/library-lab/entries/B19-embla-carousel/guide.md",
+      "packages/library-lab/entries/B19-embla-carousel/examples/example.tsx"
+    ],
+    "exit": 0
+  },
+  {
+    "label": "metadata",
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "node",
+      "packages/library-lab/entries/B19-embla-carousel/validation/check-metadata.mjs"
+    ],
+    "exit": 0
+  },
+  {
+    "label": "final-lint",
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "packages/library-lab/entries/B19-embla-carousel/examples",
+      "packages/library-lab/entries/B19-embla-carousel/validation/check-metadata.mjs",
+      "packages/library-lab/entries/B19-embla-carousel/library.json",
+      "packages/library-lab/entries/B19-embla-carousel/verification.json",
+      "packages/library-lab/e2e/quality-remediation-embla.spec.ts"
+    ],
+    "exit": 0
+  }
+]

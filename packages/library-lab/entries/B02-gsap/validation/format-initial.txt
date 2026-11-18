@@ -1,0 +1,94 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+ARGV: ["pnpm", "exec", "--", "biome", "check", "--write", "entries/B02-gsap/examples", "entries/B02-gsap/library.json"]
+START: 2026-11-10T12:33:17.329665+00:00
+END: 2026-11-10T12:33:17.591521+00:00
+EXIT: 1
+STDOUT:
+Skipped 2 suggested fixes.
+If you wish to apply the suggested (unsafe) fixes, use the command biome check --write --unsafe
+
+Checked 6 files in 11ms. Fixed 6 files.
+Found 2 errors.
+
+STDERR:
+entries/B02-gsap/examples/example.tsx:59:3 lint/correctness/useExhaustiveDependencies  FIXABLE  ━━━━━━━━━━
+
+  × This hook specifies more dependencies than necessary: generation.
+  
+    57 │     return () => document.removeEventListener('visibilitychange', sync)
+    58 │   }, [])
+  > 59 │   useEffect(() => {
+       │   ^^^^^^^^^
+    60 │     const host = scope.current
+    61 │     if (!host) return
+  
+  i This dependency can be removed from the list.
+  
+    104 │       }
+    105 │     }
+  > 106 │   }, [advanced, generation, ease, reduce])
+        │                 ^^^^^^^^^^
+    107 │   useEffect(() => {
+    108 │     const animation = owner.current?.animation
+  
+  i React relies on hook dependencies to determine when to re-compute Effects.
+    Specifying more dependencies than required can lead to unnecessary re-rendering
+    and degraded performance.
+  
+  i Unsafe fix: Remove the extra dependencies from the list.
+  
+    106 │ ··},·[advanced,·generation,·ease,·reduce])
+        │                 ------------              
+
+entries/B02-gsap/examples/example.tsx:107:3 lint/correctness/useExhaustiveDependencies  FIXABLE  ━━━━━━━━━━
+
+  × This hook specifies more dependencies than necessary: advanced, generation, ease.
+  
+    105 │     }
+    106 │   }, [advanced, generation, ease, reduce])
+  > 107 │   useEffect(() => {
+        │   ^^^^^^^^^
+    108 │     const animation = owner.current?.animation
+    109 │     if (!animation) return
+  
+  i This dependency can be removed from the list.
+  
+    111 │       animation.resume()
+    112 │     else animation.pause()
+  > 113 │   }, [advanced, generation, ease, reduce, visible, userPaused])
+        │       ^^^^^^^^
+    114 │ 
+    115 │   function read() {
+  
+  i This dependency can be removed from the list.
+  
+    111 │       animation.resume()
+    112 │     else animation.pause()
+  > 113 │   }, [advanced, generation, ease, reduce, visible, userPaused])
+        │                 ^^^^^^^^^^
+    114 │ 
+    115 │   function read() {
+  
+  i This dependency can be removed from the list.
+  
+    111 │       animation.resume()
+    112 │     else animation.pause()
+  > 113 │   }, [advanced, generation, ease, reduce, visible, userPaused])
+        │                             ^^^^
+    114 │ 
+    115 │   function read() {
+  
+  i React relies on hook dependencies to determine when to re-compute Effects.
+    Specifying more dependencies than required can lead to unnecessary re-rendering
+    and degraded performance.
+  
+  i Unsafe fix: Remove the extra dependencies from the list.
+  
+    113 │ ··},·[advanced,·generation,·ease,·reduce,·visible,·userPaused])
+        │       ----------------------------                             
+
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while applying fixes.
+  
+

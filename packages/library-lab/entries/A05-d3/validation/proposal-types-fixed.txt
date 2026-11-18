@@ -1,0 +1,9 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ["pnpm", "exec", "--", "tsc", "--ignoreConfig", "--noEmit", "--target", "ES2022", "--lib", "ES2022,DOM,DOM.Iterable", "--module", "ESNext", "--moduleResolution", "Bundler", "--jsx", "react-jsx", "--strict", "--skipLibCheck", "--esModuleInterop", "--allowSyntheticDefaultImports", "--allowImportingTsExtensions", "--types", "vite/client,node", "entries/A05-d3/validation/browser-proposal-check.ts"]
+startedAt: 2026-11-10T11:48:54.634014+00:00
+finishedAt: 2026-11-10T11:48:54.861789+00:00
+exitCode: 0
+
+STDOUT
+
+STDERR

@@ -1,0 +1,4 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: pnpm exec tsc --ignoreConfig --noEmit --target es2022 --module esnext --moduleResolution bundler --jsx react-jsx --strict --skipLibCheck --allowSyntheticDefaultImports --esModuleInterop --types node,react,react-dom,vite/client entries/E11-streamdown/examples/example.tsx entries/E11-streamdown/examples/demo.tsx
+exit: 0
+

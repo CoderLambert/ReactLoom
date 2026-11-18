@@ -1,0 +1,62 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['node', '--input-type=module', '-e', "import {chromium} from '@playwright/test';import{readFileSync}from'node:fs';\nconst browser=await chromium.launch();try{\n const page=await browser.newPage({viewport:{width:1100,height:1000}});\n await page.goto('http://127.0.0.1:4319/libraries/mantine?tab=demo&example=basic');\n const app=page.getByTestId('b08-workshop');await app.waitFor();\n const button=app.getByRole('button',{name:'确认工作区',exact:true});const input=app.getByRole('textbox',{name:'工作区',exact:true});\n const outside=page.getByRole('button',{name:'停止并卸载',exact:true});const peerBefore=await outside.evaluate(n=>getComputedStyle(n).backgroundColor);\n const candidate=readFileSync('entries/B08-mantine/examples/styles.css','utf8');\n console.log('SOURCE_CSS_TRANSIENT_PROBE_ONLY_NOT_BUILT',candidate);await page.addStyleTag({content:candidate});\n for(const colorScheme of ['light','dark']){\n  await page.emulateMedia({colorScheme});await page.mouse.move(0,0);await input.fill('ReactLoom');\n  console.log('OS_PREFERENCE_WITH_FORCED_LOCAL_LIGHT',colorScheme,await button.evaluate(n=>{const s=getComputedStyle(n);return {background:s.backgroundColor,border:s.border,padding:s.padding,font:s.font,root:n.closest('[data-b08-root]')?.getAttribute('data-mantine-color-scheme')}}));\n }\n await button.hover();console.log('HOVER',await button.evaluate(n=>getComputedStyle(n).backgroundColor));\n await input.fill('');console.log('DISABLED',await button.evaluate(n=>{const s=getComputedStyle(n);return{disabled:n.disabled,background:s.backgroundColor,opacity:s.opacity,cursor:s.cursor}}));\n await page.mouse.move(0,0);await input.fill('合法名称');await input.focus();await page.keyboard.press('Tab');\n console.log('KEYBOARD_FOCUS',await button.evaluate(n=>{const s=getComputedStyle(n);return{focused:document.activeElement===n,outline:s.outline,outlineOffset:s.outlineOffset}}));\n console.log('INPUT_FONT',await input.evaluate(n=>getComputedStyle(n).font));\n console.log('HOST_PEER_UNCHANGED',peerBefore,await outside.evaluate(n=>getComputedStyle(n).backgroundColor));\n}finally{await browser.close()}"]
+exit: 0
+SOURCE_CSS_TRANSIENT_PROBE_ONLY_NOT_BUILT .b08-root {
+  min-width: 0;
+  max-width: 60rem;
+  color: var(--mantine-color-text);
+  font-family: var(--mantine-font-family);
+}
+.b08-table-scroll {
+  overflow-x: auto;
+}
+.b08-root output {
+  overflow-wrap: anywhere;
+}
+/* Lab has unlayered element defaults. Revert only the properties it overrides,
+   restoring the official mantine layer through public component classes. */
+.b08-root .mantine-UnstyledButton-root {
+  font: revert-layer;
+  background: revert-layer;
+  border: revert-layer;
+  border-radius: revert-layer;
+  padding: revert-layer;
+  cursor: revert-layer;
+  opacity: revert-layer;
+}
+.b08-root .mantine-Input-input {
+  font: revert-layer;
+}
+.b08-root :focus-visible {
+  outline: 3px solid #326dcc;
+  outline-offset: 3px;
+}
+
+OS_PREFERENCE_WITH_FORCED_LOCAL_LIGHT light {
+  background: 'rgb(18, 184, 134)',
+  border: '1px solid rgba(0, 0, 0, 0)',
+  padding: '0px 18px',
+  font: '600 14px / 14px system-ui, sans-serif',
+  root: 'light'
+}
+OS_PREFERENCE_WITH_FORCED_LOCAL_LIGHT dark {
+  background: 'rgb(18, 184, 134)',
+  border: '1px solid rgba(0, 0, 0, 0)',
+  padding: '0px 18px',
+  font: '600 14px / 14px system-ui, sans-serif',
+  root: 'light'
+}
+HOVER rgb(12, 166, 120)
+DISABLED {
+  disabled: true,
+  background: 'rgb(233, 236, 239)',
+  opacity: '1',
+  cursor: 'not-allowed'
+}
+KEYBOARD_FOCUS {
+  focused: true,
+  outline: 'rgb(50, 109, 204) solid 3px',
+  outlineOffset: '3px'
+}
+INPUT_FONT 14px / 34px system-ui, sans-serif
+HOST_PEER_UNCHANGED rgb(255, 254, 251) rgb(255, 254, 251)

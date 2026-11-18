@@ -1,0 +1,13 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+ARGV: ["pnpm", "exec", "--", "tsc", "--ignoreConfig", "--noEmit", "--target", "ES2022", "--lib", "ES2022,DOM,DOM.Iterable", "--module", "ESNext", "--moduleResolution", "Bundler", "--jsx", "react-jsx", "--strict", "--skipLibCheck", "--esModuleInterop", "--allowImportingTsExtensions", "--types", "vite/client,node", "entries/A07-antv-g6/examples/demo.tsx"]
+START: 2026-11-10T11:40:39.956477+00:00
+END: 2026-11-10T11:40:40.209821+00:00
+EXIT: 1
+STDOUT:
+entries/A07-antv-g6/examples/example.tsx(62,7): error TS2322: Type '{ id: string; label: unknown; position: Point; client: Point; states: string[]; }[]' is not assignable to type '{ id: string; label: unknown; position: number[]; client: number[]; states: string[]; }[]'.
+  Type '{ id: string; label: unknown; position: Point; client: Point; states: string[]; }' is not assignable to type '{ id: string; label: unknown; position: number[]; client: number[]; states: string[]; }'.
+    Types of property 'position' are incompatible.
+      Type 'Point' is not assignable to type 'number[]'.
+        Type 'Float32Array<ArrayBufferLike>' is missing the following properties from type 'number[]': pop, push, concat, shift, and 5 more.
+
+STDERR:

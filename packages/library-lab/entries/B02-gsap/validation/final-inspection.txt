@@ -1,0 +1,5 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom
+CHECK: scoped local links, current 14 input hashes, 2 Demo levels/3 browser cases, no temporary .ts, git diff --check
+UTC: 2026-11-10T12:53:01.806378+00:00
+EXIT: 0
+RESULT: all 14 input hashes match; all local documentation links resolve; 5 runtime files; real Node SDK3/policy6 logs retained; browser NOT_RUN.

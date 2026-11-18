@@ -1,0 +1,179 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+command=pnpm exec biome check packages/library-lab/e2e/quality-remediation-motion-for-react.spec.ts packages/library-lab/e2e/quality-remediation-gsap.spec.ts packages/library-lab/e2e/quality-remediation-react-spring.spec.ts packages/library-lab/e2e/quality-remediation-dotlottie.spec.ts packages/library-lab/e2e/quality-remediation-rive.spec.ts packages/library-lab/e2e/quality-remediation-ant-design.spec.ts packages/library-lab/e2e/quality-remediation-mantine.spec.ts packages/library-lab/e2e/quality-remediation-ui-sources.spec.ts packages/library-lab/e2e/native-visibility-browser.ts packages/library-lab/src/lib/official-sources.mjs packages/library-lab/tests/official-sources.test.mjs
+packages/library-lab/e2e/native-visibility-browser.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+
+  × Sort these imports.
+  
+  > 1 │ import { chromium, type Page } from '@playwright/test'
+      │ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  > 2 │ import { spawn } from 'node:child_process'
+  > 3 │ import { mkdtemp, readFile, rm } from 'node:fs/promises'
+  > 4 │ import { tmpdir } from 'node:os'
+  > 5 │ import { join } from 'node:path'
+      │ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    6 │ 
+    7 │ /** A disposable browser, no user profile. Playwright's normal per-page focus
+  
+  i Safe fix: Organize imports and exports (Biome)
+  
+     1    │ - import·{·chromium,·type·Page·}·from·'@playwright/test'
+     2    │ - import·{·spawn·}·from·'node:child_process'
+     3    │ - import·{·mkdtemp,·readFile,·rm·}·from·'node:fs/promises'
+     4    │ - import·{·tmpdir·}·from·'node:os'
+     5    │ - import·{·join·}·from·'node:path'
+        1 │ + import·{·spawn·}·from·'node:child_process'
+        2 │ + import·{·mkdtemp,·readFile,·rm·}·from·'node:fs/promises'
+        3 │ + import·{·tmpdir·}·from·'node:os'
+        4 │ + import·{·join·}·from·'node:path'
+        5 │ + import·{·chromium,·type·Page·}·from·'@playwright/test'
+     6  6 │   
+     7  7 │   /** A disposable browser, no user profile. Playwright's normal per-page focus
+  
+
+packages/library-lab/e2e/native-visibility-browser.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Formatter would have printed the following content:
+  
+    10 10 │   export async function withNativeVisibilityBrowser(run: (page: Page) => Promise<void>) {
+    11 11 │     const profile = await mkdtemp(join(tmpdir(), 'reactloom-native-visibility-'))
+    12    │ - ··const·child·=·spawn(chromium.executablePath(),·[
+    13    │ - ····'--remote-debugging-port=0',·`--user-data-dir=${profile}`,·'--no-first-run',
+    14    │ - ····'--no-default-browser-check',·'--no-sandbox',·'about:blank',
+    15    │ - ··],·{·stdio:·'ignore'·})
+       12 │ + ··const·child·=·spawn(
+       13 │ + ····chromium.executablePath(),
+       14 │ + ····[
+       15 │ + ······'--remote-debugging-port=0',
+       16 │ + ······`--user-data-dir=${profile}`,
+       17 │ + ······'--no-first-run',
+       18 │ + ······'--no-default-browser-check',
+       19 │ + ······'--no-sandbox',
+       20 │ + ······'about:blank',
+       21 │ + ····],
+       22 │ + ····{·stdio:·'ignore'·},
+       23 │ + ··)
+    16 24 │     let browser: Awaited<ReturnType<typeof chromium.connectOverCDP>> | undefined
+    17 25 │     try {
+    ····· │ 
+    22 30 │           port = (await readFile(join(profile, 'DevToolsActivePort'), 'utf8')).split('\n')[0]
+    23 31 │           break
+    24    │ - ······}·catch·{·await·new·Promise(resolve·=>·setTimeout(resolve,·50))·}
+       32 │ + ······}·catch·{
+       33 │ + ········await·new·Promise((resolve)·=>·setTimeout(resolve,·50))
+       34 │ + ······}
+    25 35 │       }
+    26 36 │       if (!port) throw new Error('Own temporary Chromium did not expose its debugging port')
+    ····· │ 
+    30 40 │       if (browser) await browser.close()
+    31 41 │       child.kill('SIGTERM')
+    32    │ - ····if·(child.exitCode·===·null)·await·Promise.race([
+    33    │ - ······new·Promise(resolve·=>·child.once('exit',·resolve)),
+    34    │ - ······new·Promise(resolve·=>·setTimeout(resolve,·1500)),
+    35    │ - ····])
+       42 │ + ····if·(child.exitCode·===·null)
+       43 │ + ······await·Promise.race([
+       44 │ + ········new·Promise((resolve)·=>·child.once('exit',·resolve)),
+       45 │ + ········new·Promise((resolve)·=>·setTimeout(resolve,·1500)),
+       46 │ + ······])
+    36 47 │       if (child.exitCode === null) child.kill('SIGKILL')
+    37 48 │       await rm(profile, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 })
+  
+
+packages/library-lab/e2e/quality-remediation-dotlottie.spec.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Formatter would have printed the following content:
+  
+    133 133 │   
+    134 134 │   test('@B04 trusted native hidden tab pauses actual playback and preserves manual intent', async () => {
+    135     │ - ··await·withNativeVisibilityBrowser(async·page·=>·{
+        135 │ + ··await·withNativeVisibilityBrowser(async·(page)·=>·{
+    136 136 │       const app = await open(page, 'advanced')
+    137 137 │       await app.getByRole('button', { name: '播放', exact: true }).click()
+    ······· │ 
+    139 139 │       await page.evaluate(() => {
+    140 140 │         const events: { state: string; trusted: boolean }[] = []
+    141     │ - ······document.addEventListener('visibilitychange',·event·=>·{
+        141 │ + ······document.addEventListener('visibilitychange',·(event)·=>·{
+    142 142 │           events.push({ state: document.visibilityState, trusted: event.isTrusted })
+    143 143 │           document.documentElement.dataset.nativeVisibilityEvents = JSON.stringify(events)
+    ······· │ 
+    145 145 │       })
+    146 146 │       const sampleHidden = async (): Promise<Reading> => {
+    147     │ - ······await·app.getByRole('button',·{·name:·'读取播放器状态',·exact:·true·}).evaluate(button·=>·{
+        147 │ + ······await·app.getByRole('button',·{·name:·'读取播放器状态',·exact:·true·}).evaluate((button)·=>·{
+    148 148 │           if (!(button instanceof HTMLButtonElement)) throw new Error('No read control')
+    149 149 │           button.click() // Sampling actual getters without Playwright bringing the hidden tab forward.
+    ······· │ 
+    167 167 │         await page.bringToFront()
+    168 168 │         expect((await read(app)).playing).toBe(false)
+    169     │ - ······const·events·=·await·page.evaluate(()·=>·JSON.parse(document.documentElement.dataset.nativeVisibilityEvents·??·'[]'))
+        169 │ + ······const·events·=·await·page.evaluate(()·=>
+        170 │ + ········JSON.parse(document.documentElement.dataset.nativeVisibilityEvents·??·'[]'),
+        171 │ + ······)
+    170 172 │         expect(events).toEqual([
+    171     │ - ········{·state:·'hidden',·trusted:·true·},·{·state:·'visible',·trusted:·true·},
+    172     │ - ········{·state:·'hidden',·trusted:·true·},·{·state:·'visible',·trusted:·true·},
+        173 │ + ········{·state:·'hidden',·trusted:·true·},
+        174 │ + ········{·state:·'visible',·trusted:·true·},
+        175 │ + ········{·state:·'hidden',·trusted:·true·},
+        176 │ + ········{·state:·'visible',·trusted:·true·},
+    173 177 │         ])
+    174     │ - ····}·finally·{·await·other.close()·}
+        178 │ + ····}·finally·{
+        179 │ + ······await·other.close()
+        180 │ + ····}
+    175 181 │     })
+    176 182 │   })
+  
+
+packages/library-lab/e2e/quality-remediation-gsap.spec.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Formatter would have printed the following content:
+  
+    161 161 │   
+    162 162 │   test('@B02 native page visibility keeps a real manual pause', async () => {
+    163     │ - ··await·withNativeVisibilityBrowser(async·page·=>·{
+        163 │ + ··await·withNativeVisibilityBrowser(async·(page)·=>·{
+    164 164 │       const app = await open(page, 'advanced')
+    165 165 │       await seek(app, 50)
+    ······· │ 
+    175 175 │         expect((await requireState(app)).paused).toBe(true)
+    176 176 │         expect((await requireState(app)).progress).toBe(before.progress)
+    177     │ - ····}·finally·{·await·other.close()·}
+        177 │ + ····}·finally·{
+        178 │ + ······await·other.close()
+        179 │ + ····}
+    178 180 │     })
+    179 181 │   })
+  
+
+packages/library-lab/e2e/quality-remediation-mantine.spec.ts:3:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+
+  × Sort the imported names.
+  
+    1 │ // Root integration proposal, NOT_RUN by entry author.
+    2 │ // Real Mantine Provider/Portal/NumberInput/hooks/native events. No SDK mock, env=test or fake timer output.
+  > 3 │ import { expect, test, type Locator, type Page } from '@playwright/test'
+      │ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    4 │ 
+    5 │ async function open(page: Page, level: 'basic' | 'business' | 'advanced', viaAgent = false) {
+  
+  i Safe fix: Organize imports and exports (Biome)
+  
+      1   1 │   // Root integration proposal, NOT_RUN by entry author.
+      2   2 │   // Real Mantine Provider/Portal/NumberInput/hooks/native events. No SDK mock, env=test or fake timer output.
+      3     │ - import·{·expect,·test,·type·Locator,·type·Page·}·from·'@playwright/test'
+          3 │ + import·{·expect,·type·Locator,·type·Page,·test·}·from·'@playwright/test'
+      4   4 │   
+      5   5 │   async function open(page: Page, level: 'basic' | 'business' | 'advanced', viaAgent = false) {
+  
+
+Checked 11 files in 10ms. No fixes applied.
+Found 5 errors.
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while running checks.
+  
+
+
+exitCode=1

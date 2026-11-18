@@ -1,0 +1,362 @@
+[
+  {
+    "attempt": 1,
+    "settle": true,
+    "initial": {
+      "label": "before-wheel",
+      "at": 1759.5,
+      "scrollTop": 1640,
+      "scrollHeight": 6604,
+      "atBottom": "false",
+      "rows": [
+        {
+          "id": "article-501",
+          "top": 0,
+          "height": 164.453125,
+          "known": 164
+        },
+        {
+          "id": "article-502",
+          "top": 164.453125,
+          "height": 185.890625,
+          "known": 186
+        },
+        {
+          "id": "article-503",
+          "top": 350.34375,
+          "height": 185.890625,
+          "known": 186
+        }
+      ]
+    },
+    "sampled": {
+      "label": "anchor-captured",
+      "at": 1906,
+      "scrollTop": 2040,
+      "scrollHeight": 6519,
+      "atBottom": "false",
+      "rows": [
+        {
+          "id": "article-503",
+          "top": -50,
+          "height": 185.890625,
+          "known": 186
+        },
+        {
+          "id": "article-504",
+          "top": 135.890625,
+          "height": 121.578125,
+          "known": 122
+        },
+        {
+          "id": "article-505",
+          "top": 257.46875,
+          "height": 121.578125,
+          "known": 122
+        }
+      ],
+      "anchor": {
+        "id": "article-504",
+        "offset": 135.890625
+      }
+    },
+    "final": {
+      "label": "after-append",
+      "at": 2169.7999999970198,
+      "scrollTop": 2040,
+      "scrollHeight": 6683,
+      "atBottom": "false",
+      "rows": [
+        {
+          "id": "article-503",
+          "top": -50,
+          "height": 185.890625,
+          "known": 186
+        },
+        {
+          "id": "article-504",
+          "top": 135.890625,
+          "height": 121.578125,
+          "known": 122
+        },
+        {
+          "id": "article-505",
+          "top": 257.46875,
+          "height": 121.578125,
+          "known": 122
+        }
+      ]
+    },
+    "events": [
+      {
+        "label": "native-scroll",
+        "at": 1814.7000000029802,
+        "scrollTop": 2040,
+        "scrollHeight": 6519,
+        "atBottom": "false",
+        "rows": [
+          {
+            "id": "article-503",
+            "top": -50,
+            "height": 185.890625,
+            "known": 186
+          },
+          {
+            "id": "article-504",
+            "top": 135.890625,
+            "height": 121.578125,
+            "known": 164
+          },
+          {
+            "id": "article-505",
+            "top": 257.46875,
+            "height": 121.578125,
+            "known": 164
+          }
+        ]
+      }
+    ],
+    "delta": 0,
+    "pass": true
+  },
+  {
+    "attempt": 2,
+    "settle": true,
+    "initial": {
+      "label": "before-wheel",
+      "at": 1720.6000000014901,
+      "scrollTop": 1640,
+      "scrollHeight": 6604,
+      "atBottom": "false",
+      "rows": [
+        {
+          "id": "article-501",
+          "top": 0,
+          "height": 164.453125,
+          "known": 164
+        },
+        {
+          "id": "article-502",
+          "top": 164.453125,
+          "height": 185.890625,
+          "known": 186
+        },
+        {
+          "id": "article-503",
+          "top": 350.34375,
+          "height": 185.890625,
+          "known": 186
+        }
+      ]
+    },
+    "sampled": {
+      "label": "anchor-captured",
+      "at": 1864.8999999985099,
+      "scrollTop": 2040,
+      "scrollHeight": 6519,
+      "atBottom": "false",
+      "rows": [
+        {
+          "id": "article-503",
+          "top": -50,
+          "height": 185.890625,
+          "known": 186
+        },
+        {
+          "id": "article-504",
+          "top": 135.890625,
+          "height": 121.578125,
+          "known": 122
+        },
+        {
+          "id": "article-505",
+          "top": 257.46875,
+          "height": 121.578125,
+          "known": 122
+        }
+      ],
+      "anchor": {
+        "id": "article-504",
+        "offset": 135.890625
+      }
+    },
+    "final": {
+      "label": "after-append",
+      "at": 2130,
+      "scrollTop": 2040,
+      "scrollHeight": 6683,
+      "atBottom": "false",
+      "rows": [
+        {
+          "id": "article-503",
+          "top": -50,
+          "height": 185.890625,
+          "known": 186
+        },
+        {
+          "id": "article-504",
+          "top": 135.890625,
+          "height": 121.578125,
+          "known": 122
+        },
+        {
+          "id": "article-505",
+          "top": 257.46875,
+          "height": 121.578125,
+          "known": 122
+        }
+      ]
+    },
+    "events": [
+      {
+        "label": "native-scroll",
+        "at": 1775,
+        "scrollTop": 2040,
+        "scrollHeight": 6519,
+        "atBottom": "false",
+        "rows": [
+          {
+            "id": "article-503",
+            "top": -50,
+            "height": 185.890625,
+            "known": 186
+          },
+          {
+            "id": "article-504",
+            "top": 135.890625,
+            "height": 121.578125,
+            "known": 164
+          },
+          {
+            "id": "article-505",
+            "top": 257.46875,
+            "height": 121.578125,
+            "known": 164
+          }
+        ]
+      }
+    ],
+    "delta": 0,
+    "pass": true
+  },
+  {
+    "attempt": 3,
+    "settle": true,
+    "initial": {
+      "label": "before-wheel",
+      "at": 1723.6000000014901,
+      "scrollTop": 1640,
+      "scrollHeight": 6604,
+      "atBottom": "false",
+      "rows": [
+        {
+          "id": "article-501",
+          "top": 0,
+          "height": 164.453125,
+          "known": 164
+        },
+        {
+          "id": "article-502",
+          "top": 164.453125,
+          "height": 185.890625,
+          "known": 186
+        },
+        {
+          "id": "article-503",
+          "top": 350.34375,
+          "height": 185.890625,
+          "known": 186
+        }
+      ]
+    },
+    "sampled": {
+      "label": "anchor-captured",
+      "at": 1867.5,
+      "scrollTop": 2040,
+      "scrollHeight": 6519,
+      "atBottom": "false",
+      "rows": [
+        {
+          "id": "article-503",
+          "top": -50,
+          "height": 185.890625,
+          "known": 186
+        },
+        {
+          "id": "article-504",
+          "top": 135.890625,
+          "height": 121.578125,
+          "known": 122
+        },
+        {
+          "id": "article-505",
+          "top": 257.46875,
+          "height": 121.578125,
+          "known": 122
+        }
+      ],
+      "anchor": {
+        "id": "article-504",
+        "offset": 135.890625
+      }
+    },
+    "final": {
+      "label": "after-append",
+      "at": 2131.5,
+      "scrollTop": 2040,
+      "scrollHeight": 6683,
+      "atBottom": "false",
+      "rows": [
+        {
+          "id": "article-503",
+          "top": -50,
+          "height": 185.890625,
+          "known": 186
+        },
+        {
+          "id": "article-504",
+          "top": 135.890625,
+          "height": 121.578125,
+          "known": 122
+        },
+        {
+          "id": "article-505",
+          "top": 257.46875,
+          "height": 121.578125,
+          "known": 122
+        }
+      ]
+    },
+    "events": [
+      {
+        "label": "native-scroll",
+        "at": 1777.5,
+        "scrollTop": 2040,
+        "scrollHeight": 6519,
+        "atBottom": "false",
+        "rows": [
+          {
+            "id": "article-503",
+            "top": -50,
+            "height": 185.890625,
+            "known": 186
+          },
+          {
+            "id": "article-504",
+            "top": 135.890625,
+            "height": 121.578125,
+            "known": 164
+          },
+          {
+            "id": "article-505",
+            "top": 257.46875,
+            "height": 121.578125,
+            "known": 164
+          }
+        ]
+      }
+    ],
+    "delta": 0,
+    "pass": true
+  }
+]

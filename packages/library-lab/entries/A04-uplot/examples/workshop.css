@@ -1,0 +1,53 @@
+.a04-workshop {
+  min-width: 0;
+}
+.a04-workshop .demo-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-block: 1rem;
+}
+.a04-workshop label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.a04-workshop button,
+.a04-workshop select {
+  padding: 7px 10px;
+}
+.a04-workshop :focus-visible {
+  outline: 3px solid #287450;
+  outline-offset: 3px;
+}
+.a04-frame {
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+}
+.a04-plot {
+  width: 100%;
+  min-width: 280px;
+}
+.a04-workshop pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 22rem;
+  overflow: auto;
+  padding: 12px;
+  background: #eff5ef;
+}
+.a04-table-scroll {
+  overflow-x: auto;
+}
+.a04-workshop table {
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
+}
+.a04-workshop th,
+.a04-workshop td {
+  padding: 8px;
+  border-bottom: 1px solid #cbd7cd;
+}

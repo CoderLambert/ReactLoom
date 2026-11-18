@@ -1,0 +1,47 @@
+{
+  "reusedNotRerun": true,
+  "candidate": "candidate19",
+  "candidateSHA": "96454723c7f9a50081fab71d073f84d7962329c60c5b34dc784c58bc8f1e0c95",
+  "runtimeBinding": {
+    "examples/example.tsx": "352bbcb44bc786624307aaad0592e346a68ef16c91f938d582c74027dfa10324",
+    "examples/workspace.mjs": "fd6d90211507bf7cad84c41add7b710e85fd982eed019ed062c6e069f86bfa14",
+    "examples/workspace.d.mts": "2f4acef3fd90f092b7a9767b2a720e6aa5c29b866a2f35c16434f4c3bf1b239c",
+    "examples/language-switch.mjs": "4276db049efc9915912ce875b00b75881984be3461b0fc9ecec89a9b602aebb5",
+    "examples/language-switch.d.mts": "4c8df1590b46b218210e2041241d626acea904f6f09e723df6ba9dfb0f1127f7",
+    "examples/safe-emphasis.mjs": "36155e23805efafa89764c5bc6d7044fe5b510bebc3ac127a93f4d16474b58f0",
+    "examples/safe-emphasis.d.mts": "854c56ca8a79400d732d4f1e81eb9dc5b785323ed2a901049a704f60230b5eac",
+    "examples/styles.css": "448ce0d109b4a8c4bb232aeb12cac86654dccfcfbfe7277550b506cf4cbc5826",
+    "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038"
+  },
+  "proposalSHA": "1fe0bb51c0cdc4f13d1d05101d742eeb2c57a89602c8a32b8f46fb52a78124f5",
+  "browser": {
+    "command": [
+      "pnpm",
+      "exec",
+      "playwright",
+      "test",
+      "--config=.local-evidence/quality-playwright.config.ts",
+      "e2e/quality-document-links.spec.ts",
+      "e2e/quality-document-security.spec.ts",
+      "e2e/quality-remediation-react-i18next.spec.ts",
+      "e2e/quality-remediation-primitives-sources.spec.ts",
+      "--grep",
+      "@platform-document|@C15|@C16|@C18",
+      "--trace=off"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "startedAt": "2026-11-10T17:49:40.684796+00:00",
+    "finishedAt": "2026-11-10T17:50:03.680897+00:00",
+    "exitCode": 1,
+    "implicitBuild": false,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-19/browser.txt"
+  },
+  "cases": [
+    "  ✓   9 e2e/quality-remediation-primitives-sources.spec.ts:31:3 › @C18 original fixed README and evidenced homepage blocked (1.7s)",
+    "  ✓  10 e2e/quality-remediation-react-i18next.spec.ts:32:1 › @C18 useTranslation reacts to real original-instance language events and plural input (1.5s)",
+    "  ✓  11 e2e/quality-remediation-react-i18next.spec.ts:58:1 › @C18 namespace text and named Trans component remain React-owned while user text stays literal (1.5s)",
+    "  ✓  12 e2e/quality-remediation-react-i18next.spec.ts:79:1 › @C18 stable Provider queue survives hook wrapper changes, isolates tenants and disposes held local work (1.8s)"
+  ],
+  "browserLogSHA": "2ac374c02a400a494e97bd7473c230a4a9edf4834d6ec46cdde310dc231cfc22",
+  "scope": "C18 four cases PASS. Whole batch exit1/11PASS1FAIL retained; B15 public source URL tracked separately."
+}

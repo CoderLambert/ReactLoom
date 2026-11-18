@@ -8,7 +8,7 @@
 
 ## 版本
 
-`fuse.js@7.5.0`，MIT。选项包含 `includeScore`、`includeMatches`、`ignoreLocation`、字段权重和 `threshold`。
+`fuse.js@7.5.0`，Apache-2.0。选项包含 `includeScore`、`includeMatches`、`ignoreLocation`、字段权重和 `threshold`。
 
 basic 与 business 的有效阈值固定 0.35。只有 advanced 接受列出的四档。
 
@@ -51,10 +51,18 @@ basic 与 business 的有效阈值固定 0.35。只有 advanced 接受列出的�
 
 ## 真实限制
 
-种子只有六篇。没有网络。中文查询依赖 Fuse 的默认分词，不是专业中文分词器。`ignoreLocation` 是演示选择。
+种子只有六篇。没有网络。Fuse做字符模糊匹配，不提供专业中文分词或语义检索。`ignoreLocation` 是演示选择。
 
 分组「技术 / 商业 / 开源」是 fixture 标签。
 
 ## 证据
 
 sdk、build、browser 保持 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有匹配收据。Actions 41779873259 不是本条目 PASS。不要改 `verification.json`。
+
+## 完整迁移与归属
+
+已有React/TSX项目运行 `pnpm add fuse.js@7.5.0`，无Provider/env/额外类型包。复制article-index.mjs/search-scope.mjs/index-lifecycle.mjs和三个.d.mts；UI另复制example.tsx，demo.tsx仅Lab适配。article-index是UI与SDK共用的真实加权索引：title .65/summary .25/tags .1、includeScore/includeMatches、ignoreLocation true。分类先于索引与limit，可信授权必须先于数据进入客户端；分类不提供ACL。
+
+同ID替换必须移除所有旧可搜索字段中的词，包括summary/tags。不可变更新为浅拷贝，不应再修改嵌套tags。没有外部资源，state和index随React释放；生产JSON导入需schema及错误UI，本例只受控fixture。无结果通过清空、范围重选和重新提交恢复。IME组合期间不提交，结束后再显式提交。
+
+固定官方README来自krisk/Fuse@45bac9fe2e71fe8c680c861a35a8b226c4ae6d5a，只有英文原文，无官方zh-CN版本，禁止伪标语言。homepage GET200未证实嵌入，unknown；原文和响应证据在official。真实SDK和纯策略分别记数，无正式收据保持NOT_RUN。

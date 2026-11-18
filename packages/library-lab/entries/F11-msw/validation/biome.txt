@@ -1,0 +1,5 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: pnpm exec biome check --write entries/F11-msw/examples entries/F11-msw/tests entries/F11-msw/validation/check-entry.mjs entries/F11-msw/library.json entries/F11-msw/verification.json entries/F11-msw/official/source-audit.json entries/F11-msw/official/homepage-response.json
+exit: 0
+
+Checked 17 files in 7ms. Fixed 2 files.

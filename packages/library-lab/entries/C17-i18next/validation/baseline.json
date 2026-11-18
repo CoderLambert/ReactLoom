@@ -1,0 +1,20 @@
+{
+  "utc": "2026-11-10T17:39:08.700622+00:00",
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "head": "1218066e706a90ba03fac8dff8c9b843dd2429c4",
+  "status": "",
+  "fileCount": 11,
+  "files": {
+    "AGENTS.md": "83c497d45ec68d1bd02e37f89ae3c8c24fb136dd2ecee038be871492b1f829ef",
+    "agent.md": "09cdaf587af2f3827833c9ad3a5dace589616637078dc6788f608532cab33332",
+    "examples/demo.tsx": "254591932548c36c414610bd0d0c7ce7ef1648162f1996fbbe7381b8c1751690",
+    "examples/example.tsx": "21730f395ac28e52cf20b206280dcd895de3e753f85b5ba702b9e5c45ace892b",
+    "examples/language-switch.d.mts": "f5da9d95b4147409ca62d6cd0af59a440c1b0474ed947e2bcbe1eca6af67b236",
+    "examples/language-switch.mjs": "3787d7bfbdc46533712d1505bb6a11314e961a381953e34086b629974d1c20ac",
+    "guide.md": "d82d40f8f67ec67391105e2f89ee88e62c960a71baf05ae175950983611532f2",
+    "library.json": "d6bea4311c5c8aa47ee401220f2a465e41caa53fff940edd9f8a700476c34146",
+    "tests/language-switch.test.mjs": "82ac4b76c8fd4457f51669a188b3f0f7fd9031b63ed80c7be5928191c5ee4d87",
+    "tests/sdk.test.mjs": "933d11a740f1cb0614181f2f8bf5b613c5151987a59ad5ebc6a39e89f61cd937",
+    "verification.json": "1cce7c60db29347c18ec3608183ec8fefb1f7fd2334150bb81e1a2184da83e08"
+  }
+}

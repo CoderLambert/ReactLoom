@@ -1,0 +1,67 @@
+{
+  "checkedAt": "2026-11-10T16:42:21.072486+00:00",
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+  "scope": "SHA-only preservation against pre-maintenance author snapshot; no HTTP/SDK/browser",
+  "unchanged": [
+    {
+      "path": "examples/demo.tsx",
+      "bytes": 36,
+      "sha256": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038"
+    },
+    {
+      "path": "examples/example.tsx",
+      "bytes": 10560,
+      "sha256": "18fd7bd35b5810d482da1a6a5eb577a11575217f08082b554381d816dd2874b9"
+    },
+    {
+      "path": "examples/frappe-gantt.d.ts",
+      "bytes": 817,
+      "sha256": "4b45df1d27a2120f527190dc5a6df4ccf8ba06e387438130de608d9923eec822"
+    },
+    {
+      "path": "examples/gantt.css",
+      "bytes": 1651,
+      "sha256": "9be921449c52526977f920c0c1cd4dd18dbff4150f79c8ae8957ee221a7f6622"
+    },
+    {
+      "path": "examples/plan-policy.d.mts",
+      "bytes": 481,
+      "sha256": "b600350e29d7e34884bf76b7ad17a9e8f6700305fa3aa6bf61ae4ae5d1e0214c"
+    },
+    {
+      "path": "examples/plan-policy.mjs",
+      "bytes": 3622,
+      "sha256": "5e0bbc103803fc38aa94b8a7f545e9a52ff49d05a5930abbf1e7188b825cfe56"
+    },
+    {
+      "path": "library.json",
+      "bytes": 4141,
+      "sha256": "195f08b594bc35bb9c195554740141e90712ed533e660f3980bc4d4b8e5c6a7c"
+    },
+    {
+      "path": "official/readme.md",
+      "bytes": 15874,
+      "sha256": "6f8ef7a60672fbcdb9aafc9920cf64789e118d8f56d5ab1855a7d9553253fc46"
+    },
+    {
+      "path": "official/source-evidence.json",
+      "bytes": 17384,
+      "sha256": "84df9be9059a1ba3d91c7c1d2d598427d67968ed16b3ee21860bcc05d85f0740"
+    },
+    {
+      "path": "tests/plan-policy.test.mjs",
+      "bytes": 5249,
+      "sha256": "299ab4f885272381a205cd5b8a09d7650aaa1576273434db5c8a4093be1026b0"
+    },
+    {
+      "path": "tests/sdk.test.mjs",
+      "bytes": 3147,
+      "sha256": "3f283df12d016907e23051d2cb2bc8b5626e060822c33d68a34f84f477861af0"
+    },
+    {
+      "path": "verification.json",
+      "bytes": 457,
+      "sha256": "373078cce79ca0ad8b94d89bd2d6dd61b32fb5347cd804b7ae483a6e50fa556e"
+    }
+  ]
+}

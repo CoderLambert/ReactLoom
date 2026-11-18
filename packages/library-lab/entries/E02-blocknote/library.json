@@ -5,14 +5,7 @@
   "name": "BlockNote",
   "group": "E",
   "summary": "开箱即用的块级文档编辑器：块结构、JSON 草稿与变更生命周期",
-  "tags": [
-    "块编辑",
-    "React",
-    "ProseMirror",
-    "Mantine",
-    "JSON",
-    "BlockNote"
-  ],
+  "tags": ["块编辑", "React", "ProseMirror", "Mantine", "JSON", "BlockNote"],
   "contentState": "recreated",
   "packages": [
     {
@@ -29,15 +22,15 @@
     },
     {
       "name": "@mantine/core",
-      "version": null
+      "version": "9.7.3"
     },
     {
       "name": "@mantine/hooks",
-      "version": null
+      "version": "9.7.3"
     },
     {
       "name": "@mantine/utils",
-      "version": null
+      "version": "6.0.22"
     }
   ],
   "references": [
@@ -88,12 +81,7 @@
         "examples/snapshot-policy.mjs",
         "examples/snapshot-policy.d.mts"
       ],
-      "capabilities": [
-        "contenteditable",
-        "session-storage",
-        "editor-disposal",
-        "style-isolation"
-      ],
+      "capabilities": ["contenteditable", "session-storage", "editor-disposal", "style-isolation"],
       "description": "真实 useCreateBlockNote 与 Mantine BlockNoteView，编辑段落与块内容。"
     },
     {
@@ -108,12 +96,7 @@
         "examples/snapshot-policy.mjs",
         "examples/snapshot-policy.d.mts"
       ],
-      "capabilities": [
-        "contenteditable",
-        "session-storage",
-        "editor-disposal",
-        "style-isolation"
-      ],
+      "capabilities": ["contenteditable", "session-storage", "editor-disposal", "style-isolation"],
       "description": "同一编辑器保存/恢复本地块结构，不使用上传服务。"
     },
     {
@@ -129,12 +112,7 @@
         "examples/snapshot-policy.d.mts",
         "tests/policy.test.mjs"
       ],
-      "capabilities": [
-        "contenteditable",
-        "session-storage",
-        "editor-disposal",
-        "style-isolation"
-      ],
+      "capabilities": ["contenteditable", "session-storage", "editor-disposal", "style-isolation"],
       "description": "真实 insertBlocks、变更订阅解绑与有限数据恢复。"
     }
   ],
@@ -145,5 +123,25 @@
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
     "note": "按2026-10-27官方文档重新编写；旧归档的测试结果不作为本次真实SDK验证证据。"
+  },
+  "official": {
+    "readme": {
+      "repository": "TypeCellOS/BlockNote",
+      "commit": "8e0485caef54abe9cad6b84fa66505e0398acb79",
+      "path": "README.md",
+      "snapshotPath": "official/readme.md",
+      "sourceUrl": "https://github.com/TypeCellOS/BlockNote/blob/8e0485caef54abe9cad6b84fa66505e0398acb79/README.md",
+      "sha256": "bd1237b3f568a463fc23afab18583d63362b2e745ac049d17a37971111c08ce8",
+      "language": "en",
+      "version": "0.56.0",
+      "syncedAt": "2026-11-17T17:10:19.135Z"
+    },
+    "homepage": {
+      "url": "https://www.blocknotejs.org/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-17T17:10:19.135Z",
+      "reason": "实际响应见official/source-evidence.json；尚未从Lab origin确认嵌入，保留unknown及官网直达。"
+    }
   }
 }

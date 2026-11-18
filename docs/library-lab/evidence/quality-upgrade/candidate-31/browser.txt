@@ -1,0 +1,67 @@
+[WebServer] (node:2168609) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:2168628) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 11 tests using 2 workers
+
+(node:2168681) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2168680) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   2 e2e/quality-resume-assistant-ui.spec.ts:10:1 › E12 real primitives local reply, visible cumulative stream and error recovery @E12 (4.8s)
+  ✘   1 e2e/quality-resume-assistant-ui.spec.ts:47:1 › E12 actual stop/unmount/level change abort owned pending sleeps under controlled clock @E12 (7.4s)
+  ✓   3 e2e/quality-resume-dompurify.spec.ts:3:1 › @E10 real DOMPurify preserves limited formats and enforces exact link attributes (2.9s)
+(node:2169462) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   4 e2e/quality-resume-dompurify.spec.ts:74:1 › @E10 programmatic over-limit input clears prior preview and resets safely (1.5s)
+  ✓   5 e2e/quality-resume-dompurify.spec.ts:32:1 › @E10 harmful markup is stripped; markers and remote probes do not execute (1.7s)
+  ✓   6 e2e/quality-resume-official-e10-e13.spec.ts:8:3 › @E10 pinned official original and honest homepage fallback (1.4s)
+  ✓   7 e2e/quality-resume-official-e10-e13.spec.ts:8:3 › @E12 pinned official original and honest homepage fallback (1.7s)
+  ✓   8 e2e/quality-resume-official-e10-e13.spec.ts:8:3 › @E13 pinned official original and honest homepage fallback (1.7s)
+  ✓  10 e2e/quality-resume-photoswipe.spec.ts:53:1 › @E13 collection replacement and unmount emit actual core destroy (3.3s)
+  ✓   9 e2e/quality-resume-photoswipe.spec.ts:5:1 › @E13 first core load, SVG decode/dimensions, keyboard and focus (6.0s)
+  ✓  11 e2e/quality-resume-photoswipe.spec.ts:94:1 › @E13 unmount during actual opening animation eventually destroys core (2.3s)
+
+
+  1) e2e/quality-resume-assistant-ui.spec.ts:47:1 › E12 actual stop/unmount/level change abort owned pending sleeps under controlled clock @E12 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('region', { name: 'assistant-ui真实运行时实验', exact: true }).getByTestId('assistant-text').last()
+    Expected substring: "取消与流式实验"
+    Received string:    " ●"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByRole('region', { name: 'assistant-ui真实运行时实验', exact: true }).getByTestId('assistant-text').last() with timeout 5000ms
+      - waiting for getByRole('region', { name: 'assistant-ui真实运行时实验', exact: true }).getByTestId('assistant-text').last()
+        14 × locator resolved to <div data-testid="assistant-text">…</div>
+           - unexpected value " ●"
+
+
+      82 |   await expect.poll(async () => (await probe(page)).pending).toBeGreaterThan(0)
+      83 |   await page.clock.runFor(450)
+    > 84 |   await expect(app.getByTestId('assistant-text').last()).toContainText('取消与流式实验')
+         |                                                          ^
+      85 |   await expect.poll(async () => (await probe(page)).pending).toBeGreaterThan(0)
+      86 |   const before = await probe(page)
+      87 |   await app.getByRole('button', { name: '停止响应', exact: true }).click()
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-resume-assistant-ui.spec.ts:84:58
+
+    Error Context: test-results/quality-resume-assistant-u-7a589--under-controlled-clock-E12/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-resume-assistant-u-7a589--under-controlled-clock-E12/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-resume-assistant-u-7a589--under-controlled-clock-E12/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    e2e/quality-resume-assistant-ui.spec.ts:47:1 › E12 actual stop/unmount/level change abort owned pending sleeps under controlled clock @E12 
+  10 passed (18.7s)
+undefined
+/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: playwright test e2e/quality-resume-dompurify.spec.ts e2e/quality-resume-assistant-ui.spec.ts e2e/quality-resume-photoswipe.spec.ts e2e/quality-resume-official-e10-e13.spec.ts --workers=2

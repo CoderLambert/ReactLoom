@@ -1,0 +1,65 @@
+[
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "node",
+      "--test",
+      "packages/library-lab/entries/E02-blocknote/tests/policy.test.mjs"
+    ],
+    "exitCode": 0,
+    "at": "2026-11-17T17:12:03.125319+00:00",
+    "log": "validation/policy.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "entries/E02-blocknote/examples",
+      "entries/E02-blocknote/tests",
+      "entries/E02-blocknote/validation/browser.spec.ts",
+      "entries/E02-blocknote/library.json",
+      "entries/E02-blocknote/verification.json"
+    ],
+    "exitCode": 0,
+    "at": "2026-11-17T17:12:03.360030+00:00",
+    "log": "validation/biome.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "entries/E02-blocknote/examples",
+      "entries/E02-blocknote/tests",
+      "entries/E02-blocknote/validation/browser.spec.ts",
+      "entries/E02-blocknote/library.json",
+      "entries/E02-blocknote/verification.json"
+    ],
+    "exitCode": 0,
+    "at": "2026-11-17T17:13:10.852246+00:00",
+    "log": "validation/biome-final.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "node",
+      "--input-type=module",
+      "-e",
+      "import fs from 'node:fs';import crypto from 'node:crypto';import assert from 'node:assert/strict';import {validateOfficialSources} from './packages/library-lab/src/lib/official-sources.mjs';const p='packages/library-lab/entries/E02-blocknote/';const m=JSON.parse(fs.readFileSync(p+'library.json'));assert.deepEqual(validateOfficialSources(m.official),[]);assert.equal(crypto.createHash('sha256').update(fs.readFileSync(p+'official/readme.md')).digest('hex'),m.official.readme.sha256);console.log('official metadata and original README digest PASS');"
+    ],
+    "exitCode": 0,
+    "at": "2026-11-17T17:13:10.877348+00:00",
+    "log": "validation/official-contract.log"
+  }
+]

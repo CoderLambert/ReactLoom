@@ -1,0 +1,5 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+command=pnpm exec biome check --write packages/library-lab/src/components/document.tsx packages/library-lab/e2e/quality-document-links.spec.ts
+Checked 2 files in 8ms. Fixed 1 file.
+
+exitCode=0

@@ -1,0 +1,3 @@
+B22 4 portable sources/no legacy import, original AGENTS, links, 3 proposals, separate original README hashes, redacted session cookies and no temporary/binary copies PASS
+
+exitCode=0

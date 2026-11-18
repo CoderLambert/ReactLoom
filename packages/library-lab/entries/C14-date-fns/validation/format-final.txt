@@ -1,0 +1,72 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['pnpm', 'exec', 'biome', 'check', '--write', 'entries/C14-date-fns/validation/metadata-check.mjs', 'entries/C14-date-fns/verification.json']
+startedAt: 2026-11-10T17:19:06.745133+00:00
+exit: 0
+Skipped 3 suggested fixes.
+If you wish to apply the suggested (unsafe) fixes, use the command biome check --write --unsafe
+
+Checked 2 files in 8ms. Fixed 1 file.
+Found 3 infos.
+entries/C14-date-fns/validation/metadata-check.mjs:66:50 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    64 │   for (const match of text.matchAll(/\[[^\]]+\]\(([^)]+)\)/gu)) {
+    65 │     const target = match[1]
+  > 66 │     assert.ok(resolveDocumentUrl(target, 'C14'), name + ': rejected link ' + target)
+       │                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    67 │     if (!target.startsWith('https:')) assert.ok((await stat(new URL(target, base))).isFile())
+    68 │     links.push({ document: name, target })
+  
+  i Unsafe fix: Use a template literal.
+  
+     64  64 │     for (const match of text.matchAll(/\[[^\]]+\]\(([^)]+)\)/gu)) {
+     65  65 │       const target = match[1]
+     66     │ - ····assert.ok(resolveDocumentUrl(target,·'C14'),·name·+·':·rejected·link·'·+·target)
+         66 │ + ····assert.ok(resolveDocumentUrl(target,·'C14'),·`${name}:·rejected·link·${target}`)
+     67  67 │       if (!target.startsWith('https:')) assert.ok((await stat(new URL(target, base))).isFile())
+     68  68 │       links.push({ document: name, target })
+  
+
+entries/C14-date-fns/validation/metadata-check.mjs:83:15 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    81 │ const binding = {}
+    82 │ for (const name of runtime) {
+  > 83 │   const key = 'packages/library-lab/entries/C14-date-fns/' + name
+       │               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    84 │   const current = hash(await readFile(new URL(name, base)))
+    85 │   assert.equal(current, inputMap[key])
+  
+  i Unsafe fix: Use a template literal.
+  
+     81  81 │   const binding = {}
+     82  82 │   for (const name of runtime) {
+     83     │ - ··const·key·=·'packages/library-lab/entries/C14-date-fns/'·+·name
+         83 │ + ··const·key·=·`packages/library-lab/entries/C14-date-fns/${name}`
+     84  84 │     const current = hash(await readFile(new URL(name, base)))
+     85  85 │     assert.equal(current, inputMap[key])
+  
+
+entries/C14-date-fns/validation/metadata-check.mjs:120:3 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    118 │ await writeFile(
+    119 │   new URL('validation/shared-evidence.json', base),
+  > 120 │   JSON.stringify(shared, null, 2) + '\n',
+        │   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    121 │ )
+    122 │ console.log(
+  
+  i Unsafe fix: Use a template literal.
+  
+    118 118 │   await writeFile(
+    119 119 │     new URL('validation/shared-evidence.json', base),
+    120     │ - ··JSON.stringify(shared,·null,·2)·+·'\n',
+        120 │ + ··`${JSON.stringify(shared,·null,·2)}\n`,
+    121 121 │   )
+    122 122 │   console.log(
+  
+

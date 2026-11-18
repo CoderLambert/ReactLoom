@@ -1,11 +1,4 @@
-import { summarize } from './helper';
+import { fibonacci } from './heavy'
+import { mountCalculator } from './view'
 
-const root = document.querySelector<HTMLElement>('#root');
-const button = document.querySelector<HTMLButtonElement>('#load');
-const summary = summarize([4, 5, 6]);
-if (root) root.dataset.sum = String(summary.sum);
-button?.addEventListener('click', async () => {
-  // This is an actual dynamic import. Bundle output must confirm a split chunk.
-  const { fibonacci } = await import('./heavy');
-  if (root) root.dataset.fibonacci = String(fibonacci(12));
-});
+mountCalculator('static import：计算模块随入口进入静态依赖闭包', async () => ({ fibonacci }))

@@ -1,0 +1,4 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: pnpm exec biome check --write entries/B03-react-spring/examples entries/B03-react-spring/tests entries/B03-react-spring/validation/check-entry.mjs entries/B03-react-spring/library.json entries/B03-react-spring/verification.json entries/B03-react-spring/official/source-audit.json entries/B03-react-spring/official/homepage-response.json
+exit: 0
+Checked 11 files in 8ms. No fixes applied.

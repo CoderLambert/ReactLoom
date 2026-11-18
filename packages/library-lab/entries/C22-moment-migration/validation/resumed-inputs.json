@@ -1,0 +1,12 @@
+{
+  "startedAt": "2026-11-17T16:18:16.446356+00:00",
+  "finishedAt": "2026-11-17T16:18:17.878714+00:00",
+  "exitCode": 0,
+  "files": {
+    "examples/migration.mjs": "d141df34493711b52782029de8e89571e293ce96b027e1dc8bec658cb22ddfec",
+    "examples/migration.d.mts": "3eaf431af69e4db0edfc9649eacbf82fe3de33e82521030ea21b04370a50d561",
+    "examples/example.tsx": "fcbab085c0ec0cdbbe722121d4832c6cd9a14d53aabd27600ba05c657660d948",
+    "examples/demo.tsx": "254591932548c36c414610bd0d0c7ce7ef1648162f1996fbbe7381b8c1751690",
+    "tests/sdk.test.mjs": "997a0599d9b54d6e2c833ff9436dc07d917b07d0b992bed1683d2eaab2620965"
+  }
+}

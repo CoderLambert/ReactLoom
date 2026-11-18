@@ -1,14 +1,14 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "待 PLATFORM 安装固定版本并执行本条目真实 SDK Node 测试"
+    "note": "本地真实SDK2/policy6、独立复核与维护工具P2已闭环；candidate16实际四交互+原文/官网5case另有日志，不能替代正式SDK收据，仍NOT_RUN。"
   },
   "build": {
     "status": "NOT_RUN",
-    "note": "待 TS/Vite 构建检查"
+    "note": "条目strict/fixture增量与主控共享候选编译范围见local-validation.md，当前输入已重绑；无本条目正式build收据，仍NOT_RUN。"
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "待 Chromium 真实交互及无障碍检查"
+    "note": "candidate16中四交互最终PASS（含真实编辑保留/过期请求冲突JSON分支）及原文/官网原PASS共5case；精确初败/重试日志见local-validation，正式记录器收据仍NOT_RUN。"
   }
 }

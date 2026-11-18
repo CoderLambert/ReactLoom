@@ -1,0 +1,65 @@
+{
+  "node": "v26.13.1",
+  "commands": [
+    {
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "node",
+        "--test",
+        "packages/library-lab/entries/F06-pdfjs/examples/sdk.test.mjs"
+      ],
+      "exitCode": 0,
+      "output": "validation/sdk.log",
+      "classification": "actual same-version Node legacy SDK, not browser Worker/Canvas"
+    },
+    {
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "node",
+        "--test",
+        "packages/library-lab/entries/F06-pdfjs/examples/render-gate.test.mjs",
+        "packages/library-lab/entries/F06-pdfjs/examples/render-budget.test.mjs",
+        "packages/library-lab/entries/F06-pdfjs/examples/worker-version.test.mjs"
+      ],
+      "exitCode": 0,
+      "output": "validation/policy.log",
+      "classification": "pure and static policy9; no SDK"
+    },
+    {
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "pnpm",
+        "--filter",
+        "@reactloom/library-lab",
+        "exec",
+        "biome",
+        "check",
+        "--write",
+        "entries/F06-pdfjs/examples",
+        "entries/F06-pdfjs/validation/browser.spec.ts",
+        "entries/F06-pdfjs/library.json",
+        "entries/F06-pdfjs/official/source-evidence.json"
+      ],
+      "exitCode": 0,
+      "output": "validation/biome-initial.log"
+    },
+    {
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "pnpm",
+        "--filter",
+        "@reactloom/library-lab",
+        "exec",
+        "biome",
+        "check",
+        "entries/F06-pdfjs/examples",
+        "entries/F06-pdfjs/validation/browser.spec.ts",
+        "entries/F06-pdfjs/library.json",
+        "entries/F06-pdfjs/verification.json",
+        "entries/F06-pdfjs/official/source-evidence.json"
+      ],
+      "exitCode": 0,
+      "output": "validation/biome-final.log"
+    }
+  ]
+}

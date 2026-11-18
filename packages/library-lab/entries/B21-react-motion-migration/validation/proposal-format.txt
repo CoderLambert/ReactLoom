@@ -1,0 +1,5 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['pnpm', 'exec', 'biome', 'check', '--write', 'entries/B21-react-motion-migration/validation/browser-proposal.check.ts']
+startedAt: 2026-11-10T14:52:23.218637+00:00
+exit: 0
+Checked 1 file in 13ms. Fixed 1 file.

@@ -1,0 +1,68 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=pnpm exec playwright test --config=.local-evidence/quality-playwright.config.ts e2e/quality-remediation-react-aria.spec.ts e2e/quality-remediation-embla.spec.ts e2e/quality-remediation-cmdk.spec.ts e2e/quality-remediation-sonner.spec.ts e2e/quality-remediation-primitives-sources.spec.ts --grep @B12 (?:real|category)|@B18|@B19|@B20
+
+Running 15 tests using 2 workers
+
+(node:1688514) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1688513) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 e2e/quality-remediation-cmdk.spec.ts:57:1 › @B18 SDK groups and bilingual aliases expose disabled matches without executing them (2.0s)
+  ✓   2 e2e/quality-remediation-cmdk.spec.ts:20:1 › @B18 actual cmdk filtering and active-descendant identities drive keyboard article actions (2.0s)
+  ✓   3 e2e/quality-remediation-cmdk.spec.ts:89:1 › @B18 real Dialog portal hotkeys focus restoration composition protocol and listener teardown (2.6s)
+  ✓   4 e2e/quality-remediation-embla.spec.ts:29:1 › @B19 real measured snap positions, trusted native pointer and stable DOM drive non-loop boundaries (2.6s)
+  ✓   6 e2e/quality-remediation-embla.spec.ts:115:1 › @B19 local arrow focus, live reduced-motion jump, real ResizeObserver and hook destroy are observable (2.2s)
+  ✓   5 e2e/quality-remediation-embla.spec.ts:83:1 › @B19 actual loop fallback, controlled reInit, monotonic IDs and restore respect live engine state (3.6s)
+  ✓   7 e2e/quality-remediation-primitives-sources.spec.ts:13:3 › @B18 original fixed README and evidenced homepage blocked (1.4s)
+  ✓   9 e2e/quality-remediation-primitives-sources.spec.ts:13:3 › @B20 original fixed README and evidenced homepage unknown (1.7s)
+  ✓  10 e2e/quality-remediation-react-aria.spec.ts:27:1 › @B12 real keyboard selection submits key and edited text cannot reuse the old identity (1.9s)
+  ✓  11 e2e/quality-remediation-react-aria.spec.ts:65:1 › @B12 category filtering exposes disabled options, skips them on keyboard and has a real empty list (1.8s)
+  ✘   8 e2e/quality-remediation-primitives-sources.spec.ts:13:3 › @B19 original fixed README and evidenced homepage unknown (5.9s)
+(node:1689759) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  12 e2e/quality-remediation-react-aria.spec.ts:102:1 › @B12 real delayed suggestions align with latest query, form guard and open-Popover unmount (4.1s)
+  ✓  13 e2e/quality-remediation-sonner.spec.ts:42:1 › @B20 actual notification styling, close/auto-close and durable business feedback (6.0s)
+  ✓  14 e2e/quality-remediation-sonner.spec.ts:71:1 › @B20 latest save action owns one undo; closing the real toast does not undo business (4.1s)
+  ✓  15 e2e/quality-remediation-sonner.spec.ts:107:1 › @B20 same-id finite task outcomes, frozen input, latest-run cancel and pending unmount (15.1s)
+
+
+  1) e2e/quality-remediation-primitives-sources.spec.ts:13:3 › @B19 original fixed README and evidenced homepage unknown 
+
+    Error: expect(locator).not.toBeEmpty() failed
+
+    Locator:  locator('.prose')
+    Expected: not empty
+    Received: empty
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "not toBeEmpty" locator('.prose') with timeout 5000ms
+      - waiting for locator('.prose')
+        14 × locator resolved to <article class="prose">…</article>
+           - unexpected value "empty"
+
+
+      14 |     await page.goto(`/libraries/${slug}?tab=readme`)
+      15 |     await expect(page.getByRole('heading', { name: '官方 README 原文', exact: true })).toBeVisible()
+    > 16 |     await expect(page.locator('.prose')).not.toBeEmpty()
+         |                                              ^
+      17 |     await expect(page.getByRole('alert')).toHaveCount(0)
+      18 |     await expect(page.getByRole('link', { name: '打开上游原文' })).toHaveAttribute(
+      19 |       'href',
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-primitives-sources.spec.ts:16:46
+
+    Error Context: test-results/quality-remediation-primit-2c6e0--evidenced-homepage-unknown/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-remediation-primit-2c6e0--evidenced-homepage-unknown/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-remediation-primit-2c6e0--evidenced-homepage-unknown/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    e2e/quality-remediation-primitives-sources.spec.ts:13:3 › @B19 original fixed README and evidenced homepage unknown 
+  14 passed (36.0s)
+
+exitCode=1

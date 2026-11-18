@@ -1,46 +1,23 @@
-# E10 DOMPurify — 工程手册
+# E10 DOMPurify 迁入指南
 
-## 适用
+DOM浏览器中必须显示有限HTML时使用；纯文本用React子节点，Markdown/HTML AST分别考虑E06/E08。实装dompurify3.4.17，MPL-2.0 OR Apache-2.0。不要由版本号推成安全已验收。
 
-浏览器里必须把有限富文本 HTML 放进唯一 sink 时。纯文本用 React 子节点。Markdown 用 E06。hast 流水线用 E08。代码用 E09。不要为了显示脚本或 iframe 放宽策略。
+## 完整迁入
 
-## 版本
+已有React/TSX DOM宿主：`pnpm add dompurify@3.4.17`，复制example.tsx、html-policy.mjs/.d.mts、sanitize-preview.mjs/.d.mts；demo仅转发。ESM/TSX/DOM类型，无CSS/env/Provider/账号，无SSR或Node DOM接线。
 
-`dompurify@3.4.17`，许可 MPL-2.0 OR Apache-2.0。配置对象只有 `examples/html-policy.mjs`。不设置 `USE_PROFILES`。不使用无配置的 `sanitize(dirty)`。
+useMemo每挂载createDOMPurify(window)私有实例，避免共享实例setConfig/addHook污染；只把sanitizePreview返回html送唯一dangerouslySetInnerHTML，同一字符串pre文本可查看。原文只textarea，禁止在clean后拼接/改DOM或进入未经审查的新sink。
 
-## 迁移
+## 安全约束
 
-保持 `useMemo(() => DOMPurify.sanitize(dirty, htmlPolicy), [dirty])`，并且 `dangerouslySetInnerHTML` 只接收该结果。`<pre>` 打印同一字符串。文本框保留 12_000 上限。换 level 重置输入。不要把策略内联到组件。产品增加标签时同时改负例。
+保留现有ALLOWED_TAGS/ATTR表，不加script/style/svg/math/img/iframe/form或事件。实装ALLOW_DATA_ATTR/ARIA默认true，单独ALLOWED_ATTR不是完整属性白名单；本例显式两者false，实际仅href/title。USE_PROFILES会重建标签名单，不与手写表组合。
 
-## 不可删的清理
+URI正则保持HTTPSauthority前缀，不是完整URL/host验证；非法端口99999可匹配正则却被new URL拒绝。HTTPS不代表可信域/无追踪/无外部导航。不要为了链接好看放开javascript/data/相对协议或在净化后写回用户href。
 
-禁止 `USE_PROFILES` 与 `ALLOWED_TAGS` 组合。禁止 `setConfig` 和 `addHook`。禁止在 `clean` 之后拼接标签。禁止把 `dirty` 绑到预览。`ALLOWED_URI_REGEXP` 保持无凭据 https。卸载或换层时不要留下上一份 HTML 冒充新输入。
+maxLength/helper均12,000UTF16单元，不是字节/节点/CPU预算。unsupported不调用sanitize、不把dirty放sink；sanitize错误/非字符串也返回空html/可见错误，不留旧成功。helper不捕获模块/实例创建/任意React异常。没有hooks/订阅/计时器/网络资源需要销毁，只释放私有实例引用。
 
-## 反例
+## 验证范围
 
-- 先 innerHTML 再 sanitize。
-- 打开 `USE_PROFILES`。
-- 默认 `sanitize` 不传 `htmlPolicy`。
-- 正则删除 `<script`。
-- `afterSanitizeAttributes` 里写回用户 href。
-- 用 `DOMPurify.removed` 判断输入可信。
-- 同一 `clean` 进入邮件、PDF 或 `document.write`。
-- 把 advanced 样例的目视检查写成 XSS 已在浏览器测试。
+policy测试与fake purifier只证明配置/控制流，不是SDK。DOMPurify真实调用需要DOM；本条不为Node测试新增平台依赖。validation/browser.spec.ts给主控跑：合法格式/链接及精确属性、实际危险DOM剥离、无害执行标记与远程src探针、重置/超限清旧结果。不能只靠script不执行（innerHTML脚本可能本来不执行），还须DOM不存在。
 
-## 测试断言
-
-- 策略模块不含 `USE_PROFILES`。
-- 事件属性、`script`、`svg`、`javascript:`、`style` 不出现在净化字符串里。
-- 符合正则的 https 才可能留下 `href`。
-- 预览 sink 与 `<pre>` 使用同一 `clean`。
-- 浏览器 XSS 没有收据时不得写成通过。Node 策略测试不是 DOM 利用验证。
-
-## 真实限制
-
-未检查 `isSupported`。未启用 Trusted Types。12_000 字符不是深度限制。正则不限制主机名为自家域名。没有 jsdom 服务端路径。与 E08 的 schema 不是同一份名单。
-
-## 证据
-
-sdk、build、browser 保持 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有 E10 收据。Actions `41779873259` 是仓库级运行，不是本条目 PASS。不要声称 XSS 已做浏览器测试。
-
-资料：https://github.com/cure53/DOMPurify 与 https://www.npmjs.com/package/dompurify 。
+SDK/browser/security未执行保持NOT_RUN。官方固定原文/许可证及blocked仓库响应见official；完整argv/cwd/exit/raw日志与六项分层见local-validation.md。保持固定策略唯一源和所有helper/声明sourceFiles完整。

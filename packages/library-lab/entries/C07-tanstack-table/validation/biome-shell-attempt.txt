@@ -1,0 +1,7 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+COMMAND: pnpm exec biome check --write entries/C07-tanstack-table/examples entries/C07-tanstack-table/tests entries/C07-tanstack-table/library.json entries/C07-tanstack-table/verification.json entries/C07-tanstack-table/official/source-evidence.json
+EXIT: 1
+Observed initial shell invocation output:
+npm error could not determine executable to run
+npm error A complete log of this run can be found in: /home/lambert/.npm/_logs/2026-11-10T10_14_55_322Z-debug-0.log
+Subsequent inspection showed npm exec check rather than biome in this routed shell invocation. Retried through Python subprocess argument array; actual pnpm/biome exits in biome-format.txt and biome.txt. No dependency installation was performed.

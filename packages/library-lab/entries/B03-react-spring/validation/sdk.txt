@@ -1,0 +1,13 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node --test entries/B03-react-spring/tests/sdk.test.mjs
+exit: 0
+✔ real SpringValue advances physical tension/friction to a numeric goal (2.007614ms)
+✔ real immediate and cancellation return distinct terminal results (0.38012ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 52.055799

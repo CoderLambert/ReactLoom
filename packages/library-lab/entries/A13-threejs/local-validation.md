@@ -1,0 +1,61 @@
+# A13 Three.js 本地质量整改记录
+
+owner=/root；repo cwd=/home/lambert/githubRepos/lambert/ReactLoom，HEAD1218066e706a90ba03fac8dff8c9b843dd2429c4。进入9文件、repo-relative摘要01ee37b3f1297302703cc549ff9d03bd91aa49448548d0203a0073be56ddd33b。保留实际dirty工作区，没有提交/推送/合并/发布、改依赖锁或模板。
+
+## 问题、目标和实际改动
+
+原basic/business使用同一盒体和全部相同控件，仅换标题，无独立业务目标。保留有效WebGLRenderer/Scene/Camera/Mesh/光照/颜色/速度、13项循环策略、RO/visibility/matchMedia与独占资源清理，将目标合为2个：basic网格/材质/投影/实际尺寸，advanced循环门禁/几何替换/资源所有权。没有编造3D统计业务或外部服务。
+
+新增geometry.ts复用真实Geometry构造，CSS独立列齐5运行文件；实际诊断读取Mesh/Geometry/Material uuid、属性数量、颜色、rotation、Renderer size/drawing buffer/pixelRatio/info、camera aspect。显式按钮读取快照，没有逐帧React setState；loopActive为应用布尔，其他数据读SDK，dispose数量为真实SDK事件计数。renderer.info memory不当显存字节。
+
+换geometry按SDK事件计数并释放旧者；换geometry/color无论循环状态都主动补帧，既保留暂停后交互，也消除旧effect读未列依赖的条件。初始化清旧错误，退出增加mesh.dispose（r186真实API，不能代替geometry/material单独释放），记录实际事件数到旧Canvas；真实上下文丢失由browser读取，未先写假contextLost标记。
+
+## 六项（浏览器前）
+
+| 项 | 状态 | 依据与边界 |
+| --- | --- | --- |
+| 技术准确 | PASS，静态/真实Node局部 | installed0.186.0/THREE.REVISION186与匹配公开gitHead；Geometry/Color/Camera/Scene/dispose真实SDK2；Renderer/循环/资源源码核对，WebGL另验 |
+| 解释清楚 | PASS，静态自审 | 产品预览工程问题→对象模型/输入处理像素→材质/投影→循环/释放→迁移；两目标区别明确，删重复未实现教程 |
+| Demo有用 | NOT_RUN | 两个真实目标完整控件/观测；WebGL画面/循环/替换/上下文清理待匹配browser |
+| 源码可迁移 | PASS，文件/类型/格式 | 5必要运行文件（含CSS）/three真实依赖/客户端和WebGL2前提齐，独占资源边界清楚 |
+| 官方来源可靠 | PASS，固定原文/版本纠偏 | 采用npm0.186.0实际gitHead与manifest/原文精确匹配，未误用r186中0.186.1；完整头/摘要/英语回退及unknown依据 |
+| 结果可复核 | NOT_RUN，整体运行 | Node局部/策略/入口/提案/metadata日志可复核；旧环境探针和截图不代替新行为browser |
+
+## 官方来源和真实发现
+
+安装three0.186.0。首次ls-remote精确r186得到annotated对象48dd7be01263658aad497fd72e09d1e4c6213461，raw当commit返回404；再解析r186^{}为9b4a2ac29c63ccb43fd51c5661f2f873ac2c39b8，固定manifest实际声明0.186.1，原断言失败，source-fetch.txt保留该失败。不把版本写假，也不反复尝试相同坏ref。
+
+官方npm registry three/0.186.0真实返回gitHead148ef33ecb6d2502ff796d4554abd1549c95d519。该固定公开提交的package确为0.186.0，根目录唯一README.md，无中文候选。保存英语未改原文2969B，SHA256d553d824625a07d7690de93af6f8daf13d6aaed42700929d7ce4e725fa5ef10d。official/source-evidence.json保存实际npm metadata字段及其完整GET记录、root列表/manifest/raw/homepage完整响应；script validation/fetch-official.py和实际匹配输出source-fetch-matching.txt可复查。在线旧manual/en路径404后改读仓库声明的新manual/pages，未在正文保留失效链接。
+
+官网threejs.org实际GET200，完整头无XFO/CSP明确限制，但未从Lab origin确认iframe，unknown+直达。没有用load/timeout当成功。官方当前手册和安装src/core/Object3D.js、renderers/WebGLRenderer.js核对dispose/setAnimationLoop/renderer.info/WebGL2等，在线文档变化不替代0.186.0源码。
+
+## 实际命令与范围
+
+所有检查cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab，完整argv、UTC、exit和日志SHA在validation/local-runs.json。
+
+- node --test entries/A13-threejs/tests/sdk.test.mjs：exit0，2真实SDK（Box/Sphere属性和dispose事件；Camera投影/Color/同Mesh换几何和Scene）。没有创建WebGLRenderer，不假装GPU PASS。
+- node --test entries/A13-threejs/tests/animation-policy.test.mts：exit0，13既有纯策略。只格式变化，未重复有效逻辑检查。
+- 初次入口tsc exit0；后续effect条件/CSS/错误重置改动后仅重跑受影响入口，types-final.txt为最终结果；未重跑未受影响SDK/策略。
+- 首次Biome exit1是原效果闭包8个缺依赖；几何/材质变化主动补帧后去掉无必要条件，定向修复。中间format-final.txt exit0但含尚不存在official文件的IO诊断，不当完整格式PASS；final-format.txt实际11文件exit0、已存在官方证据，正常排版。
+- python entries/A13-threejs/validation/check-metadata.py：exit0，2独立目标/5必要源/精确npm version+gitHead/原文hash/候选/formal状态。
+- pnpm exec tsc --ignoreConfig ... e2e/quality-remediation-threejs.spec.ts：exit0，准备好的真实提案静态通过。
+
+## 环境与浏览器待办
+
+主控在尚未修改A13前对candidate07固定dist做真实环境探针：1个Canvas、860×280、WebGL2版本WebGL2.0(OpenGL ES3.0 Chromium)、renderer WebKit WebGL、无alert/pageerror。日志docs/library-lab/evidence/quality-upgrade/candidate-07/threejs-environment-probe.txt；只说明环境可用，不证明新质量目标。
+
+公共e2e/quality-remediation-threejs.spec.ts真实源码待candidate09：实际WebGL compositor截图→浏览器native PNG解码数非背景像素，未替换SDK Canvas；变色同Mesh/Material/Geometry及截图变化，RO尺寸/aspect，同一Canvas；减少动态门禁/真实frame保持和增长；暂停后3次换几何/真实dispose事件/当前几何计数；旧Canvas实际context.isContextLost/DOM detach/重进与离开。截图直接落outputPath便于保存，不用手画或预制结果。
+
+剩余独立非作者六项复核、稳定候选共享检查和上述真实WebGL。contextrestored自动恢复、真实隐藏页签、完整读屏/触控/设备GPU性能/跨浏览器/devStrictMode未验收。正式sdk/build/browser全部NOT_RUN，未来需授权干净提交与准确recorder，不为收据擅自提交。
+
+
+## 独立复核P2处置
+
+quality_e05发现并处理：1. 初始state读浏览器偏好可能造成SSR首屏不同，迁移文档现明确整个查看器client-only/禁该子树SSR，仅客户端组件声明不足，未借文档声称已跑hydration。2. 获取脚本此前未保留后续metadata所需npmRelease，现将实际registry GET/0.186.0/gitHead断言及字段持久化并入配方，旧证据另存before-recipe-fix，定向真实重跑配方与metadata检验。运行源码/SDK/策略输入未变，不重复有效测试。
+
+
+## 主控本地运行闭环
+
+candidate-09的2028输入稳定，new-e2e lint/typecheck/build/catalog exit0，独立review处置后全部本库真实browser场景通过。真实box/sphere compositor PNG已保存并经主控view_image视觉复核；图像与对象/帧/拾取/上下文断言共同构成证据，不拿截图代替运行。
+
+逐库最终结果、完整命令/候选/首次失败与定向重跑/独立报告见[结果](../../../../openspec/roadmaps/upgrade-library-quality/results/A13.md)。本地content_done不替代正式sdk/build/browser，三项仍NOT_RUN；SSR/dev重放/触控读屏/跨浏览器/性能等未由本次结果推定。

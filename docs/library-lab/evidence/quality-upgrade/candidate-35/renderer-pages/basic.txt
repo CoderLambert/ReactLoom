@@ -1,0 +1,34 @@
+Title:           ReactLoom Feed Report
+Subject:         Offline feed summary
+Author:          ReactLoom Library Lab
+Creator:         react-pdf
+Producer:        react-pdf
+CreationDate:    Wed Nov 18 02:50:18 2026 CST
+Custom Metadata: no
+Metadata Stream: no
+Tagged:          no
+UserProperties:  no
+Suspects:        no
+Form:            none
+JavaScript:      no
+Pages:           1
+Encrypted:       no
+Page size:       595.28 x 841.89 pts (A4)
+Page rot:        0
+File size:       2346 bytes
+Optimized:       no
+PDF version:     1.3
+
+ReactLoom Feed Report
+Offline research dashboard - generated locally
+
+
+Feed                                                                       Articles
+
+React Notes                                                                     18
+
+
+
+
+                                             ReactLoom lab - Page 1 of 1
+

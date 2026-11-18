@@ -1,0 +1,12 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=pnpm exec playwright test --config=.local-evidence/quality-playwright.config.ts e2e/quality-remediation-ant-design.spec.ts --grep Form rules
+
+Running 1 test using 1 worker
+
+(node:1477030) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 e2e/quality-remediation-ant-design.spec.ts:46:1 › @B06 real Form rules feed stable Table rows, composition-safe search and Modal focus (4.3s)
+
+  1 passed (4.8s)
+
+exitCode=0

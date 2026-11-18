@@ -1,0 +1,17 @@
+{
+  "gitHead": "1218066e706a90ba03fac8dff8c9b843dd2429c4",
+  "trackedFiles": 11,
+  "sha256ByPath": {
+    "AGENTS.md": "6c28feebc56771e62e2712e58d8c551652019a3e20a974f3a607914f56d38bd0",
+    "agent.md": "0a15d0d80d252ff73bd328d1334201bcb3063120c58e8114a3f6cf65d44e1458",
+    "examples/demo.tsx": "5d971ae1f6d0174728ae844ad05df854d62b6aea9946b939e9247777566d08b4",
+    "examples/example.tsx": "628c63a8ca3dce959b6551fa5d1e7a13d3727d670958afe47f780b7029e98969",
+    "examples/location-policy.ts": "4c41f6b244fcb75a11391a1ece671640ba8c88e2b224017c4fba986bce7bc837",
+    "examples/station-factory.ts": "4ac1310db552649dde5e5ec1c03444f909822ae116b3a0af73c85030b6f33578",
+    "guide.md": "6d24d4a9aef5be53623f5a0643532b3f017b4b701406e5fdf8ec87b475903bc8",
+    "library.json": "9e67cc6bcba90f80606c808b351fdac510f3b08827fe94e935993fc92a5e697f",
+    "tests/location-policy.test.mts": "7ad3efaf24c5206208e6e4a4a8b64ac876dc34ac21707b1f9bcf3793766c6839",
+    "tests/station-factory.test.mts": "88447977ce4b864eeb8bbd239e09fcc1c8b4f864e75a860401327b39b1388bf5",
+    "verification.json": "efec5750a50bb6b464b4531895ec0a0718d6b1ca116d94cd27c36319b83705d9"
+  }
+}

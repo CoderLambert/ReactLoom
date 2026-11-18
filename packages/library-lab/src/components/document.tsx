@@ -7,10 +7,18 @@ import {
   readLimitedMarkdownResponse,
   resolveDocumentUrl,
 } from '../lib/document-utils.mjs'
+import { resolveOfficialReadmeUrl } from '../lib/official-sources.mjs'
+import { rehypeReadmeHtmlFallback } from '../lib/readme-html-fallback.mjs'
 import { requestGeneratedResource } from '../lib/resource-fetch.mjs'
+import type { OfficialReadme } from '../lib/types'
 import HighlightCode from './highlight-code'
 
-type Props = { entryId: string; kind: 'guide' | 'agent'; available: boolean }
+type Props = {
+  entryId: string
+  kind: 'guide' | 'agent' | 'readme'
+  available: boolean
+  readme?: OfficialReadme | undefined
+}
 
 function CopyOriginal({ text }: { text: string }) {
   const [notice, setNotice] = useState('')
@@ -46,13 +54,17 @@ function CodeBlock({ children }: { children?: ReactNode }) {
   return <HighlightCode code={code.replace(/\n$/u, '')} language={language} />
 }
 
-export default function Document({ entryId, kind, available }: Props) {
+export default function Document({ entryId, kind, available, readme }: Props) {
   const [text, setText] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
   const [retry, setRetry] = useState(0)
   const url = `${import.meta.env.BASE_URL}raw/${entryId}/${kind}.md`
-  const request = useMemo(() => ({ url, available, retry }), [url, available, retry])
+  const sha256 = kind === 'readme' ? readme?.sha256 : undefined
+  const request = useMemo(
+    () => ({ url, available, retry, sha256 }),
+    [url, available, retry, sha256],
+  )
   const toc = useMemo(() => extractDocumentHeadings(text), [text])
   const anchors = useMemo(() => new Map(toc.map((h) => [h.line, h.id])), [toc])
   const headingId = (line?: number) => anchors.get(line ?? -1) ?? `section-${line ?? 0}`
@@ -65,9 +77,24 @@ export default function Document({ entryId, kind, available }: Props) {
       setLoading(false)
       return () => controller.abort()
     }
-    requestGeneratedResource(request.url, readLimitedMarkdownResponse, {
-      signal: controller.signal,
-    })
+    requestGeneratedResource(
+      request.url,
+      async (response) => {
+        const body = await readLimitedMarkdownResponse(response)
+        if (request.sha256) {
+          const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(body))
+          const actual = Array.from(new Uint8Array(digest), (byte) =>
+            byte.toString(16).padStart(2, '0'),
+          ).join('')
+          if (actual !== request.sha256)
+            throw new Error('官方 README 与保存的原文摘要不一致，请重新同步后重试')
+        }
+        return body
+      },
+      {
+        signal: controller.signal,
+      },
+    )
       .then((body) => {
         if (!controller.signal.aborted) {
           setText(body)
@@ -100,7 +127,13 @@ export default function Document({ entryId, kind, available }: Props) {
       </section>
     )
   const urlTransform = (value: string) =>
-    resolveDocumentUrl(value, entryId, import.meta.env.BASE_URL)
+    kind === 'readme' && readme
+      ? resolveOfficialReadmeUrl(
+          value,
+          readme,
+          toc.map((heading) => heading.id),
+        )
+      : resolveDocumentUrl(value, entryId, import.meta.env.BASE_URL, readme?.snapshotPath)
   const assetPrefix = `${import.meta.env.BASE_URL}raw/${entryId}/assets/`
   return (
     <>
@@ -114,20 +147,27 @@ export default function Document({ entryId, kind, available }: Props) {
         <article className="prose">
           <Markdown
             remarkPlugins={[remarkGfm]}
-            rehypePlugins={[rehypeSanitize]}
+            rehypePlugins={
+              kind === 'readme'
+                ? [[rehypeReadmeHtmlFallback, { source: text }], rehypeSanitize]
+                : [rehypeSanitize]
+            }
             skipHtml
             urlTransform={urlTransform}
             components={{
               pre: ({ children }) => <CodeBlock>{children}</CodeBlock>,
-              a: ({ href, children }) => (
-                <a
-                  href={href}
-                  rel="noopener noreferrer"
-                  target={href?.startsWith('#') ? undefined : '_blank'}
-                >
-                  {children}
-                </a>
-              ),
+              a: ({ href, children }) =>
+                href ? (
+                  <a
+                    href={href}
+                    rel="noopener noreferrer"
+                    target={href?.startsWith('#') ? undefined : '_blank'}
+                  >
+                    {children}
+                  </a>
+                ) : (
+                  <span>{children}</span>
+                ),
               img: ({ src, alt }) =>
                 src?.startsWith(assetPrefix) &&
                 /\.(?:png|jpe?g|webp|gif)$/iu.test(src.split('#')[0]) ? (
@@ -150,6 +190,15 @@ export default function Document({ entryId, kind, available }: Props) {
               h3: ({ node, children }) => (
                 <h3 id={headingId(node?.position?.start.line)}>{children}</h3>
               ),
+              h4: ({ node, children }) => (
+                <h4 id={headingId(node?.position?.start.line)}>{children}</h4>
+              ),
+              h5: ({ node, children }) => (
+                <h5 id={headingId(node?.position?.start.line)}>{children}</h5>
+              ),
+              h6: ({ node, children }) => (
+                <h6 id={headingId(node?.position?.start.line)}>{children}</h6>
+              ),
             }}
           >
             {text}
@@ -160,7 +209,7 @@ export default function Document({ entryId, kind, available }: Props) {
             <strong>本页目录</strong>
             <ol>
               {toc
-                .filter((h) => h.depth > 1)
+                .filter((h) => h.depth > 1 && h.depth <= 3)
                 .map((item) => (
                   <li key={item.id} data-depth={item.depth}>
                     <a href={`#${item.id}`}>{item.title}</a>

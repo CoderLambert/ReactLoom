@@ -1,0 +1,48 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=pnpm exec playwright test --config=.local-evidence/quality-playwright.config.ts e2e/quality-document-links.spec.ts e2e/quality-document-security.spec.ts e2e/quality-remediation-react-i18next.spec.ts e2e/quality-remediation-primitives-sources.spec.ts --grep @platform-document|@C15|@C16|@C18 --trace=off
+
+Running 12 tests using 2 workers
+
+(node:2296715) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2296716) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 e2e/quality-document-links.spec.ts:4:1 › @platform-document blocked reference labels remain readable without a misleading navigation target (930ms)
+  ✓   3 e2e/quality-document-links.spec.ts:57:1 › @platform-document a declared official snapshot link serves the preserved README bytes (877ms)
+  ✘   4 e2e/quality-document-links.spec.ts:79:1 › @platform-document a versioned migration patch link serves only inert declared source text (887ms)
+(node:2297122) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   5 e2e/quality-document-security.spec.ts:3:1 › @B19 @platform-document actual HTML-only official snapshot is readable without active HTML or remote images (1.7s)
+  ✓   6 e2e/quality-document-security.spec.ts:27:1 › @platform-document controlled guide fixture retains the original HTML boundary (879ms)
+  ✓   7 e2e/quality-remediation-primitives-sources.spec.ts:31:3 › @C15 original fixed README and evidenced homepage unknown (1.7s)
+  ✓   8 e2e/quality-remediation-primitives-sources.spec.ts:31:3 › @C16 original fixed README and evidenced homepage unknown (1.7s)
+  ✓   9 e2e/quality-remediation-primitives-sources.spec.ts:31:3 › @C18 original fixed README and evidenced homepage blocked (1.7s)
+  ✓  10 e2e/quality-remediation-react-i18next.spec.ts:32:1 › @C18 useTranslation reacts to real original-instance language events and plural input (1.5s)
+  ✓  11 e2e/quality-remediation-react-i18next.spec.ts:58:1 › @C18 namespace text and named Trans component remain React-owned while user text stays literal (1.5s)
+  ✓  12 e2e/quality-remediation-react-i18next.spec.ts:79:1 › @C18 stable Provider queue survives hook wrapper changes, isolates tenants and disposes held local work (1.8s)
+  ✓   2 e2e/quality-document-links.spec.ts:14:1 › @platform-document all 27 affected published documents retain text without empty URL anchors (22.2s)
+
+
+  1) e2e/quality-document-links.spec.ts:79:1 › @platform-document a versioned migration patch link serves only inert declared source text 
+
+    Error: expect(received).toContain(expected) // indexOf
+
+    Expected substring: "text/plain"
+    Received string:    "text/html"
+
+       98 |   const response = await request.get(url)
+       99 |   expect(response.ok()).toBe(true)
+    > 100 |   expect(response.headers()['content-type']).toContain('text/plain')
+          |                                              ^
+      101 |   const original = await response.body()
+      102 |   expect(original.byteLength).toBe(source?.bytes)
+      103 |   expect(createHash('sha256').update(original).digest('hex')).toBe(source?.sha256)
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-document-links.spec.ts:100:46
+
+    Error Context: test-results/quality-document-links--pl-6f0c8--inert-declared-source-text/error-context.md
+
+  1 failed
+    e2e/quality-document-links.spec.ts:79:1 › @platform-document a versioned migration patch link serves only inert declared source text 
+  11 passed (22.5s)
+
+exitCode=1

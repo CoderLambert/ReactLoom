@@ -1,152 +1,75 @@
-# GSAP 3.15.0｜时间线、作用域和减少动态
+# GSAP：先看时间怎样映射成样式，再编排一组动画
 
-Lab 只依赖 `gsap@3.15.0`。许可证在 `library.json` 里记为 **GSAP Standard No Charge**，不是 MIT，也不是 Apache-2.0。普通站点里的界面动画和「把 GSAP 做成可视化动画搭建器再分发」不是同一件事。发布前读 https://gsap.com/standard-license 。本仓库不把 GSAP 源码再打包进模板。
+摘要卡片需要按明确时序进入，并支持暂停、定位和倒放。GSAP负责把时间映射为对象属性；在浏览器里，包内CSSPlugin把这些值写到DOM的transform/opacity。它适合精确编排。单个简单过渡可先用CSS，React布局进出场可比较Motion。本例不提供发布接口或工作流状态机，视觉完成不代表业务成功。
 
-`@gsap/react` 的 `useGSAP` 是官方 React 封装，**当前示例没有安装也没有调用它**。示例用 `gsap.context(callback, host)`，清理时 `context.revert()`。这是同一套「作用域内创建的动画一起还原」的合同。若你改用 `useGSAP`，点击之后才创建的 tween 要用 `contextSafe`，依赖变化要重建时写 `revertOnUpdate: true`。不要把第三方包 `react-gsap` 或已废弃的 `gsap-react` 当成官方适配。
+固定 `gsap@3.15.0`，没有安装或调用 `@gsap/react`，也未使用ScrollTrigger等额外插件。许可证是Standard “No Charge”，不是MIT。官方条款对可视化动画搭建产品等使用另有限制，具体分发/嵌入应核对 [官方标准许可](https://gsap.com/standard-license/)，不能从“免费”推导无限制。本例只演示预设摘要卡片的局部动画，不把GSAP复制进ReactLoom模板。
 
-没有逐库收据时 sdk / build / browser 是 NOT_RUN。Actions 41779873259 不是本条目 PASS。
+## Tween是属性变化，Timeline是时间容器
 
-## Lab 当前示例
-
-[`examples/example.tsx`](examples/example.tsx) 把 context 绑在 `<section ref={scope}>` 上。选择器是 `.gsap-lab-item` 和 `.gsap-lab-detail`，因为第二个参数是宿主节点，所以不会打到页面上别的同名类。[`examples/timeline-policy.ts`](examples/timeline-policy.ts) 决定何时播放、进度百分比是否值得写进 React。
-
-实际行为：
-
-- basic / business / advanced 都是一条 timeline：元素从 `autoAlpha: 0` 和一段 y 进入，stagger 只在非 basic 时为 0.12。随后细节段落重叠 0.12 秒（位置参数 `'-=.12'`）。
-- 减少动态：不创建 timeline，内容直接可见，进度条显示 100。
-- 页面 `visibilitychange` 到 hidden 时 `pause()`。回到前台只在用户没有手动暂停时 `resume()`。
-- advanced 有暂停和 `reverse()`。重播按钮增加 `generation`，effect 清理会 `revert()` 再重建。
-- `onUpdate` 里先算整数百分比，`shouldPublishProgress` 认为没变就不 `setProgress`。业务文案不跟着每一帧走。
-
-没有 ScrollTrigger、没有 pin、没有 ScrollSmoother、没有工作流状态机。下面仍教这些，因为它们是用 GSAP 时最容易把业务状态写坏的地方。
-
-## 1. 什么时候用
-
-GSAP 是命令式时间树：Tween、Timeline、以及另外注册的 ScrollTrigger。它可以暂停、倒放、seek。它不保存你的草稿、审核或发布状态。
-
-| 任务 | 是否先选 GSAP | 更合适的工具 |
-| --- | --- | --- |
-| 多个元素要按时间点交错，并且能暂停、倒放 | 优先 | 单元素 CSS 就够时不要引入 |
-| 滚动讲故事、钉住一屏 | 可以，但先问 UX 是否真的要钉住 | 简单入场用 CSS 或 IntersectionObserver |
-| 弹层和列表布局过渡 | 往往不必 | Motion（B01） |
-| 设计师交来的角色动画 | 不优先 | Rive、dotLottie |
-| 看板拖拽 | 不优先 | dnd-kit |
-| 已有 CSS transition 已经达标 | 不引入 | CSS |
-
-本仓库没有做过 GSAP 和 Motion 的性能对打，不要写「更快」。
-
-SSR：使用 timeline 的组件放在客户端。服务端不要碰 `window` 或 `document`。
-
-## 2. 模型
-
-```text
-React 拥有文案、阶段、是否暂停
-        │
-        ▼
-已提交的 DOM（section ref）
-        │
- gsap.context(fn, host)  或  useGSAP({ scope })
-        │
- Timeline / Tween /（可选）ScrollTrigger
-        │
- 改的是 transform / autoAlpha，不是业务数据
-        │
- revert()
-```
-
-`to` 走向终点，`from` 从给定值回到当前样式，`fromTo` 两端都写明。`x` / `y` 是 transform，不是 `left` / `top`。`autoAlpha` 同时处理 opacity 和 visibility。同一属性被两段动画抢，用 `overwrite: 'auto'` 或只留一个主人，不要 `killAll` 清掉别人的动画。
-
-位置参数：`'<0.15'` 是相对上一段**起点**之后 0.15 秒；`'>'` 接在上一段结束；`'> -0.1'` 重叠。Lab 用的 `'-=.12'` 是相对插入点提前 0.12 秒。`addLabel` 适合 seek，卡片 hover 不必上时间线。
-
-## 3. 三层教学
-
-### 入门：一条可重播的时间线
-
-Lab 的 basic 就是这个层次，只是没有单独的暂停按钮。重播靠拆掉 context 再创建。减少动态时三个（或四个）卡片仍在文档流里，键盘可以走到。
-
-### 业务：视觉跟随状态，而不是动画决定状态
-
-研究稿里的「草稿 → 审核 → 发布 → 归档」**没有**做进本示例。若你要做：阶段、按钮 disabled 和 aria-live 文案放在 React；GSAP 只动装饰条的 transform。`onComplete` 不能当作「发布接口成功」。接口成功后再改状态，状态变化再触发动画。终态不能被连点跳过。
-
-### 进阶：滚动叙事（本 Demo 未挂载）
-
-ScrollTrigger 要单独 `registerPlugin`。`start: 'top 88%'` 表示目标顶部到达视口 88% 处。`toggleActions` 是进入、离开、反向进入、反向离开四段。`scrub` 把进度绑到滚动。`pin` 会改布局，只在叙事真的需要固定时用。`ScrollTrigger.refresh()` 在布局稳定之后调用，不要每帧调用。容器内滚动要设 `scroller`，不能假设都是 window。
-
-减少动态用 `gsap.matchMedia()`，查询不匹配时还原该分支，而不是把时长改成 0 仍把文字藏起来。Lab 的做法更直接：减少动态时根本不 `timeline()`。
-
-## 4. 反例
-
-### 反例 1：无作用域的类名
-
-```tsx
-useEffect(() => {
-  gsap.to('.card', { x: 20 })
-}, [])
-```
-
-页面上每张 `.card` 都会动。Lab 把 context 的宿主设成 section，选择器只匹配里面的节点。卸载必须 `revert()`。
-
-### 反例 2：点击里新建的 tween 没有主人
-
-```tsx
-<button onClick={() => gsap.to('.badge', { x: 100 })}>点我</button>
-```
-
-这段动画发生在 context 回调之外，卸载不会还原它。用 `useGSAP` 时包一层 `contextSafe`。用现在的写法时，点击只调用已经放进 context 的 timeline（`pause` / `reverse` / 增加 generation），不要在事件里裸 `gsap.to`。
-
-### 反例 3：依赖变了，旧时间线还在
-
-`useGSAP(fn, { dependencies: [value] })` 默认不一定在更新时 revert。需要重建就写 `revertOnUpdate: true`。Lab 的 effect 依赖 `level`、`generation`、`reduce`，清理函数先 `revert()`。漏掉清理就会叠多条 timeline。
-
-### 反例 4：每一帧 setState
+Tween定义目标、起止值、时长与缓动；Timeline把多段Tween放进同一时间树。React保存文案、控制意图和少量进度，GSAP拥有目标样式。卡片本身是本地fixture，不是远程新闻响应。
 
 ```ts
-gsap.to(node, {
-  x: 100,
-  onUpdate: () => setOffset(Number(gsap.getProperty(node, 'x'))),
-})
+const tween = gsap.fromTo(target,
+  { x: 0, opacity: 0.35 },
+  { x: 60, opacity: 1, duration: 1.2, ease: 'none', paused: true },
+);
+tween.progress(0.5, true); // 50%时间；true抑制此次定位的回调
+// 真实返回：progress() = 0.5，线性x = 30，opacity = 0.675
 ```
 
-视觉插值留给 GSAP。Lab 只在百分比整数变化时写进度，供 `<progress>` 读。不要用 React state 驱动 transform，同时又让 GSAP 写同一个 transform。
+x是transform的像素平移，不是left；duration单位是秒。progress是0..1的时间比例，不是已经走过的像素比例。`fromTo`明确给出两端，创建时会应用起点；内容最低opacity为0.35，控件始终位于动画目标之外，不借动画改变焦点或业务状态。
 
-### 反例 5：减少动态只是把时长改成 0
+## 目标一：同一个50%，为何位置不同
 
-时长为 0 仍可能把元素留在 `autoAlpha: 0`。正确做法是不创建动画，静态内容保持可聚焦。Lab 在 `reduce` 时直接 return，并显示说明。
+打开“Tween的时间比例与缓动映射”。选择“线性 none”，用“手动时间进度”定位50，动画会暂停。展开“查看真实动画与样式”，点“读取真实动画状态”：预期progress0.5、duration1.2、x30，计算样式matrix的平移也对应30px。
 
-### 反例 6：全局清理
+改为power2.out后重新定位50：预期时间仍是0.5，x却是52.5。它将更多位移放在前半段；终点仍是60px，不是多走一段距离。缓动切换会revert旧动画并重建起点，保留用户暂停意图；再次定位才能比较同一时间。这个数值也由共享builder的真实Node SDK用例核对，DOM输出仍需要浏览器。
 
-`gsap.globalTimeline.clear()` 或无差别 `kill()` 会拆掉别的组件。只 `revert` 自己的 context。
+“重播动画”创建新一代局部动画；“暂停/继续”操作现有对象。手动滑块用实际pause/progress，不以React state逐帧驱动transform。自动播放时，原策略仅在至少5个百分点变化及端点更新进度；它不是“每个整数都更新”，更不是性能采样。手动定位即时显示用户选择。
 
-### 反例 7：React style.transform 和 GSAP 一起写
+## 目标二：标签、重叠与播放所有权
 
-一边 render 写 `style={{ transform }}`，一边 `gsap.to` 写 x，后写的把前写的盖掉。这条轴只留一个主人。
+打开“时间编排、方向与局部所有权”。四张卡片每张0.6秒、相邻开始间隔0.14秒，卡片尾部在1.02秒完成；详情从detail标签0.7秒开始，持续0.4秒，所以Timeline总时长1.1秒。详情与卡片尾段重叠，不是等待卡片全部完成才开始。
 
-## 5. SSR、焦点、门户
+```ts
+gsap.timeline({ paused: true })
+  .addLabel('cards', 0)
+  .fromTo(cards, { y: 24, opacity: 0.35 },
+    { y: 0, opacity: 1, duration: 0.6, stagger: 0.14 }, 'cards')
+  .addLabel('detail', 0.7)
+  .fromTo(detail, { y: 8, opacity: 0.35 },
+    { y: 0, opacity: 1, duration: 0.4 }, 'detail');
+```
 
-Portal 里的节点不在 section 里面时，context 的选择器找不到它，滚动和定位也要单独测。动画不能拿走按钮的键盘焦点。中文输入法不是 GSAP 的责任；若时间线期间锁住了输入，那是你的 overlay 写错了。
+这是编排结构，实际ease/onUpdate以同源motion.ts为准。“定位详情标签”调用pause().seek('detail', true)，读状态可见time0.7、labels和两个真实子Tween的开始/时长。手动定位75%后“反向播放”，progress应下降；回到起点会触发反向视觉完成。起点的反向按钮禁用，避免暗示还能向前面的负时间运动。暂停后“继续”保留当前反向方向；重播重建时回到正向。
 
-移动端先问 pin 是否吃掉滚动。本示例没有 pin。
+页面进入后台时暂停。返回前台只有用户未手动暂停才resume；resume不会把reversed状态改成正向。系统减少动态时revert原context，不创建任何动画，内容恢复静态可见、进度显示100、运动控件禁用。偏好恢复会新建动画，但不会抹掉用户暂停意图。真实后台切换需要浏览器原生visibility，不伪造document.hidden。
 
-## 6. 组合
+## context负责范围与还原
 
-- 和 Motion：布局动画用 Motion，精确倒放的编排用 GSAP，不要两套同时改同一节点的 transform。
-- 和 Query：请求结果写进 React，再由 effect 重建 timeline。不要在 `onComplete` 里发请求。
-- 和图表：图表库自己有动画开关。GSAP 再去 tween 图表 DOM，resize 时两边打架。
+```ts
+const context = gsap.context(() => {
+  // 本例在这里调用motion.ts；选择器只查host后代
+  animation = createCardTween('.b02-card', ease, publish);
+}, host);
+// 卸载或重建：先阻止迟到UI回写
+context.revert({ suppressEvents: true });
+```
 
-## 7. 练习
+两个目标都在专属宿主context里创建动画；点击只控制已有对象，重播才由effect创建下一代。没有在context外裸建点击Tween，也不调用globalTimeline.clear/kill或全局ticker.sleep。revert还原原始内联样式并移除本context动画；GSAP共享ticker可能仍为其他动画运行，不承诺整个页面立即零rAF。
 
-1. 给 advanced 增加 `seek` 到 50%。减少动态时这个控件必须无效，内容仍可见。
-2. 做四态工作流，但阶段只存在于 React。连点不能跳过归档。卸载后用 DevTools 确认没有残留 inline transform。
-3. 若加上 ScrollTrigger：窄屏和减少动态两条 `matchMedia` 分支，都不 pin。布局变化后只 `refresh` 一次。
+清理观察来自实际getTweensOf与目标样式，还原标记只是本例写入的检查点，不能单独当作原生资源验收。动画回调有disposed守卫；matchMedia和visibility监听成对移除。滚动叙事、布局动画、回弹物理、门户节点和网络取消不在当前能力中。
 
-## 8. 证据
+## 迁移
 
-`timeline-policy` 是纯函数，不 import gsap。浏览器里要看：重播、暂停、倒放、隐藏标签、减少动态、StrictMode 双调用。没有收据就不要写 PASS。
+复制五个sourceFiles：demo.tsx、example.tsx、motion.ts、timeline-policy.ts、workshop.css。demo只重导出，其他文件不依赖Lab alias或公共CSS。React管理控件及文案，GSAP只写卡片和详情的transform/opacity，不要让React style或另一动画库同时写这些属性。没有额外图片、字体或插件资源。
 
-## 9. 资料
+需要浏览器DOM和gsap3.15.0；组件初始化读取matchMedia，因此SSR应用须让整个查看器client-only并禁用该子树SSR，单加客户端组件声明仍可能预渲染，不能保证hydration一致。替换为官方useGSAP时再处理scope/contextSafe/revertOnUpdate，不把未调用的封装说成当前依赖。
 
-- https://gsap.com/resources/React/
-- https://gsap.com/docs/v3/GSAP/gsap.context()/
-- https://gsap.com/standard-license
-- https://www.npmjs.com/package/gsap
-- ScrollTrigger：https://gsap.com/docs/v3/Plugins/ScrollTrigger/
+## 官方原文与结果边界
+
+官方3.15.0提交 [`13e2b790`](https://github.com/greensock/GSAP/blob/13e2b790546426a1a2e0e9b409f3f8dc6d6611f2/README.md) 的根目录只有英文README.md，无官方中文候选。保存未改原文6199字节，精确版本/语言/时间/sha见official元数据；核心接口同时按安装源码/类型核实。[context原理](https://gsap.com/docs/v3/GSAP/gsap.context()/) 说明作用域与revert。
+
+官网实际GET200含X-Frame-Options:sameorigin，明确限制跨源Lab嵌入，保留直达而非iframe；未运行实际Lab-origin预览，不宣称allowed。README中的远程素材由平台原文策略处理，不为它放宽公共权限。
+
+真实Node SDK3项只在普通数值对象上运行共享Tween/Timeline、缓动、标签和revert，没有伪造DOM/CSS或自动时钟；纯策略6项另记。实际 DOM 动画、播放时钟、减少动态、visibility 和卸载样式还原的覆盖见本地浏览器证据。正式verification仍NOT_RUN，完整命令/日志/六项见local-validation.md。

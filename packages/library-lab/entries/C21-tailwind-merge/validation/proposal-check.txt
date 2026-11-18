@@ -1,0 +1,7 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['python3', 'entries/C21-tailwind-merge/validation/check-proposal.py']
+startedAt: 2026-11-10T18:12:44.459097+00:00
+exit: 0
+cwd /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab argv ['pnpm', 'exec', 'biome', 'check', '--write', '/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C21-tailwind-merge/validation/.proposal-check-s4wbnblu/proposal.ts']
+Checked 1 file in 8ms. Fixed 1 file.
+cwd /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab argv ['pnpm', 'exec', 'tsc', '--ignoreConfig', '--noEmit', '--target', 'es2022', '--module', 'esnext', '--moduleResolution', 'bundler', '--strict', '--skipLibCheck', '--esModuleInterop', '--types', 'node', '/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C21-tailwind-merge/validation/.proposal-check-s4wbnblu/proposal.ts']

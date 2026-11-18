@@ -1,0 +1,30 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['pnpm', 'exec', 'biome', 'check', '--write', 'entries/C14-date-fns/examples', 'entries/C14-date-fns/tests', 'entries/C14-date-fns/library.json']
+startedAt: 2026-11-10T16:51:48.010847+00:00
+exit: 0
+Skipped 2 suggested fixes.
+If you wish to apply the suggested (unsafe) fixes, use the command biome check --write --unsafe
+
+Checked 9 files in 9ms. Fixed 9 files.
+Found 1 info.
+entries/C14-date-fns/tests/sdk.test.mjs:23:63 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    21 │     )
+    22 │     for (const value of ['0000-01-01', '2026-02-30', '1900-02-29', '2026-13-01', '2026-2-01']) {
+  > 23 │       assert.throws(() => parseCivilDate(value, zone), Error, zone + ':' + value)
+       │                                                               ^^^^^^^^^^^^^^^^^^
+    24 │     }
+    25 │   }
+  
+  i Unsafe fix: Use a template literal.
+  
+    21 21 │       )
+    22 22 │       for (const value of ['0000-01-01', '2026-02-30', '1900-02-29', '2026-13-01', '2026-2-01']) {
+    23    │ - ······assert.throws(()·=>·parseCivilDate(value,·zone),·Error,·zone·+·':'·+·value)
+       23 │ + ······assert.throws(()·=>·parseCivilDate(value,·zone),·Error,·`${zone}:${value}`)
+    24 24 │       }
+    25 25 │     }
+  
+

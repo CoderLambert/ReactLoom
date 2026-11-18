@@ -1,0 +1,19 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['node', '--test', '--test-name-pattern', '^real Day/Week/Month', 'entries/C13-frappe-gantt/tests/sdk.test.mjs']
+startedAt: 2026-11-10T16:13:37.818868+00:00
+exit: 0
+{"admittedDate":"0101-01-01","view":"Day","columns":16,"first":"0100-12-24T15:54:17.000Z","last":"0101-01-08T15:54:17.000Z","years":[100,101]}
+{"admittedDate":"0101-01-01","view":"Week","columns":10,"first":"0100-11-30T15:54:17.000Z","last":"0101-02-01T15:54:17.000Z","years":[100,101]}
+{"admittedDate":"0101-01-01","view":"Month","columns":5,"first":"0100-10-31T15:54:17.000Z","last":"0101-02-28T15:54:17.000Z","years":[100,101]}
+{"admittedDate":"9998-12-31","view":"Day","columns":16,"first":"9998-12-23T16:00:00.000Z","last":"9999-01-07T16:00:00.000Z","years":[9998,9999]}
+{"admittedDate":"9998-12-31","view":"Week","columns":10,"first":"9998-11-30T16:00:00.000Z","last":"9999-02-01T16:00:00.000Z","years":[9998,9999]}
+{"admittedDate":"9998-12-31","view":"Month","columns":6,"first":"9998-09-30T16:00:00.000Z","last":"9999-02-28T16:00:00.000Z","years":[9998,9999]}
+✔ real Day/Week/Month date recipes stay ordered and bounded at both admitted date edges (2.110235ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 46.231834

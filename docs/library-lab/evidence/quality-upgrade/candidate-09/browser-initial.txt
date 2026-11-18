@@ -1,0 +1,139 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=pnpm exec playwright test --config=.local-evidence/quality-playwright.config.ts e2e/quality-remediation-threejs.spec.ts e2e/quality-remediation-fiber.spec.ts e2e/quality-remediation-leaflet.spec.ts e2e/quality-remediation-maplibre.spec.ts e2e/quality-remediation-deckgl.spec.ts e2e/quality-remediation-maps.spec.ts --grep @A13|@A14|@A15|@A16|@A17
+
+Running 20 tests using 2 workers
+
+(node:1297023) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1297024) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 e2e/quality-remediation-deckgl.spec.ts:70:1 › @A17 filtering and radius triggers update actual GPU attributes on the same Deck canvas (2.1s)
+  ✓   2 e2e/quality-remediation-deckgl.spec.ts:40:1 › @A17 real WebGL initialization and GPU picking select the projected point (2.3s)
+  ✓   4 e2e/quality-remediation-fiber.spec.ts:48:1 › @A14 basic actual WebGL2 and declarative objects have readable native results (1.6s)
+  ✓   3 e2e/quality-remediation-deckgl.spec.ts:96:1 › @A17 dense data, complete DOM paging, resize and finalize retain truthful GPU boundaries (2.8s)
+  ✓   5 e2e/quality-remediation-fiber.spec.ts:78:1 › @A14 business native raycast hover/click and HTML Enter update one real Mesh/Material (1.8s)
+  ✓   7 e2e/quality-remediation-fiber.spec.ts:194:1 › @A14 native reduced-motion and actual scroll intersection gate continuous frames (1.8s)
+  ✓   6 e2e/quality-remediation-fiber.spec.ts:111:1 › @A14 advanced actual frame gate, geometry replacement and old WebGL context release (2.9s)
+  ✘   8 e2e/quality-remediation-leaflet.spec.ts:37:1 › @A15 actual coordinates, SVG hit, persistent popup and keyboard viewport (6.5s)
+  ✘   9 e2e/quality-remediation-leaflet.spec.ts:100:1 › @A15 filter removes only exiting layers, falls back selection and preserves camera (6.4s)
+(node:1298233) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1298269) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  11 e2e/quality-remediation-maplibre.spec.ts:39:1 › @A16 actual standalone Worker and WebGL points match the two-source table and real hit testing (1.9s)
+  ✓  12 e2e/quality-remediation-maplibre.spec.ts:79:1 › @A16 actual source/render filtering keeps the same Map Canvas and selection falls back (2.1s)
+  ✓  10 e2e/quality-remediation-leaflet.spec.ts:134:1 › @A15 bounded local updates, empty state, true resize and map unload/remove (4.4s)
+  ✓  14 e2e/quality-remediation-maps.spec.ts:9:3 › @A14 pinned original README and explicitly unknown homepage keep verified provenance (1.5s)
+  ✓  15 e2e/quality-remediation-maps.spec.ts:9:3 › @A15 pinned original README and explicitly unknown homepage keep verified provenance (1.8s)
+  ✓  16 e2e/quality-remediation-maps.spec.ts:9:3 › @A16 pinned original README and explicitly unknown homepage keep verified provenance (1.3s)
+  ✓  17 e2e/quality-remediation-maps.spec.ts:9:3 › @A17 pinned original README and explicitly unknown homepage keep verified provenance (1.7s)
+  ✘  13 e2e/quality-remediation-maplibre.spec.ts:110:1 › @A16 dynamic GeoJSON and health reach the real renderer; resize and removal clean this instance (7.3s)
+(node:1299210) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  18 e2e/quality-remediation-threejs.spec.ts:64:1 › @A13 actual WebGL2 geometry paints, material changes reuse objects and resize updates camera (1.9s)
+  ✓  20 e2e/quality-remediation-threejs.spec.ts:158:1 › @A13 official matching release README and current homepage use shared panels (1.3s)
+  ✓  19 e2e/quality-remediation-threejs.spec.ts:103:1 › @A13 real animation gate, geometry disposal and detached WebGL context cleanup (2.4s)
+
+
+  1) e2e/quality-remediation-leaflet.spec.ts:37:1 › @A15 actual coordinates, SVG hit, persistent popup and keyboard viewport 
+
+    Error: expect(received).toBeCloseTo(expected, precision)
+
+    Expected: -74.006
+    Received: -74.00390625000001
+
+    Expected precision:    5
+    Expected difference: < 0.000005
+    Received difference:   0.0020937499999860165
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      70 |   await nyc.press('Enter')
+      71 |   await expect(map.locator('.leaflet-popup-content')).toContainText('行业资讯')
+    > 72 |   await expect.poll(async () => (await state(app)).center[1]).toBeCloseTo(-74.006, 5)
+         |                                                               ^
+      73 |   await map.scrollIntoViewIfNeeded()
+      74 |   const nativeMap = page.getByRole('region', { name: '可平移缩放的Leaflet点位地图', exact: true })
+      75 |   const beforePan = (await state(app)).center[1]
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-leaflet.spec.ts:72:63
+
+    Error Context: test-results/quality-remediation-leafle-c13db-popup-and-keyboard-viewport/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-remediation-leafle-c13db-popup-and-keyboard-viewport/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-remediation-leafle-c13db-popup-and-keyboard-viewport/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) e2e/quality-remediation-leaflet.spec.ts:100:1 › @A15 filter removes only exiting layers, falls back selection and preserves camera 
+
+    Error: expect(received).toBeCloseTo(expected, precision)
+
+    Expected: -74.006
+    Received: -74.00390625000001
+
+    Expected precision:    5
+    Expected difference: < 0.000005
+    Received difference:   0.0020937499999860165
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      104 |   const before = await state(app)
+      105 |   await app.getByRole('button', { name: '定位 行业资讯', exact: true }).click()
+    > 106 |   await expect.poll(async () => (await state(app)).center[1]).toBeCloseTo(-74.006, 5)
+          |                                                               ^
+      107 |   const camera = (await state(app)).center
+      108 |   const filter = app.getByRole('checkbox', { name: '仅显示已启用来源', exact: true })
+      109 |   await filter.check()
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-leaflet.spec.ts:106:63
+
+    Error Context: test-results/quality-remediation-leafle-fdc72-ection-and-preserves-camera/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-remediation-leafle-fdc72-ection-and-preserves-camera/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-remediation-leafle-fdc72-ection-and-preserves-camera/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) e2e/quality-remediation-maplibre.spec.ts:110:1 › @A16 dynamic GeoJSON and health reach the real renderer; resize and removal clean this instance 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 1
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      150 |     await host.evaluate((node) => JSON.parse(node.getAttribute('data-a16-cleanup') ?? 'null')),
+      151 |   ).toEqual({ removed: true, canvases: 0 })
+    > 152 |   await expect.poll(() => owned.size).toBe(0)
+          |                                       ^
+      153 |   await page.getByRole('button', { name: '运行当前示例', exact: true }).click()
+      154 |   await expect(app).toHaveAttribute('data-ready', 'true', { timeout: 20_000 })
+      155 |   await expect(app.getByTestId('a16-table').locator('tbody tr')).toHaveCount(3)
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-maplibre.spec.ts:152:39
+
+    Error Context: test-results/quality-remediation-maplib-80e75-removal-clean-this-instance/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-remediation-maplib-80e75-removal-clean-this-instance/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-remediation-maplib-80e75-removal-clean-this-instance/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    e2e/quality-remediation-leaflet.spec.ts:37:1 › @A15 actual coordinates, SVG hit, persistent popup and keyboard viewport 
+    e2e/quality-remediation-leaflet.spec.ts:100:1 › @A15 filter removes only exiting layers, falls back selection and preserves camera 
+    e2e/quality-remediation-maplibre.spec.ts:110:1 › @A16 dynamic GeoJSON and health reach the real renderer; resize and removal clean this instance 
+  17 passed (29.4s)
+
+exitCode=1

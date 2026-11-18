@@ -1,0 +1,17 @@
+{
+  "AGENTS.md": "ced24f83b81e370ac4f4db64d3040568912d2ab75a973a5af50a3182dc20872c",
+  "agent.md": "c5757745d98892393bf5c2c2a04967b67a4e34226c9d08485d99ed44b0033ab5",
+  "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+  "examples/example.tsx": "367465b75ed5613305dcfda2c764bfbb2391465196b836968fd65b4f35bede8c",
+  "examples/wav.ts": "68da19b0f4ef379e7a4f9fceafcc88757961d1201e9ee024c99b58e77a6cc207",
+  "examples/wave-cleanup.d.mts": "b7f2bc51cb36cc2defea9c0ee89d6d481e615f4ca609551969aab4d6fb415db3",
+  "examples/wave-cleanup.mjs": "9e27cd6bd746cd48b997c171b8f1e6abcd64500b33d7d8296d2175d396252547",
+  "guide.md": "2ed9b34f0e93528fcf3d0e6d0e0e41ed977cd0e1e2b2978374a79f167830bac8",
+  "library.json": "62e1f5c44986eae7904287eaaec5ece3b00305409e3f7ed245324d33ba22aac2",
+  "local-validation.md": "df4413245a03d7d18da874081af4618cdf79500a0fa42255d8ad79137d5ad106",
+  "official/license.txt": "0fc992dc27cc34dde78bfeb024b4cadff6320f0dcbee2f1228efaeb533ca1364",
+  "official/readme.md": "00a51b40c28bb7f24b7787c10695e5ea26bd23930762f49ebf2c8f712f2fc872",
+  "official/source-evidence.json": "68dd1865392c5fb501bafe553b70defa3b7d2a2d6b299354fb2c5f8aa2ce67d9",
+  "tests/policy.test.mjs": "2f482011fbc4d26bbc3585368b08ac6671a6cc2f8d68d32bc7887d1b4fe1bcc8",
+  "verification.json": "c43f837e3ed4266d127e92e4e9d846c5533d4af06161336b203555d59fea6fb8"
+}

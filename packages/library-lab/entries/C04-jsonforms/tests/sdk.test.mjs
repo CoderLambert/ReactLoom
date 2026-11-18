@@ -1,25 +1,66 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
-import {JsonForms} from '@jsonforms/react';
-import {vanillaRenderers,vanillaCells} from '@jsonforms/vanilla-renderers';
-import Ajv from 'ajv';
-test('real JSON Forms renderer and cell modules load',()=>{
- assert.equal(typeof JsonForms,'function');
- assert.ok(vanillaRenderers.length>1);assert.ok(vanillaCells.length>0);
-});
-test('real Ajv validates conditional rss URL and required name',()=>{
- const ajv=new Ajv({allErrors:true});
- const validate=ajv.compile({type:'object',properties:{name:{type:'string',minLength:2},kind:{enum:['rss','manual']},url:{type:'string'}},required:['name','kind'],if:{properties:{kind:{const:'rss'}},required:['kind']},then:{required:['url']}});
- assert.equal(validate({name:'a',kind:'rss'}),false);
- assert.equal(validate({name:'demo',kind:'manual'}),true);
- assert.equal(validate({name:'demo',kind:'rss',url:'https://example.org/rss'}),true);
-});
+import assert from 'node:assert/strict'
+import test from 'node:test'
+import { convertToValidClassName, createAjv } from '@jsonforms/core'
+import { JsonForms } from '@jsonforms/react'
+import { vanillaCells, vanillaRenderers } from '@jsonforms/vanilla-renderers'
+import { createElement as h } from 'react'
+import { renderToStaticMarkup } from 'react-dom/server'
+import {
+  subscriptionSchema,
+  subscriptionUiSchema,
+  toServerError,
+} from '../examples/submission-policy.mjs'
 
-import {subscriptionSchema,toSubscriptionPayload} from '../examples/submission-policy.mjs';
-test('real Ajv validates the same conditional JSON Forms UI schema',()=>{
- const validate=new Ajv({allErrors:true}).compile(subscriptionSchema);
- assert.equal(validate({name:'Manual',feedType:'manual',url:'',enabled:true}),true);
- assert.equal(validate({name:'RSS',feedType:'rss',url:'http://invalid.test/rss',enabled:true}),false);
- assert.equal(validate({name:'RSS',feedType:'rss',url:'https://example.org/rss',enabled:true}),true);
- assert.equal('url' in toSubscriptionPayload({name:'Manual',feedType:'manual',url:'https://example.org/rss',enabled:true}),false);
-});
+const initial = {
+  name: 'Weekly',
+  feedType: 'rss',
+  url: 'https://example.org/feed.xml',
+  enabled: true,
+}
+const render = (data, extra = {}) =>
+  renderToStaticMarkup(
+    h(JsonForms, {
+      schema: subscriptionSchema,
+      uischema: subscriptionUiSchema,
+      data,
+      renderers: vanillaRenderers,
+      cells: vanillaCells,
+      ...extra,
+    }),
+  )
+const escapeRegExp = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
+// Real JSON Forms/Vanilla SSR: initial markup only, no callback/DOM/IME simulation.
+test('actual JSON Forms Vanilla labels real cells and HIDE marks its URL wrapper without deleting data', () => {
+  const visible = render(initial)
+  assert.equal(typeof document, 'undefined')
+  assert.match(visible, /订阅名称/)
+  assert.match(visible, /RSS 地址/)
+  const labels = [...visible.matchAll(/<label\b[^>]*for="([^"]+)"/gu)]
+  assert.equal(labels.length, 4)
+  for (const [, id] of labels) assert.match(visible, new RegExp(`id="${escapeRegExp(id)}"`))
+  assert.match(visible, /value="https:\/\/example.org\/feed.xml"/)
+  const manual = { ...initial, feedType: 'manual' }
+  const html = render(manual)
+  const urlClass = escapeRegExp(convertToValidClassName('#/properties/url'))
+  const opening = html.match(new RegExp(`<div\\b[^>]*class="[^"]*${urlClass}[^"]*"[^>]*>`))?.[0]
+  assert.ok(opening, 'SDK owns the URL wrapper')
+  assert.match(opening, /\shidden=""/)
+  assert.equal(manual.url, initial.url)
+})
+
+test('actual JSON Forms Ajv validates the same conditional subscription schema', () => {
+  const validate = createAjv().compile(subscriptionSchema)
+  assert.equal(validate({ ...initial, feedType: 'manual', url: '' }), true)
+  assert.equal(validate({ ...initial, url: 'http://invalid.test/rss' }), false)
+  assert.equal(validate(initial), true)
+  assert.equal(validate({ ...initial, name: '' }), false)
+})
+
+test('actual JSON Forms additionalErrors render even when normal validation is disabled', () => {
+  const error = toServerError('name', '该订阅名已存在（本地服务fixture）')
+  const html = render(initial, { validationMode: 'NoValidation', additionalErrors: [error] })
+  assert.match(html, /该订阅名已存在（本地服务fixture）/)
+  assert.equal(error.instancePath, '/name')
+  // Does not prove dynamic clearing, callback timing or real browser error association.
+})

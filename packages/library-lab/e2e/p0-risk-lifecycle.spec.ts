@@ -67,13 +67,13 @@ test('@C01 real RHF field-array submission and reset preserve default values', a
   await start(page, 'react-hook-form', 'business')
   const region = page.getByRole('region', { name: 'React Hook Form 实际 SDK 示例' })
   await region.getByRole('button', { name: '新增 RSS 来源' }).click()
-  await expect(region.getByRole('group')).toHaveCount(2)
+  await expect(region.getByTestId('c01-source-row')).toHaveCount(2)
   await region.getByRole('textbox', { name: '来源 2 URL' }).fill('https://example.com/second.xml')
   await region.getByRole('button', { name: '验证并预览' }).click()
   await expect(region.getByText('通过校验的本地数据')).toBeVisible()
   await expect(region.locator('output')).toContainText('second.xml')
   await region.getByRole('button', { name: '重置表单' }).click()
-  await expect(region.getByRole('group')).toHaveCount(1)
+  await expect(region.getByTestId('c01-source-row')).toHaveCount(1)
   await expect(region.getByRole('textbox', { name: '来源 1 URL' })).toHaveValue(
     'https://example.com/rss.xml',
   )
@@ -100,7 +100,7 @@ test('@E05 real Monaco editor creates a language worker and releases its environ
   const root = page.getByTestId('monaco-editor-root')
   await expect(root.locator('.monaco-editor')).toBeVisible({ timeout: 20_000 })
   await expect.poll(() => page.workers().length, { timeout: 20_000 }).toBeGreaterThan(0)
-  await expect(page.getByText(/编辑器已创建；Worker/u)).toBeVisible()
+  await expect(page.getByText(/编辑器已创建；可以开始编辑/u)).toBeVisible()
   await page.getByRole('tab', { name: 'Agent 指南' }).click()
   await expect(root).toHaveCount(0)
   await expect

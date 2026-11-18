@@ -1,0 +1,12 @@
+.b07-workshop {
+  min-width: 0;
+}
+.b07-workshop pre {
+  max-height: 24rem;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.b07-workshop :focus-visible {
+  outline-offset: 3px;
+}

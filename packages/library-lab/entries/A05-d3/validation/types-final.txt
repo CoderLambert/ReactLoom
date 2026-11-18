@@ -1,0 +1,9 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ["pnpm", "exec", "--", "tsc", "--ignoreConfig", "--noEmit", "--target", "ES2022", "--lib", "ES2022,DOM,DOM.Iterable", "--module", "ESNext", "--moduleResolution", "Bundler", "--jsx", "react-jsx", "--strict", "--skipLibCheck", "--esModuleInterop", "--allowSyntheticDefaultImports", "--allowImportingTsExtensions", "--types", "vite/client,node", "entries/A05-d3/examples/demo.tsx"]
+startedAt: 2026-11-10T11:47:45.992719+00:00
+finishedAt: 2026-11-10T11:47:46.298920+00:00
+exitCode: 0
+
+STDOUT
+
+STDERR

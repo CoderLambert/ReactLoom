@@ -1,0 +1,14 @@
+{
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "argv": [
+    "pnpm",
+    "--filter",
+    "@reactloom/library-lab",
+    "exec",
+    "tsc",
+    "-p",
+    "/tmp/e07-portable-4q9o6hk3/tsconfig.json"
+  ],
+  "exitCode": 0,
+  "at": "2026-11-17T17:33:29.425357+00:00"
+}

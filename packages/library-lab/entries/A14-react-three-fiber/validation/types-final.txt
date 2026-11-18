@@ -1,0 +1,9 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ["pnpm", "exec", "--", "tsc", "--ignoreConfig", "--noEmit", "--target", "ES2022", "--lib", "ES2022,DOM,DOM.Iterable", "--module", "ESNext", "--moduleResolution", "Bundler", "--jsx", "react-jsx", "--strict", "--skipLibCheck", "--esModuleInterop", "--allowSyntheticDefaultImports", "--allowImportingTsExtensions", "--types", "vite/client,node", "entries/A14-react-three-fiber/examples/demo.tsx"]
+startedAt: 2026-11-10T12:12:47.841387+00:00
+finishedAt: 2026-11-10T12:12:48.148092+00:00
+exitCode: 0
+
+STDOUT
+
+STDERR

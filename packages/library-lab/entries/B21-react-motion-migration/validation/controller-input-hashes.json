@@ -1,0 +1,24 @@
+{
+  "checkedAt": "2026-11-10T15:48:28.644186+00:00",
+  "candidate": "candidate-15",
+  "scope": "Final product/content/official input after controller fixes; validation logs and changing status notes excluded, full final Git-visible digest in roadmap results/queue.",
+  "files": {
+    "AGENTS.md": "127bda59cc2fa11d77cd161681a418380b7e96dc401878ff7812abf07605acca",
+    "agent.md": "4d7775fd582a54a85d4d2742bc65b818765b42ae7a9f8588c8aac30f1232b4d2",
+    "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+    "examples/example.tsx": "9d0fa25010172795d894de04a931798f204f4325962c5d563f68fff977d4f674",
+    "examples/migration.css": "5303bed93d7d618364174939d4ace89151ac810f1d166347f81f27cd8666f025",
+    "examples/presence-items.tsx": "4d6d3fb75a7f47e4fbd6774584ad4f091df6397bec82b53fb65fac0f4cf681b2",
+    "examples/reduced-motion.ts": "e98dbb4c4bbf92df472800de332d384af1dd86b53750c12e675dc61befe9f0f7",
+    "examples/task-history.ts": "9e30f41a66d27a1fce3ed2d6ea79573c10b5d61085a09a73a65767d36d18da6b",
+    "guide.md": "ffd6f100f9438f3a24f598d9a739156bd39673d648a68a4c5485e2854f822d24",
+    "library.json": "835cb263b31f032480213dc0af2998d02217fb96b272411f3c2bca22097e6b6e",
+    "official/legacy-readme.md": "affc2475f70368ce3f2c1bf02bd788f6967f1e73c1a7162806e3d04824b38b30",
+    "official/package-readme-correction.json": "1916b6d29fd005f1274d6c7f65c9983b12af82a8b3f6ac2fa4515391c1977d7a",
+    "official/readme.md": "3d53967ddaef8a5c37b6623ee07376aac9f9f1d2c52c894af3e521ba864fca3f",
+    "official/repository-root-readme.md": "08915bb5254a4bc1fd47e8d7ea8fff0dcb470461f6fd6b59fb6d2f0bef0400df",
+    "official/source-evidence.json": "2c6588f64db0806a5152cc7f1a4b508fae573ab17be43d86e53ce2b6cf99d1ac",
+    "tests/sdk.test.mjs": "cefc0ba8d221a273d6c831f93df2fa261ebe7a44a6707ab2182a5d828d9e0a2a",
+    "tests/task-history.test.mts": "a04bb11015be39e812ebde5538e9a2caedaae4f467c5121d01c1d4f23b5956fa"
+  }
+}

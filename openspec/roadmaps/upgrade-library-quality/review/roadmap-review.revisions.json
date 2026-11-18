@@ -1,0 +1,29 @@
+{
+  "v": 1,
+  "page": "roadmap-review.html",
+  "revisions": [
+    {
+      "n": 1,
+      "at": "2026-11-10T16:56:56+08:00",
+      "event": "首次生成",
+      "docs": {
+        "roadmap": {
+          "path": "openspec/roadmaps/upgrade-library-quality/roadmap.md",
+          "sha256": "444fc31d749c8d882e5a1e5638bbca27849f7655f8459afa4b3c5fe0b4d0d1a6"
+        },
+        "design": {
+          "path": "openspec/roadmaps/upgrade-library-quality/design.md",
+          "sha256": "a6cb403090af3c0ffb6ecbfbb87db39dab099a4ba58dd9428cb574519958dd92"
+        },
+        "task-log": {
+          "path": "openspec/roadmaps/upgrade-library-quality/task-log.md",
+          "sha256": "3f6491fe5fc4a5d627e6617ae8fda36e0b96a325c2a04553af909f9076538faa"
+        }
+      },
+      "notes": 0,
+      "dispositions": 0,
+      "changed": [],
+      "fp": "98c14c026f34b2172f2574b83c613500640398452f8b3761c2b19c9b900de486"
+    }
+  ]
+}

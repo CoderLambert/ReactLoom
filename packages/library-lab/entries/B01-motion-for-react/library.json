@@ -4,16 +4,9 @@
   "slug": "motion-for-react",
   "name": "Motion for React",
   "group": "B",
-  "summary": "React 入场/离场、列表布局过渡与减少动画偏好",
+  "summary": "真实presence退出、稳定身份列表与布局重排；业务提交、动画和焦点各自有所有者",
   "contentState": "recreated",
-  "tags": [
-    "动画",
-    "AnimatePresence",
-    "layout",
-    "reduced-motion",
-    "React 19",
-    "生命周期"
-  ],
+  "tags": ["动画", "AnimatePresence", "layout", "reduced-motion", "React 19", "生命周期"],
   "packages": [
     {
       "name": "motion",
@@ -73,13 +66,13 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/presence-items.tsx",
+        "examples/reduced-motion.ts",
         "examples/card-policy.ts",
+        "examples/workshop.css",
         "examples/demo.tsx"
       ],
-      "capabilities": [
-        "animation",
-        "reduced-motion"
-      ]
+      "capabilities": ["animation", "reduced-motion"]
     },
     {
       "demoId": "business",
@@ -90,13 +83,13 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/presence-items.tsx",
+        "examples/reduced-motion.ts",
         "examples/card-policy.ts",
+        "examples/workshop.css",
         "examples/demo.tsx"
       ],
-      "capabilities": [
-        "animation",
-        "reduced-motion"
-      ]
+      "capabilities": ["animation", "reduced-motion"]
     },
     {
       "demoId": "advanced",
@@ -107,13 +100,33 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/presence-items.tsx",
+        "examples/reduced-motion.ts",
         "examples/card-policy.ts",
+        "examples/workshop.css",
         "examples/demo.tsx"
       ],
-      "capabilities": [
-        "animation",
-        "reduced-motion"
-      ]
+      "capabilities": ["animation", "reduced-motion"]
     }
-  ]
+  ],
+  "official": {
+    "readme": {
+      "repository": "motiondivision/motion",
+      "commit": "3397236ea600094f09513fbb2bfb084dc95f5982",
+      "path": "README.md",
+      "sourceUrl": "https://github.com/motiondivision/motion/blob/3397236ea600094f09513fbb2bfb084dc95f5982/README.md",
+      "snapshotPath": "official/readme.md",
+      "language": "en",
+      "version": "14.6.0",
+      "syncedAt": "2026-11-10T12:21:34.666678+00:00",
+      "sha256": "08915bb5254a4bc1fd47e8d7ea8fff0dcb470461f6fd6b59fb6d2f0bef0400df"
+    },
+    "homepage": {
+      "url": "https://motion.dev/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-10T12:21:34.666678+00:00",
+      "reason": "实际GET200，完整响应头无XFO/CSP；未从真实Lab origin检查iframe，保持unknown。正文NOT_READ，证据见official/source-evidence.json。"
+    }
+  }
 }

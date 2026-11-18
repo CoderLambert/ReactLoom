@@ -1,14 +1,14 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "等待集成任务安装@floating-ui/react 0.27.20"
+    "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B17.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
   },
   "build": {
     "status": "NOT_RUN",
-    "note": "真实TypeScript构建未运行"
+    "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B17.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "浮层焦点与滚动未在浏览器实测"
+    "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B17.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
   }
 }

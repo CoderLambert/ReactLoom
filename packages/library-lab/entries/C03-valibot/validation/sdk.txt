@@ -1,0 +1,23 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab", "argv": ["pnpm", "test:sdk", "--entry=C03"], "start": "2026-11-10T15:04:05.158942+00:00", "end": "2026-11-10T15:04:05.436371+00:00", "exitCode": 0}
+STDOUT
+
+> @reactloom/library-lab@0.1.0 test:sdk /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+> node scripts/sdk-runner.mjs --entry=C03
+
+Real SDK suites selected: 1 file(s)
+✔ real Valibot validates and strips extra keys (0.994533ms)
+✔ real Valibot emits validation issues (0.247851ms)
+✔ real Valibot partialCheck forwards cross-field issue (0.241562ms)
+✔ real Valibot checks HTTPS credentials and strict civil dates (0.368845ms)
+✔ actual shared Feed and Batch schemas narrow output and report collection paths and limits (19.281286ms)
+✔ actual shared Window validates both civil dates and forwards order despite an unrelated type error (0.352147ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 66.435962
+
+STDERR

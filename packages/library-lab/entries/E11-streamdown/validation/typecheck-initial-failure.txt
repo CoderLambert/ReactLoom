@@ -1,0 +1,6 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: pnpm exec tsc --ignoreConfig --noEmit --target es2022 --module esnext --moduleResolution bundler --jsx react-jsx --strict --skipLibCheck --allowSyntheticDefaultImports --esModuleInterop --types node,react,react-dom entries/E11-streamdown/examples/example.tsx entries/E11-streamdown/examples/demo.tsx
+exit: 1
+
+entries/E11-streamdown/examples/example.tsx(7,8): error TS2882: Cannot find module or type declarations for side-effect import of 'streamdown/styles.css'.
+entries/E11-streamdown/examples/example.tsx(8,8): error TS2882: Cannot find module or type declarations for side-effect import of './workshop.css'.

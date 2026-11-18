@@ -192,3 +192,38 @@ test('Document-relative links reject scheme-relative or malformed Vite base path
     '/docs.v2/library/raw/A01/guide.md',
   )
 })
+
+test('declared official README links use the already published snapshot and keep private evidence inaccessible', () => {
+  assert.equal(
+    resolveDocumentUrl('official/readme.md', 'C13', '/lab/', 'official/readme.md'),
+    '/lab/raw/C13/readme.md',
+  )
+  assert.equal(
+    resolveDocumentUrl('readme.md', 'C13', '/', 'official/readme.md'),
+    '/raw/C13/readme.md',
+  )
+  assert.equal(resolveDocumentUrl('official/readme.md', 'C13'), '')
+  for (const bad of ['../secret.md', '/readme.md', 'https://evil.test/file.md'])
+    assert.equal(resolveDocumentUrl('readme.md', 'C13', '/', bad), '')
+  for (const privatePath of [
+    'official/source-evidence.json',
+    'local-validation.md',
+    'validation/run.txt',
+  ])
+    assert.equal(resolveDocumentUrl(privatePath, 'C13', '/', 'official/readme.md'), '')
+})
+
+test('versioned patch source links remain inert source text without enabling credentials or traversal', () => {
+  assert.equal(
+    resolveDocumentUrl('examples/react-grid-layout@2.3.0.patch', 'B15'),
+    '/raw/B15/sources/examples/react-grid-layout@2.3.0.patch.txt',
+  )
+  for (const bad of [
+    'examples/a@b/secret.patch',
+    'examples/../secret.patch',
+    'examples/secret.patch?token=x',
+    'https://reader@example.com/secret.patch',
+    'official/secret.patch',
+  ])
+    assert.equal(resolveDocumentUrl(bad, 'B15'), '')
+})

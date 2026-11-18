@@ -41,6 +41,10 @@ for (const [level, statuses] of [
     const scope = await openScenario(page, level)
     expect(scope).toMatch(/^http:\/\/127\.0\.0\.1:4320\/lab-runners\/msw\/sessions\/[a-f0-9-]+\/$/u)
     await expect(panel(page).locator('tbody tr td:nth-child(2)')).toHaveText([...statuses])
+    if (level === 'business') {
+      await expect(panel(page).locator('tbody tr').nth(0)).toContainText('INVALID_CODE')
+      await expect(panel(page).locator('tbody tr').nth(1)).toContainText('verified')
+    }
     expect(
       await page.evaluate(() => navigator.serviceWorker.controller?.scriptURL ?? null),
     ).toBeNull()

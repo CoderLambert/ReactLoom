@@ -1,14 +1,14 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "已编写真正第三方 SDK 调用；npm依赖未在本轮安装/运行，不得视为通过；wave23仅离线纯Node策略回归，不导入目标SDK，实际SDK/CLI仍NOT_RUN"
+    "note": "本轮直接执行真实SheetJS 0.20.3三场景及tests/sdk.test.mjs，结果见local-validation.md与evidence/；当前dirty共享工作区、未授权提交，尚无verify:record正式逐库收据，所以这里保持NOT_RUN。"
   },
   "build": {
     "status": "NOT_RUN",
-    "note": "根 pnpm-lock.yaml 已包含 Library Lab importer，声明的包可以被冻结安装解析。Actions run 41779873259 的仓库级 typecheck/build 不是本条目的 evidence/runs 收据，所以这里是 NOT_RUN，不是 PASS。"
+    "note": "主控在稳定candidate-02完成Lab typecheck/build/catalog，本地结果见路线图results/F05.md；Lab build不是独立SheetJS fixture build或正式逐库收据。"
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "尚未获得真实浏览器/媒体/Worker执行证据"
+    "note": "本条目Node配方已真实执行，官方README页签通过本地Chromium；未运行Excel/LibreOffice GUI或正式browser recorder。官网仅HTTP依据保持unknown。"
   }
 }

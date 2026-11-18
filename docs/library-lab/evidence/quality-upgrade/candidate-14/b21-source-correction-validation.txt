@@ -1,0 +1,5 @@
+cwd=packages/library-lab
+command=node entries/B21-react-motion-migration/validation/metadata-check.mjs
+B21 three migration goals / six production sources / modern14.6.0 only / two original README byte+SHA checks / old SDK NOT_RUN / homepage unknown / formal NOT_RUN PASS
+
+exitCode=0

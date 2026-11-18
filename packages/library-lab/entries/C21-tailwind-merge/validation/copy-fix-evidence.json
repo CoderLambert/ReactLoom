@@ -1,0 +1,124 @@
+{
+  "capturedAt": "2026-11-11T05:47:43.447343+00:00",
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "scope": "C21 guide/local-validation/verification only; documentation followup",
+  "candidateInputSha256": "11b1313558ef9191b68ceb7e749b4a7fca8733d3883262871ce1d0e5a1f3368a",
+  "candidate21EntryInputs": 39,
+  "changedFromCandidate21": [
+    "guide.md",
+    "local-validation.md",
+    "verification.json"
+  ],
+  "runtimeAndOtherCandidate21EntryInputs": "REUSED; all other entry input hashes unchanged",
+  "documentationDigests": {
+    "guide.md": {
+      "beforeAuthorFinal": "151f85903152c13e9a9daf103e23b411e939a73560caf14a7a6dd54a910eaaff",
+      "after": "22756307ff2c5a30594660c3b09007c74a098e9ce7204d655147c0c2cd71b61b"
+    },
+    "local-validation.md": {
+      "beforeAuthorFinal": "f154ac0d5fb49c1c90550072f8175b80d1882b2a067c842040ef8824fae52fd6",
+      "after": "763639e4513e37b4191ef6f75d6ab10c463bd497723f6837a541ae4dca51ed59"
+    },
+    "verification.json": {
+      "beforeAuthorFinal": "af5ce1be7c968f53b48b04584cf0df885acecbd82832d610dc6873060bbfb359",
+      "after": "db38c5e9b1b3a789da903a9fb729fc0dcff30925f70aecb7183ebe334c00085c"
+    }
+  },
+  "browser": {
+    "status": "REUSED",
+    "exitCode": 0,
+    "allCases": 6,
+    "entryCases": 2,
+    "cases": [
+      "✓  5 e2e/quality-remediation-primitives-sources.spec.ts:34:3 › @C21 original fixed README and evidenced homepage blocked (1.7s)",
+      "✓  6 e2e/quality-remediation-tailwind-merge.spec.ts:27:1 › @C21 base/variants/caller produce real merge output, loaded utility styles and custom-group boundaries in one experiment (1.8s)"
+    ],
+    "record": {
+      "command": [
+        "pnpm",
+        "exec",
+        "playwright",
+        "test",
+        "--config=.local-evidence/quality-playwright.config.ts",
+        "e2e/quality-remediation-nuqs.spec.ts",
+        "e2e/quality-remediation-tailwind-merge.spec.ts",
+        "e2e/quality-remediation-primitives-sources.spec.ts",
+        "--grep",
+        "@C19|@C21",
+        "--trace=off"
+      ],
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "startedAt": "2026-11-10T18:24:58.132289+00:00",
+      "finishedAt": "2026-11-10T18:25:07.331581+00:00",
+      "exitCode": 0,
+      "implicitBuild": false,
+      "log": "docs/library-lab/evidence/quality-upgrade/candidate-21/browser.txt"
+    }
+  },
+  "hostChecks": {
+    "status": "REUSED",
+    "checks": [
+      {
+        "name": "typecheck",
+        "command": [
+          "pnpm",
+          "--filter",
+          "@reactloom/library-lab",
+          "typecheck"
+        ],
+        "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+        "startedAt": "2026-11-10T18:23:22.221959+00:00",
+        "finishedAt": "2026-11-10T18:23:23.850552+00:00",
+        "exitCode": 0,
+        "log": "docs/library-lab/evidence/quality-upgrade/candidate-21/typecheck.txt"
+      },
+      {
+        "name": "build",
+        "command": [
+          "pnpm",
+          "--filter",
+          "@reactloom/library-lab",
+          "build"
+        ],
+        "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+        "startedAt": "2026-11-10T18:23:23.850801+00:00",
+        "finishedAt": "2026-11-10T18:23:30.479027+00:00",
+        "exitCode": 0,
+        "log": "docs/library-lab/evidence/quality-upgrade/candidate-21/build.txt"
+      },
+      {
+        "name": "catalog",
+        "command": [
+          "pnpm",
+          "--filter",
+          "@reactloom/library-lab",
+          "catalog:check"
+        ],
+        "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+        "startedAt": "2026-11-10T18:23:30.479384+00:00",
+        "finishedAt": "2026-11-10T18:23:30.847097+00:00",
+        "exitCode": 0,
+        "log": "docs/library-lab/evidence/quality-upgrade/candidate-21/catalog.txt"
+      }
+    ]
+  },
+  "formalReceiptStatuses": {
+    "content": "NOT_RUN",
+    "sdk": "NOT_RUN",
+    "build": "NOT_RUN",
+    "browser": "NOT_RUN"
+  },
+  "currentChecks": {
+    "jsonParseAndCanonicalFormatting": "PASS",
+    "factsAndStaleWording": "PASS",
+    "biome": "FAIL exit 254; exact captured output in copy-fix-biome-failed.txt",
+    "diffCheck": "PASS exit0; copy-fix-diff.txt"
+  },
+  "sourceAndReceiptStatusesUnmodified": true,
+  "guideLinks": {
+    "count": 9,
+    "existingLocalTargets": "PASS",
+    "newUnpublishedMaintenanceLinks": 0
+  },
+  "checkerCorrection": "First final-refresh helper incorrectly expected 6 guide links; observed 9, matching original metadata. Corrected only helper expectation; guide links unchanged."
+}

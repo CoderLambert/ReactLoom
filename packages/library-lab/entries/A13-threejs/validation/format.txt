@@ -1,0 +1,247 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv=["pnpm", "exec", "biome", "check", "--write", "entries/A13-threejs/examples", "entries/A13-threejs/tests"]
+start=2026-11-10T12:08:23.159132+00:00
+end=2026-11-10T12:08:23.379231+00:00
+exit=1
+entries/A13-threejs/examples/example.tsx:193:3 lint/correctness/useExhaustiveDependencies  FIXABLE  ━━━━━━━━━━
+
+  × This hook does not specify its dependency on overrideMotion.
+  
+    191 │     runtime.current?.syncAnimation()
+    192 │   }, [playing, reducedMotion, overrideMotion])
+  > 193 │   useEffect(() => {
+        │   ^^^^^^^^^
+    194 │     const r = runtime.current
+    195 │     if (!r) return
+  
+  i This dependency is being used here, but is not specified in the hook dependency list.
+  
+    206 │     if (
+    207 │       !shouldRunFrameLoop(
+  > 208 │         { playing, visible: !document.hidden, reducedMotion, overrideMotion },
+        │                                                              ^^^^^^^^^^^^^^
+    209 │         speed,
+    210 │       )
+  
+  i React relies on hook dependencies to determine when to re-compute Effects.
+    Failing to specify dependencies can result in Effects not updating correctly when state changes.
+    These "stale closures" are a common source of surprising bugs.
+  
+  i Unsafe fix: Add the missing dependency overrideMotion to the list.
+  
+    213 │ ··},·[shape,·level,·overrideMotion])
+        │                   ++++++++++++++++  
+
+entries/A13-threejs/examples/example.tsx:193:3 lint/correctness/useExhaustiveDependencies  FIXABLE  ━━━━━━━━━━
+
+  × This hook does not specify its dependency on reducedMotion.
+  
+    191 │     runtime.current?.syncAnimation()
+    192 │   }, [playing, reducedMotion, overrideMotion])
+  > 193 │   useEffect(() => {
+        │   ^^^^^^^^^
+    194 │     const r = runtime.current
+    195 │     if (!r) return
+  
+  i This dependency is being used here, but is not specified in the hook dependency list.
+  
+    206 │     if (
+    207 │       !shouldRunFrameLoop(
+  > 208 │         { playing, visible: !document.hidden, reducedMotion, overrideMotion },
+        │                                               ^^^^^^^^^^^^^
+    209 │         speed,
+    210 │       )
+  
+  i React relies on hook dependencies to determine when to re-compute Effects.
+    Failing to specify dependencies can result in Effects not updating correctly when state changes.
+    These "stale closures" are a common source of surprising bugs.
+  
+  i Unsafe fix: Add the missing dependency reducedMotion to the list.
+  
+    213 │ ··},·[shape,·level,·reducedMotion])
+        │                   +++++++++++++++  
+
+entries/A13-threejs/examples/example.tsx:193:3 lint/correctness/useExhaustiveDependencies  FIXABLE  ━━━━━━━━━━
+
+  × This hook does not specify its dependency on playing.
+  
+    191 │     runtime.current?.syncAnimation()
+    192 │   }, [playing, reducedMotion, overrideMotion])
+  > 193 │   useEffect(() => {
+        │   ^^^^^^^^^
+    194 │     const r = runtime.current
+    195 │     if (!r) return
+  
+  i This dependency is being used here, but is not specified in the hook dependency list.
+  
+    206 │     if (
+    207 │       !shouldRunFrameLoop(
+  > 208 │         { playing, visible: !document.hidden, reducedMotion, overrideMotion },
+        │           ^^^^^^^
+    209 │         speed,
+    210 │       )
+  
+  i React relies on hook dependencies to determine when to re-compute Effects.
+    Failing to specify dependencies can result in Effects not updating correctly when state changes.
+    These "stale closures" are a common source of surprising bugs.
+  
+  i Unsafe fix: Add the missing dependency playing to the list.
+  
+    213 │ ··},·[shape,·level,·playing])
+        │                   +++++++++  
+
+entries/A13-threejs/examples/example.tsx:193:3 lint/correctness/useExhaustiveDependencies  FIXABLE  ━━━━━━━━━━
+
+  × This hook does not specify its dependency on speed.
+  
+    191 │     runtime.current?.syncAnimation()
+    192 │   }, [playing, reducedMotion, overrideMotion])
+  > 193 │   useEffect(() => {
+        │   ^^^^^^^^^
+    194 │     const r = runtime.current
+    195 │     if (!r) return
+  
+  i This dependency is being used here, but is not specified in the hook dependency list.
+  
+    207 │       !shouldRunFrameLoop(
+    208 │         { playing, visible: !document.hidden, reducedMotion, overrideMotion },
+  > 209 │         speed,
+        │         ^^^^^
+    210 │       )
+    211 │     )
+  
+  i React relies on hook dependencies to determine when to re-compute Effects.
+    Failing to specify dependencies can result in Effects not updating correctly when state changes.
+    These "stale closures" are a common source of surprising bugs.
+  
+  i Unsafe fix: Add the missing dependency speed to the list.
+  
+    213 │ ··},·[shape,·level,·speed])
+        │                   +++++++  
+
+entries/A13-threejs/examples/example.tsx:214:3 lint/correctness/useExhaustiveDependencies  FIXABLE  ━━━━━━━━━━
+
+  × This hook does not specify its dependency on overrideMotion.
+  
+    212 │       r.frame()
+    213 │   }, [shape, level])
+  > 214 │   useEffect(() => {
+        │   ^^^^^^^^^
+    215 │     const r = runtime.current
+    216 │     if (!r) return
+  
+  i This dependency is being used here, but is not specified in the hook dependency list.
+  
+    218 │     if (
+    219 │       !shouldRunFrameLoop(
+  > 220 │         { playing, visible: !document.hidden, reducedMotion, overrideMotion },
+        │                                                              ^^^^^^^^^^^^^^
+    221 │         speed,
+    222 │       )
+  
+  i React relies on hook dependencies to determine when to re-compute Effects.
+    Failing to specify dependencies can result in Effects not updating correctly when state changes.
+    These "stale closures" are a common source of surprising bugs.
+  
+  i Unsafe fix: Add the missing dependency overrideMotion to the list.
+  
+    225 │ ··},·[color,·overrideMotion])
+        │            ++++++++++++++++  
+
+entries/A13-threejs/examples/example.tsx:214:3 lint/correctness/useExhaustiveDependencies  FIXABLE  ━━━━━━━━━━
+
+  × This hook does not specify its dependency on reducedMotion.
+  
+    212 │       r.frame()
+    213 │   }, [shape, level])
+  > 214 │   useEffect(() => {
+        │   ^^^^^^^^^
+    215 │     const r = runtime.current
+    216 │     if (!r) return
+  
+  i This dependency is being used here, but is not specified in the hook dependency list.
+  
+    218 │     if (
+    219 │       !shouldRunFrameLoop(
+  > 220 │         { playing, visible: !document.hidden, reducedMotion, overrideMotion },
+        │                                               ^^^^^^^^^^^^^
+    221 │         speed,
+    222 │       )
+  
+  i React relies on hook dependencies to determine when to re-compute Effects.
+    Failing to specify dependencies can result in Effects not updating correctly when state changes.
+    These "stale closures" are a common source of surprising bugs.
+  
+  i Unsafe fix: Add the missing dependency reducedMotion to the list.
+  
+    225 │ ··},·[color,·reducedMotion])
+        │            +++++++++++++++  
+
+entries/A13-threejs/examples/example.tsx:214:3 lint/correctness/useExhaustiveDependencies  FIXABLE  ━━━━━━━━━━
+
+  × This hook does not specify its dependency on playing.
+  
+    212 │       r.frame()
+    213 │   }, [shape, level])
+  > 214 │   useEffect(() => {
+        │   ^^^^^^^^^
+    215 │     const r = runtime.current
+    216 │     if (!r) return
+  
+  i This dependency is being used here, but is not specified in the hook dependency list.
+  
+    218 │     if (
+    219 │       !shouldRunFrameLoop(
+  > 220 │         { playing, visible: !document.hidden, reducedMotion, overrideMotion },
+        │           ^^^^^^^
+    221 │         speed,
+    222 │       )
+  
+  i React relies on hook dependencies to determine when to re-compute Effects.
+    Failing to specify dependencies can result in Effects not updating correctly when state changes.
+    These "stale closures" are a common source of surprising bugs.
+  
+  i Unsafe fix: Add the missing dependency playing to the list.
+  
+    225 │ ··},·[color,·playing])
+        │            +++++++++  
+
+entries/A13-threejs/examples/example.tsx:214:3 lint/correctness/useExhaustiveDependencies  FIXABLE  ━━━━━━━━━━
+
+  × This hook does not specify its dependency on speed.
+  
+    212 │       r.frame()
+    213 │   }, [shape, level])
+  > 214 │   useEffect(() => {
+        │   ^^^^^^^^^
+    215 │     const r = runtime.current
+    216 │     if (!r) return
+  
+  i This dependency is being used here, but is not specified in the hook dependency list.
+  
+    219 │       !shouldRunFrameLoop(
+    220 │         { playing, visible: !document.hidden, reducedMotion, overrideMotion },
+  > 221 │         speed,
+        │         ^^^^^
+    222 │       )
+    223 │     )
+  
+  i React relies on hook dependencies to determine when to re-compute Effects.
+    Failing to specify dependencies can result in Effects not updating correctly when state changes.
+    These "stale closures" are a common source of surprising bugs.
+  
+  i Unsafe fix: Add the missing dependency speed to the list.
+  
+    225 │ ··},·[color,·speed])
+        │            +++++++  
+
+Skipped 8 suggested fixes.
+If you wish to apply the suggested (unsafe) fixes, use the command biome check --write --unsafe
+
+Checked 6 files in 12ms. Fixed 5 files.
+Found 8 errors.
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while applying fixes.
+  
+

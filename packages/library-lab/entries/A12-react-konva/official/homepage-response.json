@@ -1,0 +1,31 @@
+{
+  "checkedAt": "2026-11-10T11:50:53.166158+00:00",
+  "requestedUrl": "https://konvajs.org/docs/react/index.html",
+  "finalUrl": "https://konvajs.org/docs/react/index.html",
+  "method": "GET",
+  "status": 200,
+  "headers": {
+    "Accept-Ranges": "bytes",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Origin": "*",
+    "Age": "0",
+    "Cache-Control": "public,max-age=0,must-revalidate",
+    "Cache-Status": "\"Netlify Edge\"; fwd=miss; fwd-status=200; stored",
+    "Content-Length": "61121",
+    "Content-Type": "text/html; charset=UTF-8",
+    "Date": "Tue, 10 Nov 2026 11:50:55 GMT",
+    "Etag": "\"500504bcb6562c3f97910ce2e1921607-ssl\"",
+    "Server": "Netlify",
+    "Strict-Transport-Security": "max-age=31536000",
+    "Vary": "Accept-Encoding",
+    "X-Content-Type-Options": "nosniff",
+    "X-Frame-Options": "SAMEORIGIN",
+    "X-Nf-Request-Id": "01M72MQZXMWH8M34XX5FNSY6JH",
+    "Connection": "close"
+  },
+  "xFrameOptions": "SAMEORIGIN",
+  "contentSecurityPolicy": null,
+  "browserFromLabOrigin": "NOT_RUN",
+  "bodyRead": false
+}

@@ -1,0 +1,23 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ["node", "--test", "entries/A14-react-three-fiber/tests/sdk.test.mjs"]
+startedAt: 2026-11-10T12:05:51.481644+00:00
+finishedAt: 2026-11-10T12:05:51.598332+00:00
+exitCode: 0
+
+STDOUT
+Actual Three: {"geometry":"BoxGeometry","vertices":24,"color":"c47b37","scale":[1.1,1.1,1.1]}
+(node:1191594) [THREE_CJS_DEPRECATED] DeprecationWarning: `require("three")` is deprecated and will be removed.
+Replace `const THREE = require("three")` with `import * as THREE from "three"`.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+✔ real R3F applyProps maps declarative transforms and material color onto Three objects (2.100442ms)
+✔ real R3F buildGraph returns named object identities; explicit helper disposal emits actual Three events (0.41955ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 91.393954
+
+STDERR

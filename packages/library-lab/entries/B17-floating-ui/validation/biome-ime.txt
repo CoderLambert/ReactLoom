@@ -1,0 +1,9 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+ARGV: ["pnpm", "exec", "--", "biome", "check", "entries/B17-floating-ui/examples/example.tsx", "entries/B17-floating-ui/examples/ime-guard.ts", "entries/B17-floating-ui/tests/ime-guard.test.mts"]
+START: 2026-11-10T10:47:19.122157+00:00
+END: 2026-11-10T10:47:19.378863+00:00
+EXIT: 0
+STDOUT:
+Checked 3 files in 10ms. No fixes applied.
+
+STDERR:

@@ -5,13 +5,7 @@
   "name": "es-toolkit",
   "group": "D",
   "summary": "轻量类型安全工具函数：RSS 排序、去重、分组和分页",
-  "tags": [
-    "es-toolkit",
-    "工具函数",
-    "RSS",
-    "去重",
-    "分组"
-  ],
+  "tags": ["es-toolkit", "工具函数", "RSS", "去重", "分组"],
   "contentState": "recreated",
   "packages": [
     {
@@ -44,42 +38,18 @@
   "demos": [
     {
       "demoId": "basic",
-      "title": "分组与稳定去重",
+      "title": "RSS 数据处理流水线",
       "level": "basic",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/pipeline.mjs",
+        "examples/pipeline.d.mts"
       ],
       "capabilities": [],
-      "description": "分组与稳定去重"
-    },
-    {
-      "demoId": "business",
-      "title": "RSS 聚合、排序、分页",
-      "level": "business",
-      "executionKind": "react",
-      "entryPoint": "examples/demo.tsx",
-      "sourceFiles": [
-        "examples/example.tsx",
-        "examples/demo.tsx"
-      ],
-      "capabilities": [],
-      "description": "RSS 聚合、排序、分页"
-    },
-    {
-      "demoId": "advanced",
-      "title": "坏输入隔离与URL规范化",
-      "level": "advanced",
-      "executionKind": "react",
-      "entryPoint": "examples/demo.tsx",
-      "sourceFiles": [
-        "examples/example.tsx",
-        "examples/demo.tsx"
-      ],
-      "capabilities": [],
-      "description": "坏输入隔离与URL规范化"
+      "description": "观察规范化、排序、去重、分组和分页的每一步真实结果"
     }
   ],
   "license": {
@@ -88,5 +58,25 @@
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
     "note": "依据已审阅的原研究与官方 API 独立改写；未继承旧测试结论"
+  },
+  "official": {
+    "readme": {
+      "repository": "toss/es-toolkit",
+      "commit": "32f4c8fb33828ad6512064ba84b0fdd8fda966a3",
+      "path": "README-zh_hans.md",
+      "sourceUrl": "https://github.com/toss/es-toolkit/blob/32f4c8fb33828ad6512064ba84b0fdd8fda966a3/README-zh_hans.md",
+      "snapshotPath": "official/readme.md",
+      "version": "1.52.0",
+      "language": "zh-CN",
+      "syncedAt": "2026-11-17T16:18:36.149564+00:00",
+      "sha256": "57e526f31e4471cd234cc6aeca69fb83c9e469c010713ddef6dc9f8776ac101d"
+    },
+    "homepage": {
+      "url": "https://es-toolkit.dev/zh_hans/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-17T16:18:36.149564+00:00",
+      "reason": "实际GET响应保存在official/homepage-headers.json；未从Lab origin确认iframe内容，保持unknown并保留直达入口。"
+    }
   }
 }

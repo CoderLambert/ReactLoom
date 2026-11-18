@@ -1,0 +1,76 @@
+[
+  {
+    "name": "platform-tests",
+    "status": "REUSED",
+    "from": "candidate-02/platform-tests.txt",
+    "reason": "No shared runtime changes since candidate15; affected document scope focused22 and actual security2 PASS retained. RGL patched owned RAF and portable geometry passed candidate15. Unaffected platform200 retained; only B22 failed/changed and new C entries run below."
+  },
+  {
+    "name": "platform-lint",
+    "status": "REUSED",
+    "from": "candidate-02/lint.txt",
+    "reason": "Entry lint directed by owners; changed public e2e checked below."
+  },
+  {
+    "name": "new-e2e-lint",
+    "command": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "packages/library-lab/e2e/quality-remediation-ajv.spec.ts",
+      "packages/library-lab/e2e/quality-remediation-imask.spec.ts",
+      "packages/library-lab/e2e/quality-remediation-ag-grid.spec.ts",
+      "packages/library-lab/e2e/quality-remediation-virtuoso.spec.ts",
+      "packages/library-lab/e2e/quality-remediation-beautiful-dnd-migration.spec.ts",
+      "packages/library-lab/e2e/quality-remediation-primitives-sources.spec.ts"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-10T16:08:30.909716+00:00",
+    "finishedAt": "2026-11-10T16:08:31.122803+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-16/new-e2e-lint.txt"
+  },
+  {
+    "name": "typecheck",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "typecheck"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-10T16:08:31.123033+00:00",
+    "finishedAt": "2026-11-10T16:08:32.688100+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-16/typecheck.txt"
+  },
+  {
+    "name": "build",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "build"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-10T16:08:32.688371+00:00",
+    "finishedAt": "2026-11-10T16:08:39.445416+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-16/build.txt"
+  },
+  {
+    "name": "catalog",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "catalog:check"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-10T16:08:39.445753+00:00",
+    "finishedAt": "2026-11-10T16:08:39.824430+00:00",
+    "exitCode": 0,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-16/catalog.txt"
+  }
+]

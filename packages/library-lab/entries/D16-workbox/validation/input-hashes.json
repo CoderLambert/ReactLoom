@@ -1,0 +1,15 @@
+{
+  "agent.md": "e811e49fa6b6fc4911c772e5574435994d89406d20171984f2559de5946fbf2f",
+  "examples/advanced.mjs": "d9c0c9a4e7e4820890eb10a4fa8b602ce47359787a4a558333c2f1360f8c4b28",
+  "examples/basic.mjs": "40756e7b32199b1b474bf2c93a3c054233d92ace3a27641896b44aa0a3d9cc65",
+  "examples/business.mjs": "e50f6fba544e0c98c1de896cd1154aafaf0af373a398065b6530560161fb2c4b",
+  "examples/cache-policy.mjs": "a7247f39a83f7f253a2be092d6760716393bd6955fc96af78cd594f76f3f8f03",
+  "examples/workshop.mjs": "5a2ece40629276078bae29b4b30c5f323881fcc937a9c87c52f1341cfb4402e5",
+  "guide.md": "7dab6a61998ed77f584372b19137e7804dba790a006121dd0c3e16c57dea10ae",
+  "library.json": "8757faf46ed385520db8793f2fc9efa28250dc0b1e1fc3973f9a11e63551a7ec",
+  "official/readme.md": "fcffa1e6d7fbbe1cff9aefba38a5b99a0ed51851126462a1e0884a2d1708af86",
+  "official/source-evidence.json": "c6be0d936e10905ed0e3703c205fa353366e37de3fe3339a264e9903243b7310",
+  "tests/cache-policy.test.mjs": "c131264b9490cdd139c019dc9e3196ae4ee444e633339766657f732c90fcd56d",
+  "tests/sdk.test.mjs": "9ee2fff4089e3cfc0adfcc41afa99ace325a74efc8f625a0e97ece3b0c584294",
+  "verification.json": "a09f8fb82ab89a9344bb73c52b69ffd52718c58a179b7c9d74fdf32e3e4df4ee"
+}

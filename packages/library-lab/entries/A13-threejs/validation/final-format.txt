@@ -1,0 +1,6 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv=["pnpm", "exec", "biome", "check", "--write", "entries/A13-threejs/examples", "entries/A13-threejs/tests", "entries/A13-threejs/library.json", "entries/A13-threejs/verification.json", "entries/A13-threejs/official/source-evidence.json", "e2e/quality-remediation-threejs.spec.ts"]
+start=2026-11-10T12:18:55.547430+00:00
+end=2026-11-10T12:18:55.769970+00:00
+exit=0
+Checked 11 files in 12ms. Fixed 3 files.

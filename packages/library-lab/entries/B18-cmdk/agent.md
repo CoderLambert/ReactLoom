@@ -1,47 +1,19 @@
-# B18 cmdk
+# B18 cmdk复用入口
 
-## 适用
+适合少量命令的搜索/分组/键盘选择。cmdk1.1.1、MIT，React/DOM19.3.0；peer18/19，实际Dialog依赖Radix1.2.0。不是搜索服务、虚拟列表、授权器或React Native组件。保留本地四文章动作，不改为用户数据/HTTP/剪贴板。
 
-少量命令的键盘过滤和分组用 `cmdk`。它不鉴权、不虚拟滚动、不是搜索服务。危险动作必须在数据层再拒绝。React Native 与 Server Component 不在范围内。
+三个目标：基础查询与当前高亮/SDK读数；业务分组/快捷词/禁用与本地文章结果；高级真实Command.Dialog/门户样式/快捷键/IME/焦点和清理。五sourceFiles含新styles.css，不能只复制TSX。无Lab alias或外部资源。
 
-## 版本
+Input查询不等于Item身份；Item固定save/read/copy/refresh/delete，中文标签与别名放keywords。Command.List必需，Root label建立Input/List的ARIA关系；不要假定Input aria-label覆盖内部aria-labelledby。useCommandState按search/value/filtered.count三个原始值订阅，不能返回每次新建的对象。disabled仍可匹配但不能执行，select再拒绝delete；SDK count不等于可执行数。
 
-`cmdk@1.1.1`，React 19.3.0。许可证 MIT。`Command.List` 必填。`Command.Dialog` 才带门户。1.1.1 的输入法修复不能代替应用自己的快捷键判断。
+Dialog的className作用内部Root，contentClassName/overlayClassName分别给门户内容/遮罩。高级vimBindings=false避免内置Ctrl+K上移与应用切换冲突；内联保留默认。应用document监听只在advanced存在，拒绝已消费事件、编辑目标和组词；自己拥有的repeat组合仍preventDefault但不toggle，卸载清理。
 
-## 迁移
+IME保留native isComposing/229与捕获Enter保护；createImeGuard在compositionend后只尾随80ms，Enter/Space抬键、普通输入、blur清除，不无限等待keyup。原10policy保留，新增6测试窗口/归属边界；它们不证明真实OS候选窗。
 
-1.0 的 value 大小写和 aria 属性变化要回归。不要把查询 state 写进 Item 的 value。远程结果使用 `shouldFilter={false}`，当前示例没有这条路径。
+Radix拥有modal焦点，应用外置触发器不在Radix Trigger内。open关闭后使用可取消0ms任务，在其FocusScope清理后只恢复无人接管的body/脱离焦点；原目标须连接，已有别处焦点不抢。打开、level离开与卸载取消任务；不用queueMicrotask假定所有关闭路径正确。不要伪传cmdk Dialog未暴露的onCloseAutoFocus或额外套FocusManager。
 
-## 不可删的清理
+b18-workshop带data-level/open；b18-sdk-state是真实SDK search/selectedId/resultCount；b18-status与b18-article是fixture结果。Input按combobox在具体Command/Dialog内定位，Option aria-label保持中文稳定名称，底层data-value由SDK设置；不要写DOM伪造状态。
 
-advanced 的 document 监听必须卸载。`shouldTogglePalette` 在未打开时放过可编辑焦点，并拒绝组合键与 keyCode 229。Enter 抑制保持到组合提交后的 keyup。禁用删除在 UI 和 `select` 里各挡一次。切换 level 重置文章和打开状态。关闭对话框后焦点回到触发按钮。
+固定官方来源dip/cmdk@fb4ea04e9ec211777fbb39c6104e3c5f2ee107d2根README.md，目标包目录无README、无中文候选，1.1.1/14036B/hash/完整请求在official与library。旧pacocoursey官方主页真实跳转，GitHub最终XFO deny+强制CSP none→blocked。
 
-## 反例
-
-没有 List。全局 Ctrl+K 抢输入框。组字 Enter 执行命令。onSelect 直接删除。把面板当成唯一业务记录。一次渲染两千个 Item。不清理监听。
-
-复用时保留这些不变的约定：
-
-- `Command.List` 必填；查询 state 不是 Item value。
-- Ctrl/Cmd+K 的监听在卸载时移除。
-- 可编辑焦点且面板未打开时不抢快捷键。
-- keyCode 229 与组合结束前的 Enter 不执行命令。
-- 删除命令 disabled，处理函数再拒绝一次。
-
-## 测试断言
-
-`keyboard-policy.test.mts` 断言何时切换面板、何时吃掉 Enter。`command-state.test.mts` 断言稍后阅读切换、已读单向、引用和刷新计数。不证明对话框焦点或 IME 候选窗。
-
-## 真实限制
-
-已挂载：内联菜单、分组、关键词、禁用项、本地文章、Ctrl/Cmd+K 对话框。未挂载：远程过滤、Loading、虚拟列表、剪贴板、嵌套页面。
-
-复用检查：
-
-- 版本以该条目 `library.json` 为准，不跟研究稿里的 Vite 脚本或 workshop 目录。
-- 未挂载的生产模式留在 `guide.md`，不补进 `examples/`。
-- 不修改 `verification.json`。没有匹配 receipt 时 sdk、build、browser 保持 NOT_RUN。
-
-## 证据
-
-sdk、build、browser 为 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有匹配 receipt。Actions run `41779873259` 是仓库级检查，不是本条目 PASS。文档：https://github.com/dip/cmdk
+真实SDK只运行defaultFilter与SSR形状，policy只本地逻辑；浏览器提案覆盖实际筛选/ARIA高亮身份、业务执行/disabled、真实Dialog/焦点/热键/IME事件协议/卸载。OS IME、触摸/读屏、完整SSR hydration、远程过滤/Loading/虚拟化未验收。六项/命令/剩余看local-validation，formal三项保持NOT_RUN，禁止以SDK工具函数或仓库绿CI替代实际交互。

@@ -4,14 +4,8 @@
   "slug": "tailwind-merge",
   "name": "tailwind-merge",
   "group": "C",
-  "summary": "Tailwind v4 工具类冲突合并与可覆盖组件实践",
-  "tags": [
-    "Tailwind",
-    "样式",
-    "组件API",
-    "响应式",
-    "className"
-  ],
+  "summary": "一次完整合并实验：组件基础类、条件变体与调用者覆盖到真实 className",
+  "tags": ["Tailwind", "样式", "组件API", "响应式", "className"],
   "contentState": "recreated",
   "packages": [
     {
@@ -25,12 +19,16 @@
   ],
   "references": [
     {
-      "title": "官方 README",
-      "url": "https://github.com/dcastil/tailwind-merge"
+      "title": "匹配3.7.0的官方包README",
+      "url": "https://github.com/dcastil/tailwind-merge/blob/511d68a65d8fa11ae8a549b5a1d5cf4dced41101/packages/tailwind-merge/README.md"
     },
     {
-      "title": "官方 API 文档",
-      "url": "https://github.com/dcastil/tailwind-merge/blob/main/docs/api-reference.md"
+      "title": "匹配版本配置规则",
+      "url": "https://github.com/dcastil/tailwind-merge/blob/511d68a65d8fa11ae8a549b5a1d5cf4dced41101/packages/tailwind-merge/docs/configuration.md"
+    },
+    {
+      "title": "匹配版本限制",
+      "url": "https://github.com/dcastil/tailwind-merge/blob/511d68a65d8fa11ae8a549b5a1d5cf4dced41101/packages/tailwind-merge/docs/limitations.md"
     }
   ],
   "related": [
@@ -48,51 +46,48 @@
   "demos": [
     {
       "demoId": "basic",
-      "title": "合并输入类名",
+      "title": "从输入到真实DOM的样式合并",
       "level": "basic",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/merge-model.mjs",
+        "examples/merge-model.d.mts",
+        "examples/styles.css",
         "examples/demo.tsx"
       ],
       "capabilities": [],
-      "description": "对比真实 twJoin 和 twMerge 的结果。"
-    },
-    {
-      "demoId": "business",
-      "title": "可覆盖的内容卡片",
-      "level": "business",
-      "executionKind": "react",
-      "entryPoint": "examples/demo.tsx",
-      "sourceFiles": [
-        "examples/example.tsx",
-        "examples/demo.tsx"
-      ],
-      "capabilities": [],
-      "description": "真实 clsx + twMerge 组合处理组件默认值与覆盖。"
-    },
-    {
-      "demoId": "advanced",
-      "title": "非对称冲突与 modifier",
-      "level": "advanced",
-      "executionKind": "react",
-      "entryPoint": "examples/demo.tsx",
-      "sourceFiles": [
-        "examples/example.tsx",
-        "examples/demo.tsx"
-      ],
-      "capabilities": [],
-      "description": "方向性冲突、响应式/悬停变体的真实执行。"
+      "description": "同一实验保留方向冲突/modifier预设，条件输入与自定义px规则执行真实SDK，直接用于DOM预览"
     }
   ],
   "license": {
     "spdx": "MIT",
-    "note": "不重新分发第三方源码"
+    "note": "tailwind-merge3.7.0/clsx2.1.1为MIT，保留官方README原文；示例自有CSS两类。DOM样式需应用现有Tailwind4构建，Lab已用4.3.3。"
   },
   "provenance": {
     "origin": "RFL-20261023/C/tailwind-merge",
     "mode": "recreated",
-    "note": "本次以新 SDK 版本重写演示；不迁移旧通过状态"
+    "note": "保留原recreated/RFL来源与合格cn、方向/修饰符例子；收为一个完整输入实验，用共享模型调用真实SDK并把结果接DOM，不继承旧PASS。"
+  },
+  "official": {
+    "readme": {
+      "repository": "dcastil/tailwind-merge",
+      "commit": "511d68a65d8fa11ae8a549b5a1d5cf4dced41101",
+      "path": "packages/tailwind-merge/README.md",
+      "sourceUrl": "https://github.com/dcastil/tailwind-merge/blob/511d68a65d8fa11ae8a549b5a1d5cf4dced41101/packages/tailwind-merge/README.md",
+      "snapshotPath": "official/readme.md",
+      "version": "3.7.0",
+      "language": "en",
+      "syncedAt": "2026-11-10T18:10:55.510769+00:00",
+      "sha256": "b7686c3623d44ff744eebef1bc9a2b8ab36cee4e491d1c609fc8131e67d2f2b3"
+    },
+    "homepage": {
+      "url": "https://github.com/dcastil/tailwind-merge",
+      "kind": "repository",
+      "status": "blocked",
+      "checkedAt": "2026-11-10T18:10:54.146332+00:00",
+      "reason": "官方包homepage指向GitHub仓库；实际GET最终CSP frame-ancestors none禁止所有祖先，另有X-Frame-Options deny。官网面板显示blocked与直达，未凭200宣称可嵌入。"
+    }
   }
 }

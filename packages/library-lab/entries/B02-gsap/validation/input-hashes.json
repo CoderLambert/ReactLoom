@@ -1,0 +1,23 @@
+{
+  "installed": {
+    "version": "3.15.0",
+    "packagePath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/gsap@3.15.0/node_modules/gsap/package.json",
+    "source": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/gsap@3.15.0/node_modules/gsap/gsap-core.js"
+  },
+  "files": {
+    "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+    "examples/example.tsx": "1931e43a0c0c5f2f5f955831a322ac8b05e4de82cb252c82fa61005ef33a0d61",
+    "examples/motion.ts": "2ac199135cdaae17eb8f19503bce12f8017f835f1de4b0c25f38a21ea71d53f8",
+    "examples/timeline-policy.ts": "de1261b5efa67efa522fdf15dc9bdaaf952fa6bf7383a5b7771cdb69dbfa1ab5",
+    "examples/workshop.css": "79b9e83bcad28f78797be9f181a6b3e681a254a72d0faa06e29644f6ee5426c3",
+    "tests/sdk.test.mjs": "81e5ff8c5de723b46ea960557d48fde643cfeb20959fc2facb3d72d68b3b48a4",
+    "tests/timeline-policy.test.mts": "d1f279560f54ccdb24b57b8b3f4da3b4abe48228acd14d14a6b6fc0c262136b2",
+    "library.json": "d162ad35af1f61bb3d88cfd0331b7c825624d8c8978e8506b6144aee62974273",
+    "guide.md": "2b5cd9a81c6f2e8a680a73dc9b9760e43d26fa01769a6b92cda6f552254b2d67",
+    "agent.md": "b8fac8b2e2db4f4286fd2968c562034f2dd305367af699614255a4baabb4ab42",
+    "verification.json": "506f509e874f053ddcb328ad9128e82f2ae35d9ddc5c05e7312ee639aa69ab71",
+    "official/readme.md": "66a79667b0538b19634b5a000a9a3debe588c98d390424e73e5d4de847270828",
+    "official/source-evidence.json": "b5c62a33b87a48c4446560c19f0e42e0cc32ae4c2cf58d2822190a410ef6a282",
+    "validation/browser-proposal.txt": "5b8a4b5c9d08e44100189d999566919d26dbe3891375b1a0fadc5912b9ba422b"
+  }
+}

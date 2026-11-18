@@ -1,0 +1,76 @@
+.b09-workshop {
+  min-width: 0;
+  color: #193a2e;
+}
+.b09-workshop h2 {
+  font-size: 1.3rem;
+}
+.b09-workshop h3 {
+  font-size: 1rem;
+}
+.b09-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.8rem;
+  margin-block: 1rem;
+}
+.b09-controls label,
+.b09-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.b09-workshop pre {
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  padding: 1rem;
+  background: #eff5f0;
+  border: 1px solid #c7d8cd;
+  border-radius: 8px;
+}
+.b09-articles {
+  padding: 0;
+  list-style: none;
+  margin-block: 1.2rem;
+}
+.b09-articles li {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.8rem;
+  padding: 0.8rem;
+  border-bottom: 1px solid #c7d8cd;
+}
+.b09-articles label {
+  display: inline-flex;
+  gap: 0.6rem;
+  align-items: center;
+}
+.b09-workshop [role="alert"] {
+  color: #a12626;
+}
+.b09-link-target {
+  margin-top: 1.2rem;
+  padding: 1rem;
+  border: 1px solid #c7d8cd;
+  border-radius: 8px;
+  scroll-margin-top: 1rem;
+}
+/* Keep host's unlayered generic button rules from overriding Tailwind utilities.
+   In an app with only Tailwind preflight these rollback declarations are unnecessary. */
+.b09-workshop [data-slot="button"] {
+  background: revert-layer;
+  color: revert-layer;
+  border: revert-layer;
+  border-radius: revert-layer;
+  padding: revert-layer;
+  font: revert-layer;
+  outline: revert-layer;
+  text-decoration: revert-layer;
+}
+.b09-workshop .b09-unavailable {
+  opacity: 0.55;
+  cursor: not-allowed;
+}

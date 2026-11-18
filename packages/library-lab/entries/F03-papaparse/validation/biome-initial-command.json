@@ -1,0 +1,16 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "biome",
+    "check",
+    "--write",
+    "packages/library-lab/entries/F03-papaparse/examples",
+    "packages/library-lab/entries/F03-papaparse/tests",
+    "packages/library-lab/entries/F03-papaparse/library.json",
+    "packages/library-lab/entries/F03-papaparse/verification.json",
+    "packages/library-lab/entries/F03-papaparse/validation/browser.spec.ts"
+  ],
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "exitCode": 1
+}

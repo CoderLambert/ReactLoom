@@ -1,0 +1,269 @@
+{
+  "repository": "LottieFiles/dotlottie-web",
+  "tag": "@lottiefiles/dotlottie-react@0.20.0",
+  "commit": "e34f2cf2dc609ebae482615f64be4dee4218a4eb",
+  "package": {
+    "name": "@lottiefiles/dotlottie-react",
+    "version": "0.20.0",
+    "type": "module",
+    "description": "React wrapper around the dotlottie-web library",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/LottieFiles/dotlottie-web.git",
+      "directory": "packages/react"
+    },
+    "homepage": "https://docs.lottiefiles.com/en/runtimes/distributions/react?utm_source=npm&utm_medium=package",
+    "bugs": "https://github.com/LottieFiles/dotlottie-web/issues",
+    "author": "LottieFiles",
+    "contributors": ["Abdelrahman Ashraf <a.theashraf@gmail.com>"],
+    "license": "MIT",
+    "engines": {
+      "node": ">=18.17.0",
+      "npm": ">=9.5.0"
+    },
+    "main": "dist/index.js",
+    "module": "dist/index.js",
+    "browser": "dist/browser/index.js",
+    "types": "dist/index.d.ts",
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js",
+        "default": "./dist/index.js"
+      },
+      "./webgl": {
+        "types": "./dist/webgl/index.d.ts",
+        "import": "./dist/webgl/index.js",
+        "default": "./dist/webgl/index.js"
+      },
+      "./webgpu": {
+        "types": "./dist/webgpu/index.d.ts",
+        "import": "./dist/webgpu/index.js",
+        "default": "./dist/webgpu/index.js"
+      }
+    },
+    "files": ["dist"],
+    "keywords": [
+      "dotlottie",
+      "lottie",
+      "player",
+      "animation",
+      "web",
+      "canvas",
+      "javascript",
+      "react",
+      "thorvg"
+    ],
+    "scripts": {
+      "build": "tsdown",
+      "dev": "tsdown --watch",
+      "lint": "biome check --write .",
+      "stats:ts": "tsc -p tsconfig.build.json --extendedDiagnostics",
+      "test": "vitest run --browser.headless",
+      "test:coverage": "vitest run --browser.headless --coverage",
+      "test:watch": "vitest",
+      "type-check": "tsc --noEmit"
+    },
+    "peerDependencies": {
+      "react": "^17 || ^18 || ^19"
+    },
+    "dependencies": {
+      "@lottiefiles/dotlottie-web": "workspace:*"
+    },
+    "devDependencies": {
+      "@testing-library/user-event": "^14.5.2",
+      "@types/react": "^19",
+      "@webgpu/types": "^0.1.69",
+      "@types/react-dom": "^19",
+      "@vitejs/plugin-react": "^5.2.0",
+      "@vitest/browser": "^4.0.18",
+      "@vitest/browser-playwright": "^4.0.18",
+      "@vitest/coverage-istanbul": "^4.0.18",
+      "react": "^19",
+      "react-dom": "^19",
+      "tsdown": "^0.21.10",
+      "typescript": "6.0.3",
+      "vitest": "^4.0.18",
+      "vitest-browser-react": "^2.0.5"
+    },
+    "publishConfig": {
+      "access": "public",
+      "provenance": true
+    },
+    "sideEffects": false
+  },
+  "readmeCandidates": {
+    "root": ["README.md"],
+    "packages/react": ["README.md"]
+  },
+  "selectedPath": "packages/react/README.md",
+  "language": "en",
+  "syncedAt": "2026-11-10T13:14:27.172394+00:00",
+  "homepage": "https://docs.lottiefiles.com/en/runtimes/distributions/react?utm_source=npm&utm_medium=package",
+  "requests": [
+    {
+      "url": "https://api.github.com/repos/LottieFiles/dotlottie-web/contents?ref=e34f2cf2dc609ebae482615f64be4dee4218a4eb",
+      "finalUrl": "https://api.github.com/repos/LottieFiles/dotlottie-web/contents?ref=e34f2cf2dc609ebae482615f64be4dee4218a4eb",
+      "status": 200,
+      "headers": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Expose-Headers": "ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset, Warning",
+        "Cache-Control": "public, max-age=60, s-maxage=60",
+        "Content-Length": "34246",
+        "Content-Security-Policy": "default-src 'none'",
+        "Content-Type": "application/json; charset=utf-8",
+        "Date": "Tue, 10 Nov 2026 13:14:17 GMT",
+        "ETag": "\"724a887ff7a3b3d5f334ec72d7b4b3f894c0a6d8\"",
+        "Last-Modified": "Tue, 10 Nov 2026 08:04:01 GMT",
+        "Referrer-Policy": "origin-when-cross-origin, strict-origin-when-cross-origin",
+        "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+        "Vary": "Accept, Accept-Encoding, Accept, X-Requested-With",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "deny",
+        "x-github-api-version-selected": "2022-11-28",
+        "X-GitHub-Media-Type": "github.v3; format=json",
+        "X-XSS-Protection": "0",
+        "Server": "github.com",
+        "Accept-Ranges": "bytes",
+        "X-RateLimit-Limit": "60",
+        "X-RateLimit-Remaining": "52",
+        "X-RateLimit-Used": "8",
+        "X-RateLimit-Resource": "core",
+        "X-RateLimit-Reset": "1794317719",
+        "X-GitHub-Request-Id": "8036:EAA7:1043C28:11908ED:6AF318A8",
+        "x-github-edge-region": "westus3",
+        "connection": "close"
+      },
+      "bytes": 34246,
+      "sha256": "e591c472bc468f7fb117e1c3749a09c771a5ec45125f979406bfb98fd00407e4"
+    },
+    {
+      "url": "https://api.github.com/repos/LottieFiles/dotlottie-web/contents/packages/react?ref=e34f2cf2dc609ebae482615f64be4dee4218a4eb",
+      "finalUrl": "https://api.github.com/repos/LottieFiles/dotlottie-web/contents/packages/react?ref=e34f2cf2dc609ebae482615f64be4dee4218a4eb",
+      "status": 200,
+      "headers": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Expose-Headers": "ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset, Warning",
+        "Cache-Control": "public, max-age=60, s-maxage=60",
+        "Content-Length": "10501",
+        "Content-Security-Policy": "default-src 'none'",
+        "Content-Type": "application/json; charset=utf-8",
+        "Date": "Tue, 10 Nov 2026 13:14:22 GMT",
+        "ETag": "\"724a887ff7a3b3d5f334ec72d7b4b3f894c0a6d8\"",
+        "Last-Modified": "Tue, 10 Nov 2026 08:04:01 GMT",
+        "Referrer-Policy": "origin-when-cross-origin, strict-origin-when-cross-origin",
+        "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+        "Vary": "Accept, Accept-Encoding, Accept, X-Requested-With",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "deny",
+        "x-github-api-version-selected": "2022-11-28",
+        "X-GitHub-Media-Type": "github.v3; format=json",
+        "X-XSS-Protection": "0",
+        "Server": "github.com",
+        "Accept-Ranges": "bytes",
+        "X-RateLimit-Limit": "60",
+        "X-RateLimit-Remaining": "51",
+        "X-RateLimit-Used": "9",
+        "X-RateLimit-Resource": "core",
+        "X-RateLimit-Reset": "1794317719",
+        "X-GitHub-Request-Id": "803C:2584E:FE57AE:1132DCB:6AF318AD",
+        "x-github-edge-region": "westus3",
+        "connection": "close"
+      },
+      "bytes": 10501,
+      "sha256": "94b1d9a91d36e827815e0f1d60c766ab37ab19f3f5893eaa7969186f8d933010"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/LottieFiles/dotlottie-web/e34f2cf2dc609ebae482615f64be4dee4218a4eb/packages/react/package.json",
+      "finalUrl": "https://raw.githubusercontent.com/LottieFiles/dotlottie-web/e34f2cf2dc609ebae482615f64be4dee4218a4eb/packages/react/package.json",
+      "status": 200,
+      "headers": {
+        "Connection": "close",
+        "Content-Length": "2474",
+        "Cache-Control": "max-age=300",
+        "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+        "Content-Type": "text/plain; charset=utf-8",
+        "ETag": "\"c2bfa191bbb045773f2d6f7b4b753081db3d6134d9d5d73b1b039c0082feb2d2\"",
+        "Strict-Transport-Security": "max-age=31536000",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "deny",
+        "X-XSS-Protection": "1; mode=block",
+        "X-GitHub-Request-Id": "0862:273DD:386AEE:46AAAE:6AF318AB",
+        "x-github-edge-region": "westus3",
+        "Accept-Ranges": "bytes",
+        "Date": "Tue, 10 Nov 2026 13:14:23 GMT",
+        "Via": "1.1 varnish",
+        "X-Served-By": "cache-pao-kpao1770071-PAO",
+        "X-Cache": "MISS",
+        "X-Cache-Hits": "0",
+        "X-Timer": "S1794316464.547247,VS0,VE298",
+        "Vary": "Authorization,Accept-Encoding",
+        "Access-Control-Allow-Origin": "*",
+        "Cross-Origin-Resource-Policy": "cross-origin",
+        "X-Fastly-Request-ID": "5d8be8082f2e5739b2db06c1822a4f34645b33d3",
+        "Expires": "Tue, 10 Nov 2026 13:19:23 GMT",
+        "Source-Age": "0"
+      },
+      "bytes": 2474,
+      "sha256": "aeb52f655147a039a97a9ca8fcec0e605cb91c088429215361f007996a74a22a"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/LottieFiles/dotlottie-web/e34f2cf2dc609ebae482615f64be4dee4218a4eb/packages/react/README.md",
+      "finalUrl": "https://raw.githubusercontent.com/LottieFiles/dotlottie-web/e34f2cf2dc609ebae482615f64be4dee4218a4eb/packages/react/README.md",
+      "status": 200,
+      "headers": {
+        "Connection": "close",
+        "Content-Length": "11735",
+        "Cache-Control": "max-age=300",
+        "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+        "Content-Type": "text/plain; charset=utf-8",
+        "ETag": "\"889692cca5fdab1abc6c62cf486054ab6bc96550bf4ef180001fc44e9bf3e50a\"",
+        "Strict-Transport-Security": "max-age=31536000",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "deny",
+        "X-XSS-Protection": "1; mode=block",
+        "X-GitHub-Request-Id": "E9AE:1F6766:38FFEA:473B96:6AF318B1",
+        "x-github-edge-region": "westus3",
+        "Accept-Ranges": "bytes",
+        "Date": "Tue, 10 Nov 2026 13:14:25 GMT",
+        "Via": "1.1 varnish",
+        "X-Served-By": "cache-sjc10054-SJC",
+        "X-Cache": "MISS",
+        "X-Cache-Hits": "0",
+        "X-Timer": "S1794316466.545302,VS0,VE340",
+        "Vary": "Authorization,Accept-Encoding",
+        "Access-Control-Allow-Origin": "*",
+        "Cross-Origin-Resource-Policy": "cross-origin",
+        "X-Fastly-Request-ID": "53ea32b8b196bf68e72c1c4f188470a6cd0be2c2",
+        "Expires": "Tue, 10 Nov 2026 13:19:25 GMT",
+        "Source-Age": "0"
+      },
+      "bytes": 11735,
+      "sha256": "5b8263be74ae7e5bd91155c66eb688f82954a7e3d6c205cc4949b86bfc86235c"
+    },
+    {
+      "url": "https://docs.lottiefiles.com/en/runtimes/distributions/react?utm_source=npm&utm_medium=package",
+      "finalUrl": "https://docs.lottiefiles.com/en/runtimes/distributions/react?utm_source=npm&utm_medium=package",
+      "status": 200,
+      "headers": {
+        "Date": "Tue, 10 Nov 2026 13:14:27 GMT",
+        "Content-Type": "text/html",
+        "Transfer-Encoding": "chunked",
+        "Connection": "close",
+        "Link": "</llms.txt>; rel=\"describedby\", </en/runtimes/distributions/react.md>; rel=\"alternate\"; type=\"text/markdown\", </.well-known/api-catalog>; rel=\"api-catalog\", </.well-known/ai-catalog.json>; rel=\"ai-catalog\"",
+        "CF-Cache-Status": "MISS",
+        "Cache-Control": "public, max-age=0, must-revalidate",
+        "set-cookie": "__cf_bm=.9v5wemdA6GsXZBW0WM0Tgt3QgFYybkJY0WxGU8ML1c-1794316466.9250379-1.0.1.1-0RGkZ13vp3bNTs_WaJk0eOzDJtquin4Dbra9pTc1dITiRtE8KJLyPitLCnEVCfpk4xv4ib_njAR3neix5r2z6Py4xBMO7p01DF__mfC7c6w7RiKFII7LyAccYUgE.nQp; HttpOnly; SameSite=None; Partitioned; Secure; Path=/; Domain=lottiefiles.com; Expires=Tue, 10 Nov 2026 13:44:27 GMT",
+        "content-security-policy": "default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://login.lottiefiles.com https://accounts.google.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: blob:; media-src 'self' https:; connect-src 'self' https://auth.lottiefiles.com https://login.lottiefiles.com https://lottie.host https://assets.docs.lottiefiles.dev https://assets.docs.lottiefiles.com https://*.google-analytics.com https://analytics.google.com https://*.analytics.google.com https://www.googletagmanager.com https://*.g.doubleclick.net https://*.google.com https://api2.amplitude.com https://unpkg.com https://cdn.jsdelivr.net; frame-src https://login.lottiefiles.com https://lottie.host https://creator-plugins-ds.lottiefiles.com https://codepen.io https://player.vimeo.com https://www.youtube-nocookie.com https://www.youtube.com https://codesandbox.io https://stackblitz.com https://embed.figma.com https://www.figma.com https://platform.twitter.com; font-src 'self' data:",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "Speculation-Rules": "\"/cdn-cgi/speculation\"",
+        "Server": "cloudflare",
+        "CF-RAY": "a58551fe4f8ecf50-SIN"
+      },
+      "bytes": 58954,
+      "sha256": "f4d09e10b96360667e01498286833f3d43aff25ddb2ca6c0c488c1ba912173db"
+    }
+  ]
+}

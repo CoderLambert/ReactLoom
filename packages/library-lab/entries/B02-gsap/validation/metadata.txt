@@ -1,0 +1,20 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+ARGV: ["node", "entries/B02-gsap/validation/metadata-check.mjs"]
+START: 2026-11-10T12:50:04.657934+00:00
+END: 2026-11-10T12:50:04.688807+00:00
+EXIT: 0
+STDOUT:
+{
+  "metadata": [],
+  "completeness": [],
+  "demos": 2,
+  "runtimeFiles": 5,
+  "installed": "3.15.0",
+  "readmeBytes": 6199,
+  "readmeSha256": "66a79667b0538b19634b5a000a9a3debe588c98d390424e73e5d4de847270828",
+  "homepage": "blocked: actual XFO sameorigin",
+  "formal": "NOT_RUN",
+  "inputFiles": 14
+}
+
+STDERR:

@@ -1,0 +1,5 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ["pnpm", "exec", "--", "biome", "format", "--stdin-file-path=entries/A03-chartjs/validation/browser-proposal.ts"]
+stdinFile: validation/browser-proposal.txt
+exit: 0
+

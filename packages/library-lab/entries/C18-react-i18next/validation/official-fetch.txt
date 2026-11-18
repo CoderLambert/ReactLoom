@@ -1,0 +1,5 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['python3', 'entries/C18-react-i18next/validation/fetch-official.py']
+startedAt: 2026-11-10T17:42:54.379934+00:00
+exit: 0
+C18 README.md {'path': 'official/readme.md', 'bytes': 12793, 'sha256': 'bcd692905cb53f1b7ca8e4c8c4b89b7fb0510669e41e9c3749e7830d3ada1c9b'} HTTP requests 6 homepage unknown

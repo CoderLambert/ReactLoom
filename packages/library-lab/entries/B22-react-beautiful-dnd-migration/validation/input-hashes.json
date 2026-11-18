@@ -1,0 +1,31 @@
+{
+  "installedVersions": {
+    "@hello-pangea/dnd": "18.0.1",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "files": {
+    "AGENTS.md": "20656cfbfcd34e47a8fb5f55c55b4d5f2627741c490f3987c580c87edd912550",
+    "library.json": "75d3e817bb192c17286131db2b5591b1fcfd06ee756553e380c63c5cc99cc6ab",
+    "guide.md": "e955e04921f1256cae65871e6a5e931d5d04cecaa6d3797bb068007369214897",
+    "agent.md": "13b520fc6567efa7edea273acabf2bfca443d564c2ce85cff4a07b19a6e77e61",
+    "local-validation.md": "5c344146a0bf834d2d5c672f3283ebe3e12326ce0a9765c724f40b38a61f54ff",
+    "verification.json": "7893395644465452a62a48ee15e7cc4d2cdc96722134073bc16b0a25fa9c6683",
+    "official/readme.md": "cb8eefef4209f565a8f57e27bcd107d9ea4a59e8b86d22a1c03c24e311436851",
+    "official/legacy-readme.md": "eb6feac2530eae986bd0ac8749365548c54ddb874f708c4c47bf598dd1dde2c5",
+    "official/source-evidence.json": "1c8bf972807d74d2f2dcd0eb62abef6867b0664234a039c18aeed56338c9072e",
+    "validation/browser-proposal.txt": "752cb7d0a3141d1d20309e805bdee11e951969d4c0ca59bc6878fcd9967fc2cc",
+    "validation/source-audit.mjs": "ff09c01ae2215d55717c82fa465a6caa6ba8a1a5c4932ef36cf5f1ac84b66381",
+    "validation/metadata-check.mjs": "1f8307116b0eb348b03a03f355382e56dd54aff23d3940e90bc45a603ad0ca43",
+    "validation/fetch-official.py": "3c77884f35ced22ecd4d29fb90c3f334f58cb606aff90893f442211f8226ef42",
+    "validation/sdk-source-audit.json": "1102d6c573721ab2bc1a5654005e6f1ed50c3fb306cea5603b307054ee549037",
+    "validation/final-check.py": "2b3c0ae743f2d501921bc28abbedfd4058fb5b4638ed5f77cc1fb369d7c5e9e7",
+    "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+    "examples/example.tsx": "d13adacd805fa7470c874e80ead69c42918c52bf5e7adbaa2944dbdfe86872ef",
+    "examples/pinned-order.ts": "cb5931d0f455362acc382350272d2cb388b848192611870bdfffd1ac65d22876",
+    "examples/styles.css": "ccc38e8a772b605fe8bf9ad761985fe72cad6901dfff2c6e812bb76b1d9f343c",
+    "tests/order-history.test.mts": "0ff0c493f03d70b66a590f13c4ce5f9c497aed539832a43f91686f04c7b11c29",
+    "tests/pinned-order.test.mjs": "541ce2102ea83061b802a42c592011855e9a54b5c0e8ef6f6cb609aa90baa32b",
+    "tests/sdk.test.mjs": "684e3fe9aabb888f75e5dfdb2cd96537e57ab41ec0ba0117a0bee1d8f4d38aac"
+  }
+}

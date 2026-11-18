@@ -1,0 +1,10 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ["pnpm", "exec", "--", "biome", "check", "--write", "entries/B05-rive-react/examples", "entries/B05-rive-react/tests", "entries/B05-rive-react/library.json", "entries/B05-rive-react/verification.json", "entries/B05-rive-react/validation/metadata-check.mjs", "entries/B05-rive-react/validation/source-audit.mjs"]
+startedAt: 2026-11-10T13:14:33.857757+00:00
+finishedAt: 2026-11-10T13:14:34.115369+00:00
+exitCode: 0
+
+STDOUT
+Checked 12 files in 10ms. Fixed 4 files.
+
+STDERR

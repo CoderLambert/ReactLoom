@@ -1,0 +1,6 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: ["pnpm", "exec", "tsc", "--ignoreConfig", "--noEmit", "--module", "ESNext", "--moduleResolution", "Bundler", "--target", "ES2022", "--jsx", "react-jsx", "--strict", "--skipLibCheck", "--esModuleInterop", "--types", "vite/client,node", "entries/E05-monaco-editor/examples/demo.tsx"]
+startedAt: 2026-11-10T09:25:59.397167+00:00
+
+exitCode: 0
+finishedAt: 2026-11-10T09:25:59.632301+00:00

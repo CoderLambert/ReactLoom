@@ -1,80 +1,307 @@
-import {useMemo,useRef,useState} from 'react';
-import {isCivilDate,getUtcInstant,allocateEventId} from './calendar-policy.mjs';
-export {getUtcInstant} from './calendar-policy.mjs';
-import FullCalendar, {type CalendarRef} from '@fullcalendar/react';
-import dayGridPlugin from '@fullcalendar/react/daygrid';
-import timeGridPlugin from '@fullcalendar/react/timegrid';
-import interactionPlugin from '@fullcalendar/react/interaction';
-import listPlugin from '@fullcalendar/react/list';
-import classicTheme from '@fullcalendar/react/themes/classic';
-import zhCn from '@fullcalendar/react/locales/zh-cn';
-import '@fullcalendar/react/skeleton.css';
-import '@fullcalendar/react/themes/classic/theme.css';
-import '@fullcalendar/react/themes/classic/palette.css';
+import FullCalendar, {
+  type CalendarRef,
+  type DatesSetInfo,
+  type EventDropInfo,
+  type EventResizeDoneInfo,
+} from '@fullcalendar/react'
+import { useEffect, useRef, useState } from 'react'
+import '@fullcalendar/react/skeleton.css'
+import '@fullcalendar/react/themes/classic/theme.css'
+import '@fullcalendar/react/themes/classic/palette.css'
+import { type CalendarEvent, FOLD, LOCALE, PLUGINS, seedEvents, ZONE } from './calendar-contract'
+import { allocateEventId, getUtcInstant, isCivilDate } from './calendar-policy.mjs'
+import './styles.css'
 
-type Level='basic'|'business'|'advanced';
-type Event={id:string;title:string;start:string;end?:string;allDay?:boolean};
-const PLUGINS=[classicTheme,dayGridPlugin,timeGridPlugin,interactionPlugin,listPlugin];
-const INITIAL:Event[]=[
- {id:'rss-plan',title:'发布订阅目录',start:'2026-11-01',allDay:true},
- {id:'review',title:'工程复盘',start:'2026-11-02T14:00:00Z',end:'2026-11-02T15:00:00Z'}
-];
-const FOLD:Event[]=[
- {id:'fold-early',title:'DST 01:30（UTC−04）',start:'2026-11-01T01:30:00-04:00'},
- {id:'fold-late',title:'DST 01:30（UTC−05）',start:'2026-11-01T01:30:00-05:00'}
-];
-export default function CalendarExample({level}:{level:Level}){
- const [events,setEvents]=useState<Event[]>(()=>level==='advanced'?[...INITIAL,...FOLD]:[...INITIAL]);
- const [title,setTitle]=useState('RSS 频道审核');
- const [date,setDate]=useState('2026-11-03');
- const [status,setStatus]=useState('演示仅更新组件内存，不连接真实日历服务');
- const calendarRef=useRef<CalendarRef|null>(null);
- const localSequence=useRef(1);
- const memoEvents=useMemo(()=>events,[events]);
- function add(){
-  const validDate=isCivilDate(date);
-  if(!title.trim()||!validDate){setStatus('标题及日历日期必须有效（不允许自动进位）');return;}
-  const allocated=allocateEventId(localSequence.current,events.map(event=>event.id));
-  localSequence.current=allocated.nextSequence;
-  const next={id:allocated.id,title:title.trim(),start:date,allDay:true};
-  setEvents(old=>[...old,next]);setTitle('');setStatus('本地事件已添加，未写入服务端');
- }
- function move(info:{event:{id:string;startStr:string;endStr:string;allDay:boolean};revert:()=>void}){
-  if(level==='advanced'&&info.event.id==='fold-early'){info.revert();setStatus('模拟 409：修订冲突，已调用 revert() 恢复原日期');return;}
-  if(!events.some(event=>event.id===info.event.id)) {
-   info.revert();setStatus('事件不再属于当前数据集；已撤销过期编辑');return;
+export { getUtcInstant } from './calendar-policy.mjs'
+
+type Level = 'basic' | 'business' | 'advanced'
+type EventValue = { id: string; title: string; start: string; end: string; allDay: boolean }
+type Receipt = {
+  kind: 'drop' | 'resize'
+  id: string
+  from: string
+  start: string
+  end: string
+  allDay: boolean
+  decision: 'accepted' | 'reverted'
+}
+type Range = { view: string; start: string; end: string; timeZone: string }
+
+export default function CalendarExample({ level }: { level: Level }) {
+  return <CalendarSession key={level} level={level} />
+}
+function CalendarSession({ level }: { level: Level }) {
+  const [events, setEvents] = useState(() => seedEvents(level === 'advanced'))
+  const eventsRef = useRef(events)
+  const [title, setTitle] = useState('RSS 频道审核')
+  const [date, setDate] = useState('2026-11-03')
+  const [status, setStatus] = useState('演示仅更新组件内存，不连接真实日历服务')
+  const [range, setRange] = useState<Range | null>(null)
+  const [apiEvents, setApiEvents] = useState<EventValue[] | null>(null)
+  const [receipt, setReceipt] = useState<Receipt | null>(null)
+  const [callbacks, setCallbacks] = useState({ dates: 0, drops: 0, resizes: 0, reverts: 0 })
+  const [epoch, setEpoch] = useState(0)
+  const epochRef = useRef(0)
+  const alive = useRef(true)
+  const composing = useRef(false)
+  const calendarRef = useRef<CalendarRef | null>(null)
+  const localSequence = useRef(1)
+  useEffect(() => {
+    alive.current = true
+    return () => {
+      alive.current = false
+      composing.current = false
+    }
+  }, [])
+  const current = () => alive.current && epoch === epochRef.current
+  function commit(next: CalendarEvent[]) {
+    eventsRef.current = next
+    setEvents(next)
   }
-  if(info.event.allDay ? !isCivilDate(info.event.startStr) || (!!info.event.endStr && !isCivilDate(info.event.endStr)) :
-     !getUtcInstant(info.event.startStr) || (!!info.event.endStr && !getUtcInstant(info.event.endStr))) {
-   info.revert();setStatus('拖拽返回无效日期或无明确偏移的时间值，已撤销，避免 DST 时刻被误写');return;
+  function add() {
+    if (composing.current) {
+      setStatus('请先完成标题选词')
+      return
+    }
+    if (!title.trim() || !isCivilDate(date)) {
+      setStatus('标题及日历日期必须有效（不允许自动进位）')
+      return
+    }
+    const allocated = allocateEventId(
+      localSequence.current,
+      eventsRef.current.map((event) => event.id),
+    )
+    localSequence.current = allocated.nextSequence
+    commit([
+      ...eventsRef.current,
+      { id: allocated.id, title: title.trim(), start: date, allDay: true },
+    ])
+    setTitle('')
+    setApiEvents(null)
+    setStatus('本地事件已添加，未写入服务端')
   }
-  setEvents(current=>current.map(item=>item.id===info.event.id?{...item,start:info.event.startStr,end:info.event.endStr||undefined,allDay:info.event.allDay}:item));
-  setStatus('拖拽后的日期已同步到 React 数据源。生产服务端须校验 revision。');
- }
- return <section aria-label="FullCalendar 真实演示">
-  <h2>{level==='basic'?'最小日历视图':level==='business'?'RSS 内容排程':'DST 重复时刻与冲突回滚'}</h2>
-  {level!=='basic'&&<div className="demo-controls">
-   <label>标题 <input value={title} maxLength={80} onChange={e=>setTitle(e.target.value)}/></label>
-   <label>日期 <input type="date" value={date} onChange={e=>setDate(e.target.value)}/></label>
-   <button type="button" onClick={add}>创建本地事件</button>
-   <button type="button" onClick={()=>calendarRef.current?.getApi().gotoDate('2026-11-01')}>跳到 DST 回拨日</button>
-  </div>}
-  <p role="status">{status}</p>
-  <div style={{minWidth:0,maxWidth:'100%',overflow:'auto'}}>
-   <FullCalendar ref={calendarRef} plugins={PLUGINS} initialView={level==='basic'?'dayGridMonth':'timeGridWeek'}
-    initialDate="2026-11-01" locale={zhCn} timeZone="America/New_York" height="auto"
-    headerToolbar={{left:'prev,next today',center:'title',right:'dayGridMonth,timeGridWeek,listWeek'}}
-    events={memoEvents} editable={level!=='basic'} eventDrop={move} eventResize={move}
-    eventClick={info=>setStatus('选择事件：'+info.event.id)}
-   />
-  </div>
-  {level==='advanced'&&<div>
-   <h3>两个不同的 UTC instant</h3>
-   <p>纽约 2026-11-01 01:30 重复出现，本地墙上时间不足以唯一定位事件。必须保存 offset 或明确的 instant。</p>
-   <pre>{JSON.stringify(FOLD.map(e=>({event:e.id,source:e.start,instant:getUtcInstant(e.start)})),null,2)}</pre>
-   <p>拖动 fold-early 会模拟服务端 409 并 revert；本例不安装或触发收费 Scheduler Premium。</p>
-  </div>}
-  <h3>无障碍事件清单</h3>
-  <ul>{events.map(e=><li key={e.id}>{e.title} — {e.start} {e.allDay?'（全天）':''}</li>)}</ul>
- </section>;
+  function move(kind: 'drop' | 'resize', info: EventDropInfo | EventResizeDoneInfo) {
+    if (!current()) return
+    const proposed = {
+      kind,
+      id: info.event.id,
+      from: info.oldEvent.startStr,
+      start: info.event.startStr,
+      end: info.event.endStr,
+      allDay: info.event.allDay,
+    }
+    const invalid = proposed.allDay
+      ? !isCivilDate(proposed.start) || (!!proposed.end && !isCivilDate(proposed.end))
+      : !getUtcInstant(proposed.start) || (!!proposed.end && !getUtcInstant(proposed.end))
+    const conflict = level === 'advanced' && proposed.id === 'fold-early'
+    const known = eventsRef.current.some((event) => event.id === proposed.id)
+    const rejected = invalid || conflict || !known
+    setCallbacks((old) => ({
+      ...old,
+      drops: old.drops + Number(kind === 'drop'),
+      resizes: old.resizes + Number(kind === 'resize'),
+      reverts: old.reverts + Number(rejected),
+    }))
+    setReceipt({ ...proposed, decision: rejected ? 'reverted' : 'accepted' })
+    setApiEvents(null)
+    if (rejected) {
+      info.revert()
+      setStatus(
+        conflict
+          ? '模拟 409：修订冲突，已调用 revert() 恢复原日期'
+          : '日期/偏移无效或未知事件；已调用 revert()',
+      )
+      return
+    }
+    commit(
+      eventsRef.current.map((event) =>
+        event.id === proposed.id
+          ? {
+              ...event,
+              start: proposed.start,
+              end: proposed.end || undefined,
+              allDay: proposed.allDay,
+            }
+          : event,
+      ),
+    )
+    setStatus('拖拽后的日期已同步到 React 数据源；未发起网络请求')
+  }
+  function observeDates(info: DatesSetInfo) {
+    if (!current()) return
+    setRange({
+      view: info.view.type,
+      start: info.startStr,
+      end: info.endStr,
+      timeZone: info.timeZone,
+    })
+    setCallbacks((old) => ({ ...old, dates: old.dates + 1 }))
+  }
+  function readApi() {
+    const api = calendarRef.current?.getApi()
+    if (!api) {
+      setStatus('日历API尚未就绪')
+      return
+    }
+    setApiEvents(
+      api.getEvents().map((event) => ({
+        id: event.id,
+        title: event.title,
+        start: event.startStr,
+        end: event.endStr,
+        allDay: event.allDay,
+      })),
+    )
+  }
+  function reset() {
+    epochRef.current++
+    setEpoch(epochRef.current)
+    commit(seedEvents(level === 'advanced'))
+    localSequence.current = 1
+    composing.current = false
+    setTitle('RSS 频道审核')
+    setDate('2026-11-03')
+    setRange(null)
+    setApiEvents(null)
+    setReceipt(null)
+    setCallbacks({ dates: 0, drops: 0, resizes: 0, reverts: 0 })
+    setStatus('已重置本地日历与本轮观察')
+  }
+  return (
+    <section
+      aria-label="FullCalendar 真实演示"
+      className="c12-workshop"
+      data-testid="c12-workshop"
+      data-level={level}
+    >
+      <h2>
+        {level === 'basic'
+          ? '视图、事件与半开日期范围'
+          : level === 'business'
+            ? 'RSS 全天创建与真实改期'
+            : 'DST 重复时刻与冲突回滚'}
+      </h2>
+      <p>
+        真实FullCalendar
+        React7.1.3，纽约时区，中文界面；基础MIT插件，不含Premium。日历处理视图/交互，React拥有事件数组。
+      </p>
+      <div className="c12-controls">
+        <button type="button" onClick={readApi}>
+          读取日历API事件
+        </button>
+        <button type="button" onClick={() => calendarRef.current?.getApi().gotoDate('2026-11-01')}>
+          跳到 DST 回拨日
+        </button>
+        <button type="button" onClick={reset}>
+          重置本地日历
+        </button>
+      </div>
+      {level !== 'basic' && (
+        <div className="c12-controls">
+          <label>
+            标题{' '}
+            <input
+              aria-label="标题"
+              value={title}
+              maxLength={80}
+              onChange={(event) => setTitle(event.target.value)}
+              onCompositionStart={() => {
+                composing.current = true
+              }}
+              onCompositionEnd={() => {
+                composing.current = false
+              }}
+              onBlur={() => {
+                composing.current = false
+              }}
+            />
+          </label>
+          <label>
+            日期{' '}
+            <input
+              aria-label="日期"
+              type="date"
+              value={date}
+              onChange={(event) => setDate(event.target.value)}
+            />
+          </label>
+          <button type="button" onClick={add}>
+            创建本地事件
+          </button>
+        </div>
+      )}
+      <p role="status" data-testid="c12-status">
+        {status}
+      </p>
+      <p data-testid="c12-callbacks">{JSON.stringify(callbacks)}</p>
+      <div className="c12-calendar" data-testid="c12-calendar">
+        <FullCalendar
+          key={epoch}
+          ref={calendarRef}
+          plugins={PLUGINS}
+          locale={LOCALE}
+          firstDay={0}
+          initialView={level === 'basic' ? 'dayGridMonth' : 'timeGridWeek'}
+          initialDate="2026-11-01"
+          timeZone={ZONE}
+          height={level === 'basic' ? 520 : 640}
+          scrollTime={level === 'advanced' ? '00:00:00' : '08:00:00'}
+          headerToolbar={{
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,listWeek',
+          }}
+          events={events}
+          editable={level !== 'basic'}
+          datesSet={observeDates}
+          eventDrop={(info) => move('drop', info)}
+          eventResize={(info) => move('resize', info)}
+          eventClass={(info) => `c12-event c12-event-${info.event.id}`}
+          eventContent={(info) => <span data-c12-event-id={info.event.id}>{info.event.title}</span>}
+          eventClick={(info) => {
+            if (current()) setStatus(`选择事件：${info.event.id}`)
+          }}
+        />
+      </div>
+      <details>
+        <summary>查看真实SDK范围、API事件和末次改期</summary>
+        <p>datesSet是SDK范围；API事件需点按钮重新读取；decision与计数为应用观察，非服务端结果。</p>
+        <pre data-testid="c12-range">{JSON.stringify(range, null, 2)}</pre>
+        <pre data-testid="c12-api-events">{JSON.stringify(apiEvents, null, 2)}</pre>
+        <pre data-testid="c12-receipt">{JSON.stringify(receipt, null, 2)}</pre>
+      </details>
+      {level === 'advanced' && (
+        <div>
+          <h3>两个不同的 UTC instant</h3>
+          <p>
+            纽约2026-11-01的01:30出现两次；偏移对应05:30Z与06:30Z。拖动fold-early同步模拟409并revert，不是实际HTTP或完整TZDB业务校验。
+          </p>
+          <pre data-testid="c12-fold">
+            {JSON.stringify(
+              FOLD.map((event) => ({
+                id: event.id,
+                source: event.start,
+                instant: getUtcInstant(event.start),
+              })),
+              null,
+              2,
+            )}
+          </pre>
+        </div>
+      )}
+      <h3>React权威事件与可读清单</h3>
+      <ul>
+        {events.map((event) => (
+          <li key={event.id}>
+            {event.title} — {event.start} {event.end ? `→ ${event.end}` : ''}{' '}
+            {event.allDay ? '（全天，end不包含）' : ''}
+          </li>
+        ))}
+      </ul>
+      <pre data-testid="c12-events">{JSON.stringify(events, null, 2)}</pre>
+      <p>
+        两天校对的[11月3日,11月5日)只覆盖3、4日。本例无网络取数/异步回包；未知ID与无明确偏移改期拒绝。完整触摸/读屏与系统IME未验收。
+      </p>
+    </section>
+  )
 }

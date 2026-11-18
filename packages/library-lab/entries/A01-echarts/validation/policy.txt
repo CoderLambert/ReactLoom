@@ -1,0 +1,27 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: ["pnpm", "test:policy", "--entry=A01"]
+startedAt: 2026-11-10T09:43:42.767470+00:00
+
+> @reactloom/library-lab@0.1.0 test:policy /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+> node scripts/policy-runner.mjs --entry=A01
+
+Pure entry policy suites selected: 1 (not SDK evidence)
+✔ active advanced visible stream may tick (0.492343ms)
+✔ basic and business never start the stream (0.0961ms)
+✔ user stop and hidden tab pause, but do not lose requested intent (0.072074ms)
+✔ reduce-motion pauses unless explicitly opted back in (0.071523ms)
+✔ tick uses modulo without mutating original values (0.391561ms)
+✔ empty and invalid ticks do not modify data (0.088754ms)
+✔ stream cap prevents further ticking until reset (0.064843ms)
+✔ offscreen chart is paused through visibility gate (0.059157ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 62.784691
+
+exitCode: 0
+finishedAt: 2026-11-10T09:43:43.051910+00:00

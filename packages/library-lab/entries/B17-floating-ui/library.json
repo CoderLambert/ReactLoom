@@ -4,15 +4,8 @@
   "slug": "floating-ui",
   "name": "Floating UI",
   "group": "B",
-  "summary": "浮层定位、碰撞和焦点管理",
-  "tags": [
-    "Popover",
-    "Portal",
-    "定位",
-    "键盘",
-    "ARIA",
-    "IME"
-  ],
+  "summary": "从锚点和首选方向到真实flip/shift，组合非模态焦点、滚动跟随与IME安全过滤",
+  "tags": ["Popover", "Portal", "定位", "键盘", "ARIA", "IME"],
   "contentState": "recreated",
   "packages": [
     {
@@ -22,16 +15,20 @@
   ],
   "references": [
     {
-      "title": "Floating UI React 文档",
+      "title": "官方React接入",
       "url": "https://floating-ui.com/docs/react"
     },
     {
-      "title": "Floating Focus Manager",
+      "title": "autoUpdate生命周期",
+      "url": "https://floating-ui.com/docs/autoUpdate"
+    },
+    {
+      "title": "FloatingFocusManager",
       "url": "https://floating-ui.com/docs/FloatingFocusManager"
     },
     {
-      "title": "官方仓库",
-      "url": "https://github.com/floating-ui/floating-ui"
+      "title": "0.27.20固定官方源码",
+      "url": "https://github.com/floating-ui/floating-ui/tree/12d94738472e922e1b3fa31b02b2b61b9ed77e6a/packages/react"
     }
   ],
   "related": [
@@ -54,60 +51,54 @@
   "demos": [
     {
       "demoId": "basic",
-      "title": "基础锚点与视口翻转",
+      "title": "锚点移动、翻转与边界平移",
       "level": "basic",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
-        "examples/example.tsx",
         "examples/demo.tsx",
+        "examples/example.tsx",
+        "examples/positioning.ts",
         "examples/ime-guard.ts",
-        "examples/business-policy.ts"
+        "examples/business-policy.ts",
+        "examples/workshop.css"
       ],
-      "capabilities": [
-        "portal",
-        "focus",
-        "keyboard"
-      ],
-      "description": "点击锚点，观察浮层位置、焦点和点击外部关闭"
+      "capabilities": ["portal", "focus", "keyboard"],
+      "description": "改变首选方向和锚点，读取SDK实际坐标/placement/shift，并对照DOM与真实autoUpdate清理。"
     },
     {
       "demoId": "business",
-      "title": "带动作的业务 Popover",
+      "title": "非模态焦点与文章操作",
       "level": "business",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
-        "examples/example.tsx",
         "examples/demo.tsx",
+        "examples/example.tsx",
+        "examples/positioning.ts",
         "examples/ime-guard.ts",
-        "examples/business-policy.ts"
+        "examples/business-policy.ts",
+        "examples/workshop.css"
       ],
-      "capabilities": [
-        "portal",
-        "focus",
-        "keyboard"
-      ],
-      "description": "选择新闻阅读操作，关闭后交还触发器焦点"
+      "capabilities": ["portal", "focus", "keyboard"],
+      "description": "收藏和已读真实改变本地数据；键盘可离开非模态浮层，Clipboard成功后关闭，迟到UI受代际约束。"
     },
     {
       "demoId": "advanced",
-      "title": "滚动定位、Escape 与中文 IME",
+      "title": "滚动跟随与IME安全提交",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
-        "examples/example.tsx",
         "examples/demo.tsx",
+        "examples/example.tsx",
+        "examples/positioning.ts",
         "examples/ime-guard.ts",
-        "examples/business-policy.ts"
+        "examples/business-policy.ts",
+        "examples/workshop.css"
       ],
-      "capabilities": [
-        "portal",
-        "focus",
-        "keyboard"
-      ],
-      "description": "在滚动容器与边界使用浮层，输入中文后安全提交"
+      "capabilities": ["portal", "focus", "keyboard"],
+      "description": "Portal到body仍跟随独立滚动；保留中文组合输入守卫，提交后4条结果变为1条或0条。"
     }
   ],
   "license": {
@@ -115,6 +106,26 @@
   },
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
-    "note": "独立实现，历史研究不计为本实现已测试。"
+    "note": "保留原0.27.20真实hooks/Portal/非模态FocusManager、IME和剪贴板代际；新增真实定位输入/结果及autoUpdate生命周期观察。原业务/IME策略不机械重写，历史证据不继承。"
+  },
+  "official": {
+    "readme": {
+      "repository": "floating-ui/floating-ui",
+      "commit": "12d94738472e922e1b3fa31b02b2b61b9ed77e6a",
+      "path": "README.md",
+      "sourceUrl": "https://github.com/floating-ui/floating-ui/blob/12d94738472e922e1b3fa31b02b2b61b9ed77e6a/README.md",
+      "snapshotPath": "official/readme.md",
+      "language": "en",
+      "version": "0.27.20",
+      "syncedAt": "2026-11-10T10:34:16.443684+00:00",
+      "sha256": "b352baf175998877bad6168b0e55cf887690ede7a85acdfea344de996744d123"
+    },
+    "homepage": {
+      "url": "https://floating-ui.com/docs/react",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-10T10:34:16.443684+00:00",
+      "reason": "实际GET200最终URL不变，完整响应头未见X-Frame-Options或CSP（显式null）；尚未从真实Lab origin浏览器确认iframe可嵌入，因此unknown并保留直达。官网GET只取完整响应头，不声称取得正文摘要。"
+    }
   }
 }

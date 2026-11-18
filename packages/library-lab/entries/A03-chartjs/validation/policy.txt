@@ -1,0 +1,17 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ["node", "--test", "entries/A03-chartjs/tests/chart-stream-policy.test.mts"]
+exit: 0
+
+✔ normalizes invalid, fractional and oversized revisions (0.488715ms)
+✔ monotonically advances without unbounded fixture data (0.102574ms)
+✔ produces seven consistent integer values for Canvas and table (0.42308ms)
+✔ auto sampling respects mode, visibility and capacity (0.10241ms)
+✔ reduced-motion sampling pauses until the user explicitly allows changing values (0.075507ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 66.307094

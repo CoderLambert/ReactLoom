@@ -14,7 +14,7 @@
 
 ## 迁移
 
-从 [`examples/example.tsx`](examples/example.tsx) 带走 `reviewMachine`，从 [`examples/review-policy.mjs`](examples/review-policy.mjs) 带走原因校验。`demo.tsx` 只重导出。
+从 [`examples/review-machine.ts`](examples/review-machine.ts) 带走 `reviewMachine`，从 [`examples/review-policy.mjs`](examples/review-policy.mjs) 带走原因校验。`demo.tsx` 只重导出。
 
 React 若改用 `useMachine`，仍然要在守卫里调用 `isValidRejection`，不能只留按钮 `disabled`。
 
@@ -57,3 +57,11 @@ Stately 云服务不在这个包里。SSR 若使用机器，必须每请求创�
 ## 证据
 
 sdk、build、browser 保持 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有匹配收据。Actions 41779873259 不是本条目 PASS。不要改 `verification.json`。
+
+## 完整文件、配置与失败处理
+
+`pnpm add xstate@5.33.3`；React/TypeScript宿主复制 example.tsx、review-machine.ts、review-policy.mjs/.d.mts，无 Lab 内部模块、CSS或远程服务。SDK测试需要Node>=22.18原生TypeScript擦除；测试直接导入显示的机器，禁止另造测试专用机器。纯策略套件独立计数。
+
+原因按trim后的Unicode码点计长。不要用HTML maxLength=200替代策略（它按UTF-16单元算，会错误拦截emoji）。非法事件/guard不通过时保持原状态，不抛业务异常；需要错误提示由UI解释当前状态。Actor发生未处理运行异常与合法性拒绝是两类问题。
+
+actor由React effect持有，清理先unsubscribe再stop，且仅清空仍指向该实例的ref。当前没有计时器、invoke或网络；如新增必须测试退出状态后的迟到结果与信号清理，不能把stop当事务回滚。

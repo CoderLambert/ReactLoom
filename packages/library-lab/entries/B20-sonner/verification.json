@@ -1,14 +1,14 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "待集成安装 sonner@2.0.8"
+    "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B20.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式sdk收据，状态保持NOT_RUN。"
   },
   "build": {
     "status": "NOT_RUN",
-    "note": "尚无完整TS/构建结果"
+    "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B20.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式build收据，状态保持NOT_RUN。"
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "Toast动作/回滚/同id更新/卸载待浏览器验证"
+    "note": "本地质量整改、独立复核与实际运行已完成，见local-validation.md及路线图results/B20.md；当前dirty输入未授权提交，没有干净已提交输入的verify:record正式browser收据，状态保持NOT_RUN。"
   }
 }

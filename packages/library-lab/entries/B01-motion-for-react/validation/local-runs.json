@@ -1,0 +1,274 @@
+{
+  "runs": [
+    {
+      "label": "format",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "check",
+        "--write",
+        "entries/B01-motion-for-react/examples",
+        "entries/B01-motion-for-react/tests",
+        "entries/B01-motion-for-react/library.json",
+        "entries/B01-motion-for-react/verification.json",
+        "entries/B01-motion-for-react/official/source-evidence.json",
+        "entries/B01-motion-for-react/validation/baseline.json"
+      ],
+      "startedAt": "2026-11-10T12:26:32.640421+00:00",
+      "finishedAt": "2026-11-10T12:26:32.879794+00:00",
+      "exitCode": 0,
+      "log": "validation/format.txt",
+      "logSha256": "2bec66b472effd59d8052f7867b3b574afec73f56a40deea2e7e61a373c377d6"
+    },
+    {
+      "label": "sdk",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "node",
+        "--test",
+        "entries/B01-motion-for-react/tests/sdk.test.mjs"
+      ],
+      "startedAt": "2026-11-10T12:26:57.732250+00:00",
+      "finishedAt": "2026-11-10T12:26:57.908710+00:00",
+      "exitCode": 0,
+      "log": "validation/sdk.txt",
+      "logSha256": "aa6d05f135bdb40b7a34a933512cf45afb638e0850c489bf214602e98ae939d4"
+    },
+    {
+      "label": "policy",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "node",
+        "--test",
+        "entries/B01-motion-for-react/tests/card-policy.test.mts"
+      ],
+      "startedAt": "2026-11-10T12:26:57.732465+00:00",
+      "finishedAt": "2026-11-10T12:26:57.841172+00:00",
+      "exitCode": 0,
+      "log": "validation/policy.txt",
+      "logSha256": "11d03a799fb7fd34c3930deebaee29772e50ea0c9b59bd5114e8ffa5d9bf1536"
+    },
+    {
+      "label": "types",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--target",
+        "ES2022",
+        "--lib",
+        "ES2022,DOM,DOM.Iterable",
+        "--module",
+        "ESNext",
+        "--moduleResolution",
+        "Bundler",
+        "--jsx",
+        "react-jsx",
+        "--strict",
+        "--skipLibCheck",
+        "--esModuleInterop",
+        "--allowSyntheticDefaultImports",
+        "--allowImportingTsExtensions",
+        "--types",
+        "vite/client,node",
+        "entries/B01-motion-for-react/examples/demo.tsx"
+      ],
+      "startedAt": "2026-11-10T12:26:57.732615+00:00",
+      "finishedAt": "2026-11-10T12:26:58.014051+00:00",
+      "exitCode": 0,
+      "log": "validation/types.txt",
+      "logSha256": "95190c70e8bede0de9c9b822f81c60ca8b5b0b23b228c9bff5b18a424aff06b6"
+    },
+    {
+      "label": "metadata",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "node",
+        "--input-type=module",
+        "-e",
+        "import assert from 'node:assert/strict';import{readFile,stat}from'node:fs/promises';import{createHash}from'node:crypto';import{validateEntry}from'./src/lib/catalog.mjs';import{entryCompletenessIssues}from'./scripts/entry-gate.mjs';const r='entries/B01-motion-for-react/';const e=JSON.parse(await readFile(r+'library.json'));assert.deepEqual(validateEntry(e),[]);assert.deepEqual(entryCompletenessIssues(e,{guide:true,agent:true,agents:true,verification:true}),[]);const paths=new Set(e.demos.flatMap(d=>d.sourceFiles));assert.equal(paths.size,6);for(const p of paths)assert.ok((await stat(r+p)).isFile());const b=await readFile(r+'official/readme.md');assert.equal(b.length,7475);assert.equal(createHash('sha256').update(b).digest('hex'),e.official.readme.sha256);const ev=JSON.parse(await readFile(r+'official/source-evidence.json'));assert.equal(ev.package.data.version,'14.6.0');assert.equal(ev.tree.truncated,false);assert.equal(e.official.homepage.status,'unknown');assert.ok(Object.values(JSON.parse(await readFile(r+'verification.json'))).every(x=>x.status==='NOT_RUN'));console.log('B01 intermediate metadata/3 goals/6 source files/README7475B/hash/fixed14.6.0/unknown/formalNOT_RUN PASS; docs/browser incomplete')"
+      ],
+      "startedAt": "2026-11-10T12:26:57.733055+00:00",
+      "finishedAt": "2026-11-10T12:26:57.767089+00:00",
+      "exitCode": 0,
+      "log": "validation/metadata.txt",
+      "logSha256": "3d17f86f1e7c764c3020ee14403e23db186bb092f5f7edd9890593983eddab79"
+    },
+    {
+      "label": "format-final",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "check",
+        "--write",
+        "entries/B01-motion-for-react/examples",
+        "entries/B01-motion-for-react/tests",
+        "entries/B01-motion-for-react/validation/source-audit.mjs"
+      ],
+      "startedAt": "2026-11-10T12:33:03.435916+00:00",
+      "finishedAt": "2026-11-10T12:33:03.677435+00:00",
+      "exitCode": 0,
+      "log": "validation/format-final.txt",
+      "logSha256": "82be0cfbde7a9a930c3e6d81fe96bc26d2de170d98b6d1d3c977e82fc155805b"
+    },
+    {
+      "label": "types-final",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--target",
+        "ES2022",
+        "--lib",
+        "ES2022,DOM,DOM.Iterable",
+        "--module",
+        "ESNext",
+        "--moduleResolution",
+        "Bundler",
+        "--jsx",
+        "react-jsx",
+        "--strict",
+        "--skipLibCheck",
+        "--esModuleInterop",
+        "--allowSyntheticDefaultImports",
+        "--allowImportingTsExtensions",
+        "--types",
+        "vite/client,node",
+        "entries/B01-motion-for-react/examples/demo.tsx"
+      ],
+      "startedAt": "2026-11-10T12:33:03.753517+00:00",
+      "finishedAt": "2026-11-10T12:33:04.080308+00:00",
+      "exitCode": 0,
+      "log": "validation/types-final.txt",
+      "logSha256": "516bba3ae3f0d70858560d83206d61d5e9f56fc1e1a5d1841eaf3ea5d34397ed"
+    },
+    {
+      "label": "proposal-types",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--target",
+        "ES2022",
+        "--lib",
+        "ES2022,DOM,DOM.Iterable",
+        "--module",
+        "ESNext",
+        "--moduleResolution",
+        "Bundler",
+        "--jsx",
+        "react-jsx",
+        "--strict",
+        "--skipLibCheck",
+        "--esModuleInterop",
+        "--allowSyntheticDefaultImports",
+        "--allowImportingTsExtensions",
+        "--types",
+        "vite/client,node",
+        "entries/B01-motion-for-react/validation/browser-proposal-check.ts"
+      ],
+      "startedAt": "2026-11-10T12:33:03.753773+00:00",
+      "finishedAt": "2026-11-10T12:33:04.069901+00:00",
+      "exitCode": 0,
+      "log": "validation/proposal-types.txt",
+      "logSha256": "c59c839b01fdcc719c504ca71fdd51f89a3ddde483c0d6845d6db23bee1a3aaa"
+    },
+    {
+      "label": "proposal-biome",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "check",
+        "entries/B01-motion-for-react/validation/browser-proposal-check.ts"
+      ],
+      "startedAt": "2026-11-10T12:33:03.754102+00:00",
+      "finishedAt": "2026-11-10T12:33:04.056209+00:00",
+      "exitCode": 1,
+      "log": "validation/proposal-biome.txt",
+      "logSha256": "6f697fe8138a491533a2cec135121c3b6c417bf3348e430e7e8687185003431b"
+    },
+    {
+      "label": "source-audit",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "node",
+        "entries/B01-motion-for-react/validation/source-audit.mjs"
+      ],
+      "startedAt": "2026-11-10T12:33:03.754384+00:00",
+      "finishedAt": "2026-11-10T12:33:03.790954+00:00",
+      "exitCode": 0,
+      "log": "validation/source-audit.txt",
+      "logSha256": "6a3fa45da8eac78ac3ab317982ad302e184f2683017da7dcf585aa72c33f7321"
+    },
+    {
+      "label": "proposal-biome-fixed",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "check",
+        "entries/B01-motion-for-react/validation/browser-proposal-check.ts"
+      ],
+      "startedAt": "2026-11-10T12:39:59.261286+00:00",
+      "finishedAt": "2026-11-10T12:39:59.535099+00:00",
+      "exitCode": 0,
+      "log": "validation/proposal-biome-fixed.txt",
+      "logSha256": "5b268a605f0c3b949fe4c4fa8c4c4d9be35e7dc411d3935c93ee3c5f9855adf5"
+    },
+    {
+      "label": "final-inspection",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "node",
+        "--input-type=module",
+        "-e",
+        "import assert from 'node:assert/strict';import{readFile,stat}from'node:fs/promises';import{createHash}from'node:crypto';const root='entries/B01-motion-for-react/';const sha=b=>createHash('sha256').update(b).digest('hex');for(const name of ['guide.md','agent.md','local-validation.md']){const text=await readFile(root+name,'utf8');for(const match of text.matchAll(/\\]\\(([^)]+)\\)/g)){const target=match[1];if(!/^[a-z]+:|^#/.test(target))assert.ok((await stat(root+target.split('#')[0])).isFile(),`${name}: ${target}`)}}const runs=JSON.parse(await readFile(root+'validation/local-runs.json'));for(const run of runs.runs)assert.equal(sha(await readFile(root+run.log)),run.logSha256,run.label);const e=JSON.parse(await readFile(root+'library.json'));const source=new Set(e.demos.flatMap(d=>d.sourceFiles));assert.equal(source.size,6);for(const p of source)assert.ok((await stat(root+p)).isFile());assert.equal(sha(await readFile(root+e.official.readme.snapshotPath)),e.official.readme.sha256);assert.equal((await readFile(root+'validation/browser-proposal.txt','utf8')).match(/test\\('@B01/g)?.length,3);const v=JSON.parse(await readFile(root+'verification.json'));assert.ok(Object.values(v).every(x=>x.status==='NOT_RUN'));console.log('Final local links, all prior raw-log SHA, six runtime sources, fixed README hash, three browser goals and formal NOT_RUN match. No SDK/policy/type suite repeated.');"
+      ],
+      "startedAt": "2026-11-10T12:42:51.624716+00:00",
+      "finishedAt": "2026-11-10T12:42:51.656435+00:00",
+      "exitCode": 0,
+      "log": "validation/final-inspection.txt",
+      "logSha256": "a8e6eab2de7af7bdf755506ae2565b0ea377008cd59fef94518f9707ba80a228"
+    },
+    {
+      "label": "diff-check",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "packages/library-lab/entries/B01-motion-for-react"
+      ],
+      "startedAt": "2026-11-10T12:42:51.656626+00:00",
+      "finishedAt": "2026-11-10T12:42:51.659252+00:00",
+      "exitCode": 0,
+      "log": "validation/diff-check.txt",
+      "logSha256": "b9942eac0c56428134f881c5e821b96bb90198f53d513686584af128ac103db7"
+    }
+  ],
+  "scope": "Local actual React/Motion SSR static presence/context and original pure policy; real browser animations/focus/media/layout NOT_RUN; formal all NOT_RUN."
+}

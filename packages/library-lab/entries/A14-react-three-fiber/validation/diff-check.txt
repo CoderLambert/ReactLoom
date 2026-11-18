@@ -1,0 +1,9 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom
+argv: ["git", "diff", "--check", "--", "packages/library-lab/entries/A14-react-three-fiber"]
+startedAt: 2026-11-10T12:17:09.288012+00:00
+finishedAt: 2026-11-10T12:17:09.290802+00:00
+exitCode: 0
+
+STDOUT
+
+STDERR

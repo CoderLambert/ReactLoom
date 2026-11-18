@@ -6,13 +6,7 @@
   "group": "A",
   "summary": "React 声明式 SVG 图表与可访问数据表",
   "contentState": "recreated",
-  "tags": [
-    "SVG",
-    "React",
-    "数据可视化",
-    "业务报表",
-    "ResizeObserver"
-  ],
+  "tags": ["SVG", "React", "数据可视化", "业务报表", "ResizeObserver"],
   "packages": [
     {
       "name": "recharts",
@@ -68,12 +62,10 @@
       "sourceFiles": [
         "examples/example.tsx",
         "examples/chart-policy.ts",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/styles.css"
       ],
-      "capabilities": [
-        "svg",
-        "resize-observer"
-      ]
+      "capabilities": ["svg", "resize-observer"]
     },
     {
       "demoId": "business",
@@ -85,12 +77,10 @@
       "sourceFiles": [
         "examples/example.tsx",
         "examples/chart-policy.ts",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/styles.css"
       ],
-      "capabilities": [
-        "svg",
-        "resize-observer"
-      ]
+      "capabilities": ["svg", "resize-observer"]
     },
     {
       "demoId": "advanced",
@@ -102,12 +92,30 @@
       "sourceFiles": [
         "examples/example.tsx",
         "examples/chart-policy.ts",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/styles.css"
       ],
-      "capabilities": [
-        "svg",
-        "resize-observer"
-      ]
+      "capabilities": ["svg", "resize-observer"]
     }
-  ]
+  ],
+  "official": {
+    "readme": {
+      "repository": "recharts/recharts",
+      "commit": "ffb918798051ef040bb7f9922d3850c9c189f39f",
+      "path": "README.md",
+      "sha256": "b7261f5d2719719a297a001d673f01d49363542660b408a6b8de627143adb04e",
+      "sourceUrl": "https://github.com/recharts/recharts/blob/ffb918798051ef040bb7f9922d3850c9c189f39f/README.md",
+      "language": "en",
+      "version": "3.10.1",
+      "syncedAt": "2026-11-10T11:29:14.615016+00:00",
+      "snapshotPath": "official/readme.md"
+    },
+    "homepage": {
+      "url": "https://recharts.github.io/zh-CN/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-10T11:29:14.615016+00:00",
+      "reason": "官方中文入口GET200；完整响应头见official/homepage-response.json，XFO/CSP均null，未从Lab origin实测iframe，保持unknown。"
+    }
+  }
 }

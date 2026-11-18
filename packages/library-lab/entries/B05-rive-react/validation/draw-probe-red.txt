@@ -1,0 +1,203 @@
+{
+  "initial": {
+    "instance": "_r_a_",
+    "objectIdentity": 1,
+    "artboard": "Truck",
+    "stateMachines": [
+      "bumpy"
+    ],
+    "contractMatches": true,
+    "isPlaying": true,
+    "isPaused": false,
+    "isStopped": false,
+    "playingMachines": [
+      "bumpy"
+    ],
+    "pausedMachines": [],
+    "bounds": {
+      "minX": 0,
+      "minY": 0,
+      "maxX": 1920,
+      "maxY": 1080
+    },
+    "fit": "contain",
+    "canvas": {
+      "width": 778,
+      "height": 388,
+      "cssWidth": 778,
+      "cssHeight": 388
+    },
+    "observedDrawEvents": 0,
+    "observedPlayEvents": 1,
+    "observedPauseEvents": 0,
+    "wasmUrl": "https://unpkg.com/@rive-app/webgl2@2.45.0/rive.wasm",
+    "wasmFallbackUrl": "https://cdn.jsdelivr.net/npm/@rive-app/webgl2@2.45.0/rive_fallback.wasm"
+  },
+  "samples": [
+    {
+      "state": {
+        "instance": "_r_a_",
+        "objectIdentity": 1,
+        "artboard": "Truck",
+        "stateMachines": [
+          "bumpy"
+        ],
+        "contractMatches": true,
+        "isPlaying": true,
+        "isPaused": false,
+        "isStopped": false,
+        "playingMachines": [
+          "bumpy"
+        ],
+        "pausedMachines": [],
+        "bounds": {
+          "minX": 0,
+          "minY": 0,
+          "maxX": 1920,
+          "maxY": 1080
+        },
+        "fit": "contain",
+        "canvas": {
+          "width": 778,
+          "height": 388,
+          "cssWidth": 778,
+          "cssHeight": 388
+        },
+        "observedDrawEvents": 0,
+        "observedPlayEvents": 1,
+        "observedPauseEvents": 0,
+        "wasmUrl": "https://unpkg.com/@rive-app/webgl2@2.45.0/rive.wasm",
+        "wasmFallbackUrl": "https://cdn.jsdelivr.net/npm/@rive-app/webgl2@2.45.0/rive_fallback.wasm"
+      },
+      "canvasPngSha256": "61d4d3b40251f2039812f21db86e9f1995148e21315743c998409fc05992255d"
+    },
+    {
+      "state": {
+        "instance": "_r_a_",
+        "objectIdentity": 1,
+        "artboard": "Truck",
+        "stateMachines": [
+          "bumpy"
+        ],
+        "contractMatches": true,
+        "isPlaying": true,
+        "isPaused": false,
+        "isStopped": false,
+        "playingMachines": [
+          "bumpy"
+        ],
+        "pausedMachines": [],
+        "bounds": {
+          "minX": 0,
+          "minY": 0,
+          "maxX": 1920,
+          "maxY": 1080
+        },
+        "fit": "contain",
+        "canvas": {
+          "width": 778,
+          "height": 388,
+          "cssWidth": 778,
+          "cssHeight": 388
+        },
+        "observedDrawEvents": 0,
+        "observedPlayEvents": 1,
+        "observedPauseEvents": 0,
+        "wasmUrl": "https://unpkg.com/@rive-app/webgl2@2.45.0/rive.wasm",
+        "wasmFallbackUrl": "https://cdn.jsdelivr.net/npm/@rive-app/webgl2@2.45.0/rive_fallback.wasm"
+      },
+      "canvasPngSha256": "1ede94b1370d244d433230fdadc3d32612c6e4cfaa80d4364c01c1236b828dce"
+    },
+    {
+      "state": {
+        "instance": "_r_a_",
+        "objectIdentity": 1,
+        "artboard": "Truck",
+        "stateMachines": [
+          "bumpy"
+        ],
+        "contractMatches": true,
+        "isPlaying": true,
+        "isPaused": false,
+        "isStopped": false,
+        "playingMachines": [
+          "bumpy"
+        ],
+        "pausedMachines": [],
+        "bounds": {
+          "minX": 0,
+          "minY": 0,
+          "maxX": 1920,
+          "maxY": 1080
+        },
+        "fit": "contain",
+        "canvas": {
+          "width": 778,
+          "height": 388,
+          "cssWidth": 778,
+          "cssHeight": 388
+        },
+        "observedDrawEvents": 0,
+        "observedPlayEvents": 1,
+        "observedPauseEvents": 0,
+        "wasmUrl": "https://unpkg.com/@rive-app/webgl2@2.45.0/rive.wasm",
+        "wasmFallbackUrl": "https://cdn.jsdelivr.net/npm/@rive-app/webgl2@2.45.0/rive_fallback.wasm"
+      },
+      "canvasPngSha256": "b2181b4653baed0a6625c4118d195ae6f7999986cc8306f8d0a1a93fb9d08932"
+    },
+    {
+      "state": {
+        "instance": "_r_a_",
+        "objectIdentity": 1,
+        "artboard": "Truck",
+        "stateMachines": [
+          "bumpy"
+        ],
+        "contractMatches": true,
+        "isPlaying": true,
+        "isPaused": false,
+        "isStopped": false,
+        "playingMachines": [
+          "bumpy"
+        ],
+        "pausedMachines": [],
+        "bounds": {
+          "minX": 0,
+          "minY": 0,
+          "maxX": 1920,
+          "maxY": 1080
+        },
+        "fit": "contain",
+        "canvas": {
+          "width": 778,
+          "height": 388,
+          "cssWidth": 778,
+          "cssHeight": 388
+        },
+        "observedDrawEvents": 0,
+        "observedPlayEvents": 1,
+        "observedPauseEvents": 0,
+        "wasmUrl": "https://unpkg.com/@rive-app/webgl2@2.45.0/rive.wasm",
+        "wasmFallbackUrl": "https://cdn.jsdelivr.net/npm/@rive-app/webgl2@2.45.0/rive_fallback.wasm"
+      },
+      "canvasPngSha256": "069bc9156a175925af3fc72d1af14926075e58b2adaf1a1dce7221a1ec796273"
+    }
+  ]
+}
+node:internal/modules/run_main:111
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: actual Draw count must advance
+    at file:///home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/B05-rive-react/validation/draw-probe.mjs:33:10 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v26.13.0
+
+exitCode=1

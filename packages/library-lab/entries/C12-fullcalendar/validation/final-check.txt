@@ -1,0 +1,5 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['python3', 'entries/C12-fullcalendar/validation/final-check.py']
+startedAt: 2026-11-10T16:49:29.427636+00:00
+exit: 0
+6 production files byte-identical to candidate17; 3 complete typed proposals; local links and Python syntax valid; no temporary proposal/binary artifacts; formal NOT_RUN. No SDK/HTTP/browser run.

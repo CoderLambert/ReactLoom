@@ -1,0 +1,102 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=pnpm exec playwright test --config=.local-evidence/quality-playwright.config.ts quality-remediation-data.spec.ts p0-risk-lifecycle.spec.ts repair.spec.ts --grep @C01|@D07|@F11
+
+Running 13 tests using 2 workers
+
+(node:802025) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:802026) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   2 e2e/quality-remediation-data.spec.ts:3:1 › @D07 same-key observers share fresh data and stale refresh keeps the previous value (1.6s)
+  ✓   3 e2e/quality-remediation-data.spec.ts:28:1 › @D07 tenant cancellation can recover and one-shot 409 rolls back before a successful retry (4.8s)
+  ✘   1 e2e/p0-risk-lifecycle.spec.ts:66:1 › @C01 real RHF field-array submission and reset preserve default values (6.6s)
+(node:802543) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   5 e2e/quality-remediation-data.spec.ts:85:1 › @C01 deleting a preceding row preserves the surviving field identity, value, and error (1.7s)
+  ✓   6 e2e/quality-remediation-data.spec.ts:110:1 › @C01 server errors recover and edited drafts cancel obsolete async submissions (1.8s)
+  ✓   7 e2e/quality-remediation-data.spec.ts:141:3 › @C01 official original and homepage check remain separate from runtime receipts (1.7s)
+  ✘   4 e2e/quality-remediation-data.spec.ts:62:1 › @C01 required and HTTPS errors describe their actual inputs before a valid preview (6.7s)
+(node:802993) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   8 e2e/quality-remediation-data.spec.ts:141:3 › @D07 official original and homepage check remain separate from runtime receipts (1.7s)
+  ✓  10 e2e/repair.spec.ts:37:3 › @F11 isolated MSW basic uses real requests and unregisters its session (1.1s)
+  ✓   9 e2e/quality-remediation-data.spec.ts:141:3 › @F11 official original and homepage check remain separate from runtime receipts (1.8s)
+  ✓  11 e2e/repair.spec.ts:37:3 › @F11 isolated MSW business uses real requests and unregisters its session (1.1s)
+  ✓  12 e2e/repair.spec.ts:37:3 › @F11 isolated MSW advanced uses real requests and unregisters its session (1.1s)
+  ✓  13 e2e/repair.spec.ts:82:1 › @F11 simultaneous sessions are independent and leaving a tab cleans only its session (2.2s)
+
+
+  1) e2e/p0-risk-lifecycle.spec.ts:66:1 › @C01 real RHF field-array submission and reset preserve default values 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByRole('region', { name: 'React Hook Form 实际 SDK 示例' }).getByRole('group')
+    Expected: 2
+    Received: 3
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByRole('region', { name: 'React Hook Form 实际 SDK 示例' }).getByRole('group') with timeout 5000ms
+      - waiting for getByRole('region', { name: 'React Hook Form 实际 SDK 示例' }).getByRole('group')
+        14 × locator resolved to 3 elements
+           - unexpected value "3"
+
+
+      68 |   const region = page.getByRole('region', { name: 'React Hook Form 实际 SDK 示例' })
+      69 |   await region.getByRole('button', { name: '新增 RSS 来源' }).click()
+    > 70 |   await expect(region.getByRole('group')).toHaveCount(2)
+         |                                           ^
+      71 |   await region.getByRole('textbox', { name: '来源 2 URL' }).fill('https://example.com/second.xml')
+      72 |   await region.getByRole('button', { name: '验证并预览' }).click()
+      73 |   await expect(region.getByText('通过校验的本地数据')).toBeVisible()
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/p0-risk-lifecycle.spec.ts:70:43
+
+    Error Context: test-results/p0-risk-lifecycle--C01-rea-9d78a-set-preserve-default-values/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/p0-risk-lifecycle--C01-rea-9d78a-set-preserve-default-values/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/p0-risk-lifecycle--C01-rea-9d78a-set-preserve-default-values/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) e2e/quality-remediation-data.spec.ts:62:1 › @C01 required and HTTPS errors describe their actual inputs before a valid preview 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('region', { name: 'React Hook Form 实际 SDK 示例' }).locator('output')
+    Expected substring: "https://example.com/feed"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toContainText" getByRole('region', { name: 'React Hook Form 实际 SDK 示例' }).locator('output') with timeout 5000ms
+      - waiting for getByRole('region', { name: 'React Hook Form 实际 SDK 示例' }).locator('output')
+
+
+      79 |   await url.fill('https://example.com/feed')
+      80 |   await app.getByRole('button', { name: '验证并预览', exact: true }).click()
+    > 81 |   await expect(app.locator('output')).toContainText('https://example.com/feed')
+         |                                       ^
+      82 |   await expect(app.getByTestId('c01-form-state')).toContainText('空闲')
+      83 | })
+      84 |
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-data.spec.ts:81:39
+
+    Error Context: test-results/quality-remediation-data---d61ad-puts-before-a-valid-preview/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-remediation-data---d61ad-puts-before-a-valid-preview/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-remediation-data---d61ad-puts-before-a-valid-preview/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    e2e/p0-risk-lifecycle.spec.ts:66:1 › @C01 real RHF field-array submission and reset preserve default values 
+    e2e/quality-remediation-data.spec.ts:62:1 › @C01 required and HTTPS errors describe their actual inputs before a valid preview 
+  11 passed (18.8s)
+
+exitCode=1

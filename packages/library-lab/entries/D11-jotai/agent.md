@@ -14,7 +14,7 @@
 
 ## 迁移
 
-从 [`examples/example.tsx`](examples/example.tsx) 带走模块级原子、`TenantWorkspace` 的 `createStore`，以及 [`examples/story-policy.mjs`](examples/story-policy.mjs)。`demo.tsx` 只重导出。
+从 [`examples/example.tsx`](examples/example.tsx) 带走[`examples/workspace-atoms.mjs`](examples/workspace-atoms.mjs) 的模块级原子、`TenantWorkspace` 的 `createStore`，以及 [`examples/story-policy.mjs`](examples/story-policy.mjs)。`demo.tsx` 只重导出。
 
 会话组件必须有稳定 key。退出团队 A 时递增 key，让旧 Provider 卸载。团队 B 使用另一个 key。
 
@@ -58,3 +58,9 @@
 ## 证据
 
 sdk、build、browser 保持 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有匹配收据。Actions 41779873259 不是本条目 PASS。不要改 `verification.json`。
+
+## 完整文件与前提
+
+React >=18、TypeScript >=5.5、ESM；`pnpm add jotai@3.0.1`。复制 example.tsx、workspace-atoms.mjs/.d.mts、story-policy.mjs/.d.mts；demo.tsx 仅 Lab 转发，可不复制。无额外配置、网络、CSS 或存储。不要遗漏声明文件导致 TS7016，也不要只复制 UI 后丢失真正的原子实现。
+
+TypeError 表示故事业务输入不合法，先修复源数据；不可忽略后部分写入。SDK 测试直接导入实际 workspace-atoms.mjs，策略测试独立运行不作为 SDK PASS。store.sub 返回取消函数，手动订阅必须释放；React Provider 的订阅由 React 卸载管理。外部请求、Query 缓存和服务端授权不在此生命周期保证内。

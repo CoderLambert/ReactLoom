@@ -1,0 +1,29 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node --test entries/B13-dnd-kit/tests/reorder-policy.test.mts entries/B13-dnd-kit/tests/drag-session.test.mts entries/B13-dnd-kit/tests/pinned-order.test.mjs
+exit: 0
+
+✔ matching drag session permits a single unmodified drop (0.466607ms)
+✔ keyboard reorder and reset invalidate late pointer drop (0.092768ms)
+✔ level switch and different drag ID invalidate stale drop (0.072872ms)
+✔ cancelled drag cannot commit (0.063728ms)
+✔ locked: pinned source and destination cannot move (0.544198ms)
+✔ locked: cannot cross pinned slots in either direction (0.123426ms)
+✔ locked: can move inside each unlocked segment (0.082444ms)
+✔ locked: rejects invalid or no-op moves (0.087238ms)
+✔ fixed: pinned source and destination cannot move (0.061136ms)
+✔ fixed: cannot cross pinned slots in either direction (0.059337ms)
+✔ fixed: can move inside each unlocked segment (0.049359ms)
+✔ fixed: rejects invalid or no-op moves (0.052676ms)
+✔ basic reorder preserves off-screen tail (0.922879ms)
+✔ locked slot cannot be displaced in either direction (0.134568ms)
+✔ valid unlocked move remains possible on either side (0.110665ms)
+✔ stale identities, duplicate IDs, bad prefixes and same positions fail closed (0.104487ms)
+✔ duplicate identity in a hidden suffix also rejects the whole reorder (0.09947ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 17
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 75.727572

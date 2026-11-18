@@ -1,0 +1,174 @@
+{
+  "checkedAt": "2026-11-10T12:33:03.788Z",
+  "node": "v26.13.0",
+  "packages": [
+    {
+      "name": "motion",
+      "version": "14.6.0",
+      "root": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/motion@14.6.0_react-dom@19.3.0_react@19.3.0__react@19.3.0/node_modules/motion",
+      "peerDependencies": {
+        "react": "^18.0.0 || ^19.0.0",
+        "react-dom": "^18.0.0 || ^19.0.0"
+      }
+    },
+    {
+      "name": "framer-motion",
+      "version": "14.6.0",
+      "root": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/framer-motion@14.6.0_react-dom@19.3.0_react@19.3.0__react@19.3.0/node_modules/framer-motion",
+      "peerDependencies": {
+        "react": "^18.0.0 || ^19.0.0",
+        "react-dom": "^18.0.0 || ^19.0.0"
+      }
+    },
+    {
+      "name": "motion-dom",
+      "version": "14.6.0",
+      "root": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/motion-dom@14.6.0/node_modules/motion-dom"
+    }
+  ],
+  "sources": [
+    {
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/framer-motion@14.6.0_react-dom@19.3.0_react@19.3.0__react@19.3.0/node_modules/framer-motion/dist/es/utils/reduced-motion/use-reduced-motion.mjs",
+      "sha256": "a56ff5b76d7821a59eec6324f7cff65a0267d4bdc4b903f394c4e576903d771c",
+      "evidence": [
+        {
+          "line": 37,
+          "text": "    const [shouldReduceMotion] = useState(prefersReducedMotion.current);"
+        },
+        {
+          "line": 42,
+          "text": "     * TODO See if people miss automatically updating shouldReduceMotion setting"
+        },
+        {
+          "line": 44,
+          "text": "    return shouldReduceMotion;"
+        }
+      ]
+    },
+    {
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/framer-motion@14.6.0_react-dom@19.3.0_react@19.3.0__react@19.3.0/node_modules/framer-motion/dist/es/components/AnimatePresence/use-presence-data.mjs",
+      "sha256": "8741abeb71077cf70a2554105c7bfc12e28dac3cdad64a289da41744a062bb4c",
+      "evidence": [
+        {
+          "line": 2,
+          "text": "import { useContext } from 'react';"
+        },
+        {
+          "line": 6,
+          "text": "    const context = useContext(PresenceContext);"
+        },
+        {
+          "line": 7,
+          "text": "    return context ? context.custom : undefined;"
+        }
+      ]
+    },
+    {
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/framer-motion@14.6.0_react-dom@19.3.0_react@19.3.0__react@19.3.0/node_modules/framer-motion/dist/es/components/AnimatePresence/PresenceChild.mjs",
+      "sha256": "ab041e0a0557f645d679dcf8fe70e7d822939903c9eb7e0b74c440aba8cd5e79",
+      "evidence": [
+        {
+          "line": 10,
+          "text": "const PresenceChild = ({ children, initial, isPresent, onExitComplete, custom, presenceAffectsLayout, mode, anchorX, anchorY, root }) => {"
+        },
+        {
+          "line": 21,
+          "text": "    const isPresentRef = useRef(isPresent);"
+        },
+        {
+          "line": 24,
+          "text": "        isPresentRef.current = isPresent;"
+        },
+        {
+          "line": 33,
+          "text": "            isPresent,"
+        },
+        {
+          "line": 34,
+          "text": "            custom,"
+        },
+        {
+          "line": 43,
+          "text": "            register: (childId, node) => {"
+        },
+        {
+          "line": 50,
+          "text": "                    !isPresentRef.current &&"
+        },
+        {
+          "line": 56,
+          "text": "    }, [isPresent, presenceChildren, onExitComplete]);"
+        },
+        {
+          "line": 67,
+          "text": "    }, [isPresent]);"
+        },
+        {
+          "line": 73,
+          "text": "        !isPresent &&"
+        },
+        {
+          "line": 77,
+          "text": "    }, [isPresent]);"
+        },
+        {
+          "line": 78,
+          "text": "    children = (jsx(PopChild, { pop: mode === \"popLayout\", isPresent: isPresent, anchorX: anchorX, anchorY: anchorY, root: root, popNode: popNode, children: children }));"
+        }
+      ]
+    },
+    {
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/motion-dom@14.6.0/node_modules/motion-dom/dist/es/render/VisualElement.mjs",
+      "sha256": "b280fd0b86dc374fdee8eb41bdbcf470e057b408fa0cc01d69ef254aa79b34ed",
+      "evidence": [
+        {
+          "line": 84,
+          "text": "        this.shouldReduceMotion = null;"
+        },
+        {
+          "line": 151,
+          "text": "        this.reducedMotionConfig = reducedMotionConfig;"
+        },
+        {
+          "line": 217,
+          "text": "        if (this.reducedMotionConfig === \"never\") {"
+        },
+        {
+          "line": 218,
+          "text": "            this.shouldReduceMotion = false;"
+        },
+        {
+          "line": 220,
+          "text": "        else if (this.reducedMotionConfig === \"always\") {"
+        },
+        {
+          "line": 221,
+          "text": "            this.shouldReduceMotion = true;"
+        },
+        {
+          "line": 227,
+          "text": "            this.shouldReduceMotion = prefersReducedMotion.current;"
+        }
+      ]
+    },
+    {
+      "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/motion-dom@14.6.0/node_modules/motion-dom/dist/es/animation/interfaces/visual-element-target.mjs",
+      "sha256": "ace854314a054dd939a743cfd3c60bee9a692ce9458060ca2d0c4bbda966eea2",
+      "evidence": [
+        {
+          "line": 3,
+          "text": "import { positionalKeys } from '../../render/utils/keys-position.mjs';"
+        },
+        {
+          "line": 85,
+          "text": "        const shouldReduceMotion = reduceMotion ?? visualElement.shouldReduceMotion;"
+        },
+        {
+          "line": 86,
+          "text": "        value.start(animateMotionValue(key, value, valueTarget, shouldReduceMotion && positionalKeys.has(key)"
+        }
+      ]
+    }
+  ],
+  "conclusion": "Installed 14.6.0 hook has no state setter/subscription. This demo explicitly owns live media updates and all visual targets; SDK user config normally does disable positional transforms at mount."
+}

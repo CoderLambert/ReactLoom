@@ -1,0 +1,20 @@
+{
+  "capturedAt": "2026-11-10T11:03:43.143419+00:00",
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+  "configPath": "packages/library-lab/.local-evidence/quality-playwright.config.ts",
+  "configSha256": "f94f88991356de4da51266946bf156b4a17b369934bbc0f9dc6ce944c6e66852",
+  "snapshot": "docs/library-lab/evidence/quality-upgrade/local-playwright-config.txt",
+  "note": "Existing local config stayed unchanged throughout this run. Connects to already-built preview, no implicit build; snapshot captured now for reproducibility. Default committed Playwright config remains unchanged.",
+  "baseURL": "http://127.0.0.1:4319",
+  "previewCommand": [
+    "pnpm",
+    "--filter",
+    "@reactloom/library-lab",
+    "preview"
+  ],
+  "ports": [
+    4319,
+    4320,
+    4321
+  ]
+}

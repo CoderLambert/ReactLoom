@@ -1,0 +1,22 @@
+{
+  "installed": {
+    "packagePath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/react-aria-components@1.21.0_react-dom@19.3.0_react@19.3.0__react@19.3.0/node_modules/react-aria-components/package.json",
+    "version": "1.21.0",
+    "gitHead": "0a2a7e68e4d896b3ac46c3647fe48fac9ea3ae2e"
+  },
+  "files": {
+    "examples/example.tsx": "f9f09a78ffff6953202f2da1268895cc96fde49ffe833001701a7f790e15e413",
+    "examples/channel-policy.ts": "33b77cfd98e6f03ecfe2aa8f9ae29a84ac430489020abf7554b1876f5b1cc4f3",
+    "examples/combobox.css": "b213156af86a989b475a703f07a4b1d9a9fd689ebbaee166d200a4dded00c860",
+    "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+    "tests/sdk.test.mjs": "9a176a596396d897d4902be47f6f70eaddfd2075946e2232fcde2b5a3b6fe360",
+    "tests/channel-policy.test.mts": "1d175bdc4b1f23334be0dbac14efa627cda98b5f2e8ed32e8a125a61296c9887",
+    "library.json": "8f78f8f53dd7fafc968301c55778a73c35a2da36349945708c89708c6912cc2a",
+    "guide.md": "e2ecf8190b81f4d2f351c60fc0f8f7dd78528e1125e37414cfc28f3639226e9f",
+    "agent.md": "f6780b97ef516f437a9498b23dfcf43c6c3f808f08815fc19fe76f0e20168c2a",
+    "verification.json": "8bbb3d6a5a708ae88f0c470cb9c9f94f9e9f0bca0b676217108a23cc2feda5dd",
+    "official/readme.md": "654cbc0c1d8939a0bd808883ebf1a1cca965e86b9ff657dfdf4378592fcb2960",
+    "official/source-evidence.json": "52fbd7260476091d8fc8911602c35b7dbb5e734955b7d2a7a5079a700208e1d5",
+    "validation/browser-proposal.txt": "fc91460ae432a9b9698dbe96bf14e9bcda3330f9222a8096adc1fa5712c6ee1b"
+  }
+}

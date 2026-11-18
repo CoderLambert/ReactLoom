@@ -1,0 +1,16 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=pnpm exec playwright test --config=.local-evidence/quality-playwright.config.ts e2e/quality-remediation-ag-grid.spec.ts e2e/quality-remediation-beautiful-dnd-migration.spec.ts e2e/quality-remediation-virtuoso.spec.ts --grep @C08 actual client|@B22 fixed|@C09 advanced --trace=off
+
+Running 3 tests using 2 workers
+
+(node:2014747) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2014746) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 e2e/quality-remediation-ag-grid.spec.ts:64:1 › @C08 actual client pagination/filter and readOnlyEdit use the captured start revision (2.5s)
+  ✓  1 e2e/quality-remediation-beautiful-dnd-migration.spec.ts:108:1 › @B22 fixed slot rejection is shared by actual keyboard sensor results and native button fallback (3.0s)
+  ✓  3 e2e/quality-remediation-virtuoso.spec.ts:152:1 › @C09 advanced: true prepend anchor, ID expansion measurement and conditional bottom follow (2.2s)
+
+  3 passed (5.2s)
+
+exitCode=0

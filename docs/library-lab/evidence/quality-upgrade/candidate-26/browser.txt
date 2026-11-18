@@ -1,0 +1,24 @@
+[WebServer] (node:1809238) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:1809256) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 11 tests using 2 workers
+
+(node:1809439) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1809438) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   2 e2e/quality-resume-official-d14-d17.spec.ts:8:3 › @D14 pinned official original and honest homepage fallback (1.4s)
+  ✓   1 e2e/quality-resume-official-d14-d17.spec.ts:8:3 › @D16 pinned official original and honest homepage fallback (1.8s)
+  ✓   4 e2e/quality-resume-workbox.spec.ts:4:3 › @D16 basic displays the declared local recipe without a browser execution button (946ms)
+  ✓   3 e2e/quality-resume-official-d14-d17.spec.ts:8:3 › @D17 pinned official original and honest homepage fallback (1.4s)
+  ✓   5 e2e/quality-resume-workbox.spec.ts:4:3 › @D16 business displays the declared local recipe without a browser execution button (947ms)
+  ✓   6 e2e/quality-resume-workbox.spec.ts:4:3 › @D16 advanced displays the declared local recipe without a browser execution button (965ms)
+  ✓   7 e2e/quality-resume-xstate.spec.ts:3:1 › @D14 explicit review transitions and Unicode reason policy (1.8s)
+  ✓   8 e2e/quality-resume-xstate.spec.ts:27:1 › @D14 retry budget is visible and actor is fresh after unmount (1.8s)
+  ✓   9 e2e/quality-resume-yjs.spec.ts:3:1 › @D17 local transaction emits one pending update (1.5s)
+  ✓  10 e2e/quality-resume-yjs.spec.ts:12:1 › @D17 independent offline edits survive delta merge (1.6s)
+  ✓  11 e2e/quality-resume-yjs.spec.ts:27:1 › @D17 concurrent title convergence, actual reversed events, scope rejection and remount (1.8s)
+
+  11 passed (10.1s)

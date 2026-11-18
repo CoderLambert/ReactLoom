@@ -1,0 +1,12 @@
+{
+  "url": "https://git.sheetjs.com/api/v1/repos/SheetJS/sheetjs/contents/package.json?ref=8a7cfd47bde8258c0d91df6a737bf0136699cdf8",
+  "status": 200,
+  "name": "xlsx",
+  "version": "0.20.3",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://git.sheetjs.com/SheetJS/sheetjs"
+  },
+  "homepage": "https://sheetjs.com/"
+}

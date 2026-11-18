@@ -1,0 +1,59 @@
+{"label": "mobile-overflow-red", "cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["node", "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C06-imask/validation/mobile-overflow-probe.mjs"], "start": "2026-11-10T16:17:29.285603+00:00", "end": "2026-11-10T16:17:31.056036+00:00", "exitCode": 1, "log": "mobile-overflow-red.txt", "scope": "fixed candidate16 dist; real browser; no build"}
+STDOUT
+{
+  "candidateCssOverlay": false,
+  "viewport": 390,
+  "app": {
+    "tag": "SECTION",
+    "class": "c06-workshop",
+    "text": "日期：填满、真实公历与中文备注真实react-imask7.6.1管理输入DOM与光标；React仅观察onAccept，不把业务快照反写input.value。事件日期重置当前控",
+    "x": 41,
+    "right": 349,
+    "width": 308,
+    "clientWidth": 308,
+    "scrollWidth": 324,
+    "display": "block",
+    "minWidth": "0px",
+    "maxWidth": "none",
+    "whiteSpace": "normal",
+    "overflowWrap": "normal",
+    "boxSizing": "border-box"
+  },
+  "overflow": [
+    {
+      "tag": "P",
+      "class": "",
+      "text": "value/unmaskedValue/typedValue/isComplete直接读取回调给出的SDK实例；null表示尚无事件。 它们是事件快照，计数不是按键次数或SDK实例",
+      "x": 41,
+      "right": 349,
+      "width": 308,
+      "clientWidth": 308,
+      "scrollWidth": 324,
+      "display": "block",
+      "minWidth": "0px",
+      "maxWidth": "none",
+      "whiteSpace": "normal",
+      "overflowWrap": "normal",
+      "boxSizing": "border-box"
+    }
+  ]
+}
+
+STDERR
+node:internal/modules/run_main:111
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Actual app overflow: 324>308+1
+    at file:///home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C06-imask/validation/mobile-overflow-probe.mjs:33:10
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at process.processImmediate (node:internal/timers:541:9) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v26.13.0

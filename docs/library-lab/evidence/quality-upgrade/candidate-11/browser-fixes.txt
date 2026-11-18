@@ -1,0 +1,63 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=pnpm exec playwright test --config=.local-evidence/quality-playwright.config.ts e2e/quality-remediation-rive.spec.ts e2e/quality-remediation-mantine.spec.ts e2e/quality-remediation-mui.spec.ts --grep @B05|@B08|@B07 real Dialog
+
+Running 7 tests using 2 workers
+
+(node:1493367) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1493368) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 e2e/quality-remediation-mantine.spec.ts:20:1 › @B08 actual scoped theme and controlled confirmation do not mutate the document color-scheme attribute (1.7s)
+(node:1493712) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 e2e/quality-remediation-mantine.spec.ts:58:1 › @B08 real debounced filtering preserves stable rows and one-step Switch undo (2.7s)
+  ✓  4 e2e/quality-remediation-mui.spec.ts:113:1 › @B07 real Dialog portal, form recovery, one-shot conflict, mobile and open-modal unmount (3.0s)
+(node:1493996) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  3 e2e/quality-remediation-mantine.spec.ts:96:1 › @B08 real NumberInput preserves invalid drafts, commits valid quota and cleans an open Portal on SPA Back (5.9s)
+(node:1494186) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  5 e2e/quality-remediation-rive.spec.ts:57:1 › @B05 real Rive file, WASM, Advance and Canvas frames agree with playback and same-object Layout updates (8.8s)
+  ✓  6 e2e/quality-remediation-rive.spec.ts:127:1 › @B05 local review cancellation and input snapshots request actual Rive playback without faking file states (9.5s)
+  ✓  7 e2e/quality-remediation-rive.spec.ts:163:1 › @B05 native reduced motion, real intersection and wrapper Canvas teardown preserve ownership (6.3s)
+
+
+  1) e2e/quality-remediation-mantine.spec.ts:20:1 › @B08 actual scoped theme and controlled confirmation do not mutate the document color-scheme attribute 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByTestId('b08-workshop').getByRole('status')
+    Expected substring: "本地工作区：学习空间"
+    Error: strict mode violation: getByTestId('b08-workshop').getByRole('status') resolved to 2 elements:
+        1) <output data-size="sm" class="mantine-focus-auto m_b6d8b162 mantine-Text-root">  学习空间  </output> aka getByText('学习空间', { exact: true })
+        2) <div role="status" id="mantine-xcnzxn7u5" class="m_66836ed3 mantine-Alert-root" aria-describedby="mantine-xcnzxn7u5-body">…</div> aka locator('#mantine-xcnzxn7u5')
+
+    Call log:
+      - Expect "toContainText" getByTestId('b08-workshop').getByRole('status') with timeout 5000ms
+      - waiting for getByTestId('b08-workshop').getByRole('status')
+
+
+      46 |   await confirm.focus()
+      47 |   await page.keyboard.press('Enter')
+    > 48 |   await expect(app.getByRole('status')).toContainText('本地工作区：学习空间')
+         |                                         ^
+      49 |   await input.fill('新草稿')
+      50 |   await expect(app.getByRole('status')).toHaveCount(0)
+      51 |   await page.getByRole('button', { name: '停止并卸载', exact: true }).click()
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-mantine.spec.ts:48:41
+
+    Error Context: test-results/quality-remediation-mantin-0dea5-ment-color-scheme-attribute/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-remediation-mantin-0dea5-ment-color-scheme-attribute/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-remediation-mantin-0dea5-ment-color-scheme-attribute/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    e2e/quality-remediation-mantine.spec.ts:20:1 › @B08 actual scoped theme and controlled confirmation do not mutate the document color-scheme attribute 
+  6 passed (21.6s)
+
+exitCode=1

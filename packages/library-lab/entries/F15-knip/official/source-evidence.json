@@ -1,0 +1,39 @@
+{
+  "repository": "webpro-nl/knip",
+  "tag": "knip@6.41.0",
+  "commit": "13d7f21e8ec5b30d8fe6d8377c9012b9db96f871",
+  "readmeCandidates": ["README.md", "packages/knip/README.md"],
+  "treeTruncated": false,
+  "files": [
+    {
+      "path": "packages/knip/README.md",
+      "url": "https://raw.githubusercontent.com/webpro-nl/knip/13d7f21e8ec5b30d8fe6d8377c9012b9db96f871/packages/knip/README.md",
+      "bytes": 2749,
+      "sha256": "d0e6ca051dd8f51a9564bcee254805fbb8bd0da6b37aab2cef51eae36ba1ce57"
+    },
+    {
+      "path": "LICENSE",
+      "url": "https://raw.githubusercontent.com/webpro-nl/knip/13d7f21e8ec5b30d8fe6d8377c9012b9db96f871/LICENSE",
+      "bytes": 750,
+      "sha256": "2f654153561e7d8b90fdbf448a7de09725f936533fc9c7b485190c036d089341"
+    }
+  ],
+  "packagePath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/knip@6.41.0/node_modules/knip/package.json",
+  "package": {
+    "name": "knip",
+    "version": "6.41.0",
+    "license": "ISC",
+    "engines": {
+      "node": "^20.19.0 || >=22.12.0"
+    }
+  },
+  "homepage": {
+    "initialUrllibStatus": 403,
+    "curlStatus": 200,
+    "finalUrl": "https://knip.dev/",
+    "headers": "official/homepage.headers",
+    "bodySha256": "952469bebad09873bb23caa2b6b2fc73788eda7c220184af69fa07d9ccf32d26",
+    "xFrameOptions": null,
+    "csp": null
+  }
+}

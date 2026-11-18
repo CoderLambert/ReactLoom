@@ -1,0 +1,48 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab", "argv": ["python3", "entries/B15-react-grid-layout/validation/fetch-official.py"], "start": "2026-11-10T14:02:20.574067+00:00", "end": "2026-11-10T14:02:32.204198+00:00", "exitCode": 0}
+STDOUT
+{
+  "repository": "react-grid-layout/react-grid-layout",
+  "commit": "9b01a614bcdd13e7e921cf3f4b1c7e77942421c1",
+  "package": "react-grid-layout",
+  "version": "2.3.0",
+  "browserFromLabOrigin": "NOT_RUN",
+  "npmRelease": {
+    "name": "react-grid-layout",
+    "version": "2.3.0",
+    "gitHead": "9b01a614bcdd13e7e921cf3f4b1c7e77942421c1",
+    "license": "MIT",
+    "peerDependencies": {
+      "react": ">= 16.3.0",
+      "react-dom": ">= 16.3.0"
+    }
+  },
+  "resizableRelease": {
+    "name": "react-resizable",
+    "version": "4.0.2",
+    "gitHead": "8ca079f91ba0d7002568a4154cc3b2c1f554e274",
+    "license": "MIT",
+    "peerDependencies": {
+      "react": ">= 16.3",
+      "react-dom": ">= 16.3"
+    }
+  },
+  "tag": "2.3.0",
+  "tagObject": "99f88f92470eb8a9fa51d0c1b997cc542deda270",
+  "readmeCandidates": [
+    "README.md"
+  ],
+  "treeTruncated": false,
+  "chosenReadme": "README.md",
+  "language": "en",
+  "selectionReason": "Full pinned tree has only README.md; no official Chinese README. Preserve complete upstream original.",
+  "packageVersion": "2.3.0",
+  "framingEvaluation": {
+    "status": "unknown",
+    "reason": "Actual GET headers retained; no actual Lab-origin browser confirmation. Re-evaluate policy headers when explicitly synchronizing.",
+    "browserFromLabOrigin": "NOT_RUN"
+  },
+  "syncedAt": "2026-11-10T14:02:32.195608+00:00"
+}
+Actual requests: 8
+
+STDERR

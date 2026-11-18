@@ -1,0 +1,37 @@
+.c18-workshop {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.c18-workspaces {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr));
+  gap: 1rem;
+  margin-block: 1rem;
+}
+.c18-panel {
+  min-width: 0;
+  padding: 0.8rem;
+  border: 1px solid #81968a;
+  border-radius: 0.5rem;
+}
+.c18-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-block: 0.7rem;
+}
+.c18-workshop input,
+.c18-workshop select {
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
+}
+.c18-workshop pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.c18-workshop :is(button, input, select):focus-visible {
+  outline: 3px solid #287450;
+  outline-offset: 2px;
+}

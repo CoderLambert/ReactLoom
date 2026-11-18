@@ -1,0 +1,11 @@
+# Keep upstream snapshots and machine-captured evidence byte-for-byte.
+packages/library-lab/entries/**/official/** -text -whitespace
+packages/library-lab/entries/**/validation/**/*.txt -text -whitespace
+packages/library-lab/entries/**/validation/**/*.json -text -whitespace
+packages/library-lab/entries/**/validation/**/*.headers -text -whitespace
+packages/library-lab/entries/**/validation/**/*.body -text -whitespace
+packages/library-lab/entries/**/evidence/**/*.json -text -whitespace
+docs/library-lab/evidence/**/*.txt -text -whitespace
+docs/library-lab/evidence/**/*.json -text -whitespace
+docs/library-lab/evidence/**/*.headers -text -whitespace
+docs/library-lab/evidence/**/*.body -text -whitespace

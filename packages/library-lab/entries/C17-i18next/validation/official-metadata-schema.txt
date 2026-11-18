@@ -1,0 +1,5 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['node', '--input-type=module', '-e', "import assert from 'node:assert/strict';import{readFileSync}from'node:fs';import{validateEntry}from'./src/lib/catalog.mjs';const m=JSON.parse(readFileSync('entries/C17-i18next/library.json'));assert.deepEqual(validateEntry(m),[]);assert.equal(m.official.homepage.status,'blocked');console.log('C17 entry metadata schema PASS, seven declared sources and fixed official fields, HTTP Lab framing blocked. No SDK/browser/HTTP.');"]
+startedAt: 2026-11-10T17:58:28.523511+00:00
+exit: 0
+C17 entry metadata schema PASS, seven declared sources and fixed official fields, HTTP Lab framing blocked. No SDK/browser/HTTP.

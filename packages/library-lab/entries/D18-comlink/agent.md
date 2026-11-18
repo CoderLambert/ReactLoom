@@ -1,59 +1,31 @@
-# D18 Comlink — 工程手册
+# D18 Comlink — 工程迁移指南
 
-## 适用
+适用于把纯计算移至模块Worker并组织RPC、buffer转移和少量代理回调；不是线程池、HTTP限流器、授权或持久队列。`comlink@4.4.2`是Apache-2.0，使用wrap/expose/transfer/proxy/releaseProxy。不要从旧说明复制MIT。
 
-把可结构化克隆的计算放到模块 Worker，并用小的 RPC 表面调用它。大块二进制用显式转移。进度用代理回调。
+## 完整迁入
 
-不要用它限制 HTTP 并发，不要用它代替 Yjs 或鉴权，不要在主线程伪造 Worker 的返回值。
+已有React/TypeScript浏览器宿主运行 `pnpm add comlink@4.4.2`。复制examples/example.tsx、worker.ts、worker-api.ts、session-policy.mjs/.d.mts；demo.tsx只是Lab转发可省。TypeScript使用支持ES模块/import.meta的打包器解析（如module ESNext、moduleResolution Bundler、jsx react-jsx、DOM库）。Vite可识别静态 `new Worker(new URL('./worker.ts', import.meta.url), {type:'module'})`；不要运行时拼URL。无CSS、服务地址、账号或Lab内部模块要求。部署需模块Worker支持和同源worker-src权限，不为示例全局放开CSP。
 
-## 版本
+主线程的Remote类型来自worker-api.ts，worker.ts只expose真实api。测试通过Node Worker adapter导入同一api，而不是测试专用实现。Node套件需要>=22.18原生TS擦除；浏览器产物需另测，Node通过不证明浏览器通过。
 
-`comlink@4.4.2`，MIT。入口是 `wrap`、`expose`、`transfer`、`proxy`、`releaseProxy`。
+## 场景与边界
 
-Worker 使用 `{ type: 'module' }` 和相对于 `import.meta.url` 的 `./worker.ts`。
+basic是可输入的字符串词频，使用Map再返回行数组；__proto__/constructor/toString是普通数据。最多10000项、每项最多200个UTF16单元（不是码点），空串允许；Array.from使稀疏项也受校验。校验发生在Worker接收之后，生产仍需发送前的规模/内存预算。
 
-## 迁移
+business发送非法数字项，真实远端TypeError返回主线程；修正开关再运行成功。UI每批新建Worker，SDK额外证明同一个端点拒绝后可用。它不是4000条同一示例改名。
 
-从 [`examples/example.tsx`](examples/example.tsx) 带走 `dispose`、epoch 和 `Promise.race`。从 [`examples/worker.ts`](examples/worker.ts) 带走 `summarize`、`sumBytes` 和会 `await` 的 `progress`。
+advanced实际transfer使主线程bytes.byteLength为0，sum75；proxy回调共10步，Worker逐步await确认。在正常完成/失败的finally释放收到的回调proxy；强制结束不等待远端协作。最多20步，sumBytes上限1MiB。90ms间隔是可观察fixture，不是CPU/帧率测量。
 
-生产任务换成真实计算时保留：构造失败可见、转移列表明确、回调看 epoch、终止不表示成功。
+## 不能删的生命周期
 
-不要把 4000 项的演示改成在主线程先算好再送进 Worker。
+每批独占worker/remote/controller。session先移出ref再dispose；启动期间ref存在则拒绝重复启动。成功/失败/取消/卸载都请求release并terminate；同步release抛错也不跳过terminate。4.4.2 releaseProxy公开返回void，不能await确认；立即terminate可能中断对端RELEASE处理。界面仅报告请求和terminate调用，不称ACK。
 
-## 不可删的清理
+主线程AbortController没有自动跨线程传递。取消以物理终止为边界；Promise.race让主线程等待结算，不能声称远端挂起Promise已resolve。5秒本地超时防止无expose端点无限等待；error/messageerror失败通道与超时在finally释放。epoch必须在启动/取消/卸载递增，回调/结果检查其仍当前，旧finally不能dispose新worker。
 
-`dispose` 清空 session、abort、尝试 `releaseProxy`，并在 `finally` 里 `worker.terminate()`。释放失败不能跳过终止。
+## 反例与验证
 
-每次 `execute` 和取消都递增 epoch。进度回调和最终 `setResult` 都要 epoch 仍匹配。
+禁止主线程伪造词频、裸函数参数、转移后复用buffer、Record={}处理通用键、只release不terminate、把取消写成业务成功、把超时本身当线程关闭证据。不要把Promise.resolve(releaseProxy())包装成释放ACK，SDK无此公开保证。
 
-结束后移除 `error` 和 `messageerror` 监听。卸载 effect 同样 `dispose`。
+SDK断言必须通过真实Comlink和Node Worker运行共享API：危险键正确、远端拒绝后端点恢复、buffer分离和回调顺序。业务界限/清理失败是policy测试，单列。浏览器还须观察真正模块Worker成功、取消、卸载/切Tab后的close与page.workers，而不只组件消失；提供validation/browser.spec.ts给主控。没有网络/WASM/SharedArrayBuffer/线程池或协作式取消。
 
-## 反例
-
-- 主线程直接 `setResult` 写死词频。
-- 转移后继续读原 `Uint8Array`。
-- 把裸函数传给 Worker。
-- 只 `releaseProxy` 不 `terminate`。
-- `terminate` 之后把界面写成成功。
-- 旧回调覆盖新任务。
-- 为每个元素创建 Worker。
-- 把 `Y.Doc` 当普通参数克隆。
-
-## 测试断言
-
-- 真实 Comlink 经 `MessagePort` 或 Worker 调用 `summarize`。
-- `transfer` 登记的缓冲区在发送侧分离，和为字节之和。
-- 代理回调按顺序收到 1 到 5。
-- `releaseProxy` 失败时仍执行 `terminate`。
-- 取消后的回调不回写。
-- `tests/sdk.test.mjs` 导入真实 `comlink`。无收据则 NOT_RUN。
-
-## 真实限制
-
-没有 SharedArrayBuffer，没有 WASM，没有协作式 signal 穿进 `summarize`。4000 项不是容量测试。模块 Worker 可能被 CSP 拒绝，这时界面必须显示构造错误。
-
-`terminate` 不会把远端 Promise resolve 成业务结果。
-
-## 证据
-
-sdk、build、browser 保持 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有匹配收据。Actions 41779873259 不是本条目 PASS。不要改 `verification.json`。
+正式verification sdk/build/browser保持NOT_RUN直到匹配收据；本地日志与六项内容复核在local-validation.md，不从历史CI继承PASS。

@@ -5,13 +5,7 @@
   "name": "react-i18next",
   "group": "C",
   "summary": "React useTranslation、Trans 富文本与多工作区 I18nextProvider 隔离",
-  "tags": [
-    "React 19",
-    "国际化",
-    "Provider",
-    "Trans",
-    "语言切换"
-  ],
+  "tags": ["React 19", "国际化", "Provider", "Trans", "语言切换"],
   "contentState": "recreated",
   "packages": [
     {
@@ -58,8 +52,13 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/workspace.mjs",
+        "examples/workspace.d.mts",
         "examples/language-switch.mjs",
         "examples/language-switch.d.mts",
+        "examples/safe-emphasis.mjs",
+        "examples/safe-emphasis.d.mts",
+        "examples/styles.css",
         "examples/demo.tsx"
       ],
       "capabilities": []
@@ -73,8 +72,13 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/workspace.mjs",
+        "examples/workspace.d.mts",
         "examples/language-switch.mjs",
         "examples/language-switch.d.mts",
+        "examples/safe-emphasis.mjs",
+        "examples/safe-emphasis.d.mts",
+        "examples/styles.css",
         "examples/demo.tsx"
       ],
       "capabilities": []
@@ -82,14 +86,19 @@
     {
       "demoId": "advanced",
       "title": "两个独立租户语言 Provider",
-      "description": "同一组资源，两组 provider 互不更改对方语言",
+      "description": "稳定原实例队列与两个Provider，手动在途/拒绝/恢复与重置清理可观察",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/workspace.mjs",
+        "examples/workspace.d.mts",
         "examples/language-switch.mjs",
         "examples/language-switch.d.mts",
+        "examples/safe-emphasis.mjs",
+        "examples/safe-emphasis.d.mts",
+        "examples/styles.css",
         "examples/demo.tsx"
       ],
       "capabilities": []
@@ -97,11 +106,31 @@
   ],
   "license": {
     "spdx": "MIT",
-    "note": "原生 SDK 依赖遵守上游 MIT；本条目不分发第三方媒体，许可仍需目标产品核对"
+    "note": "react-i18next17.0.16与i18next26.4.3均MIT；源码内翻译资源和局部CSS，不接付费翻译或远程服务。"
   },
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
     "mode": "recreated",
-    "note": "根据官方 API 独立编写；不沿用旧研究源文件或历史测试 PASS"
+    "note": "保留recreated/原恢复事实及三目标；依据实际17.0.16 hook wrapper语义把串行队列归原Provider实例，新增透明本地Promise gate与精确observer清理，不继承旧PASS。"
+  },
+  "official": {
+    "readme": {
+      "repository": "i18next/react-i18next",
+      "commit": "606b6a55f231bbf73823863fbb94e6b8eb8272fd",
+      "path": "README.md",
+      "sourceUrl": "https://github.com/i18next/react-i18next/blob/606b6a55f231bbf73823863fbb94e6b8eb8272fd/README.md",
+      "snapshotPath": "official/readme.md",
+      "version": "17.0.16",
+      "language": "en",
+      "syncedAt": "2026-11-10T17:43:00.934743+00:00",
+      "sha256": "bcd692905cb53f1b7ca8e4c8c4b89b7fb0510669e41e9c3749e7830d3ada1c9b"
+    },
+    "homepage": {
+      "url": "https://react.i18next.com/",
+      "kind": "website",
+      "status": "blocked",
+      "checkedAt": "2026-11-10T17:42:59.803331+00:00",
+      "reason": "实际CSP frame-ancestors为https: ionic: capacitor:，排除当前HTTP Lab祖先（http://127.0.0.1:4319）；XFO字段null，按优先CSP判定blocked。未读正文/未做浏览器可嵌入确认，HTTPS部署需另核。"
+    }
   }
 }

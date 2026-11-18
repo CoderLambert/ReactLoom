@@ -1,0 +1,80 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["pnpm", "exec", "biome", "check", "--write", "packages/library-lab/entries/C10-tanstack-virtual/examples", "packages/library-lab/entries/C10-tanstack-virtual/tests"], "utc": "2026-11-10T16:21:24.645576+00:00", "exit": 1}
+Skipped 2 suggested fixes.
+If you wish to apply the suggested (unsafe) fixes, use the command biome check --write --unsafe
+
+Checked 8 files in 13ms. Fixed 8 files.
+Found 4 errors.
+packages/library-lab/entries/C10-tanstack-virtual/examples/example.tsx:80:9 lint/a11y/useSemanticElements ━━━━━━━━━━
+
+  × The elements with this role can be changed to the following elements:
+    <section>
+  
+    78 │       <div
+    79 │         ref={viewport}
+  > 80 │         role="region"
+       │         ^^^^^^^^^^^^^
+    81 │         aria-label="虚拟文章滚动窗口"
+    82 │         tabIndex={0}
+  
+  i For examples and more information, see WAI-ARIA Roles
+  
+  i Replace with one of these elements:
+  
+  - <section>
+  
+
+packages/library-lab/entries/C10-tanstack-virtual/examples/example.tsx:82:9 lint/a11y/noNoninteractiveTabindex  FIXABLE  ━━━━━━━━━━
+
+  × The HTML element div is non-interactive. Do not use tabIndex.
+  
+    80 │         role="region"
+    81 │         aria-label="虚拟文章滚动窗口"
+  > 82 │         tabIndex={0}
+       │         ^^^^^^^^^^^^
+    83 │         className="c10-viewport"
+    84 │         data-testid="c10-scroll"
+  
+  i Adding non-interactive elements to the keyboard navigation flow can confuse users.
+  
+  i Unsafe fix: Remove the tabIndex attribute.
+  
+     80  80 │           role="region"
+     81  81 │           aria-label="虚拟文章滚动窗口"
+     82     │ - ········tabIndex={0}
+     83  82 │           className="c10-viewport"
+     84  83 │           data-testid="c10-scroll"
+  
+
+packages/library-lab/entries/C10-tanstack-virtual/examples/filter-policy.mjs:7:18 lint/suspicious/noControlCharactersInRegex ━━━━━━━━━━
+
+  × Unexpected control character in a regular expression.
+  
+    5 │     value
+    6 │       .normalize('NFC')
+  > 7 │       .replace(/[\u0000-\u001f\u007f]/gu, '')
+      │                  ^^^^^^
+    8 │       .trim(),
+    9 │   )
+  
+  i Control characters are unusual and potentially incorrect inputs, so they are disallowed.
+  
+
+packages/library-lab/entries/C10-tanstack-virtual/examples/filter-policy.mjs:7:25 lint/suspicious/noControlCharactersInRegex ━━━━━━━━━━
+
+  × Unexpected control character in a regular expression.
+  
+    5 │     value
+    6 │       .normalize('NFC')
+  > 7 │       .replace(/[\u0000-\u001f\u007f]/gu, '')
+      │                         ^^^^^^
+    8 │       .trim(),
+    9 │   )
+  
+  i Control characters are unusual and potentially incorrect inputs, so they are disallowed.
+  
+
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while applying fixes.
+  
+

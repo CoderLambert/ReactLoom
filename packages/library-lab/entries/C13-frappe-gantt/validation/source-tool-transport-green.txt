@@ -1,0 +1,58 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['python3', 'entries/C13-frappe-gantt/validation/source-tool-transport-fixture.py']
+startedAt: 2026-11-10T16:41:04.140222+00:00
+exit: 1
+Live successful pair byte-identical; all scenarios ran only in disposable directories.
+test_complete_success_replaces_both_after_all_transfers (__main__.SourceRefreshProtection.test_complete_success_replaces_both_after_all_transfers) ... ERROR
+test_first_request_failure_preserves_success_pair (__main__.SourceRefreshProtection.test_first_request_failure_preserves_success_pair) ... ERROR
+test_homepage_failure_after_readme_preserves_success_pair (__main__.SourceRefreshProtection.test_homepage_failure_after_readme_preserves_success_pair) ... ERROR
+
+======================================================================
+ERROR: test_complete_success_replaces_both_after_all_transfers (__main__.SourceRefreshProtection.test_complete_success_replaces_both_after_all_transfers)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C13-frappe-gantt/validation/source-tool-transport-fixture.py", line 88, in test_complete_success_replaces_both_after_all_transfers
+    current = json.loads((official / 'source-evidence.json').read_text())
+  File "/home/lambert/.local/share/mise/installs/python/3.15.2/lib/python3.15/json/__init__.py", line 371, in loads
+    return _default_decoder.decode(s)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/home/lambert/.local/share/mise/installs/python/3.15.2/lib/python3.15/json/decoder.py", line 361, in decode
+    raise JSONDecodeError("Extra data", s, end)
+json.decoder.JSONDecodeError: Extra data: line 168 column 2 (char 4784)
+
+======================================================================
+ERROR: test_first_request_failure_preserves_success_pair (__main__.SourceRefreshProtection.test_first_request_failure_preserves_success_pair)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C13-frappe-gantt/validation/source-tool-transport-fixture.py", line 119, in test_first_request_failure_preserves_success_pair
+    self.assert_failure_preserves_previous(1)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C13-frappe-gantt/validation/source-tool-transport-fixture.py", line 110, in assert_failure_preserves_previous
+    failed = json.loads((official / 'source-evidence.failed.json').read_text())
+  File "/home/lambert/.local/share/mise/installs/python/3.15.2/lib/python3.15/json/__init__.py", line 371, in loads
+    return _default_decoder.decode(s)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/home/lambert/.local/share/mise/installs/python/3.15.2/lib/python3.15/json/decoder.py", line 361, in decode
+    raise JSONDecodeError("Extra data", s, end)
+json.decoder.JSONDecodeError: Extra data: line 11 column 2 (char 286)
+
+======================================================================
+ERROR: test_homepage_failure_after_readme_preserves_success_pair (__main__.SourceRefreshProtection.test_homepage_failure_after_readme_preserves_success_pair)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C13-frappe-gantt/validation/source-tool-transport-fixture.py", line 122, in test_homepage_failure_after_readme_preserves_success_pair
+    self.assert_failure_preserves_previous(5)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C13-frappe-gantt/validation/source-tool-transport-fixture.py", line 110, in assert_failure_preserves_previous
+    failed = json.loads((official / 'source-evidence.failed.json').read_text())
+  File "/home/lambert/.local/share/mise/installs/python/3.15.2/lib/python3.15/json/__init__.py", line 371, in loads
+    return _default_decoder.decode(s)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/home/lambert/.local/share/mise/installs/python/3.15.2/lib/python3.15/json/decoder.py", line 361, in decode
+    raise JSONDecodeError("Extra data", s, end)
+json.decoder.JSONDecodeError: Extra data: line 138 column 2 (char 4057)
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.012s
+
+FAILED (errors=3)

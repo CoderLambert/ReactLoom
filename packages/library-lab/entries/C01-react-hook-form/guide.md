@@ -1,141 +1,98 @@
-# React Hook Form 7.89.0｜字段身份、提交代际和中文输入
+# React Hook Form：从字段注册到动态订阅表单
 
-Lab 锁定 `react-hook-form@7.89.0`（MIT），和 SPA 模板同一主版本。不要为了演示升到下一个 major。v7 的动态行用 `useFieldArray` 给出的 `field.id` 做 key。
+一个RSS订阅表单有分组、标题和URL，随后还要支持增删来源、指出哪一行重复、提交时展示业务错误。React Hook Form（RHF）负责输入注册、校验、字段状态和提交协调；你的应用负责URL规则、请求、取消和保存。本例固定 **react-hook-form 7.89.0**，使用真实SDK与本地订阅fixture，没有网络或服务端持久化。
 
-示例是本地订阅草稿，不访问网络。`delayWithSignal` 和 409 都是 fixture。没有收据时 sdk / build / browser 保持 NOT_RUN。Actions 41779873259 不是本条目 PASS。
+当表单有多个字段、动态行和字段级错误时，RHF能省去手写值与错误同步。只有一个输入时先考虑原生form；需要JSON Schema生成整页时比较JSON Forms。RHF不是鉴权、API client或schema编译器；和Zod组合需要另外接resolver或提交边界校验，本例没有安装resolver。
 
-## Lab 当前示例
+## 先走通register → errors → handleSubmit
 
-[`examples/example.tsx`](examples/example.tsx) 调用真实的 `useForm`、`useFieldArray`、`useWatch`、`register`、`handleSubmit`、`setError`。
+| 入口 | 本表单做什么 | 观察位置 |
+| --- | --- | --- |
+| `useForm({ defaultValues, mode: 'onBlur' })` | 定义嵌套草稿和校验时机；失焦或提交时按规则检查 | 默认值、字段错误和草稿状态 |
+| `register('group', rules)` | 返回name、ref、onChange、onBlur，连接原生input与库 | 输入框的值与分组错误 |
+| `formState.errors` | 保存按字段路径组织的错误 | 对应字段文字、aria-invalid、aria-describedby |
+| `handleSubmit(onValid, onInvalid)` | 校验通过才调用业务submit；失败走错误回调 | 状态提示、提交尝试次数和成功预览 |
+| `reset()` | 恢复本例defaultValues和字段状态 | 一行初始来源，成功预览被应用清除 |
 
-- 草稿形状是 `{ group, sources: [{ name, url }] }`。`mode: 'onBlur'`。
-- URL 通过 [`feed-url-policy.mjs`](examples/feed-url-policy.mjs) 的 `canonicalFeedUrl`：只要 HTTPS、不能在 URL 里带用户名或密码。比较重复时主机和默认 443 规范化，path 和 query 保持大小写，fragment 丢掉。这不是服务端 SSRF 防护。
-- [`form-policy.mjs`](examples/form-policy.mjs) 的 `fingerprintDraft` 只覆盖分组和源的名字、URL。`canApplySubmitResult` 要求指纹、generation 和未中止三者同时成立。
-- `useWatch` 看到增删行和文本变化。指纹一变就 abort 并增加 generation，清掉 `root.server`。
-- 回包前再读 `getValues()` 算当前指纹。对不上就不 `setError`、不写入已保存预览。
-- 重复 URL：先在客户端用 `findDuplicateFeedIndex` 标到具体行；advanced 把 `https://example.com/duplicate` 当成模拟 409，错误写到 `sources.${index}.url` 和 `root.server`。
-- IME：`shouldBlockCompositionEnter` 在合成中、`keyCode === 229`，或合成结束后 80ms 内的 Enter 上返回真。
-- 已保存预览只在快照指纹等于当前草稿时显示。
-- 卸载时 abort。
+RHF默认走原生输入注册，不要求为每个input再写React的value/onChange。`register`返回的处理器要真正展开到input，不能被另一套onChange悄悄覆盖。第三方受控Select等才考虑Controller，不能对同一字段同时register与Controller。
 
-没有 Controller 示例，没有服务端 schema，没有付费接口。下面仍写这些取舍，因为它们是迁出去之后最容易写错的地方。
+实际 [example.tsx](examples/example.tsx) 的关键调用如下；完整文件保留IME和异步保护，不应只复制片段就接生产请求。
 
-## 1. 什么时候用
+```tsx
+useForm<SubscriptionDraft>({ defaultValues: defaultDraft, mode: 'onBlur' })
 
-多字段、动态行、字段级错误、要和受控组件共存的表单。一个输入框用原生 `<form>`。JSON Schema 驱动的整页生成看别的条目，不要让 RHF 兼任 schema 编译器。
+<input {...register('group', {
+  required: '请输入分组名',
+  minLength: { value: 2, message: '最少两个字符' },
+})} />
+```
 
-RHF 不管鉴权、幂等和乐观锁。`setError` 是这一次提交的展示，不是数据库。
+字段路径 `sources.0.url` 对应结果中的 `sources[0].url`，不是一个含点号的平面键。完整form使用noValidate，让提交时错误统一交由RHF和可读文字呈现；输入type=url仍保留语义。HTML校验与RHF规则是两个机制，不靠浏览器原生弹窗冒充RHF错误。
 
-## 2. 模型
+本例useWatch订阅整个草稿来展示数据和计算提交指纹，所以输入会使外层示例重新渲染；不要把“非受控注册”理解成整棵React树永远不重渲染。真实大表单可按字段拆分订阅，别在每次键入时做昂贵计算或网络请求。
 
-非受控注册是默认路径：`register` 把 DOM 交给库，减少每个按键的 React 渲染。受控 UI（设计系统的 Select、日期）用 `Controller`，**不要和同一字段的 `register` 叠用**。
+## 实验一：字段错误和成功的嵌套数据
 
-`useFieldArray` 的 `field.id` 是行的身份。数组下标会在删除中间行之后指向别的数据。
+**操作**：在basic清空“分组名称”后移开焦点，或输入1个字符；将URL改为`http://example.com/rss`并失焦。也可直接点“验证并预览”。
 
-派生值（合计、是否与已保存一致）在渲染时算，不要再存一份会过期的 state。Lab 的 `savedIsCurrent` 就是这样。
+**观察**：分组出现必填/最少两字提示，URL显示只允许无用户名密码的HTTPS完整地址；字段的aria-describedby指向本行错误。字段错误区域预留两行高度，失焦校验显示或移除当前提示时不把提交按钮推离正在点击的位置；没有用pointerdown绕过正常提交。失败时不会出现成功output。修正分组、标题与HTTPS地址后提交，出现“通过校验的本地数据”，包括group和sources数组。
 
-提交的生命周期：
+“草稿状态/提交状态/提交次数”来自真实formState；次数包括校验失败的提交尝试，不等于服务端已保存次数。展开“查看草稿与动态行身份”，看到同一useWatch草稿；修改任何字段后，旧成功预览只有在指纹仍与草稿相同才显示。重置恢复默认值并清除预览。
+
+URL规则来自 [feed-url-policy.mjs](examples/feed-url-policy.mjs)：只接受HTTPS且不带用户信息；比较重复时规范化主机和默认443端口、移除fragment，保留path/query大小写。它不解析DNS、重定向或内网IP，不能替代服务端SSRF防护。
+
+## 实验二：动态行的身份与字段路径
+
+**操作**：在business新增两行，分别修改名称/URL；展开草稿与行身份记录field.id，然后删除第一行，再查看剩余值和id。最后让两行指向规范化后相同URL，提交。
+
+**观察**：删除导致剩余行下标前移，但原field.id保持；React复用正确行，不把旧DOM状态串到另一条来源。重复URL错误出现在后出现的重复行，并有分组级提示。重置后回到一个默认来源；reset或重挂可以生成新的field.id，不承诺id是数据库主键。
+
+实际代码用 `useFieldArray({ control, name: 'sources' })` 返回fields/append/remove，渲染key是field.id；注册路径仍是当前的` sources.${index}.url `。一个解决React行身份，一个描述表单值位置，不能互相替代。v7.89.0默认id；当前官网同时提到v8 beta将id改为key，本例不提前迁移。
+
+添加/删除会先取消当前提交，再改变字段数组；不能等旧409回来后仍按提交时的数组下标映射。已存在的[field身份和提交策略](examples/form-policy.mjs)继续保留，不为教学改成下标key。
+
+## 实验三：409、改稿、取消和过期结果
+
+**操作**：在advanced把任意URL改为`https://example.com/duplicate`并提交，等待450ms本地fixture。然后改成正确URL重新提交；也可在450ms窗口内编辑字段、删除来源、点“取消本地提交”或停止卸载。
+
+**观察**：URL文本含`/duplicate`时模拟409，把错误写到具体sources行的url和root.server；这不是发出的HTTP请求。改稿或主动取消后不会回填旧409，也不会用旧值覆盖当前预览。修正后再提交，可以恢复成功预览。字段错误通过setError显式映射，只接受已知路径，不把任意服务端字符串当字段路径。
 
 ```text
-handleSubmit
-  → 记下指纹和 generation，创建 AbortController
-  → 等待（示例里是本地 delay）
-  → canApplySubmitResult?
-       否：丢弃，包括 409
-       是：setError 或 setSaved
+handleSubmit校验通过
+  → 保存输入指纹与generation，创建本次AbortController
+  → 等待本地fixture（生产替换成API client）
+  → 当前指纹相同 AND generation相同 AND signal未中止？
+      是：setError或写成功快照
+      否：丢弃整个旧结果
 ```
 
-只 abort 不够。旧请求在 abort 事件之前可能已经读到 body。所以还要核对指纹和代际。
+`onChangeCapture`及时使活动提交失效；useWatch同时覆盖文本与增删，回填前再读getValues核对当前指纹。Abort只表示取消意图，不能单靠它推断已经到达回包处理的旧结果不会写入；generation区分轮次，指纹区分具体输入。取消请求也不等于服务端事务回滚。
 
-## 3. 三层
+中文IME由现有 [form-policy.mjs](examples/form-policy.mjs) 处理：组合中、native isComposing、keyCode229或compositionend后80ms内的Enter会被拦截，避免选词Enter误提交；不在组合过程中trim输入。80ms是本例策略，Node或脚本派发composition事件不能证明所有真实操作系统IME行为。
 
-### 基本
+## 最小迁移与清理
 
-分组加一行来源。blur 时检查 HTTPS。错误用文本和 `aria-invalid`，不只靠红框。提交成功把当前值放进预览。
+在现有ReactTypeScript项目中安装`pnpm add react-hook-form@7.89.0`。复制example.tsx、workshop.css、feed-url-policy.mjs、form-policy.mjs及两个.d.mts；保持相对路径。demo.tsx只是Lab重导出。默认组件接收level为basic/business/advanced。
 
-### 业务
+UI卸载时增加generation并中止本组件持有的controller。本地delay在完成/abort时移除监听，abort会清除timer。保存值、反馈、AbortController与动态行身份只归当前表单；未实现localStorage或服务器存储。
 
-追加和删除行。key 是 `field.id`。删除后再提交，错误必须落在剩下的那一行，而不是旧下标。`useWatch` 把增删也算进「草稿变了」。
+迁入真实业务时用项目API client替换delay与冲突fixture，仍保留提交快照+代际+signal校验、增删前失效和卸载清理。远程Query刷新不能无条件reset正在编辑的草稿；先定义脏字段与版本冲突策略。服务端还需schema、授权、幂等和并发控制。取消客户端Promise不保证远端没有写入。
 
-### 进阶
+## 运行与验证范围
 
-把 URL 改成文档里写的 duplicate 地址，看 409 回填。提交过程中改任一字段，反馈变成「旧提交已取消」。取消和卸载都不能把旧 409 写上来。
+仓库依赖已固定，正常打开Lab的demo页即可操作。定向Node命令cwd为packages/library-lab：
 
-中文输入法：组合过程中不要 trim，也不要在那次 Enter 上提交过滤或表单。80ms 窗口是示例策略，不是操作系统规范。目标环境要用真实 IME 再看一次。
-
-## 4. 反例
-
-### 反例 1：同一字段又 register 又 Controller
-
-值会有两份主人。原生输入用 `register`。第三方受控组件才用 `Controller`。
-
-### 反例 2：行 key 用 index
-
-```tsx
-{fields.map((field, index) => <fieldset key={index} />)}
+```sh
+node --test entries/C01-react-hook-form/tests/sdk.test.mjs
+node --test entries/C01-react-hook-form/tests/form-policy.test.mjs entries/C01-react-hook-form/tests/url-policy.test.mjs
 ```
 
-删除第 0 行会让第 1 行的 DOM 状态串到错误的数据上。用 `field.id`。
+SDK套件真实导入RHF：SSR注册field-array字段，以及公开createFormControl的注册校验、有效/无效handleSubmit、setError/clearErrors和reset；它没有调用私有control字段。策略套件只检查URL身份、指纹/代际/abort门禁和IME规则。两者不能证明真实DOM的动态焦点、行身份、IME、450ms取消或错误关联，仍需浏览器对应路径。
 
-### 反例 3：远程数据无条件 reset
+本轮命令/退出码/原始输出/六项和未测项见 [local-validation.md](local-validation.md)。正式verification的sdk/build/browser仍NOT_RUN；本地SDK执行与干净提交收据分开，不继承旧Actions结论。
 
-Query 刷新时 `reset(serverDraft)` 会抹掉正在编辑的脏字段。先定规则：仅在 `!isDirty` 时 reset，或按版本号询问。Lab 没有这条远程回填。
+## 官方原文与版本
 
-### 反例 4：订阅整个表单却在每个键上做重活
+[官方V7简体中文README](official/readme.md)取自react-hook-form/react-hook-form的固定v7.89.0提交`4722d22fbbafd52b3186e737e62bd530659f1b24`，路径`docs/README.V7.zh-CN.md`。同ref的`docs/README.zh-CN.md`仍展示V6的ref={register}写法，因此没有因文件名更短就误选它；根README和其他翻译候选已实际列目录核对。
 
-`useWatch()` 不带 name 会在任意字段变化时更新。可以，但不要在那个渲染里发请求。Lab 只用它做指纹。真正的请求只在 submit。
-
-### 反例 5：await 之后直接 setError
-
-```tsx
-const result = await save(getValues())
-setError(result.path, { message: result.message })
-```
-
-中间用户可能改了 URL 或删了行。先 `canApplySubmitResult`。
-
-### 反例 6：disabled 和清理搞反
-
-提交中禁用按钮，防止双击。卸载仍要 abort。不要用永久 disabled 代替取消。DOM disabled 也不会取消已经发出的 Promise。
-
-### 反例 7：把任意服务器路径传给 setError
-
-只接受你知道的 `sources.${number}.url` 或 `root.server`。不要把接口返回的字符串直接当成路径。
-
-### 反例 8：整段 URL toLowerCase
-
-`/Feed` 和 `/feed` 可能是不同资源。Lab 只规范化主机和默认端口。
-
-### 反例 9：把客户端 URL 策略当成 SSRF 防护
-
-`canonicalFeedUrl` 不解析 DNS，不看重定向，不看内网 IP。抓取在服务端另做。
-
-## 5. 组合
-
-**Zod**：在提交边界 `safeParse`。RHF 的 resolver 可以接 Zod，但本示例没有装 resolver。字段组件不要再写一套矛盾的正则。
-
-**Query**：mutation 的 key 包含分组和规范化后的 URL。409 映射到 `setError`。缓存不是表单草稿。
-
-**MSW**：用 200 和 409 两种 handler。断言取消后 UI 不出现旧的字段错误。MSW 通过不等于 RHF 的代际逻辑通过，两边都要有。
-
-## 6. 可访问性
-
-每个输入有 label。错误关联到字段。`root.server` 用可读区域，不要只弹一个消失的 toast。动态行的添加按钮有名字。提交中的禁用状态要能被读到。
-
-## 7. 练习
-
-1. 删除中间一行再触发重复 URL，确认错误下标是新的。
-2. 提交后立刻改 URL，409 fixture 不能出现。
-3. 用中文输入法在名称里按 Enter，表单不提交；组合结束后短时间内的 Enter 也不提交。
-4. 接上真实 mutation 时保持 abort + 指纹 + generation。不要把 `delayWithSignal` 复制进生产。
-
-## 8. 证据
-
-`url-policy` 和 `form-policy` 的单测不渲染 RHF。`tests/sdk.test.mjs` 若 import 了真实的 `react-hook-form`，也要实际跑过并留下收据才是 sdk PASS。
-
-## 9. 资料
-
-- https://react-hook-form.com/docs/usefieldarray
-- https://react-hook-form.com/docs/useform/seterror
-- https://react-hook-form.com/docs/useform/reset
-- https://react-hook-form.com/docs/useform/watch
+原文保持上游字节、署名、图片/链接，不把本地中文教学冒称官方翻译；精确语言/版本/日期/SHA-256在library.json和official/source-evidence.json。[官网](https://react-hook-form.com/)本轮GET200，未见明确跨源嵌入限制头，尚未经Lab origin浏览器确认，所以unknown并保留直达入口。

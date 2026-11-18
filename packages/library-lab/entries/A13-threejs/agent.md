@@ -1,45 +1,17 @@
-# A13 Three.js — 工程手册
+# Three.js 0.186.0 工程复用
 
-## 适用
+需要直接持有三维渲染器、循环和资源时使用；React声明式场景可选R3F，不共管Canvas。实际依赖three0.186.0，WebGLRenderer需要WebGL2。只有本地Box/Sphere与光照，没有模型/纹理/HTTP。
 
-`three@0.186.0` 适合需要直接掌握渲染循环和 GPU 资源的场景。声明式 React 树用 A14，不要两个所有者共用 canvas。一个网格的演示不要扩展成未经测量的实例化性能结论。
+## 两个目标
 
-## 版本
+basic理解Scene/Camera/Geometry/Material/Mesh，真实材质变色/速度0/static frame/容器resize与投影同步；advanced真实循环门禁、几何替换dispose、上下文与Canvas退出。旧business只有标题差异已合并，不再声明重复目标。
 
-钉 `three@0.186.0`。使用 `WebGLRenderer`、`SRGBColorSpace`、`BufferGeometry`、`setAnimationLoop`。不要写 `outputEncoding` 或旧 `Geometry`。研究笔记中的 0.186.1 不是本 pin。
+复制example.tsx、geometry.ts、animation-policy.ts、workshop.css；demo.tsx只是适配。state只存参数，effect/ref持有对象，draw只改rotation并render，不每帧setState。显式“读取当前渲染状态”读取真实uuid/属性/renderer.info；dispose事件计数为示例观察，不是显存测量。
 
-## 迁移
+颜色set保持Material，几何替换后dispose旧BufferGeometry；材质/几何变化补静帧。DPR<=2，ResizeObserver同时setSize(false)/aspect/updateProjectionMatrix。setAnimationLoop由播放/文档可见/减少动态+显式覆盖/正有限速度控制，delta<=0.1。
 
-从手写 RAF 改为 `renderer.setAnimationLoop`。从「remove 即释放」改为几何、材质、渲染器分别 dispose，并 `forceContextLoss`。换几何时先替换再 dispose 上一份。颜色用 `material.color.set`，不新建上下文。
+卸载先setAnimationLoop(null)，断RO/visibility，mesh移出并dispose对象、独占geometry/material、renderer.dispose/forceContextLoss/移除Canvas。Object3D.dispose不代替共享几何/材质/纹理释放。构造失败只有错误说明，无contextrestored重建。初始state读取浏览器偏好，因此整个查看器必须client-only/不参与SSR首屏；仅标为客户端组件不足以保证hydration一致。Renderer在effect内也不等于组件本身SSR-safe。
 
-## 不可删的清理
+真实Node SDK2只测Geometry/Color/Camera/Scene/实际dispose事件，没有WebGL；policy13只开关。browser必须实际Canvas画面、材质/几何变化、帧统计、投影/尺寸、dispose与丢失旧上下文；不mock渲染器。复杂模型、触控/读屏/硬件性能与dev重放另验。
 
-cleanup 停循环、断开 ResizeObserver、移除 `visibilitychange`、dispose 独占几何和材质、`renderer.dispose()`、`forceContextLoss()`、移除 DOM。速度为 0、隐藏页签或减少动态时循环必须关掉，并保留一帧。delta 不超过 0.1 秒。DPR 不超过 2。
-
-## 反例
-
-```ts
-scene.remove(mesh); // 错：GPU 缓冲还在
-renderer.setAnimationLoop(null);
-mesh.geometry.dispose();
-material.dispose();
-renderer.dispose();
-```
-
-render 中 `new WebGLRenderer`、无上限 DPR、把 Scene 放进 React state，都不要做。
-
-## 测试断言
-
-`shouldAnimate` 在暂停、隐藏或减少动态且未覆盖时为 false。`shouldRunFrameLoop` 在速度不是正有限数时为 false。SDK 收据还要看到真实渲染器、换几何后旧几何 dispose、卸载后循环停止。没有 runs 收据则为 NOT_RUN。
-
-## 真实限制
-
-没有 OrbitControls、InstancedMesh、glTF、射线拾取或 HTTP。覆盖减少动态只在 advanced。初始化失败没有上下文恢复流程。`renderer.info` 未读取，也不能当成显存。没有 FPS 数字。
-
-## 断言边界
-
-`tests/animation-policy.test.mts` 只判断循环开关。SDK 用例要 `import * as THREE from 'three'`。没有 WebGL 时断言失败路径可见，而不是把渲染器桩掉。换几何后旧几何已 dispose，卸载调用 `setAnimationLoop(null)`。缺收据时保持 NOT_RUN。
-
-## 证据
-
-Actions `41779873259` 的仓库级 install、typecheck、build、52 SDK 文件（153 测试）和 45 Playwright 不是 A13 PASS。不要把动画策略测试或历史研究 PASS 写入 `verification.json`。
+匹配README采用npm0.186.0 gitHead148ef33ecb6d2502ff796d4554abd1549c95d519，不误用r186标签中声明0.186.1的manifest。原文/固定来源/完整官网头与选择依据见official和validation，正式verification仍NOT_RUN直到获授权recorder。

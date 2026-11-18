@@ -1,0 +1,5 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['python3', '-c', "import ast,pathlib; paths=[pathlib.Path('entries/C09-react-virtuoso/validation/fetch-official.py'),pathlib.Path('entries/C09-react-virtuoso/validation/fetch-homepage.py')]; [ast.parse(p.read_text(),filename=str(p)) for p in paths]; print('2 evidence scripts parse; no HTTP re-fetch')"]
+startedAt: 2026-11-10T15:55:56.867326+00:00
+exit: 0
+2 evidence scripts parse; no HTTP re-fetch

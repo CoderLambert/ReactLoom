@@ -1,0 +1,43 @@
+{
+  "checkedAt": "2026-11-17T17:00:07.261847+00:00",
+  "tag": "v7.2.0",
+  "annotatedTag": "aba0d53d42deba42f5e8c2d10870f7d64fa400c6",
+  "commit": "3d239d1c3ae7aef1bf5d8945dd7b5f0709f646f5",
+  "readmeCandidates": ["README.md", "docs/demo/README.md", "examples/plain_js/README.md"],
+  "languageSelection": "Fixed tree has no official Chinese README; preserve root English original.",
+  "homepage": {
+    "url": "https://lucaong.github.io/minisearch/",
+    "status": 200,
+    "headers": {
+      "Connection": "close",
+      "Content-Length": "39993",
+      "Server": "GitHub.com",
+      "Content-Type": "text/html; charset=utf-8",
+      "Last-Modified": "Tue, 16 Sep 2025 12:44:14 GMT",
+      "Access-Control-Allow-Origin": "*",
+      "ETag": "\"68c95b9e-9c39\"",
+      "expires": "Tue, 17 Nov 2026 17:10:06 GMT",
+      "Cache-Control": "max-age=600",
+      "x-proxy-cache": "MISS",
+      "X-GitHub-Request-Id": "E946:1F44C0:2967B:2DA73:6AFC8816",
+      "x-github-edge-region": "westus3",
+      "Accept-Ranges": "bytes",
+      "Age": "0",
+      "Date": "Tue, 17 Nov 2026 17:00:06 GMT",
+      "Via": "1.1 varnish",
+      "X-Served-By": "cache-sjc10042-SJC",
+      "X-Cache": "MISS",
+      "X-Cache-Hits": "0",
+      "X-Timer": "S1794934807.682550,VS0,VE111",
+      "Vary": "Accept-Encoding",
+      "X-Fastly-Request-ID": "0d78366a9ec69356881a681b291a9a52cba916ab"
+    },
+    "bodySha256": "b1cd138e2d3e8383544a68b1bd4a2fc7d86db9dddc4eeb0f496c2ebe5e376e3a"
+  },
+  "license": {
+    "spdx": "MIT",
+    "package": "node_modules/minisearch/package.json 7.2.0",
+    "sourceUrl": "https://github.com/lucaong/minisearch/blob/3d239d1c3ae7aef1bf5d8945dd7b5f0709f646f5/LICENSE.txt",
+    "copyright": "2022 Luca Ongaro"
+  }
+}

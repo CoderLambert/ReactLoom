@@ -1,0 +1,28 @@
+{
+  "checkedAt": "2026-11-10T09:40:38.845457+00:00",
+  "requestedUrl": "https://ui.shadcn.com",
+  "finalUrl": "https://ui.shadcn.com",
+  "method": "GET",
+  "status": 200,
+  "headers": {
+    "Age": "61924",
+    "Cache-Control": "public, max-age=0, must-revalidate",
+    "Content-Length": "719507",
+    "Content-Type": "text/html; charset=utf-8",
+    "Date": "Mon, 09 Nov 2026 16:28:33 GMT",
+    "Etag": "\"bx08q1a13ff1v\"",
+    "Server": "Vercel",
+    "Strict-Transport-Security": "max-age=63072000",
+    "Vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+    "X-Matched-Path": "/",
+    "X-Nextjs-Prerender": "1",
+    "X-Nextjs-Stale-Time": "300",
+    "X-Powered-By": "Next.js",
+    "X-Vercel-Cache": "HIT",
+    "X-Vercel-Id": "sin1::iad1::z7k5l-1794303638516-c9c1ae7d3def",
+    "Connection": "close"
+  },
+  "xFrameOptions": null,
+  "contentSecurityPolicy": null,
+  "browserFromLabOrigin": "NOT_RUN"
+}

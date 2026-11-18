@@ -1,0 +1,10 @@
+{
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "utc": "2026-11-10T13:32:36.374659+00:00",
+  "inspection": "Read each of the 16 current files and recompute sha256; inspect local Markdown links and scoped git diff --check",
+  "exitCode": 0,
+  "inputFiles": 16,
+  "links": 27,
+  "runtimeChangedSinceCheckpoint": false,
+  "formal": "NOT_RUN"
+}

@@ -1,0 +1,6 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom
+ARGV: ["git", "diff", "--check", "--", "packages/library-lab/entries/A04-uplot"]
+EXIT: 0
+STDOUT:
+
+STDERR:

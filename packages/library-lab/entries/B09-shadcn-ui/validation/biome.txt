@@ -1,0 +1,5 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: pnpm exec biome check --write entries/B09-shadcn-ui/examples entries/B09-shadcn-ui/tests entries/B09-shadcn-ui/validation/check-entry.mjs entries/B09-shadcn-ui/library.json entries/B09-shadcn-ui/verification.json entries/B09-shadcn-ui/official/source-audit.json entries/B09-shadcn-ui/official/homepage-response.json
+exit: 0
+
+Checked 12 files in 14ms. Fixed 1 file.

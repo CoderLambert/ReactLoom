@@ -1,0 +1,198 @@
+// Root integration proposal; NOT_RUN by the entry author.
+// Actual SDK pointer/keyboard, DOM geometry and callback state; no SDK or browser-event mock.
+import { expect, type Locator, type Page, test } from '@playwright/test'
+
+type Level = 'basic' | 'business' | 'advanced'
+async function open(page: Page, level: Level) {
+  await page.setViewportSize({ width: 1100, height: 1000 })
+  await page.goto(`/libraries/react-resizable-panels?tab=demo&example=${level}`)
+  const app = page.getByTestId('b16-workshop')
+  const run = page.getByRole('button', { name: '运行当前示例', exact: true })
+  await expect(app.or(run).first()).toBeVisible({ timeout: 20_000 })
+  if (await run.isVisible()) await run.click()
+  await expect(app).toBeVisible()
+  await app.getByText('查看 SDK 原始布局映射', { exact: true }).click()
+  return app
+}
+function panel(app: Locator, key: string) {
+  return app.locator(`[data-b16-panel="${key}"]`)
+}
+function first(app: Locator) {
+  return app.getByRole('separator', { name: '调整项目资源和主编辑区域', exact: true })
+}
+function second(app: Locator) {
+  return app.getByRole('separator', { name: '调整编辑区域和检查面板', exact: true })
+}
+async function layout(app: Locator): Promise<Record<string, number>> {
+  const value: unknown = JSON.parse((await app.getByTestId('b16-layout').textContent()) ?? 'null')
+  if (!value || typeof value !== 'object' || Array.isArray(value))
+    throw new Error('SDK layout unavailable')
+  const result: Record<string, number> = {}
+  for (const [key, size] of Object.entries(value)) {
+    if (typeof size !== 'number' || !Number.isFinite(size))
+      throw new Error('Invalid real SDK layout')
+    result[key] = size
+  }
+  return result
+}
+async function size(app: Locator, key: string) {
+  const id = await panel(app, key).getAttribute('id')
+  if (!id) throw new Error('SDK panel missing id')
+  return (await layout(app))[id]
+}
+async function defaults(app: Locator, explorer: number) {
+  await expect.poll(() => size(app, 'explorer')).toBeCloseTo(explorer, 1)
+  await expect(app.getByTestId('b16-layout-source')).toContainText('初始化或程序变更')
+}
+async function geometryMatches(app: Locator) {
+  const snapshot = await layout(app)
+  const vertical = (await app.getAttribute('data-orientation')) === 'vertical'
+  const dimensions = await app.locator('[data-b16-panel]').evaluateAll(
+    (nodes, isVertical) =>
+      nodes.map((node) => ({
+        id: node.id,
+        pixels: isVertical
+          ? node.getBoundingClientRect().height
+          : node.getBoundingClientRect().width,
+      })),
+    vertical,
+  )
+  const available = dimensions.reduce((total, item) => total + item.pixels, 0)
+  expect(available).toBeGreaterThan(0)
+  expect(Object.keys(snapshot).sort()).toEqual(dimensions.map((item) => item.id).sort())
+  for (const item of dimensions)
+    expect(Math.abs((item.pixels / available) * 100 - snapshot[item.id])).toBeLessThan(0.6)
+  expect(Object.values(snapshot).reduce((total, value) => total + value, 0)).toBeCloseTo(100, 1)
+  expect(await size(app, 'explorer')).toBeGreaterThanOrEqual(15.9)
+  expect(await size(app, 'explorer')).toBeLessThanOrEqual(60.1)
+  expect(await size(app, 'main')).toBeGreaterThanOrEqual(21.9)
+  if (dimensions.length === 3) {
+    expect(await size(app, 'inspector')).toBeGreaterThanOrEqual(14.9)
+    expect(await size(app, 'inspector')).toBeLessThanOrEqual(55.1)
+  }
+}
+
+test('@B16 actual dual panels: pointer commit, SDK keyboard constraints and physical layout', async ({
+  page,
+}) => {
+  const app = await open(page, 'basic')
+  await defaults(app, 35)
+  await expect(app.getByRole('separator')).toHaveCount(1)
+  await expect(first(app)).toHaveAttribute('aria-orientation', 'vertical')
+  await expect(first(app)).toHaveAttribute('tabindex', '0')
+  const ids = await app
+    .locator('[data-b16-panel]')
+    .evaluateAll((nodes) => nodes.map((node) => node.id))
+  await geometryMatches(app)
+  const box = await first(app).boundingBox()
+  if (!box) throw new Error('Real separator has no geometry')
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2)
+  await page.mouse.down()
+  await page.mouse.move(box.x + box.width / 2 + 70, box.y + box.height / 2, { steps: 8 })
+  // onLayoutChanged intentionally does not publish intermediate pointer layouts.
+  expect(await size(app, 'explorer')).toBeCloseTo(35, 1)
+  await page.mouse.up()
+  await expect.poll(() => size(app, 'explorer')).toBeGreaterThan(35)
+  await expect(app.getByTestId('b16-layout-source')).toContainText('用户输入')
+  await geometryMatches(app)
+  await first(app).focus()
+  await page.keyboard.press('Home')
+  await expect.poll(() => size(app, 'explorer')).toBeCloseTo(16, 1)
+  await page.keyboard.press('ArrowLeft')
+  expect(await size(app, 'explorer')).toBeCloseTo(16, 1)
+  await page.keyboard.press('End')
+  await expect.poll(() => size(app, 'explorer')).toBeCloseTo(60, 1)
+  await page.keyboard.press('ArrowRight')
+  expect(await size(app, 'explorer')).toBeCloseTo(60, 1)
+  await page.keyboard.press('ArrowLeft')
+  await expect.poll(() => size(app, 'explorer')).toBeCloseTo(55, 1)
+  await geometryMatches(app)
+  expect(
+    await app.locator('[data-b16-panel]').evaluateAll((nodes) => nodes.map((node) => node.id)),
+  ).toEqual(ids)
+  await expect(app.getByRole('row').filter({ hasText: '项目资源' }).getByRole('cell')).toHaveText(
+    '55.0%',
+  )
+})
+
+test('@B16 actual three-panel boundaries, F6 focus and stable panel identity', async ({ page }) => {
+  const app = await open(page, 'business')
+  await defaults(app, 25)
+  await expect(app.getByRole('separator')).toHaveCount(2)
+  const ids = await app
+    .locator('[data-b16-panel]')
+    .evaluateAll((nodes) => nodes.map((node) => node.id))
+  const held = await panel(app, 'main').elementHandle()
+  if (!held) throw new Error('Missing main panel')
+  await first(app).focus()
+  await page.keyboard.press('ArrowRight')
+  await expect.poll(() => size(app, 'explorer')).toBeCloseTo(30, 1)
+  expect(await size(app, 'main')).toBeCloseTo(40, 1)
+  expect(await size(app, 'inspector')).toBeCloseTo(30, 1)
+  await page.keyboard.press('F6')
+  await expect(second(app)).toBeFocused()
+  await page.keyboard.press('ArrowRight')
+  await expect.poll(() => size(app, 'inspector')).toBeCloseTo(25, 1)
+  expect(await size(app, 'main')).toBeCloseTo(45, 1)
+  expect(await size(app, 'explorer')).toBeCloseTo(30, 1)
+  await page.keyboard.press('Shift+F6')
+  await expect(first(app)).toBeFocused()
+  expect(await held.evaluate((node) => node.isConnected)).toBe(true)
+  expect(
+    await app.locator('[data-b16-panel]').evaluateAll((nodes) => nodes.map((node) => node.id)),
+  ).toEqual(ids)
+  await geometryMatches(app)
+})
+
+test('@B16 vertical axis, remount reset, narrow geometry and owned subtree unmount', async ({
+  page,
+}) => {
+  const errors: string[] = []
+  page.on('pageerror', (error) => errors.push(error.message))
+  const app = await open(page, 'advanced')
+  await defaults(app, 25)
+  const oldGroup = await app.locator('[data-group]').elementHandle()
+  if (!oldGroup) throw new Error('Missing mounted SDK Group')
+  await first(app).focus()
+  await page.keyboard.press('ArrowRight')
+  await expect.poll(() => size(app, 'explorer')).toBeCloseTo(30, 1)
+  await app.getByRole('checkbox', { name: '纵向排列', exact: true }).check()
+  await expect(app).toHaveAttribute('data-orientation', 'vertical')
+  await defaults(app, 25)
+  expect(await oldGroup.evaluate((node) => node.isConnected)).toBe(false)
+  await expect(first(app)).toHaveAttribute('aria-orientation', 'horizontal')
+  await first(app).focus()
+  await page.keyboard.press('ArrowRight')
+  expect(await size(app, 'explorer')).toBeCloseTo(25, 1)
+  await page.keyboard.press('ArrowDown')
+  await expect.poll(() => size(app, 'explorer')).toBeCloseTo(30, 1)
+  await geometryMatches(app)
+  const beforeReset = await app.locator('[data-group]').elementHandle()
+  if (!beforeReset) throw new Error('Missing vertical SDK Group')
+  await app.getByRole('button', { name: '复位布局', exact: true }).click()
+  await defaults(app, 25)
+  expect(await beforeReset.evaluate((node) => node.isConnected)).toBe(false)
+  expect(await size(app, 'main')).toBeCloseTo(45, 1)
+  expect(await size(app, 'inspector')).toBeCloseTo(30, 1)
+  await expect(app.getByRole('button', { name: '复位布局', exact: true })).toBeFocused()
+  await page.setViewportSize({ width: 390, height: 980 })
+  await geometryMatches(app)
+  const frame = await app.locator('.b16-frame').boundingBox()
+  if (!frame) throw new Error('Missing narrow frame')
+  expect(frame.x).toBeGreaterThanOrEqual(0)
+  expect(frame.x + frame.width).toBeLessThanOrEqual(391)
+  const beforeStop = await app.locator('[data-group]').elementHandle()
+  if (!beforeStop) throw new Error('Missing owned group before stop')
+  await page.getByRole('button', { name: '停止并卸载', exact: true }).click()
+  await expect(app).toHaveCount(0)
+  expect(await beforeStop.evaluate((node) => node.isConnected)).toBe(false)
+  await page.mouse.move(180, 200)
+  await page.mouse.up()
+  await page.getByRole('button', { name: '运行当前示例', exact: true }).click()
+  await expect(app).toHaveAttribute('data-orientation', 'horizontal')
+  await app.getByText('查看 SDK 原始布局映射', { exact: true }).click()
+  await defaults(app, 25)
+  await expect(app.getByRole('separator')).toHaveCount(2)
+  await geometryMatches(app)
+  expect(errors).toEqual([])
+})

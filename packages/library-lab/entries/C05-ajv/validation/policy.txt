@@ -1,0 +1,15 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+command=node --test packages/library-lab/entries/C05-ajv/tests/rss-policy.test.mjs
+✔ reject embedded credentials, insecure protocols and invalid URLs (0.661966ms)
+✔ batch duplicate uses URL identity not JSON-object equality (0.49729ms)
+✔ single RSS record has exact field error; advanced configuration has no RSS fields (0.117051ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 49.72357
+
+exitCode=0

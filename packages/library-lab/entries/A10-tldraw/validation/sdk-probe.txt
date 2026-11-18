@@ -1,0 +1,7 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node --input-type=module -e "import { createTLStore, loadSnapshot } from 'tldraw'; const store = createTLStore(); const document = store.getStoreSnapshot(); console.log('initial records', Object.keys(document.store).length); loadSnapshot(store, {document}); console.log('loaded records', Object.keys(store.getStoreSnapshot().store).length); store.dispose();"
+exit: -15 (own exploratory process terminated with SIGTERM after output; not PASS)
+notes: Store load completed but Node kept active resources; final SDK harness uses the supported --test-force-exit after tests complete. This probe is not a cleanup test.
+
+initial records 0
+loaded records 2

@@ -1,0 +1,22 @@
+{
+  "capturedAt": "2026-11-10T09:51:26.072649+00:00",
+  "head": "1218066e706a90ba03fac8dff8c9b843dd2429c4",
+  "entryVisibleFileCount": 14,
+  "entryRelativeSha256": "4388fb578536dd618e9a273e93ee98124773b0404b60d6c80ac214e75dd9428b",
+  "files": {
+    "AGENTS.md": "ef15a5849c82f7447961696b1d8919083821367af3e8b3fe4985de75f8189862",
+    "agent.md": "c6f68de5dfce3ebfbcb8d1bbdad950b6027b7dca90e06203ef6bbb83449fd98a",
+    "examples/demo.tsx": "254591932548c36c414610bd0d0c7ce7ef1648162f1996fbbe7381b8c1751690",
+    "examples/example.tsx": "389ca3a61c5c441ae572e44583db6b6339f1196d04a6d078fa563a5705ca3256",
+    "examples/feed-url-policy.d.mts": "c01caf1045bc6b15b3ba54a0863e63ab264018202da9ea89a6bb72b796ef2185",
+    "examples/feed-url-policy.mjs": "29abbbedfc5eb3e7bcdcd62b8a1bdd50eb8a633d8216678eef69c2806d229bf9",
+    "examples/form-policy.d.mts": "e0c1104a7df954eec741209d4d212461137b20a55ca27fd0135ef3055913efbd",
+    "examples/form-policy.mjs": "9a81e11e65325ce41f4752a9970515568730b6812433e84508952534da42063b",
+    "guide.md": "529e8bb0acc220ecf7bcb455b4ee9440b9515a861a27a36f958dd6574fd77374",
+    "library.json": "4085369fd4c9f947c50b72192d97bfdb667b88997ebfc508e2c92d191c38a95f",
+    "tests/form-policy.test.mjs": "1b7b5dd155bd5e74c31375f63978cef572a40cb50a1040921e5ffb7bb61a960d",
+    "tests/sdk.test.mjs": "03309190fe42cffa87d3393f697b3658546f68ff834bd887004e46336c10a651",
+    "tests/url-policy.test.mjs": "a9b224a67d9c752791c6f18ac1319e3325a74d7e45a974931653863fe2bc49b9",
+    "verification.json": "3e7104b60236dd46acb1d97bd3f9d0b345747506287223dace79e4721c380485"
+  }
+}

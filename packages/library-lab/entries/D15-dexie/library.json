@@ -4,15 +4,8 @@
   "slug": "dexie",
   "name": "Dexie",
   "group": "D",
-  "summary": "IndexedDB 事务、复合索引和版本升级，不污染其他站点存储",
-  "tags": [
-    "IndexedDB",
-    "事务",
-    "离线",
-    "Schema升级",
-    "复合索引",
-    "数据所有权"
-  ],
+  "summary": "离线 RSS 的索引筛选、数组排序、原子回滚与真实版本升级",
+  "tags": ["IndexedDB", "事务", "离线", "Schema升级", "复合索引", "数据所有权"],
   "contentState": "recreated",
   "packages": [
     {
@@ -36,6 +29,22 @@
     {
       "title": "Dexie GitHub",
       "url": "https://github.com/dexie/Dexie.js"
+    },
+    {
+      "title": "sortBy：对结果数组排序",
+      "url": "https://dexie.org/docs/Collection/Collection.sortBy()"
+    },
+    {
+      "title": "Dexie >=3 版本迁移规则",
+      "url": "https://dexie.org/docs/Tutorial/Design"
+    },
+    {
+      "title": "复合索引",
+      "url": "https://dexie.org/docs/CompoundIndex"
+    },
+    {
+      "title": "Dexie 4.4.7 许可证",
+      "url": "https://github.com/dexie/Dexie.js/blob/v4.4.7/LICENSE"
     }
   ],
   "related": [
@@ -58,54 +67,57 @@
   "demos": [
     {
       "demoId": "basic",
-      "title": "本地 RSS 过滤与排序",
-      "description": "Dexie table 和 indexed where 查询",
+      "title": "分组筛选与内存排序",
+      "description": "选择 RSS 分组，观察索引筛选后的数组按时间排序",
       "level": "basic",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
         "examples/demo.tsx",
+        "examples/feed-database.mjs",
+        "examples/feed-database.d.mts",
         "examples/rollback-policy.mjs",
-        "examples/rollback-policy.d.mts"
+        "examples/rollback-policy.d.mts",
+        "examples/workshop.css"
       ],
-      "capabilities": [
-        "indexeddb"
-      ]
+      "capabilities": ["indexeddb"]
     },
     {
       "demoId": "business",
       "title": "约束失败时原子回滚",
-      "description": "真实 readwrite 事务与重复主键",
+      "description": "重复主键使整批写入撤销，用完整快照比较前后记录",
       "level": "business",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
         "examples/demo.tsx",
+        "examples/feed-database.mjs",
+        "examples/feed-database.d.mts",
         "examples/rollback-policy.mjs",
-        "examples/rollback-policy.d.mts"
+        "examples/rollback-policy.d.mts",
+        "examples/workshop.css"
       ],
-      "capabilities": [
-        "indexeddb"
-      ]
+      "capabilities": ["indexeddb"]
     },
     {
       "demoId": "advanced",
       "title": "离线 Schema 版本升级",
-      "description": "version(1)→version(2) 和复合索引",
+      "description": "真实 v1 数据升级至 v2，回填字段并通过复合索引查询范围",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
         "examples/demo.tsx",
+        "examples/feed-database.mjs",
+        "examples/feed-database.d.mts",
         "examples/rollback-policy.mjs",
-        "examples/rollback-policy.d.mts"
+        "examples/rollback-policy.d.mts",
+        "examples/workshop.css"
       ],
-      "capabilities": [
-        "indexeddb"
-      ]
+      "capabilities": ["indexeddb"]
     }
   ],
   "license": {
@@ -115,6 +127,26 @@
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
     "mode": "recreated",
-    "note": "参照 Dexie 4.4.7 schema/transaction 官方文档独立实现，未实测"
+    "note": "参照 Dexie 4.4.7 官方文档与已安装源码重写；本地定向 SDK 执行与正式收据状态分别记录"
+  },
+  "official": {
+    "readme": {
+      "repository": "dexie/Dexie.js",
+      "commit": "da6b2b820f5514dd0ac73d773f7e99d4aeafc0a9",
+      "path": "README.md",
+      "sha256": "9d4555452299b51fd7a6c5c6e44c03e9f045613e4808ad3bb26e2377d70b7ace",
+      "sourceUrl": "https://github.com/dexie/Dexie.js/blob/da6b2b820f5514dd0ac73d773f7e99d4aeafc0a9/README.md",
+      "snapshotPath": "official/readme.md",
+      "language": "en",
+      "version": "4.4.7",
+      "syncedAt": "2026-11-10T08:22:53.805755+00:00"
+    },
+    "homepage": {
+      "url": "https://dexie.org/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-10T08:22:53.805755+00:00",
+      "reason": "响应成功，未见 X-Frame-Options 或 frame-ancestors 限制；仍需从当前页面实际确认可嵌入性。"
+    }
   }
 }

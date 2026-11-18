@@ -1,0 +1,2 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["python", "packages/library-lab/entries/C11-react-arborist/validation/fetch-official.py"], "utc": "2026-11-10T16:53:29.872042+00:00", "exit": 0}
+C11 README.md {'path': 'official/readme.md', 'bytes': 24954, 'sha256': '0c3ba42abd227ddce29578749b9765b5513797d446cb2d3d2b96281a429fa80a'} HTTP requests 5 homepage unknown

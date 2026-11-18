@@ -1,0 +1,14 @@
+{"stage":{"status":"STAGED","version":"0.12.10","assets":2},"assetManifest":{"generator":"reactloom-library-lab","version":"0.12.10","license":"GPL-2.0-or-later","assets":[{"filename":"ffmpeg-core.js","bytes":111804,"sha256":"67a48f11645f85439f3fde4f2119042c16b374b910206b7a7a24f342e28dcae3"},{"filename":"ffmpeg-core.wasm","bytes":32232419,"sha256":"9f57947a5bd530d8f00c5b3f2cb2a3492faa7e5d823315342d6a8656d0a6b7b7"}]},"builtManifestSha256":"e0b9aa03ba0b77dd0e971597a1eaf7f755267847dd4e55c7414daaf593076d51","e19SourceFingerprint":"88ab574c66ee9b7093745438ae2407f3feefc71331c9f99deff631482dee7a57"}
+{"cwd":"/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/","localURL":"http://127.0.0.1:42961/","argv":["pnpm","exec","playwright","test","--config","/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/E19-ffmpeg-wasm/validation/playwright.local.config.ts"]}
+
+Running 4 tests using 1 worker
+
+(node:2630783) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 entries/E19-ffmpeg-wasm/validation/browser-local.spec.ts:177:1 › @E19 original input really converts and revokes the downloaded WAV on unmount (1.8s)
+  ✓  2 entries/E19-ffmpeg-wasm/validation/browser-local.spec.ts:220:1 › @E19 reject oversize before File read and normalize a real 48 kHz stereo file (2.4s)
+  ✓  3 entries/E19-ffmpeg-wasm/validation/browser-local.spec.ts:274:1 › @E19 cancel while real WASM is requested, then reload and finish a half-second conversion (1.8s)
+  ✓  4 entries/E19-ffmpeg-wasm/validation/browser-local.spec.ts:313:1 › @E19 a real EXEC log allows cancellation before an EXEC result is delivered (2.0s)
+
+  4 passed (8.3s)
+Isolated core and preview directory removed.

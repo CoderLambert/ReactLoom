@@ -1,0 +1,31 @@
+HTTP/2 308 
+cache-control: public, max-age=0, must-revalidate
+content-type: text/plain
+date: Tue, 17 Nov 2026 16:49:08 GMT
+location: /docs/xstate/v5
+refresh: 0;url=/docs/xstate/v5
+server: Vercel
+strict-transport-security: max-age=63072000; includeSubDomains; preload
+x-vercel-cache: MISS
+x-vercel-id: sin1:sin1:sin1::q9fps-1794934148019-ed11b3ecfee7
+
+HTTP/2 200 
+accept-ranges: bytes
+access-control-allow-origin: *
+age: 164859
+cache-control: public, max-age=0, must-revalidate
+content-disposition: inline
+content-type: text/html; charset=utf-8
+date: Tue, 17 Nov 2026 16:49:08 GMT
+etag: "23f367211c34b2bf2a0ec104ddf83f16"
+link: <https://stately.ai/sitemap.xml>; rel="sitemap"; type="application/xml", <https://stately.ai/llms.txt>; rel="describedby"; type="text/plain"
+server: Vercel
+strict-transport-security: max-age=63072000; includeSubDomains; preload
+vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch
+x-matched-path: /docs/xstate/v5
+x-nextjs-prerender: 1
+x-nextjs-stale-time: 300
+x-vercel-cache: HIT
+x-vercel-id: sin1:sin1:sin1::9qdqp-1794934148232-d69739d1b021
+content-length: 273010
+

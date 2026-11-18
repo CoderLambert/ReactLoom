@@ -1,0 +1,15 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+command=node --test packages/library-lab/entries/C05-ajv/tests/sdk.test.mjs
+✔ actual shared Feed contract keeps HTTPS shape distinct from the domain credential policy (2.193862ms)
+✔ actual shared batch compares full objects in uniqueItems and canonical URLs in domain policy (1.138412ms)
+✔ actual shared conditional contract inherits object type in strict mode and does not coerce, insert or remove data (0.816777ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 142.773316
+
+exitCode=0

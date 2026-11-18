@@ -1,0 +1,587 @@
+{
+  "createdAt": "2026-11-11T05:44:11.212205+00:00",
+  "local": [
+    {
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "pnpm",
+        "--dir",
+        "packages/library-lab",
+        "exec",
+        "node",
+        "entries/C19-nuqs/validation/adapter-boundary-probe.mjs"
+      ],
+      "utc": "2026-11-10T18:14:50.094330+00:00",
+      "exit": 0,
+      "log": "packages/library-lab/entries/C19-nuqs/validation/adapter-boundary-probe.txt",
+      "logSHA256": "bdf2d1fb302c9833c88ad3c81568ee0e263f5d945213ebd501199a94ba0bc7b3",
+      "state": "REUSED"
+    },
+    {
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "pnpm",
+        "exec",
+        "biome",
+        "check",
+        "--write",
+        "packages/library-lab/entries/C19-nuqs/examples/tanstack-adapter.tsx",
+        "packages/library-lab/entries/C19-nuqs/examples/example.tsx",
+        "packages/library-lab/entries/C19-nuqs/validation/browser-proposal.check.ts"
+      ],
+      "utc": "2026-11-10T18:16:54.145045+00:00",
+      "exit": 0,
+      "log": "packages/library-lab/entries/C19-nuqs/validation/adapter-format-final.txt",
+      "logSHA256": "fd6c0e8a7653e96a50a12809e3e6bfa9aac2b83df0162810ff62684458ffb1fa",
+      "state": "REUSED"
+    },
+    {
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "pnpm",
+        "exec",
+        "biome",
+        "check",
+        "--write",
+        "packages/library-lab/entries/C19-nuqs/examples/tanstack-adapter.tsx",
+        "packages/library-lab/entries/C19-nuqs/examples/example.tsx",
+        "packages/library-lab/entries/C19-nuqs/library.json"
+      ],
+      "utc": "2026-11-10T18:13:38.017939+00:00",
+      "exit": 0,
+      "log": "packages/library-lab/entries/C19-nuqs/validation/adapter-format-fixed.txt",
+      "logSHA256": "23d4e6ab7799949ecb69269fbb1e838ff2679107f6a30d7212676d07dae43b88",
+      "state": "REUSED"
+    },
+    {
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "pnpm",
+        "exec",
+        "biome",
+        "check",
+        "--write",
+        "packages/library-lab/entries/C19-nuqs/examples/tanstack-adapter.tsx",
+        "packages/library-lab/entries/C19-nuqs/examples/example.tsx"
+      ],
+      "utc": "2026-11-10T18:17:25.691693+00:00",
+      "exit": 0,
+      "log": "packages/library-lab/entries/C19-nuqs/validation/adapter-format-resolved.txt",
+      "logSHA256": "4fa480a3a837d4afb914b8b388e12624913ecfea8899956599d2443ca028b1c5",
+      "state": "REUSED"
+    },
+    {
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "pnpm",
+        "exec",
+        "biome",
+        "check",
+        "--write",
+        "packages/library-lab/entries/C19-nuqs/examples/example.tsx",
+        "packages/library-lab/entries/C19-nuqs/examples/tanstack-adapter.tsx",
+        "packages/library-lab/entries/C19-nuqs/library.json"
+      ],
+      "utc": "2026-11-10T18:11:47.477163+00:00",
+      "exit": 0,
+      "log": "packages/library-lab/entries/C19-nuqs/validation/adapter-format.txt",
+      "logSHA256": "92b7448b580da4a865ae9f48b99a9b4788ff7e20b651541df4ed0812d339d35e",
+      "state": "REUSED"
+    },
+    {
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "pnpm",
+        "--dir",
+        "packages/library-lab",
+        "exec",
+        "tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--target",
+        "es2022",
+        "--module",
+        "esnext",
+        "--moduleResolution",
+        "bundler",
+        "--jsx",
+        "react-jsx",
+        "--strict",
+        "--skipLibCheck",
+        "--esModuleInterop",
+        "--types",
+        "vite/client,node",
+        "entries/C19-nuqs/examples/demo.tsx"
+      ],
+      "utc": "2026-11-10T18:16:53.881919+00:00",
+      "exit": 1,
+      "log": "packages/library-lab/entries/C19-nuqs/validation/adapter-types-final.txt",
+      "logSHA256": "77f553b0c3945d9b51f753e719442b41f3e4599449a8c7b8e4f9e9d3a6f59198",
+      "state": "REUSED"
+    },
+    {
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "pnpm",
+        "--dir",
+        "packages/library-lab",
+        "exec",
+        "tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--target",
+        "es2022",
+        "--module",
+        "esnext",
+        "--moduleResolution",
+        "bundler",
+        "--jsx",
+        "react-jsx",
+        "--strict",
+        "--skipLibCheck",
+        "--esModuleInterop",
+        "--types",
+        "vite/client,node",
+        "entries/C19-nuqs/examples/demo.tsx"
+      ],
+      "utc": "2026-11-10T18:13:37.751296+00:00",
+      "exit": 0,
+      "log": "packages/library-lab/entries/C19-nuqs/validation/adapter-types-fixed.txt",
+      "logSHA256": "c9125f12e92fa81e6baebbc6b38f9830311c74f361bb785134d82b435edbfa2b",
+      "state": "REUSED"
+    },
+    {
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "pnpm",
+        "--dir",
+        "packages/library-lab",
+        "exec",
+        "tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--target",
+        "es2022",
+        "--module",
+        "esnext",
+        "--moduleResolution",
+        "bundler",
+        "--jsx",
+        "react-jsx",
+        "--strict",
+        "--skipLibCheck",
+        "--esModuleInterop",
+        "--types",
+        "vite/client,node",
+        "entries/C19-nuqs/examples/demo.tsx"
+      ],
+      "utc": "2026-11-10T18:17:25.427869+00:00",
+      "exit": 0,
+      "log": "packages/library-lab/entries/C19-nuqs/validation/adapter-types-resolved.txt",
+      "logSHA256": "557e2725a2c2c52ef588d64ceadd0e985e888dc1568dc4a6646d156a48e800b9",
+      "state": "REUSED"
+    },
+    {
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "pnpm",
+        "--dir",
+        "packages/library-lab",
+        "exec",
+        "tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--target",
+        "es2022",
+        "--module",
+        "esnext",
+        "--moduleResolution",
+        "bundler",
+        "--jsx",
+        "react-jsx",
+        "--strict",
+        "--skipLibCheck",
+        "--esModuleInterop",
+        "--types",
+        "vite/client,node",
+        "entries/C19-nuqs/examples/demo.tsx"
+      ],
+      "utc": "2026-11-10T18:11:47.216457+00:00",
+      "exit": 1,
+      "log": "packages/library-lab/entries/C19-nuqs/validation/adapter-types.txt",
+      "logSHA256": "3aa17969b45bc34cc97168db71cd5372526f753e1af06852f45c2a91f21b814a",
+      "state": "REUSED"
+    },
+    {
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "pnpm",
+        "--dir",
+        "packages/library-lab",
+        "exec",
+        "node",
+        "--input-type=module",
+        "-e",
+        "import fs from \"node:fs\";import assert from \"node:assert/strict\";import {validateEntry} from \"./src/lib/catalog.mjs\";import {entryCompletenessIssues} from \"./scripts/entry-gate.mjs\";const p=\"entries/C19-nuqs/\";const e=JSON.parse(fs.readFileSync(p+\"library.json\"));assert.deepEqual(validateEntry(e),[]);assert.deepEqual(entryCompletenessIssues(e,{guide:true,agent:true,agents:true,verification:true}),[]);assert.equal(new Set(e.demos.flatMap(d=>d.sourceFiles)).size,7);for(const f of e.demos[0].sourceFiles)assert.ok(fs.existsSync(p+f));console.log(\"C19 checkpoint metadata: 3 levels, 7 sources; official metadata pending; formal NOT_RUN\");"
+      ],
+      "utc": "2026-11-10T18:03:09.730258+00:00",
+      "exit": 0,
+      "log": "packages/library-lab/entries/C19-nuqs/validation/checkpoint-metadata.txt",
+      "logSHA256": "5bbce3c5c82f53ca511b7be9abdecf8696454fe32599732dbd2653e37cd75941",
+      "state": "REUSED"
+    },
+    {
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "pnpm",
+        "--dir",
+        "packages/library-lab",
+        "exec",
+        "node",
+        "--input-type=module",
+        "-e",
+        "import fs from \"node:fs\";import assert from \"node:assert/strict\";import {createHash} from \"node:crypto\";import {validateEntry} from \"./src/lib/catalog.mjs\";import {entryCompletenessIssues} from \"./scripts/entry-gate.mjs\";import {resolveDocumentUrl} from \"./src/lib/document-utils.mjs\";const p=\"entries/C19-nuqs/\";const e=JSON.parse(fs.readFileSync(p+\"library.json\"));assert.deepEqual(validateEntry(e),[]);assert.deepEqual(entryCompletenessIssues(e,{guide:true,agent:true,agents:true,verification:true}),[]);assert.equal(new Set(e.demos.flatMap(d=>d.sourceFiles)).size,8);assert.equal(createHash(\"sha256\").update(fs.readFileSync(p+e.official.readme.snapshotPath)).digest(\"hex\"),e.official.readme.sha256);let links=0;for(const name of [\"guide.md\",\"agent.md\"]){for(const match of fs.readFileSync(p+name,\"utf8\").matchAll(/\\]\\(([^)]+)\\)/gu)){assert.ok(resolveDocumentUrl(match[1],\"C19\",\"/\",e.official.readme.snapshotPath),match[1]);links++}}console.log(JSON.stringify({levels:3,sources:8,official:\"ready, unknown\",publisherLinks:links,formal:\"NOT_RUN\",newBrowser:\"NOT_RUN\"}));"
+      ],
+      "utc": "2026-11-10T18:22:01.285892+00:00",
+      "exit": 0,
+      "log": "packages/library-lab/entries/C19-nuqs/validation/checkpoint21-metadata.txt",
+      "logSHA256": "d102289a805a18cb1a95e1d20d5856ea3b709341e90a67bc5955117a951148e1",
+      "state": "REUSED"
+    },
+    {
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "pnpm",
+        "exec",
+        "biome",
+        "check",
+        "--write",
+        "packages/library-lab/entries/C19-nuqs/library.json",
+        "packages/library-lab/entries/C19-nuqs/verification.json",
+        "packages/library-lab/entries/C19-nuqs/validation/metadata-check.mjs"
+      ],
+      "utc": "2026-11-10T18:26:12.190245+00:00",
+      "exit": 0,
+      "log": "packages/library-lab/entries/C19-nuqs/validation/final-metadata-format.txt",
+      "logSHA256": "a3e1d2b5e8d674feab7809462c18e991489487a752093f573f99e90c97c88069",
+      "state": "REUSED"
+    },
+    {
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "pnpm",
+        "--dir",
+        "packages/library-lab",
+        "exec",
+        "node",
+        "entries/C19-nuqs/validation/metadata-check.mjs"
+      ],
+      "utc": "2026-11-10T18:26:12.423460+00:00",
+      "exit": 0,
+      "log": "packages/library-lab/entries/C19-nuqs/validation/final-metadata.txt",
+      "logSHA256": "a9c38a43b18f491299cb131a7636d6608aabcdaeec22d685791e81d5c0628d52",
+      "state": "REUSED"
+    },
+    {
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "pnpm",
+        "exec",
+        "biome",
+        "check",
+        "--write",
+        "packages/library-lab/entries/C19-nuqs/verification.json",
+        "packages/library-lab/entries/C19-nuqs/validation/metadata-check.mjs"
+      ],
+      "utc": "2026-11-11T05:43:35.837181+00:00",
+      "exit": 0,
+      "log": "packages/library-lab/entries/C19-nuqs/validation/final-record-format.txt",
+      "logSHA256": "acd47a1a2817dda113714c88aba8d7b70e069b4c7414a4c52471de1f4e189725",
+      "state": "RUN_DURING_FINALIZATION"
+    },
+    {
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "pnpm",
+        "--dir",
+        "packages/library-lab",
+        "exec",
+        "node",
+        "entries/C19-nuqs/validation/metadata-check.mjs"
+      ],
+      "utc": "2026-11-11T05:43:40.868751+00:00",
+      "exit": 0,
+      "log": "packages/library-lab/entries/C19-nuqs/validation/final-record-metadata.txt",
+      "logSHA256": "5ace9168b63520034fd9ea4cc739e3419febca1c89c9edd1c38452a20e8b2b8d",
+      "state": "RUN_DURING_FINALIZATION"
+    },
+    {
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "pnpm",
+        "exec",
+        "biome",
+        "check",
+        "--write",
+        "packages/library-lab/entries/C19-nuqs/examples",
+        "packages/library-lab/entries/C19-nuqs/tests",
+        "packages/library-lab/entries/C19-nuqs/library.json"
+      ],
+      "utc": "2026-11-10T17:58:51.688302+00:00",
+      "exit": 0,
+      "log": "packages/library-lab/entries/C19-nuqs/validation/format-fixed.txt",
+      "logSHA256": "fb4f1e35e038afc1fa99a6fc85d26ae6d7a58bf61bd3f2da721e87924b5f2883",
+      "state": "REUSED"
+    },
+    {
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "pnpm",
+        "exec",
+        "biome",
+        "check",
+        "--write",
+        "packages/library-lab/entries/C19-nuqs/examples",
+        "packages/library-lab/entries/C19-nuqs/tests",
+        "packages/library-lab/entries/C19-nuqs/library.json"
+      ],
+      "utc": "2026-11-10T17:58:09.307510+00:00",
+      "exit": 1,
+      "log": "packages/library-lab/entries/C19-nuqs/validation/format-initial.txt",
+      "logSHA256": "8cc6c5bb19916329844fda5b9a4970cbb0b434826ce83fec81b59eb37c57547a",
+      "state": "REUSED"
+    },
+    {
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": ["python", "packages/library-lab/entries/C19-nuqs/validation/fetch-official.py"],
+      "utc": "2026-11-10T17:58:51.922139+00:00",
+      "exit": 0,
+      "log": "packages/library-lab/entries/C19-nuqs/validation/official-fetch.txt",
+      "logSHA256": "24bedaae5f8034058506ed62029132f9a53457b644f97379c003e1b90f80c6f1",
+      "state": "REUSED"
+    },
+    {
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "pnpm",
+        "--dir",
+        "packages/library-lab",
+        "exec",
+        "node",
+        "--test",
+        "entries/C19-nuqs/tests/url-policy.test.mjs"
+      ],
+      "utc": "2026-11-10T17:58:09.044481+00:00",
+      "exit": 0,
+      "log": "packages/library-lab/entries/C19-nuqs/validation/policy.txt",
+      "logSHA256": "f6c4bfca55de0ab66848ddfc97f7dd1b203890834af75f76982c6fcf2c055d7e",
+      "state": "REUSED"
+    },
+    {
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "pnpm",
+        "exec",
+        "biome",
+        "check",
+        "--write",
+        "packages/library-lab/entries/C19-nuqs/validation/browser-proposal.check.ts"
+      ],
+      "utc": "2026-11-10T18:00:35.669054+00:00",
+      "exit": 0,
+      "log": "packages/library-lab/entries/C19-nuqs/validation/proposal-format.txt",
+      "logSHA256": "908255f40e308029c650152a5afb0a88a4c802d8024f927f83ca96098b2db7eb",
+      "state": "REUSED"
+    },
+    {
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "pnpm",
+        "--dir",
+        "packages/library-lab",
+        "exec",
+        "tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--target",
+        "es2022",
+        "--module",
+        "esnext",
+        "--moduleResolution",
+        "bundler",
+        "--strict",
+        "--skipLibCheck",
+        "--types",
+        "node",
+        "entries/C19-nuqs/validation/browser-proposal.check.ts"
+      ],
+      "utc": "2026-11-10T18:16:54.387953+00:00",
+      "exit": 0,
+      "log": "packages/library-lab/entries/C19-nuqs/validation/proposal-types-adapter.txt",
+      "logSHA256": "24287ce74e8a76e574e3e69a21eece70810e5547249cc25e03d78f239c3b27d5",
+      "state": "REUSED"
+    },
+    {
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "pnpm",
+        "--dir",
+        "packages/library-lab",
+        "exec",
+        "tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--target",
+        "es2022",
+        "--module",
+        "esnext",
+        "--moduleResolution",
+        "bundler",
+        "--strict",
+        "--skipLibCheck",
+        "--types",
+        "node",
+        "entries/C19-nuqs/validation/browser-proposal.check.ts"
+      ],
+      "utc": "2026-11-10T18:00:35.905784+00:00",
+      "exit": 0,
+      "log": "packages/library-lab/entries/C19-nuqs/validation/proposal-types.txt",
+      "logSHA256": "9e035d2fc79c36ae4f2a7c50febff3e23d8d87be947bbe7de00794ecedf4a554",
+      "state": "REUSED"
+    },
+    {
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "pnpm",
+        "--dir",
+        "packages/library-lab",
+        "exec",
+        "node",
+        "--test",
+        "entries/C19-nuqs/tests/sdk.test.mjs"
+      ],
+      "utc": "2026-11-10T17:58:08.787502+00:00",
+      "exit": 0,
+      "log": "packages/library-lab/entries/C19-nuqs/validation/sdk.txt",
+      "logSHA256": "c01cddaf807ffe7b520a1be2abce10e3d0055819ed76a90490deb94348c73038",
+      "state": "REUSED"
+    },
+    {
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "python",
+        "packages/library-lab/entries/C19-nuqs/validation/source-tool-transport-fixture.py"
+      ],
+      "utc": "2026-11-10T18:02:09.422371+00:00",
+      "exit": 0,
+      "log": "packages/library-lab/entries/C19-nuqs/validation/source-tool-transport.txt",
+      "logSHA256": "73241e858b46fbf0918087439d55b1e35a329e78782a06df934bbb44c3172ebc",
+      "state": "REUSED"
+    },
+    {
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "pnpm",
+        "--dir",
+        "packages/library-lab",
+        "exec",
+        "tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--target",
+        "es2022",
+        "--module",
+        "esnext",
+        "--moduleResolution",
+        "bundler",
+        "--jsx",
+        "react-jsx",
+        "--strict",
+        "--skipLibCheck",
+        "--esModuleInterop",
+        "--types",
+        "vite/client,node",
+        "entries/C19-nuqs/examples/demo.tsx"
+      ],
+      "utc": "2026-11-10T17:56:52.054942+00:00",
+      "exit": 0,
+      "log": "packages/library-lab/entries/C19-nuqs/validation/types-initial.txt",
+      "logSHA256": "539d3f800f9a64fe6ff30405cd2fb8e46e84bc74197accd5f18a4407ab6278cf",
+      "state": "REUSED"
+    }
+  ],
+  "sharedReused": [
+    {
+      "name": "platform-tests",
+      "status": "REUSED",
+      "from": "candidate-02/platform-tests.txt (unaffected modules), candidate-19/source-url-green.txt + source-consumers.txt, candidate-20/browser.txt B15 source-viewer pass",
+      "reason": "No common runtime/library/lock changes after20; only new entry adapter/example plus source-backed e2e. Existing focused20+2 and common docs/security/browser remain valid."
+    },
+    {
+      "name": "new-e2e-lint",
+      "command": [
+        "pnpm",
+        "exec",
+        "biome",
+        "check",
+        "packages/library-lab/e2e/quality-remediation-nuqs.spec.ts",
+        "packages/library-lab/e2e/quality-remediation-tailwind-merge.spec.ts",
+        "packages/library-lab/e2e/quality-remediation-primitives-sources.spec.ts"
+      ],
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "startedAt": "2026-11-10T18:23:22.004593+00:00",
+      "finishedAt": "2026-11-10T18:23:22.221729+00:00",
+      "exitCode": 0,
+      "log": "docs/library-lab/evidence/quality-upgrade/candidate-21/new-e2e-lint.txt"
+    },
+    {
+      "name": "typecheck",
+      "command": ["pnpm", "--filter", "@reactloom/library-lab", "typecheck"],
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "startedAt": "2026-11-10T18:23:22.221959+00:00",
+      "finishedAt": "2026-11-10T18:23:23.850552+00:00",
+      "exitCode": 0,
+      "log": "docs/library-lab/evidence/quality-upgrade/candidate-21/typecheck.txt"
+    },
+    {
+      "name": "build",
+      "command": ["pnpm", "--filter", "@reactloom/library-lab", "build"],
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "startedAt": "2026-11-10T18:23:23.850801+00:00",
+      "finishedAt": "2026-11-10T18:23:30.479027+00:00",
+      "exitCode": 0,
+      "log": "docs/library-lab/evidence/quality-upgrade/candidate-21/build.txt"
+    },
+    {
+      "name": "catalog",
+      "command": ["pnpm", "--filter", "@reactloom/library-lab", "catalog:check"],
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "startedAt": "2026-11-10T18:23:30.479384+00:00",
+      "finishedAt": "2026-11-10T18:23:30.847097+00:00",
+      "exitCode": 0,
+      "log": "docs/library-lab/evidence/quality-upgrade/candidate-21/catalog.txt"
+    }
+  ],
+  "browserReused": {
+    "command": [
+      "pnpm",
+      "exec",
+      "playwright",
+      "test",
+      "--config=.local-evidence/quality-playwright.config.ts",
+      "e2e/quality-remediation-nuqs.spec.ts",
+      "e2e/quality-remediation-tailwind-merge.spec.ts",
+      "e2e/quality-remediation-primitives-sources.spec.ts",
+      "--grep",
+      "@C19|@C21",
+      "--trace=off"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "startedAt": "2026-11-10T18:24:58.132289+00:00",
+    "finishedAt": "2026-11-10T18:25:07.331581+00:00",
+    "exitCode": 0,
+    "implicitBuild": false,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-21/browser.txt"
+  },
+  "scope": "Only final scoped metadata/format/diff checks rerun. Existing SDK6/policy6/HTTP5/real-browser4 reused, without new execution."
+}

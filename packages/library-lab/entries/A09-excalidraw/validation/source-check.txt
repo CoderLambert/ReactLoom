@@ -1,0 +1,8 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: git ls-remote --tags https://github.com/excalidraw/excalidraw.git v0.18.1*
+exit: 0
+a2ec2889babf7d2295469c6d90ebe77fae57df84 refs/tags/v0.18.1
+
+Read-only metadata query require(package/package.json) exited1 ERR_PACKAGE_PATH_NOT_EXPORTED; corrected to direct installed package.json file read. Installed version0.18.1, MIT.
+
+Python urllib fetched pinned full recursive GitHub tree (truncated=false), inspected7 README candidates, and fetched pinned target package README original bytes. Exit0; 1631 bytes; d3458f4ffe1617432989dfa40896255e805f0ddbad194873808ba7e8996e1f45. Homepage GET response headers only exit0, 200, finalURL https://plus.excalidraw.com/docs/sdk. Full original response headers in official/homepage-response.json.

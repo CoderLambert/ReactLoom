@@ -1,0 +1,4 @@
+{"label": "diff-check", "cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["git", "diff", "--check", "--", "packages/library-lab/entries/C06-imask"], "start": "2026-11-10T15:56:25.681024+00:00", "end": "2026-11-10T15:56:25.683752+00:00", "exitCode": 0, "log": "diff-check.txt"}
+STDOUT
+
+STDERR

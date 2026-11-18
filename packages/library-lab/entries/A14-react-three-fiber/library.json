@@ -4,14 +4,8 @@
   "slug": "react-three-fiber",
   "name": "React Three Fiber",
   "group": "A",
-  "summary": "React19声明式三维场景、useFrame与可见性节能的实践",
-  "tags": [
-    "R3F",
-    "React",
-    "Canvas",
-    "useFrame",
-    "reduced-motion"
-  ],
+  "summary": "声明式Mesh与真实Three对象、射线交互和按需帧：划清React业务状态与useFrame所有权",
+  "tags": ["React19", "WebGL", "Mesh", "useFrame", "demand", "cleanup"],
   "contentState": "recreated",
   "packages": [
     {
@@ -52,65 +46,82 @@
   "demos": [
     {
       "demoId": "basic",
-      "title": "声明式Mesh与灯光",
-      "description": "理解 React Three Fiber 的最小真实用法",
+      "title": "JSX构建Mesh、几何与灯光",
+      "description": "静态按需Canvas与真实Three对象值，理解几何单位、材质和光照。",
       "level": "basic",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
+        "examples/demo.tsx",
         "examples/example.tsx",
+        "examples/scene.tsx",
         "examples/frame-policy.ts",
-        "examples/demo.tsx"
+        "examples/visibility.ts",
+        "examples/workshop.css"
       ],
-      "capabilities": [
-        "WebGL",
-        "GPU",
-        "cleanup"
-      ]
+      "capabilities": ["WebGL", "GPU", "cleanup", "pointer"]
     },
     {
       "demoId": "business",
-      "title": "产品状态和指针交互",
-      "description": "面向真实项目的产品状态和指针交互",
+      "title": "射线命中与React业务状态",
+      "description": "真实网格悬停/点击及HTML键盘等价操作，颜色更新保持Mesh/Material身份。",
       "level": "business",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
+        "examples/demo.tsx",
         "examples/example.tsx",
+        "examples/scene.tsx",
         "examples/frame-policy.ts",
-        "examples/demo.tsx"
+        "examples/visibility.ts",
+        "examples/workshop.css"
       ],
-      "capabilities": [
-        "WebGL",
-        "GPU",
-        "cleanup"
-      ]
+      "capabilities": ["WebGL", "GPU", "cleanup", "pointer"]
     },
     {
       "demoId": "advanced",
-      "title": "帧循环、减少动画与重置",
-      "description": "验证React Three Fiber的资源和交互边界",
+      "title": "帧循环、几何更新与卸载",
+      "description": "useFrame delta、暂停/减动/离屏门闩、同Mesh换几何和显式Canvas重挂载。",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
+        "examples/demo.tsx",
         "examples/example.tsx",
+        "examples/scene.tsx",
         "examples/frame-policy.ts",
-        "examples/demo.tsx"
+        "examples/visibility.ts",
+        "examples/workshop.css"
       ],
-      "capabilities": [
-        "WebGL",
-        "GPU",
-        "cleanup"
-      ]
+      "capabilities": ["WebGL", "GPU", "cleanup", "pointer"]
     }
   ],
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
-    "note": "依据官方资料重新编写，历史报告的测试结果不继承；使用真实运行源码。"
+    "note": "保留原帧门闩、delta夹取、matchMedia/文档/IntersectionObserver清理；区分静态场景、真实指针业务状态和动态帧目标。Canvas/Three对象由R3F协调，快照主动读取真实对象，不继承历史PASS。"
   },
   "license": {
     "spdx": "MIT",
     "assets": "本地原创数据与界面，无第三方地图瓦片、图片或收费资源。"
+  },
+  "official": {
+    "readme": {
+      "repository": "pmndrs/react-three-fiber",
+      "commit": "d74622ea8ed717f7212d7e19d65ff3e325508389",
+      "path": "readme.md",
+      "sourceUrl": "https://github.com/pmndrs/react-three-fiber/blob/d74622ea8ed717f7212d7e19d65ff3e325508389/readme.md",
+      "snapshotPath": "official/readme.md",
+      "language": "en",
+      "version": "9.8.2 release tag（固定仓库manifest 9.8.1）",
+      "syncedAt": "2026-11-10T11:57:29.154803+00:00",
+      "sha256": "29c7319a41a30b95319e68d540672efaa31a2c3bd44bad6ef2e48b93d00d4ab6"
+    },
+    "homepage": {
+      "url": "https://r3f.docs.pmnd.rs/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-10T11:57:29.154803+00:00",
+      "reason": "实际GET200、最终URL不变，完整头无XFO/CSP；未从真实Lab origin检查iframe，所以unknown。官网正文NOT_READ。"
+    }
   }
 }

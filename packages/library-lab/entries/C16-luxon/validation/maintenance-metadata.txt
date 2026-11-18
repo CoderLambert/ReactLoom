@@ -1,0 +1,15 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["pnpm", "--dir", "packages/library-lab", "exec", "node", "entries/C16-luxon/validation/metadata-check.mjs"], "utc": "2026-11-10T17:37:40.628909+00:00", "exit": 0}
+{
+  "levels": 3,
+  "runtimeFiles": 9,
+  "inputFiles": 19,
+  "publishedDocumentLinks": 7,
+  "historicalHeaderCapture": "dictionary only; repeated raw headers unavailable",
+  "runtimeDifferencesFromCandidate18": 0,
+  "sdk": "3.7.2",
+  "types": "3.7.6",
+  "readmeBytes": 2052,
+  "readmeSHA": "5e57e6afc44eed949d850075c7e1a9206a757c058afa6b93aab83264f07cf622",
+  "homepage": "unknown; no Lab-origin iframe confirmation",
+  "formal": "NOT_RUN"
+}

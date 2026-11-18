@@ -5,15 +5,7 @@
   "name": "Shiki",
   "group": "E",
   "summary": "只读代码语法着色：按需 token 化，使用 React 文本节点安全渲染",
-  "tags": [
-    "TextMate",
-    "Syntax Highlight",
-    "Shiki",
-    "Token",
-    "Markdown",
-    "代码高亮",
-    "按需加载"
-  ],
+  "tags": ["TextMate", "Syntax Highlight", "Shiki", "Token", "Markdown", "代码高亮", "按需加载"],
   "contentState": "recreated",
   "packages": [
     {
@@ -65,29 +57,31 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/highlight.mjs",
+        "examples/highlight.d.mts",
+        "examples/highlight-session.mjs",
+        "examples/highlight-session.d.mts"
       ],
-      "capabilities": [
-        "async-highlight",
-        "safe-tokens"
-      ],
+      "capabilities": ["async-highlight", "safe-tokens"],
       "description": "使用真实 codeToTokens 的 TypeScript token 列表。"
     },
     {
       "demoId": "business",
       "level": "business",
-      "title": "业务代码片段与主题选择",
+      "title": "业务代码片段与语言选择",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/highlight.mjs",
+        "examples/highlight.d.mts",
+        "examples/highlight-session.mjs",
+        "examples/highlight-session.d.mts"
       ],
-      "capabilities": [
-        "async-highlight",
-        "safe-tokens"
-      ],
-      "description": "真实 Shiki 词法高亮、语言选择与轻量主题策略。"
+      "capabilities": ["async-highlight", "safe-tokens"],
+      "description": "真实Shiki语言规则切换，主题固定github-light。"
     },
     {
       "demoId": "advanced",
@@ -98,12 +92,13 @@
       "sourceFiles": [
         "examples/example.tsx",
         "examples/demo.tsx",
-        "tests/node-scenarios.test.mjs"
+        "tests/node-scenarios.test.mjs",
+        "examples/highlight.mjs",
+        "examples/highlight.d.mts",
+        "examples/highlight-session.mjs",
+        "examples/highlight-session.d.mts"
       ],
-      "capabilities": [
-        "async-highlight",
-        "safe-tokens"
-      ],
+      "capabilities": ["async-highlight", "safe-tokens"],
       "description": "渲染可疑 HTML 字符串为文本 token，而不插入 innerHTML。"
     }
   ],
@@ -114,5 +109,25 @@
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
     "note": "在 Shiki 4 官方 API 基础上新写安全 token 渲染，非复用旧运行结果。"
+  },
+  "official": {
+    "readme": {
+      "repository": "shikijs/shiki",
+      "commit": "f7d0167873fd676fe4e190bc9b53832fba9ee01d",
+      "path": "packages/shiki/README.md",
+      "sourceUrl": "https://github.com/shikijs/shiki/blob/f7d0167873fd676fe4e190bc9b53832fba9ee01d/packages/shiki/README.md",
+      "snapshotPath": "official/readme.md",
+      "sha256": "bbc41a59177e51e1521ef0197e6d4c3867c877c13df2a55b3fe360f48c2b4bd8",
+      "language": "en",
+      "version": "4.5.0",
+      "syncedAt": "2026-11-17T17:31:36.165Z"
+    },
+    "homepage": {
+      "url": "https://shiki.style/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-17T17:31:36.165Z",
+      "reason": "实际响应头见official/source-evidence.json，未从Lab origin确认嵌入，unknown保留直达。"
+    }
   }
 }

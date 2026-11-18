@@ -1,0 +1,30 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+ARGV: ["pnpm", "test:policy", "--entry=B17"]
+START: 2026-11-10T10:29:44.209014+00:00
+END: 2026-11-10T10:29:44.540228+00:00
+EXIT: 0
+STDOUT:
+
+> @reactloom/library-lab@0.1.0 test:policy /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+> node scripts/policy-runner.mjs --entry=B17
+
+Pure entry policy suites selected: 2 (not SDK evidence)
+✔ saved and read actions each toggle only their own property (0.819324ms)
+✔ empty search returns all local articles (0.218717ms)
+✔ multiple search terms require each term and preserve order (0.176423ms)
+✔ Unicode compatible width and case are normalized for business filtering (0.113939ms)
+✔ query and source titles remain unchanged after filtering (0.111365ms)
+✔ plain Enter commits (0.527396ms)
+✔ candidate selection during composition never commits (0.108017ms)
+✔ compositionend before trailing Enter keydown is guarded (0.074515ms)
+✔ other keyboard keys do not submit (0.062631ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 71.48952
+
+STDERR:

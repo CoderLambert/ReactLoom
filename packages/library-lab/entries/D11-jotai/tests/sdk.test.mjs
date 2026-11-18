@@ -1,33 +1,57 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
-import {atom, createStore} from 'jotai';
-import {toggleStoryRead} from '../examples/story-policy.mjs';
-test('actual Jotai derived atom follows source updates',()=>{
-  const source=atom(1), doubled=atom(get=>get(source)*2);
-  const store=createStore(); let calls=0;const unsub=store.sub(doubled,()=>{calls++;});
-  assert.equal(store.get(doubled),2);
-  store.set(source,4);
-  assert.equal(store.get(doubled),8);
-  assert.ok(calls>=1);
-  unsub();
-});
-test('actual Jotai stores isolate identical atom configs',()=>{
-  const atomConfig=atom('A');
-  const a=createStore(),b=createStore();
-  a.set(atomConfig,'changed');
-  assert.equal(a.get(atomConfig),'changed');
-  assert.equal(b.get(atomConfig),'A');
-});
+import assert from 'node:assert/strict'
+import test from 'node:test'
+import { createStore } from 'jotai'
+import {
+  counterAtom,
+  doubleAtom,
+  storiesAtom,
+  toggleReadAtom,
+  unreadAtom,
+} from '../examples/workspace-atoms.mjs'
 
-test('real Jotai write atom isolates story toggles across logout and sibling stores',()=>{
- const rows=atom([{id:'rss-1',read:false},{id:'rss-2',read:true}]);
- const toggle=atom(null,(get,set,id)=>set(rows,toggleStoryRead(get(rows),id)));
- const tenantA=createStore(),tenantB=createStore();
- tenantA.set(toggle,'rss-1');
- assert.equal(tenantA.get(rows)[0].read,true);
- assert.equal(tenantB.get(rows)[0].read,false);
- const newLogin=createStore();
- assert.equal(newLogin.get(rows)[0].read,false);
- tenantA.set(toggle,'missing');
- assert.equal(tenantA.get(rows).length,2);
-});
+test('actual demo derived atom follows source; unsubscribe stops notifications', () => {
+  const store = createStore()
+  let calls = 0
+  const unsub = store.sub(doubleAtom, () => {
+    calls++
+  })
+  assert.equal(store.get(doubleAtom), 0)
+  store.set(counterAtom, 4)
+  assert.equal(store.get(doubleAtom), 8)
+  assert.ok(calls >= 1)
+  unsub()
+  const before = calls
+  store.set(counterAtom, 5)
+  assert.equal(calls, before)
+})
+
+test('actual demo write atom and derived unread isolate sibling and new session stores', () => {
+  const a = createStore(),
+    b = createStore()
+  const initial = a.get(storiesAtom)
+  a.set(counterAtom, 3)
+  a.set(toggleReadAtom, 'rss-1')
+  assert.equal(a.get(unreadAtom), 1)
+  assert.equal(b.get(unreadAtom), 2)
+  assert.equal(initial[0].read, false)
+  assert.equal(a.get(storiesAtom)[1], initial[1])
+  const current = a.get(storiesAtom)
+  a.set(toggleReadAtom, 'missing')
+  assert.equal(a.get(storiesAtom), current)
+  const fresh = createStore()
+  assert.equal(fresh.get(counterAtom), 0)
+  assert.equal(fresh.get(unreadAtom), 2)
+  assert.equal(a.get(counterAtom), 3)
+})
+
+test('actual write atom rejects duplicate IDs before changing store snapshot', () => {
+  const store = createStore()
+  const invalid = [
+    { id: 'same', title: 'one', read: false },
+    { id: 'same', title: 'two', read: true },
+  ]
+  store.set(storiesAtom, invalid)
+  assert.throws(() => store.set(toggleReadAtom, 'same'), TypeError)
+  assert.equal(store.get(storiesAtom), invalid)
+  assert.equal(invalid[0].read, false)
+})

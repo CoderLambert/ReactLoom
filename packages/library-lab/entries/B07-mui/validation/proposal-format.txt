@@ -1,0 +1,5 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab", "argv": ["pnpm", "exec", "--", "biome", "check", "--write", "entries/B07-mui/validation/browser-proposal.check.ts", "entries/B07-mui/validation/metadata-check.mjs"], "utc": "2026-11-10T13:30:41.696346+00:00", "exitCode": 0}
+STDOUT
+Checked 2 files in 11ms. Fixed 2 files.
+
+STDERR

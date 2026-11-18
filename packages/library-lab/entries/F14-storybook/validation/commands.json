@@ -1,0 +1,45 @@
+[
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": "pnpm --filter @reactloom/library-lab exec storybook build --config-dir entries/F14-storybook/examples/.storybook --output-dir /tmp/reactloom-f14-storybook-review --disable-telemetry",
+    "exit": 0,
+    "log": "validation/build-initial.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": "python3 -m http.server 6037 --bind 127.0.0.1 --directory /tmp/reactloom-f14-storybook-review",
+    "exit": 0,
+    "note": "own server stopped with Ctrl-C after browser checks",
+    "log": "validation/server.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": "node packages/library-lab/entries/F14-storybook/validation/browser-check.mjs",
+    "exit": 0,
+    "log": "validation/browser-same-session.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": "pnpm --filter @reactloom/library-lab exec tsc -p /tmp/f14-portable-1ro3c2il/tsconfig.json",
+    "exit": 0,
+    "log": "validation/portable-types.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": "node packages/library-lab/entries/F14-storybook/validation/official-check.mjs",
+    "exit": 0,
+    "log": "validation/official.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": "pnpm exec biome check --write packages/library-lab/entries/F14-storybook/examples packages/library-lab/entries/F14-storybook/validation/*.mjs packages/library-lab/entries/F14-storybook/library.json",
+    "exit": 1,
+    "log": "validation/biome.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": "pnpm exec biome check --write packages/library-lab/entries/F14-storybook/examples packages/library-lab/entries/F14-storybook/validation/*.mjs packages/library-lab/entries/F14-storybook/library.json packages/library-lab/entries/F14-storybook/verification.json",
+    "exit": 0,
+    "log": "validation/biome-final.log"
+  }
+]

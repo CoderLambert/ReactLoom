@@ -1,0 +1,103 @@
+{
+  "reusedNotRerun": true,
+  "runtimeFilesUnchangedFromCandidate18": {
+    "examples/example.tsx": "0ac3e2242192d1349f0ddedfabadd0a1e31e63695c173852f13b3f67bb897e1d",
+    "examples/date-contract.ts": "23a4020a2f9b41fec7e759b8c97a7ba22319bbe8211cddb8dd9b58fd72ec992d",
+    "examples/instant-policy.mjs": "328a4b90f05672db7f75c982f686de2b359b1477225687633d0322fb452dde78",
+    "examples/instant-policy.d.mts": "69563ce40e725398601e1de4ee263b46cd50b11dedc77abbba56f312259d904b",
+    "examples/styles.css": "1118f3c0f0bc7d6d632a09c0fa68a422d520293fd424688ff7850f2de97daae9",
+    "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038"
+  },
+  "proposalSHA": "65da0616e759de2157b749e9fe7dff35b223cadb0d83045a34f0f3c2026eb393",
+  "candidateInputsSHA": "a5de38cbece64c52405aa3b6b18991bddb07ba169046b8c93cde66cad8f5d121",
+  "results": [
+    {
+      "name": "new-e2e-lint",
+      "command": [
+        "pnpm",
+        "exec",
+        "biome",
+        "check",
+        "packages/library-lab/e2e/quality-remediation-arborist.spec.ts",
+        "packages/library-lab/e2e/quality-remediation-date-fns.spec.ts",
+        "packages/library-lab/e2e/quality-remediation-primitives-sources.spec.ts"
+      ],
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "startedAt": "2026-11-10T17:14:29.104339+00:00",
+      "finishedAt": "2026-11-10T17:14:29.323747+00:00",
+      "exitCode": 0,
+      "log": "docs/library-lab/evidence/quality-upgrade/candidate-18/new-e2e-lint.txt"
+    },
+    {
+      "name": "typecheck",
+      "command": [
+        "pnpm",
+        "--filter",
+        "@reactloom/library-lab",
+        "typecheck"
+      ],
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "startedAt": "2026-11-10T17:14:29.323980+00:00",
+      "finishedAt": "2026-11-10T17:14:31.056192+00:00",
+      "exitCode": 0,
+      "log": "docs/library-lab/evidence/quality-upgrade/candidate-18/typecheck.txt"
+    },
+    {
+      "name": "build",
+      "command": [
+        "pnpm",
+        "--filter",
+        "@reactloom/library-lab",
+        "build"
+      ],
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "startedAt": "2026-11-10T17:14:31.056451+00:00",
+      "finishedAt": "2026-11-10T17:14:37.856420+00:00",
+      "exitCode": 0,
+      "log": "docs/library-lab/evidence/quality-upgrade/candidate-18/build.txt"
+    },
+    {
+      "name": "catalog",
+      "command": [
+        "pnpm",
+        "--filter",
+        "@reactloom/library-lab",
+        "catalog:check"
+      ],
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "startedAt": "2026-11-10T17:14:37.856770+00:00",
+      "finishedAt": "2026-11-10T17:14:38.248118+00:00",
+      "exitCode": 0,
+      "log": "docs/library-lab/evidence/quality-upgrade/candidate-18/catalog.txt"
+    }
+  ],
+  "browser": {
+    "command": [
+      "pnpm",
+      "exec",
+      "playwright",
+      "test",
+      "--config=.local-evidence/quality-playwright.config.ts",
+      "e2e/quality-remediation-arborist.spec.ts",
+      "e2e/quality-remediation-date-fns.spec.ts",
+      "e2e/quality-remediation-primitives-sources.spec.ts",
+      "--grep",
+      "@C11|@C14",
+      "--trace=off"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+    "startedAt": "2026-11-10T17:16:01.123522+00:00",
+    "finishedAt": "2026-11-10T17:16:10.504722+00:00",
+    "exitCode": 0,
+    "implicitBuild": false,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-18/browser.txt"
+  },
+  "browserLogSHA": "a6cd178feba5115a6decc51021beed7e6a721d5ddabcc58cac425db613311fde",
+  "observedC14Cases": [
+    "  ✓  4 e2e/quality-remediation-date-fns.spec.ts:29:1 › @C14 basic real zoned noon, overflow recovery and session reset (3.1s)",
+    "  ✓  5 e2e/quality-remediation-date-fns.spec.ts:75:1 › @C14 business real calendar day vs elapsed hours and result boundary (1.7s)",
+    "  ✓  6 e2e/quality-remediation-date-fns.spec.ts:100:1 › @C14 advanced real DST fold, explicit-offset boundaries and responsive output (1.8s)",
+    "  ✓  8 e2e/quality-remediation-primitives-sources.spec.ts:28:3 › @C14 original fixed README and evidenced homepage unknown (1.7s)"
+  ],
+  "limitation": "Four actual C14 cases on fixed candidate18 dist; guide maintenance-link edits and audit receipts followed build. Official iframe remained unknown. Formal verification NOT_RUN."
+}

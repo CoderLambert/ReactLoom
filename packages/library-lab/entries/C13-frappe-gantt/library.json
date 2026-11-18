@@ -4,13 +4,8 @@
   "slug": "frappe-gantt",
   "name": "Frappe Gantt",
   "group": "C",
-  "summary": "交互式任务时间线、依赖关系和日期修改",
-  "tags": [
-    "甘特图",
-    "任务",
-    "依赖关系",
-    "排程"
-  ],
+  "summary": "隔离文档中的真实任务时间线、语义表格保存与权威计划边界",
+  "tags": ["甘特图", "任务", "依赖关系", "排程"],
   "contentState": "recreated",
   "packages": [
     {
@@ -20,12 +15,16 @@
   ],
   "references": [
     {
-      "title": "官方仓库",
-      "url": "https://github.com/frappe/gantt"
+      "title": "1.2.2官方原README（固定commit）",
+      "url": "https://github.com/frappe/gantt/blob/4c82fccce9bf4237ded41680869529cea4385a90/README.md"
     },
     {
-      "title": "官方文档",
-      "url": "https://frappe.io/gantt"
+      "title": "官方配置",
+      "url": "https://docs.frappe.io/gantt/config"
+    },
+    {
+      "title": "SDK监听/refresh实现（匹配commit）",
+      "url": "https://github.com/frappe/gantt/blob/4c82fccce9bf4237ded41680869529cea4385a90/src/index.js"
     }
   ],
   "related": [
@@ -43,7 +42,7 @@
   "demos": [
     {
       "demoId": "basic",
-      "title": "最小入门",
+      "title": "隔离时间线与完整依赖",
       "level": "basic",
       "executionKind": "browser-frame",
       "entryPoint": "examples/demo.tsx",
@@ -55,11 +54,11 @@
         "examples/plan-policy.mjs",
         "examples/plan-policy.d.mts"
       ],
-      "description": "独立文档中的真实甘特图与语义任务表格，显式启停。"
+      "description": "独立4321文档中的三条真实任务/箭头与D/W/M视图，标签以文本显示"
     },
     {
       "demoId": "business",
-      "title": "实际业务",
+      "title": "表格草稿到权威计划",
       "level": "business",
       "executionKind": "browser-frame",
       "entryPoint": "examples/demo.tsx",
@@ -71,11 +70,11 @@
         "examples/plan-policy.mjs",
         "examples/plan-policy.d.mts"
       ],
-      "description": "键盘表格编辑、内存任务保存与完整依赖图；独立文档负责图表生命周期。"
+      "description": "键盘编辑/保存更新内存权威快照与真实SVG；过滤仅改变语义表格"
     },
     {
       "demoId": "advanced",
-      "title": "异常与边界",
+      "title": "拒绝、冲突与文档销毁",
       "level": "advanced",
       "executionKind": "browser-frame",
       "entryPoint": "examples/demo.tsx",
@@ -87,16 +86,36 @@
         "examples/plan-policy.mjs",
         "examples/plan-policy.d.mts"
       ],
-      "description": "无效日期、依赖环和模拟 409 拒绝；停止或离开时销毁执行文档。"
+      "description": "非法日期、进度、环与本地409不写权威计划；停止/重置销毁旧会话文档"
     }
   ],
   "provenance": {
     "collection": "RFL-20261023",
     "originalRecovery": "ORIGINAL_RECOVERED",
-    "note": "基于官方材料重新编写，仅参考旧研究，不继承既有示例的运行验收结论"
+    "note": "保留原恢复事实和既有4321隔离/会话/完整计划；本轮收紧SDK ID/日期/标签适配，明确表格草稿与权威快照、可迁移样式配置和官方原文，不继承历史PASS。"
   },
   "license": {
     "spdx": "MIT",
     "assets": "自制示例数据，无付费扩展"
+  },
+  "official": {
+    "readme": {
+      "repository": "frappe/gantt",
+      "commit": "4c82fccce9bf4237ded41680869529cea4385a90",
+      "path": "README.md",
+      "sourceUrl": "https://github.com/frappe/gantt/blob/4c82fccce9bf4237ded41680869529cea4385a90/README.md",
+      "snapshotPath": "official/readme.md",
+      "version": "1.2.2",
+      "language": "en",
+      "syncedAt": "2026-11-10T16:13:45.278995+00:00",
+      "sha256": "6f8ef7a60672fbcdb9aafc9920cf64789e118d8f56d5ab1855a7d9553253fc46"
+    },
+    "homepage": {
+      "url": "https://frappe.io/gantt",
+      "kind": "website",
+      "status": "blocked",
+      "checkedAt": "2026-11-10T16:13:44.018940+00:00",
+      "reason": "实际官网GET最终完整响应头X-Frame-Options SAMEORIGIN，未提供强制CSP frame-ancestors覆盖；限制跨源Lab嵌入。正文NOT_READ，不将200当iframe允许。"
+    }
   }
 }

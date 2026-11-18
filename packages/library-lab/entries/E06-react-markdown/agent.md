@@ -1,46 +1,13 @@
-# E06 react-markdown — 工程手册
+# E06 react-markdown 工程复用
 
-## 适用
+固定react-markdown10.1.0/remark-gfm4.0.1/rehype-sanitize6.0.0，实际安装MIT。适用完整Markdown只读React视图；不是HTML通用净化、富文本编辑器或增量流式解析。
 
-把完整 Markdown 字符串渲染成 React 元素：报告、知识库、RSS 预览。编辑源码用 E04。结构审计用 E07。已是 HTML 的字符串用 E08 或 E10。流式半截标记不要直接当本库的已完成场景。
+安装三包后复制example.tsx/render-policy.mjs/render-policy.d.mts，demo.tsx仅适配。React/DOM与TS bundler解析由已有工程提供，无Provider/env/CSS插件/网络服务。保留GFM、rehypeSanitize默认schema、skipHtml、自定义urlTransform与components全部接线。
 
-## 版本
+skipHtml丢原始HTML，sanitize过滤hast，urlTransform替换默认URL策略，a/img约束最终React输出，四者不等价。safeMarkdownURL仅无凭据HTTPS与有限#锚，拒绝ASCII控制/DEL/反斜线与其他协议/相对路径。a不spread未知props，外链_blank+noopener noreferrer；img不创建img，不访问src，仅alt占位。后置不安全组件能绕过sanitize，新增插件需审查顺序与输出。
 
-`react-markdown@10.1.0`、`remark-gfm@4.0.1`、`rehype-sanitize@6.0.0`，MIT。三包按 `library.json` 一起锁定。不要从 v9 教程删除 `skipHtml` 或 `urlTransform`。
+原文在state，maxLength12000仅UI码元限制；生产API自行限额/授权。level变化effect重置；无timer/订阅/存储需清理。原生textarea组合输入可触发预览重解析，不声称只在compositionend更新；真实IME与水合未验。
 
-## 迁移
+反例：rehype-raw、不安全props展开、dangerouslySetInnerHTML、实际远程img、只靠HTTPS当安全、默认urlTransform误当严格策略、用SSR字符串PASS当浏览器无请求/无执行。恢复通过重置样例，不碰全局数据。
 
-复制 `examples/example.tsx` 的 `remarkPlugins`、`rehypePlugins`、`skipHtml`、`urlTransform` 和 `components`。URL 与链接、图片组件以 `examples/render-policy.mjs` 为唯一实现，不要在 JSX 里再写一套正则。`examples/demo.tsx` 只是再导出。产品数据用 Query 传入字符串，不要把预览 DOM 存回数据库。
-
-## 不可删的清理
-
-`skipHtml` 必须留下。`rehypeSanitize` 必须留下。`safeMarkdownURL` 只接受无凭据 `https:` 和有限页内锚，失败返回 `''`。`components` 禁止展开未知 props。`img` 不读取 `src`。level 变化时若组件不卸载，effect 要重置原文。文本框保持上限。
-
-## 反例
-
-- `rehype-raw` 或去掉 `skipHtml`。
-- 默认 `urlTransform` 或自己用正则删 `<script`。
-- `a: (props) => <a {...props} />`。
-- `<img src={src}>` 打开展示跟踪图。
-- 把 `innerHTML` 当存储。
-- 每个键击写入全局 store。
-- 用 advanced 样例的视觉正常宣称 XSS 已在浏览器测过。
-- 把 GFM 样例表格里的 PASS 文字写成条目验收。
-
-## 测试断言
-
-- `javascript:`、带用户名的 URL、含控制字符的地址变成空，链接降级为 `span`。
-- 页内锚字符集以外的 hash 被拒绝。
-- 图片组件不输出 `src`。
-- 浏览器里 advanced 样例的 DOM 没有 `script`、事件属性或可导航的危险 href。没有收据就保持未测。
-- 策略模块与渲染组件必须继续引用同一文件。
-
-## 真实限制
-
-`rehype-sanitize` 在这里是默认调用，不是 E08 那份更窄的 schema。12_000 字符是文本框限制。示例不拉远程文章，不做 Shiki，不做流式重解析。SSR 水合未测。
-
-## 证据
-
-sdk、build、browser 保持 NOT_RUN，直到 `docs/library-lab/evidence/runs/` 有 E06 收据。Actions `41779873259` 是仓库级运行，不是本条目 PASS。不要把未跑的 XSS 观察写成通过。
-
-资料：https://github.com/remarkjs/react-markdown 与 https://github.com/rehypejs/rehype-sanitize 。
+SSR SDK6与policy2分计，Browser提案独立检查编辑/GFM/危险节点/无害执行标记/图片无请求/外链rel；无正式匹配收据verification全部NOT_RUN。官方固定readme英文原字节（无官方中文），demo主页无明确限制头但未Lab-origin确认故unknown。

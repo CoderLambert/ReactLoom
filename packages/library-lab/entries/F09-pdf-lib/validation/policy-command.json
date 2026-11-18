@@ -1,0 +1,10 @@
+{
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "argv": [
+    "node",
+    "--test",
+    "packages/library-lab/entries/F09-pdf-lib/examples/document-policy.test.mjs",
+    "packages/library-lab/entries/F09-pdf-lib/examples/operation-gate.test.mjs"
+  ],
+  "exitCode": 0
+}

@@ -1,49 +1,50 @@
-# C20 clsx — 工程手册
+# C20 clsx：工程接入要点
 
-## 适用
+`clsx@2.1.1`，MIT。将组件的条件片段组合为 `className`，适合已有样式、需要根据布尔状态或有限变体选择类名的组件。只有固定字符串时直接赋值；需要 Tailwind 冲突消解时组合 C21 的 tailwind-merge。
 
-把布尔和白名单类名拼成一条字符串。不合并 Tailwind，不去重，不表达禁用或权限。
+## 机制与最小调用
 
-## 版本
+```tsx
+import clsx from 'clsx';
 
-`clsx@2.1.1`，MIT。完整导入和 `clsx/lite` 行为不同。不要传 `bigint`。不要把接口对象直接交给它。
-
-## 迁移
-
-带走 `examples/example.tsx` 和 `examples/class-policy.mjs`。状态类继续走 `cardClassInputs`。按钮保留 `disabled` 和 `aria-pressed`。需要覆盖 `px-*` 时改用 C21 的 `twMerge`，不要在这里手写正则删类。
-
-## 不可删的清理
-
-没有实例要销毁。不要在渲染外缓存一份 className 当永久状态。语气枚举以外的值必须变成 `null`。不要为了「像 clsx」而改用字符串拼接。
-
-## 反例
-
-```ts
-clsx({ active: 'false' })
-clsx(0)
-lite({ active: true })
-clsx('badge-' + status)
-clsx('px-2', 'px-4')
+const className = clsx('card', {
+  'is-selected': selected,
+  'is-disabled': disabled,
+});
 ```
 
-- 用 `className.includes` 决定是否提交。
-- 把 JSON 响应当对象参数。
-- 用 lite 替换所有对象调用。
-- 把 `classnames/bind` 全局替换成 clsx 却不映射 CSS Modules。
+字符串保留，数组递归展开，对象值为真时保留键名；假值被忽略，真值数字转为字符串。不会生成 CSS、去重、合并冲突或设置 DOM 属性。`clsx/lite` 只保留字符串参数；本例的对象映射不能仅替换为 lite。
 
-## 测试断言
+## 本例与迁移
 
-- `selected` / `disabled` 只有严格 `true` 才产生对应键。
-- `tone` 只有 `success` 和 `warning` 映射到固定类名。
-- `0` 不产生类，真值数字会变成数字字符串。
-- lite 忽略对象。
-- `px-2` 与 `px-4` 同时保留。
-- 策略单测没有执行 clsx。
+一个 basic 实验分两部分：卡片可切换选中/禁用/语气并显示实际输入和结果；固定预设向 full/lite 传入同一组参数，比较字符串、对象、数组、数字和重复类。
 
-## 真实限制
+- `examples/example.tsx`：真实 clsx 调用与 React 状态。
+- `examples/class-policy.mjs` 及 `.d.mts`：业务有限映射。严格 `true` 才开启状态，`success` / `warning` 映射到固定类，其余语气为 `null`。
+- `examples/class-names.css`：完整演示样式，以 `.clsx-lab` 限定作用域。
+- `examples/comparison-presets.mjs` 及 `.d.mts`：页面与 SDK 测试共用的固定输入数据。
+- `examples/demo.tsx`：仅供 Lab 宿主使用的再导出。
 
-示例不加载 Tailwind 编译器。advanced 的预览只证明字符串，不证明最终像素。没有 CSS Modules。原型链投毒需要调用方不要传入外来对象，库本身不隔离。
+完整复制实验时保留以上相对路径，在已有 React 应用安装 clsx 并挂载默认组件。业务接入可删去比较面板和教学预设，保留业务状态映射及对应样式。无需 Tailwind、后端或 Lab 全局 CSS。没有实例、监听或定时器需要清理。
 
-## 证据
+## 必须保留的边界
 
-没有收据不要写 PASS。Actions 41779873259 不是本条目。不要改 `verification.json`。
+- 状态以 React 数据为准。按钮保留原生 `disabled` 与 `aria-pressed`，不能从类名字符串反推是否允许操作。
+- 外部语气值先走有限映射，不能拼接任意服务端 CSS 字段。clsx 不负责输入校验；不要将整个外部对象直接传入。
+- CSS Modules 传 `styles.card` 等已映射的值。Tailwind 冲突另用 `twMerge(clsx(...inputs))`，不能按字符串顺序推断 CSS 优先级。
+- 2.1.1 类型允许 bigint，但运行时不会把 bigint 转成类名；对象的 `for...in` 还会枚举原型链键，优先传本地构建的普通对象。
+- 页面只展示有限预设，不执行文本输入代码。输入输出字符串通过 React 文本节点显示。
+
+## 验证要点
+
+窄检查从仓库根执行：
+
+```sh
+pnpm exec node --test packages/library-lab/entries/C20-clsx/tests/sdk.test.mjs packages/library-lab/entries/C20-clsx/tests/class-policy.test.mjs
+```
+
+SDK 套件真实导入 `clsx` / `clsx/lite`，覆盖页面预设的两组返回值及卡片白名单。策略测试只验证映射，不能代替 SDK 执行。
+
+浏览器操作：选中后出现蓝边与 `is-selected`；禁用后显示虚线、按钮无法点击；切换语气后背景与类名一致。对象/数组预设应出现 full/lite 差异，重复工具类预设应全部保留。预设不加载 Tailwind，因此不证明工具类最终像素。
+
+正式 sdk / build / browser 状态分别遵守收据与指纹协议；当前工作区里的窄检查不自动改写 `verification.json`。

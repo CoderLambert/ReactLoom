@@ -1,0 +1,2 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["python", "packages/library-lab/entries/C11-react-arborist/validation/final-inspection.py"], "utc": "2026-11-10T17:45:58.208970+00:00", "exit": 0}
+{"inputFiles": 17, "inputDifferences": 0, "localLinks": 35, "agentsUnchanged": true, "proposalTemporaryFiles": 0, "formal": "NOT_RUN", "browser": "4 candidate18 C11 cases PASS; iframe unknown"}

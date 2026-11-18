@@ -1,0 +1,21 @@
+✔ 0.20.3 writes real XLSX bytes and restores typed cells and exact row values (11.259482ms)
+✔ category report restores summary values and every detail worksheet (4.604301ms)
+✔ category totals reject integer overflow before serializing a false number (0.129329ms)
+✔ formula-like labels stay string cells after an actual byte round trip (1.537745ms)
+✔ real XLSX input rejects missing-column (0.596419ms)
+✔ real XLSX input rejects extra-column (0.573838ms)
+✔ real XLSX input rejects wrong-header (0.586555ms)
+✔ real XLSX input rejects duplicate-channel (0.650992ms)
+✔ real XLSX input rejects negative-count (0.564138ms)
+✔ real XLSX input rejects blank-row (0.62567ms)
+✔ real XLSX input rejects too-many-rows (2.650032ms)
+✔ real XLSX input rejects formula-cell (0.697537ms)
+✔ real XLSX input rejects multiple-sheets (0.5686ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 96.841253

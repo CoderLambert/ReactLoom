@@ -1,0 +1,70 @@
+.a05-workshop {
+  min-width: 0;
+}
+.a05-workshop .demo-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin-block: 1rem;
+}
+.a05-workshop label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.a05-workshop button,
+.a05-workshop select {
+  padding: 6px 10px;
+}
+.a05-workshop :focus-visible {
+  outline: 3px solid #287353;
+  outline-offset: 3px;
+}
+.a05-frame {
+  max-width: 100%;
+}
+.a05-chart-host {
+  width: 100%;
+  min-width: 0;
+}
+.a05-chart-host svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  color: #384b40;
+}
+.a05-chart-host .a05-bar,
+.a05-chart-host .a05-dot {
+  cursor: pointer;
+}
+.a05-chart-host [data-selected="true"] {
+  stroke: #142f23;
+  stroke-width: 3px;
+}
+.a05-table-wrap {
+  overflow-x: auto;
+}
+.a05-workshop table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+.a05-workshop caption {
+  text-align: left;
+  font-weight: 600;
+  margin-block: 8px;
+}
+.a05-workshop th,
+.a05-workshop td {
+  padding: 7px;
+  border-bottom: 1px solid #c5d8ca;
+}
+.a05-workshop pre {
+  padding: 12px;
+  background: #edf5ed;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  overflow: auto;
+  max-height: 24rem;
+}

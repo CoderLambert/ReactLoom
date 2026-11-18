@@ -1,0 +1,19 @@
+{
+  "head": "1218066e706a90ba03fac8dff8c9b843dd2429c4",
+  "checkedAt": "2026-11-10T12:55:02.430297+00:00",
+  "fileCount": 11,
+  "entryRelativeSha256": "52474d62c4b92c6f830f61bfec4c0092426072788072ebd66cc301e212163a0e",
+  "files": {
+    "AGENTS.md": "7e6649fd159cbb6964f57e5e93f6ec1f507d2fe9aefec9d3799eb57753b81d56",
+    "agent.md": "3522a445e69c401ec3a6f7861d926a5ab564cad70850bbe9516c398e59599bc0",
+    "examples/asset.ts": "8661bd99d6fa4a3610ab1f1bd13bf211ba3837cf07fe4b68edeb6ebd0859f62e",
+    "examples/demo.tsx": "5d971ae1f6d0174728ae844ad05df854d62b6aea9946b939e9247777566d08b4",
+    "examples/example.tsx": "b1c4db2454a8da0637f864c9a13c2484c179706137af3370d45f0505df977b3b",
+    "examples/runtime-policy.ts": "6be818e75d5941bdeb74857ead7edd0be0bbb384568c0d60ff8603bea231b9ba",
+    "examples/styles.css": "ed097240be2a4e4a34d69faf00080a66fe2d0235e7ca5c7572c0dcc53e839c6d",
+    "guide.md": "2e3701c3e33cf3f20e21b588794ddfd7cd8a62a3105048df3f9d78ee39197522",
+    "library.json": "770e0d9bf756b1974546e310966a1e7d83cc41d233d23fc146a10e3ef64e24af",
+    "tests/runtime-policy.test.mts": "e1065d202fca6c987bbde121c22e662b102b9d033c6f0053a2a28377d6501413",
+    "verification.json": "169ed33cebefccad8e9980dba7973563741295c844892e7c18b58c0cd546b609"
+  }
+}

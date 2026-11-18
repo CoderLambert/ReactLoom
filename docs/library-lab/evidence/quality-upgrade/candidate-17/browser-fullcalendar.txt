@@ -1,0 +1,63 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=pnpm exec playwright test --config=.local-evidence/quality-playwright.config.ts e2e/quality-remediation-fullcalendar.spec.ts --trace=off
+
+Running 3 tests using 2 workers
+
+(node:2100917) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2100918) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  2 e2e/quality-remediation-fullcalendar.spec.ts:128:1 › @C12 business creates a unique all-day event and accepts real drop plus resize (7.7s)
+(node:2101490) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  3 e2e/quality-remediation-fullcalendar.spec.ts:179:1 › @C12 advanced observes distinct DST instants and real rejected drop restores SDK model (2.2s)
+  ✘  1 e2e/quality-remediation-fullcalendar.spec.ts:93:1 › @C12 basic real views, exclusive all-day end and SDK model observation (30.0s)
+
+
+  1) e2e/quality-remediation-fullcalendar.spec.ts:93:1 › @C12 basic real views, exclusive all-day end and SDK model observation 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByTestId('c12-workshop').getByRole('button').filter({ hasText: /^周$/u })
+
+
+      110 |       .getByRole('button')
+      111 |       .filter({ hasText: new RegExp(`^${text}$`, 'u') })
+    > 112 |       .click()
+          |        ^
+      113 |     await expect.poll(async () => (await json<{ view: string }>(range)).view).toBe(view)
+      114 |   }
+      115 |   const before = await app.getByTestId('c12-events').textContent()
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-fullcalendar.spec.ts:112:8
+
+    Error Context: test-results/quality-remediation-fullca-fca40-d-and-SDK-model-observation/error-context.md
+
+  2) e2e/quality-remediation-fullcalendar.spec.ts:128:1 › @C12 business creates a unique all-day event and accepts real drop plus resize 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 1
+    Received: 0
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      162 |   await expect
+      163 |     .poll(async () => (await json<Counters>(app.getByTestId('c12-callbacks'))).resizes)
+    > 164 |     .toBe(1)
+          |      ^
+      165 |   const resized = await json<Receipt>(app.getByTestId('c12-receipt'))
+      166 |   expect(resized).toEqual(
+      167 |     expect.objectContaining({ kind: 'resize', id: 'review', decision: 'accepted' }),
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-fullcalendar.spec.ts:164:6
+
+    Error Context: test-results/quality-remediation-fullca-f99db-cepts-real-drop-plus-resize/error-context.md
+
+  2 failed
+    e2e/quality-remediation-fullcalendar.spec.ts:93:1 › @C12 basic real views, exclusive all-day end and SDK model observation 
+    e2e/quality-remediation-fullcalendar.spec.ts:128:1 › @C12 business creates a unique all-day event and accepts real drop plus resize 
+  1 passed (30.4s)
+
+exitCode=1

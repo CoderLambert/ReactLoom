@@ -1,0 +1,14 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["pnpm", "--dir", "packages/library-lab", "exec", "node", "--test", "entries/C11-react-arborist/tests/sdk.test.mjs"], "utc": "2026-11-10T16:52:45.987029+00:00", "exit": 0}
+✔ real react-arborist helper corrects pre-removal target slots (0.49714ms)
+✔ real helper keeps target index for cross-parent moves (0.111033ms)
+✔ page moveTree uses the real helper for one-slot downward reorder (0.600712ms)
+✔ page SDK integration moves a subtree exactly once when parent and child are selected (0.152184ms)
+✔ page SDK integration rejects insertion into a removed descendant atomically (0.112706ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 103.600071

@@ -1,0 +1,144 @@
+// Complete proposal for root integration. NOT_RUN by entry author.
+// Real useSpring/useTransition/animated DOM and keyboard focus; no SDK mock or page.route.
+import { expect, test, type Locator, type Page } from '@playwright/test'
+
+async function open(page: Page, level: 'basic' | 'business' | 'advanced') {
+  await page.emulateMedia({ reducedMotion: 'no-preference' })
+  await page.goto(`/libraries/react-spring?tab=demo&example=${level}`)
+  const app = page.getByTestId('b03-workshop')
+  const run = page.getByRole('button', { name: '运行当前示例', exact: true })
+  await expect(app.or(run).first()).toBeVisible({ timeout: 20_000 })
+  if (await run.isVisible()) await run.click()
+  await expect(app).toBeVisible()
+  await expect(app).toHaveAttribute('data-reduced', 'false')
+  return app
+}
+function row(app: Locator, id: string) {
+  return app.getByTestId('b03-list').locator(`article[data-article-id="${id}"]`)
+}
+function add(app: Locator) {
+  return app.getByRole('button', { name: '添加一条新闻（上限 12）', exact: true })
+}
+async function offset(app: Locator) {
+  return app
+    .getByTestId('b03-card')
+    .evaluate((node) => new DOMMatrix(getComputedStyle(node).transform).m42)
+}
+
+test('@B03 actual animated card reaches both spring targets and accepts interrupted goals', async ({
+  page,
+}) => {
+  const app = await open(page, 'basic')
+  const toggle = app.getByTestId('b03-toggle')
+  const card = app.getByTestId('b03-card')
+  await expect(card).toHaveCSS('opacity', '1')
+  await toggle.focus()
+  await page.keyboard.press('Enter')
+  await expect(toggle).toHaveAttribute('aria-pressed', 'false')
+  await expect(card).toHaveCSS('opacity', '0.45', { timeout: 5000 })
+  await expect.poll(() => offset(app)).toBeCloseTo(18, 3)
+  await toggle.click()
+  await expect(card).toHaveCSS('opacity', '1', { timeout: 5000 })
+  await expect.poll(() => offset(app)).toBeCloseTo(0, 3)
+  // Change real targets quickly; no onRest callback drives business state.
+  await toggle.click()
+  await toggle.click()
+  await toggle.click()
+  await expect(toggle).toHaveAttribute('aria-pressed', 'false')
+  await expect(card).toHaveCSS('opacity', '0.45', { timeout: 5000 })
+  await expect.poll(() => offset(app)).toBeCloseTo(18, 3)
+})
+
+test('@B03 authoritative removal disables retained leaving DOM and preserves stable survivors', async ({
+  page,
+}) => {
+  const app = await open(page, 'business')
+  await expect(app.getByTestId('b03-authority')).toHaveText('rss-1, rss-2')
+  // Ensure the real initial enter animation has finished before starting leave.
+  await expect(row(app, 'rss-1')).toHaveCSS('opacity', '1', { timeout: 5000 })
+  const removed = await row(app, 'rss-1').elementHandle()
+  const survivor = await row(app, 'rss-2').elementHandle()
+  if (!removed || !survivor) throw new Error('Actual transition nodes missing')
+  await add(app).click()
+  await expect(app).toHaveAttribute('data-count', '3')
+  await expect(row(app, 'rss-3').getByText('新增订阅内容 #3', { exact: true })).toBeVisible()
+  await row(app, 'rss-1')
+    .getByRole('button', { name: '移除 React 性能优化实践', exact: true })
+    .focus()
+  await page.keyboard.press('Enter')
+  await expect(app.getByTestId('b03-authority')).toHaveText('rss-2, rss-3')
+  await expect(app).toHaveAttribute('data-count', '2')
+  await expect(add(app)).toBeFocused()
+  // Retain the real node handle so the safety assertion also works if leave already finished.
+  expect(
+    await removed.evaluate((node) => ({
+      active: node.getAttribute('data-active'),
+      hidden: node.getAttribute('aria-hidden'),
+      inert: node.hasAttribute('inert'),
+      actions: node.querySelectorAll('button').length,
+    })),
+  ).toEqual({ active: 'false', hidden: 'true', inert: true, actions: 0 })
+  await expect(row(app, 'rss-1')).toHaveCount(0, { timeout: 5000 })
+  expect(await survivor.evaluate((node) => node.isConnected)).toBe(true)
+  await app.getByRole('button', { name: '恢复默认数据', exact: true }).click()
+  await expect(app.getByTestId('b03-authority')).toHaveText('rss-1, rss-2')
+  await expect(row(app, 'rss-3')).toHaveCount(0, { timeout: 5000 })
+  await add(app).click()
+  await expect(app.getByTestId('b03-authority')).toHaveText('rss-1, rss-2, rss-4')
+  await expect(app.getByTestId('b03-list').locator('article[data-active="true"]')).toHaveCount(3)
+})
+
+test('@B03 local immediate respects system preference and capacity removal restores keyboard focus', async ({
+  page,
+}) => {
+  const failures: string[] = []
+  page.on('pageerror', (error) => failures.push(error.message))
+  const app = await open(page, 'advanced')
+  const local = app.getByRole('checkbox', { name: '仅本例减少动画', exact: true })
+  await local.check()
+  await expect(app).toHaveAttribute('data-reduced', 'true')
+  await expect(app).toHaveAttribute('data-system-reduced', 'false')
+  await app.getByTestId('b03-toggle').click()
+  await expect(app.getByTestId('b03-card')).toHaveCSS('opacity', '0.45')
+  await expect.poll(() => offset(app)).toBeCloseTo(18, 3)
+  await local.uncheck()
+  await expect(app).toHaveAttribute('data-reduced', 'false')
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await expect(app).toHaveAttribute('data-system-reduced', 'true')
+  await expect(app).toHaveAttribute('data-reduced', 'true')
+  await expect(local).not.toBeChecked()
+  await app.getByTestId('b03-toggle').click()
+  await expect(app.getByTestId('b03-card')).toHaveCSS('opacity', '1')
+  await expect.poll(() => offset(app)).toBeCloseTo(0, 3)
+  for (let i = 0; i < 10; i++) await add(app).click()
+  await expect(app).toHaveAttribute('data-count', '12')
+  await expect(add(app)).toBeDisabled()
+  await row(app, 'rss-1')
+    .getByRole('button', { name: '移除 React 性能优化实践', exact: true })
+    .focus()
+  await page.keyboard.press('Enter')
+  await expect(app).toHaveAttribute('data-count', '11')
+  await expect(add(app)).toBeEnabled()
+  await expect(add(app)).toBeFocused()
+  await expect(row(app, 'rss-1')).toHaveCount(0)
+  await add(app).click()
+  await expect(app).toHaveAttribute('data-count', '12')
+  await expect(row(app, 'rss-13')).toHaveCount(1)
+  await app.getByRole('button', { name: '恢复默认数据', exact: true }).click()
+  await expect(app.getByTestId('b03-authority')).toHaveText('rss-1, rss-2')
+  await expect(app.getByTestId('b03-list').locator('article')).toHaveCount(2)
+  await page.getByRole('button', { name: '停止并卸载', exact: true }).click()
+  await expect(app).toHaveCount(0)
+  await page.emulateMedia({ reducedMotion: 'no-preference' })
+  await page.getByRole('button', { name: '运行当前示例', exact: true }).click()
+  await expect(app).toHaveAttribute('data-reduced', 'false')
+  await expect(local).not.toBeChecked()
+  await expect(app).toHaveAttribute('data-count', '2')
+  await expect(app.getByTestId('b03-card')).toHaveCSS('opacity', '1')
+  await page.getByRole('tab', { name: 'Agent 指南', exact: true }).click()
+  await expect(app).toHaveCount(0)
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  expect(failures).toEqual([])
+})
+// This does not prove GPU/FPS, full assistive technology behavior, touch or SSR.
+// Node SDK/policy checks never stand in for these real DOM/keyboard assertions.

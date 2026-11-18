@@ -1,0 +1,31 @@
+[
+  {
+    "name": "platform-tests",
+    "status": "REUSED",
+    "from": "candidate-02/platform-tests.txt",
+    "reason": "No shared runtime changes since candidate15; affected document scope focused22 and actual security2 PASS retained. RGL patched owned RAF and portable geometry passed candidate15. Unaffected platform200 retained; candidate16 passed B22/C05/C08/C09 are retained; C06 advanced CSS and new C10/C13 are the relevant runtime inputs below. C12 remains an intermediate checkpoint."
+  },
+  {
+    "name": "platform-lint",
+    "status": "REUSED",
+    "from": "candidate-02/lint.txt",
+    "reason": "Entry lint directed by owners; changed public e2e checked below."
+  },
+  {
+    "name": "new-e2e-lint",
+    "command": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "packages/library-lab/e2e/quality-remediation-tanstack-virtual.spec.ts",
+      "packages/library-lab/e2e/quality-remediation-primitives-sources.spec.ts",
+      "packages/library-lab/e2e/c13-preview-boundary.spec.ts"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-10T16:37:27.590173+00:00",
+    "finishedAt": "2026-11-10T16:37:27.810058+00:00",
+    "exitCode": 1,
+    "log": "docs/library-lab/evidence/quality-upgrade/candidate-17/new-e2e-lint.txt"
+  }
+]

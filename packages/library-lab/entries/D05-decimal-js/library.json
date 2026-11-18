@@ -5,13 +5,7 @@
   "name": "decimal.js",
   "group": "D",
   "summary": "从字符串到精确金额：decimal.js 的税率、舍入和对账边界",
-  "tags": [
-    "Decimal",
-    "金额",
-    "精度",
-    "财务",
-    "计算"
-  ],
+  "tags": ["Decimal", "金额", "精度", "财务", "计算"],
   "contentState": "recreated",
   "packages": [
     {
@@ -56,7 +50,7 @@
         "examples/amount-policy.d.mts"
       ],
       "capabilities": [],
-      "description": "真实 Decimal 加法对照 JS Number。"
+      "description": "编辑两个金额字符串，对照真实 Decimal 与 Number 返回值；非法输入显示校验错误。"
     },
     {
       "demoId": "business",
@@ -90,7 +84,7 @@
         "examples/amount-policy.d.mts"
       ],
       "capabilities": [],
-      "description": "ROUND_HALF_UP 与 HALF_EVEN 在半分边界的差异。"
+      "description": "独立观察 HALF_UP/HALF_EVEN 与整行/单价舍入的一分差异，使用隔离 clone。"
     }
   ],
   "license": {
@@ -101,5 +95,25 @@
     "origin": "RFL-20261023/D/decimal.js",
     "mode": "recreated",
     "note": "基于官方 10.6.0 文档重新实现，不继承旧运行结论"
+  },
+  "official": {
+    "readme": {
+      "repository": "MikeMcl/decimal.js",
+      "commit": "1a6e845004b29a3b7dcef78fe92b8d786634f4e2",
+      "path": "README.md",
+      "sha256": "80c51b8ffd2a690cf51b571490d098c8a8175094a6c86f3e8e37716e49314d5e",
+      "sourceUrl": "https://github.com/MikeMcl/decimal.js/blob/1a6e845004b29a3b7dcef78fe92b8d786634f4e2/README.md",
+      "snapshotPath": "official/readme.md",
+      "language": "en",
+      "version": "10.6.0",
+      "syncedAt": "2026-11-17T16:26:01.248733+00:00"
+    },
+    "homepage": {
+      "url": "https://mikemcl.github.io/decimal.js/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-17T16:26:01.248733+00:00",
+      "reason": "实际 GET 200；完整响应头与最终 URL 见 official/source-evidence.json。未发现明确嵌入限制头，尚无 Lab origin 浏览器嵌入确认，保留预览尝试与官网直达。"
+    }
   }
 }

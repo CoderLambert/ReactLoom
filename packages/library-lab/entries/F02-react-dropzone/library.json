@@ -5,13 +5,7 @@
   "name": "react-dropzone",
   "group": "F",
   "summary": "文件选择与拖放输入",
-  "tags": [
-    "File",
-    "DragDrop",
-    "Upload",
-    "Validation",
-    "Accessibility"
-  ],
+  "tags": ["File", "DragDrop", "Upload", "Validation", "Accessibility"],
   "contentState": "recreated",
   "packages": [
     {
@@ -57,13 +51,11 @@
         "examples/preview.mjs",
         "examples/preview.d.mts",
         "examples/preview.test.mjs",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/preview-session.mjs",
+        "examples/preview-session.d.mts"
       ],
-      "capabilities": [
-        "file-picker",
-        "drag-drop",
-        "File-API"
-      ],
+      "capabilities": ["file-picker", "drag-drop", "File-API"],
       "description": "限制 MIME/扩展名，查看所选文件的信息与大小。"
     },
     {
@@ -77,18 +69,16 @@
         "examples/preview.mjs",
         "examples/preview.d.mts",
         "examples/preview.test.mjs",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/preview-session.mjs",
+        "examples/preview-session.d.mts"
       ],
-      "capabilities": [
-        "file-picker",
-        "drag-drop",
-        "File-API"
-      ],
+      "capabilities": ["file-picker", "drag-drop", "File-API"],
       "description": "读取受限大小的本地文件内容，只在当前示例中预览，不执行网络上传。"
     },
     {
       "demoId": "advanced",
-      "title": "拒绝策略与取消",
+      "title": "拒绝策略与迟到读取失效",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
@@ -97,14 +87,12 @@
         "examples/preview.mjs",
         "examples/preview.d.mts",
         "examples/preview.test.mjs",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/preview-session.mjs",
+        "examples/preview-session.d.mts"
       ],
-      "capabilities": [
-        "file-picker",
-        "drag-drop",
-        "File-API"
-      ],
-      "description": "限制文件个数和大小，并用 generation 防止旧异步读取覆盖新的内容。"
+      "capabilities": ["file-picker", "drag-drop", "File-API"],
+      "description": "限制文件个数/大小、同名同size独立标识与旧读取不回写；不是物理读取取消。"
     }
   ],
   "license": {
@@ -114,5 +102,25 @@
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
     "note": "基于react-dropzone v20 官方文档重新编写；运行状态待SDK与浏览器验证。"
+  },
+  "official": {
+    "readme": {
+      "repository": "react-dropzone/react-dropzone",
+      "commit": "b9a3e10cee6b15b6850e240caac94be80f5c7e0d",
+      "path": "README.md",
+      "sourceUrl": "https://github.com/react-dropzone/react-dropzone/blob/b9a3e10cee6b15b6850e240caac94be80f5c7e0d/README.md",
+      "snapshotPath": "official/readme.md",
+      "sha256": "b8aa2f3ceea991b217baa826993f0478cef8e9cdf1bb067b780ae4278454c90a",
+      "language": "en",
+      "version": "20.1.4",
+      "syncedAt": "2026-11-17T18:28:05.382Z"
+    },
+    "homepage": {
+      "url": "https://react-dropzone.js.org/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-17T18:28:05.382Z",
+      "reason": "实际GET头见official/source-evidence.json；未Lab origin嵌入确认，unknown及直达。"
+    }
   }
 }

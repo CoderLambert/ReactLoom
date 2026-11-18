@@ -1,0 +1,25 @@
+{"label": "mobile-overflow-css-green", "cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["node", "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C06-imask/validation/mobile-overflow-probe.mjs", "--candidate-css"], "start": "2026-11-10T16:18:01.760314+00:00", "end": "2026-11-10T16:18:03.518021+00:00", "exitCode": 0, "log": "mobile-overflow-css-green.txt", "scope": "candidate16 fixed dist + actual new entry CSS overlay; diagnosis only, root new-build regression pending"}
+STDOUT
+{
+  "candidateCssOverlay": true,
+  "viewport": 390,
+  "app": {
+    "tag": "SECTION",
+    "class": "c06-workshop",
+    "text": "日期：填满、真实公历与中文备注真实react-imask7.6.1管理输入DOM与光标；React仅观察onAccept，不把业务快照反写input.value。事件日期重置当前控",
+    "x": 41,
+    "right": 349,
+    "width": 308,
+    "clientWidth": 308,
+    "scrollWidth": 308,
+    "display": "block",
+    "minWidth": "0px",
+    "maxWidth": "none",
+    "whiteSpace": "normal",
+    "overflowWrap": "anywhere",
+    "boxSizing": "border-box"
+  },
+  "overflow": []
+}
+
+STDERR

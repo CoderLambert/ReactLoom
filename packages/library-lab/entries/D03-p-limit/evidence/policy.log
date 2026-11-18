@@ -1,0 +1,12 @@
+✔ queued -> running -> done is valid and keeps ID (0.819188ms)
+✔ late callbacks cannot resurrect cancelled or done work (0.153604ms)
+✔ no queued task can skip running and terminal cancellation is idempotent (3.519465ms)
+✔ invalid state/identity fail rather than silently corrupting the UI (0.323717ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 45.734963

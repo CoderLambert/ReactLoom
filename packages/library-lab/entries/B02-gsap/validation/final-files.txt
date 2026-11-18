@@ -1,0 +1,39 @@
+ENTRY: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/B02-gsap
+UTC: 2026-11-10T12:53:01.806378+00:00
+FILES: 36
+AGENTS.md
+agent.md
+examples/demo.tsx
+examples/example.tsx
+examples/motion.ts
+examples/timeline-policy.ts
+examples/workshop.css
+guide.md
+library.json
+local-validation.md
+official/readme.md
+official/source-evidence.json
+tests/sdk.test.mjs
+tests/timeline-policy.test.mts
+validation/baseline.json
+validation/browser-proposal.txt
+validation/checkpoint-format.txt
+validation/diff-check.txt
+validation/final-files.txt
+validation/final-inspection.txt
+validation/format-check.txt
+validation/format-final.txt
+validation/format-initial.txt
+validation/format-tests.txt
+validation/input-hashes.json
+validation/log-hashes.json
+validation/metadata-check.mjs
+validation/metadata.txt
+validation/policy.txt
+validation/proposal-types.txt
+validation/sdk.txt
+validation/source-fetch.txt
+validation/source-request.py
+validation/types-final.txt
+validation/types.txt
+verification.json

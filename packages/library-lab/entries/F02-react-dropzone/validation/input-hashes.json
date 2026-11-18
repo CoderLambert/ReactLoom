@@ -1,0 +1,19 @@
+{
+  "AGENTS.md": "c74df20aa848901cb6b75ccbf6fc30a422712986c4eef23ee4cc0637749473d3",
+  "agent.md": "943b4efa24063b30c16cd8b3ececbe9cf1faade4be136557a3f228f1cb0cb2e5",
+  "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+  "examples/example.tsx": "6cab5f112b26594dbf249f319af7f1f8d51d47f42437807b32987e5432e13029",
+  "examples/preview-session.d.mts": "61210de693d44494a4e5637e5abc5019867edeb20f55ba1bca1a508ce99abead",
+  "examples/preview-session.mjs": "7bac083254ce29572536a51d91892f84d2b802dd87765bbb4631874220bc2dce",
+  "examples/preview-session.test.mjs": "07e357ee37991b121f0778f21b1ccdb1d327ee2b6e78d006cb73b38f2e1cd508",
+  "examples/preview.d.mts": "6101c1e66021c0c57f6c06f3f658a600b540138175248441368467a363c53b57",
+  "examples/preview.mjs": "3bdf0a974258a423af7cd436209814bb429978f5aa112dab551f872c6a046fe6",
+  "examples/preview.test.mjs": "7be77c5dfca899991584ec64016a485927e168acd25b9a0c7e28abfd977bbc8b",
+  "guide.md": "1577a26c8fbf79d3bd8272696cfd75c0ba8959d5ba949fb494304cee91a34e33",
+  "library.json": "c158014ffe9070f1ca2343f38ca49517540270c03b713911767516644ec3a6a8",
+  "local-validation.md": "52f8f1f108922ed6fc50d064a29329314b2b6fc34448865002eeb00ac6a0e6d3",
+  "official/license.txt": "7b93b62069ec28d00cc7cf3696b5d243ad9887517f8e709dce4811747f0e2dc2",
+  "official/readme.md": "b8aa2f3ceea991b217baa826993f0478cef8e9cdf1bb067b780ae4278454c90a",
+  "official/source-evidence.json": "8d8e878feccae3920813334dcdbab6322eabf06aab4cc247d33b713e1bcd38ca",
+  "verification.json": "364da977082bffdf3e4d3c3440df4b15c7ddd8c61eac2c814fb964a6daee4b68"
+}

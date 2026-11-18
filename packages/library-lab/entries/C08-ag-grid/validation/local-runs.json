@@ -1,0 +1,130 @@
+[
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "packages/library-lab/entries/C08-ag-grid/examples",
+      "packages/library-lab/entries/C08-ag-grid/tests"
+    ],
+    "utc": "2026-11-10T15:45:18.365170+00:00",
+    "exit": 0
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "--dir",
+      "packages/library-lab",
+      "test:sdk",
+      "--entry=C08"
+    ],
+    "utc": "2026-11-10T15:45:18.691305+00:00",
+    "exit": 0
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "--dir",
+      "packages/library-lab",
+      "test:policy",
+      "--entry=C08"
+    ],
+    "utc": "2026-11-10T15:45:18.973783+00:00",
+    "exit": 0
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "packages/library-lab/entries/C08-ag-grid/library.json",
+      "packages/library-lab/entries/C08-ag-grid/verification.json",
+      "packages/library-lab/entries/C08-ag-grid/validation/metadata-check.mjs",
+      "packages/library-lab/entries/C08-ag-grid/validation/sdk-source-audit.json",
+      "packages/library-lab/entries/C08-ag-grid/official/source-evidence.json"
+    ],
+    "utc": "2026-11-10T15:52:13.375538+00:00",
+    "exit": 0
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "packages/library-lab/entries/C08-ag-grid/validation/browser-proposal.check.ts"
+    ],
+    "utc": "2026-11-10T15:52:13.593706+00:00",
+    "exit": 0
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "--dir",
+      "packages/library-lab",
+      "exec",
+      "tsc",
+      "--ignoreConfig",
+      "--noEmit",
+      "--target",
+      "es2022",
+      "--module",
+      "esnext",
+      "--moduleResolution",
+      "bundler",
+      "--strict",
+      "--skipLibCheck",
+      "--types",
+      "node",
+      "entries/C08-ag-grid/validation/browser-proposal.check.ts"
+    ],
+    "utc": "2026-11-10T15:52:13.823412+00:00",
+    "exit": 0
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "pnpm",
+      "--dir",
+      "packages/library-lab",
+      "exec",
+      "tsc",
+      "--ignoreConfig",
+      "--noEmit",
+      "--target",
+      "es2022",
+      "--module",
+      "esnext",
+      "--moduleResolution",
+      "bundler",
+      "--strict",
+      "--skipLibCheck",
+      "--types",
+      "node",
+      "--allowImportingTsExtensions",
+      "entries/C08-ag-grid/tests/edit-session.test.mts"
+    ],
+    "utc": "2026-11-10T15:52:14.057156+00:00",
+    "exit": 0
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "argv": [
+      "node",
+      "packages/library-lab/entries/C08-ag-grid/validation/metadata-check.mjs"
+    ],
+    "utc": "2026-11-10T15:52:14.086813+00:00",
+    "exit": 0
+  }
+]

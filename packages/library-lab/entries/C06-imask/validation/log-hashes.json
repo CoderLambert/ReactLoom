@@ -1,0 +1,19 @@
+{
+  "validation/diff-check.txt": "6adada8510dc2c22dd11526c0a2c0fd7b8dcec7ea67776d8caadacc49f178f4b",
+  "validation/final-check.txt": "190dd52102107b46575e617ede19ac27b5821d84dd15f12dbac163e7842147e4",
+  "validation/format-final.txt": "479526a564f04274c30fa337831d1f8653e66eff3ec8235cdded26eb6f7a9549",
+  "validation/format-intermediate.txt": "0b26d507a26bde6b5c2ff9f39474952e6cb1e681b6b9d340d83942546b2e88c6",
+  "validation/metadata.txt": "5b7e31756431a65396d500ddc7a7c52af8c0b9525caf1f2057d57063c29cd9e6",
+  "validation/mobile-fix-format.txt": "c7582deb9e481f7b5f8db379666b0ff7235359bd1dc9ad9f78b9fc84df2bfa0c",
+  "validation/mobile-fix-types.txt": "c9157881395a1d103dba9daeeb100ee2811720fba68da1187c1d737acefcea90",
+  "validation/mobile-overflow-css-green.txt": "fea6c0c33de7e7b420d93f4441eb1dfa9e4a7da7e318ee7fb97a1399c37626ca",
+  "validation/mobile-overflow-red.txt": "ec67711737cbabc95a35959c6e61f7ea08f3c649c426c5127c937c62c709fc57",
+  "validation/mobile-probe-cwd-failure.txt": "4ae058f2fe872b43a4ce6b5d79ee8de51f3e8bbccdc1b413809411b26fbbd181",
+  "validation/official-fetch.txt": "63155b779b86d207f2637df573500f21d7d2f033be2d507f4a55853a68c68a60",
+  "validation/policy.txt": "e8182146f7a3a906e6dc3314c357b6f70ed36a095e091f7a21c047f7df9a5c02",
+  "validation/proposal-format.txt": "60c284612b04eee63fbf5f7e4c0cc2a01ac8dcfdd078064c625aee3825cec319",
+  "validation/proposal-typecheck-final.txt": "b5e757bf8b70c60d456dfbe68bd2cbee70ea5114216c00c6f980c9363d942d69",
+  "validation/proposal-typecheck.txt": "8dde41e4a856df44482f7fd752fdc07d4dbea938c4fb5bf49ef36f5d59b660cc",
+  "validation/sdk.txt": "a077db45d50310f605ab366a3a00476e70e9883e246ac5b3dfba798ca2511f3f",
+  "validation/types-intermediate.txt": "48c8bc7fab3448c287bbc0cfc4ad954e2f11ec229473a7ad2f164a8486b35e3e"
+}

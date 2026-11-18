@@ -1,3 +1,7 @@
-# C21 tailwind-merge 维护
+# C21 tailwind-merge维护
 
-先阅读本库 agent.md、library.json、verification.json。真实示例与源码面板统一读取 examples/example.tsx。关注 v3.7.0 对 Tailwind v4 的规则、px/pr 非对称冲突和自定义 token；不得依赖名称相似做正则删类。由 PLATFORM 统一修改依赖锁文件，未真实安装不得标SDK通过。
+继承上级规则。复用前读library/agent/verification和当前examples；迁移文件以唯一basic的sourceFiles为准。保留单完整实验，预设只是输入样本，不为展示重复扩三层。
+
+修改merge模型时核实装API/默认配置，定向测px/pr非对称方向、modifier/important、自定义CSS对应规则与未知类；使用真实SDK结果，不手写删除正则或内部逐token追踪。自定义合并器模块级复用。样式变动另验真实Tailwind构建与DOM，不把merge识别当CSS存在。
+
+修订来源工具时保留旧成功README/evidence，完整获取后暂存replace，失败独立failed；保留重复raw响应头。浏览器/SDK/静态证据分层，正式状态只按匹配正式收据更新，本地六项写local-validation。

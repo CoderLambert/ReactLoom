@@ -1,0 +1,15 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+command=python3 - (JSON parse/canonical formatting, candidate21 entry SHA, real case/log and recorded host-exit checks)
+exitCode=0
+candidate21EntryInputs=39
+changedFromCandidate21=["guide.md", "local-validation.md", "verification.json"]
+remainingEntryInputHashes=unchanged
+jsonParseAndCanonicalFormatting=PASS
+formalStatuses=all NOT_RUN
+reusedBrowser=2 C21 cases of 6 total, exit0
+reusedHost=typecheck/build/catalog exit0
+staleCurrentWording=absent
+biome=FAIL exit254, not rerun
+firstFinalRefresh=exit1: helper expected6 guide links, observed9; original metadata also9
+finalDocumentationDigestRefresh=PASS after helper expectation correction
+guideLinks=9; existing targets present, no unpublished maintenance link

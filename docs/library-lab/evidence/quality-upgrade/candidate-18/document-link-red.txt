@@ -1,0 +1,72 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+command=node --test packages/library-lab/tests/document-utils.test.mjs
+✔ only safe HTTPS, fragments and same-entry relative files are accepted (2.643302ms)
+✔ headings ignore fenced blocks and correctly preserve source line anchor (1.929581ms)
+✔ Chinese anchors, inline code and duplicate headings exclude fenced content (0.18723ms)
+✔ local example and test links map to real generated source files, not missing SPA fallbacks (1.096388ms)
+✔ Markdown byte ceiling preserves split multibyte UTF-8 without trusting response length (15.071803ms)
+✔ Markdown byte ceiling rejects oversized decoded body and cancels the reader (0.570557ms)
+✔ Markdown rejects fallback HTML, non-2xx, invalid UTF-8 and absent response bodies (1.00543ms)
+✔ Setext headings use source start lines and duplicate slugs match rendered anchors (0.968401ms)
+✔ Fence-looking code text cannot expose hidden headings; indented/quoted code stays out of TOC (0.203404ms)
+✔ Document-relative links reject scheme-relative or malformed Vite base paths (0.213767ms)
+✖ declared official README links use the already published snapshot and keep private evidence inaccessible (0.644518ms)
+✖ versioned patch source links remain inert source text without enabling credentials or traversal (0.150599ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 10
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 73.223861
+
+✖ failing tests:
+
+test at packages/library-lab/tests/document-utils.test.mjs:196:1
+✖ declared official README links use the already published snapshot and keep private evidence inaccessible (0.644518ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + ''
+  - '/lab/raw/C13/readme.md'
+  
+      at TestContext.<anonymous> (file:///home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/tests/document-utils.test.mjs:197:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '',
+    expected: '/lab/raw/C13/readme.md',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at packages/library-lab/tests/document-utils.test.mjs:212:1
+✖ versioned patch source links remain inert source text without enabling credentials or traversal (0.150599ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + ''
+  - '/raw/B15/sources/examples/react-grid-layout%402.3.0.patch.txt'
+  
+      at TestContext.<anonymous> (file:///home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/tests/document-utils.test.mjs:213:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '',
+    expected: '/raw/B15/sources/examples/react-grid-layout%402.3.0.patch.txt',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+exitCode=1

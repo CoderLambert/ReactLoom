@@ -1,0 +1,10 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ["pnpm", "exec", "--", "biome", "check", "--write", "entries/B01-motion-for-react/examples", "entries/B01-motion-for-react/tests", "entries/B01-motion-for-react/library.json", "entries/B01-motion-for-react/verification.json", "entries/B01-motion-for-react/official/source-evidence.json", "entries/B01-motion-for-react/validation/baseline.json"]
+startedAt: 2026-11-10T12:26:32.640421+00:00
+finishedAt: 2026-11-10T12:26:32.879794+00:00
+exitCode: 0
+
+STDOUT
+Checked 12 files in 7ms. Fixed 9 files.
+
+STDERR

@@ -1,0 +1,5 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['pnpm', 'exec', '--', 'biome', 'check', '--write', 'entries/C12-fullcalendar/validation/metadata-check.mjs', 'entries/C12-fullcalendar/validation/sdk-source-audit.json', '/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C12-fullcalendar/validation/.proposal-types-0xy4qx37/browser-proposal.spec.ts']
+startedAt: 2026-11-10T16:46:20.243144+00:00
+exit: 0
+Checked 3 files in 12ms. Fixed 2 files.

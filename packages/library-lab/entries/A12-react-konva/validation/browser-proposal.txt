@@ -1,0 +1,136 @@
+// Ready Playwright source proposal; NOT_RUN by entry author. Root integrates and executes.
+// Real browser Canvas/pointer/native DOM input. No SDK mock, hidden scene API or screenshot-only result.
+import { expect, test, type Locator, type Page } from '@playwright/test'
+
+async function mountA12(page: Page, level: 'basic' | 'business' | 'advanced') {
+  await page.setViewportSize({ width: 1200, height: 1000 })
+  await page.goto(`/libraries/react-konva?tab=demo&example=${level}`)
+  const app = page.getByTestId('a12-workshop')
+  await expect(app.getByTestId('a12-stage-host').locator('canvas')).toHaveCount(2)
+  await expect.poll(async () => Number(await app.getAttribute('data-width'))).toBeGreaterThan(1)
+  await expect(app.getByTestId('a12-table').locator('tbody tr')).toHaveCount(3)
+  return app
+}
+function foreground(app: Locator) {
+  // Two actual Layer scene canvases; hit-test canvases are not DOM children.
+  return app.getByTestId('a12-stage-host').locator('canvas').nth(1)
+}
+function nodeRow(app: Locator, id: string) {
+  return app.getByTestId('a12-table').locator(`tr[data-node-id="${id}"]`)
+}
+async function fillPixel(app: Locator, x: number, y: number) {
+  const scale = Number(await app.getAttribute('data-scale'))
+  return foreground(app).evaluate(
+    (element, { x, y, scale }) => {
+      if (!(element instanceof HTMLCanvasElement)) throw new Error('actual Canvas missing')
+      const context = element.getContext('2d')
+      if (!context) throw new Error('actual Canvas 2D context missing')
+      const ratio = element.width / element.getBoundingClientRect().width
+      return [
+        ...context.getImageData(Math.round(x * scale * ratio), Math.round(y * scale * ratio), 1, 1)
+          .data,
+      ]
+    },
+    { x, y, scale },
+  )
+}
+async function dragFromCollect(page: Page, app: Locator, targetWorld: { x: number; y: number }) {
+  const row = nodeRow(app, 'collect')
+  const x = Number(await row.getAttribute('data-x'))
+  const y = Number(await row.getAttribute('data-y'))
+  const scale = Number(await app.getAttribute('data-scale'))
+  const canvas = foreground(app)
+  await canvas.scrollIntoViewIfNeeded()
+  const box = await canvas.boundingBox()
+  if (!box) throw new Error('real Stage canvas has no layout')
+  await page.mouse.move(box.x + (x + 20) * scale, box.y + (y + 10) * scale)
+  await page.mouse.down()
+  await page.mouse.move(box.x + targetWorld.x * scale, box.y + targetWorld.y * scale, { steps: 14 })
+  await page.mouse.up()
+}
+
+test('@A12 React props update actual Canvas paint and the accessible row through native keyboard', async ({
+  page,
+}) => {
+  const app = await mountA12(page, 'basic')
+  const row = nodeRow(app, 'collect')
+  await expect(row).toHaveAttribute('data-x', '28')
+  await expect.poll(() => fillPixel(app, 34, 66)).toEqual([207, 231, 215, 255])
+  const right = app.getByRole('button', { name: '键盘替代：右移12px', exact: true })
+  await right.focus()
+  await page.keyboard.press('Enter')
+  await expect(row).toHaveAttribute('data-x', '40')
+  await expect.poll(() => fillPixel(app, 50, 66)).toEqual([207, 231, 215, 255])
+  await expect.poll(() => fillPixel(app, 34, 66)).toEqual([0, 0, 0, 0])
+  // Hit another actual shape, not the matching HTML row.
+  const canvas = foreground(app)
+  await canvas.scrollIntoViewIfNeeded()
+  const box = await canvas.boundingBox()
+  const scale = Number(await app.getAttribute('data-scale'))
+  if (!box) throw new Error('Canvas has no geometry')
+  await page.mouse.click(box.x + 430 * scale, box.y + 55 * scale)
+  await expect(app.getByRole('combobox', { name: '选择节点', exact: true })).toHaveValue('publish')
+  await expect(nodeRow(app, 'publish')).toHaveAttribute('data-selected', 'true')
+})
+
+test('@A12 real drag commits world coordinates and clamps the card inside the 620x260 world', async ({
+  page,
+}) => {
+  const app = await mountA12(page, 'business')
+  // Pointer starts at (x+20,y+10), so (108,108) produces node (88,98).
+  await dragFromCollect(page, app, { x: 108, y: 108 })
+  const row = nodeRow(app, 'collect')
+  await expect(row).toHaveAttribute('data-x', '88')
+  await expect(row).toHaveAttribute('data-y', '98')
+  await expect.poll(() => fillPixel(app, 98, 106)).toEqual([207, 231, 215, 255])
+  // Keep the real pointer within the Stage while trying to move the shape beyond its inner bounds.
+  await dragFromCollect(page, app, { x: 550, y: 240 })
+  await expect(row).toHaveAttribute('data-x', '488')
+  await expect(row).toHaveAttribute('data-y', '208')
+  await expect.poll(() => fillPixel(app, 498, 216)).toEqual([207, 231, 215, 255])
+})
+
+test('@A12 lock affects dragging only; stable add/delete, responsive scaling and unmount keep one owner', async ({
+  page,
+}) => {
+  const app = await mountA12(page, 'advanced')
+  const collect = nodeRow(app, 'collect')
+  await app.getByRole('checkbox', { name: '锁定拖拽', exact: true }).check()
+  await dragFromCollect(page, app, { x: 108, y: 108 })
+  await expect(collect).toHaveAttribute('data-x', '28')
+  await expect(collect).toHaveAttribute('data-y', '58')
+  await app.getByRole('button', { name: '键盘替代：右移12px', exact: true }).click()
+  await expect(collect).toHaveAttribute('data-x', '40')
+  await app.getByRole('button', { name: '新增节点（上限 24）', exact: true }).click()
+  await expect(nodeRow(app, 'step-1')).toHaveCount(1)
+  await expect(app).toHaveAttribute('data-selected', 'step-1')
+  await app.getByRole('button', { name: '删除当前', exact: true }).click()
+  await expect(nodeRow(app, 'step-1')).toHaveCount(0)
+  await expect(app.getByTestId('a12-table').locator('tbody tr')).toHaveCount(3)
+  await expect(app).toHaveAttribute('data-selected', 'collect')
+  const before = {
+    width: Number(await app.getAttribute('data-width')),
+    x: await collect.getAttribute('data-x'),
+    y: await collect.getAttribute('data-y'),
+  }
+  await page.setViewportSize({ width: 600, height: 1000 })
+  await expect
+    .poll(async () => Number(await app.getAttribute('data-width')))
+    .toBeLessThan(before.width)
+  expect(Number(await app.getAttribute('data-scale'))).toBeLessThan(1)
+  await expect(collect).toHaveAttribute('data-x', before.x ?? '')
+  await expect(collect).toHaveAttribute('data-y', before.y ?? '')
+  await expect.poll(() => fillPixel(app, 50, 66)).toEqual([207, 231, 215, 255])
+  await page.getByRole('button', { name: '停止并卸载', exact: true }).click()
+  await expect(app).toHaveCount(0)
+  await expect(page.locator('.konvajs-content')).toHaveCount(0)
+  await page.getByRole('button', { name: '运行当前示例', exact: true }).click()
+  await expect(app.getByTestId('a12-stage-host').locator('canvas')).toHaveCount(2)
+  await expect(nodeRow(app, 'collect')).toHaveAttribute('data-x', '28')
+  await expect(app.getByRole('checkbox', { name: '锁定拖拽', exact: true })).not.toBeChecked()
+  await page.getByRole('tab', { name: 'Agent 指南', exact: true }).click()
+  await expect(page.locator('.konvajs-content')).toHaveCount(0)
+})
+
+// The 24-node cap/invalid coordinates are covered by policy tests, not 24 repeated clicks here.
+// This does not claim touch, IME, full screen-reader acceptance, performance or SSR hydration.

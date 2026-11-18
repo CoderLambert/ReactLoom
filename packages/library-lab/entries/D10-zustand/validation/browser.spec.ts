@@ -1,0 +1,40 @@
+import { expect, test } from '@playwright/test'
+
+test('@D10 actual store tenant and instance isolation, rehydration and unmount', async ({
+  page,
+}) => {
+  await page.goto('/libraries/zustand?tab=demo&example=business')
+  const panels = page.getByRole('region', { name: 'Zustand 状态隔离与迁移' })
+  const first = panels.nth(0)
+  const second = panels.nth(1)
+  await first.getByLabel('工作区').selectOption('team-b')
+  await first.getByRole('button', { name: '切换当前频道启用状态' }).click()
+  await expect(first.getByTestId('zustand-state')).toContainText('"team-b": true')
+  await expect(second.getByTestId('zustand-state')).toContainText('"team-b": false')
+  await first.getByLabel('视图', { exact: true }).selectOption('grid')
+  await first.getByRole('button', { name: '重建 store / 从当前内存恢复' }).click()
+  await expect(first.getByTestId('zustand-state')).toContainText('"tenant": "team-a"')
+  await expect(first.getByTestId('zustand-state')).toContainText('"view": "grid"')
+  await page.getByRole('tab', { name: 'Agent 指南' }).click()
+  await expect(page.getByTestId('zustand-state')).toHaveCount(0)
+  await page.getByRole('tab', { name: '实战 Demo' }).click()
+  await expect(page.getByTestId('zustand-state').first()).toContainText('"view": "list"')
+})
+test('@D10 controlled v1 migration writes allowlisted version 2 JSON', async ({ page }) => {
+  await page.goto('/libraries/zustand?tab=demo&example=advanced')
+  await page.getByRole('button', { name: '导入旧版 v1 数据并迁移' }).click()
+  await expect(page.getByTestId('zustand-state')).toContainText('"team-a": false')
+  await expect(page.getByTestId('zustand-state')).toContainText('"view": "grid"')
+  await page.getByText('查看实际序列化存储（不含函数和租户身份）').click()
+  const storage = page.locator('details pre')
+  await expect(storage).toContainText('"version":2')
+  await expect(storage).not.toContainText('"tenant"')
+  await expect(storage).not.toContainText('toggle')
+})
+test('@D10 basic actions are memory-only across a real page reload', async ({ page }) => {
+  await page.goto('/libraries/zustand?tab=demo&example=basic')
+  await page.getByRole('button', { name: '切换当前频道启用状态' }).click()
+  await expect(page.getByTestId('zustand-state')).toContainText('"team-a": false')
+  await page.reload()
+  await expect(page.getByTestId('zustand-state')).toContainText('"team-a": true')
+})

@@ -1,0 +1,253 @@
+{
+  "checkedAt": "2026-11-10T10:27:04.601684+00:00",
+  "repository": "ffmpegwasm/ffmpeg.wasm",
+  "tag": "v12.15",
+  "commit": "71aa99d37c02a7b4c435275ca9ef50e612f6efa1",
+  "readmeCandidateCheck": {
+    "url": "https://api.github.com/repos/ffmpegwasm/ffmpeg.wasm/git/trees/71aa99d37c02a7b4c435275ca9ef50e612f6efa1?recursive=1",
+    "status": 200,
+    "truncated": false,
+    "checkedAt": "2026-11-10T10:25:29.349488+00:00",
+    "candidates": [
+      "README.md",
+      "apps/angular-app/README.md",
+      "apps/nextjs-app/README.md",
+      "apps/react-vite-app/README.md",
+      "apps/solidstart-app/README.md",
+      "apps/sveltekit-app/README.md",
+      "apps/vanilla-app/README.md",
+      "apps/vue-vite-app/README.md",
+      "apps/website/README.md"
+    ],
+    "selected": "README.md",
+    "language": "en",
+    "reason": "Complete fixed-ref tree inspected; no official Chinese README candidate; root README describes the target ffmpeg.wasm API and its license distinction."
+  },
+  "requests": {
+    "readme": {
+      "url": "https://raw.githubusercontent.com/ffmpegwasm/ffmpeg.wasm/71aa99d37c02a7b4c435275ca9ef50e612f6efa1/README.md",
+      "finalUrl": "https://raw.githubusercontent.com/ffmpegwasm/ffmpeg.wasm/71aa99d37c02a7b4c435275ca9ef50e612f6efa1/README.md",
+      "status": 200,
+      "headers": {
+        "Connection": "close",
+        "Content-Length": "2161",
+        "Cache-Control": "max-age=300",
+        "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+        "Content-Type": "text/plain; charset=utf-8",
+        "ETag": "\"884bd6940212b9f85297ab7802821ecffba5e4ac705d6bd35e500096b55966a5\"",
+        "Strict-Transport-Security": "max-age=31536000",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "deny",
+        "X-XSS-Protection": "1; mode=block",
+        "X-GitHub-Request-Id": "CD6A:1DF995:31EDD6:3EA257:6AF2F176",
+        "x-github-edge-region": "westus3",
+        "Accept-Ranges": "bytes",
+        "Date": "Tue, 10 Nov 2026 10:27:03 GMT",
+        "Via": "1.1 varnish",
+        "X-Served-By": "cache-sjc10065-SJC",
+        "X-Cache": "MISS",
+        "X-Cache-Hits": "0",
+        "X-Timer": "S1794306424.612168,VS0,VE138",
+        "Vary": "Authorization,Accept-Encoding",
+        "Access-Control-Allow-Origin": "*",
+        "Cross-Origin-Resource-Policy": "cross-origin",
+        "X-Fastly-Request-ID": "0a6048ec8c0cdec9100b5aaa68342fbd07e47d9c",
+        "Expires": "Tue, 10 Nov 2026 10:32:03 GMT",
+        "Source-Age": "0"
+      },
+      "bytes": 2161,
+      "sha256": "c658a2af2da82d7b290f7ecb4ff38480594ade43eaed824094fad75bf385b68d"
+    },
+    "wrapperPackage": {
+      "url": "https://raw.githubusercontent.com/ffmpegwasm/ffmpeg.wasm/71aa99d37c02a7b4c435275ca9ef50e612f6efa1/packages/ffmpeg/package.json",
+      "finalUrl": "https://raw.githubusercontent.com/ffmpegwasm/ffmpeg.wasm/71aa99d37c02a7b4c435275ca9ef50e612f6efa1/packages/ffmpeg/package.json",
+      "status": 200,
+      "headers": {
+        "Connection": "close",
+        "Content-Length": "1655",
+        "Cache-Control": "max-age=300",
+        "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+        "Content-Type": "text/plain; charset=utf-8",
+        "ETag": "\"da660e8e98e791be8ba73d48b978ca35697d7d36a0dce89e684d39555fa6b021\"",
+        "Strict-Transport-Security": "max-age=31536000",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "deny",
+        "X-XSS-Protection": "1; mode=block",
+        "X-GitHub-Request-Id": "2474:2ADDA:31C344:3E787E:6AF2F177",
+        "x-github-edge-region": "westus3",
+        "Accept-Ranges": "bytes",
+        "Date": "Tue, 10 Nov 2026 10:27:03 GMT",
+        "Via": "1.1 varnish",
+        "X-Served-By": "cache-sjc1000122-SJC",
+        "X-Cache": "MISS",
+        "X-Cache-Hits": "0",
+        "X-Timer": "S1794306424.610036,VS0,VE145",
+        "Vary": "Authorization,Accept-Encoding",
+        "Access-Control-Allow-Origin": "*",
+        "Cross-Origin-Resource-Policy": "cross-origin",
+        "X-Fastly-Request-ID": "3986e10c1e2009da58bfdd09283237751f0fc8c9",
+        "Expires": "Tue, 10 Nov 2026 10:32:03 GMT",
+        "Source-Age": "0"
+      },
+      "bytes": 1655,
+      "sha256": "d5d7e4f7446b9c7ddd07d886f1c73a0d297be98eee428151c7dc194ef3901b7f"
+    },
+    "corePackage": {
+      "url": "https://raw.githubusercontent.com/ffmpegwasm/ffmpeg.wasm/71aa99d37c02a7b4c435275ca9ef50e612f6efa1/packages/core/package.json",
+      "finalUrl": "https://raw.githubusercontent.com/ffmpegwasm/ffmpeg.wasm/71aa99d37c02a7b4c435275ca9ef50e612f6efa1/packages/core/package.json",
+      "status": 200,
+      "headers": {
+        "Connection": "close",
+        "Content-Length": "944",
+        "Cache-Control": "max-age=300",
+        "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+        "Content-Type": "text/plain; charset=utf-8",
+        "ETag": "\"ccc04ab3126b08b940ed3eb3ab4bb322c9413331560bdecedf4fadeb476f589d\"",
+        "Strict-Transport-Security": "max-age=31536000",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "deny",
+        "X-XSS-Protection": "1; mode=block",
+        "X-GitHub-Request-Id": "300C:386B27:46694E:5597E5:6AF2F176",
+        "x-github-edge-region": "sea",
+        "Accept-Ranges": "bytes",
+        "Date": "Tue, 10 Nov 2026 10:27:03 GMT",
+        "Via": "1.1 varnish",
+        "X-Served-By": "cache-pao-kpao1770041-PAO",
+        "X-Cache": "MISS",
+        "X-Cache-Hits": "0",
+        "X-Timer": "S1794306424.610305,VS0,VE151",
+        "Vary": "Authorization,Accept-Encoding",
+        "Access-Control-Allow-Origin": "*",
+        "Cross-Origin-Resource-Policy": "cross-origin",
+        "X-Fastly-Request-ID": "149067be741d235bb74fd03433cf87f25619950d",
+        "Expires": "Tue, 10 Nov 2026 10:32:03 GMT",
+        "Source-Age": "0"
+      },
+      "bytes": 944,
+      "sha256": "21036a4a1c0bf72beef24648b3705164910ee15e34a9943c165e9dcc6ba33827"
+    },
+    "homepage": {
+      "url": "https://ffmpegwasm.netlify.app/",
+      "finalUrl": "https://ffmpegwasm.netlify.app/",
+      "status": 200,
+      "headers": {
+        "Accept-Ranges": "bytes",
+        "Age": "0",
+        "Cache-Control": "public,max-age=0,must-revalidate",
+        "Cache-Status": "\"Netlify Edge\"; fwd=miss; fwd-status=200; stored",
+        "Content-Length": "86089",
+        "Content-Type": "text/html; charset=UTF-8",
+        "Cross-Origin-Embedder-Policy": "require-corp",
+        "Cross-Origin-Opener-Policy": "same-origin",
+        "Date": "Tue, 10 Nov 2026 10:27:03 GMT",
+        "Etag": "\"9e9b876653e948b691b900a261b8f77d-ssl\"",
+        "Server": "Netlify",
+        "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
+        "Vary": "Accept-Encoding",
+        "X-Nf-Request-Id": "01M72FYEZ7R71GH6G8V7152W9C",
+        "Connection": "close"
+      },
+      "bytes": 86089,
+      "sha256": "98fb7f30c14ed1440a4a2144d48ce28c2320c67bf1cf8737832d017f7b4a90c6"
+    }
+  },
+  "wrapperPackage": {
+    "name": "@ffmpeg/ffmpeg",
+    "version": "0.12.15",
+    "description": "FFmpeg WebAssembly version for browser",
+    "main": "./dist/umd/ffmpeg.js",
+    "types": "./dist/esm/index.d.ts",
+    "exports": {
+      ".": {
+        "types": "./dist/esm/index.d.ts",
+        "node": "./dist/esm/empty.mjs",
+        "default": {
+          "import": "./dist/esm/index.js",
+          "require": "./dist/umd/ffmpeg.js"
+        }
+      },
+      "./worker": {
+        "types": "./dist/esm/worker.d.ts",
+        "default": "./dist/esm/worker.js"
+      }
+    },
+    "scripts": {
+      "dev": "webpack -w --mode development",
+      "lint": "eslint src",
+      "clean": "rimraf dist",
+      "build:esm": "tsc -p tsconfig.esm.json",
+      "build:umd": "webpack",
+      "build": "npm run clean && npm run build:esm && npm run build:umd",
+      "prepublishOnly": "npm run build"
+    },
+    "files": ["dist", "types/ffmpeg.d.ts"],
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/ffmpegwasm/ffmpeg.wasm.git"
+    },
+    "keywords": ["ffmpeg", "WebAssembly", "video", "audio", "transcode"],
+    "author": "Jerome Wu <jeromewus@gmail.com>",
+    "license": "MIT",
+    "bugs": {
+      "url": "https://github.com/ffmpegwasm/ffmpeg.wasm/issues"
+    },
+    "engines": {
+      "node": ">=18.x"
+    },
+    "homepage": "https://github.com/ffmpegwasm/ffmpeg.wasm#readme",
+    "publishConfig": {
+      "access": "public"
+    },
+    "devDependencies": {
+      "@typescript-eslint/eslint-plugin": "^6.1.0",
+      "@typescript-eslint/parser": "^6.1.0",
+      "eslint": "^8.45.0",
+      "rimraf": "^5.0.1",
+      "typescript": "^5.1.6",
+      "webpack-cli": "^5.1.4"
+    },
+    "dependencies": {
+      "@ffmpeg/types": "^0.12.4"
+    }
+  },
+  "corePackage": {
+    "name": "@ffmpeg/core",
+    "version": "0.12.10",
+    "description": "FFmpeg WebAssembly version (single thread)",
+    "main": "./dist/umd/ffmpeg-core.js",
+    "exports": {
+      ".": {
+        "import": "./dist/esm/ffmpeg-core.js",
+        "require": "./dist/umd/ffmpeg-core.js"
+      },
+      "./wasm": {
+        "import": "./dist/esm/ffmpeg-core.wasm",
+        "require": "./dist/umd/ffmpeg-core.wasm"
+      }
+    },
+    "files": ["dist"],
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/ffmpegwasm/ffmpeg.wasm.git"
+    },
+    "keywords": ["ffmpeg", "WebAssembly", "video", "audio", "transcode"],
+    "author": "Jerome Wu <jeromewus@gmail.com>",
+    "license": "GPL-2.0-or-later",
+    "bugs": {
+      "url": "https://github.com/ffmpegwasm/ffmpeg.wasm/issues"
+    },
+    "engines": {
+      "node": ">=16.x"
+    },
+    "homepage": "https://github.com/ffmpegwasm/ffmpeg.wasm#readme",
+    "publishConfig": {
+      "access": "public"
+    }
+  },
+  "versionMatch": {
+    "wrapperInstalled": "0.12.15",
+    "wrapperAtCommit": "0.12.15",
+    "coreInstalled": "0.12.10",
+    "coreAtCommit": "0.12.10"
+  }
+}

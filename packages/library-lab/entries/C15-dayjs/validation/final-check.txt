@@ -1,0 +1,5 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['python3', 'entries/C15-dayjs/validation/final-check.py']
+startedAt: 2026-11-10T17:29:02.605402+00:00
+exit: 0
+7 production files byte-identical to candidate18; 3 complete typed UI proposals; document links/Python syntax valid; temporary proposals removed; no binary artifacts; formal three statuses NOT_RUN. No SDK/HTTP/browser rerun.

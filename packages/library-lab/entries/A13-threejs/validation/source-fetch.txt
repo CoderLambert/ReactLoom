@@ -1,0 +1,6 @@
+READMEs ['README.md']
+Traceback (most recent call last):
+  File "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/A13-threejs/validation/fetch-official.py", line 11, in <module>
+    pkg=json.loads(get(f'https://raw.githubusercontent.com/{repo}/{c}/package.json')[0]);assert pkg['version']=='0.186.0'
+                                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

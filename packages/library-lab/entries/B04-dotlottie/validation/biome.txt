@@ -1,0 +1,53 @@
+entries/B04-dotlottie/examples/example.tsx:281:9 lint/a11y/useAriaPropsSupportedByRole ━━━━━━━━━━━━━
+
+  × The ARIA attribute 'aria-label' is not supported by this element.
+  
+    279 │       </p>
+    280 │       {reading && (
+  > 281 │         <pre aria-label="播放器实际读数" data-testid="b04-reading">
+        │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    282 │           {JSON.stringify(reading, null, 2)}
+    283 │         </pre>
+  
+  i Ensure that ARIA attributes are valid for the role of the element.
+  
+
+entries/B04-dotlottie/examples/example.tsx:53:3 lint/correctness/useExhaustiveDependencies  FIXABLE  ━━━━━━━━━━
+
+  × This hook specifies more dependencies than necessary: level.
+  
+    51 │   const destroyObservers = useRef(new WeakMap<DotLottie, () => void>())
+    52 │ 
+  > 53 │   useEffect(() => {
+       │   ^^^^^^^^^
+    54 │     if (pending.current !== null) window.clearTimeout(pending.current)
+    55 │     pending.current = null
+  
+  i Outer scope values aren't valid dependencies because mutating them doesn't re-render the component.
+  
+    61 │     setReading(null)
+    62 │     setFrame(0)
+  > 63 │   }, [level])
+       │       ^^^^^
+    64 │ 
+    65 │   useEffect(() => {
+  
+  i React relies on hook dependencies to determine when to re-compute Effects.
+    Specifying more dependencies than required can lead to unnecessary re-rendering
+    and degraded performance.
+  
+  i Unsafe fix: Remove the extra dependencies from the list.
+  
+    63 │ ··},·[level])
+       │       -----  
+
+Skipped 2 suggested fixes.
+If you wish to apply the suggested (unsafe) fixes, use the command biome check --write --unsafe
+
+Checked 8 files in 14ms. Fixed 7 files.
+Found 2 errors.
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while applying fixes.
+  
+

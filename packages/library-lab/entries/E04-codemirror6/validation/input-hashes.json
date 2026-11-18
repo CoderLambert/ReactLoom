@@ -1,0 +1,19 @@
+{
+  "AGENTS.md": "c788c6ac0bdc6c8c781b609a0d865028e6c3459aee2f32d007e06f6fe1ec07dc",
+  "agent.md": "3fb7e188feb52c51809f9b9def14817bd0a0d8672c0c34bcddcfaebb4d598263",
+  "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+  "examples/draft-policy.d.mts": "23175b46202eabc036630f0cfebebd4081df7ecd291722361c6ff9be3cf05a16",
+  "examples/draft-policy.mjs": "9e1a16ce7ef9ad7b5e9730d445985a1897ca0b971b06dbb37cbec0c5e91a2aa3",
+  "examples/editor-config.d.mts": "854f03970ae93167e7158663374fc05fc076c1a3d0b2a1eae7aca8312d8d0c36",
+  "examples/editor-config.mjs": "5639a250e0ea4da9e37443fbe62503cfe0d326aa7caa61e2f96d2b075e4fd41a",
+  "examples/example.tsx": "eb8205cba89264199a88ae01f1dca98417c43f3259fdd1458e522babd3874efc",
+  "guide.md": "0efea946e675b1d5a0902ea1e923becc241f53285bde574e1e400c4eb11bba81",
+  "library.json": "799f3269565f492c8824f82af02b7e620098ad1f7b9793684df08f3538900691",
+  "local-validation.md": "3b1bd18c189d8bd9a050f849c63cfc1400626d3afcf55074a0e59e6f0937d160",
+  "official/license.txt": "05c6130cda97e7600ca91427a41e8a065efcf82365fc0293e7de80faec494c07",
+  "official/readme.md": "4808b9e09e924d88f61d141714fa99bf40f03195f529b7f0fa66f501fc2e8964",
+  "official/source-evidence.json": "34b6f8fd11662010bebf64754d5312e53cb3fcf7c8c5e75c4aa021bac634ad9a",
+  "tests/node-scenarios.test.mjs": "644ea4236a8f93b468b1e7780fe22ff64aa365d7d6af4f9432cb238c2faaa651",
+  "tests/policy.test.mjs": "a66473aa96ff0bac704db36a806e8314fbc730da729136c649e2a5d46542affb",
+  "verification.json": "35b1e670e61effcf5086887577095964192b9a506ca25013f2d94b6e97bf87c9"
+}

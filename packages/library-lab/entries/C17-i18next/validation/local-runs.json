@@ -1,0 +1,302 @@
+{
+  "runs": [
+    {
+      "label": "checkpoint-format",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "check",
+        "--write",
+        "entries/C17-i18next/examples",
+        "entries/C17-i18next/tests",
+        "entries/C17-i18next/library.json"
+      ],
+      "start": "2026-11-10T17:43:23.544018+00:00",
+      "end": "2026-11-10T17:43:23.755143+00:00",
+      "exitCode": 0,
+      "log": "checkpoint-format.txt"
+    },
+    {
+      "label": "checkpoint-types",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--target",
+        "es2022",
+        "--module",
+        "esnext",
+        "--moduleResolution",
+        "bundler",
+        "--jsx",
+        "react-jsx",
+        "--strict",
+        "--skipLibCheck",
+        "--esModuleInterop",
+        "--types",
+        "vite/client,node",
+        "entries/C17-i18next/examples/demo.tsx"
+      ],
+      "start": "2026-11-10T17:43:23.755357+00:00",
+      "end": "2026-11-10T17:43:23.994743+00:00",
+      "exitCode": 0,
+      "log": "checkpoint-types.txt"
+    },
+    {
+      "label": "sdk",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "node",
+        "--test",
+        "entries/C17-i18next/tests/sdk.test.mjs"
+      ],
+      "start": "2026-11-10T17:43:23.994986+00:00",
+      "end": "2026-11-10T17:43:24.071538+00:00",
+      "exitCode": 0,
+      "log": "sdk.txt"
+    },
+    {
+      "label": "policy",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "node",
+        "--test",
+        "entries/C17-i18next/tests/language-switch.test.mjs"
+      ],
+      "start": "2026-11-10T17:43:24.071945+00:00",
+      "end": "2026-11-10T17:43:24.135720+00:00",
+      "exitCode": 0,
+      "log": "policy.txt"
+    },
+    {
+      "label": "official-fetch",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "python3",
+        "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C17-i18next/validation/fetch-official.py"
+      ],
+      "start": "2026-11-10T17:50:40.870124+00:00",
+      "end": "2026-11-10T17:50:48.989804+00:00",
+      "exitCode": 0,
+      "log": "official-fetch.txt"
+    },
+    {
+      "label": "proposal-format",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "check",
+        "--write",
+        "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C17-i18next/validation/.proposal-types-6we3k_43/browser-proposal.spec.ts"
+      ],
+      "start": "2026-11-10T17:57:43.318543+00:00",
+      "end": "2026-11-10T17:57:43.527506+00:00",
+      "exitCode": 0,
+      "log": "proposal-format.txt"
+    },
+    {
+      "label": "proposal-types",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--target",
+        "es2022",
+        "--module",
+        "esnext",
+        "--moduleResolution",
+        "bundler",
+        "--strict",
+        "--skipLibCheck",
+        "--esModuleInterop",
+        "--types",
+        "vite/client,node",
+        "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C17-i18next/validation/.proposal-types-6we3k_43/browser-proposal.spec.ts"
+      ],
+      "start": "2026-11-10T17:57:43.527957+00:00",
+      "end": "2026-11-10T17:57:43.758548+00:00",
+      "exitCode": 0,
+      "log": "proposal-types.txt"
+    },
+    {
+      "label": "official-metadata-format",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "check",
+        "--write",
+        "entries/C17-i18next/library.json",
+        "entries/C17-i18next/official/source-evidence.json",
+        "entries/C17-i18next/validation/homepage-policy-correction.json"
+      ],
+      "start": "2026-11-10T17:58:28.316820+00:00",
+      "end": "2026-11-10T17:58:28.523229+00:00",
+      "exitCode": 0,
+      "log": "official-metadata-format.txt"
+    },
+    {
+      "label": "official-metadata-schema",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "node",
+        "--input-type=module",
+        "-e",
+        "import assert from 'node:assert/strict';import{readFileSync}from'node:fs';import{validateEntry}from'./src/lib/catalog.mjs';const m=JSON.parse(readFileSync('entries/C17-i18next/library.json'));assert.deepEqual(validateEntry(m),[]);assert.equal(m.official.homepage.status,'blocked');console.log('C17 entry metadata schema PASS, seven declared sources and fixed official fields, HTTP Lab framing blocked. No SDK/browser/HTTP.');"
+      ],
+      "start": "2026-11-10T17:58:28.523511+00:00",
+      "end": "2026-11-10T17:58:28.544868+00:00",
+      "exitCode": 0,
+      "log": "official-metadata-schema.txt"
+    },
+    {
+      "label": "source-tool-transport",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "python3",
+        "entries/C17-i18next/validation/source-tool-transport-fixture.py"
+      ],
+      "start": "2026-11-10T18:15:40.545240+00:00",
+      "end": "2026-11-10T18:15:40.611530+00:00",
+      "exitCode": 0,
+      "log": "source-tool-transport.txt"
+    },
+    {
+      "label": "maintenance-format",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "check",
+        "--write",
+        "entries/C17-i18next/validation/metadata-check.mjs",
+        "entries/C17-i18next/validation/sdk-source-audit.json"
+      ],
+      "start": "2026-11-10T18:15:40.611903+00:00",
+      "end": "2026-11-10T18:15:40.828114+00:00",
+      "exitCode": 0,
+      "log": "maintenance-format.txt"
+    },
+    {
+      "label": "final-metadata",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "node",
+        "entries/C17-i18next/validation/metadata-check.mjs"
+      ],
+      "start": "2026-11-10T18:15:40.828408+00:00",
+      "end": "2026-11-10T18:15:40.860066+00:00",
+      "exitCode": 1,
+      "log": "final-metadata.txt"
+    },
+    {
+      "label": "final-metadata-green",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "node",
+        "entries/C17-i18next/validation/metadata-check.mjs"
+      ],
+      "start": "2026-11-10T18:16:05.006544+00:00",
+      "end": "2026-11-10T18:16:05.047705+00:00",
+      "exitCode": 0,
+      "log": "final-metadata-green.txt"
+    },
+    {
+      "label": "final-format",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "check",
+        "entries/C17-i18next/verification.json",
+        "entries/C17-i18next/validation/metadata-check.mjs",
+        "entries/C17-i18next/validation/sdk-source-audit.json",
+        "entries/C17-i18next/validation/shared-validation-binding.json"
+      ],
+      "start": "2026-11-10T18:18:41.552419+00:00",
+      "end": "2026-11-10T18:18:41.761904+00:00",
+      "exitCode": 1,
+      "log": "final-format.txt"
+    },
+    {
+      "label": "final-format-green",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "check",
+        "--write",
+        "entries/C17-i18next/verification.json",
+        "entries/C17-i18next/validation/metadata-check.mjs",
+        "entries/C17-i18next/validation/sdk-source-audit.json",
+        "entries/C17-i18next/validation/shared-validation-binding.json"
+      ],
+      "start": "2026-11-10T18:18:57.830572+00:00",
+      "end": "2026-11-10T18:18:58.046298+00:00",
+      "exitCode": 0,
+      "log": "final-format-green.txt"
+    },
+    {
+      "label": "source-tool-ast",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "python3",
+        "-c",
+        "import ast;from pathlib import Path;files=[Path('entries/C17-i18next/validation/fetch-official.py'),Path('entries/C17-i18next/validation/source-tool-transport-fixture.py')];[ast.parse(p.read_text(),filename=str(p))for p in files];print('2 maintenance Python AST PASS; no execution/HTTP/SDK.')"
+      ],
+      "start": "2026-11-10T18:18:58.046636+00:00",
+      "end": "2026-11-10T18:18:58.060618+00:00",
+      "exitCode": 0,
+      "log": "source-tool-ast.txt"
+    },
+    {
+      "label": "final-record-check",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "node",
+        "entries/C17-i18next/validation/metadata-check.mjs"
+      ],
+      "start": "2026-11-10T18:18:58.060929+00:00",
+      "end": "2026-11-10T18:18:58.100422+00:00",
+      "exitCode": 0,
+      "log": "final-record-check.txt"
+    },
+    {
+      "label": "scoped-diff-check",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "entries/C17-i18next"
+      ],
+      "start": "2026-11-10T18:18:58.100737+00:00",
+      "end": "2026-11-10T18:18:58.102903+00:00",
+      "exitCode": 0,
+      "log": "scoped-diff-check.txt"
+    }
+  ]
+}

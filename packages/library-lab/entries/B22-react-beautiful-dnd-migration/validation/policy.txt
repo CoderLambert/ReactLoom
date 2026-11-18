@@ -1,0 +1,27 @@
+✔ reorder and undo preserve stable IDs (0.893384ms)
+✔ pinned slot and cross-group moves cannot mutate channel order (0.119617ms)
+✔ basic level only reorders visible slice (0.097578ms)
+✔ stale drop rejected after keyboard reorder, reset, undo, and level change (0.160398ms)
+✔ old snapshots with invalid source/changed shape are rejected (0.095282ms)
+✔ final reducer refuses a queued drop after a previously valid preflight becomes stale (0.148911ms)
+✔ cancel reason and absent destination never reach the final order write (0.553401ms)
+✔ no-op reset invalidates sessions without manufacturing or replacing an undo point (0.111779ms)
+✔ dropping at the same position preserves revision and the existing undo point (0.101019ms)
+✔ locked: pinned source and destination cannot move (0.508045ms)
+✔ locked: cannot cross pinned slots in either direction (0.104338ms)
+✔ locked: can move inside each unlocked segment (0.07759ms)
+✔ locked: rejects invalid or no-op moves (0.087737ms)
+✔ fixed: pinned source and destination cannot move (0.060213ms)
+✔ fixed: cannot cross pinned slots in either direction (0.057297ms)
+✔ fixed: can move inside each unlocked segment (0.045734ms)
+✔ fixed: rejects invalid or no-op moves (0.050609ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 17
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 67.376104
+
+exitCode=0

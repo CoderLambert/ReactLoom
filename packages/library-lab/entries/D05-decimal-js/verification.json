@@ -1,18 +1,18 @@
 {
   "content": {
     "status": "NOT_RUN",
-    "note": "新教学文档待校对"
+    "note": "质量整改与本地证据见 local-validation.md；等待主控独立复核"
   },
   "sdk": {
     "status": "NOT_RUN",
-    "note": "decimal.js@10.6.0 尚未真实安装/执行"
+    "note": "本地真实SDK 6（另3项策略） 项通过；见local-validation.md；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
   },
   "build": {
     "status": "NOT_RUN",
-    "note": "等待统一依赖与类型、构建验证"
+    "note": "candidate-23本地build通过；见local-validation.md；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "金额输入/舍入 Demo 尚未执行 Playwright"
+    "note": "candidate-23本地browser通过；见local-validation.md；缺干净已提交输入的正式匹配收据，保持NOT_RUN。"
   }
 }

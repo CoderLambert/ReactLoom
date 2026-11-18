@@ -1,0 +1,16 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["pnpm", "--dir", "packages/library-lab", "test:sdk", "--entry=C08"], "utc": "2026-11-10T15:45:18.691305+00:00", "exit": 0}
+
+> @reactloom/library-lab@0.1.0 test:sdk /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+> node scripts/sdk-runner.mjs --entry=C08
+
+Real SDK suites selected: 1 file(s)
+✔ actual React adapter and Community modules match the shared Demo contract (0.854895ms)
+✔ the actual shared SDK theme composes immutably through the public Theming API (0.138976ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 105.581517

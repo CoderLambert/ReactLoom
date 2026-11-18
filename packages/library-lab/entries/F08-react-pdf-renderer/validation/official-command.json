@@ -1,0 +1,8 @@
+{
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "argv": [
+    "node",
+    "packages/library-lab/entries/F08-react-pdf-renderer/validation/check-official.mjs"
+  ],
+  "exitCode": 0
+}

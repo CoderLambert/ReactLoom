@@ -25,7 +25,7 @@ export function createWorkshopPdf(): Uint8Array {
   }
   const startxref = encoder.encode(result).byteLength
   result += `xref\n0 ${objects.length + 1}\n0000000000 65535 f \n`
-  for (const offset of offsets.slice(1)) result += `${String(offset).padStart(10,'0')} 00000 n \n`
+  for (const offset of offsets.slice(1)) result += `${String(offset).padStart(10, '0')} 00000 n \n`
   result += `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${startxref}\n%%EOF\n`
   return encoder.encode(result)
 }

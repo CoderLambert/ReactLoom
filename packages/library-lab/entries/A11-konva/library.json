@@ -5,13 +5,7 @@
   "name": "Konva",
   "group": "A",
   "summary": "Canvas 2D 场景图、图元拖拽、选择与变换",
-  "tags": [
-    "Canvas",
-    "scene graph",
-    "drag",
-    "resize",
-    "export"
-  ],
+  "tags": ["Canvas", "scene graph", "drag", "resize", "export"],
   "contentState": "recreated",
   "packages": [
     {
@@ -52,12 +46,9 @@
       "level": "basic",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
-      "sourceFiles": [
-        "examples/example.tsx",
-        "examples/stage-policy.ts",
-        "examples/demo.tsx"
-      ],
-      "capabilities": []
+      "sourceFiles": ["examples/example.tsx", "examples/stage-policy.ts", "examples/demo.tsx"],
+      "capabilities": ["canvas", "resize-observer"],
+      "description": "点击真实Canvas图元、DOM选择与键盘移动共享业务坐标；对照SDK节点快照。"
     },
     {
       "demoId": "business",
@@ -65,12 +56,9 @@
       "level": "business",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
-      "sourceFiles": [
-        "examples/example.tsx",
-        "examples/stage-policy.ts",
-        "examples/demo.tsx"
-      ],
-      "capabilities": []
+      "sourceFiles": ["examples/example.tsx", "examples/stage-policy.ts", "examples/demo.tsx"],
+      "capabilities": ["canvas", "resize-observer"],
+      "description": "真实Pointer拖拽提交世界坐标，容器宽度变化驱动同一Stage尺寸。"
     },
     {
       "demoId": "advanced",
@@ -78,15 +66,9 @@
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
-      "sourceFiles": [
-        "examples/example.tsx",
-        "examples/stage-policy.ts",
-        "examples/demo.tsx"
-      ],
-      "capabilities": [
-        "ResizeObserver",
-        "cleanup"
-      ]
+      "sourceFiles": ["examples/example.tsx", "examples/stage-policy.ts", "examples/demo.tsx"],
+      "capabilities": ["canvas", "resize-observer"],
+      "description": "真实Transformer尺寸归一、指针锚定缩放、新增删除与自有Stage销毁。"
     }
   ],
   "provenance": {
@@ -96,5 +78,25 @@
   "license": {
     "spdx": "MIT",
     "assets": "本地演示数据为原创；无第三方媒体。"
+  },
+  "official": {
+    "readme": {
+      "repository": "konvajs/konva",
+      "commit": "d95eed6d46e785efba6ab5e9eaf5a1d6bbb528c6",
+      "path": "README.md",
+      "sourceUrl": "https://github.com/konvajs/konva/blob/d95eed6d46e785efba6ab5e9eaf5a1d6bbb528c6/README.md",
+      "snapshotPath": "official/readme.md",
+      "language": "en",
+      "version": "10.9.0",
+      "sha256": "d5a4c836de0d2f05f11ead52d0d41a2f7f8005c88f45a202bddc0c74ba5d121e",
+      "syncedAt": "2026-11-10T11:41:29.686903+00:00"
+    },
+    "homepage": {
+      "url": "https://konvajs.org/",
+      "kind": "website",
+      "status": "blocked",
+      "checkedAt": "2026-11-10T11:41:31.057203+00:00",
+      "reason": "官方主页实际GET200，但响应头X-Frame-Options: SAMEORIGIN明确禁止Lab跨源嵌入；完整最终URL和原始响应头见official/source-evidence.json。保留官方直达入口，不挂载iframe。"
+    }
   }
 }

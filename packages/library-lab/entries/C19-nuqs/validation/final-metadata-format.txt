@@ -1,0 +1,2 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["pnpm", "exec", "biome", "check", "--write", "packages/library-lab/entries/C19-nuqs/library.json", "packages/library-lab/entries/C19-nuqs/verification.json", "packages/library-lab/entries/C19-nuqs/validation/metadata-check.mjs"], "utc": "2026-11-10T18:26:12.190245+00:00", "exit": 0}
+Checked 3 files in 9ms. Fixed 2 files.

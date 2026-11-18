@@ -1,0 +1,19 @@
+{
+  "command": [
+    "pnpm",
+    "exec",
+    "playwright",
+    "test",
+    "--config=.local-evidence/quality-playwright.config.ts",
+    "e2e/quality-remediation-ant-design.spec.ts",
+    "e2e/quality-remediation-dotlottie.spec.ts",
+    "--grep",
+    "Form rules|frame seek|trusted native"
+  ],
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+  "startedAt": "2026-11-10T13:31:26.118006+00:00",
+  "finishedAt": "2026-11-10T13:31:57.423499+00:00",
+  "exitCode": 1,
+  "implicitBuild": false,
+  "log": "docs/library-lab/evidence/quality-upgrade/candidate-10/browser-locators-retry.txt"
+}

@@ -1,0 +1,10 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab consumer=/tmp/reactloom-f13-consumer.Vuzfgr
+Version 1.64.0
+
+Running 1 test using 1 worker
+
+(node:2540189) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 ../../../../../../../tmp/reactloom-f13-consumer.Vuzfgr/independent.spec.ts:3:5 › new subscriber input becomes the exact intercepted query (146ms)
+
+  1 passed (455ms)

@@ -1,0 +1,18 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['node', '--test', 'entries/B20-sonner/tests/latest-run.test.mts', 'entries/B20-sonner/tests/undo-ownership.test.mts']
+startedAt: 2026-11-10T14:22:39.130889+00:00
+exit: 0
+✔ latest-run wins over earlier completion (0.556069ms)
+✔ cancel invalidates outstanding result (0.113084ms)
+✔ two independent demos do not share run versions (0.088121ms)
+✔ old save toast cannot undo a newer save (0.541218ms)
+✔ one undo consumes its ownership and cannot fire twice (0.100988ms)
+✔ switching demo level invalidates past undo and active task tokens (0.078652ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 72.013821

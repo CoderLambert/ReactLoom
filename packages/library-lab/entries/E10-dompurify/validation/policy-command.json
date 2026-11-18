@@ -1,0 +1,11 @@
+{
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "argv": [
+    "node",
+    "--test",
+    "packages/library-lab/entries/E10-dompurify/examples/html-policy.test.mjs",
+    "packages/library-lab/entries/E10-dompurify/examples/sanitize-preview.test.mjs"
+  ],
+  "exitCode": 0,
+  "at": "2026-11-17T17:43:32.594843+00:00"
+}

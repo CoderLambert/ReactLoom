@@ -1,0 +1,138 @@
+[
+  {
+    "file": "final-browser-artifacts/browser-local--E19-cancel--b651b-sh-a-half-second-conversion/half-second.wav",
+    "sha256": "eabe31e03d5b2bc50285f0bdc859af9625b25446e6a72fc0498e92a6dc70d193",
+    "argv": [
+      "ffprobe",
+      "-v",
+      "error",
+      "-show_entries",
+      "stream=codec_name,sample_rate,channels,bits_per_sample,duration:format=duration,size",
+      "-of",
+      "json",
+      "docs/library-lab/evidence/quality-upgrade/candidate-38/final-browser-artifacts/browser-local--E19-cancel--b651b-sh-a-half-second-conversion/half-second.wav"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n    \"programs\": [\n\n    ],\n    \"stream_groups\": [\n\n    ],\n    \"streams\": [\n        {\n            \"codec_name\": \"pcm_s16le\",\n            \"sample_rate\": \"16000\",\n            \"channels\": 1,\n            \"bits_per_sample\": 16,\n            \"duration\": \"0.500000\"\n        }\n    ],\n    \"format\": {\n        \"duration\": \"0.500000\",\n        \"size\": \"16078\"\n    }\n}\n",
+    "stderr": "",
+    "result": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "pcm_s16le",
+          "sample_rate": "16000",
+          "channels": 1,
+          "bits_per_sample": 16,
+          "duration": "0.500000"
+        }
+      ],
+      "format": {
+        "duration": "0.500000",
+        "size": "16078"
+      }
+    }
+  },
+  {
+    "file": "final-browser-artifacts/browser-local--E19-origina-00e09-e-downloaded-WAV-on-unmount/original-tone.wav",
+    "sha256": "11ced690fcf57d0e30af235e83d79081dfd7700093255b6be38528cc5301896c",
+    "argv": [
+      "ffprobe",
+      "-v",
+      "error",
+      "-show_entries",
+      "stream=codec_name,sample_rate,channels,bits_per_sample,duration:format=duration,size",
+      "-of",
+      "json",
+      "docs/library-lab/evidence/quality-upgrade/candidate-38/final-browser-artifacts/browser-local--E19-origina-00e09-e-downloaded-WAV-on-unmount/original-tone.wav"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n    \"programs\": [\n\n    ],\n    \"stream_groups\": [\n\n    ],\n    \"streams\": [\n        {\n            \"codec_name\": \"pcm_s16le\",\n            \"sample_rate\": \"16000\",\n            \"channels\": 1,\n            \"bits_per_sample\": 16,\n            \"duration\": \"1.000000\"\n        }\n    ],\n    \"format\": {\n        \"duration\": \"1.000000\",\n        \"size\": \"32078\"\n    }\n}\n",
+    "stderr": "",
+    "result": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "pcm_s16le",
+          "sample_rate": "16000",
+          "channels": 1,
+          "bits_per_sample": 16,
+          "duration": "1.000000"
+        }
+      ],
+      "format": {
+        "duration": "1.000000",
+        "size": "32078"
+      }
+    }
+  },
+  {
+    "file": "final-browser-artifacts/browser-local--E19-reject--42c71-e-a-real-48-kHz-stereo-file/normalized-stereo.wav",
+    "sha256": "2c901509fa2fa58176c964b1cb19a10e388d892203e40e43cfd06d8c77ea2ef9",
+    "argv": [
+      "ffprobe",
+      "-v",
+      "error",
+      "-show_entries",
+      "stream=codec_name,sample_rate,channels,bits_per_sample,duration:format=duration,size",
+      "-of",
+      "json",
+      "docs/library-lab/evidence/quality-upgrade/candidate-38/final-browser-artifacts/browser-local--E19-reject--42c71-e-a-real-48-kHz-stereo-file/normalized-stereo.wav"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n    \"programs\": [\n\n    ],\n    \"stream_groups\": [\n\n    ],\n    \"streams\": [\n        {\n            \"codec_name\": \"pcm_s16le\",\n            \"sample_rate\": \"16000\",\n            \"channels\": 1,\n            \"bits_per_sample\": 16,\n            \"duration\": \"1.000000\"\n        }\n    ],\n    \"format\": {\n        \"duration\": \"1.000000\",\n        \"size\": \"32078\"\n    }\n}\n",
+    "stderr": "",
+    "result": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "pcm_s16le",
+          "sample_rate": "16000",
+          "channels": 1,
+          "bits_per_sample": 16,
+          "duration": "1.000000"
+        }
+      ],
+      "format": {
+        "duration": "1.000000",
+        "size": "32078"
+      }
+    }
+  },
+  {
+    "file": "final-browser-artifacts/browser-local--E19-reject--42c71-e-a-real-48-kHz-stereo-file/recovered-stereo.wav",
+    "sha256": "2c901509fa2fa58176c964b1cb19a10e388d892203e40e43cfd06d8c77ea2ef9",
+    "argv": [
+      "ffprobe",
+      "-v",
+      "error",
+      "-show_entries",
+      "stream=codec_name,sample_rate,channels,bits_per_sample,duration:format=duration,size",
+      "-of",
+      "json",
+      "docs/library-lab/evidence/quality-upgrade/candidate-38/final-browser-artifacts/browser-local--E19-reject--42c71-e-a-real-48-kHz-stereo-file/recovered-stereo.wav"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n    \"programs\": [\n\n    ],\n    \"stream_groups\": [\n\n    ],\n    \"streams\": [\n        {\n            \"codec_name\": \"pcm_s16le\",\n            \"sample_rate\": \"16000\",\n            \"channels\": 1,\n            \"bits_per_sample\": 16,\n            \"duration\": \"1.000000\"\n        }\n    ],\n    \"format\": {\n        \"duration\": \"1.000000\",\n        \"size\": \"32078\"\n    }\n}\n",
+    "stderr": "",
+    "result": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "pcm_s16le",
+          "sample_rate": "16000",
+          "channels": 1,
+          "bits_per_sample": 16,
+          "duration": "1.000000"
+        }
+      ],
+      "format": {
+        "duration": "1.000000",
+        "size": "32078"
+      }
+    }
+  }
+]

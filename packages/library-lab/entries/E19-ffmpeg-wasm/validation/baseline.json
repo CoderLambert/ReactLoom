@@ -1,0 +1,22 @@
+{
+  "capturedAt": "2026-11-10T10:26:33.817796+00:00",
+  "head": "1218066e706a90ba03fac8dff8c9b843dd2429c4",
+  "visibleFiles": 14,
+  "entryRelativeSha256": "f5156f4e644348f402f6bdc2dd1ef7b242b12bf3ffabf1c7448cf9815af062c8",
+  "files": {
+    "AGENTS.md": "538accfaacb46000a3395e20d5e645e4b739029baf68b1032845ad32ddec24a8",
+    "agent.md": "d6ed90ed570ea115cca80dc3da0294fd20470a087e13f527c91946a8765fcb76",
+    "examples/demo.tsx": "254591932548c36c414610bd0d0c7ce7ef1648162f1996fbbe7381b8c1751690",
+    "examples/example.tsx": "2c47fadc875f93468a99808a34a83bbb8d5f53c55074d86bf213427b54a4838f",
+    "examples/input-policy.d.mts": "3579e49d84c5808c96b4b1d46ca24aee7a8379c7694b00bde2d4d9b5deefaff1",
+    "examples/input-policy.mjs": "f6bbbfa3868de157900953bd363fbb7d7df49637a8e5058640ccb50391340e65",
+    "examples/input-policy.test.mjs": "7d9898e2a41633d42c64e854da8becf7bce9daa37223d5ca8cef7a34fd5fba14",
+    "examples/wav-output-policy.d.mts": "09c7a15205f3c063c6dc5f988ef59f4ae220648f54260f5cc4c2c66d47494c33",
+    "examples/wav-output-policy.mjs": "c7d59217c93a5e970d399cbdd9cd6bfb1a47e87674125a5a0ca544f1164f11a7",
+    "examples/wav-output-policy.test.mjs": "dee49a14b6f5db054b8a90ead4079e73e82bea0cdfdad9def363bd03d715e236",
+    "examples/wav.ts": "28c0a3d4b78ba7a91fe949e93100832f54143bfa5204d8eb857fa150cfac20fb",
+    "guide.md": "39360992b59b3f3f58191cbd90769e7363c941b67b97e0ee7dfa754075548c5d",
+    "library.json": "74c8704918067c718d6b6ec2be9468ce3b106d573cb7ff3e63dce44f8b946247",
+    "verification.json": "65fbfb90a742d5ef7490a8aa739d4ca4419aa7e6eb90a2a197ec48d29da60831"
+  }
+}

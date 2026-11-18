@@ -1,0 +1,11 @@
+{
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "argv": [
+    "node",
+    "--input-type=module",
+    "-"
+  ],
+  "stdin": "import fs from 'node:fs';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';import {validateOfficialSources} from './packages/library-lab/src/lib/official-sources.mjs';const p='./packages/library-lab/entries/E10-dompurify/';const m=JSON.parse(fs.readFileSync(p+'library.json'));assert.deepEqual(validateOfficialSources(m.official),[]);const h=createHash('sha256').update(fs.readFileSync(p+m.official.readme.snapshotPath)).digest('hex');assert.equal(h,m.official.readme.sha256);console.log('official metadata + original README SHA PASS',h);",
+  "exitCode": 0,
+  "at": "2026-11-17T17:43:33.149291+00:00"
+}

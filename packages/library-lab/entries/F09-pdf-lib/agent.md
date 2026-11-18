@@ -1,46 +1,11 @@
-# F09 pdf-lib — 工程手册
+# F09 pdf-lib工程入口
 
-## 适用
+1.17.1/MIT，创建/复制页/本地内容流文字盖章；非阅读器/React排版/交互批注/安全redaction。读guide/verification与实际sourceFiles后迁入。
 
-在浏览器里创建、合并、短标注 PDF 字节。不负责画布阅读，也不负责 React 排版。
+六必需原件example.tsx/document.ts/document-policy.mjs/.d.mts/operation-gate.mjs/.d.mts；ReactDOM/TSX ESM/Bundler/DOM，pnpm add pdf-lib@1.17.1，无Provider/CSS/env/Worker/字体服务。demo可省。Node只需document及policy pair并编译TS，不用URL包装。
 
-## 版本
+basic createNote一页；business load/copyPages两份原创文档2页；advanced stampOwnPdf只盖第一页Reviewed locally。输入10bytes–2MiB/%PDF-/ignoreEncryption:false/1–20pages/MediaBox36–2000pt；输出≤4MiB。盖章在首CropBox∩MediaBox≥36pt内自适应坐标和字号，小页可变小，不承诺避让原内容。createNote label先trim ASCII1–60，标题按505pt宽缩字号，标准Helvetica不承诺中文。
 
-`pdf-lib@1.17.1`，MIT。`ignoreEncryption: false`。字体只用 `StandardFonts.Helvetica`。
+gate.begin同步单飞，isCurrent后才创建URL/写状态，finish只结束自己的id；keyed level重建，卸载invalidate但不abort SDK解析。ownedUrls登记；下载effect旧链接移除后revoke，卸载兜底清集合。失败清页数/链接并回收旧URL；不清全局资源。
 
-## 迁移
-
-带走 `examples/document.ts`、`examples/document-policy.mjs`、`examples/operation-gate.mjs` 和类型声明。操作必须经 `begin` / `isCurrent` / `finish`。输出经过 `validateOutputPdf`。不要把用户文件上传或写进仓库。
-
-## 不可删的清理
-
-已有活动时 `begin` 返回 null。换 level 和卸载 `invalidate`。每个 object URL 进入 `ownedUrls`，替换和卸载都 revoke。输入 ≤ 2 MiB，输出 ≤ 4 MiB，页数 1–20，边长 36–2000 pt。
-
-## 反例
-
-- 只用 `setBusy` 防连点。
-- `ignoreEncryption: true`。
-- 不检查页数和边长就盖章。
-- 泄漏 blob URL。
-- 把 `drawText` 当成已经在屏幕上渲染。
-- 上传所选 PDF。
-- 用 Helvetica 写未嵌入的中文。
-- 策略单测写成 SDK PASS。
-
-## 测试断言
-
-- basic 输出非空且不超过 4 MiB。
-- business 读回正好 2 页。
-- 坏文件头、0 页、超大边长、超限输入被拒绝。
-- 第二次 `begin` 在 `finish` 前返回 null。
-- policy 与 gate 测试不 import `pdf-lib`。
-
-## 真实限制
-
-没有表单、签名、附件清理或视觉回归。文件头检查不是沙箱。页面不显示 PDF 内容，只给下载链接。合并夹具固定两页，不是任意页数的证明。
-
-## 证据
-
-sdk 与 browser 需要 `docs/library-lab/evidence/runs/` 里的收据。Actions 41779873259 不是 F09 PASS。
-
-`document-policy` 与 `operation-gate` 的测试都不 import `pdf-lib`。
+policy不能计SDK，真实同源Node3项与policy5/gate3分记。browser实际下载/视觉/URL与held文件读取另验；formalNOT_RUN。任意外部PDF解析无ZIP/CPU/附件/脚本沙箱，不保证表单/签名/书签；ignoreEncryption不得改true。不上传、不执行CSV/HTML或用户脚本。官方固定原文/hash/license/header与本地日志见official/与条目根local-validation.md。

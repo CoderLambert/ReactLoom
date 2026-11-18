@@ -1,0 +1,8 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node entries/B09-shadcn-ui/validation/check-entry.mjs
+exit: 0
+
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: node entries/B09-shadcn-ui/validation/check-entry.mjs
+PASS: entry shape, 3 demos, 7 source paths, README bytes 1317 SHA-256 13d1235d1690dad504c4dd423d4f237a9a74eb8f2e49e7ee39f9c995ba7c0856
+exit: 0

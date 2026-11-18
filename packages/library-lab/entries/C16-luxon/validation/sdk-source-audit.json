@@ -1,0 +1,1334 @@
+{
+  "checkedAt": "2026-11-10T17:20:09.180939+00:00",
+  "packagePath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/luxon@3.7.2/node_modules/luxon",
+  "package": {
+    "name": "luxon",
+    "version": "3.7.2",
+    "description": "Immutable date wrapper",
+    "author": "Isaac Cambron",
+    "keywords": ["date", "immutable"],
+    "repository": "https://github.com/moment/luxon",
+    "exports": {
+      ".": {
+        "import": "./build/es6/luxon.mjs",
+        "require": "./build/node/luxon.js"
+      },
+      "./package.json": "./package.json"
+    },
+    "scripts": {
+      "build": "babel-node tasks/buildAll.js",
+      "build-node": "babel-node tasks/buildNode.js",
+      "build-global": "babel-node tasks/buildGlobal.js",
+      "jest": "jest",
+      "test": "jest --coverage",
+      "api-docs": "mkdir -p build && documentation build src/luxon.js -f html -o build/api-docs && sed -i.bak 's/<\\/body>/<script src=\"\\..\\/global\\/luxon.js\"><\\/script><script>console.log(\"You can try Luxon right here using the `luxon` global, like `luxon.DateTime.now()`\");<\\/script><\\/body>/g' build/api-docs/index.html && rm build/api-docs/index.html.bak",
+      "copy-site": "mkdir -p build && rsync -a docs/ build/docs && rsync -a site/ build",
+      "site": "npm run api-docs && npm run copy-site",
+      "format": "prettier --write 'src/**/*.js' 'test/**/*.js' 'benchmarks/*.js'",
+      "format-check": "prettier --check 'src/**/*.js' 'test/**/*.js' 'benchmarks/*.js'",
+      "benchmark": "node benchmarks/index.js",
+      "codecov": "codecov",
+      "prepack": "babel-node tasks/buildAll.js",
+      "prepare": "husky install",
+      "show-site": "http-server build"
+    },
+    "lint-staged": {
+      "*.{js,json}": ["prettier --write"]
+    },
+    "devDependencies": {
+      "@babel/core": "^7.18.6",
+      "@babel/node": "^7.18.6",
+      "@babel/plugin-external-helpers": "^7.18.6",
+      "@babel/preset-env": "^7.18.6",
+      "@rollup/plugin-babel": "^5.3.0",
+      "@rollup/plugin-commonjs": "^19.0.0",
+      "@rollup/plugin-node-resolve": "^13.0.0",
+      "babel-jest": "^28.1.2",
+      "benchmark": "latest",
+      "codecov": "latest",
+      "documentation": "latest",
+      "fs-extra": "^6.0.1",
+      "http-server": "^14.1.1",
+      "husky": "^7.0.0",
+      "jest": "^29.4.3",
+      "lint-staged": "^13.2.1",
+      "prettier": "latest",
+      "rollup": "^2.52.7",
+      "rollup-plugin-terser": "^7.0.2",
+      "uglify-js": "^3.13.10"
+    },
+    "main": "build/node/luxon.js",
+    "module": "src/luxon.js",
+    "browser": "build/cjs-browser/luxon.js",
+    "jsdelivr": "build/global/luxon.min.js",
+    "unpkg": "build/global/luxon.min.js",
+    "engines": {
+      "node": ">=12"
+    },
+    "files": [
+      "build/node/luxon.js",
+      "build/node/luxon.js.map",
+      "build/cjs-browser/luxon.js",
+      "build/cjs-browser/luxon.js.map",
+      "build/amd/luxon.js",
+      "build/amd/luxon.js.map",
+      "build/global/luxon.js",
+      "build/global/luxon.js.map",
+      "build/global/luxon.min.js",
+      "build/global/luxon.min.js.map",
+      "build/es6/luxon.mjs",
+      "build/es6/luxon.mjs.map",
+      "src"
+    ],
+    "license": "MIT",
+    "sideEffects": false
+  },
+  "typesPackagePath": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@types+luxon@3.7.6/node_modules/@types/luxon",
+  "typesPackage": {
+    "name": "@types/luxon",
+    "version": "3.7.6",
+    "description": "TypeScript definitions for luxon",
+    "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/luxon",
+    "license": "MIT",
+    "contributors": [
+      {
+        "name": "Carson Full",
+        "githubUsername": "carsonf",
+        "url": "https://github.com/carsonf"
+      },
+      {
+        "name": "Piotr Błażejewicz",
+        "githubUsername": "peterblazejewicz",
+        "url": "https://github.com/peterblazejewicz"
+      }
+    ],
+    "main": "",
+    "types": "index.d.ts",
+    "exports": {
+      ".": {
+        "import": "./index.d.mts",
+        "require": "./index.d.ts"
+      },
+      "./package.json": "./package.json"
+    },
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+      "directory": "types/luxon"
+    },
+    "scripts": {},
+    "dependencies": {},
+    "peerDependencies": {},
+    "typesPublisherContentHash": "208677533e60e8f7d568d6845d06cc72abd3f3ef7ba89e60fd1e5be3841027bf",
+    "typeScriptVersion": "5.6"
+  },
+  "files": {
+    "src/datetime.js": {
+      "sha256": "be10f67c2abadf2c5b178383d350f7867c051018d61903396fc5449b2bc4c0ef",
+      "lines": [
+        {
+          "line": 187,
+          "text": "// helper useful in turning the results of parsing into real dates"
+        },
+        {
+          "line": 188,
+          "text": "// by handling the zone options"
+        },
+        {
+          "line": 189,
+          "text": "function parseDataToDateTime(parsed, parsedZone, opts, format, text, specificOffset) {"
+        },
+        {
+          "line": 190,
+          "text": "  const { setZone, zone } = opts;"
+        },
+        {
+          "line": 191,
+          "text": "  if ((parsed && Object.keys(parsed).length !== 0) || parsedZone) {"
+        },
+        {
+          "line": 192,
+          "text": "    const interpretationZone = parsedZone || zone,"
+        },
+        {
+          "line": 193,
+          "text": "      inst = DateTime.fromObject(parsed, {"
+        },
+        {
+          "line": 194,
+          "text": "        ...opts,"
+        },
+        {
+          "line": 195,
+          "text": "        zone: interpretationZone,"
+        },
+        {
+          "line": 196,
+          "text": "        specificOffset,"
+        },
+        {
+          "line": 197,
+          "text": "      });"
+        },
+        {
+          "line": 198,
+          "text": "    return setZone ? inst : inst.setZone(zone);"
+        },
+        {
+          "line": 199,
+          "text": "  } else {"
+        },
+        {
+          "line": 200,
+          "text": "    return DateTime.invalid("
+        },
+        {
+          "line": 201,
+          "text": "      new Invalid(\"unparsable\", `the input \"${text}\" can't be parsed as ${format}`)"
+        },
+        {
+          "line": 202,
+          "text": "    );"
+        },
+        {
+          "line": 203,
+          "text": "  }"
+        },
+        {
+          "line": 204,
+          "text": "}"
+        },
+        {
+          "line": 914,
+          "text": "   * @return {DateTime}"
+        },
+        {
+          "line": 915,
+          "text": "   */"
+        },
+        {
+          "line": 916,
+          "text": "  static fromISO(text, opts = {}) {"
+        },
+        {
+          "line": 917,
+          "text": "    const [vals, parsedZone] = parseISODate(text);"
+        },
+        {
+          "line": 918,
+          "text": "    return parseDataToDateTime(vals, parsedZone, opts, \"ISO 8601\", text);"
+        },
+        {
+          "line": 919,
+          "text": "  }"
+        },
+        {
+          "line": 920,
+          "text": ""
+        },
+        {
+          "line": 921,
+          "text": "  /**"
+        },
+        {
+          "line": 922,
+          "text": "   * Create a DateTime from an RFC 2822 string"
+        },
+        {
+          "line": 923,
+          "text": "   * @param {string} text - the RFC 2822 string"
+        },
+        {
+          "line": 924,
+          "text": "   * @param {Object} opts - options to affect the creation"
+        },
+        {
+          "line": 925,
+          "text": "   * @param {string|Zone} [opts.zone='local'] - convert the time to this zone. Since the offset is always specified in the string itself, this has no effect on the interpretation of string, merely the zone the resulting DateTime is expressed in."
+        },
+        {
+          "line": 926,
+          "text": "   * @param {boolean} [opts.setZone=false] - override the zone with a fixed-offset zone specified in the string itself, if it specifies one"
+        },
+        {
+          "line": 927,
+          "text": "   * @param {string} [opts.locale='system's locale'] - a locale to set on the resulting DateTime instance"
+        },
+        {
+          "line": 928,
+          "text": "   * @param {string} opts.outputCalendar - the output calendar to set on the resulting DateTime instance"
+        },
+        {
+          "line": 929,
+          "text": "   * @param {string} opts.numberingSystem - the numbering system to set on the resulting DateTime instance"
+        },
+        {
+          "line": 930,
+          "text": "   * @param {string} opts.weekSettings - the week settings to set on the resulting DateTime instance"
+        },
+        {
+          "line": 931,
+          "text": "   * @example DateTime.fromRFC2822('25 Nov 2016 13:23:12 GMT')"
+        },
+        {
+          "line": 1426,
+          "text": "   * @returns {DateTime[]}"
+        },
+        {
+          "line": 1427,
+          "text": "   */"
+        },
+        {
+          "line": 1428,
+          "text": "  getPossibleOffsets() {"
+        },
+        {
+          "line": 1429,
+          "text": "    if (!this.isValid || this.isOffsetFixed) {"
+        },
+        {
+          "line": 1430,
+          "text": "      return [this];"
+        },
+        {
+          "line": 1431,
+          "text": "    }"
+        },
+        {
+          "line": 1432,
+          "text": "    const dayMs = 86400000;"
+        },
+        {
+          "line": 1433,
+          "text": "    const minuteMs = 60000;"
+        },
+        {
+          "line": 1434,
+          "text": "    const localTS = objToLocalTS(this.c);"
+        },
+        {
+          "line": 1435,
+          "text": "    const oEarlier = this.zone.offset(localTS - dayMs);"
+        },
+        {
+          "line": 1436,
+          "text": "    const oLater = this.zone.offset(localTS + dayMs);"
+        },
+        {
+          "line": 1437,
+          "text": ""
+        },
+        {
+          "line": 1438,
+          "text": "    const o1 = this.zone.offset(localTS - oEarlier * minuteMs);"
+        },
+        {
+          "line": 1439,
+          "text": "    const o2 = this.zone.offset(localTS - oLater * minuteMs);"
+        },
+        {
+          "line": 1440,
+          "text": "    if (o1 === o2) {"
+        },
+        {
+          "line": 1441,
+          "text": "      return [this];"
+        },
+        {
+          "line": 1442,
+          "text": "    }"
+        },
+        {
+          "line": 1443,
+          "text": "    const ts1 = localTS - o1 * minuteMs;"
+        },
+        {
+          "line": 1560,
+          "text": "   * @return {DateTime}"
+        },
+        {
+          "line": 1561,
+          "text": "   */"
+        },
+        {
+          "line": 1562,
+          "text": "  setZone(zone, { keepLocalTime = false, keepCalendarTime = false } = {}) {"
+        },
+        {
+          "line": 1563,
+          "text": "    zone = normalizeZone(zone, Settings.defaultZone);"
+        },
+        {
+          "line": 1564,
+          "text": "    if (zone.equals(this.zone)) {"
+        },
+        {
+          "line": 1565,
+          "text": "      return this;"
+        },
+        {
+          "line": 1566,
+          "text": "    } else if (!zone.isValid) {"
+        },
+        {
+          "line": 1567,
+          "text": "      return DateTime.invalid(unsupportedZone(zone));"
+        },
+        {
+          "line": 1568,
+          "text": "    } else {"
+        },
+        {
+          "line": 1569,
+          "text": "      let newTS = this.ts;"
+        },
+        {
+          "line": 1570,
+          "text": "      if (keepLocalTime || keepCalendarTime) {"
+        },
+        {
+          "line": 1571,
+          "text": "        const offsetGuess = zone.offset(this.ts);"
+        },
+        {
+          "line": 1572,
+          "text": "        const asObj = this.toObject();"
+        },
+        {
+          "line": 1573,
+          "text": "        [newTS] = objToTS(asObj, offsetGuess, zone);"
+        },
+        {
+          "line": 1574,
+          "text": "      }"
+        },
+        {
+          "line": 1575,
+          "text": "      return clone(this, { ts: newTS, zone });"
+        },
+        {
+          "line": 1576,
+          "text": "    }"
+        },
+        {
+          "line": 1577,
+          "text": "  }"
+        },
+        {
+          "line": 1673,
+          "text": "   * @return {DateTime}"
+        },
+        {
+          "line": 1674,
+          "text": "   */"
+        },
+        {
+          "line": 1675,
+          "text": "  plus(duration) {"
+        },
+        {
+          "line": 1676,
+          "text": "    if (!this.isValid) return this;"
+        },
+        {
+          "line": 1677,
+          "text": "    const dur = Duration.fromDurationLike(duration);"
+        },
+        {
+          "line": 1678,
+          "text": "    return clone(this, adjustTime(this, dur));"
+        },
+        {
+          "line": 1679,
+          "text": "  }"
+        },
+        {
+          "line": 1680,
+          "text": ""
+        },
+        {
+          "line": 1681,
+          "text": "  /**"
+        },
+        {
+          "line": 1682,
+          "text": "   * Subtract a period of time to this DateTime and return the resulting DateTime"
+        },
+        {
+          "line": 1683,
+          "text": "   * See {@link DateTime#plus}"
+        },
+        {
+          "line": 1684,
+          "text": "   * @param {Duration|Object|number} duration - The amount to subtract. Either a Luxon Duration, a number of milliseconds, the object argument to Duration.fromObject()"
+        },
+        {
+          "line": 1685,
+          "text": "   @return {DateTime}"
+        },
+        {
+          "line": 1686,
+          "text": "   */"
+        },
+        {
+          "line": 1687,
+          "text": "  minus(duration) {"
+        },
+        {
+          "line": 1688,
+          "text": "    if (!this.isValid) return this;"
+        },
+        {
+          "line": 1689,
+          "text": "    const dur = Duration.fromDurationLike(duration).negate();"
+        },
+        {
+          "line": 1690,
+          "text": "    return clone(this, adjustTime(this, dur));"
+        }
+      ]
+    },
+    "src/interval.js": {
+      "sha256": "9d92ad4c7b6dfc1c8260badf379c0788e5b40713f3b1f6cd62d92e9e80db5a11",
+      "lines": [
+        {
+          "line": 86,
+          "text": "   * @return {Interval}"
+        },
+        {
+          "line": 87,
+          "text": "   */"
+        },
+        {
+          "line": 88,
+          "text": "  static fromDateTimes(start, end) {"
+        },
+        {
+          "line": 89,
+          "text": "    const builtStart = friendlyDateTime(start),"
+        },
+        {
+          "line": 90,
+          "text": "      builtEnd = friendlyDateTime(end);"
+        },
+        {
+          "line": 91,
+          "text": ""
+        },
+        {
+          "line": 92,
+          "text": "    const validateError = validateStartEnd(builtStart, builtEnd);"
+        },
+        {
+          "line": 93,
+          "text": ""
+        },
+        {
+          "line": 94,
+          "text": "    if (validateError == null) {"
+        },
+        {
+          "line": 95,
+          "text": "      return new Interval({"
+        },
+        {
+          "line": 96,
+          "text": "        start: builtStart,"
+        },
+        {
+          "line": 97,
+          "text": "        end: builtEnd,"
+        },
+        {
+          "line": 98,
+          "text": "      });"
+        },
+        {
+          "line": 99,
+          "text": "    } else {"
+        },
+        {
+          "line": 100,
+          "text": "      return validateError;"
+        },
+        {
+          "line": 101,
+          "text": "    }"
+        },
+        {
+          "line": 102,
+          "text": "  }"
+        },
+        {
+          "line": 103,
+          "text": ""
+        },
+        {
+          "line": 235,
+          "text": "   * @return {number}"
+        },
+        {
+          "line": 236,
+          "text": "   */"
+        },
+        {
+          "line": 237,
+          "text": "  length(unit = \"milliseconds\") {"
+        },
+        {
+          "line": 238,
+          "text": "    return this.isValid ? this.toDuration(...[unit]).get(unit) : NaN;"
+        },
+        {
+          "line": 239,
+          "text": "  }"
+        },
+        {
+          "line": 240,
+          "text": ""
+        },
+        {
+          "line": 241,
+          "text": "  /**"
+        },
+        {
+          "line": 242,
+          "text": "   * Returns the count of minutes, hours, days, months, or years included in the Interval, even in part."
+        },
+        {
+          "line": 243,
+          "text": "   * Unlike {@link Interval#length} this counts sections of the calendar, not periods of time, e.g. specifying 'day'"
+        },
+        {
+          "line": 244,
+          "text": "   * asks 'what dates are included in this interval?', not 'how many days long is this interval?'"
+        },
+        {
+          "line": 245,
+          "text": "   * @param {string} [unit='milliseconds'] - the unit of time to count."
+        },
+        {
+          "line": 246,
+          "text": "   * @param {Object} opts - options"
+        },
+        {
+          "line": 247,
+          "text": "   * @param {boolean} [opts.useLocaleWeeks=false] - If true, use weeks based on the locale, i.e. use the locale-dependent start of the week; this operation will always use the locale of the start DateTime"
+        },
+        {
+          "line": 248,
+          "text": "   * @return {number}"
+        },
+        {
+          "line": 249,
+          "text": "   */"
+        },
+        {
+          "line": 250,
+          "text": "  count(unit = \"milliseconds\", opts) {"
+        },
+        {
+          "line": 251,
+          "text": "    if (!this.isValid) return NaN;"
+        },
+        {
+          "line": 252,
+          "text": "    const start = this.start.startOf(unit, opts);"
+        },
+        {
+          "line": 303,
+          "text": "   * @return {boolean}"
+        },
+        {
+          "line": 304,
+          "text": "   */"
+        },
+        {
+          "line": 305,
+          "text": "  contains(dateTime) {"
+        },
+        {
+          "line": 306,
+          "text": "    if (!this.isValid) return false;"
+        },
+        {
+          "line": 307,
+          "text": "    return this.s <= dateTime && this.e > dateTime;"
+        },
+        {
+          "line": 308,
+          "text": "  }"
+        },
+        {
+          "line": 309,
+          "text": ""
+        },
+        {
+          "line": 310,
+          "text": "  /**"
+        },
+        {
+          "line": 311,
+          "text": "   * \"Sets\" the start and/or end dates. Returns a newly-constructed Interval."
+        },
+        {
+          "line": 312,
+          "text": "   * @param {Object} values - the values to set"
+        },
+        {
+          "line": 313,
+          "text": "   * @param {DateTime} values.start - the starting DateTime"
+        },
+        {
+          "line": 314,
+          "text": "   * @param {DateTime} values.end - the ending DateTime"
+        },
+        {
+          "line": 315,
+          "text": "   * @return {Interval}"
+        },
+        {
+          "line": 316,
+          "text": "   */"
+        },
+        {
+          "line": 317,
+          "text": "  set({ start, end } = {}) {"
+        },
+        {
+          "line": 318,
+          "text": "    if (!this.isValid) return this;"
+        },
+        {
+          "line": 319,
+          "text": "    return Interval.fromDateTimes(start || this.s, end || this.e);"
+        },
+        {
+          "line": 320,
+          "text": "  }"
+        }
+      ]
+    },
+    "src/zones/IANAZone.js": {
+      "sha256": "12c480dabb25f4375dc29eeac67afe4db5c4d50b78256282d44fe410f65843a2",
+      "lines": [
+        {
+          "line": 3,
+          "text": ""
+        },
+        {
+          "line": 4,
+          "text": "const dtfCache = new Map();"
+        },
+        {
+          "line": 5,
+          "text": "function makeDTF(zoneName) {"
+        },
+        {
+          "line": 6,
+          "text": "  let dtf = dtfCache.get(zoneName);"
+        },
+        {
+          "line": 7,
+          "text": "  if (dtf === undefined) {"
+        },
+        {
+          "line": 8,
+          "text": "    dtf = new Intl.DateTimeFormat(\"en-US\", {"
+        },
+        {
+          "line": 9,
+          "text": "      hour12: false,"
+        },
+        {
+          "line": 10,
+          "text": "      timeZone: zoneName,"
+        },
+        {
+          "line": 11,
+          "text": "      year: \"numeric\","
+        },
+        {
+          "line": 12,
+          "text": "      month: \"2-digit\","
+        },
+        {
+          "line": 13,
+          "text": "      day: \"2-digit\","
+        },
+        {
+          "line": 14,
+          "text": "      hour: \"2-digit\","
+        },
+        {
+          "line": 15,
+          "text": "      minute: \"2-digit\","
+        },
+        {
+          "line": 16,
+          "text": "      second: \"2-digit\","
+        },
+        {
+          "line": 17,
+          "text": "      era: \"short\","
+        },
+        {
+          "line": 18,
+          "text": "    });"
+        },
+        {
+          "line": 19,
+          "text": "    dtfCache.set(zoneName, dtf);"
+        },
+        {
+          "line": 20,
+          "text": "  }"
+        },
+        {
+          "line": 102,
+          "text": "   * @return {boolean}"
+        },
+        {
+          "line": 103,
+          "text": "   */"
+        },
+        {
+          "line": 104,
+          "text": "  static isValidZone(zone) {"
+        },
+        {
+          "line": 105,
+          "text": "    if (!zone) {"
+        },
+        {
+          "line": 106,
+          "text": "      return false;"
+        },
+        {
+          "line": 107,
+          "text": "    }"
+        },
+        {
+          "line": 108,
+          "text": "    try {"
+        },
+        {
+          "line": 109,
+          "text": "      new Intl.DateTimeFormat(\"en-US\", { timeZone: zone }).format();"
+        },
+        {
+          "line": 110,
+          "text": "      return true;"
+        },
+        {
+          "line": 111,
+          "text": "    } catch (e) {"
+        },
+        {
+          "line": 112,
+          "text": "      return false;"
+        },
+        {
+          "line": 113,
+          "text": "    }"
+        },
+        {
+          "line": 114,
+          "text": "  }"
+        },
+        {
+          "line": 115,
+          "text": ""
+        },
+        {
+          "line": 116,
+          "text": "  constructor(name) {"
+        },
+        {
+          "line": 117,
+          "text": "    super();"
+        },
+        {
+          "line": 118,
+          "text": "    /** @private **/"
+        },
+        {
+          "line": 119,
+          "text": "    this.zoneName = name;"
+        },
+        {
+          "line": 172,
+          "text": "   */"
+        },
+        {
+          "line": 173,
+          "text": "  formatOffset(ts, format) {"
+        },
+        {
+          "line": 174,
+          "text": "    return formatOffset(this.offset(ts), format);"
+        },
+        {
+          "line": 175,
+          "text": "  }"
+        },
+        {
+          "line": 176,
+          "text": ""
+        },
+        {
+          "line": 177,
+          "text": "  /**"
+        },
+        {
+          "line": 178,
+          "text": "   * Return the offset in minutes for this zone at the specified timestamp."
+        },
+        {
+          "line": 179,
+          "text": "   * @override"
+        },
+        {
+          "line": 180,
+          "text": "   * @param {number} ts - Epoch milliseconds for which to compute the offset"
+        },
+        {
+          "line": 181,
+          "text": "   * @return {number}"
+        },
+        {
+          "line": 182,
+          "text": "   */"
+        },
+        {
+          "line": 183,
+          "text": "  offset(ts) {"
+        },
+        {
+          "line": 184,
+          "text": "    if (!this.valid) return NaN;"
+        },
+        {
+          "line": 185,
+          "text": "    const date = new Date(ts);"
+        },
+        {
+          "line": 186,
+          "text": ""
+        },
+        {
+          "line": 187,
+          "text": "    if (isNaN(date)) return NaN;"
+        },
+        {
+          "line": 188,
+          "text": ""
+        },
+        {
+          "line": 189,
+          "text": "    const dtf = makeDTF(this.name);"
+        },
+        {
+          "line": 190,
+          "text": "    let [year, month, day, adOrBc, hour, minute, second] = dtf.formatToParts"
+        },
+        {
+          "line": 191,
+          "text": "      ? partsOffset(dtf, date)"
+        },
+        {
+          "line": 192,
+          "text": "      : hackyOffset(dtf, date);"
+        },
+        {
+          "line": 193,
+          "text": ""
+        },
+        {
+          "line": 194,
+          "text": "    if (adOrBc === \"BC\") {"
+        },
+        {
+          "line": 195,
+          "text": "      year = -Math.abs(year) + 1;"
+        },
+        {
+          "line": 196,
+          "text": "    }"
+        },
+        {
+          "line": 197,
+          "text": ""
+        },
+        {
+          "line": 198,
+          "text": "    // because we're using hour12 and https://bugs.chromium.org/p/chromium/issues/detail?id=1025564&can=2&q=%2224%3A00%22%20datetimeformat"
+        }
+      ]
+    },
+    "src/settings.js": {
+      "sha256": "20984084cacc3a6bc40de480386fcb8266be3efea55efc9e409995311237144e",
+      "lines": [
+        {
+          "line": 9,
+          "text": ""
+        },
+        {
+          "line": 10,
+          "text": "let now = () => Date.now(),"
+        },
+        {
+          "line": 11,
+          "text": "  defaultZone = \"system\","
+        },
+        {
+          "line": 12,
+          "text": "  defaultLocale = null,"
+        },
+        {
+          "line": 13,
+          "text": "  defaultNumberingSystem = null,"
+        },
+        {
+          "line": 14,
+          "text": "  defaultOutputCalendar = null,"
+        },
+        {
+          "line": 15,
+          "text": "  twoDigitCutoffYear = 60,"
+        },
+        {
+          "line": 16,
+          "text": "  throwOnInvalid,"
+        },
+        {
+          "line": 17,
+          "text": "  defaultWeekSettings = null;"
+        },
+        {
+          "line": 18,
+          "text": ""
+        },
+        {
+          "line": 19,
+          "text": "/**"
+        },
+        {
+          "line": 20,
+          "text": " * Settings contains static getters and setters that control Luxon's overall behavior. Luxon is a simple library with few options, but the ones it does have live here."
+        },
+        {
+          "line": 21,
+          "text": " */"
+        },
+        {
+          "line": 22,
+          "text": "export default class Settings {"
+        },
+        {
+          "line": 23,
+          "text": "  /**"
+        },
+        {
+          "line": 24,
+          "text": "   * Get the callback for returning the current timestamp."
+        },
+        {
+          "line": 25,
+          "text": "   * @type {function}"
+        },
+        {
+          "line": 26,
+          "text": "   */"
+        },
+        {
+          "line": 36,
+          "text": "   * @example Settings.now = () => 0 // always pretend it's Jan 1, 1970 at midnight in UTC time"
+        },
+        {
+          "line": 37,
+          "text": "   */"
+        },
+        {
+          "line": 38,
+          "text": "  static set now(n) {"
+        },
+        {
+          "line": 39,
+          "text": "    now = n;"
+        },
+        {
+          "line": 40,
+          "text": "  }"
+        },
+        {
+          "line": 41,
+          "text": ""
+        },
+        {
+          "line": 42,
+          "text": "  /**"
+        },
+        {
+          "line": 43,
+          "text": "   * Set the default time zone to create DateTimes in. Does not affect existing instances."
+        },
+        {
+          "line": 44,
+          "text": "   * Use the value \"system\" to reset this value to the system's time zone."
+        },
+        {
+          "line": 45,
+          "text": "   * @type {string}"
+        },
+        {
+          "line": 46,
+          "text": "   */"
+        },
+        {
+          "line": 47,
+          "text": "  static set defaultZone(zone) {"
+        },
+        {
+          "line": 48,
+          "text": "    defaultZone = zone;"
+        },
+        {
+          "line": 49,
+          "text": "  }"
+        },
+        {
+          "line": 50,
+          "text": ""
+        },
+        {
+          "line": 51,
+          "text": "  /**"
+        },
+        {
+          "line": 52,
+          "text": "   * Get the default time zone object currently used to create DateTimes. Does not affect existing instances."
+        },
+        {
+          "line": 53,
+          "text": "   * The default value is the system's time zone (the one set on the machine that runs this code)."
+        },
+        {
+          "line": 54,
+          "text": "   * @type {Zone}"
+        },
+        {
+          "line": 55,
+          "text": "   */"
+        },
+        {
+          "line": 56,
+          "text": "  static get defaultZone() {"
+        },
+        {
+          "line": 57,
+          "text": "    return normalizeZone(defaultZone, SystemZone.instance);"
+        },
+        {
+          "line": 58,
+          "text": "  }"
+        },
+        {
+          "line": 59,
+          "text": ""
+        },
+        {
+          "line": 60,
+          "text": "  /**"
+        },
+        {
+          "line": 61,
+          "text": "   * Get the default locale to create DateTimes with. Does not affect existing instances."
+        },
+        {
+          "line": 62,
+          "text": "   * @type {string}"
+        },
+        {
+          "line": 63,
+          "text": "   */"
+        },
+        {
+          "line": 70,
+          "text": "   * @type {string}"
+        },
+        {
+          "line": 71,
+          "text": "   */"
+        },
+        {
+          "line": 72,
+          "text": "  static set defaultLocale(locale) {"
+        },
+        {
+          "line": 73,
+          "text": "    defaultLocale = locale;"
+        },
+        {
+          "line": 74,
+          "text": "  }"
+        },
+        {
+          "line": 75,
+          "text": ""
+        },
+        {
+          "line": 76,
+          "text": "  /**"
+        },
+        {
+          "line": 77,
+          "text": "   * Get the default numbering system to create DateTimes with. Does not affect existing instances."
+        },
+        {
+          "line": 78,
+          "text": "   * @type {string}"
+        },
+        {
+          "line": 79,
+          "text": "   */"
+        },
+        {
+          "line": 80,
+          "text": "  static get defaultNumberingSystem() {"
+        },
+        {
+          "line": 81,
+          "text": "    return defaultNumberingSystem;"
+        },
+        {
+          "line": 82,
+          "text": "  }"
+        },
+        {
+          "line": 83,
+          "text": ""
+        },
+        {
+          "line": 84,
+          "text": "  /**"
+        },
+        {
+          "line": 85,
+          "text": "   * Set the default numbering system to create DateTimes with. Does not affect existing instances."
+        },
+        {
+          "line": 86,
+          "text": "   * @type {string}"
+        },
+        {
+          "line": 87,
+          "text": "   */"
+        }
+      ]
+    }
+  },
+  "scope": "Installed source/type evidence only; SDK8 raw logs separately record actual Node/ICU/TZ. No browser execution.",
+  "typesFile": {
+    "path": "/home/lambert/githubRepos/lambert/ReactLoom/node_modules/.pnpm/@types+luxon@3.7.6/node_modules/@types/luxon/src/datetime.d.ts",
+    "sha256": "59a73b82c278e7ae48880ea87549a5f962abbdd788c905b0affe96c0d0f60dda",
+    "lines": [
+      {
+        "line": 551,
+        "text": " */"
+      },
+      {
+        "line": 552,
+        "text": "export class DateTime<IsValid extends boolean = DefaultValidity> {"
+      },
+      {
+        "line": 553,
+        "text": "    /**"
+      },
+      {
+        "line": 554,
+        "text": "     * Create a DateTime for the current instant, in the system's time zone."
+      },
+      {
+        "line": 555,
+        "text": "     *"
+      },
+      {
+        "line": 556,
+        "text": "     * Use Settings to override these default values if needed."
+      },
+      {
+        "line": 954,
+        "text": "     */"
+      },
+      {
+        "line": 955,
+        "text": "    getPossibleOffsets(): this[];"
+      },
+      {
+        "line": 956,
+        "text": ""
+      },
+      {
+        "line": 957,
+        "text": "    /**"
+      },
+      {
+        "line": 958,
+        "text": "     * Returns whether the DateTime is valid. Invalid DateTimes occur when:"
+      },
+      {
+        "line": 959,
+        "text": "     * * The DateTime was created from invalid calendar information, such as the 13th month or February 30"
+      },
+      {
+        "line": 1276,
+        "text": "     */"
+      },
+      {
+        "line": 1277,
+        "text": "    setZone(zone?: string | Zone, opts?: ZoneOptions): DateTimeMaybeValid;"
+      },
+      {
+        "line": 1278,
+        "text": ""
+      },
+      {
+        "line": 1279,
+        "text": "    /**"
+      },
+      {
+        "line": 1280,
+        "text": "     * \"Set\" the locale, numberingSystem, or outputCalendar. Returns a newly-constructed DateTime."
+      },
+      {
+        "line": 1281,
+        "text": "     *"
+      },
+      {
+        "line": 1334,
+        "text": "     */"
+      },
+      {
+        "line": 1335,
+        "text": "    plus(duration: DurationLike): this;"
+      },
+      {
+        "line": 1336,
+        "text": ""
+      },
+      {
+        "line": 1337,
+        "text": "    /**"
+      },
+      {
+        "line": 1338,
+        "text": "     * See {@link DateTime.plus}"
+      },
+      {
+        "line": 1339,
+        "text": "     *"
+      }
+    ]
+  }
+}

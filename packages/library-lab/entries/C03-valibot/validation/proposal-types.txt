@@ -1,0 +1,4 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab", "argv": ["pnpm", "exec", "--", "tsc", "--ignoreConfig", "--noEmit", "--target", "ES2022", "--lib", "ES2022,DOM,DOM.Iterable", "--module", "ESNext", "--moduleResolution", "Bundler", "--strict", "--skipLibCheck", "--esModuleInterop", "--types", "node", "entries/C03-valibot/validation/browser-proposal.check.ts"], "start": "2026-11-10T15:09:58.199856+00:00", "end": "2026-11-10T15:09:58.435946+00:00", "exitCode": 0}
+STDOUT
+
+STDERR

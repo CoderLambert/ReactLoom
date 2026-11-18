@@ -1,0 +1,27 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+ARGV: ["pnpm", "test:policy", "--entry=B07"]
+START: 2026-11-10T13:08:03.985930+00:00
+END: 2026-11-10T13:08:04.321489+00:00
+EXIT: 0
+STDOUT:
+
+> @reactloom/library-lab@0.1.0 test:policy /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+> node scripts/policy-runner.mjs --entry=B07
+
+Pure entry policy suites selected: 2 (not SDK evidence)
+✔ local validation returns both field errors without inventing a saved subscription (0.784003ms)
+✔ trim and HTTPS canonicalization accept the 60-unit boundary, reject 61 and other protocols (0.17724ms)
+✔ rapid sequential toggles undo only the latest committed mutation (0.589117ms)
+✔ noop and nonexistent records do not replace undo snapshot (0.149239ms)
+✔ monotonic local IDs survive undo and repeated addition (0.091343ms)
+✔ empty labels and duplicate endpoints do not mutate state (0.069674ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 73.712817
+
+STDERR:

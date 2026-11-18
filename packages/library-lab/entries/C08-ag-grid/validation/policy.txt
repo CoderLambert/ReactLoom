@@ -1,0 +1,20 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["pnpm", "--dir", "packages/library-lab", "test:policy", "--entry=C08"], "utc": "2026-11-10T15:45:18.973783+00:00", "exit": 0}
+
+> @reactloom/library-lab@0.1.0 test:policy /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+> node scripts/policy-runner.mjs --entry=C08
+
+Pure entry policy suites selected: 2 (not SDK evidence)
+✔ valid edit changes only matching stable ID and increments revision (0.822238ms)
+✔ stale edit and unknown status fail closed without mutation (0.128557ms)
+✔ stale server snapshot preserves newer local status but not server ownership of other fields (3.844274ms)
+✔ newer server revision wins and removed IDs are not resurrected (0.118513ms)
+✔ an editing session copies the start revision instead of rereading submission data (0.808204ms)
+✔ missing or mismatched session cannot supply an expected revision (0.094167ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 64.922059

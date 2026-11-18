@@ -1,0 +1,2 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["python", "packages/library-lab/entries/C16-luxon/validation/fetch-official.py"], "utc": "2026-11-10T17:08:05.712552+00:00", "exit": 0}
+C16 README.md {'path': 'official/readme.md', 'bytes': 2052, 'sha256': '5e57e6afc44eed949d850075c7e1a9206a757c058afa6b93aab83264f07cf622'} HTTP requests 5 homepage unknown

@@ -1,0 +1,5 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+command=pnpm exec biome check packages/library-lab/e2e/quality-remediation-threejs.spec.ts packages/library-lab/e2e/quality-remediation-fiber.spec.ts packages/library-lab/e2e/quality-remediation-leaflet.spec.ts packages/library-lab/e2e/quality-remediation-maplibre.spec.ts packages/library-lab/e2e/quality-remediation-deckgl.spec.ts packages/library-lab/e2e/quality-remediation-maps.spec.ts
+Checked 6 files in 9ms. No fixes applied.
+
+exitCode=0

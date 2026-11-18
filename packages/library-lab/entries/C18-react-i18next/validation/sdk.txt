@@ -1,0 +1,17 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['pnpm', 'exec', 'node', '--test', 'entries/C18-react-i18next/tests/sdk.test.mjs']
+startedAt: 2026-11-10T17:41:38.456366+00:00
+exit: 0
+✔ actual React provider creates separate localized SSR trees without changing the default singleton (11.435629ms)
+✔ actual Trans maps the source-owned strong component and React escapes user text once (0.889502ms)
+✔ actual stable workspace serializes changes across language events and commits the latest intent (3.195045ms)
+✔ local gate rejection leaves actual SDK language intact and a later real request recovers independently (0.627042ms)
+✔ disposing a held real workspace discards its pending intent and suppresses later publications (0.415429ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 78.680438

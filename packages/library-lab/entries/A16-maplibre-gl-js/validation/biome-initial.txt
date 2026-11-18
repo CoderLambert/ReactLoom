@@ -1,0 +1,11 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: pnpm exec biome check --write entries/A16-maplibre-gl-js/examples entries/A16-maplibre-gl-js/tests entries/A16-maplibre-gl-js/validation/check-entry.mjs entries/A16-maplibre-gl-js/library.json entries/A16-maplibre-gl-js/verification.json entries/A16-maplibre-gl-js/official/source-audit.json entries/A16-maplibre-gl-js/official/homepage-response.json
+exit: 0
+Checked 12 files in 18ms. Fixed 8 files.
+/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/A16-maplibre-gl-js/official/homepage-response.json internalError/io  INTERNAL  ━━━━━━━━━━
+
+  × No such file or directory (os error 2)
+  
+  ! This diagnostic was derived from an internal Biome error. Potential bug, please report it if necessary.
+  
+

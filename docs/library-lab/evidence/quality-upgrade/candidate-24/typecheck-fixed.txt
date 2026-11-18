@@ -1,0 +1,15 @@
+
+> @reactloom/library-lab@0.1.0 typecheck /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+> node scripts/generate.mjs && tsc --noEmit
+
+{"entries":119,"loaders":306}
+e2e/quality-resume-axios.spec.ts(27,5): error TS2322: Type '(id?: number) => void' is not assignable to type '((id: number | undefined) => void) & { (id: number | undefined): void; (timeout: string | number | Timeout | undefined): void; }'.
+  Type '(id?: number) => void' is not assignable to type '{ (id: number | undefined): void; (timeout: string | number | Timeout | undefined): void; }'.
+    Types of parameters 'id' and 'timeout' are incompatible.
+      Type 'string | number | Timeout | undefined' is not assignable to type 'number | undefined'.
+        Type 'string' is not assignable to type 'number'.
+e2e/quality-resume-axios.spec.ts(37,9): error TS2352: Conversion of type 'Window & typeof globalThis' to type 'Window & { __d09TimerProbe: () => { pending: number; fired: number; scheduled: number; }; }' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Property '__d09TimerProbe' is missing in type 'Window & typeof globalThis' but required in type '{ __d09TimerProbe: () => { pending: number; fired: number; scheduled: number; }; }'.
+/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @reactloom/library-lab@0.1.0 typecheck: `node scripts/generate.mjs && tsc --noEmit`
+Exit status 1

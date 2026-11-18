@@ -1,0 +1,9 @@
+{
+  "argv": [
+    "node",
+    "--test",
+    "packages/library-lab/entries/F03-papaparse/tests/policy.test.mjs"
+  ],
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "exitCode": 0
+}

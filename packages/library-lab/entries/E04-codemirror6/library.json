@@ -5,15 +5,7 @@
   "name": "CodeMirror 6",
   "group": "E",
   "summary": "模块化源代码编辑器：真实 EditorState / EditorView、草稿恢复、可更新配置与卸载",
-  "tags": [
-    "代码编辑",
-    "CodeMirror 6",
-    "EditorState",
-    "EditorView",
-    "IME",
-    "生命周期",
-    "React"
-  ],
+  "tags": ["代码编辑", "CodeMirror 6", "EditorState", "EditorView", "IME", "生命周期", "React"],
   "contentState": "recreated",
   "packages": [
     {
@@ -75,13 +67,11 @@
         "examples/example.tsx",
         "examples/demo.tsx",
         "examples/draft-policy.mjs",
-        "examples/draft-policy.d.mts"
+        "examples/draft-policy.d.mts",
+        "examples/editor-config.mjs",
+        "examples/editor-config.d.mts"
       ],
-      "capabilities": [
-        "dom-editor",
-        "local-session-storage",
-        "editor-cleanup"
-      ],
+      "capabilities": ["dom-editor", "local-session-storage", "editor-cleanup"],
       "description": "真实 EditorView 可编辑文本和统计长度。"
     },
     {
@@ -94,13 +84,11 @@
         "examples/example.tsx",
         "examples/demo.tsx",
         "examples/draft-policy.mjs",
-        "examples/draft-policy.d.mts"
+        "examples/draft-policy.d.mts",
+        "examples/editor-config.mjs",
+        "examples/editor-config.d.mts"
       ],
-      "capabilities": [
-        "dom-editor",
-        "local-session-storage",
-        "editor-cleanup"
-      ],
+      "capabilities": ["dom-editor", "local-session-storage", "editor-cleanup"],
       "description": "仅按钮触发当前选项卡的会话存储与恢复，不写全局键。"
     },
     {
@@ -115,13 +103,11 @@
         "tests/node-scenarios.test.mjs",
         "examples/draft-policy.mjs",
         "examples/draft-policy.d.mts",
-        "tests/policy.test.mjs"
+        "tests/policy.test.mjs",
+        "examples/editor-config.mjs",
+        "examples/editor-config.d.mts"
       ],
-      "capabilities": [
-        "dom-editor",
-        "local-session-storage",
-        "editor-cleanup"
-      ],
+      "capabilities": ["dom-editor", "local-session-storage", "editor-cleanup"],
       "description": "Compartment 重新配置只读，测试卸载后销毁 View。"
     }
   ],
@@ -132,5 +118,25 @@
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
     "note": "按 CodeMirror 官方状态/视图架构重新实现；原研究备查，不沿用历史 PASS。"
+  },
+  "official": {
+    "readme": {
+      "repository": "codemirror/basic-setup",
+      "commit": "76462c05acb10fe77e0f04edd7fcddfeb9987abd",
+      "path": "README.md",
+      "sourceUrl": "https://github.com/codemirror/basic-setup/blob/76462c05acb10fe77e0f04edd7fcddfeb9987abd/README.md",
+      "snapshotPath": "official/readme.md",
+      "sha256": "4808b9e09e924d88f61d141714fa99bf40f03195f529b7f0fa66f501fc2e8964",
+      "language": "en",
+      "version": "6.0.2",
+      "syncedAt": "2026-11-17T17:19:38.015Z"
+    },
+    "homepage": {
+      "url": "https://codemirror.net/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-17T17:19:38.015Z",
+      "reason": "实际GET和响应头见official/source-evidence.json；无Lab origin嵌入确认，保持unknown并提供直达。"
+    }
   }
 }

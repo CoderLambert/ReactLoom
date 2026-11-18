@@ -1,0 +1,312 @@
+{
+  "runs": [
+    {
+      "label": "intermediate-format",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "check",
+        "--write",
+        "entries/B18-cmdk/examples",
+        "entries/B18-cmdk/tests",
+        "entries/B18-cmdk/library.json",
+        "entries/B18-cmdk/verification.json"
+      ],
+      "startedAt": "2026-11-10T14:11:07.905273+00:00",
+      "finishedAt": "2026-11-10T14:11:08.156329+00:00",
+      "exitCode": 1,
+      "log": "intermediate-format.txt"
+    },
+    {
+      "label": "intermediate-typecheck",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--target",
+        "es2022",
+        "--module",
+        "esnext",
+        "--moduleResolution",
+        "bundler",
+        "--jsx",
+        "react-jsx",
+        "--strict",
+        "--skipLibCheck",
+        "--esModuleInterop",
+        "--types",
+        "vite/client,node",
+        "entries/B18-cmdk/examples/demo.tsx"
+      ],
+      "startedAt": "2026-11-10T14:11:08.156371+00:00",
+      "finishedAt": "2026-11-10T14:11:08.433614+00:00",
+      "exitCode": 0,
+      "log": "intermediate-typecheck.txt"
+    },
+    {
+      "label": "intermediate-format-fixed",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "check",
+        "--write",
+        "entries/B18-cmdk/examples/example.tsx"
+      ],
+      "startedAt": "2026-11-10T14:11:37.739999+00:00",
+      "finishedAt": "2026-11-10T14:11:37.985921+00:00",
+      "exitCode": 0,
+      "log": "intermediate-format-fixed.txt"
+    },
+    {
+      "label": "intermediate-typecheck-fixed",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--target",
+        "es2022",
+        "--module",
+        "esnext",
+        "--moduleResolution",
+        "bundler",
+        "--jsx",
+        "react-jsx",
+        "--strict",
+        "--skipLibCheck",
+        "--esModuleInterop",
+        "--types",
+        "vite/client,node",
+        "entries/B18-cmdk/examples/demo.tsx"
+      ],
+      "startedAt": "2026-11-10T14:11:37.985954+00:00",
+      "finishedAt": "2026-11-10T14:11:38.270593+00:00",
+      "exitCode": 0,
+      "log": "intermediate-typecheck-fixed.txt"
+    },
+    {
+      "label": "official-fetch",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "python3",
+        "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/B18-cmdk/validation/fetch-official.py"
+      ],
+      "startedAt": "2026-11-10T14:15:32.556848+00:00",
+      "finishedAt": "2026-11-10T14:15:50.964275+00:00",
+      "exitCode": 0,
+      "log": "official-fetch.txt"
+    },
+    {
+      "label": "source-audit",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "node",
+        "entries/B18-cmdk/validation/source-audit.mjs"
+      ],
+      "startedAt": "2026-11-10T14:23:40.340307+00:00",
+      "finishedAt": "2026-11-10T14:23:40.374972+00:00",
+      "exitCode": 0,
+      "log": "source-audit.txt"
+    },
+    {
+      "label": "format-final",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "check",
+        "--write",
+        "entries/B18-cmdk/examples",
+        "entries/B18-cmdk/tests",
+        "entries/B18-cmdk/library.json",
+        "entries/B18-cmdk/verification.json",
+        "entries/B18-cmdk/official/source-evidence.json",
+        "entries/B18-cmdk/validation/source-audit.mjs",
+        "entries/B18-cmdk/validation/metadata-check.mjs",
+        "entries/B18-cmdk/validation/sdk-source-audit.json",
+        "entries/B18-cmdk/validation/browser-proposal.check.ts"
+      ],
+      "startedAt": "2026-11-10T14:23:40.375257+00:00",
+      "finishedAt": "2026-11-10T14:23:40.626867+00:00",
+      "exitCode": 0,
+      "log": "format-final.txt"
+    },
+    {
+      "label": "sdk",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "node",
+        "--test",
+        "entries/B18-cmdk/tests/sdk.test.mjs"
+      ],
+      "startedAt": "2026-11-10T14:23:40.627228+00:00",
+      "finishedAt": "2026-11-10T14:23:40.735220+00:00",
+      "exitCode": 0,
+      "log": "sdk.txt"
+    },
+    {
+      "label": "policy",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "node",
+        "--test",
+        "entries/B18-cmdk/tests/keyboard-policy.test.mts",
+        "entries/B18-cmdk/tests/command-state.test.mts",
+        "entries/B18-cmdk/tests/ime-window.test.mts"
+      ],
+      "startedAt": "2026-11-10T14:23:40.735522+00:00",
+      "finishedAt": "2026-11-10T14:23:40.845122+00:00",
+      "exitCode": 0,
+      "log": "policy.txt"
+    },
+    {
+      "label": "typecheck-final",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--target",
+        "es2022",
+        "--module",
+        "esnext",
+        "--moduleResolution",
+        "bundler",
+        "--jsx",
+        "react-jsx",
+        "--strict",
+        "--skipLibCheck",
+        "--esModuleInterop",
+        "--types",
+        "vite/client,node",
+        "entries/B18-cmdk/examples/demo.tsx",
+        "entries/B18-cmdk/validation/browser-proposal.check.ts"
+      ],
+      "startedAt": "2026-11-10T14:23:40.845466+00:00",
+      "finishedAt": "2026-11-10T14:23:41.140953+00:00",
+      "exitCode": 0,
+      "log": "typecheck-final.txt"
+    },
+    {
+      "label": "metadata",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "node",
+        "entries/B18-cmdk/validation/metadata-check.mjs"
+      ],
+      "startedAt": "2026-11-10T14:23:41.141191+00:00",
+      "finishedAt": "2026-11-10T14:23:41.174257+00:00",
+      "exitCode": 0,
+      "log": "metadata.txt"
+    },
+    {
+      "label": "shortcut-format",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "biome",
+        "check",
+        "--write",
+        "entries/B18-cmdk/examples/example.tsx",
+        "entries/B18-cmdk/examples/keyboard-policy.ts",
+        "entries/B18-cmdk/tests/ime-window.test.mts"
+      ],
+      "startedAt": "2026-11-10T14:32:08.601432+00:00",
+      "finishedAt": "2026-11-10T14:32:09.394987+00:00",
+      "exitCode": 0,
+      "log": "shortcut-format.txt"
+    },
+    {
+      "label": "shortcut-policy",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "node",
+        "--test",
+        "entries/B18-cmdk/tests/keyboard-policy.test.mts",
+        "entries/B18-cmdk/tests/ime-window.test.mts"
+      ],
+      "startedAt": "2026-11-10T14:32:09.395033+00:00",
+      "finishedAt": "2026-11-10T14:32:09.493529+00:00",
+      "exitCode": 0,
+      "log": "shortcut-policy.txt"
+    },
+    {
+      "label": "shortcut-typecheck",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+      "argv": [
+        "pnpm",
+        "exec",
+        "--",
+        "tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--target",
+        "es2022",
+        "--module",
+        "esnext",
+        "--moduleResolution",
+        "bundler",
+        "--jsx",
+        "react-jsx",
+        "--strict",
+        "--skipLibCheck",
+        "--esModuleInterop",
+        "--types",
+        "vite/client,node",
+        "entries/B18-cmdk/examples/demo.tsx",
+        "entries/B18-cmdk/validation/browser-proposal.check.ts"
+      ],
+      "startedAt": "2026-11-10T14:32:09.493555+00:00",
+      "finishedAt": "2026-11-10T14:32:09.786686+00:00",
+      "exitCode": 0,
+      "log": "shortcut-typecheck.txt"
+    },
+    {
+      "label": "final-check",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "python3",
+        "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/B18-cmdk/validation/final-check.py"
+      ],
+      "startedAt": "2026-11-10T14:33:00.419719+00:00",
+      "finishedAt": "2026-11-10T14:33:00.438489+00:00",
+      "exitCode": 0,
+      "log": "final-check.txt"
+    },
+    {
+      "label": "diff-check",
+      "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+      "argv": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "packages/library-lab/entries/B18-cmdk"
+      ],
+      "startedAt": "2026-11-10T14:33:00.438517+00:00",
+      "finishedAt": "2026-11-10T14:33:00.441580+00:00",
+      "exitCode": 0,
+      "log": "diff-check.txt"
+    }
+  ]
+}

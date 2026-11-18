@@ -1,0 +1,18 @@
+{
+  "capturedAt": "2026-11-10T13:29:50.905420+00:00",
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "head": "1218066e706a90ba03fac8dff8c9b843dd2429c4",
+  "status": "",
+  "files": {
+    "AGENTS.md": "5a9f5dad6d10a71dcce574a8023a387f4634dcfc6bfc1cfd5f19ed9d34c4e720",
+    "agent.md": "27bfcea27bbc06fce299475d70d913a11b274b4400589b4465a7fd1a80912c0b",
+    "examples/checkbox.css": "35b52b2ae7739992264e037ada455bc279cd37b0c0c37601259a2b063d22f0d8",
+    "examples/demo.tsx": "254591932548c36c414610bd0d0c7ce7ef1648162f1996fbbe7381b8c1751690",
+    "examples/example.tsx": "dec2c93f4d8015f682973844e2a2d5a81be9137d73d111ee48fa2cf4d9993d14",
+    "examples/permission-policy.ts": "330f9581646768def98b907ae62a59386ee431d1bd4cf331871d6a7d8fc1c8b2",
+    "guide.md": "8c8c74406e9c4f9cb79230dca0ad52dc58112d6fe7c06d702da7a5c2a04a7735",
+    "library.json": "fca740464482d838a97b29c0080f96b4409da12fb7abb1ac0eb17ca372438a5b",
+    "tests/permission-policy.test.mts": "c93515d327b6907f6a36a328754edb8dc6b95327f6481d2fee237f0a0d0e3c49",
+    "verification.json": "f8bf27c39e08b19d8a35ea751db764e2fb15f36a69d5e45f0050f185c73ed6df"
+  }
+}

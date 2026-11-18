@@ -1,0 +1,5 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+argv=["pnpm", "exec", "biome", "check", "--write", "packages/library-lab/entries/B14-pragmatic-drag-and-drop/examples", "packages/library-lab/entries/B14-pragmatic-drag-and-drop/tests/sdk.test.mjs", "packages/library-lab/entries/B14-pragmatic-drag-and-drop/library.json", "packages/library-lab/entries/B14-pragmatic-drag-and-drop/official/source-audit.json", "packages/library-lab/e2e/quality-remediation-pragmatic.spec.ts"]
+Checked 7 files in 10ms. Fixed 3 files.
+
+exit=0

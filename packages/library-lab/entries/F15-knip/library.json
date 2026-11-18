@@ -5,14 +5,7 @@
   "name": "Knip",
   "group": "F",
   "summary": "检查 Monorepo 无用文件、导出及依赖：最小项目、业务入口与生产模式的真实 CLI 练习",
-  "tags": [
-    "Knip",
-    "CLI",
-    "Monorepo",
-    "未使用文件",
-    "unused",
-    "production"
-  ],
+  "tags": ["Knip", "CLI", "Monorepo", "未使用文件", "unused", "production"],
   "contentState": "recreated",
   "packages": [
     {
@@ -69,14 +62,9 @@
         "examples/workspace/scripts/generate.ts",
         "examples/workspace/tests/tasks.test.ts",
         "examples/report-policy.mjs",
-        "examples/report-policy.test.mjs",
         "examples/verify.mjs"
       ],
-      "capabilities": [
-        "node-process",
-        "real-cli",
-        "isolated-fixture"
-      ],
+      "capabilities": ["node-process", "real-cli", "isolated-fixture"],
       "description": "用真Knip CLI扫描原创fixture，输出unused文件/依赖，不删除源码。"
     },
     {
@@ -96,14 +84,9 @@
         "examples/workspace/scripts/generate.ts",
         "examples/workspace/tests/tasks.test.ts",
         "examples/report-policy.mjs",
-        "examples/report-policy.test.mjs",
         "examples/verify.mjs"
       ],
-      "capabilities": [
-        "node-process",
-        "real-cli",
-        "isolated-fixture"
-      ],
+      "capabilities": ["node-process", "real-cli", "isolated-fixture"],
       "description": "扩展脚本入口并限定特殊例外，观察报告如何变化。"
     },
     {
@@ -123,14 +106,9 @@
         "examples/workspace/scripts/generate.ts",
         "examples/workspace/tests/tasks.test.ts",
         "examples/report-policy.mjs",
-        "examples/report-policy.test.mjs",
         "examples/verify.mjs"
       ],
-      "capabilities": [
-        "node-process",
-        "real-cli",
-        "isolated-fixture"
-      ],
+      "capabilities": ["node-process", "real-cli", "isolated-fixture"],
       "description": "标注production entry/project，开启entry exports检查，不与测试依赖混淆。"
     }
   ],
@@ -140,6 +118,26 @@
   },
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
-    "note": "2026-10-27复核当前官方文档后新增独立示例。实际CLI、SDK、浏览器和依赖构建仍待执行。"
+    "note": "真实Knip6.41.0仅扫描原创隔离fixture，三场景exit1分别3/3/5发现项；原始JSON与自建解析policy分开，正式无receipt仍NOT_RUN。"
+  },
+  "official": {
+    "readme": {
+      "repository": "webpro-nl/knip",
+      "commit": "13d7f21e8ec5b30d8fe6d8377c9012b9db96f871",
+      "path": "packages/knip/README.md",
+      "sourceUrl": "https://github.com/webpro-nl/knip/blob/13d7f21e8ec5b30d8fe6d8377c9012b9db96f871/packages/knip/README.md",
+      "snapshotPath": "official/readme.md",
+      "sha256": "d0e6ca051dd8f51a9564bcee254805fbb8bd0da6b37aab2cef51eae36ba1ce57",
+      "language": "en",
+      "version": "6.41.0",
+      "syncedAt": "2026-11-17T19:01:10.994668+00:00"
+    },
+    "homepage": {
+      "url": "https://knip.dev/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-17T19:01:10.994668+00:00",
+      "reason": "初次urllib GET403，curl实际GET最终200无XFO/CSP，原始头保存official/homepage.headers；无Lab-origin嵌入确认保持unknown。"
+    }
   }
 }

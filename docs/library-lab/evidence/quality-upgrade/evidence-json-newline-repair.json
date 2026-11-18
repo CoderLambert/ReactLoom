@@ -1,0 +1,147 @@
+{
+  "checkedAt": "2026-11-10T16:29:56.033124+00:00",
+  "scope": "Controller evidence JSON formatting; no runtime/test input or result change, no browser rerun",
+  "fixed": [
+    {
+      "path": "docs/library-lab/evidence/quality-upgrade/candidate-07/browser-recharts-retry-binding.json",
+      "preservedOriginal": "docs/library-lab/evidence/quality-upgrade/candidate-07/browser-recharts-retry-binding.json.before-newline-fix",
+      "beforeSha256": "e0d6b03c50ee33b61e7b135a4c42c48f537c57f32268c400c701c3db3ca0dacd",
+      "afterSha256": "a19efc01613aa9773058a14efddd1f2ba5441f4eb70906d908101dc77a2e1111",
+      "change": "Only literal trailing backslash-n replaced with a real newline; decoded binding object unchanged."
+    },
+    {
+      "path": "docs/library-lab/evidence/quality-upgrade/candidate-08/browser-initial-binding.json",
+      "preservedOriginal": "docs/library-lab/evidence/quality-upgrade/candidate-08/browser-initial-binding.json.before-newline-fix",
+      "beforeSha256": "58a844a0489fd3add4178479e020ac409af6fa99f77a192eb6ef17414baa46a3",
+      "afterSha256": "fcbeb321e2be16a1f7614032dd5e409c95eac8522617fd5c762d4df1bf633391",
+      "change": "Only literal trailing backslash-n replaced with a real newline; decoded binding object unchanged."
+    },
+    {
+      "path": "docs/library-lab/evidence/quality-upgrade/candidate-08/browser-g6-retry-binding.json",
+      "preservedOriginal": "docs/library-lab/evidence/quality-upgrade/candidate-08/browser-g6-retry-binding.json.before-newline-fix",
+      "beforeSha256": "93aefb283df19402745991a356c8b3118930103e2a26118072ef6b9edde6d04a",
+      "afterSha256": "79a9ab6fb34b21aa22f6975544ea3720f5f073a4d33d81f662102f2925eb7cf2",
+      "change": "Only literal trailing backslash-n replaced with a real newline; decoded binding object unchanged."
+    },
+    {
+      "path": "docs/library-lab/evidence/quality-upgrade/candidate-09/browser-initial-binding.json",
+      "preservedOriginal": "docs/library-lab/evidence/quality-upgrade/candidate-09/browser-initial-binding.json.before-newline-fix",
+      "beforeSha256": "2e4d018f895624bc3840b4903763c5329a872679178fc96c0744a9d0b96274d2",
+      "afterSha256": "d376b252c0512e468aae0e73e1ed263a7d43291fedbf2aa54434ac4a8b404049",
+      "change": "Only literal trailing backslash-n replaced with a real newline; decoded binding object unchanged."
+    },
+    {
+      "path": "docs/library-lab/evidence/quality-upgrade/candidate-09/browser-maps-retry-binding.json",
+      "preservedOriginal": "docs/library-lab/evidence/quality-upgrade/candidate-09/browser-maps-retry-binding.json.before-newline-fix",
+      "beforeSha256": "686da9487be6c625b8fe6781425a12893255c5e92efb1660711cca46658eeb4c",
+      "afterSha256": "2c32c3254e7a33c39ba1fcc2b827d0c1b1c82ddee77d81f51404d9ef08fccc1d",
+      "change": "Only literal trailing backslash-n replaced with a real newline; decoded binding object unchanged."
+    },
+    {
+      "path": "docs/library-lab/evidence/quality-upgrade/candidate-10/browser-binding.json",
+      "preservedOriginal": "docs/library-lab/evidence/quality-upgrade/candidate-10/browser-binding.json.before-newline-fix",
+      "beforeSha256": "42ce07715c5388469a0d8b07cadb49db51734d1d8ba10b7b6921b3defb6acc79",
+      "afterSha256": "edd952592f7786a03fe14b92b38040214f1ef151a7235198d36b7e794f69846c",
+      "change": "Only literal trailing backslash-n replaced with a real newline; decoded binding object unchanged."
+    },
+    {
+      "path": "docs/library-lab/evidence/quality-upgrade/candidate-10/browser-locators-retry-binding.json",
+      "preservedOriginal": "docs/library-lab/evidence/quality-upgrade/candidate-10/browser-locators-retry-binding.json.before-newline-fix",
+      "beforeSha256": "42ab0a76f6d7c798380de55fd7bb29bf8b346a5740dcdfbbc13a31b9168c6463",
+      "afterSha256": "f8c2cce7a162b1aa40be565befde5135778c64477c7e8278e186aa5136ce430d",
+      "change": "Only literal trailing backslash-n replaced with a real newline; decoded binding object unchanged."
+    },
+    {
+      "path": "docs/library-lab/evidence/quality-upgrade/candidate-10/browser-ant-search-retry-binding.json",
+      "preservedOriginal": "docs/library-lab/evidence/quality-upgrade/candidate-10/browser-ant-search-retry-binding.json.before-newline-fix",
+      "beforeSha256": "1e78e667d01448dc45c889eaac81c9e17cab23f0494045cc0404efa146627e23",
+      "afterSha256": "088ca6fcb1dba738c5c6604b209ac2a442ae3f5db67dbef23b824bddd16fead8",
+      "change": "Only literal trailing backslash-n replaced with a real newline; decoded binding object unchanged."
+    },
+    {
+      "path": "docs/library-lab/evidence/quality-upgrade/candidate-10/browser-mui-binding.json",
+      "preservedOriginal": "docs/library-lab/evidence/quality-upgrade/candidate-10/browser-mui-binding.json.before-newline-fix",
+      "beforeSha256": "93a7e1f3bc4bd1bc24f53eda289f27a0731b65ed776d901ed75ce47c5e453fd9",
+      "afterSha256": "f60b843c68ff01318b2723304dce1ccc178497315feee56a2f51074cc7065c48",
+      "change": "Only literal trailing backslash-n replaced with a real newline; decoded binding object unchanged."
+    },
+    {
+      "path": "docs/library-lab/evidence/quality-upgrade/candidate-11/browser-fixes-binding.json",
+      "preservedOriginal": "docs/library-lab/evidence/quality-upgrade/candidate-11/browser-fixes-binding.json.before-newline-fix",
+      "beforeSha256": "6badfa769266f8b3d46139b7f84bc0b3c602b8efe094b27d15b263b52179a514",
+      "afterSha256": "a21f58150970e14440df8be29a7180dc57fa5d3bcbd51452f51a788db8187af6",
+      "change": "Only literal trailing backslash-n replaced with a real newline; decoded binding object unchanged."
+    },
+    {
+      "path": "docs/library-lab/evidence/quality-upgrade/candidate-11/browser-mantine-status-retry-binding.json",
+      "preservedOriginal": "docs/library-lab/evidence/quality-upgrade/candidate-11/browser-mantine-status-retry-binding.json.before-newline-fix",
+      "beforeSha256": "a70b039025d78b8038b22ff987bccaf4a4492f7a15b37bb85756c33f5e1e6e0f",
+      "afterSha256": "8ac37abe28ab957c9d86fdd511bf89e9e6cb0335cf9ac0f30d666a8c6ce6b6c8",
+      "change": "Only literal trailing backslash-n replaced with a real newline; decoded binding object unchanged."
+    },
+    {
+      "path": "docs/library-lab/evidence/quality-upgrade/candidate-12/browser-binding.json",
+      "preservedOriginal": "docs/library-lab/evidence/quality-upgrade/candidate-12/browser-binding.json.before-newline-fix",
+      "beforeSha256": "29bab8ca3c064785348dc88c199e1c0b74d77636960f8ffc30c84f8303fb2838",
+      "afterSha256": "532667da0b074f27310ef9c7b7677f7704fe2e937d3f001c553284be7fd99d12",
+      "change": "Only literal trailing backslash-n replaced with a real newline; decoded binding object unchanged."
+    },
+    {
+      "path": "docs/library-lab/evidence/quality-upgrade/candidate-12/browser-observation-retry-binding.json",
+      "preservedOriginal": "docs/library-lab/evidence/quality-upgrade/candidate-12/browser-observation-retry-binding.json.before-newline-fix",
+      "beforeSha256": "9c42d93ecb6d9c638b737a3e7c777ee8a346f2459493fbed2c206fc7b8fb221c",
+      "afterSha256": "1fb695b1bfad4713bb1ad9c2b4e5ad5aa7f78ff9a522f2c2041080bcbcec2311",
+      "change": "Only literal trailing backslash-n replaced with a real newline; decoded binding object unchanged."
+    },
+    {
+      "path": "docs/library-lab/evidence/quality-upgrade/candidate-13/browser-binding.json",
+      "preservedOriginal": "docs/library-lab/evidence/quality-upgrade/candidate-13/browser-binding.json.before-newline-fix",
+      "beforeSha256": "585a979068fe69cd56dd70eb2837caa1754a1149df3f757b3fd4cf46618ad047",
+      "afterSha256": "029c36a12ab5b36406c7d0953ce81aaba750562d31efdefd888c225535faa200",
+      "change": "Only literal trailing backslash-n replaced with a real newline; decoded binding object unchanged."
+    },
+    {
+      "path": "docs/library-lab/evidence/quality-upgrade/candidate-14/browser-binding.json",
+      "preservedOriginal": "docs/library-lab/evidence/quality-upgrade/candidate-14/browser-binding.json.before-newline-fix",
+      "beforeSha256": "327e522926e491839613d1d55515c552436eabdd33377c847798a0b7064bcc49",
+      "afterSha256": "511a53a3c6b3082e330ef8f2c2aecd7ef6a9e0c543ffc220204c7ebea0d8762b",
+      "change": "Only literal trailing backslash-n replaced with a real newline; decoded binding object unchanged."
+    },
+    {
+      "path": "docs/library-lab/evidence/quality-upgrade/candidate-15/browser-binding.json",
+      "preservedOriginal": "docs/library-lab/evidence/quality-upgrade/candidate-15/browser-binding.json.before-newline-fix",
+      "beforeSha256": "fcdc67bb9ac553f5f22773b1da4657ff2073c91613852b416864ea6709ab5078",
+      "afterSha256": "ce37abf01205cf98a8d820cbd173e9157a1fd7b1e25db5b6455f34dda6438abc",
+      "change": "Only literal trailing backslash-n replaced with a real newline; decoded binding object unchanged."
+    },
+    {
+      "path": "docs/library-lab/evidence/quality-upgrade/candidate-16/browser-binding.json",
+      "preservedOriginal": "docs/library-lab/evidence/quality-upgrade/candidate-16/browser-binding.json.before-newline-fix",
+      "beforeSha256": "97b471f98c1deb4e503704e5c75773bf47722760628d766410140e6b6136b2a7",
+      "afterSha256": "6de9c811267a9d1a0f8a307a31d4b37a3abb782abad4b2c9b20371eb79eba35d",
+      "change": "Only literal trailing backslash-n replaced with a real newline; decoded binding object unchanged."
+    },
+    {
+      "path": "docs/library-lab/evidence/quality-upgrade/candidate-16/browser-observation-retry-binding.json",
+      "preservedOriginal": "docs/library-lab/evidence/quality-upgrade/candidate-16/browser-observation-retry-binding.json.before-newline-fix",
+      "beforeSha256": "d6a7a0e962f9f468fc9fdab9bde7bfb053194ec18d65d7cbe14409ae158ae12e",
+      "afterSha256": "6cd79880fd40ebba436e1f9923af67c9cd3863c53648c59ac28b8337708b71ad",
+      "change": "Only literal trailing backslash-n replaced with a real newline; decoded binding object unchanged."
+    },
+    {
+      "path": "docs/library-lab/evidence/quality-upgrade/candidate-16/browser-targeted-observation-retry-binding.json",
+      "preservedOriginal": "docs/library-lab/evidence/quality-upgrade/candidate-16/browser-targeted-observation-retry-binding.json.before-newline-fix",
+      "beforeSha256": "16d0da3ee61cbdbb7c0ac7e337d15386462b1460eff70b1aaf5c600301e8aa09",
+      "afterSha256": "22b6203a68be6af82117b4473ea19a162f6312bae946a71c2d4cdbac581b3089",
+      "change": "Only literal trailing backslash-n replaced with a real newline; decoded binding object unchanged."
+    },
+    {
+      "path": "docs/library-lab/evidence/quality-upgrade/candidate-16/browser-external-update-record-binding.json",
+      "preservedOriginal": "docs/library-lab/evidence/quality-upgrade/candidate-16/browser-external-update-record-binding.json.before-newline-fix",
+      "beforeSha256": "003657ae25e83010a5f9b24af2d6cf1448a8515ebdace3912f80ca13c2d0f71b",
+      "afterSha256": "0cd8fd3f95f91b9422252be958d78ca247c0caed132adebb7e29d751e89fba4d",
+      "change": "Only literal trailing backslash-n replaced with a real newline; decoded binding object unchanged."
+    }
+  ],
+  "unexpected": []
+}

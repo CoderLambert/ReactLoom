@@ -1,0 +1,15 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['node', 'entries/C15-dayjs/validation/metadata-check.mjs']
+startedAt: 2026-11-10T17:25:18.453177+00:00
+exit: 0
+{
+  "metadata": [],
+  "sourceFiles": 7,
+  "demos": 3,
+  "installedFiles": 14,
+  "installedVersion": "1.11.23",
+  "sourceManifestVersion": "0.0.0-development",
+  "readme": "Chinese3882B",
+  "homepage": "unknown; actual iframe NOT_RUN",
+  "formal": "NOT_RUN"
+}

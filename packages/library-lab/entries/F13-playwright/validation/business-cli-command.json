@@ -1,0 +1,13 @@
+{
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab",
+  "argv": [
+    "pnpm",
+    "exec",
+    "playwright",
+    "test",
+    "--config=entries/F13-playwright/examples/playwright.config.ts",
+    "entries/F13-playwright/examples/business.spec.ts"
+  ],
+  "exitCode": 0,
+  "at": "2026-11-17T18:59:55.639802+00:00"
+}

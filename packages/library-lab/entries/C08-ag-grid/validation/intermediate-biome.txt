@@ -1,0 +1,2 @@
+{"cwd": "/home/lambert/githubRepos/lambert/ReactLoom", "argv": ["pnpm", "exec", "biome", "check", "--write", "packages/library-lab/entries/C08-ag-grid/examples", "packages/library-lab/entries/C08-ag-grid/library.json"], "utc": "2026-11-10T15:33:59.364023+00:00", "exit": 0}
+Checked 8 files in 13ms. Fixed 7 files.

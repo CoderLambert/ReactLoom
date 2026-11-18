@@ -1,0 +1,16 @@
+[
+  {
+    "name": "first-typecheck",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "typecheck"
+    ],
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "startedAt": "2026-11-10T09:34:20.758236+00:00",
+    "finishedAt": "2026-11-10T09:34:22.488322+00:00",
+    "exitCode": 1,
+    "log": "docs/library-lab/evidence/quality-upgrade/first-typecheck.txt"
+  }
+]

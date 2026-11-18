@@ -1,0 +1,8 @@
+{
+  "argv": [
+    "node",
+    "packages/library-lab/entries/F03-papaparse/validation/fetch-official.mjs"
+  ],
+  "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+  "exitCode": 0
+}

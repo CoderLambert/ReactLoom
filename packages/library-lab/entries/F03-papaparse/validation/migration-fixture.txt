@@ -1,0 +1,2 @@
+import CSV from "./example"; export const consumer=<CSV level="business"/>;
+{"compilerOptions": {"target": "ES2022", "module": "ESNext", "moduleResolution": "Bundler", "jsx": "react-jsx", "strict": true, "noEmit": true, "skipLibCheck": true, "types": ["react", "react-dom", "node"], "lib": ["ES2022", "DOM"]}, "include": ["*.tsx", "*.ts", "*.mts"]}

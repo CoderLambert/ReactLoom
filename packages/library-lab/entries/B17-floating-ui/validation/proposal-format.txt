@@ -1,0 +1,285 @@
+CWD: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+ARGV: ["pnpm", "exec", "--", "biome", "check", "--write", "--stdin-file-path=entries/B17-floating-ui/validation/browser-proposal.ts"]
+START: 2026-11-10T10:48:10.995695+00:00
+END: 2026-11-10T10:48:11.224727+00:00
+EXIT: 0
+STDOUT:
+// Proposal only. Copy into the shared Playwright suite after root review.
+// Run against a production candidate containing these entry inputs.
+// No SDK mocks, route interception, forced styles or synthetic positioning results.
+import { expect, type Page, test } from '@playwright/test'
+
+async function start(page: Page, level: 'basic' | 'business' | 'advanced') {
+  await page.goto(`/libraries/floating-ui?tab=demo&example=${level}`)
+  return page.getByRole('region', { name: 'Floating UI 真实交互示例' })
+}
+async function position(page: Page) {
+  return JSON.parse((await page.getByTestId('b17-position').textContent()) || '{}')
+}
+
+test('@B17 real anchor movement flips and shifts inside the actual element boundary', async ({
+  page,
+}) => {
+  const region = await start(page, 'basic')
+  const boundary = region.getByTestId('b17-boundary')
+  await region.getByText('查看真实定位结果', { exact: true }).click()
+  await boundary.scrollIntoViewIfNeeded()
+  await region.getByRole('button', { name: '打开详情', exact: true }).click()
+  const dialog = page.getByRole('dialog', { name: '文章浮层', exact: true })
+  await expect(dialog).toHaveAttribute('data-positioned', 'true')
+  await expect.poll(async () => (await position(page)).resolvedPlacement).toBe('bottom-start')
+  const before = await dialog.boundingBox()
+  await dialog.getByRole('combobox', { name: '锚点位置' }).selectOption('bottom-right')
+  await expect.poll(async () => (await position(page)).resolvedPlacement).toBe('top-start')
+  await expect.poll(async () => (await position(page)).shift?.x).toBeLessThan(0)
+  expect((await position(page)).requestedPlacement).toBe('bottom-start')
+  await expect
+    .poll(async () => {
+      const b = await boundary.boundingBox(),
+        f = await dialog.boundingBox()
+      if (!b || !f || !before) return false
+      return (
+        Math.abs(f.y - before.y) > 2 &&
+        f.x >= b.x + 11 &&
+        f.y >= b.y + 11 &&
+        f.x + f.width <= b.x + b.width - 11 &&
+        f.y + f.height <= b.y + b.height - 11
+      )
+    })
+    .toBe(true)
+  await expect(region.getByTestId('b17-lifecycle')).toHaveAttribute('data-active', '1')
+  await dialog.getByRole('button', { name: '确认并关闭', exact: true }).click()
+  await expect(dialog).toHaveCount(0)
+  await expect(region.getByTestId('b17-trigger')).toBeFocused()
+  await expect(region.getByTestId('b17-lifecycle')).toHaveAttribute('data-active', '0')
+  await expect
+    .poll(async () => {
+      const m = region.getByTestId('b17-lifecycle')
+      return (
+        Number(await m.getAttribute('data-started')) - Number(await m.getAttribute('data-cleaned'))
+      )
+    })
+    .toBe(0)
+})
+
+test('@B17 keyboard opens, Escape returns focus, nonmodal Tab respects the outside target', async ({
+  page,
+}) => {
+  const region = await start(page, 'basic')
+  const trigger = region.getByTestId('b17-trigger')
+  await trigger.press('Enter')
+  const dialog = page.getByRole('dialog', { name: '文章浮层', exact: true })
+  await expect(dialog.getByRole('combobox', { name: '首选方向' })).toBeFocused()
+  await page.keyboard.press('Escape')
+  await expect(dialog).toHaveCount(0)
+  await expect(trigger).toBeFocused()
+  await trigger.press('Enter')
+  await expect(dialog.getByRole('combobox', { name: '首选方向' })).toBeFocused()
+  await page.keyboard.press('Tab')
+  await expect(dialog.getByRole('combobox', { name: '锚点位置' })).toBeFocused()
+  await page.keyboard.press('Tab')
+  await expect(dialog.getByRole('button', { name: '确认并关闭', exact: true })).toBeFocused()
+  await page.keyboard.press('Tab')
+  await expect(region.getByTestId('b17-outside')).toBeFocused()
+  await expect(dialog).toHaveCount(0)
+  await expect(region.getByTestId('b17-lifecycle')).toHaveAttribute('data-active', '0')
+  await trigger.click()
+  await expect(dialog).toBeVisible()
+  await region.getByTestId('b17-outside').click()
+  await expect(dialog).toHaveCount(0)
+  await expect(region.getByTestId('b17-outside')).toBeFocused()
+})
+
+test('@B17 real scroll recomputes position and host unmount removes the portaled dialog', async ({
+  page,
+}) => {
+  const errors: string[] = []
+  page.on('pageerror', (error) => errors.push(error.message))
+  const region = await start(page, 'advanced')
+  const trigger = region.getByRole('button', { name: /编辑过滤条件/u })
+  await trigger.click()
+  const dialog = page.getByRole('dialog', { name: '过滤条件', exact: true })
+  await expect(dialog.getByRole('textbox', { name: '筛选关键词' })).toBeFocused()
+  await expect(dialog).toHaveAttribute('data-positioned', 'true')
+  const old = await dialog.boundingBox()
+  await region.getByTestId('b17-boundary').evaluate((el) => {
+    el.scrollTop += 24
+  })
+  await expect
+    .poll(async () => {
+      const next = await dialog.boundingBox()
+      return old && next ? Math.abs(next.y - old.y) : 0
+    })
+    .toBeGreaterThan(2)
+  await page.getByRole('tab', { name: 'Agent 指南', exact: true }).click()
+  await expect(dialog).toHaveCount(0)
+  await expect(region).toHaveCount(0)
+  await page.evaluate(() => window.dispatchEvent(new Event('resize')))
+  expect(errors).toEqual([])
+})
+
+// Reuse existing @B17 p0 composition/229/Escape/filter test unchanged.
+// Required business and native Clipboard cases are included below.
+// Clipboard must use actual browser permissions/API; do not turn a mocked writeText into a PASS.
+// Close counters observe actual autoUpdate cleanup calls. Unmount assertions cover Portal teardown;
+// separate native observer/listener instrumentation is needed if root wants per-resource detach counts.
+
+// Business coverage is required. Both tests below remain NOT_RUN until root runs them.
+test('@B17 business actions toggle independent state and survive closing/reopening', async ({
+  page,
+}) => {
+  const region = await start(page, 'business')
+  const trigger = region.getByRole('button', { name: /新闻操作/u })
+  const dialog = page.getByRole('dialog', { name: '文章浮层', exact: true })
+  await expect(region).toContainText('未收藏 · 未读')
+  await trigger.click()
+  await dialog.getByRole('button', { name: '加入稍后阅读', exact: true }).click()
+  await expect(dialog).toHaveCount(0)
+  await expect(trigger).toBeFocused()
+  await expect(region).toContainText('已稍后阅读 · 未读')
+  await trigger.click()
+  await expect(dialog.getByRole('button', { name: '移出稍后阅读', exact: true })).toBeVisible()
+  await dialog.getByRole('button', { name: '标记已读', exact: true }).click()
+  await expect(dialog).toHaveCount(0)
+  await expect(region).toContainText('已稍后阅读 · 已读')
+  await trigger.click()
+  await expect(dialog.getByRole('button', { name: '标记未读', exact: true })).toBeVisible()
+  await dialog.getByRole('button', { name: '移出稍后阅读', exact: true }).click()
+  await expect(region).toContainText('未收藏 · 已读')
+  await trigger.click()
+  await dialog.getByRole('button', { name: '标记未读', exact: true }).click()
+  await expect(region).toContainText('未收藏 · 未读')
+  await trigger.click()
+  await dialog.getByRole('button', { name: '关闭文章浮层', exact: true }).click()
+  await expect(dialog).toHaveCount(0)
+  await expect(region.getByTestId('b17-lifecycle')).toHaveAttribute('data-active', '0')
+  await trigger.click()
+  await expect(dialog.getByRole('button', { name: '加入稍后阅读', exact: true })).toBeVisible()
+  await expect(dialog.getByRole('button', { name: '标记已读', exact: true })).toBeVisible()
+})
+
+test('@B17 business copy uses real granted and denied Chromium clipboard permissions', async ({
+  page,
+  context,
+  browserName,
+}) => {
+  test.skip(
+    browserName !== 'chromium',
+    'NOT_RUN: this permission-denial recipe requires Chromium CDP; no mocked clipboard fallback',
+  )
+  const region = await start(page, 'business')
+  const available = await page.evaluate(
+    () =>
+      window.isSecureContext &&
+      typeof navigator.clipboard?.writeText === 'function' &&
+      typeof navigator.clipboard?.readText === 'function' &&
+      Boolean(navigator.permissions),
+  )
+  test.skip(!available, 'NOT_RUN: secure-context Clipboard/Permissions APIs unavailable')
+  const origin = new URL(page.url()).origin
+  const cdp = await context.newCDPSession(page)
+  try {
+    const { targetInfo } = await cdp.send('Target.getTargetInfo')
+    const browserContextId = targetInfo.browserContextId
+    test.skip(
+      !browserContextId,
+      'NOT_RUN: cannot scope native permission changes to this isolated test context',
+    )
+    try {
+      await context.grantPermissions(['clipboard-read', 'clipboard-write'], { origin })
+    } catch (error) {
+      test.skip(
+        true,
+        `NOT_RUN: browser cannot grant actual Clipboard permissions: ${String(error)}`,
+      )
+    }
+    const clipboardWritePermission = () =>
+      page.evaluate(async () => {
+        try {
+          return (await navigator.permissions.query({ name: 'clipboard-write' as PermissionName }))
+            .state
+        } catch {
+          return null
+        }
+      })
+    const granted = await clipboardWritePermission()
+    test.skip(granted === null, 'NOT_RUN: native clipboard-write permission query unsupported')
+    expect(granted).toBe('granted')
+    const trigger = region.getByRole('button', { name: /新闻操作/u })
+    const dialog = page.getByRole('dialog', { name: '文章浮层', exact: true })
+    await trigger.click()
+    await dialog.getByRole('button', { name: '复制示例引用到剪贴板', exact: true }).click()
+    await expect(dialog).toHaveCount(0)
+    await expect(region.getByRole('status')).toContainText('已复制示例引用')
+    await expect(trigger).toBeFocused()
+    const actualClipboard = await page.evaluate(() => navigator.clipboard.readText())
+    expect(actualClipboard).toBe('ReactLoom Library Lab / Floating UI 示例新闻引用（本地教学数据）')
+    const lastSuccessfulSelection = (await region.getByRole('status').innerText()).split(
+      '；定位策略：',
+    )[0]
+    // Real permission-manager overrides, scoped to this isolated browser context.
+    // Deny both sanitized and unsanitized writes; never replace navigator.clipboard.
+    try {
+      for (const allowWithoutSanitization of [false, true]) {
+        await cdp.send('Browser.setPermission', {
+          permission: { name: 'clipboard-write', allowWithoutSanitization },
+          setting: 'denied',
+          origin,
+          browserContextId,
+        })
+      }
+    } catch (error) {
+      test.skip(true, `NOT_RUN: native Clipboard denial override unsupported: ${String(error)}`)
+    }
+    await expect.poll(clipboardWritePermission).toBe('denied')
+    await trigger.click()
+    await dialog.getByRole('button', { name: '复制示例引用到剪贴板', exact: true }).click()
+    await expect(dialog).toBeVisible()
+    await expect(dialog.getByRole('alert')).toContainText('复制未成功')
+    // Previous successful history may remain; denied copy must not create a new success/close.
+    await expect(region.getByRole('status')).toContainText(lastSuccessfulSelection)
+    await dialog.getByRole('button', { name: '关闭文章浮层', exact: true }).click()
+    await trigger.click()
+    await expect(dialog.getByRole('alert')).toHaveCount(0)
+    await expect(
+      dialog.getByRole('button', { name: '复制示例引用到剪贴板', exact: true }),
+    ).toBeVisible()
+  } finally {
+    await context.clearPermissions()
+    await cdp.detach()
+  }
+})
+
+test('@B17 advanced committed filtering changes actual rows and releases non-Enter confirmation', async ({
+  page,
+}) => {
+  const region = await start(page, 'advanced')
+  const trigger = region.getByRole('button', { name: /编辑过滤条件/u })
+  const dialog = page.getByRole('dialog', { name: '过滤条件', exact: true })
+  await expect(region.getByRole('listitem')).toHaveCount(4)
+  await trigger.click()
+  const input = dialog.getByRole('textbox', { name: '筛选关键词', exact: true })
+  await input.fill('React')
+  await expect(region.getByRole('listitem')).toHaveCount(4)
+  // Controlled DOM event sequence exercises the actual handlers, not the SDK or a fake result.
+  // Candidate confirmation ends without an Enter keyup; a subsequent ordinary character
+  // must clear trailing suppression instead of swallowing the next normal Enter.
+  await input.dispatchEvent('compositionstart')
+  await input.dispatchEvent('compositionend')
+  await input.press('Space')
+  await input.press('Enter')
+  await expect(dialog).toHaveCount(0)
+  await expect(trigger).toBeFocused()
+  await expect(region.getByRole('listitem')).toHaveCount(1)
+  await expect(region.getByRole('listitem')).toHaveText(['React 浮层焦点管理'])
+  await trigger.click()
+  await input.fill('没有匹配的词')
+  await dialog.getByRole('button', { name: '应用过滤', exact: true }).click()
+  await expect(region.getByRole('listitem')).toHaveCount(0)
+  await trigger.click()
+  await input.fill('')
+  await dialog.getByRole('button', { name: '应用过滤', exact: true }).click()
+  await expect(region.getByRole('listitem')).toHaveCount(4)
+})
+
+STDERR:

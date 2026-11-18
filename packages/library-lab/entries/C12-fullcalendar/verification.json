@@ -1,14 +1,14 @@
 {
   "sdk": {
     "status": "NOT_RUN",
-    "note": "真实 SDK import/行为测试已写，待安装依赖并执行"
+    "note": "正式NOT_RUN；本地SDK2为真实v7共享插件/locale及FullCalendar formatDate，policy4另记；不证明Calendar DOM/drop/resize/revert。"
   },
   "build": {
     "status": "NOT_RUN",
-    "note": "待平台执行 TypeScript 和生产构建"
+    "note": "正式NOT_RUN；局部入口与完整提案strict通过，主控candidate17共享type/build/catalog0另记，不当独立正式收据。"
   },
   "browser": {
     "status": "NOT_RUN",
-    "note": "待真实 Chromium 交互、卸载和可访问性测试"
+    "note": "正式NOT_RUN；本地candidate17 basic/business受影响完整retry各1PASS，advanced原PASS和官网PASS复用=3目标+官方4PASS；非作者六项复核无遗留P1/P2。原两FAIL/诊断scope保留，六源未改。见local-validation和browser-completion-binding。"
   }
 }

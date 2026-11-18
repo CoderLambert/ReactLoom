@@ -1,46 +1,27 @@
-# A09 Excalidraw — 工程手册
+# A09 Excalidraw 工程入口
 
-## 适用
+`@excalidraw/excalidraw@0.18.1`嵌入手绘白板，MIT包。当前recreated，历史来源保留，不继承PASS。先读实际example.tsx/scene-policy.ts和verification。CSS与非零容器高度必需；无服务器保存、模型或协作。
 
-`@excalidraw/excalidraw@0.18.1` 做手绘白板。可执行节点用 A06，文本流程用 A08，可编程无限画布先核对 A10 的许可证。不要把箭头当成工作流引擎，也不要用 0.18.0。
+## 当前三个目标
 
-## 版本
+- basic：SDK矩形工具真实指针绘制、撤销；a09-count和a09-scene读取实际非删除元素，160ms后派生，不回写场景。
+- business：convertToExcalidrawElements创建3矩形/3绑定文字/2箭头，正常初始8元素。重置清空；恢复生成新骨架和新ID，不是保存快照。
+- advanced：真实loadFromBlob受限导入，失败保留原图后可重试；exportToBlob输出PNG长边最多2048。只读同时锁SDK和应用写按钮，切换作废在途结果。
 
-钉 0.18.1，MIT 嵌入包。必须导入 `index.css`。容器高度非零。`langCode="zh-CN"`，`autoFocus={false}`，`handleKeyboardGlobally={false}`。字体自托管不是当前示例的实现，生产要在模块加载前设置 `EXCALIDRAW_ASSET_PATH`。
+复制example.tsx、scene-policy.ts、styles.css；demo.tsx仅Lab重导出。导入官方index.css。langCode=zh-CN、autoFocus=false、handleKeyboardGlobally=false保留。initialData一次性，之后用API。本地恢复/导入captureUpdate=IMMEDIATELY；远端更新不要照抄撤销策略。
 
-## 迁移
+## 清理和输入政策
 
-删掉 `readyPromise` 和把 API 当作 ref 的写法，只留 `excalidrawAPI`。`initialData` 只在挂载时生效；换场景用 `updateScene` 或更换组件 key。远程更新选择 `captureUpdate`，避免全部进入本地撤销栈。安全补丁低于 0.18.1 的版本不要留。
+API由0.18.1 SDK构造函数交付；私有candidate仅用于StrictMode effect重放恢复，active apiRef在inactive时清空，mounted为false时不能回写或安排报告。卸载增加operationId、清报告/下载timer、撤销自有URL；不清全站存储。
 
-## 不可删的清理
+导入先非空/扩展名/1.5MB，再真实SDK解析；最多200元素，无附件/图片/嵌入/其它非白名单类型，链接只接受无凭据HTTPS。这不是完整安全schema或域名审核。validateEmbeddable=false阻止SDK嵌入路径；本例导入政策不等于原生编辑器所有功能都禁用。
 
-卸载时递增 `operationId`、清空 API ref、撤销 Blob URL、清除下载和防抖定时器。导入和导出完成时比对代数、挂载标志和 API 身份，不一致就丢弃结果。`onLinkOpen` 拒绝非 https 或带凭据的链接。
+只读ref同步阻断写入口，勾选/取消时递增代数，in-flight导入/导出失效；readonly下载仍可用。操作完成前检查token/mounted/API身份，导入还查当前readonly。忽略是丢弃结果，不中止SDK内部工作。PNG空图拒绝，导出错误显示，URL约2秒后释放。
 
-## 反例
+## 精确观察和验收
 
-```tsx
-<Excalidraw initialData={{ elements }} onChange={setElements} /> // 错：把初始值当受控源
-// 对：onChange 只更新 ref 或防抖计数；更换场景调用 updateScene
-```
+根a09-workshop含data-level/readOnly对应data-readonly、data-working。a09-count、a09-status、a09-scene（展开“查看当前元素身份、位置与文字”后读取JSON），画布容器a09-canvas。SDK真实工具标识toolbar-rectangle，实际Canvas为canvas.interactive。控件“重置当前画布”“恢复流程草图”“只读演示”“下载 PNG”“导入 .excalidraw 文件”“忽略当前导入或导出”。
 
-高度为 0、持久化整份 appState、每个指针事件 PUT、导入不限制大小，都不要做。
+validation/browser-proposal.txt提供真实绘图/转换骨架/合法与拒绝导入/PNG字节/只读与在途结果/卸载提案。主控接公共测试执行；未实跑不能填browser PASS。5项纯政策不是SDK验收。当前普通Node导入被open-color.json缺import attribute阻挡，没有为此改loader/依赖或mock SDK；Vite浏览器另验，不把Node边界冒充画布失败。
 
-## 测试断言
-
-`sceneImportError` 拒绝错误扩展名、空文件、超过 1.5 MB、超过 200 元素、不安全链接和任何附件。`isSafeSceneLink` 只接受无用户信息的 https。SDK 收据还要看到真实 `Excalidraw`、`convertToExcalidrawElements`、`exportToBlob` 和 `loadFromBlob`。没有 runs 收据则为 NOT_RUN。
-
-## 真实限制
-
-没有服务器 revision。只读只是 `viewModeEnabled`。教学导入不接受图片附件。宿主若不重挂载，`initialData` 不会随 level 更新。PNG 上限 2048，不是视口保证。没有协作和 FPS 数字。
-
-## 断言边界
-
-`tests/scene-policy.test.mts` 不打开编辑器。SDK 用例要导入 `Excalidraw`、`convertToExcalidrawElements`、`exportToBlob` 和 `loadFromBlob`。空场景不导出。代数变化后的导入不得 `updateScene`。缺收据时保持 NOT_RUN。`initialData` 不是受控值；宿主不重挂载时要用 `updateScene`。版本保持 0.18.1 或更高修复版。
-
-## 证据
-
-Actions `41779873259` 的仓库级 install、typecheck、build、52 SDK 文件（153 测试）和 45 Playwright 不是 A09 PASS。不要把导入策略测试或历史研究 PASS 写入 `verification.json`。
-
-对照 `library.json` 的版本编写 import，不要升到条目未钉死的版本。
-`tests/` 中的策略用例不能改写成 sdk 字段的 PASS。
-浏览器与构建未留下收据时，对应字段维持 NOT_RUN。
+官方目标包README固定a2ec2889babf7d2295469c6d90ebe77fae57df84，en、1631字节，7候选无中文，metadata含path/version/time/hash。官网docs现重定向plus.excalidraw.com/docs/sdk，完整头无XFO/CSP，未知iframe，unknown。assets当前NOT_RUN：默认远程字体，未自托管、未实测字体/中文/PNG；旧BLOCKED不能充当当前失败证据。完整六项/cwd/command/exit/log见local-validation，formal保持NOT_RUN。

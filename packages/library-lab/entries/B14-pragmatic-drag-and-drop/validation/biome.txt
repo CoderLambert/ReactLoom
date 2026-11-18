@@ -1,0 +1,177 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+argv=["pnpm", "exec", "biome", "check", "--write", "packages/library-lab/entries/B14-pragmatic-drag-and-drop/examples", "packages/library-lab/entries/B14-pragmatic-drag-and-drop/tests"]
+Skipped 16 suggested fixes.
+If you wish to apply the suggested (unsafe) fixes, use the command biome check --write --unsafe
+
+Checked 6 files in 12ms. Fixed 6 files.
+Found 8 infos.
+packages/library-lab/entries/B14-pragmatic-drag-and-drop/examples/example.tsx:101:21 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+     99 │       <button
+    100 │         type="button"
+  > 101 │         aria-label={'上移 ' + item.title}
+        │                     ^^^^^^^^^^^^^^^^^^^^
+    102 │         disabled={!canMoveUp}
+    103 │         onClick={() => move(item.id, -1)}
+  
+  i Unsafe fix: Use a template literal.
+  
+     99  99 │         <button
+    100 100 │           type="button"
+    101     │ - ········aria-label={'上移·'·+·item.title}
+        101 │ + ········aria-label={`上移·${item.title}`}
+    102 102 │           disabled={!canMoveUp}
+    103 103 │           onClick={() => move(item.id, -1)}
+  
+
+packages/library-lab/entries/B14-pragmatic-drag-and-drop/examples/example.tsx:109:21 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    107 │       <button
+    108 │         type="button"
+  > 109 │         aria-label={'下移 ' + item.title}
+        │                     ^^^^^^^^^^^^^^^^^^^^
+    110 │         disabled={!canMoveDown}
+    111 │         onClick={() => move(item.id, 1)}
+  
+  i Unsafe fix: Use a template literal.
+  
+    107 107 │         <button
+    108 108 │           type="button"
+    109     │ - ········aria-label={'下移·'·+·item.title}
+        109 │ + ········aria-label={`下移·${item.title}`}
+    110 110 │           disabled={!canMoveDown}
+    111 111 │           onClick={() => move(item.id, 1)}
+  
+
+packages/library-lab/entries/B14-pragmatic-drag-and-drop/examples/example.tsx:141:17 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    139 │       next.every((item, index) => item.id === itemsRef.current[index].id)
+    140 │     ) {
+  > 141 │       setStatus(message + '；顺序未改变')
+        │                 ^^^^^^^^^^^^^^^^^^^^^^^^
+    142 │       return
+    143 │     }
+  
+  i Unsafe fix: Use a template literal.
+  
+    139 139 │         next.every((item, index) => item.id === itemsRef.current[index].id)
+    140 140 │       ) {
+    141     │ - ······setStatus(message·+·'；顺序未改变')
+        141 │ + ······setStatus(`${message}；顺序未改变`)
+    142 142 │         return
+    143 143 │       }
+  
+
+packages/library-lab/entries/B14-pragmatic-drag-and-drop/examples/example.tsx:163:7 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    161 │     commit(
+    162 │       level === 'basic' ? [...reordered, ...all.slice(3)] : reordered,
+  > 163 │       visible[source].title + ' → 第' + (target + 1) + '位',
+        │       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    164 │     )
+    165 │   }
+  
+  i Unsafe fix: Use a template literal.
+  
+    161 161 │       commit(
+    162 162 │         level === 'basic' ? [...reordered, ...all.slice(3)] : reordered,
+    163     │ - ······visible[source].title·+·'·→·第'·+·(target·+·1)·+·'位',
+        163 │ + ······`${visible[source].title}·→·第${target·+·1}位`,
+    164 164 │       )
+    165 165 │     }
+  
+
+packages/library-lab/entries/B14-pragmatic-drag-and-drop/tests/pinned-order.test.mjs:17:8 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    15 │   ['fixed', fixed],
+    16 │ ]) {
+  > 17 │   test(name + ': pinned source and destination cannot move', () => {
+       │        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    18 │     assert.equal(canReorderAroundPinned(items, 2, 1), false)
+    19 │     assert.equal(canReorderAroundPinned(items, 1, 2), false)
+  
+  i Unsafe fix: Use a template literal.
+  
+    15 15 │     ['fixed', fixed],
+    16 16 │   ]) {
+    17    │ - ··test(name·+·':·pinned·source·and·destination·cannot·move',·()·=>·{
+       17 │ + ··test(`${name}:·pinned·source·and·destination·cannot·move`,·()·=>·{
+    18 18 │       assert.equal(canReorderAroundPinned(items, 2, 1), false)
+    19 19 │       assert.equal(canReorderAroundPinned(items, 1, 2), false)
+  
+
+packages/library-lab/entries/B14-pragmatic-drag-and-drop/tests/pinned-order.test.mjs:21:8 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    19 │     assert.equal(canReorderAroundPinned(items, 1, 2), false)
+    20 │   })
+  > 21 │   test(name + ': cannot cross pinned slots in either direction', () => {
+       │        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    22 │     for (const [from, to] of [
+    23 │       [0, 4],
+  
+  i Unsafe fix: Use a template literal.
+  
+    19 19 │       assert.equal(canReorderAroundPinned(items, 1, 2), false)
+    20 20 │     })
+    21    │ - ··test(name·+·':·cannot·cross·pinned·slots·in·either·direction',·()·=>·{
+       21 │ + ··test(`${name}:·cannot·cross·pinned·slots·in·either·direction`,·()·=>·{
+    22 22 │       for (const [from, to] of [
+    23 23 │         [0, 4],
+  
+
+packages/library-lab/entries/B14-pragmatic-drag-and-drop/tests/pinned-order.test.mjs:30:8 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    28 │       assert.equal(canReorderAroundPinned(items, from, to), false)
+    29 │   })
+  > 30 │   test(name + ': can move inside each unlocked segment', () => {
+       │        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    31 │     assert.equal(canReorderAroundPinned(items, 0, 1), true)
+    32 │     assert.equal(canReorderAroundPinned(items, 4, 3), true)
+  
+  i Unsafe fix: Use a template literal.
+  
+    28 28 │         assert.equal(canReorderAroundPinned(items, from, to), false)
+    29 29 │     })
+    30    │ - ··test(name·+·':·can·move·inside·each·unlocked·segment',·()·=>·{
+       30 │ + ··test(`${name}:·can·move·inside·each·unlocked·segment`,·()·=>·{
+    31 31 │       assert.equal(canReorderAroundPinned(items, 0, 1), true)
+    32 32 │       assert.equal(canReorderAroundPinned(items, 4, 3), true)
+  
+
+packages/library-lab/entries/B14-pragmatic-drag-and-drop/tests/pinned-order.test.mjs:34:8 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    32 │     assert.equal(canReorderAroundPinned(items, 4, 3), true)
+    33 │   })
+  > 34 │   test(name + ': rejects invalid or no-op moves', () => {
+       │        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    35 │     for (const [from, to] of [
+    36 │       [-1, 0],
+  
+  i Unsafe fix: Use a template literal.
+  
+    32 32 │       assert.equal(canReorderAroundPinned(items, 4, 3), true)
+    33 33 │     })
+    34    │ - ··test(name·+·':·rejects·invalid·or·no-op·moves',·()·=>·{
+       34 │ + ··test(`${name}:·rejects·invalid·or·no-op·moves`,·()·=>·{
+    35 35 │       for (const [from, to] of [
+    36 36 │         [-1, 0],
+  
+
+
+exit=0

@@ -1,0 +1,6 @@
+{
+  "path": "packages/library-lab/e2e/quality-resume-react-pdf.spec.ts",
+  "before": "ece65905c706a2672df49cd5bd776f7c73bde31b6e7798c9f6908aa037c6f7ce",
+  "after": "23ac2ee1050aa6bcd8aaa9818bd4c1eed9d968854d8895077a6c5f60d0ba4130",
+  "reason": "Use combobox accessible role for zoom. Production inputs unchanged."
+}

@@ -1,50 +1,13 @@
-# F12 Vitest — 工程手册
+# F12 Vitest 5.0.5 检索迁入
 
-## 适用
+适用：纯函数、注入式请求分支、fake timers与取消竞态；真实Vitest CLI测试业务，不是HTTP连通/浏览器/IME/无障碍。固定5.0.5 MIT，Node ^22.12 || ^24 || >=26并满足Vite peer；现有依赖已安装无需改shared。
 
-可注入的函数、状态码矩阵、假时钟和「最后一次请求获胜」。不证明浏览器，也不证明后端。
+迁入vitest.config.ts + examples/domain.ts +所需三test.ts（全量五份），保持目录。配置root指向自身，include仅三文件，environment=node；不继承宿主Vite配置。domain不import Vitest，只有测试/配置依赖它。
 
-## 版本
+仓库根实际命令：`pnpm --filter @reactloom/library-lab exec vitest run --config entries/F12-vitest/vitest.config.ts examples/basic.test.ts --reporter=verbose`，替换basic为business/advanced。迁出cwd自己项目根，`pnpm exec vitest run --config ./vitest.config.ts examples/basic.test.ts`。Lab 的 Demo 命令同样带条目专用配置，可在 packages/library-lab 中直接运行。
 
-`vitest@5.0.5`，MIT，已经在锁文件中。不要写成尚未安装。假时钟用 `vi.useFakeTimers` 与 `advanceTimersByTimeAsync`。
+basic6验证URL；business9用进程内Response/部分double和vi.fn验证200/422/503/403/JSON形状/取消，after3写死非Retry-After；advanced4验证fake timer、晚到结果/错误与旧finally不能清新controller。真实runner总19，不另把业务policy重复计数。ts转译不是类型检查，独立strict-copy见validation。
 
-## 迁移
+保留signal调用前/请求后/JSON后检查、generation和controller身份finally，cancel重复安全但底层忽略abort可继续；组件集成者卸载需自己cancel。fake timers afterEach恢复；fixture timer和abort listener完成时清理，timer count0。不是SDK生产任务destroy或服务取消证明。URL仅HTTPS/无凭证，不是SSRF/ACL。
 
-带走 `examples/domain.ts` 和三份测试。产品代码不要 import `vitest`。用项目的请求函数替换测试里的 `vi.fn`。保留 generation，而不是只 abort。
-
-页面命令是 `pnpm exec vitest run entries/F12-vitest/examples/<file>`。网页不执行它。
-
-## 不可删的清理
-
-`afterEach` 恢复真实时钟。`createLatestRequest` 在 `finally` 里只清除仍是当前的 controller。`verifyCode` 在请求前、JSON 后都检查 signal。取消后的结果不得写成成功或字段错误。
-
-## 反例
-
-- 业务模块 import `vi`。
-- 测试请求真实主机或写入密钥。
-- 只断言 `signal.aborted`。
-- 用真实 `setTimeout` 等竞态。
-- 把 503 收成 ok。
-- 解析后不再看 signal。
-- 假时钟泄漏到下一个文件。
-- 把 `new Response` 说成网络已通。
-- 一个文件通过就填三条 PASS。
-- 用 Node 结果代替 Playwright 或 axe。
-
-## 测试断言
-
-- hash 被去掉，query 保留；`javascript:`、`http:`、带密码、非法字符串抛错。
-- 200 / 422 / 503 的对象完全相等，且 request 只调用一次。
-- 200 的错误形状抛 `Invalid JSON shape`。
-- 已取消时不调用 request；解析中取消得到 AbortError。
-- 旧定时器结果为 null，新结果为 `value-2`。
-- 忽略 abort 的晚到成功仍是 null。
-- 活动错误抛出，取消后的错误为 null。
-
-## 真实限制
-
-没有组件、没有 MSW、没有浏览器模式。503 的 `after: 3` 是夹具，不是 Retry-After 解析。URL 规则不检查内网地址。
-
-## 证据
-
-三条命令都要各自的收据，放在 `docs/library-lab/evidence/runs/`。锁文件里有 Vitest 只说明版本在。Actions 41779873259 不是 F12 PASS。browser 保持 NOT_RUN。
+official固定7a825db…原字节README/LICENSE/包字段；无中文候选en。官网实200但XFO DENY所以blocked。实际CLI6/9/4、迁入编译和Biome证据local-validation，正式NOT_RUN；网页仅源码/命令展示，由主控检查，不启动CLI。

@@ -1,0 +1,28 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+argv: ['node', '--test', 'entries/C14-date-fns/tests/sdk.test.mjs']
+startedAt: 2026-11-10T16:51:48.634208+00:00
+exit: 1
+✖ actual shared TZDate calendar parser rejects overflow and preserves years below 100 (10.583013ms)
+✔ actual shared scheduling distinguishes calendar days, elapsed hours and bounded results (1.213571ms)
+✔ actual advanced contract consumes only its explicit instant and resolves distinct fallback offsets (1.463258ms)
+✔ actual shared contract produces the same schedule under three host TZ settings (1661.087445ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 3
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2255.061312
+
+✖ failing tests:
+
+test at entries/C14-date-fns/tests/sdk.test.mjs:15:1
+✖ actual shared TZDate calendar parser rejects overflow and preserves years below 100 (10.583013ms)
+  Error: 非法日历日期：禁止自动进位（如2月30日）
+      at parseCivilDate (file:///home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C14-date-fns/examples/date-contract.ts:46:11)
+      at TestContext.<anonymous> (file:///home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/entries/C14-date-fns/tests/sdk.test.mjs:17:18)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)

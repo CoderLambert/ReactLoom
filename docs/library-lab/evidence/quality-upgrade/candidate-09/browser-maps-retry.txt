@@ -1,0 +1,16 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=pnpm exec playwright test --config=.local-evidence/quality-playwright.config.ts e2e/quality-remediation-leaflet.spec.ts e2e/quality-remediation-maplibre.spec.ts --grep @A15 actual|@A15 filter|@A16 dynamic
+
+Running 3 tests using 2 workers
+
+(node:1315591) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1315597) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 e2e/quality-remediation-leaflet.spec.ts:105:1 › @A15 filter removes only exiting layers, falls back selection and preserves camera (1.9s)
+  ✓  1 e2e/quality-remediation-leaflet.spec.ts:37:1 › @A15 actual coordinates, SVG hit, persistent popup and keyboard viewport (2.2s)
+  ✓  3 e2e/quality-remediation-maplibre.spec.ts:110:1 › @A16 dynamic GeoJSON and health reach the real renderer; resize and removal clean this instance (2.7s)
+
+  3 passed (5.1s)
+
+exitCode=0

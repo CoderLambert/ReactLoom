@@ -1,0 +1,67 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=pnpm exec playwright test --config=.local-evidence/quality-playwright.config.ts quality-remediation-order.spec.ts quality-remediation-data.spec.ts p0-risk-lifecycle.spec.ts --grep @D03|@B13|@C07|required and HTTPS|@C01 real RHF
+
+Running 14 tests using 2 workers
+
+(node:859972) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:859973) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   2 e2e/p0-risk-lifecycle.spec.ts:83:1 › @D03 real p-limit demo unmounts and restarts with fresh batch state (1.7s)
+  ✓   1 e2e/p0-risk-lifecycle.spec.ts:66:1 › @C01 real RHF field-array submission and reset preserve default values (1.8s)
+  ✓   3 e2e/quality-remediation-data.spec.ts:63:3 › @C01 required and HTTPS errors describe their actual inputs before a valid preview at 1280px (1.7s)
+  ✓   4 e2e/quality-remediation-data.spec.ts:63:3 › @C01 required and HTTPS errors describe their actual inputs before a valid preview at 390px (1.7s)
+  ✓   6 e2e/quality-remediation-order.spec.ts:20:1 › @D03 failures remain failures and cancellation leaves no queued or running tasks (3.0s)
+  ✓   5 e2e/quality-remediation-order.spec.ts:3:1 › @D03 observed concurrency follows the selected limit and actual jobs finish (4.7s)
+  ✓   7 e2e/quality-remediation-order.spec.ts:41:1 › @B13 keyboard sorting updates actual order and preserves hidden identities (1.7s)
+  ✓   9 e2e/quality-remediation-order.spec.ts:83:1 › @C07 real v9 row models drive numeric sorting and stable selection identities (1.5s)
+  ✓   8 e2e/quality-remediation-order.spec.ts:58:1 › @B13 lock rejection and undo preserve the real array and pointer drag can be cancelled (1.8s)
+  ✓  10 e2e/quality-remediation-order.spec.ts:112:1 › @C07 application filtering and client pagination show five then one matching rows (1.5s)
+  ✓  12 e2e/quality-remediation-order.spec.ts:151:3 › @D03 pinned README and checked homepage stay traceable (916ms)
+  ✓  13 e2e/quality-remediation-order.spec.ts:151:3 › @B13 pinned README and checked homepage stay traceable (909ms)
+  ✓  14 e2e/quality-remediation-order.spec.ts:151:3 › @C07 pinned README and checked homepage stay traceable (905ms)
+  ✘  11 e2e/quality-remediation-order.spec.ts:125:1 › @C07 server pagination clamps after shrinking and distinguishes 503 from empty results (6.5s)
+
+
+  1) e2e/quality-remediation-order.spec.ts:125:1 › @C07 server pagination clamps after shrinking and distinguishes 503 from empty results 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByTestId('c07-workshop').getByTestId('c07-pager')
+    Expected substring: "第 2 页"
+    Received string:    "上一页第2 / 4页下一页每页3510"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByTestId('c07-workshop').getByTestId('c07-pager') with timeout 5000ms
+      - waiting for getByTestId('c07-workshop').getByTestId('c07-pager')
+        5 × locator resolved to <div class="demo-controls" data-testid="c07-pager">…</div>
+          - unexpected value "上一页第2页（读取当前结果中）下一页每页3510"
+        9 × locator resolved to <div class="demo-controls" data-testid="c07-pager">…</div>
+          - unexpected value "上一页第2 / 4页下一页每页3510"
+
+
+      131 |   await expect(rows).toHaveCount(5)
+      132 |   await app.getByRole('button', { name: '下一页', exact: true }).click()
+    > 133 |   await expect(app.getByTestId('c07-pager')).toContainText('第 2 页')
+          |                                              ^
+      134 |   await expect(rows).toHaveCount(5)
+      135 |   await app.getByRole('button', { name: '模拟后台缩减到2条', exact: true }).click()
+      136 |   await expect(rows).toHaveCount(2)
+        at /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab/e2e/quality-remediation-order.spec.ts:133:46
+
+    Error Context: test-results/quality-remediation-order--bccae-shes-503-from-empty-results/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/quality-remediation-order--bccae-shes-503-from-empty-results/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/quality-remediation-order--bccae-shes-503-from-empty-results/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    e2e/quality-remediation-order.spec.ts:125:1 › @C07 server pagination clamps after shrinking and distinguishes 503 from empty results 
+  13 passed (16.9s)
+
+exitCode=1

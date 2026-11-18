@@ -1,0 +1,36 @@
+{
+  "repository": "katspaugh/wavesurfer.js",
+  "tag": "8.0.3",
+  "commit": "f855c0ed1d535b94384e50d6ba335550db6ed2e2",
+  "readmeCandidates": [
+    "README.md",
+    "src/reactive/README.md"
+  ],
+  "selection": "Root official English; no Chinese README in pinned tree.",
+  "license": {
+    "version": "8.0.3",
+    "license": "BSD-3-Clause"
+  },
+  "homepage": {
+    "url": "https://wavesurfer.xyz/",
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "alt-svc": "h3=\":443\"; ma=86400",
+      "cache-control": "public, max-age=0, must-revalidate",
+      "cf-cache-status": "DYNAMIC",
+      "cf-ray": "a5c0b42b08c1ae6d-CDG",
+      "content-encoding": "br",
+      "content-type": "text/html; charset=utf-8",
+      "date": "Tue, 17 Nov 2026 18:12:28 GMT",
+      "nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+      "referrer-policy": "strict-origin-when-cross-origin",
+      "report-to": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=roGqlIVNzXq6ipCsCUxKeIlxUk%2FT6yYjHjN8fTtj95q%2BnU4gXdgvDMrRXoxsj%2FZp4NAyfGOw9Wr1M8fH1zoEoU6wHktqS4U4XC7m9xaSywD4FEpdJjQbjUxAo%2FQg6Y8saQ%3D%3D\"}]}",
+      "server": "cloudflare",
+      "vary": "accept-encoding",
+      "x-content-type-options": "nosniff"
+    },
+    "bodySha256": "27e021401ba363fcdb66532a88136f4d724e4a100ae717b9d187ccf876c2a4de"
+  },
+  "checkedAt": "2026-11-17T18:12:28.197Z"
+}

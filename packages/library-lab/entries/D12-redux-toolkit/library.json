@@ -5,14 +5,7 @@
   "name": "Redux Toolkit",
   "group": "D",
   "summary": "createSlice/configureStore、团队状态隔离和响应竞态防护",
-  "tags": [
-    "Redux",
-    "状态管理",
-    "createSlice",
-    "租户隔离",
-    "异步请求",
-    "可追踪"
-  ],
+  "tags": ["Redux", "状态管理", "createSlice", "租户隔离", "异步请求", "可追踪"],
   "contentState": "recreated",
   "packages": [
     {
@@ -65,11 +58,11 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/store.mjs",
+        "examples/store.d.mts"
       ],
-      "capabilities": [
-        "timer"
-      ]
+      "capabilities": []
     },
     {
       "demoId": "business",
@@ -80,11 +73,11 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/store.mjs",
+        "examples/store.d.mts"
       ],
-      "capabilities": [
-        "timer"
-      ]
+      "capabilities": []
     },
     {
       "demoId": "advanced",
@@ -95,11 +88,11 @@
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
-        "examples/demo.tsx"
+        "examples/demo.tsx",
+        "examples/store.mjs",
+        "examples/store.d.mts"
       ],
-      "capabilities": [
-        "timer"
-      ]
+      "capabilities": ["timer"]
     }
   ],
   "license": {
@@ -109,6 +102,26 @@
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
     "mode": "recreated",
-    "note": "2026-10-27按照Redux Toolkit官方2.13.0 API实现，未在当前环境运行SDK。"
+    "note": "本轮复用原交互并将真实store提取为浏览器与SDK共享源码；正式receipt另记。"
+  },
+  "official": {
+    "readme": {
+      "repository": "reduxjs/redux-toolkit",
+      "commit": "370f7eb6403bdfdb1a2ab5b90fbcfd8eaee7d57b",
+      "path": "packages/toolkit/README.md",
+      "sha256": "ad9190021870ba6d98c4c53436d3518eaafa01ae68bfbcb21c78c08255d22fae",
+      "sourceUrl": "https://github.com/reduxjs/redux-toolkit/blob/370f7eb6403bdfdb1a2ab5b90fbcfd8eaee7d57b/packages/toolkit/README.md",
+      "snapshotPath": "official/readme.md",
+      "language": "en",
+      "version": "2.13.0",
+      "syncedAt": "2026-11-17T16:43:00.766934+00:00"
+    },
+    "homepage": {
+      "url": "https://redux-toolkit.js.org/",
+      "kind": "website",
+      "status": "unknown",
+      "checkedAt": "2026-11-17T16:43:00.766934+00:00",
+      "reason": "实际GET200，最终URL和完整响应头见official/source-evidence.json；未从Lab origin浏览器确认嵌入，保持unknown并保留官网直达。"
+    }
   }
 }

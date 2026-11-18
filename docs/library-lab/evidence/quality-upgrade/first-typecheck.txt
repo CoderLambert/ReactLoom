@@ -1,0 +1,18 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+command=pnpm --filter @reactloom/library-lab typecheck
+
+> @reactloom/library-lab@0.1.0 typecheck /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+> node scripts/generate.mjs && tsc --noEmit
+
+{"entries":119,"loaders":315}
+e2e/quality-remediation.spec.ts(143,5): error TS2322: Type '(handler: any, delay: any, ...args: any[]) => number' is not assignable to type '((handler: TimerHandler, timeout?: number | undefined, ...arguments: any[]) => number) & { (handler: TimerHandler, timeout?: number | undefined, ...arguments: any[]): number; <TArgs extends any[]>(callback: (...args: TArgs) => void, delay?: number | undefined, ...args: TArgs): Timeout; (callback: (_: void) => void, ...'.
+  Type '(handler: any, delay: any, ...args: any[]) => number' is not assignable to type '{ (handler: TimerHandler, timeout?: number | undefined, ...arguments: any[]): number; <TArgs extends any[]>(callback: (...args: TArgs) => void, delay?: number | undefined, ...args: TArgs): Timeout; (callback: (_: void) => void, delay?: number | undefined): Timeout; }'.
+    Type 'number' is not assignable to type 'Timeout'.
+e2e/quality-remediation.spec.ts(143,27): error TS7006: Parameter 'handler' implicitly has an 'any' type.
+e2e/quality-remediation.spec.ts(143,36): error TS7006: Parameter 'delay' implicitly has an 'any' type.
+e2e/quality-remediation.spec.ts(143,43): error TS7019: Rest parameter 'args' implicitly has an 'any[]' type.
+/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @reactloom/library-lab@0.1.0 typecheck: `node scripts/generate.mjs && tsc --noEmit`
+Exit status 1
+
+exitCode=1

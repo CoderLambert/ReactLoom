@@ -1,0 +1,9 @@
+cwd: /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command: Python hashlib SHA-256 comparison of node_modules/recharts/README.md and entries/A02-recharts/official/readme.md
+exit: 0
+Installed and pinned README bytes are identical: 4046 bytes; b7261f5d2719719a297a001d673f01d49363542660b408a6b8de627143adb04e
+Tag lookup executed during read-only research: git ls-remote --tags https://github.com/recharts/recharts.git v3.10.1*
+exit: 0
+e148939042fe4beb4b1c93572a020420a48f0d38 refs/tags/v3.10.1
+ffb918798051ef040bb7f9922d3850c9c189f39f refs/tags/v3.10.1^{}
+Full pinned recursive tree response: truncated=false; eight README candidates, no Chinese README.

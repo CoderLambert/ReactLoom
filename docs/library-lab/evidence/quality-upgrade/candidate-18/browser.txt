@@ -1,0 +1,21 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=pnpm exec playwright test --config=.local-evidence/quality-playwright.config.ts e2e/quality-remediation-arborist.spec.ts e2e/quality-remediation-date-fns.spec.ts e2e/quality-remediation-primitives-sources.spec.ts --grep @C11|@C14 --trace=off
+
+Running 8 tests using 2 workers
+
+(node:2189479) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2189478) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 e2e/quality-remediation-arborist.spec.ts:37:1 › @C11 default SDK rows retain ARIA, keyboard focus and real selection is cleared on restore (1.7s)
+  ✓  1 e2e/quality-remediation-arborist.spec.ts:63:1 › @C11 real HTML5 drop and separate keyboard fallback share the move contract; rename IME and delete preserve IDs (2.0s)
+  ✓  3 e2e/quality-remediation-arborist.spec.ts:130:1 › @C11 1807-node model uses a small real DOM, name search/IME, native deep scroll, resize and unmount (2.2s)
+  ✓  4 e2e/quality-remediation-date-fns.spec.ts:29:1 › @C14 basic real zoned noon, overflow recovery and session reset (3.1s)
+  ✓  5 e2e/quality-remediation-date-fns.spec.ts:75:1 › @C14 business real calendar day vs elapsed hours and result boundary (1.7s)
+  ✓  6 e2e/quality-remediation-date-fns.spec.ts:100:1 › @C14 advanced real DST fold, explicit-offset boundaries and responsive output (1.8s)
+  ✓  7 e2e/quality-remediation-primitives-sources.spec.ts:28:3 › @C11 original fixed README and evidenced homepage unknown (1.5s)
+  ✓  8 e2e/quality-remediation-primitives-sources.spec.ts:28:3 › @C14 original fixed README and evidenced homepage unknown (1.7s)
+
+  8 passed (8.9s)
+
+exitCode=0

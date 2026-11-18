@@ -1,0 +1,16 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+argv=["node", "--test", "packages/library-lab/entries/C02-zod/tests/boundary-policy.test.mjs"]
+✔ canonical fetch identity retains path/query case (0.526345ms)
+✔ credential, non-HTTPS, control and malformed URLs are invalid (0.122561ms)
+✔ duplicate detection uses canonical URL and ignores invalid URLs (3.953094ms)
+✔ OPML import metadata must be a filename, never a path (0.307849ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 42.023519
+
+exit=0

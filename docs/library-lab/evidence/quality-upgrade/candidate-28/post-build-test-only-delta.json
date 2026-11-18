@@ -1,0 +1,7 @@
+{
+  "files": {
+    "packages/library-lab/e2e/quality-resume-tiptap.spec.ts": "b8a0c062ecdb9fd6f6919a14b3821207f182e78ad4bd0dd31067a339244b855a",
+    "packages/library-lab/e2e/quality-resume-blocknote.spec.ts": "a7521f827c1faed26fa4b3149cacf72a82b91c0b6ed70e0093297d681ccf2e5b"
+  },
+  "reason": "Only selector narrowing after actual trace; runtime dist unchanged. Next batch authors released after stable build."
+}

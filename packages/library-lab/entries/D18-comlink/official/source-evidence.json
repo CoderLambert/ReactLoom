@@ -1,0 +1,16 @@
+{
+  "commit": "fd4b52666b1ec62784f8b45cb1108c7e40bc481d",
+  "readmeCandidates": [
+    "README.md",
+    "docs/examples/01-simple-example/README.md",
+    "docs/examples/02-callback-example/README.md",
+    "docs/examples/03-classes-example/README.md",
+    "docs/examples/04-eventlistener-example/README.md",
+    "docs/examples/05-serviceworker-example/README.md",
+    "docs/examples/07-sharedworker-example/README.md",
+    "docs/examples/99-nonworker-examples/iframes/README.md"
+  ],
+  "selected": "README.md",
+  "language": "en",
+  "note": "固定树未发现官方中文README则保留英文原文；lang契约中文为zh-CN。"
+}

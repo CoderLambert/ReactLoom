@@ -1,0 +1,16 @@
+{
+  "commit": "a77a3e78b59f72fa4d1c83f22e121ad9cc7d3575",
+  "treeTruncated": false,
+  "readmeCandidates": [
+    "README.md",
+    "demos/README.md",
+    "typescript/commonjs-with-no-types/types/readme.md",
+    "typescript/esm-with-no-types/types/readme.md"
+  ],
+  "selected": "README.md",
+  "language": "en",
+  "licensePaths": [
+    "LICENSE",
+    "LICENSE-MPL"
+  ]
+}

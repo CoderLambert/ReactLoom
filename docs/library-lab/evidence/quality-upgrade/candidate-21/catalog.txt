@@ -1,0 +1,11 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom
+command=pnpm --filter @reactloom/library-lab catalog:check
+
+> @reactloom/library-lab@0.1.0 catalog:check /home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+> node scripts/generate.mjs --check && node scripts/validate-dependencies.mjs
+
+{"entries":119,"loaders":309,"workers":0}
+Static dependency contract: 119 demo entries, 162 package references
+Manifest contracts consistent (installation and SDK runtime NOT verified).
+
+exitCode=0

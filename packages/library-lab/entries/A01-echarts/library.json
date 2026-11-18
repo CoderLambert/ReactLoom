@@ -4,14 +4,8 @@
   "slug": "echarts",
   "name": "Apache ECharts",
   "group": "A",
-  "summary": "业务仪表盘和多类型交互图表",
-  "tags": [
-    "Canvas",
-    "报表",
-    "ResizeObserver",
-    "时间序列",
-    "销毁"
-  ],
+  "summary": "用同一组七日指标理解option、坐标轴、系列更新、容器尺寸与播放门禁",
+  "tags": ["Canvas", "option", "坐标轴", "setOption", "ResizeObserver", "减少动态", "生命周期"],
   "contentState": "recreated",
   "packages": [
     {
@@ -21,16 +15,20 @@
   ],
   "references": [
     {
-      "title": "ECharts 官方按需引入",
-      "url": "https://echarts.apache.org/handbook/en/basics/import/"
+      "title": "官方中文按需引入",
+      "url": "https://echarts.apache.org/handbook/zh/basics/import/"
     },
     {
-      "title": "ECharts 官方实例与组件 API",
-      "url": "https://echarts.apache.org/en/api.html"
+      "title": "官方图表尺寸与销毁",
+      "url": "https://echarts.apache.org/handbook/zh/concepts/chart-size/"
     },
     {
-      "title": "官方 GitHub 仓库",
-      "url": "https://github.com/apache/echarts"
+      "title": "官方动态数据",
+      "url": "https://echarts.apache.org/handbook/zh/how-to/data/dynamic-data/"
+    },
+    {
+      "title": "6.1.0固定源码",
+      "url": "https://github.com/apache/echarts/tree/c5a48f5f97d23e5379720870b8444cd05b50ffb4"
     }
   ],
   "related": [
@@ -53,54 +51,51 @@
   "demos": [
     {
       "demoId": "basic",
-      "title": "按需注册柱状图",
+      "title": "从七日数据到柱状图",
       "level": "basic",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/reading-option.ts",
         "examples/stream-policy.ts",
+        "examples/workshop.css",
         "examples/demo.tsx"
       ],
-      "capabilities": [
-        "canvas",
-        "resize-observer"
-      ],
-      "description": "使用真实 ECharts core 绘制七天阅读量并查看 tooltip"
+      "capabilities": ["canvas", "resize-observer"],
+      "description": "为周一加5，比较同源option、Canvas与文本表格，观察同一实例setOption更新。"
     },
     {
       "demoId": "business",
-      "title": "双系列业务指标对比",
+      "title": "对照系列与整份配置替换",
       "level": "business",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/reading-option.ts",
         "examples/stream-policy.ts",
+        "examples/workshop.css",
         "examples/demo.tsx"
       ],
-      "capabilities": [
-        "canvas",
-        "resize-observer"
-      ],
-      "description": "通过一个实例组合柱形与折线，点击数据点反馈"
+      "capabilities": ["canvas", "resize-observer"],
+      "description": "显示或移除上周折线，同步图例和表格；观察notMerge:true的系列删除边界。"
     },
     {
       "demoId": "advanced",
-      "title": "增量更新、缩放及销毁",
+      "title": "播放门禁、容器缩放与回收",
       "level": "advanced",
       "executionKind": "react",
       "entryPoint": "examples/demo.tsx",
       "sourceFiles": [
         "examples/example.tsx",
+        "examples/reading-option.ts",
         "examples/stream-policy.ts",
+        "examples/workshop.css",
         "examples/demo.tsx"
       ],
-      "capabilities": [
-        "canvas",
-        "resize-observer"
-      ],
-      "description": "稳定计时器、页面隐藏与减少动态自动暂停、容器缩放及实例清理"
+      "capabilities": ["canvas", "resize-observer"],
+      "description": "保留稳定1200ms周期、隐藏/离屏/减少动态暂停、120次上限及清理；观察实际resize尺寸。"
     }
   ],
   "license": {
@@ -109,6 +104,26 @@
   },
   "provenance": {
     "originalRecovery": "ORIGINAL_RECOVERED",
-    "note": "此示例重新编写，未复用原研究包测试结论。"
+    "note": "沿用既有真实ECharts与播放/清理逻辑，依据6.1.0源码增量完善同源配置、交互和讲解；没有复用历史研究测试结论，正式收据独立。"
+  },
+  "official": {
+    "readme": {
+      "repository": "apache/echarts",
+      "commit": "c5a48f5f97d23e5379720870b8444cd05b50ffb4",
+      "path": "README.md",
+      "sha256": "8cc8864325843d975f082cba0fd4cf208093feffb03568f48f164725dab8ebf9",
+      "sourceUrl": "https://github.com/apache/echarts/blob/c5a48f5f97d23e5379720870b8444cd05b50ffb4/README.md",
+      "snapshotPath": "official/readme.md",
+      "language": "en",
+      "version": "6.1.0",
+      "syncedAt": "2026-11-10T09:41:08.524449+00:00"
+    },
+    "homepage": {
+      "url": "https://echarts.apache.org/zh/index.html",
+      "kind": "website",
+      "status": "blocked",
+      "checkedAt": "2026-11-10T09:41:08.524449+00:00",
+      "reason": "GET 200且最终URL不变；X-Frame-Options: sameorigin，Content-Security-Policy: frame-ancestors 'self'，明确禁止当前Lab跨源嵌入。完整响应头见official/source-evidence.json，保留官网直达。"
+    }
   }
 }

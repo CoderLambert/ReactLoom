@@ -1,0 +1,90 @@
+[
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "command": [
+      "node",
+      "--test",
+      "packages/library-lab/entries/D05-decimal-js/tests/sdk.test.mjs",
+      "packages/library-lab/entries/D05-decimal-js/tests/amount-policy.test.mjs"
+    ],
+    "exitCode": 0,
+    "at": "2026-11-17T16:28:31.633185+00:00",
+    "log": "validation/sdk.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "tsc",
+      "--noEmit",
+      "--strict",
+      "--skipLibCheck",
+      "--jsx",
+      "react-jsx",
+      "--module",
+      "esnext",
+      "--moduleResolution",
+      "bundler",
+      "--target",
+      "ES2022",
+      "--lib",
+      "ES2022,DOM",
+      "--allowJs",
+      "entries/D05-decimal-js/examples/example.tsx"
+    ],
+    "exitCode": 1,
+    "at": "2026-11-17T16:28:31.873935+00:00",
+    "log": "validation/types-initial.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "tsc",
+      "--ignoreConfig",
+      "--noEmit",
+      "--strict",
+      "--skipLibCheck",
+      "--jsx",
+      "react-jsx",
+      "--module",
+      "esnext",
+      "--moduleResolution",
+      "bundler",
+      "--target",
+      "ES2022",
+      "--lib",
+      "ES2022,DOM",
+      "--allowJs",
+      "entries/D05-decimal-js/examples/example.tsx"
+    ],
+    "exitCode": 0,
+    "at": "2026-11-17T16:28:42.470431+00:00",
+    "log": "validation/types.log"
+  },
+  {
+    "cwd": "/home/lambert/githubRepos/lambert/ReactLoom",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@reactloom/library-lab",
+      "exec",
+      "biome",
+      "check",
+      "--write",
+      "entries/D05-decimal-js/examples",
+      "entries/D05-decimal-js/tests",
+      "entries/D05-decimal-js/validation/browser.spec.ts",
+      "entries/D05-decimal-js/library.json",
+      "entries/D05-decimal-js/verification.json"
+    ],
+    "exitCode": 0,
+    "log": "validation/biome.log"
+  }
+]

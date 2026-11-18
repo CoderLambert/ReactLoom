@@ -1,0 +1,16 @@
+{
+  "examples/example.tsx": "79cfa81f2c58ef256583c20b85b522a77e0aaa861e9e9e253f19d260259fd218",
+  "examples/merge-model.mjs": "5f4849643b490134d1e952aba6101d7d5db3c1d1d38940cbf27f8829ac5d057c",
+  "examples/merge-model.d.mts": "bef5097c69ec81635abd31b15ca95fba7c71f90e53e18dd0da6200c5f044e168",
+  "examples/styles.css": "b2feb5a9d7227299965098ce60d536869cb8ca2f58327ea700cfa6cbf0bdb27f",
+  "examples/demo.tsx": "f2284fc30009ceaaf34ecc200ff988948d95eba2717c8cf3ec70a978a2dc4038",
+  "AGENTS.md": "818cc9ee13054f7390cc7c7461adeb520dd7b421e78f336333363d7daae2ac56",
+  "guide.md": "151f85903152c13e9a9daf103e23b411e939a73560caf14a7a6dd54a910eaaff",
+  "agent.md": "ba147fe3358d373aff2157a2796d7de190385b42a7c73e6382cdf37eaf95be9f",
+  "library.json": "a1a0701bdef5d58f4f507194e4ae6a5159a622e739a3e46c99df420002b55214",
+  "verification.json": "af5ce1be7c968f53b48b04584cf0df885acecbd82832d610dc6873060bbfb359",
+  "tests/sdk.test.mjs": "b7b19f476862e323189070e84f69a50b25febbabf6a79c92a36715e6b38cbbd9",
+  "official/readme.md": "b7686c3623d44ff744eebef1bc9a2b8ab36cee4e491d1c609fc8131e67d2f2b3",
+  "official/source-evidence.json": "94ceb7257464663f38685ea602c765529a053731147c5538be5adac2e44071c5",
+  "validation/browser-proposal.txt": "9ed05f1b247f4cba5ba817789bffa1ad28b2eb2749adf679580cb7d54367af5a"
+}

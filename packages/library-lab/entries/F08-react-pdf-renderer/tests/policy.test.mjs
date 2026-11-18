@@ -1,28 +1,38 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
-import { validatedRows } from '../examples/report-policy.mjs';
+import assert from 'node:assert/strict'
+import test from 'node:test'
+import { validatedRows } from '../examples/report-policy.mjs'
 
-const row = { id: 'react', name: 'React Notes', articles: 18 };
+const row = { id: 'react', name: 'React Notes', articles: 18 }
 test('accepts bounded fixture and strips untrusted extra fields', () => {
-  assert.deepEqual(validatedRows([{ ...row, secret: 'must not enter PDF' }]), [row]);
-});
+  assert.deepEqual(validatedRows([{ ...row, secret: 'must not enter PDF' }]), [row])
+})
 test('rejects non-record rows and wrong ID types', () => {
-  for (const value of [null, 3, [], { ...row, id: 7 }]) {
-    assert.throws(() => validatedRows([value]), Error);
+  for (const value of [null, 3, [], { ...row, id: 7 }, { ...row, id: 'K' }, { ...row, id: 'ſ' }]) {
+    assert.throws(() => validatedRows([value]), Error)
   }
-});
+})
 test('detects duplicate IDs case-insensitively', () => {
-  assert.throws(() => validatedRows([row, { ...row, id: 'REACT' }]), /Duplicate/);
-});
-test('rejects markup, non-ASCII and control characters in names', () => {
+  assert.throws(() => validatedRows([row, { ...row, id: 'REACT' }]), /Duplicate/)
+})
+test('rejects non-ASCII and control characters in names', () => {
   for (const name of ['', '中文', 'hello\nworld', 'x'.repeat(71)]) {
-    assert.throws(() => validatedRows([{ ...row, name }]), /ASCII/);
+    assert.throws(() => validatedRows([{ ...row, name }]), /ASCII/)
   }
-});
+})
 test('rejects invalid row count and unsafe numeric bounds', () => {
-  assert.throws(() => validatedRows([]), /Row count/);
-  assert.throws(() => validatedRows(Array(141).fill(row)), /Row count/);
+  assert.throws(() => validatedRows([]), /Row count/)
+  assert.throws(() => validatedRows(Array(141).fill(row)), /Row count/)
   for (const articles of [-1, 1.5, Infinity, 1_000_001]) {
-    assert.throws(() => validatedRows([{ ...row, articles }]), /article count/);
+    assert.throws(() => validatedRows([{ ...row, articles }]), /article count/)
   }
-});
+})
+
+test('100-row fixture and maximum row/name bounds are accepted', () => {
+  const input = Array.from({ length: 140 }, (_, i) => ({
+    id: `bounded-${i}`,
+    name: 'W'.repeat(70),
+    articles: 1_000_000,
+  }))
+  assert.equal(validatedRows(input).length, 140)
+  assert.equal(validatedRows(input.slice(0, 100)).length, 100)
+})

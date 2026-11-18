@@ -1,0 +1,16 @@
+cwd=/home/lambert/githubRepos/lambert/ReactLoom/packages/library-lab
+command=pnpm exec playwright test --config=.local-evidence/quality-playwright.config.ts e2e/quality-remediation-luxon.spec.ts --trace=off
+
+Running 3 tests using 2 workers
+
+(node:2219596) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2219597) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 e2e/quality-remediation-luxon.spec.ts:37:1 › @C16 explicit source zone defines noon while display-zone conversion preserves the instant; invalid input recovers (1.7s)
+  ✓  2 e2e/quality-remediation-luxon.spec.ts:72:1 › @C16 real calendar-day windows expose 23/25/24 elapsed hours, fixed-24-hour contrast and half-open bounds (1.8s)
+  ✓  3 e2e/quality-remediation-luxon.spec.ts:105:1 › @C16 real overlap candidates require a matching offset; gaps/malformed input reject, then recover and reset on remount (1.8s)
+
+  3 passed (3.9s)
+
+exitCode=0
