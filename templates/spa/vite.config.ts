@@ -12,6 +12,7 @@ import { codeInspectorPlugin } from 'code-inspector-plugin'
 import { visualizer } from 'rollup-plugin-visualizer'
 import { defineConfig, loadEnv, searchForWorkspaceRoot } from 'vite'
 import checker from 'vite-plugin-checker'
+import { resolveDevtoolsMode } from './scripts/devtools-mode'
 import { isLoopbackDevtoolsPeer } from './scripts/devtools-peer'
 
 type InspectorEditor = NonNullable<Parameters<typeof codeInspectorPlugin>[0]['editor']>
@@ -33,8 +34,10 @@ const devtoolsStub = fileURLToPath(new URL('./src/lib/devtools-stub.ts', import.
 const workflowStub = fileURLToPath(new URL('./src/lib/workflow-stub.ts', import.meta.url))
 
 export default defineConfig(({ command, mode }) => {
-  const clickToSource = command === 'serve' && process.env.VITE_DEVTOOLS !== 'false'
-  const devtoolsEnabled = loadEnv(mode, root, 'VITE_').VITE_DEVTOOLS !== 'false'
+  const { clickToSource, lighthouse: devtoolsEnabled } = resolveDevtoolsMode(
+    command,
+    loadEnv(mode, root, 'VITE_').VITE_DEVTOOLS,
+  )
   return {
     plugins: [
       // Before the React plugin so JSX keeps data-insp-path. Dev server only; production builds omit it.
