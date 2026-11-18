@@ -49,7 +49,7 @@ test('rejects an adapted documentation target and preserves its original content
   assert.equal(await readFile(path.join(generated, relative), 'utf8'), 'template documentation')
 })
 
-test('rejects existing directories and symlinks as copy targets', async (t) => {
+test('rejects existing directories and symlinks as copy targets', async () => {
   const { root, generated } = await fixture()
   await mkdir(path.join(generated, 'existing'))
   await assert.rejects(
