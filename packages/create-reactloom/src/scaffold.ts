@@ -1,4 +1,4 @@
-import { cp, mkdir, readFile, rename, rm, stat, writeFile } from 'node:fs/promises'
+import { cp, mkdir, readFile, rm, stat, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { adaptBestPractices, installAiConfig } from './ai-config.js'
@@ -6,7 +6,7 @@ import { shouldCopySafeScaffoldEntry } from './copy-filter.js'
 import { claimScaffoldDestination } from './destination.js'
 import { type DeployTarget, writeDeployFiles } from './deploy.js'
 import { runInstall } from './install.js'
-import { assertManifestCopyTargetAvailable } from './manifest-target.js'
+import { assertManifestCopyTargetAvailable, renameManifestFile } from './manifest-target.js'
 import {
   DOCKER_FILES,
   type PackageJson,
@@ -601,7 +601,7 @@ export async function scaffold(options: ScaffoldOptions): Promise<void> {
   await writeFile(path.join(options.directory, 'pnpm-workspace.yaml'), workspaceYaml(manifest))
 
   for (const [from, to] of Object.entries(manifest.rename ?? {})) {
-    await rename(path.join(options.directory, from), path.join(options.directory, to))
+    await renameManifestFile(options.directory, from, to)
   }
 
   for (const relative of manifest.replacements ?? []) {

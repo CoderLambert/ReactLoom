@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict'
-import { cp, mkdir, mkdtemp, readFile, rm, symlink, writeFile } from 'node:fs/promises'
+import { cp, lstat, mkdir, mkdtemp, readFile, rm, symlink, writeFile } from 'node:fs/promises'
 import os from 'node:os'
 import path from 'node:path'
 import { afterEach, test } from 'node:test'
-import { assertManifestCopyTargetAvailable } from './manifest-target.ts'
+import { assertManifestCopyTargetAvailable, renameManifestFile } from './manifest-target.ts'
 
 const roots = []
 
@@ -75,4 +75,52 @@ test('allows a missing manifest destination and copies the selected source', asy
   await mkdir(path.dirname(path.join(generated, relative)), { recursive: true })
   await cp(path.join(repo, relative), path.join(generated, relative))
   assert.equal(await readFile(path.join(generated, relative), 'utf8'), 'root config')
+})
+
+test('renames an SSR scaffold file when its destination is absent', async () => {
+  const { generated } = await fixture()
+  await writeFile(path.join(generated, 'Dockerfile.standalone'), 'standalone')
+  await renameManifestFile(generated, 'Dockerfile.standalone', 'Dockerfile')
+  assert.equal(await readFile(path.join(generated, 'Dockerfile'), 'utf8'), 'standalone')
+  await assert.rejects(lstat(path.join(generated, 'Dockerfile.standalone')), { code: 'ENOENT' })
+})
+
+test('refuses to overwrite an existing Dockerfile during manifest rename', async () => {
+  const { generated } = await fixture()
+  await writeFile(path.join(generated, 'Dockerfile.standalone'), 'standalone')
+  await writeFile(path.join(generated, 'Dockerfile'), 'template original')
+  await assert.rejects(
+    renameManifestFile(generated, 'Dockerfile.standalone', 'Dockerfile'),
+    /rename target already exists: Dockerfile/,
+  )
+  assert.equal(await readFile(path.join(generated, 'Dockerfile'), 'utf8'), 'template original')
+  assert.equal(await readFile(path.join(generated, 'Dockerfile.standalone'), 'utf8'), 'standalone')
+})
+
+test('refuses a manifest rename into an existing directory', async () => {
+  const { generated } = await fixture()
+  await writeFile(path.join(generated, 'Dockerfile.standalone'), 'standalone')
+  await mkdir(path.join(generated, 'Dockerfile'))
+  await assert.rejects(
+    renameManifestFile(generated, 'Dockerfile.standalone', 'Dockerfile'),
+    /rename target already exists: Dockerfile/,
+  )
+  assert.equal((await lstat(path.join(generated, 'Dockerfile'))).isDirectory(), true)
+  assert.equal(await readFile(path.join(generated, 'Dockerfile.standalone'), 'utf8'), 'standalone')
+})
+
+test('refuses a manifest rename into an existing symlink', async () => {
+  if (process.platform === 'win32') return
+  const { root, generated } = await fixture()
+  const outside = path.join(root, 'outside.txt')
+  await writeFile(outside, 'external original')
+  await writeFile(path.join(generated, 'Dockerfile.standalone'), 'standalone')
+  await symlink(outside, path.join(generated, 'Dockerfile'))
+  await assert.rejects(
+    renameManifestFile(generated, 'Dockerfile.standalone', 'Dockerfile'),
+    /rename target already exists: Dockerfile/,
+  )
+  assert.equal((await lstat(path.join(generated, 'Dockerfile'))).isSymbolicLink(), true)
+  assert.equal(await readFile(outside, 'utf8'), 'external original')
+  assert.equal(await readFile(path.join(generated, 'Dockerfile.standalone'), 'utf8'), 'standalone')
 })
