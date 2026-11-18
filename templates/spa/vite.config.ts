@@ -12,6 +12,7 @@ import { codeInspectorPlugin } from 'code-inspector-plugin'
 import { visualizer } from 'rollup-plugin-visualizer'
 import { defineConfig, loadEnv, searchForWorkspaceRoot } from 'vite'
 import checker from 'vite-plugin-checker'
+import { isLoopbackDevtoolsPeer } from './scripts/devtools-peer'
 
 type InspectorEditor = NonNullable<Parameters<typeof codeInspectorPlugin>[0]['editor']>
 
@@ -55,6 +56,7 @@ export default defineConfig(({ command, mode }) => {
           const lighthouse = createLighthouseServer(root, 'http://127.0.0.1:4317/')
           server.middlewares.use('/__reactloom/lighthouse', async (request, response) => {
             if (
+              !isLoopbackDevtoolsPeer(request.socket.remoteAddress) ||
               !isLocalDevtoolsRequest(request.headers.host ?? null, request.headers.origin ?? null)
             ) {
               response.statusCode = 404
