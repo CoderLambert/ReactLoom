@@ -1,0 +1,1 @@
+throw new Error("never precache private fixtures");

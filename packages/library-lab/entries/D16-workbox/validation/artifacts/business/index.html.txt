@@ -1,0 +1,1 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>Isolated Workbox Workshop</title><main><h1>Public offline document</h1></main></html>

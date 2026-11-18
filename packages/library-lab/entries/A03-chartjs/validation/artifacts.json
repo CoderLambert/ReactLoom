@@ -1,0 +1,26 @@
+{
+  "files": [
+    {
+      "path": ".artifacts/bar-initial.png",
+      "bytes": 7013,
+      "width": 700,
+      "height": 310,
+      "sha256": "827ee9b8d8ad014c6116b4b034d68d09c6bf87f36e3f9b9d5bf454a2ff674ee9"
+    },
+    {
+      "path": ".artifacts/bar-updated.png",
+      "bytes": 7035,
+      "width": 700,
+      "height": 310,
+      "sha256": "2b2a0f4b98284a3d7ab24cc48953ffbbf1f580002c444e1533b9515cb9080978"
+    },
+    {
+      "path": ".artifacts/line-resized.png",
+      "bytes": 13319,
+      "width": 820,
+      "height": 350,
+      "sha256": "065d32a55b066458b72da0e6aadb193dfde57e290dd92512aade8105107c37d2"
+    }
+  ],
+  "visualInspection": "bar-updated.png viewed; real bars/axes present. Native fixture lacks Chinese glyph fallback and uses a transparent canvas; not evidence of browser typography or CSS background."
+}
