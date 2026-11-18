@@ -4,6 +4,7 @@ import { POST as login, DELETE as logout, GET as readSession } from '@/app/api/s
 import { PATCH as updateTask } from '@/app/api/tasks/[id]/route'
 import { POST as createTask, GET as readTasks } from '@/app/api/tasks/route'
 import { EXPECTED_SESSION_OWNER_HEADER, EXPECTED_TASK_OWNER_HEADER } from './mutation-request'
+import { MAX_MUTATION_JSON_BYTES } from './mutation-json'
 import { readSessionToken, SESSION_COOKIE, signSession } from './session-token'
 import { type Task, tasks } from './tasks'
 
@@ -248,5 +249,36 @@ describe('sign-out identity binding', () => {
     expect(response.status).toBe(200)
     expect(response.headers.has('set-cookie')).toBe(false)
     await expect(response.json()).resolves.toEqual({ ok: true })
+  })
+})
+
+describe.each(routes.filter((route) => route.body))('$name bounded JSON body', (route) => {
+  it('returns 413 with no cookie or task side effects for an oversized payload', async () => {
+    const before = tasks.list('user-ada').map((task) => ({ ...task }))
+    const request = new Request(origin + route.path, {
+      method: route.method,
+      headers: { origin, 'content-type': 'application/json' },
+      body: JSON.stringify({ ...route.body, padding: 'x'.repeat(MAX_MUTATION_JSON_BYTES) }),
+    })
+    const response = await route.run(request)
+
+    expect(response.status).toBe(413)
+    expect(response.headers.get('cache-control')).toBe('private, no-store')
+    expect(response.headers.has('set-cookie')).toBe(false)
+    expect(tasks.list('user-ada')).toEqual(before)
+  })
+
+  it('rejects advertised oversized length before reading or mutating', async () => {
+    const before = tasks.list('user-ada').map((task) => ({ ...task }))
+    const request = requestFor(route, {
+      origin,
+      'content-length': String(MAX_MUTATION_JSON_BYTES + 1),
+    })
+    const response = await route.run(request)
+
+    expect(response.status).toBe(413)
+    expect(request.bodyUsed).toBe(false)
+    expect(response.headers.has('set-cookie')).toBe(false)
+    expect(tasks.list('user-ada')).toEqual(before)
   })
 })

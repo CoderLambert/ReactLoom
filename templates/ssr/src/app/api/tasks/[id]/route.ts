@@ -1,6 +1,7 @@
 import * as z from 'zod'
 import { mutationRequestError, taskMutationSessionError } from '@/server/mutation-request'
 import { privateJson } from '@/server/private-response'
+import { readMutationJson } from '@/server/mutation-json'
 import { readRequestSession } from '@/server/session'
 import { tasks } from '@/server/tasks'
 
@@ -14,7 +15,11 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
   const sessionError = taskMutationSessionError(request, user.id)
   if (sessionError) return sessionError
   const { id } = await context.params
-  const parsed = statusSchema.safeParse(await request.json().catch(() => null))
+  const body = await readMutationJson(request)
+  if (!body.ok && body.tooLarge) {
+    return privateJson({ message: 'Request body is too large.' }, 413)
+  }
+  const parsed = statusSchema.safeParse(body.ok ? body.data : null)
   if (!parsed.success) return privateJson({ message: 'Unknown status.' }, 400)
   const task = tasks.setStatus(user.id, id, parsed.data.status)
   if (!task) return privateJson({ message: 'Task not found.' }, 404)

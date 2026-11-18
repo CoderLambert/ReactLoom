@@ -1,6 +1,7 @@
 import * as z from 'zod'
 import { mutationRequestError, taskMutationSessionError } from '@/server/mutation-request'
 import { privateJson } from '@/server/private-response'
+import { readMutationJson } from '@/server/mutation-json'
 import { readRequestSession } from '@/server/session'
 import { tasks } from '@/server/tasks'
 
@@ -19,7 +20,11 @@ export async function POST(request: Request) {
   if (!user) return privateJson({ message: 'Sign in is required.' }, 401)
   const sessionError = taskMutationSessionError(request, user.id)
   if (sessionError) return sessionError
-  const parsed = createSchema.safeParse(await request.json().catch(() => null))
+  const body = await readMutationJson(request)
+  if (!body.ok && body.tooLarge) {
+    return privateJson({ message: 'Request body is too large.' }, 413)
+  }
+  const parsed = createSchema.safeParse(body.ok ? body.data : null)
   if (!parsed.success) return privateJson({ message: 'Give the task a title.' }, 400)
   return privateJson(tasks.create(user.id, parsed.data.title), 201)
 }

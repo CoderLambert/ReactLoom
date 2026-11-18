@@ -5,6 +5,7 @@ import {
   sessionLogoutDecision,
 } from '@/server/mutation-request'
 import { privateJson } from '@/server/private-response'
+import { readMutationJson } from '@/server/mutation-json'
 import { readRequestSession } from '@/server/session'
 import { SESSION_COOKIE, sessionCookieOptions, signSession } from '@/server/session-token'
 import { authenticate } from '@/server/tasks'
@@ -17,7 +18,11 @@ const loginSchema = z.object({
 export async function POST(request: Request) {
   const error = mutationRequestError(request, true)
   if (error) return error
-  const parsed = loginSchema.safeParse(await request.json().catch(() => null))
+  const body = await readMutationJson(request)
+  if (!body.ok && body.tooLarge) {
+    return privateJson({ message: 'Request body is too large.' }, 413)
+  }
+  const parsed = loginSchema.safeParse(body.ok ? body.data : null)
   if (!parsed.success) {
     return privateJson({ message: 'Enter a valid email and password.' }, 400)
   }
