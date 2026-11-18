@@ -49,3 +49,5 @@ Observe rejected promises from async retry/unauthorized diagnostic loggers as be
 Reject username/password userinfo embedded in the API base URL or same-origin request URLs before reading bearer credentials or reaching custom transports. URL.origin alone does not distinguish credentialed URLs.
 
 Keep caller cancellation and timeout authoritative when an injected fetch adapter synchronously throws its own ApiError after the request signal is aborted, rather than surfacing stale transport errors.
+
+Normalize rejecting custom retry schedulers to ApiError on both HTTP and transport failure retry paths, keeping the error contract consistent without starting additional fetches.

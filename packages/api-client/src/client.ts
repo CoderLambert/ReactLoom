@@ -356,7 +356,11 @@ export function createApiClient(options: ApiClientOptions) {
         return sleep(ms, retryWaitSignal)
       }),
       retryWaitSignal,
-    )
+    ).catch((cause: unknown) => {
+      // Custom retry schedulers can reject. Preserve the ApiError contract
+      // consistently for both HTTP-status and transport-failure retries.
+      throw normalizeTransportError(cause, retryWaitSignal)
+    })
   }
 
   const policy: RetryPolicy = {

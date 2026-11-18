@@ -825,6 +825,28 @@ describe('createApiClient', () => {
   })
 
   it.each(['http', 'network'] as const)(
+    'normalizes a rejecting retry scheduler after %s failures',
+    async (kind) => {
+      const fetchFn = vi.fn(async () => {
+        if (kind === 'network') throw new TypeError('transport offline')
+        return jsonResponse({ message: 'busy' }, 503)
+      })
+      const sleep = vi.fn(async () => {
+        throw new Error('retry scheduler unavailable')
+      })
+      const client = createApiClient({ baseUrl: 'https://api.test', fetchFn, sleep })
+
+      await expect(client.request('/items', schema)).rejects.toMatchObject({
+        name: 'ApiError',
+        code: 'network',
+        message: 'The network request failed.',
+      })
+      expect(fetchFn).toHaveBeenCalledOnce()
+      expect(sleep).toHaveBeenCalledOnce()
+    },
+  )
+
+  it.each(['http', 'network'] as const)(
     'cancels non-cooperative retry backoff after %s failure',
     async (kind) => {
       const controller = new AbortController()
