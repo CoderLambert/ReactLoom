@@ -22,7 +22,8 @@ export async function readMutationJson(request: Request): Promise<MutationJsonRe
       if (done) break
       bytes += value.byteLength
       if (bytes > MAX_MUTATION_JSON_BYTES) {
-        await reader.cancel().catch(() => {})
+        // An untrusted stream cancel hook can stall; return the 413 without waiting.
+        void reader.cancel().catch(() => {})
         return { ok: false, tooLarge: true }
       }
       text += decoder.decode(value, { stream: true })

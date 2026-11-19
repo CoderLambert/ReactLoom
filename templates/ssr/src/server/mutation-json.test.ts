@@ -53,6 +53,31 @@ describe('bounded mutation JSON parsing', () => {
     expect(canceled).toBe(true)
   })
 
+  it(
+    'returns an oversized response even if the stream cancellation never settles',
+    async () => {
+      let cancelCalled = false
+      const body = new ReadableStream<Uint8Array>({
+        start(controller) {
+          controller.enqueue(new Uint8Array(MAX_MUTATION_JSON_BYTES + 1))
+        },
+        cancel() {
+          cancelCalled = true
+          return new Promise<void>(() => {})
+        },
+      })
+      const request = new Request(endpoint, {
+        method: 'POST',
+        body,
+        duplex: 'half',
+      } as RequestInit & { duplex: 'half' })
+
+      await expect(readMutationJson(request)).resolves.toEqual({ ok: false, tooLarge: true })
+      expect(cancelCalled).toBe(true)
+    },
+    3_000,
+  )
+
   it('rejects the actual streamed byte count despite a forged small length', async () => {
     const request = requestWith('"' + 'x'.repeat(MAX_MUTATION_JSON_BYTES) + '"', {
       'content-length': '2',
