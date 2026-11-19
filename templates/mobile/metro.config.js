@@ -5,14 +5,10 @@ const { FileStore } = require('metro-cache')
 const { withInspector } = require('react-native-dev-inspector/metro')
 
 const projectRoot = __dirname
-const workspaceRoot = path.resolve(projectRoot, '../..')
 const config = getDefaultConfig(projectRoot)
 
-config.watchFolders = [workspaceRoot]
-config.resolver.nodeModulesPaths = [
-  path.resolve(projectRoot, 'node_modules'),
-  path.resolve(workspaceRoot, 'node_modules'),
-]
+// SDK 57's getDefaultConfig resolves pnpm monorepos automatically.
+// Manual ../.. overrides escape a detached scaffold and search unrelated parents.
 config.resolver.unstable_enableSymlinks = true
 config.cacheStores = [new FileStore({ root: path.join(projectRoot, '.metro-cache') })]
 
