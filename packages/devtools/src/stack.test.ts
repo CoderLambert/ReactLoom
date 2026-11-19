@@ -61,7 +61,6 @@ describe('parseDevStack', () => {
       column: 4,
     })
   })
-
 })
 
 describe('devInspectorPath', () => {
