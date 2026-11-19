@@ -24,6 +24,9 @@ export async function POST(request: Request) {
   if (!body.ok && body.tooLarge) {
     return privateJson({ message: 'Request body is too large.' }, 413)
   }
+  if (!body.ok && body.timedOut) {
+    return privateJson({ message: 'Request body timed out.' }, 408)
+  }
   const parsed = createSchema.safeParse(body.ok ? body.data : null)
   if (!parsed.success) return privateJson({ message: 'Give the task a title.' }, 400)
   return privateJson(tasks.create(user.id, parsed.data.title), 201)

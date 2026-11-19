@@ -19,6 +19,9 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
   if (!body.ok && body.tooLarge) {
     return privateJson({ message: 'Request body is too large.' }, 413)
   }
+  if (!body.ok && body.timedOut) {
+    return privateJson({ message: 'Request body timed out.' }, 408)
+  }
   const parsed = statusSchema.safeParse(body.ok ? body.data : null)
   if (!parsed.success) return privateJson({ message: 'Unknown status.' }, 400)
   const task = tasks.setStatus(user.id, id, parsed.data.status)

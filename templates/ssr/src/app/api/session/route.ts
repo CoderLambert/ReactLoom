@@ -22,6 +22,9 @@ export async function POST(request: Request) {
   if (!body.ok && body.tooLarge) {
     return privateJson({ message: 'Request body is too large.' }, 413)
   }
+  if (!body.ok && body.timedOut) {
+    return privateJson({ message: 'Request body timed out.' }, 408)
+  }
   const parsed = loginSchema.safeParse(body.ok ? body.data : null)
   if (!parsed.success) {
     return privateJson({ message: 'Enter a valid email and password.' }, 400)
