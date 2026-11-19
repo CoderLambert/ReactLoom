@@ -218,6 +218,25 @@ describe('task HTTP repository', () => {
     expect(paths).toEqual(['/api/tasks/one%2Ftwo'])
   })
 
+  it('rejects dot-segment task IDs before dispatching a PATCH to another route', async () => {
+    let requests = 0
+    const baseUrl = await serve((_request, response) => {
+      requests += 1
+      send(response, 200, { id: 'ok', title: 'Weave cloth', status: 'done' })
+    })
+    const repository = createTaskRepository([], {
+      baseUrl,
+      useFixtures: false,
+      session: session(),
+      invalidateSession: async () => undefined,
+    })
+
+    for (const id of ['', '.', '..']) {
+      await expect(repository.setStatus(id, 'done')).rejects.toThrow('Task ID must identify')
+    }
+    expect(requests).toBe(0)
+  })
+
   it('rejects a successful mutation response when its captured session expired in flight', async () => {
     let deliver: (response: ServerResponse) => void = () => {
       throw new Error('Not initialized')

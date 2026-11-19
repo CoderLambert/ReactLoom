@@ -1,6 +1,7 @@
 import { ApiError, createApiClient, isApiError } from '@reactloom/api-client'
 import type { Session } from '../auth/schema'
 import { type Task, taskListSchema, taskSchema, taskTitleSchema } from './schema'
+import { encodeTaskIdSegment } from './task-id'
 
 export type { Task } from './schema'
 
@@ -73,7 +74,7 @@ export function createTaskRepository(initial: Task[] = [], options?: RepositoryO
     setStatus: (id: string, status: Task['status'], signal?: AbortSignal) =>
       request(async () => {
         if (api) {
-          return api.request(`/api/tasks/${encodeURIComponent(id)}`, taskSchema, {
+          return api.request(`/api/tasks/${encodeTaskIdSegment(id)}`, taskSchema, {
             method: 'PATCH',
             body: { status },
             signal,
