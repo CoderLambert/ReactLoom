@@ -40,6 +40,28 @@ describe('parseDevStack', () => {
     expect(frames[0]).toMatchObject({ file: 'app/tasks.tsx', line: 12, column: 4 })
     expect(frames[1]).toMatchObject({ file: 'app/index.tsx', line: 8, column: 2 })
   })
+
+  it('never exposes traversal or external absolute stack paths to click-to-source', () => {
+    const frames = parseDevStack(
+      [
+        '    at Escape (http://127.0.0.1:4317/src/../../private.ts:10:5)',
+        '    at Outside (/tmp/private.ts:3:2)',
+        String.raw`    at Outside (C:\Temp\private.ts:8:2)`,
+        '    at Safe (http://127.0.0.1:4317/src/features/tasks.tsx:12:4)',
+      ].join('\n'),
+    )
+    expect(frames.slice(0, 3).map((frame) => frame.file)).toEqual([
+      undefined,
+      undefined,
+      undefined,
+    ])
+    expect(frames[3]).toMatchObject({
+      file: 'src/features/tasks.tsx',
+      line: 12,
+      column: 4,
+    })
+  })
+
 })
 
 describe('devInspectorPath', () => {

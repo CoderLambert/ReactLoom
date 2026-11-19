@@ -42,6 +42,14 @@ function projectFile(rawFile: string): string | undefined {
   if (unwrapped.includes('node_modules')) return undefined
   const embedded = unwrapped.match(/(?:^|\/)((?:src|app)\/.+)$/)
   const file = embedded?.[1] ?? unwrapped
+  // Error stacks are not trusted file locations. Keep click-to-source paths
+  // relative to the project, not traversal or arbitrary absolute filesystem paths.
+  if (
+    file.split(/[\\/]/).includes('..') ||
+    (!embedded && (/^[\\/]/.test(file) || /^[A-Za-z]:[\\/]/.test(file)))
+  ) {
+    return undefined
+  }
   if (!/\.(tsx?|jsx?|mjs|cjs)$/.test(file)) return undefined
   if (file.includes('node_modules')) return undefined
   return file
