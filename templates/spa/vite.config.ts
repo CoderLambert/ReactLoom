@@ -133,7 +133,8 @@ export default defineConfig(({ command, mode }) => {
       devSourcemap: true,
     },
     build: {
-      sourcemap: true,
+      // Production dist/ is public; never emit browser-accessible source maps.
+      sourcemap: false,
       rollupOptions: {
         output: {
           manualChunks(id) {

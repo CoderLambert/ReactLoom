@@ -2,10 +2,21 @@ import { readdir, readFile, stat } from 'node:fs/promises'
 import path from 'node:path'
 import { gzipSync } from 'node:zlib'
 
-const distAssets = path.resolve('dist/assets')
+const distDir = path.resolve('dist')
+const distAssets = path.join(distDir, 'assets')
 const budgets = {
   totalJsGzip: 550 * 1024,
   largestJsGzip: 280 * 1024,
+}
+
+// Vite's dist/ is commonly published as-is. A forgotten .map in any nested
+// asset directory would expose original source even without a sourceMappingURL.
+const sourceMaps = (await readdir(distDir, { recursive: true })).filter((file) =>
+  file.endsWith('.map'),
+)
+if (sourceMaps.length > 0) {
+  console.error(`Source maps must not be included in the public dist/: ${sourceMaps.join(', ')}`)
+  process.exit(1)
 }
 
 const files = await readdir(distAssets)
