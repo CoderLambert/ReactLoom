@@ -142,3 +142,56 @@ test('releases streaming 503 responses before retrying a preview readiness probe
     )
   }
 })
+
+
+test('accepts a healthy response even if its body cancellation never settles', async () => {
+  const originalFetch = globalThis.fetch
+  let cancelCalls = 0
+  globalThis.fetch = async () => ({
+    ok: true,
+    body: {
+      cancel: () => {
+        cancelCalls += 1
+        return new Promise(() => {})
+      },
+    },
+  })
+  let guard
+  try {
+    await Promise.race([
+      waitForUrl('http://127.0.0.1:4317/', { timeoutMs: 50, retryDelayMs: 1 }),
+      new Promise((_, reject) => {
+        guard = setTimeout(() => reject(new Error('2xx cleanup blocked readiness')), 500)
+      }),
+    ])
+    assert.equal(cancelCalls, 1)
+  } finally {
+    clearTimeout(guard)
+    globalThis.fetch = originalFetch
+  }
+})
+
+test('enforces the startup deadline when an unhealthy body cancel never settles', async () => {
+  const originalFetch = globalThis.fetch
+  let probes = 0
+  globalThis.fetch = async () => {
+    probes += 1
+    return { ok: false, body: { cancel: () => new Promise(() => {}) } }
+  }
+  let guard
+  try {
+    await assert.rejects(
+      Promise.race([
+        waitForUrl('http://127.0.0.1:4317/', { timeoutMs: 60, retryDelayMs: 1 }),
+        new Promise((_, reject) => {
+          guard = setTimeout(() => reject(new Error('non-2xx cleanup exceeded deadline')), 500)
+        }),
+      ]),
+      /Timed out waiting for/,
+    )
+    assert.equal(probes, 1)
+  } finally {
+    clearTimeout(guard)
+    globalThis.fetch = originalFetch
+  }
+})
