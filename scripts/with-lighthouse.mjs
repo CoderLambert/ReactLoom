@@ -83,23 +83,45 @@ export async function waitForUrl(target, { timeoutMs = 60_000, retryDelayMs = 50
   const deadline = Date.now() + timeoutMs
   while (Date.now() < deadline) {
     const remainingMs = Math.max(1, deadline - Date.now())
+    const probeSignal = AbortSignal.timeout(remainingMs)
     try {
       const response = await fetch(target, {
         redirect: 'manual',
-        signal: AbortSignal.timeout(remainingMs),
+        signal: probeSignal,
       })
-      // A 3xx redirect, 401/403 auth failure, 404, or rate limit is not
-      // evidence that the intended Lighthouse target is ready.
+      // A redirect or a non-2xx response is not evidence of readiness.
       const ready = response.ok
-      // Fetch resolves after headers; a failed preview may stream its body
-      // indefinitely. Release the unread stream before another poll so each
-      // retry does not retain a separate HTTP connection.
-      try {
-        await response.body?.cancel()
-      } catch {
-        // Cancellation can race the probe deadline; status remains authoritative.
+      if (ready) {
+        // A successful status is already sufficient. A noncooperative body
+        // cancel must not indefinitely hold a healthy preview's readiness.
+        try {
+          void response.body?.cancel().catch(() => undefined)
+        } catch {
+          // Body cleanup is best-effort after a successful status.
+        }
+        return
       }
-      if (ready) return
+      // Await stream cleanup before another probe to avoid leaking sockets,
+      // but never await longer than this probe's remaining startup deadline.
+      try {
+        const cancellation = response.body?.cancel()
+        if (cancellation) {
+          await new Promise((resolve) => {
+            let done = false
+            const finish = () => {
+              if (done) return
+              done = true
+              probeSignal.removeEventListener('abort', finish)
+              resolve(undefined)
+            }
+            probeSignal.addEventListener('abort', finish, { once: true })
+            void cancellation.then(finish, finish)
+            if (probeSignal.aborted) finish()
+          })
+        }
+      } catch {
+        // A failed stream cleanup must not change the HTTP readiness result.
+      }
     } catch {
       // The server is still starting or a stalled probe reached the deadline.
     }
