@@ -12,7 +12,7 @@ async function withBuild(run) {
   const directory = await mkdtemp(path.join(os.tmpdir(), 'reactloom-dist-'))
   try {
     await mkdir(path.join(directory, 'dist/assets'), { recursive: true })
-    await writeFile(path.join(directory, 'dist/assets/app.js'), 'console.log("safe bundle")\\n')
+    await writeFile(path.join(directory, 'dist/assets/app.js'), 'console.log("safe bundle")\n')
     await run(directory)
   } finally {
     await rm(directory, { recursive: true, force: true })
@@ -37,7 +37,7 @@ test('rejects publicly deployable JavaScript source maps', async () => {
     const result = check(directory)
     assert.equal(result.status, 1, result.stdout)
     assert.match(result.stderr, /Source maps must not be included/)
-    assert.match(result.stderr, /assets\\/app\\.js\\.map/)
+    assert.match(result.stderr, /assets\/app\.js\.map/)
   })
 })
 
@@ -47,6 +47,6 @@ test('rejects nested source maps even if no JavaScript sourceMappingURL points t
     await writeFile(path.join(directory, 'dist/assets/nested/app.css.map'), '{}')
     const result = check(directory)
     assert.equal(result.status, 1, result.stdout)
-    assert.match(result.stderr, /nested\\/app\\.css\\.map/)
+    assert.match(result.stderr, /nested\/app\.css\.map/)
   })
 })
