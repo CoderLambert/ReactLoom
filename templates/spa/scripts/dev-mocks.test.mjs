@@ -47,7 +47,9 @@ test('a worker startup that never resolves cannot block app boot', async (t) => 
   let stopped = 0
   const result = startOptionalDevMocks(() => new Promise(() => {}), {
     timeoutMs: 15,
-    stop: () => { stopped += 1 },
+    stop: () => {
+      stopped += 1
+    },
   })
   await result
   assert.equal(warn.mock.callCount(), 1)
@@ -58,10 +60,14 @@ test('stops worker that starts after fallback to prevent late interception', asy
   const warn = t.mock.method(console, 'warn', () => {})
   let finish = () => {}
   let stopped = 0
-  const pending = new Promise((resolve) => { finish = resolve })
+  const pending = new Promise((resolve) => {
+    finish = resolve
+  })
   await startOptionalDevMocks(() => pending, {
     timeoutMs: 15,
-    stop: () => { stopped += 1 },
+    stop: () => {
+      stopped += 1
+    },
   })
   assert.equal(warn.mock.callCount(), 1)
   assert.equal(stopped, 0)
@@ -74,7 +80,9 @@ test('stops worker that starts after fallback to prevent late interception', asy
 test('handles late worker rejection without unhandled rejection or retry', async (t) => {
   const warn = t.mock.method(console, 'warn', () => {})
   let fail = () => {}
-  const pending = new Promise((_resolve, reject) => { fail = reject })
+  const pending = new Promise((_resolve, reject) => {
+    fail = reject
+  })
   await startOptionalDevMocks(() => pending, { timeoutMs: 15 })
   fail(new Error('secret URL after startup deadline'))
   await Promise.resolve()
@@ -86,7 +94,9 @@ test('fast worker startup preserves the normal wait and never stops it', async (
   let stopped = 0
   await startOptionalDevMocks(async () => {}, {
     timeoutMs: 15,
-    stop: () => { stopped += 1 },
+    stop: () => {
+      stopped += 1
+    },
   })
   assert.equal(stopped, 0)
   assert.equal(warn.mock.callCount(), 0)
