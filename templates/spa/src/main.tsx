@@ -61,14 +61,19 @@ const TanStackRouterDevtoolsPanel = showDevtools
 async function boot() {
   await initMonitoring(env.VITE_SENTRY_DSN)
   if (env.VITE_ENABLE_MSW === 'true' && import.meta.env.DEV) {
-    await startOptionalDevMocks(async () => {
-      const { worker } = await import('@/mocks/browser')
-      await worker.start({
-        serviceWorker: { url: '/mockServiceWorker.js' },
-        // Let page navigation and third-party devtool checks reach their server.
-        onUnhandledFrame: 'bypass',
-      })
-    })
+    let stopWorker: (() => void) | undefined
+    await startOptionalDevMocks(
+      async () => {
+        const { worker } = await import('@/mocks/browser')
+        stopWorker = () => worker.stop()
+        await worker.start({
+          serviceWorker: { url: '/mockServiceWorker.js' },
+          // Let page navigation and third-party devtool checks reach their server.
+          onUnhandledFrame: 'bypass',
+        })
+      },
+      { stop: () => stopWorker?.() },
+    )
   }
 
   const root = document.getElementById('root')
