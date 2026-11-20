@@ -28,15 +28,22 @@ export async function readMutationJson(
   const deadline = new Promise<true>((resolve) => {
     timer = setTimeout(() => resolve(true), maxDurationMs)
   })
+  // A client disconnect must release a pending read without waiting for the
+  // full deadline. Do not await stream cancellation: it can remain pending.
+  let onAbort: (() => void) | undefined
+  const aborted = new Promise<true>((resolve) => {
+    onAbort = () => resolve(true)
+    request.signal.addEventListener('abort', onAbort, { once: true })
+  })
+  const interrupted = (): MutationJsonResult => {
+    void reader.cancel().catch(() => {})
+    return { ok: false, tooLarge: false, timedOut: true }
+  }
   try {
+    if (request.signal.aborted) return interrupted()
     while (true) {
-      const chunk = await Promise.race([reader.read(), deadline])
-      if (chunk === true) {
-        // Cancellation may itself never settle; neither it nor a silent client
-        // may delay the timeout response. Handle a future rejection explicitly.
-        void reader.cancel().catch(() => {})
-        return { ok: false, tooLarge: false, timedOut: true }
-      }
+      const chunk = await Promise.race([aborted, reader.read(), deadline])
+      if (chunk === true || request.signal.aborted) return interrupted()
       if (chunk.done) break
       bytes += chunk.value.byteLength
       if (bytes > MAX_MUTATION_JSON_BYTES) {
@@ -46,11 +53,13 @@ export async function readMutationJson(
       text += decoder.decode(chunk.value, { stream: true })
     }
     text += decoder.decode()
+    if (request.signal.aborted) return interrupted()
     return { ok: true, data: JSON.parse(text) }
   } catch {
     return { ok: false, tooLarge: false }
   } finally {
     clearTimeout(timer)
+    if (onAbort) request.signal.removeEventListener('abort', onAbort)
     reader.releaseLock()
   }
 }
