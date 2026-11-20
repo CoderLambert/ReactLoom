@@ -2,13 +2,6 @@
   "id": "mobile",
   "description": "Expo Router template with a secure-store session and the shared API client.",
   "strip": ["template.json"],
-  "replacements": [
-    {
-      "file": "metro.config.js",
-      "from": "path.resolve(projectRoot, '../..')",
-      "to": "projectRoot"
-    }
-  ],
   "packages": {
     "api-client": true,
     "devtools": true,
