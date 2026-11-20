@@ -121,5 +121,4 @@ describe('bounded mutation JSON streaming duration', () => {
     ])
     expect(completion).toEqual({ ok: false, tooLarge: false, timedOut: true })
   })
-
 })
