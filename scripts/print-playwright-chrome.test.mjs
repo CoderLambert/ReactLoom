@@ -1,6 +1,14 @@
 import assert from 'node:assert/strict'
 import { spawnSync } from 'node:child_process'
-import { copyFileSync, existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import {
+  copyFileSync,
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { test } from 'node:test'
@@ -97,3 +105,38 @@ test('unexpected template selector fails without resolving arbitrary directories
     assert.match(result.stderr, /Expected a template name/)
   })
 })
+
+test(
+  'Lighthouse CI fails the step on Chromium resolver errors without exporting an empty path',
+  { skip: process.platform === 'win32' },
+  () => {
+    const workflow = readFileSync(
+      fileURLToPath(new URL('../.github/workflows/ci.yml', import.meta.url)),
+      'utf8',
+    )
+    const step = workflow.match(
+      /      - name: Point Lighthouse at Playwright Chromium\n        run: \|\n((?: {10}.*\n)+)/,
+    )?.[1]
+    assert.ok(step, 'the Lighthouse Chromium step must be a multiline shell command')
+    const command = step.replace(/^ {10}/gm, '').trim().replaceAll('${{ matrix.name }}', 'spa')
+    const invocation = 'node scripts/print-playwright-chrome.mjs spa'
+    assert.ok(command.includes(invocation), 'the step must resolve the template browser')
+    withFixture((root) => {
+      const envFile = join(root, 'github-env')
+      const simulate = (resolver) =>
+        spawnSync(
+          'bash',
+          ['-e', '-o', 'pipefail', '-c', command.replace(invocation, resolver)],
+          { env: { ...process.env, GITHUB_ENV: envFile }, encoding: 'utf8' },
+        )
+      const failed = simulate(`${JSON.stringify(process.execPath)} -e 'process.exit(23)'`)
+      assert.equal(failed.status, 23, failed.stderr)
+      assert.equal(existsSync(envFile), false, 'must not export an empty CHROME_PATH')
+      const passed = simulate(
+        `${JSON.stringify(process.execPath)} -e 'process.stdout.write("/fake/chrome")'`,
+      )
+      assert.equal(passed.status, 0, passed.stderr)
+      assert.equal(readFileSync(envFile, 'utf8'), 'CHROME_PATH=/fake/chrome\n')
+    })
+  },
+)
