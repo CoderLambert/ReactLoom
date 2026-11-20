@@ -6,7 +6,7 @@ export type DevStackFrame = {
 }
 
 const LOCATION =
-  /((?:https?:\/\/\S+)|(?:webpack-internal:\/\/\/\S+)|(?:[A-Za-z]:[/\\]\S+)|(?:\/\S+)|(?:(?:src|app)\/\S+)):(\d+):(\d+)\s*$/
+  /((?:https?:\/\/\S+)|(?:webpack-internal:\/\/\/\S+)|(?:[A-Za-z]:[/\\]\S+)|(?:\/\S+)|(?:(?:src|app)[/\\]\S+)):(\d+):(\d+)\s*$/
 
 /**
  * Turns a browser or Metro stack into project frames. `file` is set only for
@@ -39,9 +39,11 @@ function projectFile(rawFile: string): string | undefined {
   const unwrapped = noQuery
     .replace(/^webpack-internal:\/\/\/(?:[^/]+\/)*\.\//, '')
     .replace(/^https?:\/\/[^/]+\//, '')
-  if (unwrapped.includes('node_modules')) return undefined
-  const embedded = unwrapped.match(/(?:^|\/)((?:src|app)\/.+)$/)
-  const file = embedded?.[1] ?? unwrapped
+  // Windows stack frames use backslashes; normalize only for matching project paths.
+  const portable = unwrapped.replaceAll('\\', '/')
+  if (portable.includes('node_modules')) return undefined
+  const embedded = portable.match(/(?:^|\/)((?:src|app)\/.+)$/)
+  const file = embedded?.[1] ?? portable
   // Error stacks are not trusted file locations. Keep click-to-source paths
   // relative to the project, not traversal or arbitrary absolute filesystem paths.
   if (
