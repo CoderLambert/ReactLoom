@@ -40,6 +40,43 @@ describe('parseDevStack', () => {
     expect(frames[0]).toMatchObject({ file: 'app/tasks.tsx', line: 12, column: 4 })
     expect(frames[1]).toMatchObject({ file: 'app/index.tsx', line: 8, column: 2 })
   })
+
+  it('accepts Windows project frames without admitting outside or traversing paths', () => {
+    const frames = parseDevStack(
+      [
+        String.raw`    at Card (C:\workspace\ReactLoom\src\features\card.tsx:18:3)`,
+        String.raw`    at Mobile (D:\apps\mobile\app\index.tsx:6:2)`,
+        String.raw`    at Local (src\features\local.tsx:19:4)`,
+        String.raw`    at Escape (C:\workspace\src\..\secret.ts:3:1)`,
+        String.raw`    at Dependency (C:\workspace\node_modules\pkg\src\index.ts:9:1)`,
+        String.raw`    at Outside (C:\Temp\private.ts:8:2)`,
+      ].join('\n'),
+    )
+    expect(frames[0]).toMatchObject({ file: 'src/features/card.tsx', line: 18, column: 3 })
+    expect(frames[1]).toMatchObject({ file: 'app/index.tsx', line: 6, column: 2 })
+    expect(frames[2]).toMatchObject({ file: 'src/features/local.tsx', line: 19, column: 4 })
+    expect(frames.slice(3).map((frame) => frame.file)).toEqual([undefined, undefined, undefined])
+  })
+  it('never exposes traversal or external absolute stack paths to click-to-source', () => {
+    const frames = parseDevStack(
+      [
+        '    at Escape (http://127.0.0.1:4317/src/../../private.ts:10:5)',
+        '    at Outside (/tmp/private.ts:3:2)',
+        String.raw`    at Outside (C:\Temp\private.ts:8:2)`,
+        '    at Safe (http://127.0.0.1:4317/src/features/tasks.tsx:12:4)',
+      ].join('\n'),
+    )
+    expect(frames.slice(0, 3).map((frame) => frame.file)).toEqual([
+      undefined,
+      undefined,
+      undefined,
+    ])
+    expect(frames[3]).toMatchObject({
+      file: 'src/features/tasks.tsx',
+      line: 12,
+      column: 4,
+    })
+  })
 })
 
 describe('devInspectorPath', () => {

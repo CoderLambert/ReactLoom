@@ -119,11 +119,17 @@ export function createLighthouseServer(root: string, url: string) {
 }
 
 export function isLocalDevtoolsRequest(host: string | null, origin: string | null): boolean {
-  if (!host) return false
+  // Host must be an HTTP authority. URL parsing alone accepts userinfo and
+  // path/query fragments (for example, evil@localhost) as a local hostname.
+  if (!host || /[\/?#@\\\s]/.test(host)) return false
   try {
     const target = new URL(`http://${host}`)
     if (!['localhost', '127.0.0.1', '[::1]'].includes(target.hostname)) return false
-    return !origin || new URL(origin).origin === target.origin
+    if (!origin) return true
+    // Origin headers contain serialized origins, not full URLs. Comparing only
+    // URL.origin would silently discard userinfo, paths, queries or fragments.
+    const source = new URL(origin)
+    return origin === source.origin && source.origin === target.origin
   } catch {
     return false
   }

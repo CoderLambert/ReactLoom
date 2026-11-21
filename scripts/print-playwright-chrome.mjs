@@ -1,28 +1,35 @@
-import { readdirSync } from 'node:fs'
-import { homedir } from 'node:os'
-import path from 'node:path'
+import { existsSync } from 'node:fs'
+import { createRequire } from 'node:module'
+import { dirname, join } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
-const root = path.join(homedir(), '.cache', 'ms-playwright')
-
-function walk(directory, found) {
-  let entries
-  try {
-    entries = readdirSync(directory, { withFileTypes: true })
-  } catch {
-    return
-  }
-  for (const entry of entries) {
-    const next = path.join(directory, entry.name)
-    if (entry.isDirectory()) walk(next, found)
-    else if (entry.name === 'chrome' && next.includes(`${path.sep}chrome-linux`)) found.push(next)
-  }
-}
-
-const found = []
-walk(root, found)
-const chrome = found.sort()[0]
-if (!chrome) {
-  process.stderr.write(`No Playwright Chromium binary under ${root}\n`)
+// Resolve from the package that owns Playwright, not from a shared browser cache.
+// pnpm may install a different Playwright revision for each template.
+const root = dirname(dirname(fileURLToPath(import.meta.url)))
+const template = process.argv[2]
+if (template !== undefined && template !== 'spa' && template !== 'ssr') {
+  process.stderr.write('Expected a template name: spa or ssr.\n')
   process.exit(1)
 }
-process.stdout.write(chrome)
+const projectRoot = template ? join(root, 'templates', template) : root
+
+try {
+  const require = createRequire(join(projectRoot, 'package.json'))
+  const { chromium } = require('@playwright/test')
+  const executable = chromium.executablePath()
+  if (!existsSync(executable)) {
+    throw new Error(
+      'Playwright Chromium is not installed at ' +
+        executable +
+        '. Run playwright install chromium.',
+    )
+  }
+  process.stdout.write(executable)
+} catch (error) {
+  const message = error instanceof Error ? error.message : String(error)
+  const projectName = template ?? 'standalone project'
+  process.stderr.write(
+    'Cannot resolve Playwright Chromium for ' + projectName + ': ' + message + '\n',
+  )
+  process.exitCode = 1
+}
