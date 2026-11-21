@@ -1,4 +1,5 @@
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema'
+import { useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
@@ -12,6 +13,7 @@ import { isApiError } from '@/lib/api'
 export function LoginPage() {
   const { t } = useTranslation()
   const login = useLogin()
+  const submitting = useRef(false)
   const form = useForm<LoginInput>({
     resolver: standardSchemaResolver(loginSchema),
     defaultValues: { email: '', password: '' },
@@ -33,13 +35,37 @@ export function LoginPage() {
         <form
           className="space-y-4"
           noValidate
-          onSubmit={form.handleSubmit((values) => login.mutate(values))}
+          onSubmit={async (event) => {
+            // RHF's resolver is async. Two submit events can both pass validation
+            // before the mutation's pending state disables the button.
+            if (submitting.current) {
+              event.preventDefault()
+              return
+            }
+            submitting.current = true
+            try {
+              await form.handleSubmit(async (values) => {
+                await login.mutateAsync(values)
+              })(event)
+            } catch {
+              // The mutation state exposes the request error for correction/retry.
+            } finally {
+              submitting.current = false
+            }
+          }}
         >
           <div className="space-y-2">
             <Label htmlFor="email">{t('login.email')}</Label>
-            <Input id="email" type="email" autoComplete="username" {...form.register('email')} />
+            <Input
+              id="email"
+              type="email"
+              autoComplete="username"
+              aria-invalid={form.formState.errors.email ? true : undefined}
+              aria-describedby={form.formState.errors.email ? 'login-email-error' : undefined}
+              {...form.register('email')}
+            />
             {form.formState.errors.email ? (
-              <p className="text-sm text-copper" role="alert">
+              <p id="login-email-error" className="text-sm text-copper" role="alert">
                 {form.formState.errors.email.message}
               </p>
             ) : null}
@@ -50,10 +76,12 @@ export function LoginPage() {
               id="password"
               type="password"
               autoComplete="current-password"
+              aria-invalid={form.formState.errors.password ? true : undefined}
+              aria-describedby={form.formState.errors.password ? 'login-password-error' : undefined}
               {...form.register('password')}
             />
             {form.formState.errors.password ? (
-              <p className="text-sm text-copper" role="alert">
+              <p id="login-password-error" className="text-sm text-copper" role="alert">
                 {form.formState.errors.password.message}
               </p>
             ) : null}

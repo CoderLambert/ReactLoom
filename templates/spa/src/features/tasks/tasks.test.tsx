@@ -1,14 +1,64 @@
-import { cleanup, screen, waitFor, within } from '@testing-library/react'
+import { createMemoryHistory, RouterProvider } from '@tanstack/react-router'
+import { act, cleanup, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { HttpResponse, http } from 'msw'
 import { afterEach, describe, expect, it } from 'vitest'
-import { demoUser } from '@/mocks/fixtures'
+import { Providers } from '@/app/providers'
+import { createAppRouter } from '@/app/router'
+import { useAuthStore } from '@/features/auth/store'
+import { createAppQueryClient } from '@/lib/query-client'
+import { demoSession, demoUser } from '@/mocks/fixtures'
 import { server } from '@/mocks/server'
 import { renderApp } from '@/test/render'
 
 afterEach(cleanup)
 
 describe('tasks feature', () => {
+  it('discards an unsent task draft when another session replaces it without route navigation', async () => {
+    server.use(http.get('*/api/tasks', () => HttpResponse.json({ tasks: [] })))
+    useAuthStore.getState().setSession({ ...demoSession(), accessToken: 'first-account' })
+    const client = createAppQueryClient()
+    const router = createAppRouter(client, createMemoryHistory({ initialEntries: ['/tasks'] }))
+    render(
+      <Providers client={client}>
+        <RouterProvider router={router} />
+      </Providers>,
+    )
+
+    const user = userEvent.setup()
+    const originalInput = await screen.findByRole('textbox', { name: 'Task title' })
+    await user.type(originalInput, 'Confidential first-account draft')
+    expect(originalInput).toHaveValue('Confidential first-account draft')
+
+    act(() => {
+      useAuthStore.getState().setSession({ ...demoSession(), accessToken: 'second-account' })
+    })
+
+    const nextInput = await screen.findByRole('textbox', { name: 'Task title' })
+    expect(nextInput).not.toBe(originalInput)
+    expect(nextInput).toHaveValue('')
+    expect(screen.queryByDisplayValue('Confidential first-account draft')).not.toBeInTheDocument()
+    client.clear()
+  })
+
+  it('describes each keyboard-accessible status action with its task title', async () => {
+    const user = userEvent.setup()
+    renderApp('/login')
+    await user.type(await screen.findByLabelText('Email'), demoUser.email)
+    await user.type(screen.getByLabelText('Password'), demoUser.password)
+    await user.click(within(screen.getByRole('main')).getByRole('button', { name: 'Sign in' }))
+    await screen.findByText('Dress the loom')
+
+    for (const { title, action } of [
+      { title: 'Dress the loom', action: 'Mark done' },
+      { title: 'Wind a bobbin', action: 'Reopen' },
+    ]) {
+      const row = screen.getByText(title).closest('li')
+      if (!row) throw new Error(`Missing task row: ${title}`)
+      expect(within(row).getByRole('button', { name: action })).toHaveAccessibleDescription(title)
+    }
+  })
+
   it('signs in, lists tasks, and creates one', async () => {
     const user = userEvent.setup()
     renderApp('/login')
@@ -23,6 +73,45 @@ describe('tasks feature', () => {
     await user.type(screen.getByLabelText('Task title'), 'Beat the weft')
     await user.click(screen.getByRole('button', { name: 'Add task' }))
     expect(await screen.findByText('Beat the weft')).toBeVisible()
+  })
+
+  it('links an invalid task title to its announced error and permits correction', async () => {
+    const user = userEvent.setup()
+    renderApp('/login')
+    await user.type(await screen.findByLabelText('Email'), demoUser.email)
+    await user.type(screen.getByLabelText('Password'), demoUser.password)
+    await user.click(within(screen.getByRole('main')).getByRole('button', { name: 'Sign in' }))
+    await screen.findByText('Dress the loom')
+
+    let posts = 0
+    server.use(
+      http.post('*/api/tasks', () => {
+        posts += 1
+        return HttpResponse.json(
+          {
+            id: 'validated-task',
+            title: 'Weave the warp',
+            status: 'open',
+            createdAt: '2026-11-09T00:00:00.000Z',
+          },
+          { status: 201 },
+        )
+      }),
+    )
+
+    const title = screen.getByRole('textbox', { name: 'Task title' })
+    await user.click(screen.getByRole('button', { name: 'Add task' }))
+    expect(await screen.findByRole('alert')).toHaveAttribute('id', 'task-title-error')
+    expect(title).toHaveAttribute('aria-invalid', 'true')
+    expect(title).toHaveAttribute('aria-describedby', 'task-title-error')
+    expect(posts).toBe(0)
+
+    await user.type(title, 'Weave the warp')
+    await user.click(screen.getByRole('button', { name: 'Add task' }))
+    expect(await screen.findByText('Weave the warp')).toBeVisible()
+    await waitFor(() => expect(title).not.toHaveAttribute('aria-invalid'))
+    expect(title).not.toHaveAttribute('aria-describedby')
+    expect(posts).toBe(1)
   })
 
   it('preserves the draft and announces a failed creation before a successful retry', async () => {

@@ -3,9 +3,21 @@ import { getActiveSession, useAuthStore } from '@/features/auth/store'
 import { createTask, listTasks, setTaskStatus } from '@/features/tasks/api'
 import { taskKeys } from '@/features/tasks/keys'
 import type { Task, TaskStatus } from '@/features/tasks/schema'
+import { runSessionBoundRequest } from '@/features/tasks/session-request'
 
 function isCurrentSession(version: number) {
   return useAuthStore.getState().sessionVersion === version && getActiveSession() !== null
+}
+
+function writeForSession<T>(version: number, request: (signal: AbortSignal) => Promise<T>) {
+  return runSessionBoundRequest(
+    () => isCurrentSession(version),
+    (check) =>
+      useAuthStore.subscribe((state, previous) => {
+        if (state.sessionVersion !== previous.sessionVersion) check()
+      }),
+    request,
+  )
 }
 
 export function useTasks() {
@@ -26,7 +38,7 @@ export function useCreateTask() {
     mutationKey: [...taskKeys.session(version), 'create'],
     mutationFn: (title: string) => {
       if (!isCurrentSession(version)) throw new Error('The session has changed.')
-      return createTask({ title })
+      return writeForSession(version, (signal) => createTask({ title }, signal))
     },
     onMutate: async (title) => {
       if (!isCurrentSession(version)) return
@@ -78,7 +90,22 @@ export function useSetTaskStatus() {
     mutationKey: [...taskKeys.session(version), 'status'],
     mutationFn: ({ id, status }: { id: string; status: TaskStatus }) => {
       if (!isCurrentSession(version)) throw new Error('The session has changed.')
-      return setTaskStatus(id, status)
+      return writeForSession(version, (signal) => setTaskStatus(id, status, signal))
+    },
+    onMutate: async () => {
+      if (!isCurrentSession(version)) return
+      // An earlier GET can complete after PATCH and replace the confirmed status
+      // with stale data. Stop only this session's reads before sending the write.
+      await queryClient.cancelQueries({ queryKey: taskKeys.session(version) })
+    },
+    onSuccess: (task) => {
+      if (!isCurrentSession(version)) return
+      // A successful write must remain visible if the follow-up read fails.
+      queryClient.setQueryData<{ tasks: Task[] }>(taskKeys.list(version), (current) =>
+        current
+          ? { tasks: current.tasks.map((item) => (item.id === task.id ? task : item)) }
+          : current,
+      )
     },
     onSettled: async () => {
       if (isCurrentSession(version)) {

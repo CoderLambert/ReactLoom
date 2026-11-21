@@ -9,6 +9,7 @@ import { env } from '@/lib/env'
 import { reactScanController } from '@/lib/react-scan-controller'
 import { i18n } from '@/lib/i18n'
 import { initMonitoring } from '@/lib/monitoring'
+import { startOptionalDevMocks } from '@/lib/dev-mocks'
 import '@/styles/globals.css'
 
 const showDevtools = import.meta.env.DEV && env.VITE_DEVTOOLS === 'true'
@@ -60,12 +61,19 @@ const TanStackRouterDevtoolsPanel = showDevtools
 async function boot() {
   await initMonitoring(env.VITE_SENTRY_DSN)
   if (env.VITE_ENABLE_MSW === 'true' && import.meta.env.DEV) {
-    const { worker } = await import('@/mocks/browser')
-    await worker.start({
-      serviceWorker: { url: '/mockServiceWorker.js' },
-      // Let page navigation and third-party devtool checks reach their server.
-      onUnhandledFrame: 'bypass',
-    })
+    let stopWorker: (() => void) | undefined
+    await startOptionalDevMocks(
+      async () => {
+        const { worker } = await import('@/mocks/browser')
+        stopWorker = () => worker.stop()
+        await worker.start({
+          serviceWorker: { url: '/mockServiceWorker.js' },
+          // Let page navigation and third-party devtool checks reach their server.
+          onUnhandledFrame: 'bypass',
+        })
+      },
+      { stop: () => stopWorker?.() },
+    )
   }
 
   const root = document.getElementById('root')

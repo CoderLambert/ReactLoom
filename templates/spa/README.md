@@ -29,6 +29,8 @@ pnpm build-storybook
 
 Sign in with `ada@reactloom.dev` / `loom-demo`. MSW serves `/api/session` and `/api/tasks` when `VITE_ENABLE_MSW=true` (dev only, and the same handlers Storybook uses). `@axe-core/react` logs in the dev server while `VITE_DEVTOOLS` is on. Install the axe DevTools browser extension for a manual pass. Playwright is `pnpm test:e2e`.
 
+Production `pnpm build` emits no source-map assets; the bundle-budget step fails if any `.map` is present in `dist/`, including nested assets. Keep development source maps for local debugging. If private error mapping is needed, configure a separate secure source-map upload flow rather than publishing maps with static assets.
+
 `src/features/tasks` is the sample feature: query keys, a list query, an optimistic create mutation, and loading, empty, and error UI. Auth is a route guard, not a second copy of the task list.
 
 ## Developer productivity

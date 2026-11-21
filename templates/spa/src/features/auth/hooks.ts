@@ -34,14 +34,15 @@ export function useLogout() {
   const navigate = useNavigate()
 
   return useMutation({
-    mutationFn: logout,
-    onMutate: beginAuthOperation,
-    onSettled: async (_data, _error, _input, attempt) => {
-      const current = useAuthStore.getState()
-      if (current.authOperation !== attempt?.operation) return
-      if (current.sessionVersion !== attempt.version && current.session) return
+    mutationFn: () => {
+      // Capture the current token for server revocation before clearing it.
+      // A slow or failed logout request must never keep private data visible.
+      const request = logout()
       clearSession()
-      await navigate({ to: '/' })
+      void navigate({ to: '/' })
+      return request
     },
+    // Invalidate older sign-in attempts even when server logout is delayed.
+    onMutate: beginAuthOperation,
   })
 }

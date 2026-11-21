@@ -1,10 +1,11 @@
 import { Link, Outlet, useNavigate, useRouterState } from '@tanstack/react-router'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SkipLink } from '@/components/layout/skip-link'
 import { Button } from '@/components/ui/button'
 import { useLogout } from '@/features/auth/hooks'
-import { useAuthStore } from '@/features/auth/store'
+import { subscribeToSessionLogout } from '@/features/auth/session-sync'
+import { getActiveSession, useAuthStore } from '@/features/auth/store'
 import { useMatchMedia } from '@/hooks/use-match-media'
 import { i18n } from '@/lib/i18n'
 import { useTheme } from '@/lib/theme'
@@ -15,6 +16,7 @@ export function Shell() {
   const theme = useTheme((state) => state.theme)
   const toggleTheme = useTheme((state) => state.toggle)
   const logout = useLogout()
+  const signingOut = useRef(false)
   const navigate = useNavigate()
   const pathname = useRouterState({ select: (state) => state.location.pathname })
   const compact = useMatchMedia('(max-width: 640px)')
@@ -22,6 +24,65 @@ export function Shell() {
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark')
   }, [theme])
+
+  // A duplicated tab can retain its own sessionStorage and Query cache after
+  // another tab signs out. Only revoke an exact session nonce, not a new login.
+  useEffect(
+    () =>
+      subscribeToSessionLogout((sessionId) => {
+        const current = useAuthStore.getState()
+        if (!current.session || current.sessionId !== sessionId) return
+        current.clearSession({ broadcast: false })
+        if (pathname === '/tasks') void navigate({ to: '/login' })
+      }),
+    [navigate, pathname],
+  )
+
+  // A mounted protected route must not retain a private task screen indefinitely
+  // after its token expires without another navigation or API request.
+  useEffect(() => {
+    if (!session) return
+
+    let timer: ReturnType<typeof setTimeout> | undefined
+    const checkExpiry = () => {
+      // An old timer must not clear or redirect a replacement session.
+      if (useAuthStore.getState().session !== session) return
+      // Foreground checks can run before a throttled background timer fires.
+      clearTimeout(timer)
+      const remaining = session.expiresAt - Date.now()
+      if (remaining <= 0) {
+        getActiveSession()
+        if (pathname === '/tasks') void navigate({ to: '/login' })
+        return
+      }
+      // Browser timers cannot represent delays beyond a signed 32-bit integer.
+      timer = setTimeout(checkExpiry, Math.min(remaining, 2_147_483_647))
+    }
+    const checkWhenVisible = () => {
+      if (document.visibilityState === 'visible') checkExpiry()
+    }
+
+    checkExpiry()
+    window.addEventListener('focus', checkExpiry)
+    document.addEventListener('visibilitychange', checkWhenVisible)
+    return () => {
+      clearTimeout(timer)
+      window.removeEventListener('focus', checkExpiry)
+      document.removeEventListener('visibilitychange', checkWhenVisible)
+    }
+  }, [session, pathname, navigate])
+
+  // A 401 can clear the bearer while /tasks stays mounted. The route's
+  // beforeLoad guard only runs on navigation, not on this store transition.
+  // Remove the protected view immediately and redirect to the sign-in route.
+  const unauthorizedTasksView = pathname === '/tasks' && !session
+  useEffect(() => {
+    // Explicit sign-out already navigates home; do not race it with a 401 redirect.
+    if (unauthorizedTasksView && !signingOut.current) void navigate({ to: '/login' })
+  }, [navigate, unauthorizedTasksView])
+  useEffect(() => {
+    if (pathname !== '/tasks' || session) signingOut.current = false
+  }, [pathname, session])
 
   return (
     <div className="min-h-screen">
@@ -42,7 +103,13 @@ export function Shell() {
             {t('nav.tasks')}
           </Link>
           {session ? (
-            <Button variant="ghost" onClick={() => logout.mutate()}>
+            <Button
+              variant="ghost"
+              onClick={() => {
+                signingOut.current = true
+                logout.mutate()
+              }}
+            >
               {t('nav.signOut')}
             </Button>
           ) : (
@@ -70,7 +137,7 @@ export function Shell() {
         </nav>
       </header>
       <main id="content" className="mx-auto max-w-5xl px-5 pt-6 pb-20">
-        <Outlet />
+        {unauthorizedTasksView ? null : <Outlet />}
       </main>
     </div>
   )

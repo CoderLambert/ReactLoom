@@ -1,6 +1,6 @@
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema'
 import { Link, useSearch } from '@tanstack/react-router'
-import { useRef } from 'react'
+import { useId, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
@@ -8,12 +8,20 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { getActiveSession, useAuthStore } from '@/features/auth/store'
 import { useCreateTask, useSetTaskStatus, useTasks } from '@/features/tasks/hooks'
+import { createSingleFlightAction } from '@/features/tasks/status-action'
 import { type CreateTaskInput, createTaskSchema } from '@/features/tasks/schema'
 import { isApiError } from '@/lib/api'
 
 const filters = ['all', 'open', 'done'] as const
 
+// Remount form state on every login/logout/replacement so another account
+// never inherits an unsent private draft or a previous mutation's UI state.
 export function TasksPage() {
+  const version = useAuthStore((state) => state.sessionVersion)
+  return <SessionTasksPage key={version} />
+}
+
+function SessionTasksPage() {
   const { t } = useTranslation()
   const { status } = useSearch({ from: '/tasks' })
   const tasks = useTasks()
@@ -21,10 +29,18 @@ export function TasksPage() {
   const update = useSetTaskStatus()
   const draftRevision = useRef(0)
   const submitting = useRef<{ version: number; revision: number } | null>(null)
+  const submitStatus = useRef(createSingleFlightAction())
+  const taskListId = useId()
   const form = useForm<CreateTaskInput>({
     resolver: standardSchemaResolver(createTaskSchema),
     defaultValues: { title: '' },
   })
+
+  const titleError = form.formState.errors.title
+  const titleDescriptionIds = [
+    titleError && 'task-title-error',
+    create.isError && 'task-create-error',
+  ].filter(Boolean).join(' ')
 
   const visible = (tasks.data ?? []).filter((task) => status === 'all' || task.status === status)
   const errorMessage = isApiError(tasks.error)
@@ -98,16 +114,17 @@ export function TasksPage() {
           <Input
             id="title"
             placeholder={t('tasks.placeholder')}
-            aria-describedby={create.isError ? 'task-create-error' : undefined}
+            aria-invalid={titleError ? true : undefined}
+            aria-describedby={titleDescriptionIds || undefined}
             {...form.register('title', {
               onChange: () => {
                 draftRevision.current += 1
               },
             })}
           />
-          {form.formState.errors.title ? (
-            <p className="text-sm text-copper" role="alert">
-              {form.formState.errors.title.message}
+          {titleError ? (
+            <p id="task-title-error" className="text-sm text-copper" role="alert">
+              {titleError.message}
             </p>
           ) : null}
           {create.isError ? (
@@ -141,10 +158,13 @@ export function TasksPage() {
       ) : null}
 
       <ul className="divide-y divide-line overflow-hidden rounded-3xl bg-card ring-1 ring-line">
-        {visible.map((task) => (
+        {visible.map((task, index) => (
           <li key={task.id} className="flex items-center justify-between gap-4 px-4 py-3">
             <div>
-              <p className={task.status === 'done' ? 'text-muted line-through' : 'font-medium'}>
+              <p
+                id={`${taskListId}-title-${index}`}
+                className={task.status === 'done' ? 'text-muted line-through' : 'font-medium'}
+              >
                 {task.title}
               </p>
               <p className="text-xs text-muted">{task.status}</p>
@@ -152,10 +172,16 @@ export function TasksPage() {
             <Button
               variant="ghost"
               disabled={update.isPending || (create.isPending && task.id.startsWith('tmp-'))}
-              onClick={() =>
-                update.mutate({
-                  id: task.id,
-                  status: task.status === 'done' ? 'open' : 'done',
+              aria-describedby={`${taskListId}-title-${index}`}
+              onClick={() => {
+                // The ref-based guard activates before React can render isPending.
+                void submitStatus.current(() =>
+                  update.mutateAsync({
+                    id: task.id,
+                    status: task.status === 'done' ? 'open' : 'done',
+                  }),
+                ).catch(() => {
+                  // TanStack Query renders the mutation error above the task list.
                 })
               }
             >
