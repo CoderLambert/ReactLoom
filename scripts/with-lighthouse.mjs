@@ -25,22 +25,36 @@ function main() {
   process.on('SIGINT', stop)
   process.on('SIGTERM', stop)
 
+  function cleanup() {
+    process.off('SIGINT', stop)
+    process.off('SIGTERM', stop)
+  }
+
+  child.on('error', (cause) => {
+    cleanup()
+    process.stderr.write(`Failed to start preview command: ${cause.message}\n`)
+    process.exitCode = 1
+  })
+
   if (local) {
     if (!url) {
       process.stderr.write(
         'LIGHTHOUSE_LOCAL is set, but the command has no --port and LIGHTHOUSE_URL is empty.\n',
       )
     } else {
-      audit(url, mode).catch((error) => {
-        const message = error instanceof Error ? error.message : String(error)
-        process.stderr.write(`${message}\n`)
+      // A missing preview executable emits 'error' without 'spawn'.
+      // Do not begin a minute-long readiness probe for a process that never started.
+      child.once('spawn', () => {
+        audit(url, mode).catch((error) => {
+          const message = error instanceof Error ? error.message : String(error)
+          process.stderr.write(`${message}\n`)
+        })
       })
     }
   }
 
   child.on('exit', (code, signal) => {
-    process.off('SIGINT', stop)
-    process.off('SIGTERM', stop)
+    cleanup()
     if (signal) {
       process.kill(process.pid, signal)
       return
