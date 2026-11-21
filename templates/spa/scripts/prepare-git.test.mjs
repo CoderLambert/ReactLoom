@@ -10,9 +10,10 @@ const source = readFileSync(new URL('./prepare-git.mjs', import.meta.url), 'utf8
 function fixture(t) {
   const sandbox = mkdtempSync(join(tmpdir(), 'reactloom spa prepare '))
   t.after(() => rmSync(sandbox, { force: true, recursive: true }))
-  const project = join(sandbox, 'workspace with spaces', 'templates', 'spa')
+  const workspaceRoot = join(sandbox, 'workspace with spaces')
+  const project = join(workspaceRoot, 'templates', 'spa')
   const localScripts = join(project, 'scripts')
-  const rootScripts = join(sandbox, 'workspace with spaces', 'scripts')
+  const rootScripts = join(workspaceRoot, 'scripts')
   mkdirSync(localScripts, { recursive: true })
   mkdirSync(rootScripts, { recursive: true })
   writeFileSync(join(localScripts, 'prepare-git.mjs'), source)
@@ -21,8 +22,13 @@ function fixture(t) {
   return {
     marker,
     project,
+    workspaceRoot,
     local: join(localScripts, 'setup-git.mjs'),
     workspace: join(rootScripts, 'setup-git.mjs'),
+    markWorkspace(name = 'reactloom') {
+      writeFileSync(join(workspaceRoot, 'pnpm-workspace.yaml'), 'packages:\n  - templates/*\n')
+      writeFileSync(join(workspaceRoot, 'package.json'), JSON.stringify({ name }))
+    },
     run() {
       return spawnSync(process.execPath, ['scripts/prepare-git.mjs'], {
         cwd: project,
@@ -38,6 +44,7 @@ const successScript = (source) =>
 
 test('workspace lifecycle uses the shared setup script when no local copy exists', (t) => {
   const f = fixture(t)
+  f.markWorkspace()
   writeFileSync(f.workspace, successScript('workspace'))
   const result = f.run()
   assert.equal(result.status, 0, result.stderr)
@@ -64,6 +71,34 @@ test('propagates nonzero git configuration failures', (t) => {
 
 test('does not report successful prepare when neither script is available', (t) => {
   const f = fixture(t)
+  const result = f.run()
+  assert.notEqual(result.status, 0)
+  assert.equal(existsSync(f.marker), false)
+})
+
+test('detached SPA does not execute an unrelated ancestor setup script', (t) => {
+  const f = fixture(t)
+  writeFileSync(f.workspace, successScript('untrusted ancestor'))
+  const result = f.run()
+  assert.notEqual(result.status, 0)
+  assert.match(result.stderr, /Cannot find scripts\/setup-git.mjs/)
+  assert.equal(existsSync(f.marker), false)
+})
+
+test('a different workspace must not authorize ancestor setup execution', (t) => {
+  const f = fixture(t)
+  f.markWorkspace('unrelated-project')
+  writeFileSync(f.workspace, successScript('unrelated workspace'))
+  const result = f.run()
+  assert.notEqual(result.status, 0)
+  assert.equal(existsSync(f.marker), false)
+})
+
+test('missing or invalid workspace manifest cannot authorize ancestor execution', (t) => {
+  const f = fixture(t)
+  f.markWorkspace()
+  writeFileSync(join(f.workspaceRoot, 'package.json'), '{ invalid json')
+  writeFileSync(f.workspace, successScript('invalid workspace'))
   const result = f.run()
   assert.notEqual(result.status, 0)
   assert.equal(existsSync(f.marker), false)
