@@ -195,3 +195,41 @@ test('enforces the startup deadline when an unhealthy body cancel never settles'
     globalThis.fetch = originalFetch
   }
 })
+
+test('fails cleanly when a preview command cannot spawn, without starting Lighthouse polling', async () => {
+  const { spawnSync } = await import('node:child_process')
+  const { tmpdir } = await import('node:os')
+  const { join } = await import('node:path')
+  const { fileURLToPath } = await import('node:url')
+  const script = fileURLToPath(new URL('./with-lighthouse.mjs', import.meta.url))
+  const absent = join(tmpdir(), `reactloom-missing-preview-${process.pid}-${Date.now()}`)
+  const result = spawnSync(process.execPath, [script, 'dev', '--', absent], {
+    encoding: 'utf8',
+    timeout: 2_000,
+    env: {
+      ...process.env,
+      LIGHTHOUSE_LOCAL: 'true',
+      LIGHTHOUSE_URL: 'http://127.0.0.1:1/',
+    },
+  })
+
+  assert.equal(result.error, undefined, String(result.error))
+  assert.equal(result.status, 1, result.stderr)
+  assert.match(result.stderr, /Failed to start preview command:/)
+  assert.doesNotMatch(result.stderr, /Unhandled 'error' event/)
+  assert.doesNotMatch(result.stderr, /Timed out waiting for/)
+})
+
+test('preserves a normally spawned preview command exit status', async () => {
+  const { spawnSync } = await import('node:child_process')
+  const { fileURLToPath } = await import('node:url')
+  const script = fileURLToPath(new URL('./with-lighthouse.mjs', import.meta.url))
+  const result = spawnSync(process.execPath, [script, 'preview', '--', process.execPath, '-e', 'process.exit(17)'], {
+    encoding: 'utf8',
+    timeout: 2_000,
+    env: { ...process.env, LIGHTHOUSE_LOCAL: 'false' },
+  })
+
+  assert.equal(result.error, undefined, String(result.error))
+  assert.equal(result.status, 17, result.stderr)
+})
