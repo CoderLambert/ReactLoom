@@ -2,6 +2,29 @@ import { ApiError } from '@reactloom/api-client'
 import type { QueryClient } from '@tanstack/react-query'
 import type { Task, TaskRepository } from './repository'
 
+// Cancellation must settle a scope even if an injected repository ignores the signal.
+// Observe late resolution/rejection without allowing it to commit into the old session.
+function awaitTaskOrAbort<T>(request: Promise<T>, signal: AbortSignal): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    const onAbort = () => {
+      signal.removeEventListener('abort', onAbort)
+      reject(new ApiError('The task request was cancelled.', 'aborted'))
+    }
+    signal.addEventListener('abort', onAbort, { once: true })
+    if (signal.aborted) onAbort()
+    void request.then(
+      (result) => {
+        signal.removeEventListener('abort', onAbort)
+        resolve(result)
+      },
+      (error) => {
+        signal.removeEventListener('abort', onAbort)
+        reject(error)
+      },
+    )
+  })
+}
+
 export function createTaskQueryScope(
   client: QueryClient,
   revision: number,
@@ -34,7 +57,7 @@ export function createTaskQueryScope(
     try {
       if (controller.signal.aborted)
         throw new ApiError('The task request was cancelled.', 'aborted')
-      const result = await operation(controller.signal)
+      const result = await awaitTaskOrAbort(operation(controller.signal), controller.signal)
       assertCurrent(expectedEpoch)
       if (controller.signal.aborted)
         throw new ApiError('The task request was cancelled.', 'aborted')

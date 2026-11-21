@@ -7,16 +7,22 @@ import type { Session } from './schema'
 const native = vi.hoisted(() => ({
   platform: { OS: 'web' },
   values: new Map<string, string>(),
+  deleteError: null as Error | null,
+  setError: null as Error | null,
+  ignoreDelete: false,
+  ignoreSet: false,
 }))
 
 vi.mock('react-native', () => ({ Platform: native.platform }))
 vi.mock('expo-secure-store', () => ({
   getItemAsync: async (key: string) => native.values.get(key) ?? null,
   setItemAsync: async (key: string, value: string) => {
-    native.values.set(key, value)
+    if (native.setError) throw native.setError
+    if (!native.ignoreSet) native.values.set(key, value)
   },
   deleteItemAsync: async (key: string) => {
-    native.values.delete(key)
+    if (native.deleteError) throw native.deleteError
+    if (!native.ignoreDelete) native.values.delete(key)
   },
 }))
 
@@ -32,6 +38,10 @@ describe('session storage', () => {
   beforeEach(() => {
     values.clear()
     native.values.clear()
+    native.deleteError = null
+    native.setError = null
+    native.ignoreDelete = false
+    native.ignoreSet = false
     native.platform.OS = 'web'
     vi.useFakeTimers()
     vi.setSystemTime(1_000)
@@ -61,6 +71,103 @@ describe('session storage', () => {
     expect(await readSession()).toBeNull()
   })
 
+  it('rejects an ignored web session replacement and revokes the old bearer', async () => {
+    await writeSession(session)
+    vi.stubGlobal('localStorage', {
+      getItem: (name: string) => values.get(name) ?? null,
+      setItem: () => {},
+      removeItem: (name: string) => {
+        values.delete(name)
+      },
+    })
+
+    await expect(writeSession({ ...session, accessToken: 'new-token' })).rejects.toThrow(
+      'Session storage write was not persisted.',
+    )
+    expect(values.has(key)).toBe(false)
+    expect(await readToken()).toBeNull()
+  })
+
+  it('tombstones a web session when deletion is blocked, including after restart', async () => {
+    await writeSession(session)
+    vi.stubGlobal('localStorage', {
+      getItem: (name: string) => values.get(name) ?? null,
+      setItem: (name: string, value: string) => {
+        values.set(name, value)
+      },
+      removeItem: () => {
+        throw new Error('Web storage deletion blocked')
+      },
+    })
+
+    let state: AuthState = initialAuthState
+    const createController = () =>
+      createAuthController({
+        readSession,
+        writeSession,
+        requestSignIn: async () => session,
+        subscribeToForeground: () => () => {},
+        dispatch: (event) => {
+          state = authReducer(state, event)
+        },
+      })
+
+    const controller = createController()
+    await controller.start()
+    await expect(controller.signOut()).resolves.toBeUndefined()
+    controller.stop()
+    expect(values.get(key)).toBe('{"version":1,"session":null}')
+    expect(await readToken()).toBeNull()
+
+    state = initialAuthState
+    const restarted = createController()
+    await restarted.start()
+    expect(state).toEqual({ status: 'anonymous', revision: 0 })
+    restarted.stop()
+  })
+
+  it('tombstones a web bearer when removeItem silently ignores deletion', async () => {
+    await writeSession(session)
+    vi.stubGlobal('localStorage', {
+      getItem: (name: string) => values.get(name) ?? null,
+      setItem: (name: string, value: string) => {
+        values.set(name, value)
+      },
+      removeItem: () => {},
+    })
+
+    await expect(writeSession(null)).resolves.toBeUndefined()
+    expect(values.get(key)).toBe('{"version":1,"session":null}')
+    expect(await readToken()).toBeNull()
+  })
+
+  it('reports a silently ignored web delete and tombstone instead of claiming logout', async () => {
+    await writeSession(session)
+    vi.stubGlobal('localStorage', {
+      getItem: (name: string) => values.get(name) ?? null,
+      setItem: () => {},
+      removeItem: () => {},
+    })
+
+    await expect(writeSession(null)).rejects.toThrow('Session storage deletion was ignored.')
+    expect(await readToken()).toBe('server-token')
+  })
+
+  it('reports web storage failure if neither removal nor overwrite works', async () => {
+    await writeSession(session)
+    vi.stubGlobal('localStorage', {
+      getItem: (name: string) => values.get(name) ?? null,
+      setItem: () => {
+        throw new Error('Web storage write blocked')
+      },
+      removeItem: () => {
+        throw new Error('Web storage deletion blocked')
+      },
+    })
+    await expect(writeSession(null)).rejects.toThrow('Web storage deletion blocked')
+    expect(values.get(key)).toContain('server-token')
+  })
+
   it('deletes a legacy token during hydration and requires login', async () => {
     values.set(key, 'legacy-token')
     let state: AuthState = initialAuthState
@@ -88,6 +195,93 @@ describe('session storage', () => {
     expect(values.has(key)).toBe(false)
     await writeSession(null)
     expect(native.values.has(key)).toBe(false)
+  })
+
+  it('rejects an ignored SecureStore replacement and removes the previous session', async () => {
+    native.platform.OS = 'ios'
+    await writeSession(session)
+    native.ignoreSet = true
+
+    await expect(writeSession({ ...session, accessToken: 'new-token' })).rejects.toThrow(
+      'Session storage write was not persisted.',
+    )
+    expect(native.values.has(key)).toBe(false)
+    expect(await readToken()).toBeNull()
+  })
+
+  it('reports a failed native replacement even when the old bearer cannot be revoked', async () => {
+    native.platform.OS = 'android'
+    await writeSession(session)
+    native.ignoreSet = true
+    native.ignoreDelete = true
+
+    await expect(writeSession({ ...session, accessToken: 'new-token' })).rejects.toThrow(
+      'Session storage write was not persisted.',
+    )
+    // Both operations were ignored: do not claim a successful sign-in or cleanup.
+    expect(await readToken()).toBe('server-token')
+  })
+
+  it('tombstones the native session when SecureStore deletion fails', async () => {
+    native.platform.OS = 'ios'
+    await writeSession(session)
+    native.deleteError = new Error('Keychain delete blocked')
+    let state: AuthState = initialAuthState
+    const createController = () =>
+      createAuthController({
+        readSession,
+        writeSession,
+        requestSignIn: async () => session,
+        subscribeToForeground: () => () => {},
+        dispatch: (event) => {
+          state = authReducer(state, event)
+        },
+      })
+
+    const controller = createController()
+    await controller.start()
+    await expect(controller.signOut()).resolves.toBeUndefined()
+    controller.stop()
+    expect(native.values.get(key)).toBe('{"version":1,"session":null}')
+    expect(await readToken()).toBeNull()
+
+    native.deleteError = null
+    state = initialAuthState
+    const restarted = createController()
+    await restarted.start()
+    expect(state).toEqual({ status: 'anonymous', revision: 0 })
+    expect(native.values.has(key)).toBe(false)
+    restarted.stop()
+  })
+
+  it('tombstones a native bearer when SecureStore silently ignores deletion', async () => {
+    native.platform.OS = 'android'
+    await writeSession(session)
+    native.ignoreDelete = true
+
+    await expect(writeSession(null)).resolves.toBeUndefined()
+    expect(native.values.get(key)).toBe('{"version":1,"session":null}')
+    expect(await readToken()).toBeNull()
+  })
+
+  it('reports silently ignored native delete and overwrite instead of claiming logout', async () => {
+    native.platform.OS = 'ios'
+    await writeSession(session)
+    native.ignoreDelete = true
+    native.ignoreSet = true
+
+    await expect(writeSession(null)).rejects.toThrow('Session storage deletion was ignored.')
+    expect(await readToken()).toBe('server-token')
+  })
+
+  it('reports a native storage failure if neither deletion nor overwrite succeeds', async () => {
+    native.platform.OS = 'android'
+    await writeSession(session)
+    native.deleteError = new Error('Keychain delete blocked')
+    native.setError = new Error('Keychain write blocked')
+
+    await expect(writeSession(null)).rejects.toThrow('Keychain delete blocked')
+    expect(native.values.get(key)).toContain('server-token')
   })
 
   it.each([

@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url'
 import { parseArgs } from 'node:util'
 import * as p from '@clack/prompts'
 import { parseDeployTarget } from './deploy.js'
+import { devInvocation } from './install.js'
 import { scaffold } from './scaffold.js'
 import { isTemplateId, templateIds } from './templates.js'
 
@@ -283,7 +284,8 @@ export async function run(argv: string[]): Promise<void> {
 
 function startDevServer(cwd: string): Promise<void> {
   return new Promise((resolve, reject) => {
-    const child = spawn('pnpm', ['dev'], { cwd, stdio: 'inherit' })
+    const { command, args } = devInvocation(process.platform, process.env.ComSpec)
+    const child = spawn(command, args, { cwd, stdio: 'inherit' })
     const stop = (signal: NodeJS.Signals) => {
       if (!child.killed) child.kill(signal)
     }

@@ -1,4 +1,4 @@
-import { mkdtemp, readFile, rm, stat, symlink } from 'node:fs/promises'
+import { mkdir, mkdtemp, readFile, rm, stat, symlink, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -12,7 +12,7 @@ import {
   resolveStartup,
   run,
 } from './cli.js'
-import { scaffold } from './scaffold.js'
+import { copyManifestFiles, scaffold } from './scaffold.js'
 import { findRepoRoot, readManifest, type TemplateId, templateIds } from './templates.js'
 
 const created: string[] = []
@@ -207,6 +207,36 @@ describe('create-reactloom', () => {
       if (previousInit === undefined) delete process.env.INIT_CWD
       else process.env.INIT_CWD = previousInit
     }
+  })
+
+  it('preserves template config when manifest selects the same target', async () => {
+    const root = await tempParent()
+    const generated = path.join(root, 'generated')
+    const relative = 'configs/tool.json'
+    await mkdir(path.join(root, 'configs'))
+    await mkdir(path.join(generated, 'configs'), { recursive: true })
+    await writeFile(path.join(root, relative), 'root config')
+    await writeFile(path.join(generated, relative), 'template config')
+    await expect(copyManifestFiles(root, generated, [relative])).rejects.toThrow(
+      /copy target already exists: configs\/tool\.json/,
+    )
+    expect(await readFile(path.join(generated, relative), 'utf8')).toBe('template config')
+  })
+
+  it('preserves template documentation when manifest adaptation collides', async () => {
+    const root = await tempParent()
+    const generated = path.join(root, 'generated')
+    const relative = 'docs/best-practices/README.md'
+    await mkdir(path.join(root, 'docs', 'best-practices'), { recursive: true })
+    await mkdir(path.join(generated, 'docs', 'best-practices'), { recursive: true })
+    await writeFile(path.join(root, relative), 'Shared practices')
+    await writeFile(path.join(generated, relative), 'Template-specific practices')
+    await expect(
+      copyManifestFiles(root, generated, [relative], { template: 'mobile', projectName: 'pocket' }),
+    ).rejects.toThrow(/copy target already exists: docs\/best-practices\/README\.md/)
+    expect(await readFile(path.join(generated, relative), 'utf8')).toBe(
+      'Template-specific practices',
+    )
   })
 
   it('rejects unsafe project names', async () => {
@@ -825,7 +855,9 @@ describe('create-reactloom', () => {
     expect(mobilePkg.main).toBe('index.js')
     expect(mobilePkg.devDependencies['@welldone-software/why-did-you-render']).toBe('10.0.1')
     expect(mobilePkg.devDependencies['expo-atlas']).toBe('0.4.3')
-    expect(mobilePkg.scripts.analyze).toContain('EXPO_ATLAS=true')
+    expect(mobilePkg.scripts.analyze).toBe('node scripts/analyze.mjs')
+    const mobileAnalyze = await readFile(path.join(mobile, 'scripts/analyze.mjs'), 'utf8')
+    expect(mobileAnalyze).toContain("EXPO_ATLAS: 'true'")
     expect(spaPkg.devDependencies['@welldone-software/why-did-you-render']).toBeUndefined()
     expect(ssrPkg.devDependencies['@welldone-software/why-did-you-render']).toBeUndefined()
     expect(spaPkg.scripts.analyze).toBe('ANALYZE=true vite build')

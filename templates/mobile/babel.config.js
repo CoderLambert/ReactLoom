@@ -7,7 +7,9 @@ module.exports = function babelConfig(api) {
   // false for `expo export` even when the parent process left NODE_ENV unset.
   const trackRenders = devtools && api.caller((caller) => caller?.isDev) !== false
   const plugins = []
-  if (devtools) {
+  // A production Metro caller must not instrument JSX for click-to-source,
+  // even when the parent export process did not set NODE_ENV.
+  if (trackRenders) {
     plugins.push(require('react-native-dev-inspector/metro').inspectorBabelPlugin)
   }
   return {

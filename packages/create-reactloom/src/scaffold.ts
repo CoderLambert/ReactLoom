@@ -1,9 +1,12 @@
-import { spawn } from 'node:child_process'
-import { cp, mkdir, readFile, rename, rm, stat, writeFile } from 'node:fs/promises'
+import { cp, mkdir, readFile, rm, stat, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { adaptBestPractices, installAiConfig } from './ai-config.js'
+import { shouldCopySafeScaffoldEntry } from './copy-filter.js'
+import { claimScaffoldDestination } from './destination.js'
 import { type DeployTarget, writeDeployFiles } from './deploy.js'
+import { runInstall } from './install.js'
+import { assertManifestCopyTargetAvailable, renameManifestFile } from './manifest-target.js'
 import {
   DOCKER_FILES,
   type PackageJson,
@@ -13,6 +16,8 @@ import {
   unselectedFrameworkFiles,
   workspaceYaml,
 } from './selection.js'
+import { assertSafeScaffoldSource } from './source-safety.js'
+import { assertStorybookScripts, usesPortableStorybookRunner } from './storybook-scripts.js'
 import { findRepoRoot, readManifest, type TemplateId, type TemplateManifest } from './templates.js'
 
 const SKIP_DIRS = new Set([
@@ -25,6 +30,7 @@ const SKIP_DIRS = new Set([
   'test-results',
   '.turbo',
   'storybook-static',
+  '.git',
 ])
 
 export type ScaffoldOptions = {
@@ -43,26 +49,17 @@ export function assertProjectName(name: string): void {
   }
 }
 
-async function assertDestination(directory: string): Promise<void> {
-  try {
-    const info = await stat(directory)
-    if (!info.isDirectory()) {
-      throw new Error(`Destination exists and is not a directory: ${directory}`)
-    }
-    throw new Error(`Destination already exists: ${directory}`)
-  } catch (error) {
-    if (error instanceof Error && 'code' in error && error.code === 'ENOENT') return
-    throw error
-  }
-}
-
-async function copyFiltered(source: string, destination: string): Promise<void> {
+async function copyFiltered(
+  source: string,
+  destination: string,
+  allowDevelopmentEnv = false,
+): Promise<void> {
+  const permittedDevelopmentEnv = allowDevelopmentEnv
+    ? path.join(source, '.env.development')
+    : undefined
   await cp(source, destination, {
     recursive: true,
-    filter: (entry) => {
-      const base = path.basename(entry)
-      return !SKIP_DIRS.has(base) && !base.endsWith('.tsbuildinfo')
-    },
+    filter: (entry) => shouldCopySafeScaffoldEntry(entry, SKIP_DIRS, permittedDevelopmentEnv),
   })
 }
 
@@ -73,7 +70,9 @@ async function copyRepoPath(repoRoot: string, relative: string, directory: strin
   } catch {
     throw new Error(`Manifest path does not exist: ${relative}`)
   }
+  await assertSafeScaffoldSource(repoRoot, relative)
   const destination = path.join(directory, relative)
+  await assertManifestCopyTargetAvailable(directory, relative)
   await mkdir(path.dirname(destination), { recursive: true })
   await copyFiltered(source, destination)
 }
@@ -85,12 +84,14 @@ async function copySharedPackages(
 ): Promise<void> {
   await mkdir(path.join(directory, 'packages'), { recursive: true })
   if (manifest.packages['api-client']) {
+    await assertSafeScaffoldSource(repoRoot, 'packages/api-client')
     await copyFiltered(
       path.join(repoRoot, 'packages', 'api-client'),
       path.join(directory, 'packages', 'api-client'),
     )
   }
   if (manifest.packages.devtools) {
+    await assertSafeScaffoldSource(repoRoot, 'packages/devtools')
     await copyFiltered(
       path.join(repoRoot, 'packages', 'devtools'),
       path.join(directory, 'packages', 'devtools'),
@@ -101,6 +102,7 @@ async function copySharedPackages(
   const sourceDir = path.join(repoRoot, 'packages', 'tsconfig')
   const destDir = path.join(directory, 'packages', 'tsconfig')
   await mkdir(destDir, { recursive: true })
+  await assertSafeScaffoldSource(repoRoot, 'packages/tsconfig/package.json')
   await copyFiltered(path.join(sourceDir, 'package.json'), path.join(destDir, 'package.json'))
   for (const preset of manifest.packages.tsconfig) {
     const relative = path.posix.join('packages/tsconfig', preset)
@@ -109,6 +111,7 @@ async function copySharedPackages(
     } catch {
       throw new Error(`Manifest path does not exist: ${relative}`)
     }
+    await assertSafeScaffoldSource(repoRoot, relative)
     await copyFiltered(path.join(sourceDir, preset), path.join(destDir, preset))
   }
   const packagePath = path.join(destDir, 'package.json')
@@ -117,7 +120,7 @@ async function copySharedPackages(
   await writeFile(packagePath, `${JSON.stringify(pruned, null, 2)}\n`)
 }
 
-async function copyManifestFiles(
+export async function copyManifestFiles(
   repoRoot: string,
   directory: string,
   relativePaths: readonly string[],
@@ -130,6 +133,7 @@ async function copyManifestFiles(
       )
     }
     if (adapt && relative.startsWith('docs/best-practices/')) {
+      await assertSafeScaffoldSource(repoRoot, relative)
       const source = path.join(repoRoot, relative)
       let contents: string
       try {
@@ -138,6 +142,7 @@ async function copyManifestFiles(
         throw new Error(`Manifest path does not exist: ${relative}`)
       }
       const destination = path.join(directory, relative)
+      await assertManifestCopyTargetAvailable(directory, relative)
       await mkdir(path.dirname(destination), { recursive: true })
       await writeFile(destination, adaptBestPractices(contents, adapt.template, adapt.projectName))
       continue
@@ -414,15 +419,11 @@ async function assertStorybook(directory: string, manifest: TemplateManifest): P
         'template.json storybook.config must load the framework, the a11y addon, and msw-storybook-addon.',
       )
     }
-    if (!pkg.scripts?.storybook?.includes('storybook dev')) {
-      throw new Error('package.json storybook must run storybook dev.')
-    }
-    const built = pkg.scripts?.['build-storybook'] ?? ''
-    if (!built.includes('STORYBOOK=true') || !built.includes('storybook build')) {
-      throw new Error(
-        'package.json build-storybook must set STORYBOOK=true and run storybook build.',
-      )
-    }
+    const scripts = pkg.scripts ?? {}
+    const runnerSource = usesPortableStorybookRunner(scripts)
+      ? await readTemplateText(directory, 'scripts/run-project-tool.mjs', 'storybook runner')
+      : undefined
+    assertStorybookScripts(scripts, runnerSource)
     for (const relative of storybook.stories ?? []) {
       await readTemplateText(directory, relative, 'story')
     }
@@ -571,17 +572,18 @@ async function rewriteChangesetIgnore(directory: string, projectName: string): P
 export async function scaffold(options: ScaffoldOptions): Promise<void> {
   assertProjectName(options.name)
   await mkdir(path.dirname(options.directory), { recursive: true })
-  await assertDestination(options.directory)
+  await claimScaffoldDestination(options.directory)
 
   const here = path.dirname(fileURLToPath(import.meta.url))
   const repoRoot = await findRepoRoot(here)
   const templateDir = path.join(repoRoot, 'templates', options.template)
+  await assertSafeScaffoldSource(repoRoot, path.posix.join('templates', options.template))
   const manifest = await readManifest(templateDir)
   if (manifest.id !== options.template) {
     throw new Error(`template.json id "${manifest.id}" does not match ${options.template}.`)
   }
 
-  await copyFiltered(templateDir, options.directory)
+  await copyFiltered(templateDir, options.directory, true)
   await copySharedPackages(repoRoot, options.directory, manifest)
   await copyManifestFiles(repoRoot, options.directory, manifest.configs)
   await copyManifestFiles(repoRoot, options.directory, manifest.docs, {
@@ -599,7 +601,7 @@ export async function scaffold(options: ScaffoldOptions): Promise<void> {
   await writeFile(path.join(options.directory, 'pnpm-workspace.yaml'), workspaceYaml(manifest))
 
   for (const [from, to] of Object.entries(manifest.rename ?? {})) {
-    await rename(path.join(options.directory, from), path.join(options.directory, to))
+    await renameManifestFile(options.directory, from, to)
   }
 
   for (const relative of manifest.replacements ?? []) {
@@ -650,15 +652,4 @@ export async function scaffold(options: ScaffoldOptions): Promise<void> {
   if (options.install) {
     await runInstall(options.directory)
   }
-}
-
-function runInstall(cwd: string): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const child = spawn('pnpm', ['install'], { cwd, stdio: 'inherit' })
-    child.on('error', reject)
-    child.on('exit', (code) => {
-      if (code === 0) resolve()
-      else reject(new Error(`pnpm install exited with code ${code ?? 'unknown'}`))
-    })
-  })
 }
