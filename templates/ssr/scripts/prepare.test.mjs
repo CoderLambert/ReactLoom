@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { spawnSync } from 'node:child_process'
-import { mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises'
+import { access, mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import os from 'node:os'
 import path from 'node:path'
 import { afterEach, test } from 'node:test'
@@ -28,6 +28,8 @@ afterEach(async () => {
 test('monorepo install uses the shared Git setup script', async () => {
   const { root, project } = await fixture()
   await mkdir(path.join(root, 'scripts'))
+  await writeFile(path.join(root, 'pnpm-workspace.yaml'), 'packages:\n  - templates/*\n')
+  await writeFile(path.join(root, 'package.json'), '{"name":"reactloom"}\n')
   await writeFile(
     path.join(root, 'scripts', 'setup-git.mjs'),
     "import { writeFileSync } from 'node:fs'; writeFileSync('prepare-result.txt', 'workspace')\n",
@@ -46,6 +48,33 @@ test('standalone install prefers the copied local setup script', async () => {
   )
   assert.equal(run(project).status, 0)
   assert.equal(await readFile(path.join(project, 'prepare-result.txt'), 'utf8'), 'standalone')
+})
+
+test('missing local setup never executes an unrelated ancestor script', async () => {
+  const { root, project } = await fixture()
+  await mkdir(path.join(root, 'scripts'))
+  await writeFile(
+    path.join(root, 'scripts', 'setup-git.mjs'),
+    "import { writeFileSync } from 'node:fs'; writeFileSync('unexpected-execution.txt', 'ran')\n",
+  )
+  const result = run(project)
+  assert.equal(result.status, 1)
+  assert.match(result.stderr, /Cannot find scripts\/setup-git\.mjs/)
+  await assert.rejects(access(path.join(project, 'unexpected-execution.txt')))
+})
+
+test('unrelated pnpm workspace cannot activate the fallback', async () => {
+  const { root, project } = await fixture()
+  await mkdir(path.join(root, 'scripts'))
+  await writeFile(path.join(root, 'pnpm-workspace.yaml'), 'packages:\n  - templates/*\n')
+  await writeFile(path.join(root, 'package.json'), '{"name":"unrelated-project"}\n')
+  await writeFile(
+    path.join(root, 'scripts', 'setup-git.mjs'),
+    "import { writeFileSync } from 'node:fs'; writeFileSync('unexpected-execution.txt', 'ran')\n",
+  )
+  const result = run(project)
+  assert.equal(result.status, 1)
+  await assert.rejects(access(path.join(project, 'unexpected-execution.txt')))
 })
 
 test('missing setup script fails with an actionable error', async () => {
