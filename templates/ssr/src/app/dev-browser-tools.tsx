@@ -1,22 +1,19 @@
 'use client'
 
 import { useEffect } from 'react'
+import { createOptionalDevToolStartup } from './optional-dev-tool-startup'
 
-let mockWorkerStart: Promise<unknown> | undefined
-let axeStart: Promise<unknown> | undefined
-
-function startMockWorker() {
-  if (!mockWorkerStart) {
-    mockWorkerStart = import('@/mocks/browser').then(({ worker }) =>
+const startMockWorker = createOptionalDevToolStartup(
+  () =>
+    import('@/mocks/browser').then(({ worker }) =>
       worker.start({ onUnhandledFrame: 'bypass' }),
-    )
-  }
-  return mockWorkerStart
-}
+    ),
+  '[ReactLoom] MSW could not start; requests will use the configured backend.',
+)
 
-function startAxe() {
-  if (!axeStart) {
-    axeStart = import('@axe-core/react').then(async (axe) => {
+const startAxe = createOptionalDevToolStartup(
+  () =>
+    import('@axe-core/react').then(async (axe) => {
       const React = { ...(await import('react')) }
       const ReactDOM = await import('react-dom')
       await axe.default(React, ReactDOM, 1000, {
@@ -41,10 +38,9 @@ function startAxe() {
           },
         ],
       })
-    })
-  }
-  return axeStart
-}
+    }),
+  '[ReactLoom] Accessibility developer logger could not start.',
+)
 
 // This component is loaded with `ssr: false` so browser-only development
 // packages never enter Next.js's server compilation graph.

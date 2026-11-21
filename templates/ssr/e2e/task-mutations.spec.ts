@@ -31,6 +31,36 @@ test.beforeEach(async ({ page }) => {
   await expect(page.getByText('Dress the loom', { exact: true })).toBeVisible()
 })
 
+test('announces a short task title and accepts a corrected submission', async ({ page }) => {
+  let createRequests = 0
+  await page.route('**/api/tasks', async (route) => {
+    if (route.request().method() === 'POST') createRequests += 1
+    await route.continue()
+  })
+
+  const title = page.getByLabel('Task title')
+  await title.fill('ab')
+  await page.getByRole('button', { name: 'Add task' }).click()
+  const error = page.locator('#create-task-error')
+  await expect(error).toHaveAttribute('role', 'alert')
+  await expect(error).toHaveText('Task title must contain at least 3 characters.')
+  await expect(title).toHaveAttribute('aria-invalid', 'true')
+  await expect(title).toHaveAttribute('aria-describedby', 'create-task-error')
+  expect(createRequests).toBe(0)
+
+  const corrected = `Corrected title ${randomUUID()}`
+  await title.fill(corrected)
+  await expect(error).toHaveCount(0)
+  await expect(title).toHaveAttribute('aria-invalid', 'false')
+  await expect(title).not.toHaveAttribute('aria-describedby', 'create-task-error')
+
+  const saved = page.waitForResponse(isTaskCreate)
+  await page.getByRole('button', { name: 'Add task' }).click()
+  expect((await saved).status()).toBe(201)
+  await expect(page.getByText(corrected, { exact: true })).toBeVisible()
+  expect(createRequests).toBe(1)
+})
+
 test('retains a server-rejected draft and accepts a corrected retry', async ({ page }) => {
   const title = page.getByLabel('Task title')
   const rejected = 'x'.repeat(81)
@@ -39,6 +69,8 @@ test('retains a server-rejected draft and accepts a corrected retry', async ({ p
   await page.getByRole('button', { name: 'Add task' }).click()
   expect((await rejectedResponse).status()).toBe(400)
   await expect(page.locator('#create-task-error')).toContainText('Give the task a title.')
+  await expect(title).toHaveAttribute('aria-invalid', 'true')
+  await expect(title).toHaveAttribute('aria-describedby', 'create-task-error')
   await expect(title).toHaveValue(rejected)
 
   const corrected = `Retry draft ${randomUUID()}`
@@ -138,3 +170,160 @@ for (const restoreSubmitted of [false, true]) {
     }
   })
 }
+
+test('revokes cached tasks when the API response belongs to another session', async ({ page }) => {
+  // The initial verified session has already cached Ada's task list.
+  // Simulate a cookie change racing the subsequent refetch by returning
+  // another account's data under Ada's previous Query key.
+  const foreignTitle = `Foreign private task ${randomUUID()}`
+  let foreignReads = 0
+  await page.route('**/api/tasks', async (route) => {
+    if (route.request().method() !== 'GET') {
+      await route.continue()
+      return
+    }
+    foreignReads += 1
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        ownerId: 'different-user',
+        tasks: [
+          {
+            id: 'foreign-task',
+            title: foreignTitle,
+            status: 'open',
+            ownerId: 'different-user',
+            createdAt: new Date().toISOString(),
+          },
+        ],
+      }),
+    })
+  })
+
+  try {
+    await page.getByLabel('Task title').fill(`Trigger refetch ${randomUUID()}`)
+    await page.getByRole('button', { name: 'Add task' }).click()
+    await expect(page).toHaveURL(/\/login(?:\?.*)?$/)
+    expect(foreignReads).toBeGreaterThan(0)
+    await expect(page.getByText(foreignTitle)).toHaveCount(0)
+    await expect(page.getByText('Dress the loom')).toHaveCount(0)
+  } finally {
+    await page.unroute('**/api/tasks')
+  }
+})
+
+test('revokes a stale session even when the replacement account has no tasks', async ({ page }) => {
+  // An empty result has no task.ownerId to check. The response owner must
+  // still be validated against the verified session's Query key.
+  let foreignReads = 0
+  await page.route('**/api/tasks', async (route) => {
+    if (route.request().method() !== 'GET') {
+      await route.continue()
+      return
+    }
+    foreignReads += 1
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ ownerId: 'different-user', tasks: [] }),
+    })
+  })
+  try {
+    await page.getByLabel('Task title').fill(`Refresh with no tasks ${randomUUID()}`)
+    await page.getByRole('button', { name: 'Add task' }).click()
+    await expect(page).toHaveURL(/\/login(?:\?.*)?$/)
+    expect(foreignReads).toBeGreaterThan(0)
+    await expect(page.getByText('Dress the loom')).toHaveCount(0)
+  } finally {
+    await page.unroute('**/api/tasks')
+  }
+})
+
+test('binds task writes to the verified account and revokes a stale session on 409', async ({
+  page,
+}) => {
+  let expectedOwner: string | null = null
+  await page.route('**/api/tasks', async (route) => {
+    if (route.request().method() !== 'POST') {
+      await route.continue()
+      return
+    }
+    expectedOwner = route.request().headers()['x-reactloom-expected-task-owner'] ?? null
+    await route.fulfill({
+      status: 409,
+      contentType: 'application/json',
+      headers: { 'cache-control': 'private, no-store' },
+      body: JSON.stringify({ message: 'The signed-in account changed. Please sign in again.' }),
+    })
+  })
+
+  try {
+    const draft = `Old-account write ${randomUUID()}`
+    await page.getByLabel('Task title').fill(draft)
+    await page.getByRole('button', { name: 'Add task' }).click()
+    await expect(page).toHaveURL(/\/login(?:\?.*)?$/)
+    expect(expectedOwner).toBe('user-ada')
+    await expect(page.getByText('Dress the loom')).toHaveCount(0)
+    await expect(page.getByText(draft, { exact: true })).toHaveCount(0)
+  } finally {
+    await page.unroute('**/api/tasks')
+  }
+})
+
+test('revokes cached tasks immediately when a task GET receives 401', async ({ page }) => {
+  let unauthorizedReads = 0
+  await page.route('**/api/tasks', async (route) => {
+    if (route.request().method() !== 'GET') {
+      await route.continue()
+      return
+    }
+    unauthorizedReads += 1
+    await route.fulfill({
+      status: 401,
+      contentType: 'application/json',
+      headers: { 'cache-control': 'private, no-store' },
+      body: JSON.stringify({ message: 'Sign in is required.' }),
+    })
+  })
+
+  try {
+    // This page already displays tasks from its initial successful request.
+    // Mutating a task invalidates the list and reproduces an expired-cookie 401
+    // without waiting for the separate 30s session polling interval.
+    await page.getByLabel('Task title').fill(`Trigger expired GET ${randomUUID()}`)
+    await page.getByRole('button', { name: 'Add task' }).click()
+    await expect(page).toHaveURL(/\/login(?:\?.*)?$/)
+    expect(unauthorizedReads).toBeGreaterThan(0)
+    await expect(page.getByText('Dress the loom', { exact: true })).toHaveCount(0)
+  } finally {
+    await page.unroute('**/api/tasks')
+  }
+})
+
+test('revokes cached tasks immediately when a task POST receives 401', async ({ page }) => {
+  let unauthorizedWrites = 0
+  await page.route('**/api/tasks', async (route) => {
+    if (route.request().method() !== 'POST') {
+      await route.continue()
+      return
+    }
+    unauthorizedWrites += 1
+    await route.fulfill({
+      status: 401,
+      contentType: 'application/json',
+      headers: { 'cache-control': 'private, no-store' },
+      body: JSON.stringify({ message: 'Sign in is required.' }),
+    })
+  })
+
+  try {
+    await page.getByLabel('Task title').fill(`Trigger expired POST ${randomUUID()}`)
+    await page.getByRole('button', { name: 'Add task' }).click()
+    await expect(page).toHaveURL(/\/login(?:\?.*)?$/)
+    expect(unauthorizedWrites).toBe(1)
+    await expect(page.getByText('Dress the loom', { exact: true })).toHaveCount(0)
+  } finally {
+    await page.unroute('**/api/tasks')
+  }
+})

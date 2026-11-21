@@ -37,3 +37,35 @@ export function mutationRequestError(request: Request, expectsJson = false): Res
   }
   return null
 }
+
+// A task write initiated under an older tab's verified identity must not run
+// under a replacement cookie. Clients without this opt-in header keep the
+// existing API contract; the SSR task UI always sends it.
+export const EXPECTED_TASK_OWNER_HEADER = 'x-reactloom-expected-task-owner'
+
+export function taskMutationSessionError(
+  request: Request,
+  authenticatedUserId: string,
+): Response | null {
+  const expectedOwner = request.headers.get(EXPECTED_TASK_OWNER_HEADER)
+  if (expectedOwner === null || expectedOwner === authenticatedUserId) return null
+  return Response.json(
+    { message: 'The signed-in account changed. Please sign in again.' },
+    { status: 409, headers: { 'Cache-Control': 'private, no-store' } },
+  )
+}
+
+// Opt-in, identity-bound sign-out: do not expire the cookie of a user who
+// replaced the initiating tab's session. An absent current session is already
+// signed out; do not send a stale Set-Cookie that could erase a newer login.
+export const EXPECTED_SESSION_OWNER_HEADER = 'x-reactloom-expected-session-owner'
+
+export function sessionLogoutDecision(
+  request: Request,
+  authenticatedUserId: string | null,
+): 'logout' | 'already-signed-out' | 'changed-account' {
+  const expectedOwner = request.headers.get(EXPECTED_SESSION_OWNER_HEADER)
+  if (expectedOwner === null) return 'logout' // Retain legacy API callers.
+  if (authenticatedUserId === null) return 'already-signed-out'
+  return expectedOwner === authenticatedUserId ? 'logout' : 'changed-account'
+}

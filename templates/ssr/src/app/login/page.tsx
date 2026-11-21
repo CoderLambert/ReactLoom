@@ -1,11 +1,14 @@
 'use client'
 
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema'
+import { useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 import { getApi } from '@/lib/api'
+import { clearSessionCache } from '@/lib/session-cache'
+import { broadcastSessionEvent } from '@/lib/session-events'
 
 const schema = z.object({
   email: z.email(),
@@ -20,7 +23,10 @@ type FormValues = z.infer<typeof schema>
 
 export default function LoginPage() {
   const router = useRouter()
+  const queryClient = useQueryClient()
   const [error, setError] = useState<string | null>(null)
+  const [isSigningIn, setIsSigningIn] = useState(false)
+  const signingIn = useRef(false)
   const form = useForm<FormValues>({
     resolver: standardSchemaResolver(schema),
     defaultValues: { email: '', password: '' },
@@ -28,8 +34,15 @@ export default function LoginPage() {
 
   return (
     <form
+      noValidate
+      aria-busy={isSigningIn}
       className="mx-auto max-w-md space-y-4 rounded-3xl bg-card p-6 ring-1 ring-line"
       onSubmit={form.handleSubmit(async (values) => {
+        // RHF's isSubmitting can reset after a reentrant submit resolves, even
+        // while the first request is pending. Keep a separate single-flight lock.
+        if (signingIn.current) return
+        signingIn.current = true
+        setIsSigningIn(true)
         setError(null)
         try {
           await getApi().request('/api/session', responseSchema, {
@@ -37,9 +50,13 @@ export default function LoginPage() {
             body: values,
             retry: false,
           })
+          await clearSessionCache(queryClient)
+          broadcastSessionEvent('signed-in')
           router.push('/tasks')
           router.refresh()
         } catch (cause) {
+          signingIn.current = false
+          setIsSigningIn(false)
           setError(cause instanceof Error ? cause.message : 'Sign in failed.')
         }
       })}
@@ -52,20 +69,36 @@ export default function LoginPage() {
           id="email"
           type="email"
           autoComplete="username"
+          readOnly={isSigningIn}
+          aria-invalid={Boolean(form.formState.errors.email)}
+          aria-describedby={form.formState.errors.email ? 'email-error' : undefined}
           className="w-full rounded-2xl bg-linen px-3 py-2 font-normal ring-1 ring-line"
           {...form.register('email')}
         />
       </label>
+      {form.formState.errors.email ? (
+        <p id="email-error" role="alert" className="text-sm text-copper">
+          {form.formState.errors.email.message}
+        </p>
+      ) : null}
       <label className="block space-y-2 text-sm font-semibold" htmlFor="password">
         Password
         <input
           id="password"
           type="password"
           autoComplete="current-password"
+          readOnly={isSigningIn}
+          aria-invalid={Boolean(form.formState.errors.password)}
+          aria-describedby={form.formState.errors.password ? 'password-error' : undefined}
           className="w-full rounded-2xl bg-linen px-3 py-2 font-normal ring-1 ring-line"
           {...form.register('password')}
         />
       </label>
+      {form.formState.errors.password ? (
+        <p id="password-error" role="alert" className="text-sm text-copper">
+          {form.formState.errors.password.message}
+        </p>
+      ) : null}
       {error ? (
         <p role="alert" className="text-sm text-copper">
           {error}
@@ -73,9 +106,10 @@ export default function LoginPage() {
       ) : null}
       <button
         type="submit"
-        className="rounded-full bg-ink px-4 py-2 text-sm font-semibold text-linen"
+        disabled={isSigningIn}
+        className="rounded-full bg-ink px-4 py-2 text-sm font-semibold text-linen disabled:opacity-60"
       >
-        Sign in
+        {isSigningIn ? 'Signing in…' : 'Sign in'}
       </button>
     </form>
   )

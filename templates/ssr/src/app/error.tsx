@@ -2,14 +2,16 @@
 
 import { devInspectorPath, parseDevStack } from '@reactloom/devtools/stack'
 import { createElement } from 'react'
+import { errorMessageForDisplay } from '@/lib/error-display'
 
-export default function RouteError({ error, reset }: { error: Error; reset: () => void }) {
-  const stack = process.env.NODE_ENV !== 'production' ? error.stack : undefined
+export default function RouteError({ error, reset }: { error: unknown; reset: () => void }) {
+  const stack =
+    process.env.NODE_ENV !== 'production' && error instanceof Error ? error.stack : undefined
 
   return (
     <div role="alert" className="space-y-4 py-16">
       <h1 className="text-4xl">This view hit a snag.</h1>
-      <p className="text-muted">{error.message}</p>
+      <p className="text-muted">{errorMessageForDisplay(error, process.env.NODE_ENV)}</p>
       {stack ? <DevFrames stack={stack} /> : null}
       <button
         type="button"

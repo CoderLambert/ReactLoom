@@ -3,6 +3,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { POST as login, DELETE as logout, GET as readSession } from '@/app/api/session/route'
 import { PATCH as updateTask } from '@/app/api/tasks/[id]/route'
 import { POST as createTask, GET as readTasks } from '@/app/api/tasks/route'
+import { MAX_MUTATION_JSON_BYTES } from './mutation-json'
+import { EXPECTED_SESSION_OWNER_HEADER, EXPECTED_TASK_OWNER_HEADER } from './mutation-request'
 import { readSessionToken, SESSION_COOKIE, signSession } from './session-token'
 import { type Task, tasks } from './tasks'
 
@@ -171,4 +173,112 @@ it('preserves authentication and ownership failures for valid requests', async (
   )
   expect((await routes[3].run(requestFor(routes[3], { origin }))).status).toBe(404)
   expect(tasks.list('user-ada').find((task) => task.id === ownedTask.id)?.status).toBe('open')
+})
+
+describe.each(routes.filter((route) => route.name.startsWith('task ')))(
+  '$name cookie replacement guard',
+  (route) => {
+    it('rejects a stale owner before consuming the body or modifying tasks', async () => {
+      requestCookies.set(
+        SESSION_COOKIE,
+        await signSession({
+          id: 'replacement-user',
+          email: 'replacement@reactloom.dev',
+          name: 'Replacement user',
+        }),
+      )
+      const before = tasks.list('replacement-user').map((task) => ({ ...task }))
+      const request = requestFor(route, {
+        origin,
+        [EXPECTED_TASK_OWNER_HEADER]: 'user-ada',
+      })
+      const response = await route.run(request)
+
+      expect(response.status).toBe(409)
+      expect(response.headers.get('cache-control')).toBe('private, no-store')
+      expect(await response.json()).toMatchObject({ message: expect.any(String) })
+      expect(request.bodyUsed).toBe(false)
+      expect(tasks.list('replacement-user')).toEqual(before)
+    })
+
+    it('accepts a bound write when the requested and authenticated owners match', async () => {
+      const request = requestFor(route, {
+        origin,
+        [EXPECTED_TASK_OWNER_HEADER]: 'user-ada',
+      })
+      const response = await route.run(request)
+      expect(response.status).toBe(route.success)
+    })
+  },
+)
+
+
+describe('sign-out identity binding', () => {
+  it('rejects an old tab logout without clearing the replacement account cookie', async () => {
+    requestCookies.set(
+      SESSION_COOKIE,
+      await signSession({
+        id: 'replacement-user',
+        email: 'replacement@reactloom.dev',
+        name: 'Replacement user',
+      }),
+    )
+    const response = await logout(
+      requestFor(routes[1], { origin, [EXPECTED_SESSION_OWNER_HEADER]: 'user-ada' }),
+    )
+
+    expect(response.status).toBe(409)
+    expect(response.headers.get('cache-control')).toBe('private, no-store')
+    expect(response.headers.has('set-cookie')).toBe(false)
+    expect((await (await readSession()).json()).user.id).toBe('replacement-user')
+  })
+
+  it('expires only the cookie belonging to the expected account', async () => {
+    const response = await logout(
+      requestFor(routes[1], { origin, [EXPECTED_SESSION_OWNER_HEADER]: 'user-ada' }),
+    )
+    expect(response.status).toBe(200)
+    expect(response.headers.get('set-cookie')).toContain('Max-Age=0')
+  })
+
+  it('treats an already-expired bound session as signed out without a clearing cookie', async () => {
+    requestCookies = new NextRequest(origin).cookies
+    const response = await logout(
+      requestFor(routes[1], { origin, [EXPECTED_SESSION_OWNER_HEADER]: 'user-ada' }),
+    )
+    expect(response.status).toBe(200)
+    expect(response.headers.has('set-cookie')).toBe(false)
+    await expect(response.json()).resolves.toEqual({ ok: true })
+  })
+})
+
+describe.each(routes.filter((route) => route.body))('$name bounded JSON body', (route) => {
+  it('returns 413 with no cookie or task side effects for an oversized payload', async () => {
+    const before = tasks.list('user-ada').map((task) => ({ ...task }))
+    const request = new Request(origin + route.path, {
+      method: route.method,
+      headers: { origin, 'content-type': 'application/json' },
+      body: JSON.stringify({ ...route.body, padding: 'x'.repeat(MAX_MUTATION_JSON_BYTES) }),
+    })
+    const response = await route.run(request)
+
+    expect(response.status).toBe(413)
+    expect(response.headers.get('cache-control')).toBe('private, no-store')
+    expect(response.headers.has('set-cookie')).toBe(false)
+    expect(tasks.list('user-ada')).toEqual(before)
+  })
+
+  it('rejects advertised oversized length before reading or mutating', async () => {
+    const before = tasks.list('user-ada').map((task) => ({ ...task }))
+    const request = requestFor(route, {
+      origin,
+      'content-length': String(MAX_MUTATION_JSON_BYTES + 1),
+    })
+    const response = await route.run(request)
+
+    expect(response.status).toBe(413)
+    expect(request.bodyUsed).toBe(false)
+    expect(response.headers.has('set-cookie')).toBe(false)
+    expect(tasks.list('user-ada')).toEqual(before)
+  })
 })
