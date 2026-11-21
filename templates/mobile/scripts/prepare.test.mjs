@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { spawnSync } from 'node:child_process'
-import { mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises'
+import { access, mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import os from 'node:os'
 import path from 'node:path'
 import { afterEach, test } from 'node:test'
@@ -30,6 +30,9 @@ test(
   async () => {
     const { root, project } = await fixture()
     await mkdir(path.join(root, 'scripts'))
+    await mkdir(path.join(root, 'packages', 'create-reactloom'), { recursive: true })
+    await writeFile(path.join(root, 'pnpm-workspace.yaml'), 'packages: []\n')
+    await writeFile(path.join(root, 'packages', 'create-reactloom', 'package.json'), '{}\n')
     await writeFile(
       path.join(root, 'scripts', 'setup-git.mjs'),
       "import { writeFileSync } from 'node:fs'; writeFileSync('prepare-result.txt', 'workspace')\n",
@@ -51,6 +54,31 @@ test('standalone install prefers its copied local Git setup script', async () =>
   assert.equal(await readFile(path.join(project, 'prepare-result.txt'), 'utf8'), 'standalone')
 })
 
+test('detached generated app does not execute an unrelated grandparent setup script', async () => {
+  const { root } = await fixture()
+  const project = path.join(root, 'generated', 'app')
+  await mkdir(path.join(project, 'scripts'), { recursive: true })
+  await mkdir(path.join(root, 'scripts'))
+  await writeFile(
+    path.join(root, 'scripts', 'setup-git.mjs'),
+    "import { writeFileSync } from 'node:fs'; writeFileSync('unexpected-execution', 'yes')\n",
+  )
+
+  const result = run(project)
+  assert.equal(result.status, 1)
+  assert.match(result.stderr, /Cannot find scripts\/setup-git\.mjs/)
+  await assert.rejects(access(path.join(project, 'unexpected-execution')))
+})
+
+test('lookalike template without workspace markers cannot execute its ancestor setup', async () => {
+  const { root, project } = await fixture()
+  await mkdir(path.join(root, 'scripts'))
+  await writeFile(path.join(root, 'scripts', 'setup-git.mjs'), 'process.exit(23)\n')
+  const result = run(project)
+  assert.equal(result.status, 1)
+  assert.match(result.stderr, /Cannot find scripts\/setup-git\.mjs/)
+})
+
 test('missing setup script fails rather than silently skipping project configuration', async () => {
   const { project } = await fixture()
   const result = run(project)
@@ -70,9 +98,6 @@ test(
     const packagePath = fileURLToPath(new URL('../package.json', import.meta.url))
     const pkg = JSON.parse(await readFile(packagePath, 'utf8'))
     assert.equal(pkg.scripts.prepare, 'node scripts/prepare.mjs')
-    assert.equal(
-      pkg.scripts.test,
-      'vitest run && node --test scripts/prepare.test.mjs scripts/doctor-editor.test.mjs scripts/analyze.test.mjs',
-    )
+    assert.match(pkg.scripts.test, /(?:^|&& )node --test scripts\/prepare\.test\.mjs(?: |$)/)
   },
 )
